@@ -9,19 +9,23 @@ Repository for Internal Protocol Development.
 2- Create Branch with ticket number and name. For example: `5-hampton-creek-olga-etc-3-protocols`
 
 3- Team members working on protocol check out that branch.
+	
 	* Navigate to local protocol_lib directory in terminal, make sure you have the most recent online version of repo.
 	```
 	cd [local protocol folder]
 	git pull
 	```
+	
 	* fetch/list any new branches
 	```
 	git fetch --all
 	```
+	
 	* check which branch you are currently on locally
 	```
 	git branch
 	```
+	
 	* switch to proper protocol branch (never work directly off master)
 	```
 	git checkout 5-hampton-creek-olga-etc-3-protocols
