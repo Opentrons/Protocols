@@ -23,4 +23,4 @@ Hood
 ## Reagents
 Antibodies
 
-[Spec](https://docs.google.com/document/d/1dq0XLRxoC7R5F8cV4ddQsidbXYMRVLTaNYUC-J7w-EA/edit)
+[Spec](https://docs.google.com/document/d/1Lr2wrxe41MC-Y8t1DqkKB4gO4slN3RCB0t-ZETUId6s/edit)
