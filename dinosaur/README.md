@@ -1,7 +1,7 @@
 # Title: Dinosaur
 
 ## Description
-sample description
+Draw a picture of a dinosaur in a 96 well plate.
 
 ## Categories
 plate-pic
@@ -9,10 +9,10 @@ plate-pic
 ## Sub Categories
 
 ## Author
-OpenTrons
+Opentrons
 
 ## Hardware
-OT One, OT Pro, OT Hood
+Standard, PRO, Hood
 
 ## Reagents
-Blue Dye, Yellow Dye, Water
+Blue Dye, Green Dye, Water
