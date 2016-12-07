@@ -11,8 +11,12 @@ plate-pic
 ## Author
 Opentrons
 
-## Hardware
+## Partner
+
+## Robot
 Standard, PRO, Hood
 
-## Reagents
-Blue Dye, Green Dye, Water
+## Modules
+
+## Ingredients
+Blue Food Coloring, Green Food Coloring, Water
