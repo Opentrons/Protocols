@@ -10,26 +10,26 @@ Repository for Internal Protocol Development.
 
 3- Team members working on protocol check out that branch.
 	
-	* Navigate to local protocol_lib directory in terminal, make sure you have the most recent online version of repo.
-	```
-	cd [local protocol folder]
-	git pull
-	```
-	
-	* fetch/list any new branches
-	```
-	git fetch --all
-	```
-	
-	* check which branch you are currently on locally
-	```
-	git branch
-	```
-	
-	* switch to proper protocol branch (never work directly off master)
-	```
-	git checkout 5-hampton-creek-olga-etc-3-protocols
-	```
+* Navigate to local protocol_lib directory in terminal, make sure you have the most recent online version of repo.
+```
+cd [local protocol folder]
+git pull
+```
+
+* fetch/list any new branches
+```
+git fetch --all
+```
+
+* check which branch you are currently on locally
+```
+git branch
+```
+
+* switch to proper protocol branch (never work directly off master)
+```
+git checkout 5-hampton-creek-olga-etc-3-protocols
+```
 6- If it does not currently exist, create a folder for the new/current protocol being developed in this branch. Create a file called `README.md`
 
 5- Generate plain text description of protocol science in google docs and link to it in protocol folder's README file. 
