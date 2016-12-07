@@ -1,7 +1,7 @@
 # Title:  Bradford Assay
 
 ## Description
-The Bradford Assay measures the concentration of protein in a solution.
+The Bradford Assay quantifies the total concentration of protein in a solution.
 
 ## Categories
 Proteomics
@@ -16,12 +16,12 @@ Opentrons
 Biomarin
 
 ## Robot
-PRO, Standard, Hood
+PRO, Hood
 
 ## Modules
 
-## Ingredients
-Bradford Reagent, samples, buffer
+## Reagents
+Bradford Reagent, samples, standards, diluent
 
-[Spec](https://docs.google.com/document/d/1NkW68JI6YxPE_gZVv8UStaefPkphtqWzjPxckO7xJKA/edit)
+[Spec](https://docs.google.com/document/d/1DvKqkUNyBPrE8OF8AaI48uXma47klOcQsKZ2B-BXIf4/edit)
 
