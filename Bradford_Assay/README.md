@@ -23,3 +23,5 @@ PRO, Standard, Hood
 ## Ingredients
 Bradford Reagent, samples, buffer
 
+[Spec](https://docs.google.com/document/d/1NkW68JI6YxPE_gZVv8UStaefPkphtqWzjPxckO7xJKA/edit)
+
