@@ -40,7 +40,6 @@ Nulla vulputate eu ex sed ullamcorper. Cras luctus metus non dui venenatis, nec 
 
 
 ### Additional Notes
-
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sed purus eu urna vehicula ultrices at vel quam. Aliquam erat volutpat. Quisque imperdiet ut urna ut dapibus. Sed placerat, libero at ullamcorper pharetra, massa tellus sagittis eros, in feugiat est libero et turpis. Sed ac efficitur mi, at porttitor elit.
 
 
