@@ -1,92 +1,76 @@
-# Dinosaur
+from opentrons import containers, instruments
 
-from opentrons import Robot, containers, instruments
-from itertools import chain
-
-robot = Robot()
-
-p200rack = containers.load(
-    'tiprack-200ul',  
-    'B1',             
-    'tiprack'         
-)
-trough = containers.load(
-    'trough-12row',
-    'C1',
-    'trough'
-)
-plate = containers.load(
-    '96-PCR-flat',
-    'D1',
-    'plate'
-)
-trash = containers.load(
-    'point',
-    'D2',
-    'trash'
-)
+p200rack = containers.load('tiprack-200ul', 'B1')
+trough = containers.load('trough-12row', 'C1')
+plate = containers.load('96-PCR-flat', 'D1')
 
 p200 = instruments.Pipette(
-    name="p200",
-    trash_container=trash,
-    tip_racks=[p200rack],
-    min_volume=20,
     axis="b",
-    channels=1
+    max_volume=200,
+    tip_racks=[p200rack]
 )
 
-p200.set_max_volume(200)
+b = trough['A1']  # blue food coloring
+y = trough['A2']  # yellow food coloring
+
+pixel_volumes = {
+    b: 50,  # blue pixels will have 50uL
+    y: 100  # yellow pixels will have 100uL
+}
+
+_ = None
+pixels = [
+    _, _, _, _, _, _, y, b,  # 12
+    _, _, _, _, y, y, b, _,  # 11
+    _, _, _, _, y, b, _, _,  # 10
+    _, _, y, y, b, b, b, b,  # 9
+    _, _, y, b, b, b, b, b,  # 8
+    y, y, b, b, b, b, b, _,  # 7
+    _, y, b, b, b, b, b, _,  # 6
+    y, y, b, b, b, b, b, _,  # 5
+    _, y, b, b, b, b, b, b,  # 4
+    _, _, y, b, b, b, b, b,  # 3
+    _, _, _, b, b, _, _, _,  # 2
+    _, _, _, b, b, _, _, _   # 1
+]
+#   A  B  C  D  E  F  G  H
 
 
-# In[4]:
-
-volume = 200
-blue = trough['A1']
-green = trough['A2']
-
-# deposit to all blue wells
-p200.pick_up_tip(p200rack['A1'])
-p200.aspirate(volume, blue)
-p200.dispense(50, plate['D1']).dispense(50, plate['E1']).dispense(50, plate['D2']).dispense(50, plate['E2'])
-p200.aspirate(volume, blue)
-p200.dispense(50, plate['D3']).dispense(50, plate['E3']).dispense(50, plate['F3']).dispense(50, plate['G3'])
-p200.aspirate(volume, blue)
-p200.dispense(50, plate['H3']).dispense(50, plate['C4']).dispense(50, plate['D4']).dispense(50, plate['E4'])
-p200.aspirate(volume, blue)
-p200.dispense(50, plate['F4']).dispense(50, plate['G4']).dispense(50, plate['H4']).dispense(50, plate['C5'])
-p200.drop_tip(p200rack['A1'])
-
-p200.pick_up_tip(p200rack['B1'])
-p200.aspirate(volume, blue)
-p200.dispense(50, plate['D5']).dispense(50, plate['E5']).dispense(50, plate['F5']).dispense(50, plate['G5'])
-p200.aspirate(volume, blue)
-p200.dispense(50, plate['C6']).dispense(50, plate['D6']).dispense(50, plate['E6']).dispense(50, plate['F6'])
-p200.aspirate(volume, blue)
-p200.dispense(50, plate['G6']).dispense(50, plate['C7']).dispense(50, plate['D7']).dispense(50, plate['E7'])
-p200.aspirate(volume, blue)
-p200.dispense(50, plate['F7']).dispense(50, plate['G7']).dispense(50, plate['D8']).dispense(50, plate['E8'])
-p200.drop_tip(p200rack['B1'])
-
-p200.pick_up_tip(p200rack['C1'])
-p200.aspirate(volume, blue)
-p200.dispense(50, plate['F8']).dispense(50, plate['G8']).dispense(50, plate['H8']).dispense(50, plate['E9'])
-p200.aspirate(volume, blue)
-p200.dispense(50, plate['F9']).dispense(50, plate['G9']).dispense(50, plate['H9']).dispense(50, plate['F10'])
-p200.aspirate(volume, blue)
-p200.dispense(50, plate['G11']).dispense(50, plate['H12']).dispense(50, plate['F3']).dispense(50, plate['G3'])
-p200.drop_tip(p200rack['C1'])
-              
-# deposit to all green wells
-p200.pick_up_tip(p200rack['D1'])
-p200.aspirate(volume, green)
-p200.dispense(50, plate['C3']).dispense(50, plate['B4']).dispense(50, plate['A5']).dispense(50, plate['B5'])
-p200.aspirate(volume, green)
-p200.dispense(50, plate['B6']).dispense(50, plate['A7']).dispense(50, plate['B7']).dispense(50, plate['C8'])              
-p200.aspirate(volume, green)
-p200.dispense(50, plate['C9']).dispense(50, plate['D9']).dispense(50, plate['E10']).dispense(50, plate['E11'])              
-p200.aspirate(volume, green)
-p200.dispense(50, plate['F11']).dispense(50, plate['G12'])
-p200.drop_tip(p200rack['D1'])
+def index_to_well(index):
+    """
+    Returns the plate's well, given an index inside the pixels array
+    """
+    row = 11 - int(index / 8)
+    column = index % 8
+    well_index = (row * 8) + column
+    return plate[well_index]
 
 
+def spread_color(source):
+    # find all the pixels for this source
+    source_pixels = [i for i, val in enumerate(pixels) if val == source]
+    if not source_pixels or not source:
+        return
 
+    volume = pixel_volumes[source]
+
+    # use a new tip for this source
+    p200.pick_up_tip()
+    for index in source_pixels:
+
+        # refill the tip whenever it is empty
+        if p200.current_volume < volume:
+            p200.aspirate().delay(1).touch_tip()
+
+        # convert the pixel index to the plate's well, and dispense
+        well = index_to_well(index)
+        p200.dispense(volume, well).touch_tip()
+
+    # return leftover liquid to the source
+    # then return this tip to the tip rack
+    p200.blow_out(source).return_tip()
+
+
+# now draw the image, one color at a time!!
+spread_color(b)
+spread_color(y)
