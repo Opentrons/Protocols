@@ -1,27 +1,45 @@
-# Title: AMPureXP DNA Extraction
+# AMPureXP DNA Extraction
 
-## Description
-Uses MagDeck to extract DNA using AMPureXP beads.
+### Author
+[Opentrons](url)
 
-## Categories
-Sample Prep, Molecular Biology
-
-## Sub Categories
-Sequencing
-
-## Author
-Opentrons
-
-## Partner
+### Partner
 Girihlet
 
-## Robot
-Standard, PRO, Hood
+## Categories
+* Molecular Biology
 
-## Modules
-MagDeck
+### Sub Categories
+* DNA
 
-## Ingredients
-AMPureXP beads, DNA samples, ethanol, buffer
+## Description
+Use AMPureXP beads to extract DNA from samples.
 
-[Spec](https://docs.google.com/document/d/1dq0XLRxoC7R5F8cV4ddQsidbXYMRVLTaNYUC-J7w-EA/edit)
+### Time Estimate
+Unknown time
+
+### Robot
+* [OT PRO](url) 
+* [OT Standard](url)
+* [OT Hood](url)
+
+### Modules
+* [MagDeck](url)
+
+### Reagents
+* AMPureXP beads
+* DNA samples
+* ethanol
+* buffer
+
+## Process
+1. Add beads to samples based on DNA volume.
+2. Engage magdeck and incubate samples and beads at room temperature.
+3. Remove supernatent.
+4. Wash with ethanol.
+5. Disengage magdeck.
+6. Resuspend samples.
+7. Transfer samples to output plate.
+
+
+### Additional Notes
