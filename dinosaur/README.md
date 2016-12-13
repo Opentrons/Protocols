@@ -18,9 +18,9 @@ Draw a picture of a dinosaur on a 96 well plate using food coloring.
 10 minutes
 
 ### Robot
-* [OT PRO](url) 
-* [OT Standard](url)
-* [OT Hood](url)
+* OT PRO 
+* OT Standard
+* OT Hood
 
 ### Modules
 
