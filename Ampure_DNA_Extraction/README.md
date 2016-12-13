@@ -4,7 +4,7 @@
 [Opentrons](url)
 
 ### Partner
-Girihlet
+[Girihlet](http://www.girihlet.com)
 
 ## Categories
 * Molecular Biology
