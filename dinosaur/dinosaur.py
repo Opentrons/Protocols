@@ -58,11 +58,11 @@ def spread_color(source):
     p200.pick_up_tip()
     for index in source_pixels:
 
-        # refill the whenever it is empty
+        # refill the tip whenever it is empty
         if p200.current_volume < volume:
             p200.aspirate().delay(1).touch_tip()
 
-        # convert the pixel index to the plate well index
+        # convert the pixel index to the plate's well, and dispense
         well = index_to_well(index)
         p200.dispense(volume, well).touch_tip()
 
@@ -71,6 +71,6 @@ def spread_color(source):
     p200.blow_out(source).return_tip()
 
 
-# now draw the image, one color at a time
+# now draw the image, one color at a time!!
 spread_color(b)
 spread_color(y)
