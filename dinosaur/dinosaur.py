@@ -3,12 +3,10 @@ from opentrons import containers, instruments
 p200rack = containers.load('tiprack-200ul', 'B1')
 trough = containers.load('trough-12row', 'C1')
 plate = containers.load('96-PCR-flat', 'D1')
-trash = containers.load('point', 'D2')
 
 p200 = instruments.Pipette(
     axis="b",
     max_volume=200,
-    trash_container=trash,
     tip_racks=[p200rack]
 )
 
