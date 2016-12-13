@@ -38,7 +38,7 @@ pixels = [
 
 def index_to_well(index):
     """
-    Returns a well index from an index inside the pixels array
+    Returns the plate's well, given an index inside the pixels array
     """
     row = 11 - int(index / 8)
     column = index % 8
@@ -71,5 +71,6 @@ def spread_color(source):
     p200.blow_out(source).return_tip()
 
 
+# now draw the image, one color at a time
 spread_color(b)
 spread_color(y)
