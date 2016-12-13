@@ -21,7 +21,9 @@ Nulla vulputate eu ex sed ullamcorper. Cras luctus metus non dui venenatis, nec 
 22 Minutes at 3000 mm/sec
 
 ### Robot
-PRO, Standard, Hood
+* OT PRO 
+* OT Standard
+* OT Hood
 
 ### Modules
 * MagDeck
