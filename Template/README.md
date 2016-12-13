@@ -21,14 +21,14 @@ Nulla vulputate eu ex sed ullamcorper. Cras luctus metus non dui venenatis, nec 
 22 Minutes at 3000 mm/sec
 
 ### Robot
-* OT PRO 
-* OT Standard
-* OT Hood
+* [OT PRO](url) 
+* [OT Standard](url)
+* [OT Hood](url)
 
 ### Modules
-* MagDeck
-* CoolDeck 
-* HeatDeck
+* [MagDeck](url)
+* [CoolDeck](url)
+* [HeatDeck](url)
 
 ### Reagents
 * [Reagent Name](url)
