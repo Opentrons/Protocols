@@ -1,0 +1,10 @@
+sudo: false
+language: python
+python:
+- '3.5'
+
+install:
+  - pip install ssh+git@github.com/OpenTrons/protocol-library.git#egg=master
+
+script:
+  - echo "NO SCRIPTS YET"
