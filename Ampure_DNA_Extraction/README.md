@@ -19,12 +19,12 @@ Use AMPureXP beads to extract DNA from samples.
 Unknown time
 
 ### Robot
-* [OT PRO](url) 
-* [OT Standard](url)
-* [OT Hood](url)
+* OT One PRO
+* OT One Standard
+* OT One Hood
 
 ### Modules
-* [MagDeck](url)
+* MagDeck
 
 ### Reagents
 * AMPureXP beads
