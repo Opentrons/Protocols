@@ -53,12 +53,3 @@ for i in range(24):
     p200.pick_up_tip().aspirate(40, tube_rack[i]).dispense(plate[i]).drop_tip()
 
 
-# In[4]:
-
-robot.commands()
-
-
-# In[ ]:
-
-
-
