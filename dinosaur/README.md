@@ -19,4 +19,4 @@ Standard, PRO, Hood
 ## Modules
 
 ## Ingredients
-Blue Food Coloring, Green Food Coloring, Water
+Blue Food Coloring, Yellow Food Coloring, Water
