@@ -4,7 +4,7 @@ python:
 - '3.5'
 
 install:
-  - git clone git@github.com:OpenTrons/protocol-library.git
+  - pip install git+ssh://git@github.com/OpenTrons/protocol-library.git#egg=340-create-travis-script-to-scan-through-protocols
 
 script:
   - build-library .
