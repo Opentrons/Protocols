@@ -18,6 +18,8 @@ PRO, Standard, Hood
 
 ## Modules
 
+# Time Estimate
+
 ## Ingredients
 T4 DNA Ligase, Water, Vector DNA, Insert DNA, Buffer
 
