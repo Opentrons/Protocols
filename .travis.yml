@@ -14,3 +14,4 @@ install:
 script:
   - build-library .
   - echo $PATH
+  - echo pip list
