@@ -12,6 +12,9 @@ install:
   - echo $PATH
 
 script:
+  - python --version
+  - python3 --version
+  - python -c 'import os; from protolib import build_protocol_library; build_protocol_library(os.getcwd())'
   - build-library .
   - echo $PATH
   - pip list
