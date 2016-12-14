@@ -8,7 +8,7 @@ install:
   - chmod 600 ../protocol-library
   - eval `ssh-agent -s`
   - ssh-add ../protocol-library
-  - pip install git+ssh://github.com/OpenTrons/protocol-library.git@340-create-travis-script-to-scan-through-protocols#egg=protolib
+  - pip install git+ssh://git@github.com/OpenTrons/protocol-library.git@340-create-travis-script-to-scan-through-protocols#egg=protolib
   - echo $PATH
 
 script:
