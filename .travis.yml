@@ -15,6 +15,7 @@ script:
   - python --version
   - python3 --version
   - build-library . releases
+  - ls -la releases
 
 # Deploy the build version in an S3 bucket
 deploy:
@@ -27,7 +28,7 @@ deploy:
   # upload-dir: protocol-builds  # TBD: use for master vs branch builds?
   acl: private
   on:
-    repo: OpenTrons/Protocol
+    repo: OpenTrons/Protocols
     all_branches: true
 
 notifications:
