@@ -35,57 +35,57 @@ from itertools import chain
 
 p1000rack = containers.load(
     'tiprack-1000ul',  # container type
-    'C2',             # slot
+    'A1',             # slot
     'p1000-rack'         # user-defined name, optional for now
 )
 p200rack = containers.load(
     'tiprack-200ul',  # container type
-    'A1',             # slot
+    'A2',             # slot
     'p200-rack'         # user-defined name, optional for now
 )
 trough = containers.load(
     'trough-12row',
-    'E1',
+    'C1',
     'trough'
 )
 tube = containers.load(
     'tube-rack-2ml',
-    'C1',
+    'D1',
     'tube rack'
 )
 plate1 = containers.load(
     '96-PCR-flat',
-    'C2',
+    'D2',
     'plate1'
 )
 plate2 = containers.load(
     '96-PCR-flat',
-    'C3',
+    'E2',
     'plate2'
 )
 plate3 = containers.load(
     '96-PCR-flat',
-    'D1',
+    'A3',
     'plate3'
 )
 plate4 = containers.load(
     '96-PCR-flat',
-    'D2',
+    'B3',
     'plate4'
 )
 plate5 = containers.load(
     '96-PCR-flat',
-    'D3',
+    'C3',
     'plate5'
 )
 plate6 = containers.load(
     '96-PCR-flat',
-    'E1',
+    'D3',
     'plate6'
 )
 plate7 = containers.load(
     '96-PCR-flat',
-    'E2',
+    'E3',
     'plate7'
 )
 trash = containers.load(
@@ -149,14 +149,14 @@ p1000.drop_tip()
 for i in range(12):
     p1000.pick_up_tip()
     for j in range(3):
-        p1000.aspirate(300, plate1.rows[i][j]).dispense(plate1.rows[i][j+1]).mix(300, 3, plate1.rows[i][j+1])
+        p1000.aspirate(300, plate1.rows[i][j]).dispense(plate1.rows[i][j+1]).mix(3, 300, plate1.rows[i][j+1])
     p1000.drop_tip()
 
 # dilute down rows from E to H
 for i in range(12):
     p1000.pick_up_tip()
     for j in range(4,7):
-        p1000.aspirate(300, plate1.rows[i][j]).dispense(plate1.rows[i][j+1]).mix(300, 3, plate1.rows[i][j+1])
+        p1000.aspirate(300, plate1.rows[i][j]).dispense(plate1.rows[i][j+1]).mix(3, 300, plate1.rows[i][j+1])
     p1000.drop_tip()
 
 # ----------------------------------------
