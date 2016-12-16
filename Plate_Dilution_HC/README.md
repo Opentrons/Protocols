@@ -17,7 +17,7 @@ Opentrons
 Dilute samples in multiple directions by multiple dilution factors.
 
 ### Time Estimate
-@ 5000 mm/s
+1 hr 15 min @ 4000 mm/s
 
 ### Robot
 * OT PRO 

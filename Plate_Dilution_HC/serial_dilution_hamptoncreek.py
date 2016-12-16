@@ -116,7 +116,6 @@ p1000 = instruments.Pipette(
     
 p1000.set_max_volume(1000)
 
-robot.head_speed(5000)
 # In[7]:
 
 # distrubte samples in duplicate to A and E, 1 tube to 2 wells
