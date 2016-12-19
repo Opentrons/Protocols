@@ -1,5 +1,5 @@
 """
-Plate Image
+Pixels
 
 Demonstrates drawing an image in a 96 well plate,
 by first designing that image in a Python list.
@@ -42,17 +42,17 @@ pixels = [[_, _, _, _, _, _, y, b],  # 12
           [_, _, y, b, b, b, b, g],  # 3
           [_, _, _, b, b, _, _, _],  # 2
           [_, _, _, b, b, _, _, _]]  # 1
-#          A  B  C  D  E  F  G  H
+         # A  B  C  D  E  F  G  H
 
-# convert list of lists into single list
+# convert list of row lists into single pixels list
 pixels = [pixel for row in reversed(pixels) for pixel in row]
 
 
+# define a function to spread any given color
 def spread_color(color_source):
+
     # find the target wells for this color
     target_wells = [plate[i] for i in range(96) if pixels[i] is color_source]
-    if not target_wells:
-        return  # if there are no wells to fill, don't pipette
 
     # get a new tip, and distribute the color
     p200.pick_up_tip()
