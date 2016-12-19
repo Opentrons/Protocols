@@ -27,4 +27,4 @@ pipette.touch_tip(plate['B1'])     # touch tip within plate:B1
 
 pipette.mix(4, 100, plate['A2'])   # mix 4 times, 100uL, in plate:A2
 pipette.mix(3, 50)                 # mix 3 times, 50uL, in current location
-pipette.mix(2)                     # mix 2 times, pipette's full range, in current location
+pipette.mix(2)                     # mix 2 times, pipette's max volume, in current location

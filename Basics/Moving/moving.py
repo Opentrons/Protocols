@@ -13,17 +13,14 @@ plate = containers.load('96-flat', 'B1')
 pipette = instruments.Pipette(axis='b')
 
 pipette.move_to(tiprack['A1'])
-pipette.move_to(
-    tiprack['A1'].bottom(),
-    strategy='direct'
-)
 
-pipette.move_to(plate['A1'].top())
+pipette.move_to(tiprack['A2'].bottom())
+
+pipette.move_to(plate['A3'].top())
 pipette.delay(2)
-pipette.move_to(
-    plate['A1'].top(-5),
-    strategy='direct'
-)
+pipette.move_to(plate['A4'].bottom(2))
+pipette.delay(2)
+pipette.move_to(plate['A5'].top(-2))
 
 # robot.home()
 robot.home(enqueue=True)
