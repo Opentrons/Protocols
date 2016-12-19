@@ -1,7 +1,7 @@
 # Dinosaur
 
 ### Author
-[Opentrons](url)
+Opentrons
 
 ### Partner
 
