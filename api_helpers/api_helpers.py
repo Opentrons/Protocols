@@ -16,53 +16,73 @@ def find_aspirate_volume(vol, pipette):
     return aspirate_volume
 
 
-def transfer(source, targets, volumes, pipette, rate=1.0, mix=None, tip=1):
-    if isinstance(source, list) and isinstance(targets, list):
-        if not len(source) == len(targets):
+def match_volume_and_wells(volume, sources, targets):
+    # if both are lists, check they're the same length
+    if isinstance(sources, list) and isinstance(targets, list):
+        if not len(sources) == len(targets):
             raise RuntimeError('Sources and Targets list lengths do not match')
-    if not isinstance(source, list) and not isinstance(targets, list):
-        targets = [targets]
-    if not isinstance(volumes, list):
-        if isinstance(source, list):
-            volumes = [volumes] * len(source)
-        else:
-            volumes = [volumes] * len(targets)
 
-    if tip == 1:
+    if not isinstance(sources, list):
+        sources = [sources]
+    if not isinstance(targets, list):
+        targets = [targets]
+
+    # determine how long the volumes list should be
+    length = max(len(sources), len(targets))
+
+    if isinstance(volume, list) and len(volume) != length:
+        raise RuntimeError('Length of volumes does not match length of wells')
+    else:
+        volume = [volume] * length
+
+    return (volume, sources, targets)
+
+
+def transfer(pipette, volumes, sources, targets, **kwargs):
+
+    tips = kwargs.get('tips', 1)
+    rate = kwargs.get('rate', 1.0)
+    mix = kwargs.get('mix', (0, 0))
+    touch = kwargs.get('touch', True)
+    blow = kwargs.get('blow', True)
+
+    volumes, sources, targets = match_volume_and_wells(
+        volumes, sources, targets)
+
+    if tips == 1:
         pipette.pick_up_tip()
 
-    for i, well in enumerate(targets):
-
-        # keep track of how much we've dispensed
-        amount_remaining = volumes[i] * 1
+    for i in range(len(volumes)):
+        t = targets[i] if len(targets) > 1 else targets[0]
+        s = sources[i] if len(sources) > 1 else sources[0]
+        if tips > 1:
+            pipette.pick_up_tip()
+        amount_remaining = volumes[i] + 0
         while amount_remaining > 0:
-
-            if tip > 1:
-                pipette.pick_up_tip()
-
-            # aspirate
             if pipette.current_volume < volumes[i]:
-                aspirate_volume = find_aspirate_volume(volumes[i:], pipette)
-                pipette.aspirate(aspirate_volume, rate=rate)
-                pipette.delay(1).touch_tip()
-
-            pipette.dispense(volumes[i], well, rate=rate)
-
-            # mix if specified
+                v = find_aspirate_volume(volumes[i:], pipette)
+                pipette.aspirate(v, s, rate=rate)
+                pipette.delay(1)
+                if touch:
+                    pipette.touch_tip()
+            dispense_volume = min(volumes[i], pipette.current_volume)
+            amount_remaining -= dispense_volume
+            pipette.dispense(dispense_volume, t, rate=rate)
             if isinstance(mix, tuple) and len(mix) > 1:
-                pipette.mix(mix[0], mix[1])
-
-            pipette.touch_tip()
-
-            # blowout if we're able to
-            if pipette.current_volume == 0:
+                if mix[0] and mix[1]:
+                    pipette.mix(mix[0], mix[1])
+            if touch:
+                pipette.touch_tip()
+            if blow and pipette.current_volume == 0:
                 pipette.blow_out()
+        if tips > 1:
+            pipette.drop_tip()
 
-            amount_remaining -= volumes[i]
-
-            if tip > 1:
-                pipette.drop_tip()
-
-    pipette.blow_out()
-    if tip == 1:
+    if tips == 1:
         pipette.drop_tip()
+
+
+
+
+
+
