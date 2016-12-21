@@ -14,7 +14,8 @@ install:
 script:
   - python --version
   - python3 --version
-  - build-library . releases
+  # - build-library . releases
+  - build-library . releases --fake
   - ls -la releases
 
 # Deploy the build version in an S3 bucket
