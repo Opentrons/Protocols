@@ -1,9 +1,3 @@
-"""
-Dinosaur
-
-Draw a picture of a dinosaur on a 96 well plate using food coloring.
-"""
-
 from opentrons import containers, instruments
 
 
@@ -29,10 +23,13 @@ trash = containers.load(
 )
 
 p200 = instruments.Pipette(
+    name="p200",
     axis="b",
+    min_volume=20,
     max_volume=200,
     trash_container=trash,
-    tip_racks=[p200rack]
+    tip_racks=[p200rack],
+    channels=1
 )
 
 volume = 200
