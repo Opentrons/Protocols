@@ -1,14 +1,10 @@
-# Dinosaur
+from opentrons import containers, instruments
 
-from opentrons import Robot, containers, instruments
-from itertools import chain
-
-robot = Robot()
 
 p200rack = containers.load(
-    'tiprack-200ul',  
-    'B1',             
-    'tiprack'         
+    'tiprack-200ul',
+    'B1',
+    'tiprack'
 )
 trough = containers.load(
     'trough-12row',
@@ -28,17 +24,13 @@ trash = containers.load(
 
 p200 = instruments.Pipette(
     name="p200",
+    axis="b",
+    min_volume=20,
+    max_volume=200,
     trash_container=trash,
     tip_racks=[p200rack],
-    min_volume=20,
-    axis="b",
     channels=1
 )
-
-p200.set_max_volume(200)
-
-
-# In[4]:
 
 volume = 200
 blue = trough['A1']
@@ -75,18 +67,15 @@ p200.dispense(50, plate['F9']).dispense(50, plate['G9']).dispense(50, plate['H9'
 p200.aspirate(volume, blue)
 p200.dispense(50, plate['G11']).dispense(50, plate['H12']).dispense(50, plate['F3']).dispense(50, plate['G3'])
 p200.drop_tip(p200rack['C1'])
-              
+
 # deposit to all green wells
 p200.pick_up_tip(p200rack['D1'])
 p200.aspirate(volume, green)
 p200.dispense(50, plate['C3']).dispense(50, plate['B4']).dispense(50, plate['A5']).dispense(50, plate['B5'])
 p200.aspirate(volume, green)
-p200.dispense(50, plate['B6']).dispense(50, plate['A7']).dispense(50, plate['B7']).dispense(50, plate['C8'])              
+p200.dispense(50, plate['B6']).dispense(50, plate['A7']).dispense(50, plate['B7']).dispense(50, plate['C8'])
 p200.aspirate(volume, green)
-p200.dispense(50, plate['C9']).dispense(50, plate['D9']).dispense(50, plate['E10']).dispense(50, plate['E11'])              
+p200.dispense(50, plate['C9']).dispense(50, plate['D9']).dispense(50, plate['E10']).dispense(50, plate['E11'])
 p200.aspirate(volume, green)
 p200.dispense(50, plate['F11']).dispense(50, plate['G12'])
 p200.drop_tip(p200rack['D1'])
-
-
-
