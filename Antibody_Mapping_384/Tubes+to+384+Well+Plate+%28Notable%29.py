@@ -1,5 +1,4 @@
 from opentrons import containers, instruments
-from api_helpers.api_helpers import transfer
 
 
 p200rack = containers.load('tiprack-200ul', 'A1')
@@ -16,8 +15,7 @@ p200 = instruments.Pipette(
 
 # dispense 40 uL from tube to plate, for 24 tubes
 num_samples = 24
-transfer(tube_rack[:num_samples],
-         plate[:num_samples],
-         40,
-         p200,
-         tips=num_samples)
+p200.transfer(40,
+              tube_rack[:num_samples],
+              plate[:num_samples],
+              tips=num_samples)
