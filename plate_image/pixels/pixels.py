@@ -49,7 +49,8 @@ pixels = [pixel for row in reversed(pixels) for pixel in row]
 
 
 # define a function to spread any given color
-def spread_color(color_source):
+def spread_color(color_source, volume):
+    global pixels, plate, p200
 
     # find the target wells for this color
     target_wells = [plate[i] for i in range(96) if pixels[i] is color_source]
@@ -57,13 +58,13 @@ def spread_color(color_source):
     # get a new tip, and distribute the color
     p200.pick_up_tip()
     for t_well in target_wells:
-        if p200.current_volume < distribute_volume:
+        if p200.current_volume < volume:
             p200.aspirate(color_source).delay(1).touch_tip()
-        p200.dispense(distribute_volume, t_well).touch_tip()
+        p200.dispense(volume, t_well).touch_tip()
     p200.blow_out(color_source).return_tip()
 
 
 # now draw the pixels, one color at a time
-spread_color(blue_source)
-spread_color(yellow_source)
-spread_color(green_source)
+spread_color(blue_source, 50)
+spread_color(yellow_source, 50)
+spread_color(green_source, 50)
