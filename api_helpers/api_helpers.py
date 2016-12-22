@@ -122,6 +122,6 @@ if __name__ == '__main__':
     rack = containers.load('tiprack-200ul', 'A1')
     plate = containers.load('96-flat', 'B1')
     p = instruments.Pipette(axis='b', max_volume=200, tip_racks=[rack])
-    transfer(p, 100, plate[0:5], plate[1:6])
+    p.transfer(100, plate[0:5], plate[1:6])
     for c in robot.commands():
         print(c)

@@ -35,8 +35,8 @@ for i in range(12):
 
 # dilute down all rows
 for row in plate.rows:
-    p1000.dilute(300, row[0:4], mix=(3, 300))
-    p1000.dilute(300, row[4:8], mix=(3, 300))
+    p1000.transfer(300, row[0:3], row[1:4], mix=(3, 300))
+    p1000.transfer(300, row[4:7], row[5:8], mix=(3, 300))
 
 # dispense 200 uL to every even row
 p200_multi.transfer(200,
