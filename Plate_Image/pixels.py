@@ -17,54 +17,32 @@ p200 = instruments.Pipette(
     tip_racks=[tip_rack]
 )
 
-# how many uL to put in each well
-distribute_volume = 50
-
-# the source of our blue, yellow, and green food coloring
-blue_source = trough['A1']
-yellow_source = trough['A2']
-green_source = trough['A3']
-
 # edit the plate map list to draw new images!
-b = blue_source
-y = yellow_source
-g = green_source
+b = trough['A1']
+g = trough['A2']
 _ = None
-pixels = [[_, _, _, _, _, _, y, b],  # 12
-          [_, _, _, _, y, y, b, _],  # 11
-          [_, _, _, _, y, b, _, _],  # 10
-          [_, _, y, y, b, b, b, g],  # 9
-          [_, _, y, b, b, b, b, g],  # 8
-          [y, y, b, b, b, b, b, _],  # 7
-          [_, y, b, b, b, b, b, _],  # 6
-          [y, y, b, b, b, b, b, _],  # 5
-          [_, y, b, b, b, b, b, g],  # 4
-          [_, _, y, b, b, b, b, g],  # 3
+pixels = [[_, _, _, _, _, _, g, b],  # 12
+          [_, _, _, _, g, g, b, _],  # 11
+          [_, _, _, _, g, b, _, _],  # 10
+          [_, _, g, g, b, b, b, b],  # 9
+          [_, _, g, b, b, b, b, b],  # 8
+          [g, g, b, b, b, b, b, _],  # 7
+          [_, g, b, b, b, b, b, _],  # 6
+          [g, g, b, b, b, b, b, _],  # 5
+          [_, g, b, b, b, b, b, b],  # 4
+          [_, _, g, b, b, b, b, b],  # 3
           [_, _, _, b, b, _, _, _],  # 2
           [_, _, _, b, b, _, _, _]]  # 1
          # A  B  C  D  E  F  G  H
 
-# convert list of row lists into single pixels list
+# convert list of lists into single list
+# and reverse the rows so that the bottom row is at index 0
 pixels = [pixel for row in reversed(pixels) for pixel in row]
 
-
-# define a function to spread any given color
-def spread_color(color_source, volume):
-    global pixels, plate, p200
-
-    # find the target wells for this color
-    target_wells = [plate[i] for i in range(96) if pixels[i] is color_source]
-
-    # get a new tip, and distribute the color
-    p200.pick_up_tip()
-    for t_well in target_wells:
-        if p200.current_volume < volume:
-            p200.aspirate(color_source).delay(1).touch_tip()
-        p200.dispense(volume, t_well).touch_tip()
-    p200.blow_out(color_source).return_tip()
-
+# find the individual wells for each color source
+blue_wells = [plate[i] for i in range(96) if pixels[i] is trough['A1']]
+green_wells = [plate[i] for i in range(96) if pixels[i] is trough['A2']]
 
 # now draw the pixels, one color at a time
-spread_color(blue_source, 50)
-spread_color(yellow_source, 50)
-spread_color(green_source, 50)
+p200.transfer(50, trough['A1'], blue_wells)
+p200.transfer(50, trough['A2'], green_wells)
