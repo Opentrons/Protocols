@@ -15,7 +15,5 @@ p200 = instruments.Pipette(
 
 # dispense 40 uL from tube to plate, for 24 tubes
 num_samples = 24
-p200.transfer(40,
-              tube_rack[:num_samples],
-              plate[:num_samples],
-              tips=num_samples)
+p200.transfer(
+    40, tube_rack[:num_samples], plate[:num_samples], tips=num_samples)

@@ -23,15 +23,11 @@ p1000 = instruments.Pipette(
 )
 
 # distribute buffer to all wells
-p1000.transfer(300,
-               trough['A1'],
-               [w for w in plate])
+p1000.transfer(300, trough['A1'], plate)
 
 # distribute samples in duplicate to columns A and E, 1 tube to 2 wells
 for i in range(12):
-    p1000.transfer(300,
-                   tube[i],
-                   [plate.cols['A'][i], plate.cols['E'][i]])
+    p1000.transfer(300, tube[i], [plate.cols['A'][i], plate.cols['E'][i]])
 
 # dilute down all rows
 for row in plate.rows:
@@ -39,6 +35,4 @@ for row in plate.rows:
     p1000.transfer(300, row[4:7], row[5:8], mix=(3, 300))
 
 # dispense 200 uL to every even row
-p200_multi.transfer(200,
-                    trough['A1'],
-                    plate.rows[1:12:2])
+p200_multi.transfer(200, trough['A1'], plate.rows[1:12:2])
