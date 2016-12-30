@@ -102,8 +102,8 @@ LB_vol = 200
 
 for i in range(num_samples):
     p10.pick_up_tip()
-    p10.aspirate(DNA_vol, cold_deck.cols[i][1]).dispense(cold_deck.cols[i][0]).touch_tip()
-    p10.mix(3, 10, cold_deck.cols[i][0])
+    p10.aspirate(DNA_vol, cold_deck.cols[1][i]).dispense(cold_deck.cols[0][i]).touch_tip()
+    p10.mix(3, 10, cold_deck.cols[0][i])
     p10.drop_tip()
 
 # delay after adding DNA
@@ -112,9 +112,9 @@ p10.delay(DNA_delay)
 # move dna/cells from cold deck to heat deck and then back
 for i in range(num_samples):
     p200.pick_up_tip()
-    p200.aspirate(total_vol, cold_deck.cols[i][0]).dispense(heat_deck.cols[i][0]).touch_tip()
+    p200.aspirate(total_vol, cold_deck.cols[0][i]).dispense(heat_deck.cols[0][i]).touch_tip()
     p200.delay(heat_shock_delay)
-    p200.aspirate(total_vol, heat_deck.cols[i][0]).dispense(cold_deck.cols[i][0]).touch_tip()
+    p200.aspirate(total_vol, heat_deck.cols[0][i]).dispense(cold_deck.cols[0][i]).touch_tip()
     p200.drop_tip()
 
 # delay after heat shock
@@ -124,6 +124,6 @@ p200.delay(cold_delay)
 
 for i in range(num_samples):
     p200.pick_up_tip()
-    p200.aspirate(LB_vol, tube_rack['A1']).dispense(cold_deck.cols[i][0])
+    p200.aspirate(LB_vol, tube_rack['A1']).dispense(cold_deck.cols[0][i])
     p200.drop_tip()
 
