@@ -47,7 +47,7 @@ tube_rack = containers.load(
 )
 cold_deck = containers.load(
     'tube-rack-2ml',
-    'D3',
+    'D2',
     'cold_deck'
 )
 trash = containers.load(
