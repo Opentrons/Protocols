@@ -32,12 +32,12 @@ robot = Robot()
 
 tiprack200 = containers.load(
     'tiprack-200ul',  
-    'A2',             
+    'A1',             
     'tiprack200'         
 )
 tiprack10 = containers.load(
     'tiprack-10ul',  
-    'B1',             
+    'B2',             
     'tiprack10'         
 )
 tube_rack = containers.load(
@@ -47,17 +47,17 @@ tube_rack = containers.load(
 )
 cold_deck = containers.load(
     'tube-rack-2ml',
-    'D3',
+    'E3',
     'cold_deck'
 )
 trash = containers.load(
     'point',
-    'B2',
+    'A1',
     'trash'
 )
 heat_deck = containers.load(
     'tube-rack-2ml',
-    'B3',
+    'C3',
     'heat_deck'
 )
     
@@ -81,7 +81,7 @@ p10 = instruments.Pipette(
 )
 
 p200.set_max_volume(200)  # volume calibration, can be called whenever you want
-p200L.set_max_volume(200)
+p10.set_max_volume(10)
 
 
 # In[ ]:
@@ -92,10 +92,10 @@ cold_delay = 300
 
 DNA_vol = 2
 cell_vol = 25
-total_vol = DNA_volume + Cell_vol
+total_vol = DNA_vol + cell_vol
 LB_vol = 200
 
-# two sample protocol
+# TWO SAMPLE PROTOCOL
 
 # add DNA from tube B to tube A in cold deck
 p10.pick_up_tip()
