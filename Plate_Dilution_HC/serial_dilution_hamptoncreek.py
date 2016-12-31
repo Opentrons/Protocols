@@ -99,22 +99,19 @@ p200 = instruments.Pipette(
     trash_container=trash,
     tip_racks=[p200rack],
     min_volume=20, # actual minimum volume of the pipette
+    max_volume=200,
     axis="a",
     channels=8 # 
 )
-
-p200.set_max_volume(200)  # volume calibration, can be called whenever you want
-
 p1000 = instruments.Pipette(
     name="p1000", # optional
     trash_container=trash,
     tip_racks=[p1000rack],
     min_volume=1, # actual minimum volume of the pipette
+    max_volume=1000,
     axis="b",
     channels=1 # 1 o
 )
-    
-p1000.set_max_volume(1000)
 
 # In[7]:
 
@@ -126,8 +123,9 @@ dest_iter = chain(plate1.cols['A'], plate1.cols['E'])
 
 for well in tube[:12]:
     p1000.aspirate(600, well)
-    p1000.dispense(300, next(dest_iter))
-    p1000.dispense(300, next(dest_iter))
+    p1000.dispense(600, next(dest_iter))
+    p1000.aspirate(600, well)
+    p1000.dispense(600, next(dest_iter))
 
 
 # ----------------------------------------
