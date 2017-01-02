@@ -1,19 +1,4 @@
-
-# coding: utf-8
-
-# In[ ]:
-
-#!pip install --upgrade opentrons
-
-
-# In[2]:
-
 from opentrons import robot, containers, instruments
-
-#robot = Robot()
-
-
-# In[3]:
 
 p10rack = containers.load(
     'tiprack-200ul', 
@@ -39,10 +24,6 @@ p10 = instruments.Pipette(
     axis="b",
     channels=1 # 1 o
 )
-
-
-# In[6]:
-
 reaction_vol = 20 #uL
 samples = 1
 
@@ -75,8 +56,6 @@ if water_vol < 0:
     print("Volumes add up to more than 20 uL")
 
 
-# In[7]:
-
 # add water
 
 if water_vol <= 10:
@@ -98,13 +77,6 @@ p10.pick_up_tip().aspirate(insert_vol, insert_local).dispense(sample_local).drop
 p10.pick_up_tip().mix(3, 10, ligase_local).aspirate(ligase_vol, ligase_local).dispense(sample_local).touch_tip()
 p10.mix(3, 10, sample_local).drop_tip()
 
-
-# In[8]:
-
-robot.commands()
-
-
-# In[ ]:
 
 
 
