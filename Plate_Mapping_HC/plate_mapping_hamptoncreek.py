@@ -1,37 +1,5 @@
-
-# coding: utf-8
-
-
-# In[1]:
-
-# # This cell loads in the API
-# # and then prints out the serial ports
-
-# # !pip install --upgrade git+git://github.com/OpenTrons/opentrons-api.git@master#egg=opentrons
-
 from opentrons import robot, containers, instruments
 from itertools import chain
-# # robot.get_serial_ports_list()
-
-
-# In[ ]:
-
-# this cell connects to a robot and immediately homes
-# if .connect() is called without a port, the smoothieboard is simulated
-
-# robot.connect() # virtual smoothieboard
-# robot.connect('/dev/tty.usbmodem1421')
-# robot.home(now=True)
-# robot
-
-
-# In[2]:
-
-# robot.reset()
-# this cells is similar to the Deck and Head sections in a JSON protocol
-
-# Create a JSON protocol with the exact same containers and pipettes as here
-# They must be the same type, have the same user-defined names, and pipette's on the same axis (a or b)
 
 p200rack = containers.load(
     'tiprack-200ul',  # container type
@@ -84,11 +52,10 @@ p200 = instruments.Pipette(
     trash_container=trash,
     tip_racks=[p200rack],
     min_volume=20, # actual minimum volume of the pipette
+    max_volume=200,
     axis="a",
     channels=8 # 
 )
-
-p200.set_max_volume(200)  # volume calibration, can be called whenever you want
 
 dest_plates = [plate2, plate3, plate4, plate5, plate6, plate7]
 
