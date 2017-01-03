@@ -15,8 +15,7 @@ Opentrons
 Perform a 1 minute heat shock transformation on six samples.
 
 ### Time Estimate
-0:59:21
-
+1 hour
 
 ### Robot
 * OT PRO 
