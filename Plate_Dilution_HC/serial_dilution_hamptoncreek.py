@@ -5,7 +5,6 @@ p1000rack = containers.load(
     'tiprack-1000ul',  # container type
     'B1',              # slot
     'p1000-rack'       # user-defined name, optional for now
-
 )
 p200rack = containers.load(
     'tiprack-200ul',  # container type
@@ -25,7 +24,6 @@ tube = containers.load(
 plate1 = containers.load(
     '96-deep-well',
     'C2',
-
     'plate1'
 )
 plate2 = containers.load(
@@ -73,10 +71,6 @@ p200 = instruments.Pipette(
     axis="a",
     channels=8 # 
 )
-<<<<<<< HEAD
-=======
-
->>>>>>> master
 p1000 = instruments.Pipette(
     name="p1000", # optional
     trash_container=trash,
@@ -86,13 +80,7 @@ p1000 = instruments.Pipette(
     axis="b",
     channels=1 # 1 o
 )
-<<<<<<< HEAD
 
-# In[7]:
-
-=======
-    
->>>>>>> master
 # distrubte samples in duplicate to A and E, 1 tube to 2 wells
 
 # ----------------------------------------
@@ -102,15 +90,10 @@ dest_iter = chain(plate1.cols['A'], plate1.cols['E'])
 for well in tube[:12]:
     p1000.pick_up_tip()
     p1000.aspirate(600, well)
-<<<<<<< HEAD
     p1000.dispense(600, next(dest_iter))
     p1000.aspirate(600, well)
     p1000.dispense(600, next(dest_iter))
-=======
-    p1000.dispense(300, next(dest_iter))
-    p1000.dispense(300, next(dest_iter))
     p1000.drop_tip()
->>>>>>> master
 
 
 # ----------------------------------------
