@@ -1,7 +1,7 @@
-# Dinosaur
+# Pixels
 
 ### Author
-[Opentrons](url)
+[Opentrons](opentrons.com)
 
 ### Partner
 
@@ -11,11 +11,12 @@
 ### Sub Categories
 * Plate Pics
 
+
 ## Description
-Draw a picture of a dinosaur on a 96 well plate using food coloring.
+Uses a Python list to draw a picture with food coloring. The Python list represents a 96 well plate, each value within it setting the color of a well on the plate.
 
 ### Time Estimate
-10 minutes
+10 Minutes at 3000 mm/sec
 
 ### Robot
 * OT PRO 
@@ -26,10 +27,13 @@ Draw a picture of a dinosaur on a 96 well plate using food coloring.
 
 ### Reagents
 * Blue Food Coloring
+* Yellow Food Coloring
 * Green Food Coloring
 
 ## Process
 1. Transfer blue food coloring to specific wells.
+1. Transfer yellow food coloring to specific wells.
 2. Transfer green food coloring to specific wells.
+
 
 ### Additional Notes
