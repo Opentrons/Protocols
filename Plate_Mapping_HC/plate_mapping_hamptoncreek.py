@@ -33,54 +33,39 @@ from itertools import chain
 # Create a JSON protocol with the exact same containers and pipettes as here
 # They must be the same type, have the same user-defined names, and pipette's on the same axis (a or b)
 
-p1000rack = containers.load(
-    'tiprack-1000ul',  # container type
-    'A1',             # slot
-    'p1000-rack'         # user-defined name, optional for now
-)
 p200rack = containers.load(
     'tiprack-200ul',  # container type
     'A2',             # slot
     'p200-rack'         # user-defined name, optional for now
 )
-trough = containers.load(
-    'trough-12row',
-    'C1',
-    'trough'
-)
-tube = containers.load(
-    'tube-rack-2ml',
-    'D1',
-    'tube rack'
-)
 plate1 = containers.load(
     '96-PCR-flat',
-    'D2',
+    'C2',
     'plate1'
 )
 plate2 = containers.load(
     '96-PCR-flat',
-    'E2',
+    'D1',
     'plate2'
 )
 plate3 = containers.load(
     '96-PCR-flat',
-    'A3',
+    'D2',
     'plate3'
 )
 plate4 = containers.load(
     '96-PCR-flat',
-    'B3',
+    'D3',
     'plate4'
 )
 plate5 = containers.load(
     '96-PCR-flat',
-    'C3',
+    'E1',
     'plate5'
 )
 plate6 = containers.load(
     '96-PCR-flat',
-    'D3',
+    'E2',
     'plate6'
 )
 plate7 = containers.load(
@@ -90,7 +75,7 @@ plate7 = containers.load(
 )
 trash = containers.load(
     'point',
-    'B2',
+    'B3',
     'trash'
 )
     
@@ -104,17 +89,6 @@ p200 = instruments.Pipette(
 )
 
 p200.set_max_volume(200)  # volume calibration, can be called whenever you want
-
-p1000 = instruments.Pipette(
-    name="p1000", # optional
-    trash_container=trash,
-    tip_racks=[p1000rack],
-    min_volume=1, # actual minimum volume of the pipette
-    axis="b",
-    channels=1 # 1 o
-)
-    
-p1000.set_max_volume(1000)
 
 dest_plates = [plate2, plate3, plate4, plate5, plate6, plate7]
 
@@ -144,14 +118,5 @@ for i in range(0,11,2):
             p200.aspirate(180, source)
         p200.dispense(dispense_volume, dest)
     p200.drop_tip(tip)
-
-
-# In[ ]:
-
-
-
-
-# In[ ]:
-
 
 
