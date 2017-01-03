@@ -4,12 +4,12 @@ robot = Robot()
 
 tiprack200 = containers.load(
     'tiprack-200ul',  
-    'A2',             
+    'A1',             
     'tiprack200'         
 )
 tiprack10 = containers.load(
     'tiprack-10ul',  
-    'B1',             
+    'B2',             
     'tiprack10'         
 )
 tube_rack = containers.load(
@@ -24,7 +24,7 @@ cold_deck = containers.load(
 )
 trash = containers.load(
     'point',
-    'B2',
+    'A1',
     'trash'
 )
 heat_deck = containers.load(
@@ -63,9 +63,11 @@ cold_delay = 300
 DNA_vol = 2
 cell_vol = 25
 total_vol = 27
+
 LB_vol = 200
 
 # six sample protocol
+
 
 # add DNA from tube B to tube A in cold deck
 
