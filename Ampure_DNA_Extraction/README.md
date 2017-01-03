@@ -1,7 +1,7 @@
 # AMPureXP DNA Extraction
 
 ### Author
-[Opentrons](url)
+Opentrons
 
 ### Partner
 [Girihlet](http://www.girihlet.com)
