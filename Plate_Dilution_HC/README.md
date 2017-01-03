@@ -1,4 +1,4 @@
-# Plate Dilution
+# Multi Dilution in 96 Well Plate
 
 ### Author
 Opentrons

@@ -1,4 +1,4 @@
-# DNA Extraction
+# Mapping 1 Plate to Six Plates
 
 ### Author
 Opentrons
