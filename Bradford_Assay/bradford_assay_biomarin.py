@@ -1,44 +1,6 @@
-
-# coding: utf-8
-
-# In[ ]:
-
-#!pip install --upgrade git+git://github.com/OpenTrons/opentrons-api.git@master#egg=opentrons
-
-
-# In[ ]:
-
-# # This cell loads in the API
-# # and then prints out the serial ports
-
-# #!pip install --upgrade git+git://github.com/OpenTrons/opentrons-api.git@master#egg=opentrons
-
 from opentrons.robot import Robot
 from opentrons import containers, instruments
 from itertools import chain
-
-# robot = Robot()
-# # robot.get_serial_ports_list()
-
-
-# In[ ]:
-
-# this cell connects to a robot and immediately homes
-# if .connect() is called without a port, the smoothieboard is simulated
-
-# robot.connect() # virtual smoothieboard
-# robot.connect('/dev/tty.usbmodem1421')
-# robot.home(now=True)
-# robot
-
-
-# In[ ]:
-
-# robot.reset()
-# this cells is similar to the Deck and Head sections in a JSON protocol
-
-# Create a JSON protocol with the exact same containers and pipettes as here
-# They must be the same type, have the same user-defined names, and pipette's on the same axis (a or b)
 
 tiprack = containers.load(
     'tiprack-200ul',  
@@ -78,6 +40,7 @@ p200 = instruments.Pipette(
     trash_container=trash,
     tip_racks=[tiprack, tiprack2],
     min_volume=50,
+    max_volume=300,
     axis="a",
     channels=8
 )
@@ -86,17 +49,11 @@ p200S = instruments.Pipette(
     trash_container=trash,
     tip_racks=[tiprack],
     min_volume=20,
+    max_volume=200,
     axis="b",
     channels=1
 )
 
-p200.set_max_volume(200)  # volume calibration, can be called whenever you want
-p200S.set_max_volume(200)
-
-
-# In[ ]:
-
-# robot.clear_commands()
 # dispense 6 standards from tube racks (A1, B1, C1, D1, A2, B2) 
 # to first two rows of 96 well plate (duplicates, A1/A2, B1/B2 etc.)
 for i in range(6):
