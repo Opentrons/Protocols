@@ -1,34 +1,6 @@
-
-# coding: utf-8
-
-# In[ ]:
-
-# This cell loads in the API
-# and then prints out the serial ports
-
-#!pip install --upgrade opentrons
-
 from opentrons import robot, containers, instruments
 
 robot = Robot()
-
-
-# In[ ]:
-
-# this cell connects to a robot and immediately homes
-# if .connect() is called without a port, the smoothieboard is simulated
-
-#robot.connect()
-# robot.connect('/dev/tty.usbmodem1421')
-#robot.home()
-
-
-# In[ ]:
-
-# this cells is similar to the Deck and Head sections in a JSON protocol
-
-# Create a JSON protocol with the exact same containers and pipettes as here
-# They must be the same type, have the same user-defined names, and pipette's on the same axis (a or b)
 
 tiprack200 = containers.load(
     'tiprack-200ul',  
@@ -82,9 +54,6 @@ p10 = instruments.Pipette(
     channels=1
 )
 
-
-# In[ ]:
-
 num_samples = 6
 
 DNA_delay = 18000
@@ -96,7 +65,7 @@ cell_vol = 25
 total_vol = 27
 LB_vol = 200
 
-# two sample protocol
+# six sample protocol
 
 # add DNA from tube B to tube A in cold deck
 
