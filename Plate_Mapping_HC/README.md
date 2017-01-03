@@ -17,7 +17,7 @@ Opentrons
 
 
 ### Time Estimate
-?
+25 minutes
 
 ### Robot
 * OT PRO 
