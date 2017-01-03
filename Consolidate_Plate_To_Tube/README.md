@@ -4,7 +4,7 @@
 [Opentrons](url)
 
 ### Partner
-[Phdbiotech](url)
+[Phdbiotech Inc.](url)
 
 ## Categories
 * Basic Pipetting
