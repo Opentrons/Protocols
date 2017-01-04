@@ -10,12 +10,13 @@
 * Basic Pipetting
 
 ### Sub Categories
-
+* Plate Consolidation
 
 ## Description
 Consolidate the contents of an entire 96 well plate into a single 1.5 mL microcentrifuge tube.
 
 ### Time Estimate
+14 minutes
 
 ### Robot
 * OT PRO 
@@ -29,13 +30,13 @@ Consolidate the contents of an entire 96 well plate into a single 1.5 mL microce
 
 
 ## Process
-1. Pick up volume from wells until pipette is full
+1. Pick up 20ul from wells until pipette is full
 2. Dispense into tube
 3. Repeat until plate is empty
 
 
 ### Additional Notes
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sed purus eu urna vehicula ultrices at vel quam. Aliquam erat volutpat. Quisque imperdiet ut urna ut dapibus. Sed placerat, libero at ullamcorper pharetra, massa tellus sagittis eros, in feugiat est libero et turpis. Sed ac efficitur mi, at porttitor elit.
+
 
 
 

@@ -7,7 +7,7 @@ plate = containers.load(
 )
 tube_rack = containers.load(
     'tube-rack-2ml', 
-    'C2', 
+    'D1', 
     'tube_rack'
 )
 p200rack = containers.load(
