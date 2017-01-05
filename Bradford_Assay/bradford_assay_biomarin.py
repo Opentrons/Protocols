@@ -8,7 +8,7 @@ plate = containers.load('96-PCR-flat', 'D1')
 trash = containers.load('point', 'B1')
 tuberack = containers.load('tube-rack-2ml', 'D2')
 
-p200_multi = instruments.Pipette(
+p300_multi = instruments.Pipette(
     name="p200",
     trash_container=trash,
     tip_racks=[tiprack, tiprack2],
@@ -38,10 +38,10 @@ for i in range(4):
     p200.transfer(50, source, targets)
 
 # fill rows 4 to 11 with 25 uL of dilutent each
-p200_multi.transfer(25, trough['A1'], plate.rows[3:11])
+p300_multi.transfer(25, trough['A1'], plate.rows[3:11])
 
 # dilute samples down all rows
-p200_multi.transfer(25, plate.rows[2:10], plate.rows[3:11], mix=(3, 25))
+p300_multi.transfer(25, plate.rows[2:10], plate.rows[3:11], mix=(3, 25))
 
 # fill rows 1 to 11 with 200 uL of Bradford reagent
-p200_multi.transfer(200, trough['A2'], plate.rows[:11], mix=(3, 100))
+p300_multi.transfer(200, trough['A2'], plate.rows[:11], mix=(3, 100))
