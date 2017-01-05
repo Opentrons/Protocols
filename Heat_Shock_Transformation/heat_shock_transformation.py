@@ -1,100 +1,64 @@
-from opentrons import robot, containers, instruments
+from opentrons import containers, instruments
 
-robot = Robot()
 
-tiprack200 = containers.load(
-    'tiprack-200ul',  
-    'A1',             
-    'tiprack200'         
-)
-tiprack10 = containers.load(
-    'tiprack-10ul',  
-    'B2',             
-    'tiprack10'         
-)
-tube_rack = containers.load(
-    'tube-rack-2ml',
-    'D1',
-    'trough'
-)
-cold_deck = containers.load(
-    'tube-rack-2ml',
-    'D2',
-    'cold_deck'
-)
-trash = containers.load(
-    'point',
-    'A1',
-    'trash'
-)
-heat_deck = containers.load(
-    'tube-rack-2ml',
-    'B3',
-    'heat_deck'
-)
-    
+tiprack200 = containers.load('tiprack-200ul', 'A1')
+tiprack10 = containers.load('tiprack-10ul', 'B2')
+tube_rack = containers.load('tube-rack-2ml', 'D1')
+cold_deck = containers.load('tube-rack-2ml', 'D2')
+trash = containers.load('point', 'A1')
+heat_deck = containers.load('tube-rack-2ml', 'B3')
 
 p200 = instruments.Pipette(
     name="p200",
     trash_container=trash,
     tip_racks=[tiprack200],
-    min_volume=50,
     max_volume=200,
-    axis="b",
-    channels=1
+    axis="b"
 )
 
 p10 = instruments.Pipette(
     name="p10",
     trash_container=trash,
     tip_racks=[tiprack10],
-    min_volume=1,
     max_volume=10,
-    axis="a",
-    channels=1
+    axis="a"
 )
 
+# six sample protocol
 num_samples = 6
-
-DNA_delay = 18000
-heat_shock_delay = 60
-cold_delay = 300
 
 DNA_vol = 2
 cell_vol = 25
-total_vol = 27
-
 LB_vol = 200
 
-# six sample protocol
 
+# add DNA from tube column B to tube column A in cold deck
+p10.transfer(DNA_vol,
+             cold_deck.cols[1][:num_samples],
+             cold_deck.cols[0][:num_samples],
+             mix=(3, 10),
+             tips=num_samples)
 
-# add DNA from tube B to tube A in cold deck
-
-for i in range(num_samples):
-    p10.pick_up_tip()
-    p10.aspirate(DNA_vol, cold_deck.cols[1][i]).dispense(cold_deck.cols[0][i]).touch_tip()
-    p10.mix(3, 10, cold_deck.cols[0][i])
-    p10.drop_tip()
-
-# delay after adding DNA
-p10.delay(DNA_delay)
+# delay 30 minutes after adding DNA
+p10.delay(30 * 60)
 
 # move dna/cells from cold deck to heat deck and then back
 for i in range(num_samples):
     p200.pick_up_tip()
-    p200.aspirate(total_vol, cold_deck.cols[0][i]).dispense(heat_deck.cols[0][i]).touch_tip()
-    p200.delay(heat_shock_delay)
-    p200.aspirate(total_vol, heat_deck.cols[0][i]).dispense(cold_deck.cols[0][i]).touch_tip()
+    p200.aspirate(DNA_vol + cell_vol, cold_deck.cols[0][i])
+    p200.dispense(heat_deck.cols[0][i]).touch_tip()
+
+    p200.delay(1 * 60)  # delay 1 minute
+
+    p200.aspirate(DNA_vol + cell_vol, heat_deck.cols[0][i])
+    p200.dispense(cold_deck.cols[0][i]).touch_tip()
     p200.drop_tip()
 
-# delay after heat shock
-p200.delay(cold_delay)
+# delay 5 minutes after heat shock
+p200.delay(5 * 60)
 
 # add LB to dna/cells
-
-for i in range(num_samples):
-    p200.pick_up_tip()
-    p200.aspirate(LB_vol, tube_rack['A1']).dispense(cold_deck.cols[0][i])
-    p200.drop_tip()
-
+p200.transfer(LB_vol,
+              tube_rack['A1'],
+              cold_deck.cols[0][:num_samples],
+              tips=num_samples)
