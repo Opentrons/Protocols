@@ -1,5 +1,6 @@
 from opentrons import containers, instruments
 
+
 p1000rack = containers.load('tiprack-1000ul', 'A1')
 p200rack = containers.load('tiprack-200ul', 'A2')
 trough = containers.load('trough-12row', 'C1')
@@ -14,7 +15,6 @@ p200_multi = instruments.Pipette(
     tip_racks=[p200rack],
     channels=8
 )
-
 p1000 = instruments.Pipette(
     axis="b",
     max_volume=1000,
