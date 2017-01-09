@@ -1,5 +1,11 @@
 .DS_Store
 
+# opentrons api created folders
+calibrations/
+smoothie/
+*/calibrations/
+*/smoothie/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
