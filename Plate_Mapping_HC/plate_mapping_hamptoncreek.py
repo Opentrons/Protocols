@@ -23,12 +23,12 @@ p200_multi = instruments.Pipette(
 
 dest_plates = [plate2, plate3, plate4, plate5, plate6, plate7]
 
-# map 90 uL to all even rows (0, 2, 4, etc.) of all 6 destination plates
+# map 45 uL to all odd rows of all 6 destination plates
 for i in range(0, 12, 2):
     target_rows = [d.rows[i] for d in dest_plates]
-    p200_multi.transfer(90, plate1.rows[i], target_rows)
+    p200_multi.transfer(45, plate1.rows[i], target_rows)
 
-# map 45 uL to all odd rows (1, 3, 5, etc.) of all 6 destination plates
+# map 90 uL to all even rows of all 6 destination plates
 for i in range(1, 12, 2):
     target_rows = [d.rows[i] for d in dest_plates]
-    p200_multi.transfer(45, plate1.rows[i], target_rows)
+    p200_multi.transfer(90, plate1.rows[i], target_rows)
