@@ -22,12 +22,13 @@ p1000 = instruments.Pipette(
     tip_racks=[p1000rack]
 )
 
-# distribute buffer to all wells
-p1000.transfer(300, trough['A1'], plate)
+# distribute buffer to all wells, except columns A and E
+target_wells = [w for c in 'BCDFGH' for w in plate.cols[c]]
+p1000.transfer(300, trough['A1'], target_wells)
 
 # distribute samples in duplicate to columns A and E, 1 tube to 2 wells
 for i in range(12):
-    p1000.transfer(300, tube[i], [plate.cols['A'][i], plate.cols['E'][i]])
+    p1000.transfer(300, tube[i], plate.rows[i][0::4])
 
 # dilute down all rows
 for row in plate.rows:

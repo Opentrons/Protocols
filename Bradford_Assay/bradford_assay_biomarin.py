@@ -2,10 +2,11 @@ from opentrons import containers, instruments
 
 
 tiprack = containers.load('tiprack-200ul', 'B1')
-tiprack2 = containers.load('tiprack-200ul', 'B1')
+tiprack2 = containers.load('tiprack-200ul', 'B2')
+trash = containers.load('point', 'C2')
+
 trough = containers.load('trough-12row', 'C1')
 plate = containers.load('96-PCR-flat', 'D1')
-trash = containers.load('point', 'B1')
 tuberack = containers.load('tube-rack-2ml', 'D2')
 
 p300_multi = instruments.Pipette(
