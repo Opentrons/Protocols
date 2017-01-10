@@ -26,27 +26,27 @@ p1000rack2 = containers.load(
     'p1000rack2'
 )
 cooldeck = containers.load(
-    '96-PCR-flat', # using the PCR tubes section
+    'alum-block-pcr-strips', # using the PCR tubes section
     'C1',
     'cooldeck'
 )
 plate = containers.load(
-    '96-PCR-flat', # make crystallization plate container and change
+    'rigaku-compact-crystallization-plate', # make crystallization plate container and change
     'C2',
     'plate'
 )
 plate2 = containers.load(
-    '96-PCR-flat', # make crystallization plate container and change
+    'rigaku-compact-crystallization-plate', # make crystallization plate container and change
     'C3',
     'plate2'
 )
 matrix_index = containers.load(
-    '96-PCR-flat', # make matrix block container and change
+    'hampton-1ml-deep-block', # make matrix block container and change
     'C3',
     'matrix_index'
 )
 matrix_peg = containers.load(
-    '96-PCR-flat', # make matrix block container and change
+    'hampton-1ml-deep-block', # make matrix block container and change
     'C3',
     'matrix_peg'
 )
@@ -82,7 +82,7 @@ p10 = instruments.Pipette(
 # No blow-out or aspiration following distribution. Robot discards final pipette tip.
 
 for i in range(96):
-    p1000.pick_up_tip().aspirate(100, matrix_index[i]).dispense(plate[i]).drop_tip()
+    p1000.pick_up_tip().aspirate(100, matrix_index[i]).dispense(plate[i+96]).drop_tip()
     
 # Using 10 uL multi channel pipette head on the center axis, robot collects tip from 10 uL rack. 
 # Protein will be stored in 8 PCR tubes inside cool deck aluminum block (15 uL in each tube). 
@@ -110,7 +110,7 @@ p10.drop_tip()
 # If possible, after each distribution if pipette head could move back and forth a small amount to gently mix.
 
 for i in range(12):
-    p10.pick_up_tip().aspirate(1, plate[i]).dispense(plate[i].top()).touch_tip().drop_tip()
+    p10.pick_up_tip().aspirate(1, plate.rows[i][0]).dispense(plate.rows[i+12][0].top()).touch_tip().drop_tip()
     
 # Using 1 mL pipette head on the left axis, robot collects tip from 1 mL rack 
 # and then robot individually draws up 100 uL from well A1 of Hampton PegRX HT 1 mL deep well block 
@@ -120,7 +120,7 @@ for i in range(12):
 # No blow-out or aspiration following distribution. Robot discards final pipette tip.
 
 for i in range(96):
-    p1000.pick_up_tip().aspirate(100, matrix_peg[i]).dispense(plate2[i]).drop_tip()
+    p1000.pick_up_tip().aspirate(100, matrix_peg[i]).dispense(plate2[i+96]).drop_tip()
     
 # Using 10 uL multi channel pipette head on the center axis, robot collects tip from 10 uL rack. 
 # Protein will be stored in 8 PCR tubes inside cool deck aluminum block (15 uL in each tube). 
@@ -148,4 +148,4 @@ p10.drop_tip()
 # If possible, after each distribution if pipette head could move back and forth a small amount to gently mix.
 
 for i in range(12):
-    p10.pick_up_tip().aspirate(1, plate2[i]).dispense(plate2[i].top()).touch_tip().drop_tip()
+    p10.pick_up_tip().aspirate(1, plate2.rows[i][0]).dispense(plate2.rows[i+12][0].top()).touch_tip().drop_tip()
