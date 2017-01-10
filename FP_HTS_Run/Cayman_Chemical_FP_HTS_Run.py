@@ -46,12 +46,12 @@ p1000rack2 = containers.load(
     'p1000rack2'
 )
 cooldeck = containers.load(
-    '96-PCR-flat', # using the PCR tubes section
+    'alum-block-pcr-strips', # using the PCR tubes section
     'C1',
     'cooldeck'
 )
 compounds_plate = containers.load(
-    '96-PCR-flat', # make crystallization plate container and change
+    '96-PCR-flat', 
     'C2',
     'compounds_plate'
 )
@@ -181,14 +181,3 @@ p1000.pick_up_tip().aspirate(1000, cooldeck['A1']) # adjust once proper cold dec
 for i in range(16):
     p1000.dispense(60, assay_plate.rows[23][i])
 p1000.drop_tip()
-
-
-# In[ ]:
-
-
-
-
-# In[ ]:
-
-
-
