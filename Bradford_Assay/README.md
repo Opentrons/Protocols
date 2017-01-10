@@ -16,7 +16,7 @@ Opentrons
 Test six standards and four samples (all in duplicate) using the Bradford Reagent.
 
 ### Time Estimate
-25 minutes
+? minutes
 
 ### Robot
 * OT PRO 
@@ -34,7 +34,7 @@ Test six standards and four samples (all in duplicate) using the Bradford Reagen
 2. Transfer 4 samples from tube to first two rows of plates (in duplicate).
 3. Fill rows 4-11 with diluent.
 4. Dilute samples down rows.
-5. Add Bradford Reagent to all rows.
+5. Add 200 uL Bradford Reagent to all rows.
 
 
 ### Additional Notes
