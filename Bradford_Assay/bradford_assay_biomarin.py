@@ -16,7 +16,7 @@ tiprack2 = containers.load(
 
 trough = containers.load(
     'trough-12row',
-    'C1',
+    'C2',
     'trough'
 )
 plate = containers.load(
@@ -26,7 +26,7 @@ plate = containers.load(
 )
 trash = containers.load(
     'point',
-    'B1',
+    'B2',
     'trash'
 )
 tuberack = containers.load(
