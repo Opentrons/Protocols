@@ -20,7 +20,6 @@ Test six standards and four samples (all in duplicate) using the Bradford Reagen
 
 ### Robot
 * OT PRO 
-* OT Standard
 * OT Hood
 
 ### Modules

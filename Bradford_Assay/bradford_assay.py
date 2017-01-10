@@ -4,16 +4,14 @@ from itertools import chain
 
 tiprack = containers.load(
     'tiprack-200ul',  
-    'B1',             
+    'A1',             
     'tiprack'         
 )
-
 tiprack2 = containers.load(
     'tiprack-200ul',  
-    'B1',             
+    'A2',             
     'tiprack2'        
 )
-
 trough = containers.load(
     'trough-12row',
     'C2',
@@ -21,17 +19,17 @@ trough = containers.load(
 )
 plate = containers.load(
     '96-PCR-flat',
-    'D1',
+    'C1',
     'plate'
 )
 trash = containers.load(
     'point',
-    'B2',
+    'E2',
     'trash'
 )
 tuberack = containers.load(
     'tube-rack-2ml',
-    'D2',
+    'D1',
     'tuberack'
 )
     
