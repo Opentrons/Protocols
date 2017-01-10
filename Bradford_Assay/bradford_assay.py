@@ -7,6 +7,11 @@ tiprack = containers.load(
     'A1',             
     'tiprack'         
 )
+tiprack50 = containers.load(
+    'tiprack-200ul',  
+    'A2',             
+    'tiprack50'         
+)
 trough = containers.load(
     'trough-12row',
     'B2',
@@ -28,17 +33,17 @@ tuberack = containers.load(
     'tuberack'
 )
     
-p200 = instruments.Pipette(
-    name="p200",
+p50 = instruments.Pipette(
+    name="p50",
     trash_container=trash,
-    tip_racks=[tiprack],
-    min_volume=25,
-    max_volume=300,
+    tip_racks=[tiprack_50],
+    min_volume=5,
+    max_volume=50,
     axis="a",
     channels=8
 )
-p200S = instruments.Pipette(
-    name="p200S",
+p200 = instruments.Pipette(
+    name="p200",
     trash_container=trash,
     tip_racks=[tiprack],
     min_volume=20,
@@ -50,41 +55,41 @@ p200S = instruments.Pipette(
 # dispense 6 standards from tube racks (A1, B1, C1, D1, A2, B2) 
 # to first two rows of 96 well plate (duplicates, A1/A2, B1/B2 etc.)
 for i in range(6):
-    p200S.pick_up_tip().aspirate(60, tuberack[i])
+    p200.pick_up_tip().aspirate(60, tuberack[i])
     wellone = plate.cols[i][0]
     welltwo = plate.cols[i][1]
-    p200S.dispense(25, wellone).touch_tip().dispense(25, welltwo).touch_tip().drop_tip()
+    p200.dispense(25, wellone).touch_tip().dispense(25, welltwo).touch_tip().drop_tip()
     
 # dispense 4 samples from tube rack (C2, D2, A3, B3)
 # to row 3 of 96 well plate (duplicates, A3/B3, C3/D3, E3/F3, G3/H3)
 x = iter(plate.rows[2])
 for i in range(6, 10):
-    p200S.pick_up_tip().aspirate(110, tuberack[i])
+    p200.pick_up_tip().aspirate(110, tuberack[i])
     wellone = next(x)
     welltwo = next(x)
-    p200S.dispense(50, wellone).touch_tip().dispense(50, welltwo).touch_tip().drop_tip()
+    p200.dispense(50, wellone).touch_tip().dispense(50, welltwo).touch_tip().drop_tip()
 
 # fill rows 4 to 11 with 25 uL of diluent each
-p200.pick_up_tip(tiprack['A3']).aspirate(200, trough['A1'])
+p50.pick_up_tip().aspirate(50, trough['A1'])
 dispense_volume = 25
-for i in range(3,11): 
-    if p200.current_volume < dispense_volume:
-        p200.aspirate(100, trough['A1'])
-    p200.dispense(dispense_volume, plate.rows[i]).touch_tip()
-p200.drop_tip()
+for i in range(3,11):
+    if p50.current_volume < dispense_volume:
+        p50.aspirate(50, trough['A1'])
+    p50.dispense(dispense_volume, plate.rows[i]).touch_tip()
+p50.drop_tip()
 
 # dilute samples down all rows
-p200.pick_up_tip(tiprack['A4'])
+p50.pick_up_tip()
 for i in range(2, 10):
-    p200.aspirate(25, plate.rows[i]).dispense(plate.rows[i + 1]).mix(3, 25, plate.rows[i + 1]).touch_tip()
-p200.aspirate(25, plate.rows[10]).drop_tip()
+    p50.aspirate(25, plate.rows[i]).dispense(plate.rows[i + 1]).mix(3, 25, plate.rows[i + 1]).touch_tip()
+p50.aspirate(25, plate.rows[10]).drop_tip()
 
 # fill rows 1 to 11 with 200 uL of Bradford reagent
-p200.pick_up_tip(tiprack['A5']).aspirate(200, trough['A2'])
-dispense_volume = 200
+p50.pick_up_tip().aspirate(50, trough['A2'])
 for i in range(0,11): 
-    if p200.current_volume < dispense_volume:
-        p200.aspirate(200, trough['A1'])
-    p200.dispense(dispense_volume, plate.rows[i]).mix(3, 100, plate.rows[i]).touch_tip()
-p200.drop_tip()
+    p50.aspirate(50, trough['A2']).dispense(plate.rows[i])
+    p50.aspirate(50, trough['A2']).dispense(plate.rows[i])
+    p50.aspirate(50, trough['A2']).dispense(plate.rows[i])
+    p50.aspirate(50, trough['A2']).dispense(plate.rows[i]).mix(3, 50, plate.rows[i]).touch_tip()
+p50.drop_tip()
 
