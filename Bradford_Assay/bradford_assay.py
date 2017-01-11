@@ -7,7 +7,7 @@ tiprack = containers.load(
     'A1',
     'tiprack'
 )
-tiprack_50 = containers.load(
+tiprack50 = containers.load(
     'tiprack-200ul',
     'A2',
     'tiprack50'
