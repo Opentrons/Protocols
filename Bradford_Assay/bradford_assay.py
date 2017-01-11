@@ -3,14 +3,14 @@ from opentrons import containers, instruments
 from itertools import chain
 
 tiprack = containers.load(
-    'tiprack-200ul',  
-    'A1',             
-    'tiprack'         
+    'tiprack-200ul',
+    'A1',
+    'tiprack'
 )
-tiprack50 = containers.load(
-    'tiprack-200ul',  
-    'A2',             
-    'tiprack50'         
+tiprack_50 = containers.load(
+    'tiprack-200ul',
+    'A2',
+    'tiprack50'
 )
 trough = containers.load(
     'trough-12row',
@@ -32,7 +32,7 @@ tuberack = containers.load(
     'D2',
     'tuberack'
 )
-    
+
 p50 = instruments.Pipette(
     name="p50",
     trash_container=trash,
