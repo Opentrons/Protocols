@@ -16,7 +16,7 @@ Opentrons
 Test six standards and four samples (all in duplicate) using the Bradford Reagent.
 
 ### Time Estimate
-? minutes
+38  minutes
 
 ### Robot
 * OT PRO 
