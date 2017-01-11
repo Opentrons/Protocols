@@ -1,30 +1,46 @@
-# Title:  T4 DNA Ligation
+# T4 DNA Ligation
 
-## Description
-[NEB Protocol](https://www.neb.com/protocols/1/01/01/dna-ligation-with-t4-dna-ligase-m0202)
+### Author
+[Opentrons](url)
+
+### Partner
 
 ## Categories
-Molecular Biology
+* Molecular Biology
 
-## Sub Categories
-Ligation
+### Sub Categories
+* Ligation
 
-## Author
-Opentrons
+## Description
+Ligates vector DNA and insert DNA using NEB T4 DNA Ligase.
 
-## Partner
-
-## Robot
-PRO, Standard, Hood
-
-## Modules
-
-# Time Estimate
+### Time Estimate
 5 minutes
 
-## Ingredients
-T4 DNA Ligase, Water, Vector DNA, Insert DNA, Buffer
+### Robot
+* OT PRO 
+* OT Standard
+* OT Hood
+
+### Modules
+* CoolDeck
+
+### Reagents
+* T4 DNA Ligase
+* Water
+* Vector DNA
+* Insert DNA
+* Buffer
 
 
+## Process
+1. Calculate volumes based on initial and final concentrations.
+2. Add components to reaction tube on cold deck.
+3. Mix reaction tube.
+4. User Step: Incubate and heat inactivate based on [NEB Protocol](https://www.neb.com/protocols/1/01/01/dna-ligation-with-t4-dna-ligase-m0202) recommendations.
 
-[Spec](https://docs.google.com/document/d/1QKEPJPrAzkeyUNg9XFPBdTtCRO4bVUAkNaUwUuvGrSE/edit)
+
+### Additional Notes
+
+
+###### Internal
