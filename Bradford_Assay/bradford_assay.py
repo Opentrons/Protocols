@@ -36,9 +36,9 @@ tuberack = containers.load(
 p50 = instruments.Pipette(
     name="p200", # change to p50 after testing
     trash_container=trash,
-    tip_racks=[tiprack_50],
-    min_volume=5,
-    max_volume=50,
+    tip_racks=[tiprack50],
+    min_volume=25,
+    max_volume=200,
     axis="a",
     channels=8
 )
@@ -87,9 +87,9 @@ p50.aspirate(25, plate.rows[10]).drop_tip()
 # fill rows 1 to 11 with 200 uL of Bradford reagent
 p50.pick_up_tip().aspirate(50, trough['A2'])
 for i in range(0,11): 
-    p50.aspirate(50, trough['A2']).dispense(plate.rows[i])
-    p50.aspirate(50, trough['A2']).dispense(plate.rows[i])
-    p50.aspirate(50, trough['A2']).dispense(plate.rows[i])
-    p50.aspirate(50, trough['A2']).dispense(plate.rows[i]).mix(3, 50, plate.rows[i]).touch_tip()
+    p50.aspirate(50, trough['A2']).dispense(plate.rows[i].top())
+    p50.aspirate(50, trough['A2']).dispense(plate.rows[i].top())
+    p50.aspirate(50, trough['A2']).dispense(plate.rows[i].top())
+    p50.aspirate(50, trough['A2']).dispense(plate.rows[i].top())
 p50.drop_tip()
 
