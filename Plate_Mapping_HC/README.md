@@ -1,4 +1,4 @@
-# Mapping 1 Plate to Six Plates
+# Mapping One Plate to Six Plates
 
 ### Author
 Opentrons
@@ -14,7 +14,7 @@ Opentrons
 
 
 ## Description
-
+Duplicate one plate to six other plates, pulling a different volumes from the odd rows vs the even rows.
 
 ### Time Estimate
 25 minutes
