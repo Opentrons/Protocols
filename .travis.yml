@@ -1,0 +1,37 @@
+sudo: false
+language: python
+python:
+- '3.5'
+
+install:
+  - openssl aes-256-cbc -K $encrypted_43309740674a_key -iv $encrypted_43309740674a_iv -in .ci/protocol-library.enc -out ../protocol-library -d
+  - chmod 600 ../protocol-library
+  - eval `ssh-agent -s`
+  - ssh-add ../protocol-library
+  - pip install git+ssh://git@github.com/OpenTrons/protocol-library.git@master#egg=protolib
+  - echo $PATH
+
+script:
+  - python --version
+  - python3 --version
+  - build-library . releases
+  - ls -la releases
+
+# Deploy the build version in an S3 bucket
+deploy:
+  provider: s3
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+  bucket: protocol-library-builds
+  skip_cleanup: true
+  local-dir: releases
+  # upload-dir: protocol-builds  # TBD: use for master vs branch builds?
+  acl: private
+  on:
+    repo: OpenTrons/Protocols
+    branch: master
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
