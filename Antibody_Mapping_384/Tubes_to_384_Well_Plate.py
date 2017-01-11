@@ -7,7 +7,7 @@ p200rack = containers.load(
 
 trash = containers.load(
     'point',
-    'A2',
+    'B2',
     'trash'
 )
 tube_rack = containers.load(
