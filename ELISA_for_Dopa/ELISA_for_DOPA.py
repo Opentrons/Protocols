@@ -22,7 +22,7 @@ plate = containers.load(
 )
 trash = containers.load(
     'point',
-    'B3',
+    'A2',
     'trash'
 )
 p200rack = containers.load(
@@ -74,7 +74,6 @@ solutions = containers.load(
 # solutions['A4'] = Chromogen A
 # solutions['B4'] = Chromogen B
 # solutions['C4'] = Stop Solution
-
 
 p200 = instruments.Pipette(   
         axis="b",
