@@ -34,7 +34,7 @@ tuberack = containers.load(
 )
     
 p50 = instruments.Pipette(
-    name="p50",
+    name="p200", # change to p50 after testing
     trash_container=trash,
     tip_racks=[tiprack_50],
     min_volume=5,
@@ -43,7 +43,7 @@ p50 = instruments.Pipette(
     channels=8
 )
 p200 = instruments.Pipette(
-    name="p200",
+    name="p200S", # change to p200 after testing
     trash_container=trash,
     tip_racks=[tiprack],
     min_volume=20,
