@@ -1,4 +1,4 @@
-# DNA Extraction
+# Consolidate Entire Plate to Tube
 
 ### Author
 [Opentrons](url)
