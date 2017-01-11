@@ -1,4 +1,4 @@
-# Mapping 1 Plate to Six Plates
+# Mapping One Plate to Six Plates
 
 ### Author
 Opentrons
