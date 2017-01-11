@@ -1,4 +1,4 @@
-# DNA Extraction
+# Consolidate Entire Plate to Tube
 
 ### Author
 [Opentrons](url)
@@ -30,15 +30,12 @@ Consolidate the contents of an entire 96 well plate into a single 1.5 mL microce
 
 
 ## Process
-1. Pick up 20ul from wells until pipette is full
-2. Dispense into tube
-3. Repeat until plate is empty
+1. Pick up 20ul from wells until pipette is full.
+2. Dispense entire volume into tube.
+3. Repeat for all wells in plate.
 
 
 ### Additional Notes
 
 
-
-
 ###### Internal
-[Link To Google Doc](https://docs.google.com/presentation/d/1T90uIaz3ci-UPK3x-OkrLX0x0_hDDQClusc5U2qAYWs/edit#slide=id.p7)
