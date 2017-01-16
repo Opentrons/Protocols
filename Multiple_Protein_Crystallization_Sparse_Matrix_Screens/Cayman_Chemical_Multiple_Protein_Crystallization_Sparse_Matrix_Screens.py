@@ -2,57 +2,57 @@ from opentrons import robot, containers, instruments
 
 p20rack = containers.load(
     'tiprack-10ul', # make p20 rack container and change
-    'A1', 
+    'E1', 
     'p20rack'
 )
 p20rack2 = containers.load(
     'tiprack-10ul', # make p20 rack container and change
-    'A2', 
+    'E2', 
     'p20rack2'
 )
 p20rack3 = containers.load(
     'tiprack-10ul', # make p20 rack container and change
-    'A3', 
+    'E3', 
     'p20rack3'
 )
 p1000rack = containers.load(
     'tiprack-1000ul', 
-    'E1', 
+    'A1', 
     'p1000rack'
 )
 p1000rack2 = containers.load(
     'tiprack-1000ul', 
-    'E2', 
+    'A2', 
     'p1000rack2'
 )
 cooldeck = containers.load(
     'alum-block-pcr-strips', # using the PCR tubes section
-    'C1',
+    'C3',
     'cooldeck'
-)
+) 
 plate = containers.load(
     'rigaku-compact-crystallization-plate', # make crystallization plate container and change
-    'C2',
+    'C1',
     'plate'
 )
 plate2 = containers.load(
     'rigaku-compact-crystallization-plate', # make crystallization plate container and change
-    'C3',
+    'C2',
     'plate2'
 )
 matrix_index = containers.load(
     'hampton-1ml-deep-block', # make matrix block container and change
-    'C3',
+    'B1',
     'matrix_index'
 )
 matrix_peg = containers.load(
     'hampton-1ml-deep-block', # make matrix block container and change
-    'C3',
+    'B2',
     'matrix_peg'
 )
 trash = containers.load(
     'point',
-    'B2',
+    'A3',
     'trash'
 )
 p1000 = instruments.Pipette(   
