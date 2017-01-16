@@ -55,7 +55,6 @@ p200S = instruments.Pipette(
     channels=1
 )
 
-
 PBS = trough['A1']
 gp120 = trough['A2']
 BSA = trough['A3']
@@ -65,32 +64,9 @@ antibody1527 = tuberack['A1']
 antirabbit = tuberack['A2']
 readbuffer = trough['A6']
 
-# incubate RT for 20 min
-p200.delay(1500)
-
-# coat plate with 25 uL PBS
-dispense_volume = 25
-p200.pick_up_tip()
-for i in range(12):
-    if p200.current_volume < dispense_volume:
-        p200.aspirate(200, PBS)
-    p200.dispense(dispense_volume, plate.rows[i])
-p200.drop_tip()
-
-# coat plates with 30 uL of coating solution
-dispense_volume = 30
-p200.pick_up_tip()
-for i in range(12):
-    if p200.current_volume < dispense_volume:
-        p200.aspirate(180, gp120)
-    p200.dispense(dispense_volume, plate.rows[i])
-
-# seal plates and shake for 20 min
-p200.delay(1200)
-
 # empty out coating solution
 for i in range(12):
-    p200.aspirate(30, plate.rows[i]).dispense(trash['A1'])
+    p200.aspirate(50, plate.rows[i]).dispense(trash['A1'])
 p200.drop_tip()
 
 # add 200 uL per well of BSA
@@ -99,7 +75,7 @@ for i in range(12):
     p200.aspirate(200, BSA).dispense(plate.rows[i])
 p200.drop_tip()
 
-# seal and incubate for2 hours
+# seal and incubate for 2 hours
 p200.delay(7200)
 
 # wash plate 3X with PBST
@@ -107,7 +83,7 @@ p200.pick_up_tip()
 while (i < 3):
     for i in range(12):
         p200.aspirate(175, PBST).dispense(plate.rows[i])
-        p200.delay(15)
+        p200.delay(60)
         p200.aspirate(200, plate.rows[i]) # add well edge
         p200.dispense(trash['A1']) 
     i = i+1
@@ -120,10 +96,14 @@ for i in range(96):
     if p200S.current_volume < dispense_volume:
         p200S.aspirate(200, macaqueSRCR)
     p200S.dispense(dispense_volume, plate[i])
-p200S.drop_tip()
 
-# seal and incubate for 1.5 hours
-p200.delay(5400)
+# seal and incubate for 1 hr 5 min
+p200S.delay(3900)
+
+# remove purified macaqueSRCR
+for i in range(96):
+    p200S.aspirate(50, plate[i]).dispense(trash['A1'])
+p200S.drop_tip()
 
 # wash plate 3X with PBST
 p200.pick_up_tip()
@@ -143,10 +123,13 @@ for i in range(96):
     if p200S.current_volume < dispense_volume:
         p200S.aspirate(200, antibody1527)
     p200S.dispense(dispense_volume, plate[i])
-p200S.drop_tip()
 
-# seal and incubate 1 hour
-p200.delay(3600)
+# seal and incubate 1 hr 5 min
+p200.delay(3900)
+
+for i in range(96):
+    p200S.aspirate(50, plate[i]).dispense(trash['A1'])
+p200S.drop_tip()
 
 # wash plate 3X with PBST
 p200.pick_up_tip()
@@ -163,6 +146,13 @@ p200.drop_tip()
 p200S.pick_up_tip()
 for i in range(96):
     p200S.aspirate(25, antirabbit).dispense(plate[i])
+
+# seal and incubate 1 hr 5 min
+p200.delay(3900)
+
+# remove MSD Sulfotag
+for i in range(96):
+    p200S.aspirate(50, plate[i]).dispense(trash['A1'])
 p200S.drop_tip()
 
 # wash plate 3X with PBST
