@@ -39,7 +39,7 @@ p200 = instruments.Pipette(
     name="p200",
     trash_container=trash,
     tip_racks=[p200rack, p200rack2, p200rack3],
-    min_volume=50,
+    min_volume=20,
     max_volume=200,
     axis="a",
     channels=8
@@ -73,7 +73,7 @@ for i in range(12):
     p200.dispense(dispense_volume, plate.rows[i])
 
 # incubate RT for 20 min
-p200.delay(1500)
+p200.delay(1200)
 
 for i in range(12):
     p200.aspirate(40, plate.rows[i]).dispense(trash['A1'])

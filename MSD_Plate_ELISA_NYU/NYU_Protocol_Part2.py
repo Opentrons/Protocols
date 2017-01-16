@@ -39,7 +39,7 @@ plate = containers.load(
 p200 = instruments.Pipette(
     name="p200",
     trash_container=trash,
-    tip_racks=[p200rack, p200rack2, p200rack3],
+    tip_racks=[p200rack, p200rack2],
     min_volume=50,
     max_volume=200,
     axis="a",
@@ -48,7 +48,7 @@ p200 = instruments.Pipette(
 p200S = instruments.Pipette(
     name="p200S",
     trash_container=trash,
-    tip_racks=[p200rack, p200rack2, p200rack3],
+    tip_racks=[p200rack3],
     min_volume=20,
     max_volume=200,
     axis="b",
@@ -65,6 +65,7 @@ antirabbit = tuberack['A2']
 readbuffer = trough['A6']
 
 # empty out coating solution
+p200.pick_up_tip()
 for i in range(12):
     p200.aspirate(50, plate.rows[i]).dispense(trash['A1'])
 p200.drop_tip()
