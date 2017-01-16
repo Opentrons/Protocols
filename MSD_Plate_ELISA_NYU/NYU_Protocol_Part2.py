@@ -81,6 +81,7 @@ p200.delay(7200)
 
 # wash plate 3X with PBST
 p200.pick_up_tip()
+i = 0
 while (i < 3):
     for i in range(12):
         p200.aspirate(175, PBST).dispense(plate.rows[i])
@@ -97,17 +98,20 @@ for i in range(96):
     if p200S.current_volume < dispense_volume:
         p200S.aspirate(200, macaqueSRCR)
     p200S.dispense(dispense_volume, plate[i])
+p200S.drop_tip()
 
 # seal and incubate for 1 hr 5 min
 p200S.delay(3900)
 
 # remove purified macaqueSRCR
-for i in range(96):
-    p200S.aspirate(50, plate[i]).dispense(trash['A1'])
-p200S.drop_tip()
+p200.pick_up_tip()
+for i in range(12):
+    p200.aspirate(50, plate.rows[i]).dispense(trash['A1'])
+p200.drop_tip()
 
 # wash plate 3X with PBST
 p200.pick_up_tip()
+i = 0
 while (i < 3):
     for i in range(12):
         p200.aspirate(175, PBST).dispense(plate.rows[i])
@@ -124,16 +128,20 @@ for i in range(96):
     if p200S.current_volume < dispense_volume:
         p200S.aspirate(200, antibody1527)
     p200S.dispense(dispense_volume, plate[i])
+p200S.drop_tip()
 
 # seal and incubate 1 hr 5 min
 p200.delay(3900)
 
-for i in range(96):
-    p200S.aspirate(50, plate[i]).dispense(trash['A1'])
-p200S.drop_tip()
+# remove 1527 anitobyd
+p200.pick_up_tip()
+for i in range(12):
+    p200.aspirate(50, plate.rows[i]).dispense(trash['A1'])
+p200.drop_tip()
 
 # wash plate 3X with PBST
 p200.pick_up_tip()
+i = 0
 while (i < 3):
     for i in range(12):
         p200.aspirate(175, PBST).dispense(plate.rows[i])
@@ -147,17 +155,20 @@ p200.drop_tip()
 p200S.pick_up_tip()
 for i in range(96):
     p200S.aspirate(25, antirabbit).dispense(plate[i])
+p200S.drop_tip()
 
 # seal and incubate 1 hr 5 min
 p200.delay(3900)
 
 # remove MSD Sulfotag
-for i in range(96):
-    p200S.aspirate(50, plate[i]).dispense(trash['A1'])
-p200S.drop_tip()
+p200.pick_up_tip()
+for i in range(12):
+    p200.aspirate(50, plate.rows[i]).dispense(trash['A1'])
+p200.drop_tip()
 
 # wash plate 3X with PBST
 p200.pick_up_tip()
+i = 0
 while (i < 3):
     for i in range(12):
         p200.aspirate(175, PBST).dispense(plate.rows[i])

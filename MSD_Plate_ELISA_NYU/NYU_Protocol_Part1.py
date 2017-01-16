@@ -54,7 +54,6 @@ p200S = instruments.Pipette(
     channels=1
 )
 
-
 PBS = trough['A1']
 gp120 = trough['A2']
 BSA = trough['A3']
@@ -75,6 +74,7 @@ for i in range(12):
 # incubate RT for 20 min
 p200.delay(1200)
 
+# remove PBS
 for i in range(12):
     p200.aspirate(40, plate.rows[i]).dispense(trash['A1'])
 p200.drop_tip()
