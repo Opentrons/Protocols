@@ -81,6 +81,8 @@ p10 = instruments.Pipette(
 # (96 individual distributions of 100 uL from screen to crystal plate). 
 # No blow-out or aspiration following distribution. Robot discards final pipette tip.
 
+
+# runs from 18:54 to 20:31
 for i in range(96):
     p1000.pick_up_tip().aspirate(100, matrix_index[i]).dispense(plate[i+96]).drop_tip()
     
