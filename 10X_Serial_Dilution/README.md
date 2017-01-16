@@ -11,11 +11,11 @@
 ### Sub Categories
 * Dilution
 
-
 ## Description
-Uses an 8 channel to perform a 10X dilution down an entire 96 well plate.
+Uses an 8 channel to perform six 10X dilutions in a 96 well plate.
 
 ### Time Estimate
+5 minutes and 30 seconds
 
 ### Robot
 * OT PRO 
@@ -24,17 +24,13 @@ Uses an 8 channel to perform a 10X dilution down an entire 96 well plate.
 
 ### Modules
 
-
 ### Reagents
 * Samples
 * Diluent
 
 ## Process
 1. Add diluent to plate.
-2. Dilute samples through wells.
+2. Dilute samples through wells, with mixing at each step.
 
 
 ### Additional Notes
-
-
-###### Internal
