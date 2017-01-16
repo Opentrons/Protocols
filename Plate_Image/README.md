@@ -7,9 +7,7 @@
 
 ## Categories
 * Basic Pipetting
-
-### Sub Categories
-* Plate Pics
+	* Plate Pics
 
 
 ## Description

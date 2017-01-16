@@ -8,9 +8,7 @@ Opentrons
 
 ## Categories
 * Basic Pipetting
-
-### Sub Categories
-* Plate Mapping
+	* Plate Mapping
 
 
 ## Description

@@ -7,9 +7,7 @@
 
 ## Categories
 * Molecular Biology
-
-### Sub Categories
-* Ligation
+	* Ligation
 
 ## Description
 Ligates vector DNA and insert DNA using NEB T4 DNA Ligase.

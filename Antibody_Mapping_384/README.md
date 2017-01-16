@@ -7,9 +7,7 @@ Opentrons
 
 ## Categories
 * Basic Pipetting
-
-### Sub Categories
-* Plate Filling
+	* Plate Filling
 
 ## Description
 Transfers 24 antibodies to the first 24 wells in a 384 well plate.
