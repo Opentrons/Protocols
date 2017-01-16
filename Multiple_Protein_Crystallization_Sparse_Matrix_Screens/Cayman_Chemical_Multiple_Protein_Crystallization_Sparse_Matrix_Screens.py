@@ -81,10 +81,8 @@ p10 = instruments.Pipette(
 # (96 individual distributions of 100 uL from screen to crystal plate). 
 # No blow-out or aspiration following distribution. Robot discards final pipette tip.
 
-
-# takes an hour and 37 min to do this first loop
-#for i in range(96):
-#    p1000.pick_up_tip().aspirate(100, matrix_index[i]).dispense(plate[i+96]).drop_tip()
+for i in range(96):
+    p1000.pick_up_tip().aspirate(100, matrix_index[i]).dispense(plate[i+96]).drop_tip()
     
 # Using 10 uL multi channel pipette head on the center axis, robot collects tip from 10 uL rack. 
 # Protein will be stored in 8 PCR tubes inside cool deck aluminum block (15 uL in each tube). 

@@ -13,8 +13,10 @@
 * Protein Crystallography
 
 ## Description
+Map Hampton Index HT deep block to lower wells of crystallization plate.  Distribute protein to upper wells of crystallization plate. Transfer 1 uL from each lower well to its upper well in crystallization plate.  Repeat for both plates.
 
 ### Time Estimate
+3 hours and 40 minutes
 
 ### Robot
 * OT PRO 
@@ -26,6 +28,10 @@
 ### Reagents
 
 ## Process
+1. Transfer 100 uL from Hampton Index HT deep block to lower wells of crystallization plate (1:1 plate mapping).
+2. Distribute 1 uL of protein from cool deck to all lower wells of crystallization plate.
+3. Tranfser 1 uL of liquid in lower well to upper well of crystallization plate.
+4. Repeat with second block and second plate.
 
 ### Additional Notes
 
