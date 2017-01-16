@@ -85,7 +85,6 @@ i = 0
 while (i < 3):
     for i in range(12):
         p200.aspirate(175, PBST).dispense(plate.rows[i])
-        p200.delay(60)
         p200.aspirate(200, plate.rows[i]) # add well edge
         p200.dispense(trash['A1']) 
     i = i+1
@@ -115,7 +114,6 @@ i = 0
 while (i < 3):
     for i in range(12):
         p200.aspirate(175, PBST).dispense(plate.rows[i])
-        p200.delay(15)
         p200.aspirate(200, plate.rows[i]) # add well edge
         p200.dispense(trash['A1']) 
     i = i+1
@@ -145,11 +143,11 @@ i = 0
 while (i < 3):
     for i in range(12):
         p200.aspirate(175, PBST).dispense(plate.rows[i])
-        p200.delay(15)
         p200.aspirate(200, plate.rows[i]) # add well edge
         p200.dispense(trash['A1']) 
     i = i+1
 p200.drop_tip()
+
 
 # add 25 uL MSD SulfoTag
 p200S.pick_up_tip()
@@ -172,7 +170,6 @@ i = 0
 while (i < 3):
     for i in range(12):
         p200.aspirate(175, PBST).dispense(plate.rows[i])
-        p200.delay(15)
         p200.aspirate(200, plate.rows[i]) # add well edge
         p200.dispense(trash['A1']) 
     i = i+1
