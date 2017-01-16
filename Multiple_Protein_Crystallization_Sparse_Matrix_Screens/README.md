@@ -18,7 +18,6 @@
 
 ### Robot
 * OT PRO 
-* OT Standard
 * OT Hood
 
 ### Modules
