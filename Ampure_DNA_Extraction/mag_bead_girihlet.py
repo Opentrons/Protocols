@@ -1,51 +1,17 @@
-
-# coding: utf-8
-
-# In[1]:
-
-# # This cell loads in the API
-# # and then prints out the serial ports
-
-
 from opentrons import robot, containers, instruments
 from itertools import chain
 import math
 
-# robot = Robot()
-# # robot.get_serial_ports_list()
-
-
-# In[ ]:
-
-#CONNECT TO ROBOT
-#either virtual or USB, then home
-
-#connect to OT-One over USB serial
-#robot.connect('/dev/tty.usbmodem1421')
-
-#connect to virtual smoothie
-#robot.connect()
-
-#robot.home()
-
-
-# In[2]:
-
-# robot.reset()
-##### CONTAINERS AND PIPETTE SET-UP
-
-#containers
-
 p10rack = containers.load(
-    'tiprack-10ul',  # container type from library
-    'A1',             # slot on deck
-    'p10rack'         # calibration reference for 1.2 compatibility
+    'tiprack-10ul',  
+    'A1',             
+    'p10rack'        
 )
 
 p200rack = containers.load(
-    'tiprack-200ul',  # container type from library
-    'A1',             # slot on deck
-    'p200rack'         # calibration reference for 1.2 compatibility
+    'tiprack-200ul',  
+    'A1',             
+    'p200rack'        
 )
 
 output_plate = containers.load(
@@ -77,6 +43,7 @@ trash = containers.load(
 p10 = instruments.Pipette(
     name="p10",
     min_volume=1,
+    max_volume=10,
     axis="b",
     trash_container=trash,
     tip_racks=[p10rack],
@@ -86,6 +53,7 @@ p10 = instruments.Pipette(
 p200 = instruments.Pipette(
     name="p200",
     min_volume=20,
+    max_volume=200,
     axis="a",
     trash_container=trash,
     tip_racks=[p200rack],
@@ -93,12 +61,6 @@ p200 = instruments.Pipette(
 )
 
 mag_deck = instruments.Magbead()
-
-p10.set_max_volume(10)  # volume calibration, can be called whenever you want 
-p200.set_max_volume(200)
-
-
-# In[3]:
 
 # Variables set by user
 
@@ -147,9 +109,6 @@ final_volume = 20
 num_samples = len(samples)
 num_rows = math.ceil(num_samples/8)
 
-
-# In[6]:
-
 # Add beads to samples based on DNA volume
 for i in range(num_samples):
     mag_vol = ((samples[i])*8)/10  # calculate volume of mag bead to add based on sample volume
@@ -158,9 +117,6 @@ for i in range(num_samples):
     p10.dispense(well.top()).blow_out() # dispense mag beads to top of tube, blow out
     p10.mix(5, mag_vol, well.bottom())  # mix at bottom of well
     p10.drop_tip() # drop tip in trash
-
-
-# In[7]:
 
 # Incubate at room temp and engage mag beads
 
@@ -174,9 +130,6 @@ p10.delay(mag_incubation_time)
 mag_deck.engage()
 p10.delay(mag_deck_delay)
 
-
-# In[10]:
-
 #Remove supernatent from samples and deposit in trash
 
 for i in range(num_samples):  # for all samples
@@ -189,13 +142,6 @@ for i in range(num_samples):  # for all samples
         p10.aspirate(volhalf, well, rate=0.5).drop_tip()  # use a new tip for each well
     else:
         p10.pick_up_tip().aspirate(vol, well, rate=0.5).drop_tip()
-
-# pull up at a slower rate than usual in order to not disturbe magnets
-# This would be easier with a set volume - 
-# do they have any idea of how much supernatent they actually pick up per added mag bead volume?
-
-
-# In[11]:
 
 # dispense ethanol based on wash volume
 
@@ -223,8 +169,6 @@ while wash_counter < ethanol_washes: # loop through for as many washes as desire
     wash_counter += 1
 
 
-# In[12]:
-
 # Disengage magnets, resuspend samples, delay 5 min, engage magents 5 min
 
 # release magnets
@@ -241,17 +185,8 @@ p200.delay(buffer_delay)
 mag_deck.engage()
 p200.delay(mag_deck_buffer_delay)
 
-
-# In[13]:
-
 # remove 20 uL from mag bead deck and send to 
 for i in range(num_rows):
     well = mag_plate.rows[i]
     output = output_plate.rows[i]
     p200.pick_up_tip().aspirate(final_volume, well).dispense(output).drop_tip()
-
-
-# In[ ]:
-
-
-
