@@ -8,9 +8,7 @@ Opentrons
 
 ## Categories
 * Molecular Biology
-
-### Sub Categories
-* DNA
+	* DNA
 
 ## Description
 Use AMPureXP beads to extract DNA from samples.
