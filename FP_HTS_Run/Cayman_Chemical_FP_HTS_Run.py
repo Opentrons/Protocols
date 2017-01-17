@@ -5,86 +5,51 @@ p20rack = containers.load(
     'A1', 
     'p20rack'
 )
-p20rack2 = containers.load(
-    'tiprack-10ul', # make p20 rack container and change
-    'A2', 
-    'p20rack2'
-)
-p20rack3 = containers.load(
-    'tiprack-10ul', # make p20 rack container and change
-    'A3', 
-    'p20rack3'
-)
-p20rack4 = containers.load(
-    'tiprack-10ul', # make p20 rack container and change
-    'A3', 
-    'p20rack4'
-)
-p20rack5 = containers.load(
-    'tiprack-10ul', # make p20 rack container and change
-    'A3', 
-    'p20rack5'
-)
-p20rack6 = containers.load(
-    'tiprack-10ul', # make p20 rack container and change
-    'A3', 
-    'p20rack6'
-)
-p20rack7 = containers.load(
-    'tiprack-10ul', # make p20 rack container and change
-    'A3', 
-    'p20rack7'
-)
 p1000rack = containers.load(
     'tiprack-1000ul', 
-    'E1', 
+    'A2', 
     'p1000rack'
-)
-p1000rack2 = containers.load(
-    'tiprack-1000ul', 
-    'E2', 
-    'p1000rack2'
 )
 cooldeck = containers.load(
     'alum-block-pcr-strips', # using the PCR tubes section
-    'C1',
+    'D3',
     'cooldeck'
 )
 compounds_plate = containers.load(
     '96-PCR-flat', 
-    'C2',
+    'E3',
     'compounds_plate'
 )
 dilution_plate = containers.load(
     '384-plate',
-    'C2',
+    'E2',
     'dilution_plate'
 )
 assay_plate = containers.load(
     '384-plate',
-    'C2',
+    'C1',
     'assay_plate'
 )
 trash = containers.load(
     'point',
-    'B2',
+    'A3',
     'trash'
 )
 DMSO = containers.load(
     'trough-12row',
-    'B2',
+    'E1',
     'DMSO'
 )
 reagents = containers.load(
     'trough-12row',
-    'B2',
+    'C2',
     'reagents'
 )
 p1000 = instruments.Pipette(   
         axis="b",
         max_volume=1000,
         min_volume=100,
-        tip_racks=[p1000rack, p1000rack2],
+        tip_racks=[p1000rack],
         trash_container=trash,
         channels=1,
         name="p1000"
@@ -93,7 +58,7 @@ p10 = instruments.Pipette(
         axis="a",
         max_volume=10,
         min_volume=1,
-        tip_racks=[p20rack, p20rack2, p20rack3, p20rack4, p20rack5, p20rack6, p20rack7],
+        tip_racks=[p20rack],
         trash_container=trash,
         channels=8,
         name="p10"
