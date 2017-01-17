@@ -69,7 +69,7 @@ mag_beads_stock = trough['A1']
 mag_incubation_time = 900
 
 # time on magnetic bead station
-mag_deck_delay = 0 #120
+mag_deck_delay = 120
 
 # location of ethanol stock
 ethanol_stock = trough['A2']
@@ -81,7 +81,7 @@ ethanol_volume = 200
 ethanol_washes = 2
 
 # ethanol delay
-ethanol_delay = 0 #30
+ethanol_delay = 30
 
 # buffer location
 buffer_stock = trough['A3']
@@ -90,10 +90,10 @@ buffer_stock = trough['A3']
 buffer_volume = 20
 
 # buffer delay
-buffer_delay = 0 #300
+buffer_delay = 300
 
 # mag deck buffer delay
-mag_deck_buffer_delay = 0 #300
+mag_deck_buffer_delay = 300
 
 # final volume
 final_volume = 20
@@ -116,7 +116,7 @@ for i in range(num_samples):
 # Incubate at room temp and engage mag beads
 
 # home robot
-robot.home(enqueue=True)
+#robot.home(enqueue=True)
 
 # incubate at room temp for 15 minutes
 p10.delay(mag_incubation_time)
@@ -174,7 +174,7 @@ for i in range(num_rows):
     well = mag_plate.rows[i]
     p200.pick_up_tip().aspirate(buffer_volume, buffer_stock).dispense(well).mix(5, buffer_volume, well).drop_tip()
     
-robot.home(enqueue=True)
+#robot.home(enqueue=True)
 p200.delay(buffer_delay)
 
 mag_deck.engage()
