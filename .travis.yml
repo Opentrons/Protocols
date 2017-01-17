@@ -29,7 +29,7 @@ deploy:
   acl: private
   on:
     repo: OpenTrons/Protocols
-    branch: master
+    all_branches: true
 
 notifications:
   email:
