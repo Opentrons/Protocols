@@ -7,35 +7,30 @@ p10rack = containers.load(
     'A1',             
     'p10rack'        
 )
-
 p200rack = containers.load(
     'tiprack-200ul',  
-    'A1',             
+    'A2',             
     'p200rack'        
 )
-
-output_plate = containers.load(
-    '96-PCR-flat',
-    'B1',
-    'output_plate'
-)
-
-mag_plate = containers.load(
-    '96-PCR-tall',
-    'C1',
-    'mag_plate'
-)
-
-trough = containers.load(
-    'trough-12row',
-    'B1',
-    'trough'
-)
-
 trash = containers.load(
     'point', 
-    'A2', 
+    'B2', 
     'trash'
+)
+output_plate = containers.load(
+    '96-PCR-flat',
+    'E1',
+    'output_plate'
+)
+mag_plate = containers.load(
+    '96-PCR-tall',
+    'D2',
+    'mag_plate'
+)
+trough = containers.load(
+    'trough-12row',
+    'C1',
+    'trough'
 )
 
 #pipette
@@ -74,7 +69,7 @@ mag_beads_stock = trough['A1']
 mag_incubation_time = 900
 
 # time on magnetic bead station
-mag_deck_delay = 120
+mag_deck_delay = 0 #120
 
 # location of ethanol stock
 ethanol_stock = trough['A2']
@@ -86,7 +81,7 @@ ethanol_volume = 200
 ethanol_washes = 2
 
 # ethanol delay
-ethanol_delay = 30
+ethanol_delay = 0 #30
 
 # buffer location
 buffer_stock = trough['A3']
@@ -95,10 +90,10 @@ buffer_stock = trough['A3']
 buffer_volume = 20
 
 # buffer delay
-buffer_delay = 300
+buffer_delay = 0 #300
 
 # mag deck buffer delay
-mag_deck_buffer_delay = 300
+mag_deck_buffer_delay = 0 #300
 
 # final volume
 final_volume = 20
@@ -185,7 +180,7 @@ p200.delay(buffer_delay)
 mag_deck.engage()
 p200.delay(mag_deck_buffer_delay)
 
-# remove 20 uL from mag bead deck and send to 
+# remove 20 uL from mag bead deck and send to output plate
 for i in range(num_rows):
     well = mag_plate.rows[i]
     output = output_plate.rows[i]
