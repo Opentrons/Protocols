@@ -35,7 +35,7 @@ pixels = [[_, _, _, _, _, _, g, b],  # 12
           [_, _, _, b, b, _, _, _]]  # 1
          # A  B  C  D  E  F  G  H
 
-# convert list of lists into single list
+# convert "pixels" into one-dimensional list
 # and reverse the rows so that the bottom row is at index 0
 pixels = [pixel for row in reversed(pixels) for pixel in row]
 
@@ -44,5 +44,5 @@ blue_wells = [plate[i] for i in range(96) if pixels[i] is trough['A1']]
 green_wells = [plate[i] for i in range(96) if pixels[i] is trough['A2']]
 
 # now draw the pixels, one color at a time
-p200.transfer(50, trough['A1'], blue_wells)
-p200.transfer(50, trough['A2'], green_wells)
+p200.distribute(50, trough['A1'], blue_wells)
+p200.distribute(50, trough['A2'], green_wells)

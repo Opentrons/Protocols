@@ -33,11 +33,13 @@ LB_vol = 200
 
 
 # add DNA from tube column B to tube column A in cold deck
-p10.transfer(DNA_vol,
-             cold_deck.cols[1][:num_samples],
-             cold_deck.cols[0][:num_samples],
-             mix=(3, 10),
-             tips=num_samples)
+p10.transfer(
+    DNA_vol,
+    cold_deck.cols[1][:num_samples],
+    cold_deck.cols[0][:num_samples],
+    mix_after=(3, 10),
+    tips=num_samples
+)
 
 # delay 30 minutes after adding DNA
 p10.delay(30 * 60)
@@ -58,7 +60,9 @@ for i in range(num_samples):
 p200.delay(5 * 60)
 
 # add LB to dna/cells
-p200.transfer(LB_vol,
-              tube_rack['A1'],
-              cold_deck.cols[0][:num_samples],
-              tips=num_samples)
+p200.distribute(
+    LB_vol,
+    tube_rack['A1'],
+    cold_deck.cols[0][:num_samples],
+    tips=num_samples
+)

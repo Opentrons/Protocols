@@ -30,14 +30,14 @@ samples_mod = [(s * 8) / 10 for s in samples]
 num_samples = len(samples)
 
 # Step 1: transfer buffer to magbead plate
-p10.transfer(samples_mod, trough['A1'], mag_plate[:num_samples])
+p10.distribute(samples_mod, trough['A1'], mag_plate[:num_samples])
 
 # Step 2: engage magnets and wait
 mag_deck.delay(900).engage().delay(120)
 
 # Step 3: (slowly) remove supernatent from plate
 volumes = [samples[i] + samples_mod[i] for i in range(num_samples)]
-p10.transfer(volumes, mag_plate[:num_samples], trash, rate=0.5)
+p10.consolidate(volumes, mag_plate[:num_samples], trash, rate=0.5)
 
 # Step 4: wash each sample (twice) with ethanol
 num_washes = 2
@@ -65,18 +65,22 @@ for n in range(num_washes):
 mag_deck.disengage()
 
 # Step 6: add buffer to samples
-p200_multi.transfer(20,
-                    trough['A3'],
-                    mag_plate.rows[:num_samples],
-                    mix=(5, 20))
+p200_multi.distribute(
+    20,
+    trough['A3'],
+    mag_plate.rows[:num_samples],
+    mix=(5, 20)
+)
 
 # Step 7: turn on magnets and wait
 mag_deck.delay(300).engage().delay(300)
 
 # Step 8: transfer final samples to separate plate
-p200_multi.transfer(20,
-                    mag_plate.rows[:num_samples],
-                    output_plate.rows[:num_samples])
+p200_multi.transfer(
+    20,
+    mag_plate.rows[:num_samples],
+    output_plate.rows[:num_samples]
+)
 
 # Step 9: remove magnets
 mag_deck.disengage()

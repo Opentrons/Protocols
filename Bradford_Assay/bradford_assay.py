@@ -29,20 +29,20 @@ p200 = instruments.Pipette(
 # dispense 6 standards from tube racks (A1, B1, C1, D1, A2, B2)
 # to first two rows of 96 well plate (duplicates, A1/A2, B1/B2 etc.)
 for i in range(6):
-    p200.transfer(25, tuberack[i], plate.cols[i][:2])
+    p200.distribute(25, tuberack[i], plate.cols[i][:2])
 
 # dispense 4 samples from tube rack (C2, D2, A3, B3)
 # to row 3 of 96 well plate (duplicates, A3/B3, C3/D3, E3/F3, G3/H3)
 for i in range(4):
     source = tuberack[i + 6]
     targets = plate.rows[2][i * 2:][:2]
-    p200.transfer(50, source, targets)
+    p200.distribute(50, source, targets)
 
 # fill rows 4 to 11 with 25 uL of dilutent each
-p300_multi.transfer(25, trough['A1'], plate.rows[3:11])
+p300_multi.distribute(25, trough['A1'], plate.rows[3:11])
 
 # dilute samples down all rows
-p300_multi.transfer(25, plate.rows[2:10], plate.rows[3:11], mix=(3, 25))
+p300_multi.transfer(25, plate.rows[2:10], plate.rows[3:11], mix_after=(3, 25))
 
 # fill rows 1 to 11 with 200 uL of Bradford reagent
-p300_multi.transfer(200, trough['A2'], plate.rows[:11], mix=(3, 100))
+p300_multi.distribute(200, trough['A2'], plate.rows[:11], mix_after=(3, 100))
