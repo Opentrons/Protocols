@@ -7,9 +7,7 @@ Opentrons
 
 ## Categories
 * Molecular Biology
-
-### Sub Categories
-* Transformations
+	* Transformations
 
 ## Description
 Perform a 1 minute heat shock transformation on six samples.

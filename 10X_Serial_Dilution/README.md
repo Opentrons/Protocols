@@ -7,9 +7,7 @@
 
 ## Categories
 * Basic Pipetting
-
-### Sub Categories
-* Dilution
+	* Dilution
 
 ## Description
 Uses an 8 channel to perform six 10X dilutions in a 96 well plate.
