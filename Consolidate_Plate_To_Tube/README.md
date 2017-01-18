@@ -8,9 +8,7 @@
 
 ## Categories
 * Basic Pipetting
-
-### Sub Categories
-* Plate Consolidation
+	* Plate Consolidation
 
 ## Description
 Consolidate the contents of an entire 96 well plate into a single 1.5 mL microcentrifuge tube.

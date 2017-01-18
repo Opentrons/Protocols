@@ -7,9 +7,7 @@ Opentrons
 
 ## Categories
 * Basic Pipetting
-
-### Sub Categories
-* Plate Pics
+	* Plate Pics
 
 ## Description
 Draw a picture of a dinosaur on a 96 well plate using food coloring.

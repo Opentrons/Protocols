@@ -8,9 +8,7 @@ Opentrons
 
 ## Categories
 * Proteins & Proteomics
-
-### Sub Categories
-* Assay
+	* Assay
 
 ## Description
 Test six standards and four samples (all in duplicate) using the Bradford Reagent.
