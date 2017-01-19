@@ -8,10 +8,7 @@
 
 ## Categories
 * Sample Prep
-* Molecular Biology
-
-### Sub Categories
-* Sequencing
+	* Sequencing
 
 
 ## Description

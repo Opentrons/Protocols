@@ -25,9 +25,9 @@ Perform a 1 minute heat shock transformation on six samples.
 * HeatDeck
 
 ### Reagents
-* DNA
-* Competent Cells
-* LB
+* cold_deck[B1, B2, B3, B4, B5, B6] DNA samples
+* cold_deck[A1, A2, A3, A4, A5, A6] Competent Cells
+* tube_rack[A1] LB
 
 ## Process
 1. Add DNA to competent cells.
