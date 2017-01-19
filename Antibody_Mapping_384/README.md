@@ -8,6 +8,7 @@ Opentrons
 ## Categories
 * Basic Pipetting
 	* Plate Filling
+* Sample Prep
 
 ## Description
 Transfers 24 antibodies to the first 24 wells in a 384 well plate.
