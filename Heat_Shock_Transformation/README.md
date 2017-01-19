@@ -7,15 +7,12 @@ Opentrons
 
 ## Categories
 * Molecular Biology
-
-### Sub Categories
-* Transformations
+	* Transformations
 
 ## Description
 Perform a 1 minute heat shock transformation on six samples.
 
 ### Time Estimate
-
 1 hour
 
 ### Robot
@@ -28,9 +25,9 @@ Perform a 1 minute heat shock transformation on six samples.
 * HeatDeck
 
 ### Reagents
-* DNA
-* Competent Cells
-* LB
+* cool_deck[B1, B2, B3, B4, B5, B6] DNA
+* cool_deck[A1, A2, A3, A4, A5, A6] 25 uL Competent Cells
+* trough[A1] LB
 
 ## Process
 1. Add DNA to competent cells.

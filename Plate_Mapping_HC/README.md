@@ -1,4 +1,4 @@
-# DNA Extraction
+# Mapping One Plate to Six Plates
 
 ### Author
 Opentrons
@@ -8,16 +8,14 @@ Opentrons
 
 ## Categories
 * Basic Pipetting
-
-### Sub Categories
-* Plate Mapping
+	* Plate Mapping
 
 
 ## Description
-
+Duplicate one plate to six other plates, pulling a different volumes from the odd rows vs the even rows.
 
 ### Time Estimate
-?
+25 minutes
 
 ### Robot
 * OT PRO 

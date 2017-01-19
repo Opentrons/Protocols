@@ -8,14 +8,13 @@ install:
   - chmod 600 ../protocol-library
   - eval `ssh-agent -s`
   - ssh-add ../protocol-library
-  - pip install git+ssh://git@github.com/OpenTrons/protocol-library.git@master#egg=protolib
+  - pip install git+ssh://git@github.com/OpenTrons/protocol-library.git@425-revise-category-and-subcategory-definition#egg=protolib
   - echo $PATH
 
 script:
   - python --version
   - python3 --version
-  # - build-library . releases
-  - build-library . releases --fake
+  - library-build . releases
   - ls -la releases
 
 # Deploy the build version in an S3 bucket
@@ -30,7 +29,7 @@ deploy:
   acl: private
   on:
     repo: OpenTrons/Protocols
-    branch: master
+    all_branches: true
 
 notifications:
   email:

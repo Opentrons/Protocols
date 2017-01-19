@@ -1,4 +1,4 @@
-# Plate Dilution
+# Multi Dilution in 96 Well Plate
 
 ### Author
 Opentrons
@@ -17,7 +17,7 @@ Opentrons
 Dilute samples in multiple directions by multiple dilution factors.
 
 ### Time Estimate
-1 hr 15 min @ 4000 mm/s
+66 minutes
 
 ### Robot
 * OT PRO 

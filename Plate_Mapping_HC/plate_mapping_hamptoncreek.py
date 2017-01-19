@@ -1,57 +1,10 @@
-
-# coding: utf-8
-
-
-# In[1]:
-
-# # This cell loads in the API
-# # and then prints out the serial ports
-
-# # !pip install --upgrade git+git://github.com/OpenTrons/opentrons-api.git@master#egg=opentrons
-
 from opentrons import robot, containers, instruments
 from itertools import chain
-# # robot.get_serial_ports_list()
 
-
-# In[ ]:
-
-# this cell connects to a robot and immediately homes
-# if .connect() is called without a port, the smoothieboard is simulated
-
-# robot.connect() # virtual smoothieboard
-# robot.connect('/dev/tty.usbmodem1421')
-# robot.home(now=True)
-# robot
-
-
-# In[2]:
-
-# robot.reset()
-# this cells is similar to the Deck and Head sections in a JSON protocol
-
-# Create a JSON protocol with the exact same containers and pipettes as here
-# They must be the same type, have the same user-defined names, and pipette's on the same axis (a or b)
-
-p1000rack = containers.load(
-    'tiprack-1000ul',  # container type
-    'C2',             # slot
-    'p1000-rack'         # user-defined name, optional for now
-)
 p200rack = containers.load(
     'tiprack-200ul',  # container type
-    'A1',             # slot
+    'A2',             # slot
     'p200-rack'         # user-defined name, optional for now
-)
-trough = containers.load(
-    'trough-12row',
-    'E1',
-    'trough'
-)
-tube = containers.load(
-    'tube-rack-2ml',
-    'C1',
-    'tube rack'
 )
 plate1 = containers.load(
     '96-PCR-flat',
@@ -60,37 +13,37 @@ plate1 = containers.load(
 )
 plate2 = containers.load(
     '96-PCR-flat',
-    'C3',
+    'D1',
     'plate2'
 )
 plate3 = containers.load(
     '96-PCR-flat',
-    'D1',
+    'D2',
     'plate3'
 )
 plate4 = containers.load(
     '96-PCR-flat',
-    'D2',
+    'D3',
     'plate4'
 )
 plate5 = containers.load(
     '96-PCR-flat',
-    'D3',
+    'E1',
     'plate5'
 )
 plate6 = containers.load(
     '96-PCR-flat',
-    'E1',
+    'E2',
     'plate6'
 )
 plate7 = containers.load(
     '96-PCR-flat',
-    'E2',
+    'E3',
     'plate7'
 )
 trash = containers.load(
     'point',
-    'B2',
+    'B3',
     'trash'
 )
     
@@ -99,22 +52,10 @@ p200 = instruments.Pipette(
     trash_container=trash,
     tip_racks=[p200rack],
     min_volume=20, # actual minimum volume of the pipette
+    max_volume=200,
     axis="a",
     channels=8 # 
 )
-
-p200.set_max_volume(200)  # volume calibration, can be called whenever you want
-
-p1000 = instruments.Pipette(
-    name="p1000", # optional
-    trash_container=trash,
-    tip_racks=[p1000rack],
-    min_volume=1, # actual minimum volume of the pipette
-    axis="b",
-    channels=1 # 1 o
-)
-    
-p1000.set_max_volume(1000)
 
 dest_plates = [plate2, plate3, plate4, plate5, plate6, plate7]
 
@@ -144,14 +85,5 @@ for i in range(0,11,2):
             p200.aspirate(180, source)
         p200.dispense(dispense_volume, dest)
     p200.drop_tip(tip)
-
-
-# In[ ]:
-
-
-
-
-# In[ ]:
-
 
 
