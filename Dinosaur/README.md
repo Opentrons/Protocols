@@ -23,8 +23,8 @@ Draw a picture of a dinosaur on a 96 well plate using food coloring.
 ### Modules
 
 ### Reagents
-* Blue Food Coloring
-* Green Food Coloring
+* trough[A1] Blue Food Coloring
+* trough[A2] Green Food Coloring
 
 ## Process
 1. Transfer blue food coloring to specific wells.
