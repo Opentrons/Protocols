@@ -45,4 +45,5 @@ p300_multi.distribute(25, trough['A1'], plate.rows[3:11])
 p300_multi.transfer(25, plate.rows[2:10], plate.rows[3:11], mix_after=(3, 25))
 
 # fill rows 1 to 11 with 200 uL of Bradford reagent
-p300_multi.distribute(200, trough['A2'], plate.rows[:11], mix_after=(3, 100))
+for i in range(11):
+    p300_multi.transfer(200, trough['A2'], plate.rows[i], mix_after=(3, 100))

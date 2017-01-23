@@ -63,6 +63,5 @@ p200.delay(5 * 60)
 p200.distribute(
     LB_vol,
     tube_rack['A1'],
-    cold_deck.cols[0][:num_samples],
-    tips=num_samples
+    cold_deck.cols[0][:num_samples]
 )
