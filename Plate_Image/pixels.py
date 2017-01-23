@@ -40,9 +40,9 @@ pixels = [[_, _, _, _, _, _, g, b],  # 12
 pixels = [pixel for row in reversed(pixels) for pixel in row]
 
 # find the individual wells for each color source
-blue_wells = [plate[i] for i in range(96) if pixels[i] is trough['A1']]
-green_wells = [plate[i] for i in range(96) if pixels[i] is trough['A2']]
+blue_wells = [plate[i] for i in range(96) if pixels[i] is b]
+green_wells = [plate[i] for i in range(96) if pixels[i] is g]
 
 # now draw the pixels, one color at a time
-p200.distribute(50, trough['A1'], blue_wells)
-p200.distribute(50, trough['A2'], green_wells)
+p200.distribute(50, b, blue_wells)
+p200.distribute(50, g, green_wells)
