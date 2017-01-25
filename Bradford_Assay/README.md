@@ -23,10 +23,10 @@ Test six standards and four samples (all in duplicate) using the Bradford Reagen
 ### Modules
 
 ### Reagents
-* trough[A1] Diluent
-* trough[A2] [Pierce Coomassie Plus Assay Reagent](https://www.thermofisher.com/order/catalog/product/23238)
-* tuberack[A1-B2] Albumin Standard Samples
-* tuberack[C2-B3] Protein samples
+* Diluent
+* [Pierce Coomassie Plus Assay Reagent](https://www.thermofisher.com/order/catalog/product/23238)
+* Albumin Standard Samples
+* Protein samples
 
 ## Process
 1. Transfer 6 standards from tube rack to first two rows of plates (in duplicate).
