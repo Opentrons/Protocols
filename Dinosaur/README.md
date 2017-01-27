@@ -32,6 +32,6 @@ Draw a picture of a dinosaur on a 96 well plate using food coloring.
 
 
 ## Preview
-I'm a protocol preview. To learn more about dinosaurs, visit our blog [here](https://en.wikipedia.org/wiki/Dinosaur)
+Learn how to use the robot by drawing a picture of a dinosaur in a 96 well plate!
 
 ### Additional Notes
