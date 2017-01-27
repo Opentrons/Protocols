@@ -1,7 +1,7 @@
 # Pixels
 
 ### Author
-[Opentrons](opentrons.com)
+[Opentrons](https://opentrons.com)
 
 ### Partner
 
