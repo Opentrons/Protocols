@@ -18,7 +18,6 @@ Use AMPureXP beads to extract DNA from four samples.
 
 ### Robot
 * OT One PRO
-* OT One Standard
 * OT One Hood
 
 ### Modules
