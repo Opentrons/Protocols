@@ -1,4 +1,4 @@
-from opentrons import containers, instruments
+from opentrons import robot, containers, instruments
 
 
 p10rack = containers.load('tiprack-10ul', 'A1')
@@ -25,21 +25,25 @@ p200_multi = instruments.Pipette(
     channels=8
 )
 
+mag_deck = instruments.Magbead()
+
 samples = [9, 10, 9, 10]
 samples_mod = [(s * 8) / 10 for s in samples]
 num_samples = len(samples)
 
-# Step 1: transfer buffer to magbead plate
+robot.comment('\nStarting Protocol\n')
+
+robot.comment('\nStep 1: transfer buffer to magbead plate\n')
 p10.distribute(samples_mod, trough['A1'], mag_plate[:num_samples])
 
-# Step 2: engage magnets and wait
+robot.comment('\nStep 2: engage magnets and wait\n')
 mag_deck.delay(900).engage().delay(120)
 
-# Step 3: (slowly) remove supernatent from plate
+robot.comment('\nStep 3: (slowly) remove supernatent from plate\n')
 volumes = [samples[i] + samples_mod[i] for i in range(num_samples)]
 p10.consolidate(volumes, mag_plate[:num_samples], trash, rate=0.5)
 
-# Step 4: wash each sample (twice) with ethanol
+robot.comment('\nStep 4: wash each sample (twice) with ethanol\n')
 num_washes = 2
 for n in range(num_washes):
     for i in range(num_samples):
@@ -61,10 +65,10 @@ for n in range(num_washes):
 
         p200_multi.drop_tip()
 
-# Step 5: remove magnets
+robot.comment('\nStep 5: remove magnets\n')
 mag_deck.disengage()
 
-# Step 6: add buffer to samples
+robot.comment('\nStep 6: add buffer to samples\n')
 p200_multi.distribute(
     20,
     trough['A3'],
@@ -72,15 +76,18 @@ p200_multi.distribute(
     mix=(5, 20)
 )
 
-# Step 7: turn on magnets and wait
+robot.comment('\nStep 7: turn on magnets and wait\n')
 mag_deck.delay(300).engage().delay(300)
 
-# Step 8: transfer final samples to separate plate
+robot.comment('\nStep 8: transfer final samples to separate plate\n')
 p200_multi.transfer(
     20,
     mag_plate.rows[:num_samples],
     output_plate.rows[:num_samples]
 )
 
-# Step 9: remove magnets
+robot.comment('\nStep 9: remove magnets\n')
 mag_deck.disengage()
+
+for c in robot.commands():
+    print(c)

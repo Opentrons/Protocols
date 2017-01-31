@@ -32,3 +32,6 @@ Uses an 8 channel to perform six 10X dilutions in a 96 well plate.
 
 
 ### Additional Notes
+
+## Preview
+Use an 8 channel pipette do dilute six samples down a 96 well plate.

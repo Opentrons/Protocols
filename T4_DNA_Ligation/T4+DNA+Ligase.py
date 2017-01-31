@@ -47,5 +47,5 @@ p10.transfer(
     tuberack['B2'],
     mix_before=(3, 10),
     mix_after=(3, 10),
-    touch=True
+    touch_tip=True
 )
