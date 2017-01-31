@@ -42,4 +42,7 @@ CoolDeck
 9. Add Protease.
 10. Transfer gels to 37C for overnight digestion
 
+## Preview
+Explore the full In Gel Digest protocol used by the Stanford University Mass Spec Core.
+
 ### Additional Notes
