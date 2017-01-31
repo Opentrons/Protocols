@@ -14,7 +14,7 @@
 Uses a Python list to draw a picture with food coloring. The Python list represents a 96 well plate, each value within it setting the color of a well on the plate.
 
 ### Time Estimate
-10 Minutes at 3000 mm/sec
+10 Minutes
 
 ### Robot
 * OT PRO 
