@@ -13,7 +13,7 @@
 Uses an 8 channel to perform six 10X dilutions in a 96 well plate.
 
 ### Time Estimate
-5 minutes and 30 seconds
+5.5 minutes
 
 ### Robot
 * OT PRO 
