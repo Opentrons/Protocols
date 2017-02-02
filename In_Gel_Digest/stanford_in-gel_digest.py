@@ -14,7 +14,8 @@ p200 = instruments.Pipette(
     max_volume = 200,
     min_volume = 20,
     trash_container=waste,
-    tip_racks=[tip_rack])
+    tip_racks=[tip_rack],
+    name="p200")
 
 robot.head_speed(6000)
 
