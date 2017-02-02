@@ -1,4 +1,4 @@
-#In-Gel Digest Protocol Full Hoodbot / RoasaM @ Stanford University Mass Spectrometry / Opentrons
+#In-Gel Digest Protocol Full Hoodbot_RM @ Stanford University Mass Spectrometry_DC @ Opentrons
 from opentrons import robot, containers, instruments
 
 #Containers
@@ -19,16 +19,14 @@ p200 = instruments.Pipette(
 robot.head_speed(6000)
 
 #Reduction
-#(0.2 mL 50 mM DTT in 1.8 mL 50 mM Ammonium Bicarbonate)
 p200.pick_up_tip()
 dispense_volume = 100
 for i in range(20):
     if p200.current_volume < dispense_volume:
-        p200.aspirate(100, cold_deck['A1']).dispense(100,tube_rack[i].top()).blow_out(tube_rack[i].top())
+        p200.aspirate(100,cold_deck['A1']).dispense(100,tube_rack[i].top())
 p200.drop_tip().delay(1800)
 
 #Alkylation
-#(0.2 mL 100 mM Acrylamide in 1.8 mL 50 mM Ammonium Bicarbonate)
 #Removing DTT/AB (Tip Change)
 for i in range(20):
     p200.pick_up_tip()
@@ -37,15 +35,11 @@ for i in range(20):
     
 #Adding Acrylamide/AB (No Tip Change)  
 p200.pick_up_tip()
-dispense_volume = 100
+dispense_volume = 150
 for i in range(20):
     if p200.current_volume < dispense_volume:
-        p200.aspirate(100, cold_deck['B1']).dispense(100,tube_rack[i].top()).blow_out(tube_rack[i].top())
+        p200.aspirate(150, cold_deck['B1']).dispense(150, tube_rack[i].top())
 p200.drop_tip().delay(1800)
-
-
-#Wash Steps
-#(1 mL Acetonitrile in 1 mL 50 mM Ammonium Bicarbonate)
 
 #Wash1
 #Removing Acrylamide/AB (Tip Change)
@@ -59,8 +53,8 @@ p200.pick_up_tip()
 dispense_volume = 100
 for i in range(20):
     if p200.current_volume < dispense_volume:
-        p200.aspirate(100, cold_deck['C1']).dispense(100,tube_rack[i].top()).blow_out(tube_rack[i].top())
-p200.drop_tip().delay(600)
+        p200.aspirate(100, cold_deck['C1']).dispense(100,tube_rack[i].top())
+p200.drop_tip().delay(300)
 
 #Wash2
 #Removing Wash1 (Tip Change)
@@ -74,41 +68,36 @@ p200.pick_up_tip()
 dispense_volume = 100
 for i in range(20):
     if p200.current_volume < dispense_volume:
-        p200.aspirate(100, cold_deck['C2']).dispense(100,tube_rack[i].top()).blow_out(tube_rack[i].top())
-p200.drop_tip().delay(600)
+        p200.aspirate(100, cold_deck['C1']).dispense(100,tube_rack[i].top())
+p200.drop_tip().delay(300)
 
 #Removing Wash2 (Tip Change)
 for i in range(20):
     p200.pick_up_tip()
     p200.aspirate(150,tube_rack[i]).dispense(waste)
-p200.drop_tip().delay(1800)
+    p200.drop_tip()
+
+
+# In[7]:
 
 #Trypsin Digestion
-#(1 ug Trypsin in ProteaseMax and 50 mM Ammonium Bicarbonate)
 #Adding Protease (No Tip Change)
 p200.pick_up_tip()
 dispense_volume = 25
 for i in range(20):
     if p200.current_volume < dispense_volume:
-        p200.aspirate(25, cold_deck['D1']).dispense(25,tube_rack[i].top()).blow_out(tube_rack[i].top())
-p200.drop_tip().delay(600)
-
-#Covering Gels with 50 mM Ammonium Bicarbonate
-p200.pick_up_tip()
-dispense_volume = 40
-for i in range(20):
-    if p200.current_volume < dispense_volume:
-        p200.aspirate(40, cold_deck['D4']).dispense(40,tube_rack[i].top()).blow_out(tube_rack[i].top())
+        p200.aspirate(25,cold_deck['D1']).dispense(25,tube_rack[i].top())
 p200.drop_tip()
 
 #Gel ready for overnight digest at 37C
+
 
 #Next Day
 #Extraction1
 #Only to add Extraction Solution *Need to remove peptides by hand
 #p200.pick_up_tip()
 #dispense_volume = 50
-#for i in range(20):
+#for i in range(4):
   #  if p200.current_volume < dispense_volume:
      #   p200.aspirate(50,cold_deck['A6']).dispense(50,tube_rack[i])
 #p200.drop_tip().delay(1800)
@@ -117,7 +106,7 @@ p200.drop_tip()
 #Only to add Extraction Solution *Need to remove peptides by hand
 #p200.pick_up_tip()
 #dispense_volume = 100
-#for i in range(20):
+#for i in range(4):
   #  if p200.current_volume < dispense_volume:
     #    p200.aspirate(100,cold_deck['A6']).dispense(100,tube_rack[i])
 #p200.drop_tip()
