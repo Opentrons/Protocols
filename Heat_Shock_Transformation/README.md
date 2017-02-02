@@ -26,7 +26,7 @@ Perform a 1 minute heat shock transformation on six samples.
 
 ### Reagents
 * DNA
-* Competent Cells
+* 25 uL Competent Cells
 * LB
 
 ## Process
@@ -38,3 +38,6 @@ Perform a 1 minute heat shock transformation on six samples.
 
 
 ### Additional Notes
+
+## Preview
+Use our HeatDeck and CoolDeck to perform a 1 minute heat shock transformation on six samples.

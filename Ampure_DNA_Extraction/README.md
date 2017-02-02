@@ -11,14 +11,13 @@ Opentrons
 	* DNA
 
 ## Description
-Use AMPureXP beads to extract DNA from samples.
+Use AMPureXP beads to extract DNA from four samples.
 
 ### Time Estimate
-Unknown time
+22 minutes
 
 ### Robot
 * OT One PRO
-* OT One Standard
 * OT One Hood
 
 ### Modules
