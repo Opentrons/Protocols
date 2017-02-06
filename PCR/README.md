@@ -13,6 +13,7 @@
 Sets up six PCR reactions, all with the same DNA, enzyme, buffer and primers.
 
 ### Time Estimate
+17 minutes
 
 ### Robot
 * OT PRO 

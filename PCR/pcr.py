@@ -2,7 +2,7 @@ from opentrons import robot, containers, instruments
 
 p10rack = containers.load(
     'tiprack-10ul',  # container type
-    'B2',             # slot
+    'E1',             # slot
     'p10-rack'         # user-defined name, optional for now
 )
 p200rack = containers.load(
@@ -12,12 +12,12 @@ p200rack = containers.load(
 )
 tuberack = containers.load(
     'tube-rack-2ml',
-    'B1',
+    'C1',
     'tube rack'
 )
 output = containers.load(
     '96-PCR-flat',
-    'C1',
+    'B2',
     'output'
 )
 trash = containers.load(
@@ -36,7 +36,7 @@ p10 = instruments.Pipette(
     channels=1 # 1 o
 )
 p200 = instruments.Pipette(
-    name="p20",
+    name="p200",
     trash_container=trash,
     tip_racks=[p200rack],
     min_volume=20, # actual minimum volume of the pipette
