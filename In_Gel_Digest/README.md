@@ -1,7 +1,7 @@
 # In-Gel Digest
 
 ### Author
-Opentrons
+[Opentrons](https://opentrons.com/)
 
 ### Partner
 [Stanford University](https://www.stanford.edu/)
@@ -19,10 +19,10 @@ Prepares proteins harbored inside gels for overnight protease digestion to produ
 4.5 hours
 
 ### Robot
-* OT Hood
+* [OT Hood](https://opentrons.com/ot-one-hood) 
 
 ### Modules
-CoolDeck
+* [CoolDeck](https://shop.opentrons.com/collections/labware/products/cold-deck)
 
 ### Reagents
 * DTT

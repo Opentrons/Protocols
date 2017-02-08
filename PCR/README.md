@@ -1,7 +1,7 @@
 # PCR
 
 ### Author
-[Opentrons](url)
+[Opentrons](https://opentrons.com/)
 
 ### Partner
 
@@ -16,8 +16,8 @@ Sets up six PCR reactions, all with the same DNA, enzyme, buffer and primers.
 17 minutes
 
 ### Robot
-* OT PRO 
-* OT Hood
+* [OT PRO](https://opentrons.com/ot-one-pro)
+* [OT Hood](https://opentrons.com/ot-one-hood) 
 
 ### Modules
 
