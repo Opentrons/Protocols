@@ -16,10 +16,7 @@ Assay
 Perform an ELISA assay on 40 patient samples and 8 standards.
 
 ### Time Estimate
-1 hour 49 minutes (not including incubation times)
-	- 1 hour 13 minutes before first incubation
-	- 30 minutes in between both incubations
-	- 6 minutes after second incubation
+3 hours and 3 minutes
 
 ### Robot
 * OT PRO 
@@ -39,12 +36,12 @@ Perform an ELISA assay on 40 patient samples and 8 standards.
 1. Transfer standards and blanks in duplicate to ELISA plate
 2. Transfer 40 samples in duplicate to ELISA plate
 3. Dispense 100 uL HRP Conjugate Solution to all wells
-4. User Step: Pause protocol and incubate for 60 min at 37 C
-5. User Step: Put plate in automate washing station and then return to robot and resume protocol
+4. Pause protocol and incubate for 60 min at 37 C
+5. Put plate in automated washing station and then return to robot and resume protocol
 6. Dispesne 50 uL Chromogen Solution A to all wells
 7. Dipsense 50 uL Chromogen Solution B to all wells
-8. User Step: Pause protocol and incubate 15 min at 37 C
-9. User Step: Return plate to robot and resume protocol
+8. Pause protocol and incubate 15 min at 37 C
+9. Return plate to robot and resume protocol
 10. Dispense 50 uL Stop Solution to all wells
 
 
