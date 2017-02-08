@@ -17,7 +17,7 @@ standards = containers.load(
 
 plate = containers.load(
     '96-PCR-flat',
-    'C2',
+    'B1',
     'ELISA_plate'
 )
 trash = containers.load(
@@ -30,19 +30,19 @@ p200rack = containers.load(
     'A1',
     'p200rack'
 )
-p200rack2 = containers.load(
+p200rack2 = containers.load(    
     'tiprack-200ul',
     'A2',
     'p200rack2'
 )
 p200rack3 = containers.load(
     'tiprack-200ul',
-    'A3',
+    'B2',
     'p200rack3'
 )
 samples1 = containers.load(
     'tube-rack-2ml',
-    'E1',
+    'D1',
     'samples1'
 )
 
@@ -54,7 +54,7 @@ samples1 = containers.load(
 
 samples2 = containers.load(
     'tube-rack-2ml',
-    'E2',
+    'D2',
     'samples2'
 )
 
@@ -66,7 +66,7 @@ samples2 = containers.load(
 
 solutions = containers.load(
     'tube-rack-15_50ml',
-    'E3',
+    'C2',
     'solutions',
 )
 

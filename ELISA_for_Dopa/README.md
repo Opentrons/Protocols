@@ -16,7 +16,10 @@ Assay
 Perform an ELISA assay on 40 patient samples and 8 standards.
 
 ### Time Estimate
-X minutes
+1 hour 49 minutes (not including incubation times)
+	- 1 hour 13 minutes before first incubation
+	- 30 minutes in between both incubations
+	- 6 minutes after second incubation
 
 ### Robot
 * OT PRO 
