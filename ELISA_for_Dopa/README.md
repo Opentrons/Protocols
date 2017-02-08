@@ -19,9 +19,9 @@ Perform an ELISA assay on 40 patient samples and 8 standards.
 3 hours and 3 minutes
 
 ### Robot
-* OT PRO 
-* OT Standard
-* OT Hood
+* [OT Standard](https://opentrons.com/ot-one-standard)
+* [OT PRO](https://opentrons.com/ot-one-pro) 
+* [OT Hood](https://opentrons.com/ot-one-hood)
 
 ### Modules
 
