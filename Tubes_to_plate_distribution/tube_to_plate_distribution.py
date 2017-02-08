@@ -32,7 +32,7 @@ tuberack4 = containers.load(
 )
 trash = containers.load(
 	'point',
-	'A3',
+	'A2',
 	'trash'
 )
 
