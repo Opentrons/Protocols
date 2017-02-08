@@ -1,7 +1,7 @@
 # AMPureXP DNA Extraction
 
 ### Author
-Opentrons
+[Opentrons](https://opentrons.com/)
 
 ### Partner
 [Girihlet](http://www.girihlet.com)
@@ -17,11 +17,11 @@ Use AMPureXP beads to extract DNA from four samples.
 22 minutes
 
 ### Robot
-* OT One PRO
-* OT One Hood
+* [OT PRO](https://opentrons.com/ot-one-pro) 
+* [OT Hood](https://opentrons.com/ot-one-hood)
 
 ### Modules
-* MagDeck
+* [MagDeck](https://shop.opentrons.com/collections/labware/products/magdeck)
 
 ### Reagents
 * AMPureXP beads

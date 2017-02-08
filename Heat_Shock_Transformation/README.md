@@ -1,7 +1,7 @@
 # Heat Shock Transformation
 
 ### Author
-Opentrons
+[Opentrons](https://opentrons.com/)
 
 ### Partner
 
@@ -20,8 +20,8 @@ Perform a 1 minute heat shock transformation on six samples.
 * [OT Hood](https://opentrons.com/ot-one-hood)
 
 ### Modules
-* [CoolDeck](https://shop.opentrons.com/products/presale-cold-deck)
-* [HeatDeck](https://shop.opentrons.com/collections/labware/products/presale-heat-deck-with-aluminum-block)
+* [CoolDeck](https://shop.opentrons.com/collections/labware/products/cold-deck)
+* [HeatDeck](https://shop.opentrons.com/collections/labware/products/heat-deck)
 
 ### Reagents
 * DNA

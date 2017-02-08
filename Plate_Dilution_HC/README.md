@@ -1,7 +1,7 @@
 # Multi Dilution in 96 Well Plate
 
 ### Author
-Opentrons
+[Opentrons](https://opentrons.com/)
 
 ### Partner
 [Hampton Creek](www.hamptoncreek.com)
@@ -20,9 +20,9 @@ Dilute samples in multiple directions by multiple dilution factors.
 1 hour and 6 minutes
 
 ### Robot
-* OT PRO 
-* OT Standard
-* OT Hood
+* [OT PRO](https://opentrons.com/ot-one-pro)
+* [OT Standard](https://opentrons.com/ot-one-standard)  
+* [OT Hood](https://opentrons.com/ot-one-hood) 
 
 ### Modules
 
