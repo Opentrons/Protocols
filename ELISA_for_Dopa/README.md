@@ -1,10 +1,10 @@
 # ELISA for Dopa
 
 ### Author
-[Opentrons](url)
+[Opentrons](www.opentrons.com)
 
 ### Partner
-[Columbia University](url)
+[Columbia University](http://www.columbia.edu/)
 
 ## Categories
 Sample Prep
@@ -47,7 +47,7 @@ Perform an ELISA assay on 40 patient samples and 8 standards.
 
 
 ### Additional Notes
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sed purus eu urna vehicula ultrices at vel quam. Aliquam erat volutpat. Quisque imperdiet ut urna ut dapibus. Sed placerat, libero at ullamcorper pharetra, massa tellus sagittis eros, in feugiat est libero et turpis. Sed ac efficitur mi, at porttitor elit.
+As of 2/8/17 you will need to manually pause and resume the protocol to perform steps 4, 5, 8 and 9.
 
 
 
