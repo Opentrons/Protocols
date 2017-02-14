@@ -14,7 +14,8 @@ p200 = instruments.Pipette(
     max_volume=200,
     min_volume=20,
     trash_container=waste,
-    tip_racks=[tip_rack])
+    tip_racks=[tip_rack],
+    name="p200")
 
 robot.head_speed(6000)
 
@@ -41,12 +42,13 @@ p200.distribute(40, cold_deck['D4'], tube_rack[:num_tubes])
 
 # Gel ready for overnight digest at 37C
 
+
 #Next Day
 #Extraction1
 #Only to add Extraction Solution *Need to remove peptides by hand
 #p200.pick_up_tip()
 #dispense_volume = 50
-#for i in range(20):
+#for i in range(4):
   #  if p200.current_volume < dispense_volume:
      #   p200.aspirate(50,cold_deck['A6']).dispense(50,tube_rack[i])
 #p200.drop_tip().delay(1800)
@@ -55,7 +57,7 @@ p200.distribute(40, cold_deck['D4'], tube_rack[:num_tubes])
 #Only to add Extraction Solution *Need to remove peptides by hand
 #p200.pick_up_tip()
 #dispense_volume = 100
-#for i in range(20):
+#for i in range(4):
   #  if p200.current_volume < dispense_volume:
     #    p200.aspirate(100,cold_deck['A6']).dispense(100,tube_rack[i])
 #p200.drop_tip()

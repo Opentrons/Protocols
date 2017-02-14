@@ -18,9 +18,9 @@ This protocol demonstrates the multiple options available for controlling tips
 2 minutes
 
 ### Robot
-* OT PRO 
-* OT Standard
-* OT Hood
+* [OT PRO](https://opentrons.com/ot-one-pro)
+* [OT Standard](https://opentrons.com/ot-one-standard)  
+* [OT Hood](https://opentrons.com/ot-one-hood) 
 
 ### Modules
 

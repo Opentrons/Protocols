@@ -18,9 +18,9 @@ Hello Opentrons protocol uses a 200uL hand pipette to transfer 100uL of liquid
 2 minutes
 
 ### Robot
-* OT PRO 
-* OT Standard
-* OT Hood
+* [OT PRO](https://opentrons.com/ot-one-pro)
+* [OT Standard](https://opentrons.com/ot-one-standard)  
+* [OT Hood](https://opentrons.com/ot-one-hood) 
 
 ### Modules
 

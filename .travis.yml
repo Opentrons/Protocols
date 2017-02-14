@@ -8,7 +8,7 @@ install:
   - chmod 600 ../protocol-library
   - eval `ssh-agent -s`
   - ssh-add ../protocol-library
-  - pip install git+ssh://git@github.com/OpenTrons/protocol-library.git@425-revise-category-and-subcategory-definition#egg=protolib
+  - pip install git+ssh://git@github.com/OpenTrons/protocol-library.git@master#egg=protolib
   - echo $PATH
 
 script:
