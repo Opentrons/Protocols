@@ -21,23 +21,23 @@ p200 = instruments.Pipette(
 b = trough['A1']
 g = trough['A2']
 _ = None
-pixels = [[_, _, _, _, _, _, g, b],  # 12
-          [_, _, _, _, g, g, b, _],  # 11
-          [_, _, _, _, g, b, _, _],  # 10
-          [_, _, g, g, b, b, b, b],  # 9
-          [_, _, g, b, b, b, b, b],  # 8
-          [g, g, b, b, b, b, b, _],  # 7
-          [_, g, b, b, b, b, b, _],  # 6
-          [g, g, b, b, b, b, b, _],  # 5
-          [_, g, b, b, b, b, b, b],  # 4
-          [_, _, g, b, b, b, b, b],  # 3
-          [_, _, _, b, b, _, _, _],  # 2
-          [_, _, _, b, b, _, _, _]]  # 1
-         # A  B  C  D  E  F  G  H
+plate_image = [[_, _, _, _, _, _, g, b],  # 12
+               [_, _, _, _, g, g, b, _],  # 11
+               [_, _, _, _, g, b, _, _],  # 10
+               [_, _, g, g, b, b, b, b],  # 9
+               [_, _, g, b, b, b, b, b],  # 8
+               [g, g, b, b, b, b, b, _],  # 7
+               [_, g, b, b, b, b, b, _],  # 6
+               [g, g, b, b, b, b, b, _],  # 5
+               [_, g, b, b, b, b, b, b],  # 4
+               [_, _, g, b, b, b, b, b],  # 3
+               [_, _, _, b, b, _, _, _],  # 2
+               [_, _, _, b, b, _, _, _]]  # 1
+              # A  B  C  D  E  F  G  H
 
-# convert "pixels" into one-dimensional list
+# convert "plate_image" lists into one-dimensional "pixels" list
 # and reverse the rows so that the bottom row is at index 0
-pixels = [pixel for row in reversed(pixels) for pixel in row]
+pixels = [pixel for row in reversed(plate_image) for pixel in row]
 
 # find the individual wells for each color source
 blue_wells = [plate[i] for i in range(96) if pixels[i] is b]
