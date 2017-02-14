@@ -23,17 +23,26 @@ p1000 = instruments.Pipette(
 )
 
 # distribute buffer to all wells, except columns A and E
-target_wells = [w for c in 'BCDFGH' for w in plate.cols[c]]
-p1000.distribute(300, trough['A1'], target_wells)
+target_wells = [w for col in plate.cols.get('B', to='H') for w in col]
+p1000.distribute(300, trough.well('A1'), target_wells)
 
 # distribute samples in duplicate to columns A and E, 1 tube to 2 wells
 for i in range(12):
-    p1000.distribute(300, tube[i], plate.rows[i][0::4])
+    p1000.distribute(300, tube.well(i), plate.rows[i].wells('A', 'E'))
 
 # dilute down all rows
 for row in plate.rows:
-    p1000.transfer(300, row[0:3], row[1:4], mix_after=(3, 300))
-    p1000.transfer(300, row[4:7], row[5:8], mix_after=(3, 300))
+    p1000.transfer(
+        300,
+        row.wells('A', length=3),
+        row.wells('B', length=3),
+        mix_after=(3, 300))
+    p1000.transfer(
+        300,
+        row.wells('E', length=3),
+        row.wells('F', length=3),
+        mix_after=(3, 300))
 
 # dispense 200 uL to every even row
-p200_multi.distribute(200, trough['A1'], plate.rows[1:12:2])
+p200_multi.distribute(
+    200, trough.well('A1'), plate.rows.get('2', to='12', step=2))

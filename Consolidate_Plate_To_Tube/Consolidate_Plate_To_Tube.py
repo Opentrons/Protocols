@@ -19,4 +19,4 @@ p200 = instruments.Pipette(
     trash_container=trash
 )
 
-p200.consolidate(20, plate, tube_rack['A1'])
+p200.consolidate(20, plate, tube_rack.wells('A1'))

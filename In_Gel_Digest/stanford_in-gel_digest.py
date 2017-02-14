@@ -1,6 +1,6 @@
 # In-Gel Digest Protocol Full Hoodbot / RoasaM @ Stanford University
 # Mass Spectrometry / Opentrons
-from opentrons import robot, containers, instruments
+from opentrons import containers, instruments
 
 
 tip_rack = containers.load('tiprack-200ul', 'D1', 'Tip Rack')
@@ -17,24 +17,23 @@ p200 = instruments.Pipette(
     tip_racks=[tip_rack],
     name="p200")
 
-robot.head_speed(6000)
+target_tubes = tube_rack.wells(length=20)
 
-num_tubes = 20
-
-for cold_source in ['A1', 'B1', 'C1', 'C2']:
-    p200.distribute(100, cold_deck[cold_source], tube_rack[:num_tubes])
+for cold_source in cold_deck.wells(['A1', 'B1', 'C1', 'C2']):
+    p200.distribute(100, cold_source, target_tubes)
     p200.delay(30 * 60)
     p200.consolidate(
-        150, tube_rack[:num_tubes], waste, repeater=False, tips=num_tubes)
+        150, target_tubes, waste, repeater=False, new_tip='always')
 
 # Trypsin Digestion
 # (1 ug Trypsin in ProteaseMax and 50 mM Ammonium Bicarbonate)
 # Adding Protease (No Tip Change)
-p200.distribute(25, cold_deck['D1'], tube_rack[:num_tubes])
+p200.distribute(25, cold_deck.wells('D1'), target_tubes)
+
 p200.delay(10 * 60)
 
 # Covering Gels with 50 mM Ammonium Bicarbonate
-p200.distribute(40, cold_deck['D4'], tube_rack[:num_tubes])
+p200.distribute(40, cold_deck.wells('D4'), target_tubes)
 
 
 
@@ -43,23 +42,14 @@ p200.distribute(40, cold_deck['D4'], tube_rack[:num_tubes])
 # Gel ready for overnight digest at 37C
 
 
-#Next Day
-#Extraction1
-#Only to add Extraction Solution *Need to remove peptides by hand
-#p200.pick_up_tip()
-#dispense_volume = 50
-#for i in range(4):
-  #  if p200.current_volume < dispense_volume:
-     #   p200.aspirate(50,cold_deck['A6']).dispense(50,tube_rack[i])
-#p200.drop_tip().delay(1800)
+# # Next Day
+# # Extraction1
+# # Only to add Extraction Solution *Need to remove peptides by hand
+# p200.distribute(50, cold_deck.wells('A6'), tube_rack.wells('A1', length=4))
+# p200.delay(1800)
 
-#Extraction2
-#Only to add Extraction Solution *Need to remove peptides by hand
-#p200.pick_up_tip()
-#dispense_volume = 100
-#for i in range(4):
-  #  if p200.current_volume < dispense_volume:
-    #    p200.aspirate(100,cold_deck['A6']).dispense(100,tube_rack[i])
-#p200.drop_tip()
+# # Extraction2
+# # Only to add Extraction Solution *Need to remove peptides by hand
+# p200.distribute(100, cold_deck.wells('A6'), tube_rack.wells('A1', length=4))
 
-#Peptides ready for Speedvac
+# # Peptides ready for Speedvac

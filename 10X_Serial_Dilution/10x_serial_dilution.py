@@ -17,19 +17,15 @@ p200M = instruments.Pipette(
     channels=8
 )
 
-dilution_number = 6
-sample_volume = 20
-diluent_volume = 180
-
 p200M.distribute(
-    diluent_volume,
+    180,
     trough['A1'],
-    plate.rows[1:dilution_number + 1]
+    plate.rows.get('2', length=6)
 )
 
 p200M.transfer(
-    sample_volume,
-    plate.rows[:dilution_number],
-    plate.rows[1:dilution_number + 1],
-    mix_after=(3, sample_volume)
+    20,
+    plate.rows.get('1', length=6),
+    plate.rows.get('2', length=6),
+    mix_after=(3, 20)
 )
