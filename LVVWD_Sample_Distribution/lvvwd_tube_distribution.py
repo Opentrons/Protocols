@@ -35,7 +35,7 @@ p1000 = instruments.Pipette(
     channels=1
 )
 
-
+# Creates list of columns on 96 well plate
 columns_list = []
 for column in plate.cols:
     columns_list.append(iter(column))

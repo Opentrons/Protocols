@@ -17,6 +17,7 @@
 
 
 ### Time Estimate
+56 minutes
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)
