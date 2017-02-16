@@ -1,7 +1,7 @@
 # Dinosaur
 
 ### Author
-Opentrons
+[Opentrons](https://opentrons.com/)
 
 ### Partner
 
@@ -16,9 +16,9 @@ Draw a picture of a dinosaur on a 96 well plate using food coloring.
 10 minutes
 
 ### Robot
-* OT PRO 
-* OT Standard
-* OT Hood
+* [OT PRO](https://opentrons.com/ot-one-pro)
+* [OT Standard](https://opentrons.com/ot-one-standard)  
+* [OT Hood](https://opentrons.com/ot-one-hood) 
 
 ### Modules
 
@@ -32,6 +32,6 @@ Draw a picture of a dinosaur on a 96 well plate using food coloring.
 
 
 ## Preview
-I'm a protocol preview. To learn more about dinosaurs, visit our blog [here](https://en.wikipedia.org/wiki/Dinosaur)
+Learn how to use the robot by drawing a picture of a dinosaur in a 96 well plate!
 
 ### Additional Notes

@@ -1,7 +1,7 @@
 # 10X Serial Dilution
 
 ### Author
-[Opentrons](url)
+[Opentrons](https://opentrons.com/)
 
 ### Partner
 
@@ -13,12 +13,12 @@
 Uses an 8 channel to perform six 10X dilutions in a 96 well plate.
 
 ### Time Estimate
-5 minutes and 30 seconds
+5.5 minutes
 
 ### Robot
-* OT PRO 
-* OT Standard
-* OT Hood
+* [OT PRO](https://opentrons.com/ot-one-pro)
+* [OT Standard](https://opentrons.com/ot-one-standard)  
+* [OT Hood](https://opentrons.com/ot-one-hood) 
 
 ### Modules
 
@@ -32,3 +32,6 @@ Uses an 8 channel to perform six 10X dilutions in a 96 well plate.
 
 
 ### Additional Notes
+
+## Preview
+Use an 8 channel pipette do dilute six samples down a 96 well plate.

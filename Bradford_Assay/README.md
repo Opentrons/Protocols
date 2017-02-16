@@ -1,7 +1,7 @@
 # Bradford Assay
 
 ### Author
-Opentrons
+[Opentrons](https://opentrons.com/)
 
 ### Partner
 [BioMarin](http://www.biomarin.com/)
@@ -14,11 +14,11 @@ Opentrons
 Test six standards and four samples (all in duplicate) using the Bradford Reagent.
 
 ### Time Estimate
-38  minutes
+38 minutes
 
 ### Robot
-* OT PRO 
-* OT Hood
+* [OT PRO](https://opentrons.com/ot-one-pro)  
+* [OT Hood](https://opentrons.com/ot-one-hood) 
 
 ### Modules
 
@@ -39,4 +39,5 @@ Test six standards and four samples (all in duplicate) using the Bradford Reagen
 ### Additional Notes
 [Kit Link](https://www.thermofisher.com/order/catalog/product/23236)
 
-
+## Preview
+Test four samples against six known standards using the Pierce Coomassie Plus Bradford Assay Reagent

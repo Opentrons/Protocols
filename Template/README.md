@@ -1,10 +1,10 @@
 # DNA Extraction
 
 ### Author
-[Opentrons](url)
+[Opentrons](https://opentrons.com/)
 
 ### Partner
-[Stanford](url)
+[Stanford](https://www.stanford.edu/)
 
 ## Categories
 * Sample Prep
@@ -21,14 +21,14 @@ Nulla vulputate eu ex sed ullamcorper. Cras luctus metus non dui venenatis, nec 
 22 Minutes at 3000 mm/sec
 
 ### Robot
-* OT PRO 
-* OT Standard
-* OT Hood
+* [OT PRO](https://opentrons.com/ot-one-pro)
+* [OT Standard](https://opentrons.com/ot-one-standard)  
+* [OT Hood](https://opentrons.com/ot-one-hood) 
 
 ### Modules
-* MagDeck
-* CoolDeck
-* HeatDeck
+* [MagDeck](https://shop.opentrons.com/collections/labware/products/magdeck)
+* [CoolDeck](https://shop.opentrons.com/collections/labware/products/cold-deck)
+* [HeatDeck](https://shop.opentrons.com/collections/labware/products/heat-deck)
 
 ### Reagents
 * [Reagent Name](url)

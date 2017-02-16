@@ -1,10 +1,10 @@
 # Consolidate Entire Plate to Tube
 
 ### Author
-[Opentrons](url)
+[Opentrons](https://opentrons.com/)
 
 ### Partner
-[Phdbiotech Inc.](url)
+[Phdbiotech Inc.](http://www.phdbiotech.com/)
 
 ## Categories
 * Basic Pipetting
@@ -17,9 +17,9 @@ Consolidate the contents of an entire 96 well plate into a single 1.5 mL microce
 14 minutes
 
 ### Robot
-* OT PRO 
-* OT Standard
-* OT Hood
+* [OT PRO](https://opentrons.com/ot-one-pro)
+* [OT Standard](https://opentrons.com/ot-one-standard)  
+* [OT Hood](https://opentrons.com/ot-one-hood) 
 
 ### Modules
 

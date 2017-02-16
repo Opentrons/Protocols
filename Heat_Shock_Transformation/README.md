@@ -1,7 +1,7 @@
 # Heat Shock Transformation
 
 ### Author
-Opentrons
+[Opentrons](https://opentrons.com/)
 
 ### Partner
 
@@ -16,13 +16,12 @@ Perform a 1 minute heat shock transformation on six samples.
 1 hour
 
 ### Robot
-* OT PRO 
-* OT Standard
-* OT Hood
+* [OT PRO](https://opentrons.com/ot-one-pro) 
+* [OT Hood](https://opentrons.com/ot-one-hood)
 
 ### Modules
-* CoolDeck
-* HeatDeck
+* [CoolDeck](https://shop.opentrons.com/collections/labware/products/cold-deck)
+* [HeatDeck](https://shop.opentrons.com/collections/labware/products/heat-deck)
 
 ### Reagents
 * DNA
@@ -38,3 +37,6 @@ Perform a 1 minute heat shock transformation on six samples.
 
 
 ### Additional Notes
+
+## Preview
+Use our HeatDeck and CoolDeck to perform a 1 minute heat shock transformation on six samples.
