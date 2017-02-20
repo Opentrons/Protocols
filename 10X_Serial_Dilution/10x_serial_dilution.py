@@ -1,4 +1,4 @@
-from opentrons import containers, instruments
+from opentrons import robot, containers, instruments
 
 
 trough = containers.load('trough-12row', 'D2', 'trough')
@@ -20,12 +20,15 @@ p200M = instruments.Pipette(
 p200M.distribute(
     180,
     trough['A1'],
-    plate.rows.get('2', length=6)
+    plate.rows('2', to='7')
 )
 
 p200M.transfer(
     20,
-    plate.rows.get('1', length=6),
-    plate.rows.get('2', length=6),
+    plate.rows('1', to='6'),
+    plate.rows('2', to='7'),
     mix_after=(3, 20)
 )
+
+for c in robot.commands():
+    print(c)

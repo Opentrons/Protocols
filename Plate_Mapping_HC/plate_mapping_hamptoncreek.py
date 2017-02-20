@@ -1,4 +1,4 @@
-from opentrons import containers, instruments
+from opentrons import robot, containers, instruments
 
 
 p200rack = containers.load('tiprack-200ul', 'A2')
@@ -16,6 +16,7 @@ p200_multi = instruments.Pipette(
     axis="a",
     name='p200_multi',
     max_volume=200,
+    min_volume=10,
     channels=8,
     trash_container=trash,
     tip_racks=[p200rack]
@@ -25,10 +26,13 @@ dest_plates = [plate2, plate3, plate4, plate5, plate6, plate7]
 
 # map 45 uL to all odd rows of all 6 destination plates
 for i in range(0, 12, 2):
-    target_rows = [d.rows[i] for d in dest_plates]
-    p200_multi.distribute(45, plate1.rows[i], target_rows)
+    target_rows = [plate.rows(i) for plate in dest_plates]
+    p200_multi.distribute(45, plate1.rows(i), target_rows)
 
 # map 90 uL to all even rows of all 6 destination plates
 for i in range(1, 12, 2):
-    target_rows = [d.rows[i] for d in dest_plates]
-    p200_multi.distribute(90, plate1.rows[i], target_rows)
+    target_rows = [d.rows(i) for d in dest_plates]
+    p200_multi.distribute(90, plate1.rows(i), target_rows)
+
+for c in robot.commands():
+    print(c)

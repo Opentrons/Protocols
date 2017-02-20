@@ -15,7 +15,6 @@ p200 = instruments.Pipette(
 )
 
 # dispense 40 uL from tube to plate, for 24 tubes
-num_samples = 24
 p200.transfer(
     40,
     tube_rack.wells('A1', length=24),

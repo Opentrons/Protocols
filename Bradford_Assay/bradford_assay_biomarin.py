@@ -1,5 +1,4 @@
 from opentrons import containers, instruments
-import itertools
 
 
 tiprack = containers.load('tiprack-200ul', 'B1')
@@ -30,28 +29,28 @@ p200 = instruments.Pipette(
 # dispense 6 standards from tube racks (A1, B1, C1, D1, A2, B2)
 # to first two rows of 96 well plate (duplicates, A1/A2, B1/B2 etc.)
 for i in range(6):
-    p200.distribute(25, tuberack[i], plate.cols[i].wells('1', '2'))
+    p200.distribute(25, tuberack[i], plate.cols(i).wells('1', '2'))
 
 # dispense 4 samples from tube rack (C2, D2, A3, B3)
 # to row 3 of 96 well plate (duplicates, A3/B3, C3/D3, E3/F3, G3/H3)
-target_wells = itertools.chain(plate.rows['3'])
-for source in tuberack('C2', length=4):
-    target = [next(target_wells), next(target_wells)]
-    p200.distribute(50, source, target)
+t_wells = plate.rows['3'].iter()
+for source in tuberack.wells('C2', 'D2', 'A3', 'B3'):
+    targets = [next(t_wells), next(t_wells)]
+    p200.distribute(50, source, targets)
 
 # fill rows 4 to 11 with 25 uL of dilutent each
 p300_multi.distribute(
     25,
     trough['A1'],
-    plate.rows.get('4', length=8))
+    plate.rows('4', length=8))
 
 # dilute samples down all rows
 p300_multi.transfer(
     25,
-    plate.rows.get('3', length=8),
-    plate.rows.get('4', length=8),
+    plate.rows('3', length=8),
+    plate.rows('4', length=8),
     mix_after=(3, 25))
 
 # fill rows 1 to 11 with 200 uL of Bradford reagent
-for target in plate.rows.get('1', length=11):
+for target in plate.rows('1', length=11):
     p300_multi.transfer(200, trough['A2'], target, mix_after=(3, 100))
