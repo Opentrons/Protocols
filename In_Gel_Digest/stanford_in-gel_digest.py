@@ -26,11 +26,10 @@ for i in range(4):
         cold_tubes[i],
         tube_rack.wells('A1', length=20))
     p200.delay(minutes=delays[i])
-    p200.consolidate(
+    p200.transfer(
         150,
         tube_rack.wells('A1', length=20),
         waste,
-        repeater=False,
         new_tip='always')
 
 # Trypsin Digestion

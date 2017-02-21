@@ -1,4 +1,4 @@
-from opentrons import robot, containers, instruments
+from opentrons import containers, instruments
 
 
 p10rack = containers.load('tiprack-10ul', 'A1')
@@ -55,7 +55,6 @@ p10.consolidate(
 num_washes = 2
 for n in range(num_washes):
     for i in range(num_rows):
-
         p200_multi.pick_up_tip()
 
         p200_multi.transfer(
@@ -99,6 +98,3 @@ p200_multi.transfer(
 
 # Step 9: remove magnets
 mag_deck.disengage()
-
-for c in robot.commands():
-    print(c)

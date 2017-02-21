@@ -1,4 +1,4 @@
-from opentrons import robot, containers, instruments
+from opentrons import containers, instruments
 
 
 p1000rack = containers.load('tiprack-1000ul', 'A1')
@@ -23,15 +23,12 @@ p1000 = instruments.Pipette(
 )
 
 # distribute buffer to all wells, except columns A and E
-target_wells = plate.cols('B') + plate.cols('C') + plate.cols('D')
-target_wells += plate.cols('F') + plate.cols('G') + plate.cols('H')
-p1000.distribute(300, trough.well('A1'), target_wells)
+destination_wells = [w for c in plate.cols('B', to='H') for w in c]
+p1000.distribute(300, trough.well('A1'), destination_wells)
 
 # distribute samples in duplicate to columns A and E, 1 tube to 2 wells
-dest_wells = iter(plate.cols('A') + plate.cols('E'))
-for tube in tube.wells(0, length=12):
-    destinations = [next(dest_wells), next(dest_wells)]
-    p1000.distribute(600, tube, destinations)
+p1000.distribute(
+    600, tube.wells('A1', length=12), plate.cols('A') + plate.cols('E'))
 
 # dilute down all rows
 for this_row in plate.rows:
@@ -49,6 +46,3 @@ for this_row in plate.rows:
 # dispense 200 uL to every even row
 p200_multi.distribute(
     200, trough.well('A1'), plate.rows('2', to='12', step=2))
-
-for c in robot.commands():
-    print(c)

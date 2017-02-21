@@ -1,4 +1,4 @@
-from opentrons import robot, containers, instruments
+from opentrons import containers, instruments
 
 
 tiprack200 = containers.load('tiprack-200ul', 'A1')
@@ -46,16 +46,17 @@ p10.transfer(
 p10.delay(minutes=30)
 
 # move dna/cells from cold deck to heat deck and then back
+volume = DNA_vol + cell_vol
 for i in range(num_samples):
     p200.pick_up_tip()
 
-    p200.aspirate(DNA_vol + cell_vol, cold_deck.cols('A').wells(i))
+    p200.aspirate(volume, cold_deck.cols('A').wells(i))
     p200.dispense(heat_deck.cols('A').wells(i))
     p200.touch_tip()
 
-    p200.delay(1 * 60)  # delay 1 minute
+    p200.delay(minutes=1)
 
-    p200.aspirate(DNA_vol + cell_vol, heat_deck.cols('A').wells(i))
+    p200.aspirate(volume, heat_deck.cols('A').wells(i))
     p200.dispense(cold_deck.cols('A').wells(i))
     p200.touch_tip()
 
@@ -70,6 +71,3 @@ p200.distribute(
     tube_rack.wells('A1'),
     cold_deck.cols('A').wells('1', length=num_samples)
 )
-
-for c in robot.commands():
-    print(c)
