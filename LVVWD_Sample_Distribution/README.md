@@ -1,10 +1,9 @@
-# Vial Sample Distribution
+# Vial Rack Sample Distribution
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
 ### Partner
-[Las Vegas Valley Water District](https://www.lvvwd.com/)
 
 ## Categories
 * Basic Pipetting
@@ -14,6 +13,7 @@
 
 
 ## Description
+Distribute 48 samples in duplicate to a 96 well plate.
 
 
 ### Time Estimate
@@ -28,15 +28,10 @@
 
 ### Reagents
 
-
 ## Process
-1. Distribute 48 samples in duplicate to plate.  Sample A1 --> Wells A1, A2, Sample B1 --> B1, B2 etc.
-
-
+1. Transfer 300 uL of vial to two wells.
+2. Repeat for 47 more samples.
 
 ### Additional Notes
-Include mapping photo here?
-
 
 ###### Internal
-[Link To Google Doc](https://docs.google.com/presentation/d/1T90uIaz3ci-UPK3x-OkrLX0x0_hDDQClusc5U2qAYWs/edit#slide=id.p7)
