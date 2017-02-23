@@ -1,7 +1,7 @@
 # T4 DNA Ligation
 
 ### Author
-[Opentrons](url)
+[Opentrons](https://opentrons.com/)
 
 ### Partner
 
@@ -16,12 +16,12 @@ Ligates vector DNA and insert DNA using NEB T4 DNA Ligase.
 5 minutes
 
 ### Robot
-* OT PRO 
-* OT Standard
-* OT Hood
+* [OT PRO](https://opentrons.com/ot-one-pro)
+* [OT Standard](https://opentrons.com/ot-one-standard)  
+* [OT Hood](https://opentrons.com/ot-one-hood) 
 
 ### Modules
-* CoolDeck
+* [CoolDeck](https://shop.opentrons.com/collections/labware/products/cold-deck)
 
 ### Reagents
 * T4 DNA Ligase

@@ -1,7 +1,7 @@
 # Antibody Tube Distribution
 
 ### Author
-Opentrons
+[Opentrons](https://opentrons.com/)
 
 ### Partner
 
@@ -18,9 +18,9 @@ Transfers 24 antibodies to the first 24 wells in a 384 well plate.
 24 minutes
 
 ### Robot
-* OT PRO 
-* OT Standard
-* OT Hood
+* [OT PRO](https://opentrons.com/ot-one-pro)
+* [OT Standard](https://opentrons.com/ot-one-standard)  
+* [OT Hood](https://opentrons.com/ot-one-hood) 
 
 ### Modules
 

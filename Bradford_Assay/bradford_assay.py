@@ -14,7 +14,7 @@ tiprack50 = containers.load(
 )
 trough = containers.load(
     'trough-12row',
-    'B2',
+    'E1',
     'trough'
 )
 plate = containers.load(

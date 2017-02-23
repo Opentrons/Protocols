@@ -1,7 +1,7 @@
 # Mapping One Plate to Six Plates
 
 ### Author
-Opentrons
+[Opentrons](https://opentrons.com/)
 
 ### Partner
 [Hampton Creek](www.hamptoncreek.com)
@@ -18,9 +18,9 @@ Duplicate one plate to six other plates, pulling a different volumes from the od
 25 minutes
 
 ### Robot
-* OT PRO 
-* OT Standard
-* OT Hood
+* [OT PRO](https://opentrons.com/ot-one-pro)
+* [OT Standard](https://opentrons.com/ot-one-standard)  
+* [OT Hood](https://opentrons.com/ot-one-hood) 
 
 ### Modules
 

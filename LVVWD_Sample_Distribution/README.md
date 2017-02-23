@@ -1,20 +1,23 @@
-# Consolidate Entire Plate to Tube
+# Vial Rack Sample Distribution
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
 ### Partner
-[Phdbiotech Inc.](http://www.phdbiotech.com/)
 
 ## Categories
 * Basic Pipetting
-	* Plate Consolidation
+	* Plate Filling
+* Sample Prep
+	* Distribution
+
 
 ## Description
-Consolidate the contents of an entire 96 well plate into a single 1.5 mL microcentrifuge tube.
+Distribute 48 samples in duplicate to a 96 well plate.
+
 
 ### Time Estimate
-14 minutes
+56 minutes
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)
@@ -23,17 +26,12 @@ Consolidate the contents of an entire 96 well plate into a single 1.5 mL microce
 
 ### Modules
 
-
 ### Reagents
 
-
 ## Process
-1. Pick up 20ul from wells until pipette is full.
-2. Dispense entire volume into tube.
-3. Repeat for all wells in plate.
-
+1. Transfer 300 uL of vial to two wells.
+2. Repeat for 47 more samples.
 
 ### Additional Notes
-
 
 ###### Internal

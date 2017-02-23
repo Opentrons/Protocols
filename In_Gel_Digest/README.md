@@ -1,7 +1,7 @@
 # In-Gel Digest
 
 ### Author
-Opentrons
+[Opentrons](https://opentrons.com/)
 
 ### Partner
 [Stanford University](https://www.stanford.edu/)
@@ -19,28 +19,28 @@ Prepares proteins harbored inside gels for overnight protease digestion to produ
 4.5 hours
 
 ### Robot
-* OT Hood
+* [OT Hood](https://opentrons.com/ot-one-hood) 
 
 ### Modules
-CoolDeck
+* [CoolDeck](https://shop.opentrons.com/collections/labware/products/cold-deck)
 
 ### Reagents
 * DTT
-* Acrylamid
+* Acrylamide
 * Wash buffer
-* Protease
+* Protease(s) of choice
 
 ## Process
 1. Add DTT.
 2. Incubate for 30 minutes at 55C.
 3. Remove DTT.
 4. Add acrylamide.
-5. Incubate for 30 minute incubation at RT.
+5. Incubate for 30 minute at RT.
 6. Remove acrylamide. 
 7. Wash twice.
 8. Dry gels.
-9. Add Protease.
-10. Transfer gels to 37C for overnight digestion
+9. Add Protease(s) of choice.
+10. Transfer gels to 37C for overnight digestion.
 
 ## Preview
 Explore the full In Gel Digest protocol used by the Stanford University Mass Spec Core.
