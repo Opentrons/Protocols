@@ -8,6 +8,7 @@ plate = containers.load('96-PCR-flat', 'C1', 'plate')
 pcr_plate = containers.load('96-PCR-flat', 'C2', 'pcr_plate')
 trash = containers.load('point', 'A1', 'trash')
 trough = containers.load('trough-12row', 'B1', 'trough')
+tube_rack = containers.load('tube-rack-2ml', 'C1', 'tuberack')
 
 p50 = instruments.Pipette(   
         axis="a",
@@ -60,7 +61,9 @@ for i in range(11):
     p50.aspirate(20, elution_buffer).dispense(plate.rows[i]).mix(5, 20, plate.rows[i])
     p50.aspirate(20, plate.rows[i]).dispense(plate.rows[i+1])
 p50.drop_tip()
+
 # final plate dispense?
-p50.pick_up_tip()
-p50.aspirate(20, plate.rows['12']).dispense()
-p50.drop_tip()
+p50S.pick_up_tip()
+for i in range(8):
+    p50S.aspirate(20, plate.rows[i]).dispense(tube_rack['A1'])
+p50S.drop_tip()
