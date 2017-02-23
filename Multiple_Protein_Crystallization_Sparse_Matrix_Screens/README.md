@@ -7,7 +7,7 @@
 [Cayman Chemical](https://www.caymanchem.com/Home)
 
 ## Categories
-* Proteins and Proteomics
+* Proteins & Proteomics
 	* Protein Crystallography
 
 ## Description
