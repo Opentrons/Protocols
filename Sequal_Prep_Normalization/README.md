@@ -12,11 +12,9 @@
 ## Description
 
 ### Time Estimate
-
+2 hours and 55 minutes
 ### Robot
 * OT PRO 
-* OT Standard
-* OT Hood
 
 ### Modules
 
