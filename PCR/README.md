@@ -1,4 +1,4 @@
-# PCR
+# PCR Setup
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -8,6 +8,8 @@
 ## Categories
 * Molecular Biology
 	* DNA
+* Sample Prep
+	* PCR
 
 ## Description
 Sets up six PCR reactions, all with the same DNA, enzyme, buffer and primers.
