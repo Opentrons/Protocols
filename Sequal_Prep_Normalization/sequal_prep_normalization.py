@@ -2,13 +2,13 @@ from opentrons import robot, instruments, containers
 
 p50rack = containers.load('tiprack-200ul', 'A1', 'p50rack')
 p50rack2 = containers.load('tiprack-200ul', 'A2', 'p50rack2')
-p50rack3 = containers.load('tiprack-200ul', 'A3', 'p50rack3')
-p50rack4 = containers.load('tiprack-200ul', 'B3', 'p50rack4')
+p50rack3 = containers.load('tiprack-200ul', 'E1', 'p50rack3')
+p50rack4 = containers.load('tiprack-200ul', 'E2', 'p50rack4')
 plate = containers.load('96-PCR-flat', 'C1', 'plate')
 pcr_plate = containers.load('96-PCR-flat', 'C2', 'pcr_plate')
-trash = containers.load('point', 'A1', 'trash')
-trough = containers.load('trough-12row', 'B1', 'trough')
-tube_rack = containers.load('tube-rack-2ml', 'C1', 'tuberack')
+trash = containers.load('point', 'D3', 'trash')
+trough = containers.load('trough-12row', 'A3', 'trough')
+tube_rack = containers.load('tube-rack-2ml', 'C3', 'tuberack')
 
 p50 = instruments.Pipette(   
         axis="a",
@@ -30,7 +30,7 @@ binding_buffer = trough['A1']
 wash_buffer = trough['A2']
 elution_buffer = trough['A3']
 
-PCR_vol = 5 # same volume for all?  import from CSV file?
+PCR_vol = 5 
 
 # add normalization buffer
 p50S.pick_up_tip()
