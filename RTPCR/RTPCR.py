@@ -24,5 +24,5 @@ for i in range(12):
 for i in range(8):
     p50.pick_up_tip()
     for well in plate.cols[i]:
-        p50.aspirate(15, tuberack[i + 12]).dispense(well)o
+        p50.aspirate(15, tuberack[i + 12]).dispense(well)
     p50.drop_tip()
