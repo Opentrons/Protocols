@@ -1,11 +1,11 @@
 from opentrons import containers, instruments
 
 # add a 2ml tube rack
-tuberack = containers.load('tube-rack-2ml', 'C1', 'tuberack')
+tuberack = containers.load('tube-rack-2ml', 'C1')
 
 # add a p10 pipette, with tiprack and trash
-p10rack = containers.load('tiprack-200ul', 'A1', 'p10rack')
-trash = containers.load('point', 'B2', 'trash')
+p10rack = containers.load('tiprack-200ul', 'A1')
+trash = containers.load('point', 'B2')
 p10 = instruments.Pipette(
     axis='b',
     max_volume=10,
