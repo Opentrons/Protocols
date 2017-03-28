@@ -1,28 +1,34 @@
-from opentrons import containers, instruments
+from opentrons import robot, containers, instruments
 
 
-p10rack = containers.load('tiprack-10ul', 'E1', 'p10-rack')
-p200rack = containers.load('tiprack-200ul', 'A1', 'p200-rack')
-source_tubes = containers.load('tube-rack-2ml', 'C1', 'tube rack')
-dna_tubes = containers.load('tube-rack-2ml', 'C1', 'tube rack')
+robot.head_speed(15000, z=4000)
 
-output = containers.load('96-PCR-flat', 'B2', 'output')
-trash = containers.load('point', 'D2', 'trash')
+
+p10rack = containers.load('tiprack-10ul', 'B2', 'p10-rack')
+p50rack = containers.load('tiprack-200ul', 'A1', 'p50-rack')
+source_tubes = containers.load('tube-rack-2ml', 'D2', 'tube rack')
+dna_tubes = containers.load('tube-rack-2ml', 'C3', 'dna rack')
+output = containers.load('96-PCR-flat', 'C1', 'output')
+trash = containers.load('point', 'A3', 'trash')
 
 p10 = instruments.Pipette(
     name="p10",
     trash_container=trash,
     tip_racks=[p10rack],
+    min_volume=1,
     max_volume=10,
-    axis="a"
+    axis="a",
+    channels=1
 )
 
-p200 = instruments.Pipette(
-    name="p200",
+p50 = instruments.Pipette(
+    name="p50",
     trash_container=trash,
-    tip_racks=[p200rack],
-    max_volume=200,
-    axis="b"
+    tip_racks=[p50rack],
+    min_volume=5,
+    max_volume=50,
+    axis="b",
+    channels=1
 )
 
 total_volume = 25
@@ -32,33 +38,42 @@ DNA_sources = dna_tubes.wells(0, length=num_pcr_samples)
 
 mix_location = source_tubes.wells('A1')
 water_source = source_tubes.wells('C2')
-sources = {
-    'B1': 3,  # uL per PCR well
-    'C1': 2.5,
-    'D1': 2.5,
-    'A2': 2,
-    'B2': 2
+
+sources = {    #uL per PCR well
+    'B1': 3,   #enzyme -- 4 
+    'C1': 2.5, #buffer -- 5 
+    'D1': 2.5, #dNTP -- 2 
+    'A2': 2,   #fprimer -- 3 
+    'B2': 2    #rprimer -- 1 
 }
+
 sources_total_vol = sum(sources.values())
 
+#Create Master Mix
 for name, vol in sources.items():
-    p200.transfer(
+    p50.transfer(
         vol * (num_pcr_samples + 1),
         source_tubes.wells(name),
         mix_location)
 
+#Distribute Master Mix
 p10.distribute(
-    sources_total_vol,
+    sources_total_vol, 
     mix_location,
     output.wells('A1', length=num_pcr_samples))
 
+#Add DNA
 p10.transfer(
     DNA_volumes,
     DNA_sources,
     output.wells('A1', length=num_pcr_samples),
     new_tip='always')
 
-water_volumes = [total_volume - v - sources_total_vol for v in DNA_volumes]
+#Add water
+water_volumes = []
+for v in DNA_volumes:
+    water_volumes.append(total_volume - v - sources_total_vol)
+
 p10.distribute(
     water_volumes,
     water_source,
