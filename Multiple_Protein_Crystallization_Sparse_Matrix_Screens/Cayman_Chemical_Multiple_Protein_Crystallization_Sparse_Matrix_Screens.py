@@ -27,37 +27,23 @@ p1000 = instruments.Pipette(
 m10 = instruments.Pipette(
     axis="a",
     max_volume=10,
-    min_volume=1,
+    min_volume=0.5,
     tip_racks=[p20rack, p20rack2, p20rack3],
     trash_container=trash,
     channels=8,
     name="m10"
 )
 
-p1000.transfer(
-    100,
-    matrix_index.wells(length=96),
-    plate.wells(96, length=96),
+p1000.transfer(100, matrix_index.wells(length=96), plate.wells(96, length=96), 
     new_tip='always')
 
-m10.distribute(1, cooldeck.wells('A1'), plate.cols('A'))
+m10.distribute(1, cooldeck.wells('A1'), plate.rows('1', to='12'))
 
-m10.transfer(
-    1,
-    plate.cols('A').wells(0, length=12),
-    plate.cols('A').wells(12, length=12))
+m10.transfer(1, plate.rows('1', to='12'), plate.rows('13', to='24')) 
 
-p1000.transfer(
-    100,
-    matrix_peg.wells(0, length=96),
-    plate2.wells(96, length=96))
+p1000.transfer(100, matrix_peg.wells(0, length=96), plate2.wells(96, length=96),
+    new_tip='always')
 
-m10.distribute(
-    1,
-    cooldeck.wells('A1'),
-    plate2.cols('A').wells(0, length=12))
+m10.distribute(1, cooldeck.wells('A1'), plate.rows('1', to='12')) 
 
-m10.transfer(
-    1,
-    plate2.cols('A').wells(0, length=12),
-    plate2.cols('A').wells(12, length=12))
+m10.transfer(1, plate2.rows('1', to='12'), plate2.rows('13', to='24')) 
