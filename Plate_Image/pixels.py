@@ -5,13 +5,13 @@ Demonstrates drawing an image in a 96 well plate,
 by first designing that image in a Python list.
 """
 
-from opentrons import containers, instruments
+robot.head_speed(18000)
 
 tip_rack = containers.load('tiprack-200ul', 'B1')
 trough = containers.load('trough-12row', 'C1')
 plate = containers.load('96-PCR-flat', 'D1')
 
-p200 = instruments.Pipette(axis="b", max_volume=200, tip_racks=[tip_rack])
+p200 = instruments.Pipette(axis="a", max_volume=200, tip_racks=[tip_rack])
 
 # edit the plate map list to draw new images!
 _ = None
