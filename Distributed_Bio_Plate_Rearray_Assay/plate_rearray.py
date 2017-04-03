@@ -25,7 +25,7 @@ output_wells = output1.wells('A1','A2','A3','A4')
 
 p200.transfer(20, source_wells, output_wells, new_tip='always',trash=False,touch_tip=True,blow_out=True,)
 
-source_wells = input2.wells('A3','D3','G5','A7','H2','F3','F2','F1','E12')
-output_wells = output2.wells('A1','A2','A3','A4','A5','A6','A7','A8','A9')
+source_wells1 = input2.wells('A3','D3','G5','A7','H2','F3','F2','F1','E12')
+output_wells1 = output2.wells('A1','A2','A3','A4','A5','A6','A7','A8','A9')
 
-p200.transfer(20, source_wells, output_wells, new_tip='never')
+p200.transfer(20, source_wells1, output_wells1, new_tip='never')
