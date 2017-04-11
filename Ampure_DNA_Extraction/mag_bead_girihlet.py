@@ -1,55 +1,25 @@
-from opentrons import robot, containers, instruments
-from itertools import chain
-import math
+from opentrons import containers, instruments
 
-p10rack = containers.load(
-    'tiprack-10ul',  
-    'A1',             
-    'p10rack'        
-)
-p200rack = containers.load(
-    'tiprack-200ul',  
-    'A2',             
-    'p200rack'        
-)
-trash = containers.load(
-    'point', 
-    'B2', 
-    'trash'
-)
-output_plate = containers.load(
-    '96-PCR-flat',
-    'E1',
-    'output_plate'
-)
-mag_plate = containers.load(
-    '96-PCR-tall',
-    'D2',
-    'mag_plate'
-)
-trough = containers.load(
-    'trough-12row',
-    'C1',
-    'trough'
-)
 
-#pipette
+p10rack = containers.load('tiprack-10ul', 'A1')
+p200rack = containers.load('tiprack-200ul', 'A1')
+output_plate = containers.load('96-PCR-flat', 'B1')
+mag_plate = containers.load('96-PCR-tall', 'C1')
+trough = containers.load('trough-12row', 'B1')
+trash = containers.load('point', 'A2')
+
+mag_deck = instruments.Magbead()
 
 p10 = instruments.Pipette(
-    name="p10",
-    min_volume=1,
-    max_volume=10,
     axis="b",
+    max_volume=10,
     trash_container=trash,
-    tip_racks=[p10rack],
-    channels=1
+    tip_racks=[p10rack]
 )
 
-p200 = instruments.Pipette(
-    name="p200",
-    min_volume=20,
-    max_volume=200,
+p200_multi = instruments.Pipette(
     axis="a",
+    max_volume=200,
     trash_container=trash,
     tip_racks=[p200rack],
     channels=8
@@ -57,66 +27,78 @@ p200 = instruments.Pipette(
 
 mag_deck = instruments.Magbead()
 
-# Variables set by user
-
-# List of DNA volumes
-samples = [9, 10, 9, 10]
-
-# Set location for mag bead stock
-mag_beads_stock = trough['A1']
-
-# incubation time
-mag_incubation_time = 900
-
-# time on magnetic bead station
-mag_deck_delay = 120
-
-# location of ethanol stock
-ethanol_stock = trough['A2']
-
-# volume of ethanol to add to beads
-ethanol_volume = 200
-
-# number ethanol washes
-ethanol_washes = 2
-
-# ethanol delay
-ethanol_delay = 30
-
-# buffer location
-buffer_stock = trough['A3']
-
-# buffer volume
-buffer_volume = 20
-
-# buffer delay
-buffer_delay = 300
-
-# mag deck buffer delay
-mag_deck_buffer_delay = 300
-
-# final volume
-final_volume = 20
-
-# Calculate Variables
-
-# Get number of samples to use in loop
+samples = [9, 10, 9, 10]  # already present in wells
+bead_volumes = [s * (8 / 10) for s in samples]
 num_samples = len(samples)
-num_rows = math.ceil(num_samples/8)
+num_rows = int(num_samples / 8) + 1
 
-# Add beads to samples based on DNA volume
-for i in range(num_samples):
-    mag_vol = ((samples[i])*8)/10  # calculate volume of mag bead to add based on sample volume
-    well = mag_plate[i]  # set location of where DNA is located
-    p10.pick_up_tip().aspirate(mag_vol, mag_beads_stock)  # aspirate correct volume from mag bead stock
-    p10.dispense(well.top()).blow_out() # dispense mag beads to top of tube, blow out
-    p10.mix(5, mag_vol, well.bottom())  # mix at bottom of well
-    p10.drop_tip() # drop tip in trash
+# Step 1: transfer buffer to magbead plate
+p10.distribute(
+    bead_volumes,
+    trough.wells('A1'),
+    mag_plate.wells('A1', length=num_samples)
+)
 
-# Incubate at room temp and engage mag beads
+# Step 2: engage magnets and wait
+mag_deck.delay(minutes=15).engage().delay(minutes=2)
 
-# home robot
-#robot.home(enqueue=True)
+# Step 3: (slowly) remove supernatent from plate
+total_volumes = [samples[i] + bead_volumes[i] for i in range(num_samples)]
+p10.consolidate(
+    total_volumes,
+    mag_plate.wells('A1', length=num_samples),
+    trash,
+    rate=0.5
+)
+
+# Step 4: wash each sample (twice) with ethanol
+num_washes = 2
+for n in range(num_washes):
+    for i in range(num_rows):
+        p200_multi.pick_up_tip()
+
+        p200_multi.transfer(
+            200,
+            trough['A2'],
+            mag_plate.rows(i),
+            air_gap=100,
+            new_tip='never')
+
+        p200_multi.delay(seconds=30)
+
+        p200_multi.transfer(
+            200,
+            mag_plate.rows(i).bottom(1),
+            trash,
+            air_gap=100,
+            new_tip='never')
+
+        p200_multi.drop_tip()
+
+# Step 5: remove magnets
+mag_deck.disengage()
+
+# Step 6: add buffer to samples
+p200_multi.distribute(
+    20,
+    trough['A3'],
+    mag_plate.rows('1', length=num_rows),
+    mix_after=(5, 20)
+)
+
+# Step 7: turn on magnets and wait
+mag_deck.delay(minutes=5).engage().delay(minutes=5)
+
+# Step 8: transfer final samples to separate plate
+p200_multi.transfer(
+    20,
+    mag_plate.rows('1', length=num_rows),
+    output_plate.rows('1', length=num_rows)
+)
+
+# Step 9: remove magnets
+mag_deck.disengage()
+ue)
 
 # incubate at room temp for 15 minutes
 p10.delay(mag_incubation_time)
