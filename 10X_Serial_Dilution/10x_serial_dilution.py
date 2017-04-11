@@ -1,19 +1,20 @@
 from opentrons import containers, instruments
 
 
-trough = containers.load('trough-12row', 'D2', 'trough')
-plate = containers.load('96-PCR-flat', 'C1', 'plate')
+# trough and 96-well plate
+trough = containers.load('trough-12row', 'D2')
+plate = containers.load('96-PCR-flat', 'C1')
 
-m200rack = containers.load('tiprack-200ul', 'A1', 'm200-rack')
-trash = containers.load('point', 'B2', 'trash')
-
+# 8-channel 200uL pipette, with a tiprack and trash
+m200rack = containers.load('tiprack-200ul', 'A1')
+trash = containers.load('point', 'B2')
 m200 = instruments.Pipette(
-    name="m200",
+    axis='a',
+    name='m200',
     trash_container=trash,
     tip_racks=[m200rack],
-    min_volume=20,
     max_volume=200,
-    axis="a",
+    min_volume=20,
     channels=8
 )
 
