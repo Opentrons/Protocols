@@ -80,7 +80,6 @@ for i in range(0,11,2):
     p200.pick_up_tip(tip).aspirate(200)
     for dest in dest_plates:
         dest = dest.rows[i]
-        print(dest)
         if p200.current_volume < dispense_volume:
             p200.aspirate(180, source)
         p200.dispense(dispense_volume, dest)
