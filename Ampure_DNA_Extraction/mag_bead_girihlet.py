@@ -17,7 +17,7 @@ p10 = instruments.Pipette(
     tip_racks=[p10rack]
 )
 
-p200_multi = instruments.Pipette(
+m200 = instruments.Pipette(
     axis="a",
     max_volume=200,
     trash_container=trash,
@@ -55,31 +55,31 @@ p10.consolidate(
 num_washes = 2
 for n in range(num_washes):
     for i in range(num_rows):
-        p200_multi.pick_up_tip()
+        m200.pick_up_tip()
 
-        p200_multi.transfer(
+        m200.transfer(
             200,
             trough['A2'],
             mag_plate.rows(i),
             air_gap=100,
             new_tip='never')
 
-        p200_multi.delay(seconds=30)
+        m200.delay(seconds=30)
 
-        p200_multi.transfer(
+        m200.transfer(
             200,
             mag_plate.rows(i).bottom(1),
             trash,
             air_gap=100,
             new_tip='never')
 
-        p200_multi.drop_tip()
+        m200.drop_tip()
 
 # Step 5: remove magnets
 mag_deck.disengage()
 
 # Step 6: add buffer to samples
-p200_multi.distribute(
+m200.distribute(
     20,
     trough['A3'],
     mag_plate.rows('1', length=num_rows),
@@ -90,7 +90,7 @@ p200_multi.distribute(
 mag_deck.delay(minutes=5).engage().delay(minutes=5)
 
 # Step 8: transfer final samples to separate plate
-p200_multi.transfer(
+m200.transfer(
     20,
     mag_plate.rows('1', length=num_rows),
     output_plate.rows('1', length=num_rows)
