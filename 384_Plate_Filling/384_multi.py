@@ -22,7 +22,7 @@ for row in plate.rows():
     alternating_wells.append(row.wells('A', length=8, step=2))
     alternating_wells.append(row.wells('B', length=8, step=2))
 
-p200.distribute(
+m200.distribute(
     1,
     trough.wells('A1'),
     alternating_wells
