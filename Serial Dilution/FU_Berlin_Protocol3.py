@@ -27,181 +27,61 @@ p200m = instruments.Pipette(
     trash_container=trash
 )
 
+plate_slots = ['A1', 'B1', 'C1', 'D1', 'E1']
+plate_type = '384-plate'
+
+plates = [containers.load(plate_type, slot) for slot in plate_slots]
+
 #Step 1
-p200m.transfer(
-    50,
-    trough.wells('A1'),
-    plate1.wells('A1', length=24),
-    new_tips='once'
-)
+#Fill 5 plates with 50 uL culture medium
+#using multichannel pipette
+for plate in plates:
+    p200m.transfer(
+        50,
+        trough.wells('A1'),
+        plate.wells('A1', length=24),
+        new_tips='once'
+    )
 
-p200m.transfer(
-    50,
-    trough.wells('A1'),
-    plate1.wells('B1', length=24),
-    new_tips='never'
-)
-
-p200m.transfer(
-    50,
-    trough.wells('A1'),
-    plate2.wells('A1', length=24),
-    new_tips='once'
-)
-
-p200m.transfer(
-    50,
-    trough.wells('A1'),
-    plate2.wells('B1', length=24),
-    new_tips='never'
-)
-
-p200m.transfer(
-    50,
-    trough.wells('A1'),
-    plate3.wells('A1', length=24),
-    new_tips='once'
-)
-
-p200m.transfer(
-    50,
-    trough.wells('A1'),
-    plate3.wells('B1', length=24),
-    new_tips='never'
-)
-
-p200m.transfer(
-    50,
-    trough.wells('A1'),
-    plate4.wells('A1', length=24),
-    new_tips='once'
-)
-
-p200m.transfer(
-    50,
-    trough.wells('A1'),
-    plate4.wells('B1', length=24),
-    new_tips='never'
-)
-
-p200m.transfer(
-    50,
-    trough.wells('A1'),
-    plate5.wells('A1', length=24),
-    new_tips='once'
-)
-
-p200m.transfer(
-    50,
-    trough.wells('A1'),
-    plate5.wells('B1', length=24),
-    new_tips='never'
-)
+    p200m.transfer(
+        50,
+        trough.wells('A1'),
+        plate.wells('B1', length=24),
+        new_tips='never'
+    )
 
 #Step 2
-p200s.transfer(
-    50,
-    tuberack.wells('A1'),
-    plate1.wells('A1', to='A22'),
-    new_tips='once'
-)
-
-p200s.transfer(
-    50,
-    tuberack.wells('A1'),
-    plate2.wells('A1', to='A22'),
-    new_tips='once'
-)
-
-p200s.transfer(
-    50,
-    tuberack.wells('A1'),
-    plate3.wells('A1', to='A22'),
-    new_tips='once'
-)
-
-p200s.transfer(
-    50,
-    tuberack.wells('A1'),
-    plate4.wells('A1', to='A22'),
-    new_tips='once'
-)
-
-p200s.transfer(
-    50,
-    tuberack.wells('A1'),
-    plate5.wells('A1', to='A22'),
-    new_tips='once'
-)
+#Transfer 50 uL from tube 1 to
+#A1 through A22 of each plate
+#using single channel pipette
+for plate in plates:
+    p200s.transfer(
+        50,
+        tuberack.wells('A1'),
+        plate.wells('A1', to='A22'),
+        new_tips='once'
+    )
 
 #Step 3
-p200m.transfer(
-    50,
-    trough.wells('A1'),
-    plate1.wells('A24'),
-    new_tips='once'
-)
-
-p200m.transfer(
-    50,
-    trough.wells('A1'),
-    plate2.wells('A24'),
-    new_tips='once'
-)
-
-p200m.transfer(
-    50,
-    trough.wells('A1'),
-    plate3.wells('A24'),
-    new_tips='once'
-)
-
-p200m.transfer(
-    50,
-    trough.wells('A1'),
-    plate4.wells('A24'),
-    new_tips='once'
-)
-
-p200m.transfer(
-    50,
-    trough.wells('A1'),
-    plate5.wells('A24'),
-    new_tips='once'
-)
+#Transfer 50 uL of medium from trough 
+#to row 24 of each plate
+#using multichannel pipette
+for plate in plates:
+    p200m.transfer(
+        50,
+        trough.wells('A1'),
+        plate.wells('A24'),
+        new_tips='once'
+    )
 
 #Step 4
-p200m.transfer(
-    50,
-    trough.wells('A1'),
-    plate1.wells('A1', to='A22'),
-    new_tips='once'
-)
-
-p200m.transfer(
-    50,
-    trough.wells('A1'),
-    plate2.wells('A1', to='A22'),
-    new_tips='once'
-)
-
-p200m.transfer(
-    50,
-    trough.wells('A1'),
-    plate3.wells('A1', to='A22'),
-    new_tips='once'
-)
-
-p200m.transfer(
-    50,
-    trough.wells('A1'),
-    plate4.wells('A1', to='A22'),
-    new_tips='once'
-)
-
-p200m.transfer(
-    50,
-    trough.wells('A1'),
-    plate5.wells('A1', to='A22'),
-    new_tips='once'
-)
+#Transfer 50 uL of medium from trough
+#to A1 through A22 of each plate
+#using multichannel pipette
+for plate in plates:
+    p200m.transfer(
+        50,
+        trough.wells('A1'),
+        plate.wells('A1', to='A22'),
+        new_tips='once'
+    )
