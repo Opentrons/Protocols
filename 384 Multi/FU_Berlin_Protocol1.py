@@ -19,101 +19,23 @@ p200 = instruments.Pipette(
     trash_container=trash
 )
 
+plate_slots = ['A1', 'A2', 'B1', 'B2', 'C1', 'D1', 'E1']
+plate_type = '384-plate'
+
+plate = [containers.load(plate_type, slot) for slot in plate_slots]
+
 # dispense 50 uL from trough to plate
-p200.transfer(
-    50,
-    trough.wells('A1'),
-    plate1.wells('A1', length=24),
-    new_tips='once'
-)
+for plate in plates:
+    p200m.transfer(
+        50,
+        trough.wells('A1'),
+        plate.wells('A1', length=24),
+        new_tips='once'
+    )
 
-p200.transfer(
-    50,
-    trough.wells('A1'),
-    plate1.wells('B1', length=24),
-    new_tips='never'
-)
-
-p200.transfer(
-    50,
-    trough.wells('A1'),
-    plate2.wells('A1', length=24),
-    new_tips='once'
-)
-
-p200.transfer(
-    50,
-    trough.wells('A1'),
-    plate2.wells('B1', length=24),
-    new_tips='never'
-)
-
-p200.transfer(
-    50,
-    trough.wells('A1'),
-    plate3.wells('A1', length=24),
-    new_tips='once'
-)
-
-p200.transfer(
-    50,
-    trough.wells('A1'),
-    plate3.wells('B1', length=24),
-    new_tips='never'
-)
-
-p200.transfer(
-    50,
-    trough.wells('A1'),
-    plate4.wells('A1', length=24),
-    new_tips='once'
-)
-
-p200.transfer(
-    50,
-    trough.wells('A1'),
-    plate4.wells('B1', length=24),
-    new_tips='never'
-)
-
-p200.transfer(
-    50,
-    trough.wells('A1'),
-    plate5.wells('A1', length=24),
-    new_tips='once'
-)
-
-p200.transfer(
-    50,
-    trough.wells('A1'),
-    plate5.wells('B1', length=24),
-    new_tips='never'
-)
-
-p200.transfer(
-    50,
-    trough.wells('A1'),
-    plate6.wells('A1', length=24),
-    new_tips='once'
-)
-
-p200.transfer(
-    50,
-    trough.wells('A1'),
-    plate6.wells('B1', length=24),
-    new_tips='never'
-)
-
-p200.transfer(
-    50,
-    trough.wells('A1'),
-    plate7.wells('A1', length=24),
-    new_tips='once'
-)
-
-p200.transfer(
-    50,
-    trough.wells('A1'),
-    plate7.wells('B1', length=24),
-    new_tips='never'
-)
+    p200m.transfer(
+        50,
+        trough.wells('A1'),
+        plate.wells('B1', length=24),
+        new_tips='never'
+    )
