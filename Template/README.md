@@ -15,7 +15,7 @@
 Nulla vulputate eu ex sed ullamcorper. Cras luctus metus non dui venenatis, nec elementum sem dictum. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Interdum et malesuada fames ac ante ipsum primis in faucibus. Sed dignissim, quam quis tempus suscipit, ex turpis porttitor lacus, nec mattis risus lectus sed dolor. Nam feugiat ullamcorper magna, eu consectetur enim pulvinar nec. Sed facilisis eros ac tellus mattis, a auctor est viverra. Aenean vulputate felis eget finibus pellentesque. Proin porta vehicula nisi, eu semper ante tincidunt sed.
 
 ### Time Estimate
-22 Minutes at 3000 mm/sec
+X minutes
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)
