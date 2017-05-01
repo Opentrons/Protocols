@@ -1,9 +1,6 @@
 from opentrons import robot, containers, instruments
 
 
-robot.head_speed(15000, z=4000)
-
-
 p10rack = containers.load('tiprack-10ul', 'B2', 'p10-rack')
 p50rack = containers.load('tiprack-200ul', 'A1', 'p50-rack')
 source_tubes = containers.load('tube-rack-2ml', 'D2', 'tube rack')
