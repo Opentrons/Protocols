@@ -8,8 +8,6 @@ cold_deck = containers.load('tube-rack-2ml', 'D2')
 trash = containers.load('point', 'A1')
 heat_deck = containers.load('tube-rack-2ml', 'B3')
 
-heat_deck = containers.load('12-well-plate-test2', 'D3')
-
 p200 = instruments.Pipette(
     name="p200",
     trash_container=trash,
