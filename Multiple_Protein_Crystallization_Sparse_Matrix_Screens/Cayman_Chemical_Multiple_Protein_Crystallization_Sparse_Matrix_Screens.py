@@ -1,19 +1,20 @@
 from opentrons import containers, instruments
 
 
-cooldeck = containers.load('alum-block-pcr-strips', 'C3', 'cooldeck')
-plate = containers.load('rigaku-compact-crystallization-plate', 'C1', 'plate')
-plate2 = containers.load(
-    'rigaku-compact-crystallization-plate', 'C2', 'plate2')
-matrix_index = containers.load('hampton-1ml-deep-block', 'B1', 'matrix_index')
-matrix_peg = containers.load('hampton-1ml-deep-block', 'B2', 'matrix_peg')
+cooldeck = containers.load('alum-block-pcr-strips', 'C3')
+plate = containers.load('rigaku-compact-crystallization-plate', 'C1')
+plate2 = containers.load('rigaku-compact-crystallization-plate', 'C2')
+matrix_index = containers.load('hampton-1ml-deep-block', 'B1')
+matrix_peg = containers.load('hampton-1ml-deep-block', 'B2')
 
-p20rack = containers.load('tiprack-10ul', 'E1', 'p20rack')
-p20rack2 = containers.load('tiprack-10ul', 'E2', 'p20rack2')
-p20rack3 = containers.load('tiprack-10ul', 'E3', 'p20rack3')
-p1000rack = containers.load('tiprack-1000ul', 'A1', 'p1000rack')
-p1000rack2 = containers.load('tiprack-1000ul', 'A2', 'p1000rack2')
-trash = containers.load('point', 'A3', 'trash')
+p20rack = containers.load('tiprack-10ul', 'E1')
+p20rack2 = containers.load('tiprack-10ul', 'E2')
+p20rack3 = containers.load('tiprack-10ul', 'E3')
+
+p1000rack = containers.load('tiprack-1000ul', 'A1')
+p1000rack2 = containers.load('tiprack-1000ul', 'A2')
+
+trash = containers.load('point', 'A3')
 
 p1000 = instruments.Pipette(
     axis="b",

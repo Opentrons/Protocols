@@ -1,31 +1,28 @@
 from opentrons import robot, containers, instruments
 
 
-p10rack = containers.load('tiprack-10ul', 'B2', 'p10-rack')
-p50rack = containers.load('tiprack-200ul', 'A1', 'p50-rack')
 source_tubes = containers.load('tube-rack-2ml', 'D2', 'tube rack')
 dna_tubes = containers.load('tube-rack-2ml', 'C3', 'dna rack')
 output = containers.load('96-PCR-flat', 'C1', 'output')
+
+p10rack = containers.load('tiprack-10ul', 'B2', 'p10-rack')
+p50rack = containers.load('tiprack-200ul', 'A1', 'p50-rack')
 trash = containers.load('point', 'A3', 'trash')
 
 p10 = instruments.Pipette(
-    name="p10",
     trash_container=trash,
     tip_racks=[p10rack],
     min_volume=1,
     max_volume=10,
-    axis="a",
-    channels=1
+    axis="a"
 )
 
 p50 = instruments.Pipette(
-    name="p50",
     trash_container=trash,
     tip_racks=[p50rack],
     min_volume=5,
     max_volume=50,
-    axis="b",
-    channels=1
+    axis="b"
 )
 
 total_volume = 25

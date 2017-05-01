@@ -1,50 +1,23 @@
 from opentrons import robot, containers, instruments
 
 
-p1000rack = containers.load(
-    'tiprack-1000ul',
-    'A1',
-    'p1000rack'
-)
-
-vialrack = containers.load(
-    'wheaton_vial_rack',
-    'C1',
-    'vialrack'
-)
-
-plate = containers.load(
-    '96-deep-well',
-    'B1',
-    'plate'
-)
-
-trash = containers.load(
-    'point',
-    'B2',
-    'trash'
-)
+p1000rack = containers.load('tiprack-1000ul', 'A1')
+vialrack = containers.load('wheaton_vial_rack', 'C1')
+plate = containers.load('96-deep-well', 'B1')
+trash = containers.load('point', 'B2')
 
 p1000 = instruments.Pipette(
-    name="p1000",
-    trash_container=trash,
-    tip_racks=[p1000rack],
+    axis='b',
     min_volume=100,
     max_volume=1000,
-    axis="b",
-    channels=1
+    trash_container=trash,
+    tip_racks=[p1000rack]
 )
 
-# Creates list of columns on 96 well plate
-columns_list = []
-for column in plate.cols:
-    columns_list.append(iter(column))
-    
+row_length = len(plate.row(0))
 
-# Distribute 48 samples to 96 well plate
+# Distribute 48 samples to 96 well plate (2 wells at a time up the columns)
 for i in range(48):
-    p1000.pick_up_tip()
-    p1000.aspirate(600, vialrack[i])
-    p1000.dispense(300, next(columns_list[i % 8]))
-    p1000.dispense(300, next(columns_list[i % 8]))
-    p1000.drop_tip()
+    dest_index = (i % row_length) + (int(i / row_length) * row_length * 2)
+    p1000.distribute(
+        300, vialrack.wells(i), plate.wells(dest_index, length=2, skip=8))
