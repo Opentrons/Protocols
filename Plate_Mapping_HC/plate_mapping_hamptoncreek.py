@@ -33,6 +33,3 @@ for i in range(0, 12, 2):
 for i in range(1, 12, 2):
     target_rows = [d.rows(i) for d in dest_plates]
     p200_multi.distribute(90, plate1.rows(i), target_rows)
-
-for c in robot.commands():
-    print(c)
