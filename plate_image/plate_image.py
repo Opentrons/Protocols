@@ -1,5 +1,5 @@
 """
-Pixels
+Plate Image
 
 Demonstrates drawing an image in a 96 well plate,
 by first designing that image in a Python list.
