@@ -6,23 +6,25 @@ pcr_plate = containers.load('96-PCR-flat', 'C2', 'pcr_plate')
 trough = containers.load('trough-12row', 'A3', 'trough')
 tube_rack = containers.load('tube-rack-2ml', 'C3', 'tuberack')
 
-p50rack = containers.load('tiprack-200ul', 'A1', 'p50rack')
+p50rack1 = containers.load('tiprack-200ul', 'A1', 'p50rack')
 p50rack2 = containers.load('tiprack-200ul', 'A2', 'p50rack2')
-p50rack3 = containers.load('tiprack-200ul', 'E1', 'p50rack3')
-p50rack4 = containers.load('tiprack-200ul', 'E2', 'p50rack4')
+p50rack3 = containers.load('tiprack-200ul', 'A2', 'p50rack2')
+p50rack4 = containers.load('tiprack-200ul', 'E1', 'p50rack3')
+p50rack5 = containers.load('tiprack-200ul', 'E2', 'p50rack4')
+p50rack6 = containers.load('tiprack-200ul', 'E3', 'p50rack2')
 trash = containers.load('point', 'D3', 'trash')
 
 p50 = instruments.Pipette(   
         axis="a",
         max_volume=50,
-        tip_racks=[p50rack, p50rack2],
+        tip_racks=[p50rack1, p50rack2, p50rack3],
         trash_container=trash,
         channels=8
 )
 p50S = instruments.Pipette(   
         axis="b",
         max_volume=50,
-        tip_racks=[p50rack3, p50rack4],
+        tip_racks=[p50rack4, p50rack5, p50rack6],
         trash_container=trash
 )
 
@@ -40,9 +42,9 @@ p50S.transfer(
 
 p50S.delay(minutes=60)
 
-p50.transfer(50, plate.rows(), trash, new_tip='always')
-p50.transfer(50, WASH_BUFFER, plate.rows(), new_tip='always')
-p50.transfer(50, plate.rows(), trash, new_tip='always')
+p50.transfer(50, plate.rows(), trash)
+p50.transfer(50, WASH_BUFFER, plate.rows())
+p50.transfer(50, plate.rows(), trash)
 
 p50.pick_up_tip()
 for i in range(11):
