@@ -1,4 +1,4 @@
-# Multi Dilution in 96 Well Plate
+# Serial Dilution HC
 
 ### Author
 [Opentrons](https://opentrons.com/)

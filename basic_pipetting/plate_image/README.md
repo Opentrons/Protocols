@@ -1,4 +1,4 @@
-# Pixels
+# Plate Image
 
 ### Author
 [Opentrons](https://opentrons.com)

@@ -1,4 +1,4 @@
-# Mapping One Plate to Six Plates
+# Plate Mapping HC
 
 ### Author
 [Opentrons](https://opentrons.com/)

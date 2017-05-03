@@ -1,4 +1,4 @@
-# Consolidate Entire Plate to Tube
+# Consolidate Plate to Tube
 
 ### Author
 [Opentrons](https://opentrons.com/)
