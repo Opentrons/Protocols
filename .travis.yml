@@ -22,7 +22,7 @@ deploy:
   provider: s3
   access_key_id: $AWS_ACCESS_KEY
   secret_access_key: $AWS_SECRET_KEY
-  bucket: pl-blds
+  bucket: protocol-library-builds
   skip_cleanup: true
   local-dir: releases
   # upload-dir: protocol-builds  # TBD: use for master vs branch builds?
