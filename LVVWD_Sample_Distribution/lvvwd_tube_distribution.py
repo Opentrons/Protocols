@@ -14,7 +14,7 @@ p1000 = instruments.Pipette(
     tip_racks=[p1000rack]
 )
 
-row_length = len(plate.row(0))
+row_length = len(plate.rows(0))
 
 # Distribute 48 samples to 96 well plate (2 wells at a time up the columns)
 for i in range(48):
