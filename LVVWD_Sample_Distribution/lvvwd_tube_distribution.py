@@ -2,7 +2,7 @@ from opentrons import robot, containers, instruments
 
 
 p1000rack = containers.load('tiprack-1000ul', 'A1')
-vialrack = containers.load('wheaton_vial_rack', 'C1')
+vialrack = containers.load('wheaton_vial_rack', 'D1')
 plate = containers.load('96-deep-well', 'B1')
 trash = containers.load('point', 'B2')
 
