@@ -1,4 +1,4 @@
-# Dinosaur
+# Dinosaur-A
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -10,7 +10,7 @@
 	* Plate Pics
 
 ## Description
-Draw a picture of a dinosaur on a 96 well plate using food coloring.
+Draw a picture of a dinosaur on a 96 well plate using food coloring. This protocol is designed for the OT-One Standard model, which requires the pipette be on the "A" axis.
 
 ### Time Estimate
 10 minutes
