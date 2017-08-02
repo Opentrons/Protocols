@@ -33,18 +33,18 @@ DNA_sources = dna_tubes.wells(0, length=num_pcr_samples)
 mix_location = source_tubes.wells('A1')
 water_source = source_tubes.wells('C2')
 
-sources = {    #uL per PCR well
-    'B1': 3,   #enzyme -- 4 
-    'C1': 2.5, #buffer -- 5 
-    'D1': 2.5, #dNTP -- 2 
-    'A2': 2,   #fprimer -- 3 
-    'B2': 2    #rprimer -- 1 
-}
+sources = [       #uL per PCR well
+    ('B1', 3),    #enzyme -- 4
+    ('C1', 2.5),  #buffer -- 5
+    ('D1', 2.5),  #dNTP -- 2
+    ('A2', 2),    #fprimer -- 3
+    ('B2', 2)     #rprimer -- 1
+]
 
-sources_total_vol = sum(sources.values())
+sources_total_vol = sum([vol for _, vol in sources])
 
 #Create Master Mix
-for name, vol in sources.items():
+for name, vol in sources:
     p50.transfer(
         vol * (num_pcr_samples + 1),
         source_tubes.wells(name),
@@ -52,7 +52,7 @@ for name, vol in sources.items():
 
 #Distribute Master Mix
 p10.distribute(
-    sources_total_vol, 
+    sources_total_vol,
     mix_location,
     output.wells('A1', length=num_pcr_samples))
 
