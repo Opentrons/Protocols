@@ -1,3 +1,4 @@
+from opentrons import containers, instruments
 """
 Plate Image
 
@@ -31,7 +32,7 @@ image = [
     _, _, _, 1, 1, _, _, _,  # 2
     _, _, _, 1, 1, _, _, _   # 1
 ]
-  # A  B  C  D  E  F  G  H
+# A  B  C  D  E  F  G  H
 
 # lists to save the wells
 color_1_wells = []
