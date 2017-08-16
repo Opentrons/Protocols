@@ -26,7 +26,7 @@ deploy:
   bucket: protocol-library-builds
   skip_cleanup: true
   local-dir: releases
-  # upload-dir: protocol-builds  # TBD: use for master vs branch builds?
+  upload-dir: $OT_BRANCH
   acl: private
   on:
     repo: OpenTrons/Protocols
