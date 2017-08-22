@@ -1,4 +1,4 @@
-# Consolidate Plate to Tube
+# Transfer A to B
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -18,7 +18,7 @@ Varies
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)
-* [OT Standard](https://opentrons.com/ot-one-standard)  
+* [OT Standard](https://opentrons.com/ot-one-standard)
 * [OT Hood](https://opentrons.com/ot-one-hood)
 
 ### Modules
