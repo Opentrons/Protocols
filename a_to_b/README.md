@@ -1,4 +1,4 @@
-# Transfer A to B
+# Transfer from container A to container B
 
 ### Author
 [Opentrons](https://opentrons.com/)
