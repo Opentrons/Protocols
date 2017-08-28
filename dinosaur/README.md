@@ -35,3 +35,4 @@ Draw a picture of a dinosaur (a Stegosaurus!) on a 96 well plate using food colo
 Learn how to use the robot by drawing a picture of a dinosaur in a 96 well plate!
 
 ### Additional Notes
+You can find more information [here](https://support.opentrons.com/getting-started/software-setup/dinosaur-protocol) about setting up and running this dino protocol.
