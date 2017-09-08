@@ -1,7 +1,7 @@
 from opentrons import containers, instruments
 
 # change well_volume to set the final volume of all wells in the 96-well plate
-well_volume = 100
+well_volume = 200
 
 plate = containers.load('96-flat', 'A1')
 

@@ -27,9 +27,11 @@ Filling a 96 well plate using a p200 8-channel pipette.  One set of tips are use
 * Water
 
 ## Process
-1. Pick up a tip.
-2. Fill each well with 20 uL water.
-3. Drop Tip
+1. Pick up a set of tips.
+2. Fill each row in the 96-well plate with 200 uL water from the trough
+3. Touch-tip on the well after dispensing
+4. Blow out any remaining liquid over the trash
+5. Drop tips after filling all rows
 
 
 ### Additional Notes
