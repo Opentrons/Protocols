@@ -7,7 +7,7 @@ output = containers.load('96-PCR-flat', 'C1', 'output')
 
 p10rack = containers.load('tiprack-10ul', 'B2', 'p10-rack')
 p50rack = containers.load('tiprack-200ul', 'A1', 'p50-rack')
-trash = containers.load('point', 'A3', 'trash')
+trash = containers.load('trash-box', 'A3')
 
 p10 = instruments.Pipette(
     trash_container=trash,
