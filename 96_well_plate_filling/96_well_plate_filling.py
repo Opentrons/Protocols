@@ -5,7 +5,7 @@ well_volume = 200
 
 plate = containers.load('96-flat', 'A1')
 
-trough = containers.load('point', 'C1')
+trough = containers.load('trash-box', 'C1')
 source = trough.wells(0)
 
 tiprack = containers.load('tiprack-200ul', 'A2')

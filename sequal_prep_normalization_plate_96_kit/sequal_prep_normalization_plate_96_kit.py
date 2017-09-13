@@ -12,7 +12,7 @@ p50rack3 = containers.load('tiprack-200ul', 'A2', 'p50rack2')
 p50rack4 = containers.load('tiprack-200ul', 'E1', 'p50rack3')
 p50rack5 = containers.load('tiprack-200ul', 'E2', 'p50rack4')
 p50rack6 = containers.load('tiprack-200ul', 'E3', 'p50rack2')
-trash = containers.load('point', 'D3', 'trash')
+trash = containers.load('trash-box', 'D3')
 
 p50 = instruments.Pipette(   
         axis="a",

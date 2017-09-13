@@ -14,7 +14,7 @@ p20rack3 = containers.load('tiprack-10ul', 'E3')
 p1000rack = containers.load('tiprack-1000ul', 'A1')
 p1000rack2 = containers.load('tiprack-1000ul', 'A2')
 
-trash = containers.load('point', 'A3')
+trash = containers.load('trash-box', 'A3')
 
 p1000 = instruments.Pipette(
     axis="b",
