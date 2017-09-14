@@ -6,7 +6,7 @@ p200rack = containers.load('tiprack-200ul', 'A2')
 trough = containers.load('trough-12row', 'C1')
 tube = containers.load('tube-rack-2ml', 'D1')
 plate = containers.load('96-PCR-flat', 'D2')
-trash = containers.load('point', 'B2')
+trash = containers.load('trash-box', 'B2')
 
 p200_multi = instruments.Pipette(
     axis="a",
@@ -32,12 +32,12 @@ p1000.distribute(
 
 # dilute down all rows
 for this_row in plate.rows:
-    p1000.transfer(
+    p1000.distribute(
         300,
         this_row.wells('A', length=3),
         this_row.wells('B', length=3),
         mix_after=(3, 300))
-    p1000.transfer(
+    p1000.distribute(
         300,
         this_row.wells('E', length=3),
         this_row.wells('F', length=3),

@@ -3,7 +3,7 @@ from opentrons import containers, instruments
 
 tiprack = containers.load('tiprack-200ul', 'B1')
 tiprack2 = containers.load('tiprack-200ul', 'B2')
-trash = containers.load('point', 'C2')
+trash = containers.load('trash-box', 'C2')
 
 trough = containers.load('trough-12row', 'C1')
 plate = containers.load('96-PCR-flat', 'D1')

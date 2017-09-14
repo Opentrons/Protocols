@@ -7,7 +7,7 @@ plate = containers.load('384-plate', 'C1', 'plate')
 
 # 8-channel 10uL pipette, with tip rack and trash
 tiprack = containers.load('tiprack-200ul', 'A1', 'p200rack')
-trash = containers.load('point', 'B2', 'trash')
+trash = containers.load('trash-box', 'B2')
 m200 = instruments.Pipette(
     axis='a',
     trash_container=trash,

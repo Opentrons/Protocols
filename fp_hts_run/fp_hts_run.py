@@ -10,7 +10,7 @@ reagents = containers.load('trough-12row', 'C2')
 
 p1000rack = containers.load('tiprack-1000ul', 'A2')
 p20rack = containers.load('tiprack-10ul', 'A1')
-trash = containers.load('point', 'A3')
+trash = containers.load('trash-box', 'A3')
 
 p1000 = instruments.Pipette(   
         axis="b",

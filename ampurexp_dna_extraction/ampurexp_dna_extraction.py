@@ -6,7 +6,7 @@ p200rack = containers.load('tiprack-200ul', 'A1')
 output_plate = containers.load('96-PCR-flat', 'B1')
 mag_plate = containers.load('96-PCR-tall', 'C1')
 trough = containers.load('trough-12row', 'B1')
-trash = containers.load('point', 'A2')
+trash = containers.load('trash-box', 'A2')
 
 mag_deck = instruments.Magbead()
 

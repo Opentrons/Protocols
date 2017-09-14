@@ -2,7 +2,7 @@ from opentrons import containers, instruments
 
 
 p200rack = containers.load('tiprack-200ul', 'A1')
-trash = containers.load('point', 'A2')
+trash = containers.load('trash-box', 'A2')
 tube_rack = containers.load('tube-rack-2ml', 'C2')
 plate = containers.load('384-plate', 'C1')
 

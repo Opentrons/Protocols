@@ -5,7 +5,7 @@ trough = containers.load('trough-12row', 'D2', 'trough')
 plate = containers.load('96-PCR-flat', 'C1', 'plate')
 
 m200rack = containers.load('tiprack-200ul', 'A1', 'm200-rack')
-trash = containers.load('point', 'B2', 'trash')
+trash = containers.load('trash-box', 'B2')
 
 m200 = instruments.Pipette(
     name="m200",

@@ -4,11 +4,12 @@ python:
 - '3.5'
 
 install:
+  - export OT_BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
   - openssl aes-256-cbc -K $encrypted_43309740674a_key -iv $encrypted_43309740674a_iv -in .ci/protocol-library.enc -out ../protocol-library -d
   - chmod 600 ../protocol-library
   - eval `ssh-agent -s`
   - ssh-add ../protocol-library
-  - pip install git+ssh://git@github.com/OpenTrons/protocol-library.git@master#egg=protolib
+  - pip install "git+ssh://git@github.com/OpenTrons/protocol-library.git@$OT_BRANCH#egg=protolib"
   - echo $PATH
 
 script:
@@ -25,7 +26,7 @@ deploy:
   bucket: protocol-library-builds
   skip_cleanup: true
   local-dir: releases
-  upload-dir: $TRAVIS_BRANCH
+  upload-dir: $OT_BRANCH
   acl: private
   on:
     repo: OpenTrons/Protocols

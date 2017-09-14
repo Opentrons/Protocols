@@ -5,7 +5,7 @@ tiprack200 = containers.load('tiprack-200ul', 'A1')
 tiprack10 = containers.load('tiprack-10ul', 'B2')
 tube_rack = containers.load('tube-rack-2ml', 'D1')
 cold_deck = containers.load('tube-rack-2ml', 'D2')
-trash = containers.load('point', 'A1')
+trash = containers.load('trash-box', 'A1')
 heat_deck = containers.load('tube-rack-2ml', 'B3')
 
 p200 = instruments.Pipette(

@@ -8,7 +8,7 @@ tube_rack = containers.load('tube-rack-2ml', 'C1')
 
 # use p200, with a tiprack and trash
 tip_rack = containers.load('tiprack-200ul', 'D1')
-waste = containers.load('point', 'D2')
+waste = containers.load('trash-box', 'D2')
 p200 = instruments.Pipette(
     axis="b",
     max_volume=200,
