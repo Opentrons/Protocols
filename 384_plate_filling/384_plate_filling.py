@@ -1,4 +1,4 @@
-from opentrons import robot, instruments, containers
+from opentrons import instruments, containers
 
 
 # trough and 384-well plate
