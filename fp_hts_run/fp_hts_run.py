@@ -1,4 +1,4 @@
-from opentrons import robot, containers, instruments
+from opentrons import containers, instruments
 
 
 cooldeck = containers.load('alum-block-pcr-strips', 'D3')
@@ -12,14 +12,14 @@ p1000rack = containers.load('tiprack-1000ul', 'A2')
 p20rack = containers.load('tiprack-10ul', 'A1')
 trash = containers.load('trash-box', 'A3')
 
-p1000 = instruments.Pipette(   
+p1000 = instruments.Pipette(
         axis="b",
         max_volume=1000,
         min_volume=100,
         tip_racks=[p1000rack],
         trash_container=trash
 )
-p10 = instruments.Pipette(   
+p10 = instruments.Pipette(
         axis="a",
         max_volume=10,
         min_volume=1,
