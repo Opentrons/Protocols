@@ -11,10 +11,16 @@ install:
   - ssh-add ../protocol-library
   - pip install "git+ssh://git@github.com/OpenTrons/protocol-library.git@$OT_BRANCH#egg=protolib"
   - echo $PATH
+  - pip install flake8
 
 script:
   - python --version
   - python3 --version
+  - python -c 'import opentrons; print(opentrons.__version__)'
+  # lint and smoke test all protocols
+  - flake8 .
+  - ./scripts/smoke-test
+  # build zipped .json
   - library-build . releases
   - ls -la releases
 

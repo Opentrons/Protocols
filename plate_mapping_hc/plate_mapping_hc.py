@@ -1,4 +1,4 @@
-from opentrons import robot, containers, instruments
+from opentrons import containers, instruments
 
 
 p200rack = containers.load('tiprack-200ul', 'A2')

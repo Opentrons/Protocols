@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+echo "Ignoring:"
+find . -name '*.ignore.py'
+
+echo "*****"
+
+find . -name '*.py' | grep -v '.*\.ignore\.py' | sort -f | while read line; do
+    echo "Processing file '$line'"
+    python "$line" || exit 1
+done
