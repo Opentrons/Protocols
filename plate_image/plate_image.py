@@ -6,7 +6,6 @@ Demonstrates drawing an image in a 96 well plate,
 by first designing that image in a Python list.
 """
 
-from opentrons import containers, instruments
 
 tip_rack = containers.load('tiprack-200ul', 'B1')
 trough = containers.load('trough-12row', 'C1')
