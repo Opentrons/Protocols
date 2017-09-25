@@ -1,4 +1,4 @@
-# PCR Setup
+# Custom PCR Setup
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -12,29 +12,22 @@
 	* PCR
 
 ## Description
-Sets up six PCR reactions, all with the same DNA, enzyme, buffer and primers.
+Generate and download a custom PCR protocol by following the setup steps below, tailored to your needs.
 
 ### Time Estimate
-17 minutes
+Varies depending on your settings
 
 ### Robot
+* [OT Standard](https://opentrons.com/ot-one-standard)
 * [OT PRO](https://opentrons.com/ot-one-pro)
-* [OT Hood](https://opentrons.com/ot-one-hood) 
 
 ### Modules
 
 ### Reagents
-* Enzyme
-* Buffer
-* dNTP
-* DNA
-* Primers (forward and reverse)
+* Samples
+* Pre-mixed Master Mixes
 
 ## Process
-1. Combine ingredients in Master Mix.
-2. Distribute Master Mix to sample plate.
-3. Distribute DNA to sample plate.
-
 
 ### Additional Notes
 
