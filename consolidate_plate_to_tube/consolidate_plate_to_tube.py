@@ -5,18 +5,19 @@
 from opentrons import containers, instruments
 
 
+plate = containers.load('96-PCR-tall', 'C1')
+tube_rack = containers.load('tube-rack-2ml', 'D1')
+p200rack = containers.load('tiprack-200ul', 'A1')
+trash = containers.load('trash-box', 'B2')
+
+p200 = instruments.Pipette(
+    axis='b',
+    name='p200',
+    max_volume=200,
+    tip_racks=[p200rack],
+    trash_container=trash
+)
+
+
 def run_protocol(consolidate_volume: float=20.0):
-    plate = containers.load('96-PCR-tall', 'C1')
-    tube_rack = containers.load('tube-rack-2ml', 'D1')
-    p200rack = containers.load('tiprack-200ul', 'A1')
-    trash = containers.load('point', 'B2')
-
-    p200 = instruments.Pipette(
-        axis='b',
-        name='p200',
-        max_volume=200,
-        tip_racks=[p200rack],
-        trash_container=trash
-    )
-
     p200.consolidate(consolidate_volume, plate.wells(), tube_rack.wells('A1'))

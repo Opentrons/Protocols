@@ -10,10 +10,10 @@
 	* Plate Pics
 
 ## Description
-Draw a picture of a dinosaur on a 96 well plate using food coloring.
+Draw a picture of a dinosaur (a Stegosaurus!) on a 96 well plate using food coloring.
 
 ### Time Estimate
-10 minutes
+5 minutes
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)
@@ -35,3 +35,4 @@ Draw a picture of a dinosaur on a 96 well plate using food coloring.
 Learn how to use the robot by drawing a picture of a dinosaur in a 96 well plate!
 
 ### Additional Notes
+You can find more information [here](https://support.opentrons.com/getting-started/software-setup/dinosaur-protocol) about setting up and running this dino protocol.

@@ -1,22 +1,22 @@
 from opentrons import containers, instruments
 
+# add a p10 pipette, with tiprack and trash
+p10rack = containers.load('tiprack-200ul', 'A1')
+trash = containers.load('trash-box', 'B2')
+p10 = instruments.Pipette(
+    axis='b',
+    max_volume=10,
+    trash_container=trash,
+    tip_racks=[p10rack]
+)
+# add a 2ml tube rack
+tuberack = containers.load('tube-rack-2ml', 'C1')
+
 
 def run_protocol(buffer_vol: float=1.0,
                  vector_vol: float=1.5,
                  insert_vol: float=2.0,
                  ligase_vol: float=1.6):
-    # add a 2ml tube rack
-    tuberack = containers.load('tube-rack-2ml', 'C1')
-
-    # add a p10 pipette, with tiprack and trash
-    p10rack = containers.load('tiprack-200ul', 'A1')
-    trash = containers.load('point', 'B2')
-    p10 = instruments.Pipette(
-        axis='b',
-        max_volume=10,
-        trash_container=trash,
-        tip_racks=[p10rack]
-    )
 
     # single sample volumes
     mix_vol = buffer_vol + vector_vol + insert_vol + ligase_vol

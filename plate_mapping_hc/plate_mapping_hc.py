@@ -1,8 +1,8 @@
-from opentrons import robot, containers, instruments
+from opentrons import containers, instruments
 
 
 p200rack = containers.load('tiprack-200ul', 'A2')
-trash = containers.load('point', 'B3')
+trash = containers.load('trash-box', 'B3')
 
 plate1 = containers.load('96-PCR-flat', 'C2')
 plate2 = containers.load('96-PCR-flat', 'D1')
