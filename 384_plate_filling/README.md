@@ -1,4 +1,4 @@
-# 384 Plate Filling
+# 384 Well Plate Filling
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -10,7 +10,7 @@
 	* Plate Filling
 
 ## Description
-Easily fill a 384 well plate using a p10 8-channel pipette, without tip changes. Use the field labeled "well volume" below to define your preferred volume. You can input any volume from 1-10uL.
+Easily fill a 384 well plate using a p10 8-channel pipette without tip changes. Use the field labeled "well volume" below to define your preferred volume. You can input any volume from 1-10uL.
 
 ## Notes
 * One row of tips is used throughout the entire run. If you want to implement tip changes or modify your pipette, see our [API documentation](https://docs.opentrons.com) for tips on how to modify your Python script.
