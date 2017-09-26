@@ -12,9 +12,6 @@
 ## Description
 Easily fill a 384 well plate using a p10 8-channel pipette without tip changes. Use the field labeled "well volume" below to define your preferred volume. You can input any volume from 1-10uL.
 
-## Notes
-* One row of tips is used throughout the entire run. If you want to implement tip changes or modify your pipette, see our [API documentation](https://docs.opentrons.com) for tips on how to modify your Python script.
-
 ### Time Estimate
 4 minutes
 
@@ -38,7 +35,8 @@ Easily fill a 384 well plate using a p10 8-channel pipette without tip changes. 
 7. The robot will pick up one row of tips and dispense your defined volume in each well of the 384 well plate.
 
 ### Additional Notes
-[Video](https://www.youtube.com/watch?v=AWKfpK9rmuo)
+* You can get a preview of the action in this [video](https://www.youtube.com/watch?v=AWKfpK9rmuo)
+* One row of tips is used throughout the entire run. If you want to implement tip changes or modify your pipette, see our [API documentation](https://docs.opentrons.com) for tips on how to modify your Python script.
 
 
 
