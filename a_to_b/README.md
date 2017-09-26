@@ -11,6 +11,7 @@
 	* Plate Consolidation
 
 ## Description
+**INCOMPLETE EXAMPLE**
 Move a fixed volume of N samples from any container to any other container.
 
 ### Time Estimate

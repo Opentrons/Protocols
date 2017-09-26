@@ -18,11 +18,13 @@ def run_protocol(
     pipette_model: [1, 5, 10, 20, 50, 100, 200] = 100,
     pipette_axis: ['a', 'b'] = 'a',
     pipette_channels: [1, 8] = 1,
-    number_of_wells: int = 1,
-    well_volume: float = 10.0
+    number_of_samples: int = 1,
+    transfer_volume: float = 10.0
 ):
-    source_container = containers.load(source_container_type, 'E1')
-    destination_container = containers.load(destination_container_type, 'C1')
+    # HACK: Doing `container_var or 'point'` so deck map parsing works
+    source_container = containers.load(source_container_type or 'point', 'E1')
+    destination_container = containers.load(
+        destination_container_type or 'point', 'C1')
 
     tiprack1 = containers.load('tiprack-200ul', 'A1', 'p200rack')
     tiprack2 = containers.load('tiprack-200ul', 'B1', 'p200rack')
@@ -39,12 +41,14 @@ def run_protocol(
         channels=pipette_channels,
     )
 
-    source_wells = source_container.wells(length=number_of_wells)
-    destination_wells = source_container.wells(length=number_of_wells)
+    source_wells = source_container.wells(length=number_of_samples)
+    destination_wells = source_container.wells(length=number_of_samples)
 
     if pipette_channels == 8:
-        source_wells = get_alternating_wells(source_container, number_of_wells)
-        destination_wells = get_alternating_wells(
-            destination_container, number_of_wells)
+        source_wells = get_alternating_wells(
+            source_container, number_of_samples)
 
-    pipette.distribute(well_volume, source_wells, destination_wells)
+        destination_wells = get_alternating_wells(
+            destination_container, number_of_samples)
+
+    pipette.distribute(transfer_volume, source_wells, destination_wells)
