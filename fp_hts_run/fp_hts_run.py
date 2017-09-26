@@ -38,7 +38,7 @@ alternate_dilution_columns = [
 
 alternate_assay_columns = [
     row.wells(col, length=8, step=2)
-    for row in dilution_plate.rows('1', to='22')
+    for row in assay_plate.rows('1', to='22')
     for col in 'AB'
 ]
 
