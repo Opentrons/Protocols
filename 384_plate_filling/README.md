@@ -10,7 +10,8 @@
 	* Plate Filling
 
 ## Description
-Easily fill a 384 well plate using a p10 8-channel pipette without tip changes. Use the field labeled "well volume" below to define your preferred volume. You can input any volume from 1-10uL.
+Easily fill a 384 well plate using a p10 8-channel pipette, without tip changes. 
+Use the field labeled "well volume" below to define your preferred volume. You can input any volume from 1-10uL.
 
 ### Time Estimate
 4 minutes
