@@ -17,7 +17,7 @@ Map Hampton Index HT deep block to lower wells of crystallization plate.  Distri
 3 hours and 40 minutes
 
 ### Robot
-* OT PRO 
+* OT PRO
 * OT Hood
 
 ### Modules
@@ -28,7 +28,7 @@ Map Hampton Index HT deep block to lower wells of crystallization plate.  Distri
 ## Process
 1. Transfer 100 uL from Hampton Index HT deep block to lower wells of crystallization plate (1:1 plate mapping).
 2. Distribute 1 uL of protein from cool deck to all lower wells of crystallization plate.
-3. Tranfser 1 uL of liquid in lower well to upper well of crystallization plate.
+3. Transfer 1 uL of liquid in lower well to upper well of crystallization plate.
 4. Repeat with second block and second plate.
 
 ### Additional Notes

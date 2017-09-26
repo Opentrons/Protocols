@@ -2,8 +2,10 @@ from opentrons import containers, instruments
 
 
 cooldeck = containers.load('alum-block-pcr-strips', 'C3')
-plate = containers.load('rigaku-compact-crystallization-plate', 'C1')
+
+plate1 = containers.load('rigaku-compact-crystallization-plate', 'C1')
 plate2 = containers.load('rigaku-compact-crystallization-plate', 'C2')
+
 matrix_index = containers.load('hampton-1ml-deep-block', 'B1')
 matrix_peg = containers.load('hampton-1ml-deep-block', 'B2')
 
@@ -36,18 +38,12 @@ m10 = instruments.Pipette(
     name="m10"
 )
 
-p1000.transfer(
-    100, matrix_index.wells(length=96), plate.wells(96, length=96),
-    new_tip='always')
 
-m10.distribute(1, cooldeck.wells('A1'), plate.rows('1', to='12'))
+for plate in [plate1, plate2]:
+    p1000.transfer(
+        100, matrix_index.wells(length=96), plate.wells(96, length=96),
+        new_tip='always')
 
-m10.transfer(1, plate.rows('1', to='12'), plate.rows('13', to='24'))
+    m10.distribute(1, cooldeck.wells('A1'), plate.rows('1', to='12'))
 
-p1000.transfer(
-    100, matrix_peg.wells(0, length=96), plate2.wells(96, length=96),
-    new_tip='always')
-
-m10.distribute(1, cooldeck.wells('A1'), plate.rows('1', to='12'))
-
-m10.transfer(1, plate2.rows('1', to='12'), plate2.rows('13', to='24'))
+    m10.transfer(1, plate.rows('1', to='12'), plate.rows('13', to='24'))
