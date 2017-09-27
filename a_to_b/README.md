@@ -28,8 +28,8 @@ Varies
 
 
 ## Process
-1. Define the number of channels in your pipette using the _"pipette channels"_ field. Input "1" for a single channel pipette or "8" for an eight channel pipette.
-2. Define which [axis](https://support.opentrons.com/hardware-questions/setup/switching-pipettes-between-axes) your pipette is on using the *"pipette axis"* field. Input "a" for the A/center axis or "b" for the B/left axis.
+**1.** Define the number of channels in your pipette using the __"pipette channels"__ field. Input "1" for a single channel pipette or "8" for an eight channel pipette.
+2. Define which [axis](https://support.opentrons.com/hardware-questions/setup/switching-pipettes-between-axes) your pipette is on using the **"pipette axis"** field. Input "a" for the A/center axis or "b" for the B/left axis.
 3. Define your source labware by typing in the name of the labware in the *"source container type"* field. For labware naming conventions and a list of labware currently supported by Opentrons, please see our documentation on [containers](http://docs.opentrons.com/containers.html). 
 4. Input the maximum volume of your pipette using the *"pipette model"* field. *For example*, if you were using a pipette with a volume range from 20-200uL, you would input "200".
 5. Define your destination labware by typing in the name of the labware in the *"destination container type"* field. For labware naming conventions and a list of labware currently supported by Opentrons, please see our documentation on [containers](http://docs.opentrons.com/containers.html). 
