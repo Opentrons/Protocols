@@ -28,7 +28,7 @@ With this protocol, your robot can consolidate the contents of an entire 96 well
 
 
 ## Process
-1. Input your desired volume into the "consolidate volume" field above. This is the volume that will be pulled from each well of the plate, *not* the final volume that will go into the tube.
+1. Input your desired volume into the "consolidate volume" field above. This is the volume that will be pulled from each well of the plate, *not* the total final volume that will go into the tube.
 2. Download your protocol.
 3. Upload your protocol into the [OT App](http://opentrons.com/ot-app).
 4. Set up your deck according to the deck map below.
