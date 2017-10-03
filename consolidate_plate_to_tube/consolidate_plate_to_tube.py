@@ -2,7 +2,6 @@
 # Pull 20 uL from each well in a 96 well plate
 # and consolidate in one 1.5 mL tube.
 # No need to change tips when picking up from a new well.
-
 from opentrons import containers, instruments
 
 
@@ -19,4 +18,6 @@ p200 = instruments.Pipette(
     trash_container=trash
 )
 
-p200.consolidate(20, plate.wells(), tube_rack.wells('A1'))
+
+def run_protocol(consolidate_volume: float=20.0):
+    p200.consolidate(consolidate_volume, plate.wells(), tube_rack.wells('A1'))
