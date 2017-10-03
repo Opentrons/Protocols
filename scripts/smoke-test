@@ -5,7 +5,7 @@ find . -name '*.ignore.py'
 
 echo "*****"
 
-find . -name '*.py' | grep -v '.*\.ignore\.py' | sort -f | while read line; do
+find . -name '*.py' | grep -v '.*\.ignore\.py|.*/scripts/' | sort -f | while read line; do
     echo "Processing file '$line'"
     python "$line" || exit 1
 done
