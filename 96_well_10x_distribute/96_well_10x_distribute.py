@@ -16,36 +16,21 @@ transfer_volume = 10
 # Set to False for OT Hood Model it has less slots for plates
 full_deck_model = True
 
-# HACK for deck map
-# containers.load('96-flat', 'A1')
-# containers.load('96-flat', 'B1')
-# containers.load('96-flat', 'C1')
-# containers.load('96-flat', 'D1')
-# containers.load('96-flat', 'A2')
-# containers.load('96-flat', 'B2')
-# containers.load('96-flat', 'D2')
-# containers.load('96-flat', 'E2')
-# containers.load('96-flat', 'A3')
-# containers.load('96-flat', 'B3')
-# containers.load('96-flat', 'C3')
-# containers.load('96-flat', 'D3')
-# containers.load('96-flat', 'E3')
-
-# Set up deck
-dest_plates_locations = [
-        'A1', 'B1', 'C1', 'D1',
-        'A2', 'B2', 'D2', 'E2',
-        'A3', 'B3', 'C3', 'D3', 'E3'
-    ] if full_deck_model else [
-        'A1', 'B1', 'C1', 'D1',
-        'A2', 'B2', 'D2', 'E2'
-    ]
-
-dest_plates = []
-
-for loc in dest_plates_locations[:num_dest_plates]:
-    new_plate = containers.load('96-flat', loc)
-    dest_plates.append(new_plate)
+# for deck map parser, it must be written this way...
+dest_plates = [
+    containers.load('96-flat', 'A1'),
+    containers.load('96-flat', 'B1'),
+    containers.load('96-flat', 'C1'),
+    containers.load('96-flat', 'D1'),
+    containers.load('96-flat', 'A2'),
+    containers.load('96-flat', 'B2'),
+    containers.load('96-flat', 'D2'),
+    containers.load('96-flat', 'E2'),
+    containers.load('96-flat', 'A3'),
+    containers.load('96-flat', 'B3'),
+    containers.load('96-flat', 'C3'),
+    containers.load('96-flat', 'D3'),
+    containers.load('96-flat', 'E3')]
 
 source_plate = containers.load('96-flat', 'C2')
 
