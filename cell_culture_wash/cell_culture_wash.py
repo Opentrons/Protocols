@@ -1,5 +1,7 @@
 from opentrons import containers, instruments
 
+wash_volume = 6000
+
 containers.create(
     '2x3_plate',                   # name of you container
     grid=(2, 3),                   # specify amount of (columns, rows)
@@ -24,8 +26,8 @@ p1000 = instruments.Pipette(
 )
 
 PBS_wash = trough['A1']
-wash_volume = 6000
 culture_medium = trough['A2']
+
 dest_wells = [
     w.bottom(1, radius=1) for w in culture_plate.wells('A1', to='B3')]
 
