@@ -13,6 +13,7 @@ mag_deck = instruments.Magbead()
 p10 = instruments.Pipette(
     axis="b",
     max_volume=10,
+    min_volume=1,
     trash_container=trash,
     tip_racks=[p10rack]
 )
@@ -20,6 +21,7 @@ p10 = instruments.Pipette(
 p200_multi = instruments.Pipette(
     axis="a",
     max_volume=200,
+    min_volume=20,
     trash_container=trash,
     tip_racks=[p200rack],
     channels=8
@@ -56,12 +58,11 @@ num_washes = 2
 for n in range(num_washes):
     for i in range(num_rows):
         p200_multi.pick_up_tip()
-
         p200_multi.transfer(
             200,
             trough['A2'],
             mag_plate.rows(i),
-            air_gap=100,
+            # air_gap=100,  # TODO: Ian 2017-10-03: air_gap crashes my computer
             new_tip='never')
 
         p200_multi.delay(seconds=30)
@@ -70,7 +71,7 @@ for n in range(num_washes):
             200,
             mag_plate.rows(i).bottom(1),
             trash,
-            air_gap=100,
+            # air_gap=100,  # TODO: Ian 2017-10-03: air_gap crashes my computer
             new_tip='never')
 
         p200_multi.drop_tip()
