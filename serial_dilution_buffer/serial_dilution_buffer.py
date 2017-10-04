@@ -1,16 +1,6 @@
 from opentrons import containers, instruments
 
-# dilution factor
-dilution = 10  # can change here
-
-# end volume of solution
-vol = 100  # can change here
-
-# how many serial dilutions to do
-num_dilutions = 11  # can change here
-# (up to 11, since there are 12 rows in plate)
-
-# source of buffer
+# source of diluent
 trough = containers.load('trough-12row', 'D2')
 
 # HACK: need to explicitly load each container like this
@@ -59,34 +49,43 @@ p50multi = instruments.Pipette(
     channels=8
 )
 
-# calculate how much buffer to use
-buffer_vol = vol * ((dilution-1)/dilution)
+diluent_source = trough['A1']
 
-# calculate how much sample to transfer
-sample_vol = vol - buffer_vol
 
-for plate in plates:
-    # Transfer 100 uL of media from trough to Column 1 wells (A1-H1),
-    # discard tips
-    p50multi.distribute(100, trough['A1'], plate.rows(0))
-    # Transfer 90 uL of media from trough to Columns 2-12 (A2-H12) (same tips)
-    p50multi.distribute(
-        buffer_vol, trough['A1'], plate.rows(1, length=num_dilutions))
+def run_protocol(dilution_factor: float=10, final_volume: float=100,
+                 number_of_rows_to_use: int=11, number_of_plates: int=1):
+    if number_of_rows_to_use > 11:
+        raise RuntimeError((
+            'Number of dilutions cannot exceed 11 (since there are 12 rows ' +
+            'in a 96-well plate). Got {}'
+            ).format(number_of_rows_to_use))
 
-    # Mix Column 1 by pipetting up and down 10x, discard tips
-    # Transfer 10 uL from Column 1 to Column 2 and mix 10x, discard tips
-    # Transfer 10 uL from Column 2 to Column 3 and mix 10x, discard tips
-    # Repeat this going down the plate until Column 11
-    # Transfer 10 uL from Column 11 to Column 12 and mix several times,
-    # dispense liquid in well
+    # calculate how much diluent to use
+    diluent_vol = final_volume * ((dilution_factor-1)/dilution_factor)
 
-    p50multi.transfer(
-        sample_vol,
-        plate.rows(0, length=num_dilutions),
-        plate.rows(1, length=num_dilutions),
-        mix_before=(10, vol/2), new_tip='always'
-    )
+    # calculate how much sample to transfer
+    transfer_vol = final_volume - diluent_vol
 
-    # remove 10 uL of liquid from column 12 and empty into waste, discard tips
-    p50multi.transfer(
-        sample_vol, plate.rows(11), trash, mix_before=(10, vol/2))
+    for plate in plates[:number_of_plates]:
+        # Add diluent to all wells that will be used
+        # discard tips
+        p50multi.distribute(
+            final_volume,
+            diluent_source,
+            plate.rows(0, length=number_of_rows_to_use))
+
+        # dilute and mix up the plate from row 1 to last row.
+        # this is controlled by number_of_rows_to_use
+        p50multi.transfer(
+            transfer_vol,
+            plate.rows(0, length=number_of_rows_to_use),
+            plate.rows(1, length=number_of_rows_to_use),
+            mix_before=(10, final_volume/2), new_tip='always'
+        )
+
+        # remove excess liquid from column 12 and empty into waste
+        p50multi.transfer(
+            transfer_vol,
+            plate.rows(number_of_rows_to_use+1),
+            trash,
+            mix_before=(10, final_volume/2))

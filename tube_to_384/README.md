@@ -1,4 +1,4 @@
-# Fill 10x 96 well plates from 1 96 well plate
+# Tube Distribution
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -8,13 +8,14 @@
 ## Categories
 * Basic Pipetting
 	* Plate Filling
-
+* Sample Prep
+	* Distribution
 
 ## Description
-Distribute compound from a 96-well plate to 10 empty 96-well plates.
+Transfers samples from N tubes to the first N wells of a 384 well plate.
 
 ### Time Estimate
-TBD
+Varies
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)
@@ -24,13 +25,10 @@ TBD
 ### Modules
 
 ### Reagents
-TBD
+* Samples
 
 ## Process
-1. TBD
-
+1. Transfer (Transfer Volume) uL from first tube to first well in 384 well plate.
+2. Repeat for all remaining tubes, with a new tip for each tube.
 
 ### Additional Notes
-
-###### Internal
-149

@@ -1,7 +1,5 @@
 from opentrons import containers, instruments
 
-# change well_volume to set the final volume of all wells in the 96-well plate
-well_volume = 200
 
 plate = containers.load('96-flat', 'A1')
 
@@ -23,20 +21,22 @@ pipette = instruments.Pipette(
 
 row_vols = [0 for row in plate.rows()]
 
-pipette.pick_up_tip()
 
-for row_num, destination_row in enumerate(plate.rows()):
-    while row_vols[row_num] < well_volume:
-        transfer_volume = min(
-            pipette.max_volume,
-            well_volume-row_vols[row_num])
+def run_protocol(well_volume: float=20):
+    pipette.pick_up_tip()
 
-        pipette.aspirate(transfer_volume, source)
-        pipette.dispense(transfer_volume, destination_row)
-        pipette.touch_tip(destination_row)
-        row_vols[row_num] += transfer_volume
+    # this isn't just a distribute because we want to touch tip.
+    for row_num, destination_row in enumerate(plate.rows()):
+        while row_vols[row_num] < well_volume:
+            transfer_volume = min(
+                pipette.max_volume,
+                well_volume-row_vols[row_num])
 
-    pipette.blow_out(trash)
+            pipette.aspirate(transfer_volume, source)
+            pipette.dispense(transfer_volume, destination_row)
+            pipette.touch_tip(destination_row)
+            row_vols[row_num] += transfer_volume
 
+        pipette.blow_out(trash)
 
-pipette.drop_tip()
+    pipette.drop_tip()

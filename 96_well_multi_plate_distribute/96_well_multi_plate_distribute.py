@@ -9,9 +9,6 @@ from opentrons import containers, instruments
 
 # from 1 to 12 destination plates are supported for full-deck models,
 # or 1 to 7 for hood models
-num_dest_plates = 10
-
-transfer_volume = 10
 
 # Set to False for OT Hood Model it has less slots for plates
 full_deck_model = True
@@ -30,7 +27,8 @@ dest_plates = [
     containers.load('96-flat', 'B3'),
     containers.load('96-flat', 'C3'),
     containers.load('96-flat', 'D3'),
-    containers.load('96-flat', 'E3')]
+    containers.load('96-flat', 'E3')
+]
 
 source_plate = containers.load('96-flat', 'C2')
 
@@ -47,16 +45,20 @@ p50multi = instruments.Pipette(
     trash_container=trash,
 )
 
-# Distribute
 
-row_count = len(dest_plates[0].rows())
-for row_index in range(row_count):
-    # List of WellSeries
-    dest_wells = [plate.rows(row_index) for plate in dest_plates]
-    p50multi.distribute(
-        transfer_volume,
-        source_plate.rows(row_index),
-        dest_wells,
-        touch_tip=True,
-        disposal_vol=0
-    )
+def run_protocol(transfer_volume: float=20,
+                 number_of_destination_plates: int=4):
+    row_count = len(dest_plates[0].rows())
+    for row_index in range(row_count):
+        # List of WellSeries
+        dest_wells = [
+            plate.rows(row_index)
+            for plate in dest_plates[:number_of_destination_plates]]
+
+        p50multi.distribute(
+            transfer_volume,
+            source_plate.rows(row_index),
+            dest_wells,
+            touch_tip=True,
+            disposal_vol=0
+        )
