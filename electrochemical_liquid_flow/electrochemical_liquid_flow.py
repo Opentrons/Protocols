@@ -1,10 +1,10 @@
 from opentrons import containers, instruments
 
 # the number of plates with 19 mm diameter wells
-num19plates = 1  # change here
+# num19plates = 1  # change here
 
 # the number of plates with 32 mm diameter wells
-num32plates = 1  # change here
+# num32plates = 1  # change here
 
 # time to create liquid flow
 time = 45  # change here
@@ -23,20 +23,32 @@ containers.create(
     diameter=32,                   # diameter (mm) of each well on the plate
     depth=8)                       # depth (mm) of each well on the plate
 
-smallplates = []
-largeplates = []
-locations = ['A1', 'B1', 'C1', 'D1', 'A2', 'B2', 'C2', 'D2']
+# HACK: need to explicitly load each container like this
+# instead of using a for loop, so that deck map can be parsed out
+# for protocol library
+
+# smallplates = []
+# largeplates = []
+# locations = ['A1', 'B1', 'C1', 'D1', 'A2', 'B2', 'C2', 'D2']
 small_adjusted = []
 large_adjusted = []
 
-for plate in range(num19plates):
-    smallplates.append(
-        containers.load('2x3_MaxwellPlate19mm', locations[plate]))
+# for plate in range(num19plates):
+#     smallplates.append(
+#         c o n t a i n e r s.load('2x3_MaxwellPlate19mm', locations[plate]))
 
-for plate in range(num32plates):
-    largeplates.append(containers.load(
-        '2x3_MaxwellPlate32mm',
-        locations[plate + num19plates]))
+smallplates = [
+    containers.load('2x3_MaxwellPlate19mm', 'A1')
+]
+
+# for plate in range(num32plates):
+#     largeplates.append(c o n t a i n e r s.load(
+#         '2x3_MaxwellPlate32mm',
+#         locations[plate + num19plates]))
+
+largeplates = [
+    containers.load('2x3_MaxwellPlate32mm', 'C1')
+]
 
 for plate in smallplates:
     temp_plate = []

@@ -4,11 +4,19 @@ from opentrons import containers, instruments
 liquid1 = containers.load('tube-rack-15_50ml', 'C3')
 liquid2 = containers.load('tube-rack-15_50ml', 'D3')
 
-locations = ['A1', 'B1', 'C1', 'D1', 'A2', 'B2', 'C2', 'D2']
-plates = []
-
-for plate in range(8):
-    plates.append(containers.load('96-PCR-flat', locations[plate]))
+# HACK: need to explicitly load each container like this
+# instead of using a for loop, so that deck map can be parsed out
+# for protocol library
+plates = [
+    containers.load('96-PCR-flat', 'A1'),
+    containers.load('96-PCR-flat', 'B1'),
+    containers.load('96-PCR-flat', 'C1'),
+    containers.load('96-PCR-flat', 'D1'),
+    containers.load('96-PCR-flat', 'A2'),
+    containers.load('96-PCR-flat', 'B2'),
+    containers.load('96-PCR-flat', 'C2'),
+    containers.load('96-PCR-flat', 'D2')
+]
 
 # tip rack for p1000
 tip1000_rack = containers.load('tiprack-1000ul', 'B3')

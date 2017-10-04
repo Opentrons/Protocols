@@ -16,9 +16,25 @@ p10 = instruments.Pipette(
 
 )
 
-target_slots = ['D1', 'E1', 'A2', 'A3', 'B2', 'C2', 'D2', 'D3', 'E2', 'E3']
-plate_type = 'PCR-strip-tall'
-targets = [containers.load(plate_type, slot) for slot in target_slots]
+# target_slots = ['D1', 'E1', 'A2', 'A3', 'B2', 'C2', 'D2', 'D3', 'E2', 'E3']
+# plate_type = 'PCR-strip-tall'
+# HACK: need to explicitly load each container like this
+# instead of using a for loop, so that deck map can be parsed out
+# for protocol library
+# targets = [
+#     c o n t a i n e r s.load(plate_type, slot) for slot in target_slots]
+targets = [
+    containers.load('PCR-strip-tall', 'D1'),
+    containers.load('PCR-strip-tall', 'E1'),
+    containers.load('PCR-strip-tall', 'A2'),
+    containers.load('PCR-strip-tall', 'A3'),
+    containers.load('PCR-strip-tall', 'B2'),
+    containers.load('PCR-strip-tall', 'C2'),
+    containers.load('PCR-strip-tall', 'D2'),
+    containers.load('PCR-strip-tall', 'D3'),
+    containers.load('PCR-strip-tall', 'E2'),
+    containers.load('PCR-strip-tall', 'E3')
+]
 
 # print(targets)
 
