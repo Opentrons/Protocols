@@ -26,8 +26,10 @@ TBD
 * ["00" Capsules](https://www.capsuline.com/empty-capsule-size-chart/)
 
 ## Process
-1. Transfer 8 master mix solutions from row 1 of 96 well plate to all rows on 384 plate
-(48 wells of each master mix solution on 384).
+1. Load the plates of empty capsules into the robot to be filled.
+2. Each capsule will need to be filled with the specified Fill Volume (in uL).
+3. Once filled, operator will remove the plates, close the capsules, and remove them
+from the plates.
 
 
 ### Additional Notes

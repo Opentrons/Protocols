@@ -10,15 +10,15 @@
 	* Dilution
 
 ## Description
-Uses an 8 channel to perform six 10X dilutions in a 96 well plate.
+Uses an 8 channel to perform six 10X dilutions in rows 2-7 of a 96 well plate. Samples should start in Row 1.
 
 ### Time Estimate
 5.5 minutes
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)
-* [OT Standard](https://opentrons.com/ot-one-standard)  
-* [OT Hood](https://opentrons.com/ot-one-hood) 
+* [OT Standard](https://opentrons.com/ot-one-standard)
+* [OT Hood](https://opentrons.com/ot-one-hood)
 
 ### Modules
 
@@ -27,8 +27,10 @@ Uses an 8 channel to perform six 10X dilutions in a 96 well plate.
 * Diluent
 
 ## Process
-1. Add diluent to plate.
-2. Dilute samples through wells, with mixing at each step.
+1. Off robot: operator manually fills Row 1 of plate with samples.
+2. Diluent is distributed from the trough to Rows 2-7 of the plate.
+3. Samples are diluted across the rows with a dilution factor of 10, mixing at each step.
+4. Excess volume from Row 7 is discarded.
 
 
 ### Additional Notes

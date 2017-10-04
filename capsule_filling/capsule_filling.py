@@ -56,13 +56,14 @@ tubes15ml = [
     in liquid1.wells('A1', 'A2', 'B1', 'B2', 'C1', 'C2')] + \
     [well for well in liquid2.wells('A1', 'A2', 'B1', 'B2', 'C1', 'C2')]
 
+
 # We will fill 96 well plates with "00" capsules (we are hoping this will work
 # see capsule specs here: https://www.capsuline.com/empty-capsule-size-chart/).
 # We will load the plates of empty capsules into the robot to be filled.
 # Each capsule will need to be filled with exactly .7ml.
-
-p1000single.transfer(700, tubes50ml, wells50mltube)
-p1000single.transfer(700, tubes15ml, wells15mltube)
+def run_protocol(fill_volume: float=700):
+    p1000single.transfer(fill_volume, tubes50ml, wells50mltube)
+    p1000single.transfer(fill_volume, tubes15ml, wells15mltube)
 
 # Once filled we will remove the plates, close the capsules, remove them from
 # the plates, refill with empty capsules and replaced into production

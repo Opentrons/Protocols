@@ -11,7 +11,7 @@
 
 
 ## Description
-Filling a 96 well plate using a p200 8-channel pipette.  One set of tips are used throughout the entire run.
+Fill a 96 well plate with a specified volume (in uL) using a p200 8-channel pipette.  One set of tips are used throughout the entire run.
 
 ### Time Estimate
 4 minutes
@@ -24,11 +24,10 @@ Filling a 96 well plate using a p200 8-channel pipette.  One set of tips are use
 ### Modules
 
 ### Reagents
-* Water
 
 ## Process
 1. Pick up a set of tips.
-2. Fill each row in the 96-well plate with 200 uL water from the trough
+2. Fill each row in the 96-well plate with the specified amount of reagent from the trough
 3. Touch-tip on the well after dispensing
 4. Blow out any remaining liquid over the trash
 5. Drop tips after filling all rows

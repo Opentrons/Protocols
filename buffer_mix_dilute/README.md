@@ -11,7 +11,11 @@
 
 
 ## Description
-TBD
+Serial dilution in a 96-deep-well plate.
+
+Dilutes across 7 rows - the first row will just contain undiluted samples.
+
+Samples begin in 2mL tubes in a tube rack.
 
 ### Time Estimate
 TBD
