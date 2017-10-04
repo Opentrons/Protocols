@@ -82,10 +82,74 @@ but will be visible in the public GitHub Protocols repo.
 
 These files are usually blank text files. They have special names that indicate specific properties:
 
-* `.ignore` - The protocol will not be shown on the Opentrons Protocol Library, even if you search for it.
 * `.feature` - The protocol will be listed under "Featured Protocols" on the website.
+* `.ignore` - The protocol will not be shown on the Opentrons Protocol Library, even if you search for it.
+* `.notests` - The protocol will not be tested by continuous integration. This is intended only for ignored protocols.
 * `.embedded` - This is for "embedded apps" that generate a protocol and are designed to be shown in the Protocol Library in an iframe. This file should not be blank, it should contain a URL to the web app that will be embedded in the iframe.
 
-# Writing Custom Protocols
+# Custom Protocols
 
-TODO
+"Custom protocols" allow users to set variables for their protocol on the protocol library site before downloading a protocol,
+
+## Writing Custom Protocols
+
+### NOTE
+
+Custom protocols is an early-stage feature, under active development. They are subject to change.
+
+### Part 1: Set up containers + instruments
+
+First, set up your containers and instruments normally at the top of the `.py` file.
+
+For some protocols, you might want "number of destination plates" to be a variable. However, the deck map on the website is currently not dynamic - it will only show containers loaded at the top of the file. For this reason, you should load all the containers you might need at the top of the file, and then only use what you need during the actual execution.
+
+### Part 2: Set your customizable arguments
+
+To make a protocol customizable, put all your commands that run on the robot in a function called `run_protocol`.
+
+The arguments to that function will be used to create input forms on the Protocol Library website page for your protocol.
+
+You can use [Python function annotations](https://www.python.org/dev/peps/pep-3107/) to specify what type of input to use. Right now, only `float` and `int` are supported.
+
+Field names on the protocol's webpage will be named after the arguments. Eg, `number_of_samples: int=2` becomes `Number of samples` on the form, an integer field with a default of 2.
+
+Form validation, such as setting min and max values, is not currently supported.
+
+### Part 3: Commands
+
+Inside your `run_protocol` function, write all your robot commands (`transfer`, `distribute`, etc.)
+
+## A simple example
+
+Use a multi-channel pipette to transfer a custom number of rows from one plate to another, with a custom transfer volume
+
+```python
+from opentrons import instruments, containers
+
+# set up containers and instruments
+
+source = containers.load('96-flat', 'C1')
+dest = containers.load('96-flat', 'E1')
+
+trash = containers.load('trash-box', 'B2')
+tiprack = containers.load('tiprack-200ul', 'A1')
+
+p200_multi = instruments.Pipette(
+    axis='a',
+    trash_container=trash,
+    tip_racks=[tiprack],
+    max_volume=200,
+    min_volume=20,
+    channels=8,
+)
+
+# set up special `run_protocol` function, with annotated arguments
+
+def run_protocol(transfer_volume: float=1.0, number_of_rows: int=1):
+    # all commands go in this function
+    p200_multi.distribute(
+      transfer_volume,
+      source.rows(0, to=number_of_rows),
+      dest.rows(0, to=number_of_rows))
+
+```
