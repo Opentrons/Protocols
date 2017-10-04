@@ -1,4 +1,4 @@
-# Serial dilution for buffer
+# Customizable Serial Dilution
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -11,10 +11,17 @@
 
 
 ## Description
-Serial dilution for buffer in triplicate
+Customizable serial dilution. Performed across 1 to 6 96-well plates.
+
+The plates should already be loaded up manually with samples, across row 1 of the plate.
+
+For the 96-well plates, place into slots on the robot in this order: A1, B1, A2, B2, A3, B3.
+* (Ie for 3 plates, use A1, B1, A2.)
+
+For the tipracks, fill the slots on the robot in this order: C1, C3, D1, D3, E1, E2, E3.
 
 ### Time Estimate
-TBD
+Varies
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)
@@ -26,15 +33,11 @@ TBD
 ### Reagents
 
 ## Process
-1. Add 10 uL of each sample to Column 1, in triplicate (manually, by operator)
-2. Transfer 100 uL of media from trough to Column 1 wells (A1-H1), discard tips
-3. Transfer 90 uL of media from trough to Columns 2-12 (A2-H12) (same tips)
-4. Mix Column 1 by pipetting up and down 10x, discard tips
-5. Transfer 10 uL from Column 1 to Column 2 and mix 10x, discard tips
-6. Transfer 10 uL from Column 2 to Column 3 and mix 10x, discard tips
-a. Repeat this going down the plate until Column 11
-7. Transfer 10 uL from Column 11 to Column 12 and mix several times, dispense liquid in well, remove 10 uL of liquid and empty into waste, discard tips
-8. Repeat Steps 2-7 on remaining plates (12 plates total)
+1. Off-robot: operator manually adds samples to Column 1 of each plate
+2. For first plate: fill rows with uniform volume of diluent. Only as many rows specified in "Number of Rows to Use" will be used.
+3. Dilute up across the rows of the plate according to the specified Dilution Factor
+4. Discard the excess volume in the last row into the trash
+5. Repeat steps 2-4 for the each of the remaining plates
 
 
 ### Additional Notes

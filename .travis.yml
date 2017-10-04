@@ -22,7 +22,7 @@ script:
   - python -c 'import opentrons; print(opentrons.__version__)'
   # lint and smoke test all protocols
   - flake8 .
-  - ./scripts/smoke-test
+  - ./scripts/smoke-test.sh
   # build zipped .json
   - library-build . releases
   - ls -la releases

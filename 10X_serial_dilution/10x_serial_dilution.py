@@ -17,11 +17,23 @@ m200 = instruments.Pipette(
     channels=8
 )
 
-m200.distribute(180, trough['A1'], plate.rows('2', to='7'))
 
-m200.transfer(
-    20,
-    plate.rows('1', to='6'),
-    plate.rows('2', to='7'),
-    mix_after=(3, 20)
-)
+def run_protocol(final_volume: float=200):
+    transfer_volume = final_volume/10.0
+    buffer_volume = final_volume - transfer_volume
+
+    m200.distribute(buffer_volume, trough['A1'], plate.rows('2', to='7'))
+
+    m200.pick_up_tip()
+
+    m200.transfer(
+        transfer_volume,
+        plate.rows('1', to='6'),
+        plate.rows('2', to='7'),
+        mix_after=(3, final_volume/2),
+        new_tip='never'
+    )
+
+    m200.transfer(transfer_volume, plate.rows('7'), trash[0], new_tip='never')
+
+    m200.drop_tip()

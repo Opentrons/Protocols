@@ -16,8 +16,12 @@ p1000 = instruments.Pipette(
 
 row_length = len(plate.rows(0))
 
+
 # Distribute 48 samples to 96 well plate (2 wells at a time up the columns)
-for i in range(48):
-    dest_index = (i % row_length) + (int(i / row_length) * row_length * 2)
-    p1000.distribute(
-        300, vialrack.wells(i), plate.wells(dest_index, length=2, skip=8))
+def run_protocol(transfer_volume: float=300):
+    for i in range(48):
+        dest_index = (i % row_length) + (int(i / row_length) * row_length * 2)
+        p1000.distribute(
+            transfer_volume,
+            vialrack.wells(i),
+            plate.wells(dest_index, length=2, skip=8))

@@ -14,15 +14,15 @@
 
 
 ## Description
-Dilute samples in multiple directions by multiple dilution factors.
+Performs 2 separate serial dilutions in one 96-well plate. Dilute column A to D, and dilute column H to E. Optionally, add diluent to all wells as a last step.
 
 ### Time Estimate
 1 hour and 6 minutes
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)
-* [OT Standard](https://opentrons.com/ot-one-standard)  
-* [OT Hood](https://opentrons.com/ot-one-hood) 
+* [OT Standard](https://opentrons.com/ot-one-standard)
+* [OT Hood](https://opentrons.com/ot-one-hood)
 
 ### Modules
 
@@ -32,10 +32,10 @@ Dilute samples in multiple directions by multiple dilution factors.
 * Diluent
 
 ## Process
-1. Distribute samples in duplicate to columns A and E (1 tube to two wells).
-2. Distribute buffer to columns B,C,D,F,G,H.
+1. Distribute specified volume of buffer to columns B,C,D,F,G,H.
+2. Distribute samples at specified volume in duplicate to columns A and E (1 tube to two wells).
 3. Dilute 2X down rows, from A to D, and then E to H.
-4. Dispense diluent to every even row.
+4. Dispense specified volume of diluent to every even row (if Diluent Volume is 0, this step will be omitted).
 
 
 ### Additional Notes

@@ -101,3 +101,5 @@ ENV/
 .ropeproject
 
 releases
+smoketest/*
+!smoketest/.gitkeep
