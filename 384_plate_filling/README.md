@@ -10,7 +10,7 @@
 	* Plate Filling
 
 ## Description
-With this protocol, your robot can fill each well of a 384 well plate using a p10 8 channel pipette (without tip changes). This can be particularly useful for cell culture seeding, PCR master mix distribution, and more!
+With this protocol, your robot can fill each well of a 384 well plate from a source 12-row trough using a p10 8 channel pipette (without tip changes). This can be particularly useful for cell culture seeding, PCR master mix distribution, and more!
 Use the field labeled "well volume" below to define your preferred volume. You can input any volume from 1-10uL.
 
 ### Time Estimate
