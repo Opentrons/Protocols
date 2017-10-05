@@ -18,7 +18,7 @@ Purification and normalization of PCR products using a 96 well wplate kit.  PCR 
 3 hours
 
 ### Robot
-* OT PRO 
+* [OT PRO](https://opentrons.com/ot-one-pro)
 
 ### Modules
 

@@ -7,9 +7,8 @@
 
 
 ## Categories
-* Proteins and Proteomics
-
-### Sub Categories
+* Proteins & Proteomics
+  * Sample Prep
 
 
 ## Description
@@ -20,9 +19,9 @@ should be located in B2, C2, D2 respectively. Trash should be
 45 minutes
 
 ### Robot
-* OT PRO
-* OT Standard
-* OT Hood
+* [OT PRO](https://opentrons.com/ot-one-pro)
+* [OT Standard](https://opentrons.com/ot-one-standard)
+* [OT Hood](https://opentrons.com/ot-one-hood)
 
 ### Modules
 

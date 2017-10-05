@@ -4,13 +4,16 @@ from opentrons import containers, instruments
 p200rack = containers.load('tiprack-200ul', 'A2')
 trash = containers.load('trash-box', 'B3')
 
-plate1 = containers.load('96-PCR-flat', 'C2')
-plate2 = containers.load('96-PCR-flat', 'D1')
-plate3 = containers.load('96-PCR-flat', 'D2')
-plate4 = containers.load('96-PCR-flat', 'D3')
-plate5 = containers.load('96-PCR-flat', 'E1')
-plate6 = containers.load('96-PCR-flat', 'E2')
-plate7 = containers.load('96-PCR-flat', 'E3')
+source_plate = containers.load('96-PCR-flat', 'C2')
+
+dest_plates = [
+    containers.load('96-PCR-flat', 'D1'),
+    containers.load('96-PCR-flat', 'D2'),
+    containers.load('96-PCR-flat', 'E1'),
+    containers.load('96-PCR-flat', 'E2'),
+    containers.load('96-PCR-flat', 'D3'),
+    containers.load('96-PCR-flat', 'E3')
+]
 
 p200_multi = instruments.Pipette(
     axis="a",
@@ -22,14 +25,21 @@ p200_multi = instruments.Pipette(
     tip_racks=[p200rack]
 )
 
-dest_plates = [plate2, plate3, plate4, plate5, plate6, plate7]
 
-# map 45 uL to all odd rows of all 6 destination plates
-for i in range(0, 12, 2):
-    target_rows = [plate.rows(i) for plate in dest_plates]
-    p200_multi.distribute(45, plate1.rows(i), target_rows)
+def run_protocol(odd_volume: float=45, even_volume: float=90,
+                 number_of_destination_plates: int=6):
+    if number_of_destination_plates > len(dest_plates):
+        raise RuntimeError((
+            'Number of destination plates is too high. {} was specified, ' +
+            'but the max is {}').format(
+                number_of_destination_plates, len(dest_plates)))
 
-# map 90 uL to all even rows of all 6 destination plates
-for i in range(1, 12, 2):
-    target_rows = [d.rows(i) for d in dest_plates]
-    p200_multi.distribute(90, plate1.rows(i), target_rows)
+    # map odd_volume to all odd rows of all 6 destination plates
+    for i in range(0, 12, 2):
+        target_rows = [plate.rows(i) for plate in dest_plates]
+        p200_multi.distribute(odd_volume, source_plate.rows(i), target_rows)
+
+    # map even_volume to all even rows of all 6 destination plates
+    for i in range(1, 12, 2):
+        target_rows = [d.rows(i) for d in dest_plates]
+        p200_multi.distribute(even_volume, source_plate.rows(i), target_rows)
