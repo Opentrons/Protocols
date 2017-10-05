@@ -32,4 +32,5 @@ You may either manually input stock solutions or input a CSV file.
 4. Hit run and let the robot do the rest!
 
 ###### Internal
-Protocol written for R-Pharm.
+BWR9dbzc
+112
