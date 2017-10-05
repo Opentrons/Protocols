@@ -1,12 +1,24 @@
 from opentrons import containers, instruments
 
-# primer set 1 and 2 or 3 and 4:
-# for primers 1 and 2, set to True, for primers 3 and 4, set to False
-firstset = True  # can change here
+# Creating BioRad PCR plate
+containers.create(
+                 'BioRad_HSS9601',  # name of plate
+                 grid=(8, 12),      # grid 8 columns x 12 rows, remember
+                                    # the robot sees the plate in portrait
+                 spacing=(9, 9),    # Distance between center of each well
+                 diameter=5.5,      # Diameter at the top of teh well
+                 depth=19.85)       # Internal depth of the well
+"""
+    Below are variables representing which primers to use and how much to use.
+    @primer_set_1 Set to True if using primers 1 and 2
+    @primer_set_2 Set to True if using primers 3 and 4
+    @halfplate Set to True if you wish to have a half plate of primers
+"""
 
-# For filling half plate set to True,
-# for filling a full plate for each primer set to False
-halfplate = True  # can change here
+primer_set_1 = True
+primer_set_2 = True
+
+halfplate = True
 
 # ingredient volumes
 primervol = 1  # can change here
@@ -16,7 +28,7 @@ tempvol = 2  # can change here
 
 # source of reagents
 reagents = containers.load('tube-rack-2ml', 'A3')
-templates = containers.load('96-PCR-flat', 'D1')
+templates = containers.load('BioRad_HSS9601', 'D1')
 
 # ingredient locations
 water_loc = reagents.wells('A1')  # can change here
@@ -27,9 +39,33 @@ primer4_loc = reagents.wells('A2')  # can change here
 premix_loc = reagents.wells('B2')  # can change here
 template_loc = templates.rows(0)  # can change here
 
-# plate(s) setup will happen in
-plate1 = containers.load('96-PCR-flat', 'B1')
-plate2 = containers.load('96-PCR-flat', 'C1')
+"""
+    Below, plates are loaded on an as needed basis
+    (whether or not you wish to do half or whole plates of primer combos)
+    @wells_plate1_single Calls all wells in a plate to
+    touch the bottom of the well for plate 1
+    @wells_plate1_multi Calls all rows in a plate
+    to touch the bottom for plate 1
+    @wells_plate2_single Calls all wells in a plate to
+    touch the bottom of the well for plate 2
+    @wells_plate2_multi Calls all rows in a plate to touch
+    the bottom for plate 2
+
+    Do not change these variables. We will fix it
+    for you if the pipette still doesn't touch the bottom
+"""
+
+plate1 = containers.load('BioRad_HSS9601', 'B1')
+wells_plate1_single = [well.bottom() for row in plate1.rows() for well in row]
+
+wells_plate1_multi = [well.bottom() for well in plate1.cols(0)]
+
+if not halfplate:
+    plate2 = containers.load('BioRad_HSS9601', 'C1')
+    wells_plate2_single = [well.bottom()
+                           for row in plate2.rows() for well in row]
+
+    wells_plate2_multi = [well.bottom() for well in plate2.cols(0)]
 
 # tip rack for p50 pipette
 m200rack = containers.load('tiprack-200ul', 'C3')
@@ -60,111 +96,62 @@ p50single = instruments.Pipette(
     channels=1
 )
 
-# We need a protocol to set up for PCR screening of a large number of colonies
-# in 96 well PCR plates.
-# Work flow after picking colonies into 5-10 uL H2O would be,
-# make master mix for either half plate of primer 1 and 2 with H2O and
-# 2x KAPA HotStart do teh same with primers 3 and 4, dispense into
-# the PCR plate. Add 2 ul of template from an other PCR plate.
-# Same template from each half of the plates
-# (so same templeate in A1 and A7 etc).
-# If we could also have the option to expand this to filling a full plate with
-# each primer set that would be great.
-# Final volume would be 20ul (18 mix 2 template)
+"""
+ PCR protocol. Steps:
+ 1. First fill plate 1 with water and pre-mixer to specified volumes
+ 2. Check if you want to fill both PCR plates with primer combos 1+2, 3+4
+ 3. If so, fill plate 2 with water and pre-mixer and
+ check if using primer set 1 and/or 2
+ 4. If only doing half plate, skip filling plate 2
+ and check if using primer set 1 and/or 2
+ 5. Distribute template to specified volume
+"""
 
-p50single.distribute(
-    watervol,
-    water_loc,
-    plate1.rows(),
-    disposal_vol=0,
-    blowout=True)
+p50single.distribute(watervol, water_loc,
+                     wells_plate1_single, disposal_vol=0, blowout=True)
+p50single.distribute(mixvol, premix_loc,
+                     wells_plate1_single, disposal_vol=0, blowout=True)
+
 if not halfplate:
-    p50single.distribute(
-        watervol,
-        water_loc,
-        plate2.rows(),
-        disposal_vol=0,
-        blowout=True)
+    p50single.distribute(watervol, water_loc,
+                         wells_plate2_single, disposal_vol=0, blowout=True)
+    p50single.distribute(mixvol, premix_loc,
+                         wells_plate2_single, disposal_vol=0, blowout=True)
+    if primer_set_1:
+        p50single.distribute(primervol, primer1_loc,
+                             wells_plate1_single, disposal_vol=0, blowout=True)
+        p50single.distribute(primervol, primer2_loc,
+                             wells_plate1_single, disposal_vol=0, blowout=True)
+    if primer_set_2:
+        p50single.distribute(primervol, primer3_loc,
+                             wells_plate2_single, disposal_vol=0, blowout=True)
+        p50single.distribute(primervol, primer4_loc,
+                             wells_plate2_single, disposal_vol=0, blowout=True)
 
-p50single.distribute(
-    mixvol,
-    premix_loc,
-    plate1.rows(),
-    disposal_vol=0,
-    blowout=True)
-if not halfplate:
-    p50single.distribute(
-        mixvol,
-        premix_loc,
-        plate2.rows(),
-        disposal_vol=0,
-        blowout=True)
+    p10multi.distribute(tempvol, template_loc,
+                        wells_plate2_multi, disposal_vol=0, blowout=True)
 
-if firstset:
-    if halfplate:
-        p50single.distribute(
-            primervol,
-            primer1_loc,
-            plate1.rows(0, to=6),
-            disposal_vol=0,
-            blowout=True)
-        p50single.distribute(
-            primervol,
-            primer2_loc,
-            plate1.rows(6, to=12),
-            disposal_vol=0,
-            blowout=True)
-    else:
-        p50single.distribute(
-            primervol,
-            primer1_loc,
-            plate1.rows(),
-            disposal_vol=0,
-            blowout=True)
-        p50single.distribute(
-            primervol,
-            primer2_loc,
-            plate2.rows(),
-            disposal_vol=0,
-            blowout=True)
-else:
-    if halfplate:
-        p50single.distribute(
-            primervol,
-            primer3_loc,
-            plate1.rows(0, to=6),
-            disposal_vol=0,
-            blowout=True)
-        p50single.distribute(
-            primervol,
-            primer4_loc,
-            plate1.rows(6, to=12),
-            disposal_vol=0,
-            blowout=True)
-    else:
-        p50single.distribute(
-            primervol,
-            primer3_loc,
-            plate1.rows(),
-            disposal_vol=0,
-            blowout=True)
-        p50single.distribute(
-            primervol,
-            primer4_loc,
-            plate2.rows(),
-            disposal_vol=0,
-            blowout=True)
+if primer_set_1:
+        p50single.distribute(primervol, primer1_loc,
+                             wells_plate1_single[
+                                                0:len(wells_plate1_single)//2],
+                             disposal_vol=0, blowout=True)
+        p50single.distribute(primervol, primer2_loc,
+                             wells_plate1_single[
+                                                0:len(wells_plate1_single)//2],
+                             disposal_vol=0, blowout=True)
 
-p10multi.distribute(
-    tempvol,
-    template_loc,
-    plate1.rows(),
-    disposal_vol=0,
-    blowout=True)
-if not halfplate:
-    p10multi.distribute(
-        tempvol,
-        template_loc,
-        plate2.rows(),
-        disposal_vol=0,
-        blowout=True)
+if primer_set_2:
+        p50single.distribute(primervol, primer3_loc,
+                             wells_plate1_single[
+                                                len(wells_plate1_single) //
+                                                2:len(wells_plate1_single)],
+                             disposal_vol=0, blowout=True)
+        p50single.distribute(primervol, primer4_loc,
+                             wells_plate1_single[
+                                                len(wells_plate1_single) //
+                                                2:len(wells_plate1_single)],
+                             disposal_vol=0, blowout=True)
+
+p10multi.distribute(tempvol, template_loc, wells_plate1_multi,
+                    disposal_vol=0, blowout=True)
