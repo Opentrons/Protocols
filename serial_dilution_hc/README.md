@@ -8,9 +8,7 @@
 
 ## Categories
 * Basic Pipetting
-
-### Sub Categories
-* Dilution
+  * Dilution
 
 
 ## Description

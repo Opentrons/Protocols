@@ -17,11 +17,11 @@ Map Hampton Index HT deep block to lower wells of crystallization plate.  Distri
 3 hours and 40 minutes
 
 ### Robot
-* OT PRO
-* OT Hood
+* [OT PRO](https://opentrons.com/ot-one-pro)
+* [OT Hood](https://opentrons.com/ot-one-hood)
 
 ### Modules
-* CoolDeck
+* [CoolDeck](https://shop.opentrons.com/collections/labware/products/cold-deck)
 
 ### Reagents
 

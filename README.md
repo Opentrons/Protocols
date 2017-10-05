@@ -37,10 +37,8 @@ Every protocol should have a README file in its folder, with the file name `READ
 [Partner Name here](https://www.example.com/)
 
 ## Categories
-* Proteins and Proteomics
-
-### Sub Categories
-*
+* Proteins & Proteomics
+  * Assay
 
 ## Description
 Describe and summarize the protocol here.
@@ -51,12 +49,12 @@ What special labware is required?
 30 minutes
 
 ### Robot
-* OT PRO
-* OT Standard
-* OT Hood
+* [OT PRO](https://opentrons.com/ot-one-pro)
+* [OT Standard](https://opentrons.com/ot-one-standard)
+* [OT Hood](https://opentrons.com/ot-one-hood)
 
 ### Modules
-* CoolDeck
+* [CoolDeck](https://shop.opentrons.com/collections/labware/products/cold-deck)
 
 ### Reagents
 * ddH2O
