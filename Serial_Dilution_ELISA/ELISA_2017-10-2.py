@@ -118,8 +118,8 @@ p300.transfer(90, EGFR, reaction_plate_rows, trash=False)
 
 robot._driver.power_off()
 
-# time.sleep(57600)
-time.sleep(60)
+time.sleep(57600)
+
 
 robot._driver.power_on()
 
