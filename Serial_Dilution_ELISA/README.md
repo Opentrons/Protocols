@@ -4,7 +4,8 @@
 [Opentrons](http://www.opentrons.com/)
 
 ## Categories
-* Proteins and Proteomics
+* Molecular Biology
+	* ELISA
 
 ## Description
 * Prepare the ELISA plate by pre-washing with EGRF and let the solution sit

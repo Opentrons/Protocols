@@ -8,8 +8,7 @@
 
 ## Categories
 * Basic Pipetting
-  * Dilution
-
+	* Dilution
 
 ## Description
 Performs 2 separate serial dilutions in one 96-well plate. Dilute column A to D, and dilute column H to E. Optionally, add diluent to all wells as a last step.
