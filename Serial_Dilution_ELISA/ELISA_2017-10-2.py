@@ -16,10 +16,10 @@ Serial Dilution + ELISA
 """
 
 p1000rack = containers.load('tiprack-1000ul', 'A1', 'p20-rack')
-p300rack = containers.load('tiprack-200ul', 'E2', 'p300-rack')
+p300rack = containers.load('tiprack-200ul', 'C1', 'p300-rack')
 p300rack2 = containers.load('tiprack-200ul', 'E1', 'p300-rack')
 
-serial_dilution_plate = containers.load('96-deep-well', 'C1')
+serial_dilution_plate = containers.load('96-deep-well', 'B1')
 reaction_plate = containers.load('96-deep-well', 'D1')
 samples = containers.load('tube-rack-2ml', 'C2')
 
@@ -99,7 +99,7 @@ p1000 = instruments.Pipette(
     trash_container=liquid_trash,
     min_volume=100,
     max_volume=1000,
-    axis="a"
+    axis="b"
 )
 
 p300 = instruments.Pipette(
@@ -109,7 +109,7 @@ p300 = instruments.Pipette(
     min_volume=50,
     max_volume=300,
     channels=8,
-    axis="b"
+    axis="a"
 )
 
 # Step 1: Add 90uL of EGRF to ELISA plate and delay for 16 hours
