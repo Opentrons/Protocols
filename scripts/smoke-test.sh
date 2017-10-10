@@ -22,5 +22,6 @@ find smoketest/ -name '*.py' | sort -f | while read pyfile; do
     echo "Processing protocol '$pyfile'"
   fi
 
-  python "$pyfile" || exit 1
+  # you can use the env var OT_TESTING to bypass time.sleep steps in protocols
+  OT_TESTING=True python "$pyfile" || exit 1
 done

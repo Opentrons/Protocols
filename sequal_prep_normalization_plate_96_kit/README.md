@@ -6,8 +6,6 @@
 ### Partner
 
 ## Categories
-* Molecular Biology
-	* DNA
 * Sample Prep
 	* PCR
 
