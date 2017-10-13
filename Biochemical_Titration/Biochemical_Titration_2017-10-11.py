@@ -91,16 +91,11 @@ def run_protocol(number_of_plates: int=1):
         DMSO_source_rows = source.wells('A6', 'A12')
         DMSO_output_rows = output.wells('A6', 'A12')
 
-        plate_rows = []
-        source_rows = []
-        for num in range(1, 11):
-            if num != 6:
-                source_rows.append(source.rows(num-1))
-            if num != 5:
-                plate_rows.append(source.rows(num))
+        plate_rows = list(
+            source.rows('1', '2', '3', '4', '5', '7', '8', '9', '10'))
+        source_rows = list(
+            source.rows('2', '3', '4', '5', '7', '8', '9', '10', '11'))
 
-        print(source_rows)
-        print(plate_rows)
         # Step 1
         p50multi.transfer(20, DMSO, source.rows('2', length=11))
 

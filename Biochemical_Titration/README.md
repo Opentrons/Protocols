@@ -7,8 +7,8 @@
  * October 11th, 2017
 
 ## Categories
- * Molecular Biology
-** DNA
+ * Basic Pipetting
+ 	* Plate Filling
 
 ## Description
 This Biochemical titration prepares your samples for an assay.
