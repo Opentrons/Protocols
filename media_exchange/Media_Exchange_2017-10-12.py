@@ -31,7 +31,7 @@ plate_96 = containers.load('96-flat', 'C1')
 
 
 p10single = instruments.Pipette(
-    axis='a',
+    axis='b',
     name='p10single',
     max_volume=10,
     min_volume=1,
