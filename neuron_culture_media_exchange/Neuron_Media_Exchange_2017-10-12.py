@@ -52,31 +52,28 @@ def run_protocol(number_of_plates: int=6):
 
     plates = plates[0:number_of_plates]
 
-    trash = tuberack.rows('1', to='2')
-    media = tuberack.rows('3', to='4')
+    trash = tuberack[:6]  # 15mL tubes (x6)
+    media = tuberack[6:]  # 50mL tubes (x4)
 
-    i = 0
-    j = 0
+    # trash the contents of all the plates
+    for plateNo, plate in enumerate(plates):
+        pipette.consolidate(
+            350, plate, trash[plateNo], new_tip='always')
+
+    # add media from the 50mL tubes to all plates
+    tube_vol = 50000
+    media_tube_in_use = 0
+    transfer_vol = 400
+    media_vol_per_plate = 450 * 24  # depends on pipette vol, etc
+
     for plate in plates:
+        tube_vol = tube_vol - media_vol_per_plate
 
-        if j == 3:
-            j = 0
-            i = 1
-        pipette.consolidate(350, plate.rows(), trash[i][j], new_tip='always')
-        j += 1
+        if tube_vol <= media_vol_per_plate:
+            tube_vol = 50000
+            media_tube_in_use += 1
 
-    i = 0
-    j = 0
-
-    tube_vol = 50
-    for plate in plates:
-        tube_vol = tube_vol - 9.6
-
-        if tube_vol <= 0:
-            tube_vol = 50
-            if j == 2:
-                i = 1
-                j = 0
-            else:
-                j += 1
-        pipette.distribute(400, media[i][j], plate.rows())
+        pipette.distribute(
+            transfer_vol,
+            media[media_tube_in_use],
+            plate)
