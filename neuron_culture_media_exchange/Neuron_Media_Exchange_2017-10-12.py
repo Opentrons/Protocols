@@ -31,14 +31,16 @@ Step 2:  Add 400uL of media from 50mL conical with media to plates
 if it is possible to set height slightly
 above the media, we could use the same tips)
 """
-plate_type = '24-well-plate'
+# plate_type = '24-well-plate'
 
-plate_1 = containers.load(plate_type, 'A2')
-plate_2 = containers.load(plate_type, 'B1')
-plate_3 = containers.load(plate_type, 'C2')
-plate_4 = containers.load(plate_type, 'D1')
-plate_5 = containers.load(plate_type, 'E2')
-plate_6 = containers.load(plate_type, 'E1')
+all_plates = [
+    containers.load('24-well-plate', 'A2'),
+    containers.load('24-well-plate', 'B1'),
+    containers.load('24-well-plate', 'C2'),
+    containers.load('24-well-plate', 'D1'),
+    containers.load('24-well-plate', 'E2'),
+    containers.load('24-well-plate', 'E1')
+    ]
 
 tiprack = containers.load('tiprack-1000ul', 'A1')
 tiprack2 = containers.load('tiprack-1000ul', 'B2')
@@ -48,9 +50,7 @@ tuberack = containers.load('tube-rack-15_50ml', 'D2')
 
 
 def run_protocol(number_of_plates: int=6):
-    plates = [plate_1, plate_2, plate_3, plate_4, plate_5, plate_6]
-
-    plates = plates[0:number_of_plates]
+    plates = all_plates[:number_of_plates]
 
     trash = tuberack[:6]  # 15mL tubes (x6)
     media = tuberack[6:]  # 50mL tubes (x4)
