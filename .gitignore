@@ -1,11 +1,15 @@
 .DS_Store
 *.DS_Store
+*.swp
+desktop.ini
 
 # opentrons api created folders
 calibrations/
 smoothie/
 */calibrations/
 */smoothie/
+*/containers/
+*/logs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -98,3 +102,4 @@ ENV/
 .ropeproject
 
 releases
+smoketest/*.py

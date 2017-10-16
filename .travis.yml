@@ -4,13 +4,15 @@ python:
 - '3.5'
 
 install:
-  - export OT_BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
-  - echo $OT_BRANCH
+  - export OT_PROTOLIB_BRANCH=$(python scripts/getBranch.py protolib)
+  - echo $OT_PROTOLIB_BRANCH
+  - export OT_UPLOAD_BRANCH=$(python scripts/getBranch.py upload)
+  - echo $OT_UPLOAD_BRANCH
   - openssl aes-256-cbc -K $encrypted_43309740674a_key -iv $encrypted_43309740674a_iv -in .ci/protocol-library.enc -out ../protocol-library -d
   - chmod 600 ../protocol-library
   - eval `ssh-agent -s`
   - ssh-add ../protocol-library
-  - pip install "git+ssh://git@github.com/OpenTrons/protocol-library.git@$OT_BRANCH#egg=protolib"
+  - pip install "git+ssh://git@github.com/OpenTrons/protocol-library.git@$OT_PROTOLIB_BRANCH#egg=protolib"
   - echo $PATH
   - pip install flake8
 
@@ -20,7 +22,7 @@ script:
   - python -c 'import opentrons; print(opentrons.__version__)'
   # lint and smoke test all protocols
   - flake8 .
-  - ./scripts/smoke-test
+  - ./scripts/smoke-test.sh
   # build zipped .json
   - library-build . releases
   - ls -la releases
@@ -33,7 +35,7 @@ deploy:
   bucket: protocol-library-builds
   skip_cleanup: true
   local-dir: releases
-  upload-dir: $OT_BRANCH
+  upload-dir: $OT_UPLOAD_BRANCH
   acl: private
   on:
     repo: OpenTrons/Protocols
