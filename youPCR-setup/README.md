@@ -4,13 +4,14 @@
 [Opentrons](https://opentrons.com/)
 
 ### Partner
+[Medicinal Genomics](http://www.medicinalgenomics.com/)
 
 ## Categories
 * Sample Prep
 	* PCR
 
 ## Description
-Performs youPCR setup.
+Performs setup for [youPCR](http://www.medicinalgenomics.com/youpcr-platform/).
 
 1. Make master mixes: add 100uL of LAMP buffer, 2uL of primer, 60uL of water for each row (up to 8 rows)
 2. Distribute master mix across 96-well-flat plate
