@@ -7,7 +7,7 @@
 
 ## Categories
 * Molecular Biology
-  * DNA
+	* DNA
 
 ## Description
 1. Transfer 5ul of nuclease free water from 2ml tube rack to all wells
