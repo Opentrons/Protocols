@@ -8,9 +8,7 @@
 
 ## Categories
  * Basic Pipetting
-
-### Subcategories
- * Plate Cells
+	* Plate Cells
 
 ## Description
 [Part 1](./Plate_Cells_2017-10-12)
