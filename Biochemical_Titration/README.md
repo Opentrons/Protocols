@@ -1,21 +1,20 @@
 # Biochemical Assay Titration
 
 ### Author
- * Opentrons
+[Opentrons](https://opentrons.com/)
 
-### Date
- * October 11th, 2017
+### Partner
 
 ## Categories
- * Basic Pipetting
- 	* Plate Filling
+* Basic Pipetting
+	* Plate Filling
 
 ## Description
 This Biochemical titration prepares your samples for an assay.
 
 ### Robot
-* OT PRO
-* OT Standard
+* [OT PRO](https://opentrons.com/ot-one-pro)
+* [OT Standard](https://opentrons.com/ot-one-standard)
 
 ### Instruments
 * 50 ul multi channel Pipette
