@@ -1,7 +1,7 @@
 """
 NGS Prep Clean-up
 @author Opentrons
-@date October 11th, 2017
+@date October 17th, 2017
 @robot OT Pro, OT S
 """
 
