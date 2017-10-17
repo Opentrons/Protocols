@@ -70,6 +70,44 @@ p300multi = instruments.Pipette(
 
 mag_deck = instruments.Magbead(name='mag_deck')
 
+# Helper Functions
+
+
+def tip_wash(pipette):
+    for _ in range(3):
+        pipette.aspirate(200, H20)
+        pipette.dispense(200, trash)
+    for _ in range(2):
+        pipette.aspirate(200, EtOH)
+        pipette.dispense(200, trash)
+
+
+def EtOH_wash(pipette, plate, tiprack, vol):
+    p300multi.start_at_tip(tip300_rack.rows('1'))
+
+    for row in plate.rows():
+        pipette.pick_up_tip()
+        pipette.aspirate(vol, EtOH)
+        pipette.dispense(vol, row)
+        pipette.mix(5, vol)
+
+        tip_wash(pipette)
+
+        pipette.return_tip()
+
+    mag_deck.engage().delay(minutes=5)
+
+    p300multi.start_at_tip(tip300_rack.rows('1'))
+    for row in plate.rows():
+        pipette.pick_up_tip()
+
+        pipette.aspirate(vol, row)
+        pipette.dispense(vol, trash)
+
+        tip_wash(pipette)
+
+        pipette.return_tip()
+
 
 def run_protocol(TE_volume: float=20.0, number_of_samples: int=96):
     # all commands go in this function
@@ -79,41 +117,6 @@ def run_protocol(TE_volume: float=20.0, number_of_samples: int=96):
     except ValueError:
         print(
          "You can only input samples less than or equal to 96.")
-
-        # Helper Functions
-        def tip_wash(pipette):
-            for _ in range(3):
-                pipette.aspirate(200, H20)
-                pipette.dispense(200, trash)
-            for _ in range(2):
-                pipette.aspirate(200, EtOH)
-                pipette.dispense(200, trash)
-
-        def EtOH_wash(pipette, plate, tiprack, vol):
-            p300multi.start_at_tip(tip300_rack.rows('1'))
-
-            for row in plate.rows():
-                pipette.pick_up_tip()
-                pipette.aspirate(vol, EtOH)
-                pipette.dispense(vol, row)
-                pipette.mix(5, vol)
-
-                tip_wash(pipette)
-
-                pipette.return_tip()
-
-            mag_deck.engage().delay(minutes=5)
-
-            p300multi.start_at_tip(tip300_rack.rows('1'))
-            for row in plate.rows():
-                pipette.pick_up_tip()
-
-                pipette.aspirate(vol, row)
-                pipette.dispense(vol, trash)
-
-                tip_wash(pipette)
-
-                pipette.return_tip()
 
     """
        Step 1 Add Magnetic Beads:
