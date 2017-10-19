@@ -12,20 +12,19 @@
 ## Description
 This Biochemical titration prepares your samples for an assay.
 
+## Time Estimate
+* Depends on the amount of plates. No greater than 15 minutes.
+
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)
 * [OT Standard](https://opentrons.com/ot-one-standard)
 
-### Instruments
-* 50 ul multi channel Pipette
+### Modules
 
 ### Reagents
 * DMSO
 * Buffer
 * Titration
-
-## Time Estimate
-* Depends on the amount of plates. No greater than 15 minutes.
 
 ## Process
 1. Choose the amount of plates you wish to process. The maximum for this
@@ -34,6 +33,8 @@ protocol is 4 master plates and 4 output plates.
 3. Calibrate all containers needed.
 4. Hit run and watch your robot do the rest!
 
-#### Internal
+### Additional Notes
+
+###### Internal
 el8MQkJF
 349

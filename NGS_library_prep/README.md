@@ -3,24 +3,25 @@
 ### Author
  * Opentrons
 
-### Date
+### Partner
  * October 11th, 2017
 
 ## Categories
- * Molecular Biology
-** DNA
+* Molecular Biology
+	* DNA
 
 ## Description
 This NGS prep uses Opentrons' MagDeck module to cut down and create sequencing
 library.
 
+## Time Estimate
+* Depends on the amount of samples
+
 ### Robot
 * OT PRO
 * OT Standard
 
-### Instruments
-* 300 ul single channel Pipette
-* 200 ul multi channel Pipette
+### Modules
 * Mag Deck
 
 ### Reagents
@@ -29,8 +30,6 @@ library.
 * H20
 * KAPA beads
 
-## Time Estimate
-* Depends on the amount of samples
 
 ## Process
 1. Choose values for TE volume as well as number of samples. Note the allocated
@@ -41,6 +40,8 @@ containers.load() or in the deck image generated on the library.
 3. Calibrate each container as specified in the app
 4. Hit run and watch your robot go!
 
-#### Internal
+### Additional Notes
+
+###### Internal
 MP3h4TXU
 350
