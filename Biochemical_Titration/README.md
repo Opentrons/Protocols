@@ -20,7 +20,6 @@ This Biochemical titration prepares your samples for an assay.
 * [OT Standard](https://opentrons.com/ot-one-standard)
 
 ### Modules
-* 50 ul multi channel Pipette
 
 ### Reagents
 * DMSO
