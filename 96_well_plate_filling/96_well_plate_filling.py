@@ -22,7 +22,7 @@ pipette = instruments.Pipette(
 row_vols = [0 for row in plate.rows()]
 
 
-def run_protocol(well_volume: float=20):
+def run_custom_protocol(well_volume: float=20):
     pipette.pick_up_tip()
 
     # this isn't just a distribute because we want to touch tip.

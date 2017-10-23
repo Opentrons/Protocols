@@ -18,7 +18,7 @@ m200 = instruments.Pipette(
 )
 
 
-def run_protocol(final_volume: float=200):
+def run_custom_protocol(final_volume: float=200):
     transfer_volume = final_volume/10.0
     buffer_volume = final_volume - transfer_volume
 

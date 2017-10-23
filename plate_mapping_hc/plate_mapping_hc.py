@@ -26,7 +26,7 @@ p200_multi = instruments.Pipette(
 )
 
 
-def run_protocol(odd_volume: float=45, even_volume: float=90,
+def run_custom_protocol(odd_volume: float=45, even_volume: float=90,
                  number_of_destination_plates: int=6):
     if number_of_destination_plates > len(dest_plates):
         raise RuntimeError((

@@ -108,7 +108,7 @@ p300 = instruments.Pipette(
 )
 
 
-def run_protocol(hours_to_incubate: float=16):
+def run_custom_protocol(hours_to_incubate: float=16):
     # Step 1: Add 90uL of EGRF to ELISA plate and delay for 16 hours
     p300.transfer(90, EGFR, reaction_plate_rows, trash=False)
 

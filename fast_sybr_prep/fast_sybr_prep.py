@@ -44,7 +44,7 @@ p10multi = instruments.Pipette(
     tip_racks=[tip10_rack2])
 
 
-def run_protocol(vol1: float=8, vol2: float=8, cdna_vol: float=8,
+def run_custom_protocol(vol1: float=8, vol2: float=8, cdna_vol: float=8,
                  num_strips: int=6):
     # set rows of 96 well plate that get each mix
     # 1 to 6 as written, will change based on num_strips

@@ -23,7 +23,7 @@ p1000 = instruments.Pipette(
 )
 
 
-def run_protocol(buffer_volume: float=300,
+def run_custom_protocol(buffer_volume: float=300,
                  sample_volume: float=600,
                  diluent_volume: float=200,
                  a_to_d_dilution_volume: float=300,

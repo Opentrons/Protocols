@@ -49,7 +49,7 @@ tiprack3 = containers.load('tiprack-1000ul', 'C1')
 tuberack = containers.load('tube-rack-15_50ml', 'D2')
 
 
-def run_protocol(number_of_plates: int=6):
+def run_custom_protocol(number_of_plates: int=6):
     plates = all_plates[:number_of_plates]
 
     trash = tuberack[:6]  # 15mL tubes (x6)
