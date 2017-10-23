@@ -47,7 +47,7 @@ p50multi = instruments.Pipette(
 
 
 def run_custom_protocol(transfer_volume: float=20,
-                 number_of_destination_plates: int=4):
+                        number_of_destination_plates: int=4):
     row_count = len(dest_plates[0].rows())
     for row_index in range(row_count):
         # List of WellSeries

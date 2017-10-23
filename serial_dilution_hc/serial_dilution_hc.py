@@ -24,10 +24,10 @@ p1000 = instruments.Pipette(
 
 
 def run_custom_protocol(buffer_volume: float=300,
-                 sample_volume: float=600,
-                 diluent_volume: float=200,
-                 a_to_d_dilution_volume: float=300,
-                 h_to_e_dilution_volume: float=300):
+                        sample_volume: float=600,
+                        diluent_volume: float=200,
+                        a_to_d_dilution_volume: float=300,
+                        h_to_e_dilution_volume: float=300):
     # distribute buffer to all wells, except columns A and E
     destination_wells = [w for c in plate.cols('B', to='H') for w in c]
     p1000.distribute(buffer_volume, trough.well('A1'), destination_wells)

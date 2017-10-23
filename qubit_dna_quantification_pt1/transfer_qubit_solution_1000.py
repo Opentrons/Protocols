@@ -88,8 +88,10 @@ def tube_container(number, original=tubes, overflow=tubes_overflow):
     #     number, original=tubes, overflow=tubes_overflow, capacity=24)
 
 
-def run_custom_protocol(sample_number: int=4, qubit_solution_volume: float=199,
-                 standard_volume: float=190, first_sample_number: int=1):
+def run_custom_protocol(sample_number: int=4,
+                        qubit_solution_volume: float=199,
+                        standard_volume: float=190,
+                        first_sample_number: int=1):
     # p1000.start_at_tip(p1000rack[first_tip])  # start at first tip assigned
     p1000.pick_up_tip(p1000rack[first_tip])  # pick up tip, only 1 tip needed
 
