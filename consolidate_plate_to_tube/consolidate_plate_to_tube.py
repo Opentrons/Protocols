@@ -19,5 +19,5 @@ p200 = instruments.Pipette(
 )
 
 
-def run_protocol(consolidate_volume: float=20.0):
+def run_custom_protocol(consolidate_volume: float=20.0):
     p200.consolidate(consolidate_volume, plate.wells(), tube_rack.wells('A1'))
