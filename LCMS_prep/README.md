@@ -12,8 +12,13 @@
 
 
 ## Description
-LCMS Prep dependent on the number of samples being used. Tube racks
-should be located in B2, C2, D2 respectively. Trash should be
+LCMS Prep.
+
+Set a custom number of samples to use (the range is 1 to 128).
+
+Tube racks should be located in B2, C2, D2 respectively.
+
+Note: uses custom 4mL tube rack and custom reservoir.
 
 ### Time Estimate
 45 minutes
@@ -21,24 +26,20 @@ should be located in B2, C2, D2 respectively. Trash should be
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)
 * [OT Standard](https://opentrons.com/ot-one-standard)
-* [OT Hood](https://opentrons.com/ot-one-hood)
 
 ### Modules
 
 
 ### Reagents
-* ddH2O
-* cDNA samples
-* Et cetera
+* Samples
+* IS Solution
 
 ## Process
-1. Place plates, tip-racks and troughs in their designated locations.
-2. Put the steps in a numbered list
-3. Et cetera
+1. TODO
 
 ### Additional Notes
-Notes here will show up on the bottom of the protocol on the website.
+
 
 ###### Internal
-Notes here will not be published on the Opentrons Protocol Library website,
-but will be visible in the public GitHub Protocols repo.
+RlR2aGWc
+157
