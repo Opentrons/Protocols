@@ -6,7 +6,7 @@
 ### Partner
 
 ## Categories
-* Molecular Biology
+* Proteins & Proteomics
 	* ELISA
 
 

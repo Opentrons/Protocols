@@ -14,7 +14,7 @@ p200 = instruments.Pipette(
 )
 
 
-def run_protocol(number_of_tubes: int=24, transfer_volume: int=40):
+def run_custom_protocol(number_of_tubes: int=24, transfer_volume: int=40):
     if number_of_tubes > len(sample_tubes):
         print(
             'Number of samples is too high: {}. The max is {}'.format(

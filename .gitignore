@@ -1,6 +1,7 @@
 .DS_Store
 *.DS_Store
 *.swp
+desktop.ini
 
 # opentrons api created folders
 calibrations/
@@ -101,5 +102,4 @@ ENV/
 .ropeproject
 
 releases
-smoketest/*
-!smoketest/.gitkeep
+smoketest/*.py

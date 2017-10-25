@@ -52,8 +52,10 @@ p50multi = instruments.Pipette(
 diluent_source = trough['A1']
 
 
-def run_protocol(dilution_factor: float=10, final_volume: float=100,
-                 number_of_rows_to_use: int=11, number_of_plates: int=1):
+def run_custom_protocol(dilution_factor: float=10,
+                        final_volume: float=100,
+                        number_of_rows_to_use: int=11,
+                        number_of_plates: int=1):
     if number_of_rows_to_use > 11:
         raise RuntimeError((
             'Number of dilutions cannot exceed 11 (since there are 12 rows ' +
