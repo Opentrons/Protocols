@@ -103,7 +103,7 @@ For some protocols, you might want "number of destination plates" to be a variab
 
 ### Part 2: Set your customizable arguments
 
-To make a protocol customizable, put all your commands that run on the robot in a function called `run_protocol`.
+To make a protocol customizable, put all your commands that run on the robot in a function called `run_custom_protocol`.
 
 The arguments to that function will be used to create input forms on the Protocol Library website page for your protocol.
 
@@ -115,7 +115,7 @@ Form validation, such as setting min and max values, is not currently supported.
 
 ### Part 3: Commands
 
-Inside your `run_protocol` function, write all your robot commands (`transfer`, `distribute`, etc.)
+Inside your `run_custom_protocol` function, write all your robot commands (`transfer`, `distribute`, etc.)
 
 ## A simple example
 
@@ -141,9 +141,9 @@ p200_multi = instruments.Pipette(
     channels=8,
 )
 
-# set up special `run_protocol` function, with annotated arguments
+# set up special `run_custom_protocol` function, with annotated arguments
 
-def run_protocol(transfer_volume: float=1.0, number_of_rows: int=1):
+def run_custom_protocol(transfer_volume: float=1.0, number_of_rows: int=1):
     # all commands go in this function
     p200_multi.distribute(
       transfer_volume,

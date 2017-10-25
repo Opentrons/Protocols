@@ -125,8 +125,10 @@ def tube_container(number, original=tubes, overflow=tubes_overflow):
         return overflow
 
 
-def run_protocol(number_of_samples: int=4, standard_volume: float=10,
-                 first_sample_number: int=1, aspirate_volume: float=1):
+def run_custom_protocol(number_of_samples: int=4,
+                        standard_volume: float=10,
+                        first_sample_number: int=1,
+                        aspirate_volume: float=1):
     # loop through as many times as there are samples
     for i in range(first_sample_number, number_of_samples + 1, 4):
         # pick up tip, aspirate sample, dispense in qubit tube, drop tip

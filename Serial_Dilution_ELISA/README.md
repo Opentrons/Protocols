@@ -33,11 +33,17 @@ for the specified number of hours. Then wash the plate with wash buffer 4x and s
 * [OT Standard](https://opentrons.com/ot-one-standard)
 * [OT Hood](https://opentrons.com/ot-one-hood)
 
+### Modules
+
+### Reagents
+
 ## Process
 1. Place plates, tip-racks and troughs in their designated locations.
 2. Open the OT app found on Opentrons website and upload the .py file.
 3. Calibrate each container used in the protocol.
 4. Hit run and let the robot do the rest!
+
+### Additional Notes
 
 ###### Internal
 BWR9dbzc

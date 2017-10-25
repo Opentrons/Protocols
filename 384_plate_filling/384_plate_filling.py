@@ -17,7 +17,7 @@ m200 = instruments.Pipette(
 )
 
 
-def run_protocol(well_volume: float=1.0):
+def run_custom_protocol(well_volume: float=1.0):
     alternating_wells = []
     for row in plate.rows():
         alternating_wells.append(row.wells('A', length=8, step=2))

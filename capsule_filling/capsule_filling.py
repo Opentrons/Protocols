@@ -61,7 +61,7 @@ tubes15ml = [
 # see capsule specs here: https://www.capsuline.com/empty-capsule-size-chart/).
 # We will load the plates of empty capsules into the robot to be filled.
 # Each capsule will need to be filled with exactly .7ml.
-def run_protocol(fill_volume: float=700):
+def run_custom_protocol(fill_volume: float=700):
     p1000single.transfer(fill_volume, tubes50ml, wells50mltube)
     p1000single.transfer(fill_volume, tubes15ml, wells15mltube)
 

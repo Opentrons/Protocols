@@ -49,7 +49,7 @@ p10multi = instruments.Pipette(
     trash_container=trash)
 
 
-def run_protocol(plate_size: int=96):
+def run_custom_protocol(plate_size: int=96):
     if plate_size == 96:
         plate = plate_96
         pipette = p10multi

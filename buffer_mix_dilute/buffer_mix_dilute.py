@@ -28,7 +28,7 @@ p200 = instruments.Pipette(
 )
 
 
-def run_protocol(sample_volume: float=20, buffer_volume: float=20):
+def run_custom_protocol(sample_volume: float=20, buffer_volume: float=20):
     # Transfer buffer to all wells, except row 1 on plate.
     p300_multi.distribute(
         buffer_volume, trough['A1'], plate.rows('2', to='12'))

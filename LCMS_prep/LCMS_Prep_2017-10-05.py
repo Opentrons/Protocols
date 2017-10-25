@@ -61,7 +61,7 @@ p300single = instruments.Pipette(
 IS_soln = resevoir.wells('A1')
 
 
-def run_protocol(number_of_samples: int=100):
+def run_custom_protocol(number_of_samples: int=100):
     num_samples = number_of_samples
 
     # Plates/Tube racks

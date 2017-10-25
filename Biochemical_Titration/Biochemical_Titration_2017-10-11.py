@@ -81,7 +81,7 @@ all_output_plates = [
     output_plate_4]
 
 
-def run_protocol(number_of_plates: int=1):
+def run_custom_protocol(number_of_plates: int=1):
 
     source_plates = all_source_plates[0:number_of_plates]
     output_plates = all_output_plates[0:number_of_plates]

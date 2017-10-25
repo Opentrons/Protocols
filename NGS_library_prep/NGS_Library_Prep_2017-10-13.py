@@ -109,7 +109,7 @@ def EtOH_wash(pipette, plate, tiprack, vol):
         pipette.return_tip()
 
 
-def run_protocol(TE_volume: float=20.0, number_of_samples: int=96):
+def run_custom_protocol(TE_volume: float=20.0, number_of_samples: int=96):
     # all commands go in this function
 
     try:

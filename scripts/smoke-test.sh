@@ -14,10 +14,10 @@ find . -name '*.py' | grep -Ev '.*\.ignore\.py|.*/scripts/' | sort -f | while re
 done
 
 find smoketest/ -name '*.py' | sort -f | while read pyfile; do
-  if grep -Eq "^def run_protocol\(" $pyfile; then
+  if grep -Eq "^def run_custom_protocol\(" $pyfile; then
     echo "Processing CUSTOMIZABLE protocol '$pyfile'"
-    # add run_protocol() call to end of all customizable protocols
-    echo 'run_protocol()' >> $pyfile
+    # add run_custom_protocol() call to end of all customizable protocols
+    echo 'run_custom_protocol()' >> $pyfile
   else
     echo "Processing protocol '$pyfile'"
   fi

@@ -58,7 +58,7 @@ mixvol = (lampvol + primervol + watervol) / distribute_number
 samplevol = 2
 
 
-def run_protocol(number_of_rows_to_process: int=8):
+def run_custom_protocol(number_of_rows_to_process: int=8):
     num_rows = number_of_rows_to_process
     if num_rows > 8:
         raise RuntimeError(
