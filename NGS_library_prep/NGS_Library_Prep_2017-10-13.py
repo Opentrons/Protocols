@@ -12,7 +12,7 @@ import math
  Column A
 """
 # trough with solutions
-beads = containers.load('point', 'A1')
+beads = containers.load('point', 'A1', 'beads')
 
 tip300_rack = containers.load('tiprack-200ul', 'A3')
 
@@ -21,35 +21,29 @@ tip300_rack = containers.load('tiprack-200ul', 'A3')
 """
 tip200_rack = containers.load('tiprack-200ul', 'B1')
 
-EtOH = containers.load('point', 'B2')
+EtOH = containers.load('point', 'B2', 'EtOH')
 
 """
  Column C
 """
+# cool deck (note this will take up slots D3/E3)
+elution_plate = containers.load('96-PCR-flat', 'C1', 'elution plate')
+
 # trash to dispose of liquid
 H20 = containers.load('point', 'C2')
 
-mag_plate = containers.load('96-PCR-flat', 'C3')
+mag_plate = containers.load('96-PCR-flat', 'C3', 'mag plate')
 
 """
  Column D
 """
 
-# cool deck (note this will take up slots D3/E3)
-elution_plate = containers.load('96-PCR-flat', 'D1')
+gel_plate = containers.load('96-PCR-flat', 'D1', 'gel plate')
 
+trash = containers.load('trash-box', 'D3')
 # output plate for library reactions
-TE = containers.load('point', 'D2')
+TE = containers.load('point', 'D2', 'TE')
 
-
-"""
- Column E
-"""
-
-# heat plate for reactions
-gel_plate = containers.load('96-PCR-flat', 'E1')
-
-trash = containers.load('trash-box', 'E3')
 
 # p200 (20 - 200 uL) (single)
 p200single = instruments.Pipette(
@@ -112,11 +106,9 @@ def EtOH_wash(pipette, plate, tiprack, vol):
 def run_custom_protocol(TE_volume: float=20.0, number_of_samples: int=96):
     # all commands go in this function
 
-    try:
-        number_of_samples <= 96
-    except ValueError:
-        print(
-         "You can only input samples less than or equal to 96.")
+    if(number_of_samples > 96):
+        raise ValueError(
+            "You can only input samples less than or equal to 96.")
 
     """
        Step 1 Add Magnetic Beads:
