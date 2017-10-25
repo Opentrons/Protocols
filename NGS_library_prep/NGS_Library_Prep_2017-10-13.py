@@ -106,11 +106,9 @@ def EtOH_wash(pipette, plate, tiprack, vol):
 def run_custom_protocol(TE_volume: float=20.0, number_of_samples: int=96):
     # all commands go in this function
 
-    try:
-        number_of_samples <= 96
-    except ValueError:
-        print(
-         "You can only input samples less than or equal to 96.")
+    if(number_of_samples > 96):
+        raise ValueError(
+            "You can only input samples less than or equal to 96.")
 
     """
        Step 1 Add Magnetic Beads:
