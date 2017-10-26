@@ -14,7 +14,6 @@
 PCR Prep: samples in 96-well plate, reactions in 384-well plate
 
 ### Time Estimate
-TBD
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

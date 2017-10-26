@@ -12,7 +12,7 @@ install:
   - chmod 600 ../protocol-library
   - eval `ssh-agent -s`
   - ssh-add ../protocol-library
-  - pip install "git+ssh://git@github.com/OpenTrons/protocol-library.git@$OT_PROTOLIB_BRANCH#egg=protolib"
+  - pip install "git+ssh://git@github.com/Opentrons/protocol-library.git@$OT_PROTOLIB_BRANCH#egg=protolib"
   - echo $PATH
   - pip install flake8
 
@@ -20,9 +20,9 @@ script:
   - python --version
   - python3 --version
   - python -c 'import opentrons; print(opentrons.__version__)'
-  # lint and smoke test all protocols
+  # lint all protocols
   - flake8 .
-  - ./scripts/smoke-test.sh
+  # - ./scripts/smoke-test.sh  # skip smoke testing, hope protolib catches it
   # build zipped .json
   - library-build . releases
   - ls -la releases
@@ -38,7 +38,7 @@ deploy:
   upload-dir: $OT_UPLOAD_BRANCH
   acl: private
   on:
-    repo: OpenTrons/Protocols
+    repo: Opentrons/Protocols
     all_branches: true
 
 notifications:

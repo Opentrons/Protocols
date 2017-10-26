@@ -16,7 +16,6 @@ Illumina 16S Metagenomic Sequencing Library Preparation.
 Requires vacuum.
 
 ### Time Estimate
-TBD
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

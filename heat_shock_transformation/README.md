@@ -13,7 +13,6 @@
 Perform a 1 minute heat shock transformation on six samples.
 
 ### Time Estimate
-1 hour
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro) 

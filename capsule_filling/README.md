@@ -14,7 +14,6 @@
 Fill 96 well plates with "00" capsules, with reagent stored in 50mL tubes.
 
 ### Time Estimate
-TBD
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

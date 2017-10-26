@@ -13,7 +13,6 @@
 Draw a picture of a dinosaur on a 96 well plate using food coloring. This protocol is designed for the OT-One Standard model, which requires the pipette be on the "A" axis.
 
 ### Time Estimate
-10 minutes
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

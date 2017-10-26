@@ -14,7 +14,6 @@
 Map Hampton Index HT deep block to lower wells of crystallization plate.  Distribute protein to upper wells of crystallization plate. Transfer liquid from each lower well to its upper well in crystallization plate.  Two blocks/plates total.
 
 ### Time Estimate
-3 hours and 40 minutes
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

@@ -14,7 +14,9 @@ def getProtolibBranch():
     # Map Protocols repo branch name to protocol-library protolib branch.
     branchmapping = {
         'master': 'master',
-        'develop': 'develop'
+        'develop': 'develop',
+        'experimental': 'experimental',  # create this
+        'remove-times': 'remove-times'  # remove this
         # Add more here
     }
 

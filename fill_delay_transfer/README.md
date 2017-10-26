@@ -14,7 +14,6 @@
 Fill a 96-well plate with 2 samples from a trough, incubate 30 minutes, then move to another plate.
 
 ### Time Estimate
-TBD
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

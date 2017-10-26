@@ -1,8 +1,5 @@
 from opentrons import containers, instruments
 
-
-plate = containers.load('96-flat', 'A1')
-
 trough = containers.load('trash-box', 'C1')
 source = trough.wells(0)
 
@@ -19,10 +16,35 @@ pipette = instruments.Pipette(
     trash_container=trash)
 
 
-row_vols = [0 for row in plate.rows()]
+class ContainerSelection(object):
+    def __init__(self, *containers):
+        self.accepted_containers = containers
+
+    def generate_options(self):
+        def humanize(txt):
+            return txt.replace('-', ' ').replace('_', ' ')
+
+        return [
+            {'value': option, 'text': humanize(option)}
+            for option in self.accepted_containers]
+
+    def get_json(self):
+        # Of the form:
+        # {type: 'ContainerSelection',
+        # options: [{value: '96-flat', text: '96 flat'}, ...]}
+        return {
+            'type': 'ContainerSelection',
+            'options': self.generate_options()}
 
 
-def run_custom_protocol(well_volume: float=20):
+def run_custom_protocol(
+  well_volume: float=20,
+  plate_type: ContainerSelection('96-flat', '96-PCR-tall')='96-flat'):
+
+    container_type = plate_type
+    plate = containers.load(container_type, 'A1')
+    row_vols = [0 for row in plate.rows()]
+
     pipette.pick_up_tip()
 
     # this isn't just a distribute because we want to touch tip.

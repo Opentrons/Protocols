@@ -26,7 +26,6 @@ for the specified number of hours. Then wash the plate with wash buffer 4x and s
 * Stop reaction with TMB and sulfuric acid.
 
 ### Time Estimate
-16 hours and 45 minutes (Varied depending on incubation time)
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

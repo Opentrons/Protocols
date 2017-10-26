@@ -14,7 +14,6 @@
 With this protocol, your robot can consolidate the contents of an entire 96 well plate into a single 1.5 mL microcentrifuge tube using a p200 single channel pipette, without tip changes. Use this protocol when combining DNA libraries and/or PCR products from an entire plate. This protocol is best suited for consolidations where sterility is not a concern.
 
 ### Time Estimate
-14 minutes
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

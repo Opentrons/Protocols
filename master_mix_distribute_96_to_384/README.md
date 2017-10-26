@@ -14,7 +14,6 @@
 Transfer master mix solutions in quadruplicate from a 96 well plate to a 384 well plate
 
 ### Time Estimate
-TBD
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

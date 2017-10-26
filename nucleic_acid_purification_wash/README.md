@@ -21,7 +21,6 @@ Purify nucleic acids with L Buffer, Ph-Ch-Isoamyl, Isopropanol, and Ethanol wash
 * Trough row 4 = Ethanol
 
 ### Time Estimate
-TBD
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

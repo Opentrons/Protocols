@@ -13,7 +13,6 @@
 Draw a picture of a dinosaur (a Stegosaurus!) on a 96 well plate using food coloring.
 
 ### Time Estimate
-5 minutes
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)
