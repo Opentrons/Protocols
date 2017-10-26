@@ -17,7 +17,6 @@ Distribute 48 samples in duplicate to a 96 well plate.
 
 
 ### Time Estimate
-56 minutes
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

@@ -13,7 +13,6 @@
 This protocol is plating cells on a maximum of 7 96-well plates.
 
 ### Time Estimate
-10 minutes
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

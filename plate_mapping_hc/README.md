@@ -19,7 +19,6 @@ For the 96-well plates, place into slots on the robot in this order: D1, D2, E1,
 
 
 ### Time Estimate
-25 minutes
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

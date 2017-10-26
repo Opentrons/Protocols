@@ -14,7 +14,6 @@
 PCR prep with Phusion® High-Fidelity PCR Master Mix with HF Buffer.
 
 ### Time Estimate
-TBD
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

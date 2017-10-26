@@ -14,7 +14,6 @@
 TBD
 
 ### Time Estimate
-TBD
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

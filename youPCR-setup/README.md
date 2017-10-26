@@ -18,7 +18,6 @@ Performs setup for [youPCR](http://www.medicinalgenomics.com/youpcr-platform/).
 3. Transfer samples from deep plate to the flat plate containing master mix
 
 ### Time Estimate
-TBD
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

@@ -14,7 +14,6 @@
 ELISA prep with 1x 96-well plate of antibodies and 11x 96-well ELISA plates.
 
 ### Time Estimate
-TBD
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

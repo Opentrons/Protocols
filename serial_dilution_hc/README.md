@@ -14,7 +14,6 @@
 Performs 2 separate serial dilutions in one 96-well plate. Dilute column A to D, and dilute column H to E. Optionally, add diluent to all wells as a last step.
 
 ### Time Estimate
-1 hour and 6 minutes
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

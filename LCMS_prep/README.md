@@ -21,7 +21,6 @@ Tube racks should be located in B2, C2, D2 respectively.
 Note: uses custom 4mL tube rack and custom reservoir.
 
 ### Time Estimate
-45 minutes
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

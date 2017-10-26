@@ -13,7 +13,6 @@
 This Biochemical titration prepares your samples for an assay.
 
 ## Time Estimate
-* Depends on the amount of plates. No greater than 15 minutes.
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)
