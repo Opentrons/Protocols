@@ -14,7 +14,6 @@
 Test six standards and four samples (all in duplicate) using the Bradford Reagent.
 
 ### Time Estimate
-38 minutes
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)  

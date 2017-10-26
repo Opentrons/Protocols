@@ -14,7 +14,6 @@
 Part of a workflow to screen large numbers of colonies with PCR.
 
 ### Time Estimate
-TBD
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

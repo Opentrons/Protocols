@@ -18,7 +18,6 @@ Dilutes across 7 rows - the first row will just contain undiluted samples.
 Samples begin in 2mL tubes in a tube rack.
 
 ### Time Estimate
-TBD
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

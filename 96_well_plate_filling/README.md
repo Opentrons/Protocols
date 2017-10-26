@@ -14,7 +14,6 @@
 Fill a 96 well plate with a specified volume (in uL) using a p200 8-channel pipette.  One set of tips are used throughout the entire run.
 
 ### Time Estimate
-4 minutes
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

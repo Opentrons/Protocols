@@ -14,7 +14,6 @@
 Establish liquid flow over electrochemical sensor arrays: [MaxOne Single-Well Planar Microelectrode Arrays](https://www.mxwbio.com/products/maxone-mea-system/maxone-mea-wells/)
 
 ### Time Estimate
-TBD
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

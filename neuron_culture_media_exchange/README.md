@@ -15,7 +15,6 @@ You will need a 15-50 tube rack where the 15 ml act as the waste containers
 and the 50 ml contain the media.
 
 ### Time Estimate
-4 minutes
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

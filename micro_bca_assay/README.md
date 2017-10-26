@@ -14,7 +14,6 @@
 Micro BCA Protein Assay Kit
 
 ### Time Estimate
-TBD
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

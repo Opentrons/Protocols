@@ -18,7 +18,6 @@ Links: [Part 1](./qubit_dna_quantification_pt1) [Part 2](./qubit_dna_quantificat
 For a full description, see ["Massively Parallel Qubit DNA Quantification Using OpenTrons"](https://www.protocols.io/view/massively-parallel-qubit-dna-quantification-using-jrpcm5n) on protocols.io.
 
 ### Time Estimate
-TBD
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

@@ -13,7 +13,6 @@
 Ligates vector DNA and insert DNA using NEB T4 DNA Ligase.
 
 ### Time Estimate
-5 minutes
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

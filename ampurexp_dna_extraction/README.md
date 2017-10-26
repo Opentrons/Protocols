@@ -14,7 +14,6 @@
 Use AMPureXP beads to extract DNA from four samples.
 
 ### Time Estimate
-22 minutes
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro) 

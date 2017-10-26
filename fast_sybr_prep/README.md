@@ -14,7 +14,6 @@
 A qPCR prep with Fast SYBR.
 
 ### Time Estimate
-TBD
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

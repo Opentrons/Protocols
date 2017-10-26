@@ -27,7 +27,6 @@ In the second tube rack:
 
 
 ### Time Estimate
-TBD
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

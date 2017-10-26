@@ -16,7 +16,6 @@
 Prepares proteins harbored inside gels for overnight protease digestion to produce peptides for downstream mass spectrometry analysis. This protocol is designed for SDS-reducing gels (PAGE). Through a series of steps, disulfide bridges between cysteines are reduced and the sulfur atoms are capped to prevent the reformation of the disulfide  bonds. The two wash steps thereafter removes staining as well as as excess DTT, acrylamide and ammonium bicarbonate, preparing the gels for the uptake of protease(s) in a pH 8 solution.  Protocol set for 20 samples.
 
 ### Time Estimate
-4.5 hours
 
 ### Robot
 * [OT Hood](https://opentrons.com/ot-one-hood) 

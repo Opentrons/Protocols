@@ -14,7 +14,6 @@
 Cell dilution followed by biofilm setup.
 
 ### Time Estimate
-TBD
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

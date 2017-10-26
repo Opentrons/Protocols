@@ -17,7 +17,6 @@ Wash 3D cell culture with PBS, replace with fresh culture medium.
 * Culture medium = 2nd well of trough
 
 ### Time Estimate
-TBD
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

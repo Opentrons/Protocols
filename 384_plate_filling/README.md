@@ -14,7 +14,6 @@ With this protocol, your robot can fill each well of a 384 well plate from a sou
 Use the field labeled "well volume" below to define your preferred volume. You can input any volume from 1-10uL.
 
 ### Time Estimate
-4 minutes
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

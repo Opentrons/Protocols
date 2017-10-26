@@ -14,7 +14,6 @@
 Set up reagents and samples in a checkerboard pattern on 96-well microplates (see pdf).
 
 ### Time Estimate
-TBD
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

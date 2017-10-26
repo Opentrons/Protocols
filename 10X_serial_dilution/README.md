@@ -13,7 +13,6 @@
 Uses an 8 channel to perform six 10X dilutions in rows 2-7 of a 96 well plate. Samples should start in Row 1.
 
 ### Time Estimate
-5.5 minutes
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

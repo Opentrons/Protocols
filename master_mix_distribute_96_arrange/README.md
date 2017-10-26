@@ -15,7 +15,6 @@ Transfer 8 master mix solutions from row 1 of 96 well plate to all rows on 384 p
 (48 wells of each master mix solution on 384).
 
 ### Time Estimate
-TBD
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)

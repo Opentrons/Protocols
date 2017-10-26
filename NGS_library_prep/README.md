@@ -15,7 +15,6 @@ This NGS prep uses Opentrons' MagDeck module to cut down and create sequencing
 library.
 
 ## Time Estimate
-* Depends on the amount of samples
 
 ### Robot
 * OT PRO

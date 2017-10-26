@@ -13,7 +13,6 @@
 [Part 1](./Plate_Cells_2017-10-12)
 
 ## Time Estimate
-* Depends on the amount of samples. No more than 8 minutes.
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)
