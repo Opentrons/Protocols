@@ -4,16 +4,8 @@ python:
 - '3.5'
 
 install:
-  - export OT_PROTOLIB_BRANCH=$(python scripts/getBranch.py protolib)
-  - echo $OT_PROTOLIB_BRANCH
-  - export OT_UPLOAD_BRANCH=$(python scripts/getBranch.py upload)
-  - echo $OT_UPLOAD_BRANCH
-  - openssl aes-256-cbc -K $encrypted_43309740674a_key -iv $encrypted_43309740674a_iv -in .ci/protocol-library.enc -out ../protocol-library -d
-  - chmod 600 ../protocol-library
-  - eval `ssh-agent -s`
-  - ssh-add ../protocol-library
-  - pip install "git+ssh://git@github.com/Opentrons/protocol-library.git@$OT_PROTOLIB_BRANCH#egg=protolib"
   - echo $PATH
+  - pip install -r protolib/requirements.txt
   - pip install flake8
 
 script:
@@ -23,9 +15,11 @@ script:
   # lint all protocols
   - flake8 .
   # - ./scripts/smoke-test.sh  # skip smoke testing, hope protolib catches it
+  #
   # build zipped .json
-  - library-build . releases
-  - ls -la releases
+  # - library-build . releases
+  - python protolib/cli.py . releases/
+  - ls -la releases/
 
 # Deploy the build version in an S3 bucket
 deploy:
