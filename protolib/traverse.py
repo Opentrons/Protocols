@@ -1,5 +1,5 @@
 import glob
-import logging
+# import logging
 import os
 import os.path
 
@@ -10,7 +10,7 @@ from parse import (
 )
 
 
-log = logging.getLogger(__name__)
+# log = logging.getLogger(__name__)
 
 
 file_handlers = {
