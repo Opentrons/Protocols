@@ -4,9 +4,7 @@ python:
 - '3.5'
 
 install:
-  - export OT_PROTOLIB_BRANCH=$(python scripts/getBranch.py protolib)
-  - echo $OT_PROTOLIB_BRANCH
-  - export OT_UPLOAD_BRANCH=$(python scripts/getBranch.py upload)
+  - export OT_UPLOAD_BRANCH=$(python scripts/getBranch.py)
   - echo $OT_UPLOAD_BRANCH
   - echo $PATH
   - pip install -r protolib/requirements.txt
