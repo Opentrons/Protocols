@@ -1,21 +1,13 @@
-print('DEBUG: argparse')
-import argparse  # noqa: E402
-print('DEBUG: os')
-import os  # noqa: E402
-import sys  # noqa: E402
-print('DEBUG: tempfile')
-import tempfile  # noqa: E402
+import argparse
+import os
+import sys
+import tempfile
 
-print('DEBUG: generate')
-import generate  # noqa: E402
-print('DEBUG: persist')
-import persist  # noqa: E402  # noqa: E402
-print('DEBUG: traverse')
-import traverse  # noqa: E402
-print('DEBUG: utils')
-import utils  # noqa: E402
+import generate
+import persist
+import traverse
+import utils
 
-print('DEBUG: done imports')
 
 script_tag = "[OT Protocol Library build] "
 script_tab = "                            "
@@ -60,12 +52,9 @@ def prepare_dirs(
 
 
 def build_protocol_library():
-    print('debug: pre-parse args')
     parser = configure_parser()
     parsed_input = parser.parse_args()
-    print('debug: get build dir')
     PROTOCOLS_BUILD_DIR = os.path.join(tempfile.gettempdir(), 'proto-builds')
-    print('debug: get rel dir')
     PROTOCOLS_RELEASE_DIR = parsed_input.library_output_path
 
     print('preparing build & release dirs...')
@@ -137,5 +126,4 @@ def list_ignored_protocols():
 
 
 if __name__ == '__main__':
-    print('debug: initial __main__')
     build_protocol_library()
