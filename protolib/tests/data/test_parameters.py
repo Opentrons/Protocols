@@ -1,7 +1,7 @@
 from opentrons import containers, instruments
 
 
-class ContainerSelection(object):
+class StringSelection(object):
     def __init__(self, *containers):
         self.accepted_containers = containers
 
@@ -15,17 +15,17 @@ class ContainerSelection(object):
 
     def get_json(self):
         # Of the form:
-        # {type: 'ContainerSelection',
+        # {type: 'StringSelection',
         # options: [{value: '96-flat', text: '96 flat'}, ...]}
         return {
-            'type': 'ContainerSelection',
+            'type': 'StringSelection',
             'options': self.generate_options()}
 
 
 def run_custom_protocol(
   a: int=12,
   b='woo',
-  plate_type: ContainerSelection('96-flat', '96-PCR-flat', '96-PCR-tall')='96-flat'):  # noqa: E501
+  plate_type: StringSelection('96-flat', '96-PCR-flat', '96-PCR-tall')='96-flat'):  # noqa: E501
 
     p200rack = containers.load(
         'tiprack-200ul',  # container type

@@ -16,7 +16,7 @@ pipette = instruments.Pipette(
     trash_container=trash)
 
 
-class ContainerSelection(object):
+class StringSelection(object):
     def __init__(self, *containers):
         self.accepted_containers = containers
 
@@ -30,16 +30,16 @@ class ContainerSelection(object):
 
     def get_json(self):
         # Of the form:
-        # {type: 'ContainerSelection',
+        # {type: 'StringSelection',
         # options: [{value: '96-flat', text: '96 flat'}, ...]}
         return {
-            'type': 'ContainerSelection',
+            'type': 'StringSelection',
             'options': self.generate_options()}
 
 
 def run_custom_protocol(
   well_volume: float=20,
-  plate_type: ContainerSelection('96-flat', '96-PCR-tall')='96-flat'):
+  plate_type: StringSelection('96-flat', '96-PCR-tall')='96-flat'):
 
     container_type = plate_type
     plate = containers.load(container_type, 'A1')

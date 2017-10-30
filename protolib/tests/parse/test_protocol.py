@@ -76,7 +76,7 @@ def test_protocol_parameters():
         {
             "name": "plate_type",
             "annotation": {
-                "type": "ContainerSelection",
+                "type": "StringSelection",
                 "options": [
                     {"value": "96-flat", "text": "96 flat"},
                     {"value": "96-PCR-flat", "text": "96 PCR flat"},

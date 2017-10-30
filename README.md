@@ -154,12 +154,12 @@ def run_custom_protocol(transfer_volume: float=1.0, number_of_rows: int=1):
 
 ### Very Experimental: dropdown menus in custom protocols
 
-#### ContainerSelection
+#### StringSelection
 
 Copy and paste this block near the top of your protocol.
 
 ```python
-class ContainerSelection(object):
+class StringSelection(object):
     def __init__(self, *containers):
         self.accepted_containers = containers
 
@@ -173,10 +173,10 @@ class ContainerSelection(object):
 
     def get_json(self):
         # Of the form:
-        # {type: 'ContainerSelection',
+        # {type: 'StringSelection',
         # options: [{value: '96-flat', text: '96 flat'}, ...]}
         return {
-            'type': 'ContainerSelection',
+            'type': 'StringSelection',
             'options': self.generate_options()}
 ```
 
@@ -185,7 +185,7 @@ Then use it in your `run_custom_protocol` function:
 ```python
 def run_custom_protocol(
   well_volume: float=20,
-  plate_type: ContainerSelection('96-flat', '96-PCR-tall')='96-flat'):
+  plate_type: StringSelection('96-flat', '96-PCR-tall')='96-flat'):
 
     plate = containers.load(plate_type, 'A1')
     # do stuff with the plate here...
