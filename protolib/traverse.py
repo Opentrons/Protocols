@@ -3,8 +3,8 @@ import glob
 import os
 import os.path
 
-import categories
-from parse import (
+from protolib import categories
+from protolib.parse import (
     protocol as protocol_parser,
     markdown as markdown_parser
 )

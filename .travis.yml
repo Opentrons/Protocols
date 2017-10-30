@@ -10,7 +10,7 @@ install:
   - echo $OT_UPLOAD_BRANCH
   - echo $PATH
   - pip install -r protolib/requirements.txt
-  - pip install flake8
+  - pip install flake8 pytest
 
 script:
   - python --version
@@ -18,10 +18,11 @@ script:
   - python -c 'import opentrons; print(opentrons.__version__)'
   # lint all code
   - flake8 .
+  - pytest protolib/
   # - ./scripts/smoke-test.sh  # skip smoke testing, hope protolib catches it
   #
-  # build zipped .json
-  - python protolib/cli.py protocols/ releases/
+  # use protolib to build zipped .json for S3
+  - python -m protolib protocols/ releases/
   - ls -la releases/
 
 # Deploy the build version in an S3 bucket

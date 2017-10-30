@@ -3,11 +3,7 @@ import os
 import sys
 import tempfile
 
-import generate
-import persist
-import traverse
-import utils
-
+from protolib import generate, persist, traverse, utils
 
 script_tag = "[OT Protocol Library build] "
 script_tab = "                            "
@@ -123,7 +119,3 @@ def list_featured_protocols():
 
 def list_ignored_protocols():
     list_protocols_by_flag('ignore', sys.argv[1])
-
-
-if __name__ == '__main__':
-    build_protocol_library()
