@@ -55,7 +55,7 @@ def test_protocol_parse():
                 'min_volume': 1
             }
         ],
-        'parameters': {}
+        'parameters': []
     }
     assert res == expected
 

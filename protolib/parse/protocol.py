@@ -72,7 +72,7 @@ def get_result_dict(robot, protocol_function, protocol_text, all_containers):
         'instruments': get_instruments(robot),
         'containers': all_containers,
         'parameters': get_parameters(protocol_function)
-        if protocol_function else {}
+        if protocol_function else []
     }
 
 

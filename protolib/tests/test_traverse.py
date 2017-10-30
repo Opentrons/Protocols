@@ -36,7 +36,7 @@ def test_traverse():
             'status': 'ok',
             'errors': [],
             'markdown': {},
-            'parameters': {}
+            'parameters': []
         }
     ]
 
@@ -225,7 +225,7 @@ def test_missing_md():
                 'embedded-app': False
             },
             'errors': ['Found 0 description files required 1'],
-            'parameters': {}
+            'parameters': []
         }
     ]
 
