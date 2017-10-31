@@ -151,3 +151,51 @@ def run_custom_protocol(transfer_volume: float=1.0, number_of_rows: int=1):
       dest.rows(0, to=number_of_rows))
 
 ```
+
+### Very Experimental: dropdown menus in custom protocols
+
+#### StringSelection
+
+Copy and paste this block near the top of your protocol.
+
+```python
+class StringSelection(object):
+    def __init__(self, *containers):
+        self.accepted_containers = containers
+
+    def generate_options(self):
+        def humanize(txt):
+            return txt.replace('-', ' ').replace('_', ' ')
+
+        return [
+            {'value': option, 'text': humanize(option)}
+            for option in self.accepted_containers]
+
+    def get_json(self):
+        # Of the form:
+        # {type: 'StringSelection',
+        # options: [{value: '96-flat', text: '96 flat'}, ...]}
+        return {
+            'type': 'StringSelection',
+            'options': self.generate_options()}
+```
+
+Then use it in your `run_custom_protocol` function:
+
+```python
+def run_custom_protocol(
+  well_volume: float=20.0,
+  plate_type: StringSelection('96-flat', '96-PCR-tall', '96-deep-well')='96-flat',
+  tuberack_type: StringSelection('tube-rack-.75ml', 'tube-rack-2ml')='tube-rack-.75ml'):
+
+    plate = containers.load(plate_type, 'A1')
+    tube_rack = containers.load(tuberack_type, 'C1')
+    # do stuff with the plate here...
+```
+
+The line `plate_type: StringSelection('96-flat', '96-PCR-tall', '96-deep-well')='96-flat'` means:
+
+* Create a dropdown selection menu called "Plate Type" with the options: '96-flat', '96-PCR-tall', '96-deep-well'
+* The default value will be '96-flat' (from the `='96-flat'` at the end)
+
+And another selector menu is made for "Tuberack Type" with options: 'tube-rack-.75ml', 'tube-rack-2ml'.
