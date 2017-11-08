@@ -152,11 +152,14 @@ def run_custom_protocol(transfer_volume: float=1.0, number_of_rows: int=1):
 
 ```
 
-### Very Experimental: dropdown menus in custom protocols
+### Experimental Customization Widgets
 
 #### StringSelection
 
-Copy and paste this block near the top of your protocol.
+A `StringSelection` argument to your `run_custom_protocol` function will create a dropdown menu
+on your protocol's page on the Protocol Library website.
+
+To use it, first copy and paste this block near the top of your protocol:
 
 ```python
 class StringSelection(object):
@@ -199,3 +202,73 @@ The line `plate_type: StringSelection('96-flat', '96-PCR-tall', '96-deep-well')=
 * The default value will be '96-flat' (from the `='96-flat'` at the end)
 
 And another selector menu is made for "Tuberack Type" with options: 'tube-rack-.75ml', 'tube-rack-2ml'.
+
+#### FileInput
+
+A `FileInput` argument to your `run_custom_protocol` function creates a file upload button
+on your protocol's page on the Protocol Library website. To use it, copy and paste the `FileInput` class
+code (below).
+
+The uploaded file will be passed into the `run_custom_protocol` function as plain text.
+
+If you want to parse a `.csv` (comma separated values) text file, you can copy and paste
+the `well_csv_to_list` helper below.
+
+```python
+class FileInput(object):
+    def get_json(self):
+        return {
+            'type': 'FileInput'
+        }
+
+
+def well_csv_to_list(csv_string):
+    """
+    Takes a csv string and flattens it to a list, re-ordering to match
+    Opentrons API well order convention (A1, B1, C1, ..., A2, B2, B2, ...).
+
+    The orientation of the CSV cells should match the "portrait" orientation
+    of plates on the OT-One: well A1 should be on the bottom left cell. Example:
+    ...
+    A3, B3, C3, ...
+    A2, B2, C2, ...
+    A1, B1, C1, ...
+
+    Returns a list: [A1, B1, C1, ..., A2, B2, C3, ...]
+    where each CSV cell is a string in the list.
+    """
+    return [
+        cell
+        for line in reversed(csv_string.split('\n')) if line.strip()
+        for cell in line.split(',') if cell
+    ]
+
+# Don't forget to include a default file string,
+# so that unit tests which call run_custom_protocol()
+# with its default arguments will pass.
+example_csv = """
+50,50,50,50,50,50,50,50
+50,50,50,50,50,50,50,50
+50,50,50,50,50,50,50,50
+50,50,50,50,50,50,50,50
+50,50,50,50,50,50,50,50
+50,50,50,50,50,50,50,50
+50,50,50,50,50,50,50,50
+50,50,50,50,50,50,50,50
+50,50,50,50,50,50,50,50
+50,50,50,50,50,50,50,50
+50,50,50,50,50,50,50,50
+50,50,50,50,50,50,50,50
+"""
+
+def run_custom_protocol(volumes_csv: FileInput=example_csv):
+    # `example_csv` will be a multi-line string containing the contents of the uploaded file
+
+    # use the helper csv function to parse that string
+    csv_list = well_csv_to_list(volumes_csv)
+
+    # convert the cell contents from strings to floats
+    volumes = [float(cell) for cell in csv_list]
+
+    pipette.transfer(volumes, source, plate)
+```
