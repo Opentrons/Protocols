@@ -1,26 +1,9 @@
 from opentrons import containers, instruments
 
-
-class StringSelection(object):
-    def __init__(self, *containers):
-        self.accepted_containers = containers
-
-    def generate_options(self):
-        def humanize(txt):
-            return txt.replace('-', ' ').replace('_', ' ')
-
-        return [
-            {'value': option, 'text': humanize(option)}
-            for option in self.accepted_containers]
-
-    def get_json(self):
-        # Of the form:
-        # {type: 'StringSelection',
-        # options: [{value: '96-flat', text: '96 flat'}, ...]}
-        return {
-            'type': 'StringSelection',
-            'options': self.generate_options()}
-
+from os import path, sys
+sys.path.append(path.abspath(path.join(
+    __file__, path.pardir, path.pardir, path.pardir)))  # noqa: E402
+from otcustomizers import StringSelection
 
 # Be careful not to calibrate the leftmost containers ('A' slots)
 # too far to the left. The touch_tip action may make the head hit
@@ -66,7 +49,6 @@ def alternating_wells(plate, row_num):
     Returns list of 2 WellSeries for the 2 possible positions of an
     8-channel pipette for a row in a 384 well plate.
     """
-    print('alternating_wells', plate, row_num)
     return [
         plate.rows(row_num).wells(start_well, length=8, step=2)
         for start_well in ['A', 'B']
@@ -119,10 +101,6 @@ def run_custom_protocol(
             dest_wells = [plate.rows(row_index) for plate in dest_plates]
 
             source_wells = source_plate.rows(row_index)
-
-        print('row_index', row_index)
-        print('dest_wells', dest_wells)
-        print('source_wells', source_wells)
 
         p50multi.distribute(
             transfer_volume,

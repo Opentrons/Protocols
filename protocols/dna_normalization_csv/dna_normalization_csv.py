@@ -1,5 +1,10 @@
 from opentrons import containers, instruments
 
+from os import path, sys
+sys.path.append(path.abspath(path.join(
+    __file__, path.pardir, path.pardir, path.pardir)))  # noqa: E402
+from otcustomizers import FileInput
+
 trough = containers.load('trash-box', 'C1')
 source = trough.wells(0)
 
@@ -32,13 +37,6 @@ example_csv = """
 66,60,164,129,106,7,198,195
 
 """
-
-
-class FileInput(object):
-    def get_json(self):
-        return {
-            'type': 'FileInput'
-        }
 
 
 def well_csv_to_list(csv_string):
