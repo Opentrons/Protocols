@@ -14,7 +14,24 @@ Dilute samples in a 96 well plate, using volumes from a CSV file.
 
 To generate a `.csv` from from Excel or another spreadsheet program, try "File > Save As" and select `*.csv`
 
-See attached csv for an example of the accepted format (TODO)
+The csv must contain volumes in microliters (uL) with 8 columns and 12 rows, like a 96-well plate on the deck of the Opentrons robot. For example:
+
+```
+90,168,187,13,70,189,196,93
+56,197,147,139,74,61,44,157
+106,198,45,6,46,113,111,33
+28,143,185,17,199,155,78,93
+185,96,60,105,143,151,18,102
+139,48,111,68,179,126,59,172
+111,25,84,12,63,31,34,8
+24,128,106,88,124,65,133,26
+61,71,109,84,85,62,89,168
+58,101,121,5,122,88,27,59
+43,16,156,175,190,41,78,8
+66,60,164,129,106,7,198,195
+```
+
+66 uL will be added to well A1, 60 uL to B1, and so on.
 
 ### Time Estimate
 
@@ -28,7 +45,6 @@ See attached csv for an example of the accepted format (TODO)
 ### Reagents
 
 ## Process
-TODO
 
 ### Additional Notes
 
