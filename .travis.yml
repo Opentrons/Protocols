@@ -7,7 +7,7 @@ install:
   - export OT_UPLOAD_BRANCH=$(python scripts/getBranch.py)
   - echo $OT_UPLOAD_BRANCH
   - echo $PATH
-  - pip install otcustomizers
+  - pip install -e otcustomizers
   - pip install -r protolib/requirements.txt
   - pip install flake8 pytest
 
