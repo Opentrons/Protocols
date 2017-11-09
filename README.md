@@ -158,17 +158,14 @@ In this repo, the `otcustomizers` python module contains some utilities that you
 generate "customization widgets" like dropdown menus and file upload fields on your protocol's
 page on the Protocol Library.
 
-Unfortunately, the relative import for them is a little ugly.
-You will need to do this at the top of your protocol:
-
-```python
-from os import path, sys
-sys.path.append(path.abspath(path.join(
-    __file__, path.pardir, path.pardir, path.pardir)))  # noqa: E402
-```
+To install the otcustomizer module, open a terminal, `cd` into the root directory of this repo,
+and do `pip install -e otcustomizers`.
 
 Now you can do `from otcustomizers import StringSelection, FileInput`, etc, and use
 these imports in your protocol.
+
+If you forget to install `otcustomizers`, you will get the error:
+`ModuleNotFoundError: No module named 'otcustomizers'`
 
 
 #### StringSelection
@@ -179,11 +176,7 @@ on your protocol's page on the Protocol Library website.
 To use it, first copy and paste this block near the top of your protocol:
 
 ```python
-# Relative import hack
 from os import path, sys
-sys.path.append(path.abspath(path.join(
-    __file__, path.pardir, path.pardir, path.pardir)))  # noqa: E402
-
 from otcustomizers import StringSelection
 ```
 
@@ -218,11 +211,7 @@ If you want to parse a `.csv` (comma separated values) text file, you can copy a
 the `well_csv_to_list` helper below.
 
 ```python
-# Relative import hack
 from os import path, sys
-sys.path.append(path.abspath(path.join(
-    __file__, path.pardir, path.pardir, path.pardir)))  # noqa: E402
-
 from otcustomizers import FileInput
 
 

@@ -1,8 +1,4 @@
 from opentrons import containers, instruments
-
-from os import path, sys
-sys.path.append(path.abspath(path.join(
-    __file__, path.pardir, path.pardir, path.pardir)))  # noqa: E402
 from otcustomizers import FileInput
 
 trough = containers.load('trash-box', 'C1')
