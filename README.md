@@ -173,16 +173,13 @@ If you forget to install `otcustomizers`, you will get the error:
 A `StringSelection` argument to your `run_custom_protocol` function will create a dropdown menu
 on your protocol's page on the Protocol Library website.
 
-To use it, first copy and paste this block near the top of your protocol:
-
-```python
-from os import path, sys
-from otcustomizers import StringSelection
-```
-
 Then use it in your `run_custom_protocol` function:
 
 ```python
+from otcustomizers import StringSelection
+
+# maybe some setup stuff here...
+
 def run_custom_protocol(
   well_volume: float=20.0,
   plate_type: StringSelection('96-flat', '96-PCR-tall', '96-deep-well')='96-flat',
@@ -211,9 +208,9 @@ If you want to parse a `.csv` (comma separated values) text file, you can copy a
 the `well_csv_to_list` helper below.
 
 ```python
-from os import path, sys
 from otcustomizers import FileInput
 
+# maybe some setup stuff here...
 
 def well_csv_to_list(csv_string):
     """
