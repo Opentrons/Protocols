@@ -1,7 +1,7 @@
 from opentrons import containers, instruments
-from otcustomizers import FileInput
+from otcustomizers import FileInput, StringSelection
 
-trough = containers.load('trash-box', 'C1')
+trough = containers.load('trough-12row', 'C1')
 source = trough.wells(0)
 
 tiprack = containers.load('tiprack-200ul', 'A2')
@@ -47,6 +47,12 @@ def well_csv_to_list(csv_string):
     ]
 
 
-def run_custom_protocol(volumes_csv: FileInput=example_csv):
+def run_custom_protocol(
+        volumes_csv: FileInput=example_csv,
+        tip_reuse: StringSelection(
+            'new tip each time', 'reuse tip')='new tip each time'):
+
     volumes = [float(cell) for cell in well_csv_to_list(volumes_csv)]
-    pipette.transfer(volumes, source, plate)
+
+    tip_strategy = 'always' if tip_reuse == 'new tip each time' else 'once'
+    pipette.transfer(volumes, source, plate, new_tip=tip_strategy)
