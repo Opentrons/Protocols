@@ -4,18 +4,16 @@ from otcustomizers import FileInput, StringSelection
 trough = containers.load('trough-12row', 'C1')
 source = trough.wells(0)
 
-tiprack = containers.load('tiprack-200ul', 'A2')
-trash = containers.load('trash-box', 'C2')
-
-plate = containers.load('96-flat', 'A1')
+tiprack_slots = ['D1', 'A2', 'C2', 'E2']
+tipracks = [containers.load('tiprack-200ul', slot) for slot in tiprack_slots]
+trash = containers.load('trash-box', 'E1')
 
 # you may also want to change min and max volume of the pipette
 pipette = instruments.Pipette(
     max_volume=200,
     min_volume=20,
     axis='a',
-    channels=8,
-    tip_racks=[tiprack],
+    tip_racks=tipracks,
     trash_container=trash)
 
 example_csv = """
@@ -49,8 +47,11 @@ def well_csv_to_list(csv_string):
 
 def run_custom_protocol(
         volumes_csv: FileInput=example_csv,
+        plate_type: StringSelection('96-flat', '384-plate')='96-flat',
         tip_reuse: StringSelection(
             'new tip each time', 'reuse tip')='new tip each time'):
+
+    plate = containers.load(plate_type, 'A1')
 
     volumes = [float(cell) for cell in well_csv_to_list(volumes_csv)]
 
