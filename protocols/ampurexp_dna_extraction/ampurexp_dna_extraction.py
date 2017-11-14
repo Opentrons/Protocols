@@ -62,7 +62,7 @@ for n in range(num_washes):
             200,
             trough['A2'],
             mag_plate.rows(i),
-            # air_gap=100,  # TODO: Ian 2017-10-03: air_gap crashes my computer
+            # air_gap=100,  # NOTE: cannot use air gap, exceeds pipette max vol
             new_tip='never')
 
         p200_multi.delay(seconds=30)
@@ -71,7 +71,7 @@ for n in range(num_washes):
             200,
             mag_plate.rows(i).bottom(1),
             trash,
-            # air_gap=100,  # TODO: Ian 2017-10-03: air_gap crashes my computer
+            # air_gap=100,  # NOTE: cannot use air gap, exceeds pipette max vol
             new_tip='never')
 
         p200_multi.drop_tip()
