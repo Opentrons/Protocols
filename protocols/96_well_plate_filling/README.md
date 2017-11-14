@@ -9,7 +9,6 @@
 * Basic Pipetting
 	* Plate Filling
 
-
 ## Description
 This protocol has been merged into [Copy source plate to N plates with 8-channel](./plate_copying)
 
