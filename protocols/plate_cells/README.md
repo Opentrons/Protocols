@@ -5,10 +5,16 @@
 
 ## Categories
  * Basic Pipetting
-	* Plate Cells
+	* Cell Plating
 
 ## Description
-[Part 1](./Plate_Cells_2017-10-12)
+1. Pick up tips from a 200 ul-tip rack
+2. Move to the Sterile Multichannel Disposable Solutions Basin
+3. Mix cells (in Solutions Basin) up and down with multichannel pipette
+4. Transfer 100 ul of cells in medium to a 96 well plate (first row, A1 position)
+5. Repeat Steps 2-4, but pipette cells in second row, and so on until all wells are filled with cells
+6. Move to trash and eject tips.
+
 
 ### Time Estimate
 
