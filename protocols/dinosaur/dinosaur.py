@@ -1,21 +1,14 @@
 from opentrons import containers, instruments
+from otcustomizers import StringSelection
 
 # a 12 row trough for sources
-trough = containers.load('trough-12row', 'C2')
+trough = containers.load('trough-12row', 'D2')
 
 # plate to create dinosaur in
 plate = containers.load('96-PCR-flat', 'C1')
 
 # a tip rack for our pipette
-p200rack = containers.load('tiprack-200ul', 'A1')
-
-# p200 (20 - 200 ul) single channel pipette
-p200 = instruments.Pipette(
-    axis="b",
-    min_volume=20,
-    max_volume=200,
-    tip_racks=[p200rack],
-)
+p200rack = containers.load('tiprack-200ul', 'B2')
 
 # wells to dispense dinosaur body in green
 green_wells = [
@@ -38,8 +31,20 @@ green = trough.wells('A1')
 # blue solution location
 blue = trough.wells('A2')
 
-# macro commands like .distribute() make writing long sequences easier:
-# distribute green solution to the body
-p200.distribute(50, green, green_wells, disposal_vol=0, blow_out=True)
-# distribute blue solution to the dinosaur's back
-p200.distribute(50, blue, blue_wells, disposal_vol=0, blow_out=True)
+
+def run_custom_protocol(
+        pipette_axis: StringSelection(
+            'B (left side)', 'A (right side)')='B (left side)'):
+
+    p200 = instruments.Pipette(
+        axis='b' if pipette_axis[0] == 'B' else 'a',
+        min_volume=20,
+        max_volume=200,
+        tip_racks=[p200rack],
+    )
+
+    # macro commands like .distribute() make writing long sequences easier:
+    # distribute green solution to the body
+    p200.distribute(50, green, green_wells, disposal_vol=0, blow_out=True)
+    # distribute blue solution to the dinosaur's back
+    p200.distribute(50, blue, blue_wells, disposal_vol=0, blow_out=True)
