@@ -10,11 +10,13 @@
 	* DNA
 
 ## Description
-Dilute samples in a 96 well plate, using volumes from a CSV file.
+Dilute samples in a 96 or 384 well plate, using volumes from a CSV file.
 
 To generate a `.csv` from from Excel or another spreadsheet program, try "File > Save As" and select `*.csv`
 
-The csv must contain volumes in microliters (uL) with 8 columns and 12 rows, like a 96-well plate on the deck of the Opentrons robot. For example:
+The csv must contain volumes in microliters (uL), and be oriented like plate on the deck of the Opentrons robot -- well A1 should be on the bottom left.
+
+For example, for an 8x12 96-well plate, your CSV would look like:
 
 ```
 90,168,187,13,70,189,196,93
@@ -31,7 +33,7 @@ The csv must contain volumes in microliters (uL) with 8 columns and 12 rows, lik
 66,60,164,129,106,7,198,195
 ```
 
-66 uL will be added to well A1, 60 uL to B1, and so on.
+66 uL will be added to well A1, 60 uL to well B1, and so on.
 
 ### Time Estimate
 
