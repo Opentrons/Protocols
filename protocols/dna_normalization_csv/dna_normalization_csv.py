@@ -1,8 +1,8 @@
 from opentrons import containers, instruments
 from otcustomizers import FileInput, StringSelection
 
-trough = containers.load('trough-12row', 'C1')
-source = trough.wells(0)
+source_container = containers.load('point', 'C1')
+source = source_container.wells(0)
 
 tiprack_slots = ['D1', 'A2', 'C2', 'E2']
 tipracks = [containers.load('tiprack-200ul', slot) for slot in tiprack_slots]
