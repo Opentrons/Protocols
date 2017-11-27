@@ -10,7 +10,7 @@
 	* DNA
 
 ## Description
-Dilute samples in a 96 or 384 well plate, using volumes from a CSV file.
+Dilute samples in a 96 or 384 well plate, using volumes from a CSV file. Uses a single-channel pipette, and a single source of diluent.
 
 To generate a `.csv` from from Excel or another spreadsheet program, try "File > Save As" and select `*.csv`
 
