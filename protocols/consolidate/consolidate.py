@@ -45,7 +45,7 @@ def run_custom_protocol(
             'have a well of that name (eg a 96-well plate has no well "T18")')
 
     pipette = instruments.Pipette(
-        axis='b',
+        axis=pipette_axis[0].lower(),
         max_volume=pipette_max_vol,
         min_volume=pipette_max_vol / 10,
         tip_racks=[tip_rack],
