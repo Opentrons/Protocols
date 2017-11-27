@@ -39,14 +39,14 @@ def run_custom_protocol(
     data = [
         [well, float(vol)]
         for well, vol in
-        [row.split(',') for row in example_csv.strip().split('\n') if row]
+        [row.split(',') for row in volumes_csv.strip().split('\n') if row]
     ]
 
     source_plate = containers.load(source_plate_type, 'B1')
     dest_plate = containers.load(destination_plate_type, 'C1')
 
     tip_strategy = 'always' if tip_reuse == 'new tip each time' else 'once'
-    for well_idx, (source_well, vol) in data:
+    for well_idx, (source_well, vol) in enumerate(data):
         pipette.transfer(
             vol,
             source_plate.wells(source_well),
