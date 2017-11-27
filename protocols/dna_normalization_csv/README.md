@@ -14,9 +14,9 @@ Dilute samples in a 96 or 384 well plate, using volumes from a CSV file.
 
 To generate a `.csv` from from Excel or another spreadsheet program, try "File > Save As" and select `*.csv`
 
-The csv must contain volumes in microliters (uL), and be oriented like plate on the deck of the Opentrons robot -- well A1 should be on the bottom left.
+The csv must contain volumes in microliters (uL). It can be oriented either in "portrait" orientation with well A1 at the bottom left, or in "landscape" orientation with well A1 in the top left.
 
-For example, for an 8x12 96-well plate, your CSV would look like:
+For example, for an 8x12 96-well plate, your CSV could look like this ("portrait" orientation):
 
 ```
 90,168,187,13,70,189,196,93
@@ -33,7 +33,22 @@ For example, for an 8x12 96-well plate, your CSV would look like:
 66,60,164,129,106,7,198,195
 ```
 
-66 uL will be added to well A1, 60 uL to well B1, and so on.
+**Result:** 66 uL will be added to well A1, then 60 uL to well B1, and so on.
+
+Equivalently, you can use a CSV in a "landscape" orientation, with well A1 at the top left. This example will do the same as the above:
+
+```
+66,43,58,61,24,111,139,185,28,106,56,90
+60,16,101,71,128,25,48,96,143,198,197,168
+164,156,121,109,106,84,111,60,185,45,147,187
+129,175,5,84,88,12,68,105,17,6,139,13
+106,190,122,85,124,63,179,143,199,46,74,70
+7,41,88,62,65,31,126,151,155,113,61,189
+198,78,27,89,133,34,59,18,78,111,44,196
+195,8,59,168,26,8,172,102,93,33,157,93
+```
+
+**Result:** This "landscape" example will produce the same result as the other "portrait" example: 66 uL will be added to well A1, then 60 uL to well B1, and so on.
 
 ### Time Estimate
 

@@ -33,16 +33,29 @@ example_csv = """
 """
 
 
+def transpose_matrix(m):
+    return [[r[i] for r in reversed(m)] for i in range(len(m[0]))]
+
+
+def flatten_matrix(m):
+    return [cell for row in m for cell in row]
+
+
 def well_csv_to_list(csv_string):
     """
     Takes a csv string and flattens it to a list, re-ordering to match
     Opentrons well order convention (A1, B1, C1, ..., A2, B2, B2, ...)
     """
-    return [
-        cell
+    data = [
+        line.split(',')
         for line in reversed(csv_string.split('\n')) if line.strip()
-        for cell in line.split(',') if cell
+        if line
     ]
+    if len(data[0]) > len(data):
+        # row length > column length ==> "landscape", so transpose
+        return flatten_matrix(transpose_matrix(data))
+    # "portrait"
+    return flatten_matrix(data)
 
 
 def run_custom_protocol(
