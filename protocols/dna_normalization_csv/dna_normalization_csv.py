@@ -1,20 +1,12 @@
-from opentrons import containers, instruments
+from opentrons import containers, instruments, robot
 from otcustomizers import FileInput, StringSelection
 
-trough = containers.load('trough-12row', 'C1')
-source = trough.wells(0)
+source_container = containers.load('point', 'C1')
+source = source_container.wells(0)
 
 tiprack_slots = ['D1', 'A2', 'C2', 'E2']
 tipracks = [containers.load('tiprack-200ul', slot) for slot in tiprack_slots]
 trash = containers.load('trash-box', 'E1')
-
-# you may also want to change min and max volume of the pipette
-pipette = instruments.Pipette(
-    max_volume=200,
-    min_volume=20,
-    axis='a',
-    tip_racks=tipracks,
-    trash_container=trash)
 
 example_csv = """
 90,168,187,13,70,189,196,93
@@ -33,27 +25,60 @@ example_csv = """
 """
 
 
+def transpose_matrix(m):
+    return [[r[i] for r in reversed(m)] for i in range(len(m[0]))]
+
+
+def flatten_matrix(m):
+    return [cell for row in m for cell in row]
+
+
 def well_csv_to_list(csv_string):
     """
     Takes a csv string and flattens it to a list, re-ordering to match
     Opentrons well order convention (A1, B1, C1, ..., A2, B2, B2, ...)
     """
-    return [
-        cell
+    data = [
+        line.split(',')
         for line in reversed(csv_string.split('\n')) if line.strip()
-        for cell in line.split(',') if cell
+        if line
     ]
+    if len(data[0]) > len(data):
+        # row length > column length ==> "landscape", so transpose
+        return flatten_matrix(transpose_matrix(data))
+    # "portrait"
+    return flatten_matrix(data)
 
 
 def run_custom_protocol(
         volumes_csv: FileInput=example_csv,
+        pipette_axis: StringSelection(
+            'B (left side)', 'A (right side)')='B (left side)',
+        pipette_model: StringSelection(
+            'p200', 'p100', 'p50', 'p20', 'p10', 'p1000')='p200',
         plate_type: StringSelection('96-flat', '384-plate')='96-flat',
         tip_reuse: StringSelection(
             'new tip each time', 'reuse tip')='new tip each time'):
 
+    pipette_max_vol = int(pipette_model[1:])
+
+    pipette = instruments.Pipette(
+        axis='b' if pipette_axis[0] == 'B' else 'a',
+        max_volume=pipette_max_vol,
+        min_volume=pipette_max_vol / 10,
+        tip_racks=tipracks,
+        trash_container=trash
+    )
+
     plate = containers.load(plate_type, 'A1')
 
     volumes = [float(cell) for cell in well_csv_to_list(volumes_csv)]
+
+    for vol in volumes:
+        if 0 < vol < pipette.min_volume:
+            robot.comment(
+                'WARNING: volume {} is below pipette\'s minimum volume.'
+                .format(vol))
 
     tip_strategy = 'always' if tip_reuse == 'new tip each time' else 'once'
     pipette.transfer(volumes, source, plate, new_tip=tip_strategy)

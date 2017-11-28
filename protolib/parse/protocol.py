@@ -1,13 +1,14 @@
 from inspect import signature, Parameter
 # import json
-import re
+import time
 import shutil
 from opentrons import robot, containers
-from opentrons.instruments.pipette import Pipette
+from opentrons.instruments import Pipette as BasePipette
+from opentrons.instruments import Magbead as BaseMagbead
 from opentrons.util.environment import settings as opentrons_settings
 
 # HACK to get pipette type
-pipetteType = type(Pipette(robot, 'a'))
+pipetteType = type(BasePipette(robot, 'a'))
 
 
 def parse(protocol_path):
@@ -28,8 +29,9 @@ def parse(protocol_path):
     # reset is needed to reset tip tracking, other states may also interfere
     robot.reset()
 
-    # text-replace-monkeypatch containers.load with this load_container fn
     all_containers = []
+
+    orig_containers_load = containers.load
 
     def load_container(container_name, slot, label=None):
         all_containers.append({
@@ -37,16 +39,53 @@ def parse(protocol_path):
             'slot': slot,
             'name': label or container_name
             })
-        return containers.load(container_name, slot, label)
+        return orig_containers_load(container_name, slot, label)
 
-    _globals = {'robot': robot, 'load_container': load_container}
+    # monkeypatch containers.load with the load_container "spy" fn
+    containers.load = load_container
+
+    orig_time_sleep = time.sleep
+
+    def fake_sleep(*args, **kwargs):
+        # equivalent to pre-monkeypatched `time.sleep(0)`
+        orig_time_sleep(0)
+
+    def fake_delay(self, *args, **kwargs):
+        # allow chaining
+        fake_sleep(*args, **kwargs)
+        return self
+
+    # time.sleep
+    fake_time = time
+    fake_time.sleep = fake_sleep
+
+    # monkeypatch fake delay/sleep
+    PatchedPipette = BasePipette
+    PatchedPipette.delay = fake_delay
+
+    PatchedMagbead = BaseMagbead
+    PatchedMagbead.delay = fake_delay
+
+    # do the same opentrons/__init__.py trick to monkeypatch delays
+    class InstrumentsWrapper(object):
+        def __init__(self, robot):
+            self.robot = robot
+
+        def Pipette(self, *args, **kwargs):
+            return PatchedPipette(self.robot, *args, **kwargs)
+
+        def Magbead(self, *args, **kwargs):
+            return PatchedMagbead(self.robot, *args, **kwargs)
+
+    _globals = {
+        'robot': robot,
+        'opentrons.containers': containers,
+        'opentrons.instruments': InstrumentsWrapper(robot),
+        'time': fake_time
+    }
 
     with open(protocol_path) as f:
         protocol_text = f.read()
-
-    # HACK: replace containers.load( with load_container(
-    protocol_text = re.sub(
-        r'containers\.load\(', 'load_container(', protocol_text)
 
     exec(
         compile(protocol_text, protocol_path, 'exec'),
