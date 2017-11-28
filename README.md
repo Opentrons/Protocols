@@ -85,6 +85,21 @@ These files are usually blank text files. They have special names that indicate 
 * `.notests` - The protocol will not be tested by continuous integration. This is intended only for ignored protocols.
 * `.embedded` - This is for "embedded apps" that generate a protocol and are designed to be shown in the Protocol Library in an iframe. This file should not be blank, it should contain a URL to the web app that will be embedded in the iframe.
 
+## Monkeypatched delay commands & `OT_TESTING` environment variable
+
+To avoid waiting for delays while simulating protocols during the build, `Pipette.delay`, `Magbead.delay`, and `time.sleep` are monkeypatched so that they always delay for 0 seconds during the build. They will work normally when the protocol is executed by the app.
+
+If there are any cases that the monkeypatched delays don't cover, please raise an issue on GitHub. In the meantime, you can use the `OT_TESTING` environment variable -- anything truthy should indicate that a script is running in a testing/simulation environment:
+
+```python
+# Bypass time.sleep in testing env
+import os
+hours_to_incubate = 8
+if os.getenv('OT_TESTING') is not None:
+    hours_to_incubate = 0
+myPipette.delay(60*60*hours_to_incubate)
+```
+
 # Custom Protocols
 
 "Custom protocols" allow users to set variables for their protocol on the protocol library site before downloading a protocol,
