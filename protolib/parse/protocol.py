@@ -10,8 +10,27 @@ from opentrons.util.environment import settings as opentrons_settings
 # HACK to get pipette type
 pipetteType = type(BasePipette(robot, 'a'))
 
+# monkeypatch containers.load with the load_container_spy fn,
+# use global all_containers to track containers per protocol
+global all_containers
+orig_containers_load = containers.load
+
+
+def load_container_spy(container_name, slot, label=None):
+    print('loaded', container_name, 'in', slot)
+    all_containers.append({
+        'type': container_name,
+        'slot': slot,
+        'name': label or container_name
+        })
+    return orig_containers_load(container_name, slot, label)
+
+
+containers.load = load_container_spy
+
 
 def parse(protocol_path):
+
     if not protocol_path:
         return {}
     print('Parsing protocol: {}'.format(protocol_path))
@@ -29,20 +48,9 @@ def parse(protocol_path):
     # reset is needed to reset tip tracking, other states may also interfere
     robot.reset()
 
+    global all_containers
+    # new protocol. start with no containers
     all_containers = []
-
-    orig_containers_load = containers.load
-
-    def load_container(container_name, slot, label=None):
-        all_containers.append({
-            'type': container_name,
-            'slot': slot,
-            'name': label or container_name
-            })
-        return orig_containers_load(container_name, slot, label)
-
-    # monkeypatch containers.load with the load_container "spy" fn
-    containers.load = load_container
 
     orig_time_sleep = time.sleep
 
@@ -103,10 +111,10 @@ def parse(protocol_path):
         protocol_function()
 
     return get_result_dict(
-        robot, protocol_function, protocol_text, all_containers)
+        robot, protocol_function, all_containers)
 
 
-def get_result_dict(robot, protocol_function, protocol_text, all_containers):
+def get_result_dict(robot, protocol_function, all_containers):
     return {
         'instruments': get_instruments(robot),
         'containers': all_containers,
