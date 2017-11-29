@@ -17,7 +17,6 @@ orig_containers_load = containers.load
 
 
 def load_container_spy(container_name, slot, label=None):
-    print('loaded', container_name, 'in', slot)
     all_containers.append({
         'type': container_name,
         'slot': slot,
