@@ -62,17 +62,17 @@ def run_custom_protocol(dilution_factor: float=10,
             'in a 96-well plate). Got {}'
             ).format(number_of_rows_to_use))
 
-    # calculate how much diluent to use
-    diluent_vol = final_volume * ((dilution_factor-1)/dilution_factor)
+        # calculate how much sample to transfer
+    transfer_vol = final_volume/dilution_factor
 
     # calculate how much sample to transfer
-    transfer_vol = final_volume - diluent_vol
+    diluent_vol = final_volume - transfer_vol
 
     for plate in plates[:number_of_plates]:
         # Add diluent to all wells that will be used
         # discard tips
         p50multi.distribute(
-            final_volume,
+            diluent_vol,
             diluent_source,
             plate.rows(0, length=number_of_rows_to_use))
 
