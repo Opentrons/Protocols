@@ -1,4 +1,4 @@
-# Liquid Chromatography - Mass Spectrometry
+# Liquid Chromatography - Mass Spectrometry Part 2
 
 ### Author
 [Opentrons](http://www.opentrons.com/)
@@ -12,15 +12,15 @@
 
 
 ## Description
-LCMS Prep.
+LCMS Prep part 2.
 
-Set a custom number of samples to use (the range is 1 to 128).
+Set a custom number of samples to use (the range is 1 to 96).
 
-Tube racks should be located in B2, C2, D2 respectively.
+Tube racks should be located in B1, D1 respectively.
 
 Note: uses custom 4mL tube rack and custom reservoir.
 
-[Part 2](./LCMS_Prep_2017-11-30)
+[Part 1](./LCMS_prep)
 
 ### Time Estimate
 
