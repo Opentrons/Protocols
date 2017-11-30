@@ -24,7 +24,7 @@ Column B
 Column C
 """
 
-trash = containers.load('trash-box', 'C3')
+trash = containers.load('trash-box', 'C2')
 trough = containers.load('trough-12row', 'C1')
 
 """

@@ -43,6 +43,7 @@ Step 10: Drop tips after finishing Step 9.
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)
 * [OT Standard](https://opentrons.com/ot-one-standard)
+* [OT Hood](http://opentrons.com/robots/ot-one-s-hood)
 
 ### Modules
 
