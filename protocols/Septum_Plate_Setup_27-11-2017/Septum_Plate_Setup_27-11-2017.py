@@ -1,13 +1,10 @@
-from opentrons import containers, instruments, robot
-from otcustomizers import StringSelection
-
-robot.reset()
+from opentrons import containers, instruments
 
 containers.create(
     'septum-plate',  # name of you container
     grid=(7, 8),   # specify amount of (columns, rows)
-    spacing=(18, 10),  # distances (mm) between each (column, row)
-    diameter=2,       # diameter (mm) of each well on the plate
+    spacing=(18, 9),  # distances (mm) between each (column, row)
+    diameter=2.46,       # diameter (mm) of each well on the plate
     depth=10)
 
 """
@@ -19,21 +16,28 @@ tuberack = containers.load('tube-rack-2ml', 'A2')
 """
 Column B
 """
+septum1 = containers.load('septum-plate', 'B3')
 
 """
 Column C
 """
-
+septum2 = containers.load('septum-plate', 'C3')
 trash = containers.load('trash-box', 'C2')
 trough = containers.load('trough-12row', 'C1')
 
 """
 Column D
 """
-septum = containers.load('septum-plate', 'D1')
+septum3 = containers.load('septum-plate', 'D1')
+septum4 = containers.load('septum-plate', 'D2')
+septum5 = containers.load('septum-plate', 'D3')
+
 """
 Column E
 """
+septum6 = containers.load('septum-plate', 'D1')
+septum7 = containers.load('septum-plate', 'D2')
+septum8 = containers.load('septum-plate', 'D3')
 
 """
 Instruments
@@ -57,14 +61,17 @@ p100 = instruments.Pipette(
     trash_container=trash)
 
 
-def run_custom_protocol(
-        plate_type: StringSelection('96-Plate', '384-Plate')='96-Plate'):
-
+def run_custom_protocol(plate_number: int=4):
+    plates = [septum1, septum2, septum3, septum4,
+              septum5, septum6, septum7, septum8]
+    # Plates/Tube racks
+    if (plate_number > 8):
+        raise Exception(print("Error - too many plates"))
     """
     Variable initialization/Reagent setup
     """
     multichannel = False
-    if plate_type == '96-Plate':
+    if plate_number > 2:
         multichannel = True
 
     if multichannel:
@@ -82,20 +89,19 @@ def run_custom_protocol(
     """
     # Step 2
     pipette.pick_up_tip()
-    pipette.transfer(30, hexane, trash, new_tip='never')
+    pipette.transfer(30, hexane, trash, new_tip='never', blow_out=True)
 
-    pipette.aspirate(30, work_soln)
-    # Step 4-9
-    if multichannel:
-        for row in septum.rows():
-            # Step 3
-            pipette.dispense(20, row)
-            pipette.aspirate(20, work_soln)
-    else:
-        for well in septum.wells():
-            pipette.dispense(20, well)
-            pipette.aspirate(20, work_soln)
+    for septum in plates[0:plate_number]:
 
-    # Step 10
-    pipette.dispense(work_soln)
+        # Step 4-9
+        if multichannel:
+            sept_multi = [well.top(-5) for well in septum.cols(0)]
+            pipette.distribute(20, work_soln, sept_multi, new_tip='never')
+
+        else:
+            sept_single = [well.top(-5) for well in septum.wells()]
+            pipette.distribute(20, work_soln, sept_single, new_tip='never')
+
+        # Step 10
+
     pipette.drop_tip()
