@@ -15,7 +15,7 @@ from protolib.parse import (
 
 file_handlers = {
     'description': '*.md',
-    'protocol': '*.py'
+    'protocol': '*.ot1.py'
 }
 
 
