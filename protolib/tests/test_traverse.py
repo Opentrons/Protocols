@@ -20,11 +20,11 @@ def test_traverse():
             'slug': 'protocol1',
             'path': os.path.join(data_path, 'protocol1'),
             'files': {
-                'protocol': 'protocol.py',
+                'protocol': 'protocol.ot1.py',
                 'description': 'README.md'
             },
             'detected-files': {
-                'protocol': ['protocol.py'],
+                'protocol': ['protocol.ot1.py'],
                 'description': ['README.md']
             },
             'flags': {
@@ -81,7 +81,7 @@ def test_protocol_ignore():
             'slug': 'protocol3',
             'path': os.path.join(data_path, 'protocol3'),
             'detected-files': {
-                'protocol': ['protocol.py'],
+                'protocol': ['protocol.ot1.py'],
                 'description': ['README.md'],
             },
             'flags': {
@@ -111,7 +111,7 @@ def test_protocol_feature_flag():
             'slug': 'protocol1',
             'path': os.path.join(data_path, 'protocol1'),
             'detected-files': {
-                'protocol': ['protocol.py'],
+                'protocol': ['protocol.ot1.py'],
                 'description': ['README.md'],
             },
             'flags': {
@@ -216,8 +216,8 @@ def test_missing_md():
             'slug': 'category1/protocol2',
             'path': os.path.join(data_path, 'category1/protocol2'),
             'status': 'error',
-            'files': {'description': None, 'protocol': 'protocol.py'},
-            'detected-files': {'description': [], 'protocol': ['protocol.py']},
+            'files': {'description': None, 'protocol': 'protocol.ot1.py'},
+            'detected-files': {'description': [], 'protocol': ['protocol.ot1.py']},
             'flags': {
                 'ignore': False,
                 'skip-tests': False,
