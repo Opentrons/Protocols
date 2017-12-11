@@ -217,7 +217,10 @@ def test_missing_md():
             'path': os.path.join(data_path, 'category1/protocol2'),
             'status': 'error',
             'files': {'description': None, 'protocol': 'protocol.ot1.py'},
-            'detected-files': {'description': [], 'protocol': ['protocol.ot1.py']},
+            'detected-files': {
+                'description': [],
+                'protocol': ['protocol.ot1.py']
+            },
             'flags': {
                 'ignore': False,
                 'skip-tests': False,
