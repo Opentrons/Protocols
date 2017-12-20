@@ -40,13 +40,13 @@ Instruments
 """
 
 pipette = instruments.Pipette(
-    axis='a',
-    name='10ul Multichannel',
-    max_volume=10,
-    min_volume=1,
-    channels=8,
-    tip_racks=[tiprack1, tiprack2, tiprack3, tiprack4],
-    trash_container=trash)
+	axis='a',
+	name='10ul Multichannel',
+	max_volume=10,
+	min_volume=1,
+	channels=8,
+	tip_racks=[tiprack1, tiprack2, tiprack3, tiprack4],
+	trash_container=trash)
 
 """
 Variable initialization
@@ -54,38 +54,42 @@ Variable initialization
 
 
 def run_custom_protocol(number_of_samples: int=288):
-    num_samples = number_of_samples
-    plates = [inputPlate1, inputPlate2, inputPlate3]
-    # Plates/Tube racks
-    if (num_samples > 288):
-        raise Exception(print("Error - too many samples"))
+	num_samples = number_of_samples
+	plates = [inputPlate1, inputPlate2, inputPlate3]
+	# Plates/Tube racks
+	if (num_samples > 288):
+		raise Exception(print("Error - too many samples"))
 
-    num_output = math.ceil(num_samples/16)
-    num_plates = math.ceil(num_samples/96)
+	num_output = math.ceil(num_samples/16)
+	num_plates = math.ceil(num_samples/96)
 
-    plates = plates[0:num_plates]
-    master_mix = trough.wells('A1')
+	plates = plates[0:num_plates]
+	master_mix = trough.wells('A1')
 
-    alternating_wells = []
+	alternating_wells = []
 
-    for row in outputPlate.rows('1', to=num_output):
-        alternating_wells.append(row.wells('A', length=8, step=2))
-        alternating_wells.append(row.wells('B', length=8, step=2))
+	for row in outputPlate.rows('1', to=num_output):
+		alternating_wells.append(row.wells('A').bottom())
+		alternating_wells.append(row.wells('B').bottom())
 
-    # Distribute MasterMix to entire 384 plate
+	# Distribute MasterMix to entire 384 plate
+	pipette.transfer(3, master_mix, alternating_wells)
 
-    pipette.transfer(3, master_mix, alternating_wells)
+	for start, plate in enumerate(plates):
+		end = start + 1
 
-    for start, plate in enumerate(plates):
-        end = start + 1
+		for num, well in enumerate(outputPlate.cols(0)[start*6:end*6]):
+			pipette.transfer(
+				2,
+				plate.rows(num),
+				well.bottom())
 
-        pipette.transfer(
-            2,
-            plate.rows('1', length=6),
-            list(outputPlate.cols(0)[start*6:end*6]))
+		for num, well in enumerate(outputPlate.cols(1)[start*6:end*6]):
+			pipette.transfer(
+				2,
+				plate.rows(num + 6),
+				well.bottom())
+			# Can we incorporate num samples?
 
-        pipette.transfer(
-            2,
-            plate.rows('7', length=6),
-            list(outputPlate.cols(1)[start*6:end*6]))
-        # Can we incorporate num samples?
+
+run_custom_protocol(**{'number_of_samples': 288})
