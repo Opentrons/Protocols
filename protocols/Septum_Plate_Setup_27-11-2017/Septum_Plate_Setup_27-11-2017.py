@@ -96,20 +96,21 @@ def run_custom_protocol(plate_number: int=4):
         # Step 4-9
         if multichannel:
             sept_multi = [well.top(-5) for well in septum.cols(0)]
-            pipette.aspirate(10, work_soln)
+            pipette.aspirate(5, work_soln)
             for well in sept_multi:
-                pipette.transfer(20, work_soln, well, new_tip='never')
+                pipette.aspirate(20, work_soln)
+                pipette.dispense(20, well).touch_tip(-2)
 
-            pipette.dispense(pipette.max_volume, work_soln)
+            pipette.dispense(work_soln)
 
         else:
             sept_single = [well.top(-5) for well in septum.wells()]
-            pipette.aspirate(10, work_soln)
-            pipette.transfer(20, work_soln, sept_single, new_tip='never')
-            pipette.dispense(pipette.curr_volume, work_soln)
+            pipette.aspirate(5, work_soln)
+            for well in sept_single:
+                pipette.aspirate(20, work_soln)
+                pipette.dispense(20, well).touch_tip(-2)
+
+            pipette.dispense(work_soln)
         # Step 10
 
-    pipette.drop_tip()
-
-
-run_custom_protocol(**{'plate_number': 4})
+    pipette.return_tip()
