@@ -1,69 +1,42 @@
 from opentrons import containers, instruments
 import math
 
+tipracks = [
+    containers.load('tiprack-10ul', slot)
+    for slot in ['A1', 'B1', 'C1', 'D1']]
 
-"""
-Column A
-"""
-tiprack1 = containers.load('tiprack-10ul', 'A1')
+inputPlates = [
+    containers.load('96-deep-well', slot)
+    for slot in ['A2', 'B2', 'C2']]
 
-inputPlate1 = containers.load('96-deep-well', 'A2')
-
-"""
-Column B
-"""
-inputPlate2 = containers.load('96-deep-well', 'B2')
-
-tiprack2 = containers.load('tiprack-10ul', 'B1')
-"""
-Column C
-"""
-inputPlate3 = containers.load('96-deep-well', 'C2')
-
-tiprack3 = containers.load('tiprack-10ul', 'C1')
-"""
-Column D
-"""
 outputPlate = containers.load('384-plate', 'D2')
 
-tiprack4 = containers.load('tiprack-10ul', 'D1')
-
-"""
-Column E
-"""
 trough = containers.load('trough-12row', 'E2')
 
 trash = containers.load('trash-box', 'E1')
 
-"""
-Instruments
-"""
-
 pipette = instruments.Pipette(
     axis='a',
-    name='10ul Multichannel',
     max_volume=10,
     min_volume=1,
     channels=8,
-    tip_racks=[tiprack1, tiprack2, tiprack3, tiprack4],
+    tip_racks=tipracks,
     trash_container=trash)
-
-"""
-Variable initialization
-"""
 
 
 def run_custom_protocol(number_of_samples: int=288):
     num_samples = number_of_samples
-    plates = [inputPlate1, inputPlate2, inputPlate3]
+
     # Plates/Tube racks
     if (num_samples > 288):
-        raise Exception(print("Error - too many samples"))
+        raise Exception(
+            "Error - too many samples. " +
+            "The maximum number of samples is 288")
 
     num_output = math.ceil(num_samples/16)
     num_plates = math.ceil(num_samples/96)
 
-    plates = plates[0:num_plates]
+    plates = inputPlates[0:num_plates]
     master_mix = trough.wells('A1')
 
     alternating_wells = []
@@ -90,6 +63,3 @@ def run_custom_protocol(number_of_samples: int=288):
                 plate.rows(num + 6),
                 well.bottom())
     # Can we incorporate num samples?
-
-
-run_custom_protocol(**{'number_of_samples': 288})
