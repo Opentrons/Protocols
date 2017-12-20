@@ -123,21 +123,35 @@ def run_custom_protocol(volumes_csv: FileInput=volume_example,
     """
     Turns files into dictionaries for volume,
     sources, destinations respectively
+
+    Create vols dict mapping well number on the destination plate to volume
+    to transfer to that well. The vols dict is of the form:
+    {well_number: volume}
     """
     vols = dict()
     temp_lines = []
     for row in volumes_csv.split('\n'):
+        # parse through each row of the CSV
         if row:
+            # check if that row is not empty
             temp_lines.append(row.split(','))
     for col in range(len(temp_lines)):
+        # Starting with the column
         row_len = len(temp_lines[col])
         for well in range(len(temp_lines[col])):
-
+            # Now loop through each invidiual cell
             try:
+                # Add a key based on the cell in excel
+                # Each cell row corresponds to a row on the
                 vols[col + well*row_len] = float(temp_lines[col][well])
             except (ValueError, TypeError):
                 vols[col + well*row_len] = 0
 
+    """
+    Create source dict mapping well number on the source plate to location
+    of sample. The source dict is of the form:
+    {sample: well_number}
+    """
     sources = defaultdict(list)
     temp_lines = []
     for row in source_csv.split('\n'):
@@ -149,6 +163,11 @@ def run_custom_protocol(volumes_csv: FileInput=volume_example,
 
             sources[temp_lines[col][well].strip()].append(well + col*row_len)
 
+    """
+    Create destination dict mapping well number on the destination plate to
+    which sample is in that well. The destination dict is of the form:
+    {sample: [well_number1, well_number2 etc...]}
+    """
     dest_keys = []
     dest = defaultdict(list)
     temp_lines = []
