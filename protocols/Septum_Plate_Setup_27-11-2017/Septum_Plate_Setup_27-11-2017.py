@@ -2,8 +2,8 @@ from opentrons import containers, instruments
 
 containers.create(
     'septum-plate',  # name of you container
-    grid=(7, 8),   # specify amount of (columns, rows)
-    spacing=(18, 9),  # distances (mm) between each (column, row)
+    grid=(8, 7),   # specify amount of (columns, rows)
+    spacing=(9, 18),  # distances (mm) between each (column, row)
     diameter=2.46,       # diameter (mm) of each well on the plate
     depth=10)
 
@@ -35,9 +35,9 @@ septum5 = containers.load('septum-plate', 'D3')
 """
 Column E
 """
-septum6 = containers.load('septum-plate', 'D1')
-septum7 = containers.load('septum-plate', 'D2')
-septum8 = containers.load('septum-plate', 'D3')
+septum6 = containers.load('septum-plate', 'E1')
+septum7 = containers.load('septum-plate', 'E2')
+septum8 = containers.load('septum-plate', 'E3')
 
 """
 Instruments
@@ -96,12 +96,21 @@ def run_custom_protocol(plate_number: int=4):
         # Step 4-9
         if multichannel:
             sept_multi = [well.top(-5) for well in septum.cols(0)]
-            pipette.distribute(20, work_soln, sept_multi, new_tip='never')
+            pipette.aspirate(5, work_soln)
+            for well in sept_multi:
+                pipette.aspirate(20, work_soln)
+                pipette.dispense(20, well).touch_tip(-2)
+
+            pipette.dispense(work_soln)
 
         else:
             sept_single = [well.top(-5) for well in septum.wells()]
-            pipette.distribute(20, work_soln, sept_single, new_tip='never')
+            pipette.aspirate(5, work_soln)
+            for well in sept_single:
+                pipette.aspirate(20, work_soln)
+                pipette.dispense(20, well).touch_tip(-2)
 
+            pipette.dispense(work_soln)
         # Step 10
 
-    pipette.drop_tip()
+    pipette.return_tip()
