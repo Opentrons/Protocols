@@ -8,7 +8,7 @@
 
 ## Categories
 * Basic Pipetting
-  * Septum Plate
+	* Septum Plate
 
 
 ## Description

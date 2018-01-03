@@ -18,6 +18,7 @@ script:
   # lint all code
   - flake8 .
   - pytest protolib/
+  - python ./scripts/bad-README-subcategory.py # make sure subcategories don't have 2 spaces
   # - ./scripts/smoke-test.sh  # skip smoke testing, hope protolib catches it
   #
   # use protolib to build zipped .json for S3
