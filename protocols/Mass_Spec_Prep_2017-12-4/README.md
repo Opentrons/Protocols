@@ -64,27 +64,27 @@ The formats should be as follows:
 * Destination Volume - the excel rows correspond to rows A, B, C...of a container
 and the columns correspond to columns 1, 2, 3, 4...
 
-| ---- |:--------:| ----:|
+```
 | Vol1 | Vol2     | Vol3 |
 | Vol4 | Vol5     | Vol6 |
 | Vol7 | Vol8     | Vol9 |
-
+```
 * Source Location - the excel rows correspond to rows A, B, C...of a container
 and the columns correspond to columns 1, 2, 3, 4...
 
-| -------- |:-----------: | -------: |
+```
 | Sample 1 | Sample 2     | Sample 3 |
 | Sample 4 | Sample 5     | Sample 6 |
 | Sample 7 | Sample 8     | Sample 9 |
-
+```
 * Destination Location - the excel rows correspond to rows A, B, C...of a container
 and the columns correspond to columns 1, 2, 3, 4...
 
-| -------- |:-----------: | -------: |
+```
 | Sample 1 | Sample 2     | Sample 3 |
 | Sample 2 | Sample 1     | Sample 2 |
 | Sample 9 | Sample 8     | Sample 5 |
-
+```
 ### Additional Notes
 
 
