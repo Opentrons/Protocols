@@ -1,5 +1,5 @@
 from opentrons import containers, instruments, robot
-
+import math
 containers.create(
     'trough-7row',  # name of you container
     grid=(1, 7),   # specify amount of (columns, rows)
@@ -69,7 +69,7 @@ def run_custom_protocol(number_of_samples: int=384):
 
     initial_rows = [1, 7, 13, 19]
     samples = 192
-    samples_processed = samples/96
+    samples_processed = math.ceil(samples/96)
 
     cleanup_wells = []
     for row in cleanup_plate.rows():
