@@ -15,7 +15,7 @@ Perform a 1 minute heat shock transformation on six samples.
 ### Time Estimate
 
 ### Robot
-* [OT PRO](https://opentrons.com/ot-one-pro) 
+* [OT PRO](https://opentrons.com/ot-one-pro)
 * [OT Hood](https://opentrons.com/ot-one-hood)
 
 ### Modules
