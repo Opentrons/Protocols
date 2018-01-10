@@ -1,5 +1,11 @@
 from opentrons import containers, instruments, robot
 
+containers.create(
+    'trough-7row',  # name of you container
+    grid=(1, 7),   # specify amount of (columns, rows)
+    spacing=(0, 18.21),  # distances (mm) between each (column, row)
+    diameter=2.46,       # diameter (mm) of each well on the plate
+    depth=40)
 """
 Column A
 """
@@ -11,7 +17,7 @@ tiprack3 = containers.load('tiprack-200ul', 'A3', 'Tip O')
 Column B
 """
 tiprack4 = containers.load('tiprack-200ul', 'B1', 'Tip J')
-trough = containers.load('trough-4row', 'B2')
+trough = containers.load('trough-7row', 'B2')
 tiprack5 = containers.load('tiprack-200ul', 'B3', 'Tip L')
 """
 Column C
