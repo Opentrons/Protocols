@@ -10,22 +10,15 @@
 	* Cell Plating
 
 ## Description
-<<<<<<< HEAD
-This protocol is plating cells on a maximum of 7 96-well plates.
-=======
 This protocol is plating cells on a maximum of 7 96-well plates. Must use a p50
-multichannel. 
->>>>>>> Updated protocol for hood model
+multichannel.
 
 ### Time Estimate
 
 ### Robot
 * [OT PRO](https://opentrons.com/ot-one-pro)
 * [OT Standard](https://opentrons.com/ot-one-standard)
-<<<<<<< HEAD
-=======
 * [OT Hood](http://opentrons.com/robots/ot-one-s-hood)
->>>>>>> Updated protocol for hood model
 
 ### Reagents
 * Media
