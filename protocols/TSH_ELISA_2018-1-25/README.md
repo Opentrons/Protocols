@@ -14,7 +14,7 @@ This protocol sets up a DRG<sup>TM</sup> TSH ELISA for a 96 well plate. For back
 information please visit this [link](https://www.sceti.co.jp/images/psearch/pdf/DRG_EIA1782_p.pdf).
 ---
 The samples will be located in a 2 mL tuberack.
-The standards and other reagents are located in a 15+50mL tuberack
+The standards and other reagents are located in a 15+50mL [tuberack](https://shop.opentrons.com/collections/labware/products/tube-rack-15-50-ml)
 ---
 1. Secure the desired number of coated wells in the holder.
 2. Dispense 100 µL of standards, specimens, and controls into appropriate wells.
@@ -30,7 +30,8 @@ The standards and other reagents are located in a 15+50mL tuberack
 12. Gently mix for 30 seconds. It is important to make sure that all the blue color changes to yellow color
 completely.
 13. Read absorbance at 450 nm with a microtiter well reader within 15 minutes.
-
+---
+The protocol is set up to have a plate processed like this [picture](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/TSH_Plate_Setup.png). Where the red wells are **standards**, the green wells are **experimental samples** and the yellow wells are **negative controls**.
 ### Time Estimate
 
 ### Robot
