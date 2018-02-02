@@ -83,7 +83,7 @@ def run_custom_protocol(number_of_samples: int=24,
                         standard_replicates: int=3):
 
     samples_left = number_of_samples
-
+    num_rows = math.ceil(number_of_samples/8)
     # 1. Dispense 100 µL of standards
     pipette.transfer(
         sample_volume, standard_25, plate.cols(0)[0:standard_replicates])
@@ -102,7 +102,7 @@ def run_custom_protocol(number_of_samples: int=24,
     samples_left = number_of_samples
     end = False
     # 1. Dispense specimens and controls into appropriate wells.
-    for row in range(math.ceil(number_of_samples/8)):
+    for row in range(num_rows):
 
         if samples_left > 8:
             well_val = 8
@@ -140,7 +140,7 @@ def run_custom_protocol(number_of_samples: int=24,
     # 3. Dispense 100 µL of Enzyme Conjugate Reagent into each well.
     # 4. Thoroughly mix for 30 seconds.
     # It is very important to mix them completely.
-    for row in range(math.ceil(number_of_samples/8)):
+    for row in range(num_rows):
 
         # Checks how many samples are left so that it can iterate through
         # one row each
@@ -167,7 +167,7 @@ def run_custom_protocol(number_of_samples: int=24,
     # 6. Remove the incubation mixture by
     # flicking plate contents into a waste container.
 
-    for row in range(math.ceil(number_of_samples/8)):
+    for row in range(num_rows):
         p300.pick_up_tip()
         p300.aspirate(
             sample_volume*2, plate.wells(8*(standard_replicates+(row*2))))
@@ -176,7 +176,7 @@ def run_custom_protocol(number_of_samples: int=24,
 
     # 7. Rinse and flick the microtiter wells
     # 5 times with distilled or deionized water. (Please do not use tap water.)
-    for row in range(math.ceil(number_of_samples/8)):
+    for row in range(num_rows):
         for _ in range(5):
             p300.pick_up_tip()
             p300.aspirate(sample_volume*2, dioH20)
@@ -189,7 +189,7 @@ def run_custom_protocol(number_of_samples: int=24,
 
     #  9. Dispense 100 µL of TMB Reagent into each well.
     #  Gently mix for 10 seconds.
-    for row in range(math.ceil(number_of_samples/8)):
+    for row in range(num_rows):
 
         if samples_left > 8:
             well_val = 8
@@ -215,7 +215,7 @@ def run_custom_protocol(number_of_samples: int=24,
     # 12. Gently mix for 30 seconds. It is important to make sure
     # that all the blue color changes to yellow color
     # completely.
-    for row in range(math.ceil(number_of_samples/8)):
+    for row in range(num_rows):
 
         if samples_left > 8:
             well_val = 8
