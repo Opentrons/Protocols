@@ -6,11 +6,10 @@ tubes = containers.load('tube-rack-2ml', '8', 'tubes')
 
 p300rack = containers.load('tiprack-200ul', '1', 'p300rack')
 p200rack = containers.load('tiprack-200ul', '4', 'p200rack')
-trash = containers.load('fixed-trash', '12', 'trash')
+
 
 p300_multi = instruments.Pipette(
     name="p300_multi",
-    trash_container=trash,
     tip_racks=[p300rack],
     min_volume=50,
     max_volume=300,
@@ -20,7 +19,6 @@ p300_multi = instruments.Pipette(
 
 p200 = instruments.Pipette(
     name="p200",
-    trash_container=trash,
     tip_racks=[p200rack],
     min_volume=20,
     max_volume=200,
