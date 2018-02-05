@@ -15,7 +15,7 @@ Step6: Repeat Steps1-5 for the remaining rows (second, third, fourth etc.)
 A
 """
 output = containers.load('96-flat', '1')
-trash = containers.load('fixed-trash', '12')
+
 
 """
 B
@@ -36,8 +36,7 @@ p10single = instruments.Pipette(
     max_volume=10,
     min_volume=1,
     channels=1,
-    tip_racks=[tiprack],
-    trash_container=trash)
+    tip_racks=[tiprack])
 
 p10multi = instruments.Pipette(
     mount='left',
@@ -45,8 +44,7 @@ p10multi = instruments.Pipette(
     max_volume=10,
     min_volume=1,
     channels=8,
-    tip_racks=[tiprack],
-    trash_container=trash)
+    tip_racks=[tiprack])
 
 
 def run_custom_protocol(plate_size: int=96):
