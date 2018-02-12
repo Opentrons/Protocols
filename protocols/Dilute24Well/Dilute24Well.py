@@ -394,7 +394,7 @@ fluidx_rack = '''"FluidX_24_5ml": {
 '''
 
 container = create_container_obj_from_dict(json.loads(fluidx_rack)["FluidX_24_5ml"])
-s
+
 tiprack = containers.load("tiprack-1000ul", "B3")
 destination = containers.load(container, "B2")
 source = containers.load("trough-12row", "D2")
