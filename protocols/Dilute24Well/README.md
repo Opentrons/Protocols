@@ -1,4 +1,4 @@
-# 384 Well Plate Filling
+# 24 Well Plate Dilution for start of reaction
 
 ### Author
 [XChem](https://xchem.github.io/oxxchem/)
