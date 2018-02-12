@@ -402,6 +402,7 @@ tiprack = containers.load("tiprack-1000ul", "B3")
 destination = containers.load(container, "B2",label="FluidX_24_9ml")
 source = containers.load("trough-12row", "D2")
 trash = containers.load("point", 'C3')
+
 # Define the pipettes
 p1000 = instruments.Pipette(
     name="eppendorf1000",
@@ -412,8 +413,6 @@ p1000 = instruments.Pipette(
     min_volume=10,
     channels=1,
 )
-
-
 
 example_csv = """CPD ID,Structure,Original Name,Rack Type,Max volume in rack (4 mL),Rack Barcode,Vial Barcode,"""+\
               +"""LocationRack,Location 1536 XCHEM,Chemist,Salt,SMILES,weight (mg),MW (g.mol-1),Density,Volume of """+\
@@ -450,6 +449,4 @@ def run_custom_protocol(input_csv: FileInput=example_csv):
                 vol_to_add.append(float(line.split(",")[i].rstrip()))
             if col == "LocationRack":
                 pos_to_add.append(str(line.split(",")[i].rstrip()))
-    p1000.transfer(vol_to_add,
-                   source.wells('A2'),
-                   [destination.wells(x) for x in pos_to_add.top(offset)])
+    p1000.transfer(vol_to_add,source.wells('A2'),[destination.wells(x) for x in pos_to_add.top(offset)])
