@@ -1,9 +1,11 @@
 from otcustomizers import FileInput
-from opentrons import containers, instruments
+from opentrons import containers, instruments,robot
 import json
 from opentrons.containers.persisted_containers import create_container_obj_from_dict
-
-fluidx_rack = '''"FluidX_24_5ml": {
+fluidx_rack = '''
+        {
+        "FluidX_24_9ml":
+                {
                      "locations": {
                          "C4": {
                              "total-liquid-volume": 0,
@@ -390,13 +392,14 @@ fluidx_rack = '''"FluidX_24_5ml": {
                              "z": 0
                          }
                      }
-                 }
+                }
+        }
+
 '''
 
-container = create_container_obj_from_dict(json.loads(fluidx_rack)["FluidX_24_5ml"])
-
+container = create_container_obj_from_dict(json.loads(fluidx_rack)["FluidX_24_9ml"])
 tiprack = containers.load("tiprack-1000ul", "B3")
-destination = containers.load(container, "B2")
+destination = containers.load(container, "B2",label="FluidX_24_9ml")
 source = containers.load("trough-12row", "D2")
 trash = containers.load("point", 'C3')
 # Define the pipettes
