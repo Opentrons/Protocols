@@ -5,7 +5,7 @@ from opentrons import containers, instruments
 standard = False  # assign True if robot is needed to make standards
 
 # row of first tip (first row is row 0, second row is row 1, etc.)
-first_tip_row = 0
+first_tip_col = 0
 
 stloc = 'A1'  # row where standards are located
 
@@ -56,7 +56,7 @@ standards = containers.load(
 # pipette
 p10 = instruments.P10_Multi(
     mount='right',
-    tipracks=[p10rack]
+    tip_racks=[p10rack]
 )
 
 
