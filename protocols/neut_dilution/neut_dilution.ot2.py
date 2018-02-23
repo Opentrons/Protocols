@@ -44,19 +44,27 @@ p300multi.transfer(180, medium, deep_plate.columns('1'))
 # Add 450 uL of medium from trough/basin to the next 3 columns (2-4)
 # of the same deep 96 well plate.
 p300multi.distribute(
-    450, medium, deep_plate.columns('2', length=3), new_tip='once')
+    450,
+    medium,
+    deep_plate.columns('2', length=3),
+    new_tip='once')
 
 # Remove 20 uL from the first 8 tubes in a 0.75mL tube rack
 # and add it to the first 8 wells in the 96 well plate
 p200single.transfer(
-    20, reagents.wells('A1', length=8), deep_plate.columns('1'), new_tip='always')
+    20,
+    reagents.wells('A1', length=8),
+    deep_plate.columns('1'),
+    new_tip='always')
 
 # Remove 50 uL from the first column (1) in the 96 well
 # and add it to the second column.
 # Remove 50 uL from the second column (2) and add it to the third (3).
 # Remove 50 ul from the third column (3) and add it to the fourth (4).
 p300multi.transfer(
-    50, deep_plate.columns('1', length=3), deep_plate.columns('2', length=3))
+    50,
+    deep_plate.columns('1', length=3),
+    deep_plate.columns('2', length=3))
 
 # Remove 100 uL from the second column (2) of deep 96 well plate
 # and add it to columns 1-3 of a second flat 96 well plate.
