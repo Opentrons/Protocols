@@ -1,7 +1,7 @@
-from opentrons import containers, instruments
+from opentrons import labware, instruments
 
 # tube rack holding master mix
-master_mixes = containers.load('tube-rack-2ml', '1')
+master_mixes = labware.load('tube-rack-2ml', '1')
 
 # tubes with master mix in rack
 
@@ -11,14 +11,14 @@ master_mix1 = master_mixes.wells('A1')
 master_mix2 = master_mixes.wells('A2')
 
 # 96 well plate
-destination_plate = containers.load('96-PCR-flat', '2')
+destination_plate = labware.load('96-PCR-flat', '2')
 
 # PCR strips with cDNA
-pcr_strips = containers.load('PCR-strip-tall', '3')
+pcr_strips = labware.load('PCR-strip-tall', '3')
 
 # tip rack for p10 pipettes
-tip10_rack = containers.load('tiprack-10ul', '10')
-tip10_rack2 = containers.load('tiprack-10ul', '11')
+tip10_rack = labware.load('tiprack-10ul', '10')
+tip10_rack2 = labware.load('tiprack-10ul', '11')
 
 # p10 (1 - 10 uL) (single)
 p10single = instruments.P10_Single(
