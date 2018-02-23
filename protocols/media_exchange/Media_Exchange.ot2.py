@@ -30,20 +30,12 @@ plate_48 = containers.load('48-well-plate', '3', share=True)
 plate_96 = containers.load('96-flat', '3', share=True)
 
 
-p10single = instruments.Pipette(
+p10single = instruments.P10_Single(
     mount='right',
-    name='p10single',
-    max_volume=10,
-    min_volume=1,
-    channels=1,
     tip_racks=[tiprack])
 
-p10multi = instruments.Pipette(
+p10multi = instruments.P10_Multi(
     mount='left',
-    name='p10multi',
-    max_volume=10,
-    min_volume=1,
-    channels=8,
     tip_racks=[tiprack])
 
 
@@ -56,7 +48,8 @@ def run_custom_protocol(plate_size: int=96):
         pipette = p10single
 
     pipette.transfer(
-        5, plate.columns(), output.columns(), mix_before=(3, 5), new_tip='always')
-
-
-run_custom_protocol(**{'plate_size': 96})
+        5,
+        plate.cols(),
+        output.cols(),
+        mix_before=(3, 5),
+        new_tip='always')
