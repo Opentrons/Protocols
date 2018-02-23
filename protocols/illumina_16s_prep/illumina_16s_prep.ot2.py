@@ -1,18 +1,18 @@
-from opentrons import containers, instruments
+from opentrons import labware, instruments
 
-bead_plate = containers.load('96-PCR-flat', '4', 'bead_plate')
-spin_plate = containers.load('96-PCR-flat', '5', 'spin_plate')
-collection1mL_1 = containers.load('96-PCR-flat', '6', 'collection1mL_1')
-collection1mL_2 = containers.load('96-PCR-flat', '7', 'collection1mL_2')
-collection1mL_3 = containers.load('96-PCR-flat', '8', 'collection1mL_3')
-collection1mL_4 = containers.load('96-PCR-flat', '9', 'collection1mL_4')
-collection2mL_1 = containers.load('96-PCR-flat', '10', 'collection2mL_1')
+bead_plate = labware.load('96-PCR-flat', '4', 'bead_plate')
+spin_plate = labware.load('96-PCR-flat', '5', 'spin_plate')
+collection1mL_1 = labware.load('96-PCR-flat', '6', 'collection1mL_1')
+collection1mL_2 = labware.load('96-PCR-flat', '7', 'collection1mL_2')
+collection1mL_3 = labware.load('96-PCR-flat', '8', 'collection1mL_3')
+collection1mL_4 = labware.load('96-PCR-flat', '9', 'collection1mL_4')
+collection2mL_1 = labware.load('96-PCR-flat', '10', 'collection2mL_1')
 
-trough = containers.load('trough-12row', '11', 'trough')
+trough = labware.load('trough-12row', '11', 'trough')
 
-m300rack1 = containers.load('tiprack-200ul', '1', 'm300rack1')
-m300rack2 = containers.load('tiprack-200ul', '2', 'm300rack2')
-m300rack3 = containers.load('tiprack-200ul', '3', 'm300rack3')
+m300rack1 = labware.load('tiprack-200ul', '1', 'm300rack1')
+m300rack2 = labware.load('tiprack-200ul', '2', 'm300rack2')
+m300rack3 = labware.load('tiprack-200ul', '3', 'm300rack3')
 
 m300 = instruments.P300_Multi(
     tip_racks=[m300rack1, m300rack2, m300rack3],
