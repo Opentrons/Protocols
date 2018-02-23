@@ -26,23 +26,13 @@ tip200_rack3 = containers.load('tiprack-200ul', '7')
 trash = containers.load('fixed-trash', 12, 'trash')
 
 # p200 (20 - 200 uL) (single)
-p200single = instruments.Pipette(
+p200single = instruments.P300_Single(
     mount='right',
-    name='p200',
-    max_volume=200,
-    min_volume=20,
-    channels=1,
-    trash_container=trash,
     tip_racks=[tip200_rack])
 
 # p300 (50 - 300 uL) (multi)
-p300multi = instruments.Pipette(
+p300multi = instruments.P300_Multi(
     mount='left',
-    name='p300',
-    max_volume=300,
-    min_volume=50,
-    channels=8,
-    trash_container=trash,
     tip_racks=[tip200_rack2, tip200_rack3])
 
 # medium in trough
