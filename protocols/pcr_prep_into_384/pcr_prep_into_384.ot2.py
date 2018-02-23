@@ -1,23 +1,17 @@
 #
 #
 #
-from opentrons import instruments, containers, robot
+from opentrons import instruments, containers
 
 PCR_plate = containers.load('384-plate', '7')
 sample_plate = containers.load('96-PCR-flat', '9')
 tiprack = containers.load('tiprack-10ul', '10')
 tuberack = containers.load('tube-rack-2ml', '11')
-trash = robot.fixed_trash
 trough = containers.load('trough-12row', '8')
 
-p10 = instruments.Pipette(
-    name='p10',
-    trash_container=trash,
-    tip_racks=[tiprack],
-    max_volume=10,
-    min_volume=0.5,
+p10 = instruments.P10_Single(
     mount='right',
-    channels=1,
+    tip_racks=[tiprack]
 )
 
 master_volume = 9
