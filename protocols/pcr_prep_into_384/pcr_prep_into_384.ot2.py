@@ -1,13 +1,13 @@
 #
 #
 #
-from opentrons import instruments, containers
+from opentrons import labware, containers
 
-PCR_plate = containers.load('384-plate', '7')
-sample_plate = containers.load('96-PCR-flat', '9')
-tiprack = containers.load('tiprack-10ul', '10')
-tuberack = containers.load('tube-rack-2ml', '11')
-trough = containers.load('trough-12row', '8')
+PCR_plate = labware.load('384-plate', '7')
+sample_plate = labware.load('96-PCR-flat', '9')
+tiprack = labware.load('tiprack-10ul', '10')
+tuberack = labware.load('tube-rack-2ml', '11')
+trough = labware.load('trough-12row', '8')
 
 p10 = instruments.P10_Single(
     mount='right',
