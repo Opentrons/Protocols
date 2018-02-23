@@ -1,10 +1,10 @@
-from opentrons import containers, instruments
+from opentrons import labware, instruments
 
-p300rack = containers.load('tiprack-200ul', '11', 'p300rack')
-trough = containers.load('trough-12row', '10', 'trough')
-plate = containers.load('96-PCR-flat', '4', 'plate')
-top_plate = containers.load('96-PCR-flat', '5', 'top_plate')
-liquid_trash = containers.load('trash-box', '3')
+p300rack = labware.load('tiprack-200ul', '11', 'p300rack')
+trough = labware.load('trough-12row', '10', 'trough')
+plate = labware.load('96-PCR-flat', '4', 'plate')
+top_plate = labware.load('96-PCR-flat', '5', 'top_plate')
+liquid_trash = labware.load('trash-box', '3')
 
 p300_multi = instruments.P300_Multi(
     tip_racks=[p300rack],
