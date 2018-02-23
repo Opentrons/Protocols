@@ -20,8 +20,6 @@ pcr_strips = containers.load('PCR-strip-tall', '3')
 tip10_rack = containers.load('tiprack-10ul', '10')
 tip10_rack2 = containers.load('tiprack-10ul', '11')
 
-
-
 # p10 (1 - 10 uL) (single)
 p10single = instruments.P10_Single(
     mount='right',
