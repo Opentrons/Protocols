@@ -1,14 +1,14 @@
-from opentrons import containers, instruments
+from opentrons import labware, instruments
 
 vol = 100  # in ul, can change
 
 # tip rack for p300 pipette
-tip300_rack = containers.load('tiprack-200ul', '1')
+tip300_rack = labware.load('tiprack-200ul', '1')
 
 # 96 well plate
-plate = containers.load('96-PCR-flat', '2')
+plate = labware.load('96-PCR-flat', '2')
 
-cells = containers.load('tube-rack-2ml', '3')
+cells = labware.load('tube-rack-2ml', '3')
 
 # p100 (10 - 100 uL) (single)
 p300 = instruments.P300_Single(
