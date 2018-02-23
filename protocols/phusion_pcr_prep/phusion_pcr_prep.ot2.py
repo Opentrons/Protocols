@@ -1,24 +1,24 @@
-from opentrons import containers, instruments
+from opentrons import labware, instruments
 
 # number of samples
 num_samples = 8  # change here
 
 # tube rack holding reagents
-reagents = containers.load('tube-rack-2ml', '3')
+reagents = labware.load('tube-rack-2ml', '3')
 
 # reagent locations
 water = reagents['A1']  # can change location here
 mastermix = reagents['A2']  # change here
 
 # 96 well plate
-primer_plate = containers.load('96-deep-well', '4')
+primer_plate = labware.load('96-deep-well', '4')
 
 # tip racks for p10 and p50 pipette
-tip10_rack = containers.load('tiprack-10ul', '1')
-tip200_rack = containers.load('tiprack-200ul', '2')
+tip10_rack = labware.load('tiprack-10ul', '1')
+tip200_rack = labware.load('tiprack-200ul', '2')
 
 # PCR strips
-pcr_strips = containers.load('PCR-strip-tall', '5')
+pcr_strips = labware.load('PCR-strip-tall', '5')
 
 # p10 (1 - 10 uL) (single)
 p10single = instruments.P10_Single(
