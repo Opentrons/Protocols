@@ -1,37 +1,37 @@
-from opentrons import containers, instruments
+from opentrons import labware, instruments
 import math
 
 
 """
 Column A
 """
-tiprack1 = containers.load('tiprack-10ul', '1')
+tiprack1 = labware.load('tiprack-10ul', '1')
 
-inputPlate1 = containers.load('96-deep-well', '4')
+inputPlate1 = labware.load('96-deep-well', '4')
 
 """
 Column B
 """
-inputPlate2 = containers.load('96-deep-well', '2')
+inputPlate2 = labware.load('96-deep-well', '2')
 
-tiprack2 = containers.load('tiprack-10ul', '5')
+tiprack2 = labware.load('tiprack-10ul', '5')
 """
 Column C
 """
-inputPlate3 = containers.load('96-deep-well', '3')
+inputPlate3 = labware.load('96-deep-well', '3')
 
-tiprack3 = containers.load('tiprack-10ul', '6')
+tiprack3 = labware.load('tiprack-10ul', '6')
 """
 Column D
 """
-outputPlate = containers.load('384-plate', '7')
+outputPlate = labware.load('384-plate', '7')
 
-tiprack4 = containers.load('tiprack-10ul', '10')
+tiprack4 = labware.load('tiprack-10ul', '10')
 
 """
 Column E
 """
-trough = containers.load('trough-12row', '8')
+trough = labware.load('trough-12row', '8')
 
 """
 Instruments
