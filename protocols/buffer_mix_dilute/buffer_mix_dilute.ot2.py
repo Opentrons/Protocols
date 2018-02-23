@@ -4,35 +4,32 @@ trough = containers.load('trough-12row', '3', 'trough')
 plate = containers.load('96-deep-well', '2', 'plate')
 tubes = containers.load('tube-rack-2ml', '8', 'tubes')
 
-p300rack = containers.load('tiprack-200ul', '1', 'p300rack')
-p200rack = containers.load('tiprack-200ul', '4', 'p200rack')
+multirack = containers.load('tiprack-200ul', '1', 'p300rack')
+singlerack = containers.load('tiprack-200ul', '4', 'p300rack')
 
 
-p300_multi = instruments.Pipette(
-    name="p300_multi",
-    tip_racks=[p300rack],
-    min_volume=50,
-    max_volume=300,
+m300 = instruments.P300_Multi(
     mount="left",
-    channels=8
+    tip_racks=[multirack]
 )
 
-p200 = instruments.Pipette(
-    name="p200",
-    tip_racks=[p200rack],
-    min_volume=20,
-    max_volume=200,
-    mount="right"
+p300 = instruments.P300_Single(
+    mount="right",
+    tip_racks=[singlerack],
 )
 
 
-def run_custom_protocol(sample_volume: float=20, buffer_volume: float=20):
+def run_custom_protocol(sample_volume: float=30, buffer_volume: float=30):
+    if sample_volume < 30:
+        raise ValueError("Pipette only aspirates 30ul and above")
+    if buffer_volume < 30:
+        raise ValueError("Pipette only aspirates 30ul and above")
     # Transfer buffer to all wells, except row 1 on plate.
-    p300_multi.distribute(
+    m300.distribute(
         buffer_volume, trough['A1'], plate.columns('2', to='12'))
 
     # Transfer 8 tube samples to row 1 on plate, and mix.
-    p200.transfer(
+    p300.transfer(
         sample_volume*2,
         tubes.wells('A1', to='D2'),
         plate.columns('1'),
@@ -41,12 +38,9 @@ def run_custom_protocol(sample_volume: float=20, buffer_volume: float=20):
     )
 
     # Dilution transfers with mixing of rows after each transfer.
-    p300_multi.transfer(
+    m300.transfer(
         sample_volume,
         plate.columns('1', to='11'),
         plate.columns('2', to='12'),
         mix_after=(3, sample_volume)  # How much volume to mix
     )
-
-
-run_custom_protocol(**{'sample_volume': 20.0, 'buffer_volume': 20.0})
