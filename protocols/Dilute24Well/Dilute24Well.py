@@ -46,7 +46,7 @@ def run_custom_protocol(input_csv: FileInput=example_csv):
     for line in example_csv.split("\n")[1:]:
         if not line:
             continue
-        for i, col in header:
+        for i, col in enumerate(header):
             if col=="DilutionVolume":
                 vol_to_add.append(float(line.split(",")[i].strip()))
             if col=="LocationRack":
