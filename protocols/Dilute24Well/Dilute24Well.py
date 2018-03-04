@@ -42,10 +42,8 @@ Amine6,C4H5N3,pyrimidin-2-amine,Fluidx 24 9mL,5,NA, FB04712981,B2,NA,TDI,N,NC1=N
               +"""108,0.08,1,0.08,100,12,1.2
 Amine7,C6H6ClN,3-chloroaniline,Fluidx 24 9mL,5,NA, FB04712986,B4,NA,TDI,N,ClC1=CC=CC(N)=C1,290.6,127.571,NA,NA,28""" +\
               +"""47.433978,0.08,1,0.08,100,12,1.2
-Amine8,C4H6N2O,5-methylisoxazol-3-amine,Fluidx 24 9mL,5,NA, FB04712990,B6,NA,TDI,N,CC1=CC(N)=NO1,336.5,98.105,NA,""" +\
-              +"""NA,4287.498089,0.08,1,0.08,100,12,1.2
-"""
-
+Amine8,C4H6N2O,5-methylisoxazol-3-amine,Fluidx 24 9mL,5,NA, FB04712990,B6,NA,TDI,N,CC1=CC(N)=NO1,336.5,98.105,NA,NA,42""" +\
+              +"""87.498089,0.08,1,0.08,100,12,1.2"""
 
 def run_custom_protocol(input_csv: FileInput=example_csv):
     offset = -30
