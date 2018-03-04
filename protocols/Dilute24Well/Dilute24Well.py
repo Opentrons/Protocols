@@ -47,9 +47,9 @@ def run_custom_protocol(input_csv: FileInput=example_csv):
         if not line:
             continue
         for i, col in enumerate(header):
-            if col=="DilutionVolume":
+            if col == "DilutionVolume":
                 vol_to_add.append(float(line.split(",")[i].strip()))
-            if col=="LocationRack":
+            if col == "LocationRack":
                 pos_to_add.append(str(line.split(",")[i].strip()))
     p1000.transfer(
         vol_to_add, source.wells('A2'), [
