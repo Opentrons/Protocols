@@ -397,6 +397,13 @@ fluidx_rack = '''
 
 '''
 
+containers.create(
+    'FluidX_24_9ml',                    # name of you container
+    grid=(6, 8),                    # specify amount of (columns, rows)
+    spacing=(18, 18),               # distances (mm) between each (column, row)
+    diameter=13,                     # diameter (mm) of each well on the plate
+    depth=83)                       # depth (mm) of each well on the plate
+
 container = create_container_obj_from_dict(json.loads(fluidx_rack)["FluidX_24_9ml"])
 tiprack = containers.load("tiprack-1000ul", "B3")
 destination = containers.load(container, "B2",label="FluidX_24_9ml")
