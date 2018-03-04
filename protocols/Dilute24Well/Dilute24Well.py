@@ -24,8 +24,7 @@ p1000 = instruments.Pipette(
     channels=1,
 )
 6
-example_csv = """
-    LocationRack,DilutionVolume
+example_csv = """LocationRack,DilutionVolume
     A2,84.078
     D5,111.1194032
     A4,94.117
