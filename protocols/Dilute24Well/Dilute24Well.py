@@ -1,7 +1,5 @@
 from otcustomizers import FileInput
 from opentrons import containers, instruments,robot
-import json
-from opentrons.containers.persisted_containers import create_container_obj_from_dict
 fluidx_rack = '''
         {
         "FluidX_24_9ml":
@@ -404,9 +402,8 @@ containers.create(
     diameter=13,                     # diameter (mm) of each well on the plate
     depth=83)                       # depth (mm) of each well on the plate
 
-container = create_container_obj_from_dict(json.loads(fluidx_rack)["FluidX_24_9ml"])
 tiprack = containers.load("tiprack-1000ul", "B3")
-destination = containers.load(container, "B2",label="FluidX_24_9ml")
+destination = containers.load('FluidX_24_9ml', "B2",label="FluidX_24_9ml")
 source = containers.load("trough-12row", "D2")
 trash = containers.load("point", 'C3')
 
