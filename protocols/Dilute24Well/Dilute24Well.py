@@ -39,17 +39,18 @@ example_csv = """
 
 def run_custom_protocol(input_csv: FileInput=example_csv):
     offset = -30
-    header = example_csv.split("\n")[0].split(",")
+    input_lines = [x for x in example_csv.split("\n") if x.strip() != ""]
+    header = [x.strip() for x in input_lines[0].split(",")]
     vol_to_add = []
     pos_to_add = []
     for line in example_csv.split("\n")[1:]:
         if not line:
             continue
         for i, col in header:
-            if col == "DilutionVolume":
-                vol_to_add.append(float(line.split(",")[i].rstrip()))
-            if col == "LocationRack":
-                pos_to_add.append(str(line.split(",")[i].rstrip()))
+            if col=="DilutionVolume":
+                vol_to_add.append(float(line.split(",")[i].strip()))
+            if col=="LocationRack":
+                pos_to_add.append(str(line.split(",")[i].strip()))
     p1000.transfer(
         vol_to_add, source.wells('A2'), [
             destination.wells(x) for x in pos_to_add.top(offset)])
