@@ -36,6 +36,7 @@ example_csv = """
     B6,98.105
     """
 
+
 def run_custom_protocol(input_csv: FileInput=example_csv):
     offset = -30
     header = example_csv.split("\n")[0].split(",")
