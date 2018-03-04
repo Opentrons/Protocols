@@ -24,7 +24,8 @@ p1000 = instruments.Pipette(
     channels=1,
 )
 6
-example_csv = """LocationRack,DilutionVolume
+example_csv = """
+    LocationRack,DilutionVolume
     A2,84.078
     D5,111.1194032
     A4,94.117
@@ -42,9 +43,7 @@ def run_custom_protocol(input_csv: FileInput=example_csv):
     header = [x.strip() for x in input_lines[0].split(",")]
     vol_to_add = []
     pos_to_add = []
-    for line in example_csv.split("\n")[1:]:
-        if not line:
-            continue
+    for line in input_lines[1:]:
         for i, col in enumerate(header):
             if col == "DilutionVolume":
                 vol_to_add.append(float(line.split(",")[i].strip()))
