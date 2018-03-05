@@ -43,4 +43,5 @@ def run_custom_protocol(input_csv: FileInput=example_csv):
                 pos_to_add.append(str(line.split(",")[i].strip()))
     p1000.transfer(vol_to_add,
                    source.wells('A2'),
-                   [destination.wells(x) for x in pos_to_add.top(offset)])
+                   [destination.wells(x).top(offset) for x in pos_to_add]
+                   )

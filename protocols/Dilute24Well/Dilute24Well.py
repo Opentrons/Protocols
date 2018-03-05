@@ -49,6 +49,7 @@ def run_custom_protocol(input_csv: FileInput=example_csv):
                 vol_to_add.append(float(line.split(",")[i].strip()))
             if col == "LocationRack":
                 pos_to_add.append(str(line.split(",")[i].strip()))
-    p1000.transfer(
-        vol_to_add, source.wells('A2'), [
-            destination.wells(x) for x in pos_to_add.top(offset)])
+    p1000.transfer(vol_to_add,
+                   source.wells('A2'),
+                   [destination.wells(x).top(offset) for x in pos_to_add]
+                   )
