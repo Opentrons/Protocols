@@ -10,7 +10,7 @@ containers.create(
 
 tiprack = containers.load("tiprack-1000ul", "B3")
 destination = containers.load("FluidX_96_small", "B2")
-source = containers.load("trough-big", "D2")
+source = containers.load("trough-12row", "D2")
 trash = containers.load("point", 'C3')
 # Define the pipettes
 p1000 = instruments.Pipette(
