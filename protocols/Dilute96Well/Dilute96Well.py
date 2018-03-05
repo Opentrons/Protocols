@@ -1,8 +1,15 @@
 from otcustomizers import FileInput
 from opentrons import containers, instruments
 
-tiprack = containers.load("tiprack-1000", "B3")
-destination = containers.load("FluidX_24_9ml", "B2")
+containers.create(
+    'FluidX_96_small',                    # name of you container
+    grid=(8, 12),                    # specify amount of (columns, rows)
+    spacing=(9, 9),               # distances (mm) between each (column, row)
+    diameter=6,                     # diameter (mm) of each well on the plate
+    depth=20)
+
+tiprack = containers.load("tiprack-1000ul", "B3")
+destination = containers.load("FluidX_96_small", "B2")
 source = containers.load("trough-big", "D2")
 trash = containers.load("point", 'C3')
 # Define the pipettes
