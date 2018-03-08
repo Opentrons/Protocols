@@ -35,3 +35,5 @@ def run_custom_protocol(final_volume: float=200):
         new_tip='never')
 
     m300.drop_tip()
+
+run_custom_protocol()
