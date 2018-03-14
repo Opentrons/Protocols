@@ -1,14 +1,14 @@
-from opentrons import containers, instruments, robot
+from opentrons import labware, instruments, robot
 
 
-tiprack = containers.load('tiprack-200ul', '7')
-tiprack2 = containers.load('tiprack-200ul', '11')
+tiprack = labware.load('tiprack-200ul', '7')
+tiprack2 = labware.load('tiprack-200ul', '11')
 
 trash = robot.fixed_trash
 
-trough = containers.load('trough-12row', '8')
-plate = containers.load('96-PCR-flat', '9')
-tuberack = containers.load('tube-rack-2ml', '10')
+trough = labware.load('trough-12row', '8')
+plate = labware.load('96-PCR-flat', '9')
+tuberack = labware.load('tube-rack-2ml', '10')
 
 # Needs to have individual constructor
 m50 = instruments.Pipette(
