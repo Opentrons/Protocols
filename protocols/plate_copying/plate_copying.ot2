@@ -1,4 +1,4 @@
-from opentrons import containers, instruments
+from opentrons import labware, instruments
 
 # Be careful not to calibrate the leftmost containers ('A' slots)
 # too far to the left. The touch_tip action may make the head hit
@@ -21,7 +21,7 @@ dest_slots = [
 # when you have 96 well source + dest (384 needs 2x tipracks, 96 needs just 1x)
 tip_slots = ['10', '11']
 
-tip_racks = [containers.load('tiprack-200ul', slot) for slot in tip_slots]
+tip_racks = [labware.load('tiprack-200ul', slot) for slot in tip_slots]
 
 # TODO: customizable pipette vol
 p50multi = instruments.Pipette(
@@ -56,7 +56,7 @@ def run_custom_protocol(
 
     # Load containers
     all_dest_plates = [
-        containers.load(destination_container, slotName)
+        labware.load(destination_container, slotName)
         for slotName in dest_slots]
 
     source_plate = containers.load(source_container, 'C2')
