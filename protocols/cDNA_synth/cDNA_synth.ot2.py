@@ -1,24 +1,24 @@
-from opentrons import containers, instruments
+from opentrons import labware, instruments
 
 # tube rack holding reagents
-reagents = containers.load('tube-rack-2ml', '1')
+reagents = labware.load('tube-rack-2ml', '1')
 
 # 96 well plate
-cdna_plate = containers.load('96-PCR-flat', '2')
-qpcr_plate = containers.load('96-PCR-flat', '3')
-samples = containers.load('96-PCR-flat', '4')
+cdna_plate = labware.load('96-PCR-flat', '2')
+qpcr_plate = labware.load('96-PCR-flat', '3')
+samples = labware.load('96-PCR-flat', '4')
 
 # pcr strip for AffinityScript RT/ RNase Block enzyme mixture
-strip = containers.load('PCR-strip-tall', '5')
+strip = labware.load('PCR-strip-tall', '5')
 
 # tip rack for p50 pipette
-tip200_rack = containers.load('tiprack-200ul', '6')
-tip200_rack2 = containers.load('tiprack-200ul', '8')
-tip200_rack3 = containers.load('tiprack-200ul', '9')
+tip200_rack = labware.load('tiprack-200ul', '6')
+tip200_rack2 = labware.load('tiprack-200ul', '8')
+tip200_rack3 = labware.load('tiprack-200ul', '9')
 
-tip200_rack5 = containers.load('tiprack-200ul', '7')
-tip200_rack6 = containers.load('tiprack-200ul', '10')
-tip200_rack7 = containers.load('tiprack-200ul', '11')
+tip200_rack5 = labware.load('tiprack-200ul', '7')
+tip200_rack6 = labware.load('tiprack-200ul', '10')
+tip200_rack7 = labware.load('tiprack-200ul', '11')
 
 # p50 (5 - 50 uL) (single)
 p50single = instruments.Pipette(
