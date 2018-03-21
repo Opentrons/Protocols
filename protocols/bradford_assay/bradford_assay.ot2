@@ -37,13 +37,13 @@ p200.distribute(
     tuberack.wells('C2', 'D2', 'A3', 'B3'),
     plate.cols('3'))
 
-# fill rows 4 to 11 with 25 uL of dilutent each
+# fill columns 4 to 11 with 25 uL of dilutent each
 m50.distribute(
     25,
     trough['A1'],
     plate.cols('4', length=8))
 
-# dilute samples down all rows
+# dilute samples down all columns
 m50.pick_up_tip()
 
 m50.transfer(
