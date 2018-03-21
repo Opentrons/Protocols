@@ -1,20 +1,11 @@
 from opentrons import labware, instruments
 
-# Be careful not to calibrate the leftmost containers ('A' slots)
-# too far to the left. The touch_tip action may make the head hit
-# the leftmost limit switch.
-#
-# Also, you must calibrate carefully to the center well of each plate,
-# or the repeated touch_tip action may eventually knock off the tips.
+# Copy contents of one plate into another
 
 dest_slots = [
     '1',
     '2', '3', '4', '5', '6',
     '7', '8', '9']
-
-# B1 is not safe to use because of tip rack in D1.
-
-# Hood has no row 3
 
 
 # TODO: optimize so that you only use 1 tiprack and can use an extra container,
