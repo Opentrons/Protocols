@@ -23,6 +23,3 @@ def run_custom_protocol(number_of_tubes: int=24, transfer_volume: int=40):
         plate.wells('A1', length=number_of_tubes),
         new_tips='always'
     )
-
-
-run_custom_protocol(**{'number_of_tubes': 24, 'transfer_volume': 40})
