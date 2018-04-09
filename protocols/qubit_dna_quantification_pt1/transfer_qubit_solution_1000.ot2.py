@@ -1,4 +1,4 @@
-from opentrons import containers, instruments
+from opentrons import labware, instruments
 
 standard = False  # assign True if robot is needed to make standards
 # place standard tubes on new row if needed
@@ -6,26 +6,26 @@ standard = False  # assign True if robot is needed to make standards
 first_tip = 'A1'  # well location of the first tip
 # note that trash should be placed in A3
 
-# containers
-p1000rack = containers.load(
+# Labware
+p1000rack = labware.load(
     'tiprack-1000ul-chem',  # container name in opentrons system
     '11',  # slot of container
     'tiprack',  # name to remember calibrations
 )
 
-tubes = containers.load(
+tubes = labware.load(
     '96-deep-well',
     '4',
     'a2qubit_tubes',
 )
 
-tubes_overflow = containers.load(
+tubes_overflow = labware.load(
     '96-deep-well',
     '5',
     'b2qubit_tubes',
 )
 
-containers.create(
+labware.create(
     '15ml-short-tube',
     grid=(1, 1),
     spacing=(20, 20),
@@ -33,13 +33,13 @@ containers.create(
     depth=105,
 )
 
-solution = containers.load(
+solution = labware.load(
     '15ml-short-tube',
     '8',
     '15mltube',
 )
 
-standards = containers.load(
+standards = labware.load(
     '96-deep-well',
     '6',
     'b1p5tube',
