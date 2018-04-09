@@ -1,4 +1,4 @@
-# 96 Well Plate Dilution for start of reaction
+# Dilution for start of reaction
 
 ### Author
 [XChem](https://xchem.github.io/oxxchem/)
@@ -10,7 +10,8 @@
 	* Dilution
 
 ## Description
-With this protocol your robot can fill a set amount of solvent into a 24 well trough. Input data is added using a CSV File.
+With this protocol your robot can fill a set amount of solvent into either a 24 well Plate
+or a custom 96 well plate. Input data is added using a CSV File.
 
 ### Time Estimate
 
