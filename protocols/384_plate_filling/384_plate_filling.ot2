@@ -20,6 +20,3 @@ def run_custom_protocol(well_volume: float=30.0):
         alternating_wells.append(column.wells('B', length=8, step=2))
 
     m200.distribute(well_volume, trough.wells('A1'), alternating_wells)
-
-
-run_custom_protocol(**{'well_volume': 30.0})
