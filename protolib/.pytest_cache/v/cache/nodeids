@@ -1,0 +1,9 @@
+[
+  "tests/test_traverse.py::test_traverse",
+  "tests/test_traverse.py::test_tree",
+  "tests/test_traverse.py::test_protocol_ignore",
+  "tests/test_traverse.py::test_protocol_feature_flag",
+  "tests/test_traverse.py::test_embedded_app_flag",
+  "tests/test_traverse.py::test_missing_py",
+  "tests/test_traverse.py::test_missing_md"
+]
