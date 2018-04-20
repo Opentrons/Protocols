@@ -1,4 +1,4 @@
-from opentrons import labware, instruments, robot
+from opentrons import labware, instruments
 
 plate1 = labware.load('96-deep-well', '11', 'plate1')
 plate2 = labware.load('384-plate', '9', 'plate2')
