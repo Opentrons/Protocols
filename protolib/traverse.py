@@ -15,7 +15,8 @@ from protolib.parse import (
 
 file_handlers = {
     'description': '*.md',
-    'protocol': '*.py'
+    'OT 1 protocol': '*ot1.py',
+    'OT 2 protocol': '*ot2.py'
 }
 
 
@@ -47,15 +48,24 @@ def scan_for_protocols(path):
 
 
 def get_errors(file_data):
-    return [
-        'Found {} {} files required 1'.format(len(files), field)
-        for field, files in file_data.items()
-        if len(files) != 1
-    ]
+    protocol_found = False
+    msg = []
+    for field, files in file_data.items():
+        if not protocol_found:
+            if field != 'description':
+                protocol_found = True
+                field = 'protocol'
+            if len(files) != 1:
+                msg.append(
+                    'Found {} {} files required 1'.format(len(files), field))
+
+    return msg
 
 
 def get_status(file_data):
+
     errors = get_errors(file_data)
+
     if not sum(file_data.values(), []):
         return 'empty'
     return 'error' if errors else 'ok'
@@ -81,7 +91,12 @@ def get_protocol_pyfile(protocol: dict):
     """Returns path to python entry script for a protocl dir.
     Ignores python files that start with "test_"
     """
-    pyfiles = protocol['detected-files']['protocol']
+    pyfiles = protocol['detected-files'].get('OT 1 protocol')
+
+    if not pyfiles:
+
+        pyfiles = protocol['detected-files'].get('OT 2 protocol')
+
     pyfiles = filter(lambda f: not f.startswith('test_'), pyfiles)
     pyfiles = list(pyfiles)
     if not pyfiles:
@@ -105,6 +120,7 @@ def scan(root):
     Recursively scan through root returning the list of protocol
     dictionary items.
     """
+
     protocols = [
         {
             **protocol,
@@ -114,7 +130,8 @@ def scan(root):
         for protocol in get_valid_protocols(root)
         if protocol['status'] != 'empty' and
         # Skipping root dir
-        protocol['slug'] != '.' and not protocol['flags']['ignore']
+        protocol['slug'] != '.' and not protocol['flags']['ignore'] and
+        protocol['flags']['embedded-app'] is False
     ]
 
     return protocols
