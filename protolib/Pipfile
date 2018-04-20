@@ -1,0 +1,25 @@
+[[source]]
+
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+
+[packages]
+
+markdown = "*"
+"beautifulsoup4" = "==4.5.1"
+faker = "*"
+opentrons = "*"
+python-slugify = "==1.2.1"
+pytest = "*"
+"92768c6" = {path = ".\\..\\otcustomizers"}
+
+
+[dev-packages]
+
+
+
+[requires]
+
+python_version = "3.6"

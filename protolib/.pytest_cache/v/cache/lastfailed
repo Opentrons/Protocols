@@ -1,0 +1,5 @@
+{
+  "tests/test_cli.py::test_build_protocol_library": true,
+  "tests/test_traverse.py::test_missing_md": true,
+  "tests/test_traverse.py::test_missing_py": true
+}
