@@ -1,0 +1,4 @@
+{
+  "tests/test_traverse.py::test_missing_md": true,
+  "tests/test_traverse.py::test_missing_py": true
+}
