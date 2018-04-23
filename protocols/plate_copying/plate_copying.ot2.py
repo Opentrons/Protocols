@@ -50,7 +50,7 @@ def run_custom_protocol(
         labware.load(destination_container, slotName)
         for slotName in dest_slots]
 
-    source_plate = containers.load(source_container, 'C2')
+    source_plate = labware.load(source_container, 'C2')
 
     if ('384-plate' in [source_container, destination_container]
             and source_container != destination_container):
