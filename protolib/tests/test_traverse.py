@@ -82,7 +82,7 @@ def test_protocol_ignore():
             'slug': 'protocol3',
             'path': os.path.join(data_path, 'protocol3'),
             'detected-files': {
-                'OT 1 protocol': [],
+                'OT 1 protocol': ['protocol.ot1.py'],
                 'OT 2 protocol': ['protocol.ot2.py'],
                 'description': ['README.md'],
             },
