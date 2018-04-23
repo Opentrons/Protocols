@@ -130,8 +130,7 @@ def scan(root):
         for protocol in get_valid_protocols(root)
         if protocol['status'] != 'empty' and
         # Skipping root dir
-        protocol['slug'] != '.' and not protocol['flags']['ignore'] and
-        protocol['flags']['embedded-app'] is False
+        protocol['slug'] != '.' and not protocol['flags']['ignore']
     ]
 
     return protocols
