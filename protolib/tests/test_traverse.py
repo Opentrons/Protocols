@@ -190,6 +190,26 @@ def test_missing_py():
             },
             'errors': ['Found 0 protocol files required 1'],
             'markdown': {}
+        },
+        {
+            'slug': 'protocolApp',
+            'path': os.path.join(data_path, 'protocolApp'),
+            'flags': {
+                'ignore': False,
+                'feature': False,
+                'skip-tests': False,
+                'embedded-app': 'http://blah.aws.s3/something/app.html'
+            },
+            'files': {'description': 'README.md',
+                      'OT 1 protocol': None,
+                      'OT 2 protocol': None},
+            'detected-files': {
+                'description': ['README.md'],
+                'OT 1 protocol': [],
+                'OT 2 protocol': []},
+            'status': 'error',
+            'errors': ['Found 0 protocol files required 1'],
+            'markdown': {}
         }
     ]
 
