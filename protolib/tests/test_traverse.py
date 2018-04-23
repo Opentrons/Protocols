@@ -9,7 +9,7 @@ data_path = os.path.join(os.path.dirname(__file__), 'data/library')
 def test_traverse():
     res = [t
            for t in traverse.scan(data_path)
-           if t['status'] == 'ok' and not t['flags']['ignore']]
+           if t['slug'] == 'protocol1']
 
     del res[0]['containers']
     del res[0]['instruments']
@@ -220,8 +220,7 @@ def test_missing_md():
     res = [
         t for t in
         traverse.scan(data_path)
-        if (t['status'] == 'error' and
-            t['errors'][0] == 'Found 0 description files required 1')
+        if (t['slug'] == 'category1/protocol2')  # this is missing md fixture
     ]
     del res[0]['containers']
     del res[0]['instruments']
