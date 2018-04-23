@@ -63,7 +63,6 @@ def get_errors(file_data):
     ]
 
     if sum(protocol_file_counts) == 0:
-        print(protocol_file_counts, file_data)
         msg.append('Found 0 protocol files required at least 1')
 
     else:
