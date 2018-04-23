@@ -13,10 +13,13 @@ from protolib.parse import (
 # log = logging.getLogger(__name__)
 
 
+OT_1_PROTOCOL = 'OT 1 protocol'
+OT_2_PROTOCOL = 'OT 2 protocol'
+
 file_handlers = {
     'description': '*.md',
-    'OT 1 protocol': '*ot1.py',
-    'OT 2 protocol': '*ot2.py'
+    OT_1_PROTOCOL: '*ot1.py',
+    OT_2_PROTOCOL: '*ot2.py'
 }
 
 
@@ -48,16 +51,33 @@ def scan_for_protocols(path):
 
 
 def get_errors(file_data):
-    protocol_found = False
     msg = []
-    for field, files in file_data.items():
-        if not protocol_found:
-            if field != 'description':
-                protocol_found = True
-                field = 'protocol'
-            if len(files) != 1:
+    protocol_keys = [
+        OT_1_PROTOCOL,
+        OT_2_PROTOCOL
+    ]
+
+    protocol_file_counts = [
+        len(file_data.get(key, []))
+        for key in protocol_keys
+    ]
+
+    if sum(protocol_file_counts) == 0:
+        print(protocol_file_counts, file_data)
+        msg.append('Found 0 protocol files required at least 1')
+
+    else:
+        for key, num_files in zip(protocol_keys, protocol_file_counts):
+            if num_files > 1:
                 msg.append(
-                    'Found {} {} files required 1'.format(len(files), field))
+                    'Found {} {} files required no more than 1'.format(
+                        num_files, key))
+
+    description_files = len(file_data.get('description', []))
+    if description_files != 1:
+        msg.append(
+            'Found {} description files required 1'.format(
+                description_files))
 
     return msg
 

@@ -166,7 +166,7 @@ def test_missing_py():
         t for t in
         traverse.scan(data_path)
         if (t['status'] == 'error' and
-            t['errors'] == ['Found 0 protocol files required 1'])
+            t['errors'] == ['Found 0 protocol files required at least 1'])
     ]
 
     expected = [
@@ -188,7 +188,7 @@ def test_missing_py():
                 'feature': False,
                 'embedded-app': False
             },
-            'errors': ['Found 0 protocol files required 1'],
+            'errors': ['Found 0 protocol files required at least 1'],
             'markdown': {}
         },
         {
@@ -208,7 +208,7 @@ def test_missing_py():
                 'OT 1 protocol': [],
                 'OT 2 protocol': []},
             'status': 'error',
-            'errors': ['Found 0 protocol files required 1'],
+            'errors': ['Found 0 protocol files required at least 1'],
             'markdown': {}
         }
     ]
