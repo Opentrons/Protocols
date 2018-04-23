@@ -13,9 +13,13 @@ from protolib.parse import (
 # log = logging.getLogger(__name__)
 
 
+OT_1_PROTOCOL = 'OT 1 protocol'
+OT_2_PROTOCOL = 'OT 2 protocol'
+
 file_handlers = {
     'description': '*.md',
-    'protocol': '*.ot1.py'
+    OT_1_PROTOCOL: '*ot1.py',
+    OT_2_PROTOCOL: '*ot2.py'
 }
 
 
@@ -47,15 +51,40 @@ def scan_for_protocols(path):
 
 
 def get_errors(file_data):
-    return [
-        'Found {} {} files required 1'.format(len(files), field)
-        for field, files in file_data.items()
-        if len(files) != 1
+    msg = []
+    protocol_keys = [
+        OT_1_PROTOCOL,
+        OT_2_PROTOCOL
     ]
+
+    protocol_file_counts = [
+        len(file_data.get(key, []))
+        for key in protocol_keys
+    ]
+
+    if sum(protocol_file_counts) == 0:
+        msg.append('Found 0 protocol files required at least 1')
+
+    else:
+        for key, num_files in zip(protocol_keys, protocol_file_counts):
+            if num_files > 1:
+                msg.append(
+                    'Found {} {} files required no more than 1'.format(
+                        num_files, key))
+
+    description_files = len(file_data.get('description', []))
+    if description_files != 1:
+        msg.append(
+            'Found {} description files required 1'.format(
+                description_files))
+
+    return msg
 
 
 def get_status(file_data):
+
     errors = get_errors(file_data)
+
     if not sum(file_data.values(), []):
         return 'empty'
     return 'error' if errors else 'ok'
@@ -81,7 +110,12 @@ def get_protocol_pyfile(protocol: dict):
     """Returns path to python entry script for a protocl dir.
     Ignores python files that start with "test_"
     """
-    pyfiles = protocol['detected-files']['protocol']
+    pyfiles = protocol['detected-files'].get('OT 1 protocol')
+
+    if not pyfiles:
+
+        pyfiles = protocol['detected-files'].get('OT 2 protocol')
+
     pyfiles = filter(lambda f: not f.startswith('test_'), pyfiles)
     pyfiles = list(pyfiles)
     if not pyfiles:
@@ -105,6 +139,7 @@ def scan(root):
     Recursively scan through root returning the list of protocol
     dictionary items.
     """
+
     protocols = [
         {
             **protocol,

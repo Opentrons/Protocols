@@ -17,7 +17,7 @@ script:
   - python -c 'import opentrons; print(opentrons.__version__)'
   # lint all code
   - flake8 .
-  - pytest protolib/
+  - pytest protolib/ -vv
   # - ./scripts/smoke-test.sh  # skip smoke testing, hope protolib catches it
   #
   # use protolib to build zipped .json for S3
