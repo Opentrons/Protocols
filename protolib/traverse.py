@@ -9,15 +9,13 @@ from protolib.parse import (
     markdown as markdown_parser
 )
 
-
-# log = logging.getLogger(__name__)
-
-
+# file handler keys
 OT_1_PROTOCOL = 'OT 1 protocol'
 OT_2_PROTOCOL = 'OT 2 protocol'
+DESCRIPTION = 'description'
 
 file_handlers = {
-    'description': '*.md',
+    DESCRIPTION: '*.md',
     OT_1_PROTOCOL: '*ot1.py',
     OT_2_PROTOCOL: '*ot2.py'
 }
@@ -72,7 +70,7 @@ def get_errors(file_data):
                     'Found {} {} files required no more than 1'.format(
                         num_files, key))
 
-    description_files = len(file_data.get('description', []))
+    description_files = len(file_data.get(DESCRIPTION, []))
     if description_files != 1:
         msg.append(
             'Found {} description files required 1'.format(
@@ -110,11 +108,11 @@ def get_protocol_pyfile(protocol: dict):
     """Returns path to python entry script for a protocl dir.
     Ignores python files that start with "test_"
     """
-    pyfiles = protocol['detected-files'].get('OT 1 protocol')
+    pyfiles = protocol['detected-files'].get(OT_1_PROTOCOL)
 
     if not pyfiles:
 
-        pyfiles = protocol['detected-files'].get('OT 2 protocol')
+        pyfiles = protocol['detected-files'].get(OT_2_PROTOCOL)
 
     pyfiles = filter(lambda f: not f.startswith('test_'), pyfiles)
     pyfiles = list(pyfiles)
@@ -127,10 +125,10 @@ def get_protocol_mdfile(protocol: dict):
     """Returns path to python entry script for a protocl dir.
     Ignores python files that start with "test_"
     """
-    mdfiles = protocol['detected-files']['description']
+    mdfiles = protocol['detected-files'][DESCRIPTION]
     if not mdfiles:
         return
-    mdfile = protocol['detected-files']['description'][0]
+    mdfile = protocol['detected-files'][DESCRIPTION][0]
     return os.path.join(protocol['path'], mdfile)
 
 
