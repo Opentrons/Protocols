@@ -22,9 +22,6 @@ tip200_rack = containers.load('tiprack-200ul', '1')
 tip200_rack2 = containers.load('tiprack-200ul', '4')
 tip200_rack3 = containers.load('tiprack-200ul', '7')
 
-# trash to dispose of tips
-trash = containers.load('fixed-trash', 12, 'trash')
-
 # p200 (20 - 200 uL) (single)
 p200single = instruments.P300_Single(
     mount='right',
