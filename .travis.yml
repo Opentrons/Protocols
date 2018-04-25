@@ -17,7 +17,7 @@ script:
   - python -c 'import opentrons; print(opentrons.__version__)'
   # lint all code
   - flake8 .
-  - pytest protolib/
+  - pytest protolib/ -vv
   - python ./scripts/bad-README-subcategory.py # make sure subcategories don't have 2 spaces
   # - ./scripts/smoke-test.sh  # skip smoke testing, hope protolib catches it
   #
