@@ -1,21 +1,28 @@
 #!/usr/bin/env bash
 
-# Clean smoketest dir
-rm -rf smoketest/*.py
+# NOTE Ian 2018-04-25: this is meant to be run manually to check OT2 protocols.
+# For now, the user is responsible for installing the appropriate
+# python opentrons library for OT2 protocols.
+# 'otcustomizers' also must be installed.
 
-echo "Ignoring:"
-find . -name '*.ignore.py'
+# Clean smoketest dir
+echo "Clearing smoketest/ dir"
+rm -rf smoketest/
+mkdir smoketest
+
+python -c 'import opentrons; print("Smoke testing *.ot2.py protocols. Opentrons version:", opentrons.__version__)'
 
 echo "*****"
 
-# copy all non-ignored .py files to smoketest/
-find . -name '*.py' | grep -Ev '.*\.ignore\.py|.*/scripts/' | sort -f | while read filename; do
+# copy all *.ot2.py files to smoketest/
+find . -name '*.ot2.py' | sort -f | while read filename; do
     cp $filename smoketest/
 done
 
-find smoketest/ -name '*.py' | sort -f | while read pyfile; do
+
+find smoketest/ -name '*.ot2.py' | sort -f | while read pyfile; do
   if grep -Eq "^def run_custom_protocol\(" $pyfile; then
-    echo "Processing CUSTOMIZABLE protocol '$pyfile'"
+    echo "Processing CUSTOMIZABLE protocol '$pyfile' with default arguments"
     # add run_custom_protocol() call to end of all customizable protocols
     echo 'run_custom_protocol()' >> $pyfile
   else

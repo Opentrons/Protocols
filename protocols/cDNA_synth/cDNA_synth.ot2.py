@@ -1,3 +1,4 @@
+import os
 from opentrons import labware, instruments
 
 # tube rack holding reagents
@@ -70,7 +71,8 @@ p50multi.transfer(1, strip.cols(0), cdna_plate.cols(), new_tip='once')
 p50multi.transfer(1, samples.cols(), cdna_plate.cols(), new_tip='always')
 
 #  HOLD for 1.5hr for cDNA Synthesis
-p50single.delay(minutes=90)
+if not os.environ.get('OT_TESTING'):
+    p50single.delay(minutes=90)
 
 # Step7: Transfer 1 μl  of cDNA to another 96 well plate using multichannel
 # such well A1 to A1, B1 to B1. (QPCR Plate)
