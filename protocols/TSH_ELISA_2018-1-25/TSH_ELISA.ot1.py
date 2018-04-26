@@ -1,7 +1,6 @@
 from opentrons import containers, instruments, robot
 import math
 
-robot.reset()
 """
 Workflow description: TSH ELISA Assay Procedure (see attached pdf)
 Robot: OT-One S Pro
@@ -33,10 +32,6 @@ Column D
 """
 samples = containers.load('tube-rack-2ml', 'D1')
 liquid_trash = containers.load('trash-box', 'D2')
-"""
-Column E
-"""
-
 
 """
 Instruments
