@@ -10,6 +10,21 @@
 	* DNA
 
 ## Description
+Uses AffinityScript's kit to convert RNA to cDNA. Once the cDNA is prepared,
+then a QPCR can be run for sequencing.
+
+
+### Time Estimate
+
+### Robot
+* [OT PRO](https://opentrons.com/ot-one-pro)
+* [OT Standard](https://opentrons.com/ot-one-standard)
+
+### Modules
+
+### Reagents
+
+## Process
 1. Transfer 5ul of nuclease free water from 2ml tube rack to all wells
 in 96 well plate (same tip) -- this is cDNA synthesis plate.
 
@@ -38,20 +53,6 @@ to 96 well plate (qPCR plate)
 
 9. Transfer 2.5 μl of Primer mix from 2ml tube rack to all wells in 96 well plate
 (qPCR plate)
-
-
-### Time Estimate
-
-### Robot
-* [OT PRO](https://opentrons.com/ot-one-pro)
-* [OT Standard](https://opentrons.com/ot-one-standard)
-
-### Modules
-
-### Reagents
-
-## Process
-TBD
 
 ### Additional Notes
 
