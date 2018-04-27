@@ -1,32 +1,24 @@
-from opentrons import containers, instruments
+from opentrons import labware, instruments
 
 # tube rack holding reagents
-reagents = containers.load('tube-rack-2ml', '4')
-dna = containers.load('tube-rack-2ml', '5')
+reagents = labware.load('tube-rack-2ml', '4')
+dna = labware.load('tube-rack-2ml', '5')
 
 # 96 well plate
-qpcr_plate = containers.load('96-PCR-tall', '6')
+qpcr_plate = labware.load('96-PCR-tall', '6')
 
 # tip rack for p50 pipette and p20 pipette
-tip200_rack = containers.load('tiprack-200ul', '1')
-tip200_rack2 = containers.load('tiprack-200ul', '2')
+tip200_rack = labware.load('tiprack-200ul', '1')
+tip200_rack2 = labware.load('tiprack-200ul', '2')
 
-# p20 (2 - 20 uL) (single)
-p20single = instruments.Pipette(
+# p10 (1 - 10 uL) (single)
+p20single = instruments.P10_Single(
     mount='right',
-    name='p20single',
-    max_volume=20,
-    min_volume=2,
-    channels=1,
     tip_racks=[tip200_rack])
 
 # p50 (5 - 50 uL) (multi)
-p50multi = instruments.Pipette(
+p50multi = instruments.P50_Multi(
     mount='left',
-    name='p50multi',
-    max_volume=50,
-    min_volume=5,
-    channels=8,
     tip_racks=[tip200_rack2])
 
 water = reagents.wells('A1')
