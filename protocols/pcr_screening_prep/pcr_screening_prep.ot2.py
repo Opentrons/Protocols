@@ -1,4 +1,4 @@
-from opentrons import containers, instruments
+from opentrons import labware, instruments
 
 # primer set 1 and 2 or 3 and 4:
 # for primers 1 and 2, set to True, for primers 3 and 4, set to False
@@ -15,8 +15,8 @@ mixvol = 10  # can change here
 tempvol = 2  # can change here
 
 # source of reagents
-reagents = containers.load('tube-rack-2ml', '3')
-templates = containers.load('96-PCR-flat', '4')
+reagents = labware.load('tube-rack-2ml', '3')
+templates = labware.load('96-PCR-flat', '4')
 
 # ingredient locations
 water_loc = reagents.wells('A1')  # can change here
@@ -28,28 +28,22 @@ premix_loc = reagents.wells('B2')  # can change here
 template_loc = templates.rows(0)  # can change here
 
 # plate(s) setup will happen in
-plate1 = containers.load('96-PCR-flat', '5')
-plate2 = containers.load('96-PCR-flat', '6')
+plate1 = labware.load('96-PCR-flat', '5')
+plate2 = labware.load('96-PCR-flat', '6')
 
 # tip rack for p50 pipette
-m200rack = containers.load('tiprack-200ul', '1')
+m200rack = labware.load('tiprack-200ul', '1')
 
 # tip rack for p10 pipette
-m10rack = containers.load('tiprack-10ul', '2')
+m10rack = labware.load('tiprack-10ul', '2')
 
 p10multi = instruments.P10_Multi(
     tip_racks=[m10rack],
-    mount='right'
-)
+    mount='right')
 
-p50single = instruments.Pipette(
-    name='p50single',
+p50single = instruments.P50_Single(
     tip_racks=[m200rack],
-    min_volume=5,
-    max_volume=50,
-    mount='left',
-    channels=1
-)
+    mount='left')
 
 # We need a protocol to set up for PCR screening of a large number of colonies
 # in 96 well PCR plates.
