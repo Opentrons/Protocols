@@ -1,41 +1,33 @@
-from opentrons import containers, instruments
+from opentrons import labware, instruments
 
 # number of samples
 num_samples = 94  # change here
 
 # 96 well plate 1
-plate1 = containers.load('96-PCR-flat', '4')
+plate1 = labware.load('96-PCR-flat', '4')
 
 # 96 well plate 2
-plate2 = containers.load('96-PCR-flat', '7')
+plate2 = labware.load('96-PCR-flat', '7')
 
 # tip rack for p300 pipette and p20 pipette
-tip200_rack = containers.load('tiprack-200ul', '1')
-tip200_rack2 = containers.load('tiprack-200ul', '2')
-tip200_rack3 = containers.load('tiprack-200ul', '3')
+tip200_rack = labware.load('tiprack-200ul', '1')
+tip200_rack2 = labware.load('tiprack-200ul', '2')
+tip200_rack3 = labware.load('tiprack-200ul', '3')
 
 # trough with solution A and B
-trough = containers.load('trough-12row', '5')
+trough = labware.load('trough-12row', '5')
 
 # tuberack with neg and pos controls
-tuberack = containers.load('tube-rack-2ml', '6')
+tuberack = labware.load('tube-rack-2ml', '6')
 
-# p20 (1 - 20 uL) (single)
-p20single = instruments.Pipette(
+# p10 (1 - 10 uL) (single)
+p10single = instruments.P10_Single(
     mount='right',
-    name='p20single',
-    max_volume=20,
-    min_volume=2,
-    channels=1,
     tip_racks=[tip200_rack3, tip200_rack2])
 
 # p100 (10 - 100 uL) (multi)
-p100multi = instruments.Pipette(
+p50multi = instruments.P50_Multi(
     mount='left',
-    name='p100multi',
-    max_volume=100,
-    min_volume=10,
-    channels=8,
     tip_racks=[tip200_rack])
 
 # locations of solutions in trough
@@ -60,14 +52,14 @@ plate2wells = [well for well in plate2.wells(0, to=num_samples)]
 
 # Transfer 100 uL of Solution A to all wells of plate(1) with samples
 # (same tips), mix before each transfer
-p100multi.transfer(100, solutionA, plate1cols, mix_before=(3, 100))
+p50multi.transfer(100, solutionA, plate1cols, mix_before=(3, 100))
 
 # Transfer 18 uL of solution B to each well that will hold
 # samples + solution A and Solution B of a new 96 well plate (2)
-p100multi.transfer(18, solutionB, plate2cols)
+p50multi.transfer(18, solutionB, plate2cols)
 
 # Transfer 2 uL from original plate to 18 uL in plate 2 and mix
-p20single.transfer(
+p10single.transfer(
     2,
     plate1wells,
     plate2wells,
@@ -76,5 +68,5 @@ p20single.transfer(
     new_tip='always')
 
 # Transfer 2 uL of + and - control tubes to separate wells of 96 well plate (2)
-p20single.transfer(2, neg_control, neg_dest)
-p20single.transfer(2, pos_control, pos_dest)
+p10single.transfer(2, neg_control, neg_dest)
+p10single.transfer(2, pos_control, pos_dest)
