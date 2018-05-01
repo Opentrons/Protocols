@@ -127,7 +127,7 @@ def run_custom_protocol(number_of_samples: int=4,
            .aspirate(aspirate_volume) \
            .dispense(
                aspirate_volume+gap,
-               (tube_container(i)[  (i)].bottom(5))) \
+               (tube_container(i)[(i)].bottom(5))) \
            .drop_tip()
 
     if standard:  # if robot is needed to make standards
