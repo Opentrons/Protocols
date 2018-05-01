@@ -74,8 +74,8 @@ def run_custom_protocol(plate_size: int=96, number_of_plates: int=4):
         for plate in plates:
             alternating_cols = []
             for col in plate.cols():
-                alternating_rows.append(col.wells('A', length=8, step=2))
-                alternating_rows.append(col.wells('B', length=8, step=2))
+                alternating_cols.append(col.wells('A', length=8, step=2))
+                alternating_cols.append(col.wells('B', length=8, step=2))
 
             p200.transfer(
                 50,
