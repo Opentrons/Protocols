@@ -82,6 +82,3 @@ def run_custom_protocol(plate_size: int=96, number_of_plates: int=4):
                 solution_basin,
                 alternating_cols,
                 mix_before=(3, 100))
-
-
-run_custom_protocol(**{'plate_size': 96, 'number_of_plates': 4})
