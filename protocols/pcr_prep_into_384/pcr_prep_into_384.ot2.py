@@ -1,4 +1,4 @@
-from opentrons import labware, containers
+from opentrons import labware, instruments
 
 PCR_plate = labware.load('384-plate', '7')
 sample_plate = labware.load('96-PCR-flat', '9')
