@@ -1,6 +1,3 @@
-#
-#
-#
 from opentrons import labware, containers
 
 PCR_plate = labware.load('384-plate', '7')
