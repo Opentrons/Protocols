@@ -110,10 +110,6 @@ def get_protocol_pyfile(protocol: dict):
     """
     pyfiles = protocol['detected-files'].get(OT_1_PROTOCOL)
 
-    if not pyfiles:
-
-        pyfiles = protocol['detected-files'].get(OT_2_PROTOCOL)
-
     pyfiles = filter(lambda f: not f.startswith('test_'), pyfiles)
     pyfiles = list(pyfiles)
     if not pyfiles:
