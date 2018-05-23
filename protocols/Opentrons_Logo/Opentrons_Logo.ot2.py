@@ -12,12 +12,12 @@ def run_custom_protocol(pipette_type: StringSelection(
     dye_labware_type: StringSelection(
         'trough-12row', 'tube-rack-2ml')='trough-12row'):
     if pipette_type == 'p300-Single':
-        tiprack = labware.load('GEB-tiprack-300', '1')
+        tiprack = labware.load('tiprack-200ul', '1')
         pipette = instruments.P300_Single(
             mount='right',
             tip_racks=[tiprack])
     elif pipette_type == 'p50-Single':
-        tiprack = labware.load('GEB-tiprack-300', '1')
+        tiprack = labware.load('tiprack-200ul', '1')
         pipette = instruments.P50_Single(
             mount='right',
             tip_racks=[tiprack])
