@@ -19,6 +19,7 @@ def run_custom_protocol(well_volume: float=1.0, pipette_type: StringSelection(
         chan = 8
     vol = int(pip_name[0][1::])
     pipette = instruments.Pipette(
+        axis='b',
         max_volume=vol,
         tip_racks=[tiprack],
         channels=chan,
