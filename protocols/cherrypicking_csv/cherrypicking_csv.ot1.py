@@ -18,7 +18,7 @@ def run_custom_protocol(
         pipette_axis: StringSelection(
             'B (left side)', 'A (right side)')='B (left side)',
         pipette_model: StringSelection(
-            'p200', 'p100', 'p50', 'p20', 'p10', 'p1000')='p200',
+            'p300', 'p50', 'p10', 'p1000')='p300',
         source_plate_type: StringSelection('96-flat', '384-plate')='96-flat',
         destination_plate_type: StringSelection(
             '96-flat', '384-plate')='96-flat',
