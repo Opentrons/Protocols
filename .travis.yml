@@ -24,6 +24,8 @@ script:
   # use protolib to build zipped .json for S3
   - python -m protolib protocols/ releases/
   - ls -la releases/
+  # WIP. For now, just make sure this logs without errors in CI.
+  - make install parse-ot1 parse-ot2
 
 # Deploy the build version in an S3 bucket
 deploy:
