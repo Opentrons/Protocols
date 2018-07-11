@@ -1,0 +1,38 @@
+# Drug Mixing and Transferring
+
+### Author
+[Opentrons](https://opentrons.com/)
+
+### Partner
+[Imperial College]
+
+## Categories
+* Basic Pipetting
+	* Plate Consolidation
+
+
+## Description
+This protocol allows you to add different combination of compounds from several 96-well plate to each well of a 24-well plate for mixing using a single-channel pipette. Each of these 24 wells will then be transferred to a clean 24-well plate. The compound source information and target locations are defined in a CSV file.
+
+### Time Estimate
+
+### Robot
+* [OT PRO](https://opentrons.com/ot-one-pro)
+* [OT Standard](https://opentrons.com/ot-one-standard)  
+* [OT Hood](https://opentrons.com/ot-one-hood)
+
+## Process
+1. Upload a CSV file containing information of compound source and target.
+2. Download the protocol for the appropriate robot.
+
+
+### Additional Notes
+CSV fileds breakdown:
+Compound: name of compound
+Plate: the plate in which the compound is stored
+Well: the well of the plate in which the compound is stored
+A1, B1 ,,,, D6: volume of which the compound is to be tranferred to each individual target well A1, B1 ,,,, D6
+
+###### Internal
+fBpgkSb3
+1034
