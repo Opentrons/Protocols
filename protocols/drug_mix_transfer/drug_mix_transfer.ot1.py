@@ -1,7 +1,7 @@
-from opentrons import robot, containers, instruments
+from opentrons import containers, instruments
 from otcustomizers import FileInput
 
-target_plate = containers.load('24-well-plate','C3')
+target_plate = containers.load('24-well-plate', 'C3')
 mix_plate = containers.load('24-well-plate', 'B3')
 comp_plate_1 = containers.load('96-deep-well', 'A2')
 comp_plate_2 = containers.load('96-deep-well', 'B2')
@@ -39,12 +39,12 @@ def get_csv_content(csv_string):
     headers = csv_list[0:27]
 
     for i in range(1, int(len(csv_list)/27)):
-        for j in range(0,len(headers)):
+        for j in range(0, len(headers)):
             if headers[j] in content:
                 pass
             else:
-                content[headers[j]] =[]
-            content[headers[j]].append(csv_list[i*27+j])        
+                content[headers[j]] = []
+            content[headers[j]].append(csv_list[i*27+j])
 
     new_dict = {}
     for i in range(3, 27):
@@ -93,6 +93,3 @@ def run_custom_protocol(volumes_csv: FileInput=volumes_csv):
 
 
 run_custom_protocol()
-
-for c in robot.commands():
-	print(c)
