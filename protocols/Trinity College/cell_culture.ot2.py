@@ -1,4 +1,4 @@
-from opentrons import labware, instruments, robot
+from opentrons import labware, instruments
 
 trough = labware.load('trough-12row', 10)
 liquid_waste = labware.load('trough-12row', 6)
@@ -75,4 +75,3 @@ def run_custom_protocol(
 
     reverse_pipette(m300, 100, trough['A3'], target_plate.cols(),
                     liquid_waste[0])
-
