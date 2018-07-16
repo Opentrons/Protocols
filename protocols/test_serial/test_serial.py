@@ -72,7 +72,3 @@ def run_custom_protocol(
     pipette.drop_tip()
 
 
-run_custom_protocol()
-
-for c in robot.commands():
-    print(c)
