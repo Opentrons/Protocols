@@ -13,11 +13,15 @@ tiprack = labware.load('tiprack-200ul', 1)
 def run_custom_protocol(
     pipette_type: StringSelection(
         'p300-Single', 'p300-Multi', 'p50-Single', 'p50-Multi')='p300-Multi',
-    dilution_factor: float=1.5,
-    num_of_dilutions: int=10,
-    final_volume: float=200.0,
+    # dilution_factor: float=1.5,
+    # num_of_dilutions: int=10,
+    # final_volume: float=200.0,
     tip_reuse_strategy: StringSelection(
         'reuse one tip', 'new tip each time')='reuse one tip'):
+
+    dilution_factor = 1.5
+    num_of_dilutions = 10
+    final_volume = 200.0
 
     pip_name = pipette_type.split('-')
     print(pip_name[1])
