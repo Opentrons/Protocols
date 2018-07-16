@@ -19,7 +19,8 @@ def run_custom_protocol(
     tip_reuse_strategy: StringSelection(
         'reuse one tip', 'new tip each time')='reuse one tip'):
 
-    # pip_name = pipette_type.split('-')
+    pip_name = pipette_type.split('-')
+    print(pip_name[1])
 
     if pipette_type == 'p300-Single':
         pipette = instruments.P300_Single(
