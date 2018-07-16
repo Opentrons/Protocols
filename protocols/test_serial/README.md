@@ -21,6 +21,10 @@ This protocol allows you to add different combination of compounds from several 
 * [OT Standard](https://opentrons.com/ot-one-standard)  
 * [OT Hood](https://opentrons.com/ot-one-hood)
 
+### Modules
+
+### Reagents
+
 ## Process
 1. Upload a CSV file containing information of compound source and target.
 2. Download the protocol for the appropriate robot.
