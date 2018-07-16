@@ -1,4 +1,4 @@
-from opentrons import labware, instruments, robot
+from opentrons import labware, instruments
 from otcustomizers import StringSelection
 
 trough = labware.load('trough-12row', 2, 'trough')
@@ -70,5 +70,3 @@ def run_custom_protocol(
         new_tip=new_tip)
 
     pipette.drop_tip()
-
-
