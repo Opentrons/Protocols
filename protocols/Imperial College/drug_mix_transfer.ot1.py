@@ -1,22 +1,26 @@
-from opentrons import labware, instruments
+from opentrons import containers, instruments
 from otcustomizers import FileInput
 
-target_plate = labware.load('24-well-plate', 1)
-mix_plate = labware.load('24-well-plate', 2)
-comp_plate_1 = labware.load('96-deep-well', 3)
-comp_plate_2 = labware.load('96-deep-well', 4)
-comp_plate_3 = labware.load('96-deep-well', 5)
+target_plate = containers.load('24-well-plate', 'C3')
+mix_plate = containers.load('24-well-plate', 'B3')
+comp_plate_1 = containers.load('96-deep-well', 'A2')
+comp_plate_2 = containers.load('96-deep-well', 'B2')
+comp_plate_3 = containers.load('96-deep-well', 'C2')
 
-tip_rack_1 = labware.load('tiprack-10ul', 6)
-tip_rack_2 = labware.load('tiprack-10ul', 7)
-tip_rack_3 = labware.load('tiprack-10ul', 8)
-tip_rack_4 = labware.load('tiprack-10ul', 9)
+trash = containers.load('trash-box', 'E3')
+tip_rack_1 = containers.load('tiprack-10ul', 'E2')
+tip_rack_2 = containers.load('tiprack-10ul', 'E1')
+tip_rack_3 = containers.load('tiprack-10ul', 'D2')
+tip_rack_4 = containers.load('tiprack-10ul', 'D1')
 
 tip_racks = [tip_rack_1, tip_rack_2, tip_rack_3, tip_rack_4]
 
-p10 = instruments.P10_Single(
-    mount='left',
-    tip_racks=tip_racks)
+p10 = instruments.Pipette(
+    name='p10',
+    trash_container=trash,
+    tip_racks=tip_racks,
+    max_volume=10,
+    axis='a')
 
 
 def csv_to_list(csv_string):
@@ -86,6 +90,3 @@ def run_custom_protocol(volumes_csv: FileInput=volumes_csv):
                          mix_after=(2, int(j[0])))
             trasnfer_vol += int(j[0])
             p10.transfer(trasnfer_vol, mix_plate[i], target_plate[i])
-
-
-run_custom_protocol()
