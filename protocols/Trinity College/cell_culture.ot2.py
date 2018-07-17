@@ -30,8 +30,9 @@ def run_custom_protocol(
     drug_volume: int=1,
     final_volume: int=250,
     media_DMSO_volume: int=107,
-    dilution_volume: int=143
         ):
+    
+    dilution_volume = final_volume - media_DMSO_volume
 
     reverse_pipette(m300, 100, trough['A1'], source_plate.cols(),
                     liquid_waste[0])
