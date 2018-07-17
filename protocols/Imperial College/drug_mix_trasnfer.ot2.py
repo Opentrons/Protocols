@@ -64,7 +64,7 @@ def get_csv_content(csv_string):
     return headers, new_dict
 
 
-volumes_csv = """
+example_volumes_csv = """
 Compound,Plate,Well,A1,B1,C1,D1,A2,B2,C2,D2,A3,B3,C3,D3,A4,B4,C4,D4,A5,B5,C5,D5,A6,B6,C6,D6
 comp_1,1,A1,1,2,3,4,5,6,7,8,9,10,1,2,3,4,5,6,7,8,9,10,1,2,3,4
 comp_2,1,B1,,2,,4,,6,,8,,10,,2,,4,,6,,8,,10,,2,,4
@@ -72,7 +72,7 @@ comp_3,1,C1,1,2,3,4,5,6,7,8,9,10,1,2,3,4,5,6,7,8,9,10,1,2,3,4
 """
 
 
-def run_custom_protocol(volumes_csv: FileInput=volumes_csv):
+def run_custom_protocol(volumes_csv: FileInput=example_volumes_csv):
 
     headers, transfer_dict = get_csv_content(volumes_csv)
 
