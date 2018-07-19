@@ -17,12 +17,12 @@ script:
   - python -c 'import opentrons; print(opentrons.__version__)'
   # lint all code
   - flake8 .
-  - pytest protolib/ -vv
+  - pytest protolib2/ -vv
   - python ./scripts/bad-README-subcategory.py # make sure subcategories don't have 2 spaces
   # - ./scripts/smoke-test.sh  # skip smoke testing, hope protolib catches it
   #
-  # use protolib to build zipped .json for S3
-  - python -m protolib protocols/ releases/
+  # use protolib2 to build zipped .json for S3
+  - python -m protolib2 protocols/ releases/
   - ls -la releases/
   # WIP. For now, just make sure this logs without errors in CI.
   - make install parse-ot1 parse-ot2

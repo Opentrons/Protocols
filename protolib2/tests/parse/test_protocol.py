@@ -1,14 +1,12 @@
 import os
 
-from protolib.parse import (
-    protocol as protocol_parser
-)
+from protolib2.parse import parseOT1 as OT1_parser
 
 data_path = os.path.join(os.path.dirname(__file__), '../data')
 
 
 def test_protocol_parse():
-    res = protocol_parser.parse(os.path.join(data_path, 'test.py'))
+    res = OT1_parser.parse(os.path.join(data_path, 'test.py'))
     expected = {
         'containers': [
             {
@@ -58,32 +56,3 @@ def test_protocol_parse():
         'parameters': []
     }
     assert res == expected
-
-
-def test_protocol_parameters():
-    res = protocol_parser.parse(os.path.join(data_path, 'test_parameters.py'))
-    expected_parameters = [
-        {
-            "name": "a",
-            "annotation": {'type': 'int'},
-            "default": 12
-        },
-        {
-            "name": "b",
-            "annotation": None,
-            "default": "woo"
-        },
-        {
-            "name": "plate_type",
-            "annotation": {
-                "type": "StringSelection",
-                "options": [
-                    {"value": "96-flat", "text": "96 flat"},
-                    {"value": "96-PCR-flat", "text": "96 PCR flat"},
-                    {"value": "96-PCR-tall", "text": "96 PCR tall"}
-                ]},
-            "default": '96-flat'
-        }
-    ]
-
-    assert res["parameters"] == expected_parameters
