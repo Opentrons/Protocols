@@ -25,35 +25,35 @@ targets = [P2, P4, P5, P6]
 
 p300.pick_up_tip()
 for target_plate in targets:
-    for i in range(1, 11):
-        p300.transfer(182, target_plate['A1'], P2.cols(i)[1:7],
+    for col_num in range(1, 11):
+        p300.transfer(182, target_plate['A1'], P2.cols(col_num)[1:7],
                       new_tip='never')
 p300.drop_tip()
 
 target_list = []
-for i in range(2, 5):
-    target_list.append(['B' + str(i), 'B' + str(i + 3), 'B' + str(i + 6)])
+for col_select in range(2, 5):
+    target_list.append(['B' + str(col_select), 'B' + str(col_select + 3), 'B' + str(col_select + 6)])
 
 source_list = list(P1.rows(0))
 
-for i in range(len(source_list)):
-    if i % 3 == 1:
+for source in range(len(source_list)):
+    if source % 3 == 1:
         dest = target_list[1]
-    elif i % 3 == 2:
+    elif source % 3 == 2:
         dest = target_list[2]
     else:
         dest = target_list[0]
-    if i // 3 == 0:
+    if source // 3 == 0:
         plate = targets[0]
-    elif i // 3 == 1:
+    elif source // 3 == 1:
         plate = targets[1]
-    elif i // 3 == 2:
+    elif source // 3 == 2:
         plate = targets[2]
     else:
         plate = targets[3]
     m50.pick_up_tip()
     for col in dest:
-        m50.transfer(30, source_list[i], plate.wells(col), new_tip='never')
+        m50.transfer(30, source_list[source], plate.wells(col), new_tip='never')
     m50.drop_tip()
 
 for num in range(1, 11):
