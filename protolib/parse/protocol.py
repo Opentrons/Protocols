@@ -11,7 +11,7 @@ from opentrons.util.environment import settings as opentrons_settings
 pipetteType = type(BasePipette(robot, 'a'))
 
 # monkeypatch containers.load with the load_container_spy fn,
-# use global all_containers to track containers per protocol 
+# use global all_containers to track containers per protocol
 global all_containers
 orig_containers_load = containers.load
 
