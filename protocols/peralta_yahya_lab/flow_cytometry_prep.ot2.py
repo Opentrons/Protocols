@@ -1,4 +1,4 @@
-from opentrons import labware, instruments, robot
+from opentrons import labware, instruments
 
 tiprack_1 = labware.load('tiprack-200ul', 7)
 tiprack_2 = labware.load('tiprack-200ul', 8)
@@ -58,6 +58,3 @@ for i in range(len(source_list)):
 
 for num in range(1, 11):
     p300.transfer(8, P3.wells('B2'), P3.rows(1)[num], new_tip='always')
-
-for c in robot.commands():
-    print(c)
