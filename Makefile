@@ -10,7 +10,7 @@ OT2_FILE_SUFFIX := *.ot2.py
 
 .PHONY: install
 install:
-	pip install virtualenv
+	python -m pip install virtualenv
 
 venvs:
 	mkdir venvs/
@@ -24,7 +24,7 @@ venvs/ot1: venvs
 .PHONY: parse-ot1
 parse-ot1: venvs/ot1
 	source venvs/ot1/bin/activate && \
-	find protocols/ -name $(OT1_FILE_SUFFIX) | xargs python protolib2/parseOT1.py && \
+	find protocols/ -name $(OT1_FILE_SUFFIX) | xargs python protolib2/parse/parseOT1.py && \
 	deactivate
 
 ot2monorepoClone:
@@ -45,7 +45,7 @@ venvs/ot2: ot2monorepoClone
 parse-ot2: venvs/ot2
 	source venvs/ot2/bin/activate && \
 	export OVERRIDE_SETTINGS_DIR=$(OT2_MONOREPO_DIR)/api/tests/opentrons/data && \
-	find protocols/ -name $(OT2_FILE_SUFFIX) | xargs python protolib2/parseOT2.py && \
+	find protocols/ -name $(OT2_FILE_SUFFIX) | xargs python protolib2/parse/parseOT2.py && \
 	deactivate
 
 .PHONY: clean
