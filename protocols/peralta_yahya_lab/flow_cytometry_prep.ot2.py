@@ -26,7 +26,7 @@ targets = [P2, P4, P5, P6]
 p300.pick_up_tip()
 for target_plate in targets:
     for col_num in range(1, 11):
-        p300.transfer(182, target_plate['A1'], P2.cols(col_num)[1:7],
+        p300.transfer(182, trough['A1'], target_plate.cols(col_num)[1:7],
                       new_tip='never')
 p300.drop_tip()
 
@@ -42,8 +42,10 @@ for source_index, source in enumerate(source_list):
     dest = target_list[source_index % cycle_length]
     plate = targets[source_index // cycle_length]
     m50.pick_up_tip()
+    m50.current_tip()
+    m50.aspirate(30, source)
     for col in dest:
-        m50.transfer(30, source, plate.wells(col), new_tip='never')
+        m50.dispense(10, plate.wells(col))
     m50.drop_tip()
 
 for plate in targets:
