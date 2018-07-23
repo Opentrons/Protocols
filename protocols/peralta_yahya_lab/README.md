@@ -12,7 +12,7 @@ Georgia Institute of Technology
 
 
 ## Description
-This protocols allows the robot to  
+This protocols allows the robot to transfer media, chemical, and cells into wells B2-G11 of up to 4 different plates. 
 
 Steps:  
 1. Fills the wells B2-G11 of the target 96-well plates (P2, P4, P5, and P6) with 182 uL of media from a 50 mL tube using a P300_Single pipette.
