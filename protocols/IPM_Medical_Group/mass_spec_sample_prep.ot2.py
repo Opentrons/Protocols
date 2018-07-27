@@ -5,17 +5,19 @@ sample_number = 48   # must be between 10 and 48
 incubation_time = 1  # in minutes
 centrifuge_time = 1  # in minutes
 
-labware.create('custom-tuberack-7ml',
-               grid=(4, 6),
-               spacing=(20, 20),
-               diameter=10,
-               depth=72)
+if 'custom-tuberack-7ml' not in labware.list():
+  labware.create('custom-tuberack-7ml',
+                 grid=(4, 6),
+                 spacing=(20, 20),
+                 diameter=10,
+                 depth=72)
 
-labware.create('autosampler-rack-1ml',
-               grid=(6, 10),
-               spacing=(12.3, 11.5),
-               diameter=8.53,
-               depth=72)
+if 'autosampler-rack-1ml' not in labware.list():
+  labware.create('autosampler-rack-1ml',
+                 grid=(6, 10),
+                 spacing=(12.3, 11.5),
+                 diameter=8.53,
+                 depth=72)
 
 # labware setup
 MCT_rack1 = labware.load('tube-rack-2ml', 1)
@@ -53,29 +55,34 @@ p300 = instruments.P300_Single(
     tip_racks=[tiprack1_p300, tiprack2_p300],
     mount='right')
 
-
+# Transfer buffer
 p50.pick_up_tip()
 p50.mix(3, 50, buffer_loc)
 p50.transfer(30, buffer_loc, MCT_tube_loc)
 
+# Transfer enzyme
 p50.pick_up_tip()
 p50.mix(3, 50, enzyme_loc)
 p50.transfer(20, enzyme_loc, MCT_tube_loc)
 
+# Transfer internal standards
 p50.pick_up_tip()
 p50.mix(3, 50, is_loc)
 p50.transfer(50, is_loc, MCT_tube_loc)
 
+# Trasnfer sample to MCT tubes
 p300.transfer(100, sample_loc, MCT_tube_loc, new_tip='always',
               mix_before=(3, 300))
 
 p300.delay(minutes=incubation_time)
 
+# Transfer diluent
 p300.pick_up_tip()
 p300.mix(3, 300, diluent_loc)
 p300.transfer(350, diluent_loc, MCT_tube_loc)
 
 p300.delay(minutes=centrifuge_time)
 
+# Transfer supernatent
 for well_a, well_m in zip(autosampler_loc, MCT_tube_loc):
     p300.transfer(400, well_m, well_a.bottom(14), new_tip='always')

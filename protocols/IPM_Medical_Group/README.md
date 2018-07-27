@@ -8,17 +8,7 @@
     * Plate Filling
 
 ## Description
-This protocol allows the robot to transfer solutions between containers in custom racks, standard trough, and our 4-in-1 tube rack. The number of wells to fill in the MCT racks depends on the number of samples in each run, the number must be within 10-48.
-
-Steps:
-1. Pre-wet new tip. Transfer 30 uL of buffer from well A1 of trough to each well in the MCT tube racks, using the same tip.
-2. Pre-wet new tip. Transfer 20 uL of enzyme from well A2 of trough each well in the MCT tube racks, using the same tip.
-3. Pre-wet new tip. Transfer 50 uL of Internal Standard from well A3 of reagent trough to each well in the MCT tube racks, using the same tip.
-4. Pre-wet new tip for each transfer: transfer 100 uL of sample from custom tube rack to corresponding well in the MCT racks.
-5. Pause for incubation.
-6. Pre-wet new tip. Transfer 350 uL of diluent from well A4 of reagent trough to each well in the MCT racks.
-7. Pause for centrifuge.
-8. New tip for each transfer: transfer supernatent from MCT well to corresponding well in vial rack.
+This protocol is written for sample preparation for mass spectrometry (MALDI spotting, gel digests, etc). This allows the robot to transfer solutions between containers in custom racks, standard trough, and our 4-in-1 tube rack. The number of wells to fill in the MCT racks depends on the number of samples in each run, the number must be within 10-48.
 
 ### Robot
 * [OT 2](https://opentrons.com/ot-2)
@@ -29,6 +19,15 @@ Steps:
 3. Set up your deck according to the deck map.
 4. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support article](https://support.opentrons.com/ot-2/getting-started-software-setup/deck-calibration).
 5. Hit "Run".
+Steps:
+6. Pre-wet new tip. Transfer 30 uL of buffer from well A1 of trough to each well in the MCT tube racks, using the same tip.
+7. Pre-wet new tip. Transfer 20 uL of enzyme from well A2 of trough each well in the MCT tube racks, using the same tip.
+8. Pre-wet new tip. Transfer 50 uL of Internal Standard from well A3 of reagent trough to each well in the MCT tube racks, using the same tip.
+9. Pre-wet new tip for each transfer: transfer 100 uL of sample from custom tube rack to corresponding well in the MCT racks.
+10. Pause for incubation.
+11. Pre-wet new tip. Transfer 350 uL of diluent from well A4 of reagent trough to each well in the MCT racks.
+12. Pause for centrifuge.
+13. New tip for each transfer: transfer supernatent from MCT well to corresponding well in vial rack.
 
 ### Additional Information
 * Make sure to adjust the sample number at the top of the code to fit your experiment.
