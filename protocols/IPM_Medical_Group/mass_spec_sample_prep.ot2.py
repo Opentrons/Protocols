@@ -6,18 +6,18 @@ incubation_time = 1  # in minutes
 centrifuge_time = 1  # in minutes
 
 if 'custom-tuberack-7ml' not in labware.list():
-  labware.create('custom-tuberack-7ml',
-                 grid=(4, 6),
-                 spacing=(20, 20),
-                 diameter=10,
-                 depth=72)
+    labware.create('custom-tuberack-7ml',
+                   grid=(4, 6),
+                   spacing=(20, 20),
+                   diameter=10,
+                   depth=72)
 
 if 'autosampler-rack-1ml' not in labware.list():
-  labware.create('autosampler-rack-1ml',
-                 grid=(6, 10),
-                 spacing=(12.3, 11.5),
-                 diameter=8.53,
-                 depth=72)
+    labware.create('autosampler-rack-1ml',
+                   grid=(6, 10),
+                   spacing=(12.3, 11.5),
+                   diameter=8.53,
+                   depth=72)
 
 # labware setup
 MCT_rack1 = labware.load('tube-rack-2ml', 1)
