@@ -34,12 +34,12 @@ count = 0
 for i in range(0, 8):
     s50.pick_up_tip()
     for j in target[i]:
-        if count == 0: 
-            s50.aspirate(42, tuberack.wells(i))           
+        if count == 0:
+            s50.aspirate(42, tuberack.wells(i))
             count += 1
-        elif count == 5: 
+        elif count == 5:
             count = 0
-        else:   
+        else:
             count += 1
         s50.dispense(7, j)
     s50.drop_tip()
