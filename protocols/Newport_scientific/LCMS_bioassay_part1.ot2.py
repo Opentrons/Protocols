@@ -26,9 +26,9 @@ std = reagent_rack.wells('B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'C1', 'C2',
 naive_loc = reagent_rack.wells('C5')
 QC = reagent_rack.wells('C6', 'D1', 'D2')
 
-# Determines location of the samples in the incubation plate(s) depending on 
+# Determines location of the samples in the incubation plate(s) depending on
 # the number of samples. If the number is less than or equal to 72, samples go
-# into the sample plate as the reagents, starting at C1. If the number is 
+# into the sample plate as the reagents, starting at C1. If the number is
 # greater than 72, samples start in A1 of a second incubation plate.
 sample_dest = []
 sample_source = []
