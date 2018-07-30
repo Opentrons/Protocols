@@ -51,6 +51,8 @@ for dish in petri_dishes:
 
     p50.pick_up_tip()
     p50.aspirate(40, culture_loc)
+    # Dispenses culture at a distance measured using percentage difference
+    # from the center of the well
     p50.dispense(
         40, (dish_loc, dish_loc.from_center(x=(1/dish_size), y=0, z=0)))
     p50.drop_tip()
@@ -62,6 +64,8 @@ for dish in petri_dishes:
 
     p50.pick_up_tip()
     p50.aspirate(40, next(culture_loc))
+    # Dispenses culture at a distance measured using percentage difference
+    # from the center of the well
     p50.dispense(
         40, (dish_loc, dish_loc.from_center(x=-(1/dish_size), y=0, z=0)))
     p50.drop_tip()
