@@ -3,9 +3,6 @@
 ### Author
 [Opentrons](https://opentrons.com/)
 
-### Partner
-Imperial College
-
 ## Categories
 * Basic Pipetting
 	* Plate Consolidation
@@ -20,7 +17,6 @@ This protocol allows you to add different combination of compounds from several 
 * [OT 2](https://opentrons.com/ot-2)
 * [OT PRO](https://opentrons.com/robots/ot-one-s-pro)
 * [OT Standard](https://opentrons.com/robots/ot-one-s-standard)  
-* [OT Hood](https://opentrons.com/robots/ot-one-s-hood)
 
 ## Process
 1. Upload a CSV file containing information of compound source and target.

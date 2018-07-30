@@ -77,8 +77,6 @@ comp_3,1,C1,1,2,3,4,5,6,7,8,9,10,1,2,3,4,5,6,7,8,9,10,1,2,3,4
 def run_custom_protocol(volumes_csv: FileInput=example_volumes_csv):
 
     headers, transfer_dict = get_csv_content(volumes_csv)
-    print(headers)
-    print(transfer_dict)
 
     for well in headers[3:]:
         trasnfer_vol = 0
