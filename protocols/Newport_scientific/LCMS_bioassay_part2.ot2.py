@@ -23,7 +23,7 @@ tiprack3 = labware.load('tiprack-200ul', '10')
 meoh_loc = reagent_rack.wells('A5')
 
 # Copy incubation plate to the PP plates and B-Gone plates. Locations to copy
-# from and destination locations are determined by the number of samples. 
+# from and destination locations are determined by the number of samples.
 pp_dest = []
 b_gone_dest = []
 incub_source = []
