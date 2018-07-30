@@ -15,11 +15,11 @@ protein_mix_vol = 2000
 
 
 # Labware setup
-target = labware.load('384-plate', 1)
-reagent_rack = labware.load('tube-rack-2ml', 2)
-tiprack1_10 = labware.load('tiprack-10ul', 3)
-tiprack2_10 = labware.load('tiprack-10ul', 4)
-tiprack3_10 = labware.load('tiprack-10ul', 5)
+target = labware.load('384-plate', '1')
+reagent_rack = labware.load('tube-rack-2ml', '2')
+tiprack1_10 = labware.load('tiprack-10ul', '3')
+tiprack2_10 = labware.load('tiprack-10ul', '4')
+tiprack3_10 = labware.load('tiprack-10ul', '5')
 
 
 # Protein dilution setup
@@ -47,8 +47,8 @@ p10 = instruments.P10_Single(
 protein_vol = protein_dilution_vol / protein_dilution_factor
 buffer_vol = protein_dilution_vol - protein_vol
 
-# p10.transfer(buffer_vol, buffer_well, new_protein_well)
-# p10.transfer(protein_vol, protein_well, new_protein_well)
+p10.transfer(buffer_vol, buffer_well, new_protein_well)
+p10.transfer(protein_vol, protein_well, new_protein_well)
 
 
 # Part 2: Make two sets of serial dilution of competitor ligand
@@ -61,15 +61,13 @@ p10.transfer(DMSO_vol, DMSO_well, reagent_rack.rows['B'][1:5], new_tip='never')
 p10.drop_tip()
 
 p10.pick_up_tip()
-for tube1, tube2 in zip(reagent_rack.rows['A'][0:4],
-                        reagent_rack.rows['A'][1:5]):
-    p10.transfer(cl_vol, tube1, tube2, mix_after=(3, 10), new_tip='never')
+p10.transfer(cl_vol, reagent_rack.rows['A'][0:4], reagent_rack.rows['A'][1:5],
+             mix_after=(3, 10), new_tip='once')
 p10.drop_tip()
 
 p10.pick_up_tip()
-for tube1, tube2 in zip(reagent_rack.rows['B'][0:4],
-                        reagent_rack.rows['B'][1:5]):
-    p10.transfer(cl_vol, tube1, tube2, mix_after=(3, 10), new_tip='never')
+p10.transfer(cl_vol, reagent_rack.rows['B'][0:4], reagent_rack.rows['B'][1:5],
+             mix_after=(3, 10), new_tip='once')
 p10.drop_tip()
 
 
@@ -89,7 +87,7 @@ for row_index, concentration in enumerate(serial_dilutions):
     p10.transfer(2, concentration, target.rows(row_index+1))
 
 # Part 5: Add protein/fluorescent ligand mix to target plate
-for row in target.rows['A':'K']:
+for row in target.rows('A', to='K'):
     for well in row:
         p10.pick_up_tip()
         p10.transfer(28, protein_mix_well, well, new_tip='never')

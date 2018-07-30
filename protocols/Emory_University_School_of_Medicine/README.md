@@ -3,15 +3,12 @@
 ### Author
 [Opentrons](https://www.opentrons.com/)
 
-### Partner
-Emory University - School of Medicine
-
 ## Categories
 * Proteins & Proteomics
 	* Assay
 
 ## Description
-This protocol allows the robot to dilute protein in buffer, based on desired dilution factor and final volume. The robot also creates two sets of serial dilutions of a competitor ligand in DMSO. The robot then creates a mixture of the diluted protein and a fluorescent ligand in buffer. DMSO is distributed to the first row of the target 384-well plate (2 uL/well). Each concentration from the serial dilutions of the competitor ligands is transferred (2 uL/well) to the each row of the target plate, starting at the second row. A 28 uL of protein/fluorescent ligand mixture is transferred into all wells containing either DMSO, or the competitor ligand. 
+This protocol allows the robot to dilute protein in buffer, based on desired dilution factor and final volume. The robot also creates two sets of serial dilutions of a competitor ligand in DMSO. The robot then creates a mixture of the diluted protein and a fluorescent ligand in buffer. DMSO is distributed to the first row of the target 384-well plate (2 uL/well). Each concentration from the serial dilutions of the competitor ligands is transferred (2 uL/well) to the each row of the target plate, starting at the second row. A 28 uL of protein/fluorescent ligand mixture is transferred into all wells containing either DMSO, or the competitor ligand.
 
 ### Robot
 * [OT 2](https://opentrons.com/ot-2)
