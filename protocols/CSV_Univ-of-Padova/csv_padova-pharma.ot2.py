@@ -1,7 +1,8 @@
-from opentrons import instruments, labware, robot
+from opentrons import instruments, labware
 
 # customization
 mix = 1  # if you want to mix, mix = 1; no mix, mix = 0
+max_volume = 43  # adjust based on largest volume in CSV
 
 # labware setup
 tips = labware.load('tiprack-200ul', '1')
@@ -18,9 +19,18 @@ example_csv = """
 """
 
 # instrument setup
-p50 = instruments.P50_Single(
-    mount='right',
-    tip_racks=[tips])
+if max_volume <= 50:
+    pip = instruments.P50_Single(
+        mount='right',
+        tip_racks=[tips])
+elif max_volume <= 300:
+    pip = instruments.P300_Single(
+        mount='right',
+        tip_racks=[tips])
+else:
+    pip = instruments.P1000_Single(
+        mount='right',
+        tip_racks=[tips])
 
 
 # variables and reagents setup
@@ -60,16 +70,13 @@ def run_custom_protocol(
 
     ind = 0
     for vol in volumes:
-        p50.pick_up_tip()
-        p50.transfer(vol, solvent.wells('A1'), plate.wells(well_loc[ind]),
+        pip.pick_up_tip()
+        pip.transfer(vol, solvent.wells('A1'), plate.wells(well_loc[ind]),
                      new_tip='never')
         if mix == 1:
-            p50.mix(3, vol, plate.wells(well_loc[ind]))
-        p50.drop_tip()
+            pip.mix(3, vol, plate.wells(well_loc[ind]))
+        pip.drop_tip()
         ind = ind+1
 
 
 run_custom_protocol(**{'volumes_csv': example_csv})
-
-for c in robot.commands():
-    print(c)
