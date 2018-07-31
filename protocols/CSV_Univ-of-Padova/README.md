@@ -12,7 +12,7 @@
 
 
 ## Description
-Normalization of library concentrations using volume and location inputs from a CSV. Uses a p50 single channel pipette. Transfer designated volumes of solvent from a 15 mL tube to a designated well in a 96-well putput plate. Mixing after each solvent transfer is optional.
+Normalization of library concentrations using volume and location inputs from a CSV. Uses a p50, p300, or p1000 single channel pipette (changed in the customization field in the Python script). Transfer designated volumes of solvent from a 15 mL tube to a designated well in a 96-well putput plate. Mixing after each solvent transfer is optional.
 
 To generate a `.csv` from from Excel or another spreadsheet program, try "File > Save As" and select `*.csv`
 
@@ -53,7 +53,7 @@ Protocol begins:
 9. The robot repeats this for all the entries in the CSV file.
 
 ### Additional Notes
-Make sure not to change the labels of each column in the CSV. If you do, adjust the .py (Python) script accordingly.
+Make sure not to change the labels of each column in the CSV. If you do, adjust the .py (Python) script accordingly. Make to adjust max volume customization field to use appropriate single channel pipette.
 
 ###### Internal
 dVgtln5g
