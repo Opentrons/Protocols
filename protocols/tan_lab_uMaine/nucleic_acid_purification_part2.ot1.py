@@ -23,14 +23,17 @@ m300 = instruments.Pipette(
     tip_racks=[tiprack1, tiprack2, tiprack3],
     channels=8)
 
+# Define height from which the pipette is aspirating from plate2
+plate2_loc = [well.bottom(1) for well in plate2.rows()]
+
 # Remove supernatent
-m300.transfer(199, plate2.rows(), liquid_trash, new_tip='always')
+m300.transfer(199, plate2_loc, liquid_trash, new_tip='always')
 
 # Transfer ethanol
 m300.transfer(200, ethanol, plate2.rows())
 
 # Remove supernatent
-m300.transfer(199, plate2.rows(), liquid_trash, new_tip='always')
+m300.transfer(199, plate2_loc, liquid_trash, new_tip='always')
 
 robot.pause()
 

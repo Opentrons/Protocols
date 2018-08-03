@@ -25,8 +25,11 @@ m300.transfer(250, extraction_buffer, plate1.rows())
 
 robot.pause()
 
+# Define height from which the pipette is aspirating from plate1
+plate_1_loc = [well.bottom(5) for well in plate1.rows()]
+
 # Transfer supernatent from Plate 1 to Plate 2
-m300.transfer(100, plate1.rows(), plate2.rows(), new_tip='always')
+m300.transfer(100, plate_1_loc, plate2.rows(), new_tip='always')
 
 # Transfer isopropanol to Plate 2
 m300.transfer(100, isopropanol, plate2.rows())
