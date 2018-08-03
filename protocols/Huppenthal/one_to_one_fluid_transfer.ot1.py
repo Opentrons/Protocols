@@ -10,7 +10,7 @@ if olympus_test_rack not in containers.list():
         depth=75)
 
 tiprack_1000 = containers.load('tiprack-1000ul', 'C2')
-trough = containers.load('trough-1row-25ml', 'C1')
+trough = containers.load('trough-1row-25ml', 'D1')
 testrack = containers.load(olympus_test_rack, 'A1')
 
 trash = containers.load('trash-box', 'A2')
@@ -20,7 +20,7 @@ p1000 = instruments.Pipette(
     channels=1,
     axis='a',
     max_volume=1000,
-    tip_racks=tiprack_1000,
+    tip_racks=[tiprack_1000],
     trash_container=trash)
 
-p1000.transfer(875, trough['A1'], testrack, new_tip='always')
+p1000.transfer(875, trough['A1'], testrack.wells(), new_tip='always')
