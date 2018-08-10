@@ -1,4 +1,4 @@
-from opentrons import labware, instruments, robot
+from opentrons import labware, instruments
 from otcustomizers import FileInput
 
 trough = labware.load('trough-12row', '4')
@@ -14,12 +14,12 @@ tiprack_200ul = labware.load('tiprack-200ul', '6')
 tiprack2_200ul = labware.load('tiprack-200ul', '7')
 
 p10 = instruments.P10_Single(
-	mount='left',
-	tip_racks=[tiprack_10ul, tiprack2_10ul])
+    mount='left',
+    tip_racks=[tiprack_10ul, tiprack2_10ul])
 
 m50 = instruments.P50_Multi(
-	mount='right',
-	tip_racks=[tiprack_200ul, tiprack2_200ul])
+    mount='right',
+    tip_racks=[tiprack_200ul, tiprack2_200ul])
 
 sample_csv = """
 1,2,3,4,5,6,7,8,9,10,11,12
@@ -42,6 +42,7 @@ mq_csv = """
 1,2,3,4,5,6,7,8,9,10,11,12
 1,2,3,4,5,6,7,8,9,10,11,12
 """
+
 
 def transpose_matrix(m):
     return [[r[i] for r in reversed(m)] for i in range(len(m[0]))]
@@ -67,9 +68,10 @@ def well_csv_to_list(csv_string):
     # "portrait"
     return flatten_matrix(data)
 
+
 def run_custom_protocol(
-    sample_vol_csv: FileInput=sample_csv,
-    MQ_vol_csv: FileInput=mq_csv):
+        sample_vol_csv: FileInput=sample_csv,
+        MQ_vol_csv: FileInput=mq_csv):
 
     sample_vol = well_csv_to_list(sample_vol_csv)
 
