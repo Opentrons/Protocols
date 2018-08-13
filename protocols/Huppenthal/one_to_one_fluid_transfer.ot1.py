@@ -23,4 +23,10 @@ p1000 = instruments.Pipette(
     tip_racks=[tiprack_1000],
     trash_container=trash)
 
-p1000.transfer(875, trough['A1'], testrack.wells(), new_tip='always')
+
+def run_custom_protocol(
+        volume: int=875,
+        number_of_samples: int=5):
+
+    p1000.transfer(volume, trough['A1'], testrack.wells(0, length=number_of_samples),
+                   new_tip='always')
