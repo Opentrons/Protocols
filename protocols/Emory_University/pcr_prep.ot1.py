@@ -22,7 +22,7 @@ p10 = instruments.Pipette(
     name='p10',
     channels=1,
     axis='b',
-    max_volume=12,
+    max_volume=10,
     tip_racks=tiprack,
     trash_container=trash)
 
@@ -44,5 +44,8 @@ p10.distribute(0.15, trough_4.rows(0, length=8), target.cols('A', length=8),
                new_tip='always')
 
 for col_num in range(len(target.cols())):
-    p10.transfer(11.5, sample.wells(col_num), target.cols(col_num),
-                 mix_after=(5, 11.5), new_tip='always')
+    for well in target.cols(col_num):
+        p10.pick_up_tip()
+        p10.transfer(11.5, sample.wells(col_num), well, new_tip='never')
+        p10.mix(5, 10, well)
+        p10.drop_tip()
