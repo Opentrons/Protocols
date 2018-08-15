@@ -1,5 +1,7 @@
 from opentrons import containers, instruments
 import math
+from opentrons.containers import placeable
+
 
 # labware setup
 tiprack_10ul = containers.load('tiprack-10ul', 'A2')
@@ -38,6 +40,9 @@ def run_custom_protocol(diameter: int=60):
                           spacing=(subdiameter, subdiameter),
                           diameter=subdiameter,
                           depth=10)
+    elif 'petri-dish-4x4grid' in containers.list():
+        test_dish = containers.load('petri-dish-4x4grid', 'A1')
+        if petri_
 
     petri_1 = containers.load('petri-dish-4x4grid', 'C1')
     petri_2 = containers.load('petri-dish-4x4grid', 'D1')
