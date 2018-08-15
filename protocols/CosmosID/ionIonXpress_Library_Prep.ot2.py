@@ -1,4 +1,4 @@
-from opentrons import labware, instruments, robot
+from opentrons import labware, instruments
 
 sample_num = 1
 
@@ -38,11 +38,11 @@ p50.transfer(45, water, control_dil_loc)
 # transfer control library to PCR strip wells A1
 p10.pick_up_tip()
 p10.transfer(5, control_lib, control_dil_loc[0], mix_after=(10, 10),
-			 new_tip='never')
+             new_tip='never')
 
 # dilute control library serially
 p10.transfer(5, control_dil_loc[0:4], control_dil_loc[1:5],
-			 mix_after=(10, 10), new_tip='never')
+             mix_after=(10, 10), new_tip='never')
 p10.drop_tip()
 
 
@@ -53,7 +53,7 @@ Prepare Sample Library
 # where every sample dilution series occupies a different column
 sample_dil_loc = [col[0:3]
                   for col in dilution_plate.cols(1, length=sample_num)
-                 ]
+                  ]
 
 # add water to PCR strip wells A-C for each sample library
 p50.pick_up_tip()
@@ -70,7 +70,7 @@ for sample_source, each_dil_series in zip(sample_lib, sample_dil_loc):
                  new_tip='never')
 
     # serial diltion
-    p10.transfer((1,5), each_dil_series[0:2], each_dil_series[1:3],
+    p10.transfer((1, 5), each_dil_series[0:2], each_dil_series[1:3],
                  mix_after=(10, 10), new_tip='never')
     p10.drop_tip()
 
@@ -114,7 +114,7 @@ p50.transfer(15, masterMix, control_lib_loc+ntc_loc+sample_lib_loc)
 # transfer 5 uL control library dilutions to control_lib_loc
 p10.transfer(5, control_dil_loc, control_lib_loc)
 
-# transfer 5 uL water to non-template control 
+# transfer 5 uL water to non-template control
 p10.transfer(5, water, ntc_loc)
 
 # re-define sample library by grouping each column
