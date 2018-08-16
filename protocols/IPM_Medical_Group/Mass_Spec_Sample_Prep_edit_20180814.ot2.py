@@ -91,4 +91,5 @@ robot.pause()
 
 # Transfer supernatent
 for well_a, well_m in zip(autosampler_loc, MCT_tube_loc):
-    p300.transfer(300, well_m, well_a.bottom(14), new_tip='always', blow_out=True)
+    p300.transfer(300, well_m, well_a.bottom(14), new_tip='always',
+                  blow_out=True)
