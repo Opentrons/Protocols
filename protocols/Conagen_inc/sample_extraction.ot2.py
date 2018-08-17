@@ -1,5 +1,4 @@
 from opentrons import labware, instruments, modules, robot
-from otcustomizers import StringSelection
 
 """
 User Input
@@ -59,15 +58,15 @@ else:
 
 cols_in_plates = len(plate[0].cols())
 full_plates = columns_to_fill//cols_in_plates
-cols_left = columns_to_fill%cols_in_plates
+cols_left = columns_to_fill % cols_in_plates
 
 # list of columns to fill, when height does not matter
 cols_loc = [col
-             for plate in plate[0:full_plates]
-             for col in plate.cols()] + \
-            [col 
+            for plate in plate[0:full_plates]
+            for col in plate.cols()] + \
+            [col
              for col in plate[full_plates-1].cols(0, length=cols_left)
-             if cols_left > 0] 
+             if cols_left > 0]
 
 # transfer Sulfuric acid-methanol to columns, using same tips
 m300.pick_up_tip()
