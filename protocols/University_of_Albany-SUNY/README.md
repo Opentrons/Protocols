@@ -5,7 +5,7 @@
 
 ## Categories
 * Proteins & Proteomics
-  * PCR
+    * PCR
 
 ## Description
 Distribute 16 DNA samples from a 96 well block to separate rows in a 96-well block to a 384 PCR well plate. Then, distribute 8 different PCR Mixes to the 384 PCR well plate.  
