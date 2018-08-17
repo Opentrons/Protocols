@@ -40,7 +40,7 @@ def run_custom_protocol(fill_volume: float=500):
             fill_volume,
             each_tube,
             each_plate.wells(),
-            air_gap=int(1000-fill_volume),  # air gap to prevent dripping
+            air_gap=True,  # air gap to prevent dripping
             new_tip='never')
 
     p1000.drop_tip()
