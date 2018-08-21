@@ -31,10 +31,10 @@ CSV files breakdown:
 * A1, B1 ,,,, D6: volume of which the compound is to be transferred to each individual target well A1, B1 ,,,, D6
 
 | Compound | Plate | Well | A1 | B1 |...| D6 |
-|----------|-------|------|----|----|----|----|:
+|----------|-------|------|----|----|----|----|
 |          |       |      |    |    |    |    |
 |          |       |      |    |    |    |    |
-|         |       |      |    |    |    |    ||
+|         |       |      |    |    |    |    |
 
 ###### Internal
 fBpgkSb3
