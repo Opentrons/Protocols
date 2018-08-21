@@ -30,6 +30,7 @@ CSV files breakdown:
 * Well: the well of the plate in which the compound is stored
 * A1, B1 ,,,, D6: volume of which the compound is to be transferred to each individual target well A1, B1 ,,,, D6
 
+![CSV Example](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/volume_csv_example.png)
 
 ###### Internal
 fBpgkSb3
