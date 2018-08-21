@@ -1,4 +1,4 @@
-# Quantitative LCMS Bioassay
+# Quantitative LCMS Bioassay: Part 1/2
 
 ### Author
 [Opentrons](http://www.opentrons.com/)
@@ -8,6 +8,10 @@
     * Plate Filling
 
 ## Description
+Part 1 of 2: Quantitative LCMS Bioassay
+
+Links: [Part 1](./Newport_scientific_pt1) [Part 2](./Newport_scientific_pt2)
+
 This protocol consists of part I and II, where part I creates the incubation plates depending on the number of samples in the experiment, and part II transfer the incubation plates into PP plates and B-Gone plates. The incubation plates, PP plates and B-Gone plates are separated into 2 sections: reagent wells (A1-B4) and sample wells.
 
 
