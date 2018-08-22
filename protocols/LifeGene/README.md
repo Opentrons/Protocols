@@ -25,14 +25,11 @@ This protocols allows the robot to transfer liquid from four 96-well source plat
 6. Hit "Run".
 7. Transfer appropriate volume from the appropriate source well to the target well as depicted in the CSV file.
 
-### Additional Information
+### Additional Notes
 * Follow this format for the CSV file:
 
-| source plate | source well | source volume | dest plate | dest well |
-|--------------|-------------|---------------|------------|-----------|
-| 1            | A1          | 5             | 5          | A1        |
-| 3            | B7          | 10            | 5          | A2        |
-| 2            | C1          | 7             | 5          | D1        |
+
+![csv_example](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/LifeGene_Mass_Spec_Sample_Prep.png)
 
 ###### Internal
 1tr8KM5J

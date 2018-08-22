@@ -20,11 +20,11 @@ With this protocol, your robot can fill 96 well plates with "00" capsules, with 
 * ["00" Capsules](https://www.capsuline.com/empty-capsule-size-chart/)
 
 ## Process
-###### Off Robot
+Off Robot
 1. Load the plates of empty capsules into the plates to be filled.
 2. Slightly overfill eight 50 mL tubes with reagents and place them in the 15-50 mL tube racks.
 
-###### Download and Run
+Download and Run
 1. Input your desired fill volume in the field above.
 2. Download your protocol.
 3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
