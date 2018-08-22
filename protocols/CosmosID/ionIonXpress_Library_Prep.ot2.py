@@ -1,7 +1,11 @@
 from opentrons import labware, instruments
 
-sample_num = 1
+"""
+User Input
+"""
+sample_num = 1  # up to 4
 
+# labware setup
 reagent_rack = labware.load('tube-rack-2ml', '4')
 water = labware.load('tube-rack-15_50ml', '1').wells('A1')
 dilution_plate = labware.load('PCR-strip-tall', '2')
@@ -16,6 +20,7 @@ sample_lib = reagent_rack.wells('A2', length=sample_num)
 tiprack_10 = labware.load('tiprack-10ul', '6')
 tiprack_200 = labware.load('tiprack-200ul', '7')
 
+# pipette setup
 p10 = instruments.P10_Single(
     mount='left',
     tip_racks=[tiprack_10])
@@ -24,6 +29,7 @@ p50 = instruments.P50_Single(
     mount='right',
     tip_racks=[tiprack_200])
 
+# number of portions of mastermix to prepare
 masterMix_num = sample_num*3 + 18
 
 """
@@ -51,9 +57,12 @@ Prepare Sample Library
 """
 # define sample library dilution locations
 # where every sample dilution series occupies a different column
-sample_dil_loc = [col[0:3]
-                  for col in dilution_plate.cols(1, length=sample_num)
-                  ]
+if sample_num > 1:
+  sample_dil_loc = [col[0:3]
+                    for col in dilution_plate.cols(1, length=sample_num)
+                    ]
+else: 
+  sample_dil_loc = [dilution_plate.cols(1)[0:3]]
 
 # add water to PCR strip wells A-C for each sample library
 p50.pick_up_tip()
@@ -75,7 +84,7 @@ for sample_source, each_dil_series in zip(sample_lib, sample_dil_loc):
     p10.drop_tip()
 
 
-# robot.pause()
+robot.pause()
 
 """
 Prepare masterMix
@@ -115,14 +124,15 @@ p50.transfer(15, masterMix, control_lib_loc+ntc_loc+sample_lib_loc)
 p10.transfer(5, control_dil_loc, control_lib_loc)
 
 # transfer 5 uL water to non-template control
-p10.transfer(5, water, ntc_loc)
+p10.transfer(5, water, ntc_loc, new_tip='once')
 
-# re-define sample library by grouping each column
+# # re-define sample library by grouping each column
 sample_lib_loc = [col[0:3] for col in plate.cols[4:4+sample_num*2]]
 
 # transfer 5 uL sample library dilutions to sample_lib_loc
+# 2 columns for each sample
 for index, sample in enumerate(sample_dil_loc):
     p10.pick_up_tip()
-    for sample_dest in sample_lib_loc[index*2:index*2+2]:
-        p10.transfer(5, sample, sample_dest, new_tip='never')
+    p10.transfer(10, sample, sample_lib_loc[index*2],new_tip='never') 
+    p10.transfer(10, sample, sample_lib_loc[index*2+1], new_tip='never')
     p10.drop_tip()
