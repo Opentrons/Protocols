@@ -8,7 +8,7 @@
     * DNA
 
 ## Description
-This protocol allows the robot utilize the Thermo Fisher MagMAX™ DNA Multi-Sample Ultra 2.0 Kit. You can run this protocol after you have completed Proteinase K treatment to your tissue samples. The robot can then perform DNA purification by isolating gDNA using the Mag Deck. Beads are added to bind with gDNA, the mixture is then washed, and gDNA will be eluted.
+This protocol allows the robot utilize the [Thermo Fisher MagMAX™ DNA Multi-Sample Ultra 2.0 Kit](https://www.thermofisher.com/order/catalog/product/A36570). You can run this protocol after you have completed Proteinase K treatment to your tissue samples. The robot can then perform DNA purification by isolating gDNA using the Mag Deck. Beads are added to bind with gDNA, the mixture is then washed, and gDNA will be eluted. Tips are reused after washing in the wash solution.
 
 ### Robot
 * [OT 2](https://opentrons.com/ot-2)
@@ -16,6 +16,7 @@ This protocol allows the robot utilize the Thermo Fisher MagMAX™ DNA Multi-Sam
 ### Modules
 * Mag Deck
 * Temp Deck
+
 
 ## Process
 1. Download your protocol.
