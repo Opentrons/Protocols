@@ -35,7 +35,7 @@ With this protocol, the robot can perform sample extraction in up to three 96-de
 12. Transfer 200 uL hexane to the columns, mix 3 times.
 13. Transfer 100 uL hexane layer in the columns to a tube in the 24-well tube rack. Rinse tip in hexane twice between each transfer. Pause after every time all tubes have been filled, prompt the user to replace tube rack and resume the run.
 
-### Additional Information
+### Additional Notes
 * You can adjust the heights (from the bottom of the well/tube) from which the pipette aspirate and dispense at the top of the protocol.
 
 ###### Internal
