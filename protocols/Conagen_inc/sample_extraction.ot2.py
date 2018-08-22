@@ -35,12 +35,13 @@ p300 = instruments.P300_Single(
     tip_racks=tipracks)
 
 
-def run_custom_protocol(number_of_plates: int=3,
+def run_custom_protocol(
+    number_of_plates: int=3,
     columns_to_fill: int=36,
     mix_aspirate_height: int=5,
     mix_dispense_height: int=12,
     hexane_layer_height: int=11
-    ):
+        ):
 
     # if only one plate is present, Temp Deck is deployed and set to 65 degree
     if number_of_plates == 1:
@@ -48,7 +49,7 @@ def run_custom_protocol(number_of_plates: int=3,
         # temp_deck.connect()
         temp_deck.set_temperature(65)
         plate = [labware.load('96-deep-well', '1', share=True)]
-    # if more than one plate is present, plates are located in slot 1, 2, and/or 3
+    # if more than one plate, plates are located in slot 1, 2, and/or 3
     else:
         plate = [
                  labware.load('96-deep-well', str(num+1))
@@ -63,9 +64,9 @@ def run_custom_protocol(number_of_plates: int=3,
     cols_loc = [col
                 for plate in plate[0:full_plates]
                 for col in plate.cols()] + \
-                [col
-                 for col in plate[full_plates-1].cols(0, length=cols_left)
-                 if cols_left > 0]
+               [col
+                for col in plate[full_plates-1].cols(0, length=cols_left)
+                if cols_left > 0]
 
     # transfer Sulfuric acid-methanol to columns, using same tips
     m300.pick_up_tip()
