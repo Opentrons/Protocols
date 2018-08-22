@@ -22,7 +22,7 @@ With this protocol, your robot can consolidate the contents of an entire 96-well
 5. Hit "Run".
 6. Transfer appropriate volume from wells of the 96-well plate to a single 2 mL tube in well A1 of tube rack.
 
-### Additional Information
+### Additional Notes
 * New tip is used for each liquid transfer. If you want to use one tip throughout the entire run, or change your labware, see our [API documentation](https://docs.opentrons.com/index.html) for tips on how to modify your Python script.
 * CSV file format (8 X 12)
     * no headers
