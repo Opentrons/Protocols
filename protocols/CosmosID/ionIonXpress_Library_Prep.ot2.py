@@ -1,4 +1,4 @@
-from opentrons import labware, instruments
+from opentrons import labware, instruments, robot
 
 """
 User Input
@@ -58,11 +58,11 @@ Prepare Sample Library
 # define sample library dilution locations
 # where every sample dilution series occupies a different column
 if sample_num > 1:
-  sample_dil_loc = [col[0:3]
-                    for col in dilution_plate.cols(1, length=sample_num)
-                    ]
-else: 
-  sample_dil_loc = [dilution_plate.cols(1)[0:3]]
+    sample_dil_loc = [col[0:3]
+                      for col in dilution_plate.cols(1, length=sample_num)
+                      ]
+else:
+    sample_dil_loc = [dilution_plate.cols(1)[0:3]]
 
 # add water to PCR strip wells A-C for each sample library
 p50.pick_up_tip()
@@ -133,6 +133,6 @@ sample_lib_loc = [col[0:3] for col in plate.cols[4:4+sample_num*2]]
 # 2 columns for each sample
 for index, sample in enumerate(sample_dil_loc):
     p10.pick_up_tip()
-    p10.transfer(10, sample, sample_lib_loc[index*2],new_tip='never') 
+    p10.transfer(10, sample, sample_lib_loc[index*2], new_tip='never')
     p10.transfer(10, sample, sample_lib_loc[index*2+1], new_tip='never')
     p10.drop_tip()
