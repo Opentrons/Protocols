@@ -15,6 +15,8 @@ With this protocol, your robot can fill 96 well plates with "00" capsules, with 
 
 ### Robot
 * [OT 2](https://opentrons.com/ot-2)
+* [OT PRO](https://opentrons.com/ot-one-pro)
+* [OT Standard](https://opentrons.com/ot-one-standard)
 
 ### Reagents
 * ["00" Capsules](https://www.capsuline.com/empty-capsule-size-chart/)
