@@ -28,16 +28,9 @@ With this protocol, your robot can consolidate the contents of an entire 96-well
     * no headers
     * each cell represents a well in the 96-well plate
     * volumes must be in integers
+    * unit: uL
 
-| 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 |
-|---|---|---|---|---|---|---|---|---|----|----|----|
-| 2 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 |
-| 3 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 |
-| 4 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 |
-|   |   |   |   |   |   |   |   |   |    |    |    |
-|   |   |   |   |   |   |   |   |   |    |    |    |
-|   |   |   |   |   |   |   |   |   |    |    |    |
-|   |   |   |   |   |   |   |   |   |    |    |    |
+![csv example](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/96_well_consolidation_csv.png)
 
 ###### Internal
 HiS8CHvE
