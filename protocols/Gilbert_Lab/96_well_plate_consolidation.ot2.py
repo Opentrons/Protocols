@@ -1,13 +1,10 @@
 from opentrons import labware, instruments
-from otcustomizers import FileInput
+from otcustomizers import FileInput, StringSelection
 
 # labware setup
 tuberack = labware.load('tube-rack-2ml', '2')
-plate = labware.load('96-flat', '1')
-tiprack = labware.load('tiprack-200ul', '4')
 
-# target 2 mL tube
-target = tuberack.wells('A1')
+tiprack = labware.load('tiprack-200ul', '4')
 
 # pipette setup
 p50 = instruments.P50_Single(
@@ -39,10 +36,17 @@ example_csv = """
 """
 
 
-def run_custom_protocol(volumes_csv: FileInput=example_csv):
+def run_custom_protocol(
+    volumes_csv: FileInput=example_csv,
+    plate_type: StringSelection(
+            '96-flat', '96-deep-well')='96-flat',
+        destination_well: str='A1'):
 
+    plate = labware.load(plate_type, '1')
     # parse string using helper csv function
     volumes_list = well_csv_to_list(volumes_csv)
+    # target 2 mL tube
+    target = tuberack.wells(destination_well)
 
     # convert the cells contents from strings to integers
     volumes = [float(cell) for cell in volumes_list]
