@@ -3,9 +3,6 @@
 ### Author
 [Opentrons](https://opentrons.com/)
 
-### Partner
-[Sweet Jane Edibles](https://www.sweetjaneedibles.com/)
-
 ## Categories
 * Industry
 	* Capsule Filling
@@ -47,6 +44,7 @@ Protocol begins:
 * If the volume is greater than 300 uL, the robot will execute multiple transfers to reach the necessary volume
 * Height of the medicine dispense above the cookie is determined by you during calibration
 * Robot starts with the cookies at slot 1. Then is goes to slot 2, 3, 4, etc. Robot ends with the cookies at slot 9.
+![cookie arrangement](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/cookie_arrangement.png)
 
 ###### Internal
 I0N6fEWl
