@@ -77,6 +77,3 @@ def run_custom_protocol(
             pip.mix(3, vol, plate.wells(well_loc[ind]))
         pip.drop_tip()
         ind = ind+1
-
-
-run_custom_protocol(**{'volumes_csv': example_csv})

@@ -3,13 +3,9 @@
 ### Author
 [Opentrons](https://opentrons.com/)
 
-### Partner
-[University of Padova, Department of Pharmaceutical and Pharmacological Sciences](https://www.unipd.it/)
-
 ## Categories
 * Chemistry
 	* Dilution
-
 
 ## Description
 Normalization of library concentrations using volume and location inputs from a CSV. Uses a p50, p300, or p1000 single channel pipette (changed in the customization field in the Python script). Transfer designated volumes of solvent from a 15 mL tube to a designated well in a 96-well putput plate. Mixing after each solvent transfer is optional.
