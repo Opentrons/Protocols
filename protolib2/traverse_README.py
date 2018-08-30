@@ -1,7 +1,7 @@
 import os
 import json
 from parse import markdown as parser
-from traversals import PROTOCOL_PATH, PROTOCOLS_BUILD_DIR
+from traversals import PROTOCOL_DIR, PROTOCOLS_BUILD_DIR
 
 
 def write_README_to_json(path):
@@ -24,13 +24,13 @@ def write_README_to_json(path):
                     README = f
             file_path = os.path.join(
                 builds_path,
-                '{}/README.json'.format(directory))
+                'README.json')
             README = os.path.join(path, directory, README)
             with open(file_path, 'w') as fh:
-                json.dumps(
+                json.dump(
                     {**parser.parse(README)}, fh)
         except Exception:
             pass
 
 
-write_README_to_json(PROTOCOL_PATH)
+write_README_to_json(PROTOCOL_DIR)

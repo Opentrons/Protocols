@@ -2,7 +2,7 @@
 import os
 import json
 import opentrons
-from traversals import PROTOCOL_PATH, PROTOCOLS_BUILD_DIR
+from traversals import PROTOCOL_DIR, PROTOCOLS_BUILD_DIR
 from parse import parseOT1 as parser
 
 
@@ -19,26 +19,24 @@ def write_ot1_to_file(path):
                 os.mkdir(os.path.join(PROTOCOLS_BUILD_DIR, directory))
             except FileExistsError:
                 pass
-        try:
-            directory = root.split('protocols/')[-1]
-            builds_path = os.path.join(PROTOCOLS_BUILD_DIR, directory)
-            print(builds_path)
-            protocols = []
-            for f in files:
-                if not f.startswith('test_'):
-                    if 'ot1' in f.split('.'):
-                        protocols.append(f)
-            for val, protocol_name in enumerate(protocols):
-                protocol = os.path.join(
-                    path, directory, protocol_name)
-                file_path = os.path.join(
-                    builds_path,
-                    '{}/ot1_{}.json'.format(directory, val))
-                with open(file_path, 'w') as fh:
-                    json.dump(
-                        {**parser.parse(protocol)}, fh)
-        except Exception:
-            pass
+
+        directory = root.split('protocols/')[-1]
+        builds_path = os.path.join(PROTOCOLS_BUILD_DIR, directory)
+        print("BUILD PATH {}".format(builds_path))
+        protocols = []
+        for f in files:
+            if not f.startswith('test_'):
+                if 'ot1' in f.split('.'):
+                    protocols.append(f)
+        for val, protocol_name in enumerate(protocols):
+            protocol = os.path.join(
+                path, directory, protocol_name)
+            file_path = os.path.join(
+                builds_path,
+                'ot1_{}.json'.format(val))
+            with open(file_path, 'w') as fh:
+                json.dump(
+                    {**parser.parse(protocol)}, fh)
 
 
-write_ot1_to_file(PROTOCOL_PATH)
+write_ot1_to_file(PROTOCOL_DIR)
