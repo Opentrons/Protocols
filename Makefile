@@ -22,7 +22,8 @@ venvs/ot1: venvs
 	deactivate
 
 .PHONY: parse-errors
-parse-errors: xargs python protolib2/traverse_errors.py
+parse-errors:
+	python protolib2/traverse_errors.py
 
 .PHONY: parse-ot1
 parse-ot1: venvs/ot1
@@ -48,11 +49,12 @@ venvs/ot2: ot2monorepoClone
 parse-ot2: venvs/ot2
 	source venvs/ot2/bin/activate && \
 	export OVERRIDE_SETTINGS_DIR=$(OT2_MONOREPO_DIR)/api/tests/opentrons/data && \
-	find protocols/ -name $(OT2_FILE_SUFFIX) | xargs python protolib2/parse/traverse_ot2.py && \
+	find protocols/ -name $(OT2_FILE_SUFFIX) | xargs python protolib2/traverse_ot2.py && \
 	deactivate
 
 .PHONY: parse-README
-parse-README: xargs python protolib2/traverse_README.py
+parse-README:
+	python protolib2/traverse_README.py
 
 .PHONY: clean
 clean:

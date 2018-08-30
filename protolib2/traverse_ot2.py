@@ -1,8 +1,8 @@
 # import logging
 import os
 import json
-from protolib2.parse import parseOT2 as parser
-from traversals import PROTOCOL_PATH, PROTOCOLS_BUILD_DIR
+from parse import parseOT2 as parser
+from traversals import PROTOCOL_DIR, PROTOCOLS_BUILD_DIR
 
 
 def write_ot2_to_file(path):
@@ -27,15 +27,15 @@ def write_ot2_to_file(path):
                         protocols.append(f)
             for val, protocol_name in enumerate(protocols):
                 protocol = os.path.join(
-                    PROTOCOL_PATH, directory, protocol_name)
+                    path, directory, protocol_name)
                 file_path = os.path.join(
                     builds_path,
-                    '{}/ot2_{}.json'.format(directory, val))
+                    'ot2_{}.json'.format(val))
                 with open(file_path, 'w') as fh:
-                    json.dumps(
+                    json.dump(
                         {**parser.parse(protocol)}, fh)
         except Exception:
             pass
 
 
-write_ot2_to_file(PROTOCOL_PATH)
+write_ot2_to_file(PROTOCOL_DIR)

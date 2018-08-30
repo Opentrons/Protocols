@@ -1,10 +1,8 @@
 import os
-import tempfile
 
-PROTOCOL_PATH = os.path.join(
-    os.path.expanduser("~"), 'Protocols/protocols/')
-PROTOCOLS_BUILD_DIR = os.path.join(tempfile.gettempdir(), 'proto-builds')
-LIBRARY_PATH = os.path.join(tempfile.gettempdir(), 'proto-releases')
+PROTOCOL_DIR = 'protocols'
+RELEASES_DIR = 'releases'
+PROTOCOLS_BUILD_DIR = os.path.join(RELEASES_DIR, 'proto-builds')
 
 
 def prepare_dirs(
@@ -24,4 +22,4 @@ def prepare_dirs(
         raise SystemExit('Protocol Library path does not exist')
 
 
-prepare_dirs(PROTOCOLS_BUILD_DIR, LIBRARY_PATH, PROTOCOL_PATH)
+prepare_dirs(PROTOCOLS_BUILD_DIR, RELEASES_DIR, PROTOCOL_DIR)
