@@ -16,7 +16,7 @@ script:
   - python3 --version
   - python -c 'import opentrons; print(opentrons.__version__)'
   # lint all code
-  - flake8 .
+  - flake8 protocols/ protolib2/
   - python ./scripts/bad-README-subcategory.py # make sure subcategories don't have 2 spaces
   # WIP. For now, just make sure this logs without errors in CI.
   - make install parse-errors parse-ot1 parse-ot2 parse-README

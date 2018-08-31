@@ -1,32 +1,69 @@
 import os
 import json
-from protolib2.traversals import RELEASES_DIR
+from protolib2.traversals import RELEASES_DIR, search_directory
+from collections import defaultdict
+
+
+def append_to_output(categories, protocols):
+    release_path = os.path.join(RELEASES_DIR, 'output.json')
+    with open(release_path, 'w') as final_file:
+        data = {'categories': categories, 'protocols': protocols}
+        json.dump(data, final_file)
+
+
+def serialize_set(categories):
+    return {key: list(value) for key, value in categories.items()}
+
+
+def add_categories(data, categories, root):
+    new_cat = data['categories']
+    for key, value in new_cat.items():
+        if value:
+            categories[key].add(value[-1])
+        else:
+            categories[key].add(root.split('/')[-1])
 
 
 def merge_protocols(path):
     # Create generator object of protocol object(s) found
     # in the /protocols directory
-    release_path = os.path.join(RELEASES_DIR, 'output.json')
-    # with open(release_path, 'a') as final_file:
-    for root, dirs, files in os.walk(path):
-        print(root)
-        for f in files:
-            print(f)
-            # if 'metadata' in f.split('.'):
-            #     print(os.path.join(root, f))
-            #     fh = open(os.path.join(root, f), 'r')
-            #     print("File Obj", fh)
-            #     data = json.load(fh)
-            #     status = data['status']
-            #     ignore = data['flags']['ignore']
-            #     if status != 'empty' and not ignore:
-            #         print(data)
-            #         json.dump(data, final_file)
-            #     else:
-            #         pass
-            #
-            # fh = open(os.path.join(root, f), 'r')
-            # data = json.load(fh)
-            # json.dump(data, final_file)
+    protocols = []
+    categories = defaultdict(set)
+    for build_dir in search_directory(path, None):
+        root = build_dir['root']
+        # Inside a given protocol directory from the releases/builds dir
+        # Metadata blob
+        meta = open(os.path.join(root, 'metadata.json'), 'r')
+        data = json.load(meta)
+        status = data['status']
+        file_order = data['files']
+        if status != 'empty':
+            protocols.append(data)
+        else:
+            pass
+        meta.close()
 
-            return "Success"
+        # README Blob
+        md = open(os.path.join(root, 'README.json'), 'r')
+        data = json.load(md)
+        add_categories(data, categories, root)
+        md.close()
+
+        # Protocol blob
+        dir_protocols = {
+                        'protocol-data':
+                        {'OT 1 protocol': [], 'OT 2 protocol': []}}
+
+        for ot1 in file_order['OT 1 protocol']:
+            with open(os.path.join(root, '{}.json'.format(ot1)), 'r') as proto:
+                data = json.load(proto)
+            dir_protocols['protocol-data']['OT 1 protocol'].append(data)
+        for ot2 in file_order['OT 2 protocol']:
+            with open(os.path.join(root, '{}.json'.format(ot2)), 'r') as proto:
+                data = json.load(proto)
+            dir_protocols['protocol-data']['OT 2 protocol'].append(data)
+
+        protocols.append(dir_protocols)
+
+    updated_categories = serialize_set(categories)
+    append_to_output(updated_categories, protocols)
