@@ -2,7 +2,8 @@ import glob
 # import logging
 import os
 import json
-from traversals import PROTOCOL_DIR, PROTOCOLS_BUILD_DIR
+from traversals import PROTOCOLS_BUILD_DIR, PROTOCOL_DIR, \
+    ARGS, search_directory
 # file handler keys
 OT_1_PROTOCOL = 'OT 1 protocol'
 OT_2_PROTOCOL = 'OT 2 protocol'
@@ -20,32 +21,24 @@ def get_file_content(protocol_root, filename):
         return appfile.read().strip()
 
 
-def scan_for_protocols(path):
-    # Create generator object of protocol object(s) found
-    # in the /protocols directory
-    for root, dirs, files in os.walk(path):
-        print(root)
-        print(dirs)
-        print(files)
-        if os.path.relpath(root, start=path) != '.':
-            yield {
-                'slug': os.path.relpath(root, start=path),
-                'path': root,
-                'flags': {
-                    'ignore': '.ignore' in files,
-                    'feature': '.feature' in files,
-                    'skip-tests': '.notests' in files,
-                    'embedded-app':
-                        get_file_content(root, '.embedded-app')
-                        if '.embedded-app' in files else False
-                },
-                'detected-files': {
-                    file_type: [
-                        os.path.relpath(f, start=root)
-                        for f in glob.glob(os.path.join(root, file_glob))]
-                    for file_type, file_glob in file_handlers.items()
-                }
-            }
+def generate_metadata(root, path, files):
+    return {
+        'slug': root.split('/')[-1],
+        'path': os.path.join(path, root),
+        'flags': {
+            'feature': '.feature' in files,
+            'skip-tests': '.notests' in files,
+            'embedded-app':
+                get_file_content(os.path.join(path, root), '.embedded-app')
+                if '.embedded-app' in files else False
+        },
+        'files': {
+            file_type: [
+                f.split('/')[-1]
+                for f in glob.glob(os.path.join(path, root, file_glob))]
+            for file_type, file_glob in file_handlers.items()
+        }
+    }
 
 
 def get_errors(file_data):
@@ -59,7 +52,8 @@ def get_errors(file_data):
         len(file_data.get(key, []))
         for key in protocol_keys
     ]
-
+    print(file_data.get(OT_1_PROTOCOL))
+    print(file_data.get(OT_2_PROTOCOL))
     if sum(protocol_file_counts) == 0:
         raise ValueError('Found 0 protocol files required at least 1')
 
@@ -79,9 +73,9 @@ def get_errors(file_data):
 
 def get_status(file_data):
     errors = None
-    if not file_data['flags']['ignore'] and not file_data['flags']['embedded-app']:
-        errors = get_errors(file_data['detected-files'])
-    if not sum(file_data['detected-files'].values(), []):
+    if not file_data['flags']['embedded-app']:
+        errors = get_errors(file_data['files'])
+    if not sum(file_data['files'].values(), []):
         return 'empty'
     return 'error' if errors else 'ok'
 
@@ -91,24 +85,25 @@ def write_metadata_to_file(path):
     Function to write metadata to the relative path
     'protocol_dir/metadata.json'.
     """
-    print("In function!")
-    for protocol in scan_for_protocols(path):
-        try:
-            file_path = os.path.join(
-                PROTOCOLS_BUILD_DIR,
-                '{}/metadata.json'.format(protocol['slug'].split('/')[-1]))
-            print(file_path)
-            with open(file_path, 'w') as fh:
-                json.dump({**protocol,
-                           'status': get_status(protocol),
-                           'files': {
-                                file_type: files[0] if files else None
-                                for file_type, files
-                                in protocol['detected-files'].items()
-                            }}, fh)
-                print("Creating metadata")
-        except IndexError:
-            pass
+    for proto_dir in search_directory(path, None):
+        root = proto_dir['root'].split('/')[-1]
+        files = proto_dir['files']
+        build_path = os.path.join(PROTOCOLS_BUILD_DIR, root)
+        if not os.path.exists(build_path):
+            os.mkdir(build_path)
+        file_path = os.path.join(
+            build_path,
+            'metadata.json')
+        with open(file_path, 'w') as fh:
+            metadata = generate_metadata(root, path, files)
+            print(metadata)
+            json.dump({**metadata,
+                       'status': get_status(metadata)}, fh)
+            print("Creating metadata")
 
 
-write_metadata_to_file(PROTOCOL_DIR)
+if ARGS:
+    for arg in ARGS:
+        write_metadata_to_file(arg)
+else:
+    write_metadata_to_file(PROTOCOL_DIR)

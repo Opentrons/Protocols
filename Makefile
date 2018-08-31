@@ -19,6 +19,7 @@ venvs/ot1: venvs
 	virtualenv venvs/ot1 && \
 	source venvs/ot1/bin/activate && \
 	pip install opentrons==$(OT1_VERSION) && \
+	pip install -e otcustomizers && \
 	deactivate
 
 .PHONY: parse-errors
@@ -28,7 +29,7 @@ parse-errors:
 .PHONY: parse-ot1
 parse-ot1: venvs/ot1
 	source venvs/ot1/bin/activate && \
-	find protocols/ -name $(OT1_FILE_SUFFIX) | xargs python protolib2/traverse_ot1.py && \
+	python protolib2/traverse_ot1.py && \
 	deactivate
 
 ot2monorepoClone:
@@ -38,6 +39,7 @@ venvs/ot2: ot2monorepoClone
 	virtualenv venvs/ot2 && \
 	source venvs/ot2/bin/activate && \
 	pip install -r $(OT2_MONOREPO_DIR)/api/requirements.txt && \
+	pip install -e otcustomizers && \
 	pushd $(OT2_MONOREPO_DIR)/api/ && \
 	python setup.py install && \
 	popd && \
@@ -49,7 +51,7 @@ venvs/ot2: ot2monorepoClone
 parse-ot2: venvs/ot2
 	source venvs/ot2/bin/activate && \
 	export OVERRIDE_SETTINGS_DIR=$(OT2_MONOREPO_DIR)/api/tests/opentrons/data && \
-	find protocols/ -name $(OT2_FILE_SUFFIX) | xargs python protolib2/traverse_ot2.py && \
+  python protolib2/traverse_ot2.py && \
 	deactivate
 
 .PHONY: parse-README

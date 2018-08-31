@@ -1,7 +1,8 @@
 import os
 import json
 from parse import markdown as parser
-from traversals import PROTOCOL_DIR, PROTOCOLS_BUILD_DIR
+from traversals import PROTOCOLS_BUILD_DIR, PROTOCOL_DIR, \
+    ARGS, search_directory
 
 
 def write_README_to_json(path):
@@ -9,28 +10,24 @@ def write_README_to_json(path):
     Recursively scan through root returning the list of protocol
     dictionary items.
     """
-    for root, dirs, files in os.walk(path):
-        for directory in dirs:
-            try:
-                os.mkdir(os.path.join(PROTOCOLS_BUILD_DIR, directory))
-            except FileExistsError:
-                pass
-        try:
-            directory = root.split('protocols/')[1]
-            builds_path = os.path.join(PROTOCOLS_BUILD_DIR, directory)
-            README = ''
-            for f in files:
-                if 'md' in f.split('.'):
-                    README = f
+    for proto_dir in search_directory(path, '.md'):
+        root = proto_dir['root'].split('/')[-1]
+        build_path = os.path.join(PROTOCOLS_BUILD_DIR, root)
+        if not os.path.exists(build_path):
+            os.mkdir(build_path)
+
+        for val, protocol_name in enumerate(proto_dir['files']):
+            protocol = os.path.join(
+                path, root, protocol_name)
             file_path = os.path.join(
-                builds_path,
+                build_path,
                 'README.json')
-            README = os.path.join(path, directory, README)
             with open(file_path, 'w') as fh:
                 json.dump(
-                    {**parser.parse(README)}, fh)
-        except Exception:
-            pass
+                    {**parser.parse(protocol)}, fh)
 
-
-write_README_to_json(PROTOCOL_DIR)
+if ARGS:
+    for arg in ARGS:
+        write_README_to_json(arg)
+else:
+    write_README_to_json(PROTOCOL_DIR)

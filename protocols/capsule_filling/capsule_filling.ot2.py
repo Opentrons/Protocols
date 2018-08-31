@@ -22,12 +22,8 @@ plates = [
 tip1000_rack = labware.load('tiprack-1000ul', '4')
 
 # p1000 (100 - 1000 uL) (single)
-p1000single = instruments.Pipette(
+p1000single = instruments.P1000_Single(
     mount='right',
-    name='p1000single',
-    max_volume=1000,
-    min_volume=100,
-    channels=1,
     tip_racks=[tip1000_rack])
 
 # Workflow description: We fill a vessel (in this case we were thinking

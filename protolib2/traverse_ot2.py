@@ -2,7 +2,8 @@
 import os
 import json
 from parse import parseOT2 as parser
-from traversals import PROTOCOL_DIR, PROTOCOLS_BUILD_DIR
+from traversals import PROTOCOLS_BUILD_DIR, PROTOCOL_DIR, \
+    ARGS, search_directory
 
 
 def write_ot2_to_file(path):
@@ -10,32 +11,25 @@ def write_ot2_to_file(path):
     Recursively scan through root returning the list of protocol
     dictionary items searching for ot2 files only.
     """
+    for proto_dir in search_directory(path, '.ot2'):
+        root = proto_dir['root'].split('/')[-1]
+        build_path = os.path.join(PROTOCOLS_BUILD_DIR, root)
+        if not os.path.exists(build_path):
+            os.mkdir(build_path)
 
-    for root, dirs, files in os.walk(path):
-        for directory in dirs:
-            try:
-                os.mkdir(os.path.join(PROTOCOLS_BUILD_DIR, directory))
-            except FileExistsError:
-                pass
-        try:
-            directory = root.split('protocols/')[1]
-            builds_path = os.path.join(PROTOCOLS_BUILD_DIR, directory)
-            for f in files:
-                protocols = []
-                if not f.startswith('test_'):
-                    if 'ot2' in f.split('.'):
-                        protocols.append(f)
-            for val, protocol_name in enumerate(protocols):
-                protocol = os.path.join(
-                    path, directory, protocol_name)
-                file_path = os.path.join(
-                    builds_path,
-                    'ot2_{}.json'.format(val))
-                with open(file_path, 'w') as fh:
-                    json.dump(
-                        {**parser.parse(protocol)}, fh)
-        except Exception:
-            pass
+        for protocol_name in proto_dir['files']:
+            print(protocol_name)
+            protocol = os.path.join(
+                path, root, protocol_name)
+            file_path = os.path.join(
+                build_path,
+                '{}.json'.format(protocol_name))
+            with open(file_path, 'w') as fh:
+                json.dump(
+                    {**parser.parse(protocol)}, fh)
 
-
-write_ot2_to_file(PROTOCOL_DIR)
+if ARGS:
+    for arg in ARGS:
+        write_ot2_to_file(arg)
+else:
+    write_ot2_to_file(PROTOCOL_DIR)
