@@ -11,9 +11,10 @@ def zip_file(input_file):
     if not os.path.exists(deploy_path):
         os.mkdir(deploy_path)
     output_file = os.path.join(
-        deploy_path, 'PL-data-{}.zip'.format(datetime.now()))
+        deploy_path, 'PL-data-{}.zip'.format(
+            datetime.now().strftime("%Y-%m-%d_%H.%M")))
     with zipfile.ZipFile(output_file, 'w') as zf:
-        zf.write(input_file)
+        zf.write(input_file, 'output.json')
 
 
 def append_to_output(categories, protocols):
