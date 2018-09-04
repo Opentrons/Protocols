@@ -28,6 +28,7 @@ def write_ot2_to_file(path):
                 json.dump(
                     {**parser.parse(protocol)}, fh)
 
+
 if ARGS:
     for arg in ARGS:
         write_ot2_to_file(arg)
