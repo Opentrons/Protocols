@@ -26,6 +26,7 @@ def write_README_to_json(path):
                 json.dump(
                     {**parser.parse(protocol)}, fh)
 
+
 if ARGS:
     for arg in ARGS:
         write_README_to_json(arg)
