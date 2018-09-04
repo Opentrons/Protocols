@@ -1,7 +1,19 @@
 import os
 import json
+import zipfile
 from protolib2.traversals import RELEASES_DIR, search_directory
 from collections import defaultdict
+from datetime import datetime
+
+
+def zip_file(input_file):
+    deploy_path = os.path.join(RELEASES_DIR, 'deploy')
+    if not os.path.exists(deploy_path):
+        os.mkdir(deploy_path)
+    output_file = os.path.join(
+        deploy_path, 'PL-data-{}.zip'.format(datetime.now()))
+    with zipfile.ZipFile(output_file, 'w') as zf:
+        zf.write(input_file)
 
 
 def append_to_output(categories, protocols):
@@ -9,6 +21,7 @@ def append_to_output(categories, protocols):
     with open(release_path, 'w') as final_file:
         data = {'categories': categories, 'protocols': protocols}
         json.dump(data, final_file)
+    zip_file(release_path)
 
 
 def serialize_set(categories):
