@@ -29,7 +29,7 @@ deploy:
   secret_access_key: $AWS_SECRET_KEY
   bucket: protocol-library-builds
   skip_cleanup: true
-  local-dir: releases
+  local-dir: releases/deploy
   upload-dir: $OT_UPLOAD_BRANCH
   acl: private
   on:
