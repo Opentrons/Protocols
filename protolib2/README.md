@@ -61,81 +61,68 @@ A single protocol object is of the form:
 
 ```json
 {
-  "slug": "exampleProtocol",
-  "path": "protocols/exampleProtocol",
-  "flags": {
-    "ignore": false,
-    "feature": false,
-    "skip-tests": false,
-    "embedded-app": false
-  },
-  "detected-files": {
-    "description": [
-      "README.md"
-    ],
-    "OT 1 protocol": [
-      "exampleProtocol.ot1.py"
-    ],
-    "OT 2 protocol": [
-      "exampleProtocol.ot2.py"
-    ]
-  },
-  "status": "ok",
-  "errors": [],
-  "files": {
-    "description": "README.md",
-    "OT 1 protocol": "exampleProtocol.ot1.py",
-    "OT 2 protocol": "exampleProtocol.ot2.py"
-  },
-  "instruments": [
-    {
-      "name": "p50multi",
-      "axis": "a",
-      "channels": 8,
-      "type": "pipette",
-      "min_volume": 5,
-      "max_volume": 50
+    "slug": "10X_serial_dilution",
+    "path": "protocols/10X_serial_dilution",
+    "flags": {
+      "feature": true,
+      "skip-tests": false,
+      "embedded-app": false
+    },
+    "files": {
+      "description": ["README.md"],
+      "OT 1 protocol": ["10x_serial_dilution.ot1.py"],
+      "OT 2 protocol": ["10x_serial_dilution.ot2.py"]
+    },
+    "status": "ok",
+    "protocols": {
+      "OT 1 protocol": [{
+        "instruments": [{
+          "name": "m200",
+          "axis": "a",
+          "channels": 8,
+          "type": "pipette",
+          "min_volume": 20,
+          "max_volume": 200
+        }],
+        "containers": [{
+          "type": "trough-12row",
+          "slot": "D2",
+          "name": "trough"
+        }, {
+          "type": "96-PCR-flat",
+          "slot": "C1",
+          "name": "plate"
+        }, {
+          "type": "tiprack-200ul",
+          "slot": "A1",
+          "name": "m200-rack"
+        }, {
+          "type": "trash-box",
+          "slot": "B2",
+          "name": "trash-box"
+        }],
+        "parameters": [{
+          "name": "final_volume",
+          "annotation": {
+            "type": "float"
+          },
+          "default": 200
+        }]
+      }],
+      "OT 2 protocol": [{
+        "instruments": [{
+          "name": "p300_multi_v1",
+          "mount": "left"
+        }],
+        "labware": [],
+        "parameters": [{
+          "name": "final_volume",
+          "annotation": {
+            "type": "float"
+          },
+          "default": 200
+        }]
+      }]
     }
-  ],
-  "containers": [
-    {
-      "type": "tiprack-200ul",
-      "slot": "A1",
-      "name": "cool tiprack"
-    }
-  ],
-  "parameters": [
-    {
-      "name": "plate_number",
-      "annotation": {
-        "type": "int"
-      },
-      "default": 4
-    }
-  ],
-  "title": "Example Protocol",
-  "author": "Opentrons",
-  "partner": "",
-  "categories": {
-    "Demos": [
-      "Examples"
-    ]
-  },
-  "description": "An example protocol.",
-  "time-estimate": "2 minutes",
-  "robot": [
-    "OT PRO",
-    "OT Standard",
-    "OT Hood"
-  ],
-  "modules": [],
-  "reagents": [
-    "Buffer",
-    "DNA"
-  ],
-  "process": "Process details here",
-  "notes": "Notes here",
-  "internal": "Internal code for record-keeping",
-  "markdown": /* auto-generated parsed markdown JSON goes here */
-},
+  }
 ```

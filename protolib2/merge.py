@@ -51,33 +51,30 @@ def merge_protocols(path):
         data = json.load(meta)
         status = data['status']
         file_order = data['files']
-        if status != 'empty':
-            protocols.append(data)
-        else:
-            pass
         meta.close()
 
         # README Blob
         md = open(os.path.join(root, 'README.json'), 'r')
-        data = json.load(md)
-        add_categories(data, categories, root)
+        md_data = json.load(md)
+        add_categories(md_data, categories, root)
         md.close()
 
         # Protocol blob
-        dir_protocols = {
-                        'protocol-data':
-                        {'OT 1 protocol': [], 'OT 2 protocol': []}}
+        data['protocols'] = {'OT 1 protocol': [], 'OT 2 protocol': []}
 
         for ot1 in file_order['OT 1 protocol']:
             with open(os.path.join(root, '{}.json'.format(ot1)), 'r') as proto:
-                data = json.load(proto)
-            dir_protocols['protocol-data']['OT 1 protocol'].append(data)
+                proto_data = json.load(proto)
+            data['protocols']['OT 1 protocol'].append(proto_data)
         for ot2 in file_order['OT 2 protocol']:
             with open(os.path.join(root, '{}.json'.format(ot2)), 'r') as proto:
-                data = json.load(proto)
-            dir_protocols['protocol-data']['OT 2 protocol'].append(data)
+                proto_data = json.load(proto)
+            data['protocols']['OT 2 protocol'].append(proto_data)
 
-        protocols.append(dir_protocols)
+        if status != 'empty':
+            protocols.append(data)
+        else:
+            pass
 
     updated_categories = serialize_set(categories)
     append_to_output(updated_categories, protocols)
