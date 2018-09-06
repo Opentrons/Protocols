@@ -4,11 +4,11 @@ Protolib traverses through a directory of protocols, parses supported files insi
 
 ## Supported protocol files
 
-Inside `protocols/`, each subdirectory represents a single protocol and can contain these files:
+Inside `protocols/`, each subdirectory represents a single or multiple protocol(s) and can contain these files:
 
-* `*.ot1.py`: OT1 Python protocol file
-* `*.ot2.py`: OT2 Python protocol file
-* `*.md` (preferably `README.md`): README files for a protocol following a specific Markdown format
+* `*.ot1.py`: OT1 Python protocol file(s)
+* `*.ot2.py`: OT2 Python protocol file(s)
+* `*.md` (preferably `README.md`): A single README files for the entire directory following a specific Markdown format
 
 ### README format
 
@@ -21,13 +21,8 @@ Note that the `subcategory` section must be indented by a tab, not by spaces.
 From the repo root:
 
 ```bash
-# inside a virtualenv
-pip install -r protolib/requirements.txt
-
-# build zipped JSON of protocols & categories from
-# all protocols in the protocols/ directory
-# and put the result in the releases/ dir
-python -m protolib protocols/ releases/
+make install parse-errors parse-ot1 parse-ot2 parse-README
+python -m protolib2
 ```
 
 
@@ -61,81 +56,91 @@ A single protocol object is of the form:
 
 ```json
 {
-  "slug": "exampleProtocol",
-  "path": "protocols/exampleProtocol",
-  "flags": {
-    "ignore": false,
-    "feature": false,
-    "skip-tests": false,
-    "embedded-app": false
-  },
-  "detected-files": {
-    "description": [
-      "README.md"
+    "slug": "10X_serial_dilution",
+    "path": "protocols/10X_serial_dilution",
+    "flags": {
+      "feature": true,
+      "skip-tests": false,
+      "embedded-app": false
+    },
+    "files": {
+      "description": ["README.md"],
+      "OT 1 protocol": ["10x_serial_dilution.ot1.py"],
+      "OT 2 protocol": ["10x_serial_dilution.ot2.py"]
+    },
+    "status": "ok",
+    "protocols": {
+      "OT 1 protocol": [{
+        "instruments": [{
+          "name": "m200",
+          "axis": "a",
+          "channels": 8,
+          "type": "pipette",
+          "min_volume": 20,
+          "max_volume": 200
+        }],
+        "containers": [{
+          "type": "trough-12row",
+          "slot": "D2",
+          "name": "trough"
+        }, {
+          "type": "96-PCR-flat",
+          "slot": "C1",
+          "name": "plate"
+        }, {
+          "type": "tiprack-200ul",
+          "slot": "A1",
+          "name": "m200-rack"
+        }, {
+          "type": "trash-box",
+          "slot": "B2",
+          "name": "trash-box"
+        }],
+        "parameters": [{
+          "name": "final_volume",
+          "annotation": {
+            "type": "float"
+          },
+          "default": 200
+        }]
+      }],
+      "OT 2 protocol": [{
+        "instruments": [{
+          "name": "p300_multi_v1",
+          "mount": "left"
+        }],
+        "labware": [],
+        "parameters": [{
+          "name": "final_volume",
+          "annotation": {
+            "type": "float"
+          },
+          "default": 200
+        }]
+      }]
+    },
+    "title": "Example Protocol",
+    "author": "Opentrons",
+    "partner": "",
+    "categories": {
+      "Demos": [
+        "Examples"
+      ]
+    },
+    "description": "An example protocol.",
+    "time-estimate": "2 minutes",
+    "robot": [
+      "OT PRO",
+      "OT Standard",
+      "OT Hood"
     ],
-    "OT 1 protocol": [
-      "exampleProtocol.ot1.py"
+    "modules": [],
+    "reagents": [
+      "Buffer",
+      "DNA"
     ],
-    "OT 2 protocol": [
-      "exampleProtocol.ot2.py"
-    ]
-  },
-  "status": "ok",
-  "errors": [],
-  "files": {
-    "description": "README.md",
-    "OT 1 protocol": "exampleProtocol.ot1.py",
-    "OT 2 protocol": "exampleProtocol.ot2.py"
-  },
-  "instruments": [
-    {
-      "name": "p50multi",
-      "axis": "a",
-      "channels": 8,
-      "type": "pipette",
-      "min_volume": 5,
-      "max_volume": 50
-    }
-  ],
-  "containers": [
-    {
-      "type": "tiprack-200ul",
-      "slot": "A1",
-      "name": "cool tiprack"
-    }
-  ],
-  "parameters": [
-    {
-      "name": "plate_number",
-      "annotation": {
-        "type": "int"
-      },
-      "default": 4
-    }
-  ],
-  "title": "Example Protocol",
-  "author": "Opentrons",
-  "partner": "",
-  "categories": {
-    "Demos": [
-      "Examples"
-    ]
-  },
-  "description": "An example protocol.",
-  "time-estimate": "2 minutes",
-  "robot": [
-    "OT PRO",
-    "OT Standard",
-    "OT Hood"
-  ],
-  "modules": [],
-  "reagents": [
-    "Buffer",
-    "DNA"
-  ],
-  "process": "Process details here",
-  "notes": "Notes here",
-  "internal": "Internal code for record-keeping",
-  "markdown": /* auto-generated parsed markdown JSON goes here */
-},
+    "process": "Process details here",
+    "notes": "Notes here",
+    "internal": "Internal code for record-keeping"
+  }
 ```
