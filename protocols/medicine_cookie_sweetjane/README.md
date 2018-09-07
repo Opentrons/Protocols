@@ -10,13 +10,9 @@
 ## Description
 Your robot will dispense a designated amount of medicine onto up to 18 cookies on the robot's deck. Medicine is positioned on the center of the temperature module in slot 11. Arrangement of cookies is specificed on the included pdf document (2 cookies per slot). The robot dispenses the same volume on all cookies, minimum volume of 5 microliters. The pipette (either p50 or p300 single channel) is determined by the volume. The height below the top of the medicine container can be adjusted based on the liquid level in the medicine container.
 
-### Time Estimate
-
 ### Robot
 * OT2
 
-### Modules
-* Temperature Module
 
 ### Reagents
 * Medicine (liquid)
