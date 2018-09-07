@@ -65,15 +65,15 @@ def run_custom_protocol(
 
     source_plate = containers.load(source_container, 'C2')
 
-    if (robot_model == 'hood'
-            and number_of_destination_plates > max_plates_for_hood):
+    if (robot_model == 'hood' and
+            number_of_destination_plates > max_plates_for_hood):
         raise Exception((
             'OT Hood model can only accomodate {} plates for ' +
             'this protocol, you entered {}').format(
                 max_plates_for_hood, number_of_destination_plates))
 
-    if ('384-plate' in [source_container, destination_container]
-            and source_container != destination_container):
+    if ('384-plate' in [source_container, destination_container] and
+            source_container != destination_container):
         raise Exception(
             'This protocol currently only allows 96:96 or 384:384 transfers.' +
             ' You entered "{}" and "{}"'.format(
