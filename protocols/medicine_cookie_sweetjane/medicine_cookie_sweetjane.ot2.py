@@ -20,14 +20,14 @@ def run_custom_protocol(
                        grid=(2, 1),
                        spacing=(0, 63),
                        diameter=53,
-                       depth=1)
+                       depth=20)
     # make a list of all the cookie holder containers
     holders = [labware.load('cookie-holder-1', slot) for slot in empty_slots]
 
     # INSTRUMENT SETUP
     if volume <= 50:
         pip = instruments.P50_Single(
-            mount='right',
+            mount='left',
             tip_racks=[tips])
     else:
         pip = instruments.P300_Single(
