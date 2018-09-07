@@ -3,7 +3,7 @@ from opentrons import labware, instruments, modules
 # labware setup
 mag_deck = modules.load('magdeck', '2')
 plate = labware.load('96-flat', '1')
-pcr_strips = labware.load('96-PCR-flat', '2', share=True)
+pcr_strips = labware.load('biorad-hardshell-96-PCR', '2', share=True)
 tuberack = labware.load('tube-rack-2ml', '4')
 mag_beads = tuberack.wells('A1')
 liquid_trash = labware.load('point', '7')
