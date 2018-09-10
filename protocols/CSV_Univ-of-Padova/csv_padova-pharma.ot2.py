@@ -1,4 +1,5 @@
 from opentrons import instruments, labware
+from otcustomizers import FileInput
 
 # customization
 mix = 1  # if you want to mix, mix = 1; no mix, mix = 0
@@ -56,7 +57,7 @@ def well_csv_to_list(csv_string):
 
 
 def run_custom_protocol(
-        volumes_csv: 'FileInput'=example_csv):
+        volumes_csv: FileInput=example_csv):
     script = [str(cell) for cell in well_csv_to_list(volumes_csv)]
 
     well_loc = script[script.index('PLATE-POSITION')+1:script.index(
