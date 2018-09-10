@@ -13,12 +13,8 @@ tip200_rack = labware.load('tiprack-200ul', '1')
 matrigelcell_trough = labware.load('trough-12row', '3')
 
 # p10 (1 - 10 uL) (multi)
-p50multi = instruments.Pipette(
+p50multi = instruments.P50_Multi(
     mount='left',
-    name='p50multi',
-    max_volume=50,
-    min_volume=5,
-    channels=8,
     tip_racks=[tip200_rack])
 
 # location of matrigel + cell in trough
