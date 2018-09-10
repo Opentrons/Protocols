@@ -1,7 +1,7 @@
 from inspect import signature, Parameter
 # import json
 import time
-from opentrons import robot, labware
+from opentrons import robot, labware, modules
 from opentrons.instruments import Pipette as BasePipette
 import sys
 import opentrons
@@ -14,21 +14,33 @@ print(allProtocolFiles)
 print('*-' * 40)
 
 global all_labware
+global all_modules
 orig_labware_load = labware.load
+orig_module_load = modules.load
 
 
 # Create fake loading function to avoid repetitive access to
 # DB and/or opentrons server of labware
-def load_labware_spy(labware_name, slot, label=None):
+def load_labware_spy(labware_name, slot, label=None, share=False):
     all_labware.append({
         'type': labware_name,
         'slot': slot,
-        'name': label or labware_name
+        'name': label or labware_name,
+        'share': share
         })
-    return orig_labware_load(labware_name, slot, label)
+    return orig_labware_load(labware_name, slot, label, share)
+
+
+# Create fake loading function for modules
+def load_module_spy(labware_name, slot):
+    all_modules.append({
+        'type': labware_name,
+        'slot': slot})
+    return orig_module_load(labware_name, slot)
 
 
 labware.load = load_labware_spy
+modules.load = load_module_spy
 
 
 def parse(protocol_path):
@@ -41,9 +53,10 @@ def parse(protocol_path):
     robot.reset()
 
     global all_labware
+    global all_modules
     # new protocol. start with no containers
     all_labware = []
-
+    all_modules = []
     orig_time_sleep = time.sleep
 
     def fake_sleep(*args, **kwargs):
@@ -76,6 +89,7 @@ def parse(protocol_path):
     _globals = {
         'robot': robot,
         'opentrons.labware': all_labware,
+        'opentrons.modules': all_modules,
         'opentrons.instruments': InstrumentsWrapper(robot),
         'time': fake_time
     }
@@ -102,6 +116,8 @@ def parse(protocol_path):
         robot, protocol_function, all_labware)
 
 
+# TODO: Add in all recorded modules to the result dict once deck map can
+# support it.
 def get_result_dict(robot, protocol_function, all_labware):
     return {
         'instruments': get_instruments(robot),
