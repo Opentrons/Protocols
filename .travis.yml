@@ -16,11 +16,16 @@ script:
   - python3 --version
   - python -c 'import opentrons; print(opentrons.__version__)'
   # lint all code
-  - flake8 protocols/ protolib2/
+  - flake8 .
+  - pytest protolib/ -vv
   - python ./scripts/bad-README-subcategory.py # make sure subcategories don't have 2 spaces
+  # - ./scripts/smoke-test.sh  # skip smoke testing, hope protolib catches it
+  #
+  # use protolib to build zipped .json for S3
+  - python -m protolib protocols/ releases/
+  - ls -la releases/
   # WIP. For now, just make sure this logs without errors in CI.
-  - make install parse-errors parse-ot1 parse-ot2 parse-README
-  - python -m protolib2
+  - make install parse-ot1 parse-ot2
 
 # Deploy the build version in an S3 bucket
 deploy:
@@ -29,7 +34,7 @@ deploy:
   secret_access_key: $AWS_SECRET_KEY
   bucket: protocol-library-builds
   skip_cleanup: true
-  local-dir: releases/deploy
+  local-dir: releases
   upload-dir: $OT_UPLOAD_BRANCH
   acl: private
   on:
