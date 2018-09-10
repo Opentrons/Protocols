@@ -1,5 +1,5 @@
 from opentrons import labware, instruments
-from otcustomizers import StringSelection
+
 # Copy contents of one plate into another
 
 source_slot = '6'
@@ -17,9 +17,13 @@ tip_slots = ['10', '11']
 tip_racks = [labware.load('tiprack-200ul', slot) for slot in tip_slots]
 
 # TODO: customizable pipette vol
-p50multi = instruments.P50_Multi(
-    mount='right',
-    tip_racks=tip_racks)
+p50multi = instruments.Pipette(
+    axis='a',
+    channels=8,
+    max_volume=50,
+    min_volume=5,
+    tip_racks=tip_racks,
+)
 
 container_choices = [
     '96-flat', '96-PCR-tall', '96-deep-well', '384-plate']
@@ -38,9 +42,9 @@ def alternating_wells(plate, row_num):
 
 def run_custom_protocol(
         transfer_volume: float=20,
-        robot_model: StringSelection('hood', 'not hood')='not hood',
-        source_container: StringSelection(*container_choices)='96-flat',
-        destination_container: StringSelection(*container_choices)='96-flat',
+        robot_model: 'StringSelection...'='not hood',
+        source_container: 'StringSelection...'='96-flat',
+        destination_container: 'StringSelection...'='96-flat',
         number_of_destination_plates: int=4):
 
     # Load containers
@@ -50,8 +54,8 @@ def run_custom_protocol(
 
     source_plate = labware.load(source_container, source_slot)
 
-    if ('384-plate' in [source_container, destination_container] and
-            source_container != destination_container):
+    if ('384-plate' in [source_container, destination_container]
+            and source_container != destination_container):
         raise Exception(
             'This protocol currently only allows 96:96 or 384:384 transfers.' +
             ' You entered "{}" and "{}"'.format(

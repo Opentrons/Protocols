@@ -36,13 +36,16 @@ def run_custom_protocol(
         pipette_axis: StringSelection(
             'left', 'right')='left'):
 
-    p300 = instruments.P300_Single(
+    p200 = instruments.Pipette(
         mount=pipette_axis,
-        tip_racks=[p200rack]
+        min_volume=20,
+        max_volume=200,
+        name='p200',
+        tip_racks=[p200rack],
     )
 
     # macro commands like .distribute() make writing long sequences easier:
     # distribute green solution to the body
-    p300.distribute(50, green, green_wells, disposal_vol=0, blow_out=True)
+    p200.distribute(50, green, green_wells, disposal_vol=0, blow_out=True)
     # distribute blue solution to the dinosaur's back
-    p300.distribute(50, blue, blue_wells, disposal_vol=0, blow_out=True)
+    p200.distribute(50, blue, blue_wells, disposal_vol=0, blow_out=True)
