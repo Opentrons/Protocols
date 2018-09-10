@@ -6,7 +6,8 @@ plate = containers.load('384-plate', '9')
 
 p200 = instruments.P300_Single(
     mount="right",
-    tip_racks=[p200rack])
+    tip_racks=[p200rack],
+)
 
 
 def run_custom_protocol(number_of_tubes: int=24, transfer_volume: int=40):

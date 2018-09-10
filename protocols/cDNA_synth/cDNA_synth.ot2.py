@@ -22,13 +22,21 @@ tip200_rack6 = labware.load('tiprack-200ul', '10')
 tip200_rack7 = labware.load('tiprack-200ul', '11')
 
 # p50 (5 - 50 uL) (single)
-p50single = instruments.P50_Single(
+p50single = instruments.Pipette(
     mount='right',
+    name='p50single',
+    max_volume=50,
+    min_volume=5,
+    channels=1,
     tip_racks=[tip200_rack, tip200_rack2, tip200_rack3])
 
 # p50 (5 - 50 uL) (multi)
-p50multi = instruments.P50_Multi(
+p50multi = instruments.Pipette(
     mount='left',
+    name='p50multi',
+    max_volume=50,
+    min_volume=5,
+    channels=8,
     tip_racks=[tip200_rack5, tip200_rack6, tip200_rack7])
 
 water = reagents.wells('A1')
