@@ -11,9 +11,13 @@ plate = labware.load('96-PCR-flat', '9')
 tuberack = labware.load('tube-rack-2ml', '10')
 
 # Needs to have individual constructor
-m50 = instruments.P50_Multi(
+m50 = instruments.Pipette(
+    name="p200",
     tip_racks=[tiprack, tiprack2],
-    mount="left")
+    max_volume=50,
+    mount="left",
+    channels=8
+)
 
 p200 = instruments.P300_Single(
     tip_racks=[tiprack],
