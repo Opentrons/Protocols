@@ -2,7 +2,8 @@ from opentrons import instruments, labware, modules
 
 # labware setup
 temp_deck = modules.load('tempdeck', '1')
-plate_96 = labware.load('opentrons-aluminum-block-96-PCR-plate', '1', share=True)
+plate_96 = labware.load('opentrons-aluminum-block-96-PCR-plate',
+                        '1', share=True)
 plate_384 = labware.load('384-plate', '2')
 tuberack = labware.load('tube-rack-2ml', '3')
 source_tubes = tuberack.wells(0, length=8)
