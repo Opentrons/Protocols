@@ -32,11 +32,11 @@ def load_labware_spy(labware_name, slot, label=None, share=False):
 
 
 # Create fake loading function for modules
-def load_module_spy(labware_name, slot):
+def load_module_spy(module_name, slot):
     all_modules.append({
-        'type': labware_name,
+        'name': module_name,
         'slot': slot})
-    return orig_module_load(labware_name, slot)
+    return orig_module_load(module_name, slot)
 
 
 labware.load = load_labware_spy
@@ -116,12 +116,11 @@ def parse(protocol_path):
         robot, protocol_function, all_labware)
 
 
-# TODO: Add in all recorded modules to the result dict once deck map can
-# support it.
 def get_result_dict(robot, protocol_function, all_labware):
     return {
         'instruments': get_instruments(robot),
         'labware': all_labware,
+        'modules': all_modules,
         'parameters': get_parameters(protocol_function)
         if protocol_function else []
     }
