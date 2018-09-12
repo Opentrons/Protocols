@@ -5,7 +5,8 @@ temp_deck = modules.load('tempdeck', '7')
 
 trough = labware.load('trough-12row', '3')
 mag_plate = labware.load('biorad-hardshell-96-PCR', '1', share=True)
-temp_plate = labware.load('opentrons-aluminum-block-96-PCR-plate', '7', share=True)
+temp_plate = labware.load('opentrons-aluminum-block-96-PCR-plate',
+                          '7', share=True)
 fresh_plate = labware.load('96-flat', '2')
 tiprack1 = labware.load('tiprack-200ul', '4')
 tiprack2 = labware.load('tiprack-200ul', '5')
