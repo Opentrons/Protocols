@@ -5,7 +5,7 @@
 
 ## Categories
 * Basic Pipetting
-    * Plate Filling
+	* Plate Filling
 
 ## Description
 This protocol allows the robot to distribute magnetic beads from a 1.5 mL tube to a number of wells in PCR strips, based on the number defined by the user. The beads are then washed with the use of the Opentrons MagDeck. This protocol can work with up to 32 samples.
