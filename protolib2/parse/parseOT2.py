@@ -18,20 +18,23 @@ orig_labware_load = labware.load
 orig_module_load = modules.load
 
 
-# Create fake loading function to avoid repetitive access to
-# DB and/or opentrons server of labware
+# labware.load spy
 def load_labware_spy(labware_name, slot, label=None, share=False):
-    all_labware.append({
-        'type': labware_name,
-        'slot': slot,
-        'name': label or labware_name,
-        'share': share
-        })
+    # module.load() calls labware.load() to get the "labware" for the modules
+    # so we have to filter out modules from this labware spy somehow...
+    if labware_name not in modules.SUPPORTED_MODULES:
+        all_labware.append({
+            'type': labware_name,
+            'slot': slot,
+            'name': label or labware_name,
+            'share': share
+            })
     return orig_labware_load(labware_name, slot, label, share)
 
 
-# Create fake loading function for modules
+# modules.load spy
 def load_module_spy(module_name, slot):
+    print('debug module', module_name, slot)
     all_modules.append({
         'name': module_name,
         'slot': slot})
@@ -41,6 +44,8 @@ def load_module_spy(module_name, slot):
 # monkeypatch the spies in
 labware.load = load_labware_spy
 modules.load = load_module_spy
+# TODO: Ian 2018-09-13 avoid these spies altogether once there's a solid way
+# to get labware and modules (eg after major Session refactor)
 
 
 def parse(protocol_path):
