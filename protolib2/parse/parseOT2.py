@@ -34,7 +34,6 @@ def load_labware_spy(labware_name, slot, label=None, share=False):
 
 # modules.load spy
 def load_module_spy(module_name, slot):
-    print('debug module', module_name, slot)
     all_modules.append({
         'name': module_name,
         'slot': slot})
