@@ -109,7 +109,16 @@ A single protocol object is of the form:
           "name": "p300_multi_v1",
           "mount": "left"
         }],
-        "labware": [],
+        "modules": [{
+          "name": "magdeck",
+          "slot": "2"
+        }],
+        "labware": [{
+          "type": "biorad-hardshell-96-PCR",
+          "slot": "2",
+          "name": "biorad-hardshell-96-PCR",
+          "share": true
+        }],
         "parameters": [{
           "name": "final_volume",
           "annotation": {
