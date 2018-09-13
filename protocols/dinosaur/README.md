@@ -7,6 +7,7 @@
 
 ## Categories
 * Demos
+	* Dinosaur
 
 ## Description
 Draw a picture of a dinosaur (a Stegosaurus!) on a 96 well plate using food coloring.
