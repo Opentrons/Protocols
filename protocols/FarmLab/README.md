@@ -19,21 +19,21 @@ This protocol allows the robot to perform indirect ELISA to detect anti-MOMP ant
 ## Process
 1. Input desired number of strips to use in your experiment.
 2. Download your protocol.
-2. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
-3. Set up your deck according to the deck map.
-4. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support article](https://support.opentrons.com/ot-2/getting-started-software-setup/deck-calibration).
-5. Hit "Run".
-6. Transfer 90 uL dilution buffer to target strips.
-7. Pause for 45-min incubation.
-8. Empty target strips into liquid trash.
-9. Wash strips with 300 uL of wash buffer 5 times.
-10. Transfer 100 uL of conjugate secondary antibody to strips.
-11. Pause for 30-min incubation.
-12. Empty target strips into liquid trash.
-13. Wash strips with 300 uL of wash buffer 5 times.
-14. Transfer 100 uL of substrate to target strips.
-15. Pause for 15-min incubation.
-16. Transfer 100 uL stop solution to target strips.
+3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
+4. Set up your deck according to the deck map.
+5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support article](https://support.opentrons.com/ot-2/getting-started-software-setup/deck-calibration).
+6. Hit "Run".
+7. Transfer 90 uL dilution buffer to target strips.
+8. Pause for 45-min incubation.
+9. Empty target strips into liquid trash.
+10. Wash strips with 300 uL of wash buffer 5 times.
+11. Transfer 100 uL of conjugate secondary antibody to strips.
+12. Pause for 30-min incubation.
+13. Empty target strips into liquid trash.
+14. Wash strips with 300 uL of wash buffer 5 times.
+15. Transfer 100 uL of substrate to target strips.
+16. Pause for 15-min incubation.
+17. Transfer 100 uL stop solution to target strips.
 
 ###### Internal
 ledvUIra
