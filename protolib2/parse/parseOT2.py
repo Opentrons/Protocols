@@ -1,10 +1,9 @@
 from inspect import signature, Parameter
-# import json
 import time
-from opentrons import robot, labware, modules
-from opentrons.instruments import Pipette as BasePipette
 import sys
 import opentrons
+from opentrons import robot, labware, modules
+from opentrons.instruments import Pipette as BasePipette
 
 allProtocolFiles = sys.argv[1:]
 
@@ -13,8 +12,8 @@ print('Parsing OT2. Files:')
 print(allProtocolFiles)
 print('*-' * 40)
 
-global all_labware
-global all_modules
+all_labware = []
+all_modules = []
 orig_labware_load = labware.load
 orig_module_load = modules.load
 
@@ -39,6 +38,7 @@ def load_module_spy(module_name, slot):
     return orig_module_load(module_name, slot)
 
 
+# monkeypatch the spies in
 labware.load = load_labware_spy
 modules.load = load_module_spy
 
@@ -88,8 +88,6 @@ def parse(protocol_path):
 
     _globals = {
         'robot': robot,
-        'opentrons.labware': all_labware,
-        'opentrons.modules': all_modules,
         'opentrons.instruments': InstrumentsWrapper(robot),
         'time': fake_time
     }
@@ -113,10 +111,10 @@ def parse(protocol_path):
         protocol_function()
 
     return get_result_dict(
-        robot, protocol_function, all_labware)
+        robot, protocol_function, all_labware, all_modules)
 
 
-def get_result_dict(robot, protocol_function, all_labware):
+def get_result_dict(robot, protocol_function, all_labware, all_modules):
     return {
         'instruments': get_instruments(robot),
         'labware': all_labware,
