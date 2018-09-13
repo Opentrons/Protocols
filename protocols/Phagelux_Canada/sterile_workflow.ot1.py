@@ -55,8 +55,15 @@ def run_custom_protocol(diameter: int=60):
                  mix_after=(3, 10))
 
     # Serial dilute row 1->2, 2->3, 3->4, 4->5, and 5->6
-    m300.transfer(10, plate.rows('1', to='5'), plate.rows('2', to='6'),
-                  mix_after=(3, 10))
+    for col in plate.cols():
+        p10.pick_up_tip()
+        p10.transfer(
+            10,
+            col.wells('1', to='5'),
+            col.wells('2', to='6'),
+            mix_after=(3, 10),
+            new_tip='never')
+        p10.drop_tip()
 
     """
     2. Titration on Agar Plates
