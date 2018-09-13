@@ -1,10 +1,9 @@
 from inspect import signature, Parameter
-# import json
 import time
-from opentrons import robot, labware, modules
-from opentrons.instruments import Pipette as BasePipette
 import sys
 import opentrons
+from opentrons import robot, labware, modules
+from opentrons.instruments import Pipette as BasePipette
 
 allProtocolFiles = sys.argv[1:]
 
@@ -13,34 +12,39 @@ print('Parsing OT2. Files:')
 print(allProtocolFiles)
 print('*-' * 40)
 
-global all_labware
-global all_modules
+all_labware = []
+all_modules = []
 orig_labware_load = labware.load
 orig_module_load = modules.load
 
 
-# Create fake loading function to avoid repetitive access to
-# DB and/or opentrons server of labware
+# labware.load spy
 def load_labware_spy(labware_name, slot, label=None, share=False):
-    all_labware.append({
-        'type': labware_name,
-        'slot': slot,
-        'name': label or labware_name,
-        'share': share
-        })
+    # module.load() calls labware.load() to get the "labware" for the modules
+    # so we have to filter out modules from this labware spy somehow...
+    if labware_name not in modules.SUPPORTED_MODULES:
+        all_labware.append({
+            'type': labware_name,
+            'slot': slot,
+            'name': label or labware_name,
+            'share': share
+            })
     return orig_labware_load(labware_name, slot, label, share)
 
 
-# Create fake loading function for modules
-def load_module_spy(labware_name, slot):
+# modules.load spy
+def load_module_spy(module_name, slot):
     all_modules.append({
-        'type': labware_name,
+        'name': module_name,
         'slot': slot})
-    return orig_module_load(labware_name, slot)
+    return orig_module_load(module_name, slot)
 
 
+# monkeypatch the spies in
 labware.load = load_labware_spy
 modules.load = load_module_spy
+# TODO: Ian 2018-09-13 avoid these spies altogether once there's a solid way
+# to get labware and modules (eg after major Session refactor)
 
 
 def parse(protocol_path):
@@ -88,8 +92,6 @@ def parse(protocol_path):
 
     _globals = {
         'robot': robot,
-        'opentrons.labware': all_labware,
-        'opentrons.modules': all_modules,
         'opentrons.instruments': InstrumentsWrapper(robot),
         'time': fake_time
     }
@@ -113,15 +115,14 @@ def parse(protocol_path):
         protocol_function()
 
     return get_result_dict(
-        robot, protocol_function, all_labware)
+        robot, protocol_function, all_labware, all_modules)
 
 
-# TODO: Add in all recorded modules to the result dict once deck map can
-# support it.
-def get_result_dict(robot, protocol_function, all_labware):
+def get_result_dict(robot, protocol_function, all_labware, all_modules):
     return {
         'instruments': get_instruments(robot),
         'labware': all_labware,
+        'modules': all_modules,
         'parameters': get_parameters(protocol_function)
         if protocol_function else []
     }
