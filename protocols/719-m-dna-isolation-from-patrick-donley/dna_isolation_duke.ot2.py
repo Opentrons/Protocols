@@ -2,8 +2,7 @@ from opentrons import instruments, labware, modules
 
 # labware setup
 mag_module = modules.load('magdeck', '1')
-mag_plate = labware.load('biorad-hardshell-96-PCR', '1', 'mag_plate',
-                         share=True)
+mag_plate = labware.load('biorad-hardshell-96-PCR', '1', share=True)
 trough = labware.load('trough-12row', '2')
 source_plate = labware.load('96-flat', '3', 'source_plate')
 tiprack_p50 = labware.load('tiprack-200ul', '4', 'tiprack50')
