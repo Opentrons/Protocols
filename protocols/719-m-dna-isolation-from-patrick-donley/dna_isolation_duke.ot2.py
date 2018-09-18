@@ -1,7 +1,7 @@
 from opentrons import instruments, labware, modules
 
 # labware setup
-mag_deck = modules.load('magdeck', '1')
+mag_module = modules.load('magdeck', '1')
 mag_plate = labware.load('biorad-hardshell-96-PCR', '1', 'mag_plate',
                          share=True)
 trough = labware.load('trough-12row', '2')
@@ -84,7 +84,7 @@ def run_custom_protocol(
     m50.delay(minutes=30)
 
     # Turn on magnetic module for 15 minutes
-    mag_deck.engage()
+    mag_module.engage(height=18)
     m50.delay(minutes=15)
 
     # Discard solution from mag-plate
@@ -96,7 +96,7 @@ def run_custom_protocol(
             new_tip='always')
 
     # Turn off magnetic module
-    mag_deck.disengage()
+    mag_module.disengage()
 
     # Wash with water 4 times
     # Using the same tip to add water and to remove waste in each cycle
@@ -112,7 +112,7 @@ def run_custom_protocol(
             m300.return_tip()
 
         # wait 15 minutes for NP to settle
-        mag_deck.engage()
+        mag_module.engage(height=18)
         m300.delay(minutes=15)
 
         # remove 250 uL of water
@@ -123,4 +123,4 @@ def run_custom_protocol(
                 col.bottom(aspirate_height),
                 liquid_trash,
                 new_tip='always')
-        mag_deck.disengage()
+        mag_module.disengage()
