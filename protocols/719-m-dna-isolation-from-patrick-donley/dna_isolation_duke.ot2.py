@@ -83,7 +83,7 @@ def run_custom_protocol(
     m50.delay(minutes=30)
 
     # Turn on magnetic module for 15 minutes
-    mag_module.engage(height=18)
+    mag_module.engage()
     m50.delay(minutes=15)
 
     # Discard solution from mag-plate
@@ -111,7 +111,7 @@ def run_custom_protocol(
             m300.return_tip()
 
         # wait 15 minutes for NP to settle
-        mag_module.engage(height=18)
+        mag_module.engage()
         m300.delay(minutes=15)
 
         # remove 250 uL of water
