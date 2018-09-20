@@ -8,7 +8,7 @@
     * Plate Filling
 
 ## Description
-This protocol allows the robot to distribute polymer and PCR reagents from a 12-row trough to a 384-well plate using a single channel pipette. The robot then transfer the primer stocks from four 96-well plates to the 384-well plate. Volumes of the reagent and primer can be modified in the fields below.
+This protocol allows the robot to distribute polymer and PCR reagents from a 12-row trough to a 384-well plate using a single channel pipette. The robot will then transfer the primer stocks from four 96-well plates to the 384-well plate. Volumes of the reagent and primer can be modified in the fields below.
 
 ### Robot
 * [OT 2](https://opentrons.com/ot-2)
