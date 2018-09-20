@@ -21,7 +21,8 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-env/
+venvs/
+ot2monorepoClone/
 build/
 develop-eggs/
 dist/
