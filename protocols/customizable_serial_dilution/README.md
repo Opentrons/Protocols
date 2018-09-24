@@ -10,10 +10,28 @@
 ## Description
 With this protocol, you can do a simple serial dilution in a 96-well plate using either a single-channel or multichannel pipette on the left mount of your OT-2. This can be useful for everything from creating a simple standard curve to a concentration-limiting dilution. You can use this as a standalone protocol or as part of a larger workflow. For more information (including results and other considerations), please see our [Technical Note](https://docs.google.com/document/d/1cwSAS52fSBOEI0Hb7U2paq5jS_G1LN2fB5TssJp-Au0/edit?usp=sharing).
 
+<<<<<<< HEAD
 This protocol uses the inputs you define for **dilution factor** and **dilution volume** to automatically infer the necessary volume for each individual transfer across your plate.
 
 * ***Example:*** For a 1 in 10 dilution series, if you define a **dilution volume** of 90uL and a **dilution factor** of 10, your OT-2 will first add 90uL of diluent to each well in your plate, then transfer 10uL between each well in the plate.
 ![serial dilution](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/customizable-serial-dilution/Screen+Shot+2018-09-24+at+3.04.54+PM.png)
+=======
+User-Defined Inputs
+  * Pipette Type (defined for left mount only)
+  * Dilution factor
+  * Number of dilutions (max: 11)
+  * Dilution volume
+  * Tip Reuse Strategy (default: reuse one tip throughout dilution series)
+
+Materials Needed
+  * [Opentrons OT-2](http://opentrons.com/ot-2)
+  * [Opentrons OT-2 Run App (Version 3.1.2 or later)](http://opentrons.com/ot-app)
+  * 200uL or 300 uL Tiprack - [Opentrons tips suggested](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips-racks-9-600-tips)
+  * [12-row automation-friendly trough](https://www.usascientific.com/12-channel-automation-reservoir.aspx))
+  * Clear flat-bottom 96-well polystyrene 96-well plate
+  * Diluent (Pre-loaded in row 1 of trough
+  * Samples/Standards (Pre-loaded in Column 1 of a standard flat-bottom 96-well plate)
+>>>>>>> a26b555f76a36a193be152f105d20c171009f0a6
 
 User-Defined Inputs
 * Pipette Type (defined for left mount only)
@@ -22,6 +40,7 @@ User-Defined Inputs
 * Dilution volume
 * Tip Reuse Strategy (default: reuse one tip throughout dilution series)
 
+<<<<<<< HEAD
 Materials Needed
 * [Opentrons OT-2](http://opentrons.com/ot-2)
 * [Opentrons OT-2 Run App (Version 3.1.2 or later)](http://opentrons.com/ot-app)
@@ -32,6 +51,8 @@ Materials Needed
 * Samples/Standards (Pre-loaded in Column 1 of a standard flat-bottom 96-well plate)
 
 
+=======
+>>>>>>> a26b555f76a36a193be152f105d20c171009f0a6
 ### Time Estimate
 * Varies. 2-5 minutes depending on pipette model chosen
 
@@ -50,6 +71,7 @@ Materials Needed
 9. Upload into the Opentrons Run App and hit run!
 
 
+<<<<<<< HEAD
 ### Additional Notes
 Please reference our [Technical Note](https://docs.google.com/document/d/1cwSAS52fSBOEI0Hb7U2paq5jS_G1LN2fB5TssJp-Au0/edit?usp=sharing) for more information about the expected output of this protocol, in addition to expanded sample data from the Opentrons lab. You can also see a brief summary of our findings below.
 
@@ -64,3 +86,10 @@ Please reference our [Technical Note](https://docs.google.com/document/d/1cwSAS5
 
 ###### Internal
 Customizable Serial Dilution, v1
+=======
+### Additional Information
+Please reference our [Technical Note](https://docs.google.com/document/d/1cwSAS52fSBOEI0Hb7U2paq5jS_G1LN2fB5TssJp-Au0/edit?usp=sharing) for more information about the expected output of this protocol, in addition to expanded sample data from the Opentrons lab.
+
+We understand that there are limitations to the use of this protocol, and we plan to make improvements soon.
+In the meantime, if you'd like to request a more complex dilution workflow, please use our [Protocol Development Request Form](https://opentrons-protocol-dev.paperform.co/). You can also download this Python file and modify it using our [API Documentation](https://docs.opentrons.com/). For questions about this protocol, please email support@opentrons.com.
+>>>>>>> a26b555f76a36a193be152f105d20c171009f0a6
