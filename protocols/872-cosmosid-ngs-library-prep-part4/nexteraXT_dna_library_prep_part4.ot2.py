@@ -8,7 +8,6 @@ in_plate = labware.load('96-PCR-flat', '1')
 tuberack = labware.load('tube-rack-2ml', '2')
 
 
-
 def run_custom_protocol(
         number_of_samples: int=24,
         number_of_pools: int=1,
@@ -35,5 +34,3 @@ def run_custom_protocol(
     # Transfer each library to pooling tube(s)
     for tube in tuberack.wells(0, length=number_of_pools):
         p10.transfer(pool_volume, input, tube, new_tip='always')
-
-run_custom_protocol(**{'number_of_samples': 96, 'number_of_pools': 3})
