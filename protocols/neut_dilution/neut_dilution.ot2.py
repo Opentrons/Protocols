@@ -5,22 +5,22 @@ neut_dilution
 OT-2
 """
 
-from opentrons import containers, instruments
+from opentrons import labware, instruments
 
 # solutions in trough
-trough = containers.load('trough-12row', '3')
+trough = labware.load('trough-12row', '3')
 
 # tube rack holding reagents
-reagents = containers.load('tube-rack-.75ml', '6')
+reagents = labware.load('tube-rack-.75ml', '6')
 
 # 96 well plates
-flat_plate = containers.load('96-PCR-flat', '2')
-deep_plate = containers.load('96-deep-well', '5')
+flat_plate = labware.load('96-PCR-flat', '2')
+deep_plate = labware.load('96-deep-well', '5')
 
 # tip rack for p10 and p50 pipette
-tip200_rack = containers.load('tiprack-200ul', '1')
-tip200_rack2 = containers.load('tiprack-200ul', '4')
-tip200_rack3 = containers.load('tiprack-200ul', '7')
+tip200_rack = labware.load('tiprack-200ul', '1')
+tip200_rack2 = labware.load('tiprack-200ul', '4')
+tip200_rack3 = labware.load('tiprack-200ul', '7')
 
 # p200 (20 - 200 uL) (single)
 p200single = instruments.P300_Single(

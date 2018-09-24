@@ -1,14 +1,14 @@
-from opentrons import containers, instruments
+from opentrons import labware, instruments
 from otcustomizers import StringSelection
 
 # a 12 row trough for sources
-trough = containers.load('trough-12row', 8)
+trough = labware.load('trough-12row', 8)
 
 # plate to create dinosaur in
-plate = containers.load('96-PCR-flat', 3)
+plate = labware.load('96-PCR-flat', 3)
 
 # a tip rack for our pipette
-p200rack = containers.load('tiprack-200ul', 6)
+p200rack = labware.load('tiprack-200ul', 6)
 
 # wells to dispense dinosaur body in green
 green_wells = [
