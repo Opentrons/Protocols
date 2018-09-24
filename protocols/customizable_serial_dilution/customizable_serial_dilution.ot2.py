@@ -15,7 +15,7 @@ def run_custom_protocol(
         'p300-Single', 'p300-Multi', 'p50-Single', 'p50-Multi')='p300-Multi',
     dilution_factor: float=1.5,
     num_of_dilutions: int=10,
-    final_volume: float=200.0,
+    dilution_volume: float=200.0,
     tip_reuse_strategy: StringSelection(
         'reuse one tip', 'new tip each time')='reuse one tip'):
 
@@ -41,8 +41,8 @@ def run_custom_protocol(
 
     new_tip = 'never' if tip_reuse_strategy == 'reuse one tip' else 'always'
 
-    transfer_volume = final_volume/dilution_factor
-    buffer_volume = final_volume - transfer_volume
+    transfer_volume = dilution_volume/dilution_factor
+    buffer_volume = dilution_volume - transfer_volume
 
     # Distribute diluent across the plate to the the number of samples
     # And add diluent to one column after the number of samples for a blank
@@ -56,7 +56,7 @@ def run_custom_protocol(
         transfer_volume,
         plate.columns('1', to=(num_of_dilutions-1)),
         plate.columns('2', to=num_of_dilutions),
-        mix_after=(3, final_volume/2),
+        mix_after=(3, dilution_volume/2),
         new_tip=new_tip
     )
 

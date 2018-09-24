@@ -16,21 +16,20 @@ This protocol uses the inputs you define for **dilution factor** and **dilution 
 ![serial dilution](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/customizable-serial-dilution/Screen+Shot+2018-09-24+at+3.04.54+PM.png)
 
 User-Defined Inputs
-  * Pipette Type (defined for left mount only)
-  * Dilution factor
-  * Number of dilutions (max: 11)
-  * Dilution volume 
-  * Tip Reuse Strategy (default: reuse one tip throughout dilution series) 
+* Pipette Type (defined for left mount only)
+* Dilution factor
+* Number of dilutions (max: 11)
+* Dilution volume
+* Tip Reuse Strategy (default: reuse one tip throughout dilution series)
 
 Materials Needed
-  * [Opentrons OT-2](http://opentrons.com/ot-2)
-  * [Opentrons OT-2 Run App (Version 3.1.2 or later)](http://opentrons.com/ot-app)
-  * 200uL or 300 uL Tiprack - [Opentrons tips suggested](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips-racks-9-600-tips)
-  * [12-row automation-friendly trough](https://www.usascientific.com/12-channel-automation-reservoir.aspx))
-  * Clear flat-bottom 96-well polystyrene 96-well plate
-  * Diluent (Pre-loaded in row 1 of trough
-  * Samples/Standards (Pre-loaded in Column 1 of a standard flat-bottom 96-well plate)
-
+* [Opentrons OT-2](http://opentrons.com/ot-2)
+* [Opentrons OT-2 Run App (Version 3.1.2 or later)](http://opentrons.com/ot-app)
+* 200uL or 300 uL Tiprack - [Opentrons tips suggested](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips-racks-9-600-tips)
+* [12-row automation-friendly trough](https://www.usascientific.com/12-channel-automation-reservoir.aspx))
+* Clear flat-bottom 96-well polystyrene 96-well plate
+* Diluent (Pre-loaded in row 1 of trough
+* Samples/Standards (Pre-loaded in Column 1 of a standard flat-bottom 96-well plate)
 
 ### Time Estimate
 * Varies. 2-5 minutes depending on pipette model chosen
@@ -49,8 +48,6 @@ Materials Needed
 8. Download your customized OT-2 Serial Dilution protocol using the blue "Download" button.
 9. Upload into the Opentrons Run App and hit run!
 
-###### Internal
-Customizable Serial Dilution, v1
 
 ### Additional Notes
 Please reference our [Technical Note](https://docs.google.com/document/d/1cwSAS52fSBOEI0Hb7U2paq5jS_G1LN2fB5TssJp-Au0/edit?usp=sharing) for more information about the expected output of this protocol, in addition to expanded sample data from the Opentrons lab. You can also see a brief summary of our findings below.
@@ -61,5 +58,7 @@ Please reference our [Technical Note](https://docs.google.com/document/d/1cwSAS5
 * Figure 2: Column-wise comparison between Opentrons OT-2 fitted with a multi-channel 300uL pipette and Agilent Bravo running multi-channel protocol. Average coefficient of variance (%CV) per column is shown in each table.
 ![OT-2 vs agilent bravo](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/customizable-serial-dilution/Screen+Shot+2018-09-24+at+2.59.24+PM.png)
 
-* We understand that there are limitations to the use of this protocol, and we plan to make improvements soon. 
-In the meantime, if you'd like to request a more complex dilution workflow, please use our [Protocol Development Request Form](https://opentrons-protocol-dev.paperform.co/). You can also download this Python file and modify it using our [API Documentation](https://docs.opentrons.com/). For additional questions about this protocol, please email support@opentrons.com.
+* We understand that there are limitations to the use of this protocol, and we plan to make improvements soon. In the meantime, if you'd like to request a more complex dilution workflow, please use our [Protocol Development Request Form](https://opentrons-protocol-dev.paperform.co/). You can also download this Python file and modify it using our [API Documentation](https://docs.opentrons.com/). For additional questions about this protocol, please email support@opentrons.com.
+
+###### Internal
+Customizable Serial Dilution, v1
