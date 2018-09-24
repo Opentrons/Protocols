@@ -10,7 +10,7 @@ in_plate = labware.load('96-PCR-flat', '5')
 out_plate = labware.load('96-PCR-flat', '1')
 tuberack = labware.load('tube-rack-2ml', '2')
 trough = labware.load('trough-12row', '3')
-liquid_trash = tuberack.wells('A12')
+liquid_trash = trough.wells('A12')
 
 
 # reagent setup
@@ -55,11 +55,11 @@ def run_custom_protocol(
     # Transfer 20 uL supernatant to new plate
     p50.transfer(20, input, mag, new_tip='always')
 
-    # Transfer 44 uL LNA1 per sample to conical tube
+    # Transfer 44 uL LNA1 per sample to trough
     lna_vol = round(number_of_samples*1.05*44)
     p50.transfer(lna_vol, LNA1, trough.wells('A1'))
 
-    # Transfer 8 uL LNB1 per sample to conical tube
+    # Transfer 8 uL LNB1 per sample to trough
     lnb_vol = round(number_of_samples*1.05*8)
     p50.pick_up_tip()
     p50.mix(5, 50, LNB1)
