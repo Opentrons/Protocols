@@ -5,8 +5,8 @@
 
 ## Categories
 * Basic Pipetting
-	* Dilution
-		* Customizable Serial Dilution
+    * Dilution
+        * Customizable Serial Dilution
 
 ## Description
 With this protocol, you can do a simple serial dilution in a 96-well plate using either a single-channel or multichannel pipette on the left mount of your OT-2. This can be useful for everything from creating a simple standard curve to a concentration-limiting dilution.
