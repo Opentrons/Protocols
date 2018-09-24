@@ -1,4 +1,4 @@
-from opentrons import containers, instruments
+from opentrons import labware, instruments
 
 """
 Workflow description: Step1: pick up tips from a 10 ul-tip rack
@@ -14,20 +14,20 @@ Step6: Repeat Steps1-5 for the remaining rows (second, third, fourth etc.)
 """
 A
 """
-output = containers.load('96-flat', '1')
+output = labware.load('96-flat', '1')
 
 
 """
 B
 """
-tiprack = containers.load('tiprack-10ul', '2')
+tiprack = labware.load('tiprack-10ul', '2')
 
 
 """
 C
 """
-plate_48 = containers.load('48-well-plate', '3', share=True)
-plate_96 = containers.load('96-flat', '3', share=True)
+plate_48 = labware.load('48-well-plate', '3', share=True)
+plate_96 = labware.load('96-flat', '3', share=True)
 
 
 p10single = instruments.P10_Single(

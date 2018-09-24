@@ -1,9 +1,9 @@
-from opentrons import containers, instruments, robot
+from opentrons import labware, instruments, robot
 
-trough = containers.load('trough-12row', '5', 'trough')
-plate = containers.load('96-PCR-flat', '3', 'plate')
+trough = labware.load('trough-12row', '5', 'trough')
+plate = labware.load('96-PCR-flat', '3', 'plate')
 
-m300rack = containers.load('tiprack-200ul', '1', 'm300-rack')
+m300rack = labware.load('tiprack-200ul', '1', 'm300-rack')
 trash = robot.fixed_trash
 
 m300 = instruments.P300_Multi(

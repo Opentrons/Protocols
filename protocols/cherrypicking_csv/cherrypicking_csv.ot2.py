@@ -1,4 +1,4 @@
-from opentrons import containers, instruments
+from opentrons import labware, instruments
 from otcustomizers import FileInput, StringSelection
 
 example_csv = """
@@ -31,19 +31,19 @@ def run_custom_protocol(
 
     if pipette_max_vol == 300:
         tipracks = [
-            containers.load('tiprack-200ul', slot) for slot in tiprack_slots]
+            labware.load('tiprack-200ul', slot) for slot in tiprack_slots]
         pipette = instruments.P300_Single(mount=mount, tip_racks=[tipracks])
     elif pipette_max_vol == 50:
         tipracks = [
-            containers.load('tiprack-200ul', slot) for slot in tiprack_slots]
+            labware.load('tiprack-200ul', slot) for slot in tiprack_slots]
         pipette = instruments.P50_Single(mount=mount, tip_racks=[tipracks])
     elif pipette_max_vol == 10:
         tipracks = [
-            containers.load('tiprack-200ul', slot) for slot in tiprack_slots]
+            labware.load('tiprack-200ul', slot) for slot in tiprack_slots]
         pipette = instruments.P10_Single(mount=mount, tip_racks=[tipracks])
     elif pipette_max_vol == 1000:
         tipracks = [
-            containers.load('tiprack-200ul', slot) for slot in tiprack_slots]
+            labware.load('tiprack-200ul', slot) for slot in tiprack_slots]
         pipette = instruments.P1000_Single(mount=mount, tip_racks=[tipracks])
 
     data = [
@@ -52,8 +52,8 @@ def run_custom_protocol(
         [row.split(',') for row in volumes_csv.strip().split('\n') if row]
     ]
 
-    source_plate = containers.load(source_plate_type, '2')
-    dest_plate = containers.load(destination_plate_type, '3')
+    source_plate = labware.load(source_plate_type, '2')
+    dest_plate = labware.load(destination_plate_type, '3')
 
     tip_strategy = 'always' if tip_reuse == 'new tip each time' else 'once'
     for well_idx, (source_well, vol) in enumerate(data):
