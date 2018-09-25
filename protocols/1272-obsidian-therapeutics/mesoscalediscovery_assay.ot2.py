@@ -9,7 +9,7 @@ tipracks300 = [labware.load('opentrons-tiprack-300ul', slot)
                for slot in ['4', '7', '9', '10']]
 
 tiprack50 = labware.load('opentrons-tiprack-300ul', '8')
-liquid_trash = labware.load('trough-1row-deep', '6')
+liquid_trash = labware.load('trough-1row-25ml', '6')
 
 # instrument setup
 m300 = instruments.P300_Multi(
