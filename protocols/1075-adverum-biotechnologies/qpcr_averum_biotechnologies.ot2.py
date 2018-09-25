@@ -15,7 +15,7 @@ dilution_buffer = trough.wells('A1')
 TE_buffer = trough.wells('A2')
 dnase_1 = tuberack.wells('A1')
 proK_mix = tuberack.wells('B1')
-master_mix = tuberack.wels('C1')
+master_mix = tuberack.wells('C1')
 standards_ctrl = pcr_strips.cols('1')
 
 
