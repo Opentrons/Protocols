@@ -47,7 +47,7 @@ def run_custom_protocol(
     p300.distribute(40, dnase_1, plate_loc, disposal_vol=0)
     p10.transfer(10, samples, plate_loc, new_tip='always')
 
-    temp_module.set_temperate(37)
+    temp_module.set_temperature(37)
     temp_module.wait_for_temp()
     p10.delay(minutes=60)
     temp_module.deactivate()
@@ -56,17 +56,17 @@ def run_custom_protocol(
     for loc in plate_loc:
         p300.transfer(50, proK_mix, loc, mix_after=(3, 50))
 
-    temp_module.set_temperate(37)
+    temp_module.set_temperature(37)
     temp_module.wait_for_temp()
     p10.delay(minutes=60)
-    temp_module.set_temperate(95)
+    temp_module.set_temperature(95)
     temp_module.wait_for_temp()
     p10.delay(minutes=10)
-    temp_module.set_temperate(4)
+    temp_module.set_temperature(4)
     temp_module.wait_for_temp()
 
     dilution_loc = microplate.wells('A4', length=sample_num)
-    p300.transfer(245, TE_buffer, dilution_loc, new_tip='never')
+    p300.transfer(245, TE_buffer, dilution_loc, new_tip='once')
     p10.transfer(5, plate_loc, dilution_loc, new_tip='always')
 
     total_locs = 24 + sample_num * 3
