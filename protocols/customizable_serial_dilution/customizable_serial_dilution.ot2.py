@@ -16,8 +16,8 @@ def run_custom_protocol(
     dilution_factor: float=1.5,
     num_of_dilutions: int=10,
     dilution_volume: float=200.0,
-    tip_reuse_strategy: StringSelection(
-        'reuse one tip', 'new tip each time')='reuse one tip'):
+    tip_use_strategy: StringSelection(
+        'use one tip', 'new tip each time')='use one tip'):
 
     pip_name = pipette_type.split('-')
     print(pip_name[1])
@@ -39,7 +39,7 @@ def run_custom_protocol(
             mount='left',
             tip_racks=[tiprack])
 
-    new_tip = 'never' if tip_reuse_strategy == 'reuse one tip' else 'always'
+    new_tip = 'never' if tip_use_strategy == 'use one tip' else 'always'
 
     transfer_volume = dilution_volume/dilution_factor
     buffer_volume = dilution_volume - transfer_volume
