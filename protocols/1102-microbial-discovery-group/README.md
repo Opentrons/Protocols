@@ -17,12 +17,11 @@ This robot allows the robot to perform cell culture and any similar assays.
 * [Tryptic Soy Broth](https://www.fishersci.com/shop/products/bd-difco-dehydrated-culture-media-tryptic-soy-broth-soybean-casein-digest-medi-tryptic-soy-broth-soybean-casein-digest-medium-500g/df0370173)
 
 ## Process
-1. Input your desired number of samples.
-2. Download your protocol.
-3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
-4. Set up your deck according to the deck map.
-5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support article](https://support.opentrons.com/ot-2/getting-started-software-setup/deck-calibration).
-6. Hit "Run".
+1. Download your protocol.
+2. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
+3. Set up your deck according to the deck map.
+4. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support article](https://support.opentrons.com/ot-2/getting-started-software-setup/deck-calibration).
+5. Hit "Run".
 
 ### Additional Notes
 * Reservoir setup
