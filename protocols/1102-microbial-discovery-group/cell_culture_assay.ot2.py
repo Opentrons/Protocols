@@ -50,4 +50,4 @@ for index, well in enumerate(microtiter_plate.cols('3')):
     p10.transfer(2, well, plate_deep.rows(index)[6:9])
 
 for index, well in enumerate(microtiter_plate.cols('4')['B':'H']):
-    p10.transfer(2, well, plate_deep.rows(index+1)[:8:-1])
+    p10.transfer(2, well, plate_deep.rows(index)[:8:-1])
