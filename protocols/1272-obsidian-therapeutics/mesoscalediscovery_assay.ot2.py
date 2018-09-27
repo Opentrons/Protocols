@@ -1,5 +1,6 @@
 from opentrons import labware, instruments, robot
 from otcustomizers import StringSelection
+import math
 
 # labware setup
 source = labware.load('96-flat', '5')
@@ -68,8 +69,8 @@ def run_custom_protocols(
     dest_loc = dest_loc[:number_of_samples+8+3]
 
     # define output plate destination cols
-    total_cols = (number_of_samples+8+3)*2//8 + (
-        1 if (number_of_samples+8+3)*2 % 8 > 0 else 0)
+    total_cols = math.ceil(
+        (number_of_samples+len(calibrators)+len(controls))*2//8)
     dest_cols = [col.top() for col in output.cols('1', length=total_cols)]
 
     # wash plate 3 times with wash buffer
@@ -80,7 +81,8 @@ def run_custom_protocols(
         p50.transfer(50, source, dest)
 
     # pause for user to seal plate and shake plate
-    robot.pause()
+    robot.pause("Seal plate with adhesive plate seal and incubate at room \
+        temperature with shaking for two hours.")
 
     # wash plate 3 times with wash buffer
     wash_plate(1, dest_cols, reservoir)
@@ -90,7 +92,8 @@ def run_custom_protocols(
     p50.transfer(25, tuberack.wells('A1'), dispense_loc)
 
     # pause for user to seal and shake plate
-    robot.pause()
+    robot.pause("Seal plate with adhesive plate seal and incubate at room \
+        temperature with shaking for two hours.")
 
     # wash plate 3 times with wash buffer
     wash_plate(2, dest_cols, reservoir)
