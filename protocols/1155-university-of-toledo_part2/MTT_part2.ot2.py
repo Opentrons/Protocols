@@ -67,4 +67,4 @@ def run_custom_protocol(
 
     # Transfer serial diluted drug to cells
     for source, dest in zip(source_well, dest_row):
-        p50.distribute(20, source, dest, disposal_vol=0)
+        p50.distribute(20, source, dest, disposal_vol=5)
