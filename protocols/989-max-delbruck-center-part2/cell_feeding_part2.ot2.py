@@ -1,4 +1,4 @@
-from opentrons import labware, instruments
+from opentrons import labware, instruments, robot
 from otcustomizers import StringSelection
 
 """
@@ -82,8 +82,8 @@ def run_custom_protocol(
     if cell_container == '24-well-plate':
         s_slots = ['6', '7', '8', '9', '10', '11']
     else:
-        s_slots = ['11']
-        m_slots = ['6', '7', '8', '9', '10']
+        s_slots = ['10', '11']
+        m_slots = ['6', '7', '8', '9']
         tipracks_m = [labware.load(tiprack_dict[m_name], slot)
                       for slot in m_slots]
         pipette_m = pipette_setup(
@@ -110,8 +110,10 @@ def run_custom_protocol(
         pipette = pipette_m
 
     # discard media from wells
+    pipette.pick_up_tip()
     for loc in dest:
-        pipette.transfer(old_media_volume, loc, liquid_trash)
+        pipette.transfer(old_media_volume, loc, liquid_trash, new_tip='never')
+    pipette.drop_tip()
 
     # add trypsin to old plate
     pipette_s.pick_up_tip()
