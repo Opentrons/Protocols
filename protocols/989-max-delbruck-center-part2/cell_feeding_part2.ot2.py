@@ -163,5 +163,5 @@ def run_custom_protocol(
     # transfer half of the dissociated colony to a 96-well plate and rest of it
     # goes to an eppendorf tube
     for source, dest in zip(s_old_locs, s_new_locs):
-        pipette.transfer(
+        pipette_s.transfer(
             new_media_volume/2, source, [dest, tuberack_2ml.wells('A1')])
