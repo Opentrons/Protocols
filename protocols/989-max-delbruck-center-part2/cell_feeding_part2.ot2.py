@@ -1,4 +1,4 @@
-from opentrons import labware, instruments, robot
+from opentrons import labware, instruments
 from otcustomizers import StringSelection
 
 """
@@ -161,7 +161,6 @@ def run_custom_protocol(
     for loc in dest:
         pipette.transfer(new_media_volume, media, loc,
                          mix_after=(mix_times, pipette.max_volume/2))
-
     # transfer half of the dissociated colony to a 96-well plate and rest of it
     # goes to an eppendorf tube
     for source, dest in zip(s_old_locs, s_new_locs):
