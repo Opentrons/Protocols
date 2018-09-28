@@ -1,4 +1,4 @@
-# Customizable Serial Dilution
+# Customizable Serial Dilution for OT-2
 
 ### Author
 [Opentrons](https://opentrons.com/)
