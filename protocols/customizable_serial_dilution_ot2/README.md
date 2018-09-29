@@ -8,7 +8,7 @@
     * Dilution
 
 ## Description
-With this protocol, you can do a simple serial dilution across a 96-well plate using either a single-channel or multichannel pipette. This can be useful for everything from creating a simple standard curve to a concentration-limiting dilution. For more information (including data from the Opentrons Lab and other considerations), please see our [Technical Note](https://docs.google.com/document/d/1cwSAS52fSBOEI0Hb7U2paq5jS_G1LN2fB5TssJp-Au0/edit?usp=sharing).
+With this protocol, you can do a simple serial dilution across a 96-well plate using either a single-channel or multichannel pipette. This can be useful for everything from creating a simple standard curve to a concentration-limiting dilution. For more information (including data from the Opentrons Lab and other considerations), please see our [Technical Note](https://s3.amazonaws.com/opentrons-protocol-library-website/Technical+Notes/Technical+Note+for+Customizable+Serial+Dilution+on+OT2.pdf).
 
 ---
 
@@ -71,6 +71,6 @@ This protocol uses the inputs you define for "***Dilution Factor***" and "***Tot
 Customizable Serial Dilution, v1
 
 ### Additional Notes
-Please reference our [Technical Note](https://docs.google.com/document/d/1cwSAS52fSBOEI0Hb7U2paq5jS_G1LN2fB5TssJp-Au0/edit?usp=sharing) for more information about the expected output of this protocol, in addition to expanded sample data from the Opentrons lab. 
+Please reference our [Technical Note](https://s3.amazonaws.com/opentrons-protocol-library-website/Technical+Notes/Technical+Note+for+Customizable+Serial+Dilution+on+OT2.pdf) for more information about the expected output of this protocol, in addition to expanded sample data from the Opentrons lab. 
 
 We understand that there are limitations to the use of this protocol, and we plan to make improvements soon. In the meantime, if you'd like to request a more complex dilution workflow, please use our [Protocol Development Request Form](https://opentrons-protocol-dev.paperform.co/). You can also download this Python file and modify it using our [API Documentation](https://docs.opentrons.com/). For additional questions about this protocol, please email support@opentrons.com.
