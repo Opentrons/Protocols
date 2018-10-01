@@ -1,4 +1,4 @@
-# Nextera XT DNA Library Prep Kit Protocol: Part 4/4
+# Nextera XT DNA Library Prep Kit Protocol: Part 4/4 - Pool Libraries
 
 ### Author
 [Opentrons](http://www.opentrons.com/)
