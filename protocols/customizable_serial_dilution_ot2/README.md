@@ -8,7 +8,7 @@
     * Dilution
 
 ## Description
-With this protocol, you can do a simple serial dilution across a 96-well plate using either a single-channel or multichannel pipette. This can be useful for everything from creating a simple standard curve to a concentration-limiting dilution. For more information (including data from the Opentrons Lab and other considerations), please see our [Technical Note](https://s3.amazonaws.com/opentrons-protocol-library-website/Technical+Notes/Technical+Note+for+Customizable+Serial+Dilution+on+OT2.pdf).
+With this protocol, you can do a simple serial dilution across a 96-well plate using either a single-channel or multichannel pipette. This can be useful for everything from creating a simple standard curve to a concentration-limiting dilution. For more information (including data from the Opentrons Lab and other considerations), please see our [Technical Note](https://s3.amazonaws.com/opentrons-protocol-library-website/Technical+Notes/Serial+Dilution+OT2+Technical+Note.pdf).
 
 ---
 
@@ -60,17 +60,16 @@ This protocol uses the inputs you define for "***Dilution Factor***" and "***Tot
 1. Choose the pipette you want to use from the dropdown menu above. ***Note:*** Your pipette should be installed on the ***left mount*** of your OT-2.
 2. Set your dilution factor.***Example:*** If you want a 1:2 ratio of sample to total reaction volume, you would set your dilution factor to 2.
 3. Set your number of dilutions (max = 11)
-4. Set your dilution volume
+4. Set your total mixing volume. (Total mixing volume = transfer volume + diluent volume). Be careful to make sure this number does not exceed the volume capacity of your plate. To see how this number is used, scroll to the example above.
 5. Set your tip reuse strategy. ***Note:*** This defaults to no tip changes; adjust only if you want to change tips between each well.
-6. Place your 12-row trough on the deck as indicated in the deckmap. **Make sure to add diluent to the first row of your 12-row trough.**
-7. Place your 96-well plate on the deck as indicated in the deckmap. **Make sure to load your desired samples/standards into column 1 of your plate.**
-8. Download your customized OT-2 Serial Dilution protocol using the blue "Download" button.
-9. Upload into the Opentrons Run App and hit run!
+6. Download your customized OT-2 Serial Dilution protocol using the blue "Download" button.
+7. Upload into the Opentrons Run App and follow the instructions there to set up your deck and proceed to run!
+8. Make sure to add diluent to the first row of your 12-row trough and load your desired samples/standards into column 1 of your plate before running your protocol in the run app!
 
 ###### Internal
 Customizable Serial Dilution, v1
 
 ### Additional Notes
-Please reference our [Technical Note](https://s3.amazonaws.com/opentrons-protocol-library-website/Technical+Notes/Technical+Note+for+Customizable+Serial+Dilution+on+OT2.pdf) for more information about the expected output of this protocol, in addition to expanded sample data from the Opentrons lab. 
+Please reference our [Technical Note](https://s3.amazonaws.com/opentrons-protocol-library-website/Technical+Notes/Serial+Dilution+OT2+Technical+Note.pdf) for more information about the expected output of this protocol, in addition to expanded sample data from the Opentrons lab. 
 
 We understand that there are limitations to the use of this protocol, and we plan to make improvements soon. In the meantime, if you'd like to request a more complex dilution workflow, please use our [Protocol Development Request Form](https://opentrons-protocol-dev.paperform.co/). You can also download this Python file and modify it using our [API Documentation](https://docs.opentrons.com/). For additional questions about this protocol, please email support@opentrons.com.
