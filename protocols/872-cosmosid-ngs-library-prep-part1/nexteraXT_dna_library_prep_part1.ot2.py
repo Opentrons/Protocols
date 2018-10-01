@@ -15,8 +15,8 @@ atm = tuberack.wells('A1')  # Amplicon Tagment Mix
 td = tuberack.wells('B1')  # Tagment DNA Buffer
 nt = tuberack.wells('C1')  # Neutralize Tagment Buffer
 npm = tuberack.wells('D1')  # Nextera PCR Master Mix
-index_1 = tuberack.wells('A2', to='D4')  # Index 1 (i7) adapters
-index_2 = tuberack.wells('A5', to='D6')  # Index 2 (i5) adapters
+index_7 = tuberack.wells('A2', to='D4')  # Index 1 (i7) adapters
+index_5 = tuberack.wells('A5', to='D6')  # Index 2 (i5) adapters
 
 tipracks50 = [labware.load('tiprack-200ul', slot) for slot in ['3', '4']]
 tipracks10 = [labware.load('tiprack-10ul', slot) for slot in ['6', '7']]
@@ -37,21 +37,19 @@ def run_custom_protocol(
     # define sample locations
     samples = gDNA_plate.wells()[:number_of_samples]
 
-    index1 = {name: [] for name in range(len(index_1))}
-    index2 = {name: [] for name in range(len(index_2))}
-
     if number_of_samples <= 24:
+        index7 = 6
+        index5 = 4
         output = [well
                   for col in gDNA_plate.cols('1', to='6')
-                  for well in col.wells('A', to='D')][:number_of_samples]
-        for index, well in enumerate(output):
-            index1[index // 4].append(well)
-            index2[index % 4].append(well)
+                  for well in col.wells('A', to='D')]
     else:
+        index7 = 12
+        index5 = 8
         output = [well for well in out_plate.wells()][:number_of_samples]
-        for index, well in enumerate(output):
-            index1[index // 8].append(well)
-            index2[index % 8].append(well)
+
+    cols = number_of_samples // index5
+    remainder = number_of_samples % index5
 
     """
     Tagment genomic DNA
@@ -62,21 +60,17 @@ def run_custom_protocol(
     # Add normalized gDNA to each well
     p10.transfer(5, samples, output, new_tip='always')
 
-    robot.comment("Centrifuge at 280 × g at 20°C for 1 minute. Place on the \
+    robot.pause("Centrifuge at 280 × g at 20°C for 1 minute. Place on the \
         preprogrammed thermal cycler and run the tagmentation program. \
         When the sample reaches 10°C, immediately proceed to the next step \
         because the transposome is still active. Place the plate back to \
         slot 2.")
 
-    robot.pause()
-
     # Add Neutralize Tagment Buffer to each well
     p10.transfer(5, nt, output, mix_after=(5, 10), new_tip='always')
 
-    robot.comment("Centrifuge at 280 × g at 20°C for 1 minute. Place the plate \
+    robot.pause("Centrifuge at 280 × g at 20°C for 1 minute. Place the plate \
         back to slot 2.")
-
-    robot.pause()
 
     # Incubate at RT for 5 minutes
     p10.delay(minutes=5)
@@ -85,20 +79,32 @@ def run_custom_protocol(
     Amplify Libraries
     """
     # Add each index 1 adapter down each column
-    for key in index1.keys():
-        if index1[key]:
-            p50.distribute(
-                5,
-                index_1[key],
-                [well.top() for well in index1[key]])
+    for index, loc in enumerate(range(0, number_of_samples, index5)[:cols]):
+        p50.distribute(
+            5,
+            index_7[index],
+            [well.top() for well in output[loc: loc+index5]])
+
+    if remainder:
+        index = range(0, number_of_samples, index5)[cols]
+        p50.distribute(
+            5,
+            index_7[cols],
+            [well.top() for well in output[index:index+remainder]])
 
     # Add each index 2 adapter across each row
-    for key in index2.keys():
-        if index2[key]:
-            p50.distribute(
-                5,
-                index_2[key],
-                [well.top() for well in index2[key]])
+    for index in range(0, index5):
+        if remainder and index < remainder:
+            loc = [loc for loc in range(
+                index, number_of_samples, index5)][:cols+1]
+            dest = [output[i].top() for i in loc]
+        else:
+            dest = [output[i].top() for i in range(
+                index, number_of_samples, index5)][:cols]
+        p50.distribute(
+            5,
+            index_5[index],
+            dest)
 
     # Add Nextera PCR Master Mix to each well
     p50.transfer(15, npm, output, mix_after=(2, 30), new_tip='always')

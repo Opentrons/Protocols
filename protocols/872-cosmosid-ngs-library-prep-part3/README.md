@@ -1,4 +1,4 @@
-# Nextera XT DNA Library Prep Kit Protocol: Part 3/4
+# Nextera XT DNA Library Prep Kit Protocol: Part 3/4 - Normalize Libraries
 
 ### Author
 [Opentrons](http://www.opentrons.com/)
