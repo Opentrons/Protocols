@@ -34,33 +34,31 @@ def run_custom_protocol(
         ):
 
     if number_of_samples <= 24:
-        input = [well
+        inputs = [well
                  for col in in_plate.cols('1', to='6')
                  for well in col.wells('A', to='D')][:number_of_samples]
         mag = [well
                for col in mag_plate.cols('1', to='6')
                for well in col.wells('A', to='D')][:number_of_samples]
-        output = [well
+        outputs = [well
                   for col in out_plate.cols('1', to='6')
                   for well in col.wells('A', to='D')][:number_of_samples]
     else:
-        input = [well for well in in_plate.wells()][:number_of_samples]
+        inputs = [well for well in in_plate.wells()][:number_of_samples]
         mag = [well for well in mag_plate.wells()][:number_of_samples]
-        output = [well for well in out_plate.wells()][:number_of_samples]
+        outputs = [well for well in out_plate.wells()][:number_of_samples]
 
     bead_vol = PCR_product_volume*bead_ratio
 
     # Transfer PCR product
-    p50.transfer(PCR_product_volume, input, mag, new_tip='always')
+    p50.transfer(PCR_product_volume, inputs, mag, new_tip='always')
 
     # Transfer beads to each well
     p50.distribute(bead_vol, beads, [well.top() for well in mag])
 
     total_vol = bead_vol + PCR_product_volume + 5
 
-    robot.comment("Shake at 1800 rpm for 2 minutes.")
-
-    robot.pause()
+    robot.pause("Shake at 1800 rpm for 2 minutes.")
 
     # Incubate at RT for 5 minutes
     p50.delay(minutes=5)
@@ -88,16 +86,14 @@ def run_custom_protocol(
     # Transfer RSB to well
     p50.transfer(52.5, rsb, [well.top() for well in mag])
 
-    robot.comment("Shake at 1800 rpm for 2 minutes.")
-
-    robot.pause()
+    robot.pause("Shake at 1800 rpm for 2 minutes.")
 
     # Turn on MagDeck for 2 minutes
     mag_deck.engage()
     p50.delay(minutes=2)
 
     # Transfer supernatant to new PCR plate
-    p50.transfer(50, mag_plate, output, new_tip='always')
+    p50.transfer(50, mag_plate, outputs, new_tip='always')
 
     # Disengage MagDeck
     mag_deck.disengage()
