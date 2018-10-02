@@ -15,8 +15,7 @@ To generate a `.csv` from from Excel or another spreadsheet program, try "File >
 
 ![CSV Layout](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/882-agenus-bio/agenus_bio_csv_layout.png)
 
-
-Make sure to have the appropriate columns names for your CSV and to have "ul" after your desired volume. Well A1 in each plate is postion 0, well B1 is position 1, C1 is position 2, etc. Position 383 is well P24 for a 384-well plate, and position 95 is well H12 for a 96-well plate. Source and destination plates can use any naming conventions. You can have a maximun of three 384-well source plates.
+Note: Well A1 in each plate is postion 0, well B1 is position 1, C1 is position 2, etc. Position 383 is well P24 for a 384-well plate, and position 95 is well H12 for a 96-well plate.  You can have a maximum of three 384-well source plates.
 
 
 ### Robot
@@ -35,7 +34,8 @@ Make sure to have the appropriate columns names for your CSV and to have "ul" af
 10. Robot will repeat step 9 for each row in the .csv file.
 
 ### Additional Notes
-Robot will use a new tip for each column of the .csv file. Make sure that there are enough slots on the robot deck for tipracks. For instance, if you have 80 rows in your .csv file, the needs one slot for the tiprack and one slot for the media trough. You have 9 slots remaining for 384-well source plates and 96-well destination plates. However, if you have 100 samples, you need 2 slots for tipracks and one slot for the media trough. You have 8 slots remaining for 384-well source plates and 96-well destination plates.
+* Robot will use a new tip for each row of the .csv file.
+*
 
 ###### Internal
 FFYV8NBK
