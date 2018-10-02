@@ -1,11 +1,11 @@
-from opentrons import containers, instruments
+from opentrons import labware, instruments
 
-trough = containers.load('trough-12row', '3', 'trough')
-plate = containers.load('96-deep-well', '2', 'plate')
-tubes = containers.load('tube-rack-2ml', '8', 'tubes')
+trough = labware.load('trough-12row', '3', 'trough')
+plate = labware.load('96-deep-well', '2', 'plate')
+tubes = labware.load('tube-rack-2ml', '8', 'tubes')
 
-multirack = containers.load('tiprack-200ul', '1', 'p300rack')
-singlerack = containers.load('tiprack-200ul', '4', 'p300rack')
+multirack = labware.load('tiprack-200ul', '1', 'p300rack')
+singlerack = labware.load('tiprack-200ul', '4', 'p300rack')
 
 
 m300 = instruments.P300_Multi(
