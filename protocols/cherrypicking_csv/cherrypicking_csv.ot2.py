@@ -32,19 +32,19 @@ def run_custom_protocol(
     if pipette_max_vol == 300:
         tipracks = [
             labware.load('tiprack-200ul', slot) for slot in tiprack_slots]
-        pipette = instruments.P300_Single(mount=mount, tip_racks=[tipracks])
+        pipette = instruments.P300_Single(mount=mount, tip_racks=tipracks)
     elif pipette_max_vol == 50:
         tipracks = [
             labware.load('tiprack-200ul', slot) for slot in tiprack_slots]
-        pipette = instruments.P50_Single(mount=mount, tip_racks=[tipracks])
+        pipette = instruments.P50_Single(mount=mount, tip_racks=tipracks)
     elif pipette_max_vol == 10:
         tipracks = [
             labware.load('tiprack-200ul', slot) for slot in tiprack_slots]
-        pipette = instruments.P10_Single(mount=mount, tip_racks=[tipracks])
+        pipette = instruments.P10_Single(mount=mount, tip_racks=tipracks)
     elif pipette_max_vol == 1000:
         tipracks = [
             labware.load('tiprack-200ul', slot) for slot in tiprack_slots]
-        pipette = instruments.P1000_Single(mount=mount, tip_racks=[tipracks])
+        pipette = instruments.P1000_Single(mount=mount, tip_racks=tipracks)
 
     data = [
         [well, float(vol)]
