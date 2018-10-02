@@ -43,7 +43,7 @@ def run_custom_protocol(
         destination_container: StringSelection(*container_choices)='96-flat',
         number_of_destination_plates: int=4):
 
-    # Load containers
+    # Load labware
     all_dest_plates = [
         labware.load(destination_container, slotName)
         for slotName in dest_slots]
