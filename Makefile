@@ -2,7 +2,7 @@ SHELL := /bin/bash
 
 MONOREPO_URI := https://github.com/Opentrons/opentrons.git
 OT1_VERSION := 2.5.2
-OT2_VERSION_TAG := v3.3.1-beta.0
+OT2_VERSION_TAG := v3.4.0
 OT2_MONOREPO_DIR := ot2monorepoClone
 
 OT1_FILE_SUFFIX := *.ot1.py
