@@ -41,7 +41,7 @@ def well_csv_to_list(csv_string):
     sources = []
     volumes = []
     dests = []
-    info_list = [cell for line in example_csv.splitlines() if line
+    info_list = [cell for line in csv_string.splitlines() if line
                  for cell in [line.split(',')]]
     for line in info_list[1:]:
         for plate in plates_384:
