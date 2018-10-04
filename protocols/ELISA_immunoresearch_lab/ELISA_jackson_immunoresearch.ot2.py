@@ -94,6 +94,3 @@ for row in [0, 4, 2, 6]:
         p1000.transfer(200, deepwell.rows(row)[ind+1],
                        output.rows(row+1)[ind+1], new_tip='never')
     p1000.drop_tip()
-
-for c in robot.commands():
-    print(c)
