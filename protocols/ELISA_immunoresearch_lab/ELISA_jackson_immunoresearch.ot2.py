@@ -1,4 +1,4 @@
-from opentrons import instruments, labware, robot
+from opentrons import instruments, labware
 
 # labware definitions
 tips_1000 = labware.load('tiprack-1000ul', '1')
