@@ -5,6 +5,7 @@
 
 ## Categories
 * Basic Pipetting
+    * Agar Plate
 
 ## Description
 This protocol allows the robot to perform agar plate culture by precisely placing 2 drops of liquid 2 cm away from each other in petri dishes. Petri dishes used in the protocol are of 6 cm and 10 cm in diameter. Custom adapters are needed for the petri dishes in order to fit them on the robot deck.
