@@ -49,7 +49,7 @@ def run_custom_protocol(
         mount='left',
         tip_racks=tiprack)
 
-    csvs = [[plate_csv_1], [plate_csv_2], [plate_csv_3]][:number_of_plates]
+    csvs = [plate_csv_1, plate_csv_2, plate_csv_3][:number_of_plates]
     tube = tuberack.wells('A1')
 
     # transfer from each plate to tube
