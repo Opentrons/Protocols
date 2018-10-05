@@ -5,6 +5,7 @@
 
 ## Categories
 * Cell Culture
+    * Trypsinization
 
 ## Description
 Part 2 of 3: Custom Cell Culture
