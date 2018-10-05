@@ -1,8 +1,17 @@
 from opentrons import labware, instruments
 import math
 
+trough_name = 'trough-1row'
+if trough_name not in labware.list():
+    labware.create(
+        trough_name,
+        grid=(1, 1),
+        spacing=(0, 0),
+        diameter=72,
+        depth=41.5)
+
 # labware setup
-trough = labware.load('trough-1row-deep', '11')
+trough = labware.load(trough_name, '11')
 plates = [labware.load('96-flat', slot)
           for slot in ['1', '2', '3', '4', '5']]
 tipracks = [labware.load('opentrons-tiprack-300ul', slot)
