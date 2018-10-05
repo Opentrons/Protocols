@@ -5,6 +5,7 @@
 
 ## Categories
 * Cell Culture
+    * Lysis
 
 ## Description
 Part 3 of 3: Custom Cell Culture
