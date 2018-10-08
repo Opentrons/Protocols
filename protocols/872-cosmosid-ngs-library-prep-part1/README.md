@@ -8,7 +8,7 @@
 ## Description
 Part 1 of 4: Tagment Genomic DNA and Amplify Libraries
 
-Links: [Part 1](./873-cosmosid-ngs-library-prep-part1) [Part 2](./873-cosmosid-ngs-library-prep-part2) [Part 3](./873-cosmosid-ngs-library-prep-part3) [Part 4](./873-cosmosid-ngs-library-prep-part4)
+Links: [Part 1](./872-cosmosid-ngs-library-prep-part1) [Part 2](./872-cosmosid-ngs-library-prep-part2) [Part 3](./872-cosmosid-ngs-library-prep-part3) [Part 4](./872-cosmosid-ngs-library-prep-part4)
 
 With this protocol, your robot can perform the Nextera XT DNA Library Prep Kit protocol describe by the [Illumina Reference Guide](https://support.illumina.com/content/dam/illumina-support/documents/documentation/chemistry_documentation/samplepreps_nextera/nextera-xt/nextera-xt-library-prep-reference-guide-15031942-03.pdf).  
 
