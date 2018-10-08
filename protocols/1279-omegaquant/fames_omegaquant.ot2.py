@@ -14,7 +14,7 @@ m300 = instruments.P300_Multi(
 def run_custom_protocol(
         number_of_samples: int=96,
         tip_start_column: str=1,
-        trough_start_column: str=1):
+        trough_start_column: int=1):
 
     if number_of_samples >= 12:
         plate_loc = [col for col in plate.cols()]
@@ -23,11 +23,11 @@ def run_custom_protocol(
 
     # uses well A2 in trough if more than 72 samples
     if number_of_samples > 72:
-        source_loc = [trough.wells(trough_start_column
-                                   if col < 9 else trough_start_column+1)
+        source_loc = [trough.wells(trough_start_column-1
+                                   if col < 9 else trough_start_column)
                       for col in range(len(plate_loc))]
     else:
-        source_loc = [trough.wells(trough_start_column)
+        source_loc = [trough.wells(trough_start_column-1)
                       for col in range(len(plate_loc))]
 
     m300.start_at_tip(tiprack.cols(tip_start_column))
