@@ -35,14 +35,14 @@ def run_custom_protocol(
 
     if number_of_samples <= 24:
         inputs = [well
-                 for col in in_plate.cols('1', to='6')
-                 for well in col.wells('A', to='D')][:number_of_samples]
+                  for col in in_plate.cols('1', to='6')
+                  for well in col.wells('A', to='D')][:number_of_samples]
         mag = [well
                for col in mag_plate.cols('1', to='6')
                for well in col.wells('A', to='D')][:number_of_samples]
         outputs = [well
-                  for col in out_plate.cols('1', to='6')
-                  for well in col.wells('A', to='D')][:number_of_samples]
+                   for col in out_plate.cols('1', to='6')
+                   for well in col.wells('A', to='D')][:number_of_samples]
     else:
         inputs = [well for well in in_plate.wells()][:number_of_samples]
         mag = [well for well in mag_plate.wells()][:number_of_samples]

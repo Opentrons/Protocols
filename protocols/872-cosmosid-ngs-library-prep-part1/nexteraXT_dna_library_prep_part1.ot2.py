@@ -38,13 +38,13 @@ def run_custom_protocol(
     samples = gDNA_plate.wells()[:number_of_samples]
 
     if number_of_samples <= 24:
-        index7 = 6
+        # index7 = 6
         index5 = 4
         output = [well
                   for col in gDNA_plate.cols('1', to='6')
                   for well in col.wells('A', to='D')]
     else:
-        index7 = 12
+        # index7 = 12
         index5 = 8
         output = [well for well in out_plate.wells()][:number_of_samples]
 
