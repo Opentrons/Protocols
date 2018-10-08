@@ -45,7 +45,7 @@ def wash_plate(repetition, dest_cols, reservoir):
                       trash=trash, new_tip='always')
 
 
-def run_custom_protocols(
+def run_custom_protocol(
         container_type: StringSelection(
             'trough-12row', '96-deep-well')='trough-12row',
         number_of_samples: int=35):
