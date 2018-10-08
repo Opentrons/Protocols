@@ -2,7 +2,8 @@ from opentrons import labware, instruments
 
 # labware setup
 plate = labware.load('96-flat', '2')
-trough = labware.load('trough-12row', '3')
+trough1 = labware.load('trough-12row', '3')
+trough2 = labware.load('trough-12row', '6')
 tiprack = labware.load('opentrons-tiprack-300ul', '5')
 
 # instrument setup
@@ -23,16 +24,16 @@ def run_custom_protocol(
 
     # uses well A2 in trough if more than 72 samples
     if number_of_samples > 72:
-        wistd_loc = [trough.wells(trough_start_column-1
-                                  if col < 9 else trough_start_column)
+        wistd_loc = [trough1.wells(trough_start_column-1
+                                   if col < 9 else trough_start_column)
                      for col in range(len(plate_loc))]
-        water_loc = [trough.wells(trough_start_column+1
-                                  if col < 9 else trough_start_column+2)
+        water_loc = [trough2.wells(trough_start_column-1
+                                   if col < 9 else trough_start_column)
                      for col in range(len(plate_loc))]
     else:
-        wistd_loc = [trough.wells(trough_start_column-1)
+        wistd_loc = [trough1.wells(trough_start_column-1)
                      for col in range(len(plate_loc))]
-        water_loc = [trough.wells(trough_start_column)
+        water_loc = [trough2.wells(trough_start_column-1)
                      for col in range(len(plate_loc))]
 
     # transfer WISTD to wells
