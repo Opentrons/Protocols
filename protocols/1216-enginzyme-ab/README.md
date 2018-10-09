@@ -37,7 +37,7 @@ Using this protocol, your robot will be able to distribute a number of reagents 
 * Location CSV Layout:
     * Each row represents a reagent
 
-    ![location csv](	https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1216-enginzyme-ab/location_csv.png)
+    ![location csv](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1216-enginzyme-ab/location_csv.png)
 
 
 * Reagent CSV Layout:
