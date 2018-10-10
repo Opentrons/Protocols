@@ -36,6 +36,7 @@ def run_custom_protocol(
         water_loc = [trough2.wells(trough_start_column-1)
                      for col in range(len(plate_loc))]
 
+    m300.start_at_tip(tiprack.cols(tip_start_column))
     # transfer WISTD to wells
     m300.pick_up_tip()
     m300.mix(3, 300, wistd_loc[0])
