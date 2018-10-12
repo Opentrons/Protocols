@@ -50,7 +50,7 @@ def well_csv_to_list(csv_string):
     """
     data = [
         line.split(',')
-        for line in reversed(csv_string.split('\n')) if line.strip()
+        for line in reversed(csv_string.split('\r\n')) if line.strip()
         if line
     ]
     return flatten_matrix(transpose_matrix(data))
