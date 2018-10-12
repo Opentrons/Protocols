@@ -5,7 +5,7 @@
 
 ## Categories
 * Basic Pipetting
-    * Plate Filling
+    * Mixing
 
 ## Description
 With this protocol, your robot can work with the [mPrep/s™ capsules](https://microscopyinnovations.com/mpreps-2/). Instead of picking up regular pipette tips, user will manually attach the tips to the P300 multi-channel pipette. The robot will deliver the reagents to the capsules through using a series of mixing commands.
