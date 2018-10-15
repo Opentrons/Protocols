@@ -14,7 +14,7 @@ To generate a `.csv` from from Excel or another spreadsheet program, try "File >
 
 Your CSV should look similar to this:  
 
-![csv layout](	https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/CSV_Univ-of-Padova/csv_layout.png)
+![csv layout](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/CSV_Univ-of-Padova/csv_layout.png)
 
 There can be 1-96 row entries in this list because you only have 96 pipette tips available. You use a new tip for each well of the normalization process.
 
