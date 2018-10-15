@@ -5,7 +5,7 @@
 
 ## Categories
 * Basic Pipetting
-    * Serial Dilution
+    * Plate Filling
 
 ## Description
 With this protocol, your robot can perform serial dilution by transferring PBS from a 12-column trough into a 96-well plate and dilute the solutions down the columns in the plate.
