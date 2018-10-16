@@ -23,17 +23,17 @@ def run_custom_protocol(transfer_volume: float=300):
             tip_racks=tipracks)
 
     dest_1 = [well for well in output_384.rows(0)[::2]]
-    for source, dest in zip(plate_1, dest_1):
+    for source, dest in zip(plate_1.cols(), dest_1):
         pipette.transfer(transfer_volume, source, dest)
 
     dest_2 = [well for well in output_384.rows(0)[1::2]]
-    for source, dest in zip(plate_2, dest_2):
+    for source, dest in zip(plate_2.cols(), dest_2):
         pipette.transfer(transfer_volume, source, dest)
 
     dest_3 = [well for well in output_384.rows(1)[::2]]
-    for source, dest in zip(plate_3, dest_3):
+    for source, dest in zip(plate_3.cols(), dest_3):
         pipette.transfer(transfer_volume, source, dest)
 
     dest_4 = [well for well in output_384.rows(1)[1::2]]
-    for source, dest in zip(plate_4, dest_4):
+    for source, dest in zip(plate_4.cols(), dest_4):
         pipette.transfer(transfer_volume, source, dest)
