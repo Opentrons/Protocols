@@ -1,4 +1,4 @@
-from opentrons import labware, instruments, robot
+from opentrons import labware, instruments
 
 # labware setup
 trough = labware.load('trough-12row', '1')
