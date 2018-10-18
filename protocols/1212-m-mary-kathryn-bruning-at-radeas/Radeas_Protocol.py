@@ -1,5 +1,6 @@
 from opentrons import labware, instruments
 
+
 def create_container_instance(name, grid, spacing, diameter, depth, height,
                               volume=0, slot=None, label=None):
     from opentrons import robot
@@ -26,23 +27,23 @@ def create_container_instance(name, grid, spacing, diameter, depth, height,
             well_name = chr(r + ord('A')) + str(1 + c)
             coordinates = (c * col_spacing, r * row_spacing, 0)
             custom_container.add(well, well_name, coordinates)
-            
+
     custom_container.properties['type'] = name
     custom_container.properties['height'] = height
     custom_container.get_name = lambda: label
 
     # add to robot deck
-    if not in database.list_all_containers():
-    	database.save_new_container(custom_container, name)
+    if name not in database.list_all_containers():
+        database.save_new_container(custom_container, name)
     robot.deck[slot].add(custom_container, label)
 
     return custom_container
 
-## FIX AND DOUBLE CHECK DIMS
+
 glassVials = create_container_instance(
     'solidBlue_5x10',                    # name of you container
     grid=(5, 10),                    # specify amount of (columns, rows)
-    spacing=(18.4, 18.4),               # distances (mm) between each (column, row)
+    spacing=(18.4, 18.4),           # distances (mm) between each (column, row)
     diameter=11,                     # diameter (mm) of each well on the plate
     depth=50,                       # depth of tube
     height=70,                      # total height of container
@@ -83,17 +84,17 @@ QClow2 = glassVials.wells('C2')
 
 
 def run_custom_protocol(QC_Conc1000: float=100.0,
-						BuffA_Conc1000: float=100.0,
-						urine_Conc1000: float=100.0,
-						urine_Conc200: float=800.0,
-						urine_Conc20: float=800.0,
-						dilute_Conc200by1000: float=200.0,
-						dilute_Conc20by200: float=100.0,
-						QC_highvol: float=800.0,
-						QC_lowvol: float=800.0,
-						std3_vol: float=50.0,
-						add_Conc200: float=400.0,
-						add_Conc20: float=400.0):
+                        BuffA_Conc1000: float=100.0,
+                        urine_Conc1000: float=100.0,
+                        urine_Conc200: float=800.0,
+                        urine_Conc20: float=800.0,
+                        dilute_Conc200by1000: float=200.0,
+                        dilute_Conc20by200: float=100.0,
+                        QC_highvol: float=800.0,
+                        QC_lowvol: float=800.0,
+                        std3_vol: float=50.0,
+                        add_Conc200: float=400.0,
+                        add_Conc20: float=400.0):
     p50.transfer(QC_Conc1000, QC, conc_1000, new_tip='once')
     p50.transfer(BuffA_Conc1000, BuffA, conc_1000, new_tip='always')
     p50.transfer(urine_Conc1000, urine1, conc_1000, new_tip='always')
