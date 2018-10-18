@@ -2,8 +2,8 @@ from inspect import signature, Parameter
 import time
 import sys
 import opentrons
-from opentrons import robot, labware, modules
-from opentrons.instruments import Pipette as BasePipette
+from opentrons.legacy_api import robot, labware, modules
+from opentrons.legacy_api.instruments import Pipette as BasePipette
 
 allProtocolFiles = sys.argv[1:]
 
