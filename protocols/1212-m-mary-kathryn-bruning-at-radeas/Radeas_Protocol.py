@@ -4,7 +4,7 @@ from opentrons import labware, instruments
 def create_container_instance(name, grid, spacing, diameter, depth, height,
                               volume=0, slot=None, label=None):
     from opentrons import robot
-    from opentrons.containers.placeable import Container, Well
+    from opentrons.legacy_api.containers.placeable import Container, Well
     from opentrons.data_storage import database
 
     if slot is None:
