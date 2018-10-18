@@ -38,7 +38,6 @@ ot2monorepoClone:
 venvs/ot2: ot2monorepoClone
 	virtualenv venvs/ot2 && \
 	source venvs/ot2/bin/activate && \
-	pip install -r $(OT2_MONOREPO_DIR)/api/requirements.txt && \
 	pip install -e otcustomizers && \
 	pushd $(OT2_MONOREPO_DIR)/api/ && \
 	python setup.py install && \
