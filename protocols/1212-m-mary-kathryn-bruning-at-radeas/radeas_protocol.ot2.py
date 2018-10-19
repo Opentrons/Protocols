@@ -1,65 +1,29 @@
 from opentrons import labware, instruments
+from opentrons.data_storage import database
 
+if 'solidBlue_5x10' not in database.list_all_containers():
+	labware.create(
+	    'solidBlue_5x10',    # name of you container
+	    grid=(5, 10),    # specify amount of (columns, rows)
+	    spacing=(18.4, 18.4),    # distances (mm) between each (column, row)
+	    diameter=11,       # diameter (mm) of each well on the plate
+	    depth=50)    # depth (mm) of each well on the plate
 
-def create_container_instance(name, grid, spacing, diameter, depth, height,
-                              volume=0, slot=None, label=None):
-    from opentrons import robot
-    from opentrons.legacy_api.containers.placeable import Container, Well
-    from opentrons.data_storage import database
-
-    if slot is None:
-        raise RuntimeError('"slot" argument is required.')
-    if label is None:
-        label = name
-    columns, rows = grid
-    col_spacing, row_spacing = spacing
-    custom_container = Container()
-    well_properties = {
-        'type': 'custom',
-        'diameter': diameter,
-        'height': depth,
-        'total-liquid-volume': volume
-    }
-
-    for c in range(columns):
-        for r in range(rows):
-            well = Well(properties=well_properties)
-            well_name = chr(r + ord('A')) + str(1 + c)
-            coordinates = (c * col_spacing, r * row_spacing, 0)
-            custom_container.add(well, well_name, coordinates)
-
-    custom_container.properties['type'] = name
-    custom_container.properties['height'] = height
-    custom_container.get_name = lambda: label
-
-    # add to robot deck
-    if name not in database.list_all_containers():
-        database.save_new_container(custom_container, name)
-    robot.deck[slot].add(custom_container, label)
-
-    return custom_container
-
-
-glassVials = create_container_instance(
-    'solidBlue_5x10',                    # name of you container
-    grid=(5, 10),                    # specify amount of (columns, rows)
-    spacing=(18.4, 18.4),           # distances (mm) between each (column, row)
-    diameter=11,                     # diameter (mm) of each well on the plate
-    depth=50,                       # depth of tube
-    height=70,                      # total height of container
-    slot='2')                       # depth (mm) of each well on the plate
-
-cuvetteTray = create_container_instance(
-    'clearBlue_8x12',                    # name of you container
-    grid=(8, 12),                    # specify amount of (columns, rows)
-    spacing=(12, 15),               # distances (mm) between each (column, row)
-    diameter=9,                     # diameter (mm) of each well on the plate
-    depth=40,
-    height=63.5,
-    slot='3')                       # depth (mm) of each well on the plate
+if 'clearBlue_8x12' not in database.list_all_containers():
+	labware.create(
+	    'clearBlue_8x12',    # name of you container
+	    grid=(8, 12),   # specify amount of (columns, rows)
+	    spacing=(12, 15),  # distances (mm) between each (column, row)
+	    diameter=9,        # diameter (mm) of each well on the plate
+	    depth=40)         # depth (mm) of each well on the plate
 
 tiprack1 = labware.load('opentrons-tiprack-300ul', '1')
-tiprack2 = labware.load('opentrons-tiprack-300ul', '2')
+tiprack2 = labware.load('opentrons-tiprack-300ul', '4')
+glassVials = labware.load('solidBlue_5x10', '2')
+cuvetteTray = labware.load('clearBlue_8x12', '3')
+
+glassVials.properties['height'] = 70
+glassVials.properties['height'] = 63.5
 
 p50 = instruments.P50_Single(mount='left', tip_racks=[tiprack1, tiprack2])
 
@@ -95,6 +59,7 @@ def run_custom_protocol(QC_Conc1000: float=100.0,
                         std3_vol: float=50.0,
                         add_Conc200: float=400.0,
                         add_Conc20: float=400.0):
+
     p50.transfer(QC_Conc1000, QC, conc_1000, new_tip='once')
     p50.transfer(BuffA_Conc1000, BuffA, conc_1000, new_tip='always')
     p50.transfer(urine_Conc1000, urine1, conc_1000, new_tip='always')
