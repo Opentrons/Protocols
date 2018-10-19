@@ -88,7 +88,8 @@ def run_custom_protocol(
     for key in sources.keys():
         if key == 'mastermix':
             vol = master_mix_vol
-            p50.transfer(vol, sources[key], [well.top() for well in dests[key]])
+            p50.transfer(
+                vol, sources[key], [well.top() for well in dests[key]])
         else:
             vol = reagent_vol
         if dests[key]:
