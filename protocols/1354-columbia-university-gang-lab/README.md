@@ -1,4 +1,4 @@
-# Cherrypicking from Multiple Sources using CSVs
+# Pooling from Multiple Sources using CSVs
 
 ### Author
 [Opentrons](http://www.opentrons.com/)
