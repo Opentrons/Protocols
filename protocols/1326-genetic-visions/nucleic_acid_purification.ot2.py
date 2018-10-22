@@ -32,28 +32,28 @@ tip_start_column = '4'
 
 # distribute 65 uL Tris-HCl to elution plate
 m300.pick_up_tip()
-for col in elution_plate.cols():
+for well in elution_plate.rows(0):
     if m300.current_volume < 65:
         m300.aspirate(tris_hcl)
-    m300.dispense(65, col.top())
+    m300.dispense(65, well.top())
 m300.drop_tip()
 
 # distribute 200 uL EtOH to EtOH plate
 m300.pick_up_tip()
-for col in etoh_plate.cols():
+for well in etoh_plate.rows(0):
     if m300.current_volume < 200:
         m300.aspirate(etoh)
-    m300.dispense(200, col.top())
+    m300.dispense(200, well.top())
 m300.drop_tip()
 
 # distribute 500 uL of wash buffer to wash buffer 1 plate
 m300.pick_up_tip()
-for col in buffer_1_plate.cols():
-    m300.transfer(500, wash_buffer_1, col.top(), new_tip='never')
+for well in buffer_1_plate.rows(0):
+    m300.transfer(500, wash_buffer_1, well.top(), new_tip='never')
 m300.drop_tip()
 
 # distribute 500 uL of wash buffer to wash buffer 2 plate
 m300.pick_up_tip()
-for col in buffer_2_plate.cols():
-    m300.transfer(500, wash_buffer_2, col.top(), new_tip='never')
+for well in buffer_2_plate.rows(0):
+    m300.transfer(500, wash_buffer_2, well.top(), new_tip='never')
 m300.drop_tip()
