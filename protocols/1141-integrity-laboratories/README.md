@@ -22,7 +22,7 @@ This protocol allows your robot to perform mass spec sample prep by letting you 
 
 ### Additional Notes
 Iteration Strategy:  
-![strategy](	https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1141-integrity-laboratories/strategy.png)
+![strategy](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1141-integrity-laboratories/strategy.png)
 
 Sample number limitation:
 Since only 1 sample rack will be loaded in the robot, you need to be mindful when inputing the sample number.
