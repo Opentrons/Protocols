@@ -10,7 +10,7 @@ def run_custom_protocol(
             'opentrons-tuberack-15ml', 'opentrons-tuberack-2ml-eppendorf',
             'opentrons-tuberack-2ml-screwcap', 'PCR-strip-tall', '96-flat',
             '96-deep-square')='opentrons-tuberack-15ml',
-        sample_number: int=24,
+        sample_number: int=12,
         destination_container: StringSelection(
             'opentrons-tuberack-15ml', 'opentrons-tuberack-2ml-eppendorf',
             'opentrons-tuberack-2ml-screwcap', 'PCR-strip-tall', '96-flat',
