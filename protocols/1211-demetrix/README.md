@@ -25,10 +25,10 @@ With this protocol, your robot can perform multiple well-to-well liquid transfer
 
 ### Additional Notes
 Labware CSV:  
-Column 1: Slot on the deck (1-10), Column 2: Plate Type, Column 3: Custom Container Height  
-![labware csv](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1211-demetrix/labware+csv.png)
+Column 1: Slot on the deck (1-10), Column 2: Plate Type, Column 3: Custom Container Height, Column 4: Custom Well Height
+![labware csv](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1211-demetrix/labware_csv.png)
 * You need to define all of the labware you would use, except for the tipracks.
-* [Here](https://andysigler.github.io/ot-api-containerviz/) is a list of pre-defined labware, if you use these, you do not need to define a height
+* [Here](https://andysigler.github.io/ot-api-containerviz/) is a list of pre-defined labware, if you wish to use these, you do not need to define a height
 * If you would like to use any custom 96-well and/or 384-well containers, you could make up the plate type. However, you must *MUST* include the number 96 or 384 in the plate type. Otherwise, the program would not recognize those plates.
 * You have to use the slots in this order 1, 2, 3, 4,.. up to 10. You *cannot* skip a slot.
 * Make sure to keep the headers.

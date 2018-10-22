@@ -3,12 +3,12 @@ from opentrons import labware, instruments, robot
 from otcustomizers import FileInput
 
 labware_csv_example = """
-Slot,Plate Type,Well Height
-1,384-pcr,15
-2,96-echo,30
-3,trough-12row,
-4,96-flat,
-5,384-plate,
+Slot,Plate Type,Container Height,Well Depth
+1,384-plate,15,11.4
+2,96-PCR-tall,30,10
+3,trough-12row,,
+4,96-flat,,
+5,384-plate,,
 """
 
 transfer_csv_example = """
@@ -24,22 +24,28 @@ def load_labware(csv_string):
                       for cell in [line.split(',')]]
     containers = {}
     for line in container_info[1:]:
-        if line[1] not in labware.list():
-            if '96' in line[1]:
-                labware.create(
-                    line[1],
-                    grid=(12, 8),
-                    spacing=(9, 9),
-                    diameter=4.2,
-                    depth=round(float(line[2])))
-            elif '384' in line[1]:
-                labware.create(
-                    line[1],
-                    grid=(24, 16),
-                    spacing=(4.5, 4.5),
-                    diameter=3.1,
-                    depth=round(float(line[2])))
-        containers[line[0]] = labware.load(line[1], line[0])
+        if line[3]:
+            name = line[1]+'-'+line[3]
+            if name not in labware.list():
+                if '96' in line[1]:
+                    labware.create(
+                        name,
+                        grid=(12, 8),
+                        spacing=(9, 9),
+                        diameter=4.2,
+                        depth=round(float(line[3])))
+                elif '384' in line[1]:
+                    labware.create(
+                        name,
+                        grid=(24, 16),
+                        spacing=(4.5, 4.5),
+                        diameter=3.1,
+                        depth=round(float(line[3])))
+        else:
+            name = line[1]
+        containers[line[0]] = labware.load(name, line[0])
+        if line[2]:
+            containers[line[0]].properties['height'] = float(line[2])
     return containers
 
 
@@ -58,7 +64,7 @@ def run_custom_protocol(
         transfer_csv: FileInput=transfer_csv_example):
 
     containers = load_labware(labware_csv)
-    # print(containers)
+
     tipracks = [labware.load('tiprack-10ul', str(slot+1))
                 for slot in range(len(containers), 11)]
 
