@@ -27,7 +27,7 @@ With this protocol, your robot can perform PCR prep or similar assays using the 
 7. Robot will transfer mastermix to every destination well defined in the PCR setup.
 8. Robot will transfer each reagent defined in the PCR setup to the appropriate wells.
 
-### Additional Notes
+### Additional Information
 Tuberack CSV:  
 Column 1: Slot on the deck (A1, or A2), Column 2: Name of reagent, Column 3: Well in the tuberack  
 ![tuberack csv layout](	https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1317-university-of-texas-at-austin/tuberack_csv.png)
