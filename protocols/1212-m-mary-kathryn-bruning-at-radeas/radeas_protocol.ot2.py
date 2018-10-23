@@ -2,20 +2,20 @@ from opentrons import labware, instruments
 from opentrons.data_storage import database
 
 if 'solidBlue_5x10' not in database.list_all_containers():
-	labware.create(
-	    'solidBlue_5x10',    # name of you container
-	    grid=(5, 10),    # specify amount of (columns, rows)
-	    spacing=(18.4, 18.4),    # distances (mm) between each (column, row)
-	    diameter=11,       # diameter (mm) of each well on the plate
-	    depth=50)    # depth (mm) of each well on the plate
+    labware.create(
+        'solidBlue_5x10',    # name of you container
+        grid=(5, 10),    # specify amount of (columns, rows)
+        spacing=(18.4, 18.4),    # distances (mm) between each (column, row)
+        diameter=11,       # diameter (mm) of each well on the plate
+        depth=50)    # depth (mm) of each well on the plate
 
 if 'clearBlue_8x12' not in database.list_all_containers():
-	labware.create(
-	    'clearBlue_8x12',    # name of you container
-	    grid=(8, 12),   # specify amount of (columns, rows)
-	    spacing=(12, 15),  # distances (mm) between each (column, row)
-	    diameter=9,        # diameter (mm) of each well on the plate
-	    depth=40)         # depth (mm) of each well on the plate
+    labware.create(
+        'clearBlue_8x12',    # name of you container
+        grid=(8, 12),   # specify amount of (columns, rows)
+        spacing=(12, 15),  # distances (mm) between each (column, row)
+        diameter=9,        # diameter (mm) of each well on the plate
+        depth=40)         # depth (mm) of each well on the plate
 
 tiprack1 = labware.load('opentrons-tiprack-300ul', '1')
 tiprack2 = labware.load('opentrons-tiprack-300ul', '4')
