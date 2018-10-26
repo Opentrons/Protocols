@@ -62,7 +62,7 @@ def run_custom_protocol(
     precipitate forms. Place the block on the MagDeck. Place a new 96-well \
     Block in slot 2.")
 
-    mag_deck.engage(height=15)
+    mag_deck.engage(height=14.94)
     m300.delay(minutes=5)
 
     for source, dest in zip(mag_loc, plate_loc):
@@ -80,7 +80,7 @@ def run_custom_protocol(
     robot.pause("Place the block from slot 2 in the MagDeck. You can discard \
     the old plate.")
 
-    mag_deck.engage(height=15)
+    mag_deck.engage(height=14.94)
     m300.delay(minutes=5)
 
     for well in mag_loc:
@@ -96,7 +96,7 @@ def run_custom_protocol(
         m300.mix(10, 300, well)
         m300.return_tip()
 
-    mag_deck.engage(height=15)
+    mag_deck.engage(height=14.94)
     m300.delay(minutes=5)
 
     m300.start_at_tip(reuse_tip)
@@ -118,7 +118,7 @@ def run_custom_protocol(
             m300.mix(10, 300, well)
             m300.return_tip()
 
-        mag_deck.engage(height=15)
+        mag_deck.engage(height=14.94)
         m300.delay(minutes=5)
 
         m300.start_at_tip(reuse_tip)
@@ -133,7 +133,7 @@ def run_custom_protocol(
         m300.mix(10, 300, well)
         m300.return_tip()
 
-    mag_deck.engage(height=15)
+    mag_deck.engage(height=14.94)
     m300.delay(minutes=5)
 
     m300.start_at_tip(reuse_tip)
@@ -147,7 +147,7 @@ def run_custom_protocol(
         m300.transfer(elution_buffer_volume, elution_buffer, well,
                       mix_after=(20, 50))
 
-    mag_deck.engage()
+    mag_deck.engage(height=14.94)
     m300.delay(minutes=5)
 
     flat_loc = [well for well in flat_plate.rows(0)]
