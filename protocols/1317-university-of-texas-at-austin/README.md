@@ -30,7 +30,7 @@ With this protocol, your robot can perform PCR prep or similar assays using the 
 ### Additional Notes
 Tuberack CSV:  
 Column 1: Slot on the deck (A1, or A2), Column 2: Name of reagent, Column 3: Well in the tuberack  
-![tuberack csv layout](	https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1317-university-of-texas-at-austin/tuberack_csv.png)
+![tuberack csv layout](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1317-university-of-texas-at-austin/tuberack_csv.png)
 * Well A1 is defaulted to be master mix, skip using well A1 in the CSV.
 * You can only use slot A1 and/or A2.
 * Make sure to keep the headers.
@@ -38,7 +38,7 @@ Column 1: Slot on the deck (A1, or A2), Column 2: Name of reagent, Column 3: Wel
 
 PCR Setup CSV:  
 Column 1: Destination Well, Column 2: Reagent 1 name, Column 3: Reagent 2 name, Column 4: Reagent name 3  
-![pcr setup csv](	https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1317-university-of-texas-at-austin/pcr_setup.png)
+![pcr setup csv](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1317-university-of-texas-at-austin/pcr_setup.png)
 * The names of the reagents *MUST* match those defined in the Tuberack CSV.
 * Make sure you keep the headers.
 
