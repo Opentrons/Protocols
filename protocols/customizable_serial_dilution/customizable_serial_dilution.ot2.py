@@ -44,12 +44,13 @@ def run_custom_protocol(
     transfer_volume = total_mixing_volume/dilution_factor
     buffer_volume = total_mixing_volume - transfer_volume
 
-    # Distribute diluent across the plate to the the number of samples
-    # And add diluent to one column after the number of samples for a blank
-    pipette.distribute(buffer_volume, trough['A1'], plate.cols(
-        '2', length=(num_of_dilutions)))
-
     if pip_name == 'Multi':
+
+        # Distribute diluent across the plate to the the number of samples
+        # And add diluent to one column after the number of samples for a blank
+        pipette.distribute(buffer_volume, trough['A1'], plate.cols(
+            '2', length=(num_of_dilutions)))
+
         # Dilution of samples across the 96-well flat bottom plate
         pipette.pick_up_tip(presses=3, increment=1)
 
@@ -71,6 +72,11 @@ def run_custom_protocol(
             pipette.drop_tip()
 
     else:
+        # Distribute diluent across the plate to the the number of samples
+        # And add diluent to one column after the number of samples for a blank
+        for col in plate.cols('2', length=(num_of_dilutions)):
+            pipette.distribute(buffer_volume, trough['A1'], col)
+
         for row in plate.rows():
             if new_tip == 'never':
                 pipette.pick_up_tip()
