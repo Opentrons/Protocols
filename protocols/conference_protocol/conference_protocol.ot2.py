@@ -2,9 +2,8 @@ from opentrons import labware, instruments, modules
 from otcustomizers import StringSelection
 
 
-def run_custom_protocol(
-    module_type: StringSelection('None', 'temp', 'magnet'),
-        number_of_runs: int=40):
+def run_custom_protocol(module_type: StringSelection('None', 'temp', 'magnet')='None',
+                        number_of_runs: int=40):
 
     if module_type == 'temp':
         module = modules.load('tempdeck', '7')
