@@ -24,9 +24,9 @@ def serial_dilution_calculations(
         stock_conc,
         first_conc,
         dilution_factor,
-        dilution_num,
-        dilution_loc):
-
+        dilution_loc,
+        vol_per_well
+        ):
     """
     Return the following lists:
     source_wells - locations of source well
@@ -34,36 +34,38 @@ def serial_dilution_calculations(
     source_vol - volumes of dilution source for each well
     buffer_vol - volumes of buffer for each well
     """
-    prep_vol = 50 * 6 + 100  # Prepare more than enough volume for 6 replicates
-    final_concs = [0] + [first_conc/(2**repeat)
-                         for repeat in range(dilution_num)]
-    initial_concs = [0, stock_conc]+final_concs[1:-1]
+    prep_vol = vol_per_well * 6 + 100  # Prepare more than enough vol for 6X
     dil_wells = [well for well in dilution_loc[1][:]+dilution_loc[0][::-1]]
     source_wells = [None, stock] + dil_wells[1:-1]
-
     buffer_vol = []
     source_vol = []
-
-    for index, (conc1, conc2) in enumerate(zip(initial_concs, final_concs)):
-        if index == 1:
-            dest_vol = prep_vol * 2
+    for index in range(16):
+        if index == 0:              # first well is control
+            b_vol = prep_vol        # buffer volume == prep_vol
+            s_vol = 0               # 0 uL stock volume
+        elif index == 1:
+            conc_1 = stock_conc
+            conc_2 = first_conc
+            first_prep_vol = prep_vol * (1 + 1/dilution_factor)
+            s_vol = first_prep_vol * conc_2 / conc_1
+            b_vol = first_prep_vol - s_vol
         else:
-            dest_vol = prep_vol
-        vol = (dest_vol * conc2 / conc1 if conc1 > 0 else 0)
-        source_vol.append(vol)
-        buffer_vol.append(dest_vol - vol)
-
+            conc_1 = first_conc / (dilution_factor ** (index-1))
+            conc_2 = first_conc / (dilution_factor ** index)
+            s_vol = prep_vol * conc_2 / conc_1
+            b_vol = prep_vol
+        buffer_vol.append(b_vol)
+        source_vol.append(s_vol)
     return source_vol, buffer_vol, source_wells, dil_wells
 
 
 def run_custom_protocol(
-    stock_concentration: float=1600,
-    initial_concentration: float=16,
-    dilution_factor: float=2,
-    dilution_start_column: int=1
-        ):
+        stock_concentration: float=1600,
+        initial_concentration: float=16,
+        dilution_factor: float=2,
+        dilution_start_column: int=1,
+        final_volume_in_each_well: float=50):
 
-    number_of_dilutions = 15
     dilution_loc = dilution_plate.cols(str(dilution_start_column), length=2)
 
     source_vol, buffer_vol, source_wells, dil_wells = \
@@ -71,8 +73,8 @@ def run_custom_protocol(
             stock_conc=stock_concentration,
             first_conc=initial_concentration,
             dilution_factor=dilution_factor,
-            dilution_num=number_of_dilutions,
-            dilution_loc=dilution_loc)
+            dilution_loc=dilution_loc,
+            vol_per_well=final_volume_in_each_well)
 
     """
     Transfer buffer for serial dilution wells
@@ -95,14 +97,14 @@ def run_custom_protocol(
     for vol, source, dest in zip(source_vol, source_wells, dil_wells):
         if vol > 0 and vol <= 10:
             m10.pick_up_tip(tiprack10.wells('H1'))
-            m10.transfer(vol, source, dest, mix_after=(3, vol),
+            m10.transfer(vol, source, dest, mix_after=(6, vol),
                          new_tip='never')
             m10.drop_tip()
         elif vol > 10:
             if not m300.tip_attached:
                 m300.pick_up_tip(tiprack300.wells('G2'))
-            m300.transfer(vol, source, dest, mix_after=(3, vol/2),
-                          new_tip='never')
+            m300.transfer(vol, source, dest, mix_befor=(3, vol/2),
+                          mix_after=(3, vol/2), new_tip='never')
     m300.drop_tip()
 
     """
@@ -112,3 +114,11 @@ def run_custom_protocol(
     # transfer serial dilution to plate
     m300.distribute(50, dilution_loc[0], plate.cols[::2], disposal_vol=10)
     m300.distribute(50, dilution_loc[1], plate.cols[1::2], disposal_vol=10)
+
+
+run_custom_protocol(**
+        {'stock_concentration': 1600,
+        'initial_concentration': 16,
+        'dilution_factor': 2,
+        'dilution_start_column': 1,
+        'final_volume_in_each_well': 50})
