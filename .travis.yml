@@ -9,7 +9,7 @@ install:
   - echo $PATH
   - pip install -e otcustomizers
   - pip install -r protolib/requirements.txt
-  - pip install flake8 pytest
+  - pip install flake8==3.5.0 pytest
 
 script:
   - python --version
