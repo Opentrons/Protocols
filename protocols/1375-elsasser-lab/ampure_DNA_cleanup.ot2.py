@@ -1,5 +1,5 @@
 from opentrons import labware, instruments, modules
-# from otcustomizers import StringSelection
+from otcustomizers import StringSelection
 import math
 
 # labware setup
@@ -25,13 +25,13 @@ ethanol = trough.wells('A1')
 
 def run_custom_protocol(
         number_of_samples: int=24,
-        beads_container: 'StringSelection'(
+        beads_container: StringSelection(
             'opentrons-tuberack-2ml-eppendorf',
             'opentrons-aluminum-block-2ml-screwcap',
             'trough-12row')='opentrons-tuberack-2ml-eppendorf',
         beads_location: str='A1',
         bead_volume: float=50,
-        elution_buffer_container: 'StringSelection'(
+        elution_buffer_container: StringSelection(
             'opentrons-tuberack-2ml-eppendorf',
             'opentrons-aluminum-block-2ml-screwcap',
             'trough-12row')='opentrons-tuberack-2ml-eppendorf',
