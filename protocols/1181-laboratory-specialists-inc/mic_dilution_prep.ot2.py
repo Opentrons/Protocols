@@ -114,11 +114,3 @@ def run_custom_protocol(
     # transfer serial dilution to plate
     m300.distribute(50, dilution_loc[0], plate.cols[::2], disposal_vol=10)
     m300.distribute(50, dilution_loc[1], plate.cols[1::2], disposal_vol=10)
-
-
-run_custom_protocol(**
-        {'stock_concentration': 1600,
-        'initial_concentration': 16,
-        'dilution_factor': 2,
-        'dilution_start_column': 1,
-        'final_volume_in_each_well': 50})
