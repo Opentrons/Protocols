@@ -6,7 +6,7 @@ if trough_name not in labware.list():
         trough_name,
         grid=(2, 1),
         spacing=(54, 0),
-        diamter=53,
+        diameter=53,
         depth=42)
 
 # labware setup
