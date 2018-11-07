@@ -27,7 +27,7 @@ p10 = instruments.P10_Single(
     mount='left',
     tip_racks=tiprack_10)
 
-m10 = instruments.p10_Multi(
+m10 = instruments.P10_Multi(
     mount='right',
     tip_racks=[tiprack_10_m])
 
