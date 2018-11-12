@@ -29,7 +29,7 @@ def run_custom_protocol(
     m10.drop_tip()
 
     m10.pick_up_tip()
-    for well in plate_out.rows(0).wells():
+    for well in plate_out.rows('A'):
         m10.transfer(
             dye_volume, dye, well.top(), blow_out=True, new_tip='never')
     m10.drop_tip()
