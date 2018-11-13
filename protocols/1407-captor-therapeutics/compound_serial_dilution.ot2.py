@@ -1,5 +1,5 @@
 from opentrons import labware, instruments
-from otcustomizers import StringSeletion
+from otcustomizers import StringSelection
 
 # labware setup
 trough = labware.load('trough-12row', '1')
@@ -21,7 +21,7 @@ buffer = trough.wells('A1')
 
 
 def run_custom_protocol(
-        sample_container: StringSeletion(
+        sample_container: StringSelection(
             'opentrons-tuberack-2ml-eppendorf',
             'opentrons-tuberack-2ml-screwcap',
             'opentrons-tuberack-15ml',
