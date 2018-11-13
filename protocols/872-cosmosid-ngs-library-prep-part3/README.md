@@ -3,19 +3,26 @@
 ### Author
 [Opentrons](http://www.opentrons.com/)
 
+### Partner
+[CosmosID](http://www.cosmosid.com/)
+
 ## Categories
+NGS Library Prep
 
 ## Description
 Part 3 of 4: Normalize Libraries
 
-
-Links: [Part 1](./872-cosmosid-ngs-library-prep-part1) [Part 2](./872-cosmosid-ngs-library-prep-part2) [Part 3](./872-cosmosid-ngs-library-prep-part3) [Part 4](./872-cosmosid-ngs-library-prep-part4)
+Links: 
+* [Part 1: Tagment and Amplify](./872-cosmosid-ngs-library-prep-part1) 
+* [Part 2: Clean Up Libraries](./872-cosmosid-ngs-library-prep-part2) 
+* [Part 3: Normalize Libraries](./872-cosmosid-ngs-library-prep-part3) 
+* [Part 4: Pool Libraries](./872-cosmosid-ngs-library-prep-part4)
 
 With this protocol, your robot can perform the Nextera XT DNA Library Prep Kit protocol describe by the [Illumina Reference Guide](https://support.illumina.com/content/dam/illumina-support/documents/documentation/chemistry_documentation/samplepreps_nextera/nextera-xt/nextera-xt-library-prep-reference-guide-15031942-03.pdf).
 
-This is part 3 of the protocol, which is step (4) normalize libraries. This step normalizes the quantity of each library to ensure more equal library representation in the pooled library.
+This is part 3 of the protocol, which is step (4) of the overall workflow: normalize libraries. This step normalizes the concentration of each library to ensure correct library representation in the donwstream pooled libraries.
 
-It is a safe stopping point after this step. If you are stopping, seal the plate and store at -25°C to -15°C for up to seven days.
+It is safe to stop after this step and re-start work at a later point. If you are stopping, seal the plate and store at -25°C to -15°C for up to seven days.
 
 ### Robot
 * [OT 2](https://opentrons.com/ot-2)
