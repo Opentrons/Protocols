@@ -1,8 +1,17 @@
 from opentrons import labware, instruments
 from otcustomizers import FileInput
 
+trough_name = 'trough-1row-deep'
+if trough_name not in labware.list():
+    labware.create(
+        trough_name,
+        grid=(1, 1),
+        spacing=(0, 0),
+        diameter=10,
+        depth=40)
+
 # labware setup
-trough = labware.load('trough-1row-deep', '1')
+trough = labware.load(trough_name, '1')
 plate_1 = labware.load('96-flat', '2')
 output_1 = labware.load('96-flat', '3')
 plate_2 = labware.load('96-flat', '5')
