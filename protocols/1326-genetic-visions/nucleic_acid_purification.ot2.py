@@ -15,14 +15,15 @@ etoh_plate = labware.load('96-deep-well', '2')
 buffer_1_plate = labware.load('96-deep-well', '3')
 buffer_2_plate = labware.load('96-deep-well', '6')
 trough = labware.load(trough_name, '5')
+trough_1 = labware.load(trough_name, '8')
 
 tiprack = labware.load('opentrons-tiprack-300ul', '4')
 
 # reagent setup
 tris_hcl = trough.wells('A1')
 etoh = trough.wells('A2')
-wash_buffer_1 = trough.wells('A3')
-wash_buffer_2 = trough.wells('A4')
+wash_buffer = trough_1.wells('A1')
+
 
 m300 = instruments.P300_Multi(
     mount='left',
@@ -48,12 +49,11 @@ m300.drop_tip()
 
 # distribute 500 uL of wash buffer to wash buffer 1 plate
 m300.pick_up_tip()
-for well in buffer_1_plate.rows(0):
-    m300.transfer(500, wash_buffer_1, well.top(), new_tip='never')
-m300.drop_tip()
-
-# distribute 500 uL of wash buffer to wash buffer 2 plate
-m300.pick_up_tip()
-for well in buffer_2_plate.rows(0):
-    m300.transfer(500, wash_buffer_2, well.top(), new_tip='never')
+count = 0
+for well in buffer_1_plate.rows(0)+buffer_2_plate.rows(0):
+    count += 1
+    m300.transfer(500, wash_buffer, well.top(), new_tip='never')
+    if count == 8:
+        wash_buffer = next(wash_buffer)
+        count = 0
 m300.drop_tip()
