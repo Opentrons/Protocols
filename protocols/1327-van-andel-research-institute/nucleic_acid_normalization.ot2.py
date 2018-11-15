@@ -1,5 +1,6 @@
 from opentrons import labware, instruments
 from otcustomizers import StringSelection, FileInput
+import math
 
 # labware setup
 source_racks = [labware.load('opentrons-tuberack-2ml-eppendorf', slot)
@@ -60,9 +61,12 @@ def csv_to_list(csv_string):
 
 def run_custom_protocol(
         dilution_csv: FileInput=csv_example,
+        total_diluent_volume: float=50,
         mix_after_each_transfer: StringSelection("True", "False")="True"):
 
     sample_volumes, diluent_volumes = csv_to_list(csv_example)
+    diluent_height = 20 + \
+        (50-total_diluent_volume) * 1000 / (math.pi * (15 ** 2))
 
     if mix_after_each_transfer == "True":
         mix_num = 3
@@ -74,14 +78,23 @@ def run_custom_protocol(
 
     for index, vol in enumerate(diluent_volumes):
         if vol:
+            diluent_height += vol / (math.pi * (15 ** 2))
             if vol >= 50:
                 if not p300.tip_attached:
                     p300.pick_up_tip()
-                p300.transfer(vol, diluent, dests[index], new_tip='never')
+                p300.transfer(
+                    vol,
+                    diluent.top(-diluent_height),
+                    dests[index],
+                    new_tip='never')
             else:
                 if not p50.tip_attached:
                     p50.pick_up_tip()
-                p50.transfer(vol, diluent, dests[index], new_tip='never')
+                p50.transfer(
+                    vol,
+                    diluent.top(-diluent_height),
+                    dests[index],
+                    new_tip='never')
     for pipette in pipettes:
         if pipette.tip_attached:
             pipette.drop_tip()
