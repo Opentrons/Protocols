@@ -19,14 +19,15 @@ With this protocol, your robot will be able to perform dilutions on 72 samples b
 
 ## Process
 1. Upload your dilution CSV.
-2. Select whether or not you would like to mix the sample in after each transfer.
-3. Download your protocol.
-4. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
-5. Set up your deck according to the deck map.
-6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support article](https://support.opentrons.com/ot-2/getting-started-software-setup/deck-calibration).
-7. Hit "Run".
-8. Robot will transfer the defined volume of diluent into each well.
-9. Robot will transfer the defined volume of each sample into each destination well.
+2. Input the total volume of diluent in the 50 mL conical tube. (We recommend always having more than enough volume of diluent in the conical tube.)
+3. Select whether or not you would like to mix the sample in after each transfer.
+4. Download your protocol.
+5. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
+6. Set up your deck according to the deck map.
+7. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support article](https://support.opentrons.com/ot-2/getting-started-software-setup/deck-calibration).
+8. Hit "Run".
+9. Robot will transfer the defined volume of diluent into each well.
+10. Robot will transfer the defined volume of each sample into each destination well.
 
 ### Additional Notes
 Samples setup(1.5 mL Eppendorf tubes)
