@@ -161,6 +161,3 @@ def run_custom_protocol(
         m300.transfer(100, substrate_solution, col[0].top(), new_tip='never')
     m300.drop_tip()
     update_multi_tip_count(1)
-
-    # incubate at room temperature for 30 minutes
-    m300.delay(minutes=30)
