@@ -18,8 +18,8 @@ sample_plate = labware.load('96-flat', '4', 'Sample Plate', share=True)
 trough = labware.load('trough-12row', '5')
 trough_2 = labware.load(trough_name, '7')
 
-tiprack50 = labware.load('tiprack-200ul', '1')
-tiprack300s = [labware.load('tiprack-200ul', slot)
+tiprack50 = labware.load('opentrons-tiprack-300ul', '1')
+tiprack300s = [labware.load('opentrons-tiprack-300ul', slot)
                for slot in ['6', '8', '9', '10', '11']]
 
 for well in trough_2.wells():
@@ -51,7 +51,7 @@ def update_multi_tip_count(num):
     multi_tip_count += num
     if multi_tip_count == 12 * len(tiprack300s):
         robot.pause("Your P300 tips have run out. Resume the protocol when the \
-        tips are replenished.")
+        tips are replenished. Slot 6, 8, 9, 10, and 11.")
         m300.reset_tip_tracking()
         m300.start_at_tip(tiprack300s[0].cols(0))
         multi_tip_count = 0
