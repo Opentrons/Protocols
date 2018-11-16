@@ -10,10 +10,13 @@
 ## Description
 Part 4 of 4: Pool Libraries
 
+Links: 
+* [Part 1](http://protocols.opentrons.com/protocol/illumina-nextera-XT-library-prep-part1) 
+* [Part 2](http://protocols.opentrons.com/protocol/illumina-nextera-XT-library-prep-part2) 
+* [Part 3](http://protocols.opentrons.com/protocol/illumina-nextera-XT-library-prep-part3) 
+* [Part 4](http://protocols.opentrons.com/protocol/illumina-nextera-XT-library-prep-part4)
 
-Links: [Part 1](./872-cosmosid-ngs-library-prep-part1) [Part 2](./872-cosmosid-ngs-library-prep-part2) [Part 3](./872-cosmosid-ngs-library-prep-part3) [Part 4](./872-cosmosid-ngs-library-prep-part4)
-
-With this protocol, your robot can perform the Nextera XT DNA Library Prep Kit protocol describe by the [Illumina Reference Guide](https://support.illumina.com/content/dam/illumina-support/documents/documentation/chemistry_documentation/samplepreps_nextera/nextera-xt/nextera-xt-library-prep-reference-guide-15031942-03.pdf).
+With this protocol, your robot can perform the Nextera XT DNA Library Prep Kit protocol described by the [Illumina Reference Guide](https://support.illumina.com/content/dam/illumina-support/documents/documentation/chemistry_documentation/samplepreps_nextera/nextera-xt/nextera-xt-library-prep-reference-guide-15031942-03.pdf).
 
 This is part 4 of the protocol, which is step (4) pool libraries. This step combines equal volumes of normalized libraries in a single tube. After pooling, dilute and heat-denature the library pool before loading libraries for the sequencing run.
 
