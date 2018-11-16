@@ -7,7 +7,8 @@
 [CosmosID](http://www.cosmosid.com/)
 
 ## Categories
-NGS Library Prep
+* NGS Library Prep
+     * Illumina
 
 ## Description
 Part 3 of 4: Normalize Libraries

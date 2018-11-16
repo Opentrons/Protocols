@@ -4,6 +4,8 @@
 [Opentrons](http://www.opentrons.com/)
 
 ## Categories
+* NGS Library Prep
+     * Illumina
 
 ## Description
 Part 4 of 4: Pool Libraries
