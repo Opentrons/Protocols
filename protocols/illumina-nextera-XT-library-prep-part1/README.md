@@ -7,7 +7,8 @@
 [CosmosID](http://www.cosmosid.com/)
 
 ## Categories
-NGS Library Prep
+* NGS Library Prep
+     * Illumina
 
 ## Description
 Part 1 of 4: Tagment Genomic DNA and Amplify Libraries

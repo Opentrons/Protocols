@@ -7,7 +7,8 @@
 [CosmosID](http://www.cosmosid.com/)
 
 ## Categories
-NGS Library Prep
+* NGS Library Prep
+     * Illumina
 
 ## Description
 Part 2 of 4: Clean Up Libraries
