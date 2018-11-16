@@ -24,7 +24,7 @@ m300 = instruments.P300_Multi(
     tip_racks=[tiprack])
 
 
-def run_custom_protocols(
+def run_custom_protocol(
         number_of_384_well_plates: int=2):
 
     plates = [labware.load('384-plate', slot)
