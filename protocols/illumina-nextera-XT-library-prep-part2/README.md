@@ -14,10 +14,10 @@
 Part 2 of 4: Clean Up Libraries
 
 Links: 
-* [Part 1: Tagment and Amplify](./872-cosmosid-ngs-library-prep-part1) 
-* [Part 2: Clean Up Libraries](./872-cosmosid-ngs-library-prep-part2) 
-* [Part 3: Normalize Libraries](./872-cosmosid-ngs-library-prep-part3) 
-* [Part 4: Pool Libraries](./872-cosmosid-ngs-library-prep-part4)
+* [Part 1: Tagment and Amplify](http://protocols.opentrons.com/protocol/illumina-nextera-XT-library-prep-part1) 
+* [Part 2: Clean Up Libraries](http://protocols.opentrons.com/protocol/illumina-nextera-XT-library-prep-part2) 
+* [Part 3: Normalize Libraries](http://protocols.opentrons.com/protocol/illumina-nextera-XT-library-prep-part3) 
+* [Part 4: Pool Libraries](http://protocols.opentrons.com/protocol/illumina-nextera-XT-library-prep-part4)
 
 With this protocol, your robot can perform the Nextera XT DNA Library Prep Kit protocol describe by the [Illumina Reference Guide](https://support.illumina.com/content/dam/illumina-support/documents/documentation/chemistry_documentation/samplepreps_nextera/nextera-xt/nextera-xt-library-prep-reference-guide-15031942-03.pdf).
 
