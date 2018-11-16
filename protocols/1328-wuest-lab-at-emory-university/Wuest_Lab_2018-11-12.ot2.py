@@ -17,6 +17,9 @@ def run_custom_protocol(
         cells_location: str='A4',
         dilution_factor: float=10):
 
+    if water_location == cells_location:
+        raise Exception("Water and cells cannot be in the same compartment.")
+
     # variables and reagents
     water = trough.well(water_location)
     cells = trough.well(cells_location)
