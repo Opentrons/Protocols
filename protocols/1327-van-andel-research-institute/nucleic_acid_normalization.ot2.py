@@ -77,33 +77,31 @@ def run_custom_protocol(
     dests = [well for rack in dest_racks for well in rack]
 
     for index, vol in enumerate(diluent_volumes):
-        if vol:
-            diluent_height += vol / (math.pi * (15 ** 2))
-            if vol >= 50:
-                if not p300.tip_attached:
-                    p300.pick_up_tip()
-                p300.transfer(
-                    vol,
-                    diluent.top(-diluent_height),
-                    dests[index],
-                    new_tip='never')
-            else:
-                if not p50.tip_attached:
-                    p50.pick_up_tip()
-                p50.transfer(
-                    vol,
-                    diluent.top(-diluent_height),
-                    dests[index],
-                    new_tip='never')
+        diluent_height += vol / (math.pi * (15 ** 2))
+        if vol >= 50:
+            if not p300.tip_attached:
+                p300.pick_up_tip()
+            p300.transfer(
+                vol,
+                diluent.top(-diluent_height),
+                dests[index],
+                new_tip='never')
+        else:
+            if not p50.tip_attached:
+                p50.pick_up_tip()
+            p50.transfer(
+                vol,
+                diluent.top(-diluent_height),
+                dests[index],
+                new_tip='never')
     for pipette in pipettes:
         if pipette.tip_attached:
             pipette.drop_tip()
 
     for index, vol in enumerate(sample_volumes):
-        if vol:
-            if vol >= 50:
-                p300.transfer(
-                    vol, sources[index], dests[index], mix_after=(mix_num, 50))
-            else:
-                p50.transfer(
-                    vol, sources[index], dests[index], mix_after=(mix_num, 20))
+        if vol >= 50:
+            p300.transfer(
+                vol, sources[index], dests[index], mix_after=(mix_num, 50))
+        else:
+            p50.transfer(
+                vol, sources[index], dests[index], mix_after=(mix_num, 20))
