@@ -52,7 +52,7 @@ Using the customization fields below, set up your protocol as follows:
 
 -- Magnetic Beads (We recommend using [Omega Biotek Mag-Bind TotalPure NGS](http://omegabiotek.com/store/product/mag-bind-totalpure-ngs/))
 
--- 70% Ethanol 
+-- Ethanol 
 
 -- Elution Buffer (Typically  10 mM Tris pH 8.0, TE Buffer, or nuclease-free water)
 
