@@ -65,7 +65,7 @@ for sample, col in zip(strips.cols(0), strips.cols(1, length=8)):
     p50.drop_tip()
 
 # distribute master mix
-p50.distribute(16, master_mix, plate_2.rows('A', to='F'), disposal_vol=0)
+p50.distribute(16, master_mix, plate_1.rows('A', to='F'), disposal_vol=0)
 
 
 # transfer standards
