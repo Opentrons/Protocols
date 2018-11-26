@@ -69,7 +69,7 @@ Using the customization fields below, set up your protocol as follows:
 3. Upload your protocol file into the Opentrons Run App and follow the instructions there to set up your deck and proceed to run!
 4. Make sure to add reagents to your labware before placing it on the deck! You can see where to place your reagents below.
 
-![Labware setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/Nucleic+Acid+Purification/Nucleic+Acid+Purification+with+Magnetic+Beads+-+Reagent+Starting+Position+Image+(2).png)
+![Labware setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/Nucleic+Acid+Purification/Nucleic+Acid+Purification+with+Magnetic+Beads+-+Reagent+Start+Position.png)
 
 ###### Internal
 Nucleic Acid Purification, v1
