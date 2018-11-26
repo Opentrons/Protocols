@@ -8,9 +8,9 @@
     * Nucleic Acid Purification
 
 ## Description
-With this protocol you can perform high-quality nucleic acid purifcations using magnetic beads and the [Opentrons Magnetic Module](https://shop.opentrons.com/products/magdeck?_ga=2.120183432.1039841802.1542049668-403439593.1535387376). This protocol contains many parameters to customize protocols for many different magnetic bead and nucleic acid types. 
+With this protocol, you can perform high-quality nucleic acid purifcations using magnetic beads and the [Opentrons Magnetic Module](https://shop.opentrons.com/products/magdeck?_ga=2.120183432.1039841802.1542049668-403439593.1535387376). This protocol contains several parameters that you can customize for many different magnetic bead and nucleic acid types. Use this setup to iterate and optimize your magbead-based workflows!
 
-While we have reagent recommendations in the **Materials Neeeded** section below, you can use any magnetic beads you prefer with this protocol. For more detailed information on how to use this protocol, please see our [Technical Note](https://s3.amazonaws.com/opentrons-protocol-library-website/Technical+Notes/Nucleic+Acid+Purification+with+Magnetic+Module+OT2+Technical+Note.pdf).
+You can use any magnetic beads you prefer with this protocol, but we do have reagent recommendations in the **Materials Neeeded** section below to help you get started. For more detailed information on how to use this protocol, please see our [Technical Note](https://s3.amazonaws.com/opentrons-protocol-library-website/Technical+Notes/Nucleic+Acid+Purification+with+Magnetic+Module+OT2+Technical+Note.pdf).
 
 ---
 
@@ -50,11 +50,11 @@ Using the customization fields below, set up your protocol as follows:
 
 -- [BioRad HardShell 96-Well PCR Plate](http://www.bio-rad.com/en-us/sku/hsp9601-hard-shell-96-well-pcr-plates-low-profile-thin-wall-skirted-white-clear?ID=hsp9601)
 
--- Magnetic Beads (We recommend using [Omega Biotek Mag-Bind TotalPure NGS](http://omegabiotek.com/store/product/mag-bind-totalpure-ngs/))
+-- Magnetic Beads (Looking for a kit? We recommend trying [Omega Biotek Mag-Bind TotalPure NGS](http://omegabiotek.com/store/product/mag-bind-totalpure-ngs/))
 
 -- Ethanol 
 
--- Elution Buffer (Typically  10 mM Tris pH 8.0, TE Buffer, or nuclease-free water)
+-- Elution Buffer (Typically 10 mM Tris pH 8.0, TE Buffer, or nuclease-free water)
 
 ---
 
@@ -65,8 +65,8 @@ Using the customization fields below, set up your protocol as follows:
 
 ## Process
 1. Select all desired settings according to the "Setup" section above to create your customized protocol.
-2. Download your customized OT-2 Serial Dilution protocol using the blue "Download" button.
-3. Upload your protocol file into the Opentrons Run App and follow the instructions there to set up your deck and proceed to run!
+2. Download your customized Nucleic Acid Purification protocol using the blue "Download" button.
+3. Upload your protocol file into the Opentrons Run App and follow the instructions there to set up your deck and proceed to run.
 4. Make sure to add reagents to your labware before placing it on the deck! You can see where to place your reagents below.
 
 ![Labware setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/Nucleic+Acid+Purification/Nucleic+Acid+Purification+with+Magnetic+Beads+-+Reagent+Start+Position.png)
