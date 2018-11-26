@@ -7,7 +7,7 @@
 
 ## Categories
 * Molecular Biology
-	* DNA
+	* DNA Normalization
 
 ## Description
 Dilute samples in a 96 or 384 well plate, using volumes from a CSV file. Uses a single-channel pipette, and a single source of diluent.
