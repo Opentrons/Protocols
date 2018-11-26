@@ -16,6 +16,7 @@ tiprack_10 = labware.load('tiprack-10ul', '6')
 # reagent setup
 water = trough.wells('A1')
 master_mix = tuberack.wells('A1')
+standards = strips.cols('12')[:6]
 
 # instruments setup
 p10 = instruments.P10_Single(
@@ -65,33 +66,36 @@ for sample, col in zip(strips.cols(0), strips.cols(1, length=8)):
     p50.drop_tip()
 
 # distribute master mix
-p50.distribute(16, master_mix, plate_1.rows('A', to='F'), disposal_vol=0)
-
+p50.pick_up_tip()
+for index, row in enumerate(plate_1.rows()):
+    if index == 6 or index == 7:
+        dest = row.wells('1', length=6)
+    else:
+        dest = row.wells('1', length=9)
+    p50.distribute(6, master_mix, dest, disposal_vol=0, new_tip='never')
+p50.drop_tip()
 
 # transfer standards
-all_wells = [well for row in plate_1.rows() for well in row]
-dests = [all_wells[i:i+3] for i in range(0, 18, 3)]
-for standard, dest in zip(strips.cols('12')[:6], dests):
-    for well in dest:
+for standard, row in zip(standards, plate_1.rows()):
+    dests = row.wells('7', to='9')
+    for well in dests:
         p10.pick_up_tip()
         p10.transfer(4, standard, well, mix_after=(5, 10), new_tip='never')
         p10.blow_out(well)
         p10.drop_tip()
 
 # transfer samples
-dests_1 = [all_wells[i:i+3] for i in range(18, 61, 6)]
-dests_2 = [all_wells[i:i+3] for i in range(21, 64, 6)]
-for index, col in enumerate(strips.cols[1:9]):
-    for well_1 in dests_1[index]:
+for sample, row in zip(strips.cols[1:9], plate_1.rows()):
+    for well_1 in row.wells('1', to='3'):
         p10.pick_up_tip()
         p10.transfer(
-            4, col.wells('D'), well_1, mix_after=(5, 10), new_tip='never')
+            4, sample.wells('D'), well_1, mix_after=(5, 10), new_tip='never')
         p10.blow_out(well_1)
         p10.drop_tip()
 
-    for well_2 in dests_2[index]:
+    for well_2 in row.wells('4', to='6'):
         p10.pick_up_tip()
         p10.transfer(
-            4, col.wells('G'), well_2, mix_after=(5, 10), new_tip='never')
+            4, sample.wells('G'), well_2, mix_after=(5, 10), new_tip='never')
         p10.blow_out(well_2)
         p10.drop_tip()
