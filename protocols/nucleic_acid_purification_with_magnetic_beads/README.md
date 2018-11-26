@@ -64,7 +64,7 @@ Using the customization fields below, set up your protocol as follows:
 * Varies.
 
 ## Process
-1. Select all desired settings according to the "Setup" section above to create your cusotmized protocol.
+1. Select all desired settings according to the "Setup" section above to create your customized protocol.
 2. Download your customized OT-2 Serial Dilution protocol using the blue "Download" button.
 3. Upload your protocol file into the Opentrons Run App and follow the instructions there to set up your deck and proceed to run!
 4. Make sure to add reagents to your labware before placing it on the deck! You can see where to place your reagents below.
