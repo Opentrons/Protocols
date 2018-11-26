@@ -7,7 +7,7 @@
 
 ## Categories
 * Molecular Biology
-	* DNA Quanitification
+	* DNA Quantification
 
 
 ## Description
