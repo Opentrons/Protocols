@@ -8,7 +8,7 @@
     * Nucleic Acid Purification
 
 ## Description
-With this protocol, you can perform high-quality nucleic acid purifcations using magnetic beads and the [Opentrons Magnetic Module](https://shop.opentrons.com/products/magdeck?_ga=2.120183432.1039841802.1542049668-403439593.1535387376). This protocol contains flexible parameters that you can customize for many different magnetic bead and nucleic acid types. Use this setup to iterate and optimize your magbead-based workflows!
+With this protocol, you can perform high-quality nucleic acid purifcations using magnetic beads and the [Opentrons Magnetic Module](https://shop.opentrons.com/products/magdeck?_ga=2.120183432.1039841802.1542049668-403439593.1535387376). This protocol contains flexible parameters that you can customize for many different magnetic bead and nucleic acid types. Use this setup to rapidly iterate and optimize your magbead-based workflows!
 
 You can use any magnetic beads you prefer with this protocol, but we have included some reagent recommendations in the **Materials Neeeded** section below to help you get started. For more detailed information on how to use this protocol, please see our [Technical Note](https://s3.amazonaws.com/opentrons-protocol-library-website/Technical+Notes/Nucleic+Acid+Purification+with+Magnetic+Module+OT2+Technical+Note.pdf).
 
