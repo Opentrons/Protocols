@@ -8,8 +8,8 @@ output_plate = labware.load('biorad-hardshell-96-PCR', '2')
 
 def run_custom_protocol(
         pipette_type: StringSelection(
-            'p10_Single', 'p50_Single', 'p300_Single', 'p1000_Single',
-            'p10_Multi', 'p50_Multi', 'p300_Multi'
+            'p300_Multi', 'p50_Single', 'p300_Single', 'p1000_Single',
+            'p10_Multi', 'p50_Multi', 'p10_Single'
             )='p300_Multi',
         pipette_mount: StringSelection('left', 'right')='left',
         sample_number: int=24,
