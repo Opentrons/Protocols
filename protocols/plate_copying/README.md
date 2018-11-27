@@ -1,4 +1,4 @@
-# Copy source plate to N plates with 8-channel
+# Plate Mapping
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -10,19 +10,17 @@
 	* Plate Filling
 
 ## Description
-This protocol allows you to "copy" all the wells in a plate to 1-11 different plates (or 1-6 plates with the OT Hood model), using an 8-channel pipette.
+This protocol allows you to map all of the wells in a plate to 1-9 additional plates using an 8-channel pipette.
 
 This protocol can copy one 96 well plate to other 96 well plates, **OR** one 384 well plate to other 384 well plates.
 You cannot go 96 to 384, or 384 to 96.
 
-First, the robot will transfer the specified volume from Row 1 of the source plate to Row 1 of all the destination plates. It will change tips, then do the same for Row 2, and so on, until all rows are filled.
+First, the robot will transfer the specified volume from Column 1 of the source plate to Row 1 of all the destination plates. It will change tips, then do the same for Column 2, and so on, until all rows are filled.
 
 ### Time Estimate
 
 ### Robot
-* [OT PRO](https://opentrons.com/ot-one-pro)
-* [OT Standard](https://opentrons.com/ot-one-standard)
-* [OT Hood](https://opentrons.com/ot-one-hood)
+* [Opentrons OT-2](https://opentrons.com/ot2)
 
 ### Modules
 
