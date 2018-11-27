@@ -32,7 +32,7 @@ This protocol allows your robot to perform DNA quantification using Quant-iT™ 
 11. Robot will distribute 100 uL of PicoGreen ssDNA reagent to all of the occupied wells.
 
 ### Additional Notes
-#### Tube Rack Setup
+#### Tip Rack Setup
 * Remove the second tip from column 1 of the 300 uL tip rack in slot 7.
 
 #### Trough Setup
