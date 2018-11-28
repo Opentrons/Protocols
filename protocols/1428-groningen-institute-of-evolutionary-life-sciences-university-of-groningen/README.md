@@ -28,17 +28,21 @@ This protocol gives your robot the ability to perform microsatellite genotyping 
 7. Robot will transfer sample to each plate.
 
 ### Additional Notes
-#### Trough Setup
+Trough Setup
 * Master Mix A: well A1
 * Master Mix B: well A2
 * Master Mix C: well A3
 * Master Mix D: well A4
 
-#### Output Plate Setup
+---
+
+Output Plate Setup
 * Plate A: slot 2
 * Plate B: slot 3
 * Plate C: slot 5
 * Plate D: slot 6
+
+---
 
 If you have any questions about this protocol, please contact protocols@opentrons.com.
 
