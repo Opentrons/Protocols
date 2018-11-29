@@ -19,7 +19,7 @@ index_7 = tuberack.wells('A2', to='D4')  # Index 1 (i7) adapters
 index_5 = tuberack.wells('A5', to='D6')  # Index 2 (i5) adapters
 
 tipracks50 = [labware.load('tiprack-200ul', slot) for slot in ['3', '4']]
-tipracks10 = [labware.load('tiprack-10ul', slot) for slot in ['6', '7']]
+tipracks10 = [labware.load('tiprack-10ul', slot) for slot in ['6', '7', '8', '9']]
 
 # pipette setup
 p50 = instruments.P50_Single(
@@ -59,6 +59,13 @@ def run_custom_protocol(
 
     # Add normalized gDNA to each well
     p10.transfer(5, samples, output, new_tip='always')
+
+    # Add ATM to each well
+    for well in output:
+        p10.pick_up_tip()
+        p10.transfer(5, atm, well, new_tip='never')
+        p10.mix(5, 10, well)
+        p10.drop_tip()
 
     robot.pause("Centrifuge at 280 × g at 20°C for 1 minute. Place on the \
         preprogrammed thermal cycler and run the tagmentation program. \
