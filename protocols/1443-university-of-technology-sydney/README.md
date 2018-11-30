@@ -31,19 +31,23 @@ This protocol allows your robot to perform the Picogreen Assay on up to 184 samp
 10. Robot will transfer 1 uL sample into its designed well. columns 1-12 of the first sample plate will go to column 2-13, and columns 1-11 of the second sample plate will go into column 14-24 in the 384-well plate.
 
 ### Additional Notes
-#### 384-well Plate Layout
+384-well Plate Layout
 ![layout](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1443-university-of-technology-sydney/layout.png)  
 * Column 1: 4 standards and blank
 * Columns 2-24: Up to 184 samples
 
-#### Deck Setup
+---
+
+Deck Setup
 * Sample Plate 1: slot 1
 * 384-well Plate: slot 2
 * Sample Plate 2: slot 3
 * PCR Strip Tubes: slot 4
 * Reagent Trough: slot 5
 
-#### Reagent Trough Setup
+---
+
+Reagent Trough Setup
 * PicoGreen Mix: well A1
 
 If you have any questions about this protocol, please contact protocols@opentrons.com.

@@ -32,16 +32,16 @@ This protocol allows your robot to perform DNA quantification using Quant-iT™ 
 11. Robot will distribute 100 uL of PicoGreen ssDNA reagent to all of the occupied wells.
 
 ### Additional Notes
-#### Tip Rack Setup
+Tip Rack Setup
 * Remove the second tip from column 1 of the 300 uL tip rack in slot 7.
-
-#### Trough Setup
+---
+Trough Setup
 * TE Buffer: well A1
 * PicoGreen ssDNA Reagent: well A2
-
-#### Tube Rack Setup
+---
+Tube Rack Setup
 * DNA Standard: well A1
-
+---
 Before you run this protcol, make sure to take a look at the [Application Note](https://www.promega.com/-/media/files/products-and-services/instruments/detection/tbs-technical-support-docs/997-9314.pdf?la=en) for the Quant-iT PicoGreen dsDNA Kit to ensure you have all the correct materials needed for your experiment.
 
 If you have any questions about this protocol, please contact protocols@opentrons.com.
