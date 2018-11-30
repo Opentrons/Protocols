@@ -32,11 +32,13 @@ Your robot can use this protocol to create PCR mixes using the [TaqPath™ ProAm
 9. Robot will transfer each sample to each row, sample 1 to row A, sample 2 to row B, etc.
 
 ### Additional Notes
-#### Tube Rack Setup
+Tube Rack Setup
 * Samples 1-8: well A1-D2
 * Assays 1-12: well A2-D5
 * Water: well A6
 * Master Mix: well B6
+
+---
 
 If you have any questions about this protocol, please contact protocols@opentrons.com.
 

@@ -32,12 +32,14 @@ Using this protocol, your robot can perform drug screening on a 96-well plates u
 12. Robot will repeat steps 10-11 until the entire plate is filled with drug E.
 
 ### Additional Notes
-#### Trough setup
+Trough setup
 * Drug A: well A1
 * Drug B: well A2
 * Drug C: well A3
 * Drug D: well A4
 * Drug E: well A5
+
+---
 
 If you have any questions about this protocol, please contact protocols@opentrons.com.
 
