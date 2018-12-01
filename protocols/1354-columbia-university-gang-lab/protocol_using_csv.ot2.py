@@ -113,16 +113,12 @@ def run_custom_protocol(
 
     source_list, volume_list = csv_to_list(sample_1_csv)
     custom_mix_sample(volume_list, source_list, sample_1)
-    robot.comment("Sample 1 finished mixing.")
 
     source_list, volume_list = csv_to_list(sample_2_csv)
     custom_mix_sample(volume_list, source_list, sample_2)
-    robot.comment("Sample 2 finished mixing.")
 
     source_list, volume_list = csv_to_list(sample_3_csv)
     custom_mix_sample(volume_list, source_list, sample_3)
-    robot.comment("Sample 3 finished mixing.")
 
     source_list, volume_list = csv_to_list(sample_4_csv)
     custom_mix_sample(volume_list, source_list, sample_4)
-    robot.comment("Sample 4 finished mixing.")
