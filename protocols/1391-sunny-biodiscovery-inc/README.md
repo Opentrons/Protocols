@@ -5,7 +5,7 @@
 
 ## Categories
 * Cell Culture
-    * Cell Feeding
+	* Cell Feeding
 
 ## Description
 With this protocol, your robot can plate cells from a trough to a 96-well plate, as well as distribute several samples from 2-mL tubes to each well following a specific layout (see Additional Notes). This protocol requires a P10 single-channel and a P300 multi-channel pipette.
