@@ -55,7 +55,9 @@ def run_custom_protocol(
         ):
 
     vol_list = csv_to_list(CSV_file)
-    compounds_wells = [well for row in compounds.rows() for well in row]
+    compounds_wells = [well
+                       for plate in compounds
+                       for row in plate.rows() for well in row]
     dest_wells = [well for row in experiments.rows() for well in row]
 
     for index, dest_vol in enumerate(vol_list):
