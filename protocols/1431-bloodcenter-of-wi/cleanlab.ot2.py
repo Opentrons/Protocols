@@ -1,4 +1,4 @@
-from opentrons import labware, instruments, modules, robot
+from opentrons import labware, instruments, modules
 
 # labware setup
 strips = labware.load('PCR-strip-tall', '3')
@@ -105,7 +105,8 @@ End Repair
 """
 m300.mix(5, 50, cold_strips.cols('3'))
 heat_block.wait_for_temp()
-m300.transfer(50, cold_strips.cols('3'), heat_strips.cols('2'), new_tip='never')
+m300.transfer(50, cold_strips.cols('3'), heat_strips.cols('2'),
+              new_tip='never')
 m300.delay(minutes=30)
 m300.transfer(50, heat_strips.cols('2'), mag_plate.cols('2'), new_tip='never')
 m300.drop_tip()
@@ -200,12 +201,15 @@ m300.mix(5, 40, cold_strips.cols('6'))
 """
 Ligation Step 2
 """
-m300.transfer(50, cold_strips.cols('6'), cold_strips.cols('7'), new_tip='never')
+m300.transfer(50, cold_strips.cols('6'), cold_strips.cols('7'),
+              new_tip='never')
 m300.mix(5, 50, cold_strips.cols('7'))
 heat_block.wait_for_temp()
-m300.transfer(50, cold_strips.cols('7'), heat_strips.cols('4'), new_tip='never')
+m300.transfer(50, cold_strips.cols('7'), heat_strips.cols('4'),
+              new_tip='never')
 m300.delay(minutes=5)
-m300.transfer(50, heat_strips.cols('4'), cold_strips.cols('8'), new_tip='never')
+m300.transfer(50, heat_strips.cols('4'), cold_strips.cols('8'),
+              new_tip='never')
 m300.delay(minutes=4)
 m300.drop_tip()
 
