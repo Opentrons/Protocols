@@ -38,7 +38,9 @@ Tube Rack Well Iteration:
 * Tube 2: well A2, etc
 
 ![setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/well_iteration_row.png)
+
 ---
+
 96-Well Plate Layout:
 
 ![layout](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1391-sunny-biodiscovery-inc/layout.png)
