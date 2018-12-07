@@ -1,4 +1,4 @@
-from opentrons import labware, instruments, modules, robot
+from opentrons import labware, instruments, robot
 
 """
 Part 3 - PCR Enrichment
