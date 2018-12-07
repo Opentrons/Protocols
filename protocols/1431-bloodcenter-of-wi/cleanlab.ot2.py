@@ -104,6 +104,7 @@ mag_deck.disengage()
 End Repair
 """
 m300.mix(5, 50, cold_strips.cols('3'))
+heat_block.set_temperature(25)
 heat_block.wait_for_temp()
 m300.transfer(50, cold_strips.cols('3'), heat_strips.cols('2'),
               new_tip='never')
@@ -152,6 +153,7 @@ Ligation Step 1
 """
 m50.pick_up_tip(tipracks[0].cols('12'))
 m50.mix(5, 20, cold_strips.cols('4'))
+heat_block.set_temperature(37)
 heat_block.wait_for_temp()
 m50.transfer(20, cold_strips.cols('4'), heat_strips.cols('3'), new_tip='never')
 m50.delay(minutes=15)
@@ -204,6 +206,7 @@ Ligation Step 2
 m300.transfer(50, cold_strips.cols('6'), cold_strips.cols('7'),
               new_tip='never')
 m300.mix(5, 50, cold_strips.cols('7'))
+heat_block.set_temperature(22)
 heat_block.wait_for_temp()
 m300.transfer(50, cold_strips.cols('7'), heat_strips.cols('4'),
               new_tip='never')
