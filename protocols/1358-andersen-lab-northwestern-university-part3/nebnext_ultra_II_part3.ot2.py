@@ -53,7 +53,6 @@ def update_m300_tip_count(num):
     global m300_tip_count
     m300_tip_count += num
     if m300_tip_count == 12 * len(tipracks_m300):
-        print('Reset p300 tip racks')
         robot.pause("Your P300 tips have run out, please refill the tip racks \
         in slot 5, 6, 7, 8, and 9. Resume after you have finished.")
         m300.reset_tip_tracking()
@@ -65,7 +64,6 @@ def update_m10_tip_count(num):
     global m10_tip_count
     m10_tip_count += num
     if m10_tip_count == 12 * len(tipracks_m10):
-        print('Reset p10 tip racks')
         robot.pause("Your P10 tips have run out, please refill the tip racks \
         in slot 10, and 11. Resume after you have finished.")
         m10.reset_tip_tracking()
