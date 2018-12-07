@@ -64,7 +64,7 @@ def run_custom_protocol(
         total_diluent_volume: float=50,
         mix_after_each_transfer: StringSelection("True", "False")="True"):
 
-    sample_volumes, diluent_volumes = csv_to_list(csv_example)
+    sample_volumes, diluent_volumes = csv_to_list(dilution_csv)
     diluent_height = 20 + \
         (50-total_diluent_volume) * 1000 / (math.pi * (15 ** 2))
 
