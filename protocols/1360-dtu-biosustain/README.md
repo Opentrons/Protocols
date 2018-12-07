@@ -8,7 +8,7 @@
     * Distribution
 
 ## Description
-This protocol allows your robot to add up to 192 compounds from 96-deep well compound plates to a single 96-deep well experiment plate. The volume and destination location of each compound are defined in a CSV file input. See Additional Notes for more details on the CSV setup. Only two volumes will be accepted in the form of `1` and `-1`, each represents a volume you define in the custom fields below.
+This protocol allows your robot to add up to 192 compounds from 96-deep well compound plates to a single 96-deep well experiment plate. The volume and destination location of each compound are defined in a CSV file input. See Additional Notes for more details on the CSV setup. Only two volumes will be accepted in the form of `1` and `-1`, each represents a volume you define in the custom fields below. In the protocol, `volume_positive_value` is the `-1` volume, and `volume_negative_value` is the `1` volume.
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
