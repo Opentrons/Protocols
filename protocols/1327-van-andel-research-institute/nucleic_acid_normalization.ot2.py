@@ -6,13 +6,10 @@ import math
 source_racks = [labware.load('opentrons-tuberack-2ml-eppendorf', slot)
                 for slot in ['1', '2', '3']]
 
-dest_racks = [labware.load('opentrons-tuberack-2ml-screwcap', slot)
+dest_racks = [labware.load('opentrons-tuberack-2ml-eppendorf', slot)
               for slot in ['4', '5', '6']]
-for rack in dest_racks:
-    for well in rack:
-        well.properties['height'] = 24
 
-diluent = labware.load('opentrons-tuberack-50ml', '7').wells('A1')
+diluent = labware.load('opentrons-tuberack-15ml', '7').wells('A1')
 
 tipracks_300 = [labware.load('opentrons-tiprack-300ul', slot)
                 for slot in ['8', '9']]
@@ -66,7 +63,7 @@ def run_custom_protocol(
 
     sample_volumes, diluent_volumes = csv_to_list(dilution_csv)
     diluent_height = 20 + \
-        (50-total_diluent_volume) * 1000 / (math.pi * (15 ** 2))
+        (50-total_diluent_volume) * 1000 / (math.pi * (8 ** 2))
 
     if mix_after_each_transfer == "True":
         mix_num = 3
@@ -77,7 +74,7 @@ def run_custom_protocol(
     dests = [well for rack in dest_racks for well in rack]
 
     for index, vol in enumerate(diluent_volumes):
-        diluent_height += vol / (math.pi * (15 ** 2))
+        diluent_height += vol / (math.pi * (8 ** 2))
         if vol >= 50:
             if not p300.tip_attached:
                 p300.pick_up_tip()
