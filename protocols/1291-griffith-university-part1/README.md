@@ -42,6 +42,13 @@ With this protocol, your robot will generate up to 8 output plates by distributi
 
 ---
 
+Tip Rack Setup
+* Remove the following before the start of the protocol:
+    * 1st tip of column 2
+    * 8th tip of column 3
+
+---
+
 Troughs
 * Medium: slot 3
 * Cells: slot 6

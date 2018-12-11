@@ -54,7 +54,7 @@ def run_custom_protocol(
                   for index in range(2)]
     m300.distribute(medium_volume, medium, multi_dest, disposal_vol=0)
 
-    p300.start_at_tip(tiprack.wells('A3'))
+    p300.start_at_tip(tiprack.wells('A4'))
     single_dest = [well
                    for plate in destination[:number_of_plates]
                    for row_alpha in ['A', 'P']
@@ -62,14 +62,33 @@ def run_custom_protocol(
     p300.distribute(medium_volume, medium, single_dest, disposal_vol=0)
 
     # transfer cells
+    count = 0
     m300.pick_up_tip()
     for plate in destination:
         for col_num in range(1, 23):
-            for well_num in range(2):
+            well_num = 0
+            if count == 0 or count % 5 == 0:
                 m300.mix(3, 100, cells)
-                m300.transfer(
-                    cell_volume,
-                    cells,
-                    plate.cols(col_num)[well_num],
-                    new_tip='never')
+            count += 1
+            m300.transfer(
+                cell_volume,
+                cells,
+                plate.cols(col_num)[well_num],
+                new_tip='never')
+    m300.drop_tip()
+
+    # transfer cells
+    count = 0
+    m300.pick_up_tip()
+    for plate in destination:
+        for col_num in range(1, 23):
+            well_num = 1
+            if count == 0 or count % 5 == 0:
+                m300.mix(3, 100, cells)
+            count += 1
+            m300.transfer(
+                cell_volume,
+                cells,
+                plate.cols(col_num)[well_num],
+                new_tip='never')
     m300.drop_tip()
