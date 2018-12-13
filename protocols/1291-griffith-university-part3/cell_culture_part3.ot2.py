@@ -55,9 +55,8 @@ def dispense_solution(volume, reagent, destinations):
     m300.set_flow_rate(dispense=150)
     m300.pick_up_tip()
     for dest in destinations:
-        well_edge = dest.center()
-        m300.transfer(volume, reagent, (dest, well_edge), new_tip='never')
-        m300.blow_out((dest, well_edge))
+        m300.transfer(volume, reagent, dest.top(-6), new_tip='never')
+        m300.blow_out(dest.top(-6))
     m300.drop_tip()
     update_tip_count(1)
 
@@ -65,17 +64,16 @@ def dispense_solution(volume, reagent, destinations):
 def remove_solution(volume, sources, trash_location):
     m300.set_flow_rate(dispense=300)
     for source in sources:
-        well_edge = source.from_center(x=0.8, y=-0.8, z=-0.9)
-        m300.transfer(volume, (source, well_edge), trash_location)
+        m300.transfer(volume, source.bottom(0.5), trash_location)
         update_tip_count(1)
 
 
-def remove_solution_using_same_tip(volume, sources, trash_location):
-    m300.set_flow_rate(dispense=300)
-    consolidate_dest = [(source, source.from_center(x=0.8, y=-0.8, z=-0.9))
-                        for source in sources]
-    m300.consolidate(volume, consolidate_dest, trash_location)
-    update_tip_count(1)
+# def remove_solution_using_same_tip(volume, sources, trash_location):
+#     m300.set_flow_rate(dispense=300)
+#     consolidate_dest = [(source, source.from_center(x=0.8, y=-0.8, z=-0.9))
+#                         for source in sources]
+#     m300.consolidate(volume, consolidate_dest, trash_location)
+#     update_tip_count(1)
 
 
 def run_custom_protocol(
@@ -91,13 +89,3 @@ def run_custom_protocol(
     remove_solution(water_volume, dests, liquid_trash)
 
     dispense_solution(dye_volume, dye, dests)
-
-    m300.delay(minutes=incubation_time)
-
-    remove_solution(dye_volume, dests, liquid_trash)
-
-    dispense_solution(water_volume, water, dests)
-
-    remove_solution_using_same_tip(water_volume, dests, liquid_trash)
-
-    dispense_solution(water_volume, water, dests)
