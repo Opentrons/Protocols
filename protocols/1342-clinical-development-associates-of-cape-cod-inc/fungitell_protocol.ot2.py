@@ -41,7 +41,7 @@ STDs = [well for well in SP.wells('C2', 'D2', 'E2', 'F2')]
 
 
 # remove A, B, G, H from col 1 of 300 uL tiprack
-m300.transfer(100, RGW, SP.cols('2'))
+p50.transfer(100, RGW, SP.cols('2').wells('C', 'D', 'E', 'F'))
 p50.pick_up_tip()
 p50.transfer(100, BG_STD, SP.wells('B2'), new_tip='never')
 p50.transfer(100, BG_STD, STDs[0], new_tip='never')
