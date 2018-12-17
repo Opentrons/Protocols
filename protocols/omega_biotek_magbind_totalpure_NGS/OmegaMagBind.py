@@ -10,16 +10,16 @@ mag_plate = labware.load('biorad-hardshell-96-PCR', '1', share=True)
 output_plate = labware.load('96-PCR-tall', '2')
 
 
- def run_custom_protocol(
-        pipette_type: StringSelection(
-            'p10_Single', 'p50_Single', 'p300_Single', 'p1000_Single',
-            'p10_Multi', 'p50_Multi', 'p300_Multi'
-            )='p300_Multi',
-        pipette_mount: StringSelection('left', 'right')='left',
-        sample_number: int=16,
-        PCR_volume: float=20,
-        bead_ratio: float=1.8,
-        elution_buffer_volume: float=200):
+def run_custom_protocol(
+    pipette_type: StringSelection(
+        'p10_Single', 'p50_Single', 'p300_Single', 'p1000_Single',
+        'p10_Multi', 'p50_Multi', 'p300_Multi'
+        )='p300_Multi',
+    pipette_mount: StringSelection('left', 'right')='left',
+    sample_number: int=16,
+    PCR_volume: float=20,
+    bead_ratio: float=1.8,
+    elution_buffer_volume: float=200):
 
 incubation_time = 300
 settling_time = 50
@@ -182,12 +182,11 @@ for cycle in range(2):
 
 # Dry at RT
 pipette.delay(minutes=drying_time)
-# Disengage MagDeck
 
+# Disengage MagDeck
 mag_deck.disengage()
 
 # Mix beads with elution buffer
-
 if elution_buffer_volume/2 > pipette.max_volume:
     mix_vol = pipette.max_volume
 else:
@@ -203,9 +202,9 @@ for target in samples:
 pipette.delay(minutes=3)
 
 # Engage MagDeck for 1 minute and remain engaged for DNA elution
-
 mag_deck.engage()
 pipette.delay(seconds=settling_time)
+
 # Transfer clean PCR product to a new well
 for target, dest in zip(samples, output):
     pipette.transfer(elution_buffer_volume, target.bottom(1), dest.top(), blow_out=True)
