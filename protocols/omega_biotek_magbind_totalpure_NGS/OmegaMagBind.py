@@ -152,13 +152,11 @@ def run_custom_protocol(
     mag_deck.engage()
     pipette.delay(seconds=settling_time)
 
-
     # Remove supernatant from magnetic beads
     pipette.set_flow_rate(aspirate=25, dispense=120)
     for target in samples:
         pipette.transfer(
             total_vol, target.bottom(0.7), liquid_waste.top(), blow_out=True)
-
 
     # Wash beads twice with 70% ethanol
 
