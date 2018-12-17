@@ -35,6 +35,8 @@ Using the customization fields below, set up your protocol as follows:
 
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/customizable-serial-dilution/materials.png)
 
+-- [Omega Bio-tek Mag-Bind® TotalPure NGS Kit](https://shop.opentrons.com/products/mag-bind-total-pure-ngs?_ga=2.87650270.758603424.1545063195-403439593.1535387376&_gac=1.3933956.1543039580.EAIaIQobChMI0bPCrK7s3gIVhx6BCh0oPA25EAEYASAAEgJxEfD_BwE)
+
 -- [Opentrons OT-2](http://opentrons.com/ot-2)
 
 -- [Opentrons Magnetic Module](https://shop.opentrons.com/products/magdeck?_ga=2.171718441.823190023.1542396855-403439593.1535387376)
@@ -46,8 +48,6 @@ Using the customization fields below, set up your protocol as follows:
 -- [12-row automation-friendly trough](https://www.usascientific.com/12-channel-automation-reservoir.aspx)
 
 -- [BioRad HardShell 96-Well PCR Plates](http://www.bio-rad.com/en-us/sku/hsp9601-hard-shell-96-well-pcr-plates-low-profile-thin-wall-skirted-white-clear?ID=hsp9601)
-
--- [Omega Bio-tek Mag-Bind® TotalPure NGS Kit](https://shop.opentrons.com/products/mag-bind-total-pure-ngs?_ga=2.87650270.758603424.1545063195-403439593.1535387376&_gac=1.3933956.1543039580.EAIaIQobChMI0bPCrK7s3gIVhx6BCh0oPA25EAEYASAAEgJxEfD_BwE)
 
 -- Ethanol 
 
