@@ -10,7 +10,7 @@
 ## Description
 With this protocol, you can perform high-quality nucleic acid purifications using [Omega Bio-tek Mag-Bind® TotalPure NGS](https://shop.opentrons.com/products/mag-bind-total-pure-ngs?_ga=2.87650270.758603424.1545063195-403439593.1535387376&_gac=1.3933956.1543039580.EAIaIQobChMI0bPCrK7s3gIVhx6BCh0oPA25EAEYASAAEgJxEfD_BwE) magnetic beads and the [Opentrons Magnetic Module](https://shop.opentrons.com/products/magdeck?_ga=2.120183432.1039841802.1542049668-403439593.1535387376). This setup yields high quality PCR product and other nucleic acids without the use of centrifugation or vacuum separation.
 
-This kit is widely used in NGS cleanup for its affordability and simplicity. It is also well-adapted for nucleic acid size selection by varying bead ratios for  the  isolation  of  a  wide  array  of  fragment  sizes. For more detailed information on how to use this protocol, please see our [Technical Note]().
+This kit is widely used in NGS cleanup for its affordability and simplicity. It is also well-adapted for nucleic acid size selection by varying bead ratios for  the  isolation  of  a  wide  array  of  fragment  sizes. For more detailed information on how to use this protocol, please see our [Technical Note](https://s3.amazonaws.com/opentrons-protocol-library-website/Technical+Notes/Omega_Application_Note.pdf).
 
 ---
 
@@ -41,7 +41,7 @@ This kit is widely used in NGS cleanup for its affordability and simplicity. It 
 ---
 
 
-![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/Nucleic+Acid+Purification/Setup.png)
+![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
 Using the customization fields below, set up your protocol as follows:
 
@@ -71,6 +71,6 @@ Using the customization fields below, set up your protocol as follows:
 Nucleic Acid Purification, v1
 
 ### Additional Notes
-Please reference our [Technical Note]() for more information about the expected output of this protocol, in addition to expanded sample data from the Opentrons and Omega Bio-tek labs. 
+Please reference our [Technical Note](https://s3.amazonaws.com/opentrons-protocol-library-website/Technical+Notes/Omega_Application_Note.pdf) for more information about the expected output of this protocol, in addition to expanded sample data from the Opentrons and Omega Bio-tek labs. 
 
 We understand that there are limitations to the use of this protocol and we plan to make improvements soon! In the meantime, if you'd like to request a more complex purification workflow, please use our [Protocol Development Request Form](https://opentrons-protocol-dev.paperform.co/). You can also download the Python file from this page and modify it using our [API Documentation](https://docs.opentrons.com/). For additional questions about this protocol, please email protocols@opentrons.com.
