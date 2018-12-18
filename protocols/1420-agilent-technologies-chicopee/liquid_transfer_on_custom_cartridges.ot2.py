@@ -3,7 +3,7 @@ from opentrons import labware, instruments
 metadata = {
     'protocolName': 'Liquid Transfer on Custom Cartridges',
     'author': 'Alise <protocols@opentrons.com>',
-    'source': 'Protocol Library'
+    'source': 'Custom Protocol Request'
     }
 
 trough_1_well_name = 'trough_1well'
