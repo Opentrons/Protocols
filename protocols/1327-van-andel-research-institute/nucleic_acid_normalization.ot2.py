@@ -2,6 +2,12 @@ from opentrons import labware, instruments
 from otcustomizers import StringSelection, FileInput
 import math
 
+metadat = {
+    'protocolName': 'Nucleic Acid Normalization',
+    'author': 'Alise <protocols@opentrons.com>',
+    'source': 'Custom Protocol Request'
+    }
+
 # labware setup
 source_racks = [labware.load('opentrons-tuberack-2ml-eppendorf', slot)
                 for slot in ['1', '2', '3']]
