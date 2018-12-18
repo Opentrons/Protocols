@@ -8,9 +8,9 @@
     * Nucleic Acid Purification
 
 ## Description
-With this protocol, you can perform high-quality nucleic acid purifcations using magnetic beads and the [Opentrons Magnetic Module](https://shop.opentrons.com/products/magdeck?_ga=2.120183432.1039841802.1542049668-403439593.1535387376). This protocol contains flexible parameters that you can customize for many different magnetic bead and nucleic acid types. Use this setup to rapidly iterate and optimize your magbead-based workflows!
+With this protocol, you can perform high-quality nucleic acid puriifcations using magnetic beads and the [Opentrons Magnetic Module](https://shop.opentrons.com/products/magdeck?_ga=2.120183432.1039841802.1542049668-403439593.1535387376). This protocol contains flexible parameters that you can customize for many different magnetic bead and nucleic acid types. Use this setup to rapidly iterate and optimize your magbead-based workflows!
 
-You can use any magnetic beads you prefer with this protocol, but we have included some reagent recommendations in the **Materials Neeeded** section below to help you get started. For more detailed information on how to use this protocol, please see our [Technical Note](https://s3.amazonaws.com/opentrons-protocol-library-website/Technical+Notes/Nucleic+Acid+Purification+with+Magnetic+Module+OT2+Technical+Note.pdf).
+You can use any magnetic beads you prefer with this protocol, but we have included some reagent recommendations in the **Materials Needed** section below to help you get started. For more detailed information on how to use this protocol, please see our [Technical Note](https://s3.amazonaws.com/opentrons-protocol-library-website/Technical+Notes/Nucleic+Acid+Purification+with+Magnetic+Module+OT2+Technical+Note.pdf).
 
 ---
 
@@ -50,7 +50,7 @@ Using the customization fields below, set up your protocol as follows:
 
 -- [BioRad HardShell 96-Well PCR Plate](http://www.bio-rad.com/en-us/sku/hsp9601-hard-shell-96-well-pcr-plates-low-profile-thin-wall-skirted-white-clear?ID=hsp9601)
 
--- Magnetic Beads (Looking for a kit? We recommend trying [Omega Biotek Mag-Bind TotalPure NGS](http://omegabiotek.com/store/product/mag-bind-totalpure-ngs/))
+-- Magnetic Beads (Looking for a kit? We recommend trying [Omega Bio-tek Mag-Bind® TotalPure NGS](https://shop.opentrons.com/products/mag-bind-total-pure-ngs))
 
 -- Ethanol 
 
