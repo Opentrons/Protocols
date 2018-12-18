@@ -70,7 +70,7 @@ Make sure to add reagents to your labware before placing it on the deck! You can
 1. Select all desired settings according to the "Setup" section above to create your cusotmized protocol.
 2. Download your customized OT-2 protocol using the blue "Download" button.
 3. Upload your protocol file into the Opentrons Run App and follow the instructions there to set up your deck and proceed to run!
-4. Make sure to add reagents to your labware before placing it on the deck! You can see where to place your reagents in teh "Setup" section above.
+4. Make sure to add reagents to your labware before placing it on the deck! You can see where to place your reagents in the "Setup" section above.
 
 ###### Internal
 Omega Nucleic Acid Purification, v1
