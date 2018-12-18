@@ -3,7 +3,7 @@ from opentrons import labware, instruments, robot
 metadata = {
     'protocolName': 'Protein-based Compound Screening',
     'author': 'Alise <protocols@opentrons.com>',
-    'source': 'Protocol Library'
+    'source': 'Custom Protocol Request'
     }
 
 plate_name = 'corning-384-well-standard-flat'
