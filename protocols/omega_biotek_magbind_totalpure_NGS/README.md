@@ -80,3 +80,5 @@ Omega Nucleic Acid Purification, v1
 Please reference our [Application Note](https://s3.amazonaws.com/opentrons-protocol-library-website/Technical+Notes/Omega_Application_Note.pdf) for more information about the expected output of this protocol, in addition to expanded sample data from the Opentrons and Omega Bio-tek labs. 
 
 If you'd like to request a more complex purification workflow, please use our [Protocol Development Request Form](https://opentrons-protocol-dev.paperform.co/). You can also download the Python file from this page and modify it using our [API Documentation](https://docs.opentrons.com/). For additional questions about this protocol, please email protocols@opentrons.com.
+
+![Omega logo](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Omega+Logo.png)
