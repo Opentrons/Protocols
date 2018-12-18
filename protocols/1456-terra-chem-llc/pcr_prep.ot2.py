@@ -4,7 +4,7 @@ from otcustomizers import StringSelection
 metadata = {
     'protocolName': 'PCR Prep',
     'author': 'Alise <protocols@opentrons.com>',
-    'source': 'Protocol Library'
+    'source': 'Custom Protocol Request'
     }
 
 # labware setup
