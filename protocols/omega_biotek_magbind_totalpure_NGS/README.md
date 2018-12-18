@@ -1,4 +1,4 @@
-# Nucleic Acid Purification with Omega Bio-tek Mag-Bind® TotalPure NGS
+# NGS Cleanup and Size Selection with Omega Bio-tek Mag-Bind® TotalPure NGS
 
 ### Author
 [Opentrons](https://opentrons.com/)
