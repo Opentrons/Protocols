@@ -5,7 +5,7 @@ import math
 metadata = {
     'protocolName': 'Tube Filling',
     'author': 'Alise <protocols@opentrons.com>',
-    'source': 'Protocol Library'}
+    'source': 'Custom Protocol Request'}
 
 # labware setup
 trough = labware.load('trough-12row', '1')
