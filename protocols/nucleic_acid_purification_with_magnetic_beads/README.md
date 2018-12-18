@@ -8,33 +8,13 @@
     * Nucleic Acid Purification
 
 ## Description
-With this protocol, you can perform high-quality nucleic acid purifcations using magnetic beads and the [Opentrons Magnetic Module](https://shop.opentrons.com/products/magdeck?_ga=2.120183432.1039841802.1542049668-403439593.1535387376). This protocol contains flexible parameters that you can customize for many different magnetic bead and nucleic acid types. Use this setup to rapidly iterate and optimize your magbead-based workflows!
+With this protocol, you can perform high-quality nucleic acid purifications using magnetic beads and the [Opentrons Magnetic Module](https://shop.opentrons.com/products/magdeck?_ga=2.120183432.1039841802.1542049668-403439593.1535387376). This protocol contains flexible parameters that you can customize for many different magnetic bead and nucleic acid types. Use this setup to rapidly iterate and optimize your magbead-based workflows!
 
-You can use any magnetic beads you prefer with this protocol, but we have included some reagent recommendations in the **Materials Neeeded** section below to help you get started. For more detailed information on how to use this protocol, please see our [Technical Note](https://s3.amazonaws.com/opentrons-protocol-library-website/Technical+Notes/Nucleic+Acid+Purification+with+Magnetic+Module+OT2+Technical+Note.pdf).
-
----
-
----
-
-
-![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/Nucleic+Acid+Purification/Setup.png)
-
-Using the customization fields below, set up your protocol as follows:
-
-   * **Pipette:** Specify your pipette. We recommend using a p50 or p300 multi- or single-channel.
-   * **Pipette Mount:** Specify which mount (left or right) your pipette is on.
-   * **Sample number:** Customize the number of samples to run per protocol. A multiple of 8 is recommended when you are using a multichannel pipette.
-   * **Sample volume:** Specify the starting volume (in uL) of the input sample.
-   * **Bead Ratio:** Customize the ratio of beads for left or right side size-selection of fragments. *The default bead ratio is 1.8x the input sample volume.*
-   * **Elution Volume:** Specify the final volume (in uL) to elute the purified nucleic acid. *The Opentrons MagDeck supports elution volumes above 10 µL.*
-   * **Incubation Time:** Specify the amount of time (in minutes) that the bead solution and input sample interact.
-   * **Settling Time:** Specify the amount of time (in minutes) needed to pellet the beads. *Higher volumes may require a longer settling time.*
-   * **Drying Time:** Specify the drying time (in minutes) needed after wash steps.
+You can use any magnetic beads you prefer with this protocol, but we have included some reagent recommendations in the **Materials Needed** section below to help you get started. For more detailed information on how to use this protocol, please see our [Technical Note](https://s3.amazonaws.com/opentrons-protocol-library-website/Technical+Notes/Nucleic+Acid+Purification+with+Magnetic+Module+OT2+Technical+Note.pdf).
 
 ---
 
 ---
-
 
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/customizable-serial-dilution/materials.png)
 
@@ -50,11 +30,29 @@ Using the customization fields below, set up your protocol as follows:
 
 -- [BioRad HardShell 96-Well PCR Plate](http://www.bio-rad.com/en-us/sku/hsp9601-hard-shell-96-well-pcr-plates-low-profile-thin-wall-skirted-white-clear?ID=hsp9601)
 
--- Magnetic Beads (Looking for a kit? We recommend trying [Omega Biotek Mag-Bind TotalPure NGS](https://shop.opentrons.com/products/mag-bind-total-pure-ngs))
+-- Magnetic Beads (Looking for a kit? We recommend trying [Omega Bio-tek Mag-Bind® TotalPure NGS](https://shop.opentrons.com/products/mag-bind-total-pure-ngs))
 
 -- Ethanol 
 
 -- Elution Buffer (Typically 10 mM Tris pH 8.0, TE Buffer, or nuclease-free water)
+
+---
+
+---
+
+![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
+
+Using the customization fields below, set up your protocol as follows:
+
+   * **Pipette:** Specify your pipette. We recommend using a p50 or p300 multi- or single-channel.
+   * **Pipette Mount:** Specify which mount (left or right) your pipette is on.
+   * **Sample number:** Customize the number of samples to run per protocol. A multiple of 8 is recommended when you are using a multichannel pipette.
+   * **Sample volume:** Specify the starting volume (in uL) of the input sample.
+   * **Bead Ratio:** Customize the ratio of beads for left or right side size-selection of fragments. *The default bead ratio is 1.8x the input sample volume.*
+   * **Elution Volume:** Specify the final volume (in uL) to elute the purified nucleic acid. *The Opentrons MagDeck supports elution volumes above 10 µL.*
+   * **Incubation Time:** Specify the amount of time (in minutes) that the bead solution and input sample interact.
+   * **Settling Time:** Specify the amount of time (in minutes) needed to pellet the beads. *Higher volumes may require a longer settling time.*
+   * **Drying Time:** Specify the drying time (in minutes) needed after wash steps.
 
 ---
 
