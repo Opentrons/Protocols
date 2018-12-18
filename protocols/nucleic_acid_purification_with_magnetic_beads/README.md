@@ -17,7 +17,7 @@ You can use any magnetic beads you prefer with this protocol, but we have includ
 ---
 
 
-![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/Nucleic+Acid+Purification/Setup.png)
+![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
 Using the customization fields below, set up your protocol as follows:
 
