@@ -3,6 +3,9 @@
 ### Author
 [Opentrons](https://opentrons.com/)
 
+### Partner
+[Omega Bio-tek](http://omegabiotek.com/store/)
+
 ## Categories
 * Molecular Biology
     * Nucleic Acid Purification
