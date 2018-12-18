@@ -3,7 +3,7 @@ from opentrons import labware, instruments
 metadata = {
     'protocolName': 'Dilution Series for Biophysical Assays',
     'author': 'Alise <protocols@opentrons.com>',
-    'source': 'Protocol Library'
+    'source': 'Custom Protocol Request'
     }
 
 # labware setup
