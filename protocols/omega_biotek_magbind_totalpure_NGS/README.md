@@ -15,8 +15,6 @@ With this protocol, you can perform high-quality nucleic acid purifications usin
 
 This kit is widely used in NGS cleanup for its affordability and simplicity. It is also well-adapted for nucleic acid size selection by varying bead ratios for  the  isolation  of  a  wide  array  of  fragment  sizes. This protocol contains optimized parameters for settling time, drying time, and incubation time, but you can still customize sample number, bead ratio, and elution volume as needed for your experiments. For more detailed information on how to use this protocol, please see our [Application Note](https://s3.amazonaws.com/opentrons-protocol-library-website/Technical+Notes/Omega_Application_Note.pdf).
 
-We have optimized parameters for settling time, drying time, and incubation time based on Omega Bio-tek's bead chemistry 
-
 ---
 
 ---
