@@ -4,7 +4,7 @@ from otcustomizers import StringSelection
 metadata = {
     'protocolName': 'QIAseq Targeted DNA Panel Part 3',
     'author': 'Alise <protocols@opentrons.com>',
-    'source': 'Protocol Library'
+    'source': 'Custom Protocol Request'
     }
 
 """
