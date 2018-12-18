@@ -9,6 +9,7 @@
 ## Categories
 * Molecular Biology
     * Nucleic Acid Purification
+        * Omega Bio-tek Mag-Bind® TotalPure NGS
 
 ## Description
 With this protocol, you can perform high-quality nucleic acid purifications using [Omega Bio-tek Mag-Bind® TotalPure NGS](https://shop.opentrons.com/products/mag-bind-total-pure-ngs?_ga=2.87650270.758603424.1545063195-403439593.1535387376&_gac=1.3933956.1543039580.EAIaIQobChMI0bPCrK7s3gIVhx6BCh0oPA25EAEYASAAEgJxEfD_BwE) magnetic beads and the [Opentrons Magnetic Module](https://shop.opentrons.com/products/magdeck?_ga=2.120183432.1039841802.1542049668-403439593.1535387376). This setup yields high quality PCR product and other nucleic acids without the use of centrifugation or vacuum separation.
