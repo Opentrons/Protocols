@@ -3,9 +3,6 @@
 ### Author
 [Opentrons](http://www.opentrons.com/)
 
-### Partner
-[CosmosID](http://www.cosmosid.com/)
-
 ## Categories
 * NGS Library Prep
      * Illumina
