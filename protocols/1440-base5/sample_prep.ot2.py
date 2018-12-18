@@ -3,7 +3,7 @@ from opentrons import labware, instruments, modules
 metadata = {
     'protocolName': 'MDA Sample Prep',
     'author': 'Alise <protocols@opentrons.com>',
-    'source': 'Protocol Library'}
+    'source': 'Custom Protocol Request'}
 
 # labware setup
 tuberack = labware.load('opentrons-tuberack-2ml-eppendorf', '1')
