@@ -16,23 +16,6 @@ This kit is widely used in NGS cleanup for its affordability and simplicity. It 
 
 ---
 
-
-![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/Nucleic+Acid+Purification/Setup.png)
-
-Using the customization fields below, set up your protocol as follows:
-
-   * **Pipette:** Specify your pipette. We recommend using a p50 or p300 multi- or single-channel.
-   * **Pipette Mount:** Specify which mount (left or right) your pipette is on.
-   * **Sample number:** Customize the number of samples to run per protocol. A multiple of 8 is recommended when you are using a multichannel pipette.
-   * **Sample volume:** Specify the starting volume (in uL) of the input sample.
-   * **Bead Ratio:** Customize the ratio of beads for left or right side size-selection of fragments. *The default bead ratio is 1.8x the input sample volume.*
-   * **Elution Volume:** Specify the final volume (in uL) to elute the purified nucleic acid. *The Opentrons MagDeck supports elution volumes above 10 µL.*
-
----
-
----
-
-
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/customizable-serial-dilution/materials.png)
 
 -- [Omega Bio-tek Mag-Bind® TotalPure NGS Kit](https://shop.opentrons.com/products/mag-bind-total-pure-ngs?_ga=2.87650270.758603424.1545063195-403439593.1535387376&_gac=1.3933956.1543039580.EAIaIQobChMI0bPCrK7s3gIVhx6BCh0oPA25EAEYASAAEgJxEfD_BwE)
@@ -52,6 +35,22 @@ Using the customization fields below, set up your protocol as follows:
 -- Ethanol 
 
 -- Elution Buffer (Typically  10 mM Tris pH 8.0, TE Buffer, or nuclease-free water)
+
+---
+
+---
+
+
+![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/Nucleic+Acid+Purification/Setup.png)
+
+Using the customization fields below, set up your protocol as follows:
+
+   * **Pipette:** Specify your pipette. We recommend using a p50 or p300 multi- or single-channel.
+   * **Pipette Mount:** Specify which mount (left or right) your pipette is on.
+   * **Sample number:** Customize the number of samples to run per protocol. A multiple of 8 is recommended when you are using a multichannel pipette.
+   * **Sample volume:** Specify the starting volume (in uL) of the input sample.
+   * **Bead Ratio:** Customize the ratio of beads for left or right side size-selection of fragments. *The default bead ratio is 1.8x the input sample volume.*
+   * **Elution Volume:** Specify the final volume (in uL) to elute the purified nucleic acid. *The Opentrons MagDeck supports elution volumes above 10 µL.*
 
 ---
 
