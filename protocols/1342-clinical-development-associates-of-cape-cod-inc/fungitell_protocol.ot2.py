@@ -1,5 +1,11 @@
 from opentrons import labware, instruments, robot
 
+metadata = {
+    'protocolName': 'Fungitell Protocol',
+    'author': 'Alise <protocols@opentrons.com>',
+    'source': 'Custom Protocol Request'
+    }
+
 # create custom labware
 tuberack_name = 'custom-pyrotube-rack'
 if tuberack_name not in labware.list():
