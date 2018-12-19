@@ -49,6 +49,9 @@ After the two steps carried out in this protocol, you can safely stop work and r
 * If number of samples is less than 25, arrange 6 tubes of Index 1 (A2-B3) and 4 tubes of Index 2 (A5-D5) in the tuberack. Otherwise, fill Index 1 and Index 2 according to the tuberack setup as instructed above.
 * Review the reference guide before proceeding to confirm kit contents and make sure you have the required equipment and consumables.
 
+## Preview
+With this series of protocols and the [Opentrons Magnetic Module](https://shop.opentrons.com/products/magdeck), your robot can complete a library prep using the [Illumina Nextera XT DNA Library Prep Kit](https://support.illumina.com/content/dam/illumina-support/documents/documentation/chemistry_documentation/samplepreps_nextera/nextera-xt/nextera-xt-library-prep-reference-guide-15031942-03.pdf). This library prep protocol comes in four parts: Tagment and Amplify, Clean Up Libraries, Normalize Libraries, and Pool Libraries.
+
 ###### Internal
 bU7eUGEh
 872
