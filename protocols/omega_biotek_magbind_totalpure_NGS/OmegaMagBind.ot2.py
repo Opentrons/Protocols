@@ -4,7 +4,7 @@ from otcustomizers import StringSelection
 from opentrons import robot
 
 metadata = {
-    'protocolName': 'NGS Cleanup and Size Selection with Omega Bio-tek Mag-Bind® TotalPure NGS',
+    'protocolName': 'Omega Bio-tek Mag-Bind TotalPure NGS',
     'author': 'Opentrons <protocols@opentrons.com>',
     'source': 'Protocol Library'
     }
