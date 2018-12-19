@@ -1,5 +1,11 @@
 from opentrons import labware, instruments, robot
 
+metadata = {
+    'protocolName': 'Illumina Nextera XT DNA Library Prep Part 1/4 - Tagment and Amplify',
+    'author': 'Opentrons <protocols@opentrons.com>',
+    'source': 'Protocol Library'
+    }
+
 """
 Tagment Genomic DNA
 Amplify Libraries
