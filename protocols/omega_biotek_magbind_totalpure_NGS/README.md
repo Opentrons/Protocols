@@ -18,8 +18,6 @@ With this protocol, you can perform high-quality nucleic acid purifications usin
 
 This kit is widely used in NGS cleanup for its affordability and simplicity. It is also well-adapted for nucleic acid size selection by varying bead ratios for  the  isolation  of  a  wide  array  of  fragment  sizes. For more detailed information on how to use this protocol, please see our [Application Note](https://s3.amazonaws.com/opentrons-protocol-library-website/Technical+Notes/Omega_Application_Note.pdf).
 
-If you are interested in purchasing the Opentrons Magnetic Module or trying out the Omega Bio-tek Mag-Bind® beads, please contact our Sales Team at <info@opentrons.com> to learn more!
-
 ---
 
 ---
