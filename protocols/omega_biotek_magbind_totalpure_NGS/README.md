@@ -7,8 +7,8 @@
 [Omega Bio-tek](http://omegabiotek.com/store/)
 
 ## Categories
-* Molecular Biology
-    * Nucleic Acid Purification
+* Library Prep
+    * NGS Cleanup and Size Selection
         * Omega Bio-tek Mag-Bind® TotalPure NGS
 
 ## Description
@@ -18,15 +18,17 @@ With this protocol, you can perform high-quality nucleic acid purifications usin
 
 This kit is widely used in NGS cleanup for its affordability and simplicity. It is also well-adapted for nucleic acid size selection by varying bead ratios for  the  isolation  of  a  wide  array  of  fragment  sizes. For more detailed information on how to use this protocol, please see our [Application Note](https://s3.amazonaws.com/opentrons-protocol-library-website/Technical+Notes/Omega_Application_Note.pdf).
 
+If you are interested in purchasing the Opentrons Magnetic Module or trying out the Omega Bio-tek Mag-Bind® beads, please contact our Sales Team at <info@opentrons.com> to learn more!
+
 ---
 
 ---
 
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
-   * [Omega Bio-tek Mag-Bind® TotalPure NGS Kit](https://shop.opentrons.com/products/mag-bind-total-pure-ngs?_ga=2.87650270.758603424.1545063195-403439593.1535387376&_gac=1.3933956.1543039580.EAIaIQobChMI0bPCrK7s3gIVhx6BCh0oPA25EAEYASAAEgJxEfD_BwE)
+   * [Omega Bio-tek Mag-Bind® TotalPure NGS Kit](https://shop.opentrons.com/products/mag-bind-total-pure-ngs)
    * [Opentrons OT-2](http://opentrons.com/ot-2)
-   * [Opentrons Magnetic Module](https://shop.opentrons.com/products/magdeck?_ga=2.171718441.823190023.1542396855-403439593.1535387376)
+   * [Opentrons Magnetic Module](https://shop.opentrons.com/products/magdeck)
    * [Opentrons OT-2 Run App (Version 3.1.2 or later)](http://opentrons.com/ot-app)
    * 200uL or 300 uL Tiprack ([Opentrons tips suggested](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips-racks-9-600-tips))
    * [12-row automation-friendly trough](https://www.usascientific.com/12-channel-automation-reservoir.aspx)
@@ -73,4 +75,4 @@ Omega Nucleic Acid Purification, v1
 ### Additional Notes
 Please reference our [Application Note](https://s3.amazonaws.com/opentrons-protocol-library-website/Technical+Notes/Omega_Application_Note.pdf) for more information about the expected output of this protocol, in addition to expanded sample data from the Opentrons and Omega Bio-tek labs. 
 
-If you'd like to request a more complex purification workflow, please use our [Protocol Development Request Form](https://opentrons-protocol-dev.paperform.co/). You can also download the Python file from this page and modify it using our [API Documentation](https://docs.opentrons.com/). For additional questions about this protocol, please email protocols@opentrons.com.
+If you'd like to request a more complex purification workflow, please use our [Protocol Development Request Form](https://opentrons-protocol-dev.paperform.co/). You can also download the Python file from this page and modify it using our [API Documentation](https://docs.opentrons.com/). For additional questions about this protocol, please email <protocols@opentrons.com>.nal questions about this protocol, please email protocols@opentrons.com.
