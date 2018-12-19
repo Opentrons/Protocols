@@ -24,7 +24,7 @@ This kit is widely used in NGS cleanup for its affordability and simplicity. It 
 
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
-To purchase tips, reagents, or our Magnetic Module, please contact our Sales team at <info@opentrons.com>.
+To purchase tips, reagents, or our Magnetic Module, please [visit our online store](https://shop.opentrons.com/) or contact our Sales team at <info@opentrons.com>.
 
    * [Omega Bio-tek Mag-Bind® TotalPure NGS Kit](https://shop.opentrons.com/products/mag-bind-total-pure-ngs)
    * [Opentrons OT-2](http://opentrons.com/ot-2)
