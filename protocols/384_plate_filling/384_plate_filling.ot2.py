@@ -1,5 +1,12 @@
 from opentrons import instruments, labware
 from otcustomizers import StringSelection
+
+metadata = {
+    'protocolName': '384 Well Plate Filling',
+    'author': 'Opentrons <protocols@opentrons.com>',
+    'source': 'Protocol Library'
+    }
+
 # trough and 384-well plate
 trough = labware.load('trough-12row', '4', 'trough')
 plate = labware.load('384-plate', '2', 'plate')

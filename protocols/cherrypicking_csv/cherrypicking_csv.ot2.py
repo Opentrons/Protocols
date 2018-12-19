@@ -1,6 +1,12 @@
 from opentrons import labware, instruments
 from otcustomizers import FileInput, StringSelection
 
+metadata = {
+    'protocolName': 'Cherrypicking CSV',
+    'author': 'Opentrons <protocols@opentrons.com>',
+    'source': 'Protocol Library'
+    }
+
 example_csv = """
 A1, 20
 A3, 10
