@@ -1,5 +1,11 @@
 from opentrons import labware, instruments, robot
 
+metadata = {
+    'protocolName': 'Cell Culture',
+    'author': 'Alise <protocols@opentrons.com>',
+    'source': 'Custom Protocol Request'
+    }
+
 microplate_name = 'greiner-384-square-1'
 if microplate_name not in labware.list():
     labware.create(
