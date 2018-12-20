@@ -1,5 +1,11 @@
 from opentrons import labware, instruments
 
+metadata = {
+    'protocolName': 'Cell Culture',
+    'author': 'Alise <protocols@opentrons.com>',
+    'source': 'Custom Protocol Request'
+    }
+
 reservoir_name = 'biotix-reservoir'
 if reservoir_name not in labware.list():
     labware.create(

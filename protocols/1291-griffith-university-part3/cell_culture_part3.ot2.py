@@ -1,5 +1,11 @@
 from opentrons import labware, instruments, robot
 
+metadata = {
+    'protocolName': 'Cell Culture',
+    'author': 'Alise <protocols@opentrons.com>',
+    'source': 'Custom Protocol Request'
+    }
+
 microplate_name = 'greiner-384-square-1'
 if microplate_name not in labware.list():
     labware.create(
@@ -35,8 +41,7 @@ m300 = instruments.P300_Multi(
 
 tip_count = 0
 
-dests = [col[well_index]
-         for col in destination.cols()
+dests = [[col[well_index] for col in destination.cols('4', to='21')]
          for well_index in range(2)]
 
 
@@ -53,27 +58,23 @@ def update_tip_count(num):
 
 def dispense_solution(volume, reagent, destinations):
     m300.set_flow_rate(dispense=150)
-    m300.pick_up_tip()
     for dest in destinations:
-        m300.transfer(volume, reagent, dest.top(-6), new_tip='never')
-        m300.blow_out(dest.top(-6))
-    m300.drop_tip()
+        m300.pick_up_tip()
+        m300.aspirate(300, reagent)
+        for well in dest:
+            if m300.current_volume < volume:
+                m300.aspirate(300, reagent)
+            m300.dispense(volume, well.top(-6))
+        m300.drop_tip()
     update_tip_count(1)
 
 
 def remove_solution(volume, sources, trash_location):
     m300.set_flow_rate(dispense=300)
     for source in sources:
-        m300.transfer(volume, source.bottom(0.5), trash_location)
-        update_tip_count(1)
-
-
-# def remove_solution_using_same_tip(volume, sources, trash_location):
-#     m300.set_flow_rate(dispense=300)
-#     consolidate_dest = [(source, source.from_center(x=0.8, y=-0.8, z=-0.9))
-#                         for source in sources]
-#     m300.consolidate(volume, consolidate_dest, trash_location)
-#     update_tip_count(1)
+        for well in source:
+            m300.transfer(volume, well.bottom(0.5), trash_location)
+            update_tip_count(1)
 
 
 def run_custom_protocol(
@@ -82,10 +83,15 @@ def run_custom_protocol(
         dye_volume: float=30,
         incubation_time: float=15):
 
+    m300.start_at_tip(tipracks[0].cols('5'))
     remove_solution(supernatant_volume, dests, liquid_trash)
+    new_tip = m300.get_next_tip()
 
+    m300.start_at_tip(tipracks[0].cols('1'))
     dispense_solution(water_volume, water, dests)
 
+    m300.start_at_tip(new_tip)
     remove_solution(water_volume, dests, liquid_trash)
 
+    m300.start_at_tip(tipracks[0].cols('3'))
     dispense_solution(dye_volume, dye, dests)
