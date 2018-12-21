@@ -1,4 +1,4 @@
-from opentrons import labware, instruments, modules, robot
+from opentrons import labware, instruments, modules
 
 metadata = {
     'protocolName': 'Nucleic Acid Purification',
