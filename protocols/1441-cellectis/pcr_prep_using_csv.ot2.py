@@ -4,7 +4,7 @@ from otcustomizers import FileInput
 metadata = {
     'protocolName': 'PCR Prep Using CSV Input',
     'author': 'Alise <protocols@opentrons.com>',
-    'source': 'Protocol Library'
+    'source': 'Custom Protocol Request'
     }
 
 # labware setup
