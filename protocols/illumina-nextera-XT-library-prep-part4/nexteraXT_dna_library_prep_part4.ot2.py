@@ -1,5 +1,11 @@
 from opentrons import labware, instruments
 
+metadata = {
+    'protocolName': 'Nextera XT DNA Library Prep Part 4',
+    'author': 'Alise <protocols@opentrons.com>',
+    'source': 'Protocol Library'
+    }
+
 """
 Pool Libraries
 """
