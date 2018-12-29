@@ -1,5 +1,11 @@
 from opentrons import labware, instruments, modules, robot
 
+metadata = {
+    'protocolName': 'Nextera XT DNA Library Prep Part 2',
+    'author': 'Alise <protocols@opentrons.com>',
+    'source': 'Protocol Library'
+    }
+
 """
 Clean Up Libraries
 """
