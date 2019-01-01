@@ -1,8 +1,11 @@
 from opentrons import instruments, labware, robot
 from otcustomizers import StringSelection
 
-experiment_plate = labware.load('384-plate', '3')
-tuberack = labware.load('opentrons-tuberack-2ml-eppendorf', '1')
+metadata = {
+ 'protocolName': 'Fluorescence Assay Specific Enzyme Concentration',
+ 'author': 'Laura <protocols@opentrons.com>',
+ 'source': 'Custom Protocol Request'
+}
 
 
 def run_custom_protocol(pipette_type: StringSelection(

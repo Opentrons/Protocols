@@ -9,15 +9,16 @@ metadata = {
 
 
 def run_custom_protocol(pipette_type: StringSelection(
-    'p10-single', 'p50-multi')='p10-single',
-    mm_volume: int=10,
-    donor_sub_volume: int=10,
-    start: str='A',
-    end: str='A'
-    starting_well: int=0,
-    ending_well: int=12,
-    mm_loc: str='A1',
-    donor_loc: str='B1'):
+        'p10-single', 'p50-multi')='p10-single',
+        mm_volume: int=10,
+        donor_sub_volume: int=10,
+        start: str='A',
+        end: str='A',
+        starting_well: int=0,
+        ending_well: int=12,
+        mm_loc: str='A1',
+        donor_loc: str='B1'):
+
     experiment_plate = labware.load('384-plate', '3')
 
     if pipette_type == 'p10-single':
