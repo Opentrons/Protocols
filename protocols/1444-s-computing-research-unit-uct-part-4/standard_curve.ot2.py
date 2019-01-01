@@ -9,10 +9,10 @@ metadata = {
 
 
 def run_custom_protocol(pipette_type: StringSelection(
-    'p10-single', 'p50-multi')='p10-single',
-    standards: int=12,
-    standard_volume: int=15,
-    detection_reagent_volume: int=5):
+        'p10-single', 'p50-multi')='p10-single',
+        standards: int=12,
+        standard_volume: int=15,
+        detection_reagent_volume: int=5):
 
     standard_plate = labware.load('384-plate', '3')
 
