@@ -7,7 +7,9 @@ metadata = {
     }
 
 
-def run_custom_protocol(tube_height: float=43):
+def run_custom_protocol(
+        tube_height: float=43,
+        engage_height: float=14.94):
     rack_name = '1.2mL_96-well_tube_rack'
     if rack_name not in labware.list():
         labware.create(
@@ -67,7 +69,7 @@ def run_custom_protocol(tube_height: float=43):
     m300.drop_tip()
     m300.delay(minutes=5)
 
-    mag_module.engage(height=14.94)
+    mag_module.engage(height=engage_height)
     m300.delay(minutes=2)
 
     m300.transfer(1200, beads, m300.trash_container.top())
@@ -78,7 +80,7 @@ def run_custom_protocol(tube_height: float=43):
         m300.transfer(250, buffer_C, beads, new_tip='never')
         m300.mix(5, 100, beads)
         m300.move_to(beads[0].top(10))
-        mag_module.engage(height=14.94)
+        mag_module.engage(height=engage_height)
         m300.delay(seconds=30)
         m300.transfer(300, beads, m300.trash_container.top(), new_tip='never')
         m300.drop_tip()
@@ -89,7 +91,7 @@ def run_custom_protocol(tube_height: float=43):
         m300.transfer(250, buffer_D, beads, new_tip='never')
         m300.mix(5, 100, beads)
         m300.move_to(beads[0].top(10))
-        mag_module.engage(height=14.94)
+        mag_module.engage(height=engage_height)
         m300.delay(seconds=30)
         m300.transfer(300, beads, m300.trash_container.top(), new_tip='never')
         m300.drop_tip()
@@ -99,7 +101,7 @@ def run_custom_protocol(tube_height: float=43):
     m50.transfer(20, buffer_E, beads, new_tip='never')
     m50.mix(5, 15, beads)
     m50.move_to(beads[0].top(10))
-    mag_module.engage(height=14.94)
+    mag_module.engage(height=engage_height)
     m50.delay(seconds=30)
     m50.transfer(25, beads, plate.cols('1'), new_tip='never')
     m50.drop_tip()
