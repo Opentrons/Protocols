@@ -21,7 +21,7 @@ def run_custom_protocol(pipette_type: StringSelection(
         source = tuberack.wells('A1')
         reagent = tuberack.wells('B1')
         destination = [well
-                       for rows in standard_plate.rows('1', length=standards)
+                       for rows in standard_plate.rows('A', length=standards)
                        for well in rows[0:3]]
         tiprack = labware.load('tiprack-10ul', '2')
         pipette = instruments.P10_Single(mount='right', tip_racks=[tiprack])
