@@ -125,7 +125,7 @@ def run_custom_protocol(pipette_type: StringSelection(
         pipette.delay(minutes=incubation_time)
 
     if pipette_type == 'p10-single':
-        experiment_transfer = [wells
+        experiment_transfer = [well
                                for column in experiment_plate.columns()
                                for well in column.wells('I', 'K', 'M', 'O')]
         pipette.transfer(
