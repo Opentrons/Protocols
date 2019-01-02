@@ -58,7 +58,7 @@ def run_custom_protocol(pipette_type: StringSelection(
         pipette.transfer(
             titrator_volume,
             tuberack.wells(titrator_location),
-            experiment_plate.columns('1').rows('I', 'K', 'M', 'O'),
+            experiment_plate.columns('1').wells('I', 'K', 'M', 'O'),
             new_tip='once'
         )
 
@@ -125,10 +125,13 @@ def run_custom_protocol(pipette_type: StringSelection(
         pipette.delay(minutes=incubation_time)
 
     if pipette_type == 'p10-single':
+        experiment_transfer = [wells
+                               for column in experiment_plate.columns()
+                               for well in column.wells('I', 'K', 'M', 'O')]
         pipette.transfer(
             detection_reagent_volume,
             tuberack.wells('A4'),
-            experiment_plate.columns().rows('I', 'K', 'M', 'O'),
+            experiment_transfer,
             new_tip='always',
             mix_after=(3, detection_reagent_volume))
     else:
