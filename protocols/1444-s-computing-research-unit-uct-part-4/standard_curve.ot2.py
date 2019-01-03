@@ -24,7 +24,9 @@ def run_custom_protocol(pipette_type: StringSelection(
                        for rows in standard_plate.rows('A', length=standards)
                        for well in rows[0:3]]
         tiprack = labware.load('tiprack-10ul', '2')
-        pipette = instruments.P10_Single(mount='right', tip_racks=[tiprack])
+        tiprack2 = labware.load('tiprack-10ul', '4')
+        pipette = instruments.P10_Single(
+            mount='right', tip_racks=[tiprack, tiprack2])
     else:
         plate = labware.load('96-flat', '1')
         source = plate.columns('1')[0]
@@ -32,7 +34,9 @@ def run_custom_protocol(pipette_type: StringSelection(
         destination = [well for cols in standard_plate.columns('1', to='3')
                        for well in cols[0]]
         tiprack = labware.load('opentrons-tiprack-300ul', '2')
-        pipette = instruments.P50_Multi(mount='left', tip_racks=[tiprack])
+        tiprack2 = labware.load('opentrons-tiprack-300ul', '2')
+        pipette = instruments.P50_Multi(
+            mount='left', tip_racks=[tiprack, tiprack2])
 
     pipette.distribute(standard_volume, source, destination, new_tip='always')
     pipette.transfer(
