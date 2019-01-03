@@ -85,5 +85,8 @@ def run_custom_protocol(transfer_volume: int=20):
     reagent_wells = [well
                      for row in transfer_plate.rows('A', 'F')
                      for well in row[16:23]]
-    reagent_wells = reagent_wells + transfer_plate.columns('23')[1:5]
+    reagent_columns = [well
+                       for column in transfer_plate.columns('23')
+                       for well in column[1:5]]
+    reagent_wells = reagent_wells + reagent_columns
     p10.transfer(transfer_volume, reagent, reagent_wells, new_tip='once')
