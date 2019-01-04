@@ -1,6 +1,12 @@
 from opentrons import labware, instruments, robot
 from otcustomizers import StringSelection
 
+metadata = {
+ 'protocolName': 'Fluorescence Assay Specific Antibody Setup',
+ 'author': 'Laura <protocols@opentrons.com>',
+ 'source': 'Custom Protocol Request'
+}
+
 
 def run_custom_protocol(pipette_type: StringSelection(
         'p10-single', 'p50-multi')='p10-single',

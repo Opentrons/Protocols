@@ -14,6 +14,7 @@ def run_custom_protocol(pipette_type: StringSelection(
         standard_volume: int=15,
         detection_reagent_volume: int=5):
 
+    pipette_type = 'p50-single'
     standard_plate = labware.load('384-plate', '3')
 
     if pipette_type == 'p10-single':
@@ -31,10 +32,11 @@ def run_custom_protocol(pipette_type: StringSelection(
         plate = labware.load('96-flat', '1')
         source = plate.columns('1')[0]
         reagent = plate.columns('2')[0]
-        destination = [well for cols in standard_plate.columns('1', to='3')
-                       for well in cols[0]]
+        destination = [well
+                       for cols in standard_plate.columns('1', to='3')
+                       for well in cols[0:2]]
         tiprack = labware.load('opentrons-tiprack-300ul', '2')
-        tiprack2 = labware.load('opentrons-tiprack-300ul', '2')
+        tiprack2 = labware.load('opentrons-tiprack-300ul', '4')
         pipette = instruments.P50_Multi(
             mount='left', tip_racks=[tiprack, tiprack2])
 

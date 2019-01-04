@@ -38,7 +38,7 @@ There are eight custom variables for this part as follows:
 A.] mm_volume: volume of master mix e. Default is 10,
 B.] donor_sub_volume: volume of donor substrate. Default is 10,
 C.] start: the starting row or column to distribute to. Default is 'A'. If single channel, the range is *'A'-'P'* or if multichannel, the range is *'1'-'24'*
-D.] end: the ending row or column to distribute to. Default is 'A'. If single channel, the range is *'A'-'P'* or if multichannel, the range is *'1'-'24'*
+D.] end: the ending row or column to distribute to. Default is 1. If single channel, the range is *1-24* or if multichannel, the range is *1-16*. 
 E.] starting_well: the starting well _within_ a row that you would like to distribute to. Default is 0, the range is *0-24* for a single channel. For a multichannel you *MUST* input 0.
 F.] ending_well: the ending well _within_ a row that you would like to distribute to. Default is 12, the range is *0-24* for a single channel. For a multichannel you *MUST* input 0.
 G.] mm_loc: The location of master mix e. Default is 'A1'. The range is *A1-D6* if single channel or *1-12* if multichannel
