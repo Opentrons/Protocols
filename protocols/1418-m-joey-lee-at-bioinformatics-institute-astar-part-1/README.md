@@ -1,4 +1,4 @@
-# Protein-based Compound Screening
+# Serial Dilution A
 
 ### Author
 [Opentrons](http://www.opentrons.com/)
@@ -8,7 +8,7 @@
     * Serial Dilution
 
 ## Description
-With this protocol, your robot will load a 96 well plate with samples and
+With this protocol, your robot will load a 96 well plate with samples using a p10 single channel and the opentrons tuberack. Then, using a mulichannel it will add reagent from a single channel trough into the designated columns. From there, the multichannel will perform a serial dilution across the columns of the plate.
 
 ---
 
@@ -16,6 +16,7 @@ To run this protocol, you will need:
 * P10 Single-channel Pipette
 * p300 Multi-channel Pipette
 * Single Channel Trough
+* Opentrons 4-in-1 tuberack
 * [Corning 384-well Microplates](https://www.sigmaaldrich.com/catalog/product/sigma/cls3575?lang=en&region=US)
 * [Opentrons 300 uL Tip Racks](https://shop.opentrons.com/collections/opentrons-tips)
 * 10 uL Tip Racks
