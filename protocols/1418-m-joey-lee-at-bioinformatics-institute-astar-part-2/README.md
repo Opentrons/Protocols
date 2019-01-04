@@ -1,4 +1,4 @@
-# Protein-based Compound Screening
+# 96 to 384 WP mapping
 
 ### Author
 [Opentrons](http://www.opentrons.com/)
