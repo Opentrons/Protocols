@@ -1,5 +1,11 @@
 from opentrons import labware, instruments
 
+metadata = {
+ 'protocolName': 'Serial Dilution A',
+ 'author': 'Laura <protocols@opentrons.com>',
+ 'source': 'Custom Protocol Request'
+}
+
 
 def run_custom_protocol(
         sample_volume: int=4,
