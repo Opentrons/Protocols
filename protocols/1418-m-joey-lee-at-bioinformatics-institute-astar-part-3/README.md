@@ -1,4 +1,4 @@
-# Protein-based Compound Screening
+# Transfer Reagent to a 384 WP
 
 ### Author
 [Opentrons](http://www.opentrons.com/)
