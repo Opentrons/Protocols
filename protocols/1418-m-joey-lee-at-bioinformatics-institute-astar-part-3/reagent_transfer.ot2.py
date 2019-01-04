@@ -1,10 +1,9 @@
 from opentrons import labware, instruments
-from opentrons.data_storage import database
 
 
 def run_custom_protocol(transfer_volume: int=20):
 
-    if 'custom-resevoir' not in database.list_all_labware():
+    if 'custom-resevoir' not in labware.list():
         labware.create(
              'custom-resevoir',
              grid=(1, 1),
