@@ -1,5 +1,11 @@
 from opentrons import labware, instruments
 
+metadata = {
+ 'protocolName': 'Transfer serial dilution to 384 WP',
+ 'author': 'Laura <protocols@opentrons.com>',
+ 'source': 'Custom Protocol Request'
+}
+
 
 def run_custom_protocol(transfer_volume: int=20):
     if 'custom-resevoir' not in labware.list():
