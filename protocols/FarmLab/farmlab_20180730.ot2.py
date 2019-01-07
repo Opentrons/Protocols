@@ -33,12 +33,7 @@ def run_custom_protocol(strip_number: int=10):
     target_aspirate_loc = [well.bottom(-0.5) for well in targets]
 
     # Transfer dilution buffer
-    m300.pick_up_tip()
-    for target in targets:
-        m300.transfer(90, dilution_buffer, target, new_tip='never')
-        m300.mix(3, 80, target)
-        m300.blow_out(target)
-    m300.drop_tip()
+    m300.transfer(90, dilution_buffer, targets, blow_out=True)
 
     m300.delay(minutes=45)
 
