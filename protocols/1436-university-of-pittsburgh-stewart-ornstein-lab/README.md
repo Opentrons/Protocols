@@ -62,6 +62,14 @@ Variables:
 
 ---
 
+Plate Setup:
+* Plate A: slot 1
+* Plate B: slot 2
+* Plate C: slot 3
+* Plate D: slot 4
+
+---
+
 Reagent Setup:
 * Bead/Buffer Mix: Plate B column 1
 * TAE: Plate B column 3
