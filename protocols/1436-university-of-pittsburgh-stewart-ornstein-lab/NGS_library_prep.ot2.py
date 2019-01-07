@@ -92,11 +92,11 @@ def run_custom_protocol(
     m10.delay(minutes=1)
 
     # remove supernatant in plate A
-    m10.pick_up_tip()
-    m10.transfer(
+    m300.pick_up_tip()
+    m300.transfer(
         2.5 * bead_volume, plate_A.cols(), liquid_waste, new_tip='never')
-    m10.drop_tip()
-    update_m10_tip_tracking(1)
+    m300.drop_tip()
+    update_m300_tip_tracking(1)
 
     # add wash buffer to plate A
     m300.distribute(
