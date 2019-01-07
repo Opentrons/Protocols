@@ -8,10 +8,10 @@ metadata = {
 
 # labware setup
 mag_module = modules.load('magdeck', '1')
-plate_A = labware.load('biorad-hardshell-96-PCR', '1', 'PLATE A', share=True)
-plate_B = labware.load('biorad-hardshell-96-PCR', '2', 'PLATE B')
-plate_C = labware.load('biorad-hardshell-96-PCR', '3', 'PLATE C')
-plate_D = labware.load('96-deep-well', '4', 'PLATE D')
+plate_A = labware.load('biorad-hardshell-96-PCR', '1', share=True)
+plate_B = labware.load('biorad-hardshell-96-PCR', '2')
+plate_C = labware.load('biorad-hardshell-96-PCR', '3')
+plate_D = labware.load('96-deep-well', '4')
 liquid_waste = labware.load('trough-12row', '5', 'LIQUID WASTE').wells('A1')
 tipracks_10 = [labware.load('tiprack-10ul', slot)
                for slot in ['6', '7', '8']]
