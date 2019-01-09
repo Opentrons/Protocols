@@ -81,9 +81,17 @@ def get_transfer_info(csv_string, container_list):
     mixes = []
     discard_tips = []
     for line in info_list[1:]:
-        source_wells.append(container_list[line[0]].wells(line[1]))
+        if line[1][1] == '0':
+            source_well = line[1].replace('0', '')
+        else:
+            source_well = line[1]
+        source_wells.append(container_list[line[0]].wells(source_well))
         vols.append(float(line[2]))
-        dest_wells.append(container_list[line[3]].wells(line[4]))
+        if line[4][1] == '0':
+            dest_well = line[4].replace('0', '')
+        else:
+            dest_well = line[4]
+        dest_wells.append(container_list[line[3]].wells(dest_well))
         mixes.append(line[5].lower())
         discard_tips.append(line[6].lower())
     return source_wells, vols, dest_wells, mixes, discard_tips
