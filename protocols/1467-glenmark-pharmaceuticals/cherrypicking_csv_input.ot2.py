@@ -128,13 +128,13 @@ def run_custom_protocol(
             sources, volumes, dests, mixes, discard_tips):
         if not pipette.tip_attached:
             pipette.pick_up_tip()
-        pipette.transfer(volume, source, dest, new_tip='never')
         if mix == 'yes':
             if volume > pipette.max_volume:
                 mix_vol = pipette.max_volume
             else:
                 mix_vol = volume
-            pipette.mix(3, mix_vol, dest)
+            pipette.mix(3, mix_vol, source)
+        pipette.transfer(volume, source, dest, new_tip='never')
         if discard_tip == 'yes':
             pipette.drop_tip()
     if pipette.tip_attached:
