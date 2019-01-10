@@ -3,7 +3,7 @@ from otcustomizers import FileInput, StringSelection
 
 
 reservoir_name = 'biotix-resevoir'
-if name not in labware.list():
+if reservoir_name not in labware.list():
     labware.create(
         reservoir_name,
         grid=(1, 1),
@@ -68,9 +68,9 @@ def run_custom_protocol(
         plate_type: StringSelection('96-flat', '384-plate')='96-flat',
         tip_reuse: StringSelection(
             'new tip each time', 'reuse tip')='new tip each time'):
-	tipracks = [
-	    labware.load('opentrons-tiprack-300ul', slot)
-	    for slot in tiprack_slots]
+    tipracks = [
+        labware.load('opentrons-tiprack-300ul', slot)
+        for slot in tiprack_slots]
 
     if pipette_model == 'p300-Single':
         pipette = instruments.P300_Single(
@@ -82,13 +82,11 @@ def run_custom_protocol(
             tip_racks=tipracks)
     elif pipette_model == 'p10-Single':
         tipracks = [
-			labware.load('tiprack-10ul', slot)
-			for slot in tiprack_slots]
+            labware.load('tiprack-10ul', slot)
+            for slot in tiprack_slots]
         pipette = instruments.P10_Single(
             mount=pipette_mount,
             tip_racks=tipracks)
-
-
 
     plate = labware.load(plate_type, '3')
 
