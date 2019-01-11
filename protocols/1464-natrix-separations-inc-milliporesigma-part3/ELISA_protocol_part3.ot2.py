@@ -21,7 +21,7 @@ tiprack_m300 = [labware.load('opentrons-tiprack-300ul', slot)
 # instrument setup
 m300 = instruments.P300_Multi(
     mount='left',
-    tip_racks=[tiprack_m300])
+    tip_racks=tiprack_m300)
 
 # reagent setup
 dilution_buffer = tuberack_4.wells('A3')
