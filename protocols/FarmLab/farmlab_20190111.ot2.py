@@ -104,14 +104,3 @@ def run_custom_protocol(
         stop_solution,
         target_dispense_loc,
         blow_out=True)
-
-
-run_custom_protocol(
-        **{'strip_number': 10,
-        'dilution_buffer_volume': 90,
-        'first_incubation_time': 45,
-        'wash_cycle_number': 5,
-        'second_incubation_time': 30,
-        'third_incubation_time': 15,
-        'stop_solution_volume': 100}
-        )
