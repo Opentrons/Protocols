@@ -8,7 +8,7 @@
     * Cell Seeding
 
 ## Description
-With this protocol, your robot can perform cell-seeding on up to nine 384-well plates. Robot will use one set of tips to perform cell-seeding on all of the defined plates.
+With this protocol, your robot can perform cell-seeding on up to six 384-well plates. Robot will use one set of tips to perform cell-seeding on all of the defined plates.
 
 ---
 
