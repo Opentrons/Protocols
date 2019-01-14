@@ -1,7 +1,7 @@
 from opentrons import containers, instruments
 from otcustomizers import FileInput
 
-plate = containers.load('PCR-strip-tall', 'B1')
+plate = containers.load('96-flat', 'B1')
 tuberacks = [containers.load('tube-rack-2ml', slot)
              for slot in ['A1', 'A2']]
 tiprack_10 = [containers.load('tiprack-10ul', slot)
@@ -11,7 +11,7 @@ tiprack_50 = [containers.load('tiprack-200ul', slot)
 trash = containers.load('trash-box', 'B2')
 
 p10 = instruments.Pipette(
-    axis='a',
+    axis='b',
     name='p10',
     channels=1,
     max_volume=10,
@@ -19,7 +19,7 @@ p10 = instruments.Pipette(
     trash_container=trash)
 
 p50 = instruments.Pipette(
-    axis='b',
+    axis='a',
     name='p50',
     channels=1,
     max_volume=50,
@@ -79,8 +79,8 @@ def run_custom_protocol(
         pcr_setup_csv: FileInput=pcr_example,
         total_volume: float=50.0):
 
-    sources = get_source_dict(tuberack_example)
-    dests = get_dest_dict(pcr_example, sources)
+    sources = get_source_dict(tuberack_csv)
+    dests = get_dest_dict(pcr_setup_csv, sources)
 
     master_mix_vol = round(total_volume * 47 / 50, 1)
     reagent_vol = round(total_volume * 1 / 50, 1)
