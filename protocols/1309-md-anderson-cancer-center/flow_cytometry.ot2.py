@@ -18,7 +18,7 @@ temp_deck = modules.load('tempdeck', '4')
 plate = labware.load('96-flat', '4', share=True)
 
 trough = labware.load('trough-12row', '7')
-tuberack = labware.load('opentrons-tuberack-2ml-eppendorf', '8')
+tuberack = labware.load('opentrons-tuberack-2ml-screwcap', '8')
 tiprack_10 = labware.load('tiprack-10ul', '6')
 tiprack_300 = [labware.load('opentrons-tiprack-300ul', slot)
                for slot in ['9', '10', '11']]
