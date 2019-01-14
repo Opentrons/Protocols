@@ -30,8 +30,8 @@ destination = [labware.load(microplate_name, slot)
 for plate in destination:
     plate.properties['height'] = 14.5
 
-medium = labware.load(reservoir_name, '3', 'Medium').wells('A1')
-cells = labware.load(reservoir_name, '6', 'Cells').wells('A1')
+medium = labware.load(reservoir_name, '3', 'Medium').wells('A1').bottom(-4)
+cells = labware.load(reservoir_name, '6', 'Cells').wells('A1').bottom(-4)
 
 
 tiprack = labware.load('opentrons-tiprack-300ul', '9')
