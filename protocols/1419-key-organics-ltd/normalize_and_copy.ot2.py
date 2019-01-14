@@ -71,7 +71,7 @@ def run_custom_protocol(
         volume_csv: FileInput=example,
         transfer_volume: float=100):
 
-    locations, volumes, active_plates = csv_to_list(example)
+    locations, volumes, active_plates = csv_to_list(volume_csv)
 
     for loc, vol in zip(locations, volumes):
         p300.pick_up_tip()
