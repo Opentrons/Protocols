@@ -102,7 +102,6 @@ def run_custom_protocol(
     # using same tip for tube 14-15
     p10.pick_up_tip()
     for tube_num in range(13, 15):
-        print(tube_num)
         for dest in master_list[tube_num]:
             p10.mix(3, 10, tubes[tube_num])
             p10.transfer(

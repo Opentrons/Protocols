@@ -65,7 +65,6 @@ Antibody 8
 def update_p10_tip_count(num):
     global p10_tip_count
     p10_tip_count += num
-    print(p10_tip_count)
     if p10_tip_count == 96:
         robot.pause("Your P10 tips have run out. Refill tip rack before \
         resuming.")
@@ -76,7 +75,6 @@ def update_p10_tip_count(num):
 def update_p300_tip_count(num):
     global p300_tip_count
     p300_tip_count += num
-    print(p300_tip_count)
     if p300_tip_count == 96:
         robot.pause("Your P300 tips have run out. Refill tip racks before \
         resuming.")
