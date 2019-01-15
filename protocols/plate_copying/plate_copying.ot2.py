@@ -80,6 +80,5 @@ def run_custom_protocol(
             transfer_volume,
             source_wells,
             dest_wells,
-            touch_tip=True,
             disposal_vol=0
         )

@@ -53,7 +53,6 @@ def run_custom_protocol(
     # dilutions, using the same pipette tip
     p1000.pick_up_tip()
     for index, group in enumerate(wells_group):
-        print(index, trough_loc[index])
         p1000.transfer(1000, trough_loc[index], group, new_tip='never')
     p1000.drop_tip()
 
