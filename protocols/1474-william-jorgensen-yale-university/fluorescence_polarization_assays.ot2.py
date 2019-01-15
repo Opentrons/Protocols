@@ -68,7 +68,7 @@ protein = reagent_plate.cols('1')
 DMSO = reagent_plate.cols('2')
 
 
-def run_custom_protocols(protocol_type: StringSelection('A1', 'A2')='A1'):
+def run_custom_protocol(protocol_type: StringSelection('A1', 'A2')='A1'):
 
     if protocol_type == 'A1':
         DMSO_vol = 18
