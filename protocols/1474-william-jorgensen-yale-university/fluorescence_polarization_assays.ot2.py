@@ -7,7 +7,7 @@ metadata = {
     'source': 'Custom Protocol Request'}
 
 trough_name = 'trough-1row'
-if trough_name not in trough_name:
+if trough_name not in labware.list():
     labware.create(
         trough_name,
         grid=(1, 1),
