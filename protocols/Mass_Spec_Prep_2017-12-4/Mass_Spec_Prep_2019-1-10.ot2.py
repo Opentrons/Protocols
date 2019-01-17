@@ -20,7 +20,7 @@ tuberack = labware.load('tube-rack-15_50ml', '6')
 """
 Column D
 """
-liquid_trash = labware.load('trash-box', 'D2', 'Liquid Trash')
+liquid_trash = labware.load('trash-box', '3', 'Liquid Trash')
 """
 Instruments
 """
