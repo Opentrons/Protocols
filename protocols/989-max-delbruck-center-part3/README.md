@@ -40,7 +40,7 @@ This is part 3 of the protocol: PCR Lysis. The robot will remove old media from 
 * Reagent container
     * Buffer: **A1**
 * Trough
-    * Liquid Trash: **A12**
+    * Liquid Trash: Starting at **A1**
 
 ###### Internal
 dog1ERZJ
