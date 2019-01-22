@@ -37,8 +37,8 @@ This is part 2 of the protocol: Trypsination and Pooling. The robot will initiat
 14. Robot will discard media from all wells in the old plate.
 15. Robot will transfer trypsin to each well in the old plate and pause for incubation.
 16. Robot will remove trypsin from all the wells.
-17. Robot will wash each well by dispensing the wash solution in a circular motion in side the well and then discarding the solution. This process will be repeated twice.
-18. Robot will add media to the disassociated cells.
+17. Robot will wash each well by dispensing the wash solution to the plates and then discarding the solution. This process will be repeated twice.
+18. Robot will add media in a circular motion in side the well to disassociate cells.
 19. Robot will transfer half of the content of each well to a new plate, and pool half of the volume to an eppendorf tube.
 
 ### Additional Notes
