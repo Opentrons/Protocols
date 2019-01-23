@@ -32,7 +32,7 @@ def run_custom_protocol(
     # reagent setup
     reagents = labware.load(reagent_container, '5')
     buffer = reagents.wells('A1')
-    liquid_trash = trough.wells('A12')
+    liquid_trash = trough.wells('A1')
 
     pipette_name = pipette_model.split('-')[0]
     channel = pipette_model.split('-')[1]
@@ -69,13 +69,21 @@ def run_custom_protocol(
         col_num = sample_num // 8 + (1 if sample_num % 8 > 0 else 0)
         old_locs = [col for plate in old_plates for col in plate.cols()][
             :col_num]
+        multiplier = 8
     else:
         old_locs = [well for plate in old_plates for well in plate.wells()][
             :sample_num]
+        multiplier = 1
 
+    volume = 21000
     # discard media from plate
     for loc in old_locs:
-        pipette.transfer(discard_media_volume, loc, liquid_trash)
+        if volume < discard_media_volume * multiplier:
+            liquid_trash = next(liquid_trash)
+            volume = 21000
+        print(liquid_trash.top())
+        pipette.transfer(discard_media_volume, loc, liquid_trash.top())
+        volume -= discard_media_volume * multiplier
 
     # add pre-made buffer
     pipette.pick_up_tip()
