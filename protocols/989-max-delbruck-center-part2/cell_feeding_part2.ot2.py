@@ -128,22 +128,13 @@ def run_custom_protocol(
         pipette.transfer(trypsin_volume, loc.bottom(3), liquid_trash)
 
     # wash with PBS 3 times
-    # pipette moves in a circular motion in the well
     pipette.pick_up_tip()
     aspirate_tip_loc = pipette.current_tip()
     for cycle in range(3):
         # dispensing PBS
         if not pipette.tip_attached:
             pipette.pick_up_tip(aspirate_tip_loc)
-        for index, loc in enumerate(dest):
-            pipette.aspirate(wash_volume, PBS)
-            theta = 0.0
-            while pipette.current_volume > 0:
-                well_edge = loc.from_center(r=1.0, theta=theta, h=0.9)
-                destination = (loc, well_edge)
-                pipette.move_to(destination, strategy='direct')
-                pipette.dispense(wash_volume/10)
-                theta += 0.314
+        pipette.transfer(wash_volume, PBS, dest, new_tip='never')
         pipette.return_tip()
         if cycle == 0:
             pipette.pick_up_tip()
@@ -157,10 +148,21 @@ def run_custom_protocol(
                              trash=False)
 
     # add more media
+    # pipette moves in a circular motion in the well
     # mix with custom number of times
     for loc in dest:
-        pipette.transfer(new_media_volume, media, loc,
-                         mix_after=(mix_times, pipette.max_volume/2))
+        pipette.pick_up_tip()
+        pipette.aspirate(new_media_volume, media)
+        theta = 0.0
+        while pipette.current_volume > 0:
+            well_edge = loc.from_center(r=1.0, theta=theta, h=0.9)
+            destination = (loc, well_edge)
+            pipette.move_to(destination, strategy='direct')
+            pipette.dispense(new_media_volume/10)
+            theta += 0.314
+        pipette.mix(mix_times, pipette.max_volume/2, loc)
+        pipette.drop_tip()
+
     # transfer half of the dissociated colony to a 96-well plate and rest of it
     # goes to an eppendorf tube
     for source, dest in zip(s_old_locs, s_new_locs):
