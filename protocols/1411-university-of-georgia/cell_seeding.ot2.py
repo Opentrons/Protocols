@@ -24,8 +24,6 @@ def run_custom_protocol(
     if number_of_plates > 6:
         raise Exception('Number of plates cannot exceed 6.')
 
-    transfer_volume = 70
-    number_of_plates = 4
     plates = [labware.load('384-plate', str(slot), 'Plate '+str())
               for index, slot in enumerate(range(3, 3+number_of_plates), 1)]
 
