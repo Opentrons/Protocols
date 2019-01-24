@@ -33,8 +33,8 @@ p50 = instruments.Pipette(
 
 
 def run_custom_protocol(
-        mastermix_volume: 6.5,
-        DNA_volume: 5.5):
+        mastermix_volume: float=6.5,
+        DNA_volume: float=5.5):
 
     # sample setup
     samples = pcr_strips.rows('1')
