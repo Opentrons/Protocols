@@ -39,15 +39,15 @@ This is part 2 of the protocol: Trypsination and Pooling. The robot will initiat
 16. Robot will remove trypsin from all the wells.
 17. Robot will wash each well by dispensing the wash solution to the plates and then discarding the solution. This process will be repeated twice.
 18. Robot will add media in a circular motion in side the well to disassociate cells.
-19. Robot will transfer half of the content of each well to a new plate, and pool half of the volume to an eppendorf tube.
+19. Robot will transfer half of the content of each well to a new flat plate, and transfer the other half to a new 96-well PCR plate.
 
 ### Additional Notes
 * Tube rack setup
     * Trypsin: **A1**
 * 12-column Trough setup
-    * Wash Solution: **A1-9**
-    * Media: **A10**
-    * Liquid Trash: **A12**
+    * Wash Solution: **A1**
+    * Media: **A7**
+    * Liquid Trash: **A9-12**
 
 ###### Internal
 dog1ERZJ
