@@ -7,6 +7,24 @@ metadata = {
     'source': 'Custom Protocol Request'
     }
 
+deep_block_name = 'vwr-96-deep-well-2ml'
+if deep_block_name not in labware.list():
+    labware.create(
+        deep_block_name,
+        grid=(12, 8),
+        spacing=(9, 9),
+        diameter=8.25,
+        depth=39.9)
+
+reservoir_name = 'E&K-undivided-deep-well-reservoir'
+if reservoir_name not in labware.list():
+    labware.create(
+        reservoir_name,
+        grid=(1, 1),
+        spacing=(0, 0),
+        diameter=85,
+        depth=39.2)
+
 csv_example = """
 Samples,DNA VOLUME OF STOCK,H2O VOLUME OF STOCK,WELL
 SOY1,1.17,98.83,A1
@@ -38,26 +56,7 @@ def csv_to_lists(csv_string):
 
 
 def run_custom_protocol(
-        reservoir_depth: float=25,
         volume_csv: FileInput=csv_example):
-
-    deep_block_name = 'vwr-96-deep-well-2ml'
-    if deep_block_name not in labware.list():
-        labware.create(
-            deep_block_name,
-            grid=(12, 8),
-            spacing=(9, 9),
-            diameter=8.25,
-            depth=39.9)
-
-    reservoir_name = 'texan-reagent-reservoir-' + str(reservoir_depth) + 'mm'
-    if reservoir_name not in labware.list():
-        labware.create(
-            reservoir_name,
-            grid=(1, 1),
-            spacing=(0, 0),
-            diameter=85,
-            depth=reservoir_depth)
 
     # labware setup
     plate = labware.load('96-PCR-flat', '2')
