@@ -65,15 +65,15 @@ def run_custom_protocol(
     # labware setup
     old_plates = [labware.load(cell_container, '1')]
     new_plates = [labware.load(cell_container, '2')]
-    tuberack_2ml = labware.load('opentrons-tuberack-2ml-eppendorf', '3')
+    pcr_plate = labware.load('96-PCR-tall', '3')
     trough = labware.load('trough-12row', '4')
     tuberack_15ml = labware.load('opentrons-tuberack-15ml', '5')
 
     # reagent setup
     trypsin = tuberack_15ml.wells('A1')
     PBS = trough.wells('A1')
-    media = trough.wells('A10')
-    liquid_trash = trough.wells('A12')
+    media = trough.wells('A4')
+    liquid_trash = trough.wells('A9', to='A12')
 
     s_name = single_pipette_model.split('-')[0]
     m_name = multi_pipette_model.split('-')[0]
@@ -112,7 +112,8 @@ def run_custom_protocol(
     # discard media from wells
     pipette.pick_up_tip()
     for loc in dest:
-        pipette.transfer(old_media_volume, loc, liquid_trash, new_tip='never')
+        pipette.transfer(old_media_volume, loc, liquid_trash[0],
+                         new_tip='never')
     pipette.drop_tip()
 
     # add trypsin to old plate
@@ -125,27 +126,12 @@ def run_custom_protocol(
 
     # discard trypsin from old plate
     for loc in dest:
-        pipette.transfer(trypsin_volume, loc.bottom(3), liquid_trash)
+        pipette.transfer(trypsin_volume, loc.bottom(3), liquid_trash[1])
 
-    # wash with PBS 3 times
-    pipette.pick_up_tip()
-    aspirate_tip_loc = pipette.current_tip()
-    for cycle in range(3):
-        # dispensing PBS
-        if not pipette.tip_attached:
-            pipette.pick_up_tip(aspirate_tip_loc)
-        pipette.transfer(wash_volume, PBS, dest, new_tip='never')
-        pipette.return_tip()
-        if cycle == 0:
-            pipette.pick_up_tip()
-            dispense_tip_loc = pipette.current_tip()
-        else:
-            pipette.start_at_tip(dispense_tip_loc)
-            pipette.pick_up_tip()
-        # discarding PBS from wells
-        for index, loc in enumerate(dest):
-            pipette.transfer(wash_volume, loc, liquid_trash,
-                             trash=False)
+    # wash with PBS once
+    pipette.transfer(wash_volume, PBS, dest)
+    for index, loc in enumerate(dest):
+        pipette.transfer(wash_volume, loc, liquid_trash[2])
 
     # add more media
     # pipette moves in a circular motion in the well
@@ -165,6 +151,7 @@ def run_custom_protocol(
 
     # transfer half of the dissociated colony to a 96-well plate and rest of it
     # goes to an eppendorf tube
-    for source, dest in zip(s_old_locs, s_new_locs):
+    pcr_locs = [well for well in pcr_plate.wells()][:sample_num]
+    for source, dest_1, dest_2 in zip(s_old_locs, s_new_locs, pcr_locs):
         pipette_s.transfer(
-            new_media_volume/2, source, [dest, tuberack_2ml.wells('A1')])
+            new_media_volume/2, source, [dest_1, dest_2])

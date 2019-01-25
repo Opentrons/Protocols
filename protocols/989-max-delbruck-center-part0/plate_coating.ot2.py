@@ -1,9 +1,11 @@
 from opentrons import labware, instruments
 from otcustomizers import StringSelection
 
-"""
-Step 1: Feeding Cells
-"""
+metadata = {
+    'protocolName': 'Plate Coating',
+    'author': 'Alise <protocols@opentrons.com>',
+    'source': 'Custom Protocol Request'
+    }
 
 tiprack_dict = {'p10': 'tiprack-10ul',
                 'p50': 'tiprack-200ul',
@@ -18,25 +20,23 @@ def run_custom_protocol(
             'p50-Multi', 'p300-Multi')='p300-Single',
         pipette_mount: StringSelection(
             'left', 'right')='right',
-        media_container: StringSelection(
+        reagent_container: StringSelection(
             'trough-12row', 'opentrons-tuberack-50ml',
             'opentrons-tuberack-15_50ml')='trough-12row',
         sample_num: int=96,
-        old_media_volume: float=200,
-        media_volume: float=200,
+        reagent_volume: float=200,
         tip_reuse_strategy: StringSelection(
             'reuse one tip', 'new tip each time')='reuse one tip'):
 
     plates = [labware.load(cell_container, '2')]
 
-    trough = labware.load(media_container, '5')
+    reagent = labware.load(reagent_container, '5').wells('A1')
 
     pipette_name = pipette_model.split('-')[0]
     channel = pipette_model.split('-')[1]
 
     new_tip = 'once' if tip_reuse_strategy == 'new tip each time' else 'never'
-    tipracks = [labware.load(tiprack_dict[pipette_name], slot)
-                for slot in ['1', '4']]
+    tipracks = [labware.load(tiprack_dict[pipette_name], '4')]
 
     if pipette_model == 'p10-Single':
         pipette = instruments.P10_Single(
@@ -70,27 +70,18 @@ def run_custom_protocol(
         locs = [well for plate in plates for well in plate.wells()][
             :sample_num]
 
-    media = trough.wells('A1')
-    liquid_trash = trough.well('A5')
+    reagent_source = reagent
+    volume_tracker = reagent_source.max_volume()
 
-    media_source = media
-    volume_tracker = media_source.max_volume()
+    if new_tip == 'never':
+        pipette.pick_up_tip()
 
     for loc in locs:
-        if volume_tracker < old_media_volume:
-            liquid_trash = next(liquid_trash)
-            volume_tracker = media_source.max_volume()
-        pipette.transfer(old_media_volume, loc, liquid_trash.top())
-        volume_tracker = volume_tracker - old_media_volume * (
-            8 if channel == 'Multi' else 1)
-
-    pipette.pick_up_tip()
-    for loc in locs:
-        if volume_tracker < media_volume:
-            media_source = next(media_source)
-            volume_tracker = media_source.max_volume()
-        pipette.transfer(media_volume, media_source, loc, new_tip=new_tip)
-        volume_tracker = volume_tracker - media_volume * (
+        if volume_tracker < reagent_volume:
+            reagent_source = next(reagent_source)
+            volume_tracker = reagent_source.max_volume()
+        pipette.transfer(reagent_volume, reagent_source, loc, new_tip=new_tip)
+        volume_tracker = volume_tracker - reagent_volume * (
             8 if channel == 'Multi' else 1)
     if new_tip == 'never':
         pipette.drop_tip()
