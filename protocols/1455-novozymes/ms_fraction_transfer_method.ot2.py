@@ -1,5 +1,5 @@
 from opentrons import labware, instruments, robot
-from otcustomizers import FileInput
+from otcustomizers import FileInput, StringSelection
 
 metadata = {
     'protocolName': 'MS Fraction Transfer Method',
@@ -7,14 +7,14 @@ metadata = {
     'source': 'Custom Protocol Request'
     }
 
-masterblock_name = 'greiner-bio-one-96-well-masterblock-0.5ml'
+masterblock_name = 'greiner-bio-one-96-well-masterblock-2ml'
 if masterblock_name not in labware.list():
     labware.create(
         masterblock_name,
         grid=(12, 8),
         spacing=(9, 9),
         diameter=7,
-        depth=23.3
+        depth=40
         )
 
 autosampler_plate_name = 'agilent_autosampler_plate_2ml'
@@ -53,13 +53,6 @@ autosampler_plate = labware.load(autosampler_plate_name, '2')
 scintillation_plate = labware.load(scintillation_plate_name, '3')
 scintillation_plate_2 = labware.load(scintillation_plate_name, '6')
 trough = labware.load('trough-12row', '4')
-tipracks = [labware.load(tiprack_name, slot)
-            for slot in ['5', '7', '8', '9', '10', '11']]
-
-# instrument setup
-p300 = instruments.P300_Single(
-    mount='left',
-    tip_racks=tipracks)
 
 # reagent setup
 water = fraction_block.wells('A1')
@@ -85,7 +78,7 @@ scint_volumes = {well.get_name(): [0, 0]
                  for well in scintillation_plate.wells()}
 
 
-def transfer_to_scint_vials(volume, source, dest):
+def transfer_to_scint_vials(pipette, volume, source, dest):
     global scint_volumes
     well_name = dest.get_name()
     dests = [dest, scintillation_plate_2.wells(well_name)]
@@ -94,13 +87,13 @@ def transfer_to_scint_vials(volume, source, dest):
             continue
         else:
             if value + volume <= 10000:
-                p300.transfer(volume, source, dests[index])
+                pipette.transfer(volume, source, dests[index])
                 scint_volumes[well_name][index] = value + volume
                 break
             elif value + volume > 10000:
                 vol_1 = 10000 - value
                 volume -= vol_1
-                p300.transfer(vol_1, source, dests[index])
+                pipette.transfer(vol_1, source, dests[index])
                 scint_volumes[well_name][index] = 10000
 
 
@@ -121,15 +114,33 @@ def csv_to_lists(csv_string):
 
 
 def run_custom_protocol(
+        pipette_type: StringSelection(
+            'p300-Single', 'p1000-Single')='p300-Single',
+        pipette_mount: StringSelection(
+            'left', 'right')='left',
         hplc_csv: FileInput=hplc_csv_example,
         scintillation_csv: FileInput=scintillation_csv_example):
+
+    if pipette_type == 'p300-Single':
+        tipracks = [labware.load(tiprack_name, slot)
+                    for slot in ['5', '7', '8', '9', '10', '11']]
+        pipette = instruments.P300_Single(
+            mount=pipette_mount,
+            tip_racks=tipracks)
+    else:
+        tipracks = [labware.load('tiprack-1000ul', slot)
+                    for slot in ['5', '7', '8', '9', '10', '11']]
+        pipette = instruments.P1000_Single(
+            mount=pipette_mount,
+            tip_racks=tipracks)
+
     """
     Transfer from Fraction Plate to HPCL Vials
     """
     hplc_vol, hplc_source, hplc_dest = csv_to_lists(hplc_csv)
 
     for vol, source, dest in zip(hplc_vol, hplc_source, hplc_dest):
-        p300.transfer(vol, source, dest)
+        pipette.transfer(vol, source, dest)
 
     """
     Transfer from Fraction Plate to openVials
@@ -138,16 +149,16 @@ def run_custom_protocol(
         scintillation_csv)
 
     for vol, source, dest in zip(scint_vol, scint_source, scint_dest):
-        transfer_to_scint_vials(vol, source, dest)
+        transfer_to_scint_vials(pipette, vol, source, dest)
 
     """
     Wash Plate With Water
     """
     for source in scint_source:
-        p300.transfer(1000, water, source, new_tip='always')
+        pipette.transfer(1000, water, source, new_tip='always')
 
     """
     Transfer Water to openVials
     """
     for source, dest in zip(scint_source, scint_dest):
-        transfer_to_scint_vials(1000, source, dest)
+        transfer_to_scint_vials(pipette, 1000, source, dest)
