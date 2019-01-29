@@ -1,4 +1,4 @@
-from opentrons import containers, instruments, robot
+from opentrons import containers, instruments
 
 metadata = {
     'protocolName': 'ELISA Assay',
@@ -59,7 +59,7 @@ for cycle in range(3):
     for row in plate.rows():
         m300.transfer(300, row, liquid_trash.top())
 
-robot.pause()
+m300.pause(minutes=2)
 
 # block plate with blocking buffer
 m300.pick_up_tip()

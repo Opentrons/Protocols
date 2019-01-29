@@ -40,7 +40,7 @@ You will need:
 7. Robot will transfer 300 uL wash buffer to the whole plate.
 8. Robot will discard solutions in each well.
 9. Robot will repeat steps 7-8 twice.
-10. Robot will pause for user to remove all residual buffer by tapping the plate upside down on absorbent paper.
+10. Robot will pause for 2 minutes for user to remove all residual buffer by tapping the plate upside down on absorbent paper.
 11. Robot will transfer 18 standard samples from 24-well standard plates to 96-well plate.
 12. Robot will transfer 78 test samples from 24-well sample plates to 96-well plate.
 

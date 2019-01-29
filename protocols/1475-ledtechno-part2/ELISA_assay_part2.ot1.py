@@ -1,4 +1,4 @@
-from opentrons import containers, instruments, robot
+from opentrons import containers, instruments
 
 metadata = {
     'protocolName': 'ELISA Assay',
@@ -48,31 +48,28 @@ p300 = instruments.Pipette(
     trash_container=trash,
     tip_racks=[tiprack])
 
+# reagent setup
+wash_buffer = trough.wells('A1')
+blocking_buffer = trough.wells('A7')
 
-def run_custom_protocol():
-
-    # reagent setup
-    wash_buffer = trough.wells('A1')
-    blocking_buffer = trough.wells('A7')
-
-    # wash plate 3 times with wash buffer
-    wash_buffer_tracker = wash_buffer.max_volume()
-    for cycle in range(3):
-        m300.pick_up_tip()
-        for row in plate.rows():
-            if wash_buffer_tracker < 300 * 8:
-                wash_buffer = next(wash_buffer)
-                wash_buffer_tracker = wash_buffer.max_volume()
-            m300.transfer(300, wash_buffer, row.top(), new_tip='never')
-            wash_buffer_tracker -= 300 * 8
-        for row in plate.rows():
-            m300.transfer(300, row, liquid_trash.top(), new_tip='never')
-        m300.drop_tip()
-
-    robot.pause()
-
-    # block plate with blocking buffer
+# wash plate 3 times with wash buffer
+wash_buffer_tracker = wash_buffer.max_volume()
+for cycle in range(3):
     m300.pick_up_tip()
     for row in plate.rows():
-        m300.transfer(200, blocking_buffer, row.top(), new_tip='never')
+        if wash_buffer_tracker < 300 * 8:
+            wash_buffer = next(wash_buffer)
+            wash_buffer_tracker = wash_buffer.max_volume()
+        m300.transfer(300, wash_buffer, row.top(), new_tip='never')
+        wash_buffer_tracker -= 300 * 8
+    for row in plate.rows():
+        m300.transfer(300, row, liquid_trash.top(), new_tip='never')
     m300.drop_tip()
+
+m300.delay(minutes=2)
+
+# block plate with blocking buffer
+m300.pick_up_tip()
+for row in plate.rows():
+    m300.transfer(200, blocking_buffer, row.top(), new_tip='never')
+m300.drop_tip()
