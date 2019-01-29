@@ -40,12 +40,12 @@ You will need:
 7. Robot will transfer 300 uL wash buffer to the whole plate.
 8. Robot will discard solutions in each well.
 9. Robot will repeat steps 7-8 twice.
-10. Robot will pause for user to remove all residual buffer by tapping the plate upside down on absorbent paper.
+10. Robot will pause for 2 minutes for user to remove all residual buffer by tapping the plate upside down on absorbent paper.
 11. Robot will transfer 100 uL Avidin-HRP to each well.
-12. Robot will pause for user to incubate the plate with shaking. User should refill the wash buffer and empty the liquid trash before resuming the protocol.
-13. Robot will wash the plate 4 times with wash buffer, robot will pause for user to remove residual buffer.
+12. Robot will pause for 35 minutes for user to incubate the plate with shaking. User should refill the wash buffer and empty the liquid trash before resuming the protocol.
+13. Robot will wash the plate 4 times with wash buffer, robot will pause for 2 minutes for user to remove residual buffer.
 14. Robot will add 100 uL TMB substrate to each well.
-15. Robot will pause for user to incubate plate without light.
+15. Robot will pause for 25 minutes for user to incubate plate without light.
 16. Robot will add 100 uL stop solution to each well.
 
 ### Additional Notes
