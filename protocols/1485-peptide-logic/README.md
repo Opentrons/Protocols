@@ -27,7 +27,8 @@ You will need:
 
 ### Reagents
 
-## Process  number of samples to be diluted in this protocol.
+## Process
+1. number of samples to be diluted in this protocol.
 2. Download your protocol.
 3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
 4. Set up your deck according to the deck map.
