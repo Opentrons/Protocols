@@ -3,16 +3,16 @@ from otcustomizers import FileInput, StringSelection
 
 example_csv = """
 Block Start,Well Start ,ul to add,Block End,Well End
-A,1,3.95,B,1
-A,2,2.97,B,2
-A,3,2.85,B,3
-A,4,3.56,B,4
-A,5,2.87,B,5
-A,6,2.48,B,6
-A,7,1.84,B,7
-A,95,2.27,B,8
-A,8,1.93,B,1
-A,9,0.99,B,2
+A,A1,3.95,B,A1
+A,A2,2.97,B,A2
+A,A3,2.85,B,A3
+A,A4,3.56,B,A4
+A,A5,2.87,B,A5
+A,A6,2.48,B,A6
+A,A7,1.84,B,H7
+A,B5,2.27,B,B8
+A,B8,1.93,B,B1
+A,B9,0.99,B,B2
 """
 
 
@@ -52,7 +52,7 @@ def run_custom_protocol(
     plate_B = labware.load(block_b_container, '2', 'plate_B')
 
     source_list, dest_list, vol_list = csv_to_lists(
-        example_csv, plate_A, plate_B)
+        transfer_csv, plate_A, plate_B)
 
     # determine number of tipracks needed
     total_tips = len(source_list)
