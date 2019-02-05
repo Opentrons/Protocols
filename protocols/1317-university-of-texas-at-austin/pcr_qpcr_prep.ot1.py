@@ -52,13 +52,20 @@ D5,Forward 3,Reverse 4,PCR template 2
 
 
 def get_source_dict(csv_string):
-    info_list = [cell for line in tuberack_example.splitlines() if line
+    info_list = [cell for line in csv_string.splitlines() if line
                  for cell in [line.split(',')]]
     new_dict = {}
+    new_dict['mastermix'] = tuberacks[0].wells('A1')
     for line in info_list[1:]:
         name = line[1].lower().strip().replace(" ", "")
         index = line[2].strip()
-        new_dict[name] = tuberacks[int(line[0])-1].wells(index)
+        if line[0] == 'A1':
+            tuberack = tuberacks[0]
+        elif line[0] == 'A2':
+            tuberack = tuberacks[1]
+        else:
+            raise Exception('Source slot does not exist.')
+        new_dict[name] = tuberack.wells(index)
     return new_dict
 
 
@@ -66,6 +73,7 @@ def get_dest_dict(csv_string, source_dict):
     info_list = [cell for line in csv_string.splitlines() if line
                  for cell in [line.split(',')]]
     new_dict = {name: [] for name in source_dict.keys()}
+    new_dict['mastermix'] = []
     for line in info_list[1:]:
         for cell in line[1:]:
             name = cell.lower().strip().replace(" ", "")
@@ -88,9 +96,10 @@ def run_custom_protocol(
     for key in sources.keys():
         if key == 'mastermix':
             vol = master_mix_vol
-            p50.transfer(
-                vol, sources[key], [well.top() for well in dests[key]])
+            p50.distribute(
+                vol, sources[key], [well.top() for well in dests[key]],
+                disposal_vol=0)
         else:
             vol = reagent_vol
-        if dests[key]:
-            p10.transfer(vol, sources[key], dests[key], new_tip='always')
+            if dests[key]:
+                p10.transfer(vol, sources[key], dests[key], new_tip='always')
