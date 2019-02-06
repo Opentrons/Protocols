@@ -11,12 +11,8 @@ if trough_name not in labware.list():
 
 # labware setup
 tiprack = labware.load('opentrons-tiprack-300ul', '1')
-
-pbs = labware.load(trough_name, '2').wells('A1')
-paraform = labware.load(trough_name, '3').wells('A1')
-for well in [pbs, paraform]:
-    well.properties['length'] = 95
-    well.properties['width'] = 75
+trough_1 = labware.load('trough-12row', '2')
+trough_2 = labware.load('trough-12row', '3')
 
 # pipette setup
 m300 = instruments.P300_Multi(
@@ -26,6 +22,9 @@ m300 = instruments.P300_Multi(
 
 def run_custom_protocol(
         number_of_384_well_plates: int=2):
+
+    pbs = trough_1.wells('A1')
+    paraform = trough_2.wells('A1')
 
     plates = [labware.load('384-plate', slot)
               for slot in ['4', '5', '6', '7', '8', '9', '10', '11'][
@@ -41,13 +40,16 @@ def run_custom_protocol(
     # remove 50 uL from all wells of all plates
     m300.consolidate(50, targets, m300.trash_container.top(), new_tip='once')
 
+    pbs_volume_tracker = pbs.max_volume()
     # add 50 uL PBS to all wells of all plates
     m300.pick_up_tip()
-    m300.aspirate(250, pbs)
     for well in targets:
-        if m300.current_volume <= 50:
-            m300.blow_out(pbs)
-            m300.aspirate(250, pbs)
+        if pbs_volume_tracker < 300 * 8:
+            pbs = next(pbs)
+            pbs_volume_tracker = pbs.max_volume()
+        if m300.current_volume < 50:
+            m300.aspirate(300, pbs)
+            pbs_volume_tracker -= 300 * 8
         m300.dispense(50, well)
     m300.drop_tip()
 
@@ -55,12 +57,15 @@ def run_custom_protocol(
     m300.consolidate(50, targets, m300.trash_container.top(), new_tip='once')
 
     # add 50 uL paraform to all wells of all plates
+    paraform_volume_tracker = paraform.max_volume()
     m300.pick_up_tip()
-    m300.aspirate(250, paraform)
     for well in targets:
-        if m300.current_volume <= 50:
-            m300.blow_out(paraform)
-            m300.aspirate(250, paraform)
+        if pbs_volume_tracker < 300 * 8:
+            pbs = next(paraform)
+            paraform_volume_tracker = paraform.max_volume()
+        if m300.current_volume < 50:
+            m300.aspirate(300, paraform)
+            paraform_volume_tracker -= 300 * 8
         m300.dispense(50, well)
     m300.drop_tip()
 
@@ -71,10 +76,12 @@ def run_custom_protocol(
 
     # add 50 uL PBS to all wells of all plates
     m300.pick_up_tip()
-    m300.aspirate(250, pbs)
     for well in targets:
-        if m300.current_volume <= 50:
-            m300.blow_out(pbs)
-            m300.aspirate(250, pbs)
+        if pbs_volume_tracker < 300 * 8:
+            pbs = next(pbs)
+            pbs_volume_tracker = pbs.max_volume()
+        if m300.current_volume < 50:
+            m300.aspirate(300, pbs)
+            pbs_volume_tracker -= 300 * 8
         m300.dispense(50, well)
     m300.drop_tip()
