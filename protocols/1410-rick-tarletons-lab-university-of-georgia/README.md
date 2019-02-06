@@ -10,6 +10,14 @@
 ## Description
 With this protocol, your robot can perform cell fixation in up to eight 384-well plates. The procedures are (1) removing all cell medium 50 uL/well from all plates, (2) washing cells using 50 uL PBS, (3) fixing cells using 50 uL paraformaldehyde in each well for 15 minutes, (4) removing paraformaldehyde solution and (5) wash cells with 50 uL PBS.
 
+---
+
+You will need:
+* P300 Multi-channel Pipette
+* [12-row Troughs](https://www.usascientific.com/12-channel-automation-reservoir.aspx)
+* 384-well Plates
+* Opentrons 300 uL Tip Racks
+
 ### Robot
 * [OT 2](https://opentrons.com/ot-2)
 
@@ -26,7 +34,7 @@ With this protocol, your robot can perform cell fixation in up to eight 384-well
 6. Hit "Run".
 
 ### Additional Notes
-[Trough](http://biotix.com/wp-content/uploads/2018/07/biotix_100_ml_reservoir_for_automated_platforms_spec_sheet.pdf) Setup
+12-row Trough Setup:
 * PBS: slot 2
 * Paraformaldehyde: slot 3
 
