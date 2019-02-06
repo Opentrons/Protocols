@@ -14,7 +14,7 @@ With this protocol, your robot can perform cell-seeding on up to six 384-well pl
 
 You will need:
 * P300 Multi-channel Pipette
-* [Biotix Disposable Reservoir](http://biotix.com/products/reservoirs/100-ml-automation-reservoir-sterilized-2/)
+* [12-row Trough](https://www.usascientific.com/12-channel-automation-reservoir.aspx)
 * 384-well Plates
 * Opentrons 300 uL Tip Rack
 
