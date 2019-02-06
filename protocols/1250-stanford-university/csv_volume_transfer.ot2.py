@@ -30,9 +30,9 @@ def csv_to_lists(csv_string, plate_A, plate_B):
     vol = []
     for line in string[1:]:
         source_plate = (plate_A if line[0].lower() == 'a' else plate_B)
-        source_well = source_plate.wells(int(line[1])-1)
+        source_well = source_plate.wells(line[1])
         dest_plate = (plate_B if line[3].lower() == 'b' else plate_A)
-        dest_well = dest_plate.wells(int(line[4])-1)
+        dest_well = dest_plate.wells(line[4])
         source.append(source_well)
         dest.append(dest_well)
         vol.append(float(line[2]))
