@@ -4,8 +4,8 @@
 [Opentrons](http://www.opentrons.com/)
 
 ## Categories
-*
-    *
+* Basic Pipetting
+    * Dilution
 
 ## Description
 With this protocol, your robot can perform dilution by diluting the same volume of DNAs with different volume of buffer. The volume of buffer will be provided in the form of a CSV file. The details on the layout of the CSV can be found in Additional Notes below.
