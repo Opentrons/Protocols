@@ -1,6 +1,12 @@
 from opentrons import containers, instruments
 from otcustomizers import FileInput
 
+metadata = {
+    'protocolName': 'PCR/qPCR Prep',
+    'author': 'Alise <protocols@opentrons.com>',
+    'source': 'Custom Protocol Request'
+    }
+
 plate = containers.load('96-flat', 'B1')
 tuberacks = [containers.load('tube-rack-2ml', slot)
              for slot in ['A1', 'A2']]
@@ -18,17 +24,17 @@ p10 = instruments.Pipette(
 
 tuberack_example = """
 Slot,Name,Well
-1,Master Mix,A1
-1,Forward 1,B1
-1,Forward 2,C1
-1,Forward 3,D1
-1,Forward 4,A2
-1,Reverse 1,B2
-1,Reverse 2,C2
-2,Reverse 3,D2
-2,Reverse 4,A3
-2,PCR template 1,B3
-2,PCR template 2,C3
+A1,Master Mix,A1
+A1,Forward 1,B1
+A1,Forward 2,C1
+A1,Forward 3,D1
+A1,Forward 4,A2
+A1,Reverse 1,B2
+A1,Reverse 2,C2
+A2,Reverse 3,D2
+A2,Reverse 4,A3
+A2,PCR template 1,B3
+A2,PCR template 2,C3
 """
 
 pcr_example = """
