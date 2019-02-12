@@ -28,21 +28,25 @@ You will need:
 ### Reagents
 
 ## Process
-1. number of samples to be diluted in this protocol.
+1. Set the number of samples to be diluted in this protocol.
 2. Download your protocol.
 3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
 4. Set up your deck according to the deck map.
 5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support article](https://support.opentrons.com/ot-2/getting-started-software-setup/deck-calibration).
 6. Hit "Run".
 7. Robot will transfer 50 uL of buffer to column 2-12 and 14-24 in the compound plate.
-8. Robot will dilute the preloaded samples in column 1 and 13 down the compound plate.
+8. Robot will dilute the preloaded samples in column 1 and 13 down the compound plate, using a new tip for every dilution.
 9. Robot will transfer 5 uL of each diluted sample to a clean cell plate in triplicate.
 
 ### Additional Notes
 ![layout](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1485-peptide-logic/layout.png)
 
 * Compound Plate: Slot 1
-* Cell Plates: Slot 2, 3, 5, 6, 8, 9
+* Cell Plates: Slot 2, 3, 4
+
+---
+
+Throughout the protocol, the robot would pause and prompt you to replenish tip racks as the tips are being used up.
 
 ---
 
