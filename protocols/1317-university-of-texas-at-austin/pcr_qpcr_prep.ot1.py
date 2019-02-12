@@ -7,7 +7,7 @@ metadata = {
     'source': 'Custom Protocol Request'
     }
 
-plate = containers.load('96-flat', 'B1')
+plate = containers.load('PCR-strip-tall', 'B1')
 tuberacks = [containers.load('tube-rack-2ml', slot)
              for slot in ['A1', 'A2']]
 tiprack_10 = [containers.load('tiprack-10ul', slot)
