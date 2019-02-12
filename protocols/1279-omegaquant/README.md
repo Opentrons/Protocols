@@ -1,4 +1,4 @@
-# FAME's Protocol
+# One-Solution FAME's Protocol
 
 ### Author
 [Opentrons](http://www.opentrons.com/)
