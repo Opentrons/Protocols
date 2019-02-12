@@ -1,11 +1,19 @@
 from opentrons import labware, instruments
-import math
 
 metadata = {
     'protocolName': 'RBC Transfer',
     'author': 'Alise <protocols@opentrons.com>',
     'source': 'Custom Protocol Request'
     }
+
+plate_name = 'omegaquant-96-well-plate'
+if plate_name not in labware.list():
+    labware.create(
+        plate_name,
+        grid=(12, 8),
+        spacing=(9, 9),
+        diameter=9,
+        depth=30)
 
 trough_name = 'glass-trough'
 if trough_name not in labware.list():
@@ -35,50 +43,65 @@ if tuberack_name not in labware.list():
         depth=75)
 
 # labware setup
-BTM = labware.load(trough_name, '1').wells('A1')
-plate = labware.load('96-flat', '2')
-BF3 = labware.load(trough_name, '3').wells('A1')
+plate = labware.load(plate_name, '2')
+trough_1 = labware.load(trough_name, '3')
 tiprack_300 = labware.load('opentrons-tiprack-300ul', '4')
-WISTD = labware.load(trough_name, '5').wells('A1')
+trough_2 = labware.load(trough_name, '5')
 tiprack_50 = labware.load(tiprack_name, '6')
 sample_trays = [labware.load(tuberack_name, slot)
                 for slot in ['7', '8', '10', '11']]
-water = labware.load(trough_name, '9')
 
 # instruments setup
 p50 = instruments.P50_Single(
-    mount='left',
+    mount='right',
     tip_racks=[tiprack_50])
 
 m300 = instruments.P300_Multi(
-    mount='right',
+    mount='left',
     tip_racks=[tiprack_300])
 
+# Reagent setup and transfer
+bf3 = trough_1.wells('A1')
+wistd = trough_2.wells('A1')
 
-def run_custom_protocol(number_of_samples: int=96):
 
-    col_num = math.ceil(number_of_samples/8)
+def run_custom_protocol(
+        number_of_samples: int=96,
+        tip_start_column: str=1):
+
+    if number_of_samples >= 12:
+        plate_loc = [col for col in plate.cols()]
+    else:
+        plate_loc = [col for col in plate.cols()][:number_of_samples]
 
     samples = [well for tray in sample_trays for well in tray.wells()]
+    outputs = [well for row in plate.rows() for well in row]
 
     # transfer blood from tube to 96-well plate
     for index in range(number_of_samples):
         p50.pick_up_tip()
         p50.aspirate(25, samples[index].bottom(4))
         p50.delay(seconds=3)
-        p50.dispense(25, plate[index])
+        p50.dispense(25, outputs[index])
+        p50.blow_out()
+        p50.touch_tip()
+        p50.delay(seconds=1)
         p50.drop_tip()
 
-    # transfer BF3 to each well
+    m300.start_at_tip(tiprack_300.cols(tip_start_column))
+    # transfer 14% BF3·MeOH to wells
     m300.pick_up_tip()
-    m300.mix(3, 300, BF3)
-    for col in plate.cols('1', length=col_num):
-        m300.transfer(250, BF3, col[0].top(), new_tip='never')
+    m300.mix(3, 300, bf3)
+    m300.blow_out(bf3)
+    for dest in plate_loc:
+        m300.transfer(250, bf3, dest[0].top(), blow_out=True, new_tip='never')
     m300.drop_tip()
 
-    # transfer WISTD
+    # transfer WISTD to wells
     m300.pick_up_tip()
-    m300.mix(3, 300, WISTD)
-    for col in plate.cols('1', length=col_num):
-        m300.transfer(250, WISTD, col[0].top(), new_tip='never')
+    m300.mix(3, 300, wistd)
+    m300.blow_out(wistd)
+    for dest in plate_loc:
+        m300.transfer(250, wistd, dest[0].top(), blow_out=True,
+                      new_tip='never')
     m300.drop_tip()
