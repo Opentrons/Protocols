@@ -16,7 +16,7 @@ With this protocol, your robot can perform PCR prep or similar assays using the 
 * [OT-One Hood](https://opentrons.com/robots/ot-one-s-hood)
 
 ## Process
-1. Upload your tuberack and PCR setup CSVs, and modify the total volume.
+1. Upload your tuberack and PCR setup CSVs, and modify the master mix and reagent volume.
 2. Download your protocol.
 3. Upload your protocol onto the [OT App](https://opentrons.com/ot-app).
 4. Set up your deck according to the deck map.
