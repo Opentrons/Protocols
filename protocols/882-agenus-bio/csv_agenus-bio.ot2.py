@@ -1,11 +1,46 @@
 from opentrons import instruments, labware, robot
 from otcustomizers import FileInput
 
+# importing Agenus castom labware defenitions:
+
+# 384 corning square flat bottom
+plate_name = '384_corning_FlatBottom'
+if plate_name not in labware.list():
+    custom_plate = labware.create(
+        '384_corning_FlatBottom',  # name of your labware
+        grid=(24, 16),   # specify amount of (columns, rows)
+        spacing=(4.5, 4.5),  # distances (mm) between each (column, row)
+        diameter=3.5,  # diameter (mm) of each well on the plate
+        depth=11.8,  # depth (mm) of each well on the plate
+        volume=100)
+
+# Lid as Trough (TipBox lid on delrin adapter)
+plate_name = 'Lid_as_Trough'
+if plate_name not in labware.list():
+    custom_plate = labware.create(
+        'Lid_as_Trough',  # name of your labware
+        grid=(1, 8),   # specify amount of (columns, rows)
+        spacing=(9, 9),  # distances (mm) between each (column, row)
+        diameter=7,  # diameter (mm) of each well on the plate
+        depth=18,  # depth (mm) of each well on the plate
+        volume=50000)
+
+# 96 greiner cellstar round flat bottom
+plate_name = '96_greiner_cellstar_FlatBottom'
+if plate_name not in labware.list():
+    custom_plate = labware.create(
+        '96_greiner_cellstar_FlatBottom',  # name of you labware
+        grid=(12, 8),  # specify amount of (columns, rows)
+        spacing=(9, 9),  # distances (mm) between each (column, row)
+        diameter=7,  # diameter (mm) of each well on the plate
+        depth=11,  # depth (mm) of each well on the plate
+        volume=350)
+
 # labware setup
-trough = labware.load('trough-12row', '2')
-plates_384 = [labware.load('384-plate', slot)
+trough = labware.load('Lid_as_Trough', '2')
+plates_384 = [labware.load('384_corning_FlatBottom', slot)
               for slot in ['5', '8', '11']]
-plates_96 = [labware.load('96-PCR-flat', slot)
+plates_96 = [labware.load('96_greiner_cellstar_FlatBottom', slot)
              for slot in ['3', '4']]
 tipracks = [labware.load('tiprack-200ul', slot)
             for slot in ['1', '6', '9', '7', '10']]
@@ -15,9 +50,15 @@ p300 = instruments.P300_Single(
     mount='left',
     tip_racks=tipracks)
 
+# Changing the phead aspirate/dispense speeds
+p300.set_flow_rate(aspirate=150, dispense=300)
+
 m300 = instruments.P300_Multi(
     mount='right',
     tip_racks=tipracks)
+
+# Changing the mhead aspirate/dispense speeds
+m300.set_flow_rate(aspirate=50, dispense=100)
 
 
 example_csv = """
@@ -72,10 +113,16 @@ def run_custom_protocol(
     dest_loc = [col
                 for plate in dest_plate_list for col in plate.cols()]
     m300.distribute(
-        media_volume, trough.wells('A1'), dest_loc, new_tip='once')
+        media_volume, trough.wells('A1'), dest_loc, blow_out=True,
+        new_tip='once')
 
     p300.start_at_tip(tipracks[0].wells('A2'))
 
     # transfer sample to destination
     for source, dest, vol in zip(sources, dests, volumes):
-        p300.transfer(vol, source, dest, mix_after=(3, vol/2))
+        p300.pick_up_tip()
+        p300.mix(5, 25, source)
+        p300.transfer(vol, source, dest, new_tip='never')
+        p300.mix(2, 160, dest)
+        p300.blow_out(dest)
+        p300.drop_tip()
