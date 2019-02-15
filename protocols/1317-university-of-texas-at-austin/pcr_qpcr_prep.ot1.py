@@ -20,6 +20,8 @@ p10 = instruments.Pipette(
     channels=1,
     max_volume=10,
     tip_racks=tiprack_10,
+    aspirate_speed=1000,
+    dispense_speed=1000,
     trash_container=trash)
 
 tuberack_example = """
@@ -87,9 +89,10 @@ def run_custom_protocol(
     sources = get_source_dict(tuberack_csv)
     dests, master_mix_dests = get_dest_dict(pcr_setup_csv, sources)
 
-    p10.transfer(mastermix_vol, mastermix, master_mix_dests)
+    p10.transfer(mastermix_vol, mastermix, master_mix_dests, blow_out=True)
 
     for key in sources.keys():
         vol = reagent_vol
         if dests[key]:
-            p10.transfer(vol, sources[key], dests[key], new_tip='always')
+            p10.transfer(vol, sources[key], dests[key], new_tip='always',
+                         blow_out=True)
