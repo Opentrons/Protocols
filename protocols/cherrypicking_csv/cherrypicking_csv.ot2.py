@@ -53,10 +53,9 @@ def run_custom_protocol(
         pipette = instruments.P1000_Single(mount=mount, tip_racks=tipracks)
 
     data = [
-        [well, float(vol)]
+        [well, vol]
         for well, vol in
-        [line.split(',') for line in volumes_csv.strip().splitlines() if line]
-        if well and vol
+        [row.split(',') for row in volumes_csv.strip().splitlines() if row]
     ]
 
     source_plate = labware.load(source_plate_type, '2')
@@ -64,8 +63,10 @@ def run_custom_protocol(
 
     tip_strategy = 'always' if tip_reuse == 'new tip each time' else 'once'
     for well_idx, (source_well, vol) in enumerate(data):
-        pipette.transfer(
-            vol,
-            source_plate.wells(source_well),
-            dest_plate.wells(well_idx),
-            new_tip=tip_strategy)
+        if source_well and vol:
+            vol = float(vol)
+            pipette.transfer(
+                vol,
+                source_plate.wells(source_well),
+                dest_plate.wells(well_idx),
+                new_tip=tip_strategy)
