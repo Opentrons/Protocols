@@ -29,9 +29,9 @@ def run_custom_protocol(
         ):
 
     pipette_max_vol = int(pipette_model[1:])
-    mount = 'left'
+    mount = 'right'
     if pipette_axis[0] == 'B':
-        mount = 'right'
+        mount = 'left'
 
     tiprack_slots = ['1', '4', '7', '10']
 
@@ -55,7 +55,8 @@ def run_custom_protocol(
     data = [
         [well, float(vol)]
         for well, vol in
-        [row.split(',') for row in volumes_csv.strip().split('\n') if row]
+        [line.split(',') for line in volumes_csv.strip().splitlines() if line]
+        if well and vol
     ]
 
     source_plate = labware.load(source_plate_type, '2')
