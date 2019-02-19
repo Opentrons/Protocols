@@ -1,4 +1,4 @@
-from opentrons import labware, instruments
+from opentrons import labware, instruments, robot
 from otcustomizers import FileInput
 
 metadata = {
@@ -13,14 +13,13 @@ samples = [labware.load('opentrons-tuberack-2ml-eppendorf', slot)
            for slot in ['3', '4', '5', '6']]
 pcr_plate = labware.load('PCR-strip-tall', '1')
 
-tipracks_10 = [labware.load('tiprack-10ul', slot)
-               for slot in ['7', '8']]
+tipracks_10 = labware.load('tiprack-10ul', '7')
 tiprack_300 = labware.load('opentrons-tiprack-300ul', '9')
 
 # instruments setup
 p10 = instruments.P10_Single(
     mount='left',
-    tip_racks=tipracks_10)
+    tip_racks=[tipracks_10])
 p50 = instruments.P50_Single(
     mount='right',
     tip_racks=[tiprack_300])
@@ -37,6 +36,29 @@ D1,6.0,9.0
 E1,14.7,0.3
 F1,7.8,7.2
 """
+
+p10_tip_count = 0
+p50_tip_count = 0
+
+
+def update_p10_tip_count(num):
+    global p10_tip_count
+    p10_tip_count += num
+    if p10_tip_count > 96:
+        robot.pause('The P10 tips have run out. Replenish tip rack before \
+resuming protocol.')
+        p10.reset_tip_tracking()
+        p10_tip_count = 0
+
+
+def update_p50_tip_count(num):
+    global p50_tip_count
+    p50_tip_count += num
+    if p50_tip_count > 96:
+        robot.pause('The P50 tips have run out. Replenish tip rack before \
+resuming protocol.')
+        p50.reset_tip_tracking()
+        p50_tip_count = 0
 
 
 def run_custom_protocol(
@@ -79,13 +101,21 @@ def run_custom_protocol(
         pipette.dispense(vol, dest)
     if p50.tip_attached:
         p50.drop_tip()
+        update_p50_tip_count(1)
     if p10.tip_attached:
         p10.drop_tip()
+        update_p10_tip_count(1)
 
     # transfer and mix samples
     total_samples = [well for tuberack in samples for well in tuberack.wells()]
     for vol, source, dest in zip(dna_vols, total_samples, pcr_plate.wells()):
-        p10.pick_up_tip()
-        p10.transfer(vol, source, dest, new_tip='never')
-        p10.mix(3, 10, dest)
-        p10.drop_tip()
+        if vol > 10:
+            pipette = p50
+            update_p50_tip_count(1)
+        else:
+            pipette = p10
+            update_p10_tip_count(1)
+        pipette.pick_up_tip()
+        pipette.transfer(vol, source, dest, new_tip='never')
+        pipette.mix(3, pipette.max_volume / 2, dest)
+        pipette.drop_tip()
