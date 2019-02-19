@@ -37,6 +37,9 @@ E1,14.7,0.3
 F1,7.8,7.2
 """
 
+p10_tip_count = 0
+p50_tip_count = 0
+
 
 def update_p10_tip_count(num):
     global p10_tip_count
