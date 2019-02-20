@@ -19,7 +19,7 @@ tiprack_300 = labware.load('opentrons-tiprack-300ul', '6')
 # instruments setup
 p10 = instruments.P10_Single(
     mount='left',
-    tip_racks=[tiprack_10_1,tiprack_10_2])
+    tip_racks=[tiprack_10_1, tiprack_10_2])
 p300 = instruments.P300_Single(
     mount='right',
     tip_racks=[tiprack_300])
@@ -53,9 +53,9 @@ resuming the protocol.")
 
 # selects PCR plate 2 wells taking into consideration edge effects
 target_2b = [well for col in plate_2.cols('2', to='5')
-            for well in col.wells('B', to='G')]
+             for well in col.wells('B', to='G')]
 target_2f = [well for col in plate_2.cols('8', to='11')
-            for well in col.wells('B', to='G')]
+             for well in col.wells('B', to='G')]
 target_2 = target_2b + target_2f
 
 # transfer bacteria mastermix 2
