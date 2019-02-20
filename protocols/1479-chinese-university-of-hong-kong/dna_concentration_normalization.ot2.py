@@ -87,7 +87,7 @@ def run_custom_protocol(
 
     # distribute buffer
     for vol, dest in zip(diluent_vols, dests):
-        if vol > 5:
+        if vol >= 5:
             pipette = p50
         elif vol > 0 and vol < 5:
             pipette = p10
