@@ -30,7 +30,7 @@ You will need:
 ### Reagents
 
 ## Process
-1. Select your pipettes and tip racks.
+1. Select your pipettes.
 2. Upload your master mix CSV.
 3. Download your protocol.
 4. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
