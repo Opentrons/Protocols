@@ -72,6 +72,3 @@ def run_custom_protocol(
                 plate.rows['A'][col],
                 mix_after=(3, 75)
                 )
-
-
-run_custom_protocol()
