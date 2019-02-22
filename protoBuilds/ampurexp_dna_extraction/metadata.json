@@ -1,0 +1,1 @@
+{"slug": "ampurexp_dna_extraction", "path": "protocols/ampurexp_dna_extraction", "flags": {"feature": true, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["ampurexp_dna_extraction.ot1.py"], "OT 2 protocol": []}, "status": "ok"}

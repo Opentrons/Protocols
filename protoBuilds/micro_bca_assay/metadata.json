@@ -1,0 +1,1 @@
+{"slug": "micro_bca_assay", "path": "protocols/micro_bca_assay", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["micro_bca_assay.ot1.py"], "OT 2 protocol": []}, "status": "ok"}

@@ -1,0 +1,1 @@
+{"slug": "NGS_library_prep", "path": "protocols/NGS_library_prep", "flags": {"feature": true, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["NGS_Library_Prep_2017-10-13.ot1.py"], "OT 2 protocol": []}, "status": "ok"}

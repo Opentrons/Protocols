@@ -1,0 +1,1 @@
+{"slug": "pcr_prep_with_beads", "path": "protocols/pcr_prep_with_beads", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["pcr_prep_with_beads.ot1.py"], "OT 2 protocol": []}, "status": "ok"}

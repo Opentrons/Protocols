@@ -1,0 +1,1 @@
+{"slug": "checkerboard_plate_setup", "path": "protocols/checkerboard_plate_setup", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["checkerboard_plate_setup.ot1.py"], "OT 2 protocol": []}, "status": "ok"}
