@@ -29,13 +29,14 @@ if plate_name not in labware.list():
 plate = labware.load(plate_name, '1')
 chip = labware.load(chip_name, '2')
 tuberack = labware.load('opentrons-tuberack-2ml-eppendorf', '4')
-tiprack = labware.load('tiprack-200ul', '5')
+tipracks = [labware.load('tiprack-200ul', slot)
+            for slot in ['5', '6']]
 
 
 # instruments setup
 p50 = instruments.P50_Single(
     mount='left',
-    tip_racks=[tiprack])
+    tip_racks=tipracks)
 
 reagent_csv_example = """
 R-A1;20,R-A1;20,P-A1;20,P-A2;20,,R-D2;200,,,,,,,,,,,,,R-A1;20,R-A1;20,P-A1;20,\
@@ -61,7 +62,7 @@ def csv_to_dict(csv_string):
                 elif source_info[0] == 'P':
                     source = plate.wells(source_info[1])
                 else:
-                    raise Exception("This CSV does not follow the guideline \
+                    raise Exception("This CSV does not follow the guidelines \
 in the Additional Notes section of your protocol. Please review your CSV and \
 try again.")
                 if source not in new_dict.keys():
