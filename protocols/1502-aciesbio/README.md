@@ -22,7 +22,7 @@ You will need:
 * 50ul Tip rack
 
 ### Robot
-* [OT 2](https://opentrons.com/ot-2)
+* [OT-2](https://opentrons.com/ot-2)
 
 ### Modules
 * [MagDeck](https://shop.opentrons.com/products/magdeck)
@@ -35,7 +35,7 @@ You will need:
 1. Download your protocol.
 2. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
 3. Set up your deck according to the deck map.
-4. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support article](https://support.opentrons.com/ot-2/getting-started-software-setup/deck-calibration).
+4. Calibrate your labware, tiprack, and pipette using the OT App. For calibration pointers, check out our [support article](https://docs.opentrons.com/ot1/calibration.html).
 5. Hit "Run".
 6. Robot will transfer 250 uL Solution I/RNase A to each well of the plate in slot 2. Program will pause and prompt user to vortex the plate.
 7. Robot will transfer 250 uL Solution II. Program will pause and prompt user to gently mix the plate and incubate the plate off-robot for 5 minutes.
@@ -48,20 +48,17 @@ You will need:
 14. Robot will transfer 500 uL ETR Wash Buffer to the plate on the MagDeck.
 15. MagDeck will engage and supernatant will be discarded in liquid trash container. MagDeck will disengage.
 16. Program will prompt user to *replenish tipracks*.
-16. Robot will add 700 uL VHB Buffer to the plate on the MagDeck.
-17. MagDeck will engage and supernatant will be discarded in liquid trash container. MagDeck will disengage.
-18. Repeat steps 16-17 for a second VHB Buffer wash.
-19. Robot will add 700 uL SPM Wash Buffer to the plate on the MagDeck.
-20. MagDeck will engage and supernatant will be discarded in liquid trash container.
-21. Program will pause for 10 minutes to dry the Mag-Bind® Particles RQ. MagDeck will disengage.
-22. Robot will add Elution Buffer to re-suspend the beads.
-23. MagDeck will engage. Robot will transfer supernatant into a new 96-well plate in slot 5.
+17. Robot will add 700 uL VHB Buffer to the plate on the MagDeck.
+18. MagDeck will engage and supernatant will be discarded in liquid trash container. MagDeck will disengage.
+19. Repeat steps 16-17 for a second VHB Buffer wash.
+20. Robot will add 700 uL SPM Wash Buffer to the plate on the MagDeck.
+21. MagDeck will engage and supernatant will be discarded in liquid trash container.
+22. Program will pause for 10 minutes to dry the Mag-Bind® Particles RQ. MagDeck will disengage.
+23. Robot will add Elution Buffer to re-suspend the beads.
+24. MagDeck will engage. Robot will transfer supernatant into a new 96-well plate in slot 5.
 
 ### Additional Notes
 Before you begin the protocol, please read the [Product Manual](http://omegabiotek.com/store/wp-content/uploads/2014/01/M1258-Mag-Bind-Ultra-Pure-Plasmid-DNA-96-Kit-Combo-Online-010716.pdf) of the Mag-Bind® Ultra Pure Plasmid DNA Kit to make sure you have the correct labware and reagents. The protocol begins at step 4 in page 9 of the manual.
-
-Deck Setup:
-![deck setup](https://s3-ap-southeast-2.amazonaws.com/paperform/u-4256/0/2019-02-06/no134rs/OT2%20Layout%20-%20BCA%20Assay%20Protocol%20Development_Mey%20Feb%202019.jpg)
 
 ###### Internal
 1502
