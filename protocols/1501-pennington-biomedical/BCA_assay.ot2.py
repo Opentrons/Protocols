@@ -64,11 +64,14 @@ def run_custom_protocol(
         p300.distribute(30, sample, wells)
 
     # transfers solution from trough to corresponding column of samples
-    num_troughs = (int((sample_num-1)/8)+1)*3
-    for col in range(num_troughs):
+    num_transfers = (int((sample_num-1)/8)+1)*3
+    for col in range(num_transfers):
         m300.transfer(
                 200,
-                trough.rows['A'][col],
+                trough.wells('A1'),
                 plate.rows['A'][col],
                 mix_after=(3, 75)
                 )
+
+
+run_custom_protocol()
