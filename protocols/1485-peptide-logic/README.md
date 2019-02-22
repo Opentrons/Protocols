@@ -13,11 +13,10 @@ With this protocol, the robot can perform serial dilution for up to 30 samples i
 ---
 
 You will need:
-* P10 Single-channel Pipette
+* P50 Single-channel Pipette
 * P50 Multi-channel Pipette
 * 384-well Plates
 * 12-well Trough
-* Opentrons 10 uL Tip Racks
 * Opentrons 300 uL Tip Racks
 
 ### Robot
