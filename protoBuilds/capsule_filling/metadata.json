@@ -1,0 +1,1 @@
+{"slug": "capsule_filling", "path": "protocols/capsule_filling", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["capsule_filling.ot1.py"], "OT 2 protocol": ["capsule_filling.ot2.py"]}, "status": "ok"}
