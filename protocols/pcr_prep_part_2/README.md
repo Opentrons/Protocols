@@ -32,7 +32,7 @@ You will need:
 
 ## Process
 1. Input the number of samples you are processing.
-2. Select your pipettes and tip racks.
+2. Select your pipettes.
 3. Input the desired master mix and DNA volume in each well.
 4. Download your protocol.
 5. Upload your protocol into the [OT App](https://opentrons.com/ot-app).

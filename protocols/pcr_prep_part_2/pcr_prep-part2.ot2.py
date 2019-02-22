@@ -13,28 +13,37 @@ def run_custom_protocol(
         number_of_samples: int=96,
         left_pipette: StringSelection(
             'p10-multi', 'P50-multi', 'p300-multi')='p50-multi',
-        left_pipette_tip: StringSelection(
-            'tiprack-10ul', 'tiprack-200ul',
-            'opentrons-tiprack-300ul')='opentrons-tiprack-300ul',
         right_pipette: StringSelection(
             'p10-multi', 'P50-multi', 'p300-multi')='p300-multi',
-        right_pipette_tip: StringSelection(
-            'tiprack-10ul', 'tiprack-200ul',
-            'opentrons-tiprack-300ul')='opentrons-tiprack-300ul',
         mastermix_volume: float=18,
         DNA_volume: float=2
         ):
 
-    def mount_pipette(pipette_type, mount, tiprack, tiprack_slot):
-        tip_rack = [labware.load(tiprack, slot)
-                    for slot in tiprack_slot]
-        pipette_args = {'mount': mount, 'tip_racks': tip_rack}
-        if pipette_type == 'p10-multi':
-            pipette = instruments.P10_Multi(**pipette_args)
-        elif pipette_type == 'p50-multi':
-            pipette = instruments.P50_Multi(**pipette_args)
+    def mount_pipette(pipette_type, mount, tiprack_slot):
+        if pipette_type == 'p10-single':
+            tip_rack = [labware.load('tiprack-10ul', slot)
+                        for slot in tiprack_slot]
+            pipette = instruments.P10_Single(
+                mount=mount,
+                tip_racks=tip_rack)
+        elif pipette_type == 'p50-single':
+            tip_rack = [labware.load('opentrons-tiprack-300ul', slot)
+                        for slot in tiprack_slot]
+            pipette = instruments.P50_Single(
+                mount=mount,
+                tip_racks=tip_rack)
+        elif pipette_type == 'p300-single':
+            tip_rack = [labware.load('opentrons-tiprack-300ul', slot)
+                        for slot in tiprack_slot]
+            pipette = instruments.P300_Single(
+                mount=mount,
+                tip_racks=tip_rack)
         else:
-            pipette = instruments.P300_Multi(**pipette_args)
+            tip_rack = [labware.load('tiprack-1000ul', slot)
+                        for slot in tiprack_slot]
+            pipette = instruments.P1000_Single(
+                mount=mount,
+                tip_racks=tip_rack)
         return pipette
 
     # labware setup
@@ -44,9 +53,9 @@ def run_custom_protocol(
 
     # instrument setup
     pipette_l = mount_pipette(
-        left_pipette, 'left', left_pipette_tip, ['4', '5'])
+        left_pipette, 'left', ['4', '5'])
     pipette_r = mount_pipette(
-        right_pipette, 'right', right_pipette_tip, ['6', '7'])
+        right_pipette, 'right', ['6', '7'])
 
     # reagent setup
     mastermix = trough.wells('A1')
