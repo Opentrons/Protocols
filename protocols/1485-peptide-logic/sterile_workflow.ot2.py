@@ -12,38 +12,38 @@ cell_plates = [labware.load('384-plate', slot)
                for slot in ['2', '3', '4']]
 trough = labware.load('trough-12row', '5')
 
-tiprack_10 = [labware.load('tiprack-10ul', slot)
-              for slot in ['10', '11']]
+tiprack_50s = [labware.load('opentrons-tiprack-300ul', slot)
+               for slot in ['10', '11']]
 tiprack_50 = [labware.load('opentrons-tiprack-300ul', slot)
               for slot in ['6', '7', '8', '9']]
 
 # instrument setup
-p10 = instruments.P10_Single(
+p50 = instruments.P50_Single(
     mount='left',
-    tip_racks=tiprack_10)
+    tip_racks=tiprack_50s)
 
 m50 = instruments.P50_Multi(
     mount='right',
     tip_racks=tiprack_50)
 
-p10_tip_count = 0
+p50_tip_count = 0
 m50_tip_count = 0
 
 
 def update_single_tip_count(col_num):
-    global p10_tip_count
-    p10_tip_count += col_num
-    if p10_tip_count == len(tiprack_10) * 96:
+    global p50_tip_count
+    p50_tip_count += col_num
+    if p50_tip_count == len(tiprack_50s) * 96:
         robot.pause("Your 10 uL tips have run out. Replenish the tip racks \
 before resuming.")
-        p10_tip_count = 0
-        p10.reset_tip_tracking()
+        p50_tip_count = 0
+        p50.reset_tip_tracking()
 
 
 def update_multi_tip_count(col_num):
     global m50_tip_count
     m50_tip_count += col_num
-    if m50_tip_count == len(tiprack_10) * 12:
+    if m50_tip_count == len(tiprack_50) * 12:
         robot.pause("Your 300 uL tips have run out. Replenish the tip racks \
 before resuming.")
         m50_tip_count = 0
@@ -60,8 +60,10 @@ def run_custom_protocol(number_of_compounds: int=17):
 
     if number_of_compounds == 17:
         dil_list = dil_list[:3]
-    elif number_of_compounds < 17:
+    elif number_of_compounds < 17 and number_of_compounds > 1:
         dil_list = dil_list[:2]
+    elif number_of_compounds == 1:
+        dil_list = [dil_list[0]]
 
     # transfer 50 uL buffer
     m50.pick_up_tip()
@@ -94,5 +96,9 @@ def run_custom_protocol(number_of_compounds: int=17):
     for source, dest in zip(compound_sources, compound_dests):
         for index, source_well in enumerate(source):
             dests = [dest[0][index], dest[1][index], dest[2][index]]
-            p10.distribute(5, source_well, dests)
+            p50.pick_up_tip()
+            p50.aspirate(20, source_well)
+            for new_dest in dests:
+                p50.dispense(5, new_dest)
+            p50.drop_tip()
             update_single_tip_count(1)
