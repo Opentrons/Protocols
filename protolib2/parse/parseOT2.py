@@ -1,16 +1,9 @@
+import json
 from inspect import signature, Parameter
 import time
 import sys
-import opentrons
 from opentrons import robot, labware, modules
 from opentrons.instruments import Pipette as BasePipette
-
-allProtocolFiles = sys.argv[1:]
-
-print('Opentrons verson: ', opentrons.__version__)
-print('Parsing OT2. Files:')
-print(allProtocolFiles)
-print('*-' * 40)
 
 all_labware = []
 all_modules = []
@@ -161,3 +154,13 @@ def get_instruments(robot):
          }
         for axis, instr in robot.get_instruments()
     ]
+
+
+if __name__ == '__main__':
+    sourceFilePath = sys.argv[1]
+    destFilePath = sys.argv[2]
+    print('OT2: parsing {} to {}'.format(sourceFilePath, destFilePath))
+
+    result = parse(sourceFilePath)
+    with open(destFilePath, 'w') as f:
+        json.dump(result, f)
