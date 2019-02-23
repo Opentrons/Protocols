@@ -5,8 +5,20 @@ OT1_VERSION := 2.5.2
 OT2_VERSION_TAG := v3.3.1-beta.0
 OT2_MONOREPO_DIR := ot2monorepoClone
 
-OT1_FILE_SUFFIX := *.ot1.py
-OT2_FILE_SUFFIX := *.ot2.py
+# Parsers output to here
+BUILD_DIR := protoBuilds
+
+# Ignore all protocol dirs that contain a file named '.ignore'
+# on the top protocol folder level
+IGNORED_INPUT_PATHS := $(addsuffix %, $(dir $(wildcard protocols/*/.ignore)))
+
+OT1_INPUT_FILES_UNFILTERED := $(shell find protocols/ -type f -name '*.ot1.py')
+OT1_INPUT_FILES := $(filter-out $(IGNORED_INPUT_PATHS), $(OT1_INPUT_FILES_UNFILTERED))
+OT1_OUTPUT_FILES := $(patsubst protocols/%.ot1.py, $(BUILD_DIR)/%.ot1.py.json, $(OT1_INPUT_FILES))
+
+OT2_INPUT_FILES_UNFILTERED := $(shell find protocols/ -type f -name '*.ot2.py')
+OT2_INPUT_FILES := $(filter-out $(IGNORED_INPUT_PATHS), $(OT2_INPUT_FILES_UNFILTERED))
+OT2_OUTPUT_FILES := $(patsubst protocols/%.ot2.py, $(BUILD_DIR)/%.ot2.py.json, $(OT2_INPUT_FILES))
 
 .PHONY: install
 install:
@@ -26,12 +38,6 @@ venvs/ot1: venvs
 parse-errors:
 	python protolib2/traverse_errors.py
 
-.PHONY: parse-ot1
-parse-ot1: venvs/ot1
-	source venvs/ot1/bin/activate && \
-	python protolib2/traverse_ot1.py && \
-	deactivate
-
 ot2monorepoClone:
 	git clone --depth=1 --branch=$(OT2_VERSION_TAG) $(MONOREPO_URI) $(OT2_MONOREPO_DIR)
 
@@ -45,13 +51,26 @@ venvs/ot2: ot2monorepoClone
 	popd && \
 	deactivate
 
-# OVERRIDE_SETTINGS_DIR must be set to use opentrons v3
-# (otherwise it will try to access /data dir during 'import opentrons')
+.PHONY: parse-ot1
+parse-ot1: venvs/ot1 $(OT1_OUTPUT_FILES)
+
+# Parse all OT1 python files
+$(BUILD_DIR)/%.ot1.py.json: protocols/%.ot1.py
+	mkdir -p $(dir $@) && \
+	source venvs/ot1/bin/activate && \
+  python protolib2/parse/parseOT1.py $< $@ && \
+	deactivate
+
 .PHONY: parse-ot2
-parse-ot2: venvs/ot2
+parse-ot2: venvs/ot2 $(OT2_OUTPUT_FILES)
+
+# Parse all OT2 python files
+# Note: OVERRIDE_SETTINGS_DIR must be set to use opentrons v3
+$(BUILD_DIR)/%.ot2.py.json: protocols/%.ot2.py
+	mkdir -p $(dir $@) && \
 	source venvs/ot2/bin/activate && \
 	export OVERRIDE_SETTINGS_DIR=$(OT2_MONOREPO_DIR)/api/tests/opentrons/data && \
-  python protolib2/traverse_ot2.py && \
+  python protolib2/parse/parseOT2.py $< $@ && \
 	deactivate
 
 .PHONY: parse-README
@@ -61,3 +80,9 @@ parse-README:
 .PHONY: clean
 clean:
 	rm -rf $(OT2_MONOREPO_DIR) venvs
+	rm -rf $(BUILD_DIR)
+
+# Take all files in BUILD_DIR and make a single zipped JSON
+.PHONY: build
+build:
+	python -m protolib2
