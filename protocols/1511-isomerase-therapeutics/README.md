@@ -5,7 +5,7 @@
 
 ## Categories
 * Proteins & Proteomics
-  * PCR preparation
+    * PCR preparation
 
 ## Description
 This protocol performs a PCR preparation with DreamTaq Green mastermix and E coli colonies. The preparation is done on a PCR strip seated in an aluminum block on the OT-2 temperature module. During the process, a second PCR strip with suspended E coli colonies is produced for later use and does not receive PCR mastermix. For proper reagent setup on a 4x6 tube rack, see the 'Additional Notes' section below.
