@@ -60,8 +60,8 @@ You will need:
 ### Additional Notes
 Before you begin the protocol, please read the [Product Manual](http://omegabiotek.com/store/wp-content/uploads/2014/01/M1258-Mag-Bind-Ultra-Pure-Plasmid-DNA-96-Kit-Combo-Online-010716.pdf) of the Mag-Bind® Ultra Pure Plasmid DNA Kit to make sure you have the correct labware and reagents. The protocol begins at step 4 in page 9 of the manual.
 
-Deck Setup:
-![deck setup](https://s3-ap-southeast-2.amazonaws.com/paperform/u-4256/0/2019-02-06/no134rs/OT2%20Layout%20-%20BCA%20Assay%20Protocol%20Development_Mey%20Feb%202019.jpg)
+If you have any questions about this protocol, please contact protocols@opentrons.com.
 
 ###### Internal
+BVjNKd5X
 1502
