@@ -11,7 +11,7 @@ metadata = {
 tube_rack_1 = labware.load('tube-rack-2ml', '3')
 tube_rack_2 = labware.load('tube-rack-2ml', '6')
 tip_rack_200_s = labware.load('tiprack-200ul', '7')
-tip_rack_200_m = labware.load('tiprack-200ul', '10')
+tip_racks_200_m = [labware.load('tiprack-200ul', slot) for slot in ['9', '10']]
 trough = labware.load('trough-12row', '8')
 plate = labware.load('96-PCR-flat', '11')
 
@@ -23,7 +23,7 @@ p300 = instruments.P300_Single(
 
 m300 = instruments.P300_Multi(
     mount='left',
-    tip_racks=[tip_rack_200_m]
+    tip_racks=tip_racks_200_m
     )
 
 # creates a list of 32 sets of wells in triplicate corresponding to a max
@@ -65,3 +65,6 @@ def run_custom_protocol(
                 plate.rows['A'][col],
                 mix_after=(3, 50)
                 )
+
+
+run_custom_protocol()
