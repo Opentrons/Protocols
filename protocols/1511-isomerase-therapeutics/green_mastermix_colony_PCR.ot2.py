@@ -38,10 +38,10 @@ strip2 = strips.wells('A2', length=8)
 
 
 def run_custom_protocol(
-    h2o_Ecoli_vol=10,
-    primer1_vol=1.25,
-    primer2_vol=1.25,
-    greentaq_vol=12.5,
+    h2o_Ecoli_vol: float = 10.0,
+    primer1_vol: float = 1.25,
+    primer2_vol: float = 1.25,
+    greentaq_vol: float = 12.5,
 ):
 
     # create mastermix with 10:1:1 ratio of greentaq:primer1:primer2
