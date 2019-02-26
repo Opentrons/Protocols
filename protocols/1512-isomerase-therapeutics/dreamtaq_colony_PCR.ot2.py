@@ -40,13 +40,13 @@ strip2 = strips.wells('A2', length=8)
 
 
 def run_custom_protocol(
-    h2o_Ecoli_vol=10,
-    h2o_mastermix_vol=9.75,
-    primer1_vol=1.25,
-    primer2_vol=1.25,
-    dreamtaq_buffer_vol=2.5,
-    dNTP_vol=2.5,
-    dreamtaq_polymerase_vol=0.25
+    h2o_Ecoli_vol: float = 10.0,
+    h2o_mastermix_vol: float = 9.75,
+    primer1_vol: float = 1.25,
+    primer2_vol: float = 1.25,
+    dreamtaq_buffer_vol: float = 2.5,
+    dNTP_vol: float = 2.5,
+    dreamtaq_polymerase_vol: float = 0.25
 ):
 
     # create mastermix with 10:1:1 ratio of greentaq:primer1:primer2
