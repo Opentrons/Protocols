@@ -12,9 +12,10 @@ metadata = {
 sample_plates = [labware.load('96-flat', str(slot))
                  for slot in range(1, 6)]
 trough = labware.load('trough-12row', '7')
+trough_2 = labware.load('trough-12row', '9')
 bDNA_plate = labware.load('96-flat', '6')
 tiprack_10 = labware.load('tiprack-10ul', '8')
-tiprack_300 = labware.load('opentrons-tiprack-300ul', '9')
+tiprack_300 = labware.load('opentrons-tiprack-300ul', '11')
 
 # instruments
 m10 = instruments.P10_Multi(
@@ -90,16 +91,20 @@ def run_custom_protocol(
             m10.mix(5, 10, dest)
         m10.drop_tip()
 
+    # reagent setup
+    diluent_s = trough_2.wells('A1')
+    diluent_s_volume_tracker = diluent_s.max_volume()
+
     # transfer dilent to bDNA plate
     bDNA_dests = bDNA_plate.cols(starting_column, length=sample_col_num * 2)
     m300.pick_up_tip()
     for col in bDNA_dests:
         if m300.current_volume <= bDNA_buffer_volume:
-            if diluent_volume_tracker < bDNA_buffer_volume * 8:
-                diluent = next(diluent)
-                diluent_volume_tracker = diluent.max_volume()
-            m300.aspirate(diluent)
-            diluent_volume_tracker -= bDNA_buffer_volume * 8
+            if diluent_s_volume_tracker < bDNA_buffer_volume * 8:
+                diluent_s = next(diluent_s)
+                diluent_s_volume_tracker = diluent_s.max_volume()
+            m300.aspirate(diluent_s)
+            diluent_s_volume_tracker -= bDNA_buffer_volume * 8
         m300.dispense(bDNA_buffer_volume, col)
     m300.drop_tip()
 
