@@ -16,7 +16,7 @@ You will need:
 * P10 Multi-channel Pipette
 * P300 Multi-channel Pipette
 * 96-well Plates
-* 12-row Trough
+* 12-row Troughs
 * 10 uL Tip Rack
 * Opentrons 300 uL Tip Rack
 
@@ -37,9 +37,9 @@ You will need:
 7. Set up your deck according to the deck map.
 8. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support article](https://support.opentrons.com/ot-2/getting-started-software-setup/deck-calibration).
 9. Hit "Run".
-10. Robot will distribute buffer from 12-row trough to the dilution plate(s).
+10. Robot will distribute buffer from 12-row trough in slot 7 to the dilution plate(s).
 11. Robot will serially dilute samples down the plate(s).
-12. Robot will distribute buffer from 12-row trough to the bDNA plate.
+12. Robot will distribute buffer from 12-row trough in slot 9 to the bDNA plate.
 13. Robot will transfer the last dilutions to the bDNA plate in duplicate.
 
 
