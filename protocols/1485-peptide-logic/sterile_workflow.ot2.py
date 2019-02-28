@@ -6,9 +6,27 @@ metadata = {
     'source': 'Custom Protocol Request'
     }
 
+cell_plate_name = "corning-384-square-plate"
+if cell_plate_name not in labware.list():
+    labware.create(
+        cell_plate_name,
+        grid=(24, 16),
+        spacing=(4.5, 4.5),
+        diameter=3.6,
+        depth=11.7)
+
+compound_plate_name = "corning-384-round-plate"
+if compound_plate_name not in labware.list():
+    labware.create(
+        compound_plate_name,
+        grid=(24, 16),
+        spacing=(4.5, 4.5),
+        diameter=3.6,
+        depth=11.6)
+
 # labware setup
-compound_plate = labware.load('384-plate', '1')
-cell_plates = [labware.load('384-plate', slot)
+compound_plate = labware.load(compound_plate_name, '1')
+cell_plates = [labware.load(cell_plate_name, slot)
                for slot in ['2', '3', '4']]
 trough = labware.load('trough-12row', '5')
 
