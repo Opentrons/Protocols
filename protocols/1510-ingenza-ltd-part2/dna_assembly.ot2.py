@@ -90,7 +90,7 @@ def run_custom_protocol(
     transfer_csv: FileInput=transfer_csv_example
         ):
 
-    temp_decks, sources, volumes, dests, mixes = get_transfer_info(
+    sources, volumes, dests, mixes = get_transfer_info(
         transfer_csv, reagent_list, dest_plate)
 
     for vol, source, dest, mix_after in zip(volumes, sources, dests, mixes):
