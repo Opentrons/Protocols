@@ -26,56 +26,58 @@ m300 = instruments.P300_Multi(
 pbs = trough.wells('A1')
 antigen = plate.wells('A3')
 
-# turn on magnetic field
+# turn on magnet for 3 seconds
 mag_module.engage()
 p50.delay(seconds=3)
 
 # discard supernatant in well A2
 p50.transfer(25, plate.wells('A2').bottom(0.5), p50.trash_container.top())
 
-# transfer A1 to A2, and mix every 2 min for an hour, then discard supernatant
+# transfer from A1 to A2
 p50.pick_up_tip()
 p50.transfer(10, plate.wells('A1'), plate.wells('A2'), new_tip='never')
-mag_module.disengage()
+mag_module.disengage()  # turn off magnet
+# mix 3 times at 5 uL every 2 minutes for 30 times using the same tip
 for _ in range(30):
-    p50.mix(2, 5, plate.wells('A2'))
+    p50.mix(3, 5, plate.wells('A2'))
     p50.blow_out(plate.wells('A2').top())
     p50.delay(minutes=2)
-p50.mix(2, 5, plate.wells('A2'))
+p50.mix(3, 5, plate.wells('A2'))
 p50.blow_out(plate.wells('A2').top())
-mag_module.engage()
-p50.delay(seconds=3)
+mag_module.engage()  # turn on magnet for 5 seconds
+p50.delay(seconds=5)
 p50.transfer(12, plate.wells('A2').bottom(0.5), p50.trash_container.top(),
-             new_tip='never')
+             new_tip='never')  # discard supernatant
 p50.drop_tip()
 
 # wash well with PBS twice
 for _ in range(2):
-    mag_module.disengage()
+    mag_module.disengage()  # turn off magnet
     m300.pick_up_tip()
-    m300.transfer(200, pbs, plate.wells('A2'), new_tip='never')
+    m300.transfer(200, pbs, plate.wells('A2'), new_tip='never')  # add pbs
     m300.mix(3, 100, plate.wells('A2'))
     m300.blow_out(plate.wells('A2').top())
-    mag_module.engage()
+    mag_module.engage()  # turn on magnet
     m300.delay(seconds=3)
     m300.transfer(
         250, plate.wells('A2').bottom(0.5), m300.trash_container.top(),
-        new_tip='never')
+        new_tip='never')  # discard supernatant
     m300.drop_tip()
 
-# turn off magnetic module
+# turn off magnet
 mag_module.disengage()
 
 # resuspend the antibody coated in 100 uL PBS
 p50.pick_up_tip()
 p50.transfer(100, pbs, plate.wells('A2').top(), blow_out=True, new_tip='never')
 p50.mix(5, 50, plate.wells('A2'))
+# transfer well A2 to B1
 p50.transfer(10, plate.wells('A2'), plate.wells('B1'), new_tip='never')
 p50.move_to(plate.wells('B1').top())
-mag_module.engage()
+mag_module.engage()  # turn on magnet for 2 seconds
 p50.delay(seconds=2)
 p50.transfer(120, plate.wells('B1').bottom(0.5), p50.trash_container.top(),
-             new_tip='never')
+             new_tip='never')  # discard supernatant
 p50.drop_tip()
 
 # turn off magnetic module
@@ -84,19 +86,20 @@ mag_module.disengage()
 # transfer antigen solution
 m300.pick_up_tip()
 m300.transfer(200, antigen, plate.wells('B1'), new_tip='never')
+# mix 3 times at 150 uL every 2 minutes for 15 times using the same tip
 for _ in range(15):
     m300.mix(3, 150, plate.wells('B1'))
     m300.blow_out(plate.wells('B1').top())
     m300.delay(minutes=2)
 m300.mix(3, 150, plate.wells('B1'))
 m300.blow_out(plate.wells('B1').top())
-mag_module.engage()
-m300.delay(minutes=1)
+mag_module.engage()  # turn on magnet for 2 minutes
+m300.delay(minutes=2)
 m300.transfer(250, plate.wells('B1').bottom(0.5), m300.trash_container.top(),
-              new_tip='never')
+              new_tip='never')  # discard supernatant
 m300.drop_tip()
 
-# turn off magnetic module
+# turn off magnet
 mag_module.disengage()
 
 # wash well with PBS twice
