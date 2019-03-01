@@ -4,11 +4,11 @@
 [Opentrons](http://www.opentrons.com/)
 
 ## Categories
-* Protein and Proteomics
+* Protein & Proteomics
     * Assay
 
 ## Description
-With this protocol, your robot can perform a colorimetric acid assay for up to 32 samples in triplicate on a single 96-well PCR plate. Each set of triplicate samples are arranged next to each other horizontally (ex: A1, A2, A3). Subsequent samples in triplicate are filled down the column before moving 3 columns over (ex: sample 1- A1, A2, A3; sample 2- B1, B2, B3; ...; sample 8- H1, H2, H3; sample 9- A4, A5, A6, ...). [See additional notes below.]
+With this protocol, your robot can perform a colorimetric acid assay for up to 32 samples in triplicate on a single 96-well PCR plate. Each set of triplicate samples are arranged next to each other horizontally (ex: A1, A2, A3). Subsequent samples in triplicate are filled down the column before moving 3 columns over (ex: sample 1- A1, A2, A3; sample 2- B1, B2, B3; ...; sample 8- H1, H2, H3; sample 9- A4, A5, A6, ...). See additional notes below.
 
 ---
 
@@ -42,5 +42,5 @@ You will need:
 If you have any questions about this protocol, please contact protocols@opentrons.com.
 
 ###### Internal
-qT4pYTkP
+qT4pYTkP  
 1500
