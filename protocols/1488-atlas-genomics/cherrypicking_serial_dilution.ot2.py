@@ -8,14 +8,71 @@ metadata = {
     'source': 'Custom Protocol Request'
     }
 
+# tiprack-custom-200ul
+tiprack_200_name = 'tiprack-custom-200ul'
+if tiprack_200_name not in labware.list():
+    labware.create(
+        tiprack_200_name,
+        grid=(12, 8),
+        spacing=(9, 9),
+        diameter=8,
+        depth=52,
+        volume=200)
+
+# tiprack-custom-10ul
+tiprack_10_name = 'tiprack-custom-10ul'
+if tiprack_10_name not in labware.list():
+    labware.create(
+        tiprack_10_name,
+        grid=(12, 8),
+        spacing=(9, 9),
+        diameter=4.2,
+        depth=44,
+        volume=10)
+
+# bDNA plate
+bDNA_plate_name = 'bDNA plate'
+if bDNA_plate_name not in labware.list():
+    labware.create(
+        bDNA_plate_name,
+        grid=(12, 8),
+        spacing=(9, 9),
+        diameter=7,
+        depth=11,
+        volume=300)
+
+# trough_300ul
+trough_name = 'trough_300ul'
+if trough_name not in labware.list():
+    labware.create(
+        trough_name,
+        grid=(1, 1),
+        spacing=(0, 0),
+        diameter=0,
+        depth=41,
+        volume=300000)
+
+
+# plate_200ul_noskirt
+plate_name = 'plate_200ul_noskirt'
+if plate_name not in labware.list():
+    labware.create(
+        plate_name,
+        grid=(12, 8),
+        spacing=(9, 9),
+        diameter=6,
+        depth=21,
+        volume=200)
+
+
 # labware setup
-sample_plates = [labware.load('96-flat', str(slot))
+sample_plates = [labware.load(plate_name, str(slot))
                  for slot in range(1, 6)]
-trough = labware.load('trough-12row', '7')
-trough_2 = labware.load('trough-12row', '9')
-bDNA_plate = labware.load('96-flat', '6')
-tiprack_10 = labware.load('tiprack-10ul', '8')
-tiprack_300 = labware.load('opentrons-tiprack-300ul', '11')
+trough = labware.load(trough_name, '7')
+trough_2 = labware.load(trough_name, '9')
+bDNA_plate = labware.load(bDNA_plate_name, '6')
+tiprack_10 = labware.load(tiprack_10_name, '8')
+tiprack_300 = labware.load(tiprack_200_name, '11')
 
 # instruments
 m10 = instruments.P10_Multi(
@@ -33,6 +90,19 @@ Buffer Volume,Sample Volume
 45,5
 90,10
 """
+
+
+def transform_volumes(volume):
+    if volume <= 200:
+        return [volume]
+    else:
+        if volume % 200 >= 30 and volume % 200 <= 200:
+            return [200] * int(volume // 200) + [volume % 200]
+        else:
+            volume_list = [200] * int(volume // 200) + [volume % 200]
+            new_vol = (volume_list.pop(-2) + volume_list.pop(-1)) / 2
+            [volume_list.append(new_vol) for _ in range(2)]
+            return volume_list
 
 
 def csv_to_list(csv_string):
@@ -72,15 +142,16 @@ def run_custom_protocol(
     buffer_volumes = buffer_vols * sample_col_num
     buffer_loc = [col for group in dil_groups for col in group[1:]]
     m300.pick_up_tip()
-    m300.aspirate(300, diluent)
     for vol, col in zip(buffer_volumes, buffer_loc):
-        if m300.current_volume <= vol:
-            if diluent_volume_tracker < vol * 8:
-                diluent = next(diluent)
-                diluent_volume_tracker = diluent.max_volume()
-            m300.aspirate(diluent)
-            diluent_volume_tracker -= vol * 8
-        m300.dispense(vol, col)
+        for new_vol in transform_volumes(vol):
+            if m300.current_volume <= new_vol:
+                if diluent_volume_tracker < new_vol * 8:
+                    diluent = next(diluent)
+                    diluent_volume_tracker = diluent.max_volume()
+                m300.blow_out(diluent.top())
+                m300.aspirate(200, diluent)
+                diluent_volume_tracker -= new_vol * 8
+            m300.dispense(new_vol, col)
     m300.drop_tip()
 
     # serial dilute samples in groups
@@ -98,14 +169,17 @@ def run_custom_protocol(
     # transfer dilent to bDNA plate
     bDNA_dests = bDNA_plate.cols(starting_column, length=sample_col_num * 2)
     m300.pick_up_tip()
+    m300.aspirate(200, diluent_s)
     for col in bDNA_dests:
-        if m300.current_volume <= bDNA_buffer_volume:
-            if diluent_s_volume_tracker < bDNA_buffer_volume * 8:
-                diluent_s = next(diluent_s)
-                diluent_s_volume_tracker = diluent_s.max_volume()
-            m300.aspirate(diluent_s)
-            diluent_s_volume_tracker -= bDNA_buffer_volume * 8
-        m300.dispense(bDNA_buffer_volume, col)
+        for new_vol in transform_volumes(bDNA_buffer_volume):
+            if m300.current_volume <= bDNA_buffer_volume:
+                if diluent_s_volume_tracker < bDNA_buffer_volume * 8:
+                    diluent_s = next(diluent_s)
+                    diluent_s_volume_tracker = diluent_s.max_volume()
+                m300.blow_out(diluent_s.top())
+                m300.aspirate(200, diluent_s)
+                diluent_s_volume_tracker -= bDNA_buffer_volume * 8
+            m300.dispense(new_vol, col)
     m300.drop_tip()
 
     # transfer sample to bDNA plate
