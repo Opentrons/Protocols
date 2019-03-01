@@ -1,52 +1,35 @@
-from opentrons import containers, instruments
+from opentrons import labware, instruments
 from collections import defaultdict
 from otcustomizers import FileInput, StringSelection
-
-metadata = {
-    'protocolName': 'Mass Spec Protocol',
-    'author': 'Opentrons <protocols@opentrons.com>',
-    'source': 'Protocol Library'
-    }
 
 """
 Column A
 """
-trough = containers.load('trough-12row', 'A1')
-single_tip = containers.load('tiprack-200ul', 'A2', 'Single Tips')
+trough = labware.load('trough-12row', '1')
+single_tip = labware.load('tiprack-200ul', '4', 'Single Tips')
 """
 Column B
 """
-multi_tip = containers.load('tiprack-200ul', 'B1', 'Multi Tips')
+multi_tip = labware.load('tiprack-200ul', '5', 'Multi Tips')
 """
 Column C
 """
-plate96 = containers.load('96-deep-well', 'C1')
-plate384 = containers.load('384-plate', 'C1')
 
-tuberack = containers.load('tube-rack-15_50ml', 'C2')
+tuberack = labware.load('tube-rack-15_50ml', '6')
 
 """
 Column D
 """
-liquid_trash = containers.load('trash-box', 'D2', 'Liquid Trash')
-trash = containers.load('trash-box', 'D1', 'Tip Trash')
+liquid_trash = labware.load('trash-box', '3', 'Liquid Trash')
 """
 Instruments
 """
-p300multi = instruments.Pipette(
-    axis='a',
-    name='p300multi',
-    max_volume=300,
-    min_volume=50,
-    channels=8,
+p300multi = instruments.P300_Multi(
+    mount='right',
     tip_racks=[multi_tip])
 
-p100single = instruments.Pipette(
-    axis='b',
-    name='p100single',
-    max_volume=100,
-    min_volume=10,
-    channels=1,
+p50single = instruments.P50_Single(
+    mount='left',
     tip_racks=[single_tip])
 
 """
@@ -122,9 +105,10 @@ def run_custom_protocol(volumes_csv: FileInput=volume_example,
     """
     Check which plate you are using
     """
-    plate = plate384
     if plate_type == '96-flat':
-        plate = plate96
+        plate = labware.load('96-deep-well', '2')
+    else:
+        plate = labware.load('384-plate', '2')
 
     """
     Turns files into dictionaries for volume,
@@ -148,7 +132,7 @@ def run_custom_protocol(volumes_csv: FileInput=volume_example,
             # Now loop through each invidiual cell
             try:
                 # Add a key based on the cell in excel
-                # Each cell row corresponds to a row on the
+                # Each cell row corresponds to a row on the plate
                 vols[col + well*row_len] = float(temp_lines[col][well])
             except (ValueError, TypeError):
                 vols[col + well*row_len] = 0
@@ -192,7 +176,7 @@ def run_custom_protocol(volumes_csv: FileInput=volume_example,
         dest_keys.remove('')  # gets rid of whitespace key
 
     """
-    Part A: Get samples from variously-sized containers
+    Part A: Get samples from variously-sized labware
     into a deep (2.2 mL) 96 well plate:
     Step A1:	Take clean pipette tip for p100 (single channel)
     and move to reagent 1 in the trough; ‘dunk’
@@ -207,23 +191,23 @@ def run_custom_protocol(volumes_csv: FileInput=volume_example,
     Step A4:	Discard pipette tip after sample is transferred
     """
     for sample in dest_keys:
-        p100single.pick_up_tip()
+        p50single.pick_up_tip()
 
-        prewet_tip(p100single)
+        prewet_tip(p50single)
 
-        wash(p100single)
+        wash(p50single)
 
         destination = dest[sample]
 
         volumes = [vols[i] for i in destination]
 
-        p100single.distribute(
+        p50single.distribute(
             volumes,
             tuberack.wells(sources[sample]),
             plate.wells(destination),
             new_tip='never')
 
-        p100single.drop_tip()
+        p50single.drop_tip()
 
     """
     Part B: Dilute each sample up to 1,900 uL using a clean tip
@@ -265,12 +249,12 @@ def run_custom_protocol(volumes_csv: FileInput=volume_example,
                 plate.wells(well),
                 new_tip='never')
             if volume > 1800:
-                p100single.pick_up_tip()
-                prewet_tip(p100single)
-                wash(p100single)
+                p50single.pick_up_tip()
+                prewet_tip(p50single)
+                wash(p50single)
 
-                p100single.transfer(volume-1800, reagent3, plate.wells(well))
-                p100single.drop_tip()
+                p50single.transfer(volume-1800, reagent3, plate.wells(well))
+                p50single.drop_tip()
 
         p300multi.drop_tip()
 
