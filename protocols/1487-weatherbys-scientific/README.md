@@ -4,8 +4,8 @@
 [Opentrons](http://www.opentrons.com/)
 
 ## Categories
-* Molecular Biology
-    * NGS Library Prep
+* NGS Library Prep
+    * Plate Mapping
 
 ## Description
 With this protocol, your robot can transfer four 96-well plates to a single 384-well plate. Layout can be found in Additional Notes.
