@@ -2,6 +2,12 @@ from opentrons import containers, instruments
 from collections import defaultdict
 from otcustomizers import FileInput, StringSelection
 
+metadata = {
+    'protocolName': 'Mass Spec Protocol',
+    'author': 'Opentrons <protocols@opentrons.com>',
+    'source': 'Protocol Library'
+    }
+
 """
 Column A
 """
