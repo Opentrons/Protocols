@@ -55,8 +55,6 @@ def run_custom_protocol(
     p10.blow_out()
     p10.drop_tip()
 
-    robot.clear_commands()
-
     # transfer nuclease-free H2O
     p10.pick_up_tip()
     p10.transfer(
