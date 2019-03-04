@@ -1,6 +1,12 @@
 from opentrons import labware, instruments
 from otcustomizers import StringSelection
 
+metadata = {
+    'protocolName': 'Customizable Serial Dilution',
+    'author': 'Opentrons <protocols@opentrons.com>',
+    'source': 'Protocol Library'
+    }
+
 trough = labware.load('trough-12row', '2')
 
 liquid_trash = trough.wells('A12')
