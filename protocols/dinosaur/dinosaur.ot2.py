@@ -1,6 +1,12 @@
 from opentrons import labware, instruments
 from otcustomizers import StringSelection
 
+metadata = {
+    'protocolName': 'Dinosaur Demo',
+    'author': 'Opentrons <protocols@opentrons.com>',
+    'source': 'Protocol Library'
+    }
+
 # a 12 row trough for sources
 trough = labware.load('trough-12row', 8)
 
