@@ -55,4 +55,5 @@ def run_custom_protocol(
     # order convention
     plate_loc = [well for row in plate.rows() for well in row]
 
-    p50.transfer(volumes, plate_loc, target, new_tips='always')
+    for vol, loc in zip(volumes, plate_loc):
+        p50.transfer(vol, loc, target)
