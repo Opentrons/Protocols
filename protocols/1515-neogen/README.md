@@ -8,7 +8,7 @@
     * Plate filling
 
 ## Description
-This protocol performs performs standard liquid transfer from a 12-row trough to a user specified number of custom 96-well deep plates. The entire protocol uses the same tips throughout the process. The protocol can handle volumes from 5-300µl assuming the user has both p50 and p300 Opentrons electronic pipettes.
+This protocol performs standard liquid transfer from a 12-row trough to a user specified number of custom 96-well deep plates. The entire protocol uses the same tips throughout the process. The protocol can handle volumes from 5-300µl assuming the user has both p50 and p300 Opentrons electronic pipettes.
 
 ---
 
@@ -17,9 +17,6 @@ You will need:
 * [p300 8-channel pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette?variant=5984202457117)
 * [Opentrons 300uL Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
 * [12-row trough](https://www.usascientific.com/12-channel-automation-reservoir.aspx)
-
-### Time Estimate
-30 minutes
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
