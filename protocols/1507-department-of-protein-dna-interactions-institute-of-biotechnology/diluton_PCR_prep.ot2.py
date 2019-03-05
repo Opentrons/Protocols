@@ -61,17 +61,32 @@ m10.transfer(2,
              mix_after=(3, 10))
 
 
-def run_custom_protocol(water_vol=4,
-                        qPCR_mm_vol=7.5,
-                        oligo1_vol=0.75,
-                        oligo2_vol=0.75,
-                        DNA_sample_vol=2):
+def run_custom_protocol(water_vol: float = 4,
+                        qPCR_mm_vol: float = 7.5,
+                        oligo1_vol: float = 0.75,
+                        oligo2_vol: float = 0.75,
+                        DNA_sample_vol: float = 2):
 
     # create reaction mix for 52 samples (extra volume for 48 samples)
-    p50.transfer(water_vol*52, water, mix.top(), mix_after=(3, 50))
-    p50.transfer(qPCR_mm_vol*52, qPCR_mm, mix.top(), mix_after=(3, 50))
-    p50.transfer(oligo1_vol*52, oligo1, mix.top(), mix_after=(3, 50))
-    p50.transfer(oligo2_vol*52, oligo2, mix.top(), mix_after=(3, 50))
+    p50.pick_up_tip()
+    p50.transfer(water_vol*52, water, mix.top(), new_tip='never')
+    p50.mix(3, 50, mix)
+    p50.drop_tip()
+
+    p50.pick_up_tip()
+    p50.transfer(qPCR_mm_vol*52, qPCR_mm, mix.top(), new_tip='never')
+    p50.mix(3, 50, mix)
+    p50.drop_tip()
+
+    p50.pick_up_tip()
+    p50.transfer(oligo1_vol*52, oligo1, mix.top(), new_tip='never')
+    p50.mix(3, 50, mix)
+    p50.drop_tip()
+
+    p50.pick_up_tip()
+    p50.transfer(oligo2_vol*52, oligo2, mix.top(), new_tip='never')
+    p50.mix(3, 50, mix)
+    p50.drop_tip()
 
     # transfer composed mix to all 48 wells of right block rack
     total_mix_vol = water_vol + qPCR_mm_vol + oligo1_vol + oligo2_vol
@@ -83,5 +98,10 @@ def run_custom_protocol(water_vol=4,
         origin = pcr_strips.rows['A'][well_num]
         dest1 = block.rows['A'][ind]
         dest2 = block.rows['A'][ind+4]
-        m10.transfer(2, origin, dest1, blow_out=True, mix_after=(5, 5))
-        m10.transfer(2, origin, dest2, blow_out=True, mix_after=(5, 5))
+        d = [dest1, dest2]
+        for dest in d:
+            m10.pick_up_tip()
+            m10.transfer(2, origin, dest, new_tip='never')
+            m10.blow_out()
+            m10.mix(5, 5)
+            m10.drop_tip()

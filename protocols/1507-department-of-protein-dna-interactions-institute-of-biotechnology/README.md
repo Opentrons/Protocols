@@ -25,9 +25,6 @@ You will need:
 * [4x6 2ml Tube Rack](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)
 * [96-well Aluminum block](https://shop.opentrons.com/collections/hardware-modules/products/aluminum-block-set) (or equivalent for seating 8-strip PCR tubes)
 
-### Time Estimate
-30 minutes
-
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
 
