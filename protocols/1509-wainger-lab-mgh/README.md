@@ -18,9 +18,6 @@ You will need:
 * [12-row trough](https://www.usascientific.com/12-channel-automation-reservoir.aspx)
 * Standard 96-well flat PCR plate
 
-### Time Estimate
-30 minutes
-
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
 
