@@ -18,10 +18,6 @@ You will need:
 * [1.5ml Microfuge Tubes](https://www.fishersci.co.uk/shop/products/product/11558232)
 * [10µl Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
 
-
-### Time Estimate
-30 minutes
-
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
 
