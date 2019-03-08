@@ -10,7 +10,7 @@ trash = containers.load('trash-box', 'B2', 'trash')
 
 
 def run_custom_protocol(
-        well_volume: float = 1.0,
+        well_volume: float = 50.0,
         reagent_well: StringSelection(
             'A1', 'A2', 'A3', 'A4', 'A5', 'A6',
             'A7', 'A8', 'A9', 'A10', 'A11', 'A12') = 'A1',
