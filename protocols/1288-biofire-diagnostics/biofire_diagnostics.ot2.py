@@ -33,7 +33,7 @@ p2 = instruments.P300_Multi(
 def run_custom_protocol(
         reagent_volume: float=1000):
 
-    tip_loc = [col for plate in plates for col in plate.cols()]
+    tip_loc = [col for tiprack in tipracks for col in tiprack.cols()]
     plate_loc = [col for plate in plates for col in plate.cols()]
 
     for index, (col_1, col_2) in enumerate(zip(
