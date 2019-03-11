@@ -3,7 +3,7 @@ from inspect import signature, Parameter
 import time
 import sys
 from opentrons import robot, labware, modules
-from opentrons.instruments import Pipette as BasePipette
+from opentrons.legacy_api.instruments import Pipette as BasePipette
 
 all_labware = []
 all_modules = []
