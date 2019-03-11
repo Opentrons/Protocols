@@ -14,8 +14,8 @@ def run_custom_protocol(
         reagent_well: StringSelection(
             'A1', 'A2', 'A3', 'A4', 'A5', 'A6',
             'A7', 'A8', 'A9', 'A10', 'A11', 'A12') = 'A1',
-        plate_starting_column: str = '1',
-        number_of_columns_to_fill: int = 24,
+        plate_starting_row: str = '1',
+        number_of_rows_to_fill: int = 24,
         pipette_type: StringSelection('p300-Single', 'p50-Single',
                                       'p10-Single', 'p300-Multi', 'p50-Multi',
                                       'p10-Multi', 'p200-Single',
@@ -23,9 +23,9 @@ def run_custom_protocol(
         mix_reagent_before_transfer: StringSelection(
             'True', 'False') = 'True'):
 
-    if int(plate_starting_column) <= 0 or int(plate_starting_column) > 24:
+    if int(plate_starting_row) <= 0 or int(plate_starting_row) > 24:
         raise Exception("Plate starting column number must be 1-24.")
-    if (int(plate_starting_column) + number_of_columns_to_fill) > 25:
+    if (int(plate_starting_row) + number_of_rows_to_fill) > 25:
         raise Exception("Number of columns to fill exceeds plate's limit.")
 
     if mix_reagent_before_transfer == 'False':
@@ -60,17 +60,17 @@ def run_custom_protocol(
         channels=chan,
         trash_container=trash)
 
-    alternating_wells = []
-    for row in plate.rows():
-        if pip_name[1] == 'Multi':
+    if pip_name[1] == 'Multi':
+        alternating_wells = []
+        for row in plate.rows(plate_starting_row, to='24'):
             alternating_wells.append(row.wells('A'))
             alternating_wells.append(row.wells('B'))
-        else:
-            alternating_wells.append(row.wells('A', length=8, step=2))
-            alternating_wells.append(row.wells('B', length=8, step=2))
+        dests = alternating_wells[:number_of_rows_to_fill * 2]
+    else:
+        dests = plate.rows(plate_starting_row, length=number_of_rows_to_fill)
 
     pipette.distribute(
         well_volume,
         trough.wells(reagent_well),
-        alternating_wells,
+        dests,
         mix_before=(mix_times, pipette.max_volume))
