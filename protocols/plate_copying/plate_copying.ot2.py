@@ -4,10 +4,7 @@ from otcustomizers import StringSelection
 
 source_slot = '6'
 
-dest_slots = [
-    '1',
-    '2', '3', '4', '5',
-    '7', '8', '9']
+dest_slots = ['1', '2', '3', '4', '5', '7', '8', '9']
 
 
 # TODO: optimize so that you only use 1 tiprack and can use an extra container,
@@ -44,9 +41,8 @@ def run_custom_protocol(
         number_of_destination_plates: int=4):
 
     # Load labware
-    all_dest_plates = [
-        labware.load(destination_container, slotName)
-        for slotName in dest_slots]
+    all_dest_plates = [labware.load(destination_container, slotName)
+                       for slotName in dest_slots]
 
     source_plate = labware.load(source_container, source_slot)
 
@@ -57,29 +53,22 @@ def run_custom_protocol(
             ' You entered "{}" and "{}"'.format(
                 source_container, destination_container))
 
-    row_count = len(all_dest_plates[0].rows())
+    col_count = len(all_dest_plates[0].cols())
     dest_plates = all_dest_plates[:number_of_destination_plates]
 
-    # fill row 1 for all plates, then row 2 for all plates, etc
-    for row_index in range(row_count):
+    for col_index in range(col_count):
         if destination_container == '384-plate':
-            # Use "alternating wells" trick for 8-channel in 384 plate
-            dest_wells = [
-                row
-                for plate in dest_plates
-                for row in alternating_wells(plate, row_index)]
+            dest_wells = [[plate.cols(col_index).wells(well_index)
+                          for plate in dest_plates] for well_index in range(2)]
+            source_wells = [source_plate.cols(col_index).wells(well_index)
+                            for well_index in range(2)]
 
-            source_wells = alternating_wells(source_plate, row_index)
-
+            for source, dest in zip(source_wells, dest_wells):
+                p50multi.distribute(
+                    transfer_volume, source, dest, disposal_vol=0)
         else:
-            dest_wells = [plate.rows(row_index) for plate in dest_plates]
+            dest_wells = [plate.cols(col_index) for plate in dest_plates]
+            source_well = source_plate.cols(col_index)
 
-            source_wells = source_plate.rows(row_index)
-
-        p50multi.distribute(
-            transfer_volume,
-            source_wells,
-            dest_wells,
-            touch_tip=True,
-            disposal_vol=0
-        )
+            p50multi.distribute(
+                transfer_volume, source_well, dest_wells, disposal_vol=0)
