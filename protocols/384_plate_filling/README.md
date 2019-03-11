@@ -7,7 +7,7 @@
 
 ## Categories
 * Basic Pipetting
-		* Plate Filling
+    * Plate Filling
 
 ## Description
 With this protocol, your robot can fill each well of a 384-well plate from a source 12-row trough using any sized pipette from
