@@ -50,7 +50,7 @@ def prepare_dirs(
 def build_protocol_library():
     parser = configure_parser()
     parsed_input = parser.parse_args()
-    PROTOCOLS_BUILD_DIR = os.path.join(tempfile.gettempdir(), 'proto-builds')
+    PROTOCOLS_BUILD_DIR = os.path.join(tempfile.gettempdir(), 'protoBuilds')
     PROTOCOLS_RELEASE_DIR = parsed_input.library_output_path
 
     print('preparing build & release dirs...')
