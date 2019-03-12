@@ -1,0 +1,1 @@
+{"slug": "bca_protein_assay", "path": "protocols/bca_protein_assay", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["bca_protein_assay.ot1.py"], "OT 2 protocol": []}, "status": "ok"}

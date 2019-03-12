@@ -1,0 +1,1 @@
+{"slug": "drug_media_setup", "path": "protocols/drug_media_setup", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["drug_media_setup.ot1.py"], "OT 2 protocol": ["drug_media_setup.ot2.py"]}, "status": "ok"}
