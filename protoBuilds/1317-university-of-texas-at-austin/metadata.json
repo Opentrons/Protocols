@@ -1,0 +1,1 @@
+{"slug": "1317-university-of-texas-at-austin", "path": "protocols/1317-university-of-texas-at-austin", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["pcr_qpcr_prep.ot1.py"], "OT 2 protocol": []}, "status": "ok"}

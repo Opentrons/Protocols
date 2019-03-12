@@ -1,0 +1,1 @@
+{"slug": "1251-california-polytechnic-state-university-slo", "path": "protocols/1251-california-polytechnic-state-university-slo", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["cell-free_protein_synthesis_reaction_setup.ot2.py"]}, "status": "ok"}

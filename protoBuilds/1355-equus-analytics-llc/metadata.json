@@ -1,0 +1,1 @@
+{"slug": "1355-equus-analytics-llc", "path": "protocols/1355-equus-analytics-llc", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["qpcr.ot2.py"]}, "status": "ok"}

@@ -1,0 +1,1 @@
+{"slug": "1328-wuest-lab-at-emory-university", "path": "protocols/1328-wuest-lab-at-emory-university", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["Wuest_Lab_2018-11-12.ot2.py"]}, "status": "ok"}

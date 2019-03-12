@@ -1,0 +1,1 @@
+{"slug": "University_of_Vermont", "path": "protocols/University_of_Vermont", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["protein_quantification.ot2.py"]}, "status": "ok"}

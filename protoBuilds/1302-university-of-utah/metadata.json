@@ -1,0 +1,1 @@
+{"slug": "1302-university-of-utah", "path": "protocols/1302-university-of-utah", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["multiplexing.ot2.py"]}, "status": "ok"}

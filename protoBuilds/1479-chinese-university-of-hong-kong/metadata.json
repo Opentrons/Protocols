@@ -1,0 +1,1 @@
+{"slug": "1479-chinese-university-of-hong-kong", "path": "protocols/1479-chinese-university-of-hong-kong", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["dna_concentration_normalization.ot2.py"]}, "status": "ok"}

@@ -1,0 +1,1 @@
+{"slug": "Clear_Gene", "path": "protocols/Clear_Gene", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["pcr-qpcr_clear-gene.ot2.py"]}, "status": "ok"}

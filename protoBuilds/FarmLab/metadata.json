@@ -1,0 +1,1 @@
+{"slug": "FarmLab", "path": "protocols/FarmLab", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["farmlab_20190111.ot2.py"]}, "status": "ok"}

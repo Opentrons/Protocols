@@ -1,0 +1,1 @@
+{"slug": "1510-ingenza-ltd-part1", "path": "protocols/1510-ingenza-ltd-part1", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["part-linker_fusion.ot2.py"]}, "status": "ok"}

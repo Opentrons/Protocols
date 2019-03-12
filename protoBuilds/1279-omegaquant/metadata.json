@@ -1,0 +1,1 @@
+{"slug": "1279-omegaquant", "path": "protocols/1279-omegaquant", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["one-solution_fames_omegaquant.ot2.py"]}, "status": "ok"}

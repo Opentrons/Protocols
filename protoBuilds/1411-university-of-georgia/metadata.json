@@ -1,0 +1,1 @@
+{"slug": "1411-university-of-georgia", "path": "protocols/1411-university-of-georgia", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["cell_seeding.ot2.py"]}, "status": "ok"}

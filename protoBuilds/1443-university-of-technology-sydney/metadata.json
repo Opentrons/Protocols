@@ -1,0 +1,1 @@
+{"slug": "1443-university-of-technology-sydney", "path": "protocols/1443-university-of-technology-sydney", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["nucleic_acid_quantification.ot2.py"]}, "status": "ok"}

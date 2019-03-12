@@ -1,0 +1,1 @@
+{"slug": "1444-s-computing-research-unit-uct-part-1", "path": "protocols/1444-s-computing-research-unit-uct-part-1", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["antibody_setup.ot2.py"]}, "status": "ok"}

@@ -1,0 +1,1 @@
+{"slug": "1477-university-of-alberta", "path": "protocols/1477-university-of-alberta", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["multiple_sample_transfer.ot2.py"]}, "status": "ok"}

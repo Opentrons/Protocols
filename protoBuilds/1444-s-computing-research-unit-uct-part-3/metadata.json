@@ -1,0 +1,1 @@
+{"slug": "1444-s-computing-research-unit-uct-part-3", "path": "protocols/1444-s-computing-research-unit-uct-part-3", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["assay_setup.ot2.py"]}, "status": "ok"}

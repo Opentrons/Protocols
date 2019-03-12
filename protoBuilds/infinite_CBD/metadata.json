@@ -1,0 +1,1 @@
+{"slug": "infinite_CBD", "path": "protocols/infinite_CBD", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["capsule_filling.ot2.py"]}, "status": "ok"}

@@ -1,0 +1,1 @@
+{"slug": "1407-captor-therapeutics", "path": "protocols/1407-captor-therapeutics", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["compound_serial_dilution.ot2.py"]}, "status": "ok"}

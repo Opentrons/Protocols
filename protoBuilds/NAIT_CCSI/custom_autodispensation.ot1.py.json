@@ -1,0 +1,1 @@
+{"instruments": [{"name": "Pipette", "axis": "b", "channels": 1, "type": "pipette", "min_volume": 0, "max_volume": 10}], "containers": [{"type": "new_custom_tray", "slot": "A1", "name": "new_custom_tray"}, {"type": "trash-box", "slot": "C2", "name": "trash-box"}], "parameters": []}
