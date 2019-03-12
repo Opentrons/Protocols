@@ -13,7 +13,7 @@ make setup
 
 # Generating derived data
 
-To speed up CI, we commit the results of these parsers to git. To run all the parsers in parallel, do:
+To speed up CI, we commit the results of these parsers to git. To run all the parsers in parallel, go to the repository root and from there, do:
 
 `make all -j`
 
