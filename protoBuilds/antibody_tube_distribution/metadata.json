@@ -1,0 +1,1 @@
+{"slug": "antibody_tube_distribution", "path": "protocols/antibody_tube_distribution", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["antibody_tube_distribution.ot1.py"], "OT 2 protocol": ["antibody_tube_distribution.ot2.py"]}, "status": "ok"}

@@ -3,7 +3,7 @@ import sys
 
 PROTOCOL_DIR = 'protocols'
 RELEASES_DIR = 'releases'
-PROTOCOLS_BUILD_DIR = os.path.join(RELEASES_DIR, 'proto-builds')
+PROTOCOLS_BUILD_DIR = 'protoBuilds'
 ARGS = sys.argv[2::]
 
 
