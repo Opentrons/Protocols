@@ -4,7 +4,7 @@ MONOREPO_URI := https://github.com/Opentrons/opentrons.git
 OT1_VERSION := 2.5.2
 OT2_VERSION_TAG := v3.7.0
 OT2_MONOREPO_DIR := ot2monorepoClone
-
+OT1_TEMP_DIR := ot1temp
 # Parsers output to here
 BUILD_DIR := protoBuilds
 
@@ -12,11 +12,11 @@ BUILD_DIR := protoBuilds
 # on the top protocol folder level
 IGNORED_INPUT_PATHS := $(addsuffix %, $(dir $(wildcard protocols/*/.ignore)))
 
-OT1_INPUT_FILES_UNFILTERED := $(shell find protocols/ -type f -name '*.ot1.py')
+OT1_INPUT_FILES_UNFILTERED := $(shell find protocols -type f -name '*.ot1.py')
 OT1_INPUT_FILES := $(filter-out $(IGNORED_INPUT_PATHS), $(OT1_INPUT_FILES_UNFILTERED))
 OT1_OUTPUT_FILES := $(patsubst protocols/%.ot1.py, $(BUILD_DIR)/%.ot1.py.json, $(OT1_INPUT_FILES))
 
-OT2_INPUT_FILES_UNFILTERED := $(shell find protocols/ -type f -name '*.ot2.py')
+OT2_INPUT_FILES_UNFILTERED := $(shell find protocols -type f -name '*.ot2.py')
 OT2_INPUT_FILES := $(filter-out $(IGNORED_INPUT_PATHS), $(OT2_INPUT_FILES_UNFILTERED))
 OT2_OUTPUT_FILES := $(patsubst protocols/%.ot2.py, $(BUILD_DIR)/%.ot2.py.json, $(OT2_INPUT_FILES))
 
@@ -34,19 +34,15 @@ setup:
 	$(MAKE) venvs/ot1 venvs/ot2
 
 venvs/ot1:
-	mkdir venvs -p
+	mkdir -p venvs
 	virtualenv venvs/ot1
 	source venvs/ot1/bin/activate && \
 	pip install opentrons==$(OT1_VERSION) && \
 	pip install -e otcustomizers && \
 	deactivate
 
-.PHONY: parse-errors
-parse-errors:
-	python protolib2/traverse_errors.py
-
 venvs/ot2:
-	mkdir venvs -p
+	mkdir -p venvs
 	virtualenv venvs/ot2
 	source venvs/ot2/bin/activate && \
 	pip install -e otcustomizers && \
@@ -57,22 +53,25 @@ venvs/ot2:
 	popd && \
 	deactivate
 
+.PHONY: parse-errors
+parse-errors:
+	python protolib2/traverse_errors.py
+
 # TODO: Ian 2019-03-11 maybe ot1 can be parallelized somehow.
 # right now it deletes `configurations.json` and runs into race conditions
 # deleting that file after another process just deleted it
 .PHONY: parse-ot1
-.NOTPARALLEL: parse-ot1
-parse-ot1: venvs/ot1 $(OT1_OUTPUT_FILES)
+parse-ot1: $(OT1_OUTPUT_FILES)
 
 # Parse all OT1 python files
 $(BUILD_DIR)/%.ot1.py.json: protocols/%.ot1.py
 	mkdir -p $(dir $@)
 	source venvs/ot1/bin/activate && \
-	python protolib2/parse/parseOT1.py $< $@ && \
+	APP_DATA_DIR=$(OT1_TEMP_DIR)/$@ python protolib2/parse/parseOT1.py $< $@ && \
 	deactivate
 
 .PHONY: parse-ot2
-parse-ot2: venvs/ot2 $(OT2_OUTPUT_FILES)
+parse-ot2: $(OT2_OUTPUT_FILES)
 
 # Parse all OT2 python files
 # Note: OVERRIDE_SETTINGS_DIR must be set to use opentrons v3
@@ -93,7 +92,7 @@ clean:
 
 .PHONY: teardown
 teardown:
-	rm -rf $(OT2_MONOREPO_DIR) venvs
+	rm -rf $(OT2_MONOREPO_DIR) venvs $(OT1_TEMP_DIR)
 
 # Take all files in BUILD_DIR and make a single zipped JSON
 .PHONY: build
