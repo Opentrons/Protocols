@@ -25,6 +25,7 @@ script:
 # Deploy the build version in an S3 bucket
 deploy:
   provider: s3
+  region: us-west-2
   access_key_id: $AWS_ACCESS_KEY
   secret_access_key: $AWS_SECRET_KEY
   bucket: protocol-library-builds
