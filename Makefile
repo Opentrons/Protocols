@@ -89,11 +89,11 @@ parse-README:
 
 .PHONY: clean
 clean:
-	rm -rf $(OT2_MONOREPO_DIR) venvs
+	rm -rf $(BUILD_DIR)
 
 .PHONY: teardown
 teardown:
-	rm -rf $(BUILD_DIR)
+	rm -rf $(OT2_MONOREPO_DIR) venvs
 
 # Take all files in BUILD_DIR and make a single zipped JSON
 .PHONY: build
