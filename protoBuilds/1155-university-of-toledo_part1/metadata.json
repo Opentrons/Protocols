@@ -1,0 +1,1 @@
+{"slug": "1155-university-of-toledo_part1", "path": "protocols/1155-university-of-toledo_part1", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["MTT_part1.ot2.py"]}, "status": "ok"}

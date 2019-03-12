@@ -1,0 +1,1 @@
+{"slug": "1309-md-anderson-cancer-center", "path": "protocols/1309-md-anderson-cancer-center", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["flow_cytometry.ot2.py"]}, "status": "ok"}

@@ -1,0 +1,1 @@
+{"slug": "1358-andersen-lab-northwestern-university-part2", "path": "protocols/1358-andersen-lab-northwestern-university-part2", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["nebnext_ultra_II_part2.ot2.py"]}, "status": "ok"}

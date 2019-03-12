@@ -1,0 +1,1 @@
+{"slug": "1521-Technion-Israel-Institute-of-Technology", "path": "protocols/1521-Technion-Israel-Institute-of-Technology", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["cell_culture_assay.ot1.py"], "OT 2 protocol": []}, "status": "ok"}

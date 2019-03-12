@@ -1,0 +1,1 @@
+{"slug": "1501-pennington-biomedical", "path": "protocols/1501-pennington-biomedical", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["BCA_assay.ot2.py"]}, "status": "ok"}

@@ -1,0 +1,1 @@
+{"slug": "1489-biosyntagma", "path": "protocols/1489-biosyntagma", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["pcr_prep.ot1.py"], "OT 2 protocol": []}, "status": "ok"}

@@ -1,0 +1,1 @@
+{"slug": "1223-lsbg-ibi-sv-epfl-part1", "path": "protocols/1223-lsbg-ibi-sv-epfl-part1", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["rna_quantification.ot2.py"]}, "status": "ok"}

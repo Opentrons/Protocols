@@ -1,0 +1,1 @@
+{"slug": "1075-adverum-biotechnologies", "path": "protocols/1075-adverum-biotechnologies", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["qpcr_averum_biotechnologies.ot2.py"]}, "status": "ok"}

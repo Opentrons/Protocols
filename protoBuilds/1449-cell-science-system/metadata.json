@@ -1,0 +1,1 @@
+{"slug": "1449-cell-science-system", "path": "protocols/1449-cell-science-system", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["cell_science_20181114.ot2.py"]}, "status": "ok"}

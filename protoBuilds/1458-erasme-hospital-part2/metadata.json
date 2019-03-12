@@ -1,0 +1,1 @@
+{"slug": "1458-erasme-hospital-part2", "path": "protocols/1458-erasme-hospital-part2", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["QIAseq_targeted_DNA_panel-part2.ot2.py"]}, "status": "ok"}

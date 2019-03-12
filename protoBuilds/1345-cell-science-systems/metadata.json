@@ -1,0 +1,1 @@
+{"slug": "1345-cell-science-systems", "path": "protocols/1345-cell-science-systems", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["multiple_plate_filling.ot2.py"]}, "status": "ok"}

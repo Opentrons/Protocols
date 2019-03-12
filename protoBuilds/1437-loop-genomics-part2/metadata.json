@@ -1,0 +1,1 @@
+{"slug": "1437-loop-genomics-part2", "path": "protocols/1437-loop-genomics-part2", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["tube_distribution.ot2.py"]}, "status": "ok"}
