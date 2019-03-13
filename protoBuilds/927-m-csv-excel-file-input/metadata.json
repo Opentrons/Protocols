@@ -1,0 +1,1 @@
+{"slug": "927-m-csv-excel-file-input", "path": "protocols/927-m-csv-excel-file-input", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["plate_normalization.ot2.py"]}, "status": "ok"}

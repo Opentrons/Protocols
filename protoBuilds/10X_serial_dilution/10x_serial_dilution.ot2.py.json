@@ -1,0 +1,1 @@
+{"instruments": [{"name": "p300_multi_v1", "mount": "left"}], "labware": [], "modules": [], "parameters": [{"name": "final_volume", "annotation": {"type": "float"}, "default": 200}]}

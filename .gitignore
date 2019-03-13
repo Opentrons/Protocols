@@ -23,6 +23,7 @@ __pycache__/
 .Python
 venvs/
 ot2monorepoClone/
+ot1temp/
 build/
 develop-eggs/
 dist/

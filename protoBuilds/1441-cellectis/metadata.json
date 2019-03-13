@@ -1,0 +1,1 @@
+{"slug": "1441-cellectis", "path": "protocols/1441-cellectis", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["pcr_prep_using_csv.ot2.py"]}, "status": "ok"}

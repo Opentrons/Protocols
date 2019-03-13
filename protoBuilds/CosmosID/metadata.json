@@ -1,0 +1,1 @@
+{"slug": "CosmosID", "path": "protocols/CosmosID", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["ionIonXpress_Library_Prep.ot2.py"]}, "status": "ok"}

@@ -1,0 +1,1 @@
+{"slug": "882-agenus-bio", "path": "protocols/882-agenus-bio", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["csv_agenus-bio.ot2.py"]}, "status": "ok"}

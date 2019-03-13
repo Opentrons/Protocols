@@ -1,0 +1,1 @@
+{"slug": "1494-uppsala-university", "path": "protocols/1494-uppsala-university", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["cell_painting.ot2.py"]}, "status": "ok"}

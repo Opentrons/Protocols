@@ -1,0 +1,1 @@
+{"slug": "1318-university-of-texas-at-dallas", "path": "protocols/1318-university-of-texas-at-dallas", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["serial_dilution_CFU_quantification.ot2.py"]}, "status": "ok"}

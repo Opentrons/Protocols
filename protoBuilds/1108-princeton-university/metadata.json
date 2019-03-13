@@ -1,0 +1,1 @@
+{"slug": "1108-princeton-university", "path": "protocols/1108-princeton-university", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["mrna_extraction_using_dynabeads.ot2.py"]}, "status": "ok"}

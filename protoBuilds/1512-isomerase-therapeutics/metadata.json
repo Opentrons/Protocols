@@ -1,0 +1,1 @@
+{"slug": "1512-isomerase-therapeutics", "path": "protocols/1512-isomerase-therapeutics", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["dreamtaq_colony_PCR.ot2.py"]}, "status": "ok"}

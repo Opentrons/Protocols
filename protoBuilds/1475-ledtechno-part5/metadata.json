@@ -1,0 +1,1 @@
+{"slug": "1475-ledtechno-part5", "path": "protocols/1475-ledtechno-part5", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["ELISA_assay_part5.ot1.py"], "OT 2 protocol": []}, "status": "ok"}

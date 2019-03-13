@@ -1,0 +1,1 @@
+{"slug": "IFIN", "path": "protocols/IFIN", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["enzyme_activity.ot1.py"], "OT 2 protocol": []}, "status": "ok"}

@@ -1,0 +1,1 @@
+{"slug": "1376-arold-lab-kaust-part2", "path": "protocols/1376-arold-lab-kaust-part2", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["kinase_assay_part2.ot2.py"]}, "status": "ok"}

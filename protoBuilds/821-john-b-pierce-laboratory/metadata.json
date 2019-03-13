@@ -1,0 +1,1 @@
+{"slug": "821-john-b-pierce-laboratory", "path": "protocols/821-john-b-pierce-laboratory", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["Mag-Bind_Ultra_Pure_Plasmid_Kit.ot2.py"]}, "status": "ok"}

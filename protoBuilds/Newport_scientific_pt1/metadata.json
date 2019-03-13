@@ -1,0 +1,1 @@
+{"slug": "Newport_scientific_pt1", "path": "protocols/Newport_scientific_pt1", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["LCMS_bioassay_part1.ot2.py"]}, "status": "ok"}

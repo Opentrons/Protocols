@@ -1,0 +1,1 @@
+{"slug": "1028-mousenor-inc", "path": "protocols/1028-mousenor-inc", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["odorant_screening.ot2.py"]}, "status": "ok"}

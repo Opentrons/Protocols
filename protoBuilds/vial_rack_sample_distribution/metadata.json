@@ -1,0 +1,1 @@
+{"slug": "vial_rack_sample_distribution", "path": "protocols/vial_rack_sample_distribution", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["vial_rack_sample_distribution.ot1.py"], "OT 2 protocol": []}, "status": "ok"}

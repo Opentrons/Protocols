@@ -1,0 +1,1 @@
+{"slug": "liquid_handler_part3", "path": "protocols/liquid_handler_part3", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["liquid_handler_part3.ot2.py"]}, "status": "ok"}

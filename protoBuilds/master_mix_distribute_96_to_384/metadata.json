@@ -1,0 +1,1 @@
+{"slug": "master_mix_distribute_96_to_384", "path": "protocols/master_mix_distribute_96_to_384", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["master_mix_distribute.ot1.py"], "OT 2 protocol": ["master_mix_distribute_96_to_384.ot2.py"]}, "status": "ok"}

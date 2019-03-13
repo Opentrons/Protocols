@@ -1,0 +1,1 @@
+{"slug": "1493-clinical-pharmacology-analytical-laboratory-jhu", "path": "protocols/1493-clinical-pharmacology-analytical-laboratory-jhu", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["pcr_qpcr_prep.ot2.py"]}, "status": "ok"}

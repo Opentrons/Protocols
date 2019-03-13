@@ -1,0 +1,1 @@
+{"slug": "1430-ucsf", "path": "protocols/1430-ucsf", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["drug_screening.ot2.py"]}, "status": "ok"}
