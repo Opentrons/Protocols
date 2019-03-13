@@ -1,0 +1,1 @@
+{"slug": "dinosaur", "path": "protocols/dinosaur", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["dinosaur.ot1.py"], "OT 2 protocol": ["dinosaur.ot2.py"]}, "status": "ok"}

@@ -1,0 +1,1 @@
+{"slug": "qubit_dna_quantification_pt2", "path": "protocols/qubit_dna_quantification_pt2", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["sample_to_qubit.ot1.py"], "OT 2 protocol": []}, "status": "ok"}
