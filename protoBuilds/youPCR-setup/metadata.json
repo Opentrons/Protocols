@@ -1,0 +1,1 @@
+{"slug": "youPCR-setup", "path": "protocols/youPCR-setup", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["youPCR-setup.ot1.py"], "OT 2 protocol": []}, "status": "ok"}

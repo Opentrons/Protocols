@@ -1,0 +1,1 @@
+{"slug": "1431-bloodcenter-of-wi", "path": "protocols/1431-bloodcenter-of-wi", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["cleanlab.ot2.py"]}, "status": "ok"}

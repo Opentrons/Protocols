@@ -1,0 +1,1 @@
+{"slug": "cell_culture_wash", "path": "protocols/cell_culture_wash", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["cell_culture_wash.ot1.py"], "OT 2 protocol": []}, "status": "ok"}

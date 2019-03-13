@@ -1,0 +1,1 @@
+{"slug": "CDG_Biotech_Corp", "path": "protocols/CDG_Biotech_Corp", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["cdg_biotech_20180730.ot2.py"]}, "status": "ok"}

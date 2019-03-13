@@ -1,0 +1,1 @@
+{"slug": "1513-university-of-california-santa-cruz", "path": "protocols/1513-university-of-california-santa-cruz", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["magbead_based_immunoprecipitation.ot2.py"]}, "status": "ok"}

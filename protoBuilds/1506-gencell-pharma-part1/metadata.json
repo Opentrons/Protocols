@@ -1,0 +1,1 @@
+{"slug": "1506-gencell-pharma-part1", "path": "protocols/1506-gencell-pharma-part1", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["digestion_mix_prep.ot2.py"]}, "status": "ok"}

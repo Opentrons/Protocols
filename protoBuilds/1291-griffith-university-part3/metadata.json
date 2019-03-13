@@ -1,0 +1,1 @@
+{"slug": "1291-griffith-university-part3", "path": "protocols/1291-griffith-university-part3", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["cell_culture_part3.ot2.py"]}, "status": "ok"}

@@ -1,0 +1,1 @@
+{"slug": "Emory_University_School_of_Medicine", "path": "protocols/Emory_University_School_of_Medicine", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["fp_ligand_competition.ot2.py"]}, "status": "ok"}

@@ -1,0 +1,1 @@
+{"slug": "1216-enginzyme-ab", "path": "protocols/1216-enginzyme-ab", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["plate_filling_using_csv.ot2.py"]}, "status": "ok"}

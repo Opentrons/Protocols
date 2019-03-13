@@ -1,0 +1,1 @@
+{"slug": "PCR_Prep_Multiple_Plates", "path": "protocols/PCR_Prep_Multiple_Plates", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["PCR_Prep_2017-12-5.ot1.py"], "OT 2 protocol": []}, "status": "ok"}

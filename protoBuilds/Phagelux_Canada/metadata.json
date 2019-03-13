@@ -1,0 +1,1 @@
+{"slug": "Phagelux_Canada", "path": "protocols/Phagelux_Canada", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["sterile_workflow.ot1.py"], "OT 2 protocol": []}, "status": "ok"}

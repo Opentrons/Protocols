@@ -1,0 +1,1 @@
+{"slug": "1463-soteria-biotherapeutics", "path": "protocols/1463-soteria-biotherapeutics", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["sterile_workflow.ot2.py"]}, "status": "ok"}

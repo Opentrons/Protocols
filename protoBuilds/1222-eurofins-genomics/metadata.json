@@ -1,0 +1,1 @@
+{"slug": "1222-eurofins-genomics", "path": "protocols/1222-eurofins-genomics", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["filling_384_well_plate.ot2.py"]}, "status": "ok"}

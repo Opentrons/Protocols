@@ -1,0 +1,1 @@
+{"slug": "omega_biotek_magbind_totalpure_NGS", "path": "protocols/omega_biotek_magbind_totalpure_NGS", "flags": {"feature": true, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["OmegaMagBind.ot2.py"]}, "status": "ok"}

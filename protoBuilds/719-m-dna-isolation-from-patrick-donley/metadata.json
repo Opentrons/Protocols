@@ -1,0 +1,1 @@
+{"slug": "719-m-dna-isolation-from-patrick-donley", "path": "protocols/719-m-dna-isolation-from-patrick-donley", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["dna_isolation_duke.ot2.py"]}, "status": "ok"}

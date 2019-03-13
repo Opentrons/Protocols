@@ -1,0 +1,1 @@
+{"slug": "1181-laboratory-specialists-inc", "path": "protocols/1181-laboratory-specialists-inc", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["mic_dilution_prep.ot2.py"]}, "status": "ok"}

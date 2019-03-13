@@ -1,0 +1,1 @@
+{"slug": "1189-quantum-si-inc", "path": "protocols/1189-quantum-si-inc", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["ngs_xl_library_prep.ot2.py"]}, "status": "ok"}

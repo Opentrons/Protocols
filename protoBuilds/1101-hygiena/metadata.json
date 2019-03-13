@@ -1,0 +1,1 @@
+{"slug": "1101-hygiena", "path": "protocols/1101-hygiena", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["assay_preparation.ot2.py"]}, "status": "ok"}
