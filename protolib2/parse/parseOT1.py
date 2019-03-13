@@ -1,5 +1,5 @@
 from inspect import signature, Parameter
-# import json
+import json
 import time
 import shutil
 from opentrons import robot, containers
@@ -8,14 +8,7 @@ from opentrons.instruments import Magbead as BaseMagbead
 from opentrons.util.environment import settings as opentrons_settings
 
 import sys
-import opentrons
 
-allProtocolFiles = sys.argv[1:]
-
-print('Opentrons verson: ', opentrons.__version__)
-print('Parsing OT1. Files:')
-print(allProtocolFiles)
-print('*-' * 40)
 # HACK to get pipette type
 pipetteType = type(BasePipette(robot, 'a'))
 
@@ -167,3 +160,13 @@ def get_instruments(robot):
          }
         for axis, instr in robot.get_instruments()
     ]
+
+
+if __name__ == '__main__':
+    sourceFilePath = sys.argv[1]
+    destFilePath = sys.argv[2]
+    print('OT1: parsing {} to {}'.format(sourceFilePath, destFilePath))
+
+    result = parse(sourceFilePath)
+    with open(destFilePath, 'w') as f:
+        json.dump(result, f)
