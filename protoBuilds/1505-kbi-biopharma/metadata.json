@@ -1,0 +1,1 @@
+{"slug": "1505-kbi-biopharma", "path": "protocols/1505-kbi-biopharma", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["basic_liquid_transfer.ot2.py"]}, "status": "ok"}
