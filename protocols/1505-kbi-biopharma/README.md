@@ -8,7 +8,7 @@
     * Distribution
 
 ## Description
-This protocol performs a transfer of culture supernatant aliquots from 24-well deep well plates into 96-tube racks of matrix tubes. The protocol allows for user input of number of samples, number of aliquots per sample, and volume of each aliquot transfer. The quantity of each labware necessitated by the specified number of samples and aliquots is automatically calculated and prompts the user to load the proper quantities upon launching in the Run App.  
+This protocol performs a transfer of culture supernatant aliquots from 24-well deep well plates into 96-tube racks of matrix tubes. The protocol allows for user input of number of samples, number of aliquots per sample, and volume of each aliquot transfer. The quantity of each labware necessitated by the specified number of samples and aliquots is automatically calculated and prompts the user to load the proper quantities upon launching in the Run App. The protocol can also handle deck refills if the specified number of samples and aliquots cannot be accommodated with one full 11-slot deck setup.
 
 Each sample is iterated down each column and then across each row. If more than 24 samples are specified, the 25th sample is taken from the first well of the second deep well plate, and the transfers continue. Similarly, the destinations of the aliquots are oriented down each column and then across each row, before moving to the next destination tube rack. Aliquots of the same sample use the same tip and are filled vertically adjacent to each other on the 96-tube racks.
 

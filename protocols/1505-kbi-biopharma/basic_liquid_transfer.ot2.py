@@ -1,5 +1,4 @@
-from opentrons import labware, instruments
-import math
+from opentrons import labware, instruments, robot
 
 metadata = {
     'protocolName': 'Basic Liquid Transfer for Multiple Aliquots',
@@ -28,50 +27,78 @@ if tube_rack_name not in labware.list():
         depth=44
     )
 
+# load each labware
+deep_plates = [labware.load('24-deep-well-plate', str(s+1))
+               for s in range(4)]
+tube_racks = [labware.load('1ml-tuberack', str(s+1)) for s in range(4, 9)]
+tips1000 = [labware.load('tiprack-1000ul', str(s+1))
+            for s in range(9, 11)]
+
+# set up continuous list of wells across each type of labware
+all_wells = [well for plate in deep_plates for well in plate]
+all_tubes = [tube for rack in tube_racks for tube in rack]
+all_tips = [tip for rack in tips1000 for tip in rack]
+
+# load pipette with tip racks attached
+p1000 = instruments.P1000_Single(mount='right', tip_racks=tips1000)
+
+# setup total number of available wells, tubes, and tips
+max_wells = len(all_wells)
+max_tubes = len(all_tubes)
+max_tips = len(all_tips)
+
+# initialize global counters to check if a deck refill is necessary
+well_count = 0
+tube_count = 0
+tip_count = 0
+
 
 def run_custom_protocol(number_of_samples: int = 48,
-                        number_of_aliquots_per_source_well: int = 4,
+                        number_of_aliquots_per_sample: int = 4,
                         volume_of_each_aliquot: float = 100.0):
+    global well_count
+    global tube_count
+    global tip_count
 
     # volume check for p1000 pipette
     if volume_of_each_aliquot < 100:
         raise Exception("Specified volume not supported by p1000 pipette.")
 
-    num_total_aliquots = number_of_samples*number_of_aliquots_per_source_well
+    def check_wells():
+        global well_count
+        well_count += 1
+        if well_count >= max_wells:
+            robot.pause("Please refill deep-well plates before continuing.")
+            well_count = 0
 
-    num_deep_well_plates = math.ceil(number_of_samples/24)
-    num_tube_racks = math.ceil(num_total_aliquots/96)
-    num_tip_racks = math.ceil(number_of_samples/96)
+    def check_tubes(aliquots):
+        global tube_count
+        tube_count += aliquots
+        if tube_count >= max_tubes:
+            robot.pause("Please refill tuberacks before continuing.")
+            tube_count = 0
 
-    # load appropriate number of each labware
-    deep_plates = [labware.load('24-deep-well-plate', str(s+1))
-                   for s in range(num_deep_well_plates)]
-
-    tube_racks = [labware.load('1ml-tuberack', str(s+num_deep_well_plates+1))
-                  for s in range(num_tube_racks)]
-
-    tips1000 = [labware.load('tiprack-1000ul',
-                str(s+num_deep_well_plates+num_tube_racks+1))
-                for s in range(num_tip_racks)]
-
-    # load pipette with tip racks attached
-    p1000 = instruments.P1000_Single(mount='right', tip_racks=tips1000)
-
-    # create continuous lists of source wells, destination wells, and tips
-    all_sources = [well for plate in deep_plates
-                   for well in plate.wells()][0:number_of_samples]
-
-    all_dests = [tube for rack in tube_racks for tube in rack.wells()]
-    dest_sets = []
-    for s in range(number_of_samples):
-        start = s*number_of_aliquots_per_source_well
-        end = (s+1)*number_of_aliquots_per_source_well
-        set = all_dests[start:end]
-        dest_sets.append(set)
+    def check_tips():
+        global tip_count
+        tip_count += 1
+        if tip_count >= max_tips:
+            robot.pause("Please refill tipracks before continuing.")
+            p1000.reset()
 
     # execute transfers
-    for source, set in zip(all_sources, dest_sets):
+    for _ in range(number_of_samples):
+        # check all labware to see if a refill is needed
+        check_wells()
+        check_tubes(number_of_aliquots_per_sample)
+        check_tips()
+
+        # execute transfer
+        source = all_wells[well_count]
+        dests = all_tubes[tube_count:tube_count+number_of_aliquots_per_sample]
         p1000.distribute(volume_of_each_aliquot,
                          source.bottom(2),
-                         [tube.top(-2) for tube in set],
-                         disposal_vol=p1000.min_volume/2)
+                         [dest.top(-2) for dest in dests],
+                         disposal_vol=50)
+
+
+run_custom_protocol()
