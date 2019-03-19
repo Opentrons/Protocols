@@ -48,7 +48,7 @@ def run_custom_protocol(
         # index7 = 6
         index5 = 4
         output = [well
-                  for col in gDNA_plate.cols('1', to='6')
+                  for col in out_plate.cols('1', to='6')
                   for well in col.wells('A', to='D')]
     else:
         # index7 = 12
@@ -62,7 +62,7 @@ def run_custom_protocol(
     Tagment genomic DNA
     """
     # Add Tagment DNA Buffer to each well
-    p50.distribute(10, td, [well.top() for well in samples])
+    p50.distribute(10, td, output)
 
     # Add normalized gDNA to each well
     p10.transfer(5, samples, output, new_tip='always')
