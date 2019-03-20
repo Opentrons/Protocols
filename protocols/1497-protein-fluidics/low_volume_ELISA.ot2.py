@@ -49,7 +49,7 @@ P-B2;20,,P-H12;10
 
 def csv_to_dict(csv_string):
     global plate, chip, tuberack
-    info_list = [cell for line in csv_string.splitlines() if line
+    info_list = [cell for line in csv_string.splitlines()
                  for cell in [line.split(',')]]
     new_dict = {}
     for line, row in zip(info_list, chip.rows()):
