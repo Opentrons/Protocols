@@ -5,6 +5,7 @@
 
 ## Categories
 * Cell Culture
+    * Cell Seeding
 
 ## Description
 This protocol allows your robot to distribute cells and H2O2 from 2 deep well blocks to 4 96-well plates.

@@ -4,7 +4,7 @@
 [Opentrons](http://www.opentrons.com/)
 
 ## Categories
-* Proteins and Proteomics
+* Proteins & Proteomics
     * PCR
 
 ## Description

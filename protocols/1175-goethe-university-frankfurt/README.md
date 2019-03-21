@@ -5,7 +5,7 @@
 
 ## Categories
 * Cell Culture
-    * Celll Feeding
+    * Cell Feeding
 
 ## Description
 With this protocol, your robot can use a P300 multichannel pipette to distribute medium and cell culture from 96-well deep blocks to six 96-well plates. Media are stored in columns 1-12 of a deep well block. Cell cultures are stored in columns 1-6 of another deep well block.

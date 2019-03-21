@@ -4,8 +4,8 @@
 [Opentrons](http://www.opentrons.com/)
 
 ## Categories
-* Molecular Biololgy
-    * NGS Library Prep
+* NGS Library Prep
+    * NEB POLYdT Purification Kit
 
 ## Description
 With this protocol, your robot can perform NGS library prep using the [NEB POLYdT Purification Kit](https://www.neb.com/products/e7490-nebnext-polya-mrna-magnetic-isolation-module).
