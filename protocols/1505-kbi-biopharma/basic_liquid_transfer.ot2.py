@@ -99,6 +99,3 @@ def run_custom_protocol(number_of_samples: int = 48,
                          source.bottom(2),
                          [dest.top(-2) for dest in dests],
                          disposal_vol=50)
-
-
-run_custom_protocol()
