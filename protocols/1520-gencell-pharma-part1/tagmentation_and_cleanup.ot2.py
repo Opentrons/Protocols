@@ -22,6 +22,7 @@ tip_counter = 0
 # modules
 tempdeck = modules.load('tempdeck', '5')
 tempdeck.set_temperature(58)
+tempdeck.wait_for_temp()
 block = labware.load('opentrons-aluminum-block-96-PCR-plate', '5', share=True)
 
 magdeck = modules.load('magdeck', '6')

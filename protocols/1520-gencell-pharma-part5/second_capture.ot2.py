@@ -32,6 +32,7 @@ tip300_counter = 0
 # modules
 tempdeck = modules.load('tempdeck', '9')
 tempdeck.set_temperature(42)
+tempdeck.wait_for_temp()
 block = labware.load('opentrons-aluminum-block-96-PCR-plate', '9', share=True)
 
 # pipettes:
