@@ -64,7 +64,7 @@ def run_custom_protocol(transfer_csv: FileInput = csv_example):
     transfers = csv_to_list(transfer_csv)
     for t in transfers:
         vol = float(t[4])
-        if vol > 10 or vol < 1:
+        if vol < 1:
             raise Exception("Volume is outside range of p10 pipette.")
         source = source_plate.wells(well_parse(t[3]))
         dest = dest_plate.wells(well_parse(t[5]))
