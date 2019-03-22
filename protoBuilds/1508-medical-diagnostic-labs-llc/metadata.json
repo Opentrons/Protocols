@@ -1,0 +1,1 @@
+{"slug": "1508-medical-diagnostic-labs-llc", "path": "protocols/1508-medical-diagnostic-labs-llc", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["barcode_transfer.ot2.py"]}, "status": "ok"}
