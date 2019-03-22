@@ -1,0 +1,1 @@
+{"slug": "1526-university-of-manchester", "path": "protocols/1526-university-of-manchester", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["blocks_to_plates.ot2.py"]}, "status": "ok"}
