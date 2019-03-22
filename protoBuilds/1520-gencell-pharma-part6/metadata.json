@@ -1,0 +1,1 @@
+{"slug": "1520-gencell-pharma-part6", "path": "protocols/1520-gencell-pharma-part6", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["capture_cleanup.ot2.py"]}, "status": "ok"}
