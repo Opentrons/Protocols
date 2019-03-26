@@ -1,5 +1,5 @@
 from opentrons import labware, instruments, modules
-from otcustomizers import FileInput
+from otcustomizers import FileInput, StringSelection
 
 metadata = {
     'protocolName': 'DNA Assembly',
@@ -21,18 +21,20 @@ Source Slot ,Source Well,Volume,Dest Slot,Dest Well,Mix After
 1,C4,4.5,9,A3,Yes
 """
 
-rack_name = "beckman-coulter-24-tuberack"
-if rack_name not in labware.list():
-    labware.create(
-        rack_name,
-        grid=(6, 4),
-        spacing=(19, 19),
-        diameter=8.38,
-        depth=42.9)
+rack_names = ["beckman-coulter-24-tuberack-"+str(num) for num in range(1, 6)]
+for rack_name in rack_names:
+    if rack_name not in labware.list():
+        labware.create(
+            rack_name,
+            grid=(6, 4),
+            spacing=(19, 19),
+            diameter=8.38,
+            depth=42.9
+            )
 
 # labware setup
-reagent_list = {slot: labware.load(rack_name, slot)
-                for slot in ['1', '2', '3', '4', '5']}
+reagent_list = {str(slot): labware.load(rack_name, str(slot))
+                for slot, rack_name in enumerate(rack_names, 1)}
 
 tipracks_10 = [labware.load('tiprack-10ul', slot)
                for slot in ['10', '11']]
@@ -48,43 +50,42 @@ p50 = instruments.P50_Single(
     tip_racks=tipracks_50)
 
 
-def get_transfer_info(csv_string, reagent_list):
-    info_list = [cell for line in csv_string.splitlines() if line
-                 for cell in [line.split(',')]]
-    sources = []
-    volumes = []
-    dests = []
-    mixes = []
-    temp_decks = []
-    plates = {}
-    for line in info_list[1:]:
-        if line[0] not in reagent_list.keys():
-            raise Exception('Source container in slot ' + line[0] +
-                            ' does not exist.')
-        else:
-            source = reagent_list[line[0]].wells(line[1])
+def run_custom_protocol(
+        transfer_csv: FileInput=transfer_csv_example,
+        plate_type: StringSelection(
+            'opentrons-aluminum-block-96-PCR-plate',
+            'opentrons-aluminum-block-PCR-strips-200ul'
+            )='opentrons-aluminum-block-96-PCR-plate'):
 
-        volume = float(line[2])
-
-        if line[3] not in plates.keys():
-            temp_decks.append(modules.load('tempdeck', line[3]))
-            plates[line[3]] = labware.load(
-                'opentrons-aluminum-block-96-PCR-plate', line[3], share=True)
-
-        if not line[5].lower().strip() == 'yes':
-            mixes.append("")
-        else:
+    def get_transfer_info(csv_string, reagent_list):
+        info_list = [cell for line in csv_string.splitlines() if line
+                     for cell in [line.split(',')]]
+        sources = []
+        volumes = []
+        dests = []
+        mixes = []
+        temp_decks = []
+        plates = {}
+        for line in info_list[1:]:
+            if line[0] not in reagent_list.keys():
+                raise Exception('Source container in slot ' + line[0] +
+                                ' does not exist.')
+            else:
+                source = reagent_list[line[0]].wells(line[1])
+            volume = float(line[2])
+            if line[3] not in plates.keys():
+                temp_decks.append(modules.load('tempdeck', line[3]))
+                plates[line[3]] = labware.load(
+                    plate_type, line[3], share=True)
+            if not line[5].lower().strip() == 'yes':
+                mixes.append("")
+            else:
                 mixes.append(True)
-
-        dest = plates[line[3]].wells(line[4])
-        sources.append(source)
-        volumes.append(volume)
-        dests.append(dest)
-
-    return temp_decks, sources, volumes, dests, mixes
-
-
-def run_custom_protocol(transfer_csv: FileInput=transfer_csv_example):
+            dest = plates[line[3]].wells(line[4])
+            sources.append(source)
+            volumes.append(volume)
+            dests.append(dest)
+        return temp_decks, sources, volumes, dests, mixes
 
     temp_decks, sources, volumes, dests, mixes = get_transfer_info(
         transfer_csv, reagent_list)
