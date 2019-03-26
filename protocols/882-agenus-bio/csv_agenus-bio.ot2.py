@@ -124,5 +124,4 @@ def run_custom_protocol(
         p300.mix(5, 25, source)
         p300.transfer(vol, source, dest, new_tip='never')
         p300.mix(2, 160, dest)
-        p300.blow_out(dest)
         p300.drop_tip()
