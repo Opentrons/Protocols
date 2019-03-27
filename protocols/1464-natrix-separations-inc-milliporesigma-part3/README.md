@@ -13,7 +13,11 @@ Links:
 * [Part 2-1: Antibody Addition](./1464-natrix-separations-inc-milliporesigma-part2)
 * [Part 2-2: Substrate and Stop Solution Addtion](1464-natrix-separations-inc-milliporesigma-part3)
 
-This is the third part of a ELISA protocol: Substrate and Stop Solution Addition. This should be run immediately after the incubation and wash steps. See protocol details [here](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1464-natrix-separations-inc-milliporesigma/ELISA_protocol.xlsx).
+This is the third part of a ELISA protocol: Substrate and Stop Solution Addition. This should be run immediately after the incubation and wash steps.
+
+Download full protocol details [here](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1464-natrix-separations-inc-milliporesigma/NEW_ELISA_protocol.xlsx).
+
+---
 
 You will need:
 * P300 Multi-channel Pipette
@@ -28,11 +32,12 @@ You will need:
 * [OT-2](https://opentrons.com/ot-2)
 
 ## Process
-1. Download your protocol.
-2. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
-3. Set up your deck according to the deck map.
-4. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support article](https://support.opentrons.com/ot-2/getting-started-software-setup/deck-calibration).
-5. Hit "Run".
+1. Input the number of columns that are currently occupied in the 96-well plate.
+2. Download your protocol.
+3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
+4. Set up your deck according to the deck map.
+5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support article](https://support.opentrons.com/ot-2/getting-started-software-setup/deck-calibration).
+6. Hit "Run".
 
 
 ### Additional Notes
