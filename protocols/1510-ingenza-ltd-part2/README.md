@@ -50,7 +50,7 @@ Sources:
 
 Destination:
 * Slot 9
-* Can be a flat 96-well PCR plate, 96-well Bio-rad Hardshell Plate, or a 384-well plate
+* Can be a unskirted 96-well PCR plate, 96-well Bio-rad Hardshell Plate, or a 384-well plate
 
 ---
 

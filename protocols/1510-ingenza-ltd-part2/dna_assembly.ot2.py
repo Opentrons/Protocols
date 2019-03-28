@@ -21,7 +21,7 @@ Source Slot ,Source Well,Volume,Dest Slot,Dest Well,Mix After
 8,C8,4.5,9,A3,Yes
 """
 
-rack_name = "beckman-coulter-24-tuberack"
+rack_name = "beckman-coulter-24-tuberack-5"
 if rack_name not in labware.list():
     labware.create(
         rack_name,
@@ -30,10 +30,19 @@ if rack_name not in labware.list():
         diameter=8.38,
         depth=42.9)
 
+custom_plate_name = 'greiner-sapphire-96-PCR-plate'
+if custom_plate_name not in labware.list():
+    labware.create(
+        custom_plate_name,
+        grid=(12, 8),
+        spacing=(9, 9),
+        diameter=5.57,
+        depth=20)
+
 # labware setup
 reagent_list = {
                 '5': labware.load(rack_name, '5'),
-                '8': labware.load('96-PCR-flat', '8')
+                '8': labware.load('biorad-hardshell-96-PCR', '8')
                 }
 
 tipracks_10 = [labware.load('tiprack-10ul', slot)
@@ -86,7 +95,8 @@ def get_transfer_info(csv_string, reagent_list, dest_plate):
 
 def run_custom_protocol(
     dest_plate: StringSelection(
-        '96-PCR-flat', 'biorad-hardshell-96-PCR', '384-plate')='96-PCR-flat',
+        'greiner-sapphire-96-PCR-plate', 'biorad-hardshell-96-PCR', '384-plate'
+            )='greiner-sapphire-96-PCR-plate',
     transfer_csv: FileInput=transfer_csv_example
         ):
 
