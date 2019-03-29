@@ -158,9 +158,13 @@ def run_custom_protocol(
     for group in dil_groups:
         m10.pick_up_tip()
         for vol, source, dest in zip(sample_vols, group[:-1], group[1:]):
+            m10.set_flow_rate(aspirate=5, dispense=10)
             m10.transfer(vol, source, dest, new_tip='never')
+            m10.set_flow_rate(aspirate=10, dispense=20)
             m10.mix(5, 10, dest)
         m10.drop_tip()
+
+    m10.set_flow_rate(aspirate=5, dispense=10)
 
     # reagent setup
     diluent_s = trough_2.wells('A1')
@@ -184,7 +188,7 @@ def run_custom_protocol(
 
     # transfer sample to bDNA plate
     bDNA_sources = [group[-1] for group in dil_groups]
-    bDNA_groups = [bDNA_dests[i:i+2] for i in range(len(dil_groups))]
+    bDNA_groups = [bDNA_dests[i*2:i*2+2] for i in range(len(dil_groups))]
     if bDNA_sample_volume > 10:
         pipette = m300
     else:
@@ -193,5 +197,4 @@ def run_custom_protocol(
         pipette.pick_up_tip()
         for dest in dests:
             pipette.transfer(bDNA_sample_volume, source, dest, new_tip='never')
-            pipette.mix(5, bDNA_sample_volume, dest)
         pipette.drop_tip()
