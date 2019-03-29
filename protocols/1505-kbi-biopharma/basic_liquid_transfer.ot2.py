@@ -66,21 +66,18 @@ def run_custom_protocol(number_of_samples: int = 48,
 
     def check_wells():
         global well_count
-        well_count += 1
         if well_count >= max_wells:
             robot.pause("Please refill deep-well plates before continuing.")
             well_count = 0
 
-    def check_tubes(aliquots):
+    def check_tubes():
         global tube_count
-        tube_count += aliquots
         if tube_count >= max_tubes:
             robot.pause("Please refill tuberacks before continuing.")
             tube_count = 0
 
     def check_tips():
         global tip_count
-        tip_count += 1
         if tip_count >= max_tips:
             robot.pause("Please refill tipracks before continuing.")
             p1000.reset()
@@ -89,7 +86,7 @@ def run_custom_protocol(number_of_samples: int = 48,
     for _ in range(number_of_samples):
         # check all labware to see if a refill is needed
         check_wells()
-        check_tubes(number_of_aliquots_per_sample)
+        check_tubes()
         check_tips()
 
         # execute transfer
@@ -99,3 +96,6 @@ def run_custom_protocol(number_of_samples: int = 48,
                          source.bottom(2),
                          [dest.top(-2) for dest in dests],
                          disposal_vol=50)
+        well_count += 1
+        tube_count += number_of_aliquots_per_sample
+        tip_count += 1
