@@ -1,0 +1,1 @@
+{"slug": "1516-solvay-speciality-chemicals-asia-pacific", "path": "protocols/1516-solvay-speciality-chemicals-asia-pacific", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["sample_transfer.ot2.py"]}, "status": "ok"}
