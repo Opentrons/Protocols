@@ -4,8 +4,8 @@
 [Opentrons](http://www.opentrons.com/)
 
 ## Categories
-* Molecular Biology
-    * NGS Library Prep
+* NGS Library Prep
+    * TruSight Rapid Capture
 
 ## Description
 Links:

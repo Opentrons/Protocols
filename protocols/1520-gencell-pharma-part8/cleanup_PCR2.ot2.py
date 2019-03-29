@@ -1,4 +1,5 @@
 from opentrons import labware, instruments, modules, robot
+from otcustomizers import StringSelection
 
 metadata = {
     'protocolName': 'Cleanup PCR 2 (Part 8/8)',
@@ -9,7 +10,7 @@ metadata = {
 # labware
 wash_rack = labware.load('96-PCR-tall', '1')
 samples_rack = labware.load('96-deep-well', '2')
-tube_rack = labware.load('tube-rack-2ml', '3')
+tube_rack = labware.load('opentrons-tuberack-2ml-eppendorf', '3')
 waste_rack = labware.load('PCR-strip-tall', '4')
 
 # set up tip rack to accommodate single transfers with multi-channel pipette
@@ -32,13 +33,16 @@ m50 = instruments.P50_Multi(mount='right')
 m300 = instruments.P300_Multi(mount='left')
 
 
-def run_custom_protocol(number_of_pools: int = 4):
+def run_custom_protocol(
+        number_of_pools: StringSelection('1', '2', '3', '4') = '4'):
     global tip_counter
 
     # reagent setup
     beads = tube_rack.wells('A1')
     buffer = tube_rack.wells('A2')
     etanol = tube_rack.wells('A3', to='A4')
+
+    number_of_pools = int(number_of_pools)
     pools = samples_rack.wells('E6', length=number_of_pools)
     mag_pools = mag_plate.wells('E6', length=number_of_pools)
 
@@ -81,7 +85,7 @@ def run_custom_protocol(number_of_pools: int = 4):
     m300.pick_up_tip(tips[tip_counter])
     m300.distribute(200,
                     etanol[0],
-                    mag_pools,
+                    [p.top() for p in mag_pools],
                     disposal_volume=10,
                     new_tip='never')
     m300.drop_tip()
@@ -104,7 +108,7 @@ def run_custom_protocol(number_of_pools: int = 4):
     m300.pick_up_tip(tips[tip_counter])
     m300.distribute(200,
                     etanol[1],
-                    mag_pools,
+                    [p.top() for p in mag_pools],
                     disposal_volume=10,
                     new_tip='never')
     m300.drop_tip()

@@ -1,4 +1,5 @@
 from opentrons import labware, instruments, modules, robot
+from otcustomizers import StringSelection
 
 metadata = {
     'protocolName': 'NGS Prep: Tagmentation and Clean-up (Part 1/8)',
@@ -7,7 +8,7 @@ metadata = {
 }
 
 # labware
-tubes = labware.load('tube-rack-2ml', '1')
+tubes = labware.load('opentrons-tuberack-2ml-eppendorf', '1')
 samples_rack = labware.load('96-PCR-tall', '2')
 waste_rack = labware.load('PCR-strip-tall', '3')
 
@@ -48,10 +49,13 @@ etanol1 = tubes.wells('B1')
 etanol2 = tubes.wells('B2')
 
 
-def run_custom_protocol(number_of_samples: int = 4):
+def run_custom_protocol(
+    number_of_samples: StringSelection('3', '4', '6', '8',
+                                       '9', '12', '16') = '4'):
     global tip_counter
 
     # set up pools based on sample number
+    number_of_samples = int(number_of_samples)
     if number_of_samples in [3, 6, 9]:
         num_pools = int(number_of_samples/3)
         pools = [samples_rack.wells(i*3, length=3) for i in range(num_pools)]
@@ -67,7 +71,7 @@ def run_custom_protocol(number_of_samples: int = 4):
     m50.pick_up_tip(tips[tip_counter])
     m50.distribute(25,
                    tagbuffer,
-                   all_samples,
+                   [s.top() for s in all_samples],
                    disposal_vol=5,
                    new_tip='never')
     m50.drop_tip()
@@ -144,7 +148,7 @@ def run_custom_protocol(number_of_samples: int = 4):
     m300.pick_up_tip(tips[tip_counter])
     m300.distribute(200,
                     etanol1,
-                    all_mag_samples,
+                    [s.top() for s in all_mag_samples],
                     disposal_vol=10,
                     new_tip='never')
     m300.drop_tip()

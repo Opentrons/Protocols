@@ -1,4 +1,5 @@
 from opentrons import labware, instruments, modules, robot
+from otcustomizers import StringSelection
 
 metadata = {
     'protocolName': 'Second Capture (Part 5/8)',
@@ -7,7 +8,7 @@ metadata = {
 }
 
 # labware
-tubes = labware.load('tube-rack-2ml', '1')
+tubes = labware.load('opentrons-tuberack-2ml-eppendorf', '1')
 samples_rack = labware.load('96-deep-well', '2')
 wash_rack = labware.load('PCR-strip-tall', '3')
 mag_plate = labware.load('biorad-hardshell-96-PCR', '5')
@@ -53,11 +54,13 @@ waste = tubes.wells('C1')
 elution_mix = extra_rack.wells('A6')
 
 
-def run_custom_protocol(number_of_pools: int = 4):
+def run_custom_protocol(
+        number_of_pools: StringSelection('1', '2', '3', '4') = '4'):
     global tip10_counter
     global tip300_counter
 
     # setup sample pools
+    number_of_pools = int(number_of_pools)
     pools = samples_rack.wells('E2', length=number_of_pools)
     mag_pools = mag_plate.wells('E2', length=number_of_pools)
 
@@ -226,6 +229,9 @@ def run_custom_protocol(number_of_pools: int = 4):
 
     # transfer target buffer2 to wash rack
     m10.pick_up_tip(tips10[tip10_counter])
-    m10.distribute(4, buffer2, wash_dests_temp, new_tip='never')
+    m10.distribute(4,
+                   buffer2,
+                   [w.top() for w in wash_dests_temp],
+                   new_tip='never')
     m10.drop_tip()
     tip10_counter += 1

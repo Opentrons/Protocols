@@ -1,4 +1,5 @@
 from opentrons import labware, instruments, modules, robot
+from otcustomizers import StringSelection
 
 metadata = {
     'protocolName': 'Clean-Up PCR 1 (Part 3/8)',
@@ -7,7 +8,7 @@ metadata = {
 }
 
 # labware
-tubes = labware.load('tube-rack-2ml', '1')
+tubes = labware.load('opentrons-tuberack-2ml-eppendorf', '1')
 samples_rack = labware.load('96-PCR-tall', '2')
 waste_rack = labware.load('PCR-strip-tall', '3')
 
@@ -32,9 +33,12 @@ m300 = instruments.P300_Multi(
 )
 
 
-def run_custom_protocol(number_of_samples: int = 4):
+def run_custom_protocol(
+    number_of_samples: StringSelection('3', '4', '6', '8',
+                                       '9', '12', '16') = '4'):
     global tip_counter
 
+    number_of_samples = int(number_of_samples)
     samples = samples_rack.wells('A4', length=number_of_samples)
     mag_samples = mag_plate.wells('A4', length=number_of_samples)
     etanol = [well for row in tubes.rows()
@@ -72,7 +76,10 @@ def run_custom_protocol(number_of_samples: int = 4):
 
     # distribute ethanol to samples
     m300.pick_up_tip(tips[tip_counter])
-    m300.distribute(200, etanol[0], mag_samples, new_tip='never')
+    m300.distribute(200,
+                    etanol[0],
+                    [s.top() for s in mag_samples],
+                    new_tip='never')
     m300.drop_tip()
     tip_counter += 1
 
@@ -91,7 +98,10 @@ def run_custom_protocol(number_of_samples: int = 4):
 
     # distribute ethanol to samples
     m300.pick_up_tip(tips[tip_counter])
-    m300.distribute(200, etanol[1], mag_samples, new_tip='never')
+    m300.distribute(200,
+                    etanol[1],
+                    [s.top() for s in mag_samples],
+                    new_tip='never')
     m300.drop_tip()
     tip_counter += 1
 
@@ -126,9 +136,10 @@ def run_custom_protocol(number_of_samples: int = 4):
     # incubate at room temperature for 2 minutes
     m300.delay(minutes=2)
 
-    robot.pause("Place the sample rack on the magnetic module before "
-                "resuming. The magdeck will engage for 2 minutes before the "
-                "protocol resumes.")
+    robot.pause("Pause for 2 minutes to allow samples to incubate. Then place "
+                "the sample rack on the magnetic module before resuming. The "
+                "magdeck will engage for 2 minutes before the protocol "
+                "resumes.")
     magdeck.engage()
     m300.delay(minutes=2)
 
