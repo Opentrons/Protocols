@@ -6,6 +6,12 @@
 from opentrons import labware, instruments
 from otcustomizers import StringSelection
 
+metadata = {
+    'protocolName': 'Opentrons Logo',
+    'author': 'Opentrons <protocols@opentrons.com>',
+    'source': 'Protocol Library'
+    }
+
 
 def run_custom_protocol(pipette_type: StringSelection(
     'p300-Single', 'p50-Single', 'p10-Single')='p300-Single',
