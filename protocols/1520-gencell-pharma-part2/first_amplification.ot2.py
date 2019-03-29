@@ -1,4 +1,5 @@
 from opentrons import labware, instruments
+from otcustomizers import StringSelection
 
 metadata = {
     'protocolName': 'First Amplification (Part 2/8)',
@@ -7,7 +8,7 @@ metadata = {
 }
 
 # labware
-tubes = labware.load('tube-rack-2ml', '1')
+tubes = labware.load('opentrons-tuberack-2ml-eppendorf', '1')
 samples_rack = labware.load('96-PCR-tall', '2')
 index_plate = labware.load('PCR-strip-tall', '3')
 
@@ -28,10 +29,13 @@ m50 = instruments.P50_Multi(
 NLM = tubes.wells('A1')
 
 
-def run_custom_protocol(number_of_samples: int = 4):
+def run_custom_protocol(
+    number_of_samples: StringSelection('3', '4', '6', '8',
+                                       '9', '12', '16') = '4'):
     global tip_counter
 
     # setup samples and mix indexes
+    number_of_samples = int(number_of_samples)
     samples = samples_rack.wells('A4', length=number_of_samples)
     mix_indexes = index_plate.wells('A1', length=number_of_samples)
 
@@ -40,7 +44,7 @@ def run_custom_protocol(number_of_samples: int = 4):
         m50.pick_up_tip(tips[tip_counter])
         m50.transfer(10, i, s, blow_out=True, new_tip='never')
         m50.drop_tip()
-        tip_counter == 1
+        tip_counter += 1
 
     # distribute NLM to samples and mix
     for s in samples:
