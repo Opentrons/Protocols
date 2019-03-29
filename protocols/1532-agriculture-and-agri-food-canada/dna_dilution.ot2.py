@@ -34,6 +34,15 @@ if output_plate_name not in labware.list():
         volume=350
         )
 
+trough_name = 'trough-1row'
+if trough_name not in labware.list():
+    labware.create(
+        trough_name,
+        grid=(1, 1),
+        spacing=(0, 0),
+        diameter=70,
+        depth=40)
+
 
 def run_custom_protocol(
     volume_csv: FileInput=example_csv,
@@ -81,7 +90,6 @@ def run_custom_protocol(
 
     tips = [well for rack in tipracks for well in rack]
 
-    volume_csv = example_csv
     sample_vols, diluent_vols, dests, samples = volume_csv_to_lists(volume_csv)
 
     # transfer diluent
