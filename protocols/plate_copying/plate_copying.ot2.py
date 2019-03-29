@@ -2,6 +2,12 @@ from opentrons import labware, instruments
 from otcustomizers import StringSelection
 # Copy contents of one plate into another
 
+metadata = {
+    'protocolName': 'Plate Copying',
+    'author': 'Opentrons <protocols@opentrons.com>',
+    'source': 'Protocol Library'
+    }
+
 source_slot = '6'
 
 dest_slots = ['1', '2', '3', '4', '5', '7', '8', '9']
