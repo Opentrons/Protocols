@@ -1,0 +1,1 @@
+{"slug": "1520-gencell-pharma-part7", "path": "protocols/1520-gencell-pharma-part7", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["second_amplification.ot2.py"]}, "status": "ok"}
