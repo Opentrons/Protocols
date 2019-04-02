@@ -1,0 +1,1 @@
+{"slug": "1542-lutzoni-lab-duke-university-round1", "path": "protocols/1542-lutzoni-lab-duke-university-round1", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["PCR_prep_round_1.ot2.py"]}, "status": "ok"}
