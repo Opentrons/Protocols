@@ -1,0 +1,1 @@
+{"slug": "1476-cytec-solvay-group", "path": "protocols/1476-cytec-solvay-group", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["successive_dilution.ot2.py"]}, "status": "ok"}
