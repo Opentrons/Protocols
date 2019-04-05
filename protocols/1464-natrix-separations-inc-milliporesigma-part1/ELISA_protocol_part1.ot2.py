@@ -95,7 +95,6 @@ def run_custom_protocol(
         dilution_concs.append(new_concs)
 
     # transfer dilution buffer
-    p1000.set_flow_rate(dispense=300)
     p1000.pick_up_tip()
     for sample_index, (row, concs) in enumerate(
             zip(dil_dests, dilution_concs)):
@@ -116,7 +115,6 @@ def run_custom_protocol(
                 new_tip='never')
             p1000.blow_out(dest.top())
     p1000.drop_tip()
-    p1000.set_flow_rate(dispense=1000)
 
     # transfer samples
     for sample_index, (row, concs) in enumerate(
@@ -136,5 +134,5 @@ def run_custom_protocol(
             p300.pick_up_tip()
             for volume, source, dest in zip(volumes, sources, dests):
                 p300.transfer(volume, source, dest, new_tip='never')
-                p300.mix(3, 300, dest)
+                p300.mix(3, 200, dest)
             p300.drop_tip()
