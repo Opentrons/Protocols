@@ -9,7 +9,7 @@ assignees: ''
 
 **Describe the bug**
 A clear and concise description of what the bug is.
-Is this specific to a protocol? If so, include the link of this protocol.
+Is this specific to a protocol? If so, include the URL to this protocol.
 
 **To Reproduce** 
 (optional)
