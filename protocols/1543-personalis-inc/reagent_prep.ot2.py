@@ -67,11 +67,11 @@ def run_custom_protocol(
         repetition = math.ceil(transfer_volume / 1000)
         new_vol = transfer_volume / repetition
         for _ in range(repetition):
+            new_source_depth(new_vol)
             if p1000.current_volume < new_vol:
                 p1000.aspirate(source_loc)
                 p1000.delay(seconds=1)
                 p1000.touch_tip()
             p1000.dispense(new_vol, well)
-            new_source_depth(new_vol)
     p1000.dispense(source_loc)
     p1000.drop_tip()
