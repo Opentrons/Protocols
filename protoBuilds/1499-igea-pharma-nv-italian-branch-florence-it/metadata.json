@@ -1,0 +1,1 @@
+{"slug": "1499-igea-pharma-nv-italian-branch-florence-it", "path": "protocols/1499-igea-pharma-nv-italian-branch-florence-it", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["dispense_plastic_sheet.ot2.py"]}, "status": "ok"}
