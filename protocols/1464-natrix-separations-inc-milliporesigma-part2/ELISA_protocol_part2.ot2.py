@@ -107,6 +107,5 @@ def run_custom_protocol(
         p300.aspirate(130, sample)
         for dest in dests[0]:
             p300.dispense(50, dest)
-            p300.touch_tip(dest)
         p300.drop_tip()
         dests.pop(0)
