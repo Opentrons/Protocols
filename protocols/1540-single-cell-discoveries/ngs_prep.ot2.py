@@ -7,17 +7,16 @@ metadata = {
 }
 
 # labware
-sample_plate = labware.load('opentrons-aluminum-block-96-PCR-plate', '2')
-new_plate = labware.load('opentrons-aluminum-block-96-PCR-plate', '3')
-trough = labware.load('trough-12row', '4')
+new_plate = labware.load('biorad-hardshell-96-PCR', '2')
+trough = labware.load('trough-12row', '3')
 tips10_rack = [labware.load('tiprack-10ul', slot)
-               for slot in ['5', '6', '7']]
+               for slot in ['4', '5', '6', '7']]
 tips300_rack = [labware.load('tiprack-200ul', slot)
                 for slot in ['8', '9', '10', '11']]
 
 # modules
 magdeck = modules.load('magdeck', '1')
-mag_plate = labware.load('opentrons-aluminum-block-96-PCR-plate',
+mag_plate = labware.load('biorad-hardshell-96-PCR',
                          '1',
                          share=True)
 
@@ -56,9 +55,6 @@ def run_custom_protocol(number_of_columns: int = 12,
         raise Exception('Too many EtOH washes.')
 
     # setup sample locations
-    cols = sample_plate.columns(str(start_column), length=number_of_columns)
-    samples = [well for col in cols for well in col]
-
     mag_cols = mag_plate.columns(str(start_column), length=number_of_columns)
     mag_samples = [well for col in mag_cols for well in col]
 
@@ -76,16 +72,15 @@ def run_custom_protocol(number_of_columns: int = 12,
         pipette = p10
     pipette.transfer(volume_of_beads,
                      beads,
-                     [s.top() for s in samples],
+                     [s.top() for s in mag_samples],
                      mix_after=(10, volume_of_beads))
 
     # incubate at room temperature for 15 minutes
+    robot.comment('Incubating at room temperature for 15 minutes.')
     pipette.delay(minutes=15)
 
-    robot.pause('Place the samples on the magnetic module before resuming. '
-                'The protocol will pause for 5 minutes after resuming to allow'
-                'the samples to incubate on the magnetic module.')
-    magdeck.engage(height=18)
+    magdeck.engage()
+    robot.comment('Incubating with magnet engaged for 5 minutes.')
     pipette.delay(minutes=5)
     robot.pause('Ensure the sample liquid is clear before resuming. If not, '
                 'allow the samples to incubate further until the liquid is '
@@ -140,9 +135,8 @@ def run_custom_protocol(number_of_columns: int = 12,
 
     # dry beads
     p300.delay(minutes=minutes_to_dry)
+    robot.pause('Ensure beads are completely dry before resuming.')
     magdeck.disengage()
-    robot.pause('Ensure beads are completely dry and remove from the magnetic '
-                'module before resuming.')
 
     # resuspend in water
     if resuspension_volume > 10:
@@ -150,18 +144,21 @@ def run_custom_protocol(number_of_columns: int = 12,
     else:
         pipette = p10
 
-    # transfer water
-    pipette.transfer(resuspension_volume,
-                     water,
-                     samples,
-                     mix_after=(10, pipette.max_volume),
-                     new_tip='always')
+    # transfer and mix water
+    for s in mag_samples:
+        pipette.pick_up_tip()
+        pipette.transfer(resuspension_volume,
+                         water,
+                         s,
+                         new_tip='never')
+        pipette.mix(10, pipette.max_volume, s)
+        pipette.drop_tip()
 
-    # incubate at room temperature for 2 minutes
+    robot.comment('Incubating at room temperature for 2 minutes.')
     pipette.delay(minutes=2)
 
-    robot.pause('Place on magnetic deck before resuming.')
-    magdeck.engage(height=18)
+    robot.comment('Incubating with magnet engaged for 5 minutes.')
+    magdeck.engage()
     pipette.delay(minutes=5)
     robot.pause('Ensure the sample liquid is clear before resuming. If not, '
                 'allow the samples to incubate further until the liquid is '
@@ -173,7 +170,10 @@ def run_custom_protocol(number_of_columns: int = 12,
     else:
         pipette = p10
 
-    pipette.transfer(volume_of_second_supernatant_to_remove,
-                     [s.bottom(2) for s in mag_samples],
-                     super_samples,
-                     new_tip='always')
+    for source, dest in zip(mag_samples, super_samples):
+        pipette.pick_up_tip()
+        pipette.transfer(volume_of_second_supernatant_to_remove,
+                         source.bottom(2),
+                         dest,
+                         new_tip='never')
+        pipette.drop_tip()

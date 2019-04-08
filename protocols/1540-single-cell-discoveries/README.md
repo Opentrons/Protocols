@@ -36,13 +36,13 @@ You will need:
 6. Hit "Run".
 7. The Ampure beads are mixed thoroughly and transferred to each of the selected sample columns. The destination is mixed after each transfer, and a new tip is used for each transfer.
 8. The samples incubate at room temperature for 15 minutes.
-9. The protocol pauses for the user to transfer the samples to the magnetic module. The module engages and the samples incubate for 5 minutes or until the sample liquid is clear.
+9. The module engages and the samples incubate for 5 minutes or until the sample liquid is clear.
 10. Supernatant is carefully removed from each sample well ensuring that the pipette tip does not touch the beads.
 11. The pellets are immediately washed with 200µl of 80% EtOH after the supernatant is removed. After 30 seconds, the EtOH is removed.
 12. Step 11 is repeated for as many times as specified.
 13. The protocol pauses for the beads to dry completely.
 14. Each sample is resuspended in water and mixed thoroughly.
-15. The protocol pauses for the samples to incubate at room temperature for 2 minutes. The user is then prompted to place the samples back on the magnetic module.
+15. The protocol pauses for the samples to incubate at room temperature for 2 minutes.
 16. The module engages and the samples incubate for 5 minutes or until the sample liquid is clear.
 17. Supernatant is transferred to a new 96-well plate.
 
