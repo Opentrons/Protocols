@@ -34,7 +34,7 @@ def run_custom_protocol(
         radius = 7.5
         max_vol = 15
     else:
-        source_rack = labware.load('opentrons-tuberack-15ml', '1')
+        source_rack = labware.load('opentrons-tuberack-50ml', '1')
         radius = 13.5
         max_vol = 50
 
