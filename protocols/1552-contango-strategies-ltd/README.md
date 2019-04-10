@@ -45,9 +45,9 @@ You will need:
 11. 5ul of each of the specified number of oligo standards is transferred to its corresponding set of 3 destination wells according to the plate diagram in Additional Notes below.
 
 ### Additional Notes
-![Initial Reagent Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1552-contango-strategies-ltd/reagent_setup_1.png)
+![Initial Reagent Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1552-contango-strategies-ltd/reagent_setup_1_v2.png)
 
-![Second Reagent Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1552-contango-strategies-ltd/reagent_setup_2_.png)
+![Second Reagent Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1552-contango-strategies-ltd/reagent_setup_2_v2.png)
 
 ![Transfer Diagram](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1552-contango-strategies-ltd/transfer_diagram.png)
 
