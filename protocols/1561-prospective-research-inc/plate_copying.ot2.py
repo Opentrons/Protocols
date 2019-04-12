@@ -41,7 +41,7 @@ def run_custom_protocol(transfer_volume: float = 100.0):
     else:
         tips = [labware.load('tiprack-10ul', slot)
                 for slot in ['7', '8']]
-        pipette = instruments.P300_Single(mount='right', tip_racks=tips)
+        pipette = instruments.P10_Multi(mount='right', tip_racks=tips)
 
     sources = [well for plate in source_plates for well in plate.rows('A')]
     dests = [well for row in dest_plate.rows('A', length=2) for well in row]
