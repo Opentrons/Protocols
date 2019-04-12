@@ -15,14 +15,14 @@ if trough_A_name not in labware.list():
         diameter=76,
         depth=64)
 
-tube_b_name = 'wheaton-serum-bottle-30ml'
+tube_b_name = 'wheaton-serum-bottle-30-ml'
 if tube_b_name not in labware.list():
     labware.create(
         tube_b_name,
         grid=(4, 2),
         spacing=(29.1, 34.5),
-        diameter=26,
-        depth=63)
+        diameter=25,
+        depth=92)
 
 # labware setup
 a_rack = labware.load(trough_A_name, '7')
