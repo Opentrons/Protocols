@@ -15,7 +15,7 @@ With this protocol, your robot can perform serial dilutions up to 16 sample solu
 You will need:
 * P1000 Single-channel Pipette
 * [Glass Dish](https://wheaton.com/dish-and-cover-20-slide.html)
-* [30 mL Serum Bottles](https://us.vwr.com/store/product?keyword=%0916171-330)
+* 30 mL vials
 * Custom Tube Rack for 30 mL bottles
 * 15 mL Conical Tubes
 * [Opentrons 4-in-1 Tube Rack Sets](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)
