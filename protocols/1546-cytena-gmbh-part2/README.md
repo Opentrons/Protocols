@@ -1,4 +1,4 @@
-# DNA Normalization
+# CSV DNA Normalization
 
 ### Author
 [Opentrons](http://www.opentrons.com/)

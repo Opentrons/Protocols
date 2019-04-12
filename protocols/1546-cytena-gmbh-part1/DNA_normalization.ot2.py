@@ -1,7 +1,7 @@
 from opentrons import labware, instruments, robot
 
 metadata = {
-    'protocolName': 'CSV Plate Filling',
+    'protocolName': 'DNA Normalization',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request'
 }

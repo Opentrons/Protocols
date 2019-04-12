@@ -2,7 +2,7 @@ from opentrons import labware, instruments
 from otcustomizers import FileInput
 
 metadata = {
-    'protocolName': 'CSV Plate Filling',
+    'protocolName': 'CSV DNA Normalization',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request'
 }
