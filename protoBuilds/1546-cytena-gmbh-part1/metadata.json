@@ -1,0 +1,1 @@
+{"slug": "1546-cytena-gmbh-part1", "path": "protocols/1546-cytena-gmbh-part1", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["DNA_normalization.ot2.py"]}, "status": "ok"}
