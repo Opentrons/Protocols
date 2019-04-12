@@ -93,7 +93,7 @@ def run_custom_protocol(number_of_DNA_samples: int = 22,
                 'resuming.')
 
     # transfer NTC to corresponding triplicate location
-    NTC = tubes.wells('B6')
+    NTC = tubes.wells('D6')
     p10.pick_up_tip()
     NTC_dests = dests_triplicates[number_of_DNA_samples+1]
     p10.transfer(5,
