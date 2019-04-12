@@ -69,11 +69,11 @@ def run_custom_protocol(
     num_columns = int(columns_to_process)
     if pipettes_type == 'single':
         pipette50 = instruments.P50_Single(mount='right', tip_racks=tips50)
-        pipette300 = instruments.P300_Multi(mount='left', tip_racks=tips300)
+        pipette300 = instruments.P300_Single(mount='left', tip_racks=tips300)
         bacteria_samples = bacteria_plate.wells('A1', length=8*num_columns)
         mag_samples = mag_plate.wells('A1', length=8*num_columns)
     else:
-        pipette50 = instruments.P50_Single(mount='right', tip_racks=tips50)
+        pipette50 = instruments.P50_Multi(mount='right', tip_racks=tips50)
         pipette300 = instruments.P300_Multi(mount='left', tip_racks=tips300)
         bacteria_samples = bacteria_plate.rows['A'][0:num_columns]
         mag_samples = mag_plate.rows['A'][0:num_columns]
