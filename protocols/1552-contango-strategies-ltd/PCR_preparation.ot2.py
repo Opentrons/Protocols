@@ -26,8 +26,9 @@ tips50 = labware.load('opentrons-tiprack-300ul', '5')
 # modules
 tempdeck = modules.load('tempdeck', '1')
 plate = labware.load(plate_name, '1', share=True)
-tempdeck.set_temperature(4)
-tempdeck.wait_for_temp()
+if not robot.is_simulating():
+    tempdeck.set_temperature(4)
+    tempdeck.wait_for_temp()
 
 # pipettes
 p10 = instruments.P10_Single(
@@ -39,44 +40,82 @@ p50 = instruments.P50_Single(
     tip_racks=[tips50]
 )
 
-# DNA sample sources setup
-master_mix = tubes.wells(0)
-DNA_samples = tubes.wells(1, length=22)
 
-# DNA sample destinations setup
-set1 = [plate.rows[start][0:3] for start in range(8)]
-set2 = [plate.rows[start][3:6] for start in range(8)]
-set3 = [plate.rows[start][6:9] for start in range(6)]
-DNA_dests_triplicates = set1 + set2 + set3
+def run_custom_protocol(number_of_DNA_samples: int = 22,
+                        number_of_oligo_standards: int = 8):
+    # check invalid parameters
+    if number_of_DNA_samples > 23:
+        raise Exception('Please specify 23 or fewer DNA samples.')
+    if number_of_DNA_samples + number_of_oligo_standards > 30:
+        raise Exception('Too many samples and standards for one plate.')
 
-# distribute master mix to all destination wells
-p50.distribute(15, master_mix, plate.wells())
+    # master mix setup
+    master_mix = tubes.wells('A1')
 
-# transfer DNA samples to corresponding triplicate locations
-for source, dests in zip(DNA_samples, DNA_dests_triplicates):
+    # DNA sample sources setup
+    DNA_samples = tubes.wells('B1', length=number_of_DNA_samples)
+
+    # DNA sample destinations setup
+    dests_triplicates = [plate.rows[start][(3*i):(3*i+3)]
+                         for i in range(4) for start in range(8)]
+
+    DNA_dests = dests_triplicates[0:number_of_DNA_samples]
+
+    # distribute master mix to all destination wells for DNA, oligo, positive
+    # control, and NTC
+    num_total_sources = number_of_DNA_samples + number_of_oligo_standards + 2
+    all_mm_wells = [well for trip in dests_triplicates for well in trip]
+    p50.distribute(15, master_mix, all_mm_wells[0:num_total_sources*3])
+
+    # transfer DNA samples to corresponding triplicate locations
+    for source, dests in zip(DNA_samples, DNA_dests):
+        p10.pick_up_tip()
+        p10.transfer(5,
+                     source,
+                     [d.top() for d in dests],
+                     new_tip='never',
+                     blow_out=True)
+        p10.drop_tip()
+
+    # transfer positive control to corresponding triplicate location
+    positive_control = tubes.wells('D6')
     p10.pick_up_tip()
+    pc_dests = dests_triplicates[number_of_DNA_samples]
     p10.transfer(5,
-                 source,
-                 [d.top() for d in dests],
+                 positive_control,
+                 [d.top() for d in pc_dests],
                  new_tip='never',
                  blow_out=True)
     p10.drop_tip()
 
-robot.pause("Please replace the master mix tube and DNA sample tubes with "
-            "oligo standard tubes before resuming.")
+    robot.pause('Please replace the master mix tube and DNA sample tubes with '
+                'NTC, positive control, and oligo standard tubes before '
+                'resuming.')
 
-# oligo standard sources setup
-oligo_standards = tubes.wells(0, length=8)
-
-# oligo standard destinations
-oligo_dests_triplicates = [plate.rows[start][9:12] for start in range(8)]
-
-# transfer oligo standards to corresponding triplicate locations
-for source, dests in zip(oligo_standards, oligo_dests_triplicates):
+    # transfer NTC to corresponding triplicate location
+    NTC = tubes.wells('D6')
     p10.pick_up_tip()
+    NTC_dests = dests_triplicates[number_of_DNA_samples+1]
     p10.transfer(5,
-                 source,
-                 [d.top() for d in dests],
+                 NTC,
+                 [d.top() for d in NTC_dests],
                  new_tip='never',
                  blow_out=True)
     p10.drop_tip()
+
+    # oligo standard sources setup
+    oligo_standards = tubes.wells(0, length=number_of_oligo_standards)
+
+    # oligo standard destinations
+    oligo_dests = dests_triplicates[number_of_DNA_samples+2:
+                                    num_total_sources]
+
+    # transfer oligo standards to corresponding triplicate locations
+    for source, dests in zip(oligo_standards, oligo_dests):
+        p10.pick_up_tip()
+        p10.transfer(5,
+                     source,
+                     [d.top() for d in dests],
+                     new_tip='never',
+                     blow_out=True)
+        p10.drop_tip()

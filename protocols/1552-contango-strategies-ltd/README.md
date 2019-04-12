@@ -8,7 +8,7 @@
     * PCR preparation
 
 ## Description
-This protocol performs PCR preparation on a custom 96-well PCR plate. All samples are carried out in triplicate. To see diagrams for initial and second reagent setup, as well as triplicate filling order, see Additional Notes below.
+This protocol performs PCR preparation on a custom 96-well PCR plate for a specified number of DNA samples and oligo standards. All samples are carried out in triplicate. To see diagrams for initial and second reagent setup, as well as triplicate filling order, see Additional Notes below.
 
 ---
 
@@ -38,19 +38,21 @@ You will need:
 4. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support article](https://support.opentrons.com/ot-2/getting-started-software-setup/deck-calibration).
 5. Hit "Run".
 6. 15ul of master mix are distributed to each well of the 96-well plate, which is loaded on the temperature module.
-7. 5ul of each of 22 DNA samples is transferred to its corresponding set of 3 destination wells according to the plate diagram in Additional Notes below.
-8. To avoid contamination, the protocol pauses and prompts the user to replace the master mix and DNA sample tubes with oligo standard tubes according to the reagent setup diagrams in Additional Notes below.
-9. 5ul of each of 8 oligo standards is transferred to its corresponding set of 3 destination wells according to the plate diagram in Additional Notes below.
+7. 5ul of each of the specified number of DNA samples is transferred to its corresponding set of 3 destination wells according to the plate diagram in Additional Notes below.
+8. To avoid contamination, the protocol pauses and prompts the user to replace the master mix and DNA sample tubes with oligo standard tubes, positive control tube, and NTC tube according to the reagent setup diagrams in Additional Notes below.
+9. 5ul of positive control is transferred to its corresponding set of 3 destination wells according to the plate diagram in Additional Notes below.
+10. 5ul of NTC is transferred to its corresponding set of 3 destination wells according to the plate diagram in Additional Notes below.
+11. 5ul of each of the specified number of oligo standards is transferred to its corresponding set of 3 destination wells according to the plate diagram in Additional Notes below.
 
 ### Additional Notes
-![Initial Reagent Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1552-contango-strategies-ltd/reagent_setup_1.png)
+![Initial Reagent Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1552-contango-strategies-ltd/reagent_setup_1_v2.png)
 
-![Second Reagent Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1552-contango-strategies-ltd/reagent_setup_2.png)
+![Second Reagent Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1552-contango-strategies-ltd/reagent_setup_2_v2.png)
 
 ![Transfer Diagram](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1552-contango-strategies-ltd/transfer_diagram.png)
 
 If you have any questions about this protocol, please contact protocols@opentrons.com.
 
 ###### Internal
-nU8R1Kic
+nU8R1Kic  
 1552
