@@ -8,15 +8,6 @@ metadata = {
     'source': 'Custom Protocol Request'
     }
 
-deep_plate_name = 'usa-scientific-tuberack-1.2ml'
-if deep_plate_name not in labware.list():
-    labware.create(
-        deep_plate_name,
-        grid=(12, 8),
-        spacing=(9, 9),
-        diameter=7,
-        depth=44)
-
 
 example_csv = """
 50,500,5000
@@ -34,7 +25,7 @@ def run_custom_protocol(
     # labware setup
     tuberack_1 = labware.load('opentrons-tuberack-15_50ml', '1')
     tuberack_4 = labware.load('opentrons-tuberack-2ml-eppendorf', '4')
-    deep_plates = [labware.load(deep_plate_name, slot)
+    deep_plates = [labware.load('96-deep-well', slot)
                    for slot in ['5', '6']]
 
     tiprack_1000 = labware.load('tiprack-1000ul', '2')
