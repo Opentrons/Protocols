@@ -1,7 +1,7 @@
 from opentrons import labware, instruments, modules, robot
 
 metadata = {
-    'protocolName': 'CSV Plate Filling',
+    'protocolName': 'PCR Preparation',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request'
 }
@@ -44,8 +44,8 @@ p50 = instruments.P50_Single(
 def run_custom_protocol(number_of_DNA_samples: int = 22,
                         number_of_oligo_standards: int = 8):
     # check invalid parameters
-    if number_of_DNA_samples > 23:
-        raise Exception('Please specify 23 or fewer DNA samples.')
+    if number_of_DNA_samples > 22:
+        raise Exception('Please specify 22 or fewer DNA samples.')
     if number_of_DNA_samples + number_of_oligo_standards > 30:
         raise Exception('Too many samples and standards for one plate.')
 
@@ -55,17 +55,22 @@ def run_custom_protocol(number_of_DNA_samples: int = 22,
     # DNA sample sources setup
     DNA_samples = tubes.wells('B1', length=number_of_DNA_samples)
 
-    # DNA sample destinations setup
+    # destinations setup
     dests_triplicates = [plate.rows[start][(3*i):(3*i+3)]
                          for i in range(4) for start in range(8)]
 
     DNA_dests = dests_triplicates[0:number_of_DNA_samples]
+    pc_dests = dests_triplicates[number_of_DNA_samples]
+    NTC_dests = dests_triplicates[number_of_DNA_samples+1]
+    oligo_dests = dests_triplicates[32-number_of_oligo_standards:]
 
     # distribute master mix to all destination wells for DNA, oligo, positive
     # control, and NTC
-    num_total_sources = number_of_DNA_samples + number_of_oligo_standards + 2
-    all_mm_wells = [well for trip in dests_triplicates for well in trip]
-    p50.distribute(15, master_mix, all_mm_wells[0:num_total_sources*3])
+    mm_dests = [well
+                for set in [DNA_dests, [pc_dests], [NTC_dests], oligo_dests]
+                for well in set]
+    all_mm_wells = [well for trip in mm_dests for well in trip]
+    p50.distribute(15, master_mix, all_mm_wells)
 
     # transfer DNA samples to corresponding triplicate locations
     for source, dests in zip(DNA_samples, DNA_dests):
@@ -80,7 +85,6 @@ def run_custom_protocol(number_of_DNA_samples: int = 22,
     # transfer positive control to corresponding triplicate location
     positive_control = tubes.wells('D6')
     p10.pick_up_tip()
-    pc_dests = dests_triplicates[number_of_DNA_samples]
     p10.transfer(5,
                  positive_control,
                  [d.top() for d in pc_dests],
@@ -89,13 +93,11 @@ def run_custom_protocol(number_of_DNA_samples: int = 22,
     p10.drop_tip()
 
     robot.pause('Please replace the master mix tube and DNA sample tubes with '
-                'NTC, positive control, and oligo standard tubes before '
-                'resuming.')
+                'NTC and oligo standard tubes before resuming.')
 
     # transfer NTC to corresponding triplicate location
     NTC = tubes.wells('D6')
     p10.pick_up_tip()
-    NTC_dests = dests_triplicates[number_of_DNA_samples+1]
     p10.transfer(5,
                  NTC,
                  [d.top() for d in NTC_dests],
@@ -105,10 +107,6 @@ def run_custom_protocol(number_of_DNA_samples: int = 22,
 
     # oligo standard sources setup
     oligo_standards = tubes.wells(0, length=number_of_oligo_standards)
-
-    # oligo standard destinations
-    oligo_dests = dests_triplicates[number_of_DNA_samples+2:
-                                    num_total_sources]
 
     # transfer oligo standards to corresponding triplicate locations
     for source, dests in zip(oligo_standards, oligo_dests):
