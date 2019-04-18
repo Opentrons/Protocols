@@ -76,7 +76,10 @@ def run_custom_protocol(volume_csv: FileInput=volume_csv_example):
     sources = get_source_list(volume_lists)
 
     for source_index, volumes in enumerate(volume_lists):
-        source = sources[source_index][0]
+        if len(sources[source_index]) == 1:
+            source = sources[source_index]
+        else:
+            source = sources[source_index][0]
         source_volume_tracker = source.max_volume()
         dests = vials[:len(volumes)]
         for vol, dest in zip(volumes, dests):
