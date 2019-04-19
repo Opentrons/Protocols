@@ -1,4 +1,4 @@
-from opentrons import labware, instruments, modules
+from opentrons import labware, instruments
 import math
 
 metadata = {
@@ -14,7 +14,7 @@ def run_custom_protocol(
 
     # labware setup
     mix_rack = labware.load('opentrons-tuberack-2ml-eppendorf', '4')
-    temp_module = modules.load('tempdeck', '10')
+    labware.load('tempdeck', '10')
     temp_rack = labware.load('opentrons-aluminum-block-2ml-eppendorf', '10',
                              share=True)
     samples_control_plate = labware.load('PCR-strip-tall', '1')
@@ -48,10 +48,6 @@ def run_custom_protocol(
     else:
         control_cols = [col for col in samples_control_plate.cols(
             '6', length=math.ceil(control_num/8))]
-
-    # temp cofig
-    temp_module.set_temperature(4)
-    temp_module.wait_for_temp()
 
     # Transfer reagents to mastermixes
     s_factor = sample_num + 0.5
