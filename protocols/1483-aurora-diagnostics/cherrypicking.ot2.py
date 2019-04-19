@@ -1,5 +1,5 @@
 from opentrons import labware, instruments
-from otcustomizers import FileInput, StringSelection
+from otcustomizers import FileInput
 
 metadata = {
     'protocolName': 'Cherrypicking',
@@ -16,6 +16,15 @@ CMPD-ID,PLATE-POSITION,volume_to_be_added_to_the_well
 1004,A5,25
 """
 
+plate_name = 'optical-96-well'
+if plate_name not in labware.list():
+    custom_plate = labware.create(
+        plate_name,
+        grid=(12, 8),
+        spacing=(9.025, 9.025),
+        diameter=5.494,
+        depth=23.24)
+
 
 def csv_to_list(csv_string):
     info_list = [cell for line in csv_string.splitlines() if line
@@ -30,17 +39,13 @@ def csv_to_list(csv_string):
 
 
 def run_custom_protocol(
-        tuberack_type: StringSelection(
-            'opentrons-tuberack-2ml-eppendorf',
-            'opentrons-tuberack-2ml-screwcap'
-                )='opentrons-tuberack-2ml-eppendorf',
         volume_csv: FileInput=csv_example,
         dna_volume: float=2):
 
     # labware setup
-    tuberack = labware.load(tuberack_type, '2')
-    plate = labware.load('96-flat', '3', 'Output Plate')
-    dna = labware.load('96-flat', '6', 'DNA Plate')
+    tuberack = labware.load('trough-12row', '2')
+    plate = labware.load('optical-96-well', '3', 'Output Plate')
+    dna = labware.load('optical-96-well', '6', 'DNA Plate')
 
     tiprack_10 = labware.load('tiprack-10ul', '5')
     tiprack_300 = labware.load('opentrons-tiprack-300ul', '1')
@@ -68,9 +73,9 @@ def run_custom_protocol(
             buff_volume_tracker = buff.max_volume()
         if p300.current_volume < vol:
             p300.blow_out(buff.top())
-            p300.aspirate(300, buff)
-            buff_volume_tracker -= 300
-        p300.dispense(vol, plate.wells(dest))
+            p300.transfer(vol, buff, plate.wells(dest), air_gap=10,
+                          new_tip='never')
+            buff_volume_tracker -= vol
     p300.drop_tip()
 
     # transfer samples
