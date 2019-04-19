@@ -15,7 +15,7 @@ With this protocol, your robot can perform dilution by diluting the same volume 
 You will need:
 * P10 Multi-channel Pipette
 * P300 Single-channel Pipette
-* [Opentrons 4-in-1 Tube Rack Set](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)
+* 12-row Trough
 * 96-well Plates
 * 10 uL Tip Rack
 * Opentrons 300 uL Tip Rack
@@ -28,16 +28,15 @@ You will need:
 ### Reagents
 
 ## Process
-1. Select the tube type for your buffer.
-2. Upload your buffer volume CSV.
-3. Set the DNA volume.
-4. Download your protocol.
-5. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
-6. Set up your deck according to the deck map.
-7. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support article](https://support.opentrons.com/ot-2/getting-started-software-setup/deck-calibration).
-8. Hit "Run".
-9. Robot will transfer buffer to all wells in the output plate defined in the CSV file using the P300 single-channel pipette.
-10. Robot will transfer each column of the DNA plate to each column of the output plate.
+1. Upload your buffer volume CSV.
+2. Set the DNA volume.
+3. Download your protocol.
+4. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
+5. Set up your deck according to the deck map.
+6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support article](https://support.opentrons.com/ot-2/getting-started-software-setup/deck-calibration).
+7. Hit "Run".
+8. Robot will transfer buffer to all wells in the output plate defined in the CSV file using the P300 single-channel pipette.
+9. Robot will transfer each column of the DNA plate to each column of the output plate.
 
 
 ### Additional Notes
@@ -48,8 +47,7 @@ CSV Layout:
 ---
 
 Buffer:
-* Tube Rack: A1, B1, C1...
-* Number of buffer tubes depends on how much buffer it requires to fill all of the wells defined in the CSV file
+* Trough A1
 
 ---
 
