@@ -76,7 +76,7 @@ def run_custom_protocol(volume_csv: FileInput=volume_csv_example):
     sources = get_source_list(volume_lists)
 
     for source_index, volumes in enumerate(volume_lists):
-        if len(sources[source_index]) == 1:
+        if len(sources[source_index]) < 2:
             source = sources[source_index]
         else:
             source = sources[source_index][0]
