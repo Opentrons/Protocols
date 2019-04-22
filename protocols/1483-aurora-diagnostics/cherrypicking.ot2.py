@@ -13,7 +13,7 @@ CMPD-ID,PLATE-POSITION,volume_to_be_added_to_the_well
 1001,A2,25
 1002,A3,25
 1003,A4,25
-1004,A5,25
+# 1004,A5,25
 """
 
 plate_name = 'optical-96-well'
@@ -35,7 +35,8 @@ def csv_to_list(csv_string):
         volume = float(line[2])
         dests.append(well_name)
         vols.append(volume)
-    return dests, vols
+    col_num = well_name[1:]
+    return dests, vols, col_num
 
 
 def run_custom_protocol(
@@ -62,7 +63,7 @@ def run_custom_protocol(
     # reagent setup
     buff = tuberack.wells('A1')
 
-    dest_wells, volumes = csv_to_list(volume_csv)
+    dest_wells, volumes, col_num = csv_to_list(volume_csv)
 
     # transfer buffer
     buff_volume_tracker = buff.max_volume()
@@ -79,5 +80,6 @@ def run_custom_protocol(
     p300.drop_tip()
 
     # transfer samples
-    for source, dest in zip(dna.cols(), plate.cols()):
+    for source, dest in zip(
+            dna.cols('1', to=col_num), plate.cols('1', to=col_num)):
         m10.transfer(dna_volume, source, dest, mix_after=(3, 10))
