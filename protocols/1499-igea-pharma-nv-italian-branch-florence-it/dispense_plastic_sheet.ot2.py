@@ -16,7 +16,7 @@ if sheet_name not in labware.list():
                                   depth=0.5)
 
 # labware
-tips10 = labware.load('tiprack-10ul', '3')
+tips50 = labware.load('opentrons-tiprack-300ul', '3')
 trough = labware.load('trough-12row', '6')
 
 # custom sheet
@@ -26,17 +26,11 @@ sheet = labware.load('A4-plastic-sheet', '10')
 saline = trough.wells('A1')
 
 # pipettes
-p10 = instruments.P10_Single(mount='left',
-                             tip_racks=[tips10])
+p50 = instruments.P50_Single(mount='left',
+                             tip_racks=[tips50])
 
-
-def run_custom_protocol(transfer_volume: float = 10.0):
-
-    # transfer saline to all spots on paper
-    p10.pick_up_tip()
-    p10.transfer(10,
-                 saline,
-                 [well.top(2) for well in sheet.wells()],
-                 blow_out=True,
-                 new_tip='never')
-    p10.drop_tip()
+# transfer saline to all spots on paper
+spots_ordered = [spot.top(2) for row in sheet.rows() for spot in row]
+p50.distribute(10,
+               saline,
+               spots_ordered)
