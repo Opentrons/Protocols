@@ -16,7 +16,7 @@ if sheet_name not in labware.list():
                                   depth=0.5)
 
 # labware
-tips10 = labware.load('tiprack-10ul', '3')
+tips50 = labware.load('opentrons-tiprack-300ul', '3')
 trough = labware.load('trough-12row', '6')
 
 # custom sheet
@@ -27,7 +27,7 @@ saline = trough.wells('A1')
 
 # pipettes
 p50 = instruments.P50_Single(mount='left',
-                             tip_racks=[tips10])
+                             tip_racks=[tips50])
 
 # transfer saline to all spots on paper
 spots_ordered = [spot.top(2) for row in sheet.rows() for spot in row]
