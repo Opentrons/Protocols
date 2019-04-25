@@ -1,4 +1,4 @@
-from opentrons import labware, instruments, modules
+from opentrons import labware, instruments, modules, robot
 
 metadata = {
     'protocolName': 'Nucleic Acid Purification',
@@ -69,6 +69,7 @@ def buffer_transfer(buffer, tips, repeats, samples, num_mixes, disengage):
             m300.transfer(200, s, waste, new_tip='never')
             m300.return_tip()
         if disengage is True:
+            robot._driver.run_flag.wait()
             magdeck.disengage()
 
 
@@ -143,6 +144,7 @@ def run_custom_protocol(number_of_sample_columns: int = 12,
             m300.return_tip()
 
         m300.delay(minutes=5)
+        robot._driver.run_flag.wait()
         magdeck.engage()
         m300.delay(minutes=5)
         for tip, source, dest in zip(elution_buffer_tips,
