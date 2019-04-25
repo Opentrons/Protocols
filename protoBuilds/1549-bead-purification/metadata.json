@@ -1,0 +1,1 @@
+{"slug": "1549-bead-purification", "path": "protocols/1549-bead-purification", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["NGS_library_prep_bead_purification.ot2.py"]}, "status": "ok"}
