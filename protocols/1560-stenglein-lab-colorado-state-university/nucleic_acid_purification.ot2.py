@@ -1,4 +1,4 @@
-from opentrons import labware, instruments, modules
+from opentrons import labware, instruments, modules, robot
 from otcustomizers import FileInput
 
 metadata = {
@@ -78,6 +78,7 @@ def run_custom_protocol(volume_autoclave_ddH2O: float = 30,
             m300.return_tip()
 
         m300.delay(minutes=2)
+        robot._driver.run_flag.wait()
         magdeck.engage(height=18)
         m300.delay(minutes=3)
         m300.set_flow_rate(aspirate=25)
@@ -123,6 +124,7 @@ def run_custom_protocol(volume_autoclave_ddH2O: float = 30,
         m300.return_tip()
 
     m300.delay(minutes=10)
+    robot._driver.run_flag.wait()
     magdeck.engage(height=18)
     m300.delay(minutes=3)
     m300.set_flow_rate(aspirate=25)
@@ -157,7 +159,7 @@ def run_custom_protocol(volume_autoclave_ddH2O: float = 30,
         m300.mix(10, 130, s)
         m300.return_tip()
     m300.delay(minutes=5)
-
+    robot._driver.run_flag.wait()
     magdeck.engage(height=18)
     m300.delay(minutes=3)
     for tip, s in zip(s_tips, mag_samples):
@@ -171,6 +173,7 @@ def run_custom_protocol(volume_autoclave_ddH2O: float = 30,
 
     # dry beads
     m300.delay(minutes=3)
+    robot._driver.run_flag.wait()
     magdeck.disengage()
 
     # distribute autoclave ddH2O, mix, and incubate
@@ -185,7 +188,7 @@ def run_custom_protocol(volume_autoclave_ddH2O: float = 30,
         m300.mix(10, volume_autoclave_ddH2O, s)
         m300.return_tip()
     m300.delay(minutes=5)
-
+    robot._driver.run_flag.wait()
     magdeck.engage(height=18)
     m300.delay(minutes=3)
     for tip, source, dest in zip(s_tips, mag_samples, new_samples):
