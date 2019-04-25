@@ -9,8 +9,8 @@
 
 ## Description
 Links:
-* [Part 1: Purify and Fragment mRNA, First & Second Strand cDNA Synthesis, and End Repairs](./1559-cell-signaling-lab-irb-barcelona-part1)
-* [Part 2: Adenylate 3' Ends, Ligate Adapters, PCR Amplification](./1559-cell-signaling-lab-irb-barcelona-part2)
+* [Part 1: Purify and Fragment mRNA, First & Second Strand cDNA Synthesis, and End Repairs](./1559-part1)
+* [Part 2: Adenylate 3' Ends, Ligate Adapters, PCR Amplification](./1559-part2)
 
 With this protocol, your robot can perform the TruSeq RNA Library Prep Kit as described in the [Illumina TruSeq® RNA Sample Preparation v2 Guide](https://support.illumina.com/content/dam/illumina-support/documents/documentation/chemistry_documentation/samplepreps_truseq/truseqrna/truseq-rna-sample-prep-v2-guide-15026495-f.pdf).
 
