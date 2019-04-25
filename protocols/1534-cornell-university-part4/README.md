@@ -36,11 +36,11 @@ After this part of the protocol is done, you need to perform the steps describe 
 ### Additional Notes
 In order to control two Temperature Modules in the protocol, please follow the instructions below. You will need to modify the code in line 21 and 22.
 1. Plug in Temperature Module 1 to the robot
-1. SSH into the robot to gain access of it's terminal by running `ssh root@ROBOT_IP` (replace ROBOT_IP with your robot's IP)
-2. Find device path of the module by running `ls /dev/ttyACM*`
-3. Replace line 21 example device path with your result
-4. Unplug Temperature Module 1, and plug in Temperature Module 2
-5. Repeat the same steps above to find the device path and replace it in line 22
+2. SSH into the robot to gain access of it's terminal by running `ssh root@ROBOT_IP` (replace ROBOT_IP with your robot's IP)
+3. Find device path of the module by running `ls /dev/ttyACM*`
+4. Replace line 21 example device path with your result
+5. Unplug Temperature Module 1, and plug in Temperature Module 2
+6. Repeat the same steps above to find the device path and replace it in line 22
 
 ---
 
