@@ -88,6 +88,7 @@ def run_custom_protocol(beads_strip_column: StringSelection('1', '2', '3', '4',
 
     # incubate for 5 minutes
     p300.delay(minutes=5)
+    robot._driver.run_flag.wait()
 
     # remove supernatant for each plate
     for ind, (plate_num, et_tube) in enumerate(zip(range(1, 3), ethanol)):
@@ -131,6 +132,7 @@ def run_custom_protocol(beads_strip_column: StringSelection('1', '2', '3', '4',
 
         # dry pellet for 8 minutes
         p300.delay(minutes=8)
+        robot._driver.run_flag.wait()
 
         # resuspend in TE
         magdeck.disengage()

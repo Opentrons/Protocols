@@ -1,4 +1,4 @@
-from opentrons import labware, instruments, modules
+from opentrons import labware, instruments, modules, robot
 from otcustomizers import StringSelection
 import math
 
@@ -99,6 +99,7 @@ def run_custom_protocol(
         p300.return_tip()
 
     p300.delay(minutes=5)
+    robot._driver.run_flag.wait()
     magdeck.engage(height=18)
     p300.delay(minutes=10)
 
@@ -139,6 +140,7 @@ def run_custom_protocol(
 
     # dry pellet
     p300.delay(minutes=8)
+    robot._driver.run_flag.wait()
 
     # resuspend in TE
     magdeck.disengage()
@@ -147,6 +149,7 @@ def run_custom_protocol(
     p10.transfer(10.5, TE, [p.top() for p in new_pools], new_tip='never')
     p10.drop_tip()
     p10.delay(minutes=2)
+    robot._driver.run_flag.wait()
     magdeck.engage(height=18)
     p10.delay(minutes=5)
 
