@@ -1,0 +1,1 @@
+{"slug": "1549-BP-post-index2", "path": "protocols/1549-BP-post-index2", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["NGS_library_prep_BP_post_index2.ot2.py"]}, "status": "ok"}
