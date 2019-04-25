@@ -1,0 +1,1 @@
+{"slug": "1534-cornell-university-part5", "path": "protocols/1534-cornell-university-part5", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["NGS_library_prep-part5.ot2.py"]}, "status": "ok"}
