@@ -1,5 +1,5 @@
 from opentrons import labware, instruments
-# from otcustomizers import FileInput
+from otcustomizers import FileInput
 import math
 
 metadata = {
@@ -51,9 +51,7 @@ p1000 = instruments.P1000_Single(
     tip_racks=tipracks_1000)
 
 
-# def run_custom_protocol(volume_csv: FileInput=volume_csv_example):
-def run_custom_protocol():
-    volume_csv = volume_csv_example
+def run_custom_protocol(volume_csv: FileInput=volume_csv_example):
 
     def get_volume_lists(csv_string):
         info_list = [cell for line in volume_csv.splitlines() if line
