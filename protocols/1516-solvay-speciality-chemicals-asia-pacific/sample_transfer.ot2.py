@@ -33,20 +33,21 @@ Produit1,Produit2,Produit3,Produit4,Produit5,Produit6,Produit7,Produit8,Produit9
 """
 
 # labware setup
-al_block = labware.load('opentrons-aluminum-block-2ml-eppendorf', '4')
+mother_racks = [labware.load('opentrons-tuberack-50ml', slot)
+                for slot in ['2', '5', '8']]
 sample_racks = [labware.load(vial_rack_name, slot)
-                for slot in ['1', '2', '3']]
+                for slot in ['3', '6', '9']]
 tipracks_300 = [labware.load('opentrons-tiprack-300ul', slot)
-                for slot in ['5', '6']]
+                for slot in ['10', '11']]
 tipracks_1000 = [labware.load('tiprack-1000ul', slot)
-                 for slot in ['7', '8']]
+                 for slot in ['1', '4', '7']]
 
 # instruments setup
 p300 = instruments.P300_Single(
-    mount='right',
+    mount='left',
     tip_racks=tipracks_300)
 p1000 = instruments.P1000_Single(
-    mount='left',
+    mount='right',
     tip_racks=tipracks_1000)
 
 
@@ -63,11 +64,12 @@ def run_custom_protocol(volume_csv: FileInput=volume_csv_example):
 
     def get_source_list(volume_lists):
         source_dict = {index: [] for index in range(len(volume_lists))}
+        source_tubes = [well for rack in mother_racks for well in rack]
         tube_count = 0
         for index, volumes in enumerate(volume_lists):
             total_vol = sum(volumes)
-            tube_num = math.ceil(total_vol / 1000)
-            source_dict[index] = al_block.wells(tube_count, length=tube_num)
+            tube_num = math.ceil(total_vol / 50000)
+            source_dict[index] = source_tubes[tube_count:tube_count+tube_num]
             tube_count += tube_num
         return source_dict
 
@@ -80,7 +82,7 @@ def run_custom_protocol(volume_csv: FileInput=volume_csv_example):
             source = sources[source_index]
         else:
             source = sources[source_index][0]
-        source_volume_tracker = source.max_volume()
+        source_volume_tracker = 50000
         dests = vials[:len(volumes)]
         for vol, dest in zip(volumes, dests):
             if vol == 0:
@@ -94,7 +96,7 @@ def run_custom_protocol(volume_csv: FileInput=volume_csv_example):
                     pipette.pick_up_tip()
                 if vol > source_volume_tracker:
                     source = next(source)
-                    source_volume_tracker = source.max_volume()
+                    source_volume_tracker = 50000
                 pipette.transfer(vol, source, dest.top(-10), new_tip='never')
                 pipette.blow_out(dest.top(-10))
                 source_volume_tracker -= vol

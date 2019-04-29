@@ -8,7 +8,7 @@
     * Cherrypicking
 
 ## Description
-This protocol allows your robot to consolidate up to 24 mother solutions in up to 72 custom vials. The mother solutions are stored in 2 mL Eppendorf tubes. The volume of each mother solution to be transferred to each vial will be provided in the form of a CSV file. See Additional Notes for more information on the CSV requirement. Based on how much each mother solution is needed, the robot will automatically calculate the number of tubes each mother solution stock would need for each run.
+This protocol allows your robot to consolidate up to 24 mother solutions in up to 72 custom vials. The mother solutions are stored in 50 mL conical tubes. The volume of each mother solution to be transferred to each vial will be provided in the form of a CSV file. See Additional Notes for more information on the CSV requirement. Based on how much each mother solution is needed, the robot will automatically calculate the number of tubes each mother solution stock would need for each run.
 
 ---
 
@@ -17,7 +17,7 @@ You will need:
 * P1000 Single-channel Pipette
 * [Opentrons Aluminum Block Set](https://shop.opentrons.com/collections/hardware-modules/products/aluminum-block-set)
 * 8 mL Vials
-* Custom Vial Racks
+* [Opentrons 4-in-1 Tube Rack Set](https://shop.opentrons.com/products/tube-rack-set-1)
 * Opentrons 300 uL Tip Racks
 * 1000 uL Tip Racks
 
@@ -50,10 +50,10 @@ CSV Layout:
 
 ---
 
-Aluminum block setup:
-* The maximum volume in the tube is 2 mL
-* If the total volume of a mother solution (sum of the volumes in a single column) exceeds 2 mL, the robot will recognize 2 or more Eppendorf tubes will be used to store the mother solution
-
+Mother Solution setup:
+* The maximum volume in the tube is 50 mL
+* If the total volume of a mother solution (sum of the volumes in a single column) exceeds 50 mL, the robot will recognize 2 or more Eppendorf tubes will be used to store the mother solution
+* Tube order (slot 2 -> slot 5 -> slot 8): A1, B1, A2, B2, A3, B3
 ---
 
 Custom vial racks setup:
