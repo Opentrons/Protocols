@@ -104,5 +104,3 @@ def run_custom_protocol(volume_csv: FileInput=volume_csv_example):
             p1000.drop_tip()
         if p300.tip_attached:
             p300.drop_tip()
-
-run_custom_protocol()
