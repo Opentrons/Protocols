@@ -10,6 +10,8 @@
 ## Description
 With this protocol, you can perform a 10x serial dilution using buffer from a 12-row trough reservoir for up to 12 samples, setup according to the diagram in the Additional Notes section below. Each sample is diluted 8 times, but only the 6 most dilute samples are transferred to the Petri dishes. The samples are then distributed to one (up to 6 samples) or two (up to 12 samples) Petri dishes according to the schematic in the Additional Notes section below.
 
+Note: Please calibrate the Petri dishes such that the pipette tip barely touches the gel.
+
 ---
 
 You will need:

@@ -27,11 +27,11 @@ if petri_dish_name not in labware.list():
 
 # load labware
 trough = labware.load('trough-12row', '1')
-plate = labware.load('96-flat-culture', '2')
-petris = [labware.load('6x6-petri-dish-square', slot) for slot in ['3', '4']]
-tuberack = labware.load('tube-rack-2ml', '5')
-tips50 = labware.load('tiprack-200ul', '7')
-tips10 = labware.load('tiprack-10ul', '8')
+plate = labware.load(plate_name, '4')
+petris = [labware.load(petri_dish_name, slot) for slot in ['5', '6']]
+tuberack = labware.load('tube-rack-2ml', '7')
+tips50 = labware.load('tiprack-200ul', '8')
+tips10 = labware.load('tiprack-10ul', '9')
 
 # pipettes
 m50 = instruments.P50_Multi(
