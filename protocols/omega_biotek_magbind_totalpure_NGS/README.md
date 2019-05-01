@@ -33,7 +33,7 @@ To purchase tips, reagents, or our Magnetic Module, please [visit our online sto
    * 200uL or 300 uL Tiprack ([Opentrons tips suggested](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips-racks-9-600-tips))
    * [12-row automation-friendly trough](https://www.usascientific.com/12-channel-automation-reservoir.aspx)
    * [BioRad HardShell 96-Well PCR Plates](http://www.bio-rad.com/en-us/sku/hsp9601-hard-shell-96-well-pcr-plates-low-profile-thin-wall-skirted-white-clear?ID=hsp9601)
-   * Ethanol 
+   * Ethanol
    * Elution Buffer (Typically  10 mM Tris pH 8.0, TE Buffer, or nuclease-free water)
 
 ---
@@ -51,7 +51,7 @@ Using the customization fields below, set up your protocol as follows:
    * **Sample volume:** Specify the starting volume (in uL) of the input sample.
    * **Bead Ratio:** Customize the ratio of beads for left or right side size-selection of fragments. *The default bead ratio is 1.8x the input sample volume.*
    * **Elution Volume:** Specify the final volume (in uL) to elute the purified nucleic acid. *The Opentrons MagDeck supports elution volumes above 10 µL.*
-   
+
 Make sure to add reagents to your labware before placing it on the deck! You can see where to place your reagents below.
 
 ![Labware setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/Nucleic+Acid+Purification/Nucleic+Acid+Purification+with+Magnetic+Beads+-+Reagent+Start+Position.png)
@@ -73,7 +73,7 @@ Make sure to add reagents to your labware before placing it on the deck! You can
 Omega Nucleic Acid Purification, v1
 
 ### Additional Notes
-Please reference our [Application Note](https://s3.amazonaws.com/opentrons-protocol-library-website/Technical+Notes/Omega_Application_Note.pdf) for more information about the expected output of this protocol, in addition to expanded sample data from the Opentrons and Omega Bio-tek labs. 
+Please reference our [Application Note](https://s3.amazonaws.com/opentrons-protocol-library-website/Technical+Notes/Omega_Application_Note.pdf) for more information about the expected output of this protocol, in addition to expanded sample data from the Opentrons and Omega Bio-tek labs.
 
 If you'd like to request a more complex purification workflow, please use our [Protocol Development Request Form](https://opentrons-protocol-dev.paperform.co/). You can also download the Python file from this page and modify it using our [API Documentation](https://docs.opentrons.com/). For additional questions about this protocol, please email <protocols@opentrons.com>.
 
