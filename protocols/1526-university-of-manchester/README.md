@@ -15,6 +15,7 @@ This protocol performs liquid transfer from a 96 deep well block to the square r
 You will need:
 * [96 Starlab Deep Well Block](https://www.starlabgroup.com/en/consumables/plates_WebPSub-155857/deepwell-plates_PF-SL-155338.html)
 * [Swissci SD3 3 Well Crystallization Plate](https://hamptonresearch.com/product_detail.aspx?cid=10&sid=182&pid=568)
+* [P50 8-Channel Electronic Pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette?variant=5984202457117)
 * [P300 8-Channel Electronic Pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)
 * [Opentrons 300uL Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
 
