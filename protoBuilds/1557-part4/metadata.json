@@ -1,0 +1,1 @@
+{"slug": "1557-part4", "path": "protocols/1557-part4", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["NGS_library_prep-part4.ot2.py"]}, "status": "ok"}
