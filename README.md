@@ -1,14 +1,9 @@
 # Opentrons Protocol Library
 
-This is where Opentrons protocols are stored for everyone to use.
+Welcome to the Opentrons Community and our Protocols Repo! This is where Opentrons protocols are stored for everyone to use.
 
-The `master` branch populates http://protocols.opentrons.com/, our Protocol Library. Please let us know if you would like to contribute your protocols, or just submit a pull request. We would love to add your Opentrons protocols to the Library!
+The `master` branch populates http://protocols.opentrons.com/, our Protocol Library. Please let us know if you would like to contribute your protocol or suggest revisions by emailing us at protocols@opentrons.com, or just submit a pull request! We would love to add your Opentrons protocols to the Library!
 
-All the best,
-
-Will Canine
-Co-Founder, Opentrons
-will@opentrons.com
 
 # Contributing
 
@@ -52,17 +47,21 @@ What special labware is required?
 * [OT PRO](https://opentrons.com/ot-one-pro)
 * [OT Standard](https://opentrons.com/ot-one-standard)
 * [OT Hood](https://opentrons.com/ot-one-hood)
+* [OT-2](https://opentrons.com/ot-2)
 
 ### Modules
-* [CoolDeck](https://shop.opentrons.com/collections/labware/products/cold-deck)
+* [Temperature Module](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
+* [Magnetic Module](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
 
-### Reagents
+### Materials
 * ddH2O
-* cDNA samples
+* DNA samples
+* Primers
+* Thin-walled PCR plates
 * Et cetera
 
 ## Process
-1. Describe the steps that a scientist takes to execute the protocol.
+1. Describe the steps that a scientist should take to execute the protocol on Opentrons.
 2. Put the steps in a numbered list
 3. Et cetera
 
