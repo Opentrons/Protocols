@@ -60,7 +60,7 @@ def run_custom_protocol(
             pipette.pick_up_tip(tips.cols(ind))
             for plate in plates:
                 pipette.aspirate(vol, source)
-                pipette.move_to(source)
+                pipette.move_to(source_col[0].top(1))
                 pipette.delay(seconds=10)
                 offset = source_col[0].from_center(h=0.9, r=1.0, theta=0)
                 touch_dest = (source_col[0], offset)
