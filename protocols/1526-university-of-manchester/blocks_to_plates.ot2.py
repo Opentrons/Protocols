@@ -56,13 +56,17 @@ def run_custom_protocol(
         ):
     def perform_deck_transfer(vol):
         for ind, source_col in enumerate(block.cols()):
+            source = source_col[0].top(-3)
             pipette.pick_up_tip(tips.cols(ind))
             for plate in plates:
-                dest_col = plate.cols(ind)
-                pipette.transfer(vol,
-                                 source_col,
-                                 dest_col,
-                                 new_tip='never')
+                pipette.aspirate(vol, source)
+                pipette.move_to(source)
+                pipette.delay(seconds=10)
+                offset = source_col[0].from_center(h=0.9, r=1.0, theta=0)
+                touch_dest = (source_col[0], offset)
+                pipette.move_to(touch_dest, strategy='direct')
+                dest = plate.cols(ind)[0]
+                pipette.dispense(vol, dest)
             pipette.drop_tip()
 
     # select pipette
@@ -70,6 +74,7 @@ def run_custom_protocol(
         pipette = m50
     else:
         pipette = m300
+    pipette.set_flow_rate(aspirate=10, dispense=20)
 
     # perform transfers
     perform_deck_transfer(volume_of_transfer)
