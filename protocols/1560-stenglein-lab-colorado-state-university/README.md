@@ -45,19 +45,19 @@ You will need:
 15. The aspiration flow rate is decreased to 25ul/s to avoid bead perturbation, and the supernatant is removed from each sample to the waste, using the corresponding tip from step 7. Tips are returned after the transfer.
 16. Steps 12-15 are repeated 1x more, and the magnetic deck disengages.
 17. 30ul of DNase is transferred from the trough to each of the specified sample columns on the magnetic plate using a new tip. Samples are mixed 10x after each transfer, using the corresponding tip from step 7. Tips are returned. The samples incubate for 30 minutes.
-18. 30ul of binding buffer is transferred from the trough to each of the specified sample columns on the magnetic plate using a new tip. Samples are mixed 10x after each transfer, using the corresponding tip from step 7. Tips are returned. The samples incubate for 5 minutes.
+18. 100ul of binding buffer is transferred from the trough to each of the specified sample columns on the magnetic plate using a new tip. Samples are mixed 10x after each transfer, using the corresponding tip from step 7. Tips are returned. The samples incubate for 5 minutes.
 19. The magnetic deck engages, and samples incubate on the magnet for 3 minutes for the beads to separate before the protocol resumes.
 20. The supernatant from each sample is transferred from the magnetic plate to the waste, using the corresponding tips from step 7.
 21. Steps 12-15 are repeated 2x.
 22. The plate incubates on the magnet for 3 minutes for the beads to dry, and the magnetic deck disengages.
 23. The specified volume of autoclave ddH2O is transferred from the trough to each of the specified sample columns on the magnetic plate using a new tip. Samples are mixed 10x after each transfer, using the corresponding tip from step 7. Tips are returned. The samples incubate for 5 minutes.
 24. The magnetic deck engages and the plate incubates on the magnet for 3 minutes for the beads to separate.
-25. All but 2 ml of supernatant is removed from the samples to their corresponding wells on a new plate, using the corresponding tips from step 7. Tips are dropped after each transfer. The magnetic deck disengages.
+25. All but 2ul of supernatant is removed from the samples to their corresponding wells on a new plate, using the corresponding tips from step 7. Tips are dropped after each transfer. The magnetic deck disengages.
 
 ### Additional Notes
 ![Example CSV](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1560-stenglein-lab-colorado-state-university/csv_example.png)
 
-![Trough Reagent Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1560-stenglein-lab-colorado-state-university/trough_reagent_setup.png)
+![Trough Reagent Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1560-stenglein-lab-colorado-state-university/trough_reagent_setup_2.png)
 
 If you have any questions about this protocol, please contact protocols@opentrons.com.
 
