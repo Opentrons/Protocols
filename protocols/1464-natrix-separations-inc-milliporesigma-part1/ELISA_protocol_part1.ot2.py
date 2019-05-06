@@ -16,6 +16,16 @@ example_csv = """
 5,,
 """
 
+deep_plate_name = "plateone-96-deep-well-plate-2ml"
+if deep_plate_name not in labware.list():
+    labware.create(
+        deep_plate_name,
+        grid=(12, 8),
+        spacing=(9, 9),
+        diameter=8.2,
+        depth=41.3,
+        volume=2000)
+
 
 def run_custom_protocol(
         starting_buffer_volume: float=50,
@@ -25,7 +35,7 @@ def run_custom_protocol(
     # labware setup
     tuberack_1 = labware.load('opentrons-tuberack-15_50ml', '1')
     tuberack_4 = labware.load('opentrons-tuberack-2ml-eppendorf', '4')
-    deep_plates = [labware.load('96-deep-well', slot)
+    deep_plates = [labware.load(deep_plate_name, slot)
                    for slot in ['5', '6']]
 
     tiprack_1000 = labware.load('tiprack-1000ul', '2')
