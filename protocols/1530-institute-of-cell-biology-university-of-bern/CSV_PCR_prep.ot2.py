@@ -1,4 +1,4 @@
-from opentrons import labware, instruments, robot
+from opentrons import labware, instruments
 from otcustomizers import FileInput
 
 metadata = {
