@@ -1,0 +1,1 @@
+{"slug": "1530-institute-of-cell-biology-university-of-bern", "path": "protocols/1530-institute-of-cell-biology-university-of-bern", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["CSV_PCR_prep.ot2.py"]}, "status": "ok"}
