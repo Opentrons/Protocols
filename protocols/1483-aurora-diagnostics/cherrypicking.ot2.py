@@ -80,6 +80,11 @@ def run_custom_protocol(
     p300.drop_tip()
 
     # transfer samples
-    for source, dest in zip(
-            dna.cols('1', to=col_num), plate.cols('1', to=col_num)):
-        m10.transfer(dna_volume, source, dest, mix_after=(3, 10))
+    i = len(dest_wells)
+    LastLane = dest_wells[int(i-1)]
+    LastLaneid = LastLane[1:]
+    for x in range(int(LastLaneid)):
+        location = "A" + str(x+1)
+        m10.transfer(
+            dna_volume, dna.wells(location), plate.wells(location),
+            mix_after=(3, 10))
