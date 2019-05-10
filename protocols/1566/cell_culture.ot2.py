@@ -132,6 +132,9 @@ def run_custom_protocol(CSV_for_XYZ: FileInput = csv_0,
             p300.blow_out(discharge)
         p300.drop_tip()
 
+    # extract CSV information
+    CSV_parser(CSV_for_XYZ)
+
     # discharge 100ul from specified wells
     discharge_supernatant()
 
@@ -254,7 +257,6 @@ def run_custom_protocol(CSV_for_XYZ: FileInput = csv_0,
                 pipette.transfer(vol, source, dest, new_tip='never')
                 pipette.drop_tip()
                 counter += 1
-                # Z_temp.append(dest.get_name())
                 Z_temp.append(vol)
 
         Z_positions = []
@@ -283,5 +285,5 @@ def run_custom_protocol(CSV_for_XYZ: FileInput = csv_0,
                 for row in Z_positions:
                     z_writer.writerow(row)
 
-        # prompt user to retrieve the written CSV from the robot
-        robot.comment('Retrieve your file: ' + new_file_name)
+            # prompt user to retrieve the written CSV from the robot
+            robot.comment('Retrieve your file: ' + new_file_name)
