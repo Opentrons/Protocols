@@ -74,7 +74,7 @@ cDNA_tubes = {'kd1': tubes.wells('A1'),
               'ctrl': tubes.wells('D1'),
               'h2o': tubes.wells('A2')}
 
-MM_tubes = {'kd1': tubes.wells('B2'),
+mm_tubes = {'kd1': tubes.wells('B2'),
             'kd2': tubes.wells('C2'),
             'kd3': tubes.wells('D2'),
             'gapdh': tubes.wells('A3')}
@@ -102,7 +102,7 @@ def run_custom_protocol(CSV_file: FileInput = example_csv):
 
     # transfer primers
     for primer, dest in zip(primers, qPCR_rack.wells()):
-        source = MM_tubes[primer]
+        source = mm_tubes[primer]
         p10.pick_up_tip()
         p10.transfer(9, source, dest, new_tip='never')
         p10.blow_out(dest.top())
