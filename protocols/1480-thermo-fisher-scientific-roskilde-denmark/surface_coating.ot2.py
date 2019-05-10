@@ -25,6 +25,15 @@ if reservoir_name not in labware.list():
         diameter=86,
         depth=43)
 
+plate_name_96 = 'Nunc-96-well'
+if plate_name_96 not in labware.list():
+    labware.create(
+        plate_name_96,
+        grid=(12, 8),
+        spacing=(9, 9),
+        diameter=7,
+        depth=11.3)
+
 # labware setup
 reservior = labware.load(reservoir_name, '6').wells('A1')
 tiprack = labware.load(tiprack_name, '9')
@@ -32,10 +41,12 @@ tiprack = labware.load(tiprack_name, '9')
 
 def run_custom_protocol(
         pipette_type: StringSelection(
-            'P300-Single', 'P50-Multi', 'P300-Multi')='P300-Multi',
-        pipette_mount: StringSelection('left', 'right')='left',
-        starting_tip: str='A1',
-        number_of_plates: int=9):
+            'P300-Single', 'P50-Multi', 'P300-Multi') = 'P300-Multi',
+        pipette_mount: StringSelection('left', 'right') = 'left',
+        starting_tip: str = 'A1',
+        plate_type: StringSelection('96-well', '384-well') = '384-well',
+        number_of_plates: int = 9,
+        volume: float = 50):
 
     # instruments setup
     pipette_args = {'mount': pipette_mount, 'tip_racks': [tiprack]}
@@ -49,7 +60,11 @@ def run_custom_protocol(
 
     mode = pipette_type.split('-')[1]
 
-    plates = [labware.load('384-plate', slot)
+    if plate_type == '384-well':
+        name = '384-plate'
+    else:
+        name = plate_name_96
+    plates = [labware.load(name, slot)
               for slot in ['1', '2', '3', '4', '5', '7', '8', '10', '11']][
               :number_of_plates]
 
@@ -59,23 +74,38 @@ def run_custom_protocol(
     else:
         starting_col = starting_tip[1:]
         pipette.start_at_tip(tiprack.cols(starting_col))
-        dests = [col[index] for plate in plates
-                 for col in plate.cols() for index in range(2)]
+        if plate_type == '384-well':
+            dests = [well for plate in plates for letter in ['A', 'B']
+                     for well in plate.rows(letter)]
+        else:
+            dests = [well for plate in plates for well in plate.rows('A')]
 
     pipette.pick_up_tip()
-    pipette.distribute(50, reservior, dests, disposal_vol=0, new_tip='never')
+    pipette.distribute(volume,
+                       reservior,
+                       dests,
+                       disposal_vol=0,
+                       new_tip='never')
     pipette.retract()
 
     robot.pause('Insert plates into light cabinet. Remove solution and wash \
     plates. Dry plate and place the plates back in the robot. Make sure to \
     load reagent 2 in slot 6.')
 
-    pipette.distribute(50, reservior, dests, disposal_vol=0, new_tip='never')
+    pipette.distribute(volume,
+                       reservior,
+                       dests,
+                       disposal_vol=0,
+                       new_tip='never')
     pipette.retract()
 
     robot.pause('Insert plates into light cabinet. Remove solution and wash \
     plates. Dry plate and place the plates back in the robot. Make sure to \
     load reagent 3 in slot 6.')
 
-    pipette.distribute(50, reservior, dests, disposal_vol=0, new_tip='never')
+    pipette.distribute(volume,
+                       reservior,
+                       dests,
+                       disposal_vol=0,
+                       new_tip='never')
     pipette.drop_tip()
