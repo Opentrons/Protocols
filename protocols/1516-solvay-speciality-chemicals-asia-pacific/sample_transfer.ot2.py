@@ -1,5 +1,5 @@
 from opentrons import labware, instruments
-from otcustomizers import FileInput
+from otcustomizers import FileInput, StringSelection
 import math
 
 metadata = {
@@ -8,14 +8,24 @@ metadata = {
     'source': 'Custom Protocol Request'
     }
 
-vial_rack_name = '24-custom-vial-rack'
-if vial_rack_name not in labware.list():
+vial_8ml_rack_name = '24-custom-vial-rack'
+if vial_8ml_rack_name not in labware.list():
     labware.create(
-        vial_rack_name,
+        vial_8ml_rack_name,
         grid=(6, 4),
         spacing=(20, 20),
         diameter=10,
         depth=21
+        )
+
+vial_30ml_rack_name = '6-cucstom-vial-rack'
+if vial_30ml_rack_name not in labware.list():
+    labware.create(
+        vial_30ml_rack_name,
+        grid=(3, 2),
+        spacing=(40, 30),
+        diameter=20,
+        depth=78
         )
 
 volume_csv_example = """
@@ -35,8 +45,7 @@ Produit1,Produit2,Produit3,Produit4,Produit5,Produit6,Produit7,Produit8,Produit9
 # labware setup
 mother_racks = [labware.load('opentrons-tuberack-50ml', slot)
                 for slot in ['2', '5', '8']]
-sample_racks = [labware.load(vial_rack_name, slot)
-                for slot in ['3', '6', '9']]
+
 tipracks_300 = [labware.load('opentrons-tiprack-300ul', slot)
                 for slot in ['10', '11']]
 tipracks_1000 = [labware.load('tiprack-1000ul', slot)
@@ -51,7 +60,17 @@ p1000 = instruments.P1000_Single(
     tip_racks=tipracks_1000)
 
 
-def run_custom_protocol(volume_csv: FileInput=volume_csv_example):
+def run_custom_protocol(
+        volume_csv: FileInput=volume_csv_example,
+        vial_rack_type: StringSelection('8 mL', '30 mL')='8 mL'):
+
+    if vial_rack_type == '8 mL':
+        vial_rack_name = vial_8ml_rack_name
+    else:
+        vial_rack_name = vial_30ml_rack_name
+
+    sample_racks = [labware.load(vial_rack_name, slot)
+                    for slot in ['3', '6', '9']]
 
     def get_volume_lists(csv_string):
         info_list = [cell for line in volume_csv.splitlines() if line
