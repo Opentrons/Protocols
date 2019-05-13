@@ -1,0 +1,1 @@
+{"slug": "1570", "path": "protocols/1570", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["ngs_library_prep.ot2.py"]}, "status": "ok"}
