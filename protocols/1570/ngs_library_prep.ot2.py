@@ -72,6 +72,7 @@ def run_custom_protocol(number_of_sample_columns: int = 12,
             blow_out=True
             )
         m10.mix(10, 10, dest)
+        m10.blow_out(dest.top())
         m10.drop_tip()
 
     robot.pause('Perform reaction. Resume when finished...')
@@ -87,4 +88,6 @@ def run_custom_protocol(number_of_sample_columns: int = 12,
             new_tip='never',
             blow_out=True
             )
+    p10.mix(10, 10, edta)
+    p10.blow_out(edta.top())
     p10.drop_tip()
