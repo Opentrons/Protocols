@@ -104,52 +104,52 @@ def run_custom_protocol(number_of_sample_columns: int = 12,
             m300.return_tip()
         magdeck.disengage()
 
-        # buffer transfers
-        buffer_transfer(VHB,
-                        VHB_tips,
-                        number_of_first_supernatant_transfers,
-                        mag_samples,
-                        number_of_secondary_mixes,
-                        True)
-        buffer_transfer(SPM,
-                        SPM_tips,
-                        number_of_second_supernatant_transfers,
-                        mag_samples,
-                        number_of_secondary_mixes,
-                        True)
-        buffer_transfer(SPM,
-                        SPM_tips,
-                        1,
-                        mag_samples,
-                        number_of_secondary_mixes,
-                        False)
+    # buffer transfers
+    buffer_transfer(VHB,
+                    VHB_tips,
+                    number_of_first_supernatant_transfers,
+                    mag_samples,
+                    number_of_secondary_mixes,
+                    True)
+    buffer_transfer(SPM,
+                    SPM_tips,
+                    number_of_second_supernatant_transfers,
+                    mag_samples,
+                    number_of_secondary_mixes,
+                    True)
+    buffer_transfer(SPM,
+                    SPM_tips,
+                    1,
+                    mag_samples,
+                    number_of_secondary_mixes,
+                    False)
 
-        for s_tip, w_tip, s in zip(sample_tips, water_tips, mag_samples):
-            m300.pick_up_tip(w_tip)
-            m300.transfer(180, water, s.top(), new_tip='never')
-            m300.drop_tip()
+    for s_tip, w_tip, s in zip(sample_tips, water_tips, mag_samples):
+        m300.pick_up_tip(w_tip)
+        m300.transfer(180, water, s.top(), new_tip='never')
+        m300.drop_tip()
 
-            m300.pick_up_tip(s_tip)
-            m300.transfer(200, s, waste, new_tip='never')
-            m300.return_tip()
-        magdeck.disengage()
+        m300.pick_up_tip(s_tip)
+        m300.transfer(200, s, waste, new_tip='never')
+        m300.return_tip()
+    magdeck.disengage()
 
-        for tip, s in zip(elution_buffer_tips, mag_samples):
-            m300.pick_up_tip(tip)
-            m300.transfer(elution_volume_ul,
-                          elution_buffer,
-                          s.top(),
-                          new_tip='never')
-            m300.mix(number_of_secondary_mixes, 300, s)
-            m300.return_tip()
+    for tip, s in zip(elution_buffer_tips, mag_samples):
+        m300.pick_up_tip(tip)
+        m300.transfer(elution_volume_ul,
+                      elution_buffer,
+                      s.top(),
+                      new_tip='never')
+        m300.mix(number_of_secondary_mixes, 300, s)
+        m300.return_tip()
 
-        m300.delay(minutes=5)
-        robot._driver.run_flag.wait()
-        magdeck.engage()
-        m300.delay(minutes=5)
-        for tip, source, dest in zip(elution_buffer_tips,
-                                     mag_samples,
-                                     new_samples):
-            m300.pick_up_tip(tip)
-            m300.transfer(elution_volume_ul, source, dest, new_tip='never')
-            m300.drop_tip()
+    m300.delay(minutes=5)
+    robot._driver.run_flag.wait()
+    magdeck.engage()
+    m300.delay(minutes=5)
+    for tip, source, dest in zip(elution_buffer_tips,
+                                 mag_samples,
+                                 new_samples):
+        m300.pick_up_tip(tip)
+        m300.transfer(elution_volume_ul, source, dest, new_tip='never')
+        m300.drop_tip()
