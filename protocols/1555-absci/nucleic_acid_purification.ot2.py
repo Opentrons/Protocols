@@ -37,8 +37,8 @@ if mag_plate_name not in labware.list():
 
 # load labware
 trough = labware.load(trough_name, '2')
-bacteria_plate = labware.load(plate_name, '3')
-tubes = labware.load('opentrons-tuberack-2ml-eppendorf', '4')
+bacteria_plate = labware.load(plate_name, '3', 'bacteria plate')
+pur4_plate = labware.load(plate_name, '4', 'plate for PUR4')
 tips300 = [labware.load('opentrons-tiprack-300ul', slot)
            for slot in ['5', '6', '7', '9', '10']]
 tips50 = labware.load('opentrons-tiprack-300ul', '11')
@@ -56,7 +56,7 @@ EtOH = trough.wells('A5')
 RE1_2 = trough.wells('A6')
 waste = trough.wells('A12')
 
-PUR4 = tubes.wells('A1')
+PUR4 = pur4_plate.wells('A1')
 
 
 def run_custom_protocol(
