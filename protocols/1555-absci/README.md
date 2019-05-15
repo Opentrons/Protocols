@@ -58,7 +58,7 @@ You will need:
 ### Additional Notes
 ![Trough Reagent Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1555-absci/trough_setup.png)
 
-![Tube Rack Reagent Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1555-absci/tuberack_setup.png)
+![PUR4 Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1555-absci/pur4_setup.png)
 
 If you have any questions about this protocol, please contact protocols@opentrons.com.
 
