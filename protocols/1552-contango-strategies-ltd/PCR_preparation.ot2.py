@@ -19,24 +19,24 @@ if plate_name not in labware.list():
     )
 
 # load labware
-tubes = labware.load('opentrons-aluminum-block-2ml-eppendorf', '2')
-tips10 = labware.load('tiprack-10ul', '4')
-tips50 = labware.load('opentrons-tiprack-300ul', '5')
+tubes = labware.load('opentrons-aluminum-block-2ml-eppendorf', '1')
+tips10 = labware.load('tiprack-10ul', '2')
+tips50 = labware.load('opentrons-tiprack-300ul', '3')
 
 # modules
-tempdeck = modules.load('tempdeck', '1')
-plate = labware.load(plate_name, '1', share=True)
+tempdeck = modules.load('tempdeck', '5')
+plate = labware.load(plate_name, '5', share=True)
 if not robot.is_simulating():
     tempdeck.set_temperature(4)
     tempdeck.wait_for_temp()
 
 # pipettes
 p10 = instruments.P10_Single(
-    mount='left',
+    mount='right',
     tip_racks=[tips10]
 )
 p50 = instruments.P50_Single(
-    mount='right',
+    mount='left',
     tip_racks=[tips50]
 )
 
@@ -44,8 +44,6 @@ p50 = instruments.P50_Single(
 def run_custom_protocol(number_of_DNA_samples: int = 22,
                         number_of_oligo_standards: int = 8):
     # check invalid parameters
-    if number_of_DNA_samples > 22:
-        raise Exception('Please specify 22 or fewer DNA samples.')
     if number_of_DNA_samples + number_of_oligo_standards > 30:
         raise Exception('Too many samples and standards for one plate.')
 
@@ -62,7 +60,9 @@ def run_custom_protocol(number_of_DNA_samples: int = 22,
     DNA_dests = dests_triplicates[0:number_of_DNA_samples]
     pc_dests = dests_triplicates[number_of_DNA_samples]
     NTC_dests = dests_triplicates[number_of_DNA_samples+1]
-    oligo_dests = dests_triplicates[32-number_of_oligo_standards:]
+    oligo_dests = dests_triplicates[number_of_DNA_samples+2:
+                                    (number_of_DNA_samples+2 +
+                                     number_of_oligo_standards)]
 
     # distribute master mix to all destination wells for DNA, oligo, positive
     # control, and NTC
@@ -82,8 +82,12 @@ def run_custom_protocol(number_of_DNA_samples: int = 22,
                      blow_out=True)
         p10.drop_tip()
 
+    robot.pause('Please replace the master mix tube and DNA sample tubes with '
+                'positive control, NTC and oligo standard tubes before '
+                'resuming.')
+
     # transfer positive control to corresponding triplicate location
-    positive_control = tubes.wells('D6')
+    positive_control = tubes.wells('C6')
     p10.pick_up_tip()
     p10.transfer(5,
                  positive_control,
@@ -91,9 +95,6 @@ def run_custom_protocol(number_of_DNA_samples: int = 22,
                  new_tip='never',
                  blow_out=True)
     p10.drop_tip()
-
-    robot.pause('Please replace the master mix tube and DNA sample tubes with '
-                'NTC and oligo standard tubes before resuming.')
 
     # transfer NTC to corresponding triplicate location
     NTC = tubes.wells('D6')
