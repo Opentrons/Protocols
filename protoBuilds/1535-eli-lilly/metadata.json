@@ -1,0 +1,1 @@
+{"slug": "1535-eli-lilly", "path": "protocols/1535-eli-lilly", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["NGS_library_prep.ot2.py"]}, "status": "ok"}
