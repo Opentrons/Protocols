@@ -9,11 +9,11 @@ metadata = {
 }
 
 # create custom labware
-adapter_name = '5x6-cartridge-adapter'
+adapter_name = '6x8-cartridge-adapter'
 if adapter_name not in labware.list():
     labware.create(
         adapter_name,
-        grid=(6, 5),
+        grid=(8, 6),
         spacing=(15, 12.5),
         diameter=3,
         depth=5.3,
@@ -41,7 +41,7 @@ oil = reservoir.wells('A1')
 
 
 def run_custom_protocol(
-        number_of_cartridges_to_fill: int = 299,
+        number_of_cartridges_to_fill: int = 432,
         volume_to_fill_in_microliters: float = 350,
         pipette_mount: StringSelection('right', 'left') = 'right',
         oil_temperature_in_degrees_Celsius: int = 37):
@@ -62,7 +62,7 @@ def run_custom_protocol(
         tempdeck.wait_for_temp()
 
     # load cartridges and set up fill sequence
-    num_decks = math.ceil(number_of_cartridges_to_fill/270)
+    num_decks = math.ceil(number_of_cartridges_to_fill/432)
     num_total_adapters = math.ceil(number_of_cartridges_to_fill/30)
     num_adapters_on_deck = 9 if num_total_adapters >= 9 else num_total_adapters
 
