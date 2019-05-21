@@ -19,7 +19,7 @@ if plate_name not in labware.list():
     )
 
 # load labware
-tubes = labware.load('opentrons-aluminum-block-2ml-eppendorf', '1')
+tubes = labware.load('opentrons-tuberack-2ml-eppendorf', '6')
 tips10 = labware.load('tiprack-10ul', '2')
 tips50 = labware.load('opentrons-tiprack-300ul', '3')
 
