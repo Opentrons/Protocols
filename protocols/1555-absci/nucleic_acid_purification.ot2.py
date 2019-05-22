@@ -105,6 +105,7 @@ def run_custom_protocol(
     # distribute PUR4
     dests = mag_plate.wells('A1', length=8*num_columns)
     pipette50.pick_up_tip(tips50.wells('H12'))
+    pipette50.mix(5, 50, PUR4)
     pipette50.distribute(10, PUR4, [d.top() for d in dests], new_tip='never')
     pipette50.drop_tip()
 
