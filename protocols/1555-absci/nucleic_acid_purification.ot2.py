@@ -38,14 +38,14 @@ if mag_plate_name not in labware.list():
 # load labware
 trough = labware.load(trough_name, '2')
 bacteria_plate = labware.load(plate_name, '3', 'bacteria plate')
-pur4_plate = labware.load(plate_name, '4', 'plate for PUR4')
+pur4_plate = labware.load(plate_name, '1', 'plate for PUR4')
 tips300 = [labware.load('opentrons-tiprack-300ul', slot)
            for slot in ['5', '6', '7', '9', '10']]
 tips50 = labware.load('opentrons-tiprack-300ul', '11')
 
 # module
-magdeck = modules.load('magdeck', '1')
-mag_plate = labware.load(mag_plate_name, '1', share=True)
+magdeck = modules.load('magdeck', '4')
+mag_plate = labware.load(mag_plate_name, '4', share=True)
 
 # reagent setup
 RE1_1 = trough.wells('A1')
@@ -105,6 +105,7 @@ def run_custom_protocol(
     # distribute PUR4
     dests = mag_plate.wells('A1', length=8*num_columns)
     pipette50.pick_up_tip(tips50.wells('H12'))
+    pipette50.mix(5, 50, PUR4)
     pipette50.distribute(10, PUR4, [d.top() for d in dests], new_tip='never')
     pipette50.drop_tip()
 
