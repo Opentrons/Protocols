@@ -41,7 +41,8 @@ oil = reservoir.wells('A1')
 
 
 def run_custom_protocol(
-        number_of_cartridges_to_fill: int = 432,
+        number_of_cartridges_to_fill: int = 192,
+        number_of_adapters_on_deck: int = 4,
         volume_to_fill_in_microliters: float = 350,
         pipette_mount: StringSelection('right', 'left') = 'right',
         oil_temperature_in_degrees_Celsius: int = 37):
@@ -62,12 +63,13 @@ def run_custom_protocol(
         tempdeck.wait_for_temp()
 
     # load cartridges and set up fill sequence
-    num_decks = math.ceil(number_of_cartridges_to_fill/432)
-    num_total_adapters = math.ceil(number_of_cartridges_to_fill/30)
-    num_adapters_on_deck = 9 if num_total_adapters >= 9 else num_total_adapters
+    cartridges_on_deck = number_of_adapters_on_deck*48
+    num_decks = math.ceil(number_of_cartridges_to_fill/cartridges_on_deck)
+    num_total_adapters = math.ceil(number_of_cartridges_to_fill/48)
+    number_of_adapters_on_deck
 
     adapters = [labware.load(adapter_name, str(slot))
-                for slot in range(3, 3+num_adapters_on_deck)]
+                for slot in range(3, 3+number_of_adapters_on_deck)]
 
     # perform transfer
     cartridge_count = 0
