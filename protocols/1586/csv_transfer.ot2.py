@@ -14,9 +14,9 @@ if plate_name not in labware.list():
         plate_name,
         grid=(12, 8),
         spacing=(9, 9),
-        diameter=5,
-        depth=15,
-        volume=450
+        diameter=8.4,
+        depth=11.8,
+        volume=480
     )
 
 example_csv = """# 5 lines of header where we store,,,,
