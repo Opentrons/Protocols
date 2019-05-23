@@ -41,7 +41,7 @@ p50 = instruments.P50_Single(
 )
 
 
-def run_custom_protocol(number_of_DNA_samples: int = 22,
+def run_custom_protocol(number_of_DNA_samples: int = 21,
                         number_of_oligo_standards: int = 8):
     # check invalid parameters
     if number_of_DNA_samples + number_of_oligo_standards > 30:
@@ -60,9 +60,9 @@ def run_custom_protocol(number_of_DNA_samples: int = 22,
     DNA_dests = dests_triplicates[0:number_of_DNA_samples]
     pc_dests = dests_triplicates[number_of_DNA_samples]
     NTC_dests = dests_triplicates[number_of_DNA_samples+1]
-    oligo_dests = dests_triplicates[number_of_DNA_samples+2:
-                                    (number_of_DNA_samples+2 +
-                                     number_of_oligo_standards)]
+    oligo_dests = dests_triplicates[(len(dests_triplicates) -
+                                    number_of_oligo_standards):
+                                    len(dests_triplicates)]
 
     # distribute master mix to all destination wells for DNA, oligo, positive
     # control, and NTC
@@ -70,17 +70,15 @@ def run_custom_protocol(number_of_DNA_samples: int = 22,
                 for set in [DNA_dests, [pc_dests], [NTC_dests], oligo_dests]
                 for well in set]
     all_mm_wells = [well for trip in mm_dests for well in trip]
-    p50.distribute(15, master_mix, all_mm_wells)
+    p50.distribute(15, master_mix, all_mm_wells, blow_out=True)
 
     # transfer DNA samples to corresponding triplicate locations
     for source, dests in zip(DNA_samples, DNA_dests):
-        p10.pick_up_tip()
         p10.transfer(5,
                      source,
-                     [d.top() for d in dests],
-                     new_tip='never',
+                     dests,
+                     new_tip='always',
                      blow_out=True)
-        p10.drop_tip()
 
     robot.pause('Please replace the master mix tube and DNA sample tubes with '
                 'positive control, NTC and oligo standard tubes before '
@@ -88,33 +86,27 @@ def run_custom_protocol(number_of_DNA_samples: int = 22,
 
     # transfer positive control to corresponding triplicate location
     positive_control = tubes.wells('C6')
-    p10.pick_up_tip()
     p10.transfer(5,
                  positive_control,
-                 [d.top() for d in pc_dests],
-                 new_tip='never',
+                 pc_dests,
+                 new_tip='always',
                  blow_out=True)
-    p10.drop_tip()
 
     # transfer NTC to corresponding triplicate location
     NTC = tubes.wells('D6')
-    p10.pick_up_tip()
     p10.transfer(5,
                  NTC,
-                 [d.top() for d in NTC_dests],
-                 new_tip='never',
+                 NTC_dests,
+                 new_tip='always',
                  blow_out=True)
-    p10.drop_tip()
 
     # oligo standard sources setup
     oligo_standards = tubes.wells(0, length=number_of_oligo_standards)
 
     # transfer oligo standards to corresponding triplicate locations
     for source, dests in zip(oligo_standards, oligo_dests):
-        p10.pick_up_tip()
         p10.transfer(5,
                      source,
-                     [d.top() for d in dests],
-                     new_tip='never',
+                     dests,
+                     new_tip='always',
                      blow_out=True)
-        p10.drop_tip()
