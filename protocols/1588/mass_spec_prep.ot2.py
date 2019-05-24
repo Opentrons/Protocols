@@ -41,9 +41,23 @@ solution = trough.wells('A1')
 def run_custom_protocol(start_temperature_in_Celsius: int = 25,
                         stop_temperature_in_Celsius: int = 95):
 
-    # loop through temperatures from
+    # check input temperatures for too great of a range
+    if abs(start_temperature_in_Celsius-stop_temperature_in_Celsius) > 95:
+        raise Exception("Please enter a range of temperatures 96˚C apart "
+                        "or fewer.")
+
+    # determine whether to increment or decrement temperature
+    if start_temperature_in_Celsius > stop_temperature_in_Celsius:
+        s = -1
+    elif start_temperature_in_Celsius < stop_temperature_in_Celsius:
+        s = 1
+    else:
+        raise Exception("Please enter distinct start and stop temperatures.")
+
+    # loop through temperatures and wells
     for temp, well1, well2, well3 in zip(range(start_temperature_in_Celsius,
-                                               stop_temperature_in_Celsius+1),
+                                               stop_temperature_in_Celsius+s,
+                                               s),
                                          plate1_wells,
                                          plate2_wells,
                                          plate3_wells):
