@@ -50,9 +50,9 @@ chem_mob = tubes15.wells('A3', 'A4')
 
 # variables for height tracking 50 ml tubes
 heights_50 = {
-    'h2o1': -15,
-    'h2o2': -15,
-    'anolyte': -15
+    'h2o1': -10.5,
+    'h2o2': -10.5,
+    'anolyte': -10.5
 }
 r_cyl_50 = 13.4
 
@@ -68,11 +68,11 @@ def track_50(tube, vol):
 
 # variables for height tracking 50 ml tubes
 heights_15 = {
-    'catholyte': -18,
-    'chem mob1': -18,
-    'chem mob2': -18,
-    'sls': -18,
-    'cief gel': -18
+    'catholyte': -10.5,
+    'chem mob1': -10.5,
+    'chem mob2': -10.5,
+    'sls': -10.5,
+    'cief gel': -10.5
 }
 r_cyl_15 = 7.52
 
