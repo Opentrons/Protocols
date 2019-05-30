@@ -1,22 +1,9 @@
 from opentrons import containers, instruments
 from otcustomizers import FileInput, StringSelection
 
-metadata = {
-    'protocolName': 'Cherrypicking CSV Spreadsheet',
-    'author': 'Nick <protocols@opentrons.com>',
-    'source': 'Custom Protocol Request'
-}
-
 tiprack_slots = ['D1', 'A2', 'C2', 'E2']
 tipracks = [containers.load('tiprack-200ul', slot) for slot in tiprack_slots]
 trash = containers.load('trash-box', 'E1')
-
-example_csv = """
-A1, 20
-A3, 10
-B2, 15
-
-"""
 
 # create custom containers
 source_name = '96-2ml-rack'
@@ -44,16 +31,24 @@ if dest_name not in containers.list():
 source_plate = containers.load(source_name, 'B1')
 dest_plate = containers.load(dest_name, 'C1')
 
+example_csv = """
+A1, 20
+A3, 10
+B2, 15
+"""
+
 
 def run_custom_protocol(
-        volumes_csv: FileInput = example_csv,
+        volumes_csv: FileInput=example_csv,
         pipette_axis: StringSelection(
-            'B (left side)', 'A (right side)') = 'B (left side)',
+            'B (left side)', 'A (right side)')='B (left side)',
         pipette_model: StringSelection(
-            'p300', 'p50', 'p10', 'p1000') = 'p300',
+            'p300', 'p50', 'p10', 'p1000')='p300',
+        source_plate_type: StringSelection('96-flat', '384-plate')='96-flat',
+        destination_plate_type: StringSelection(
+            '96-flat', '384-plate')='96-flat',
         tip_reuse: StringSelection(
-            'new tip each time', 'reuse tip') = 'new tip each time',
-        blow_out_at_destination: StringSelection('yes', 'no') = 'yes'
+            'new tip each time', 'reuse tip')='new tip each time'
         ):
 
     pipette_max_vol = int(pipette_model[1:])
@@ -72,21 +67,13 @@ def run_custom_protocol(
         [row.split(',') for row in volumes_csv.strip().splitlines() if row]
     ]
 
-    if tip_reuse == 'reuse tip':
-        pipette.pick_up_tip()
-    for well_name, vol in data:
-        if well_name and vol:
+    tip_strategy = 'always' if tip_reuse == 'new tip each time' else 'once'
+    for well_idx, (source_well, vol) in enumerate(data):
+        if source_well and vol:
             vol = float(vol)
-            if tip_reuse == 'new tip each time':
-                pipette.pick_up_tip()
             pipette.transfer(
                 vol,
-                source_plate.wells(well_name),
-                dest_plate.wells(well_name),
-                new_tip='never')
-            if blow_out_at_destination == 'yes':
-                pipette.blow_out(dest_plate.wells(well_name))
-            if tip_reuse == 'new tip each time':
-                pipette.drop_tip()
-    if tip_reuse == 'reuse tip':
-        pipette.drop_tip()
+                source_plate.wells(source_well),
+                dest_plate(well_idx),
+                blow_out=True,
+                new_tip=tip_strategy)
