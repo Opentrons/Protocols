@@ -1,6 +1,12 @@
 from opentrons import containers, instruments
 from otcustomizers import FileInput, StringSelection
 
+metadata = {
+    'protocolName': 'Custom Cartridge Filling',
+    'author': 'Nick <protocols@opentrons.com>',
+    'source': 'Custom Protocol Request'
+}
+
 tiprack_slots = ['D1', 'A2', 'C2', 'E2']
 tipracks = [containers.load('tiprack-200ul', slot) for slot in tiprack_slots]
 trash = containers.load('trash-box', 'E1')
