@@ -24,7 +24,7 @@ if strips_name not in labware.list():
         strips_name,
         grid=(12, 8),
         spacing=(9, 9),
-        diameter=5,
+        diameter=6,
         depth=20,
         volume=200
     )
@@ -54,7 +54,7 @@ p50.transfer(15.5*28, h2o, mix_tube.top(), blow_out=True)
 p50.transfer(5*28, red_buffer, mix_tube.top(), blow_out=True)
 p50.transfer(1*28, primer, mix_tube.top(), blow_out=True)
 p50.pick_up_tip()
-p50.transfer(0.25*28, dna_pol, mix_tube, new_tip='never')
+p50.transfer(0.25*28, dna_pol.bottom(), mix_tube, new_tip='never')
 p50.mix(10, 50, mix_tube)
 p50.drop_tip()
 

@@ -8,7 +8,7 @@
     * PCR preparation
 
 ## Description
-This protocol performs PCR preparation on a custom 3x8 membrane chip on 6 PCR strips. **Please calibrate the custom chip so that the pipette tip lands lands just barely above the membrane**-- this will ensure accurate liquid transfer without disturbing the eggs or crashing into the chip. For reagent setup, see 'Additional Notes' below.
+This protocol performs PCR preparation on a custom 3x8 membrane chip on 6 PCR strips. Ensure that the chip is seated so that the wells of the second (middle) row are slightly offset to the **left** of the first and third rows as shown in 'Additional Notes' below. **Please calibrate the custom chip so that the pipette tip lands lands just barely above the membrane**-- this will ensure accurate liquid transfer without disturbing the eggs or crashing into the chip. For reagent setup, see 'Additional Notes' below.
 
 ---
 
@@ -42,6 +42,9 @@ You will need:
 9. 3ul of each sample from strips 1-3 is transferred to its corresponding well in strips 4-6 (strip 1 well 1 to strip 4 well 1, strip 1 well 2 to strip 4 well 2, etc.). The contents of the destination well are mixed 10x after the transfer.
 
 ### Additional Notes
+Chip Alignment on Shaker:
+![Chip Alignment](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1577/chip.png)
+
 Reagent setup for 4x6 tube rack:
 ![Tube Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1577/tube_setup.png)
 
