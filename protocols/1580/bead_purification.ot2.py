@@ -53,8 +53,7 @@ def run_custom_protocol(number_of_samples: int=96):
         mag_module.disengage()
 
     for run_num in range(2):
-        robot.comment(f'This is the beginning of Bead Purification \
-{run_num+1}.')
+        robot.comment(f'This is the start of Bead Purification {run_num+1}.')
 
         # transfer beads to sample_cols
         p50.pick_up_tip(tipracks_300[0].wells('A1'))
