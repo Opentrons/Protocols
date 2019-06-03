@@ -69,8 +69,8 @@ def run_custom_protocol(number_of_DNA_samples: int = 21,
     mm_dests = [well
                 for set in [DNA_dests, [pc_dests], [NTC_dests], oligo_dests]
                 for well in set]
-    all_mm_wells = [well for trip in mm_dests for well in trip]
-    p50.distribute(15, master_mix, all_mm_wells, blow_out=True)
+    for trip in mm_dests:
+        p50.distribute(15, master_mix, trip)
 
     # transfer DNA samples to corresponding triplicate locations
     for source, dests in zip(DNA_samples, DNA_dests):
