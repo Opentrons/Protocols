@@ -1,1 +1,1 @@
-{"instruments": [{"name": "p300_single_v1", "mount": "left"}], "labware": [], "modules": [], "parameters": [{"name": "pipette_axis", "annotation": {"type": "StringSelection", "options": [{"value": "left", "text": "left"}, {"value": "right", "text": "right"}]}, "default": "left"}]}
+{"instruments": [{"name": "p300_single", "mount": "left"}], "labware": [], "modules": [], "parameters": [{"name": "pipette_axis", "annotation": {"type": "StringSelection", "options": [{"value": "left", "text": "left"}, {"value": "right", "text": "right"}]}, "default": "left"}]}

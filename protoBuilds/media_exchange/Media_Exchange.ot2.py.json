@@ -1,1 +1,1 @@
-{"instruments": [{"name": "p10_multi_v1", "mount": "left"}, {"name": "p10_single_v1", "mount": "right"}], "labware": [], "modules": [], "parameters": [{"name": "plate_size", "annotation": {"type": "int"}, "default": 96}]}
+{"instruments": [{"name": "p10_multi", "mount": "left"}, {"name": "p10_single", "mount": "right"}], "labware": [], "modules": [], "parameters": [{"name": "plate_size", "annotation": {"type": "int"}, "default": 96}]}
