@@ -2,7 +2,7 @@ SHELL := /bin/bash
 
 MONOREPO_URI := https://github.com/Opentrons/opentrons.git
 OT1_VERSION := 2.5.2
-OT2_VERSION_TAG := v3.7.0
+OT2_VERSION_TAG := v3.9.0
 OT2_MONOREPO_DIR := ot2monorepoClone
 OT1_TEMP_DIR := ot1temp
 # Parsers output to here
@@ -39,6 +39,7 @@ venvs/ot1:
 	source venvs/ot1/bin/activate && \
 	pip install opentrons==$(OT1_VERSION) && \
 	pip install -e otcustomizers && \
+	pip install -r protolib2/requirements.txt && \
 	deactivate
 
 venvs/ot2:
@@ -46,6 +47,7 @@ venvs/ot2:
 	virtualenv venvs/ot2
 	source venvs/ot2/bin/activate && \
 	pip install -e otcustomizers && \
+	pip install -r protolib2/requirements.txt && \
 	pip install pipenv && \
 	pushd $(OT2_MONOREPO_DIR)/api/ && \
 	$(MAKE) install && \
@@ -84,7 +86,9 @@ $(BUILD_DIR)/%.ot2.py.json: protocols/%.ot2.py
 
 .PHONY: parse-README
 parse-README:
-	python protolib2/traverse_README.py
+	source venvs/ot2/bin/activate && \
+	python protolib2/traverse_README.py && \
+	deactivate
 
 .PHONY: clean
 clean:
