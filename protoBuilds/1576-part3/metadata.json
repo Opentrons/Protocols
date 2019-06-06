@@ -1,0 +1,1 @@
+{"slug": "1576-part3", "path": "protocols/1576-part3", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["cell_free_DNA_target_enrichment-part3.ot2.py"]}, "status": "ok"}
