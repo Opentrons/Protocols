@@ -74,14 +74,27 @@ def etoh_wash(num):
     p300.drop_tip()
 
     # remove supernatant
-    p300.transfer(100,
-                  mag_samples_single,
-                  p300.trash_container,
-                  new_tip='always')
+    for s in mag_samples_single[0:95]:
+        p300.pick_up_tip()
+        p300.aspirate(100, s)
+        p300.dispense(100, p300.trash_container.top())
+        p300.drop_tip(home_after=False)
+    p300.pick_up_tip()
+    p300.aspirate(100, mag_samples_single[95])
+    p300.dispense(100, p300.trash_container.top())
+    p300.drop_tip()
 
 
 # transfer SPRI beads
-m10.transfer(10, spri_beads, mag_samples_multi, new_tip='always')
+for s in mag_samples_multi[0:11]:
+    m10.pick_up_tip()
+    m10.aspirate(10, spri_beads)
+    m10.dispense(10, s)
+    m10.drop_tip(home_after=False)
+m10.pick_up_tip()
+m10.aspirate(10, spri_beads)
+m10.dispense(10, mag_samples_multi[11])
+m10.drop_tip()
 
 # incubate for 10 minutes
 m10.delay(minutes=10)
@@ -92,7 +105,15 @@ magdeck.engage(height=18)
 m10.delay(minutes=5)
 
 # remove supernatant
-m10.transfer(10, mag_samples_multi, m10.trash_container, new_tip='always')
+for s in mag_samples_multi[0:11]:
+    m10.pick_up_tip()
+    m10.aspirate(10, s)
+    m10.dispense(10, m10.trash_container.top())
+    m10.drop_tip(home_after=False)
+m10.pick_up_tip()
+m10.aspirate(10, mag_samples_multi[11])
+m10.dispense(10, m10.trash_container.top())
+m10.drop_tip()
 
 # 2 EtOH washes
 etoh_wash(0)
@@ -102,7 +123,15 @@ etoh_wash(1)
 m10.delay(minutes=5)
 
 # remove residue from washes with P10 pipette
-m10.transfer(10, mag_samples_multi, m10.trash_container, new_tip='always')
+for s in mag_samples_multi[0:11]:
+    m10.pick_up_tip()
+    m10.aspirate(10, s)
+    m10.dispense(10, m10.trash_container.top())
+    m10.drop_tip(home_after=False)
+m10.pick_up_tip()
+m10.aspirate(10, mag_samples_multi[11])
+m10.dispense(10, m10.trash_container.top())
+m10.drop_tip()
 
 # prompt user to resplace 10ul tips
 robot.pause('Please replace 10ul tipracks in slots 3, 5, and 6.')
@@ -110,28 +139,46 @@ m10.reset()
 
 # transfer PBS
 magdeck.disengage()
-m10.transfer(4, pbs, mag_samples_multi, blow_out=True, new_tip='always')
+for s in mag_samples_multi[0:11]:
+    m10.pick_up_tip()
+    m10.aspirate(4, pbs)
+    m10.dispense(4, s)
+    m10.blow_out(s)
+    m10.drop_tip(home_after=False)
+m10.pick_up_tip()
+m10.aspirate(4, pbs)
+m10.dispense(mag_samples_multi[11])
+m10.blow_out(mag_samples_multi[11])
+m10.drop_tip()
 
 # engage magnet and incubate for 1 minute
 magdeck.engage(height=18)
 m10.delay(minutes=1)
 
 # transfer supernatant to plate on tempdeck
-m10.transfer(
-    4,
-    mag_samples_multi,
-    temp_samples_multi,
-    blow_out=True,
-    new_tip='always'
-    )
+for s, t in zip(mag_samples_multi[0:11], temp_samples_multi[0:11]):
+    m10.pick_up_tip()
+    m10.aspirate(4, s)
+    m10.dispense(4, t)
+    m10.blow_out(t)
+    m10.drop_tip(home_after=False)
+m10.pick_up_tip()
+m10.aspirate(4, mag_samples_multi[11])
+m10.dispense(4, temp_samples_multi[11])
+m10.blow_out(temp_samples_multi[11])
+m10.drop_tip()
 
 # transfer barcodes to new plate
-m10.transfer(
-    1,
-    barcodes_multi,
-    temp_samples_multi,
-    blow_out=True,
-    new_tip='always'
-    )
+for b, t in zip(barcodes_multi[0:11], temp_samples_multi[0:11]):
+    m10.pick_up_tip()
+    m10.aspirate(1, b)
+    m10.dispense(1, t)
+    m10.blow_out(t)
+    m10.drop_tip(home_after=False)
+m10.pick_up_tip()
+m10.aspirate(1, barcodes_multi[11])
+m10.dispense(1, temp_samples_multi[11])
+m10.blow_out(temp_samples_multi[11])
+m10.drop_tip()
 
 magdeck.disengage()
