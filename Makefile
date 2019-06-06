@@ -39,6 +39,7 @@ venvs/ot1:
 	source venvs/ot1/bin/activate && \
 	pip install opentrons==$(OT1_VERSION) && \
 	pip install -e otcustomizers && \
+	pip install -r protolib2/requirements.txt && \
 	deactivate
 
 venvs/ot2:
@@ -46,6 +47,7 @@ venvs/ot2:
 	virtualenv venvs/ot2
 	source venvs/ot2/bin/activate && \
 	pip install -e otcustomizers && \
+	pip install -r protolib2/requirements.txt && \
 	pip install pipenv && \
 	pushd $(OT2_MONOREPO_DIR)/api/ && \
 	$(MAKE) install && \
@@ -84,7 +86,9 @@ $(BUILD_DIR)/%.ot2.py.json: protocols/%.ot2.py
 
 .PHONY: parse-README
 parse-README:
-	python protolib2/traverse_README.py
+	source venvs/ot2/bin/activate && \
+	python protolib2/traverse_README.py && \
+	deactivate
 
 .PHONY: clean
 clean:
