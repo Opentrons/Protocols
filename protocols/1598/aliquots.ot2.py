@@ -76,13 +76,19 @@ def run_custom_protocol(
         nonlocal heights
 
         dh = vol/(math.pi*(r15**2))
-        heights[reagent] -= dh
+        if heights[reagent] - dh < -116:
+            heights[reagent] = -116
+        else:
+            heights[reagent] -= dh
 
     def height_track50(reagent, vol):
         nonlocal heights
 
         dh = vol/(math.pi*(r50**2))
-        heights[reagent] -= dh
+        if heights[reagent] - dh < -116:
+            heights[reagent] = -116
+        else:
+            heights[reagent] -= dh
 
     # transfer CSF1
     p1000.pick_up_tip()
