@@ -1,1 +1,1 @@
-{"instruments": [{"name": "p300_multi_v1", "mount": "left"}, {"name": "p300_single_v1", "mount": "right"}], "labware": [], "modules": [], "parameters": []}
+{"instruments": [{"name": "p300_multi", "mount": "left"}, {"name": "p300_single", "mount": "right"}], "labware": [], "modules": [], "parameters": []}
