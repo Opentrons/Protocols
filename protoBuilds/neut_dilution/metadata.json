@@ -1,1 +1,0 @@
-{"slug": "neut_dilution", "path": "protocols/neut_dilution", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["neut_dilution.ot1.py"], "OT 2 protocol": ["neut_dilution.ot2.py"]}, "status": "ok"}

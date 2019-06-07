@@ -1,5 +1,10 @@
 from opentrons import labware, instruments, robot
 
+metadata = {
+    'protocolName': 'Bradford Assay',
+    'author': 'Opentrons <protocols@opentrons.com>',
+    'source': 'Protocol Library'
+    }
 
 tiprack = labware.load('tiprack-200ul', '7')
 tiprack2 = labware.load('tiprack-200ul', '11')

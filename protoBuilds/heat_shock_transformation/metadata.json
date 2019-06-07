@@ -1,1 +1,0 @@
-{"slug": "heat_shock_transformation", "path": "protocols/heat_shock_transformation", "flags": {"feature": true, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["heat_shock_transformation.ot1.py"], "OT 2 protocol": []}, "status": "ok"}

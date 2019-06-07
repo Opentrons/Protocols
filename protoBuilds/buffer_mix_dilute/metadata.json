@@ -1,1 +1,0 @@
-{"slug": "buffer_mix_dilute", "path": "protocols/buffer_mix_dilute", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["buffer_mix_dilute.ot1.py"], "OT 2 protocol": ["buffer_mix_dilute.ot2.py"]}, "status": "ok"}

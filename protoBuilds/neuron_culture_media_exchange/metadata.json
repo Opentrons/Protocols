@@ -1,1 +1,0 @@
-{"slug": "neuron_culture_media_exchange", "path": "protocols/neuron_culture_media_exchange", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["Neuron_Media_Exchange_2017-10-12.ot1.py"], "OT 2 protocol": []}, "status": "ok"}

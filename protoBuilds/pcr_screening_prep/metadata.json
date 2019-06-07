@@ -1,1 +1,0 @@
-{"slug": "pcr_screening_prep", "path": "protocols/pcr_screening_prep", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["pcr_screening_prep.ot1.py"], "OT 2 protocol": []}, "status": "ok"}
