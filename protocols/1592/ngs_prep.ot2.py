@@ -62,10 +62,14 @@ def run_custom_protocol(
     def etoh_wash(num):
         # transfer EtOH to samples
         pipette300.pick_up_tip(etoh_tips.rows('A')[num])
+        if P300_pipette_type == 'single':
+            etoh_dests = mag_samples_single
+        else:
+            etoh_dests = mag_samples_multi
         pipette300.distribute(
             100,
             etoh,
-            [s.top() for s in mag_samples_multi],
+            [s.top() for s in etoh_dests],
             new_tip='never'
             )
         pipette300.drop_tip()
@@ -73,7 +77,7 @@ def run_custom_protocol(
         # remove supernatant
         pipette300.transfer(
             100,
-            mag_samples_single,
+            etoh_dests,
             pipette300.trash_container.top(),
             new_tip='always'
             )
