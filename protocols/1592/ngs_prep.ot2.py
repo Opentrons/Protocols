@@ -1,5 +1,5 @@
 from opentrons import labware, instruments, modules, robot
-import math
+from otcustomizers import StringSelection
 
 metadata = {
     'protocolName': 'NGS Library Prep',
@@ -20,7 +20,7 @@ if plate_name not in labware.list():
     )
 
 # load labware
-tubes50 = labware.load('opentrons-tuberack-50ml', '1')
+trough = labware.load('trough-12row', '1')
 barcode_plate = labware.load(plate_name, '2', 'barcode plate')
 reagent_plate = labware.load(plate_name, '4', 'reagent plate')
 magdeck = modules.load('magdeck', '7')
@@ -35,10 +35,6 @@ etoh_tips = labware.load('opentrons-tiprack-300ul', '8')
 tips300 = [labware.load('opentrons-tiprack-300ul', slot)
            for slot in ['9', '10']]
 
-# pipettes
-m10 = instruments.P10_Multi(mount='right', tip_racks=tips10)
-p300 = instruments.P300_Single(mount='left', tip_racks=tips300)
-
 # sample setup
 mag_samples_single = [well for well in mag_plate.wells()]
 mag_samples_multi = [well for well in mag_plate.rows('A')]
@@ -48,90 +44,102 @@ barcodes_multi = [well for well in barcode_plate.rows('A')]
 # reagent setup
 spri_beads = reagent_plate.wells('A1')
 pbs = reagent_plate.wells('A4')
-etoh = tubes50.wells('A1')
-
-# variables for height tracking
-h_track = -15
-r_cyl = 13.4
+etoh = trough.wells('A1')
 
 
-# EtOH height tracking function
-def etoh_track(vol):
-    global h_track
+def run_custom_protocol(
+        P300_pipette_type: StringSelection('single', 'multi') = 'single'
+        ):
 
-    # update height from which to aspirate
-    dh = vol/(math.pi*(r_cyl**2))
-    h_track -= dh
+    # pipettes
+    m10 = instruments.P10_Multi(mount='right', tip_racks=tips10)
+    if P300_pipette_type == 'single':
+        pipette300 = instruments.P300_Single(mount='left', tip_racks=tips300)
+    else:
+        pipette300 = instruments.P300_Multi(mount='left', tip_racks=tips300)
 
+    # EtOH wash function
+    def etoh_wash(num):
+        # transfer EtOH to samples
+        pipette300.pick_up_tip(etoh_tips.rows('A')[num])
+        pipette300.distribute(
+            100,
+            etoh,
+            [s.top() for s in mag_samples_multi],
+            new_tip='never'
+            )
+        pipette300.drop_tip()
 
-# EtOH wash function
-def etoh_wash(num):
-    # transfer EtOH to samples
-    p300.pick_up_tip(etoh_tips.wells(num))
-    for s in mag_samples_single:
-        etoh_track(100)
-        p300.transfer(100, etoh.top(h_track), s.top(), new_tip='never')
-    p300.drop_tip()
+        # remove supernatant
+        pipette300.transfer(
+            100,
+            mag_samples_single,
+            pipette300.trash_container.top(),
+            new_tip='always'
+            )
+
+    # transfer SPRI beads
+    m10.transfer(10, spri_beads, mag_samples_multi, new_tip='always')
+
+    # incubate for 10 minutes
+    m10.delay(minutes=10)
+
+    # engage magnet and incubate for an additional 5 minutes
+    robot._driver.run_flag.wait()
+    magdeck.engage(height=18)
+    m10.delay(minutes=5)
 
     # remove supernatant
-    p300.transfer(100,
-                  mag_samples_single,
-                  p300.trash_container,
-                  new_tip='always')
+    m10.transfer(
+        10,
+        mag_samples_multi,
+        m10.trash_container.top(),
+        new_tip='always'
+        )
 
+    # 2 EtOH washes
+    etoh_wash(0)
+    etoh_wash(1)
 
-# transfer SPRI beads
-m10.transfer(10, spri_beads, mag_samples_multi, new_tip='always')
+    # allow samples to dry for 5 minutes
+    m10.delay(minutes=5)
 
-# incubate for 10 minutes
-m10.delay(minutes=10)
+    # remove residue from washes with P10 pipette
+    m10.transfer(
+        10,
+        mag_samples_multi,
+        m10.trash_container.top(),
+        new_tip='always'
+        )
 
-# engage magnet and incubate for an additional 5 minutes
-robot._driver.run_flag.wait()
-magdeck.engage(height=18)
-m10.delay(minutes=5)
+    # prompt user to resplace 10ul tips
+    robot.pause('Please replace 10ul tipracks in slots 3, 5, and 6.')
+    m10.reset()
 
-# remove supernatant
-m10.transfer(10, mag_samples_multi, m10.trash_container, new_tip='always')
+    # transfer PBS
+    magdeck.disengage()
+    m10.transfer(4, pbs, mag_samples_multi, blow_out=True, new_tip='always')
 
-# 2 EtOH washes
-etoh_wash(0)
-etoh_wash(1)
+    # engage magnet and incubate for 1 minute
+    magdeck.engage(height=18)
+    m10.delay(minutes=1)
 
-# allow samples to dry for 5 minutes
-m10.delay(minutes=5)
+    # transfer supernatant to plate on tempdeck
+    m10.transfer(
+        4,
+        mag_samples_multi,
+        temp_samples_multi,
+        blow_out=True,
+        new_tip='always'
+        )
 
-# remove residue from washes with P10 pipette
-m10.transfer(10, mag_samples_multi, m10.trash_container, new_tip='always')
+    # transfer barcodes to new plate
+    m10.transfer(
+        1,
+        barcodes_multi,
+        temp_samples_multi,
+        blow_out=True,
+        new_tip='always'
+        )
 
-# prompt user to resplace 10ul tips
-robot.pause('Please replace 10ul tipracks in slots 3, 5, and 6.')
-m10.reset()
-
-# transfer PBS
-magdeck.disengage()
-m10.transfer(4, pbs, mag_samples_multi, blow_out=True, new_tip='always')
-
-# engage magnet and incubate for 1 minute
-magdeck.engage(height=18)
-m10.delay(minutes=1)
-
-# transfer supernatant to plate on tempdeck
-m10.transfer(
-    4,
-    mag_samples_multi,
-    temp_samples_multi,
-    blow_out=True,
-    new_tip='always'
-    )
-
-# transfer barcodes to new plate
-m10.transfer(
-    1,
-    barcodes_multi,
-    temp_samples_multi,
-    blow_out=True,
-    new_tip='always'
-    )
-
-magdeck.disengage()
+    magdeck.disengage()
