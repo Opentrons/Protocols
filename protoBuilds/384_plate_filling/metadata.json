@@ -1,1 +1,0 @@
-{"slug": "384_plate_filling", "path": "protocols/384_plate_filling", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["384_plate_filling.ot1.py"], "OT 2 protocol": ["384_plate_filling.ot2.py"]}, "status": "ok"}

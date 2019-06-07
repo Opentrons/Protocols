@@ -1,1 +1,0 @@
-{"slug": "multiple_sparse_matrix_screens", "path": "protocols/multiple_sparse_matrix_screens", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["multiple_sparse_matrix_screens.ot1.py"], "OT 2 protocol": []}, "status": "ok"}

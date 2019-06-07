@@ -1,1 +1,0 @@
-{"slug": "media_exchange", "path": "protocols/media_exchange", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["Media_Exchange_2017-10-12.ot1.py"], "OT 2 protocol": ["Media_Exchange.ot2.py"]}, "status": "ok"}

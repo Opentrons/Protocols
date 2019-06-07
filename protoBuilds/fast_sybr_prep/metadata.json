@@ -1,1 +1,0 @@
-{"slug": "fast_sybr_prep", "path": "protocols/fast_sybr_prep", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["fast_sybr_prep.ot1.py"], "OT 2 protocol": ["fast_sybr_prep.ot2.py"]}, "status": "ok"}

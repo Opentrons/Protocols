@@ -2,6 +2,13 @@ from opentrons import labware, instruments
 from otcustomizers import StringSelection
 
 
+metadata = {
+    'protocolName': 'Consolidate Multiple Wells Into One',
+    'author': 'Opentrons <protocols@opentrons.com>',
+    'source': 'Protocol Library'
+    }
+
+
 def tiprack_from_pipette(pipette_vol):
     if pipette_vol <= 10:
         return 'tiprack-10ul'

@@ -1,1 +1,0 @@
-{"slug": "plate_mapping_hc", "path": "protocols/plate_mapping_hc", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["plate_mapping_hc.ot1.py"], "OT 2 protocol": []}, "status": "ok"}

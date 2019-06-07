@@ -1,1 +1,0 @@
-{"slug": "cDNA_synth", "path": "protocols/cDNA_synth", "flags": {"feature": true, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["cDNA_synth.ot1.py"], "OT 2 protocol": ["cDNA_synth.ot2.py"]}, "status": "ok"}
