@@ -1,27 +1,33 @@
 from opentrons import containers, instruments
 from otcustomizers import FileInput, StringSelection
 
+metadata = {
+    'protocolName': 'Custom Cartridge Filling',
+    'author': 'Nick <protocols@opentrons.com>',
+    'source': 'Custom Protocol Request'
+}
+
 tiprack_slots = ['D1', 'A2', 'C2', 'E2']
 tipracks = [containers.load('tiprack-200ul', slot) for slot in tiprack_slots]
 trash = containers.load('trash-box', 'E1')
 
 # create custom containers
-source_name = '96-2ml-rack'
+source_name = '96-rack-2ml'
 if source_name not in containers.list():
     containers.create(
         source_name,
-        grid=(12, 8),
+        grid=(8, 12),
         spacing=(9, 9),
         diameter=7.42,
         depth=40.27,
         volume=2000
         )
 
-dest_name = '96-deep-custom'
+dest_name = '96-deepwell-custom'
 if dest_name not in containers.list():
     containers.create(
         dest_name,
-        grid=(12, 8),
+        grid=(8, 12),
         spacing=(9, 9),
         diameter=7.78,
         depth=35.6,
@@ -44,9 +50,6 @@ def run_custom_protocol(
             'B (left side)', 'A (right side)')='B (left side)',
         pipette_model: StringSelection(
             'p300', 'p50', 'p10', 'p1000')='p300',
-        source_plate_type: StringSelection('96-flat', '384-plate')='96-flat',
-        destination_plate_type: StringSelection(
-            '96-flat', '384-plate')='96-flat',
         tip_reuse: StringSelection(
             'new tip each time', 'reuse tip')='new tip each time'
         ):
