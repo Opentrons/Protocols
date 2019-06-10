@@ -2,8 +2,7 @@ from opentrons import instruments, labware
 from otcustomizers import StringSelection
 
 # trough and 384-well plate
-trough = labware.load('trough-12row', '4', 'trough')
-plate = labware.load('384-plate', '2', 'plate')
+trough = labware.load('trough-12row', '2', 'trough')
 
 
 def run_custom_protocol(
@@ -17,19 +16,25 @@ def run_custom_protocol(
             'p300-Single', 'p50-Single', 'p10-Single',
             'p300-Multi', 'p50-Multi', 'p10-Multi')='p50-Multi',
         mix_reagent_before_transfer: StringSelection(
-            'True', 'False')='True'):
+            'True', 'False')='True',
+        number_of_plates_to_fill: int = 9):
 
     if int(plate_starting_column) < 0 or int(plate_starting_column) > 24:
         raise Exception("Plate starting column number must be 1-24.")
     if (int(plate_starting_column) + number_of_columns_to_fill) > 25:
         raise Exception("Number of columns to fill exceeds plate's limit.")
 
-    if mix_reagent_before_transfer == 'False':
+    if mix_reagent_before_transfer == 'True':
         mix_times = 5
     else:
         mix_times = 0
 
     pip_name = pipette_type.split('-')  # Check which pipette type
+
+    if number_of_plates_to_fill > 9:
+        raise Exception("Number of plates to fill exceeds deck space.")
+    plates = [labware.load('384-plate', str(slot), 'plate')
+              for slot in range(3, 3+number_of_plates_to_fill)]
 
     if pip_name[0] == 'p10':
         tiprack = labware.load('tiprack-10ul', '1', 'p10rack')
@@ -61,15 +66,16 @@ def run_custom_protocol(
             mount='left',
             tip_racks=[tiprack])
 
-    if pip_name[1] == 'Multi':
-        alternating_wells = []
-        for column in plate.cols(plate_starting_column, to='24'):
-            alternating_wells.append(column.wells('A'))
-            alternating_wells.append(column.wells('B'))
-        dests = alternating_wells[:number_of_columns_to_fill * 2]
-    else:
-        dests = plate.cols(
-            plate_starting_column, length=number_of_columns_to_fill)
+    for plate in plates:
+        if pip_name[1] == 'Multi':
+            alternating_wells = []
+            for column in plate.cols(plate_starting_column, to='24'):
+                alternating_wells.append(column.wells('A'))
+                alternating_wells.append(column.wells('B'))
+            dests = alternating_wells[:number_of_columns_to_fill * 2]
+        else:
+            dests = plate.cols(
+                plate_starting_column, length=number_of_columns_to_fill)
 
     pipette.distribute(
         well_volume,
