@@ -1,1 +1,1 @@
-{"instruments": [{"name": "p300_single_v1", "mount": "right"}], "labware": [], "modules": [], "parameters": [{"name": "number_of_tubes", "annotation": {"type": "int"}, "default": 24}, {"name": "transfer_volume", "annotation": {"type": "int"}, "default": 40}]}
+{"instruments": [{"name": "p300_single", "mount": "right"}], "labware": [], "modules": [], "parameters": [{"name": "number_of_tubes", "annotation": {"type": "int"}, "default": 24}, {"name": "transfer_volume", "annotation": {"type": "int"}, "default": 40}]}

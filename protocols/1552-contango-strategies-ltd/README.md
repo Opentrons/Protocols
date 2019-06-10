@@ -40,16 +40,16 @@ You will need:
 6. 15ul of master mix are distributed to each well of the 96-well plate, which is loaded on the temperature module.
 7. 5ul of each of the specified number of DNA samples is transferred to its corresponding set of 3 destination wells according to the plate diagram in Additional Notes below.
 8. To avoid contamination, the protocol pauses and prompts the user to replace the master mix and DNA sample tubes with oligo standard tubes, positive control tube, and NTC tube according to the reagent setup diagrams in Additional Notes below.
-9. 5ul of positive control is transferred to its corresponding set of 3 destination wells according to the plate diagram in Additional Notes below.
-10. 5ul of NTC is transferred to its corresponding set of 3 destination wells according to the plate diagram in Additional Notes below.
-11. 5ul of each of the specified number of oligo standards is transferred to its corresponding set of 3 destination wells according to the plate diagram in Additional Notes below.
+9. 5ul of positive control is transferred to its corresponding set of 3 destination wells according to the example plate diagram in Additional Notes below.
+10. 5ul of NTC is transferred to its corresponding set of 3 destination wells according to the example plate diagram in Additional Notes below.
+11. 5ul of each of the specified number of oligo standards is transferred to its corresponding set of 3 destination wells according to the example plate diagram in Additional Notes below.
 
 ### Additional Notes
-![Initial Reagent Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1552-contango-strategies-ltd/reagent_setup_1_v2.png)
+![Initial Reagent Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1552-contango-strategies-ltd/reagent_setup_1_v3.png)
 
-![Second Reagent Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1552-contango-strategies-ltd/reagent_setup_2_v2.png)
+![Second Reagent Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1552-contango-strategies-ltd/reagent_setup_2_v3.png)
 
-![Transfer Diagram](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1552-contango-strategies-ltd/transfer_diagram.png)
+![Example Transfer Diagram](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1552-contango-strategies-ltd/transfer_diagram.png)
 
 If you have any questions about this protocol, please contact protocols@opentrons.com.
 

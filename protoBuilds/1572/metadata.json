@@ -1,0 +1,1 @@
+{"slug": "1572", "path": "protocols/1572", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["custom_cassette_filling.ot2.py"]}, "status": "ok"}

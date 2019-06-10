@@ -1,0 +1,1 @@
+{"slug": "1581", "path": "protocols/1581", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["cherrypicking_csv.ot1.py"], "OT 2 protocol": []}, "status": "ok"}
