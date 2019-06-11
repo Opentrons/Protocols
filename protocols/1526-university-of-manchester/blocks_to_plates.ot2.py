@@ -83,6 +83,4 @@ def run_custom_protocol(
     for i in range(number_of_full_decks-1):
         robot.pause("Please replace plates in slots 1, 2, 3, 4, 5, 6, 8, 9, "
                     "and 11, and tip rack in slot 10 before resuming.")
-        perform_deck_transfer(volume_of_transfer)
-
-        
+        perform_deck_transfer(volume_of_transfer)        
