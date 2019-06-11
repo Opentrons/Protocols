@@ -1,4 +1,5 @@
 from opentrons import labware, instruments
+from otcustomizers import StringSelection
 import math
 
 metadata = {
@@ -9,7 +10,7 @@ metadata = {
 
 
 def run_custom_protocol(
-        sample_num: int=16
+        sample_num: StringSelection('4', '8', '12', '16')='4'
         ):
 
     # labware setup
@@ -17,7 +18,7 @@ def run_custom_protocol(
     labware.load('tempdeck', '10')
     temp_rack = labware.load(
         'opentrons-aluminum-block-2ml-eppendorf', '10', share=True)
-    samples_plate = labware.load('PCR-strip-tall', '1')
+    sample_plate = labware.load('PCR-strip-tall', '1')
 
     # reagent setup
     water = temp_rack.wells('A1')
@@ -27,46 +28,47 @@ def run_custom_protocol(
     rsa = temp_rack.wells('A5')
 
     mastermix = mix_rack.wells('A1')
-    samples = [well for well in samples_plate.wells('A1', length=sample_num)]
-    if sample_num <= 8:
-        sample_cols = [samples_plate.cols('1')]
-    else:
-        sample_cols = samples_plate.cols('1', length=math.ceil(sample_num/8))
+    samples = [well
+               for well in sample_plate.wells('A1', length=int(sample_num)*2)]
 
     tiprack_10 = labware.load('tiprack-10ul', '6')
     tiprack_300 = labware.load('opentrons-tiprack-300ul', '5')
 
     # pipette setup
-    m10 = instruments.P10_Multi(
+    p10 = instruments.P10_Single(
         mount='left',
         tip_racks=[tiprack_10])
 
-    m50 = instruments.P50_Multi(
+    p50 = instruments.P50_Single(
         mount='right',
         tip_racks=[tiprack_300])
 
     # Transfer reagents to mastermix
-    m50.transfer(2 * (sample_num + 1), water, mastermix)
-    m50.transfer(2.6 * (sample_num + 1), RE_buffer, mastermix)
-    m10.pick_up_tip()
-    m10.mix(5, 8, bsa)
-    m10.transfer(0.2 * (sample_num + 1), bsa, mastermix, new_tip='never')
-    m10.drop_tip()
-    m10.transfer(0.5 * (sample_num + 1), alu, mastermix, mix_before=(5, 8))
-    m10.transfer(0.5 * (sample_num + 1), rsa, mastermix, mix_before=(5, 8))
+    volume_dict = {
+        '4': {water: 18, RE_buffer: 23.4, bsa: 1.8, alu: 4.5, rsa: 4.5},
+        '8': {water: 34, RE_buffer: 44.2, bsa: 3.4, alu: 8.5, rsa: 8.5},
+        '12': {water: 50, RE_buffer: 65, bsa: 5, alu: 12.5, rsa: 12.5},
+        '16': {water: 66, RE_buffer: 85.8, bsa: 6.6, alu: 16.5, rsa: 16.5}
+    }
+    vol_dict = volume_dict[sample_num]
+    for reagent, volume in vol_dict.items():
+        if volume > 10:
+            pipette = p50
+        else:
+            pipette = p10
+        pipette.pick_up_tip()
+        if reagent == alu or reagent == rsa:
+            pipette.mix(5, 8, reagent)
+            pipette.blow_out(reagent.top())
+        pipette.transfer(volume, reagent, mastermix.top(), new_tip='never')
+        pipette.blow_out(mastermix.top())
+        pipette.move_to(mastermix.bottom(2))
+        pipette.drop_tip()
 
-    # Distribute master mix in samples
-    m50.pick_up_tip()
-    m50.mix(5, 30, mastermix)
+    # Transfer and master mix in samples
     for sample in samples:
-        if m50.current_volume <= 5.8:
-            m50.aspirate(mastermix)
-        m50.dispense(5.8, sample)
-    m50.drop_tip()
-
-    # Mix each column
-    for col in sample_cols:
-        m10.pick_up_tip()
-        m10.mix(5, 10, col)
-        m10.blow_out(col[0].top())
-        m10.drop_tip()
+        p50.pick_up_tip()
+        p50.transfer(5.8, mastermix, sample, new_tip='never')
+        p50.mix(5, 10, sample)
+        p50.blow_out(sample)
+        p50.drop_tip()
