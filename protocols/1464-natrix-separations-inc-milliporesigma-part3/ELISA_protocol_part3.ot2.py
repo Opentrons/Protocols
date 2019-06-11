@@ -55,5 +55,7 @@ def run_custom_protocol(
     for col in plate.cols[:number_of_columns]:
         m300.pick_up_tip()
         m300.transfer(100, stop_solution, col, new_tip='never')
-        m300.mix(10, 100, col)
+        m300.mix(3, 100, col)
         m300.drop_tip()
+
+

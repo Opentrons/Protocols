@@ -22,7 +22,7 @@ if deep_plate_name not in labware.list():
         grid=(12, 8),
         spacing=(9, 9),
         diameter=8.2,
-        depth=41.3,
+        depth=40.5,
         volume=2000)
 
 

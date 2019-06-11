@@ -1,4 +1,5 @@
 from opentrons import labware, instruments
+from opentrons.data_storage import database
 from otcustomizers import FileInput
 import math
 
@@ -23,7 +24,7 @@ if deep_plate_name not in labware.list():
         grid=(12, 8),
         spacing=(9, 9),
         diameter=8.2,
-        depth=41.3,
+        depth=40,
         volume=2000)
 
 
@@ -134,6 +135,6 @@ def run_custom_protocol(
                      for conc in c_list]
             p300.pick_up_tip()
             for volume, source, dest in zip(volumes, sources, dests):
-                p300.transfer(volume, source, dest, new_tip='never')
-                p300.mix(3, 200, dest)
+                p300.transfer(volume, source, dest.bottom(2), new_tip='never')
+                p300.mix(3, 200, dest.bottom(2))
             p300.drop_tip()
