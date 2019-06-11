@@ -1,5 +1,4 @@
 from opentrons import labware, instruments
-from opentrons.data_storage import database
 from otcustomizers import FileInput
 import math
 
