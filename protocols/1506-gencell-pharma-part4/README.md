@@ -19,10 +19,9 @@ This protocol allows your robot to prepare and distribute the Hybridization Mast
 ---
 
 You will need:
-* P300 Multi-channel Pipette
-* P50 Multi-channel Pipette
-* [4-in-1 Tube Rack Set](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)
-* [Temperature Module + Aluminum Block Set](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
+* P300 Single-channel Pipette
+* P50 Single-channel Pipette
+* [4-in-1 Tube Rack Sets](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)
 * 8-well PCR Strips
 * Opentrons 300 uL Tip Racks
 
@@ -45,22 +44,16 @@ You will need:
 
 
 ### Additional Notes
-Temperature Deck Rack Setup: (slot 10)
-* Cot-1 DNA: A1
-* 10X aCGH Blocking Agent: A2
+4x6 Screwcap Tube Rack Setup: (slot 4)
+* Cot-1 DNA: D1
+* 10X aCGH Blocking Agent: D2
+* HI-RPM Hypridization Buffer: D3
 
 ---
 
-Room Temperature Rack Setup: (slot 4)
+4x6 Eppendorf Tube Rack Setup: (slot 5)
 * Master Mix: A1
-* HI-RPM Hypridization Buffer: A3
 
----
-
-Tip Rack Setup:
-* In order to use the multi-channel pipettes as single-channel pipettes, you will need to remove some tips from the tip racks for this protocol based on the following image:
-
-![setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1506-gencell-pharma/tiprack-part4.png)
 
 ---
 
