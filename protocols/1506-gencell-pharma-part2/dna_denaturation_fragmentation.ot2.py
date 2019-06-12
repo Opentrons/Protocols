@@ -1,6 +1,5 @@
 from opentrons import labware, instruments
 from otcustomizers import StringSelection
-import math
 
 metadata = {
     'protocolName': 'DNA Denaturation and Fragmentation',
