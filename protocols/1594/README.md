@@ -8,7 +8,7 @@
     * PCR preparation
 
 ## Description
-This protocol performs PCR preparation for a user-input number of 96-well sample plates. **Ensure mineral oil is filled to approximately 10mm below the top of the trough channel. This will ensure accurate height tracking when aspirating mineral oil and will minimize excess oil left on the tip.** For reagent setup, see 'Additional Notes' below.
+This protocol performs PCR preparation for a user-input number of 96-well sample plates (up to 5 per protocol). **Be sure to specify how high the mineral oil is filled to (in mm below the top opening of the trough). This will ensure accurate height tracking when aspirating mineral oil and will minimize excess oil left on the tip.** For reagent setup, see 'Additional Notes' below.
 
 ---
 
@@ -28,7 +28,7 @@ You will need:
 * [Fisher Mineral oil # 415080010](https://www.fishersci.com/shop/products/mineral-oil-pure-acros-organics-4/AC415080060)
 
 ## Process
-1. Select the number of destination plates and volume of mineral oil (in ul) to transfer to each well.
+1. Select the number of destination plates, volume of mineral oil (in ul) to transfer to each well, and distance form the oil surface to the opening of the trough (in mm).
 2. Download your protocol.
 3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
 4. Set up your deck according to the deck map.
@@ -36,12 +36,12 @@ You will need:
 6. Hit "Run".
 7. The user input volume of mineral oil is transferred to each well of each destination plate on the robot deck. The aspirate and dispense flow rates are decreased 5x to accommodate viscous liquid. The protocol calculates the height from which to aspirate to ensure accurate pipetting of viscous liquid. Tips are reused for each dispense
 8. 18ul of PCR mastermix is transferred to each well of each destination plate on the robot deck. The aspirate and dispense flow rates are restored to default.
-9. 1ul of forward primer is transferred to each well of each destination plate on the robot deck. Tips are changed between each transfer to prevent sample contamination. The user is prompted to replace 10ul tipracks if necessary throughout the process.
-10. 1ul of reverse primer is transferred to each well of each destination plate on the robot deck. Tips are changed between each transfer to prevent sample contamination. The user is prompted to replace 10ul tipracks if necessary throughout the process.
+9. 1ul of forward primer is transferred to each well of each destination plate on the robot deck. Tips are changed between each transfer to prevent sample contamination.
+10. 1ul of reverse primer is transferred to each well of each destination plate on the robot deck. Tips are changed between each transfer to prevent sample contamination.
 
 ### Additional Notes
-Reagent trough (slot 1):
-* mineral oil: channel 1 **(filled to at least 10mm below the top of the channel)**
+Reagent trough setup (slot 1):
+* mineral oil: channel 1
 * PCR mastermix: channel 3
 
 If you have any questions about this protocol, please contact protocols@opentrons.com.

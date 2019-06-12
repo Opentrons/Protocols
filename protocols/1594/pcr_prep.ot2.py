@@ -1,4 +1,4 @@
-from opentrons import labware, instruments, robot
+from opentrons import labware, instruments
 
 metadata = {
     'protocolName': 'PCR Preparation',
@@ -32,9 +32,9 @@ if trough_name not in labware.list():
         trough_name,
         grid=(12, 1),
         spacing=(9, 0),
-        diameter=5,
-        depth=20,
-        volume=22000
+        diameter=8.1,
+        depth=39.1,
+        volume=7000
     )
 
 plate_name = 'Starlab-96-PCR'
@@ -42,10 +42,10 @@ if plate_name not in labware.list():
     labware.create(
         plate_name,
         grid=(12, 8),
-        spacing=(9, 9),
-        diameter=5,
+        spacing=(8.9, 8.9),
+        diameter=5.6,
         depth=15,
-        volume=350
+        volume=200
     )
 
 # load labware
@@ -59,12 +59,14 @@ master_mix = trough.wells('A3')
 
 
 def run_custom_protocol(
-    number_of_destination_plates: int = 4,
-    volume_of_mineral_oil: float = 10
-):
+        number_of_destination_plates: int = 5,
+        volume_of_mineral_oil_in_ul: float = 15,
+        distance_from_oil_surface_to_opening_of_trough_in_mm: float = 10
+        ):
+
     # check for labware space
-    if number_of_destination_plates > 6:
-        raise Exception('Please specify 6 or fewer destination plates.')
+    if number_of_destination_plates > 5:
+        raise Exception('Please specify 5 or fewer destination plates.')
 
     # remaining labware
     dest_plates = [labware.load(plate_name, str(slot))
@@ -80,24 +82,31 @@ def run_custom_protocol(
     all_dests = [well for plate in dest_plates for well in plate.rows('A')]
 
     # variables for mineral oil height track
-    h_oil = -12
-    length = 60
-    width = 5
+    h_oil = -(distance_from_oil_surface_to_opening_of_trough_in_mm + 5)
+    length = 71.4
+    width = dest_plates[0].wells(0).properties['diameter']
 
-    def oil_height_track(vol):
+    def oil_height_track():
         nonlocal h_oil
-
-        dh = vol/(length*width)
+        dh = volume_of_mineral_oil_in_ul/(length*width)
         h_oil -= dh
 
     # transfer mineral oil
     m50.set_flow_rate(aspirate=5, dispense=10)
+    t_count = 0
     m50.pick_up_tip()
     for d in all_dests:
-        oil_height_track(volume_of_mineral_oil)
-        m50.aspirate(volume_of_mineral_oil, mineral_oil.top(h_oil))
+        # prevent oil buildup in the same tip (replace after each plate fill)
+        if t_count == 12:
+            m50.drop_tip()
+            m50.pick_up_tip()
+            t_count = 1
+
+        oil_height_track()
+        m50.aspirate(volume_of_mineral_oil_in_ul, mineral_oil.top(h_oil))
         m50.delay(seconds=5)
         m50.dispense(d.bottom(5))
+        t_count += 1
         m50.blow_out()
     m50.drop_tip()
 
@@ -108,25 +117,12 @@ def run_custom_protocol(
         m50.transfer(18, master_mix, d.top(), blow_out=True, new_tip='never')
     m50.drop_tip()
 
-    # set tip trackers
-    num_max_tip_pickups = 12*len(tips10)
-    tip_counter = 0
+    # forward primer distribution
+    for ind, primer in enumerate(forward_primer.rows('A')):
+        dests = [plate.rows('A')[ind] for plate in dest_plates]
+        m10.distribute(1, primer, dests)
 
-    # primer transfer function
-    def primer_transfer(primer_plate):
-        nonlocal tip_counter
-
-        for ind, primer in enumerate(primer_plate.rows('A')):
-            for plate in dest_plates:
-                tip_counter += 1
-                if tip_counter >= num_max_tip_pickups:
-                    robot.pause('Replace 10ul tipracks before resuming.')
-                    m10.reset()
-                    tip_counter = 0
-                m10.transfer(1, primer, plate.rows('A')[ind], blow_out=True)
-
-    # forward primers
-    primer_transfer(forward_primer)
-
-    # reverse primers
-    primer_transfer(reverse_primer)
+    # reverse primer distribution
+    for ind, primer in enumerate(reverse_primer.rows('A')):
+        dests = [plate.rows('A')[ind] for plate in dest_plates]
+        m10.distribute(1, primer, dests)
