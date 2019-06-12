@@ -47,12 +47,11 @@ def run_custom_protocol(
     m300_tip_count = 0
     m10_tip_count = 0
 
-    acceptable_cols = [str(col) for col in range(1, 13)]
     cols = [col.strip()
             for col in sample_columns_separated_by_commas.split(',')]
     # check input columns
     for col in cols:
-        if col not in acceptable_cols:
+        if int(col) < 1 or int(col) > 12:
             raise Exception('Invalid column input.')
 
     mag_loc = [mag_plate.columns(col) for col in cols]
@@ -174,7 +173,7 @@ def run_custom_protocol(
                 "deck before resuming.")
     robot._driver.run_flag.wait()
     magdeck.engage()
-    m300.delay(minutes=2)
+    m300.delay(minutes=5)
     robot._driver.run_flag.wait()
     robot.pause("Resume when solution is clear.")
 
@@ -296,6 +295,7 @@ def run_custom_protocol(
         m300.pick_up_tip()
         m300.transfer(53, TE_buffer, loc, new_tip='never')
         m300.mix(10, 25, loc)
+        m300.blow_out()
         m300.drop_tip()
         update_m300_tip_count(1)
 

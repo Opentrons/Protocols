@@ -39,12 +39,11 @@ def run_custom_protocol(
     m300_tip_count = 0
     m10_tip_count = 0
 
-    acceptable_cols = [str(col) for col in range(1, 13)]
     cols = [col.strip()
             for col in sample_columns_separated_by_commas.split(',')]
     # check input columns
     for col in cols:
-        if col not in acceptable_cols:
+        if int(col) < 1 or int(col) > 12:
             raise Exception('Invalid column input.')
 
     mag_loc = [mag_plate.columns(col) for col in cols]
@@ -111,7 +110,7 @@ def run_custom_protocol(
             m300.transfer(200, loc, m300.trash_container.top())
             update_m300_tip_count(1)
 
-    robot.pause("Air dry the beads for 5 minutes. Resume when finished.")
+    m300.delay(minutes=5)
 
     robot._driver.run_flag.wait()
     magdeck.disengage()
@@ -126,7 +125,7 @@ def run_custom_protocol(
         update_m10_tip_count(1)
 
     magdeck.engage()
-    m10.delay(minutes=2)
+    m10.delay(minutes=5)
     robot._driver.run_flag.wait()
     robot.pause("Place a fresh plate in slot 3. Resume when the solution is "
                 "clear.")
