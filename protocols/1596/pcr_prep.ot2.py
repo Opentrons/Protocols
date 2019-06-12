@@ -42,9 +42,8 @@ if tips_name not in labware.list():
 # load labware and modules
 tempdeck = modules.load('tempdeck', '1')
 temp_plate = labware.load(pcr_plate_name, '1', share=True)
-if not robot.is_simulating():
-    tempdeck.set_temperature(4)
-    tempdeck.wait_for_temp()
+tempdeck.set_temperature(4)
+tempdeck.wait_for_temp()
 deep_plate = labware.load(deepwell_plate_name, '2')
 block = labware.load(
     'opentrons-aluminum-block-2ml-eppendorf',
@@ -121,12 +120,12 @@ def run_custom_protocol(
         m50.pick_up_tip()
         m50.transfer(
             25,
-            deep_plate.columns()[0:number_of_sample_columns],
-            temp_plate.columns()[0:number_of_sample_columns],
+            source,
+            dest,
             new_tip='never'
         )
-        m50.mix(10, 25, temp_plate.columns('1'))
-        m50.blow_out(temp_plate.columns('1'))
+        m50.mix(10, 25, dest)
+        m50.blow_out(dest)
         m50.drop_tip()
 
     robot.pause('Please replace mastermix tube in block well A3 with a '
@@ -146,6 +145,7 @@ def run_custom_protocol(
         blow_out=True
         )
     p50.mix(20, 50, mm)
+    p50.blow_out(mm)
     p50.drop_tip()
 
     robot.pause('Please place the reaction plate back on the tempdeck.')
