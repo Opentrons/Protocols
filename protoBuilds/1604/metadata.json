@@ -1,0 +1,1 @@
+{"slug": "1604", "path": "protocols/1604", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["cherrypick_to_one.ot2.py"]}, "status": "ok"}
