@@ -19,11 +19,9 @@ This protocol allows your robot to add and mix 5 uL Random Primer to each reacti
 ---
 
 You will need:
-* P10 Multi-channel Pipette
-* P50 Multi-channel Pipette
-* [Temperature Module + Aluminum Block Set](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
+* P50 Single-channel Pipette
+* [4-in-1 Tube Rack Sets](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)
 * 8-well PCR Strips
-* 10 uL Tip Racks
 * Opentrons 300 uL Tip Racks
 
 ### Robot
@@ -41,21 +39,13 @@ You will need:
 5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support article](https://support.opentrons.com/ot-2/getting-started-software-setup/deck-calibration).
 6. Hit "Run".
 7. Robot will mix and transfer Random Primer to sample plate, starting at A1.
-8. Robot will mix each column of samples with a new set of tips.
+8. Robot will transfer and mix each sample with a new tip per well.
 
 ### Additional Notes
-Temperature Deck Rack Setup: (slot 10)
+4x6 Screwcap Tube Rack: (slot 4)
 * Random Primer: A1
 
 ---
-
-Tip Rack Setup:
-* In order to use the multi-channel pipettes as single-channel pipettes, you will need to remove some tips from the tip racks for this protocol based on the following image:
-
-![setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1506-gencell-pharma/tiprack-part2.png)
-
----
-
 
 If you have any questions about this protocol, please contact protocols@opentrons.com.
 

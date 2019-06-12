@@ -19,10 +19,9 @@ This protocol allows your robot to create and distribute two different Labeling 
 ---
 
 You will need:
-* P10 Multi-channel Pipette
-* P50 Multi-channel Pipette
-* [4-in-1 Tube Rack Set](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)
-* [Temperature Module + Aluminum Block Set](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
+* P10 Single-channel Pipette
+* P50 Single-channel Pipette
+* [4-in-1 Tube Rack Sets](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)
 * 8-well PCR Strips
 * 10 uL Tip Racks
 * Opentrons 300 uL Tip Racks
@@ -43,31 +42,24 @@ You will need:
 6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support article](https://support.opentrons.com/ot-2/getting-started-software-setup/deck-calibration).
 7. Hit "Run".
 8. Robot will create the master mixes based on the number of samples and controls you have input, by transferring water, 5X RE buffer, 10X dNTPs, Cyc3 (master mix 1) or Cyc5 (master mix 2), and Exo Klenow to the master mix locations in the 2 mL tube rack.
-9. Robot will distribute 21 uL master mix 1 to samples (starting at A1).
-10. Robot will distribute 21 uL master mix 2 to controls (starting at A6).
+9. Robot will transfer and mix 21 uL master mix 1 to samples (starting at A1).
+10. Robot will transfer and mix 21 uL master mix 2 to controls (starting at A6).
 
 
 ### Additional Notes
-Temperature Deck Rack Setup: (slot 10)
-* Water: A1
-* 5X RE buffer: A2
-* 10X dNTPs: A3
-* Cyc3: A4
-* Cyc5: A5
-* Exo Klenow: A6
+4x6 Screwcap Tube Rack Setup: (slot 4)
+* Water: D1
+* 5X RE buffer: D2
+* 10X dNTPs: D3
+* Cyc3: D4
+* Cyc5: D5
+* Exo Klenow: D6
 
 ---
 
-Room Temperature Rack Setup: (slot 4)
+4x6 Eppendorf Rack Setup: (slot 5)
 * Master Mix 1: A1
 * Master Mix 2: A3
-
----
-
-Tip Rack Setup:
-* In order to use the multi-channel pipettes as single-channel pipettes, you will need to remove some tips from the tip racks for this protocol based on the following image:
-
-![setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1506-gencell-pharma/tiprack-part3.png)
 
 ---
 
