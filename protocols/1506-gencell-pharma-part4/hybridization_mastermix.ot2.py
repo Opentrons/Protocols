@@ -1,5 +1,5 @@
 from opentrons import labware, instruments
-import math
+from otcustomizers import StringSelection
 
 metadata = {
     'protocolName': 'Hybridization Master Mix',
@@ -8,58 +8,66 @@ metadata = {
     }
 
 
-def run_custom_protocol(sample_num: int=8):
+def run_custom_protocol(
+        sample_num: StringSelection('4', '8', '12', '16')='4'
+        ):
+
+    sample_num = int(sample_num)
 
     # labware setup
-    mix_rack = labware.load('opentrons-tuberack-2ml-eppendorf', '4')
-    labware.load('tempdeck', '10')
-    temp_rack = labware.load('opentrons-aluminum-block-2ml-eppendorf', '10',
-                             share=True)
+    screwcap_rack = labware.load('opentrons-tuberack-2ml-screwcap', '4')
+    eppendorf_rack = labware.load('opentrons-tuberack-2ml-eppendorf', '5')
     samples_plate = labware.load('PCR-strip-tall', '1')
 
     tiprack_50 = labware.load('opentrons-tiprack-300ul', '6')
-    tiprack_300 = labware.load('opentrons-tiprack-300ul', '5')
+    tiprack_300 = labware.load('opentrons-tiprack-300ul', '3')
 
     # pipette setup
-    m300 = instruments.P300_Multi(
+    p300 = instruments.P300_Single(
         mount='left',
         tip_racks=[tiprack_300])
 
-    m50 = instruments.P50_Multi(
+    p50 = instruments.P50_Single(
         mount='right',
         tip_racks=[tiprack_50])
 
     # reagent setup
-    cot = temp_rack.wells('A1')
-    blockagent = temp_rack.wells('A2')
+    cot = screwcap_rack.wells('D1')
+    blockagent = screwcap_rack.wells('D2')
+    hyb_buf = screwcap_rack.wells('D3')
 
-    mix_dest = mix_rack.wells('A1')
-    hyb_buf = mix_rack.wells('A3')
+    mix_dest = eppendorf_rack.wells('A1')
+
     samples = [well for well in samples_plate.wells('A1', length=sample_num)]
-    if sample_num <= 8:
-        sample_cols = [samples_plate.cols('1')]
-    else:
-        sample_cols = samples_plate.cols('1', length=math.ceil(sample_num/8))
 
-    s_factor = sample_num + 1
+    volume_dict = {
+        4: {cot: 25, blockagent: 55, hyb_buf: 275},
+        8: {cot: 45, blockagent: 99, hyb_buf: 495},
+        12: {cot: 65, blockagent: 143, hyb_buf: 715},
+        16: {cot: 90, blockagent: 198, hyb_buf: 990}
+    }
 
-    # Transfer reagents to mastermixes
-    m50.transfer(s_factor * 5, cot, mix_dest)
-    m300.transfer(s_factor * 11, blockagent, mix_dest)
-    m300.pick_up_tip()
-    m300.mix(5, 200, hyb_buf)
-    m300.transfer(s_factor * 55, hyb_buf, mix_dest, new_tip='never')
-    m300.mix(5, 300, mix_dest)
-    m300.drop_tip()
+    # create master mix
+    for reagent, volume in volume_dict[sample_num].items():
+        if volume > 50:
+            pipette = p300
+        else:
+            pipette = p50
+        pipette.pick_up_tip()
+        if reagent == hyb_buf:
+            pipette.mix(5, pipette.max_volume, reagent)
+            pipette.blow_out(reagent)
+        pipette.transfer(
+            volume, reagent, mix_dest.top(), blow_out=True, new_tip='always')
 
-    m300.pick_up_tip()
+    # transfer and mix master mix in samples
+    p300.pick_up_tip()
+    p300.mix(5, 300, mix_dest)
+    p300.blow_out(mix_dest)
     for sample in samples:
-        if m300.current_volume <= 71:
-            m300.aspirate(mix_dest)
-        m300.dispense(71, sample)
-    m300.drop_tip()
-
-    for col in sample_cols:
-        m300.pick_up_tip()
-        m300.mix(5, 50, col)
-        m300.drop_tip()
+        if not p300.tip_attached:
+            p300.pick_up_tip()
+        p300.transfer(71, mix_dest, sample, new_tip='never')
+        p300.mix(5, 50, sample)
+        p300.blow_out(sample)
+        p300.drop_tip()
