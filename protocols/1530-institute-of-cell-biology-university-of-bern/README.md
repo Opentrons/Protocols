@@ -27,7 +27,7 @@ You will need:
 * [MESA GREEN qPCR MasterMix Plus for SYBR Assay](https://secure.eurogentec.com/product/research-mesa-green-qpcr-mastermix-plus-for-sybr-assay.html)
 
 ## Process
-1. Upload your input CSV file.
+1. Upload your input CSV file and select which tip to start at.
 2. Download your protocol.
 3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
 4. Set up your deck according to the deck map.

@@ -80,25 +80,30 @@ mm_tubes = {'kd1': tubes.wells('B2'),
             'gapdh': tubes.wells('A3')}
 
 
-def run_custom_protocol(CSV_file: FileInput = example_csv):
+def run_custom_protocol(
+        csv_file: FileInput = example_csv,
+        tip_start_well: str = 'A1'
+):
+
+    # tip check
+    tip_row = tip_start_well.strip()[0]
+    tip_col = int(tip_start_well.strip()[1:])
+    if tip_row not in 'ABCDEFGH' or tip_col < 1 or tip_col > 12:
+        raise Exception('Invalid tip well input.')
+
+    p10.start_at_tip(tip_start_well)
 
     knockdowns = []
     primers = []
 
-    def csv_parser(file_string):
-        nonlocal knockdowns
-        nonlocal primers
-
-        # remove header column
-        rows = file_string.splitlines()[1:]
-        for row in rows:
-            # check if empty line
-            vals = row.split(',')
-            if len(vals[1]) > 0:
-                knockdowns.append(vals[1].lower())
-                primers.append(vals[2].lower())
-
-    csv_parser(CSV_file)
+    # remove header column
+    rows = csv_file.splitlines()[1:]
+    for row in rows:
+        # check if empty line
+        vals = row.split(',')
+        if len(vals[1]) > 0:
+            knockdowns.append(vals[1].lower())
+            primers.append(vals[2].lower())
 
     # transfer primers
     for primer, dest in zip(primers, qPCR_rack.wells()):
