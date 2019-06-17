@@ -69,7 +69,7 @@ def run_custom_protocol(
         number_of_dilutions_per_sample: int = 11,
         dilution_start_well: str = 'A1',
         dilution_orientation: StringSelection('vertical',
-                                              'horiziontal') = 'horizontal',
+                                              'horizontal') = 'horizontal',
         tip_use_strategy: StringSelection(
             'use one tip per sample',
             'new tip for each transfer') = 'use one tip per sample'
