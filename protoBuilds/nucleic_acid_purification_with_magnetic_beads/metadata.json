@@ -1,0 +1,1 @@
+{"slug": "nucleic_acid_purification_with_magnetic_beads", "path": "protocols/nucleic_acid_purification_with_magnetic_beads", "flags": {"feature": true, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["dna_purification.ot2.py"]}, "status": "ok"}

@@ -1,1 +1,0 @@
-{"slug": "plate_cells", "path": "protocols/plate_cells", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["Plate_Cells_2017-10-12.ot1.py"], "OT 2 protocol": []}, "status": "ok"}

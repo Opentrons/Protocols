@@ -1,1 +1,0 @@
-{"slug": "t4_dna_ligation", "path": "protocols/t4_dna_ligation", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["t4_dna_ligation.ot1.py"], "OT 2 protocol": []}, "status": "ok"}

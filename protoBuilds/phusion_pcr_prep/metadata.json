@@ -1,1 +1,0 @@
-{"slug": "phusion_pcr_prep", "path": "protocols/phusion_pcr_prep", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["phusion_pcr_prep.ot1.py"], "OT 2 protocol": []}, "status": "ok"}

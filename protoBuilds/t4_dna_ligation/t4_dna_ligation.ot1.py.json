@@ -1,1 +1,0 @@
-{"instruments": [{"name": "Pipette", "axis": "b", "channels": 1, "type": "pipette", "min_volume": 0, "max_volume": 10}], "containers": [{"type": "tube-rack-2ml", "slot": "C1", "name": "tube-rack-2ml"}, {"type": "tiprack-200ul", "slot": "A1", "name": "tiprack-200ul"}, {"type": "trash-box", "slot": "B2", "name": "trash-box"}], "parameters": []}

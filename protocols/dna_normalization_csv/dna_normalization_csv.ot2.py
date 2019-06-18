@@ -1,6 +1,12 @@
 from opentrons import labware, instruments, robot
 from otcustomizers import FileInput, StringSelection
 
+metadata = {
+    'protocolName': 'DNA Normalization using CSV',
+    'author': 'Opentrons <protocols@opentrons.com>',
+    'source': 'Protocol Library'
+    }
+
 
 reservoir_name = 'biotix-resevoir'
 if reservoir_name not in labware.list():

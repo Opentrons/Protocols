@@ -1,1 +1,0 @@
-{"slug": "Dilute96Well", "path": "protocols/Dilute96Well", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["Reaction_Dilution_4-9-2018.ot1.py"], "OT 2 protocol": []}, "status": "ok"}

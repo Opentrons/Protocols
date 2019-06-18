@@ -1,1 +1,0 @@
-{"slug": "buffer_and_sample_distribution", "path": "protocols/buffer_and_sample_distribution", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["buffer_and_sample_distribution.ot1.py"], "OT 2 protocol": []}, "status": "ok"}

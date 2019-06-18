@@ -1,6 +1,12 @@
 from opentrons import labware, instruments
 from otcustomizers import FileInput, StringSelection
 
+metadata = {
+    'protocolName': 'Cherrypicking CSV',
+    'author': 'Opentrons <protocols@opentrons.com>',
+    'source': 'Protocol Library'
+    }
+
 example_csv = """
 A1, 20
 A3, 10
@@ -23,9 +29,9 @@ def run_custom_protocol(
         ):
 
     pipette_max_vol = int(pipette_model[1:])
-    mount = 'left'
+    mount = 'right'
     if pipette_axis[0] == 'B':
-        mount = 'right'
+        mount = 'left'
 
     tiprack_slots = ['1', '4', '7', '10']
 
@@ -47,9 +53,9 @@ def run_custom_protocol(
         pipette = instruments.P1000_Single(mount=mount, tip_racks=tipracks)
 
     data = [
-        [well, float(vol)]
+        [well, vol]
         for well, vol in
-        [row.split(',') for row in volumes_csv.strip().split('\n') if row]
+        [row.split(',') for row in volumes_csv.strip().splitlines() if row]
     ]
 
     source_plate = labware.load(source_plate_type, '2')
@@ -57,8 +63,10 @@ def run_custom_protocol(
 
     tip_strategy = 'always' if tip_reuse == 'new tip each time' else 'once'
     for well_idx, (source_well, vol) in enumerate(data):
-        pipette.transfer(
-            vol,
-            source_plate.wells(source_well),
-            dest_plate.wells(well_idx),
-            new_tip=tip_strategy)
+        if source_well and vol:
+            vol = float(vol)
+            pipette.transfer(
+                vol,
+                source_plate.wells(source_well),
+                dest_plate.wells(well_idx),
+                new_tip=tip_strategy)
