@@ -101,12 +101,18 @@ def run_custom_protocol(
     ethanol = reagent_container.wells(1)
     elution_buffer = reagent_container.wells(2)
 
-    # Define bead and mix volume
+    # Define bead and mix volume to resuspend beads
     bead_volume = PCR_volume*bead_ratio
-    if 'p300' in pipette_type or 'p1000' in pipette_type:
-        mix_vol = 280
+    if mode == 'Single':
+        if bead_volume*sample_number > pipette.max_volume:
+            mix_vol = pipette.max_volume
+        else:
+            mix_vol = bead_volume*sample_number
     else:
-        mix_vol = pipette.max_volume
+        if bead_volume*col_num > pipette.max_volume:
+            mix_vol = pipette.max_volume
+        else:
+            mix_vol = bead_volume*col_num
     total_vol = bead_volume + PCR_volume + 15
     mix_voltarget = PCR_volume + 10
 
