@@ -16,14 +16,14 @@ output_plate = labware.load('96-PCR-tall', '2')
 
 def run_custom_protocol(
         pipette_type: StringSelection(
-            'p10_Single', 'p50_Single', 'p300_Single', 'p1000_Single',
-            'p10_Multi', 'p50_Multi', 'p300_Multi'
+            'p300_Multi', 'p50_Multi', 'p10_Multi', 'p1000_Single',
+            'p300_Single', 'p50_Single', 'p10_Single'
             )='p300_Multi',
         pipette_mount: StringSelection('left', 'right')='left',
         sample_number: int=16,
         PCR_volume: float=20,
         bead_ratio: float=1.8,
-        elution_buffer_volume: float=200):
+        elution_buffer_volume: float=20):
 
     incubation_time = 300
     settling_time = 50
@@ -77,7 +77,8 @@ def run_custom_protocol(
     mode = pipette_type.split('_')[1]
     if mode == 'Single':
         if sample_number <= 5:
-            reagent_container = labware.load('tube-rack-2ml', '7')
+            reagent_container = labware.load(
+                'opentrons-tuberack-2ml-screwcap', '7')
             liquid_waste = labware.load('trough-12row', '5').wells('A12')
 
         else:
@@ -100,12 +101,18 @@ def run_custom_protocol(
     ethanol = reagent_container.wells(1)
     elution_buffer = reagent_container.wells(2)
 
-    # Define bead and mix volume
+    # Define bead and mix volume to resuspend beads
     bead_volume = PCR_volume*bead_ratio
-    if bead_volume/2 > pipette.max_volume:
-        mix_vol = 280
+    if mode == 'Single':
+        if bead_volume*sample_number > pipette.max_volume:
+            mix_vol = pipette.max_volume
+        else:
+            mix_vol = bead_volume*sample_number
     else:
-        mix_vol = 280
+        if bead_volume*col_num > pipette.max_volume:
+            mix_vol = pipette.max_volume
+        else:
+            mix_vol = bead_volume*col_num
     total_vol = bead_volume + PCR_volume + 15
     mix_voltarget = PCR_volume + 10
 
@@ -151,10 +158,15 @@ def run_custom_protocol(
             **max_speed_per_axis)
 
     # Incubate beads and PCR product at RT for 5 minutes
+    robot.comment("Incubating the beads and PCR products at room temperature \
+for 5 minutes. Protocol will resume automatically.")
     pipette.delay(seconds=incubation_time)
 
     # Engage MagDeck and Magnetize
+    robot._driver.run_flag.wait()
     mag_deck.engage()
+    robot.comment("Delaying for "+str(settling_time)+" seconds for beads to \
+settle.")
     pipette.delay(seconds=settling_time)
 
     # Remove supernatant from magnetic beads
@@ -172,6 +184,7 @@ def run_custom_protocol(
         for target in samples_top:
             pipette.transfer(
                 185, ethanol, target, air_gap=air_vol, new_tip='never')
+        robot.comment("Delaying for 17 seconds.")
         pipette.delay(seconds=17)
         for target in samples:
             if not pipette.tip_attached:
@@ -181,9 +194,12 @@ def run_custom_protocol(
             pipette.drop_tip()
 
     # Dry at RT
+    robot.comment("Drying the beads for "+str(drying_time)+" minutes. Protocol \
+will resume automatically.")
     pipette.delay(minutes=drying_time)
 
     # Disengage MagDeck
+    robot._driver.run_flag.wait()
     mag_deck.disengage()
 
     # Mix beads with elution buffer
@@ -199,10 +215,15 @@ def run_custom_protocol(
         pipette.drop_tip()
 
     # Incubate at RT for 3 minutes
+    robot.comment("Incubating at room temperature for 3 minutes. Protocol will \
+resume automatically.")
     pipette.delay(minutes=3)
 
     # Engage MagDeck for 1 minute and remain engaged for DNA elution
+    robot._driver.run_flag.wait()
     mag_deck.engage()
+    robot.comment("Delaying for "+str(settling_time)+" seconds for beads to \
+settle.")
     pipette.delay(seconds=settling_time)
 
     # Transfer clean PCR product to a new well
