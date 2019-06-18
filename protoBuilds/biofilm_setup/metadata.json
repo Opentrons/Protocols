@@ -1,1 +1,0 @@
-{"slug": "biofilm_setup", "path": "protocols/biofilm_setup", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["biofilm_setup.ot1.py"], "OT 2 protocol": ["biofilm_setup.ot2.py"]}, "status": "ok"}

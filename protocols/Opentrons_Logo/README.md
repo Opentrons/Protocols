@@ -3,15 +3,12 @@
 ### Author
 [Opentrons](https://opentrons.com/)
 
-### Partner
-
 ## Categories
-* Demos
+* Getting Started
 	* Opentrons Logo
 
 ## Description
-This is a demonstration protocol so you can get familiar with your
-robot. All you need is some food dye and a trough!
+This is a demo protocol that will help you to get more familiar with your new OT-2! All you need is some food dye, a 12-row trough, and a 96-well plate. Your robot will pipette the Opentrons logo into your plate and you'll be ready to go! 
 
 ### Time Estimate
 * 2-5 minutes depending on pipette model chosen

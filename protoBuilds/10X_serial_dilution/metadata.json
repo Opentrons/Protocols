@@ -1,1 +1,0 @@
-{"slug": "10X_serial_dilution", "path": "protocols/10X_serial_dilution", "flags": {"feature": true, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["10x_serial_dilution.ot1.py"], "OT 2 protocol": ["10x_serial_dilution.ot2.py"]}, "status": "ok"}

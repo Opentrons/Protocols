@@ -1,5 +1,11 @@
 from opentrons import labware, instruments
 
+metadata = {
+    'protocolName': 'Tube Distribution',
+    'author': 'Opentrons <protocols@opentrons.com>',
+    'source': 'Protocol Library'
+    }
+
 p200rack = labware.load('tiprack-200ul', '10')
 sample_tubes = labware.load('tube-rack-2ml', '11')
 plate = labware.load('384-plate', '9')

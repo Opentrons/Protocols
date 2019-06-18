@@ -1,1 +1,0 @@
-{"instruments": [{"name": "m10", "axis": "a", "channels": 8, "type": "pipette", "min_volume": 0.5, "max_volume": 10}], "containers": [{"type": "96-deep-well", "slot": "C1", "name": "plate1"}, {"type": "384-plate", "slot": "E1", "name": "plate2"}, {"type": "tiprack-10ul", "slot": "A1", "name": "m10rack"}, {"type": "point", "slot": "B2", "name": "trash"}], "parameters": []}
