@@ -4,8 +4,8 @@
 [Opentrons](http://www.opentrons.com/)
 
 ## Categories
-* Proteins & Proteomics
-    * PCR preparation
+* Cell Culture
+    * Assay
 
 ## Description
 This protocol performs a cell culture assay on 4 custom 24-well culture plates. Ensure the plates are each mounted on temperature modules with aluminum plates mounted. For information on setting up 4 temperature mdoules for use at the same time, as well as reagent setup, see Additional Notes below.

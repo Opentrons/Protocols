@@ -51,13 +51,13 @@ if plate_name not in labware.list():
     )
 
 # load labware and modules
-tempmod1 = modules.load('tempdeck', '10')
+tempmod_1 = modules.load('tempdeck', '10')
 temp_plate1 = labware.load(plate_name, '10', 'plate 1', share=True)
-tempmod2 = modules.load('tempdeck', '7')
+tempmod_2 = modules.load('tempdeck', '7')
 temp_plate2 = labware.load(plate_name, '7', 'plate 2', share=True)
-tempmod3 = modules.load('tempdeck', '4')
+tempmod_3 = modules.load('tempdeck', '4')
 temp_plate3 = labware.load(plate_name, '4', 'plate 3', share=True)
-tempmod4 = modules.load('tempdeck', '6')
+tempmod_4 = modules.load('tempdeck', '6')
 temp_plate4 = labware.load(plate_name, '6', 'plate 4', share=True)
 tips1000 = [labware.load('tiprack-1000ul', slot) for slot in ['5', '11']]
 tubes = labware.load('opentrons-tuberack-15_50ml', '8')
