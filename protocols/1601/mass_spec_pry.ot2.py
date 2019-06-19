@@ -27,8 +27,8 @@ if rack_name_2 not in labware.list():
         grid=(10, 5),
         spacing=(18.5, 18.5),
         diameter=6.25,
-        depth=30,
-        volume=1000
+        depth=24,
+        volume=450
     )
 
 tips_name = 'Globe-Scientific-tiprack-200ul'
