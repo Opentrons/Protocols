@@ -66,9 +66,9 @@ if tips200_name not in labware.list():
                    depth=20)
 
 # load labware and modules
-magdeck1 = modules.load('magdeck', '1')
+magdeck_1 = modules.load('magdeck', '1')
 plate1 = labware.load(plate_1_2_name, '1', share=True)
-magdeck2 = modules.load('magdeck', '4')
+magdeck_2 = modules.load('magdeck', '4')
 plate2 = labware.load(plate_1_2_name, '4', share=True)
 plate3 = labware.load(plate_3_name, '2')
 tips10 = [labware.load(tips10_name, slot) for slot in ['3', '6', '9', '11']]
