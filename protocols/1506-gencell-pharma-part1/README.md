@@ -45,17 +45,14 @@ You will need:
 9. Robot will mix the samples and master mix mixture.
 
 ### Additional Notes
-4x6 Screwcap Tube Rack Setup: (slot 4)
-* Water: D1
-* 10X RE Buffer: D2
-* BSA: D3
-* Alu I: D4
-* Rsa I: D5
-
----
 
 4x6 Eppendorf Setup: (slot 5)
-* Empty tube reserved for Master Mix: A1
+* Water: A1
+* 10X RE Buffer: A2
+* BSA: A3
+* Alu I: A4
+* Rsa I: A5
+* Empty tube reserved for Master Mix: D1
 
 ---
 
