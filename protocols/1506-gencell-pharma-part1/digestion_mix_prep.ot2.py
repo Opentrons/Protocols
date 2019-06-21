@@ -15,17 +15,16 @@ def run_custom_protocol(
     sample_num = int(sample_num)
 
     # labware setup
-    screwcap_rack = labware.load('opentrons-tuberack-2ml-screwcap', '4')
     eppendorf_rack = labware.load('opentrons-tuberack-2ml-eppendorf', '5')
     sample_plate = labware.load('PCR-strip-tall', '1')
 
     # reagent setup
-    water = screwcap_rack.wells('D1')
-    RE_buffer = screwcap_rack.wells('D2')
-    bsa = screwcap_rack.wells('D3')
-    alu = screwcap_rack.wells('D4')
-    rsa = screwcap_rack.wells('D5')
-    mastermix = eppendorf_rack.wells('A1')
+    water = eppendorf_rack.wells('A1')
+    RE_buffer = eppendorf_rack.wells('A2')
+    bsa = eppendorf_rack.wells('A3')
+    alu = eppendorf_rack.wells('A4')
+    rsa = eppendorf_rack.wells('A5')
+    mastermix = eppendorf_rack.wells('D1')
 
     samples = [well
                for well in sample_plate.wells('A1', length=sample_num*2)]
@@ -61,6 +60,11 @@ def run_custom_protocol(
             pipette.blow_out(reagent)
         pipette.transfer(
             volume, reagent, mastermix, blow_out=True, new_tip='always')
+    # mix mastermix 8 times
+    p50.pick_up_tip()
+    p50.mix(8, 40, mastermix)
+    p50.blow_out(mastermix)
+    p50.drop_tip()
 
     # Transfer and master mix in samples
     for sample in samples:

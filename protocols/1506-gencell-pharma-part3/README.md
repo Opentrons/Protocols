@@ -47,19 +47,16 @@ You will need:
 
 
 ### Additional Notes
-4x6 Screwcap Tube Rack Setup: (slot 4)
-* Water: D1
-* 5X RE buffer: D2
-* 10X dNTPs: D3
-* Cyc3: D4
-* Cyc5: D5
-* Exo Klenow: D6
-
----
 
 4x6 Eppendorf Rack Setup: (slot 5)
-* Master Mix 1: A1
-* Master Mix 2: A3
+* Water: A1
+* 5X RE buffer: A2
+* 10X dNTPs: A3
+* Cyc3: A4
+* Cyc5: A5
+* Exo Klenow: A6
+* Master Mix 1: D1
+* Master Mix 2: D6
 
 ---
 
