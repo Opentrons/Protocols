@@ -95,13 +95,13 @@ def run_custom_protocol(
     robot.comment('Incubating on magnet for 2 minutes...')
 
     # water to OA transfer
-    p10.pick_up_tip()
-    p50.pick_up_tip()
     for line in data:
         vol = float(line[5])
         if vol != 0:
             dest = oa_dilution_plate.wells(line[3])
             pipette = p10 if vol <= 10 else p50
+            if not pipette.tip_attached:
+                pipette.pick_up_tip()
             pipette.transfer(
                 vol,
                 water,
@@ -109,8 +109,10 @@ def run_custom_protocol(
                 blow_out=True,
                 new_tip='never'
             )
-    p10.drop_tip()
-    p50.drop_tip()
+    if p10.tip_attached:
+        p10.drop_tip()
+    if p50.tip_attached:
+        p50.drop_tip()
 
     # elution to OA DNA transfer
     for line in data:
@@ -134,6 +136,8 @@ def run_custom_protocol(
         if vol != 0:
             dest = cnv_dilution_plate.wells(line[6])
             pipette = p10 if vol <= 10 else p50
+            if not pipette.tip_attached:
+                pipette.pick_up_tip()
             pipette.transfer(
                 vol,
                 water,
@@ -141,8 +145,10 @@ def run_custom_protocol(
                 blow_out=True,
                 new_tip='never'
             )
-    p10.drop_tip()
-    p50.drop_tip()
+    if p10.tip_attached:
+        p10.drop_tip()
+    if p50.tip_attached:
+        p50.drop_tip()
 
     # OA to CNV DNA transfer
     for line in data:

@@ -13,14 +13,13 @@ This protocol performs DNA dilutions on custom 96-well elution and dilution plat
 ---
 
 You will need:
-* [BioRad 96-Well PCR plate](http://www.bio-rad.com/en-us/sku/mll9651-multiplate-96-well-pcr-plates-low-profile-unskirted-white?ID=MLL9651)
-* [Opentrons 2ml Tube Rack](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)
-* [Diamed 2ml Microfuge Tubes](http://www.diamed.ca/microcentrifuge-tubes-15ml-microtubes-bulk-c-265_496_497.html)
-* [Fisherbrand 1.5ml Microfuge Tubes](https://www.fishersci.com/shop/products/fisherbrand-low-retention-microcentrifuge-tubes-8/p-193936)
-* [TipOne 10ul Tips](https://www.usascientific.com/tiponefiltertips.aspx)
-* [TipOne 50ul Tips](https://www.usascientific.com/tiponefiltertips.aspx)
+* [Thermo Fisher Scientific KingFisher 96 plate 200uL # 97002540](https://www.thermofisher.com/order/catalog/product/95040450)
+* [USA Scientific TempPlate 96-well full skirt 0.1mL PCR plates # 1402-9800](https://www.usascientific.com/full-skirted-96-well-PCR-plate.aspx)
+* [USA Scientific Channelmate 25ml reservoir # 1306-2590](https://www.usascientific.com/channelmate.aspx)
 * [Opentrons P10 Single-Channel Electronic Pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette)
 * [Opentrons P50 Single-Channel Electronic Pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette?variant=5984549077021)
+* [Opentrons 10ul Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
+* [Opentrons 300ul Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
