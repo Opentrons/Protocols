@@ -9,7 +9,7 @@ metadata = {
 
 mastermix_csv_example = """
 Reagent,Slot,Well,Volume
-Buffer,1,A2,25
+Buffer,1,A2,3
 MgCl,1,A3,40
 dNTPs,2,A2,90
 Water,2,A3,248
@@ -21,12 +21,15 @@ primer 2,1,A5,25
 def run_custom_protocol(
         left_pipette: StringSelection(
             'p10-single', 'P50-single', 'p300-single',
-            'p1000-single')='p50-single',
+            'p1000-single', 'none')='p50-single',
         right_pipette: StringSelection(
             'p10-single', 'P50-single', 'p300-single',
-            'p1000-single')='p300-single',
+            'p1000-single', 'none')='p300-single',
         master_mix_csv: FileInput=mastermix_csv_example
         ):
+
+    if left_pipette == right_pipette and left_pipette == 'none':
+        raise Exception('You have to select at least 1 pipette.')
 
     def mount_pipette(pipette_type, mount, tiprack_slot):
         if pipette_type == 'p10-single':
@@ -57,8 +60,23 @@ def run_custom_protocol(
     trough = labware.load('trough-12row', '3')
 
     # instrument setup
-    pipette_l = mount_pipette(left_pipette, 'left', '5')
-    pipette_r = mount_pipette(right_pipette, 'right', '6')
+    pipette_l = mount_pipette(
+        left_pipette, 'left', '5') if 'none' not in left_pipette else None
+    pipette_r = mount_pipette(
+        right_pipette, 'right', '6') if 'none' not in right_pipette else None
+
+    # determine which pipette has the smaller volume range
+    if pipette_l and pipette_r:
+        if left_pipette == right_pipette:
+            pip_s = pipette_l
+            pip_l = pipette_r
+        else:
+            if pipette_l.max_volume < pipette_r.max_volume:
+                pip_s, pip_l = pipette_l, pipette_r
+            else:
+                pip_s, pip_l = pipette_r, pipette_l
+    else:
+        pipette = pipette_l if pipette_l else pipette_r
 
     # destination
     mastermix_dest = trough.wells('A1')
@@ -69,8 +87,9 @@ def run_custom_protocol(
     for line in info_list[1:]:
         source = robot.deck.children_by_name[line[1]][0].wells(line[2])
         vol = float(line[3])
-        if vol < pipette_r.min_volume and vol > pipette_l.min_volume:
-            pipette = pipette_l
-        else:
-            pipette = pipette_r
+        if pipette_l and pipette_r:
+            if vol <= pip_s.max_volume:
+                pipette = pip_s
+            else:
+                pipette = pip_l
         pipette.transfer(vol, source, mastermix_dest)
