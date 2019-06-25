@@ -49,8 +49,10 @@ destination_vials = labware.load(rack_name_2, '9', 'filter vials')
 
 def run_custom_protocol(
         P300_mount: StringSelection('right', 'left') = 'right',
-        number_of_samples: int = 50
-        ):
+        number_of_samples: int = 50,
+        pre_incubation_steps: StringSelection('yes', 'no') = 'yes',
+        post_incubation_steps: StringSelection('yes', 'no') = 'no'
+):
 
     # check inputs
     if number_of_samples > 50 or number_of_samples < 1:
@@ -65,37 +67,41 @@ def run_custom_protocol(
     mm = trough.wells('A1')
     diluent = trough.wells('A2')
 
-    p300.pick_up_tip()
-    for dest in vials:
+    if pre_incubation_steps == 'yes':
+
+        # transfer mstermix to each destination vial
+        p300.pick_up_tip()
+        for dest in vials:
+            p300.transfer(
+                50,
+                mm,
+                dest.top(),
+                blow_out=True,
+                new_tip='never'
+            )
+        p300.drop_tip()
+
+        # transfer urine samples to corresponding destination vial
         p300.transfer(
             50,
-            mm,
-            dest.top(),
+            urine,
+            vials,
             blow_out=True,
-            new_tip='never'
+            new_tip='always'
         )
-    p300.drop_tip()
 
-    # transfer urine samples to corresponding destination vial
-    p300.transfer(
-        50,
-        urine,
-        vials,
-        blow_out=True,
-        new_tip='always'
-    )
+        robot.pause('Incubate filter vials now containing mastermix and sample\
+s. Reload the rack in slot 8 before resuming.')
 
-    robot.pause('Incubate filter vials now containing mastermix and samples. '
-                'Reload the rack in slot 8 before resuming.')
-
-    # height track and transfer diluent to each destination vial
-    p300.pick_up_tip()
-    for dest in vials:
-        p300.transfer(
-            300,
-            diluent,
-            dest,
-            blow_out=True,
-            new_tip='never'
-        )
-    p300.drop_tip()
+    if post_incubation_steps == 'yes':
+        # transfer diluent to each destination vial
+        p300.pick_up_tip()
+        for dest in vials:
+            p300.transfer(
+                300,
+                diluent,
+                dest,
+                blow_out=True,
+                new_tip='never'
+            )
+        p300.drop_tip()
