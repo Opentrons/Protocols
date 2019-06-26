@@ -1,6 +1,5 @@
-from opentrons import labware, instruments
+from opentrons import labware, instruments, robot
 from otcustomizers import StringSelection
-import math
 
 metadata = {
     'protocolName': 'Customizable Cell Culture Serial Dilution',
@@ -105,14 +104,16 @@ def run_custom_protocol(
             raise Exception('Too many samples with specified start column.')
 
     # diluent height tracking function
-    dil_height = -18
-    r = (tubes.wells(0).properties['diameter'])/2
+    dil_height = -45
+    v_out = 0
 
     def h_track(vol):
         nonlocal dil_height
-
-        dh = vol/(math.pi*(r**2))
-        dil_height -= dh
+        nonlocal v_out
+        v_out += vol
+        if v_out > 3500 and dil_height - 25 > -105:
+            v_out = 0
+            dil_height -= 25
 
     # setup sample tubes and initial heights
     diluent = tubes.wells('A1')
@@ -147,14 +148,12 @@ def run_custom_protocol(
     pipette.pick_up_tip()
     for d in d_dests:
         h_track(diluent_volume)
-        pipette.transfer(
-            diluent_volume,
-            diluent.top(dil_height),
-            d.top(),
-            disposal_vol=0,
-            blow_out=True,
-            new_tip='never'
-            )
+        pipette.move_to(diluent.top())
+        robot.head_speed(z=50, a=50)
+        pipette.aspirate(diluent_volume, diluent.top(dil_height))
+        robot.head_speed(z=125, a=125)
+        pipette.dispense(diluent_volume, d.top())
+        pipette.blow_out()
     pipette.drop_tip()
 
     # select pipette based on volume
