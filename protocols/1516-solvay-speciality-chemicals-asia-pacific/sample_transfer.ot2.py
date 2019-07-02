@@ -8,12 +8,12 @@ metadata = {
     'source': 'Custom Protocol Request'
     }
 
-vial_8ml_rack_name = '24-custom-vial-rack'
+vial_8ml_rack_name = '24-custom-vial-rack-8ml'
 if vial_8ml_rack_name not in labware.list():
     labware.create(
         vial_8ml_rack_name,
         grid=(6, 4),
-        spacing=(20, 20),
+        spacing=(19, 19),
         diameter=10,
         depth=21
         )
