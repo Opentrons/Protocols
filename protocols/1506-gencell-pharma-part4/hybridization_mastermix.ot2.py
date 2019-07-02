@@ -15,7 +15,6 @@ def run_custom_protocol(
     sample_num = int(sample_num)
 
     # labware setup
-    screwcap_rack = labware.load('opentrons-tuberack-2ml-screwcap', '4')
     eppendorf_rack = labware.load('opentrons-tuberack-2ml-eppendorf', '5')
     samples_plate = labware.load('PCR-strip-tall', '1')
 
@@ -32,11 +31,11 @@ def run_custom_protocol(
         tip_racks=[tiprack_50])
 
     # reagent setup
-    cot = screwcap_rack.wells('D1')
-    blockagent = screwcap_rack.wells('D2')
-    hyb_buf = screwcap_rack.wells('D3')
+    cot = eppendorf_rack.wells('A1')
+    blockagent = eppendorf_rack.wells('A2')
+    hyb_buf = eppendorf_rack.wells('A3')
 
-    mix_dest = eppendorf_rack.wells('A1')
+    mix_dest = eppendorf_rack.wells('D1')
 
     samples = [well for well in samples_plate.wells('A1', length=sample_num)]
 

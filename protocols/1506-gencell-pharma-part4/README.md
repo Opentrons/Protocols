@@ -44,15 +44,12 @@ You will need:
 
 
 ### Additional Notes
-4x6 Screwcap Tube Rack Setup: (slot 4)
-* Cot-1 DNA: D1
-* 10X aCGH Blocking Agent: D2
-* HI-RPM Hypridization Buffer: D3
-
----
 
 4x6 Eppendorf Tube Rack Setup: (slot 5)
-* Master Mix: A1
+* Cot-1 DNA: A1
+* 10X aCGH Blocking Agent: A2
+* HI-RPM Hypridization Buffer: A3
+* Master Mix: D1
 
 
 ---

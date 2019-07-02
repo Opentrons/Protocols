@@ -15,7 +15,6 @@ def run_custom_protocol(
     sample_num = int(sample_num)
 
     # labware setup
-    screwcap_rack = labware.load('opentrons-tuberack-2ml-screwcap', '4')
     eppendorf_rack = labware.load('opentrons-tuberack-2ml-eppendorf', '5')
     plate = labware.load('PCR-strip-tall', '2')
     tiprack_10 = labware.load('tiprack-10ul', '8')
@@ -32,15 +31,15 @@ def run_custom_protocol(
         tip_racks=tipracks_300)
 
     # reagent setup
-    water = screwcap_rack.wells('D1')
-    RE_buffer = screwcap_rack.wells('D2')
-    dntps = screwcap_rack.wells('D3')
-    cy3 = screwcap_rack.wells('D4')
-    cy5 = screwcap_rack.wells('D5')
-    exo = screwcap_rack.wells('D6')
+    water = eppendorf_rack.wells('A1')
+    RE_buffer = eppendorf_rack.wells('A2')
+    dntps = eppendorf_rack.wells('A3')
+    cy3 = eppendorf_rack.wells('A4')
+    cy5 = eppendorf_rack.wells('A5')
+    exo = eppendorf_rack.wells('A6')
 
-    mixcy3 = eppendorf_rack.wells('A1')
-    mixcy5 = eppendorf_rack.wells('A3')
+    mixcy3 = eppendorf_rack.wells('D1')
+    mixcy5 = eppendorf_rack.wells('D6')
 
     samples = [well for well in plate.wells(0, length=sample_num)]
     controls = [well for well in plate.wells(sample_num, length=sample_num)]
