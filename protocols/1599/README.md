@@ -14,6 +14,7 @@ With this protocol, you can perform a cell culture serial dilution across a 96-w
 
 You will need:
 * [Greiner Bio-One 96-well plate # 655161](https://shop.gbo.com/en/england/products/bioscience/microplates/96-well-microplates/96-well-microplates-clear/655161.html)
+* [USA Scientific PlateOne 96-deepwell plate # 1896-2000](https://www.usascientific.com/2ml-deep96-well-plateone-bulk.aspx)
 * Tip One 50 and 300ul pipette tips
 * [Greiner 15ml centrifuge tubes # 188261](https://shop.gbo.com/en/england/products/bioscience/tubes-beakers/tubes/15ml-cellstar-polypropylene-tube/)
 * [Opentrons 4-in-1 tube rack set](https://shop.opentrons.com/collections/racks-and-adapters/products/tube-rack-set-1)
@@ -22,7 +23,7 @@ You will need:
 * [OT-2](https://opentrons.com/ot-2)
 
 ## Process
-1. Input your dilution factor, total mixing volume, number of samples, number of dilutions per sample, dilution start well (in format 'row + column', ex: 'A1'), dilution orientation, and tip use strategy (per each sample's dilution).
+1. Input your dilution plate type, dilution factor, total mixing volume, number of samples, number of dilutions per sample, dilution start well (in format 'row + column', ex: 'A1'), dilution orientation, and tip use strategy (per each sample's dilution).
 2. Download your protocol.
 3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
 4. Set up your deck according to the deck map.
