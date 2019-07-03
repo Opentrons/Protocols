@@ -15,13 +15,15 @@ tips1000 = labware.load('tiprack-1000ul', '4')
 p1000 = instruments.P1000_Single(mount='right', tip_racks=[tips1000])
 
 # reagents
-ms2 = tubes.wells('A1')
+e_coli = tubes.wells('A1')
+ms2 = tubes.wells('A2')
 pbs = tubes.wells('B1')
 mix_tube = tubes.wells('C1')
 
 # variables for height tracking 15 ml tubes
 r_cyl = 7.52
 heights = {
+    'e_coli': -42,
     'mix_tube': -42,
     'ms2': -42,
     'pbs': -42
@@ -51,6 +53,18 @@ for _ in range(9):
         )
     p1000.blow_out(mix_tube.top())
 p1000.drop_tip()
+
+# distribute E. coli host to recipient tubes
+p1000.pick_up_tip()
+dests = [tube for row in ['B', 'C'] for tube in tubes.rows(row)[1:4]]
+height_track('e_coli', 100*len(dests))
+h = heights['e_coli']
+p1000.distribute(
+    100,
+    e_coli,
+    [tube.top() for tube in dests],
+    disposal_vol=0
+)
 
 # transfer MS2 reagent
 p1000.pick_up_tip()

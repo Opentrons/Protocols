@@ -32,14 +32,15 @@ You will need:
 4. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support article](https://support.opentrons.com/ot-2/getting-started-software-setup/deck-calibration).
 5. Hit "Run".
 6. 9ml of PBS is transferred to the mix tube in tuberack well C1.
-7. Using a new tip, 1ml of E. coli reagent is directly transferred to each of the 3 tubes in tuberack wells B2, B3 and B4.
-8. Using the same tip from step 7, 1ml of E. coli reagent reagent is transferred to the mix tube in tuberack well C1.
-9. The contents of the mix tube are mixed 5x to create a 10x dilution of E. coli reagent in PBS.
-10. 500ul of 10x diluted E. coli reagent is transferred from the mix tube to each of the 3 tubes in tuberack wells C2, C3 and C4.
+7. 100ul of E. coli reagent is directly transferred to wells B2, B3, B4, C2, C3, and C4.
+8. Using a new tip, 1ml of MS2 is directly transferred to each of the 3 tubes in tuberack wells B2, B3 and B4.
+9. Using the same tip from step 7, 1ml of MS2 is transferred to the mix tube in tuberack well C1.
+10. The contents of the mix tube are mixed 5x to create a 10x dilution of MS2 in PBS.
+11. 500ul of 10x diluted MS2 is transferred from the mix tube to each of the 3 tubes in tuberack wells C2, C3 and C4.
 
 ### Additional Notes
 Reagent tube setup:
-![tube setup](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1597-dilution3/Screen+Shot+2019-06-04+at+2.55.12+PM.png)
+![tube setup](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1597-dilution3/reagent_setup.png)
 
 If you have any questions about this protocol, please contact protocols@opentrons.com.
 

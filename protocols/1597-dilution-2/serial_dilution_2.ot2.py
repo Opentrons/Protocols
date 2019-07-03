@@ -13,8 +13,8 @@ if plate_name not in labware.list():
     labware.create(
         plate_name,
         grid=(3, 2),
-        spacing=(24, 24),
-        diameter=22,
+        spacing=(41.1, 41.1),
+        diameter=35,
         depth=19,
         volume=15000
     )
