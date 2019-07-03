@@ -19,6 +19,17 @@ if plate_name not in labware.list():
         volume=350
     )
 
+deep_name = 'USA-Scientific-PlateOne-96-deepwell'
+if deep_name not in labware.list():
+    labware.create(
+        deep_name,
+        grid=(12, 8),
+        spacing=(9, 9),
+        diameter=8.2,
+        depth=41.3,
+        volume=2000
+    )
+
 tubes_name = 'Cellstar-15ml-3x5'
 if tubes_name not in labware.list():
     labware.create(
@@ -51,7 +62,6 @@ if tips300_name not in labware.list():
     )
 
 # load labware
-dil_plate = labware.load(plate_name, '1')
 tubes = labware.load(tubes_name, '2')
 tips50 = labware.load(tips50_name, '4', '50ul tips')
 tips300 = labware.load(tips300_name, '5', '300ul tips')
@@ -62,17 +72,25 @@ p300 = instruments.P300_Single(mount='left', tip_racks=[tips300])
 
 
 def run_custom_protocol(
+        dilution_plate_type: StringSelection(
+            'deepwell', 'standard') = 'standard',
         dilution_factor: float = 1.5,
         total_mixing_volume: float = 200.0,
         number_of_samples: int = 8,
         number_of_dilutions_per_sample: int = 11,
         dilution_start_well: str = 'A1',
-        dilution_orientation: StringSelection('vertical',
-                                              'horizontal') = 'horizontal',
+        dilution_orientation: StringSelection(
+            'vertical', 'horizontal') = 'horizontal',
         tip_use_strategy: StringSelection(
             'use one tip per sample',
             'new tip for each transfer') = 'use one tip per sample'
         ):
+
+    # load specified dilution plate
+    if dilution_plate_type == 'standard':
+        dil_plate = labware.load(plate_name, '1')
+    else:
+        dil_plate = labware.load(deep_name, '1')
 
     # parse start well
     start_row = dilution_start_well.strip()[0]
