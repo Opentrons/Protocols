@@ -116,10 +116,12 @@ def run_custom_protocol(
             if tip10_count == tips10_max:
                 robot.pause('Replace tipracks before resuming.')
                 p10.reset()
+                tip10_count = 0
         if tip300_count == tips300_max:
             robot.pause('Replace tipracks before resuming.')
             p50.reset()
             p300.reset()
+            tip300_count = 0
 
         if vol > 0:
             s_plate_ind = unique_source_slots[s_slot]
