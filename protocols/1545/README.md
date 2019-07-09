@@ -4,7 +4,7 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Molecular Biology
+* Molecular Biology  
 		* Nucleic Acid Purification
 
 ## Description
