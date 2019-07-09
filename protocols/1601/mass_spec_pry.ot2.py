@@ -69,7 +69,21 @@ def run_custom_protocol(
 
     if pre_incubation_steps == 'yes':
 
-        # transfer mstermix to each destination vial
+        def dead_space_transfer():
+            for source, dest in zip(urine, vials):
+                offset1 = (source, source.from_center(r=0, theta=90, h=3.0))
+                offset2 = (source, source.from_center(r=0.84, theta=90, h=3.0))
+                offset3 = (dest, dest.from_center(r=1.5, theta=90, h=6.25))
+                p300.pick_up_tip()
+                p300.aspirate(50, source)
+                p300.move_to(offset1)
+                p300.move_to(offset2)
+                p300.move_to(offset3)
+                p300.dispense(50, dest.top())
+                p300.blow_out(dest.top())
+                p300.drop_tip()
+
+        # transfer mastermix to each destination vial
         p300.pick_up_tip()
         for dest in vials:
             p300.transfer(
@@ -82,13 +96,7 @@ def run_custom_protocol(
         p300.drop_tip()
 
         # transfer urine samples to corresponding destination vial
-        p300.transfer(
-            50,
-            urine,
-            vials,
-            blow_out=True,
-            new_tip='always'
-        )
+        dead_space_transfer()
 
         robot.pause('Incubate filter vials now containing mastermix and sample\
 s. Reload the rack in slot 8 before resuming.')
@@ -100,7 +108,7 @@ s. Reload the rack in slot 8 before resuming.')
             p300.transfer(
                 300,
                 diluent,
-                dest,
+                dest.top(),
                 blow_out=True,
                 new_tip='never'
             )
