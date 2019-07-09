@@ -5,7 +5,7 @@
 
 ## Categories
 * Molecular Biology
-		* Nucleic Acid Purification
+    * Nucleic Acid Purification
 
 ## Description
 This protocol performs nucleic acid purification using an Opentrons magnetic module. The final elution is transferred to a fresh plate to finish the protocol. For reagent setup, see 'Additional Notes' below.
