@@ -231,5 +231,5 @@ resume to ensure cells do not dislodge from the pellet.')
             disposal_vol=0
         )
 
-    robot.pause('Take the clear microtiter plate to the Tecan reader. Resume \
+    robot.comment('Take the clear microtiter plate to the Tecan reader. Resume \
 to finish.')
