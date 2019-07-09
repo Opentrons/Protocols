@@ -87,7 +87,7 @@ def run_custom_protocol(
         )
     p1000.drop_tip()
 
-    robot.pause('Use sterile tips to pick 1 colony from the agar plate contain\
+    robot.comment('Use sterile tips to pick 1 colony from the agar plate contain\
 ing the strains and inoculate in the liquid media on the 24 well plate. Repeat\
  this step for all strains and biological replicates. Grow the strains on the \
 24 well culture plates overnight at 30˚C on a shaking incubator set at 180 rpm\
