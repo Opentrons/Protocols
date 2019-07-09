@@ -8,7 +8,7 @@
     * Nucleic Acid Purification
 
 ## Description
-This protocol performs nucleic acid purification on a deepwell plate mounted on an Opentrons magnetic module.
+This protocol performs nucleic acid purification on a deepwell plate mounted on an Opentrons magnetic module. For reagent setup, see 'Additional Notes' below.
 
 ---
 
@@ -39,6 +39,14 @@ You will need:
 6. Hit "Run".
 
 ### Additional Notes
+Reagent trough 1 setup:
+* beads: channels 1-3
+* magnetic wash 1: channels 4-9
+* DNase/RNase-free water: channel 10
+
+Reagent trough 2 setup:
+* magnetic wash 2: channels 1-12
+
 If you have any questions about this protocol, please contact protocols@opentrons.com.
 
 ###### Internal
