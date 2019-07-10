@@ -30,7 +30,7 @@ p1000 = instruments.P1000_Single(mount='right', tip_racks=[tips1000])
 # reagents
 mix_tubes = tubes.columns('1')[0:3]
 pbs_tubes = tubes.columns('2')[0:3]
-coliform_hpc = tubes.wells('C1')
+coliform_hpc = tubes.wells('A3')
 
 # variables for height tracking 15 ml tubes
 r_cyl = 7.52

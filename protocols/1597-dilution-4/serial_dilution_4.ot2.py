@@ -132,15 +132,15 @@ p1000.mix(5, 1000, mix_tubes[2])
 for tube in tubes.wells('C3', 'C4'):
     p1000.transfer(
         500,
-        mix_tubes[1].top(h),
+        mix_tubes[2].top(h),
         tube.top(),
         blow_out=True,
         new_tip='never')
-height_track('mix_tube2', 500)
-h = heights['mix_tube2']
+height_track('mix_tube3', 500)
+h = heights['mix_tube3']
 p1000.transfer(
     500,
-    mix_tubes[1].top(h),
+    mix_tubes[2].top(h),
     tubes.wells('C5'),
     blow_out=True,
     new_tip='never'
