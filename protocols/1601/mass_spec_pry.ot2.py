@@ -50,8 +50,9 @@ destination_vials = labware.load(rack_name_2, '9', 'filter vials')
 def run_custom_protocol(
         P300_mount: StringSelection('right', 'left') = 'right',
         number_of_samples: int = 50,
-        pre_incubation_steps: StringSelection('yes', 'no') = 'yes',
-        post_incubation_steps: StringSelection('yes', 'no') = 'no'
+        mastermix_distribution: StringSelection('yes', 'no') = 'yes',
+        sample_transfer: StringSelection('yes', 'no') = 'yes',
+        post_incubation_dilution: StringSelection('yes', 'no') = 'no'
 ):
 
     # check inputs
@@ -67,21 +68,7 @@ def run_custom_protocol(
     mm = trough.wells('A1')
     diluent = trough.wells('A2')
 
-    if pre_incubation_steps == 'yes':
-
-        def dead_space_transfer():
-            for source, dest in zip(urine, vials):
-                offset1 = (source, source.from_center(r=0, theta=90, h=3.0))
-                offset2 = (source, source.from_center(r=0.84, theta=90, h=3.0))
-                offset3 = (dest, dest.from_center(r=1.5, theta=90, h=6.25))
-                p300.pick_up_tip()
-                p300.aspirate(50, source)
-                p300.move_to(offset1)
-                p300.move_to(offset2)
-                p300.move_to(offset3)
-                p300.dispense(50, dest.top())
-                p300.blow_out(dest.top())
-                p300.drop_tip()
+    if mastermix_distribution == 'yes':
 
         # transfer mastermix to each destination vial
         p300.pick_up_tip()
@@ -95,13 +82,28 @@ def run_custom_protocol(
             )
         p300.drop_tip()
 
+    if sample_transfer == 'yes':
+
         # transfer urine samples to corresponding destination vial
-        dead_space_transfer()
+        for source, dest in zip(urine, vials):
+            offset1 = (source, source.from_center(r=0, theta=90, h=3.0))
+            offset2 = (source, source.from_center(r=0.84, theta=90, h=3.0))
+            offset3 = (dest, dest.from_center(r=1.5, theta=90, h=6.25))
+            p300.pick_up_tip()
+            p300.aspirate(50, source)
+            p300.move_to(offset1)
+            p300.move_to(offset2)
+            p300.move_to(offset3)
+            p300.dispense(50, dest.top())
+            p300.blow_out(dest.top())
+            p300.drop_tip()
 
-        robot.pause('Incubate filter vials now containing mastermix and sample\
-s. Reload the rack in slot 8 before resuming.')
+    if post_incubation_dilution == 'yes':
 
-    if post_incubation_steps == 'yes':
+        if mastermix_distribution == 'yes' or sample_transfer == 'yes':
+            robot.pause('Incubate filter vials now containing mastermix and \
+samples. Reload the rack in slot 8 before resuming.')
+
         # transfer diluent to each destination vial
         p300.pick_up_tip()
         for dest in vials:
