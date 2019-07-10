@@ -12,7 +12,7 @@ rack_name_1 = '5x10-false-bottom-3ml'
 if rack_name_1 not in labware.list():
     labware.create(
         rack_name_1,
-        grid=(10, 5),
+        grid=(5, 10),
         spacing=(18.5, 18.5),
         diameter=11,
         depth=50,
@@ -23,7 +23,7 @@ rack_name_2 = '5x10-filter-vial'
 if rack_name_2 not in labware.list():
     labware.create(
         rack_name_2,
-        grid=(10, 5),
+        grid=(5, 10),
         spacing=(18.5, 18.5),
         diameter=6.25,
         depth=24,
@@ -45,6 +45,14 @@ trough = labware.load('trough-12row', '1', 'reagent trough')
 tips = labware.load(tips_name, '4')
 urine_samples = labware.load(rack_name_1, '8', 'urine sample tubes')
 destination_vials = labware.load(rack_name_2, '9', 'filter vials')
+
+max_speed_per_axis = {
+    'x': 600, 'y': 400, 'z': 125, 'a': 125, 'b': 50, 'c': 50
+}
+robot.head_speed(
+    combined_speed=max(max_speed_per_axis.values()),
+    **max_speed_per_axis
+)
 
 
 def run_custom_protocol(
