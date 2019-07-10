@@ -24,7 +24,7 @@ You will need:
 * [OT-2](https://opentrons.com/ot-2)
 
 ## Process
-1. Input the mount for your P300 pipette and the number of samples to be processed.
+1. Input the mount for your P300 pipette, the number of samples to be processed, and which steps to perform.
 2. Download your protocol.
 3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
 4. Set up your deck according to the deck map.
