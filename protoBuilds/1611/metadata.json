@@ -1,0 +1,1 @@
+{"slug": "1611", "path": "protocols/1611", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["elisa.ot2.py"]}, "status": "ok"}
