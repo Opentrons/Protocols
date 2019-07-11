@@ -1,5 +1,4 @@
 from opentrons import labware, instruments
-from otcustomizers import StringSelection
 
 metadata = {
     'protocolName': 'ELISA',
