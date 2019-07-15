@@ -1,0 +1,1 @@
+{"slug": "Arcis_Sample_Prep_demo", "path": "protocols/Arcis_Sample_Prep_demo", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["Arcis_sample_prep_demo_kit.ot2.py"]}, "status": "ok"}
