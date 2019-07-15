@@ -37,7 +37,7 @@ range. (30-300 uL)")
     def mount_pipette(pipette_type, mount, tiprack_slot):
         pipette_size = pipette_type.split('_')[0]
         vol = 10 if pipette_size == 'p10' else 300
-        tipracks = [labware.load(f'opentrons-tiprack-{vol}ul', slot)
+        tipracks = [labware.load('opentrons-tiprack-{}ul'.format(vol), slot)
                     for slot in tiprack_slot]
         pipette = getattr(instruments, pipette_type)(
             mount=mount,
