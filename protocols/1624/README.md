@@ -8,7 +8,7 @@
     * Dilution
 
 ## Description
-This protocol performs sample dilutions in H2O across multiple deepwell plates. The user can specify 20x, 100x, 200x, or 400x dilutions in H2O via CSV. The final dilution carried out on a flat culture plate is 10x in HCl for all samples. Any other inputs will be ignored during parsing.
+This protocol performs sample dilutions in H2O across multiple deepwell plates. The user can specify 20x, 100x, 200x, or 400x dilutions in H2O via CSV. The final dilution carried out on a flat culture plate is 10x in HCl for all samples. Any other inputs (good practice to enter `Empty` in the CSV) will be ignored during parsing. The input CSV dilution information should start at the first value of the CSV, and be laid out in 8 row x 12 column format-- see 'Additional Notes' below for formatting details.
 
 ---
 
@@ -32,6 +32,9 @@ You will need:
 7. The dilution CSV is parsed for the dilution factor of each well. 20x and 100x dilutions are carried out in the corresponding wells of the source plate, 2 dilution plates, and the end culture plate, while 200x and 400x dilutions are carried out in the corresponding wells of the source plate, 3 dilution plates, and the end culture plate.
 
 ### Additional Notes
+Example CSV:
+![CSV layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1624/csv_layout.png)
+
 If you have any questions about this protocol, please contact protocols@opentrons.com.
 
 ###### Internal
