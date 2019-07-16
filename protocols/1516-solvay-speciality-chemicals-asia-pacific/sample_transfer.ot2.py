@@ -18,12 +18,12 @@ if vial_8ml_rack_name not in labware.list():
         depth=21
         )
 
-vial_30ml_rack_name = '6-cucstom-vial-rack'
+vial_30ml_rack_name = '6-cucstom-vial-rack-30ml'
 if vial_30ml_rack_name not in labware.list():
     labware.create(
         vial_30ml_rack_name,
         grid=(3, 2),
-        spacing=(40, 30),
+        spacing=(35, 35),
         diameter=20,
         depth=78
         )
