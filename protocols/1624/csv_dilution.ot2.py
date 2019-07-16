@@ -70,23 +70,14 @@ hcl = hcl_res.wells('A1')
 # tip setup
 h2o_tip = tips[0].wells('H12')
 
-example_csv = """,,,,,,,,,,,,,,,,,
-,Dilution:,,,,,,,,,,,,,,,20,200-500 µL
-,,,,,,,,,,,,,,,,100,500 -1000µL
-,,,,,,,,,,,,,,,,200,"1 mL - 1,5 mL"
-,"Final Dilution is performed in 0,1 HCl",,,,,,,,,,,,,,,400,">1,5 mL"
-,,,,,,,,,,,,,,,,Empty,
-,dilution:,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,
-,,1,2,2,3,4,5,6,7,8,9,10,11,12,,,
-,A,20,400,Empty,20,20,20,20,20,20,20,20,20,20,,,
-,B,20,400,Empty,100,20,100,100,100,20,20,20,Empty,Empty,,,
-,C,20,400,Empty,100,20,100,100,100,20,20,20,Empty,Empty,,,
-,D,20,400,Empty,400,20,400,400,400,20,20,20,400,400,,,
-,E,20,200,Empty,400,20,400,400,400,20,20,20,400,400,,,
-,F,20,400,Empty,Empty,20,Empty,Empty,Empty,20,20,20,200,200,,,
-,G,20,200,Empty,Empty,20,Empty,Empty,Empty,20,20,20,200,200,,,
-,,,,,,,,,,,,,,,,,
+example_csv = """20,400,Empty,20,20,20,20,20,20,20,20,20,20
+20,400,Empty,100,20,100,100,100,20,20,20,Empty,Empty,
+20,400,Empty,100,20,100,100,100,20,20,20,Empty,Empty,
+20,400,Empty,400,20,400,400,400,20,20,20,400,400
+20,200,Empty,400,20,400,400,400,20,20,20,400,400
+20,400,Empty,Empty,20,Empty,Empty,Empty,20,20,20,200,200
+20,200,Empty,Empty,20,Empty,Empty,Empty,20,20,20,200,200
+20,200,Empty,Empty,20,Empty,Empty,Empty,20,20,20,200,200
 """
 
 
@@ -107,9 +98,9 @@ def run_custom_protocol(
     p300 = instruments.P300_Single(mount=pipette_mount, tip_racks=tips)
 
     # parse CSV
-    dil_lines = csv_file.splitlines()[9:17]
+    dil_lines = csv_file.splitlines()[:8]
     dil_info = [dil.strip() for line in dil_lines
-                for dil in line.split(',')[2:14]]
+                for dil in line.split(',')[:12]]
     all_plates = [source_plate] + dil_plates + [end_plate]
 
     def dilution(dil_type, well_name):
