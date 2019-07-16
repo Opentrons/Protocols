@@ -1,0 +1,1 @@
+{"slug": "66aa48", "path": "protocols/66aa48", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["csv_screen.ot2.py"]}, "status": "ok"}
