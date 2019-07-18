@@ -16,7 +16,7 @@ You will need:
 * [Roche Lightcycler 384-well plate # 05102430001](https://lifescience.roche.com/en_us/products/lightcycler14301-multiwell-plate-384-clear.html)
 * [SSI 0.2ml 8 strip PCR tubes, flat caps # 313500 (seated)](https://www.ssibio.com/pcr/strip-pcr-tubes-and-caps)
 * [Opentrons 2ml Eppendorf tube rack](https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1)
-* [Opentrons P10 multi-channel electronic pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)
+* [Opentrons P10 single-channel electronic pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette)
 * [Opentrons P50 single-channel electronic pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette)
 * [Opentrons 10ul pipette tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
 * [Opentrons 300ul pipette tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
