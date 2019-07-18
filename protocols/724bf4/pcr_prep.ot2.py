@@ -40,11 +40,11 @@ tips10 = labware.load('opentrons_96_tiprack_10ul', '4')
 tips50 = labware.load('opentrons_96_tiprack_300ul', '5')
 
 # pipettes
-m10 = instruments.P10_Multi(mount='right', tip_racks=[tips10])
+p10 = instruments.P10_Single(mount='right', tip_racks=[tips10])
 p50 = instruments.P50_Single(mount='left', tip_racks=[tips50])
 
 # reagents
-primers = [well for well in strips.rows('A')[0:2]]
+primers = [well for col in strips.columns()[0:2] for well in col]
 
 
 def run_custom_protocol(
@@ -56,19 +56,22 @@ def run_custom_protocol(
         raise Exception('P50 pipette cannot accommodate distributions for \
 volumes less than 5ul.')
 
-    # distribute primers
-    for p, row in zip(primers, ['A', 'B']):
-        dests = [well for well in plate.rows(row)]
-        m10.pick_up_tip()
-        for d in dests:
-            m10.transfer(
+    # setup alternating destination rows and distribute primers
+    dests1 = [[well for well in row] for row in plate.rows()[0::2]]
+    dests2 = [[well for well in row] for row in plate.rows()[1::2]]
+    dests = dests1+dests2
+
+    for p, dest_set in zip(primers, dests):
+        p10.pick_up_tip()
+        for d in dest_set:
+            p10.transfer(
                 volume_of_primer_in_ul,
                 p,
                 d.bottom(),
                 new_tip='never'
             )
-            m10.blow_out()
-        m10.drop_tip()
+            p10.blow_out()
+        p10.drop_tip()
 
     # distribute cDNA samples and negative
     cdna_tubes = [tubes for tube in tubes.wells('A1', length=8)]
@@ -80,6 +83,3 @@ volumes less than 5ul.')
             [d.bottom(2) for d in dests],
             blow_out=True
         )
-
-
-run_custom_protocol()
