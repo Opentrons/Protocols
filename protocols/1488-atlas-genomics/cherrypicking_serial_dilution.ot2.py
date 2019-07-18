@@ -128,9 +128,7 @@ def csv_to_list(csv_string):
 def run_custom_protocol(
         number_of_samples: int=40,
         dilution_csv: FileInput=dilution_csv_example,
-        starting_column: str='3',
-        bDNA_buffer_volume: float=300,
-        bDNA_sample_volume: float=40,
+        starting_column: str='1',
         output_plate_type: StringSelection(
             'plate_200ul_noskirt', 'bDNA plate')='bDNA plate'):
 
@@ -179,36 +177,14 @@ def run_custom_protocol(
 
     m10.set_flow_rate(aspirate=5, dispense=10)
 
-    # reagent setup
-    diluent_s = trough_2.wells('A1')
-    diluent_s_volume_tracker = diluent_s.max_volume()
-
-    # transfer dilent to bDNA plate
-    m300.pick_up_tip()
-    m300.aspirate(200, diluent_s)
-    for col in output_plate.cols():
-        for new_vol in transform_volumes(bDNA_buffer_volume):
-            if m300.current_volume <= bDNA_buffer_volume:
-                if diluent_s_volume_tracker < bDNA_buffer_volume * 8:
-                    diluent_s = next(diluent_s)
-                    diluent_s_volume_tracker = diluent_s.max_volume()
-                m300.blow_out(diluent_s.top())
-                m300.aspirate(200, diluent_s)
-                diluent_s_volume_tracker -= bDNA_buffer_volume * 8
-            m300.dispense(new_vol, col)
-    m300.dispense(diluent_s.top())
-    m300.drop_tip()
-
-    # transfer sample to bDNA plate
-    bDNA_dests = [col for col in output_plate.cols(starting_column, to='12')]
-    if len(bDNA_dests) % 2 == 1:
-        bDNA_dests.pop(-1)
+    # transfer diluted sample to bDNA plate
+    final_volume = buffer_vols[-1] + sample_vols[-1]
     bDNA_sources = [group[-1] for group in dil_groups]
-    bDNA_groups = [bDNA_dests[i*2:i*2+2] for i in range(len(dil_groups))]
-    if bDNA_sample_volume > 10:
+    if final_volume > 10:
         pipette = m300
     else:
         pipette = m10
-    for source, dests in zip(bDNA_sources, bDNA_groups):
-        for dest in dests:
-            pipette.transfer(bDNA_sample_volume, source, dest)
+    for source, dest in zip(
+            bDNA_sources,
+            output_plate.cols(starting_column, length=len(bDNA_sources))):
+        pipette.transfer(final_volume, source, dest)
