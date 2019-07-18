@@ -6,15 +6,6 @@ metadata = {
     'source': 'Custom Protocol Request'
     }
 
-cell_plate_name = "corning-384-square-plate"
-if cell_plate_name not in labware.list():
-    labware.create(
-        cell_plate_name,
-        grid=(24, 16),
-        spacing=(4.5, 4.5),
-        diameter=3.6,
-        depth=11.7)
-
 compound_plate_name = "corning-384-round-plate"
 if compound_plate_name not in labware.list():
     labware.create(
@@ -27,36 +18,34 @@ if compound_plate_name not in labware.list():
 
 # labware setup
 compound_plate = labware.load(compound_plate_name, '1')
-cell_plates = [labware.load(cell_plate_name, slot)
-               for slot in ['2', '3', '4']]
 trough = labware.load('trough-12row', '5')
 
-tiprack_50s = [labware.load('opentrons-tiprack-300ul', slot)
+tiprack_300 = [labware.load('opentrons-tiprack-300ul', slot)
                for slot in ['10', '11']]
 tiprack_50 = [labware.load('opentrons-tiprack-300ul', slot)
               for slot in ['6', '7', '8', '9']]
 
 # instrument setup
-p50 = instruments.P50_Single(
+m300 = instruments.P50_Multi(
     mount='left',
-    tip_racks=tiprack_50s)
+    tip_racks=tiprack_300)
 
 m50 = instruments.P50_Multi(
     mount='right',
     tip_racks=tiprack_50)
 
-p50_tip_count = 0
+m300_tip_count = 0
 m50_tip_count = 0
 
 
-def update_single_tip_count(col_num):
-    global p50_tip_count
-    p50_tip_count += col_num
-    if p50_tip_count == len(tiprack_50s) * 96:
+def update_m300_tip_count(col_num):
+    global m300_tip_count
+    m300_tip_count += col_num
+    if m300_tip_count == len(tiprack_300) * 12:
         robot.pause("Your 10 uL tips have run out. Replenish the tip racks \
 before resuming.")
-        p50_tip_count = 0
-        p50.reset_tip_tracking()
+        m300_tip_count = 0
+        m300.reset_tip_tracking()
 
 
 def update_multi_tip_count(col_num):
@@ -85,39 +74,16 @@ def run_custom_protocol(number_of_compounds: int=17):
         dil_list = [dil_list[0]]
 
     # transfer 50 uL buffer
-    m50.pick_up_tip()
-    for row in dil_list:
-        for col in row[1:]:
-            m50.transfer(50, buffer, col, new_tip='never')
-            m50.blow_out(col.top())
-    m50.drop_tip()
+    m300.distribute(
+        50, buffer, [col for row in dil_list for col in row[1:]])
     update_multi_tip_count(1)
 
     # perform serial dilutions
     for row in dil_list:
         for source, dest in zip(row[:11], row[1:]):
-            m50.transfer(25, source, dest, mix_after=(3, 50))
+            m50.pick_up_tip()
+            m50.transfer(25, source, dest, new_tip='never')
+            m50.mix(3, 50, dest.bottom(2))
+            m50.blow_out(dest.top())
+            m50.drop_tip()
             update_multi_tip_count(1)
-
-    # tranfer 5 uL compound to cell plate in triplicate
-    compound_sources = [row.wells(col, length=12) for col in ['1', '13']
-                        for row in compound_plate.rows()][:number_of_compounds]
-
-    compound_dests = []
-    for plate in cell_plates:
-        for i in range(0, 15, 3):
-            compound_dests.append(
-                [row.wells(0, length=12) for row in plate.rows[i:i+3]])
-        for i in range(1, 16, 3):
-            compound_dests.append(
-                [row.wells(12, length=12) for row in plate.rows[i:i+3]])
-
-    for source, dest in zip(compound_sources, compound_dests):
-        for index, source_well in enumerate(source):
-            dests = [dest[0][index], dest[1][index], dest[2][index]]
-            p50.pick_up_tip()
-            p50.aspirate(20, source_well)
-            for new_dest in dests:
-                p50.dispense(5, new_dest)
-            p50.drop_tip()
-            update_single_tip_count(1)
