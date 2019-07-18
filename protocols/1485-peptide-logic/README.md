@@ -8,12 +8,12 @@
     * Serial Dilution
 
 ## Description
-With this protocol, the robot can perform serial dilution for up to 30 samples in a 384-well plate. The diluted samples will then be transferred to clean 384-well plates in triplicate. Layout of the samples can be found in Additional Notes.
+With this protocol, the robot can perform serial dilution for up to 30 samples in a 384-well plate.
 
 ---
 
 You will need:
-* P50 Single-channel Pipette
+* P300 Multi-channel Pipette
 * P50 Multi-channel Pipette
 * 384-well Plates
 * 12-well Trough
@@ -35,13 +35,10 @@ You will need:
 6. Hit "Run".
 7. Robot will transfer 50 uL of buffer to column 2-12 and 14-24 in the compound plate.
 8. Robot will dilute the preloaded samples in column 1 and 13 down the compound plate, using a new tip for every dilution.
-9. Robot will transfer 5 uL of each diluted sample to a clean cell plate in triplicate.
 
 ### Additional Notes
-![layout](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1485-peptide-logic/layout.png)
 
 * Compound Plate: Slot 1
-* Cell Plates: Slot 2, 3, 4
 
 ---
 
