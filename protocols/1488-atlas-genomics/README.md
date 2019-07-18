@@ -8,7 +8,7 @@
     * Serial Dilution
 
 ## Description
-With this protocol, your robot can perform serial dilution on up to 40 samples. The number of dilutions and each buffer and sample volume are defined by a CSV input. See Additional Notes for more details on the required CSV layout. After the serial dilutions are completed, the robot will transfer each final dilution sample in duplicate to a new assay plate (bDNA plate) containing a specific amount of buffer.
+With this protocol, your robot can perform serial dilution on up to 40 samples. The number of dilutions and each buffer and sample volume are defined by a CSV input. See Additional Notes for more details on the required CSV layout. After the serial dilutions are completed, the robot will transfer each final dilution sample to a new assay plate (bDNA plate).
 
 ---
 
@@ -31,17 +31,16 @@ You will need:
 1. Input the number of samples you are processing.
 2. Upload your dilution CSV.
 3. Input the starting column to fill samples in the bDNA plate.
-4. Input the volume of buffer and samples to be transferred to the bDNA plate.
-5. Select your output plate
-6. Download your protocol.
-7. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
-8. Set up your deck according to the deck map.
-9. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support article](https://support.opentrons.com/ot-2/getting-started-software-setup/deck-calibration).
-10. Hit "Run".
-11. Robot will distribute buffer from 12-row trough in slot 7 to the dilution plate(s).
-12. Robot will serially dilute samples down the plate(s).
-13. Robot will distribute buffer from 12-row trough in slot 9 to the bDNA plate.
-14. Robot will transfer the last dilutions to the bDNA plate in duplicate.
+4. Select your output plate
+5. Download your protocol.
+6. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
+7. Set up your deck according to the deck map.
+8. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support article](https://support.opentrons.com/ot-2/getting-started-software-setup/deck-calibration).
+9. Hit "Run".
+10. Robot will distribute buffer from 12-row trough in slot 7 to the dilution plate(s).
+11. Robot will serially dilute samples down the plate(s).
+12. Robot will distribute buffer from 12-row trough in slot 9 to the bDNA plate.
+13. Robot will transfer the entire last dilutions to the bDNA plate.
 
 
 ### Additional Notes
