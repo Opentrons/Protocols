@@ -42,8 +42,6 @@ if trough_name not in labware.list():
     )
 
 # load labware and modules
-magdeck = modules.load('magdeck', '1')
-elution_plate = labware.load(elution_name, '1', 'elution plate', share=True)
 oa_dilution_plate = labware.load(dilution_name, '2', 'OA dilution plate')
 cnv_dilution_plate = labware.load(dilution_name, '5', 'CNV dilution plate')
 trough = labware.load(trough_name, '6', 'water trough')
@@ -80,17 +78,36 @@ B1,PHI17445,11.8,B1,30.0,0.0,B1,8.5,11.5,
 def run_custom_protocol(
         csv_file: FileInput = example_csv,
         P10_mount: StringSelection('right', 'left') = 'right',
-        P50_mount: StringSelection('right', 'left') = 'left'
+        P50_mount: StringSelection('right', 'left') = 'left',
+        magnet_setup: StringSelection(
+            'Thermo Fisher magnetic stand',
+            'Opentrons magnetic module') = 'Opentrons magnetic module'
 ):
     # mount check
     if P10_mount == P50_mount:
         raise Exception('Please select different mounts for P10 and P50 \
-        pipettes.')
+pipettes.')
 
     # csv parse
     data = [line.split(',') for line in csv_file.splitlines() if line][3:]
 
-    magdeck.engage(height=16)
+    if magnet_setup == 'Opentrons magnetic module':
+        magdeck = modules.load('magdeck', '1')
+        elution_plate = labware.load(
+            elution_name,
+            '1',
+            'elution plate',
+            share=True
+        )
+        magdeck.engage(height=16)
+    else:
+        elution_plate = labware.load(
+            elution_name,
+            '1',
+            'elution plate on magnetic stand'
+        )
+
+    p10.home()
     p10.delay(minutes=2)
     robot.comment('Incubating on magnet for 2 minutes...')
 
@@ -164,4 +181,5 @@ def run_custom_protocol(
                 blow_out=True
             )
 
-    magdeck.disengage()
+    if magnet_setup == 'Opentrons magnetic module':
+        magdeck.disengage()
