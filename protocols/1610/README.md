@@ -32,7 +32,7 @@ You will need:
 * Nuclease-free H2O
 
 ## Process
-1. Upload your CSV file.
+1. Upload your CSV file, input your pipette mounts, and select the magnet setup for your elution plate.
 2. Download your protocol.
 3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
 4. Set up your deck according to the deck map.
