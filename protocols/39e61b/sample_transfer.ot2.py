@@ -3,7 +3,7 @@ from otcustomizers import StringSelection
 import math
 
 metadata = {
-    'protocolName': 'Same Transfer ',
+    'protocolName': 'Sample Transfer',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request'
 }
