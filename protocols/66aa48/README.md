@@ -47,7 +47,7 @@ The pooling tubes are seated in the Opentrons tube rack according to the followi
 * no change: tube C1
 * increase: tube D1
 
-If you have any questions about this protocol, please contact protocols@opentrons.com.
+If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
 66aa48
