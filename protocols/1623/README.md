@@ -38,7 +38,7 @@ You will need:
 6. Hit "Run".
 
 ### Additional Notes
-If you have any questions about this protocol, please contact protocols@opentrons.com.
+If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
 TMTCsRlj  
