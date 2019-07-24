@@ -1,0 +1,1 @@
+{"slug": "39e61b", "path": "protocols/39e61b", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["sample_transfer.ot2.py"]}, "status": "ok"}
