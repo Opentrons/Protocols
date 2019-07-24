@@ -1,0 +1,1 @@
+{"slug": "1623", "path": "protocols/1623", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["Omega_betaM2350_BWE.ot2.py"]}, "status": "ok"}
