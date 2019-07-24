@@ -136,13 +136,6 @@ def run_custom_protocol(
     mix_vol_beads = 300
     mag_deck.disengage()
 
-    # #Return robot head speed to the defaults for all axes
-    # max_speed_per_axis = {
-    # 'x': (600), 'y': (400), 'z':(125) , 'a': (125), 'b': (50), 'c': (50)}
-    # robot.head_speed(
-    #     combined_speed=max(max_speed_per_axis.values()),
-    #     **max_speed_per_axis)
-
     # Mix beads and distribute
     for target in samples:
         pipette.set_flow_rate(aspirate=180, dispense=180)
