@@ -53,14 +53,14 @@ def run_custom_protocol(
 
     if destination_tube_type.split(' ')[-1] == 'Eppendorf':
         dest_rack = labware.load(
-            'opentrons-tuberack-2ml-eppendorf',
+            'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap',
             '4',
             'rack for destination tube'
         )
         h = 2.3
     else:
         dest_rack = labware.load(
-            'opentrons-tuberack-2ml-screwcap',
+            'opentrons_24_tuberack_generic_2ml_screwcap',
             '4',
             'rack for destination tube'
         )
