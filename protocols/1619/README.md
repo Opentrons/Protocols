@@ -40,7 +40,7 @@ Image 1: initial sample consolidation:
 Image 2: aliquotting scheme:  
 ![aliquot scheme](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1619/aliquot_scheme.png)
 
-If you have any questions about this protocol, please contact protocols@opentrons.com.
+If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
 bW5ZjqSf  
