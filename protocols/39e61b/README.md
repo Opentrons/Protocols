@@ -33,7 +33,7 @@ You will need:
 7. DNA samples are transferred to their corresponding wells on the E. coli plate (mounted on the temperature module). E. coli samples are mixed at a decreased flow rate after each transfer, and new tips are used for each transfer and mix sequence.
 
 ### Additional Notes
-If you have any questions about this protocol, please contact protocols@opentrons.com.
+If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
 39e61b
