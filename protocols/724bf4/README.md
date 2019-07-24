@@ -40,7 +40,7 @@ You will need:
 ### Additional Notes
 [Transfer scheme](https://s3-ap-southeast-2.amazonaws.com/paperform/u-4256/0/2019-07-09/wd13di5/qRT%20PCR%20excel%20.xlsx)
 
-If you have any questions about this protocol, please contact protocols@opentrons.com.
+If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
 724bf4
