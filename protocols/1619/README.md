@@ -38,7 +38,7 @@ Image 1: initial sample consolidation:
 ![initial sample consolidation](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1619/source_plate_scheme.png)
 
 Image 2: aliquotting scheme:  
-![aliquot scheme](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1619/aliquot_scheme.png)
+![aliquot scheme](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1619/aliquot_scheme_2.png)
 
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
