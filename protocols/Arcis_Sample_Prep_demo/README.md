@@ -22,7 +22,7 @@ With this protocol, you can perform sample prep on any DNA or RNA-containing sam
 * Opentrons P300 Single-Channel Pipette
 * Opentrons P10 or P50 Single-Channel Pipette
 * Opentrons 4-in-1 Tube Rack Set
-* 2-mL
+* 2-mL Screwcap Tubes
 * 300 uL and/or 10 uL Tiprack (Opentrons tips recommended)
 
 ---
@@ -32,9 +32,7 @@ Using the customization fields below, set up your protocol as follows:
 
 * Left Pipette: A P300 single-channel pipette is required to be attached to the right mount. Select a second pipette, either a P10 (working volume: 1-10 uL) or P50 (5-50 uL) based on your extract volume if it is smaller than 30 uL.
 * Sample Number: Customize the number of samples to run per protocol (max: 12 for this demo kit)
-* Sample Container: Select the container type for your sample source
-* Stage 1 Container: Select the container type for your Stage 1 reaction
-* Stage 2 Container: Select the container type for your Stage 2 reaction
+* Reaction Container: Select the container type for your reactions
 * Extract Volume: Specify the volume from Stage 1 reaction to be extracted for Stage 2 reaction
 * Extract/Reagent 2 Ratio: Specify the Stage 1 Reaction to Reagent 2 volume ratio for Stage 2 reaction
 
@@ -42,7 +40,7 @@ Using the customization fields below, set up your protocol as follows:
 Make sure to add reagents to your labware before placing it on the deck! You can see where to place your reagents below.
 
 
-![Setup](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/Arcis_Sample_Prep/reagent_setup.png)
+![Setup](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/Arcis_Sample_Prep/new_reagent_setup.png)
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
@@ -54,10 +52,10 @@ Make sure to add reagents to your labware before placing it on the deck! You can
 2. Download your customized OT-2 protocol using the blue "Download" button.
 3. Upload your protocol file into the [OT App](https://opentrons.com/ot-app) and follow the instructions there to set up your deck and proceed to run.
 4. Make sure to add reagents to your labware before placing it on the deck! You can see where to place your reagents in the "Setup" section above.
-5. Robot will transfer 150 uL of Reagent 1 to each well in the Stage 1 Plate in slot 2.
-6. Robot will transfer (Extract volume x Reagent 2 Ratio) uL of Reagent 2 to each well in the Stage 2 Plate in slot 3.
-7. Robot will transfer 90 uL of sample from Sample Plate in slot 1 to Stage 1 Plate and incubate for one minute.
-8. Robot will transfer (Extract volume) uL of Stage 1 reaction to Stage 2 Plate.
+5. Robot will transfer 150 uL of Reagent 1 to each well in the Stage 1 wells in slot 2.
+6. Robot will transfer (Extract volume x Reagent 2 Ratio) uL of Reagent 2 to each well in the Stage 2 wells in slot 2.
+7. Robot will transfer 90 uL of sample from Sample wells to Stage 1 wells and incubate for one minute.
+8. Robot will transfer (Extract volume) uL of Stage 1 reaction to Stage 2 wells.
 
 
 
