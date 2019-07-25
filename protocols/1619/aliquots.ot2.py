@@ -36,7 +36,7 @@ tips50 = labware.load('opentrons-tiprack-300ul', '6')
 
 # pipettes
 m300 = instruments.P300_Multi(mount='right', tip_racks=[tips300])
-p50 = instruments.P50_Single(mount='left', tip_racks=[tips50])
+m50 = instruments.P50_Multi(mount='left', tip_racks=[tips50])
 
 
 def run_custom_protocol(
@@ -65,24 +65,20 @@ def run_custom_protocol(
         m300.drop_tip()
 
     # destination plate setup
-    num_dests = number_of_protein_samples*8
-    num_dest_racks = math.ceil(num_dests/96)
+    num_dest_cols = num_cons*8
+    num_dest_racks = math.ceil(num_dest_cols/12)
     dest_locs = ['4', '5', '7', '8'][:num_dest_racks]
     dest_racks = [
         labware.load(dest_name, slot, 'destination rack ' + str(i+1))
         for i, slot in enumerate(dest_locs)
     ]
-    dest_cols = [col for rack in dest_racks
-                 for col in rack.columns()][:number_of_protein_samples]
-    rep_dests = [[well for well in col] for col in dest_cols]
-    rep_sources = [
-        well for loc in cons_locs
-        for well in source_plate.wells(loc.get_name(), length=8)
-    ]
+    all_dest_cols = [well for rack in dest_racks
+                     for well in rack.rows('A')][:num_dest_cols]
+    rep_dests = [all_dest_cols[i*8:(i+1)*8] for i in range(num_cons)]
 
     # transfer aliquots
-    for s, d in zip(rep_sources, rep_dests):
-        p50.distribute(
+    for s, d in zip(cons_locs, rep_dests):
+        m50.distribute(
             25,
             s,
             [well.top() for well in d],
