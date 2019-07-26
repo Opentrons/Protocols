@@ -55,7 +55,6 @@ def run_custom_protocol(
         pipette_type: StringSelection('P50-Multi', 'P300-Multi') = 'P50-Multi'
         ):
 
-
     def perform_deck_transfer_with_mix(vol):
         for ind, source_col in enumerate(block.cols()):
             source = source_col[0].bottom()
@@ -99,9 +98,6 @@ def run_custom_protocol(
                 pipette.dispense(vol, dest)
                 pipette.delay(seconds=5)
             pipette.drop_tip()
-
-
-
 
     # select pipette
     if pipette_type == 'P50-Multi':
