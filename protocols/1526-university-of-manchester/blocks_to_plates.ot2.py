@@ -48,7 +48,6 @@ m300 = instruments.P300_Multi(
     tip_racks=[tips]
 )
 
-
 def run_custom_protocol(
         number_of_full_decks: int = 2,
         volume_of_transfer: float = 30.0,
@@ -60,9 +59,11 @@ def run_custom_protocol(
             source = source_col[0].bottom()
             pipette.pick_up_tip(tips.cols(ind))
             # Mix the column
-            pipette.mix(repetitions=5, volume=50, location=source_col[0].bottom(1), rate=2.0)
-            pipette.mix(repetitions=5, volume=50, location=source_col[0].bottom(10), rate=2.0)
-            pipette.mix(repetitions=5, volume=50, location=source_col[0].bottom(20), rate=2.0)
+            for height in [1, 10, 20]:
+                pipette.mix(repetitions=5,
+                            volume=50,
+                            location=source_col[0].bottom(height),
+                            rate=2.0)
             pipette.blow_out(source_col[0].top())
             for plate in plates:
                 pipette.set_flow_rate(aspirate=3, dispense=10)
@@ -78,7 +79,6 @@ def run_custom_protocol(
                 pipette.dispense(vol, dest)
                 pipette.delay(seconds=5)
             pipette.drop_tip()
-
 
     def perform_deck_transfer(vol):
         for ind, source_col in enumerate(block.cols()):
@@ -104,7 +104,6 @@ def run_custom_protocol(
         pipette = m50
     else:
         pipette = m300
-
 
     # perform transfers
     perform_deck_transfer_with_mix(volume_of_transfer)
