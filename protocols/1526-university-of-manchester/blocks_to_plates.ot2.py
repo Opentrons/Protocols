@@ -48,6 +48,7 @@ m300 = instruments.P300_Multi(
     tip_racks=[tips]
 )
 
+
 def run_custom_protocol(
         number_of_full_decks: int = 2,
         volume_of_transfer: float = 30.0,
