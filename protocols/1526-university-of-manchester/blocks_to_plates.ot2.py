@@ -54,32 +54,64 @@ def run_custom_protocol(
         volume_of_transfer: float = 30.0,
         pipette_type: StringSelection('P50-Multi', 'P300-Multi') = 'P50-Multi'
         ):
-    def perform_deck_transfer(vol):
+
+
+    def perform_deck_transfer_with_mix(vol):
         for ind, source_col in enumerate(block.cols()):
-            source = source_col[0]
+            source = source_col[0].bottom()
             pipette.pick_up_tip(tips.cols(ind))
+            # Mix the column
+            pipette.mix(repetitions=5, volume=50, location=source_col[0].bottom(1), rate=2.0)
+            pipette.mix(repetitions=5, volume=50, location=source_col[0].bottom(10), rate=2.0)
+            pipette.mix(repetitions=5, volume=50, location=source_col[0].bottom(20), rate=2.0)
+            pipette.blow_out(source_col[0].top())
             for plate in plates:
+                pipette.set_flow_rate(aspirate=3, dispense=10)
                 pipette.aspirate(vol, source)
-                pipette.move_to(source_col[0].top(1))
-                pipette.delay(seconds=10)
-                offset = source_col[0].from_center(h=0.9, r=1.0, theta=0)
+                robot.head_speed(x=15, y=15, z=15, a=30)
+                pipette.move_to(source_col[0].top(-2))
+                pipette.delay(seconds=15)
+                offset = source_col[0].from_center(h=0.9, r=.95, theta=0)
                 touch_dest = (source_col[0], offset)
-                robot.head_speed(x=50, y=50, z=50, a=50)
                 pipette.move_to(touch_dest, strategy='direct')
                 robot.head_speed(x=600, y=400, z=125, a=125)
                 dest = plate.cols(ind)[0]
                 pipette.dispense(vol, dest)
+                pipette.delay(seconds=5)
             pipette.drop_tip()
+
+
+    def perform_deck_transfer(vol):
+        for ind, source_col in enumerate(block.cols()):
+            source = source_col[0].bottom()
+            pipette.pick_up_tip(tips.cols(ind))
+            for plate in plates:
+                pipette.set_flow_rate(aspirate=3, dispense=10)
+                pipette.aspirate(vol, source)
+                robot.head_speed(x=15, y=15, z=15, a=30)
+                pipette.move_to(source_col[0].top(-2))
+                pipette.delay(seconds=15)
+                offset = source_col[0].from_center(h=0.9, r=.95, theta=0)
+                touch_dest = (source_col[0], offset)
+                pipette.move_to(touch_dest, strategy='direct')
+                robot.head_speed(x=600, y=400, z=125, a=125)
+                dest = plate.cols(ind)[0]
+                pipette.dispense(vol, dest)
+                pipette.delay(seconds=5)
+            pipette.drop_tip()
+
+
+
 
     # select pipette
     if pipette_type == 'P50-Multi':
         pipette = m50
     else:
         pipette = m300
-    pipette.set_flow_rate(aspirate=10, dispense=20)
+
 
     # perform transfers
-    perform_deck_transfer(volume_of_transfer)
+    perform_deck_transfer_with_mix(volume_of_transfer)
     for i in range(number_of_full_decks-1):
         robot.pause("Please replace plates in slots 1, 2, 3, 4, 5, 6, 8, 9, "
                     "and 11, and tip rack in slot 10 before resuming.")
