@@ -6,26 +6,16 @@ metadata = {
     'source': 'Custom Protocol Request'
 }
 
-# create custom labware
-plate_name = 'biorad-low-profile-96'
-if plate_name not in labware.list():
-    labware.create(
-        plate_name,
-        grid=(12, 8),
-        spacing=(9, 9),
-        diameter=5.4,
-        depth=15.5,
-        volume=200
-    )
-
 # load labware
-tubes = labware.load('opentrons-tuberack-2ml-eppendorf', '6')
-tips10 = labware.load('tiprack-10ul', '2')
-tips50 = labware.load('opentrons-tiprack-300ul', '3')
+tips10 = labware.load('opentrons_96_tiprack_10ul', '2')
+tips50 = labware.load('opentrons_96_tiprack_300ul', '3')
+tubes = labware.load(
+    'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '6')
 
 # modules
 tempdeck = modules.load('tempdeck', '5')
-plate = labware.load(plate_name, '5', share=True)
+plate = labware.load(
+    'opentrons_96_aluminumblock_biorad_wellplate_200ul', '5', share=True)
 if not robot.is_simulating():
     tempdeck.set_temperature(4)
     tempdeck.wait_for_temp()
