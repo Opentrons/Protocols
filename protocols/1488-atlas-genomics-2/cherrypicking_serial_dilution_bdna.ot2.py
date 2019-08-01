@@ -173,7 +173,7 @@ def run_custom_protocol(
         for vol, source, dest in zip(sample_vols, group[:-1], group[1:]):
             m10.set_flow_rate(aspirate=5, dispense=10)
             m10.transfer(vol, source, dest, new_tip='never')
-            m10.set_flow_rate(aspirate=10, dispense=20)
+            m10.set_flow_rate(aspirate=10, dispense=60)
             m10.mix(5, 10, dest)
         m10.drop_tip()
 
