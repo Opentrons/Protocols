@@ -35,8 +35,7 @@ def run_custom_protocol(
     if number_of_plates > 8 or number_of_plates < 1:
         raise Exception('Invalid number of plates.')
 
-    slots = [str(i) for i in range(9, 0, -1)]
-    slots.remove('7')
+    slots = ['8', '9', '4', '5', '6', '1', '2', '3'][:number_of_plates]
     plates = [
         labware.load(
             'corning_96_wellplate_360ul_flat',
@@ -44,7 +43,7 @@ def run_custom_protocol(
             'plate ' + str(i+1)
         )
         for i, slot in enumerate(slots)
-    ][:number_of_plates]
+    ]
 
     loc_sets_l = [
         plate.rows('A')[i*6:i*6+3]
