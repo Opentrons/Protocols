@@ -34,7 +34,7 @@ mm_tubes = labware.load(
     '2',
     'mastermix tuberack').rows('A')[:2]
 oligo_plate = labware.load(
-    'opentrons_96_aluminumblock_biorad_wellplate_200ul',
+    'corning_96_wellplate_360ul_flat',
     '4',
     'oligo plate'
 )
