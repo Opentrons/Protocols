@@ -8,13 +8,13 @@
     * PCR preparation
 
 ## Description
-This protocol performs PCR preparation on a 96-well PCR plate mounted on an aluminum block on an Opentrons temperature module (set to 4˚C). Oligo primers are located in a separate 96-well PCR plate, and master mix is held in two screwcap tubes in an Opentrons aluminum block for 2ml screwcap tubes.
+This protocol performs PCR preparation on a 96-well PCR plate mounted on an aluminum block on an Opentrons temperature module (set to 4˚C). Oligo primers are located in a separate 96-well plate, and master mix is held in two screwcap tubes in an Opentrons aluminum block for 2ml screwcap tubes.
 
 ---
 
 You will need:
 
-* [Bio-Rad Hard-Shell 96-Well PCR Plate, low profile # HSP9601](http://www.bio-rad.com/en-us/sku/hsp9601-hard-shell-96-well-pcr-plates-low-profile-thin-wall-skirted-white-clear?ID=hsp9601)
+* [Corning 96 Well Plate 360 µL Flat](https://ecatalog.corning.com/life-sciences/b2c/US/en/Microplates/Assay-Microplates/96-Well-Microplates/Corning®-96-well-Solid-Black-and-White-Polystyrene-Microplates/p/corning96WellSolidBlackAndWhitePolystyreneMicroplates)
 * [Bio-Rad Hard-Shell 96-Well PCR Plate, high profile # HSP9641](http://www.bio-rad.com/en-us/sku/hss9641-hard-shell-96-well-pcr-plates-high-profile-semi-skirted-green-clear?ID=hss9641)
 * [Opentrons P50 single-channel electronic pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette)
 * [Opentrons P50 multi-channel electronic pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)
