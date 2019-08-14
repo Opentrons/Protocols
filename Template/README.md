@@ -25,11 +25,11 @@ Nulla vulputate eu ex sed ullamcorper. Cras luctus metus non dui venenatis, nec 
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
 Trough
-	* A1: Water
-	* A2: 70% Ethanol
+* A1: Water
+* A2: 70% Ethanol
 
 PCR Plate
-	* Column 1: Samples
+* Column 1: Samples
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
