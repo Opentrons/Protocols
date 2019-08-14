@@ -1,0 +1,1 @@
+{"slug": "0cb5e5-part2", "path": "protocols/0cb5e5-part2", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["ngs_prep_pt2.ot2.py"]}, "status": "ok"}
