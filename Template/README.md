@@ -3,9 +3,6 @@
 ### Author
 [Opentrons](https://opentrons.com/)
 
-### Partner
-[Stanford](https://www.stanford.edu/)
-
 ## Categories
 * Sample Prep
 	* Sequencing
@@ -35,9 +32,12 @@ PCR Plate
 * [OT-2](https://opentrons.com/ot-2)
 
 ## Process
-1. Suspendisse ultrices elit ex, sit amet porttitor justo convallis eget. Integer quis felis eleifend, venenatis.
-2. Sed ultricies lacus eu justo laoreet, sed maximus libero faucibus. Nulla sit amet imperdiet erat. Pellentesque ultrices, felis at auctor.
-
+1. Upload your protocol parameters.
+2. Download your protocol.
+3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
+4. Set up your deck according to the deck map.
+5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).
+6. Hit "Run".
 
 ### Additional Notes
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sed purus eu urna vehicula ultrices at vel quam. Aliquam erat volutpat. Quisque imperdiet ut urna ut dapibus. Sed placerat, libero at ullamcorper pharetra, massa tellus sagittis eros, in feugiat est libero et turpis. Sed ac efficitur mi, at porttitor elit.
@@ -45,4 +45,4 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sed purus eu urna v
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-[Link To Google Doc](https://docs.google.com/presentation/d/1T90uIaz3ci-UPK3x-OkrLX0x0_hDDQClusc5U2qAYWs/edit#slide=id.p7)
+Custom Protocol ID
