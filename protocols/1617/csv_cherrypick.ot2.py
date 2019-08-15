@@ -25,6 +25,8 @@ def run_custom_protocol(
             'Opentrons 4x6 tube rack') = 'Bio-Rad Hardshell 96-well plate',
         pipette_selection: StringSelection('P10 and P50', 'P50 and P300',
                                            'P10 and P300') = 'P50 and P300',
+        p10_aspirate_speed_in_ul_per_s_if_applicable: float = 5,
+        p10_dispense_speed_in_ul_per_s_if_applicable: float = 10
 ):
 
     if source_plate_type == 'Bio-Rad Hardshell 96-well plate':
@@ -119,6 +121,10 @@ def run_custom_protocol(
         tips300_max = 96*3
         all_tips_10 = [well for rack in tips10 for well in rack.wells()]
         p10 = instruments.P10_Single(mount='right')
+        p10.set_flow_rate(
+            aspirate=p10_aspirate_speed_in_ul_per_s_if_applicable,
+            dispense=p10_dispense_speed_in_ul_per_s_if_applicable
+        )
         if pipette_selection.split(' ')[2] == 'P50':
             p50 = instruments.P50_Single(mount='left')
         else:
