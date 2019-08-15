@@ -9,7 +9,7 @@ metadata = {
 
 example_csv = """source deck,Source well,volume,Destination deck,Destination \
 well,mixing volume,mixing cycle
-4,A1,20,1,A1,20, 1
+4,A1,20,1,A12,20, 1
 5,D7,40,1,D12,40, 2
 6,F12,70,2,G8,10, 3
 """
@@ -28,18 +28,20 @@ def run_custom_protocol(
 ):
 
     if source_plate_type == 'Bio-Rad Hardshell 96-well plate':
-        source_name = 'biorad-hardshell-96-PCR'
+        source_name = 'biorad_96_wellplate_200ul_pcr'
     else:
-        source_name = 'opentrons-tuberack-2ml-eppendorf'
+        source_name = 'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap'
 
     if destination_plate_type == 'Bio-Rad Hardshell 96-well plate':
-        dest_name = 'biorad-hardshell-96-PCR'
+        dest_name = 'biorad_96_wellplate_200ul_pcr'
     else:
-        dest_name = 'opentrons-tuberack-2ml-eppendorf'
+        dest_name = 'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap'
 
     # pop top 6 lines of CSV that do not contain transfer info
-    transfer_info = [line.split(',')
-                     for line in transfer_cherrypick_CSV.splitlines() if line]
+    transfer_info = [
+        line.split(',')
+        for line in transfer_cherrypick_CSV.splitlines() if line
+    ]
     transfer_info.pop(0)
     source_plate_slots = []
     source_wells = []
@@ -79,11 +81,40 @@ def run_custom_protocol(
     destination_plates = [labware.load(dest_name, key, 'destination ' + key)
                           for key in unique_target_slots]
 
+    # constants for row check
+    row_names = 'ABCDEFGH'
+    num_s_rows = len(source_plates[0].get_grid()['1'])
+    s_rows = row_names[:num_s_rows][:num_s_rows]
+    num_s_cols = len(source_plates[0].get_grid())
+    num_t_rows = len(destination_plates[0].get_grid()['1'])
+    t_rows = row_names[:num_t_rows][:num_t_rows]
+    num_t_cols = len(destination_plates[0].get_grid())
+
+    def well_check(s, t):
+        s_row = s[0]
+        s_col = int(s[1:])
+        t_row = t[0]
+        t_col = int(t[1:])
+        # checks
+        if s_row not in s_rows:
+            raise Exception('Invalid source well row [' + s + ']')
+        if s_col > num_s_cols:
+            raise Exception('Invalid source well column [' + s + ']')
+        if t_row not in t_rows:
+            raise Exception('Invalid target well row [' + t + ']')
+        if t_col > num_t_cols:
+            raise Exception('Invalid target well column [' + t + ']')
+
     # pipette and tiprack setup depending on pipette selection
     if pipette_selection.split(' ')[0] == 'P10':
-        tips10 = [labware.load('tiprack-10ul', slot) for slot in ['10', '11']]
-        tips300 = [labware.load('opentrons-tiprack-300ul', slot)
-                   for slot in ['7', '8', '9']]
+        tips10 = [
+            labware.load('opentrons_96_tiprack_10ul', slot)
+            for slot in ['10', '11']
+        ]
+        tips300 = [
+            labware.load('opentrons_96_tiprack_300ul', slot)
+            for slot in ['7', '8', '9']
+        ]
         tips10_max = 96*2
         tips300_max = 96*3
         all_tips_10 = [well for rack in tips10 for well in rack.wells()]
@@ -94,7 +125,7 @@ def run_custom_protocol(
             p300 = instruments.P300_Single(mount='left')
         tip10_count = 0
     else:
-        tips300 = [labware.load('opentrons-tiprack-300ul', slot)
+        tips300 = [labware.load('opentrons_96_tiprack_300ul', slot)
                    for slot in ['7', '8', '9', '10', '11']]
         tips300_max = 96*5
         p50 = instruments.P50_Single(mount='right')
@@ -129,6 +160,7 @@ def run_custom_protocol(
             t_plate_ind = unique_target_slots[t_slot]
             t_plate = destination_plates[t_plate_ind]
 
+            well_check(s_well, t_well)
             source = s_plate.wells(s_well)
             target = t_plate.wells(t_well)
 
