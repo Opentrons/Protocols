@@ -14,7 +14,6 @@ install:
 script:
   - python --version
   - python3 --version
-  - python -c 'import opentrons; print(opentrons.__version__)'
   # lint all code
   - flake8 protocols/ protolib/
   - python ./scripts/bad-README-subcategory.py # make sure subcategories don't have 2 spaces
