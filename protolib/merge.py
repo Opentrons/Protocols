@@ -1,7 +1,7 @@
 import os
 import json
 import zipfile
-from protolib2.traversals import RELEASES_DIR, search_directory
+from protolib.traversals import RELEASES_DIR, search_directory
 from collections import defaultdict
 from datetime import datetime
 
