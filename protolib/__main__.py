@@ -1,3 +1,5 @@
-from protolib import cli
+from protolib import merge
+from protolib.traversals import PROTOCOLS_BUILD_DIR
 
-cli.build_protocol_library()
+print(PROTOCOLS_BUILD_DIR)
+merge.merge_protocols(PROTOCOLS_BUILD_DIR)
