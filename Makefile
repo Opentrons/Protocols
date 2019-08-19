@@ -39,7 +39,7 @@ venvs/ot1:
 	source venvs/ot1/bin/activate && \
 	pip install opentrons==$(OT1_VERSION) && \
 	pip install -e otcustomizers && \
-	pip install -r protolib2/requirements.txt && \
+	pip install -r protolib/requirements.txt && \
 	deactivate
 
 venvs/ot2:
@@ -47,7 +47,7 @@ venvs/ot2:
 	virtualenv venvs/ot2
 	source venvs/ot2/bin/activate && \
 	pip install -e otcustomizers && \
-	pip install -r protolib2/requirements.txt && \
+	pip install -r protolib/requirements.txt && \
 	pip install pipenv && \
 	pushd $(OT2_MONOREPO_DIR)/api/ && \
 	$(MAKE) install && \
@@ -57,7 +57,7 @@ venvs/ot2:
 
 .PHONY: parse-errors
 parse-errors:
-	python protolib2/traverse_errors.py
+	python protolib/traverse_errors.py
 
 # TODO: Ian 2019-03-11 maybe ot1 can be parallelized somehow.
 # right now it deletes `configurations.json` and runs into race conditions
@@ -69,7 +69,7 @@ parse-ot1: $(OT1_OUTPUT_FILES)
 $(BUILD_DIR)/%.ot1.py.json: protocols/%.ot1.py
 	mkdir -p $(dir $@)
 	source venvs/ot1/bin/activate && \
-	APP_DATA_DIR=$(OT1_TEMP_DIR)/$@ python protolib2/parse/parseOT1.py $< $@ && \
+	APP_DATA_DIR=$(OT1_TEMP_DIR)/$@ python protolib/parse/parseOT1.py $< $@ && \
 	deactivate
 
 .PHONY: parse-ot2
@@ -81,13 +81,13 @@ $(BUILD_DIR)/%.ot2.py.json: protocols/%.ot2.py
 	mkdir -p $(dir $@)
 	source venvs/ot2/bin/activate && \
 	export OVERRIDE_SETTINGS_DIR=$(OT2_MONOREPO_DIR)/api/tests/opentrons/data && \
-	python protolib2/parse/parseOT2.py $< $@ && \
+	python protolib/parse/parseOT2.py $< $@ && \
 	deactivate
 
 .PHONY: parse-README
 parse-README:
 	source venvs/ot2/bin/activate && \
-	python protolib2/traverse_README.py && \
+	python protolib/traverse_README.py && \
 	deactivate
 
 .PHONY: clean
@@ -101,4 +101,4 @@ teardown:
 # Take all files in BUILD_DIR and make a single zipped JSON
 .PHONY: build
 build:
-	python -m protolib2
+	python -m protolib
