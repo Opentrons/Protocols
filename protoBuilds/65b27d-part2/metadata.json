@@ -1,0 +1,1 @@
+{"slug": "65b27d-part2", "path": "protocols/65b27d-part2", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["nucleic_acid_purification_pt2.ot2.py"]}, "status": "ok"}
