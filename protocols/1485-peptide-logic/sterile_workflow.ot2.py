@@ -1,4 +1,4 @@
-from opentrons import labware, instruments, robot
+from opentrons import labware, instruments
 
 metadata = {
     'protocolName': 'Compound Serial Dilution',
@@ -20,48 +20,24 @@ if compound_plate_name not in labware.list():
 compound_plate = labware.load(compound_plate_name, '1')
 trough = labware.load('trough-12row', '5')
 
-tiprack_300 = [labware.load('opentrons-tiprack-300ul', slot)
-               for slot in ['10', '11']]
-tiprack_50 = [labware.load('opentrons-tiprack-300ul', slot)
-              for slot in ['6', '7', '8', '9']]
+tipracks = [labware.load('opentrons-tiprack-300ul', slot)
+            for slot in ['6', '7', '8', '9', '10', '11']]
+
 
 # instrument setup
 m300 = instruments.P300_Multi(
     mount='left',
-    tip_racks=tiprack_300)
+    tip_racks=tipracks)
 
 m50 = instruments.P50_Multi(
     mount='right',
-    tip_racks=tiprack_50)
-
-m300_tip_count = 0
-m50_tip_count = 0
-
-
-def update_m300_tip_count(col_num):
-    global m300_tip_count
-    m300_tip_count += col_num
-    if m300_tip_count == len(tiprack_300) * 12:
-        robot.pause("Your 10 uL tips have run out. Replenish the tip racks \
-before resuming.")
-        m300_tip_count = 0
-        m300.reset_tip_tracking()
-
-
-def update_multi_tip_count(col_num):
-    global m50_tip_count
-    m50_tip_count += col_num
-    if m50_tip_count == len(tiprack_50) * 12:
-        robot.pause("Your 300 uL tips have run out. Replenish the tip racks \
-before resuming.")
-        m50_tip_count = 0
-        m50.reset_tip_tracking()
+    tip_racks=tipracks)
 
 
 def run_custom_protocol(number_of_compounds: int=17):
 
-    if number_of_compounds > 17:
-        raise Exception("Number of compounds cannot exceed 17.")
+    if number_of_compounds > 30:
+        raise Exception("Number of compounds cannot exceed 30.")
 
     # reagent setup
     buffer = trough.wells('A1')
@@ -79,7 +55,8 @@ def run_custom_protocol(number_of_compounds: int=17):
     # transfer 50 uL buffer
     m300.distribute(
         50, buffer, [col for row in dil_list for col in row[1:]])
-    update_multi_tip_count(1)
+
+    m50.start_at_tip(tipracks[0].cols('2'))
 
     # perform serial dilutions
     for row in dil_list:
@@ -89,4 +66,3 @@ def run_custom_protocol(number_of_compounds: int=17):
             m50.mix(3, 50, dest.bottom(2))
             m50.blow_out(dest.top())
             m50.drop_tip()
-            update_multi_tip_count(1)
