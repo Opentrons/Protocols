@@ -26,7 +26,7 @@ tiprack_50 = [labware.load('opentrons-tiprack-300ul', slot)
               for slot in ['6', '7', '8', '9']]
 
 # instrument setup
-m300 = instruments.P50_Multi(
+m300 = instruments.P300_Multi(
     mount='left',
     tip_racks=tiprack_300)
 
@@ -59,6 +59,9 @@ before resuming.")
 
 
 def run_custom_protocol(number_of_compounds: int=17):
+
+    if number_of_compounds > 17:
+        raise Exception("Number of compounds cannot exceed 17.")
 
     # reagent setup
     buffer = trough.wells('A1')
