@@ -57,7 +57,7 @@ def run_custom_protocol(
 
     # transfer solution B to C
     for index in range(num_of_samples):
-        source_num = num_of_dilutions - 1
+        source_num = num_of_dilutions
         sources = [solution_b[index]] + \
             solution_c[index * (source_num): (index+1) * (source_num)]
         dests = solution_c[
