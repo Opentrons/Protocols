@@ -7,13 +7,25 @@ metadata = {
     'source': 'Custom Protocol Request'
 }
 
+# create custom labware
+res12_name = 'axygen_12_reservoir_290ml'
+if res12_name not in labware.list():
+    labware.create(
+        res12_name,
+        grid=(12, 1),
+        spacing=(9, 0),
+        diameter=8.3,
+        depth=43,
+        volume=22000
+    )
+
 # load modules and labware
 rxn_plate = labware.load(
     'biorad_96_wellplate_200ul_pcr', '1', 'sample plate')
 barcode_plate = labware.load(
     'biorad_96_wellplate_200ul_pcr', '2', 'barcode plate')
 reagent_res = labware.load(
-    'usascientific_12_reservoir_22ml', '3', 'reagent reservoir')
+    res12_name, '3', 'reagent reservoir')
 magdeck = modules.load('magdeck', '4')
 magplate = labware.load(
     'biorad_96_wellplate_200ul_pcr',
