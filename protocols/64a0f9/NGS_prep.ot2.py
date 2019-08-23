@@ -64,15 +64,15 @@ def run_custom_protocol(
         well for well in reagent_rack.wells(
             'A2', length=math.ceil(number_of_samples/48))
     ]
-    beads = reagent_rack.wells(0)
 
+    beads = reagent_res.wells('A1')
     etoh = [
         well for well in reagent_res.wells(
-            1, length=math.ceil(number_of_samples/48)*2)
+            'A2', length=math.ceil(number_of_samples/48)*2)
     ]
-    edta_buffer = reagent_res.wells(5)
-    te_buffer = reagent_res.wells(6)
-    liquid_trash = [well for well in reagent_res.wells(7, length=5)]
+    edta_buffer = reagent_res.wells('A6')
+    te_buffer = reagent_res.wells('A7')
+    liquid_trash = [well for well in reagent_res.wells('A8', length=5)]
 
     t_samples = mag_plate.wells()[:number_of_samples]
     m_samples = temp_plate.wells()[:number_of_samples]
