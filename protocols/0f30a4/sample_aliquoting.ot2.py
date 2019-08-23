@@ -42,7 +42,7 @@ def run_custom_protocol(
     p1000 = instruments.P1000_Single(mount=p1000_mount, tip_racks=[tips1000])
     p1000.start_at_tip(tips1000.wells('B1'))
     p300 = instruments.P300_Single(mount=p300_mount, tip_racks=[tips300])
-    tips1000.wells('C1')
+    p300.start_at_tip(tips300.wells('C1'))
 
     tubes = {
         'water1': [tuberack50.wells('A1'), -20],
