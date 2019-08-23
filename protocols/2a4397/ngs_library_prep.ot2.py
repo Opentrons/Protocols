@@ -155,6 +155,7 @@ RT. Then spin down the samples and place on the magnetic module.')
 
     robot._driver.run_flag.wait()
     magdeck.engage(height=18)
+    p300.delay(minutes=3)
 
     p300.set_flow_rate(aspirate=30, dispense=60)
 
