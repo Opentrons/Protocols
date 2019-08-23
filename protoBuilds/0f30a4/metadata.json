@@ -1,0 +1,1 @@
+{"slug": "0f30a4", "path": "protocols/0f30a4", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["sample_aliquoting.ot2.py"]}, "status": "ok"}
