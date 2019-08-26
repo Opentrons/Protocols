@@ -114,8 +114,8 @@ def run_custom_protocol(
     pcr_wells = [well for well in pcr_plate.wells()]
     tube_wells = [well for rack in tuberack for well in tuberack.wells()]
     master_list = zip(dna_vols, pcr_wells, tube_wells)
-    starting_well_index = pcr_plate.get_index_from_name('A1')
-    ending_well_index = pcr_plate.get_index_from_name('H12')
+    starting_well_index = pcr_plate.get_index_from_name('starting_well')
+    ending_well_index = pcr_plate.get_index_from_name('ending_well')
     for vol, dest, source in list(
             itertools.islice(
                 master_list, starting_well_index, ending_well_index+1)):
