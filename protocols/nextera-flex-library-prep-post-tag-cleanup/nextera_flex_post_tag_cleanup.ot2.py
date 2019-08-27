@@ -70,7 +70,6 @@ pipettes')
         pip50.transfer(10, tsb, s, new_tip='never')
         pip50.set_flow_rate(aspirate=10, dispense=20)
         pip50.mix(10, 30, s)
-        pip50.set_flow_rate(aspirate=25, dispense=50)
         pip50.blow_out(s.top(-2))
         pip50.drop_tip()
 
@@ -111,7 +110,6 @@ thermal cycler, and run the PTC program.')
         if wash < 2:
             pip300.delay(minutes=3)
             # remove and discard supernatant
-            pip300.set_flow_rate(aspirate=150, dispense=300)
             for s in samples300:
                 pip300.pick_up_tip()
                 pip300.transfer(110, s, liquid_waste, new_tip='never')
