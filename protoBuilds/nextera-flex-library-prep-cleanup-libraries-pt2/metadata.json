@@ -1,0 +1,1 @@
+{"slug": "nextera-flex-library-prep-cleanup-libraries-pt2", "path": "protocols/nextera-flex-library-prep-cleanup-libraries-pt2", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["nextera_flex_cleanup_libraries_pt2.ot2.py"]}, "status": "ok"}
