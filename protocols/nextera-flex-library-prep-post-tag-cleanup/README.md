@@ -11,6 +11,12 @@
 ## Description
 This protocol performs the 'Post Tagmentation Cleanup' section of the [Nextera DNA Flex Library Prep protocol](https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/nextera-dna-flex.html).
 
+Links:
+* [Tagment DNA](./nextera-flex-library-prep-tagment-dna)
+* [Post Tagmentation Cleanup](./nextera-flex-library-prep-post-tag-cleanup)
+* [Amplify Tagmented DNA](./nextera-flex-library-prep-amplify-tagmented-dna)
+* [Cleanup Libraries](./nextera-flex-library-prep-cleanup-libraries)
+
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 

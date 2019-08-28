@@ -15,8 +15,7 @@ Links:
 * [Tagment DNA](./nextera-flex-library-prep-tagment-dna)
 * [Post Tagmentation Cleanup](./nextera-flex-library-prep-post-tag-cleanup)
 * [Amplify Tagmented DNA](./nextera-flex-library-prep-amplify-tagmented-dna)
-* [Cleanup Libraries Part 1/2](./nextera-flex-library-prep-cleanup-libraries-pt1)
-* [Cleanup Libraries Part 2/2](./nextera-flex-library-prep-cleanup-libraries-pt2)
+* [Cleanup Libraries](./nextera-flex-library-prep-cleanup-libraries)
 
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
