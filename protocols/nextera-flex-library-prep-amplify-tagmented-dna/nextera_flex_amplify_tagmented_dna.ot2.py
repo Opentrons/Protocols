@@ -107,7 +107,7 @@ pipettes')
         if not p50.tip_attached:
             p50.pick_up_tip()
         mm_ind = i//32
-        p50.transfer(40, mm[mm_ind].bottom(-36), s, new_tip='never')
+        p50.transfer(40, mm[mm_ind].top(-36), s, new_tip='never')
         p50.mix(10, 30, s)
         p50.blow_out()
         p50.drop_tip()
