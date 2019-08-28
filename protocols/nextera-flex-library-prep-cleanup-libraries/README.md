@@ -1,4 +1,4 @@
-# Nextera DNA Flex NGS Library Prep: Cleanup Libraries Part 1/2
+# Nextera DNA Flex NGS Library Prep: Cleanup Libraries Part
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -7,9 +7,8 @@
 * Molecular Biology
 	* NGS Library Prep
 
-
 ## Description
-This protocol performs part 1/2 of the 'Cleanup Libraries' section of the [Nextera DNA Flex Library Prep protocol](https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/nextera-dna-flex.html).
+This protocol performs the 'Cleanup Libraries' section of the [Nextera DNA Flex Library Prep protocol](https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/nextera-dna-flex.html).
 
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
@@ -28,7 +27,7 @@ This protocol performs part 1/2 of the 'Cleanup Libraries' section of the [Nexte
 Centrifuge the PCR plate from the Amplify Tagmented DNA step. Place the plate on the magnetic module.
 
 12-channel reservoir (slot 3)
-* channel 1: SPB
+* channel 1: SPB (user is prompted to vortex before adding mid-protocol)
 * channel 2: nuclease-free water
 * channel 3: RSB
 * channel 4-5: EtOH
