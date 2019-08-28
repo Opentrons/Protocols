@@ -34,10 +34,10 @@ Links:
 
 Preprogram the thermocycler according to the BLT PCR program parameters described in the kit manual.
 
-1.5ml tuberack (slot 2)
-* A1: mastermix (loaded empty)
-* B1: EPM
-* C1: nuclease-free water
+4x6 aluminum block tuberack (slot 4, mounted on temperature module)
+* A1-C1: mastermix 1.5ml snapcap tubes (loaded empty, 1 tube needed per 32 samples)
+* A2-D2: EPM in 0.5ml false-bottom tubes (1 tube needed per 24 samples)
+* A3-B3: nuclease-free water in 1.5ml snapcap tubes (1 tube needed per 48 samples)
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
