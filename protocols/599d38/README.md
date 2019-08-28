@@ -4,35 +4,40 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Sample Prep
-	* Sequencing
+* Molecular Biology
+	* Nucleic Acid Purification
 
 
 ## Description
-Nulla vulputate eu ex sed ullamcorper. Cras luctus metus non dui venenatis, nec elementum sem dictum. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Interdum et malesuada fames ac ante ipsum primis in faucibus. Sed dignissim, quam quis tempus suscipit, ex turpis porttitor lacus, nec mattis risus lectus sed dolor. Nam feugiat ullamcorper magna, eu consectetur enim pulvinar nec. Sed facilisis eros ac tellus mattis, a auctor est viverra. Aenean vulputate felis eget finibus pellentesque. Proin porta vehicula nisi, eu semper ante tincidunt sed.
+This protocol is used to aid in the prep for nucleic acid extraction. The robot begins by creating 3 separate wash plates and an elution plate. After loading a plate containing the samples, the robot adds isopropanol to each of the samples. The robot then adds magnetic beads to each sample. After the user washes the beads in each wash plate, the robot adds an elution buffer to the beads/sample mixture to release the DNA from the beads.
 
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
-* [P300 Single-channel Pipette](link-to-pipette)
-* [Greiner Masterblock 96-deepwell plates # 780270](link-to-labware)
-* [Brand Name Labware Name # catalog-number](link)
+* [P50 Multi-channel electronic pipette](https://shop.opentrons.com/collections/ot-2-robot/products/8-channel-electronic-pipette?variant=5984202489885)
+* [P300 Multi-channel electronic pipette](https://shop.opentrons.com/collections/ot-2-robot/products/8-channel-electronic-pipette?variant=5984202489885)
+* [300uL Opentrons tipracks](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
+* [Bio-Rad Hard Shell 96-well PCR plate 200ul #hsp9601](bio-rad.com/en-us/sku/hsp9601-hard-shell-96-well-pcr-plates-low-profile-thin-wall-skirted-white-clear?ID=hsp9601)
+* [USA Scientific 12-channel reservoir 22ml #1061-8150](https://www.usascientific.com/12-channel-automation-reservoir.aspx)
+* [96-well Square Plate](link)
 
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
-Trough
-* A1: Water
-* A2: 70% Ethanol
-
-PCR Plate
-* Column 1: Samples
+12-channel reservoir (slot 5):
+* channel 1: Bead Mix
+* channel 3: 100% Isopropanol
+* channel 5: Wash Solution 1
+* channel 7: Wash Solution 2
+* channel 8: Wash Solution 2
+* channel 10: DNA Elution Buffer 1
+* channel 12: DNA Elution Buffer 2
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
 
 ## Process
-1. Upload your protocol parameters.
+1. Input your protocol parameters.
 2. Download your protocol.
 3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
 4. Set up your deck according to the deck map.
@@ -40,9 +45,7 @@ PCR Plate
 6. Hit "Run".
 
 ### Additional Notes
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam sed purus eu urna vehicula ultrices at vel quam. Aliquam erat volutpat. Quisque imperdiet ut urna ut dapibus. Sed placerat, libero at ullamcorper pharetra, massa tellus sagittis eros, in feugiat est libero et turpis. Sed ac efficitur mi, at porttitor elit.
-
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-Custom Protocol ID
+599d38
