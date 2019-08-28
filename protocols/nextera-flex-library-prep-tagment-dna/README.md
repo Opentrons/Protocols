@@ -11,6 +11,12 @@
 ## Description
 This protocol performs the 'Tagment DNA' section of the [Nextera DNA Flex Library Prep protocol](https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/nextera-dna-flex.html).
 
+Links:
+* [Tagment DNA](./nextera-flex-library-prep-tagment-dna)
+* [Post Tagmentation Cleanup](./nextera-flex-library-prep-post-tag-cleanup)
+* [Amplify Tagmented DNA](./nextera-flex-library-prep-amplify-tagmented-dna)
+* [Cleanup Libraries](./nextera-flex-library-prep-cleanup-libraries)
+
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
@@ -26,9 +32,9 @@ This protocol performs the 'Tagment DNA' section of the [Nextera DNA Flex Librar
 Vortex BLT and TB1 vigorously for 10 seconds before placing in tube rack wells B1 and C1, respectively, and resuming. Preprogram the thermocycler according to the TAG program parameters described in the kit manual.
 
 1.5ml Eppendorf Tuberack (slot 2)
-* A1: mastermix tube (loaded empty)
-* B1: BLT
-* C1: TB1
+* A1-B1: mastermix 1.5ml snapcap tubes (loaded empty, 1 tube needed per 48 samples)
+* A2-B2: BLT in 0.5ml false-bottom tubes (1 tube needed per 48 samples)
+* A3-B3: TB1 in 0.5ml false-bottom tubes (1 tube needed per 48 samples)
 
 200ul PCR strips (slot 3 **only needed if using P50 multi-channel pipette**
 * strip column 1: mastermix strip (loaded empty)

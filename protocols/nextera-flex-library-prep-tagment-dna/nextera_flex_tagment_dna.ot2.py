@@ -18,9 +18,9 @@ tuberack = labware.load(
 )
 
 # reagents
-mm = tuberack.wells('A1')
-blt = tuberack.wells('B1')
-tb1 = tuberack.wells('C1')
+mm = tuberack.wells('A1', length=2)
+blt = [well.top(-24) for well in tuberack.wells('A2', length=2)]
+tb1 = [well.top(-24) for well in tuberack.wells('A3', length=2)]
 
 
 def run_custom_protocol(
@@ -28,7 +28,7 @@ def run_custom_protocol(
         using_p50_multi: StringSelection('no', 'yes') = 'no',
         p50_multi_mount_if_applicable: StringSelection(
             'right', 'left') = 'right',
-        number_of_samples_to_process: int = 24
+        number_of_samples_to_process: int = 96
 ):
     # check:
     if (
@@ -50,25 +50,43 @@ pipettes')
     p50 = instruments.P50_Single(mount=p50_single_mount, tip_racks=tips50s)
 
     # create mastermix
-    vol_blt = 11*number_of_samples_to_process
-    vol_tb1 = 11*number_of_samples_to_process
-    for i, (vol, reagent) in enumerate(zip([vol_blt, vol_tb1], [blt, tb1])):
-        p50.pick_up_tip()
-        p50.transfer(vol, reagent, mm, new_tip='never')
-        p50.blow_out()
+    num_transfers_each = math.ceil(11*number_of_samples_to_process/50)
+    max_transfers = math.ceil(11*96/50)
+    vol_per_transfer = 11*number_of_samples_to_process/num_transfers_each
+
+    max_mm_ind = 0
+    for i, reagent in enumerate([blt, tb1]):
+        if not p50.tip_attached:
+            p50.pick_up_tip()
+        for i in range(num_transfers_each):
+            r_ind = i*len(reagent)//max_transfers
+            mm_ind = i*len(mm)//max_transfers
+            if mm_ind > max_mm_ind:
+                max_mm_ind = mm_ind
+            p50.transfer(
+                vol_per_transfer,
+                reagent[r_ind],
+                mm[mm_ind].top(),
+                new_tip='never'
+            )
         if i == 0:
             p50.drop_tip()
-    p50.mix(10, 40, mm)
-    p50.blow_out(mm.top())
 
+    # mix used mastermix tubes
+    for tube in mm[:max_mm_ind+1]:
+        p50.mix(10, 50, tube.top(-36))
+        p50.blow_out(tube.top())
+
+    # distribute mastermix
     if using_p50_multi == 'no':
-        for s in samples:
+        for i, s in enumerate(samples):
             if not p50.tip_attached:
                 p50.pick_up_tip()
-            p50.transfer(20, mm, s, new_tip='never')
-            p50.mix(10, 20, s)
-            p50.blow_out(s.top())
-            p50.drop_tip()
+            mm_ind = i//48
+            p50.transfer(20, mm[mm_ind].bottom(-36), s, new_tip='never')
+            p50.mix(10, 15, s)
+            p50.blow_out()
+        p50.drop_tip()
 
     else:
         strips = labware.load(
@@ -83,9 +101,10 @@ pipettes')
         samples_multi = rxn_plate.rows('A')[:num_cols]
 
         # transfer mm to strip
-        t_vol = (vol_blt+vol_tb1)/8
-        for s in strips.columns('1'):
-            p50.transfer(t_vol, mm, s, new_tip='never')
+        t_vol = (11+11)/8
+        for i, s in enumerate(strips.columns('1')):
+            mm_ind = i//4
+            p50.transfer(t_vol, mm[mm_ind].top(-36), s, new_tip='never')
             p50.blow_out(s)
         p50.drop_tip()
 
