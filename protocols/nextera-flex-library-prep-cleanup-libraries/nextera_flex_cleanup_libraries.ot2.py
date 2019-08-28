@@ -203,7 +203,6 @@ on slot 2 for the final elution.')
     for i, s in enumerate(mag_samples50):
         side = i % 2 if p50_type == 'multi' else math.floor(i/8) % 2
         angle = 0 if side == 0 else math.pi
-        print(angle)
         disp_loc = (s, s.from_center(r=0.95, h=-0.6, theta=angle))
 
         pick_up('pip50')
