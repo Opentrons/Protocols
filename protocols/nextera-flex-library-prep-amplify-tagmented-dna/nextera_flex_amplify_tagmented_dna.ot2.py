@@ -12,27 +12,31 @@ metadata = {
 magdeck = modules.load('magdeck', '1')
 mag_plate = labware.load(
     'biorad_96_wellplate_200ul_pcr', '1', 'reaction plate', share=True)
-tuberack = labware.load(
-    'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap',
-    '2',
-    'reagent tuberack'
+tempdeck = modules.load('tempdeck', '4')
+tubeblock = labware.load(
+    'opentrons_24_aluminumblock_generic_2ml_screwcap',
+    '4',
+    'reagent tubeblock',
+    share=True
 )
+tempdeck.set_temperature(4)
+tempdeck.wait_for_temp()
+tips50 = labware.load('opentrons-tiprack-300ul', '5')
+tips300 = labware.load('opentrons-tiprack-300ul', '6')
 liquid_waste = labware.load(
-    'agilent_1_reservoir_290ml', '4', 'liquid waste').wells(0).top()
-tips50 = labware.load('opentrons_96_tiprack_300ul', '5')
-tips300 = labware.load('opentrons_96_tiprack_300ul', '6')
+    'agilent_1_reservoir_290ml', '8', 'liquid waste').wells(0).top()
 
 # reagents
-mm = tuberack.wells('A1')
-epm = tuberack.wells('B1')
-nuc_free_water = tuberack.wells('C1')
+mm = tubeblock.wells('A1', length=3)
+epm = [well.top(-24) for well in tubeblock.wells('A2', length=4)]
+nuc_free_water = [well.top(-36) for well in tubeblock.wells('A3', length=2)]
 
 
 def run_custom_protocol(
         p300_type: StringSelection('single', 'multi') = 'single',
         p50_single_mount: StringSelection('left', 'right') = 'left',
         p300_mount: StringSelection('right', 'left') = 'right',
-        number_of_samples_to_process: int = 24
+        number_of_samples_to_process: int = 96
 ):
     # check:
     if p50_single_mount == p300_mount:
@@ -58,16 +62,35 @@ pipettes')
     magdeck.engage(height=18)
 
     # create mastermix
-    pip = p50 if p300_type == 'multi' else pip300
-    vol_epm = 22*number_of_samples_to_process
-    vol_nuc_free_water = 22*number_of_samples_to_process
+    if p300_type == 'multi':
+        pip = p50
+        num_transfers_each = math.ceil(22*number_of_samples_to_process/50)
+        max_transfers = math.ceil(22*96/50)
+    else:
+        pip = pip300
+        num_transfers_each = math.ceil(22*number_of_samples_to_process/300)
+        max_transfers = math.ceil(22*96/300)
+    vol_per_transfer = 22*number_of_samples_to_process/num_transfers_each
+
+    max_mm_ind = 0
     pip.pick_up_tip()
-    for i, (vol, reagent) in enumerate(
-            zip([vol_nuc_free_water, vol_epm], [nuc_free_water, epm])):
-        pip.transfer(vol, reagent, mm, new_tip='never')
-        pip.blow_out()
-    pip.mix(10, 40, mm)
-    pip.blow_out(mm.top())
+    for reagent in [nuc_free_water, epm]:
+        for i in range(num_transfers_each):
+            r_ind = i*len(reagent)//max_transfers
+            mm_ind = i*len(mm)//max_transfers
+            if mm_ind > max_mm_ind:
+                max_mm_ind = mm_ind
+            pip.transfer(
+                vol_per_transfer,
+                reagent[r_ind],
+                mm[mm_ind].top(),
+                new_tip='never'
+            )
+
+    # mix used mastermix tubes
+    for tube in mm[:max_mm_ind+1]:
+        pip.mix(10, 10, tube.top(-36))
+        pip.blow_out(tube.top())
 
     # remove supernatant
     for s in samples300:
@@ -80,10 +103,11 @@ pipettes')
     magdeck.disengage()
 
     # distribute mastermix
-    for s in samples50:
+    for i, s in enumerate(samples50):
         if not p50.tip_attached:
             p50.pick_up_tip()
-        p50.transfer(40, mm, s, new_tip='never')
+        mm_ind = i//32
+        p50.transfer(40, mm[mm_ind].top(-36), s, new_tip='never')
         p50.mix(10, 30, s)
         p50.blow_out()
         p50.drop_tip()
