@@ -114,7 +114,7 @@ pipettes.')
     # water to OA transfer
     for line in data:
         vol = float(line[5])
-        if vol != 0:
+        if vol != 0 and vol:
             dest = oa_dilution_plate.wells(line[3])
             pipette = p10 if vol <= 10 else p50
             if not pipette.tip_attached:
@@ -134,7 +134,7 @@ pipettes.')
     # elution to OA DNA transfer
     for line in data:
         vol = float(line[4])
-        if vol != 0:
+        if vol != 0 and vol:
             source = elution_plate.wells(line[0])
             dest = oa_dilution_plate.wells(line[3])
             pipette = p10 if vol <= 10 else p50
@@ -150,7 +150,7 @@ pipettes.')
     p50.pick_up_tip()
     for line in data:
         vol = float(line[8])
-        if vol != 0:
+        if vol != 0 and vol:
             dest = cnv_dilution_plate.wells(line[6])
             pipette = p10 if vol <= 10 else p50
             if not pipette.tip_attached:
@@ -170,7 +170,7 @@ pipettes.')
     # OA to CNV DNA transfer
     for line in data:
         vol = float(line[7])
-        if vol != 0:
+        if vol != 0 and vol:
             source = oa_dilution_plate.wells(line[3])
             dest = oa_dilution_plate.wells(line[6])
             pipette = p10 if vol <= 10 else p50
