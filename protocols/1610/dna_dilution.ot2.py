@@ -113,19 +113,20 @@ pipettes.')
 
     # water to OA transfer
     for line in data:
-        vol = float(line[5])
-        if vol != 0:
-            dest = oa_dilution_plate.wells(line[3])
-            pipette = p10 if vol <= 10 else p50
-            if not pipette.tip_attached:
-                pipette.pick_up_tip()
-            pipette.transfer(
-                vol,
-                water,
-                dest,
-                blow_out=True,
-                new_tip='never'
-            )
+        if line[5]:
+            vol = float(line[5])
+            if vol != 0:
+                dest = oa_dilution_plate.wells(line[3])
+                pipette = p10 if vol <= 10 else p50
+                if not pipette.tip_attached:
+                    pipette.pick_up_tip()
+                pipette.transfer(
+                    vol,
+                    water,
+                    dest,
+                    blow_out=True,
+                    new_tip='never'
+                )
     if p10.tip_attached:
         p10.drop_tip()
     if p50.tip_attached:
@@ -133,35 +134,37 @@ pipettes.')
 
     # elution to OA DNA transfer
     for line in data:
-        vol = float(line[4])
-        if vol != 0:
-            source = elution_plate.wells(line[0])
-            dest = oa_dilution_plate.wells(line[3])
-            pipette = p10 if vol <= 10 else p50
-            pipette.transfer(
-                vol,
-                source,
-                dest,
-                blow_out=True
-            )
+        if line[4]:
+            vol = float(line[4])
+            if vol != 0:
+                source = elution_plate.wells(line[0])
+                dest = oa_dilution_plate.wells(line[3])
+                pipette = p10 if vol <= 10 else p50
+                pipette.transfer(
+                    vol,
+                    source,
+                    dest,
+                    blow_out=True
+                )
 
     # water to CNV transfer
     p10.pick_up_tip()
     p50.pick_up_tip()
     for line in data:
-        vol = float(line[8])
-        if vol != 0:
-            dest = cnv_dilution_plate.wells(line[6])
-            pipette = p10 if vol <= 10 else p50
-            if not pipette.tip_attached:
-                pipette.pick_up_tip()
-            pipette.transfer(
-                vol,
-                water,
-                dest,
-                blow_out=True,
-                new_tip='never'
-            )
+        if vol:
+            vol = float(line[8])
+            if vol != 0:
+                dest = cnv_dilution_plate.wells(line[6])
+                pipette = p10 if vol <= 10 else p50
+                if not pipette.tip_attached:
+                    pipette.pick_up_tip()
+                pipette.transfer(
+                    vol,
+                    water,
+                    dest,
+                    blow_out=True,
+                    new_tip='never'
+                )
     if p10.tip_attached:
         p10.drop_tip()
     if p50.tip_attached:
@@ -169,17 +172,18 @@ pipettes.')
 
     # OA to CNV DNA transfer
     for line in data:
-        vol = float(line[7])
-        if vol != 0:
-            source = oa_dilution_plate.wells(line[3])
-            dest = oa_dilution_plate.wells(line[6])
-            pipette = p10 if vol <= 10 else p50
-            pipette.transfer(
-                vol,
-                source,
-                dest,
-                blow_out=True
-            )
+        if line[7]:
+            vol = float(line[7])
+            if vol != 0:
+                source = oa_dilution_plate.wells(line[3])
+                dest = oa_dilution_plate.wells(line[6])
+                pipette = p10 if vol <= 10 else p50
+                pipette.transfer(
+                    vol,
+                    source,
+                    dest,
+                    blow_out=True
+                )
 
     if magnet_setup == 'Opentrons magnetic module':
         magdeck.disengage()
