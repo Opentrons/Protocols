@@ -1,28 +1,9 @@
-"""
-Social.Links@usask.ca
-
-The deck on the OT-2 looks like this:
-
-[10] [11] [trash]
-[7]  [8]  [9]
-[4]  [5]  [6]
-[1]  [2]  [3]
-
-and for this protocol, the labware is arranged like so:
-
-[tip_racks]     [tip_racks]       [trash]
-[tip_racks]     [tip_racks]       [tip_racks]
-[sample_plate]  [reagent_trough]  [elution_plate]
-[wash_plate1]   [wash_plate2A]    [wash_plate2B]
-
-"""
-
 from opentrons import labware, instruments, robot
 from otcustomizers import StringSelection
 import math
 
 metadata = {
-    'protocolName': 'Mag Max',
+    'protocolName': 'Sample Prep with Magnetic Beads',
     'author': 'Chaz <protocols@opentrons.com>',
     'source': 'Custom Protocol Request'
 }
@@ -215,12 +196,13 @@ def run_custom_protocol(
     pip50.drop_tip()
 
     robot.home()
-    robot.comment("MESSAGE: initial plate creation should now be complete.")
 
     # BREAK POINT #
     # this is when the user should add the sample plate
 
-    robot.pause("USER ACTION: Add sample plate to position '4'. Empty the trash. \
+    robot.pause("MESSAGE: initial plate creation should now be complete.\
+    \
+    USER ACTION: Add sample plate to position '4'. Empty the trash. \
 When the sample plate has been unsealed and placed at '4'' please click PAUSE \
 and then RESUME on the OT App")
 
@@ -231,18 +213,18 @@ and then RESUME on the OT App")
         pip300.transfer(160, isopropanol, dest, new_tip='never')
         pip300.mix(5, 160, dest)  # Chaz question: do we need to specify dest?
         pip300.blow_out(dest.top())
-        pip300.touch_tip()
         pip300.drop_tip()
 
     robot.home()
-    robot.comment("USER ACTION: Empty the trash.")
 
-    robot.comment("USER ACTION: Remove the sample plate from position '4'', \
-seal the plate using a MicroAmp Clear Adhesive Film, then shake the sealed \
-plate for 3 minutes at speed 7 on plate shaker. When shaking is complete \
-remove the clear film and replace the plate in position '4'")
-
-    robot.pause("USER ACTION: Vortex the DNA binding bead mix and load into \
+    robot.pause("USER ACTION: Empty the trash.\
+    \
+    USER ACTION: Remove the sample plate from position 4,\
+    seal the plate using a MicroAmp Clear Adhesive Film, then shake the sealed\
+    plate for 3 minutes at speed 7 on plate shaker. When shaking is complete \
+    remove the clear film and replace the plate in position 4\
+    \
+    USER ACTION: Vortex the DNA binding bead mix and load into \
     well A1 of the reagent trough. When you are ready please click RESUME on \
     the OT App")
 
@@ -256,43 +238,45 @@ remove the clear film and replace the plate in position '4'")
         pip50.transfer(20, bead_mix, dest, new_tip='never')
         pip50.mix(5, 40, dest)
         pip50.blow_out(dest.top())
-        pip50.touch_tip()
         pip50.drop_tip()
 
-    # Step 3 - binding incubation
     robot.home()
-
-    robot.comment("USER ACTION: Remove sample plate from '4'. The plate needs to \
-    be sealed and placed on the plate shaker @ speed 7 for 3 mins.")
+    # Step 3 - binding incubation
 
     # Step 4 - Wash 1
-    robot.comment("USER ACTION: Unseal sample plate. Using the magnetic \
-    pin tool, manually transfer beads from the sample plate to wash plate 1 \
-    (position 1). Seal wash plate 1 and shake for 1 minute at speed 7 on \
-    plate shaker.")
 
     # Step 5 - Wash 2A
-    robot.comment("USER ACTION: Unseal wash plate 1. Using the magnetic pin \
-    tool, \
-    manually transfer beads from wash plate 1 to wash plate 2A (position 2). \
-    Seal wash plate 2A and shake for 1 minute at speed 7 on plate shaker.")
 
     # Step 5 - Wash 2B
-    robot.comment("USER ACTION: Unseal wash plate 2A. Using the magnetic pin \
-    tool, \
-    manually transfer beads from wash plate 2A to wash plate 2B (position 3). \
-    Seal wash plate 2B and shake for 1 minute at speed 7 on plate shaker.")
 
     # Step 6 - Elution step 1
-    robot.comment("USER ACTION: Unseal wash plate 2B. Using the magnetic \
+    robot.pause("USER ACTION: Remove sample plate from '4'. The plate needs to \
+    be sealed and placed on the plate shaker @ speed 7 for 3 mins.\
+    \
+    USER ACTION: Unseal sample plate. Using the magnetic \
+    pin tool, manually transfer beads from the sample plate to wash plate 1 \
+    (position 1). Seal wash plate 1 and shake for 1 minute at speed 7 on \
+    plate shaker.\
+    \
+    USER ACTION: Unseal wash plate 1. Using the magnetic pin \
+    tool, \
+    manually transfer beads from wash plate 1 to wash plate 2A (position 2). \
+    Seal wash plate 2A and shake for 1 minute at speed 7 on plate shaker.\
+    \
+    USER ACTION: Unseal wash plate 2A. Using the magnetic pin \
+    tool, \
+    manually transfer beads from wash plate 2A to wash plate 2B (position 3). \
+    Seal wash plate 2B and shake for 1 minute at speed 7 on plate shaker.\
+    \
+    USER ACTION: Unseal wash plate 2B. Using the magnetic \
     pin tool, \
     manually transfer beads from wash plate 2B to the elution plate \
     (position 6). Seal the elution plate and shake for 5 minutes at \
     900 rpm on \
     plate shaker at 70C. When you have completed this step unseal the elution \
-    plate and place it in position E1.")
-
-    robot.pause("USER ACTION: When you are ready to continue click RESUME \
+    plate and place it in position E1.\
+    \
+    USER ACTION: When you are ready to continue click RESUME \
     on the OT App")
 
     # Step 7 - Elution step 2
@@ -304,7 +288,6 @@ remove the clear film and replace the plate in position '4'")
         pip50.transfer(elution_volume/2, elu_buff2, dest, new_tip='never')
         pip50.mix(10, 40, dest)
         pip50.blow_out(dest.top())
-        pip50.touch_tip()
         pip50.drop_tip()
 
     robot.home()
