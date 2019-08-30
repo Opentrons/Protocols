@@ -1,4 +1,4 @@
-# DNA Extraction
+# Sample Prep with Magnetic Beads
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -19,7 +19,7 @@ This protocol is used to aid in the prep for nucleic acid extraction. The robot 
 * [300uL Opentrons tipracks](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
 * [Bio-Rad Hard Shell 96-well PCR plate 200ul #hsp9601](bio-rad.com/en-us/sku/hsp9601-hard-shell-96-well-pcr-plates-low-profile-thin-wall-skirted-white-clear?ID=hsp9601)
 * [USA Scientific 12-channel reservoir 22ml #1061-8150](https://www.usascientific.com/12-channel-automation-reservoir.aspx)
-* [96-well Square Plate](link)
+* 96-well Square Plate
 
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)

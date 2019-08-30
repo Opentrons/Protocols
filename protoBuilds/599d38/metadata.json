@@ -1,1 +1,1 @@
-{"slug": "599d38", "path": "protocols/599d38", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["OT2-magMax-p50m.ot2.py"]}, "status": "ok"}
+{"slug": "599d38", "path": "protocols/599d38", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["Sample_Prep_with_Mag.ot2.py"]}, "status": "ok"}
