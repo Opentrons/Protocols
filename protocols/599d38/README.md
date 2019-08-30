@@ -24,7 +24,15 @@ This protocol is used to aid in the prep for nucleic acid extraction. The robot 
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
-12-channel reservoir (slot 5):
+Slot 1: Empty 96-well plate (will become 'Wash 1')
+
+Slot 2: Empty 96-well plate (will become 'Wash 2A')
+
+Slot 3: Empty 96-well plate (will become 'Wash 2B')
+
+Slot 4: 96-well plate with samples (added during the run)
+
+Slot 5: 12-channel reservoir
 * channel 1: Bead Mix
 * channel 3: 100% Isopropanol
 * channel 5: Wash Solution 1
@@ -32,6 +40,12 @@ This protocol is used to aid in the prep for nucleic acid extraction. The robot 
 * channel 8: Wash Solution 2
 * channel 10: DNA Elution Buffer 1
 * channel 12: DNA Elution Buffer 2
+
+Slot 6: Empty 96-well plate (will become 'Elution')
+
+Slots 7-9: Tipracks for [P50](https://shop.opentrons.com/collections/ot-2-robot/products/8-channel-electronic-pipette?variant=5984202489885)
+
+Slots 10-11: Tipracks for [P300](https://shop.opentrons.com/collections/ot-2-robot/products/8-channel-electronic-pipette?variant=5984202489885) 
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
