@@ -7,20 +7,26 @@ liquid_trash = trough.wells('A12')
 
 plate = labware.load('96-flat', '3')
 
-tiprack = [labware.load('tiprack-200ul', slot)
-           for slot in ['1', '4']]
-
 
 def run_custom_protocol(
     pipette_type: StringSelection(
-        'p300-Single', 'p300-Multi', 'p50-Single', 'p50-Multi')='p300-Multi',
-    dilution_factor: float=1.5,
-    num_of_dilutions: int=10,
-    total_mixing_volume: float=200.0,
+        'p300-Single', 'p300-Multi', 'p50-Single', 'p50-Multi', 'p10-Single',
+        'p10-Multi') = 'p300-Multi',
+    dilution_factor: float = 1.5,
+    num_of_dilutions: int = 10,
+    total_mixing_volume: float = 200.0,
     tip_use_strategy: StringSelection(
-        'use one tip', 'new tip each time')='use one tip'):
+        'use one tip', 'new tip each time') = 'use one tip'):
 
     pip_name = pipette_type.split('-')[1]
+    tip_name = pipette_type.split('-')[0]
+
+    if tip_name == 'p300' or tip_name == 'p50':
+        tiprack = [labware.load('tiprack-200ul', slot)
+                   for slot in ['1', '4']]
+    elif tip_name == 'p10':
+        tiprack = [labware.load('tiprack-10ul', slot)
+                   for slot in ['1', '4']]
 
     if pipette_type == 'p300-Single':
         pipette = instruments.P300_Single(
@@ -36,6 +42,14 @@ def run_custom_protocol(
             tip_racks=tiprack)
     elif pipette_type == 'p50-Multi':
         pipette = instruments.P50_Multi(
+            mount='left',
+            tip_racks=tiprack)
+    elif pipette_type == 'p10-Multi':
+        pipette = instruments.P10_Multi(
+            mount='left',
+            tip_racks=tiprack)
+    elif pipette_type == 'p10-Single':
+        pipette = instruments.P10_Single(
             mount='left',
             tip_racks=tiprack)
 
