@@ -53,7 +53,7 @@ def run_custom_protocol(
 
     # labware setup
     if number_of_racks > 9:
-        raise Exception('The max numnber of racks to be filled 9. '
+        raise Exception('The max number of racks to be filled 9. '
                         'Please try again.')
     # define source tube
     if falcon_tube_type == '15-ml':
