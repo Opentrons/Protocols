@@ -16,7 +16,7 @@ if res_name not in labware.list():
         grid=(4, 1),
         spacing=(7.4325, 0),
         diameter=23.65,
-        depth=3.5,
+        depth=36,
         volume=40700
     )
 
@@ -83,10 +83,8 @@ def run_custom_protocol(
     strips_multi = strip_rack.rows('A')[:math.ceil(number_of_samples/8)]
     mag_multi = mag_plate.rows('A')[:math.ceil(number_of_samples/8)]
 
-    slot300_str = ''
-    for i, s in enumerate(slots300):
-        temp = s + ', ' if i < len(slots300)-1 else s
-        slot300_str += temp
+    separator = ', '
+    slot300_str = separator.join(slots300)
 
     tip300_count = 0
     tip300_max = len(tips300)*12
