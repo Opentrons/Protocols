@@ -15,7 +15,7 @@ if capsule_rack_name not in labware.list():
         capsule_rack_name,
         grid=(10, 10),
         spacing=(13, 13),
-        diameter=2,
+        diameter=7,
         depth=10,
         volume=500
     )
