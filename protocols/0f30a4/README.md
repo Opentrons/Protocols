@@ -26,12 +26,13 @@ This protocol performs custom sample aliquoting on 15ml tubes and a 4x6 10ml Agi
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
-50ml tuberack:
-* A1: water (tube 1)
-* B1: water (tube 2)
-* A2: scale control 1
-* B2: scale control 2
-* A3: scale control 3
+4x50ml, 6x15ml tuberack:
+* A1 (15ml): empty tube for calibration
+* B1 (15ml): scale control 1
+* C1 (15ml): scale control 2
+* A2 (15ml): scale control 3
+* A3 (50ml): water (tube 1)
+* B3 (50ml): water (tube 2)
 
 12-channel reservoir:
 * channel 1: solution 1
