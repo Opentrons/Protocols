@@ -35,14 +35,18 @@ A3,1/10X,50
 
 
 def run_custom_protocol(
-        picking_csv: FileInput = example_csv,
+        picking_csv: 'FileInput' = example_csv,
         p10_mount: StringSelection('left', 'right') = 'left',
         p50_mount: StringSelection('left', 'right') = 'right',
+        number_of_samples_to_process: int = 96
         ):
 
     # check
     if p10_mount == p50_mount:
         raise Exception('Input different mounts for P10 and P50 pipettes')
+    if number_of_samples_to_process > 96 or number_of_samples_to_process < 1:
+        raise Exception('Invalid number of samples to process (must be between \
+        1 and 96).')
 
     # create pipettes
     pip10 = instruments.P10_Single(mount=p10_mount, tip_racks=tips10)
@@ -57,7 +61,7 @@ def run_custom_protocol(
         nonlocal tip10_count
         nonlocal tip50_count
 
-        if pip == 'pip50':
+        if pip == pip50:
             if tip50_count == tip50_max:
                 robot.pause('Replace 300ul tipracks in slots 6 and 9\
                  before resuming.')
@@ -91,19 +95,15 @@ def run_custom_protocol(
         else:
             plate = plate1X
 
-        pick_up('pip50')
+        pick_up(pip50)
         pip50.transfer(10, plate.wells(d[0]),
                        dest_plate.wells(d[0]), new_tip='never')
         pip50.blow_out(dest_plate.wells(d[0]).top())
         pip50.drop_tip()
 
-        if d[2] > 9:
-            pick_up('pip50')
-            tris_transfer(pip50, d[2], dest_plate.wells(d[0]))
-        elif d[2] > 0.1:
-            pick_up('pip10')
-            tris_transfer(pip10, d[2], dest_plate.wells(d[0]))
-        else:
-            pass
+        if d[2] > 0.1:
+            pip = pip50 if d[2] > 9 else pip10
+            pick_up(pip)
+            tris_transfer(pip, d[2], dest_plate.wells(d[0]))
 
     robot.comment('Congratulations, the protocol is now complete.')
