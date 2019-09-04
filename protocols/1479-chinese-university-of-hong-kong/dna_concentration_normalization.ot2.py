@@ -1,5 +1,6 @@
 from opentrons import labware, instruments, robot
 from otcustomizers import FileInput
+import itertools
 
 metadata = {
     'protocolName': 'DNA Concentration Normalization',
@@ -63,7 +64,9 @@ resuming protocol.')
 
 def run_custom_protocol(
         volume_csv: FileInput=csv_example,
-        max_reaction_volume: float=15):
+        max_reaction_volume: float=15,
+        starting_well: str='A1',
+        ending_well: str='H12'):
 
     def csv_to_list(csv_string):
         dests, dna_vol, diluent_vol = [], [], []
@@ -84,6 +87,7 @@ def run_custom_protocol(
         return dests, dna_vol, diluent_vol
 
     dests,  dna_vols, diluent_vols = csv_to_list(volume_csv)
+    tube_wells = [well for rack in samples for well in tuberack.wells()]
 
     # distribute buffer
     for vol, dest in zip(diluent_vols, dests):
@@ -107,8 +111,14 @@ def run_custom_protocol(
         update_p10_tip_count(1)
 
     # transfer and mix samples
-    total_samples = [well for tuberack in samples for well in tuberack.wells()]
-    for vol, source, dest in zip(dna_vols, total_samples, pcr_plate.wells()):
+    pcr_wells = [well for well in pcr_plate.wells()]
+    tube_wells = [well for rack in tuberack for well in tuberack.wells()]
+    master_list = zip(dna_vols, pcr_wells, tube_wells)
+    starting_well_index = pcr_plate.get_index_from_name('starting_well')
+    ending_well_index = pcr_plate.get_index_from_name('ending_well')
+    for vol, dest, source in list(
+            itertools.islice(
+                master_list, starting_well_index, ending_well_index+1)):
         if vol > 10:
             pipette = p50
             update_p50_tip_count(1)
