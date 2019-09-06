@@ -1,0 +1,1 @@
+{"slug": "50486f-part3-EXO", "path": "protocols/50486f-part3-EXO", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["50486f-part3-EXO.ot2.py"]}, "status": "ok"}
