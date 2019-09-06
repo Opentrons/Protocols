@@ -80,14 +80,14 @@ def run_custom_protocol(
         pip.blow_out(dest)
 
     # transfer water to 15ml tubes
-    for row in tuberack15:
+    for row in tuberack15.rows():
         p1000.pick_up_tip()
         for well in row:
             for _ in range(2):
                 h_trans(1000, 'water1', well.top())
         p1000.drop_tip()
 
-    # transer water to custom 24-well plate
+    # transfer water to custom 24-well plate
     p1000.pick_up_tip()
     for i, well in enumerate(plate.wells()):
         water_tube = 'water1' if i < 12 else 'water2'
