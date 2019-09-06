@@ -46,11 +46,11 @@ def run_custom_protocol(
     p300.start_at_tip(tips300.wells('C1'))
 
     tubes = {
-        'water1': [tuberack50.wells('A3'), -20],
-        'water2': [tuberack50.wells('B3'), -20],
-        'scale1': [tuberack50.wells('B1'), -20],
-        'scale2': [tuberack50.wells('C1'), -20],
-        'scale3': [tuberack50.wells('A2'), -20]
+        'water1': [tuberack50.wells('A3'), -40],
+        'water2': [tuberack50.wells('B3'), -40],
+        'scale1': [tuberack50.wells('B1'), -40],
+        'scale2': [tuberack50.wells('C1'), -40],
+        'scale3': [tuberack50.wells('A2'), -40]
     }
     max_depth50 = -113 + 10
     max_depth15 = -117.5 + 10
