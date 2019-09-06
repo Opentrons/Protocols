@@ -33,6 +33,10 @@ multi_tips = [labware.load('tiprack-10ul', slot)
 p10 = instruments.P10_Single(mount='right', tip_racks=single_tips)
 m10 = instruments.P10_Multi(mount='left', tip_racks=multi_tips)
 
+# slow flow rates
+p10.set_flow_rate(aspirate=2.5, dispense=5)
+m10.set_flow_rate(aspirate=2.5, dispense=5)
+
 # tube setup
 mm = tubes.wells('A1')
 edta = tubes.wells('A2')
@@ -54,10 +58,16 @@ def run_custom_protocol(number_of_sample_columns: int = 12,
         blow_out=True
         )
 
-    # transfer mm
+    # transfer mm with air gap
     num_dests = number_of_sample_columns*8
     dests = plate1.wells('A1', len=num_dests)
-    p10.transfer(6, mm, dests, new_tip='always', blow_out=True)
+    for d in dests:
+        p10.pick_up_tip()
+        p10.aspirate(3, mm.top())
+        p10.aspirate(7, mm)
+        p10.dispense(10, d)
+        p10.blow_out()
+        p10.drop_tip()
 
     # transfer dna to corresponding well and mix
     sources = dna_plate.rows('A')[0:number_of_sample_columns]
@@ -81,13 +91,10 @@ def run_custom_protocol(number_of_sample_columns: int = 12,
     p10.pick_up_tip()
     sources = dna_plate.wells('A1', len=num_dests)
     for s in sources:
-        p10.transfer(
-            volume_of_DNA_to_pool,
-            s,
-            edta,
-            new_tip='never',
-            blow_out=True
-            )
-    p10.mix(10, 10, edta)
+        p10.aspirate(10-volume_of_DNA_to_pool, s.top())
+        p10.aspirate(volume_of_DNA_to_pool, s)
+        p10.dispense(10, edta)
+        p10.blow_out()
+    p10.mix(10, 9, edta)
     p10.blow_out(edta.top())
     p10.drop_tip()
