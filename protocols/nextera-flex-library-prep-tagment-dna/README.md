@@ -12,6 +12,7 @@
 This protocol performs the 'Tagment DNA' section of the [Nextera DNA Flex Library Prep protocol](https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/nextera-dna-flex.html).
 
 Links:
+* [Cherrypick Samples](./nextera-flex-library-prep-cherrypick-samples)
 * [Tagment DNA](./nextera-flex-library-prep-tagment-dna)
 * [Post Tagmentation Cleanup](./nextera-flex-library-prep-post-tag-cleanup)
 * [Amplify Tagmented DNA](./nextera-flex-library-prep-amplify-tagmented-dna)
