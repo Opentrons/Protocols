@@ -1,0 +1,1 @@
+{"slug": "68b326-size-selection", "path": "protocols/68b326-size-selection", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["neb_next_ngs_prep_size_selection.ot2.py"]}, "status": "ok"}
