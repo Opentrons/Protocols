@@ -27,25 +27,27 @@ if res_name not in labware.list():
         grid=(12, 1),
         spacing=(9, 0),
         diameter=8.3,
-        depth=42,
+        depth=39,
         volume=22000
+    )
+
+strips_name = 'generic_96_aluminumblock_pcr_strip_200ul'
+if strips_name not in labware.list():
+    labware.create(
+        strips_name,
+        grid=(12, 8),
+        spacing=(9, 9),
+        diameter=5.5,
+        depth=21.4,
+        volume=200
     )
 
 # load labware
 mag_plate = labware.load(pcr_name, '1', 'reaction plate')
 res12 = labware.load(res_name, '2', 'reagent reservoir')
-strips = labware.load(
-    'opentrons_96_aluminumblock_generic_pcr_strip_200ul',
-    '3',
-    'strips after move'
-)
+strips = labware.load(strips_name, '3', 'strips (after move)')
 tempdeck = modules.load('tempdeck', '4')
-temp_strips = labware.load(
-    'opentrons_96_aluminumblock_generic_pcr_strip_200ul',
-    '4',
-    'strips (initial)',
-    share=True
-)
+temp_strips = labware.load(strips_name, '4', 'strips (initial)', share=True)
 tempdeck.set_temperature(20)
 tempdeck.wait_for_temp()
 tips10 = [
@@ -140,6 +142,7 @@ between 1 and 96)')
         pick_up(m300)
         mix(10, 40, m, m300)
         m300.blow_out(m.top())
+        m300.drop_tip()
 
     robot.pause('Move strips block from the temperature module to slot 3 and \
 place the reaction plate from slot 1 onto the temperature module. Allow to \
