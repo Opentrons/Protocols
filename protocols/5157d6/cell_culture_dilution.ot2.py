@@ -129,8 +129,8 @@ def run_custom_protocol(
     for i in range(num_aspirations_w):
         dests = [well.bottom(1) for well in water_dests[i*2:i*2+2]]
         asp_h = h_track(40, 'water')
-        p50.distribute(40, water.bottom(asp_h), dests, new_tip='never')
-        p50.blow_out()
+        p50.distribute(20, water.bottom(asp_h), dests, new_tip='never')
+        p50.blow_out(water.top())
     p50.drop_tip()
 
     # distibute growth medium to all wells of all plates
