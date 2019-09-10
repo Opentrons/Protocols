@@ -1,0 +1,1 @@
+{"slug": "68b326-cleanup-pcr", "path": "protocols/68b326-cleanup-pcr", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["neb_next_ngs_prep_cleanup_pcr.ot2.py"]}, "status": "ok"}
