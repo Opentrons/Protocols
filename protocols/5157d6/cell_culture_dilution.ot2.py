@@ -93,7 +93,7 @@ def run_custom_protocol(
             )
             tubes[tube][1] = 100
             tubes[tube][2] = 14000
-        dh = vol/((r15**2)*math.pi)
+        dh = vol/((r15**2)*math.pi)*1.1
         new_h = tubes[tube][1] - dh if tubes[tube][1] - dh > min_h else min_h
         tubes[tube][1] = new_h
         return new_h
