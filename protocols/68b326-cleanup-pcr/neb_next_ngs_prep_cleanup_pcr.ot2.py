@@ -28,7 +28,7 @@ if res_name not in labware.list():
         grid=(12, 1),
         spacing=(9, 0),
         diameter=8.3,
-        depth=42,
+        depth=39,
         volume=22000
     )
 
