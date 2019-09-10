@@ -1,6 +1,7 @@
 language: python
 python:
-  - "3.5"
+- '3.6.4'
+
 
 install:
   - export OT_UPLOAD_BRANCH=$(python scripts/getBranch.py)
