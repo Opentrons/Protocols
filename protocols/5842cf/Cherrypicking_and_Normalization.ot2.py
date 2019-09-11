@@ -35,7 +35,7 @@ A3,1/10X,50
 
 
 def run_custom_protocol(
-        picking_csv: 'FileInput' = example_csv,
+        picking_csv: FileInput = example_csv,
         p10_mount: StringSelection('left', 'right') = 'left',
         p50_mount: StringSelection('left', 'right') = 'right',
         number_of_samples_to_process: int = 96
