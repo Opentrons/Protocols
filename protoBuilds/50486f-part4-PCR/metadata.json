@@ -1,0 +1,1 @@
+{"slug": "50486f-part4-PCR", "path": "protocols/50486f-part4-PCR", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["50486f-part4-PCR.ot2.py"]}, "status": "ok"}
