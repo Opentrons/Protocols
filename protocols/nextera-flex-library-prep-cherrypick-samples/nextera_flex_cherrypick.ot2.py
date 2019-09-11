@@ -75,7 +75,7 @@ def run_custom_protocol(
     # parse CSV
     data = [
         [val.strip() for val in line.split(',')]
-        for line in example_csv.splitlines() if line][1:]
+        for line in cherrypicking_CSV.splitlines() if line][1:]
 
     for trans in data:
         [s_plate, s_well, d_well] = [val for val in trans]
