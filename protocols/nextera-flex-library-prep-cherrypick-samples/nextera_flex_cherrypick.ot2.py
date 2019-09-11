@@ -31,8 +31,14 @@ tiprack = labware.load('opentrons_96_tiprack_300ul', '11')
 
 example_csv = """source plate, source well, destination well
 1, A1, A1
-1, H2, B1
+2, H2, B1
+3, B3, C3
+4, C7, D2
 5, A3, C1
+6, G1, D1
+7, H1, D8
+8, A12, C12
+9, B11, E11
 """
 
 
