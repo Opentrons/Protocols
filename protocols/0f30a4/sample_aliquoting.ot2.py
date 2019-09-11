@@ -9,7 +9,7 @@ metadata = {
 }
 
 # create custom labware
-plate_name = 'agilent_24_wellplate_10ml'
+plate_name = 'agilent_24_wellplate_deep_10ml'
 if plate_name not in labware.list():
     labware.create(
         plate_name,
@@ -22,7 +22,7 @@ if plate_name not in labware.list():
 
 # load labware
 plate = labware.load(plate_name, '1', 'plate')
-tuberack50 = labware.load(
+tuberack15_50 = labware.load(
     'opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical', '2')
 tuberack15 = labware.load(
     'opentrons_15_tuberack_falcon_15ml_conical', '3')
@@ -46,14 +46,13 @@ def run_custom_protocol(
     p300.start_at_tip(tips300.wells('C1'))
 
     tubes = {
-        'water1': [tuberack50.wells('A3'), -40],
-        'water2': [tuberack50.wells('B3'), -40],
-        'scale1': [tuberack50.wells('B1'), -40],
-        'scale2': [tuberack50.wells('C1'), -40],
-        'scale3': [tuberack50.wells('A2'), -40]
+        'water1': [tuberack15_50.wells('A3'), 90],
+        'water2': [tuberack15_50.wells('B3'), 90],
+        'scale1': [tuberack15_50.wells('B1'), 100],
+        'scale2': [tuberack15_50.wells('C1'), 100],
+        'scale3': [tuberack15_50.wells('A2'), 100]
     }
-    max_depth50 = -113 + 10
-    max_depth15 = -117.5 + 10
+    min_height = 10
     r50 = 27.81/2
     r15 = 14.9/2
 
@@ -61,22 +60,15 @@ def run_custom_protocol(
         nonlocal tubes
         pip = p1000 if vol > 300 else p300
 
-        if source_tube[0] == 'w':
-            dh = vol/((r50**2)*math.pi)
-            if tubes[source_tube][1] > max_depth50:
-                new_h = tubes[source_tube][1] - dh
-            else:
-                new_h = max_depth50
+        r = r50 if source_tube[0] == 'w' else r15
+        dh = vol/((r**2)*math.pi)*1.1
+        if tubes[source_tube][1] - dh > min_height:
+            new_h = tubes[source_tube][1] - dh
         else:
-            dh = vol/((r15**2)*math.pi)
-            if tubes[source_tube][1] > max_depth15:
-                new_h = tubes[source_tube][1] - dh
-            else:
-                new_h = max_depth50
-
+            new_h = min_height
         tubes[source_tube][1] = new_h
         pip.transfer(
-            vol, tubes[source_tube][0].top(new_h), dest, new_tip='never')
+            vol, tubes[source_tube][0].bottom(new_h), dest, new_tip='never')
         pip.blow_out(dest)
 
     # transfer water to 15ml tubes
@@ -98,7 +90,7 @@ def run_custom_protocol(
     # transfer corresponding scales and volumes to each 15ml tube
     for row, scale in zip(tuberack15.rows(), ['scale1', 'scale2', 'scale3']):
         p300.pick_up_tip()
-        for dest, vol in zip(row, [30*i for i in range(1, 5)]):
+        for dest, vol in zip(row, [30*i for i in range(1, 6)]):
             h_trans(vol, scale, dest.top())
         p300.drop_tip()
 
@@ -106,7 +98,7 @@ def run_custom_protocol(
     for source_vol, source_chan, row in zip(
             [100, 50, 50, 50], res12.wells()[:4], plate.rows()):
         p300.pick_up_tip()
-        p300.transfer(vol, source_chan, row[0], new_tip='never')
+        p300.transfer(source_vol, source_chan, row[0], new_tip='never')
         p300.mix(3, 250, row[0])
         p300.blow_out(row[0].top())
         for source, dest in zip(row[:5], row[1:]):
