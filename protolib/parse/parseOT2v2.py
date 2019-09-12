@@ -55,7 +55,7 @@ def parse(protocol_path):
                            in context.loaded_labwares.items()])
 
     # TODO IMMEDIATELY: need `parameters` from parse_protocol fn
-    parameters = {}
+    parameters = []
 
     # TODO IMMEDIATELY
     modules = []
