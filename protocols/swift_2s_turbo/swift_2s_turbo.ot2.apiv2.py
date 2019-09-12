@@ -15,7 +15,8 @@ def run(protocol_context):
     # Labware Setup
     # rt_reagents = protocol_context.load_labware(
     #     'nest_12_reservoir_15ml', '1')
-    # TODO IMMEDIATELY: change this back to nest_12_reservoir_15ml when that labware is added to shared-data
+    # TODO IMMEDIATELY: change this back to nest_12_reservoir_15ml
+    # when that labware is added to shared-data
     rt_reagents = protocol_context.load_labware(
         'usascientific_12_reservoir_22ml', '1')
 
@@ -191,7 +192,7 @@ def run(protocol_context):
     p300.default_speed = 200
     p300.flow_rate.aspirate = 10
     p300.flow_rate.dispense = 10
-    for cycle in range(2):
+    for _ in range(2):
         for well in mag_samples:
             p300.pick_up_tip()
             p300.aspirate(180, ethanol)
@@ -286,10 +287,16 @@ def run(protocol_context):
     # PLATE_TEMP_HOLD_5 = (72, 300)
     PLATE_TEMP_POST = 4
     NUM_CYCLES = 3
-    CYCLED_STEPS = [{'temperature': PLATE_TEMP_HOLD_2[0], 'hold_time_seconds': PLATE_TEMP_HOLD_2[1]},
-                    {'temperature': PLATE_TEMP_HOLD_3[0],
-                        'hold_time_seconds': PLATE_TEMP_HOLD_3[1]},
-                    {'temperature': PLATE_TEMP_HOLD_4[0], 'hold_time_seconds': PLATE_TEMP_HOLD_4[1]}]
+    CYCLED_STEPS = [
+        {
+            'temperature': PLATE_TEMP_HOLD_2[0],
+            'hold_time_seconds': PLATE_TEMP_HOLD_2[1]},
+        {
+            'temperature': PLATE_TEMP_HOLD_3[0],
+            'hold_time_seconds': PLATE_TEMP_HOLD_3[1]},
+        {
+            'temperature': PLATE_TEMP_HOLD_4[0],
+            'hold_time_seconds': PLATE_TEMP_HOLD_4[1]}]
 
     # Set PRE temp
     thermocycler.set_block_temperature(PLATE_TEMP_PRE)
@@ -302,7 +309,8 @@ def run(protocol_context):
     # Loop HOLD2 - HOLD4 temps NUM_CYCLES times
     thermocycler.execute_profile(steps=CYCLED_STEPS, repetitions=NUM_CYCLES)
     # Set HOLD5 temp
-    # thermocycler.set_block_temperature(PLATE_TEMP_HOLD_5[0], hold_time_seconds=PLATE_TEMP_HOLD_5[1])
+    # thermocycler.set_block_temperature(
+    #     PLATE_TEMP_HOLD_5[0], hold_time_seconds=PLATE_TEMP_HOLD_5[1])
     # thermocycler.deactivate_lid()
     # Set POST temp
     thermocycler.set_block_temperature(PLATE_TEMP_POST)
@@ -379,7 +387,7 @@ def run(protocol_context):
     thermocycler.set_block_temperature(4)
 
     # Wash samples 2X with 180 uL of 80% EtOH
-    for cycle in range(2):
+    for _ in range(2):
         for well in mag_samples:
             p300.pick_up_tip()
             p300.aspirate(180, ethanol)
