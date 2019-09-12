@@ -14,7 +14,7 @@ install:
 addons:
   apt:
     packages:
-      - libsystemd
+      - libsystemd-dev
 
 script:
   - python --version
