@@ -25,13 +25,21 @@ def parse(protocol_path):
     pipettes = {mount: pipette.name for mount,
                 pipette in context.loaded_instruments.items()}
 
-    # TODO: Ian 2019-09-12 Labware should remember its label, use that here instead of Labware.__str__
+    # TODO: Ian 2019-09-12 Labware should remember its label,
+    # use that here instead of Labware.__str__
     labware = {slot: str(labware)
-               for slot, labware in context.loaded_labwares.items() if labware is not None}
+               for slot, labware
+               in context.loaded_labwares.items()
+               if labware is not None}
 
-    parameters = {}  # TODO IMMEDIATELY: need `parameters` from parse_protocol fn
+    # TODO IMMEDIATELY: need `parameters` from parse_protocol fn
+    parameters = {}
 
-    return {"pipettes": pipettes, "labware": labware, "parameters": parameters, "metadata": protocol.metadata}
+    return {
+        "pipettes": pipettes,
+        "labware": labware,
+        "parameters": parameters,
+        "metadata": protocol.metadata}
 
 
 if __name__ == '__main__':
