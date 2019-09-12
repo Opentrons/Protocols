@@ -1,1 +1,0 @@
-{"slug": "in_gel_digest", "path": "protocols/in_gel_digest", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["in_gel_digest.ot1.py"], "OT 2 protocol": []}, "status": "ok"}
