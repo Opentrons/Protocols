@@ -171,7 +171,6 @@ def run_custom_protocol(
     robot.comment('Incubating for 10 minutes. OT-2 will resume when incubation \
     is complete.')
     pip50.delay(minutes=10)
-    robot._driver.run_flag.wait()
 
     # mix magbeads and dispense to each well
 
@@ -250,11 +249,14 @@ def run_custom_protocol(
     pip300.drop_tip()
 
     # use tips from before to mix each well and then return tips
-
+    mix_r = 0
     for well in samples300:
         well_name = well.get_name()
         pip300.pick_up_tip(tips_reuse_a.wells(well_name))
-        pip300.mix(5, 290, well)
+        mix_dest = (well, well.from_center(
+                    h=-0.7, r=0.8, theta=math.pi*mix_r))
+        mix_r = (mix_r + 1) % 2
+        pip300.mix(5, 290, mix_dest)
         pip300.blow_out(well.top())
         pip300.return_tip()
 
@@ -292,7 +294,10 @@ def run_custom_protocol(
         for well in samples300:
             well_name = well.get_name()
             pip300.pick_up_tip(tips_reuse_a.wells(well_name))
-            pip300.mix(5, 290, well)
+            mix_dest = (well, well.from_center(
+                        h=-0.7, r=0.8, theta=math.pi*mix_r))
+            mix_r = (mix_r + 1) % 2
+            pip300.mix(5, 290, mix_dest)
             pip300.blow_out(well.top())
             pip300.return_tip()
 
@@ -329,7 +334,10 @@ def run_custom_protocol(
     for well in samples300:
         well_name = well.get_name()
         pip300.pick_up_tip(tips_reuse_a.wells(well_name))
-        pip300.mix(5, 290, well)
+        mix_dest = (well, well.from_center(
+                    h=-0.7, r=0.8, theta=math.pi*mix_r))
+        mix_r = (mix_r + 1) % 2
+        pip300.mix(5, 290, mix_dest)
         pip300.blow_out(well.top())
         pip300.return_tip()
 
@@ -361,7 +369,10 @@ def run_custom_protocol(
         well_name = well.get_name()
         pip300.pick_up_tip(tips_reuse_b.wells(well_name))
         pip300.transfer(100, elution, well, new_tip='never')
-        pip300.mix(3, 50, well)
+        mix_dest = (well, well.from_center(
+                    h=-0.7, r=0.8, theta=math.pi*mix_r))
+        mix_r = (mix_r + 1) % 2
+        pip300.mix(3, 50, mix_dest)
         pip300.blow_out(well.top())
         pip300.return_tip()
 
