@@ -12,7 +12,7 @@ DESCRIPTION = 'description'
 file_handlers = {
     DESCRIPTION: '*.md',
     OT_1_PROTOCOL: '*ot1.py',
-    OT_2_PROTOCOL: '*ot2.py'
+    OT_2_PROTOCOL: '*ot2*.py'
 }
 
 
