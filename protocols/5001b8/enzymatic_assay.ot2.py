@@ -43,8 +43,8 @@ if pcr_name not in labware.list():
         pcr_name,
         grid=(12, 8),
         spacing=(9, 9),
-        diameter=5,
-        depth=15,
+        diameter=4,
+        depth=14,
         volume=150
     )
 
@@ -55,7 +55,7 @@ if deep_name not in labware.list():
         grid=(12, 8),
         spacing=(9, 9),
         diameter=7,
-        depth=35,
+        depth=39,
         volume=2000
     )
 
