@@ -11,6 +11,11 @@ install:
   - pip install flake8==3.5.0 pytest
   - make setup
 
+addons:
+  apt:
+    packages:
+      - libsystemd
+
 script:
   - python --version
   - python3 --version
