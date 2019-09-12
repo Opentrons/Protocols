@@ -5,11 +5,19 @@
 # Blow out added after every dispense
 # APIV2
 
+metadata = {
+    "author": "Kinnari Watson",
+    "organization": "Opentrons Labworks"
+}
+
 
 def run(protocol_context):
     # Labware Setup
+    # rt_reagents = protocol_context.load_labware(
+    #     'nest_12_reservoir_15ml', '1')
+    # TODO IMMEDIATELY: change this back to nest_12_reservoir_15ml when that labware is added to shared-data
     rt_reagents = protocol_context.load_labware(
-        'nest_12_reservoir_15ml', '1')
+        'usascientific_12_reservoir_22ml', '1')
 
     p20rack = protocol_context.load_labware('opentrons_96_tiprack_20ul', '6')
 
@@ -279,7 +287,8 @@ def run(protocol_context):
     PLATE_TEMP_POST = 4
     NUM_CYCLES = 3
     CYCLED_STEPS = [{'temperature': PLATE_TEMP_HOLD_2[0], 'hold_time_seconds': PLATE_TEMP_HOLD_2[1]},
-                    {'temperature': PLATE_TEMP_HOLD_3[0], 'hold_time_seconds': PLATE_TEMP_HOLD_3[1]},
+                    {'temperature': PLATE_TEMP_HOLD_3[0],
+                        'hold_time_seconds': PLATE_TEMP_HOLD_3[1]},
                     {'temperature': PLATE_TEMP_HOLD_4[0], 'hold_time_seconds': PLATE_TEMP_HOLD_4[1]}]
 
     # Set PRE temp
@@ -288,7 +297,8 @@ def run(protocol_context):
     thermocycler.set_lid_temperature(COVER_TEMP)
     thermocycler.close_lid()
     # Set HOLD1 temp
-    thermocycler.set_block_temperature(PLATE_TEMP_HOLD_1[0], hold_time_seconds=PLATE_TEMP_HOLD_1[1])
+    thermocycler.set_block_temperature(
+        PLATE_TEMP_HOLD_1[0], hold_time_seconds=PLATE_TEMP_HOLD_1[1])
     # Loop HOLD2 - HOLD4 temps NUM_CYCLES times
     thermocycler.execute_profile(steps=CYCLED_STEPS, repetitions=NUM_CYCLES)
     # Set HOLD5 temp

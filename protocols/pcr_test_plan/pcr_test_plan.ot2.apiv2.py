@@ -2,6 +2,10 @@ DNA_VOLUME = 1
 PRIMER_VOLUME = 2
 MASTER_MIX_VOLUME = 20
 
+metadata = {
+    "author": "example"
+}
+
 
 def run(protocol_context):
     # labware setup
