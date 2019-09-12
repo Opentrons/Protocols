@@ -1,1 +1,0 @@
-{"slug": "Opentrons_Logo", "path": "protocols/Opentrons_Logo", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["Opentrons_Logo.ot1.py"], "OT 2 protocol": ["Opentrons_Logo.ot2.py"]}, "status": "ok"}

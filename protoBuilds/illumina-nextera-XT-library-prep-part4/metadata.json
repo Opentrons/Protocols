@@ -1,1 +1,0 @@
-{"slug": "illumina-nextera-XT-library-prep-part4", "path": "protocols/illumina-nextera-XT-library-prep-part4", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["nexteraXT_dna_library_prep_part4.ot2.py"]}, "status": "ok"}
