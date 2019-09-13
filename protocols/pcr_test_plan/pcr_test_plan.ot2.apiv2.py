@@ -1,15 +1,40 @@
-DNA_VOLUME = 1
-PRIMER_VOLUME = 2
-MASTER_MIX_VOLUME = 20
-
 metadata = {
-    "author": "example"
+    "protocol_library": {
+        "fields": [
+            {
+                "type": "number",
+                "label": "DNA Volume (uL)",
+                "name": "dna_volume",
+                "default": 1
+            },
+            {
+                "type": "number",
+                "label": "Primer Volume (uL)",
+                "name": "primer_volume",
+                "default": 2
+            },
+            {
+                "type": "number",
+                "label": "Master Mix Volume (uL)",
+                "name": "master_mix_volume",
+                "default": 20
+            },
+        ],
+        "values": {
+            # PROTOCOL_LIBRARY_VALUES #
+        }
+    }
 }
+
+_values = metadata['protocol_library']['values']
+dna_volume = _values['dna_volume']
+primer_volume = _values['primer_volume']
+master_mix_volume = _values['master_mix_volume']
 
 
 def run(protocol_context):
     # labware setup
-    total_volume = DNA_VOLUME + 2*PRIMER_VOLUME + MASTER_MIX_VOLUME
+    total_volume = dna_volume + 2*primer_volume + master_mix_volume
     if total_volume != 25:
         raise Exception("Total reaction volume must be 25 uL.")
 
@@ -44,25 +69,25 @@ def run(protocol_context):
     volume_in_tube = master_mix.max_volume
     for well in reaction_plate.wells():
         p50.pick_up_tip()
-        if volume_in_tube < MASTER_MIX_VOLUME:
+        if volume_in_tube < master_mix_volume:
             master_mix = master_mix
-        p50.aspirate(MASTER_MIX_VOLUME, master_mix)
-        p50.dispense(MASTER_MIX_VOLUME, well)
+        p50.aspirate(master_mix_volume, master_mix)
+        p50.dispense(master_mix_volume, well)
         p50.blow_out(well.top())
         p50.drop_tip()
 
     # transfer primer 1
     for well in reaction_plate.wells():
         p10.pick_up_tip()
-        p10.aspirate(PRIMER_VOLUME, primer_1)
-        p10.dispense(PRIMER_VOLUME, well)
+        p10.aspirate(primer_volume, primer_1)
+        p10.dispense(primer_volume, well)
         p10.blow_out(well.bottom(3))
         p10.drop_tip()
 
     # transfer primer 2
     for well in reaction_plate.wells():
         p10.pick_up_tip()
-        p10.aspirate(PRIMER_VOLUME, primer_2)
-        p10.dispense(PRIMER_VOLUME, well)
+        p10.aspirate(primer_volume, primer_2)
+        p10.dispense(primer_volume, well)
         p10.blow_out(well.bottom(3))
         p10.drop_tip()

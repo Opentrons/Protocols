@@ -5,11 +5,6 @@
 # Blow out added after every dispense
 # APIV2
 
-metadata = {
-    "author": "Kinnari Watson",
-    "organization": "Opentrons Labworks"
-}
-
 
 def run(protocol_context):
     # Labware Setup
