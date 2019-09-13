@@ -1,20 +1,41 @@
 [
   {
-    "type": "number",
+    "type": "float",
     "label": "DNA Volume (uL)",
     "name": "dna_volume",
     "default": 1
   },
   {
-    "type": "number",
+    "type": "float",
     "label": "Primer Volume (uL)",
     "name": "primer_volume",
     "default": 2
   },
   {
-    "type": "number",
+    "type": "float",
     "label": "Master Mix Volume (uL)",
     "name": "master_mix_volume",
     "default": 20
+  },
+  {
+    "type": "int",
+    "label": "Integer example",
+    "name": "integer_example",
+    "default": 10
+  },
+  {
+    "type": "dropDown",
+    "label": "Example Dropdown",
+    "name": "example_dropdown",
+    "options": [
+      { "label": "Something here", "value": "aaa" },
+      { "label": "Other thing", "value": "bbb" }
+    ]
+  },
+  {
+    "type": "textFile",
+    "label": "Example file",
+    "name": "example_file",
+    "default": "1,2,3"
   }
 ]
