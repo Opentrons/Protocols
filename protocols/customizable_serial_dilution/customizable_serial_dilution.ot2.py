@@ -1,26 +1,68 @@
-from opentrons import labware, instruments
+from opentrons import labware, instruments, robot
 from otcustomizers import StringSelection
 
-trough = labware.load('trough-12row', '2')
+trough = labware.load('usascientific_12_reservoir_22ml', '2')
 
 liquid_trash = trough.wells('A12')
-
-plate = labware.load('96-flat', '3')
-
-tiprack = [labware.load('tiprack-200ul', slot)
-           for slot in ['1', '4']]
 
 
 def run_custom_protocol(
     pipette_type: StringSelection(
-        'p300-Single', 'p300-Multi', 'p50-Single', 'p50-Multi')='p300-Multi',
-    dilution_factor: float=1.5,
-    num_of_dilutions: int=10,
-    total_mixing_volume: float=200.0,
+        'p300-Single', 'p300-Multi', 'p50-Single', 'p50-Multi', 'p10-Single',
+        'p10-Multi') = 'p300-Multi',
+    labware_type: StringSelection(
+        'Bio-Rad 96 Well Plate 200uL PCR',
+        'Corning 12 Well Plate 6.9mL Flat',
+        'Corning 24 Well Plate 3.4mL Flat',
+        'Corning 384 Well Plate 112 uL Flat',
+        'Corning 48 Well Plate 1.6 mL Flat',
+        'Corning 6 Well Plate 16.8 mL Flat',
+        'Corning 96 Well Plate 360 uL Flat',
+        'USA Scientific 96 Deep Well Plate 2.4 mL') = 'Bio-Rad 96 Well \
+        Plate 200uL PCR',
+    dilution_factor: float = 3.0,
+    num_of_dilutions: int = 10,
+    total_mixing_volume: float = 150.0,
     tip_use_strategy: StringSelection(
-        'use one tip', 'new tip each time')='use one tip'):
+        'use one tip', 'new tip each time') = 'use one tip'):
 
     pip_name = pipette_type.split('-')[1]
+    tip_name = pipette_type.split('-')[0]
+
+    plate_names = [
+        'biorad_96_wellplate_200ul_pcr',
+        'corning_12_wellplate_6.9ml_flat',
+        'corning_24_wellplate_3.4ml_flat',
+        'corning_384_wellplate_112ul_flat',
+        'corning_48_wellplate_1.6ml_flat',
+        'corning_6_wellplate_16.8ml_flat',
+        'corning_96_wellplate_360ul_flat',
+        'usascientific_96_wellplate_2.4ml_deep'
+    ]
+
+    if labware_type == 'Corning 12 Well Plate 6.9mL Flat':
+        plate = labware.load(plate_names[1], '3')
+    elif labware_type == 'Corning 24 Well Plate 3.4mL Flat':
+        plate = labware.load(plate_names[2], '3')
+    elif labware_type == 'Corning 384 Well Plate 112 uL Flat':
+        plate = labware.load(plate_names[3], '3')
+    elif labware_type == 'Corning 48 Well Plate 1.6 mL Flat':
+        plate = labware.load(plate_names[4], '3')
+    elif labware_type == 'corning_6_wellplate_16.8ml_flat':
+        plate = labware.load(plate_names[5], '3')
+    elif labware_type == 'corning_96_wellplate_360ul_flat':
+        plate = labware.load(plate_names[6], '3')
+    elif labware_type == 'corning_96_wellplate_360ul_flat':
+        plate = labware.load(plate_names[7], '3')
+    else:
+        plate = labware.load(plate_names[0], '3')
+
+    if tip_name == 'p300' or tip_name == 'p50':
+        tiprack = [labware.load('opentrons_96_tiprack_300ul', slot)
+                   for slot in ['1', '4']]
+    elif tip_name == 'p10':
+        tiprack = [labware.load('opentrons_96_tiprack_10ul', slot)
+                   for slot in ['1', '4']]
 
     if pipette_type == 'p300-Single':
         pipette = instruments.P300_Single(
@@ -36,6 +78,14 @@ def run_custom_protocol(
             tip_racks=tiprack)
     elif pipette_type == 'p50-Multi':
         pipette = instruments.P50_Multi(
+            mount='left',
+            tip_racks=tiprack)
+    elif pipette_type == 'p10-Multi':
+        pipette = instruments.P10_Multi(
+            mount='left',
+            tip_racks=tiprack)
+    elif pipette_type == 'p10-Single':
+        pipette = instruments.P10_Single(
             mount='left',
             tip_racks=tiprack)
 
@@ -96,3 +146,8 @@ def run_custom_protocol(
 
             if new_tip == 'never':
                 pipette.drop_tip()
+
+
+run_custom_protocol()
+for c in robot.commands():
+    print(c)
