@@ -1,0 +1,20 @@
+[
+  {
+    "type": "number",
+    "label": "DNA Volume (uL)",
+    "name": "dna_volume",
+    "default": 1
+  },
+  {
+    "type": "number",
+    "label": "Primer Volume (uL)",
+    "name": "primer_volume",
+    "default": 2
+  },
+  {
+    "type": "number",
+    "label": "Master Mix Volume (uL)",
+    "name": "master_mix_volume",
+    "default": 20
+  }
+]

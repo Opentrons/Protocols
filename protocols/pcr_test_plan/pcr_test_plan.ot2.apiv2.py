@@ -1,38 +1,7 @@
-metadata = {
-    "protocol_library": {
-        "fields": [
-            {
-                "type": "number",
-                "label": "DNA Volume (uL)",
-                "name": "dna_volume",
-                "default": 1
-            },
-            {
-                "type": "number",
-                "label": "Primer Volume (uL)",
-                "name": "primer_volume",
-                "default": 2
-            },
-            {
-                "type": "number",
-                "label": "Master Mix Volume (uL)",
-                "name": "master_mix_volume",
-                "default": 20
-            },
-        ],
-        "values": {
-            # PROTOCOL_LIBRARY_VALUES #
-        }
-    }
-}
-
-_values = metadata['protocol_library']['values']
-dna_volume = _values['dna_volume']
-primer_volume = _values['primer_volume']
-master_mix_volume = _values['master_mix_volume']
-
-
 def run(protocol_context):
+    dna_volume, primer_volume, master_mix_volume = get_values(  # noqa: F821
+        'dna_volume', 'primer_volume', 'master_mix_volume')
+
     # labware setup
     total_volume = dna_volume + 2*primer_volume + master_mix_volume
     if total_volume != 25:
