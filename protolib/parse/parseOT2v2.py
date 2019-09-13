@@ -59,9 +59,10 @@ def parse(protocol_path):
           (' yes' if has_fields else ' no'))
 
     with open(protocol_path) as f:
-        contents = f.read()
+        original_contents = f.read()
 
     fields = []
+    contents = original_contents
     if has_fields:
         with open(fields_json_path) as f:
             fields = json.load(f)
@@ -69,7 +70,7 @@ def parse(protocol_path):
             # the default values
             default_values = {
                 f['name']: get_default_field_value(f) for f in fields}
-            contents = prepend_get_values_fn(contents, default_values)
+            contents = prepend_get_values_fn(original_contents, default_values)
 
     protocol = parse_protocol(
         protocol_contents=contents, filename=protocol_path)
@@ -98,7 +99,8 @@ def parse(protocol_path):
         "labware": labware,
         "fields": fields,
         "modules": modules,
-        "metadata": metadata}
+        "metadata": metadata,
+        "content": original_contents}
 
 
 if __name__ == '__main__':
