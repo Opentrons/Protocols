@@ -124,9 +124,9 @@ pipettes.')
                     vol,
                     water,
                     dest,
-                    blow_out=True,
                     new_tip='never'
                 )
+                pipette.blow_out()
     if p10.tip_attached:
         p10.drop_tip()
     if p50.tip_attached:
@@ -140,12 +140,16 @@ pipettes.')
                 source = elution_plate.wells(line[0])
                 dest = oa_dilution_plate.wells(line[3])
                 pipette = p10 if vol <= 10 else p50
+                pipette.pick_up_tip()
                 pipette.transfer(
                     vol,
                     source,
                     dest,
-                    blow_out=True
+                    new_tip='never'
                 )
+                pipette.mix(5, 9, dest)
+                pipette.blow_out()
+                pipette.drop_tip()
 
     # water to CNV transfer
     p10.pick_up_tip()
@@ -162,9 +166,10 @@ pipettes.')
                     vol,
                     water,
                     dest,
-                    blow_out=True,
                     new_tip='never'
                 )
+                pipette.blow_out()
+                pipette.drop_tip()
     if p10.tip_attached:
         p10.drop_tip()
     if p50.tip_attached:
@@ -176,14 +181,17 @@ pipettes.')
             vol = float(line[7])
             if vol != 0:
                 source = oa_dilution_plate.wells(line[3])
-                dest = oa_dilution_plate.wells(line[6])
+                dest = cnv_dilution_plate.wells(line[6])
                 pipette = p10 if vol <= 10 else p50
+                pipette.pick_up_tip()
                 pipette.transfer(
                     vol,
                     source,
                     dest,
-                    blow_out=True
+                    new_tip='never'
                 )
+                pipette.blow_out()
+                pipette.drop_tip()
 
     if magnet_setup == 'Opentrons magnetic module':
         magdeck.disengage()
