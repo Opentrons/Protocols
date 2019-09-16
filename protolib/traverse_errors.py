@@ -28,6 +28,7 @@ def generate_metadata(root, path, files):
         'flags': {
             'feature': '.feature' in files,
             'skip-tests': '.notests' in files,
+            'hide-from-search': '.hide-from-search' in files,
             'embedded-app':
                 get_file_content(os.path.join(path, root), '.embedded-app')
                 if '.embedded-app' in files else False

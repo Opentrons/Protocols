@@ -84,6 +84,7 @@ These files are usually blank text files. They have special names that indicate 
 * `.ignore` - The protocol will not be shown on the Opentrons Protocol Library, even if you search for it.
 * `.notests` - The protocol will not be tested by continuous integration. This is intended only for ignored protocols.
 * `.embedded` - This is for "embedded apps" that generate a protocol and are designed to be shown in the Protocol Library in an iframe. This file should not be blank, it should contain a URL to the web app that will be embedded in the iframe.
+* `.hide-from-search` - do not show this protocol in any search results. The protocol page should only be accessible from direct URL.
 
 ## Monkeypatched delay commands & `OT_TESTING` environment variable
 
