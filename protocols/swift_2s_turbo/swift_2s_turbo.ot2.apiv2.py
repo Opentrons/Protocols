@@ -8,12 +8,8 @@
 
 def run(protocol_context):
     # Labware Setup
-    # rt_reagents = protocol_context.load_labware(
-    #     'nest_12_reservoir_15ml', '1')
-    # TODO IMMEDIATELY: change this back to nest_12_reservoir_15ml
-    # when that labware is added to shared-data
     rt_reagents = protocol_context.load_labware(
-        'usascientific_12_reservoir_22ml', '1')
+        'nest_12_reservoir_15ml_custom_example', '1', namespace='custom_beta')
 
     p20rack = protocol_context.load_labware('opentrons_96_tiprack_20ul', '6')
 

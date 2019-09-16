@@ -55,8 +55,6 @@ def parse(protocol_path):
 
     fields_json_path = Path(protocol_path).parent / ('fields.json')
     has_fields = Path(fields_json_path).is_file()
-    print(f'has fields? {fields_json_path}' +
-          (' yes' if has_fields else ' no'))
 
     with open(protocol_path) as f:
         original_contents = f.read()
@@ -71,6 +69,16 @@ def parse(protocol_path):
             default_values = {
                 f['name']: get_default_field_value(f) for f in fields}
             contents = prepend_get_values_fn(original_contents, default_values)
+
+    # load any custom labware in protocols/{PROTOCOL_SLUG}/labware/*.json
+    custom_labware_defs = []
+    custom_labware_path = Path(protocol_path).parent / 'labware'
+    if custom_labware_path.is_dir():
+        for l_path in custom_labware_path.iterdir():
+            with open(l_path) as lf:
+                custom_labware_defs.append(json.load(lf))
+    for labware_def in custom_labware_defs:
+        opentrons.protocol_api.labware.save_definition(labware_def, force=True)
 
     protocol = parse_protocol(
         protocol_contents=contents, filename=protocol_path)
@@ -100,7 +108,9 @@ def parse(protocol_path):
         "fields": fields,
         "modules": modules,
         "metadata": metadata,
-        "content": original_contents}
+        "content": original_contents,
+        "custom_labware_defs": custom_labware_defs
+    }
 
 
 if __name__ == '__main__':
