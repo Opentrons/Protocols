@@ -79,9 +79,13 @@ def run_custom_protocol(
     # transfer water to 15ml tubes
     for row in tuberack15.rows():
         p1000.pick_up_tip()
-        for well in row:
+        if tubes['water1'][2] > min_water_vol_before_switch_in_ul:
+            water_tube = 'water1'
+        else:
+            water_tube = 'water2'
+        for tube in row:
             for _ in range(2):
-                h_trans(1000, 'water1', well.top())
+                h_trans(1000, water_tube, tube.top())
         p1000.drop_tip()
 
     # transfer water to custom 24-well plate
