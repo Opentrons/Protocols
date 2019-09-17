@@ -33,7 +33,8 @@ tips300 = labware.load('opentrons_96_tiprack_300ul', '8')
 
 def run_custom_protocol(
         p1000_mount: StringSelection('right', 'left') = 'right',
-        p300_mount: StringSelection('left', 'right') = 'left'
+        p300_mount: StringSelection('left', 'right') = 'left',
+        min_water_vol_before_switch_in_ul: float = 7000
 ):
     # check
     if p1000_mount == p300_mount:
@@ -46,8 +47,8 @@ def run_custom_protocol(
     p300.start_at_tip(tips300.wells('C1'))
 
     tubes = {
-        'water1': [tuberack15_50.wells('A3'), 90],
-        'water2': [tuberack15_50.wells('B3'), 90],
+        'water1': [tuberack15_50.wells('A3'), 90, 50000],
+        'water2': [tuberack15_50.wells('B3'), 90, 50000],
         'scale1': [tuberack15_50.wells('B1'), 100],
         'scale2': [tuberack15_50.wells('C1'), 100],
         'scale3': [tuberack15_50.wells('A2'), 100]
@@ -60,7 +61,11 @@ def run_custom_protocol(
         nonlocal tubes
         pip = p1000 if vol > 300 else p300
 
-        r = r50 if source_tube[0] == 'w' else r15
+        if source_tube[0] == 'w':
+            r = r50
+            tubes[source_tube][2] -= vol
+        else:
+            r = r15
         dh = vol/((r**2)*math.pi)*1.1
         if tubes[source_tube][1] - dh > min_height:
             new_h = tubes[source_tube][1] - dh
@@ -82,7 +87,10 @@ def run_custom_protocol(
     # transfer water to custom 24-well plate
     p1000.pick_up_tip()
     for i, well in enumerate(plate.wells()):
-        water_tube = 'water1' if i < 12 else 'water2'
+        if tubes['water1'][2] > min_water_vol_before_switch_in_ul:
+            water_tube = 'water1'
+        else:
+            water_tube = 'water2'
         for _ in range(2):
             h_trans(1000, water_tube, well.top())
     p1000.drop_tip()
@@ -91,7 +99,7 @@ def run_custom_protocol(
     for row, scale in zip(tuberack15.rows(), ['scale1', 'scale2', 'scale3']):
         p300.pick_up_tip()
         for dest, vol in zip(row, [30*i for i in range(1, 6)]):
-            h_trans(vol, scale, dest.top())
+            h_trans(vol, scale, dest.top(-10))
         p300.drop_tip()
 
     # plate dilution
