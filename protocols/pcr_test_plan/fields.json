@@ -24,11 +24,17 @@
     "default": 10
   },
   {
+    "type": "str",
+    "label": "Example String",
+    "name": "example_string",
+    "default": "blah"
+  },
+  {
     "type": "dropDown",
     "label": "Example Dropdown",
     "name": "example_dropdown",
     "options": [
-      { "label": "Something here", "value": "aaa" },
+      { "label": "P10 Single (Recommended)", "value": "p10_single" },
       { "label": "Other thing", "value": "bbb" }
     ]
   },

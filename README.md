@@ -96,13 +96,13 @@ The `fields.json` file should be an array of field objects. Here's an example:
 
 ### Get values in the Python protocol with `get_values`
 
-To allow you to get the parametric values inside the protocol, a function `def get_values(*names)` will be injected into the Python protocol when a user downloads the protocol from the site.
+To allow you to get the parametric values inside the protocol, a function `def get_values(*names)` will be injected into the Python protocol when a user downloads the protocol from the site. It returns an **array** of values for each of the field names you give it as arguments.
 
 ```py
 import opentrons
 
 def run(context):
-    example_dropdown, integer_example, float_example, example_file = get_values(  # noqa: F821
+    [example_dropdown, integer_example, float_example, example_file] = get_values(  # noqa: F821
         'example_dropdown', 'integer_example', 'float_example', 'example_file')
 
     # ... do stuff with those values
@@ -151,6 +151,19 @@ An `int` will not allow floating-point values to be entered from the website. A 
 }
 ```
 
+### `str` type
+
+A field that lets users type in arbitrary text, read into the Python protocol as a string. Useful for things like entering a single well eg `"B2"`.
+
+```json
+{
+  "type": "str",
+  "label": "Example String",
+  "name": "example_string",
+  "default": "blah"
+}
+```
+
 ### `dropDown` type
 
 A `dropDown` will make a dropdown (aka `select`) UI widget.
@@ -169,7 +182,7 @@ Describe the `options` that are available in the dropdown by specifying the `lab
 }
 ```
 
-If the user selects "Other thing", `x = get_values('example_dropdown')[0]` will give you `x === "bbb"`.
+If the user selects "Other thing", `[x] = get_values('example_dropdown')` will give you `x === "bbb"`.
 
 Note that unlike other field types, `dropDown` has no `default`. Instead, it will always default to the first option.
 
@@ -214,7 +227,7 @@ def well_csv_to_list(csv_string):
         for well in row.split(',') if well]
 
 def run(context):
-    example_file = get_values('example_file')
+    [example_file] = get_values('example_file')
     # pass the file contents string into this utility fn
     well_list = well_csv_to_list(example_file)
 ```
@@ -229,7 +242,7 @@ If any validation is necessary, add it in the protocol itself, eg:
 
 ```python
 def run(context):
-    some_field, other_field = get_values(  # noqa: F821
+    [some_field, other_field] = get_values(  # noqa: F821
         'some_fields', 'other_field')
     assert some_field > 0
     assert other_field + some_field <= 96
