@@ -1,4 +1,4 @@
-from opentrons import labware, instruments, robot
+from opentrons import labware, instruments
 from otcustomizers import StringSelection
 
 trough = labware.load('usascientific_12_reservoir_22ml', '2')
