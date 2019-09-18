@@ -1,4 +1,4 @@
-from opentrons import labware, instruments, robot
+from opentrons import labware, instruments
 from otcustomizers import StringSelection
 
 trough = labware.load('usascientific_12_reservoir_22ml', '2')
@@ -146,8 +146,3 @@ def run_custom_protocol(
 
             if new_tip == 'never':
                 pipette.drop_tip()
-
-
-run_custom_protocol()
-for c in robot.commands():
-    print(c)
