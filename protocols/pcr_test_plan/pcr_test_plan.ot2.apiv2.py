@@ -1,5 +1,5 @@
 def run(protocol_context):
-    dna_volume, primer_volume, master_mix_volume = get_values(  # noqa: F821
+    [dna_volume, primer_volume, master_mix_volume] = get_values(  # noqa: F821
         'dna_volume', 'primer_volume', 'master_mix_volume')
 
     # labware setup
