@@ -1,4 +1,4 @@
-# DNA Dilution from CSV
+# CNV Dilution from CSV
 
 ### Author
 [Opentrons](http://www.opentrons.com/)
@@ -9,6 +9,10 @@
 
 ## Description
 This protocol performs DNA dilutions on custom 96-well elution and dilution plates. The elution plate is mounted on a magnetic deck to separate beads. Transfer volumes are specified by a CSV file that can be uploaded on the custom protocol site. For reagent setup, see Additional Notes below.
+
+Links:
+[OA Dilution from CSV](./1610-OA)
+[CNV Dilution from CSV](./1610-CNV)
 
 ---
 
@@ -38,14 +42,11 @@ You will need:
 4. Set up your deck according to the deck map.
 5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support article](https://support.opentrons.com/ot-2/getting-started-software-setup/deck-calibration).
 6. Hit "Run".
-7. The magnetic deck engages, and the protocol delays 2 minutes for the elution plate contents with beads to incubate on the magnet.
-8. The specified volumes of nuclease-free H2O is transferred to each well of the OA dilution plate using the same tip. The pipette type is automatically selected based on transfer volume.
-9. The specified volumes of elution plate solution are transferred to their corresponding wells on the OA dilution plate using a new tip for each transfer. The pipette type is automatically selected based on the transfer volume.
-10. The specified volumes of nuclease-free H2O is transferred to each well of the CNV dilution plate using the same tip. The pipette type is automatically selected based on transfer volume.
-11. The specified volumes of OA plate contents are transferred to their corresponding wells on the CNV dilution plate using a new tip for each transfer. The pipette type is automatically selected based on the transfer volume.
+7. The specified volumes of nuclease-free H2O is transferred to each well of the CNV dilution plate using the same tip. The pipette type is automatically selected based on transfer volume.
+8. The specified volumes of OA plate contents are transferred to their corresponding wells on the CNV dilution plate using a new tip for each transfer. The pipette type is automatically selected based on the transfer volume.
 
 ### Additional Notes
-Reagent trough setup:  
+Reagent trough setup:
 * nuclease-free H2O: channel 1
 
 ---
@@ -53,5 +54,5 @@ Reagent trough setup:
 If you have any questions about this protocol, please contact protocols@opentrons.com.
 
 ###### Internal
-ya76sE6P  
+ya76sE6P
 1610
