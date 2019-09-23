@@ -124,8 +124,8 @@ def run_custom_protocol(
         m50.drop_tip()
 
     robot.pause('Seal the plate and put it on a thermocycler for 98°C/1min; \
-ramp down to 25°C; 25°C/30min. Then unseal and replace it on TM. Place a new \
-MIDI plate on the magdeck. Place a new PCR plate in slot 7.')
+ramp down to 25°C; 25°C/30min. Then unseal and replace it on tempdeck in slot \
+4. Place a new MIDI plate on the magdeck. Place a new PCR plate in slot 7.')
 
     for s in samples_TM:
         tip_check('p50')

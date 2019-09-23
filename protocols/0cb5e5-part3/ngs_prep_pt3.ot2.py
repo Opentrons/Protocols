@@ -114,7 +114,7 @@ def run_custom_protocol(
 
     """M5 PCR Amplification"""
     m10.home()
-    robot.pause("Place the i7 index plate on TM")
+    robot.pause("Place the i7 index plate on tempdeck in slot 4.")
 
     for s, index in zip(samples_2, samples_TM):
         tip_check('p10')
@@ -126,7 +126,8 @@ def run_custom_protocol(
         m10.drop_tip()
 
     if dual_index == 'yes':
-        robot.pause("Replace i7 index plate with i5 index plate on TM2")
+        robot.pause("Replace i7 index plate with i5 index plate on tempdeck in \
+slot 4.")
         for s, index in zip(samples_2, samples_TM):
             tip_check('p10')
             m10.pick_up_tip()
@@ -137,5 +138,5 @@ def run_custom_protocol(
 
     robot.comment('Seal the plate and thermocycle; place in slot 7 when \
 finished. Replace the the MIDI plate on the magdeck with a fresh plate. \
-Replace the index plate on TM with a fresh PCR plate. Proceed to Part 4/4: M6 \
-PCR Cleanup')
+Replace the index plate on tempdeck with a fresh PCR plate. Proceed to Part \
+4/4: M6 PCR Cleanup')
