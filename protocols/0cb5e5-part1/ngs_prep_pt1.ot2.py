@@ -22,8 +22,6 @@ if plate_name not in labware.list():
     )
 
 # load modules and labware
-magdeck = modules.load('magdeck', '1')
-magplate = labware.load(plate_name, '1', share=True)
 trough = labware.load('usascientific_12_reservoir_22ml', '2')
 tempdeck = modules.load('tempdeck', '4')
 plate_TM = labware.load(
