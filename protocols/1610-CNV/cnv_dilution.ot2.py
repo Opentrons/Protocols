@@ -1,8 +1,8 @@
-from opentrons import labware, instruments, modules, robot
+from opentrons import labware, instruments
 from otcustomizers import StringSelection, FileInput
 
 metadata = {
-    'protocolName': 'DNA Dilution from CSV',
+    'protocolName': 'CNV Dilution from CSV',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request'
 }
@@ -49,10 +49,6 @@ tips10 = [labware.load('tiprack-10ul', slot) for slot in ['4', '7', '8']]
 tips50 = [labware.load('opentrons-tiprack-300ul', slot)
           for slot in ['9', '10', '11']]
 
-# pipettes
-p10 = instruments.P10_Single(mount='right', tip_racks=tips10)
-p50 = instruments.P50_Single(mount='left', tip_racks=tips50)
-
 # reagents
 water = trough.wells('A1')
 
@@ -78,84 +74,25 @@ B1,PHI17445,11.8,B1,30.0,0.0,B1,8.5,11.5,
 def run_custom_protocol(
         csv_file: FileInput = example_csv,
         P10_mount: StringSelection('right', 'left') = 'right',
-        P50_mount: StringSelection('right', 'left') = 'left',
-        magnet_setup: StringSelection(
-            'Thermo Fisher magnetic stand',
-            'Opentrons magnetic module') = 'Opentrons magnetic module'
+        P50_mount: StringSelection('left', 'right') = 'left'
 ):
     # mount check
     if P10_mount == P50_mount:
         raise Exception('Please select different mounts for P10 and P50 \
 pipettes.')
 
+    # pipettes
+    p10 = instruments.P10_Single(mount=P10_mount, tip_racks=tips10)
+    p50 = instruments.P50_Single(mount=P50_mount, tip_racks=tips50)
+
     # csv parse
     data = [line.split(',') for line in csv_file.splitlines() if line][3:]
-
-    if magnet_setup == 'Opentrons magnetic module':
-        magdeck = modules.load('magdeck', '1')
-        elution_plate = labware.load(
-            elution_name,
-            '1',
-            'elution plate',
-            share=True
-        )
-        magdeck.engage(height=16)
-    else:
-        elution_plate = labware.load(
-            elution_name,
-            '1',
-            'elution plate on magnetic stand'
-        )
-
-    p10.home()
-    p10.delay(minutes=2)
-    robot.comment('Incubating on magnet for 2 minutes...')
-
-    # water to OA transfer
-    for line in data:
-        if line[5]:
-            vol = float(line[5])
-            if vol != 0:
-                dest = oa_dilution_plate.wells(line[3])
-                pipette = p10 if vol <= 10 else p50
-                if not pipette.tip_attached:
-                    pipette.pick_up_tip()
-                pipette.transfer(
-                    vol,
-                    water,
-                    dest,
-                    new_tip='never'
-                )
-                pipette.blow_out()
-    if p10.tip_attached:
-        p10.drop_tip()
-    if p50.tip_attached:
-        p50.drop_tip()
-
-    # elution to OA DNA transfer
-    for line in data:
-        if line[4]:
-            vol = float(line[4])
-            if vol != 0:
-                source = elution_plate.wells(line[0])
-                dest = oa_dilution_plate.wells(line[3])
-                pipette = p10 if vol <= 10 else p50
-                pipette.pick_up_tip()
-                pipette.transfer(
-                    vol,
-                    source,
-                    dest,
-                    new_tip='never'
-                )
-                pipette.mix(5, 9, dest)
-                pipette.blow_out()
-                pipette.drop_tip()
 
     # water to CNV transfer
     p10.pick_up_tip()
     p50.pick_up_tip()
     for line in data:
-        if vol:
+        if line[8]:
             vol = float(line[8])
             if vol != 0:
                 dest = cnv_dilution_plate.wells(line[6])
@@ -192,6 +129,3 @@ pipettes.')
                 )
                 pipette.blow_out()
                 pipette.drop_tip()
-
-    if magnet_setup == 'Opentrons magnetic module':
-        magdeck.disengage()
