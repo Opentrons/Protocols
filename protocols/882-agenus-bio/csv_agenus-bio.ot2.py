@@ -1,6 +1,11 @@
 from opentrons import instruments, labware, robot
 from otcustomizers import FileInput
 
+metadata = {
+    'protocolName': 'Transfer samples from 384-well plate to 96-well plate',
+    'author': 'Alise <protocols@opentrons.com>',
+    'source': 'Custom Protocol Request'}
+
 # importing Agenus castom labware defenitions:
 
 # 384 corning square flat bottom
@@ -14,16 +19,16 @@ if plate_name not in labware.list():
         depth=11.8,  # depth (mm) of each well on the plate
         volume=100)
 
-# Lid as Trough (TipBox lid on delrin adapter)
-plate_name = 'Lid_as_Trough'
+# Biotix trough (Biotix empty tip box without the green tip nest)
+plate_name = 'Biotix_Trough'
 if plate_name not in labware.list():
     custom_plate = labware.create(
-        'Lid_as_Trough',  # name of your labware
-        grid=(1, 8),   # specify amount of (columns, rows)
-        spacing=(9, 9),  # distances (mm) between each (column, row)
-        diameter=7,  # diameter (mm) of each well on the plate
-        depth=18,  # depth (mm) of each well on the plate
-        volume=50000)
+        'Biotix_Trough',   # name of your labware
+        grid=(12, 8),     # specify amount of (columns, rows)
+        spacing=(9, 9),    # distances (mm) between each (column, row)
+        diameter=7,     # diameter (mm) of each well on the plate
+        depth=38,     # depth (mm) of each well on the plate
+        volume=250000)
 
 # 96 greiner cellstar round flat bottom
 plate_name = '96_greiner_cellstar_FlatBottom'
@@ -37,7 +42,7 @@ if plate_name not in labware.list():
         volume=350)
 
 # labware setup
-trough = labware.load('Lid_as_Trough', '2')
+trough = labware.load('Biotix_Trough', '2')
 plates_384 = [labware.load('384_corning_FlatBottom', slot)
               for slot in ['5', '8', '11']]
 plates_96 = [labware.load('96_greiner_cellstar_FlatBottom', slot)

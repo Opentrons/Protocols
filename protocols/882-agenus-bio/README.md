@@ -35,7 +35,7 @@ Note: Well A1 in each plate is postion 0, well B1 is position 1, C1 is position 
 
 ### Additional Notes
 * Robot will use a new tip for each row of the .csv file.
-*
+
 
 ###### Internal
 FFYV8NBK
