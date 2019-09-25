@@ -177,8 +177,3 @@ def run_custom_protocol(
 
     robot.comment("Congratulations. The protocol is now complete. Please \
     remove samples from the deck and store properly.")
-
-
-run_custom_protocol()
-for c in robot.commands():
-    print(c)
