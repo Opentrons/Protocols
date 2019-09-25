@@ -70,22 +70,40 @@ number between 1 and 4.')
             well.top(4), (well, well.from_center(r=2.571, h=3, theta=0))]
     ]
 
-    # distribute blockin buffer
+    def vacuum():
+        m300.set_flow_rate(aspirate=250)
+        if not m300.tip_attached:
+            m300.pick_up_tip()
+        for i in range(len(aspirate_locs)//2):
+            set_a = aspirate_locs[i*2:i*2+2]
+            set_d = dispense_locs[i*2:i*2+2]
+            m300.aspirate(150, set_a[0])
+            m300.move_to(set_d[0])
+            m300.move_to(set_d[1])
+            m300.aspirate(150, set_a[1])
+            m300.dispense(300, liquid_trash)
+            m300.blow_out(liquid_trash)
+        m300.drop_tip()
+        m300.set_flow_rate(aspirate=150)
+
+    # distribute blocking buffer
     m300.distribute(
         100, super_g_blocking_buffer, dispense_locs, disposal_vol=0)
 
     robot.pause("Shake for 30 minutes at room temperature on TeleShake before \
 resuming.")
 
-    # completely transfer out buffer
-    m300.transfer(150, aspirate_locs, liquid_trash, blow_out=True)
+    # completely transfer out buffer (replacement for vacuum system)
+    vacuum()
 
     # PBST washes
-    for ind in range(2):
-        m300.distribute(100, pbst[ind], dispense_locs, disposal_vol=0)
-        # incubate
+    for wash in range(2):
+        m300.pick_up_tip()
+        m300.distribute(
+            100, pbst[wash], dispense_locs, disposal_vol=0, new_tip='never')
+        robot.comment('Incubating 5 minutes.')
         m300.delay(minutes=5)
-        m300.transfer(150, aspirate_locs, liquid_trash, blow_out=True)
+        vacuum()
 
     if sample_addition == 'manually add samples':
         pause_str = 'Manually add samples to slides. Incubate the samples by \
@@ -101,37 +119,71 @@ using TeleShake before resuming.'
     robot.pause(pause_str)
 
     # completely transfer out liquid
-    m300.transfer(150, aspirate_locs, liquid_trash, blow_out=True)
+    vacuum()
 
     # wash sequence
-    def wash(wash_ind, final_aspirate=True):
-        m300.distribute(100, pbst[wash_ind], dispense_locs, disposal_vol=0)
-        # incubate
-        m300.delay(minutes=5)
-        m300.transfer(150, aspirate_locs, liquid_trash, blow_out=True)
+    def wash(wash_ind, num_initial_pbst, final_aspirate):
+        for i in range(num_initial_pbst):
+            m300.pick_up_tip()
+            m300.distribute(
+                100,
+                pbst[wash_ind],
+                dispense_locs,
+                disposal_vol=0,
+                new_tip='never'
+            )
+            robot.comment('Incubating 5 minutes.')
+            m300.delay(minutes=5)
+            vacuum()
 
+        m300.pick_up_tip()
         m300.distribute(
-            100, super_g_blocking_buffer, dispense_locs, disposal_vol=0)
-        # incubate
+            100,
+            super_g_blocking_buffer,
+            dispense_locs,
+            disposal_vol=0,
+            new_tip='never'
+        )
+        robot.comment('Incubating 5 minutes.')
         m300.delay(minutes=5)
-        m300.transfer(150, aspirate_locs, liquid_trash, blow_out=True)
+        vacuum()
 
-        m300.distribute(100, pbst[wash_ind], dispense_locs, disposal_vol=0)
-        # incubate
+        m300.pick_up_tip()
+        m300.distribute(
+            100,
+            pbst[wash_ind],
+            dispense_locs,
+            disposal_vol=0,
+            new_tip='never'
+        )
+        robot.comment('Incubating 5 minutes.')
         m300.delay(minutes=5)
         if final_aspirate:
-            m300.transfer(150, aspirate_locs, liquid_trash, blow_out=True)
+            vacuum()
+        else:
+            m300.drop_tip()
 
-    wash(wash_ind=0)
+    wash(wash_ind=0, num_initial_pbst=1, final_aspirate=True)
 
-    m300.distribute(100, antibody_2, dispense_locs, disposal_vol=0)
+    robot.pause('Prepare 1:1000 secondary antibody solution (2 ml total volume \
+per slide) in PBST and place in channel 2 of the 12-channel reagent reservoir \
+(slot 3).')
+
+    m300.pick_up_tip()
+    m300.distribute(
+        100,
+        antibody_2,
+        dispense_locs,
+        disposal_vol=0,
+        new_tip='never'
+    )
 
     robot.pause('Incubate the samples by gentle agitation for 1 hour using \
 TeleShake before resuming.')
 
-    m300.transfer(150, aspirate_locs, liquid_trash, blow_out=True)
+    vacuum()
 
-    wash(wash_ind=1, final_aspirate=False)
+    wash(wash_ind=1, num_initial_pbst=2, final_aspirate=False)
 
     robot.comment('Take off slides from FastFrame and place into 50 ml \
 conical tube filled with 45 ml PBS, and wash by agitating on TeleShake for 5 \
