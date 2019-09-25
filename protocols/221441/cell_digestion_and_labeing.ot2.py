@@ -51,14 +51,14 @@ if transwell_name not in labware.list():
     )
 
 # load modules and labware
-tempdeck = modules.load('tempdeck', '1')
-transwell_plate = labware.load(
-    transwell_name, '1', 'HTS transwell plate', share=True)
+tips10 = labware.load(tiprack10_name, '1', '10ul tiprack')
 sus_plate = labware.load(
     plate_name, '2', 'suspension plate with HTS transwell')
 res12 = labware.load(
     'usascientific_12_reservoir_22ml', '3', 'reagent reservoir')
-tips10 = labware.load(tiprack10_name, '4', '10ul tiprack')
+tempdeck = modules.load('tempdeck', '4')
+transwell_plate = labware.load(
+    transwell_name, '4', 'HTS transwell plate', share=True)
 strips = labware.load(
     'opentrons_96_aluminumblock_generic_pcr_strip_200ul', '5', 'PCR strips')
 tips300 = [
