@@ -2,6 +2,12 @@
 # Mass Spectrometry / Opentrons
 from opentrons import containers, instruments
 
+metadata = {
+    'protocolName': 'In-Gel Digest Protocol',
+    'author': 'Opentrons <protocols@opentrons.com>',
+    'source': 'Protocol Library'
+    }
+
 # add two tube racks
 cold_deck = containers.load('tube-rack-2ml', 'A1')
 tube_rack = containers.load('tube-rack-2ml', 'C1')

@@ -6,7 +6,7 @@
 ### Partner
 
 ## Categories
-* Demos
+* Getting Started
 	* Dinosaur
 
 ## Description
