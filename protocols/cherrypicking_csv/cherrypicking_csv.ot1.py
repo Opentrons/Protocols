@@ -52,5 +52,5 @@ def run_custom_protocol(
             pipette.transfer(
                 vol,
                 source_plate.wells(source_well),
-                dest_plate.wells(well_idx),
+                dest_plate(well_idx),
                 new_tip=tip_strategy)
