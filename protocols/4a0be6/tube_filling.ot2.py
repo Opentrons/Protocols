@@ -1,5 +1,5 @@
 import math
-from opentrons import labware, instruments, robot
+from opentrons import labware, instruments
 from otcustomizers import StringSelection
 
 metadata = {
