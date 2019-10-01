@@ -77,7 +77,7 @@ def run_custom_protocol(
             """yield lists based on number of items
             """
             for i in range(0, len(list), num):
-                    yield list[i:i+num]
+                yield list[i:i+num]
 
     # labware setup
     if number_of_racks > 9:
@@ -126,9 +126,6 @@ def run_custom_protocol(
     pip = getattr(instruments, pipette_type)(
         mount=pipette_mount, tip_racks=[tiprack])
 
-    # split tuberacks into groups of 2 for recap purposes
-    tuberack_groups = list(yield_groups(tube_racks, 2))
-
     # get number of distributes pipette can handle
     distribute_num = pip.max_volume // transfer_volume
     if distribute_num < 1:
@@ -138,25 +135,20 @@ def run_custom_protocol(
 
     pip.start_at_tip(tiprack.wells(starting_tip))
     pip.pick_up_tip()
-    for tuberacks in tuberack_groups:
-        all_wells = [well for rack in tuberacks for well in rack.wells()]
-
-        if dispense_mode == 'Transfer':
-            for dest in all_wells:
-                # get source location (height varies if using conical tubes)
-                source_loc = source if source_container_type == 'trough' else \
-                    track_source_loc(transfer_volume)
-                print(source_loc)
-                pip.transfer(
-                    transfer_volume, source_loc, dest, new_tip='never')
-        else:
-            well_groups = list(yield_groups(all_wells, distribute_num))
-            for wells in well_groups:
-                source_loc = source if source_container_type == 'trough' else \
-                    track_source_loc(transfer_volume * distribute_num)
-                pip.distribute(
-                    transfer_volume, source_loc, wells, blow_out=source,
-                    new_tip='never')
-        pip.retract()
-        robot.pause("Cap tubes for before resuming.")
+    all_wells = [well for tuberack in tube_racks for well in tuberack.wells()]
+    if dispense_mode == 'Transfer':
+        for dest in all_wells:
+            # get source location (height varies if using conical tubes)
+            source_loc = source if source_container_type == 'trough' else \
+                track_source_loc(transfer_volume)
+            pip.transfer(
+                transfer_volume, source_loc, dest, new_tip='never')
+    else:
+        well_groups = list(yield_groups(all_wells, int(distribute_num)))
+        for wells in well_groups:
+            source_loc = source if source_container_type == 'trough' else \
+                track_source_loc(transfer_volume * distribute_num)
+            pip.distribute(
+                transfer_volume, source_loc, wells, blow_out=source,
+                new_tip='never')
     pip.drop_tip()
