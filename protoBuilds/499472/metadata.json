@@ -1,0 +1,1 @@
+{"slug": "499472", "path": "protocols/499472", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["499472.ot2.py"]}, "status": "ok"}
