@@ -89,8 +89,6 @@ pipettes.')
     data = [line.split(',') for line in csv_file.splitlines() if line][3:]
 
     # water to CNV transfer
-    p10.pick_up_tip()
-    p50.pick_up_tip()
     for line in data:
         if line[8]:
             vol = float(line[8])
@@ -106,11 +104,6 @@ pipettes.')
                     new_tip='never'
                 )
                 pipette.blow_out()
-                pipette.drop_tip()
-    if p10.tip_attached:
-        p10.drop_tip()
-    if p50.tip_attached:
-        p50.drop_tip()
 
     # OA to CNV DNA transfer
     for line in data:
@@ -120,12 +113,14 @@ pipettes.')
                 source = oa_dilution_plate.wells(line[3])
                 dest = cnv_dilution_plate.wells(line[6])
                 pipette = p10 if vol <= 10 else p50
-                pipette.pick_up_tip()
+                if not pipette.tip_attached:
+                    pipette.pick_up_tip()
                 pipette.transfer(
                     vol,
                     source,
                     dest,
                     new_tip='never'
                 )
+                pipette.mix(5, vol, dest)
                 pipette.blow_out()
                 pipette.drop_tip()
