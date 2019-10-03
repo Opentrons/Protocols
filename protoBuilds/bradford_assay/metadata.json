@@ -1,1 +1,1 @@
-{"slug": "bradford_assay", "path": "protocols/bradford_assay", "flags": {"feature": true, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["bradford_assay.ot1.py"], "OT 2 protocol": ["bradford_assay.ot2.py"]}, "status": "ok"}
+{"slug": "bradford_assay", "path": "protocols/bradford_assay", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["bradford_assay.ot1.py"], "OT 2 protocol": ["bradford_assay.ot2.py"]}, "status": "ok"}
