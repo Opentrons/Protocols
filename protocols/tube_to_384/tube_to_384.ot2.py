@@ -1,8 +1,14 @@
-from opentrons import containers, instruments
+from opentrons import labware, instruments
 
-p200rack = containers.load('tiprack-200ul', '10')
-sample_tubes = containers.load('tube-rack-2ml', '11')
-plate = containers.load('384-plate', '9')
+metadata = {
+    'protocolName': 'Tube Distribution',
+    'author': 'Opentrons <protocols@opentrons.com>',
+    'source': 'Protocol Library'
+    }
+
+p200rack = labware.load('tiprack-200ul', '10')
+sample_tubes = labware.load('tube-rack-2ml', '11')
+plate = labware.load('384-plate', '9')
 
 p200 = instruments.P300_Single(
     mount="right",

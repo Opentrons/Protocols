@@ -1,6 +1,12 @@
 from opentrons import labware, instruments, modules
 from otcustomizers import StringSelection
 
+metadata = {
+    'protocolName': 'DNA Purification',
+    'author': 'Opentrons <protocols@opentrons.com>',
+    'source': 'Protocol Library'
+    }
+
 mag_deck = modules.load('magdeck', '1')
 mag_plate = labware.load('biorad-hardshell-96-PCR', '1', share=True)
 output_plate = labware.load('biorad-hardshell-96-PCR', '2')
