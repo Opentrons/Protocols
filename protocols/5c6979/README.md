@@ -1,4 +1,4 @@
-# Sample Aliquoting
+# Nucleic Acid Purification
 
 ### Author
 [Opentrons](https://opentrons.com/)
