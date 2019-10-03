@@ -25,7 +25,7 @@ res_12 = labware.load(
 shake_plate = labware.load(
     custom_shaker_name, '4', 'Teleshake with slides mounted')
 liquid_trash = labware.load(
-    'agilent_1_reservoir_290ml', '6', 'liquid trash').top()
+    'agilent_1_reservoir_290ml', '6', 'liquid trash').wells(0).top()
 
 # reagents
 super_g_blocking_buffer = res_12.wells('A1')
@@ -71,7 +71,7 @@ number between 1 and 4.')
     ]
 
     def vacuum():
-        m300.set_flow_rate(aspirate=250)
+        m300.set_flow_rate(aspirate=300)
         if not m300.tip_attached:
             m300.pick_up_tip()
         for i in range(len(aspirate_locs)//2):
@@ -148,19 +148,20 @@ using TeleShake before resuming.'
         m300.delay(minutes=5)
         vacuum()
 
-        m300.pick_up_tip()
-        m300.distribute(
-            100,
-            pbst[wash_ind],
-            dispense_locs,
-            disposal_vol=0,
-            new_tip='never'
-        )
+        if final_aspirate:
+            m300.pick_up_tip()
+            m300.distribute(
+                100,
+                pbst[wash_ind],
+                dispense_locs,
+                disposal_vol=0,
+                new_tip='never'
+            )
         robot.comment('Incubating 5 minutes.')
         m300.delay(minutes=5)
         if final_aspirate:
             vacuum()
-        else:
+        if m300.tip_attached:
             m300.drop_tip()
 
     wash(wash_ind=0, num_initial_pbst=1, final_aspirate=True)
