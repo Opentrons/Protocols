@@ -1,0 +1,1 @@
+{"slug": "1610", "path": "protocols/1610", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["oa_cnv_dilution.ot2.py"]}, "status": "ok"}
