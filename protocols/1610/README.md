@@ -1,4 +1,4 @@
-# CNV Dilution from CSV
+# OA/CNV Dilution from CSV
 
 ### Author
 [Opentrons](http://www.opentrons.com/)
@@ -9,10 +9,6 @@
 
 ## Description
 This protocol performs DNA dilutions on custom 96-well elution and dilution plates. The elution plate is mounted on a magnetic deck to separate beads. Transfer volumes are specified by a CSV file that can be uploaded on the custom protocol site. For reagent setup, see Additional Notes below.
-
-Links:
-[OA Dilution from CSV](./1610-OA)
-[CNV Dilution from CSV](./1610-CNV)
 
 ---
 
@@ -44,6 +40,8 @@ You will need:
 6. Hit "Run".
 7. The specified volumes of nuclease-free H2O is transferred to each well of the CNV dilution plate using the same tip. The pipette type is automatically selected based on transfer volume.
 8. The specified volumes of OA plate contents are transferred to their corresponding wells on the CNV dilution plate using a new tip for each transfer. The pipette type is automatically selected based on the transfer volume.
+9. The specified volumes of nuclease-free H2O is transferred to each well of the OA dilution plate using the same tip. The pipette type is automatically selected based on transfer volume.
+10. The specified volumes of elution plate solution are transferred to their corresponding wells on the OA dilution plate using a new tip for each transfer. The pipette type is automatically selected based on the transfer volume.
 
 ### Additional Notes
 Reagent trough setup:
