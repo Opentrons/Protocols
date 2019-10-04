@@ -1,0 +1,1 @@
+{"slug": "5b7a97-part3-elution", "path": "protocols/5b7a97-part3-elution", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["5b7a97-part3-elution.ot2.py"]}, "status": "ok"}
