@@ -1,0 +1,1 @@
+{"slug": "0f1aa5-pt4", "path": "protocols/0f1aa5-pt4", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["cell_culture_pt4.ot2.py"]}, "status": "ok"}
