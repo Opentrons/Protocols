@@ -52,11 +52,11 @@ def run_custom_protocol(
     # remove and discard supernatant
     for s in samples300:
         pip300.pick_up_tip()
-        pip300.transfer(65, s.bottom(), liquid_waste, new_tip='never')
+        pip300.transfer(65, s.bottom(1), liquid_waste, new_tip='never')
         pip300.blow_out()
         pip300.drop_tip()
 
-    # TWB washes 2x
+    # TWB washes 3x
     count = 0
     total_twb = 96*3
     for wash in range(3):
@@ -69,7 +69,7 @@ def run_custom_protocol(
 
             side = i % 2 if p300_type == 'multi' else math.floor(i/8) % 2
             angle = 0 if side == 0 else math.pi
-            disp_loc = (s, s.from_center(r=0.95, h=-0.6, theta=angle))
+            disp_loc = (s, s.from_center(r=0.85, h=-0.6, theta=angle))
             pip300.pick_up_tip()
             pip300.transfer(100, twb[ind], disp_loc, new_tip='never')
             pip300.mix(10, 80, disp_loc)
@@ -84,7 +84,7 @@ def run_custom_protocol(
             for s in samples300:
                 pip300.pick_up_tip()
                 pip300.transfer(
-                    120, s.bottom(0.5), liquid_waste, new_tip='never')
+                    120, s.bottom(1), liquid_waste, new_tip='never')
                 pip300.blow_out()
                 pip300.drop_tip()
 

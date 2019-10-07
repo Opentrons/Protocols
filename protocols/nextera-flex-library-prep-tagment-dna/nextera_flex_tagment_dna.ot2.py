@@ -19,8 +19,8 @@ tuberack = labware.load(
 
 # reagents
 mm = tuberack.wells('A1', length=2)
-blt = [well.top(-24) for well in tuberack.wells('A2', length=2)]
-tb1 = [well.top(-24) for well in tuberack.wells('A3', length=2)]
+blt = [well.top(-19) for well in tuberack.wells('A2', length=4)]
+tb1 = [well.top(-19) for well in tuberack.wells('A3', length=4)]
 
 
 def run_custom_protocol(
@@ -55,9 +55,8 @@ pipettes')
     vol_per_transfer = 11*number_of_samples_to_process/num_transfers_each
 
     max_mm_ind = 0
+    p50.pick_up_tip()
     for i, reagent in enumerate([blt, tb1]):
-        if not p50.tip_attached:
-            p50.pick_up_tip()
         for i in range(num_transfers_each):
             r_ind = i*len(reagent)//max_transfers
             mm_ind = i*len(mm)//max_transfers
@@ -66,27 +65,32 @@ pipettes')
             p50.transfer(
                 vol_per_transfer,
                 reagent[r_ind],
-                mm[mm_ind].top(),
+                mm[mm_ind].bottom(5),
                 new_tip='never'
             )
-        if i == 0:
-            p50.drop_tip()
+            if reagent == tb1:
+                p50.blow_out()
+            p50.move_to(mm[mm_ind].top(10))
 
     # mix used mastermix tubes
+    p50.set_flow_rate(aspirate=40)
     for tube in mm[:max_mm_ind+1]:
-        p50.mix(10, 50, tube.top(-36))
+        for i in range(10):
+            p50.aspirate(50, tube)
+            p50.dispense(50, tube.bottom(15))
         p50.blow_out(tube.top())
 
     # distribute mastermix
+    p50.set_flow_rate(aspirate=25)
     if using_p50_multi == 'no':
         for i, s in enumerate(samples):
             if not p50.tip_attached:
                 p50.pick_up_tip()
             mm_ind = i//48
-            p50.transfer(20, mm[mm_ind].bottom(-36), s, new_tip='never')
+            p50.transfer(20, mm[mm_ind], s, new_tip='never')
             p50.mix(10, 15, s)
             p50.blow_out()
-        p50.drop_tip()
+            p50.drop_tip()
 
     else:
         strips = labware.load(
@@ -104,7 +108,7 @@ pipettes')
         t_vol = (11+11)/8
         for i, s in enumerate(strips.columns('1')):
             mm_ind = i//4
-            p50.transfer(t_vol, mm[mm_ind].top(-36), s, new_tip='never')
+            p50.transfer(t_vol, mm[mm_ind], s, new_tip='never')
             p50.blow_out(s)
         p50.drop_tip()
 
