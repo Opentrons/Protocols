@@ -56,7 +56,7 @@ pipettes')
 
     max_mm_ind = 0
     p50.pick_up_tip()
-    for i, reagent in enumerate([blt, tb1]):
+    for reagent in [blt, tb1]:
         for i in range(num_transfers_each):
             r_ind = i*len(reagent)//max_transfers
             mm_ind = i*len(mm)//max_transfers

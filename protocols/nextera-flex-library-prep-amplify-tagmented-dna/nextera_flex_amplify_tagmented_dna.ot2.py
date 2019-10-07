@@ -21,15 +21,16 @@ tubeblock = labware.load(
 )
 tempdeck.set_temperature(4)
 tempdeck.wait_for_temp()
-tips50 = labware.load('opentrons-tiprack-300ul', '5')
-tips300 = labware.load('opentrons-tiprack-300ul', '6')
+tips50 = [labware.load('opentrons-tiprack-300ul', slot) for slot in ['5', '6']]
+tips300 = [
+    labware.load('opentrons-tiprack-300ul', slot) for slot in ['7', '8']]
 liquid_waste = labware.load(
-    'agilent_1_reservoir_290ml', '8', 'liquid waste').wells(0).top()
+    'agilent_1_reservoir_290ml', '9', 'liquid waste').wells(0).top()
 
 # reagents
 mm = tubeblock.wells('A1', length=3)
-epm = [well.top(-24) for well in tubeblock.wells('A2', length=4)]
-nuc_free_water = [well.top(-36) for well in tubeblock.wells('A3', length=2)]
+epm = [well.top(-19) for well in tubeblock.wells('A2', length=4)]
+nuc_free_water = tubeblock.wells('A3', length=2)
 
 
 def run_custom_protocol(
@@ -49,14 +50,14 @@ pipettes')
     num_cols = math.ceil(number_of_samples_to_process/8)
 
     # pipettes
-    p50 = instruments.P50_Single(mount=p50_single_mount, tip_racks=[tips50])
+    p50 = instruments.P50_Single(mount=p50_single_mount, tip_racks=tips50)
     samples50 = mag_plate.wells()[:number_of_samples_to_process]
 
     if p300_type == 'multi':
-        pip300 = instruments.P300_Multi(mount=p300_mount, tip_racks=[tips300])
+        pip300 = instruments.P300_Multi(mount=p300_mount, tip_racks=tips300)
         samples300 = mag_plate.rows('A')[:num_cols]
     else:
-        pip300 = instruments.P300_Single(mount=p300_mount, tip_racks=[tips300])
+        pip300 = instruments.P300_Single(mount=p300_mount, tip_racks=tips300)
         samples300 = mag_plate.wells()[:number_of_samples_to_process]
 
     magdeck.engage(height=18)
@@ -86,17 +87,27 @@ pipettes')
                 mm[mm_ind].top(),
                 new_tip='never'
             )
+            if reagent == epm:
+                pip.blow_out(mm[mm_ind].top())
+            pip.move_to(mm[mm_ind].top(10))
 
     # mix used mastermix tubes
+    p50.set_flow_rate(aspirate=40)
+    if not p50.tip_attached:
+        p50.pick_up_tip()
     for tube in mm[:max_mm_ind+1]:
-        pip.mix(10, 10, tube.top(-36))
-        pip.blow_out(tube.top())
+        for i in range(10):
+            p50.aspirate(50, tube)
+            p50.dispense(50, tube.bottom(15))
+        p50.blow_out(tube.top())
+    p50.set_flow_rate(aspirate=25)
+    p50.drop_tip()
 
     # remove supernatant
     for s in samples300:
         if not pip300.tip_attached:
             pip300.pick_up_tip()
-        pip300.transfer(300, s, liquid_waste, new_tip='never')
+        pip300.transfer(300, s.bottom(1), liquid_waste, new_tip='never')
         pip300.blow_out()
         pip300.drop_tip()
 
@@ -107,7 +118,7 @@ pipettes')
         if not p50.tip_attached:
             p50.pick_up_tip()
         mm_ind = i//32
-        p50.transfer(40, mm[mm_ind].top(-36), s, new_tip='never')
+        p50.transfer(40, mm[mm_ind], s, new_tip='never')
         p50.mix(10, 30, s)
         p50.blow_out()
         p50.drop_tip()
