@@ -22,7 +22,7 @@ if deep_name not in labware.list():
         volume=2000
     )
 mag_plate = labware.load(deep_name, '10', share=True)
-magh = 12
+magh = 14.94
 
 res_name = 'nalgene_1_reservoir_300ml'
 if res_name not in labware.list():
