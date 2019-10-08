@@ -141,6 +141,7 @@ def run_custom_protocol(
         pip300.drop_tip()
 
     pip300.delay(minutes=3)
+    robot._driver.run_flag.wait()
     magdeck.engage(height=magh)
     pip300.delay(minutes=5)
 
