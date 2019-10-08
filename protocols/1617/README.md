@@ -10,6 +10,8 @@
 ## Description
 This protocol performs cherrypicking from source to target plates as specified in an input CSV file. The protocol parses the CSV for slots to load the source and target plates. Only non-zero volume transfers are carried out for efficiency, and the user is prompted to refill tipracks if necessary.
 
+This protocol has been updated and now includes added labware (Corning 384-well plate) and the option to use Opentrons tips or TipOne tips. 
+
 ---
 
 You will need:
@@ -37,5 +39,4 @@ You will need:
 If you have any questions about this protocol, please contact protocols@opentrons.com.
 
 ###### Internal
-vmxMIYN4
-1617
+5c8926
