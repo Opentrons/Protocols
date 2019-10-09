@@ -87,8 +87,7 @@ pipettes')
                 mm[mm_ind].top(),
                 new_tip='never'
             )
-            if reagent == epm:
-                pip.blow_out(mm[mm_ind].top())
+            pip.blow_out(mm[mm_ind].top())
             pip.move_to(mm[mm_ind].top(10))
 
     # mix used mastermix tubes
@@ -97,31 +96,64 @@ pipettes')
         p50.pick_up_tip()
     for tube in mm[:max_mm_ind+1]:
         for i in range(10):
-            p50.aspirate(50, tube)
+            p50.aspirate(50, tube.bottom(4))
             p50.dispense(50, tube.bottom(15))
         p50.blow_out(tube.top())
-    p50.set_flow_rate(aspirate=25)
     p50.drop_tip()
+    p50.set_flow_rate(aspirate=25)
 
     # remove supernatant
     for s in samples300:
         if not pip300.tip_attached:
             pip300.pick_up_tip()
-        pip300.transfer(300, s.bottom(1), liquid_waste, new_tip='never')
+        pip300.transfer(120, s.bottom(1), liquid_waste, new_tip='never')
         pip300.blow_out()
         pip300.drop_tip()
 
     magdeck.disengage()
 
     # distribute mastermix
-    for i, s in enumerate(samples50):
-        if not p50.tip_attached:
+    if p300_type == 'single':
+        for i, s in enumerate(samples50):
+            mm_ind = i//32
+            angle = 0 if (i//8) % 2 == 0 else math.pi
+            disp_loc = (s, s.from_center(r=0.85, h=-0.6, theta=angle))
             p50.pick_up_tip()
-        mm_ind = i//32
-        p50.transfer(40, mm[mm_ind], s, new_tip='never')
-        p50.mix(10, 30, s)
-        p50.blow_out()
+            p50.aspirate(40, mm[mm_ind])
+            p50.move_to(s.bottom(5))
+            p50.dispense(40, disp_loc)
+            p50.mix(10, 30, disp_loc)
+            p50.blow_out(s.top())
+            p50.drop_tip()
+
+    else:
+        mm_plate = labware.load(
+            'biorad_96_wellplate_200ul_pcr',
+            '3',
+            'mastermix plate (for multi-channel transfer)'
+        )
+        # transfer mm to plate columns
+        p50.pick_up_tip()
+        for i in range(num_cols):
+            for j, well in enumerate(mm_plate.rows()[i//4]):
+                well_ind = i*8+j
+                mm_ind = well_ind//32
+                p50.transfer(44, mm[mm_ind], well, new_tip='never')
+                p50.blow_out()
         p50.drop_tip()
+
+        # distribute mm to sample columns
+        for i, dest in enumerate(samples300):
+            source = mm_plate.rows('A')[i//4]
+            angle = 0 if i % 2 == 0 else math.pi
+            disp_loc = (dest, dest.from_center(r=0.85, h=-0.6, theta=angle))
+            pip300.pick_up_tip()
+            pip300.aspirate(40, source)
+            pip300.move_to(dest.bottom(5))
+            pip300.dispense(40, disp_loc)
+            pip300.mix(10, 20, disp_loc)
+            pip300.blow_out(dest.top())
+            pip300.drop_tip()
 
     robot.comment('Add the appropriate index adapters to each sample and mix. \
 Seal the plate, centrifuge, and run the BLT PCR program.')
