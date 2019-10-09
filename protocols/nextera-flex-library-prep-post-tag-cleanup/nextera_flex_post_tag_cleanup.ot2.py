@@ -17,7 +17,7 @@ res12 = labware.load(
     'usascientific_12_reservoir_22ml', '3', 'reagent reservoir')
 
 twb = [chan for chan in res12.wells()[:2]]
-liquid_waste = res12.wells(11).top()
+liquid_waste = [chan.top() for chan in res12.wells('A11', length=2)]
 
 
 def run_custom_protocol(
@@ -52,7 +52,7 @@ def run_custom_protocol(
     # remove and discard supernatant
     for s in samples300:
         pip300.pick_up_tip()
-        pip300.transfer(65, s.bottom(1), liquid_waste, new_tip='never')
+        pip300.transfer(65, s.bottom(1), liquid_waste[0], new_tip='never')
         pip300.blow_out()
         pip300.drop_tip()
 
@@ -71,7 +71,9 @@ def run_custom_protocol(
             angle = 0 if side == 0 else math.pi
             disp_loc = (s, s.from_center(r=0.85, h=-0.6, theta=angle))
             pip300.pick_up_tip()
-            pip300.transfer(100, twb[ind], disp_loc, new_tip='never')
+            pip300.aspirate(100, twb[ind])
+            pip300.move_to(s.bottom(5))
+            pip300.dispense(100, disp_loc)
             pip300.mix(10, 80, disp_loc)
             pip300.drop_tip()
 
@@ -84,7 +86,7 @@ def run_custom_protocol(
             for s in samples300:
                 pip300.pick_up_tip()
                 pip300.transfer(
-                    120, s.bottom(1), liquid_waste, new_tip='never')
+                    120, s.bottom(1), liquid_waste[wash], new_tip='never')
                 pip300.blow_out()
                 pip300.drop_tip()
 
