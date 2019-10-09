@@ -93,10 +93,10 @@ pipettes')
             p50.drop_tip()
 
     else:
-        strips = labware.load(
-            'opentrons_96_aluminumblock_generic_pcr_strip_200ul',
+        mm_plate = labware.load(
+            'biorad_96_wellplate_200ul_pcr',
             '3',
-            'mastermix strip rack'
+            'mastermix plate (for multi-channel transfer)'
         )
         tips50m = labware.load('opentrons_96_tiprack_300ul', '6')
         m50 = instruments.P50_Multi(
@@ -104,20 +104,22 @@ pipettes')
         num_cols = math.ceil(number_of_samples_to_process/8)
         samples_multi = rxn_plate.rows('A')[:num_cols]
 
-        # transfer mm to strip
-        t_vol = (11+11)/8
-        for i, s in enumerate(strips.columns('1')):
-            mm_ind = i//4
-            p50.transfer(t_vol, mm[mm_ind], s, new_tip='never')
-            p50.blow_out(s)
+        # transfer mm to plate columns
+        p50.pick_up_tip()
+        for i in range(num_cols):
+            for j, well in enumerate(mm_plate.rows()[i//6]):
+                well_ind = i*8+j
+                mm_ind = well_ind/48
+                p50.transfer(22, mm[mm_ind], well, new_tip='never')
+                p50.blow_out()
         p50.drop_tip()
 
         # distribute mm to sample columns
-        mm_source = strips.columns('1')[0]
-        for s in samples_multi:
+        for dest in samples_multi:
+            source = mm_plate.rows('A')[i//6]
             m50.pick_up_tip()
-            m50.transfer(20, mm_source, s, new_tip='never')
-            m50.mix(10, 20, s)
+            m50.transfer(20, source, dest, new_tip='never')
+            m50.mix(10, 20, dest)
             m50.blow_out(s.top())
             m50.drop_tip()
 
