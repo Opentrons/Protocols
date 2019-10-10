@@ -36,35 +36,14 @@ def run_custom_protocol(
     # create pipettes
     pip1k = instruments.P1000_Single(mount=p1000_mount, tip_racks=[tips1000])
 
-    wellno = 0
-
-    def simple_transfer(src):
-        nonlocal wellno
-
+    for source, dest_col in zip(trough1.wells(), vialrack.columns()):
         pip1k.pick_up_tip()
-        pip1k.transfer(
-            500, src, vialrack.wells(wellno), air_gap=50, new_tip='never')
-        pip1k.blow_out(vialrack.wells(wellno).top())
-        wellno += 1
-        pip1k.transfer(
-            375, src, vialrack.wells(wellno), air_gap=50, new_tip='never')
-        pip1k.blow_out(vialrack.wells(wellno).top())
-        wellno += 1
-        pip1k.transfer(
-            250, src, vialrack.wells(wellno), air_gap=50, new_tip='never')
-        pip1k.blow_out(vialrack.wells(wellno).top())
-        wellno += 1
-        pip1k.transfer(
-            125, src, vialrack.wells(wellno), air_gap=50, new_tip='never')
-        pip1k.blow_out(vialrack.wells(wellno).top())
-        wellno += 1
+        for i, dest in enumerate(dest_col):
+            vol = 500-(125*i)
+            pip1k.transfer(vol, source, dest, air_gap=50, new_tip='never')
+            pip1k.blow_out(dest.top())
         pip1k.drop_tip()
 
-    for s in trough1:
-        simple_transfer(s)
+    pip1k.distribute(500, trough2.wells('A3'), vialrack.wells(), air_gap=50)
 
-    pip1k.pick_up_tip()
-    pip1k.distribute(500, trough2.wells('A3'), vialrack, air_gap=50)
-
-    pip1k.pick_up_tip()
-    pip1k.distribute(500, trough2.wells('B3'), vialrack, air_gap=50)
+    pip1k.distribute(500, trough2.wells('B3'), vialrack.wells(), air_gap=50)
