@@ -3,7 +3,7 @@ from otcustomizers import StringSelection, FileInput
 
 metadata = {
     'protocolName': 'CSV Cherrypicking',
-    'author': 'Nick <protocols@opentrons.com>',
+    'author': 'Chaz <protocols@opentrons.com>',
     'source': 'Custom Protocol Request'
 }
 
@@ -19,20 +19,24 @@ def run_custom_protocol(
         transfer_cherrypick_CSV: FileInput = example_csv,
         source_plate_type: StringSelection(
             'Bio-Rad Hardshell 96-well plate',
-            'Opentrons 4x6 tube rack') = 'Bio-Rad Hardshell 96-well plate',
+            'Opentrons 4x6 tube rack',
+            'Corning 384-well plate') = 'Corning 384-well plate',
         destination_plate_type: StringSelection(
             'Bio-Rad Hardshell 96-well plate',
             'Opentrons 4x6 tube rack') = 'Bio-Rad Hardshell 96-well plate',
-        pipette_selection: StringSelection('P10 and P50', 'P50 and P300',
-                                           'P10 and P300') = 'P50 and P300',
+        pipette_selection: StringSelection('P10 and P50', 'P10 and P300',
+                                           'P10 and P300') = 'P10 and P300',
+        pipette_tip_type: StringSelection('Opentrons', 'TipOne') = 'Opentrons',
         p10_aspirate_speed_in_ul_per_s_if_applicable: float = 5,
         p10_dispense_speed_in_ul_per_s_if_applicable: float = 10
 ):
 
     if source_plate_type == 'Bio-Rad Hardshell 96-well plate':
         source_name = 'biorad_96_wellplate_200ul_pcr'
-    else:
+    elif source_plate_type == 'Opentrons 4x6 tube rack':
         source_name = 'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap'
+    else:
+        source_name = 'corning_384_wellplate_112ul_flat'
 
     if destination_plate_type == 'Bio-Rad Hardshell 96-well plate':
         dest_name = 'biorad_96_wellplate_200ul_pcr'
@@ -109,14 +113,43 @@ def run_custom_protocol(
 
     # pipette and tiprack setup depending on pipette selection
     if pipette_selection.split(' ')[0] == 'P10':
-        tips10 = [
-            labware.load('opentrons_96_tiprack_10ul', slot)
-            for slot in ['10', '11']
-        ]
-        tips300 = [
-            labware.load('opentrons_96_tiprack_300ul', slot)
-            for slot in ['7', '8', '9']
-        ]
+        if pipette_tip_type == 'Opentrons':
+            tips10 = [
+                labware.load('opentrons_96_tiprack_10ul', slot)
+                for slot in ['10', '11']
+            ]
+            tips300 = [
+                labware.load('opentrons_96_tiprack_300ul', slot)
+                for slot in ['7', '8', '9']
+            ]
+        else:
+            tiprack300_name = 'tipone_96_tiprack_300ul'
+            if tiprack300_name not in labware.list():
+                labware.create(
+                    tiprack300_name,
+                    grid=(12, 8),
+                    spacing=(9, 9),
+                    diameter=5.23,
+                    depth=59.30
+                )
+
+            tiprack10_name = 'tipone_96_tiprack_10ul'
+            if tiprack10_name not in labware.list():
+                labware.create(
+                    tiprack10_name,
+                    grid=(12, 8),
+                    spacing=(9, 9),
+                    diameter=6,
+                    depth=34
+                )
+            tips10 = [
+                labware.load('tipone_96_tiprack_10ul', slot)
+                for slot in ['10', '11']
+            ]
+            tips300 = [
+                labware.load('tipone_96_tiprack_300ul', slot)
+                for slot in ['7', '8', '9']
+            ]
         tips10_max = 96*2
         tips300_max = 96*3
         all_tips_10 = [well for rack in tips10 for well in rack.wells()]
@@ -131,8 +164,21 @@ def run_custom_protocol(
             p300 = instruments.P300_Single(mount='left')
         tip10_count = 0
     else:
-        tips300 = [labware.load('opentrons_96_tiprack_300ul', slot)
-                   for slot in ['7', '8', '9', '10', '11']]
+        if pipette_tip_type == 'TipOne':
+            tiprack300_name = 'tipone_96_tiprack_300ul'
+            if tiprack300_name not in labware.list():
+                labware.create(
+                    tiprack300_name,
+                    grid=(12, 8),
+                    spacing=(9, 9),
+                    diameter=5.23,
+                    depth=59.30
+                )
+            tips300 = [labware.load('tipone_96_tiprack_300ul', slot)
+                       for slot in ['7', '8', '9', '10', '11']]
+        else:
+            tips300 = [labware.load('opentrons_96_tiprack_300ul', slot)
+                       for slot in ['7', '8', '9', '10', '11']]
         tips300_max = 96*5
         p50 = instruments.P50_Single(mount='right')
         p300 = instruments.P300_Single(mount='left')
@@ -173,21 +219,21 @@ def run_custom_protocol(
             if pipette_selection == 'P10 and P50':
                 if vol <= 10:
                     pipette = p10
-                    tip10_count += 1
                     pipette.pick_up_tip(all_tips_10[tip10_count])
+                    tip10_count += 1
                 else:
                     pipette = p50
-                    tip300_count += 1
                     pipette.pick_up_tip(all_tips_300[tip300_count])
+                    tip300_count += 1
             elif pipette_selection == 'P10 and P300':
                 if vol <= 30:
                     pipette = p10
-                    tip10_count += 1
                     pipette.pick_up_tip(all_tips_10[tip10_count])
+                    tip10_count += 1
                 else:
                     pipette = p300
-                    tip300_count += 1
                     pipette.pick_up_tip(all_tips_300[tip300_count])
+                    tip300_count += 1
             else:
                 if vol <= 50:
                     pipette = p50
@@ -203,6 +249,8 @@ def run_custom_protocol(
                 blow_out=True,
                 new_tip='never'
                 )
+            if mix_vol > pipette.max_volume:
+                mix_vol = pipette.max_volume
             pipette.mix(mix_n, mix_vol)
             pipette.blow_out(target.top())
             pipette.drop_tip()
