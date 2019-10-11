@@ -35,7 +35,7 @@ plate_2 = labware.load(
     'opentrons_96_aluminumblock_biorad_wellplate_200ul', '7')
 tips10 = [labware.load('tiprack-10ul', slot)
           for slot in ['3', '6', '8']]
-tips300 = [labware.load('openrons-tiprack-300ul', str(slot))
+tips300 = [labware.load('opentrons-tiprack-300ul', str(slot))
            for slot in range(9, 12)]
 
 
@@ -105,6 +105,7 @@ def run_custom_protocol(
                 [s.top() for s in samples_mag],
                 new_tip='never'
             )
+            m300.delay(seconds=30)
             for s in samples_mag:
                 if not m300.tip_attached:
                     tip_check('p300')
