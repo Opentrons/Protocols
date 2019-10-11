@@ -1,0 +1,1 @@
+{"slug": "qiaseq-pt-1", "path": "protocols/qiaseq-pt-1", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["pt1_mastermixes_assembly.ot2.py"]}, "status": "ok"}

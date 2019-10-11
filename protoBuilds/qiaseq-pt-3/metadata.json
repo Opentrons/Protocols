@@ -1,0 +1,1 @@
+{"slug": "qiaseq-pt-3", "path": "protocols/qiaseq-pt-3", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["pt3_cleanup_of_dna.ot2.py"]}, "status": "ok"}
