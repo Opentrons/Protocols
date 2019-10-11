@@ -36,20 +36,21 @@ def run_custom_protocol(
         pip10.pick_up_tip()
         tip10_count += 1
 
-    dest = pcr_plate.rows('A')
+    src = pcr_plate.rows('A')
+    dest = pcr_well.wells('A1')
 
     # transfer 2ul of sample to 8-well PCR strip
     if tip_strategy == 'different tip':
-        for d in dest:
+        for s in src:
             pick_up(pip10)
-            pip10.transfer(2, d, pcr_well.wells('A1'), new_tip='never')
-            pip10.blow_out(d.top())
+            pip10.transfer(2, s, dest, new_tip='never')
+            pip10.blow_out(dest.top())
             pip10.drop_tip()
     else:
         pick_up(pip10)
-        for d in dest:
-            pip10.transfer(2, d, pcr_well.wells('A1'), new_tip='never')
-            pip10.blow_out(d.top())
+        for s in src:
+            pip10.transfer(2, s, dest, new_tip='never')
+            pip10.blow_out(dest.top())
         pip10.drop_tip()
 
     robot.comment("Pooling protocol now complete.")
