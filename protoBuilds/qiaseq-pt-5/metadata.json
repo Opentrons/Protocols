@@ -1,0 +1,1 @@
+{"slug": "qiaseq-pt-5", "path": "protocols/qiaseq-pt-5", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["pt5_cleanup_of_target_enrichment.ot2.py"]}, "status": "ok"}
