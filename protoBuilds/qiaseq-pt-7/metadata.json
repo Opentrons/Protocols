@@ -1,0 +1,1 @@
+{"slug": "qiaseq-pt-7", "path": "protocols/qiaseq-pt-7", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["pt7_cleanup_universal_pcr.ot2.py"]}, "status": "ok"}
