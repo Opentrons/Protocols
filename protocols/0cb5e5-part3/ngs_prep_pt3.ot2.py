@@ -33,30 +33,30 @@ reagent_plate = labware.load(
     'opentrons_96_aluminumblock_biorad_wellplate_200ul', '5', 'reagent plate')
 plate_2 = labware.load(
     'opentrons_96_aluminumblock_biorad_wellplate_200ul', '7')
-tips10 = [labware.load('opentrons_96_tiprack_10ul', slot)
+tips10 = [labware.load('tiprack-10ul', slot)
           for slot in ['3', '6', '8']]
-tips50 = [labware.load('opentrons_96_tiprack_300ul', str(slot))
-          for slot in range(9, 12)]
+tips300 = [labware.load('openrons-tiprack-300ul', str(slot))
+           for slot in range(9, 12)]
 
 
 def run_custom_protocol(
         number_of_samples: int = 96,
         p10_multi_mount: StringSelection('right', 'left') = 'right',
-        p50_multi_mount: StringSelection('left', 'right') = 'left',
+        p300_multi_mount: StringSelection('left', 'right') = 'left',
         dual_index: StringSelection('yes', 'no') = 'yes',
         reagent_starting_column: int = 1
 ):
     # checks
     if number_of_samples > 96 or number_of_samples < 1:
         raise Exception('Invalid number of samples')
-    if p10_multi_mount == p50_multi_mount:
+    if p10_multi_mount == p300_multi_mount:
         raise Exception('Invalid pipette mount combination')
     if reagent_starting_column > 7:
         raise Exception('Invlaid reagent starting column')
 
     # pipettes
     m10 = instruments.P10_Multi(mount=p10_multi_mount, tip_racks=tips10)
-    m50 = instruments.P50_Multi(mount=p50_multi_mount, tip_racks=tips50)
+    m300 = instruments.P300_Multi(mount=p300_multi_mount, tip_racks=tips300)
 
     # reagent setup
     [fs2e1, fs1, rs, ss1, ss2e2, pcre3] = [
@@ -75,19 +75,19 @@ def run_custom_protocol(
 
     # tip check function
     tip10_max = len(tips10)*12
-    tip50_max = len(tips50)*12
+    tip300_max = len(tips300)*12
     tip10_count = 0
-    tip50_count = 0
+    tip300_count = 0
 
     def tip_check(pipette):
         nonlocal tip10_count
-        nonlocal tip50_count
-        if pipette == 'p50':
-            tip50_count += 1
-            if tip50_count > tip50_max:
-                m50.reset()
-                tip50_count = 1
-                robot.pause('Please replace 50ul tipracks before resuming.')
+        nonlocal tip300_count
+        if pipette == 'p300':
+            tip300_count += 1
+            if tip300_count > tip300_max:
+                m300.reset()
+                tip300_count = 1
+                robot.pause('Please replace 300ul tipracks before resuming.')
         else:
             tip10_count += 1
             if tip10_count > tip10_max:
@@ -97,20 +97,20 @@ def run_custom_protocol(
 
     def etoh_wash(inds):
         for wash in inds:
-            tip_check('p50')
-            m50.pick_up_tip()
-            m50.transfer(
+            tip_check('p300')
+            m300.pick_up_tip()
+            m300.transfer(
                 120,
                 etoh[wash],
                 [s.top() for s in samples_mag],
                 new_tip='never'
             )
             for s in samples_mag:
-                if not m50.tip_attached:
-                    tip_check('p50')
-                    m50.pick_up_tip()
-                m50.transfer(120, s, etoh_waste[wash], new_tip='never')
-                m50.drop_tip()
+                if not m300.tip_attached:
+                    tip_check('p300')
+                    m300.pick_up_tip()
+                m300.transfer(120, s, etoh_waste[wash], new_tip='never')
+                m300.drop_tip()
 
     """M5 PCR Amplification"""
     m10.home()
