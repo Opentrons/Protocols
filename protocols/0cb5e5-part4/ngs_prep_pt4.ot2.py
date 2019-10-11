@@ -106,6 +106,7 @@ def run_custom_protocol(
                 [s.top() for s in samples_mag],
                 new_tip='never'
             )
+            m300.delay(seconds=30)
             for s in samples_mag:
                 if not m300.tip_attached:
                     tip_check('p300')
