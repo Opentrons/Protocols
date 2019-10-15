@@ -25,7 +25,7 @@ if centr_container not in labware.list():
         centr_container,
         grid=(8, 12),
         spacing=(9, 9),
-        diameter=7.5,
+        diameter=5.5,
         depth=30.5,
         volume=500
     )
@@ -36,7 +36,7 @@ if nano_container not in labware.list():
         nano_container,
         grid=(8, 12),
         spacing=(9, 9),
-        diameter=10,
+        diameter=5.5,
         depth=10,
         volume=500
     )
@@ -91,25 +91,23 @@ def run_custom_protocol(
         tip_count += 1
 
     # Step 1 - mix bio-fluid and transfer 50uL
-
-    for i in range(50):
+    for source, dest in zip(cryovials.wells(), centtubes.wells()):
         pick_up(pip300)
-        pip300.mix(5, 50, cryovials.wells(i))
-        pip300.blow_out(cryovials.wells(i).top())
-        pip300.transfer(50, cryovials.wells(i), centtubes.wells(i),
-                        new_tip='never')
-        pip300.blow_out(centtubes.wells(i).top())
+        pip300.mix(5, 50, source)
+        pip300.blow_out(source.top())
+        pip300.transfer(50, source, dest, new_tip='never')
+        pip300.blow_out(dest.top())
         pip300.drop_tip()
 
     # Step 2 - transfer 20ul aliquot of solution
     tempdeck.wait_for_temp()
 
-    for j in range(50):
+    for dest in centtubes.wells()[:50]:
         pick_up(pip50)
-        pip50.transfer(20, temprack.wells(0), centtubes.wells(j),
+        pip50.transfer(20, temprack.wells(0), dest,
                        new_tip='never')
-        pip50.mix(3, 35, centtubes.wells(j))
-        pip50.blow_out(centtubes.wells(j).top())
+        pip50.mix(3, 35, dest)
+        pip50.blow_out(dest.top())
         pip50.drop_tip()
 
     # Step 3 + 4 transfer 130ul solution then transfer 200 to nanosep tubes
@@ -130,3 +128,8 @@ def run_custom_protocol(
     centrifugation. After centrifugation, replace samples on the deck and run \
     Part 2. Be sure to replace the cryovials in slots 3/6/9 with sample \
     vials. Lastly, replace the tiprack in slot 11 with a full rack.")
+
+
+run_custom_protocol()
+for c in robot.commands():
+    print(c)
