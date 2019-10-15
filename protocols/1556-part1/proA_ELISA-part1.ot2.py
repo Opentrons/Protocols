@@ -117,7 +117,7 @@ def run_custom_protocol(
                 p1000.transfer(
                     volume,
                     source,
-                    dest.top(-10),
+                    dest.top(-20),
                     new_tip='never')
                 p1000.blow_out(dest.top())
     p1000.drop_tip()
@@ -177,7 +177,7 @@ def run_custom_protocol(
     # transfer samples
     for sample in samples:
         p300.pick_up_tip()
-        p300.aspirate(200, sample)
+        p300.aspirate(230, sample)
         for dest in dests[0]:
             p300.dispense(100, dest)
         p300.drop_tip()
