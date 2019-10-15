@@ -25,7 +25,7 @@ if centr_container not in labware.list():
         centr_container,
         grid=(8, 12),
         spacing=(9, 9),
-        diameter=7.5,
+        diameter=5.5,
         depth=30.5,
         volume=500
     )
@@ -36,7 +36,7 @@ if nano_container not in labware.list():
         nano_container,
         grid=(8, 12),
         spacing=(9, 9),
-        diameter=10,
+        diameter=5.5,
         depth=10,
         volume=500
     )
@@ -77,22 +77,23 @@ def run_custom_protocol(
         tip_count += 1
 
     # Step 5
-
-    for l in range(50):
+    for source, dest in zip(ultratubes.wells()[:50], sampvials.wells()):
         pick_up(pip50)
-        pip50.transfer(20, ultratubes.wells(l), sampvials.wells(l),
-                       new_tip='never')
-        pip50.blow_out(sampvials.wells(l).top())
+        pip50.transfer(20, source, dest, new_tip='never')
+        pip50.blow_out(dest.top())
         pip50.drop_tip()
 
     robot.pause("Samples have been transferred to sample vial. Replace the \
     centrifuge tubes in slots 2/5/8 and when ready, click RESUME.")
-
-    for p in range(50):
+    for source, dest in zip(ultratubes.wells()[:50], centtubes.wells()):
         pick_up(pip300)
-        pip300.transfer(180, ultratubes.wells(p), centtubes.wells(p),
-                        new_tip='never')
-        pip300.blow_out(centtubes.wells(p).top())
+        pip300.transfer(180, source, dest, new_tip='never')
+        pip300.blow_out(dest.top())
         pip300.drop_tip()
 
     robot.comment("Part 2 complete, protocol is now finished.")
+
+
+run_custom_protocol()
+for c in robot.commands():
+    print(c)
