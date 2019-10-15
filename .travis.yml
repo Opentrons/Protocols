@@ -2,6 +2,9 @@ language: python
 python:
   - '3.6.4'
 
+before_install:
+  - sudo apt-get install -y --no-install-recommends libsystemd-dev
+
 install:
   - export OT_UPLOAD_BRANCH=$(python scripts/getBranch.py)
   - echo $OT_UPLOAD_BRANCH
