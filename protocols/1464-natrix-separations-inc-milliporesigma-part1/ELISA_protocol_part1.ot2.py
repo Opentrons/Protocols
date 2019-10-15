@@ -112,7 +112,7 @@ def run_custom_protocol(
             p1000.transfer(
                 volume,
                 source,
-                dest.top(-10),
+                dest.top(-20),
                 new_tip='never')
             p1000.blow_out(dest.top())
     p1000.drop_tip()
