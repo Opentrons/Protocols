@@ -92,8 +92,3 @@ def run_custom_protocol(
         pip300.drop_tip()
 
     robot.comment("Part 2 complete, protocol is now finished.")
-
-
-run_custom_protocol()
-for c in robot.commands():
-    print(c)
