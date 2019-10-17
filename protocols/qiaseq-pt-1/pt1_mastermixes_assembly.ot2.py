@@ -36,7 +36,7 @@ tips10 = [
 frag_buffer = reagent_tuberack.wells('A1')
 fera = reagent_tuberack.wells('B1')
 nuc_free_water = reagent_tuberack.wells('C1')
-frag_enzyme_mix = reagent_tuberack.wells('A1')
+frag_enzyme_mix = reagent_tuberack.wells('D1')
 frag_mastermix_tube = reagent_tuberack.wells('A2')
 
 
