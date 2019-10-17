@@ -128,8 +128,3 @@ def run_custom_protocol(
     centrifugation. After centrifugation, replace samples on the deck and run \
     Part 2. Be sure to replace the cryovials in slots 3/6/9 with sample \
     vials. Lastly, replace the tiprack in slot 11 with a full rack.")
-
-
-run_custom_protocol()
-for c in robot.commands():
-    print(c)
