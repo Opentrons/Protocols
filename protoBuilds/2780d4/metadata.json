@@ -1,0 +1,1 @@
+{"slug": "2780d4", "path": "protocols/2780d4", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["checkerboard_assay.ot2.py"]}, "status": "ok"}
