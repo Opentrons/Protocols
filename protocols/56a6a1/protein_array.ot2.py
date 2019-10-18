@@ -89,6 +89,7 @@ number between 1 and 4.')
     # distribute blocking buffer
     m300.distribute(
         100, super_g_blocking_buffer, dispense_locs, disposal_vol=0)
+    m300.move_to(res_12.wells('A12').top(10))
 
     robot.pause("Shake for 30 minutes at room temperature on TeleShake before \
 resuming.")
@@ -112,10 +113,11 @@ gentle agitation for 1 hour using TeleShake before resuming.'
         sample_plate = labware.load(
             'biorad_96_wellplate_200ul_pcr', '10', 'sample plate')
         samples = sample_plate.rows('A')[:number_of_slides_to_process*2]
+        m300.drop_tip()
         m300.transfer(100, samples, dispense_locs, new_tip='always')
         pause_str = 'Incubate the samples by gentle agitation for 1 hour \
 using TeleShake before resuming.'
-
+    m300.move_to(res_12.wells('A12').top(10))
     robot.pause(pause_str)
 
     # completely transfer out liquid
@@ -177,6 +179,7 @@ per slide) in PBST and place in channel 2 of the 12-channel reagent reservoir \
         disposal_vol=0,
         new_tip='never'
     )
+    m300.move_to(res_12.wells('A12').top(10))
 
     robot.pause('Incubate the samples by gentle agitation for 1 hour using \
 TeleShake before resuming.')
@@ -184,6 +187,7 @@ TeleShake before resuming.')
     vacuum()
 
     wash(wash_ind=2, num_initial_pbst=2, final_aspirate=False)
+    m300.move_to(res_12.wells('A12').top(10))
 
     robot.comment('Take off slides from FastFrame and place into 50 ml \
 conical tube filled with 45 ml PBS, and wash by agitating on TeleShake for 5 \
