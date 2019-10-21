@@ -64,7 +64,7 @@ def run_custom_protocol(
     # parse
     rep_sets = [
         [magplate.rows('A')[int(col)-1] for col in line.split(',')]
-        for line in input_CSV.splitlines()[1:] if line
+        for line in input_CSV.splitlines() if line
     ]
     # samples
     mag_samples_m = [col for set in rep_sets for col in set]
@@ -121,7 +121,8 @@ resuming.')
 
     def remove_supernatant(vol, waste_chan):
         for set in rep_sets:
-            pick_up(m300, 'multi')
+            if not m300.tip_attached:
+                pick_up(m300, 'multi')
             m300.consolidate(
                 vol, [s.bottom(0.5) for s in set], waste_chan, new_tip='never')
             m300.drop_tip()
@@ -406,7 +407,8 @@ resuming.')
             robot.pause('Prepare the substrate and load it into the 22mL \
 reservoir channel 3.')
             for i, m in enumerate(mag_samples_m):
-                pick_up(m300, 'multi')
+                if not m300.tip_attached:
+                    pick_up(m300, 'multi')
                 m300.transfer(160, m.bottom(0.5), waste[2], new_tip='never')
                 m300.drop_tip()
                 pick_up(m300, 'multi')
