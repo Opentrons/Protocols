@@ -43,7 +43,10 @@ waste = [chan.top() for chan in res12.wells('A11', length=2)]
 def run_custom_protocol(
         p10_multi_mount: StringSelection('right', 'left') = 'right',
         p300_multi_mount: StringSelection('left', 'right') = 'left',
-        number_of_samples: int = 48
+        number_of_samples: int = 48,
+        bead_incubation_time_in_minutes: int = 10,
+        bead_settling_time_on_magnet_in_minutes: int = 10,
+        drying_time_in_minutes: int = 5
 ):
     # check
     if number_of_samples > 96 or number_of_samples < 1:
@@ -74,11 +77,14 @@ def run_custom_protocol(
         m300.drop_tip()
 
     # incubation
-    robot.comment('Incubating off magnet for 10 minutes.')
-    m300.delay(minutes=10)
+    robot.comment('Incubating off magnet for \
+' + str(bead_incubation_time_in_minutes) + ' minutes.')
+    m300.delay(minutes=bead_incubation_time_in_minutes)
     robot._driver.run_flag.wait()
     magdeck.engage(height=18)
-    m300.delay(minutes=10)
+    robot.comment('Incubating on magnet for \
+' + str(bead_settling_time_on_magnet_in_minutes) + ' minutes.')
+    m300.delay(minutes=bead_settling_time_on_magnet_in_minutes)
 
     # remove supernatant
     m300.transfer(
@@ -100,7 +106,7 @@ def run_custom_protocol(
             new_tip='always'
         )
 
-    # 2x remove residual supernatant
+    # remove residual supernatant
     m10.transfer(
         10,
         [m.bottom(0.3) for m in mag_samples],
@@ -108,8 +114,8 @@ def run_custom_protocol(
         new_tip='always'
     )
 
-    robot.comment('Incubating for 5 minutes.')
-    m300.delay(minutes=5)
+    robot.comment('Drying for ' + str(drying_time_in_minutes) + ' minutes.')
+    m300.delay(minutes=drying_time_in_minutes)
     robot._driver.run_flag.wait()
     magdeck.disengage()
 
