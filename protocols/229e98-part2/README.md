@@ -1,4 +1,4 @@
-# BioFluid Mix and Transfer - Part 1/2
+# BioFluid Mix and Transfer - Part 2/2
 
 ### Author
 [Opentrons](https://opentrons.com/)
