@@ -129,6 +129,7 @@ resuming.')
 
     # HB distributions
     pick_up(m50, 'single')
+    m50.aspirate(0, temp_plate.wells(0).top(5))
     # HB
     hb_distribute(10, hb[0], ['2', '5'])
     hb_distribute(20, hb[0], ['8'])
