@@ -1,4 +1,4 @@
-from opentrons import labware, instruments, robot, modules
+from opentrons import labware, instruments, robot
 from otcustomizers import StringSelection
 
 metadata = {
@@ -7,24 +7,38 @@ metadata = {
     'source': 'Custom Protocol Request'
 }
 
-tempdeck = modules.load('tempdeck', '4')
-tempplate = labware.load('biorad_96_wellplate_200ul_pcr', '4', share=True)
-tempdeck.set_temperature(4)
-tempdeck.wait_for_temp()
-pcr_well = labware.load('opentrons_96_aluminumblock_generic_pcr_strip_200ul',
-                        '5', 'chilled aluminum block w/ PCR strip')
+pcrcool = 'labcon_96_wellplate_pcr_on_cooler'
+if pcrcool not in labware.list():
+    labware.create(
+        pcrcool,
+        grid=(12, 8),
+        spacing=(9, 9),
+        diameter=5.5,
+        depth=20,
+        volume=200
+    )
+tempplate = labware.load(pcrcool, '1', 'Labcon Plate on PCR Cooler')
+
+pcr_well = labware.load(pcrcool, '2', 'PCR Strip on PCR Cooler')
+
 primer_plate = labware.load(
-            'biorad_96_wellplate_200ul_pcr', '1', 'primer plate')
+            'biorad_96_wellplate_200ul_pcr', '3', 'primer plate (BioRad)')
 dna_plate = labware.load(
-            'biorad_96_wellplate_200ul_pcr', '6', 'DNA plate')
+            'opentrons_96_aluminumblock_generic_pcr_strip_200ul', '4',
+            'DNA plate on Aluminum Block')
 tipracks = [
-    labware.load('tiprack-10ul', slot) for slot in ['7', '8', '9']
+    labware.load('tiprack-10ul', slot) for slot in range(5, 12)
 ]
 
 
 def run_custom_protocol(
         p10_mount: StringSelection('left', 'right') = 'left',
+        number_of_plates: int = 1
 ):
+
+    # Check number of plates
+    if number_of_plates > 6 or number_of_plates < 1:
+        raise Exception('The number of plates should be between 1 and 6.')
 
     # create pipette
 
@@ -44,35 +58,42 @@ def run_custom_protocol(
         pip10.pick_up_tip()
         tip10_count += 1
 
-    dest = tempplate.rows('A')[:12]
-    primers = primer_plate.rows('A')[:12]
-    samps = dna_plate.rows('A')[:12]
+    dest = tempplate.rows('A')
+    primers = primer_plate.rows('A')
+    samps = dna_plate.rows('A')
 
-    # step 1
+    for i in range(number_of_plates):
+        # step 1
 
-    pick_up(pip10)
-
-    for d in dest:
-        pip10.transfer(8.7, pcr_well.wells('A1'), d, new_tip='never')
-        pip10.blow_out(d.top())
-
-    pip10.drop_tip()
-
-    # step 2
-
-    for p, d in zip(primers, dest):
         pick_up(pip10)
-        pip10.transfer(1.3, p, d, new_tip='never')
-        pip10.blow_out(d.top())
+
+        for d in dest:
+            pip10.transfer(8.7, pcr_well.wells('A1'), d, new_tip='never')
+            pip10.blow_out(d.top())
+
         pip10.drop_tip()
 
-    # step 3
+        # step 2
 
-    for s, d in zip(samps, dest):
-        pick_up(pip10)
-        pip10.transfer(5, s, d, new_tip='never')
-        pip10.blow_out(d.top())
-        pip10.drop_tip()
+        for p, d in zip(primers, dest):
+            pick_up(pip10)
+            pip10.transfer(1.3, p, d, new_tip='never')
+            pip10.blow_out(d.top())
+            pip10.drop_tip()
 
-    robot.comment("Congratulations, you have completed step 4/4 of this \
-    protocol. Please remove samples from OT-2 and properly store.")
+        # step 3
+
+        for s, d in zip(samps, dest):
+            pick_up(pip10)
+            pip10.transfer(5, s, d, new_tip='never')
+            pip10.blow_out(d.top())
+            pip10.drop_tip()
+
+        if i == number_of_plates-1:
+            robot.comment("Congratulations, you have completed step 4/4 of this \
+            protocol. Please remove samples from OT-2 and properly store.")
+        else:
+            robot.pause("Congratulations, you have completed step 4/4 of this \
+            protocol for plate "+str(i+1)+". Please remove samples from OT-2 \
+            and properly store. When you're ready to fill the next plate, \
+            please load proper materials and click RESUME.")

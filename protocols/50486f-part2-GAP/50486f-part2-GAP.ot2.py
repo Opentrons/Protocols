@@ -1,4 +1,4 @@
-from opentrons import labware, instruments, robot, modules
+from opentrons import labware, instruments, robot
 from otcustomizers import StringSelection
 
 metadata = {
@@ -7,22 +7,37 @@ metadata = {
     'source': 'Custom Protocol Request'
 }
 
-tempdeck = modules.load('tempdeck', '4')
-tempplate = labware.load('biorad_96_wellplate_200ul_pcr', '4', share=True)
-tempdeck.set_temperature(4)
-tempdeck.wait_for_temp()
-pcr_well = labware.load('opentrons_96_aluminumblock_generic_pcr_strip_200ul',
-                        '5', 'chilled aluminum block w/ PCR strip')
-tipracks = labware.load('tiprack-10ul', '7')
+pcrcool = 'labcon_96_wellplate_pcr_on_cooler'
+if pcrcool not in labware.list():
+    labware.create(
+        pcrcool,
+        grid=(12, 8),
+        spacing=(9, 9),
+        diameter=5.5,
+        depth=20,
+        volume=200
+    )
+tempplate = labware.load(pcrcool, '1', 'Labcon Plate on PCR Cooler')
+
+pcr_well = labware.load(pcrcool, '2', 'PCR Strip on PCR Cooler')
+
+tipracks = [
+    labware.load(
+        'tiprack-10ul', str(slot), '10uL Tips') for slot in range(4, 12)]
 
 
 def run_custom_protocol(
         p10_mount: StringSelection('left', 'right') = 'left',
+        number_of_plates: int = 1
 ):
+
+    # Check number of plates
+    if number_of_plates > 6 or number_of_plates < 1:
+        raise Exception('The number of plates should be between 1 and 6.')
 
     # create pipette
 
-    pip10 = instruments.P10_Multi(mount=p10_mount, tip_racks=[tipracks])
+    pip10 = instruments.P10_Multi(mount=p10_mount, tip_racks=tipracks)
 
     tip10_max = len(tipracks)*12
     tip10_count = 0
@@ -38,16 +53,24 @@ def run_custom_protocol(
         pip10.pick_up_tip()
         tip10_count += 1
 
-    dest = tempplate.rows('A')[:12]
+    dest = tempplate.rows('A')
 
-    # transfer 10ul of mastermix from PCR strip to plate on tempdeck
+    for i in range(number_of_plates):
 
-    for d in dest:
-        pick_up(pip10)
-        pip10.transfer(10, pcr_well.wells('A1'), d, new_tip='never')
-        pip10.blow_out(d.top())
-        pip10.drop_tip()
+        # transfer 10ul of mastermix from PCR strip to plate on tempdeck
 
-    robot.comment("Part 2/4 (GAP) complete. Please remove plate from \
-    temperature module and run on PCR program. When ready, load Part 3/4 (EXO)\
-     into OT-2.")
+        for d in dest:
+            pick_up(pip10)
+            pip10.transfer(10, pcr_well.wells('A1'), d, new_tip='never')
+            pip10.blow_out(d.top())
+            pip10.drop_tip()
+
+        if i == number_of_plates-1:
+            robot.comment("Part 2/4 (GAP) complete. Please remove plate from \
+            Slot 1 and run on PCR program. When ready, load materials and run \
+            Part 3/4 (EXO) on the OT-2.")
+        else:
+            robot.pause("Part 2/4 (GAP), plate "+str(i+1)+" now complete. \
+            Please remove plate from Slot 1 and run on PCR program. You may \
+            now load new materials into the robot for the next plate fill. \
+            When ready to fill the next plate, click RESUME.")
