@@ -9,15 +9,16 @@ metadata = {
 }
 
 # create custom labware
-plate_name = "twintec PCR plate"
+plate_name = "twintec_PCR_plate"
 if plate_name not in labware.list():
     labware.create(
         plate_name,
         grid=(12, 8),
         spacing=(9, 9),
-        depth=16.4,
+        depth=14.6,
         diameter=6.46,
-        volume=150)
+        volume=150
+    )
 
 
 # load labware
