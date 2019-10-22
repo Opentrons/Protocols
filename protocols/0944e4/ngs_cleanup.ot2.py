@@ -9,15 +9,16 @@ metadata = {
 }
 
 # create custom labware
-plate_name = "twintec PCR plate"
+plate_name = "twintec_PCR_plate"
 if plate_name not in labware.list():
     labware.create(
         plate_name,
         grid=(12, 8),
         spacing=(9, 9),
-        depth=16.4,
+        depth=14.6,
         diameter=6.46,
-        volume=150)
+        volume=150
+    )
 
 
 # load labware
@@ -64,6 +65,7 @@ def run_custom_protocol(
     elution_samples = elution_plate.rows('A')[:num_cols]
 
     # mix beads
+    robot.head_speed(z=50, a=50)
     m300.pick_up_tip()
     m300.mix(10, 200, beads)
     m300.blow_out(beads.top())
@@ -75,6 +77,7 @@ def run_custom_protocol(
         m300.transfer(110, beads, m, new_tip='never')
         m300.mix(10, 130, m)
         m300.drop_tip()
+    robot.head_speed(z=125, a=125)
 
     # incubation
     robot.comment('Incubating off magnet for \
@@ -137,3 +140,5 @@ resuming.')
         m300.transfer(35, m, e, new_tip='never')
         m300.blow_out(e.top())
         m300.drop_tip()
+
+    magdeck.disengage()
