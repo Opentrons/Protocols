@@ -12,7 +12,8 @@ metadata = {
 def run_custom_protocol(
         p50_mount: StringSelection('right', 'left') = 'right',
         p300_mount: StringSelection('left', 'right') = 'left',
-        number_of_checkerboard_plates: int = 6
+        number_of_checkerboard_plates: int = 6,
+        distribute_growth_medium: StringSelection('yes', 'no') = 'yes'
 ):
 
     # check
@@ -135,25 +136,29 @@ def run_custom_protocol(
         p300.blow_out(tubes['water'][0].top())
     p300.drop_tip()
 
-    # transfer growth medium to all wells
-    all_dests = [
-        well
-        for plate in cb_plates
-        for row in plate.rows()
-        for well in row[:9]
-    ]
-    num_asp_gm = math.ceil(len(all_dests)/5)
-    pick_up(p300)
-    for _ in range(num_asp_gm):
-        if len(all_dests) >= 5:
-            h_asp(p300, 280, 'growth medium')
-            length = 5
-        else:
-            h_asp(p300, len(all_dests)*50+30, 'growth medium')
-            length = len(all_dests)
-        for _ in range(length):
-            dest = all_dests.pop(0)
-            p300.dispense(50, dest.bottom(7))
-            p300.touch_tip(dest)
-        p300.blow_out(tubes['growth medium'][0].top())
-    p300.drop_tip()
+    if distribute_growth_medium == 'yes':
+        # transfer growth medium to all wells
+        all_dests = [
+            well
+            for plate in cb_plates
+            for row in plate.rows()
+            for well in row[:9]
+        ]
+        num_asp_gm = math.ceil(len(all_dests)/5)
+        pick_up(p300)
+        for _ in range(num_asp_gm):
+            if len(all_dests) >= 5:
+                h_asp(p300, 280, 'growth medium')
+                length = 5
+            else:
+                h_asp(p300, len(all_dests)*50+30, 'growth medium')
+                length = len(all_dests)
+            for _ in range(length):
+                dest = all_dests.pop(0)
+                p300.dispense(50, dest.bottom(7))
+                p300.touch_tip(dest)
+            p300.blow_out(tubes['growth medium'][0].top())
+        p300.drop_tip()
+    else:
+        robot.comment('Program finished. Manually distribute growth medium \
+to all wells of all checkerboard plates.')

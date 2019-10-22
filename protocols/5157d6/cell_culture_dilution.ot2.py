@@ -37,7 +37,8 @@ def run_custom_protocol(
             'deepwell', 'flat well') = 'deepwell',
         drug_rows_separated_by_commas: str = 'A, B, C, D, E, F, G, H',
         number_of_test_plates: int = 6,
-        number_of_replicates_per_source: int = 1
+        number_of_replicates_per_source: int = 1,
+        distribute_growth_medium: StringSelection('yes', 'no') = 'yes'
 ):
     # check
     if p50_single_mount == p300_single_mount:
@@ -133,22 +134,27 @@ def run_custom_protocol(
         p50.blow_out(water.top())
     p50.drop_tip()
 
-    # distibute growth medium to all wells of all plates
-    all_dests = [well for plate in test_plates for well in plate.wells()]
-    num_aspirations_gm = math.ceil(len(all_dests)/6)
-    p300.pick_up_tip()
-    for i in range(num_aspirations_gm):
-        if i*6+6 < len(all_dests):
-            dests = all_dests[i*6:i*6+6]
-            asp_vol = 300
-        else:
-            dests = all_dests[i*6:]
-            asp_vol = len(all_dests[i*6:])*50
+    if distribute_growth_medium == 'yes':
+        # distibute growth medium to all wells of all plates
+        all_dests = [well for plate in test_plates for well in plate.wells()]
+        num_aspirations_gm = math.ceil(len(all_dests)/6)
+        p300.pick_up_tip()
+        for i in range(num_aspirations_gm):
+            if i*6+6 < len(all_dests):
+                dests = all_dests[i*6:i*6+6]
+                asp_vol = 300
+            else:
+                dests = all_dests[i*6:]
+                asp_vol = len(all_dests[i*6:])*50
 
-        asp_h = h_track(asp_vol, 'growth medium')
-        p300.aspirate(asp_vol, gm.bottom(asp_h))
-        for d in dests:
-            p300.dispense(50, d.top(-1))
-            p300.move_to((d, d.from_center(r=1, h=0.9, theta=0)))
-            p300.move_to((d, d.from_center(r=1, h=0.9, theta=math.pi)))
-        p300.blow_out(gm.top())
+            asp_h = h_track(asp_vol, 'growth medium')
+            p300.aspirate(asp_vol, gm.bottom(asp_h))
+            for d in dests:
+                p300.dispense(50, d.top(-1))
+                p300.move_to((d, d.from_center(r=1, h=0.9, theta=0)))
+                p300.move_to((d, d.from_center(r=1, h=0.9, theta=math.pi)))
+            p300.blow_out(gm.top())
+
+    else:
+        robot.comment('Program finished. Manually distribute growth medium \
+to all wells of all test plates.')
