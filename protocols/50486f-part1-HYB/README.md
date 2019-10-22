@@ -16,24 +16,22 @@ This protocol performs PCR prep - HYB (part 1/4) for 96 samples using the P10 Mu
 
 * [P10 Multi-channel Pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)
 * [10uL Opentrons tipracks](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
-* [Opentrons Temperature Module](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
-* [Opentrons aluminum block set](https://shop.opentrons.com/collections/hardware-modules/products/aluminum-block-set)
-* [Bio-Rad Hard Shell 96-well PCR plate 200ul #hsp9601](bio-rad.com/en-us/sku/hsp9601-hard-shell-96-well-pcr-plates-low-profile-thin-wall-skirted-white-clear?ID=hsp9601)
-* [Labcon 0.2mL PCR strips #3940-550](http://www.labcon.com/microstrips.html)
+* [Bio-Rad 96-Well PCR Plate](https://labware.opentrons.com/biorad_96_wellplate_200ul_pcr?category=wellPlate)
+* [Labcon 0.2mL PCR Strips](http://www.labcon.com/microstrips.html)
+* [Labcon 96-Well PCR Plate](http://www.labcon.com/micro.html)
+* PCR Cooler
 
 
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
-Slot 4: [Temperature Module](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck) with [flat plate adapter](https://shop.opentrons.com/collections/hardware-modules/products/aluminum-block-set) and 96-well PCR plate (clean and empty).
+Slot 1: Labcon PCR Plate on PCR Cooler (clean and empty)
 
-Slot 5: Pre-Chilled [PCR Thermal Block](https://shop.opentrons.com/collections/hardware-modules/products/aluminum-block-set) with PCR strip placed in column 1 and filled with master mix
+Slot 2: Labcon 0.2mL PCR Strip on PCR Cooler (Column 1)
 
-Slot 6: 96-well PCR plate filled with DNA samples.
+Slot 3: Bio-Rad PCR plate, filled with DNA samples.
 
-Slot 7: [10ul Opentrons tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
-
-Slot 8: [10ul Opentrons tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
+Slot 4-11: [10uL Opentrons tipracks](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
