@@ -11,7 +11,7 @@ metadata = {
 
 # load modules and labware
 rxn_plate = labware.load(
-    'opentrons_96_aluminumblock_biorad_wellplate_200ul',
+    'biorad_96_wellplate_200ul_pcr',
     '1',
     'reaction plate'
 )

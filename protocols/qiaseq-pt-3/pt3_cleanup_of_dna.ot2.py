@@ -12,13 +12,13 @@ metadata = {
 # load modules and labware
 magdeck = modules.load('magdeck', '1')
 rxn_plate = labware.load(
-    'opentrons_96_aluminumblock_biorad_wellplate_200ul',
+    'biorad_96_wellplate_200ul_pcr',
     '1',
     'reaction plate',
     share=True
 )
 elution_plate = labware.load(
-    'opentrons_96_aluminumblock_biorad_wellplate_200ul', '2', 'elution plate')
+    'biorad_96_wellplate_200ul_pcr', '2', 'elution plate')
 reagent_reservoir = labware.load(
     'usascientific_12_reservoir_22ml', '3', 'reagent reservoir')
 
