@@ -17,7 +17,7 @@ This protocol performs the [Oxford Nanopore 16S Barcoding NGS library prep kit](
 * [P10 Single-channel electronic pipettte](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette)
 * [P300 Single-channel pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette?variant=5984549109789)
 * [Bio-Rad Hard Shell 96-well PCR plate 200ul #hsp9601](bio-rad.com/en-us/sku/hsp9601-hard-shell-96-well-pcr-plates-low-profile-thin-wall-skirted-white-clear?ID=hsp9601)
-* [Opentrons 4-in-1 tuberack set(1.5ml Eppendorf snapcap top)](https://shop.opentrons.com/collections/racks-and-adapters/products/tube-rack-set-1
+* [Opentrons 4-in-1 tuberack set(1.5ml Eppendorf snapcap top)](https://shop.opentrons.com/collections/racks-and-adapters/products/tube-rack-set-1)
 * [Axygen 12-channel reservoir 22ml #RES-MW12-HP](https://ecatalog.corning.com/life-sciences/b2c/US/en/Genomics-%26-Molecular-Biology/Automation-Consumables/Automation-Reservoirs/Axygen%C2%AE-Reagent-Reservoirs/p/RES-MW12-HP)
 
 ---
