@@ -90,8 +90,8 @@ def run_custom_protocol(
     sample_cols = plate.rows('A').wells('1', length=number_of_columns)
 
     # transfer Rxn Buffer Master Mix to samples
-    update_m10_tip_count(1)
     for well in sample_cols:
+        update_m10_tip_count(1)
         m10.pick_up_tip()
         m10.aspirate(4.5, rxn_buffer_mm)
         m10.dispense(4.5, well)
