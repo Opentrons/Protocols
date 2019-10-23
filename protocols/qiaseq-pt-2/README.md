@@ -15,7 +15,7 @@ Links:
 * [Part 2: Adapter Ligation](./qiaseq-pt-2)
 * [Part 3: Cleanup of adapter-ligated DNA](./qiaseq-pt-3)
 * [Part 4: Target enrichment](./qiaseq-pt-4)
-* [Part 5: Part 5: Cleanup of target enrichment](./qiaseq-pt-5)
+* [Part 5: Cleanup of target enrichment](./qiaseq-pt-5)
 * [Part 6: Universal PCR](./qiaseq-pt-6)
 * [Part 7: Cleanup of universal PCR](./qiaseq-pt-7)
 
@@ -25,7 +25,8 @@ Links:
 * [Opentrons electronic pipettes](https://shop.opentrons.com/collections/ot-2-pipettes)
 * [Opentrons temperature module with aluminum block set](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
 * [Opentrons magnetic module](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
-* [Bio-rad Hardshell 96-well PCR plate 200ul](https://www.bio-rad.com/en-us/sku/hsp9601-hard-shell-96-well-pcr-plates-low-profile-thin-wall-skirted-white-clear?ID=hsp9601)
+* [Bio-rad Hardshell 96-well PCR plate 200ul #hsp9601](https://www.bio-rad.com/en-us/sku/hsp9601-hard-shell-96-well-pcr-plates-low-profile-thin-wall-skirted-white-clear?ID=hsp9601)
+* [Bio-rad Hardshell 96-well PCR plate 350ul #hss9601](https://www.bio-rad.com/en-us/sku/hss9601-hard-shell-96-well-pcr-plates-high-profile-semi-skirted-clear-clear?ID=HSS9601)
 * [USA Scientific 12-channel reservoir 22ml #1061-8150](https://www.usascientific.com/12-channel-automation-reservoir.aspx)
 * Generic 200ul PCR strips (seated)
 
