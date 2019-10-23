@@ -62,20 +62,20 @@ def run_custom_protocol(
     p50.transfer(
         2.5*number_of_samples_for_mix,
         frag_buffer,
-        frag_mastermix_tube.bottom(),
+        frag_mastermix_tube,
         blow_out=True
     )
     p50.transfer(
         0.75*number_of_samples_for_mix,
         fera,
-        frag_mastermix_tube,
+        frag_mastermix_tube.top(-5),
         blow_out=True
         )
     p50.pick_up_tip()
     p50.transfer(
         volume_of_nuclease_free_water*number_of_samples_for_mix,
         nuc_free_water,
-        frag_mastermix_tube,
+        frag_mastermix_tube.top(-5),
         new_tip='never'
     )
     p50.mix(7, 40, frag_mastermix_tube)
