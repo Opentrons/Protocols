@@ -9,23 +9,23 @@ metadata = {
 }
 
 # load labware
-tuberack = labware.load(
-    'opentrons_24_aluminumblock_generic_2ml_screwcap',
-    '2',
-    'reagent tube block'
-)
+reagent_res = labware.load(
+    'usascientific_12_reservoir_22ml', '1', 'reagent reservoir')
+pbs_t = labware.load('agilent_1_reservoir_290ml', '2', 'PBS-T').wells(0)
 wash_buff = labware.load(
     'agilent_1_reservoir_290ml', '3', 'wash buffer').wells(0)
 tiprack_single = labware.load('opentrons_96_tiprack_300ul', '4')
-reagent_res = labware.load(
-    'usascientific_12_reservoir_22ml', '5', 'reagent reservoir')
-pbs_t = labware.load('agilent_1_reservoir_290ml', '6', 'PBS-T').wells(0)
-magdeck = modules.load('magdeck', '7')
-magplate = labware.load('biorad_96_wellplate_200ul_pcr', '7', share=True)
+tuberack = labware.load(
+    'opentrons_24_aluminumblock_generic_2ml_screwcap',
+    '5',
+    'reagent tube block'
+)
 tipracks_multi = [
     labware.load('opentrons_96_tiprack_300ul', slot)
-    for slot in ['8', '9', '11']
+    for slot in ['6', '8', '9', '11']
 ]
+magdeck = modules.load('magdeck', '7')
+magplate = labware.load('biorad_96_wellplate_200ul_pcr', '7', share=True)
 tempdeck = modules.load('tempdeck', '10')
 temp_plate = labware.load('biorad_96_wellplate_200ul_pcr', '10', share=True)
 tempdeck.set_temperature(41)
@@ -163,10 +163,8 @@ resuming.')
             5, beads, [well.top(-2) for well in col], new_tip='never')
         m50.drop_tip()
 
-    new_rack = labware.load('opentrons_96_tiprack_300ul', '1')
-    robot.pause('Fill tiprack in slot 4, and place a tiprack in slot 1')
+    robot.pause('Fill tiprack in slot 4.')
     tipracks_multi.insert(0, tiprack_single)
-    tipracks_multi.insert(0, new_rack)
     tip_max_m = len(tipracks_multi)*12
     tip_locs_m = [tip for rack in tipracks_multi for tip in rack.rows('A')]
 
@@ -174,7 +172,7 @@ resuming.')
     tip_locs = []
     for mix_set, mag_set in zip(mix_sets, rep_sets):
         if len(mix_sets) > tip_max_m - tip_count_m:
-            robot.pause('Refill tiprack in slots 1, 4, 8, 9, and 11 before \
+            robot.pause('Refill tiprack in slots 4, 6, 8, 9, and 11 before \
 resuming.')
             tip_count_m = 0
         pick_up(m300, 'multi')
@@ -278,7 +276,7 @@ hour, and then replace on the magnetic module before resuming.')
         magdeck.disengage()
 
         if len(mag_samples_m) > tip_max_m - tip_count_m:
-            robot.pause('Refill tiprack in slots 1, 4, 8, 9, and 11 before \
+            robot.pause('Refill tiprack in slots 4, 6, 8, 9, and 11 before \
 resuming.')
             tip_count_m = 0
 
@@ -350,7 +348,7 @@ resuming.')
         for t, (mix_set, mag_set) in enumerate(zip(mix_sets, rep_sets)):
             if pause == 0:
                 if len(mix_sets) > tip_max_m - tip_count_m:
-                    robot.pause('Refill tiprack in slots 1, 4, 8, 9, and 11 \
+                    robot.pause('Refill tiprack in slots 4, 6, 8, 9, and 11 \
 before resuming.')
                     tip_count_m = 0
                 if not m300.tip_attached:
@@ -405,8 +403,8 @@ resuming.')
             remove_supernatant(150, waste[wash])
         else:
             robot._driver.run_flag.wait()
-            robot.pause('Prepare the substrate and load it into the 22mL \
-reservoir channel 3.')
+            robot.pause('Prepare the substrate and load it into the 12-channel \
+reservoir in channel 3.')
             for i, m in enumerate(mag_samples_m):
                 if not m300.tip_attached:
                     pick_up(m300, 'multi')
