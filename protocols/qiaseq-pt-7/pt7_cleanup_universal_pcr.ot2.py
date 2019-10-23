@@ -109,7 +109,7 @@ def run_custom_protocol(
     for s in rxn_samples:
         pick_up(m300)
         m300.transfer(
-            300,
+            190,
             s,
             liquid_waste[0],
             new_tip='never'
@@ -126,7 +126,7 @@ def run_custom_protocol(
         for s in rxn_samples:
             if not m300.tip_attached:
                 pick_up(m300)
-            m300.transfer(300, s, liquid_waste[wash], new_tip='never')
+            m300.transfer(210, s, liquid_waste[wash], new_tip='never')
             m300.drop_tip()
 
     # remove supernatant completely with P50 multi

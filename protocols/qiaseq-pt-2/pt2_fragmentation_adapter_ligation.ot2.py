@@ -9,6 +9,18 @@ metadata = {
     'source': 'Custom Protocol Request'
 }
 
+# create high profile plate
+plate_name = 'opentrons_96_aluminumblock_biorad_wellplate_350ul'
+if plate_name not in labware.list():
+    labware.create(
+        plate_name,
+        grid=(12, 8),
+        spacing=(9, 9),
+        diameter=5.5,
+        depth=19.85,
+        volume=350
+    )
+
 # load modules and labware
 tempdeck = modules.load('tempdeck', '4')
 rxn_plate = labware.load(
@@ -20,7 +32,7 @@ rxn_plate = labware.load(
 tempdeck.set_temperature(4)
 tempdeck.wait_for_temp()
 index_plates = [labware.load(
-    'opentrons_96_aluminumblock_biorad_wellplate_200ul',
+    plate_name,
     slot,
     'index plate ' + str(i))
                 for i, slot in enumerate(['1', '2'])]
