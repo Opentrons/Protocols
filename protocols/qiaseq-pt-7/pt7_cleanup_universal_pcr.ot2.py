@@ -12,13 +12,13 @@ metadata = {
 # load modules and labware
 magdeck = modules.load('magdeck', '1')
 rxn_plate = labware.load(
-    'opentrons_96_aluminumblock_biorad_wellplate_200ul',
+    'biorad_96_wellplate_200ul_pcr',
     '1',
     'reaction plate',
     share=True
 )
 elution_plate = labware.load(
-    'opentrons_96_aluminumblock_biorad_wellplate_200ul', '2', 'elution plate')
+    'biorad_96_wellplate_200ul_pcr', '2', 'elution plate')
 reagent_reservoir = labware.load(
     'usascientific_12_reservoir_22ml', '3', 'reagent reservoir')
 
@@ -109,7 +109,7 @@ def run_custom_protocol(
     for s in rxn_samples:
         pick_up(m300)
         m300.transfer(
-            300,
+            190,
             s,
             liquid_waste[0],
             new_tip='never'
@@ -126,7 +126,7 @@ def run_custom_protocol(
         for s in rxn_samples:
             if not m300.tip_attached:
                 pick_up(m300)
-            m300.transfer(300, s, liquid_waste[wash], new_tip='never')
+            m300.transfer(210, s, liquid_waste[wash], new_tip='never')
             m300.drop_tip()
 
     # remove supernatant completely with P50 multi

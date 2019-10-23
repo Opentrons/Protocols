@@ -15,7 +15,7 @@ Links:
 * [Part 2: Adapter Ligation'](./qiaseq-pt-2)
 * [Part 3: Cleanup of adapter-ligated DNA](./qiaseq-pt-3)
 * [Part 4: Target enrichment](./qiaseq-pt-4)
-* [Part 5: Part 5: Cleanup of target enrichment](./qiaseq-pt-5)
+* [Part 5: Cleanup of target enrichment](./qiaseq-pt-5)
 * [Part 6: Universal PCR](./qiaseq-pt-6)
 * [Part 7: Cleanup of universal PCR](./qiaseq-pt-7)
 

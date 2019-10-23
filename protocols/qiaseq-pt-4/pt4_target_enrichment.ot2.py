@@ -11,7 +11,7 @@ metadata = {
 
 # load modules and labware
 rxn_plate = labware.load(
-    'opentrons_96_aluminumblock_biorad_wellplate_200ul',
+    'biorad_96_wellplate_200ul_pcr',
     '1',
     'reaction plate'
 )
@@ -69,20 +69,20 @@ def run_custom_protocol(
     p50.transfer(
         5*number_of_samples_for_mix,
         dna_panel,
-        targ_enrich_mix_tube,
+        targ_enrich_mix_tube.top(5),
         blow_out=True
     )
     p50.transfer(
         0.8*number_of_samples_for_mix,
         il_forward_primer,
-        targ_enrich_mix_tube,
+        targ_enrich_mix_tube.top(5),
         blow_out=True
     )
     p50.pick_up_tip()
     p50.transfer(
         0.8*number_of_samples_for_mix,
-        il_forward_primer,
-        targ_enrich_mix_tube,
+        dna_pol,
+        targ_enrich_mix_tube.top(5),
         blow_out=True,
         new_tip='never'
     )
