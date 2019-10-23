@@ -11,9 +11,11 @@ metadata = {
 def run_custom_protocol(
         number_of_columns: int=12,
         p10_tiprack_type: StringSelection(
+            'opentrons_96_tiprack_10ul',
             'fisherbrand-filter-tiprack-10ul',
             'phenix-filter-tiprack-10ul')='phenix-filter-tiprack-10ul',
         p50_tiprack_type: StringSelection(
+            'opentrons_96_tiprack_300ul',
             'fisherbrand-filter-tiprack-200ul',
             'phenix-filter-tiprack-300ul')='phenix-filter-tiprack-300ul'):
 
@@ -88,13 +90,13 @@ def run_custom_protocol(
     sample_cols = plate.rows('A').wells('1', length=number_of_columns)
 
     # transfer Rxn Buffer Master Mix to samples
-    update_m10_tip_count(1)
-    m10.transfer(
-        4.5,
-        rxn_buffer_mm,
-        [well.top() for well in sample_cols],
-        blow_out=True
-        )
+    for well in sample_cols:
+        update_m10_tip_count(1)
+        m10.pick_up_tip()
+        m10.aspirate(4.5, rxn_buffer_mm)
+        m10.dispense(4.5, well)
+        m10.blow_out(well.top())
+        m10.drop_tip()
 
     robot.pause("Quickly vortex and spin down. Place on Thermocycler (37C for \
 12 minutes, 65C for 30 minutes, hold at 4C. While on Thermocycler create \

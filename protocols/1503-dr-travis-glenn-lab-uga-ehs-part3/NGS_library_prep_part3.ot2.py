@@ -11,11 +11,13 @@ metadata = {
 def run_custom_protocol(
         number_of_columns: int=12,
         p50_tiprack_type: StringSelection(
+            'opentrons_96_tiprack_300ul',
             'fisherbrand-filter-tiprack-200ul',
-            'phenix-filter-tiprack-300ul')='phenix-filter-tiprack-300ul',
+            'phenix-filter-tiprack-300ul')='opentrons_96_tiprack_300ul',
         p300_tiprack_type: StringSelection(
+            'opentrons_96_tiprack_300ul',
             'fisherbrand-filter-tiprack-200ul',
-            'phenix-filter-tiprack-300ul')='phenix-filter-tiprack-30ul',):
+            'phenix-filter-tiprack-300ul')='opentrons_96_tiprack_300ul',):
 
     for tiprack_type in [p50_tiprack_type, p300_tiprack_type]:
         if tiprack_type not in labware.list():
