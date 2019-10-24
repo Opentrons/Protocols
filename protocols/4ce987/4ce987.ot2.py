@@ -124,9 +124,10 @@ def run_custom_protocol(p10_mount: StringSelection('left', 'right') = 'left',
     for src, dest in zip([d1, d2, d3], ['A1', 'A3', 'A5']):
         for well in src:
             pick_up(pip10)
-            pip10.aspirate(8, istock9.wells(well))
-            pip10.dispense(5, istock45.wells(well).bottom(5))
-            pip10.dispense(3, tr24a.wells(dest).top(-5))
+            pip10.aspirate(5, istock9.wells(well))
+            pip10.dispense(5, istock45.wells(well).top(-5))
+            pip10.aspirate(10, istock9.wells(well))
+            pip10.dispense(10, tr24a.wells(dest).top(-5))
             pip10.blow_out()
             pip10.drop_tip()
 
@@ -161,16 +162,28 @@ def run_custom_protocol(p10_mount: StringSelection('left', 'right') = 'left',
     # initiator in purple to create 0.01x Crosstalk
 
     pick_up(pip10)
-    pip10.distribute(3, tr24a.wells('A3'), istock9.wells(cc+ff).top(-4))
+    pip10.distribute(
+        3,
+        tr24a.wells('A3'),
+        [well.top(-4) for well in istock9.wells(cc+ff)])
 
     pick_up(pip10)
-    pip10.distribute(3, tr24a.wells('A1'), istock9.wells(ff).top(-4))
+    pip10.distribute(
+        3,
+        tr24a.wells('A1'),
+        [well.top(-4) for well in istock9.wells(ff)])
 
     pick_up(pip10)
-    pip10.distribute(3, tr24a.wells('A1'), istock9.wells(eleven[3:]).top(-4))
+    pip10.distribute(
+        3,
+        tr24a.wells('A1'),
+        [well.top(-4) for well in istock9.wells(eleven[3:])])
 
     pick_up(pip10)
-    pip10.distribute(3, tr24a.wells('A1'), istock9.wells('G11', 'H11').top(-4))
+    pip10.distribute(
+        3,
+        tr24a.wells('A1'),
+        [well.top(-4) for well in istock9.wells('G11', 'H11')])
 
     for well in cc+eleven:
         pick_up(pip10)
@@ -222,8 +235,8 @@ def run_custom_protocol(p10_mount: StringSelection('left', 'right') = 'left',
     pick_up(pip300)
     pick_up(pip10)
 
-    mmlist = (tr24b.rows('A')+tr24b.rows('B')+tr24b.rows('C')
-              + tr24b.rows('D')+tr24a.wells('D3', 'D4', 'D5', 'D6'))
+    mmlist = [tr24b.rows('A')+tr24b.rows('B')+tr24b.rows('C')
+              + tr24b.rows('D')+tr24a.wells('D3', 'D4', 'D5', 'D6')]
 
     for well in mmlist:
         pip300.transfer(470, obuff.bottom(30), well.top(-4), new_tip='never')
