@@ -183,10 +183,7 @@ resuming.')
         m300.return_tip()
 
     # 60 minute pause with 3x iterative mixing every 20 minutes
-    for pause in range(1, 4):
-        robot.comment('Delaying 20 minutes (part ' + str(pause) + '/3 of \
-60-minute pause).')
-        m300.delay(minutes=20)
+    for pause in range(4):
         for t, mix_set, mag_set in zip(tip_locs_s, mix_sets, rep_sets):
             m300.pick_up_tip(t)
             for mix_loc, mag_samp in zip(mix_set, mag_set):
@@ -196,6 +193,10 @@ resuming.')
                 m300.drop_tip()
             else:
                 m300.return_tip()
+        if pause < 3:
+            robot.comment('Delaying 20 minutes (part ' + str(pause) + '/3 of \
+    60-minute pause).')
+            m300.delay(minutes=20)
 
     magdeck.engage(height=18)
     robot.comment('Incubating on magnet for 1 minute.')
