@@ -54,8 +54,6 @@ Slot 9: Opentrons 50uL Tips
 
 Slot 10: Opentrons 1000uL Tips
 
-Slot 11: Opentrons 1000uL Tips
-
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
