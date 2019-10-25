@@ -41,9 +41,7 @@ tips50 = [labware.load(
     'opentrons_96_tiprack_300ul', str(slot)) for slot in range(8, 10)
     ]
 
-tips1k = [labware.load(
-    'opentrons_96_tiprack_1000ul', slot) for slot in ['10', '11']
-    ]
+tips1k = [labware.load('opentrons_96_tiprack_1000ul', '11')]
 
 pbs = tr1550.wells('A3')
 methemo = tr1550.wells('B3')
@@ -51,8 +49,8 @@ h2o2 = tr1550.wells('A4')
 
 
 def run_custom_protocol(
-        p1000_mount: StringSelection('left', 'right') = 'left',
-        p50_mount: StringSelection('right', 'left') = 'right'):
+        p50_mount: StringSelection('left', 'right') = 'left',
+        p1000_mount: StringSelection('right', 'left') = 'right'):
 
     # create pipettes
     pip50 = instruments.P50_Single(mount=p50_mount, tip_racks=tips50)
@@ -95,26 +93,9 @@ def run_custom_protocol(
     robot.pause('Vortex tubes and then let sample incubate for 1 hour. When \
     ready to resume, click RESUME.')
 
-    fp1a = fp.cols('1', '3', '5', '7', '9', '11')
-    fp1 = []
+    dest_sets = [row[i*2:i*2+2] for i in range(6) for row in fp.rows()]
 
-    fp2a = fp.cols('2', '4', '6', '8', '10', '12')
-    fp2 = []
-
-    for well in fp1a:
-        for w in well:
-            fp1.append(w)
-
-    for well in fp2a:
-        for w in well:
-            fp2.append(w)
-
-    for src, dest1, dest2 in zip(tbs, fp1, fp2):
-        if not pip1k.tip_attached:
-            pip1k.pick_up_tip()
-        for d in [dest1, dest2]:
-            pip1k.transfer(200, src.top(-60), d, new_tip='never')
-            pip1k.blow_out(d.top())
-        pip1k.drop_tip()
+    for src, dest in zip(tbs, dest_sets):
+        pip1k.transfer(200, src, [well.top(-60) for well in dest])
 
     robot.comment('Congratulations, the protocol is now complete!')
