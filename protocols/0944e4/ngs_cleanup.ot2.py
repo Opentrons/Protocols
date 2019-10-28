@@ -28,11 +28,11 @@ elution_plate = labware.load(
     plate_name, '2', 'elution plate')
 tips300 = [
     labware.load('opentrons_96_filtertiprack_200ul', slot)
-    for slot in ['3', '5', '6', '9']
+    for slot in ['5', '6', '8', '9']
 ]
 res12 = labware.load(
     'usascientific_12_reservoir_22ml', '7', 'reagent reservoir')
-tips10 = labware.load('opentrons_96_filtertiprack_10ul', '8')
+tips10 = labware.load('opentrons_96_filtertiprack_10ul', '3')
 
 # reagents
 beads = res12.wells('A1')
