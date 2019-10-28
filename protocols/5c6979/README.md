@@ -11,9 +11,9 @@
 ## Description
 This protocol performs nucleic acid purification on a magnetic module. A temperature module is also on the deck and cools 41C for mid-protocol incubation. The user is prompted to replace tipracks, and to fill/empty channels in the reagent reservoir throughout the protocol to optimize deck space.
 
-**Ensure slot 1 is initially empty so that the P50 multi-channel pipette can function with single-channel capabilities. After this pipette is finished, the user will be prompted to place a tiprack in slot 1.**
+Initial HB distributions are uploaded in a csv as formatted in [this template](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/5c6979/HB_layout.csv). The file should be uploaded as the `HB CSV` variable below.
 
-Replicate columns are uploaded in a CSV, with each line containing comma-separated replicate column numbers (1-12).  Empty lines are ignored. For example, if columns 1, 3, 4 contain sample replicates of the same type, columns 2 and 5 contain sample replicates of the same type, column 7 contains unique samples, and columns 6 and 8-12 are empty, the following CSV should be uploaded:
+Replicate columns for bead and reagent steps are uploaded in a CSV, with each line containing comma-separated replicate column numbers (1-12).  Empty lines are ignored. For example, if columns 1, 3, 4 contain sample replicates of the same type, columns 2 and 5 contain sample replicates of the same type, column 7 contains unique samples, and columns 6 and 8-12 are empty, the following CSV should be uploaded as the `Replicate CSV` variable below:
 
 ```
 1, 3, 4
