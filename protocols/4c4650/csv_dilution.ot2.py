@@ -3,7 +3,7 @@ from otcustomizers import StringSelection, FileInput
 import math
 
 metadata = {
-    'protocolName': '',
+    'protocolName': 'CSV Dilution',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request'
 }
@@ -68,7 +68,7 @@ def run_custom_protocol(
 
     def pick_up():
         nonlocal tip1000_count
-        if tip1000_count > tip1000_max:
+        if tip1000_count == tip1000_max:
             robot.pause('Refill 1000ul tipracks before resuming.')
             p1000.reset()
             tip1000_count = 0
