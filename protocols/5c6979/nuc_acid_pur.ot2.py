@@ -47,11 +47,20 @@ example_csv = """
 10,11
 """
 
+example_hb_csv = """,column 1,column 2,column 3,column 4,column 5,column 6,\
+column 7,column 8,column 9,column 10,column 11,column 12
+hb0,,10,15,,10,15,,20,,,,
+hb1,20,10,5,,,,,,,,,
+hb2,,,,20,10,5,,,,,,
+hb3,,,,,,,20,,,,,
+"""
+
 
 def run_custom_protocol(
         p50_multi_mount: StringSelection('right', 'left') = 'right',
         p300_multi_mount: StringSelection('left', 'right') = 'left',
-        input_CSV: FileInput = example_csv
+        HB_CSV: FileInput = example_hb_csv,
+        replicate_CSV: FileInput = example_csv
 ):
     # check
     if p50_multi_mount == p300_multi_mount:
@@ -64,12 +73,12 @@ def run_custom_protocol(
     # parse
     rep_sets = [
         [magplate.rows('A')[int(col)-1] for col in line.split(',')]
-        for line in input_CSV.splitlines() if line
+        for line in replicate_CSV.splitlines() if line
     ]
     # samples
     mag_samples_m = [col for set in rep_sets for col in set]
     mix_sets = []
-    for line in input_CSV.splitlines()[1:]:
+    for line in replicate_CSV.splitlines()[1:]:
         if line:
             set = []
             for col in line.split(','):
@@ -110,11 +119,10 @@ resuming.')
             tip_count_m += 1
 
     def hb_distribute(vol, src, cols):
-        m50.distribute(
+        m50.transfer(
             vol,
             src,
             [well for col in cols for well in magplate.columns(col)],
-            disposal_vol=0,
             new_tip='never',
             blow_out=True
         )
@@ -127,31 +135,29 @@ resuming.')
                 vol, [s.bottom(0.5) for s in set], waste_chan, new_tip='never')
             m300.drop_tip()
 
+    # parse HB file
+    hb_all = {h: {} for h in hb}
+    hb_input_data = [
+        line.split(',')[1:13]
+        for line in HB_CSV.splitlines()[1:5]
+    ]
+    for key, line in zip(hb_all, hb_input_data):
+        for i, vol in enumerate(line):
+            if vol and vol.strip() != '0':
+                if vol not in hb_all[key]:
+                    hb_all[key][vol] = []
+                hb_all[key][vol].append(str(i+1))
+
     # HB distributions
     pick_up(m50, 'single')
     m50.aspirate(0, temp_plate.wells(0).top(5))
-    # HB
-    hb_distribute(10, hb[0], ['2', '5'])
-    hb_distribute(20, hb[0], ['8'])
-    hb_distribute(15, hb[0], ['3', '6'])
-
-    # HB1
-    hb_distribute(20, hb[1], ['1'])
-    hb_distribute(10, hb[1], ['2'])
-    hb_distribute(5, hb[1], ['3'])
-    m50.drop_tip()
-
-    # HB2
-    pick_up(m50, 'single')
-    hb_distribute(20, hb[2], ['4'])
-    hb_distribute(10, hb[2], ['5'])
-    hb_distribute(5, hb[2], ['6'])
-    m50.drop_tip()
-
-    # HB3
-    pick_up(m50, 'single')
-    hb_distribute(20, hb[3], ['7'])
-    m50.drop_tip()
+    for i, source in enumerate(hb_all):
+        if not m50.tip_attached:
+            pick_up(m50, 'single')
+        for vol in hb_all[source]:
+            hb_distribute(float(vol), source, hb_all[source][vol])
+        if i != 0:
+            m50.drop_tip()
 
     robot.comment('Delaying 1 minute.')
     m50.delay(minutes=1)
@@ -159,8 +165,9 @@ resuming.')
     # bead distribution
     for col in magplate.columns()[:8]:
         pick_up(m50, 'single')
-        m50.distribute(
-            5, beads, [well.top(-2) for well in col], new_tip='never')
+        for well in col:
+            m50.transfer(5, beads, well.top(-2), new_tip='never')
+            m50.blow_out()
         m50.drop_tip()
 
     robot.pause('Fill tiprack in slot 4.')
@@ -183,10 +190,7 @@ resuming.')
         m300.return_tip()
 
     # 60 minute pause with 3x iterative mixing every 20 minutes
-    for pause in range(1, 4):
-        robot.comment('Delaying 20 minutes (part ' + str(pause) + '/3 of \
-60-minute pause).')
-        m300.delay(minutes=20)
+    for pause in range(4):
         for t, mix_set, mag_set in zip(tip_locs_s, mix_sets, rep_sets):
             m300.pick_up_tip(t)
             for mix_loc, mag_samp in zip(mix_set, mag_set):
@@ -196,6 +200,10 @@ resuming.')
                 m300.drop_tip()
             else:
                 m300.return_tip()
+        if pause < 3:
+            robot.comment('Delaying 20 minutes (part ' + str(pause) + '/3 of \
+    60-minute pause).')
+            m300.delay(minutes=20)
 
     magdeck.engage(height=18)
     robot.comment('Incubating on magnet for 1 minute.')
