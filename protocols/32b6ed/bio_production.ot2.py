@@ -42,6 +42,7 @@ def run_custom_protocol(
         volume_of_solution_to_transfer_in_ul: float = 50,
         transfer_plan: StringSelection(
             'distribution', 'single transfers') = 'distribution',
+        circle_destination_well: StringSelection('yes', 'no') = 'yes',
         tip_well: str = 'A1'
 ):
     # check
@@ -75,7 +76,7 @@ to continue.')
         p300.distribute(
             volume_of_solution_to_transfer_in_ul,
             sol_a,
-            [d.top(5) for d in dests],
+            [d.top(1) for d in dests],
             new_tip='never',
             disposal_vol=10,
             blow_out=True
@@ -85,9 +86,14 @@ to continue.')
             p300.transfer(
                 volume_of_solution_to_transfer_in_ul,
                 sol_a,
-                d.top(5),
-                new_tip='never'
-            )
+                d.top(0.5),
+                new_tip='never')
+            if circle_destination_well == 'yes':
+                # move around well
+                [p300.move_to((d, d.from_center(r=0.9, h=0, theta=angle/10)))
+                    for angle in range(0, 63, 6)]
+            else:
+                # standard touch tip
+                p300.touch_tip(d, 0.9, 0.5, 20)
             p300.blow_out(d.top(5))
-            p300.blow_out(sol_a.top())
     p300.drop_tip()
