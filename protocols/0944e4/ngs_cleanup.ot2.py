@@ -38,7 +38,7 @@ tips10 = labware.load('opentrons_96_filtertiprack_10ul', '3')
 beads = res12.wells('A1')
 etoh = res12.wells('A2')
 eb_buff = res12.wells('A3')
-waste = [chan.top() for chan in res12.wells('A11', length=2)]
+waste = [chan.top(-5) for chan in res12.wells('A11', length=2)]
 
 
 def run_custom_protocol(
@@ -67,7 +67,7 @@ def run_custom_protocol(
     # mix beads
     robot.head_speed(z=50, a=50)
     m300.pick_up_tip()
-    m300.mix(10, 200, beads)
+    m300.mix(5, 200, beads)
     m300.blow_out(beads.top())
 
     # transfer beads and mix samples
@@ -75,7 +75,9 @@ def run_custom_protocol(
         if not m300.tip_attached:
             m300.pick_up_tip()
         m300.transfer(110, beads, m, new_tip='never')
+        m300.blow_out()
         m300.mix(10, 130, m)
+        m300.blow_out(m.top())
         m300.drop_tip()
     robot.head_speed(z=125, a=125)
 
@@ -96,7 +98,11 @@ def run_custom_protocol(
     # 2x EtOH washes
     for _ in range(2):
         # transfer EtOH
-        m300.transfer(180, etoh, mag_samples, new_tip='always', air_gap=20)
+        for m in mag_samples:
+            m300.pick_up_tip()
+            m300.transfer(180, etoh, m, new_tip='never', air_gap=20)
+            m300.blow_out(m)
+            m300.drop_tip()
 
         robot.comment('Incubating for 1 minute.')
         m300.delay(minutes=1)
@@ -110,12 +116,16 @@ def run_custom_protocol(
         )
 
     # remove residual supernatant
-    m10.transfer(
-        10,
-        [m.bottom(0.3) for m in mag_samples],
-        waste[1],
-        new_tip='always'
-    )
+    for m in mag_samples:
+        m10.pick_up_tip()
+        m10.transfer(
+            10,
+            m.bottom(0.3),
+            waste[1],
+            new_tip='never'
+        )
+        m10.blow_out()
+        m10.drop_tip()
 
     robot.comment('Drying for ' + str(drying_time_in_minutes) + ' minutes.')
     m300.delay(minutes=drying_time_in_minutes)
@@ -123,7 +133,11 @@ def run_custom_protocol(
     magdeck.disengage()
 
     # transfer EB buffer
-    m300.transfer(37.5, eb_buff, mag_samples, new_tip='always')
+    for m in mag_samples:
+        m300.pick_up_tip()
+        m300.transfer(37.5, eb_buff, m, new_tip='never')
+        m300.blow_out()
+        m300.drop_tip()
 
     robot.pause('Remove PCR plate, seal and shake at 1800 RPM for 2 minutes. \
 Return PCR plate to magnetic module and incubate for 3 minutes before \
@@ -138,7 +152,7 @@ resuming.')
     for m, e in zip(mag_samples, elution_samples):
         m300.pick_up_tip()
         m300.transfer(35, m, e, new_tip='never')
-        m300.blow_out(e.top())
+        m300.blow_out()
         m300.drop_tip()
 
     magdeck.disengage()
