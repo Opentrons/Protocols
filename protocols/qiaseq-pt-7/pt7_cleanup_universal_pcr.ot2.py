@@ -18,7 +18,7 @@ rxn_plate = labware.load(
     share=True
 )
 elution_plate = labware.load(
-    'biorad_96_wellplate_200ul_pcr', '2', 'elution plate')
+    'opentrons_96_aluminumblock_biorad_wellplate_200ul', '2', 'elution plate')
 reagent_reservoir = labware.load(
     'usascientific_12_reservoir_22ml', '3', 'reagent reservoir')
 
@@ -84,6 +84,7 @@ def run_custom_protocol(
             tip300_count += 1
 
     # distribute nuclease-free water and beads to each sample
+    m300.set_flow_rate(aspirate=100, dispense=250)
     pick_up(m300)
     m300.distribute(
         80,
@@ -109,7 +110,7 @@ def run_custom_protocol(
     for s in rxn_samples:
         pick_up(m300)
         m300.transfer(
-            190,
+            200,
             s,
             liquid_waste[0],
             new_tip='never'
@@ -120,7 +121,12 @@ def run_custom_protocol(
     for wash in range(2):
         pick_up(m300)
         m300.transfer(
-            200, etoh[wash], [s.top() for s in rxn_samples], new_tip='never')
+            200,
+            etoh[wash],
+            [s.top() for s in rxn_samples],
+            new_tip='never',
+            air_gap=10
+        )
 
         # remove supernatant
         for s in rxn_samples:
@@ -132,11 +138,11 @@ def run_custom_protocol(
     # remove supernatant completely with P50 multi
     for s in rxn_samples:
         pick_up(m50)
-        m50.transfer(50, s, liquid_waste[0], new_tip='never')
+        m50.transfer(7, s.bottom(), liquid_waste[0], new_tip='never')
         m50.drop_tip()
 
     # airdry
-    m50.delay(minutes=10)
+    m50.delay(minutes=7)
     robot._driver.run_flag.wait()
     magdeck.disengage()
 
@@ -153,7 +159,7 @@ def run_custom_protocol(
         m50.drop_tip()
 
     magdeck.engage(height=18)
-    robot.pause('Resume once the reaction solution has cleared.')
+    m50.delay(minutes=1)
 
     # transfer to elution plate
     for s, d in zip(rxn_samples, elution_samples):
