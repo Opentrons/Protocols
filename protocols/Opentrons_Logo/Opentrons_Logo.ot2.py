@@ -4,7 +4,6 @@
 @version 1.3
 """
 from opentrons import labware, instruments
-from otcustomizers import StringSelection
 
 metadata = {
     'protocolName': 'Opentrons Logo',
@@ -13,24 +12,27 @@ metadata = {
     }
 
 
-def run_custom_protocol(pipette_type: StringSelection(
-    'p300-Single', 'p50-Single', 'p10-Single')='p300-Single',
-    dye_labware_type: StringSelection(
-        'trough-12row', 'tube-rack-2ml')='trough-12row'):
+def run_custom_protocol(pipette_type: 'StringSelection...'='p300-Single',
+    dye_labware_type: 'StringSelection...'='trough-12row', mount: 'StringSelection...'='right'):
+    if pipette_type == 'p1000-Single':
+        tiprack = labware.load('tiprack-1000ul', '1')
+        pipette = instruments.P1000_Single(
+            mount=mount,
+            tip_racks=[tiprack])
     if pipette_type == 'p300-Single':
         tiprack = labware.load('tiprack-200ul', '1')
         pipette = instruments.P300_Single(
-            mount='right',
+            mount=mount,
             tip_racks=[tiprack])
     elif pipette_type == 'p50-Single':
         tiprack = labware.load('tiprack-200ul', '1')
         pipette = instruments.P50_Single(
-            mount='right',
+            mount=mount,
             tip_racks=[tiprack])
     elif pipette_type == 'p10-Single':
         tiprack = labware.load('tiprack-10ul', '1')
         pipette = instruments.P10_Single(
-            mount='right',
+            mount=mount,
             tip_racks=[tiprack])
 
     if dye_labware_type == 'trough-12row':
