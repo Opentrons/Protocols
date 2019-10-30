@@ -25,7 +25,7 @@ def run_custom_protocol(pipette_type: StringSelection(
         pipette = instruments.P1000_Single(
             mount=pipette_is_on,
             tip_racks=[tiprack])
-    if pipette_type == 'p300-Single':
+    elif pipette_type == 'p300-Single':
         tiprack = labware.load('tiprack-200ul', '1')
         pipette = instruments.P300_Single(
             mount=pipette_is_on,
