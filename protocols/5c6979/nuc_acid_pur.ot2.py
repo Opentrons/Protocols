@@ -71,27 +71,38 @@ def run_custom_protocol(
     m300 = instruments.P300_Multi(mount=p300_multi_mount)
 
     # parse
-    rep_sets = [
-        [magplate.rows('A')[int(col)-1] for col in line.split(',')]
-        for line in replicate_CSV.splitlines() if line
+    [rep_sets_m, rep_sets_t] = [
+        [[plate.rows('A')[int(col)-1] for col in line.split(',')]
+            for line in replicate_CSV.splitlines() if line]
+        for plate in [magplate, temp_plate]
     ]
     # samples
-    mag_samples_m = [col for set in rep_sets for col in set]
-    mix_sets = []
+    mag_samples_m = [col for set in rep_sets_m for col in set]
+    mix_sets_m = []
+    mix_sets_t = []
     for line in replicate_CSV.splitlines()[1:]:
         if line:
-            set = []
+            set_m = []
+            set_t = []
             for col in line.split(','):
                 col_ind = int(col) - 1
                 angle = 0 if col_ind % 2 == 0 else math.pi
-                mix_well = magplate.rows('A')[col_ind]
-                set.append(
+                mix_well_m = magplate.rows('A')[col_ind]
+                mix_well_t = temp_plate.rows('A')[col_ind]
+                set_m.append(
                     (
-                     mix_well,
-                     mix_well.from_center(r=0.9, h=-0.7, theta=angle)
+                     mix_well_m,
+                     mix_well_m.from_center(r=0.9, h=-0.7, theta=angle)
                     )
                 )
-            mix_sets.append(set)
+                set_t.append(
+                    (
+                     mix_well_t,
+                     mix_well_t.from_center(r=0.9, h=-0.7, theta=angle)
+                    )
+                )
+            mix_sets_m.append(set_m)
+            mix_sets_t.append(set_t)
 
     tip_count_s = 0
     tip_max_s = 96
@@ -128,7 +139,7 @@ resuming.')
         )
 
     def remove_supernatant(vol, waste_chan):
-        for set in rep_sets:
+        for set in rep_sets_m:
             if not m300.tip_attached:
                 pick_up(m300, 'multi')
             m300.consolidate(
@@ -177,8 +188,8 @@ resuming.')
 
     # mix wells
     tip_locs = []
-    for mix_set, mag_set in zip(mix_sets, rep_sets):
-        if len(mix_sets) > tip_max_m - tip_count_m:
+    for mix_set, mag_set in zip(mix_sets_m, rep_sets_m):
+        if len(mix_sets_m) > tip_max_m - tip_count_m:
             robot.pause('Refill tiprack in slots 4, 6, 8, 9, and 11 before \
 resuming.')
             tip_count_m = 0
@@ -190,20 +201,20 @@ resuming.')
         m300.return_tip()
 
     # 60 minute pause with 3x iterative mixing every 20 minutes
-    for pause in range(4):
-        for t, mix_set, mag_set in zip(tip_locs_s, mix_sets, rep_sets):
-            m300.pick_up_tip(t)
-            for mix_loc, mag_samp in zip(mix_set, mag_set):
-                m300.mix(10, 100, mix_loc)
-                m300.blow_out(mag_samp.top(-2))
-            if pause == 2:
-                m300.drop_tip()
-            else:
-                m300.return_tip()
-        if pause < 3:
-            robot.comment('Delaying 20 minutes (part ' + str(pause) + '/3 of \
-    60-minute pause).')
-            m300.delay(minutes=20)
+    for pause in range(3):
+        if pause > 0:
+            for t, mix_set, mag_set in zip(tip_locs_s, mix_sets_m, rep_sets_m):
+                m300.pick_up_tip(t)
+                for mix_loc, mag_samp in zip(mix_set, mag_set):
+                    m300.mix(10, 100, mix_loc)
+                    m300.blow_out(mag_samp.top(-2))
+                if pause == 2:
+                    m300.drop_tip()
+                else:
+                    m300.return_tip()
+        robot.comment('Delaying 20 minutes (part ' + str(pause+1) + '/3 of \
+60-minute pause).')
+        m300.delay(minutes=20)
 
     magdeck.engage(height=18)
     robot.comment('Incubating on magnet for 1 minute.')
@@ -223,13 +234,13 @@ resuming.')
         )
 
         magdeck.disengage()
-        for mix_set, mag_set in zip(mix_sets, rep_sets):
-            if not m300.tip_attached:
-                pick_up(m300, 'multi')
-            for mix_loc, mag_samp in zip(mix_set, mag_set):
-                m300.mix(3, 100, mix_loc)
-                m300.blow_out(mag_samp.top(-2))
-            m300.drop_tip()
+        for _ in range(3):
+            m300.delay(seconds=10)
+            robot._driver.run_flag.wait()
+            magdeck.engage(height=18)
+            m300.delay(seconds=10)
+            robot._driver.run_flag.wait()
+            magdeck.disengage()
 
         magdeck.engage(height=18)
         robot.comment('Incubating on magnet for 1 minute.')
@@ -252,19 +263,43 @@ resuming.')
 
     magdeck.disengage()
 
-    # mix
-    for mix_set, mag_set in zip(mix_sets, rep_sets):
+    # mix wells
+    tip_locs = []
+    for mix_set, mag_set in zip(mix_sets_m, rep_sets_m):
+        if len(mix_sets_m) > tip_max_m - tip_count_m:
+            robot.pause('Refill tiprack in slots 4, 6, 8, 9, and 11 before \
+resuming.')
+            tip_count_m = 0
         if not m300.tip_attached:
             pick_up(m300, 'multi')
+        tip_locs.append(m300.current_tip())
         for mix_loc, mag_samp in zip(mix_set, mag_set):
-            m300.mix(3, 100, mix_loc)
+            m300.mix(10, 100, mix_loc)
             m300.blow_out(mag_samp.top(-2))
-        m300.drop_tip()
-    tempdeck.wait_for_temp()
-    robot._driver.run_flag.wait()
-    robot.pause('Move the plate onto the temperature module. Incubate for 1 \
-hour, and then replace on the magnetic module before resuming.')
+        m300.return_tip()
 
+    robot.pause('Move the plate onto the temperature module.')
+
+    # 60 minute pause with 3x iterative mixing every 20 minutes
+    for pause in range(3):
+        if pause > 0:
+            for t, mix_set, mag_set in zip(tip_locs_s, mix_sets_t, rep_sets_t):
+                m300.pick_up_tip(t)
+                for mix_loc, mag_samp in zip(mix_set, mag_set):
+                    m300.mix(10, 100, mix_loc)
+                    m300.blow_out(mag_samp.top(-2))
+                if pause == 2:
+                    m300.drop_tip()
+                else:
+                    m300.return_tip()
+        robot.comment('Delaying 20 minutes (part ' + str(pause+1) + '/3 of \
+60-minute pause).')
+        m300.delay(minutes=20)
+
+    m300.home()
+    robot.pause('Move the plate onto the magnetic module.')
+
+    robot._driver.run_flag.wait()
     magdeck.engage(height=18)
     robot.comment('Incubating on magnet for 1 minute.')
     m300.delay(minutes=1)
@@ -282,29 +317,15 @@ hour, and then replace on the magnetic module before resuming.')
             new_tip='never'
         )
         magdeck.disengage()
-
-        if len(mag_samples_m) > tip_max_m - tip_count_m:
-            robot.pause('Refill tiprack in slots 4, 6, 8, 9, and 11 before \
-resuming.')
-            tip_count_m = 0
-
-        tip_locs = []
         for rep in range(2):
-            for t, (mix_set, mag_set) in enumerate(zip(mix_sets, rep_sets)):
-                if rep == 0:
-                    if not m300.tip_attached:
-                        pick_up(m300, 'multi')
-                    tip_locs.append(m300.current_tip())
-                else:
-                    if not m300.tip_attached:
-                        m300.pick_up_tip(tip_locs[t])
-                for mix_loc, mag_samp in zip(mix_set, mag_set):
-                    m300.mix(3, 100, mix_loc)
-                    m300.blow_out(mag_samp.top())
-                if rep == 1:
-                    m300.drop_tip()
-                else:
-                    m300.return_tip()
+            for _ in range(3):
+                m300.delay(seconds=10)
+                robot._driver.run_flag.wait()
+                magdeck.engage(height=18)
+                m300.delay(seconds=10)
+                robot._driver.run_flag.wait()
+                magdeck.disengage()
+
             robot.comment('Incubating 5 minutes.')
             m300.delay(minutes=5)
 
@@ -325,14 +346,13 @@ resuming.')
     )
 
     magdeck.disengage()
-
-    for mix_set, mag_set in zip(mix_sets, rep_sets):
-        if not m300.tip_attached:
-            pick_up(m300, 'multi')
-        for mix_loc, mag_samp in zip(mix_set, mag_set):
-            m300.mix(3, 100, mix_loc)
-            m300.blow_out(mag_samp.top(-2))
-        m300.drop_tip()
+    for _ in range(3):
+        m300.delay(seconds=10)
+        robot._driver.run_flag.wait()
+        magdeck.engage(height=18)
+        m300.delay(seconds=10)
+        robot._driver.run_flag.wait()
+        magdeck.disengage()
 
     magdeck.engage(height=18)
     robot.comment('Incubating 1 minute.')
@@ -349,37 +369,25 @@ resuming.')
         disposal_vol=0,
         new_tip='never'
     )
-
     magdeck.disengage()
-    tip_locs = []
-    for pause in range(2):
-        for t, (mix_set, mag_set) in enumerate(zip(mix_sets, rep_sets)):
-            if pause == 0:
-                if len(mix_sets) > tip_max_m - tip_count_m:
-                    robot.pause('Refill tiprack in slots 4, 6, 8, 9, and 11 \
-before resuming.')
-                    tip_count_m = 0
-                if not m300.tip_attached:
-                    pick_up(m300, 'multi')
-                tip_locs.append(m300.current_tip())
-            else:
-                m300.pick_up_tip(tip_locs[t])
-            for mix_loc, mag_samp in zip(mix_set, mag_set):
-                m300.mix(10, 100, mix_loc)
-                m300.blow_out(mag_samp.top(-2))
-            if pause == 0:
-                m300.return_tip()
-            else:
-                m300.drop_tip()
+    for rep in range(2):
+        for _ in range(3):
+            m300.delay(seconds=10)
+            robot._driver.run_flag.wait()
+            magdeck.engage(height=18)
+            m300.delay(seconds=10)
+            robot._driver.run_flag.wait()
+            magdeck.disengage()
 
+        robot.comment('Incubating 5 minutes.')
         m300.delay(minutes=5)
 
-    robot._driver.run_flag.wait()
-    robot.comment('Incubating on magnet 1 minute.')
     magdeck.engage(height=18)
+    robot.comment('Incubating 1 minute.')
     m300.delay(minutes=1)
 
-    remove_supernatant(100, waste[7])
+    remove_supernatant(150, waste[wash])
+
     robot.pause('Empty liquid waste in reservoir channels 4-12 before \
 resuming.')
 
@@ -395,13 +403,13 @@ resuming.')
         )
 
         magdeck.disengage()
-        for mix_set, mag_set in zip(mix_sets, rep_sets):
-            if not m300.tip_attached:
-                pick_up(m300, 'multi')
-            for mix_loc, mag_samp in zip(mix_set, mag_set):
-                m300.mix(3, 100, mix_loc)
-                m300.blow_out(mag_samp.top(-2))
-            m300.drop_tip()
+        for _ in range(3):
+            m300.delay(seconds=10)
+            robot._driver.run_flag.wait()
+            magdeck.engage(height=18)
+            m300.delay(seconds=10)
+            robot._driver.run_flag.wait()
+            magdeck.disengage()
 
         magdeck.engage(height=18)
         robot.comment('Incubating on magnet for 1 minute.')
