@@ -17,7 +17,7 @@ metadata = {
 def run_custom_protocol(pipette_type: StringSelection(
     'p1000-Single', 'p300-Single', 'p50-Single', 'p10-Single')='p300-Single',
     dye_labware_type: StringSelection(
-        'trough-12row', 'tube-rack-2ml')='trough-12row'),
+        'trough-12row', 'tube-rack-2ml')='trough-12row',
     pipette_is_on: StringSelection(
         'left', 'right')='right'):
     if pipette_type == 'p1000-Single':
