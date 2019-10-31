@@ -116,13 +116,18 @@ def run_custom_protocol(
     # ethanol washes
     for wash in range(2):
         pick_up(m300)
-        m300.transfer(
-            200,
-            etoh[wash],
-            [s.top() for s in rxn_samples],
-            new_tip='never',
-            air_gap=10
-        )
+        for i, s in enumerate(rxn_samples):
+            if i != 0:
+                m300.dispense(30, etoh[wash].top())
+            m300.transfer(
+                200,
+                etoh[wash],
+                s.top(),
+                new_tip='never',
+                air_gap=10
+            )
+            if i < len(rxn_samples) - 1:
+                m300.aspirate(30)
 
         # remove supernatant
         for s in rxn_samples:
