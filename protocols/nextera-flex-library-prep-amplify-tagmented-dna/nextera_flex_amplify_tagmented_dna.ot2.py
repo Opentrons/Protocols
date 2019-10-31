@@ -135,7 +135,7 @@ pipettes')
         # transfer mm to plate columns
         p50.pick_up_tip()
         for i in range(num_cols):
-            for j, well in enumerate(mm_plate.rows()[i//4]):
+            for j, well in enumerate(mm_plate.columns()[i//4]):
                 well_ind = i*8+j
                 mm_ind = well_ind//32
                 p50.transfer(44, mm[mm_ind], well, new_tip='never')
