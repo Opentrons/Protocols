@@ -16,7 +16,7 @@ mag_plate = labware.load(
 res12 = labware.load(
     'usascientific_12_reservoir_22ml', '3', 'reagent reservoir')
 
-twb = [chan for chan in res12.wells()[:2]]
+twb = [chan.bottom(5) for chan in res12.wells()[:2]]
 liquid_waste = [chan.top() for chan in res12.wells('A11', length=2)]
 
 

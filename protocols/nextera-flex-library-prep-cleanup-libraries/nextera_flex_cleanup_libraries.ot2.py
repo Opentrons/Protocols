@@ -25,9 +25,9 @@ tips300 = [
 
 # reagents
 spb = res12.wells(0)
-nuc_free_water = res12.wells(1)
-rsb = res12.wells(2)
-etoh = res12.wells(3, length=2)
+nuc_free_water = res12.wells(1).bottom(5)
+rsb = res12.wells(2).bottom(5)
+etoh = [chan.bottom(5) for chan in res12.wells(3, length=2)]
 liquid_waste = [chan.top() for chan in res12.wells(9, length=3)]
 
 
@@ -111,7 +111,7 @@ pipettes')
 
     lng = 71.88
     wid = 8.33
-    h = 35
+    h = 25
 
     def track_bead_height(pip, vol):
         nonlocal h
@@ -152,7 +152,7 @@ new PCR plate in slot 2, and resume.')
 
     if p300_type == 'multi':
         pick_up('pip300')
-        pip300.mix(20, 200, spb)
+        pip300.mix(20, 200, spb.bottom(5))
         pip300.blow_out(spb.top())
         pip300.drop_tip()
     pick_up('pip50')
@@ -192,21 +192,23 @@ on slot 2 for the final elution.')
     # 2x EtOH wash
     for wash in range(2):
         pick_up('pip300')
-        for s in mag_samples300:
-            pip300.transfer(200, etoh[wash], s.top(), new_tip='never')
+        for i, s in enumerate(mag_samples300):
+            side = i % 2 if p50_type == 'multi' else math.floor(i/8) % 2
+            angle = math.pi if side == 0 else 0
+            disp_loc = (s, s.from_center(r=0.85, h=1.0, theta=angle))
+            pip300.transfer(190, etoh[wash], s.top(), new_tip='never')
             pip300.blow_out()
-        pip300.delay(seconds=30)
         for s in mag_samples300:
             if not pip300.tip_attached:
                 pick_up('pip300')
             pip300.transfer(
-                220, s.bottom(1), liquid_waste[wash], new_tip='never')
+                200, s.bottom(1), liquid_waste[wash], new_tip='never')
             pip300.drop_tip()
 
     # remove residual supernatant
     for s in mag_samples50:
         pick_up('pip50')
-        pip50.transfer(20, s.bottom(0.3), liquid_waste[2], new_tip='never')
+        pip50.aspirate(20, s.bottom(0.3))
         pip50.drop_tip()
 
     # airdry for 5 minutes
