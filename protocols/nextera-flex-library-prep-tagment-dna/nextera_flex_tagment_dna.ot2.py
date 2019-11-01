@@ -120,7 +120,7 @@ pipettes')
             m50.pick_up_tip()
             m50.transfer(20, source, dest, new_tip='never')
             m50.mix(10, 20, dest)
-            m50.blow_out(s.top())
+            m50.blow_out(dest.top())
             m50.drop_tip()
 
     robot.comment('Seal the plate and thermocycle running the TAG program.')
