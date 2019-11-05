@@ -1,0 +1,1 @@
+{"slug": "1a6463", "path": "protocols/1a6463", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["pcr_prep.ot2.py"]}, "status": "ok"}
