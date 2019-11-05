@@ -14,7 +14,7 @@ mag_plate = labware.load(
     'biorad_96_wellplate_200ul_pcr', '1', 'reaction plate', share=True)
 tempdeck = modules.load('tempdeck', '4')
 tubeblock = labware.load(
-    'opentrons_24_aluminumblock_generic_2ml_screwcap',
+    'opentrons_24_aluminumblock_nest_1.5ml_snapcap',
     '4',
     'reagent tubeblock',
     share=True
@@ -29,7 +29,7 @@ liquid_waste = labware.load(
 
 # reagents
 mm = tubeblock.wells('A1', length=3)
-epm = [well.top(-19) for well in tubeblock.wells('A2', length=4)]
+epm = [well.bottom() for well in tubeblock.wells('A2', length=4)]
 nuc_free_water = tubeblock.wells('A3', length=2)
 
 
@@ -128,18 +128,21 @@ pipettes')
 
     else:
         mm_plate = labware.load(
-            'biorad_96_wellplate_200ul_pcr',
+            'opentrons_96_aluminumblock_biorad_wellplate_200ul',
             '3',
-            'mastermix plate (for multi-channel transfer)'
+            'mastermix plate on chilled aluminum block'
         )
         # transfer mm to plate columns
         p50.pick_up_tip()
         for i in range(num_cols):
-            for j, well in enumerate(mm_plate.columns()[i//4]):
+            col_ind = i//4
+            for j, well in enumerate(mm_plate.columns()[col_ind]):
                 well_ind = i*8+j
                 mm_ind = well_ind//32
                 p50.transfer(44, mm[mm_ind], well, new_tip='never')
                 p50.blow_out()
+                if (i+1) % 3 == 0:
+                    p50.transfer(10, well, well.bottom(7), new_tip='never')
         p50.drop_tip()
 
         # distribute mm to sample columns
