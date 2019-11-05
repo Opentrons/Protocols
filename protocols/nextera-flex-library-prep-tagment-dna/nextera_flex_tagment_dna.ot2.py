@@ -12,7 +12,7 @@ metadata = {
 rxn_plate = labware.load(
     'biorad_96_wellplate_200ul_pcr', '1', 'tagmentation reaction plate')
 tuberack = labware.load(
-    'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap',
+    'opentrons_24_aluminumblock_nest_1.5ml_snapcap',
     '2',
     'reagent tuberack'
 )
@@ -57,9 +57,14 @@ pipettes')
     max_mm_ind = 0
     p50.pick_up_tip()
     for reagent in [blt, tb1]:
+        r_ind_prev = 0
         for i in range(num_transfers_each):
             r_ind = i*len(reagent)//max_transfers
             mm_ind = i*len(mm)//max_transfers
+            if r_ind != r_ind_prev:
+                p50.transfer(
+                    10, reagent[r_ind], mm[mm_ind].bottom(5), new_tip='never')
+                r_ind_prev = r_ind
             if mm_ind > max_mm_ind:
                 max_mm_ind = mm_ind
             p50.transfer(
@@ -105,12 +110,11 @@ pipettes')
         samples_multi = rxn_plate.rows('A')[:num_cols]
 
         # transfer mm to plate columns
-        p50.pick_up_tip()
         for i in range(num_cols):
             for j, well in enumerate(mm_plate.columns()[i//6]):
                 well_ind = i*8+j
                 mm_ind = well_ind//48
-                p50.transfer(22, mm[mm_ind], well, new_tip='never')
+                p50.transfer(21, mm[mm_ind], well, new_tip='never')
                 p50.blow_out()
         p50.drop_tip()
 
