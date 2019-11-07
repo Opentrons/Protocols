@@ -1,0 +1,1 @@
+{"slug": "4ca4bd", "path": "protocols/4ca4bd", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["cherrypicking.ot2.py"]}, "status": "ok"}
