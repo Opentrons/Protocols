@@ -58,18 +58,9 @@ def run_custom_protocol(
         raise Exception('Pipette mounts cannot match.')
 
     # location for safe tip drop
-    well_ref = mag_plate.rows('A')[7]
-    r_well = well_ref.properties['diameter']/2
-    h_well = well_ref.properties['height']/2
-    d_abs = 274.57
-    d_rel = d_abs/r_well
-    h_abs = 100
-    h_rel = h_abs/h_well
-    tip_drop_loc = (well_ref, well_ref.from_center(
-        r=d_rel, theta=math.pi/4, h=h_rel))
 
     def drop(pip):
-        pip.move_to(tip_drop_loc)
+        pip.move_to(res12.wells()[7].top(10))
         pip.drop_tip()
 
     # pipettes
