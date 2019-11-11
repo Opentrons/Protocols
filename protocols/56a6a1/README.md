@@ -26,9 +26,10 @@ This protocol performs a protein array on ONCYTE SuperNOVA slides mounted on an 
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
 12-channel reservoir
-* Super G blocking buffer: channel 1
+* Super G plus blocking buffer: channel 1
 * Secondary antibody: channel 2
-* PBST: channels 3-4
+* PBST: channels 3-6
+* Super G: channel 7
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
