@@ -94,7 +94,7 @@ def run_custom_protocol(
         vol1000 = float(vol1000)
         if well == 'E1':
             src_well1k = tuberack.wells('B3')
-            p1kht = 90
+            p1kht = 80
         p1k.transfer(
             vol1000,
             src_well1k.bottom(p1kht),
