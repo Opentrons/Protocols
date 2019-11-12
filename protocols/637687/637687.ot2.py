@@ -71,7 +71,7 @@ def run_custom_protocol(
             if p1kht < 4:
                 return p1kht
             else:
-                delta_h = vol/607.42  # pi*r^2
+                delta_h = 1.1*(vol/607.42)  # pi*r^2 + 10%
                 delta_h = round(delta_h, 2)
                 p1kht -= delta_h
                 return p1kht
@@ -79,7 +79,7 @@ def run_custom_protocol(
             if p300ht < 4:
                 return p300ht
             else:
-                delta_h = vol/174.37  # pi*r^2
+                delta_h = 1.1*(vol/174.37)  # pi*r^2 + 10%
                 delta_h = round(delta_h, 2)
                 p300ht -= delta_h
                 return p300ht
