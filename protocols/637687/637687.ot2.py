@@ -8,8 +8,8 @@ metadata = {
     }
 
 # Create labware
-tips300 = labware.load('opentrons_96_tiprack_300ul', '1', '300uL Tips')
-tips1k = labware.load('opentrons_96_tiprack_1000ul', '2', '1000uL Tips')
+tips300 = labware.load('opentrons_96_tiprack_300ul', '2', '300uL Tips')
+tips1k = labware.load('opentrons_96_tiprack_1000ul', '1', '1000uL Tips')
 
 tuberack = labware.load(
     'opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical', '5', 'Tube Rack'
@@ -60,8 +60,8 @@ def run_custom_protocol(
         [row.split(',') for row in volumes_csv.strip().splitlines() if row]
     ]
 
-    p300ht = 70
-    p1kht = 90
+    p300ht = 60
+    p1kht = 80
 
     def ht_adj(pip, vol):
         nonlocal p300ht
@@ -71,7 +71,7 @@ def run_custom_protocol(
             if p1kht < 4:
                 return p1kht
             else:
-                delta_h = 1.1*(vol/607.42)  # pi*r^2 & 10% extra
+                delta_h = vol/607.42  # pi*r^2
                 delta_h = round(delta_h, 2)
                 p1kht -= delta_h
                 return p1kht
@@ -79,7 +79,7 @@ def run_custom_protocol(
             if p300ht < 4:
                 return p300ht
             else:
-                delta_h = 1.1*(vol/174.37)  # pi*r^2 & 10% extra
+                delta_h = vol/174.37  # pi*r^2
                 delta_h = round(delta_h, 2)
                 p300ht -= delta_h
                 return p300ht
@@ -101,6 +101,7 @@ def run_custom_protocol(
             plate.wells(well).bottom(35),
             new_tip='never'
             )
+        p1k.blow_out(plate.wells(well).top())
         ht_adj(p1k, vol1000)
 
     for well, vol300, not_used in data[1:]:
@@ -111,6 +112,7 @@ def run_custom_protocol(
             plate.wells(well).bottom(35),
             new_tip='never'
             )
+        p300.blow_out(plate.wells(well).top())
         ht_adj(p300, vol300)
 
     p1k.drop_tip()
