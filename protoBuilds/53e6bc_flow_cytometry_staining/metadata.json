@@ -1,0 +1,1 @@
+{"slug": "53e6bc_flow_cytometry_staining", "path": "protocols/53e6bc_flow_cytometry_staining", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["flow_cytometry_staining.ot2.py"]}, "status": "ok"}
