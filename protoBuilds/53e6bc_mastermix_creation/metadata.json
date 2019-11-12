@@ -1,0 +1,1 @@
+{"slug": "53e6bc_mastermix_creation", "path": "protocols/53e6bc_mastermix_creation", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["antibody_mm_creation.ot2.py"]}, "status": "ok"}
