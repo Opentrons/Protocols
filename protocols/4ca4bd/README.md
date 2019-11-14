@@ -8,28 +8,28 @@
 	* Cherrypicking
 
 ## Description
-This protocol performs a custom cherrypicking sample prep from a 96-tube rack to a custom 96-well plate. The plate first receives 198ul of DMSO from a 12-channel reservoir, before receiving 2ul of the corresponding sample from the tube rack. The plate is filled sequentially down the columns then across the rows. The transfer scheme should be input in a `.csv` file formatted as follows (including headers):
+This protocol performs a custom cherrypicking sample prep from up to 7 96-tube racks (available slots- 2-8) to a custom 96-well plate (maximum 96 cherrypicks). The destination plate first receives 198ul of DMSO from a 12-channel reservoir using a multi-channel pipette, before receiving 2ul of the corresponding sample from the tube rack. The plate is filled sequentially down the columns then across the rows. The transfer scheme should be input in a `.csv` file formatted as follows (including headers):
 
 ```
-Well,Pos,Tube BC
-A01,1,0357024553
-B01,13,0357024554
-C01,25,0357024555
-D01,37,0357024556
-E01,49,0357024557
-F01,61,0357024558
-G01,73,0357024559
-H01,85,0357024560
-A02,2,0357024561
-B02,14,0357024562
-C02,26,0357024563
-D02,38,0357024564
-E02,50,0357024565
-F02,62,0357024566
-G02,74,0357024567
-H02,86,0357024568
-A03,3,0357024569
-B03,15,0357024570
+Source Well,Source Slot,Pos,Tube BC
+A01,2,1,0357024553
+B01,3,13,0357024554
+H01,3,25,0357024555
+D01,5,37,0357024556
+E01,4,49,0357024557
+F01,2,61,0357024558
+G01,3,73,0357024559
+H01,6,85,0357024560
+A02,2,2,0357024561
+B02,7,14,0357024562
+C02,1,26,0357024563
+D02,2,38,0357024564
+E02,3,50,0357024565
+F02,1,62,0357024566
+G02,2,74,0357024567
+H02,3,86,0357024568
+A03,1,3,0357024569
+B03,1,15,0357024570
 
 ```
 
@@ -48,8 +48,13 @@ In this example, all wells in columns 1, 2, and 3 of the destination plate will 
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
+
+
 12-channel reservoir (slot 4):
 * channel 1: DMSO
+
+source 96-tube racks:
+* can occupy slots 2-8 (specified in input `.csv`)
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
