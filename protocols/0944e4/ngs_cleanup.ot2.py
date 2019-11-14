@@ -120,7 +120,7 @@ def run_custom_protocol(
         for m in mag_samples:
             m300.pick_up_tip()
             m300.transfer(
-                160, m.bottom(0.5), waste[0], new_tip='never')
+                180, m.bottom(0.5), waste[0], new_tip='never')
             m300.blow_out(waste[0])
             drop(m300)
 
