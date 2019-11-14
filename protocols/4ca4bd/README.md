@@ -8,7 +8,7 @@
 	* Cherrypicking
 
 ## Description
-This protocol performs a custom cherrypicking sample prep from up to 7 96-tube racks to a custom 96-well plate (maximum 96 cherrypicks). The destination plate first receives 198ul of DMSO from a 12-channel reservoir using a multi-channel pipette, before receiving 2ul of the corresponding sample from the tube rack. The plate is filled sequentially down the columns then across the rows. The transfer scheme should be input in a `.csv` file formatted as follows (including headers):
+This protocol performs a custom cherrypicking sample prep from up to 7 96-tube racks (available slots- 2-8) to a custom 96-well plate (maximum 96 cherrypicks). The destination plate first receives 198ul of DMSO from a 12-channel reservoir using a multi-channel pipette, before receiving 2ul of the corresponding sample from the tube rack. The plate is filled sequentially down the columns then across the rows. The transfer scheme should be input in a `.csv` file formatted as follows (including headers):
 
 ```
 Source Well,Source Slot,Pos,Tube BC
@@ -48,8 +48,13 @@ In this example, all wells in columns 1, 2, and 3 of the destination plate will 
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
+
+
 12-channel reservoir (slot 4):
 * channel 1: DMSO
+
+source 96-tube racks:
+* can occupy slots 2-8 (specified in input `.csv`)
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
