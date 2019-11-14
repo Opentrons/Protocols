@@ -173,18 +173,39 @@ replace before resuming.')
     m300.drop_tip()
 
     # add first EtOH
+    tip_locs = []
     for s in mag_samples:
         pick_up()
+        tip_locs.append(m300.current_tip())
         etoh_check(450)
         m300.transfer(450, etoh, s, new_tip='never')
         m300.mix(10, 250, s)
         m300.blow_out(s.top())
         m300.drop_tip()
 
-    robot.comment('Incubating for 10 minutes')
-    m300.delay(minutes=10)
+    # iterative mixing
+    for mix in range(3):
+        for t, m in zip(tip_locs, mag_samples):
+            robot.comment('Incuating with iterative mixing...')
+            m300.delay(minutes=2)
+            pick_up(t)
+            m300.mix(5, 200, m)
+            m300.blow_out(m.top(-2))
+            if mix < 2:
+                m300.return_tip()
+            else:
+                m300.drop_tip()
 
     magdeck.engage(height=14.93)
+    robot.comment('Beads separating for supernatant removal')
+    m300.delay(minutes=bead_separation_time_in_minutes)
+
+    # remove supernatant
+    for m in mag_samples:
+        pick_up()
+        w = waste_check(1000)
+        m300.transfer(1000, m, waste_list[0], new_tip='never')
+        m300.drop_tip()
 
     # first set of 3x EtOH washes
     etoh_wash_3x()
