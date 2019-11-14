@@ -51,10 +51,12 @@ def run_custom_protocol(
             vol, water.bottom(pip_ht), final_plate.wells(dest), new_tip='never'
             )
 
-        if pip_ht > 4:
-            delta_h = 1.1*(vol/174.37)  # pi*r**2 + 10%
-            delta_h = round(delta_h, 2)
+        delta_h = 1.1*(vol/174.37)  # pi*r**2 + 10%
+        delta_h = round(delta_h, 2)
+        if pip_ht - delta_h > 4:
             pip_ht -= delta_h
+        else:
+            pip_ht = 4
 
     def dna_transfer(loc, vol):
         pip = p10 if vol < 10 else p50
