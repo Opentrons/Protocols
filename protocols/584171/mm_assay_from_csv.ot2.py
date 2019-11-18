@@ -40,7 +40,9 @@ tube 5,A7,240 ul,2,
 
 
 def run_custom_protocol(
-        p1000_mount: StringSelection('right', 'left') = 'right',
+        single_channel_pipette_type: StringSelection(
+            'P1000', 'P300') = 'P1000',
+        pipette_mount: StringSelection('right', 'left') = 'right',
         input_csv_file: FileInput = example_csv,
         number_of_target_plates: int = 3
 ):
@@ -48,13 +50,22 @@ def run_custom_protocol(
     plate = labware.load(
         'usascientific_96_wellplate_2.4ml_deep', '2', 'assay plate')
     max_racks = math.ceil(15*number_of_target_plates/96)
-    tips = [
-        labware.load('opentrons_96_tiprack_1000ul', str(slot))
-        for slot in range(3, 3+max_racks)
-    ]
 
     # pipette
-    p1000 = instruments.P1000_Single(mount=p1000_mount, tip_racks=tips)
+    if single_channel_pipette_type == 'P1000':
+        tips = [
+            labware.load('opentrons_96_tiprack_1000ul', str(slot))
+            for slot in range(3, 3+max_racks)
+        ]
+        pip = instruments.P1000_Single(mount=pipette_mount, tip_racks=tips)
+        ag_vol = 50
+    else:
+        tips = [
+            labware.load('opentrons_96_tiprack_300ul', str(slot))
+            for slot in range(3, 3+max_racks)
+        ]
+        pip = instruments.P300_Single(mount=pipette_mount, tip_racks=tips)
+        ag_vol = 30
 
     # parse
     trans_data = [
@@ -71,21 +82,21 @@ def run_custom_protocol(
     num_trans = [int(line[3]) for line in trans_data]
 
     for n in range(number_of_target_plates):
-        p1000.pick_up_tip()
+        pip.pick_up_tip()
         s_prev = sources[0]
         for v, s, d, t in zip(vols, sources, dests, num_trans):
             if s != s_prev:
                 s_prev = s
-                p1000.drop_tip()
-                p1000.pick_up_tip()
+                pip.drop_tip()
+                pip.pick_up_tip()
             for _ in range(t):
-                p1000.aspirate(v, s.bottom(5))
-                p1000.aspirate(50, s.top(5))
-                p1000.dispense(v+50, d.top(-2))
-                p1000.blow_out(d.top(-2))
-            p1000.mix(3, v, d.bottom(5))
-            p1000.blow_out(d.top(-2))
-        p1000.drop_tip()
+                pip.aspirate(v, s.bottom(5))
+                pip.aspirate(ag_vol, s.top(5))
+                pip.dispense(v+ag_vol, d.top(-2))
+                pip.blow_out(d.top(-2))
+            pip.mix(3, v, d.bottom(5))
+            pip.blow_out(d.top(-2))
+        pip.drop_tip()
         if n < number_of_target_plates - 1:
             robot.pause('Replace the assay plate in slot 2 with the next plate \
 and refill source tubes if necessary before resuming.')
