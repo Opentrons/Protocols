@@ -41,8 +41,8 @@ If more than one target assay plate is specified, the user is prompted to replac
 
 * [USA Scientific 96 Deep Well Plate 2.4ml #1896-2000](https://www.usascientific.com/2ml-deep96-well-plateone-bulk.aspx)
 * [VWR 15ml conical centrifuge tubes #10025-686](https://us.vwr.com/store/product/12134703/vwr-centrifuge-tubes-with-flat-or-plug-caps-polypropylene-sterile-standard-line) or equivalent seated in [Opentrons 3x5 tuberack insert for 4-in-1 tuberack](https://shop.opentrons.com/collections/verified-labware/products/tube-rack-set-1)
-* [Opentrons GEN1 P1000 electronic pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette?variant=5984549142557)
-* [Opentrons 1000ul tipracks](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-1000ul-tips)
+* [Opentrons GEN1 P300/P1000 electronic pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette?variant=5984549142557)
+* [Opentrons 300/1000ul tipracks](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-1000ul-tips)
 
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
@@ -55,7 +55,7 @@ If more than one target assay plate is specified, the user is prompted to replac
 * [OT-2](https://opentrons.com/ot-2)
 
 ## Process
-1. Input the mount side for your P1000 single-channel pipette, the input `.csv` file, and the number of target plates.
+1. Input your single-channel pipette type, the mount side for your pipette, the input `.csv` file, and the number of target plates.
 2. Download your protocol.
 3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
 4. Set up your deck according to the deck map.
