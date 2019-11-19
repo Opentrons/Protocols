@@ -1,4 +1,4 @@
-from opentrons import labware, instruments
+from opentrons import labware, instruments, robot
 from otcustomizers import StringSelection
 
 trough = labware.load('usascientific_12_reservoir_22ml', '2')
@@ -21,10 +21,15 @@ def run_custom_protocol(
         'USA Scientific 96 Deep Well Plate 2.4 mL') = 'Bio-Rad 96 Well \
         Plate 200uL PCR',
     dilution_factor: float = 3.0,
+    number_of_dilution_plates: int = 1,
     num_of_dilutions: int = 10,
     total_mixing_volume: float = 150.0,
     tip_use_strategy: StringSelection(
         'use one tip', 'new tip each time') = 'use one tip'):
+
+    # check plate number
+    if number_of_dilution_plates > 8:
+        raise Exception('Maximum of 8 dilution plates.')
 
     pip_name = pipette_type.split('-')[1]
     tip_name = pipette_type.split('-')[0]
@@ -41,21 +46,27 @@ def run_custom_protocol(
     ]
 
     if labware_type == 'Corning 12 Well Plate 6.9mL Flat':
-        plate = labware.load(plate_names[1], '3')
+        plate_name = plate_names[1]
     elif labware_type == 'Corning 24 Well Plate 3.4mL Flat':
-        plate = labware.load(plate_names[2], '3')
+        plate_name = plate_names[2]
     elif labware_type == 'Corning 384 Well Plate 112 uL Flat':
-        plate = labware.load(plate_names[3], '3')
+        plate_name = plate_names[3]
     elif labware_type == 'Corning 48 Well Plate 1.6 mL Flat':
-        plate = labware.load(plate_names[4], '3')
+        plate_name = plate_names[4]
     elif labware_type == 'corning_6_wellplate_16.8ml_flat':
-        plate = labware.load(plate_names[5], '3')
+        plate_name = plate_names[5]
     elif labware_type == 'corning_96_wellplate_360ul_flat':
-        plate = labware.load(plate_names[6], '3')
+        plate_name = plate_names[6]
     elif labware_type == 'corning_96_wellplate_360ul_flat':
-        plate = labware.load(plate_names[7], '3')
+        plate_name = plate_names[7]
     else:
-        plate = labware.load(plate_names[0], '3')
+        plate_name = plate_names[0]
+    plates = [
+        labware.load(plate_name, slot, 'dilution plate ' + str(i+1))
+        for i, slot in enumerate(
+         ['3', '5', '6', '7', '8', '9', '10', '11'][:number_of_dilution_plates]
+        )
+    ]
 
     if tip_name == 'p300' or tip_name == 'p50':
         tiprack = [labware.load('opentrons_96_tiprack_300ul', slot)
@@ -94,55 +105,93 @@ def run_custom_protocol(
     transfer_volume = total_mixing_volume/dilution_factor
     buffer_volume = total_mixing_volume - transfer_volume
 
-    if pip_name == 'Multi':
+    tip_max = 12*len(tiprack) if pip_name == 'Multi' else 96*len(tiprack)
+    tip_count = 0
 
-        # Distribute diluent across the plate to the the number of samples
-        # And add diluent to one column after the number of samples for a blank
-        pipette.distribute(buffer_volume, trough['A1'], plate.cols(
-            '2', length=(num_of_dilutions)))
+    def pick_up():
+        nonlocal tip_count
+        if tip_count == tip_max:
+            robot.pause('Replace tipracks in slots 1 and 4 before resuming.')
+            pipette.reset()
+            tip_count = 0
+        pipette.pick_up_tip()
+        tip_count += 1
 
-        # Dilution of samples across the 96-well flat bottom plate
-        pipette.pick_up_tip(presses=3, increment=1)
+    for plate in plates:
 
-        pipette.transfer(
-            transfer_volume,
-            plate.columns('1', to=(num_of_dilutions-1)),
-            plate.columns('2', to=num_of_dilutions),
-            mix_after=(3, total_mixing_volume/2),
-            new_tip=new_tip)
+        pick_up()
 
-        # Remove transfer volume from the last column of the dilution
-        pipette.transfer(
-            transfer_volume,
-            plate.columns(num_of_dilutions),
-            liquid_trash,
-            new_tip=new_tip)
+        if pip_name == 'Multi':
 
-        if new_tip == 'never':
+            # Distribute diluent across the plate to the the number of samples
+            # And add diluent to one column after the number of samples for a
+            # blank
+            pipette.distribute(buffer_volume, trough['A1'], plate.cols(
+                '2', length=(num_of_dilutions)), new_tip='never')
+
+            # Dilution of samples across the 96-well flat bottom plate
+            for s, d in zip(
+                    plate.columns('1', to=(num_of_dilutions-1)),
+                    plate.columns('2', to=num_of_dilutions)):
+                if not pipette.tip_attached:
+                    pick_up()
+                pipette.transfer(
+                    transfer_volume,
+                    s,
+                    d,
+                    mix_after=(3, total_mixing_volume/2),
+                    new_tip='never')
+                if new_tip == 'always':
+                    pipette.drop_tip()
+
+            # Remove transfer volume from the last column of the dilution
+            if not pipette.tip_attached:
+                pick_up()
+            pipette.transfer(
+                transfer_volume,
+                plate.columns(num_of_dilutions),
+                liquid_trash,
+                new_tip='never')
+
             pipette.drop_tip()
 
-    else:
-        # Distribute diluent across the plate to the the number of samples
-        # And add diluent to one column after the number of samples for a blank
-        for col in plate.cols('2', length=(num_of_dilutions)):
-            pipette.distribute(buffer_volume, trough['A1'], col)
+        else:
+            # Distribute diluent across the plate to the the number of samples
+            # And add diluent to one column after the number of samples for a
+            # blank
+            for col in plate.cols('2', length=(num_of_dilutions)):
+                pipette.distribute(
+                    buffer_volume, trough['A1'], col, new_tip='never')
 
-        for row in plate.rows():
-            if new_tip == 'never':
-                pipette.pick_up_tip()
+            for row in plate.rows():
+                for s, d in zip(
+                        row.wells('1', to=(num_of_dilutions-1)),
+                        row.wells('2', to=(num_of_dilutions))):
 
-            pipette.transfer(
-                transfer_volume,
-                row.wells('1', to=(num_of_dilutions-1)),
-                row.wells('2', to=(num_of_dilutions)),
-                mix_after=(3, total_mixing_volume / 2),
-                new_tip=new_tip)
+                    if not pipette.tip_attached:
+                        pick_up()
 
-            pipette.transfer(
-                transfer_volume,
-                row.wells(num_of_dilutions),
-                liquid_trash,
-                new_tip=new_tip)
+                    pipette.transfer(
+                        transfer_volume,
+                        s,
+                        d,
+                        mix_after=(3, total_mixing_volume / 2),
+                        new_tip='never')
 
-            if new_tip == 'never':
+                    if new_tip == 'always':
+                        pipette.drop_tip()
+
+                if not pipette.tip_attached:
+                    pick_up()
+
+                pipette.transfer(
+                    transfer_volume,
+                    row.wells(num_of_dilutions),
+                    liquid_trash,
+                    new_tip='never')
+
+                if new_tip == 'always':
+                    pipette.drop_tip()
+
+            if pipette.tip_attached:
                 pipette.drop_tip()
