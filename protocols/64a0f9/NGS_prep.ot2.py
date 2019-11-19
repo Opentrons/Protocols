@@ -57,12 +57,12 @@ def run_custom_protocol(
     # reagents
     e_mm = reagent_rack.wells('A1')
     l_mm = [
-        well for well in reagent_rack.wells(
-            'B1', length=math.ceil(number_of_samples/48))
+        well
+        for well in reagent_rack.wells()[2:2+math.ceil(number_of_samples/48)]
     ]
     pcr_mm = [
-        well for well in reagent_rack.wells(
-            'A2', length=math.ceil(number_of_samples/48))
+        well
+        for well in reagent_rack.wells()[4:4+math.ceil(number_of_samples/48)]
     ]
 
     beads = reagent_res.wells('A1')
@@ -74,8 +74,8 @@ def run_custom_protocol(
     te_buffer = reagent_res.wells('A7')
     liquid_trash = [well for well in reagent_res.wells('A8', length=5)]
 
-    t_samples = mag_plate.wells()[:number_of_samples]
-    m_samples = temp_plate.wells()[:number_of_samples]
+    t_samples = temp_plate.wells()[:number_of_samples]
+    m_samples = mag_plate.wells()[:number_of_samples]
     m_cols = mag_plate.rows('A')[:math.ceil(number_of_samples/8)]
     e_samples = elution_plate.wells()[:number_of_samples]
 
