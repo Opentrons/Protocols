@@ -144,12 +144,14 @@ def run_custom_protocol(
     p300.delay(minutes=5)
 
     # transfer supernatant to clean plate
+    p300.set_flow_rate(aspirate=75)
     for src, dest in zip(mag_plate, deep_trans):
         pick_up()
         for _ in range(3):
             p300.transfer(250, src, dest, new_tip='never')
         p300.blow_out(dest.top())
         p300.drop_tip()
+    p300.set_flow_rate(aspirate=150)
 
     magdeck.disengage()
 
@@ -162,7 +164,9 @@ def run_custom_protocol(
     for tips, mag in zip(used_tips, mag_plate):
         p300.pick_up_tip(tips)
         p300.mix(5, 30, mag_bead)
+        p300.set_flow_rate(aspirate=75)
         p300.transfer(30, mag_bead, mag, new_tip='never')
+        p300.set_flow_rate(aspirate=150)
         p300.mix(10, 280, mag)
         p300.blow_out(mag.top())
         p300.return_tip()
@@ -179,6 +183,7 @@ def run_custom_protocol(
 
     p300.delay(minutes=5)
 
+    p300.set_flow_rate(aspirate=75)
     for mag in mag_plate:
         pick_up()
         for _ in range(3):
@@ -186,6 +191,7 @@ def run_custom_protocol(
         p300.drop_tip()
 
     magdeck.disengage()
+    p300.set_flow_rate(aspirate=150)
 
     wash_wells = ([7]*4)+([8]*4)+([9]*4)
     for mag, well in zip(mag_plate, wash_wells):
@@ -197,6 +203,7 @@ def run_custom_protocol(
 
     magdeck.engage(height=mag_offset)
     p300.delay(minutes=2)
+    p300.set_flow_rate(aspirate=75)
 
     for mag in mag_plate:
         pick_up()
@@ -204,6 +211,7 @@ def run_custom_protocol(
         p300.drop_tip()
 
     magdeck.disengage()
+    p300.set_flow_rate(aspirate=150)
 
     for _ in range(2):
         for mag in mag_plate:
@@ -214,6 +222,7 @@ def run_custom_protocol(
             p300.drop_tip()
         magdeck.engage(height=mag_offset)
         p300.delay(minutes=2)
+        p300.set_flow_rate(aspirate=75)
         for mag in mag_plate:
             pick_up()
             p300.transfer(400, mag, liq_waste, new_tip='never')
@@ -223,6 +232,7 @@ def run_custom_protocol(
     inc_cmmt = 'Incubating for '+str(incubation_time)+' minutes.'
     robot.comment(inc_cmmt)
     robot.comment('While incubating, please replace tips in slot 8.')
+    p300.set_flow_rate(aspirate=150)
 
     p300.delay(minutes=incubation_time)
 
@@ -244,6 +254,7 @@ def run_custom_protocol(
 
     magdeck.engage(height=mag_offset)
     p300.delay(minutes=1)
+    p300.set_flow_rate(aspirate=50, dispense=100)
 
     for src, dest in zip(mag_plate, elutes):
         pick_up()
