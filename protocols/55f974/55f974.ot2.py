@@ -21,7 +21,7 @@ if deep_name not in labware.list():
         grid=(12, 8),
         spacing=(9, 9),
         diameter=8.2,
-        depth=41.4,
+        depth=36.0,
         volume=2000
     )
 deep_plate = labware.load(deep_name, '4', 'Deep Well Plate', share=True)
@@ -51,7 +51,7 @@ if trough_name not in labware.list():
         grid=(12, 1),
         spacing=(9, 0),
         diameter=8.2,
-        depth=41.2,
+        depth=36.0,
         volume=7000
     )
 tr12 = labware.load(trough_name, '2', '12 Channel Starlabs Res')
