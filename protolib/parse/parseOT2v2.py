@@ -90,7 +90,7 @@ def parse(protocol_path):
     run_protocol(protocol, simulate=True, context=context)
 
     instruments = [{'mount': mount, 'name': pipette.name} for mount,
-                   pipette in context.loaded_instruments.items()]
+                   pipette in context.loaded_instruments.items() if pipette]
 
     labware = filter_none([parse_labware(slot, labware)
                            for slot, labware
