@@ -59,15 +59,15 @@ mag_clear = tr12.wells(3)
 mag_bead = tr12.wells(5)
 zyppy_el = tr12.wells(11)
 
-res_name = 'mt_1_reservoir_XXXXml'
+res_name = 'mt_1_reservoir_200ml'
 if res_name not in labware.list():
     labware.create(
         res_name,
         grid=(1, 1),
         spacing=(0, 0),
         diameter=100,
-        depth=41.2,
-        volume=70000
+        depth=36.0,
+        volume=200000
     )
 
 res1 = labware.load(res_name, '3', 'MT Reservoir w/ Zyppy Wash')
