@@ -9,17 +9,6 @@ metadata = {
 }
 
 # create custom labware
-rack_2ml_name = 'fisherbrand_96_tuberack_2ml_screwcap'
-if rack_2ml_name not in labware.list():
-    labware.create(
-        rack_2ml_name,
-        grid=(12, 8),
-        spacing=(9, 9),
-        diameter=8.5,
-        depth=42,
-        volume=2000
-    )
-
 rack_500ul_name = 'thermoscientific_96_tuberack_0.5ml_screwcap'
 if rack_500ul_name not in labware.list():
     labware.create(
@@ -32,26 +21,34 @@ if rack_500ul_name not in labware.list():
     )
 
 # create custom labware
-dest_rack = labware.load(rack_500ul_name, '1', '0.5ml destination rack')
-tipracks300 = [
-    labware.load('opentrons_96_tiprack_300ul', slot, '300ul tiprack')
-    for slot in ['3', '6']
-]
-src_rack = labware.load(rack_2ml_name, '4', '2ml source rack')
+src_racks = {
+    str(i+1): labware.load(
+        'opentrons_24_tuberack_generic_2ml_screwcap',
+        slot,
+        '2ml source rack ' + str(i+1)
+    )
+    for i, slot in enumerate(['1', '2', '4', '5'])
+}
+dest_rack = labware.load(rack_500ul_name, '3', '0.5ml destination rack')
 te_buff = labware.load(
     'opentrons_15_tuberack_nest_15ml_conical',
-    '5',
+    '6',
     'TE buffer rack').wells()[0]
+tipracks300 = [
+    labware.load('opentrons_96_tiprack_300ul', slot, '300ul tiprack')
+    for slot in ['8', '9']
+]
 
-example_csv = """PtID,Sample Type,Tube,ng/ul,Plate,Well,DNA (uL),water (uL)
-10013393,dna,A01,125.88,Regen60K-001,A01,50,75
-10012852,dna,A02,152.083,Regen60K-001,A02,41,84
-10013300,dna,A03,136.822,Regen60K-001,A03,46,79
-10013324,dna,A04,151.436,Regen60K-001,A04,41,84
-10012592,dna,A05,156.14,Regen60K-001,A05,40,85
-10012378,dna,A06,100.801,Regen60K-001,A06,62,63
-10012541,dna,A07,114.195,Regen60K-001,A07,55,70
-10012189,dna,A08,118.836,Regen60K-001,A08,53,72
+example_csv = """PtID,Source rack (1-4),Source well,Destination well,DNA (ul), \
+water (ul)
+10013393,1,A01,A01,50,75
+10012852,2,A02,A02,41,84
+10013300,1,A03,A03,46,79
+10013324,1,A04,A04,41,84
+10012592,1,A05,A05,40,85
+10012378,1,A06,A06,62,63
+10012541,1,B1,A07,55,70
+10012189,1,B2,A08,53,72
 """
 
 
@@ -84,14 +81,16 @@ def run_custom_protocol(
         [val.strip() for val in line.split(',')]
         for line in input_csv_file.splitlines()[1:] if line
     ]
+    s_slots = [t[1] for t in trans_data]
     s_names = [parse_well(t[2]) for t in trans_data]
-    d_names = [parse_well(t[5]) for t in trans_data]
-    vols_dna = [float(t[6]) for t in trans_data]
-    vols_buffer = [float(t[7]) for t in trans_data]
+    d_names = [parse_well(t[3]) for t in trans_data]
+    vols_dna = [float(t[4]) for t in trans_data]
+    vols_buffer = [float(t[5]) for t in trans_data]
 
     # transfer DNA
-    for v, s, d in zip(vols_dna, s_names, d_names):
+    for sl, v, s, d in zip(s_slots, vols_dna, s_names, d_names):
         p300.pick_up_tip()
+        src_rack = src_racks[sl]
         p300.transfer(
             v,
             src_rack.wells(s),
