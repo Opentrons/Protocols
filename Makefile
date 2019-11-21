@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 
 MONOREPO_URI := https://github.com/Opentrons/opentrons.git
-OT2_VERSION_TAG := api_v2-entrypoints  # TODO IMMEDIATELY switch to version number on release
+OT2_VERSION_TAG := v3.14.1
 OT2_MONOREPO_DIR := ot2monorepoClone
 
 # Parsers output to here
