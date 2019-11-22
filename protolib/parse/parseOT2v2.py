@@ -81,7 +81,7 @@ def parse(protocol_path):
         opentrons.protocol_api.labware.save_definition(labware_def, force=True)
 
     protocol = parse_protocol(
-        protocol_contents=contents, filename=protocol_path)
+        protocol_file=contents, filename=protocol_path)
 
     assert protocol.api_level == '2'
 
