@@ -117,7 +117,7 @@ def run_custom_protocol(
         pipette.pick_up_tip()
         tip_count += 1
 
-    for plate in plates:
+    for p_i, plate in enumerate(plates):
 
         pick_up()
 
@@ -126,7 +126,7 @@ def run_custom_protocol(
             # Distribute diluent across the plate to the the number of samples
             # And add diluent to one column after the number of samples for a
             # blank
-            pipette.distribute(buffer_volume, trough['A1'], plate.cols(
+            pipette.distribute(buffer_volume, trough.wells()[p_i], plate.cols(
                 '2', length=(num_of_dilutions)), new_tip='never')
 
             # Dilution of samples across the 96-well flat bottom plate
@@ -161,7 +161,7 @@ def run_custom_protocol(
             # blank
             for col in plate.cols('2', length=(num_of_dilutions)):
                 pipette.distribute(
-                    buffer_volume, trough['A1'], col, new_tip='never')
+                    buffer_volume, trough.wells()[p_i], col, new_tip='never')
 
             for row in plate.rows():
                 for s, d in zip(
