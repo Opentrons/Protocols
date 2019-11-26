@@ -1,6 +1,5 @@
-from opentrons import labware, instruments, modules, robot
+from opentrons import labware, instruments
 from otcustomizers import StringSelection, FileInput
-import math
 
 metadata = {
     'protocolName': 'DNA Normalization and Pooling from .csv',
