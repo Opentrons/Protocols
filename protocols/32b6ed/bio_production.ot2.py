@@ -75,8 +75,10 @@ to continue.')
         d for set in [
             [
                 well
-                for row in [row[::2] if i % 2 == 0 else row[1::2]
-                                 for i, row in enumerate(plate.rows())]
+                for row in [
+                    row[::2] if i % 2 == 0 else row[1::2]
+                    for i, row in enumerate(plate.rows())
+                ]
                 for well in row
             ]
             for plate in disc_plates
