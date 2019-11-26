@@ -30,7 +30,6 @@ if tiprack_name not in labware.list():
     )
 
 # load labware
-disc_plate = labware.load(disc_plate_name, '1', 'carrier disc plate')
 sol_a = labware.load(
     'agilent_1_reservoir_290ml', '2', 'solution A').wells(0)
 tiprack300 = labware.load(tiprack_name, '4')
@@ -38,7 +37,8 @@ tiprack300 = labware.load(tiprack_name, '4')
 
 def run_custom_protocol(
         p300_single_mount: StringSelection('right', 'left') = 'right',
-        number_of_discs_to_receive_solution: int = 48,
+        number_of_plates: int = 3,
+        number_of_discs_per_plate: int = 48,
         volume_of_solution_to_transfer_in_ul: float = 50,
         transfer_plan: StringSelection(
             'distribution', 'single transfers') = 'distribution',
@@ -47,8 +47,8 @@ def run_custom_protocol(
 ):
     # check
     if (
-            number_of_discs_to_receive_solution < 1
-            or number_of_discs_to_receive_solution > 48
+            number_of_discs_per_plate < 1
+            or number_of_discs_per_plate > 48
     ):
         raise Exception('Invalid number of discs to receive solution \
 (must be 1-48).')
@@ -64,11 +64,25 @@ to continue.')
         mount=p300_single_mount, tip_racks=[tiprack300])
 
     # setup discs
+    if number_of_plates > 9:
+        raise Exception('Can only specify up to 9 plates.')
+    disc_plates = [
+        labware.load(disc_plate_name, slot, 'carrier disc plate ' + str(i+1))
+        for i, slot in enumerate([
+            '1', '3', '5', '6', '7', '8', '9', '10', '11'][:number_of_plates])
+    ]
     dests = [
-        well for row in [row[::2] if i % 2 == 0 else row[1::2]
-                         for i, row in enumerate(disc_plate.rows())]
-        for well in row
-    ][:number_of_discs_to_receive_solution]
+        d for set in [
+            [
+                well
+                for row in [row[::2] if i % 2 == 0 else row[1::2]
+                                 for i, row in enumerate(plate.rows())]
+                for well in row
+            ]
+            for plate in disc_plates
+        ]
+        for d in set[:number_of_discs_per_plate]
+    ]
 
     # distribute solution
     p300.pick_up_tip(tiprack300.wells(tip_well))
