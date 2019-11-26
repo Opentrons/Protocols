@@ -8,7 +8,7 @@
 	* Distribution
 
 ## Description
-This protocol performs a custom protocol for production of biological products by distributing solution from a reservoir to a custom 48-disc plate with offset disc locations.
+This protocol performs a custom protocol for production of biological products by distributing solution from a reservoir to up to 9 custom 48-disc plates with offset disc locations.
 
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
@@ -27,7 +27,7 @@ This protocol performs a custom protocol for production of biological products b
 * [OT-2](https://opentrons.com/ot-2)
 
 ## Process
-1. Input the mount side for your P300 single-channel pipette, the number of discs to receive solution, the volume to fill each disc (in ul), the transfer plan (distribution or single transfers), and the tip well (A1-H12).
+1. Input the mount side for your P300 single-channel pipette, the number of plates, the number of discs per plate to receive solution, the volume to fill each disc (in ul), the transfer plan (distribution or single transfers), and the tip well (A1-H12).
 2. Download your protocol.
 3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
 4. Set up your deck according to the deck map.
