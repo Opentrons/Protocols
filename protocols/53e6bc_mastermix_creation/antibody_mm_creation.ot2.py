@@ -1,6 +1,6 @@
 from opentrons import labware, instruments, modules, robot
 from otcustomizers import StringSelection, FileInput
-
+import math
 
 metadata = {
     'protocolName': 'Antibody Mastermix Creation',
@@ -106,12 +106,12 @@ cause overflow in the mastermix tube.')
 
     for t in transfer_data:
         vol = float(t[0])*number_of_samples
-        source = ab_plate.wells(t[2].upper())
+        source = ab_plate.wells(t[2].upper()).bottom(5)
         pip = p10 if vol < 30 else p300
 
         current_vol += vol
         pip.pick_up_tip()
-        pip.transfer(vol, source, mm.top(-5), new_tip='never')
+        pip.transfer(vol, source, mm.bottom(5), new_tip='never')
         mix_vol = (
             current_vol*0.5
             if current_vol*0.5 < pip.max_volume*0.9
@@ -131,8 +131,16 @@ cause overflow in the mastermix tube.')
             if end_vol/2 < p300.max_volume*0.9
             else p300.max_volume*0.9
         )
+        num_trans = math.ceil(pbs_vol/300)
         pip.pick_up_tip()
-        pip.transfer(pbs_vol, pbs, mm.top(-5), new_tip='never')
+        for t in range(num_trans):
+            if t < num_trans - 1:
+                t_vol = 300
+            else:
+                t_vol = 300 if pbs_vol % 300 == 0 else pbs_vol % 300
+            pip.aspirate(t_vol, pbs)
+            pip.move_to(pbs.top(15))
+            pip.dispense(t_vol, mm.bottom(5))
         if p10.tip_attached:
             p10.drop_tip()
         if not p300.tip_attached:
