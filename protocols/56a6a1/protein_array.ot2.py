@@ -83,7 +83,7 @@ number between 1 and 4.')
             m300.aspirate(150, set_a[1])
             m300.dispense(300, liquid_trash)
             m300.blow_out(liquid_trash)
-        m300.drop_tip()
+        m300.drop_tip(m300.trash_container.top(15))
         m300.set_flow_rate(aspirate=150)
 
     # distribute blocking buffer
@@ -114,7 +114,7 @@ gentle agitation for 1 hour using TeleShake before resuming.'
         sample_plate = labware.load(
             'biorad_96_wellplate_200ul_pcr', '10', 'sample plate')
         samples = sample_plate.rows('A')[:number_of_slides_to_process*2]
-        m300.drop_tip()
+        m300.drop_tip(m300.trash_container.top(15))
         m300.transfer(100, samples, dispense_locs, new_tip='always')
         pause_str = 'Incubate the samples by gentle agitation for 1 hour \
 using TeleShake before resuming.'
@@ -174,7 +174,7 @@ using TeleShake before resuming.'
             if final_aspirate:
                 vacuum()
             if m300.tip_attached:
-                m300.drop_tip()
+                m300.drop_tip(m300.trash_container.top(15))
 
     wash(
         wash_ind=1,
@@ -221,7 +221,7 @@ TeleShake before resuming.')
     m300.move_to(res_12.wells('A12').top(10))
     robot.comment('Incubating 5 minutes.')
     m300.delay(minutes=5)
-    m300.drop_tip()
+    m300.drop_tip(m300.trash_container.top(15))
 
     robot.comment('Take off slides from FastFrame and place into 50 ml \
 conical tube filled with 45 ml PBS, and wash by agitating on TeleShake for 5 \
