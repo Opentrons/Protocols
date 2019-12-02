@@ -58,7 +58,7 @@ def run_custom_protocol(
 
     dcurve = ep1.rows('A')+ep1.wells('B1', 'B2')
 
-    pip50.transfer(8, pbs, dcurve, new_tip='always')
+    pip50.transfer(8, pbs, dcurve[1:], new_tip='always')
 
     for i in range(7):
         pip50.pick_up_tip()
