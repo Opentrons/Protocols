@@ -3,7 +3,7 @@ from otcustomizers import StringSelection
 import math
 
 metadata = {
-    'protocolName': 'Mastermix Assay from .csv',
+    'protocolName': 'Nucleic Acid Purification',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request'
 }
@@ -53,15 +53,27 @@ def run_custom_protocol(
     mag_samples = mag_plate.rows('A')[:num_cols]
     elution_samples = elution_plate.rows('A')[:num_cols]
 
+    tip_count = 0
+    tip_max = len(tipracks50)*12
+
+    def pick_up():
+        nonlocal tip_count
+        if tip_count == tip_max:
+            robot.pause('Please replace tipracks before resuming.')
+            m50.reset()
+            tip_count = 0
+        tip_count += 1
+        m50.pick_up_tip()
+
     # mix, transfer, and mix beads
-    m50.pick_up_tip()
+    pick_up()
     for _ in range(5):
         m50.aspirate(40, beads.bottom(3))
         m50.dispense(40, beads.bottom(15))
     m50.blow_out(beads.top(-5))
     for m in mag_samples:
         if not m50.tip_attached:
-            m50.pick_up_tip()
+            pick_up()
         m50.transfer(15, beads, m, new_tip='never')
         m50.mix(3, 10, m)
         m50.blow_out(m.top(-2))
@@ -72,16 +84,28 @@ def run_custom_protocol(
     m50.delay(minutes=2)
     robot._driver.run_flag.wait()
     magdeck.engage(height=18)
-    m50.delay(minutes=2)
     robot.comment('Incubating on magnet 2 minutes.')
+    m50.delay(minutes=2)
+
+    # discard supernatant
+    for m in mag_samples:
+        if not m50.tip_attached:
+            pick_up()
+        m50.transfer(
+            45, m.bottom(0.5), liquid_waste[0], new_tip='never', air_gap=5)
+        m50.blow_out()
+        m50.drop_tip()
 
     # EtOH washes
     for wash in range(2):
         # transfer EtOH
         for m in mag_samples:
-            m50.pick_up_tip()
-            m50.transfer(140, etoh[wash], m.bottom(5), new_tip='never')
-            m50.drop_tip()
+            tip_count += 3
+            if tip_count >= tip_max:
+                robot.pause('Please replace tipracks before resuming.')
+                m50.reset()
+                tip_count = 0
+            m50.transfer(140, etoh[wash], m.bottom(5), new_tip='always')
 
         # incubate
         robot.comment('Incubating on magnet 2 minutes.')
@@ -90,7 +114,7 @@ def run_custom_protocol(
         # discard supernatant
         for m in mag_samples:
             if not m50.tip_attached:
-                m50.pick_up_tip()
+                pick_up()
             m50.transfer(
                 150, m.bottom(0.5), liquid_waste[wash], new_tip='never')
             m50.blow_out()
@@ -104,15 +128,16 @@ def run_custom_protocol(
     # resuspend
     angles = [0 if i % 2 == 0 else math.pi for i in range(num_cols)]
     mix_locs = [
-        (well, well.from_center(r=0.85, h=-0.9, theta=angle))
+        (well, well.from_center(r=0.8, h=-0.9, theta=angle))
         for angle, well in zip(angles, mag_samples)
     ]
     for mix_loc, m in zip(mix_locs, mag_samples):
-        m50.pick_up_tip()
+        pick_up()
         m50.aspirate(18, elution_buffer)
+        m50.move_to(m)
         m50.dispense(18, mix_loc)
         m50.mix(3, 10, mix_loc)
-        m50.blow_out()
+        m50.blow_out(m.bottom(4))
         m50.drop_tip()
 
     # separate beads
@@ -122,7 +147,7 @@ def run_custom_protocol(
 
     # transfer eluent
     for m, e in zip(mag_samples, elution_samples):
-        m50.pick_up_tip()
+        pick_up()
         m50.transfer(14, m.bottom(0.5), e, new_tip='never')
         m50.blow_out()
         m50.drop_tip()
