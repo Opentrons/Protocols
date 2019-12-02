@@ -96,11 +96,8 @@ def custom_mix_sample(volume_list, source_list, dest):
         else:
             pipette = p300
         pipette.pick_up_tip()
-        pipette.mix(3, pipette.max_volume)
         pipette.transfer(
             vol, source, dest, new_tip='never')
-        if vol < 5:
-            pipette.touch_tip(source, -1)
         pipette.drop_tip()
         update_tip_count(pipette)
 
