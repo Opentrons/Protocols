@@ -16,7 +16,7 @@ if deep_name not in labware.list():
         grid=(12, 8),
         spacing=(9, 9),
         diameter=7.2,
-        depth=41.5,
+        depth=38.5,
         volume=2000
     )
 
@@ -53,7 +53,8 @@ def run_custom_protocol(
         number_of_samples_to_process: int = 96,
         p300_multi_mount: StringSelection('left', 'right') = 'left',
         volume_of_beads_in_ul: float = 30,
-        bead_separation_time_in_minutes: int = 3
+        bead_separation_time_in_minutes: int = 3,
+        mix_repetitions: int = 5
 ):
     # check
     if number_of_samples_to_process > 96 or number_of_samples_to_process < 1:
@@ -68,7 +69,7 @@ def run_custom_protocol(
     disp_locs = []
     for i, m in enumerate(mag_samples):
         angle = 0 if i % 2 == 0 else math.pi
-        disp_loc = (m, m.from_center(r=0.9, h=-0.95, theta=angle))
+        disp_loc = (m, m.from_center(r=0.8, h=-0.95, theta=angle))
         disp_locs.append(disp_loc)
     elution_samples = elution_plate.rows('A')[:num_cols]
 
@@ -129,10 +130,10 @@ replace before resuming.')
                     pick_up(tip_locs[t])
                 etoh_check(500)
                 m300.transfer(500, etoh, s.top(), new_tip='never')
-                m300.mix(10, 250, d)
+                m300.mix(mix_repetitions, 250, d)
                 m300.blow_out(s.top())
                 m300.return_tip()
-            magdeck.engage(height=14.93)
+            magdeck.engage(height=12)
             m300.delay(minutes=bead_separation_time_in_minutes)
             for t, s in zip(tip_locs, mag_samples):
                 pick_up(t)
@@ -151,10 +152,10 @@ replace before resuming.')
             pick_up()
             tip_locs.append(m300.current_tip())
             m300.transfer(500, w[r_ind], s.top(), new_tip='never')
-            m300.mix(10, 250, d)
+            m300.mix(mix_repetitions, 250, d)
             m300.blow_out(s.top())
             m300.return_tip()
-        magdeck.engage(height=14.93)
+        magdeck.engage(height=12)
         m300.delay(minutes=bead_separation_time_in_minutes)
         for t, s in zip(tip_locs, mag_samples):
             pick_up(t)
@@ -179,9 +180,9 @@ replace before resuming.')
         tip_locs.append(m300.current_tip())
         etoh_check(450)
         m300.transfer(450, etoh, s, new_tip='never')
-        m300.mix(10, 250, s)
+        m300.mix(mix_repetitions, 250, s)
         m300.blow_out(s.top())
-        m300.drop_tip()
+        m300.return_tip()
 
     # iterative mixing
     for mix in range(3):
@@ -189,14 +190,14 @@ replace before resuming.')
             robot.comment('Incuating with iterative mixing...')
             m300.delay(minutes=2)
             pick_up(t)
-            m300.mix(5, 200, m)
+            m300.mix(mix_repetitions, 200, m)
             m300.blow_out(m.top(-2))
             if mix < 2:
                 m300.return_tip()
             else:
                 m300.drop_tip()
 
-    magdeck.engage(height=14.93)
+    magdeck.engage(height=12)
     robot.comment('Beads separating for supernatant removal')
     m300.delay(minutes=bead_separation_time_in_minutes)
 
@@ -217,7 +218,7 @@ replace before resuming.')
     for d, s in zip(disp_locs, mag_samples):
         pick_up()
         m300.transfer(50, dnase, d, new_tip='never')
-        m300.mix(10, 40, d)
+        m300.mix(mix_repetitions, 40, d)
         m300.blow_out(s.top())
         m300.drop_tip()
 
@@ -231,14 +232,14 @@ replace before resuming.')
         pick_up()
         tip_locs.append(m300.current_tip())
         m300.transfer(500, rna_buff[r_ind], s.top(), new_tip='never')
-        m300.mix(10, 250, s)
+        m300.mix(mix_repetitions, 250, s)
         m300.blow_out(s.top())
         m300.return_tip()
 
     robot.comment('Incubating off magnet for 5 minutes')
     m300.delay(minutes=5)
     robot._driver.run_flag.wait()
-    magdeck.engage(height=14.93)
+    magdeck.engage(height=12)
     robot.comment('Beads separating.')
     m300.delay(minutes=bead_separation_time_in_minutes)
 
@@ -274,22 +275,24 @@ resuming.')
                 tip_locs.append(m300.current_tip())
             else:
                 pick_up(tip_locs[t])
-            m300.mix(10, 250, d)
+            m300.mix(mix_repetitions, 250, d)
             m300.blow_out(s.bottom(10))
             m300.return_tip()
         robot.comment('Incubating before next mix...')
         m300.delay(minutes=2)
 
     robot._driver.run_flag.wait()
-    magdeck.engage(height=14.93)
+    magdeck.engage(height=12)
     robot.comment('Incubating on magnet for bead separation')
     m300.delay(minutes=bead_separation_time_in_minutes)
 
     # transfer eluate to a new PCR plate
-    for t, s, e in zip(tip_locs, mag_samples, elution_samples):
+    for i, (t, s, e) in enumerate(zip(tip_locs, mag_samples, elution_samples)):
+        angle = math.pi if i % 2 == 0 else 0
+        asp_loc = (s, s.from_center(r=0.5, h=-0.95, theta=angle))
         pick_up(t)
-        m300.transfer(50, s, e, new_tip='never')
-        m300.blow_out()
+        m300.transfer(50, asp_loc, e, new_tip='never')
+        m300.blow_out(e.bottom(0.5))
         m300.drop_tip()
 
     magdeck.disengage()
