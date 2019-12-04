@@ -43,15 +43,15 @@ if lgc_name not in labware.list():
 
 example_csv = """Deck Position,Well,Pooled Plate (Position 10),Volume (ul)
 1,A7,A1,8.7
-1,C12,A3,8.7
-1,E4,A11,8.7
-1,G2,A12,6
-1,G8,B5,6
-1,H8,B6,6
-1,H9,B7,6
-1,H4,B10,6
-2,B6,B11,6
-2,B12,B12,6
+2,C12,A3,8.7
+3,E4,A11,8.7
+4,G2,A12,6
+5,G8,B5,6
+6,H8,B6,6
+7,H9,B7,6
+8,H4,B10,6
+9,H4,B10,6
+1,B12,B12,6
 2,C9,H1,6
 """
 
@@ -87,16 +87,20 @@ def run_custom_protocol(
 
     # method to find slot for tiprack and pool plate
 
-    def find_available_slot(lw_type, lw_name):
-        for i, c in enumerate(robot.deck.get_children_list()):
+    def find_available_slot(lw_type, lw_name, start_slot):
+        deck_order = robot.deck.get_children_list()[
+            start_slot:] + robot.deck.get_children_list()[:start_slot]
+        slots = [str(i+1) for i in range(12)][start_slot:] + [
+            str(i+1) for i in range(12)][:start_slot]
+        for s, c in zip(slots, deck_order):
             if not c.has_children():
-                return labware.load(lw_type, str(i+1), lw_name)
+                return labware.load(lw_type, s, lw_name)
         return('No available slots remaining.')
 
     # load labware
-    pool_plate = find_available_slot(pool_name, 'pool plate')
+    pool_plate = find_available_slot(pool_name, 'pool plate', start_slot=9)
     tiprack10 = find_available_slot(
-        'opentrons_96_tiprack_10ul', '10ul tiprack')
+        'opentrons_96_tiprack_10ul', '10ul tiprack', start_slot=10)
 
     # pipette
     p10 = instruments.P10_Single(mount=p10_single_mount, tip_racks=[tiprack10])
