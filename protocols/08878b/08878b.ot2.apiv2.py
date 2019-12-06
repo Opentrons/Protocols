@@ -13,7 +13,6 @@ def run(protocol):
     # load labware
     tempdeck = protocol.load_module('tempdeck', '4')
     sample_plate = tempdeck.load_labware('biorad_96_wellplate_200ul_pcr')
-    tempdeck.set_temperature(37)
 
     tips300 = [
         protocol.load_labware(
@@ -109,8 +108,7 @@ def run(protocol):
     ft_srcs = [R1, R2, R3, aceacid, aceacid]
     ft_vols = [100, 25, 50, 25, 25]
 
-    while tempdeck.temperature < 36.0:
-        protocol.delay(seconds=30)
+    tempdeck.set_temperature(37)
 
     for src, vol in zip(ft_srcs, ft_vols):
         final_transfer(src, vol)
