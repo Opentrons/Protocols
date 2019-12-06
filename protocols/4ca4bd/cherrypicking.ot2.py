@@ -33,8 +33,8 @@ if rack_name not in labware.list():
 
 # load labware
 plate = labware.load(plate_name, '1', 'destination sample plate')
-dmso = labware.load(
-    'usascientific_12_reservoir_22ml', '9', 'reservoir for DMSO').wells()[0]
+solvent = labware.load(
+    'usascientific_12_reservoir_22ml', '9', 'reservoir for solvent').wells()[0]
 tiprack300 = labware.load('opentrons_96_tiprack_300ul', '10', '300ul tiprack')
 tiprack10 = labware.load('opentrons_96_tiprack_10ul', '11', '10ul tiprack')
 
@@ -56,7 +56,9 @@ B02,7,14,0357024562
 def run_custom_protocol(
         p300_multi_mount: StringSelection('right', 'left') = 'right',
         p10_single_mount: StringSelection('left', 'right') = 'left',
-        input_csv: FileInput = example_csv
+        input_csv: FileInput = example_csv,
+        volume_of_solvent_in_ul: float = 198,
+        volume_of_sample_in_ul: float = 2
 ):
     # check
     if p300_multi_mount == p10_single_mount:
@@ -79,12 +81,13 @@ def run_custom_protocol(
         if line and line.split(',')[0].strip()  # ignore empty lines/sources
     ]
 
-    # transfer DMSO to receiving columns based on .csv file using P300-multi
+    # transfer solvent to receiving columns based on .csv file using P300-multi
     num_cols = math.ceil(len(trans_data)/8)
-    dmso_dests = plate.rows('A')[:num_cols]
+    solvent_dests = plate.rows('A')[:num_cols]
     m300.pick_up_tip()
-    for d in dmso_dests:
-        m300.transfer(198, dmso, d.bottom(2), new_tip='never')
+    for d in solvent_dests:
+        m300.transfer(
+            volume_of_solvent_in_ul, solvent, d.bottom(2), new_tip='never')
         m300.blow_out(d.top(-2))
     m300.drop_tip()
 
@@ -111,9 +114,9 @@ def run_custom_protocol(
         s = s_rack.wells(source_name)
         d = plate.wells()[i]
         p10.pick_up_tip()
-        p10.aspirate(2, s)
+        p10.aspirate(volume_of_sample_in_ul, s)
         p10.touch_tip(s)
-        p10.aspirate(8, d.bottom(2))
+        p10.aspirate(10-volume_of_sample_in_ul, d.bottom(2))
         p10.dispense(10, d.bottom(2))
         p10.blow_out(d.bottom(5))
         p10.drop_tip()

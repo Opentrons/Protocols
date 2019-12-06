@@ -8,7 +8,7 @@
 	* Cherrypicking
 
 ## Description
-This protocol performs a custom cherrypicking sample prep from up to 7 96-tube racks (available slots- 2-8) to a custom 96-well plate (maximum 96 cherrypicks). The destination plate first receives 198ul of DMSO from a 12-channel reservoir using a multi-channel pipette, before receiving 2ul of the corresponding sample from the tube rack. The plate is filled sequentially down the columns then across the rows. The transfer scheme should be input in a `.csv` file formatted as follows (including headers):
+This protocol performs a custom cherrypicking sample prep from up to 7 96-tube racks (available slots- 2-8) to a custom 96-well plate (maximum 96 cherrypicks). The destination plate first receives solvent from a 12-channel reservoir using a multi-channel pipette, before receiving the corresponding sample from the tube rack. The plate is filled sequentially down the columns then across the rows. The transfer scheme should be input in a `.csv` file formatted as follows (including headers):
 
 ```
 Source Well,Source Slot,Pos,Tube BC
@@ -33,7 +33,7 @@ B03,1,15,0357024570
 
 ```
 
-In this example, all wells in columns 1, 2, and 3 of the destination plate will receive 198ul each of DMSO from the reservoir using a P300 multi-channel pipette. Then, 2ul of sample from tube A1 will be transferred to well A1 in the plate, 2ul of sample from tube B1 will be transferred to well B1 in the plate, etc. The P10 single-channel pipette is used for these one-to-one sample transfers, and tips are changed between each transfer.
+In this example, all wells in columns 1, 2, and 3 of the destination plate will receive DMSO from the reservoir using a P300 multi-channel pipette. Then, sample from tube A1 will be transferred to well A1 in the plate, sample from tube B1 will be transferred to well B1 in the plate, etc. The P10 single-channel pipette is used for these one-to-one sample transfers, and tips are changed between each transfer.
 
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
@@ -48,10 +48,8 @@ In this example, all wells in columns 1, 2, and 3 of the destination plate will 
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
-
-
 12-channel reservoir (slot 4):
-* channel 1: DMSO
+* channel 1: solvent
 
 source 96-tube racks:
 * can occupy slots 2-8 (specified in input `.csv`)
