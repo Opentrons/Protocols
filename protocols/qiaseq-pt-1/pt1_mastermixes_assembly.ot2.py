@@ -26,10 +26,11 @@ reagent_tuberack = labware.load(
 )
 strips = labware.load(
     'opentrons_96_aluminumblock_generic_pcr_strip_200ul', '3', 'strips')
-tips50 = labware.load('opentrons_96_tiprack_300ul', '4')
+tips50 = [
+    labware.load('opentrons_96_tiprack_300ul', slot) for slot in ['4', '5']]
 tips10 = [
     labware.load('opentrons_96_tiprack_10ul', str(slot))
-    for slot in range(5, 9)
+    for slot in range(6, 10)
 ]
 
 # reagents
@@ -42,7 +43,7 @@ frag_mastermix_tube = reagent_tuberack.wells('A2')
 
 def run_custom_protocol(
         number_of_samples: int = 96,
-        volume_of_DNA_in_ul: float = 10,
+        volume_of_DNA_in_UL: float = 10,
         volume_of_nuclease_free_water: float = 5,
         p10_mount: StringSelection('left', 'right') = 'left',
         p50_mount: StringSelection('right', 'left') = 'right'
@@ -54,7 +55,7 @@ def run_custom_protocol(
     # pipettes
     p50 = instruments.P50_Single(
         mount='right',
-        tip_racks=[tips50]
+        tip_racks=tips50
     )
 
     # create mix for fragmentation, end-repair, and A-addition
@@ -102,7 +103,7 @@ def run_custom_protocol(
         num_cols = math.ceil(number_of_samples/8)
         for well in strips.cols('1'):
             p50.transfer(
-                (20-volume_of_DNA_in_ul)*number_of_samples_for_mix/8,
+                (20-volume_of_DNA_in_UL)*number_of_samples_for_mix/8,
                 frag_mastermix_tube,
                 well,
                 new_tip='never'
@@ -139,7 +140,10 @@ temperature module.')
 temperature module.')
 
     # add Fragmentation Enzyme Mix and mix
-    pip10.transfer(5, frag_enzyme_mix, dests, new_tip='always')
+    rxn_samples = rxn_plate.wells()[:number_of_samples]
+    p50.pick_up_tip()
+    p50.transfer(
+        5, frag_enzyme_mix, rxn_samples, new_tip='always')
 
     robot.pause('Briefly centrifuge the reaction plate and place back on the \
 temperature module.')
