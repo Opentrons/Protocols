@@ -40,7 +40,7 @@ tempdeck.wait_for_temp()
 rack_5ml = labware.load(rack_5ml_name, '2', '3x5 5ml tuberack')
 tiprack300 = labware.load('opentrons_96_tiprack_300ul', '3', '300ul tiprack')
 rack_1500ul = labware.load(
-    'opentrons_24_tuberack_nest_1.5ml_screwcap', '4')
+    'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', '4')
 tiprack10 = labware.load('opentrons_96_tiprack_10ul', '5', '10ul tiprack')
 
 # reagent setup
