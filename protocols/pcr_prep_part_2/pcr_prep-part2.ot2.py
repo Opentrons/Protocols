@@ -12,9 +12,9 @@ metadata = {
 def run_custom_protocol(
         number_of_samples: int=96,
         left_pipette: StringSelection(
-            'p10-multi', 'P50-multi', 'p300-multi', 'none')='p50-multi',
+            'p10-multi', 'p50-multi', 'p300-multi', 'none')='p50-multi',
         right_pipette: StringSelection(
-            'p10-multi', 'P50-multi', 'p300-multi', 'none')='p300-multi',
+            'p10-multi', 'p50-multi', 'p300-multi', 'none')='p300-multi',
         mastermix_volume: float=18,
         DNA_volume: float=2
         ):
