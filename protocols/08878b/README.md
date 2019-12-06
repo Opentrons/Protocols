@@ -13,6 +13,8 @@ This protocol utilizes the P300 (GEN2) and P1000 pipettes to transfer and mix re
 
 The protocol begins by making four (4) dilutions of reagent with heparin or sample. These dilutions are then added to a PCR plate on the temperature module and other reagents are added.
 
+**Note about Temperature Module**: The temperature of the Temperature Module can now be set in the Opentrons App. To expedite a heating or cooling step in your protocol, you should set your Temperature Module to the desired temperature in the Opentrons App, prior to running your protocol. 
+
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
