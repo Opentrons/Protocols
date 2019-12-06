@@ -25,7 +25,7 @@ It is safe to stop after this step and re-start work at a later point. If you ar
 --
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
-To purchase tips, reagents, or pipettes, please visit our [online store](https://shop.opentrons.com/) or contact our sales team at [info@opentrons.com](mailto: info@opentrons.com)
+To purchase tips, reagents, or pipettes, please visit our [online store](https://shop.opentrons.com/) or contact our sales team at [info@opentrons.com](mailto:info@opentrons.com)
 
 * [Opentrons OT-2](https://shop.opentrons.com/collections/ot-2-robot/products/ot-2)
 * [Opentrons OT-2 Run App (Version 3.15.0 or later)](https://opentrons.com/ot-app/)
