@@ -80,7 +80,11 @@ def run_custom_protocol(
     pip50.drop_tip()
 
     for src, dest in zip(eps, tbs):
-        pip50.transfer(5, src, dest.top(-10), new_tip='always')
+        pip50.pick_up_tip()
+        pip50.transfer(5, src, dest.bottom(5), new_tip='never')
+        pip50.mix(3, 30, dest.bottom(5))
+        pip50.blow_out(dest.top(-10))
+        pip50.drop_tip()
 
     robot.pause("Remove tubes from OT-2 and incubate at 37C in water bath for \
     45 minutes. After incubation, return tubes to robot and click RESUME.")
@@ -90,6 +94,7 @@ def run_custom_protocol(
     for well in tbs:
         pip1k.transfer(100, h2o2, well.top(-10), new_tip='never')
 
+    pip1k.drop_tip()
     robot.pause('Vortex tubes and then let sample incubate for 1 hour. When \
     ready to resume, click RESUME.')
 
