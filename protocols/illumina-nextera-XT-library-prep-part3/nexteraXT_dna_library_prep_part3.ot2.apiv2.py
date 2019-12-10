@@ -90,7 +90,7 @@ def run(protocol):
         Place the plate back on the MagDeck in slot 4.")
         protocol.delay(minutes=2)
         for well in mag:
-            pip.transfer(50, mag, liquid_trash)
+            pip.transfer(50, well, liquid_trash)
 
     # Add 30 uL NaOH to each well
     mag_deck.disengage()
