@@ -1,0 +1,1 @@
+{"slug": "7aa3fd-library-quantification", "path": "protocols/7aa3fd-library-quantification", "flags": {"feature": false, "skip-tests": false, "hide-from-search": true, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["lib_quant.ot2.apiv2.py"]}, "status": "ok"}
