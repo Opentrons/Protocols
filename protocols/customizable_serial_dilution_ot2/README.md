@@ -24,7 +24,7 @@ This protocol uses the inputs you define for "***Dilution Factor***" and "***Tot
 
 -- Define a ***Total Mixing Volume*** of 100uL, a ***Dilution Factor*** of 3, and set ***Number of Dilutions*** = 11.
 
--- Your OT-2 will add 100uL of diluent to each empty well in your plate. Then it will transfer 50uL from Column 1 between each well/column in the plate. 
+-- Your OT-2 will add 100uL of diluent to each empty well in your plate. Then it will transfer 50uL from Column 1 between each well/column in the plate.
 
 -- "***Total mixing volume***" = transfer volume + diluent volume.
 
@@ -43,18 +43,11 @@ This protocol uses the inputs you define for "***Dilution Factor***" and "***Tot
 
 -- [12-row automation-friendly trough](https://www.usascientific.com/12-channel-automation-reservoir.aspx)
 
--- Clear flat-bottom 96-well polystyrene 96-well plate
+-- Clear flat-bottom 96-well polystyrene 96-well plate ([Corning plate suggested](https://ecatalog.corning.com/life-sciences/b2c/US/en/Microplates/Assay-Microplates/96-Well-Microplates/Corning%C2%AE-96-well-Solid-Black-and-White-Polystyrene-Microplates/p/corning96WellSolidBlackAndWhitePolystyreneMicroplates))
 
 -- Diluent (Pre-loaded in row 1 of trough)
 
 -- Samples/Standards (Pre-loaded in Column 1 of a standard flat-bottom 96-well plate)
-
----
-
----
-
-### Time Estimate
-* Varies. 2-5 minutes depending on pipette model chosen
 
 ## Process
 1. Choose the pipette you want to use from the dropdown menu above. ***Note:*** Your pipette should be installed on the ***left mount*** of your OT-2.
@@ -66,13 +59,13 @@ This protocol uses the inputs you define for "***Dilution Factor***" and "***Tot
 7. Upload into the Opentrons Run App and follow the instructions there to set up your deck and proceed to run!
 8. Make sure to add diluent to the first row of your 12-row trough and load your desired samples/standards into column 1 of your plate before running your protocol in the run app!
 
-###### Internal
-Customizable Serial Dilution, v1
-
 ### Additional Notes
-Please reference our [Technical Note](https://s3.amazonaws.com/opentrons-protocol-library-website/Technical+Notes/Serial+Dilution+OT2+Technical+Note.pdf) for more information about the expected output of this protocol, in addition to expanded sample data from the Opentrons lab. 
+Please reference our [Technical Note](https://s3.amazonaws.com/opentrons-protocol-library-website/Technical+Notes/Serial+Dilution+OT2+Technical+Note.pdf) for more information about the expected output of this protocol, in addition to expanded sample data from the Opentrons lab.
 
 We understand that there are limitations to the use of this protocol, and we plan to make improvements soon. In the meantime, if you'd like to request a more complex dilution workflow, please use our [Protocol Development Request Form](https://opentrons-protocol-dev.paperform.co/). You can also download this Python file and modify it using our [API Documentation](https://docs.opentrons.com/). For additional questions about this protocol, please email <support@opentrons.com>.
 
 ## Preview
 Perform a simple serial dilution across a 96-well plate using either a single-channel or multichannel pipette. This can be useful for everything from creating a simple standard curve to a concentration-limiting dilution.
+
+###### Internal
+Customizable Serial Dilution, v2

@@ -29,8 +29,11 @@ def serialize_set(categories):
     return {key: list(value) for key, value in categories.items()}
 
 
-def add_categories(data, categories, root):
+def add_categories(data, metadata, categories, root):
     new_cat = data['categories']
+    is_hidden = metadata.get('flags', {}).get('hide-from-search', False)
+    if is_hidden:
+        return
     for key, value in new_cat.items():
         if value:
             categories[key].add(value[-1])
@@ -47,34 +50,32 @@ def merge_protocols(path):
         root = build_dir['root']
         # Inside a given protocol directory from the releases/builds dir
         # Metadata blob
-        meta = open(os.path.join(root, 'metadata.json'), 'r')
-        data = json.load(meta)
-        status = data['status']
-        file_order = data['files']
-        meta.close()
+        with open(os.path.join(root, 'metadata.json'), 'r') as meta:
+            metadata = json.load(meta)
+            status = metadata['status']
+            file_order = metadata['files']
 
         # README Blob
-        md = open(os.path.join(root, 'README.json'), 'r')
-        md_data = json.load(md)
-        add_categories(md_data, categories, root)
-        md.close()
+        with open(os.path.join(root, 'README.json'), 'r') as md:
+            md_data = json.load(md)
+            add_categories(md_data, metadata, categories, root)
 
         # Protocol blob
-        data['protocols'] = {'OT 1 protocol': [], 'OT 2 protocol': []}
+        metadata['protocols'] = {'OT 1 protocol': [], 'OT 2 protocol': []}
 
         for ot1 in file_order['OT 1 protocol']:
             with open(os.path.join(root, '{}.json'.format(ot1)), 'r') as proto:
                 proto_data = json.load(proto)
-            data['protocols']['OT 1 protocol'].append(proto_data)
+            metadata['protocols']['OT 1 protocol'].append(proto_data)
         for ot2 in file_order['OT 2 protocol']:
             with open(os.path.join(root, '{}.json'.format(ot2)), 'r') as proto:
                 proto_data = json.load(proto)
-            data['protocols']['OT 2 protocol'].append(proto_data)
+            metadata['protocols']['OT 2 protocol'].append(proto_data)
 
         if status != 'empty':
             for key, value in md_data.items():
-                data[key] = value
-            protocols.append(data)
+                metadata[key] = value
+            protocols.append(metadata)
         else:
             pass
 

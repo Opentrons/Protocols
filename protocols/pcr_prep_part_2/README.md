@@ -20,15 +20,11 @@ This protocol allows your robot to distribute a master mix solution from well A1
 ---
 
 You will need:
-* [12-well Trough](https://www.usascientific.com/12-channel-automation-reservoir.aspx)
-* 8-well PCR Strips
+* [12-channel reservoir](https://www.usascientific.com/12-channel-automation-reservoir.aspx)
+* [96-well PCR plate](https://www.bio-rad.com/en-us/sku/hsp9601-hard-shell-96-well-pcr-plates-low-profile-thin-wall-skirted-white-clear?ID=hsp9601)
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
-
-### Modules
-
-### Reagents
 
 ## Process
 1. Input the number of samples you are processing.
@@ -43,13 +39,13 @@ You will need:
 10. Robot will transfer DNA from PCR strips in slot 1 to those in slot 2.
 
 ### Additional Notes
-Slot 1: PCR Strips with DNA samples
-Slot 2: Empty PCR Strips
-Slot 3: 12-well Trough with master mix solution in well A1
+Slot 1: PCR plate with DNA samples
+Slot 2: Empty PCR plate
+Slot 3: 12-channel reservoir with master mix solution in well A1
 
 ---
 
 If you have any questions about this protocol, please contact protocols@opentrons.com.
 
 ###### Internal
-OT-2 PCR Prep
+OT-2 PCR Prep v2

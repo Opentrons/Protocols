@@ -1,1 +1,0 @@
-{"slug": "cherrypicking_csv", "path": "protocols/cherrypicking_csv", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": ["cherrypicking_csv.ot1.py"], "OT 2 protocol": ["cherrypicking_csv.ot2.py"]}, "status": "ok"}

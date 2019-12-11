@@ -1,1 +1,1 @@
-{"slug": "pcr_prep_part_2", "path": "protocols/pcr_prep_part_2", "flags": {"feature": false, "skip-tests": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["pcr_prep-part2.ot2.py"]}, "status": "ok"}
+{"slug": "pcr_prep_part_2", "path": "protocols/pcr_prep_part_2", "flags": {"feature": false, "skip-tests": false, "hide-from-search": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["pcr_prep-part2.ot2.apiv2.py"]}, "status": "ok"}

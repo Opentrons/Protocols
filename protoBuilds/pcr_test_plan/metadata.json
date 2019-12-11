@@ -1,0 +1,1 @@
+{"slug": "pcr_test_plan", "path": "protocols/pcr_test_plan", "flags": {"feature": false, "skip-tests": false, "hide-from-search": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["pcr_test_plan.ot2.apiv2.py"]}, "status": "ok"}
