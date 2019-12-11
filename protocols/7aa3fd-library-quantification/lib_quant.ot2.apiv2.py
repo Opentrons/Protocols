@@ -94,7 +94,7 @@ B1 of reagent rack.')
     # QPCR plate setup
     mm_wells = [well for row in qpcr_plate.rows() for well in row]
     for _ in range(3):
-        _ = mm_wells.pop(0)
+        mm_wells.pop(0)
     p300.transfer(
         16, qpcr_mm, [well for well in mm_wells], air_gap=0, blow_out=True)
 
