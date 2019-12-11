@@ -1,1 +1,0 @@
-{"slug": "211fe1", "path": "protocols/211fe1", "flags": {"feature": false, "skip-tests": false, "hide-from-search": true, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["mass_spec_sample_prep.ot2.apiv2.py"]}, "status": "ok"}

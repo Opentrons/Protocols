@@ -23,8 +23,7 @@ script:
   - flake8 protocols/ protolib/
   - python ./scripts/bad-README-subcategory.py # make sure subcategories don't have 2 spaces
   # combine all parsed files to final zipped JSON in releases/deploy
-  # (NOTE: developers should have run `make all` beforehand and commited the results)
-  - make build
+  - make all build
 
 # Deploy the build version in an S3 bucket
 deploy:
