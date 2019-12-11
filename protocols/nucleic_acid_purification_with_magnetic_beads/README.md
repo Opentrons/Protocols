@@ -32,7 +32,7 @@ You can use any magnetic beads you prefer with this protocol, but we have includ
 
 -- Magnetic Beads (Looking for a kit? We recommend trying [Omega Bio-tek Mag-Bind® TotalPure NGS](https://shop.opentrons.com/products/mag-bind-total-pure-ngs))
 
--- Ethanol 
+-- Ethanol
 
 -- Elution Buffer (Typically 10 mM Tris pH 8.0, TE Buffer, or nuclease-free water)
 
@@ -58,9 +58,6 @@ Using the customization fields below, set up your protocol as follows:
 
 ---
 
-### Time Estimate
-* Varies.
-
 ## Process
 1. Select all desired settings according to the "Setup" section above to create your customized protocol.
 2. Download your customized Nucleic Acid Purification protocol using the blue "Download" button.
@@ -73,7 +70,7 @@ Using the customization fields below, set up your protocol as follows:
 Nucleic Acid Purification, v1
 
 ### Additional Notes
-Please reference our [Technical Note](https://s3.amazonaws.com/opentrons-protocol-library-website/Technical+Notes/Nucleic+Acid+Purification+with+Magnetic+Module+OT2+Technical+Note.pdf) for more information about the expected output of this protocol, in addition to expanded sample data from the Opentrons lab. 
+Please reference our [Technical Note](https://s3.amazonaws.com/opentrons-protocol-library-website/Technical+Notes/Nucleic+Acid+Purification+with+Magnetic+Module+OT2+Technical+Note.pdf) for more information about the expected output of this protocol, in addition to expanded sample data from the Opentrons lab.
 
 We understand that there are limitations to the use of this protocol and we plan to make improvements soon! In the meantime, if you'd like to request a more complex purification workflow, please use our [Protocol Development Request Form](https://opentrons-protocol-dev.paperform.co/). You can also download the Python file from this page and modify it using our [API Documentation](https://docs.opentrons.com/). For additional questions about this protocol, please email <protocols@opentrons.com>.
 

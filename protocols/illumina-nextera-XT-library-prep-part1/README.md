@@ -10,19 +10,19 @@
 ## Description
 Part 1 of 4: Tagment Genomic DNA and Amplify Libraries
 
-Links: 
-* [Part 1: Tagment and Amplify](http://protocols.opentrons.com/protocol/illumina-nextera-XT-library-prep-part1) 
-* [Part 2: Clean Up Libraries](http://protocols.opentrons.com/protocol/illumina-nextera-XT-library-prep-part2) 
-* [Part 3: Normalize Libraries](http://protocols.opentrons.com/protocol/illumina-nextera-XT-library-prep-part3) 
+Links:
+* [Part 1: Tagment and Amplify](http://protocols.opentrons.com/protocol/illumina-nextera-XT-library-prep-part1)
+* [Part 2: Clean Up Libraries](http://protocols.opentrons.com/protocol/illumina-nextera-XT-library-prep-part2)
+* [Part 3: Normalize Libraries](http://protocols.opentrons.com/protocol/illumina-nextera-XT-library-prep-part3)
 * [Part 4: Pool Libraries](http://protocols.opentrons.com/protocol/illumina-nextera-XT-library-prep-part4)
 
-With this protocol, your robot can perform the Nextera XT DNA Library Prep Kit protocol described by the [Illumina Reference Guide](https://support.illumina.com/content/dam/illumina-support/documents/documentation/chemistry_documentation/samplepreps_nextera/nextera-xt/nextera-xt-library-prep-reference-guide-15031942-03.pdf). 
+With this protocol, your robot can perform the Nextera XT DNA Library Prep Kit protocol described by the [Illumina Reference Guide](https://support.illumina.com/content/dam/illumina-support/documents/documentation/chemistry_documentation/samplepreps_nextera/nextera-xt/nextera-xt-library-prep-reference-guide-15031942-03.pdf).
 
-This is part 1 of the protocol, which includes the steps (1) Tagment Genomic DNA and (2) Amplify Libraries. 
+This is part 1 of the protocol, which includes the steps (1) Tagment Genomic DNA and (2) Amplify Libraries.
 
-The tagmentation step uses Nextera transposase to fragment DNA into sizes suitable for sequencing, and then tags the DNA with adapter sequences. The library amplification step increases the yield of the tagmented DNA using PCR. PCR adds the Index 1 (i7), Index 2 (i5), and full adapter sequences to the tagmented DNA from the previous step. This protocol assumes you are taking your plate off the OT-2 and thermocycling on a stand-alone PCR machine according to the [Illumina Reference Guide](https://support.illumina.com/content/dam/illumina-support/documents/documentation/chemistry_documentation/samplepreps_nextera/nextera-xt/nextera-xt-library-prep-reference-guide-15031942-03.pdf). 
+The tagmentation step uses Nextera transposase to fragment DNA into sizes suitable for sequencing, and then tags the DNA with adapter sequences. The library amplification step increases the yield of the tagmented DNA using PCR. PCR adds the Index 1 (i7), Index 2 (i5), and full adapter sequences to the tagmented DNA from the previous step. This protocol assumes you are taking your plate off the OT-2 and thermocycling on a stand-alone PCR machine according to the [Illumina Reference Guide](https://support.illumina.com/content/dam/illumina-support/documents/documentation/chemistry_documentation/samplepreps_nextera/nextera-xt/nextera-xt-library-prep-reference-guide-15031942-03.pdf).
 
-After the two steps carried out in this protocol, you can safely stop work and return to it at a later point. If you are stopping, seal the plate and store at 2°C to 8°C for up to 2 days. 
+After the two steps carried out in this protocol, you can safely stop work and return to it at a later point. If you are stopping, seal the plate and store at 2°C to 8°C for up to 2 days.
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)

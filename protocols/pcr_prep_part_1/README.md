@@ -25,10 +25,6 @@ You will need:
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
 
-### Modules
-
-### Reagents
-
 ## Process
 1. Select your pipettes.
 2. Upload your master mix CSV.
@@ -59,4 +55,4 @@ Slot 3: 12-well Trough
 If you have any questions about this protocol, please contact protocols@opentrons.com.
 
 ###### Internal
-OT-2 PCR Prep
+OT-2 PCR Prep v2

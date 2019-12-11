@@ -1,34 +1,37 @@
 import os
 import json
+from pathlib import Path
 from parse import markdown as parser
-from traversals import PROTOCOLS_BUILD_DIR, PROTOCOL_DIR, \
-    ARGS, search_directory
+from traversals import PROTOCOLS_BUILD_DIR, PROTOCOL_DIR
 
 
-def write_README_to_json(path):
+def write_README_to_json(protocol_path):
     """
-    Recursively scan through root returning the list of protocol
+    Shallow scan through root returning the list of protocol
     dictionary items.
     """
-    for proto_dir in search_directory(path, '.md'):
-        root = proto_dir['root'].split('/')[-1]
-        build_path = os.path.join(PROTOCOLS_BUILD_DIR, root)
-        if not os.path.exists(build_path):
-            os.mkdir(build_path)
+    for proto_dir in Path(protocol_path).iterdir():
+        if not proto_dir.is_dir():
+            # maybe it's a .DS_Store or something
+            print(f'DEBUG: Not a directory: "{proto_dir}"')
+        else:
+            root = proto_dir.name
+            files = list(proto_dir.iterdir())
+            readme_files = [f for f in files if f.name == 'README.md']
+            if len(readme_files) >= 2:
+                raise RuntimeError(
+                    'Expected exactly 1 README.md, got ' +
+                    f'{len(readme_files)} in {proto_dir}')
 
-        for val, protocol_name in enumerate(proto_dir['files']):
-            protocol = os.path.join(
-                path, root, protocol_name)
-            file_path = os.path.join(
-                build_path,
-                'README.json')
-            with open(file_path, 'w') as fh:
+            build_path = Path(PROTOCOLS_BUILD_DIR) / root
+            if not build_path.is_dir():
+                os.mkdir(build_path)
+
+            output_path = build_path / 'README.json'
+            with open(output_path, 'w') as output_file:
                 json.dump(
-                    {**parser.parse(protocol)}, fh)
+                    {**parser.parse(readme_files[0])}, output_file)
 
 
-if ARGS:
-    for arg in ARGS:
-        write_README_to_json(arg)
-else:
+if __name__ == '__main__':
     write_README_to_json(PROTOCOL_DIR)
