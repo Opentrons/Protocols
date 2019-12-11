@@ -1,0 +1,1 @@
+{"slug": "7aa3fd-size-selection", "path": "protocols/7aa3fd-size-selection", "flags": {"feature": false, "skip-tests": false, "hide-from-search": true, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["size_selection.ot2.apiv2.py"]}, "status": "ok"}
