@@ -1,1 +1,0 @@
-{"slug": "08878b", "path": "protocols/08878b", "flags": {"feature": false, "skip-tests": false, "hide-from-search": true, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["08878b.ot2.apiv2.py"]}, "status": "ok"}

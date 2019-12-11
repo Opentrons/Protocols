@@ -1,1 +1,0 @@
-{"slug": "cherrypicking", "path": "protocols/cherrypicking", "flags": {"feature": false, "skip-tests": false, "hide-from-search": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["cherrypicking.ot2.apiv2.py"]}, "status": "ok"}
