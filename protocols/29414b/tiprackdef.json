@@ -1,0 +1,28 @@
+const options = {
+  metadata: {
+    displayName: 'Custom 200µL Tiprack',
+    displayCategory: 'tipRack',
+    displayVolumeUnits: 'µL',
+    tags: [],
+  },
+  parameters: {
+    format: '96Standard',
+    isTiprack: true,
+    tipLength:32,
+    isMagneticModuleCompatible: false,
+  },
+  dimensions: {
+    xDimension: 127.76,
+    yDimension: 85.48,
+    zDimension: 70,
+  },
+  offset: { x: 14.38, y: 11.24, z: 70 },
+  grid: { row: 8, column: 12 },
+  spacing: { row: 9, column: 9 },
+  well: {
+    depth: 32,
+    shape: 'circular',
+    diameter: 5.2,
+    totalLiquidVolume: 20,
+  },
+}
