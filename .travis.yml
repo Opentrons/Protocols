@@ -21,8 +21,8 @@ script:
   - python3 --version
   # lint all code
   - flake8 protocols/ protolib/
-  # fail the build if `make parse-ot2` would do anything.
-  - make parse-ot2 --question || travis_terminate 1
+  # fail the build if protoBuilds is not up-to-date
+  - bash ./checkChanges.sh
   - python ./scripts/bad-README-subcategory.py # make sure subcategories don't have 2 spaces
   # combine all parsed files to final zipped JSON in releases/deploy
   # (NOTE: developers should have run `make all` beforehand and commited the results)
