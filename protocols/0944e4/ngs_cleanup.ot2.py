@@ -66,6 +66,8 @@ def run_custom_protocol(
     # pipettes
     m10 = instruments.P10_Multi(mount=p10_multi_mount, tip_racks=[tips10])
     m300 = instruments.P300_Multi(mount=p300_multi_mount, tip_racks=tips300)
+    m300.set_flow_rate(aspirate=100, dispense=200)
+    m10.set_flow_rate(aspirate=3, dispense=6)
 
     # sample setup
     num_cols = math.ceil(number_of_samples/8)
