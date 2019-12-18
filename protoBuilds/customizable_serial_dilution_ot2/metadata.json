@@ -1,1 +1,20 @@
-{"slug": "customizable_serial_dilution_ot2", "path": "protocols/customizable_serial_dilution_ot2", "flags": {"feature": true, "skip-tests": false, "hide-from-search": false, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["customizable_serial_dilution.ot2.apiv2.py"]}, "status": "ok"}
+{
+    "files": {
+        "OT 1 protocol": [],
+        "OT 2 protocol": [
+            "customizable_serial_dilution.ot2.apiv2.py"
+        ],
+        "description": [
+            "README.md"
+        ]
+    },
+    "flags": {
+        "embedded-app": false,
+        "feature": true,
+        "hide-from-search": false,
+        "skip-tests": false
+    },
+    "path": "protocols/customizable_serial_dilution_ot2",
+    "slug": "customizable_serial_dilution_ot2",
+    "status": "ok"
+}

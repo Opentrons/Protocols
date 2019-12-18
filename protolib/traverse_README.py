@@ -30,7 +30,8 @@ def write_README_to_json(protocol_path):
             output_path = build_path / 'README.json'
             with open(output_path, 'w') as output_file:
                 json.dump(
-                    {**parser.parse(readme_files[0])}, output_file)
+                    {**parser.parse(readme_files[0])}, output_file,
+                    indent=4, sort_keys=True)
 
 
 if __name__ == '__main__':
