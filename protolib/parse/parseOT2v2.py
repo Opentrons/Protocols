@@ -18,7 +18,7 @@ def parse_labware(slot, labware):
     # TODO IMMEDIATELY better way to distingush non-labware
     # in `loaded_labwares`?
     try:
-        labware_type = labware.name
+        labware_type = labware.load_name
     except AttributeError:
         return None
 
@@ -120,4 +120,4 @@ if __name__ == '__main__':
 
     result = parse(sourceFilePath)
     with open(destFilePath, 'w') as f:
-        json.dump(result, f)
+        json.dump(result, f, indent=4, sort_keys=True)
