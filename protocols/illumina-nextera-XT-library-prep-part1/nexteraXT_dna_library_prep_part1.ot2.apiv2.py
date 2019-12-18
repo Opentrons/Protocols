@@ -2,7 +2,8 @@ metadata = {
     'protocolName': 'Illumina Nextera XT NGS Prep 1: Tagment Genomic DNA & \
 Amplify Libraries',
     'author': 'Opentrons <protocols@opentrons.com>',
-    'source': 'Protocol Library'
+    'source': 'Protocol Library',
+    'apiLevel': '2.0'
     }
 
 

@@ -3,7 +3,8 @@ import math
 metadata = {
     'protocolName': 'PCR Prep',
     'author': 'Opentrons <protocols@opentrons.com>',
-    'source': 'Protocol Library'
+    'source': 'Protocol Library',
+    'apiLevel': '2.0'
     }
 
 
