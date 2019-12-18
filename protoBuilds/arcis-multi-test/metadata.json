@@ -1,0 +1,1 @@
+{"slug": "arcis-multi-test", "path": "protocols/arcis-multi-test", "flags": {"feature": false, "skip-tests": false, "hide-from-search": true, "embedded-app": false}, "files": {"description": ["README.md"], "OT 1 protocol": [], "OT 2 protocol": ["arcis-multi-test.ot2.apiv2.py"]}, "status": "ok"}
