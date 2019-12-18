@@ -1,9 +1,9 @@
-# Opentrons Labworks
-# Author: Kinnari Watson
-# Eight samples of lambda phage genomic DNA
-# Define the pipettes and tip racks for the protocol
-# Blow out added after every dispense
-# APIV2
+metadata = {
+    'protocolName': 'PCR Prep',
+    'author': 'Opentrons <protocols@opentrons.com>',
+    'source': 'Protocol Library',
+    'apiLevel': '2.0'
+    }
 
 
 def run(protocol_context):
