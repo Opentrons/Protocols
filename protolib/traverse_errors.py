@@ -112,7 +112,8 @@ def write_metadata_to_file(protocol_path):
             with open(metadata_output_path, 'w') as metadata_file:
                 json.dump(
                     {**metadata,
-                     'status': get_status(metadata)}, metadata_file)
+                     'status': get_status(metadata)},
+                    metadata_file, indent=4, sort_keys=True)
 
 
 if __name__ == '__main__':
