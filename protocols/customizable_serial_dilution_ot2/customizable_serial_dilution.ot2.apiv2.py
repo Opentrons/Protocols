@@ -1,8 +1,9 @@
 metadata = {
     'protocolName': 'Customizable Serial Dilution',
     'author': 'Opentrons <protocols@opentrons.com>',
-    'source': 'Protocol Library'
-    }
+    'source': 'Protocol Library',
+    'apiLevel': '2.0'
+}
 
 
 def run(protocol_context):

@@ -1,3 +1,11 @@
+metadata = {
+    'protocolName': 'PCR Test Plan',
+    'author': 'Opentrons <protocols@opentrons.com>',
+    'source': 'Protocol Library',
+    'apiLevel': '2.0'
+}
+
+
 def run(protocol_context):
     [dna_volume, primer_volume, master_mix_volume] = get_values(  # noqa: F821
         'dna_volume', 'primer_volume', 'master_mix_volume')
