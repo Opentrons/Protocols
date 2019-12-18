@@ -18,7 +18,7 @@ def parse_labware(slot, labware):
     # TODO IMMEDIATELY better way to distingush non-labware
     # in `loaded_labwares`?
     try:
-        labware_type = labware.name
+        labware_type = labware.load_name
     except AttributeError:
         return None
 
@@ -83,11 +83,11 @@ def parse(protocol_path):
     protocol = parse_protocol(
         protocol_file=contents, filename=protocol_path)
 
-    assert protocol.api_level == '2'
+    assert protocol.api_level >= (2, 0)
 
     context = opentrons.protocol_api.contexts.ProtocolContext()
     context.home()
-    run_protocol(protocol, simulate=True, context=context)
+    run_protocol(protocol, context=context)
 
     instruments = [{'mount': mount, 'name': pipette.name} for mount,
                    pipette in context.loaded_instruments.items() if pipette]
@@ -120,4 +120,4 @@ if __name__ == '__main__':
 
     result = parse(sourceFilePath)
     with open(destFilePath, 'w') as f:
-        json.dump(result, f)
+        json.dump(result, f, indent=4, sort_keys=True)
