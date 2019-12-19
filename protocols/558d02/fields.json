@@ -1,0 +1,26 @@
+[
+  {
+    "type": "dropDown",
+    "label": "P50 multi-channel mount",
+    "name": "p50_multi_mount",
+    "options": [
+      { "label": "left", "value": "left" },
+      { "label": "right", "value": "right" }
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "P300 multi-channel mount",
+    "name": "p300_multi_mount",
+    "options": [
+      { "label": "right", "value": "right" },
+      { "label": "left", "value": "left" }
+    ]
+  },
+  {
+    "type": "int",
+    "label": "number of samples",
+    "name": "number_of_samples",
+    "default": 96
+  }
+]
