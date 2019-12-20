@@ -68,9 +68,9 @@ def run(protocol_context):
             'usascientific_12_reservoir_22ml', '7', 'reagent reservoir')
         liquid_waste = reagent_container.wells()[-1]
         col_num = math.ceil(sample_number/8)
-        samples = [col for col in mag_plate.cols()[:col_num]]
+        samples = [col for col in mag_plate.rows()[0][:col_num]]
         samples_top = [well.top() for well in mag_plate.rows()[0][:col_num]]
-        output = [col for col in output_plate.cols()[:col_num]]
+        output = [col for col in output_plate.rows()[0][:col_num]]
 
     # Define reagents and liquid waste
     beads = reagent_container.wells()[0]
