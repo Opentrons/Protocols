@@ -63,7 +63,7 @@ def run(protocol_context):
         reagent_container = protocol_context.load_labware(
             'usascientific_12_reservoir_22ml', '4')
         liquid_waste = reagent_container.wells()[-1]
-        col_num = math.ceil(sample_number)/8
+        col_num = math.ceil(sample_number/8)
         samples = [col for col in mag_plate.rows()[0][:col_num]]
         output = [col for col in output_plate.rows()[0][:col_num]]
 
