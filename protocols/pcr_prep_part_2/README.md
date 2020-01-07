@@ -4,8 +4,8 @@
 [Opentrons](http://www.opentrons.com/)
 
 ## Categories
-* Sample Prep
-    * PCR
+* PCR
+    * Mastermix Distribution
 
 ## Description
 Part 2 of 2: Master Mix Distribution and DNA Transfer
