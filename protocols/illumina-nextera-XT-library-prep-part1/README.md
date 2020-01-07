@@ -5,7 +5,7 @@
 
 ## Categories
 * NGS Library Prep
-     * Illumina
+     * Illumina Nextera XT
 
 ## Description
 Part 1 of 4: Tagment Genomic DNA and Amplify Libraries
