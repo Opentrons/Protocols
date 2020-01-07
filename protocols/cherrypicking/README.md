@@ -4,8 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Basic Pipetting
-	* Plate Consolidation
+* Sample Preparation
+	* Cherrypicking
 
 
 ## Description
