@@ -16,7 +16,7 @@ source.update({name: plate for name, plate in zip(plates_name, plates)})
 # instrument setup
 p10 = instruments.P10_Single(
     mount='right',
-    tip_racks=tipracks_10
+    tip_racks=tipracks_10)
 
 p10.set_flow_rate(aspirate=3, dispense=5)
 
