@@ -16,7 +16,9 @@ source.update({name: plate for name, plate in zip(plates_name, plates)})
 # instrument setup
 p10 = instruments.P10_Single(
     mount='right',
-    tip_racks=tipracks_10)
+    tip_racks=tipracks_10
+
+p10.set_flow_rate(aspirate=3, dispense=5)
 
 p300 = instruments.P300_Single(
     mount='left',
@@ -71,6 +73,16 @@ def update_tip_count(pipette):
             p300_tip_count = 0
 
 
+def vols_list(v):
+    vols = []
+    while v >= 10:
+        vols.append(10)
+        v -= 10
+    if v > 0:
+        vols.append(v)
+    return vols
+
+
 def csv_to_list(csv_string):
     global source
     info_list = [cell for line in csv_string.splitlines() if line
@@ -91,15 +103,14 @@ def csv_to_list(csv_string):
 def custom_mix_sample(volume_list, source_list, dest):
     for vol, source in zip(volume_list, source_list):
         if vol < 30:
-            pipette = p10
-            pipette.set_flow_rate(aspirate=3, dispense=5)
+            x = vols_list(vol)
+            for v in x:
+                p10.transfer(v, source, dest, new_tip='always')
+                update_tip_count(p10)
         else:
-            pipette = p300
-        pipette.pick_up_tip()
-        pipette.transfer(
-            vol, source, dest, new_tip='never')
-        pipette.drop_tip()
-        update_tip_count(pipette)
+            p300.transfer(
+                vol, source, dest, new_tip='always')
+            update_tip_count(p300)
 
 
 def run_custom_protocol(
