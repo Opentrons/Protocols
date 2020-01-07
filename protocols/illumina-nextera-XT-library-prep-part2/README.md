@@ -5,7 +5,7 @@
 
 ## Categories
 * NGS Library Prep
-     * Illumina
+     * Illumina Nextera XT
 
 ## Description
 Part 2 of 4: Clean Up Libraries
