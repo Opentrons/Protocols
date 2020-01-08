@@ -4,9 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Basic Pipetting
-	* Plate Consolidation
-
+* Sample Prep
+	* Cherrypicking
 
 ## Description
 ![Cherrypicking Example](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/cherrypicking/cherrypicking_example.png)
