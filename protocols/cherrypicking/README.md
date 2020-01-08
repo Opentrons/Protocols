@@ -4,9 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Sample Preparation
+* Sample Prep
 	* Cherrypicking
-
 
 ## Description
 ![Cherrypicking Example](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/cherrypicking/cherrypicking_example.png)
