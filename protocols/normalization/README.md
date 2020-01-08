@@ -3,10 +3,8 @@
 ### Author
 [Opentrons](https://opentrons.com/)
 
-### Partner
-
 ## Categories
-* Sample Preparation
+* Sample Prep
 	* Normalization
 
 ## Description

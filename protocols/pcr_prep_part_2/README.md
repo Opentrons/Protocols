@@ -5,7 +5,7 @@
 
 ## Categories
 * PCR
-    * Mastermix Distribution
+    * PCR Prep
 
 ## Description
 Part 2 of 2: Master Mix Distribution and DNA Transfer
