@@ -6,8 +6,8 @@
 ### Partner
 
 ## Categories
-* Molecular Biology
-	* DNA
+* Sample Preparation
+	* Normalization
 
 ## Description
 ![Normalization Example](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/normalization/normalization_example.png)
