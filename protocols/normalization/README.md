@@ -3,11 +3,9 @@
 ### Author
 [Opentrons](https://opentrons.com/)
 
-### Partner
-
 ## Categories
-* Molecular Biology
-	* DNA
+* Sample Prep
+	* Normalization
 
 ## Description
 ![Normalization Example](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/normalization/normalization_example.png)

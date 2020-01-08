@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "pcr_test_plan.ot2.apiv2.py"
+            "custom_chip_PCR_prep.ot2.apiv2.py"
         ],
         "description": [
             "README.md"
@@ -14,7 +14,7 @@
         "hide-from-search": true,
         "skip-tests": false
     },
-    "path": "protocols/pcr_test_plan",
-    "slug": "pcr_test_plan",
+    "path": "protocols/1577-v2",
+    "slug": "1577-v2",
     "status": "ok"
 }

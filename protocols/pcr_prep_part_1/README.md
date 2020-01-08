@@ -4,8 +4,8 @@
 [Opentrons](http://www.opentrons.com/)
 
 ## Categories
-* Sample Prep
-    * PCR
+* PCR
+    * Mastermix Assembly
 
 ## Description
 Part 1 of 2: Master Mix Assembly

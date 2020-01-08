@@ -5,7 +5,7 @@
 
 ## Categories
 * NGS Library Prep
-     * Illumina
+     * Illumina Nextera XT
 
 ## Description
 Part 4 of 4: Pool Libraries
