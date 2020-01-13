@@ -7,9 +7,9 @@ metadata = {
 
 
 def run(ctx):
-    [samples_csv, p20_mount,
+    [samples_csv, p50_mount,
         incubation_temperature] = get_values(  # noqa: F821
-            'samples_csv', 'p20_mount', 'incubation_temperature'
+            'samples_csv', 'p50_mount', 'incubation_temperature'
         )
 
     tc = ctx.load_module('thermocycler')
@@ -20,7 +20,7 @@ def run(ctx):
         'reagent tuberack'
     )
     tipracks = [
-        ctx.load_labware('opentrons_96_tiprack_20ul', slot, '20ul tiprack')
+        ctx.load_labware('opentrons_96_tiprack_300ul', slot, '300ul tiprack')
         for slot in ['2', '3', '5']
     ]
 
@@ -39,16 +39,16 @@ def run(ctx):
     reagents = [tuberack.wells()[i] for i in [1, 2]]
 
     # pipettes
-    p20 = ctx.load_instrument(
-        'p20_single_gen2', p20_mount, tip_racks=tipracks)
+    p50 = ctx.load_instrument(
+        'p50_single', p50_mount, tip_racks=tipracks)
 
     # transfer enzyme
     for s in samples:
-        p20.pick_up_tip()
-        p20.transfer(
+        p50.pick_up_tip()
+        p50.transfer(
             10, enzyme, s.bottom(2), mix_after=(3, 7), new_tip='never')
-        p20.blow_out(s.top(-2))
-        p20.drop_tip()
+        p50.blow_out(s.top(-2))
+        p50.drop_tip()
 
     tc.set_block_temperature(incubation_temperature)
     tc.set_lid_temperature(incubation_temperature)
@@ -59,11 +59,11 @@ def run(ctx):
     # transfer reagents
     for i, r in enumerate(reagents):
         for s in samples:
-            p20.pick_up_tip()
-            p20.transfer(
+            p50.pick_up_tip()
+            p50.transfer(
                 5, r, s.bottom(2), mix_after=(3, 7), new_tip='never')
-            p20.blow_out(s.top(-2))
-            p20.drop_tip()
+            p50.blow_out(s.top(-2))
+            p50.drop_tip()
 
         if i == 0:
             tc.close_lid()
