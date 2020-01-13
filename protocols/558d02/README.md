@@ -18,14 +18,14 @@ This protocol performs a magbead-based peptide enrichment using the Opentrons ma
 * [Nest 12-channel reservoir 15ml #360102](https://labware.opentrons.com/nest_12_reservoir_15ml?category=reservoir)
 * [Nest 1-channel reservoir 195ml #360103](https://labware.opentrons.com/nest_1_reservoir_195ml?category=reservoir)
 * [Opentrons magnetic module](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
-* [Opentrons P50 and P300 multi-channel pipettes](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)
+* [Opentrons P300 GEN2 single-channel pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)
 * [Opentrons 300ul tipracks](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
 
 ## Process
-1. Input the respective mount sides for your P300 and p50 multi-channel pipettes and the number of samples to process.
+1. Input the mount side for your P300 GEN2 single-channel pipette and the number of samples to process.
 2. Download your protocol.
 3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
 4. Set up your deck according to the deck map.
