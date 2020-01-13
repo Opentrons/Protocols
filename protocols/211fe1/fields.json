@@ -7,8 +7,8 @@
   },
   {
     "type": "dropDown",
-    "label": "P20 GEN2 mount",
-    "name": "p20_mount",
+    "label": "P50 single-channel pipette mount",
+    "name": "p50_mount",
     "options": [
       { "label": "left", "value": "left" },
       { "label": "right", "value": "right" }
