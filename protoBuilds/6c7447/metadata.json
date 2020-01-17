@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "thermocycler.ot2.apiv2.py"
+            "6c7447.ot2.apiv2.py"
         ],
         "description": [
             "README.md"
@@ -14,7 +14,7 @@
         "hide-from-search": true,
         "skip-tests": false
     },
-    "path": "protocols/thermocycler",
-    "slug": "thermocycler",
+    "path": "protocols/6c7447",
+    "slug": "6c7447",
     "status": "ok"
 }
