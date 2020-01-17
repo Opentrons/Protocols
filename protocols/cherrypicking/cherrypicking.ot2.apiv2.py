@@ -28,7 +28,7 @@ def run(protocol):
     pipette = protocol.load_instrument(pip_model, pip_mount, tip_racks=tips)
 
     # create labware
-    dest_plate = protocol.load_labware(dp_type, '3', 'Destination Plate')
+    dest_plate = protocol.load_labware(dp_type, '3', 'Destination Plate/Rack')
 
     data = [row.split(',') for row in volumes_csv.strip().splitlines() if row]
 

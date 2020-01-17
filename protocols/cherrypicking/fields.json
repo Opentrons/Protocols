@@ -38,7 +38,8 @@
       {"label": "BioRad 96-Well, 200µL PCR", "value": "biorad_96_wellplate_200ul_pcr"},
       {"label": "Corning 96-Well, 360µL Flat", "value": "corning_96_wellplate_360ul_flat"},
       {"label": "Corning 384-Well, 112µL Flat", "value": "corning_384_wellplate_112ul_flat"},
-      {"label": "USA Scientific 96-Deepwell, 2.4mL", "value": "usascientific_96_wellplate_2.4ml_deep"}
+      {"label": "USA Scientific 96-Deepwell, 2.4mL", "value": "usascientific_96_wellplate_2.4ml_deep"},
+      {"label": "Opentrons 24 Tube Rack with Eppendorf 2 mL Safe-Lock Snapcap", "value": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"}
     ]
   },
   {
@@ -51,7 +52,8 @@
       {"label": "BioRad 96-Well, 200µL PCR", "value": "biorad_96_wellplate_200ul_pcr"},
       {"label": "Corning 96-Well, 360µL Flat", "value": "corning_96_wellplate_360ul_flat"},
       {"label": "Corning 384-Well, 112µL Flat", "value": "corning_384_wellplate_112ul_flat"},
-      {"label": "USA Scientific 96-Deepwell, 2.4mL", "value": "usascientific_96_wellplate_2.4ml_deep"}
+      {"label": "USA Scientific 96-Deepwell, 2.4mL", "value": "usascientific_96_wellplate_2.4ml_deep"},
+      {"label": "Opentrons 24 Tube Rack with Eppendorf 2 mL Safe-Lock Snapcap", "value": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"}
     ]
   },
   {
