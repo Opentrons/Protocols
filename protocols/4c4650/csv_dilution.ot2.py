@@ -9,16 +9,6 @@ metadata = {
 }
 
 # create custom labware
-galipot_name = 'galipot_small'
-if galipot_name not in labware.list():
-    labware.create(
-        galipot_name,
-        grid=(1, 1),
-        spacing=(0, 0),
-        diameter=18,
-        depth=50
-    )
-
 rack_name = '48_well_tuberack'
 if rack_name not in labware.list():
     labware.create(
@@ -40,7 +30,8 @@ example_csv = """1668,
 # load labware
 tipracks1000 = [
     labware.load('opentrons_96_tiprack_1000ul', slot) for slot in ['1', '2']]
-te = labware.load(galipot_name, '3', '1X tris-EDTA buffer').wells(0)
+te = labware.load(
+    'agilent_1_reservoir_290ml', '3', '1X tris-EDTA buffer').wells(0)
 
 
 def run_custom_protocol(
