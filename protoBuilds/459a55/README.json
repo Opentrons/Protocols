@@ -1,0 +1,26 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Proteins & Proteomics": [
+            "PCR preparation"
+        ]
+    },
+    "description": "This protocol performs a PCR preparation by transferring buffer from up to 4 1.5ml microtubes on a temperature module to a PCR plate.\n\n\n\n[]\n\n\n\n4x6 aluminum block on temperature module\n* tubes A1-D1: buffer",
+    "internal": "",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* Proteins & Proteomics\n\t* PCR preparation\n\n",
+        "description": "This protocol performs a PCR preparation by transferring buffer from up to 4 1.5ml microtubes on a temperature module to a PCR plate.\n\n---\n![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)\n\n* []\n\n---\n![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)\n\n4x6 aluminum block on temperature module\n* tubes A1-D1: buffer\n\n",
+        "internal": "",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "process": "1. Input the mount side for your P1000 single-channel pipette, the number of capsules to fill, and the volume to fill each capsule (in ul).\n2. Download your protocol.\n3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).\n4. Set up your deck according to the deck map.\n5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n6. Hit \"Run\".\n\n",
+        "robot": "* [OT-2](https://opentrons.com/ot-2)\n\n",
+        "title": "DNA Normalization and Pooling from .csv"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "process": "\nInput the mount side for your P1000 single-channel pipette, the number of capsules to fill, and the volume to fill each capsule (in ul).\nDownload your protocol.\nUpload your protocol into the OT App.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "robot": [
+        "OT-2"
+    ],
+    "title": "DNA Normalization and Pooling from .csv"
+}
