@@ -1,6 +1,6 @@
 # metadata
 metadata = {
-    'protocolName': 'Cherrypicking from .csv',
+    'protocolName': 'Mass Spec Sample Prep',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.0'
@@ -11,9 +11,10 @@ def run(ctx):
 
     [p300_mount, p20_mount, num_samples] = get_values(  # noqa: F821
         'p300_mount', 'p20_mount', 'num_samples')
+    # [p300_mount, p20_mount, num_samples] = ['left', 'right', 20]
 
     # check
-    if num_samples > 20 or num_samples < 1:
+    if num_samples > 22 or num_samples < 1:
         raise Exception('Invalid number of samples (must be 1-20)')
     if p300_mount == p20_mount:
         raise Exception('Pipette mounts cannot match.')
@@ -23,7 +24,7 @@ def run(ctx):
     plate = tempdeck.load_labware(
         'opentrons_96_aluminumblock_nest_wellplate_100ul')
     tubeblock = ctx.load_labware(
-        'opentrons_24_aluminumblock_nest_1.5ml_screwcap', '2', 'sample tubes')
+        'opentrons_24_aluminumblock_nest_1.5ml_snapcap', '2', 'sample tubes')
     tiprack300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', '5', '300ul tiprack')]
     tiprack20 = [
@@ -36,7 +37,13 @@ def run(ctx):
         'p20_single_gen2', p20_mount, tip_racks=tiprack20)
 
     # samples and reagent setup
-    samples = plate.wells()[:num_samples]
+    starting_tubes = [
+        well for col in tubeblock.columns()[:2] for well in col[:3]] + [
+        well for col in tubeblock.columns()[2:] for well in col]
+    samples = [
+        plate.wells_by_name()[tube.display_name.split(' ')[0]]
+        for tube in starting_tubes
+    ]
     denaturing_sol = tubeblock.wells_by_name()['D1']
     dtt = tubeblock.wells_by_name()['D2']
 
