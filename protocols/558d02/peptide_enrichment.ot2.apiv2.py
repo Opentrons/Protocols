@@ -14,7 +14,7 @@ def run(ctx):
     # retrieve custom parameters
     [p300_single_mount, number_of_samples] = get_values(  # noqa: F821
             'p300_single_mount', 'number_of_samples')
-    # [p300_single_mount, number_of_samples] = ['right', 96]
+    # [p300_single_mount, number_of_samples] = ['right', 1]
 
     # check
     if number_of_samples > 96 or number_of_samples < 1:
@@ -40,10 +40,15 @@ def run(ctx):
     # pipettes
     p300 = ctx.load_instrument(
         'p300_single_gen2', p300_single_mount, tip_racks=tips300)
+    p300.flow_rate.aspirate = 150
+    p300.flow_rate.dispense = 300
 
     # samples and reagents
-    magsamples = magplate.wells()[:number_of_samples]
-    elutionsamples = elutionplate.wells()[:number_of_samples]
+    magsamples = [
+        well for row in magplate.rows() for well in row][:number_of_samples]
+    elutionsamples = [
+        well
+        for row in elutionplate.rows() for well in row][:number_of_samples]
     mgcbb = res12.wells()[:2]
     etoh = res12.wells()[3:9]
     mgceb = res12.wells()[10]
@@ -51,7 +56,13 @@ def run(ctx):
     # add MGC binding buffer
     for i, m in enumerate(magsamples):
         mgcbb_chan = mgcbb[i//48]
-        p300.transfer(200, mgcbb_chan, m.bottom(5), mix_after=(15, 150))
+        p300.pick_up_tip()
+        p300.transfer(200, mgcbb_chan, m.bottom(5), new_tip='never')
+        for _ in range(5):
+            p300.aspirate(150, m)
+            p300.dispense(150, m)
+        p300.blow_out(m.top())
+        p300.drop_tip()
 
     ctx.delay(minutes=5, msg='Incubating off magnet for 5 minutes')
     magdeck.engage()
@@ -90,7 +101,10 @@ def run(ctx):
         p300.aspirate(50, mgceb)
         p300.move_to(m.center())
         p300.dispense(50, disploc)
-        p300.mix(15, 40, m.bottom(1))
+        for _ in range(5):
+            p300.aspirate(40, m.bottom(1))
+            p300.dispense(40, m.bottom(1))
+        p300.blow_out(m.top())
         p300.drop_tip()
 
     ctx.delay(minutes=1, msg='Incubating off magnet for 5 minutes')

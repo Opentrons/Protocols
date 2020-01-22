@@ -22,7 +22,7 @@ def run(ctx):
     rack_1500ul = ctx.load_labware(
         'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', '4')
     tiprack50 = ctx.load_labware(
-        'opentrons_96_tiprack_10ul', '5', '10ul tiprack')
+        'opentrons_96_tiprack_300ul', '5', '300ul tiprack')
 
     # reagent setup
     mm = rack_5ml.wells()[0]
