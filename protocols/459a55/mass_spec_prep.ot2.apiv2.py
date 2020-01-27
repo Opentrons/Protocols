@@ -11,7 +11,7 @@ def run(ctx):
 
     [p300_mount, p20_mount, num_samples] = get_values(  # noqa: F821
         'p300_mount', 'p20_mount', 'num_samples')
-    # [p300_mount, p20_mount, num_samples] = ['left', 'right', 20]
+    # [p300_mount, p20_mount, num_samples] = ['left', 'right', 12]
 
     # check
     if num_samples > 22 or num_samples < 1:
@@ -38,18 +38,18 @@ def run(ctx):
 
     # samples and reagent setup
     starting_tubes = [
-        well for col in tubeblock.columns()[:2] for well in col[:3]] + [
-        well for col in tubeblock.columns()[2:] for well in col]
+        tube for tube in
+        [well for col in tubeblock.columns()[:2] for well in col[:3]] + [
+         well for col in tubeblock.columns()[2:]
+         for well in col]][:num_samples]
     samples = [
         plate.wells_by_name()[tube.display_name.split(' ')[0]]
-        for tube in starting_tubes
-    ]
+        for tube in starting_tubes][:num_samples]
     denaturing_sol = tubeblock.wells_by_name()['D1']
     dtt = tubeblock.wells_by_name()['D2']
 
     # transfer from tubes to plate
-    for tube, well in zip(
-            tubeblock.wells()[:num_samples], plate.wells()[:num_samples]):
+    for tube, well in zip(starting_tubes, samples):
         p300.pick_up_tip()
         p300.transfer(50, tube, well, air_gap=10, new_tip='never')
         p300.blow_out(well.top(-1))
