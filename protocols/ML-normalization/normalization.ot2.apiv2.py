@@ -18,9 +18,9 @@ def run(ctx):
 
     # labware
     source_plate = ctx.load_labware(
-        'biorad_96_wellplate_200ul_pcr', '1', 'source plate')
+        'eppendorf_96_well_on_block', '1', 'source plate')
     destination_plate = ctx.load_labware(
-        'biorad_96_wellplate_200ul_pcr', '2', 'destination plate')
+        'eppendorf_96_well_on_block', '2', 'destination plate')
     tiprack10 = [
         ctx.load_labware('opentrons_96_tiprack_10ul', slot, '10ul tiprack')
         for slot in ['3', '6']
