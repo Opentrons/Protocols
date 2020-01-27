@@ -1,0 +1,102 @@
+{
+    "content": "metadata = {\n    'protocolName': 'Swift 2S Turbo DNA Library Kit Protocol: Part 1/3 - \\\n    Enzymatic Prep & Ligation',\n    'author': 'Opentrons <protocols@opentrons.com>',\n    'source': 'Protocol Library',\n    'apiLevel': '2.1'\n}\n\n\ndef run(protocol):\n    [pip_type, tip_name, samps] = get_values(  # noqa: F821\n    'pip_type', 'tip_name', 'samps')\n\n    # Labware Setup\n    small_tips = protocol.load_labware(tip_name, '5')\n\n    small_pip = protocol.load_instrument(\n        pip_type, 'left', tip_racks=[small_tips])\n\n    tempdeck = protocol.load_module('Temperature Module', '1')\n\n    cool_reagents = tempdeck.load_labware(\n        'opentrons_24_aluminumblock_generic_2ml_screwcap',\n        'Opentrons 24-Well Aluminum Block')\n\n    reaction_plate = protocol.load_labware(\n        'opentrons_96_aluminumblock_nest_wellplate_100ul', '3')\n\n    # Reagent Setup\n    enzymatic_prep_mm = cool_reagents.wells_by_name()['A1']\n    ligation_mm = cool_reagents.wells_by_name()['A2']\n\n    # Destination of input DNA samples and samples on the magnetic module\n    enzymatic_prep_samples = reaction_plate.columns()[0]\n    if samps == '16':\n        enzymatic_prep_samples += reaction_plate.columns()[1]\n\n    # Actively cool the samples and enzymes\n    tempdeck.set_temperature(4)\n\n    # Make sure to vortex mastermix right before the run\n    # Custom transfer function for accounting for various volumes\n    tip_count = 0\n\n    def pick_up():\n        nonlocal tip_count\n\n        if tip_count == 96:\n            small_pip.home()\n            protocol.pause('Out of tips. Please replace tips in slot 5 and \\\n            click RESUME.')\n            small_tips.reset()\n\n        small_pip.pick_up_tip()\n\n        tip_count += 1\n\n    def vol_trans(vol, src, dest):\n        if pip_type[1:3] == '50':\n            if not small_pip.hw_pipette['has_tip']:\n                pick_up()\n            small_pip.transfer(vol, src, dest, new_tip='never')\n        else:\n            if tip_name[-4:-2] == '20':\n                if vol < 20:\n                    pick_up()\n                    small_pip.transfer(vol, src, dest, new_tip='never')\n                else:\n                    while vol >= 15:\n                        if not small_pip.hw_pipette['has_tip']:\n                            pick_up()\n                        small_pip.transfer(15, src, dest, new_tip='never')\n                        vol -= 15\n                        if vol >= 15:\n                            small_pip.drop_tip()\n            else:\n                while vol > 8:\n                    if not small_pip.hw_pipette['has_tip']:\n                        pick_up()\n                    small_pip.transfer(8, src, dest, new_tip='never')\n                    small_pip.drop_tip()\n                    vol -= 8\n                pick_up()\n                small_pip.transfer(vol, src, dest, new_tip='never')\n\n    # Dispense Enzymatic Prep Master Mix to the samples\n    for well in enzymatic_prep_samples:\n        vol_trans(10.5, enzymatic_prep_mm.bottom(0.2), well.top(-12))\n        small_pip.blow_out()\n        small_pip.mix(2, small_pip.max_volume/2, well.top(-13.5))\n        small_pip.move_to(well.top(-12))\n        protocol.delay(seconds=0.5)\n        small_pip.blow_out()\n        small_pip.drop_tip()\n\n    # Run Enzymatic Prep Profile\n    protocol.pause('Enzymatic prep complete. Please place sample plate in \\\n    thermocycler and run program according to Swift 2S Turbo manual. When \\\n    complete, return samples to OT-2 deck for ligation prep and click RESUME.')\n\n    # Transfer Ligation Master Mix to the samples\n\n    pick_up()\n    small_pip.mix(10, small_pip.max_volume/2, ligation_mm)\n    small_pip.blow_out(ligation_mm.top())\n\n    for well in enzymatic_prep_samples:\n        vol_trans(30, ligation_mm, well.top(-7))\n        small_pip.blow_out()\n        small_pip.mix(2, small_pip.max_volume/2, well.top(-13.5))\n        small_pip.blow_out(well.top(-7))\n        small_pip.drop_tip()\n\n    protocol.comment(\"Add samples to the thermocycler for ligation. \\\n    Temp deck will remain on at 4C\")\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "label": "Single-Channel Pipette",
+            "name": "pip_type",
+            "options": [
+                {
+                    "label": "P50 Single",
+                    "value": "p50_single"
+                },
+                {
+                    "label": "P20 Single",
+                    "value": "p20_single_gen2"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Single-Channel Pipette Tip Type",
+            "name": "tip_name",
+            "options": [
+                {
+                    "label": "Opentrons 50\u00b5L/300\u00b5L Tips",
+                    "value": "opentrons_96_tiprack_300ul"
+                },
+                {
+                    "label": "Opentrons 200\u00b5L Filter Tips",
+                    "value": "opentrons_96_filtertiprack_200ul"
+                },
+                {
+                    "label": "Opentrons 10\u00b5L/20\u00b5L Tips",
+                    "value": "opentrons_96_tiprack_20ul"
+                },
+                {
+                    "label": "Opentrons 20\u00b5L Filter Tips",
+                    "value": "opentrons_96_filtertiprack_20ul"
+                },
+                {
+                    "label": "Opentrons 10\u00b5L Filter Tips",
+                    "value": "opentrons_96_filtertiprack_10ul"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Number of Samples",
+            "name": "samps",
+            "options": [
+                {
+                    "label": "8",
+                    "value": "8"
+                },
+                {
+                    "label": "16",
+                    "value": "16"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p50_single"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Opentrons 24-Well Aluminum Block on Temperature Module on 1",
+            "share": false,
+            "slot": "1",
+            "type": "opentrons_24_aluminumblock_generic_2ml_screwcap"
+        },
+        {
+            "name": "Opentrons 96 Well Aluminum Block with NEST Well Plate 100 \u00b5L on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_aluminumblock_nest_wellplate_100ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.1",
+        "author": "Opentrons <protocols@opentrons.com>",
+        "protocolName": "Swift 2S Turbo DNA Library Kit Protocol: Part 1/3 -     Enzymatic Prep & Ligation",
+        "source": "Protocol Library"
+    },
+    "modules": []
+}
