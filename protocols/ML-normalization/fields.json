@@ -1,0 +1,26 @@
+[
+  {
+    "type": "textFile",
+    "label": ".csv input file",
+    "name": "input_csv",
+    "default": "source plate well,destination plate well,volume sample (µl),volume diluent (µl)\nA1,A1,2,28"
+  },
+  {
+    "type": "dropDown",
+    "label": "P10 GEN1 single-channel mount",
+    "name": "p10_mount",
+    "options": [
+      { "label": "right", "value": "right" },
+      { "label": "left", "value": "left" }
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "P50 GEN1 single-channel mount",
+    "name": "p50_mount",
+    "options": [
+      { "label": "left", "value": "left" },
+      { "label": "right", "value": "right" }
+    ]
+  }
+]
