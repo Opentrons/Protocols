@@ -1,0 +1,87 @@
+{
+    "content": "metadata = {\n    'protocolName': 'NEW NAME DONT FORGET',\n    'author': 'Opentrons <protocols@opentrons.com>',\n    'source': 'Protocol Library',\n    'apiLevel': '2.1'\n}\n\n\ndef run(protocol):\n    [p300tips, samps] = get_values(  # noqa: F821\n    'p300tips', 'samps')\n\n    # Labware Setup\n    big_tips = [protocol.load_labware(p300tips, s) for s in ['6', '9']]\n    p300 = protocol.load_instrument('p300_multi', 'right', tip_racks=big_tips)\n\n    rt_reagents = protocol.load_labware(\n        'nest_12_reservoir_15ml', '2')\n\n    magdeck = protocol.load_module('Magnetic Module', '4')\n    mag_plate = magdeck.load_labware('biorad_96_wellplate_200ul_pcr')\n\n    reaction_plate = protocol.load_labware(\n        'opentrons_96_aluminumblock_nest_wellplate_100ul', '3')\n\n    # Reagent Setup\n    beads = rt_reagents.wells_by_name()['A1']\n    ethanol2 = rt_reagents.wells_by_name()['A4']\n    te = rt_reagents.wells_by_name()['A6']\n    waste2 = rt_reagents.wells_by_name()['A12']\n\n    col_no = [3, 5, 3]\n\n    pcr_prep_samples = [reaction_plate['A3']]\n    purified_samples = [reaction_plate['A5']]\n    mag_samples = [mag_plate['A3']]\n\n    plate_list = [pcr_prep_samples, purified_samples, mag_samples]\n\n    if samps == '16':\n        for n, plate in zip(col_no, plate_list):\n            plate.append(reaction_plate.columns()[n][0])\n\n    # PCR Purification\n\n    # Transfer samples to the Magnetic Module\n    p300.flow_rate.aspirate = 75\n    for pcr_samps, mag_samps in zip(pcr_prep_samples, mag_samples):\n        p300.pick_up_tip()\n        p300.aspirate(60, pcr_samps)\n        p300.dispense(60, mag_samps.top(-4))\n        p300.blow_out(mag_samps.top(-4))\n        p300.drop_tip()\n\n    # Transfer beads to the samples in PCR strip\n    p300.pick_up_tip()\n    p300.mix(5, 60, beads)\n\n    for mag_samps in mag_samples:\n        if not p300.hw_pipette['has_tip']:\n            p300.pick_up_tip()\n        p300.flow_rate.aspirate = 10\n        p300.flow_rate.dispense = 10\n        p300.aspirate(32.5, beads)\n        p300.default_speed = 50\n        p300.dispense(32.5, mag_samps.top(-12))\n        p300.flow_rate.aspirate = 50\n        p300.flow_rate.dispense = 50\n        p300.blow_out()\n        p300.mix(10, 60, mag_samps.top(-13.5))\n        p300.blow_out()\n        p300.drop_tip()\n\n    # Incubate for 5 minutes, then engage Magnetic Module and incubate\n    protocol.comment('Incubating for 5 minutes.')\n    protocol.delay(minutes=5)\n\n    magdeck.engage()\n    protocol.delay(minutes=5)\n\n    # Aspirate supernatant\n    for mag_samps in mag_samples:\n        p300.pick_up_tip()\n        p300.aspirate(82.5, mag_samps.bottom(2))\n        p300.dispense(82.5, waste2)\n        p300.drop_tip()\n\n    # Wash samples 2x with 180ul of 80% EtOH\n    for _ in range(2):\n        for mag_samps in mag_samples:\n            if not p300.hw_pipette['has_tip']:\n                p300.pick_up_tip()\n            p300.air_gap(5)\n            p300.aspirate(180, ethanol2)\n            p300.air_gap(10)\n            p300.dispense(200, mag_samps.top(-2))\n        if samps == '8':\n            protocol.delay(seconds=15)\n        for mag_samps in mag_samples:\n            if not p300.hw_pipette['has_tip']:\n                p300.pick_up_tip()\n            p300.air_gap(5)\n            p300.aspirate(190, mag_samps.bottom(1.5))\n            p300.air_gap(10)\n            p300.dispense(210, waste2)\n            p300.drop_tip()\n\n    # Remove residual 80% EtOH\n    for mag_samps in mag_samples:\n        p300.pick_up_tip()\n        p300.aspirate(30, mag_samps.bottom(0.5))\n        p300.air_gap(5)\n        p300.drop_tip()\n\n    protocol.delay(minutes=2)\n    magdeck.disengage()\n\n    # Elute clean product\n    for mag_samps in mag_samples:\n        p300.pick_up_tip()\n        p300.aspirate(22, te)\n        p300.dispense(22, mag_samps.top(-12))\n        p300.blow_out(mag_samps.top())\n        p300.mix(10, 20, mag_samps.top(-13.5))\n        p300.blow_out(mag_samps.top())\n        p300.drop_tip()\n\n    # Incubate for 2 minutes, then engage Magnetic Module\n    protocol.comment(\"Incubating for 2 minutes, \\\n    then engaging Magnetic Module.\")\n    protocol.delay(minutes=2)\n\n    magdeck.engage()\n    protocol.delay(minutes=5)\n\n    # Transfer clean samples to aluminum block plate.\n    for mag_samps, p_samps in zip(mag_samples, purified_samples):\n        p300.pick_up_tip()\n        p300.aspirate(20, mag_samps)\n        p300.dispense(22, p_samps.top(-12))\n        p300.blow_out()\n        p300.drop_tip()\n\n    # Collect clean product\n    magdeck.disengage()\n    protocol.comment(\"Clean up complete. Store samples in 4C or -20C for \\\n    long term storage.\")\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "label": "P300 Multi-Channel Pipette Tip Type",
+            "name": "p300tips",
+            "options": [
+                {
+                    "label": "Opentrons 50\u00b5L/300\u00b5L Tips",
+                    "value": "opentrons_96_tiprack_300ul"
+                },
+                {
+                    "label": "Opentrons 200\u00b5L Filter Tips",
+                    "value": "opentrons_96_filtertiprack_200ul"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Number of Samples",
+            "name": "samps",
+            "options": [
+                {
+                    "label": "8",
+                    "value": "8"
+                },
+                {
+                    "label": "16",
+                    "value": "16"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "right",
+            "name": "p300_multi"
+        }
+    ],
+    "labware": [
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on 2",
+            "share": false,
+            "slot": "2",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Opentrons 96 Well Aluminum Block with NEST Well Plate 100 \u00b5L on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_aluminumblock_nest_wellplate_100ul"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on Magnetic Module on 4",
+            "share": false,
+            "slot": "4",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.1",
+        "author": "Opentrons <protocols@opentrons.com>",
+        "protocolName": "NEW NAME DONT FORGET",
+        "source": "Protocol Library"
+    },
+    "modules": []
+}

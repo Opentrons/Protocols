@@ -1,0 +1,41 @@
+[
+  {
+    "type": "dropDown",
+    "label": "Single-Channel Pipette",
+    "name": "pip_type",
+    "options": [
+      {"label": "P50 Single", "value": "p50_single"},
+      {"label": "P20 Single", "value": "p20_single_gen2"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Single-Channel Pipette Tip Type",
+    "name": "tip_name",
+    "options": [
+      {"label": "Opentrons 50µL/300µL Tips", "value": "opentrons_96_tiprack_300ul"},
+      {"label": "Opentrons 200µL Filter Tips", "value": "opentrons_96_filtertiprack_200ul"},
+      {"label": "Opentrons 10µL/20µL Tips", "value": "opentrons_96_tiprack_20ul"},
+      {"label": "Opentrons 20µL Filter Tips", "value": "opentrons_96_filtertiprack_20ul"},
+      {"label": "Opentrons 10µL Filter Tips", "value": "opentrons_96_filtertiprack_10ul"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "P300 Multi-Channel Pipette Tip Type",
+    "name": "p300tips",
+    "options": [
+      {"label": "Opentrons 50µL/300µL Tips", "value": "opentrons_96_tiprack_300ul"},
+      {"label": "Opentrons 200µL Filter Tips", "value": "opentrons_96_filtertiprack_200ul"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Number of Samples",
+    "name": "samps",
+    "options": [
+      {"label": "8", "value": "8"},
+      {"label": "16", "value": "16"}
+    ]
+  }
+]
