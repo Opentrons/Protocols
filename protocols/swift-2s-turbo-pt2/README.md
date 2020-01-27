@@ -11,16 +11,23 @@
 ## Description
 Part 2 of 3: Ligation & Indexing PCR
 
+
 With this protocol, your [OT-2](https://shop.opentrons.com/collections/ot-2-robot/products/ot-2) can perform the [Swift 2S Turbo DNA Library Kit](https://swiftbiosci.com/swift-2s-turbo-dna-library-kits/). For more information about the Swift 2S Turbo Kit on the OT-2, please see our white paper here: [Rapid high quality next generation sequencing library preparation with Swift 2S Turbo DNA Library Kits on the Opentrons OT-2](https://opentrons-landing-img.s3.amazonaws.com/bundles/fully_automated_ngs_application_note.pdf)
 
-In this part of the protocol, your [OT-2](https://shop.opentrons.com/collections/ot-2-robot/products/ot-2) will complete the ligation process that was begun in part 1 and complete the indexing portion up to the thermocycling step (step 18) as outlined in the [Swift 2S Turbo Kit Guide](https://swiftbiosci.com/wp-content/uploads/2019/11/PRT-001-2S-Turbo-DNA-Library-Kit-Rev-1.pdf).
+
+In this part of the protocol, your OT-2 will complete the ligation process that was begun in [Part 1](http://develop.protocols.opentrons.com/protocol/swift-2s-turbo-pt1) and complete the indexing portion up to the thermocycling step (step 18) as outlined in the [Swift 2S Turbo Kit Guide](https://swiftbiosci.com/wp-content/uploads/2019/11/PRT-001-2S-Turbo-DNA-Library-Kit-Rev-1.pdf).
+
 
 At the completion of this step, you will add your samples to the thermocycler and then continue with Part 3 of the protocol.
 
+
 Links:
-* [Part 1: Enzymatic Prep & Ligation](http://protocols.opentrons.com/protocol/swift-2s-turbo-pt1)
-* [Part 2: Ligation & Indexing PCR](http://protocols.opentrons.com/protocol/swift-2s-turbo-pt2)
-* [Part 3: Indexing PCR & Final Clean-Up](http://protocols.opentrons.com/protocol/swift-2s-turbo-pt3)
+* [Part 1: Enzymatic Prep & Ligation](http://develop.protocols.opentrons.com/protocol/swift-2s-turbo-pt1)
+* [Part 2: Ligation & Indexing PCR](http://develop.protocols.opentrons.com/protocol/swift-2s-turbo-pt2)
+* [Part 3: Indexing PCR & Final Clean-Up](http://develop.protocols.opentrons.com/protocol/swift-2s-turbo-pt3)
+
+
+
 
 
 ---
@@ -48,7 +55,6 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 Slot 1: [Opentrons Temperature Module with 24-Well Aluminum Block](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck) and 2mL Tubes
 * A1: Enzymatic Prep Master Mix
 * A2: Ligation Master Mix
-* A3: Indexing PCR Master Mix **Not used in this part**
 * B1: Indexing Reagent 1; loaded sequentially (Reagent 2 - B2; Reagent 3 - B3...)
 
 
@@ -74,6 +80,7 @@ Slot 6: [Opentrons Tips for P300 Multi-Channel Pipette](https://shop.opentrons.c
 
 
 Slot 9: [Opentrons Tips for P300 Multi-Channel Pipette](https://shop.opentrons.com/collections/opentrons-tips)
+
 
 
 **Using the customizations fields, below set up your protocol.**
