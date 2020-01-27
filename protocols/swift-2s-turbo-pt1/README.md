@@ -11,16 +11,22 @@
 ## Description
 Part 1 of 3: Enzymatic Prep & Ligation
 
-With this protocol, your [OT-2](https://shop.opentrons.com/collections/ot-2-robot/products/ot-2) can perform the [Swift 2S Turbo DNA Library Kit](https://swiftbiosci.com/swift-2s-turbo-dna-library-kits/). For more information about the Swift 2S Turbo Kit on the OT-2, please see our white paper here: [Rapid high quality next generation sequencing library preparation with Swift 2S Turbo DNA Library Kits on the Opentrons OT-2](https://opentrons-landing-img.s3.amazonaws.com/bundles/fully_automated_ngs_application_note.pdf) 
 
-In this part of the protocol, your [OT-2](https://shop.opentrons.com/collections/ot-2-robot/products/ot-2) will complete the enzymatic prep portion and the initial steps of the ligation portion prior to adding your samples to a thermocycler, as described in the [Swift 2S Turbo Kit Guide](https://swiftbiosci.com/wp-content/uploads/2019/11/PRT-001-2S-Turbo-DNA-Library-Kit-Rev-1.pdf).
+With this protocol, your [OT-2](https://shop.opentrons.com/collections/ot-2-robot/products/ot-2) can perform the [Swift 2S Turbo DNA Library Kit](https://swiftbiosci.com/swift-2s-turbo-dna-library-kits/). For more information about the Swift 2S Turbo Kit on the OT-2, please see our white paper here: [Rapid high quality next generation sequencing library preparation with Swift 2S Turbo DNA Library Kits on the Opentrons OT-2](https://opentrons-landing-img.s3.amazonaws.com/bundles/fully_automated_ngs_application_note.pdf)
 
-At the completion of this step, you will add your samples to the thermocycler and then continue with Part 2 of the protocol.
+
+In this part of the protocol, your OT-2 will complete the enzymatic prep portion and the initial steps of the ligation portion prior to adding your samples to a thermocycler, as described in the [Swift 2S Turbo Kit Guide](https://swiftbiosci.com/wp-content/uploads/2019/11/PRT-001-2S-Turbo-DNA-Library-Kit-Rev-1.pdf).
+
+
+At the completion of this step, you will add your samples to the thermocycler and upon completion of thermocycle, continue with [Part 2 of the protocol](http://develop.protocols.opentrons.com/protocol/swift-2s-turbo-pt2).
+
 
 Links:
-* [Part 1: Enzymatic Prep & Ligation](http://protocols.opentrons.com/protocol/swift-2s-turbo-pt1)
-* [Part 2: Ligation & Indexing PCR](http://protocols.opentrons.com/protocol/swift-2s-turbo-pt2)
-* [Part 3: Indexing PCR & Final Clean-Up](http://protocols.opentrons.com/protocol/swift-2s-turbo-pt3)
+* [Part 1: Enzymatic Prep & Ligation](http://develop.protocols.opentrons.com/protocol/swift-2s-turbo-pt1)
+* [Part 2: Ligation & Indexing PCR](http://develop.protocols.opentrons.com/protocol/swift-2s-turbo-pt2)
+* [Part 3: Indexing PCR & Final Clean-Up](http://develop.protocols.opentrons.com/protocol/swift-2s-turbo-pt3)
+
+
 
 
 ---
@@ -39,20 +45,13 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 * Samples
 
 
+
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
 Slot 1: [Opentrons Temperature Module with 24-Well Aluminum Block](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck) and 2mL Tubes
 * A1: Enzymatic Prep Master Mix
 * A2: Ligation Master Mix
-* A3: Indexing PCR Master Mix **Not used in this part**
-
-
-Slot 2: **Not used in this part** [NEST 12-Well Reservoir](https://shop.opentrons.com/collections/reservoirs/products/nest-12-well-reservoir-15-ml)
-* A1: Magnetic Beads
-* A3: 80% Ethanol Solution, Freshly Prepared
-* A4: 80% Ethanol Solution, Freshly Prepared
-* A6: Low EDTA TE Buffer
 
 
 Slot 3: [NEST 96-Well PCR Plate](https://shop.opentrons.com/collections/lab-plates/products/nest-0-1-ml-96-well-pcr-plate-full-skirt) on top of [96-Well Aluminum Block](https://shop.opentrons.com/collections/racks-and-adapters/products/aluminum-block-set) with samples
@@ -60,19 +59,12 @@ Slot 3: [NEST 96-Well PCR Plate](https://shop.opentrons.com/collections/lab-plat
 * 16 Samples: Column 1 & Column 2
 
 
-Slot 4: **Not used in this part** [Opentrons Magnetic Module](https://shop.opentrons.com/collections/hardware-modules/products/magdeck) with [NEST 96-Well PCR Plate](https://shop.opentrons.com/collections/lab-plates/products/nest-0-1-ml-96-well-pcr-plate-full-skirt)
-
-
 Slot 5: [Opentrons Tips](https://shop.opentrons.com/collections/opentrons-tips)
 
 
-Slot 6: **Not used in this part** [Opentrons Tips for P300 Multi-Channel Pipette](https://shop.opentrons.com/collections/opentrons-tips)
 
 
-Slot 9: **Not used in this part** [Opentrons Tips for P300 Multi-Channel Pipette](https://shop.opentrons.com/collections/opentrons-tips)
-
-
-**Using the customizations fields, below set up your protocol.**
+__Using the customizations fields, below set up your protocol.__
 * **Single-Channel Pipette**: Select which pipette (P50 Single-Channel or P20 Single-Channel) to be used for this protocol. **The pipette should be attached to the left mount.**
 * **Single-Channel Pipette Tip Type**: Select which tips (filter/non-filter) to be used for this protocol.
 * **Number of Samples**: Specify the number of samples (8 or 16) you'd like to run.
