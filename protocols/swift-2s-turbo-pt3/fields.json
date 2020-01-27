@@ -1,0 +1,20 @@
+[
+  {
+    "type": "dropDown",
+    "label": "P300 Multi-Channel Pipette Tip Type",
+    "name": "p300tips",
+    "options": [
+      {"label": "Opentrons 50µL/300µL Tips", "value": "opentrons_96_tiprack_300ul"},
+      {"label": "Opentrons 200µL Filter Tips", "value": "opentrons_96_filtertiprack_200ul"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Number of Samples",
+    "name": "samps",
+    "options": [
+      {"label": "8", "value": "8"},
+      {"label": "16", "value": "16"}
+    ]
+  }
+]
