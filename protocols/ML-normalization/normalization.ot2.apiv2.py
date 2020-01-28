@@ -81,7 +81,7 @@ def run(ctx):
         pip = p50 if vol2 > 10 else p10
         if not pip.hw_pipette['has_tip']:
             pip.pick_up_tip()
-        pip.transfer(vol2, r2, d, mix_after=(5, 10), new_tip='never')
+        pip.transfer(vol2, r2, d, new_tip='never')
         pip.blow_out(d.top(-2))
         for p in [p10, p50]:
             if p.hw_pipette['has_tip']:
