@@ -59,17 +59,29 @@ def run(ctx):
 
     # perform normalization
     for s, d, vol_s, vol_w in zip(sources, dests, vols_sample, vols_water):
+        # move larger volume first
+        if vol_s > vol_w:
+            r1, r2 = s, water
+            vol1, vol2 = vol_s, vol_w
+            drop = True
+        else:
+            r1, r2 = water, s
+            vol1, vol2 = vol_w, vol_s
+            drop = False
+
         # pre-transfer diluent
-        pip = p50 if vol_w > 10 else p10
+        pip = p50 if vol1 > 10 else p10
         pip.pick_up_tip()
-        pip.transfer(vol_w, water, d.bottom(2), new_tip='never')
+        pip.transfer(vol1, r1, d.bottom(2), new_tip='never')
         pip.blow_out(d.top(-2))
+        if drop:
+            pip.drop_tip()
 
         # transfer sample
-        pip = p50 if vol_s > 10 else p10
+        pip = p50 if vol2 > 10 else p10
         if not pip.hw_pipette['has_tip']:
             pip.pick_up_tip()
-        pip.transfer(vol_s, s, d, mix_after=(5, 10), new_tip='never')
+        pip.transfer(vol2, r2, d, new_tip='never')
         pip.blow_out(d.top(-2))
         for p in [p10, p50]:
             if p.hw_pipette['has_tip']:

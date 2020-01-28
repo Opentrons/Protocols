@@ -123,7 +123,7 @@ Each field must have a unique `name`, otherwise unexpected behavior may occur.
 
 ### `type`
 
-The `type` field specifies what kind of input field you want. The options are `float`, `int`, `dropDown`, or `textFile`.
+The `type` field specifies what kind of input field you want. The options are `float`, `int`, `str`, `dropDown`, or `textFile`.
 
 ### `label`
 
@@ -190,7 +190,7 @@ Note that unlike other field types, `dropDown` has no `default`. Instead, it wil
 
 This creates a file upload widget.
 
-It's important for PL that you specify a working `default` value so that the protocol can by simulated using that default value.
+It's important for PL that you specify a working `default` value so that the protocol can be simulated using that default value.
 
 ```json
 {
