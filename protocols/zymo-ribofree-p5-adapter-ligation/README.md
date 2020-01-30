@@ -34,10 +34,10 @@ Links:
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
-4x6 aluminum block on temperature module (slot 1)
+4x6 aluminum block on temperature module (slot 1)  
 ![block setup](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/zymo-ribofree/reagent_setup.png)
 
-12-channel reservoir (slot 2)
+12-channel reservoir (slot 2)  
 ![res setup](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/zymo-ribofree/reagent_res.png)
 
 ### Robot

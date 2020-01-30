@@ -33,7 +33,7 @@ Links:
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
-12-channel reservoir (slot 2)
+12-channel reservoir (slot 2)  
 ![res setup](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/zymo-ribofree/cleanup_res.png)
 
 ### Robot
