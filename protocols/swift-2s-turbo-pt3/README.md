@@ -1,4 +1,4 @@
-# Swift 2S Turbo DNA Library Kit Protocol: Part 3/3 - Indexing PCR & Final Clean-Up
+# Swift 2S Turbo DNA Library Kit Protocol: Part 3/3 - Final Clean-Up
 
 ### Author
 [Opentrons](https://opentrons.com/)
