@@ -17,70 +17,74 @@ def run(protocol):
     'ki_dil', 'pan_dil', 'ds_520', 'ds_570', 'ds_540',
     'ds_620', 'ds_650', 'ds_690')
 
-    file_path = '/data/csv/ReagentVols.csv'
-    file_dir = os.path.dirname(file_path)
-    # check for file directory
-    if not os.path.exists(file_dir):
-        os.makedirs(file_dir)
-    # check for file; if not there, create initial volumes csv
-    if not os.path.isfile(file_path):
-        init_cond_dict = {
-          '520': [0, 'A1'],
-          '540': [0, 'B1'],
-          '570': [0, 'C1'],
-          '620': [0, 'D1'],
-          '650': [0, 'E1'],
-          '690': [0, 'F1'],
-          'CD3': [0, 'A2'],
-          'CD4': [0, 'B2'],
-          'CD8': [0, 'C2'],
-          'CD20': [0, 'D2'],
-          'CD56': [0, 'E2'],
-          'CD68': [0, 'F2'],
-          'CD163': [0, 'G2'],
-          'PD1': [0, 'H2'],
-          'PDL1': [0, 'A3'],
-          'FOXP3': [0, 'B3'],
-          'PANCK': [0, 'C3'],
-          'KI67': [0, 'D3'],
-          '520_src': [75, 'A1'],
-          '540_src': [75, 'B1'],
-          '570_src': [75, 'C1'],
-          '620_src': [75, 'D1'],
-          '650_src': [75, 'A2'],
-          '690_src': [75, 'B2'],
-          'CD3_src': [1000, 'A3'],
-          'CD4_src': [100, 'B3'],
-          'CD8_src': [100, 'C3'],
-          'CD20_src': [250, 'D3'],
-          'CD56_src': [1000, 'A4'],
-          'CD68_src': [100, 'B4'],
-          'CD163_src': [100, 'C4'],
-          'PD1_src': [100, 'D4'],
-          'PDL1_src': [100, 'A5'],
-          'FOXP3_src': [500, 'B5'],
-          'PANCK_src': [1000, 'C5'],
-          'KI67_src1': [2000, 'D5'],
-          'KI67_src2': [2000, 'A6'],
-          'KI67_src3': [2000, 'B6'],
-          'KI67_src4': [2000, 'C6'],
-          'KI67_src5': [2000, 'D6'],
-          'ab_dil': [50000, '93'],
-          'amp_dil': [50000, '93'],
-          'p10tip': [0, 'tip'],
-          'p1ktip': [0, 'tip']
-          }
-        with open(file_path, 'w') as outfile:
-            for key in init_cond_dict:
-                outfile.write("%s,%s,%s\n" % (key, init_cond_dict[key][0],
-                              init_cond_dict[key][1]))
+    init_cond_dict = {
+      '520': [0, 'A1'],
+      '540': [0, 'B1'],
+      '570': [0, 'C1'],
+      '620': [0, 'D1'],
+      '650': [0, 'E1'],
+      '690': [0, 'F1'],
+      'CD3': [0, 'A2'],
+      'CD4': [0, 'B2'],
+      'CD8': [0, 'C2'],
+      'CD20': [0, 'D2'],
+      'CD56': [0, 'E2'],
+      'CD68': [0, 'F2'],
+      'CD163': [0, 'G2'],
+      'PD1': [0, 'H2'],
+      'PDL1': [0, 'A3'],
+      'FOXP3': [0, 'B3'],
+      'PANCK': [0, 'C3'],
+      'KI67': [0, 'D3'],
+      '520_src': [75, 'A1'],
+      '540_src': [75, 'B1'],
+      '570_src': [75, 'C1'],
+      '620_src': [75, 'D1'],
+      '650_src': [75, 'A2'],
+      '690_src': [75, 'B2'],
+      'CD3_src': [1000, 'A3'],
+      'CD4_src': [100, 'B3'],
+      'CD8_src': [100, 'C3'],
+      'CD20_src': [250, 'D3'],
+      'CD56_src': [1000, 'A4'],
+      'CD68_src': [100, 'B4'],
+      'CD163_src': [100, 'C4'],
+      'PD1_src': [100, 'D4'],
+      'PDL1_src': [100, 'A5'],
+      'FOXP3_src': [500, 'B5'],
+      'PANCK_src': [1000, 'C5'],
+      'KI67_src1': [2000, 'D5'],
+      'KI67_src2': [2000, 'A6'],
+      'KI67_src3': [2000, 'B6'],
+      'KI67_src4': [2000, 'C6'],
+      'KI67_src5': [2000, 'D6'],
+      'ab_dil': [50000, '93'],
+      'amp_dil': [50000, '93'],
+      'p10tip': [0, 'tip'],
+      'p1ktip': [0, 'tip']
+      }
+    if not protocol.is_simulating():
+        file_path = '/data/csv/ReagentVols.csv'
+        file_dir = os.path.dirname(file_path)
+        # check for file directory
+        if not os.path.exists(file_dir):
+            os.makedirs(file_dir)
+        # check for file; if not there, create initial volumes csv
+        if not os.path.isfile(file_path):
+            with open(file_path, 'w') as outfile:
+                for key in init_cond_dict:
+                    outfile.write("%s,%s,%s\n" % (key, init_cond_dict[key][0],
+                                  init_cond_dict[key][1]))
 
     # create volumes dictionary based on csv file
     volumes_dict = {}
-    with open(file_path) as csv_file:
-        csv_reader = csv.reader(csv_file, delimiter=',')
-        for row in csv_reader:
-            volumes_dict[row[0]] = [float(row[1]), row[2]]
+    if protocol.is_simulating():
+        volumes_dict = init_cond_dict
+    else:
+        with open(file_path) as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=',')
+            for row in csv_reader:
+                volumes_dict[row[0]] = [float(row[1]), row[2]]
 
     # create labware
     tips10 = protocol.load_labware('opentrons_96_tiprack_10ul', '4')
@@ -131,7 +135,10 @@ def run(protocol):
 
         pipp.pick_up_tip()
 
-        tipc += 1
+        if pip == p10:
+            tip10count += 1
+        else:
+            tip1kcount += 1
 
     def ab_d_transfer(vol, dest):
         nonlocal ab_ht
@@ -327,7 +334,8 @@ def run(protocol):
     volumes_dict['amp_dil'][0] = amp_vol
 
     # write updated dictionary to CSV
-    with open(file_path, 'w') as outfile:
-        for key in volumes_dict:
-            outfile.write("%s,%s,%s\n" % (key, volumes_dict[key][0],
-                          volumes_dict[key][1]))
+    if not protocol.is_simulating():
+        with open(file_path, 'w') as outfile:
+            for key in volumes_dict:
+                outfile.write("%s,%s,%s\n" % (key, volumes_dict[key][0],
+                              volumes_dict[key][1]))
