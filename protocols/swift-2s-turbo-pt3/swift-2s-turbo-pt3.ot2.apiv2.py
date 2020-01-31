@@ -1,5 +1,9 @@
+import os
+import csv
+
 metadata = {
-    'protocolName': 'NEW NAME DONT FORGET',
+    'protocolName': 'Swift 2S Turbo DNA Library Kit Protocol: Part 3/3 - \
+    Final Clean-Up',
     'author': 'Opentrons <protocols@opentrons.com>',
     'source': 'Protocol Library',
     'apiLevel': '2.1'
@@ -11,17 +15,60 @@ def run(protocol):
     'p300tips', 'samps')
 
     # Labware Setup
-    big_tips = [protocol.load_labware(p300tips, s) for s in ['6', '9']]
-    p300 = protocol.load_instrument('p300_multi', 'right', tip_racks=big_tips)
+    big_tips1 = protocol.load_labware(p300tips, '3')
+    big_tips2 = protocol.load_labware(p300tips, '6')
+    p300 = protocol.load_instrument('p300_multi', 'right')
 
     rt_reagents = protocol.load_labware(
         'nest_12_reservoir_15ml', '2')
 
     magdeck = protocol.load_module('Magnetic Module', '4')
-    mag_plate = magdeck.load_labware('biorad_96_wellplate_200ul_pcr')
+    mag_plate = magdeck.load_labware(
+        'nest_96_wellplate_100ul_pcr_full_skirt', 'NEST 96-Well Plate')
 
     reaction_plate = protocol.load_labware(
-        'opentrons_96_aluminumblock_nest_wellplate_100ul', '3')
+        'opentrons_96_aluminumblock_nest_wellplate_100ul', '1')
+
+    # Tip tracking between runs
+    if not protocol.is_simulating():
+        file_path = '/data/csv/tiptracking.csv'
+        file_dir = os.path.dirname(file_path)
+        # check for file directory
+        if not os.path.exists(file_dir):
+            os.makedirs(file_dir)
+        # check for file; if not there, create initial tip count tracking
+        if not os.path.isfile(file_path):
+            with open(file_path, 'w') as outfile:
+                outfile.write("0, 0\n")
+
+    tip_count_list = []
+    if protocol.is_simulating():
+        tip_count_list = [0, 0]
+    else:
+        with open(file_path) as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=',')
+            tip_count_list = next(csv_reader)
+
+    spip_count = int(tip_count_list[0])
+    bpip_count = int(tip_count_list[1])
+
+    def big_pick_up():
+        nonlocal bpip_count
+
+        if bpip_count == 24:
+            p300.home()
+            protocol.pause('Out of tips. Please replace tips in slot 5 and \
+            click RESUME.')
+            big_tips1.reset()
+            big_tips2.reset()
+            bpip_count = 0
+
+        if bpip_count <= 11:
+            p300.pick_up_tip(big_tips1.columns()[bpip_count][0])
+        else:
+            p300.pick_up_tip(big_tips2.columns()[bpip_count-12][0])
+
+        bpip_count += 1
 
     # Reagent Setup
     beads = rt_reagents.wells_by_name()['A1']
@@ -44,21 +91,22 @@ def run(protocol):
     # PCR Purification
 
     # Transfer samples to the Magnetic Module
-    p300.flow_rate.aspirate = 75
+    p300.flow_rate.aspirate = 10
     for pcr_samps, mag_samps in zip(pcr_prep_samples, mag_samples):
-        p300.pick_up_tip()
+        big_pick_up()
         p300.aspirate(60, pcr_samps)
         p300.dispense(60, mag_samps.top(-4))
         p300.blow_out(mag_samps.top(-4))
         p300.drop_tip()
 
     # Transfer beads to the samples in PCR strip
-    p300.pick_up_tip()
+    p300.flow_rate.aspirate = 75
+    big_pick_up()
     p300.mix(5, 60, beads)
 
     for mag_samps in mag_samples:
         if not p300.hw_pipette['has_tip']:
-            p300.pick_up_tip()
+            big_pick_up()
         p300.flow_rate.aspirate = 10
         p300.flow_rate.dispense = 10
         p300.aspirate(32.5, beads)
@@ -80,7 +128,7 @@ def run(protocol):
 
     # Aspirate supernatant
     for mag_samps in mag_samples:
-        p300.pick_up_tip()
+        big_pick_up()
         p300.aspirate(82.5, mag_samps.bottom(2))
         p300.dispense(82.5, waste2)
         p300.drop_tip()
@@ -89,7 +137,7 @@ def run(protocol):
     for _ in range(2):
         for mag_samps in mag_samples:
             if not p300.hw_pipette['has_tip']:
-                p300.pick_up_tip()
+                big_pick_up()
             p300.air_gap(5)
             p300.aspirate(180, ethanol2)
             p300.air_gap(10)
@@ -98,7 +146,7 @@ def run(protocol):
             protocol.delay(seconds=15)
         for mag_samps in mag_samples:
             if not p300.hw_pipette['has_tip']:
-                p300.pick_up_tip()
+                big_pick_up()
             p300.air_gap(5)
             p300.aspirate(190, mag_samps.bottom(1.5))
             p300.air_gap(10)
@@ -107,7 +155,7 @@ def run(protocol):
 
     # Remove residual 80% EtOH
     for mag_samps in mag_samples:
-        p300.pick_up_tip()
+        big_pick_up()
         p300.aspirate(30, mag_samps.bottom(0.5))
         p300.air_gap(5)
         p300.drop_tip()
@@ -117,7 +165,7 @@ def run(protocol):
 
     # Elute clean product
     for mag_samps in mag_samples:
-        p300.pick_up_tip()
+        big_pick_up()
         p300.aspirate(22, te)
         p300.dispense(22, mag_samps.top(-12))
         p300.blow_out(mag_samps.top())
@@ -135,7 +183,7 @@ def run(protocol):
 
     # Transfer clean samples to aluminum block plate.
     for mag_samps, p_samps in zip(mag_samples, purified_samples):
-        p300.pick_up_tip()
+        big_pick_up()
         p300.aspirate(20, mag_samps)
         p300.dispense(22, p_samps.top(-12))
         p300.blow_out()
@@ -145,3 +193,9 @@ def run(protocol):
     magdeck.disengage()
     protocol.comment("Clean up complete. Store samples in 4C or -20C for \
     long term storage.")
+
+    # write updated tipcount to CSV
+    new_tip_count = str(spip_count)+", "+str(bpip_count)+"\n"
+    if not protocol.is_simulating():
+        with open(file_path, 'w') as outfile:
+            outfile.write(new_tip_count)
