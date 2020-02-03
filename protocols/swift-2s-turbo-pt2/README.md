@@ -1,4 +1,4 @@
-# Swift 2S Turbo DNA Library Kit Protocol: Part 2/3 - Ligation & Indexing PCR
+# Swift 2S Turbo DNA Library Kit Protocol: Part 2/3 - Ligation Clean-Up and & PCR Prep
 
 ### Author
 [Opentrons](https://opentrons.com/)

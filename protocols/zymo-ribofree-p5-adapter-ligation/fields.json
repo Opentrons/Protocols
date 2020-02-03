@@ -1,8 +1,14 @@
 [
   {
+    "type": "int",
+    "label": "number of samples",
+    "name": "number_of_samples",
+    "default": 96
+  },
+  {
     "type": "dropDown",
-    "label": "P300 GEN2 single-channel mount",
-    "name": "p300_single_mount",
+    "label": "P20 GEN2 single-channel mount",
+    "name": "p20_mount",
     "options": [
       { "label": "right", "value": "right" },
       { "label": "left", "value": "left" }
@@ -10,17 +16,11 @@
   },
   {
     "type": "dropDown",
-    "label": "P1000 GEN2 single-channel mount",
-    "name": "p1000_single_mount",
+    "label": "P50 GEN1 multi-channel mount",
+    "name": "p50_mount",
     "options": [
       { "label": "left", "value": "left" },
       { "label": "right", "value": "right" }
     ]
-  },
-  {
-    "type": "int",
-    "label": "number of samples",
-    "name": "number_of_samples",
-    "default": 96
   }
 ]
