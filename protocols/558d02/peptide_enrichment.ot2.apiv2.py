@@ -12,9 +12,11 @@ metadata = {
 def run(ctx):
 
     # retrieve custom parameters
-    [p300_single_mount, number_of_samples] = get_values(  # noqa: F821
-            'p300_single_mount', 'number_of_samples')
-    # [p300_single_mount, number_of_samples] = ['right', 1]
+    [p300_single_mount, p1000_single_mount,
+        number_of_samples] = get_values(  # noqa: F821
+            'p300_single_mount', 'p1000_single_mount', 'number_of_samples')
+    # [p300_single_mount, p1000_single_mount, number_of_samples] = [
+    #     'right', 'left', 1]
 
     # check
     if number_of_samples > 96 or number_of_samples < 1:
@@ -34,14 +36,22 @@ def run(ctx):
         'thermoscientific_96_wellplate_300ul', '4', 'elution plate')
     tips300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', str(slot))
-        for slot in range(5, 11)
+        for slot in range(5, 9)
+    ]
+    tips1000 = [
+        ctx.load_labware('opentrons_96_tiprack_1000ul', str(slot))
+        for slot in range(9, 12)
     ]
 
     # pipettes
     p300 = ctx.load_instrument(
         'p300_single_gen2', p300_single_mount, tip_racks=tips300)
+    p1000 = ctx.load_instrument(
+        'p1000_single_gen2', p1000_single_mount, tip_racks=tips1000)
     p300.flow_rate.aspirate = 150
     p300.flow_rate.dispense = 300
+    p1000.flow_rate.aspirate = 500
+    p1000.flow_rate.dispense = 10000
 
     # samples and reagents
     magsamples = [
@@ -70,23 +80,25 @@ def run(ctx):
 
     # remove supernatant
     for m in magsamples:
-        p300.transfer(400, m, waste, air_gap=30)
+        p1000.transfer(400, m.bottom(1), waste, air_gap=100)
 
     # etoh washes
     for wash in range(2):
-        p300.pick_up_tip()
+        p1000.pick_up_tip()
         for i, m in enumerate(magsamples):
             etoh_chan = etoh[wash*3:wash*3+3][i//32]
-            p300.transfer(400, etoh_chan, m.top(), air_gap=30, new_tip='never')
+            p1000.transfer(
+                400, etoh_chan, m.top(), air_gap=100, new_tip='never')
 
         ctx.delay(seconds=30, msg='Incubating on magnet for 30 seconds.')
 
         # remove supernatant
         for m in magsamples:
-            if not p300.hw_pipette['has_tip']:
-                p300.pick_up_tip()
-            p300.transfer(400, m, waste, air_gap=30, new_tip='never')
-            p300.drop_tip()
+            if not p1000.hw_pipette['has_tip']:
+                p1000.pick_up_tip()
+            p1000.transfer(
+                400, m.bottom(1), waste, air_gap=100, new_tip='never')
+            p1000.drop_tip()
 
     ctx.delay(minutes=15, msg='Incubating off magnet for 15 minutes')
     magdeck.disengage()
