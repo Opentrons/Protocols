@@ -11,13 +11,8 @@ metadata = {
 
 
 def run(protocol):
-    """[pip_type, tip_name, p300tips, samps] = get_values(  # noqa: F821
-    'pip_type', 'tip_name', 'p300tips', 'samps')"""
-
-    pip_type = 'p50_single'
-    tip_name = 'opentrons_96_tiprack_300ul'
-    p300tips = 'opentrons_96_tiprack_300ul'
-    samps = '8'
+    [pip_type, tip_name, p300tips, samps] = get_values(  # noqa: F821
+    'pip_type', 'tip_name', 'p300tips', 'samps')
 
     # Labware Setup
     small_tips = protocol.load_labware(tip_name, '5')
