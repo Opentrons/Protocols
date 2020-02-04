@@ -4,8 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Molecular Biology
-	* NGS Library Prep
+* NGS Library Prep
+	* Nextera DNA Flex Library Prep
 
 ## Description
 This protocol performs the 'Cleanup Libraries' section of the [Nextera DNA Flex Library Prep protocol](https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/nextera-dna-flex.html).

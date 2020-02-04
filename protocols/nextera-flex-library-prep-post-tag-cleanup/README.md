@@ -4,8 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Molecular Biology
-	* NGS Library Prep
+* NGS Library Prep
+	* Nextera DNA Flex Library Prep
 
 
 ## Description
