@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "nextera_flex_cherrypick.ot2.apiv2.py"
+            "nextera_flex_cleanup_libraries.ot2.apiv2.py"
         ],
         "description": [
             "README.md"
@@ -14,7 +14,7 @@
         "hide-from-search": false,
         "skip-tests": false
     },
-    "path": "protocols/nextera-flex-library-prep-cherrypick-samples",
-    "slug": "nextera-flex-library-prep-cherrypick-samples",
+    "path": "protocols/nextera-flex-library-prep-cleanup-libraries",
+    "slug": "nextera-flex-library-prep-cleanup-libraries",
     "status": "ok"
 }
