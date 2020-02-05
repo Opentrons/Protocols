@@ -27,10 +27,10 @@ Triplicates samples are filled in the PCR plate across rows before moving down c
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
-4x6 tuberack 1 (slot 2):
+4x6 tuberack 1 (slot 4):
 * DNA samples 1-24
 
-4x6 tuberack 2 (slot 4):
+4x6 tuberack 2 (slot 5):
 * DNA samples 24-36
 
 ### Robot
