@@ -48,8 +48,6 @@ def run(ctx):
         'p300_single_gen2', p300_single_mount, tip_racks=tips300)
     p1000 = ctx.load_instrument(
         'p1000_single_gen2', p1000_single_mount, tip_racks=tips1000)
-    p300.flow_rate.aspirate = 150
-    p300.flow_rate.dispense = 300
     p1000.flow_rate.aspirate = 500
     p1000.flow_rate.dispense = 10000
 
@@ -74,13 +72,19 @@ def run(ctx):
         p300.blow_out(m.top())
         p300.drop_tip()
 
+    p300.flow_rate.aspirate = 150
+    p300.flow_rate.dispense = 300
+
     ctx.delay(minutes=5, msg='Incubating off magnet for 5 minutes')
     magdeck.engage()
     ctx.delay(minutes=5, msg='Incubating on magnet for 5 minutes')
 
     # remove supernatant
     for m in magsamples:
-        p1000.transfer(400, m.bottom(1), waste, air_gap=100)
+        p1000.pick_up_tip()
+        p1000.transfer(500, m.bottom(1), waste, air_gap=100, new_tip='never')
+        p1000.blow_out(waste)
+        p1000.drop_tip()
 
     # etoh washes
     for wash in range(2):
@@ -97,7 +101,8 @@ def run(ctx):
             if not p1000.hw_pipette['has_tip']:
                 p1000.pick_up_tip()
             p1000.transfer(
-                400, m.bottom(1), waste, air_gap=100, new_tip='never')
+                500, m.bottom(1), waste, air_gap=100, new_tip='never')
+            p1000.blow_out(waste)
             p1000.drop_tip()
 
     ctx.delay(minutes=15, msg='Incubating off magnet for 15 minutes')
@@ -125,6 +130,6 @@ def run(ctx):
 
     # transfer eluent to new plate
     for m, e in zip(magsamples, elutionsamples):
-        p300.transfer(50, m.bottom(1), e.bottom(3))
+        p300.transfer(65, m.bottom(2.5), e.bottom(3))
 
     magdeck.disengage()
