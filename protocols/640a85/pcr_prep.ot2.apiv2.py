@@ -9,10 +9,10 @@ metadata = {
 
 def run(ctx):
 
-    [p300_multi_mount, p20_single_mount,
-        number_of_samples] = get_values(  # noqa: F821
-            'p300_multi_mount', 'p20_single_mount', 'number_of_samples'
-        )
+    [number_of_samples, pcr_type, p300_multi_mount,
+        p20_single_mount] = get_values(  # noqa: F821
+            'number_of_samples', 'pcr_type', 'p300_multi_mount',
+            'p20_single_mount')
 
     # checks
     if p300_multi_mount == p20_single_mount:
@@ -21,22 +21,23 @@ def run(ctx):
         raise Exception('Invalid number of DNA samples (must be 1-32).')
 
     # load labware
-    plate = ctx.load_labware(
-        'thermoscientific_96_wellplate_300ul', '1', 'PCR plate')
+    tc = ctx.load_module('thermocycler')
+    tc.open_lid()
+    plate = tc.load_labware(pcr_type)
+    tips300 = [
+        ctx.load_labware('opentrons_96_tiprack_300ul', '1', '300ul tips')]
+    tips20 = [
+        ctx.load_labware('opentrons_96_tiprack_20ul', '2', '20ul tips')]
     tuberacks = [
         ctx.load_labware(
             'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap',
             slot,
             'DNA tuberack ' + str(i+1)
         )
-        for i, slot in enumerate(['2', '4'])
+        for i, slot in enumerate(['4', '5'])
     ]
     mm = ctx.load_labware(
-        'nest_12_reservoir_15ml', '3', 'reservoir for mastermix').wells()[0]
-    tips300 = [
-        ctx.load_labware('opentrons_96_tiprack_300ul', '5', '300ul tips')]
-    tips20 = [
-        ctx.load_labware('opentrons_96_tiprack_20ul', '6', '20ul tips')]
+        'nest_12_reservoir_15ml', '6', 'reservoir for mastermix').wells()[0]
 
     # pipettes
     m300 = ctx.load_instrument(
@@ -74,3 +75,30 @@ def run(ctx):
             p20.blow_out(d.top(-2))
             p20.touch_tip(d, v_offset=-3)
         p20.drop_tip()
+
+    # setup and execute thermocylcer profile
+    tc.close_lid()
+    tc.set_lid_temperature(105)
+    profile1 = [{'temperature': 95, 'hold_time_minutes': 10}]
+    profiles2 = [
+        [
+            {'temperature': 96, 'hold_time_seconds': 10},
+            {'temperature': temp, 'hold_time_seconds': 30},
+            {'temperature': 68, 'hold_time_seconds': 60}
+        ] for temp in range(62, 46, -1)
+    ]
+    profile3 = [
+        {'temperature': 96, 'hold_time_seconds': 10},
+        {'temperature': 46, 'hold_time_seconds': 30},
+        {'temperature': 68, 'hold_time_seconds': 60}
+    ]
+    profile4 = [
+        {'temperature': 72, 'hold_time_minutes': 10},
+        {'temperature': 4, 'hold_time_seconds': 10}
+    ]
+    tc.execute_profile(steps=profile1, repetitions=1, block_max_volume=25)
+    for prof in profiles2:
+        tc.execute_profile(
+            steps=prof, repetitions=1, block_max_volume=25)
+    tc.execute_profile(steps=profile3, repetitions=25, block_max_volume=25)
+    tc.execute_profile(steps=profile4, repetitions=1, block_max_volume=25)
