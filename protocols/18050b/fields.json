@@ -10,6 +10,15 @@
   },
   {
     "type": "dropDown",
+    "label": "mother plate type",
+    "name": "mother_plate_type",
+    "options": [
+      { "label": "Corning 384-flatwell", "value": "corning_384_wellplate_112ul_flat" },
+      { "label": "Greiner Bio-One 384-deepwell", "value": "greinerbioone_384_wellplate_240ul" }
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "number of daughter plates (1-6)",
     "name": "num_daughter_plates",
     "options": [
