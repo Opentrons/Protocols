@@ -10,11 +10,10 @@ metadata = {
 
 
 def run(ctx):
-    [p10_multi_mount, num_daughter_plates, start_col, end_col,
-        transfer_volume, dispense_plan] = get_values(  # noqa: F821
-            'p10_multi_mount', 'num_daughter_plates', 'start_col',
-            'end_col', 'transfer_volume', 'dispense_plan'
-        )
+    [p10_multi_mount, mother_plate_type, num_daughter_plates, start_col,
+        end_col, transfer_volume, dispense_plan] = get_values(  # noqa: F821
+            'p10_multi_mount', 'mother_plate_type', 'num_daughter_plates',
+            'start_col', 'end_col', 'transfer_volume', 'dispense_plan')
 
     # checks
     if num_daughter_plates > 6 or num_daughter_plates < 1:
@@ -37,7 +36,7 @@ end must be after start.')
         for i, slot in enumerate(range(4, 4+num_daughter_plates))
         ]
     mother = ctx.load_labware(
-        'corning_384_wellplate_112ul_flat', '11', 'Prestwick (mother plate)')
+        mother_plate_type, '11', 'Prestwick (mother plate)')
 
     # pipette
     p10 = ctx.load_instrument(
