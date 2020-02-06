@@ -20,7 +20,7 @@ def run(protocol):
     small_pip = protocol.load_instrument(
         pip_type, 'left')
 
-    tempdeck = protocol.load_module('Temperature Module', '7')
+    tempdeck = protocol.load_module('Temperature Module', '10')
 
     cool_reagents = tempdeck.load_labware(
         'opentrons_24_aluminumblock_generic_2ml_screwcap',
@@ -60,6 +60,8 @@ def run(protocol):
     enzymatic_prep_samples = reaction_plate.columns()[0]
     if samps == '16':
         enzymatic_prep_samples += reaction_plate.columns()[1]
+        if samps == '24':
+            enzymatic_prep_samples += reaction_plate.columns()[2]
 
     # Actively cool the samples and enzymes
     tempdeck.set_temperature(4)
@@ -116,7 +118,7 @@ def run(protocol):
 
     # Dispense Enzymatic Prep Master Mix to the samples
     for well in enzymatic_prep_samples:
-        vol_trans(10.5, enzymatic_prep_mm.bottom(0.2), well.top(-12))
+        vol_trans(14, enzymatic_prep_mm.bottom(0.2), well.top(-12))
         small_pip.blow_out()
         small_pip.mix(2, small_pip.max_volume/2, well.top(-13.5))
         small_pip.move_to(well.top(-12))
