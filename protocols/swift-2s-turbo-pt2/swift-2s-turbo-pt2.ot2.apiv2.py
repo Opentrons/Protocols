@@ -11,8 +11,8 @@ metadata = {
 
 
 def run(protocol):
-    [pip_type, tip_name, p300tips, samps] = get_values(  # noqa: F821
-    'pip_type', 'tip_name', 'p300tips', 'samps')
+    [pip_type, tip_name, p300tips, samps, a_i] = get_values(  # noqa: F821
+    'pip_type', 'tip_name', 'p300tips', 'samps', 'a_i')
 
     # Labware Setup
     small_tips = protocol.load_labware(tip_name, '5')
@@ -25,7 +25,7 @@ def run(protocol):
     rt_reagents = protocol.load_labware(
         'nest_12_reservoir_15ml', '2')
 
-    tempdeck = protocol.load_module('Temperature Module', '7')
+    tempdeck = protocol.load_module('Temperature Module', '10')
 
     cool_reagents = tempdeck.load_labware(
         'opentrons_24_aluminumblock_generic_2ml_screwcap',
@@ -109,7 +109,7 @@ def run(protocol):
     waste = rt_reagents.wells_by_name()['A11']
 
     ezp = 0
-    pps = 2
+    pps = 3
     ms = 0
 
     enzymatic_prep_samples = reaction_plate.columns()[ezp]
@@ -124,10 +124,18 @@ def run(protocol):
     samp_pl = [reaction_plate, reaction_plate, mag_plate]
     samp_300 = [enzymatic_300, pcr_300, mag_300]
 
-    if samps == '16':
-        for s, t, plate, n in zip(samp_l, samp_300, samp_pl, [ezp, pps, ms]):
+    nums = [ezp, pps, ms]
+
+    samps = int(samps)
+
+    if samps > 8:
+        for s, t, plate, n in zip(samp_l, samp_300, samp_pl, nums):
             s += plate.columns()[n+1]
             t.append(plate.columns()[n+1][0])
+        if samps > 16:
+            for s, t, plate, n in zip(samp_l, samp_300, samp_pl, nums):
+                s += plate.columns()[n+2]
+                t.append(plate.columns()[n+2][0])
 
     # Actively cool the samples and enzymes
     tempdeck.set_temperature(4)
@@ -196,11 +204,11 @@ def run(protocol):
             p300.aspirate(180, ethanol)
             p300.air_gap(5)
             p300.dispense(210, mag_samp.top(-2))
-        if samps == '8':
+        if samps == 8:
             protocol.delay(seconds=15)
         for mag_samp in mag_300:
             if not p300.hw_pipette['has_tip']:
-                p300.pick_up_tip()
+                big_pick_up()
             p300.air_gap(10)
             p300.aspirate(190, mag_samp)
             p300.air_gap(5)
@@ -254,14 +262,37 @@ def run(protocol):
 
     # PCR Prep
     # Transfer Dual Indexes to the samples
-    primers = [well for row in cool_reagents.rows()[1:] for well in row]
+    p8 = ['B'+str(i) for i in range(1, 7)] + ['C1', 'C2']
+    p16 = ['C'+str(i) for i in range(3, 7)] + ['D'+str(i) for i in range(1, 5)]
 
-    for primer, well in zip(primers, pcr_prep_samples):
-        small_pick_up()
-        small_pip.aspirate(5, primer.top(-24))
-        small_pip.dispense(5, well)
-        small_pip.drop_tip()
-
+    if a_i == 'no':
+        protocol.pause('Please manually add indexes to samples now. When done \
+        replace plate and click RESUME.')
+    else:
+        if samps != 24:
+            primers = [cool_reagents[well] for well in p8]
+            if samps == 16:
+                primers += [cool_reagents[well] for well in p16]
+            for primer, well in zip(primers, pcr_prep_samples):
+                small_pick_up()
+                small_pip.aspirate(5, primer.top(-24))
+                small_pip.dispense(5, well)
+                small_pip.drop_tip()
+        if samps == 24:
+            primers8 = [cool_reagents[well] for well in p8]
+            primers16 = [cool_reagents[well] for well in p8+p16]
+            for primer, well in zip(primers16, pcr_prep_samples[:16]):
+                small_pick_up()
+                small_pip.aspirate(5, primer.top(-24))
+                small_pip.dispense(5, well)
+                small_pip.drop_tip()
+            protocol.pause('Please remove initial indexes and replace with \
+            remaining 8 in row B, C1, and C2. Click RESUME when ready.')
+            for primer, well in zip(primers8, pcr_prep_samples[16:]):
+                small_pick_up()
+                small_pip.aspirate(5, primer.top(-24))
+                small_pip.dispense(5, well)
+                small_pip.drop_tip()
     # Transfer PCR Master Mix to the samples
     small_pick_up()
 
@@ -283,7 +314,7 @@ def run(protocol):
                 small_pip.blow_out()
                 small_pip.drop_tip()
                 vol -= mix_vol*0.9
-            small_pip.pick_up_tip()
+            small_pick_up()
             small_pip.aspirate(vol, src)
             small_pip.dispense(vol, dest)
         else:
