@@ -35,7 +35,17 @@
     "name": "samps",
     "options": [
       {"label": "8", "value": "8"},
-      {"label": "16", "value": "16"}
+      {"label": "16", "value": "16"},
+      {"label": "24", "value": "24"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Automate Indexing",
+    "name": "a_i",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
     ]
   }
 ]

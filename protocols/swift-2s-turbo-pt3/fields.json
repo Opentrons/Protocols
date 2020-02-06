@@ -14,7 +14,8 @@
     "name": "samps",
     "options": [
       {"label": "8", "value": "8"},
-      {"label": "16", "value": "16"}
+      {"label": "16", "value": "16"},
+      {"label": "24", "value": "24"}
     ]
   }
 ]

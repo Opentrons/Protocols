@@ -76,17 +76,22 @@ def run(protocol):
     te = rt_reagents.wells_by_name()['A6']
     waste2 = rt_reagents.wells_by_name()['A12']
 
-    col_no = [3, 5, 3]
+    col_no = [3, 6, 3]
 
     pcr_prep_samples = [reaction_plate['A3']]
     purified_samples = [reaction_plate['A5']]
     mag_samples = [mag_plate['A3']]
 
+    samps = int(samps)
+
     plate_list = [pcr_prep_samples, purified_samples, mag_samples]
 
-    if samps == '16':
+    if samps > 8:
         for n, plate in zip(col_no, plate_list):
             plate.append(reaction_plate.columns()[n][0])
+        if samps > 16:
+            for n, plate in zip(col_no, plate_list):
+                plate.append(reaction_plate.columns()[n+1][0])
 
     # PCR Purification
 
@@ -142,7 +147,7 @@ def run(protocol):
             p300.aspirate(180, ethanol2)
             p300.air_gap(10)
             p300.dispense(200, mag_samps.top(-2))
-        if samps == '8':
+        if samps == 8:
             protocol.delay(seconds=15)
         for mag_samps in mag_samples:
             if not p300.hw_pipette['has_tip']:
