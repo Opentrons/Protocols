@@ -1,0 +1,26 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Sample Prep": [
+            "Aliquoting"
+        ]
+    },
+    "description": "This protocol performs a custom sample aliquoting workflow by transferring the contents of 2 15ml tubes to 12 2ml tubes each. 300\u00b5l is transferred to each tube, and height tracking is performed automatically so that the pipette does not submerge into the solution in the 15ml tubes.\n\n\n\nOpentrons 4-in-1 tuberack with 3x5 insert for 15ml tubes\nOpentrons 4-in-1 tuberack with 4x6 insert for 2ml tubes\nOpentrons P1000 GEN2 single-channel electronic pipette\nOpentrons 1000\u00b5l tiprack\n\n\n\n3x5 tuberack for 15ml tubes (slot 1):\n tube A1: solution 1 (filled to at least 10ml mark)\n tube B1: solution 2 (filled to at least 10ml mark)\n4x6 tuberack for 2ml tubes (slot 2):\n rows A and B: tubes to receive solution 1\n rows C and D: tubes to receive solution 2",
+    "internal": "298069",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* Sample Prep\n\t* Aliquoting\n\n",
+        "description": "This protocol performs a custom sample aliquoting workflow by transferring the contents of 2 15ml tubes to 12 2ml tubes each. 300\u00b5l is transferred to each tube, and height tracking is performed automatically so that the pipette does not submerge into the solution in the 15ml tubes.\n\n---\n![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)\n\n* [Opentrons 4-in-1 tuberack](https://shop.opentrons.com/collections/verified-labware/products/tube-rack-set-1) with 3x5 insert for 15ml tubes\n* [Opentrons 4-in-1 tuberack](https://shop.opentrons.com/collections/verified-labware/products/tube-rack-set-1) with 4x6 insert for 2ml tubes\n* [Opentrons P1000 GEN2 single-channel electronic pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette?variant=5984549142557)\n* [Opentrons 1000\u00b5l tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-1000ul-tips)\n\n---\n![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)\n\n3x5 tuberack for 15ml tubes (slot 1):\n* tube A1: solution 1 (filled to at least 10ml mark)\n* tube B1: solution 2 (filled to at least 10ml mark)\n\n4x6 tuberack for 2ml tubes (slot 2):\n* rows A and B: tubes to receive solution 1\n* rows C and D: tubes to receive solution 2\n\n",
+        "internal": "298069\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "process": "1. Input the mount side for your P1000 single-channel pipette, the number of capsules to fill, and the volume to fill each capsule (in ul).\n2. Download your protocol.\n3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).\n4. Set up your deck according to the deck map.\n5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n6. Hit \"Run\".\n\n",
+        "robot": "* [OT-2](https://opentrons.com/ot-2)\n\n",
+        "title": "Sample Aliquoting"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "process": "\nInput the mount side for your P1000 single-channel pipette, the number of capsules to fill, and the volume to fill each capsule (in ul).\nDownload your protocol.\nUpload your protocol into the OT App.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "robot": [
+        "OT-2"
+    ],
+    "title": "Sample Aliquoting"
+}
