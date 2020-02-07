@@ -55,11 +55,11 @@ if trough_name not in labware.list():
         volume=7000
     )
 tr12 = labware.load(trough_name, '2', '12 Channel Starlabs Res')
-deep_blue = tr12.wells(0)
+"""deep_blue = tr12.wells(0)
 mag_clear = tr12.wells(3)
 mag_bead = tr12.wells(5)
 endo_wash = tr12.wells(7)
-zyppy_el = tr12.wells(11)
+zyppy_el = tr12.wells(11)"""
 
 res_name = 'mt_1_reservoir_XXXXml'
 if res_name not in labware.list():
@@ -76,8 +76,8 @@ res1 = labware.load(res_name, '3', 'MT Reservoir w/ Zyppy Wash')
 res2 = labware.load(res_name, '6', 'MT Reservoir w/ Neutralization')
 liq_cont = labware.load(res_name, '7', 'Liquid Waste')
 
-zyppy_wash = res1.wells(0)
-neu_buff = res2.wells(0)
+"""zyppy_wash = res1.wells(0)
+neu_buff = res2.wells(0)"""
 liq_waste = liq_cont.wells(0).top()
 
 reuse_tips = labware.load('opentrons_96_tiprack_300ul', '8')
@@ -87,7 +87,9 @@ tips_once = [labware.load('opentrons_96_tiprack_300ul', str(slot))
 
 def run_custom_protocol(
         p300_mount: StringSelection('right', 'left') = 'right',
-        incubation_time: int = 10
+        incubation_time: int = 10,
+        reservoir_height: int = 0,
+        plate_height: int = 0
         ):
 
     # create pipettes
@@ -95,6 +97,17 @@ def run_custom_protocol(
 
     tip_count = 0
     tip_max = len(tips_once)*12
+
+    rsht = 0-reservoir_height
+    p_ht = 0-plate_height
+
+    deep_blue = tr12.wells(0).bottom(rsht)
+    mag_clear = tr12.wells(3).bottom(rsht)
+    mag_bead = tr12.wells(5).bottom(rsht)
+    endo_wash = tr12.wells(7).bottom(rsht)
+    zyppy_el = tr12.wells(11).bottom(rsht)
+    zyppy_wash = res1.wells(0).bottom(rsht)
+    neu_buff = res2.wells(0).bottom(rsht)
 
     def pick_up():
         nonlocal tip_count
@@ -113,8 +126,8 @@ def run_custom_protocol(
     # add 100ul deep blue lysis buffer
     for tips, mag in zip(used_tips, mag_plate):
         p300.pick_up_tip(tips)
-        p300.transfer(100, deep_blue, mag, new_tip='never')
-        p300.mix(10, 280, mag)
+        p300.transfer(100, deep_blue, mag.bottom(p_ht), new_tip='never')
+        p300.mix(10, 280, mag.bottom(p_ht))
         p300.blow_out(mag.top())
         p300.return_tip()
 
@@ -132,7 +145,7 @@ def run_custom_protocol(
 
         for tips, mag in zip(used_tips, mag_plate):
             p300.pick_up_tip(tips)
-            p300.mix(5, 280, mag)
+            p300.mix(5, 280, mag.bottom(p_ht))
             p300.blow_out(mag.top())
             p300.return_tip()
 
@@ -149,7 +162,8 @@ def run_custom_protocol(
     for src, dest in zip(mag_plate, deep_trans):
         pick_up()
         for _ in range(3):
-            p300.transfer(250, src, dest, new_tip='never')
+            p300.transfer(
+                250, src.bottom(p_ht), dest.bottom(p_ht), new_tip='never')
         p300.blow_out(dest.top())
         p300.drop_tip()
     p300.set_flow_rate(aspirate=150)
@@ -165,9 +179,9 @@ def run_custom_protocol(
         p300.pick_up_tip(tips)
         p300.mix(5, 30, mag_bead)
         p300.set_flow_rate(aspirate=75)
-        p300.transfer(30, mag_bead, mag, new_tip='never')
+        p300.transfer(30, mag_bead, mag.bottom(p_ht), new_tip='never')
         p300.set_flow_rate(aspirate=150)
-        p300.mix(10, 280, mag)
+        p300.mix(10, 280, mag.bottom(p_ht))
         p300.blow_out(mag.top())
         p300.return_tip()
 
@@ -175,7 +189,7 @@ def run_custom_protocol(
         p300.delay(seconds=30)
         for tips, mag in zip(used_tips[3:6], mag_plate):
             p300.pick_up_tip(tips)
-            p300.mix(10, 280, mag)
+            p300.mix(10, 280, mag.bottom(p_ht))
             p300.blow_out(mag.top())
             p300.return_tip()
 
@@ -187,7 +201,7 @@ def run_custom_protocol(
     for mag in mag_plate:
         pick_up()
         for _ in range(3):
-            p300.transfer(260, mag, liq_waste, new_tip='never')
+            p300.transfer(260, mag.bottom(p_ht), liq_waste, new_tip='never')
         p300.drop_tip()
 
     magdeck.disengage()
@@ -195,7 +209,7 @@ def run_custom_protocol(
 
     for mag in mag_plate:
         pick_up()
-        p300.transfer(200, endo_wash, mag, new_tip='never')
+        p300.transfer(200, endo_wash, mag.bottom(p_ht), new_tip='never')
         p300.mix(10, 200, mag)
         p300.blow_out(mag.top())
         p300.drop_tip()
@@ -206,7 +220,7 @@ def run_custom_protocol(
 
     for mag in mag_plate:
         pick_up()
-        p300.transfer(200, mag, liq_waste, new_tip='never')
+        p300.transfer(200, mag.bottom(p_ht), liq_waste, new_tip='never')
         p300.drop_tip()
 
     magdeck.disengage()
@@ -224,7 +238,7 @@ def run_custom_protocol(
         p300.set_flow_rate(aspirate=75)
         for mag in mag_plate:
             pick_up()
-            p300.transfer(400, mag, liq_waste, new_tip='never')
+            p300.transfer(400, mag.bottom(p_ht), liq_waste, new_tip='never')
             p300.drop_tip()
         magdeck.disengage()
 
@@ -239,7 +253,7 @@ def run_custom_protocol(
     for tips, mag in zip(used_tips[6:9], mag_plate):
         p300.pick_up_tip(tips)
         p300.transfer(40, zyppy_el, mag, new_tip='never')
-        p300.mix(10, 40, mag)
+        p300.mix(10, 40, mag.bottom(p_ht))
         p300.blow_out(mag.top())
         p300.return_tip()
 
@@ -247,7 +261,7 @@ def run_custom_protocol(
         p300.delay(seconds=30)
         for tips, mag in zip(used_tips[6:9], mag_plate):
             p300.pick_up_tip(tips)
-            p300.mix(10, 40, mag)
+            p300.mix(10, 40, mag.bottom(p_ht))
             p300.blow_out(mag.top())
             p300.return_tip()
 
@@ -257,7 +271,7 @@ def run_custom_protocol(
 
     for src, dest in zip(mag_plate, elutes):
         pick_up()
-        p300.transfer(30, src, dest, new_tip='never')
+        p300.transfer(30, src.bottom(p_ht), dest, new_tip='never')
         p300.blow_out(dest.top())
         p300.drop_tip()
 
