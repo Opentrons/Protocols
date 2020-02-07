@@ -7,8 +7,8 @@ metadata = {
 
 
 def run(protocol):
-    [pip_type, pip_mnt] = get_values(  # noqa: F821
-    'pip_type', 'pip_mnt')
+    [pip_type, pip_mnt, tt_asp, tt_dsp] = get_values(  # noqa: F821
+    'pip_type', 'pip_mnt', 'tt_asp', 'tt_dsp')
 
     # load labware
     small_tips = protocol.load_labware('generic_96_tiprack_20ul', '1')
@@ -21,8 +21,13 @@ def run(protocol):
         tips = small_tips if vol < 20 else big_tips
         pip.pick_up_tip(tips.wells_by_name()[tip])
         for i in range(2, 5):
-            pip.aspirate(vol, tuberack[init_well].bottom(20))
-            pip.dispense(vol, tuberack[start_letter+str(i)])
+            pip.aspirate(vol, tuberack[init_well].bottom(10))
+            if tt_asp == 'yes':
+                pip.move_to(tuberack[init_well].top(-5))
+                pip.touch_tip()
+            pip.dispense(vol, tuberack[start_letter+str(i)].top(-10))
+            if tt_dsp == 'yes':
+                pip.touch_tip()
         pip.drop_tip()
 
     def multi_trans(start_col, vol, tip):
