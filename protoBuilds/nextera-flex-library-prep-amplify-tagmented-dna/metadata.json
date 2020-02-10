@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "1_first_strand_synth_uni_depletion.ot2.apiv2.py"
+            "nextera_flex_amplify_tagmented_dna.ot2.apiv2.py"
         ],
         "description": [
             "README.md"
@@ -11,10 +11,10 @@
     "flags": {
         "embedded-app": false,
         "feature": false,
-        "hide-from-search": true,
+        "hide-from-search": false,
         "skip-tests": false
     },
-    "path": "protocols/zymo-ribofree-first-strand-cdna-synth-universal-depletion",
-    "slug": "zymo-ribofree-first-strand-cdna-synth-universal-depletion",
+    "path": "protocols/nextera-flex-library-prep-amplify-tagmented-dna",
+    "slug": "nextera-flex-library-prep-amplify-tagmented-dna",
     "status": "ok"
 }
