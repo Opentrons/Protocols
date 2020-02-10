@@ -29,7 +29,7 @@
   {
     "type": "dropDown",
     "label": "Touch Tip (After Dispense)",
-    "name": "tt_dsp",
+    "name": "tt_disp",
     "options": [
       {"label": "No", "value": "no"},
       {"label": "Yes", "value": "yes"}
