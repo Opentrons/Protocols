@@ -16,5 +16,23 @@
       {"label": "Left side", "value": "left"},
       {"label": "Right side", "value": "right"}
     ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Touch Tip (After Aspiration)",
+    "name": "tt_asp",
+    "options": [
+      {"label": "No", "value": "no"},
+      {"label": "Yes", "value": "yes"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Touch Tip (After Dispense)",
+    "name": "tt_disp",
+    "options": [
+      {"label": "No", "value": "no"},
+      {"label": "Yes", "value": "yes"}
+    ]
   }
 ]
