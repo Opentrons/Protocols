@@ -7,8 +7,8 @@ metadata = {
 
 
 def run(protocol):
-    [pip_type, pip_mnt, tt_asp, tt_dsp] = get_values(  # noqa: F821
-    'pip_type', 'pip_mnt', 'tt_asp', 'tt_dsp')
+    [pip_type, pip_mnt, tt_asp, tt_disp] = get_values(  # noqa: F821
+    'pip_type', 'pip_mnt', 'tt_asp', 'tt_disp')
 
     # load labware
     small_tips = protocol.load_labware('generic_96_tiprack_20ul', '1')
@@ -26,7 +26,7 @@ def run(protocol):
                 pip.move_to(tuberack[init_well].top(-5))
                 pip.touch_tip()
             pip.dispense(vol, tuberack[start_letter+str(i)].top(-10))
-            if tt_dsp == 'yes':
+            if tt_disp == 'yes':
                 pip.touch_tip()
         pip.drop_tip()
 
