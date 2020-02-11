@@ -18,7 +18,7 @@ source plate,source well,volume,destination plate,destination well,height offset
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
-* [NEST 96 Well Plate 100 µL PCR Full Skirt](https://shop.opentrons.com/collections/verified-labware/products/nest-0-1-ml-96-well-pcr-plate-full-skirt)
+* [Bio-Rad Hard-Shell® 96-Well PCR Plates 200µl #HSP9601](https://www.bio-rad.com/en-us/sku/hsp9601-hard-shell-96-well-pcr-plates-low-profile-thin-wall-skirted-white-clear?ID=hsp9601)
 * [Opentrons P20 GEN2 single-channel pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette)
 * [Biotix 96 Filter Tiprack 10µl](https://biotix.com/products/utip-for-universal-pipettes/10-%ce%bcl-xl-racked-filtered-sterilized/)
 
