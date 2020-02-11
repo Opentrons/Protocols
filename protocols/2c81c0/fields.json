@@ -1,0 +1,17 @@
+[
+  {
+    "type": "textFile",
+    "label": "cherrypicking .csv input file",
+    "name": "csv_input",
+    "default": "source plate ,well,volume,destination plate ,well,height \n,,,,,\n1,A2,7,5,A4,-4"
+  },
+  {
+    "type": "dropDown",
+    "label": "P20 GEN2 single-channel pipette mount",
+    "name": "p20_mount",
+    "options": [
+      { "label": "right", "value": "right" },
+      { "label": "left", "value": "left" }
+    ]
+  }
+]
