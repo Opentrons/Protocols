@@ -23,16 +23,16 @@ def run(ctx):
     # ]
 
     # load modules and labware
-    magdeck = ctx.load_module('magdeck', '1')
-    mag_plate = magdeck.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
     reagent_res = ctx.load_labware(
-        'nest_12_reservoir_15ml', '2', 'reagent reservoir')
+        'nest_12_reservoir_15ml', '1', 'reagent reservoir')
+    elution_plate = ctx.load_labware(
+        'nest_96_wellplate_100ul_pcr_full_skirt', '2', 'elution PCR plate')
     racks10 = [
         ctx.load_labware('opentrons_96_tiprack_10ul', slot)
         for slot in ['3', '6']
     ]
-    elution_plate = ctx.load_labware(
-        'nest_96_wellplate_100ul_pcr_full_skirt', '4', 'elution PCR plate')
+    magdeck = ctx.load_module('magdeck', '4')
+    mag_plate = magdeck.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
     racks300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
         for slot in ['5', '9']
@@ -158,8 +158,12 @@ stored at ≤ 4°C overnight or ≤ -20°C for long-term storage.'
     supernatant_vol = start_vol + bead_vol
     for i, m in enumerate(mag_samples):
         pick_up(m300)
-        m300.transfer(
-            supernatant_vol*1.1, m, waste[i//6], air_gap=30, new_tip='never')
+        m300.aspirate(supernatant_vol*1.1, m)
+        m300.air_gap(30)
+        m300.dispense(supernatant_vol*1.1+30, waste[i//6])
+        m300.air_gap(30)
+        # m300.transfer(
+        #     supernatant_vol*1.1, m, waste[i//6], air_gap=30, new_tip='never')
         m300.drop_tip()
 
     # 2x washes
@@ -178,13 +182,17 @@ stored at ≤ 4°C overnight or ≤ -20°C for long-term storage.'
             if not m300.hw_pipette['has_tip']:
                 pick_up(m300)
             chan = (i+wash*12)//8
-            m300.transfer(
-                210,
-                m,
-                waste[chan+2],
-                air_gap=30,
-                new_tip='never'
-            )
+            # m300.transfer(
+            #     210,
+            #     m,
+            #     waste[chan+2],
+            #     air_gap=30,
+            #     new_tip='never'
+            # )
+            m300.aspirate(supernatant_vol*1.1, m)
+            m300.air_gap(30)
+            m300.dispense(supernatant_vol*1.1+30, waste[chan+2])
+            m300.air_gap(30)
             m300.drop_tip()
 
     magdeck.disengage()
@@ -209,7 +217,7 @@ stored at ≤ 4°C overnight or ≤ -20°C for long-term storage.'
 
     if inc_temp and inc_time:
         tempdeck.set_temperature(inc_temp)
-        m10.move_to(tempplate.wells()[0].top(10))
+        # m10.move_to(tempplate.wells()[0].top(10))
         ctx.pause('Transfer plate from magnetic module to aluminum block on \
 temperature module. Once you resume, the plate will incubate for \
 ' + str(inc_temp) + ' minutes.')
@@ -229,6 +237,7 @@ on temperature module.')
         m10.drop_tip()
 
     magdeck.disengage()
+    tempdeck.deactivate()
     ctx.comment(end_msg)
 
     # track final used tip

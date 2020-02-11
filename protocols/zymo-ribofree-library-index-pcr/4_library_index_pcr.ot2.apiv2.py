@@ -36,7 +36,8 @@ def run(ctx):
         for slot in ['3', '5']
     ]
     index_plate = ctx.load_labware(
-        'nest_96_wellplate_100ul_pcr_full_skirt', '4', 'UDI primer plate')
+        'opentrons_96_aluminumblock_nest_wellplate_100ul',
+        '4', 'UDI primer plate')
     racks50 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
         for slot in ['6', '9']
@@ -46,6 +47,8 @@ def run(ctx):
     if p20_mount == p50_mount:
         raise Exception('Pipette mounts cannot match.')
     p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tip_racks=racks20)
+    p20.flow_rate.aspirate = 10
+    p20.flow_rate.dispense = 20
     m50 = ctx.load_instrument('p50_multi', p50_mount, tip_racks=racks50)
 
     file_path = '/data/csv/tip_track.json'
@@ -110,8 +113,11 @@ def run(ctx):
 
     # transfer taq premix
     for s in samples:
-        pick_up(p20)
-        p20.transfer(25, taq_premix, s.top(), new_tip='never')
+        for i, vol in enumerate([15, 10]):
+            pick_up(p20)
+            p20.transfer(vol, taq_premix, s.bottom(1), new_tip='never')
+            if i == 0:
+                p20.drop_tip()
         p20.mix(3, 15, s)
         p20.blow_out(s.top(-2))
         p20.drop_tip()
@@ -147,7 +153,7 @@ def run(ctx):
     for m in samples_multi:
         pick_up(m50)
         m50.transfer(50, dna_eb, m, new_tip='never')
-        m50.mix(5, 40, s)
+        m50.mix(5, 40, m)
         m50.blow_out(m.top(-2))
         m50.drop_tip()
 
