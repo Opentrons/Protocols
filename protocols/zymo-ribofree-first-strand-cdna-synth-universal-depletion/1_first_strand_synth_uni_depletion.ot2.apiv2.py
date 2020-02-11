@@ -1,4 +1,5 @@
 import math
+import json
 
 metadata = {
     'protocolName': 'Zymo-Seq RiboFree™ Total RNA Library Prep First-Strand \
@@ -177,3 +178,13 @@ resuming.')
 
     ctx.comment('Carefully remove sample plate from thermocycler and proceed \
 with cleanup.')
+
+    # track final used tip
+    if not ctx.is_simulating():
+        file_path = '/data/csv/tip_track.json'
+        # file_path = '/protocols/tip_track.json'
+        data = {
+            'tips20': tip20_count
+        }
+        with open(file_path, 'w') as outfile:
+            json.dump(data, outfile)

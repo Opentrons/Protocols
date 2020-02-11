@@ -1,4 +1,6 @@
 import math
+import json
+import os
 
 metadata = {
     'protocolName': 'Zymo-Seq RiboFree™ Total RNA Library Prep P5 Adapter \
@@ -38,6 +40,46 @@ def run(ctx):
     p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tip_racks=racks20)
     m50 = ctx.load_instrument('p50_multi', p50_mount, tip_racks=racks50)
 
+    file_path = '/data/csv/tip_track.json'
+    # file_path = 'protocols/tip_track.json'
+    if os.path.isfile(file_path):
+        with open(file_path) as json_file:
+            data = json.load(json_file)
+            if 'tips20' in data:
+                tip20_count = data['tips20']
+            else:
+                tip20_count = 0
+            if 'tips50' in data:
+                tip50_count = data['tips50']
+            else:
+                tip50_count = 0
+    else:
+        tip20_count = 0
+        tip50_count = 0
+
+    all_tips20 = [tip for rack in racks20 for tip in rack.wells()]
+    all_tips50 = [tip for rack in racks50 for tip in rack.rows()[0]]
+    tip20_max = len(all_tips20)
+    tip50_max = len(all_tips50)
+
+    def pick_up(pip):
+        nonlocal tip20_count
+        nonlocal tip50_count
+        if pip == p20:
+            if tip20_count == tip20_max:
+                ctx.pause('Replace tipracks before resuming.')
+                tip20_count = 0
+                [rack.reset() for rack in racks20]
+            pip.pick_up_tip(all_tips20[tip20_count])
+            tip20_count += 1
+        else:
+            if tip50_count == tip50_max:
+                ctx.pause('Replace tipracks before resuming.')
+                tip50_count = 0
+                [rack.reset() for rack in racks50]
+            pip.pick_up_tip(all_tips50[tip50_count])
+            tip50_count += 1
+
     # reagents and sample setup
     if number_of_samples > 96 or number_of_samples < 1:
         raise Exception('Invalid number of samples (must be 1-96).')
@@ -52,7 +94,7 @@ def run(ctx):
 
     # transfer L3
     for s in samples:
-        p20.pick_up_tip()
+        pick_up(p20)
         p20.transfer(10, l3, s, mix_after=(3, 15), new_tip='never')
         p20.blow_out(s.top(-2))
         p20.drop_tip()
@@ -70,7 +112,7 @@ def run(ctx):
     # transer DNA elution buffer
     ctx.pause('Briefly spin down plate before resuming.')
     for m in samples_multi:
-        m50.pick_up_tip()
+        pick_up(m50)
         m50.transfer(80, dna_eb, m.top(), new_tip='never', air_gap=10)
         m50.mix(5, 40, m)
         m50.blow_out(m.top(-2))
@@ -78,3 +120,12 @@ def run(ctx):
 
     ctx.comment('Carefully remove sample plate from thermocycler and proceed \
 with cleanup.')
+
+    # track final used tip
+    file_path = '/data/csv/tip_track.json'
+    data = {
+        'tips20': tip20_count,
+        'tips50': tip50_count
+    }
+    with open(file_path, 'w') as outfile:
+        json.dump(data, outfile)
