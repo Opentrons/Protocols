@@ -40,6 +40,8 @@ def run(ctx):
     if p20_mount == p50_mount:
         raise Exception('Pipette mounts cannot match.')
     p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tip_racks=racks20)
+    p20.flow_rate.aspirate = 10
+    p20.flow_rate.dispense = 20
     m50 = ctx.load_instrument('p50_multi', p50_mount, tip_racks=racks50)
 
     # reagents and sample setup
