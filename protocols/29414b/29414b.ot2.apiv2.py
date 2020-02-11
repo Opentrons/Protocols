@@ -34,8 +34,13 @@ def run(protocol):
         tips = small_tips if vol < 20 else big_tips
         pip.pick_up_tip(tips.wells_by_name()[tip])
         for i in range(start_col+1, start_col+4):
-            pip.aspirate(vol, tuberack['A'+str(start_col)].bottom(20))
-            pip.dispense(vol, tuberack['A'+str(i)])
+            pip.aspirate(vol, tuberack['A'+str(start_col)].bottom(10))
+            if tt_asp == 'yes':
+                pip.move_to(tuberack['A'+str(start_col)].top(-5))
+                pip.touch_tip()
+            pip.dispense(vol, tuberack['A'+str(i)].top(-10))
+            if tt_asp == 'yes':
+                pip.touch_tip()
         pip.drop_tip()
 
     vols = [5, 50, 200]
