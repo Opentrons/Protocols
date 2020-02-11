@@ -1,4 +1,6 @@
 import math
+import json
+import os
 
 metadata = {
     'protocolName': 'Zymo-Seq RiboFree™ Total RNA Library Prep Library Index \
@@ -31,10 +33,11 @@ def run(ctx):
     dna_eb = reagent_res.wells()[1]
     racks20 = [
         ctx.load_labware('opentrons_96_tiprack_20ul', slot)
-        for slot in ['3']
+        for slot in ['3', '5']
     ]
     index_plate = ctx.load_labware(
-        'nest_96_wellplate_100ul_pcr_full_skirt', '4', 'UDI primer plate')
+        'opentrons_96_aluminumblock_nest_wellplate_100ul',
+        '4', 'UDI primer plate')
     racks50 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
         for slot in ['6', '9']
@@ -44,7 +47,49 @@ def run(ctx):
     if p20_mount == p50_mount:
         raise Exception('Pipette mounts cannot match.')
     p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tip_racks=racks20)
+    p20.flow_rate.aspirate = 10
+    p20.flow_rate.dispense = 20
     m50 = ctx.load_instrument('p50_multi', p50_mount, tip_racks=racks50)
+
+    file_path = '/data/csv/tip_track.json'
+    # file_path = 'protocols/tip_track.json'
+    if os.path.isfile(file_path):
+        with open(file_path) as json_file:
+            data = json.load(json_file)
+            if 'tips20' in data:
+                tip20_count = data['tips20'] % 96
+            else:
+                tip20_count = 0
+            if 'tips50' in data:
+                tip50_count = data['tips50'] % 96
+            else:
+                tip50_count = 0
+    else:
+        tip20_count = 0
+        tip50_count = 0
+
+    all_tips20 = [tip for rack in racks20 for tip in rack.wells()]
+    all_tips50 = [tip for rack in racks50 for tip in rack.rows()[0]]
+    tip20_max = len(all_tips20)
+    tip50_max = len(all_tips50)
+
+    def pick_up(pip):
+        nonlocal tip20_count
+        nonlocal tip50_count
+        if pip == p20:
+            if tip20_count == tip20_max:
+                ctx.pause('Replace tipracks before resuming.')
+                tip20_count = 0
+                [rack.reset() for rack in racks20]
+            pip.pick_up_tip(all_tips20[tip20_count])
+            tip20_count += 1
+        else:
+            if tip50_count == tip50_max:
+                ctx.pause('Replace tipracks before resuming.')
+                tip50_count = 0
+                [rack.reset() for rack in racks50]
+            pip.pick_up_tip(all_tips50[tip50_count])
+            tip50_count += 1
 
     # reagents and sample setup
     if number_of_samples > 96 or number_of_samples < 1:
@@ -60,7 +105,7 @@ def run(ctx):
 
     # transfer UDI primers
     for m in samples_multi:
-        m50.pick_up_tip()
+        pick_up(m50)
         m50.transfer(
             5, udi_primers, m, mix_after=(3, 15), air_gap=5, new_tip='never')
         m50.blow_out(m.top(-2))
@@ -68,8 +113,11 @@ def run(ctx):
 
     # transfer taq premix
     for s in samples:
-        p20.pick_up_tip()
-        p20.transfer(25, taq_premix, s.top(), new_tip='never')
+        for i, vol in enumerate([15, 10]):
+            pick_up(p20)
+            p20.transfer(vol, taq_premix, s.bottom(1), new_tip='never')
+            if i == 0:
+                p20.drop_tip()
         p20.mix(3, 15, s)
         p20.blow_out(s.top(-2))
         p20.drop_tip()
@@ -103,9 +151,9 @@ def run(ctx):
 
     # transfer elution buffer
     for m in samples_multi:
-        m50.pick_up_tip()
+        pick_up(m50)
         m50.transfer(50, dna_eb, m, new_tip='never')
-        m50.mix(5, 40, s)
+        m50.mix(5, 40, m)
         m50.blow_out(m.top(-2))
         m50.drop_tip()
 
