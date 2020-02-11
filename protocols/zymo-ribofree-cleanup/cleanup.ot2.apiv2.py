@@ -100,8 +100,8 @@ def run(ctx):
         bead_vol = 150
         elution_vol = 10
         tempdeck = ctx.load_module('tempdeck', '7')
-        tempplate = tempdeck.load_labware(
-            'opentrons_96_aluminumblock_nest_wellplate_100ul')
+        # tempplate = tempdeck.load_labware(
+        #     'opentrons_96_aluminumblock_nest_wellplate_100ul')
         inc_temp = 95
         inc_time = 5
         end_msg = 'This is a safe stopping point. Cleaned-up DNA can be safely \
@@ -218,6 +218,7 @@ stored at ≤ 4°C overnight or ≤ -20°C for long-term storage.'
     if inc_temp and inc_time:
         tempdeck.set_temperature(inc_temp)
         # m10.move_to(tempplate.wells()[0].top(10))
+        m10.home()
         ctx.pause('Transfer plate from magnetic module to aluminum block on \
 temperature module. Once you resume, the plate will incubate for \
 ' + str(inc_temp) + ' minutes.')
