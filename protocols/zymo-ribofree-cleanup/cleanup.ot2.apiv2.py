@@ -1,4 +1,6 @@
 import math
+import json
+import os
 from opentrons.types import Point
 
 metadata = {
@@ -39,8 +41,48 @@ def run(ctx):
     # pipettes
     if p10_mount == p300_mount:
         raise Exception('Pipette mounts cannot match.')
-    m10 = ctx.load_instrument('p10_multi', p10_mount, tip_racks=racks10)
-    m300 = ctx.load_instrument('p300_multi', p300_mount, tip_racks=racks300)
+    m10 = ctx.load_instrument('p10_multi', p10_mount)
+    m300 = ctx.load_instrument('p300_multi', p300_mount)
+
+    file_path = '/data/csv/tip_track.json'
+    # file_path = 'protocols/tip_track.json'
+    if os.path.isfile(file_path):
+        with open(file_path) as json_file:
+            data = json.load(json_file)
+            if 'tips10' in data:
+                tip10_count = data['tips10']
+            else:
+                tip10_count = 0
+            if 'tips300' in data:
+                tip300_count = data['tips300']
+            else:
+                tip300_count = 0
+    else:
+        tip10_count = 0
+        tip300_count = 0
+
+    all_tips10 = [tip for rack in racks10 for tip in rack.rows()[0]]
+    all_tips300 = [tip for rack in racks300 for tip in rack.rows()[0]]
+    tip10_max = len(all_tips10)
+    tip300_max = len(all_tips300)
+
+    def pick_up(pip):
+        nonlocal tip10_count
+        nonlocal tip300_count
+        if pip == m10:
+            if tip10_count == tip10_max:
+                ctx.pause('Replace 10µl tipracks before resuming.')
+                tip10_count = 0
+                [rack.reset() for rack in racks300]
+            pip.pick_up_tip(all_tips10[tip10_count])
+            tip10_count += 1
+        else:
+            if tip300_count == tip300_max:
+                ctx.pause('Replace tipracks before resuming.')
+                tip300_count = 0
+                [rack.reset() for rack in racks300]
+            pip.pick_up_tip(all_tips300[tip300_count])
+            tip300_count += 1
 
     # reagents and sample setup
     if number_of_samples > 96 or number_of_samples < 1:
@@ -89,28 +131,15 @@ stored at ≤ 4°C overnight or ≤ −20°C for up to one week.'
         end_msg = 'The eluate is your final RNA-Seq library 3. Libraries may be \
 stored at ≤ 4°C overnight or ≤ -20°C for long-term storage.'
 
-    tip300_count = 0
-    tip300_max = len(racks300*12)
-
-    def pick_up():
-        nonlocal tip300_count
-        if tip300_count == tip300_max:
-            ctx.pause('Replace 20µl tipracks in slots 3 and 4 before \
-resuming.')
-            m300.reset_tipracks()
-            tip300_count = 0
-        tip300_count += 1
-        m300.pick_up_tip()
-
     """ Appendix A: Select-a-Size MagBead Clean-up Protocol """
     # mix and transfer beads
-    pick_up()
+    pick_up(m300)
     for _ in range(10):
         m300.aspirate(250, beads.bottom(2))
         m300.dispense(250, beads.bottom(20))
     for m in mag_samples:
         if not m300.hw_pipette['has_tip']:
-            pick_up()
+            pick_up(m300)
         m300.transfer(
             bead_vol,
             beads,
@@ -128,14 +157,14 @@ resuming.')
     ctx.delay(minutes=3, msg='Incubating on magnet for 3 minutes.')
     supernatant_vol = start_vol + bead_vol
     for i, m in enumerate(mag_samples):
-        pick_up()
+        pick_up(m300)
         m300.transfer(
             supernatant_vol*1.1, m, waste[i//6], air_gap=30, new_tip='never')
         m300.drop_tip()
 
     # 2x washes
     for wash in range(2):
-        pick_up()
+        pick_up(m300)
         for i, m in enumerate(mag_samples):
             chan = (i+wash*12)//8
             m300.transfer(
@@ -147,7 +176,7 @@ resuming.')
             )
         for i, m in enumerate(mag_samples):
             if not m300.hw_pipette['has_tip']:
-                pick_up()
+                pick_up(m300)
             chan = (i+wash*12)//8
             m300.transfer(
                 210,
@@ -165,7 +194,7 @@ resuming.')
     for i, m in enumerate(mag_samples):
         side = 1 if i % 2 == 0 else -1
         loc = m.bottom().move(Point(x=side*m.diameter/2*0.9, y=0, z=2))
-        m10.pick_up_tip()
+        pick_up(m10)
         if elution_vol > 10:
             pre_vol = elution_vol - 10
             m10.transfer(pre_vol, dna_eb, m.top(), new_tip='never')
@@ -193,7 +222,7 @@ on temperature module.')
 
     # transfer elution to new plate
     for m, e in zip(mag_samples, elution_samples):
-        m10.pick_up_tip()
+        pick_up(m10)
         m10.transfer(elution_vol, m, e, new_tip='never')
         m10.blow_out(e.top(-2))
         m10.air_gap(5)
@@ -201,3 +230,20 @@ on temperature module.')
 
     magdeck.disengage()
     ctx.comment(end_msg)
+
+    # track final used tip
+    if not ctx.is_simulating():
+        file_path = '/data/csv/tip_track.json'
+        # file_path = '/protocols/tip_track.json'
+        if cleanup_stage == 'post-library index PCR':
+            data = {
+                'tips10': 0,
+                'tips300': 0
+            }
+        else:
+            data = {
+                'tips10': tip10_count,
+                'tips300': tip300_count
+            }
+        with open(file_path, 'w') as outfile:
+            json.dump(data, outfile)
