@@ -13,23 +13,5 @@
       { "label": "left", "value": "left" },
       { "label": "right", "value": "right" }
     ]
-  },
-  {
-    "type": "dropDown",
-    "label": "using P50 multi-channel pipette",
-    "name": "using_p50_multi",
-    "options": [
-      { "label": "no", "value": "no" },
-      { "label": "yes", "value": "yes" }
-    ]
-  },
-  {
-    "type": "dropDown",
-    "label": "P50 multi-channel mount (if applicable)",
-    "name": "p50_multi_mount_if_applicable",
-    "options": [
-      { "label": "right", "value": "right" },
-      { "label": "left", "value": "left" }
-    ]
   }
 ]

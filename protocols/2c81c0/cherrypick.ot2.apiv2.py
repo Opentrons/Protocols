@@ -36,11 +36,11 @@ def run(ctx):
         vol, h_offset = float(vol), float(h_offset)
         if int(s_slot) not in ctx.loaded_labwares:
             ctx.load_labware(
-                'nest_96_wellplate_100ul_pcr_full_skirt', s_slot,
+                'biorad_96_wellplate_200ul_pcr', s_slot,
                 'source plate ' + s_slot)
         if int(d_slot) not in ctx.loaded_labwares:
             ctx.load_labware(
-                'nest_96_wellplate_100ul_pcr_full_skirt', d_slot,
+                'biorad_96_wellplate_200ul_pcr', d_slot,
                 'destination plate ' + d_slot)
         source = ctx.loaded_labwares[int(s_slot)].wells_by_name()[s_well]
         dest = ctx.loaded_labwares[int(d_slot)].wells_by_name()[d_well]
