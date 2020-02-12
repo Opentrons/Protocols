@@ -40,6 +40,7 @@ def run(ctx):
     p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tip_racks=racks20)
     p20.flow_rate.aspirate = 10
     p20.flow_rate.dispense = 20
+    p20.flow_rate.blow_out = 30
     m50 = ctx.load_instrument('p50_multi', p50_mount, tip_racks=racks50)
 
     file_path = '/data/csv/tip_track.json'
@@ -124,7 +125,7 @@ def run(ctx):
 with cleanup.')
 
     # track final used tip
-    file_path = '/data/csv/tip_track.json'
+    # file_path = '/data/csv/tip_track.json'
     data = {
         'tips20': tip20_count,
         'tips50': tip50_count
