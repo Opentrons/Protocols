@@ -29,13 +29,13 @@ def run(ctx):
         'nest_96_wellplate_100ul_pcr_full_skirt', '2', 'elution PCR plate')
     racks10 = [
         ctx.load_labware('opentrons_96_tiprack_10ul', slot)
-        for slot in ['3', '6']
+        for slot in ['3', '5']
     ]
     magdeck = ctx.load_module('magdeck', '4')
     mag_plate = magdeck.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
     racks300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
-        for slot in ['5', '9']
+        for slot in ['6', '9']
     ]
 
     # pipettes
