@@ -43,7 +43,7 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 * [Opentrons Tips](https://shop.opentrons.com/collections/opentrons-tips)
 * [NEST 96-Well PCR Plate](https://shop.opentrons.com/collections/lab-plates/products/nest-0-1-ml-96-well-pcr-plate-full-skirt)
 * [NEST 2mL Tubes](https://shop.opentrons.com/collections/tubes/products/nest-2-0-ml-sample-vial)
-* Samples, resuspended in Low EDTA TE, bringing the total volume 16
+* Samples, resuspended in Low EDTA TE, bringing the total volume to 16µL
 
 
 Full setup for the entire protocol:
