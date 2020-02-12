@@ -11,8 +11,10 @@ metadata = {
 
 
 def run(protocol):
-    [pip_type, tip_name, samps] = get_values(  # noqa: F821
-    'pip_type', 'tip_name', 'samps')
+    [pip_tip, samps] = get_values(  # noqa: F821
+    'pip_tip', 'samps')
+
+    pip_type, tip_name = pip_tip.split()
 
     # Labware Setup
     small_tips = protocol.load_labware(tip_name, '5')
@@ -20,7 +22,7 @@ def run(protocol):
     small_pip = protocol.load_instrument(
         pip_type, 'left')
 
-    tempdeck = protocol.load_module('Temperature Module', '10')
+    tempdeck = protocol.load_module('Temperature Module', '3')
 
     cool_reagents = tempdeck.load_labware(
         'opentrons_24_aluminumblock_generic_2ml_screwcap',
