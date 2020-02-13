@@ -1,23 +1,14 @@
 [
   {
     "type": "dropDown",
-    "label": "Single-Channel Pipette",
-    "name": "pip_type",
+    "label": "Pipette and Tip Type",
+    "name": "pip_tip",
     "options": [
-      {"label": "P50 Single", "value": "p50_single"},
-      {"label": "P20 Single", "value": "p20_single_gen2"}
-    ]
-  },
-  {
-    "type": "dropDown",
-    "label": "Single-Channel Pipette Tip Type",
-    "name": "tip_name",
-    "options": [
-      {"label": "[P50] Opentrons 50µL/300µL Tips", "value": "opentrons_96_tiprack_300ul"},
-      {"label": "[P50] Opentrons 200µL Filter Tips", "value": "opentrons_96_filtertiprack_200ul"},
-      {"label": "[P20] Opentrons 10µL/20µL Tips", "value": "opentrons_96_tiprack_20ul"},
-      {"label": "[P20] Opentrons 20µL Filter Tips", "value": "opentrons_96_filtertiprack_20ul"},
-      {"label": "[P20] Opentrons 10µL Filter Tips", "value": "opentrons_96_filtertiprack_10ul"}
+      {"label": "P50 & 50µL/300µL Tips", "value": "p50_single opentrons_96_tiprack_300ul"},
+      {"label": "P50 & 200µL Filter Tips", "value": "p50_single opentrons_96_filtertiprack_200ul"},
+      {"label": "P20 & 10µL/20µL Tips", "value": "p20_single_gen2 opentrons_96_tiprack_20ul"},
+      {"label": "P20 & 20µL Filter Tips", "value": "p20_single_gen2 opentrons_96_filtertiprack_20ul"},
+      {"label": "P20 & 10µL Filter Tips", "value": "p20_single_gen2 opentrons_96_filtertiprack_10ul"}
     ]
   },
   {
