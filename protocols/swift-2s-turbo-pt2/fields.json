@@ -13,7 +13,7 @@
   },
   {
     "type": "dropDown",
-    "label": "P300 Multi-Channel Pipette Tip Type",
+    "label": "P300 8-Channel Pipette Tip Type",
     "name": "p300tips",
     "options": [
       {"label": "Opentrons 50µL/300µL Tips", "value": "opentrons_96_tiprack_300ul"},
