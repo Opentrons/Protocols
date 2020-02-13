@@ -15,13 +15,13 @@
 Part 2 of 3: Ligation Clean-Up & PCR Prep
 
 
-With this protocol, your [OT-2](https://shop.opentrons.com/collections/ot-2-robot/products/ot-2) can perform the [Swift 2S Turbo DNA Library Kit](https://swiftbiosci.com/swift-2s-turbo-dna-library-kits/). For more information about the Swift 2S Turbo Kit on the OT-2, please see our white paper here: [Rapid high quality next generation sequencing library preparation with Swift 2S Turbo DNA Library Kits on the Opentrons OT-2](https://opentrons-landing-img.s3.amazonaws.com/bundles/fully_automated_ngs_application_note.pdf)
+With this protocol, your [OT-2](https://shop.opentrons.com/collections/ot-2-robot/products/ot-2) can perform the [Swift 2S Turbo DNA Library Kit](https://swiftbiosci.com/swift-2s-turbo-dna-library-kits/). For more information about the Swift 2S Turbo Kit and the [Swift 2S Turbo Unique Dual Indexing Primer Kit](https://shop.opentrons.com/products/swift-2s-turbo-unique-dual-indexing-primer-kit-96-rxns?_pos=1&_sid=f1fb599e7&_ss=r) on the OT-2, please see our Application Note here: [Rapid high quality next generation sequencing library preparation with Swift 2S Turbo DNA Library Kits on the Opentrons OT-2](https://opentrons-landing-img.s3.amazonaws.com/bundles/fully_automated_ngs_application_note.pdf)
 
 
 In this part of the protocol, your OT-2 will complete the ligation process that was begun in [Part 1](http://develop.protocols.opentrons.com/protocol/swift-2s-turbo-pt1) and complete the indexing portion up to the thermocycling step (step 18) as outlined in the [Swift 2S Turbo Kit Guide](https://swiftbiosci.com/wp-content/uploads/2019/11/PRT-001-2S-Turbo-DNA-Library-Kit-Rev-1.pdf).
 
 
-At the completion of this step, you will add your samples to the thermocycler and then continue with [Part 3 of the protocol](https://protocols.opentrons.com/protocol/swift-2s-turbo-pt3).
+At the completion of this step, you will add your samples to the thermocycler. Once the thermocycler step is complete, continue with [Part 3 of the protocol](https://protocols.opentrons.com/protocol/swift-2s-turbo-pt3).
 
 
 Links:
@@ -41,6 +41,7 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 * [Opentrons OT-2](https://shop.opentrons.com/collections/ot-2-robot/products/ot-2)
 * [Opentrons OT-2 Run App (Version 3.15.0 or later)](https://opentrons.com/ot-app/)
 * [Swift 2S Turbo DNA Library Kit](https://swiftbiosci.com/swift-2s-turbo-dna-library-kits/)
+[Swift 2S Turbo Unique Dual Indexing Primer Kit](https://shop.opentrons.com/products/swift-2s-turbo-unique-dual-indexing-primer-kit-96-rxns?_pos=1&_sid=f1fb599e7&_ss=r)
 * [Opentrons Temperature Module with Aluminum Block Set](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
 * [Opentrons Magnetic Module](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
 * [Opentrons P20 Single-Channel Pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette) or Opentrons P50 Single-Channel Pipette
@@ -57,9 +58,7 @@ Full setup for the entire protocol:
 
 ![Full Deck Layout](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/swift-2s-protocol/deck_layout_names.png)
 
-![Trough Layout](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/swift-2s-protocol/trough_layout.jpeg)
-
-![Temperature Module Layout](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/swift-2s-protocol/aluminum_block_layout.jpeg)
+![Layout of Reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/swift-2s-protocol/labware_layout.jpeg)
 
 
 ---
@@ -68,7 +67,7 @@ Full setup for the entire protocol:
 *Specific to Part 2 of 3*
 
 
-Slot 1: [NEST 96-Well PCR Plate](https://shop.opentrons.com/collections/lab-plates/products/nest-0-1-ml-96-well-pcr-plate-full-skirt) (or PCR Strips) on top of [96-Well Aluminum Block](https://shop.opentrons.com/collections/racks-and-adapters/products/aluminum-block-set) with samples user has collected from [Part 1](https://protocols.opentrons.com/protocol/swift-2s-turbo-pt1)
+Slot 1: [NEST 96-Well PCR Plate](https://shop.opentrons.com/collections/lab-plates/products/nest-0-1-ml-96-well-pcr-plate-full-skirt) (or PCR Strips) on top of [96-Well Aluminum Block](https://shop.opentrons.com/collections/racks-and-adapters/products/aluminum-block-set) with samples the user has collected from [Part 1](https://protocols.opentrons.com/protocol/swift-2s-turbo-pt1)
 * 8 Samples: Column 1
 * 16 Samples: Columns 1 & 2
 * 24 Samples: Columns 1, 2, & 3
@@ -84,23 +83,23 @@ Slot 3: [[Opentrons Temperature Module with 24-Well Aluminum Block](https://shop
 * A2: Ligation Master Mix (used in Part 1)
 * A3: PCR Master Mix
 * B1: Indexing Reagent 1 (in original container); loaded sequentially (Reagent 2 - B2; Reagent 3 - B3...)
-*Note*: if user is running 24 samples and user chooses to automate indices addition, robot will pause after addition of the first 16 indices to allow user to replace them with the final 8 indices.
+*Note*: if the user is running 24 samples and chooses to automate indices addition, the robot will pause after addition of the first 16 indices to allow user to replace them with the final 8 indices.
 
 Slot 4: [Opentrons Magnetic Module](https://shop.opentrons.com/collections/hardware-modules/products/magdeck) with [NEST 96-Well PCR Plate](https://shop.opentrons.com/collections/lab-plates/products/nest-0-1-ml-96-well-pcr-plate-full-skirt)
 
 Slot 5: [Opentrons Tips for Single-Channel Pipette](https://shop.opentrons.com/collections/opentrons-tips)
 
 
-Slot 6: [Opentrons Tips for P300 Multi-Channel Pipette](https://shop.opentrons.com/collections/opentrons-tips)
+Slot 6: [Opentrons Tips for P300 8-Channel Pipette](https://shop.opentrons.com/collections/opentrons-tips)
 
 
-Slot 9: [Opentrons Tips for P300 Multi-Channel Pipette](https://shop.opentrons.com/collections/opentrons-tips)
+Slot 9: [Opentrons Tips for P300 8-Channel Pipette](https://shop.opentrons.com/collections/opentrons-tips)
 
 
 
 **Using the customizations fields, below set up your protocol.**
 * **Pipette and Tip Type**: Select which pipette (P50 Single-Channel or P20 Single-Channel) and corresponding tips to be used for this protocol. **The pipette should be attached to the left mount.**
-* **P300 Multi-Channel Pipette Tip Type**: Select which tips (filter/non-filter) to be used for this protocol.
+* **P300 8-Channel Pipette Tip Type**: Select which tips (filter/non-filter) to be used for this protocol.
 * **Number of Samples**: Specify the number of samples (8, 16, or 24) you'd like to run.
 * **Automate Indexing**: Specify whether the indices should be added to the samples with the OT-2, or manually.
 
