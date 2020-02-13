@@ -43,10 +43,14 @@ To purchase consumables, labware, or pipettes, please visit our [online store](h
 * [Opentrons OT-2](https://shop.opentrons.com/collections/ot-2-robot/products/ot-2)
 * [Opentrons OT-2 Run App (Version 3.15.0 or later)](https://opentrons.com/ot-app/)
 * [Swift 2S Turbo DNA Library Kit](https://swiftbiosci.com/swift-2s-turbo-dna-library-kits/)
+* [Swift 2S Turbo Unique Dual Indexing Primer Kit](https://shop.opentrons.com/products/swift-2s-turbo-unique-dual-indexing-primer-kit-96-rxns?_pos=1&_sid=f1fb599e7&_ss=r)
 * [Opentrons Temperature Module with Aluminum Block Set](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
+* [Opentrons Magnetic Module](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
 * [Opentrons P20 Single-Channel Pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette) or Opentrons P50 Single-Channel Pipette*
+* [Opentrons P300 Multi-Channel Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/8-channel-electronic-pipette)
 * [Opentrons Tips](https://shop.opentrons.com/collections/opentrons-tips)
 * [NEST 96-Well PCR Plate](https://shop.opentrons.com/collections/lab-plates/products/nest-0-1-ml-96-well-pcr-plate-full-skirt)
+* [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/reservoirs/products/nest-12-well-reservoir-15-ml)
 * [NEST 2mL Tubes](https://shop.opentrons.com/collections/tubes/products/nest-2-0-ml-sample-vial)
 * Samples, resuspended in Low EDTA TE, bringing the total volume to 16µL
 * *Optional*: PCR Strip(s)
