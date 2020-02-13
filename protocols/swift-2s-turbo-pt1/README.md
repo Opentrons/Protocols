@@ -59,7 +59,7 @@ Full setup for the entire protocol:
 
 ![Full Deck Layout](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/swift-2s-protocol/deck_layout_names.png)
 
-![Trough Layout](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/swift-2s-protocol/trough_layout_resize.jpeg) ![Temperature Module Layout](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/swift-2s-protocol/aluminum_block_layout_resize.jpeg)
+![Layout of Reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/swift-2s-protocol/labware_layout.jpeg)
 
 
 
