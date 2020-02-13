@@ -79,7 +79,7 @@ def run(protocol):
     col_no = [3, 6, 3]
 
     pcr_prep_samples = [reaction_plate['A3']]
-    purified_samples = [reaction_plate['A5']]
+    purified_samples = [reaction_plate['A6']]
     mag_samples = [mag_plate['A3']]
 
     samps = int(samps)
