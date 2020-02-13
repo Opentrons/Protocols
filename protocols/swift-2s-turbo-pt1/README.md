@@ -12,16 +12,18 @@
 
 
 ## Description
+![Swift Biosciences](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/swift-2s-protocol/swift_logo.jpg)
+
 Part 1 of 3: Enzymatic Prep & Ligation
 
 
-With this protocol, your [OT-2](https://shop.opentrons.com/collections/ot-2-robot/products/ot-2) can perform the [Swift 2S Turbo DNA Library Kit](https://swiftbiosci.com/swift-2s-turbo-dna-library-kits/). For more information about the Swift 2S Turbo Kit on the OT-2, please see our Application Note here: [Rapid high quality next generation sequencing library preparation with Swift 2S Turbo DNA Library Kits on the Opentrons OT-2](https://opentrons-landing-img.s3.amazonaws.com/bundles/fully_automated_ngs_application_note.pdf)
+With this protocol, your [OT-2](https://shop.opentrons.com/collections/ot-2-robot/products/ot-2) can perform the [Swift 2S Turbo DNA Library Kit](https://swiftbiosci.com/swift-2s-turbo-dna-library-kits/). For more information about the Swift 2S Turbo Kit and the [Swift 2S Turbo Unique Dual Indexing Primer Kit](https://shop.opentrons.com/products/swift-2s-turbo-unique-dual-indexing-primer-kit-96-rxns?_pos=1&_sid=f1fb599e7&_ss=r) on the OT-2, please see our Application Note here: [Rapid high quality next generation sequencing library preparation with Swift 2S Turbo DNA Library Kits on the Opentrons OT-2](https://opentrons-landing-img.s3.amazonaws.com/bundles/fully_automated_ngs_application_note.pdf)
 
 
 In this part of the protocol, your OT-2 will complete the enzymatic prep portion and the initial steps of the ligation portion prior to adding your samples to a thermocycler, as described in the [Swift 2S Turbo Kit Guide](https://swiftbiosci.com/wp-content/uploads/2019/11/PRT-001-2S-Turbo-DNA-Library-Kit-Rev-1.pdf).
 
 
-At the completion of this step, you will add your samples to the thermocycler and upon completion of thermocycler, continue with [Part 2 of the protocol](https://protocols.opentrons.com/protocol/swift-2s-turbo-pt2).
+At the completion of this step, you will add your samples to the thermocycler. Once the thermocycler step is complete, continue with [Part 2 of the protocol](https://protocols.opentrons.com/protocol/swift-2s-turbo-pt2).
 
 
 Links:
@@ -36,13 +38,13 @@ Links:
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
-To purchase tips, reagents, or pipettes, please visit our [online store](https://shop.opentrons.com/) or contact our sales team at [info@opentrons.com](mailto:info@opentrons.com)
+To purchase consumables, labware, or pipettes, please visit our [online store](https://shop.opentrons.com/) or contact our sales team at [info@opentrons.com](mailto:info@opentrons.com)
 
 * [Opentrons OT-2](https://shop.opentrons.com/collections/ot-2-robot/products/ot-2)
 * [Opentrons OT-2 Run App (Version 3.15.0 or later)](https://opentrons.com/ot-app/)
 * [Swift 2S Turbo DNA Library Kit](https://swiftbiosci.com/swift-2s-turbo-dna-library-kits/)
 * [Opentrons Temperature Module with Aluminum Block Set](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
-* [Opentrons P20 Single-Channel Pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette) or Opentrons P50 Single-Channel Pipette
+* [Opentrons P20 Single-Channel Pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette) or Opentrons P50 Single-Channel Pipette*
 * [Opentrons Tips](https://shop.opentrons.com/collections/opentrons-tips)
 * [NEST 96-Well PCR Plate](https://shop.opentrons.com/collections/lab-plates/products/nest-0-1-ml-96-well-pcr-plate-full-skirt)
 * [NEST 2mL Tubes](https://shop.opentrons.com/collections/tubes/products/nest-2-0-ml-sample-vial)
@@ -50,13 +52,16 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 * *Optional*: PCR Strip(s)
 
 
+\*Opentrons now sells the P20 Single-Channel Pipette in place of the P50 Single-Channel Pipette. If you have the P50 Single-Channel Pipette, you can use it for this protocol.
+
+
 Full setup for the entire protocol:
 
 ![Full Deck Layout](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/swift-2s-protocol/deck_layout_names.png)
 
-![Trough Layout](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/swift-2s-protocol/trough_layout.jpeg)
+![Trough Layout](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/swift-2s-protocol/trough_layout_resize.jpeg) ![Temperature Module Layout](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/swift-2s-protocol/aluminum_block_layout_resize.jpeg)
 
-![Temperature Module Layout](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/swift-2s-protocol/aluminum_block_layout.jpeg)
+
 
 
 ---
@@ -71,7 +76,7 @@ Slot 1: [NEST 96-Well PCR Plate](https://shop.opentrons.com/collections/lab-plat
 * 16 Samples: Columns 1 & 2
 * 24 Samples: Columns 1, 2, & 3
 
-Slot 3: [Opentrons Temperature Module with 24-Well Aluminum Block](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck) and [NEST 2mL Tubes](https://shop.opentrons.com/collections/tubes/products/nest-2-0-ml-sample-vial) with master mixes (for more information on master mixes, [click here](https://docs.google.com/spreadsheets/d/1_XIL31tTYOFV9ehGmeAc1eorLgv8yxpEu_27qpg3Ei4/edit?usp=sharing)
+Slot 3: [Opentrons Temperature Module with 24-Well Aluminum Block](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck) and [NEST 2mL Tubes](https://shop.opentrons.com/collections/tubes/products/nest-2-0-ml-sample-vial) with master mixes (for more information on master mixes, [click here](https://docs.google.com/spreadsheets/d/1_XIL31tTYOFV9ehGmeAc1eorLgv8yxpEu_27qpg3Ei4/edit?usp=sharing))
 * A1: Enzymatic Prep Master Mix
 * A2: Ligation Master Mix
 

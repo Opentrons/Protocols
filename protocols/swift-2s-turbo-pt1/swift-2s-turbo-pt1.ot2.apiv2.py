@@ -60,9 +60,10 @@ def run(protocol):
 
     # Destination of input DNA samples and samples on the magnetic module
     enzymatic_prep_samples = reaction_plate.columns()[0]
-    if samps == '16':
+    samps = int(samps)
+    if samps > 8:
         enzymatic_prep_samples += reaction_plate.columns()[1]
-        if samps == '24':
+        if samps > 16:
             enzymatic_prep_samples += reaction_plate.columns()[2]
 
     # Actively cool the samples and enzymes
