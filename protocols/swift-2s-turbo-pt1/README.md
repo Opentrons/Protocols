@@ -53,7 +53,7 @@ To purchase consumables, labware, or pipettes, please visit our [online store](h
 * [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/reservoirs/products/nest-12-well-reservoir-15-ml)
 * [NEST 2mL Tubes](https://shop.opentrons.com/collections/tubes/products/nest-2-0-ml-sample-vial)
 * Samples, resuspended in Low EDTA TE, bringing the total volume to 16µL
-* *Optional*: PCR Strip(s)
+* PCR Strip(s), *optional*
 
 
 \*Opentrons now sells the P20 Single-Channel Pipette in place of the P50 Single-Channel Pipette. If you have the P50 Single-Channel Pipette, you can use it for this protocol.
