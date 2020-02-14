@@ -40,10 +40,14 @@ Links:
 
 To purchase tips, reagents, or pipettes, please visit our [online store](https://shop.opentrons.com/) or contact our sales team at [info@opentrons.com](mailto:info@opentrons.com)
 
+
+**Attention**: You can now purchase all of the consumables needed to run this protocol by [clicking here](https://shop.opentrons.com/products/ngs-library-prep-workstation-consumables-refill).
+
 * [Opentrons OT-2](https://shop.opentrons.com/collections/ot-2-robot/products/ot-2)
 * [Opentrons OT-2 Run App (Version 3.15.0 or later)](https://opentrons.com/ot-app/)
 * [Swift 2S Turbo DNA Library Kit](https://swiftbiosci.com/swift-2s-turbo-dna-library-kits/)
 [Swift 2S Turbo Unique Dual Indexing Primer Kit](https://shop.opentrons.com/products/swift-2s-turbo-unique-dual-indexing-primer-kit-96-rxns?_pos=1&_sid=f1fb599e7&_ss=r)
+* [Omega Mag-Bind TotalPure NGS Kit](https://shop.opentrons.com/collections/verified-reagents/products/mag-bind-total-pure-ngs)
 * [Opentrons Temperature Module with Aluminum Block Set](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
 * [Opentrons Magnetic Module](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
 * [Opentrons P20 Single-Channel Pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette) or Opentrons P50 Single-Channel Pipette
@@ -80,9 +84,9 @@ Slot 2: [NEST 12-Well Reservoir](https://shop.opentrons.com/collections/reservoi
 * A4: 80% Ethanol Solution, Freshly Prepared
 * A6: Low EDTA TE Buffer
 
-Slot 3: [[Opentrons Temperature Module with 24-Well Aluminum Block](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck) and [NEST 2mL Tubes](https://shop.opentrons.com/collections/tubes/products/nest-2-0-ml-sample-vial) with master mixes (for more information on master mixes, [click here](https://docs.google.com/spreadsheets/d/1_XIL31tTYOFV9ehGmeAc1eorLgv8yxpEu_27qpg3Ei4/edit?usp=sharing) and indices (if automating index addition)
-* A1: Enzymatic Prep Master Mix (used in Part 1)
-* A2: Ligation Master Mix (used in Part 1)
+Slot 3: [[Opentrons Temperature Module with 24-Well Aluminum Block](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck) and [NEST 2mL Tubes](https://shop.opentrons.com/collections/tubes/products/nest-2-0-ml-sample-vial) with master mixes (for more information on master mixes, [click here](https://docs.google.com/spreadsheets/d/1_XIL31tTYOFV9ehGmeAc1eorLgv8yxpEu_27qpg3Ei4/edit?usp=sharing)) and indices (if automating index addition)
+* A1: (**used in Part 1**) Enzymatic Prep Master Mix
+* A2: (**used in Part 1**) Ligation Master Mix
 * A3: PCR Master Mix
 * B1: Indexing Reagent 1 (in original container); loaded sequentially (Reagent 2 - B2; Reagent 3 - B3...)
 *Note*: if the user is running 24 samples and chooses to automate indices addition, the robot will pause after addition of the first 16 indices to allow user to replace them with the final 8 indices.
