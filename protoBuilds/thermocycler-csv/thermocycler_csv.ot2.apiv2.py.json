@@ -1,0 +1,76 @@
+{
+    "content": "metadata = {\n    'protocolName': 'Thermocycler Example Protocol',\n    'author': 'Opentrons <protocols@opentrons.com>',\n    'source': 'Protocol Library',\n    'apiLevel': '2.0'\n    }\n\n\ndef run(protocol):\n    [well_vol, lid_temp, input_csv, final_temp, open_lid,\n        deactivate_mod] = get_values(  # noqa: F821\n            'well_vol', 'lid_temp', 'input_csv', 'final_temp', 'open_lid',\n            'deactivate_mod')\n\n    # ex_prof = \"\"\"cycle,repetitions,\"steps (temperature, time in minutes)\",,\n    # 1,1,\"96, 30\",,\n    # 2,30,\"96, 15\",\"60, 30\",\"74, 30\"\n    # 3,1,\"74, 30\",,\"\"\"\n    #\n    # [well_vol, lid_temp, input_csv, final_temp, open_lid, deactivate_mod] = [\n    #     20, 105, ex_prof, 4, True, True]\n\n    # load thermocycler\n    tc_mod = protocol.load_module('thermocycler')\n\n    \"\"\"\n    Add liquid transfers here, if interested (make sure TC lid is open)\n    Example (Transfer 50ul of Sample from plate to Thermocycler):\n\n    tips = [protocol.load_labware('opentrons_96_tiprack_300ul', '2')]\n    pipette = protocol.load_instrument('p300_single', 'right', tip_racks=tips)\n    tc_plate = tc_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')\n    sample_plate = protocol.load_labware('nest_96_wellplate_200ul_flat', '1')\n\n    tc_wells = tc_plate.wells()\n    sample_wells = sample_plate.wells()\n\n    if tc_mod.lid_position != 'open':\n        tc_mod.open_lid()\n\n    for t, s in zip(tc_wells, sample_wells):\n        pipette.transfer(50, s, t)\n    \"\"\"\n\n    # parse profile input\n    profiles_parsed = [\n        [set for set in\n            [\n                [val.strip() for val in quoted.split(',') if val]\n                for quoted in line.split(\"\\\"\") if line\n            ] if set]\n        for line in input_csv.splitlines()[1:]\n    ]\n\n    profiles = [\n        {'cycles': int(prof[0][1]), 'temps': prof[1:]}\n        for prof in profiles_parsed if len(prof) > 1\n    ]\n\n    # Close lid\n    if tc_mod.lid_position != 'closed':\n        tc_mod.close_lid()\n\n    # lid temperature set\n    tc_mod.set_lid_temperature(lid_temp)\n\n    # run profile\n    for profile in profiles:\n        set = [\n            {\n                'temperature': float(temp[0]),\n                'hold_time_minutes': float(temp[1])\n            }\n            for temp in profile['temps']\n        ]\n        tc_mod.execute_profile(\n            steps=set, repetitions=profile['cycles'],\n            block_max_volume=well_vol)\n\n    # reach final temperature\n    tc_mod.deactivate_lid()\n    tc_mod.set_block_temperature(final_temp)\n\n    if open_lid:\n        tc_mod.open_lid()\n\n    if deactivate_mod:\n        tc_mod.deactivate_block()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 50,
+            "label": "Sample Volume per Well",
+            "name": "well_vol",
+            "type": "float"
+        },
+        {
+            "default": 105,
+            "label": "Lid Temperature (\u00b0C)",
+            "name": "lid_temp",
+            "type": "float"
+        },
+        {
+            "default": "cycle,repetitions,\"steps (temperature, time in minutes)\",,\n1,1,\"96, 30\",,\n2,30,\"96, 15\",\"60, 30\",\"74, 30\"\n3,1,\"74, 30\",,",
+            "label": "profile .csv file",
+            "name": "input_csv",
+            "type": "textFile"
+        },
+        {
+            "default": 4,
+            "label": "Final Hold Temperature (\u00b0C)",
+            "name": "final_temp",
+            "type": "float"
+        },
+        {
+            "label": "open lid after profile executes",
+            "name": "open_lid",
+            "options": [
+                {
+                    "label": "yes",
+                    "value": true
+                },
+                {
+                    "label": "no",
+                    "value": false
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "deactivate module after profile executes",
+            "name": "deactivate_mod",
+            "options": [
+                {
+                    "label": "yes",
+                    "value": true
+                },
+                {
+                    "label": "no",
+                    "value": false
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [],
+    "labware": [
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.0",
+        "author": "Opentrons <protocols@opentrons.com>",
+        "protocolName": "Thermocycler Example Protocol",
+        "source": "Protocol Library"
+    },
+    "modules": []
+}
