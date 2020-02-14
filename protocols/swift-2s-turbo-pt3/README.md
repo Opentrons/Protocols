@@ -99,7 +99,7 @@ Slot 9: [Opentrons Tips for P300 8-Channel Pipette](https://shop.opentrons.com/c
 * **Number of Samples**: Specify the number of samples (8, 16, or 24) you'd like to run.
 
 
-__Note:__ The final elution will be transferred to column 7 (and column 8 and column 9, if running 16 samples or 24 samples, respectively) of the PCR plate (or strips) in slot 3.
+__Note:__ The final elution will be transferred to column 7 (and column 8 and column 9, if running 16 samples or 24 samples, respectively) of the PCR plate (or strips) in slot 1.
 
 
 ### Robot
