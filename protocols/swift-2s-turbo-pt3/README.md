@@ -12,6 +12,8 @@
 
 
 ## Description
+![Swift Biosciences](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/swift-2s-protocol/swift_logo.jpg)
+
 Part 3 of 3: Final Clean-Up
 
 
@@ -48,8 +50,8 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 * [NEST 96-Well PCR Plate](https://shop.opentrons.com/collections/lab-plates/products/nest-0-1-ml-96-well-pcr-plate-full-skirt)
 * [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/reservoirs/products/nest-12-well-reservoir-15-ml)
 * [NEST 2mL Tubes](https://shop.opentrons.com/collections/tubes/products/nest-2-0-ml-sample-vial)
-* Samples, user collected from [Part 1](https://protocols.opentrons.com/protocol/swift-2s-turbo-pt1)
-* *Optional*: PCR Strip(s)
+* Samples, user collected from [Part 2](https://protocols.opentrons.com/protocol/swift-2s-turbo-pt2)
+* PCR Strip(s), *optional*
 
 
 Full setup for the entire protocol:
