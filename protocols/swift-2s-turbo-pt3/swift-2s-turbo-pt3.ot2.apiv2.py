@@ -15,8 +15,8 @@ def run(protocol):
     'p300tips', 'samps')
 
     # Labware Setup
-    big_tips1 = protocol.load_labware(p300tips, '3')
-    big_tips2 = protocol.load_labware(p300tips, '6')
+    big_tips1 = protocol.load_labware(p300tips, '6')
+    big_tips2 = protocol.load_labware(p300tips, '9')
     p300 = protocol.load_instrument('p300_multi', 'right')
 
     rt_reagents = protocol.load_labware(
@@ -79,7 +79,7 @@ def run(protocol):
     col_no = [3, 6, 3]
 
     pcr_prep_samples = [reaction_plate['A3']]
-    purified_samples = [reaction_plate['A5']]
+    purified_samples = [reaction_plate['A6']]
     mag_samples = [mag_plate['A3']]
 
     samps = int(samps)

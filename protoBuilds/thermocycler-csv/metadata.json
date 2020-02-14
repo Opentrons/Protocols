@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "swift-2s-turbo-pt3.ot2.apiv2.py"
+            "thermocycler_csv.ot2.apiv2.py"
         ],
         "description": [
             "README.md"
@@ -11,10 +11,10 @@
     "flags": {
         "embedded-app": false,
         "feature": false,
-        "hide-from-search": false,
+        "hide-from-search": true,
         "skip-tests": false
     },
-    "path": "protocols/swift-2s-turbo-pt3",
-    "slug": "swift-2s-turbo-pt3",
+    "path": "protocols/thermocycler-csv",
+    "slug": "thermocycler-csv",
     "status": "ok"
 }
