@@ -42,6 +42,7 @@ def run(ctx):
         ctx.load_labware('opentrons_96_tiprack_1000ul', str(slot))
         for slot in range(9, 12)
     ]
+    trash = ctx.loaded_labwares[12].wells()[0]
 
     # pipettes
     p300 = ctx.load_instrument(
@@ -70,7 +71,8 @@ def run(ctx):
             p300.aspirate(150, m)
             p300.dispense(150, m)
         p300.blow_out(m.top())
-        p300.drop_tip()
+        side = 1 if i % 2 == 0 else -1
+        p300.drop_tip(trash.top().move(types.Point(x=side*25, y=0, z=0)))
 
     p300.flow_rate.aspirate = 150
     p300.flow_rate.dispense = 300
@@ -80,11 +82,12 @@ def run(ctx):
     ctx.delay(minutes=5, msg='Incubating on magnet for 5 minutes')
 
     # remove supernatant
-    for m in magsamples:
+    for i, m in enumerate(magsamples):
         p1000.pick_up_tip()
-        p1000.transfer(500, m.bottom(1), waste, air_gap=100, new_tip='never')
+        p1000.transfer(500, m.bottom(3), waste, air_gap=100, new_tip='never')
         p1000.blow_out(waste)
-        p1000.drop_tip()
+        side = 1 if i % 2 == 0 else -1
+        p1000.drop_tip(trash.top().move(types.Point(x=side*25, y=0, z=0)))
 
     # etoh washes
     for wash in range(2):
@@ -97,15 +100,16 @@ def run(ctx):
         ctx.delay(seconds=30, msg='Incubating on magnet for 30 seconds.')
 
         # remove supernatant
-        for m in magsamples:
+        for i, m in enumerate(magsamples):
             if not p1000.hw_pipette['has_tip']:
                 p1000.pick_up_tip()
             p1000.transfer(
-                500, m.bottom(1), waste, air_gap=100, new_tip='never')
+                500, m.bottom(3), waste, air_gap=100, new_tip='never')
             p1000.blow_out(waste)
-            p1000.drop_tip()
+            side = 1 if i % 2 == 0 else -1
+            p1000.drop_tip(trash.top().move(types.Point(x=side*25, y=0, z=0)))
 
-    ctx.delay(minutes=15, msg='Incubating off magnet for 15 minutes')
+    ctx.delay(minutes=25, msg='Incubating off magnet for 15 minutes')
     magdeck.disengage()
 
     # resuspend in elution buffer
@@ -122,14 +126,15 @@ def run(ctx):
             p300.aspirate(40, m.bottom(1))
             p300.dispense(40, m.bottom(1))
         p300.blow_out(m.top())
-        p300.drop_tip()
+        side = 1 if i % 2 == 0 else -1
+        p300.drop_tip(trash.top().move(types.Point(x=side*25, y=0, z=0)))
 
-    ctx.delay(minutes=1, msg='Incubating off magnet for 5 minutes')
+    ctx.delay(minutes=1, msg='Incubating off magnet for 1 minutes')
     magdeck.engage()
-    ctx.delay(minutes=1, msg='Incubating on magnet for 5 minutes')
+    ctx.delay(minutes=1, msg='Incubating on magnet for 1 minutes')
 
     # transfer eluent to new plate
     for m, e in zip(magsamples, elutionsamples):
-        p300.transfer(65, m.bottom(2.5), e.bottom(3))
+        p300.transfer(65, m.bottom(2.1), e.bottom(3))
 
     magdeck.disengage()
