@@ -15,7 +15,7 @@ This protocol automates the steps outlined in the [Quant-iT dsDNA Broad-Range As
 
 **Using the customizations fields, below set up your protocol.**
 * **P300 Multi Mount**: Select which mount (left or right) the P300 Multi is attached to.
-* **P10 Multi Mount**: Select which mount (left or right) the P50 Single is attached to.
+* **P10 Multi Mount**: Select which mount (left or right) the P10 Multi is attached to.
 
 
 

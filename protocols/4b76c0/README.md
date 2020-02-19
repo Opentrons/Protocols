@@ -17,7 +17,7 @@ Concentration normalization is a key component of many genomic and proteomic app
 
 **Using the customizations fields, below set up your protocol.**
 * **Volumes CSV**: Upload the CSV (.csv) containing your diluent volumes.
-* **P10 Multi Mount**: Select which mount (left or right) the P50 Single is attached to.
+* **P10 Multi Mount**: Select which mount (left or right) the P10 Multi is attached to.
 
 *Note about CSV*: All values corresponding to wells in the CSV must have a value (zero (0) is a valid value and nothing will be transferred to the corresponding well(s)). Additionally, the CSV can be formatted in "portrait" orientation. In portrait orientation, the bottom left corner is treated as A1 and the top right corner would correspond to the furthest well from A1 (H12 in a 96-well plate).
 
