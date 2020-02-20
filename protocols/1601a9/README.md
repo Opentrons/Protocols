@@ -1,4 +1,4 @@
-# DNA Transfer
+# Illumina Beadchip Amplification
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -9,8 +9,7 @@
 
 
 ## Description
-This protocol is designed to transfer 10µL of sample DNA from the Micronics Tubes to the wells of an Axygen 96-Well Plate using the P10-Multi.
-
+This protocol automates sample distribution and the addition of [MA1](https://www.illumina.com/products/by-type/microarray-kits/infinium-global-screening.html) and [0.1 N NaOH](https://www.sigmaaldrich.com/catalog/product/sigma/s2770?lang=en®ion=US).
 
 
 **Using the customizations fields, below set up your protocol.**
@@ -27,18 +26,25 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 * [Opentrons OT-2 Run App (Version 3.15.0 or later)](https://opentrons.com/ot-app/)
 * [Opentrons P10 Multi-Channel Pipette](https://shop.opentrons.com/collections/ot-2-pipettes)
 * [Opentrons 10µL Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
+* [NEST 12-Well Reservoir, 15mL](https://labware.opentrons.com/nest_12_reservoir_15ml?category=reservoir)
 * Axygen 96-Well Plate (PCR-96-FS-C)
-* Micronics 96-Tubes in Plate (MP52757S-Y20)
+* Abgene 96-Deep Well Plate (AB0765)
+* Reagents
 * Samples
 
 
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
+Slot 1: [NEST 12-Well Reservoir](https://labware.opentrons.com/nest_12_reservoir_15ml?category=reservoir)
+* A5: [MA1](https://www.illumina.com/products/by-type/microarray-kits/infinium-global-screening.html)
+* A9: [0.1 N NaOH](https://www.sigmaaldrich.com/catalog/product/sigma/s2770?lang=en®ion=US)
 
-Slot 2: Axygen 96-Well Plate (PCR-96-FS-C)
+Slot 2: Abgene 96-Deep Well Plate (AB0765)
 
-Slot 3: Micronics 96-Tubes in Plate (MP52757S-Y20)
+Slot 3: Axygen 96-Well Plate (PCR-96-FS-C)
+
+Slot 4: [Opentrons 10µL Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
 
 Slot 5: [Opentrons 10µL Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
 
@@ -60,4 +66,4 @@ Slot 5: [Opentrons 10µL Tips](https://shop.opentrons.com/collections/opentrons-
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-06ab09
+1601a9
