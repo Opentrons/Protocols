@@ -2,7 +2,7 @@ metadata = {
     'protocolName': 'Illumina Nextera XT NGS Prep 4: Pool Libraries',
     'author': 'Opentrons <protocols@opentrons.com>',
     'source': 'Protocol Library',
-    'apiLevel': '2.0'
+    'apiLevel': '2.2'
     }
 
 
