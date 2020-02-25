@@ -1,9 +1,9 @@
 [
   {
     "type": "int",
-    "label": "number of DNA samples (1-32)",
+    "label": "number of DNA samples (1-96)",
     "name": "number_of_samples",
-    "default": 32
+    "default": 96
   },
   {
     "type": "dropDown",
