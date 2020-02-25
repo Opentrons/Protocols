@@ -1,0 +1,26 @@
+[
+  {
+    "type": "int",
+    "label": "Number of Samples",
+    "name": "samps",
+    "default": 1
+  },
+  {
+    "type": "dropDown",
+    "label": "P20 Single Mount",
+    "name": "mnt20",
+    "options": [
+      {"label": "Left", "value": "left"},
+      {"label": "Right", "value": "right"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "P1000 Single Mount",
+    "name": "m1k",
+    "options": [
+      {"label": "Right", "value": "right"},
+      {"label": "Left", "value": "left"}
+    ]
+  }
+]
