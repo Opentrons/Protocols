@@ -10,8 +10,8 @@ metadata = {
 
 
 def run(protocol):
-    [samps, mnt20, m1k] = get_values(  # noqa: F821
-    'samps', 'mnt20', 'm1k')
+    [samps, mnt20, m1k, reagent_labware] = get_values(  # noqa: F821
+    'samps', 'mnt20', 'm1k', 'reagent_labware')
 
     # load labware and pipettes
     if samps > 16:
@@ -30,25 +30,28 @@ def run(protocol):
                 'nest_96_wellplate_1000ul', 'NEST 1mL Deep Well Plate')
     flatplate = protocol.load_labware(
                 'nest_96_wellplate_100ul_pcr_full_skirt', '1', 'Elution Plate')
-    trough = protocol.load_labware('nest_12_reservoir_15ml', '5', 'Trough')
     liqwaste = protocol.load_labware(
                 'nest_1_reservoir_195ml', '8', 'Liquid Waste')
     waste = liqwaste['A1'].top()  # may need to change
-    ie_rna = trough['A1']  # may need to change
-    bind1 = trough['A2']
-    """
-    bind2 = trough['A3']
-    bind3 = trough['A4']
-    """
-    # washbuffer = trough['A5']
-    # ethanol = trough['A7']
-    water = trough['A9']
-    tuberack = protocol.load_labware(
-                'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', '2')
-    # bind1 = tuberack['A1']
-    washbuffer = tuberack['A3']
-    washbuffer2 = tuberack['A5']
-    ethanol = tuberack['D1']
+    if reagent_labware == 'nest_12_reservoir_15ml':
+        trough = protocol.load_labware(
+                    reagent_labware, '2', 'Trough with Reagents')
+        ie_rna = trough['A1']
+        bind1 = trough['A2']
+        washbuffer = trough['A5']
+        washbuffer2 = trough['A7']
+        ethanol = trough['A9']
+        water = trough['A12']
+    else:
+        tuberack = protocol.load_labware(
+                    reagent_labware, '2',
+                    'Opentrons 24 Tuberack with Reagents')
+        ie_rna = tuberack['A1']
+        bind1 = tuberack['A3']
+        washbuffer = tuberack['A5']
+        washbuffer2 = tuberack['C1']
+        ethanol = tuberack['C3']
+        water = tuberack['C5']
 
     magsamps = magplate.wells()[:samps]
     elutes = flatplate.wells()[:samps]
@@ -105,20 +108,23 @@ def run(protocol):
     p20.flow_rate.dispense = 20
     p20.flow_rate.blow_out = 500
 
-    pick_up(p20)
-
     for dest in magsamps:
+        pick_up(p20)
         p20.air_gap(2)
         p20.aspirate(4, ie_rna)
         p20.dispense(6, dest.top(-2))
         p20.touch_tip()
         p20.blow_out(dest.top(-2))
-
-    p20.drop_tip()
+        p20.drop_tip()
 
     # Step 3 - Mix bind buffer, then add to samples
     pick_up(p1k)
-    p1k.mix(10, 580, bind1)
+    p1k.aspirate(800, bind1)
+    p1k.dispense(790, bind1)
+    for _ in range(9):
+        p1k.aspirate(790)
+        p1k.dispense(790)
+    p1k.dispense(10)
     p1k.blow_out(bind1.top())
 
     # function for mixing 800ul with p1000
