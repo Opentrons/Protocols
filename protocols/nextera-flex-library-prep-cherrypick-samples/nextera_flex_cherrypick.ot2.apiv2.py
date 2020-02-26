@@ -2,7 +2,7 @@ metadata = {
     'protocolName': 'Nextera DNA Flex NGS Library Prep: Cherrypick Samples',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.0'
+    'apiLevel': '2.2'
 }
 
 example_csv = """source plate, source well, destination well
