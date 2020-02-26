@@ -69,8 +69,9 @@ def run(ctx):
         vol_per_asp = vol/num_asp
         p50.pick_up_tip()
         for _ in range(num_asp):
+            p50.move_to(source.top(5))
             p50.air_gap(50-vol_per_asp)
-            p50.aspirate(vol_per_asp)
+            p50.aspirate(vol_per_asp, source)
             p50.dispense(50, mix_tube.top())
             p50.blow_out(mix_tube.top())
         p50.drop_tip()
