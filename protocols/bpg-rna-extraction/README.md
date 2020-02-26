@@ -31,7 +31,7 @@ To purchase consumables, labware, or pipettes, please visit our [online store](h
 * [Opentrons P1000 Single-Channel Pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette)
 * [Opentrons Tips](https://shop.opentrons.com/collections/opentrons-tips)
 * [NEST 96-Well PCR Plate](https://shop.opentrons.com/collections/lab-plates/products/nest-0-1-ml-96-well-pcr-plate-full-skirt)
-* [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/reservoirs/products/nest-12-well-reservoir-15-ml)
+* [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/reservoirs/products/nest-12-well-reservoir-15-ml) or [Opentrons 24 Tuberack with 2mL Tubes](https://labware.opentrons.com/opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap?category=tubeRack)
 * NEST Deep Well Plate, 1mL
 * [NEST 1-Well Reservoir, 195mL](https://labware.opentrons.com/nest_1_reservoir_195ml?category=reservoir)
 
@@ -44,15 +44,31 @@ To purchase consumables, labware, or pipettes, please visit our [online store](h
 
 Slot 1: [NEST 96-Well PCR Plate](https://shop.opentrons.com/collections/lab-plates/products/nest-0-1-ml-96-well-pcr-plate-full-skirt) (for elutes)
 
+Slot 2: [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/reservoirs/products/nest-12-well-reservoir-15-ml) or [Opentrons 24 Tuberack with 2mL Tubes](https://labware.opentrons.com/opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap?category=tubeRack), with Reagents
+**If using NEST 12-Well Reservoir, reagents should be loaded in the following configuration:**
+* A1: Internal Extraction Control RNA
+* A2: Magbeads (in isopropanol; 20ul beads, 560ul isopropanol per sample)
+* A5: Wash Buffer 1
+* A7: Wash Buffer 2
+* A9: Ethanol
+* A10: Ethanol
+* A12: Nuclease-Free Water
+**If using Opentrons 24-Tuberack & 2mL Tubes, reagents should be loaded in the following configuration:**
+* A1: Internal Exctraction Control RNA
+* A3: Magbeads (in isopropanol; 20ul beads, 560ul isopropanol per sample)
+* A5: Wash Buffer 1
+* C1: Wash Buffer 2
+* C3: Ethanol
+* C4: Ethanol
+* C6: Nuclease-Free Water
+
 Slot 3: Opentrons 20ul Filter Tips
 
 Slot 4: MagDeck, with Deep Well Plate containing 400ul of sample
 
-Slot 5: 12-Well Reservoir
+Slot 5: Reservoir for Liquid Waste
 
 Slot 6: Opentrons 1000ul Filter Tips
-
-Slot 8: Reservoir for Liquid Waste
 
 
 
@@ -63,6 +79,7 @@ __Using the customizations fields, below set up your protocol.__
 * **Number of Samples**: Specify the number of samples you'd like to run.
 * **P20 Single Mount**: Specify which mount (left or right) the P20 Single is attached to.
 * **P1000 Single Mount**: Specify which mount (left or right) the P1000 Single is attached to.
+* **Labware for Reagents**: Specify which labware (NEST 12-Channel Reservoir or Opentrons 24-Tuberack) will house the reagents. This labware (& reagents) should be loaded in slot 2 and reagents should be loaded as described above.
 
 
 
