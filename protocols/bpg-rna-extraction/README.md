@@ -32,7 +32,7 @@ To purchase consumables, labware, or pipettes, please visit our [online store](h
 * [Opentrons Tips](https://shop.opentrons.com/collections/opentrons-tips)
 * [NEST 96-Well PCR Plate](https://shop.opentrons.com/collections/lab-plates/products/nest-0-1-ml-96-well-pcr-plate-full-skirt)
 * [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/reservoirs/products/nest-12-well-reservoir-15-ml)
-* [Deep Well Plate](https://labware.opentrons.com/usascientific_96_wellplate_2.4ml_deep?category=wellPlate)
+* NEST Deep Well Plate, 1mL
 * [NEST 1-Well Reservoir, 195mL](https://labware.opentrons.com/nest_1_reservoir_195ml?category=reservoir)
 
 
