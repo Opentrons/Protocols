@@ -22,5 +22,14 @@
       {"label": "Right", "value": "right"},
       {"label": "Left", "value": "left"}
     ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Labware for Reagents",
+    "name": "reagent_labware",
+    "options": [
+      {"label": "NEST 12-Channel Reservoir", "value": "nest_12_reservoir_15ml"},
+      {"label": "Opentrons 24-Tuberack with 2mL Tubes", "value": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"}
+    ]
   }
 ]
