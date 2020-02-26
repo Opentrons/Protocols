@@ -41,6 +41,7 @@ def run(protocol):
         washbuffer = trough['A5']
         washbuffer2 = trough['A7']
         ethanol = trough['A9']
+        ethanol2 = trough['A9']
         water = trough['A12']
     else:
         tuberack = protocol.load_labware(
@@ -51,7 +52,8 @@ def run(protocol):
         washbuffer = tuberack['A5']
         washbuffer2 = tuberack['C1']
         ethanol = tuberack['C3']
-        water = tuberack['C5']
+        ethanol2 = tuberack['C4']
+        water = tuberack['C6']
 
     magsamps = magplate.wells()[:samps]
     elutes = flatplate.wells()[:samps]
@@ -112,9 +114,9 @@ def run(protocol):
         pick_up(p20)
         p20.air_gap(2)
         p20.aspirate(4, ie_rna)
-        p20.dispense(6, dest.top(-2))
-        p20.touch_tip()
+        p20.dispense(6, dest)
         p20.blow_out(dest.top(-2))
+        p20.touch_tip()
         p20.drop_tip()
 
     # Step 3 - Mix bind buffer, then add to samples
@@ -190,6 +192,8 @@ def run(protocol):
 
     # Step 9, 10, 11
     wash_step(ethanol, 800, 4)
+
+    wash_step(ethanol2, 800, 4)
 
     # Additional wash step, if needed
 
