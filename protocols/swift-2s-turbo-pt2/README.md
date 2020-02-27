@@ -84,7 +84,7 @@ Slot 2: [NEST 12-Well Reservoir](https://shop.opentrons.com/collections/reservoi
 * A4: 80% Ethanol Solution, Freshly Prepared
 * A6: Low EDTA TE Buffer
 
-Slot 3: [[Opentrons Temperature Module with 24-Well Aluminum Block](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck) and [NEST 2mL Tubes](https://shop.opentrons.com/collections/tubes/products/nest-2-0-ml-sample-vial) with master mixes (for more information on master mixes, [click here](https://docs.google.com/spreadsheets/d/1_XIL31tTYOFV9ehGmeAc1eorLgv8yxpEu_27qpg3Ei4/edit?usp=sharing)) and indices (if automating index addition)
+Slot 3: [Opentrons Temperature Module with 24-Well Aluminum Block](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck) and [NEST 2mL Tubes](https://shop.opentrons.com/collections/tubes/products/nest-2-0-ml-sample-vial) with master mixes (for more information on master mixes, [click here](https://docs.google.com/spreadsheets/d/1_XIL31tTYOFV9ehGmeAc1eorLgv8yxpEu_27qpg3Ei4/edit?usp=sharing)) and indices (if automating index addition)
 * A1: (**used in Part 1**) Enzymatic Prep Master Mix
 * A2: (**used in Part 1**) Ligation Master Mix
 * A3: PCR Master Mix
