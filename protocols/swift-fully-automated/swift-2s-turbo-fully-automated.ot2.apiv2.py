@@ -7,8 +7,16 @@ metadata = {
 
 
 def run(protocol):
-    [no_samps, pip_tip, p300tips, cycles] = get_values(  # noqa: F821
-    'no_samps', 'pip_tip', 'p300tips', 'cycles')
+    [no_samps, pip_tip, p300tips,
+    a_index, cycles, f_time] = get_values(  # noqa: F821
+    'no_samps', 'pip_tip', 'p300tips', 'a_index', 'cycles', 'f_time')
+
+    # raise exceptions
+    if cycles < 3 or cycles > 15:
+        raise Exception('Number of Thermocycles should be between 3 and 15.')
+
+    if f_time < 6 or f_time > 30:
+        raise Exception('Fragmentation Time should be between 6 & 30 minutes.')
 
     # labware setup
     pip_type, tip_name = pip_tip.split()
@@ -40,7 +48,7 @@ def run(protocol):
     beads = rt_reagents.wells_by_name()['A2']
     ethanol = rt_reagents.wells_by_name()['A3']
     ethanol2 = rt_reagents.wells_by_name()['A4']
-    te = rt_reagents.wells_by_name()['A5']
+    te = rt_reagents.wells_by_name()['A6']
     waste = rt_reagents.wells_by_name()['A11']
     waste2 = rt_reagents.wells_by_name()['A12']
 
@@ -49,25 +57,25 @@ def run(protocol):
     mag_cols = mag_plate.columns_by_name()
 
     if no_samps == '8':
-        enzymatic_prep_samples = tc_samps['2']
+        enzymatic_prep_samples = tc_samps['1']
         enzymatic_300 = [enzymatic_prep_samples[0]]
-        pcr_prep_samples = tc_samps['3']
+        pcr_prep_samples = tc_samps['2']
         pcr_300 = [pcr_prep_samples[0]]
-        purified_samples = tc_samps['4']
+        purified_samples = tc_samps['3']
         # samps_300 = purified_samples[0]
-        mag_samples = mag_cols['2']
+        mag_samples = mag_cols['1']
         mag_300 = [mag_samples[0]]
-        mag_pure = [mag_cols['3'][0]]
+        mag_pure = [mag_cols['2'][0]]
     else:
-        enzymatic_prep_samples = tc_samps['2'] + tc_samps['3']
-        enzymatic_300 = [tc_samps['2'][0], tc_samps['3'][0]]
-        pcr_prep_samples = tc_samps['4'] + tc_samps['5']
-        pcr_300 = [tc_samps['4'][0], tc_samps['5'][0]]
-        purified_samples = tc_samps['6'] + tc_samps['7']
+        enzymatic_prep_samples = tc_samps['1'] + tc_samps['2']
+        enzymatic_300 = [tc_samps['1'][0], tc_samps['2'][0]]
+        pcr_prep_samples = tc_samps['3'] + tc_samps['4']
+        pcr_300 = [tc_samps['3'][0], tc_samps['4'][0]]
+        purified_samples = tc_samps['5'] + tc_samps['6']
         # samps_300 = tc_samps['6'][0] + tc_samps['7'][0]
-        mag_samples = mag_cols['2'] + mag_cols['3']
-        mag_300 = [mag_cols['2'][0], mag_cols['3'][0]]
-        mag_pure = [mag_cols['4'][0], mag_cols['5'][0]]
+        mag_samples = mag_cols['1'] + mag_cols['2']
+        mag_300 = [mag_cols['1'][0], mag_cols['2'][0]]
+        mag_pure = [mag_cols['3'][0], mag_cols['4'][0]]
 
     small_pip.flow_rate.aspirate = 150
     small_pip.flow_rate.dispense = 300
@@ -113,7 +121,7 @@ def run(protocol):
     # Run Enzymatic Prep Profile
     thermocycler.close_lid()
     thermocycler.set_lid_temperature(70)
-    thermocycler.set_block_temperature(32, hold_time_minutes=10)
+    thermocycler.set_block_temperature(32, hold_time_minutes=f_time)
     thermocycler.set_block_temperature(65, hold_time_minutes=30)
     thermocycler.set_block_temperature(4)
     thermocycler.deactivate_lid()
@@ -259,13 +267,17 @@ def run(protocol):
     """PCR Prep"""
     # Transfer Dual Indexes to the sample
     # Primer screw tubes are shallow !!!!
-    x = int(no_samps)
-    primers = [well for row in cool_reagents.rows()[1:] for well in row][:x]
-    for primer, well in zip(primers, pcr_prep_samples):
-        small_pip.pick_up_tip()
-        small_pip.aspirate(5, primer.top(-24))
-        small_pip.dispense(5, well)
-        small_pip.drop_tip()
+    if a_index == 'yes':
+        x = int(no_samps)
+        primers = [w for row in cool_reagents.rows()[1:] for w in row][:x]
+        for primer, well in zip(primers, pcr_prep_samples):
+            small_pip.pick_up_tip()
+            small_pip.aspirate(5, primer.top(-24))
+            small_pip.dispense(5, well)
+            small_pip.drop_tip()
+    else:
+        protocol.pause('You selected "No" to automated indexing. Please add \
+        indices to samples. When ready to continue, click RESUME.')
 
     # Transfer PCR Master Mix to the samples
 
