@@ -102,11 +102,11 @@ def run(ctx):
     m10.flow_rate.dispense = 2
     sample_strips = strips.rows()[0][:num_cols]
     h2o_strip = strips.rows()[0][-1]
-    m10.pick_up_tip()
     for spot, dest in zip(spots, sample_strips):
-        m10.transfer(8, spot.top(), dest, blow_out=True, new_tip='never')
+        m10.pick_up_tip()
+        m10.transfer(8, spot.top(), dest, new_tip='never', trash=False)
         m10.transfer(10, h2o_strip.bottom(1), spot.top(1), new_tip='never')
-    m10.drop_tip()
+        m10.drop_tip()
 
     # transfer master mix to new strip tubes
     mix_wells = strips.wells()[24:24+num_samples]
