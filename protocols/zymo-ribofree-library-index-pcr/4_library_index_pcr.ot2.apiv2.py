@@ -52,19 +52,20 @@ def run(ctx):
     p20.flow_rate.blow_out = 30
     m50 = ctx.load_instrument('p50_multi', p50_mount, tip_racks=racks50)
 
-    file_path = '/data/csv/tip_track.json'
     # file_path = 'protocols/tip_track.json'
-    if os.path.isfile(file_path):
-        with open(file_path) as json_file:
-            data = json.load(json_file)
-            if 'tips20' in data:
-                tip20_count = data['tips20'] % 96
-            else:
-                tip20_count = 0
-            if 'tips50' in data:
-                tip50_count = data['tips50'] % 96
-            else:
-                tip50_count = 0
+    if not ctx.is_simulating():
+        file_path = '/data/csv/tip_track.json'
+        if os.path.isfile(file_path):
+            with open(file_path) as json_file:
+                data = json.load(json_file)
+                if 'tips20' in data:
+                    tip20_count = data['tips20'] % 96
+                else:
+                    tip20_count = 0
+                if 'tips50' in data:
+                    tip50_count = data['tips50'] % 96
+                else:
+                    tip50_count = 0
     else:
         tip20_count = 0
         tip50_count = 0

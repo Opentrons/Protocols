@@ -36,15 +36,16 @@ def run(ctx):
     p20.flow_rate.dispense = 20
     p20.flow_rate.blow_out = 30
 
-    file_path = '/data/csv/tip_track.json'
     # file_path = 'protocols/tip_track.json'
-    if os.path.isfile(file_path):
-        with open(file_path) as json_file:
-            data = json.load(json_file)
-            if 'tips20' in data:
-                tip20_count = data['tips20']
-            else:
-                tip20_count = 0
+    if not ctx.is_simulating():
+        file_path = '/data/csv/tip_track.json'
+        if os.path.isfile(file_path):
+            with open(file_path) as json_file:
+                data = json.load(json_file)
+                if 'tips20' in data:
+                    tip20_count = data['tips20']
+                else:
+                    tip20_count = 0
     else:
         tip20_count = 0
 
@@ -112,8 +113,9 @@ with cleanup.')
 
     # track final used tip
     # file_path = '/data/csv/tip_track.json'
-    data = {
-        'tips20': tip20_count
-    }
-    with open(file_path, 'w') as outfile:
-        json.dump(data, outfile)
+    if not ctx.is_simulating():
+        data = {
+            'tips20': tip20_count
+        }
+        with open(file_path, 'w') as outfile:
+            json.dump(data, outfile)
