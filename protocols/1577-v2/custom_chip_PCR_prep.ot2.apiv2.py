@@ -73,7 +73,7 @@ def run(ctx):
             p50.air_gap(50-vol_per_asp)
             p50.aspirate(vol_per_asp, source)
             p50.dispense(50, mix_tube.top())
-            p50.blow_out(mix_tube.top())
+            # p50.blow_out(mix_tube.top())
         p50.drop_tip()
 
     mm_create(15*num_samples_for_mm, h2o)
@@ -89,7 +89,7 @@ def run(ctx):
         air_gap=5,
         new_tip='never')
     p50.mix(10, 20, mix_tube)
-    p50.blow_out(mix_tube.top())
+    # p50.blow_out(mix_tube.top())
     p50.drop_tip()
 
     # set up spots
@@ -113,7 +113,7 @@ def run(ctx):
     p50.pick_up_tip()
     for m in mix_wells:
         p50.transfer(21.75, mix_tube, m, new_tip='never')
-        p50.blow_out(m.top(-3))
+        # p50.blow_out(m.top(-3))
     p50.drop_tip()
 
     # reset flow rate to default and transfer sample to corresponding strip
@@ -125,7 +125,7 @@ def run(ctx):
         m10.pick_up_tip()
         m10.transfer(3, s, d, new_tip='never')
         m10.mix(10, 9, d)
-        m10.blow_out(d.top(-2))
+        # m10.blow_out(d.top(-2))
         m10.drop_tip()
 
     # transfer to thermocycler and perform thermocycling profile
@@ -133,7 +133,7 @@ def run(ctx):
     for s, d in zip(mix_strips, tc_dests):
         m10.pick_up_tip()
         m10.transfer(25, s.bottom(0.5), d, new_tip='never')
-        m10.blow_out(d.top(-2))
+        # m10.blow_out(d.top(-2))
         m10.drop_tip()
 
     tc.close_lid()
