@@ -30,9 +30,24 @@
     ]
   },
   {
+    "type": "dropDown",
+    "label": "Automate Indexing",
+    "name": "a_index",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
     "type": "int",
     "label": "Number of Thermocycles",
     "name": "cycles",
     "default": 5
+  },
+  {
+    "type": "int",
+    "label": "Fragmentation Time",
+    "name": "f_time",
+    "default": 10
   }
 ]
