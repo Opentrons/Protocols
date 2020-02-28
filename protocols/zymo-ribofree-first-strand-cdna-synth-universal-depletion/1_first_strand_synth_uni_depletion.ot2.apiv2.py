@@ -20,21 +20,21 @@ def run(ctx):
     #     96, 5, '> 1µg', 'right', 'left']
 
     # load modules and labware
-    tempdeck = ctx.load_module('tempdeck', '1')
-    tempdeck.set_temperature(4)
-    tempblock = tempdeck.load_labware(
-        'opentrons_24_aluminumblock_nest_1.5ml_screwcap')
     tc = ctx.load_module('thermocycler')
     tc.set_lid_temperature(100)
     tc.set_block_temperature(4)
     tc_plate = tc.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
-    reagent_res = ctx.load_labware(
-        'nest_12_reservoir_15ml', '2', 'reagent reservoir')
     racks20 = [
         ctx.load_labware('opentrons_96_tiprack_20ul', slot)
-        for slot in ['3', '4', '5', '6']
+        for slot in ['1', '2', '3']
     ]
-    racks50 = [ctx.load_labware('opentrons_96_tiprack_300ul', '9')]
+    tempdeck = ctx.load_module('tempdeck', '4')
+    tempdeck.set_temperature(4)
+    tempblock = tempdeck.load_labware(
+        'opentrons_24_aluminumblock_nest_1.5ml_screwcap')
+    reagent_res = ctx.load_labware(
+        'nest_12_reservoir_15ml', '5', 'reagent reservoir')
+    racks50 = [ctx.load_labware('opentrons_96_tiprack_300ul', '6')]
 
     # pipettes
     if p20_mount == p50_mount:
@@ -55,17 +55,29 @@ def run(ctx):
     etoh = reagent_res.wells()[0]
 
     tip20_count = 0
+    all_tips20 = [tip for rack in racks20 for tip in rack.wells()]
+    all_tips50 = [tip for rack in racks50 for tip in rack.rows()[0]]
+    tip50_count = 0
+    tip50_max = len(racks50*12)
     tip20_max = len(racks20*96)
 
-    def pick_up():
+    def pick_up(pip):
         nonlocal tip20_count
-        if tip20_count == tip20_max:
-            ctx.pause('Replace 20µl tipracks in slots 3 and 4 before \
-resuming.')
-            p20.reset_tipracks()
-            tip20_count = 0
-        tip20_count += 1
-        p20.pick_up_tip()
+        nonlocal tip50_count
+        if pip == p20:
+            if tip20_count == tip20_max:
+                ctx.pause('Replace tipracks before resuming.')
+                tip20_count = 0
+                [rack.reset() for rack in racks20]
+            pip.pick_up_tip(all_tips20[tip20_count])
+            tip20_count += 1
+        else:
+            if tip50_count == tip50_max:
+                ctx.pause('Replace tipracks before resuming.')
+                tip50_count = 0
+                [rack.reset() for rack in racks50]
+            pip.pick_up_tip(all_tips50[tip50_count])
+            tip50_count += 1
 
     """ Section 1.1: First-Strand cDNA Synthesis (Yellow Caps) """
     if tc.lid_position == 'closed':
@@ -74,7 +86,7 @@ resuming.')
     # bring samples up to 8µl with H2O if necessary
     vol_h2o = 9 - starting_vol if rna_input != '< 100ng' else 8 - starting_vol
     for s in samples:
-        pick_up()
+        pick_up(p20)
         p20.transfer(vol_h2o, h2o, s, new_tip='never')
         p20.blow_out(s.top(-2))
         p20.drop_tip()
@@ -82,7 +94,7 @@ resuming.')
     # transfer R1
     vol_r1 = 1 if rna_input != '< 100ng' else 2
     for s in samples:
-        pick_up()
+        pick_up(p20)
         p20.transfer(vol_r1, r1, s, mix_after=(3, 5), new_tip='never')
         p20.blow_out(s.top(-2))
         p20.drop_tip()
@@ -99,7 +111,7 @@ resuming.')
 
     # transfer R2
     for s in samples:
-        pick_up()
+        pick_up(p20)
         p20.transfer(10, r2, s, mix_after=(3, 15), new_tip='never')
         p20.blow_out(s.top(-2))
         p20.drop_tip()
@@ -116,12 +128,34 @@ resuming.')
 
     """ Section 1.2: RiboFreeTM Universal Depletion (Red Caps) """
 
+    # distribute D reagents to predispesing plate
+    if number_of_samples > 24:
+        predispense_plate = ctx.load_labware(
+            'nest_96_wellplate_100ul_pcr_full_skirt', '9',
+            'plate to predispense D reagent')
+        vol_per_well = 11*math.ceil(number_of_samples/8)
+        for d_reagent, col in zip(
+                [d1, d2, d3], predispense_plate.columns()[:3]):
+            pick_up(p20)
+            for well in col:
+                p20.transfer(
+                    vol_per_well, d_reagent, well, air_gap=2, new_tip='never')
+                p20.blow_out(well.top(-5))
+                p20.touch_tip(well)
+            p20.drop_tip()
+        d1, d2, d3 = predispense_plate.rows()[0][:3]
+        d_pip = m50
+        d_samples = samples_multi
+    else:
+        d_pip = p20
+        d_samples = samples
+
     # transfer D1
-    for s in samples:
-        pick_up()
-        p20.transfer(10, d1, s, mix_after=(3, 15), new_tip='never')
-        p20.blow_out(s.top(-2))
-        p20.drop_tip()
+    for s in d_samples:
+        pick_up(d_pip)
+        d_pip.transfer(10, d1, s, mix_after=(3, 15), new_tip='never')
+        d_pip.blow_out(s.top(-2))
+        d_pip.drop_tip()
     ctx.pause('Briefly spin down plate before resuming.')
 
     # execute pre-depletion incubation
@@ -134,11 +168,11 @@ resuming.')
     tc.open_lid()
 
     # transfer D2
-    for s in samples:
-        pick_up()
-        p20.transfer(10, d2, s, mix_after=(3, 15), new_tip='never')
-        p20.blow_out(s.top(-2))
-        p20.drop_tip()
+    for s in d_samples:
+        pick_up(d_pip)
+        d_pip.transfer(10, d2, s, mix_after=(3, 15), new_tip='never')
+        d_pip.blow_out(s.top(-2))
+        d_pip.drop_tip()
 
     # exeute depletion reaction
     if rna_input == '> 1µg':
@@ -155,11 +189,11 @@ resuming.')
     tc.open_lid()
 
     # transfer D3
-    for s in samples:
-        pick_up()
-        p20.transfer(10, d3, s, mix_after=(3, 15), new_tip='never')
-        p20.blow_out(s.top(-2))
-        p20.drop_tip()
+    for s in d_samples:
+        pick_up(d_pip)
+        d_pip.transfer(10, d3, s, mix_after=(3, 15), new_tip='never')
+        d_pip.blow_out(s.top(-2))
+        d_pip.drop_tip()
 
     # execute stop depletion
     profile_1_5 = [
@@ -172,7 +206,7 @@ resuming.')
 
     # transfer EtOH
     for m in samples_multi:
-        m50.pick_up_tip()
+        pick_up(m50)
         m50.transfer(
             25, etoh, m, mix_after=(5, 40), air_gap=10, new_tip='never')
         m50.blow_out(m.top(-2))
@@ -187,7 +221,8 @@ with cleanup.')
         file_path = '/data/csv/tip_track.json'
         # file_path = '/protocols/tip_track.json'
         data = {
-            'tips20': tip20_count
+            'tips20': tip20_count,
+            'tips50': tip50_count
         }
         with open(file_path, 'w') as outfile:
             json.dump(data, outfile)
