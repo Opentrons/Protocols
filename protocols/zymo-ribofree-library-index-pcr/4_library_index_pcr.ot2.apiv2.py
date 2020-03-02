@@ -20,27 +20,26 @@ def run(ctx):
     #     96, '> 1µg', 'right', 'left']
 
     # load modules and labware
-    tempdeck = ctx.load_module('tempdeck', '1')
-    tempdeck.set_temperature(4)
-    tempblock = tempdeck.load_labware(
-        'opentrons_24_aluminumblock_nest_1.5ml_screwcap')
     tc = ctx.load_module('thermocycler')
     tc.set_lid_temperature(100)
     tc.set_block_temperature(4)
     tc_plate = tc.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
-    reagent_res = ctx.load_labware(
-        'nest_12_reservoir_15ml', '2', 'reagent reservoir')
-    dna_eb = reagent_res.wells()[1]
     racks20 = [
         ctx.load_labware('opentrons_96_tiprack_20ul', slot)
-        for slot in ['3', '5']
+        for slot in ['1', '2']
     ]
+    tempdeck = ctx.load_module('tempdeck', '4')
+    tempdeck.set_temperature(4)
+    tempblock = tempdeck.load_labware(
+        'opentrons_24_aluminumblock_nest_1.5ml_screwcap')
+    reagent_res = ctx.load_labware(
+        'nest_12_reservoir_15ml', '5', 'reagent reservoir')
     index_plate = ctx.load_labware(
         'opentrons_96_aluminumblock_nest_wellplate_100ul',
-        '4', 'UDI primer plate')
+        '9', 'UDI primer plate')
     racks50 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
-        for slot in ['6', '9']
+        for slot in ['3', '6']
     ]
 
     # pipettes
@@ -52,19 +51,20 @@ def run(ctx):
     p20.flow_rate.blow_out = 30
     m50 = ctx.load_instrument('p50_multi', p50_mount, tip_racks=racks50)
 
-    file_path = '/data/csv/tip_track.json'
     # file_path = 'protocols/tip_track.json'
-    if os.path.isfile(file_path):
-        with open(file_path) as json_file:
-            data = json.load(json_file)
-            if 'tips20' in data:
-                tip20_count = data['tips20'] % 96
-            else:
-                tip20_count = 0
-            if 'tips50' in data:
-                tip50_count = data['tips50'] % 96
-            else:
-                tip50_count = 0
+    if not ctx.is_simulating():
+        file_path = '/data/csv/tip_track.json'
+        if os.path.isfile(file_path):
+            with open(file_path) as json_file:
+                data = json.load(json_file)
+                if 'tips20' in data:
+                    tip20_count = data['tips20'] % 96
+                else:
+                    tip20_count = 0
+                if 'tips50' in data:
+                    tip50_count = data['tips50'] % 96
+                else:
+                    tip50_count = 0
     else:
         tip20_count = 0
         tip50_count = 0
@@ -99,6 +99,7 @@ def run(ctx):
     udi_primers = index_plate.rows()[0][:math.ceil(number_of_samples/8)]
     samples_multi = tc_plate.rows()[0][:math.ceil(number_of_samples/8)]
     taq_premix = tempblock.rows()[3][0]
+    dna_eb = reagent_res.wells()[1]
 
     """ Section 2.3: Library Index PCR (Green Caps) """
     if tc.lid_position == 'closed':
