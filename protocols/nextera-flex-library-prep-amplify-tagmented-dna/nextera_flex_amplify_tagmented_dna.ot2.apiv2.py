@@ -153,7 +153,8 @@ pipettes')
         for i, dest in enumerate(samples300):
             source = mm_plate.rows()[0][i//4]
             angle = 0 if i % 2 == 0 else math.pi
-            disp_loc = (dest, dest.from_center(r=0.85, h=-0.6, theta=angle))
+            disp_loc = dest.bottom().move(
+                Point(x=0.85*(s.diameter/2)*angle, y=0, z=3))
             pip300.pick_up_tip()
             pip300.aspirate(40, source)
             pip300.move_to(dest.bottom(5))
