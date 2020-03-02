@@ -18,7 +18,7 @@ C1,A7,H8
 D1,A9,H12
 ```
 
-You can also download a template for this input [here](), edit in a spreadsheet editor like Google Sheets, MS Excel, or Apple Numbers, export as a `.csv` file, and upload below as the `.csv file to specify PCR mix destinations` parameter.
+You can also download a template for this input [here](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/453b5a/csv_temp.csv), edit in a spreadsheet editor like Google Sheets, MS Excel, or Apple Numbers, export as a `.csv` file, and upload below as the `.csv file to specify PCR mix destinations` parameter.
 
 The user is prompted to refill tipracks when necessary for both the P20 single-channel and P300 multi-channel pipettes.
 
