@@ -72,5 +72,12 @@
         "protocolName": "Thermocycler Example Protocol",
         "source": "Protocol Library"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "ThermocyclerContext at Thermocycler Module on 7 lw None",
+            "share": false,
+            "slot": "7",
+            "type": "thermocycler"
+        }
+    ]
 }
