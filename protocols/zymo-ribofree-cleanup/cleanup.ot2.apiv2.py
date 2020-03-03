@@ -25,7 +25,7 @@ def run(ctx):
     # load modules and labware
     racks10 = [
         ctx.load_labware('opentrons_96_tiprack_10ul', slot)
-        for slot in ['1', '4', '5']
+        for slot in ['1', '4']
     ]
     elution_plate = ctx.load_labware(
         'nest_96_wellplate_100ul_pcr_full_skirt', '2', 'elution PCR plate')
@@ -35,8 +35,10 @@ def run(ctx):
     mag_plate = magdeck.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
     racks300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
-        for slot in ['8', '9', '10', '11']
+        for slot in ['5', '8', '10', '11']
     ]
+    waste = ctx.load_labware(
+        'agilent_1_reservoir_290ml', '9', 'waste reservoir').wells()[0].top()
 
     # pipettes
     if p10_mount == p300_mount:
@@ -74,6 +76,7 @@ def run(ctx):
                 ctx.pause('Replace 10µl tipracks before resuming.')
                 tip10_count = 0
                 [rack.reset() for rack in racks300]
+                print('10 OUT')
             pip.pick_up_tip(all_tips10[tip10_count])
             tip10_count += 1
         else:
@@ -81,6 +84,7 @@ def run(ctx):
                 ctx.pause('Replace tipracks before resuming.')
                 tip300_count = 0
                 [rack.reset() for rack in racks300]
+                print('300 OUT')
             pip.pick_up_tip(all_tips300[tip300_count])
             tip300_count += 1
 
@@ -92,7 +96,7 @@ def run(ctx):
     beads = reagent_res.wells()[0]
     wash_buffer = reagent_res.wells()[1:4]
     dna_eb = reagent_res.wells()[4]
-    waste = [chan.top() for chan in reagent_res.wells()[6:]]
+    # waste = [chan.top() for chan in reagent_res.wells()[6:]]
 
     # setup cleanup parameters
     if cleanup_stage == 'post-first-strand synthesis and universal depletion':
@@ -160,7 +164,7 @@ stored at ≤ 4°C overnight or ≤ -20°C for long-term storage.'
         pick_up(m300)
         m300.aspirate(supernatant_vol*1.1, m)
         m300.air_gap(30)
-        m300.dispense(supernatant_vol*1.1+30, waste[i//6])
+        m300.dispense(supernatant_vol*1.1+30, waste)
         m300.air_gap(30)
         # m300.transfer(
         #     supernatant_vol*1.1, m, waste[i//6], air_gap=30, new_tip='never')
@@ -191,7 +195,7 @@ stored at ≤ 4°C overnight or ≤ -20°C for long-term storage.'
             # )
             m300.aspirate(supernatant_vol*1.1, m)
             m300.air_gap(30)
-            m300.dispense(supernatant_vol*1.1+30, waste[chan+2])
+            m300.dispense(supernatant_vol*1.1+30, waste)
             m300.air_gap(30)
             m300.drop_tip()
 
