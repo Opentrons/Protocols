@@ -120,5 +120,18 @@
         "protocolName": "Nextera DNA Flex NGS Library Prep: Amplify Tagmented DNA",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module on 4 lw 4 on Temperature Module on 4",
+            "share": false,
+            "slot": "4",
+            "type": "tempdeck"
+        },
+        {
+            "name": "MagneticModuleContext at Magnetic Module on 1 lw 1 on Magnetic Module on 1",
+            "share": false,
+            "slot": "1",
+            "type": "magdeck"
+        }
+    ]
 }
