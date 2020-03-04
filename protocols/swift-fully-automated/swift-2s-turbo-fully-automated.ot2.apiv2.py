@@ -420,3 +420,7 @@ def run(protocol):
         p300.dispense(22, p_samps.top(-12))
         p300.blow_out()
         p300.drop_tip()
+
+    protocol.comment('Swift 2S Turbo DNA Library Kit completed. \
+    Store freshly prepared libraries at 4C (-20C for long term), \
+    or proceed to quantification.')
