@@ -104,13 +104,7 @@ __Using the customizations fields, below set up your protocol.__
 * **Pipette and Tip Type**: Select which pipette (P50 Single-Channel or P20 Single-Channel) and corresponding tips to be used for this protocol. **The pipette should be attached to the left mount.**
 * **P300 8-Channel Pipette Tip Type**: Select which tips (Filter/Non-Filter) for P300 8-Channel Pipette
 * **Automate Indexing**: Specify whether the indices should be added to the samples with the OT-2, or manually.
-* **Number of PCR Cycles**: See manual for more information
-|Input(ng)	|Minimum recommended PCR cycles	|
-|----				|----														|
-|>=100 			|3															|
-|25					|5															|
-|10					|7															|
-|1					|10															|
+* **Number of PCR Cycles**: See suggested cycles [here](https://docs.google.com/spreadsheets/d/1uSJjvYjxcpHjleom6PTDldCKUYiHMLG2ngEs6Cugx5Q/edit?usp=sharing). See Swift 2S Turbo manual for more detailed information. 
 * **Fragmentation Time**: Fragmentation time varies depending on *1)* Lot number of the kit and *2)* whether the desired insert size is 200bp or 350bp. Please refer to the manual and Lot number on your kit for more information.
 
 
