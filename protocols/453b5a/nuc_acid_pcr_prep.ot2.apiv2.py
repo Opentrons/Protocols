@@ -59,7 +59,7 @@ def run(ctx):
     conc_dil = res12.wells()[0]
     buffer_b = res12.wells()[1]
     buffer_c = res12.wells()[2:5]
-    liq_waste = [chan.top() for chan in res12.wells()[8:]]
+    liq_waste = [chan.top(2) for chan in res12.wells()[8:]]
     pcr_mix_sources = [
         line.split(',')[0].strip().upper()
         for line in mix_csv.splitlines()[1:] if line]
@@ -99,7 +99,7 @@ resuming.')
     # distribute concentration dilution
     pick_up(m300)
     m300.distribute(
-        50, conc_dil, [s.top() for s in samples300], new_tip='never',
+        50, conc_dil, [s.top(2) for s in samples300], new_tip='never',
         air_gap=30, disposal_vol=0)
 
     ctx.delay(minutes=5, msg='Incubating at 50˚C for 5 minutes.')
@@ -108,7 +108,7 @@ resuming.')
     if not m300.hw_pipette['has_tip']:
         pick_up(m300)
     m300.distribute(
-        100, buffer_b, [s.top() for s in samples300], new_tip='never',
+        100, buffer_b, [s.top(2) for s in samples300], new_tip='never',
         air_gap=30, disposal_vol=0)
 
     ctx.delay(minutes=5, msg='Incubating at 50˚C for 5 minutes.')
@@ -126,7 +126,7 @@ resuming.')
     for wash in range(3):
         pick_up(m300)
         m300.transfer(
-            200, buffer_c[wash], [s.top() for s in samples300],
+            200, buffer_c[wash], [s.top(2) for s in samples300],
             new_tip='never', air_gap=30)
         # remove supernatant from all samples
         for s in samples300:
@@ -153,5 +153,5 @@ resuming.')
         pick_up(p20)
         start, end = d_set
         for d in parse_destinations(start, end):
-            p20.transfer(8, source, d.top(), air_gap=5, new_tip='never')
+            p20.transfer(8, source, d.top(2), air_gap=5, new_tip='never')
         p20.drop_tip()
