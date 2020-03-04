@@ -15,7 +15,7 @@
 ![Swift Biosciences](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/swift-2s-protocol/swift_logo.jpg)
 
 
-With this protocol, your [OT-2](https://shop.opentrons.com/collections/ot-2-robot/products/ot-2) can **fully automate** the entire [Swift 2S Turbo DNA Library Kit](https://swiftbiosci.com/swift-2s-turbo-dna-library-kits/). Once you press start on the OT-2, the robot will run through the enzymatic prep all the way through the entire workflow without any pauses or hands-on requirements. Up to 16 libraries can be prepared in under 3 hours.
+With this protocol, your [OT-2](https://shop.opentrons.com/collections/ot-2-robot/products/ot-2) can **fully automate** the entire [Swift 2S Turbo DNA Library Kit](https://swiftbiosci.com/swift-2s-turbo-dna-library-kits/). Simply press start and your can OT-2 can automate this entire workflow without any hands-on requirement - from enzymatic prep to sequence ready libraries! Up to 16 libraries can be prepared in under 3 hours.
 
 
 For more information about the Swift 2S Turbo Kit and the [Swift 2S Turbo Unique Dual Indexing Primer Kit](https://shop.opentrons.com/products/swift-2s-turbo-unique-dual-indexing-primer-kit-96-rxns?_pos=1&_sid=f1fb599e7&_ss=r) on the OT-2, please see our Application Note here: [Rapid high quality next generation sequencing library preparation with Swift 2S Turbo DNA Library Kits on the Opentrons OT-2](https://opentrons-landing-img.s3.amazonaws.com/bundles/swift_automated_ngs_application_note.pdf)
@@ -104,7 +104,7 @@ __Using the customizations fields, below set up your protocol.__
 * **Pipette and Tip Type**: Select which pipette (P50 Single-Channel or P20 Single-Channel) and corresponding tips to be used for this protocol. **The pipette should be attached to the left mount.**
 * **P300 8-Channel Pipette Tip Type**: Select which tips (Filter/Non-Filter) for P300 8-Channel Pipette
 * **Automate Indexing**: Specify whether the indices should be added to the samples with the OT-2, or manually.
-* **Number of PCR Cycles**: See suggested cycles [here](https://docs.google.com/spreadsheets/d/1uSJjvYjxcpHjleom6PTDldCKUYiHMLG2ngEs6Cugx5Q/edit?usp=sharing). See Swift 2S Turbo manual for more detailed information. 
+* **Number of PCR Cycles**: See suggested cycles [here](https://docs.google.com/spreadsheets/d/1uSJjvYjxcpHjleom6PTDldCKUYiHMLG2ngEs6Cugx5Q/edit?usp=sharing). See Swift 2S Turbo manual for more detailed information.
 * **Fragmentation Time**: Fragmentation time varies depending on *1)* Lot number of the kit and *2)* whether the desired insert size is 200bp or 350bp. Please refer to the manual and Lot number on your kit for more information.
 
 
