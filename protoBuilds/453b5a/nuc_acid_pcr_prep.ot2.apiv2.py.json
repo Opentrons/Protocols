@@ -1644,5 +1644,12 @@
         "protocolName": "Nucleic Acid Purification and PCR Prep",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module on 4 lw PCR plate on Temperature Module on 4",
+            "share": false,
+            "slot": "4",
+            "type": "tempdeck"
+        }
+    ]
 }

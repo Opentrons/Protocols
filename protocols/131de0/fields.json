@@ -1,0 +1,17 @@
+[
+  {
+    "type": "dropDown",
+    "label": "P10 multi-channel GEN1 pipette mount",
+    "name": "p10_multi_mount",
+    "options": [
+      { "label": "left", "value": "left" },
+      { "label": "right", "value": "right" }
+    ]
+  },
+  {
+    "type": "int",
+    "label": "number of samples (1-96)",
+    "name": "num_samples",
+    "default": 96
+  }
+]
