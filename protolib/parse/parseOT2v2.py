@@ -119,10 +119,11 @@ def parse(protocol_path):
     # NOTE: this isn't really used right now...
     metadata = protocol.metadata
 
-    # TODO IMMEDIATELY
-    modules = filter_none([parse_module(slot, module)
-                           for slot, module
-                           in context.loaded_modules.items()])
+    # NOTE: module population broke library deck layout 3/5/2020
+    # modules = filter_none([parse_module(slot, module)
+    #                        for slot, module
+    #                        in context.loaded_modules.items()])
+    modules = []
 
     return {
         "instruments": instruments,
