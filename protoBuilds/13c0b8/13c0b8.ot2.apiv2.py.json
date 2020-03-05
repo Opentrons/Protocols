@@ -1206,12 +1206,5 @@
         "protocolName": "Non-Sterile Cell Analysis",
         "source": "Custom Protocol Request"
     },
-    "modules": [
-        {
-            "name": "TemperatureModuleContext at Temperature Module on 1 lw 96-well BRANDplate with V-bottom on Temperature Module on 1",
-            "share": false,
-            "slot": "1",
-            "type": "tempdeck"
-        }
-    ]
+    "modules": []
 }
