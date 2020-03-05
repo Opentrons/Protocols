@@ -87,12 +87,5 @@
         "protocolName": "Swift 2S Turbo DNA Library Kit Protocol: Part 3/3 -     Final Clean-Up",
         "source": "Protocol Library"
     },
-    "modules": [
-        {
-            "name": "MagneticModuleContext at Magnetic Module on 4 lw NEST 96-Well Plate on Magnetic Module on 4",
-            "share": false,
-            "slot": "4",
-            "type": "magdeck"
-        }
-    ]
+    "modules": []
 }

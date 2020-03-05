@@ -98,12 +98,5 @@
         "protocolName": "Library Prep Clean Up",
         "source": "Custom Protocol Request"
     },
-    "modules": [
-        {
-            "name": "MagneticModuleContext at Magnetic Module on 4 lw Mag Plate on Magnetic Module on 4",
-            "share": false,
-            "slot": "4",
-            "type": "magdeck"
-        }
-    ]
+    "modules": []
 }
