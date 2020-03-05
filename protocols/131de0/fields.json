@@ -13,5 +13,11 @@
     "label": "number of samples (1-96)",
     "name": "num_samples",
     "default": 96
+  },
+  {
+    "type": "int",
+    "label": "number of replicates (1-4)",
+    "name": "num_reps",
+    "default": 4
   }
 ]

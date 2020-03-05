@@ -1,5 +1,5 @@
 {
-    "content": "import math\n\n# metadata\nmetadata = {\n    'protocolName': 'Copy Number Variant (CNV) Plating',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.0'\n}\n\n\ndef run(ctx):\n\n    p10_multi_mount, num_samples = get_values(  # noqa: F821\n        'p10_multi_mount', 'num_samples')\n\n    # load labware\n    plate384 = ctx.load_labware(\n        'microampoptical_384_wellplate_30ul', '2', '384-well plate')\n    dilution_plate = ctx.load_labware(\n        'usascientific_96_wellplate_100ul', '3', 'CNV dilution plate')\n    mm = ctx.load_labware('generic_1_reservoir_25000ul', '4').wells()[0]\n    tipracks = [ctx.load_labware('opentrons_96_tiprack_10ul', '6')]\n\n    # load pipette\n    m10 = ctx.load_instrument('p10_multi', p10_multi_mount, tip_racks=tipracks)\n\n    # transfer mastermix to all 384 wells\n    num_cols = math.ceil(num_samples/8)\n    mm_dests = [\n        well for row in plate384.rows()[:2] for well in row[:num_cols*2]]\n    m10.pick_up_tip()\n    for d in mm_dests:\n        m10.air_gap(2)\n        m10.aspirate(8, mm)\n        m10.dispense(10, d)\n        m10.blow_out(d.bottom(3))\n\n    # setup DNA sources and destinations\n    dna_source_sets = dilution_plate.rows()[0]\n    dna_dest_sets = [\n        [well\n         for set in [row[i*2:i*2+2] for row in plate384.rows()[:2]]\n         for well in set]\n        for i in range(12)\n    ][:num_cols]\n\n    # transfer DNA in triplicate\n    for s, d_set in zip(dna_source_sets, dna_dest_sets):\n        if not m10.hw_pipette['has_tip']:\n            m10.pick_up_tip()\n        for d in d_set:\n            m10.air_gap(3)\n            m10.aspirate(2, s)\n            m10.air_gap(2)\n            m10.dispense(2, d.top(-2))\n            m10.aspirate(5)\n            m10.dispense(7, d)\n            m10.dispense(3, d.bottom(3))\n            m10.blow_out(d.bottom(3))\n        m10.drop_tip()\n",
+    "content": "import math\n\n# metadata\nmetadata = {\n    'protocolName': 'Copy Number Variant (CNV) Plating',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.0'\n}\n\n\ndef run(ctx):\n\n    p10_multi_mount, num_samples, num_reps = get_values(  # noqa: F821\n        'p10_multi_mount', 'num_samples', 'num_reps')\n\n    # load labware\n    mm_plate = ctx.load_labware(\n        'microampoptical_384_wellplate_30ul', '1', 'mastermix plate')\n    plate384 = ctx.load_labware(\n        'microampoptical_384_wellplate_30ul', '2', '384-well plate')\n    dilution_plate = ctx.load_labware(\n        'usascientific_96_wellplate_100ul', '3', 'CNV dilution plate')\n    tipracks = [\n        ctx.load_labware('opentrons_96_tiprack_10ul', str(slot))\n        for slot in range(4, 7)\n    ]\n\n    # load pipette\n    m10 = ctx.load_instrument('p10_multi', p10_multi_mount, tip_racks=tipracks)\n\n    # transfer mastermix to all 384 wells\n    num_cols = math.ceil(num_samples/8)\n    mm_sources = mm_plate.rows()[0][:num_reps]\n    mm_dest_sets = [\n        [\n            [well\n             for set in [row[i*2:i*2+2] for row in plate384.rows()[:2]]\n             for well in set[:num_reps]][n]\n            for i in range(12)\n        ][:num_cols]\n        for n in range(num_reps)\n    ]\n    for s, d_set in zip(mm_sources, mm_dest_sets):\n        m10.pick_up_tip()\n        for d in d_set:\n            m10.air_gap(2)\n            m10.aspirate(8, s)\n            m10.dispense(10, d)\n            m10.blow_out(d.bottom(3))\n        m10.drop_tip()\n\n    # setup DNA sources and destinations\n    dna_source_sets = dilution_plate.rows()[0]\n    dna_dest_sets = [\n        [well\n         for set in [row[i*2:i*2+2] for row in plate384.rows()[:2]]\n         for well in set[:num_reps]]\n        for i in range(12)\n    ][:num_cols]\n\n    # transfer DNA in triplicate\n    for s, d_set in zip(dna_source_sets, dna_dest_sets):\n        m10.pick_up_tip()\n        for d in d_set:\n            m10.air_gap(3)\n            m10.aspirate(2, s)\n            m10.air_gap(2)\n            m10.dispense(2, d.top(-2))\n            m10.aspirate(5)\n            m10.dispense(7, d)\n            m10.dispense(3, d.bottom(3))\n            m10.blow_out(d.bottom(3))\n        m10.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -5541,6 +5541,12 @@
             "label": "number of samples (1-96)",
             "name": "num_samples",
             "type": "int"
+        },
+        {
+            "default": 4,
+            "label": "number of replicates (1-4)",
+            "name": "num_reps",
+            "type": "int"
         }
     ],
     "instruments": [
@@ -5550,6 +5556,12 @@
         }
     ],
     "labware": [
+        {
+            "name": "mastermix plate on 1",
+            "share": false,
+            "slot": "1",
+            "type": "microampoptical_384_wellplate_30ul"
+        },
         {
             "name": "384-well plate on 2",
             "share": false,
@@ -5563,10 +5575,16 @@
             "type": "usascientific_96_wellplate_100ul"
         },
         {
-            "name": "Generic 1 Reservoir 25000 \u00b5L on 4",
+            "name": "Opentrons 96 Tip Rack 10 \u00b5L on 4",
             "share": false,
             "slot": "4",
-            "type": "generic_1_reservoir_25000ul"
+            "type": "opentrons_96_tiprack_10ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 10 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_tiprack_10ul"
         },
         {
             "name": "Opentrons 96 Tip Rack 10 \u00b5L on 6",
