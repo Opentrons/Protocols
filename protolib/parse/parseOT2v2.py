@@ -10,6 +10,25 @@ def filter_none(arr):
     return [i for i in arr if i is not None]
 
 
+def parse_module(slot, module):
+    if module is None:
+        return None
+
+    # TODO: Nick 3/3/2020 better way to access module (load) name directly
+    try:
+        module_type = module._module.name()
+    except AttributeError:
+        return None
+
+    # TODO: Ian 2019-09-12 Labware should remember its label,
+    # use that for `name` instead of Labware.__str__
+    return {
+        'slot': str(slot),
+        'type': module_type,  # load name or something
+        'name': str(module),  # display name
+        'share': False}
+
+
 def parse_labware(slot, labware):
     if labware is None:
         return None
@@ -24,6 +43,7 @@ def parse_labware(slot, labware):
 
     # TODO: Ian 2019-09-12 Labware should remember its label,
     # use that for `name` instead of Labware.__str__
+
     return {
         'slot': str(slot),
         'type': labware_type,  # load name or something
@@ -99,7 +119,10 @@ def parse(protocol_path):
     # NOTE: this isn't really used right now...
     metadata = protocol.metadata
 
-    # TODO IMMEDIATELY
+    # NOTE: module population broke library deck layout 3/5/2020
+    # modules = filter_none([parse_module(slot, module)
+    #                        for slot, module
+    #                        in context.loaded_modules.items()])
     modules = []
 
     return {

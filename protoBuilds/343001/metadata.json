@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "swift-2s-turbo-fully-automated.ot2.apiv2.py"
+            "343001.ot2.apiv2.py"
         ],
         "description": [
             "README.md"
@@ -11,10 +11,10 @@
     "flags": {
         "embedded-app": false,
         "feature": false,
-        "hide-from-search": false,
+        "hide-from-search": true,
         "skip-tests": false
     },
-    "path": "protocols/swift-fully-automated",
-    "slug": "swift-fully-automated",
+    "path": "protocols/343001",
+    "slug": "343001",
     "status": "ok"
 }

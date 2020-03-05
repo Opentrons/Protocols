@@ -15,7 +15,7 @@
 ![Swift Biosciences](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/swift-2s-protocol/swift_logo.jpg)
 
 
-With this protocol, your [OT-2](https://shop.opentrons.com/collections/ot-2-robot/products/ot-2) can **fully automate** the entire [Swift 2S Turbo DNA Library Kit](https://swiftbiosci.com/swift-2s-turbo-dna-library-kits/). Once you press start on the OT-2, the robot will run through the enzymatic prep all the way through the entire workflow without any pauses or hands-on requirements. Up to 16 libraries can be prepared in under 3 hours.
+With this protocol, your [OT-2](https://shop.opentrons.com/collections/ot-2-robot/products/ot-2) can **fully automate** the entire [Swift 2S Turbo DNA Library Kit](https://swiftbiosci.com/swift-2s-turbo-dna-library-kits/). Simply press start and your OT-2 can automate this entire workflow without any hands-on requirement - from enzymatic prep to sequence ready libraries! Up to 16 libraries can be prepared in under 3 hours.
 
 
 For more information about the Swift 2S Turbo Kit and the [Swift 2S Turbo Unique Dual Indexing Primer Kit](https://shop.opentrons.com/products/swift-2s-turbo-unique-dual-indexing-primer-kit-96-rxns?_pos=1&_sid=f1fb599e7&_ss=r) on the OT-2, please see our Application Note here: [Rapid high quality next generation sequencing library preparation with Swift 2S Turbo DNA Library Kits on the Opentrons OT-2](https://opentrons-landing-img.s3.amazonaws.com/bundles/swift_automated_ngs_application_note.pdf)
@@ -67,10 +67,10 @@ Slot 1: [NEST 96-Well PCR Plate](https://shop.opentrons.com/collections/lab-plat
 
 
 Slot 2: [NEST 12-Well Reservoir](https://shop.opentrons.com/collections/reservoirs/products/nest-12-well-reservoir-15-ml) with Reagents
-* A2: Magnetic Beads
-* A3: 80% Ethanol Solution, Freshly Prepared
-* A4: 80% Ethanol Solution, Freshly Prepared (if running 16 samples)
-* A6: Low EDTA Buffer
+* A2: Magnetic Beads; recommended volume: 3-4mL
+* A3: 80% Ethanol Solution, Freshly Prepared; recommended volume: 9-10mL
+* A4: 80% Ethanol Solution, Freshly Prepared (if running 16 samples); recommended volume: 9-10mL
+* A6: Low EDTA TE Buffer; recommended volume: 3mL
 
 
 Slot 3: [Opentrons Temperature Module with 24-Well Aluminum Block](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck) and [NEST 2mL Tubes](https://shop.opentrons.com/collections/tubes/products/nest-2-0-ml-sample-vial) with master mixes (for more information on master mixes, [click here](https://docs.google.com/spreadsheets/d/1zK-6d6UDam4nW0FYZ3eG5yBFRs51Kggchh3NE77kR5g/edit?usp=sharing)) and indices (if automating index addition)
@@ -104,13 +104,7 @@ __Using the customizations fields, below set up your protocol.__
 * **Pipette and Tip Type**: Select which pipette (P50 Single-Channel or P20 Single-Channel) and corresponding tips to be used for this protocol. **The pipette should be attached to the left mount.**
 * **P300 8-Channel Pipette Tip Type**: Select which tips (Filter/Non-Filter) for P300 8-Channel Pipette
 * **Automate Indexing**: Specify whether the indices should be added to the samples with the OT-2, or manually.
-* **Number of Thermocycles**: See manual for more information
-Input (ng) | **Minimum** recommended PCR cycles
---- | ---
-(>=)100 | 3
-25 | 5
-10 | 7
-1 | 10
+* **Number of PCR Cycles**: See suggested cycles [here](https://docs.google.com/spreadsheets/d/1uSJjvYjxcpHjleom6PTDldCKUYiHMLG2ngEs6Cugx5Q/edit?usp=sharing). See Swift 2S Turbo manual for more detailed information.
 * **Fragmentation Time**: Fragmentation time varies depending on *1)* Lot number of the kit and *2)* whether the desired insert size is 200bp or 350bp. Please refer to the manual and Lot number on your kit for more information.
 
 
