@@ -10,14 +10,23 @@
   },
   {
     "type": "int",
-    "label": "number of samples (1-96)",
+    "label": "number of samples (1-96, processed in columns of 8)",
     "name": "num_samples",
     "default": 96
   },
   {
-    "type": "int",
-    "label": "number of replicates (1-4)",
+    "type": "dropDown",
+    "label": "replicate factor",
     "name": "num_reps",
-    "default": 4
+    "options": [
+      { "label": "duplicate", "value": "duplicate"},
+      { "label": "quadruplicate", "value": "quadruplicate"}
+    ]
+  },
+  {
+    "type": "int",
+    "label": "number of mastermixes (if processing duplicates)",
+    "name": "num_mm",
+    "default": 2
   }
 ]
