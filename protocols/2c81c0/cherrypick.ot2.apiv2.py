@@ -9,8 +9,8 @@ metadata = {
 
 def run(ctx):
 
-    csv_input, p10_mount = get_values(  # noqa: F821
-        'csv_input', 'p10_mount')
+    csv_input, p10_mount, labware_type = get_values(  # noqa: F821
+        'csv_input', 'p10_mount', 'labware_type')
     # csv_input, p10_mount = [
     #     'source plate ,well,volume,destination plate ,well,height \n,,,,\
     #        ,\n1,A2,7,5,A4,-4',
@@ -36,12 +36,10 @@ def run(ctx):
         vol, h_offset = float(vol), float(h_offset)
         if int(s_slot) not in ctx.loaded_labwares:
             ctx.load_labware(
-                'biorad_96_wellplate_200ul_pcr', s_slot,
-                'source plate ' + s_slot)
+                labware_type, s_slot, 'source plate ' + s_slot)
         if int(d_slot) not in ctx.loaded_labwares:
             ctx.load_labware(
-                'biorad_96_wellplate_200ul_pcr', d_slot,
-                'destination plate ' + d_slot)
+                labware_type, d_slot, 'destination plate ' + d_slot)
         source = ctx.loaded_labwares[int(s_slot)].wells_by_name()[s_well]
         dest = ctx.loaded_labwares[int(d_slot)].wells_by_name()[d_well]
         if h_offset > source._depth:

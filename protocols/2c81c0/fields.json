@@ -13,5 +13,14 @@
       { "label": "right", "value": "right" },
       { "label": "left", "value": "left" }
     ]
+  },
+  {
+    "type": "dropDown",
+    "label": "labware type",
+    "name": "labware_type",
+    "options": [
+      { "label": "Bio-Rad 96 Well Plate 200 µL PCR", "value": "biorad_96_wellplate_200ul_pcr" },
+      { "label": "Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap", "value": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap" }
+    ]
   }
 ]
