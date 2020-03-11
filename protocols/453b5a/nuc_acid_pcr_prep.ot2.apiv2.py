@@ -31,19 +31,19 @@ def run(ctx):
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
         for slot in ['3', '6', '9']
     ]
-    tempdeck = ctx.load_module('tempdeck', '4')
+    cuvette_racks = [
+        ctx.load_labware(
+            'greinerbioone_24_bloodrack_13x100',
+            slot, 'blood sample rack ' + str(i+1))
+        for i, slot in enumerate(['4', '5', '7', '8'])
+    ]
+    tempdeck = ctx.load_module('tempdeck', '10')
     tempdeck.set_temperature(50)
     temp_plate = tempdeck.load_labware(
         'biozym_96_aluminumblock_200ul', 'PCR plate')
     pcr_mix_rack = ctx.load_labware(
         'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap',
-        '5', 'PCR mix tube rack')
-    cuvette_racks = [
-        ctx.load_labware(
-            'greinerbioone_24_bloodrack_13x100',
-            slot, 'blood sample rack ' + str(i+1))
-        for i, slot in enumerate(['7', '8', '10', '11'])
-    ]
+        '11', 'PCR mix tube rack')
 
     # pipettes
     p20 = ctx.load_instrument(
@@ -99,8 +99,7 @@ resuming.')
     # distribute concentration dilution
     pick_up(m300)
     m300.distribute(
-        50, conc_dil, [s.top(2) for s in samples300], new_tip='never',
-        air_gap=30, disposal_vol=0)
+        50, conc_dil, [s.top(2) for s in samples300], new_tip='never')
 
     ctx.delay(minutes=5, msg='Incubating at 50˚C for 5 minutes.')
 
@@ -108,8 +107,7 @@ resuming.')
     if not m300.hw_pipette['has_tip']:
         pick_up(m300)
     m300.distribute(
-        100, buffer_b, [s.top(2) for s in samples300], new_tip='never',
-        air_gap=30, disposal_vol=0)
+        100, buffer_b, [s.top(2) for s in samples300], new_tip='never')
 
     ctx.delay(minutes=5, msg='Incubating at 50˚C for 5 minutes.')
 
