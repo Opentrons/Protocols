@@ -1,5 +1,5 @@
 {
-    "content": "# metadata\nmetadata = {\n    'protocolName': 'Cherrypicking from .csv',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.0'\n}\n\n\ndef run(ctx):\n\n    csv_input, p10_mount = get_values(  # noqa: F821\n        'csv_input', 'p10_mount')\n    # csv_input, p10_mount = [\n    #     'source plate ,well,volume,destination plate ,well,height \\n,,,,\\\n    #        ,\\n1,A2,7,5,A4,-4',\n    #     'left'\n    # ]\n\n    # labware\n    tiprack10 = ctx.load_labware('biotix_96_filtertiprack_10ul', '4')\n\n    # pipette\n    p10 = ctx.load_instrument(\n        'p10_single', p10_mount, tip_racks=[tiprack10])\n\n    # parse\n    data = [\n        [val.strip().upper() for val in line.split(',')]\n        for line in csv_input.splitlines()\n        if line and line.split(',')[0].strip()][1:]\n\n    # loop and perform transfers\n    for d in data:\n        s_slot, s_well, vol, d_slot, d_well, h_offset = d\n        vol, h_offset = float(vol), float(h_offset)\n        if int(s_slot) not in ctx.loaded_labwares:\n            ctx.load_labware(\n                'biorad_96_wellplate_200ul_pcr', s_slot,\n                'source plate ' + s_slot)\n        if int(d_slot) not in ctx.loaded_labwares:\n            ctx.load_labware(\n                'biorad_96_wellplate_200ul_pcr', d_slot,\n                'destination plate ' + d_slot)\n        source = ctx.loaded_labwares[int(s_slot)].wells_by_name()[s_well]\n        dest = ctx.loaded_labwares[int(d_slot)].wells_by_name()[d_well]\n        if h_offset > source._depth:\n            ctx.pause('Warning: Specified height may result in crashing. \\\nPress resume to ignore.')\n\n        p10.pick_up_tip()\n        p10.transfer(\n            vol,\n            source.top(h_offset),\n            dest.bottom(3),\n            new_tip='never'\n        )\n        p10.blow_out(dest.top(-2))\n        p10.drop_tip()\n",
+    "content": "# metadata\nmetadata = {\n    'protocolName': 'Cherrypicking from .csv',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.0'\n}\n\n\ndef run(ctx):\n\n    csv_input, p10_mount, labware_type = get_values(  # noqa: F821\n        'csv_input', 'p10_mount', 'labware_type')\n    # csv_input, p10_mount = [\n    #     'source plate ,well,volume,destination plate ,well,height \\n,,,,\\\n    #        ,\\n1,A2,7,5,A4,-4',\n    #     'left'\n    # ]\n\n    # labware\n    tiprack10 = ctx.load_labware('biotix_96_filtertiprack_10ul', '4')\n\n    # pipette\n    p10 = ctx.load_instrument(\n        'p10_single', p10_mount, tip_racks=[tiprack10])\n\n    # parse\n    data = [\n        [val.strip().upper() for val in line.split(',')]\n        for line in csv_input.splitlines()\n        if line and line.split(',')[0].strip()][1:]\n\n    # loop and perform transfers\n    for d in data:\n        s_slot, s_well, vol, d_slot, d_well, h_offset = d\n        vol, h_offset = float(vol), float(h_offset)\n        if int(s_slot) not in ctx.loaded_labwares:\n            ctx.load_labware(\n                labware_type, s_slot, 'source plate ' + s_slot)\n        if int(d_slot) not in ctx.loaded_labwares:\n            ctx.load_labware(\n                labware_type, d_slot, 'destination plate ' + d_slot)\n        source = ctx.loaded_labwares[int(s_slot)].wells_by_name()[s_well]\n        dest = ctx.loaded_labwares[int(d_slot)].wells_by_name()[d_well]\n        if h_offset > source._depth:\n            ctx.pause('Warning: Specified height may result in crashing. \\\nPress resume to ignore.')\n\n        p10.pick_up_tip()\n        p10.transfer(\n            vol,\n            source.top(h_offset),\n            dest.bottom(3),\n            new_tip='never'\n        )\n        p10.blow_out(dest.top(-2))\n        p10.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -1142,6 +1142,21 @@
                 {
                     "label": "left",
                     "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "labware type",
+            "name": "labware_type",
+            "options": [
+                {
+                    "label": "Bio-Rad 96 Well Plate 200 \u00b5L PCR",
+                    "value": "biorad_96_wellplate_200ul_pcr"
+                },
+                {
+                    "label": "Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap",
+                    "value": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
                 }
             ],
             "type": "dropDown"
