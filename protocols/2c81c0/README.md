@@ -11,9 +11,12 @@
 This protocol performs a custom cherrypicking workflow from `.csv` file using custom filtertips. The `.csv` file should be formatted as follows, **including header line** (all empty lines are ignored):
 
 ```
-source plate,source well,volume,destination plate,destination well,height offset from top of source well
-1,A2,7,5,A4,-4
+source labware,source slot,source well,volume,destination labware,destination slot,destination well,height offset from top of source well (mm)
+plate,1,A2,7,tuberack,5,A4,-4
+plate,2,H10,9,tuberack,3,D1,-4
 ```
+
+Note that `source labware` and `destination labware` must be either `plate` or `tuberack`
 
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
