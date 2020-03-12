@@ -60,7 +60,8 @@ def run_custom_protocol(
             'P1000_Single')='P300_Single',
         pipette_mount: StringSelection('left', 'right')='left',
         starting_tip: str='A1',
-        dispense_mode: StringSelection('Transfer', 'Distribute')='Transfer'
+        dispense_mode: StringSelection('Transfer', 'Distribute')='Transfer',
+        touch_tip: StringSelection('yes', 'no')='yes'
         ):
 
     def track_source_loc(volume):
@@ -133,6 +134,7 @@ def run_custom_protocol(
         # use Transfer mode
         dispense_mode = 'Transfer'
 
+    tt = True if touch_tip == 'yes' else False
     pip.start_at_tip(tiprack.wells(starting_tip))
     pip.pick_up_tip()
     all_wells = [well for tuberack in tube_racks for well in tuberack.wells()]
@@ -142,7 +144,8 @@ def run_custom_protocol(
             source_loc = source if source_container_type == 'trough' else \
                 track_source_loc(transfer_volume)
             pip.transfer(
-                transfer_volume, source_loc, dest, new_tip='never')
+                transfer_volume, source_loc, dest, touch_tip=tt,
+                new_tip='never')
     else:
         well_groups = list(yield_groups(all_wells, int(distribute_num)))
         for wells in well_groups:
@@ -150,5 +153,5 @@ def run_custom_protocol(
                 track_source_loc(transfer_volume * distribute_num)
             pip.distribute(
                 transfer_volume, source_loc, wells, blow_out=source,
-                new_tip='never')
+                touch_tip=tt, new_tip='never')
     pip.drop_tip()
