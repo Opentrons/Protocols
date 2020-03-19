@@ -68,18 +68,18 @@ def run(ctx):
     # setup and execute thermocycler profile
     tc.close_lid()
     tc.set_lid_temperature(105)
-    profile1 = [{'temperature': 95, 'hold_time_minutes': 10}]
+    profile1 = [{'temperature': 95, 'hold_time_minutes': 15}]
     profiles2 = [
         [
-            {'temperature': 96, 'hold_time_seconds': 10},
+            {'temperature': 94, 'hold_time_seconds': 30},
             {'temperature': temp, 'hold_time_seconds': 30},
-            {'temperature': 68, 'hold_time_seconds': 60}
-        ] for temp in range(62, 46, -1)
+            {'temperature': 72, 'hold_time_seconds': 90}
+        ] for temp in [69-i*1.5 for i in range(13)]
     ]
     profile3 = [
-        {'temperature': 96, 'hold_time_seconds': 10},
-        {'temperature': 46, 'hold_time_seconds': 30},
-        {'temperature': 68, 'hold_time_seconds': 60}
+        {'temperature': 94, 'hold_time_seconds': 30},
+        {'temperature': 50, 'hold_time_seconds': 30},
+        {'temperature': 72, 'hold_time_seconds': 45}
     ]
     profile4 = [
         {'temperature': 72, 'hold_time_minutes': 10},
