@@ -16,6 +16,12 @@ def run(ctx):
     # p10_multi_mount, num_samples, num_reps, num_mm = [
     #     'left', 24, 'duplicate', 8]
 
+    rep_setup = {
+        'duplicate': 2,
+        'quadruplicate': 4
+    }
+    reps = rep_setup[num_reps]
+
     # load labware
     plate384 = ctx.load_labware(
         'microampoptical_384_wellplate_30ul', '2', '384-well plate')
@@ -33,15 +39,16 @@ def run(ctx):
     num_cols = math.ceil(num_samples/8)
 
     if num_reps == 'quadruplicate':
-        mm_source = ctx.load_labware('generic_1_reservoir_25000ul', '4')
+        mm_source = ctx.load_labware(
+            'generic_1_reservoir_25000ul', '4').wells()[0]
         mm_dest_sets = [
             [
                 [well
                  for set in [row[i*2:i*2+2] for row in plate384.rows()[:2]]
-                 for well in set[:num_reps]][n]
+                 for well in set[:reps]][n]
                 for i in range(12)
             ][:num_cols]
-            for n in range(num_reps)
+            for n in range(reps)
         ]
         for d_set in mm_dest_sets:
             m10.pick_up_tip()
@@ -57,7 +64,7 @@ def run(ctx):
         dna_dest_sets = [
             [well
              for set in [row[i*2:i*2+2] for row in plate384.rows()[:2]]
-             for well in set[:num_reps]]
+             for well in set[:reps]]
             for i in range(12)
         ][:num_cols]
 
