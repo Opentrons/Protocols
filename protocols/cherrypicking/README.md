@@ -47,7 +47,7 @@ In the first example, 40μL will be removed from well A3 in your source plate, a
 
 ![Cherrypicking CSV ex2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/cherrypicking/cp_csv_ex2.png)
 
-In the second example, 100μL will be transferred from well E5 in "Plate 1" (slot 2) to well A1 in the destination plate (slot 3). After this, 100μL will be transferred from well G10 in "Plate 3" (slot 8) to well B1 in the destination plate (slot 3).
+In the second example, 40μL will be transferred from well A3 in "Plate 1" (slot 2) to well A1 in the destination plate (slot 3). After this, 36μL will be transferred from well D4 in "Plate 3" (slot 8) to well B1 in the destination plate (slot 3).
 
 If you’d like to follow our template, you can make a copy of [this spreadsheet](https://docs.google.com/spreadsheets/d/10ts0zdoUOHlwkElJi6KkaghWmsN4PPZqF9iJoXzGmGA/edit#gid=0), fill out your values, and export as CSV for use with this protocol.
 
