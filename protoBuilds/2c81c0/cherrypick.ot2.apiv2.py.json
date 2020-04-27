@@ -1,5 +1,5 @@
 {
-    "content": "# metadata\nmetadata = {\n    'protocolName': 'Cherrypicking from .csv',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.0'\n}\n\n\ndef run(ctx):\n\n    csv_input, p10_mount = get_values(  # noqa: F821\n        'csv_input', 'p10_mount')\n    # csv_input, p10_mount = [\n    #     'source plate ,well,volume,destination plate ,well,height \\n,,,,\\\n    #        ,\\n1,A2,7,5,A4,-4',\n    #     'left'\n    # ]\n\n    # labware\n    tiprack10 = ctx.load_labware('biotix_96_filtertiprack_10ul', '4')\n\n    # pipette\n    p10 = ctx.load_instrument(\n        'p10_single', p10_mount, tip_racks=[tiprack10])\n\n    # parse\n    data = [\n        [val.strip().upper() for val in line.split(',')]\n        for line in csv_input.splitlines()\n        if line and line.split(',')[0].strip()][1:]\n\n    # loop and perform transfers\n    for d in data:\n        s_slot, s_well, vol, d_slot, d_well, h_offset = d\n        vol, h_offset = float(vol), float(h_offset)\n        if int(s_slot) not in ctx.loaded_labwares:\n            ctx.load_labware(\n                'biorad_96_wellplate_200ul_pcr', s_slot,\n                'source plate ' + s_slot)\n        if int(d_slot) not in ctx.loaded_labwares:\n            ctx.load_labware(\n                'biorad_96_wellplate_200ul_pcr', d_slot,\n                'destination plate ' + d_slot)\n        source = ctx.loaded_labwares[int(s_slot)].wells_by_name()[s_well]\n        dest = ctx.loaded_labwares[int(d_slot)].wells_by_name()[d_well]\n        if h_offset > source._depth:\n            ctx.pause('Warning: Specified height may result in crashing. \\\nPress resume to ignore.')\n\n        p10.pick_up_tip()\n        p10.transfer(\n            vol,\n            source.top(h_offset),\n            dest.bottom(3),\n            new_tip='never'\n        )\n        p10.blow_out(dest.top(-2))\n        p10.drop_tip()\n",
+    "content": "# metadata\nmetadata = {\n    'protocolName': 'Cherrypicking from .csv',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.0'\n}\n\n\ndef run(ctx):\n\n    csv_input, p10_mount = get_values(  # noqa: F821\n        'csv_input', 'p10_mount')\n#     csv_input, p10_mount = [\n#         'source labware,source slot,source well,volume,destination labware,\\\n# destination slot,destination well,height offset from top of source well \\\n# (mm)\\nplate,1,A2,7,tuberack,5,A4,-4\\nplate,2,H10,9,tuberack,3,D1,-4', 'left']\n\n    # labware\n    tiprack10 = ctx.load_labware('biotix_96_filtertiprack_10ul', '4')\n\n    # pipette\n    p10 = ctx.load_instrument(\n        'p10_single', p10_mount, tip_racks=[tiprack10])\n\n    # parse\n    data = [\n        [val.strip().upper() for val in line.split(',')]\n        for line in csv_input.splitlines()\n        if line and line.split(',')[0].strip()][1:]\n\n    # loop and perform transfers\n    labware_load_dict = {\n        'plate': 'biorad_96_wellplate_200ul_pcr',\n        'tuberack': 'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap'\n    }\n    for d in data:\n        s_lw, s_slot, s_well, vol, d_lw, d_slot, d_well, h_offset = d\n        vol, h_offset = float(vol), float(h_offset)\n        s_lw, d_lw = s_lw.lower().strip(), d_lw.lower().strip()\n        if int(s_slot) not in ctx.loaded_labwares:\n            ctx.load_labware(\n                labware_load_dict[s_lw], s_slot, 'source plate ' + s_slot)\n        if int(d_slot) not in ctx.loaded_labwares:\n            ctx.load_labware(\n                labware_load_dict[d_lw], d_slot, 'destination plate ' + d_slot)\n        source = ctx.loaded_labwares[int(s_slot)].wells_by_name()[s_well]\n        dest = ctx.loaded_labwares[int(d_slot)].wells_by_name()[d_well]\n        if h_offset > source._depth:\n            ctx.pause('Warning: Specified height may result in crashing. \\\nPress resume to ignore.')\n\n        p10.pick_up_tip()\n        p10.transfer(\n            vol,\n            source.top(h_offset),\n            dest.bottom(3),\n            new_tip='never'\n        )\n        p10.blow_out(dest.top(-2))\n        p10.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -1126,7 +1126,7 @@
     ],
     "fields": [
         {
-            "default": "source plate ,well,volume,destination plate ,well,height \n,,,,,\n1,A2,7,5,A4,-4",
+            "default": "source labware,source slot,source well,volume,destination labware,destination slot,destination well,height offset from top of source well (mm)\nplate,1,A2,7,tuberack,5,A4,-4\nplate,2,H10,9,tuberack,3,D1,-4",
             "label": "cherrypicking .csv input file",
             "name": "csv_input",
             "type": "textFile"
@@ -1161,6 +1161,18 @@
             "type": "biorad_96_wellplate_200ul_pcr"
         },
         {
+            "name": "source plate 2 on 2",
+            "share": false,
+            "slot": "2",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "destination plate 3 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
+        },
+        {
             "name": "Biotix 96 Filter Tip Rack 10\u00b5l on 4",
             "share": false,
             "slot": "4",
@@ -1170,7 +1182,7 @@
             "name": "destination plate 5 on 5",
             "share": false,
             "slot": "5",
-            "type": "biorad_96_wellplate_200ul_pcr"
+            "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
         },
         {
             "name": "Opentrons Fixed Trash on 12",
