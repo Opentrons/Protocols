@@ -242,7 +242,8 @@ on temperature module.')
         m10.drop_tip()
 
     magdeck.disengage()
-    tempdeck.deactivate()
+    if cleanup_stage == 'post-first-strand synthesis and universal depletion':
+        tempdeck.deactivate()
     ctx.comment(end_msg)
 
     # track final used tip
