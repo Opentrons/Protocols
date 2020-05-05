@@ -51,9 +51,7 @@ def run(protocol):
     tip_name = 'opentrons_96_tiprack_'+pip_size+'ul'
     if filter_tip == 'yes':
         pip_size = '200' if pip_size == '300' else pip_size
-        tip_name = 'opentrons_96_filtertippack_'+pip_size+'ul'
-        if pip_size == '20':
-            raise Exception('Filter tips are not yet supported on the P20.')
+        tip_name = 'opentrons_96_filtertiprack_'+pip_size+'ul'
 
     tipracks = [protocol.load_labware(tip_name, slot)
                 for slot in tiprack_slots]
