@@ -81,7 +81,7 @@
             "type": "usascientific_12_reservoir_22ml"
         },
         {
-            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on Magnetic Module on 4",
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on Magnetic Module GEN1 on 4",
             "share": false,
             "slot": "4",
             "type": "biorad_96_wellplate_200ul_pcr"

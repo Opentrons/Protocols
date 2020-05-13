@@ -106,6 +106,12 @@ def parse(protocol_path):
     assert protocol.api_level >= (2, 0)
 
     context = opentrons.protocol_api.contexts.ProtocolContext()
+    # NOTE:(IL, 2020-05-13)L there’s no deck calibration, and the
+    # identity deck calibration is about 25 mm too high (as of v1.17.1).
+    # Because of this, tall labware can cross the threshold and cause a
+    # LabwareHeightError even though they're safe to use.
+    # So we'll apply a HACK-y -25 offset of the deck.
+    context._hw_manager.hardware._config.gantry_calibration[2][3] = -25
     context.home()
     run_protocol(protocol, context=context)
 
