@@ -1210,7 +1210,7 @@
     ],
     "labware": [
         {
-            "name": "Eppendorf Twin.tec 96 Well Plate 150 \u00b5L on Magnetic Module on 1",
+            "name": "Eppendorf Twin.tec 96 Well Plate 150 \u00b5L on Magnetic Module GEN1 on 1",
             "share": false,
             "slot": "1",
             "type": "eppendorftwin.tec_96_wellplate_150ul"
