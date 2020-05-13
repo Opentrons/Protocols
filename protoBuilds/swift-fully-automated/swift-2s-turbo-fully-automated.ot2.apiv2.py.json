@@ -99,7 +99,7 @@
     ],
     "labware": [
         {
-            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Magnetic Module on 1",
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Magnetic Module GEN1 on 1",
             "share": false,
             "slot": "1",
             "type": "nest_96_wellplate_100ul_pcr_full_skirt"
@@ -111,7 +111,7 @@
             "type": "nest_12_reservoir_15ml"
         },
         {
-            "name": "Opentrons 24 Well Aluminum Block with Generic 2 mL Screwcap on Temperature Module on 3",
+            "name": "Opentrons 24 Well Aluminum Block with Generic 2 mL Screwcap on Temperature Module GEN1 on 3",
             "share": false,
             "slot": "3",
             "type": "opentrons_24_aluminumblock_generic_2ml_screwcap"

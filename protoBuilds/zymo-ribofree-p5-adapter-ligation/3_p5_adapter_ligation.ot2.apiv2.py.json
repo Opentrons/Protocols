@@ -69,7 +69,7 @@
             "type": "opentrons_96_tiprack_20ul"
         },
         {
-            "name": "Opentrons 24 Well Aluminum Block with NEST 1.5 mL Screwcap on Temperature Module on 4",
+            "name": "Opentrons 24 Well Aluminum Block with NEST 1.5 mL Screwcap on Temperature Module GEN1 on 4",
             "share": false,
             "slot": "4",
             "type": "opentrons_24_aluminumblock_nest_1.5ml_screwcap"
