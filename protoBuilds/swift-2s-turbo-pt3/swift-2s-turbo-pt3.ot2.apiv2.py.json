@@ -57,7 +57,7 @@
             "type": "nest_12_reservoir_15ml"
         },
         {
-            "name": "NEST 96-Well Plate on Magnetic Module on 4",
+            "name": "NEST 96-Well Plate on Magnetic Module GEN1 on 4",
             "share": false,
             "slot": "4",
             "type": "nest_96_wellplate_100ul_pcr_full_skirt"
