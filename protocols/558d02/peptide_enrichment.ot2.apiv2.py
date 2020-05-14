@@ -1,9 +1,3 @@
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"p300_single_mount":"right","p1000_single_mount":"left","number_of_samples":96}""")
-    return [_all_values[n] for n in names]
-
-
 from opentrons import types
 
 # metadata
@@ -136,10 +130,11 @@ def run(ctx):
         p300.drop_tip(trash.top().move(types.Point(x=side*25, y=0, z=0)))
 
     ctx.delay(minutes=1, msg='Incubating off magnet for 1 minutes')
-    p300.home()  # added to ensure there are no bugs in following a pause directly after a delay
+    p300.home()  # added to ensure there are no bugs in following a pause
     # inserted pause for manual re-elution
-    ctx.pause('Sonicate for 1 minute to re-elute beads thoroughly. Resume when plate is in place on Magnetic Module')
-    p300.home()  # added to ensure there are no bugs in following a pause directly after a delay
+    ctx.pause('Sonicate for 1 minute to re-elute beads thoroughly. Resume when \
+plate is in place on Magnetic Module')
+    p300.home()  # added to ensure there are no bugs in following a pause
     magdeck.engage()
     ctx.delay(minutes=1, msg='Incubating on magnet for 1 minutes')
 
