@@ -53,7 +53,7 @@ Slot 2: [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/re
 Slot 3: [Opentrons Temperature Module with 96-Well Aluminum Block](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck) with clean and empty [NEST 96-Well PCR Plate](https://shop.opentrons.com/collections/lab-plates/products/nest-0-1-ml-96-well-pcr-plate-full-skirt)<br/>
 <br/>
 Slot 4: [Opentrons Magnetic Module](https://shop.opentrons.com/collections/hardware-modules/products/magdeck) with [NEST 96-Deepwell Plate, 2mL](https://labware.opentrons.com/nest_96_wellplate_2ml_deep?category=wellPlate), containing samples*<br/>
-Samples should be loaded in odd-numbered columns only
+*Samples should be loaded in odd-numbered columns only*<br/>
 <br/>
 Slot 5: [Opentrons 20µL Filter Tips](https://shop.opentrons.com/collections/opentrons-tips)<br/>
 <br/>
@@ -65,6 +65,7 @@ Slot 8: [Opentrons 4-in-1 Tube Rack with 24-Well Top](https://shop.opentrons.com
 * if 24 samples, Slots 1, 6, and 9
 * if 32 samples, Slots 1, 6, 7, and 9
 * if 40 or 48 samples, Slots 1, 6, 7, 9, and 10
+
 <br/>
 <br/>
 **Reagent Setup**<br/>
