@@ -31,7 +31,8 @@ def run(ctx):
         'thermofisherdwplate_96_wellplate_2000ul', '11', 'reagent plate')
 
     # pipettes
-    m300 = ctx.load_instrument('p300_multi', m300_mount, tip_racks=tipracks300)
+    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,
+                               tip_racks=tipracks300)
     m20 = ctx.load_instrument('p20_multi_gen2', m20_mount,
                               tip_racks=tipracks20)
 
