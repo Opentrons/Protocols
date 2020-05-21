@@ -23,7 +23,7 @@ def run(ctx):
             'thermofishermicroampfast96well0.1_96_wellplate_100ul',
             slot, 'PCR plate ' + str(i+1))
         for i, slot in enumerate(['3', '6', '9'])][:num_plates]
-    tipracks20 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
+    tipracks20 = [ctx.load_labware('opentrons_96_tiprack_20ul', slot)
                   for slot in ['1', '4', '7']]
     tipracks300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
                    for slot in ['10']]
