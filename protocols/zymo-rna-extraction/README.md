@@ -11,7 +11,7 @@
 ## Description
 This protocol automates the [Zymo Quick-DNA/RNA Viral MagBead Extraction Kit](https://www.zymoresearch.com/collections/quick-dna-rna-viral-kits/products/quick-dna-rna-viral-magbead). This kit is designed for high-throughput purification of viral DNA and/or RNA and the isolated nucleic acids are ready for all downstream applications, such as RT-qPCR, Next-Gen Sequencing, and many others.<br/>
 <br/>
-This kit can be used for Station B (RNA extraction) as part of our [COVID Workstation]().
+This kit can be used for Station B (RNA extraction) as part of our [COVID Workstation](https://blog.opentrons.com/how-to-use-opentrons-to-test-for-covid-19/).
 
 
 
@@ -81,7 +81,9 @@ For every 8 samples, the following reagents are needed:
 * 4.5mL of Zymo Wash Buffer 2
 * 4.5mL of Ethanol (Ethanol Wash 1)
 * 4.5mL Ethanol (Ethanol Wash 2)
+
 <br/>
+
 Slot 1: Zymo Viral DNA/RNA Buffer + Zymo MagBeads, 8/16 samples<br/>
 Slot 2: Zymo Viral DNA/RNA Buffer + Zymo MagBeads, 24/32 samples<br/>
 Slot 3: Zymo Viral DNA/RNA Buffer + Zymo MagBeads, 40/48 samples<br/>
