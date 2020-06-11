@@ -46,6 +46,10 @@ column 1 in reagent plate (slot 11).')
     ntc = reagent_plate.rows()[0][10]
     ptc = reagent_plate.rows()[0][11]
 
+    def drop(pip):
+        drop_loc = ctx.loaded_labwares[12].wells()[0].top(-20)
+        pip.drop_tip(drop_loc)
+
     # distribute mastermix
     for plate in pcr_plates:
         if num_cols % 2 == 0:
@@ -62,11 +66,14 @@ column 1 in reagent plate (slot 11).')
             for well in set:
                 m300.dispense(20, well.bottom(3.5))
             m300.blow_out(mm.top(-2))
-        m300.drop_tip()
+        drop(m300)
 
     # transfer NTC
+    m20.pick_up_tip()
     m20.transfer(5, ntc.bottom(2),
-                 [plate.rows()[0][0].bottom(2) for plate in pcr_plates])
+                 [plate.rows()[0][0].bottom(2) for plate in pcr_plates],
+                 new_tip='never')
+    drop(m20)
 
     # transfer samples
     for s_plate, d_plate in zip(deep_plates, pcr_plates):
@@ -75,7 +82,7 @@ column 1 in reagent plate (slot 11).')
             m20.pick_up_tip()
             m20.transfer(5, s, d.bottom(2), new_tip='never')
             m20.air_gap(5)
-            m20.drop_tip()
+            drop(m20)
 
     # transfer PTC
     for plate in pcr_plates:
@@ -83,7 +90,7 @@ column 1 in reagent plate (slot 11).')
         m20.transfer(5, ptc.bottom(2), plate.rows()[0][num_cols-1].bottom(2),
                      new_tip='never')
         m20.air_gap(5)
-        m20.drop_tip()
+        drop(m20)
 
     ctx.comment('PCR set up completed. Please remove PCR plates on blocks, \
 seal, vortex and spin')
