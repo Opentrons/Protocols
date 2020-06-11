@@ -32,7 +32,8 @@ def run(ctx):
     # loop and perform transfers
     labware_load_dict = {
         'plate': 'biorad_96_wellplate_200ul_pcr',
-        'tuberack': 'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap'
+        'tuberack': 'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap',
+        'deepplate': 'nest_96_wellplate_2ml_deep'
     }
     for d in data:
         s_lw, s_slot, s_well, vol, d_lw, d_slot, d_well, h_offset = d
