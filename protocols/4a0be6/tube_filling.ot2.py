@@ -36,6 +36,18 @@ for var, depth in zip(tube_vars, depth_vars):
             diameter=8.41)
     tuberack_names.append(tuberack_name)
 
+# create definitions for 12-well rack
+for var, depth in zip(tube_vars, depth_vars):
+    tuberack_name = 'custom-12-well-'+var+'-ml'
+    if tuberack_name not in labware.list():
+        labware.create(
+            tuberack_name,
+            grid=(4, 3),
+            spacing=(30, 30),
+            depth=depth,
+            diameter=8.41)
+    tuberack_names.append(tuberack_name)
+
 # create definition for BC trough
 trough_name = 'beckman-coulter-trough-1-well-150ml'
 if trough_name not in labware.list():
@@ -49,7 +61,7 @@ if trough_name not in labware.list():
 
 def run_custom_protocol(
         transfer_volume: float=105,
-        tube_rack_type: StringSelection('48-well', '24-well')='48-well',
+        tube_rack_type: StringSelection('48-well', '24-well', '12-well')='48-well',
         tube_type: StringSelection('0.5-ml', '1.5-ml', '2.0-ml')='0.5-ml',
         number_of_racks: int=2,
         source_container_type: StringSelection(

@@ -9,7 +9,7 @@
 
 
 ## Description
-This protocol allows your robot to transfer solution from a single source tube (15 mL or 50 mL Falcon conical tube) to up to nine 48-well or 24-well tube racks containing Sarstedt screw-cap tubes (either 0.5 mL, 1.5 mL or 2 mL).
+This protocol allows your robot to transfer solution from a single source tube (15 mL or 50 mL Falcon conical tube) to up to nine 48-well, 24-well, or 12-well tube racks containing Sarstedt screw-cap tubes (either 0.5 mL, 1.5 mL or 2 mL).
 
 User need to specify the following:
 * Transfer Volume: volume to be transferred to each Sarstedt tube
@@ -26,7 +26,7 @@ User need to specify the following:
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
 * [Opentrons Single-channel Pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette)
-* Custom 24-well Rack or Custom 48-well Rack
+* Custom 12-well Rack, 24-well Rack, or Custom 48-well Rack
 * Sarstedt Tubes 0.5 mL, 1.5 mL or 2 mL
 
 ---
@@ -35,7 +35,7 @@ User need to specify the following:
 Opentrons 15x15 mL or 6x50 mL Tube Rack
 * A1: Stock
 
-24-well or 48 well Racks (starting from slot 2-10)
+12-well, 24-well, or 48-well Racks (starting from slot 2-10)
 * Fill each entire rack with the desired tubes
 
 ### Robot
