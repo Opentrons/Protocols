@@ -61,7 +61,8 @@ if trough_name not in labware.list():
 
 def run_custom_protocol(
         transfer_volume: float=105,
-        tube_rack_type: StringSelection('48-well', '24-well', '12-well')='48-well',
+        tube_rack_type: StringSelection(
+            '48-well', '24-well', '12-well')='48-well',
         tube_type: StringSelection('0.5-ml', '1.5-ml', '2.0-ml')='0.5-ml',
         number_of_racks: int=2,
         source_container_type: StringSelection(
