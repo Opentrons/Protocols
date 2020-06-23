@@ -1,5 +1,5 @@
 {
-    "content": "metadata = {\n    'protocolName': 'Media Aliquotting',\n    'author': 'Nick <ndiehl@opentrons.com',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.3'\n}\n\n\ndef run(ctx):\n    [num_samples, transfer_vol, p1000_mount] = get_values(  # noqa: F821\n        'num_samples', 'transfer_vol', 'p1000_mount')\n\n    # labware\n    source = ctx.load_labware('nest_1_reservoir_195ml', '1',\n                              'liquid reservoir').wells()[0]\n    tuberack = ctx.load_labware('custom_24_tuberack_2000ul', '2',\n                                'custom tuberack')\n    tiprack = [\n        ctx.load_labware('opentrons_96_tiprack_1000ul', '4', '1000\u00b5l tiprack')]\n\n    # pipette\n    p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,\n                                tip_racks=tiprack)\n\n    # perform transfers\n    for d in tuberack.wells()[:num_samples]:\n        p1000.pick_up_tip()\n        p1000.transfer(transfer_vol, source, d, air_gap=50, new_tip='never')\n        p1000.air_gap(50)\n        p1000.drop_tip()\n",
+    "content": "metadata = {\n    'protocolName': 'Media Aliquotting',\n    'author': 'Nick <ndiehl@opentrons.com',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.3'\n}\n\n\ndef run(ctx):\n    [num_samples, transfer_vol, p1000_mount] = get_values(  # noqa: F821\n        'num_samples', 'transfer_vol', 'p1000_mount')\n\n    # labware\n    source = ctx.load_labware('nest_1_reservoir_195ml', '1',\n                              'liquid reservoir').wells()[0]\n    tuberack = ctx.load_labware('custom_24_tuberack_2000ul', '2',\n                                'custom tuberack')\n    tiprack = [\n        ctx.load_labware('opentrons_96_tiprack_1000ul', '4', '1000\u00b5l tiprack')]\n\n    # pipette\n    p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,\n                                tip_racks=tiprack)\n\n    # perform transfers\n    for d in tuberack.wells()[:num_samples]:\n        p1000.pick_up_tip()\n        for _ in range(2):\n            p1000.transfer(\n                transfer_vol, source, d, air_gap=50, new_tip='never')\n        p1000.air_gap(50)\n        p1000.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -330,7 +330,7 @@
             "type": "int"
         },
         {
-            "default": 850.0,
+            "default": 925.0,
             "label": "transfer volume (100-1000, in \u00b5l)",
             "name": "transfer_vol",
             "type": "float"
