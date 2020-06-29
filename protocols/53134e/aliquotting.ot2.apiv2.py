@@ -24,9 +24,9 @@ def run(ctx):
 
     # perform transfers
     for d in tuberack.wells()[:num_samples]:
-        p1000.pick_up_tip()
         for _ in range(2):
+            p1000.pick_up_tip()
             p1000.transfer(
                 transfer_vol, source, d, air_gap=50, new_tip='never')
-        p1000.air_gap(50)
-        p1000.drop_tip()
+            p1000.air_gap(50)
+            p1000.drop_tip()
