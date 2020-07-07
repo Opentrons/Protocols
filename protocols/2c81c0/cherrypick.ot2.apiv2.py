@@ -9,8 +9,8 @@ metadata = {
 
 def run(ctx):
 
-    csv_input, p10_mount = get_values(  # noqa: F821
-        'csv_input', 'p10_mount')
+    csv_input, p10_mount, p300_mount = get_values(  # noqa: F821
+        'csv_input', 'p10_mount', 'p300_mount')
 #     csv_input, p10_mount = [
 #         'source labware,source slot,source well,volume,destination labware,\
 # destination slot,destination well,height offset from top of source well \
@@ -18,10 +18,13 @@ def run(ctx):
 
     # labware
     tiprack10 = ctx.load_labware('biotix_96_filtertiprack_10ul', '4')
+    tiprack300 = ctx.load_labware('opentrons_96_filtertiprack_200ul', '7')
 
     # pipette
     p10 = ctx.load_instrument(
         'p10_single', p10_mount, tip_racks=[tiprack10])
+    p300 = ctx.load_instrument(
+        'p300_single', p300_mount, tip_racks=[tiprack300])
 
     # parse
     data = [
@@ -51,12 +54,13 @@ def run(ctx):
             ctx.pause('Warning: Specified height may result in crashing. \
 Press resume to ignore.')
 
-        p10.pick_up_tip()
-        p10.transfer(
+        pip = p300 if vol > 30 else p10
+        pip.pick_up_tip()
+        pip.transfer(
             vol,
             source.top(h_offset),
             dest.bottom(3),
             new_tip='never'
         )
-        p10.blow_out(dest.top(-2))
-        p10.drop_tip()
+        pip.blow_out(dest.top(-2))
+        pip.drop_tip()
