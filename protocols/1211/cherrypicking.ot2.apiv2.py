@@ -52,11 +52,17 @@ def run(ctx):
         pip.pick_up_tip()
         tip_count += 1
 
+    def parse_well(well):
+        letter = well[0]
+        number = well[1:]
+        return letter.upper() + str(int(number))
+
     for line in transfer_info:
         _, s_slot, s_well, _, d_slot, d_well, vol = line[:7]
         source = ctx.loaded_labwares[
-            int(s_slot)].wells_by_name()[s_well.upper()]
-        dest = ctx.loaded_labwares[int(d_slot)].wells_by_name()[d_well.upper()]
+            int(s_slot)].wells_by_name()[parse_well(s_well)]
+        dest = ctx.loaded_labwares[
+            int(d_slot)].wells_by_name()[parse_well(d_well)]
         pick_up()
         pip.transfer(float(vol), source, dest, new_tip='never')
         pip.drop_tip()
