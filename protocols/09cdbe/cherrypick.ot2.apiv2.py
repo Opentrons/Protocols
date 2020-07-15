@@ -11,17 +11,14 @@ def run(ctx):
 
     plate_type, p20_mount, transfer_csv = get_values(  # noqa: F821
         'plate_type', 'p20_mount', 'transfer_csv')
-#     plate_type, p20_mount, transfer_csv = [
-#         'biorad_96_wellplate_200ul_pcr', 'right', 'Plate Position,Well ID,\
-# Volume,,\n1,A1,3.0,,\n1,B1,4.0,,\n1,C1,5.0,,\n1,D1,3.0,,']
 
     # load labware
     source_plates = {
         str(i+1): ctx.load_labware(plate_type, slot, 'plate ' + str(i+1))
         for i, slot in enumerate(['2', '5', '8', '11', '6'])
     }
-    destination_tube = ctx.load_labware(
-        'vwr_15_tuberack_5000ul', '9', 'destination tube').wells()[0]
+    tuberack = ctx.load_labware(
+        'vwr_15_tuberack_5000ul', '9', 'pooling tuberack')
     tipracks = [
         ctx.load_labware('opentrons_96_tiprack_20ul', slot, '20µl tiprack')
         for slot in ['1', '4', '7', '10', '3']
@@ -36,10 +33,14 @@ def run(ctx):
         for line in transfer_csv.splitlines()[1:] if line
     ]
 
+    def parse_well(well_name):
+        return well_name[0].upper() + str(int(well_name[1:]))
+
     # perform transfers
     for line in transfer_info:
-        slot, well, volume = line[:3]
-        source = source_plates[slot].wells_by_name()[well.upper()]
+        slot, well, tube, volume = line[:4]
+        source = source_plates[slot].wells_by_name()[parse_well(well)]
+        destination_tube = tuberack.wells_by_name()[parse_well(tube)]
         vol = float(volume)
         air_vol = (20-vol)/2
         p20.pick_up_tip()

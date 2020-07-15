@@ -11,7 +11,7 @@
 This protocol performs a sample consolidation from `.csv` file. The file should be organized in the following way **including header line**:
 
 ```
-Plate Position (slot), Well ID, Volume (in µl)
+Plate Position (slot), Source Well ID, Volume (in µl)
 1, A1, 3.0
 1, B1, 4.0,
 ...
