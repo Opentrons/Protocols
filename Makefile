@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 
 MONOREPO_URI := https://github.com/Opentrons/opentrons.git
-OT2_VERSION_TAG := v3.17.1
+OT2_VERSION_TAG := v3.19.0
 OT2_MONOREPO_DIR := ot2monorepoClone
 
 # Parsers output to here
@@ -36,7 +36,7 @@ venvs/ot2:
 	pip install -r protolib/requirements.txt && \
 	pip install pipenv && \
 	pushd $(OT2_MONOREPO_DIR)/api/ && \
-	$(MAKE) install && \
+	$(MAKE) setup && \
 	python setup.py install && \
 	popd && \
 	deactivate
