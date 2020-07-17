@@ -2,7 +2,7 @@ metadata = {
     'protocolName': 'Cherrypicking',
     'author': 'Opentrons <protocols@opentrons.com>',
     'source': 'Protocol Library',
-    'apiLevel': '2.2'
+    'apiLevel': '2.3'
     }
 
 
@@ -19,7 +19,7 @@ def run(protocol):
     tip_name = 'opentrons_96_tiprack_'+pip_max+'ul'
     if filter_tip == 'yes':
         pip_max = '200' if pip_max == '300' else pip_max
-        tip_name = 'opentrons_96_filtertippack_'+pip_max+'ul'
+        tip_name = 'opentrons_96_filtertiprack_'+pip_max+'ul'
 
     tiprack_slots = ['1', '4', '7', '10']
     tips = [protocol.load_labware(tip_name, slot)
@@ -41,8 +41,8 @@ def run(protocol):
                 vol = float(vol)
                 pipette.transfer(
                     vol,
-                    source_plate.wells(source_well),
-                    dest_plate.wells(well_idx),
+                    source_plate.wells_by_name()[source_well],
+                    dest_plate.wells()[well_idx],
                     new_tip=tip_reuse)
         if tip_reuse == 'never':
             pipette.drop_tip()
@@ -63,14 +63,14 @@ def run(protocol):
             ))
         if tip_reuse == 'never':
             pipette.pick_up_tip()
-        for well_idx, (source_well, vol, plate) in enumerate(data[1:]):
+        for well_idx, (source_well, vol, plate, dest_well) in enumerate(data[1:]):
             if source_well and vol and plate:
                 vol = float(vol)
                 source_p = source_plates[int(plate)-1]
                 pipette.transfer(
                     vol,
-                    source_p.wells(source_well),
-                    dest_plate.wells(well_idx),
+                    source_p.wells_by_name()[source_well],
+                    dest_plate.wells_by_name()[dest_well],
                     new_tip=tip_reuse)
         if tip_reuse == 'never':
             pipette.drop_tip()

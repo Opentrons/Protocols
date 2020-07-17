@@ -35,7 +35,7 @@ The Source Plate should be loaded in **Slot 2**. If using multiple Source Plates
 *Note*: If using multiple Source Plates, you must specify the Source Plate in the third column of the CSV (see below for examples)
 
 The Destination Plate should be loaded in **Slot 3**.
-*Note*: The Destination Plate will receive each cherrypicking transfer sequentially, filling up the plate in well A1, then B1, etc.
+*Note*: Specify the destination well of each transfer in the fourth column of the CSV
 
 **CSV Format**
 
@@ -49,7 +49,7 @@ In the first example, 40μL will be removed from well A3 in your source plate, a
 
 In the second example, 40μL will be transferred from well A3 in "Plate 1" (slot 2) to well A1 in the destination plate (slot 3). After this, 36μL will be transferred from well D4 in "Plate 3" (slot 8) to well B1 in the destination plate (slot 3).
 
-If you’d like to follow our template, you can make a copy of [this spreadsheet](https://docs.google.com/spreadsheets/d/10ts0zdoUOHlwkElJi6KkaghWmsN4PPZqF9iJoXzGmGA/edit#gid=0), fill out your values, and export as CSV for use with this protocol.
+If you’d like to follow our template, you can make a copy of [this spreadsheet](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/cherrypicking/Opentrons+Cherrypicking+Example+Template+-+Sheet1.csv), fill out your values, and export as CSV for use with this protocol.
 
 Using the customizations fields, below set up your protocol.
 * Volumes CSV: Upload the .csv file containing your well locations, volumes, and source plate (optional).

@@ -3,7 +3,7 @@
     "type": "textFile",
     "label": "Volumes CSV",
     "name": "volumes_csv",
-    "default": "well,vol,plate\nA3,40,1"
+    "default": "source well,vol,plate,destination well\nA3,40,1,A1"
   },
   {
     "type": "dropDown",
