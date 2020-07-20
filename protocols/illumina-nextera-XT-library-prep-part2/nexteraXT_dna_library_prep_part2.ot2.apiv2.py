@@ -81,7 +81,7 @@ def run(protocol):
         pip.transfer(200, ethanol, [well.top() for well in mag])
         protocol.delay(seconds=30)
         for well in mag:
-            pip.transfer(220, well.top(), liquid_trash)
+            pip.transfer(220, well, liquid_trash)
 
     # Air dry
     protocol.delay(minutes=dry_time)
