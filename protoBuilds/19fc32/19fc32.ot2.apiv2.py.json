@@ -44,7 +44,7 @@
             "type": "corning_384_wellplate_112ul_flat"
         },
         {
-            "name": "Mag Plate on Magnetic Module on 4",
+            "name": "Mag Plate on Magnetic Module GEN1 on 4",
             "share": false,
             "slot": "4",
             "type": "biorad_96_wellplate_200ul_pcr"

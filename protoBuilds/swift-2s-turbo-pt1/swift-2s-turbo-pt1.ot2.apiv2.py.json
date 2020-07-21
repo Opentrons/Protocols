@@ -63,7 +63,7 @@
             "type": "opentrons_96_aluminumblock_nest_wellplate_100ul"
         },
         {
-            "name": "Opentrons 24-Well Aluminum Block on Temperature Module on 3",
+            "name": "Opentrons 24-Well Aluminum Block on Temperature Module GEN1 on 3",
             "share": false,
             "slot": "3",
             "type": "opentrons_24_aluminumblock_generic_2ml_screwcap"

@@ -2345,7 +2345,7 @@
             "type": "opentrons_6_tuberack_falcon_50ml_conical"
         },
         {
-            "name": "Zymo 96-Well Block on Magnetic Module on 4",
+            "name": "Zymo 96-Well Block on Magnetic Module GEN1 on 4",
             "share": false,
             "slot": "4",
             "type": "zymo_96_wellblock"
