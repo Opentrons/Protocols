@@ -3,7 +3,7 @@
     "type": "textFile",
     "label": "cherrypicking .csv input file",
     "name": "csv_input",
-    "default": "source labware,source slot,source well,volume,destination labware,destination slot,destination well,height offset from top of source well (mm)\nplate,1,A2,7,tuberack,5,A4,-4\nplate,2,H10,9,tuberack,3,D1,-4"
+    "default": "source labware,source slot,source well,volume,destination labware,destination slot,destination well,height offset from top of source well (mm),mix volume\nplate,1,A2,7,tuberack,5,A4,-4,5\nplate,2,H10,9,tuberack,3,D1,-4,5"
   },
   {
     "type": "dropDown",
