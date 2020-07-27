@@ -13,7 +13,7 @@ This protocol automates nucleic acid purification with the [Zymo Quick-DNA/RNA V
 </br>
 Using the P300 Multi-Channel Pipette and a Single-Channel Pipette, this protocol can accommodate up to 48 samples per run and can be configured to run any multiple of 8 up to 48. Starting with 400µL of sample in a deepwell plate, the entire process is automated and ends with 60µL of elution containing nucleic acid dispensed into a 96-well PCR plate. The elution is then ready for RT/qPCR, Next-Gen Sequencing, hybridization, etc.</br>
 </br>
-If you have any questions about this protocol, please email our Applications Engineering team at [protocols@opentrons.com](mailto:protocols@opentrons.com).
+This kit can be used for Station B (RNA extraction) of our [COVID Workstation](https://blog.opentrons.com/how-to-use-opentrons-to-test-for-covid-19/).
 
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
@@ -46,6 +46,7 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 Prepare all reagents according to Zymo manual.</br>
 </br>
 ![Reagents in 12-Well Reservoir](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/zymo-rna-extraction/zymo_reservoir.png)
+</br>
 </br>
 **Proteinase K**: In 1.5mL centrifuge tube, placed in "D1" in [Opentrons 4-in-1 Tube Rack](https://shop.opentrons.com/collections/verified-labware/products/tube-rack-set-1) with 24-slot top.</br>
 **Viral DNA/RNA Buffer + MagBinding Beads**: In slots 1, 2, and 3 in the 12-well reservoir. For every column (8 samples), 7mL of Viral DNA/RNA Buffer should be combined with 175µL of MagBinding Beads. Up to two columns (16 samples) worth of buffer+beads can be prepared in one Falcon Tube at a time. Each slot of the 12 well reservoir can accommodate volume for 2 columns/16 samples and should be loaded sequentially (ex. if running 24 samples, slot 1 would get 14mL buffer + 350µL beads, slot 2 would get 7mL buffer + 175µL beads, slot 3 would be empty).</br>
