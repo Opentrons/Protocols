@@ -1,0 +1,26 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Proteins & Proteomics": [
+            "Assay"
+        ]
+    },
+    "description": "This protocol performs a mass spec sample prep on up to 63 samples on a custom 72-sample slide mount (the top row of 9 wells are left blank). Samples are taken from and filled in the slides down the columns, then across the rows. For more detailed sample and reagent setup, please see below.\n\n\n\ncustom 3-grid 3x8 slide mount\nOpentrons 4x6 tuberack insert with 1.5ml Eppendorf snapcap tubes\nOpentrons 2x3 tuberack insert with 50ml Falcon tubes\nOpentrons 20ul pipette tips\nOpentrons 300ul pipette tips\nOpentrons P20- and P300-single GEN2 electronic pipettes\n\n\n\n2x3 50ml tuberack (slot 1)\n detergent wash buffer: tube A1\n BSA blocking buffer: tube B1\n PBS: tubes A2-B2\n water: tubes A3-B3\nsample rack 1 (slot 9):\n tube A1: sample 1\n tube B1: sample 2\n ...\n tube A2: sample 5\n ...\n tube D6: sample 24\nsample rack 2 (slot 6):\n tube A1: sample 25\n tube B1: sample 26\n ...\n tube A2: sample 29\n ...\n tube D6: sample 48\nsample rack 3 (slot 3):\n tube A1: sample 49\n ...\n tube D3: sample 63\n tube D6: antibody",
+    "internal": "51df08",
+    "markdown": {
+        "author": "[Opentrons](http://www.opentrons.com/)\n\n",
+        "categories": "* Proteins & Proteomics\n    * Assay\n\n",
+        "description": "This protocol performs a mass spec sample prep on up to 63 samples on a custom 72-sample slide mount (the top row of 9 wells are left blank). Samples are taken from and filled in the slides down the columns, then across the rows. For more detailed sample and reagent setup, please see below.\n\n---\n![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)\n\n* custom 3-grid 3x8 slide mount\n* [Opentrons 4x6 tuberack insert](https://shop.opentrons.com/collections/verified-labware/products/tube-rack-set-1) with 1.5ml Eppendorf snapcap tubes\n* [Opentrons 2x3 tuberack insert](https://shop.opentrons.com/collections/verified-labware/products/tube-rack-set-1) with 50ml Falcon tubes\n* [Opentrons 20ul pipette tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)\n* [Opentrons 300ul pipette tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips?variant=15954632802398)\n* [Opentrons P20- and P300-single GEN2 electronic pipettes](https://shop.opentrons.com/collections/ot-2-pipettes)\n\n---\n![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)\n\n2x3 50ml tuberack (slot 1)\n* detergent wash buffer: tube A1\n* BSA blocking buffer: tube B1\n* PBS: tubes A2-B2\n* water: tubes A3-B3\n\nsample rack 1 (slot 9):\n* tube A1: sample 1\n* tube B1: sample 2\n* ...\n* tube A2: sample 5\n* ...\n* tube D6: sample 24\n\nsample rack 2 (slot 6):\n* tube A1: sample 25\n* tube B1: sample 26\n* ...\n* tube A2: sample 29\n* ...\n* tube D6: sample 48\n\nsample rack 3 (slot 3):\n* tube A1: sample 49\n* ...\n* tube D3: sample 63\n* **tube D6: antibody**\n\n",
+        "internal": "51df08\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "process": "1. Input the number of samples, and the respective mount sides for your P20 and P300 pipettes.\n2. Download your protocol package.\n3. Upload your custom labware and protocol into the [OT App](https://opentrons.com/ot-app).\n4. Set up your deck according to the deck map.\n5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2). **Ensure that you calibrate your slides mounted on the Teleshake to the precise location from which you would like to aspirate liquid.**\n6. Hit 'Run'.\n\n",
+        "robot": "* [OT-2](https://opentrons.com/ot-2)\n\n",
+        "title": "Mass Spec Sample Prep on Custom Slide"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "process": "\nInput the number of samples, and the respective mount sides for your P20 and P300 pipettes.\nDownload your protocol package.\nUpload your custom labware and protocol into the OT App.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles. Ensure that you calibrate your slides mounted on the Teleshake to the precise location from which you would like to aspirate liquid.\nHit 'Run'.\n",
+    "robot": [
+        "OT-2"
+    ],
+    "title": "Mass Spec Sample Prep on Custom Slide"
+}
