@@ -39,8 +39,8 @@ def run(ctx):
         'deepplate': 'nest_96_wellplate_2ml_deep'
     }
     for d in data:
-        s_lw, s_slot, s_well, vol, d_lw, d_slot, d_well, h_offset = d
-        vol, h_offset = float(vol), float(h_offset)
+        s_lw, s_slot, s_well, vol, d_lw, d_slot, d_well, h_offset, vol_mix = d
+        vol, h_offset, vol_mix = float(vol), float(h_offset), float(vol_mix)
         s_lw, d_lw = s_lw.lower().strip(), d_lw.lower().strip()
         if int(s_slot) not in ctx.loaded_labwares:
             ctx.load_labware(
@@ -60,6 +60,7 @@ Press resume to ignore.')
             vol,
             source.top(h_offset),
             dest.bottom(3),
+            mix_after=(3, vol_mix),
             new_tip='never'
         )
         pip.blow_out(dest.top(-2))
