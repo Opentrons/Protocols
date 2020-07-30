@@ -9,15 +9,13 @@ metadata = {
 
 
 def run(protocol):
-    [p300mnt] = get_values(  # noqa: F821
-    'p300mnt')
 
     # load labware and pipettes
     tips = [
         protocol.load_labware(
             'opentrons_96_tiprack_300ul', str(s)) for s in [10, 11, 8, 9]]
 
-    m300 = protocol.load_instrument('p300_multi_gen2', p300mnt)
+    m300 = protocol.load_instrument('p300_multi_gen2', 'left')
 
     reservoir = protocol.load_labware('nest_12_reservoir_15ml', '1')
     bper = reservoir['A1']
@@ -33,7 +31,7 @@ def run(protocol):
 
     [plate1, plate2, plate3] = [plate.rows()[0] for plate in plates]
 
-    magdeck = protocol.load_module('magdeck', '7')
+    magdeck = protocol.load_module('magnetic module gen2', '7')
     magplate = magdeck.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
     magwells = magplate.rows()[0]
 
