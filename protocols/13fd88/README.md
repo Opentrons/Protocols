@@ -71,9 +71,6 @@ Slot 2: [NEST 96-Well Plates](https://shop.opentrons.com/collections/verified-la
 Slot 3: Chrom Tech 96-Well Filter Plate
 </br>
 </br>
-**Using the customizations field (below), set up your protocol.**
-* **P300-Multi Pipette Mount**: Select which mount (left or right) the P300-Multi is attached to.
-
 
 
 ### Robot
