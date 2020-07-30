@@ -35,7 +35,7 @@ def run(protocol):
     magplate = magdeck.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
     magwells = magplate.rows()[0]
 
-    deepplate = protocol.load_labware('nest_96deepplate_1ml', '4')
+    deepplate = protocol.load_labware('nest_96_wellplate_2ml_deep', '4')
     deepwells = deepplate.rows()[0]
 
     e_plate = protocol.load_labware('chromtech_96_filter_wellplate', '3')
