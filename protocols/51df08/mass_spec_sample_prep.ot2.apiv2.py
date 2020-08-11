@@ -10,29 +10,36 @@ metadata = {
 
 def run(ctx):
 
-    num_samples, p20_mount, p300_mount = get_values(  # noqa: F821
-        'num_samples', 'p20_mount', 'p300_mount')
-    # num_samples, p20_mount, p300_mount = 63, 'left', 'right'
+    [num_antibodies, num_samples, p20_mount,
+        p300_mount] = get_values(  # noqa: F821
+            'num_antibodies', 'num_samples', 'p20_mount', 'p300_mount')
+    # [num_antibodies, num_samples, p20_mount,
+    #     p300_mount] = 5, 10, 'left', 'right'
 
     # load labware
     reagent_rack = ctx.load_labware(
         'opentrons_6_tuberack_falcon_50ml_conical', '1',
         '50ml reagent tuberack')
-    slide = ctx.load_labware(
-        'custom_72_other_24x330ul_24x330ul_24x330ul', '5', 'slide')
-    # slide = ctx.load_labware(
-    #     'biorad_96_wellplate_200ul_pcr', '5', 'slide')
-    sample_racks = [ctx.load_labware(
-        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', slot,
-        '1.5ml Eppendorf tuberacks for samples and antibody')
-        for slot in ['9', '6', '3']]
-    tiprack20 = [ctx.load_labware('opentrons_96_tiprack_20ul', '2')]
-    tiprack300 = [
-        ctx.load_labware('opentrons_96_tiprack_300ul', slot)
-        for slot in ['7', '8', '10', '11']]
+    num_slides = 2 if num_antibodies > 3 else 1
+    slide_mounts = [ctx.load_labware(
+        'custom_72_other_24x330ul_24x330ul_24x330ul', slot, 'slides ' + inds)
+        for slot, inds in zip(['5', '2'], ['1-3', '4-5'])][:num_slides]
+    # slide_mounts = [ctx.load_labware(
+    #     'biorad_96_wellplate_200ul_pcr', slot, 'slides ' + inds)
+    #     for slot, inds in zip(['5', '2'], ['1-3', '4-5'])][:num_slides]
+    sample_rack = ctx.load_labware(
+        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '3',
+        '1.5ml Eppendorf tuberacks for samples')
     waste = ctx.load_labware(
         'nest_1_reservoir_195ml', '4',
         'waste reservoir (calibrate to top center)').wells()[0].top()
+    ab_rack = ctx.load_labware(
+        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '6',
+        '1.5ml Eppendorf tuberacks for antibodies')
+    tiprack20 = [ctx.load_labware('opentrons_96_tiprack_20ul', '7')]
+    tiprack300 = [
+        ctx.load_labware('opentrons_96_tiprack_300ul', slot)
+        for slot in ['8', '9', '10', '11']]
 
     # load pipettes
     p20 = ctx.load_instrument(
@@ -41,62 +48,95 @@ def run(ctx):
         'p300_single_gen2', p300_mount, tip_racks=tiprack300)
 
     # define wells
-    slide_wells = [
-        well for col in slide.columns() for well in col[1:]][:num_samples]
+    if num_antibodies > 3:
+        slide_inds = [3, num_antibodies % 3]
+    else:
+        slide_inds = [num_antibodies]
+    slides_split = [[slide_mount.columns()[i*3:i*3+3] for i in range(ind)]
+                    for slide_mount, ind in zip(slide_mounts, slide_inds)]
+    slides = [slide for slide_split in slides_split for slide in slide_split]
+    slides_cols_reordered = [[col[1:] if i % 2 == 0 else col[:0:-1]
+                             for i, col in enumerate(slide)]
+                             for slide in slides]
+    slides_wells_reordered = [[well for col in slide for well in col]
+                              for slide in slides_cols_reordered]
     detergent_wash_buffer = reagent_rack.wells()[0].bottom(5)
     bsa_blocking_buffer = reagent_rack.wells()[1].bottom(5)
     pbs = [tube.bottom(2) for tube in reagent_rack.wells()[2:4]]
     water = [tube.bottom(2) for tube in reagent_rack.wells()[4:6]]
 
-    samples = [
-        rack.wells() for rack in sample_racks
-        for well in rack.wells()][:num_samples]
-    antibody = sample_racks[-1].wells()[-1]
+    samples = sample_rack.wells()[:num_samples]
+    antibodies = ab_rack.wells()[:num_antibodies]
 
     # calculate offset for spots
-    y_offset = slide.wells()[0]._width/3/2
+    y_offset = slide_mounts[0].wells()[0]._width/3/2
+    # y_offset = slide_mounts[0].wells()[0].diameter/3/2
     ab_spot_sets = [
-        [well.bottom().move(Point(y=side*y_offset)) for side in [1, -1]]
-        for well in slide_wells]
+        [[well.bottom().move(Point(y=side*y_offset)) for side in [0, -2]]
+         for well in slide]
+        for slide in slides_wells_reordered]
 
-    # transfer antibody to slide wells 2x
-    p20.pick_up_tip()
-    for set in ab_spot_sets:
-        for well in set:
-            p20.transfer(1.5, antibody, well, new_tip='never')
+    tip_track = {
+        p300: {
+            'max': len(tiprack300)*96,
+            'count': 0
+        },
+        p20: {
+            'max': len(tiprack20)*96,
+            'count': 0
+        }
+    }
 
-    p20.drop_tip()
-
-    ctx.home()
-    ctx.pause('Remove well module from OT-2 and incubate in humidity chamber \
-overnight at 4C to allow antibodies to adhere to slide. After overnight \
-incubation, remove the slide from the humidity chamber and place in \
-desiccator to dry. Once dry, place slide with attached well module back into \
-OT-2')
+    def pick_up(pip):
+        nonlocal tip_track
+        if tip_track[pip]['count'] == tip_track[pip]['max']:
+            ctx.pause('Replace ' + str(pip.max_volume) + 'ul tipracks before \
+resuming.')
+            tip_track[pip]['count'] = 0
+            pip.reset_tipracks()
+        tip_track[pip]['count'] += 1
+        pip.pick_up_tip()
 
     def add_reagent(vol, source, drop=True):
-        p300.pick_up_tip()
-        for well in slide_wells:
-            p300.transfer(vol, source, well.top(), air_gap=20, new_tip='never')
+        pick_up(p300)
+        for slide_wells in slides_wells_reordered:
+            for well in slide_wells:
+                p300.transfer(vol, source, well.top(), air_gap=20,
+                              new_tip='never')
         if drop:
             p300.drop_tip()
 
     def discard_liquid(vol, new_tip=False):
         if not p300.hw_pipette['has_tip']:
-            p300.pick_up_tip()
-        for well in slide_wells:
-            if new_tip and not p300.hw_pipette['has_tip']:
-                p300.pick_up_tip()
-            p300.transfer(
-                vol, well.bottom(0.2), waste, air_gap=20, new_tip='never')
-            if new_tip:
+            pick_up(p300)
+        for slide_wells in slides_wells_reordered:
+            for well in slide_wells:
+                if not p300.hw_pipette['has_tip']:
+                    pick_up(p300)
+                p300.transfer(
+                    vol, well.bottom(0.2), waste, air_gap=20, new_tip='never')
                 p300.drop_tip()
-        if p300.hw_pipette['has_tip']:
-            p300.drop_tip()
+            if p300.hw_pipette['has_tip']:
+                p300.drop_tip()
 
     def wash(vol, source):
         add_reagent(vol, source)
         discard_liquid(vol)
+
+    # transfer antibodies to slide wells 2x
+    for ab, slide in zip(antibodies, ab_spot_sets):
+        pick_up(p20)
+        for set in slide:
+            for well in set:
+                p20.transfer(1.5, ab, well, new_tip='never')
+        p20.drop_tip()
+
+    ctx.home()
+    ctx.pause('Remove well module from OT-2 and incubate in humidity chamber \
+overnight at 4C to allow antibodies to adhere to slides. After overnight \
+incubation, remove the slides from the humidity chamber and place in \
+desiccator to dry. Once dry, place slides with attached well module back into \
+OT-2')
 
     wash(250, detergent_wash_buffer)
 
@@ -116,10 +156,15 @@ incubate in humidity chamber for 1 hour at room temperature')
 samples in Eppendorf tubes')
 
     # add samples
-    for s, d in zip(samples, slide_wells):
-        p300.pick_up_tip()
-        p300.transfer(100, s, d.top(-1), air_gap=20, new_tip='never')
-        p300.drop_tip()
+    sample_duplicates = [[slide[i*2+1:i*2+3] for i in range(num_samples)]
+                         for slide in slides_wells_reordered]
+    for slide in sample_duplicates:
+        for sample, set in zip(samples, slide):
+            pick_up(p300)
+            p300.distribute(100, sample, [d.top(-1) for d in set], air_gap=20,
+                            new_tip='never')
+            p300.air_gap(20)
+            p300.drop_tip()
 
     ctx.home()
     ctx.pause('Remove slide from OT-2 and incubate on benchtop shaker in \
