@@ -49,14 +49,15 @@ def run(ctx):
 
     # define wells
     if num_antibodies > 3:
-        slide_inds = [3, num_antibodies%3]
+        slide_inds = [3, num_antibodies % 3]
     else:
         slide_inds = [num_antibodies]
     slides_split = [[slide_mount.columns()[i*3:i*3+3] for i in range(ind)]
                     for slide_mount, ind in zip(slide_mounts, slide_inds)]
     slides = [slide for slide_split in slides_split for slide in slide_split]
-    slides_cols_reordered = [[col[1:] if i%2 == 0 else col[:0:-1]
-        for i, col in enumerate(slide)] for slide in slides]
+    slides_cols_reordered = [[col[1:] if i % 2 == 0 else col[:0:-1]
+                             for i, col in enumerate(slide)]
+                             for slide in slides]
     slides_wells_reordered = [[well for col in slide for well in col]
                               for slide in slides_cols_reordered]
     detergent_wash_buffer = reagent_rack.wells()[0].bottom(5)
@@ -68,8 +69,8 @@ def run(ctx):
     antibodies = ab_rack.wells()[:num_antibodies]
 
     # calculate offset for spots
-    # y_offset = slide_mounts[0].wells()[0]._width/3/2
-    y_offset = slide_mounts[0].wells()[0].diameter/3/2
+    y_offset = slide_mounts[0].wells()[0]._width/3/2
+    # y_offset = slide_mounts[0].wells()[0].diameter/3/2
     ab_spot_sets = [
         [[well.bottom().move(Point(y=side*y_offset)) for side in [0, -2]]
          for well in slide]

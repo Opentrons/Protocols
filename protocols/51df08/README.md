@@ -8,7 +8,7 @@
     * Assay
 
 ## Description
-This protocol performs a mass spec sample prep on up to 63 samples on a custom 72-sample slide mount (the top row of 9 wells are left blank). Samples are taken from and filled in the slides down the columns, then across the rows. For more detailed sample and reagent setup, please see below.
+This protocol performs a mass spec sample prep on up to 10 samples with up to 5 antibodies on up to 2 custom 72-sample slide mounts (the top row of 9 wells are left blank). Samples and antibodies should be loaded in their respective tuberacks down the columns and then across the rows. Samples and antibodies are filled in the slides down the first column of each slide, then up the second, and finally down the third column. For more detailed sample and reagent setup, please see below.
 
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
@@ -29,37 +29,15 @@ This protocol performs a mass spec sample prep on up to 63 samples on a custom 7
 * PBS: tubes A2-B2
 * water: tubes A3-B3
 
-sample rack 1 (slot 9):
-* tube A1: sample 1
-* tube B1: sample 2
-* ...
-* tube A2: sample 5
-* ...
-* tube D6: sample 24
-
-sample rack 2 (slot 6):
-* tube A1: sample 25
-* tube B1: sample 26
-* ...
-* tube A2: sample 29
-* ...
-* tube D6: sample 48
-
-sample rack 3 (slot 3):
-* tube A1: sample 49
-* ...
-* tube D3: sample 63
-* **tube D6: antibody**
-
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
 
 ## Process
-1. Input the number of samples, and the respective mount sides for your P20 and P300 pipettes.
+1. Input the respective numbers of samples and antibodies, and the respective mount sides for your P20 and P300 pipettes.
 2. Download your protocol package.
 3. Upload your custom labware and protocol into the [OT App](https://opentrons.com/ot-app).
 4. Set up your deck according to the deck map.
-5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2). **Ensure that you calibrate your slides mounted on the Teleshake to the precise location from which you would like to aspirate liquid.**
+5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).
 6. Hit 'Run'.
 
 ### Additional Notes
