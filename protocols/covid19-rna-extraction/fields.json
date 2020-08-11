@@ -61,5 +61,23 @@
       {"label": "yes", "value": true},
       {"label": "no", "value": false}
     ]
+  },
+  {
+    "type": "dropDown",
+    "label": "track tips across protocol runs",
+    "name": "tip_track",
+    "options": [
+      {"label": "no", "value": false},
+      {"label": "yes", "value": true}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "flash robot on pause",
+    "name": "flash",
+    "options": [
+      {"label": "no", "value": false},
+      {"label": "yes", "value": true}
+    ]
   }
 ]
