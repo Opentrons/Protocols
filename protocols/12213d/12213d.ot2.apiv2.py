@@ -53,4 +53,6 @@ def run(protocol):
         p20.pick_up_tip()
         p20.aspirate(15, well.bottom(0.2))
         p20.dispense(15, waste)
+        p20.aspirate(15, well.bottom(0.2))
+        p20.dispense(15, waste)
         p20.drop_tip()
