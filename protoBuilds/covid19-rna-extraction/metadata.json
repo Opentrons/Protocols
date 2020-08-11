@@ -14,7 +14,7 @@
         "hide-from-search": false,
         "skip-tests": false
     },
-    "path": "protocols/covid-19-rna-extraction",
-    "slug": "covid-19-rna-extraction",
+    "path": "protocols/covid19-rna-extraction",
+    "slug": "covid19-rna-extraction",
     "status": "ok"
 }
