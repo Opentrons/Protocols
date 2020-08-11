@@ -13,12 +13,8 @@ metadata = {
 
 
 """
-Here is where you can define the parameters of your protocol:
-FLASH: If True, will flash lights if liquid waste or tip waste needs to be
-       disposed of.
+Here is where you can modify the magnetic module engage height:
 """
-TIP_TRACK = False
-FLASH = False
 MAG_HEIGHT = 13.7
 
 
@@ -56,10 +52,10 @@ def run(ctx):
 
     [num_samples, starting_vol, binding_buffer_vol, wash1_vol, wash2_vol,
      wash3_vol, elution_vol, mix_reps, settling_time,
-     park_tips] = get_values(  # noqa: F821
+     park_tips, tip_track, flash] = get_values(  # noqa: F821
         'num_samples', 'starting_vol', 'binding_buffer_vol', 'wash1_vol',
         'wash2_vol', 'wash3_vol', 'elution_vol', 'mix_reps', 'settling_time',
-        'park_tips')
+        'park_tips', 'tip_track', 'flash')
 
     """
     Here is where you can change the locations of your labware and modules
@@ -118,7 +114,7 @@ def run(ctx):
     folder_path = '/data/B'
     tip_file_path = folder_path + '/tip_log.json'
     tip_log = {'count': {}}
-    if TIP_TRACK and not ctx.is_simulating():
+    if tip_track and not ctx.is_simulating():
         if os.path.isfile(tip_file_path):
             with open(tip_file_path) as json_file:
                 data = json.load(json_file)
@@ -164,7 +160,7 @@ resuming.')
         drop_count += 8
         if drop_count == drop_threshold:
             # Setup for flashing lights notification to empty trash
-            if FLASH:
+            if flash:
                 if not ctx._hw_manager.hardware.is_simulator:
                     cancellationToken.set_true()
                 thread = create_thread(ctx, cancellationToken)
@@ -172,7 +168,7 @@ resuming.')
             ctx.pause('Please empty tips from waste before resuming.')
 
             ctx.home()  # home before continuing with protocol
-            if FLASH:
+            if flash:
                 cancellationToken.set_false()  # stop light flashing after home
                 thread.join()
 
@@ -195,7 +191,7 @@ resuming.')
             nonlocal waste_vol
             if waste_vol + vol >= waste_threshold:
                 # Setup for flashing lights notification to empty liquid waste
-                if FLASH:
+                if flash:
                     if not ctx._hw_manager.hardware.is_simulator:
                         cancellationToken.set_true()
                     thread = create_thread(ctx, cancellationToken)
@@ -204,7 +200,7 @@ resuming.')
 resuming.')
 
                 ctx.home()  # home before continuing with protocol
-                if FLASH:
+                if flash:
                     # stop light flashing after home
                     cancellationToken.set_false()
                     thread.join()
@@ -412,3 +408,11 @@ resuming.')
     wash(wash2_vol, wash2, park=park_tips)
     wash(wash3_vol, wash3, park=park_tips)
     elute(elution_vol, park=park_tips)
+
+    # track final used tip
+    if tip_track and not ctx.is_simulating():
+        if not os.path.isdir(folder_path):
+            os.mkdir(folder_path)
+        data = {'tips300': tip_log['count'][m300]}
+        with open(tip_file_path, 'w') as outfile:
+            json.dump(data, outfile)
