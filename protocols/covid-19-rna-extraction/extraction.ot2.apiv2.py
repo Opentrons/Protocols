@@ -17,6 +17,7 @@ Here is where you can define the parameters of your protocol:
 FLASH: If True, will flash lights if liquid waste or tip waste needs to be
        disposed of.
 """
+TIP_TRACK = False
 FLASH = False
 MAG_HEIGHT = 13.7
 
@@ -24,13 +25,13 @@ MAG_HEIGHT = 13.7
 # Definitions for deck light flashing
 class CancellationToken:
     def __init__(self):
-       self.is_continued = False
+        self.is_continued = False
 
     def set_true(self):
-       self.is_continued = True
+        self.is_continued = True
 
     def set_false(self):
-       self.is_continued = False
+        self.is_continued = False
 
 
 def turn_on_blinking_notification(hardware, pause):
@@ -53,28 +54,32 @@ def run(ctx):
     # Setup for flashing lights notification to empty trash
     cancellationToken = CancellationToken()
 
-    [num_samples, starting_vol, wash1_vol, wash2_vol, wash3_vol, elution_vol,
-     mix_reps, settling_time, park_tips] = get_values(  # noqa: F821
-        'num_samples', 'starting_vol', 'wash1_vol', 'wash2_vol', 'wash3_vol',
-        'elution_vol', 'mix_reps', 'settling_time', 'park_tips')
+    [num_samples, starting_vol, binding_buffer_vol, wash1_vol, wash2_vol,
+     wash3_vol, elution_vol, mix_reps, settling_time,
+     park_tips] = get_values(  # noqa: F821
+        'num_samples', 'starting_vol', 'binding_buffer_vol', 'wash1_vol',
+        'wash2_vol', 'wash3_vol', 'elution_vol', 'mix_reps', 'settling_time',
+        'park_tips')
 
     """
     Here is where you can change the locations of your labware and modules
     (note that this is the recommended configuration)
     """
-    magdeck = ctx.load_module('magdeck', '4')
+    magdeck = ctx.load_module('magnetic module gen2', '4')
     magdeck.disengage()
-    magplate = magdeck.load_labware('nest_96_wellplate_2ml_deep')
+    magplate = magdeck.load_labware('nest_96_wellplate_2ml_deep',
+                                    'deepwell plate')
     tempdeck = ctx.load_module('Temperature Module Gen2', '1')
-    flatplate = tempdeck.load_labware(
-                'opentrons_96_aluminumblock_nest_wellplate_100ul',)
+    elutionplate = tempdeck.load_labware(
+                'opentrons_96_aluminumblock_nest_wellplate_100ul',
+                'elution plate')
     waste = ctx.load_labware('nest_1_reservoir_195ml', '11',
                              'Liquid Waste').wells()[0].top()
     res2 = ctx.load_labware(
         'nest_12_reservoir_15ml', '2', 'reagent reservoir 2')
     res1 = ctx.load_labware(
         'nest_12_reservoir_15ml', '5', 'reagent reservoir 1')
-    num_cols = math.ceil(NUM_SAMPLES/8)
+    num_cols = math.ceil(num_samples/8)
     tips300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot,
                                 '200µl filtertiprack')
                for slot in ['3', '6', '8', '9', '10']]
@@ -86,7 +91,6 @@ def run(ctx):
         tips300.insert(0, ctx.load_labware('opentrons_96_tiprack_300ul', '7',
                                            '200µl filtertiprack'))
         parking_spots = [None for none in range(12)]
-
 
     # load P300M pipette
     m300 = ctx.load_instrument(
@@ -102,7 +106,7 @@ def run(ctx):
     wash3 = res2.wells()[8:]
 
     mag_samples_m = magplate.rows()[0][:num_cols]
-    elution_samples_m = flatplate.rows()[0][:num_cols]
+    elution_samples_m = elutionplate.rows()[0][:num_cols]
 
     magdeck.disengage()  # just in case
     tempdeck.set_temperature(4)
@@ -248,7 +252,7 @@ resuming.')
         """
         latest_chan = -1
         for i, (well, spot) in enumerate(zip(mag_samples_m, parking_spots)):
-            pick_up(m300)
+            _pick_up(m300)
             num_trans = math.ceil(vol/200)
             vol_per_trans = vol/num_trans
             asp_per_chan = 14000//(vol_per_trans*8)
@@ -280,7 +284,7 @@ resuming.')
 ' + str(settling_time) + ' minutes.')
 
         # remove initial supernatant
-        remove_supernatant(vol+STARTING_VOL, park=park)
+        remove_supernatant(vol+starting_vol, park=park)
 
     def wash(vol, source, mix_reps=15, park=True, resuspend=True):
         """
