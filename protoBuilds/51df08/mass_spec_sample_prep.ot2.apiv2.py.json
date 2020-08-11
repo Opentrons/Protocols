@@ -1,5 +1,5 @@
 {
-    "content": "from opentrons.types import Point\n\nmetadata = {\n    'protocolName': 'Mass Spec Sample Prep',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.0'\n}\n\n\ndef run(ctx):\n\n    num_samples, p20_mount, p300_mount = get_values(  # noqa: F821\n        'num_samples', 'p20_mount', 'p300_mount')\n    # num_samples, p20_mount, p300_mount = 63, 'left', 'right'\n\n    # load labware\n    reagent_rack = ctx.load_labware(\n        'opentrons_6_tuberack_falcon_50ml_conical', '1',\n        '50ml reagent tuberack')\n    slide = ctx.load_labware(\n        'custom_72_other_24x330ul_24x330ul_24x330ul', '5', 'slide')\n    # slide = ctx.load_labware(\n    #     'biorad_96_wellplate_200ul_pcr', '5', 'slide')\n    sample_racks = [ctx.load_labware(\n        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', slot,\n        '1.5ml Eppendorf tuberacks for samples and antibody')\n        for slot in ['9', '6', '3']]\n    tiprack20 = [ctx.load_labware('opentrons_96_tiprack_20ul', '2')]\n    tiprack300 = [\n        ctx.load_labware('opentrons_96_tiprack_300ul', slot)\n        for slot in ['7', '8', '10', '11']]\n    waste = ctx.load_labware(\n        'nest_1_reservoir_195ml', '4',\n        'waste reservoir (calibrate to top center)').wells()[0].top()\n\n    # load pipettes\n    p20 = ctx.load_instrument(\n        'p20_single_gen2', p20_mount, tip_racks=tiprack20)\n    p300 = ctx.load_instrument(\n        'p300_single_gen2', p300_mount, tip_racks=tiprack300)\n\n    # define wells\n    slide_wells = [\n        well for col in slide.columns() for well in col[1:]][:num_samples]\n    detergent_wash_buffer = reagent_rack.wells()[0].bottom(5)\n    bsa_blocking_buffer = reagent_rack.wells()[1].bottom(5)\n    pbs = [tube.bottom(2) for tube in reagent_rack.wells()[2:4]]\n    water = [tube.bottom(2) for tube in reagent_rack.wells()[4:6]]\n\n    samples = [\n        rack.wells() for rack in sample_racks\n        for well in rack.wells()][:num_samples]\n    antibody = sample_racks[-1].wells()[-1]\n\n    # calculate offset for spots\n    y_offset = slide.wells()[0]._width/3/2\n    print(slide.wells()[0]._width)\n    ab_spot_sets = [\n        [well.bottom().move(Point(y=side*y_offset)) for side in [1, -1]]\n        for well in slide_wells]\n\n    # transfer antibody to slide wells 2x\n    p20.pick_up_tip()\n    for set in ab_spot_sets:\n        for well in set:\n            p20.transfer(1.5, antibody, well, new_tip='never')\n\n    p20.drop_tip()\n\n    ctx.home()\n    ctx.pause('Remove well module from OT-2 and incubate in humidity chamber \\\novernight at 4C to allow antibodies to adhere to slide. After overnight \\\nincubation, remove the slide from the humidity chamber and place in \\\ndesiccator to dry. Once dry, place slide with attached well module back into \\\nOT-2')\n\n    def add_reagent(vol, source, drop=True):\n        p300.pick_up_tip()\n        for well in slide_wells:\n            p300.transfer(vol, source, well.top(), air_gap=20, new_tip='never')\n        if drop:\n            p300.drop_tip()\n\n    def discard_liquid(vol, new_tip=False):\n        if not p300.hw_pipette['has_tip']:\n            p300.pick_up_tip()\n        for well in slide_wells:\n            if new_tip and not p300.hw_pipette['has_tip']:\n                p300.pick_up_tip()\n            p300.transfer(\n                vol, well.bottom(0.2), waste, air_gap=20, new_tip='never')\n            if new_tip:\n                p300.drop_tip()\n        if p300.hw_pipette['has_tip']:\n            p300.drop_tip()\n\n    def wash(vol, source):\n        add_reagent(vol, source)\n        discard_liquid(vol)\n\n    wash(250, detergent_wash_buffer)\n\n    add_reagent(250, bsa_blocking_buffer)\n\n    ctx.home()\n    ctx.pause('Remove slide from OT-2 and place on benchtop shaker to \\\nincubate in humidity chamber for 1 hour at room temperature')\n\n    for _ in range(2):\n        wash(250, pbs[0])\n\n    wash(250, water[0])\n\n    ctx.home()\n    ctx.pause('Remove slide from OT-2 and desiccate dry. Prepare serum \\\nsamples in Eppendorf tubes')\n\n    # add samples\n    for s, d in zip(samples, slide_wells):\n        p300.pick_up_tip()\n        p300.transfer(100, s, d.top(-1), air_gap=20, new_tip='never')\n        p300.drop_tip()\n\n    ctx.home()\n    ctx.pause('Remove slide from OT-2 and incubate on benchtop shaker in \\\nhumidity box for 2 hours at room temperature')\n\n    discard_liquid(100, new_tip=True)\n\n    for _ in range(2):\n        wash(250, pbs[1])\n\n    for _ in range(2):\n        wash(250, water[1])\n",
+    "content": "from opentrons.types import Point\n\nmetadata = {\n    'protocolName': 'Mass Spec Sample Prep',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.0'\n}\n\n\ndef run(ctx):\n\n    [num_antibodies, num_samples, p20_mount,\n        p300_mount] = get_values(  # noqa: F821\n            'num_antibodies', 'num_samples', 'p20_mount', 'p300_mount')\n    # [num_antibodies, num_samples, p20_mount,\n    #     p300_mount] = 5, 10, 'left', 'right'\n\n    # load labware\n    reagent_rack = ctx.load_labware(\n        'opentrons_6_tuberack_falcon_50ml_conical', '1',\n        '50ml reagent tuberack')\n    num_slides = 2 if num_antibodies > 3 else 1\n    slide_mounts = [ctx.load_labware(\n        'custom_72_other_24x330ul_24x330ul_24x330ul', slot, 'slides ' + inds)\n        for slot, inds in zip(['5', '2'], ['1-3', '4-5'])][:num_slides]\n    # slide_mounts = [ctx.load_labware(\n    #     'biorad_96_wellplate_200ul_pcr', slot, 'slides ' + inds)\n    #     for slot, inds in zip(['5', '2'], ['1-3', '4-5'])][:num_slides]\n    sample_rack = ctx.load_labware(\n        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '3',\n        '1.5ml Eppendorf tuberacks for samples')\n    waste = ctx.load_labware(\n        'nest_1_reservoir_195ml', '4',\n        'waste reservoir (calibrate to top center)').wells()[0].top()\n    ab_rack = ctx.load_labware(\n        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '6',\n        '1.5ml Eppendorf tuberacks for antibodies')\n    tiprack20 = [ctx.load_labware('opentrons_96_tiprack_20ul', '7')]\n    tiprack300 = [\n        ctx.load_labware('opentrons_96_tiprack_300ul', slot)\n        for slot in ['8', '9', '10', '11']]\n\n    # load pipettes\n    p20 = ctx.load_instrument(\n        'p20_single_gen2', p20_mount, tip_racks=tiprack20)\n    p300 = ctx.load_instrument(\n        'p300_single_gen2', p300_mount, tip_racks=tiprack300)\n\n    # define wells\n    if num_antibodies > 3:\n        slide_inds = [3, num_antibodies % 3]\n    else:\n        slide_inds = [num_antibodies]\n    slides_split = [[slide_mount.columns()[i*3:i*3+3] for i in range(ind)]\n                    for slide_mount, ind in zip(slide_mounts, slide_inds)]\n    slides = [slide for slide_split in slides_split for slide in slide_split]\n    slides_cols_reordered = [[col[1:] if i % 2 == 0 else col[:0:-1]\n                             for i, col in enumerate(slide)]\n                             for slide in slides]\n    slides_wells_reordered = [[well for col in slide for well in col]\n                              for slide in slides_cols_reordered]\n    detergent_wash_buffer = reagent_rack.wells()[0].bottom(5)\n    bsa_blocking_buffer = reagent_rack.wells()[1].bottom(5)\n    pbs = [tube.bottom(2) for tube in reagent_rack.wells()[2:4]]\n    water = [tube.bottom(2) for tube in reagent_rack.wells()[4:6]]\n\n    samples = sample_rack.wells()[:num_samples]\n    antibodies = ab_rack.wells()[:num_antibodies]\n\n    # calculate offset for spots\n    y_offset = slide_mounts[0].wells()[0]._width/3/2\n    # y_offset = slide_mounts[0].wells()[0].diameter/3/2\n    ab_spot_sets = [\n        [[well.bottom().move(Point(y=side*y_offset)) for side in [0, -2]]\n         for well in slide]\n        for slide in slides_wells_reordered]\n\n    tip_track = {\n        p300: {\n            'max': len(tiprack300)*96,\n            'count': 0\n        },\n        p20: {\n            'max': len(tiprack20)*96,\n            'count': 0\n        }\n    }\n\n    def pick_up(pip):\n        nonlocal tip_track\n        if tip_track[pip]['count'] == tip_track[pip]['max']:\n            ctx.pause('Replace ' + str(pip.max_volume) + 'ul tipracks before \\\nresuming.')\n            tip_track[pip]['count'] = 0\n            pip.reset_tipracks()\n        tip_track[pip]['count'] += 1\n        pip.pick_up_tip()\n\n    def add_reagent(vol, source, drop=True):\n        pick_up(p300)\n        for slide_wells in slides_wells_reordered:\n            for well in slide_wells:\n                p300.transfer(vol, source, well.top(), air_gap=20,\n                              new_tip='never')\n        if drop:\n            p300.drop_tip()\n\n    def discard_liquid(vol, new_tip=False):\n        if not p300.hw_pipette['has_tip']:\n            pick_up(p300)\n        for slide_wells in slides_wells_reordered:\n            for well in slide_wells:\n                if not p300.hw_pipette['has_tip']:\n                    pick_up(p300)\n                p300.transfer(\n                    vol, well.bottom(0.2), waste, air_gap=20, new_tip='never')\n                p300.drop_tip()\n            if p300.hw_pipette['has_tip']:\n                p300.drop_tip()\n\n    def wash(vol, source):\n        add_reagent(vol, source)\n        discard_liquid(vol)\n\n    # transfer antibodies to slide wells 2x\n    for ab, slide in zip(antibodies, ab_spot_sets):\n        pick_up(p20)\n        for set in slide:\n            for well in set:\n                p20.transfer(1.5, ab, well, new_tip='never')\n        p20.drop_tip()\n\n    ctx.home()\n    ctx.pause('Remove well module from OT-2 and incubate in humidity chamber \\\novernight at 4C to allow antibodies to adhere to slides. After overnight \\\nincubation, remove the slides from the humidity chamber and place in \\\ndesiccator to dry. Once dry, place slides with attached well module back into \\\nOT-2')\n\n    wash(250, detergent_wash_buffer)\n\n    add_reagent(250, bsa_blocking_buffer)\n\n    ctx.home()\n    ctx.pause('Remove slide from OT-2 and place on benchtop shaker to \\\nincubate in humidity chamber for 1 hour at room temperature')\n\n    for _ in range(2):\n        wash(250, pbs[0])\n\n    wash(250, water[0])\n\n    ctx.home()\n    ctx.pause('Remove slide from OT-2 and desiccate dry. Prepare serum \\\nsamples in Eppendorf tubes')\n\n    # add samples\n    sample_duplicates = [[slide[i*2+1:i*2+3] for i in range(num_samples)]\n                         for slide in slides_wells_reordered]\n    for slide in sample_duplicates:\n        for sample, set in zip(samples, slide):\n            pick_up(p300)\n            p300.distribute(100, sample, [d.top(-1) for d in set], air_gap=20,\n                            new_tip='never')\n            p300.air_gap(20)\n            p300.drop_tip()\n\n    ctx.home()\n    ctx.pause('Remove slide from OT-2 and incubate on benchtop shaker in \\\nhumidity box for 2 hours at room temperature')\n\n    discard_liquid(100, new_tip=True)\n\n    for _ in range(2):\n        wash(250, pbs[1])\n\n    for _ in range(2):\n        wash(250, water[1])\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -945,8 +945,14 @@
     ],
     "fields": [
         {
-            "default": 63,
-            "label": "number of samples (1-63)",
+            "default": 5,
+            "label": "number of antibodies/slides (1-5)",
+            "name": "num_antibodies",
+            "type": "int"
+        },
+        {
+            "default": 10,
+            "label": "number of samples (in duplicate, 1-11)",
             "name": "num_samples",
             "type": "int"
         },
@@ -999,13 +1005,13 @@
             "type": "opentrons_6_tuberack_falcon_50ml_conical"
         },
         {
-            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 2",
+            "name": "slides 4-5 on 2",
             "share": false,
             "slot": "2",
-            "type": "opentrons_96_tiprack_20ul"
+            "type": "custom_72_other_24x330ul_24x330ul_24x330ul"
         },
         {
-            "name": "1.5ml Eppendorf tuberacks for samples and antibody on 3",
+            "name": "1.5ml Eppendorf tuberacks for samples on 3",
             "share": false,
             "slot": "3",
             "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
@@ -1017,22 +1023,22 @@
             "type": "nest_1_reservoir_195ml"
         },
         {
-            "name": "slide on 5",
+            "name": "slides 1-3 on 5",
             "share": false,
             "slot": "5",
             "type": "custom_72_other_24x330ul_24x330ul_24x330ul"
         },
         {
-            "name": "1.5ml Eppendorf tuberacks for samples and antibody on 6",
+            "name": "1.5ml Eppendorf tuberacks for antibodies on 6",
             "share": false,
             "slot": "6",
             "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
         },
         {
-            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 7",
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 7",
             "share": false,
             "slot": "7",
-            "type": "opentrons_96_tiprack_300ul"
+            "type": "opentrons_96_tiprack_20ul"
         },
         {
             "name": "Opentrons 96 Tip Rack 300 \u00b5L on 8",
@@ -1041,10 +1047,10 @@
             "type": "opentrons_96_tiprack_300ul"
         },
         {
-            "name": "1.5ml Eppendorf tuberacks for samples and antibody on 9",
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 9",
             "share": false,
             "slot": "9",
-            "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
+            "type": "opentrons_96_tiprack_300ul"
         },
         {
             "name": "Opentrons 96 Tip Rack 300 \u00b5L on 10",
