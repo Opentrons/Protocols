@@ -1,9 +1,15 @@
 [
   {
     "type": "int",
-    "label": "number of samples (1-63)",
+    "label": "number of antibodies/slides (1-5)",
+    "name": "num_antibodies",
+    "default": 5
+  },
+  {
+    "type": "int",
+    "label": "number of samples (in duplicate, 1-11)",
     "name": "num_samples",
-    "default": 63
+    "default": 10
   },
   {
     "type": "dropDown",
