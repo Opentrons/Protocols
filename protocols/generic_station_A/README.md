@@ -4,7 +4,7 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Covid-19
+* COVID-19
 	* Station A: Sample Plating
 
 
