@@ -1,0 +1,20 @@
+[
+  {
+    "type": "dropDown",
+    "label": "P20 Mount",
+    "name": "p20mnt",
+    "options": [
+      {"label": "Right", "value": "right"},
+      {"label": "Left", "value": "left"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "How many 384-well plates",
+    "name": "sec_plate",
+    "options": [
+      {"label": "1", "value": "no"},
+      {"label": "2", "value": "yes"}
+    ]
+  }
+]
