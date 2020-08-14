@@ -1,0 +1,17 @@
+[
+  {
+    "type": "dropDown",
+    "label": "P20 Mount",
+    "name": "p20mnt",
+    "options": [
+      {"label": "Right", "value": "right"},
+      {"label": "Left", "value": "left"}
+    ]
+  },
+  {
+    "type": "int",
+    "label": "Number of Plates (1-9)",
+    "name": "num_plates",
+    "default": 1
+  }
+]
