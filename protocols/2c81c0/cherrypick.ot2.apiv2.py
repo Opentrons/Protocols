@@ -1,3 +1,5 @@
+import math
+
 # metadata
 metadata = {
     'protocolName': 'Cherrypicking from .csv',
@@ -24,9 +26,9 @@ def run(ctx):
 
     # pipette
     p10 = ctx.load_instrument(
-        'p10_single', p10_mount, tip_racks=[tiprack10])
+        'p10_single', p10_mount, tip_racks=tiprack10)
     p300 = ctx.load_instrument(
-        'p300_single', p300_mount, tip_racks=[tiprack300])
+        'p300_single', p300_mount, tip_racks=tiprack300)
 
     # parse
     data = [

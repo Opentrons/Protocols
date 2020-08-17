@@ -1,5 +1,5 @@
 {
-    "content": "# metadata\nmetadata = {\n    'protocolName': 'Cherrypicking from .csv',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.0'\n}\n\n\ndef run(ctx):\n\n    csv_input, p10_mount, p300_mount = get_values(  # noqa: F821\n        'csv_input', 'p10_mount', 'p300_mount')\n#     csv_input, p10_mount = [\n#         'source labware,source slot,source well,volume,destination labware,\\\n# destination slot,destination well,height offset from top of source well \\\n# (mm)\\nplate,1,A2,7,tuberack,5,A4,-4\\nplate,2,H10,9,tuberack,3,D1,-4', 'left']\n\n    # labware\n    tiprack10 = ctx.load_labware('biotix_96_filtertiprack_10ul', '4')\n    tiprack300 = ctx.load_labware('opentrons_96_filtertiprack_200ul', '7')\n\n    # pipette\n    p10 = ctx.load_instrument(\n        'p10_single', p10_mount, tip_racks=[tiprack10])\n    p300 = ctx.load_instrument(\n        'p300_single', p300_mount, tip_racks=[tiprack300])\n\n    # parse\n    data = [\n        [val.strip().upper() for val in line.split(',')]\n        for line in csv_input.splitlines()\n        if line and line.split(',')[0].strip()][1:]\n\n    # loop and perform transfers\n    labware_load_dict = {\n        'plate': 'biorad_96_wellplate_200ul_pcr',\n        'tuberack': 'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap',\n        'deepplate': 'nest_96_wellplate_2ml_deep'\n    }\n    for d in data:\n        s_lw, s_slot, s_well, vol, d_lw, d_slot, d_well, h_offset, vol_mix = d\n        vol, h_offset, vol_mix = float(vol), float(h_offset), float(vol_mix)\n        s_lw, d_lw = s_lw.lower().strip(), d_lw.lower().strip()\n        if int(s_slot) not in ctx.loaded_labwares:\n            ctx.load_labware(\n                labware_load_dict[s_lw], s_slot, 'source plate ' + s_slot)\n        if int(d_slot) not in ctx.loaded_labwares:\n            ctx.load_labware(\n                labware_load_dict[d_lw], d_slot, 'destination plate ' + d_slot)\n        source = ctx.loaded_labwares[int(s_slot)].wells_by_name()[s_well]\n        dest = ctx.loaded_labwares[int(d_slot)].wells_by_name()[d_well]\n        if h_offset > source._depth:\n            ctx.pause('Warning: Specified height may result in crashing. \\\nPress resume to ignore.')\n\n        pip = p300 if vol > 30 else p10\n        pip.pick_up_tip()\n        pip.transfer(\n            vol,\n            source.top(h_offset),\n            dest.bottom(3),\n            mix_after=(3, vol_mix),\n            new_tip='never'\n        )\n        pip.blow_out(dest.top(-2))\n        pip.drop_tip()\n",
+    "content": "import math\n\n# metadata\nmetadata = {\n    'protocolName': 'Cherrypicking from .csv',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.0'\n}\n\n\ndef run(ctx):\n\n    csv_input, p10_mount, p300_mount, change_tips = get_values(  # noqa: F821\n        'csv_input', 'p10_mount', 'p300_mount', 'change_tips')\n#     csv_input, p10_mount = [\n#         'source labware,source slot,source well,volume,destination labware,\\\n# destination slot,destination well,height offset from top of source well \\\n# (mm)\\nplate,1,A2,7,tuberack,5,A4,-4\\nplate,2,H10,9,tuberack,3,D1,-4', 'left']\n\n    # labware\n    tiprack10 = [ctx.load_labware('biotix_96_filtertiprack_10ul', slot)\n                 for slot in ['4', '11']]\n    tiprack300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)\n                  for slot in ['7', '10']]\n\n    # pipette\n    p10 = ctx.load_instrument(\n        'p10_single', p10_mount, tip_racks=tiprack10)\n    p300 = ctx.load_instrument(\n        'p300_single', p300_mount, tip_racks=tiprack300)\n\n    # parse\n    data = [\n        [val.strip().upper() for val in line.split(',')]\n        for line in csv_input.splitlines()\n        if line and line.split(',')[0].strip()][1:]\n\n    # loop and perform transfers\n    labware_load_dict = {\n        'plate': 'biorad_96_wellplate_200ul_pcr',\n        'tuberack': 'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap',\n        'deepplate': 'nest_96_wellplate_2ml_deep'\n    }\n    for d in data:\n        s_lw, s_slot, s_well, vol, d_lw, d_slot, d_well, h_offset, vol_mix = d\n        vol, h_offset, vol_mix = float(vol), float(h_offset), float(vol_mix)\n        s_lw, d_lw = s_lw.lower().strip(), d_lw.lower().strip()\n        if int(s_slot) not in ctx.loaded_labwares:\n            ctx.load_labware(\n                labware_load_dict[s_lw], s_slot, 'source plate ' + s_slot)\n        if int(d_slot) not in ctx.loaded_labwares:\n            ctx.load_labware(\n                labware_load_dict[d_lw], d_slot, 'destination plate ' + d_slot)\n        source = ctx.loaded_labwares[int(s_slot)].wells_by_name()[s_well]\n        dest = ctx.loaded_labwares[int(d_slot)].wells_by_name()[d_well]\n        if h_offset > source._depth:\n            ctx.pause('Warning: Specified height may result in crashing. \\\nPress resume to ignore.')\n\n        pip = p300 if vol > 30 else p10\n        num_trans = math.ceil(vol/pip.max_volume)\n        vol_per_trans = vol/num_trans\n        if change_tips == 'once per well':\n            pip.pick_up_tip()\n        for _ in range(num_trans):\n            if change_tips == 'always':\n                pip.pick_up_tip()\n            if vol_mix != 0:\n                pip.transfer(\n                    vol_per_trans,\n                    source.top(h_offset),\n                    dest.bottom(3),\n                    mix_after=(3, vol_mix),\n                    new_tip='never'\n                )\n            else:\n                pip.transfer(\n                    vol_per_trans,\n                    source.top(h_offset),\n                    dest.bottom(3),\n                    new_tip='never'\n                )\n            pip.blow_out(dest.top(-2))\n            if change_tips == 'always':\n                pip.drop_tip()\n        if change_tips == 'once per well':\n            pip.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -1160,6 +1160,21 @@
                 }
             ],
             "type": "dropDown"
+        },
+        {
+            "label": "change tips",
+            "name": "change_tips",
+            "options": [
+                {
+                    "label": "once per well",
+                    "value": "once per well"
+                },
+                {
+                    "label": "always",
+                    "value": "always"
+                }
+            ],
+            "type": "dropDown"
         }
     ],
     "instruments": [
@@ -1208,6 +1223,18 @@
             "share": false,
             "slot": "7",
             "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 10",
+            "share": false,
+            "slot": "10",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Biotix 96 Filter Tip Rack 10\u00b5l on 11",
+            "share": false,
+            "slot": "11",
+            "type": "biotix_96_filtertiprack_10ul"
         },
         {
             "name": "Opentrons Fixed Trash on 12",
