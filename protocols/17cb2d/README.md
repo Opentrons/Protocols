@@ -11,7 +11,9 @@
 ## Description
 This protocol fills [Applied Biosystems MicroAmp 384-well plates]([https://www.thermofisher.com/order/catalog/product/4343370#/4343370) with mastermix.</br>
 </br>
-The protocol can fill up to 9 plates and will dispense 7.5µL of mastermix 1 into all the odd rows (A/C/E...) and 7.5µL of mastermix 2 into all the even rows (B/D/F...).
+The protocol can fill up to 9 plates and will dispense 7.5µL of mastermix 1 into all the odd rows (A/C/E...) and 7.5µL of mastermix 2 into all the even rows (B/D/F...).</br>
+</br>
+This protocol has been updated to use the GEN2 Multi-Channel Pipettes - please use corresponding tips.
 
 
 ---
@@ -21,8 +23,8 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 
 * [Opentrons OT-2](https://shop.opentrons.com/collections/ot-2-robot/products/ot-2)
 * [Opentrons OT-2 Run App (Version 3.19.0 or later)](https://opentrons.com/ot-app/)
-* [Opentrons P20 Single-Channel Pipette](https://shop.opentrons.com/collections/ot-2-pipettes)
-* [Opentrons 20µL Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
+* [Opentrons Multi-Channel Pipette](https://shop.opentrons.com/collections/ot-2-pipettes)
+* [Opentrons Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
 * [USA Scientific 12-Well Reservoir](https://labware.opentrons.com/usascientific_12_reservoir_22ml?category=reservoir)
 * [Applied Biosystems MicroAmp 384-Well Plate](https://www.thermofisher.com/order/catalog/product/4343370#/4343370)
 * Reagents (mastermix 1, mastermix 2)
@@ -33,7 +35,7 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 
 Slots 1 - 9: [Applied Biosystems MicroAmp 384-Well Plate](https://www.thermofisher.com/order/catalog/product/4343370#/4343370)
 
-Slot 10: [Opentrons 20µL Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
+Slot 10: [Opentrons Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
 
 Slot 11: [USA Scientific 12-Well Reservoir](https://labware.opentrons.com/usascientific_12_reservoir_22ml?category=reservoir)
 A1: Mastermix 1
@@ -42,7 +44,8 @@ A2: Mastermix 2
 </br>
 </br>
 **Using the customizations field (below), set up your protocol.**
-* **P20 Mount**: Select which mount (left or right) the P20-Single is attached to.
+* **Pipette Type**: Select which GEN2 Multi-Channel Pipette (p300 or p20) will be used
+* **Pipette Mount**: Select which mount (left or right) the Multi-Channel Pipette is attached to
 * **Number of Plates (1-9)**: Specify the number of plates to fill
 
 

@@ -1,5 +1,5 @@
 {
-    "content": "metadata = {\n    'protocolName': 'Plate Filling Master Mix in AB 384 Well Plate',\n    'author': 'Chaz <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.5'\n}\n\n\ndef run(protocol):\n    [p20mnt, num_plates] = get_values(  # noqa: F821\n    'p20mnt', 'num_plates')\n\n    # load labware and pipettes\n    tips = protocol.load_labware('opentrons_96_tiprack_20ul', '10')\n    pip = protocol.load_instrument('p20_single_gen2', p20mnt, tip_racks=[tips])\n    res = protocol.load_labware('usascientific_12_reservoir_22ml', '11')\n    mm1 = res['A1']\n    mm2 = res['A2']\n    num_plates += 1\n    plates = [\n        protocol.load_labware(\n            'appliedbiosystemsmicroampoptical384' +\n            'wellreactionplatewithbarcode_384_wellplate_30ul',\n            s) for s in range(1, num_plates)]\n\n    # distribute mastermix 1\n    protocol.comment('Distributing master mix 1...')\n    pip.pick_up_tip()\n    for plate in plates:\n        wells = [w for col in plate.rows()[::2] for w in col]\n        mm_vol = 0\n        for well in wells:\n            if mm_vol < 1:\n                pip.aspirate(15, mm1)\n                mm_vol = 15\n            pip.dispense(7.5, well)\n            mm_vol -= 7.5\n    pip.drop_tip()\n\n    # distribute mastermix 2\n    protocol.comment('Distributing master mix 2...')\n    pip.pick_up_tip()\n    for plate in plates:\n        wells = [w for col in plate.rows()[1::2] for w in col]\n        mm_vol = 0\n        for well in wells:\n            if mm_vol < 1:\n                pip.aspirate(15, mm2)\n                mm_vol = 15\n            pip.dispense(7.5, well)\n            mm_vol -= 7.5\n    pip.drop_tip()\n",
+    "content": "metadata = {\n    'protocolName': 'Plate Filling Master Mix in AB 384 Well Plate',\n    'author': 'Chaz <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.5'\n}\n\n\ndef run(protocol):\n    [piptype, pipmnt, num_plates] = get_values(  # noqa: F821\n    'piptype', 'pipmnt', 'num_plates')\n\n    # load labware and pipettes\n    pip_name, tip_name = piptype.split()\n    tips = protocol.load_labware(tip_name, '10')\n    pip = protocol.load_instrument(pip_name, pipmnt, tip_racks=[tips])\n    res = protocol.load_labware('usascientific_12_reservoir_22ml', '11')\n    mm1 = res['A1']\n    mm2 = res['A2']\n    num_plates += 1\n    plates = [\n        protocol.load_labware(\n            'appliedbiosystemsmicroampoptical384' +\n            'wellreactionplatewithbarcode_384_wellplate_30ul',\n            s) for s in range(1, num_plates)]\n\n    max_vol = 15 if pip_name == 'p20_multi_gen2' else 180\n\n    # distribute mastermix 1\n    protocol.comment('Distributing master mix 1...')\n    pip.pick_up_tip()\n    for plate in plates:\n        wells = plate.rows()[0]\n        mm_vol = 0\n        for well in wells:\n            if mm_vol < 6:\n                pip.aspirate(max_vol, mm1)\n                mm_vol = max_vol\n            pip.dispense(7.5, well)\n            mm_vol -= 7.5\n    pip.drop_tip()\n\n    # distribute mastermix 2\n    protocol.comment('Distributing master mix 2...')\n    pip.pick_up_tip()\n    for plate in plates:\n        wells = plate.rows()[1]\n        mm_vol = 0\n        for well in wells:\n            if mm_vol < 6:\n                pip.aspirate(max_vol, mm2)\n                mm_vol = max_vol\n            pip.dispense(7.5, well)\n            mm_vol -= 7.5\n    pip.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -4323,8 +4323,23 @@
     ],
     "fields": [
         {
-            "label": "P20 Mount",
-            "name": "p20mnt",
+            "label": "Pipette Type",
+            "name": "piptype",
+            "options": [
+                {
+                    "label": "P20 Multi",
+                    "value": "p20_multi_gen2 opentrons_96_tiprack_20ul"
+                },
+                {
+                    "label": "P300 Multi",
+                    "value": "p300_multi_gen2 opentrons_96_tiprack_300ul"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Pipette Mount",
+            "name": "pipmnt",
             "options": [
                 {
                     "label": "Right",
@@ -4347,7 +4362,7 @@
     "instruments": [
         {
             "mount": "right",
-            "name": "p20_single_gen2"
+            "name": "p20_multi_gen2"
         }
     ],
     "labware": [
