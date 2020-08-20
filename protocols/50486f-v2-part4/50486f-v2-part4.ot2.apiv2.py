@@ -9,7 +9,7 @@ metadata = {
 def run(protocol):
     [p20_mount, number_of_plates] = get_values(  # noqa: F821
     'p20_mount', 'number_of_plates')
-    
+
     # load labware
     pcrcoolplate = 'labcon_96_wellplate_pcr_on_cooler'
     pcrcoolstrip = 'labcon_8strip_pcr_on_cooler'
@@ -85,8 +85,8 @@ def run(protocol):
             pip20.drop_tip()
 
         if i == number_of_plates-1:
-            protocol.comment("Congratulations, you have completed step 4/4 of \
-            this protocol. Please remove samples from OT-2 \
+            protocol.comment("Congratulations, you have completed step 4/4 \
+            of this protocol. Please remove samples from OT-2 \
             and properly store.")
         else:
             protocol.pause("Congratulations, you have completed step 4/4 \
