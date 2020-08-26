@@ -17,7 +17,8 @@ def run(ctx):
         for line in input_csv.splitlines()[1:]]
     occupied_slots = [int(line[ind]) for line in data for ind in [0, 2]]
     for slot in occupied_slots:
-        ctx.load_labware('biorad_96_wellplate_200ul_pcr', str(slot))
+        if slot not in ctx.loaded_labwares:
+            ctx.load_labware('biorad_96_wellplate_200ul_pcr', str(slot))
 
     tipracks = []
     for slot in range(1, 12):
