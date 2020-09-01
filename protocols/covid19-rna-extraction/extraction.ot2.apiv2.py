@@ -81,7 +81,7 @@ def run(ctx):
                for slot in ['3', '6', '8', '9', '10']]
     if park_tips:
         parkingrack = ctx.load_labware(
-            'opentrons_96_tiprack_300ul', '7', 'empty tiprack for parking')
+            'opentrons_96_tiprack_300ul', '7', 'tiprack for parking')
         parking_spots = parkingrack.rows()[0][:num_cols]
     else:
         tips300.insert(0, ctx.load_labware('opentrons_96_tiprack_300ul', '7',
@@ -248,7 +248,10 @@ resuming.')
         """
         latest_chan = -1
         for i, (well, spot) in enumerate(zip(mag_samples_m, parking_spots)):
-            _pick_up(m300)
+            if park:
+                _pick_up(m300, spot)
+            else:
+                _pick_up(m300)
             num_trans = math.ceil(vol/200)
             vol_per_trans = vol/num_trans
             asp_per_chan = 14000//(vol_per_trans*8)
