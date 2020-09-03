@@ -1,7 +1,7 @@
 # Generic qPCR Setup Protocol (Station C)
 
 ### Author
-[Opentrons](https://opentrons.com/)
+[Opentrons (verified)](https://opentrons.com/)
 
 ## Categories
 * COVID-19

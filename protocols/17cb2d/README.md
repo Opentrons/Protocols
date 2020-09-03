@@ -1,7 +1,7 @@
 # Plate Filling Master Mix in AB 384 Well Plate
 
 ### Author
-[Opentrons](https://opentrons.com/)
+[Opentrons (verified)](https://opentrons.com/)
 
 ## Categories
 * Sample Prep

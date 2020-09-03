@@ -1,7 +1,7 @@
 # Swift 2S Turbo DNA Library Kit Protocol: Part 1/3 - Enzymatic Prep & Ligation
 
 ### Author
-[Opentrons](https://opentrons.com/)
+[Opentrons (verified)](https://opentrons.com/)
 
 ### Partner
 [Swift Biosciences](https://swiftbiosci.com/)
