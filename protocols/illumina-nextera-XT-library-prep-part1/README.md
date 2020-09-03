@@ -1,7 +1,7 @@
 # Nextera XT DNA Library Prep Kit Protocol: Part 1/4 - Tagment Genomic DNA and Amplify Libraries
 
 ### Author
-[Opentrons](http://www.opentrons.com/)
+[Opentrons (verified)](https://opentrons.com/)
 
 ## Categories
 * NGS Library Prep
