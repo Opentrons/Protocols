@@ -1,7 +1,7 @@
 # Swift 2S Turbo DNA Library Kit Protocol: Part 3/3 - Final Clean-Up
 
 ### Author
-[Opentrons](https://opentrons.com/)
+[Opentrons (verified)](https://opentrons.com/)
 
 ### Partner
 [Swift Biosciences](https://swiftbiosci.com/)

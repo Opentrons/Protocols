@@ -1,7 +1,7 @@
 # OT-2 PCR Prep 1/2: Master Mix Assembly
 
 ### Author
-[Opentrons](http://www.opentrons.com/)
+[Opentrons (verified)](https://opentrons.com/)
 
 ## Categories
 * PCR
