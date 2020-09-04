@@ -1,7 +1,7 @@
 # Customizable Serial Dilution for OT-2
 
 ### Author
-[Opentrons](https://opentrons.com/)
+[Opentrons (verified)](https://opentrons.com/)
 
 ## Categories
 * Sample Prep

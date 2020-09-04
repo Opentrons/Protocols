@@ -1,7 +1,7 @@
 # Generic Sample Plating Protocol (Station A)
 
 ### Author
-[Opentrons](https://opentrons.com/)
+[Opentrons (verified)](https://opentrons.com/)
 
 ## Categories
 * COVID-19

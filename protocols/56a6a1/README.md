@@ -1,7 +1,7 @@
 # Protein Array
 
 ### Author
-[Opentrons](http://www.opentrons.com/)
+[Opentrons (verified)](https://opentrons.com/)
 
 ## Categories
 * Proteins & Proteomics

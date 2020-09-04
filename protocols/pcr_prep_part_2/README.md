@@ -1,7 +1,7 @@
 # OT-2 PCR Prep 2/2: Master Mix Distribution and DNA Transfer
 
 ### Author
-[Opentrons](http://www.opentrons.com/)
+[Opentrons (verified)](https://opentrons.com/)
 
 ## Categories
 * PCR
