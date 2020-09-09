@@ -10,9 +10,10 @@ metadata = {
 
 def run(ctx):
 
-    [num_antibodies, num_samples, p20_mount,
-        p300_mount] = get_values(  # noqa: F821
-            'num_antibodies', 'num_samples', 'p20_mount', 'p300_mount')
+    [process, num_antibodies, num_samples, p20_mount,
+     p300_mount] = get_values(  # noqa: F821
+            'process', 'num_antibodies', 'num_samples', 'p20_mount',
+            'p300_mount')
     # [num_antibodies, num_samples, p20_mount,
     #     p300_mount] = 5, 10, 'left', 'right'
 
@@ -72,7 +73,7 @@ def run(ctx):
     y_offset = slide_mounts[0].wells()[0]._width/3/2
     # y_offset = slide_mounts[0].wells()[0].diameter/3/2
     ab_spot_sets = [
-        [[well.bottom().move(Point(y=side*y_offset)) for side in [0, -2]]
+        [[well.bottom().move(Point(y=side*y_offset)) for side in [1, -1]]
          for well in slide]
         for slide in slides_wells_reordered]
 
@@ -123,57 +124,59 @@ resuming.')
         add_reagent(vol, source)
         discard_liquid(vol)
 
-    # transfer antibodies to slide wells 2x
-    for ab, slide in zip(antibodies, ab_spot_sets):
-        pick_up(p20)
-        for set in slide:
-            for well in set:
-                p20.transfer(1.5, ab, well, new_tip='never')
-        p20.drop_tip()
+    if 'antibody' in process:
+        # transfer antibodies to slide wells 2x
+        for ab, slide in zip(antibodies, ab_spot_sets):
+            pick_up(p20)
+            for set in slide:
+                for well in set:
+                    p20.transfer(1.5, ab, well, new_tip='never')
+            p20.drop_tip()
 
-    ctx.home()
-    ctx.pause('Remove well module from OT-2 and incubate in humidity chamber \
-overnight at 4C to allow antibodies to adhere to slides. After overnight \
-incubation, remove the slides from the humidity chamber and place in \
-desiccator to dry. Once dry, place slides with attached well module back into \
-OT-2')
+        ctx.home()
+        ctx.pause('Remove well module from OT-2 and incubate in humidity \
+chamber overnight at 4C to allow antibodies to adhere to slides. After \
+overnight incubation, remove the slides from the humidity chamber and place \
+in desiccator to dry. Once dry, place slides with attached well module back \
+into OT-2')
 
-    wash(250, detergent_wash_buffer)
+        wash(250, detergent_wash_buffer)
 
-    add_reagent(250, bsa_blocking_buffer)
+        add_reagent(250, bsa_blocking_buffer)
 
-    ctx.home()
-    ctx.pause('Remove slide from OT-2 and place on benchtop shaker to \
-incubate in humidity chamber for 1 hour at room temperature')
+        ctx.home()
+        ctx.pause('Remove slide from OT-2 and place on benchtop shaker to \
+    incubate in humidity chamber for 1 hour at room temperature')
 
-    for _ in range(2):
-        wash(250, pbs[0])
+        for _ in range(2):
+            wash(250, pbs[0])
 
-    wash(250, water[0])
+        wash(250, water[0])
 
     ctx.home()
     ctx.pause('Remove slide from OT-2 and desiccate dry. Prepare serum \
 samples in Eppendorf tubes')
 
-    # add samples
-    sample_duplicates = [[slide[i*2+1:i*2+3] for i in range(num_samples)]
-                         for slide in slides_wells_reordered]
-    for slide in sample_duplicates:
-        for sample, set in zip(samples, slide):
-            pick_up(p300)
-            p300.distribute(100, sample, [d.top(-1) for d in set], air_gap=20,
-                            new_tip='never')
-            p300.air_gap(20)
-            p300.drop_tip()
+    if 'sample' in process:
+        # add samples
+        sample_duplicates = [[slide[i*2+1:i*2+3] for i in range(num_samples)]
+                             for slide in slides_wells_reordered]
+        for slide in sample_duplicates:
+            for sample, set in zip(samples, slide):
+                pick_up(p300)
+                p300.distribute(100, sample, [d.top(-1) for d in set],
+                                air_gap=20, new_tip='never')
+                p300.air_gap(20)
+                p300.drop_tip()
 
-    ctx.home()
-    ctx.pause('Remove slide from OT-2 and incubate on benchtop shaker in \
-humidity box for 2 hours at room temperature')
+        ctx.home()
+        ctx.pause('Remove slide from OT-2 and incubate on benchtop shaker in \
+    humidity box for 2 hours at room temperature')
 
-    discard_liquid(100, new_tip=True)
+        discard_liquid(100, new_tip=True)
 
-    for _ in range(2):
-        wash(250, pbs[1])
+        for _ in range(2):
+            wash(250, pbs[1])
 
-    for _ in range(2):
-        wash(250, water[1])
+        for _ in range(2):
+            wash(250, water[1])
