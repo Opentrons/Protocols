@@ -1,4 +1,4 @@
-# Cherrypicking from .csv
+# Sample Pooling
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -23,16 +23,16 @@ This protocol performs a custom sample preparation through pooling up to 3 sampl
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
 Transfer Scheme  
-![transfer scheme]()
+![transfer scheme](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/199721/transfer_scheme.png)
 
 Transfer Order  
-![transfer order]()
+![transfer order](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/199721/transfer_order.png)
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
 
 ## Process
-1. Upload your `.csv` file and input the respective mount sides for your single channel pipettes.
+1. Input the parameters for your protocol.
 2. Download your protocol.
 3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
 4. Set up your deck according to the deck map.
@@ -43,4 +43,4 @@ Transfer Order
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-2c81c0
+199721
