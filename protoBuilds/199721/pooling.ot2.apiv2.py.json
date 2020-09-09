@@ -1,5 +1,5 @@
 {
-    "content": "# metadata\nmetadata = {\n    'protocolName': 'Pooling',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.4'\n}\n\n\ndef run(ctx):\n\n    sample_vol, num_pools, p300_mount, tip_strategy = get_values(  # noqa: F821\n        'sample_vol', 'num_pools', 'p300_mount', 'tip_strategy')\n\n    # labware\n    primary_racks_sets = [\n        [ctx.load_labware(\n            'alpaquaprimaryv3_24_tuberack_2000ul', slot,\n            'primary rack ' + str(i+1))\n         for i, slot in enumerate(set)]\n        for set in [['4', '7', '10'], ['5', '8', '11']]]\n    secondary_racks = [ctx.load_labware(\n            'alpaquasecondaryv3_24_tuberack_750ul', slot,\n            'secondary rack ' + str(i+1))\n        for i, slot in enumerate(['2', '3'])]\n    tipracks300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)\n                   for slot in ['1', '9']]\n\n    # pipette\n    p300 = ctx.load_instrument(\n        'p300_single_gen2', p300_mount, tip_racks=tipracks300)\n\n    for primary_racks, secondary_rack in zip(primary_racks_sets,\n                                             secondary_racks):\n        sources_reordered = [\n            row[i*3:i*3+num_pools]\n            for rack in primary_racks\n            for row in rack.rows()\n            for i in range(2)]\n        dests = secondary_rack.wells()\n\n        for source_set, dest in zip(sources_reordered, dests):\n            if tip_strategy == 'once':\n                p300.pick_up_tip()\n            for source in source_set:\n                if tip_strategy == 'always':\n                    p300.pick_up_tip()\n                p300.transfer(sample_vol, source, dest, air_gap=20,\n                              new_tip='never')\n                if tip_strategy == 'always':\n                    p300.drop_tip()\n            if tip_strategy == 'once':\n                p300.drop_tip()\n",
+    "content": "# metadata\nmetadata = {\n    'protocolName': 'Pooling',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.4'\n}\n\n\ndef run(ctx):\n\n    [sample_vol, num_pools, p1000_mount,\n     tip_strategy] = get_values(  # noqa: F821\n        'sample_vol', 'num_pools', 'p1000_mount', 'tip_strategy')\n\n    # labware\n    primary_racks_sets = [\n        [ctx.load_labware(\n            'alpaquaprimaryv3_24_tuberack_2000ul', slot,\n            'primary rack ' + str(i+1))\n         for i, slot in enumerate(set)]\n        for set in [['4', '7', '10'], ['5', '8', '11']]]\n    secondary_racks = [ctx.load_labware(\n            'alpaquasecondaryv3_24_tuberack_750ul', slot,\n            'secondary rack ' + str(i+1))\n        for i, slot in enumerate(['2', '3'])]\n    tipracks1000 = [ctx.load_labware('opentrons_96_tiprack_1000ul', slot)\n                    for slot in ['1', '9']]\n\n    # pipette\n    p1000 = ctx.load_instrument(\n        'p1000_single_gen2', p1000_mount, tip_racks=tipracks1000)\n\n    for primary_racks, secondary_rack in zip(primary_racks_sets,\n                                             secondary_racks):\n        sources_reordered = [\n            row[i*3:i*3+num_pools]\n            for rack in primary_racks\n            for row in rack.rows()\n            for i in range(2)]\n        dests = secondary_rack.wells()\n\n        for source_set, dest in zip(sources_reordered, dests):\n            if tip_strategy == 'once':\n                p1000.pick_up_tip()\n            for source in source_set:\n                if tip_strategy == 'always':\n                    p1000.pick_up_tip()\n                p1000.transfer(sample_vol, source, dest, air_gap=20,\n                               new_tip='never')\n                if tip_strategy == 'always':\n                    p1000.drop_tip()\n            if tip_strategy == 'once':\n                p1000.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -660,8 +660,8 @@
             "type": "int"
         },
         {
-            "label": "P300 GEN2 single-channel pipette mount",
-            "name": "p300_mount",
+            "label": "P1000 GEN2 single-channel pipette mount",
+            "name": "p1000_mount",
             "options": [
                 {
                     "label": "left",
@@ -693,15 +693,15 @@
     "instruments": [
         {
             "mount": "left",
-            "name": "p300_single_gen2"
+            "name": "p1000_single_gen2"
         }
     ],
     "labware": [
         {
-            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 1",
+            "name": "Opentrons 96 Tip Rack 1000 \u00b5L on 1",
             "share": false,
             "slot": "1",
-            "type": "opentrons_96_tiprack_300ul"
+            "type": "opentrons_96_tiprack_1000ul"
         },
         {
             "name": "secondary rack 1 on 2",
@@ -740,10 +740,10 @@
             "type": "alpaquaprimaryv3_24_tuberack_2000ul"
         },
         {
-            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 9",
+            "name": "Opentrons 96 Tip Rack 1000 \u00b5L on 9",
             "share": false,
             "slot": "9",
-            "type": "opentrons_96_tiprack_300ul"
+            "type": "opentrons_96_tiprack_1000ul"
         },
         {
             "name": "primary rack 3 on 10",
