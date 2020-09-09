@@ -1,0 +1,774 @@
+{
+    "content": "# metadata\nmetadata = {\n    'protocolName': 'Pooling',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.4'\n}\n\n\ndef run(ctx):\n\n    sample_vol, num_pools, p300_mount, tip_strategy = get_values(  # noqa: F821\n        'sample_vol', 'num_pools', 'p300_mount', 'tip_strategy')\n\n    # labware\n    primary_racks_sets = [\n        [ctx.load_labware(\n            'alpaquaprimaryv3_24_tuberack_2000ul', slot,\n            'primary rack ' + str(i+1))\n         for i, slot in enumerate(set)]\n        for set in [['4', '7', '10'], ['5', '8', '11']]]\n    secondary_racks = [ctx.load_labware(\n            'alpaquasecondaryv3_24_tuberack_750ul', slot,\n            'secondary rack ' + str(i+1))\n        for i, slot in enumerate(['2', '3'])]\n    tipracks300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)\n                   for slot in ['1', '9']]\n\n    # pipette\n    p300 = ctx.load_instrument(\n        'p300_single_gen2', p300_mount, tip_racks=tipracks300)\n\n    for primary_racks, secondary_rack in zip(primary_racks_sets,\n                                             secondary_racks):\n        sources_reordered = [\n            row[i*3:i*3+num_pools]\n            for rack in primary_racks\n            for row in rack.rows()\n            for i in range(2)]\n        dests = secondary_rack.wells()\n\n        for source_set, dest in zip(sources_reordered, dests):\n            if tip_strategy == 'once':\n                p300.pick_up_tip()\n            for source in source_set:\n                if tip_strategy == 'always':\n                    p300.pick_up_tip()\n                p300.transfer(sample_vol, source, dest, air_gap=20,\n                              new_tip='never')\n                if tip_strategy == 'always':\n                    p300.drop_tip()\n            if tip_strategy == 'once':\n                p300.drop_tip()\n",
+    "custom_labware_defs": [
+        {
+            "brand": {
+                "brand": "Alpaqua primary-v3",
+                "brandId": []
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 127.75,
+                "yDimension": 85.5,
+                "zDimension": 86
+            },
+            "groups": [
+                {
+                    "metadata": {
+                        "displayCategory": "tubeRack",
+                        "wellBottomShape": "flat"
+                    },
+                    "wells": [
+                        "A1",
+                        "B1",
+                        "C1",
+                        "D1",
+                        "A2",
+                        "B2",
+                        "C2",
+                        "D2",
+                        "A3",
+                        "B3",
+                        "C3",
+                        "D3",
+                        "A4",
+                        "B4",
+                        "C4",
+                        "D4",
+                        "A5",
+                        "B5",
+                        "C5",
+                        "D5",
+                        "A6",
+                        "B6",
+                        "C6",
+                        "D6"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "tubeRack",
+                "displayName": "Alpaqua Primary-v3 24 Tube Rack 2000 \u00b5L",
+                "displayVolumeUnits": "\u00b5L",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1",
+                    "B1",
+                    "C1",
+                    "D1"
+                ],
+                [
+                    "A2",
+                    "B2",
+                    "C2",
+                    "D2"
+                ],
+                [
+                    "A3",
+                    "B3",
+                    "C3",
+                    "D3"
+                ],
+                [
+                    "A4",
+                    "B4",
+                    "C4",
+                    "D4"
+                ],
+                [
+                    "A5",
+                    "B5",
+                    "C5",
+                    "D5"
+                ],
+                [
+                    "A6",
+                    "B6",
+                    "C6",
+                    "D6"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "alpaquaprimaryv3_24_tuberack_2000ul",
+                "quirks": []
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 80,
+                    "diameter": 12,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 18.21,
+                    "y": 75.43,
+                    "z": 6
+                },
+                "A2": {
+                    "depth": 80,
+                    "diameter": 12,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 38.1,
+                    "y": 75.43,
+                    "z": 6
+                },
+                "A3": {
+                    "depth": 80,
+                    "diameter": 12,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 57.99,
+                    "y": 75.43,
+                    "z": 6
+                },
+                "A4": {
+                    "depth": 80,
+                    "diameter": 12,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 77.88,
+                    "y": 75.43,
+                    "z": 6
+                },
+                "A5": {
+                    "depth": 80,
+                    "diameter": 12,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 97.77,
+                    "y": 75.43,
+                    "z": 6
+                },
+                "A6": {
+                    "depth": 80,
+                    "diameter": 12,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 117.66,
+                    "y": 75.43,
+                    "z": 6
+                },
+                "B1": {
+                    "depth": 80,
+                    "diameter": 12,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 18.21,
+                    "y": 56.15,
+                    "z": 6
+                },
+                "B2": {
+                    "depth": 80,
+                    "diameter": 12,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 38.1,
+                    "y": 56.15,
+                    "z": 6
+                },
+                "B3": {
+                    "depth": 80,
+                    "diameter": 12,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 57.99,
+                    "y": 56.15,
+                    "z": 6
+                },
+                "B4": {
+                    "depth": 80,
+                    "diameter": 12,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 77.88,
+                    "y": 56.15,
+                    "z": 6
+                },
+                "B5": {
+                    "depth": 80,
+                    "diameter": 12,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 97.77,
+                    "y": 56.15,
+                    "z": 6
+                },
+                "B6": {
+                    "depth": 80,
+                    "diameter": 12,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 117.66,
+                    "y": 56.15,
+                    "z": 6
+                },
+                "C1": {
+                    "depth": 80,
+                    "diameter": 12,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 18.21,
+                    "y": 36.87,
+                    "z": 6
+                },
+                "C2": {
+                    "depth": 80,
+                    "diameter": 12,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 38.1,
+                    "y": 36.87,
+                    "z": 6
+                },
+                "C3": {
+                    "depth": 80,
+                    "diameter": 12,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 57.99,
+                    "y": 36.87,
+                    "z": 6
+                },
+                "C4": {
+                    "depth": 80,
+                    "diameter": 12,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 77.88,
+                    "y": 36.87,
+                    "z": 6
+                },
+                "C5": {
+                    "depth": 80,
+                    "diameter": 12,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 97.77,
+                    "y": 36.87,
+                    "z": 6
+                },
+                "C6": {
+                    "depth": 80,
+                    "diameter": 12,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 117.66,
+                    "y": 36.87,
+                    "z": 6
+                },
+                "D1": {
+                    "depth": 80,
+                    "diameter": 12,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 18.21,
+                    "y": 17.59,
+                    "z": 6
+                },
+                "D2": {
+                    "depth": 80,
+                    "diameter": 12,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 38.1,
+                    "y": 17.59,
+                    "z": 6
+                },
+                "D3": {
+                    "depth": 80,
+                    "diameter": 12,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 57.99,
+                    "y": 17.59,
+                    "z": 6
+                },
+                "D4": {
+                    "depth": 80,
+                    "diameter": 12,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 77.88,
+                    "y": 17.59,
+                    "z": 6
+                },
+                "D5": {
+                    "depth": 80,
+                    "diameter": 12,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 97.77,
+                    "y": 17.59,
+                    "z": 6
+                },
+                "D6": {
+                    "depth": 80,
+                    "diameter": 12,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 117.66,
+                    "y": 17.59,
+                    "z": 6
+                }
+            }
+        },
+        {
+            "brand": {
+                "brand": "Alpaqua secondaryv3",
+                "brandId": []
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 127.75,
+                "yDimension": 85.5,
+                "zDimension": 78.25
+            },
+            "groups": [
+                {
+                    "metadata": {
+                        "displayCategory": "tubeRack",
+                        "wellBottomShape": "u"
+                    },
+                    "wells": [
+                        "A1",
+                        "B1",
+                        "C1",
+                        "D1",
+                        "A2",
+                        "B2",
+                        "C2",
+                        "D2",
+                        "A3",
+                        "B3",
+                        "C3",
+                        "D3",
+                        "A4",
+                        "B4",
+                        "C4",
+                        "D4",
+                        "A5",
+                        "B5",
+                        "C5",
+                        "D5",
+                        "A6",
+                        "B6",
+                        "C6",
+                        "D6"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "tubeRack",
+                "displayName": "Alpaqua Secondaryv3 24 Tube Rack 750 \u00b5L",
+                "displayVolumeUnits": "\u00b5L",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1",
+                    "B1",
+                    "C1",
+                    "D1"
+                ],
+                [
+                    "A2",
+                    "B2",
+                    "C2",
+                    "D2"
+                ],
+                [
+                    "A3",
+                    "B3",
+                    "C3",
+                    "D3"
+                ],
+                [
+                    "A4",
+                    "B4",
+                    "C4",
+                    "D4"
+                ],
+                [
+                    "A5",
+                    "B5",
+                    "C5",
+                    "D5"
+                ],
+                [
+                    "A6",
+                    "B6",
+                    "C6",
+                    "D6"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "alpaquasecondaryv3_24_tuberack_750ul",
+                "quirks": []
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 70,
+                    "diameter": 11,
+                    "shape": "circular",
+                    "totalLiquidVolume": 750,
+                    "x": 18.21,
+                    "y": 75.43,
+                    "z": 8.25
+                },
+                "A2": {
+                    "depth": 70,
+                    "diameter": 11,
+                    "shape": "circular",
+                    "totalLiquidVolume": 750,
+                    "x": 38.1,
+                    "y": 75.43,
+                    "z": 8.25
+                },
+                "A3": {
+                    "depth": 70,
+                    "diameter": 11,
+                    "shape": "circular",
+                    "totalLiquidVolume": 750,
+                    "x": 57.99,
+                    "y": 75.43,
+                    "z": 8.25
+                },
+                "A4": {
+                    "depth": 70,
+                    "diameter": 11,
+                    "shape": "circular",
+                    "totalLiquidVolume": 750,
+                    "x": 77.88,
+                    "y": 75.43,
+                    "z": 8.25
+                },
+                "A5": {
+                    "depth": 70,
+                    "diameter": 11,
+                    "shape": "circular",
+                    "totalLiquidVolume": 750,
+                    "x": 97.77,
+                    "y": 75.43,
+                    "z": 8.25
+                },
+                "A6": {
+                    "depth": 70,
+                    "diameter": 11,
+                    "shape": "circular",
+                    "totalLiquidVolume": 750,
+                    "x": 117.66,
+                    "y": 75.43,
+                    "z": 8.25
+                },
+                "B1": {
+                    "depth": 70,
+                    "diameter": 11,
+                    "shape": "circular",
+                    "totalLiquidVolume": 750,
+                    "x": 18.21,
+                    "y": 56.15,
+                    "z": 8.25
+                },
+                "B2": {
+                    "depth": 70,
+                    "diameter": 11,
+                    "shape": "circular",
+                    "totalLiquidVolume": 750,
+                    "x": 38.1,
+                    "y": 56.15,
+                    "z": 8.25
+                },
+                "B3": {
+                    "depth": 70,
+                    "diameter": 11,
+                    "shape": "circular",
+                    "totalLiquidVolume": 750,
+                    "x": 57.99,
+                    "y": 56.15,
+                    "z": 8.25
+                },
+                "B4": {
+                    "depth": 70,
+                    "diameter": 11,
+                    "shape": "circular",
+                    "totalLiquidVolume": 750,
+                    "x": 77.88,
+                    "y": 56.15,
+                    "z": 8.25
+                },
+                "B5": {
+                    "depth": 70,
+                    "diameter": 11,
+                    "shape": "circular",
+                    "totalLiquidVolume": 750,
+                    "x": 97.77,
+                    "y": 56.15,
+                    "z": 8.25
+                },
+                "B6": {
+                    "depth": 70,
+                    "diameter": 11,
+                    "shape": "circular",
+                    "totalLiquidVolume": 750,
+                    "x": 117.66,
+                    "y": 56.15,
+                    "z": 8.25
+                },
+                "C1": {
+                    "depth": 70,
+                    "diameter": 11,
+                    "shape": "circular",
+                    "totalLiquidVolume": 750,
+                    "x": 18.21,
+                    "y": 36.87,
+                    "z": 8.25
+                },
+                "C2": {
+                    "depth": 70,
+                    "diameter": 11,
+                    "shape": "circular",
+                    "totalLiquidVolume": 750,
+                    "x": 38.1,
+                    "y": 36.87,
+                    "z": 8.25
+                },
+                "C3": {
+                    "depth": 70,
+                    "diameter": 11,
+                    "shape": "circular",
+                    "totalLiquidVolume": 750,
+                    "x": 57.99,
+                    "y": 36.87,
+                    "z": 8.25
+                },
+                "C4": {
+                    "depth": 70,
+                    "diameter": 11,
+                    "shape": "circular",
+                    "totalLiquidVolume": 750,
+                    "x": 77.88,
+                    "y": 36.87,
+                    "z": 8.25
+                },
+                "C5": {
+                    "depth": 70,
+                    "diameter": 11,
+                    "shape": "circular",
+                    "totalLiquidVolume": 750,
+                    "x": 97.77,
+                    "y": 36.87,
+                    "z": 8.25
+                },
+                "C6": {
+                    "depth": 70,
+                    "diameter": 11,
+                    "shape": "circular",
+                    "totalLiquidVolume": 750,
+                    "x": 117.66,
+                    "y": 36.87,
+                    "z": 8.25
+                },
+                "D1": {
+                    "depth": 70,
+                    "diameter": 11,
+                    "shape": "circular",
+                    "totalLiquidVolume": 750,
+                    "x": 18.21,
+                    "y": 17.59,
+                    "z": 8.25
+                },
+                "D2": {
+                    "depth": 70,
+                    "diameter": 11,
+                    "shape": "circular",
+                    "totalLiquidVolume": 750,
+                    "x": 38.1,
+                    "y": 17.59,
+                    "z": 8.25
+                },
+                "D3": {
+                    "depth": 70,
+                    "diameter": 11,
+                    "shape": "circular",
+                    "totalLiquidVolume": 750,
+                    "x": 57.99,
+                    "y": 17.59,
+                    "z": 8.25
+                },
+                "D4": {
+                    "depth": 70,
+                    "diameter": 11,
+                    "shape": "circular",
+                    "totalLiquidVolume": 750,
+                    "x": 77.88,
+                    "y": 17.59,
+                    "z": 8.25
+                },
+                "D5": {
+                    "depth": 70,
+                    "diameter": 11,
+                    "shape": "circular",
+                    "totalLiquidVolume": 750,
+                    "x": 97.77,
+                    "y": 17.59,
+                    "z": 8.25
+                },
+                "D6": {
+                    "depth": 70,
+                    "diameter": 11,
+                    "shape": "circular",
+                    "totalLiquidVolume": 750,
+                    "x": 117.66,
+                    "y": 17.59,
+                    "z": 8.25
+                }
+            }
+        }
+    ],
+    "fields": [
+        {
+            "default": 250,
+            "label": "sample volume (in ul)",
+            "name": "sample_vol",
+            "type": "float"
+        },
+        {
+            "default": 3,
+            "label": "number of pools (1-3)",
+            "name": "num_pools",
+            "type": "int"
+        },
+        {
+            "label": "P300 GEN2 single-channel pipette mount",
+            "name": "p300_mount",
+            "options": [
+                {
+                    "label": "left",
+                    "value": "left"
+                },
+                {
+                    "label": "right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "tip strategy",
+            "name": "tip_strategy",
+            "options": [
+                {
+                    "label": "one tip per pool",
+                    "value": "once"
+                },
+                {
+                    "label": "one tip per transfer",
+                    "value": "always"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 1",
+            "share": false,
+            "slot": "1",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "secondary rack 1 on 2",
+            "share": false,
+            "slot": "2",
+            "type": "alpaquasecondaryv3_24_tuberack_750ul"
+        },
+        {
+            "name": "secondary rack 2 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "alpaquasecondaryv3_24_tuberack_750ul"
+        },
+        {
+            "name": "primary rack 1 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "alpaquaprimaryv3_24_tuberack_2000ul"
+        },
+        {
+            "name": "primary rack 1 on 5",
+            "share": false,
+            "slot": "5",
+            "type": "alpaquaprimaryv3_24_tuberack_2000ul"
+        },
+        {
+            "name": "primary rack 2 on 7",
+            "share": false,
+            "slot": "7",
+            "type": "alpaquaprimaryv3_24_tuberack_2000ul"
+        },
+        {
+            "name": "primary rack 2 on 8",
+            "share": false,
+            "slot": "8",
+            "type": "alpaquaprimaryv3_24_tuberack_2000ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "primary rack 3 on 10",
+            "share": false,
+            "slot": "10",
+            "type": "alpaquaprimaryv3_24_tuberack_2000ul"
+        },
+        {
+            "name": "primary rack 3 on 11",
+            "share": false,
+            "slot": "11",
+            "type": "alpaquaprimaryv3_24_tuberack_2000ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.4",
+        "author": "Nick <protocols@opentrons.com>",
+        "protocolName": "Pooling",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}

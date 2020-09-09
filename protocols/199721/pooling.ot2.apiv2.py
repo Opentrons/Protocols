@@ -1,5 +1,3 @@
-import math
-
 # metadata
 metadata = {
     'protocolName': 'Pooling',
@@ -11,9 +9,8 @@ metadata = {
 
 def run(ctx):
 
-    # sample_vol, num_pools, p300_mount, tip_strategy = get_values(  # noqa: F821
-    #     'sample_vol', 'num_pools', 'p300_mount', 'tip_strategy')
-    sample_vol, num_pools, p300_mount, tip_strategy = 250, 3, 'left', 'always'
+    sample_vol, num_pools, p300_mount, tip_strategy = get_values(  # noqa: F821
+        'sample_vol', 'num_pools', 'p300_mount', 'tip_strategy')
 
     # labware
     primary_racks_sets = [
@@ -27,7 +24,7 @@ def run(ctx):
             'secondary rack ' + str(i+1))
         for i, slot in enumerate(['2', '3'])]
     tipracks300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
-                for slot in ['1', '9']]
+                   for slot in ['1', '9']]
 
     # pipette
     p300 = ctx.load_instrument(
