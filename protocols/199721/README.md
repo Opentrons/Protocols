@@ -13,8 +13,8 @@ This protocol performs a custom sample preparation through pooling up to 3 sampl
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
-* [Opentrons P300 GEN2 single-channel pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette?variant=5984549109789)
-* [Opentrons 300ul tipracks](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
+* [Opentrons P1000 GEN2 single-channel pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette?variant=5984549109789)
+* [Opentrons 1000ul tipracks](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-1000ul-tips)
 * [Mercedes Scientific Tubes Flat Base 7ml #60550050](https://www.mercedesscientific.com/buy/product/screw-cap-tube/CLENC2fcbbe9ab2407f2b7db3c5ca4455f575?text=SRS+60550050&lsi=true)
 * [Mercedes Scientific Tubes 5ml round base #GLO110470](https://www.mercedesscientific.com/buy/product/test-tube/CLENC9a8cb62386ae3ba2bc4ba50fb708dc8b?text=GLO+110470&lsi=true)
 * [Custom Alphaqua racks](https://s3.amazonaws.com/pf-upload-01/u-4256/0/2020-08-19/wg23biy/Alpaqua%20Custom%20Rack%20for%20CorePlus.pdf)
