@@ -9,8 +9,9 @@ metadata = {
 
 def run(ctx):
 
-    sample_vol, num_pools, p300_mount, tip_strategy = get_values(  # noqa: F821
-        'sample_vol', 'num_pools', 'p300_mount', 'tip_strategy')
+    [sample_vol, num_pools, p1000_mount,
+     tip_strategy] = get_values(  # noqa: F821
+        'sample_vol', 'num_pools', 'p1000_mount', 'tip_strategy')
 
     # labware
     primary_racks_sets = [
@@ -23,12 +24,12 @@ def run(ctx):
             'alpaquasecondaryv3_24_tuberack_750ul', slot,
             'secondary rack ' + str(i+1))
         for i, slot in enumerate(['2', '3'])]
-    tipracks300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
-                   for slot in ['1', '9']]
+    tipracks1000 = [ctx.load_labware('opentrons_96_tiprack_1000ul', slot)
+                    for slot in ['1', '9']]
 
     # pipette
-    p300 = ctx.load_instrument(
-        'p300_single_gen2', p300_mount, tip_racks=tipracks300)
+    p1000 = ctx.load_instrument(
+        'p1000_single_gen2', p1000_mount, tip_racks=tipracks1000)
 
     for primary_racks, secondary_rack in zip(primary_racks_sets,
                                              secondary_racks):
@@ -41,13 +42,13 @@ def run(ctx):
 
         for source_set, dest in zip(sources_reordered, dests):
             if tip_strategy == 'once':
-                p300.pick_up_tip()
+                p1000.pick_up_tip()
             for source in source_set:
                 if tip_strategy == 'always':
-                    p300.pick_up_tip()
-                p300.transfer(sample_vol, source, dest, air_gap=20,
-                              new_tip='never')
+                    p1000.pick_up_tip()
+                p1000.transfer(sample_vol, source, dest, air_gap=20,
+                               new_tip='never')
                 if tip_strategy == 'always':
-                    p300.drop_tip()
+                    p1000.drop_tip()
             if tip_strategy == 'once':
-                p300.drop_tip()
+                p1000.drop_tip()
