@@ -11,31 +11,12 @@ metadata = {
 
 def run(ctx):
 
-    # num_samples, p1000_mount, input_csv = get_values(  # noqa: F821
-    #     'num_samples', 'p1000_mount', 'input_csv')
     num_samples, p1000_mount, input_csv = [
         24, 'left',
         'distance down tube to aspirate (in mm),aspiration speed (in ul/s),\
         dispense speed (in ul/s)\n20,100,100\n20,100,100\n']
 
     tiprack1000 = [ctx.load_labware('opentrons_96_tiprack_1000ul', '1')]
-    # sample_racks = [
-    #     ctx.load_labware('opentrons_6_tuberack_falcon_50ml_conical', slot,
-    #                      'Samples ' + name)
-    #     for slot, name in zip(['5', '2', '6', '3'],
-    #                           ['1, 2, 5, 6, 9, 10', '3, 4, 7, 8, 11, 12',
-    #                            '13, 14, 17, 18, 21, 22',
-    #                            '15, 16, 19, 20, 23, 24'])]
-    # lw_racks = [
-    #     ctx.load_labware('opentrons_15_tuberack_nest_15ml_conical', slot, name)
-    #     for slot, name in zip(['10', '11'], ['LW 1-15', 'LW 16-24 (6 spare)'])]
-    # icp_racks = [
-    #     ctx.load_labware('opentrons_15_tuberack_nest_15ml_conical', slot, name)
-    #     for slot, name in zip(['7', '8'],
-    #                           ['ICP 1-15', 'ICP 16-24 (6 spare)'])]
-    # ir_rack = ctx.load_labware(
-    #     'opentrons_24_aluminumblock_generic_2ml_screwcap', '4',
-    #     'IR tubes (1-24)')
     sample_racks = [
         ctx.load_labware('custom_6_tuberack_100ml', slot, 'Samples ' + name)
         for slot, name in zip(['5', '2', '6', '3'],
