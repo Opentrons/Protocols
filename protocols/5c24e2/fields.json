@@ -16,5 +16,14 @@
       {"label": "1", "value": "no"},
       {"label": "2", "value": "yes"}
     ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Plate (384-Well) Type",
+    "name": "p384",
+    "options": [
+      {"label": "Applied Biosystems", "value": "appliedbiosystemsmicroampoptical384wellreactionplatewithbarcode_384_wellplate_30ul"},
+      {"label": "SSI", "value": "ssi_384_wellplate_50ul"}
+    ]
   }
 ]

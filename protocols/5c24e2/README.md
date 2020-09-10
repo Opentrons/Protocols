@@ -9,7 +9,7 @@
 
 
 ## Description
-This protocol transfers sample from [NEST 96-Well Plates](https://shop.opentrons.com/collections/verified-labware/products/nest-0-1-ml-96-well-pcr-plate-full-skirt) to [Applied Biosystems MicroAmp 384-well plates](https://www.thermofisher.com/order/catalog/product/4343370#/4343370) with mastermix.</br>
+This protocol transfers sample from [NEST 96-Well Plates](https://shop.opentrons.com/collections/verified-labware/products/nest-0-1-ml-96-well-pcr-plate-full-skirt) to [Applied Biosystems MicroAmp 384-well plates](https://www.thermofisher.com/order/catalog/product/4343370#/4343370) with mastermix. **Update**: this protocol has been updated to accommodate the SSI 384-well plate as well.</br>
 </br>
 The protocol can fill one or two, 384-well plates. The [P20 Single-Channel Pipette](https://shop.opentrons.com/collections/ot-2-pipettes) will aspirate 5µL from each well of the [NEST 96-Well Plates](https://shop.opentrons.com/collections/verified-labware/products/nest-0-1-ml-96-well-pcr-plate-full-skirt) and dispense 2.5µL into two wells of the (A1 --> A1/B1; B1 --> C1/D1; etc.)
 
@@ -23,7 +23,7 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 * [Opentrons OT-2 Run App (Version 3.19.0 or later)](https://opentrons.com/ot-app/)
 * [Opentrons P20 Single-Channel Pipette](https://shop.opentrons.com/collections/ot-2-pipettes)
 * [Opentrons 20µL Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
-* [Applied Biosystems MicroAmp 384-Well Plate](https://www.thermofisher.com/order/catalog/product/4343370#/4343370) with mastermix
+* [Applied Biosystems MicroAmp 384-Well Plate](https://www.thermofisher.com/order/catalog/product/4343370#/4343370) or SSI 384-Well Plate with mastermix
 * [NEST 96-Well Plates](https://shop.opentrons.com/collections/verified-labware/products/nest-0-1-ml-96-well-pcr-plate-full-skirt) with samples
 
 
@@ -34,13 +34,13 @@ Slots 1: [Opentrons 20µL Tips](https://shop.opentrons.com/collections/opentrons
 
 Slot 2: [NEST 96-Well Plates](https://shop.opentrons.com/collections/verified-labware/products/nest-0-1-ml-96-well-pcr-plate-full-skirt) with samples
 
-Slot 3: [Applied Biosystems MicroAmp 384-Well Plate](https://www.thermofisher.com/order/catalog/product/4343370#/4343370) with mastermix
+Slot 3: [Applied Biosystems MicroAmp 384-Well Plate](https://www.thermofisher.com/order/catalog/product/4343370#/4343370) or SSI 384-Well Plate with mastermix
 
 Slot 4: [Opentrons 20µL Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
 
 Slot 5: [NEST 96-Well Plates](https://shop.opentrons.com/collections/verified-labware/products/nest-0-1-ml-96-well-pcr-plate-full-skirt) with samples
 
-Slot 6: [Applied Biosystems MicroAmp 384-Well Plate](https://www.thermofisher.com/order/catalog/product/4343370#/4343370) with mastermix (if filling two plates)
+Slot 6: [Applied Biosystems MicroAmp 384-Well Plate](https://www.thermofisher.com/order/catalog/product/4343370#/4343370) or SSI 384-Well Plate with mastermix (if filling two plates)
 
 Slot 7: [Opentrons 20µL Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips) (if filling two plates)
 
