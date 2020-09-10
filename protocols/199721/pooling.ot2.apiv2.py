@@ -48,9 +48,11 @@ def run(ctx):
         for i, source in enumerate(source_set):
             if tip_strategy == 'always':
                 p1000.pick_up_tip()
-            p1000.mix(mix_reps, mix_vol, dest)
+            p1000.mix(mix_reps, mix_vol, source)
             p1000.transfer(sample_vol, source, dest, air_gap=20,
                            new_tip='never')
+            if i == len(source_set) - 1:
+                p1000.mix(mix_reps, mix_vol, dest)
             if tip_strategy == 'always':
                 p1000.drop_tip()
         if tip_strategy == 'once':
