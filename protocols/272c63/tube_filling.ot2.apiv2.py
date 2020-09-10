@@ -1,5 +1,3 @@
-from opentrons.types import Point
-
 # metadata
 metadata = {
     'protocolName': 'Tube Filling',
