@@ -7,9 +7,15 @@
   },
   {
     "type": "int",
-    "label": "number of pools (1-3)",
-    "name": "num_pools",
+    "label": "number of pool sources (1-3)",
+    "name": "num_pool_sources",
     "default": 3
+  },
+  {
+    "type": "int",
+    "label": "number of pools (1-48)",
+    "name": "num_pools",
+    "default": 48
   },
   {
     "type": "dropDown",
@@ -19,6 +25,30 @@
       { "label": "left", "value": "left" },
       { "label": "right", "value": "right" }
     ]
+  },
+  {
+    "type": "float",
+    "label": "aspiration speed (in ul/s)",
+    "name": "asp_speed",
+    "default": 274.7
+  },
+  {
+    "type": "float",
+    "label": "dispense speed (in ul/s)",
+    "name": "dispense_speed",
+    "default": 274.7
+  },
+  {
+    "type": "int",
+    "label": "pool mixing repetitions",
+    "name": "mix_reps",
+    "default": 3
+  },
+  {
+    "type": "float",
+    "label": "pool mixing volume (in ul)",
+    "name": "mix_vol",
+    "default": 500
   },
   {
     "type": "dropDown",
