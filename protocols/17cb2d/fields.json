@@ -22,5 +22,14 @@
     "label": "Number of Plates (1-9)",
     "name": "num_plates",
     "default": 1
+  },
+  {
+    "type": "dropDown",
+    "label": "Plate (384-Well) Type",
+    "name": "p384",
+    "options": [
+      {"label": "Applied Biosystems", "value": "appliedbiosystemsmicroampoptical384wellreactionplatewithbarcode_384_wellplate_30ul"},
+      {"label": "SSI", "value": "ssi_384_wellplate_50ul"}
+    ]
   }
 ]

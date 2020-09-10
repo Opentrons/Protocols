@@ -7,8 +7,8 @@ metadata = {
 
 
 def run(protocol):
-    [piptype, pipmnt, num_plates] = get_values(  # noqa: F821
-    'piptype', 'pipmnt', 'num_plates')
+    [piptype, pipmnt, num_plates, p384] = get_values(  # noqa: F821
+    'piptype', 'pipmnt', 'num_plates', 'p384')
 
     # load labware and pipettes
     pip_name, tip_name = piptype.split()
@@ -19,10 +19,7 @@ def run(protocol):
     mm2 = res['A2']
     num_plates += 1
     plates = [
-        protocol.load_labware(
-            'appliedbiosystemsmicroampoptical384' +
-            'wellreactionplatewithbarcode_384_wellplate_30ul',
-            s) for s in range(1, num_plates)]
+        protocol.load_labware(p384, s) for s in range(1, num_plates)]
 
     max_vol = 15 if pip_name == 'p20_multi_gen2' else 180
 
