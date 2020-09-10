@@ -1,5 +1,5 @@
 {
-    "content": "# metadata\nmetadata = {\n    'protocolName': 'Pooling',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.4'\n}\n\n\ndef run(ctx):\n\n    [sample_vol, num_pools, p1000_mount,\n     tip_strategy] = get_values(  # noqa: F821\n        'sample_vol', 'num_pools', 'p1000_mount', 'tip_strategy')\n\n    # labware\n    primary_racks_sets = [\n        [ctx.load_labware(\n            'alpaquaprimaryv3_24_tuberack_2000ul', slot,\n            'primary rack ' + str(i+1))\n         for i, slot in enumerate(set)]\n        for set in [['4', '7', '10'], ['5', '8', '11']]]\n    secondary_racks = [ctx.load_labware(\n            'alpaquasecondaryv3_24_tuberack_750ul', slot,\n            'secondary rack ' + str(i+1))\n        for i, slot in enumerate(['2', '3'])]\n    tipracks1000 = [ctx.load_labware('opentrons_96_tiprack_1000ul', slot)\n                    for slot in ['1', '9']]\n\n    # pipette\n    p1000 = ctx.load_instrument(\n        'p1000_single_gen2', p1000_mount, tip_racks=tipracks1000)\n\n    for primary_racks, secondary_rack in zip(primary_racks_sets,\n                                             secondary_racks):\n        sources_reordered = [\n            row[i*3:i*3+num_pools]\n            for rack in primary_racks\n            for row in rack.rows()\n            for i in range(2)]\n        dests = secondary_rack.wells()\n\n        for source_set, dest in zip(sources_reordered, dests):\n            if tip_strategy == 'once':\n                p1000.pick_up_tip()\n            for source in source_set:\n                if tip_strategy == 'always':\n                    p1000.pick_up_tip()\n                p1000.transfer(sample_vol, source, dest, air_gap=20,\n                               new_tip='never')\n                if tip_strategy == 'always':\n                    p1000.drop_tip()\n            if tip_strategy == 'once':\n                p1000.drop_tip()\n",
+    "content": "# metadata\nmetadata = {\n    'protocolName': 'Pooling',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.4'\n}\n\n\ndef run(ctx):\n\n    [sample_vol, num_pool_sources, num_pools, p1000_mount, asp_speed,\n     dispense_speed, mix_reps, mix_vol,\n     tip_strategy] = get_values(  # noqa: F821\n        'sample_vol', 'num_pool_sources', 'num_pools', 'p1000_mount',\n        'asp_speed', 'dispense_speed', 'mix_reps', 'mix_vol', 'tip_strategy')\n\n    # labware\n    primary_racks = [ctx.load_labware('alpaquaprimaryv3_24_tuberack_2000ul',\n                                      slot, 'primary rack ' + str(i+1))\n        for i, slot in enumerate(['4', '7', '10', '5', '8', '11'])]\n    secondary_racks = [ctx.load_labware('alpaquasecondaryv3_24_tuberack_750ul',\n                                        slot, 'secondary rack ' + str(i+1))\n        for i, slot in enumerate(['2', '3'])]\n    tipracks1000 = [ctx.load_labware('opentrons_96_tiprack_1000ul', slot)\n        for slot in ['1', '9']]\n\n    sources_reordered = [row[i*3:i*3+num_pool_sources]\n        for rack in primary_racks for row in rack.rows()\n        for i in range(2)][:num_pools]\n    dests = [\n        well for rack in secondary_racks for well in rack.wells()][:num_pools]\n\n    # pipette\n    p1000 = ctx.load_instrument(\n        'p1000_single_gen2', p1000_mount, tip_racks=tipracks1000)\n    p1000.flow_rate.aspirate = asp_speed\n    p1000.flow_rate.dispense = dispense_speed\n\n    for source_set, dest in zip(sources_reordered, dests):\n        if tip_strategy == 'once':\n            p1000.pick_up_tip()\n        for i, source in enumerate(source_set):\n            if tip_strategy == 'always':\n                p1000.pick_up_tip()\n            p1000.transfer(sample_vol, source, dest, air_gap=20,\n                           new_tip='never')\n            if len(source_set) > 1 and i == len(source_set) - 1:\n                p1000.mix(mix_reps, mix_vol, dest)\n            if tip_strategy == 'always':\n                p1000.drop_tip()\n        if tip_strategy == 'once':\n            p1000.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -655,7 +655,13 @@
         },
         {
             "default": 3,
-            "label": "number of pools (1-3)",
+            "label": "number of pool sources (1-3)",
+            "name": "num_pool_sources",
+            "type": "int"
+        },
+        {
+            "default": 24,
+            "label": "number of pools (1-48)",
             "name": "num_pools",
             "type": "int"
         },
@@ -673,6 +679,30 @@
                 }
             ],
             "type": "dropDown"
+        },
+        {
+            "default": 274.7,
+            "label": "aspiration speed (in ul/s)",
+            "name": "asp_speed",
+            "type": "float"
+        },
+        {
+            "default": 274.7,
+            "label": "dispense speed (in ul/s)",
+            "name": "dispense_speed",
+            "type": "float"
+        },
+        {
+            "default": 3,
+            "label": "pool mixing repetitions",
+            "name": "mix_reps",
+            "type": "int"
+        },
+        {
+            "default": 500,
+            "label": "pool mixing volume (in ul)",
+            "name": "mix_vol",
+            "type": "float"
         },
         {
             "label": "tip strategy",
@@ -722,7 +752,7 @@
             "type": "alpaquaprimaryv3_24_tuberack_2000ul"
         },
         {
-            "name": "primary rack 1 on 5",
+            "name": "primary rack 4 on 5",
             "share": false,
             "slot": "5",
             "type": "alpaquaprimaryv3_24_tuberack_2000ul"
@@ -734,7 +764,7 @@
             "type": "alpaquaprimaryv3_24_tuberack_2000ul"
         },
         {
-            "name": "primary rack 2 on 8",
+            "name": "primary rack 5 on 8",
             "share": false,
             "slot": "8",
             "type": "alpaquaprimaryv3_24_tuberack_2000ul"
@@ -752,7 +782,7 @@
             "type": "alpaquaprimaryv3_24_tuberack_2000ul"
         },
         {
-            "name": "primary rack 3 on 11",
+            "name": "primary rack 6 on 11",
             "share": false,
             "slot": "11",
             "type": "alpaquaprimaryv3_24_tuberack_2000ul"
