@@ -16,17 +16,22 @@ def run(ctx):
         'asp_speed', 'dispense_speed', 'mix_reps', 'mix_vol', 'tip_strategy')
 
     # labware
-    primary_racks = [ctx.load_labware('alpaquaprimaryv3_24_tuberack_2000ul',
-                                      slot, 'primary rack ' + str(i+1))
+    primary_racks = [
+        ctx.load_labware('alpaquaprimaryv3_24_tuberack_2000ul', slot,
+                         'primary rack ' + str(i+1))
         for i, slot in enumerate(['4', '7', '10', '5', '8', '11'])]
-    secondary_racks = [ctx.load_labware('alpaquasecondaryv3_24_tuberack_750ul',
-                                        slot, 'secondary rack ' + str(i+1))
+    secondary_racks = [
+        ctx.load_labware('alpaquasecondaryv3_24_tuberack_750ul', slot,
+                         'secondary rack ' + str(i+1))
         for i, slot in enumerate(['2', '3'])]
-    tipracks1000 = [ctx.load_labware('opentrons_96_tiprack_1000ul', slot)
+    tipracks1000 = [
+        ctx.load_labware('opentrons_96_tiprack_1000ul', slot)
         for slot in ['1', '9']]
 
-    sources_reordered = [row[i*3:i*3+num_pool_sources]
-        for rack in primary_racks for row in rack.rows()
+    sources_reordered = [
+        row[i*3:i*3+num_pool_sources]
+        for rack in primary_racks
+        for row in rack.rows()
         for i in range(2)][:num_pools]
     dests = [
         well for rack in secondary_racks for well in rack.wells()][:num_pools]
