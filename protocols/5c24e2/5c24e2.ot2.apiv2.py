@@ -7,8 +7,8 @@ metadata = {
 
 
 def run(protocol):
-    [p20mnt, sec_plate] = get_values(  # noqa: F821
-    'p20mnt', 'sec_plate')
+    [p20mnt, sec_plate, p384] = get_values(  # noqa: F821
+    'p20mnt', 'sec_plate', 'p384')
 
     # load labware and pipettes
     tips = [
@@ -21,10 +21,7 @@ def run(protocol):
             s) for s in range(2, 12, 3)]
 
     mmPlates = [
-        protocol.load_labware(
-            'appliedbiosystemsmicroampoptical384' +
-            'wellreactionplatewithbarcode_384_wellplate_30ul',
-            s) for s in ['3', '6']]
+        protocol.load_labware(p384, s) for s in ['3', '6']]
     plate1 = [mmPlates[0][ltr+str(i)] for i in range(1, 13) for ltr in 'AB']
     plate2 = [mmPlates[0][ltr+str(i)] for i in range(13, 25) for ltr in 'AB']
     plate3 = [mmPlates[1][ltr+str(i)] for i in range(1, 13) for ltr in 'AB']
