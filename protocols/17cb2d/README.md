@@ -9,7 +9,7 @@
 
 
 ## Description
-This protocol fills [Applied Biosystems MicroAmp 384-well plates]([https://www.thermofisher.com/order/catalog/product/4343370#/4343370) with mastermix.</br>
+This protocol fills [Applied Biosystems MicroAmp 384-well plates]([https://www.thermofisher.com/order/catalog/product/4343370#/4343370) with mastermix. **Update**: this protocol can now accomodate the SSI 384-well plate as well.</br>
 </br>
 The protocol can fill up to 9 plates and will dispense 7.5µL of mastermix 1 into all the odd rows (A/C/E...) and 7.5µL of mastermix 2 into all the even rows (B/D/F...).</br>
 </br>
@@ -26,14 +26,14 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 * [Opentrons Multi-Channel Pipette](https://shop.opentrons.com/collections/ot-2-pipettes)
 * [Opentrons Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
 * [USA Scientific 12-Well Reservoir](https://labware.opentrons.com/usascientific_12_reservoir_22ml?category=reservoir)
-* [Applied Biosystems MicroAmp 384-Well Plate](https://www.thermofisher.com/order/catalog/product/4343370#/4343370)
+* [Applied Biosystems MicroAmp 384-Well Plate](https://www.thermofisher.com/order/catalog/product/4343370#/4343370) or SSI 384-Well Plate
 * Reagents (mastermix 1, mastermix 2)
 
 
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
-Slots 1 - 9: [Applied Biosystems MicroAmp 384-Well Plate](https://www.thermofisher.com/order/catalog/product/4343370#/4343370)
+Slots 1 - 9: [Applied Biosystems MicroAmp 384-Well Plate](https://www.thermofisher.com/order/catalog/product/4343370#/4343370) or SSI 384-Well Plate
 
 Slot 10: [Opentrons Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
 
@@ -47,6 +47,7 @@ A2: Mastermix 2
 * **Pipette Type**: Select which GEN2 Multi-Channel Pipette (p300 or p20) will be used
 * **Pipette Mount**: Select which mount (left or right) the Multi-Channel Pipette is attached to
 * **Number of Plates (1-9)**: Specify the number of plates to fill
+* **Plate (384-Well) Type**: Select which plate (Applied Biosystems or SSI) to use.
 
 
 
