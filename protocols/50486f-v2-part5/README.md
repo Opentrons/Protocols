@@ -4,8 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Sample Prep
-	* PCR
+* PCR
+	* PCR Prep
 
 
 ## Description

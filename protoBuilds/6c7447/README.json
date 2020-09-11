@@ -1,7 +1,7 @@
 {
     "author": "Opentrons",
     "categories": {
-        "Sample Prep": [
+        "PCR": [
             "PCR Prep"
         ]
     },
@@ -9,7 +9,7 @@
     "internal": "6c7447",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
-        "categories": "* Sample Prep\n\t* PCR Prep\n\n\n",
+        "categories": "* PCR\n\t* PCR Prep\n\n\n",
         "description": "This protocol is an update to a qPCR prep protocol designed for the OT-1.\n\n\n---\n![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)\n\nTo purchase tips, reagents, or pipettes, please visit our [online store](https://shop.opentrons.com/) or contact our sales team at [info@opentrons.com](mailto:info@opentrons.com)\n\n* [Opentrons OT-2](https://shop.opentrons.com/collections/ot-2-robot/products/ot-2)\n* [Opentrons OT-2 Run App (Version 3.15.0 or later)](https://opentrons.com/ot-app/)\n* [Opentrons P300 Single-Channel Pipette](https://shop.opentrons.com/collections/ot-2-pipettes)\n* [Opentrons P10 Multi-Channel Pipette](https://shop.opentrons.com/collections/ot-2-pipettes)\n* [Opentrons 300\u00b5L Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)\n* [Opentrons 10\u00b5L Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)\n* [Opentrons 4-in-1 Tube Rack](https://shop.opentrons.com/collections/racks-and-adapters/products/tube-rack-set-1)\n* [Bio-Rad 96-Well Plate, 200\u00b5L](https://labware.opentrons.com/biorad_96_wellplate_200ul_pcr)\n* Eppendorf 2mL Tubes\n* Reagents\n* Samples\n\n\n---\n![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)\n\nSlot 1: Bio-Rad Plate (qPCR Plate)\n\nSlot 2: Bio-Rad Plate (DNA Plate)\n\nSlot 3: [Opentrons 10\u00b5L Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips), Full Tip Rack\n\nSlot 4: [Tube Rack](https://shop.opentrons.com/collections/racks-and-adapters/products/tube-rack-set-1) with 2mL Tubes and Reagents\n\nSlot 5: [Opentrons 10\u00b5L Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips), with only tips in row 'A'\n\nSlot 6: [[Opentrons 10\u00b5L Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips), with only tips in 'A1' and 'A2'\n\nSlot 7: [Opentrons 300\u00b5L Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips), Full Tip Rack\n\n\n\n\n**Using the customizations fields, below set up your protocol.**\n* **P10 Multi Mount**: Select which mount (left or right) the P10 Multi is attached to.\n* **P300 Single Mount**: Select which mount (left or right) the P300 Single is attached to.\n* **Pre-Wet Tips?**: Specify whether or not you'd like a mix step prior to each transfer to pre-wet the tip.\n\n\n\n**Note**: The tip racks in slot 5 and 6 should be empty, with tips only in row 'A'. This will allow the P10-Multi to effectively operate as a single channel pipette.\n\n",
         "internal": "6c7447\n",
         "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",

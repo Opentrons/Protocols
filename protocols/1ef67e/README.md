@@ -4,8 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Sample Prep
-	* Primary Antibody Set Dilution
+* Proteins & Proteomics
+	* Assay
 
 
 ## Description
