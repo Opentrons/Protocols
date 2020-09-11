@@ -7,8 +7,8 @@
 [BP Genomics](https://bpgenomics.com/)
 
 ## Categories
-* Sample Prep
-	* RNA Extraction
+* Covid-19 Workstation
+	* Station B: RNA Extraction
 
 
 ## Description
