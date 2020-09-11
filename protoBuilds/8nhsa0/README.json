@@ -15,12 +15,12 @@
         "notes": "If you have any questions about this protocol, please contact the Applications Engineering Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
         "process": "\n1. Upload CSV and input your protocol parameters.\n2. Download your protocol.\n3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).\n4. Set up your deck according to the deck map.\n5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n6. Hit \"Run\".\n\n",
         "robot": "* [OT-2](https://opentrons.com/ot-2)\n\n",
-        "title": "Cherrypicking"
+        "title": "Cherrypicking (Custom)"
     },
     "notes": "If you have any questions about this protocol, please contact the Applications Engineering Team by filling out the Troubleshooting Survey.",
     "process": "\nUpload CSV and input your protocol parameters.\nDownload your protocol.\nUpload your protocol into the OT App.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
     "robot": [
         "OT-2"
     ],
-    "title": "Cherrypicking"
+    "title": "Cherrypicking (Custom)"
 }

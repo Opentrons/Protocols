@@ -4,8 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Molecular Biology
-	* Nucleic Acid Purification
+* Nucleic Acid Extraction & Purification
+	* Zymo Kit
 
 
 ## Description
