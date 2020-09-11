@@ -4,8 +4,8 @@
 [Opentrons](http://www.opentrons.com/)
 
 ## Categories
-* Proteins & Proteomics
-    * PCR preparation
+* PCR
+	* PCR Prep
 
 ## Description
 This protocol performs PCR preparation on a custom 3x8 membrane chip on 6 PCR strips. Ensure that the chip is seated so that the wells of the second (middle) row are slightly offset to the **top** of the first and third rows as shown in 'Additional Notes' below. **Please calibrate the custom chip so that the pipette tip lands lands just barely above the membrane**-- this will ensure accurate liquid transfer without disturbing the eggs or crashing into the chip. For reagent setup, see 'Additional Notes' below.

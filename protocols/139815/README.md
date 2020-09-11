@@ -4,8 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Basic Pipetting
-	* Plate Consoidation
+* Sample Prep
+	* Consolidation
 
 ## Description
 This protocol performs a custom pooling and consolidation protocol from a 96-well PCR plate to an 8-tube strip, and then from the strip to a microcentrifuge tube.

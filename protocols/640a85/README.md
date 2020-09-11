@@ -4,8 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Proteins & Proteomics
-	* PCR preparation
+* PCR
+	* PCR Prep
 
 ## Description
 This protocol performs a custom PCR preparation on DNA samples in triplicate using pre-created mastermix.
