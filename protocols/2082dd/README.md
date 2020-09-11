@@ -4,7 +4,7 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Basic Pipetting
+* Sample Prep
 	* Cherrypicking
 
 ## Description

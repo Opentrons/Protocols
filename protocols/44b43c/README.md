@@ -4,8 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Proteins & Proteomics
-	* PCR preparation
+* PCR
+	* PCR Prep
 
 ## Description
 This protocol performs a PCR preparation by transferring mastermix and controls from custom deepwell plates and samples from PCR plates to corresponding deepwell plates. The user is prompted to

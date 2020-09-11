@@ -4,8 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Proteins & Proteomics
-	* Sample Prep
+* Nucleic Acid Extraction & Purification
+	* Arcis Blood Kit
 
 
 ## Description
