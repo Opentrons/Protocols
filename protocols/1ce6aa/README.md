@@ -4,8 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Basic Pipetting
-	* Sample Transfer
+* Sample Prep
+	* Plate Filling
 
 
 ## Description

@@ -4,7 +4,7 @@
 [Opentrons (verified)](https://opentrons.com/)
 
 ## Categories
-* COVID-19
+* Covid-19 Workstation
 	* Station A: Sample Plating
 
 

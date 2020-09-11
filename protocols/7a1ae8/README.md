@@ -4,8 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Molecular Biology
-	* Nucleic Acid Purification
+* Nucleic Acid Extraction & Purification
+	* Zymo Kit
 
 ## Description
 This protocol performs a custom nucleic acid purification using the Zymobiomics Magbead kit. This protocol was updated from [this](https://protocol-delivery.protocols.opentrons.com/protocol/0bdecb) to APIv2.
