@@ -39,6 +39,18 @@
     "default": 274.7
   },
   {
+    "type": "float",
+    "label": "aspiration height from bottom of primary tube (in mm)",
+    "name": "asp_height",
+    "default": 5
+  },
+  {
+    "type": "float",
+    "label": "dispense height from bottom of secondary tube (in mm)",
+    "name": "dispense_height",
+    "default": 5
+  },
+  {
     "type": "int",
     "label": "pool mixing repetitions",
     "name": "mix_reps",

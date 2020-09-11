@@ -10,10 +10,11 @@ metadata = {
 def run(ctx):
 
     [sample_vol, num_pool_sources, num_pools, p1000_mount, asp_speed,
-     dispense_speed, mix_reps, mix_vol,
+     dispense_speed, asp_height, dispense_height, mix_reps, mix_vol,
      tip_strategy] = get_values(  # noqa: F821
         'sample_vol', 'num_pool_sources', 'num_pools', 'p1000_mount',
-        'asp_speed', 'dispense_speed', 'mix_reps', 'mix_vol', 'tip_strategy')
+        'asp_speed', 'dispense_speed', 'asp_height', 'dispense_height',
+        'mix_reps', 'mix_vol', 'tip_strategy')
 
     # labware
     primary_racks = [
@@ -48,11 +49,12 @@ def run(ctx):
         for i, source in enumerate(source_set):
             if tip_strategy == 'always':
                 p1000.pick_up_tip()
-            p1000.mix(mix_reps, mix_vol, source)
-            p1000.transfer(sample_vol, source, dest, air_gap=20,
+            p1000.mix(mix_reps, mix_vol, source.bottom(asp_height))
+            p1000.transfer(sample_vol, source.bottom(asp_height),
+                           dest.bottom(dispense_height), air_gap=20,
                            new_tip='never')
             if i == len(source_set) - 1:
-                p1000.mix(mix_reps, mix_vol, dest)
+                p1000.mix(mix_reps, mix_vol, dest.bottom(dispense_height))
             if tip_strategy == 'always':
                 p1000.drop_tip()
         if tip_strategy == 'once':
