@@ -5,7 +5,7 @@
 
 ## Categories
 * Sample Prep
-	* DNA Prep
+	* Plate Filling
 
 
 ## Description

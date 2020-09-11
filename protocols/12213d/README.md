@@ -5,7 +5,7 @@
 
 ## Categories
 * Sample Prep
-	* Protein Purification
+	* Plate Filling
 
 
 ## Description

@@ -4,8 +4,8 @@
 [Opentrons (verified)](https://opentrons.com/)
 
 ## Categories
-* Covid-19 Workstation
-	* Station B: RNA Extraction
+* Nucleic Acid Extraction & Purification
+	* Zymo Kit
 
 
 ## Description
