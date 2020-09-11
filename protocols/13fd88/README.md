@@ -4,8 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Sample Prep
-	* Protein Purification
+* Proteins & Proteomics
+	* Purification
 
 
 ## Description
