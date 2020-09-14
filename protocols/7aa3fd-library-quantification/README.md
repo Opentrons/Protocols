@@ -4,8 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Molecular Biology
-	* NGS Library Prep
+* NGS Library Prep
+	* Custom
 
 ## Description
 This protocol performs the QPCR plate set-up protocol for library quantification step of NGS library prep.

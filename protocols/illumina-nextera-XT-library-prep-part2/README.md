@@ -1,7 +1,7 @@
 # Nextera XT DNA Library Prep Kit Protocol: Part 2/4 - Clean Up Libraries
 
 ### Author
-[Opentrons](http://www.opentrons.com/)
+[Opentrons (verified)](https://opentrons.com/)
 
 ## Categories
 * NGS Library Prep

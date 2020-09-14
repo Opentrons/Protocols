@@ -4,8 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Sample Prep
-	* DNA Prep
+* Nucleic Acid Extraction & Purification
+	* Quant-iT dsDNA Kit
 
 
 ## Description

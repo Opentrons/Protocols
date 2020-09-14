@@ -4,8 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Molecular Biology
-	* NGS Library Prep
+* NGS Library Prep
+	* Custom
 
 ## Description
 This protocol performs the final size selection step of NGS library prep.

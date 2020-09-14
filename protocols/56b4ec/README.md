@@ -5,7 +5,7 @@
 
 ## Categories
 * Sample Prep
-	* Distribution
+	* Plate Filling
 
 
 ## Description

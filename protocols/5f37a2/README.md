@@ -4,12 +4,12 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Sample Prep
-	* PCR Prep
+* Nucleic Acid Extraction & Purification
+	* MagneSil
 
 
 ## Description
-This protocol performs a nucleic acid purification protocol based on the MagneSil Plasmid Purification System from Promega. 
+This protocol performs a nucleic acid purification protocol based on the MagneSil Plasmid Purification System from Promega.
 
 
 ---

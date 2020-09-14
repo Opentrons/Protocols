@@ -4,8 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Molecular Biology
-	* NGS Library Prep
+* NGS Library Prep
+	* Custom
 
 ## Description
 This protocol performs the final library pooling step of NGS library prep. Sample volumes should be specified in a `.csv` file formatted as followed (**including headers line**). Transfers will be executed in the order specified in the `.csv`:

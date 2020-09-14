@@ -4,8 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Proteins & Proteomics
-	* Sample Prep
+* NGS Library Prep
+	* plexWell LP384
 
 
 ## Description
