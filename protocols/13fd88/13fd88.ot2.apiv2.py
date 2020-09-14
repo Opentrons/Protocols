@@ -9,15 +9,13 @@ metadata = {
 
 
 def run(protocol):
-    [p300mnt] = get_values(  # noqa: F821
-    'p300mnt')
 
     # load labware and pipettes
     tips = [
         protocol.load_labware(
             'opentrons_96_tiprack_300ul', str(s)) for s in [10, 11, 8, 9]]
 
-    m300 = protocol.load_instrument('p300_multi_gen2', p300mnt)
+    m300 = protocol.load_instrument('p300_multi_gen2', 'left')
 
     reservoir = protocol.load_labware('nest_12_reservoir_15ml', '1')
     bper = reservoir['A1']
@@ -28,16 +26,16 @@ def run(protocol):
 
     plates = [
         protocol.load_labware(
-            'nest_96_wellplate_100ul_pcr_full_skirt',
+            'greiner_96_wellplate',
             str(slot)) for slot in [5, 6, 2]]
 
     [plate1, plate2, plate3] = [plate.rows()[0] for plate in plates]
 
-    magdeck = protocol.load_module('magdeck', '7')
-    magplate = magdeck.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
+    magdeck = protocol.load_module('magnetic module gen2', '7')
+    magplate = magdeck.load_labware('greiner_96_wellplate')
     magwells = magplate.rows()[0]
 
-    deepplate = protocol.load_labware('nest_96deepplate_1ml', '4')
+    deepplate = protocol.load_labware('nest_96_wellplate_2ml_deep', '4')
     deepwells = deepplate.rows()[0]
 
     e_plate = protocol.load_labware('chromtech_96_filter_wellplate', '3')
@@ -48,6 +46,8 @@ def run(protocol):
     m300.flow_rate.aspirate = 100
     m300.flow_rate.dispense = 150
     m300.flow_rate.blow_out = 200
+
+    magheight = 20
 
     # Adding 100uL of B-PER lysis buffer to deep well plate
     protocol.comment("Adding 100uL of B-PER lysis buffer to deep well plate")
@@ -101,7 +101,7 @@ def run(protocol):
             m300.return_tip()
 
     protocol.comment("Engaging magdeck for 3 minutes.")
-    magdeck.engage()
+    magdeck.engage(height=magheight)
     protocol.delay(minutes=3)
 
     def super_removal(vol, d_plate, tips):
@@ -132,7 +132,7 @@ def run(protocol):
         m300.blow_out()
         m300.drop_tip(tdest)
 
-    magdeck.engage()
+    magdeck.engage(height=magheight)
 
     for i in range(6):
         protocol.set_rail_lights(not protocol.rail_lights_on)
@@ -156,7 +156,7 @@ def run(protocol):
         m300.drop_tip(tdest)
 
     protocol.comment("Engaging magdeck for 3 minutes.")
-    magdeck.engage()
+    magdeck.engage(height=magheight)
     protocol.delay(minutes=3)
 
     protocol.comment("Transferring 100uL of Supernatant to plate 4 (slot 2)")
@@ -175,7 +175,7 @@ def run(protocol):
         m300.drop_tip(tdest)
 
     protocol.comment("Engaging magdeck for 3 minutes.")
-    magdeck.engage()
+    magdeck.engage(height=magheight)
     protocol.delay(minutes=3)
 
     protocol.comment("Transferring 50uL of elution to filter plate")

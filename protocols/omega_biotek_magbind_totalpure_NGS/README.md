@@ -1,7 +1,7 @@
 # NGS Cleanup and Size Selection with Omega Bio-tek Mag-Bind® TotalPure NGS
 
 ### Author
-[Opentrons](http://opentrons.com/)
+[Opentrons (verified)](https://opentrons.com/)
 
 ### Partner
 [Omega Bio-tek](http://omegabiotek.com/store/)

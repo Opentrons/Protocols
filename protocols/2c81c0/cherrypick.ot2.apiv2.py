@@ -1,3 +1,5 @@
+import math
+
 # metadata
 metadata = {
     'protocolName': 'Cherrypicking from .csv',
@@ -9,22 +11,24 @@ metadata = {
 
 def run(ctx):
 
-    csv_input, p10_mount, p300_mount = get_values(  # noqa: F821
-        'csv_input', 'p10_mount', 'p300_mount')
+    csv_input, p10_mount, p300_mount, change_tips = get_values(  # noqa: F821
+        'csv_input', 'p10_mount', 'p300_mount', 'change_tips')
 #     csv_input, p10_mount = [
 #         'source labware,source slot,source well,volume,destination labware,\
 # destination slot,destination well,height offset from top of source well \
 # (mm)\nplate,1,A2,7,tuberack,5,A4,-4\nplate,2,H10,9,tuberack,3,D1,-4', 'left']
 
     # labware
-    tiprack10 = ctx.load_labware('biotix_96_filtertiprack_10ul', '4')
-    tiprack300 = ctx.load_labware('opentrons_96_filtertiprack_200ul', '7')
+    tiprack10 = [ctx.load_labware('biotix_96_filtertiprack_10ul', slot)
+                 for slot in ['4', '11']]
+    tiprack300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
+                  for slot in ['7', '10']]
 
     # pipette
     p10 = ctx.load_instrument(
-        'p10_single', p10_mount, tip_racks=[tiprack10])
+        'p10_single', p10_mount, tip_racks=tiprack10)
     p300 = ctx.load_instrument(
-        'p300_single', p300_mount, tip_racks=[tiprack300])
+        'p300_single', p300_mount, tip_racks=tiprack300)
 
     # parse
     data = [
@@ -55,13 +59,30 @@ def run(ctx):
 Press resume to ignore.')
 
         pip = p300 if vol > 30 else p10
-        pip.pick_up_tip()
-        pip.transfer(
-            vol,
-            source.top(h_offset),
-            dest.bottom(3),
-            mix_after=(3, vol_mix),
-            new_tip='never'
-        )
-        pip.blow_out(dest.top(-2))
-        pip.drop_tip()
+        num_trans = math.ceil(vol/pip.max_volume)
+        vol_per_trans = vol/num_trans
+        if change_tips == 'once per well':
+            pip.pick_up_tip()
+        for _ in range(num_trans):
+            if change_tips == 'always':
+                pip.pick_up_tip()
+            if vol_mix != 0:
+                pip.transfer(
+                    vol_per_trans,
+                    source.top(h_offset),
+                    dest.bottom(3),
+                    mix_after=(3, vol_mix),
+                    new_tip='never'
+                )
+            else:
+                pip.transfer(
+                    vol_per_trans,
+                    source.top(h_offset),
+                    dest.bottom(3),
+                    new_tip='never'
+                )
+            pip.blow_out(dest.top(-2))
+            if change_tips == 'always':
+                pip.drop_tip()
+        if change_tips == 'once per well':
+            pip.drop_tip()

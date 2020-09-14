@@ -22,5 +22,15 @@
       { "label": "left", "value": "left" },
       { "label": "right", "value": "right" }
     ]
+  },
+  {
+    "type": "dropDown",
+    "label": "change tips",
+    "name": "change_tips",
+    "options": [
+      { "label": "once per well", "value": "once per well" },
+      { "label": "always", "value": "always" }
+    ]
   }
+
 ]

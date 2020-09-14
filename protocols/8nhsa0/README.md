@@ -1,7 +1,7 @@
-# Cherrypicking
+# Cherrypicking (Custom)
 
 ### Author
-[Opentrons](https://opentrons.com/)
+[Opentrons (verified)](https://opentrons.com/)
 
 ## Categories
 * Sample Prep

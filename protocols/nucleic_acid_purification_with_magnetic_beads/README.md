@@ -1,7 +1,7 @@
 # Nucleic Acid Purification with Magnetic Beads
 
 ### Author
-[Opentrons](https://opentrons.com/)
+[Opentrons (verified)](https://opentrons.com/)
 
 ## Categories
 * Nucleic Acid Extraction & Purification

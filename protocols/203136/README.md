@@ -4,12 +4,12 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Sample Prep
-	* PCR Prep
+* Nucleic Acid Extraction & Purification
+	* Invitrogen ChargeSwitch
 
 
 ## Description
-This protocol performs the Invitrogen ChargeSwitch gDNA Kit, using the P50 Single-Channel Pipette and the P300 Multi-Channel Pipette. 
+This protocol performs the Invitrogen ChargeSwitch gDNA Kit, using the P50 Single-Channel Pipette and the P300 Multi-Channel Pipette.
 
 
 ---

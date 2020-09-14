@@ -4,8 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Basic Pipetting
-	* Plate Mapping
+* Sample Prep
+	* Plate Filling
 
 ## Description
 This protocol performs a custom drug screening assay through plate mapping from one mother plate to up to 6 daughter plates using a P10-multi channel pipette. All plates used are Corning 384-flatwell plates.
