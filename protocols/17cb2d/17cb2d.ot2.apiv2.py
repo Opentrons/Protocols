@@ -21,20 +21,18 @@ def run(protocol):
     plates = [
         protocol.load_labware(p384, s) for s in range(1, num_plates)]
 
-    max_vol = 15 if pip_name == 'p20_multi_gen2' else 180
+    # max_vol = 15 if pip_name == 'p20_multi_gen2' else 180
 
     # distribute mastermix 1
     protocol.comment('Distributing master mix 1...')
     pip.pick_up_tip()
     for plate in plates:
         wells = plate.rows()[0]
-        mm_vol = 0
+        # mm_vol = 0
         for well in wells:
-            if mm_vol < 6:
-                pip.aspirate(max_vol, mm1)
-                mm_vol = max_vol
+            pip.aspirate(7.5, mm1)
             pip.dispense(7.5, well)
-            mm_vol -= 7.5
+            pip.blow_out()
     pip.drop_tip()
 
     # distribute mastermix 2
@@ -42,11 +40,9 @@ def run(protocol):
     pip.pick_up_tip()
     for plate in plates:
         wells = plate.rows()[1]
-        mm_vol = 0
+        # mm_vol = 0
         for well in wells:
-            if mm_vol < 6:
-                pip.aspirate(max_vol, mm2)
-                mm_vol = max_vol
+            pip.aspirate(7.5, mm2)
             pip.dispense(7.5, well)
-            mm_vol -= 7.5
+            pip.blow_out()
     pip.drop_tip()
