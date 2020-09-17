@@ -9,10 +9,12 @@ metadata = {
 
 def run(ctx):
 
-    num_samples, p1000_mount, input_csv = [
-        24, 'left',
-        'distance down tube to aspirate (in mm),aspiration speed (in ul/s),\
-        dispense speed (in ul/s)\n20,100,100\n20,100,100\n']
+    # num_samples, p1000_mount, input_csv = [
+    #     24, 'left',
+    #     'distance down tube to aspirate (in mm),aspiration speed (in ul/s),\
+    #     dispense speed (in ul/s)\n20,100,100\n20,100,100\n']
+    num_samples, p1000_mount, input_csv = get_values(  # noqa: F821
+        'num_samples', 'p1000_mount', 'input_csv')
 
     tiprack1000 = [ctx.load_labware('opentrons_96_tiprack_1000ul', '1')]
     sample_racks = [
