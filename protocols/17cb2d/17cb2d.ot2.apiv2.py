@@ -15,8 +15,8 @@ def run(protocol):
     tips = protocol.load_labware(tip_name, '10')
     pip = protocol.load_instrument(pip_name, pipmnt, tip_racks=[tips])
     res = protocol.load_labware('usascientific_12_reservoir_22ml', '11')
-    mm1 = res['A1']
-    mm2 = res['A2']
+    mm1 = res['A1'].bottom(7)
+    mm2 = res['A2'].bottom(7)
     num_plates += 1
     plates = [
         protocol.load_labware(p384, s) for s in range(1, num_plates)]
