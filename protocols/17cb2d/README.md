@@ -25,7 +25,7 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 * [Opentrons OT-2 Run App (Version 3.19.0 or later)](https://opentrons.com/ot-app/)
 * [Opentrons Multi-Channel Pipette](https://shop.opentrons.com/collections/ot-2-pipettes)
 * [Opentrons Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
-* [USA Scientific 12-Well Reservoir](https://labware.opentrons.com/usascientific_12_reservoir_22ml?category=reservoir)
+* [NEST 12-Well Reservoir](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
 * [Applied Biosystems MicroAmp 384-Well Plate](https://www.thermofisher.com/order/catalog/product/4343370#/4343370) or SSI 384-Well Plate
 * Reagents (mastermix 1, mastermix 2)
 
@@ -37,9 +37,9 @@ Slots 1 - 9: [Applied Biosystems MicroAmp 384-Well Plate](https://www.thermofish
 
 Slot 10: [Opentrons Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
 
-Slot 11: [USA Scientific 12-Well Reservoir](https://labware.opentrons.com/usascientific_12_reservoir_22ml?category=reservoir)
-A1: Mastermix 1
-A2: Mastermix 2
+Slot 11: [NEST 12-Well Reservoir](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)</br>
+A1: Mastermix 1</br>
+A12: Mastermix 2</br>
 
 </br>
 </br>
