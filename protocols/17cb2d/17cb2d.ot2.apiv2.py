@@ -14,9 +14,9 @@ def run(protocol):
     pip_name, tip_name = piptype.split()
     tips = protocol.load_labware(tip_name, '10')
     pip = protocol.load_instrument(pip_name, pipmnt, tip_racks=[tips])
-    res = protocol.load_labware('usascientific_12_reservoir_22ml', '11')
-    mm1 = res['A1'].bottom(7)
-    mm2 = res['A2'].bottom(7)
+    res = protocol.load_labware('nest_12_reservoir_15ml', '11')
+    mm1 = res['A1']
+    mm2 = res['A12']
     num_plates += 1
     plates = [
         protocol.load_labware(p384, s) for s in range(1, num_plates)]
@@ -28,11 +28,11 @@ def run(protocol):
     pip.pick_up_tip()
     for plate in plates:
         wells = plate.rows()[0]
-        # mm_vol = 0
+        disp_vol = 7.5
         for well in wells:
             pip.aspirate(7.5, mm1)
-            pip.dispense(7.5, well)
-            pip.blow_out()
+            pip.dispense(disp_vol, well)
+            pip.blow_out(well)
     pip.drop_tip()
 
     # distribute mastermix 2
@@ -40,9 +40,9 @@ def run(protocol):
     pip.pick_up_tip()
     for plate in plates:
         wells = plate.rows()[1]
-        # mm_vol = 0
+        disp_vol = 7.5
         for well in wells:
             pip.aspirate(7.5, mm2)
-            pip.dispense(7.5, well)
-            pip.blow_out()
+            pip.dispense(disp_vol, well)
+            pip.blow_out(well)
     pip.drop_tip()
