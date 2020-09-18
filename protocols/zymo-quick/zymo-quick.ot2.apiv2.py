@@ -169,7 +169,7 @@ def run(protocol):
 
     def wash_step(src, vol, mtimes, tips, usedtips, msg, trash_tips=False):
         protocol.comment(f'Wash Step {msg} - Adding to samples:')
-        for well, tip, s in zip(magsamps, tips, src):
+        for well, tip, tret, s in zip(magsamps, tips, usedtips, src):
             p300.pick_up_tip(tip)
             for _ in range(2):
                 p300.aspirate(165, s)
@@ -179,7 +179,7 @@ def run(protocol):
             p300.dispense(185, well.bottom(5))
             well_mix(mtimes, well, 180)
             p300.blow_out()
-            p300.return_tip()
+            p300.drop_tip(tret)
 
         magdeck.engage(height=magheight)
         protocol.comment('Incubating on MagDeck for 3 minutes.')
