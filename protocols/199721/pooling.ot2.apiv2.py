@@ -88,12 +88,17 @@ before resuming.')
         for i, source in enumerate(source_set):
             if tip_strategy == 'always':
                 pick_up(p1000)
+            if p1000.current_volume > 0:
+                p1000.dispense(p1000.current_volume, source.top())
             p1000.mix(mix_reps, mix_vol, source.bottom(asp_height))
             p1000.transfer(sample_vol, source.bottom(asp_height),
                            dest.bottom(dispense_height), air_gap=20,
                            new_tip='never')
             if i == len(source_set) - 1:
                 p1000.mix(mix_reps, mix_vol, dest.bottom(dispense_height))
+            p1000.blow_out(dest.top(-2))
+            p1000.touch_tip(dest)
+            p1000.air_gap(20)
             if tip_strategy == 'always':
                 p1000.drop_tip()
         if tip_strategy == 'once':
