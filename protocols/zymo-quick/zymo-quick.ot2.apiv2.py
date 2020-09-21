@@ -9,9 +9,11 @@ metadata = {
 
 
 def run(protocol):
-    [num_samples, p300m, s_pip] = get_values(  # noqa: F821
-    'num_samples', 'p300m', 's_pip')
-
+    """[num_samples, p300m, s_pip] = get_values(  # noqa: F821
+    'num_samples', 'p300m', 's_pip')"""
+    num_samples = 1
+    p300m = 'p300_multi_gen2'
+    s_pip = 'p20_single_gen2'
     # load labware and pipettes
     samps = int(num_samples)  # this num represents columns and should be 1-6
     tips200 = [
@@ -164,10 +166,10 @@ def run(protocol):
         p300.drop_tip()
 
     magdeck.disengage()
-    protocol.pause('Check the wells for volume.')
-    # make sounds
+    # protocol.pause('Check the wells for volume.')
+    ttips = True if samps < 3 else False
 
-    def wash_step(src, vol, mtimes, tips, usedtips, msg, trash_tips=False):
+    def wash_step(src, vol, mtimes, tips, usedtips, msg, trash_tips=ttips):
         protocol.comment(f'Wash Step {msg} - Adding to samples:')
         for well, tip, tret, s in zip(magsamps, tips, usedtips, src):
             p300.pick_up_tip(tip)
@@ -214,7 +216,10 @@ def run(protocol):
         p300.transfer(
             180, well.bottom().move(types.Point(x=-0.5, y=0, z=0.4)),
             waste, new_tip='never')
-        p300.drop_tip(tret)
+        if samps < 3:
+            p300.drop_tip()
+        else:
+            p300.drop_tip(tret)
     p300.flow_rate.aspirate = 50
 
     protocol.comment('Allowing beads to air dry for 10 minutes.')
@@ -234,7 +239,10 @@ def run(protocol):
                 50, well.bottom().move(types.Point(x=1, y=0, z=0.5)))
         p300.dispense(80, well)
         p300.blow_out()
-        p300.drop_tip(tret)
+        if samps < 3:
+            p300.drop_tip()
+        else:
+            p300.drop_tip(tret)
 
     protocol.comment('Incubating at room temp for 10 minutes.')
     protocol.delay(minutes=10)
@@ -250,7 +258,10 @@ def run(protocol):
         p300.pick_up_tip(tip)
         p300.aspirate(60, src.bottom().move(types.Point(x=-1, y=0, z=0.6)))
         p300.dispense(60, dest)
-        p300.drop_tip(tret)
+        if samps < 3:
+            p300.drop_tip()
+        else:
+            p300.drop_tip(tret)
 
     magdeck.disengage()
 
