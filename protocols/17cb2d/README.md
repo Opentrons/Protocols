@@ -13,7 +13,9 @@ This protocol fills [Applied Biosystems MicroAmp 384-well plates]([https://www.t
 </br>
 The protocol can fill up to 9 plates and will dispense 7.5µL of mastermix 1 into all the odd rows (A/C/E...) and 7.5µL of mastermix 2 into all the even rows (B/D/F...).</br>
 </br>
-This protocol has been updated to use the GEN2 Multi-Channel Pipettes - please use corresponding tips.
+This protocol has been updated to use the GEN2 Multi-Channel Pipettes - please use corresponding tips.</br>
+</br>
+**Update 09-21-20:** The protocol will now do a blow out in the well and aspirate 2µL of air at the top of the well after each dispense step to ensure all liquid has been expelled from pipette and minimize contamination risk due to droplet hang.
 
 
 ---
