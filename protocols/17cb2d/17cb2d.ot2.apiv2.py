@@ -28,11 +28,12 @@ def run(protocol):
     pip.pick_up_tip()
     for plate in plates:
         wells = plate.rows()[0]
-        disp_vol = 7.5
+        disp_vol = 9.5
         for well in wells:
             pip.aspirate(7.5, mm1)
             pip.dispense(disp_vol, well)
             pip.blow_out(well)
+            pip.aspirate(2, well.top())
     pip.drop_tip()
 
     # distribute mastermix 2
@@ -40,9 +41,10 @@ def run(protocol):
     pip.pick_up_tip()
     for plate in plates:
         wells = plate.rows()[1]
-        disp_vol = 7.5
+        disp_vol = 9.5
         for well in wells:
             pip.aspirate(7.5, mm2)
             pip.dispense(disp_vol, well)
             pip.blow_out(well)
+            pip.aspirate(2, well.top())
     pip.drop_tip()
