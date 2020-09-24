@@ -19,5 +19,14 @@
     "label": ".csv containing aspiration depth and flow rates",
     "name": "input_csv",
     "default": "distance down tube to aspirate (in mm),aspiration speed (in ul/s), dispense speed (in ul/s)\n20,100,100\n20,100,100\n"
+  },
+  {
+    "type": "dropDown",
+    "label": "tip track",
+    "name": "tip_track",
+    "options": [
+      { "label": "yes", "value": true },
+      { "label": "no", "value": false }
+    ]
   }
 ]

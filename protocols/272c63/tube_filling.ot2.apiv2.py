@@ -1,3 +1,5 @@
+import os
+
 # metadata
 metadata = {
     'protocolName': 'Tube Filling',
@@ -13,8 +15,8 @@ def run(ctx):
     #     24, 'left',
     #     'distance down tube to aspirate (in mm),aspiration speed (in ul/s),\
     #     dispense speed (in ul/s)\n20,100,100\n20,100,100\n']
-    num_samples, p1000_mount, input_csv = get_values(  # noqa: F821
-        'num_samples', 'p1000_mount', 'input_csv')
+    num_samples, p1000_mount, input_csv, tip_track = get_values(  # noqa: F821
+        'num_samples', 'p1000_mount', 'input_csv', 'tip_track')
 
     tiprack1000 = [ctx.load_labware('opentrons_96_tiprack_1000ul', '1')]
     sample_racks = [
@@ -36,6 +38,41 @@ def run(ctx):
     # pipette
     p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,
                                 tip_racks=tiprack1000)
+
+    # determine starting tip
+    tip_log_file_path = '/data/pooling/tip_track.json'
+    tip_log_folder_path = os.path.dirname(tip_log_file_path)
+
+    tip_count = 0
+    if not ctx.is_simulating() and tip_track:
+        if not os.path.exists(tip_log_folder_path):
+            os.makedirs(tip_log_folder_path)
+        if (
+                tip_track
+                and os.path.isfile(tip_log_file_path)
+                and os.stat(tip_log_file_path).st_size > 0):
+            with open(tip_log_file_path, 'r') as tip_file:
+                data = json.load(tip_file)
+                if 'tips1000' in data:
+                    tip_count = data['tips1000']
+
+    tip_log = {
+        p1000: {
+            'tip_list': [
+                tip for rack in tiprack1000 for tip in rack.wells()],
+            'tip_max': len(tiprack1000) * 96,
+            'tip_count': tip_count
+        }
+    }
+
+    def pick_up(pip):
+        if tip_log[p1000]['tip_count'] >= tip_log[p1000]['tip_max']:
+            ctx.pause('Please replace 1000ul tipracks in slots 1, 6, and 9 \
+before resuming.')
+            tip_log[p1000]['tip_count'] = 0
+        p1000.pick_up_tip(
+            tip_log[p1000]['tip_list'][tip_log[p1000]['tip_count']])
+        tip_log[p1000]['tip_count'] += 1
 
     # parse .csv file
     csv_data = [
@@ -69,10 +106,15 @@ def run(ctx):
             lw_ordered, ir_ordered):
         p1000.flow_rate.aspirate = asp_rate
         p1000.flow_rate.dispense = dispense_rate
-        p1000.pick_up_tip()
+        pick_up(p1000)
         p1000.aspirate(1000, s.top(-1*depth))
         p1000.dispense(500, icp.top(-2))
         p1000.dispense(500, lw.top(-2))
         p1000.aspirate(1000, s.top(-1*depth))
         p1000.dispense(500, ir.top(-2))
         p1000.drop_tip()
+
+    if not ctx.is_simulating():
+        with open(tip_log_file_path, 'w') as tip_file:
+            data = {'tips1000': tip_log[p1000]['tip_count']}
+            json.dump(data, tip_file)
