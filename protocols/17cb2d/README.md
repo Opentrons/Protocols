@@ -15,7 +15,9 @@ The protocol can fill up to 9 plates and will dispense 7.5µL of mastermix 1 int
 </br>
 This protocol has been updated to use the GEN2 Multi-Channel Pipettes - please use corresponding tips.</br>
 </br>
-**Update 09-21-20:** The protocol will now do a blow out in the well and aspirate 2µL of air at the top of the well after each dispense step to ensure all liquid has been expelled from pipette and minimize contamination risk due to droplet hang.
+**Update 09-21-20:** The protocol will now do a blow out in the well and aspirate 2µL of air at the top of the well after each dispense step to ensure all liquid has been expelled from pipette and minimize contamination risk due to droplet hang.</br>
+</br>
+**Update 09-25-20:** The protocol has been updated in two ways. First, the mastermix should be split between two wells (A1/A2 and A11/A12). Second, after aspirating the mastermix, the pipette will move to the sides of the well to remove liquid attached to the tips.
 
 
 ---
@@ -40,8 +42,10 @@ Slots 1 - 9: [Applied Biosystems MicroAmp 384-Well Plate](https://www.thermofish
 Slot 10: [Opentrons Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
 
 Slot 11: [NEST 12-Well Reservoir](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)</br>
-A1: Mastermix 1</br>
-A12: Mastermix 2</br>
+A1: Mastermix 1 (for plates 1-5)</br>
+A2: Mastermix 1 (for plates 6-9)</br>
+A11: Mastermix 2 (for plates 1-5)</br>
+A12: Mastermix 2 (for plates 6-9)</br>
 
 </br>
 </br>
