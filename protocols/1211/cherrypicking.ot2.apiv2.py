@@ -17,15 +17,16 @@ def run(ctx):
         'p300_single_gen1': 'opentrons_96_tiprack_300ul',
         'p1000_single_gen1': 'opentrons_96_tiprack_1000ul',
         'p20_single_gen2': 'opentrons_96_tiprack_20ul',
-        'p300_single_gen2': 'opentrons_96_tiprack_3000ul',
+        'p300_single_gen2': 'opentrons_96_tiprack_300ul',
         'p1000_single_gen2': 'opentrons_96_tiprack_1000ul'
     }
 
     # load labware
     transfer_info = [[val.strip().lower() for val in line.split(',')]
-                     for line in transfer_csv.splitlines()][1:]
+                     for line in transfer_csv.splitlines()
+                     if line.split(',')[0].strip()][1:]
     for line in transfer_info:
-        s_lw, s_slot, d_lw, d_slot = line[:2] + line[3:5]
+        s_lw, s_slot, d_lw, d_slot = line[:2] + line[4:6]
         for slot, lw in zip([s_slot, d_slot], [s_lw, d_lw]):
             if not int(slot) in ctx.loaded_labwares:
                 ctx.load_labware(lw.lower(), slot)
@@ -58,11 +59,12 @@ def run(ctx):
         return letter.upper() + str(int(number))
 
     for line in transfer_info:
-        _, s_slot, s_well, _, d_slot, d_well, vol = line[:7]
+        _, s_slot, s_well, h, _, d_slot, d_well, vol = line[:8]
         source = ctx.loaded_labwares[
-            int(s_slot)].wells_by_name()[parse_well(s_well)]
+            int(s_slot)].wells_by_name()[parse_well(s_well)].bottom(float(h))
         dest = ctx.loaded_labwares[
             int(d_slot)].wells_by_name()[parse_well(d_well)]
+        print(vol)
         pick_up()
         pip.transfer(float(vol), source, dest, new_tip='never')
         pip.drop_tip()
