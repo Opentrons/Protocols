@@ -23,12 +23,12 @@ def run(ctx):
 
     # load labware
     transfer_info_d = [[val.strip().lower() for val in line.split(',')]
-                     for line in d_csv.splitlines()
-                     if line.split(',')[0].strip()][1:]
+                       for line in d_csv.splitlines()
+                       if line.split(',')[0].strip()][1:]
 
     transfer_info_s = [[val.strip().lower() for val in line.split(',')]
-                     for line in s_csv.splitlines()
-                     if line.split(',')[0].strip()][1:]
+                       for line in s_csv.splitlines()
+                       if line.split(',')[0].strip()][1:]
 
     for line in transfer_info_d:
         s_lw, s_slot, d_lw, d_slot = line[:2] + line[4:6]
