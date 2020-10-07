@@ -1,5 +1,14 @@
 [
   {
+    "type": "dropDown",
+    "label": "mastermix labware",
+    "name": "mm_lw",
+    "options": [
+      {"label": "12-channel reservoir", "value": "nest_12_reservoir_15ml"},
+      {"label": "96-well plate", "value": "greinerbioone_96_wellplate_200ul"}
+    ]
+  },
+  {
     "type": "float",
     "label": "mastermix plate slot (1-11)",
     "name": "mm_slot",
