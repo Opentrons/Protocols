@@ -20,7 +20,8 @@ def run(ctx):
                      for line in transfer_csv.splitlines()
                      if line.split(',')[0].strip()][1:]
 
-    parse_well = lambda well: well[0].upper() + str(int(well[1:]))
+    def parse_well(well):
+        return well[0].upper() + str(int(well[1:]))
 
     # parse csv file
     lw_map = {
