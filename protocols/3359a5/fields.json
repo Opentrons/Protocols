@@ -4,6 +4,7 @@
     "label": "pipette type",
     "name": "pipette_type",
     "options": [
+      {"label": "P20 Multi (GEN 2)", "value": "p20_multi_gen2"}
       {"label": "P20 Single (GEN 2)", "value": "p20_single_gen2"},
       {"label": "P10 Single (GEN 1)", "value": "p10_single"},
       {"label": "P50 Single (GEN 1)", "value": "p50_single"},
