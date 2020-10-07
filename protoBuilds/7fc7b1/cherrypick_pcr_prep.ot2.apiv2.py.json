@@ -1,5 +1,5 @@
 {
-    "content": "metadata = {\n    'protocolName': 'PCR Preparation Cherrypicking',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.3'\n}\n\n\ndef run(ctx):\n\n    [mm_slot, mm_vol, dna_vol, transfer_csv,\n     p20_mount] = get_values(  # noqa: F821\n        'mm_slot', 'mm_vol', 'dna_vol', 'transfer_csv', 'p20_mount')\n\n    # load labware\n    mm = ctx.load_labware('greinerbioone_96_wellplate_200ul', mm_slot,\n                          'plate for mastermix (column 1)').rows()[0]\n\n    transfer_info = [[val.strip().lower() for val in line.split(',')]\n                     for line in transfer_csv.splitlines()\n                     if line.split(',')[0].strip()][1:]\n\n    def parse_well(well):\n        return well[0].upper() + str(int(well[1:]))\n\n    # parse csv file\n    lw_map = {\n        '96': 'greinerbioone_96_wellplate_200ul',\n        '384': 'sarstedt_384_wellplate_40ul'\n    }\n    transfer_dict = {}\n    for line in transfer_info:\n        s_slot, s_well, d_lw, d_slot, d_well = line[:5]\n        if int(s_slot) not in ctx.loaded_labwares:\n            ctx.load_labware(lw_map['96'], s_slot)\n        if int(d_slot) not in ctx.loaded_labwares:\n            ctx.load_labware(lw_map[d_lw], d_slot)\n        source = ctx.loaded_labwares[int(s_slot)].wells_by_name()[\n            parse_well(s_well)]\n        dest = ctx.loaded_labwares[int(d_slot)].wells_by_name()[\n            parse_well(d_well)]\n        if source not in transfer_dict:\n            transfer_dict[source] = [dest]\n        else:\n            transfer_dict[source].append(dest)\n\n    # load tipracks in remaining slots\n    tipracks = []\n    for slot in range(1, 13):\n        if slot not in ctx.loaded_labwares:\n            tipracks.append(\n                ctx.load_labware('opentrons_96_tiprack_20ul', str(slot)))\n\n    # load pipette\n    m20 = ctx.load_instrument('p20_multi_gen2', p20_mount, tip_racks=tipracks)\n\n    tip_count = 0\n    tip_max = len(tipracks*96)\n\n    def pick_up():\n        nonlocal tip_count\n        if tip_count == tip_max:\n            ctx.pause('Please refill tipracks before resuming.')\n            m20.reset_tipracks()\n            tip_count = 0\n        m20.pick_up_tip()\n        tip_count += 1\n\n    # transfer mastermix\n    all_dests = [d for dest_set in transfer_dict.values() for d in dest_set]\n    pick_up()\n    dests_per_col = 200//mm_vol\n    for i, d in enumerate(all_dests):\n        m20.air_gap(2)\n        m20.aspirate(mm_vol, mm[i//dests_per_col])\n        m20.dispense(2+mm_vol, d)\n    m20.drop_tip()\n\n    # transfer sample\n    for source, dests in transfer_dict.items():\n        pick_up()\n        for d in dests:\n            m20.air_gap(2)\n            m20.aspirate(dna_vol, source)\n            m20.dispense(2+dna_vol, dest.bottom(1))\n        m20.drop_tip()\n",
+    "content": "metadata = {\n    'protocolName': 'PCR Preparation Cherrypicking',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.3'\n}\n\n\ndef run(ctx):\n\n    [mm_lw, mm_slot, mm_vol, dna_vol, transfer_csv,\n     p20_mount] = get_values(  # noqa: F821\n        'mm_lw', 'mm_slot', 'mm_vol', 'dna_vol', 'transfer_csv', 'p20_mount')\n\n    # load labware\n    mm = ctx.load_labware(mm_lw, mm_slot, 'mastermix container').rows()[0]\n\n    transfer_info = [[val.strip().lower() for val in line.split(',')]\n                     for line in transfer_csv.splitlines()\n                     if line.split(',')[0].strip()][1:]\n\n    def parse_well(well):\n        return well[0].upper() + str(int(well[1:]))\n\n    # parse csv file\n    lw_map = {\n        '96': 'greinerbioone_96_wellplate_200ul',\n        '384': 'sarstedt_384_wellplate_40ul'\n    }\n    transfer_dict = {}\n    for line in transfer_info:\n        s_slot, s_well, d_lw, d_slot, d_well = line[:5]\n        if int(s_slot) not in ctx.loaded_labwares:\n            ctx.load_labware(lw_map['96'], s_slot)\n        if int(d_slot) not in ctx.loaded_labwares:\n            ctx.load_labware(lw_map[d_lw], d_slot)\n        source = ctx.loaded_labwares[int(s_slot)].wells_by_name()[\n            parse_well(s_well)]\n        dest = ctx.loaded_labwares[int(d_slot)].wells_by_name()[\n            parse_well(d_well)]\n        if source not in transfer_dict:\n            transfer_dict[source] = [dest]\n        else:\n            transfer_dict[source].append(dest)\n\n    # load tipracks in remaining slots\n    tipracks = []\n    for slot in range(1, 13):\n        if slot not in ctx.loaded_labwares:\n            tipracks.append(\n                ctx.load_labware('opentrons_96_tiprack_20ul', str(slot)))\n\n    # load pipette\n    m20 = ctx.load_instrument('p20_multi_gen2', p20_mount, tip_racks=tipracks)\n\n    tip_count = 0\n    tip_max = len(tipracks*96)\n\n    def pick_up():\n        nonlocal tip_count\n        if tip_count == tip_max:\n            ctx.pause('Please refill tipracks before resuming.')\n            m20.reset_tipracks()\n            tip_count = 0\n        m20.pick_up_tip()\n        tip_count += 1\n\n    # transfer mastermix\n    all_dests = [d for dest_set in transfer_dict.values() for d in dest_set]\n    pick_up()\n    dests_per_col = mm[0].max_volume//mm_vol\n    print(dests_per_col)\n    for i, d in enumerate(all_dests):\n        m20.air_gap(2)\n        m20.aspirate(mm_vol, mm[i//dests_per_col])\n        m20.dispense(2+mm_vol, d)\n    m20.drop_tip()\n\n    # transfer sample\n    for source, dests in transfer_dict.items():\n        pick_up()\n        for d in dests:\n            m20.air_gap(2)\n            m20.aspirate(dna_vol, source)\n            m20.dispense(2+dna_vol, dest.bottom(1))\n        m20.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -5450,6 +5450,21 @@
     ],
     "fields": [
         {
+            "label": "mastermix labware",
+            "name": "mm_lw",
+            "options": [
+                {
+                    "label": "12-channel reservoir",
+                    "value": "nest_12_reservoir_15ml"
+                },
+                {
+                    "label": "96-well plate",
+                    "value": "greinerbioone_96_wellplate_200ul"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
             "default": 4,
             "label": "mastermix plate slot (1-11)",
             "name": "mm_slot",
@@ -5515,10 +5530,10 @@
             "type": "opentrons_96_tiprack_20ul"
         },
         {
-            "name": "plate for mastermix (column 1) on 4",
+            "name": "mastermix container on 4",
             "share": false,
             "slot": "4",
-            "type": "greinerbioone_96_wellplate_200ul"
+            "type": "nest_12_reservoir_15ml"
         },
         {
             "name": "Opentrons 96 Tip Rack 20 \u00b5L on 5",

@@ -14,7 +14,9 @@ The .csv file should be formatted as shown in [this template](https://opentrons-
 
 All available empty slots will be filled with tipracks, and the user will be prompted to refill the tipracks if all are emptied in the middle of the protocol.
 
-Mastermix should be filled in the first columns of the mastermix plate in as many columns as necessary. The protocol will automatically calculate when the second column should be acccessed for mastermix once the first column has run out of volume, then the third column, etc.
+If you choose a 96-well plate for mastermix, the mastermix should be filled in the first columns in as many columns as necessary. The protocol will automatically calculate when the second column should be acccessed for mastermix once the first column has run out of volume, then the third column, etc.
+
+If you choose a 12-channel reservoir for mastermix, the mastermix should be filled in the first channel of the reservoir alone.
 
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
