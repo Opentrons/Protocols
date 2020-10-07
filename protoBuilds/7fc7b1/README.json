@@ -1,0 +1,26 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Sample Prep": [
+            "Cherrypicking"
+        ]
+    },
+    "description": "With this protocol, your robot can perform a custom PCR preparation using a P20-multi pipette.\nThe .csv file should be formatted as shown in this template, including headers line.\nAll available empty slots will be filled with tipracks, and the user will be prompted to refill the tipracks if all are emptied in the middle of the protocol.\nMastermix should be filled in the first columns of the mastermix plate in as many columns as necessary. The protocol will automatically calculate when the second column should be acccessed for mastermix once the first column has run out of volume, then the third column, etc.",
+    "internal": "7fc7b1",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* Sample Prep\n\t* Cherrypicking\n\n",
+        "description": "With this protocol, your robot can perform a custom PCR preparation using a P20-multi pipette.\n\nThe .csv file should be formatted as shown in [this template](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/7fc7b1/7fc7b1_csv_template.csv), **including headers line**.\n\nAll available empty slots will be filled with tipracks, and the user will be prompted to refill the tipracks if all are emptied in the middle of the protocol.\n\nMastermix should be filled in the first columns of the mastermix plate in as many columns as necessary. The protocol will automatically calculate when the second column should be acccessed for mastermix once the first column has run out of volume, then the third column, etc.\n\n",
+        "internal": "7fc7b1\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "process": "1. Input your protocol parameters.\n2. Download your protocol.\n3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).\n4. Set up your deck according to the deck map.\n5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n6. Hit \"Run\".\n\n",
+        "robot": "* [OT-2](https://opentrons.com/ot-2)\n\n",
+        "title": "PCR Preparation Cherrypicking"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "process": "\nInput your protocol parameters.\nDownload your protocol.\nUpload your protocol into the OT App.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "robot": [
+        "OT-2"
+    ],
+    "title": "PCR Preparation Cherrypicking"
+}
