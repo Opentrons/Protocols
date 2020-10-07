@@ -16,6 +16,14 @@ All available empty slots will be filled with tipracks, and the user will be pro
 
 Mastermix should be filled in the first columns of the mastermix plate in as many columns as necessary. The protocol will automatically calculate when the second column should be acccessed for mastermix once the first column has run out of volume, then the third column, etc.
 
+---
+![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
+
+* [Greiner Bio-One 96-Well Plates 200µl #652290](https://shop.gbo.com/pt/brazil/products/bioscience/biologia-molecular/pcr-microplates/bs-96-well-polypropylene-microplates/652290.html)
+* [Sarstedt 384-Well Plates 40µl #72.1984.202](https://www.sarstedt.com/en/products/laboratory/pcr-molecular-biology/pcr-plates/product/72.1984.202/)
+* [Opentrons P20 GEN2 multi-channel electronic pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)
+* [Opentrons 20µl tipracks](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
+
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
 
