@@ -40,6 +40,8 @@ def run(ctx):
     # pipette
     p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,
                                 tip_racks=tiprack1000)
+    ctx.max_speeds['A'] = 200
+    ctx.max_speeds['Z'] = 200
 
     # determine starting tip
     tip_log_file_path = '/data/pooling/tip_track.json'
@@ -114,10 +116,12 @@ before resuming.')
         p1000.flow_rate.aspirate = asp_rate
         p1000.flow_rate.dispense = dispense_rate
         pick_up(p1000)
+        touch_tip(s, -10)
         p1000.aspirate(1000, s.top(-1*depth))
         p1000.dispense(500, icp.top(-2))
         p1000.dispense(500, lw.top(-2))
         p1000.aspirate(1000, s.top(-1*depth))
+        touch_tip(s, -10)
         p1000.dispense(500, ir.top(-2))
         p1000.drop_tip()
 
