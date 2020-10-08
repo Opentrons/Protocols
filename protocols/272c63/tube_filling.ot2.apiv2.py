@@ -1,5 +1,6 @@
 import os
 import json
+from opentrons.types import Point
 
 # metadata
 metadata = {
@@ -100,6 +101,11 @@ before resuming.')
         for col in rack.columns()
         for well in col[::-1]][:num_samples]
     ir_ordered = ir_rack.wells()[:num_samples]
+
+    def touch_tip(loc, v_offset):
+        [p1000.move_to(loc.top().move(
+            Point(x=side*loc._diameter/2, z=v_offset)))
+         for side in [-1, 1]]
 
     # transfers
     for asp_rate, dispense_rate, depth, s, icp, lw, ir in zip(
