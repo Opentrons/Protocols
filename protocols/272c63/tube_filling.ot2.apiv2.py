@@ -123,7 +123,7 @@ before resuming.')
         p1000.aspirate(1000, s.top(-1*depth))
         touch_tip(s, -10)
         p1000.dispense(500, ir.top(-2))
-        p1000.drop_tip()
+        p1000.drop_tip(home_after=False)
 
     if not ctx.is_simulating():
         with open(tip_log_file_path, 'w') as tip_file:
