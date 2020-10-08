@@ -2,11 +2,17 @@ from time import sleep
 
 metadata={"apiLevel": "2.3"}
 
+def get_values(s):
+    return 1
+
 def run(ctx):
-    #plate_count = get_values('plate_count')
+
+    plate_count = get_values('plate_count')
 
     plate = ctx.load_labware(
             'nest_96_wellplate_2ml_deep', '6')
+    plate2 = ctx.load_labware(
+            'nest_96_wellplate_2ml_deep', '9')
     # labware
     liquid_trash = ctx.load_labware(
             'nest_1_reservoir_195ml','8').wells()[0]
@@ -71,21 +77,34 @@ def run(ctx):
         [p300m.transfer(20, rnase_a, col) for col in plate.columns()]
         ctx.home()
     initial_lysis(plate)
+    if plate_count == 2:
+        initial_lysis(plate2)
     
     ###################
     ## Precipitation ##
     ###################
-    ctx.pause('Homogenize samples, then return plate tempdeck on robot')
+    if plate_count == 1:
+        ctx.pause('Homogenize samples, then return plate tempdeck on robot')
+    if plate_count == 2:
+        ctx.pause('Homogenize samples, then return 1st plate tempdeck on robot')
     #sleep(600)
     pick_up_plate()
     [p300m.transfer(130, precipitation_solution, col) for col in temp_plate.columns()]
     ctx.home()
+    if plate_count == 2:
+        ctx.pause('Swap 1st plate for 2nd plate tempdeck on robot')
+        pick_up_plate()
+        [p300m.transfer(130, precipitation_solution, col) for col in temp_plate.columns()]
+        ctx.home()
 
     ##################
     ## Initial wash ##
     ##################
-    ctx.pause('Incubate on ice for 5 minutes, then return plate to deck')
-    def initial_wash():
+    if plate_count == 1:
+        ctx.pause('Incubate on ice for 5 minutes, then return plate to deck')
+    if plate_count == 2:
+        ctx.pause('Incubate on ice for 5 minutes, then return 1st plate and 2nd plate to deck')
+    def initial_wash(plate):
         pick_up_plate()
         [p300m.transfer(400, plate.columns()[x], mag_plate.columns()[x]) for x in range(0,12)]
         pick_up_plate()
@@ -99,13 +118,20 @@ def run(ctx):
         pick_up_plate()
         magdeck.disengage()
         [p300m.transfer(400, lysis_buffer_a_wash_1, col) for col in mag_plate.columns()]
-    initial_wash()
+    initial_wash(plate)
+    
+    if plate_count == 2:
+        ctx.pause('Remove 1st plate from magdeck, replace with fresh deepwell')
+        initial_wash(plate2)
+
     
     ################
     ## Final wash ##
     ################
-    ctx.pause('Vortex plate for 1 minute at 750 RPM, then replace onto magdeck')
-    magdeck.engage()
+    if plate_count == 1:
+        ctx.pause('Vortex plate for 1 minute at 750 RPM, then replace onto magdeck')
+    if plate_count == 2:
+        ctx.pause('Vortex plate for 1 minute at 750 RPM, then replace 1st plate onto magdeck')
 
     def wash_2_function():
         magdeck.engage()
@@ -128,21 +154,43 @@ def run(ctx):
     wash_2_function()
     wash_2_function()
 
+    if plate_count == 2:
+        ctx.pause('Replace 1st plate with 2nd plate on magdeck')
+        wash_2_function()
+        wash_2_function()
+
 
     ################
     ## Heat plate ##
     ################
-    ctx.pause('Vortex plate, then return to tempdeck on robot')
     tempdeck.set_temperature(70)
+    if plate_count == 1:
+        ctx.pause('Vortex plate, then return to tempdeck on robot')
+        #sleep(300)
+    if plate_count == 2:
+        ctx.pause('Vortex plates, then return 1st plate to tempdeck on robot')
+        #sleep(300)
+        ctx.pause('Replace 1st plate with 2nd plate on tempdeck')
+        #sleep(300)
     #sleep(300)
 
     #############
     ## Elution ##
     #############
     # Not being able to overload current labware gets really annoying here...
-    ctx.pause('Return plate to magdeck. Replace original plate at position 6 with a new skirted plate')
-    magdeck.engage()
-    #sleep(300)
-    pick_up_plate()
-    [p300m.transfer(400, temp_plate.columns()[x], plate.columns()[x]) for x in range(0,12)]
-    ctx.home()
+    if plate_count == 1:
+        ctx.pause('Return plate to magdeck. Replace original plate at position 6 with a new skirted plate')
+    if plate_count == 2:
+        ctx.pause('Return 1st plate to magdeck. Replace original plates at position 6 and position 9 with new skirted plates')
+    def elute(plate):
+        magdeck.engage()
+        #sleep(300)
+        pick_up_plate()
+        [p300m.transfer(400, temp_plate.columns()[x], plate.columns()[x]) for x in range(0,12)]
+        ctx.home()
+    elute(plate)
+    if plate_count == 2:
+        ctx.pause('Replace 1st plate with 2nd plate on magdeck')
+        elute(plate2)
+
+
