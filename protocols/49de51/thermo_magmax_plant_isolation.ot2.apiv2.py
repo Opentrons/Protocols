@@ -87,7 +87,7 @@ def run(ctx):
         ctx.pause('Homogenize samples, then return plate tempdeck on robot')
     if plate_count == 2:
         ctx.pause('Homogenize samples, then return 1st plate tempdeck on robot')
-    #sleep(600)
+    sleep(600)
     pick_up_plate()
     [p300m.transfer(130, precipitation_solution, col) for col in temp_plate.columns()]
     ctx.home()
@@ -112,7 +112,7 @@ def run(ctx):
         pick_up_plate()
         [p300m.transfer(400, ethanol_wash_2, col, mix_after=(3,200)) for col in mag_plate.columns()]
         magdeck.engage()
-        #sleep(300)
+        sleep(300)
         pick_up_plate()
         [p300m.transfer(825, col, liquid_trash) for col in mag_plate.columns()]
         pick_up_plate()
@@ -135,7 +135,7 @@ def run(ctx):
 
     def wash_2_function():
         magdeck.engage()
-        #sleep(120)
+        sleep(120)
         pick_up_plate()
         [p300m.transfer(400, col, liquid_trash) for col in mag_plate.columns()]
         magdeck.disengage()
@@ -143,10 +143,10 @@ def run(ctx):
         [p300m.transfer(400, ethanol_wash_2, col) for col in mag_plate.columns()]
         # mix?
         magdeck.engage()
-        #sleep(120)
+        sleep(120)
         pick_up_plate()
         [p300m.transfer(400, col, liquid_trash) for col in mag_plate.columns()]
-        #sleep(300)
+        sleep(300)
         magdeck.disengage()
         pick_up_plate()
         [p300m.transfer(150, elution_buffer, col) for col in mag_plate.columns()]
@@ -166,13 +166,12 @@ def run(ctx):
     tempdeck.set_temperature(70)
     if plate_count == 1:
         ctx.pause('Vortex plate, then return to tempdeck on robot')
-        #sleep(300)
+        sleep(300)
     if plate_count == 2:
         ctx.pause('Vortex plates, then return 1st plate to tempdeck on robot')
-        #sleep(300)
+        sleep(300)
         ctx.pause('Replace 1st plate with 2nd plate on tempdeck')
-        #sleep(300)
-    #sleep(300)
+        sleep(300)
 
     #############
     ## Elution ##
@@ -184,7 +183,7 @@ def run(ctx):
         ctx.pause('Return 1st plate to magdeck. Replace original plates at position 6 and position 9 with new skirted plates')
     def elute(plate):
         magdeck.engage()
-        #sleep(300)
+        sleep(300)
         pick_up_plate()
         [p300m.transfer(400, temp_plate.columns()[x], plate.columns()[x]) for x in range(0,12)]
         ctx.home()
