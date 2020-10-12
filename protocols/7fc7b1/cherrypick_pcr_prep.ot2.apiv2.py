@@ -16,8 +16,8 @@ def run(ctx):
         'p20_mount')
 
     # load labware
-    mm = ctx.load_labware(mm_lw, mm_slot,
-        'mastermix container').rows()[0][mastermix_start_col-1:]
+    mm = ctx.load_labware(mm_lw, mm_slot, 'mastermix container').rows()[0][
+        mastermix_start_col-1:]
 
     transfer_info = [[val.strip().lower() for val in line.split(',')]
                      for line in transfer_csv.splitlines()
