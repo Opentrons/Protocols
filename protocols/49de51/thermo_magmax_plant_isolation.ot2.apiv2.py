@@ -1,7 +1,12 @@
 import math
 from opentrons.types import Point
 
-metadata = {"apiLevel": "2.3"}
+metadata = {
+        'apiLevel': '2.5',
+        'protocolName': 'ThermoFisher MagMAX Plant DNA Isolation',
+        'author': 'Chaz <chaz@opentrons.com>',
+        'source': 'Custom Protocol Request',
+        }
 
 
 def run(ctx):
