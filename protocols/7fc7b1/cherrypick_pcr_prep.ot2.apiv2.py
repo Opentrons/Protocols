@@ -2,18 +2,22 @@ metadata = {
     'protocolName': 'PCR Preparation Cherrypicking',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.3'
+    'apiLevel': '2.5'
 }
 
 
 def run(ctx):
 
-    [mm_lw, mm_slot, mm_vol, dna_vol, transfer_csv,
+    [mm_lw, mm_slot, mm_transfer_vol, mm_source_vol, mastermix_start_col,
+     dna_vol, transfer_scheme, transfer_csv,
      p20_mount] = get_values(  # noqa: F821
-        'mm_lw', 'mm_slot', 'mm_vol', 'dna_vol', 'transfer_csv', 'p20_mount')
+        'mm_lw', 'mm_slot', 'mm_transfer_vol', 'mm_source_vol',
+        'mastermix_start_col', 'dna_vol', 'transfer_scheme', 'transfer_csv',
+        'p20_mount')
 
     # load labware
-    mm = ctx.load_labware(mm_lw, mm_slot, 'mastermix container').rows()[0]
+    mm = ctx.load_labware(mm_lw, mm_slot, 'mastermix container').rows()[0][
+        mastermix_start_col-1:]
 
     transfer_info = [[val.strip().lower() for val in line.split(',')]
                      for line in transfer_csv.splitlines()
@@ -68,19 +72,22 @@ def run(ctx):
     # transfer mastermix
     all_dests = [d for dest_set in transfer_dict.values() for d in dest_set]
     pick_up()
-    dests_per_col = mm[0].max_volume//mm_vol
-    print(dests_per_col)
+    dests_per_col = mm_source_vol//mm_transfer_vol
     for i, d in enumerate(all_dests):
         m20.air_gap(2)
-        m20.aspirate(mm_vol, mm[i//dests_per_col])
-        m20.dispense(2+mm_vol, d)
+        m20.aspirate(mm_transfer_vol, mm[i//dests_per_col])
+        m20.dispense(2+mm_transfer_vol, d)
     m20.drop_tip()
 
     # transfer sample
     for source, dests in transfer_dict.items():
         pick_up()
-        for d in dests:
-            m20.air_gap(2)
-            m20.aspirate(dna_vol, source)
-            m20.dispense(2+dna_vol, dest.bottom(1))
+        if transfer_scheme == 'single':
+            for d in dests:
+                m20.air_gap(2)
+                m20.aspirate(dna_vol, source)
+                m20.dispense(2+dna_vol, d.bottom(1))
+        else:
+            m20.distribute(dna_vol, source, [d.bottom(1) for d in dests],
+                           air_gap=2, new_tip='never')
         m20.drop_tip()
