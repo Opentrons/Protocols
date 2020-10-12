@@ -1,21 +1,18 @@
-from time import sleep
+import math
+from opentrons.types import Point
 
 metadata={"apiLevel": "2.3"}
 
-def get_values(s):
-    return 1
-
 def run(ctx):
 
-    plate_count = get_values('plate_count')
-
+    num_samples = get_values('num_samples')
     plate = ctx.load_labware(
             'nest_96_wellplate_2ml_deep', '6')
-    plate2 = ctx.load_labware(
-            'nest_96_wellplate_2ml_deep', '9')
+    num_cols = math.ceil(num_samples/8)
+
     # labware
     liquid_trash = ctx.load_labware(
-            'nest_1_reservoir_195ml','8').wells()[0]
+            'nest_1_reservoir_195ml','9').wells()[0]
     reagents = ctx.load_labware(
             'nest_12_reservoir_15ml', '3')
 
@@ -41,7 +38,7 @@ def run(ctx):
     temp_plate = tempdeck.load_labware('nest_96_wellplate_2ml_deep')
 
     ## tipracks
-    tip_racks = [ctx.load_labware('opentrons_96_filtertiprack_200ul', x) for x in ['7','10','11']]
+    tip_racks = [ctx.load_labware('opentrons_96_filtertiprack_200ul', x) for x in ['7','8','10','11']]
 
     # pipette
     p300m = ctx.load_instrument(
@@ -59,8 +56,13 @@ def run(ctx):
             tip_count = 0
         tip_count += 8
     def pick_up_plate():
-        for _ in range(0,12):
+        for _ in range(num_cols):
             pick_up()
+
+    plate_cols = plate.rows()[0][:num_cols]
+    mag_plate_cols = mag_plate.rows()[0][:num_cols]
+    temp_plate_cols = temp_plate.rows()[0][:num_cols]
+
 
     ###################
     ## Initial Lysis ##
@@ -70,126 +72,94 @@ def run(ctx):
     
     def initial_lysis(plate):
         pick_up_plate()
-        [p300m.transfer(500, lysis_buffer_a_wash_1, col) for col in plate.columns()]
+        [p300m.transfer(500, lysis_buffer_a_wash_1, col) for col in plate_cols]
         pick_up_plate()
-        [p300m.transfer(70, lysis_buffer_b, col) for col in plate.columns()]
+        [p300m.transfer(70, lysis_buffer_b, col) for col in plate_cols]
         pick_up_plate()
-        [p300m.transfer(20, rnase_a, col) for col in plate.columns()]
+        [p300m.transfer(20, rnase_a, col) for col in plate_cols]
         ctx.home()
     initial_lysis(plate)
-    if plate_count == 2:
-        initial_lysis(plate2)
     
     ###################
     ## Precipitation ##
     ###################
-    if plate_count == 1:
-        ctx.pause('Homogenize samples, then return plate tempdeck on robot')
-    if plate_count == 2:
-        ctx.pause('Homogenize samples, then return 1st plate tempdeck on robot')
-    sleep(600)
+    ctx.pause('Homogenize samples, then return plate tempdeck on robot')
+    ctx.delay(600)
     pick_up_plate()
-    [p300m.transfer(130, precipitation_solution, col) for col in temp_plate.columns()]
+    [p300m.transfer(130, precipitation_solution, col) for col in temp_plate_cols]
     ctx.home()
-    if plate_count == 2:
-        ctx.pause('Swap 1st plate for 2nd plate tempdeck on robot')
-        pick_up_plate()
-        [p300m.transfer(130, precipitation_solution, col) for col in temp_plate.columns()]
-        ctx.home()
 
     ##################
     ## Initial wash ##
     ##################
-    if plate_count == 1:
-        ctx.pause('Incubate on ice for 5 minutes, then return plate to deck')
-    if plate_count == 2:
-        ctx.pause('Incubate on ice for 5 minutes, then return 1st plate and 2nd plate to deck')
+    def magdeck_remove_supernatant():
+        pick_up_plate()
+        for i,col in enumerate(mag_plate_cols):
+            side = -1 if i % 2 == 0 else 1
+            loc = col.bottom(0.5).move(Point(x=side*2))
+            p300m.pick_up_tip()
+            for _ in range(2):
+                p300m.move_to(col.center())
+                p300m.transfer(200, loc, liquid_trash, new_tip='never')
+                p300m.blow_out(liquid_trash)
+            p300m.drop_tip()
+
+    ctx.pause('Incubate on ice for 5 minutes, then return plate to deck')
     def initial_wash(plate):
         pick_up_plate()
-        [p300m.transfer(400, plate.columns()[x], mag_plate.columns()[x]) for x in range(0,12)]
+        [p300m.transfer(400, plate_cols[x], mag_plate_cols[x]) for x in range(0,12)]
         pick_up_plate()
-        [p300m.transfer(25, beads, col, mix_before=(3,100)) for col in mag_plate.columns()]
+        [p300m.transfer(25, beads, col, mix_before=(3,100)) for col in mag_plate_cols]
         pick_up_plate()
-        [p300m.transfer(400, ethanol_wash_2, col, mix_after=(3,200)) for col in mag_plate.columns()]
+        [p300m.transfer(400, ethanol_wash_2, col, mix_after=(3,200)) for col in mag_plate_cols]
         magdeck.engage()
-        sleep(300)
-        pick_up_plate()
-        [p300m.transfer(825, col, liquid_trash) for col in mag_plate.columns()]
-        pick_up_plate()
+        ctx.delay(300)
+        magdeck_remove_supernatant() 
         magdeck.disengage()
-        [p300m.transfer(400, lysis_buffer_a_wash_1, col) for col in mag_plate.columns()]
+        pick_up_plate()
+        [p300m.transfer(400, lysis_buffer_a_wash_1, col) for col in mag_plate_cols]
     initial_wash(plate)
-    
-    if plate_count == 2:
-        ctx.pause('Remove 1st plate from magdeck, replace with fresh deepwell')
-        initial_wash(plate2)
-
     
     ################
     ## Final wash ##
     ################
-    if plate_count == 1:
-        ctx.pause('Vortex plate for 1 minute at 750 RPM, then replace onto magdeck')
-    if plate_count == 2:
-        ctx.pause('Vortex plate for 1 minute at 750 RPM, then replace 1st plate onto magdeck')
-
+    ctx.pause('Vortex plate for 1 minute at 750 RPM, then replace onto magdeck')
+    magdeck.engage()
     def wash_2_function():
-        magdeck.engage()
-        sleep(120)
+        ctx.delay(120)
         pick_up_plate()
-        [p300m.transfer(400, col, liquid_trash) for col in mag_plate.columns()]
+        [p300m.transfer(400, col, liquid_trash) for col in mag_plate_cols]
         magdeck.disengage()
         pick_up_plate()
-        [p300m.transfer(400, ethanol_wash_2, col) for col in mag_plate.columns()]
+        [p300m.transfer(400, ethanol_wash_2, col) for col in mag_plate_cols]
         # mix?
         magdeck.engage()
-        sleep(120)
-        pick_up_plate()
-        [p300m.transfer(400, col, liquid_trash) for col in mag_plate.columns()]
-        sleep(300)
-        magdeck.disengage()
-        pick_up_plate()
-        [p300m.transfer(150, elution_buffer, col) for col in mag_plate.columns()]
-        ctx.home()
+        ctx.delay(120)
+        magdeck_remove_supernatant()
     wash_2_function()
     wash_2_function()
-
-    if plate_count == 2:
-        ctx.pause('Replace 1st plate with 2nd plate on magdeck')
-        wash_2_function()
-        wash_2_function()
-
+    ctx.delay(300)
+    magdeck.disengage()
+    pick_up_plate()
+    [p300m.transfer(150, elution_buffer, col) for col in mag_plate_cols]
+    ctx.home()
 
     ################
     ## Heat plate ##
     ################
     tempdeck.set_temperature(70)
-    if plate_count == 1:
-        ctx.pause('Vortex plate, then return to tempdeck on robot')
-        sleep(300)
-    if plate_count == 2:
-        ctx.pause('Vortex plates, then return 1st plate to tempdeck on robot')
-        sleep(300)
-        ctx.pause('Replace 1st plate with 2nd plate on tempdeck')
-        sleep(300)
+    ctx.pause('Vortex plate, then return to tempdeck on robot')
 
     #############
     ## Elution ##
     #############
     # Not being able to overload current labware gets really annoying here...
-    if plate_count == 1:
-        ctx.pause('Return plate to magdeck. Replace original plate at position 6 with a new skirted plate')
-    if plate_count == 2:
-        ctx.pause('Return 1st plate to magdeck. Replace original plates at position 6 and position 9 with new skirted plates')
+    ctx.pause('Return plate to magdeck. Replace original plate at position 6 with a new skirted plate')
     def elute(plate):
         magdeck.engage()
-        sleep(300)
+        ctx.delay(300)
         pick_up_plate()
-        [p300m.transfer(400, temp_plate.columns()[x], plate.columns()[x]) for x in range(0,12)]
+        [p300m.transfer(400, temp_plate_cols[x], plate_cols[x]) for x in range(0,12)]
         ctx.home()
     elute(plate)
-    if plate_count == 2:
-        ctx.pause('Replace 1st plate with 2nd plate on magdeck')
-        elute(plate2)
-
 
