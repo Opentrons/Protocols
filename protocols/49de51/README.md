@@ -3,7 +3,7 @@
 ### Author
 [Opentrons](https://opentrons.com/)
 
-## Categories:
+## Categories
 * Nucleic Acid Extraction & Purification
 	* Plant DNA
 
