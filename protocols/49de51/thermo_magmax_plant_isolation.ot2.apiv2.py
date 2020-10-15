@@ -11,13 +11,13 @@ metadata = {
 
 def run(ctx):
 
-    num_samples = get_values('num_samples')
+    num_samples = get_values('num_samples') # noqa: F821
     plate = ctx.load_labware(
         'nest_96_wellplate_2ml_deep', '6')
     num_cols = math.ceil(num_samples[0] / 8)
 
-    reagents = ctx.load_labware('nest_12_reservoir_15ml', '3')
-    # labware
+    reagents = ctx.load_labware(
+            'nest_12_reservoir_15ml', '3')
     liquid_trash = ctx.load_labware(
             'nest_1_reservoir_195ml', '9').wells()[0]
 
