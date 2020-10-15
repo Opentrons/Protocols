@@ -11,7 +11,8 @@ metadata = {
 
 def run(ctx):
 
-    num_samples = get_values('num_samples') # noqa: F821
+    num_samples = get_values(  # noqa: F821
+            'num_samples') 
     plate = ctx.load_labware(
         'nest_96_wellplate_2ml_deep', '6')
     num_cols = math.ceil(num_samples[0] / 8)
