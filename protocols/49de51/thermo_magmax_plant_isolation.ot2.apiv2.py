@@ -5,7 +5,7 @@ metadata = {
         'apiLevel': '2.5',
         'protocolName': 'ThermoFisher MagMAX Plant DNA Isolation',
         'author': 'Chaz <chaz@opentrons.com>',
-        'source': 'Custom Protocol Request',
+        'source': 'Custom Protocol Request'
         }
 
 
@@ -14,13 +14,12 @@ def run(ctx):
     num_samples = get_values('num_samples')
     plate = ctx.load_labware(
         'nest_96_wellplate_2ml_deep', '6')
-    num_cols = math.ceil(num_samples / 8)
+    num_cols = math.ceil(num_samples[0] / 8)
 
+    reagents = ctx.load_labware('nest_12_reservoir_15ml', '3')
     # labware
     liquid_trash = ctx.load_labware(
-        'nest_1_reservoir_195ml', '9').wells()[0]
-    reagents = ctx.load_labware(
-        'nest_12_reservoir_15ml', '3')
+            'nest_1_reservoir_195ml', '9').wells()[0]
 
     # Lysis
     lysis_buffer_b = reagents.columns()[0]
