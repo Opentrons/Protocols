@@ -1,11 +1,8 @@
 [
   {
-    "type": "dropDown",
-    "label": "number of plates",
-    "name": "plate_count",
-    "options": [
-      { "label": "1", "value": 1 },
-      { "label": "2", "value": 2 }
-    ]
+    "type": "int",
+    "label": "Number of Samples (1-96)",
+    "name": "num_samples",
+    "default": 96
   }
 ]
