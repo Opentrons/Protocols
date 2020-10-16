@@ -93,7 +93,7 @@ def run(ctx):
     initial_lysis(plate)
 
     # Precipitation
-    ctx.pause('Homogenize samples, then return plate tempdeck on robot')
+    ctx.pause('Homogenize samples, then return plate tempdeck on robot.')
     ctx.delay(600)
     pick_up_plate()
     [p300m.transfer(130, precipitation_solution, col)
@@ -113,7 +113,8 @@ def run(ctx):
                 p300m.blow_out(liquid_trash)
             p300m.drop_tip()
 
-    ctx.pause('Incubate on ice for 5 minutes, then return plate to deck')
+    ctx.pause("""Incubate on ice for 5 minutes, then return plate to deck.
+            Replace lysis buffer A with wash buffer 1.""")
 
     def initial_wash(plate):
         pick_up_plate()
@@ -136,7 +137,7 @@ def run(ctx):
 
     # Final wash
     ctx.pause("""Vortex plate for 1 minute at 750 RPM,
-         then replace onto magdeck""")
+         then replace onto magdeck. Replace ethanol with wash buffer 2.""")
     magdeck.engage()
 
     def wash_2_function():
@@ -161,7 +162,7 @@ def run(ctx):
     # Heat plate
     tempdeck.set_temperature(70)
     ctx.pause('Vortex plate, then return to tempdeck on robot')
-
+    ctx.delay(300)
     # Elution
     ctx.pause("""Return plate to magdeck. Replace original
              plate at position 6 with a new skirted plate""")
