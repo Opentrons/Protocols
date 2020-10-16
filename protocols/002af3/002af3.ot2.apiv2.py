@@ -1,13 +1,10 @@
 metadata = {"apiLevel": "2.3"}
 
 
-def get_values(s):
-    return 14
-
-
 def run(ctx):
 
-    column_count = get_values('column_count')
+    column_count = get_values(  # noqa: F821
+            'column_count')[0]
 
     # Change to HARD-SHELL BIO-RAD PCR 384 WELL PLATE 50 UL
     cfx_plate = ctx.load_labware('corning_384_wellplate_112ul_flat', '3')
@@ -40,14 +37,14 @@ def run(ctx):
 
     if column_count < 12:
         transfers_needed = list(
-            zip(sample_plate_1.rows()[0][:column_count - 1],
-                cols[:column_count - 1]))
+            zip(sample_plate_1.rows()[0][:column_count],
+                cols[:column_count]))
     if column_count > 12:
         transfers_needed = list(
-            zip(sample_plate_1.rows()[0][:column_count - 1],
-                cols[:column_count - 1])) + list(
-            zip(sample_plate_2.rows()[0][:column_count - 13],
-                cols[:column_count - 13]))
+            zip(sample_plate_1.rows()[0][:column_count],
+                cols[:column_count])) + list(
+            zip(sample_plate_2.rows()[0][:column_count - 12],
+                cols[12:(column_count - 12) + 12]))
 
     for from_well, to_wells in transfers_needed:
         for to_well in to_wells:
