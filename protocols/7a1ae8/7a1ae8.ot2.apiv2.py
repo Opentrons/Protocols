@@ -94,16 +94,16 @@ def run(protocol):
     r = 27.81/2
 
     # transfer mag binding buffer
-    m300.pick_up_tip()
+    p300.pick_up_tip()
     dh = 600/(math.pi*(r**2))*1.1  # adjust height from which to aspirate MBB
-    for m in mag_cols:
+    for m in mag_samples:
         if mbb_h - dh > 10:
             mbb_h -= dh
         else:
             mbb_h = 10
-        m300.transfer(600, mbb.bottom(mbb_h), m.top(), new_tip='never')
-        m300.blow_out()
-    m300.drop_tip()
+        p300.transfer(600, mbb.bottom(mbb_h), m.top(), new_tip='never')
+        p300.blow_out()
+    p300.drop_tip()
 
     # mix and transfer beads
     m300.pick_up_tip()
