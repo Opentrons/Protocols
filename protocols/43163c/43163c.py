@@ -89,4 +89,5 @@ def run(ctx):
 
         if step == 3:
             for col in final_plate_columns:
+                p300m.transfer(100, col, liquid_trash)
                 p300m.transfer(50, pbs, col)
