@@ -1,5 +1,6 @@
 import os
 import json
+from opentrons.types import Point
 
 # metadata
 metadata = {
@@ -39,6 +40,8 @@ def run(ctx):
     # pipette
     p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,
                                 tip_racks=tiprack1000)
+    ctx.max_speeds['A'] = 200
+    ctx.max_speeds['Z'] = 200
 
     # determine starting tip
     tip_log_file_path = '/data/pooling/tip_track.json'
@@ -101,6 +104,11 @@ before resuming.')
         for well in col[::-1]][:num_samples]
     ir_ordered = ir_rack.wells()[:num_samples]
 
+    def touch_tip(loc, v_offset):
+        [p1000.move_to(loc.top().move(
+            Point(x=side*loc._diameter/2, z=v_offset)))
+         for side in [-1, 1]]
+
     # transfers
     for asp_rate, dispense_rate, depth, s, icp, lw, ir in zip(
             asp_rates, dispense_rates, depths, samples_odered, icp_ordered,
@@ -108,12 +116,14 @@ before resuming.')
         p1000.flow_rate.aspirate = asp_rate
         p1000.flow_rate.dispense = dispense_rate
         pick_up(p1000)
+        touch_tip(s, -10)
         p1000.aspirate(1000, s.top(-1*depth))
         p1000.dispense(500, icp.top(-2))
         p1000.dispense(500, lw.top(-2))
         p1000.aspirate(1000, s.top(-1*depth))
+        touch_tip(s, -10)
         p1000.dispense(500, ir.top(-2))
-        p1000.drop_tip()
+        p1000.drop_tip(home_after=False)
 
     if not ctx.is_simulating():
         with open(tip_log_file_path, 'w') as tip_file:
