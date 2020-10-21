@@ -33,6 +33,7 @@ There are 3 steps to this protocol:
 * [OT-2](https://opentrons.com/ot-2)
 
 ## Process
+<<<<<<< HEAD:protocols/43163c/README.md
 1. (Step 1) Load all labware. On the 12 well reagent reservoir, load 1:10 GO on column 1, 1:100 GO on column 2, MoS2 on column 3, 1:10 MoS2 on column 4, MoSe2 on column 5, and 1:10 MoSe2 on column 6. After running, remove experimental 384 well plate and dry at 60c.
 2. (Step 2) Load all labware, including live bacteria. After PBS washes and adding of the bacteria, incubate at 37.5 for 5 hours.
 3. (Step 3) Load all labware. After PBS washes, plate is ready for imaging.

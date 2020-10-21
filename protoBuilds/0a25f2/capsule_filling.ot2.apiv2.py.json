@@ -3425,7 +3425,7 @@
     "fields": [
         {
             "default": 100,
-            "label": "number of samples (1-300)",
+            "label": "number of capsules to fill (1-300)",
             "name": "num_samples",
             "type": "int"
         },
