@@ -1,4 +1,9 @@
-metadata = {"apiLevel": "2.3"}
+metadata = {
+        'apiLevel': '2.5',
+        'protocolName': 'qPCR 96 well -> 384 well transfer',
+        'author': 'Chaz <chaz@opentrons.com>',
+        'source': 'Custom Protocol Request'
+        }
 
 
 def run(ctx):
