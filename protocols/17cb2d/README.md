@@ -17,7 +17,9 @@ This protocol has been updated to use the GEN2 Multi-Channel Pipettes - please u
 </br>
 **Update 09-21-20:** The protocol will now do a blow out in the well and aspirate 2µL of air at the top of the well after each dispense step to ensure all liquid has been expelled from pipette and minimize contamination risk due to droplet hang.</br>
 </br>
-**Update 09-25-20:** The protocol has been updated in two ways. First, the mastermix should be split between two wells (A1/A2 and A11/A12). Second, after aspirating the mastermix, the pipette will move to the sides of the well to remove liquid attached to the tips.
+**Update 09-25-20:** The protocol has been updated in two ways. First, the mastermix should be split between two wells (A1/A2 and A11/A12). Second, after aspirating the mastermix, the pipette will move to the sides of the well to remove liquid attached to the tips.</br>
+</br>
+**Updated 10-29-20:** The protocol will now transfer 10µL of mastermix.
 
 
 ---
