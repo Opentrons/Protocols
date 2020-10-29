@@ -4,8 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Nucleic Acid Extraction & Purification
-	* Plant DNA
+* PCR
+	* PCR Prep
 
 ## Description
 This protocol automates dilution of DNA in wells in a plate (Plate 1) with TE in a second plate (Plate2). The protocol does this using an input .csv file with 3 columns: plate1 (for the well location to transfer), DNA (for volume of DNA to transfer), and TE Buffer (for volume of TE to transfer). TE is loaded from a trough initially into Plate 2, and then the DNA is loaded into Plate 2 from Plate 1.
