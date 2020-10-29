@@ -1,7 +1,7 @@
 import math
 
 metadata = {
-    'protocolName': 'STANDARD MP 332 312 V8',
+    'protocolName': 'STANDARD MP 332 312 V3',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.0'
@@ -100,15 +100,15 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
         'DILUENT AND MOBILE PHASE')
 
     ws_1_4 = [
-        ctx.load_labware('opentrons_24_aluminumblock_nest_1.5ml_snapcap', slot,
+        ctx.load_labware('opentrons_24_tuberack_nest_1.5ml_snapcap', slot,
                          'WS ' + '1-4' + ' ' + let)
         for slot, let in zip(['7', '8'], 'AB')]
     ws_5_8 = [
-        ctx.load_labware('opentrons_24_aluminumblock_nest_1.5ml_snapcap',
+        ctx.load_labware('opentrons_24_tuberack_nest_1.5ml_snapcap',
                          slot, 'WS ' + '5-8' + ' ' + let)
         for slot, let in zip(['4', '5'], 'AB')]
     qc = [
-        ctx.load_labware('opentrons_24_aluminumblock_nest_1.5ml_snapcap',
+        ctx.load_labware('opentrons_24_tuberack_nest_1.5ml_snapcap',
                          slot, 'QC ' + let)
         for slot, let in zip(['9', '6'], 'AB')]
     tiprack300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '10')]
@@ -118,6 +118,8 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
                                tip_racks=tiprack300)
     p1000 = ctx.load_instrument('p1000_single_gen2', 'right',
                                 tip_racks=tiprack1000)
+    p300.flow_rate.blow_out = 300
+    p1000.flow_rate.blow_out = 1000
 
     # start reagent setup
     tubes_dict = {
@@ -133,6 +135,8 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
 
     def tip_condition(pip, vol):
         pip.pick_up_tip()
+        pip.flow_rate.aspirate = pip.max_volume/2
+        pip.flow_rate.dispense = pip.max_volume
         for i in range(2):
             mix_reps = 2 - i
             pip.transfer(vol, tubes_dict[diluent].height_dec(vol),
@@ -142,9 +146,6 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
             tubes_dict[dil_dest].height_inc(vol)
             pip.blow_out(dil_dest.bottom(104))
 
-    # first set of tip conditioning
-    tip_condition(p1000, 500)
-
     # create serial dilution from .csv file
     # data = [
     #     line.split(',')[9:17] for line in input_csv.splitlines()[14:28]
@@ -153,13 +154,26 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
         line.split(',')[:17] for line in input_csv.splitlines()[27:41]
         if line and line.split(',')[0]]
 
+    # first set of tip conditioning
+    tip_condition(p1000, 500)
+
     # pre-add diluent in reverse
     for line in data[::-1]:
         dest = ctx.loaded_labwares[int(line[12])].wells_by_name()[line[13]]
-        dil_vol = float(line[5])
-        p1000.transfer(dil_vol, tubes_dict[diluent].height_dec(dil_vol),
-                       tubes_dict[dest].height_inc(dil_vol), new_tip='never')
-        p1000.blow_out(dest.bottom(tubes_dict[dest].height))
+        dil_vol = float(line[14])
+        num_trans = math.ceil(dil_vol/p1000.max_volume)
+        vol_per_trans = dil_vol/num_trans
+        asp_rate = vol_per_trans if vol_per_trans < 150 else 150
+        disp_rate = 2*vol_per_trans if vol_per_trans > 37 else 150
+        p1000.flow_rate.aspirate = asp_rate
+        p1000.flow_rate.dispense = disp_rate
+        for n in range(num_trans):
+            p1000.transfer(vol_per_trans,
+                           tubes_dict[diluent].height_dec(vol_per_trans),
+                           tubes_dict[dest].height_inc(vol_per_trans),
+                           new_tip='never')
+            p1000.blow_out(dest.bottom(tubes_dict[dest].height))
+    p1000.drop_tip()
 
     # parse std sources
     std_dict = {}
@@ -178,6 +192,9 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
             if p1000.hw_pipette['has_tip']:
                 p1000.drop_tip()
             p1000.pick_up_tip()
+            p1000.flow_rate.aspirate = 500
+            p1000.flow_rate.dispense = 1000
+            p1000.flow_rate.blow_out = 1000
             p1000.mix(5, 1000, std.bottom(tubes_dict[std].height))
             p1000.blow_out(std.top(-2))
             p1000.drop_tip()
@@ -186,9 +203,13 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
         for val in vals:
             dest = val['dest']
             vol = val['vol']
-            num_trans = math.ceil(p300.max_volume/vol)
-            vol_per_trans = num_trans/vol
+            num_trans = math.ceil(vol/p300.max_volume)
+            vol_per_trans = vol/num_trans
             dest_loc = tubes_dict[dest].height_inc(vol)
+            asp_rate = vol_per_trans if vol_per_trans < 150 else 150
+            disp_rate = 2*vol_per_trans if vol_per_trans > 37 else 150
+            p300.flow_rate.aspirate = asp_rate
+            p300.flow_rate.dispense = disp_rate
             for n in range(num_trans):
                 dest_loc = dest.bottom(tubes_dict[dest].height)
                 p300.transfer(vol_per_trans, std.bottom(1),
@@ -235,9 +256,14 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
         if p1000.hw_pipette['has_tip']:
             p1000.drop_tip()
         p1000.pick_up_tip()
+        p1000.flow_rate.aspirate = 500
+        p1000.flow_rate.dispense = 1000
+        p1000.flow_rate.blow_out = 1000
         p1000.mix(5, 1000, std.bottom(tubes_dict[std].height))
         p1000.blow_out(std.top(-2))
         for a in aliquots:
+            p1000.flow_rate.aspirate = 150
+            p1000.flow_rate.dispense = 320
             p1000.transfer(160, tubes_dict[std].height_dec(160), a.bottom(0.5),
                            new_tip='never')
             p1000.blow_out(a.top(-2))
@@ -253,6 +279,8 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
     tubes_dict[diluent].height = 85
     mobile_phase_dests = plate.rows()[0][:8] + plate.rows()[2][:6]
     for i in range(len(mobile_phase_dests)//2):
+        p1000.flow_rate.aspirate = 150
+        p1000.flow_rate.dispense = 800
         p1000.distribute(
             400, tubes_dict[mobile_phase].height_dec(800),
             [well.bottom(10) for well in mobile_phase_dests[i*2:i*2+2]],
@@ -286,6 +314,8 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
         counter = qc_counter if 'QC' in std_name else ws_counter
 
         tip_condition(p300, 150)
+        p300.flow_rate.aspirate = 30
+        p300.flow_rate.dispense = 150
         p300.transfer(30, tubes_dict[std].height_dec(30),
                       dest_set[counter].bottom(14), new_tip='never')
         p300.blow_out(dest_set[counter].bottom(14))
