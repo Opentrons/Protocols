@@ -35,7 +35,7 @@ def run(ctx):
 
     data = [
         [val.strip().upper() for val in line.split(',')]
-        for line in csv_input.splitlines()
+        for line in csv_input
         if line and line.split(',')[0].strip()][1:]
 
     dna_transfer = []
