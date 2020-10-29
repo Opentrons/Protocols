@@ -2,7 +2,7 @@ import json
 import sys
 from pathlib import Path
 import opentrons
-from opentrons.protocol_api.execute import run_protocol
+from opentrons.protocols.execution.execute import run_protocol
 from opentrons.protocols.parse import parse as parse_protocol
 
 
