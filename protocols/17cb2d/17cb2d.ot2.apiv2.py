@@ -30,9 +30,9 @@ def run(protocol):
     pip.pick_up_tip()
     for plate, mm in zip(plates, mm1):
         wells = plate.rows()[0]
-        disp_vol = 9.5
+        disp_vol = 12
         for well in wells:
-            pip.aspirate(7.5, mm)
+            pip.aspirate(10, mm)
             protocol.max_speeds['X'] = 25
             pip.move_to(mm.top().move(types.Point(x=3.5, y=0, z=-4)))
             pip.move_to(mm.top().move(types.Point(x=-3.5, y=0, z=-2)))
@@ -47,9 +47,9 @@ def run(protocol):
     pip.pick_up_tip()
     for plate, mm in zip(plates, mm2):
         wells = plate.rows()[1]
-        disp_vol = 9.5
+        disp_vol = 12
         for well in wells:
-            pip.aspirate(7.5, mm)
+            pip.aspirate(10, mm)
             protocol.max_speeds['X'] = 25
             pip.move_to(mm.top().move(types.Point(x=3.5, y=0, z=-4)))
             pip.move_to(mm.top().move(types.Point(x=-3.5, y=0, z=-2)))
