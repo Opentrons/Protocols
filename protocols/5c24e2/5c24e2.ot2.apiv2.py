@@ -32,9 +32,9 @@ def run(protocol):
         dest2 = d_plate[1::2]
         for src, d1, d2 in zip(s_plate.rows()[0], dest1, dest2):
             pip.pick_up_tip()
-            pip.aspirate(5, src)
-            pip.dispense(2.5, d1)
-            pip.dispense(2.5, d2)
+            pip.aspirate(10, src)
+            pip.dispense(5, d1)
+            pip.dispense(5, d2)
             pip.drop_tip()
 
     if sec_plate == 'yes':
@@ -43,7 +43,7 @@ def run(protocol):
             dest2 = d_plate[1::2]
             for src, d1, d2 in zip(s_plate.rows()[0], dest1, dest2):
                 pip.pick_up_tip()
-                pip.aspirate(5, src)
-                pip.dispense(2.5, d1)
-                pip.dispense(2.5, d2)
+                pip.aspirate(10, src)
+                pip.dispense(5, d1)
+                pip.dispense(5, d2)
                 pip.drop_tip()
