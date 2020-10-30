@@ -281,11 +281,13 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
     for i in range(len(mobile_phase_dests)//2):
         p1000.flow_rate.aspirate = 150
         p1000.flow_rate.dispense = 800
-        p1000.distribute(
-            400, tubes_dict[mobile_phase].height_dec(800),
-            [well.bottom(10) for well in mobile_phase_dests[i*2:i*2+2]],
-            disposal_volume=100, new_tip='never')
-        p1000.blow_out(mobile_phase.top())
+        # custom distribution
+        p1000.aspirate(900, tubes_dict[mobile_phase].height_dec(900))
+        for well in mobile_phase_dests[i*2:i*2+2]]:
+            p1000.dispense(400, well.bottom(10))
+        disposal_volume=100, new_tip='never')
+        p1000.dispense(100, tubes_dict[mobile_phase].height_inc(100))
+        p1000.blow_out(mobile_phase.top(-2))
     p1000.drop_tip()
 
     # # transfer IS
