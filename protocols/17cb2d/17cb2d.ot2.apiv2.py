@@ -23,23 +23,28 @@ def run(protocol):
     plates = [
         protocol.load_labware(p384, s) for s in range(1, num_plates)]
 
-    # max_vol = 15 if pip_name == 'p20_multi_gen2' else 180
+    max_vol = 20 if pip_name == 'p20_multi_gen2' else 240
 
     # distribute mastermix 1
     protocol.comment('Distributing master mix 1...')
     pip.pick_up_tip()
     for plate, mm in zip(plates, mm1):
         wells = plate.rows()[0]
-        disp_vol = 12
+        # disp_vol = 12
+        vol_ctr = 0
         for well in wells:
-            pip.aspirate(10, mm)
-            protocol.max_speeds['X'] = 25
-            pip.move_to(mm.top().move(types.Point(x=3.5, y=0, z=-4)))
-            pip.move_to(mm.top().move(types.Point(x=-3.5, y=0, z=-2)))
-            protocol.max_speeds['X'] = None
-            pip.dispense(disp_vol, well)
-            pip.blow_out(well)
-            pip.aspirate(2, well.top())
+            if vol_ctr == 0:
+                pip.aspirate(max_vol, mm)
+                vol_ctr = max_vol
+                protocol.max_speeds['X'] = 25
+                pip.move_to(mm.top().move(types.Point(x=3.5, y=0, z=-4)))
+                pip.move_to(mm.top().move(types.Point(x=-3.5, y=0, z=-2)))
+                protocol.max_speeds['X'] = None
+            # pip.dispense(disp_vol, well)
+            pip.dispense(10, well)
+            vol_ctr -= 10
+            # pip.blow_out(well)
+            # pip.aspirate(2, well.top())
     pip.drop_tip()
 
     # distribute mastermix 2
@@ -47,14 +52,19 @@ def run(protocol):
     pip.pick_up_tip()
     for plate, mm in zip(plates, mm2):
         wells = plate.rows()[1]
-        disp_vol = 12
+        # disp_vol = 12
+        vol_ctr = 0
         for well in wells:
-            pip.aspirate(10, mm)
-            protocol.max_speeds['X'] = 25
-            pip.move_to(mm.top().move(types.Point(x=3.5, y=0, z=-4)))
-            pip.move_to(mm.top().move(types.Point(x=-3.5, y=0, z=-2)))
-            protocol.max_speeds['X'] = None
-            pip.dispense(disp_vol, well)
-            pip.blow_out(well)
-            pip.aspirate(2, well.top())
+            if vol_ctr == 0:
+                pip.aspirate(max_vol, mm)
+                vol_ctr = max_vol
+                protocol.max_speeds['X'] = 25
+                pip.move_to(mm.top().move(types.Point(x=3.5, y=0, z=-4)))
+                pip.move_to(mm.top().move(types.Point(x=-3.5, y=0, z=-2)))
+                protocol.max_speeds['X'] = None
+            # pip.dispense(disp_vol, well)
+            pip.dispense(10, well)
+            vol_ctr -= 10
+            # pip.blow_out(well)
+            # pip.aspirate(2, well.top())
     pip.drop_tip()
