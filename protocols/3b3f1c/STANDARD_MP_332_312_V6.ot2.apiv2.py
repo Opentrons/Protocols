@@ -129,7 +129,6 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
     }
     diluent = tuberack15_50.wells_by_name()['A3']
     tubes_dict[diluent].height = 90
-    tubes_dict[diluent].height = tubes_dict[diluent].height + 10
 
     # tip conditioning
     dil_dest = tuberack15_50.wells()[0]
@@ -207,13 +206,12 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
             vol = val['vol']
             num_trans = math.ceil(vol/p300.max_volume)
             vol_per_trans = vol/num_trans
-            dest_loc = tubes_dict[dest].height_inc(vol)
             asp_rate = vol_per_trans if vol_per_trans < 150 else 150
             disp_rate = 2*vol_per_trans if vol_per_trans > 37 else 150
             p300.flow_rate.aspirate = asp_rate
             p300.flow_rate.dispense = disp_rate
             for n in range(num_trans):
-                dest_loc = dest.bottom(tubes_dict[dest].height)
+                dest_loc = tubes_dict[dest].height_inc(vol_per_trans)
                 if std.parent.parent == '1':
                     p300.transfer(vol_per_trans, std.bottom(plate_height),
                                   dest_loc, new_tip='never')
@@ -235,7 +233,7 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
         well
         for set in [ws_5_8[0].rows()[i] + ws_5_8[1].rows()[i][:4]
                     for i in range(len(ws_5_8[0].rows()))]
-        for well in set]
+        for well in set
     ws_dests_all = ws_dests_1_4 + ws_dests_5_8
 
     qc_dests = [
@@ -283,7 +281,6 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
     # transfer mobile phase
     mobile_phase = tuberack15_50.wells_by_name()['B1']
     tubes_dict[mobile_phase].height = 85
-    tubes_dict[mobile_phase].height = tubes_dict[mobile_phase].height + 10
     tip_condition(p1000, 1000, mobile_phase)
     mobile_phase_dests = plate.rows()[0][:8] + plate.rows()[2][:6]
     for i in range(len(mobile_phase_dests)//2):
