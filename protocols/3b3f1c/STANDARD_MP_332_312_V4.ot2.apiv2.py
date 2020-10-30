@@ -133,13 +133,13 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
     # tip conditioning
     dil_dest = tuberack15_50.wells()[0]
 
-    def tip_condition(pip, vol):
+    def tip_condition(pip, vol, loc):
         pip.pick_up_tip()
         pip.flow_rate.aspirate = pip.max_volume/2
         pip.flow_rate.dispense = pip.max_volume
         for i in range(2):
             mix_reps = 2 - i
-            pip.transfer(vol, tubes_dict[diluent].height_dec(vol),
+            pip.transfer(vol, tubes_dict[loc].height_dec(vol),
                          dil_dest.bottom(104),
                          mix_before=(mix_reps, pip.max_volume*2/3),
                          new_tip='never')
@@ -155,7 +155,7 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
         if line and line.split(',')[0]]
 
     # first set of tip conditioning
-    tip_condition(p1000, 500)
+    tip_condition(p1000, 500, diluent)
 
     # pre-add diluent in reverse
     for line in data[::-1]:
@@ -199,7 +199,7 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
             p1000.blow_out(std.top(-2))
             p1000.drop_tip()
         # p300 tip condition
-        tip_condition(p300, 150)
+        tip_condition(p300, 150, diluent)
         for val in vals:
             dest = val['dest']
             vol = val['vol']
@@ -274,8 +274,8 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
             ws_counter += num_aliquots
 
     # transfer mobile phase
-    tip_condition(p1000, 1000)
     mobile_phase = tuberack15_50.wells_by_name()['B1']
+    tip_condition(p1000, 1000, mobile_phase)
     tubes_dict[mobile_phase].height = 85
     mobile_phase_dests = plate.rows()[0][:8] + plate.rows()[2][:6]
     for i in range(len(mobile_phase_dests)//2):
@@ -290,7 +290,7 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
 
     # # transfer IS
     is_ = plate.wells_by_name()['H1']
-    tip_condition(p300, 150)
+    tip_condition(p300, 150, diluent)
     for i, m in enumerate(mobile_phase_dests):
         if i < 5:
             h = 9
@@ -313,7 +313,7 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
         dest_set = qc_dests if 'QC' in std_name else ws_dests
         counter = qc_counter if 'QC' in std_name else ws_counter
 
-        tip_condition(p300, 150)
+        tip_condition(p300, 150, diluent)
         p300.flow_rate.aspirate = 30
         p300.flow_rate.dispense = 150
         p300.transfer(30, tubes_dict[std].height_dec(30),
