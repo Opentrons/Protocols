@@ -74,7 +74,7 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
             self.min_height = min_height
             self.comp_coeff = comp_coeff
 
-        def heightec(self, vol):
+        def height_dec(self, vol):
             dh = vol/(math.pi*(self.radius**2))
             if self.height - dh > self.min_height:
                 self.height = self.height - dh
@@ -140,7 +140,7 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
         pip.flow_rate.dispense = pip.max_volume
         for i in range(2):
             mix_reps = 2 - i
-            pip.transfer(vol, tubes_dict[loc].heightec(vol),
+            pip.transfer(vol, tubes_dict[loc].height_dec(vol),
                          dil_dest.bottom(104),
                          mix_before=(mix_reps, pip.max_volume*2/3),
                          new_tip='never')
@@ -170,7 +170,7 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
         p1000.flow_rate.dispense = disp_rate
         for n in range(num_trans):
             p1000.transfer(vol_per_trans,
-                           tubes_dict[diluent].heightec(vol_per_trans),
+                           tubes_dict[diluent].height_dec(vol_per_trans),
                            tubes_dict[dest].height_inc(vol_per_trans),
                            new_tip='never')
             p1000.blow_out(dest.bottom(tubes_dict[dest].height))
@@ -220,7 +220,7 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
                     plate_height -= 1
                 else:
                     p300.transfer(vol_per_trans,
-                                  tubes_dict[std].heightec(vol_per_trans),
+                                  tubes_dict[std].height_dec(vol_per_trans),
                                   dest_loc, new_tip='never')
                 p300.blow_out(dest_loc)
         p300.drop_tip()
@@ -271,7 +271,7 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
         for a in aliquots:
             p1000.flow_rate.aspirate = 150
             p1000.flow_rate.dispense = 320
-            p1000.transfer(160, tubes_dict[std].heightec(160), a.bottom(10),
+            p1000.transfer(160, tubes_dict[std].height_dec(160), a.bottom(10),
                            new_tip='never')
             p1000.blow_out(a.top(-6))
         p1000.drop_tip()
@@ -290,7 +290,7 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
         p1000.flow_rate.aspirate = 150
         p1000.flow_rate.dispense = 800
         # custom distribution
-        p1000.aspirate(900, tubes_dict[mobile_phase].heightec(900))
+        p1000.aspirate(900, tubes_dict[mobile_phase].height_dec(900))
         for well in mobile_phase_dests[i*2:i*2+2]:
             p1000.dispense(400, well.bottom(10))
         p1000.dispense(100, tubes_dict[mobile_phase].height_inc(100))
@@ -326,7 +326,7 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
         p300.flow_rate.dispense = 150
         # tip_condition(p300, 150, diluent)
         p300.pick_up_tip()
-        p300.transfer(30, tubes_dict[std].heightec(30),
+        p300.transfer(30, tubes_dict[std].height_dec(30),
                       dest_set[counter].bottom(14), mix_before=(2, 200),
                       new_tip='never')
         p300.blow_out(dest_set[counter].bottom(14))
