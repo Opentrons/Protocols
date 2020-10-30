@@ -237,7 +237,6 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
                     for i in range(len(ws_5_8[0].rows()))]
         for well in set]
     ws_dests_all = ws_dests_1_4 + ws_dests_5_8
-    # for line in data[:-1]:
 
     qc_dests = [
         well
