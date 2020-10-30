@@ -1,7 +1,7 @@
 import math
 
 metadata = {
-    'protocolName': 'STANDARD MP 332 312 V4',
+    'protocolName': 'STANDARD MP 332 312 V5',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.0'
@@ -67,7 +67,7 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
 
     class tube():
 
-        def __init__(self, tube, height=0, min_height=5, comp_coeff=1.1):
+        def __init__(self, tube, height=0, min_height=5, comp_coeff=1.15):
             self.tube = tube
             self.height = height
             self.radius = tube._diameter/2
@@ -124,7 +124,7 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
     # start reagent setup
     tubes_dict = {
         well: tube(well)
-        for rack in [tuberack15_50, tuberack15, ]
+        for rack in [tuberack15_50, tuberack15]
         for well in rack.wells()
     }
     diluent = tuberack15_50.wells_by_name()['A3']
@@ -200,6 +200,7 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
             p1000.drop_tip()
         # p300 tip condition
         tip_condition(p300, 150, diluent)
+        plate_height = 16
         for val in vals:
             dest = val['dest']
             vol = val['vol']
@@ -212,8 +213,15 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
             p300.flow_rate.dispense = disp_rate
             for n in range(num_trans):
                 dest_loc = dest.bottom(tubes_dict[dest].height)
-                p300.transfer(vol_per_trans, std.bottom(1),
-                              dest_loc, new_tip='never')
+                if std.parent.parent == '1':
+                    p300.transfer(vol_per_trans, std.bottom(plate_height),
+                                  dest_loc, new_tip='never')
+                    plate_height -= 1
+                    print(std, plate_height)
+                else:
+                    p300.transfer(vol_per_trans,
+                                  tubes_dict[std].height_dec(vol_per_trans),
+                                  dest_loc, new_tip='never')
                 p300.blow_out(dest_loc)
         p300.drop_tip()
 
