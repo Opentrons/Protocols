@@ -1,7 +1,7 @@
 import math
 
 metadata = {
-    'protocolName': 'STANDARD MP 332 312 V3',
+    'protocolName': 'STANDARD MP 332 312 V4',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.0'
@@ -67,12 +67,12 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
 
     class tube():
 
-        def __init__(self, tube, height=0, min_height=1, comp_coeff=1.1):
+        def __init__(self, tube, height=0, min_height=5, comp_coeff=1.1):
             self.tube = tube
             self.height = height
             self.radius = tube._diameter/2
-            self.min_height = 5
-            self.comp_coeff = 1.1
+            self.min_height = min_height
+            self.comp_coeff = comp_coeff
 
         def height_dec(self, vol):
             dh = vol/(math.pi*(self.radius**2))
