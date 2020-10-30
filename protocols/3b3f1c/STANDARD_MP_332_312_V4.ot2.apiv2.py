@@ -293,11 +293,11 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
     tip_condition(p300, 150)
     for i, m in enumerate(mobile_phase_dests):
         if i < 5:
-            h = 11
-        elif i >= 5 and i < 8:
             h = 9
+        elif i >= 5 and i < 8:
+            h = 7
         else:
-            h = 3
+            h = 2
         p300.transfer(30, is_.bottom(h), m.bottom(14), new_tip='never')
         p300.blow_out(m.bottom(14))
     p300.drop_tip()
