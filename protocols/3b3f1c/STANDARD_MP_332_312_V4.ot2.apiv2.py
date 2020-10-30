@@ -283,9 +283,8 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
         p1000.flow_rate.dispense = 800
         # custom distribution
         p1000.aspirate(900, tubes_dict[mobile_phase].height_dec(900))
-        for well in mobile_phase_dests[i*2:i*2+2]]:
+        for well in mobile_phase_dests[i*2:i*2+2]:
             p1000.dispense(400, well.bottom(10))
-        disposal_volume=100, new_tip='never')
         p1000.dispense(100, tubes_dict[mobile_phase].height_inc(100))
         p1000.blow_out(mobile_phase.top(-2))
     p1000.drop_tip()
@@ -315,11 +314,13 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
         dest_set = qc_dests if 'QC' in std_name else ws_dests
         counter = qc_counter if 'QC' in std_name else ws_counter
 
-        tip_condition(p300, 150, diluent)
         p300.flow_rate.aspirate = 30
         p300.flow_rate.dispense = 150
+        # tip_condition(p300, 150, diluent)
+        p300.pick_up_tip()
         p300.transfer(30, tubes_dict[std].height_dec(30),
-                      dest_set[counter].bottom(14), new_tip='never')
+                      dest_set[counter].bottom(14), mix_before=(2, 200),
+                      new_tip='never')
         p300.blow_out(dest_set[counter].bottom(14))
         p300.drop_tip()
 
