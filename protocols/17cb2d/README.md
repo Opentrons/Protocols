@@ -19,7 +19,9 @@ This protocol has been updated to use the GEN2 Multi-Channel Pipettes - please u
 </br>
 **Update 09-25-20:** The protocol has been updated in two ways. First, the mastermix should be split between two wells (A1/A2 and A11/A12). Second, after aspirating the mastermix, the pipette will move to the sides of the well to remove liquid attached to the tips.</br>
 </br>
-**Updated 10-29-20:** The protocol will now transfer 10µL of mastermix.
+**Update 10-29-20:** The protocol will now transfer 10µL of mastermix.</br>
+</br>
+**Update 10-30-20:** The protocol will now multi-dispense mastermix instead of 1-to-1 transfer. 
 
 
 ---
