@@ -282,14 +282,15 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
 
     # transfer mobile phase
     mobile_phase = tuberack15_50.wells_by_name()['B1']
-    tip_condition(p1000, 1000, mobile_phase)
     tubes_dict[mobile_phase].height = 85
+    tip_condition(p1000, 1000, mobile_phase)
     mobile_phase_dests = plate.rows()[0][:8] + plate.rows()[2][:6]
     for i in range(len(mobile_phase_dests)//2):
         p1000.flow_rate.aspirate = 150
         p1000.flow_rate.dispense = 800
         # custom distribution
         p1000.aspirate(900, tubes_dict[mobile_phase].height_dec(900))
+        print(tubes_dict[mobile_phase].height)
         for well in mobile_phase_dests[i*2:i*2+2]:
             p1000.dispense(400, well.bottom(10))
         p1000.dispense(100, tubes_dict[mobile_phase].height_inc(100))
