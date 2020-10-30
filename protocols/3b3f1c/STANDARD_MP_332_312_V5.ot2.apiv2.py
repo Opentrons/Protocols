@@ -217,7 +217,6 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
                     p300.transfer(vol_per_trans, std.bottom(plate_height),
                                   dest_loc, new_tip='never')
                     plate_height -= 1
-                    print(std, plate_height)
                 else:
                     p300.transfer(vol_per_trans,
                                   tubes_dict[std].height_dec(vol_per_trans),
