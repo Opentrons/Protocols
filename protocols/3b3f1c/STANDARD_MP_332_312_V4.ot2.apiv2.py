@@ -264,7 +264,7 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
         for a in aliquots:
             p1000.flow_rate.aspirate = 150
             p1000.flow_rate.dispense = 320
-            p1000.transfer(160, tubes_dict[std].height_dec(160), a.bottom(0.5),
+            p1000.transfer(160, tubes_dict[std].height_dec(160), a.bottom(10),
                            new_tip='never')
             p1000.blow_out(a.top(-6))
         p1000.drop_tip()
