@@ -7,14 +7,14 @@ metadata = {
 
 
 def run(protocol):
-    [p20mnt, sec_plate, p384] = get_values(  # noqa: F821
-    'p20mnt', 'sec_plate', 'p384')
+    [pip_type, pipmnt, sec_plate, p384] = get_values(  # noqa: F821
+    'pip_type', 'pipmnt', 'sec_plate', 'p384')
 
     # load labware and pipettes
     tips = [
         protocol.load_labware(
-            'opentrons_96_tiprack_20ul', s) for s in range(1, 11, 3)]
-    pip = protocol.load_instrument('p20_multi_gen2', p20mnt, tip_racks=tips)
+            pip_type.split()[1], s) for s in range(1, 11, 3)]
+    pip = protocol.load_instrument(pip_type.split()[0], pipmnt, tip_racks=tips)
     dnaPlates = [
         protocol.load_labware(
             'nest_96_wellplate_100ul_pcr_full_skirt',
@@ -32,9 +32,9 @@ def run(protocol):
         dest2 = d_plate[1::2]
         for src, d1, d2 in zip(s_plate.rows()[0], dest1, dest2):
             pip.pick_up_tip()
-            pip.aspirate(10, src)
-            pip.dispense(5, d1)
-            pip.dispense(5, d2)
+            pip.aspirate(20, src)
+            pip.dispense(10, d1)
+            pip.dispense(10, d2)
             pip.drop_tip()
 
     if sec_plate == 'yes':
@@ -43,7 +43,7 @@ def run(protocol):
             dest2 = d_plate[1::2]
             for src, d1, d2 in zip(s_plate.rows()[0], dest1, dest2):
                 pip.pick_up_tip()
-                pip.aspirate(10, src)
-                pip.dispense(5, d1)
-                pip.dispense(5, d2)
+                pip.aspirate(20, src)
+                pip.dispense(10, d1)
+                pip.dispense(10, d2)
                 pip.drop_tip()
