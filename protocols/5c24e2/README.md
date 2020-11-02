@@ -13,7 +13,9 @@ This protocol transfers sample from [NEST 96-Well Plates](https://shop.opentrons
 </br>
 The protocol can fill one or two, 384-well plates. The [P20 Single-Channel Pipette](https://shop.opentrons.com/collections/ot-2-pipettes) will aspirate 5µL from each well of the [NEST 96-Well Plates](https://shop.opentrons.com/collections/verified-labware/products/nest-0-1-ml-96-well-pcr-plate-full-skirt) and dispense 2.5µL into two wells of the (A1 --> A1/B1; B1 --> C1/D1; etc.)</br>
 </br>
-**Update (10/22/20)**: The protocol will now aspirate 10µL and dispense 5µL into two wells.
+**Update (10/22/20):** The protocol will now aspirate 10µL and dispense 5µL into two wells.</br>
+</br>
+**Update (11/2/20):** The protocol will now aspirate 20µL and dispense 10µL into two wells. Additionally, the option to use the p300-multi pipette has been added.
 
 
 ---

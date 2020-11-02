@@ -1,8 +1,17 @@
 [
   {
     "type": "dropDown",
-    "label": "P20 Mount",
-    "name": "p20mnt",
+    "label": "Pipette Type",
+    "name": "pip_type",
+    "options": [
+      {"label": "P20-Multi", "value": "p20_multi_gen2 opentrons_96_tiprack_20ul"},
+      {"label": "P300-Multi (GEN2)", "value": "p300_multi_gen2 opentrons_96_tiprack_300ul"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Pipette Mount",
+    "name": "pipmnt",
     "options": [
       {"label": "Right", "value": "right"},
       {"label": "Left", "value": "left"}
