@@ -1,7 +1,7 @@
 import math
 
 metadata = {
-    'protocolName': 'STANDARD MP 332 312 V6',
+    'protocolName': 'STANDARD MP 332 312 V7',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.0'
@@ -67,7 +67,7 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
 
     class tube():
 
-        def __init__(self, tube, height=0, min_height=5, comp_coeff=1.15):
+        def __init__(self, tube, height=0, min_height=5, comp_coeff=1.2):
             self.tube = tube
             self.radius = tube._diameter/2
             self.height = height
@@ -88,7 +88,7 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
                 self.height = self.height + dh
             else:
                 self.height = self.tube._depth
-            return(self.tube.bottom(self.height + 10))
+            return(self.tube.bottom(self.height + 20))
 
     # load labware
     plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '1',
@@ -200,7 +200,7 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
             p1000.drop_tip()
         # p300 tip condition
         tip_condition(p300, 150, diluent)
-        plate_height = 16
+        plate_height = 14
         for val in vals:
             dest = val['dest']
             vol = val['vol']
@@ -280,7 +280,7 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
 
     # transfer mobile phase
     mobile_phase = tuberack15_50.wells_by_name()['B1']
-    tubes_dict[mobile_phase].height = 85
+    tubes_dict[mobile_phase].height = 90
     tip_condition(p1000, 1000, mobile_phase)
     mobile_phase_dests = plate.rows()[0][:8] + plate.rows()[2][:6]
     for i in range(len(mobile_phase_dests)//2):
