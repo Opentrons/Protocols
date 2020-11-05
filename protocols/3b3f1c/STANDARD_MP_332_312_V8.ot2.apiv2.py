@@ -1,7 +1,7 @@
 import math
 
 metadata = {
-    'protocolName': 'STANDARD MP 332 312 V7',
+    'protocolName': 'STANDARD MP 332 312 V8',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.0'
@@ -172,7 +172,7 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
                            tubes_dict[diluent].height_dec(vol_per_trans),
                            tubes_dict[dest].height_inc(vol_per_trans),
                            new_tip='never')
-            p1000.blow_out(dest.bottom(tubes_dict[dest].height))
+            p1000.blow_out(dest.bottom(tubes_dict[dest].height + 20))
     p1000.drop_tip()
 
     # parse std sources
