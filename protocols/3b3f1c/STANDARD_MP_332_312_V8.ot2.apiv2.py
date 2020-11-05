@@ -67,7 +67,7 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
 
     class tube():
 
-        def __init__(self, tube, height=0, min_height=5, comp_coeff=1.2):
+        def __init__(self, tube, height=0, min_height=5, comp_coeff=1.15):
             self.tube = tube
             self.radius = tube._diameter/2
             self.height = height
@@ -128,6 +128,7 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
         for well in rack.wells()
     }
     diluent = tuberack15_50.wells_by_name()['A3']
+    tubes_dict[diluent].comp_coeff = 1.2
     tubes_dict[diluent].height = 90
 
     # tip conditioning
