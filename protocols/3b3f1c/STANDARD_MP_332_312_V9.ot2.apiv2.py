@@ -201,7 +201,10 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
             p1000.drop_tip()
         # p300 tip condition
         tip_condition(p300, 150, diluent)
-        plate_height = 14
+        if std.display_name.split()[0] == 'H11':
+            plate_height = 12
+        elif std.display_name.split()[0] == 'H12':
+            plate_height = 7
         for val in vals:
             dest = val['dest']
             vol = val['vol']
