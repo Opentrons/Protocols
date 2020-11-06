@@ -75,7 +75,7 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
             self.comp_coeff = comp_coeff
 
         def height_dec(self, vol):
-            dh = vol/(math.pi*(self.radius**2))*self.comp_coeff
+            dh = (vol/(math.pi*(self.radius**2)))*self.comp_coeff
             if self.height - dh > self.min_height:
                 self.height = self.height - dh
             else:
@@ -83,7 +83,7 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
             return(self.tube.bottom(self.height))
 
         def height_inc(self, vol):
-            dh = vol/(math.pi*(self.radius**2))*self.comp_coeff
+            dh = (vol/(math.pi*(self.radius**2)))*self.comp_coeff
             if self.height + dh < self.tube._depth:
                 self.height = self.height + dh
             else:
