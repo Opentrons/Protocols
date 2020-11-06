@@ -1,7 +1,7 @@
 import math
 
 metadata = {
-    'protocolName': 'STANDARD MP 332 312 V8',
+    'protocolName': 'STANDARD MP 332 312 V9',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.0'
@@ -128,7 +128,7 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
         for well in rack.wells()
     }
     diluent = tuberack15_50.wells_by_name()['A3']
-    tubes_dict[diluent].comp_coeff = 1.2
+    tubes_dict[diluent].comp_coeff = 1.23
     tubes_dict[diluent].height = 90
 
     # tip conditioning
