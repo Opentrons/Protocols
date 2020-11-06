@@ -1,7 +1,7 @@
 import math
 
 metadata = {
-    'protocolName': 'STANDARD MP 332 312 V9',
+    'protocolName': 'STANDARD MP 332 312 V10',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.0'
@@ -75,7 +75,7 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
             self.comp_coeff = comp_coeff
 
         def height_dec(self, vol):
-            dh = vol/(math.pi*(self.radius**2))
+            dh = vol/(math.pi*(self.radius**2))*self.comp_coeff
             if self.height - dh > self.min_height:
                 self.height = self.height - dh
             else:
@@ -83,7 +83,7 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
             return(self.tube.bottom(self.height))
 
         def height_inc(self, vol):
-            dh = vol/(math.pi*(self.radius**2))
+            dh = vol/(math.pi*(self.radius**2))*self.comp_coeff
             if self.height + dh < self.tube._depth:
                 self.height = self.height + dh
             else:
@@ -128,7 +128,7 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
         for well in rack.wells()
     }
     diluent = tuberack15_50.wells_by_name()['A3']
-    tubes_dict[diluent].comp_coeff = 1.23
+    tubes_dict[diluent].comp_coeff = 1.2
     tubes_dict[diluent].height = 90
 
     # tip conditioning
@@ -202,7 +202,7 @@ LLOQC,2,C5,1,20,3,600,100,2900,98.5,2,B3,2,C5,2872,2,C5,,
         # p300 tip condition
         tip_condition(p300, 150, diluent)
         if std.display_name.split()[0] == 'H11':
-            plate_height = 12
+            plate_height = 10
         elif std.display_name.split()[0] == 'H12':
             plate_height = 7
         for val in vals:
