@@ -18,5 +18,12 @@ def run(ctx):
 
     for i, sample_plate in enumerate(sample_plates):
         for well_num, well in enumerate(sample_plate.wells()[:count-(i*24)]):
+            try:
+                p300s.pick_up_tip()
+            except ctx.labware.OutOfTipsError:
+                ctx.pause("Replace the tips")
+                p300s.reset_tipracks()
+                p300s.pick_up_tip()
             p300s.transfer(volume, well, target_plates[i].wells()[well_num],
-                           blow_out=True, new_tip='always')
+                           blow_out=True, new_tip='never')
+            p300s.drop_tip()
