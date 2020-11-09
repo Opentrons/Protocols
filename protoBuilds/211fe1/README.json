@@ -5,7 +5,7 @@
             "Mass Spec"
         ]
     },
-    "description": "This protocol performs mass spec sample prep on up to 96 samples using an Opentrons thermocycler for incubation steps. Samples should be specified as comma-separated values on the first line of a .csv file, as in the following example:\nA1,B1,C1,D1,E1,G1,B2\nThe samples are filled according to the order of the .csv, and invalid wells are ignored (valid wells must be A1-H12)\n\n\n\nNEST 96-well PCR plate 100\u00b5L #402501 mounted in Opentrons Thermocycler\nNEST 1.5ml snapcap microcentrifuge tubes (or equivalent) mounted in Opentrons 4-in-1 tuberack with 4x6 insert\nOpentrons P20 GEN2 electronic pipette\nOpentrons 10/20ul tiprack\n\n\n\nOpentrons 4-in-1 tuberack with 4x6 1.5ml tube insert\n* tube A1: enzyme\n* tube B1: reagent 1\n* tube C1: reagent 2",
+    "description": "This protocol performs mass spec sample prep on up to 96 samples using an Opentrons thermocycler for incubation steps. Samples should be specified as comma-separated values on the first line of a .csv file, as in the following example:\nA1,B1,C1,D1,E1,G1,B2\nThe samples are filled according to the order of the .csv, and invalid wells are ignored (valid wells must be A1-H12)\n\n\n\nNEST 96-well PCR plate 100\u00b5L #402501 mounted in Opentrons Thermocycler\nNEST 1.5ml snapcap microcentrifuge tubes (or equivalent) mounted in Opentrons 4-in-1 tuberack with 4x6 insert\nOpentrons P20 GEN2 electronic pipette\nOpentrons 10/20ul tiprack\n\n\n\nOpentrons 4-in-1 tuberack with 4x6 1.5ml tube insert\n tube A1: enzyme\n tube B1: reagent 1\n* tube C1: reagent 2",
     "internal": "211fe1",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
