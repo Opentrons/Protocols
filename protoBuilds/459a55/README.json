@@ -5,7 +5,7 @@
             "Mass Spec"
         ]
     },
-    "description": "This protocol performs a custom mass spec sample prep for up to 20 samples.\n\n\n\nOpentrons temperature module with NEST 96-well PCR plate 100\u00b5l full skirt\n4x6 aluminum block for NEST 1.5ml snapcap tubes\nOpentrons 20\u00b5l tiprack\nOpentrons 300\u00b5l tiprack\nOpentrons P20 and P300 GEN2 single-channel electronic pipette\n\n\n\n4x6 aluminum block for NEST 1.5ml snapcap tubes (slot 2)\n tube D1: denaturing solution\n tube D2: DTT\n* all other tubes: samples that will be transferred to their corresponding locations in sample plate",
+    "description": "This protocol performs a custom mass spec sample prep for up to 20 samples.\n\n\n\nOpentrons temperature module with NEST 96-well PCR plate 100\u00b5l full skirt\n4x6 aluminum block for NEST 1.5ml snapcap tubes\nOpentrons 20\u00b5l tiprack\nOpentrons 300\u00b5l tiprack\nOpentrons P20 and P300 GEN2 single-channel electronic pipette\n\n\n\n4x6 aluminum block for NEST 1.5ml snapcap tubes (slot 2)\n* tube D1: denaturing solution\n* tube D2: DTT\n* all other tubes: samples that will be transferred to their corresponding locations in sample plate",
     "internal": "459a55",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
