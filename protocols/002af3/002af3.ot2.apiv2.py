@@ -8,13 +8,13 @@ metadata = {
 
 def run(ctx):
 
-    column_count = get_values(  # noqa: F821
-            'column_count')[0]
+    column_count, cfxp, ctrlp = get_values(  # noqa: F821
+            'column_count', 'cfx_plate', 'control_plate')
 
     # Change to HARD-SHELL BIO-RAD PCR 384 WELL PLATE 50 UL
-    cfx_plate = ctx.load_labware('corning_384_wellplate_112ul_flat', '3')
+    cfx_plate = ctx.load_labware(cfxp, '3')
     # THERMO FISHER SCIENTIFIC ELUTION TUBES 96 WELL PLATE 650 UL
-    control_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '2')
+    control_plate = ctx.load_labware(ctrlp, '2')
 
     tip_racks = [
         ctx.load_labware(
