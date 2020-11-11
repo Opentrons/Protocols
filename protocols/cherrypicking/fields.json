@@ -1,68 +1,40 @@
 [
   {
     "type": "textFile",
-    "label": "Volumes CSV",
-    "name": "volumes_csv",
-    "default": "well,vol,plate\nA3,40,1"
+    "label": "Transfer .csv File",
+    "name": "transfer_csv",
+    "default": "Source Labware,Source Slot,Source Well,Source Aspiration Height Above Bottom (in mm),Dest Labware,Dest Slot,Dest Well,Volume (in ul)\nagilent_1_reservoir_290ml,1,A1,1,nest_96_wellplate_100ul_pcr_full_skirt,4,A11,1\nnest_12_reservoir_15ml,2,A1,1,nest_96_wellplate_2ml_deep,5,A5,3\nnest_1_reservoir_195ml,3,A1,1,nest_96_wellplate_2ml_deep,5,H12,7"
   },
   {
     "type": "dropDown",
     "label": "Pipette Model",
-    "name": "pip_model",
+    "name": "pipette_type",
     "options": [
-      {"label": "P300 Single GEN2", "value": "p300_single_gen2"},
-      {"label": "P300 Single GEN1", "value": "p300_single"},
-      {"label": "P20 Single GEN2", "value": "p20_single_gen2"},
-      {"label": "P50 Single GEN1", "value": "p50_single"},
-      {"label": "P10 Single GEN1", "value": "p10_single"},
-      {"label": "P1000 Single GEN2", "value": "p1000_single_gen2"},
-      {"label": "P1000 Single GEN1", "value": "p1000_single"}
+      {"label": "P10 Single (GEN 1)", "value": "p10_single"},
+      {"label": "P50 Single (GEN 1)", "value": "p50_single"},
+      {"label": "P300 Single (GEN 1)", "value": "p300_single_gen1"},
+      {"label": "P1000 Single (GEN 1)", "value": "p1000_single_gen1"},
+      {"label": "P20 Single (GEN 2)", "value": "p20_single_gen2"},
+      {"label": "P300 Single (GEN 2)", "value": "p300_single_gen2"},
+      {"label": "P1000 Single (GEN 2)", "value": "p1000_single_gen2"}
     ]
   },
   {
     "type": "dropDown",
     "label": "Pipette Mount",
-    "name": "pip_mount",
+    "name": "pipette_mount",
     "options": [
-      {"label": "Right side", "value": "right"},
-      {"label": "Left side", "value": "left"}
+      {"label": "right", "value": "right"},
+      {"label": "left", "value": "left"}
     ]
   },
   {
     "type": "dropDown",
-    "label": "Source Plate Type",
-    "name": "sp_type",
+    "label": "Tip Type",
+    "name": "tip_type",
     "options": [
-      {"label": "NEST 96-Well, 200µL Flat", "value": "nest_96_wellplate_200ul_flat"},
-      {"label": "NEST 96-Well, 100µL PCR", "value": "nest_96_wellplate_100ul_pcr_full_skirt"},
-      {"label": "BioRad 96-Well, 200µL PCR", "value": "biorad_96_wellplate_200ul_pcr"},
-      {"label": "Corning 96-Well, 360µL Flat", "value": "corning_96_wellplate_360ul_flat"},
-      {"label": "Corning 384-Well, 112µL Flat", "value": "corning_384_wellplate_112ul_flat"},
-      {"label": "USA Scientific 96-Deepwell, 2.4mL", "value": "usascientific_96_wellplate_2.4ml_deep"},
-      {"label": "Opentrons 24 Tube Rack with Eppendorf 2 mL Safe-Lock Snapcap", "value": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"}
-    ]
-  },
-  {
-    "type": "dropDown",
-    "label": "Destination Plate Type",
-    "name": "dp_type",
-    "options": [
-      {"label": "NEST 96-Well, 200µL Flat", "value": "nest_96_wellplate_200ul_flat"},
-      {"label": "NEST 96-Well, 100µL PCR", "value": "nest_96_wellplate_100ul_pcr_full_skirt"},
-      {"label": "BioRad 96-Well, 200µL PCR", "value": "biorad_96_wellplate_200ul_pcr"},
-      {"label": "Corning 96-Well, 360µL Flat", "value": "corning_96_wellplate_360ul_flat"},
-      {"label": "Corning 384-Well, 112µL Flat", "value": "corning_384_wellplate_112ul_flat"},
-      {"label": "USA Scientific 96-Deepwell, 2.4mL", "value": "usascientific_96_wellplate_2.4ml_deep"},
-      {"label": "Opentrons 24 Tube Rack with Eppendorf 2 mL Safe-Lock Snapcap", "value": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"}
-    ]
-  },
-  {
-    "type": "dropDown",
-    "label": "Use Filter Tips?",
-    "name": "filter_tip",
-    "options": [
-      {"label": "No", "value": "no"},
-      {"label": "Yes", "value": "yes"}
+      {"label": "standard", "value": "standard"},
+      {"label": "filter", "value": "filter"}
     ]
   },
   {
