@@ -11,7 +11,7 @@
 ## Description
 With this protocol, your robot can perform multiple well-to-well liquid transfers using a single-channel pipette by parsing through a user-defined .csv file.
 
-The .csv file should be formatted as shown in the example below, **including headers**:
+The .csv file should be formatted as shown in the example below, **including headers** (you can also download a template for this .csv file [here](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1211/example.csv)):
 
 ```
 Source Labware,Source Slot,Source Well,Source Aspiration Height Above Bottom (in mm),Dest Labware,Dest Slot,Dest Well,Volume (in ul)

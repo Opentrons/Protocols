@@ -8,17 +8,40 @@ metadata = {
 
 def run(ctx):
 
-    pipette_type, pipette_mount, transfer_csv = get_values(  # noqa: F821
-        "pipette_type", "pipette_mount", "transfer_csv")
+    [pipette_type, pipette_mount, tip_type,
+     tip_reuse, transfer_csv] = get_values(  # noqa: F821
+        "pipette_type", "pipette_mount", "tip_type", "tip_reuse",
+        "transfer_csv")
 
     tiprack_map = {
-        'p10_single': 'opentrons_96_tiprack_10ul',
-        'p50_single': 'opentrons_96_tiprack_300ul',
-        'p300_single_gen1': 'opentrons_96_tiprack_300ul',
-        'p1000_single_gen1': 'opentrons_96_tiprack_1000ul',
-        'p20_single_gen2': 'opentrons_96_tiprack_20ul',
-        'p300_single_gen2': 'opentrons_96_tiprack_300ul',
-        'p1000_single_gen2': 'opentrons_96_tiprack_1000ul'
+        'p10_single': {
+            'standard': 'opentrons_96_tiprack_10ul',
+            'filter': 'opentrons_96_filtertiprack_20ul'
+        },
+        'p50_single': {
+            'standard': 'opentrons_96_tiprack_300ul',
+            'filter': 'opentrons_96_filtertiprack_200ul'
+        },
+        'p300_single_gen1': {
+            'standard': 'opentrons_96_tiprack_300ul',
+            'filter': 'opentrons_96_filtertiprack_200ul'
+        },
+        'p1000_single_gen1': {
+            'standard': 'opentrons_96_tiprack_1000ul',
+            'filter': 'opentrons_96_filtertiprack_1000ul'
+        },
+        'p20_single_gen2': {
+            'standard': 'opentrons_96_tiprack_20ul',
+            'filter': 'opentrons_96_filtertiprack_20ul'
+        },
+        'p300_single_gen2': {
+            'standard': 'opentrons_96_tiprack_300ul',
+            'filter': 'opentrons_96_filtertiprack_200ul'
+        },
+        'p1000_single_gen2': {
+            'standard': 'opentrons_96_tiprack_1000ul',
+            'filter': 'opentrons_96_filtertiprack_1000ul'
+        }
     }
 
     # load labware
@@ -32,7 +55,7 @@ def run(ctx):
                 ctx.load_labware(lw.lower(), slot)
 
     # load tipracks in remaining slots
-    tiprack_type = tiprack_map[pipette_type]
+    tiprack_type = tiprack_map[pipette_type][tip_type]
     tipracks = []
     for slot in range(1, 13):
         if slot not in ctx.loaded_labwares:
@@ -58,13 +81,18 @@ def run(ctx):
         number = well[1:]
         return letter.upper() + str(int(number))
 
+    if tip_reuse == 'never':
+        pick_up()
     for line in transfer_info:
         _, s_slot, s_well, h, _, d_slot, d_well, vol = line[:8]
         source = ctx.loaded_labwares[
             int(s_slot)].wells_by_name()[parse_well(s_well)].bottom(float(h))
         dest = ctx.loaded_labwares[
             int(d_slot)].wells_by_name()[parse_well(d_well)]
-        print(vol)
-        pick_up()
+        if tip_reuse == 'always':
+            pick_up()
         pip.transfer(float(vol), source, dest, new_tip='never')
+        if tip_reuse == 'always':
+            pip.drop_tip()
+    if pip.hw_pipette['has_tip']:
         pip.drop_tip()
