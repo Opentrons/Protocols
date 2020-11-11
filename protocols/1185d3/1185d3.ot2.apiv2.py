@@ -1,6 +1,6 @@
 metadata = {
     'apiLevel': '2.5',
-    'protocolName': 'ThermoFisher MagMAX Plant DNA Isolation',
+    'protocolName': 'MagMAX Viral/Pathogen Nucleic Acid Isolation Kit wash steps',
     'author': 'Chaz <chaz@opentrons.com>',
     'source': 'Custom Protocol Request'
 }
