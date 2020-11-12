@@ -589,10 +589,19 @@
     ],
     "fields": [
         {
-            "default": 8,
             "label": "number of samples",
             "name": "num_samples",
-            "type": "int"
+            "options": [
+                {
+                    "label": "8",
+                    "value": 8
+                },
+                {
+                    "label": "24",
+                    "value": 24
+                }
+            ],
+            "type": "dropDown"
         },
         {
             "label": "track tips across runs",
