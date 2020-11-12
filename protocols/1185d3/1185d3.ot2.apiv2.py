@@ -1,6 +1,6 @@
 metadata = {
     'apiLevel': '2.5',
-    'protocolName': 'MagMAX Viral/Pathogen Nucleic Acid Isolation Kit wash steps',
+    'protocolName': 'MagMAX Viral/Pathogen Nucleic Acid Isolation Kit wash',
     'author': 'Chaz <chaz@opentrons.com>',
     'source': 'Custom Protocol Request'
 }
