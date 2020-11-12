@@ -31,5 +31,11 @@
       {"label": "Applied Biosystems", "value": "appliedbiosystemsmicroampoptical384wellreactionplatewithbarcode_384_wellplate_30ul"},
       {"label": "SSI", "value": "ssi_384_wellplate_50ul"}
     ]
+  },
+  {
+    "type": "float",
+    "label": "Master Mix Volume (uL)",
+    "name": "mm_vol",
+    "default": 7.5
   }
 ]
