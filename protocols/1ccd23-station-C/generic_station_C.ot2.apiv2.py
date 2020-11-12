@@ -5,7 +5,7 @@ import math
 
 # metadata
 metadata = {
-    'protocolName': 'Version 1 S14 Station C Thermo Taqpath P20 Multi',
+    'protocolName': 'Covid-19 qPCR Prep (Station C)',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.3'
@@ -97,8 +97,8 @@ resuming.')
             }
         },
         'Allplex SARS-CoV-2 Assay': {
-            'sample_vol': 15,
-            'mm_vol': 5,
+            'sample_vol': 5,
+            'mm_vol': 15,
             'components': {
                 tube: vol for tube, vol in zip(tube_block.columns()[1][:2],
                                                [5, 5, 5])
@@ -130,6 +130,8 @@ resuming.')
         return mm_tube.bottom(mm_height)
 
     if prepare_mastermix:
+        p300.flow_rate.aspirate = 15
+        p300.flow_rate.dispense = 30
         vol_overage = 1.2 if num_samples > 48 else 1.1
 
         for i, (tube, vol) in enumerate(mm_dict['components'].items()):
@@ -146,7 +148,7 @@ resuming.')
                 p300.dispense(20, mm_tube.top())  # void air gap
                 p300.dispense(vol_per_trans, mm_tube.bottom(2))
                 p300.dispense(20, mm_tube.top())  # void pre-loaded air gap
-                p300.blow_out(mm_tube.top())
+                # p300.blow_out(mm_tube.top())
                 p300.touch_tip(mm_tube)
             if i < len(mm_dict['components'].items()) - 1:
                 p300.drop_tip()
@@ -156,7 +158,7 @@ resuming.')
         mix_vol = mm_total_vol / 2 if mm_total_vol / 2 <= 200 else 200
         mix_loc = mm_tube.bottom(20) if num_samples > 48 else mm_tube.bottom(5)
         p300.mix(7, mix_vol, mix_loc)
-        p300.blow_out(mm_tube.top())
+        # p300.blow_out(mm_tube.top())
         p300.touch_tip()
 
     # transfer mastermix to strips
