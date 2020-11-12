@@ -9,25 +9,25 @@
     "type": "float",
     "label": "intitial volume (sample + lysis buffer, in ul)",
     "name": "starting_vol",
-    "default": 440.0
+    "default": 270.0
   },
   {
     "type": "float",
     "label": "binding buffer volume (in ul)",
     "name": "binding_buffer_vol",
-    "default": 600.0
+    "default": 596.0
   },
   {
     "type": "float",
     "label": "wash 1 volume (in ul, up to 500ul)",
     "name": "wash1_vol",
-    "default": 500.0
+    "default": 490.0
   },
   {
     "type": "float",
     "label": "wash 2 volume (in ul, up to 500ul)",
     "name": "wash2_vol",
-    "default": 500.0
+    "default": 490.0
   },
   {
     "type": "float",
@@ -39,7 +39,7 @@
     "type": "float",
     "label": "final elution volume (in ul)",
     "name": "elution_vol",
-    "default": 50.0
+    "default": 100.0
   },
   {
     "type": "int",
