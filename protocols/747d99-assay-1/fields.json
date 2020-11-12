@@ -1,0 +1,20 @@
+[
+  {
+    "type": "dropDown",
+    "label": "number of samples",
+    "name": "num_samples",
+    "options": [
+      {"label": "8", "value": 8},
+      {"label": "24", "value": 24}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "track tips across runs",
+    "name": "tip_track",
+    "options": [
+      {"label": "no", "value": false},
+      {"label": "yes", "value": true}
+    ]
+  }
+]

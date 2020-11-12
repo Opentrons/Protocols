@@ -38,19 +38,19 @@ def run(protocol):
     # perform transfers from source 1
     for tubes in tuberacks[:3]:
         for t in tubes.wells():
+            p1000.pick_up_tip()
             for _ in range(2):
-                p1000.pick_up_tip()
                 p1000.transfer(
                     transfer_vol, source[0], t, air_gap=50, new_tip='never')
-                p1000.air_gap(50)
-                p1000.drop_tip()
+            p1000.air_gap(50)
+            p1000.drop_tip()
 
     # perform transfers from source 2
     for tubes in tuberacks[3:]:
         for t in tubes.wells():
+            p1000.pick_up_tip()
             for _ in range(2):
-                p1000.pick_up_tip()
                 p1000.transfer(
                     transfer_vol, source[1], t, air_gap=50, new_tip='never')
-                p1000.air_gap(50)
-                p1000.drop_tip()
+            p1000.air_gap(50)
+            p1000.drop_tip()
