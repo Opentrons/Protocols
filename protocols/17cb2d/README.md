@@ -21,7 +21,9 @@ This protocol has been updated to use the GEN2 Multi-Channel Pipettes - please u
 </br>
 **Update 10-29-20:** The protocol will now transfer 10µL of mastermix.</br>
 </br>
-**Update 10-30-20:** The protocol will now multi-dispense mastermix instead of 1-to-1 transfer. 
+**Update 10-30-20:** The protocol will now multi-dispense mastermix instead of 1-to-1 transfer. </br>
+</br>
+**Update 11-12-20:** The protocol now has a new parameter for master mix volume (default is 7.5µL)
 
 
 ---
@@ -57,7 +59,8 @@ A12: Mastermix 2 (for plates 6-9)</br>
 * **Pipette Type**: Select which GEN2 Multi-Channel Pipette (p300 or p20) will be used
 * **Pipette Mount**: Select which mount (left or right) the Multi-Channel Pipette is attached to
 * **Number of Plates (1-9)**: Specify the number of plates to fill
-* **Plate (384-Well) Type**: Select which plate (Applied Biosystems or SSI) to use.
+* **Plate (384-Well) Type**: Select which plate (Applied Biosystems or SSI) to use
+* **Master Mix Volume (uL)**: Input the volume of master mix to be transferred to each well
 
 
 
