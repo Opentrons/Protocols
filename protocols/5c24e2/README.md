@@ -16,6 +16,7 @@ The protocol can fill one or two, 384-well plates. The [P20 Single-Channel Pipet
 **Update (10/22/20):** The protocol will now aspirate 10µL and dispense 5µL into two wells.</br>
 </br>
 **Update (11/2/20):** The protocol will now aspirate 20µL and dispense 10µL into two wells. Additionally, the option to use the p300-multi pipette has been added.
+**Updated (11/12/20):** A new parameter has been added that allows the user to input the volume (in µL) of sample that should be transferred. The pipette will aspirate 2x the volume and dispense into two wells.
 
 
 ---
@@ -59,8 +60,11 @@ Slot 11: [NEST 96-Well Plates](https://shop.opentrons.com/collections/verified-l
 </br>
 </br>
 **Using the customizations field (below), set up your protocol.**
-* **P20 Mount**: Select which mount (left or right) the P20-Single is attached to.
+* **Pipette Type**: Select which pipette will be used
+* **Pipette Mount**: Select which mount (left or right) the pipette is attached to.
+* **Sample Volume (uL)**: Input the sample volume
 * **How many 384-well plates**: Specify the number of 384-well plates to fill
+* **Plate (384-Well) Type**: Specify the type of 384-well plates that are being used
 
 
 
