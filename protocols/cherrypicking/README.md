@@ -10,7 +10,7 @@
 ## Description
 ![Cherrypicking Example](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/cherrypicking/cherrypicking_example.png)
 
-Cherrypicking, or hit-picking, is a key component of many workflows from high-throughput screening to microbial transfections. With this protocol, you can easily select specific wells in a 96 or 384 microwell plate without worrying about missing or selecting the wrong well. Just upload your properly formatted CSV file (keep scrolling for an example), customize your parameters, and download your ready-to-run protocol.
+Cherrypicking, or hit-picking, is a key component of many workflows from high-throughput screening to microbial transfections. With this protocol, you can easily select specific wells in any labware without worrying about missing or selecting the wrong well. Just upload your properly formatted CSV file (keep scrolling for an example), customize your parameters, and download your ready-to-run protocol.
 
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
@@ -29,35 +29,30 @@ For more detailed information on compatible labware, please visit our [Labware L
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
-[Tipracks](https://shop.opentrons.com/collections/opentrons-tips) should be loaded in **Slot 1** (if using more than 96 tips, Slots 4, 7, and 10 can be loaded as well).
-
-The Source Plate should be loaded in **Slot 2**. If using multiple Source Plates, Source Plates 1, 2, 3, and 4 should be loaded into **Slot 2**, **Slot 5**, **Slot 8**, and **Slot 11**, respectively.
-*Note*: If using multiple Source Plates, you must specify the Source Plate in the third column of the CSV (see below for examples)
-
-The Destination Plate should be loaded in **Slot 3**.
-*Note*: The Destination Plate will receive each cherrypicking transfer sequentially, filling up the plate in well A1, then B1, etc.
+Labware will be loaded automatically by specifying the labware loadname and labware slot in the .csv file. All available empty slots will be filled with the necessary [tipracks](https://shop.opentrons.com/collections/opentrons-tips), and the user will be prompted to refill the tipracks if all are emptied in the middle of the protocol.
 
 **CSV Format**
 
-Your cherrypicking transfers must be saved as a comma separated value (.csv) file type. Your CSV must contain values corresponding to volumes in microliters (μL).
+Your cherrypicking transfers must be saved as a comma separated value (.csv) file type. Your CSV must contain values corresponding to volumes in microliters (μL). Note that the header line (first row of the .csv file) should also be included!
 
-![Cherrypicking CSV ex1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/cherrypicking/cp_csv_ex1.png)
+Here's an example of how a short cherrypicking protocol should be properly formatted:
 
-In the first example, 40μL will be removed from well A3 in your source plate, and placed in well A1 in your destination plate. 36μL will be removed from well D4 in your source plate, and placed in well B1 in your destination plate.
+```
+Source Labware,Source Slot,Source Well,Source Aspiration Height Above Bottom (in mm),Dest Labware,Dest Slot,Dest Well,Volume (in ul)
+agilent_1_reservoir_290ml,1,A1,1,nest_96_wellplate_100ul_pcr_full_skirt,4,A11,1
+nest_12_reservoir_15ml,2,A1,1,nest_96_wellplate_2ml_deep,5,A5,3
+nest_1_reservoir_195ml,3,A1,1,nest_96_wellplate_2ml_deep,5,H12,7
+```
 
-![Cherrypicking CSV ex2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/cherrypicking/cp_csv_ex2.png)
+In this example, 1μL will be transferred from 1mm above the bottom of well A1 in an Agilent 1-well 290ml reservoir (slot 1) to well A11 in the destination NEST 96-well plate 100µl (slot 4). After this, 3μL will be transferred from 1mm above the bottom of well A1 in a NEST 12-well 15ml reservoir (slot 2) to well A5 in the destination NEST 96-well plate 100µl (slot 5). Last, 7μL will be transferred from 1mm above the bottom of well A1 in a NEST 1-well 195ml reservoir (slot 3) to well H12 in the destination NEST 96-well plate 100µl (slot 5).
 
-In the second example, 40μL will be transferred from well A3 in "Plate 1" (slot 2) to well A1 in the destination plate (slot 3). After this, 36μL will be transferred from well D4 in "Plate 3" (slot 8) to well B1 in the destination plate (slot 3).
-
-If you’d like to follow our template, you can make a copy of [this spreadsheet](https://docs.google.com/spreadsheets/d/10ts0zdoUOHlwkElJi6KkaghWmsN4PPZqF9iJoXzGmGA/edit#gid=0), fill out your values, and export as CSV for use with this protocol.
+If you’d like to follow our template, you can make a copy of [this spreadsheet](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1211/example.csv), fill out your values, and export as CSV for use with this protocol.
 
 Using the customizations fields, below set up your protocol.
-* Volumes CSV: Upload the .csv file containing your well locations, volumes, and source plate (optional).
+* Transfer .csv File: Upload the .csv file containing your well locations, volumes, and source plate (optional).
 * Pipette Model: Select which pipette you will use for this protocol.
 * Pipette Mount: Specify which mount your single-channel pipette is on (left or right)
-* Source Plate Type: Select which (source) plate you will pick samples from.
-* Destination Plate Type: Select which (destination) plate you will dispense into.
-* Filter Tips: Specify whether you want to use filter tips.
+* Tip Type: Specify whether you want to use filter tips.
 * Tip Usage Strategy: Specify whether you'd like to use a new tip for each transfer, or keep the same tip throughout the protocol.
 
 
