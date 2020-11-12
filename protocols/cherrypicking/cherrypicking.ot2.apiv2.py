@@ -1,76 +1,98 @@
 metadata = {
     'protocolName': 'Cherrypicking',
-    'author': 'Opentrons <protocols@opentrons.com>',
-    'source': 'Protocol Library',
-    'apiLevel': '2.2'
+    'author': 'Nick <protocols@opentrons.com>',
+    'source': 'Custom Protocol Request',
+    'apiLevel': '2.3'
+}
+
+
+def run(ctx):
+
+    [pipette_type, pipette_mount, tip_type,
+     tip_reuse, transfer_csv] = get_values(  # noqa: F821
+        "pipette_type", "pipette_mount", "tip_type", "tip_reuse",
+        "transfer_csv")
+
+    tiprack_map = {
+        'p10_single': {
+            'standard': 'opentrons_96_tiprack_10ul',
+            'filter': 'opentrons_96_filtertiprack_20ul'
+        },
+        'p50_single': {
+            'standard': 'opentrons_96_tiprack_300ul',
+            'filter': 'opentrons_96_filtertiprack_200ul'
+        },
+        'p300_single_gen1': {
+            'standard': 'opentrons_96_tiprack_300ul',
+            'filter': 'opentrons_96_filtertiprack_200ul'
+        },
+        'p1000_single_gen1': {
+            'standard': 'opentrons_96_tiprack_1000ul',
+            'filter': 'opentrons_96_filtertiprack_1000ul'
+        },
+        'p20_single_gen2': {
+            'standard': 'opentrons_96_tiprack_20ul',
+            'filter': 'opentrons_96_filtertiprack_20ul'
+        },
+        'p300_single_gen2': {
+            'standard': 'opentrons_96_tiprack_300ul',
+            'filter': 'opentrons_96_filtertiprack_200ul'
+        },
+        'p1000_single_gen2': {
+            'standard': 'opentrons_96_tiprack_1000ul',
+            'filter': 'opentrons_96_filtertiprack_1000ul'
+        }
     }
 
+    # load labware
+    transfer_info = [[val.strip().lower() for val in line.split(',')]
+                     for line in transfer_csv.splitlines()
+                     if line.split(',')[0].strip()][1:]
+    for line in transfer_info:
+        s_lw, s_slot, d_lw, d_slot = line[:2] + line[4:6]
+        for slot, lw in zip([s_slot, d_slot], [s_lw, d_lw]):
+            if not int(slot) in ctx.loaded_labwares:
+                ctx.load_labware(lw.lower(), slot)
 
-def run(protocol):
-    [volumes_csv, pip_model, pip_mount, sp_type,
-     dp_type, filter_tip, tip_reuse] = get_values(  # noqa: F821
-        'volumes_csv', 'pip_model', 'pip_mount', 'sp_type',
-         'dp_type', 'filter_tip', 'tip_reuse')
+    # load tipracks in remaining slots
+    tiprack_type = tiprack_map[pipette_type][tip_type]
+    tipracks = []
+    for slot in range(1, 13):
+        if slot not in ctx.loaded_labwares:
+            tipracks.append(ctx.load_labware(tiprack_type, str(slot)))
 
-    # create pipette and volume max
-    pip_max = pip_model.split('_')[0][1:]
+    # load pipette
+    pip = ctx.load_instrument(pipette_type, pipette_mount, tip_racks=tipracks)
 
-    pip_max = '300' if pip_max == '50' else pip_max
-    tip_name = 'opentrons_96_tiprack_'+pip_max+'ul'
-    if filter_tip == 'yes':
-        pip_max = '200' if pip_max == '300' else pip_max
-        tip_name = 'opentrons_96_filtertippack_'+pip_max+'ul'
+    tip_count = 0
+    tip_max = len(tipracks*96)
 
-    tiprack_slots = ['1', '4', '7', '10']
-    tips = [protocol.load_labware(tip_name, slot)
-            for slot in tiprack_slots]
+    def pick_up():
+        nonlocal tip_count
+        if tip_count == tip_max:
+            ctx.pause('Please refill tipracks before resuming.')
+            pip.reset_tipracks()
+            tip_count = 0
+        pip.pick_up_tip()
+        tip_count += 1
 
-    pipette = protocol.load_instrument(pip_model, pip_mount, tip_racks=tips)
+    def parse_well(well):
+        letter = well[0]
+        number = well[1:]
+        return letter.upper() + str(int(number))
 
-    # create labware
-    dest_plate = protocol.load_labware(dp_type, '3', 'Destination Plate/Rack')
-
-    data = [row.split(',') for row in volumes_csv.strip().splitlines() if row]
-
-    if len(data[1]) == 2:
-        source_plate = protocol.load_labware(sp_type, '2', 'Source Plate')
-        if tip_reuse == 'never':
-            pipette.pick_up_tip()
-        for well_idx, (source_well, vol) in enumerate(data[1:]):
-            if source_well and vol:
-                vol = float(vol)
-                pipette.transfer(
-                    vol,
-                    source_plate.wells(source_well),
-                    dest_plate.wells(well_idx),
-                    new_tip=tip_reuse)
-        if tip_reuse == 'never':
-            pipette.drop_tip()
-    else:
-        source_plates = []
-        plateno = 0
-        for d in data[1:]:
-            z = int(d[2])
-            if z > plateno:
-                plateno = z
-        for i in range(plateno):
-            nomenclature = 'Source Plate ' + str(i+1)
-            numeral = str(i*3+2)
-            source_plates.append(protocol.load_labware(
-                sp_type,
-                numeral,
-                nomenclature
-            ))
-        if tip_reuse == 'never':
-            pipette.pick_up_tip()
-        for well_idx, (source_well, vol, plate) in enumerate(data[1:]):
-            if source_well and vol and plate:
-                vol = float(vol)
-                source_p = source_plates[int(plate)-1]
-                pipette.transfer(
-                    vol,
-                    source_p.wells(source_well),
-                    dest_plate.wells(well_idx),
-                    new_tip=tip_reuse)
-        if tip_reuse == 'never':
-            pipette.drop_tip()
+    if tip_reuse == 'never':
+        pick_up()
+    for line in transfer_info:
+        _, s_slot, s_well, h, _, d_slot, d_well, vol = line[:8]
+        source = ctx.loaded_labwares[
+            int(s_slot)].wells_by_name()[parse_well(s_well)].bottom(float(h))
+        dest = ctx.loaded_labwares[
+            int(d_slot)].wells_by_name()[parse_well(d_well)]
+        if tip_reuse == 'always':
+            pick_up()
+        pip.transfer(float(vol), source, dest, new_tip='never')
+        if tip_reuse == 'always':
+            pip.drop_tip()
+    if pip.hw_pipette['has_tip']:
+        pip.drop_tip()

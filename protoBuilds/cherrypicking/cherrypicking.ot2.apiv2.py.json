@@ -1,144 +1,74 @@
 {
-    "content": "metadata = {\n    'protocolName': 'Cherrypicking',\n    'author': 'Opentrons <protocols@opentrons.com>',\n    'source': 'Protocol Library',\n    'apiLevel': '2.2'\n    }\n\n\ndef run(protocol):\n    [volumes_csv, pip_model, pip_mount, sp_type,\n     dp_type, filter_tip, tip_reuse] = get_values(  # noqa: F821\n        'volumes_csv', 'pip_model', 'pip_mount', 'sp_type',\n         'dp_type', 'filter_tip', 'tip_reuse')\n\n    # create pipette and volume max\n    pip_max = pip_model.split('_')[0][1:]\n\n    pip_max = '300' if pip_max == '50' else pip_max\n    tip_name = 'opentrons_96_tiprack_'+pip_max+'ul'\n    if filter_tip == 'yes':\n        pip_max = '200' if pip_max == '300' else pip_max\n        tip_name = 'opentrons_96_filtertippack_'+pip_max+'ul'\n\n    tiprack_slots = ['1', '4', '7', '10']\n    tips = [protocol.load_labware(tip_name, slot)\n            for slot in tiprack_slots]\n\n    pipette = protocol.load_instrument(pip_model, pip_mount, tip_racks=tips)\n\n    # create labware\n    dest_plate = protocol.load_labware(dp_type, '3', 'Destination Plate/Rack')\n\n    data = [row.split(',') for row in volumes_csv.strip().splitlines() if row]\n\n    if len(data[1]) == 2:\n        source_plate = protocol.load_labware(sp_type, '2', 'Source Plate')\n        if tip_reuse == 'never':\n            pipette.pick_up_tip()\n        for well_idx, (source_well, vol) in enumerate(data[1:]):\n            if source_well and vol:\n                vol = float(vol)\n                pipette.transfer(\n                    vol,\n                    source_plate.wells(source_well),\n                    dest_plate.wells(well_idx),\n                    new_tip=tip_reuse)\n        if tip_reuse == 'never':\n            pipette.drop_tip()\n    else:\n        source_plates = []\n        plateno = 0\n        for d in data[1:]:\n            z = int(d[2])\n            if z > plateno:\n                plateno = z\n        for i in range(plateno):\n            nomenclature = 'Source Plate ' + str(i+1)\n            numeral = str(i*3+2)\n            source_plates.append(protocol.load_labware(\n                sp_type,\n                numeral,\n                nomenclature\n            ))\n        if tip_reuse == 'never':\n            pipette.pick_up_tip()\n        for well_idx, (source_well, vol, plate) in enumerate(data[1:]):\n            if source_well and vol and plate:\n                vol = float(vol)\n                source_p = source_plates[int(plate)-1]\n                pipette.transfer(\n                    vol,\n                    source_p.wells(source_well),\n                    dest_plate.wells(well_idx),\n                    new_tip=tip_reuse)\n        if tip_reuse == 'never':\n            pipette.drop_tip()\n",
+    "content": "metadata = {\n    'protocolName': 'Cherrypicking',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.3'\n}\n\n\ndef run(ctx):\n\n    [pipette_type, pipette_mount, tip_type,\n     tip_reuse, transfer_csv] = get_values(  # noqa: F821\n        \"pipette_type\", \"pipette_mount\", \"tip_type\", \"tip_reuse\",\n        \"transfer_csv\")\n\n    tiprack_map = {\n        'p10_single': {\n            'standard': 'opentrons_96_tiprack_10ul',\n            'filter': 'opentrons_96_filtertiprack_20ul'\n        },\n        'p50_single': {\n            'standard': 'opentrons_96_tiprack_300ul',\n            'filter': 'opentrons_96_filtertiprack_200ul'\n        },\n        'p300_single_gen1': {\n            'standard': 'opentrons_96_tiprack_300ul',\n            'filter': 'opentrons_96_filtertiprack_200ul'\n        },\n        'p1000_single_gen1': {\n            'standard': 'opentrons_96_tiprack_1000ul',\n            'filter': 'opentrons_96_filtertiprack_1000ul'\n        },\n        'p20_single_gen2': {\n            'standard': 'opentrons_96_tiprack_20ul',\n            'filter': 'opentrons_96_filtertiprack_20ul'\n        },\n        'p300_single_gen2': {\n            'standard': 'opentrons_96_tiprack_300ul',\n            'filter': 'opentrons_96_filtertiprack_200ul'\n        },\n        'p1000_single_gen2': {\n            'standard': 'opentrons_96_tiprack_1000ul',\n            'filter': 'opentrons_96_filtertiprack_1000ul'\n        }\n    }\n\n    # load labware\n    transfer_info = [[val.strip().lower() for val in line.split(',')]\n                     for line in transfer_csv.splitlines()\n                     if line.split(',')[0].strip()][1:]\n    for line in transfer_info:\n        s_lw, s_slot, d_lw, d_slot = line[:2] + line[4:6]\n        for slot, lw in zip([s_slot, d_slot], [s_lw, d_lw]):\n            if not int(slot) in ctx.loaded_labwares:\n                ctx.load_labware(lw.lower(), slot)\n\n    # load tipracks in remaining slots\n    tiprack_type = tiprack_map[pipette_type][tip_type]\n    tipracks = []\n    for slot in range(1, 13):\n        if slot not in ctx.loaded_labwares:\n            tipracks.append(ctx.load_labware(tiprack_type, str(slot)))\n\n    # load pipette\n    pip = ctx.load_instrument(pipette_type, pipette_mount, tip_racks=tipracks)\n\n    tip_count = 0\n    tip_max = len(tipracks*96)\n\n    def pick_up():\n        nonlocal tip_count\n        if tip_count == tip_max:\n            ctx.pause('Please refill tipracks before resuming.')\n            pip.reset_tipracks()\n            tip_count = 0\n        pip.pick_up_tip()\n        tip_count += 1\n\n    def parse_well(well):\n        letter = well[0]\n        number = well[1:]\n        return letter.upper() + str(int(number))\n\n    if tip_reuse == 'never':\n        pick_up()\n    for line in transfer_info:\n        _, s_slot, s_well, h, _, d_slot, d_well, vol = line[:8]\n        source = ctx.loaded_labwares[\n            int(s_slot)].wells_by_name()[parse_well(s_well)].bottom(float(h))\n        dest = ctx.loaded_labwares[\n            int(d_slot)].wells_by_name()[parse_well(d_well)]\n        if tip_reuse == 'always':\n            pick_up()\n        pip.transfer(float(vol), source, dest, new_tip='never')\n        if tip_reuse == 'always':\n            pip.drop_tip()\n    if pip.hw_pipette['has_tip']:\n        pip.drop_tip()\n",
     "custom_labware_defs": [],
     "fields": [
         {
-            "default": "well,vol,plate\nA3,40,1",
-            "label": "Volumes CSV",
-            "name": "volumes_csv",
+            "default": "Source Labware,Source Slot,Source Well,Source Aspiration Height Above Bottom (in mm),Dest Labware,Dest Slot,Dest Well,Volume (in ul)\nagilent_1_reservoir_290ml,1,A1,1,nest_96_wellplate_100ul_pcr_full_skirt,4,A11,1\nnest_12_reservoir_15ml,2,A1,1,nest_96_wellplate_2ml_deep,5,A5,3\nnest_1_reservoir_195ml,3,A1,1,nest_96_wellplate_2ml_deep,5,H12,7",
+            "label": "Transfer .csv File",
+            "name": "transfer_csv",
             "type": "textFile"
         },
         {
             "label": "Pipette Model",
-            "name": "pip_model",
+            "name": "pipette_type",
             "options": [
                 {
-                    "label": "P300 Single GEN2",
-                    "value": "p300_single_gen2"
-                },
-                {
-                    "label": "P300 Single GEN1",
-                    "value": "p300_single"
-                },
-                {
-                    "label": "P20 Single GEN2",
-                    "value": "p20_single_gen2"
-                },
-                {
-                    "label": "P50 Single GEN1",
-                    "value": "p50_single"
-                },
-                {
-                    "label": "P10 Single GEN1",
+                    "label": "P10 Single (GEN 1)",
                     "value": "p10_single"
                 },
                 {
-                    "label": "P1000 Single GEN2",
-                    "value": "p1000_single_gen2"
+                    "label": "P50 Single (GEN 1)",
+                    "value": "p50_single"
                 },
                 {
-                    "label": "P1000 Single GEN1",
-                    "value": "p1000_single"
+                    "label": "P300 Single (GEN 1)",
+                    "value": "p300_single_gen1"
+                },
+                {
+                    "label": "P1000 Single (GEN 1)",
+                    "value": "p1000_single_gen1"
+                },
+                {
+                    "label": "P20 Single (GEN 2)",
+                    "value": "p20_single_gen2"
+                },
+                {
+                    "label": "P300 Single (GEN 2)",
+                    "value": "p300_single_gen2"
+                },
+                {
+                    "label": "P1000 Single (GEN 2)",
+                    "value": "p1000_single_gen2"
                 }
             ],
             "type": "dropDown"
         },
         {
             "label": "Pipette Mount",
-            "name": "pip_mount",
+            "name": "pipette_mount",
             "options": [
                 {
-                    "label": "Right side",
+                    "label": "right",
                     "value": "right"
                 },
                 {
-                    "label": "Left side",
+                    "label": "left",
                     "value": "left"
                 }
             ],
             "type": "dropDown"
         },
         {
-            "label": "Source Plate Type",
-            "name": "sp_type",
+            "label": "Tip Type",
+            "name": "tip_type",
             "options": [
                 {
-                    "label": "NEST 96-Well, 200\u00b5L Flat",
-                    "value": "nest_96_wellplate_200ul_flat"
+                    "label": "standard",
+                    "value": "standard"
                 },
                 {
-                    "label": "NEST 96-Well, 100\u00b5L PCR",
-                    "value": "nest_96_wellplate_100ul_pcr_full_skirt"
-                },
-                {
-                    "label": "BioRad 96-Well, 200\u00b5L PCR",
-                    "value": "biorad_96_wellplate_200ul_pcr"
-                },
-                {
-                    "label": "Corning 96-Well, 360\u00b5L Flat",
-                    "value": "corning_96_wellplate_360ul_flat"
-                },
-                {
-                    "label": "Corning 384-Well, 112\u00b5L Flat",
-                    "value": "corning_384_wellplate_112ul_flat"
-                },
-                {
-                    "label": "USA Scientific 96-Deepwell, 2.4mL",
-                    "value": "usascientific_96_wellplate_2.4ml_deep"
-                },
-                {
-                    "label": "Opentrons 24 Tube Rack with Eppendorf 2 mL Safe-Lock Snapcap",
-                    "value": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
-                }
-            ],
-            "type": "dropDown"
-        },
-        {
-            "label": "Destination Plate Type",
-            "name": "dp_type",
-            "options": [
-                {
-                    "label": "NEST 96-Well, 200\u00b5L Flat",
-                    "value": "nest_96_wellplate_200ul_flat"
-                },
-                {
-                    "label": "NEST 96-Well, 100\u00b5L PCR",
-                    "value": "nest_96_wellplate_100ul_pcr_full_skirt"
-                },
-                {
-                    "label": "BioRad 96-Well, 200\u00b5L PCR",
-                    "value": "biorad_96_wellplate_200ul_pcr"
-                },
-                {
-                    "label": "Corning 96-Well, 360\u00b5L Flat",
-                    "value": "corning_96_wellplate_360ul_flat"
-                },
-                {
-                    "label": "Corning 384-Well, 112\u00b5L Flat",
-                    "value": "corning_384_wellplate_112ul_flat"
-                },
-                {
-                    "label": "USA Scientific 96-Deepwell, 2.4mL",
-                    "value": "usascientific_96_wellplate_2.4ml_deep"
-                },
-                {
-                    "label": "Opentrons 24 Tube Rack with Eppendorf 2 mL Safe-Lock Snapcap",
-                    "value": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
-                }
-            ],
-            "type": "dropDown"
-        },
-        {
-            "label": "Use Filter Tips?",
-            "name": "filter_tip",
-            "options": [
-                {
-                    "label": "No",
-                    "value": "no"
-                },
-                {
-                    "label": "Yes",
-                    "value": "yes"
+                    "label": "filter",
+                    "value": "filter"
                 }
             ],
             "type": "dropDown"
@@ -162,45 +92,75 @@
     "instruments": [
         {
             "mount": "right",
-            "name": "p300_single_gen2"
+            "name": "p10_single"
         }
     ],
     "labware": [
         {
-            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 1",
+            "name": "Agilent 1 Well Reservoir 290 mL on 1",
             "share": false,
             "slot": "1",
-            "type": "opentrons_96_tiprack_300ul"
+            "type": "agilent_1_reservoir_290ml"
         },
         {
-            "name": "Source Plate 1 on 2",
+            "name": "NEST 12 Well Reservoir 15 mL on 2",
             "share": false,
             "slot": "2",
-            "type": "nest_96_wellplate_200ul_flat"
+            "type": "nest_12_reservoir_15ml"
         },
         {
-            "name": "Destination Plate/Rack on 3",
+            "name": "NEST 1 Well Reservoir 195 mL on 3",
             "share": false,
             "slot": "3",
-            "type": "nest_96_wellplate_200ul_flat"
+            "type": "nest_1_reservoir_195ml"
         },
         {
-            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 4",
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on 4",
             "share": false,
             "slot": "4",
-            "type": "opentrons_96_tiprack_300ul"
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
         },
         {
-            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 7",
+            "name": "NEST 96 Deepwell Plate 2mL on 5",
+            "share": false,
+            "slot": "5",
+            "type": "nest_96_wellplate_2ml_deep"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 10 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_tiprack_10ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 10 \u00b5L on 7",
             "share": false,
             "slot": "7",
-            "type": "opentrons_96_tiprack_300ul"
+            "type": "opentrons_96_tiprack_10ul"
         },
         {
-            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 10",
+            "name": "Opentrons 96 Tip Rack 10 \u00b5L on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_tiprack_10ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 10 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_tiprack_10ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 10 \u00b5L on 10",
             "share": false,
             "slot": "10",
-            "type": "opentrons_96_tiprack_300ul"
+            "type": "opentrons_96_tiprack_10ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 10 \u00b5L on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_96_tiprack_10ul"
         },
         {
             "name": "Opentrons Fixed Trash on 12",
@@ -210,10 +170,10 @@
         }
     ],
     "metadata": {
-        "apiLevel": "2.2",
-        "author": "Opentrons <protocols@opentrons.com>",
+        "apiLevel": "2.3",
+        "author": "Nick <protocols@opentrons.com>",
         "protocolName": "Cherrypicking",
-        "source": "Protocol Library"
+        "source": "Custom Protocol Request"
     },
     "modules": []
 }
