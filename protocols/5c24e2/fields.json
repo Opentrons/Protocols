@@ -18,6 +18,12 @@
     ]
   },
   {
+    "type": "float",
+    "label": "Sample Volume (uL)",
+    "name": "s_vol",
+    "default": 2.5
+  },
+  {
     "type": "dropDown",
     "label": "How many 384-well plates",
     "name": "sec_plate",
