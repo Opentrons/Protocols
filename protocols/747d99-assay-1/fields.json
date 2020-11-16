@@ -1,12 +1,9 @@
 [
   {
-    "type": "dropDown",
+    "type": "int",
     "label": "number of samples",
     "name": "num_samples",
-    "options": [
-      {"label": "8", "value": 8},
-      {"label": "24", "value": 24}
-    ]
+    "default": 8
   },
   {
     "type": "dropDown",
@@ -16,5 +13,20 @@
       {"label": "no", "value": false},
       {"label": "yes", "value": true}
     ]
+  },
+  {
+    "type": "dropDown",
+    "label": "add internal control during protocol",
+    "name": "add_ic",
+    "options": [
+      {"label": "no", "value": false},
+      {"label": "yes", "value": true}
+    ]
+  },
+  {
+    "type": "float",
+    "label": "volume internal control to add to buffer (if necessary)",
+    "name": "vol_ic",
+    "default": 100
   }
 ]

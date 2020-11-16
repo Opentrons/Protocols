@@ -18,8 +18,8 @@ Here is where you can modify the magnetic module engage height:
 # Start protocol
 def run(ctx):
 
-    num_samples, tip_track = get_values(  # noqa: F821
-        'num_samples', 'tip_track')
+    num_samples, tip_track, add_ic, vol_ic = get_values(  # noqa: F821
+        'num_samples', 'tip_track', 'add_ic', 'vol_ic')
 
     lys_hyb_bead_vol = 680
     wash_vol = 200
@@ -69,6 +69,7 @@ def run(ctx):
     """
     lys_hyb_buff = res.wells()[0]
     beads = res.wells()[1]
+    ic = res.wells()[2]
     wash1 = res.wells()[3:4]
     mm = res.wells()[4]
     waste = res.wells()[-1].top()
@@ -105,8 +106,9 @@ def run(ctx):
                     tip_log['count'][m300] = 0
         else:
             tip_log['count'][m300] = 0
+            tip_log['count'][p1000] = 0
     else:
-        tip_log['count'] = {m300: 0}
+        tip_log['count'] = {m300: 0, p1000: 0}
 
     tip_log['tips'] = {
         m300: [tip for rack in tips300 for tip in rack.rows()[0]],
@@ -269,44 +271,51 @@ resuming.')
                           new_tip='never')
             m300.blow_out(e.top(-2))
             m300.air_gap(20)
-            m300.drop_tip()
+            _drop(m300)
 
     """     BUFFER PREP     """
+    if add_ic:
+        _pick_up(p1000)
+        p1000.transfer(vol_ic, ic, lys_hyb_buff, mix_before=(10, 100),
+                       mix_after=(10, 100), new_tip='never')
+        _drop(p1000)
+    _pick_up(p1000)
     p1000.transfer(90, beads, lys_hyb_buff, mix_before=(10, 100),
-                   mix_after=(10, 100))
+                   mix_after=(10, 100), new_tip='never')
+    _drop(p1000)
 
     for t in inc_tubes:
-        p1000.pick_up_tip()
+        _pick_up(p1000)
         p1000.transfer(lys_hyb_bead_vol, lys_hyb_buff, t,
                        mix_before=(10, 200), air_gap=50, new_tip='never')
         p1000.air_gap(50)
-        p1000.drop_tip()
+        _drop(p1000)
 
     """     REFORMATTING    """
     for s, d in zip(sources, inc_tubes):
-        p1000.pick_up_tip()
+        _pick_up(p1000)
         p1000.transfer(100, s, d, mix_before=(5, 100), mix_after=(5, 100),
                        air_gap=50, new_tip='never')
         p1000.air_gap(50)
-        p1000.drop_tip()
+        _drop(p1000)
 
     # temperature incubations
     for temp in [85, 56]:
         tempdeck.set_temperature(temp)
         ctx.delay(minutes=3)
         for t in inc_tubes:
-            p1000.pick_up_tip()
+            _pick_up(p1000)
             p1000.mix(10, 100, t)
             p1000.air_gap(50)
-            p1000.drop_tip()
+            _drop(p1000)
 
     # transfer to magplate
     for s, d in zip(inc_tubes, mag_samples_s):
-        p1000.pick_up_tip()
+        _pick_up(p1000)
         p1000.transfer(800, s, d, mix_before=(5, 100), air_gap=50,
                        new_tip='never')
         p1000.air_gap(50)
-        p1000.drop_tip()
+        _drop(p1000)
 
     """     EXTRACTION     """
 
@@ -321,6 +330,9 @@ resuming.')
     if tip_track and not ctx.is_simulating():
         if not os.path.isdir(folder_path):
             os.mkdir(folder_path)
-        data = {'tips300': tip_log['count'][m300]}
+        data = {
+            'tips300': tip_log['count'][m300],
+            'tips1000': tip_log['count'][p1000]
+        }
         with open(tip_file_path, 'w') as outfile:
             json.dump(data, outfile)
