@@ -12,8 +12,8 @@
 This protocol is [part one](https://develop.protocols.opentrons.com/protocol/21e4d8-pt1) of a three-part series to automate the [Twist Library Prep protocol](https://www.twistbioscience.com/sites/default/files/resources/2019-09/Protocol_NGS_EnzymaticFragUniversalAdapterSystem_11Sep19_Rev1.pdf). See below for all three parts:</br>
 </br>
 Part 1: [Fragmentation & Repair](https://develop.protocols.opentrons.com/protocol/21e4d8-pt1)</br>
-Part 2: [](https://develop.protocols.opentrons.com/protocol/21e4d8-pt2)</br>
-Part 3: [](https://develop.protocols.opentrons.com/protocol/21e4d8-pt3)</br>
+Part 2: [Ligate Adapters](https://develop.protocols.opentrons.com/protocol/21e4d8-pt2)</br>
+Part 3: [PCR Amplification](https://develop.protocols.opentrons.com/protocol/21e4d8-pt3)</br>
 </br>
 This protocol begins with samples diluted to 5ng/µL (if you still need to normalize your sample concentration, try our [Normalization protocol](https://protocols.opentrons.com/protocol/normalization)) in either PCR tubes or a 96-well plate. Enzymatic Fragmentation Mastermix (40µL) is added to empty PCR tubes/96-well plate first, before 10µL of normalized sample is added. The PCR tubes/96-well plate containing sample and mastermix should then be moved off deck to thermocycler and run on the program listed in the [Twist Library Prep protocol](https://www.twistbioscience.com/sites/default/files/resources/2019-09/Protocol_NGS_EnzymaticFragUniversalAdapterSystem_11Sep19_Rev1.pdf). After the thermocycler, the samples can be returned to the OT-2 for [part two](https://develop.protocols.opentrons.com/protocol/21e4d8-pt2) of this protocol.</br>
 </br>
