@@ -305,6 +305,8 @@ resuming.')
 
     """     EXTRACTION     """
 
+    ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
+' + str(settling_time) + ' minutes.')
     remove_supernatant(220)
     wash(wash_vol, wash1)
     elute(elution_vol)
