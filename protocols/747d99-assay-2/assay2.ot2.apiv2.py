@@ -219,7 +219,7 @@ resuming.')
             side = 1 if i % 2 == 0 else -1
             loc = m.bottom(0.5).move(Point(x=side*m._width))
             src = source[i//(12//len(source))]
-            m300.mix(3, 100, src)
+            # m300.mix(3, 100, src)
             for n in range(num_trans):
                 if m300.current_volume > 0:
                     m300.dispense(m300.current_volume, src.top())
@@ -305,6 +305,8 @@ resuming.')
 
     """     EXTRACTION     """
 
+    ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
+' + str(settling_time) + ' minutes.')
     remove_supernatant(220)
     wash(wash_vol, wash1)
     elute(elution_vol)
