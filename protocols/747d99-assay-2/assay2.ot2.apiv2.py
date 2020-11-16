@@ -4,7 +4,7 @@ import os
 import math
 
 metadata = {
-    'protocolName': 'HP COVID-19 Assay 1 V1',
+    'protocolName': 'HP COVID-19 Assay 2 V1',
     'author': 'Opentrons <protocols@opentrons.com>',
     'apiLevel': '2.4'
 }
@@ -18,10 +18,9 @@ Here is where you can modify the magnetic module engage height:
 # Start protocol
 def run(ctx):
 
-    num_samples, tip_track, add_ic, vol_ic = get_values(  # noqa: F821
-        'num_samples', 'tip_track', 'add_ic', 'vol_ic')
+    num_samples, tip_track = get_values(  # noqa: F821
+        'num_samples', 'tip_track')
 
-    lys_hyb_bead_vol = 680
     wash_vol = 200
     mag_height = 13.7
     elution_vol = 40
@@ -39,9 +38,8 @@ def run(ctx):
     res = ctx.load_labware(
         'nest_12_reservoir_15ml', '2', 'reagent reservoir')
     tempdeck = ctx.load_module('Temperature Module Gen2', '3')
-    rxn_tubeblock = tempdeck.load_labware(
-                'opentrons_24_aluminumblock_nest_1.5ml_snapcap',
-                'reaction tubeblock')
+    rxn_plate = tempdeck.load_labware('biorad_96_wellplate_200ul_pcr',
+                                      'reaction plate')
     source_racks = [
         ctx.load_labware('opentrons_15_tuberack_nest_15ml_conical', slot,
                          'patient samples in VTM: rack ' + str(i+1))
@@ -67,9 +65,7 @@ def run(ctx):
     """
     Here is where you can define the locations of your reagents.
     """
-    lys_hyb_buff = res.wells()[0]
     beads = res.wells()[1]
-    ic = res.wells()[2]
     wash1 = res.wells()[3:4]
     mm = res.wells()[4]
     waste = res.wells()[-1].top()
@@ -77,9 +73,9 @@ def run(ctx):
     sources = [
         well for rack in source_racks for well in rack.wells()][:num_samples]
     num_cols = math.ceil(num_samples/8)
-    inc_tubes = rxn_tubeblock.wells()[:num_samples]
+    inc_tubes_m = rxn_plate.rows()[0][:num_cols]
+    inc_tubes_s = rxn_plate.wells()[:num_samples]
     mag_samples_m = magplate.rows()[0][:num_cols]
-    mag_samples_s = magplate.wells()[:num_samples]
     elution_samples_m = elution_plate.rows()[0][:num_cols]
 
     magdeck.disengage()  # just in case
@@ -147,8 +143,8 @@ resuming.')
         switch = not switch
         drop_inc = 8 if pip == m300 else 1
         drop_count += drop_inc
-        if drop_count == drop_threshold:
-            m300.home()
+        if drop_count >= drop_threshold:
+            ctx.home()
             ctx.pause('Please empty tips from waste before resuming.')
 
             ctx.home()  # home before continuing with protocol
@@ -274,53 +270,42 @@ resuming.')
             m300.air_gap(20)
             _drop(m300)
 
-    """     BUFFER PREP     """
-    if add_ic:
-        _pick_up(p1000)
-        p1000.transfer(vol_ic, ic, lys_hyb_buff, mix_before=(10, 100),
-                       mix_after=(10, 100), new_tip='never')
-        _drop(p1000)
-    _pick_up(p1000)
-    p1000.transfer(90, beads, lys_hyb_buff, mix_before=(10, 100),
-                   mix_after=(10, 100), new_tip='never')
-    _drop(p1000)
-
-    for t in inc_tubes:
-        _pick_up(p1000)
-        p1000.transfer(lys_hyb_bead_vol, lys_hyb_buff, t,
-                       mix_before=(10, 200), air_gap=50, new_tip='never')
-        p1000.air_gap(50)
-        _drop(p1000)
-
     """     REFORMATTING    """
-    for s, d in zip(sources, inc_tubes):
+    for s, d in zip(sources, inc_tubes_s):
         _pick_up(p1000)
-        p1000.transfer(100, s, d, mix_before=(5, 100), mix_after=(5, 100),
-                       air_gap=50, new_tip='never')
+        p1000.transfer(200, s, d, mix_before=(5, 100), air_gap=50,
+                       new_tip='never')
         p1000.air_gap(50)
         _drop(p1000)
+
+    # add beads
+    for m in inc_tubes_m:
+        _pick_up(m300)
+        m300.transfer(20, beads, m, mix_before=(5, 100), mix_after=(5, 100),
+                      new_tip='never')
+        _drop(m300)
 
     # temperature incubations
     for temp in [85, 56]:
         tempdeck.set_temperature(temp)
         ctx.delay(minutes=3)
-        for t in inc_tubes:
-            _pick_up(p1000)
-            p1000.mix(10, 100, t)
-            p1000.air_gap(50)
-            _drop(p1000)
+        for m in inc_tubes_m:
+            _pick_up(m300)
+            m300.mix(10, 100, m)
+            m300.air_gap(20)
+            _drop(m300)
 
     # transfer to magplate
-    for s, d in zip(inc_tubes, mag_samples_s):
-        _pick_up(p1000)
-        p1000.transfer(800, s, d, mix_before=(5, 100), air_gap=50,
-                       new_tip='never')
-        p1000.air_gap(50)
-        _drop(p1000)
+    for s, d in zip(inc_tubes_m, mag_samples_m):
+        _pick_up(m300)
+        m300.transfer(220, s, d, mix_before=(5, 100), air_gap=20,
+                      new_tip='never')
+        m300.air_gap(20)
+        _drop(m300)
 
     """     EXTRACTION     """
 
-    remove_supernatant(800)
+    remove_supernatant(220)
     wash(wash_vol, wash1)
     elute(elution_vol)
     ctx.home()
