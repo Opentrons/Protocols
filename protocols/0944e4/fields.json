@@ -1,8 +1,8 @@
 [
   {
     "type": "dropDown",
-    "label": "P10 multi-channel GEN1 pipette mount",
-    "name": "p10_multi_mount",
+    "label": "P20 multi-channel GEN2 pipette mount",
+    "name": "p20_multi_mount",
     "options": [
       { "label": "right", "value": "right" },
       { "label": "left", "value": "left" }
@@ -22,6 +22,12 @@
     "label": "number of samples (1-96)",
     "name": "number_of_samples",
     "default": 48
+  },
+  {
+    "type": "float",
+    "label": "volume of beads (µl)",
+    "name": "volume_of_beads",
+    "default": 55
   },
   {
     "type": "float",
