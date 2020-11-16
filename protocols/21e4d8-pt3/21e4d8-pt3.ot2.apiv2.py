@@ -81,11 +81,9 @@ def run(protocol):
 
     # Assign variables to pipettes dependent on single/multi
     if p20name.split('_')[1] == 'multi':
-        p20pcr = pcr_cols
         p20twist = twist_cols
         p20mag = mag_cols
     else:
-        p20pcr = pcr_wells
         p20twist = twist_wells
         p20mag = mag_wells
 
