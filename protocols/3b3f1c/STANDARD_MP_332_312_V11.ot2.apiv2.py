@@ -1,7 +1,7 @@
 import math
 
 metadata = {
-    'protocolName': 'STANDARD MP 332 312 V10',
+    'protocolName': 'STANDARD MP 332 312 V11',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.0'
@@ -10,8 +10,8 @@ metadata = {
 
 def run(ctx):
 
-    [input_csv] = get_values(  # noqa: F821
-        'input_csv')
+    [input_csv, vol_aliquot] = get_values(  # noqa: F821
+        'input_csv', 'vol_aliqout')
 
     class tube():
 
@@ -77,7 +77,7 @@ def run(ctx):
     }
     diluent = tuberack15_50.wells_by_name()['A3']
     tubes_dict[diluent].comp_coeff = 1.2
-    tubes_dict[diluent].height = 90
+    tubes_dict[diluent].height = 92
 
     # tip conditioning
     dil_dest = tuberack15_50.wells()[0]
@@ -221,8 +221,9 @@ def run(ctx):
         for a in aliquots:
             p1000.flow_rate.aspirate = 150
             p1000.flow_rate.dispense = 320
-            p1000.transfer(160, tubes_dict[std].height_dec(160), a.bottom(10),
-                           new_tip='never')
+            p1000.transfer(vol_aliquot,
+                           tubes_dict[std].height_dec(vol_aliquot),
+                           a.bottom(10), new_tip='never')
             p1000.blow_out(a.top(-6))
         p1000.drop_tip()
         if 'QC' in std_name:
@@ -232,7 +233,7 @@ def run(ctx):
 
     # transfer mobile phase
     mobile_phase = tuberack15_50.wells_by_name()['B1']
-    tubes_dict[mobile_phase].height = 90
+    tubes_dict[mobile_phase].height = 94
     tip_condition(p1000, 1000, mobile_phase)
     mobile_phase_dests = plate.rows()[0][:8] + plate.rows()[2][:6]
     for i in range(len(mobile_phase_dests)//2):
@@ -285,3 +286,16 @@ def run(ctx):
             qc_counter += 1
         else:
             ws_counter += 1
+
+    if not ctx.is_simulating():
+        p300_serial = p300.hw_pipette['pipette_id']
+        p1000_serial = p1000.hw_pipette['pipette_id']
+        ot2_serial = []
+        with open('/var/serial') as serialfile:
+            ot2_serial.append(serialfile.read())
+        with open('/data/output/readout.txt', 'w') as text_file:
+            text_file.write('P300 Serial: ' + str(p300_serial))
+            text_file.write('P1000 Serial: ' + str(p1000_serial))
+            text_file.write('OT-2 Serial: ' + str(ot2_serial[0]))
+            for c in ctx.commands():
+                text_file.write(c + '\n')
