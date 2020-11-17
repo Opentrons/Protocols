@@ -1,7 +1,7 @@
 import math
 
 metadata = {
-    'protocolName': 'STANDARD MP 332 312 V10',
+    'protocolName': 'STANDARD MP 332 312 V11',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.0'
@@ -77,7 +77,7 @@ def run(ctx):
     }
     diluent = tuberack15_50.wells_by_name()['A3']
     tubes_dict[diluent].comp_coeff = 1.2
-    tubes_dict[diluent].height = 90
+    tubes_dict[diluent].height = 92
 
     # tip conditioning
     dil_dest = tuberack15_50.wells()[0]
@@ -232,7 +232,7 @@ def run(ctx):
 
     # transfer mobile phase
     mobile_phase = tuberack15_50.wells_by_name()['B1']
-    tubes_dict[mobile_phase].height = 90
+    tubes_dict[mobile_phase].height = 94
     tip_condition(p1000, 1000, mobile_phase)
     mobile_phase_dests = plate.rows()[0][:8] + plate.rows()[2][:6]
     for i in range(len(mobile_phase_dests)//2):
