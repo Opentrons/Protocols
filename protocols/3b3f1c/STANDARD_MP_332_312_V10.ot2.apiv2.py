@@ -296,6 +296,6 @@ def run(ctx):
         with open('/data/output/readout.txt', 'w') as text_file:
             text_file.write('P300 Serial: ' + str(p300_serial))
             text_file.write('P1000 Serial: ' + str(p1000_serial))
-            text_file.write('OT-2 Serial: ' + str(ot2_serial))
+            text_file.write('OT-2 Serial: ' + str(ot2_serial[0]))
             for c in ctx.commands():
                 text_file.write(c + '\n')
