@@ -15,7 +15,8 @@ def run(ctx):
     # Change to HARD-SHELL BIO-RAD PCR 384 WELL PLATE 50 UL
     cfx_plate = ctx.load_labware('hardshellbioradpcr_384_wellplate_50ul', '3')
     # THERMO FISHER SCIENTIFIC ELUTION TUBES 96 WELL PLATE 650 UL
-    control_plate = ctx.load_labware('thermofisherscientificelutiontubes_96_wellplate_650ul', '2')
+    control_plate = ctx.load_labware(
+       'thermofisherscientificelutiontubes_96_wellplate_650ul', '2')
 
     tip_racks = [
         ctx.load_labware(
