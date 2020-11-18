@@ -1,3 +1,5 @@
+from opentrons import protocol_api
+
 metadata = {"apiLevel": "2.5"}
 
 
@@ -20,7 +22,7 @@ def run(ctx):
         for well_num, well in enumerate(sample_plate.wells()[:count-(i*24)]):
             try:
                 p300s.pick_up_tip()
-            except ctx.labware.OutOfTipsError:
+            except protocol_api.labware.OutOfTipsError:
                 ctx.pause("Replace the tips")
                 p300s.reset_tipracks()
                 p300s.pick_up_tip()
