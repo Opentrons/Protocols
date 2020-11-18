@@ -2,7 +2,7 @@ import math
 from datetime import datetime
 
 metadata = {
-    'protocolName': 'STANDARD MP 332 312 V12',
+    'protocolName': 'STANDARD MP 332 312 V11',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.0'
