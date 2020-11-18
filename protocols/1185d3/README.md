@@ -5,7 +5,7 @@
 
 ## Categories
 * Nucleic Acid Extraction & Purification
-        * Plant DNA
+        * MagMAX Nucleic Acid Isolation Kit
 
 ## Description
 This protocol automates the wash steps of the MagMAX Viral/Pathogen Nucleic Acid Isolation Kit. As inputs, it requires a deep well plate with sample beads, a single well trough of 80% ethanol, a single well trough of wash buffer, a single well trash, and an output 96 well plate. 
