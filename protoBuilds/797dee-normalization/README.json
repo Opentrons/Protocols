@@ -15,12 +15,12 @@
         "notes": "\nIf you\u2019d like to request a protocol supporting multiple plates or require other changes to this script, please fill out our [Protocol Request Form](https://opentrons-protocol-dev.paperform.co/). You can also modify the Python file directly by following our [API Documentation](https://docs.opentrons.com/v2/apiv2index.html). If you\u2019d like to chat with an applications engineer about changes, please contact us at [protocols@opentrons.com](mailto:protocols@opentrons.com).\n\n",
         "process": "\n1. Create your CSV file according to our instructions.\n2. Upload your CSV and select all desired settings according to the \u201cSetup\u201d section above to customize your protocol run.\n3. Download your customized OT-2 protocol using the blue \u201cDownload\u201d button, located above the deckmap.\n4. Upload your protocol into the Opentrons App and follow the instructions there to set up your deck, calibrate your labware, and proceed to run.\n5. Make sure to add reagents to your labware before placing it on the deck! Your diluent should be in a 50ml tube in the A3 spot (upper left) of your tube rack, and the samples you\u2019re normalizing should be in your plate.\n\n\n",
         "robot": "* [OT-2](https://opentrons.com/ot-2)\n\n\n",
-        "title": "Normalization"
+        "title": "Normalization with 50ml tubes"
     },
     "notes": "If you\u2019d like to request a protocol supporting multiple plates or require other changes to this script, please fill out our Protocol Request Form. You can also modify the Python file directly by following our API Documentation. If you\u2019d like to chat with an applications engineer about changes, please contact us at protocols@opentrons.com.",
     "process": "\nCreate your CSV file according to our instructions.\nUpload your CSV and select all desired settings according to the \u201cSetup\u201d section above to customize your protocol run.\nDownload your customized OT-2 protocol using the blue \u201cDownload\u201d button, located above the deckmap.\nUpload your protocol into the Opentrons App and follow the instructions there to set up your deck, calibrate your labware, and proceed to run.\nMake sure to add reagents to your labware before placing it on the deck! Your diluent should be in a 50ml tube in the A3 spot (upper left) of your tube rack, and the samples you\u2019re normalizing should be in your plate.\n",
     "robot": [
         "OT-2"
     ],
-    "title": "Normalization"
+    "title": "Normalization with 50ml tubes"
 }
