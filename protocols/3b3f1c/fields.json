@@ -10,5 +10,11 @@
     "label": "volume of aliquot (in µl)",
     "name": "vol_aliqout",
     "default": 160
+  },
+  {
+    "type": "str",
+    "label": "name of user",
+    "name": "user_name",
+    "default": "User"
   }
 ]
