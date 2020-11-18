@@ -1,4 +1,4 @@
-# Normalization
+# Normalization with 50ml tubes
 
 ### Author
 [Opentrons (verified)](https://opentrons.com/)

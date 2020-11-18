@@ -1,5 +1,5 @@
 metadata = {
-    'protocolName': 'Normalization',
+    'protocolName': 'Normalization with 50ml tube',
     'author': 'Opentrons <protocols@opentrons.com>',
     'source': 'Protocol Library',
     'apiLevel': '2.2'
