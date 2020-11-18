@@ -1,7 +1,7 @@
 metadata = {
     'apiLevel': '2.5',
     'protocolName': 'CerTest VIASURE SARS-CoV-2 Real Time PCR Detection kit',
-    'author': 'Chaz <chaz@opentrons.com>',
+    'author': 'Opentrons <protocols@opentrons.com>',
     'source': 'Custom Protocol Request'
 }
 
