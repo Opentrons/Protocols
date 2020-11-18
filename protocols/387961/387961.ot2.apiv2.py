@@ -10,7 +10,8 @@ def run(protocol):
 
     # labware
     plate384 = protocol.load_labware('flipped_384_plate', '3')
-    srcplate = protocol.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '5')
+    srcplate = protocol.load_labware(
+        'nest_96_wellplate_100ul_pcr_full_skirt', '5')
     tips = protocol.load_labware('opentrons_96_tiprack_20ul', '1')
 
     pip = protocol.load_instrument('p20_multi_gen2', 'right', tip_racks=[tips])
