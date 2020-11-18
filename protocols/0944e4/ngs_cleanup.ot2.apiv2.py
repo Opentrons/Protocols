@@ -65,7 +65,7 @@ def run(ctx):
     m20 = ctx.load_instrument(
         'p20_multi_gen2', mount=p20_multi_mount, tip_racks=tips20)
     m300 = ctx.load_instrument(
-        'p300_multi', mount=p300_multi_mount, tip_racks=tips300)
+        'p300_multi_gen2', mount=p300_multi_mount, tip_racks=tips300)
     m300.flow_rate.aspirate = 100
     m300.flow_rate.dispense = 200
     m20.flow_rate.aspirate = 3
