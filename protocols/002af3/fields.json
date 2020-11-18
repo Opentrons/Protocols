@@ -4,18 +4,5 @@
     "label": "Number of Columns (1-14)",
     "name": "column_count",
     "default": 14
-  },
-    {
-    "type": "string",
-    "label": "CFX plate labware",
-    "name": "cfx_plate",
-    "default": "corning_384_wellplate_112ul_flat"
-  },
-  {
-    "type": "string",
-    "label": "Control plate labware",
-    "name": "control_plate",
-    "default": "nest_96_wellplate_2ml_deep"
   }
-
 ]
