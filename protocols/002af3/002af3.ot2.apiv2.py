@@ -10,6 +10,7 @@ def run(ctx):
 
     column_count = get_values(  # noqa: F821
             'column_count')
+    column_count = column_count[0]
 
     # Change to HARD-SHELL BIO-RAD PCR 384 WELL PLATE 50 UL
     cfx_plate = ctx.load_labware('hardshellbioradpcr_384_wellplate_50ul', '3')
