@@ -1,4 +1,5 @@
 import math
+from datetime import datetime
 
 metadata = {
     'protocolName': 'STANDARD MP 332 312 V12',
@@ -10,8 +11,8 @@ metadata = {
 
 def run(ctx):
 
-    [input_csv, vol_aliquot] = get_values(  # noqa: F821
-        'input_csv', 'vol_aliqout')
+    [input_csv, vol_aliquot, user_name] = get_values(  # noqa: F821
+        'input_csv', 'vol_aliqout', 'user_name')
 
     class tube():
 
@@ -287,15 +288,19 @@ def run(ctx):
         else:
             ws_counter += 1
 
+    write_path = '/data/output/readout.txt'
     if not ctx.is_simulating():
         p300_serial = p300.hw_pipette['pipette_id']
         p1000_serial = p1000.hw_pipette['pipette_id']
         ot2_serial = []
         with open('/var/serial') as serialfile:
             ot2_serial.append(serialfile.read())
-        with open('/data/output/readout.txt', 'w') as text_file:
-            text_file.write('P300 Serial: ' + str(p300_serial))
-            text_file.write('P1000 Serial: ' + str(p1000_serial))
-            text_file.write('OT-2 Serial: ' + str(ot2_serial[0]))
+        with open(write_path, 'w') as text_file:
+            text_file.write(f'Name of user: {user_name} \n')
+            text_file.write(f'Date/Time of run: {str(datetime.now())}\n')
+            text_file.write(f'P300 Serial: {str(p300_serial)}\n')
+            text_file.write(f'P1000 Serial: {str(p1000_serial)}\n')
+            text_file.write(f'OT-2 Serial: {str(ot2_serial[0])}\n')
+            text_file.write('Protocol execution:\n')
             for c in ctx.commands():
-                text_file.write(c + '\n')
+                text_file.write(f'{c}\n')
