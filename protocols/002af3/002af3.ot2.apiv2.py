@@ -1,20 +1,20 @@
 metadata = {
         'apiLevel': '2.5',
         'protocolName': 'qPCR 96 well -> 384 well transfer',
-        'author': 'Chaz <chaz@opentrons.com>',
+        'author': 'Opentrons <protocols@opentrons.com>',
         'source': 'Custom Protocol Request'
         }
 
 
 def run(ctx):
 
-    column_count, cfxp, ctrlp = get_values(  # noqa: F821
-            'column_count', 'cfx_plate', 'control_plate')
+    column_count = get_values(  # noqa: F821
+            'column_count')
 
     # Change to HARD-SHELL BIO-RAD PCR 384 WELL PLATE 50 UL
-    cfx_plate = ctx.load_labware(cfxp, '3')
+    cfx_plate = ctx.load_labware('hardshellbioradpcr_384_wellplate_50ul', '3')
     # THERMO FISHER SCIENTIFIC ELUTION TUBES 96 WELL PLATE 650 UL
-    control_plate = ctx.load_labware(ctrlp, '2')
+    control_plate = ctx.load_labware('thermofisherscientificelutiontubes_96_wellplate_650ul', '2')
 
     tip_racks = [
         ctx.load_labware(
