@@ -32,10 +32,23 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
-chilled 24-well aluminum block for 2ml tubes (slot 5):
-* well A1: mastermix tube (loaded empty)
-* wells A2-D2: mastermix reagents in order listed by kit (2-4, depending on which kit is selected)
+chilled 24-well aluminum block for 2ml tubes (slot 5):  
+![tubeblock](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/stationCtubeblock.png)
 
+Allplex 2019-nCoV Assay (17µl/sample total):  
+* reagent 1: 2019-nCov MOM (5µl/sample)
+* reagent 2: RNase-free water (5µl/sample)
+* reagent 3: 5X Real-time One-step Buffer (5µl/sample)
+* reagent 4: Real-time One-step Enzyme (2µl/sample)
+
+Allplex SARS-CoV-2 Assay (15µl/sample total):  
+* reagent 1: SARS2 MOM (5µl/sample)
+* reagent 2: EM8 (5µl/sample)
+* reagent 3: RNase-free water (5µl/sample)
+
+Seegene Real-time One-step RT-PCR:  
+* reagent 1: SC2FabR MOM (5µl/sample)
+* reagent 2: EM8 (5µl/sample)
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
