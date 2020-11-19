@@ -11,8 +11,6 @@ metadata = {
     'apiLevel': '2.0'
 }
 
-tip_track = False
-
 
 def run(ctx: protocol_api.ProtocolContext):
 
@@ -28,15 +26,17 @@ def run(ctx: protocol_api.ProtocolContext):
         ctx.load_labware(
             'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', slot,
             'source tuberack ' + str(i+1))
-        for i, slot in enumerate(['2', '3', '5', '6', '7', '8', '9'])
+        for i, slot in enumerate(['2', '3', '5', '6'])
     ]
     dest_plate = ctx.load_labware(
         'nest_96_wellplate_2ml_deep', '4', '96-deepwell sample plate')
+    tipracks20 = [
+        ctx.load_labware('opentrons_96_filtertiprack_20ul', slot,
+                         '20µl filter tiprack')
+        for slot in ['7', '8', '9']]
     tipracks1000 = [ctx.load_labware('opentrons_96_filtertiprack_1000ul', slot,
                                      '1000µl filter tiprack')
-                    for slot in ['11']]
-    tipracks20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '10',
-                                   '20µl filter tiprack')]
+                    for slot in ['10', '11']]
 
     # load pipette
     p20 = ctx.load_instrument('p20_single_gen2', 'left', tip_racks=tipracks20)
