@@ -12,6 +12,18 @@
     "default": 160
   },
   {
+    "type": "float",
+    "label": "QC (slot 1, well H11) starting height (in mm)",
+    "name": "qc_height",
+    "default": 10
+  },
+  {
+    "type": "float",
+    "label": "STD (slot 1, well H12) starting height (in mm)",
+    "name": "std_height",
+    "default": 7
+  },
+  {
     "type": "str",
     "label": "name of user",
     "name": "user_name",
