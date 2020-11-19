@@ -11,10 +11,10 @@ metadata = {
 
 def run(ctx):
 
-    [input_csv, vol_aliquot, vol_tests, qc_height, std_height, user_name,
-     air_gap_bool] = get_values(  # noqa: F821
-        'input_csv', 'vol_aliqout', 'vol_tests', 'qc_height', 'std_height',
-        'user_name', 'air_gap_bool')
+    [input_csv, vol_aliquot, vol_mobile_phase, vol_tests, qc_height,
+     std_height, user_name, air_gap_bool] = get_values(  # noqa: F821
+        'input_csv', 'vol_aliqout', 'vol_mobile_phase', 'vol_tests',
+        'qc_height', 'std_height', 'user_name', 'air_gap_bool')
 
     class tube():
 
@@ -259,10 +259,14 @@ def run(ctx):
         p1000.flow_rate.aspirate = 150
         p1000.flow_rate.dispense = 800
         # custom distribution
-        p1000.aspirate(900, tubes_dict[mobile_phase].height_dec(900))
+        asp_vol = vol_mobile_phase*2 + 100 \
+            if vol_mobile_phase*2 + 100 < 1000 else 1000
+        p1000.aspirate(asp_vol, tubes_dict[mobile_phase].height_dec(asp_vol))
         for well in mobile_phase_dests[i*2:i*2+2]:
-            p1000.dispense(400, well.bottom(10))
-        p1000.dispense(100, tubes_dict[mobile_phase].height_inc(100))
+            p1000.dispense(vol_mobile_phase, well.bottom(10))
+        p1000.dispense(
+            p1000.current_volume,
+            tubes_dict[mobile_phase].height_inc(p1000.current_volume))
         p1000.blow_out(mobile_phase.top(-2))
     p1000.air_gap(100)
     p1000.drop_tip()

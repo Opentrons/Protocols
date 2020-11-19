@@ -13,6 +13,18 @@
   },
   {
     "type": "float",
+    "label": "volume of mobile phase (in µl)",
+    "name": "vol_mobile_phase",
+    "default": 400
+  },
+  {
+    "type": "float",
+    "label": "volume of tests (in µl)",
+    "name": "vol_tests",
+    "default": 30
+  },
+  {
+    "type": "float",
     "label": "volume of tests (in µl)",
     "name": "vol_tests",
     "default": 30
