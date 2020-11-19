@@ -11,8 +11,10 @@ metadata = {
 
 def run(ctx):
 
-    [input_csv, vol_aliquot, user_name] = get_values(  # noqa: F821
-        'input_csv', 'vol_aliqout', 'user_name')
+    [input_csv, vol_aliquot, vol_mobile_phase, vol_tests, qc_height,
+     std_height, user_name, air_gap_bool] = get_values(  # noqa: F821
+        'input_csv', 'vol_aliqout', 'vol_mobile_phase', 'vol_tests',
+        'qc_height', 'std_height', 'user_name', 'air_gap_bool')
 
     class tube():
 
@@ -70,6 +72,13 @@ def run(ctx):
     p300.flow_rate.blow_out = 300
     p1000.flow_rate.blow_out = 1000
 
+    air_gap_p1000 = 100 if air_gap_bool else 0
+    air_gap_p300 = 20 if air_gap_bool else 0
+    air_gap_dict = {
+        pip: airgap for pip, airgap in zip([p1000, p300],
+                                           [air_gap_p1000, air_gap_p300])
+    }
+
     # start reagent setup
     tubes_dict = {
         well: tube(well)
@@ -92,14 +101,11 @@ def run(ctx):
             pip.transfer(vol, tubes_dict[loc].height_dec(vol),
                          dil_dest.bottom(104),
                          mix_before=(mix_reps, pip.max_volume*2/3),
-                         new_tip='never')
+                         air_gap=air_gap_dict[pip], new_tip='never')
             tubes_dict[dil_dest].height_inc(vol)
             pip.blow_out(dil_dest.bottom(104))
 
     # create serial dilution from .csv file
-    # data = [
-    #     line.split(',')[9:17] for line in input_csv.splitlines()[14:28]
-    #     if line and line.split(',')[0]]
     data = [
         line.split(',')[:17] for line in input_csv.splitlines()[14:28]
         if line and line.split(',')[0]]
@@ -111,7 +117,7 @@ def run(ctx):
     for line in data[::-1]:
         dest = ctx.loaded_labwares[int(line[12])].wells_by_name()[line[13]]
         dil_vol = float(line[14])
-        num_trans = math.ceil(dil_vol/p1000.max_volume)
+        num_trans = math.ceil(dil_vol/(p1000.max_volume-air_gap_p1000))
         vol_per_trans = dil_vol/num_trans
         asp_rate = vol_per_trans if vol_per_trans < 150 else 150
         disp_rate = 2*vol_per_trans if vol_per_trans > 37 else 150
@@ -121,8 +127,9 @@ def run(ctx):
             p1000.transfer(vol_per_trans,
                            tubes_dict[diluent].height_dec(vol_per_trans),
                            tubes_dict[dest].height_inc(vol_per_trans),
-                           new_tip='never')
+                           air_gap=air_gap_p1000, new_tip='never')
             p1000.blow_out(dest.bottom(tubes_dict[dest].height + 20))
+    p1000.air_gap(100)
     p1000.drop_tip()
 
     # parse std sources
@@ -140,6 +147,7 @@ def run(ctx):
     for std, vals in std_dict.items():
         if std.parent.parent == '2':
             if p1000.hw_pipette['has_tip']:
+                p1000.air_gap(100)
                 p1000.drop_tip()
             p1000.pick_up_tip()
             p1000.flow_rate.aspirate = 500
@@ -147,17 +155,18 @@ def run(ctx):
             p1000.flow_rate.blow_out = 1000
             p1000.mix(5, 1000, std.bottom(tubes_dict[std].height))
             p1000.blow_out(std.top(-2))
+            p1000.air_gap(100)
             p1000.drop_tip()
         # p300 tip condition
         tip_condition(p300, 150, diluent)
         if std.display_name.split()[0] == 'H11':
-            plate_height = 10
+            plate_height = qc_height
         elif std.display_name.split()[0] == 'H12':
-            plate_height = 7
+            plate_height = std_height
         for val in vals:
             dest = val['dest']
             vol = val['vol']
-            num_trans = math.ceil(vol/p300.max_volume)
+            num_trans = math.ceil(vol/(p300.max_volume-air_gap_p300))
             vol_per_trans = vol/num_trans
             asp_rate = vol_per_trans if vol_per_trans < 150 else 150
             disp_rate = 2*vol_per_trans if vol_per_trans > 37 else 150
@@ -167,13 +176,19 @@ def run(ctx):
                 dest_loc = tubes_dict[dest].height_inc(vol_per_trans)
                 if std.parent.parent == '1':
                     p300.transfer(vol_per_trans, std.bottom(plate_height),
-                                  dest_loc, new_tip='never')
-                    plate_height -= 1
+                                  dest_loc, air_gap=air_gap_p300,
+                                  new_tip='never')
+                    if plate_height - 1 > 1:
+                        plate_height -= 1
+                    else:
+                        plate_height = 1
                 else:
                     p300.transfer(vol_per_trans,
                                   tubes_dict[std].height_dec(vol_per_trans),
-                                  dest_loc, new_tip='never')
+                                  dest_loc, air_gap=air_gap_p300,
+                                  new_tip='never')
                 p300.blow_out(dest_loc)
+        p300.air_gap(20)
         p300.drop_tip()
 
     # aliquots
@@ -212,6 +227,7 @@ def run(ctx):
 
         # mix
         if p1000.hw_pipette['has_tip']:
+            p1000.air_gap(100)
             p1000.drop_tip()
         p1000.pick_up_tip()
         p1000.flow_rate.aspirate = 500
@@ -224,8 +240,10 @@ def run(ctx):
             p1000.flow_rate.dispense = 320
             p1000.transfer(vol_aliquot,
                            tubes_dict[std].height_dec(vol_aliquot),
-                           a.bottom(10), new_tip='never')
+                           a.bottom(10), air_gap=air_gap_p1000,
+                           new_tip='never')
             p1000.blow_out(a.top(-6))
+        p1000.air_gap(100)
         p1000.drop_tip()
         if 'QC' in std_name:
             qc_counter += num_aliquots
@@ -241,25 +259,32 @@ def run(ctx):
         p1000.flow_rate.aspirate = 150
         p1000.flow_rate.dispense = 800
         # custom distribution
-        p1000.aspirate(900, tubes_dict[mobile_phase].height_dec(900))
+        asp_vol = vol_mobile_phase*2 + 100 \
+            if vol_mobile_phase*2 + 100 < 1000 else 1000
+        p1000.aspirate(asp_vol, tubes_dict[mobile_phase].height_dec(asp_vol))
         for well in mobile_phase_dests[i*2:i*2+2]:
-            p1000.dispense(400, well.bottom(10))
-        p1000.dispense(100, tubes_dict[mobile_phase].height_inc(100))
+            p1000.dispense(vol_mobile_phase, well.bottom(10))
+        p1000.dispense(
+            p1000.current_volume,
+            tubes_dict[mobile_phase].height_inc(p1000.current_volume))
         p1000.blow_out(mobile_phase.top(-2))
+    p1000.air_gap(100)
     p1000.drop_tip()
 
-    # # transfer IS
+    # transfer IS
     is_ = plate.wells_by_name()['H1']
     tip_condition(p300, 150, diluent)
     for i, m in enumerate(mobile_phase_dests):
         if i < 5:
-            h = 7
+            h = 6
         elif i >= 5 and i < 8:
-            h = 5
+            h = 4
         else:
-            h = 2
-        p300.transfer(30, is_.bottom(h), m.bottom(14), new_tip='never')
+            h = 1
+        p300.transfer(30, is_.bottom(h), m.bottom(14), air_gap=air_gap_p300,
+                      new_tip='never')
         p300.blow_out(m.bottom(14))
+    p300.air_gap(20)
     p300.drop_tip()
 
     # tests
@@ -277,10 +302,11 @@ def run(ctx):
         p300.flow_rate.dispense = 150
         # tip_condition(p300, 150, diluent)
         p300.pick_up_tip()
-        p300.transfer(30, tubes_dict[std].height_dec(30),
+        p300.transfer(vol_tests, tubes_dict[std].height_dec(vol_tests),
                       dest_set[counter].bottom(14), mix_before=(2, 200),
-                      new_tip='never')
+                      air_gap=air_gap_p300, new_tip='never')
         p300.blow_out(dest_set[counter].bottom(14))
+        p300.air_gap(20)
         p300.drop_tip()
 
         if 'QC' in std_name:
@@ -288,7 +314,7 @@ def run(ctx):
         else:
             ws_counter += 1
 
-    write_path = '/data/output/readout.txt'
+    write_path = '/data/readout.txt'
     if not ctx.is_simulating():
         p300_serial = p300.hw_pipette['pipette_id']
         p1000_serial = p1000.hw_pipette['pipette_id']
