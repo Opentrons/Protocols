@@ -12,9 +12,48 @@
     "default": 160
   },
   {
+    "type": "float",
+    "label": "volume of mobile phase (in µl)",
+    "name": "vol_mobile_phase",
+    "default": 400
+  },
+  {
+    "type": "float",
+    "label": "volume of tests (in µl)",
+    "name": "vol_tests",
+    "default": 30
+  },
+  {
+    "type": "float",
+    "label": "volume of tests (in µl)",
+    "name": "vol_tests",
+    "default": 30
+  },
+  {
+    "type": "float",
+    "label": "QC (slot 1, well H11) starting height (in mm)",
+    "name": "qc_height",
+    "default": 10
+  },
+  {
+    "type": "float",
+    "label": "STD (slot 1, well H12) starting height (in mm)",
+    "name": "std_height",
+    "default": 7
+  },
+  {
     "type": "str",
     "label": "name of user",
     "name": "user_name",
     "default": "User"
+  },
+  {
+    "type": "dropDown",
+    "label": "air gap",
+    "name": "air_gap_bool",
+    "options": [
+      {"label": "no", "value": false},
+      {"label": "yes", "value": true}
+    ]
   }
 ]
