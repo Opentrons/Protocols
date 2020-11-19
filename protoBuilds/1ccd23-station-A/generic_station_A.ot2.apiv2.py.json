@@ -1,76 +1,30 @@
 {
-    "content": "metadata = {\n    'protocolName': 'Generic Sample Plating Protocol (Station A)',\n    'author': 'Chaz <protocols@opentrons.com>',\n    'source': 'Protocol Library',\n    'apiLevel': '2.5'\n}\n\n\ndef run(protocol):\n    [num_samples, samp_vol, plate_type,\n    tube_type, pip_type] = get_values(  # noqa: F821\n    'num_samples', 'samp_vol', 'plate_type',\n    'tube_type', 'pip_type')\n\n    # load labware and pipettes\n    pip_name, tip_name = pip_type.split()\n    tips = [protocol.load_labware(tip_name, '3')]\n    pipette = protocol.load_instrument(pip_name, 'right', tip_racks=tips)\n\n    dest_plate = protocol.load_labware(plate_type, '2')\n\n    t_slots = ['1', '4', '7', '10', '5', '8', '11']\n    src_tubes = [protocol.load_labware(tube_type, s) for s in t_slots]\n\n    # define source/dest wells\n    if num_samples > 96:\n        raise Exception('The number of samples should be 1-96.')\n\n    dest_wells = dest_plate.wells()[:num_samples]\n    src_wells = [t for tube in src_tubes for t in tube.wells()][:num_samples]\n    air_vol = round(samp_vol*0.1)\n\n    for src, dest in zip(src_wells, dest_wells):\n        pipette.pick_up_tip()\n        pipette.transfer(samp_vol, src, dest, new_tip='never', air_gap=air_vol)\n        pipette.drop_tip()\n",
+    "content": "from opentrons import protocol_api\nimport json\nimport os\n# import math\n\n# metadata\nmetadata = {\n    'protocolName': 'Sample plating protocol',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.0'\n}\n\n\ndef run(ctx: protocol_api.ProtocolContext):\n\n    num_samples, vol_sample, tip_track = get_values(  # noqa: F821\n        'num_samples', 'vol_sample', 'tip_track')\n\n    # load labware\n    tempdeck = ctx.load_module('temperature module gen2', '1')\n    ic_pk = tempdeck.load_labware(\n        'opentrons_24_aluminumblock_nest_2ml_screwcap',\n        'chilled tubeblock for internal control (well A1)')\n    source_racks = [\n        ctx.load_labware(\n            'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', slot,\n            'source tuberack ' + str(i+1))\n        for i, slot in enumerate(['2', '3', '5', '6'])\n    ]\n    dest_plate = ctx.load_labware(\n        'nest_96_wellplate_2ml_deep', '4', '96-deepwell sample plate')\n    tipracks20 = [\n        ctx.load_labware('opentrons_96_filtertiprack_20ul', slot,\n                         '20\u00b5l filter tiprack')\n        for slot in ['7', '8', '9']]\n    tipracks1000 = [ctx.load_labware('opentrons_96_filtertiprack_1000ul', slot,\n                                     '1000\u00b5l filter tiprack')\n                    for slot in ['10', '11']]\n\n    # load pipette\n    p20 = ctx.load_instrument('p20_single_gen2', 'left', tip_racks=tipracks20)\n    p1000 = ctx.load_instrument(\n        'p1000_single_gen2', 'right', tip_racks=tipracks1000)\n\n    # setup samples\n    sources = [\n        well for rack in source_racks for well in rack.wells()][:num_samples]\n    dests_single = dest_plate.wells()[:num_samples]\n    # num_cols = math.ceil(num_samples/8)\n    ic = ic_pk.wells()[0]\n    pk = ic_pk.wells()[1]\n\n    tip_log = {'count': {}}\n    folder_path = '/data/A'\n    tip_file_path = folder_path + '/tip_log.json'\n    if tip_track and not ctx.is_simulating():\n        if os.path.isfile(tip_file_path):\n            with open(tip_file_path) as json_file:\n                data = json.load(json_file)\n                if 'tips1000' in data:\n                    tip_log['count'][p1000] = data['tips1000']\n                else:\n                    tip_log['count'][p1000] = 0\n                if 'tips20' in data:\n                    tip_log['count'][p20] = data['tips20']\n                else:\n                    tip_log['count'][p20] = 0\n    else:\n        tip_log['count'] = {p1000: 0, p20: 0}\n\n    tip_log['tips'] = {\n        p1000: [tip for rack in tipracks1000 for tip in rack.wells()],\n        p20: [tip for rack in tipracks20 for tip in rack.wells()]\n    }\n    tip_log['max'] = {\n        pip: len(tip_log['tips'][pip])\n        for pip in [p1000, p20]\n    }\n\n    def pick_up(pip):\n        nonlocal tip_log\n        if tip_log['count'][pip] == tip_log['max'][pip]:\n            ctx.pause('Replace ' + str(pip.max_volume) + '\u00b5l tipracks before \\\nresuming.')\n            pip.reset_tipracks()\n            tip_log['count'][pip] = 0\n        pip.pick_up_tip(tip_log['tips'][pip][tip_log['count'][pip]])\n        tip_log['count'][pip] += 1\n\n    # transfer sample\n    for s, d in zip(sources, dests_single):\n        pick_up(p1000)\n        p1000.transfer(vol_sample, s.bottom(5), d.bottom(5), air_gap=100,\n                       new_tip='never')\n        p1000.air_gap(100)\n        p1000.drop_tip()\n\n    # transfer internal control + proteinase K\n    for reagent in [ic, pk]:\n        for d in dests_single:\n            pick_up(p20)\n            p20.transfer(10, reagent.bottom(2), d.bottom(10), air_gap=5,\n                         new_tip='never')\n            p20.air_gap(5)\n            p20.drop_tip()\n\n    ctx.comment('Move deepwell plate (slot 4) to Station B for RNA \\\nextraction.')\n\n    # track final used tip\n    if not ctx.is_simulating():\n        if not os.path.isdir(folder_path):\n            os.mkdir(folder_path)\n        data = {\n            'tips1000': tip_log['count'][p1000],\n            'tips20': tip_log['count'][p20]\n        }\n        with open(tip_file_path, 'w') as outfile:\n            json.dump(data, outfile)\n",
     "custom_labware_defs": [],
     "fields": [
         {
             "default": 96,
-            "label": "Number of Samples",
+            "label": "number of samples + controls (1-96)",
             "name": "num_samples",
             "type": "int"
         },
         {
             "default": 200,
-            "label": "Volume of Samples (in \u00b5L)",
-            "name": "samp_vol",
+            "label": "volume of sample (in \u00b5L)",
+            "name": "vol_sample",
             "type": "int"
         },
         {
-            "label": "Destination Plate Labware",
-            "name": "plate_type",
+            "label": "track tips across protocol runs",
+            "name": "tip_track",
             "options": [
                 {
-                    "label": "NEST Deepwell Plate, 2mL",
-                    "value": "nest_96_wellplate_2ml_deep"
+                    "label": "no",
+                    "value": false
                 },
                 {
-                    "label": "NEST PCR Plate",
-                    "value": "nest_96_wellplate_100ul_pcr_full_skirt"
-                }
-            ],
-            "type": "dropDown"
-        },
-        {
-            "label": "Source Tube Labware",
-            "name": "tube_type",
-            "options": [
-                {
-                    "label": "OT Tuberack (24) w/ NEST 2mL Screwcap",
-                    "value": "opentrons_24_tuberack_nest_2ml_screwcap"
-                },
-                {
-                    "label": "OT Tuberack (24) w/ NEST 1.5mL Screwcap",
-                    "value": "opentrons_24_tuberack_nest_1.5ml_screwcap"
-                },
-                {
-                    "label": "OT Tuberack (24) w/ NEST 0.5mL Screwcap",
-                    "value": "opentrons_24_tuberack_nest_0.5ml_screwcap"
-                },
-                {
-                    "label": "OT Tuberack (15) w/ NEST 15mL Conical",
-                    "value": "opentrons_15_tuberack_nest_15ml_conical"
-                }
-            ],
-            "type": "dropDown"
-        },
-        {
-            "label": "Pipette Type",
-            "name": "pip_type",
-            "options": [
-                {
-                    "label": "P300-Single GEN2",
-                    "value": "p300_single_gen2 opentrons_96_filtertiprack_200ul"
-                },
-                {
-                    "label": "P300-Single GEN1",
-                    "value": "p300_single opentrons_96_filtertiprack_200ul"
-                },
-                {
-                    "label": "P1000-Single GEN2",
-                    "value": "p1000_single_gen2 opentrons_96_filtertiprack_1000ul"
-                },
-                {
-                    "label": "P1000-Single GEN1",
-                    "value": "p1000_single opentrons_96_filtertiprack_1000ul"
+                    "label": "yes",
+                    "value": true
                 }
             ],
             "type": "dropDown"
@@ -78,64 +32,80 @@
     ],
     "instruments": [
         {
+            "mount": "left",
+            "name": "p20_single_gen2"
+        },
+        {
             "mount": "right",
-            "name": "p300_single_gen2"
+            "name": "p1000_single_gen2"
         }
     ],
     "labware": [
         {
-            "name": "Opentrons 24 Tube Rack with NEST 2 mL Screwcap on 1",
+            "name": "chilled tubeblock for internal control (well A1) on Temperature Module GEN2 on 1",
             "share": false,
             "slot": "1",
-            "type": "opentrons_24_tuberack_nest_2ml_screwcap"
+            "type": "opentrons_24_aluminumblock_nest_2ml_screwcap"
         },
         {
-            "name": "NEST 96 Deepwell Plate 2mL on 2",
+            "name": "source tuberack 1 on 2",
             "share": false,
             "slot": "2",
+            "type": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
+        },
+        {
+            "name": "source tuberack 2 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
+        },
+        {
+            "name": "96-deepwell sample plate on 4",
+            "share": false,
+            "slot": "4",
             "type": "nest_96_wellplate_2ml_deep"
         },
         {
-            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 3",
-            "share": false,
-            "slot": "3",
-            "type": "opentrons_96_filtertiprack_200ul"
-        },
-        {
-            "name": "Opentrons 24 Tube Rack with NEST 2 mL Screwcap on 4",
-            "share": false,
-            "slot": "4",
-            "type": "opentrons_24_tuberack_nest_2ml_screwcap"
-        },
-        {
-            "name": "Opentrons 24 Tube Rack with NEST 2 mL Screwcap on 5",
+            "name": "source tuberack 3 on 5",
             "share": false,
             "slot": "5",
-            "type": "opentrons_24_tuberack_nest_2ml_screwcap"
+            "type": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
         },
         {
-            "name": "Opentrons 24 Tube Rack with NEST 2 mL Screwcap on 7",
+            "name": "source tuberack 4 on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
+        },
+        {
+            "name": "20\u00b5l filter tiprack on 7",
             "share": false,
             "slot": "7",
-            "type": "opentrons_24_tuberack_nest_2ml_screwcap"
+            "type": "opentrons_96_filtertiprack_20ul"
         },
         {
-            "name": "Opentrons 24 Tube Rack with NEST 2 mL Screwcap on 8",
+            "name": "20\u00b5l filter tiprack on 8",
             "share": false,
             "slot": "8",
-            "type": "opentrons_24_tuberack_nest_2ml_screwcap"
+            "type": "opentrons_96_filtertiprack_20ul"
         },
         {
-            "name": "Opentrons 24 Tube Rack with NEST 2 mL Screwcap on 10",
+            "name": "20\u00b5l filter tiprack on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "1000\u00b5l filter tiprack on 10",
             "share": false,
             "slot": "10",
-            "type": "opentrons_24_tuberack_nest_2ml_screwcap"
+            "type": "opentrons_96_filtertiprack_1000ul"
         },
         {
-            "name": "Opentrons 24 Tube Rack with NEST 2 mL Screwcap on 11",
+            "name": "1000\u00b5l filter tiprack on 11",
             "share": false,
             "slot": "11",
-            "type": "opentrons_24_tuberack_nest_2ml_screwcap"
+            "type": "opentrons_96_filtertiprack_1000ul"
         },
         {
             "name": "Opentrons Fixed Trash on 12",
@@ -145,10 +115,10 @@
         }
     ],
     "metadata": {
-        "apiLevel": "2.5",
-        "author": "Chaz <protocols@opentrons.com>",
-        "protocolName": "Generic Sample Plating Protocol (Station A)",
-        "source": "Protocol Library"
+        "apiLevel": "2.0",
+        "author": "Nick <protocols@opentrons.com>",
+        "protocolName": "Sample plating protocol",
+        "source": "Custom Protocol Request"
     },
     "modules": []
 }
