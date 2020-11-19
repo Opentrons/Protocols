@@ -1,0 +1,24 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Nucleic Acid Extraction & Purification\n        * Plant DNA": []
+    },
+    "description": "This protocol automates the entire Oxford Nanopore sequencing kit SQK-RBK004 workflow. Input a variable number of samples (up to 12), and get out a pooled library. \n\n\n\nOpentrons 200ul Filter Tips\n",
+    "internal": "3bc25d",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* Nucleic Acid Extraction & Purification\n        * Plant DNA\n\n",
+        "description": "This protocol automates the entire Oxford Nanopore sequencing kit SQK-RBK004 workflow. Input a variable number of samples (up to 12), and get out a pooled library. \n\n---\n![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)\n\n* [Opentrons 200ul Filter Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)\n\n",
+        "internal": "3bc25d\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "process": "1. Load tubes into the temperature deck. Place RAP into tube A1 and AMPure beads (~150ul) into tube A2. In tubes B1 to C6 go your fragmentation mixes depending on the number of samples to be barcoded. The fragmentation mixes are placed in ascending order from B1 to B2 to B3 (etc). \n2. Load tubes into the tube rack. Place H2O (~500ul) into tube A1, fresh 70% ethanol (~600ul) into tube A2, and Tris-HCl with NaCl into tube A3. Place empty tubes in B2 and B3 - these will be used as liquid trash and as intermediate locations for samples. Also place an empty tube in C1 - this will be your output tube.\n3. Load the rest of the deck as the protocol asks and press go. No intervention should be necessary, and you can take out your prepared library from tube C1 in the tube rack after the protocol finishes.\n\n",
+        "robot": "* [OT-2](https://opentrons.com/ot-2)\n\n",
+        "title": "Nanopore Rapid Barcoding Kit (SQK-RBK004)"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "process": "\nLoad tubes into the temperature deck. Place RAP into tube A1 and AMPure beads (~150ul) into tube A2. In tubes B1 to C6 go your fragmentation mixes depending on the number of samples to be barcoded. The fragmentation mixes are placed in ascending order from B1 to B2 to B3 (etc). \nLoad tubes into the tube rack. Place H2O (~500ul) into tube A1, fresh 70% ethanol (~600ul) into tube A2, and Tris-HCl with NaCl into tube A3. Place empty tubes in B2 and B3 - these will be used as liquid trash and as intermediate locations for samples. Also place an empty tube in C1 - this will be your output tube.\nLoad the rest of the deck as the protocol asks and press go. No intervention should be necessary, and you can take out your prepared library from tube C1 in the tube rack after the protocol finishes.\n",
+    "robot": [
+        "OT-2"
+    ],
+    "title": "Nanopore Rapid Barcoding Kit (SQK-RBK004)"
+}
