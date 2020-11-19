@@ -105,9 +105,6 @@ def run(ctx):
             pip.blow_out(dil_dest.bottom(104))
 
     # create serial dilution from .csv file
-    # data = [
-    #     line.split(',')[9:17] for line in input_csv.splitlines()[14:28]
-    #     if line and line.split(',')[0]]
     data = [
         line.split(',')[:17] for line in input_csv.splitlines()[14:28]
         if line and line.split(',')[0]]
