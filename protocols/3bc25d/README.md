@@ -13,7 +13,14 @@ This protocol automates the entire Oxford Nanopore sequencing kit SQK-RBK004 wor
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
+* [Opentrons P300-single channel electronic pipettes (GEN2)](https://shop.opentrons.com/collections/ot-2-robot/products/single-channel-electronic-pipette?variant=5984549109789)
+* [Opentrons P20-single channel electronic pipettes (GEN2)](https://shop.opentrons.com/collections/ot-2-robot/products/single-channel-electronic-pipette?variant=31059478970462)
+* [Opentrons 20ul Filter Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-20ul-filter-tips)
 * [Opentrons 200ul Filter Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)
+* [Rapid Barcoding Kit (SQK-RBK004)](https://store.nanoporetech.com/us/rapid-barcoding-kit.html)
+* Fresh 70% Ethanol
+* H2O
+* [1.5mL centrifuge tubes](https://shop.opentrons.com/collections/tubes/products/nest-microcentrifuge-tubes)
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
