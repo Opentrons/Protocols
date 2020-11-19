@@ -39,9 +39,10 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
-* Reservoir 1: slot 5
+* Reservoir 1: slot 5  
+![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res1.png)
 * Reservoir 2: slot 2  
-![reservoirs](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/covid-19-station-b/reagent_layout.png)
+![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res2.png)
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
