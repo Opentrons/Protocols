@@ -11,9 +11,10 @@ metadata = {
 
 def run(ctx):
 
-    [input_csv, vol_aliquot, user_name,
+    [input_csv, vol_aliquot, qc_height, std_height, user_name,
      air_gap_bool] = get_values(  # noqa: F821
-        'input_csv', 'vol_aliqout', 'user_name', 'air_gap_bool')
+        'input_csv', 'vol_aliqout', 'qc_height', 'std_height', 'user_name',
+        'air_gap_bool')
 
     class tube():
 
@@ -159,9 +160,9 @@ def run(ctx):
         # p300 tip condition
         tip_condition(p300, 150, diluent)
         if std.display_name.split()[0] == 'H11':
-            plate_height = 10
+            plate_height = qc_height
         elif std.display_name.split()[0] == 'H12':
-            plate_height = 7
+            plate_height = std_height
         for val in vals:
             dest = val['dest']
             vol = val['vol']
@@ -177,7 +178,10 @@ def run(ctx):
                     p300.transfer(vol_per_trans, std.bottom(plate_height),
                                   dest_loc, air_gap=air_gap_p300,
                                   new_tip='never')
-                    plate_height -= 1
+                    if plate_height - 1 > 1:
+                        plate_height -= 1
+                    else:
+                        plate_height = 1
                 else:
                     p300.transfer(vol_per_trans,
                                   tubes_dict[std].height_dec(vol_per_trans),
