@@ -11,8 +11,9 @@ metadata = {
 
 def run(ctx):
 
-    [input_csv, vol_aliquot, user_name] = get_values(  # noqa: F821
-        'input_csv', 'vol_aliqout', 'user_name')
+    [input_csv, vol_aliquot, user_name,
+     air_gap_bool] = get_values(  # noqa: F821
+        'input_csv', 'vol_aliqout', 'user_name', 'air_gap_bool')
 
     class tube():
 
@@ -70,6 +71,13 @@ def run(ctx):
     p300.flow_rate.blow_out = 300
     p1000.flow_rate.blow_out = 1000
 
+    air_gap_p1000 = 100 if air_gap_bool else 0
+    air_gap_p300 = 20 if air_gap_bool else 0
+    air_gap_dict = {
+        pip: airgap for pip, airgap in zip([p1000, p300],
+                                           [air_gap_p1000, air_gap_p300])
+    }
+
     # start reagent setup
     tubes_dict = {
         well: tube(well)
@@ -92,7 +100,7 @@ def run(ctx):
             pip.transfer(vol, tubes_dict[loc].height_dec(vol),
                          dil_dest.bottom(104),
                          mix_before=(mix_reps, pip.max_volume*2/3),
-                         new_tip='never')
+                         air_gap=air_gap_dict[pip], new_tip='never')
             tubes_dict[dil_dest].height_inc(vol)
             pip.blow_out(dil_dest.bottom(104))
 
@@ -111,7 +119,7 @@ def run(ctx):
     for line in data[::-1]:
         dest = ctx.loaded_labwares[int(line[12])].wells_by_name()[line[13]]
         dil_vol = float(line[14])
-        num_trans = math.ceil(dil_vol/p1000.max_volume)
+        num_trans = math.ceil(dil_vol/(p1000.max_volume-air_gap_p1000))
         vol_per_trans = dil_vol/num_trans
         asp_rate = vol_per_trans if vol_per_trans < 150 else 150
         disp_rate = 2*vol_per_trans if vol_per_trans > 37 else 150
@@ -121,7 +129,7 @@ def run(ctx):
             p1000.transfer(vol_per_trans,
                            tubes_dict[diluent].height_dec(vol_per_trans),
                            tubes_dict[dest].height_inc(vol_per_trans),
-                           new_tip='never')
+                           air_gap=air_gap_p1000, new_tip='never')
             p1000.blow_out(dest.bottom(tubes_dict[dest].height + 20))
     p1000.drop_tip()
 
@@ -157,7 +165,7 @@ def run(ctx):
         for val in vals:
             dest = val['dest']
             vol = val['vol']
-            num_trans = math.ceil(vol/p300.max_volume)
+            num_trans = math.ceil(vol/(p300.max_volume-air_gap_p300))
             vol_per_trans = vol/num_trans
             asp_rate = vol_per_trans if vol_per_trans < 150 else 150
             disp_rate = 2*vol_per_trans if vol_per_trans > 37 else 150
@@ -167,12 +175,14 @@ def run(ctx):
                 dest_loc = tubes_dict[dest].height_inc(vol_per_trans)
                 if std.parent.parent == '1':
                     p300.transfer(vol_per_trans, std.bottom(plate_height),
-                                  dest_loc, new_tip='never')
+                                  dest_loc, air_gap=air_gap_p300,
+                                  new_tip='never')
                     plate_height -= 1
                 else:
                     p300.transfer(vol_per_trans,
                                   tubes_dict[std].height_dec(vol_per_trans),
-                                  dest_loc, new_tip='never')
+                                  dest_loc, air_gap=air_gap_p300,
+                                  new_tip='never')
                 p300.blow_out(dest_loc)
         p300.drop_tip()
 
@@ -224,7 +234,8 @@ def run(ctx):
             p1000.flow_rate.dispense = 320
             p1000.transfer(vol_aliquot,
                            tubes_dict[std].height_dec(vol_aliquot),
-                           a.bottom(10), new_tip='never')
+                           a.bottom(10), air_gap=air_gap_p1000,
+                           new_tip='never')
             p1000.blow_out(a.top(-6))
         p1000.drop_tip()
         if 'QC' in std_name:
@@ -258,7 +269,8 @@ def run(ctx):
             h = 5
         else:
             h = 2
-        p300.transfer(30, is_.bottom(h), m.bottom(14), new_tip='never')
+        p300.transfer(30, is_.bottom(h), m.bottom(14), air_gap=air_gap_p300,
+                      new_tip='never')
         p300.blow_out(m.bottom(14))
     p300.drop_tip()
 
@@ -279,7 +291,7 @@ def run(ctx):
         p300.pick_up_tip()
         p300.transfer(30, tubes_dict[std].height_dec(30),
                       dest_set[counter].bottom(14), mix_before=(2, 200),
-                      new_tip='never')
+                      air_gap=air_gap_p300, new_tip='never')
         p300.blow_out(dest_set[counter].bottom(14))
         p300.drop_tip()
 
