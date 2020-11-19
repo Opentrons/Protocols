@@ -306,7 +306,7 @@ def run(ctx):
         else:
             ws_counter += 1
 
-    write_path = '/data/output/readout.txt'
+    write_path = '/data/readout.txt'
     if not ctx.is_simulating():
         p300_serial = p300.hw_pipette['pipette_id']
         p1000_serial = p1000.hw_pipette['pipette_id']
