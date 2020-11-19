@@ -11,10 +11,10 @@ metadata = {
 
 def run(ctx):
 
-    [input_csv, vol_aliquot, qc_height, std_height, user_name,
+    [input_csv, vol_aliquot, vol_tests, qc_height, std_height, user_name,
      air_gap_bool] = get_values(  # noqa: F821
-        'input_csv', 'vol_aliqout', 'qc_height', 'std_height', 'user_name',
-        'air_gap_bool')
+        'input_csv', 'vol_aliqout', 'vol_tests', 'qc_height', 'std_height',
+        'user_name', 'air_gap_bool')
 
     class tube():
 
@@ -298,7 +298,7 @@ def run(ctx):
         p300.flow_rate.dispense = 150
         # tip_condition(p300, 150, diluent)
         p300.pick_up_tip()
-        p300.transfer(30, tubes_dict[std].height_dec(30),
+        p300.transfer(vol_tests, tubes_dict[std].height_dec(vol_tests),
                       dest_set[counter].bottom(14), mix_before=(2, 200),
                       air_gap=air_gap_p300, new_tip='never')
         p300.blow_out(dest_set[counter].bottom(14))
