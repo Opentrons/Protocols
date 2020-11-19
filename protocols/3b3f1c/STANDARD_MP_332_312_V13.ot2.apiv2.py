@@ -128,6 +128,7 @@ def run(ctx):
                            tubes_dict[dest].height_inc(vol_per_trans),
                            air_gap=air_gap_p1000, new_tip='never')
             p1000.blow_out(dest.bottom(tubes_dict[dest].height + 20))
+    p1000.air_gap(100)
     p1000.drop_tip()
 
     # parse std sources
@@ -145,6 +146,7 @@ def run(ctx):
     for std, vals in std_dict.items():
         if std.parent.parent == '2':
             if p1000.hw_pipette['has_tip']:
+                p1000.air_gap(100)
                 p1000.drop_tip()
             p1000.pick_up_tip()
             p1000.flow_rate.aspirate = 500
@@ -152,6 +154,7 @@ def run(ctx):
             p1000.flow_rate.blow_out = 1000
             p1000.mix(5, 1000, std.bottom(tubes_dict[std].height))
             p1000.blow_out(std.top(-2))
+            p1000.air_gap(100)
             p1000.drop_tip()
         # p300 tip condition
         tip_condition(p300, 150, diluent)
@@ -181,6 +184,7 @@ def run(ctx):
                                   dest_loc, air_gap=air_gap_p300,
                                   new_tip='never')
                 p300.blow_out(dest_loc)
+        p300.air_gap(20)
         p300.drop_tip()
 
     # aliquots
@@ -219,6 +223,7 @@ def run(ctx):
 
         # mix
         if p1000.hw_pipette['has_tip']:
+            p1000.air_gap(100)
             p1000.drop_tip()
         p1000.pick_up_tip()
         p1000.flow_rate.aspirate = 500
@@ -234,6 +239,7 @@ def run(ctx):
                            a.bottom(10), air_gap=air_gap_p1000,
                            new_tip='never')
             p1000.blow_out(a.top(-6))
+        p1000.air_gap(100)
         p1000.drop_tip()
         if 'QC' in std_name:
             qc_counter += num_aliquots
@@ -254,9 +260,10 @@ def run(ctx):
             p1000.dispense(400, well.bottom(10))
         p1000.dispense(100, tubes_dict[mobile_phase].height_inc(100))
         p1000.blow_out(mobile_phase.top(-2))
+    p1000.air_gap(100)
     p1000.drop_tip()
 
-    # # transfer IS
+    # transfer IS
     is_ = plate.wells_by_name()['H1']
     tip_condition(p300, 150, diluent)
     for i, m in enumerate(mobile_phase_dests):
@@ -269,6 +276,7 @@ def run(ctx):
         p300.transfer(30, is_.bottom(h), m.bottom(14), air_gap=air_gap_p300,
                       new_tip='never')
         p300.blow_out(m.bottom(14))
+    p300.air_gap(20)
     p300.drop_tip()
 
     # tests
@@ -290,6 +298,7 @@ def run(ctx):
                       dest_set[counter].bottom(14), mix_before=(2, 200),
                       air_gap=air_gap_p300, new_tip='never')
         p300.blow_out(dest_set[counter].bottom(14))
+        p300.air_gap(20)
         p300.drop_tip()
 
         if 'QC' in std_name:
