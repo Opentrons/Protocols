@@ -81,7 +81,8 @@ def run(ctx):
                for slot in ['3', '6', '8', '9', '10']]
     if park_tips:
         parkingrack = ctx.load_labware(
-            'opentrons_96_tiprack_300ul', '7', 'tiprack for parking')
+            'opentrons_96_tiprack_300ul', '7', '200µl filtertiprack (parking)')
+        tips300.insert(0, parkingrack)
         parking_spots = parkingrack.rows()[0][:num_cols]
     else:
         tips300.insert(0, ctx.load_labware('opentrons_96_tiprack_300ul', '7',
@@ -95,7 +96,8 @@ def run(ctx):
     """
     Here is where you can define the locations of your reagents.
     """
-    binding_buffer = res1.wells()[:11]
+    binding_buffer = res1.wells()[2:6]
+    lysis_buffer = res1.wells()[1]
     elution_solution = res1.wells()[-1]
     wash1 = res2.wells()[:4]
     wash2 = res2.wells()[4:8]
@@ -249,13 +251,10 @@ resuming.')
         """
         latest_chan = -1
         for i, (well, spot) in enumerate(zip(mag_samples_m, parking_spots)):
-            if park:
-                _pick_up(m300, spot)
-            else:
-                _pick_up(m300)
+            _pick_up(m300)
             num_trans = math.ceil(vol/200)
             vol_per_trans = vol/num_trans
-            asp_per_chan = 14000//(vol_per_trans*8)
+            asp_per_chan = 14500//(vol_per_trans*8)
             for t in range(num_trans):
                 chan_ind = int((i*num_trans + t)//asp_per_chan)
                 source = binding_buffer[chan_ind]
@@ -407,6 +406,13 @@ resuming.')
     Here is where you can call the methods defined above to fit your specific
     protocol. The normal sequence is:
     """
+    # transfer lysis buffer
+    for m in mag_samples_m:
+        _pick_up(m300)
+        m300.transfer(50, lysis_buffer, m, air_gap=20, mix_after=(5, 100),
+                      new_tip='never')
+        _drop(m300)
+
     bind(binding_buffer_vol, park=park_tips)
     wash(wash1_vol, wash1, park=park_tips)
     wash(wash2_vol, wash2, park=park_tips)
