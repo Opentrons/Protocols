@@ -4,8 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Nucleic Acid Extraction & Purification
-        * Plant DNA
+* NGS Library Prep
+        * Nanopore
 
 ## Description
 This protocol automates the entire Oxford Nanopore sequencing kit SQK-RBK004 workflow. Input a variable number of samples (up to 12), and get out a pooled library. 
