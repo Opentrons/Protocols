@@ -155,14 +155,14 @@ resuming.')
             if flash:
                 if not ctx._hw_manager.hardware.is_simulator:
                     cancellationToken.set()
-                thread = create_thread(ctx, cancellationToken)
+                # thread = create_thread(ctx, cancellationToken)
             m300.home()
             ctx.pause('Please empty tips from waste before resuming.')
 
             ctx.home()  # home before continuing with protocol
             if flash:
                 cancellationToken.clear()  # stop light flashing after home
-                thread.join()
+                # thread.join()
 
             drop_count = 0
 
@@ -186,7 +186,7 @@ resuming.')
                 if flash:
                     if not ctx._hw_manager.hardware.is_simulator:
                         cancellationToken.set()
-                    thread = create_thread(ctx, cancellationToken)
+                    # thread = create_thread(ctx, cancellationToken)
                 m300.home()
                 ctx.pause('Please empty liquid waste (slot 11) before \
 resuming.')
@@ -195,7 +195,7 @@ resuming.')
                 if flash:
                     # stop light flashing after home
                     cancellationToken.clear()
-                    thread.join()
+                    # thread.join()
 
                 waste_vol = 0
             waste_vol += vol
