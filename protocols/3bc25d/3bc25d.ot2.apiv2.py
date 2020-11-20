@@ -49,6 +49,8 @@ def run(ctx):
             ctx.load_labware(
                 'opentrons_96_filtertiprack_200ul', '9')])
 
+    tempdeck.set_temperature(4)
+
     p20s.default_speed = 50  # Slow to 1/8 speed
     # Adjust to 7.5 with H2O
     for well in thermocycler_plate.wells()[0:sample_count]:
