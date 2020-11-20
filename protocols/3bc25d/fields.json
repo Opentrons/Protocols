@@ -1,7 +1,7 @@
 [
   {
     "type": "int",
-    "label": "Number of Samples (1-12",
+    "label": "Number of Samples (1-12)",
     "name": "sample_count",
     "default": 1
   },
