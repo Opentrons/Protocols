@@ -7,9 +7,11 @@
 * PCR
 	* PCR Prep
 
+
 ## Description
-This protocol performs a custom cherrypicked PCR/qPRC prep. It requires a CSV input for the source and destination wells of the samples. It will automatically add mastermix based on the number of samples inputted to the PCR plate sequentially (A1-12 then B1-12, etc...). 
+This protocol performs a custom cherrypicked PCR/qPRC prep. It requires a CSV input for the source and destination wells of the samples. It will automatically add mastermix based on the number of samples inputted to the PCR plate sequentially (A1-12 then B1-12, etc...).
 ---
+
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
 * [Opentrons Temperature Module](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
