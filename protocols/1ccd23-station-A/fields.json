@@ -13,6 +13,24 @@
   },
   {
     "type": "dropDown",
+    "label": "P20 GEN2 type",
+    "name": "p20_type",
+    "options": [
+      {"label": "multi", "value": "p20_multi_gen2"},
+      {"label": "single", "value": "p20_single_gen2"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "internal control strip type (if using P20 Multi)",
+    "name": "strip_type",
+    "options": [
+      {"label": "BIOplastics", "value": "bioplastics_96_aluminumblock_200ul"},
+      {"label": "Bio-Rad", "value": "biorad_96_aluminumblock_200ul"}
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "track tips across protocol runs",
     "name": "tip_track",
     "options": [
