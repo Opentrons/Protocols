@@ -1,7 +1,7 @@
 from opentrons import protocol_api
 import json
 import os
-# import math
+import math
 
 # metadata
 metadata = {
@@ -14,14 +14,19 @@ metadata = {
 
 def run(ctx: protocol_api.ProtocolContext):
 
-    num_samples, vol_sample, tip_track = get_values(  # noqa: F821
-        'num_samples', 'vol_sample', 'tip_track')
+    [num_samples, vol_sample, p20_type, strip_type,
+     tip_track] = get_values(  # noqa: F821
+        'num_samples', 'vol_sample', 'p20_type', 'strip_type', 'tip_track')
 
     # load labware
-    tempdeck = ctx.load_module('temperature module gen2', '1')
-    ic_pk = tempdeck.load_labware(
-        'opentrons_24_aluminumblock_nest_2ml_screwcap',
-        'chilled tubeblock for internal control (well A1)')
+    if 'multi' in p20_type:
+        ic = ctx.load_labware(
+            strip_type, '1',
+            'chilled tubeblock for internal control (strip 1)').wells()[0]
+    else:
+        ic = ctx.load_labware(
+            'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', '1'
+            '2ml Eppendorf tube for internal control (well A1)').wells()[0]
     source_racks = [
         ctx.load_labware(
             'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', slot,
@@ -39,7 +44,7 @@ def run(ctx: protocol_api.ProtocolContext):
                     for slot in ['10', '11']]
 
     # load pipette
-    p20 = ctx.load_instrument('p20_single_gen2', 'left', tip_racks=tipracks20)
+    pip20 = ctx.load_instrument(p20_type, 'left', tip_racks=tipracks20)
     p1000 = ctx.load_instrument(
         'p1000_single_gen2', 'right', tip_racks=tipracks1000)
 
@@ -47,9 +52,8 @@ def run(ctx: protocol_api.ProtocolContext):
     sources = [
         well for rack in source_racks for well in rack.wells()][:num_samples]
     dests_single = dest_plate.wells()[:num_samples]
-    # num_cols = math.ceil(num_samples/8)
-    ic = ic_pk.wells()[0]
-    pk = ic_pk.wells()[1]
+    num_cols = math.ceil(num_samples/8)
+    dests_multi = dest_plate.rows()[0][:num_cols]
 
     tip_log = {'count': {}}
     folder_path = '/data/A'
@@ -63,19 +67,23 @@ def run(ctx: protocol_api.ProtocolContext):
                 else:
                     tip_log['count'][p1000] = 0
                 if 'tips20' in data:
-                    tip_log['count'][p20] = data['tips20']
+                    tip_log['count'][pip20] = data['tips20']
                 else:
-                    tip_log['count'][p20] = 0
+                    tip_log['count'][pip20] = 0
     else:
-        tip_log['count'] = {p1000: 0, p20: 0}
+        tip_log['count'] = {p1000: 0, pip20: 0}
 
+    if 'multi' in p20_type:
+        tips20 = [tip for rack in tipracks20 for tip in rack.rows()[0]]
+    else:
+        tips20 = [tip for rack in tipracks20 for tip in rack.wells()]
     tip_log['tips'] = {
         p1000: [tip for rack in tipracks1000 for tip in rack.wells()],
-        p20: [tip for rack in tipracks20 for tip in rack.wells()]
+        pip20: tips20
     }
     tip_log['max'] = {
         pip: len(tip_log['tips'][pip])
-        for pip in [p1000, p20]
+        for pip in [p1000, pip20]
     }
 
     def pick_up(pip):
@@ -97,13 +105,13 @@ resuming.')
         p1000.drop_tip()
 
     # transfer internal control + proteinase K
-    for reagent in [ic, pk]:
-        for d in dests_single:
-            pick_up(p20)
-            p20.transfer(10, reagent.bottom(2), d.bottom(10), air_gap=5,
-                         new_tip='never')
-            p20.air_gap(5)
-            p20.drop_tip()
+    dests = dests_single if 'single' in p20_type else dests_multi
+    for d in dests:
+        pick_up(pip20)
+        pip20.transfer(10, ic.bottom(2), d.bottom(10), air_gap=5,
+                       new_tip='never')
+        pip20.air_gap(5)
+        pip20.drop_tip()
 
     ctx.comment('Move deepwell plate (slot 4) to Station B for RNA \
 extraction.')
@@ -114,7 +122,7 @@ extraction.')
             os.mkdir(folder_path)
         data = {
             'tips1000': tip_log['count'][p1000],
-            'tips20': tip_log['count'][p20]
+            'tips20': tip_log['count'][pip20]
         }
         with open(tip_file_path, 'w') as outfile:
             json.dump(data, outfile)

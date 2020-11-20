@@ -17,6 +17,15 @@
   },
   {
     "type": "dropDown",
+    "label": "internal control strip type (if using P20 Multi)",
+    "name": "strip_type",
+    "options": [
+      {"label": "BIOplastics", "value": "bioplastics_96_aluminumblock_200ul"},
+      {"label": "Bio-Rad", "value": "biorad_96_aluminumblock_200ul"}
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "prepare mastermix",
     "name": "prepare_mastermix",
     "options": [
