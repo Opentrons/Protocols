@@ -12,6 +12,12 @@
       "default": 1
     },
     {
+      "type": "float",
+      "label": "Mastermix Volume",
+      "name": "mastermix_vol",
+      "default": 11.5
+    },
+    {
         "type": "dropDown",
         "label": "P20-single GEN2 mount",
         "name": "p20_mount",
