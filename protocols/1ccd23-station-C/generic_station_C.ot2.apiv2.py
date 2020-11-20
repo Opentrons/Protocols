@@ -13,9 +13,9 @@ metadata = {
 
 
 def run(ctx: protocol_api.ProtocolContext):
-    [num_samples, assay, prepare_mastermix,
+    [num_samples, assay, strip_type, prepare_mastermix,
      tip_track] = get_values(  # noqa: F821
-        'num_samples', 'assay', 'prepare_mastermix', 'tip_track')
+        'num_samples', 'assay', 'strip_type', 'prepare_mastermix', 'tip_track')
 
     # check source (elution) labware type
     source_plate = ctx.load_labware(
@@ -29,9 +29,7 @@ def run(ctx: protocol_api.ProtocolContext):
     tempdeck = ctx.load_module('Temperature Module Gen2', '4')
     pcr_plate = tempdeck.load_labware(
         'opentrons_96_aluminumblock_nest_wellplate_100ul', 'PCR plate')
-    mm_strips = ctx.load_labware(
-        'opentrons_96_aluminumblock_generic_pcr_strip_200ul', '7',
-        'mastermix strips')
+    mm_strips = ctx.load_labware(strip_type, '7', 'mastermix strips')
     tempdeck.set_temperature(4)
     tube_block = ctx.load_labware(
         'opentrons_24_aluminumblock_nest_2ml_screwcap', '5',
