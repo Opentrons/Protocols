@@ -18,18 +18,6 @@ Here is where you can modify the magnetic module engage height:
 MAG_HEIGHT = 13.7
 
 
-# Definitions for deck light flashing
-class CancellationToken:
-    def __init__(self):
-        self.is_continued = False
-
-    def set_true(self):
-        self.is_continued = True
-
-    def set_false(self):
-        self.is_continued = False
-
-
 def turn_on_blinking_notification(hardware, pause):
     while pause.is_continued:
         hardware.set_lights(rails=True)
@@ -48,7 +36,7 @@ def create_thread(ctx, cancel_token):
 # Start protocol
 def run(ctx):
     # Setup for flashing lights notification to empty trash
-    cancellationToken = CancellationToken()
+    cancellationToken = threading.Event()
 
     [num_samples, starting_vol, binding_buffer_vol, wash1_vol, wash2_vol,
      wash3_vol, elution_vol, mix_reps, settling_time,
@@ -161,15 +149,15 @@ resuming.')
         if drop_count == drop_threshold:
             # Setup for flashing lights notification to empty trash
             if flash:
-                if not ctx._hw_manager.hardware.is_simulator:
-                    cancellationToken.set_true()
+                if not ctx.is_simulating():
+                    cancellationToken.set()
                 thread = create_thread(ctx, cancellationToken)
             m300.home()
             ctx.pause('Please empty tips from waste before resuming.')
 
             ctx.home()  # home before continuing with protocol
             if flash:
-                cancellationToken.set_false()  # stop light flashing after home
+                cancellationToken.clear()  # stop light flashing after home
                 thread.join()
 
             drop_count = 0
@@ -192,8 +180,8 @@ resuming.')
             if waste_vol + vol >= waste_threshold:
                 # Setup for flashing lights notification to empty liquid waste
                 if flash:
-                    if not ctx._hw_manager.hardware.is_simulator:
-                        cancellationToken.set_true()
+                    if not ctx.is_simulating():
+                        cancellationToken.set()
                     thread = create_thread(ctx, cancellationToken)
                 m300.home()
                 ctx.pause('Please empty liquid waste (slot 11) before \
@@ -202,7 +190,7 @@ resuming.')
                 ctx.home()  # home before continuing with protocol
                 if flash:
                     # stop light flashing after home
-                    cancellationToken.set_false()
+                    cancellationToken.clear()
                     thread.join()
 
                 waste_vol = 0
