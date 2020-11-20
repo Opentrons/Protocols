@@ -409,7 +409,7 @@ resuming.')
     # transfer lysis buffer
     for m in mag_samples_m:
         _pick_up(m300)
-        m300.transfer(50, lysis_buffer, m, air_gap=20, mix_after=(5, 100),
+        m300.transfer(60, lysis_buffer, m, air_gap=20, mix_after=(5, 100),
                       new_tip='never')
         _drop(m300)
 
