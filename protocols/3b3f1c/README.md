@@ -1,4 +1,4 @@
-# STANDARD MP 332 312 V10
+# STANDARD MP
 
 ### Author
 [Opentrons](https://opentrons.com/)
