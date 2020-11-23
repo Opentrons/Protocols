@@ -26,7 +26,7 @@ def run(ctx):
         raise Exception('Pipette mounts cannot match.')
 
     # load labware
-    magdeck = ctx.load_module('magdeck', '1')
+    magdeck = ctx.load_module('magnetic module gen2', '1')
     mag_plate = magdeck.load_labware('twintec_pcr_plate', 'magnetic plate')
     elution_plate = ctx.load_labware('twintec_pcr_plate', '2', 'elution plate')
     tips20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '3')]
