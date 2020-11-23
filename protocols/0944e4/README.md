@@ -13,7 +13,7 @@ This protocol performs a custom NGS library cleanup using Ampure XP beads in a v
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
-* [Opentrons magnetic module](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
+* [Opentrons Magnetic Module GEN2](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
 * [USA Scientific 12-channel reservoir 22ml #1061-8150](https://www.usascientific.com/12-channel-automation-reservoir.aspx)
 * [Eppendorf twin.tec 96-well PCR plate #0030129512](https://www.fishersci.com/shop/products/eppendorf-twin-tec-96-lobind-pcr-plates-skirted-clear/e0030129512)
 * [P20 multi-channel GEN2 electronic pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)
