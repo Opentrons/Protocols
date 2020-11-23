@@ -19,8 +19,8 @@
         "label": "P1000-single GEN2 mount",
         "name": "p1000_mount",
         "options": [
-          {"label": "right", "value": "right"},
-          {"label": "left", "value": "left"}
+          {"label": "left", "value": "left"},
+          {"label": "right", "value": "right"}
         ]
     }
 
