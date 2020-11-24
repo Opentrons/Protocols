@@ -12,9 +12,9 @@ metadata = {
 def run(ctx):
 
     [input_csv, vol_aliquot, vol_mobile_phase, vol_tests, qc_height,
-     std_height, user_name, air_gap_bool] = get_values(  # noqa: F821
+     std_height, air_gap_bool] = get_values(  # noqa: F821
         'input_csv', 'vol_aliqout', 'vol_mobile_phase', 'vol_tests',
-        'qc_height', 'std_height', 'user_name', 'air_gap_bool')
+        'qc_height', 'std_height', 'air_gap_bool')
 
     class tube():
 
@@ -322,7 +322,6 @@ def run(ctx):
         with open('/var/serial') as serialfile:
             ot2_serial.append(serialfile.read())
         with open(write_path, 'w') as text_file:
-            text_file.write(f'Name of user: {user_name} \n')
             text_file.write(f'Date/Time of run: {str(datetime.now())}\n')
             text_file.write(f'P300 Serial: {str(p300_serial)}\n')
             text_file.write(f'P1000 Serial: {str(p1000_serial)}\n')
