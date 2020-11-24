@@ -36,12 +36,6 @@
     "default": 7
   },
   {
-    "type": "str",
-    "label": "name of user",
-    "name": "user_name",
-    "default": "User"
-  },
-  {
     "type": "dropDown",
     "label": "air gap",
     "name": "air_gap_bool",
