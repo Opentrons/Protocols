@@ -254,7 +254,8 @@ def run(ctx):
     mobile_phase = tuberack15_50.wells_by_name()['B1']
     tubes_dict[mobile_phase].height = 94
     tip_condition(p1000, 1000, mobile_phase)
-    mobile_phase_dests = plate.rows()[0][:8] + plate.rows()[2][:6]
+    mobile_phase_dests = plate.rows()[0][:8] + plate.rows()[2][:6] + [
+        plate.wells_by_name()['E1']] + [plate.wells_by_name()['E3']]
     for i in range(len(mobile_phase_dests)//2):
         p1000.flow_rate.aspirate = 150
         p1000.flow_rate.dispense = 800
