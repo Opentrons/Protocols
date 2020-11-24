@@ -5,22 +5,22 @@ metadata = {
     'protocolName': 'STANDARD MP',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.0'
+    'apiLevel': '2.8'
 }
 
 
 def run(ctx):
 
-    [input_csv, vol_aliquot, vol_mobile_phase, vol_tests, qc_height,
-     std_height, user_name, air_gap_bool] = get_values(  # noqa: F821
-        'input_csv', 'vol_aliqout', 'vol_mobile_phase', 'vol_tests',
-        'qc_height', 'std_height', 'user_name', 'air_gap_bool')
+    [input_csv, test_method, vol_aliquot, vol_mobile_phase, vol_tests,
+     qc_height, std_height, air_gap_bool] = get_values(  # noqa: F821
+        'input_csv', 'test_method', 'vol_aliqout', 'vol_mobile_phase',
+        'vol_tests', 'qc_height', 'std_height', 'air_gap_bool')
 
     class tube():
 
         def __init__(self, tube, height=0, min_height=5, comp_coeff=1.15):
             self.tube = tube
-            self.radius = tube._diameter/2
+            self.radius = tube.geometry._diameter/2
             self.height = height
             self.min_height = min_height
             self.comp_coeff = comp_coeff
@@ -35,10 +35,10 @@ def run(ctx):
 
         def height_inc(self, vol):
             dh = (vol/(math.pi*(self.radius**2)))*self.comp_coeff
-            if self.height + dh < self.tube._depth:
+            if self.height + dh < self.tube.geometry._depth:
                 self.height = self.height + dh
             else:
-                self.height = self.tube._depth
+                self.height = self.tube.geometry._depth
             return(self.tube.bottom(self.height + 20))
 
     # load labware
@@ -179,7 +179,7 @@ def run(ctx):
                                   dest_loc, air_gap=air_gap_p300,
                                   new_tip='never')
                     if plate_height - 1 > 1:
-                        plate_height -= 1
+                        plate_height -= 1.5
                     else:
                         plate_height = 1
                 else:
@@ -254,7 +254,8 @@ def run(ctx):
     mobile_phase = tuberack15_50.wells_by_name()['B1']
     tubes_dict[mobile_phase].height = 94
     tip_condition(p1000, 1000, mobile_phase)
-    mobile_phase_dests = plate.rows()[0][:8] + plate.rows()[2][:6]
+    mobile_phase_dests = plate.rows()[0][:8] + plate.rows()[2][:6] + [
+        plate.wells_by_name()['E1']] + [plate.wells_by_name()['E3']]
     for i in range(len(mobile_phase_dests)//2):
         p1000.flow_rate.aspirate = 150
         p1000.flow_rate.dispense = 800
@@ -322,7 +323,7 @@ def run(ctx):
         with open('/var/serial') as serialfile:
             ot2_serial.append(serialfile.read())
         with open(write_path, 'w') as text_file:
-            text_file.write(f'Name of user: {user_name} \n')
+            text_file.write(f'Test method: {test_method}\n')
             text_file.write(f'Date/Time of run: {str(datetime.now())}\n')
             text_file.write(f'P300 Serial: {str(p300_serial)}\n')
             text_file.write(f'P1000 Serial: {str(p1000_serial)}\n')
