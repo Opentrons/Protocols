@@ -27,29 +27,34 @@ def run(protocol):
     deepwell_plate = protocol.load_labware('usascientific_96_wellplate_2.4ml_deep', 3) # Replace with 2 custom deep well plates
 
     # Lysis Buffer Reservoir
-    buffer_reservoir = protocol.load_labware('nest_1_reservoir_195ml', 4)
+    buffer_reservoir = protocol.load_labware('nest_1_reservoir_195ml', 4)['A1']
 
     # Load 7 Tube Racks with Samples in 30 mL Tubes
     for slot in range(1,12):
         if not slot in protocol.loaded_labwares:
             protocol.load_labware('opentrons_6_tuberack_falcon_50ml_conical', slot)
     
-    pool_size = 5
+    pool_size = 5 # USER
+    # total_samples = 12 # USER
     all_wells = [protocol.loaded_labwares[i].wells()[j] for i in range(5,12) for j in range(6)]
     sample_wells = [all_wells[i:i + pool_size] for i in range(0, len(all_wells), pool_size)]
     dest_wells = deepwell_plate.wells()[0:len(sample_wells)]
 
-    # for i in range(len(sample_wells)):
-    #     p300_single.transfer(40, sample_wells[i], dest_wells[i], new_tip='always')
+    # Transfer 40 uL samples into DWP
+    protocol.comment(f'Adding 40 uL samples with a pool size of {pool_size}')
+    for i in range(len(sample_wells)):
+        p300_single.transfer(40, sample_wells[i], dest_wells[i], new_tip='always')
 
-    # print(deepwell_plate.wells()[0:len(dest_wells)])
-
-    columns = (len(dest_wells) - (len(dest_wells) % 8)) / 8
-    print(int(columns))
-
-# Custom Labware Description (if applicable): 
-# 1.5 mL tubes (cat. no. 16466-058 VWR)
-# Caplugs (cat. no. 2223530G80) 30 mL tubes
-# NEST 96 DWP 2mL (cat. no. 503162) (SAME AS BELOW?)(https://www.fishersci.com/shop/products/nunc-1-3-2-0ml-deepwell-plates-shared-wall-technology/12565606?searchHijack=true&searchTerm=12565606&searchType=RAPID&crossRef=max9620&matchedCatNo=12565606)
-# Thermofisher Nunc 96-well deep well plate (cat. no. 278743) (https://assets.thermofisher.com/TFS-Assets/LSG/manuals/D03027.pdf)
-# NEST 1 well Reservoir 195 mL (cat. no. 360103)
+    # Transfer 240 uL of Lysis Buffer into variable wells using multichannel pipette
+    buffer_wells = len(dest_wells)
+    columns = math.floor(buffer_wells / 8)
+    left_over_wells = buffer_wells % 8
+    protocol.comment('Transferring 240 uL of Lysis buffer into DWP')
+    for i in range(columns):
+        p300_multi.pick_up_tip(tiprack_300ul.columns()[i][0])
+        p300_multi.transfer(240, buffer_reservoir, deepwell_plate.columns()[i][0], new_tip='never')
+        p300_multi.drop_tip()
+    if left_over_wells > 0:
+        p300_multi.pick_up_tip(tiprack_300ul.columns()[columns][8-left_over_wells])
+        p300_multi.transfer(240, buffer_reservoir, deepwell_plate.columns()[columns][0], new_tip='never')
+        p300_multi.drop_tip()
