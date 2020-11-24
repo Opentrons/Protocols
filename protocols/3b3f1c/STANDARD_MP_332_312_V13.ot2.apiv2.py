@@ -5,7 +5,7 @@ metadata = {
     'protocolName': 'STANDARD MP',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.0'
+    'apiLevel': '2.8'
 }
 
 
@@ -20,7 +20,7 @@ def run(ctx):
 
         def __init__(self, tube, height=0, min_height=5, comp_coeff=1.15):
             self.tube = tube
-            self.radius = tube._diameter/2
+            self.radius = tube.geometry._diameter/2
             self.height = height
             self.min_height = min_height
             self.comp_coeff = comp_coeff
@@ -35,10 +35,10 @@ def run(ctx):
 
         def height_inc(self, vol):
             dh = (vol/(math.pi*(self.radius**2)))*self.comp_coeff
-            if self.height + dh < self.tube._depth:
+            if self.height + dh < self.tube.geometry._depth:
                 self.height = self.height + dh
             else:
-                self.height = self.tube._depth
+                self.height = self.tube.geometry._depth
             return(self.tube.bottom(self.height + 20))
 
     # load labware
