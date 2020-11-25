@@ -31,6 +31,7 @@
         "label": "PCR plate on top of Temperature Module",
         "name": "pcr_labware",
         "options": [
+          {"label": "Applied Biosystems 96 Well Plate 100 µL", "value": "appliedbiosystems_96_wellplate_100ul"},
           {"label": "96 well PCR Strip (Aluminum Block)", "value": "opentrons_96_aluminumblock_generic_pcr_strip_200ul"},
           {"label": "96 well NEST 100uL PCR Plate", "value": "nest_96_wellplate_100ul_pcr_full_skirt"}
         ]
