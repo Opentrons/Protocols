@@ -36,22 +36,23 @@ def run(protocol):
     buffer_reservoir = protocol.load_labware('nest_1_reservoir_195ml', 3)['A1']
 
     # Load 7 Tube Racks with Samples in 30 mL Tubes
+    tube_racks = []
     for slot in range(1, 12):
         if slot not in protocol.loaded_labwares:
-            protocol.load_labware('caplugs_6_tuberack_30ml', slot)
+            tube_racks.append(protocol.load_labware('caplugs_6_tuberack_30ml',
+                                                    slot))
 
-    all_wells = [protocol.loaded_labwares[i].wells()[j] for i in [1, 4, 7, 8,
-                 9, 10, 11] for j in range(6)]
-    all_wells = all_wells[:total_samples]
+    all_wells = [well for tube in tube_racks for well
+                 in tube.wells()][:total_samples]
     sample_wells = [all_wells[i:i + pool_size] for i in range(0,
                     len(all_wells), pool_size)]
     dest_wells = deepwell_plate.wells()[0:len(sample_wells)]
 
     # Transfer 40 uL samples into DWP
     protocol.comment(f'Adding 40 uL samples with a pool size of {pool_size}')
-    for i in range(len(sample_wells)):
-        p300s.flow_rate.aspirate = 30
-        p300s.transfer(40, sample_wells[i], dest_wells[i], new_tip='always')
+    p300s.flow_rate.aspirate = 30
+    for s, d in zip(sample_wells, dest_wells):
+        p300s.transfer(40, s, d, new_tip='always')
 
     # Transfer 240 uL of Lysis Buffer into variable wells using multichannel
     buffer_wells = len(dest_wells)
