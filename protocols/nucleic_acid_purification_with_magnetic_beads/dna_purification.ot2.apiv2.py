@@ -4,21 +4,21 @@ metadata = {
     'protocolName': 'DNA Purification',
     'author': 'Opentrons <protocols@opentrons.com>',
     'source': 'Protocol Library',
-    'apiLevel': '2.2'
+    'apiLevel': '2.4'
     }
 
 
 def run(protocol_context):
 
-    [pipette_type, pipette_mount, sample_number, sample_volume, bead_ratio,
-     elution_buffer_volume, incubation_time, settling_time,
+    [mag_mod, pipette_type, pipette_mount, sample_number, sample_volume,
+     bead_ratio, elution_buffer_volume, incubation_time, settling_time,
      drying_time] = get_values(  # noqa: F821
-        "pipette_type", "pipette_mount", "sample_number", "sample_volume",
-        "bead_ratio", "elution_buffer_volume", "incubation_time",
-        "settling_time", "drying_time"
+        "mag_mod", "pipette_type", "pipette_mount", "sample_number",
+        "sample_volume", "bead_ratio", "elution_buffer_volume",
+        "incubation_time", "settling_time", "drying_time"
     )
 
-    mag_deck = protocol_context.load_module('magdeck', '1')
+    mag_deck = protocol_context.load_module(mag_mod, '1')
     mag_plate = mag_deck.load_labware(
         'biorad_96_wellplate_200ul_pcr')
     output_plate = protocol_context.load_labware(

@@ -1,6 +1,15 @@
 [
   {
     "type": "dropDown",
+    "label": "magnetic module",
+    "name": "mag_mod",
+    "options": [
+      { "label": "GEN1 Magnetic Module", "value": "magnetic module"},
+      { "label": "GEN2 Magnetic Module", "value": "magnetic module gen2"}
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "pipette type",
     "name": "pipette_type",
     "options": [
