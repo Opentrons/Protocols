@@ -9,6 +9,7 @@
 
 ## Description
 This protocol automates variable pooling of samples and addition of lysis buffer for automated extraction downstream. 
+[Workflow 2](https://develop.protocols.opentrons.com/protocol/6fe477-workflow-2)
 
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
