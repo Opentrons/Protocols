@@ -1,13 +1,21 @@
-metadata={"apiLevel": "2.0"}
+metadata = {
+    'protocolName': 'PCR setup using a CSV file',
+    'author': 'Opentrons <protocols@opentrons.com>',
+    'source': 'Protocol Library',
+    'apiLevel': '2.2'
+    }
 
-c = """Reagent,Source Slot,Source Well,Target Slot,Target Well,Volume
-Water,2,A1,9,A1,10
-Primer 1,2,A2,9,A1,5
-PCR Mix,2,A3,9,A1,10
-DNA 1,2,A4,9,A1,1
-"""
+#c = """Reagent,Source Slot,Source Well,Target Slot,Target Well,Volume
+#Water,2,A1,9,A1,10
+#Primer 1,2,A2,9,A1,5
+#PCR Mix,2,A3,9,A1,10
+#DNA 1,2,A4,9,A1,1
+#"""
 
 def run(ctx):
+
+    c = get_values(  # noqa: F821
+            'csv_input')
 
     csv_data = [r.split(',') for r in c.strip().splitlines() if r][1:]
     steps = {"Water": [], "PCR":[], "Primer":[], "DNA":[]}
