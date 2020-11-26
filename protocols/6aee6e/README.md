@@ -4,8 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Nucleic Acid Extraction & Purification
-        * Plant DNA
+* Sample Prep
+        * Plate Filling
 
 ## Description
 This protocol automates a request for a ammonia and ytrium dilution protocol. It uses 2 custom labwares, transferring 10ul of ammonia from a 50mL tube to a custom 99 well plate, then transferring 5ul of Ytrium from a custom 96 well plate on a shaker. This is repeated 96 times until all wells from the custom 96 well plate have been transferred.
