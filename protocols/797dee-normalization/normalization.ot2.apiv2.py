@@ -74,7 +74,7 @@ def run(protocol):
         # 1mm per 2ml
         if vol_used == 0:
             return liquid_top
-        offset = vol_used / 2000
+        offset = vol_used / 500
         if offset > liquid_top:
             protocol.comment("WARNING: Not enough liquid in 50ml tube")
             return 1
