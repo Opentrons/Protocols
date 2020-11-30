@@ -7,8 +7,8 @@
   },
   {
     "type": "dropDown",
-    "label": "P10 GEN1 single-channel mount",
-    "name": "p10_mount",
+    "label": "P20 GEN2 single-channel mount",
+    "name": "p20_mount",
     "options": [
       { "label": "right", "value": "right" },
       { "label": "left", "value": "left" }
@@ -16,8 +16,8 @@
   },
   {
     "type": "dropDown",
-    "label": "P50 GEN1 single-channel mount",
-    "name": "p50_mount",
+    "label": "P300 GEN2 single-channel mount",
+    "name": "p300_mount",
     "options": [
       { "label": "left", "value": "left" },
       { "label": "right", "value": "right" }
