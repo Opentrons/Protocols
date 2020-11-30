@@ -9,11 +9,9 @@ metadata = {
 
 
 def run(protocol):
-    """[num_samples, p300m, s_pip] = get_values(  # noqa: F821
-    'num_samples', 'p300m', 's_pip')"""
-    num_samples = 1
-    p300m = 'p300_multi_gen2'
-    s_pip = 'p20_single_gen2'
+    [num_samples, p300m, s_pip] = get_values(  # noqa: F821
+    'num_samples', 'p300m', 's_pip')
+
     # load labware and pipettes
     samps = int(num_samples)  # this num represents columns and should be 1-6
     tips200 = [
