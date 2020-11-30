@@ -3,15 +3,15 @@ metadata = {
     'protocolName': 'Normalization from .csv',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.0'
+    'apiLevel': '2.4'
 }
 
 
 def run(ctx):
 
-    [input_csv, p10_mount, p50_mount] = get_values(  # noqa: F821
-        'input_csv', 'p10_mount', 'p50_mount')
-    # [input_csv, p10_mount, p50_mount] = [
+    [input_csv, p20_mount, p300_mount] = get_values(  # noqa: F821
+        'input_csv', 'p20_mount', 'p300_mount')
+    # [input_csv, p20_mount, p300_mount] = [
     #     "source plate well, destination plate well, volume sample (µl),\
     #     volume diluent (µl)\nA1, A1, 2, 28", 'right', 'left'
     # ]
@@ -21,23 +21,23 @@ def run(ctx):
         'eppendorf_96_well_on_block', '1', 'source plate')
     destination_plate = ctx.load_labware(
         'eppendorf_96_well_on_block', '2', 'destination plate')
-    tiprack10 = [
+    tiprack20 = [
         ctx.load_labware('opentrons_96_tiprack_10ul', slot, '10ul tiprack')
         for slot in ['3', '6']
     ]
     water = ctx.load_labware(
         'usascientific_12_reservoir_22ml', '5',
         'reservoir for water (channel 1)').wells()[0].bottom(5)
-    tiprack50 = [
+    tiprack300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot, '300ul tiprack')
         for slot in ['8', '9']
     ]
 
     # pipettes
-    p10 = ctx.load_instrument(
-        'p10_single', p10_mount, tip_racks=tiprack10)
-    p50 = ctx.load_instrument(
-        'p50_single', p50_mount, tip_racks=tiprack50)
+    p20 = ctx.load_instrument(
+        'p20_single_gen2', p20_mount, tip_racks=tiprack20)
+    p300 = ctx.load_instrument(
+        'p300_single_gen2', p300_mount, tip_racks=tiprack300)
 
     # parse
     sources = [
@@ -70,7 +70,7 @@ def run(ctx):
             drop = False
 
         # pre-transfer diluent
-        pip = p50 if vol1 > 10 else p10
+        pip = p300 if vol1 > 10 else p20
         pip.pick_up_tip()
         pip.transfer(vol1, r1, d.bottom(2), new_tip='never')
         pip.blow_out(d.top(-2))
@@ -78,11 +78,11 @@ def run(ctx):
             pip.drop_tip()
 
         # transfer sample
-        pip = p50 if vol2 > 10 else p10
+        pip = p300 if vol2 > 10 else p20
         if not pip.hw_pipette['has_tip']:
             pip.pick_up_tip()
         pip.transfer(vol2, r2, d, new_tip='never')
         pip.blow_out(d.top(-2))
-        for p in [p10, p50]:
+        for p in [p20, p300]:
             if p.hw_pipette['has_tip']:
                 p.drop_tip()
