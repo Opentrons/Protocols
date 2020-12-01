@@ -1,0 +1,11 @@
+[
+  {
+    "type": "dropDown",
+    "label": "Number of Plates (1 or 2)",
+    "name": "num_plates",
+    "options": [
+      {"label": "One (1)", "value": 1},
+      {"label": "Two (2)", "value": 2}
+    ]
+  }
+]
