@@ -31,9 +31,9 @@ def run(protocol):
     p1000 = protocol.load_instrument('p1000_single_gen2', p1000_mount,
                                      tip_racks=tipracks_1000ul)
 
-    # Proccess Buffer (A4)
+    # Proccess Buffer (A1)
     buffer = protocol.load_labware(
-        'opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical', 1)['A4']
+        'opentrons_6_tuberack_falcon_50ml_conical', 1)['A1']
 
     deep_samples = deepwell_plate.wells()[:total_samples]
     pcr_samples = pcr_plate.wells()[:total_samples]
