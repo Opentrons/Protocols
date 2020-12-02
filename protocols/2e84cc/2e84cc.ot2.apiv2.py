@@ -5,6 +5,7 @@ metadata = {
     'source': 'Custom Protocol Request'
 }
 
+
 def run(ctx):
 
     sample_count = 96
@@ -21,24 +22,49 @@ def run(ctx):
         'opentrons_24_aluminumblock_generic_2ml_screwcap')
     phusion_mm = temp_rack.wells_by_name()["A1"]
     kapa_mm = temp_rack.wells_by_name()["B1"]
-    north_indexing_primers = [temp_rack.wells_by_name()[x] for x in ["{}{}".format(b,a) for a in ["2","3"] for b in ["A","B","C","D"]]]
-    south_indexing_primers = [temp_rack.wells_by_name()[x] for x in ["{}{}".format(b,a) for a in ["4","5","6"] for b in ["A","B","C","D"]]]
+    north_indexing_primers = [
+        temp_rack.wells_by_name()[x] for x in [
+            "{}{}".format(
+                b, a) for a in [
+                "2", "3"] for b in [
+                    "A", "B", "C", "D"]]]
+    south_indexing_primers = [
+        temp_rack.wells_by_name()[x] for x in [
+            "{}{}".format(
+                b, a) for a in [
+                "4", "5", "6"] for b in [
+                    "A", "B", "C", "D"]]]
 
     mag_deck = ctx.load_module('magnetic module', '4')  # update to gen2
     mag_deck.disengage()
-    mag_plate = mag_deck.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
+    mag_plate = mag_deck.load_labware(
+        'nest_96_wellplate_100ul_pcr_full_skirt')
 
-    DNA_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '5')
+    DNA_plate = ctx.load_labware(
+        'nest_96_wellplate_100ul_pcr_full_skirt', '5')
 
     reservoir = ctx.load_labware('nest_12_reservoir_15ml', '2')
     beads = reservoir.wells_by_name()["A1"]
     h2o = reservoir.wells_by_name()["A2"]
 
-    etoh_list = [reservoir.wells_by_name()[x] for x in ["A3","A4","A5","A6"]] 
-    liquid_trash_list = [reservoir.wells_by_name()[x] for x in ["A7","A8","A9","A10","A11"]]
-    
-    p20s = ctx.load_instrument("p20_single_gen2", "right", tip_racks=[ctx.load_labware("opentrons_96_filtertiprack_20ul", "3")])
-    p300s = ctx.load_instrument("p300_single_gen2", "left", tip_racks=[ctx.load_labware("opentrons_96_filtertiprack_200ul", x) for x in ["6","9"]])
+    etoh_list = [reservoir.wells_by_name()[x]
+                 for x in ["A3", "A4", "A5", "A6"]]
+    liquid_trash_list = [reservoir.wells_by_name()[x]
+                         for x in ["A7", "A8", "A9", "A10", "A11"]]
+
+    p20s = ctx.load_instrument(
+        "p20_single_gen2", "right", tip_racks=[
+            ctx.load_labware(
+                "opentrons_96_filtertiprack_20ul", "3")])
+    p300s = ctx.load_instrument(
+        "p300_single_gen2",
+        "left",
+        tip_racks=[
+            ctx.load_labware(
+                "opentrons_96_filtertiprack_200ul",
+                x) for x in [
+                "6",
+                "9"]])
 
     dna_wells = DNA_plate.wells()[:sample_count]
     mag_wells = mag_plate.wells()[:sample_count]
@@ -47,42 +73,47 @@ def run(ctx):
     # Ethanol and Liquid trash simulation
     class ReservoirMaterial():
         def __init__(self, lanes):
-            self.lanes = []
+            self.lanes = lanes
         liquid_taken = 0
         depth_per_lane = 14800
         current_lane = 0
 
         def get_lane(self, liquid_quantity):
-            if liquid_quantity+liquid_taken > depth_per_lane:
-                current_lane += 1
-                liquid_taken = 0
-            liquid_taken += liquid_quantity
-            return lanes[current_lane]
+            if liquid_quantity + self.liquid_taken > self.depth_per_lane:
+                self.current_lane += 1
+                self.liquid_taken = 0
+            self.liquid_taken += liquid_quantity
+            return self.lanes[self.current_lane]
 
     etoh = ReservoirMaterial(etoh_list)
     liquid_trash = ReservoirMaterial(liquid_trash_list)
 
     # Tip simulation function
     class TipCounter():
-        def __init__(self,pipette,tip_kind):
+        def __init__(self, pipette, tip_kind):
             self.pipette = pipette
             self.tip_kind = tip_kind
         i = 0
 
-        def get_tip(self,quantity=sample_count):
+        def get_tip(self, quantity=sample_count):
             if self.i + quantity > 96:
                 ctx.pause("Replace {} tip boxes".format(self.tip_kind))
                 self.pipette.reset_tipracks()
             else:
                 self.i += quantity
 
-    c20 = TipCounter(p20s,"20ul")
-    c300 = TipCounter(p300s,"200ul")
+    c20 = TipCounter(p20s, "20ul")
+    c300 = TipCounter(p300s, "200ul")
 
     # Genomic DNA amplification
 
     c300.get_tip()
-    p300s.transfer(21, phusion_mm, thermocycler_plate.wells()[:sample_count], new_tip='once')
+    p300s.transfer(
+        21,
+        phusion_mm,
+        thermocycler_plate.wells()[
+            :sample_count],
+        new_tip='once')
     c20.get_tip()
     p20s.transfer(2, dna_wells, thermo_wells, new_tip='always')
     ctx.pause("Switch DNA plate out with Primer plate")
@@ -93,11 +124,12 @@ def run(ctx):
         return {"temperature": temp, "hold_time_seconds": hold}
     steps = []
     steps.append(stp(98, 300))
-    steps += [item for sublist in [[stp(98,10), stp(69-x,10), stp(72,30)] for x in range(0,10)] for item in sublist]
-    steps += [item for sublist in [[stp(98,10), stp(72,30)] for _ in range(0,25)] for item in sublist]
-    steps.append(stp(72,420))
-    steps.append(stp(10,10))
-
+    steps += [item for sublist in [[stp(98, 10), stp(69 - x, 10), stp(72, 30)]
+                                   for x in range(0, 10)] for item in sublist]
+    steps += [item for sublist in [[stp(98, 10), stp(72, 30)]
+                                   for _ in range(0, 25)] for item in sublist]
+    steps.append(stp(72, 420))
+    steps.append(stp(10, 10))
 
     thermocycler.close_lid()
     thermocycler.set_lid_temperature(99)
@@ -105,59 +137,78 @@ def run(ctx):
         steps=steps,
         repetitions=1, block_max_volume=25)
     thermocycler.open_lid()
-    
+
     ctx.pause("Move thermocycler plate to magdeck. Replace DNA plate with indexing plate I. Replace thermocycler plate with reaction plate C")
 
     # PCR amplicons beads clean
-    
-    print('0')
-    c300.get_tip()
-    p300s.transfer(45, beads, mag_wells, mix_before=(100,5), mix_after=(50,15), new_tip='always')
-    ctx.delay(300)
-    mag_deck.engage()
-    ctx.delay(600)
+    def wash():
+        c300.get_tip()
+        p300s.transfer(
+            45, beads, mag_wells, mix_before=(
+                5, 100), mix_after=(
+                15, 50), new_tip='always')
+        ctx.delay(300)
+        mag_deck.engage()
+        ctx.delay(600)
 
-    ## Wash start
-    print('1')
-    c300.get_tip()
-    p300s.transfer(200, mag_wells, liquid_trash.get_lane(200), new_tip='always')
-    for _ in range(0,2):
-        # Protocol from customer did not include a sample resuspension
-        # or a step for removing EtOH. I am doing what I assume it meant.
-        for mag_well in mag_wells:
-            p300s.pick_up_tip()
-            c300.get_tip(quantity=1)
-            p300s.transfer(150, etoh.get_lane(150),  mag_well, new_tip='never')
-            p300s.transfer(150, mag_well, liquid_trash.get_lane(150), new_tip='never')
-            p300s.drop_tip()
-    print('2')
-    c20.get_tip()
-    p20s.transfer(10, mag_wells, liquid_trash.get_lane(10), new_tip='always')
+        # Wash start
+        c300.get_tip()
+        p300s.transfer(
+            200,
+            mag_wells,
+            liquid_trash.get_lane(200),
+            new_tip='always')
+        for _ in range(0, 2):
+            # Protocol from customer did not include a sample resuspension
+            # or a step for removing EtOH. I am doing what I assume it meant.
+            for mag_well in mag_wells:
+                p300s.pick_up_tip()
+                c300.get_tip(quantity=1)
+                p300s.transfer(
+                    150,
+                    etoh.get_lane(150),
+                    mag_well,
+                    new_tip='never')
+                p300s.transfer(
+                    150,
+                    mag_well,
+                    liquid_trash.get_lane(150),
+                    new_tip='never')
+                p300s.drop_tip()
+        c20.get_tip()
+        p20s.transfer(
+            10,
+            mag_wells,
+            liquid_trash.get_lane(10),
+            new_tip='always')
 
-    ctx.delay(360)
-    mag_deck.disengage()
-    
-    c300.get_tip()
-    p300s.transfer(40, h2o, mag_wells, mix_after=(30,20), new_tip='always')
-    ctx.delay(120)
-    mag_deck.engage()
-    ctx.delay(180)
-    c300.get_tip()
-    p300s.transfer(36, mag_wells, DNA_plate.wells()[:sample_count])
-    print("3")
+        ctx.delay(360)
+        mag_deck.disengage()
+
+        c300.get_tip()
+        p300s.transfer(
+            40, h2o, mag_wells, mix_after=(
+                20, 30), new_tip='always')
+        ctx.delay(120)
+        mag_deck.engage()
+        ctx.delay(180)
+        c300.get_tip()
+        p300s.transfer(36, mag_wells, DNA_plate.wells()[:sample_count])
+    wash()
 
     # Library indexing PCR KAPA
     c20.get_tip()
-    p20s.tranfer(17.5, kapa_mm, thermo_wells)
+    p20s.transfer(17.5, kapa_mm, thermo_wells)
     c20.get_tip()
     p20s.transfer(2.5, dna_wells, thermo_wells)
     # transfer north index
     # transfer south index
 
     steps = []
-    steps.append(stp(95,30))
-    steps += [item for sublist in [[stp(95,10), stp(55,30), stp(72,30)] for _ in range(0,12)] for item in sublist]
-    steps.append(stp(72,300))
+    steps.append(stp(95, 30))
+    steps += [item for sublist in [[stp(95, 10), stp(55, 30), stp(72, 30)]
+                                   for _ in range(0, 12)] for item in sublist]
+    steps.append(stp(72, 300))
     steps.append(stp(4, 10))
 
     thermocycler.close_lid()
@@ -165,37 +216,10 @@ def run(ctx):
     thermocycler.execute_profile(
         steps=steps,
         repetitions=1, block_max_volume=25)
-    
+
     thermocycler.open_lid()
-    ctx.pause("Move thermocycler plate to magdeck. Replace indexing I plate with output plate.")
+    ctx.pause(
+        "Move thermocycler plate to magdeck. Replace indexing I plate with output plate.")
 
     # Index library beads clean
-    ### This is copy and pasted from above: turn into function once it is operational
-    print('1')
-    c300.get_tip()
-    p300s.transfer(200, mag_wells, liquid_trash.get_lane(200), new_tip='always')
-    for _ in range(0,2):
-        # Protocol from customer did not include a sample resuspension
-        # or a step for removing EtOH. I am doing what I assume it meant.
-        for mag_well in mag_wells:
-            p300s.pick_up_tip()
-            c300.get_tip(quantity=1)
-            p300s.transfer(150, etoh.get_lane(150),  mag_well, new_tip='never')
-            p300s.transfer(150, mag_well, liquid_trash.get_lane(150), new_tip='never')
-            p300s.drop_tip()
-    print('2')
-    c20.get_tip()
-    p20s.transfer(10, mag_wells, liquid_trash.get_lane(10), new_tip='always')
-
-    ctx.delay(360)
-    mag_deck.disengage()
-
-    c300.get_tip()
-    p300s.transfer(40, h2o, mag_wells, mix_after=(30,20), new_tip='always')
-    ctx.delay(120)
-    mag_deck.engage()
-    ctx.delay(180)
-    c300.get_tip()
-    p300s.transfer(36, mag_wells, DNA_plate.wells()[:sample_count])
-    print("3")
-
+    wash()
