@@ -138,7 +138,9 @@ def run(ctx):
         repetitions=1, block_max_volume=25)
     thermocycler.open_lid()
 
-    ctx.pause("Move thermocycler plate to magdeck. Replace DNA plate with indexing plate I. Replace thermocycler plate with reaction plate C")
+    ctx.pause("""Move thermocycler plate to magdeck.
+    Replace DNA plate with indexing plate I.
+    Replace thermocycler plate with reaction plate C""")
 
     # PCR amplicons beads clean
     def wash():
@@ -201,19 +203,27 @@ def run(ctx):
     p20s.transfer(17.5, kapa_mm, thermo_wells)
     c20.get_tip()
     p20s.transfer(2.5, dna_wells, thermo_wells)
-    
+
     # transfer north index
     for col in thermocycler_plate.columns():
         for i, well in enumerate(col):
             if well in thermo_wells:
                 c20.get_tip(1)
-                p20s.transfer(2.5, north_indexing_primers[i], well, new_tip='always')
+                p20s.transfer(
+                    2.5,
+                    north_indexing_primers[i],
+                    well,
+                    new_tip='always')
     # transfer south index
     for row in thermocycler_plate.rows():
         for i, well in enumerate(row):
             if well in thermo_wells:
                 c20.get_tip(1)
-                p20s.transfer(2.5, south_indexing_primers[i], well, new_tip='always')
+                p20s.transfer(
+                    2.5,
+                    south_indexing_primers[i],
+                    well,
+                    new_tip='always')
 
     steps = []
     steps.append(stp(95, 30))
@@ -230,7 +240,8 @@ def run(ctx):
 
     thermocycler.open_lid()
     ctx.pause(
-        "Move thermocycler plate to magdeck. Replace indexing I plate with output plate.")
+        """Move thermocycler plate to magdeck.
+        Replace indexing I plate with output plate.""")
 
     # Index library beads clean
     wash()
