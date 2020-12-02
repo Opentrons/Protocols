@@ -7,7 +7,6 @@ metadata = {
 
 
 def run(ctx):
-    
     sample_count = get_values(  # noqa: F821
             'sample_count')[0]
 
@@ -21,6 +20,7 @@ def run(ctx):
         '1')
     temp_rack = temp_deck.load_labware(
         'opentrons_24_aluminumblock_generic_2ml_screwcap')
+    temp_deck.set_temperature(4)
     phusion_mm = temp_rack.wells_by_name()["A1"]
     kapa_mm = temp_rack.wells_by_name()["B1"]
     north_indexing_primers = [
@@ -42,9 +42,9 @@ def run(ctx):
         'nest_96_wellplate_100ul_pcr_full_skirt')
 
     DNA_plate = ctx.load_labware(
-        'nest_96_wellplate_100ul_pcr_full_skirt', '5')
+        'nest_96_wellplate_100ul_pcr_full_skirt', '2')
 
-    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '2')
+    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '5')
     beads = reservoir.wells_by_name()["A1"]
     h2o = reservoir.wells_by_name()["A2"]
 
