@@ -7,8 +7,9 @@ metadata = {
 
 
 def run(ctx):
-
-    sample_count = 96
+    
+    sample_count = get_values(  # noqa: F821
+            'sample_count')[0]
 
     thermocycler = ctx.load_module('thermocycler')
     thermocycler.open_lid()
