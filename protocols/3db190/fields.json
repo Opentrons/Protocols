@@ -22,6 +22,14 @@
           {"label": "left", "value": "left"},
           {"label": "right", "value": "right"}
         ]
-    }
-
+    },
+    {
+      "type": "dropDown",
+      "label": "Home after each tip drop",
+      "name": "home",
+      "options": [
+        {"label": "False", "value": "False"},
+        {"label": "True", "value": "True"}
+      ]
+  }
   ]

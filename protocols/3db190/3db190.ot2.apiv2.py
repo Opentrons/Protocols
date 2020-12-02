@@ -8,8 +8,8 @@ metadata = {
 
 def run(protocol):
 
-    [total_samples, p20_mount, p1000_mount] = get_values(  # noqa: F821
-        "total_samples", "p20_mount", "p1000_mount")
+    [total_samples, p20_mount, p1000_mount, home] = get_values(  # noqa: F821
+        "total_samples", "p20_mount", "p1000_mount", "home")
 
     total_samples = int(total_samples)
 
@@ -31,9 +31,14 @@ def run(protocol):
     p1000 = protocol.load_instrument('p1000_single_gen2', p1000_mount,
                                      tip_racks=tipracks_1000ul)
 
+    p1000.flow_rate.aspirate = 350
+    p1000.flow_rate.dispense = 350
+    p20.flow_rate.aspirate = 12
+    p20.flow_rate.dispense = 12
+
     # Proccess Buffer (A1)
     buffer = protocol.load_labware(
-        'opentrons_6_tuberack_falcon_50ml_conical', 1)['A1']
+        'opentrons_6_tuberack_falcon_50ml_conical', 1)['A1'].bottom(z=10)
 
     deep_samples = deepwell_plate.wells()[:total_samples]
     pcr_samples = pcr_plate.wells()[:total_samples]
@@ -47,7 +52,7 @@ def run(protocol):
     for well in deep_samples:
         p1000.transfer(400, buffer, well,
                        new_tip='never')
-    p1000.drop_tip()
+    p1000.drop_tip(home_after=home)
 
     # PAUSE PROTOCOL #
     protocol.pause('Pausing protocol for further specimen processing and \
@@ -61,6 +66,6 @@ def run(protocol):
     for source, dest in zip(deep_samples, pcr_samples):
         p1000.pick_up_tip()
         p1000.mix(5, 150, source)
-        p1000.drop_tip()
+        p1000.drop_tip(home_after=home)
         p20.transfer(5, source,
                      dest, new_tip='always')
