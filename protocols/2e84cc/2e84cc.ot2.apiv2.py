@@ -16,7 +16,7 @@ def run(ctx):
         'nest_96_wellplate_100ul_pcr_full_skirt')
 
     temp_deck = ctx.load_module(
-        'temperature module',  # Update to Gen2
+        'temperature module gen2',
         '1')
     temp_rack = temp_deck.load_labware(
         'opentrons_24_aluminumblock_generic_2ml_screwcap')
@@ -35,7 +35,7 @@ def run(ctx):
                 "4", "5", "6"] for b in [
                     "A", "B", "C", "D"]]]
 
-    mag_deck = ctx.load_module('magnetic module', '4')  # update to gen2
+    mag_deck = ctx.load_module('magnetic module gen2', '4')
     mag_deck.disengage()
     mag_plate = mag_deck.load_labware(
         'nest_96_wellplate_100ul_pcr_full_skirt')
@@ -195,7 +195,7 @@ def run(ctx):
         mag_deck.engage()
         ctx.delay(180)
         c300.get_tip()
-        p300s.transfer(36, mag_wells, DNA_plate.wells()[:sample_count])
+        p300s.transfer(36, mag_wells, dna_wells)
     wash()
 
     # Library indexing PCR KAPA
