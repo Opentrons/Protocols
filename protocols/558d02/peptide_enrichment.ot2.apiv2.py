@@ -114,7 +114,7 @@ def run(ctx):
 
     # resuspend in elution buffer
     # establish offset location for resuspension
-    x, y, z = [magsamples[0]._width*0.95/2, 0, 2]
+    x, y, z = [magsamples[0].geometry._width*0.95/2, 0, 2]
     for i, m in enumerate(magsamples):
         sign = 1 if i//8 % 2 == 0 else -1
         disploc = m.bottom().move(types.Point(x*sign, y, z))
