@@ -14,8 +14,13 @@ def run(ctx):
     master_mix_1 = tube_rack.wells_by_name()["A1"]
     master_mix_2 = tube_rack.wells_by_name()["B1"]
 
-    p1000s.transfer(
+    p1000s.transfer(200, master_mix_1, pcr_strip.columns()[0], new_tip="once")
+    p1000s.transfer(100.8, master_mix_2, pcr_strip.columns()[1])
 
-    p1000s.transfer(column_count*5, master_mix, pcr_strip.columns()[0], new_tip="once")
-    p20m.transfer(3.8, pcr_strip.wells_by_name()["A1"], biorad_96_well.rows()[0][:column_count], new_tip="once")
+    for source_well, target_loc in zip([pcr_strip.wells_by_name()["A1"], pcr_strip.wells_by_name()["B1"]], [[1,2,4,5,7,8,10,11,13,14,16,17],[3,6,9,12,15,18]]):
+        p20m.pick_up_tip()
+        for letter in ["A","B"]:
+            for num in target_loc:
+                p20m.transfer(8, source_well, applied_biosystems_plate.wells_by_name()["{}{}".format(letter,num)], new_tip='never')
+        p20m.drop_tip()
 
