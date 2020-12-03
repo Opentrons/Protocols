@@ -132,8 +132,8 @@ def run(ctx):
     ctx.delay(minutes=1, msg='Incubating off magnet for 1 minutes')
     p300.home()  # added to ensure there are no bugs in following a pause
     # inserted pause for manual re-elution
-    ctx.pause('Sonicate for 1 minute to re-elute beads thoroughly. Resume when \
-plate is in place on Magnetic Module')
+    ctx.pause('Sonicate for 1 minute to re-elute beads thoroughly. Resume \
+when plate is in place on Magnetic Module')
     p300.home()  # added to ensure there are no bugs in following a pause
     magdeck.engage()
     ctx.delay(minutes=1, msg='Incubating on magnet for 1 minutes')

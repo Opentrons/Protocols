@@ -82,7 +82,8 @@ end must be after start.')
                 asp_vol = len(set)*transfer_volume + 1
                 p10.aspirate(asp_vol, s.top(7-s.geometry._depth))
                 for well in set:
-                    p10.dispense(transfer_volume, well.top(2-well.geometry._depth))
+                    p10.dispense(
+                        transfer_volume, well.top(2-well.geometry._depth))
                     p10.touch_tip(well, v_offset=7-well.geometry._depth)
                 p10.blow_out(s.top(7-s.geometry._depth))
         p10.drop_tip()
