@@ -106,7 +106,7 @@ def run(ctx):
         for i, s in enumerate(mag_samples):
             side = 1 if i % 2 == 0 else -1
             loc = s.bottom().move(
-                Point(x=side*s._width/2*0.95, y=0, z=3))
+                Point(x=side*s.geometry._width/2*0.95, y=0, z=3))
             pickup()
             m300.aspirate(300, magnehis_wash)
             m300.move_to(s.center())
@@ -134,7 +134,7 @@ def run(ctx):
     for i, s in enumerate(mag_samples):
         side = 1 if i % 2 == 0 else -1
         loc = s.bottom().move(
-            Point(x=side*s._width/2*0.95, y=0, z=2))
+            Point(x=side*s.geometry._width/2*0.95, y=0, z=2))
         pickup()
         m300.aspirate(150, magnehis_eb)
         m300.move_to(s.center())
