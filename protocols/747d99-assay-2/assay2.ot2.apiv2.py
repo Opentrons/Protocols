@@ -217,7 +217,7 @@ resuming.')
         for i, m in enumerate(mag_samples_m):
             _pick_up(m300)
             side = 1 if i % 2 == 0 else -1
-            loc = m.bottom(0.5).move(Point(x=side*m._width))
+            loc = m.bottom(0.5).move(Point(x=side*m.geometry._width))
             src = source[i//(12//len(source))]
             # m300.mix(3, 100, src)
             for n in range(num_trans):
@@ -259,7 +259,7 @@ resuming.')
             if not m300.hw_pipette['has_tip']:
                 _pick_up(m300)
             side = 1 if i % 2 == 0 else -1
-            loc = m.bottom(0.5).move(Point(x=side*m._width/2))
+            loc = m.bottom(0.5).move(Point(x=side*m.geometry._width/2))
             m300.aspirate(vol, mm)
             m300.move_to(m.center())
             m300.dispense(vol, loc)

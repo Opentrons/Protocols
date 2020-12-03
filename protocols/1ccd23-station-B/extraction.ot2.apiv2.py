@@ -105,7 +105,7 @@ def run(ctx):
 
     mag_samples_m = magplate.rows()[0][:num_cols]
     elution_samples_m = elutionplate.rows()[0][:num_cols]
-    radius = mag_samples_m[0]._width/2
+    radius = mag_samples_m[0].geometry._width/2
 
     magdeck.disengage()  # just in case
     tempdeck.set_temperature(4)

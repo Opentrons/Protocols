@@ -54,7 +54,7 @@ def run(ctx):
                 labware_load_dict[d_lw], d_slot, 'destination plate ' + d_slot)
         source = ctx.loaded_labwares[int(s_slot)].wells_by_name()[s_well]
         dest = ctx.loaded_labwares[int(d_slot)].wells_by_name()[d_well]
-        if h_offset > source._depth:
+        if h_offset > source.geometry._depth:
             ctx.pause('Warning: Specified height may result in crashing. \
 Press resume to ignore.')
 
