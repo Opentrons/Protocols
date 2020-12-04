@@ -1109,7 +1109,7 @@
     "isTiprack": true,
     "tipLength": 48.6,
     "isMagneticModuleCompatible": false,
-    "loadName": "generic_96_tiprack_300ul"
+    "loadName": "tarsons_300ul"
   },
   "namespace": "custom_beta",
   "version": 1,

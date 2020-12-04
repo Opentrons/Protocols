@@ -1109,7 +1109,7 @@
     "isTiprack": true,
     "tipLength": 103,
     "isMagneticModuleCompatible": false,
-    "loadName": "generic_96_tiprack_1000ul"
+    "loadName": "eptips_1000ul"
   },
   "namespace": "custom_beta",
   "version": 1,
