@@ -52,7 +52,7 @@ def run(protocol):
     dispense_vols = [i[1:13] for i in htp_info]
 
     # Group dispense volumes per column
-    # (Each list contains volumes per reservoir)
+    # Each list contains volumes per reservoir
     dispense_vols_serialized = [[vol[i] for vol in
                                 dispense_vols] for i in range(12)]
 
