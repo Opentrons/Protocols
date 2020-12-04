@@ -22,13 +22,16 @@ This protocol performs a custom cherrypicked high-throughput synthesis. It requi
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
+* [Vial Map CSV Example](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/5191b6/vial_map.csv)
+* [High-Throughput CSV Example](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/5191b6/htp.csv)
+
 Deck Setup
 * P1000 Tips (Slot 1)
 * P300 Tips (Slot 2)
 * NEST 12-well 15 mL reservoir (Slot 3)
 * Opentrons Tube Racks (Use Vial Map CSV)
 
-Example of the Vial Map CSV:
+Example of the Vial Map CSV [Download Example](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/5191b6/vial_map.csv):
 ```
 Well Number,Labware,Slot,Well Position
 1,opentrons_24_tuberack_nest_2ml_screwcap,4,A1

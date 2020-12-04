@@ -2,7 +2,7 @@ metadata = {
     'protocolName': 'High-Throughput Synthesis',
     'author': 'Sakib <sakib.hossain@opentrons.com>',
     'description': 'Custom Protocol Request',
-    'apiLevel': '2.7'
+    'apiLevel': '2.8'
 }
 
 
@@ -49,7 +49,7 @@ def run(protocol):
                 if line.split(',')[0].strip()][2:]
 
     # Get all dispense volumes in each row
-    dispense_vols = [htp_info[i][1:13] for i in range(len(htp_info))]
+    dispense_vols = [i[1:13] for i in htp_info]
 
     # Group dispense volumes per column
     # (Each list contains volumes per reservoir)
@@ -66,15 +66,13 @@ def run(protocol):
     samples_data = {i: v for i, v in raw_samples_data.items() if v}
 
     for res in samples_data:
-        p300.pick_up_tip()
-        p1000.pick_up_tip()
         for i, vol in enumerate(samples_data[res]):
             well, volume = i, int(samples_data[res][i])
-            if volume < 300:
-                p300.transfer(volume, reservoir.wells()[res],
-                              sample_tubes[well], new_tip='never')
-            else:
-                p1000.transfer(volume, reservoir.wells()[res],
-                               sample_tubes[well], new_tip='never')
-        p300.drop_tip()
-        p1000.drop_tip()
+            pip = p300 if volume < 300 else p1000
+            if not pip.has_tip:
+                pip.pick_up_tip()
+            pip.transfer(volume, reservoir.wells()[res],
+                         sample_tubes[well], new_tip='never')
+        for pipette in [p300, p1000]:
+            if pipette.has_tip:
+                pipette.drop_tip()
