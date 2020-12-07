@@ -70,19 +70,20 @@ end must be after start.')
             for d in d_set:
                 p10.transfer(
                     transfer_volume,
-                    s.top(7-s._depth),
-                    d.top(2-d._depth),
+                    s.top(7-s.geometry._depth),
+                    d.top(2-d.geometry._depth),
                     new_tip='never'
                 )
-                p10.touch_tip(d, v_offset=7-d._depth)
+                p10.touch_tip(d, v_offset=7-d.geometry._depth)
         else:
             num_trans_per_asp = int(9//transfer_volume)
             disp_sets = split_dests(d_set, num_trans_per_asp)
             for set in disp_sets:
                 asp_vol = len(set)*transfer_volume + 1
-                p10.aspirate(asp_vol, s.top(7-s._depth))
+                p10.aspirate(asp_vol, s.top(7-s.geometry._depth))
                 for well in set:
-                    p10.dispense(transfer_volume, well.top(2-well._depth))
-                    p10.touch_tip(well, v_offset=7-well._depth)
-                p10.blow_out(s.top(7-s._depth))
+                    p10.dispense(
+                        transfer_volume, well.top(2-well.geometry._depth))
+                    p10.touch_tip(well, v_offset=7-well.geometry._depth)
+                p10.blow_out(s.top(7-s.geometry._depth))
         p10.drop_tip()
