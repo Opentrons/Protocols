@@ -43,6 +43,17 @@ Well Number,Labware,Slot,Well Position
 
 The Vial Map CSV can be used to place custom labware and different tube racks from the labware library. It also allows mapping of the well positions of each vial on a tube rack corresponding to the well number in the high-throughput synthesis protocol.
 
+Example of the High-Throughput Synthesis Protocol CSV [Download Example](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/5191b6/htp.csv)
+```
+*Note numbering starts from top left to top right,Reservoir 1,Reservoir 2,Reservoir 3,Reservoir 4,Reservoir 5,Reservoir 6,Reservoir 7,Reservoir 8,Reservoir 9,Reservoir 10,Reservoir 11,Reservoir 12,
+Well Number,Metal Salt Stock Soln 1 (1 M) (uL),Metal Salt Stock Soln 2 (1 M) (uL),Metal Salt Stock Soln 3 (1 M) (uL),Metal Salt Stock Soln 4 (1 M) (uL),Organic Linker Stock Soln 1 (1 M) (uL),Organic Linker Stock Soln 2 (1 M) (uL),Organic Linker Stock Soln 3 (1 M) (uL),Organic Linker Stock Soln 4 (1M) (uL),Extra Solvent 1 (uL),Extra Solvent 2 (uL),Extra Solvent 3 (uL),Extra Solvent 4 (uL),Total Volume (uL)
+1,270,270,270,,150,,,,64,64,,,1088
+2,27,270,270,,150,,,,48,48,,,813
+3,34,270,270,,150,,,,48,48,,,821
+...
+96,270,425,425,,425,,,,,,,,1545
+```
+
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
 
