@@ -1,5 +1,5 @@
 {
-    "content": "metadata = {\n    'protocolName': 'PCR/qPCR prep',\n    'author': 'Sakib <sakib.hossain@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.7'\n}\n\n\ndef run(protocol):\n\n    [total_samples, p20_mount, p1000_mount, home] = get_values(  # noqa: F821\n        \"total_samples\", \"p20_mount\", \"p1000_mount\", \"home\")\n\n    total_samples = int(total_samples)\n\n    # Load Tip Racks\n    tipracks_20ul = [protocol.load_labware('opentrons_96_filtertiprack_20ul',\n                                           slot) for slot in ['7', '8']]\n    tipracks_1000ul = [protocol.load_labware(\n        'opentrons_96_filtertiprack_1000ul', slot) for slot in ['4', '5']]\n\n    # Load Plates\n    # 1 mL Deepwell Microtiter Plate\n    deepwell_plate = protocol.load_labware('eppendorf_96_deepwell_1000ul', 2)\n    # PCR Plate resting on top of the thermal block\n    pcr_plate = protocol.load_labware('enduraplate_96_wellplate_200ul', 3)\n\n    # Load Instruments\n    p20 = protocol.load_instrument('p20_single_gen2', p20_mount,\n                                   tip_racks=tipracks_20ul)\n    p1000 = protocol.load_instrument('p1000_single_gen2', p1000_mount,\n                                     tip_racks=tipracks_1000ul)\n\n    p1000.flow_rate.aspirate = 350\n    p1000.flow_rate.dispense = 350\n    p20.flow_rate.aspirate = 12\n    p20.flow_rate.dispense = 12\n\n    # Proccess Buffer (A1)\n    buffer = protocol.load_labware(\n        'opentrons_6_tuberack_falcon_50ml_conical', 1)['A1'].bottom(z=10)\n\n    deep_samples = deepwell_plate.wells()[:total_samples]\n    pcr_samples = pcr_plate.wells()[:total_samples]\n\n    # Protocol Steps\n\n    # Add 400 uL of Process Buffer to Required Wells in Deep Well Block\n    protocol.comment(f'Adding 400 uL of process buffer \\\n                     sequentially to {total_samples} wells...')\n    p1000.pick_up_tip()\n    for well in deep_samples:\n        p1000.transfer(400, buffer, well,\n                       new_tip='never')\n    p1000.drop_tip(home_after=home)\n\n    # PAUSE PROTOCOL #\n    protocol.pause('Pausing protocol for further specimen processing and \\\n                   addition of 15uL of master mix to the PCR plate. Click \\\n                   Resume when ready...')\n\n    # Mix and Add 5 uL from Deep Well Block to PCR Plate\n    # Mix 5x with P1000 set at 150 uL, (Uses new tip each time)\n    # then transfer with P20 at 5 uL (Uses new tip each time)\n    protocol.comment('Starting the mixing and transfer of specimen process...')\n    for source, dest in zip(deep_samples, pcr_samples):\n        p1000.pick_up_tip()\n        p1000.mix(5, 150, source)\n        p1000.drop_tip(home_after=home)\n        p20.transfer(5, source,\n                     dest, new_tip='always')\n",
+    "content": "metadata = {\n    'protocolName': 'PCR/qPCR prep - Manual',\n    'author': 'Sakib <sakib.hossain@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.7'\n}\n\n\ndef run(protocol):\n\n    [total_samples, p20_mount, p1000_mount] = get_values(  # noqa: F821\n        \"total_samples\", \"p20_mount\", \"p1000_mount\")\n\n    total_samples = int(total_samples)\n\n    # Load Tip Racks\n    tipracks_20ul = [protocol.load_labware('opentrons_96_filtertiprack_20ul',\n                                           slot) for slot in ['7']]\n    tipracks_1000ul = [protocol.load_labware(\n        'opentrons_96_filtertiprack_1000ul', slot) for slot in ['4']]\n\n    # Load Plates\n    # 1 mL Deepwell Microtiter Plate\n    deepwell_plate = protocol.load_labware('eppendorf_96_deepwell_1000ul', 2)\n    # PCR Plate resting on top of the thermal block\n    pcr_plate = protocol.load_labware('enduraplate_96_wellplate_200ul', 3)\n\n    # Load Instruments\n    p20 = protocol.load_instrument('p20_single_gen2', p20_mount,\n                                   tip_racks=tipracks_20ul)\n    p1000 = protocol.load_instrument('p1000_single_gen2', p1000_mount,\n                                     tip_racks=tipracks_1000ul)\n\n    deep_samples = deepwell_plate.wells()[:total_samples]\n    pcr_samples = pcr_plate.wells()[:total_samples]\n\n    # Protocol Steps\n\n    # Mix and Add 5 uL from Deep Well Block to PCR Plate\n    # Mix 5x with P1000 set at 150 uL, (Uses new tip each time)\n    # then transfer with P20 at 5 uL (Uses new tip each time)\n    protocol.comment('Starting the mixing and transfer of specimen process...')\n    for source, dest in zip(deep_samples, pcr_samples):\n        p1000.pick_up_tip()\n        p1000.mix(5, 150, source)\n        p1000.drop_tip()\n        p20.transfer(5, source,\n                     dest, new_tip='always')\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -2292,21 +2292,6 @@
                 }
             ],
             "type": "dropDown"
-        },
-        {
-            "label": "Home after each tip drop",
-            "name": "home",
-            "options": [
-                {
-                    "label": "False",
-                    "value": "False"
-                },
-                {
-                    "label": "True",
-                    "value": "True"
-                }
-            ],
-            "type": "dropDown"
         }
     ],
     "instruments": [
@@ -2320,12 +2305,6 @@
         }
     ],
     "labware": [
-        {
-            "name": "Opentrons 6 Tube Rack with Falcon 50 mL Conical on 1",
-            "share": false,
-            "slot": "1",
-            "type": "opentrons_6_tuberack_falcon_50ml_conical"
-        },
         {
             "name": "Eppendorf 96 Deep Well Block 1000ul on 2",
             "share": false,
@@ -2345,21 +2324,9 @@
             "type": "opentrons_96_filtertiprack_1000ul"
         },
         {
-            "name": "Opentrons 96 Filter Tip Rack 1000 \u00b5L on 5",
-            "share": false,
-            "slot": "5",
-            "type": "opentrons_96_filtertiprack_1000ul"
-        },
-        {
             "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 7",
             "share": false,
             "slot": "7",
-            "type": "opentrons_96_filtertiprack_20ul"
-        },
-        {
-            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 8",
-            "share": false,
-            "slot": "8",
             "type": "opentrons_96_filtertiprack_20ul"
         },
         {
@@ -2373,7 +2340,7 @@
         "apiLevel": "2.7",
         "author": "Sakib <sakib.hossain@opentrons.com>",
         "description": "Custom Protocol Request",
-        "protocolName": "PCR/qPCR prep"
+        "protocolName": "PCR/qPCR prep - Manual"
     },
     "modules": []
 }
