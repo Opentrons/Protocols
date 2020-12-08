@@ -1,5 +1,5 @@
 metadata = {
-    'ctxName': 'Simple Plate Transfer - 4 Sources',
+    'ctxName': 'Simple Plate Transfer - 6 Sources',
     'author': 'Nick <ndiehl@opentrons.com',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.8'
@@ -22,7 +22,7 @@ def run(ctx):
     # load pipettes
     m300 = ctx.load_instrument('p300_multi', m300_mount, tip_racks=tips300)
 
-    col_ind_sets = [[i, i+4, i+8] for i in range(4)]
+    col_ind_sets = [[i, i+6] for i in range(6)]
     for i, ind_set in enumerate(col_ind_sets):
         m300.pick_up_tip()
         for c in ind_set:
