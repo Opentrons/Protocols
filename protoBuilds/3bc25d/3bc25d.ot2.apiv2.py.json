@@ -1,0 +1,79 @@
+{
+    "content": "metadata = {\n    'apiLevel': '2.5',\n    'protocolName': 'Rapid Barcoding Kit (SQK-RBK004)',\n    'author': 'Opentrons <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request'\n}\n\n\ndef run(ctx):\n\n    sample_count, sample_vol = get_values(  # noqa: F821\n            'sample_count', 'sample_vol')\n    thermocycler = ctx.load_module('thermocycler')\n    thermocycler.open_lid()\n    thermocycler_plate = thermocycler.load_labware(\n        'nest_96_wellplate_100ul_pcr_full_skirt')\n\n    magdeck = ctx.load_module('magnetic module gen2', '4')  # update to gen2\n    magdeck.disengage()\n    mag_plate = magdeck.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')\n    mag_well = mag_plate.wells_by_name()[\"A1\"]\n\n    tempdeck = ctx.load_module(\n        'temperature module gen2',\n        '1')  # update to gen2\n    temp_plate = tempdeck.load_labware(\n        'opentrons_24_aluminumblock_generic_2ml_screwcap')\n\n    RAP = temp_plate.wells_by_name()[\"A1\"]\n    AMPure_beads = temp_plate.wells_by_name()[\"A2\"]\n\n    fragmentation_mixes = [temp_plate.wells_by_name()[\"{}{}\".format(\n        a, b)] for a in [\"B\", \"C\"] for b in range(1, 7)][0:sample_count]\n\n    tube_rack = ctx.load_labware(\n        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '5')\n    H2O = tube_rack.wells_by_name()[\"A1\"]\n    ethanol_70 = tube_rack.wells_by_name()[\"A2\"]\n    tris_nacl = tube_rack.wells_by_name()[\"A3\"]\n    liquid_trash = tube_rack.wells_by_name()[\"B1\"]\n    cleaned_library = tube_rack.wells_by_name()[\"C1\"]\n\n    p20s = ctx.load_instrument(\n        'p20_single_gen2', 'left', tip_racks=[\n            ctx.load_labware(\n                'opentrons_96_filtertiprack_20ul', '6')])\n    p300s = ctx.load_instrument(\n        'p300_single_gen2', \"right\", tip_racks=[\n            ctx.load_labware(\n                'opentrons_96_filtertiprack_200ul', '9')])\n\n    tempdeck.set_temperature(4)\n\n    p20s.default_speed = 50  # Slow to 1/8 speed\n    # Adjust to 7.5 with H2O\n    for well in thermocycler_plate.wells()[0:sample_count]:\n        p20s.transfer((7.5 - sample_vol), H2O, well, mix_after=(2, 4))\n\n    # Move 2.5 of fragmentation mixes to block\n    for i, f in enumerate(fragmentation_mixes):\n        p20s.transfer(2.5, f, thermocycler_plate.wells()[\n                      i], mix_after=(2, 5), new_tip='always')\n    p20s.default_speed = 400\n\n    # Thermocycle\n    thermocycler.close_lid()\n    thermocycler.set_lid_temperature(90)\n    thermocycler.execute_profile(\n        steps=[\n            {\n                'temperature': 30, 'hold_time_seconds': 60}, {\n                'temperature': 80, 'hold_time_seconds': 60}, {\n                'temperature': 15, 'hold_time_seconds': 10}],\n        repetitions=1, block_max_volume=10)\n    thermocycler.open_lid()\n\n    # Pool Samples\n    if 20 * sample_count > 200:\n        pooled_library = tube_rack.wells_by_name()[\"B2\"]\n    else:\n        pooled_library = mag_plate.wells_by_name()[\"A1\"]\n\n    for well in thermocycler_plate.wells()[0:sample_count]:\n        p20s.transfer(10, well, pooled_library, new_tip='always')\n\n    # Wash\n\n    # Add beads, wait\n    p300s.transfer(\n        (10 * sample_count),\n        AMPure_beads,\n        pooled_library,\n        mix_before=(\n            10,\n            (8 * sample_count)),\n        mix_after=(\n            2,\n            (10 * sample_count)),\n        new_tip='always')\n    ctx.delay(300)\n\n    # Move half of beads to magplate, pull down, move rest.\n    if 20 * sample_count > 200:\n        p300s.transfer(\n            (10 * sample_count),\n            pooled_library,\n            mag_well,\n            mix_before=(\n                3,\n                (15 * sample_count)),\n            new_tip='always')\n        magdeck.engage()\n        ctx.delay(450)\n        p300s.transfer(200, mag_well, liquid_trash, new_tip='always')\n        p300s.transfer(\n            (10 * sample_count),\n            pooled_library,\n            mag_well,\n            mix_before=(\n                3,\n                (5 * sample_count)),\n            new_tip='always')\n\n    magdeck.engage()\n    ctx.delay(600)  # Drag down for a full 10 minutes\n    p300s.transfer(200, mag_well, liquid_trash, new_tip='always')\n\n    p300s.default_speed = 100  # Slow down pipette speed to 1/8\n    for _ in range(0, 2):\n        p300s.transfer(\n            200,\n            ethanol_70,\n            mag_well.bottom(7),\n            new_tip='always')  # halfway\n        ctx.delay(10)\n        p300s.transfer(200, mag_well, liquid_trash, new_tip='always')\n        ctx.delay(10)\n    p300s.default_speed = 400\n\n    # Dry for 10 minutes\n    ctx.delay(600)\n    magdeck.disengage()\n\n    p20s.transfer(10, tris_nacl, mag_well, mix_after=(3, 8), new_tip='always')\n    ctx.delay(120)\n    magdeck.engage()\n    ctx.delay(300)\n    p20s.transfer(10, mag_well, cleaned_library, new_tip='always')\n\n    # Add RAP\n    p20s.transfer(1, RAP, mag_well, mix_after=(2, 5), new_tip='always')\n    ctx.delay(300)\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 1,
+            "label": "Number of Samples (1-12)",
+            "name": "sample_count",
+            "type": "int"
+        },
+        {
+            "default": 2.5,
+            "label": "Volume of input samples (1ul-7.5ul)",
+            "name": "sample_vol",
+            "type": "float"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p20_single_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p300_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Opentrons 24 Well Aluminum Block with Generic 2 mL Screwcap on Temperature Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "opentrons_24_aluminumblock_generic_2ml_screwcap"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Magnetic Module GEN2 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Thermocycler Module on 7",
+            "share": false,
+            "slot": "7",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.5",
+        "author": "Opentrons <protocols@opentrons.com>",
+        "protocolName": "Rapid Barcoding Kit (SQK-RBK004)",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}
