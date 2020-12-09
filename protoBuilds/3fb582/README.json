@@ -1,13 +1,13 @@
 {
     "author": "Opentrons",
     "categories": {
-        "Nucleic Acid Extraction & Purification\n        * Plant DNA": []
+        "PCR\n        * PCR Prep": []
     },
     "description": "This protocol automates PCR setups using a CSV file. Slots 2, 5, 8, and 11 are reserved for input tube racks. Slot 6 is reserved for a 384 well PCR plate and slot 9 is reserved for a 96 well PCR plate. The rest of the slots are reserved for tips.\nCustomize the PCR setup CSV and upload it to get a custom protocol. Setup CSV can be found here - \n\n\n\nOpentrons P20-single channel electronic pipettes (GEN2)\nOpentrons 20ul Filter Tips\nOpentrons 4-in-1 Tube Rack Set\n384 or 96 well PCR plate\n",
     "internal": "3fb582",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
-        "categories": "* Nucleic Acid Extraction & Purification\n        * Plant DNA\n\n",
+        "categories": "* PCR\n        * PCR Prep\n\n",
         "description": "This protocol automates PCR setups using a CSV file. Slots 2, 5, 8, and 11 are reserved for input tube racks. Slot 6 is reserved for a 384 well PCR plate and slot 9 is reserved for a 96 well PCR plate. The rest of the slots are reserved for tips.\n\nCustomize the PCR setup CSV and upload it to get a custom protocol. Setup CSV can be found here - \n\n---\n![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)\n\n* [Opentrons P20-single channel electronic pipettes (GEN2)](https://shop.opentrons.com/collections/ot-2-robot/products/single-channel-electronic-pipette?variant=31059478970462)\n* [Opentrons 20ul Filter Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-20ul-filter-tips)\n* [Opentrons 4-in-1 Tube Rack Set](https://shop.opentrons.com/products/tube-rack-set-1)\n* 384 or 96 well PCR plate\n\n",
         "internal": "3fb582\n",
         "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
