@@ -1,11 +1,11 @@
-# 7e4c3e-2
+# 7e4c3e-5
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* sample prep
-        * plate filling
+* Nucleic Acid Extraction & Purification
+        * Plant DNA
 
 ## Description
 Todo
@@ -31,4 +31,4 @@ TODO
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-7e4c3e-2
+7e4c3e-5
