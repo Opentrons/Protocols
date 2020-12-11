@@ -3,9 +3,10 @@ metadata = {'apiLevel': '2.0'}
 
 def run(ctx):
     
+    num_samples, tip_start = [96,"A1"]
+
     num_samples, tip_start = get_values(  # noqa: F821
             'num_samples', 'tip_start')
-
     column_count = math.ceil(num_samples/8)
 
     p20m_racks = [ctx.load_labware("opentrons_96_filtertiprack_20ul", x) for x in ["2","3"]] 

@@ -1,5 +1,5 @@
 {
-    "content": "import math\nmetadata = {'apiLevel': '2.0'}\n\ndef run(ctx):\n    \n    num_samples, tip_start = [96,\"A1\"]\n\n    num_samples, tip_start = get_values(  # noqa: F821\n            'num_samples', 'tip_start')\n    column_count = math.ceil(num_samples/8)\n\n    p20m_racks = [ctx.load_labware(\"opentrons_96_filtertiprack_20ul\", x) for x in [\"2\",\"3\"]] \n    p20m = ctx.load_instrument('p20_multi_gen2', 'right', tip_racks=p20m_racks)\n    p1000s = ctx.load_instrument('p1000_single_gen2', 'left', tip_racks=[])\n\n    biorad_96_well = ctx.load_labware(\"opentrons_96_aluminumblock_biorad_wellplate_200ul\",\"4\")\n    b_cols = biorad_96_well.rows()[0][:column_count]\n    pcr_strip = ctx.load_labware(\"opentrons_96_aluminumblock_generic_pcr_strip_200ul\", \"5\")\n\n    p20m.starting_tip = p20m_racks[0].well(tip_start)\n    for cols, target_well in zip([b_cols[:6], b_cols[6:]], [pcr_strip.wells_by_name()[x] for x in [\"A1\",\"A2\"]]):\n        for col in cols:\n            p20m.transfer(20, col, target_well)\n\n",
+    "content": "metadata = {'apiLevel': '2.0'}\n\n\ndef run(ctx):\n\n    a1_init_vol, a3_init_vol, a4_init_vol, b3_init_vol, tip_start = get_values(  # noqa: F821, E501\n            'a1_init_vol', 'a3_init_vol', 'a4_init_vol', 'b3_init_vol', 'tip_start')  # noqa: E501\n\n    p1000s_rack = ctx.load_labware(\"opentrons_96_filtertiprack_1000ul\", \"1\")\n    p1000s = ctx.load_instrument(\n        'p1000_single_gen2',\n        'left',\n        tip_racks=[p1000s_rack])\n    p1000s.starting_tip = p1000s_rack.well(tip_start)\n\n    tube_rack = ctx.load_labware(\n        \"opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical\", \"4\")\n    tube_a1 = tube_rack.wells_by_name()[\"A1\"]\n    tube_a3 = tube_rack.wells_by_name()[\"A3\"]\n    tube_a4 = tube_rack.wells_by_name()[\"A4\"]\n    tube_b3 = tube_rack.wells_by_name()[\"B3\"]\n\n    deepwell_a1 = ctx.load_labware(\"nest_96_wellplate_2ml_deep\", \"6\")\n    deepwell_a3 = ctx.load_labware(\"nest_96_wellplate_2ml_deep\", \"2\")\n    deepwell_a4 = ctx.load_labware(\"nest_96_wellplate_2ml_deep\", \"5\")\n    deepwell_b3 = ctx.load_labware(\"nest_96_wellplate_2ml_deep\", \"3\")\n\n    def height_offset(vol_used, tube_type=\"50ml\", init_vol=50):\n        if tube_type == \"50ml\":\n            liquid_top = init_vol * 2\n            # 1mm per 2ml\n            if vol_used == 0:\n                return liquid_top\n            offset = vol_used / 500\n            if offset > liquid_top:\n                ctx.comment(\"WARNING: Not enough liquid in 50ml tube\")\n                return 1\n            return liquid_top - offset\n        if tube_type == \"15ml\":\n            liquid_top = init_vol * 7.5\n            # 1mm per 2ml\n            if vol_used == 0:\n                return liquid_top\n            offset = vol_used / 133\n            if offset > liquid_top:\n                ctx.comment(\"WARNING: Not enough liquid in 15ml tube\")\n                return 1\n            return liquid_top - offset\n\n    for init_vol, tube, tube_type, deepwell, vol in zip(\n        [\n            a1_init_vol, a3_init_vol, a4_init_vol, b3_init_vol], [\n            tube_a1, tube_a3, tube_a4, tube_b3], [\n                \"15ml\", \"50ml\", \"50ml\", \"50ml\"], [\n                    deepwell_a1, deepwell_a3, deepwell_a4, deepwell_b3], [\n                        50, 245, 200, 200]):\n        vol_used = 0\n        p1000s.pick_up_tip()\n        for well in deepwell.wells():\n            p1000s.transfer(\n                vol,\n                tube.bottom(\n                    height_offset(\n                        vol_used,\n                        tube_type=tube_type,\n                        init_vol=init_vol)),\n                well,\n                new_tip='never')\n        p1000s.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -8650,9 +8650,27 @@
     ],
     "fields": [
         {
-            "default": 96,
-            "label": "Number of Samples (1-96)",
-            "name": "num_samples",
+            "default": 15,
+            "label": "Volume (mL) in tube A1",
+            "name": "a1_init_vol",
+            "type": "int"
+        },
+        {
+            "default": 50,
+            "label": "Volume (mL) in tube A3",
+            "name": "a3_init_vol",
+            "type": "int"
+        },
+        {
+            "default": 50,
+            "label": "Volume (mL) in tube A4",
+            "name": "a4_init_vol",
+            "type": "int"
+        },
+        {
+            "default": 50,
+            "label": "Volume (mL) in tube B3",
+            "name": "b3_init_vol",
             "type": "int"
         },
         {
@@ -8666,36 +8684,44 @@
         {
             "mount": "left",
             "name": "p1000_single_gen2"
-        },
-        {
-            "mount": "right",
-            "name": "p20_multi_gen2"
         }
     ],
     "labware": [
         {
-            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 2",
+            "name": "Opentrons 96 Filter Tip Rack 1000 \u00b5L on 1",
+            "share": false,
+            "slot": "1",
+            "type": "opentrons_96_filtertiprack_1000ul"
+        },
+        {
+            "name": "NEST 96 Deepwell Plate 2mL on 2",
             "share": false,
             "slot": "2",
-            "type": "opentrons_96_filtertiprack_20ul"
+            "type": "nest_96_wellplate_2ml_deep"
         },
         {
-            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 3",
+            "name": "NEST 96 Deepwell Plate 2mL on 3",
             "share": false,
             "slot": "3",
-            "type": "opentrons_96_filtertiprack_20ul"
+            "type": "nest_96_wellplate_2ml_deep"
         },
         {
-            "name": "Opentrons 96 Well Aluminum Block with Bio-Rad Well Plate 200 \u00b5L on 4",
+            "name": "Opentrons 10 Tube Rack with Falcon 4x50 mL, 6x15 mL Conical on 4",
             "share": false,
             "slot": "4",
-            "type": "opentrons_96_aluminumblock_biorad_wellplate_200ul"
+            "type": "opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical"
         },
         {
-            "name": "Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 \u00b5L on 5",
+            "name": "NEST 96 Deepwell Plate 2mL on 5",
             "share": false,
             "slot": "5",
-            "type": "opentrons_96_aluminumblock_generic_pcr_strip_200ul"
+            "type": "nest_96_wellplate_2ml_deep"
+        },
+        {
+            "name": "NEST 96 Deepwell Plate 2mL on 6",
+            "share": false,
+            "slot": "6",
+            "type": "nest_96_wellplate_2ml_deep"
         },
         {
             "name": "Opentrons Fixed Trash on 12",

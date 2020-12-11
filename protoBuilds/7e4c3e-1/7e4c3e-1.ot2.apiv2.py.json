@@ -1,5 +1,5 @@
 {
-    "content": "import math\nmetadata = {'apiLevel': '2.0'}\n\ndef run(ctx):\n    \n    num_samples, tip_start = [96,\"A1\"]\n\n    num_samples, tip_start = get_values(  # noqa: F821\n            'num_samples', 'tip_start')\n    column_count = math.ceil(num_samples/8)\n\n    p20m_racks = [ctx.load_labware(\"opentrons_96_filtertiprack_20ul\", x) for x in [\"2\",\"3\"]] \n    p20m = ctx.load_instrument('p20_multi_gen2', 'right', tip_racks=p20m_racks)\n    p1000s = ctx.load_instrument('p1000_single_gen2', 'left', tip_racks=[])\n\n    biorad_96_well = ctx.load_labware(\"opentrons_96_aluminumblock_biorad_wellplate_200ul\",\"4\")\n    b_cols = biorad_96_well.rows()[0][:column_count]\n    pcr_strip = ctx.load_labware(\"opentrons_96_aluminumblock_generic_pcr_strip_200ul\", \"5\")\n\n    p20m.starting_tip = p20m_racks[0].well(tip_start)\n    for cols, target_well in zip([b_cols[:6], b_cols[6:]], [pcr_strip.wells_by_name()[x] for x in [\"A1\",\"A2\"]]):\n        for col in cols:\n            p20m.transfer(20, col, target_well)\n\n",
+    "content": "import math\nmetadata = {'apiLevel': '2.5'}\n\n\ndef run(ctx):\n\n    num_samples, tip_start = get_values(  # noqa: F821\n            'num_samples', 'tip_start')\n    column_count = math.ceil(num_samples / 8)\n\n    p20m_racks = [\n        ctx.load_labware(\n            \"opentrons_96_filtertiprack_20ul\",\n            x) for x in [\n            \"1\",\n            \"2\",\n            \"3\"]]\n    p20m = ctx.load_instrument(\n        'p20_multi_gen2',\n        'right',\n        tip_racks=p20m_racks)\n\n    biorad_96_well = ctx.load_labware(\n        \"opentrons_96_aluminumblock_biorad_wellplate_200ul\", \"4\")\n    b_cols = biorad_96_well.rows()[0][:column_count]\n    applied_biosystems = ctx.load_labware(\n            \"{}{}\".format(\"appliedbiosystemsmicroampoptical384\",\n                          \"wellreactionplatewithbarcode_384_wellplate_30ul\"),\n            \"5\")\n\n    p20m.starting_tip = p20m_racks[0].well(tip_start)\n\n    applied_wells = [item for sublist in [[[applied_biosystems.wells_by_name()[\"{}{}\".format(a, b + (x * 3))] for b in range(1, 4)] for a in [\"A\", \"B\"]] for x in range(0, 6)] for item in sublist]  # noqa: E501\n    p20m.transfer(\n        2,\n        b_cols[0],\n        applied_biosystems.wells_by_name()[\"B1\"],\n        new_tip=\"always\")\n    for col, target_wells in zip(b_cols, applied_wells):\n        p20m.pick_up_tip()\n        p20m.aspirate(4.5, col)  # Get extra for nice dead volume\n        for target_well_num in range(0, 2):\n            p20m.dispense(2, target_wells[target_well_num])\n        p20m.drop_tip()\n        p20m.transfer(2, col, target_wells[2], new_tip=\"always\")\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -8664,15 +8664,17 @@
     ],
     "instruments": [
         {
-            "mount": "left",
-            "name": "p1000_single_gen2"
-        },
-        {
             "mount": "right",
             "name": "p20_multi_gen2"
         }
     ],
     "labware": [
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 1",
+            "share": false,
+            "slot": "1",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
         {
             "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 2",
             "share": false,
@@ -8692,10 +8694,10 @@
             "type": "opentrons_96_aluminumblock_biorad_wellplate_200ul"
         },
         {
-            "name": "Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 \u00b5L on 5",
+            "name": "Applied Biosystems\u2122 MicroAmp\u2122 Optical 384-Well Reaction Plate With Barcode 384 Well Plate 30 \u00b5L on 5",
             "share": false,
             "slot": "5",
-            "type": "opentrons_96_aluminumblock_generic_pcr_strip_200ul"
+            "type": "appliedbiosystemsmicroampoptical384wellreactionplatewithbarcode_384_wellplate_30ul"
         },
         {
             "name": "Opentrons Fixed Trash on 12",
@@ -8705,7 +8707,7 @@
         }
     ],
     "metadata": {
-        "apiLevel": "2.0"
+        "apiLevel": "2.5"
     },
     "modules": []
 }

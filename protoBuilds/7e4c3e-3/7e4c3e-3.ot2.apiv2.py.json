@@ -1,5 +1,5 @@
 {
-    "content": "import math\nmetadata = {'apiLevel': '2.0'}\n\ndef run(ctx):\n    \n    num_samples, tip_start = [96,\"A1\"]\n\n    num_samples, tip_start = get_values(  # noqa: F821\n            'num_samples', 'tip_start')\n    column_count = math.ceil(num_samples/8)\n\n    p20m_racks = [ctx.load_labware(\"opentrons_96_filtertiprack_20ul\", x) for x in [\"2\",\"3\"]] \n    p20m = ctx.load_instrument('p20_multi_gen2', 'right', tip_racks=p20m_racks)\n    p1000s = ctx.load_instrument('p1000_single_gen2', 'left', tip_racks=[])\n\n    biorad_96_well = ctx.load_labware(\"opentrons_96_aluminumblock_biorad_wellplate_200ul\",\"4\")\n    b_cols = biorad_96_well.rows()[0][:column_count]\n    pcr_strip = ctx.load_labware(\"opentrons_96_aluminumblock_generic_pcr_strip_200ul\", \"5\")\n\n    p20m.starting_tip = p20m_racks[0].well(tip_start)\n    for cols, target_well in zip([b_cols[:6], b_cols[6:]], [pcr_strip.wells_by_name()[x] for x in [\"A1\",\"A2\"]]):\n        for col in cols:\n            p20m.transfer(20, col, target_well)\n\n",
+    "content": "import math\nmetadata = {'apiLevel': '2.0'}\n\n\ndef run(ctx):\n\n    num_samples, tip_start = get_values(  # noqa: F821\n            'num_samples', 'tip_start')\n    column_count = math.ceil(num_samples / 8)\n\n    p20m_racks = [\n        ctx.load_labware(\n            \"opentrons_96_filtertiprack_20ul\",\n            x) for x in [\n            \"1\",\n            \"2\"]]\n    p20m = ctx.load_instrument(\n        'p20_multi_gen2',\n        'right',\n        tip_racks=p20m_racks)\n\n    rna = ctx.load_labware(\n        \"opentrons_96_aluminumblock_biorad_wellplate_200ul\", \"4\")\n    cdna = ctx.load_labware(\n        \"opentrons_96_aluminumblock_biorad_wellplate_200ul\", \"5\")\n\n    p20m.starting_tip = p20m_racks[0].well(tip_start)\n    for source_well, target_well in zip(\n            rna.rows()[0][:column_count], cdna.rows()[0][:column_count]):\n        p20m.transfer(6.2, source_well, target_well)\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -8664,25 +8664,21 @@
     ],
     "instruments": [
         {
-            "mount": "left",
-            "name": "p1000_single_gen2"
-        },
-        {
             "mount": "right",
             "name": "p20_multi_gen2"
         }
     ],
     "labware": [
         {
-            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 2",
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 1",
             "share": false,
-            "slot": "2",
+            "slot": "1",
             "type": "opentrons_96_filtertiprack_20ul"
         },
         {
-            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 3",
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 2",
             "share": false,
-            "slot": "3",
+            "slot": "2",
             "type": "opentrons_96_filtertiprack_20ul"
         },
         {
@@ -8692,10 +8688,10 @@
             "type": "opentrons_96_aluminumblock_biorad_wellplate_200ul"
         },
         {
-            "name": "Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 \u00b5L on 5",
+            "name": "Opentrons 96 Well Aluminum Block with Bio-Rad Well Plate 200 \u00b5L on 5",
             "share": false,
             "slot": "5",
-            "type": "opentrons_96_aluminumblock_generic_pcr_strip_200ul"
+            "type": "opentrons_96_aluminumblock_biorad_wellplate_200ul"
         },
         {
             "name": "Opentrons Fixed Trash on 12",
