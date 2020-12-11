@@ -157,8 +157,11 @@ resuming.')
             Point(x=side))
         pip.drop_tip(drop_loc)
         switch = not switch
-        drop_count += 8
-        if drop_count == drop_threshold:
+        if pip.type == 'multi':
+            drop_count += 8
+        else:
+            drop_count += 1
+        if drop_count >= drop_threshold:
             # Setup for flashing lights notification to empty trash
             if flash:
                 if not ctx._hw_manager.hardware.is_simulator:
@@ -166,12 +169,10 @@ resuming.')
                 thread = create_thread(ctx, cancellationToken)
             m300.home()
             ctx.pause('Please empty tips from waste before resuming.')
-
             ctx.home()  # home before continuing with protocol
             if flash:
                 cancellationToken.set_false()  # stop light flashing after home
                 thread.join()
-
             drop_count = 0
 
     waste_vol = 0
