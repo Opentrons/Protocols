@@ -20,9 +20,9 @@ def run(ctx):
 
     # labware
     tiprack10 = [ctx.load_labware('biotix_96_filtertiprack_10ul', slot)
-                 for slot in ['4', '11']]
+                 for slot in ['4', '9']]
     tiprack300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-                  for slot in ['7', '10']]
+                  for slot in ['7', '8']]
 
     # pipette
     p10 = ctx.load_instrument(
@@ -70,7 +70,7 @@ Press resume to ignore.')
                 pip.transfer(
                     vol_per_trans,
                     source.top(h_offset),
-                    dest.bottom(3),
+                    dest.bottom(-1),
                     mix_after=(3, vol_mix),
                     new_tip='never'
                 )
@@ -78,10 +78,11 @@ Press resume to ignore.')
                 pip.transfer(
                     vol_per_trans,
                     source.top(h_offset),
-                    dest.bottom(3),
+                    dest.bottom(-1),
                     new_tip='never'
                 )
-            pip.blow_out(dest.top(-2))
+            pip.blow_out(dest.top(-8))
+            pip.touch_tip(v_offset=-6)
             if change_tips == 'always':
                 pip.drop_tip()
         if change_tips == 'once per well':
