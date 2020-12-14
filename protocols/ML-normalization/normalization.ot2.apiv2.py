@@ -9,8 +9,9 @@ metadata = {
 
 def run(ctx):
 
-    [input_csv, p20_mount, p300_mount] = get_values(  # noqa: F821
-        'input_csv', 'p20_mount', 'p300_mount')
+    [input_csv, p20_type, p20_mount, p300_type,
+     p300_mount] = get_values(  # noqa: F821
+        'input_csv', 'p20_type', 'p20_mount', 'p300_type', 'p300_mount')
     # [input_csv, p20_mount, p300_mount] = [
     #     "source plate well, destination plate well, volume sample (µl),\
     #     volume diluent (µl)\nA1, A1, 2, 28", 'right', 'left'
@@ -22,7 +23,7 @@ def run(ctx):
     destination_plate = ctx.load_labware(
         'eppendorf_96_well_on_block', '2', 'destination plate')
     tiprack20 = [
-        ctx.load_labware('opentrons_96_tiprack_10ul', slot, '10ul tiprack')
+        ctx.load_labware('opentrons_96_tiprack_20ul', slot, '20ul tiprack')
         for slot in ['3', '6']
     ]
     water = ctx.load_labware(
@@ -34,10 +35,8 @@ def run(ctx):
     ]
 
     # pipettes
-    p20 = ctx.load_instrument(
-        'p20_single_gen2', p20_mount, tip_racks=tiprack20)
-    p300 = ctx.load_instrument(
-        'p300_single_gen2', p300_mount, tip_racks=tiprack300)
+    p20 = ctx.load_instrument(p20_type, p20_mount, tip_racks=tiprack20)
+    p300 = ctx.load_instrument(p300_type, p300_mount, tip_racks=tiprack300)
 
     # parse
     sources = [
