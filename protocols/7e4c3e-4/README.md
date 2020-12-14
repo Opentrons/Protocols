@@ -4,28 +4,29 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Nucleic Acid Extraction & Purification
-        * Plant DNA
+* sample prep 
+        * plate filing
 
 ## Description
-Todo
+Automates fourth JSON portion of protocol [7e4c3e](https://docs.google.com/document/d/1odr2TfSuiJhDRY0qyfBs5fz-swU-nJTulUdvRRDV4ec/edit?ts=5fbbeb03)
 
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
 * [Opentrons P300-multi channel electronic pipettes (GEN2)](https://shop.opentrons.com/collections/ot-2-robot/products/8-channel-electronic-pipette?variant=5984202489885)
 * [Opentrons 200ul Filter Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)
-* [NEST 1 Well Reservoir 195 mL](http://www.cell-nest.com/page94?_l=en&product_id=102)
-* [NEST 12-Well Reservoirs, 15 mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
 * [NEST 96 Deepwell Plate 2mL](http://www.cell-nest.com/page94?product_id=101&_l=en)
-* [NEST 0.1 mL 96-Well PCR Plate, Full Skirt](https://shop.opentrons.com/collections/verified-labware/products/nest-0-1-ml-96-well-pcr-plate-full-skirt)
-
+* [Opentrons P1000-single channel electronic pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-robot/products/single-channel-electronic-pipette?variant=5984549142557)
+* [Opentrons 1000ul Filter Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-1000ul-filter-tips)
+* [Opentrons 4-in-1 Tube Rack Set](https://shop.opentrons.com/collections/racks-and-adapters/products/tube-rack-set-1)
+* [NEST 15 mL Centrifuge Tube](https://shop.opentrons.com/collections/tubes/products/nest-15-ml-centrifuge-tube)
+* [NEST 50 mL Centrifuge Tube](https://shop.opentrons.com/collections/tubes/products/nest-50-ml-centrifuge-tube)
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
 
 ## Process
-TODO
+Load reagents onto deck and press go.
 
 ### Additional Notes
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
