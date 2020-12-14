@@ -4,7 +4,8 @@ from pathlib import Path
 import opentrons
 from opentrons.protocols.execution.execute import run_protocol
 from opentrons.protocols.parse import parse as parse_protocol
-from opentrons.protocols.implementations.simulators.protocol_context import SimProtocolContext
+from opentrons.protocols.implementations.simulators.protocol_context \
+    import SimProtocolContext
 
 
 def filter_none(arr):
@@ -109,7 +110,8 @@ def parse(protocol_path):
     # Use a simulating protocol context
     context_impl = SimProtocolContext()
 
-    context = opentrons.protocol_api.contexts.ProtocolContext(implementation=context_impl)
+    context = opentrons.protocol_api.contexts.ProtocolContext(
+        implementation=context_impl)
     # NOTE:(IL, 2020-05-13)L there’s no deck calibration, and the
     # identity deck calibration is about 25 mm too high (as of v1.17.1).
     # Because of this, tall labware can cross the threshold and cause a
