@@ -11,10 +11,11 @@ metadata = {
 
 def run(ctx):
 
-    [num_samples, m300_mount] = get_values(  # noqa: F821
-        "num_samples", "m300_mount")
+    [num_samples, m300_mount, mag_height] = get_values(  # noqa: F821
+        "num_samples", "m300_mount", "mag_height")
 
     num_samples = int(num_samples)
+    mag_height = float(mag_height)
 
     # Load Labware
     mag_mod = ctx.load_module('magnetic module', '1')
@@ -46,34 +47,23 @@ def run(ctx):
     elution_buffer = res.wells()[10]
     mag_beads = res.wells()[11]
 
-    def shake(well, reps, shake_mode, z_offset=-2):
+    def shake(well, reps, shake_mode, z_offset=-2, shake_magnitude=1.5):
         if shake_mode == 'lateral':
-            radius = well.geometry._length/2
-            shake_locs = [well.top().move(Point(x=side*radius/2,
+            shake_locs = [well.top().move(Point(x=side*shake_magnitude,
                           y=0, z=z_offset))
                           for side in [-1, 1]]
-            print(f'Performing {shake_mode} shakes!')
+            ctx.comment(f'Performing {shake_mode} shakes!')
             for _ in range(reps):
                 for loc in shake_locs:
                     m300.move_to(loc)
         elif shake_mode == 'vertical':
-            shake_locs = [well.top().move(Point(x=0, y=0, z=side*z_offset))
+            shake_locs = [well.top().move(Point(x=0, y=0,
+                          z=side*shake_magnitude+z_offset))
                           for side in [-1, 1]]
-            print(f'Performing {shake_mode} shakes!')
+            ctx.comment(f'Performing {shake_mode} shakes!')
             for _ in range(reps):
                 for loc in shake_locs:
                     m300.move_to(loc)
-
-    # Split large volumes into smaller volumes
-    def split_volume(vol, max_vol):
-        vols = []
-        while vol > max_vol:
-            vols.append(max_vol)
-            vol -= max_vol
-            if vol <= max_vol:
-                vols.append(vol)
-                break
-        return vols
 
     # Transfer to Trash
     def transfer_trash(vol, asp_rate, disp_rate, asp_delay, disp_delay,
@@ -82,20 +72,16 @@ def run(ctx):
         m300.flow_rate.dispense = disp_rate
         for m in mag_samples:
             m300.pick_up_tip()
-            if vol > max_vol:
-                for i in split_volume(vol, max_vol):
-                    m300.aspirate(i, m.bottom(1))
-                    ctx.delay(seconds=asp_delay)
-                    if "touch_tip_offset" in kwargs:
-                        m300.touch_tip(v_offset=kwargs['touch_tip_offset'])
-                    m300.dispense(i, trash.bottom(0.5))
-                    shake(trash, 10, 'lateral')
-                    ctx.delay(seconds=disp_delay)
-            else:
-                m300.aspirate(vol, m.bottom(1))
+            num_trans = math.ceil(vol/max_vol)
+            vol_per_trans = vol/num_trans
+            for _ in range(num_trans):
+                m300.aspirate(vol_per_trans, m.bottom(1))
                 ctx.delay(seconds=asp_delay)
-                m300.touch_tip(v_offset=kwargs['touch_tip_offset'])
-                m300.dispense(vol, trash.bottom(0.5))
+                shake(m, 10, 'vertical')
+                if "touch_tip_offset" in kwargs:
+                    m300.touch_tip(v_offset=(m.geometry._depth -
+                                             kwargs['touch_tip_offset'])*-1)
+                m300.dispense(vol_per_trans, trash.bottom(0.5))
                 shake(trash, 10, 'lateral')
                 ctx.delay(seconds=disp_delay)
             m300.drop_tip()
@@ -105,7 +91,7 @@ def run(ctx):
             if val == 0:
                 mag_mod.disengage()
             else:
-                mag_mod.engage(height=4.1)
+                mag_mod.engage(height=mag_height)
 
     def regular_transfer(vol, source, delay_asp={}, delay_disp={}, shakes={},
                          mix_before=[], mix_after=[], **kwargs):
@@ -121,52 +107,32 @@ def run(ctx):
                     m300.mix(*mix_before, source[i//kwargs['div_cols']])
                 else:
                     m300.mix(*mix_before, source)
-            if vol > max_vol:
-                for k in split_volume(vol, max_vol):
-                    if 'div_cols' in kwargs:
-                        m300.aspirate(k, source[i//kwargs['div_cols']].bottom(
-                                      kwargs['asp_height']))
-                    else:
-                        m300.aspirate(k, source)
-                    if delay_asp:
-                        ctx.delay(**delay_asp)
-                    if "touch_tip_offset" in kwargs:
-                        m300.touch_tip(v_offset=kwargs['touch_tip_offset'])
-                    m300.dispense(k, wells.bottom(kwargs['disp_height']))
-                    if mix_after:
-                        m300.mix(*mix_after, wells)
-                    if delay_disp:
-                        ctx.delay(**delay_disp)
-                    if 'touch_tip_disp_offset' in kwargs:
-                        m300.touch_tip(
-                            v_offset=kwargs['touch_tip_disp_offset'])
-                    if 'shake_type' in kwargs:
-                        if 'div_cols' in kwargs:
-                            shake(source[i//kwargs['div_cols']], 10,
-                                  kwargs['shake_type'])
-                        else:
-                            shake(source, 10, kwargs['shake_type'])
-            else:
+            num_trans = math.ceil(vol/max_vol)
+            vol_per_trans = vol/num_trans
+            for _ in range(num_trans):
                 if 'div_cols' in kwargs:
-                    m300.aspirate(vol, source[i//kwargs['div_cols']].bottom(
-                                  kwargs['asp_height']))
+                    m300.aspirate(vol_per_trans, source[i//kwargs[
+                                  'div_cols']].bottom(
+                                    kwargs['asp_height']))
                 else:
-                    m300.aspirate(vol, source)
+                    m300.aspirate(vol_per_trans, source)
                 if delay_asp:
                     ctx.delay(**delay_asp)
                 if "touch_tip_offset" in kwargs:
                     m300.touch_tip(v_offset=kwargs['touch_tip_offset'])
-                m300.dispense(vol, wells.bottom(kwargs['disp_height']))
+                m300.dispense(vol_per_trans, wells.bottom(
+                              kwargs['disp_height']))
                 if mix_after:
                     m300.mix(*mix_after, wells)
                 if delay_disp:
                     ctx.delay(**delay_disp)
                 if 'touch_tip_disp_offset' in kwargs:
-                    m300.touch_tip(v_offset=kwargs['touch_tip_disp_offset'])
+                    m300.touch_tip(
+                        v_offset=kwargs['touch_tip_disp_offset'])
                 if 'shake_type' in kwargs:
                     if 'div_cols' in kwargs:
-                        shake(source[i//kwargs['div_cols']],
-                              10, kwargs['shake_type'])
+                        shake(source[i//kwargs['div_cols']], 10,
+                              kwargs['shake_type'])
                     else:
                         shake(source, 10, kwargs['shake_type'])
             if kwargs['new_tip'] == 'always':
@@ -191,8 +157,8 @@ def run(ctx):
 
     # Delay for bead incubation (Steps 5-8)
     ctx.delay(minutes=2, msg='Bead Incubation')
-    mag_mod.engage(height=4.1)
-    mag_mod.engage(height=4.1)
+    mag_mod.engage(height=mag_height)
+    mag_mod.engage(height=mag_height)
     ctx.delay(minutes=6, msg='Bead Binding')
 
     # Transfer to Trash (Step 9)
@@ -207,7 +173,7 @@ def run(ctx):
 
     # Delay for bead incubation (Steps 13-15)
     ctx.delay(seconds=30, msg='Wash Buffer 1 Incubation')
-    mag_mod.engage(height=4.1)
+    mag_mod.engage(height=mag_height)
     ctx.delay(seconds=30, msg='Bead Binding')
 
     # Mag Mod (Steps 16-25)
@@ -225,7 +191,7 @@ def run(ctx):
 
     # Delay for bead incubation (Steps 31-33)
     ctx.delay(seconds=30, msg='Wash Buffer 2 Incubation')
-    mag_mod.engage(height=4.1)
+    mag_mod.engage(height=mag_height)
     ctx.delay(seconds=30, msg='Bead Binding')
 
     # Mag Mod Switching (Steps 34-45)
@@ -241,7 +207,7 @@ def run(ctx):
 
     # Delay for bead incubation (Steps 49-51)
     ctx.delay(seconds=30, msg='Wash Buffer 2 second wash incubation')
-    mag_mod.engage(height=4.1)
+    mag_mod.engage(height=mag_height)
     ctx.delay(seconds=30, msg='Wash Buffer 2 second wash bead binding')
 
     # Steps 52-64
@@ -258,7 +224,7 @@ def run(ctx):
 
     # Steps 66-68
     ctx.delay(minutes=2, msg='Elution Incubation')
-    mag_mod.engage(height=4.1)
+    mag_mod.engage(height=mag_height)
     ctx.delay(minutes=1, msg='Bead Binding')
 
     # Steps 69-78
