@@ -4,8 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* sample prep 
-        * plate filing
+* Sample Prep 
+        * Plate Filing
 
 ## Description
 Automates first JSON portion of protocol [7e4c3e](https://docs.google.com/document/d/1odr2TfSuiJhDRY0qyfBs5fz-swU-nJTulUdvRRDV4ec/edit?ts=5fbbeb03)

@@ -1,11 +1,11 @@
-# 7e4c3e-1
+# 7e4c3e-2
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* sample prep 
-        * plate filing
+* Sample Prep 
+        * Plate Filing
 
 ## Description
 Automates second JSON portion of protocol [7e4c3e](https://docs.google.com/document/d/1odr2TfSuiJhDRY0qyfBs5fz-swU-nJTulUdvRRDV4ec/edit?ts=5fbbeb03)
