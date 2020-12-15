@@ -12,12 +12,6 @@ metadata = {
 }
 
 
-"""
-Here is where you can modify the magnetic module engage height:
-"""
-MAG_HEIGHT = 13.7
-
-
 # Definitions for deck light flashing
 class CancellationToken:
     def __init__(self):
@@ -50,12 +44,12 @@ def run(ctx):
     # Setup for flashing lights notification to empty trash
     cancellationToken = CancellationToken()
 
-    [num_samples, starting_vol, binding_buffer_vol, wash1_vol, wash2_vol,
-     wash3_vol, elution_vol, mix_reps, settling_time,
-     park_tips, tip_track, flash] = get_values(  # noqa: F821
-        'num_samples', 'starting_vol', 'binding_buffer_vol', 'wash1_vol',
-        'wash2_vol', 'wash3_vol', 'elution_vol', 'mix_reps', 'settling_time',
-        'park_tips', 'tip_track', 'flash')
+    [num_samples, mag_height, starting_vol, binding_buffer_vol, wash1_vol,
+     wash2_vol, wash3_vol, elution_vol, mix_reps, settling_time, park_tips,
+     tip_track, flash] = get_values(  # noqa: F821
+        'num_samples', 'mag_height', 'starting_vol', 'binding_buffer_vol',
+        'wash1_vol', 'wash2_vol', 'wash3_vol', 'elution_vol', 'mix_reps',
+        'settling_time', 'park_tips', 'tip_track', 'flash')
 
     """
     Here is where you can change the locations of your labware and modules
@@ -278,7 +272,7 @@ resuming.')
             else:
                 _drop(m300)
 
-        magdeck.engage(height=MAG_HEIGHT)
+        magdeck.engage(height=mag_height)
         ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
 ' + str(settling_time) + ' minutes.')
 
@@ -331,7 +325,7 @@ resuming.')
                 _drop(m300)
 
         if magdeck.status == 'disengaged':
-            magdeck.engage(height=MAG_HEIGHT)
+            magdeck.engage(height=mag_height)
 
         ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
 ' + str(settling_time) + ' minutes.')
@@ -385,7 +379,7 @@ resuming.')
             else:
                 _drop(m300)
 
-        magdeck.engage(height=MAG_HEIGHT)
+        magdeck.engage(height=mag_height)
         ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
 ' + str(settling_time) + ' minutes.')
 
