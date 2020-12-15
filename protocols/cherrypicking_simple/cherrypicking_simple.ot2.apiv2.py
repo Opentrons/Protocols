@@ -19,7 +19,7 @@ def run(protocol):
     tip_name = 'opentrons_96_tiprack_'+pip_max+'ul'
     if filter_tip == 'yes':
         pip_max = '200' if pip_max == '300' else pip_max
-        tip_name = 'opentrons_96_filtertippack_'+pip_max+'ul'
+        tip_name = 'opentrons_96_filtertiprack_'+pip_max+'ul'
 
     tiprack_slots = ['1', '4', '7', '10']
     tips = [protocol.load_labware(tip_name, slot)
