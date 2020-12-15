@@ -7,6 +7,12 @@
   },
   {
     "type": "float",
+    "label": "magnetic engage height (in mm)",
+    "name": "mag_height",
+    "default": 13.7
+  },
+  {
+    "type": "float",
     "label": "intitial volume (sample + lysis buffer, in ul)",
     "name": "starting_vol",
     "default": 220.0
