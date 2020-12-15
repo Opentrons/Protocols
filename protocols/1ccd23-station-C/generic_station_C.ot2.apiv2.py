@@ -8,7 +8,7 @@ metadata = {
     'protocolName': 'Covid-19 qPCR Prep (Station C)',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.3'
+    'apiLevel': '2.8'
 }
 
 
