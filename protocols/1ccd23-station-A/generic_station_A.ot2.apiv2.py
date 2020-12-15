@@ -28,9 +28,8 @@ def run(ctx: protocol_api.ProtocolContext):
             'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', '1'
             '2ml Eppendorf tube for internal control (well A1)').wells()[0]
     source_racks = [
-        ctx.load_labware(
-            'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', slot,
-            'source tuberack ' + str(i+1))
+        ctx.load_labware('custom_24_tuberack_5ml', slot,
+                         'source tuberack ' + str(i+1))
         for i, slot in enumerate(['2', '3', '5', '6'])
     ]
     dest_plate = ctx.load_labware(
