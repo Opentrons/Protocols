@@ -8,7 +8,7 @@ from time import sleep
 metadata = {
     'protocolName': 'COVID-19 Station B RNA Extraction',
     'author': 'Opentrons <protocols@opentrons.com>',
-    'apiLevel': '2.4'
+    'apiLevel': '2.8'
 }
 
 
