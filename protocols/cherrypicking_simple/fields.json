@@ -3,7 +3,7 @@
     "type": "textFile",
     "label": "Volumes CSV",
     "name": "volumes_csv",
-    "default": "1,2,3"
+    "default": "Well, Vol\nB1, 20"
   },
   {
     "type": "dropDown",
