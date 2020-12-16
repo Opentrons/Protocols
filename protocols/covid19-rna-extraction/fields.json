@@ -6,6 +6,15 @@
     "default": 96
   },
   {
+    "type": "dropDown",
+    "label": "96-deepwell plate type",
+    "name": "deepwell_type",
+    "options": [
+      {"label": "NEST", "value": "nest_96_wellplate_2ml_deep"},
+      {"label": "USA Scientific", "value": "usascientific_96_wellplate_2.4ml_deep"}
+    ]
+  },
+  {
     "type": "float",
     "label": "intitial volume (sample + lysis buffer, in ul)",
     "name": "starting_vol",

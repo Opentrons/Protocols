@@ -50,12 +50,12 @@ def run(ctx):
     # Setup for flashing lights notification to empty trash
     cancellationToken = CancellationToken()
 
-    [num_samples, starting_vol, binding_buffer_vol, wash1_vol, wash2_vol,
-     wash3_vol, elution_vol, mix_reps, settling_time,
-     park_tips, tip_track, flash] = get_values(  # noqa: F821
-        'num_samples', 'starting_vol', 'binding_buffer_vol', 'wash1_vol',
-        'wash2_vol', 'wash3_vol', 'elution_vol', 'mix_reps', 'settling_time',
-        'park_tips', 'tip_track', 'flash')
+    [num_samples, deepwell_type, starting_vol, binding_buffer_vol, wash1_vol,
+     wash2_vol, wash3_vol, elution_vol, mix_reps, settling_time, park_tips,
+     tip_track, flash] = get_values(  # noqa: F821
+        'num_samples', 'deepwell_type', 'starting_vol', 'binding_buffer_vol',
+        'wash1_vol', 'wash2_vol', 'wash3_vol', 'elution_vol', 'mix_reps',
+        'settling_time', 'park_tips', 'tip_track', 'flash')
 
     """
     Here is where you can change the locations of your labware and modules
