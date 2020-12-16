@@ -5,7 +5,7 @@
 
 ## Categories
 * NGS Library Prep
-        * Nanopore
+	* Nanopore
 
 ## Description
 This protocol automates the entire Oxford Nanopore sequencing kit SQK-RBK004 workflow. Input a variable number of samples (up to 12), and get out a pooled library. 

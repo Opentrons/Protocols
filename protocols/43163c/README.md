@@ -5,7 +5,7 @@
 
 ## Categories
 * Nucleic Acid Extraction & Purification
-        * Plant DNA
+	* Plant DNA
 
 ## Description
 This is a protocol to run a nanomaterial toxicity test. The nanomaterials get added at different concentrations to a plate, are dried, and then cells are exposed to the dried nanosheets. 
