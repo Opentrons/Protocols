@@ -18,7 +18,7 @@ def run(ctx):
     mag_height = float(mag_height)
 
     # Load Labware
-    mag_mod = ctx.load_module('magnetic module', '1')
+    mag_mod = ctx.load_module('magnetic module gen2', '1')
     mag_mod.disengage()
     plate = mag_mod.load_labware('nest_96_wellplate_2000ul',
                                  'Extraction Plate')
