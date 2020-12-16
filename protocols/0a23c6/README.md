@@ -5,7 +5,7 @@
 
 ## Categories
 * PCR
-        * qPCR setup
+	* qPCR setup
 
 ## Description
 This protocol automates the setup of a qPCR reaction using the Opentrons robots. It scales with quantity of samples, but has a practical lower limit of 24 samples. This is a pythonized version of a [Protocol Designer protocol](https://s3.amazonaws.com/pf-upload-01/u-4256/0/2020-09-21/tm23shu/Full%20PCR%20Plate%20with%20Master%20Mix%20.json).
