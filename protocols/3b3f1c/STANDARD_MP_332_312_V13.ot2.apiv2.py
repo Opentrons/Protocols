@@ -179,7 +179,7 @@ def run(ctx):
                                   dest_loc, air_gap=air_gap_p300,
                                   new_tip='never')
                     if plate_height - 1 > 1:
-                        plate_height -= 1.5
+                        plate_height -= 2.5
                     else:
                         plate_height = 1
                 else:
