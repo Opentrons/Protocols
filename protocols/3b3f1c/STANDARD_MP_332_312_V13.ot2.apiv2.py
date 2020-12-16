@@ -277,11 +277,11 @@ def run(ctx):
     tip_condition(p300, 150, diluent)
     for i, m in enumerate(mobile_phase_dests):
         if i < 5:
-            h = 6
+            h = 3
         elif i >= 5 and i < 8:
-            h = 4
-        else:
             h = 1
+        else:
+            h = -2
         p300.transfer(30, is_.bottom(h), m.bottom(14), air_gap=air_gap_p300,
                       new_tip='never')
         p300.blow_out(m.bottom(14))
