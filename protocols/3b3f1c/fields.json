@@ -15,19 +15,19 @@
     "type": "float",
     "label": "volume of aliquot (in µl)",
     "name": "vol_aliqout",
-    "default": 160
+    "default": 80
   },
   {
     "type": "float",
     "label": "volume of mobile phase (in µl)",
     "name": "vol_mobile_phase",
-    "default": 400
+    "default": 475
   },
   {
     "type": "float",
     "label": "volume of tests (in µl)",
     "name": "vol_tests",
-    "default": 30
+    "default": 25
   },
   {
     "type": "float",
