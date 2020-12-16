@@ -5,7 +5,7 @@
 
 ## Categories
 * Nucleic Acid Extraction & Purification
-        * Plant DNA
+	* Plant DNA
 
 ## Description
 This protocol automates {mesoscale kit} in 4 steps over 2 days. Those steps are:

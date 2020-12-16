@@ -5,7 +5,7 @@
 
 ## Categories
 * PCR
-        * PCR Prep
+	* PCR Prep
 
 ## Description
 This protocol automates PCR setups using a CSV file. Slots 2, 5, 8, and 11 are reserved for input tube racks. Slot 6 is reserved for a 384 well PCR plate and slot 9 is reserved for a 96 well PCR plate. The rest of the slots are reserved for tips.

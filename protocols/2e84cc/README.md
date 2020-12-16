@@ -5,7 +5,7 @@
 
 ## Categories
 * NGS Library Prep
-        * Illumina Nextera XT
+	* Illumina Nextera XT
 
 ## Description 
 This protocol automates the TG Nextera XT DNA Sample Preparation Kit from illumina on up to 96 samples. While this protocol functions perfectly fine on up to 96 samples, it will take a significant amount of time to run that many samples. For most preparations, there will need to be a technician available to replace tip boxes as they are used.
