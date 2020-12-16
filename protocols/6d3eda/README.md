@@ -5,7 +5,7 @@
 
 ## Categories
 * Nucleic Acid Extraction & Purification
-        * Plant DNA
+	* Plant DNA
 
 ## Description
 This protocol was built for Mass Spec sample prep for IPM doctors. It transfers a variable volume of reagent between 24 well input plate(s) and 24 well output plate(s). There are 3 custom labwares that this protocol normally uses - a 7ml tube rack (24 slot),  a 1ml autosampler tube rack (24 slot), and a 24 MCT laser cut acrylic rack.
