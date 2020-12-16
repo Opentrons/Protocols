@@ -50,12 +50,13 @@ def run(ctx):
     # Setup for flashing lights notification to empty trash
     cancellationToken = CancellationToken()
 
-    [num_samples, starting_vol, binding_buffer_vol, wash1_vol, wash2_vol,
-     wash3_vol, elution_vol, mix_reps, settling_time,
+    [num_samples, deepwell_type, res_type, starting_vol, binding_buffer_vol,
+     wash1_vol, wash2_vol, wash3_vol, elution_vol, mix_reps, settling_time,
      park_tips, tip_track, flash] = get_values(  # noqa: F821
-        'num_samples', 'starting_vol', 'binding_buffer_vol', 'wash1_vol',
-        'wash2_vol', 'wash3_vol', 'elution_vol', 'mix_reps', 'settling_time',
-        'park_tips', 'tip_track', 'flash')
+        'num_samples', 'deepwell_type', 'res_type', 'starting_vol',
+        'binding_buffer_vol', 'wash1_vol', 'wash2_vol', 'wash3_vol',
+        'elution_vol', 'mix_reps', 'settling_time', 'park_tips', 'tip_track',
+        'flash')
 
     """
     Here is where you can change the locations of your labware and modules
@@ -63,18 +64,15 @@ def run(ctx):
     """
     magdeck = ctx.load_module('magnetic module gen2', '4')
     magdeck.disengage()
-    magplate = magdeck.load_labware('nest_96_wellplate_2ml_deep',
-                                    'deepwell plate')
+    magplate = magdeck.load_labware(deepwell_type, 'deepwell plate')
     tempdeck = ctx.load_module('Temperature Module Gen2', '1')
     elutionplate = tempdeck.load_labware(
                 'opentrons_96_aluminumblock_nest_wellplate_100ul',
                 'elution plate')
     waste = ctx.load_labware('nest_1_reservoir_195ml', '11',
                              'Liquid Waste').wells()[0].top()
-    res2 = ctx.load_labware(
-        'nest_12_reservoir_15ml', '2', 'reagent reservoir 2')
-    res1 = ctx.load_labware(
-        'nest_12_reservoir_15ml', '5', 'reagent reservoir 1')
+    res2 = ctx.load_labware(res_type, '2', 'reagent reservoir 2')
+    res1 = ctx.load_labware(res_type, '5', 'reagent reservoir 1')
     num_cols = math.ceil(num_samples/8)
     tips300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot,
                                 '200µl filtertiprack')
@@ -255,7 +253,7 @@ resuming.')
                 _pick_up(m300)
             num_trans = math.ceil(vol/200)
             vol_per_trans = vol/num_trans
-            asp_per_chan = 14000//(vol_per_trans*8)
+            asp_per_chan = (0.95*res1.wells()[0].max_volume)//(vol_per_trans*8)
             for t in range(num_trans):
                 chan_ind = int((i*num_trans + t)//asp_per_chan)
                 source = binding_buffer[chan_ind]
