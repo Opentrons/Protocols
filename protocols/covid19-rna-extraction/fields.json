@@ -15,6 +15,15 @@
     ]
   },
   {
+    "type": "dropDown",
+    "label": "12-well reservoir type",
+    "name": "res_type",
+    "options": [
+      {"label": "NEST", "value": "nest_12_reservoir_15ml"},
+      {"label": "USA Scientific", "value": "usascientific_12_reservoir_22ml"}
+    ]
+  },
+  {
     "type": "float",
     "label": "intitial volume (sample + lysis buffer, in ul)",
     "name": "starting_vol",
