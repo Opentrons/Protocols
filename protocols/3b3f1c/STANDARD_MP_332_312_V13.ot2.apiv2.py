@@ -293,6 +293,10 @@ def run(ctx):
     qc_counter = 0
     ws_dests = mobile_phase_dests[:8]
     qc_dests = mobile_phase_dests[8:]
+    suitability_transfers = {
+        '1': plate.wells_by_name()['E1'],
+        '8': plate.wells_by_name()['E3']
+    }
     for line in data[::-1]:
         std_name = line[0]
         std = ctx.loaded_labwares[int(line[12])].wells_by_name()[line[13]]
@@ -308,6 +312,13 @@ def run(ctx):
                       air_gap=air_gap_p300, new_tip='never')
         p300.blow_out(dest_set[counter].bottom(14))
         p300.air_gap(20)
+        if std_name in suitability_transfers:
+            p300.dispense(20, std.top())  # void air gap
+            p300.transfer(vol_tests, tubes_dict[std].height_dec(vol_tests),
+                          suitability_transfers[std_name].bottom(10),
+                          mix_before=(2, 200), air_gap=air_gap_p300,
+                          new_tip='never')
+            p300.blow_out(dest_set[counter].bottom(10))
         p300.drop_tip()
 
         if 'QC' in std_name:
