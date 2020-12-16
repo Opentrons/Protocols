@@ -19,6 +19,7 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 * [Opentrons P300 GEN2 Multi-Channel Pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)
 * [Opentrons 200µL Filter Tips](https://shop.opentrons.com/collections/opentrons-tips)
 * [USA Scientific 12-Well Reservoir, 22ml](https://www.usascientific.com/12-channel-automation-reservoir/p/1061-8150)
+* [Opentrons Magnetic Module (GEN2)](https://shop.opentrons.com/products/magdeck)
 * NEST 96 Well Plate 2000 µL
 
 ---
