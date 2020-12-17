@@ -318,7 +318,7 @@ def run(ctx):
                           suitability_transfers[std_name].bottom(10),
                           mix_before=(2, 200), air_gap=air_gap_p300,
                           new_tip='never')
-            p300.blow_out(dest_set[counter].bottom(10))
+            p300.blow_out(suitability_transfers[std_name].bottom(10))
         p300.drop_tip()
 
         if 'QC' in std_name:
