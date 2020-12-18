@@ -26,7 +26,7 @@ def run(protocol):
         'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', 5)
 
     # modules
-    temp_mod = protocol.load_module('temperature module', 3)
+    temp_mod = protocol.load_module('temperature module', 4)
     temp_plate = temp_mod.load_labware(
         'opentrons_96_aluminumblock_biorad_wellplate_200ul')
 
