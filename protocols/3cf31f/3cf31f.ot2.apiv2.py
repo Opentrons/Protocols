@@ -51,9 +51,6 @@ def run(ctx):
     centtubes48 = [well for wells in centtubes.rows()[::2] for well in wells]
     ultratubes48 = [well for wells in ultratubes.rows()[::2] for well in wells]
 
-    c6 = temprack['C6']
-    d6 = temprack['D6']
-
     for source, dest in zip(cryovials48, centtubes48):
         pick_up(p300)
         p300.transfer(50, source, dest, new_tip='never')
