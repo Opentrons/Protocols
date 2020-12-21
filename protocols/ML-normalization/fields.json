@@ -10,8 +10,8 @@
     "label": "P20 GEN2 type",
     "name": "p20_type",
     "options": [
-      { "label": "single", "value": "p20_single_gen2" },
-      { "label": "multi", "value": "p20_multi_gen2" }
+      { "label": "multi", "value": "p20_multi_gen2" },
+      { "label": "single", "value": "p20_single_gen2" }
     ]
   },
   {
