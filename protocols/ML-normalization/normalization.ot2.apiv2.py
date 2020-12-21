@@ -78,10 +78,11 @@ def run(ctx):
 
         # transfer sample
         pip = p300 if vol2 > 10 else p20
-        if not pip.hw_pipette['has_tip']:
-            pip.pick_up_tip()
-        pip.transfer(vol2, r2, d, new_tip='never')
-        pip.blow_out(d.top(-2))
+        if vol2 != 0:
+            if not pip.hw_pipette['has_tip']:
+                pip.pick_up_tip()
+            pip.transfer(vol2, r2, d, new_tip='never')
+            pip.blow_out(d.top(-2))
         for p in [p20, p300]:
             if p.hw_pipette['has_tip']:
                 p.drop_tip()
