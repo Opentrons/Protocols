@@ -3,7 +3,7 @@
     "type": "textFile",
     "label": ".csv input file",
     "name": "input_csv",
-    "default": "source plate well,destination plate well,volume sample (µl),volume diluent (µl)\nA1,A1,2,28"
+    "default": "source plate well,destination plate well,volume sample (µl),volume diluent (µl)\nA1, A1,5,100\nB1,B1,,101\nC1,C1,,102\nD1,D1,,103"
   },
   {
     "type": "dropDown",
