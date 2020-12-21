@@ -10,8 +10,8 @@ metadata = {
 
 def run(ctx):
 
-    [p50_mount, p300_mount] = get_values(  # noqa: F821
-        "p50_mount", "p300_mount")
+    [p300_mount] = get_values(  # noqa: F821
+        "p300_mount")
 
     # Load labware/tiprack/modules
     tiprack = ctx.load_labware('opentrons_96_tiprack_300ul', '11',
