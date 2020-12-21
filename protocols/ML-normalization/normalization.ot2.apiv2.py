@@ -39,25 +39,25 @@ def run(ctx):
     p300 = ctx.load_instrument(p300_type, p300_mount, tip_racks=tiprack300)
 
     # parse
-    sources = [
-        source_plate.wells_by_name()[line.split(',')[0].strip().upper()]
-        for line in input_csv.splitlines()[1:] if line
-    ]
-    dests = [
-        destination_plate.wells_by_name()[line.split(',')[1].strip().upper()]
-        for line in input_csv.splitlines()[1:] if line
-    ]
-    vols_sample = [
-        float(line.split(',')[2])
-        for line in input_csv.splitlines()[1:] if line
-    ]
-    vols_water = [
-        float(line.split(',')[3])
-        for line in input_csv.splitlines()[1:] if line
-    ]
+    data = [
+        [val.strip().upper() for val in line.split(',')]
+        for line in input_csv.splitlines()[1:]
+        if line and line.split(',')[0]]
 
     # perform normalization
-    for s, d, vol_s, vol_w in zip(sources, dests, vols_sample, vols_water):
+    for s, d, vol_s, vol_w in data:
+        if not vol_s:
+            vol_s = 0
+        else:
+            vol_s = float(vol_s)
+        if not vol_w:
+            vol_w = 0
+        else:
+            vol_w = float(vol_w)
+
+        s = source_plate.wells_by_name()[s]
+        d = destination_plate.wells_by_name()[d]
+
         # move larger volume first
         if vol_s > vol_w:
             r1, r2 = s, water
@@ -69,7 +69,7 @@ def run(ctx):
             drop = False
 
         # pre-transfer diluent
-        pip = p300 if vol1 > 10 else p20
+        pip = p300 if vol1 > 20 else p20
         pip.pick_up_tip()
         pip.transfer(vol1, r1, d.bottom(2), new_tip='never')
         pip.blow_out(d.top(-2))
