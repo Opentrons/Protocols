@@ -25,8 +25,10 @@ def run(ctx):
     sample_set_1 = [ctx.loaded_labwares[i].rows()[0] for i in range(1,5)]
     sample_set_2 = [ctx.loaded_labwares[i].rows()[0] for i in range(5,9)]
 
-    m20.transfer(16, mm_1, sample_set_1)
-    m20.transfer(16, mm_2, sample_set_2)
+    m20.pick_up_tip()
+    for source, dest in zip([mm_1, mm_2], [sample_set_1, sample_set_2]):
+        m20.transfer(16, source, dest, new_tip='never')
+    m20.drop_tip()
 
 # Please define new labware:
 # 2. NEST 12-channel reservoir 15ml #360102 on top of a tray with ice (dimensions: L:127mm, W:85mm, H: 18.5mm) - named Source plate #1
