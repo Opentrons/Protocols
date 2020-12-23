@@ -9,7 +9,7 @@ def run(ctx):
 
     # Load labware
     tiprack = ctx.load_labware('opentrons_96_tiprack_20ul', 10)
-    source_plate_1 = ctx.load_labware('nest_12_reservoir_15ml', 11, 'Source Plate #1')
+    source_plate_1 = ctx.load_labware('nest_12_reservoir_15ml_icetray', 11, 'Source Plate #1')
     
     for slot in range(1, 9):
         if int(slot) not in ctx.loaded_labwares:
@@ -33,4 +33,4 @@ def run(ctx):
 # Please define new labware:
 # 2. NEST 12-channel reservoir 15ml #360102 on top of a tray with ice (dimensions: L:127mm, W:85mm, H: 18.5mm) - named Source plate #1
 
-# Hours: 1.5
+# Hours: 1.8
