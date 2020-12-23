@@ -14,7 +14,7 @@ def run(ctx):
         tipracks_20ul.append(ctx.load_labware('opentrons_96_tiprack_20ul', slot))
     
     tiprack_300ul = ctx.load_labware('opentrons_96_tiprack_300ul', 4)
-    source_plate = ctx.load_labware('nest_12_reservoir_15ml', 1, 'Source Plate #1') # On top of ice tray
+    source_plate = ctx.load_labware('nest_12_reservoir_15ml_icetray', 1, 'Source Plate #1') # On top of ice tray
 
     temp_plates = []
     for i, slot in enumerate([8, 5, 2], 1):
