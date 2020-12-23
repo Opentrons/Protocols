@@ -13,7 +13,7 @@
     "label": "destination plate type",
     "name": "dest_plate_type",
     "options": [
-      {"label": "Corning 384 Well Plate 20 µL", "value": "greinerbioone_384_wellplate_100ul"},
+      {"label": "Corning 384 Well Plate 20 µL", "value": "corning_384_wellplate_20ul"},
       {"label": "Bio-Rad 384 Well Plate 50 µL", "value": "biorad_384_wellplate_50ul"}
     ]
   },
