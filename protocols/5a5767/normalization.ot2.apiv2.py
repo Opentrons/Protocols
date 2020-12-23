@@ -27,7 +27,7 @@ def run(ctx):
     # setup sources and destinations
     num_cols = math.ceil(num_samples/8)
     sources, dests = [
-        [well for row in source_plate.rows()[:2] for well in row][:num_cols]
+        [well for row in plate.rows()[:2] for well in row][:num_cols]
         for plate in [source_plate, dest_plate]]
 
     m50.transfer(transfer_vol, sources, dests, new_tip='always')
