@@ -17,7 +17,8 @@
         "name": "p300_tips",
         "options": [
           {"label": "Eppendorf epTIPS 300uL", "value": "eptips_300ul"},
-          {"label": "Tarsons 300uL Tips", "value": "tarsons_300ul"}
+          {"label": "Tarsons 300uL Tips", "value": "tarsons_300ul"},
+          {"label": "Opentrons 96 Tip Rack 300uL", "value": "opentrons_96_tiprack_300ul"}
         ]
     },
     {
@@ -26,7 +27,8 @@
         "name": "p1000_tips",
         "options": [
           {"label": "Eppendorf epTIPS 1000uL", "value": "eptips_1000ul"},
-          {"label": "Tarsons 1000uL Tips", "value": "tarsons_1000ul"}
+          {"label": "Tarsons 1000uL Tips", "value": "tarsons_1000ul"},
+          {"label": "Opentrons 96 Tip Rack 1000uL", "value": "opentrons_96_tiprack_1000ul"}
         ]
     },
     {
