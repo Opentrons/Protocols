@@ -12,8 +12,8 @@
     "options": [
       {"label": "P10 Single (GEN 1)", "value": "p10_single"},
       {"label": "P50 Single (GEN 1)", "value": "p50_single"},
-      {"label": "P300 Single (GEN 1)", "value": "p300_single_gen1"},
-      {"label": "P1000 Single (GEN 1)", "value": "p1000_single_gen1"},
+      {"label": "P300 Single (GEN 1)", "value": "p300_single"},
+      {"label": "P1000 Single (GEN 1)", "value": "p1000_single"},
       {"label": "P20 Single (GEN 2)", "value": "p20_single_gen2"},
       {"label": "P300 Single (GEN 2)", "value": "p300_single_gen2"},
       {"label": "P1000 Single (GEN 2)", "value": "p1000_single_gen2"}
