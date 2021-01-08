@@ -22,11 +22,11 @@ def run(ctx):
             'standard': 'opentrons_96_tiprack_300ul',
             'filter': 'opentrons_96_filtertiprack_200ul'
         },
-        'p300_single_gen1': {
+        'p300_single': {
             'standard': 'opentrons_96_tiprack_300ul',
             'filter': 'opentrons_96_filtertiprack_200ul'
         },
-        'p1000_single_gen1': {
+        'p1000_single': {
             'standard': 'opentrons_96_tiprack_1000ul',
             'filter': 'opentrons_96_filtertiprack_1000ul'
         },
