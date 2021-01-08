@@ -31,7 +31,7 @@ def run(protocol):
         for _ in range(2):
             m300.aspirate(200, buffer)
             m300.dispense(200, well)
-        m300.blow_out()
+        m300.blow_out(well.bottom(1))
 
     m300.drop_tip()
 
