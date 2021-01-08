@@ -56,7 +56,7 @@ def run(protocol):
             if int(slot) not in protocol.loaded_labwares:
                 protocol.load_labware(lw.lower(), slot)
             reservoirs.append(protocol.loaded_labwares[
-                              int(slot)].wells_by_name()[well.upper()])
+                            int(slot)].wells_by_name()[well.upper()])
 
     # Parse High-Throughput CSV
     htp_info = [[val.strip().lower() for val in line.split(',')]
