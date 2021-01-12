@@ -8,6 +8,9 @@ metadata = {
 
 def run(ctx):
 
+    [p300_mount, temperature] = get_values(  # noqa: F821
+    "p300_mount", "temperature")
+
     # Load Labware
     temp_mod = ctx.load_module('temperature module gen2', 7)
     reagents = temp_mod.load_labware('opentrons_24_aluminumblock_generic_2ml_screwcap')
@@ -23,7 +26,7 @@ def run(ctx):
     volumes = [51, 85, 51, 119, 136, 34, 34, 34, 34, 34, 34, 34]
 
     # Set Temperature to 8C
-    temp_mod.set_temperature(8)
+    temp_mod.set_temperature(temperature)
     
     # Add Components to Master Mix
     p300.transfer(volumes, components, mm, new_tip='always')
