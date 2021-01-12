@@ -7,15 +7,15 @@ metadata = {
 
 
 def run(protocol):
-    [num_plates] = get_values(  # noqa: F821
-    'num_plates')
+    [num_plates, deep_plate] = get_values(  # noqa: F821
+    'num_plates', 'deep_plate')
 
     # load labware and pipette
     plate1, plate2 = [protocol.load_labware(
-        'nest_96_wellplate_2ml_deep', s) for s in ['2', '5']]
+        deep_plate, s) for s in ['2', '5']]
 
     deep_plates = [protocol.load_labware(
-        'nest_96_wellplate_2ml_deep', s) for s in ['3', '6']]
+        deep_plate, s) for s in ['3', '6']]
 
     tips = [protocol.load_labware(
         'opentrons_96_filtertiprack_200ul', s) for s in ['7', '10', '11']]
