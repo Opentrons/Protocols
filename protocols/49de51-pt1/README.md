@@ -27,8 +27,7 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 * [Opentrons 200µL Filter Tip Rack](https://shop.opentrons.com/collections/opentrons-tips)
 * [NEST 1-Well Reservoir, 195mL](https://shop.opentrons.com/collections/verified-labware/products/nest-1-well-reservoir-195-ml)
 * [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
-* [NEST 96-Well Deep Well Plate](https://labware.opentrons.com/nest_96_wellplate_2ml_deep?category=wellPlate)
-* [OMNI 96-Well Deep Well Plate with Ceramic Beads](https://www.omni-inc.com/consumables/well-plates/2-pack-96-well-plate-1-4mm-ceramic.html)
+* 96-Deep Well Plate (such as the [OMNI 96-Well Deep Well Plate with Ceramic Beads](https://www.omni-inc.com/consumables/well-plates/2-pack-96-well-plate-1-4mm-ceramic.html))
 * [MagMAX™ Plant DNA Isolation Kit](https://www.thermofisher.com/order/catalog/product/A32549#/A32549)
 * Samples
 
@@ -41,7 +40,8 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 Slot 1: [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)</br>
 * A1: Precipitation Solution, 13.5mL (for Plate 1)
 * A2: Precipitation Solution, 13.5mL (for Plate 2)
-</br>
+
+
 Slot 2: [OMNI 96-Well Deep Well Plate with Ceramic Beads](https://www.omni-inc.com/consumables/well-plates/2-pack-96-well-plate-1-4mm-ceramic.html) containing sample (Plate 1)</br>
 </br>
 Slot 3: [NEST 96-Well Deep Well Plate](https://labware.opentrons.com/nest_96_wellplate_2ml_deep?category=wellPlate) (empty, for Plate 1 supernatant)</br>
@@ -51,7 +51,8 @@ For each plate, the following should be added:
 * Lysis Buffer A, 52mL
 * Lysis Buffer B, 4.160mL
 * RNase A, 2.080mL
-</br>
+
+
 Slot 5: [OMNI 96-Well Deep Well Plate with Ceramic Beads](https://www.omni-inc.com/consumables/well-plates/2-pack-96-well-plate-1-4mm-ceramic.html) containing sample (Plate 2)</br>
 </br>
 Slot 6: [NEST 96-Well Deep Well Plate](https://labware.opentrons.com/nest_96_wellplate_2ml_deep?category=wellPlate) (empty, for Plate 2 supernatant)</br>
