@@ -18,7 +18,7 @@ def run(ctx):
     tiprack_200ul = ctx.load_labware('opentrons_96_filtertiprack_200ul', 1)
 
     # Load Instruments
-    p300 = ctx.load_instrument('p300_single_gen2', 'right', tip_racks=[tiprack_200ul])
+    p300 = ctx.load_instrument('p300_single_gen2', p300_mount, tip_racks=[tiprack_200ul])
 
     # Get Sample Wells
     mm = reagents.wells()[0]
