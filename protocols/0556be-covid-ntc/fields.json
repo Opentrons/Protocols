@@ -1,0 +1,17 @@
+[
+    {
+        "type": "dropDown",
+        "label": "P1000-single GEN2 mount",
+        "name": "p1000_mount",
+        "options": [
+          {"label": "right", "value": "right"},
+          {"label": "left", "value": "left"}
+        ]
+    },
+    {
+        "type": "float",
+        "label": "Component 1 Volume (uL)",
+        "name": "component_1_volume",
+        "default": 300
+    }
+  ]
