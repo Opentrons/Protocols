@@ -9,16 +9,19 @@ metadata = {
 def run(ctx):
 
     [p300_mount, temperature] = get_values(  # noqa: F821
-    "p300_mount", "temperature")
+        "p300_mount", "temperature")
 
     # Load Labware
     temp_mod = ctx.load_module('temperature module gen2', 7)
-    reagents = temp_mod.load_labware('opentrons_24_aluminumblock_generic_2ml_screwcap')
-    pcr_plate = ctx.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul', 8)
+    reagents = temp_mod.load_labware(
+        'opentrons_24_aluminumblock_generic_2ml_screwcap')
+    pcr_plate = ctx.load_labware(
+        'opentrons_96_aluminumblock_generic_pcr_strip_200ul', 8)
     tiprack_200ul = ctx.load_labware('opentrons_96_filtertiprack_200ul', 1)
 
     # Load Instruments
-    p300 = ctx.load_instrument('p300_single_gen2', p300_mount, tip_racks=[tiprack_200ul])
+    p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
+                               tip_racks=[tiprack_200ul])
 
     # Get Sample Wells
     mm = reagents.wells()[0]
@@ -27,7 +30,7 @@ def run(ctx):
 
     # Set Temperature to 8C
     temp_mod.set_temperature(temperature)
-    
+
     # Add Components to Master Mix
     p300.transfer(volumes, components, mm, new_tip='always')
     p300.pick_up_tip()

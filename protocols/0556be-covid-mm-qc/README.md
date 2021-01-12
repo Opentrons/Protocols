@@ -5,7 +5,7 @@
 
 ## Categories
 * Sample Prep
-	* Cherrypicking
+	* Plate Filling
 
 
 ## Description
