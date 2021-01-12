@@ -4,7 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Manufacturing
+* Sample Prep
+	* Cherrypicking
 
 
 ## Description
