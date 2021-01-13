@@ -1,0 +1,79 @@
+﻿Plate LC (Source),Source Well #,ID ,concentration (ug/ml),yield (ug),Destination 1 volume (ul),Destination 1 (Dil),Destination 1 (Dil Plate) Well,concentration dil (ug/ml),yield (ug),Destination 2 volume (ul),Destination 2 (final norm plate),Destination 2 (well #)
+LC 96-well plate,A1,pET4286,3000.00,6.00,10,LC Dil Plate,A1,300.00,6.00,20.00,Norm Plate,A1
+LC 96-well plate,B1,pET4287,3400.00,6.00,10,LC Dil Plate,B1,340.00,6.00,17.65,Norm Plate,B1
+LC 96-well plate,C1,pET4288,840.00,6.00,0,LC Dil Plate,C1,840.00,6.00,7.14,Norm Plate,C1
+LC 96-well plate,D1,pET4289,2500.00,6.00,10,LC Dil Plate,D1,250.00,6.00,24.00,Norm Plate,D1
+LC 96-well plate,E1,pET4290,580.00,6.00,0,LC Dil Plate,E1,580.00,6.00,10.34,Norm Plate,E1
+LC 96-well plate,F1,pET4291,2800.00,6.00,10,LC Dil Plate,F1,280.00,6.00,21.43,Norm Plate,F1
+LC 96-well plate,E2,pET4292,2600.00,6.00,10,LC Dil Plate,E2,260.00,6.00,23.08,Norm Plate,E2
+LC 96-well plate,F2,pET4293,440.00,6.00,0,LC Dil Plate,F2,440.00,6.00,13.64,Norm Plate,F2
+LC 96-well plate,G2,pET4294,3000.00,6.00,10,LC Dil Plate,G2,300.00,6.00,20.00,Norm Plate,G2
+LC 96-well plate,H2,pET4295,760.00,6.00,0,LC Dil Plate,H2,760.00,6.00,7.89,Norm Plate,H2
+LC 96-well plate,A3,pET4296,3000.00,6.00,10,LC Dil Plate,A3,300.00,6.00,20.00,Norm Plate,A3
+LC 96-well plate,B3,pET4297,3000.00,6.00,10,LC Dil Plate,B3,300.00,6.00,20.00,Norm Plate,B3
+LC 96-well plate,C3,pET4298,3000.00,6.00,10,LC Dil Plate,C3,300.00,6.00,20.00,Norm Plate,C3
+LC 96-well plate,D3,pET4298,3000.00,6.00,10,LC Dil Plate,D3,300.00,6.00,20.00,Norm Plate,D3
+LC 96-well plate,E3,pET4298,3000.00,6.00,10,LC Dil Plate,E3,300.00,6.00,20.00,Norm Plate,E3
+LC 96-well plate,F3,pET4298,3000.00,6.00,10,LC Dil Plate,F3,300.00,6.00,20.00,Norm Plate,F3
+LC 96-well plate,G3,pET4298,3000.00,6.00,10,LC Dil Plate,G3,300.00,6.00,20.00,Norm Plate,G3
+LC 96-well plate,H3,pET4298,3000.00,6.00,10,LC Dil Plate,H3,300.00,6.00,20.00,Norm Plate,H3
+LC 96-well plate,A3,pET4299,3000.00,6.00,10,LC Dil Plate,A3,300.00,6.00,20.00,Norm Plate,A3
+LC 96-well plate,B3,pET4300,3000.00,6.00,10,LC Dil Plate,B3,300.00,6.00,20.00,Norm Plate,B3
+LC 96-well plate,C3,pET4015,3300,6.00,10,LC Dil Plate,C3,330.00,6.00,18.18,Norm Plate,C3
+LC 96-well plate,D3,pET4016,3000,6.00,10,LC Dil Plate,D3,300.00,6.00,20.00,Norm Plate,D3
+LC 96-well plate,E3,pET4017,3300,6.00,10,LC Dil Plate,E3,330.00,6.00,18.18,Norm Plate,E3
+LC 96-well plate,F3,pET4015,3300,6.00,10,LC Dil Plate,F3,330.00,6.00,18.18,Norm Plate,F3
+LC 96-well plate,G3,pET4016,3000,6.00,10,LC Dil Plate,G3,300.00,6.00,20.00,Norm Plate,G3
+LC 96-well plate,H3,pET4017,3300,6.00,10,LC Dil Plate,H3,330.00,6.00,18.18,Norm Plate,H3
+HC 96-well plate,A1,pET4027,1600,6.00,10,HC Dil Plate,A1,160,6.00,37.50,Norm Plate,A1
+HC 96-well plate,B1,pET4027,1600,6.00,10,HC Dil Plate,B1,160,6.00,37.50,Norm Plate,B1
+HC 96-well plate,C1,pET4027,1600,6.00,10,HC Dil Plate,C1,160,6.00,37.50,Norm Plate,C1
+HC 96-well plate,D1,pET4027,1600,6.00,10,HC Dil Plate,D1,160,6.00,37.50,Norm Plate,D1
+HC 96-well plate,E1,pET4027,1600,6.00,10,HC Dil Plate,E1,160,6.00,37.50,Norm Plate,E1
+HC 96-well plate,F1,pET4027,1600,6.00,10,HC Dil Plate,F1,160,6.00,37.50,Norm Plate,F1
+HC 96-well plate,E2,pET4033,1800,6.00,10,HC Dil Plate,E2,180,6.00,33.33,Norm Plate,E2
+HC 96-well plate,F2,pET4033,1800,6.00,10,HC Dil Plate,F2,180,6.00,33.33,Norm Plate,F2
+HC 96-well plate,G2,pET4033,1800,6.00,10,HC Dil Plate,G2,180,6.00,33.33,Norm Plate,G2
+HC 96-well plate,H2,pET4033,1800,6.00,10,HC Dil Plate,H2,180,6.00,33.33,Norm Plate,H2
+HC 96-well plate,A3,pET4033,1800,6.00,10,HC Dil Plate,A3,180,6.00,33.33,Norm Plate,A3
+HC 96-well plate,B3,pET4033,1800,6.00,10,HC Dil Plate,B3,180,6.00,33.33,Norm Plate,B3
+HC 96-well plate,C3,pET4033,1800,6.00,10,HC Dil Plate,C3,180,6.00,33.33,Norm Plate,C3
+HC 96-well plate,D3,pET4302,3000,6.00,10,HC Dil Plate,D3,300,6.00,20.00,Norm Plate,D3
+HC 96-well plate,E3,pET4303,3000,6.00,10,HC Dil Plate,E3,300,6.00,20.00,Norm Plate,E3
+HC 96-well plate,F3,pET4304,3000,6.00,10,HC Dil Plate,F3,300,6.00,20.00,Norm Plate,F3
+HC 96-well plate,G3,pET4305,3000,6.00,10,HC Dil Plate,G3,300,6.00,20.00,Norm Plate,G3
+HC 96-well plate,H3,pET4306,3000,6.00,10,HC Dil Plate,H3,300,6.00,20.00,Norm Plate,H3
+HC 96-well plate,A3,pET4033,1800,6.00,10,HC Dil Plate,A3,180,6.00,33.33,Norm Plate,A3
+HC 96-well plate,B3,pET4033,1800,6.00,10,HC Dil Plate,B3,180,6.00,33.33,Norm Plate,B3
+HC 96-well plate,C3,pET4307,3000,6.00,10,HC Dil Plate,C3,300,6.00,20.00,Norm Plate,C3
+HC 96-well plate,D3,pET4307,3000,6.00,10,HC Dil Plate,D3,300,6.00,20.00,Norm Plate,D3
+HC 96-well plate,E3,pET4307,3000,6.00,10,HC Dil Plate,E3,300,6.00,20.00,Norm Plate,E3
+HC 96-well plate,F3,pET4308,3000,6.00,10,HC Dil Plate,F3,300,6.00,20.00,Norm Plate,F3
+HC 96-well plate,G3,pET4308,3000,6.00,10,HC Dil Plate,G3,300,6.00,20.00,Norm Plate,G3
+HC 96-well plate,H3,pET4308,3000,6.00,10,HC Dil Plate,H3,300,6.00,20.00,Norm Plate,H3
+water,A1,,,,,,,,,62.50,Norm Plate,A1
+water,B1,,,,,,,,,64.85,Norm Plate,B1
+water,C1,,,,,,,,,75.36,Norm Plate,C1
+water,D1,,,,,,,,,58.50,Norm Plate,D1
+water,E1,,,,,,,,,72.16,Norm Plate,E1
+water,F1,,,,,,,,,61.07,Norm Plate,F1
+water,E2,,,,,,,,,63.59,Norm Plate,E2
+water,F2,,,,,,,,,73.03,Norm Plate,F2
+water,G2,,,,,,,,,66.67,Norm Plate,G2
+water,H2,,,,,,,,,78.77,Norm Plate,H2
+water,A3,,,,,,,,,66.67,Norm Plate,A3
+water,B3,,,,,,,,,66.67,Norm Plate,B3
+water,C3,,,,,,,,,66.67,Norm Plate,C3
+water,D3,,,,,,,,,80.00,Norm Plate,D3
+water,E3,,,,,,,,,80.00,Norm Plate,E3
+water,F3,,,,,,,,,80.00,Norm Plate,F3
+water,G3,,,,,,,,,80.00,Norm Plate,G3
+water,H3,,,,,,,,,80.00,Norm Plate,H3
+water,A3,,,,,,,,,66.67,Norm Plate,A3
+water,B3,,,,,,,,,66.67,Norm Plate,B3
+water,C3,,,,,,,,,81.82,Norm Plate,C3
+water,D3,,,,,,,,,80.00,Norm Plate,D3
+water,E3,,,,,,,,,81.82,Norm Plate,E3
+water,F3,,,,,,,,,81.82,Norm Plate,F3
+water,G3,,,,,,,,,80.00,Norm Plate,G3
+water,H3,,,,,,,,,81.82,Norm Plate,H3
