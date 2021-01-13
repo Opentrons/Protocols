@@ -14,7 +14,6 @@ def run(ctx):
     # Load Labware
     tipracks = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot) for slot in range(1,3)]
     tuberacks = [ctx.load_labware('opentrons_15_tuberack_falcon_15ml_conical', slot) for slot in range(5,12)]
-    # dw_plate = ctx.load_labware('kingfisher_96_deepwell_plate_2ml', 2)
     sample_plate = ctx.load_labware('kingfisher_96_deepwell_plate_2ml', 3)
     reservoir = ctx.load_labware('nest_12_reservoir_15ml', 4)
 
