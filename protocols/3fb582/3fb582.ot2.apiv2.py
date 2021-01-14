@@ -35,7 +35,7 @@ def run(ctx):
             "11"]]
     tube_rack_slot = {
         str(i): tube_rack for i,
-        tube_rack in enumerate(tube_racks)}
+        tube_rack in zip(range(2, 12, 3), tube_racks)}
 
     p20s = ctx.load_instrument(
         "p20_single_gen2",

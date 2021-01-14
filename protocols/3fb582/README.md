@@ -8,7 +8,9 @@
 	* PCR Prep
 
 ## Description
-This protocol automates PCR setups using a CSV file. Slots 2, 5, 8, and 11 are reserved for input tube racks. Slot 6 is reserved for a 384 well PCR plate and slot 9 is reserved for a 96 well PCR plate. The rest of the slots are reserved for tips.
+This protocol automates PCR setups using a CSV file. Slots 2, 5, 8, and 11 are reserved for input tube racks. Slot 6 is reserved for a 384 well PCR plate and slot 9 is reserved for a 96 well PCR plate. The rest of the slots are reserved for tips.</br>
+</br>
+**Update (Jan 13, 2021)**: A fix was added that was preventing use of slots 5, 8, and 11.
 
 Customize the PCR setup CSV and upload it to get a custom protocol. Template CSV can be found [here](https://docs.google.com/spreadsheets/d/15ddYgLTeaY4jjYTro1_AiAuMxNe6WrNxDndm7DE7Kgc/edit?usp=sharing).
 
@@ -24,8 +26,8 @@ Customize the PCR setup CSV and upload it to get a custom protocol. Template CSV
 * [OT-2](https://opentrons.com/ot-2)
 
 ## Process
-1. Load reagents and labware into required slots. 
-2. Run the protocol. 
+1. Load reagents and labware into required slots.
+2. Run the protocol.
 
 ### Additional Notes
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
