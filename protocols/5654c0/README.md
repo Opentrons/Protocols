@@ -25,6 +25,17 @@ water,H3,,,,,,,,,81.82,Norm Plate,H3
 
 **Note: Save any .xlsx files as a .csv**
 
+## Protocol Steps
+
+1. Transfer 90 uL of Water to LC Dil Plate and HC Dil Plate 
+2. Transfer necessary volumes of Water to Norm plate based on spreadsheet
+3. Transfer DNA from LC Plates to LC Dil Plates
+4. Transfer DNA from HC Plates to HC Dil Plates
+5. Transfer DNA from LC Plate to Norm
+6. Transfer DNA from LC Dil to Norm
+7. Transfer DNA from HC Plate to Norm
+8. Transfer DNA from HC Dil to Norm
+
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
