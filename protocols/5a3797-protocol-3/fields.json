@@ -1,0 +1,83 @@
+[
+    {
+        "type": "dropDown",
+        "label": "P300-multichannel GEN2 mount",
+        "name": "m300_mount",
+        "options": [
+          {"label": "right", "value": "right"},
+          {"label": "left", "value": "left"}
+        ]
+    },
+    {
+        "type": "dropDown",
+        "label": "P300-single GEN2 mount",
+        "name": "p300_mount",
+        "options": [
+          {"label": "left", "value": "left"},
+          {"label": "right", "value": "right"}
+        ]
+    },
+    {
+        "type": "dropDown",
+        "label": "Tube Rack 1 Type",
+        "name": "tuberack_1",
+        "options": [
+          {"label": "Sorfa 15 Tube Rack 10 mL", "value": "sorfa_15_tuberack_10000ul"},
+          {"label": "Copan 15 Tube Rack 10 mL", "value": "copan_15_tuberack_10000ul"}
+        ]
+    },
+    {
+        "type": "dropDown",
+        "label": "Tube Rack 2 Type",
+        "name": "tuberack_2",
+        "options": [
+          {"label": "Sorfa 15 Tube Rack 10 mL", "value": "sorfa_15_tuberack_10000ul"},
+          {"label": "Copan 15 Tube Rack 10 mL", "value": "copan_15_tuberack_10000ul"}
+        ]
+    },
+    {
+        "type": "dropDown",
+        "label": "Tube Rack 3 Type",
+        "name": "tuberack_3",
+        "options": [
+          {"label": "Sorfa 15 Tube Rack 10 mL", "value": "sorfa_15_tuberack_10000ul"},
+          {"label": "Copan 15 Tube Rack 10 mL", "value": "copan_15_tuberack_10000ul"}
+        ]
+    },
+    {
+        "type": "dropDown",
+        "label": "Tube Rack 4 Type",
+        "name": "tuberack_4",
+        "options": [
+          {"label": "Sorfa 15 Tube Rack 10 mL", "value": "sorfa_15_tuberack_10000ul"},
+          {"label": "Copan 15 Tube Rack 10 mL", "value": "copan_15_tuberack_10000ul"}
+        ]
+    },
+    {
+        "type": "dropDown",
+        "label": "Tube Rack 5 Type",
+        "name": "tuberack_5",
+        "options": [
+          {"label": "Sorfa 15 Tube Rack 10 mL", "value": "sorfa_15_tuberack_10000ul"},
+          {"label": "Copan 15 Tube Rack 10 mL", "value": "copan_15_tuberack_10000ul"}
+        ]
+    },
+    {
+        "type": "dropDown",
+        "label": "Tube Rack 6 Type",
+        "name": "tuberack_6",
+        "options": [
+          {"label": "Sorfa 15 Tube Rack 10 mL", "value": "sorfa_15_tuberack_10000ul"},
+          {"label": "Copan 15 Tube Rack 10 mL", "value": "copan_15_tuberack_10000ul"}
+        ]
+    },
+    {
+        "type": "dropDown",
+        "label": "Tube Rack 7 Type",
+        "name": "tuberack_7",
+        "options": [
+          {"label": "Sorfa 15 Tube Rack 10 mL", "value": "sorfa_15_tuberack_10000ul"},
+          {"label": "Copan 15 Tube Rack 10 mL", "value": "copan_15_tuberack_10000ul"}
+        ]
+    }
+  ]
