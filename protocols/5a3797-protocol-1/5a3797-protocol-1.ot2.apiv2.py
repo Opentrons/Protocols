@@ -8,8 +8,8 @@ metadata = {
 
 def run(ctx):
 
-    # [m300_mount] = get_values(  # noqa: F821
-    #     "m300_mount")
+    [m300_mount] = get_values(  # noqa: F821
+        "m300_mount")
 
     # Load Labware
     tipracks = ctx.load_labware('opentrons_96_filtertiprack_200ul', 1)
@@ -21,7 +21,8 @@ def run(ctx):
     dw_plate_elution = ctx.load_labware('kingfisher_96_deepwell_plate_2ml', 6)
 
     # Load Pipette
-    m300 = ctx.load_instrument('p300_multi_gen2', 'left', tip_racks=[tipracks])
+    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,
+                               tip_racks=[tipracks])
 
     # Aliquot 500uL of Wash 1
     m300.transfer(500, wash_1.wells(), dw_plate_wash_1.wells())
