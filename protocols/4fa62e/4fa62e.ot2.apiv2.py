@@ -42,7 +42,7 @@ def run(protocol):
     master_mix = tubes.wells('A1')
 
     # DNA sample sources setup
-    DNA_samples = tubes.wells()[2:(number_of_DNA_samples+1)]
+    DNA_samples = tubes.wells()[1:(number_of_DNA_samples+1)]
 
     # destinations setup
     dests_triplicates = [temp_plate.rows()[start][(3*i):(3*i+3)]
