@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 
 MONOREPO_URI := https://github.com/Opentrons/opentrons.git
-OT2_VERSION_TAG := edge
+OT2_VERSION_TAG := v4.1.0
 OT2_MONOREPO_DIR := ot2monorepoClone
 
 # Parsers output to here
