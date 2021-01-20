@@ -53,11 +53,11 @@ def run(ctx):
     water_data = []
 
     for row in data:
-        if row[0] == 'water':
+        if row[0].lower().strip() == 'water':
             water_data.append(row)
-        elif row[0] == 'LC 96-well plate':
+        elif row[0].lower().strip() == 'lc 96-well plate':
             lc_plates.append(row)
-        elif row[0] == 'HC 96-well plate':
+        elif row[0].lower().strip() == 'hc 96-well plate':
             hc_plates.append(row)
 
     # Transfer Water (2)
