@@ -91,7 +91,7 @@ def run(ctx):
     Here is where you can define the locations of your reagents.
     """
     binding_buffer = res1.wells()[2:6]
-    lysis_buffer = res1.wells()[1]
+    lysis_buffer = res1.wells()[0]
     elution_solution = res1.wells()[-1]
     wash1 = res2.wells()[:4]
     wash2 = res2.wells()[4:8]
