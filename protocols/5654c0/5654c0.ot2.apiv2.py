@@ -45,7 +45,7 @@ def run(ctx):
                                                 plates[
                                                     'HC Dil Plate'].wells()])
 
-    # Parse CSV
+    # Parse DNA Norm CSV File
     data = [[val.strip() for val in line.split(',')] for line in
             dna_csv.splitlines()[1:] if line and line.split(',')[0]]
     lc_plates = []
