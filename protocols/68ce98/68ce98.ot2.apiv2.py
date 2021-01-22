@@ -26,8 +26,8 @@ def run(ctx):
     m300 = ctx.load_instrument('p300_multi_gen2', 'left', tip_racks=[tiprack])
 
     # Get sample columns
-    plate1_wells = [plate1.columns()[i][0] for i in range(12)]
-    plate2_wells = [plate2.columns()[i][0] for i in range(12)]
+    plate1_wells = plate1.rows()[0]
+    plate2_wells = plate2.rows()[0]
 
     # Flow Rates
     m300.flow_rate.aspirate = asp_speed
