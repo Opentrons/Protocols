@@ -14,8 +14,8 @@ def run(ctx):
 
     asp_speed = float(asp_speed)
     disp_speed = float(disp_speed)
-    asp_height = float(asp_speed)
-    disp_height = float(disp_speed)
+    asp_height = float(asp_height)
+    disp_height = float(disp_height)
 
     # Load Labware
     plate1 = ctx.load_labware('waters_96_wellplate_2ml', 1, 'Plate 1')
