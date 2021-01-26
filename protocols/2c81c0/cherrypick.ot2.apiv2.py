@@ -43,8 +43,11 @@ def run(ctx):
         'deepplate': 'nest_96_wellplate_2ml_deep'
     }
     for d in data:
-        s_lw, s_slot, s_well, vol, d_lw, d_slot, d_well, h_offset, vol_mix = d
-        vol, h_offset, vol_mix = float(vol), float(h_offset), float(vol_mix)
+        [s_lw, s_slot, s_well, vol, d_lw, d_slot, d_well, h_offset_src,
+         h_offset_dest, vol_mix] = d
+        vol, h_offset_src, h_offset_dest, vol_mix = [
+            float(vol), float(h_offset_src), float(h_offset_dest),
+            float(vol_mix)]
         s_lw, d_lw = s_lw.lower().strip(), d_lw.lower().strip()
         if int(s_slot) not in ctx.loaded_labwares:
             ctx.load_labware(
@@ -54,9 +57,12 @@ def run(ctx):
                 labware_load_dict[d_lw], d_slot, 'destination plate ' + d_slot)
         source = ctx.loaded_labwares[int(s_slot)].wells_by_name()[s_well]
         dest = ctx.loaded_labwares[int(d_slot)].wells_by_name()[d_well]
-        if h_offset > source.geometry._depth:
-            ctx.pause('Warning: Specified height may result in crashing. \
-Press resume to ignore.')
+        if h_offset_src > source.geometry._depth:
+            ctx.pause('Warning: Specified source height may result in \
+crashing. Press resume to ignore.')
+        if h_offset_dest > dest.geometry._depth:
+            ctx.pause('Warning: Specified destination height may result in \
+crashing. Press resume to ignore.')
 
         pip = p300 if vol > 30 else p10
         num_trans = math.ceil(vol/pip.max_volume)
@@ -69,16 +75,16 @@ Press resume to ignore.')
             if vol_mix != 0:
                 pip.transfer(
                     vol_per_trans,
-                    source.top(h_offset),
-                    dest.bottom(-1),
+                    source.top(h_offset_src),
+                    dest.bottom(h_offset_dest),
                     mix_after=(3, vol_mix),
                     new_tip='never'
                 )
             else:
                 pip.transfer(
                     vol_per_trans,
-                    source.top(h_offset),
-                    dest.bottom(-1),
+                    source.top(h_offset_src),
+                    dest.bottom(h_offset_dest),
                     new_tip='never'
                 )
             pip.blow_out(dest.top(-8))
