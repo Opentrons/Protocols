@@ -9,9 +9,9 @@ metadata = {
 def run(ctx):
 
     [p300_mount, p20_mount, temperature, component_1_volume,
-        component_2_volume] = get_values(  # noqa: F821
+        component_2_volume, asp_height] = get_values(  # noqa: F821
         "p300_mount", "p20_mount", "temperature", "component_1_volume",
-        "component_2_volume")
+        "component_2_volume", "asp_height")
 
     # Load Labware
     tuberack = ctx.load_labware(
@@ -41,7 +41,8 @@ def run(ctx):
 
     # Transfer Component 2 to 24 Well Block Tubes
     p300.transfer(float(component_2_volume),
-                  tuberack['B1'], dest_tubes.wells()[:24], new_tip='always')
+                  tuberack['B1'].bottom(float(asp_height)),
+                  dest_tubes.wells()[:24], new_tip='always')
 
     # Get Select PCR Tube Wells
     pcr_wells = [pcr_plate[well] for well in ['A1', 'A2', 'A3', 'A6', 'A7',
