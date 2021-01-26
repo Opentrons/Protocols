@@ -8,8 +8,10 @@ metadata = {
 
 def run(ctx):
 
-    [p1000_mount, component_1_volume] = get_values(  # noqa: F821
-        "p1000_mount", "component_1_volume")
+    [p1000_mount, component_1_volume, asp_height] = get_values(  # noqa: F821
+        "p1000_mount", "component_1_volume", "asp_height")
+
+    asp_height = float(asp_height)
 
     # Load Labware
     tuberack = ctx.load_labware(
@@ -23,4 +25,5 @@ def run(ctx):
                                 tip_racks=[tiprack_1000ul])
 
     # Transfer Component 1 to Destination Tubes
-    p1000.transfer(float(component_1_volume), tuberack, dest_tubes.wells())
+    p1000.transfer(float(component_1_volume), tuberack.bottom(asp_height),
+                   dest_tubes.wells())
