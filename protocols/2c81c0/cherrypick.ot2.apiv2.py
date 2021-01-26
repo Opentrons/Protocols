@@ -29,6 +29,12 @@ def run(ctx):
         'p10_single', p10_mount, tip_racks=tiprack10)
     p300 = ctx.load_instrument(
         'p300_single', p300_mount, tip_racks=tiprack300)
+    p10.flow_rate.aspirate = 3.5
+    p10.flow_rate.dispense = 7
+    p10.flow_rate.blow_out = 500
+    p300.flow_rate.aspirate = 105
+    p300.flow_rate.dispense = 210
+    p300.flow_rate.blow_out = 500
 
     # parse
     data = [
@@ -87,8 +93,8 @@ crashing. Press resume to ignore.')
                     dest.bottom(h_offset_dest),
                     new_tip='never'
                 )
-            pip.blow_out(dest.top(-8))
-            pip.touch_tip(v_offset=-6)
+            pip.blow_out(dest.top(h_offset_dest))
+            pip.touch_tip(v_offset=h_offset_dest)
             if change_tips == 'always':
                 pip.drop_tip()
         if change_tips == 'once per well':
