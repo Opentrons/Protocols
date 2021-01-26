@@ -34,5 +34,11 @@
       "label": "Component 2 Volume (uL)",
       "name": "component_2_volume",
       "default": 546
+    },
+    {
+      "type": "float",
+      "label": "Tube Aspiration Height (mm)",
+      "name": "asp_height",
+      "default": 75
     }
   ]
