@@ -37,8 +37,12 @@ def run(ctx):
     p300.mix(20)
     p300.drop_tip()
 
+    # Get well distribution for PCR plate
+    pcr_plate_wells = [pcr_plate.columns()[i] for i in [0, 3, 6, 9]]
+    pcr_plate_wells = [wells for well in pcr_plate_wells for wells in well]
+
     # Add Master Mix to 32 wells
-    p300.transfer(20, mm, pcr_plate.wells()[:32], new_tip='once')
+    p300.transfer(20, mm, pcr_plate_wells, new_tip='once')
 
     # Deactivate Temp Mod
     temp_mod.deactivate()
