@@ -14,7 +14,7 @@ def run(protocol):
      elutePlate, p300mnt, tipType, tipTrash] = get_values(  # noqa: F821
      'numSamps', 'sampPlate', 'extrPlate',
      'elutePlate', 'p300mnt', 'tipType', 'tipTrash')
-     
+
     # load labware and pipette
     m300 = protocol.load_instrument('p300_multi_gen2', p300mnt)
 
