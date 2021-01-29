@@ -72,7 +72,7 @@ def run(ctx):
     m20.drop_tip()
 
     # Transfer Samples to PCR Plate
-    for samples, dest in zip(sample_wells, flat_dests):
+    for s_well, dest in zip(sample_wells, flat_dests):
         pick_up(m20)
-        m20.transfer(10, samples, dest, new_tip='never')
+        m20.transfer(10, s_well, dest, new_tip='never')
         m20.drop_tip()
