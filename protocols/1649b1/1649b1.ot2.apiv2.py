@@ -1,5 +1,10 @@
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"m300_mount":"left"}""")
+    return [_all_values[n] for n in names]
+
 metadata = {
-    'protocolName': 'Nucleic Acid Purification',
+    'protocolName': 'LGC Sbeadex Plant Maxi Kit Nucleic Acid Extraction',
     'author': 'Sakib <sakib.hossain@opentrons.com>',
     'description': 'Custom Protocol Request',
     'apiLevel': '2.8'
@@ -23,10 +28,10 @@ def run(ctx):
                                     'Ground Sample Plate')
     lysis = ctx.load_labware('nest_1_reservoir_195ml', 4, 'Lysis Buffer')
     binding = ctx.load_labware('nest_1_reservoir_195ml', 5,
-                               'Binding Buffer and Magnetic Beads')
-    wash1 = ctx.load_labware('nest_1_reservoir_195ml', 7, 'Wash Buffer 1')
-    wash2 = ctx.load_labware('nest_1_reservoir_195ml', 8, 'Wash Buffer 2')
-    elution = ctx.load_labware('nest_1_reservoir_195ml', 6, 'Elution Buffer')
+                               'Binding Buffer and Magnetic Beads').wells()[0]
+    wash1 = ctx.load_labware('nest_1_reservoir_195ml', 7, 'Wash Buffer 1').wells()[0]
+    wash2 = ctx.load_labware('nest_1_reservoir_195ml', 8, 'Wash Buffer 2').wells()[0]
+    elution = ctx.load_labware('nest_1_reservoir_195ml', 6, 'Elution Buffer').wells()[0]
     tips300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
                for slot in range(9, 12)]
 
@@ -56,6 +61,10 @@ resuming.')
             return tip_loc
 
     mag_plate_samples = mag_plate.rows()[0]
+    temp_plate_wells = temp_plate.rows()[0]
+
+    # Home Pipette
+    m300.home()
 
     # Initial Pause Step
     ctx.pause('Did you add Proteinase K and 2-ME to the lysis buffer?')
@@ -82,12 +91,12 @@ resuming.')
     # (5) Mix Binding Buffer
     _pick_up(m300)
     m300.mix(6, 300, binding.wells()[0])
-    m300.drop_tip()
 
     # (6) Transfer 490 uL of Binding Buffer + Mag Beads
-    for mag_plate in mag_plate_samples:
-        _pick_up(m300)
-        m300.transfer(490, binding.wells()[0], mag_plate, mix_before=(2, 300),
+    for mag_well in mag_plate_samples:
+        if not m300.has_tip:
+            _pick_up(m300)
+        m300.transfer(490, binding.wells()[0], mag_well, mix_before=(2, 300),
                       mix_after=(10, 245), new_tip='never')
         m300.drop_tip()
 
@@ -96,9 +105,9 @@ resuming.')
     ctx.delay(minutes=5, msg='Pausing for 5 minutes...')
 
     # (8) Transfer 890 uL from Mag Plate to Binding Reservoir
-    for mag_plate in mag_plate_samples:
+    for mag_well in mag_plate_samples:
         _pick_up(m300)
-        m300.transfer(890, mag_plate, binding.wells()[0], new_tip='never')
+        m300.transfer(890, mag_well, binding.wells()[0], new_tip='never')
         m300.drop_tip()
 
     # (9) Pause
@@ -107,7 +116,7 @@ resuming.')
     # (10) Transfer 75uL of Elution Buffer to Temp Plate
     # CONSERVE TIPS
     _pick_up(m300)
-    m300.transfer(75, elution.wells(), temp_plate.wells(), new_tip='never')
+    m300.transfer(75, elution, temp_plate.rows()[0], new_tip='never')
     m300.return_tip()
 
     # Warm Elution Buffer to 60C
@@ -119,9 +128,9 @@ resuming.')
     # (12) Transfer 600 uL Wash 1 Buffer to Mag Plate
     # CONSERVE TIPS
     wash1_tips = []
-    for mag_plate in mag_plate_samples:
+    for mag_well in mag_plate_samples:
         wash1_tips.append(_pick_up(m300))
-        m300.transfer(600, wash1.wells(), mag_plate, mix_after=(10, 300),
+        m300.transfer(600, wash1.wells(), mag_well, mix_after=(10, 300),
                       new_tip='never')
         m300.return_tip()
 
@@ -130,9 +139,9 @@ resuming.')
     ctx.delay(minutes=3, msg='Pausing for 3 minutes...')
 
     # (14) Transfer 600 uL from mag plate to binding buffer reservoir
-    for mag_plate in mag_plate_samples:
+    for mag_well in mag_plate_samples:
         _pick_up(m300)
-        m300.transfer(600, mag_plate, binding.wells(), new_tip='never')
+        m300.transfer(600, mag_well, binding.wells(), new_tip='never')
         m300.drop_tip()
 
     # (15) Disengage Magnet
@@ -183,7 +192,7 @@ resuming.')
     mag_mod.disengage()
 
     # (25) Transfer 70uL of Elution Buffer to Mag Plate
-    for elution_wells, mag_plate in zip(temp_plate.rows()[0],
+    for elution_well, mag_well in zip(temp_plate.rows()[0],
                                         mag_plate_samples):
         _pick_up(m300)
         m300.transfer(70, elution_wells, mag_plate, mix_after=(10, 35),
@@ -199,7 +208,7 @@ resuming.')
     ctx.delay(minutes=3, msg='Pausing for 3 minutes...')
 
     # (28) Transfer 70 uL from Mag Plate to Temp Plate
-    for temp_plate, mag_plate in zip(temp_plate.rows()[0], mag_plate_samples):
+    for temp_well, mag_well in zip(temp_plate.rows()[0], mag_plate_samples):
         _pick_up(m300)
         m300.transfer(70, mag_plate, temp_plate, new_tip='never')
         m300.drop_tip()
