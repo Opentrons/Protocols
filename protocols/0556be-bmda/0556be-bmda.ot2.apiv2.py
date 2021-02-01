@@ -40,7 +40,8 @@ def run(ctx):
 
     # Get well distribution for PCR plate
     pcr_plate_wells = [pcr_plate.columns()[i] for i in [0, 3, 6, 9]]
-    pcr_plate_wells = [wells for well in pcr_plate_wells for wells in well][:final_tubes]
+    pcr_plate_wells = [wells for well in pcr_plate_wells
+                       for wells in well][:final_tubes]
 
     # Add Master Mix to 32 wells
     p300.transfer(20, mm, pcr_plate_wells, new_tip='once')
