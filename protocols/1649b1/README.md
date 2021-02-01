@@ -1,4 +1,4 @@
-# Nucleic Acid Purification
+# LGC Sbeadex Plant Maxi Kit Nucleic Acid Extraction
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -9,7 +9,7 @@
 
 
 ## Description
-This protocol automates a nucleic acid purification using the [Opentrons Magnetic Module](https://shop.opentrons.com/collections/hardware-modules/products/magdeck) and [Opentrons Temperature Module](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)</br>
+This protocol automates a nucleic acid purification for the LGC Sbeadex Plant Maxi Kit using the [Opentrons Magnetic Module](https://shop.opentrons.com/collections/hardware-modules/products/magdeck) and [Opentrons Temperature Module](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)</br>
 
 If you have any questions about this protocol, please email our Applications Engineering team at [protocols@opentrons.com](mailto:protocols@opentrons.com).
 
