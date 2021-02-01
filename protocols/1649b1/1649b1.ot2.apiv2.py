@@ -1,8 +1,3 @@
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"m300_mount":"left"}""")
-    return [_all_values[n] for n in names]
-
 metadata = {
     'protocolName': 'LGC Sbeadex Plant Maxi Kit Nucleic Acid Extraction',
     'author': 'Sakib <sakib.hossain@opentrons.com>',
@@ -26,12 +21,16 @@ def run(ctx):
     # Load Labware
     sample_plate = ctx.load_labware('spex_96_wellplate_2400ul', 2,
                                     'Ground Sample Plate')
-    lysis = ctx.load_labware('nest_1_reservoir_195ml', 4, 'Lysis Buffer').wells()[0]
+    lysis = ctx.load_labware('nest_1_reservoir_195ml', 4,
+                             'Lysis Buffer').wells()[0]
     binding = ctx.load_labware('nest_1_reservoir_195ml', 5,
                                'Binding Buffer and Magnetic Beads').wells()[0]
-    wash1 = ctx.load_labware('nest_1_reservoir_195ml', 7, 'Wash Buffer 1').wells()[0]
-    wash2 = ctx.load_labware('nest_1_reservoir_195ml', 8, 'Wash Buffer 2').wells()[0]
-    elution = ctx.load_labware('nest_1_reservoir_195ml', 6, 'Elution Buffer').wells()[0]
+    wash1 = ctx.load_labware('nest_1_reservoir_195ml', 7,
+                             'Wash Buffer 1').wells()[0]
+    wash2 = ctx.load_labware('nest_1_reservoir_195ml', 8,
+                             'Wash Buffer 2').wells()[0]
+    elution = ctx.load_labware('nest_1_reservoir_195ml', 6,
+                               'Elution Buffer').wells()[0]
     tips300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
                for slot in range(9, 12)]
 
@@ -81,7 +80,7 @@ resuming.')
 
     # (3) Transfer 400 uL of Sample to NEST Deep Well Plate
     for samples, mag_well in zip(sample_plate_wells,
-                                       mag_plate_samples):
+                                 mag_plate_samples):
         _pick_up(m300)
         m300.transfer(400, samples, mag_well, new_tip='never')
         m300.drop_tip()
@@ -194,7 +193,7 @@ resuming.')
 
     # (25) Transfer 70uL of Elution Buffer to Mag Plate
     for elution_well, mag_well in zip(temp_plate_wells,
-                                        mag_plate_samples):
+                                      mag_plate_samples):
         _pick_up(m300)
         m300.transfer(70, elution_well, mag_well, mix_after=(10, 35),
                       new_tip='never')
