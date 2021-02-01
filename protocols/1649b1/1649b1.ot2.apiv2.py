@@ -26,7 +26,7 @@ def run(ctx):
     # Load Labware
     sample_plate = ctx.load_labware('spex_96_wellplate_2400ul', 2,
                                     'Ground Sample Plate')
-    lysis = ctx.load_labware('nest_1_reservoir_195ml', 4, 'Lysis Buffer')
+    lysis = ctx.load_labware('nest_1_reservoir_195ml', 4, 'Lysis Buffer').wells()[0]
     binding = ctx.load_labware('nest_1_reservoir_195ml', 5,
                                'Binding Buffer and Magnetic Beads').wells()[0]
     wash1 = ctx.load_labware('nest_1_reservoir_195ml', 7, 'Wash Buffer 1').wells()[0]
@@ -62,6 +62,7 @@ resuming.')
 
     mag_plate_samples = mag_plate.rows()[0]
     temp_plate_wells = temp_plate.rows()[0]
+    sample_plate_wells = sample_plate.rows()[0]
 
     # Home Pipette
     m300.home()
@@ -71,18 +72,18 @@ resuming.')
 
     # (1) Transfer 600 uL of Lysis Buffer to Sample Plate
     _pick_up(m300)
-    for samples in sample_plate.rows()[0]:
-        m300.transfer(600, lysis.wells(), samples.top(), new_tip='never')
+    for samples in sample_plate_wells:
+        m300.transfer(600, lysis, samples.top(), new_tip='never')
     m300.drop_tip()
 
     # (2) Pause for Incubation
     ctx.pause('Pausing for Incubation...')
 
     # (3) Transfer 400 uL of Sample to NEST Deep Well Plate
-    for sample_plate, mag_plate in zip(sample_plate.rows()[0],
+    for samples, mag_well in zip(sample_plate_wells,
                                        mag_plate_samples):
         _pick_up(m300)
-        m300.transfer(400, sample_plate, mag_plate, new_tip='never')
+        m300.transfer(400, samples, mag_well, new_tip='never')
         m300.drop_tip()
 
     # (4) Pausing...
@@ -90,13 +91,13 @@ resuming.')
 
     # (5) Mix Binding Buffer
     _pick_up(m300)
-    m300.mix(6, 300, binding.wells()[0])
+    m300.mix(6, 300, binding)
 
     # (6) Transfer 490 uL of Binding Buffer + Mag Beads
     for mag_well in mag_plate_samples:
         if not m300.has_tip:
             _pick_up(m300)
-        m300.transfer(490, binding.wells()[0], mag_well, mix_before=(2, 300),
+        m300.transfer(490, binding, mag_well, mix_before=(2, 300),
                       mix_after=(10, 245), new_tip='never')
         m300.drop_tip()
 
@@ -107,7 +108,7 @@ resuming.')
     # (8) Transfer 890 uL from Mag Plate to Binding Reservoir
     for mag_well in mag_plate_samples:
         _pick_up(m300)
-        m300.transfer(890, mag_well, binding.wells()[0], new_tip='never')
+        m300.transfer(890, mag_well, binding, new_tip='never')
         m300.drop_tip()
 
     # (9) Pause
@@ -116,7 +117,7 @@ resuming.')
     # (10) Transfer 75uL of Elution Buffer to Temp Plate
     # CONSERVE TIPS
     _pick_up(m300)
-    m300.transfer(75, elution, temp_plate.rows()[0], new_tip='never')
+    m300.transfer(75, elution, temp_plate_wells, new_tip='never')
     m300.return_tip()
 
     # Warm Elution Buffer to 60C
@@ -130,7 +131,7 @@ resuming.')
     wash1_tips = []
     for mag_well in mag_plate_samples:
         wash1_tips.append(_pick_up(m300))
-        m300.transfer(600, wash1.wells(), mag_well, mix_after=(10, 300),
+        m300.transfer(600, wash1, mag_well, mix_after=(10, 300),
                       new_tip='never')
         m300.return_tip()
 
@@ -141,7 +142,7 @@ resuming.')
     # (14) Transfer 600 uL from mag plate to binding buffer reservoir
     for mag_well in mag_plate_samples:
         _pick_up(m300)
-        m300.transfer(600, mag_well, binding.wells(), new_tip='never')
+        m300.transfer(600, mag_well, binding, new_tip='never')
         m300.drop_tip()
 
     # (15) Disengage Magnet
@@ -149,9 +150,9 @@ resuming.')
 
     # (16) Transfer 600 uL of Wash 1 to Mag Plate
     # USE SAME TIPS from STEP 12
-    for loc, mag_plate in zip(wash1_tips, mag_plate_samples):
+    for loc, mag_well in zip(wash1_tips, mag_plate_samples):
         _pick_up(m300, loc)
-        m300.transfer(600, wash1.wells(), mag_plate, mix_after=(5, 300),
+        m300.transfer(600, wash1, mag_well, mix_after=(5, 300),
                       new_tip='never')
         m300.return_tip()
 
@@ -164,7 +165,7 @@ resuming.')
     # (19) Transfer 600 uL from Mag Plate to Wash 1 Reservoir
     for mag_plate in mag_plate_samples:
         _pick_up(m300)
-        m300.transfer(600, mag_plate, wash1.wells(), new_tip='never')
+        m300.transfer(600, mag_plate, wash1, new_tip='never')
         m300.drop_tip()
 
     # (20) Disengage Magnet
@@ -172,9 +173,9 @@ resuming.')
 
     # (21) Transfer 600 uL Wash 2 to Mag Plate and Mix 5 times
     # USE SAME TIPS AS STEPS 12, 16
-    for loc, mag_plate in zip(wash1_tips, mag_plate_samples):
+    for loc, mag_well in zip(wash1_tips, mag_plate_samples):
         _pick_up(m300, loc)
-        m300.transfer(600, wash2.wells(), mag_plate, mix_after=(5, 300),
+        m300.transfer(600, wash2, mag_well, mix_after=(5, 300),
                       new_tip='never')
         m300.drop_tip()
 
@@ -183,19 +184,19 @@ resuming.')
     ctx.delay(minutes=3, msg='Pausing for 3 minutes...')
 
     # (23) Transfer 600uL from Mag Plate to Wash 2 Reservoir
-    for mag_plate in mag_plate_samples:
+    for mag_well in mag_plate_samples:
         _pick_up(m300)
-        m300.transfer(600, mag_plate, wash2.wells(), new_tip='never')
+        m300.transfer(600, mag_well, wash2, new_tip='never')
         m300.drop_tip()
 
     # (24) Disengage Magnet
     mag_mod.disengage()
 
     # (25) Transfer 70uL of Elution Buffer to Mag Plate
-    for elution_well, mag_well in zip(temp_plate.rows()[0],
+    for elution_well, mag_well in zip(temp_plate_wells,
                                         mag_plate_samples):
         _pick_up(m300)
-        m300.transfer(70, elution_wells, mag_plate, mix_after=(10, 35),
+        m300.transfer(70, elution_well, mag_well, mix_after=(10, 35),
                       new_tip='never')
         m300.drop_tip()
     temp_mod.deactivate()
@@ -208,7 +209,7 @@ resuming.')
     ctx.delay(minutes=3, msg='Pausing for 3 minutes...')
 
     # (28) Transfer 70 uL from Mag Plate to Temp Plate
-    for temp_well, mag_well in zip(temp_plate.rows()[0], mag_plate_samples):
+    for temp_well, mag_well in zip(temp_plate_wells, mag_plate_samples):
         _pick_up(m300)
-        m300.transfer(70, mag_plate, temp_plate, new_tip='never')
+        m300.transfer(70, mag_well, temp_well, new_tip='never')
         m300.drop_tip()
