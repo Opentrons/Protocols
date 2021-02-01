@@ -40,5 +40,25 @@
       { "label": "left", "value": "left" },
       { "label": "right", "value": "right" }
     ]
+  },
+  {
+    "type": "dropDown",
+    "label": "source plate type",
+    "name": "source_type",
+    "options": [
+      { "label": "Eppendorf (on aluminum block)", "value": "eppendorf_96_well_on_block" },
+      { "label": "Bio-Rad (on aluminum block)", "value": "opentrons_96_aluminumblock_biorad_wellplate_200ul" },
+      { "label": "Bio-Rad (off aluminum block)", "value": "biorad_96_wellplate_200ul_pcr" }
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "destination plate type",
+    "name": "dest_type",
+    "options": [
+      { "label": "Eppendorf (on aluminum block)", "value": "eppendorf_96_well_on_block" },
+      { "label": "Bio-Rad (on aluminum block)", "value": "opentrons_96_aluminumblock_biorad_wellplate_200ul" },
+      { "label": "Bio-Rad (off aluminum block)", "value": "biorad_96_wellplate_200ul_pcr" }
+    ]
   }
 ]
