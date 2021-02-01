@@ -10,18 +10,17 @@ metadata = {
 def run(ctx):
 
     [input_csv, p20_type, p20_mount, p300_type,
-     p300_mount] = get_values(  # noqa: F821
-        'input_csv', 'p20_type', 'p20_mount', 'p300_type', 'p300_mount')
+     p300_mount, source_type, dest_type] = get_values(  # noqa: F821
+        'input_csv', 'p20_type', 'p20_mount', 'p300_type', 'p300_mount',
+        'source_type', 'dest_type')
     # [input_csv, p20_mount, p300_mount] = [
     #     "source plate well, destination plate well, volume sample (µl),\
     #     volume diluent (µl)\nA1, A1, 2, 28", 'right', 'left'
     # ]
 
     # labware
-    source_plate = ctx.load_labware(
-        'eppendorf_96_well_on_block', '1', 'source plate')
-    destination_plate = ctx.load_labware(
-        'eppendorf_96_well_on_block', '2', 'destination plate')
+    source_plate = ctx.load_labware(source_type, '1', 'source plate')
+    destination_plate = ctx.load_labware(dest_type, '2', 'destination plate')
     tiprack20 = [
         ctx.load_labware('opentrons_96_tiprack_20ul', slot, '20ul tiprack')
         for slot in ['3', '6']
