@@ -15,12 +15,12 @@
         "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
         "process": "\n1. Download your protocol bundle.\n2. Upload [custom labware definition](https://support.opentrons.com/en/articles/3136506-using-labware-in-your-protocols), if needed.\n3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).\n4. Set up your deck according to the deck map.\n5. Calibrate your labware, tipracks, and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n6. Hit \"Run\".\n\n",
         "robot": "* [OT-2](https://opentrons.com/ot-2)\n\n",
-        "title": "Nucleic Acid Purification"
+        "title": "Nucleic Acid Extraction"
     },
     "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
     "process": "\nDownload your protocol bundle.\nUpload custom labware definition, if needed.\nUpload your protocol into the OT App.\nSet up your deck according to the deck map.\nCalibrate your labware, tipracks, and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
     "robot": [
         "OT-2"
     ],
-    "title": "Nucleic Acid Purification"
+    "title": "Nucleic Acid Extraction"
 }
