@@ -10,13 +10,16 @@ metadata = {
 
 def run(ctx):
 
-    [m300_mount, p300_mount, samples, tuberack_1, tuberack_2, tuberack_3, tuberack_4,
-        tuberack_5, tuberack_6, tuberack_7, final_asp_speed] = get_values(  # noqa: F821
-        "m300_mount", "p300_mount", "samples", "tuberack_1", "tuberack_2", "tuberack_3",
-        "tuberack_4", "tuberack_5", "tuberack_6", "tuberack_7", "final_asp_speed")
-    
+    [m300_mount, p300_mount, samples, tuberack_1, tuberack_2, tuberack_3,
+        tuberack_4, tuberack_5, tuberack_6, tuberack_7,
+        final_asp_speed] = get_values(  # noqa: F821
+        "m300_mount", "p300_mount", "samples", "tuberack_1",
+        "tuberack_2", "tuberack_3",
+        "tuberack_4", "tuberack_5", "tuberack_6",
+        "tuberack_7", "final_asp_speed")
+
     final_asp_speed = float(final_asp_speed)
-    
+
     # Get sample number
     samples = int(samples)
     if samples > 96:
@@ -58,4 +61,4 @@ def run(ctx):
     # Aliquot 275 uL from Reservoir
     m300.flow_rate.aspirate = final_asp_speed
     m300.transfer(275, reservoir_columns, sample_plate_wells,
-                new_tip='always')
+                  new_tip='always')
