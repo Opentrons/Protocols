@@ -88,8 +88,14 @@
     },
     {
       "type": "float",
-      "label": "Fial Step Aspiration Speed (uL/sec)",
+      "label": "Final Step Aspiration Speed (uL/sec)",
       "name": "final_asp_speed",
       "default": 50
+    },
+    {
+      "type": "float",
+      "label": "Final Step Air Gap (uL)",
+      "name": "final_air_gap",
+      "default": 20
     }
   ]
