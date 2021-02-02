@@ -11,7 +11,8 @@ metadata = {
 def run(ctx):
 
     [p300_mount, p20_mount, temperature, component_1_volume,
-        component_2_volume, component_1_height, component_2_height] = get_values(  # noqa: F821
+        component_2_volume, component_1_height,
+        component_2_height] = get_values(  # noqa: F821
         "p300_mount", "p20_mount", "temperature", "component_1_volume",
         "component_2_volume", "component_1_height", "component_2_height")
 
@@ -38,20 +39,21 @@ def run(ctx):
                               tip_racks=[tiprack_20ul])
 
     # Liquid Level Tracking
-    min_height = 1  # depth at which the pipette tip will stop descending into the tube
-    compensation_coeff = 1.1  # ensures tip is below liquid level even with theoretical volume loss
-    component_1_height = float(component_1_height)  # heights that the tubes will be filled to initially
-    component_2_height = float(component_2_height)  # heights that the tubes will be filled to initially
-    heights = dict(zip(tuberack.wells()[:2], [component_1_height, component_2_height]))
+    min_h = 1
+    compensation_coeff = 1.1
+    component_1_height = float(component_1_height)
+    component_2_height = float(component_2_height)
+    heights = dict(zip(tuberack.wells()[:2], [component_1_height,
+                                              component_2_height]))
 
     def h_track(vol, tube):
         nonlocal heights
-        
+
         # calculate height decrement based on volume
         dh = ((math.pi*((tube.diameter/2)**2))/vol)*compensation_coeff
-        
+
         # make sure height decrement will not crash into the bottom of the tube
-        h = heights[tube] - dh if heights[tube] - dh > min_height else min_height
+        h = heights[tube] - dh if heights[tube] - dh > min_h else min_h
         heights[tube] = h
         return h
 
@@ -62,14 +64,14 @@ def run(ctx):
     for d_tubes in dest_tubes.wells()[:24]:
         h = h_track(component_1_volume, tuberack['A1'])
         p300.transfer(component_1_volume, tuberack['A1'].bottom(h),
-                    d_tubes, new_tip='always')
+                      d_tubes, new_tip='always')
 
     # Transfer Component 2 to 24 Well Block Tubes
     for d_tubes in dest_tubes.wells()[:24]:
         h = h_track(component_2_volume, tuberack['B1'])
         p300.transfer(component_2_volume,
-                    tuberack['B1'].bottom(h),
-                    d_tubes, new_tip='always')
+                      tuberack['B1'].bottom(h),
+                      d_tubes, new_tip='always')
 
     # Get Select PCR Tube Wells
     pcr_wells = [pcr_plate[well] for well in ['A1', 'A2', 'A3', 'A6', 'A7',
@@ -77,14 +79,15 @@ def run(ctx):
 
     # Transfer from Tube 1 to Select PCR Tubes
     p300.transfer(22, dest_tubes['A1'], pcr_wells, new_tip='always')
-    
+
     # Mix Component 3, 5 times
     p300.pick_up_tip()
     p300.mix(5, 200, component_3)
     p300.drop_tip()
 
     # Transfer Component 3 to Select PCR Tube Wells
-    p20.transfer(18, component_3, pcr_wells[-3:], mix_after=(5, 9), new_tip='always')
+    p20.transfer(18, component_3, pcr_wells[-3:], mix_after=(5, 9),
+                 new_tip='always')
 
     # Deactivate Temperature Module
     temp_mod.deactivate()
