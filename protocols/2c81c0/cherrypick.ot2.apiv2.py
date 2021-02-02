@@ -13,10 +13,6 @@ def run(ctx):
 
     csv_input, p10_mount, p300_mount, change_tips = get_values(  # noqa: F821
         'csv_input', 'p10_mount', 'p300_mount', 'change_tips')
-#     csv_input, p10_mount = [
-#         'source labware,source slot,source well,volume,destination labware,\
-# destination slot,destination well,height offset from top of source well \
-# (mm)\nplate,1,A2,7,tuberack,5,A4,-4\nplate,2,H10,9,tuberack,3,D1,-4', 'left']
 
     # labware
     tiprack10 = [ctx.load_labware('biotix_96_filtertiprack_10ul', slot)
@@ -82,7 +78,7 @@ crashing. Press resume to ignore.')
                 pip.transfer(
                     vol_per_trans,
                     source.top(h_offset_src),
-                    dest.bottom(h_offset_dest),
+                    dest.top(h_offset_dest),
                     mix_after=(3, vol_mix),
                     new_tip='never'
                 )
@@ -90,7 +86,7 @@ crashing. Press resume to ignore.')
                 pip.transfer(
                     vol_per_trans,
                     source.top(h_offset_src),
-                    dest.bottom(h_offset_dest),
+                    dest.top(h_offset_dest),
                     new_tip='never'
                 )
             pip.blow_out(dest.top(h_offset_dest))
