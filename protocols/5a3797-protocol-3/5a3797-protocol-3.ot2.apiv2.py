@@ -12,13 +12,14 @@ def run(ctx):
 
     [m300_mount, p300_mount, samples, tuberack_1, tuberack_2, tuberack_3,
         tuberack_4, tuberack_5, tuberack_6, tuberack_7,
-        final_asp_speed] = get_values(  # noqa: F821
+        final_asp_speed, final_air_gap] = get_values(  # noqa: F821
         "m300_mount", "p300_mount", "samples", "tuberack_1",
         "tuberack_2", "tuberack_3",
         "tuberack_4", "tuberack_5", "tuberack_6",
-        "tuberack_7", "final_asp_speed")
+        "tuberack_7", "final_asp_speed", "final_air_gap")
 
     final_asp_speed = float(final_asp_speed)
+    final_air_gap = float(final_air_gap)
 
     # Get sample number
     samples = int(samples)
@@ -61,4 +62,4 @@ def run(ctx):
     # Aliquot 275 uL from Reservoir
     m300.flow_rate.aspirate = final_asp_speed
     m300.transfer(275, reservoir_columns, sample_plate_wells,
-                  new_tip='always')
+                  air_gap=final_air_gap, new_tip='always')
