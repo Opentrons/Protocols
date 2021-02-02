@@ -106,7 +106,7 @@ before resuming.')
 
     def touch_tip(loc, v_offset):
         [p1000.move_to(loc.top().move(
-            Point(x=side*loc._diameter/2, z=v_offset)))
+            Point(x=side*loc.geometry._diameter/2, z=v_offset)))
          for side in [-1, 1]]
 
     # transfers

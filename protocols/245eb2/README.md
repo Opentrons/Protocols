@@ -1,4 +1,4 @@
-# Nucleic Acid Purification
+# Nucleic Acid Extraction
 
 ### Author
 [Opentrons](https://opentrons.com/)

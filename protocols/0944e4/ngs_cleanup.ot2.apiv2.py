@@ -4,32 +4,32 @@ metadata = {
     'protocolName': 'NGS Library Cleanup with Ampure XP Beads',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.0'
+    'apiLevel': '2.8'
 }
 
 
 def run(ctx):
 
-    [p10_multi_mount, p300_multi_mount, number_of_samples,
+    [p20_multi_mount, p300_multi_mount, number_of_samples, volume_of_beads,
      bead_incubation_time_in_minutes, bead_settling_time_on_magnet_in_minutes,
      drying_time_in_minutes, volume_EB_in_ul,
      volume_final_elution_in_ul] = get_values(  # noqa: F821
-        'p10_multi_mount', 'p300_multi_mount', 'number_of_samples',
-        'bead_incubation_time_in_minutes',
+        'p20_multi_mount', 'p300_multi_mount', 'number_of_samples',
+        'volume_of_beads', 'bead_incubation_time_in_minutes',
         'bead_settling_time_on_magnet_in_minutes', 'drying_time_in_minutes',
         'volume_EB_in_ul', 'volume_final_elution_in_ul')
 
     # check
     if number_of_samples > 96 or number_of_samples < 1:
         raise Exception('Invalid number of samples.')
-    if p10_multi_mount == p300_multi_mount:
+    if p20_multi_mount == p300_multi_mount:
         raise Exception('Pipette mounts cannot match.')
 
     # load labware
-    magdeck = ctx.load_module('magdeck', '1')
+    magdeck = ctx.load_module('magnetic module gen2', '1')
     mag_plate = magdeck.load_labware('twintec_pcr_plate', 'magnetic plate')
     elution_plate = ctx.load_labware('twintec_pcr_plate', '2', 'elution plate')
-    tips10 = [ctx.load_labware('opentrons_96_filtertiprack_10ul', '3')]
+    tips20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '3')]
     tips300 = [
         ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
         for slot in ['4', '5', '6', '8', '9', '10', '11']
@@ -62,14 +62,14 @@ def run(ctx):
         pip.drop_tip()
 
     # pipettes
-    m10 = ctx.load_instrument(
-        'p10_multi', mount=p10_multi_mount, tip_racks=tips10)
+    m20 = ctx.load_instrument(
+        'p20_multi_gen2', mount=p20_multi_mount, tip_racks=tips20)
     m300 = ctx.load_instrument(
-        'p300_multi', mount=p300_multi_mount, tip_racks=tips300)
+        'p300_multi_gen2', mount=p300_multi_mount, tip_racks=tips300)
     m300.flow_rate.aspirate = 100
     m300.flow_rate.dispense = 200
-    m10.flow_rate.aspirate = 3
-    m10.flow_rate.dispense = 6
+    m20.flow_rate.aspirate = 3
+    m20.flow_rate.dispense = 6
 
     # sample setup
     num_cols = math.ceil(number_of_samples/8)
@@ -82,11 +82,11 @@ def run(ctx):
     # transfer beads and mix samples
     for m in mag_samples:
         pick_up()
-        m300.mix(5, 200, beads)
+        m300.mix(5, volume_of_beads, beads)
         m300.blow_out(beads.top())
-        m300.transfer(121, beads, m, new_tip='never')
+        m300.transfer(volume_of_beads, beads, m, new_tip='never')
         m300.blow_out()
-        m300.mix(10, 130, m)
+        m300.mix(10, volume_of_beads, m)
         m300.blow_out(m.top())
         drop(m300)
     ctx.max_speeds['A'] = 125
@@ -128,11 +128,11 @@ on magnet for ' + str(bead_settling_time_on_magnet_in_minutes) + ' minutes.')
 
     # remove residual supernatant
     for m in mag_samples:
-        m10.pick_up_tip()
-        m10.transfer(
+        m20.pick_up_tip()
+        m20.transfer(
             10, m.bottom(0.5), waste[1], new_tip='never')
-        m10.blow_out()
-        drop(m10)
+        m20.blow_out()
+        drop(m20)
 
     ctx.delay(
         minutes=drying_time_in_minutes, msg='Drying for \

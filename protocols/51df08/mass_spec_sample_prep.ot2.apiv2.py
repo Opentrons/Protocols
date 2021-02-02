@@ -70,7 +70,7 @@ def run(ctx):
     antibodies = ab_rack.wells()[:num_antibodies]
 
     # calculate offset for spots
-    y_offset = slide_mounts[0].wells()[0]._width/3/2
+    y_offset = slide_mounts[0].wells()[0].geometry._width/3/2
     # y_offset = slide_mounts[0].wells()[0].diameter/3/2
     ab_spot_sets = [
         [[well.bottom().move(Point(y=side*y_offset)) for side in [1, -1]]

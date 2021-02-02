@@ -8,17 +8,17 @@
 	* Ampure XP
 
 ## Description
-This protocol performs a custom NGS library cleanup using Ampure XP beads in a 2.2 ratio with samples. The samples are mounted on an Opentrons magnetic module, and the final elute is transferred to a fresh PCR plate.
+This protocol performs a custom NGS library cleanup using Ampure XP beads in a variable ratio with samples. The samples are mounted on an Opentrons magnetic module, and the final elute is transferred to a fresh PCR plate.
 
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
-* [Opentrons magnetic module](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
+* [Opentrons Magnetic Module GEN2](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
 * [USA Scientific 12-channel reservoir 22ml #1061-8150](https://www.usascientific.com/12-channel-automation-reservoir.aspx)
 * [Eppendorf twin.tec 96-well PCR plate #0030129512](https://www.fishersci.com/shop/products/eppendorf-twin-tec-96-lobind-pcr-plates-skirted-clear/e0030129512)
-* [P10 multi-channel electronic pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)
+* [P20 multi-channel GEN2 electronic pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)
 * [P300 multi-channel electronic pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette?variant=5984202489885)
-* [Opentrons 10ul filter tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-filter-tip)
+* [Opentrons 20ul filter tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-filter-tip)
 * [Opentrons 200ul filter tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)
 
 ---
@@ -34,7 +34,7 @@ This protocol performs a custom NGS library cleanup using Ampure XP beads in a 2
 * [OT-2](https://opentrons.com/ot-2)
 
 ## Process
-1. Input the respective mount sides for your P10 and P300 multi-channel pipettes and the number of samples to process.
+1. Input the respective mount sides for your P20 and P300 multi-channel pipettes and the number of samples to process.
 2. Download your protocol.
 3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
 4. Set up your deck according to the deck map.

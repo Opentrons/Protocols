@@ -1,0 +1,23 @@
+[
+    {
+        "type": "dropDown",
+        "label": "P300-single GEN2 mount",
+        "name": "p300_mount",
+        "options": [
+          {"label": "right", "value": "right"},
+          {"label": "left", "value": "left"}
+        ]
+    },
+    {
+      "type": "int",
+      "label": "Temperature in Celsius (Temperature Module)",
+      "name": "temperature",
+      "default": 8
+    },
+    {
+      "type": "int",
+      "label": "Final Tubes Number (Max: 32)",
+      "name": "final_tubes",
+      "default": 32
+    }
+  ]

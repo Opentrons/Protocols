@@ -8,14 +8,8 @@ from time import sleep
 metadata = {
     'protocolName': 'COVID-19 Station B RNA Extraction',
     'author': 'Opentrons <protocols@opentrons.com>',
-    'apiLevel': '2.4'
+    'apiLevel': '2.8'
 }
-
-
-"""
-Here is where you can modify the magnetic module engage height:
-"""
-MAG_HEIGHT = 13.7
 
 
 # Definitions for deck light flashing
@@ -50,12 +44,12 @@ def run(ctx):
     # Setup for flashing lights notification to empty trash
     cancellationToken = CancellationToken()
 
-    [num_samples, starting_vol, binding_buffer_vol, wash1_vol, wash2_vol,
-     wash3_vol, elution_vol, mix_reps, settling_time,
-     park_tips, tip_track, flash] = get_values(  # noqa: F821
-        'num_samples', 'starting_vol', 'binding_buffer_vol', 'wash1_vol',
-        'wash2_vol', 'wash3_vol', 'elution_vol', 'mix_reps', 'settling_time',
-        'park_tips', 'tip_track', 'flash')
+    [num_samples, mag_height, starting_vol, binding_buffer_vol, wash1_vol,
+     wash2_vol, wash3_vol, elution_vol, mix_reps, settling_time, park_tips,
+     tip_track, flash] = get_values(  # noqa: F821
+        'num_samples', 'mag_height', 'starting_vol', 'binding_buffer_vol',
+        'wash1_vol', 'wash2_vol', 'wash3_vol', 'elution_vol', 'mix_reps',
+        'settling_time', 'park_tips', 'tip_track', 'flash')
 
     """
     Here is where you can change the locations of your labware and modules
@@ -81,7 +75,8 @@ def run(ctx):
                for slot in ['3', '6', '8', '9', '10']]
     if park_tips:
         parkingrack = ctx.load_labware(
-            'opentrons_96_tiprack_300ul', '7', 'tiprack for parking')
+            'opentrons_96_tiprack_300ul', '7', '200µl filtertiprack (parking)')
+        tips300.insert(0, parkingrack)
         parking_spots = parkingrack.rows()[0][:num_cols]
     else:
         tips300.insert(0, ctx.load_labware('opentrons_96_tiprack_300ul', '7',
@@ -95,7 +90,8 @@ def run(ctx):
     """
     Here is where you can define the locations of your reagents.
     """
-    binding_buffer = res1.wells()[:11]
+    binding_buffer = res1.wells()[2:6]
+    lysis_buffer = res1.wells()[0]
     elution_solution = res1.wells()[-1]
     wash1 = res2.wells()[:4]
     wash2 = res2.wells()[4:8]
@@ -103,7 +99,7 @@ def run(ctx):
 
     mag_samples_m = magplate.rows()[0][:num_cols]
     elution_samples_m = elutionplate.rows()[0][:num_cols]
-    radius = mag_samples_m[0]._width/2
+    radius = mag_samples_m[0].geometry._width/2
 
     magdeck.disengage()  # just in case
     tempdeck.set_temperature(4)
@@ -249,13 +245,10 @@ resuming.')
         """
         latest_chan = -1
         for i, (well, spot) in enumerate(zip(mag_samples_m, parking_spots)):
-            if park:
-                _pick_up(m300, spot)
-            else:
-                _pick_up(m300)
+            _pick_up(m300)
             num_trans = math.ceil(vol/200)
             vol_per_trans = vol/num_trans
-            asp_per_chan = 14000//(vol_per_trans*8)
+            asp_per_chan = 14500//(vol_per_trans*8)
             for t in range(num_trans):
                 chan_ind = int((i*num_trans + t)//asp_per_chan)
                 source = binding_buffer[chan_ind]
@@ -279,7 +272,7 @@ resuming.')
             else:
                 _drop(m300)
 
-        magdeck.engage(height=MAG_HEIGHT)
+        magdeck.engage(height=mag_height)
         ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
 ' + str(settling_time) + ' minutes.')
 
@@ -332,7 +325,7 @@ resuming.')
                 _drop(m300)
 
         if magdeck.status == 'disengaged':
-            magdeck.engage(height=MAG_HEIGHT)
+            magdeck.engage(height=mag_height)
 
         ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
 ' + str(settling_time) + ' minutes.')
@@ -386,7 +379,7 @@ resuming.')
             else:
                 _drop(m300)
 
-        magdeck.engage(height=MAG_HEIGHT)
+        magdeck.engage(height=mag_height)
         ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
 ' + str(settling_time) + ' minutes.')
 
@@ -407,6 +400,13 @@ resuming.')
     Here is where you can call the methods defined above to fit your specific
     protocol. The normal sequence is:
     """
+    # transfer lysis buffer
+    for m in mag_samples_m:
+        _pick_up(m300)
+        m300.transfer(60, lysis_buffer, m, air_gap=20, mix_after=(5, 100),
+                      new_tip='never')
+        _drop(m300)
+
     bind(binding_buffer_vol, park=park_tips)
     wash(wash1_vol, wash1, park=park_tips)
     wash(wash2_vol, wash2, park=park_tips)

@@ -114,7 +114,7 @@ def run(ctx):
 
     # resuspend in elution buffer
     # establish offset location for resuspension
-    x, y, z = [magsamples[0]._width*0.95/2, 0, 2]
+    x, y, z = [magsamples[0].geometry._width*0.95/2, 0, 2]
     for i, m in enumerate(magsamples):
         sign = 1 if i//8 % 2 == 0 else -1
         disploc = m.bottom().move(types.Point(x*sign, y, z))
@@ -132,8 +132,8 @@ def run(ctx):
     ctx.delay(minutes=1, msg='Incubating off magnet for 1 minutes')
     p300.home()  # added to ensure there are no bugs in following a pause
     # inserted pause for manual re-elution
-    ctx.pause('Sonicate for 1 minute to re-elute beads thoroughly. Resume when \
-plate is in place on Magnetic Module')
+    ctx.pause('Sonicate for 1 minute to re-elute beads thoroughly. Resume \
+when plate is in place on Magnetic Module')
     p300.home()  # added to ensure there are no bugs in following a pause
     magdeck.engage()
     ctx.delay(minutes=1, msg='Incubating on magnet for 1 minutes')

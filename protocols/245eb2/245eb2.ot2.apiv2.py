@@ -1,7 +1,7 @@
 import math
 
 metadata = {
-    'protocolName': 'Nucleic Acid Purification',
+    'protocolName': 'Nucleic Acid Extraction',
     'author': 'Chaz <chaz@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.5'

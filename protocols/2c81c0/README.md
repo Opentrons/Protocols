@@ -11,9 +11,9 @@
 This protocol performs a custom cherrypicking workflow from `.csv` file using custom filtertips. The `.csv` file should be formatted as follows, **including header line** (all empty lines are ignored):
 
 ```
-source labware,source slot,source well,volume,destination labware,destination slot,destination well,height offset from top of source well (mm),mix volume
-plate,1,A2,7,tuberack,5,A4,-4,5
-plate,2,H10,9,tuberack,3,D1,-4,5
+source labware,source slot,source well,volume,destination labware,destination slot,destination well,height offset from top of source well,height offset from top of destination well (mm),mix volume
+plate,1,A2,7,tuberack,5,A4,-4,-1,5
+plate,2,H10,9,tuberack,3,D1,-4,-1,5
 ```
 
 Note that `source labware` and `destination labware` must be either `plate`, `tuberack`, or `deepplate`.

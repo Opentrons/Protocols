@@ -44,7 +44,7 @@ Reservoir (slot 2):
 ## Process
 1. Select your protocol parameters.
 2. Download your protocol package.
-3. Upload your custom labwrae and protocol into the [OT App](https://opentrons.com/ot-app).
+3. Upload your custom labware and protocol into the [OT App](https://opentrons.com/ot-app).
 4. Set up your deck according to the deck map.
 5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support article](https://support.opentrons.com/ot-2/getting-started-software-setup/deck-calibration).
 6. Hit "Run".

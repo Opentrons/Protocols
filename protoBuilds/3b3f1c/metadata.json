@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "STANDARD_MP_332_312_V10.ot2.apiv2.py"
+            "STANDARD_MP_332_312_V13.ot2.apiv2.py"
         ],
         "description": [
             "README.md"

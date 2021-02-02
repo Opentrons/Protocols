@@ -3,12 +3,21 @@
     "type": "textFile",
     "label": ".csv input file",
     "name": "input_csv",
-    "default": "source plate well,destination plate well,volume sample (µl),volume diluent (µl)\nA1,A1,2,28"
+    "default": "source plate well,destination plate well,volume sample (µl),volume diluent (µl)\nA1, A1,5,100\nB1,B1,,101\nC1,C1,,102\nD1,D1,,103"
   },
   {
     "type": "dropDown",
-    "label": "P10 GEN1 single-channel mount",
-    "name": "p10_mount",
+    "label": "P20 GEN2 type",
+    "name": "p20_type",
+    "options": [
+      { "label": "multi", "value": "p20_multi_gen2" },
+      { "label": "single", "value": "p20_single_gen2" }
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "P20 GEN2 mount",
+    "name": "p20_mount",
     "options": [
       { "label": "right", "value": "right" },
       { "label": "left", "value": "left" }
@@ -16,11 +25,40 @@
   },
   {
     "type": "dropDown",
-    "label": "P50 GEN1 single-channel mount",
-    "name": "p50_mount",
+    "label": "P300 GEN2 type",
+    "name": "p300_type",
+    "options": [
+      { "label": "single", "value": "p300_single_gen2" },
+      { "label": "multi", "value": "p300_multi_gen2" }
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "P300 GEN2 mount",
+    "name": "p300_mount",
     "options": [
       { "label": "left", "value": "left" },
       { "label": "right", "value": "right" }
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "source plate type",
+    "name": "source_type",
+    "options": [
+      { "label": "Eppendorf (on aluminum block)", "value": "eppendorf_96_well_on_block" },
+      { "label": "Bio-Rad (on aluminum block)", "value": "opentrons_96_aluminumblock_biorad_wellplate_200ul" },
+      { "label": "Bio-Rad (off aluminum block)", "value": "biorad_96_wellplate_200ul_pcr" }
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "destination plate type",
+    "name": "dest_type",
+    "options": [
+      { "label": "Eppendorf (on aluminum block)", "value": "eppendorf_96_well_on_block" },
+      { "label": "Bio-Rad (on aluminum block)", "value": "opentrons_96_aluminumblock_biorad_wellplate_200ul" },
+      { "label": "Bio-Rad (off aluminum block)", "value": "biorad_96_wellplate_200ul_pcr" }
     ]
   }
 ]

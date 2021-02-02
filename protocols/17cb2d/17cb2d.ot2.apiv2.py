@@ -9,8 +9,8 @@ metadata = {
 
 
 def run(protocol):
-    [piptype, pipmnt, num_plates, p384] = get_values(  # noqa: F821
-    'piptype', 'pipmnt', 'num_plates', 'p384')
+    [piptype, pipmnt, num_plates, p384, mm_vol] = get_values(  # noqa: F821
+    'piptype', 'pipmnt', 'num_plates', 'p384', 'mm_vol')
 
     # load labware and pipettes
     pip_name, tip_name = piptype.split()
@@ -23,7 +23,10 @@ def run(protocol):
     plates = [
         protocol.load_labware(p384, s) for s in range(1, num_plates)]
 
-    max_vol = 20 if pip_name == 'p20_multi_gen2' else 240
+    if pip_name == 'p20_multi_gen2':
+        max_vol = mm_vol * 2
+    else:
+        max_vol = (300//mm_vol) * mm_vol
 
     # distribute mastermix 1
     protocol.comment('Distributing master mix 1...')
@@ -33,7 +36,7 @@ def run(protocol):
         # disp_vol = 12
         vol_ctr = 0
         for well in wells:
-            if vol_ctr == 0:
+            if vol_ctr < 1:
                 pip.aspirate(max_vol, mm)
                 vol_ctr = max_vol
                 protocol.max_speeds['X'] = 25
@@ -41,8 +44,8 @@ def run(protocol):
                 pip.move_to(mm.top().move(types.Point(x=-3.5, y=0, z=-2)))
                 protocol.max_speeds['X'] = None
             # pip.dispense(disp_vol, well)
-            pip.dispense(10, well)
-            vol_ctr -= 10
+            pip.dispense(mm_vol, well)
+            vol_ctr -= mm_vol
             # pip.blow_out(well)
             # pip.aspirate(2, well.top())
     pip.drop_tip()
@@ -55,7 +58,7 @@ def run(protocol):
         # disp_vol = 12
         vol_ctr = 0
         for well in wells:
-            if vol_ctr == 0:
+            if vol_ctr < 1:
                 pip.aspirate(max_vol, mm)
                 vol_ctr = max_vol
                 protocol.max_speeds['X'] = 25
@@ -63,8 +66,8 @@ def run(protocol):
                 pip.move_to(mm.top().move(types.Point(x=-3.5, y=0, z=-2)))
                 protocol.max_speeds['X'] = None
             # pip.dispense(disp_vol, well)
-            pip.dispense(10, well)
-            vol_ctr -= 10
+            pip.dispense(mm_vol, well)
+            vol_ctr -= mm_vol
             # pip.blow_out(well)
             # pip.aspirate(2, well.top())
     pip.drop_tip()
