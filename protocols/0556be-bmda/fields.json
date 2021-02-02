@@ -13,5 +13,11 @@
       "label": "Temperature in Celsius (Temperature Module)",
       "name": "temperature",
       "default": 8
+    },
+    {
+      "type": "int",
+      "label": "Final Tubes Number (Max: 32)",
+      "name": "final_tubes",
+      "default": 32
     }
   ]
