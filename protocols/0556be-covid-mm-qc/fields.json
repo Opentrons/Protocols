@@ -37,8 +37,14 @@
     },
     {
       "type": "float",
-      "label": "Tube Aspiration Height (mm)",
-      "name": "asp_height",
+      "label": "Component 1 Height (mm)",
+      "name": "component_1_height",
+      "default": 75
+    },
+    {
+      "type": "float",
+      "label": "Component 2 Height (mm)",
+      "name": "component_2_height",
       "default": 75
     }
   ]
