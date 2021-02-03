@@ -18,6 +18,12 @@
         ]
     },
     {
+      "type": "int",
+      "label": "Total Sample Number (# of Tubes)",
+      "name": "samples",
+      "default": 96
+    },
+    {
         "type": "dropDown",
         "label": "Tube Rack 1 Type",
         "name": "tuberack_1",
@@ -79,5 +85,17 @@
           {"label": "Sorfa 15 Tube Rack 10 mL", "value": "sorfa_15_tuberack_10000ul"},
           {"label": "Copan 15 Tube Rack 10 mL", "value": "copan_15_tuberack_10000ul"}
         ]
+    },
+    {
+      "type": "float",
+      "label": "Final Step Aspiration Speed (uL/sec)",
+      "name": "final_asp_speed",
+      "default": 50
+    },
+    {
+      "type": "float",
+      "label": "Final Step Air Gap (uL)",
+      "name": "final_air_gap",
+      "default": 20
     }
   ]
