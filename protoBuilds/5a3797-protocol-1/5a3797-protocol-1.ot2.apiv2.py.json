@@ -1,5 +1,5 @@
 {
-    "content": "metadata = {\n    'protocolName': 'Protocol 1 - Washing Aliquot',\n    'author': 'Sakib <sakib.hossain@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.8'\n}\n\n\ndef run(ctx):\n\n    [m300_mount] = get_values(  # noqa: F821\n        \"m300_mount\")\n\n    # Load Labware\n    tipracks = ctx.load_labware('opentrons_96_filtertiprack_200ul', 1)\n    wash_1 = ctx.load_labware('nest_12_reservoir_15ml', 7)\n    wash_2 = ctx.load_labware('nest_12_reservoir_15ml', 8)\n    elution = ctx.load_labware('nest_12_reservoir_15ml', 9)\n    dw_plate_wash_1 = ctx.load_labware('kingfisher_96_deepwell_plate_2ml', 4)\n    dw_plate_wash_2 = ctx.load_labware('kingfisher_96_deepwell_plate_2ml', 5)\n    dw_plate_elution = ctx.load_labware('kingfisher_96_deepwell_plate_2ml', 6)\n\n    # Load Pipette\n    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,\n                               tip_racks=[tipracks])\n\n    # Aliquot 500uL of Wash 1\n    m300.transfer(500, wash_1.wells(), dw_plate_wash_1.wells())\n\n    # Aliquot 1000uL of Wash 2\n    m300.transfer(1000, wash_2.wells(), dw_plate_wash_2.wells())\n\n    # Aliquot 50uL of Elution\n    m300.transfer(50, elution.wells(), dw_plate_elution.wells())\n",
+    "content": "metadata = {\n    'protocolName': 'Protocol 1 - Washing Aliquot',\n    'author': 'Sakib <sakib.hossain@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.8'\n}\n\n\ndef run(ctx):\n\n    [m300_mount, reservoir_height, plate_height] = get_values(  # noqa: F821\n        \"m300_mount\", \"reservoir_height\", \"plate_height\")\n\n    reservoir_height = float(reservoir_height)\n    plate_height = float(plate_height)\n\n    # Load Labware\n    tipracks = ctx.load_labware('opentrons_96_filtertiprack_200ul', 1)\n    wash_1 = ctx.load_labware('nest_12_reservoir_15ml', 7)\n    wash_2 = ctx.load_labware('nest_12_reservoir_15ml', 8)\n    elution = ctx.load_labware('nest_12_reservoir_15ml', 9)\n    dw_plate_wash_1 = ctx.load_labware('kingfisher_96_deepwell_plate_2ml', 4)\n    dw_plate_wash_2 = ctx.load_labware('kingfisher_96_deepwell_plate_2ml', 5)\n    dw_plate_elution = ctx.load_labware('kingfisher_96_deepwell_plate_2ml', 6)\n\n    # Load Pipette\n    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,\n                               tip_racks=[tipracks])\n\n    # Split Transfer Volumes\n    max_vol = 200\n\n    def split_transfer(vol, source, dest):\n        while vol >= max_vol:\n            m300.transfer(max_vol, source, dest, new_tip='never')\n            vol -= max_vol\n        else:\n            if vol:\n                m300.transfer(vol, source, dest, new_tip='never')\n\n    # Aliquot 500uL of Wash 1\n    m300.pick_up_tip()\n    for wash_1_well, plate_1_well in zip(wash_1.wells(),\n                                         dw_plate_wash_1.rows()[0]):\n        split_transfer(500, wash_1_well.bottom(reservoir_height),\n                       plate_1_well.bottom(plate_height))\n    m300.drop_tip()\n\n    # Aliquot 1000uL of Wash 2\n    m300.pick_up_tip()\n    for wash_2_well, plate_2_well in zip(wash_2.wells(),\n                                         dw_plate_wash_2.rows()[0]):\n        split_transfer(1000, wash_2_well.bottom(reservoir_height),\n                       plate_2_well.bottom(plate_height))\n    m300.drop_tip()\n\n    # Aliquot 50uL of Elution\n    m300.pick_up_tip()\n    for elution_well in dw_plate_elution.rows()[0]:\n        m300.transfer(50, elution.wells()[0].bottom(reservoir_height),\n                      elution_well.bottom(plate_height), new_tip=\"never\")\n    m300.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -1144,6 +1144,18 @@
                 }
             ],
             "type": "dropDown"
+        },
+        {
+            "default": 3,
+            "label": "Reservoir Pipette Height from well bottom (mm)",
+            "name": "reservoir_height",
+            "type": "float"
+        },
+        {
+            "default": 3,
+            "label": "Deep Well Plate Pipette Height from well bottom (mm)",
+            "name": "plate_height",
+            "type": "float"
         }
     ],
     "instruments": [
