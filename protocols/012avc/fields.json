@@ -1,0 +1,11 @@
+[
+    {
+        "type": "dropDown",
+        "label": "P1000 Mount",
+        "name": "p1000_mount",
+        "options": [
+          { "label": "Left Side", "value": "left" },
+          { "label": "Right Side", "value": "right" }
+        ]
+      }
+]
