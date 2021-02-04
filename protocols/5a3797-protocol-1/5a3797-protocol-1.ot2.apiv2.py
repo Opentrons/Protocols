@@ -29,6 +29,7 @@ def run(ctx):
 
     # Split Transfer Volumes
     max_vol = 200
+
     def split_transfer(vol, source, dest):
         while vol >= max_vol:
             m300.transfer(max_vol, source, dest, new_tip='never')
@@ -39,18 +40,23 @@ def run(ctx):
 
     # Aliquot 500uL of Wash 1
     m300.pick_up_tip()
-    for wash_1_well, plate_1_well in zip(wash_1.wells(), dw_plate_wash_1.rows()[0]):
-        split_transfer(500, wash_1_well.bottom(reservoir_height), plate_1_well.bottom(plate_height))
+    for wash_1_well, plate_1_well in zip(wash_1.wells(),
+                                         dw_plate_wash_1.rows()[0]):
+        split_transfer(500, wash_1_well.bottom(reservoir_height),
+                       plate_1_well.bottom(plate_height))
     m300.drop_tip()
 
     # Aliquot 1000uL of Wash 2
     m300.pick_up_tip()
-    for wash_2_well, plate_2_well in zip(wash_2.wells(), dw_plate_wash_2.rows()[0]):
-        split_transfer(1000, wash_2_well.bottom(reservoir_height), plate_2_well.bottom(plate_height))
+    for wash_2_well, plate_2_well in zip(wash_2.wells(),
+                                         dw_plate_wash_2.rows()[0]):
+        split_transfer(1000, wash_2_well.bottom(reservoir_height),
+                       plate_2_well.bottom(plate_height))
     m300.drop_tip()
 
     # Aliquot 50uL of Elution
     m300.pick_up_tip()
     for elution_well in dw_plate_elution.rows()[0]:
-        m300.transfer(50, elution.wells()[0].bottom(reservoir_height), elution_well.bottom(plate_height), new_tip="never")
+        m300.transfer(50, elution.wells()[0].bottom(reservoir_height),
+                      elution_well.bottom(plate_height), new_tip="never")
     m300.drop_tip()
