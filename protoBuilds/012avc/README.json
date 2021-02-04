@@ -1,0 +1,26 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "PCR": [
+            "PCR Prep"
+        ]
+    },
+    "description": "This protocol transfer reagent from A1 to A2.\n\n\n\n[P1000 single-channel GEN2 electronic pipette](https://shop.opentrons.com/collections/ot-2-pipettes/\n\n\n\nDeck Setup\n* Plate (Slot 1)",
+    "internal": "012avc",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* PCR\n\t* PCR Prep\n\n",
+        "description": "This protocol transfer reagent from A1 to A2.\n\n---\n![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)\n\n* [P1000 single-channel GEN2 electronic pipette](https://shop.opentrons.com/collections/ot-2-pipettes/\n\n---\n![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)\n\nDeck Setup\n* Plate (Slot 1)\n\n",
+        "internal": "012avc",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "process": "1. Select P1000 mount position\n2. Download your protocol\n3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).\n4. Set up your deck according to the deck map.\n5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n6. Hit \"Run\".\n\n",
+        "robot": "* [OT-2](https://opentrons.com/ot-2)\n\n",
+        "title": "PCR/qPCR Prep"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "process": "\nSelect P1000 mount position\nDownload your protocol\nUpload your protocol into the OT App.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "robot": [
+        "OT-2"
+    ],
+    "title": "PCR/qPCR Prep"
+}
