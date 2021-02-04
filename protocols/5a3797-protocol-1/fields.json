@@ -7,5 +7,16 @@
           {"label": "right", "value": "right"},
           {"label": "left", "value": "left"}
         ]
+    },
+    {
+      "type": "float",
+      "label": "Reservoir Pipette Height from well bottom (mm)",
+      "name": "reservoir_height",
+      "default": 3
+    },  {
+      "type": "float",
+      "label": "Deep Well Plate Pipette Height from well bottom (mm)",
+      "name": "plate_height",
+      "default": 3
     }
   ]
