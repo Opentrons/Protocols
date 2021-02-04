@@ -70,7 +70,6 @@ def run(ctx):
         tc_mod.set_block_temperature(37, hold_time_minutes=10)
         tc_mod.set_block_temperature(65, hold_time_minutes=30)
         tc_mod.set_block_temperature(20)
-        tc_mod.deactivate_lid()
 
     # Adaptor Ligation
     if adapter_ligation == "True":
@@ -80,14 +79,12 @@ def run(ctx):
                      new_tip="always")
 
         # Begin Theromcycler Process
-        tc_mod.close_lid()
         tc_mod.set_block_temperature(20, hold_time_minutes=15)
         tc_mod.set_block_temperature(4)
 
     # Bead Clean Up
     if bead_clean_up == "True":
 
-        tc_mod.open_lid()
         m20.transfer(20, tc_plate_samples, mag_plate_samples,
                      mix_after=(5, 12), new_tip="always")
         ctx.delay(minutes=5, msg="Pausing for 5 minutes")
