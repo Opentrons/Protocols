@@ -22,4 +22,4 @@ def run(protocol):
     p1000 = protocol.load_instrument('p1000_single_gen2', p1000_mount,
                                      tip_racks=tipracks_1000ul)
 
-    p1000.transfer(100, plate['A1'], plate['A2'])
+    p1000.transfer(100, plate['A1'], plate['A3'])
