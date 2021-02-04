@@ -1,8 +1,3 @@
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"sample_number":"48", "m300_mount":"left", "m20_mount":"right", "end_repair":"True", "adapter_ligation":"True", "bead_clean_up":"True"}""")
-    return [_all_values[n] for n in names]
-
 import math
 
 metadata = {
@@ -30,13 +25,13 @@ def run(ctx):
 
     # Load Modules and Plates
     tc_mod = ctx.load_module('thermocycler module')
-    tc_plate = tc_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt') # Replace with true plate
+    tc_plate = tc_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
 
     temp_mod = ctx.load_module('temperature module gen2', 4)
-    temp_plate = temp_mod.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul') # Replace with true plate
+    temp_plate = temp_mod.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul')
 
     mag_mod = ctx.load_module('magnetic module gen2', 9)
-    mag_plate = mag_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt') # Replace with true plate
+    mag_plate = mag_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
 
     # Load Pipettes
     m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tiprack20ul)
@@ -62,9 +57,11 @@ def run(ctx):
 
         # Begin Theromcycler Process
         tc_mod.close_lid()
+        tc_mod.set_lid_temperature(75)
         tc_mod.set_block_temperature(37, hold_time_minutes=10)
         tc_mod.set_block_temperature(65, hold_time_minutes=30)
         tc_mod.set_block_temperature(20)
+        tc_mod.deactivate_lid()
     
     # Adaptor Ligation
     if adapter_ligation == "True":
@@ -84,9 +81,8 @@ def run(ctx):
         m20.transfer(20, tc_plate_samples, mag_plate_samples, mix_after=(5, 12), new_tip="always")
         ctx.delay(minutes=5, msg="Pausing for 5 minutes")
 
-        mag_mod.engage() # Engage for 2 minutes?
-        ctx.delay(minutes=2)
-        mag_mod.disengage() 
+        mag_mod.engage()
+        ctx.delay(minutes=2, msg="Engaging magnet for 2 minutes...")
 
         # Steps 22-26
         for mag_col in mag_plate_samples:
@@ -106,4 +102,4 @@ def run(ctx):
         # Steps 37-41
         ctx.delay(minutes=2, msg="Delaying for 2 minutes to dry...")
         mag_mod.disengage()
-        m20.transfer(13, pcr_mm, mag_plate_samples[0], new_tip='always')
+        m20.transfer(13, pcr_mm, mag_plate_samples, new_tip='always')
