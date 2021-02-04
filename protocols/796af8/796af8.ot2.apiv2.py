@@ -1,7 +1,7 @@
 import math
 
 metadata = {
-    'protocolName': 'NGS Library Prep',
+    'protocolName': 'NEB Ultra II FS DNA Library Prep',
     'author': 'Sakib <sakib.hossain@opentrons.com>',
     'description': 'Custom Protocol Request',
     'apiLevel': '2.8'
