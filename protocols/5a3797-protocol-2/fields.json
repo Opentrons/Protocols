@@ -7,5 +7,23 @@
           {"label": "right", "value": "right"},
           {"label": "left", "value": "left"}
         ]
-    }
-  ]
+    },
+    {
+      "type": "float",
+      "label": "Reservoir Height from bottom of well (mm)",
+      "name": "reservoir_height",
+      "default": 2      
+    },    
+    {
+      "type": "float",
+      "label": "PCR Plate Height from bottom of well (mm)",
+      "name": "pcr_plate_height",
+      "default": 2      
+  },
+  {
+      "type": "float",
+      "label": "Sample Plate from bottom of well (mm)",
+      "name": "sample_plate_height",
+      "default": 2      
+  }
+]
