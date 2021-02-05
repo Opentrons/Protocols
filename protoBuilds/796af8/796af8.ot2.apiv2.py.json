@@ -1,5 +1,5 @@
 {
-    "content": "import math\n\nmetadata = {\n    'protocolName': 'NEB Ultra II FS DNA Library Prep',\n    'author': 'Sakib <sakib.hossain@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.8'\n}\n\n\ndef run(ctx):\n\n    [sample_number, m300_mount, m20_mount, end_repair,\n        adapter_ligation, bead_clean_up] = get_values(  # noqa: F821\n        \"sample_number\", \"m300_mount\", \"m20_mount\",\n        \"end_repair\", \"adapter_ligation\", \"bead_clean_up\")\n\n    sample_number = int(sample_number)\n    if not sample_number > 1 or sample_number > 48:\n        raise Exception(\"Enter a sample number between 1-48\")\n    columns = math.ceil(sample_number/8)\n\n    # Load Labware\n    tiprack20ul = [ctx.load_labware('opentrons_96_filtertiprack_20ul',\n                   slot, f'Tip Box {box}') for slot, box in\n                   zip(['1', '2', '5'], ['1', '2', '4'])]\n    tiprack200ul = ctx.load_labware('opentrons_96_filtertiprack_200ul',\n                                    3, 'Tip Box 3')\n    reservoir = ctx.load_labware('nest_12_reservoir_15ml', 6)\n\n    # Load Modules and Plates\n    tc_mod = ctx.load_module('thermocycler module')\n    tc_plate = tc_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')\n\n    temp_mod = ctx.load_module('temperature module gen2', 4)\n    temp_plate = temp_mod.load_labware(\n                    'opentrons_96_aluminumblock_generic_pcr_strip_200ul')\n\n    mag_mod = ctx.load_module('magnetic module gen2', 9)\n    mag_plate = mag_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')\n\n    # Load Pipettes\n    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount,\n                              tip_racks=tiprack20ul)\n    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,\n                               tip_racks=[tiprack200ul])\n\n    # Reagents and Samples\n    ethanol = reservoir['A1']\n    endprep_mm = temp_plate.rows()[0][0]\n    adapter_mm = temp_plate.rows()[0][1]\n    pcr_mm = temp_plate.rows()[0][2]\n    tc_plate_samples = tc_plate.rows()[0][:columns]\n    mag_plate_samples = mag_plate.rows()[0][:columns]\n    trash = ctx.fixed_trash['A1']\n\n    # Set Temp Mod to 4C\n    temp_mod.set_temperature(4)\n\n    # End Repair\n    if end_repair == \"True\":\n\n        # Transfer Master Mix\n        m20.transfer(6.25, endprep_mm, tc_plate_samples, mix_after=(5, 8),\n                     touch_tip=True, new_tip=\"always\")\n\n        # Begin Theromcycler Process\n        tc_mod.close_lid()\n        tc_mod.set_lid_temperature(75)\n        tc_mod.set_block_temperature(37, hold_time_minutes=10)\n        tc_mod.set_block_temperature(65, hold_time_minutes=30)\n        tc_mod.set_block_temperature(20)\n\n    # Adaptor Ligation\n    if adapter_ligation == \"True\":\n\n        tc_mod.open_lid()\n        m20.transfer(10, adapter_mm, tc_plate_samples, mix_after=(5, 12),\n                     new_tip=\"always\")\n\n        # Begin Theromcycler Process\n        tc_mod.set_block_temperature(20, hold_time_minutes=15)\n        tc_mod.set_block_temperature(4)\n\n    # Bead Clean Up\n    if bead_clean_up == \"True\":\n\n        m20.transfer(20, tc_plate_samples, mag_plate_samples,\n                     mix_after=(5, 12), new_tip=\"always\")\n        ctx.delay(minutes=5, msg=\"Pausing for 5 minutes\")\n\n        mag_mod.engage()\n        ctx.delay(minutes=2, msg=\"Engaging magnet for 2 minutes...\")\n\n        # Steps 22-26\n        for mag_col in mag_plate_samples:\n            m20.pick_up_tip()\n            for _ in range(2):\n                m20.transfer(20, mag_col, trash, new_tip='never')\n            m20.drop_tip()\n\n        # Steps 27-36\n        for _ in range(2):\n            for mag_col in mag_plate_samples:\n                m300.pick_up_tip()\n                m300.transfer(100, ethanol, mag_col, new_tip='never')\n                m300.transfer(100, ethanol, trash, new_tip='never')\n                m300.drop_tip()\n\n        # Steps 37-41\n        ctx.delay(minutes=2, msg=\"Delaying for 2 minutes to dry...\")\n        mag_mod.disengage()\n        m20.transfer(13, pcr_mm, mag_plate_samples, new_tip='always')\n",
+    "content": "import math\n\nmetadata = {\n    'protocolName': 'NEB Ultra II FS DNA Library Prep',\n    'author': 'Sakib <sakib.hossain@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.8'\n}\n\n\ndef run(ctx):\n\n    [sample_number, m300_mount, m20_mount, end_repair,\n        adapter_ligation, bead_clean_up] = get_values(  # noqa: F821\n        \"sample_number\", \"m300_mount\", \"m20_mount\",\n        \"end_repair\", \"adapter_ligation\", \"bead_clean_up\")\n\n    sample_number = int(sample_number)\n    if not sample_number > 1 or sample_number > 48:\n        raise Exception(\"Enter a sample number between 1-48\")\n    columns = math.ceil(sample_number/8)\n\n    # Load Labware\n    tiprack20ul = [ctx.load_labware('opentrons_96_filtertiprack_20ul',\n                   slot, f'Tip Box {box}') for slot, box in\n                   zip(['1', '2', '5'], ['1', '2', '4'])]\n    tiprack200ul = ctx.load_labware('opentrons_96_filtertiprack_200ul',\n                                    3, 'Tip Box 3')\n    reservoir = ctx.load_labware('nest_12_reservoir_15ml', 6)\n\n    # Load Modules and Plates\n    tc_mod = ctx.load_module('thermocycler module')\n    tc_plate = tc_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')\n\n    temp_mod = ctx.load_module('temperature module gen2', 4)\n    temp_plate = temp_mod.load_labware(\n                    'opentrons_96_aluminumblock_generic_pcr_strip_200ul')\n\n    mag_mod = ctx.load_module('magnetic module gen2', 9)\n    mag_plate = mag_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')\n\n    # Load Pipettes\n    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount,\n                              tip_racks=tiprack20ul)\n    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,\n                               tip_racks=[tiprack200ul])\n\n    # Reagents and Samples\n    ethanol = reservoir['A1']\n    endprep_mm = temp_plate['A1']\n    adapter_mm = temp_plate['A2']\n    pcr_mm = temp_plate['A3']\n    tc_plate_samples = tc_plate.rows()[0][:columns]\n    mag_plate_samples = mag_plate.rows()[0][:columns]\n    trash = ctx.fixed_trash['A1']\n\n    # Set Temp Mod to 4C\n    temp_mod.set_temperature(4)\n\n    # End Repair\n    if end_repair:\n\n        # Transfer Master Mix\n        m20.transfer(6.25, endprep_mm, tc_plate_samples, mix_after=(5, 8),\n                     touch_tip=True, new_tip=\"always\")\n\n        # Begin Theromcycler Process\n        tc_mod.close_lid()\n        tc_mod.set_lid_temperature(75)\n        tc_mod.set_block_temperature(37, hold_time_minutes=10)\n        tc_mod.set_block_temperature(65, hold_time_minutes=30)\n        tc_mod.set_block_temperature(20)\n\n    # Adaptor Ligation\n    if adapter_ligation:\n\n        tc_mod.open_lid()\n        m20.transfer(10, adapter_mm, tc_plate_samples, mix_after=(5, 12),\n                     new_tip=\"always\")\n\n        # Begin Theromcycler Process\n        tc_mod.set_block_temperature(20, hold_time_minutes=15)\n        tc_mod.set_block_temperature(4)\n\n    # Bead Clean Up\n    if bead_clean_up:\n\n        m20.transfer(20, tc_plate_samples, mag_plate_samples,\n                     mix_after=(5, 12), new_tip=\"always\")\n        ctx.delay(minutes=5, msg=\"Pausing for 5 minutes\")\n\n        mag_mod.engage()\n        ctx.delay(minutes=2, msg=\"Engaging magnet for 2 minutes...\")\n\n        # Steps 22-26\n        for mag_col in mag_plate_samples:\n            m20.pick_up_tip()\n            for _ in range(2):\n                m20.transfer(20, mag_col, trash, new_tip='never')\n            m20.drop_tip()\n\n        # Steps 27-36\n        for _ in range(2):\n            for mag_col in mag_plate_samples:\n                m300.pick_up_tip()\n                m300.transfer(100, ethanol, mag_col, new_tip='never')\n                m300.transfer(100, ethanol, trash, new_tip='never')\n                m300.drop_tip()\n\n        # Steps 37-41\n        ctx.delay(minutes=2, msg=\"Delaying for 2 minutes to dry...\")\n        mag_mod.disengage()\n        m20.transfer(13, pcr_mm, mag_plate_samples, new_tip='always')\n",
     "custom_labware_defs": [],
     "fields": [
         {
@@ -44,11 +44,11 @@
             "options": [
                 {
                     "label": "Yes",
-                    "value": "True"
+                    "value": true
                 },
                 {
                     "label": "No",
-                    "value": "False"
+                    "value": false
                 }
             ],
             "type": "dropDown"
@@ -59,11 +59,11 @@
             "options": [
                 {
                     "label": "Yes",
-                    "value": "True"
+                    "value": true
                 },
                 {
                     "label": "No",
-                    "value": "False"
+                    "value": false
                 }
             ],
             "type": "dropDown"
@@ -74,11 +74,11 @@
             "options": [
                 {
                     "label": "Yes",
-                    "value": "True"
+                    "value": true
                 },
                 {
                     "label": "No",
-                    "value": "False"
+                    "value": false
                 }
             ],
             "type": "dropDown"
