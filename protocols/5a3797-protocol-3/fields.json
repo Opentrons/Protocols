@@ -18,6 +18,15 @@
         ]
     },
     {
+      "type": "dropDown",
+      "label": "Tip Type",
+      "name": "tip_type",
+      "options": [
+        {"label": "Opentrons 300 uL Tips", "value": "opentrons_96_tiprack_300ul"},
+        {"label": "Opentrons 200 uL Filter Tips", "value": "opentrons_96_filtertiprack_200ul"}
+      ]
+    },
+    {
       "type": "int",
       "label": "Total Sample Number (# of Tubes)",
       "name": "samples",
@@ -97,5 +106,23 @@
       "label": "Final Step Air Gap (uL)",
       "name": "final_air_gap",
       "default": 20
+    },
+    {
+      "type": "float",
+      "label": "Tube Height from bottom (mm)",
+      "name": "tube_height",
+      "default": 15
+    },
+    {
+      "type": "float",
+      "label": "Deep Well Plate Height from bottom (mm)",
+      "name": "sample_plate_height",
+      "default": 5
+    },
+    {
+      "type": "float",
+      "label": "Reservoir Height from bottom (mm)",
+      "name": "reservoir_height",
+      "default": 5
     }
   ]
