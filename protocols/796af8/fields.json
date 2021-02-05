@@ -28,8 +28,8 @@
       "label": "Run End Repair",
       "name": "end_repair",
       "options": [
-        {"label": "Yes", "value": "True"},
-        {"label": "No", "value": "False"}
+        {"label": "Yes", "value": true},
+        {"label": "No", "value": false}
       ]
   },
       {
@@ -37,8 +37,8 @@
       "label": "Run Adapter Ligation",
       "name": "adapter_ligation",
       "options": [
-        {"label": "Yes", "value": "True"},
-        {"label": "No", "value": "False"}
+        {"label": "Yes", "value": true},
+        {"label": "No", "value": false}
       ]
   },
   {
@@ -46,8 +46,8 @@
     "label": "Run Bead Clean Up",
     "name": "bead_clean_up",
     "options": [
-      {"label": "Yes", "value": "True"},
-      {"label": "No", "value": "False"}
+      {"label": "Yes", "value": true},
+      {"label": "No", "value": false}
     ]
     }
 ]
