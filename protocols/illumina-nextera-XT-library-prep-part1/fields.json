@@ -1,17 +1,26 @@
 [
   {
     "type": "dropDown",
-    "label": "pipette setup",
-    "name": "pipette_setup",
+    "label": "P20 multi-channel GEN2 mount",
+    "name": "m20_mount",
     "options": [
-      { "label": "P20 single-channel (GEN2)", "value": "p20_single_gen2" },
-      { "label": "P10 and P50 single-channel (GEN1)", "value": "p50_single,p10_single" }
+      { "label": "left", "value": "left" },
+      { "label": "right", "value": "right" }
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "P20 single-channel GEN2 mount",
+    "name": "p20_mount",
+    "options": [
+      { "label": "right", "value": "right" },
+      { "label": "left", "value": "left" }
     ]
   },
   {
     "type": "int",
     "label": "number of samples",
     "name": "number_of_samples",
-    "default": 24
+    "default": 96
   }
 ]

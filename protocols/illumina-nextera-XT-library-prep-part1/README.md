@@ -20,7 +20,7 @@ With this protocol, your robot can perform the Nextera XT DNA Library Prep Kit p
 
 This is part 1 of the protocol, which includes the steps (1) Tagment Genomic DNA and (2) Amplify Libraries.
 
-The tagmentation step uses Nextera transposase to fragment DNA into sizes suitable for sequencing, and then tags the DNA with adapter sequences. The library amplification step increases the yield of the tagmented DNA using PCR. PCR adds the Index 1 (i7), Index 2 (i5), and full adapter sequences to the tagmented DNA from the previous step. This protocol assumes you are taking your plate off the OT-2 and thermocycling on a stand-alone PCR machine according to the [Illumina Reference Guide](https://support.illumina.com/content/dam/illumina-support/documents/documentation/chemistry_documentation/samplepreps_nextera/nextera-xt/nextera-xt-library-prep-reference-guide-15031942-03.pdf).
+The tagmentation step uses Nextera transposase to fragment DNA into sizes suitable for sequencing, and then tags the DNA with adapter sequences. The library amplification step increases the yield of the tagmented DNA using PCR. PCR adds the Index 1 (i7), Index 2 (i5), and full adapter sequences to the tagmented DNA from the previous step. This protocol assumes you are taking your plate off the OT-2 and thermocycling on a stand-alone PCR machine according to the [Illumina Reference Guide](https://support.illumina.com/content/dam/illumina-support/documents/documentation/chemistry_documentation/samplepreps_nextera/nextera-xt/nextera-xt-library-prep-reference-guide-15031942-05.pdf).
 
 After the two steps carried out in this protocol, you can safely stop work and return to it at a later point. If you are stopping, seal the plate and store at 2°C to 8°C for up to 2 days.
 
@@ -44,9 +44,6 @@ After the two steps carried out in this protocol, you can safely stop work and r
     * Tagment DNA Buffer: **B1**
     * Neutralize Tagment Buffer: **C1**
     * Nextera PCR Master Mix: **D1**
-    * Index 1 (i7) adapters: **A2-D3**
-    * Index 2 (i5) adapters: **A5-D6**
-* If number of samples is less than 25, arrange 6 tubes of Index 1 (A2-B3) and 4 tubes of Index 2 (A5-D5) in the tuberack. Otherwise, fill Index 1 and Index 2 according to the tuberack setup as instructed above.
 * Review the reference guide before proceeding to confirm kit contents and make sure you have the required equipment and consumables.
 
 ## Preview
