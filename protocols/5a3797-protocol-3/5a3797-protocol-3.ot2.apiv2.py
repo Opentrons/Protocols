@@ -12,14 +12,19 @@ def run(ctx):
 
     [m300_mount, p300_mount, samples, tuberack_1, tuberack_2, tuberack_3,
         tuberack_4, tuberack_5, tuberack_6, tuberack_7,
-        final_asp_speed, final_air_gap] = get_values(  # noqa: F821
+        final_asp_speed, final_air_gap, tube_height, sample_plate_height, 
+        reservoir_height, tip_type] = get_values(  # noqa: F821
         "m300_mount", "p300_mount", "samples", "tuberack_1",
         "tuberack_2", "tuberack_3",
         "tuberack_4", "tuberack_5", "tuberack_6",
-        "tuberack_7", "final_asp_speed", "final_air_gap")
+        "tuberack_7", "final_asp_speed", "final_air_gap", 
+        "tube_height", "sample_plate_height", "reservoir_height", "tip_type")
 
     final_asp_speed = float(final_asp_speed)
     final_air_gap = float(final_air_gap)
+    tube_height = float(tube_height)
+    sample_plate_height = float(sample_plate_height)
+    reservoir_height = float(reservoir_height)
 
     # Get sample number
     samples = int(samples)
@@ -29,7 +34,7 @@ def run(ctx):
     columns = math.ceil(samples/8)
 
     # Load Labware
-    tipracks = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
+    tipracks = [ctx.load_labware(tip_type, slot)
                 for slot in range(1, 3)]
     tuberack_types = [tuberack_1, tuberack_2, tuberack_3, tuberack_4,
                       tuberack_5, tuberack_6, tuberack_7]
@@ -56,10 +61,12 @@ def run(ctx):
     reservoir_columns = reservoir.wells()[:columns]
 
     # Aliquot 200 uL from ~7 Tube Racks
-    p300.transfer(200, tuberack_samples, sample_plate.wells()[:samples],
-                  new_tip='always')
+    for tuberack_well, sample_well in zip(tuberack_samples, sample_plate.wells()[:samples]):
+        p300.transfer(200, tuberack_well.bottom(tube_height), sample_well.bottom(sample_plate_height),
+                    new_tip='always')
 
     # Aliquot 275 uL from Reservoir
     m300.flow_rate.aspirate = final_asp_speed
-    m300.transfer(275, reservoir_columns, sample_plate_wells,
-                  air_gap=final_air_gap, new_tip='always')
+    for res, sample_well in zip(reservoir_columns, sample_plate_wells):
+        m300.transfer(275, res.bottom(reservoir_height), sample_well.center(),
+                    air_gap=final_air_gap, new_tip='always')
