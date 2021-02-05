@@ -47,9 +47,9 @@ def run(ctx):
 
     # Reagents and Samples
     ethanol = reservoir['A1']
-    endprep_mm = temp_plate.rows()[0][0]
-    adapter_mm = temp_plate.rows()[0][1]
-    pcr_mm = temp_plate.rows()[0][2]
+    endprep_mm = temp_plate['A1']
+    adapter_mm = temp_plate['A2']
+    pcr_mm = temp_plate['A3']
     tc_plate_samples = tc_plate.rows()[0][:columns]
     mag_plate_samples = mag_plate.rows()[0][:columns]
     trash = ctx.fixed_trash['A1']
@@ -58,7 +58,7 @@ def run(ctx):
     temp_mod.set_temperature(4)
 
     # End Repair
-    if end_repair == "True":
+    if end_repair:
 
         # Transfer Master Mix
         m20.transfer(6.25, endprep_mm, tc_plate_samples, mix_after=(5, 8),
@@ -72,7 +72,7 @@ def run(ctx):
         tc_mod.set_block_temperature(20)
 
     # Adaptor Ligation
-    if adapter_ligation == "True":
+    if adapter_ligation:
 
         tc_mod.open_lid()
         m20.transfer(10, adapter_mm, tc_plate_samples, mix_after=(5, 12),
@@ -83,7 +83,7 @@ def run(ctx):
         tc_mod.set_block_temperature(4)
 
     # Bead Clean Up
-    if bead_clean_up == "True":
+    if bead_clean_up:
 
         m20.transfer(20, tc_plate_samples, mag_plate_samples,
                      mix_after=(5, 12), new_tip="always")
