@@ -1,3 +1,5 @@
+from opentrons import protocol_api
+
 metadata = {
     'protocolName': 'Illumina Nextera XT NGS Prep 2: Clean-Up Libraries',
     'author': 'Opentrons <protocols@opentrons.com>',
@@ -9,8 +11,8 @@ metadata = {
 def run(protocol):
     [pip_type, pip_mount, no_of_samps, pcr_vol,
      bead_ratio, dry_time] = get_values(  # noqa: F821
-    'pip_type', 'pip_mount', 'no_of_samps', 'pcr_vol',
-    'bead_ratio', 'dry_time')
+     'pip_type', 'pip_mount', 'no_of_samps', 'pcr_vol',
+     'bead_ratio', 'dry_time')
 
     # labware setup
     mag_deck = protocol.load_module('magdeck', '4')
@@ -76,12 +78,24 @@ def run(protocol):
     # Remove supernatant
     pip.transfer(total_vol, mag, liquid_trash, new_tip='always')
 
+    # Replace Tips
+    def pick_up(pip):
+        try:
+            pip.pick_up_tip()
+        except protocol_api.labware.OutOfTipsError:
+            pip.home()
+            protocol.pause("Replace the tips")
+            pip.reset_tipracks()
+            pip.pick_up_tip()
+
     # Wash beads twice with 80% ethanol
     for cycle in range(2):
         pip.transfer(200, ethanol, [well.top() for well in mag])
         protocol.delay(seconds=30)
         for well in mag:
-            pip.transfer(220, well, liquid_trash)
+            pick_up(pip)
+            pip.transfer(220, well, liquid_trash, new_tip='never')
+            pip.drop_tip()
 
     # Air dry
     protocol.delay(minutes=dry_time)
