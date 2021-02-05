@@ -1,5 +1,5 @@
 {
-    "content": "metadata = {\n    'protocolName': 'Protocol 2 - PCR setup',\n    'author': 'Sakib <sakib.hossain@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.8'\n}\n\n\ndef run(ctx):\n\n    [m20_mount] = get_values(  # noqa: F821\n        \"m20_mount\")\n\n    # Load Labware\n    tipracks = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)\n                for slot in range(1, 3)]\n    mastermix = ctx.load_labware('nest_12_reservoir_15ml', 7)\n    sample_plate = ctx.load_labware('kingfisher_96_deepwell_plate_2ml', 4)\n    pcr_plate = ctx.load_labware(\n                'thermofishermicroampfast96well0.1_96_wellplate_100ul', 5)\n\n    # Load Pipette\n    m20 = ctx.load_instrument('p20_multi_gen2', 'left', tip_racks=tipracks)\n\n    # Aliquot 15uL of Mastermix\n    m20.transfer(15, mastermix.wells(), pcr_plate.wells())\n\n    # Aliquot 10 uL of Sample\n    m20.transfer(10, sample_plate.wells(), pcr_plate.wells(), new_tip='always')\n",
+    "content": "metadata = {\n    'protocolName': 'Protocol 2 - PCR setup',\n    'author': 'Sakib <sakib.hossain@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.8'\n}\n\n\ndef run(ctx):\n\n    [m20_mount, reservoir_height, pcr_plate_height,\n        sample_plate_height] = get_values(  # noqa: F821\n        \"m20_mount\", \"reservoir_height\",\n        \"pcr_plate_height\", \"sample_plate_height\")\n\n    reservoir_height = float(reservoir_height)\n    pcr_plate_height = float(pcr_plate_height)\n    sample_plate_height = float(sample_plate_height)\n\n    # Load Labware\n    tiprack1 = ctx.load_labware('opentrons_96_filtertiprack_20ul',\n                                1, 'Tip Box 1')\n    tiprack2 = ctx.load_labware('opentrons_96_filtertiprack_20ul',\n                                2, 'Tip Box 2')\n    mastermix = ctx.load_labware('nest_12_reservoir_15ml', 7)['A1']\n    sample_plate = ctx.load_labware('kingfisher_96_deepwell_plate_2ml', 4)\n    pcr_plate = ctx.load_labware(\n                'thermofishermicroampfast96well0.1_96_wellplate_100ul', 5)\n\n    # Load Pipette\n    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount,\n                              tip_racks=[tiprack1, tiprack2])\n\n    # Aliquot 15uL of Mastermix\n    m20.pick_up_tip(tiprack1['A1'])\n    for pcr_well in pcr_plate.rows()[0]:\n        m20.transfer(15, mastermix.bottom(reservoir_height),\n                     pcr_well.bottom(pcr_plate_height), new_tip='never')\n    m20.drop_tip()\n\n    # Aliquot 10 uL of Sample\n    for source, dest, tip in zip(sample_plate.rows()[0], pcr_plate.rows()[0],\n                                 tiprack2.rows()[0]):\n        m20.pick_up_tip(tip)\n        m20.transfer(10, source.bottom(sample_plate_height),\n                     dest.bottom(pcr_plate_height), new_tip='never')\n        m20.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -2279,23 +2279,41 @@
                 }
             ],
             "type": "dropDown"
+        },
+        {
+            "default": 2,
+            "label": "Reservoir Height from bottom of well (mm)",
+            "name": "reservoir_height",
+            "type": "float"
+        },
+        {
+            "default": 2,
+            "label": "PCR Plate Height from bottom of well (mm)",
+            "name": "pcr_plate_height",
+            "type": "float"
+        },
+        {
+            "default": 2,
+            "label": "Sample Plate from bottom of well (mm)",
+            "name": "sample_plate_height",
+            "type": "float"
         }
     ],
     "instruments": [
         {
-            "mount": "left",
+            "mount": "right",
             "name": "p20_multi_gen2"
         }
     ],
     "labware": [
         {
-            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 1",
+            "name": "Tip Box 1 on 1",
             "share": false,
             "slot": "1",
             "type": "opentrons_96_filtertiprack_20ul"
         },
         {
-            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 2",
+            "name": "Tip Box 2 on 2",
             "share": false,
             "slot": "2",
             "type": "opentrons_96_filtertiprack_20ul"
