@@ -23,7 +23,7 @@ def run(ctx):
     tips_1000 = ctx.load_labware(
         'opentrons_96_filtertiprack_1000ul', '10')
 
-    single_1000 = ctx.load_instrument(
+    p1000 = ctx.load_instrument(
         'p1000_single_gen2', 'left', tip_racks=[tips_1000])
 
     [*patient_samples] = [ctx.load_labware(
@@ -47,15 +47,15 @@ def run(ctx):
             destinations.index(extraction_plate.wells_by_name()[well]))
 
     # set default aspiration and dispense rates
-    single_1000.flow_rate.aspirate = 137.35
-    single_1000.flow_rate.dispense = 137.35
+    p1000.flow_rate.aspirate = 137.35
+    p1000.flow_rate.dispense = 137.35
 
     # transfer patient samples to extraction plate
     rows_transferred = 0
     for rack in patient_samples:
         for row in rack.rows():
             dest_index = rows_transferred*len(row)
-            single_1000.transfer(
+            p1000.transfer(
              sample_volume, [well for well in row],
              destinations[dest_index:dest_index + 5], new_tip='always')
             rows_transferred += 1
