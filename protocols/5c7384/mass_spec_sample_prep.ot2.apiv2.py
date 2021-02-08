@@ -18,3 +18,14 @@ def run(ctx):
 
     p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tip_racks=[])
     p300 = ctx.load_instrument('p20_single_gen2', p20_mount, tip_racks=[])
+
+    """ Reduction and Alkylation """
+    
+
+    """ Protein Binding """
+
+    """ Ethanol Wash """
+
+    """ Acetonitrile Wash """
+
+    """ On-Bead Digestion """
