@@ -9,6 +9,6 @@
     "type": "str",
     "label": "wells_skipped",
     "name": "wells_skipped",
-    "default": "A1, B1, H1, A7, B7, H7"
+    "default": "A1,B1,H1,A7,B7,H7"
   }
 ]
