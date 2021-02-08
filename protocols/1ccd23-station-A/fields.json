@@ -12,6 +12,12 @@
     "default": 200
   },
   {
+    "type": "int",
+    "label": "aspiration height from bottom of sample tube (in mm)",
+    "name": "asp_height",
+    "default": 5.0
+  },
+  {
     "type": "dropDown",
     "label": "P20 GEN2 type",
     "name": "p20_type",
