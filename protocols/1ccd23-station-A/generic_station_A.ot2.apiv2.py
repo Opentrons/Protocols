@@ -14,9 +14,10 @@ metadata = {
 
 def run(ctx: protocol_api.ProtocolContext):
 
-    [num_samples, vol_sample, p20_type, strip_type,
+    [num_samples, vol_sample, asp_height, p20_type, strip_type,
      tip_track] = get_values(  # noqa: F821
-        'num_samples', 'vol_sample', 'p20_type', 'strip_type', 'tip_track')
+        'num_samples', 'vol_sample', 'asp_height', 'p20_type', 'strip_type',
+        'tip_track')
 
     # load labware
     if 'multi' in p20_type:
@@ -98,8 +99,8 @@ resuming.')
     # transfer sample
     for s, d in zip(sources, dests_single):
         pick_up(p1000)
-        p1000.transfer(vol_sample, s.bottom(5), d.bottom(5), air_gap=100,
-                       new_tip='never')
+        p1000.transfer(vol_sample, s.bottom(asp_height), d.bottom(5),
+                       air_gap=100, new_tip='never')
         p1000.air_gap(100)
         p1000.drop_tip()
 
