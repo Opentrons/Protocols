@@ -36,6 +36,9 @@ def run(ctx):
 
     hsc = ctx.load_labware('mtcbio_15_tuberack_10000ul', '6', 'HSC')
 
+    # ghost movement to recognize unused tuberack on deck
+    p1000.move_to(hsc.wells()[0].top(5))
+
     # reference to destination wells
     destinations = extraction_plate.wells()
 
