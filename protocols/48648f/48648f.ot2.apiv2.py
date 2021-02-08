@@ -1,5 +1,3 @@
-from opentrons import protocol_api
-
 metadata = {
     'protocolName': 'Sample Plating (90 samples)',
     'author': 'McCampbell Analytical Inc. / Alex Anderson',
