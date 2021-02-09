@@ -103,5 +103,11 @@
       "label": "Component 12 Volume (uL)",
       "name": "comp12_vol",
       "default": 34
+    },
+    {
+      "type": "float",
+      "label": "Master Mix Volume (uL)",
+      "name": "mm_vol",
+      "default": 20
     }
   ]
