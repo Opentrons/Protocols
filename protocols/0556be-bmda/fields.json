@@ -19,5 +19,17 @@
       "label": "Final Tubes Number (Max: 32)",
       "name": "final_tubes",
       "default": 32
+    },
+    {
+      "type": "float",
+      "label": "Component Aspirate Flow Rate (uL/s)",
+      "name": "comp_asp_speed",
+      "default": 50
+    },
+    {
+      "type": "float",
+      "label": "Component Dispense Flow Rate (uL/s)",
+      "name": "comp_disp_speed",
+      "default": 50
     }
   ]
