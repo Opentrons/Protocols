@@ -4,7 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Nucleic acid purification
+* Nucleic Acid Extraction & Purification
+  * Nucleic Acid Purification
 
 ## Description
 This protocol automates the transfer of 90 patient samples to an extraction plate for the purification of nucleic acids using an Opentrons OT-2 robot. This is a pythonized version of a [Protocol Designer protocol](https://s3.amazonaws.com/pf-upload-01/u-4256/0/2021-01-27/jd23jyu/Sample%20Plating%2090%20samples.json).
@@ -15,8 +16,8 @@ This protocol automates the transfer of 90 patient samples to an extraction plat
 * [Opentrons P1000-single channel electronic pipettes (GEN2)](https://shop.opentrons.com/collections/ot-2-robot/products/single-channel-electronic-pipette?variant=5984549142557)
 * [Opentrons 1000ul Filter Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-1000ul-filter-tips)
 * [Opentrons Temperature Module (GEN2)](https://shop.opentrons.com/products/tempdeck?_pos=1&_sid=5b80a3c66&_ss=r)
-* MTCbio 10 ml tube mtcbio_15_tuberack_10000ul (https://s3.amazonaws.com/pf-upload-01/u-4256/0/2021-01-27/jj43jf5/mtcbio_15_tuberack_10000ul.json)
-* NEST 96 2 mL nest_96_wellplate_2000ul (https://s3.amazonaws.com/pf-upload-01/u-4256/0/2021-01-27/ox33jt1/nest_96_wellplate_2000ul.json)
+* [MTCbio 10 ml tube](https://s3.amazonaws.com/pf-upload-01/u-4256/0/2021-01-27/jj43jf5/mtcbio_15_tuberack_10000ul.json)
+* [NEST 96 2 mL](https://s3.amazonaws.com/pf-upload-01/u-4256/0/2021-01-27/ox33jt1/nest_96_wellplate_2000ul.json)
 
 
 ### Robot
