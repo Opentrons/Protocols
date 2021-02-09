@@ -109,5 +109,17 @@
       "label": "Master Mix Volume (uL)",
       "name": "mm_vol",
       "default": 20
+    },
+    {
+      "type": "int",
+      "label": "Mix Repititions",
+      "name": "mix_reps",
+      "default": 10
+    },
+    {
+      "type": "float",
+      "label": "Mixing Volume (uL)",
+      "name": "mix_vol",
+      "default": 200
     }
   ]
