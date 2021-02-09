@@ -1,0 +1,32 @@
+[
+  {
+    "type": "int",
+    "label": "number of samples",
+    "name": "num_samples",
+    "default": 96
+  },
+  {
+    "type": "dropDown",
+    "label": "P20-single channel pipette mount",
+    "name": "p20_mount",
+    "options": [
+      {"label": "right", "value": "right"},
+      {"label": "left", "value": "left"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "P300-single channel pipette mount",
+    "name": "p300_mount",
+    "options": [
+      {"label": "left", "value": "left"},
+      {"label": "right", "value": "right"}
+    ]
+  },
+  {
+    "type": "str",
+    "label": "plate defintion",
+    "name": "plate_def",
+    "default": "nest_96_wellplate_100ul_pcr_full_skirt"
+  }
+]
