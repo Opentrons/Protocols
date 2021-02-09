@@ -11,11 +11,12 @@ def run(ctx):
     [p300_mount, temperature, final_tubes, comp_asp_speed, comp_disp_speed,
         comp1_vol, comp2_vol, comp3_vol, comp4_vol, comp5_vol, comp6_vol,
         comp7_vol, comp8_vol, comp9_vol, comp10_vol, comp11_vol,
-        comp12_vol, mm_vol] = get_values(  # noqa: F821
+        comp12_vol, mm_vol, mix_reps, mix_vol] = get_values(  # noqa: F821
         "p300_mount", "temperature", "final_tubes", "comp_asp_speed",
         "comp_disp_speed", "comp1_vol", "comp2_vol", "comp3_vol",
         "comp4_vol", "comp5_vol", "comp6_vol", "comp7_vol", "comp8_vol",
-        "comp9_vol", "comp10_vol", "comp11_vol", "comp12_vol", "mm_vol")
+        "comp9_vol", "comp10_vol", "comp11_vol", "comp12_vol", "mm_vol",
+        "mix_reps", "mix_vol")
 
     # Load Labware
     temp_mod = ctx.load_module('temperature module gen2', 10)
@@ -47,7 +48,7 @@ def run(ctx):
     p300.flow_rate.dispense = comp_disp_speed
     p300.transfer(volumes, components, mm, new_tip='always')
     p300.pick_up_tip()
-    p300.mix(5, 200, mm)
+    p300.mix(mix_reps, mix_vol, mm)
     p300.drop_tip()
 
     # Reset Flow Rates
