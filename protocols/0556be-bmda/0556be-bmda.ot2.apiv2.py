@@ -1,3 +1,8 @@
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"p300_mount":"left", "temperature":"8", "final_tubes": "32", "comp_asp_speed": "50", "comp_disp_speed": "50", "comp1_vol": "51", "comp2_vol": "85", "comp3_vol": "51", "comp4_vol": "119", "comp5_vol": "136", "comp6_vol": "34", "comp7_vol": "34", "comp8_vol": "34", "comp9_vol":"34", "comp10_vol":"34", "comp11_vol":"34", "comp12_vol":"34"}""")
+    return [_all_values[n] for n in names]
+
 metadata = {
     'protocolName': 'BMDA - Dengue Protocol',
     'author': 'Sakib <sakib.hossain@opentrons.com>',
@@ -8,8 +13,8 @@ metadata = {
 
 def run(ctx):
 
-    [p300_mount, temperature, final_tubes, comp_asp_speed, comp_disp_speed] = get_values(  # noqa: F821
-        "p300_mount", "temperature", "final_tubes", "comp_asp_speed", "comp_disp_speed")
+    [p300_mount, temperature, final_tubes, comp_asp_speed, comp_disp_speed, comp1_vol, comp2_vol, comp3_vol, comp4_vol, comp5_vol, comp6_vol, comp7_vol, comp8_vol, comp9_vol, comp10_vol, comp11_vol, comp12_vol] = get_values(  # noqa: F821
+        "p300_mount", "temperature", "final_tubes", "comp_asp_speed", "comp_disp_speed", "comp1_vol", "comp2_vol", "comp3_vol", "comp4_vol", "comp5_vol", "comp6_vol", "comp7_vol", "comp8_vol", "comp9_vol", "comp10_vol", "comp11_vol", "comp12_vol")
 
     # Load Labware
     temp_mod = ctx.load_module('temperature module gen2', 10)
@@ -26,7 +31,7 @@ def run(ctx):
     # Get Sample Wells
     mm = reagents.wells()[0]
     components = reagents.wells()[12:]
-    volumes = [51, 85, 51, 119, 136, 34, 34, 34, 34, 34, 34, 34]
+    volumes = [int(vol) for vol in [comp1_vol, comp2_vol, comp3_vol, comp4_vol, comp5_vol, comp6_vol, comp7_vol, comp8_vol, comp9_vol, comp10_vol, comp11_vol, comp12_vol]]
     final_tubes = int(final_tubes)
 
     # Set Temperature to 8C
