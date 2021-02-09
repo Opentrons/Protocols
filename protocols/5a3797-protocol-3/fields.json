@@ -22,8 +22,8 @@
       "label": "Tip Type",
       "name": "tip_type",
       "options": [
-        {"label": "Opentrons 300 uL Tips", "value": "opentrons_96_tiprack_300ul"},
-        {"label": "Opentrons 200 uL Filter Tips", "value": "opentrons_96_filtertiprack_200ul"}
+        {"label": "Opentrons 200 uL Filter Tips", "value": "opentrons_96_filtertiprack_200ul"},
+        {"label": "Opentrons 300 uL Tips", "value": "opentrons_96_tiprack_300ul"}
       ]
     },
     {
