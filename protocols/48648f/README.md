@@ -5,7 +5,7 @@
 
 ## Categories
 * Nucleic Acid Extraction & Purification
-  * Nucleic Acid Purification
+    * Nucleic Acid Purification
 
 ## Description
 This protocol automates the transfer of 90 patient samples to an extraction plate for the purification of nucleic acids using an Opentrons OT-2 robot. This is a pythonized version of a [Protocol Designer protocol](https://s3.amazonaws.com/pf-upload-01/u-4256/0/2021-01-27/jd23jyu/Sample%20Plating%2090%20samples.json).
