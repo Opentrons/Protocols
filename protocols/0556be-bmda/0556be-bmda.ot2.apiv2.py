@@ -8,8 +8,15 @@ metadata = {
 
 def run(ctx):
 
-    [p300_mount, temperature, final_tubes] = get_values(  # noqa: F821
-        "p300_mount", "temperature", "final_tubes")
+    [p300_mount, temperature, final_tubes, comp_asp_speed, comp_disp_speed,
+        comp1_vol, comp2_vol, comp3_vol, comp4_vol, comp5_vol, comp6_vol,
+        comp7_vol, comp8_vol, comp9_vol, comp10_vol, comp11_vol,
+        comp12_vol, mm_vol, mix_reps, mix_vol] = get_values(  # noqa: F821
+        "p300_mount", "temperature", "final_tubes", "comp_asp_speed",
+        "comp_disp_speed", "comp1_vol", "comp2_vol", "comp3_vol",
+        "comp4_vol", "comp5_vol", "comp6_vol", "comp7_vol", "comp8_vol",
+        "comp9_vol", "comp10_vol", "comp11_vol", "comp12_vol", "mm_vol",
+        "mix_reps", "mix_vol")
 
     # Load Labware
     temp_mod = ctx.load_module('temperature module gen2', 10)
@@ -26,17 +33,27 @@ def run(ctx):
     # Get Sample Wells
     mm = reagents.wells()[0]
     components = reagents.wells()[12:]
-    volumes = [51, 85, 51, 119, 136, 34, 34, 34, 34, 34, 34, 34]
+    volumes = [int(vol) for vol in [comp1_vol, comp2_vol, comp3_vol, comp4_vol,
+                                    comp5_vol, comp6_vol, comp7_vol, comp8_vol,
+                                    comp9_vol, comp10_vol, comp11_vol,
+                                    comp12_vol]]
     final_tubes = int(final_tubes)
+    mm_vol = float(mm_vol)
 
     # Set Temperature to 8C
     temp_mod.set_temperature(temperature)
 
     # Add Components to Master Mix
+    p300.flow_rate.aspirate = comp_asp_speed
+    p300.flow_rate.dispense = comp_disp_speed
     p300.transfer(volumes, components, mm, new_tip='always')
     p300.pick_up_tip()
-    p300.mix(5, 200, mm)
+    p300.mix(mix_reps, mix_vol, mm)
     p300.drop_tip()
+
+    # Reset Flow Rates
+    p300.flow_rate.aspirate = 92.86
+    p300.flow_rate.dispense = 92.86
 
     # Get well distribution for PCR plate
     pcr_plate_wells = [pcr_plate.columns()[i] for i in [0, 3, 6, 9]]
@@ -44,7 +61,7 @@ def run(ctx):
                        for wells in well][:final_tubes]
 
     # Add Master Mix to 32 wells
-    p300.transfer(20, mm, pcr_plate_wells, new_tip='once')
+    p300.transfer(mm_vol, mm, pcr_plate_wells, new_tip='once')
 
     # Deactivate Temp Mod
     temp_mod.deactivate()
