@@ -55,14 +55,15 @@ def run(ctx):
     # Get list of tubes across 7 racks based on sample number
     tuberack_wells = [tuberacks[i].wells() for i in range(len(tuberacks))]
     tuberack_samples = [well for wells in tuberack_wells for well in
-                        wells][:samples]
+                        wells][1:samples]
 
     sample_plate_wells = sample_plate.rows()[0][:columns]
+    sample_plate_control = sample_plate.wells()[1:samples]
     reservoir_columns = reservoir.wells()[:columns]
 
     # Aliquot 200 uL from ~7 Tube Racks
     for tuberack_well, sample_well in zip(tuberack_samples,
-                                          sample_plate.wells()[:samples]):
+                                          sample_plate_control):
         p300.transfer(200, tuberack_well.bottom(tube_height),
                       sample_well.bottom(sample_plate_height),
                       new_tip='always')
