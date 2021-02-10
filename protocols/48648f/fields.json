@@ -1,0 +1,14 @@
+[
+  {
+    "type": "int",
+    "label": "sample_volume",
+    "name": "sample_volume",
+    "default": 100
+  },
+  {
+    "type": "str",
+    "label": "wells_skipped",
+    "name": "wells_skipped",
+    "default": "A1,B1,H1,A7,B7,H7"
+  }
+]
