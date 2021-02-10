@@ -1,3 +1,5 @@
+import math
+
 metadata = {
     'protocolName': 'Protocol 2 - PCR setup',
     'author': 'Sakib <sakib.hossain@opentrons.com>',
@@ -8,14 +10,16 @@ metadata = {
 
 def run(ctx):
 
-    [m20_mount, reservoir_height, pcr_plate_height,
+    [m20_mount, samples, reservoir_height, pcr_plate_height,
         sample_plate_height] = get_values(  # noqa: F821
-        "m20_mount", "reservoir_height",
+        "m20_mount", "samples", "reservoir_height",
         "pcr_plate_height", "sample_plate_height")
 
     reservoir_height = float(reservoir_height)
     pcr_plate_height = float(pcr_plate_height)
     sample_plate_height = float(sample_plate_height)
+    samples = int(samples)
+    columns = math.ceil(samples/8)
 
     # Load Labware
     tiprack1 = ctx.load_labware('opentrons_96_filtertiprack_20ul',
@@ -33,14 +37,15 @@ def run(ctx):
 
     # Aliquot 15uL of Mastermix
     m20.pick_up_tip(tiprack1['A1'])
-    for pcr_well in pcr_plate.rows()[0]:
+    for pcr_well in pcr_plate.rows()[0][:columns]:
         m20.transfer(15, mastermix.bottom(reservoir_height),
                      pcr_well.bottom(pcr_plate_height), new_tip='never')
     m20.drop_tip()
 
     # Aliquot 10 uL of Sample
-    for source, dest, tip in zip(sample_plate.rows()[0], pcr_plate.rows()[0],
-                                 tiprack2.rows()[0]):
+    for source, dest, tip in zip(sample_plate.rows()[0][:columns],
+                                 pcr_plate.rows()[0][:columns],
+                                 tiprack2.rows()[0][:columns]):
         m20.pick_up_tip(tip)
         m20.transfer(10, source.bottom(sample_plate_height),
                      dest.bottom(pcr_plate_height), new_tip='never')
