@@ -1,3 +1,4 @@
+from opentrons import protocol_api
 import math
 
 metadata = {
@@ -55,20 +56,46 @@ def run(ctx):
     # Get list of tubes across 7 racks based on sample number
     tuberack_wells = [tuberacks[i].wells() for i in range(len(tuberacks))]
     tuberack_samples = [well for wells in tuberack_wells for well in
-                        wells][:samples]
+                        wells][1:samples]
 
     sample_plate_wells = sample_plate.rows()[0][:columns]
+    sample_plate_control = sample_plate.wells()[1:samples]
     reservoir_columns = reservoir.wells()[:columns]
 
     # Aliquot 200 uL from ~7 Tube Racks
     for tuberack_well, sample_well in zip(tuberack_samples,
-                                          sample_plate.wells()[:samples]):
+                                          sample_plate_control):
         p300.transfer(200, tuberack_well.bottom(tube_height),
-                      sample_well.bottom(sample_plate_height),
-                      new_tip='always')
+                      sample_well.bottom(sample_plate_height), blow_out=True,
+                      blowout_location='destination well', new_tip='always')
 
-    # Aliquot 275 uL from Reservoir
-    m300.flow_rate.aspirate = final_asp_speed
-    for res, sample_well in zip(reservoir_columns, sample_plate_wells):
-        m300.transfer(275, res.bottom(reservoir_height), sample_well.center(),
-                      air_gap=final_air_gap, new_tip='always')
+    if tip_type == 'opentrons_96_filtertiprack_200ul':
+
+        def pick_up(pip):
+            try:
+                pip.pick_up_tip()
+            except protocol_api.labware.OutOfTipsError:
+                pip.home()
+                ctx.pause("Please replace the tips in slot 1!")
+                pip.reset_tipracks()
+                pip.pick_up_tip()
+
+        # Aliquot 275 uL from Reservoir
+        m300.flow_rate.aspirate = final_asp_speed
+        for res, sample_well in zip(reservoir_columns, sample_plate_wells):
+            for _, vol in zip(range(2), [150, 125]):
+                pick_up(m300)
+                m300.aspirate(vol, res.bottom(reservoir_height))
+                m300.air_gap(final_air_gap)
+                m300.dispense(vol+final_air_gap, sample_well.center())
+                m300.blow_out()
+                m300.drop_tip()
+
+    elif tip_type == 'opentrons_96_tiprack_300ul':
+
+        m300.flow_rate.aspirate = final_asp_speed
+        for res, sample_well in zip(reservoir_columns, sample_plate_wells):
+            m300.transfer(275, res.bottom(reservoir_height),
+                          sample_well.center(), air_gap=final_air_gap,
+                          blow_out=True, blowout_location='destination well',
+                          new_tip='always')
