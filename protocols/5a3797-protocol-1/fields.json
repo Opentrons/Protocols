@@ -9,6 +9,12 @@
         ]
     },
     {
+      "type": "int",
+      "label": "Number of Samples",
+      "name": "samples",
+      "default": 96
+    },
+    {
       "type": "float",
       "label": "Reservoir Pipette Height from well bottom (mm)",
       "name": "reservoir_height",
