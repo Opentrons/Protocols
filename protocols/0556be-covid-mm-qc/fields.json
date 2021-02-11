@@ -37,6 +37,18 @@
     },
     {
       "type": "float",
+      "label": "Component 3 Volume (uL)",
+      "name": "tube1_vol",
+      "default": 22
+    },
+    {
+      "type": "float",
+      "label": "Tube 1 Transfer Volume (uL)",
+      "name": "component_3_volume",
+      "default": 18
+    },
+    {
+      "type": "float",
       "label": "Component 1 Height (mm)",
       "name": "component_1_height",
       "default": 75
