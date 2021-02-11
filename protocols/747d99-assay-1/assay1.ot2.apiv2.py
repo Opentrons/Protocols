@@ -23,7 +23,7 @@ def run(ctx):
 
     lys_hyb_bead_vol = 680
     wash_vol = 200
-    mag_height = 13.7
+    mag_height = 6.8
     elution_vol = 40
     mix_reps = 10
     settling_time = 3
