@@ -1,4 +1,4 @@
-# Nucleic acid purification from 90 patient samples
+# Nucleic Acid Purification
 
 ### Author
 [Opentrons](https://opentrons.com/)

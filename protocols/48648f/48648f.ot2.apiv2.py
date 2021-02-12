@@ -1,5 +1,5 @@
 metadata = {
-    'protocolName': 'Sample Plating (90 samples)',
+    'protocolName': 'Nucleic Acid Purification',
     'author': 'McCampbell Analytical Inc. / Alex Anderson',
     'source': 'customer provided json file: Sample Plating 90 samples.json',
     'description': '',
