@@ -8,7 +8,7 @@
     * Nucleic Acid Purification
 
 ## Description
-This protocol automates the transfer of up to 90 patient samples to an extraction plate for the purification of nucleic acids using an Opentrons OT-2 robot. This is a pythonized version of a [Protocol Designer protocol](https://s3.amazonaws.com/pf-upload-01/u-4256/0/2021-01-27/jd23jyu/Sample%20Plating%2090%20samples.json). Each of the six patient sample racks should contain a full set of 15 samples.  Wells A1, B1, H1, A7, B7, and H7 in the extraction plate are left empty. The protocol transfers 100uL of each sample into a new well on the extraction plate using the custom tube rack and custom NEST well plate.
+This protocol automates the transfer of up to 90 patient samples to an extraction plate for the purification of nucleic acids using an Opentrons OT-2 robot. This is a pythonized version of a [Protocol Designer protocol](https://s3.amazonaws.com/pf-upload-01/u-4256/0/2021-01-27/jd23jyu/Sample%20Plating%2090%20samples.json). Each of the six patient sample racks should contain a full set of 15 samples.  Wells A1, B1, H1, A7, B7, and H7 in the extraction plate are left empty unless otherwise specified in the parameters below. The protocol transfers 100uL of each sample into a new well on the extraction plate using the custom tube rack and custom NEST well plate.
 
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
