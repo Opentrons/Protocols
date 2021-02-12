@@ -1,7 +1,11 @@
 import math
 
-
-metadata = {'apiLevel': '2.7'}
+metadata = {
+    'protocolName': 'Version Update - Adding Water to RBC 96-Well Plate',
+    'author': 'Rami Farawi <rami.farawi@opentrons.com>',
+    'source': 'Custom Protocol Request',
+    'apiLevel': '2.7'
+}
 
 
 def run(protocol):
@@ -36,7 +40,6 @@ def run(protocol):
     else:
         plate_loc = [col for col in plate.rows()[0]][:num_columns]
 
-    # m300.start_at_tip(tiprack.cols(tip_start_column))
     m300.pick_up_tip(tiprack.rows()[0][tip_start_column], presses=4)
     m300.mix(3, 300, source)
     m300.blow_out(source)
