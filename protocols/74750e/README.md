@@ -5,7 +5,7 @@
 
 ## Categories
 * Sample Prep
-  * Serial Dilution
+	* Serial Dilution
 
 
 ## Description
