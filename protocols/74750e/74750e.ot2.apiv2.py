@@ -23,7 +23,7 @@ def run(ctx):
         p300.pick_up_tip()
 
     for col in range(0, glob_num_dilutions):
-        if col % 6 == 0 and col != 0:
+        if col % num_dilutions == 0 and col != 0:
             p300.mix(12, 100, source[col-1][1])
             p300.aspirate(20, source[col-1][1])
             p300.drop_tip()

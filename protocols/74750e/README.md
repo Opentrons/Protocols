@@ -8,7 +8,7 @@
 
 
 ## Description
-This protocol performs a simple serial dilution (factor 10) within each of four well plates. 100ul of solution is mixed 12 times in each column before 20ul is transferred to the following column. New tips are granted for each well plate.
+This protocol performs a simple serial dilution (factor 10) within each well plate for a specified number of well plates. 100ul of solution is mixed 12 times in each column before 20ul is transferred to the following column, with the mix-transfer iteration repeated up to the specified number of columns. New tips are granted between each well plate.
 
 
 ---
@@ -30,18 +30,16 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 
 Slot 1: 96 Tip Rack 300 µL
 
-Slot 2: Corning 96 Well Plate 360 µL Flat
-
-Slot 3: Corning 96 Well Plate 360 µL Flat
-
-Slot 4: Corning 96 Well Plate 360 µL Flat
-
-Slot 5: Corning 96 Well Plate 360 µL Flat
+Slot 2 - (up to 11): Corning 96 Well Plate 360 µL Flat
 
 P300-Multi Mount: Left
 
 
-
+</br>
+</br>
+**Using the customizations field (below), set up your protocol.**
+* **Number of Columns**: Specify number of columns with solution in each well plate.
+* **Number of Plates**: Specify number of plates for serial dilution.
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
