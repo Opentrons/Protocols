@@ -394,6 +394,7 @@ resuming.')
             else:
                 _drop(m300)
 
+        tempdeck.set_temperature(4)
         ctx.pause('Replace strips on temperature module (slot 1) with fresh \
 strips before resuming.')
         magdeck.engage(height=MAG_HEIGHT)
