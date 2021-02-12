@@ -1,6 +1,11 @@
 import math
 
-metadata = {'apiLevel': '2.7'}
+metadata = {
+    'protocolName': 'Version Update - Adding BTM to DBS',
+    'author': 'Rami Farawi <rami.farawi@opentrons.com>',
+    'source': 'Custom Protocol Request',
+    'apiLevel': '2.7'
+}
 
 
 def run(protocol):
