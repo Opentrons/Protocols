@@ -1,5 +1,5 @@
 {
-    "content": "metadata = {'apiLevel': '2.7'}\n\n\ndef run(ctx):\n\n    # labware setup\n    tiprack = ctx.load_labware('opentrons_96_tiprack_300ul', '1')\n    plates = [ctx.load_labware('corning_96_wellplate_360ul_flat', slot)\n              for slot in ['2', '3', '4', '5']]\n\n    # instrument setup\n    p300 = ctx.load_instrument('p300_multi_gen2', 'left', tip_racks=[tiprack])\n\n    # commands\n    num_dilutions = 6\n    glob_num_dilutions = num_dilutions*len(plates)\n\n    source = [s for plate in plates for s in\n              zip(plate.rows()[0][:num_dilutions],\n                  plate.rows()[0][1:num_dilutions+1])]\n\n    if not p300.has_tip:\n        p300.pick_up_tip()\n\n    for col in range(0, glob_num_dilutions):\n        if col % num_dilutions == 0 and col != 0:\n            p300.mix(12, 100, source[col-1][1])\n            p300.aspirate(20, source[col-1][1])\n            p300.drop_tip()\n            p300.pick_up_tip()\n        p300.transfer(20, source[col][0], source[col][1],\n                      mix_before=(12, 100), new_tip='never')\n\n    p300.mix(12, 100, source[col][1])\n    p300.aspirate(20, source[col][1])\n    p300.drop_tip()\n",
+    "content": "metadata = {\n    'protocolName': 'Standard Serial Dilution',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.7'\n}\n\n\ndef run(ctx):\n\n    [num_columns, num_plates] = get_values(  # noqa: F821\n        \"num_columns\", \"num_plates\")\n\n    if not 1 <= num_columns <= 12:\n        raise Exception(\"Enter a column number between 1-12\")\n    if not 1 <= num_plates <= 10:\n        raise Exception(\"Enter a plate number between 1-10\")\n\n    # custom number of Plates\n    custom_plates = [str(i) for i in range(2, num_plates+2)]\n\n    # labware setup\n    tiprack = ctx.load_labware('opentrons_96_tiprack_300ul', '1')\n    plates = [ctx.load_labware('corning_96_wellplate_360ul_flat', slot)\n              for slot in custom_plates]\n\n    # instrument setup\n    p300 = ctx.load_instrument('p300_multi_gen2', 'left', tip_racks=[tiprack])\n\n    # commands\n    num_dilutions = num_columns - 1\n\n    for plate in plates:\n        p300.pick_up_tip()\n        rows = zip(plate.rows()[0][:num_dilutions],\n                   plate.rows()[0][1:num_dilutions+1])\n        p300.mix(12, 100, plate.rows()[0][0])\n        for source, dest in rows:\n            p300.transfer(20, source, dest,\n                          mix_after=(12, 100), new_tip='never')\n        p300.aspirate(20, plate.rows()[0][num_dilutions])\n        p300.drop_tip()\n",
     "custom_labware_defs": [],
     "fields": [
         {
@@ -60,7 +60,10 @@
         }
     ],
     "metadata": {
-        "apiLevel": "2.7"
+        "apiLevel": "2.7",
+        "author": "Rami Farawi <rami.farawi@opentrons.com>",
+        "protocolName": "Standard Serial Dilution",
+        "source": "Custom Protocol Request"
     },
     "modules": []
 }
