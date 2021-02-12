@@ -15,12 +15,12 @@
         "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
         "process": "1. Setup up deck according to instructions.  Each of the six patient sample racks should contain a full set of 15 samples.  Wells A1, B1, H1, A7, B7, and H7 in the extraction plate are left empty. Transfers 100uL of each sample into a new well on the extraction plate using the custom tube rack and custom NEST well plate.\n\n",
         "robot": "* [OT-2](https://opentrons.com/ot-2)\n\n",
-        "title": "Nucleic acid purification from 90 patient samples"
+        "title": "Nucleic Acid Purification"
     },
     "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
     "process": "\nSetup up deck according to instructions.  Each of the six patient sample racks should contain a full set of 15 samples.  Wells A1, B1, H1, A7, B7, and H7 in the extraction plate are left empty. Transfers 100uL of each sample into a new well on the extraction plate using the custom tube rack and custom NEST well plate.\n",
     "robot": [
         "OT-2"
     ],
-    "title": "Nucleic acid purification from 90 patient samples"
+    "title": "Nucleic Acid Purification"
 }
