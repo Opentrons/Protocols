@@ -1,17 +1,12 @@
 
 import math
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"number_of_samples":96,"tip_start_column":1}""")
-    return [_all_values[n] for n in names]
-
 metadata = {
-    'apiLevel': '2.7',
-    'protocolName': 'RBC Transfer',
-    'author': 'Alise <protocols@opentrons.com>',
-    'source': 'Custom Protocol Request'
-    }
+    'protocolName': 'Version Update - Master RBC Transfer',
+    'author': 'Rami Farawi <rami.farawi@opentrons.com>',
+    'source': 'Custom Protocol Request',
+    'apiLevel': '2.7'
+}
 
 
 def run(protocol):
