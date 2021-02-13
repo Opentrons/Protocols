@@ -1,6 +1,12 @@
 import math
 
-metadata = {'apiLevel': '2.7'}
+metadata = {
+    'protocolName':
+    'Version Update - Adding WISTD and Water to DBS 96-Well Plate ',
+    'author': 'Rami Farawi <rami.farawi@opentrons.com>',
+    'source': 'Custom Protocol Request',
+    'apiLevel': '2.7'
+}
 
 
 def run(protocol):
