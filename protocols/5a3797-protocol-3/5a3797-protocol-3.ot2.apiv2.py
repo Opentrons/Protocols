@@ -46,6 +46,7 @@ def run(ctx):
 
     sample_plate = ctx.load_labware('kingfisher_96_deepwell_plate_2ml', 3)
     reservoir = ctx.load_labware('nest_12_reservoir_15ml', 4)
+    res_wells = reservoir.wells()[0:3]
 
     # Load Pipette
     p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
@@ -60,7 +61,6 @@ def run(ctx):
 
     sample_plate_wells = sample_plate.rows()[0][:columns]
     sample_plate_control = sample_plate.wells()[1:samples]
-    reservoir_columns = reservoir.wells()[:columns]
 
     # Aliquot 200 uL from ~7 Tube Racks
     for tuberack_well, sample_well in zip(tuberack_samples,
@@ -82,10 +82,10 @@ def run(ctx):
 
         # Aliquot 275 uL from Reservoir
         m300.flow_rate.aspirate = final_asp_speed
-        for res, sample_well in zip(reservoir_columns, sample_plate_wells):
+        for i, sample_well in enumerate(sample_plate_wells):
             for _, vol in zip(range(2), [150, 125]):
                 pick_up(m300)
-                m300.aspirate(vol, res.bottom(reservoir_height))
+                m300.aspirate(vol, res_wells[i//4].bottom(reservoir_height))
                 m300.air_gap(final_air_gap)
                 m300.dispense(vol+final_air_gap, sample_well.center())
                 m300.blow_out()
@@ -94,8 +94,8 @@ def run(ctx):
     elif tip_type == 'opentrons_96_tiprack_300ul':
 
         m300.flow_rate.aspirate = final_asp_speed
-        for res, sample_well in zip(reservoir_columns, sample_plate_wells):
-            m300.transfer(275, res.bottom(reservoir_height),
+        for i, sample_well in enumerate(sample_plate_wells):
+            m300.transfer(275, res_wells[i//4].bottom(reservoir_height),
                           sample_well.center(), air_gap=final_air_gap,
                           blow_out=True, blowout_location='destination well',
                           new_tip='always')
