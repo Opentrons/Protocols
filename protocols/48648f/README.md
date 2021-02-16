@@ -19,13 +19,6 @@ This protocol automates the transfer of up to 90 patient samples to an extractio
 * [MTCbio 10 ml tube](https://s3.amazonaws.com/pf-upload-01/u-4256/0/2021-01-27/jj43jf5/mtcbio_15_tuberack_10000ul.json)
 * [NEST 96 2 mL](https://s3.amazonaws.com/pf-upload-01/u-4256/0/2021-01-27/ox33jt1/nest_96_wellplate_2000ul.json)
 
----
-![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
-
-* Reservoir 1: slot 5
-* Reservoir 2: slot 2  
-![reservoirs](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/covid-19-station-b/reagent_layout.png)
-
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
