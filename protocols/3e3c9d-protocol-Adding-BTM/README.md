@@ -1,11 +1,11 @@
-# Version Update - Adding WISTD and Water to DBS 96-Well Plate
+# Version Update - Adding BTM to DBS
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Sample Prep
-  * Plate Filling
+* General
+
 
 ## Description
 This protocol updates an existing protocol request from Opentrons API Version 1 to Opentrons API Version 2.</br>
@@ -34,15 +34,13 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
+Slot 1: Electron Microscopy Sciences Rectangular Staining Dish
+
 Slot 2: Corning 96 Well Plate 360 µL Flat
 
 Slot 4: Opentrons 96 Tip-Rack 300ul
 
-Slot 5: Electron Microscopy Sciences Rectangular Staining Dish
-
-Slot 9: Electron Microscopy Sciences Rectangular Staining Dish
-
-P300-Multi Mount: Left
+P300-Multi Mount: Left Mount
 
 
 
@@ -71,4 +69,4 @@ P300-Multi Mount: Left
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-3e3c9d-protocols-Adding-WISTD-Water
+3e3c9d-protocol-Adding-BTM
