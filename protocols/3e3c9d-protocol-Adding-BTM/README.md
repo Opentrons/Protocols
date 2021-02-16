@@ -1,4 +1,4 @@
-# Version Update - Master RBC Transfer
+# Version Update - Adding BTM to DBS
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -22,14 +22,11 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 
 * [Opentrons OT-2](https://shop.opentrons.com/collections/ot-2-robot/products/ot-2)
 * [Opentrons OT-2 Run App (Version 3.19.0 or later)](https://opentrons.com/ot-app/)
-* [Opentrons P50 Single-Channel Pipette](https://shop.opentrons.com/collections/ot-2-pipettes)
 * [Opentrons P50 Multi-Channel Pipette](https://shop.opentrons.com/collections/ot-2-pipettes)
+* [Opentrons Corning 96 Well Plate 360 µL Flat](https://labware.opentrons.com/corning_96_wellplate_360ul_flat?category=wellPlate)
 * [Opentrons 96 Tip Rack 300 µL](https://labware.opentrons.com/opentrons_96_tiprack_300ul?category=tipRack)
 * [Opentrons 300µL Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
 * Electron Microscopy Sciences Rectangular Staining Dish [https://www.emsdiasum.com/microscopy/products/histology/staining.aspx#70314]
-* Omegaquant 96-Well Plate
-* Blood Tube Rack
-* 200ul Tip-Rack and Tips
 * Reagents
 
 
@@ -37,27 +34,14 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
-Slot 2: Omegaquant 96-Well Plate
+Slot 1: Electron Microscopy Sciences Rectangular Staining Dish
 
-Slot 3: Electron Microscopy Sciences Rectangular Staining Dish
+Slot 2: Corning 96 Well Plate 360 µL Flat
 
 Slot 4: Opentrons 96 Tip-Rack 300ul
 
-Slot 5: Electron Microscopy Sciences Rectangular Staining Dish
+P300-Multi Mount: Left Mount
 
-Slot 6: 200ul Tip-Rack
-
-Slot 7: Blood Tube Rack
-
-Slot 8: Blood Tube Rack
-
-Slot 10: Blood Tube Rack
-
-Slot 11: Blood Tube Rack
-
-P300-Multi Mount: Left
-
-P50-Single Mount: Right
 
 
 
@@ -85,4 +69,4 @@ P50-Single Mount: Right
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-3e3c9d-protocol-Master-RBC-Transfer
+3e3c9d-protocol-Adding-BTM
