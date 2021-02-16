@@ -9,6 +9,6 @@
     "type": "int",
     "label": "Tip Start Column",
     "name": "tip_start_column",
-    "default": 2
+    "default": 1
   }
 ]

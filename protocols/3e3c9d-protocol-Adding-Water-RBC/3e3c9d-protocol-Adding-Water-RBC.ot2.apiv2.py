@@ -1,8 +1,7 @@
 import math
 
 metadata = {
-    'protocolName':
-    'Version Update - Adding WISTD and Water to DBS 96-Well Plate ',
+    'protocolName': 'Version Update - Adding Water to RBC 96-Well Plate',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.7'
@@ -25,18 +24,15 @@ def run(protocol):
 
     # labware setup
     plate = protocol.load_labware('corning_96_wellplate_360ul_flat', '2')
-    trough1 = protocol.load_labware(
-                        'electronmicroscopysciences_1_reservoir_100000ul', '5')
-    trough2 = protocol.load_labware(
-                        'electronmicroscopysciences_1_reservoir_100000ul', '9')
+    trough = protocol.load_labware(
+                        'electronmicroscopysciences_1_reservoir_100000ul', '1')
     tiprack = protocol.load_labware('opentrons_96_tiprack_300ul', '4')
 
     # instrument setup
     m300 = protocol.load_instrument('p300_multi', 'left', tip_racks=[tiprack])
 
     # reagent setup
-    wistd = trough1['A1']
-    water = trough2['A1']
+    source = trough['A1']
 
     # protocol
     if number_of_samples >= 12:
@@ -44,19 +40,10 @@ def run(protocol):
     else:
         plate_loc = [col for col in plate.rows()[0]][:num_columns]
 
-    # transfer WISTD to wells
     m300.pick_up_tip(tiprack.rows()[0][tip_start_column], presses=4)
-    m300.mix(3, 300, wistd)
-    m300.blow_out(wistd)
-    for dest in plate_loc:
-        m300.transfer(250, wistd, dest.top(), blow_out=True, new_tip='never')
-    m300.drop_tip()
-
-    # transfer water to wells
-    m300.pick_up_tip(presses=4, increment=1)
-    m300.mix(3, 300, water)
-    m300.blow_out(water)
+    m300.mix(3, 300, source)
+    m300.blow_out(source)
 
     for dest in plate_loc:
-        m300.transfer(250, water, dest.top(), blow_out=True, new_tip='never')
+        m300.transfer(250, source, dest.top(), blow_out=True, new_tip='never')
     m300.drop_tip()

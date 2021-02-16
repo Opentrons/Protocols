@@ -2,13 +2,11 @@ from opentrons.types import Point
 import json
 import os
 import math
-import threading
-from time import sleep
 
 metadata = {
-    'protocolName': 'COVID-19 Station B RNA Extraction',
+    'protocolName': 'Beckman Coulter RNAdvance Viral RNA Isolation',
     'author': 'Opentrons <protocols@opentrons.com>',
-    'apiLevel': '2.4'
+    'apiLevel': '2.9'
 }
 
 
@@ -18,71 +16,41 @@ Here is where you can modify the magnetic module engage height:
 MAG_HEIGHT = 6.8
 
 
-# Definitions for deck light flashing
-class CancellationToken:
-    def __init__(self):
-        self.is_continued = False
-
-    def set_true(self):
-        self.is_continued = True
-
-    def set_false(self):
-        self.is_continued = False
-
-
-def turn_on_blinking_notification(hardware, pause):
-    while pause.is_continued:
-        hardware.set_lights(rails=True)
-        sleep(1)
-        hardware.set_lights(rails=False)
-        sleep(1)
-
-
-def create_thread(ctx, cancel_token):
-    t1 = threading.Thread(target=turn_on_blinking_notification,
-                          args=(ctx._hw_manager.hardware, cancel_token))
-    t1.start()
-    return t1
-
-
-# Start protocol
 def run(ctx):
-    # Setup for flashing lights notification to empty trash
-    cancellationToken = CancellationToken()
 
-    [num_samples, deepwell_type, res_type, starting_vol, binding_buffer_vol,
-     wash1_vol, wash2_vol, wash3_vol, elution_vol, mix_reps, settling_time,
-     park_tips, tip_track, flash] = get_values(  # noqa: F821
-        'num_samples', 'deepwell_type', 'res_type', 'starting_vol',
-        'binding_buffer_vol', 'wash1_vol', 'wash2_vol', 'wash3_vol',
-        'elution_vol', 'mix_reps', 'settling_time', 'park_tips', 'tip_track',
-        'flash')
-
+    [num_samples] = get_values(  # noqa: F821
+        'num_samples')
+    [starting_vol, binding_buffer_vol, wash1_vol, wash2_vol, wash3_vol,
+     elution_vol, mix_reps, settling_time, park_tips, tip_track] = [
+     200, 200, 400, 400, 400, 40, 10, 5, False, False]
     """
     Here is where you can change the locations of your labware and modules
     (note that this is the recommended configuration)
     """
-    magdeck = ctx.load_module('magnetic module gen2', '4')
+    magdeck = ctx.load_module('magnetic module gen2', '6')
     magdeck.disengage()
-    magplate = magdeck.load_labware(deepwell_type, 'deepwell plate')
+    magplate = magdeck.load_labware('nest_96_wellplate_2ml_deep',
+                                    'deepwell plate')
     tempdeck = ctx.load_module('Temperature Module Gen2', '1')
     elutionplate = tempdeck.load_labware(
                 'opentrons_96_aluminumblock_nest_wellplate_100ul',
                 'elution plate')
-    waste = ctx.load_labware('nest_1_reservoir_195ml', '11',
+    waste = ctx.load_labware('nest_1_reservoir_195ml', '9',
                              'Liquid Waste').wells()[0].top()
-    res2 = ctx.load_labware(res_type, '2', 'reagent reservoir 2')
-    res1 = ctx.load_labware(res_type, '5', 'reagent reservoir 1')
+    res2 = ctx.load_labware(
+        'nest_12_reservoir_15ml', '3', 'reagent reservoir 2')
+    res1 = ctx.load_labware(
+        'nest_12_reservoir_15ml', '2', 'reagent reservoir 1')
     num_cols = math.ceil(num_samples/8)
     tips300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot,
                                 '200µl filtertiprack')
-               for slot in ['3', '6', '8', '9', '10']]
+               for slot in ['4', '7', '8', '10', '11']]
     if park_tips:
         parkingrack = ctx.load_labware(
-            'opentrons_96_tiprack_300ul', '7', 'tiprack for parking')
+            'opentrons_96_tiprack_300ul', '5', 'tiprack for parking')
         parking_spots = parkingrack.rows()[0][:num_cols]
     else:
-        tips300.insert(0, ctx.load_labware('opentrons_96_tiprack_300ul', '7',
+        tips300.insert(0, ctx.load_labware('opentrons_96_tiprack_300ul', '5',
                                            '200µl filtertiprack'))
         parking_spots = [None for none in range(12)]
 
@@ -93,16 +61,15 @@ def run(ctx):
     """
     Here is where you can define the locations of your reagents.
     """
-    binding_buffer = res1.wells()[:11]
-    elution_solution = res1.wells()[-1]
-    wash1 = res2.wells()[:4]
-    wash2 = res2.wells()[4:8]
-    wash3 = res2.wells()[8:]
+    binding_buffer = res1.wells()[:2]
+    elution_solution = res2.wells()[-1]
+    wash1 = res1.wells()[4:8]
+    wash2 = res1.wells()[8:]
+    wash3 = res2.wells()[:4]
 
     mag_samples_m = magplate.rows()[0][:num_cols]
     elution_samples_m = elutionplate.rows()[0][:num_cols]
 
-    magdeck.disengage()  # just in case
     tempdeck.set_temperature(4)
 
     m300.flow_rate.aspirate = 50
@@ -155,22 +122,13 @@ resuming.')
             Point(x=side))
         pip.drop_tip(drop_loc)
         switch = not switch
-        if pip.type == 'multi':
-            drop_count += 8
-        else:
-            drop_count += 1
-        if drop_count >= drop_threshold:
-            # Setup for flashing lights notification to empty trash
-            if flash:
-                if not ctx._hw_manager.hardware.is_simulator:
-                    cancellationToken.set_true()
-                thread = create_thread(ctx, cancellationToken)
+        drop_count += 8
+        if drop_count == drop_threshold:
             m300.home()
             ctx.pause('Please empty tips from waste before resuming.')
+
             ctx.home()  # home before continuing with protocol
-            if flash:
-                cancellationToken.set_false()  # stop light flashing after home
-                thread.join()
+
             drop_count = 0
 
     waste_vol = 0
@@ -189,21 +147,10 @@ resuming.')
         def _waste_track(vol):
             nonlocal waste_vol
             if waste_vol + vol >= waste_threshold:
-                # Setup for flashing lights notification to empty liquid waste
-                if flash:
-                    if not ctx._hw_manager.hardware.is_simulator:
-                        cancellationToken.set_true()
-                    thread = create_thread(ctx, cancellationToken)
-                m300.home()
                 ctx.pause('Please empty liquid waste (slot 11) before \
 resuming.')
 
                 ctx.home()  # home before continuing with protocol
-                if flash:
-                    # stop light flashing after home
-                    cancellationToken.set_false()
-                    thread.join()
-
                 waste_vol = 0
             waste_vol += vol
 
@@ -218,7 +165,7 @@ resuming.')
             side = -1 if i % 2 == 0 else 1
             loc = m.bottom(0.5).move(Point(x=side*2))
             for _ in range(num_trans):
-                _waste_track(vol_per_trans)
+                _waste_track(vol_per_trans*8)
                 if m300.current_volume > 0:
                     # void air gap if necessary
                     m300.dispense(m300.current_volume, m.top())
@@ -245,7 +192,6 @@ resuming.')
                                supernatant to the final clean elutions PCR
                                plate.
         """
-        latest_chan = -1
         for i, (well, spot) in enumerate(zip(mag_samples_m, parking_spots)):
             if park:
                 _pick_up(m300, spot)
@@ -253,19 +199,15 @@ resuming.')
                 _pick_up(m300)
             num_trans = math.ceil(vol/200)
             vol_per_trans = vol/num_trans
-            asp_per_chan = (0.95*res1.wells()[0].max_volume)//(vol_per_trans*8)
             for t in range(num_trans):
-                chan_ind = int((i*num_trans + t)//asp_per_chan)
-                source = binding_buffer[chan_ind]
+                src = binding_buffer[i//(12//len(binding_buffer))]
                 if m300.current_volume > 0:
                     # void air gap if necessary
-                    m300.dispense(m300.current_volume, source.top())
-                if chan_ind > latest_chan:  # mix if accessing new channel
-                    for _ in range(5):
-                        m300.aspirate(180, source.bottom(0.5))
-                        m300.dispense(180, source.bottom(5))
-                    latest_chan = chan_ind
-                m300.transfer(vol_per_trans, source, well.top(), air_gap=20,
+                    m300.dispense(m300.current_volume, src.top())
+                for _ in range(5):
+                    m300.aspirate(180, src.bottom(0.5))
+                    m300.dispense(180, src.bottom(5))
+                m300.transfer(vol_per_trans, src, well.top(), air_gap=20,
                               new_tip='never')
                 if t < num_trans - 1:
                     m300.air_gap(20)
@@ -276,7 +218,7 @@ resuming.')
                 m300.drop_tip(spot)
             else:
                 _drop(m300)
-
+        ctx.delay(minutes=5, msg='Incubate for 5 minutes')
         magdeck.engage(height=MAG_HEIGHT)
         ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
 ' + str(settling_time) + ' minutes.')
@@ -332,8 +274,7 @@ resuming.')
         if magdeck.status == 'disengaged':
             magdeck.engage(height=MAG_HEIGHT)
 
-        ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
-' + str(settling_time) + ' minutes.')
+        ctx.delay(minutes=7, msg='Incubating on MagDeck for 7 minutes.')
 
         remove_supernatant(vol, park=park)
 
@@ -368,22 +309,6 @@ resuming.')
             else:
                 _drop(m300)
 
-        # agitate after resuspension
-        for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
-            if park:
-                _pick_up(m300, spot)
-            else:
-                _pick_up(m300)
-            side = 1 if i % 2 == 0 else -1
-            loc = m.bottom(0.5).move(Point(x=side*2))
-            m300.mix(10, 0.8*vol, loc)
-            m300.blow_out(m.bottom(5))
-            m300.air_gap(20)
-            if park:
-                m300.drop_tip(spot)
-            else:
-                _drop(m300)
-
         magdeck.engage(height=MAG_HEIGHT)
         ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
 ' + str(settling_time) + ' minutes.')
@@ -406,9 +331,9 @@ resuming.')
     protocol. The normal sequence is:
     """
     bind(binding_buffer_vol, park=park_tips)
-    wash(wash1_vol, wash1, park=park_tips)
-    wash(wash2_vol, wash2, park=park_tips)
-    wash(wash3_vol, wash3, park=park_tips)
+    wash(wash1_vol, wash1, park=park_tips, resuspend=True)
+    wash(wash2_vol, wash2, park=park_tips, resuspend=False)
+    wash(wash3_vol, wash3, park=park_tips, resuspend=False)
     elute(elution_vol, park=park_tips)
 
     # track final used tip
