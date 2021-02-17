@@ -127,7 +127,7 @@ def run(ctx):
                 i] for i in range(1, len(dispense_locations), 2)])
 
         # transfer steps
-        for asp_l, asp_r, disp_l, disp_r in list(transfers)[:sample_number]:
+        for asp_l, asp_r, disp_l, disp_r in list(transfers):
             left_pipette.pick_up_tip()
             if asp_r and transfer_count < sample_number - 1:
                 right_pipette.pick_up_tip()
@@ -140,6 +140,8 @@ def run(ctx):
                 right_pipette.dispense(500, disp_r)
                 transfer_count += 1
             if asp_r and transfer_count < sample_number:
-                p1000LR.drop_tip()
+                left_pipette.drop_tip()
+                right_pipette.drop_tip()
             else:
                 left_pipette.drop_tip()
+            
