@@ -74,13 +74,13 @@ def run(ctx):
 
     # Transfer Component 2 to 24 Well Block Tubes
     for d_tubes in dest_tubes.wells()[:24]:
-        h = h_track(component_2_volume, tuberack['B1'])
+        h = h_track(60, tuberack['B1'])
         num_trans = math.ceil(component_2_volume/200)
         vol_per_trans = component_2_volume/num_trans
         for _ in range(num_trans):
             p300.transfer(vol_per_trans,
-                        tuberack['B1'].bottom(h),
-                        d_tubes, new_tip='always')
+                          tuberack['B1'].bottom(h),
+                          d_tubes, new_tip='always')
 
     # Get Select PCR Tube Wells
     pcr_wells = [pcr_plate[well] for well in ['A1', 'A2', 'A3', 'A6', 'A7',
