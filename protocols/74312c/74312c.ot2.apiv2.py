@@ -12,15 +12,10 @@ def run(ctx):
         "p20_mount", "samples", "volume", "trough_type")
 
     volume = float(volume)
-    trough_type = int(trough_type)
-
-    troughs = {1: "agilent_1_reservoir_290ml", 2: "axygen_1_reservoir_90ml",
-               3: "nest_12_reservoir_15ml", 4: "nest_1_reservoir_195ml",
-               5: "usascientific_12_reservoir_22ml"}
 
     # Load Labware
     pcb = ctx.load_labware('pcb_board_250_wells', 1)
-    trough = ctx.load_labware(troughs[trough_type], 6, 'Tetrahydrofuran')['A1']
+    trough = ctx.load_labware(trough_type, 6, 'Tetrahydrofuran')['A1']
     tiprack = ctx.load_labware('opentrons_96_tiprack_20ul', 3)
 
     # Load Pipette
@@ -28,4 +23,9 @@ def run(ctx):
                               tip_racks=[tiprack])
 
     # Transfer 10 uL to all wells
-    p20.transfer(volume, trough, pcb.wells()[:samples], new_tip='once')
+    delay_count = 0
+    for _ in range(2):
+        p20.transfer(volume, trough, pcb.wells()[:samples], new_tip='once')
+        if delay_count == 0:
+            ctx.delay(minutes=1, msg='Pausing for 1 minute')
+        delay_count += 1
