@@ -128,20 +128,21 @@ def run(ctx):
 
         # transfer steps
         for asp_l, asp_r, disp_l, disp_r in list(transfers):
-            left_pipette.pick_up_tip()
-            if asp_r and transfer_count < sample_number - 1:
-                right_pipette.pick_up_tip()
-            left_pipette.aspirate(500, asp_l)
-            if asp_r and transfer_count < sample_number - 1:
-                right_pipette.aspirate(500, asp_r)
-            left_pipette.dispense(500, disp_l)
-            transfer_count += 1
-            if disp_r and transfer_count < sample_number:
-                right_pipette.dispense(500, disp_r)
+            if transfer_count <= 96:
+                left_pipette.pick_up_tip()
+                if asp_r and transfer_count < sample_number - 1:
+                    right_pipette.pick_up_tip()
+                left_pipette.aspirate(500, asp_l)
+                if asp_r and transfer_count < sample_number - 1:
+                    right_pipette.aspirate(500, asp_r)
+                left_pipette.dispense(500, disp_l)
                 transfer_count += 1
-            if asp_r and transfer_count < sample_number:
-                p1000LR.drop_tip()
-            else:
-                left_pipette.drop_tip()
-            if transfer_count >= sample_number:
-                break
+                if disp_r and transfer_count < sample_number:
+                    right_pipette.dispense(500, disp_r)
+                    transfer_count += 1
+                if asp_r and transfer_count < sample_number:
+                    p1000LR.drop_tip()
+                else:
+                    left_pipette.drop_tip()
+                if transfer_count >= sample_number:
+                    break
