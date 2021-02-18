@@ -1,0 +1,160 @@
+{
+    "content": "import math\n\nmetadata = {\n    'protocolName': 'NEB Ultra II FS DNA Library Prep (Part 2)',\n    'author': 'Sakib <sakib.hossain@opentrons.com>',\n    'description': 'PCR, Bead Clean up, and Elution',\n    'apiLevel': '2.8'\n}\n\n\ndef run(ctx):\n\n    [sample_number, m300_mount, m20_mount, pcr,\n     bead_clean_up, elution] = get_values(  # noqa: F821\n     \"sample_number\", \"m300_mount\", \"m20_mount\",\n     \"pcr\", \"bead_clean_up\", \"elution\")\n\n    sample_number = int(sample_number)\n    if not sample_number > 1 or sample_number > 48:\n        raise Exception(\"Enter a sample number between 1-48\")\n    columns = math.ceil(sample_number/8)\n\n    # Load Labware\n    tiprack20ul = ctx.load_labware('opentrons_96_filtertiprack_20ul',\n                                   1, 'Tip Box 1')\n    tiprack200ul = [ctx.load_labware('opentrons_96_filtertiprack_200ul',\n                                     slot, f'Tip Box {slot}') for\n                    slot in ['2', '3']]\n    reservoir = ctx.load_labware('nest_12_reservoir_15ml', 6, 'Reservoir')\n    index_primers = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',\n                                     5, 'Index Primers')\n\n    # Load Modules and Plates\n    tc_mod = ctx.load_module('thermocycler module')\n    tc_plate = tc_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')\n\n    temp_mod = ctx.load_module('temperature module gen2', 4)\n    temp_plate = temp_mod.load_labware(\n                    'opentrons_96_aluminumblock_generic_pcr_strip_200ul')\n\n    mag_mod = ctx.load_module('magnetic module gen2', 9)\n    mag_plate = mag_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')\n\n    # Load Pipettes\n    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount,\n                              tip_racks=[tiprack20ul])\n    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,\n                               tip_racks=tiprack200ul)\n\n    # Reagents and Samples\n    ethanol = reservoir['A1']\n    eb_tween = temp_plate['A1']\n    trash = ctx.fixed_trash['A1']\n    tc_plate_samples = tc_plate.rows()[0][:columns]\n    mag_plate_samples = mag_plate.rows()[0][:columns]\n    index_primers_samples = index_primers.rows()[0][:columns]\n\n    if pcr:\n\n        m20.transfer(10, index_primers_samples, tc_plate_samples,\n                     mix_after=(5, 15), new_tip='always')\n\n        tc_mod.close_lid()\n        tc_mod.set_lid_temperature(105)\n        tc_mod.set_block_temperature(98, hold_time_seconds=30)\n\n        profile = [\n            {'temperature': 98, 'hold_time_minutes': 10},\n            {'temperature': 65, 'hold_time_minutes': 1,\n             'hold_time_seconds': 15}\n        ]\n\n        tc_mod.execute_profile(steps=profile, repetitions=12)\n        tc_mod.set_block_temperature(65, hold_time_minutes=5)\n        tc_mod.set_block_temperature(4)\n        tc_mod.open_lid()\n\n    if bead_clean_up:\n\n        m20.transfer(20, tc_plate_samples, mag_plate_samples,\n                     mix_after=(5, 15), new_tip='always')\n\n        ctx.delay(minutes=5, msg='Pausing for 5 minutes...')\n        mag_mod.engage()\n        ctx.delay(minutes=2, msg='Pausing for 2 minutes...')\n\n        for mag_col in mag_plate_samples:\n            m300.pick_up_tip()\n            for _ in range(2):\n                m300.transfer(25, mag_col, trash, new_tip='never')\n            m300.drop_tip()\n\n        for _ in range(2):\n            for mag_col in mag_plate_samples:\n                m300.pick_up_tip()\n                m300.transfer(100, ethanol, mag_col, new_tip='never')\n                m300.transfer(110, ethanol, trash, new_tip='never')\n                m300.drop_tip()\n\n        ctx.delay(minutes=2, msg=\"Delaying for 2 minutes to dry...\")\n        mag_mod.disengage()\n\n    if elution:\n\n        m300.transfer(22, eb_tween, mag_plate_samples, new_tip='always')\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 48,
+            "label": "Total Samples (Max: 48)",
+            "name": "sample_number",
+            "type": "int"
+        },
+        {
+            "label": "P20-multi channel GEN2 mount",
+            "name": "m20_mount",
+            "options": [
+                {
+                    "label": "right",
+                    "value": "right"
+                },
+                {
+                    "label": "left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P300-multi channel GEN2 mount",
+            "name": "m300_mount",
+            "options": [
+                {
+                    "label": "left",
+                    "value": "left"
+                },
+                {
+                    "label": "right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Run PCR",
+            "name": "pcr",
+            "options": [
+                {
+                    "label": "Yes",
+                    "value": true
+                },
+                {
+                    "label": "No",
+                    "value": false
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Run Bead Clean Up",
+            "name": "bead_clean_up",
+            "options": [
+                {
+                    "label": "Yes",
+                    "value": true
+                },
+                {
+                    "label": "No",
+                    "value": false
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Run Elution",
+            "name": "elution",
+            "options": [
+                {
+                    "label": "Yes",
+                    "value": true
+                },
+                {
+                    "label": "No",
+                    "value": false
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_multi_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p20_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Tip Box 1 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Tip Box 2 on 2",
+            "share": false,
+            "slot": "2",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Tip Box 3 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 \u00b5L on Temperature Module GEN2 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_aluminumblock_generic_pcr_strip_200ul"
+        },
+        {
+            "name": "Index Primers on 5",
+            "share": false,
+            "slot": "5",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Reservoir on 6",
+            "share": false,
+            "slot": "6",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Thermocycler Module on 7",
+            "share": false,
+            "slot": "7",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Magnetic Module GEN2 on 9",
+            "share": false,
+            "slot": "9",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.8",
+        "author": "Sakib <sakib.hossain@opentrons.com>",
+        "description": "PCR, Bead Clean up, and Elution",
+        "protocolName": "NEB Ultra II FS DNA Library Prep (Part 2)"
+    },
+    "modules": []
+}
