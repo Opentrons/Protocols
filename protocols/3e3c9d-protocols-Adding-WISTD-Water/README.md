@@ -4,8 +4,7 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Sample Prep
-  * Plate Filling
+* General
 
 ## Description
 This protocol updates an existing protocol request from Opentrons API Version 1 to Opentrons API Version 2.</br>
