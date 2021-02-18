@@ -1,0 +1,25 @@
+[
+  {
+    "type": "textFile",
+    "label": "Transfer CSV",
+    "name": "v_csv",
+    "default": ""
+  },{
+    "type": "dropDown",
+    "label": "P20 Single Mount",
+    "name": "p20_mount",
+    "options": [
+      {"label": "Right", "value": "right"},
+      {"label": "Left", "value": "left"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "P50 Single Mount",
+    "name": "p50_mount",
+    "options": [
+      {"label": "Right", "value": "left"},
+      {"label": "Left", "value": "right"}
+    ]
+  }
+]
