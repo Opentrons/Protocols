@@ -104,7 +104,8 @@ def run(ctx):
 
     if pool_size == "2":
         pool_dispenses = [
-          pool_well for pool_well in pool_wells for i in range(int(pool_size))]
+            pool_well for pool_well in pool_wells for i in range(
+             int(pool_size))]
 
     # list wells for transfer steps (L asp, R asp, L disp, R disp)
     transfer_count = 0
@@ -118,13 +119,17 @@ def run(ctx):
                 pool_well for pool_well in pool_wells[
                     index*pool_columns:(index+1)*pool_columns
                     ] for i in range(3)]
+        stop_index = (
+         lambda transfer_count: len(
+          rack.wells()) if sample_number - transfer_count >= len(
+          rack.wells()) else sample_number - transfer_count)(transfer_count)
         transfers = zip_longest(
-            [rack.wells()[i] for i in range(0, len(rack.wells()), 2)],
-            [rack.wells()[i] for i in range(1, len(rack.wells()), 2)],
+            [rack.wells()[i] for i in range(0, stop_index, 2)],
+            [rack.wells()[i] for i in range(1, stop_index, 2)],
             [dispense_locations[
-                i] for i in range(0, len(dispense_locations), 2)],
+                i] for i in range(0, stop_index, 2)],
             [dispense_locations[
-                i] for i in range(1, len(dispense_locations), 2)])
+                i] for i in range(1, stop_index, 2)])
 
         # transfer steps
         for asp_l, asp_r, disp_l, disp_r in list(transfers):
@@ -140,8 +145,6 @@ def run(ctx):
                 right_pipette.dispense(500, disp_r)
                 transfer_count += 1
             if asp_r and transfer_count < sample_number:
-                left_pipette.drop_tip()
-                right_pipette.drop_tip()
+                p1000LR.drop_tip()
             else:
                 left_pipette.drop_tip()
-            
