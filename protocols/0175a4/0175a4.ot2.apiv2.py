@@ -25,9 +25,6 @@ def run(ctx):
     left_pipette = ctx.load_instrument(
         'p1000_single_gen2', 'left', tip_racks=[tips_1000])
 
-    # pair the left(primary) and right(secondary) p1000 pipettes
-    p1000LR = left_pipette.pair_with(right_pipette)
-
     # calculate the number of sample_racks needed
     sample_racks = math.ceil(sample_number / (sample_rows*sample_columns))
 
@@ -145,6 +142,7 @@ def run(ctx):
                 right_pipette.dispense(500, disp_r)
                 transfer_count += 1
             if asp_r and transfer_count < sample_number:
-                p1000LR.drop_tip()
+                left_pipette.drop_tip()
+                right_pipette.drop_tip()
             else:
                 left_pipette.drop_tip()
