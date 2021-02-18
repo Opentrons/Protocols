@@ -6,6 +6,8 @@ metadata = {
     'source': 'Custom Protocol Request',
     'apiLevel': '2.7'
 }
+
+
 def run(protocol):
     [number_of_samples, tip_start_column] = get_values(  # noqa: F821
         "number_of_samples", "tip_start_column")
