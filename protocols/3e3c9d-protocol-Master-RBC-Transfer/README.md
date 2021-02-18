@@ -75,7 +75,7 @@ P50-Single Mount: Right
 
 ## Process
 
-1. Download your protocol package containing the custom labware definitions for the reservoir and plate.
+1. Download your protocol package containing the custom labware definitions for the reservoir and plates.
 2. Upload the labware definition in the [OT App](https://opentrons.com/ot-app). For help, please see [this article](https://support.opentrons.com/en/articles/3136506-using-labware-in-your-protocols).
 3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
 4. Set up your deck according to the deck map.
