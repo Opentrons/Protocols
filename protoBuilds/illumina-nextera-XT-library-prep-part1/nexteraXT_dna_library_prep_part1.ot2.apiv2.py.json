@@ -33,7 +33,7 @@
             "type": "dropDown"
         },
         {
-            "default": 24,
+            "default": 96,
             "label": "number of samples",
             "name": "number_of_samples",
             "type": "int"

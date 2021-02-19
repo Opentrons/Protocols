@@ -13749,7 +13749,7 @@
             "options": [
                 {
                     "label": "Corning 384 Well Plate 20 \u00b5L",
-                    "value": "greinerbioone_384_wellplate_100ul"
+                    "value": "corning_384_wellplate_20ul"
                 },
                 {
                     "label": "Bio-Rad 384 Well Plate 50 \u00b5L",
@@ -13782,7 +13782,7 @@
             "name": "destination plate on 1",
             "share": false,
             "slot": "1",
-            "type": "greinerbioone_384_wellplate_100ul"
+            "type": "corning_384_wellplate_20ul"
         },
         {
             "name": "source plate on 6",
