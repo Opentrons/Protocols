@@ -27,8 +27,8 @@ def run(ctx):
 
     # csv file --> nested list
     transfer = [[val.strip() for val in line.split(',')]
-                     for line in v_csv.splitlines()
-                     if line.split(',')[0].strip()][1:]
+                for line in v_csv.splitlines()
+                if line.split(',')[0].strip()][1:]
 
     for line in transfer:
         vol_dna = float(line[1])
