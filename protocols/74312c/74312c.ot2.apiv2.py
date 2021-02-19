@@ -23,9 +23,8 @@ def run(ctx):
                               tip_racks=[tiprack])
 
     # Transfer 10 uL to all wells
-    delay_count = 0
-    for _ in range(2):
+
+    for i in range(2):
         p20.transfer(volume, trough, pcb.wells()[:samples], new_tip='once')
-        if delay_count == 0:
+        if i == 0:
             ctx.delay(minutes=1, msg='Pausing for 1 minute')
-        delay_count += 1
