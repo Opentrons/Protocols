@@ -19,11 +19,13 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 * [Opentrons OT-2 Run App (Version 3.15.0 or later)](https://opentrons.com/ot-app/)
 * [P20 Single Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/single-channel-electronic-pipette)
 * [P300 Single Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/single-channel-electronic-pipette)
+* [GEB 96 Tip Rack 10 µL](https://labware.opentrons.com/geb_96_tiprack_10ul?category=tipRack)
+* [Opentrons 96 Tip Rack 300 µL](https://labware.opentrons.com/opentrons_96_tiprack_300ul?category=tipRack)
 * [VWR Universal Pipet Tips 10ul, XL, Low Retention](https://us.vwr.com/store/catalog/product.jsp?catalog_number=76323-388)
 * [VWR Universal Pipet Tips 300ul, Low Retention](https://us.vwr.com/store/catalog/product.jsp?catalog_number=76322-148)
 * [VWR Flat 96 Well PCR Plate 200ul](https://us.vwr.com/store/catalog/product.jsp?catalog_number=82006-636)
 * [VWR Microplate 96 Square 2ml](https://us.vwr.com/store/product?keyword=75870-792)
-* [VWR Reservoir Without Lid 125 mL](https://us.vwr.com/store/catalog/product.jsp?catalog_number=89049-028)
+* [EK Scientific Reservoir Without Lid 290 mL](https://us.vwr.com/store/catalog/product.jsp?catalog_number=89049-028)
 
 
 
@@ -47,15 +49,15 @@ The first row (A1, B1, C1, D1) can contain headers (like above) or simply have t
 
 **Labware Setup**
 
-Slot 6: VWR Reservoir Without Lid 125 mL
+Slot 6: EK Scientific Reservoir Without Lid 290 mL
 
 Slot 8: VWR Flat 96 Well PCR Plate 200ul
 
-Slot 9: VWR Tiprack 300ul
+Slot 9: Opentrons 96 Tip Rack 300 µL
 
-Slot 10: VWR Microplate 96 Square 2ml
+Slot 10: VWR Square Microplate 96 Square 2ml
 
-Slot 11: VWR Tiprack 10ul
+Slot 11: GEB 96 Tip Rack 10 µL
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
