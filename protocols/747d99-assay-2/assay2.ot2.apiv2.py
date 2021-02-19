@@ -22,7 +22,7 @@ def run(ctx):
         'num_samples', 'tip_track')
 
     wash_vol = 200
-    mag_height = 13.7
+    mag_height = 6.8
     elution_vol = 40
     mix_reps = 10
     settling_time = 3

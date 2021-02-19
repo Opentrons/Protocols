@@ -12,12 +12,16 @@ def run(ctx):
 
     [p300_mount, p20_mount, temperature, component_1_volume,
         component_2_volume, component_1_height,
-        component_2_height] = get_values(  # noqa: F821
+        component_2_height, tube1_vol,
+        component_3_volume] = get_values(  # noqa: F821
         "p300_mount", "p20_mount", "temperature", "component_1_volume",
-        "component_2_volume", "component_1_height", "component_2_height")
+        "component_2_volume", "component_1_height", "component_2_height",
+        "tube1_vol", "component_3_volume")
 
     component_1_volume = float(component_1_volume)
     component_2_volume = float(component_2_volume)
+    component_3_volume = float(component_3_volume)
+    tube1_vol = float(tube1_vol)
 
     # Load Labware
     tuberack = ctx.load_labware(
@@ -61,24 +65,29 @@ def run(ctx):
     temp_mod.set_temperature(temperature)
 
     # Transfer Component 1 to 24 Well Block Tubes
+    p300.pick_up_tip()
     for d_tubes in dest_tubes.wells()[:24]:
         h = h_track(component_1_volume, tuberack['A1'])
         p300.transfer(component_1_volume, tuberack['A1'].bottom(h),
-                      d_tubes, new_tip='always')
+                      d_tubes, new_tip='never')
+    p300.drop_tip()
 
     # Transfer Component 2 to 24 Well Block Tubes
     for d_tubes in dest_tubes.wells()[:24]:
-        h = h_track(component_2_volume, tuberack['B1'])
-        p300.transfer(component_2_volume,
-                      tuberack['B1'].bottom(h),
-                      d_tubes, new_tip='always')
+        h = h_track(60, tuberack['B1'])
+        num_trans = math.ceil(component_2_volume/200)
+        vol_per_trans = component_2_volume/num_trans
+        for _ in range(num_trans):
+            p300.transfer(vol_per_trans,
+                          tuberack['B1'].bottom(h),
+                          d_tubes, new_tip='always')
 
     # Get Select PCR Tube Wells
     pcr_wells = [pcr_plate[well] for well in ['A1', 'A2', 'A3', 'A6', 'A7',
                                               'A8', 'C1', 'C2', 'C3']]
 
     # Transfer from Tube 1 to Select PCR Tubes
-    p300.transfer(22, dest_tubes['A1'], pcr_wells, new_tip='always')
+    p300.transfer(tube1_vol, dest_tubes['A1'], pcr_wells, new_tip='always')
 
     # Mix Component 3, 5 times
     p300.pick_up_tip()
@@ -86,8 +95,8 @@ def run(ctx):
     p300.drop_tip()
 
     # Transfer Component 3 to Select PCR Tube Wells
-    p20.transfer(18, component_3, pcr_wells[-3:], mix_after=(5, 9),
-                 new_tip='always')
+    p20.transfer(component_3_volume, component_3, pcr_wells[-3:],
+                 mix_after=(5, 9), new_tip='always')
 
     # Deactivate Temperature Module
     temp_mod.deactivate()

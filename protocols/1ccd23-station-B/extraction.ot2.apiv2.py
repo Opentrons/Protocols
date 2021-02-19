@@ -44,12 +44,14 @@ def run(ctx):
     # Setup for flashing lights notification to empty trash
     cancellationToken = CancellationToken()
 
-    [num_samples, mag_height, starting_vol, binding_buffer_vol, wash1_vol,
-     wash2_vol, wash3_vol, elution_vol, mix_reps, settling_time, park_tips,
-     tip_track, flash] = get_values(  # noqa: F821
-        'num_samples', 'mag_height', 'starting_vol', 'binding_buffer_vol',
-        'wash1_vol', 'wash2_vol', 'wash3_vol', 'elution_vol', 'mix_reps',
-        'settling_time', 'park_tips', 'tip_track', 'flash')
+    [num_samples, mag_height, magplate_offset, radial_offset, starting_vol,
+     binding_buffer_vol, wash1_vol, wash2_vol, wash3_vol, elution_vol,
+     mix_reps, settling_time, park_tips, tip_track,
+     flash] = get_values(  # noqa: F821
+        'num_samples', 'mag_height', 'magplate_offset', 'radial_offset',
+        'starting_vol', 'binding_buffer_vol', 'wash1_vol', 'wash2_vol',
+        'wash3_vol', 'elution_vol', 'mix_reps', 'settling_time', 'park_tips',
+        'tip_track', 'flash')
 
     """
     Here is where you can change the locations of your labware and modules
@@ -214,7 +216,8 @@ resuming.')
             else:
                 _pick_up(m300)
             side = -1 if i % 2 == 0 else 1
-            loc = m.bottom(0.5).move(Point(x=side*radius))
+            loc = m.bottom(magplate_offset).move(Point(
+                x=side*radius*radial_offset))
             for _ in range(num_trans):
                 _waste_track(vol_per_trans)
                 if m300.current_volume > 0:
@@ -264,7 +267,7 @@ resuming.')
                               new_tip='never')
                 if t < num_trans - 1:
                     m300.air_gap(20)
-            m300.mix(5, 200, well)
+            m300.mix(5, 200, well.bottom(magplate_offset))
             m300.blow_out(well.top(-2))
             m300.air_gap(20)
             if park:
@@ -306,7 +309,8 @@ resuming.')
         for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
             _pick_up(m300)
             side = 1 if i % 2 == 0 else -1
-            loc = m.bottom(0.5).move(Point(x=side*radius))
+            loc = m.bottom(magplate_offset).move(Point(
+                x=side*radius*radial_offset))
             src = source[i//(12//len(source))]
             for n in range(num_trans):
                 if m300.current_volume > 0:
@@ -351,12 +355,13 @@ resuming.')
         for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
             _pick_up(m300)
             side = 1 if i % 2 == 0 else -1
-            loc = m.bottom(0.5).move(Point(x=side*radius))
+            loc = m.bottom(magplate_offset).move(Point(
+                x=side*radius*radial_offset))
             m300.aspirate(vol, elution_solution)
             m300.move_to(m.center())
             m300.dispense(vol, loc)
             m300.mix(mix_reps, 0.8*vol, loc)
-            m300.blow_out(m.bottom(5))
+            m300.blow_out(m.bottom(5+magplate_offset))
             m300.air_gap(20)
             if park:
                 m300.drop_tip(spot)
@@ -370,9 +375,10 @@ resuming.')
             else:
                 _pick_up(m300)
             side = 1 if i % 2 == 0 else -1
-            loc = m.bottom(0.5).move(Point(x=side*radius))
+            loc = m.bottom(magplate_offset).move(Point(
+                x=side*radius*radial_offset))
             m300.mix(10, 0.8*vol, loc)
-            m300.blow_out(m.bottom(5))
+            m300.blow_out(m.bottom(5+magplate_offset))
             m300.air_gap(20)
             if park:
                 m300.drop_tip(spot)
@@ -390,7 +396,8 @@ resuming.')
             else:
                 _pick_up(m300)
             side = -1 if i % 2 == 0 else 1
-            loc = m.bottom(0.5).move(Point(x=side*radius))
+            loc = m.bottom(magplate_offset).move(Point(
+                x=side*radius*radial_offset))
             m300.transfer(vol, loc, e.bottom(5), air_gap=20, new_tip='never')
             m300.blow_out(e.top(-2))
             m300.air_gap(20)
@@ -403,8 +410,8 @@ resuming.')
     # transfer lysis buffer
     for m in mag_samples_m:
         _pick_up(m300)
-        m300.transfer(60, lysis_buffer, m, air_gap=20, mix_after=(5, 100),
-                      new_tip='never')
+        m300.transfer(60, lysis_buffer, m.bottom(magplate_offset), air_gap=20,
+                      mix_after=(5, 100), new_tip='never')
         _drop(m300)
 
     bind(binding_buffer_vol, park=park_tips)

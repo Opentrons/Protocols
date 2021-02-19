@@ -15,7 +15,7 @@ metadata = {
 """
 Here is where you can modify the magnetic module engage height:
 """
-MAG_HEIGHT = 13.7
+MAG_HEIGHT = 6.8
 
 
 # Definitions for deck light flashing
@@ -78,17 +78,20 @@ def run(ctx):
                                 '200µl filtertiprack')
                for slot in ['3', '6', '8', '9', '10']]
     if park_tips:
-        parkingrack = ctx.load_labware(
+        rack = ctx.load_labware(
             'opentrons_96_tiprack_300ul', '7', 'tiprack for parking')
-        parking_spots = parkingrack.rows()[0][:num_cols]
+        parking_spots = rack.rows()[0][:num_cols]
     else:
-        tips300.insert(0, ctx.load_labware('opentrons_96_tiprack_300ul', '7',
-                                           '200µl filtertiprack'))
+        rack = ctx.load_labware(
+            'opentrons_96_tiprack_300ul', '7', '200µl filtertiprack')
         parking_spots = [None for none in range(12)]
+    tips300.insert(0, rack)
 
     # load P300M pipette
     m300 = ctx.load_instrument(
         'p300_multi_gen2', 'left', tip_racks=tips300)
+
+    tip_log = {val: {} for val in ctx.loaded_instruments.values()}
 
     """
     Here is where you can define the locations of your reagents.
@@ -111,36 +114,42 @@ def run(ctx):
 
     folder_path = '/data/B'
     tip_file_path = folder_path + '/tip_log.json'
-    tip_log = {'count': {}}
     if tip_track and not ctx.is_simulating():
         if os.path.isfile(tip_file_path):
             with open(tip_file_path) as json_file:
                 data = json.load(json_file)
-                if 'tips300' in data:
-                    tip_log['count'][m300] = data['tips300']
-                else:
-                    tip_log['count'][m300] = 0
+                for pip in tip_log:
+                    if pip.name in data:
+                        tip_log[pip]['count'] = data[pip.name]
+                    else:
+                        tip_log[pip]['count'] = 0
         else:
-            tip_log['count'][m300] = 0
+            for pip in tip_log:
+                tip_log[pip]['count'] = 0
     else:
-        tip_log['count'] = {m300: 0}
+        for pip in tip_log:
+            tip_log[pip]['count'] = 0
 
-    tip_log['tips'] = {
-        m300: [tip for rack in tips300 for tip in rack.rows()[0]]}
-    tip_log['max'] = {m300: len(tip_log['tips'][m300])}
+    for pip in tip_log:
+        if pip.type == 'multi':
+            tip_log[pip]['tips'] = [tip for rack in pip.tip_racks
+                                    for tip in rack.rows()[0]]
+        else:
+            tip_log[pip]['tips'] = [tip for rack in pip.tip_racks
+                                    for tip in rack.wells()]
+        tip_log[pip]['max'] = len(tip_log[pip]['tips'])
 
     def _pick_up(pip, loc=None):
-        nonlocal tip_log
-        if tip_log['count'][pip] == tip_log['max'][pip] and not loc:
+        if tip_log[pip]['count'] == tip_log[pip]['max'] and not loc:
             ctx.pause('Replace ' + str(pip.max_volume) + 'µl tipracks before \
 resuming.')
             pip.reset_tipracks()
-            tip_log['count'][pip] = 0
+            tip_log[pip]['count'] = 0
         if loc:
             pip.pick_up_tip(loc)
         else:
-            pip.pick_up_tip(tip_log['tips'][pip][tip_log['count'][pip]])
-            tip_log['count'][pip] += 1
+            pip.pick_up_tip(tip_log[pip]['tips'][tip_log[pip]['count']])
+            tip_log[pip]['count'] += 1
 
     switch = True
     drop_count = 0
@@ -247,10 +256,7 @@ resuming.')
         """
         latest_chan = -1
         for i, (well, spot) in enumerate(zip(mag_samples_m, parking_spots)):
-            if park:
-                _pick_up(m300, spot)
-            else:
-                _pick_up(m300)
+            _pick_up(m300)
             num_trans = math.ceil(vol/200)
             vol_per_trans = vol/num_trans
             asp_per_chan = (0.95*res1.wells()[0].max_volume)//(vol_per_trans*8)
@@ -415,6 +421,6 @@ resuming.')
     if tip_track and not ctx.is_simulating():
         if not os.path.isdir(folder_path):
             os.mkdir(folder_path)
-        data = {'tips300': tip_log['count'][m300]}
+        data = {pip.name: tip_log[pip]['count'] for pip in tip_log}
         with open(tip_file_path, 'w') as outfile:
             json.dump(data, outfile)

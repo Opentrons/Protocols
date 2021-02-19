@@ -12,6 +12,18 @@
     "default": 13.7
   },
   {
+    "type": "int",
+    "label": "height offset from bottom of deepwell plate (in mm)",
+    "name": "magplate_offset",
+    "default": 1.0
+  },
+  {
+    "type": "int",
+    "label": "lateral offset (as fraction of deepwell radius)",
+    "name": "radial_offset",
+    "default": 0.8
+  },
+  {
     "type": "float",
     "label": "intitial volume (sample + lysis buffer, in ul)",
     "name": "starting_vol",
