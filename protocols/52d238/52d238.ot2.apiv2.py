@@ -94,7 +94,7 @@ def run(ctx):
             for mag_col in mag_plate_samples:
                 m300.pick_up_tip()
                 m300.transfer(100, ethanol, mag_col, new_tip='never')
-                m300.transfer(110, ethanol, trash, new_tip='never')
+                m300.transfer(110, mag_col, trash, new_tip='never')
                 m300.drop_tip()
 
         ctx.delay(minutes=2, msg="Delaying for 2 minutes to dry...")
