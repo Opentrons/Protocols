@@ -1,3 +1,5 @@
+import math
+
 metadata = {
     'protocolName': 'Nucleic Acid Purification',
     'author': 'McCampbell Analytical Inc. / Alex Anderson',
@@ -14,8 +16,9 @@ metadata = {
 
 def run(ctx):
     # bring in constant values from json string above
-    [sample_volume, wells_skipped] = get_values(  # noqa: F821
-            'sample_volume', 'wells_skipped')
+    [sample_count, sample_volume, sample_deck_slots,
+     wells_skipped] = get_values(  # noqa: F821
+      'sample_count', 'sample_volume', 'sample_deck_slots', 'wells_skipped')
 
     # instrument, labware and module setup
     tips_1000 = ctx.load_labware(
@@ -24,11 +27,14 @@ def run(ctx):
     p1000 = ctx.load_instrument(
         'p1000_single_gen2', 'left', tip_racks=[tips_1000])
 
+    # calculate the number of sample racks
+    sample_racks = math.ceil(sample_count / 15)
+
     [*patient_samples] = [ctx.load_labware(
         'mtcbio_15_tuberack_10000ul',
         str(slot), plate_name) for slot, plate_name in zip(
-        [7, 8, 4, 5, 1, 2],
-        ['Patient Samples Rack ' + str(i + 1) for i in range(6)])]
+        sample_deck_slots.split(","),
+        ['Patient Samples Rack ' + str(i + 1) for i in range(sample_racks)])]
 
     temp_deck = ctx.load_module('Temperature Module gen2', '3')
     extraction_plate = temp_deck.load_labware(
@@ -55,11 +61,17 @@ def run(ctx):
     rows_transferred = 0
     for rack in patient_samples:
         for row in rack.rows():
-            dest_index = rows_transferred*len(row)
-            p1000.transfer(
-             sample_volume, [well for well in row],
-             destinations[dest_index:dest_index + 5], new_tip='always')
-            rows_transferred += 1
+            if rows_transferred*len(row) < sample_count:
+                start_index = rows_transferred*len(row)
+                stop_index = (
+                  lambda dest_start_index:
+                  start_index + 5 if sample_count >
+                  start_index + 5 else sample_count)(start_index)
+                p1000.transfer(
+                 sample_volume, [
+                   well for well in row[:stop_index - start_index]],
+                 destinations[start_index:stop_index], new_tip='always')
+                rows_transferred += 1
 
     # 10 minute extraction at 55 degrees followed by hold at 4 degrees
     ctx.pause("Remove Extraction Plate")
