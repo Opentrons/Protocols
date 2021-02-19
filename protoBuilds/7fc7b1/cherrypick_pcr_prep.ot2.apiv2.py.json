@@ -1980,7 +1980,7 @@
                 ]
             ],
             "parameters": {
-                "format": "irregular",
+                "format": "384Standard",
                 "isMagneticModuleCompatible": false,
                 "isTiprack": false,
                 "loadName": "sarstedt_384_wellplate_40ul",

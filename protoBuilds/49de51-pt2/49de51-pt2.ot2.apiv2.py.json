@@ -1164,11 +1164,11 @@
                     "value": "NEST_reservoir"
                 },
                 {
-                    "label": "PCR Strip in Aluminum Block; Slot 4; Column 1",
+                    "label": "PCR Strip in Aluminum Block; Slot 10; Column 1",
                     "value": "opentrons_96_aluminumblock_generic_pcr_strip_200ul"
                 },
                 {
-                    "label": "NEST 96-Deep Well Plate; Slot 4; Column 1",
+                    "label": "NEST 96-Deep Well Plate; Slot 10; Column 1",
                     "value": "nest_96_wellplate_2ml_deep"
                 }
             ],
