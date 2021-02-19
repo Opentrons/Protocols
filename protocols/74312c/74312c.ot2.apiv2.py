@@ -23,7 +23,6 @@ def run(ctx):
                               tip_racks=[tiprack])
 
     # Transfer 10 uL to all wells
-
     for i in range(2):
         p20.transfer(volume, trough, pcb.wells()[:samples], new_tip='once')
         if i == 0:
