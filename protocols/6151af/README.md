@@ -24,7 +24,7 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 * [Opentrons OT-2 Run App (Version 4.1.0 or later)](https://opentrons.com/ot-app/)
 * [Opentrons P300 GEN2 Single-Channel Pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette)
 * [Opentrons 200µl Filter/300µl Standard Tips](https://shop.opentrons.com/collections/opentrons-tips)
-* [Opentrons 4-in-1 Tube Rack Set](https://shop.opentrons.com/collections/verified-labware/products/tube-rack-set-1) with 3x5 15ml tube insert for [Avantik 2ml Viral Transport Medium Tubes](https://www.avantik-us.com/specimen-handling/vtm-3ml-50-pack.asp)
+* [Opentrons 4-in-1 Tube Rack Set](https://shop.opentrons.com/collections/verified-labware/products/tube-rack-set-1) with 3x5 15ml tube insert for [Avantik 3ml Viral Transport Medium Tubes #GL4692](https://www.avantik-us.com/specimen-handling/vtm-3ml-50-pack.asp)
 * [NEST 96 Deepwell Plate 2mL](http://www.cell-nest.com/page94?product_id=101&_l=en)
 
 
