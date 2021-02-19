@@ -2,15 +2,16 @@ import math
 
 metadata = {
     'protocolName': 'Sample Plating Protocol',
-    'author': 'Chaz <protocols@opentrons.com>',
+    'author': 'Nick <protocols@opentrons.com>',
     'source': 'Protocol Library',
     'apiLevel': '2.9'
 }
 
 
 def run(ctx):
-    [num_samples, sample_vol, p300_mount, tip_type] = get_values(  # noqa: F821
-        'num_samples', 'sample_vol', 'p300_mount', 'tip_type')
+    [num_samples, sample_vol, asp_height, p300_mount,
+     tip_type] = get_values(  # noqa: F821
+        'num_samples', 'sample_vol', 'asp_height', 'p300_mount', 'tip_type')
 
     # define source/dest wells
     if num_samples > 96:
@@ -19,7 +20,7 @@ def run(ctx):
     # load labware
     num_racks = math.ceil(num_samples/15)
     source_tuberacks = [
-        ctx.load_labware('opentrons_15_tuberack_falcon_15ml_conical', slot,
+        ctx.load_labware('avantik_15_tuberack_3000ul', slot,
                          'sample tuberack ' + str(i + 1))
         for i, slot in enumerate(
             ['1', '4', '5', '6', '7', '8', '9'][:num_racks])]
@@ -50,7 +51,7 @@ def run(ctx):
         air_gap = 20
     for source, dest in zip(sources, dests):
         p300.pick_up_tip()
-        p300.transfer(sample_vol, source.bottom(5), dest, air_gap=air_gap,
-                      new_tip='never')
+        p300.transfer(sample_vol, source.bottom(asp_height),
+                      dest, air_gap=air_gap, new_tip='never')
         p300.air_gap(20)  # ensure no dripping on way to trash
         p300.drop_tip()

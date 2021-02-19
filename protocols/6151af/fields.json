@@ -12,6 +12,12 @@
     "default": 200
   },
   {
+    "type": "float",
+    "label": "aspiration height from bottom of source tube (in mm)",
+    "name": "asp_height",
+    "default": 5.0
+  },
+  {
     "type": "dropDown",
     "label": "P300 single-channel GEN2 pipette mount",
     "name": "p300_mount",
