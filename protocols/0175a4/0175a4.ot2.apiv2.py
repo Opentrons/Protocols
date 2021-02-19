@@ -4,7 +4,7 @@ import math
 # metadata
 metadata = {
     'protocolName': 'Saliva 3:1|2:1 pooling protocol',
-    'author': 'B.Ince <email@address.com>',
+    'author': 'Steve Plonk <protocols@opentrons.com>',
     'description': 'Pool 96 -15mL patients into 32 -15mL pools',
     'apiLevel': '2.9'
 }
