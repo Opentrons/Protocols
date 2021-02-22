@@ -50,11 +50,11 @@ def run(protocol):
         'corning_96_wellplate_360ul_flat', '8')
     labware_dict['11'] = protocol.load_labware(
         'corning_96_wellplate_360ul_flat', '11')
-    tips50 = [protocol.load_labware('opentrons_96_tiprack_300ul', '1')]
+    # tips50 = [protocol.load_labware('opentrons_96_tiprack_300ul', '1')]
     tips300 = [protocol.load_labware(
         'opentrons_96_tiprack_300ul', s) for s in ['4', '7']]
 
-    p50 = protocol.load_instrument('p50_single', 'right', tip_racks=tips50)
+    # p50 = protocol.load_instrument('p50_single', 'right', tip_racks=tips50)
     m300 = protocol.load_instrument('p300_multi', 'left', tip_racks=tips300)
 
     def pick_up(pip):
