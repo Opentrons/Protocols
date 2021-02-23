@@ -1,5 +1,10 @@
 import math
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"m20_mount":"right","samples":96,"reservoir_height":2,"pcr_plate_height":2,"sample_plate_height":2}""")
+    return [_all_values[n] for n in names]
+
 metadata = {
     'protocolName': 'Protocol 2 - PCR setup',
     'author': 'Sakib <sakib.hossain@opentrons.com>',
@@ -26,7 +31,7 @@ def run(ctx):
                                 1, 'Tip Box 1')
     tiprack2 = ctx.load_labware('opentrons_96_filtertiprack_20ul',
                                 2, 'Tip Box 2')
-    mastermix = ctx.load_labware('nest_12_reservoir_15ml', 7)['A1']
+    mastermix = ctx.load_labware('96well_pcr_base_200ul_strip', 7)['A1']
     sample_plate = ctx.load_labware('kingfisher_96_deepwell_plate_2ml', 4)
     pcr_plate = ctx.load_labware(
                 'thermofishermicroampfast96well0.1_96_wellplate_100ul', 5)
