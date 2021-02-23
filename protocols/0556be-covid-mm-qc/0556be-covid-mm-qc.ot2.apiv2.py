@@ -62,7 +62,7 @@ def run(ctx):
         heights[tube] = h
         return h
 
-    # Set Temperature to 8C
+    # Set Temperature (8C)
     temp_mod.set_temperature(temperature)
 
     # Transfer Component 1 to 24 Well Block Tubes
