@@ -12,7 +12,7 @@ This protocol performs the transfer of mastermix and samples from a source to a 
 
 ## Protocol Steps
 
-1. Aliquot 15uL of master mix from a 15mL-12 section reservoir into a abi 96 well fast start PCR plate
+1. Aliquot 15uL of master mix from a PCR tube strip into an ABI 96 well fast start PCR plate
 2. Aliquot 10uL of sample from the deep well RNA plate to the ABI 96 well PCR plate
 
 
