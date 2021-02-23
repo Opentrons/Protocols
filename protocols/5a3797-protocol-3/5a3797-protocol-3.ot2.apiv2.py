@@ -60,7 +60,9 @@ def run(ctx):
                         wells][1:samples]
 
     sample_plate_wells = sample_plate.rows()[0][:columns]
-    sample_plate_control = sample_plate.wells()[1:samples]
+    sample_plate_control = [well for well in sample_plate.wells()[:samples]
+                            if well not in [sample_plate['A1'],
+                            sample_plate['A12']]]
 
     # Aliquot 200 uL from ~7 Tube Racks
     for tuberack_well, sample_well in zip(tuberack_samples,
@@ -68,6 +70,8 @@ def run(ctx):
         p300.transfer(200, tuberack_well.bottom(tube_height),
                       sample_well.bottom(sample_plate_height), blow_out=True,
                       blowout_location='destination well', new_tip='always')
+
+    ctx.pause("Add binding/beads solution to deck position 4")
 
     if tip_type == 'opentrons_96_filtertiprack_200ul':
 
@@ -80,7 +84,7 @@ def run(ctx):
                 pip.reset_tipracks()
                 pip.pick_up_tip()
 
-        # Aliquot 275 uL from Reservoir
+        # Aliquot 275 uL from Reservoir (Viscous Binding Solution)
         m300.flow_rate.aspirate = final_asp_speed
         for i, sample_well in enumerate(sample_plate_wells):
             for _, vol in zip(range(2), [150, 125]):
