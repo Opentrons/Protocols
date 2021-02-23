@@ -80,13 +80,13 @@ def run(ctx):
     wash_blot()
 
     for sample_set, slide_set in zip(sample_sets, slide_sets):
-        ctx.max_speeds['A'] = 10
-        ctx.max_speeds['Z'] = 10
         for sample, slide_spot in zip(sample_set, slide_set):
+            ctx.max_speeds['A'] = 10
+            ctx.max_speeds['Z'] = 10
             m300.move_to(sample.bottom(sample_height))
             ctx.delay(seconds=sample_dwell_time)
             m300.move_to(slide_spot.bottom(0.1))
             ctx.delay(seconds=slide_dwell_time)
-        wash_blot()
+            wash_blot()
 
     m300.return_tip()
