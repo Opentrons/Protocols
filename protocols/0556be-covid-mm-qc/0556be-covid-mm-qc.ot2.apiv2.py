@@ -88,6 +88,11 @@ def run(ctx):
     # Get Select PCR Tube Wells
     pcr_wells = [pcr_plate[well] for well in pcr_tubes]
 
+    # Mix Tube A1, Slot 10
+    p300.pick_up_tip()
+    p300.mix(10, 200, dest_tubes['A1'])
+    p300.drop_tip()
+
     # Transfer from Tube 1 to Select PCR Tubes
     for well in pcr_wells:
         p300.transfer(tube1_vol, dest_tubes['A1'],
