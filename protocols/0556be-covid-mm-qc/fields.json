@@ -67,7 +67,7 @@
     },
     {
       "type": "str",
-      "label": "Select PCR Tubes",
+      "label": "Select PCR Tubes/Wells",
       "name": "pcr_tubes",
       "default": "A1,A2,A3,A6,A7,A8,C1,C2,C3"
     }
