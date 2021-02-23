@@ -216,8 +216,8 @@ resuming.')
             else:
                 _pick_up(m300)
             side = -1 if i % 2 == 0 else 1
-            loc = m.bottom(magplate_offset).move(Point(
-                x=side*radius*radial_offset))
+            loc = m.bottom().move(Point(
+                x=side*radius*radial_offset, z=magplate_offset))
             for _ in range(num_trans):
                 _waste_track(vol_per_trans)
                 if m300.current_volume > 0:
@@ -309,8 +309,8 @@ resuming.')
         for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
             _pick_up(m300)
             side = 1 if i % 2 == 0 else -1
-            loc = m.bottom(magplate_offset).move(Point(
-                x=side*radius*radial_offset))
+            loc = m.bottom().move(Point(
+                x=side*radius*radial_offset, z=magplate_offset))
             src = source[i//(12//len(source))]
             for n in range(num_trans):
                 if m300.current_volume > 0:
@@ -355,8 +355,8 @@ resuming.')
         for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
             _pick_up(m300)
             side = 1 if i % 2 == 0 else -1
-            loc = m.bottom(magplate_offset).move(Point(
-                x=side*radius*radial_offset))
+            loc = m.bottom().move(Point(
+                x=side*radius*radial_offset, z=magplate_offset))
             m300.aspirate(vol, elution_solution)
             m300.move_to(m.center())
             m300.dispense(vol, loc)
@@ -375,8 +375,8 @@ resuming.')
             else:
                 _pick_up(m300)
             side = 1 if i % 2 == 0 else -1
-            loc = m.bottom(magplate_offset).move(Point(
-                x=side*radius*radial_offset))
+            loc = m.bottom().move(Point(
+                x=side*radius*radial_offset, z=magplate_offset))
             m300.mix(10, 0.8*vol, loc)
             m300.blow_out(m.bottom(5+magplate_offset))
             m300.air_gap(20)
@@ -396,8 +396,8 @@ resuming.')
             else:
                 _pick_up(m300)
             side = -1 if i % 2 == 0 else 1
-            loc = m.bottom(magplate_offset).move(Point(
-                x=side*radius*radial_offset))
+            loc = m.bottom().move(Point(
+                x=side*radius*radial_offset, z=magplate_offset))
             m300.transfer(vol, loc, e.bottom(5), air_gap=20, new_tip='never')
             m300.blow_out(e.top(-2))
             m300.air_gap(20)
