@@ -12,13 +12,13 @@
     "default": 13.7
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "height offset from bottom of deepwell plate (in mm)",
     "name": "magplate_offset",
     "default": 1.0
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "lateral offset (as fraction of deepwell radius)",
     "name": "radial_offset",
     "default": 0.8
