@@ -11,8 +11,8 @@ metadata = {
 
 def run(ctx):
 
-    [samples, p300_mount, p20_mount] = get_values(  # noqa: F821
-        "samples", "p300_mount", "p20_mount")
+    [samples, p20_mount] = get_values(  # noqa: F821
+        "samples", "p20_mount")
 
     samples = int(samples)
 
@@ -22,30 +22,32 @@ def run(ctx):
                  for slot in range(1, 5)]
     pcr_plate = ctx.load_labware('microampoptical_384_wellplate_30ul', 5,
                                  'PCR Plate')
-    reservoir = ctx.load_labware('nest_12_reservoir_15ml', 6)
-    tiprack300 = ctx.load_labware('opentrons_96_tiprack_300ul', 7)
+    # reservoir = ctx.load_labware('nest_12_reservoir_15ml', 6)
+    reservoir = ctx.load_labware('96well_pcr_base_200ul_strip', 6)
+    # tiprack300 = ctx.load_labware('opentrons_96_tiprack_300ul', 7)
     tiprack200 = [ctx.load_labware('opentrons_96_tiprack_20ul', slot)
-                  for slot in range(8, 12)]
+                  for slot in range(7, 12)]
 
-    water = reservoir['A1']
-    multiplex = reservoir['A2']
-    dye = reservoir['A3']
-    mm = reservoir['A5']
+    # water = reservoir['A1']
+    # multiplex = reservoir['A2']
+    # dye = reservoir['A3']
+    # mm = reservoir['A5']
+    mm = reservoir.rows()[0][0:3]
 
     # Load Pipette
-    p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
-                               tip_racks=[tiprack300])
+    # p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
+    #                            tip_racks=[tiprack300])
     m20 = ctx.load_instrument('p20_multi_gen2', p20_mount,
                               tip_racks=tiprack200)
 
-    # Create PCR Mix
-    reactions = round((samples*0.095)+samples)
-    p300.transfer(4*reactions, water, mm)
-    p300.transfer(5*reactions, multiplex, mm)
-    p300.transfer(1*reactions, dye, mm)
-    p300.pick_up_tip()
-    p300.mix(5, 300, mm)
-    p300.drop_tip()
+    # # Create PCR Mix
+    # reactions = round((samples*0.095)+samples)
+    # p300.transfer(4*reactions, water, mm)
+    # p300.transfer(5*reactions, multiplex, mm)
+    # p300.transfer(1*reactions, dye, mm)
+    # p300.pick_up_tip()
+    # p300.mix(5, 300, mm)
+    # p300.drop_tip()
 
     # Get columns depending on sample number
     columns = math.ceil(samples / 8)
@@ -67,8 +69,14 @@ def run(ctx):
             pip.pick_up_tip()
 
     # Transfer MM to PCR Plate
+    i = 0
     pick_up(m20)
-    m20.transfer(10, mm, flat_dests, new_tip='never')
+    for well in flat_dests:
+        m20.transfer(10, mm[i//4], well, new_tip='never')
+        if i == 11:
+            i = 0
+        else:
+            i += 1
     m20.drop_tip()
 
     # Transfer Samples to PCR Plate

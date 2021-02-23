@@ -7,15 +7,6 @@
     },
     {
         "type": "dropDown",
-        "label": "P300-single GEN2 mount",
-        "name": "p300_mount",
-        "options": [
-          {"label": "right", "value": "right"},
-          {"label": "left", "value": "left"}
-        ]
-    },
-    {
-        "type": "dropDown",
         "label": "P20-multi channel GEN2 mount",
         "name": "p20_mount",
         "options": [
