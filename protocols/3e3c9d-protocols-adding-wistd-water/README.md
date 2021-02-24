@@ -5,7 +5,7 @@
 
 ## Categories
 * Sample Prep
-  * Plate Filling
+	* Plate Filling
 
 ## Description
 This protocol updates an existing protocol request from Opentrons API Version 1 to Opentrons API Version 2.</br>
