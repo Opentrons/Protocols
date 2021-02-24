@@ -86,7 +86,6 @@ def run(ctx):
     disp_heights = [2, 0.5]
     transfer_col('A4', 'A3', [150, 150],
                  asp_heights, disp_heights)
-
     change_speeds(150, 300)
     p300.mix(20, 150, ydp_plate['A3'].bottom(2.5))
     p300.drop_tip()
@@ -100,7 +99,6 @@ def run(ctx):
     disp_heights = [1.5, 1.5]
     transfer_col('A10', 'A9', [150, 150],
                  asp_heights, disp_heights)
-
     change_speeds(150, 300)
     p300.mix(20, 150, ydp_plate['A9'].bottom(2))
     p300.drop_tip()
@@ -110,6 +108,7 @@ def run(ctx):
     p300.pick_up_tip()
     change_speeds(50, 300)
     mix_height(1, 200, 'A3', asp_height=2, disp_height=2.5)
+
     asp_heights = [2, 2, 2]
     disp_heights = [2.5, 2.5, 2.5]
     transfer_col('A3', 'A1', [200, 200, 100],
@@ -120,6 +119,7 @@ def run(ctx):
     # add lysate to beads from column 9 into column 7 (12-15)
     p300.pick_up_tip()
     mix_height(1, 200, 'A9', asp_height=2, disp_height=2.5)
+
     asp_heights = [2, 2, 2]
     disp_heights = [2.5, 2.5, 2.5]
     transfer_col('A9', 'A7', [200, 200, 100],
@@ -130,6 +130,7 @@ def run(ctx):
     # add isoproponal from column 2 into column 1 (16-18)
     p300.pick_up_tip()
     mix_height(1, 200, 'A2', asp_height=2, disp_height=0.5)
+
     asp_heights = [2, 2]
     disp_heights = [0.5, 0.5]
     transfer_col('A2', 'A1', [200, 200],
@@ -140,6 +141,7 @@ def run(ctx):
     # add isoproponal from column 8 to 7 (19-21)
     p300.pick_up_tip()
     mix_height(1, 200, 'A8', asp_height=3, disp_height=0.5)
+
     asp_heights = [3, 0.5]
     disp_heights = [2, 0.5]
     transfer_col('A8', 'A7', [200, 200],
@@ -217,8 +219,8 @@ def run(ctx):
                  asp_heights, disp_heights)
     change_speeds(80, 300)
     mix_height(20, 150, 'A1', asp_height=2, disp_height=1)
-
     p300.drop_tip()
+
     mag_deck.engage(height_from_base=6)
     ctx.delay(minutes=1.5)
     p300.pick_up_tip()
@@ -237,7 +239,6 @@ def run(ctx):
                  asp_heights, disp_heights)
     change_speeds(80, 300)
     mix_height(20, 150, 'A7', asp_height=2, disp_height=1)
-
     p300.drop_tip()
 
     mag_deck.engage(height_from_base=6)
