@@ -9,7 +9,9 @@
 
 
 ## Description
-This protocol performs a nucleic acid purification with the Opentrons magnetic module. 
+This protocol performs a nucleic acid purification with the Opentrons magnetic module.
+
+Lysis buffer is added to sample and mixed. The subsequent lysate is then added to magnetic beads with isopropanol. After mixing, the Opentrons magnetic module is engaged and supernatant is removed and returned to reservoir. Two washes are then performed using wash and elution buffer, respectively. The final elute is transferred to an Opentrons 96-Well Aluminum Block plate. 
 
 
 ---
