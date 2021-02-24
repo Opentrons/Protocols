@@ -6,7 +6,6 @@
     "default": 1.0125
   },
   {
-  {
      "type": "dropDown",
      "label": "P300 GEN2 mount",
      "name": "p300_mount",
