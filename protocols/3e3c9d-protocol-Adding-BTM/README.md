@@ -4,7 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* General
+* Sample Prep
+  * Plate Filling
 
 
 ## Description
