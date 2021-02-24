@@ -14,7 +14,7 @@ def run(ctx):
         "length_from_side", "p300_mount")
 
     if not 1 <= length_from_side <= 4.05:
-        raise Exception("Enter a sample number between 1-96")
+        raise Exception("Enter a number between 1 and 4.05")
 
     # load labware
     mag_deck = ctx.load_module('magdeck', '6')
@@ -31,7 +31,7 @@ def run(ctx):
 
     # functions for protocol
 
-    # transfer_col takes a source and destination column along with a list of
+    # transfer_col() takes a source and destination column along with a list of
     # volumes to transfer. The function also takes in a list for the aspiration
     # and dispense height respectively, for each transfer volume
     def transfer_col(source_col, dest_col, transfer_vols,
@@ -44,20 +44,20 @@ def run(ctx):
                           ydp_plate[dest_col].bottom(
                                 disp_heights[i]))
 
-    # change_speeds globally changes the aspiration and dispense flow rate
+    # change_speeds() globally changes the aspiration and dispense flow rate
     # in uL/sec
     def change_speeds(asp_speed, disp_speed):
         p300.flow_rate.aspirate = asp_speed
         p300.flow_rate.dispense = disp_speed
 
-    # change_clearance globally changes the tip aspiration position and tip
-    # dispense position relative to the bottom of the well in (mm)
+    # mix_height() takes in the number of mixes as well as aspiration and
+    # dispense height to peform a custom mix
     def mix_height(num_mix, vol, column, asp_height, disp_height):
         for i in range(0, num_mix):
             p300.aspirate(vol, ydp_plate[column].bottom(asp_height))
             p300.dispense(vol, ydp_plate[column].bottom(disp_height))
 
-    # remove_supernat takes in a list of transfer volumes and column number -
+    # remove_supernat() takes in a list of transfer volumes and column number -
     # the function aspirates from column in ydp plate on the side of the well
     # opposite magnetic beads. Disposes in A1 of nest reservoir. Aspiration
     # position of tips from ydp plate and dispense position at nest reservoir
