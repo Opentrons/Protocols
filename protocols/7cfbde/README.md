@@ -60,19 +60,18 @@ The PCR strips should be loaded in columns 7-12 of the [Opentrons 96-Well Alumin
 </br>
 </br>
 **Deck Layout**</br>
-![Deck Layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/zymo-rna-extraction/zymo_deck_layout.png)
 </br>
-**Slot 1:**: [NEST 96-Well PCR Plate](https://shop.opentrons.com/collections/verified-labware/products/nest-0-1-ml-96-well-pcr-plate-full-skirt), containing samples</br>
-**Slot 2:**: [NEST 1-Well Reservoir](https://shop.opentrons.com/collections/verified-labware/products/nest-1-well-reservoir-195-ml) containing **Wash 2**</br>
-**Slot 3:**: [Opentrons 200µL Filter Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)</br>
-**Slot 4:**: [Opentrons 96-Well Aluminum Block](https://shop.opentrons.com/collections/hardware-modules/products/aluminum-block-set) containing **Proteinase K**, **Magnetic Beads**, and **Elution Buffer**</br>
-**Slot 5:**: [NEST 12-Well Reservoir](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml) containing **Lysis-Binding Mix** and **Wash 1**</br>
-**Slot 6:**: [Opentrons 200µL Filter Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)</br>
-**Slot 7:**: [Opentrons Magnetic Module, GEN2](https://shop.opentrons.com/collections/hardware-modules/products/magdeck) with [NEST 96-Deep Well Plate, 2mL](https://labware.opentrons.com/nest_96_wellplate_2ml_deep?category=wellPlate)</br>
-**Slot 8:**: [Opentrons 200µL Filter Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)</br>
-**Slot 9:**: [Opentrons 200µL Filter Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)</br>
-**Slot 10:**: [NEST 1-Well Reservoir](https://shop.opentrons.com/collections/verified-labware/products/nest-1-well-reservoir-195-ml), empty for liquid waste</br>
-**Slot 11:**: [NEST 1-Well Reservoir](https://shop.opentrons.com/collections/verified-labware/products/nest-1-well-reservoir-195-ml), empty for liquid waste</br>
+**Slot 1:** [NEST 96-Well PCR Plate](https://shop.opentrons.com/collections/verified-labware/products/nest-0-1-ml-96-well-pcr-plate-full-skirt), containing samples</br>
+**Slot 2:** [NEST 1-Well Reservoir](https://shop.opentrons.com/collections/verified-labware/products/nest-1-well-reservoir-195-ml) containing **Wash 2**</br>
+**Slot 3:** [Opentrons 200µL Filter Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)</br>
+**Slot 4:** [Opentrons 96-Well Aluminum Block](https://shop.opentrons.com/collections/hardware-modules/products/aluminum-block-set) containing **Proteinase K**, **Magnetic Beads**, and **Elution Buffer**</br>
+**Slot 5:** [NEST 12-Well Reservoir](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml) containing **Lysis-Binding Mix** and **Wash 1**</br>
+**Slot 6:** [Opentrons 200µL Filter Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)</br>
+**Slot 7:** [Opentrons Magnetic Module, GEN2](https://shop.opentrons.com/collections/hardware-modules/products/magdeck) with [NEST 96-Deep Well Plate, 2mL](https://labware.opentrons.com/nest_96_wellplate_2ml_deep?category=wellPlate)</br>
+**Slot 8:** [Opentrons 200µL Filter Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)</br>
+**Slot 9:** [Opentrons 200µL Filter Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)</br>
+**Slot 10:** [NEST 1-Well Reservoir](https://shop.opentrons.com/collections/verified-labware/products/nest-1-well-reservoir-195-ml), empty for liquid waste</br>
+**Slot 11:** [NEST 1-Well Reservoir](https://shop.opentrons.com/collections/verified-labware/products/nest-1-well-reservoir-195-ml), empty for liquid waste</br>
 </br>
 *Note about tips*: The tips in slot 8 will be used for removing supernatant and used tips will be returned to empty tip racks to prevent overflow of the waste bin.</br>
 </br>
