@@ -17,7 +17,7 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 
 * [Opentrons OT-2](https://shop.opentrons.com/collections/ot-2-robot/products/ot-2)
 * [Opentrons OT-2 Run App (Version 3.15.0 or later)](https://opentrons.com/ot-app/)
-* [P10 Single Pipette]
+* P10 Single Pipette
 * [P300 Single Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/single-channel-electronic-pipette)
 * [GEB 96 Tip Rack 10 µL](https://labware.opentrons.com/geb_96_tiprack_10ul?category=tipRack)
 * [Opentrons 96 Tip Rack 300 µL](https://labware.opentrons.com/opentrons_96_tiprack_300ul?category=tipRack)
