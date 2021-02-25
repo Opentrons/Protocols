@@ -22,7 +22,7 @@ def run(ctx):
     p10 = ctx.load_instrument('p10_single', p10_mount,
                               tip_racks=[tiprack_10])
 
-    p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
+    p300 = ctx.load_instrument('p300_single', p300_mount,
                                tip_racks=[tiprack_300])
 
     # csv file --> nested list
@@ -34,10 +34,10 @@ def run(ctx):
         vol_dna = float(line[1])
         well = line[3]
         p10.transfer(vol_dna, dna_stock.wells_by_name()[well],
-                     pcr_plate.wells_by_name()[well], new_tip='always')
+                     pcr_plate.wells_by_name()[well])
 
     for line in transfer:
         vol_water = float(line[2])
         well = line[3]
         p300.transfer(vol_water, reservoir['A1'],
-                      pcr_plate.wells_by_name()[well], new_tip='always')
+                      pcr_plate.wells_by_name()[well])
