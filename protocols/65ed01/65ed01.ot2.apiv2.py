@@ -20,14 +20,15 @@ def run(ctx):
     mag_deck = ctx.load_module('magdeck', '6')
     pcr_alum = ctx.load_labware(
                 'opentrons_96_aluminumblock_generic_pcr_strip_200ul', '1')
-    tiprack1 = ctx.load_labware('opentrons_96_filtertiprack_200ul', '2')
-    tiprack2 = ctx.load_labware('opentrons_96_filtertiprack_200ul', '3')
+    tipracks = [ctx.load_labware('opentrons_96_filtertiprack_200ul',
+                                 slot, f'Tip Box {slot}')
+                for slot in ['2', '3']]
     ydp_plate = mag_deck.load_labware('ydp962_2sc_96_wellplate_2200ul')
     reservoir = ctx.load_labware('nest_1_reservoir_195ml', '11')
 
     # load instruments
     p300 = ctx.load_instrument('p300_multi_gen2', p300_mount,
-                               tip_racks=[tiprack1, tiprack2])
+                               tip_racks=tipracks)
 
     # functions for protocol
 
