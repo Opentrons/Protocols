@@ -139,9 +139,10 @@ def run(ctx):
             left_pipette.dispense(500, disp_l)
             transfer_count += 1
             if disp_r and transfer_count < sample_number:
+                right_pipette.move_to(disp_r.top(10))
                 right_pipette.dispense(500, disp_r)
                 transfer_count += 1
-            if asp_r and transfer_count < sample_number:
+            if asp_r:
                 left_pipette.drop_tip()
                 right_pipette.drop_tip()
             else:
