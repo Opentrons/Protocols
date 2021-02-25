@@ -40,4 +40,6 @@ def run(ctx):
         vol_water = float(line[2])
         well = line[3]
         p300.transfer(vol_water, reservoir['A1'],
+
                       pcr_plate.wells_by_name()[well])
+
