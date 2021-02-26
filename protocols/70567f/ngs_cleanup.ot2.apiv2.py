@@ -126,11 +126,11 @@ resuming.')
     for m, p in zip(mag_samples, parking_spots):
         pick_up(m300)
         m300.mix(5, volume_of_beads, beads)
-        m300.blow_out(beads.top())
+        m300.blow_out(beads.top(-5))
         m300.transfer(volume_of_beads, beads, m, new_tip='never')
         m300.blow_out()
         m300.mix(10, volume_of_beads, m)
-        m300.blow_out(m.top())
+        m300.blow_out(m.top(-5))
         drop(m300, p)
     ctx.max_speeds['A'] = 125
     ctx.max_speeds['Z'] = 125
