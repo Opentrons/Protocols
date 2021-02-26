@@ -195,7 +195,7 @@ on magnet for ' + str(bead_settling_time_on_magnet_in_minutes) + ' minutes.')
                               new_tip='never')
                 drop(m300, p)
 
-                ctx.pause('Briefly centrifuge plate to pellet any residual \
+            ctx.pause('Briefly centrifuge plate to pellet any residual \
 material on the side of the wells. Then, replace plate on magnetic module.')
 
             for m, p in zip(mag_samples, parking_spots):
