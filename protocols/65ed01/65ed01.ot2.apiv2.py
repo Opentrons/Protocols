@@ -105,7 +105,7 @@ def run(ctx):
     p300.drop_tip()
     ctx.delay(minutes=3)
 
-    # add lysate to beads from column 2 into column 1 (8-11)
+    # add lysate to beads from column 3 into column 1 (8-11)
     p300.pick_up_tip()
     change_speeds(50, 300)
     mix_height(1, 200, 'A3', asp_height=2, disp_height=2.5)
@@ -143,8 +143,8 @@ def run(ctx):
     p300.pick_up_tip()
     mix_height(1, 200, 'A8', asp_height=3, disp_height=0.5)
 
-    asp_heights = [3, 0.5]
-    disp_heights = [2, 0.5]
+    asp_heights = [3, 2]
+    disp_heights = [0.5, 0.5]
     transfer_col('A8', 'A7', [200, 200],
                  asp_heights, disp_heights)
     mix_height(12, 200, 'A7', asp_height=2, disp_height=0.5)
