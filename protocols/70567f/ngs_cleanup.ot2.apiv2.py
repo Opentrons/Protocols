@@ -226,7 +226,7 @@ material on the side of the wells. Then, replace plate on magnetic module.')
         m300.transfer(volume_EB_in_ul, eb_buff, m,
                       mix_after=(10, 0.8*volume_EB_in_ul), new_tip='never')
         m300.blow_out(m.top())
-        drop(m300, p)
+        drop(m300)
 
     ctx.delay(minutes=bead_incubation_time_in_minutes, msg='Incubating off \
 magnet for ' + str(bead_incubation_time_in_minutes) + ' minutes.')
@@ -236,7 +236,7 @@ on magnet for ' + str(bead_settling_time_on_magnet_in_minutes) + ' minutes.')
 
     # transfer supernatant to new PCR plate
     for m, e, p in zip(mag_samples, elution_samples, parking_spots):
-        pick_up(m300, p)
+        pick_up(m300)
         m300.transfer(volume_final_elution_in_ul, m, e, new_tip='never')
         m300.blow_out(e.top(-2))
         drop(m300)
