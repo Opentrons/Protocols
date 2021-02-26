@@ -112,9 +112,12 @@ resuming.')
             tip_log[pip]['count'] = 0
         if loc:
             pip.pick_up_tip(loc)
+            return loc
         else:
-            pip.pick_up_tip(tip_log[pip]['tips'][tip_log[pip]['count']])
+            loc = tip_log[pip]['tips'][tip_log[pip]['count']]
+            pip.pick_up_tip(loc)
             tip_log[pip]['count'] += 1
+            return loc
 
     def drop(pip, loc=ctx.loaded_labwares[12].wells()[0].top()):
         pip.drop_tip(loc)
@@ -126,11 +129,11 @@ resuming.')
     for m, p in zip(mag_samples, parking_spots):
         pick_up(m300)
         m300.mix(5, volume_of_beads, beads)
-        m300.blow_out(beads.top())
+        m300.blow_out(beads.top(-5))
         m300.transfer(volume_of_beads, beads, m, new_tip='never')
         m300.blow_out()
         m300.mix(10, volume_of_beads, m)
-        m300.blow_out(m.top())
+        m300.blow_out(m.top(-5))
         drop(m300, p)
     ctx.max_speeds['A'] = 125
     ctx.max_speeds['Z'] = 125
@@ -148,21 +151,29 @@ on magnet for ' + str(bead_settling_time_on_magnet_in_minutes) + ' minutes.')
         m300.transfer(
             120, m.bottom(0.5), waste[1], new_tip='never')
         m300.blow_out(waste[1])
-        drop(m300)
+        drop(m300, p)
 
     # 2x EtOH washes
+    etoh_loc = None
     for wash in range(2):
 
         magdeck.disengage()
 
         # transfer EtOH
-        pick_up(m300)
+        if wash == 0:
+            etoh_loc = pick_up(m300)
+        else:
+            pick_up(m300, etoh_loc)
+
         m300.distribute(vol_etoh, etoh, [m.top(2) for m in mag_samples],
                         air_gap=20, new_tip='never')
+        if wash == 0:
+            drop(m300, etoh_loc)
+        else:
+            drop(m300)
         if mix_etoh:
             for m, p in zip(mag_samples, parking_spots):
-                if not m300.has_tip:
-                    pick_up(m300)
+                pick_up(m300, p)
                 m300.mix(10, vol_etoh*0.8, m)
                 m300.blow_out(m.top())
                 drop(m300, p)
@@ -179,23 +190,23 @@ on magnet for ' + str(bead_settling_time_on_magnet_in_minutes) + ' minutes.')
                     pick_up(m300, p)
                 else:
                     if not m300.has_tip:
-                        pick_up(m300)
+                        pick_up(m300, p)
                 m300.transfer(vol_etoh, m.bottom(0.5), waste[0],
                               new_tip='never')
                 m300.blow_out(waste[0])
-                drop(m300)
+                drop(m300, p)
         else:
             for m, p in zip(mag_samples, parking_spots):
                 if mix_etoh:
                     pick_up(m300, p)
                 else:
                     if not m300.has_tip:
-                        pick_up(m300)
+                        pick_up(m300, p)
                 m300.transfer(vol_etoh - 15, m.bottom(0.5), waste[0],
                               new_tip='never')
                 drop(m300, p)
 
-                ctx.pause('Briefly centrifuge plate to pellet any residual \
+            ctx.pause('Briefly centrifuge plate to pellet any residual \
 material on the side of the wells. Then, replace plate on magnetic module.')
 
             for m, p in zip(mag_samples, parking_spots):
@@ -215,7 +226,7 @@ material on the side of the wells. Then, replace plate on magnetic module.')
         m300.transfer(volume_EB_in_ul, eb_buff, m,
                       mix_after=(10, 0.8*volume_EB_in_ul), new_tip='never')
         m300.blow_out(m.top())
-        drop(m300, p)
+        drop(m300)
 
     ctx.delay(minutes=bead_incubation_time_in_minutes, msg='Incubating off \
 magnet for ' + str(bead_incubation_time_in_minutes) + ' minutes.')
@@ -225,7 +236,7 @@ on magnet for ' + str(bead_settling_time_on_magnet_in_minutes) + ' minutes.')
 
     # transfer supernatant to new PCR plate
     for m, e, p in zip(mag_samples, elution_samples, parking_spots):
-        pick_up(m300, p)
+        pick_up(m300)
         m300.transfer(volume_final_elution_in_ul, m, e, new_tip='never')
         m300.blow_out(e.top(-2))
         drop(m300)
