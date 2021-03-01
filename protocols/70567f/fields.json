@@ -28,8 +28,8 @@
   },
   {
     "type": "float",
-    "label": "bead settling time on magnet (minutes)",
-    "name": "bead_settling_time_on_magnet_in_minutes",
+    "label": "initial/EtOH wash bead settling time on magnet (minutes)",
+    "name": "etoh_inc",
     "default": 2
   },
   {
@@ -58,6 +58,12 @@
     "label": "volume of EB (µl)",
     "name": "volume_EB_in_ul",
     "default": 50.0
+  },
+  {
+    "type": "float",
+    "label": "elution bead settling time on magnet (minutes)",
+    "name": "elution_inc",
+    "default": 2
   },
   {
     "type": "float",
