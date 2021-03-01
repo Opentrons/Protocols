@@ -1,5 +1,5 @@
 {
-    "content": "from opentrons import protocol_api\nimport math\n\nmetadata = {\n    'protocolName': 'Protocol 3 - Sample Plate setup',\n    'author': 'Sakib <sakib.hossain@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.8'\n}\n\n\ndef run(ctx):\n\n    [m300_mount, p300_mount, samples, tuberack_1, tuberack_2, tuberack_3,\n        tuberack_4, tuberack_5, tuberack_6, tuberack_7,\n        final_asp_speed, final_air_gap, tube_height, sample_plate_height,\n        reservoir_height, tip_type] = get_values(  # noqa: F821\n        \"m300_mount\", \"p300_mount\", \"samples\", \"tuberack_1\",\n        \"tuberack_2\", \"tuberack_3\",\n        \"tuberack_4\", \"tuberack_5\", \"tuberack_6\",\n        \"tuberack_7\", \"final_asp_speed\", \"final_air_gap\",\n        \"tube_height\", \"sample_plate_height\", \"reservoir_height\", \"tip_type\")\n\n    final_asp_speed = float(final_asp_speed)\n    final_air_gap = float(final_air_gap)\n    tube_height = float(tube_height)\n    sample_plate_height = float(sample_plate_height)\n    reservoir_height = float(reservoir_height)\n\n    # Get sample number\n    samples = int(samples)\n    if samples > 96:\n        raise Exception(\"You cannot have greater than 96 samples\")\n\n    columns = math.ceil(samples/8)\n\n    # Load Labware\n    tipracks = [ctx.load_labware(tip_type, slot)\n                for slot in range(1, 3)]\n    tuberack_types = [tuberack_1, tuberack_2, tuberack_3, tuberack_4,\n                      tuberack_5, tuberack_6, tuberack_7]\n\n    tuberacks = []\n    for rack, slot in zip(tuberack_types, range(5, 12)):\n        tuberacks.append(ctx.load_labware(rack, slot))\n\n    sample_plate = ctx.load_labware('kingfisher_96_deepwell_plate_2ml', 3)\n    reservoir = ctx.load_labware('nest_12_reservoir_15ml', 4)\n    res_wells = reservoir.wells()[0:3]\n\n    # Load Pipette\n    p300 = ctx.load_instrument('p300_single_gen2', p300_mount,\n                               tip_racks=tipracks)\n    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,\n                               tip_racks=tipracks)\n\n    # Get list of tubes across 7 racks based on sample number\n    tuberack_wells = [tuberacks[i].wells() for i in range(len(tuberacks))]\n    tuberack_samples = [well for wells in tuberack_wells for well in\n                        wells][1:samples]\n\n    sample_plate_wells = sample_plate.rows()[0][:columns]\n    sample_plate_control = [well for well in sample_plate.wells()[:samples]\n                            if well not in [sample_plate['A1'],\n                            sample_plate['A12']]]\n\n    # Aliquot 200 uL from ~7 Tube Racks\n    for tuberack_well, sample_well in zip(tuberack_samples,\n                                          sample_plate_control):\n        p300.transfer(200, tuberack_well.bottom(tube_height),\n                      sample_well.bottom(sample_plate_height), blow_out=True,\n                      blowout_location='destination well', new_tip='always')\n\n    ctx.pause(\"Add binding/beads solution to deck position 4\")\n\n    if tip_type == 'opentrons_96_filtertiprack_200ul':\n\n        def pick_up(pip):\n            try:\n                pip.pick_up_tip()\n            except protocol_api.labware.OutOfTipsError:\n                pip.home()\n                ctx.pause(\"Please replace the tips in slot 1!\")\n                pip.reset_tipracks()\n                pip.pick_up_tip()\n\n        # Aliquot 275 uL from Reservoir (Viscous Binding Solution)\n        m300.flow_rate.aspirate = final_asp_speed\n        for i, sample_well in enumerate(sample_plate_wells):\n            for _, vol in zip(range(2), [150, 125]):\n                pick_up(m300)\n                m300.aspirate(vol, res_wells[i//4].bottom(reservoir_height))\n                m300.air_gap(final_air_gap)\n                m300.dispense(vol+final_air_gap, sample_well.center())\n                m300.blow_out()\n                m300.drop_tip()\n\n    elif tip_type == 'opentrons_96_tiprack_300ul':\n\n        m300.flow_rate.aspirate = final_asp_speed\n        for i, sample_well in enumerate(sample_plate_wells):\n            m300.transfer(275, res_wells[i//4].bottom(reservoir_height),\n                          sample_well.center(), air_gap=final_air_gap,\n                          blow_out=True, blowout_location='destination well',\n                          new_tip='always')\n",
+    "content": "from opentrons import protocol_api\nimport math\n\nmetadata = {\n    'protocolName': 'Protocol 3 - Sample Plate setup',\n    'author': 'Sakib <sakib.hossain@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.8'\n}\n\n\ndef run(ctx):\n\n    [m300_mount, p1000_mount, samples, sample_vol, sample_asp_speed,\n        tuberack_1, tuberack_2, tuberack_3,\n        tuberack_4, tuberack_5, tuberack_6, tuberack_7,\n        final_asp_speed, final_air_gap, tube_height, sample_plate_height,\n        reservoir_height, tip_type] = get_values(  # noqa: F821\n        \"m300_mount\", \"p1000_mount\", \"samples\", \"sample_vol\",\n        \"sample_asp_speed\", \"tuberack_1\",\n        \"tuberack_2\", \"tuberack_3\",\n        \"tuberack_4\", \"tuberack_5\", \"tuberack_6\",\n        \"tuberack_7\", \"final_asp_speed\", \"final_air_gap\",\n        \"tube_height\", \"sample_plate_height\", \"reservoir_height\", \"tip_type\")\n\n    final_asp_speed = float(final_asp_speed)\n    final_air_gap = float(final_air_gap)\n    tube_height = float(tube_height)\n    sample_plate_height = float(sample_plate_height)\n    reservoir_height = float(reservoir_height)\n\n    # Get sample number\n    samples = int(samples)\n    if samples > 96:\n        raise Exception(\"You cannot have greater than 96 samples\")\n\n    columns = math.ceil(samples/8)\n\n    # Load Labware\n    tiprack_300ul = ctx.load_labware(tip_type, 1)\n    tiprack_1000ul = ctx.load_labware('opentrons_96_filtertiprack_1000ul', 2)\n    tuberack_types = [tuberack_1, tuberack_2, tuberack_3, tuberack_4,\n                      tuberack_5, tuberack_6, tuberack_7]\n\n    tuberacks = []\n    for rack, slot in zip(tuberack_types, range(5, 12)):\n        tuberacks.append(ctx.load_labware(rack, slot))\n\n    sample_plate = ctx.load_labware('kingfisher_96_deepwell_plate_2ml', 3)\n    reservoir = ctx.load_labware('nest_12_reservoir_15ml', 4)\n    res_wells = reservoir.wells()[0:3]\n\n    # Load Pipette\n    p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,\n                                tip_racks=[tiprack_1000ul])\n    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,\n                               tip_racks=[tiprack_300ul])\n\n    # Get list of tubes across 7 racks based on sample number\n    tuberack_wells = [tuberacks[i].wells() for i in range(len(tuberacks))]\n    tuberack_samples = [well for wells in tuberack_wells for well in\n                        wells][1:samples]\n\n    sample_plate_wells = sample_plate.rows()[0][:columns]\n    sample_plate_control = [well for well in sample_plate.wells()[:samples]\n                            if well not in [sample_plate['A1'],\n                            sample_plate['A12']]]\n\n    # Aliquot 200 uL from ~7 Tube Racks\n    p1000.flow_rate.aspirate = sample_asp_speed\n    for tuberack_well, sample_well in zip(tuberack_samples,\n                                          sample_plate_control):\n        p1000.transfer(sample_vol, tuberack_well.bottom(tube_height),\n                       sample_well.bottom(sample_plate_height), blow_out=True,\n                       blowout_location='destination well', new_tip='always')\n\n    ctx.pause(\"Add binding/beads solution to deck position 4\")\n\n    if tip_type == 'opentrons_96_filtertiprack_200ul':\n\n        def pick_up(pip):\n            try:\n                pip.pick_up_tip()\n            except protocol_api.labware.OutOfTipsError:\n                pip.home()\n                ctx.pause(\"Please replace the tips in slot 1!\")\n                pip.reset_tipracks()\n                pip.pick_up_tip()\n\n        # Aliquot 275 uL from Reservoir (Viscous Binding Solution)\n        m300.flow_rate.aspirate = final_asp_speed\n        for i, sample_well in enumerate(sample_plate_wells):\n            for _, vol in zip(range(2), [150, 125]):\n                pick_up(m300)\n                m300.aspirate(vol, res_wells[i//4].bottom(reservoir_height))\n                m300.air_gap(final_air_gap)\n                m300.dispense(vol+final_air_gap, sample_well.center())\n                m300.blow_out()\n                m300.drop_tip()\n\n    elif tip_type == 'opentrons_96_tiprack_300ul':\n\n        m300.flow_rate.aspirate = final_asp_speed\n        for i, sample_well in enumerate(sample_plate_wells):\n            m300.transfer(275, res_wells[i//4].bottom(reservoir_height),\n                          sample_well.center(), air_gap=final_air_gap,\n                          blow_out=True, blowout_location='destination well',\n                          new_tip='always')\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -1590,8 +1590,8 @@
             "type": "dropDown"
         },
         {
-            "label": "P300-single GEN2 mount",
-            "name": "p300_mount",
+            "label": "P1000-single GEN2 mount",
+            "name": "p1000_mount",
             "options": [
                 {
                     "label": "left",
@@ -1624,6 +1624,18 @@
             "label": "Total Sample Number (# of Tubes)",
             "name": "samples",
             "type": "int"
+        },
+        {
+            "default": 200,
+            "label": "P1000 Sample Transfer Volume (uL)",
+            "name": "sample_vol",
+            "type": "float"
+        },
+        {
+            "default": 50,
+            "label": "P1000 Sample Aspiration Rate (uL/s)",
+            "name": "sample_asp_speed",
+            "type": "float"
         },
         {
             "label": "Tube Rack 1 Type",
@@ -1764,7 +1776,7 @@
     "instruments": [
         {
             "mount": "left",
-            "name": "p300_single_gen2"
+            "name": "p1000_single_gen2"
         },
         {
             "mount": "right",
@@ -1779,10 +1791,10 @@
             "type": "opentrons_96_filtertiprack_200ul"
         },
         {
-            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 2",
+            "name": "Opentrons 96 Filter Tip Rack 1000 \u00b5L on 2",
             "share": false,
             "slot": "2",
-            "type": "opentrons_96_filtertiprack_200ul"
+            "type": "opentrons_96_filtertiprack_1000ul"
         },
         {
             "name": "KingFisher 96 Deep Well Plate on 3",
