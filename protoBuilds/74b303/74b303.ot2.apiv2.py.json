@@ -1,0 +1,117 @@
+{
+    "content": "import string\n\nmetadata = {\n    'protocolName': 'Four Plate Normalization',\n    'author': 'Steve <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.9'\n}\n\n\ndef run(ctx):\n\n    [tiprack_slot, reservoir_slot, tube_rack_slot, mix_volume, mix_repetitions,\n        pooling_volume, pipette_type, pipette_mount, column_count, row_count,\n        uploaded_csv] = get_values(  # noqa: F821\n        \"tiprack_slot\", \"reservoir_slot\", \"tube_rack_slot\", \"mix_volume\",\n        \"mix_repetitions\", \"pooling_volume\", \"pipette_type\", \"pipette_mount\",\n        \"column_count\", \"row_count\", \"uploaded_csv\")\n\n    tiprack_map = {\n        'p10_single': 'opentrons_96_filtertiprack_10ul',\n        'p50_single': 'opentrons_96_filtertiprack_200ul',\n        'p300_single_gen1': 'opentrons_96_filtertiprack_200ul',\n        'p1000_single_gen1': 'opentrons_96_filtertiprack_1000ul',\n        'p20_single_gen2': 'opentrons_96_filtertiprack_20ul',\n        'p300_single_gen2': 'opentrons_96_filtertiprack_200ul',\n        'p1000_single_gen2': 'opentrons_96_filtertiprack_1000ul'\n    }\n\n    # row references\n    rows = [*string.ascii_uppercase[:row_count]]\n\n    # lines from uploaded csv file\n    [*csv_lines] = uploaded_csv.splitlines()\n\n    # plate count, plate order, plate names, custom volumes from csv lines\n    plate_names, row_volumes = [], []\n    for index, line in enumerate(csv_lines):\n        if index == 0:\n            plate_name_index = 0\n        new_row = {}\n        if not any(line.replace(\",\", \"\")):\n            plate_name_index = index + 1\n            continue\n        if index == plate_name_index:\n            plate_name = line.split(\",\")[column_count + 1]\n            if plate_name not in plate_names:\n                plate_names.append(plate_name)\n            row_name_index = 0\n        new_row['plate'] = plate_name\n        new_row['row_name'] = rows[row_name_index]\n        new_row['volumes'] = line.split(\",\")[:column_count]\n        row_volumes.append(new_row)\n        row_name_index += 1\n\n    # tipracks\n    tipracks = [ctx.load_labware(tiprack_map[pipette_type], tiprack_slot)]\n\n    # pipette\n    pip = ctx.load_instrument(pipette_type, pipette_mount, tip_racks=tipracks)\n\n    # water\n    reservoir = ctx.load_labware(\"nest_12_reservoir_15ml\", reservoir_slot)\n    water = reservoir.wells()[0]\n\n    # deck slots available for pcr plates\n    available_deck_slots = [str(num) for num in [*range(1, 12)]]\n    for slt in [tiprack_slot, reservoir_slot, tube_rack_slot]:\n        available_deck_slots.pop(available_deck_slots.index(slt))\n\n    # pcr plates\n    [*plate_names] = [ctx.load_labware(\n        \"biorad_96_wellplate_200ul_pcr\",\n        slot, plate_name) for slot, plate_name in zip(\n            available_deck_slots[:len(plate_names)],\n            plate_names)]\n\n    # pools\n    tube_rack = ctx.load_labware(\n      'opentrons_24_tuberack_nest_2ml_snapcap', tube_rack_slot)\n    pools = [\"pool\" + str(i) for i in range(len(plate_names))]\n    [*pools] = tube_rack.wells()[:len(plate_names)]\n\n    # transfer csv water volumes to pcr plate row wells using one tip per plate\n    for index, plate in enumerate(plate_names):\n        pip.pick_up_tip()\n        for item in row_volumes:\n            if item[\"plate\"] == plate.name:\n                pip.transfer(\n                  [float(volume) for volume in item[\"volumes\"]], water, [\n                    well for well in plate.rows_by_name()[\n                      item[\"row_name\"]]], new_tip=\"never\")\n        pip.drop_tip()\n\n    # mix first, then pool 5 ul aliquots using one tip per plate\n    for index, plate in enumerate(plate_names):\n        pip.pick_up_tip()\n        pip.transfer(\n          pooling_volume, plate.wells(), pools[index], mix_before=(\n            mix_repetitions, mix_volume), new_tip=\"never\")\n        pip.drop_tip()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": "11",
+            "label": "Tiprack Slot",
+            "name": "tiprack_slot",
+            "type": "str"
+        },
+        {
+            "default": "1",
+            "label": "Reservoir Slot",
+            "name": "reservoir_slot",
+            "type": "str"
+        },
+        {
+            "default": "3",
+            "label": "Tuberack Slot",
+            "name": "tube_rack_slot",
+            "type": "str"
+        },
+        {
+            "default": 15,
+            "label": "Mix Volume",
+            "name": "mix_volume",
+            "type": "int"
+        },
+        {
+            "default": 3,
+            "label": "Mix Repetitions",
+            "name": "mix_repetitions",
+            "type": "int"
+        },
+        {
+            "default": 5,
+            "label": "Pooling Volume",
+            "name": "pooling_volume",
+            "type": "int"
+        },
+        {
+            "default": "p20_single_gen2",
+            "label": "Pipette Type",
+            "name": "pipette_type",
+            "type": "str"
+        },
+        {
+            "default": "right",
+            "label": "Pipette Mount",
+            "name": "pipette_mount",
+            "type": "str"
+        },
+        {
+            "default": 12,
+            "label": "Column Count",
+            "name": "column_count",
+            "type": "int"
+        },
+        {
+            "default": 8,
+            "label": "Row Count",
+            "name": "row_count",
+            "type": "int"
+        },
+        {
+            "default": "0,0,0,0,0,0,0,0,0,0,0,0,,Plate 1\\n0,0,0,0,0,0,0,0,0,0,0,0,,\\n0,0,0,0,0,0,0,0,0,0,0,0,,\\n0,0,0,0,0,0,0,0,0,0,0,0,,\\n0,0,0,0,0,0,0,0,0,0,0,0,,\\n0,0,0,0,0,0,0,0,0,0,0,0,,\\n0,0,0,0,0,0,0,0,0,0,0,0,,\\n0,0,0,0,0,0,0,0,0,0,0,0,,\\n,,,,,,,,,,,,,\\n0,0,0,0,0,0,0,0,0,0,0,0,,Plate 2\\n0,0,0,0,0,0,0,0,0,0,0,0,,\\n0,0,0,0,0,0,0,0,0,0,0,0,,\\n0,0,0,0,0,0,0,0,0,0,0,0,,\\n0,0,0,0,0,0,0,0,0,0,0,0,,\\n0,0,0,0,0,0,0,0,0,0,0,0,,\\n0,0,0,0,0,0,0,0,0,0,0,0,,\\n0,0,0,0,0,0,0,0,0,0,0,0,,\\n,,,,,,,,,,,,,\\n0,0,0,0,0,0,0,0,0,0,0,0,,Plate 3\\n0,0,0,0,0,0,0,0,0,0,0,0,,\\n0,0,0,0,0,0,0,0,0,0,0,0,,\\n0,0,0,0,0,0,0,0,0,0,0,0,,\\n0,0,0,0,0,0,0,0,0,0,0,0,,\\n0,0,0,0,0,0,0,0,0,0,0,0,,\\n0,0,0,0,0,0,0,0,0,0,0,0,,\\n0,0,0,0,0,0,0,0,0,0,0,0,,\\n,,,,,,,,,,,,,\\n0,0,0,0,0,0,0,0,0,0,0,0,,Plate 4\\n0,0,0,0,0,0,0,0,0,0,0,0,,\\n0,0,0,0,0,0,0,0,0,0,0,0,,\\n0,0,0,0,0,0,0,0,0,0,0,0,,\\n0,0,0,0,0,0,0,0,0,0,0,0,,\\n0,0,0,0,0,0,0,0,0,0,0,0,,\\n0,0,0,0,0,0,0,0,0,0,0,0,,\\n0,0,0,0,0,0,0,0,0,0,0,0,,",
+            "label": "Uploaded csv",
+            "name": "uploaded_csv",
+            "type": "textFile"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "right",
+            "name": "p20_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on 1",
+            "share": false,
+            "slot": "1",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Plate 1\\n0 on 2",
+            "share": false,
+            "slot": "2",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Opentrons 24 Tube Rack with NEST 2 mL Snapcap on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_24_tuberack_nest_2ml_snapcap"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.9",
+        "author": "Steve <protocols@opentrons.com>",
+        "protocolName": "Four Plate Normalization",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}
