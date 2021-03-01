@@ -223,13 +223,13 @@ on magnet for ' + str(bead_settling_time_on_magnet_in_minutes) + ' minutes.')
             ctx.pause('Briefly centrifuge plate to pellet any residual \
 material on the side of the wells. Then, replace plate on magnetic module.')
 
-            m300.flow_rates.aspirate = 20
+            m300.flow_rate.aspirate = 20
             for m, p in zip(mag_samples, parking_spots):
                 pick_up(m300, p)
                 m300.transfer(20, m.bottom(0.5), waste[0], new_tip='never')
                 m300.blow_out(waste[0])
                 drop(m300)
-            m300.flow_rates.aspirate = 100
+            m300.flow_rate.aspirate = 100
 
     ctx.delay(
         minutes=drying_time_in_minutes, msg='Drying for \
@@ -251,9 +251,13 @@ magnet for ' + str(bead_incubation_time_in_minutes) + ' minutes.')
 on magnet for ' + str(bead_settling_time_on_magnet_in_minutes) + ' minutes.')
 
     # transfer supernatant to new PCR plate
-    for m, e, p in zip(mag_samples, elution_samples, parking_spots):
+    m300.flow_rate.aspirate = 20
+    for i, (m, e, p) in zip(mag_samples, elution_samples, parking_spots):
         pick_up(m300)
-        m300.transfer(volume_final_elution_in_ul, m, e, new_tip='never')
+        side = -1 if i % 2 == 0 else 1
+        m300.transfer(volume_final_elution_in_ul,
+                      m.bottom().move(Point(x=side*2.0, z=0.5)), e,
+                      new_tip='never')
         m300.blow_out(e.top(-2))
         drop(m300)
 
