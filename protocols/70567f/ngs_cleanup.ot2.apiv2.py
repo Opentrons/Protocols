@@ -251,7 +251,8 @@ magnet for ' + str(bead_incubation_time_in_minutes) + ' minutes.')
 
     # transfer supernatant to new PCR plate
     m300.flow_rate.aspirate = 20
-    for i, (m, e, p) in zip(mag_samples, elution_samples, parking_spots):
+    for i, (m, e, p) in enumerate(
+            zip(mag_samples, elution_samples, parking_spots)):
         pick_up(m300)
         side = -1 if i % 2 == 0 else 1
         m300.transfer(volume_final_elution_in_ul,
