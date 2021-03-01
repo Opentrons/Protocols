@@ -31,13 +31,16 @@ def run(ctx):
                 if line.split(',')[0].strip()][1:]
 
     for line in transfer:
+        if not p300.has_tip:
+            p300.pick_up_tip()
+        vol_water = float(line[2])
+        well = line[3]
+        p300.transfer(vol_water, reservoir['A1'],
+                      pcr_plate.wells_by_name()[well], new_tip='never')
+    p300.drop_tip()
+
+    for line in transfer:
         vol_dna = float(line[1])
         well = line[3]
         p10.transfer(vol_dna, dna_stock.wells_by_name()[well],
                      pcr_plate.wells_by_name()[well])
-
-    for line in transfer:
-        vol_water = float(line[2])
-        well = line[3]
-        p300.transfer(vol_water, reservoir['A1'],
-                      pcr_plate.wells_by_name()[well])
