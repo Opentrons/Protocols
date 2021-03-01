@@ -180,7 +180,7 @@ on magnet for ' + str(bead_settling_time_on_magnet_in_minutes) + ' minutes.')
             pick_up(m300, etoh_loc)
 
         m300.distribute(vol_etoh, etoh, [m.top(2) for m in mag_samples],
-                        air_gap=20, new_tip='never')
+                        new_tip='never')
         if wash == 0:
             drop(m300, etoh_loc)
         else:
