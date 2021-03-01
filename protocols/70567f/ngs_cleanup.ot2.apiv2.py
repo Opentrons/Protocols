@@ -16,15 +16,14 @@ MAG_HEIGHT = 6.8
 def run(ctx):
 
     [p300_multi_mount, number_of_samples, volume_of_beads,
-     bead_incubation_time_in_minutes, bead_settling_time_on_magnet_in_minutes,
-     drying_time_in_minutes, vol_etoh, mix_etoh, volume_EB_in_ul,
-     volume_final_elution_in_ul, park_tips,
-     tip_track, drop_threshold] = get_values(  # noqa: F821
+     bead_incubation_time_in_minutes, etoh_inc, drying_time_in_minutes,
+     vol_etoh, mix_etoh, volume_EB_in_ul, elution_inc,
+     volume_final_elution_in_ul, park_tips, tip_track,
+     drop_threshold] = get_values(  # noqa: F821
         'p300_multi_mount', 'number_of_samples', 'volume_of_beads',
-        'bead_incubation_time_in_minutes',
-        'bead_settling_time_on_magnet_in_minutes',
+        'bead_incubation_time_in_minutes', 'etoh_inc',
         'drying_time_in_minutes', 'vol_etoh', 'mix_etoh', 'volume_EB_in_ul',
-        'volume_final_elution_in_ul', 'park_tips', 'tip_track',
+        'elution_inc', 'volume_final_elution_in_ul', 'park_tips', 'tip_track',
         'drop_threshold')
 
     # check
@@ -156,8 +155,8 @@ resuming.')
     ctx.delay(minutes=bead_incubation_time_in_minutes, msg='Incubating off \
 magnet for ' + str(bead_incubation_time_in_minutes) + ' minutes.')
     magdeck.engage(height=MAG_HEIGHT)
-    ctx.delay(minutes=bead_settling_time_on_magnet_in_minutes, msg='Incubating \
-on magnet for ' + str(bead_settling_time_on_magnet_in_minutes) + ' minutes.')
+    ctx.delay(minutes=etoh_inc, msg='Incubating \
+on magnet for ' + str(etoh_inc) + ' minutes.')
 
     # remove supernatant
     for m, p in zip(mag_samples, parking_spots):
@@ -170,8 +169,8 @@ on magnet for ' + str(bead_settling_time_on_magnet_in_minutes) + ' minutes.')
     # 2x EtOH washes
     etoh_loc = None
     for wash in range(2):
-
-        magdeck.disengage()
+        if mix_etoh:
+            magdeck.disengage()
 
         # transfer EtOH
         if wash == 0:
@@ -192,10 +191,10 @@ on magnet for ' + str(bead_settling_time_on_magnet_in_minutes) + ' minutes.')
                 m300.blow_out(m.top())
                 drop(m300, p)
 
-        magdeck.engage(height=MAG_HEIGHT)
-        ctx.delay(minutes=bead_settling_time_on_magnet_in_minutes,
-                  msg='Incubating on magnet for \
-' + str(bead_settling_time_on_magnet_in_minutes) + ' minutes.')
+        if mix_etoh:
+            magdeck.engage(height=MAG_HEIGHT)
+            ctx.delay(minutes=etoh_inc, msg='Incubating on magnet for \
+' + str(etoh_inc) + ' minutes.')
 
         # remove supernatant
         if wash == 0:
@@ -247,8 +246,8 @@ material on the side of the wells. Then, replace plate on magnetic module.')
     ctx.delay(minutes=bead_incubation_time_in_minutes, msg='Incubating off \
 magnet for ' + str(bead_incubation_time_in_minutes) + ' minutes.')
     magdeck.engage(height=MAG_HEIGHT)
-    ctx.delay(minutes=bead_settling_time_on_magnet_in_minutes, msg='Incubating \
-on magnet for ' + str(bead_settling_time_on_magnet_in_minutes) + ' minutes.')
+    ctx.delay(minutes=elution_inc, msg='Incubating on magnet for \
+' + str(elution_inc) + ' minutes.')
 
     # transfer supernatant to new PCR plate
     m300.flow_rate.aspirate = 20
