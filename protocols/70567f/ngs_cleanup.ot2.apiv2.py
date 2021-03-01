@@ -63,7 +63,7 @@ def run(ctx):
     beads = res12.wells()[0]
     etoh = res12.wells()[1]
     eb_buff = res12.wells()[2]
-    waste = [chan.top(-10) for chan in res12.wells()[10:]]
+    waste = [chan.top(-2) for chan in res12.wells()[10:]]
 
     # pipettes
     m300 = ctx.load_instrument(
