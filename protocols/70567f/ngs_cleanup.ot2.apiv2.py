@@ -1,6 +1,7 @@
 import math
 import os
 import json
+from opentrons.types import Point
 
 metadata = {
     'protocolName': 'NGS Library Cleanup with Ampure XP Beads',
@@ -14,22 +15,21 @@ MAG_HEIGHT = 6.8
 
 def run(ctx):
 
-    [p20_multi_mount, p300_multi_mount, number_of_samples, volume_of_beads,
+    [p300_multi_mount, number_of_samples, volume_of_beads,
      bead_incubation_time_in_minutes, bead_settling_time_on_magnet_in_minutes,
      drying_time_in_minutes, vol_etoh, mix_etoh, volume_EB_in_ul,
      volume_final_elution_in_ul, park_tips,
-     tip_track] = get_values(  # noqa: F821
-        'p20_multi_mount', 'p300_multi_mount', 'number_of_samples',
-        'volume_of_beads', 'bead_incubation_time_in_minutes',
+     tip_track, drop_threshold] = get_values(  # noqa: F821
+        'p300_multi_mount', 'number_of_samples', 'volume_of_beads',
+        'bead_incubation_time_in_minutes',
         'bead_settling_time_on_magnet_in_minutes',
         'drying_time_in_minutes', 'vol_etoh', 'mix_etoh', 'volume_EB_in_ul',
-        'volume_final_elution_in_ul', 'park_tips', 'tip_track')
+        'volume_final_elution_in_ul', 'park_tips', 'tip_track',
+        'drop_threshold')
 
     # check
     if number_of_samples > 96 or number_of_samples < 1:
         raise Exception('Invalid number of samples.')
-    if p20_multi_mount == p300_multi_mount:
-        raise Exception('Pipette mounts cannot match.')
 
     num_cols = math.ceil(number_of_samples/8)
 
@@ -39,10 +39,9 @@ def run(ctx):
         'nest_96_wellplate_100ul_pcr_full_skirt', 'magnetic plate')
     elution_plate = ctx.load_labware(
         'nest_96_wellplate_100ul_pcr_full_skirt', '2', 'elution plate')
-    tips20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '3')]
     tips300 = [
         ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-        for slot in ['5', '6', '8', '9', '10', '11']]
+        for slot in ['5', '6', '8', '9', '10', '11', '3']]
     if park_tips:
         rack = ctx.load_labware(
             'opentrons_96_tiprack_300ul', '4', 'tiprack for parking')
@@ -67,14 +66,10 @@ def run(ctx):
     waste = [chan.top(-10) for chan in res12.wells()[10:]]
 
     # pipettes
-    m20 = ctx.load_instrument(
-        'p20_multi_gen2', mount=p20_multi_mount, tip_racks=tips20)
     m300 = ctx.load_instrument(
         'p300_multi_gen2', mount=p300_multi_mount, tip_racks=tips300)
     m300.flow_rate.aspirate = 100
     m300.flow_rate.dispense = 200
-    m20.flow_rate.aspirate = 3
-    m20.flow_rate.dispense = 6
 
     tip_log = {val: {} for val in ctx.loaded_instruments.values()}
     folder_path = '/data/bead_cleanup'
@@ -119,8 +114,26 @@ resuming.')
             tip_log[pip]['count'] += 1
             return loc
 
-    def drop(pip, loc=ctx.loaded_labwares[12].wells()[0].top()):
-        pip.drop_tip(loc)
+    switch = True
+    drop_count = 0
+    # number of tips trash will accommodate before prompting user to empty
+
+    def drop(pip):
+        nonlocal switch
+        nonlocal drop_count
+        if pip.type == 'multi':
+            drop_count += 8
+        else:
+            drop_count += 1
+        if drop_count >= drop_threshold:
+            ctx.home()
+            ctx.pause('Please empty tips from waste before resuming.')
+            drop_count = 0
+        side = 30 if switch else -18
+        drop_loc = ctx.loaded_labwares[12].wells()[0].top().move(
+            Point(x=side))
+        pip.drop_tip(drop_loc)
+        switch = not switch
 
     # mix beads
     ctx.max_speeds['A'] = 50
