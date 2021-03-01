@@ -17,7 +17,7 @@ def run(ctx):
         raise Exception("Enter a number between 1 and 4.05")
 
     # load labware
-    mag_deck = ctx.load_module('magdeck', '6')
+    mag_deck = ctx.load_module('magnetic module gen2', '6')
     pcr_alum = ctx.load_labware(
                 'opentrons_96_aluminumblock_generic_pcr_strip_200ul', '1')
     tipracks = [ctx.load_labware('opentrons_96_filtertiprack_200ul',
