@@ -118,22 +118,23 @@ resuming.')
     drop_count = 0
     # number of tips trash will accommodate before prompting user to empty
 
-    def drop(pip):
+    def drop(pip, loc=None):
         nonlocal switch
         nonlocal drop_count
-        if pip.type == 'multi':
-            drop_count += 8
-        else:
-            drop_count += 1
-        if drop_count >= drop_threshold:
-            ctx.home()
-            ctx.pause('Please empty tips from waste before resuming.')
-            drop_count = 0
-        side = 30 if switch else -18
-        drop_loc = ctx.loaded_labwares[12].wells()[0].top().move(
-            Point(x=side))
-        pip.drop_tip(drop_loc)
-        switch = not switch
+        if not loc:
+            if pip.type == 'multi':
+                drop_count += 8
+            else:
+                drop_count += 1
+            if drop_count >= drop_threshold:
+                ctx.home()
+                ctx.pause('Please empty tips from waste before resuming.')
+                drop_count = 0
+            side = 30 if switch else -18
+            drop_loc = ctx.loaded_labwares[12].wells()[0].top().move(
+                Point(x=side))
+            pip.drop_tip(drop_loc)
+            switch = not switch
 
     # mix beads
     ctx.max_speeds['A'] = 50
