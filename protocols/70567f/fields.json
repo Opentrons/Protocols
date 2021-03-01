@@ -1,15 +1,6 @@
 [
   {
     "type": "dropDown",
-    "label": "P20 multi-channel GEN2 pipette mount",
-    "name": "p20_multi_mount",
-    "options": [
-      { "label": "right", "value": "right" },
-      { "label": "left", "value": "left" }
-    ]
-  },
-  {
-    "type": "dropDown",
     "label": "P300 multi-channel GEN2 pipette mount",
     "name": "p300_multi_mount",
     "options": [
@@ -37,8 +28,8 @@
   },
   {
     "type": "float",
-    "label": "bead settling time on magnet (minutes)",
-    "name": "bead_settling_time_on_magnet_in_minutes",
+    "label": "initial/EtOH wash bead settling time on magnet (minutes)",
+    "name": "etoh_inc",
     "default": 2
   },
   {
@@ -70,6 +61,12 @@
   },
   {
     "type": "float",
+    "label": "elution bead settling time on magnet (minutes)",
+    "name": "elution_inc",
+    "default": 2
+  },
+  {
+    "type": "float",
     "label": "volume of final elution (µl)",
     "name": "volume_final_elution_in_ul",
     "default": 40.0
@@ -91,5 +88,11 @@
       { "label": "no", "value": false },
       { "label": "yes", "value": true }
     ]
+  },
+  {
+    "type": "int",
+    "label": "maximum tips allowed in trash",
+    "name": "drop_threshold",
+    "default": 200
   }
 ]

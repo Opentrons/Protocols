@@ -1,6 +1,7 @@
 import math
 import os
 import json
+from opentrons.types import Point
 
 metadata = {
     'protocolName': 'NGS Library Cleanup with Ampure XP Beads',
@@ -14,22 +15,20 @@ MAG_HEIGHT = 6.8
 
 def run(ctx):
 
-    [p20_multi_mount, p300_multi_mount, number_of_samples, volume_of_beads,
-     bead_incubation_time_in_minutes, bead_settling_time_on_magnet_in_minutes,
-     drying_time_in_minutes, vol_etoh, mix_etoh, volume_EB_in_ul,
-     volume_final_elution_in_ul, park_tips,
-     tip_track] = get_values(  # noqa: F821
-        'p20_multi_mount', 'p300_multi_mount', 'number_of_samples',
-        'volume_of_beads', 'bead_incubation_time_in_minutes',
-        'bead_settling_time_on_magnet_in_minutes',
+    [p300_multi_mount, number_of_samples, volume_of_beads,
+     bead_incubation_time_in_minutes, etoh_inc, drying_time_in_minutes,
+     vol_etoh, mix_etoh, volume_EB_in_ul, elution_inc,
+     volume_final_elution_in_ul, park_tips, tip_track,
+     drop_threshold] = get_values(  # noqa: F821
+        'p300_multi_mount', 'number_of_samples', 'volume_of_beads',
+        'bead_incubation_time_in_minutes', 'etoh_inc',
         'drying_time_in_minutes', 'vol_etoh', 'mix_etoh', 'volume_EB_in_ul',
-        'volume_final_elution_in_ul', 'park_tips', 'tip_track')
+        'elution_inc', 'volume_final_elution_in_ul', 'park_tips', 'tip_track',
+        'drop_threshold')
 
     # check
     if number_of_samples > 96 or number_of_samples < 1:
         raise Exception('Invalid number of samples.')
-    if p20_multi_mount == p300_multi_mount:
-        raise Exception('Pipette mounts cannot match.')
 
     num_cols = math.ceil(number_of_samples/8)
 
@@ -39,10 +38,9 @@ def run(ctx):
         'nest_96_wellplate_100ul_pcr_full_skirt', 'magnetic plate')
     elution_plate = ctx.load_labware(
         'nest_96_wellplate_100ul_pcr_full_skirt', '2', 'elution plate')
-    tips20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '3')]
     tips300 = [
         ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-        for slot in ['5', '6', '8', '9', '10', '11']]
+        for slot in ['5', '6', '8', '9', '10', '11', '3']]
     if park_tips:
         rack = ctx.load_labware(
             'opentrons_96_tiprack_300ul', '4', 'tiprack for parking')
@@ -64,17 +62,13 @@ def run(ctx):
     beads = res12.wells()[0]
     etoh = res12.wells()[1]
     eb_buff = res12.wells()[2]
-    waste = [chan.top(-10) for chan in res12.wells()[10:]]
+    waste = [chan.top(-2) for chan in res12.wells()[10:]]
 
     # pipettes
-    m20 = ctx.load_instrument(
-        'p20_multi_gen2', mount=p20_multi_mount, tip_racks=tips20)
     m300 = ctx.load_instrument(
         'p300_multi_gen2', mount=p300_multi_mount, tip_racks=tips300)
     m300.flow_rate.aspirate = 100
     m300.flow_rate.dispense = 200
-    m20.flow_rate.aspirate = 3
-    m20.flow_rate.dispense = 6
 
     tip_log = {val: {} for val in ctx.loaded_instruments.values()}
     folder_path = '/data/bead_cleanup'
@@ -119,8 +113,27 @@ resuming.')
             tip_log[pip]['count'] += 1
             return loc
 
-    def drop(pip, loc=ctx.loaded_labwares[12].wells()[0].top()):
-        pip.drop_tip(loc)
+    switch = True
+    drop_count = 0
+    # number of tips trash will accommodate before prompting user to empty
+
+    def drop(pip, loc=None):
+        nonlocal switch
+        nonlocal drop_count
+        if not loc:
+            if pip.type == 'multi':
+                drop_count += 8
+            else:
+                drop_count += 1
+            if drop_count >= drop_threshold:
+                ctx.home()
+                ctx.pause('Please empty tips from waste before resuming.')
+                drop_count = 0
+            side = 30 if switch else -18
+            drop_loc = ctx.loaded_labwares[12].wells()[0].top().move(
+                Point(x=side))
+            pip.drop_tip(drop_loc)
+            switch = not switch
 
     # mix beads
     ctx.max_speeds['A'] = 50
@@ -130,9 +143,9 @@ resuming.')
         pick_up(m300)
         m300.mix(5, volume_of_beads, beads)
         m300.blow_out(beads.top(-5))
-        m300.transfer(volume_of_beads, beads, m, new_tip='never')
+        m300.transfer(volume_of_beads, beads, m.bottom(2), new_tip='never')
         m300.blow_out()
-        m300.mix(10, volume_of_beads, m)
+        m300.mix(10, volume_of_beads, m.bottom(2))
         m300.blow_out(m.top(-5))
         drop(m300, p)
     ctx.max_speeds['A'] = 125
@@ -142,8 +155,8 @@ resuming.')
     ctx.delay(minutes=bead_incubation_time_in_minutes, msg='Incubating off \
 magnet for ' + str(bead_incubation_time_in_minutes) + ' minutes.')
     magdeck.engage(height=MAG_HEIGHT)
-    ctx.delay(minutes=bead_settling_time_on_magnet_in_minutes, msg='Incubating \
-on magnet for ' + str(bead_settling_time_on_magnet_in_minutes) + ' minutes.')
+    ctx.delay(minutes=etoh_inc, msg='Incubating \
+on magnet for ' + str(etoh_inc) + ' minutes.')
 
     # remove supernatant
     for m, p in zip(mag_samples, parking_spots):
@@ -156,8 +169,8 @@ on magnet for ' + str(bead_settling_time_on_magnet_in_minutes) + ' minutes.')
     # 2x EtOH washes
     etoh_loc = None
     for wash in range(2):
-
-        magdeck.disengage()
+        if mix_etoh:
+            magdeck.disengage()
 
         # transfer EtOH
         if wash == 0:
@@ -166,7 +179,7 @@ on magnet for ' + str(bead_settling_time_on_magnet_in_minutes) + ' minutes.')
             pick_up(m300, etoh_loc)
 
         m300.distribute(vol_etoh, etoh, [m.top(2) for m in mag_samples],
-                        air_gap=20, new_tip='never')
+                        new_tip='never')
         if wash == 0:
             drop(m300, etoh_loc)
         else:
@@ -178,10 +191,10 @@ on magnet for ' + str(bead_settling_time_on_magnet_in_minutes) + ' minutes.')
                 m300.blow_out(m.top())
                 drop(m300, p)
 
-        magdeck.engage(height=MAG_HEIGHT)
-        ctx.delay(minutes=bead_settling_time_on_magnet_in_minutes,
-                  msg='Incubating on magnet for \
-' + str(bead_settling_time_on_magnet_in_minutes) + ' minutes.')
+        if mix_etoh:
+            magdeck.engage(height=MAG_HEIGHT)
+            ctx.delay(minutes=etoh_inc, msg='Incubating on magnet for \
+' + str(etoh_inc) + ' minutes.')
 
         # remove supernatant
         if wash == 0:
@@ -209,11 +222,13 @@ on magnet for ' + str(bead_settling_time_on_magnet_in_minutes) + ' minutes.')
             ctx.pause('Briefly centrifuge plate to pellet any residual \
 material on the side of the wells. Then, replace plate on magnetic module.')
 
+            m300.flow_rate.aspirate = 20
             for m, p in zip(mag_samples, parking_spots):
                 pick_up(m300, p)
                 m300.transfer(20, m.bottom(0.5), waste[0], new_tip='never')
                 m300.blow_out(waste[0])
                 drop(m300)
+            m300.flow_rate.aspirate = 100
 
     ctx.delay(
         minutes=drying_time_in_minutes, msg='Drying for \
@@ -231,13 +246,18 @@ material on the side of the wells. Then, replace plate on magnetic module.')
     ctx.delay(minutes=bead_incubation_time_in_minutes, msg='Incubating off \
 magnet for ' + str(bead_incubation_time_in_minutes) + ' minutes.')
     magdeck.engage(height=MAG_HEIGHT)
-    ctx.delay(minutes=bead_settling_time_on_magnet_in_minutes, msg='Incubating \
-on magnet for ' + str(bead_settling_time_on_magnet_in_minutes) + ' minutes.')
+    ctx.delay(minutes=elution_inc, msg='Incubating on magnet for \
+' + str(elution_inc) + ' minutes.')
 
     # transfer supernatant to new PCR plate
-    for m, e, p in zip(mag_samples, elution_samples, parking_spots):
+    m300.flow_rate.aspirate = 20
+    for i, (m, e, p) in enumerate(
+            zip(mag_samples, elution_samples, parking_spots)):
         pick_up(m300)
-        m300.transfer(volume_final_elution_in_ul, m, e, new_tip='never')
+        side = -1 if i % 2 == 0 else 1
+        m300.transfer(volume_final_elution_in_ul,
+                      m.bottom().move(Point(x=side*2.0, z=0.5)), e,
+                      new_tip='never')
         m300.blow_out(e.top(-2))
         drop(m300)
 
