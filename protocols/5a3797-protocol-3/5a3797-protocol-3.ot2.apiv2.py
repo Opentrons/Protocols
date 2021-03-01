@@ -11,11 +11,13 @@ metadata = {
 
 def run(ctx):
 
-    [m300_mount, p1000_mount, samples, tuberack_1, tuberack_2, tuberack_3,
+    [m300_mount, p1000_mount, samples, sample_vol, sample_asp_speed,
+        tuberack_1, tuberack_2, tuberack_3,
         tuberack_4, tuberack_5, tuberack_6, tuberack_7,
         final_asp_speed, final_air_gap, tube_height, sample_plate_height,
         reservoir_height, tip_type] = get_values(  # noqa: F821
-        "m300_mount", "p1000_mount", "samples", "tuberack_1",
+        "m300_mount", "p1000_mount", "samples", "sample_vol",
+        "sample_asp_speed", "tuberack_1",
         "tuberack_2", "tuberack_3",
         "tuberack_4", "tuberack_5", "tuberack_6",
         "tuberack_7", "final_asp_speed", "final_air_gap",
@@ -65,9 +67,10 @@ def run(ctx):
                             sample_plate['A12']]]
 
     # Aliquot 200 uL from ~7 Tube Racks
+    p1000.flow_rate.aspirate = sample_asp_speed
     for tuberack_well, sample_well in zip(tuberack_samples,
                                           sample_plate_control):
-        p1000.transfer(200, tuberack_well.bottom(tube_height),
+        p1000.transfer(sample_vol, tuberack_well.bottom(tube_height),
                        sample_well.bottom(sample_plate_height), blow_out=True,
                        blowout_location='destination well', new_tip='always')
 
