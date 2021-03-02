@@ -48,12 +48,15 @@ __Using the customizations fields, below set up your protocol.__
 
 ## Process
 
-1. Input your protocol parameters.
+1. Input your protocol parameters (specify the number of initial DNA samples (1-24) and indicate if you want to manually place the PCR plate on the 98 degree pre-heated thermocycler).
 2. Download your protocol.
-3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
+3. Upload your protocol into the [OT App](https://opentrons.com/ot-app). Be sure to use OT App settings in advance of the protocol run to pre-cool the temperature and thermocycler modules to 4 degrees.
 4. Set up your deck according to the deck map.
 5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).
 6. Hit "Run".
-
-### Additional Notes
-If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
+7. Deck lights will momentarily go off to indicate a pause when reagents should be added to the OT-2 deck:
+   a.  Multiplex Mastermix and PCR plate containing the initial DNA samples (both at 4 degrees).
+   b.  Optional: PCR plate held on ice while thermocycler block pre-heats to 98 degrees.
+   c.  Beads and 80% ethanol (both at room temp).
+   d.  Index plate and cold indexing reaction mix (4 degrees).
+   e.  PEG NaCl and post PCR TE (both at room temp).

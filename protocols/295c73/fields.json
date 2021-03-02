@@ -10,8 +10,8 @@
     "label": "Hold PCR plate on ice until block reaches 98 degrees?",
     "name": "hold_pcr_plate_on_ice_until_block_reaches_98",
     "options": [
-      { "label": "YES", "value": "1" },
-      { "label": "NO", "value": "0" }
+      { "label": "YES", "value": true },
+      { "label": "NO", "value": false }
     ]
   },
   {

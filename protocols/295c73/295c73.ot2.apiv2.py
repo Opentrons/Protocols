@@ -21,6 +21,9 @@ def run(ctx):
 
     ctx.set_rail_lights(True)
 
+    if sample_count < 1 or sample_count > 24:
+        raise Exception('Invalid number of DNA samples (must be 1-24).')
+
     # turn off rail lights to bring the pause to the user's attention
     ctx.set_rail_lights(False)
     ctx.pause("""Please pre-cool both the thermocycler block and the
@@ -57,11 +60,11 @@ def run(ctx):
 
     # define initial DNA sample locations
     # avoid wells located at plate edge to minimize evaporation during PCR
-    # example B2 to G2, B3 to G3, B4 to B4, B5 to G5 for 24 samples
+    # example B2 to G2, B3 to G3, B4 to G4, B5 to G5 for 24 samples
     initial_sample = [well for column in tc_plate.columns()[
       initial_sample_col:] for well in column[1:len(column)-1]][:sample_count]
 
-    # setup samples, indices, ETOH, master mix, beads, waste, output
+    # setup samples, indices, etoh, master mix, beads, waste, output
     column_well_count = len(tc_plate.columns()[0])
     indexing_sample = tc_plate.wells()[
       indexing_sample_col*column_well_count:sample_count +
@@ -72,7 +75,7 @@ def run(ctx):
     multiplex_mm = temp_reagents.wells_by_name()[mm_well]
     index = ctx.load_labware("biorad_96_wellplate_200ul_pcr", 4)
     reservoir = ctx.load_labware("nest_12_reservoir_15ml", '2')
-    ETOH = reservoir.wells()[0]
+    etoh = reservoir.wells()[0]
     mag_waste = reservoir.wells()[1]
     mag_sample = mag_plate.wells()[
       mag_sample_col*column_well_count:sample_count +
@@ -104,7 +107,7 @@ def run(ctx):
     temp.deactivate()
 
     # pcr
-    if int(hold_pcr_plate_on_ice_until_block_reaches_98):
+    if hold_pcr_plate_on_ice_until_block_reaches_98:
         ctx.set_rail_lights(False)
         ctx.pause("""Please remove the thermocycler plate and place it on ice.
         Then click resume.""")
@@ -113,7 +116,7 @@ def run(ctx):
     tc.set_lid_temperature(105)
     tc.set_block_temperature(98)
 
-    if int(hold_pcr_plate_on_ice_until_block_reaches_98):
+    if hold_pcr_plate_on_ice_until_block_reaches_98:
         ctx.set_rail_lights(False)
         ctx.pause("""Please place thermocycler plate back on the pre-heated
         98 degree block and immediately click resume""")
@@ -205,11 +208,11 @@ def run(ctx):
     p300.flow_rate.dispense = 50
     p300.transfer(
       60, [mag_samp.bottom(2) for mag_samp in mag_sample],
-      mag_waste.bottom(1.5), new_tip='always', trash=False)
+      mag_waste.top(1.5), new_tip='always', trash=False)
     p300.reset_tipracks()
 
-    # wash samples 2x with 180 ul 80% EtOH
-    # reuse EtOH tip to distribute EtOH in second and later washes
+    # wash samples 2x with 180 ul 80% etoh
+    # reuse etoh tip to distribute etoh in second and later washes
     # reuse other tips for supernatant removal from same sample
     p300.default_speed = 200
     p300.flow_rate.aspirate = 75
@@ -218,7 +221,7 @@ def run(ctx):
         p300.pick_up_tip(tips300[0]['A4'])
         for mag_samp in mag_sample:
             p300.air_gap(10)
-            p300.aspirate(180, ETOH)
+            p300.aspirate(180, etoh)
             p300.air_gap(5)
             p300.dispense(210, mag_samp.top(-2))
         p300.return_tip()
@@ -229,16 +232,16 @@ def run(ctx):
             p300.air_gap(10)
             p300.aspirate(190, mag_samp)
             p300.air_gap(5)
-            p300.dispense(210, mag_waste.bottom(1.5))
+            p300.dispense(210, mag_waste.top(1.5))
             p300.return_tip()
         p300.reset_tipracks()
 
-    # aspirate last traces of EtOH
+    # aspirate last traces of etoh
     for mag_samp in mag_sample:
         p300.pick_up_tip()
         p300.aspirate(30, mag_samp.bottom(-0.5))
         p300.air_gap(5)
-        p300.dispense(35, mag_waste.bottom(1.5))
+        p300.dispense(35, mag_waste.top(1.5))
         p300.return_tip()
 
     if sample_count <= 8:
@@ -314,8 +317,8 @@ def run(ctx):
     p300.reset_tipracks()
     p300.starting_tip = tips300[0]['A10']
 
-    # post-indexing wash 2x with 180 ul 80% EtOH
-    # reuse EtOH tip to distribute EtOH
+    # post-indexing wash 2x with 180 ul 80% etoh
+    # reuse etoh tip to distribute etoh
     # reuse other tips for supernatant removal from same sample
     p300.default_speed = 200
     p300.flow_rate.aspirate = 75
@@ -324,7 +327,7 @@ def run(ctx):
         p300.pick_up_tip(tips300[0]['A4'])
         for mag_samp in mag_sample:
             p300.air_gap(10)
-            p300.aspirate(180, ETOH)
+            p300.aspirate(180, etoh)
             p300.air_gap(5)
             p300.dispense(210, mag_samp.top(-2))
         p300.return_tip()
@@ -335,17 +338,17 @@ def run(ctx):
             p300.air_gap(10)
             p300.aspirate(190, mag_samp)
             p300.air_gap(5)
-            p300.dispense(210, mag_waste.bottom(1.5))
+            p300.dispense(210, mag_waste.top(1.5))
             p300.return_tip()
         p300.reset_tipracks()
         p300.starting_tip = tips300[0]['A10']
 
-    # aspirate last traces of EtOH
+    # aspirate last traces of etoh
     for mag_samp in mag_sample:
         p300.pick_up_tip()
         p300.aspirate(30, mag_samp.bottom(-0.5))
         p300.air_gap(5)
-        p300.dispense(35, mag_waste.bottom(1.5))
+        p300.dispense(35, mag_waste.top(1.5))
         p300.return_tip()
 
     if sample_count <= 8:
