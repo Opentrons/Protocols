@@ -246,8 +246,7 @@ material on the side of the wells. Then, replace plate on magnetic module.')
     for m in mag_samples:
         if not m300.has_tip:
             pick_up(m300)
-        m300.transfer(volume_EB_in_ul, eb_buff, m,
-                      mix_after=(10, 0.8*volume_EB_in_ul), new_tip='never')
+        m300.mix(10, 0.8*volume_EB_in_ul, m)
         m300.blow_out(m.top())
         drop(m300)
 
