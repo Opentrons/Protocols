@@ -143,10 +143,10 @@ resuming.')
     # transfer beads and mix samples
     for m, p in zip(mag_samples, parking_spots):
         pick_up(m300)
-        m300.mix(5, volume_of_beads, beads)
+        m300.mix(5, volume_of_beads, beads.bottom(2))
         m300.blow_out(beads.top(-5))
         m300.transfer(volume_of_beads, beads, m.bottom(2), new_tip='never')
-        m300.blow_out()
+        m300.blow_out(m.top(-5))
         m300.mix(10, volume_of_beads, m.bottom(2))
         m300.blow_out(m.top(-5))
         drop(m300, p)
@@ -181,6 +181,7 @@ on magnet for ' + str(etoh_inc) + ' minutes.')
             pick_up(m300, etoh_loc)
 
         m300.distribute(vol_etoh, etoh, [m.top(2) for m in mag_samples],
+                        blow_out=True, blowout_location='source well',
                         new_tip='never')
         if wash == 0:
             drop(m300, etoh_loc)
@@ -238,10 +239,14 @@ material on the side of the wells. Then, replace plate on magnetic module.')
     magdeck.disengage()
 
     # transfer EB buffer
-    for m, p in zip(mag_samples, parking_spots):
-        pick_up(m300)
-        m300.transfer(volume_EB_in_ul, eb_buff, m,
-                      mix_after=(10, 0.8*volume_EB_in_ul), new_tip='never')
+    pick_up(m300)
+    m300.distribute(volume_EB_in_ul, eb_buff, [m.top(2) for m in mag_samples],
+                    blow_out=True, blowout_location='source well',
+                    new_tip='never')
+    for m in mag_samples:
+        if not m300.has_tip:
+            pick_up(m300)
+        m300.mix(10, 0.8*volume_EB_in_ul, m)
         m300.blow_out(m.top())
         drop(m300)
 
