@@ -134,6 +134,8 @@ resuming.')
                 Point(x=side))
             pip.drop_tip(drop_loc)
             switch = not switch
+        else:
+            pip.drop_tip(loc)
 
     # mix beads
     ctx.max_speeds['A'] = 50
