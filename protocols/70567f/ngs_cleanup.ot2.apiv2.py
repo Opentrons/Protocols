@@ -181,6 +181,7 @@ on magnet for ' + str(etoh_inc) + ' minutes.')
             pick_up(m300, etoh_loc)
 
         m300.distribute(vol_etoh, etoh, [m.top(2) for m in mag_samples],
+                        blow_out=True, blowout_location='source well',
                         new_tip='never')
         if wash == 0:
             drop(m300, etoh_loc)
