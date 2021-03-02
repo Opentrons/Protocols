@@ -20,7 +20,7 @@ Explanation of complex parameters below:
 * [Opentrons Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
 * [NEST 12-channel reservoir 15ml #1061-8150](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
 * [P300 multi-channel electronic pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette?variant=5984202489885)
-* [Opentrons 200ul filter tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)
+* [Opentrons 200ul filtertipracks](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)
 
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
