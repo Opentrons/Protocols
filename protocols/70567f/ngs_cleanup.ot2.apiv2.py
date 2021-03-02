@@ -239,8 +239,13 @@ material on the side of the wells. Then, replace plate on magnetic module.')
     magdeck.disengage()
 
     # transfer EB buffer
-    for m, p in zip(mag_samples, parking_spots):
-        pick_up(m300)
+    pick_up(m300)
+    m300.distribute(volume_EB_in_ul, eb_buff, [m.top(2) for m in mag_samples],
+                    blow_out=True, blowout_location='source well',
+                    new_tip='never')
+    for m in mag_samples:
+        if not m300.has_tip:
+            pick_up(m300)
         m300.transfer(volume_EB_in_ul, eb_buff, m,
                       mix_after=(10, 0.8*volume_EB_in_ul), new_tip='never')
         m300.blow_out(m.top())
