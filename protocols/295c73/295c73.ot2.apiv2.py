@@ -21,6 +21,8 @@ def run(ctx):
 
     ctx.set_rail_lights(True)
 
+    ctx.delay(seconds=10)
+
     if sample_count < 1 or sample_count > 24:
         raise Exception('Invalid number of DNA samples (must be 1-24).')
 
