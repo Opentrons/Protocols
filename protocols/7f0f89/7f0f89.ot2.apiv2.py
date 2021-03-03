@@ -8,11 +8,11 @@ metadata = {
 
 def run(ctx):
 
-    [z_above_cartridge, disp_vol,
-        disp_rate, p300_mount] = get_values(  # noqa: F821
-        "z_above_cartridge", "disp_vol", "disp_rate", "p300_mount")
+    [height_above_cartridge,
+        disp_vol, disp_rate, p300_mount] = get_values(  # noqa: F821
+        "height_above_cartridge", "disp_vol", "disp_rate", "p300_mount")
 
-    if not 0.1 <= z_above_cartridge <= 10:
+    if not 0.1 <= height_above_cartridge <= 10:
         raise Exception("Enter a height between 1 and 10mm")
     if not 1 <= disp_vol <= 85:
         raise Exception("Enter a dispense volume between 1 and 85µL")
@@ -33,7 +33,7 @@ def run(ctx):
     for i in range(int(len(plate.wells())/3)):
         i *= 3
         p300.distribute(disp_vol, reservoir.wells(0),
-                        [plate.wells()[i].top(z_above_cartridge)
+                        [plate.wells()[i].top(height_above_cartridge)
                         for i in [i, i+1, i+2]],
                         new_tip='never',
                         blow_out=True,
