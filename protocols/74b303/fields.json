@@ -18,34 +18,45 @@
     "default": "3"
   },
   {
-    "type": "int",
+    "type": "dropDown",
     "label": "Mix Volume",
     "name": "mix_volume",
-    "default": 15
+    "options": [
+      { "label": "15 ul", "value": 15 }
+    ]
   },
   {
-    "type": "int",
+    "type": "dropDown",
     "label": "Mix Repetitions",
     "name": "mix_repetitions",
-    "default": 3
+    "options": [
+      { "label": "3 repetitions", "value": 3 }
+    ]
   },
   {
-    "type": "int",
+    "type": "dropDown",
     "label": "Pooling Volume",
     "name": "pooling_volume",
-    "default": 5
+    "options": [
+      { "label": "5 ul", "value": 5 }
+    ]
   },
   {
-    "type": "str",
+    "type": "dropDown",
     "label": "Pipette Type",
     "name": "pipette_type",
-    "default": "p20_single_gen2"
+    "options": [
+      { "label": "p20 single gen2", "value": "p20_single_gen2" }
+    ]
   },
   {
-    "type": "str",
+    "type": "dropDown",
     "label": "Pipette Mount",
     "name": "pipette_mount",
-    "default": "right"
+    "options": [
+      { "label": "Right", "value": "right" },
+      { "label": "Left", "value": "left" }
+    ]
   },
   {
     "type": "int",

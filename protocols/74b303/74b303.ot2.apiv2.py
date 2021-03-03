@@ -70,7 +70,7 @@ def run(ctx):
 
     # pcr plates
     [*plate_names] = [ctx.load_labware(
-        "biorad_96_wellplate_200ul_pcr",
+        "neptunegensci_pcrplate",
         slot, plate_name) for slot, plate_name in zip(
             available_deck_slots[:len(plate_names)],
             plate_names)]
