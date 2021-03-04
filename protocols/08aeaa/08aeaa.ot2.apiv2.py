@@ -8,8 +8,9 @@ metadata = {
 
 def run(ctx):
 
-    [norm_data, p300_mount, p20_mount, final_conc] = get_values(  # noqa: F821
-        "norm_data", "p300_mount", "p20_mount", "final_conc")
+    [norm_data, p300_mount, p20_mount, final_conc,
+        water_vol] = get_values(  # noqa: F821
+        "norm_data", "p300_mount", "p20_mount", "final_conc", "water_vol")
 
     # Load Labware
     tipracks_20ul = [ctx.load_labware('opentrons_96_tiprack_20ul',
@@ -56,7 +57,7 @@ def run(ctx):
     # Part 2
     p300.pick_up_tip()
     for well in dna_wells:
-        p300.transfer(32.5, water, pcr_plate[well], new_tip='never')
+        p300.transfer(water_vol, water, pcr_plate[well], new_tip='never')
     p300.drop_tip()
 
     for well in dna_wells:
@@ -65,3 +66,4 @@ def run(ctx):
 
     ctx.comment(f'The following samples have failed:{", ".join(failed_wells)}')
     ctx.pause(f'Failed Samples: {", ".join(failed_wells)}')
+    ctx.home()

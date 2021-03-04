@@ -28,5 +28,11 @@
         "label": "Final Concentration (ng/ul)",
         "name": "final_conc",
         "default": 15
+      },
+      {
+        "type": "float",
+        "label": "Nuclease-Free Water Transfer Volume (uL)",
+        "name": "water_vol",
+        "default": 32.5
       }
 ]
