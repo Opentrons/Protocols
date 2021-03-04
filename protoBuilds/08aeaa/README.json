@@ -15,12 +15,12 @@
         "notes": "\nIf you\u2019d like to request a protocol supporting multiple plates or require other changes to this script, please fill out our [Protocol Request Form](https://opentrons-protocol-dev.paperform.co/). You can also modify the Python file directly by following our [API Documentation](https://docs.opentrons.com/v2/). If you\u2019d like to chat with an applications engineer about changes, please contact us at [protocols@opentrons.com](mailto:protocols@opentrons.com).\n\n",
         "process": "\n1. Create your CSV file based on the format provided.\n2. Upload your CSV, choose your pipette mount positions and enter the final concentration for normalization.\n3. Download your customized OT-2 protocol using the blue \u201cDownload\u201d button, located above the deckmap.\n4. Upload your protocol into the Opentrons App and follow the instructions there to set up your deck, calibrate your labware, and proceed to run.\n\n\n",
         "robot": "* [OT-2](https://opentrons.com/ot-2)\n\n\n",
-        "title": "Normalization"
+        "title": "Custom Normalization & Transfer"
     },
     "notes": "If you\u2019d like to request a protocol supporting multiple plates or require other changes to this script, please fill out our Protocol Request Form. You can also modify the Python file directly by following our API Documentation. If you\u2019d like to chat with an applications engineer about changes, please contact us at protocols@opentrons.com.",
     "process": "\nCreate your CSV file based on the format provided.\nUpload your CSV, choose your pipette mount positions and enter the final concentration for normalization.\nDownload your customized OT-2 protocol using the blue \u201cDownload\u201d button, located above the deckmap.\nUpload your protocol into the Opentrons App and follow the instructions there to set up your deck, calibrate your labware, and proceed to run.\n",
     "robot": [
         "OT-2"
     ],
-    "title": "Normalization"
+    "title": "Custom Normalization & Transfer"
 }
