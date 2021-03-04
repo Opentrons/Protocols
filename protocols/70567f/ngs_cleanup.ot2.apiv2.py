@@ -147,7 +147,7 @@ resuming.')
         m300.blow_out(beads.top(-5))
         m300.transfer(volume_of_beads, beads, m.bottom(2), new_tip='never')
         m300.blow_out(m.top(-5))
-        m300.mix(10, volume_of_beads, m.bottom(2))
+        m300.mix(10, volume_of_beads+25, m.bottom(2))
         m300.blow_out(m.top(-5))
         drop(m300, p)
     ctx.max_speeds['A'] = 125
