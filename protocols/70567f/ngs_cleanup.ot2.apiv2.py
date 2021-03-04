@@ -57,6 +57,15 @@ def run(ctx):
     # sample setup
     mag_samples = mag_plate.rows()[0][:num_cols]
     elution_samples = elution_plate.rows()[0][:num_cols]
+    num_drying_sets = math.ceil(num_cols/4)  # process 4 columns at a time
+    drying_sets = [
+        mag_samples[i*4:i*4+4] if i < num_drying_sets - 1
+        else mag_samples[i*4:]
+        for i in range(num_drying_sets)]
+    parking_sets = [
+        parking_spots[i*4:i*4+4] if i < num_drying_sets - 1
+        else parking_spots[i*4:]
+        for i in range(num_drying_sets)]
 
     # reagents
     beads = res12.wells()[0]
@@ -227,27 +236,40 @@ on magnet for ' + str(etoh_inc) + ' minutes.')
             ctx.pause('Briefly centrifuge plate to pellet any residual \
 material on the side of the wells. Then, replace plate on magnetic module.')
 
-            m300.flow_rate.aspirate = 20
-            for m, p in zip(mag_samples, parking_spots):
-                pick_up(m300, p)
-                m300.transfer(20, m.bottom(0.5), waste[0], new_tip='never')
-                m300.blow_out(waste[0])
-                drop(m300)
-            m300.flow_rate.aspirate = 100
+            eb_tip = None
+            for set_ind, (sample_set, parking_set) in enumerate(
+                    zip(drying_sets, parking_sets)):
+                m300.flow_rate.aspirate = 20
+                for m, p in zip(sample_set, parking_set):
+                    pick_up(m300, p)
+                    m300.transfer(20, m.bottom(0.5), waste[0], new_tip='never')
+                    m300.blow_out(waste[0])
+                    drop(m300)
+                m300.flow_rate.aspirate = 100
 
-    ctx.delay(
-        minutes=drying_time_in_minutes, msg='Drying for \
+                ctx.delay(
+                    minutes=drying_time_in_minutes, msg='Drying for \
 ' + str(drying_time_in_minutes) + ' minutes.')
+
+                # transfer EB buffer
+                if set_ind == 0:
+                    eb_tip = pick_up(m300)
+                else:
+                    pick_up(m300, eb_tip)
+                m300.distribute(volume_EB_in_ul, eb_buff,
+                                [m.top(2) for m in sample_set], blow_out=True,
+                                blowout_location='source well',
+                                new_tip='never')
+                if set_ind == len(sample_set) - 1:
+                    drop(m300)
+                else:
+                    drop(m300, eb_tip)
+
     magdeck.disengage()
 
-    # transfer EB buffer
-    pick_up(m300)
-    m300.distribute(volume_EB_in_ul, eb_buff, [m.top(2) for m in mag_samples],
-                    blow_out=True, blowout_location='source well',
-                    new_tip='never')
+    # mix samples
     for m in mag_samples:
-        if not m300.has_tip:
-            pick_up(m300)
+        pick_up(m300)
         m300.mix(10, 0.8*volume_EB_in_ul, m)
         m300.blow_out(m.top())
         drop(m300)
