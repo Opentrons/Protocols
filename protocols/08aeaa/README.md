@@ -1,4 +1,4 @@
-# Normalization
+# Custom Normalization & Transfer
 
 ### Author
 [Opentrons](https://opentrons.com/)

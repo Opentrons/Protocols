@@ -1,5 +1,5 @@
 metadata = {
-    'protocolName': 'Sample Normalization',
+    'protocolName': 'Custom Normalization & Transfer',
     'author': 'Sakib <sakib.hossain@opentrons.com>',
     'description': 'Custom Protocol Request',
     'apiLevel': '2.9'
