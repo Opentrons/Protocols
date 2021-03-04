@@ -29,7 +29,7 @@ Explanation of complex parameters below:
 * channel 1: Ampure XP beads
 * channel 2: 80% ethanol
 * channel 3: EB buffer
-* channels 11-12: liquid waste (loaded empty)
+* channels 11-12: liquid waste (loaded empty at start)
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
