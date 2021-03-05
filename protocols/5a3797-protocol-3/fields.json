@@ -10,8 +10,8 @@
     },
     {
         "type": "dropDown",
-        "label": "P300-single GEN2 mount",
-        "name": "p300_mount",
+        "label": "P1000-single GEN2 mount",
+        "name": "p1000_mount",
         "options": [
           {"label": "left", "value": "left"},
           {"label": "right", "value": "right"}
@@ -31,6 +31,18 @@
       "label": "Total Sample Number (# of Tubes)",
       "name": "samples",
       "default": 96
+    },
+    {
+      "type": "float",
+      "label": "P1000 Sample Transfer Volume (uL)",
+      "name": "sample_vol",
+      "default": 200
+    },
+    {
+      "type": "float",
+      "label": "P1000 Sample Aspiration Rate (uL/s)",
+      "name": "sample_asp_speed",
+      "default": 50
     },
     {
         "type": "dropDown",

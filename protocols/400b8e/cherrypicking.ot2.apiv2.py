@@ -98,6 +98,9 @@ def run(ctx):
         if tip_reuse == 'never':
             pick_up()
 
+        # calculate time estimate based on 30s/transfer
+        time_est_min = round(len(block)*30.0/60, 1)
+
         # find plate IDs
         id_dict = {}
         for line in block:
@@ -106,7 +109,8 @@ def run(ctx):
                 id_dict[id] = slot
         comments = ', '.join(
             [f'plate {key} in slot {val}' for key, val in id_dict.items()])
-        ctx.pause(f'Please load {comments}. Resume when loaded.')
+        ctx.pause(f'Please load {comments}. This set of transfers will take \
+approximately {time_est_min} minutes. Resume when loaded.')
 
         for line in block:
             _, s_slot, s_well, h, _, d_slot, d_well, vol = line[1:9]

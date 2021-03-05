@@ -27,7 +27,7 @@ def run(ctx):
                                      slot, f'Tip Box {slot}') for
                     slot in ['2', '3']]
     reservoir = ctx.load_labware('nest_12_reservoir_15ml', 6, 'Reservoir')
-    index_primers = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
+    index_primers = ctx.load_labware('4titude_framestar_pcr_plate_200ul',
                                      5, 'Index Primers')
 
     # Load Modules and Plates

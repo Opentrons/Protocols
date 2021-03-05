@@ -1,0 +1,77 @@
+[
+  {
+    "type": "dropDown",
+    "label": "number of source plates",
+    "name": "num_plates",
+    "options": [
+      {"label": "1", "value": 1},
+      {"label": "2", "value": 2}
+    ]
+  },
+  {
+    "type": "int",
+    "label": "number of samples per plate (1-96)",
+    "name": "num_samples",
+    "default": 96
+  },
+  {
+    "type": "dropDown",
+    "label": "number of slides (1-4)",
+    "name": "num_slides",
+    "options": [
+      {"label": "1", "value": 1},
+      {"label": "2", "value": 2},
+      {"label": "3", "value": 3},
+      {"label": "4", "value": 4}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "array pattern",
+    "name": "array_pattern",
+    "options": [
+      {"label": "1", "value": 1},
+      {"label": "2", "value": 2},
+      {"label": "3", "value": 3}
+    ]
+  },
+  {
+    "type": "float",
+    "label": "blot dwell time (in seconds)",
+    "name": "blot_dwell_time",
+    "default": 1
+  },
+  {
+    "type": "float",
+    "label": "slow vertical speed (in mm/s)",
+    "name": "slow_speed",
+    "default": 10.0
+  },
+  {
+    "type": "float",
+    "label": "sample height (in mm)",
+    "name": "sample_height",
+    "default": 4
+  },
+  {
+    "type": "float",
+    "label": "sample dwell time (in seconds)",
+    "name": "sample_dwell_time",
+    "default": 2
+  },
+  {
+    "type": "float",
+    "label": "slide dwell time (in seconds)",
+    "name": "slide_dwell_time",
+    "default": 1
+  },
+  {
+    "type": "dropDown",
+    "label": "P300 multi-channel GEN2 pipette mount",
+    "name": "m300_mount",
+    "options": [
+      {"label": "right", "value": "right"},
+      {"label": "left", "value": "left"}
+    ]
+  }
+]

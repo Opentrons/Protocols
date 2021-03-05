@@ -26,7 +26,7 @@ def run(ctx):
                                 1, 'Tip Box 1')
     tiprack2 = ctx.load_labware('opentrons_96_filtertiprack_20ul',
                                 2, 'Tip Box 2')
-    mastermix = ctx.load_labware('nest_12_reservoir_15ml', 7)['A1']
+    mastermix = ctx.load_labware('96well_pcr_base_200ul_strip', 7)['A1']
     sample_plate = ctx.load_labware('kingfisher_96_deepwell_plate_2ml', 4)
     pcr_plate = ctx.load_labware(
                 'thermofishermicroampfast96well0.1_96_wellplate_100ul', 5)

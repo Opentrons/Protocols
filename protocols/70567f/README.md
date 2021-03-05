@@ -8,7 +8,7 @@
 	* Ampure XP
 
 ## Description
-This protocol performs a custom NGS library cleanup using Ampure XP beads in a variable ratio with samples. The samples are mounted on an Opentrons magnetic module, and the final elute is transferred to a fresh PCR plate.
+This protocol performs a custom NGS library prep cleanup using Ampure XP beads in a variable ratio with samples. The samples are mounted on an Opentrons magnetic module, and the final elute is transferred to a fresh PCR plate.
 
 Explanation of complex parameters below:
 * `park tips`: If set to `yes` (recommended), the protocol will conserve tips between reagent addition and removal. Tips will be stored in the wells of an empty rack corresponding to the well of the sample that they access (tip parked in A1 of the empty rack will only be used for sample A1, tip parked in B1 only used for sample B1, etc.). If set to `no`, tips will always be used only once, and the user will be prompted to manually refill tipracks mid-protocol for high throughput runs.
@@ -17,12 +17,10 @@ Explanation of complex parameters below:
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
-* [Opentrons Magnetic Module GEN2](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
+* [Opentrons Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
 * [NEST 12-channel reservoir 15ml #1061-8150](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
-* [P20 multi-channel GEN2 electronic pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)
-* [P300 multi-channel electronic pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette?variant=5984202489885)
-* [Opentrons 20ul filter tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-filter-tip)
-* [Opentrons 200ul filter tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)
+* [P300 multi-channel electronic pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette?variant=5984202489885)
+* [Opentrons 200ul filtertipracks](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)
 
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
@@ -31,7 +29,7 @@ Explanation of complex parameters below:
 * channel 1: Ampure XP beads
 * channel 2: 80% ethanol
 * channel 3: EB buffer
-* channels 11-12: liquid waste (loaded empty)
+* channels 11-12: liquid waste (loaded empty at start)
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)

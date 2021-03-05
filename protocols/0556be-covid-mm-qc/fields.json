@@ -58,5 +58,17 @@
       "label": "Component 2 Height (mm)",
       "name": "component_2_height",
       "default": 75
+    },
+    {
+      "type": "float",
+      "label": "PCR Tube Dispense Height (mm)",
+      "name": "pcr_tube_height",
+      "default": 3
+    },
+    {
+      "type": "str",
+      "label": "Select PCR Tubes/Wells",
+      "name": "pcr_tubes",
+      "default": "A1,A2,A3,A6,A7,A8,C1,C2,C3"
     }
   ]
