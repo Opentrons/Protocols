@@ -2,7 +2,7 @@ metadata = {
     'protocolName': 'Cherrypicking (Simple)',
     'author': 'Opentrons <protocols@opentrons.com>',
     'source': 'Protocol Library',
-    'apiLevel': '2.4'
+    'apiLevel': '2.7'
     }
 
 
@@ -30,13 +30,13 @@ def run(protocol):
     # create labware
     dest_plate = protocol.load_labware(dp_type, '3', 'Destination Labware')
 
-    data = [row.split(',') for row in volumes_csv.strip().splitlines() if row]
+    data = [r.split(',') for r in volumes_csv.strip().splitlines() if r][1:]
 
-    if len(data[1]) == 2:
+    if len(data[0]) == 2:
         source_plate = protocol.load_labware(sp_type, '2', 'Source Labware')
         if tip_reuse == 'never':
             pipette.pick_up_tip()
-        for well_idx, (source_well, vol) in enumerate(data[1:]):
+        for well_idx, (source_well, vol) in enumerate(data):
             if source_well and vol:
                 vol = float(vol)
                 pipette.transfer(
@@ -63,7 +63,7 @@ def run(protocol):
             ))
         if tip_reuse == 'never':
             pipette.pick_up_tip()
-        for well_idx, (source_well, vol, plate) in enumerate(data[1:]):
+        for well_idx, (source_well, vol, plate) in enumerate(data):
             if source_well and vol and plate:
                 vol = float(vol)
                 source_p = source_plates[int(plate)-1]
