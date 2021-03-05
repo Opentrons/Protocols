@@ -10,7 +10,7 @@
     },
     "flags": {
         "embedded-app": false,
-        "feature": true,
+        "feature": false,
         "hide-from-search": false,
         "skip-tests": false
     },
