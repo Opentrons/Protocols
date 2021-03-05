@@ -43,6 +43,12 @@
   },
   {
     "type": "float",
+    "label": "slow vertical speed (in mm/s)",
+    "name": "slow_speed",
+    "default": 10.0
+  },
+  {
+    "type": "float",
     "label": "sample height (in mm)",
     "name": "sample_height",
     "default": 4

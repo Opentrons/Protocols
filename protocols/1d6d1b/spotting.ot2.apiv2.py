@@ -12,10 +12,10 @@ metadata = {
 def run(ctx):
 
     [num_plates, num_samples, num_slides, array_pattern, blot_dwell_time,
-     sample_height, sample_dwell_time, slide_dwell_time,
+     slow_speed, sample_height, sample_dwell_time, slide_dwell_time,
      m300_mount] = get_values(  # noqa: F821
         'num_plates', 'num_samples', 'num_slides', 'array_pattern',
-        'blot_dwell_time', 'sample_height', 'sample_dwell_time',
+        'blot_dwell_time', 'slow_speed', 'sample_height', 'sample_dwell_time',
         'slide_dwell_time', 'm300_mount')
 
     sample_plates = [
@@ -67,8 +67,8 @@ def run(ctx):
                     m300.move_to(m)
             m300.move_to(wash.center())
 
-            ctx.max_speeds['A'] = 10
-            ctx.max_speeds['Z'] = 10
+            ctx.max_speeds['A'] = slow_speed
+            ctx.max_speeds['Z'] = slow_speed
             m300.move_to(blot.top())
             m300.move_to(blot.bottom())
             ctx.delay(seconds=blot_dwell_time)
@@ -81,12 +81,14 @@ def run(ctx):
 
     for sample_set, slide_set in zip(sample_sets, slide_sets):
         for sample, slide_spot in zip(sample_set, slide_set):
-            ctx.max_speeds['A'] = 10
-            ctx.max_speeds['Z'] = 10
+            ctx.max_speeds['A'] = slow_speed
+            ctx.max_speeds['Z'] = slow_speed
             m300.move_to(sample.bottom(sample_height))
             ctx.delay(seconds=sample_dwell_time)
             m300.move_to(slide_spot.bottom(0.1))
             ctx.delay(seconds=slide_dwell_time)
+            del ctx.max_speeds['A']
+            del ctx.max_speeds['Z']
             wash_blot()
 
     m300.return_tip()
