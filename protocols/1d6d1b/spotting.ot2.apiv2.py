@@ -87,6 +87,8 @@ def run(ctx):
             ctx.delay(seconds=sample_dwell_time)
             m300.move_to(slide_spot.bottom(0.1))
             ctx.delay(seconds=slide_dwell_time)
+            del ctx.max_speeds['A']
+            del ctx.max_speeds['Z']
             wash_blot()
 
     m300.return_tip()
