@@ -22,6 +22,12 @@
     "default": 10
   },
   {
+    "type": "float",
+    "label": "space between duplicate samples (y-direction, in mm)",
+    "name": "y_offset",
+    "default": 2.3
+  },
+  {
     "type": "dropDown",
     "label": "P20 GEN2 single-channel pipette mount",
     "name": "p20_mount",
