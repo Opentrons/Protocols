@@ -28,13 +28,12 @@ def run(ctx):
 
     # protocol
     p300.flow_rate.dispense = disp_rate
+    chunks = [plate.wells()[i:i+3] for i in range(0, len(plate.wells()), 3)]
     p300.pick_up_tip()
-
-    for i in range(int(len(plate.wells())/3)):
-        i *= 3
-        p300.distribute(disp_vol, reservoir.wells(0),
-                        [plate.wells()[i].top(height_above_cartridge)
-                        for i in [i, i+1, i+2]],
+    for chunk in chunks:
+        p300.distribute(disp_vol, reservoir.wells()[0],
+                        [well.top(height_above_cartridge)
+                        for well in chunk],
                         new_tip='never',
                         blow_out=True,
                         blowout_location='source well')

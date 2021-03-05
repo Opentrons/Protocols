@@ -2430,7 +2430,7 @@
     "format": "irregular",
     "isTiprack": false,
     "isMagneticModuleCompatible": false,
-    "loadName": "invoy_216_well_cartridge_plate"
+    "loadName": "generic_216_wellplate_85ul_flat"
   },
   "namespace": "custom_beta",
   "version": 1,
