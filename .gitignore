@@ -108,3 +108,6 @@ ENV/
 
 releases
 smoketest/*.py
+
+# supplementary protocol bundle files
+protocols/**/supplements
