@@ -18,6 +18,18 @@ def run(ctx):
         'blot_dwell_time', 'slow_speed', 'sample_height', 'sample_dwell_time',
         'slide_dwell_time', 'm300_mount')
 
+    # space for parameters
+    num_plates = num_plates
+    num_samples = num_samples
+    num_slides = num_slides
+    array_pattern = array_pattern
+    blot_dwell_time = blot_dwell_time
+    slow_speed = slow_speed
+    sample_height = sample_height
+    sample_dwell_time = sample_dwell_time
+    slide_dwell_time = slide_dwell_time
+    m300_mount = m300_mount
+
     sample_plates = [
         ctx.load_labware('eppendorf_96_wellplate_350ul', slot,
                          'sample plate ' + str(i+1))
