@@ -43,8 +43,14 @@
   },
   {
     "type": "float",
-    "label": "slow vertical speed (in mm/s)",
-    "name": "slow_speed",
+    "label": "slow vertical speed up (in mm/s)",
+    "name": "slow_speed_up",
+    "default": 10.0
+  },
+  {
+    "type": "float",
+    "label": "slow vertical speed down (in mm/s)",
+    "name": "slow_speed_down",
     "default": 10.0
   },
   {
