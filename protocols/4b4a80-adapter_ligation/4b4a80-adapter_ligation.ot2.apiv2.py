@@ -70,7 +70,7 @@ def run(ctx):
     mixture_volume = ligation_mastermix_volume
     + ligation_enhancer_volume + ligation_adapter_volume
 
-    ligation_mastermix, ligation_enhancer, ligation_adapter, user_enzyme, \\
+    ligation_mastermix, ligation_enhancer, ligation_adapter, user_enzyme, \
         mixture = [temp_reagents.wells_by_name()[well] for well in [
          ligation_mastermix_well, ligation_enhancer_well,
          ligation_adapter_well, user_enzyme_well, empty_vial_well]]
