@@ -1,5 +1,5 @@
 {
-    "content": "metadata = {\n    'protocolName': 'Cherrypicking',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.3'\n}\n\n\ndef run(ctx):\n\n    [pipette_type, pipette_mount, tip_type,\n     transfer_csv] = get_values(  # noqa: F821\n        \"pipette_type\", \"pipette_mount\", \"tip_type\", \"transfer_csv\")\n\n    tiprack_map = {\n        'p10_single': {\n            'standard': 'opentrons_96_tiprack_10ul',\n            'filter': 'opentrons_96_filtertiprack_20ul'\n        },\n        'p50_single': {\n            'standard': 'opentrons_96_tiprack_300ul',\n            'filter': 'opentrons_96_filtertiprack_200ul'\n        },\n        'p300_single': {\n            'standard': 'opentrons_96_tiprack_300ul',\n            'filter': 'opentrons_96_filtertiprack_200ul'\n        },\n        'p1000_single': {\n            'standard': 'opentrons_96_tiprack_1000ul',\n            'filter': 'opentrons_96_filtertiprack_1000ul'\n        },\n        'p20_single_gen2': {\n            'standard': 'opentrons_96_tiprack_20ul',\n            'filter': 'opentrons_96_filtertiprack_20ul'\n        },\n        'p300_single_gen2': {\n            'standard': 'opentrons_96_tiprack_300ul',\n            'filter': 'opentrons_96_filtertiprack_200ul'\n        },\n        'p1000_single_gen2': {\n            'standard': 'opentrons_96_tiprack_1000ul',\n            'filter': 'opentrons_96_filtertiprack_1000ul'\n        }\n    }\n\n    # load labware\n    transfer_info = [[val.strip().lower() for val in line.split(',')]\n                     for line in transfer_csv.splitlines()\n                     if line.split(',')[1].strip()][1:]\n    for line in transfer_info:\n        s_lw, s_slot, d_lw, d_slot = line[1:3] + line[5:7]\n        for slot, lw in zip([s_slot, d_slot], [s_lw, d_lw]):\n            if not int(slot) in ctx.loaded_labwares:\n                ctx.load_labware(lw.lower(), slot)\n\n    # load tipracks in remaining slots\n    tiprack_type = tiprack_map[pipette_type][tip_type]\n    tipracks = []\n    for slot in range(1, 13):\n        if slot not in ctx.loaded_labwares:\n            tipracks.append(ctx.load_labware(tiprack_type, str(slot)))\n\n    # load pipette\n    pip = ctx.load_instrument(pipette_type, pipette_mount, tip_racks=tipracks)\n\n    tip_count = 0\n    tip_max = len(tipracks*96)\n\n    def pick_up():\n        nonlocal tip_count\n        if tip_count == tip_max:\n            ctx.pause('Please refill tipracks before resuming.')\n            pip.reset_tipracks()\n            tip_count = 0\n        pip.pick_up_tip()\n        tip_count += 1\n\n    def parse_well(well):\n        letter = well[0]\n        number = well[1:]\n        return letter.upper() + str(int(number))\n\n    for line in transfer_info:\n        new_tip, _, s_slot, s_well, h, _, d_slot, d_well, vol = line[:9]\n        source = ctx.loaded_labwares[\n            int(s_slot)].wells_by_name()[parse_well(s_well)].bottom(float(h))\n        dest = ctx.loaded_labwares[\n            int(d_slot)].wells_by_name()[parse_well(d_well)]\n\n        if new_tip:\n            if new_tip.lower()[0] == 'y':\n                if pip.has_tip:\n                    pip.drop_tip()\n                pick_up()\n\n        pip.transfer(float(vol), source, dest, new_tip='never')\n\n    if pip.has_tip:\n        pip.drop_tip()\n",
+    "content": "metadata = {\n    'protocolName': 'Cherrypicking',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.3'\n}\n\n\ndef run(ctx):\n\n    [pipette_type, pipette_mount, tip_type,\n     transfer_csv] = get_values(  # noqa: F821\n        \"pipette_type\", \"pipette_mount\", \"tip_type\", \"transfer_csv\")\n\n    tiprack_map = {\n        'p10_single': {\n            'standard': 'opentrons_96_tiprack_10ul',\n            'filter': 'opentrons_96_filtertiprack_20ul'\n        },\n        'p50_single': {\n            'standard': 'opentrons_96_tiprack_300ul',\n            'filter': 'opentrons_96_filtertiprack_200ul'\n        },\n        'p300_single': {\n            'standard': 'opentrons_96_tiprack_300ul',\n            'filter': 'opentrons_96_filtertiprack_200ul'\n        },\n        'p1000_single': {\n            'standard': 'opentrons_96_tiprack_1000ul',\n            'filter': 'opentrons_96_filtertiprack_1000ul'\n        },\n        'p20_single_gen2': {\n            'standard': 'opentrons_96_tiprack_20ul',\n            'filter': 'opentrons_96_filtertiprack_20ul'\n        },\n        'p300_single_gen2': {\n            'standard': 'opentrons_96_tiprack_300ul',\n            'filter': 'opentrons_96_filtertiprack_200ul'\n        },\n        'p1000_single_gen2': {\n            'standard': 'opentrons_96_tiprack_1000ul',\n            'filter': 'opentrons_96_filtertiprack_1000ul'\n        },\n        'p10_multi': {\n            'standard': 'opentrons_96_tiprack_10ul',\n            'filter': 'opentrons_96_filtertiprack_20ul'\n        },\n        'p50_multi': {\n            'standard': 'opentrons_96_tiprack_300ul',\n            'filter': 'opentrons_96_filtertiprack_200ul'\n        },\n        'p300_multi': {\n            'standard': 'opentrons_96_tiprack_300ul',\n            'filter': 'opentrons_96_filtertiprack_200ul'\n        },\n        'p20_multi_gen2': {\n            'standard': 'opentrons_96_tiprack_20ul',\n            'filter': 'opentrons_96_filtertiprack_20ul'\n        },\n        'p300_multi_gen2': {\n            'standard': 'opentrons_96_tiprack_300ul',\n            'filter': 'opentrons_96_filtertiprack_200ul'\n        }\n    }\n\n    # load labware\n    transfer_info = [[val.strip().lower() for val in line.split(',')]\n                     for line in transfer_csv.splitlines()\n                     if line.split(',')[1].strip()][1:]\n    for line in transfer_info:\n        s_lw, s_slot, d_lw, d_slot = line[1:3] + line[5:7]\n        for slot, lw in zip([s_slot, d_slot], [s_lw, d_lw]):\n            if not int(slot) in ctx.loaded_labwares:\n                ctx.load_labware(lw.lower(), slot)\n\n    # load tipracks in remaining slots\n    tiprack_type = tiprack_map[pipette_type][tip_type]\n    tipracks = []\n    for slot in range(1, 13):\n        if slot not in ctx.loaded_labwares:\n            tipracks.append(ctx.load_labware(tiprack_type, str(slot)))\n\n    # load pipette\n    pip = ctx.load_instrument(pipette_type, pipette_mount, tip_racks=tipracks)\n\n    tip_count = 0\n    tip_max = len(tipracks*96)\n\n    def pick_up():\n        nonlocal tip_count\n        if tip_count == tip_max:\n            ctx.pause('Please refill tipracks before resuming.')\n            pip.reset_tipracks()\n            tip_count = 0\n        pip.pick_up_tip()\n        tip_count += 1\n\n    def parse_well(well):\n        letter = well[0]\n        number = well[1:]\n        return letter.upper() + str(int(number))\n\n    for line in transfer_info:\n        new_tip, _, s_slot, s_well, h, _, d_slot, d_well, vol = line[:9]\n        if pip.type == 'multi' and (\n                parse_well(s_well) != 'A' or parse_well(d_well) != 'A'):\n            ctx.pause('Warning: attempting to use multi-channel pipette on \\\nrows other than row A.')\n        source = ctx.loaded_labwares[\n            int(s_slot)].wells_by_name()[parse_well(s_well)].bottom(float(h))\n        dest = ctx.loaded_labwares[\n            int(d_slot)].wells_by_name()[parse_well(d_well)]\n\n        if new_tip:\n            if new_tip.lower()[0] == 'y':\n                if pip.has_tip:\n                    pip.drop_tip()\n                pick_up()\n\n        pip.transfer(float(vol), source, dest, new_tip='never')\n\n    if pip.has_tip:\n        pip.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -5450,7 +5450,7 @@
     ],
     "fields": [
         {
-            "default": "New Tip,Source Labware,Source Slot,Source Well,Source Aspiration Height Above Bottom (in mm),Dest Labware,Dest Slot,Dest Well,Volume (in ul)\nyes,agilent_1_reservoir_290ml,1,A1,1,nest_96_wellplate_100ul_pcr_full_skirt,4,A11,1\n,nest_12_reservoir_15ml,2,A1,1,nest_96_wellplate_2ml_deep,5,A5,3\n,nest_1_reservoir_195ml,3,A1,1,nest_96_wellplate_2ml_deep,5,H12,7",
+            "default": "New Tip,Source Labware,Source Slot,Source Well,Source Aspiration Height Above Bottom (in mm),Dest Labware,Dest Slot,Dest Well,Volume (in ul)\nyes,agilent_1_reservoir_290ml,1,A1,1,nest_96_wellplate_100ul_pcr_full_skirt,4,A11,1\n,nest_12_reservoir_15ml,2,A1,1,nest_96_wellplate_2ml_deep,5,A5,3\nyes,nest_1_reservoir_195ml,3,A1,1,nest_96_wellplate_100ul_pcr_full_skirt,5,A12,7",
             "label": "Transfer .csv File",
             "name": "transfer_csv",
             "type": "textFile"
@@ -5459,6 +5459,10 @@
             "label": "Pipette Model",
             "name": "pipette_type",
             "options": [
+                {
+                    "label": "P20 Multi (GEN 2)",
+                    "value": "p20_multi_gen2"
+                },
                 {
                     "label": "P10 Single (GEN 1)",
                     "value": "p10_single"
@@ -5486,6 +5490,22 @@
                 {
                     "label": "P1000 Single (GEN 2)",
                     "value": "p1000_single_gen2"
+                },
+                {
+                    "label": "P10 Multi (GEN 1)",
+                    "value": "p10_multi"
+                },
+                {
+                    "label": "P50 Multi (GEN 1)",
+                    "value": "p50_multi"
+                },
+                {
+                    "label": "P300 Multi (GEN 1)",
+                    "value": "p300_multi"
+                },
+                {
+                    "label": "P300 Multi (GEN 2)",
+                    "value": "p300_multi_gen2"
                 }
             ],
             "type": "dropDown"
@@ -5524,7 +5544,7 @@
     "instruments": [
         {
             "mount": "right",
-            "name": "p10_single"
+            "name": "p20_multi_gen2"
         }
     ],
     "labware": [
@@ -5559,40 +5579,40 @@
             "type": "nest_96_wellplate_2ml_deep"
         },
         {
-            "name": "Opentrons 96 Tip Rack 10 \u00b5L on 6",
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 6",
             "share": false,
             "slot": "6",
-            "type": "opentrons_96_tiprack_10ul"
+            "type": "opentrons_96_tiprack_20ul"
         },
         {
-            "name": "Opentrons 96 Tip Rack 10 \u00b5L on 7",
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 7",
             "share": false,
             "slot": "7",
-            "type": "opentrons_96_tiprack_10ul"
+            "type": "opentrons_96_tiprack_20ul"
         },
         {
-            "name": "Opentrons 96 Tip Rack 10 \u00b5L on 8",
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 8",
             "share": false,
             "slot": "8",
-            "type": "opentrons_96_tiprack_10ul"
+            "type": "opentrons_96_tiprack_20ul"
         },
         {
-            "name": "Opentrons 96 Tip Rack 10 \u00b5L on 9",
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 9",
             "share": false,
             "slot": "9",
-            "type": "opentrons_96_tiprack_10ul"
+            "type": "opentrons_96_tiprack_20ul"
         },
         {
-            "name": "Opentrons 96 Tip Rack 10 \u00b5L on 10",
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 10",
             "share": false,
             "slot": "10",
-            "type": "opentrons_96_tiprack_10ul"
+            "type": "opentrons_96_tiprack_20ul"
         },
         {
-            "name": "Opentrons 96 Tip Rack 10 \u00b5L on 11",
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 11",
             "share": false,
             "slot": "11",
-            "type": "opentrons_96_tiprack_10ul"
+            "type": "opentrons_96_tiprack_20ul"
         },
         {
             "name": "Opentrons Fixed Trash on 12",
