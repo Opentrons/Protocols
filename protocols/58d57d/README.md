@@ -21,13 +21,12 @@ This protocol performs transfers of reagents for the Promega ADP-Glo Kinase Assa
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
-### Deck Setup
+Deck Setup
 * Greiner 384 Well Plate (Slot 1)
 * Opentrons 20uL Tips (Slot 2)
 * Opentrons 24 Tube Rack 1.5mL Tubes (Slot 4)
 
-### Reagent Setup
-Opentrons 24 Tube Rack 1.5mL Tubes (Slot 4):
+Reagent Setup: Opentrons 24 Tube Rack 1.5mL Tubes (Slot 4):
 * Liquid A (A1)
 * Liquid B (B1)
 * Liquid C (C1)
