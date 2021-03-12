@@ -58,8 +58,7 @@ def run(ctx):
     tc_plate = tc.load_labware(pcr_labware)
 
     # fragmented sample locations (first three columns of thermocycler plate)
-    fragmented_sample = [
-     well for column in tc_plate.columns() for well in column][:sample_count]
+    fragmented_sample = tc_plate.wells()[:sample_count]
 
     # reagent setup: combine mastermix, enhancer and adapter
     # adjusted settings, air gaps and blow outs for pipetting of viscous liquid
@@ -76,7 +75,7 @@ def run(ctx):
          ligation_adapter_well, user_enzyme_well, empty_vial_well]]
 
     p300.pick_up_tip()
-    p300.mix(10, 250, ligation_mastermix.bottom())
+    p300.mix(10, 250, ligation_mastermix.bottom(1))
     p300.blow_out(ligation_mastermix.top())
     p300.drop_tip()
     p300.transfer(
