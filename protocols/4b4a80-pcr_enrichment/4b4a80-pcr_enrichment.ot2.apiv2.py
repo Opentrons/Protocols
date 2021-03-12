@@ -1,3 +1,5 @@
+import math
+
 metadata = {
     'protocolName': '''NEBNext Ultra II FS DNA Library Prep Kit for Illumina
     E6177S/L (for 1-24 DNA samples): Step 5: PCR Enrichment''',
@@ -64,8 +66,7 @@ def run(ctx):
     mag.disengage()
 
     # sample locations (first three columns of thermocycler plate)
-    post_size_selection_sample = [
-     well for column in tc_plate.columns() for well in column][:sample_count]
+    post_size_selection_sample = tc_plate.wells()[:sample_count]
 
     # reagent setup: Q5 mastermix, i5, i7, etoh, te
     q5, i5, i7, mixture = [
@@ -73,7 +74,7 @@ def run(ctx):
       q5_well, i5_well, i7_well, empty_vial_well]]
 
     p300s.pick_up_tip()
-    p300s.mix(10, 250, q5.bottom())
+    p300s.mix(10, 250, q5.bottom(1))
     p300s.drop_tip()
 
     for volume, source in zip([q5_volume, i5_volume, i7_volume], [q5, i5, i7]):
@@ -128,8 +129,9 @@ def run(ctx):
     ctx.set_rail_lights(True)
 
     # add SPRI beads to post pcr enrichment samples on the magnetic module
-    post_pcr_sample = [
-     well for column in mag_plate.columns() for well in column][:sample_count]
+    post_pcr_sample = mag_plate.wells()[:sample_count]
+    num_cols = math.ceil(sample_count / 8)
+    post_pcr_sample_m = mag_plate.rows()[0][:num_cols]
     p300s.transfer(
      spri_beads_volume, spri_beads, post_pcr_sample,
      mix_before=(4, 250), mix_after=(4, (rxn_volume + spri_beads_volume) / 2),
@@ -141,7 +143,7 @@ def run(ctx):
 
     # remove supernatant to trash
     p300m.transfer(
-     rxn_volume + spri_beads_volume, post_pcr_sample,
+     rxn_volume + spri_beads_volume, post_pcr_sample_m,
      ctx.fixed_trash['A1'], new_tip='always')
 
     # wash beads 2X, adjust gantry speed, flow_rate, air_gaps for ethanol
@@ -151,21 +153,21 @@ def run(ctx):
     for rep in range(2):
         p300m.pick_up_tip()
         p300m.transfer(
-         etoh_volume, etoh, [well.top() for well in post_pcr_sample],
+         etoh_volume, etoh, [well.top() for well in post_pcr_sample_m],
          air_gap=20, new_tip='never', trash=False)
         p300m.return_tip()
         ctx.delay(seconds=30)
         p300m.transfer(
-         etoh_volume, post_pcr_sample, ctx.fixed_trash['A1'],
+         etoh_volume, post_pcr_sample_m, ctx.fixed_trash['A1'],
          air_gap=20, new_tip='always')
 
     # aspirate last traces of etoh
     p300m.transfer(
-     50, [well.bottom(-0.5) for well in post_pcr_sample],
+     50, [well.bottom(1) for well in post_pcr_sample_m],
      ctx.fixed_trash['A1'], air_gap=5, new_tip='always')
 
     # reset to default gantry speed, aspirate and dispense flow rates
-    p300m.default_speeed = 400
+    p300m.default_speed = 400
     p300m.flow_rate.aspirate = 94
     p300m.flow_rate.dispense = 94
 
@@ -175,7 +177,7 @@ def run(ctx):
     # elute
     mag.disengage()
     p300m.transfer(
-     te_volume, te, post_pcr_sample, mix_after=(3, te_volume / 2),
+     te_volume, te, post_pcr_sample_m, mix_after=(3, te_volume / 2),
      new_tip='always')
     ctx.delay(minutes=7)
     mag.engage()
@@ -183,13 +185,11 @@ def run(ctx):
 
     # set up fresh 96-well plate for eluate
     eluate_plate = ctx.load_labware(pcr_labware, '1')
-    eluted_samples = [
-     well for column in eluate_plate.columns()
-     for well in column][:sample_count]
+    eluted_samples_m = eluate_plate.rows()[0][:num_cols]
 
     # transfer eluate to eluate plate
     p300m.transfer(
-     te_volume, post_pcr_sample, eluted_samples, new_tip='always')
+     te_volume, post_pcr_sample_m, eluted_samples_m, new_tip='always')
 
     ctx.comment("PCR enrichment step is complete")
     ctx.set_rail_lights(False)

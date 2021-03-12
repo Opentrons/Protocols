@@ -1,3 +1,5 @@
+import math
+
 metadata = {
     'protocolName': '''NEBNext Ultra II FS DNA Library Prep Kit for Illumina
     E6177S/L (for 1-24 DNA samples): Step 4: Size Selection''',
@@ -58,8 +60,9 @@ def run(ctx):
     mag.disengage()
 
     # sample locations (first three columns of magnetic module plate)
-    post_user_sample = [
-     well for column in mag_plate.columns() for well in column][:sample_count]
+    post_user_sample = mag_plate.wells()[:sample_count]
+    num_cols = math.ceil(sample_count / 8)
+    post_user_sample_m = mag_plate.rows()[0][:num_cols]
 
     # reagent setup: SPRI beads, water, etoh, te
     spri_beads = temp_reagents.wells_by_name()[spri_beads_well]
@@ -70,7 +73,7 @@ def run(ctx):
 
     # add water to samples and mix
     p300.transfer(
-     water_volume, water, post_user_sample,
+     water_volume, water, post_user_sample_m,
      mix_after=(4, (post_user_sample_volume + water_volume) / 2),
      new_tip="always")
 
@@ -85,13 +88,12 @@ def run(ctx):
 
     # 96-well plate to contain right-side sups, remove sups to this plate
     size_sel_plate = ctx.load_labware(pcr_labware, '7')
-    right_sup_sample = [
-     well for column in size_sel_plate.columns()
-     for well in column][:sample_count]
+    right_sup_sample_m = size_sel_plate.rows()[0][:num_cols]
+
     p300.transfer(
      post_user_sample_volume + water_volume + spri_beads_right_volume,
-     post_user_sample, right_sup_sample, new_tip='always')
-    mag.disengage
+     post_user_sample_m, right_sup_sample_m, new_tip='always')
+    mag.disengage()
 
     # remove bead pellets, place right-side supernatants on magnetic module
     ctx.set_rail_lights(False)
@@ -109,7 +111,7 @@ def run(ctx):
     ctx.delay(minutes=5)
     p300.transfer(
      post_user_sample_volume + water_volume + spri_beads_right_volume,
-     post_user_sample, ctx.fixed_trash['A1'], new_tip='always')
+     post_user_sample_m, ctx.fixed_trash['A1'], new_tip='always')
 
     # wash beads 2X, adjust gantry speed, flow_rate, air_gaps for ethanol
     p300.default_speed = 200
@@ -118,21 +120,21 @@ def run(ctx):
     for rep in range(2):
         p300.pick_up_tip()
         p300.transfer(
-         etoh_volume, etoh, [well.top() for well in post_user_sample],
+         etoh_volume, etoh, [well.top() for well in post_user_sample_m],
          air_gap=15, new_tip='never', trash=False)
         p300.return_tip()
         ctx.delay(seconds=30)
         p300.transfer(
-         etoh_volume, post_user_sample, ctx.fixed_trash['A1'],
+         etoh_volume, post_user_sample_m, ctx.fixed_trash['A1'],
          air_gap=15, new_tip='always')
 
     # aspirate last traces of etoh
     p300.transfer(
-     50, [well.bottom(-0.5) for well in post_user_sample],
+     50, [well.bottom(1) for well in post_user_sample_m],
      ctx.fixed_trash['A1'], air_gap=5, new_tip='always')
 
     # reset to default gantry speed, aspirate and dispense flow rates
-    p300.default_speeed = 400
+    p300.default_speed = 400
     p300.flow_rate.aspirate = 94
     p300.flow_rate.dispense = 94
 
@@ -150,9 +152,7 @@ def run(ctx):
 
     # set up fresh 96-well plate for eluate
     eluate_plate = ctx.load_labware(pcr_labware, '1')
-    eluted_samples = [
-     well for column in eluate_plate.columns()
-     for well in column][:sample_count]
+    eluted_samples = eluate_plate.wells()[:sample_count]
 
     # transfer eluate to eluate plate
     p20.transfer(

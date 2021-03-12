@@ -52,8 +52,7 @@ def run(ctx):
     tc_plate = tc.load_labware(pcr_labware)
 
     # DNA sample locations in first three columns of thermocycler plate
-    initial_sample = [
-     well for column in tc_plate.columns() for well in column][:sample_count]
+    initial_sample = tc_plate.wells()[:sample_count]
 
     # reagent setup: combine reaction buffer and enzyme mix
     mixture_volume = rxn_bf_volume + enz_mx_volume
