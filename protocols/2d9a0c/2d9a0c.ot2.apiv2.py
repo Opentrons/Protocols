@@ -1,5 +1,6 @@
 from opentrons import protocol_api
 
+
 metadata = {
     'protocolName': 'PCR Workflow With Thermocycler',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
@@ -10,9 +11,14 @@ metadata = {
 
 def run(protocol):
 
-    [lid_temp, tube_rack, num_tipracks,
+    [lid_temp, tube_rack, num_samples, num_tipracks,
         p300_mount, p20_mount] = get_values(  # noqa: F821
-        "lid_temp", "tube_rack", "num_tipracks", "p300_mount", "p20_mount")
+        "lid_temp", "tube_rack", "num_samples", "num_tipracks",
+        "p300_mount", "p20_mount")
+
+    num_samples = int(num_samples)
+    if not 1 <= num_samples <= 96:
+        raise Exception("Enter a sample number between 1-96")
 
     # load labware. Set lid temperature
     buff_tuberack = protocol.load_labware(tube_rack, '5')
@@ -60,19 +66,26 @@ def run(protocol):
     ]
 
     # transfer 20ul buffer to plate
-    p300.pick_up_tip()
-    chunks = [tc_plate.wells()[i:i+8]
-              for i in range(0, len(tc_plate.wells()), 8)]
-    for chunk in chunks:
-        p300.distribute(20, buff_tuberack.wells_by_name()['A1'],
-                        [well for well in chunk],
-                        new_tip='never',
-                        blow_out=True,
-                        blowout_location='source well')
-    p300.drop_tip()
+    if num_samples == 96:
+        p300.pick_up_tip()
+        chunks = [tc_plate.wells()[i:i+8]
+                  for i in range(0, len(tc_plate.wells()[:num_samples]), 8)]
+        for chunk in chunks:
+            p300.distribute(20, buff_tuberack.wells_by_name()['A1'],
+                            [well for well in chunk],
+                            new_tip='never',
+                            blow_out=True,
+                            blowout_location='source well')
+        p300.drop_tip()
+
+    else:
+        p300.pick_up_tip()
+        for s, d in zip(plate_B.wells()[:num_samples], tc_plate.wells()):
+            p300.transfer(20, s, d, new_tip='never')
+        p300.drop_tip()
 
     # transfer 2ul sample to tc plate. Air gap for small volume
-    for s, d in zip(plate_B.wells(), tc_plate.wells()):
+    for s, d in zip(plate_B.wells()[:num_samples], tc_plate.wells()):
         p20.transfer(2, s, d,
                      air_gap=5,
                      blow_out=True,
@@ -95,7 +108,7 @@ def run(protocol):
         block_vol += 5 if index > 0 else 20
 
         thermocyc.open_lid()
-        for well in tc_plate.wells():
+        for well in tc_plate.wells()[:num_samples]:
             pick_up(p20)
             p20.aspirate(transfer_vol, tube)
             p20.dispense(transfer_vol, well)
@@ -110,7 +123,7 @@ def run(protocol):
     # final transfer of 100ul
     thermocyc.open_lid()
     transfer_vol = 100
-    for well in tc_plate.wells():
+    for well in tc_plate.wells()[:num_samples]:
         pick_up(p300)
         p300.aspirate(transfer_vol, buff_tuberack.wells_by_name()['B2'])
         p300.dispense(transfer_vol, well)

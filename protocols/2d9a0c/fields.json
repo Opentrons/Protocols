@@ -15,6 +15,12 @@
      ]
   },
   {
+    "type": "int",
+    "label": "Number of Samples in Plate B (1-96)",
+    "name": "num_samples",
+    "default": 96
+  },
+  {
     "type": "dropDown",
     "label": "Number of tip racks",
     "name": "num_tipracks",

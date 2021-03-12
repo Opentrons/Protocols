@@ -39,6 +39,7 @@ For this protocol, be sure that the pipettes (P20 and P300) are attached.
 Using the customization fields below, set up your protocol.
 * Lid Temperature: Specify lid temperature to be set for the duration of the protocol (default 105C).
 * Tube rack used: Specify whether you are using 1.5mL or 2mL Eppendorf tube rack.
+* Number of Samples in Plate B: Specify the number of samples to be transferred and ultimately cycled on the 96 well plate on the thermocycler.
 * Number of tip racks: Specify the number of 20µL tip racks you will have loaded onto the deck.
 * P20 Single Mount: Specify which mount the P10 is on (left or right).
 * P300 Single Mount: Specify which mount the P50 is on (left or right).
