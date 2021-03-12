@@ -8,7 +8,7 @@
 	* Mass Spec
 
 ## Description
-This protocol performs a custom mass spectrometry sample prep for peptides up to 48 samples. 
+This protocol performs a custom mass spectrometry sample prep for peptides up to 48 samples.
 
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
@@ -22,7 +22,7 @@ This protocol performs a custom mass spectrometry sample prep for peptides up to
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
-## Deck Setup
+Deck Setup
 * Nunc 96-well polystyrene V-bottom microwell plate (Slot 1)
 * NEST 0.1 mL 96-Well PCR Plate, Full Skirt (Slot 2)
 * NEST 12-well reservoir, 15 mL,Opentrons (Slot 3)
@@ -31,7 +31,7 @@ This protocol performs a custom mass spectrometry sample prep for peptides up to
 * Opentrons 300 uL Tip Rack (Slot 5, Slot 8)
 * Opentrons 20 uL Tip Rack (Slot 6, Slot 9)
 
-### NOTE: Switch the NEST Deep Well Plate with the NEST PCR Plate on the Magnetic Module once the Pause step is reached.
+NOTE: Switch the NEST Deep Well Plate with the NEST PCR Plate on the Magnetic Module once the Pause step is reached.
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
