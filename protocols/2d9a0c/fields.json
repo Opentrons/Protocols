@@ -11,7 +11,7 @@
     "name": "tube_rack",
     "options": [
        { "label": "Opentrons 24 Tube Rack Eppendorf 1.5mL", "value": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap" },
-       { "label": "Opentrons 24 Tube Rack Eppendorf 2mL", "value": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap" },
+       { "label": "Opentrons 24 Tube Rack Eppendorf 2mL", "value": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap" }
      ]
   },
   {
@@ -21,7 +21,7 @@
     "options": [
        { "label": "1", "value": "1" },
        { "label": "2", "value": "2" },
-       { "label": "3", "value": "3" },
+       { "label": "3", "value": "3" }
      ]
   },
   {
@@ -39,7 +39,7 @@
     "name": "p20_mount",
     "options": [
        { "label": "right", "value": "right" },
-       { "label": "left", "value": "left" },
+       { "label": "left", "value": "left" }
      ]
   }
 ]
