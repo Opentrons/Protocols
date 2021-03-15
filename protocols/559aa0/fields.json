@@ -1,0 +1,70 @@
+[
+  {
+    "type": "dropDown",
+    "label": "Choose your labware (384-well plate)",
+    "name": "labware_384_well_plate",
+    "options": [
+      { "label": "Thermo Applied Biosystems 384 well plate (4310286)", "value": "appliedbiosystems_384_wellplate_40ul" }
+    ]
+  },
+  {
+    "type": "str",
+    "label": "N1 Primer (2 mL plate Well Location)",
+    "name": "n1_primer_well",
+    "default": "A1"
+  },
+  {
+    "type": "str",
+    "label": "N1 Primer (1 mL plate Column Location)",
+    "name": "n1_col",
+    "default": "1"
+  },
+  {
+    "type": "str",
+    "label": "N2 Primer (2 mL plate Well Location)",
+    "name": "n2_primer_well",
+    "default": "A2"
+  },
+  {
+    "type": "str",
+    "label": "N2 Primer (1 mL plate Column Location)",
+    "name": "n2_col",
+    "default": "2"
+  },
+  {
+    "type": "str",
+    "label": "RP Primer (2 mL plate Well Location)",
+    "name": "rp_primer_well",
+    "default": "A3"
+  },
+  {
+    "type": "str",
+    "label": "RP Primer (1 mL plate Column Location)",
+    "name": "rp_col",
+    "default": "3"
+  },
+  {
+    "type": "str",
+    "label": "NTC Primer (2 mL plate Well Location)",
+    "name": "ntc_primer_well",
+    "default": "A4"
+  },
+  {
+    "type": "str",
+    "label": "NTC Primer (1 mL plate Column Location)",
+    "name": "ntc_col",
+    "default": "4"
+  },
+  {
+    "type": "float",
+    "label": "Primer Volume (ul/well in column of 1 mL plate)",
+    "name": "primer_col_volume",
+    "default": 100
+  },
+  {
+    "type": "float",
+    "label": "Primer Volume (per well of 384 well plate)",
+    "name": "primer_volume",
+    "default": 7.5
+  }
+]
