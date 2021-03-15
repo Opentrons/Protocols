@@ -2,7 +2,7 @@ metadata = {
     'protocolName': 'Cherrypicking',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.3'
+    'apiLevel': '2.9'
 }
 
 
