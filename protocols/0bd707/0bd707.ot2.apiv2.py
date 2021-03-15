@@ -8,7 +8,7 @@ metadata = {
 
 def run(protocol):
     [num_plates, transfer_vol, p1000_mount] = get_values(  # noqa: F821
-    'num_plates', 'transfer_vol', 'p1000_mount')
+        'num_plates', 'transfer_vol', 'p1000_mount')
 
     # labware
     source = [protocol.load_labware(
@@ -18,11 +18,11 @@ def run(protocol):
     tuberacks = [protocol.load_labware(
                     'custom_24_tuberack_2000ul',
                     slot, 'custom tuberack') for slot in [
-                        2, 3, 5, 6, 8, 9]][:num_plates]
+                        2, 3, 5, 6, 7, 8, 9]][:num_plates]
     tiprack = [
         protocol.load_labware(
             'opentrons_96_tiprack_1000ul',
-            slot, '1000µl tiprack') for slot in [1, 4, 7]]
+            slot, '1000µl tiprack') for slot in [1, 4]]
 
     # pipette
     p1000 = protocol.load_instrument(
@@ -32,8 +32,8 @@ def run(protocol):
         raise Exception(
             'The Transfer Volume must be within P1000 range (100-1000).')
 
-    if num_plates < 1 or num_plates > 6:
-        raise Exception('The Number of Plates must be between 1 and 6.')
+    if num_plates < 1 or num_plates > 7:
+        raise Exception('The Number of Plates must be between 1 and 7.')
 
     # perform transfers from source 1
     for tubes in tuberacks[:3]:
