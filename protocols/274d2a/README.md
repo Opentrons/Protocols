@@ -44,7 +44,7 @@ yes,agilent_1_reservoir_290ml,1,A1,1,nest_96_wellplate_100ul_pcr_full_skirt,4,A1
 yes,nest_1_reservoir_195ml,3,A1,1,nest_96_wellplate_2ml_deep,5,H12,7
 ```
 
-In this example, 1μL will be transferred from 1mm above the bottom of well A1 in an Agilent 1-well 290ml reservoir (slot 1) to well A11 in the destination NEST 96-well plate 100µl (slot 4) with a new tip. After this, 3μL will be transferred from 1mm above the bottom of well A1 in a NEST 12-well 15ml reservoir (slot 2) to well A5 in the destination NEST 96-well plate 100µl (slot 5) with the same tip. Last, 7μL will be transferred from 1mm above the bottom of well A1 in a NEST 1-well 195ml reservoir (slot 3) to well H12 in the destination NEST 96-well plate 100µl (slot 5) with a new tip.
+In the above example, 1μL will be transferred from 1mm above the bottom of well A1 in an Agilent 1-well 290ml reservoir (slot 1) to well A11 in the destination NEST 96-well plate 100µl (slot 4) with a new tip. After this, 3μL will be transferred from 1mm above the bottom of well A1 in a NEST 12-well 15ml reservoir (slot 2) to well A5 in the destination NEST 96-well plate 100µl (slot 5) with the same tip. Last, 7μL will be transferred from 1mm above the bottom of well A1 in a NEST 1-well 195ml reservoir (slot 3) to well H12 in the destination NEST 96-well plate 100µl (slot 5) with a new tip.
 
 If you’d like to follow our template, you can make a copy of [this spreadsheet](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/274d2a/ex_csv.csv), fill out your values, and export as CSV for use with this protocol.
 
