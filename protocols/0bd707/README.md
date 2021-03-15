@@ -30,10 +30,10 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
 **Tube Racks**</br>
-Load sequentially deck slots, in this order: *2, 3, 5, 6, 8, 9*</br>
+Load sequentially deck slots, in this order: *2, 3, 5, 6, 7, 8, 9*</br>
 </br>
 **Tip Racks**</br>
-One tip rack is needed for every two tube racks. The tip racks should be loaded in deck slots: *1, 4, 7*</br>
+One tip rack is needed for every two tube racks. The tip racks should be loaded in deck slots: *1, 4*</br>
 </br>
 **Reagent Reservoirs**</br>
 One reagent reservoir should be used for every three tube racks. The reservoirs should be loaded in deck slots: *11 (will be used first), 10*</br>
