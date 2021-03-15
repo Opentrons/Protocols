@@ -1,7 +1,7 @@
 import math
 
 metadata = {
-    'protocolName': 'PCR/qPCR prep: distribute patient samples to 384 well plate',
+    'protocolName': 'PCR/qPCR prep: distribute samples to 384 well plate',
     'author': 'Steve Plonk <protocols@opentrons.com>',
     'apiLevel': '2.9'
 }
