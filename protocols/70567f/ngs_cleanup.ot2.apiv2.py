@@ -71,7 +71,7 @@ def run(ctx):
     beads = deep96.rows()[0][0]
     etoh = deep96.rows()[0][1]
     eb_buff = deep96.rows()[0][2]
-    waste = [chan.top(-2) for chan in deep96.rows()[0][10:]]
+    waste = [chan.top(-2) for chan in deep96.rows()[0][9:]]
 
     # pipettes
     m300 = ctx.load_instrument(
@@ -175,13 +175,13 @@ on magnet for ' + str(etoh_inc) + ' minutes.')
     for m, p in zip(mag_samples, parking_spots):
         pick_up(m300, p)
         m300.transfer(
-            120, m.bottom(0.5), waste[1], new_tip='never')
-        m300.blow_out(waste[1])
+            120, m.bottom(0.5), waste[0], new_tip='never')
+        m300.blow_out(waste[0])
         drop(m300, p)
 
     # 2x EtOH washes
     etoh_loc = None
-    for wash in range(2):
+    for wash in range(1, 3):
         if mix_etoh:
             magdeck.disengage()
 
@@ -218,9 +218,9 @@ on magnet for ' + str(etoh_inc) + ' minutes.')
                 else:
                     if not m300.has_tip:
                         pick_up(m300, p)
-                m300.transfer(vol_etoh, m.bottom(0.5), waste[0],
+                m300.transfer(vol_etoh, m.bottom(0.5), waste[wash],
                               new_tip='never')
-                m300.blow_out(waste[0])
+                m300.blow_out(waste[wash])
                 drop(m300, p)
         else:
             for m, p in zip(mag_samples, parking_spots):
@@ -229,7 +229,7 @@ on magnet for ' + str(etoh_inc) + ' minutes.')
                 else:
                     if not m300.has_tip:
                         pick_up(m300, p)
-                m300.transfer(vol_etoh - 15, m.bottom(0.5), waste[0],
+                m300.transfer(vol_etoh - 15, m.bottom(0.5), waste[wash],
                               new_tip='never')
                 drop(m300, p)
 
@@ -242,8 +242,8 @@ material on the side of the wells. Then, replace plate on magnetic module.')
                 m300.flow_rate.aspirate = 20
                 for m, p in zip(sample_set, parking_set):
                     pick_up(m300, p)
-                    m300.transfer(20, m.bottom(0.5), waste[0], new_tip='never')
-                    m300.blow_out(waste[0])
+                    m300.transfer(20, m.bottom(0.5), waste[wash], new_tip='never')
+                    m300.blow_out(waste[wash])
                     drop(m300)
                 m300.flow_rate.aspirate = 100
 
