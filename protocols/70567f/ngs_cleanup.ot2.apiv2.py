@@ -51,8 +51,8 @@ def run(ctx):
         parking_spots = [None for none in range(12)]
     tips300.insert(0, rack)
 
-    res12 = ctx.load_labware('nest_12_reservoir_15ml', '7',
-                             'reagent reservoir')
+    deep96 = ctx.load_labware('nest_96_wellplate_2ml_deep', '7',
+                              'reagent deepwell plate')
 
     # sample setup
     mag_samples = mag_plate.rows()[0][:num_cols]
@@ -68,10 +68,10 @@ def run(ctx):
         for i in range(num_drying_sets)]
 
     # reagents
-    beads = res12.wells()[0]
-    etoh = res12.wells()[1]
-    eb_buff = res12.wells()[2]
-    waste = [chan.top(-2) for chan in res12.wells()[10:]]
+    beads = deep96.rows()[0][0]
+    etoh = deep96.rows()[0][1]
+    eb_buff = deep96.rows()[0][2]
+    waste = [chan.top(-2) for chan in deep96.rows()[0][10:]]
 
     # pipettes
     m300 = ctx.load_instrument(
