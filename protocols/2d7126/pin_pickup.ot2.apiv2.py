@@ -8,18 +8,16 @@ metadata = {
 
 def run(ctx):
 
-    # [m300_mount] = get_values(  # noqa: F821
-    #     'm300_mount')
+    [m300_mount] = get_values(  # noqa: F821
+        'm300_mount')
 
-    m300_mount = 'left'
     # labware
     plate1, plate2 = [
         ctx.load_labware('corning_96_wellplate_360ul_flat', slot,
                          'plate ' + str(i+1))
         for i, slot in enumerate(['1', '2'])]
-    pinrack = [
-        ctx.load_labware('opentrons_96_tiprack_300ul', '5',
-                         'custom pin adapter')]
+    pinrack = [ctx.load_labware('opentrons_96_tiprack_300ul', '5',
+                                'custom pin adapter')]
 
     # pipette
     m300 = ctx.load_instrument('p300_multi', m300_mount, tip_racks=pinrack)
