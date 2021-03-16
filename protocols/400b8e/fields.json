@@ -3,7 +3,7 @@
     "type": "textFile",
     "label": "Transfer .csv File",
     "name": "transfer_csv",
-    "default": "Source Labware ID,Source Labware Type,Source Slot,Source Well,Source Aspiration Height Above Bottom (in mm),Dest Labware Type,Dest Slot,Dest Well,Volume (in ul)\nRNA1,agilent_1_reservoir_290ml,3,A1,1,nest_96_wellplate_100ul_pcr_full_skirt,4,A11,1\nRNA2,nest_12_reservoir_15ml,4,A1,1,nest_96_wellplate_2ml_deep,5,A5,3\npause,,,\nRNA3,nest_1_reservoir_195ml,5,A1,1,nest_96_wellplate_2ml_deep,5,H12,7"
+    "default": "Source Labware ID,Source Labware Type,Source Slot,Source Well,Source Aspiration Height Above Bottom (in mm),Dest Labware Type,Dest Slot,Dest Well,Volume (in ul)\nRNA1,agilent_1_reservoir_290ml,3,A1,1,nest_96_wellplate_100ul_pcr_full_skirt,4,A11,1\nRNA2,nest_12_reservoir_15ml,4,A1,1,nest_96_wellplate_2ml_deep,5,A5,3\npause,,,\nRNA3,nest_1_reservoir_195ml,10,A1,1,nest_96_wellplate_2ml_deep,5,H12,7\nRNA3,nest_1_reservoir_195ml,10,A1,1,nest_96_wellplate_2ml_deep,5,H12,7"
   },
   {
     "type": "dropDown",
@@ -45,5 +45,40 @@
       {"label": "Use a new tip for each transfer", "value": "always"},
       {"label": "Reuse tip for each transfer", "value": "never"}
     ]
+  },
+  {
+    "type": "dropDown",
+    "label": "temperature module slot",
+    "name": "tempdeck_slot",
+    "options": [
+      {"label": "not using temperature module", "value": null },
+      {"label": "1", "value": "1"},
+      {"label": "2", "value": "2"},
+      {"label": "3", "value": "3"},
+      {"label": "4", "value": "4"},
+      {"label": "5", "value": "5"},
+      {"label": "6", "value": "6"},
+      {"label": "7", "value": "7"},
+      {"label": "8", "value": "8"},
+      {"label": "9", "value": "9"},
+      {"label": "10", "value": "10"},
+      {"label": "11", "value": "11"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "temperature module type (if using)",
+    "name": "tempdeck_name",
+    "options": [
+      {"label": "not using temperature module", "value": null },
+      {"label": "GEN1", "value": "tempdeck" },
+      {"label": "GEN2", "value": "temperature module gen2" }
+    ]
+  },
+  {
+    "type": "float",
+    "label": "temperature module temperature (if using)",
+    "name": "temp",
+    "default": 4.0
   }
 ]
