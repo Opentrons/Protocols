@@ -18,18 +18,18 @@ Explanation of complex parameters below:
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
 * [Opentrons Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
-* [NEST 12-channel reservoir 15ml #1061-8150](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
+* [NEST 96 Deepwell Plate 2mL](https://shop.opentrons.com/collections/verified-labware/products/nest-0-2-ml-96-well-deep-well-plate-v-bottom)
 * [P300 multi-channel electronic pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette?variant=5984202489885)
 * [Opentrons 200ul filtertipracks](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)
 
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
-12-channel reservoir (slot 7)
-* channel 1: Ampure XP beads
-* channel 2: 80% ethanol
-* channel 3: EB buffer
-* channels 11-12: liquid waste (loaded empty at start)
+96-deepwell plate (slot 7)
+* column 1: Ampure XP beads
+* column 2: 80% ethanol
+* column 3: EB buffer
+* columns 10-12: liquid waste (loaded empty at start)
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
