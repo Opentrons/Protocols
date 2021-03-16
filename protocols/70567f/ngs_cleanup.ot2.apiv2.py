@@ -174,9 +174,11 @@ on magnet for ' + str(etoh_inc) + ' minutes.')
     # remove supernatant
     for m, p in zip(mag_samples, parking_spots):
         pick_up(m300, p)
-        m300.transfer(
-            120, m.bottom(0.5), waste[0], new_tip='never')
+        m300.aspirate(120, m.bottom(0.5))
+        m300.air_gap(20)
+        m300.dispense(140, waste[0], rate=0.7)
         m300.blow_out(waste[0])
+        m300.air_gap(20)
         drop(m300, p)
 
     # 2x EtOH washes
@@ -218,9 +220,11 @@ on magnet for ' + str(etoh_inc) + ' minutes.')
                 else:
                     if not m300.has_tip:
                         pick_up(m300, p)
-                m300.transfer(vol_etoh, m.bottom(0.5), waste[wash],
-                              new_tip='never')
+                m300.aspirate(vol_etoh, m.bottom(0.5))
+                m300.air_gap(20)
+                m300.dispense(vol_etoh+20, waste[wash], rate=0.7)
                 m300.blow_out(waste[wash])
+                m300.air_gap(20)
                 drop(m300, p)
         else:
             for m, p in zip(mag_samples, parking_spots):
@@ -229,8 +233,10 @@ on magnet for ' + str(etoh_inc) + ' minutes.')
                 else:
                     if not m300.has_tip:
                         pick_up(m300, p)
-                m300.transfer(vol_etoh - 15, m.bottom(0.5), waste[wash],
-                              new_tip='never')
+                m300.aspirate(vol_etoh - 15, m.bottom(0.5))
+                m300.air_gap(20)
+                m300.dispense(vol_etoh - 15 + 20, waste[wash], rate=0.7)
+                m300.air_gap(20)
                 drop(m300, p)
 
             ctx.pause('Briefly centrifuge plate to pellet any residual \
@@ -242,8 +248,11 @@ material on the side of the wells. Then, replace plate on magnetic module.')
                 m300.flow_rate.aspirate = 20
                 for m, p in zip(sample_set, parking_set):
                     pick_up(m300, p)
-                    m300.transfer(20, m.bottom(0.5), waste[wash], new_tip='never')
+                    m300.aspirate(20, m.bottom(0.5))
+                    m300.air_gap(20)
+                    m300.dispense(40, waste[wash], rate=0.7)
                     m300.blow_out(waste[wash])
+                    m300.air_gap(20)
                     drop(m300)
                 m300.flow_rate.aspirate = 100
 
