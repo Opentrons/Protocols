@@ -18,11 +18,17 @@ MAG_HEIGHT = 6.8
 
 def run(ctx):
 
-    [num_samples] = get_values(  # noqa: F821
-        'num_samples')
-    [starting_vol, binding_buffer_vol, wash1_vol, wash2_vol, wash3_vol,
-     elution_vol, mix_reps, settling_time, park_tips, tip_track] = [
-     200, 200, 400, 400, 400, 40, 10, 5, False, False]
+    [num_samples, starting_vol, elution_vol] = get_values(  # noqa: F821
+        'num_samples', 'starting_vol', 'elution_vol')
+    [binding_buffer_vol, wash1_vol, wash2_vol, wash3_vol, mix_reps,
+     settling_time, park_tips, tip_track] = [
+     200, 400, 400, 400, 10, 5, False, False]
+
+    if not 100 <= starting_vol <= 400:
+        raise Exception('Starting volume should be from 100-400µl.')
+    if not 40 <= elution_vol <= 100:
+        raise Exception('Elution volume should be from 40-100µl.')
+
     """
     Here is where you can change the locations of your labware and modules
     (note that this is the recommended configuration)
