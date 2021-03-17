@@ -121,5 +121,17 @@
       "label": "Mixing Volume (uL)",
       "name": "mix_vol",
       "default": 200
+    },
+    {
+      "type": "float",
+      "label": "Delay After Aspirating (seconds)",
+      "name": "asp_delay",
+      "default": 2
+    },
+    {
+      "type": "float",
+      "label": "Delay After Dispensing (seconds)",
+      "name": "disp_delay",
+      "default": 2
     }
   ]
