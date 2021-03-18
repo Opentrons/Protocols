@@ -1,0 +1,26 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Sample Prep": [
+            "Plate Filling"
+        ]
+    },
+    "description": "This protocol performs transfers of reagents for the Promega ADP-Glo Kinase Assay. It will transfer four different liquids into the test wells with pauses for centrifugation and incubations in between transfers.\n\n\n\nP20 single-channel GEN2 electronic pipette\nGreiner Microplate 384 Wells\n\n\n\nDeck Setup\n Greiner 384 Well Plate (Slot 1)\n Opentrons 20uL Tips (Slot 2)\n* Opentrons 24 Tube Rack 1.5mL Tubes (Slot 4)\nReagent Setup: Opentrons 24 Tube Rack 1.5mL Tubes (Slot 4):\n Liquid A (A1)\n Liquid B (B1)\n Liquid C (C1)\n Liquid D (D1)",
+    "internal": "58d57d",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* Sample Prep\n\t* Plate Filling\n\n\n",
+        "description": "This protocol performs transfers of reagents for the Promega ADP-Glo Kinase Assay. It will transfer four different liquids into the test wells with pauses for centrifugation and incubations in between transfers.\n\n---\n\n![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)\n\n* [P20 single-channel GEN2 electronic pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette)\n* [Greiner Microplate 384 Wells](https://shop.gbo.com/en/usa/products/bioscience/covid-19/covid-19-non-binding-microplates/781904.html)\n\n---\n![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)\n\nDeck Setup\n* Greiner 384 Well Plate (Slot 1)\n* Opentrons 20uL Tips (Slot 2)\n* Opentrons 24 Tube Rack 1.5mL Tubes (Slot 4)\n\nReagent Setup: Opentrons 24 Tube Rack 1.5mL Tubes (Slot 4):\n* Liquid A (A1)\n* Liquid B (B1)\n* Liquid C (C1)\n* Liquid D (D1)\n\n",
+        "internal": "58d57d\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "process": "1. Enter the number of test wells (samples) and adjust volumes for each liquid as needed. (Note: Test wells incremement across a row on the plate)\n2. Download your protocol.\n3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).\n4. Set up your deck according to the deck map.\n5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n6. Hit \"Run\".\n\n",
+        "robot": "* [OT-2](https://opentrons.com/ot-2)\n\n",
+        "title": "Promega ADP-Glo Kinase Assay"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "process": "\nEnter the number of test wells (samples) and adjust volumes for each liquid as needed. (Note: Test wells incremement across a row on the plate)\nDownload your protocol.\nUpload your protocol into the OT App.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "robot": [
+        "OT-2"
+    ],
+    "title": "Promega ADP-Glo Kinase Assay"
+}

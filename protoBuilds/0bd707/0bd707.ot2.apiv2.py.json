@@ -1,5 +1,5 @@
 {
-    "content": "metadata = {\n    'protocolName': 'Media Aliquotting',\n    'author': 'Chaz <chaz@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.3'\n}\n\n\ndef run(protocol):\n    [num_plates, transfer_vol, p1000_mount] = get_values(  # noqa: F821\n    'num_plates', 'transfer_vol', 'p1000_mount')\n\n    # labware\n    source = [protocol.load_labware(\n                'nest_1_reservoir_195ml', s,\n                'liquid reservoir').wells()[0] for s in ['11', '10']]\n\n    tuberacks = [protocol.load_labware(\n                    'custom_24_tuberack_2000ul',\n                    slot, 'custom tuberack') for slot in [\n                        2, 3, 5, 6, 8, 9]][:num_plates]\n    tiprack = [\n        protocol.load_labware(\n            'opentrons_96_tiprack_1000ul',\n            slot, '1000\u00b5l tiprack') for slot in [1, 4, 7]]\n\n    # pipette\n    p1000 = protocol.load_instrument(\n        'p1000_single_gen2', p1000_mount, tip_racks=tiprack)\n\n    if transfer_vol > 1000 or transfer_vol < 100:\n        raise Exception(\n            'The Transfer Volume must be within P1000 range (100-1000).')\n\n    if num_plates < 1 or num_plates > 6:\n        raise Exception('The Number of Plates must be between 1 and 6.')\n\n    # perform transfers from source 1\n    for tubes in tuberacks[:3]:\n        for t in tubes.wells():\n            p1000.pick_up_tip()\n            for _ in range(2):\n                p1000.transfer(\n                    transfer_vol, source[0], t, air_gap=50, new_tip='never')\n            p1000.air_gap(50)\n            p1000.drop_tip()\n\n    # perform transfers from source 2\n    for tubes in tuberacks[3:]:\n        for t in tubes.wells():\n            p1000.pick_up_tip()\n            for _ in range(2):\n                p1000.transfer(\n                    transfer_vol, source[1], t, air_gap=50, new_tip='never')\n            p1000.air_gap(50)\n            p1000.drop_tip()\n",
+    "content": "metadata = {\n    'protocolName': 'Media Aliquotting',\n    'author': 'Chaz <chaz@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.3'\n}\n\n\ndef run(protocol):\n    [num_plates, transfer_vol, p1000_mount] = get_values(  # noqa: F821\n        'num_plates', 'transfer_vol', 'p1000_mount')\n\n    # labware\n    source = [protocol.load_labware(\n                'nest_1_reservoir_195ml', s,\n                'liquid reservoir').wells()[0] for s in ['11', '10']]\n\n    tuberacks = [protocol.load_labware(\n                    'custom_24_tuberack_2000ul',\n                    slot, 'custom tuberack') for slot in [\n                        2, 3, 5, 6, 7, 8, 9]][:num_plates]\n    tiprack = [\n        protocol.load_labware(\n            'opentrons_96_tiprack_1000ul',\n            slot, '1000\u00b5l tiprack') for slot in [1, 4]]\n\n    # pipette\n    p1000 = protocol.load_instrument(\n        'p1000_single_gen2', p1000_mount, tip_racks=tiprack)\n\n    if transfer_vol > 1000 or transfer_vol < 100:\n        raise Exception(\n            'The Transfer Volume must be within P1000 range (100-1000).')\n\n    if num_plates < 1 or num_plates > 7:\n        raise Exception('The Number of Plates must be between 1 and 7.')\n\n    # perform transfers from source 1\n    for tubes in tuberacks[:3]:\n        for t in tubes.wells():\n            p1000.pick_up_tip()\n            for _ in range(2):\n                p1000.transfer(\n                    transfer_vol, source[0], t, air_gap=50, new_tip='never')\n            p1000.air_gap(50)\n            p1000.drop_tip()\n\n    # perform transfers from source 2\n    for tubes in tuberacks[3:]:\n        for t in tubes.wells():\n            p1000.pick_up_tip()\n            for _ in range(2):\n                p1000.transfer(\n                    transfer_vol, source[1], t, air_gap=50, new_tip='never')\n            p1000.air_gap(50)\n            p1000.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -324,7 +324,7 @@
     ],
     "fields": [
         {
-            "default": 6,
+            "default": 7,
             "label": "Number of Plates (1-6)",
             "name": "num_plates",
             "type": "int"
@@ -395,10 +395,10 @@
             "type": "custom_24_tuberack_2000ul"
         },
         {
-            "name": "1000\u00b5l tiprack on 7",
+            "name": "custom tuberack on 7",
             "share": false,
             "slot": "7",
-            "type": "opentrons_96_tiprack_1000ul"
+            "type": "custom_24_tuberack_2000ul"
         },
         {
             "name": "custom tuberack on 8",

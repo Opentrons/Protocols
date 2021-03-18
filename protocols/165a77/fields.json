@@ -1,0 +1,28 @@
+[
+  {
+    "type": "dropDown",
+    "label": "Choose your labware (384-well plate)",
+    "name": "labware_384_well_plate",
+    "options": [
+      { "label": "Thermo Applied Biosystems 384 well plate (4310286)", "value": "appliedbiosystems_384_wellplate_40ul" }
+    ]
+  },
+  {
+    "type": "float",
+    "label": "Patient Sample Volume",
+    "name": "patient_sample_vol",
+    "default": 3
+  },
+  {
+    "type": "float",
+    "label": "Pipette Disposal Volume",
+    "name": "disposal_vol",
+    "default": 1
+  },
+  {
+    "type": "int",
+    "label": "Patient Sample Count (up to 96)",
+    "name": "patient_sample_count",
+    "default": 96
+  }
+]

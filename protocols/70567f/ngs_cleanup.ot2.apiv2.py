@@ -51,8 +51,8 @@ def run(ctx):
         parking_spots = [None for none in range(12)]
     tips300.insert(0, rack)
 
-    res12 = ctx.load_labware('nest_12_reservoir_15ml', '7',
-                             'reagent reservoir')
+    deep96 = ctx.load_labware('nest_96_wellplate_2ml_deep', '7',
+                              'reagent deepwell plate')
 
     # sample setup
     mag_samples = mag_plate.rows()[0][:num_cols]
@@ -68,10 +68,10 @@ def run(ctx):
         for i in range(num_drying_sets)]
 
     # reagents
-    beads = res12.wells()[0]
-    etoh = res12.wells()[1]
-    eb_buff = res12.wells()[2]
-    waste = [chan.top(-2) for chan in res12.wells()[10:]]
+    beads = deep96.rows()[0][0]
+    etoh = deep96.rows()[0][1]
+    eb_buff = deep96.rows()[0][2]
+    waste = [chan.top(-2) for chan in deep96.rows()[0][9:]]
 
     # pipettes
     m300 = ctx.load_instrument(
@@ -155,11 +155,11 @@ resuming.')
         m300.mix(5, volume_of_beads, beads.bottom(2))
         m300.blow_out(beads.top(-5))
         m300.transfer(volume_of_beads, beads, m.bottom(2), new_tip='never')
-        m300.blow_out(m.top(-5))
+        m300.blow_out(m.top(-2))
         for _ in range(10):
             m300.aspirate(volume_of_beads+25, m.bottom(2))
             m300.dispense(volume_of_beads+25, m.center())
-        m300.blow_out(m.top(-5))
+        m300.blow_out(m.top(-2))
         drop(m300, p)
     ctx.max_speeds['A'] = 125
     ctx.max_speeds['Z'] = 125
@@ -174,14 +174,16 @@ on magnet for ' + str(etoh_inc) + ' minutes.')
     # remove supernatant
     for m, p in zip(mag_samples, parking_spots):
         pick_up(m300, p)
-        m300.transfer(
-            120, m.bottom(0.5), waste[1], new_tip='never')
-        m300.blow_out(waste[1])
+        m300.aspirate(120, m.bottom(0.5))
+        m300.air_gap(20)
+        m300.dispense(140, waste[0], rate=0.7)
+        m300.blow_out(waste[0])
+        m300.air_gap(20)
         drop(m300, p)
 
     # 2x EtOH washes
     etoh_loc = None
-    for wash in range(2):
+    for wash in range(1, 3):
         if mix_etoh:
             magdeck.disengage()
 
@@ -218,9 +220,11 @@ on magnet for ' + str(etoh_inc) + ' minutes.')
                 else:
                     if not m300.has_tip:
                         pick_up(m300, p)
-                m300.transfer(vol_etoh, m.bottom(0.5), waste[0],
-                              new_tip='never')
-                m300.blow_out(waste[0])
+                m300.aspirate(vol_etoh, m.bottom(0.5))
+                m300.air_gap(20)
+                m300.dispense(vol_etoh+20, waste[wash], rate=0.7)
+                m300.blow_out(waste[wash])
+                m300.air_gap(20)
                 drop(m300, p)
         else:
             for m, p in zip(mag_samples, parking_spots):
@@ -229,8 +233,10 @@ on magnet for ' + str(etoh_inc) + ' minutes.')
                 else:
                     if not m300.has_tip:
                         pick_up(m300, p)
-                m300.transfer(vol_etoh - 15, m.bottom(0.5), waste[0],
-                              new_tip='never')
+                m300.aspirate(vol_etoh - 15, m.bottom(0.5))
+                m300.air_gap(20)
+                m300.dispense(vol_etoh - 15 + 20, waste[wash], rate=0.7)
+                m300.air_gap(20)
                 drop(m300, p)
 
             ctx.pause('Briefly centrifuge plate to pellet any residual \
@@ -242,8 +248,11 @@ material on the side of the wells. Then, replace plate on magnetic module.')
                 m300.flow_rate.aspirate = 20
                 for m, p in zip(sample_set, parking_set):
                     pick_up(m300, p)
-                    m300.transfer(20, m.bottom(0.5), waste[0], new_tip='never')
-                    m300.blow_out(waste[0])
+                    m300.aspirate(20, m.bottom(0.5))
+                    m300.air_gap(20)
+                    m300.dispense(40, waste[wash], rate=0.7)
+                    m300.blow_out(waste[wash])
+                    m300.air_gap(20)
                     drop(m300)
                 m300.flow_rate.aspirate = 100
 

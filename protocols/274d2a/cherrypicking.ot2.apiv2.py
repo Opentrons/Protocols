@@ -2,7 +2,7 @@ metadata = {
     'protocolName': 'Cherrypicking',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.3'
+    'apiLevel': '2.9'
 }
 
 
@@ -40,6 +40,26 @@ def run(ctx):
         'p1000_single_gen2': {
             'standard': 'opentrons_96_tiprack_1000ul',
             'filter': 'opentrons_96_filtertiprack_1000ul'
+        },
+        'p10_multi': {
+            'standard': 'opentrons_96_tiprack_10ul',
+            'filter': 'opentrons_96_filtertiprack_20ul'
+        },
+        'p50_multi': {
+            'standard': 'opentrons_96_tiprack_300ul',
+            'filter': 'opentrons_96_filtertiprack_200ul'
+        },
+        'p300_multi': {
+            'standard': 'opentrons_96_tiprack_300ul',
+            'filter': 'opentrons_96_filtertiprack_200ul'
+        },
+        'p20_multi_gen2': {
+            'standard': 'opentrons_96_tiprack_20ul',
+            'filter': 'opentrons_96_filtertiprack_20ul'
+        },
+        'p300_multi_gen2': {
+            'standard': 'opentrons_96_tiprack_300ul',
+            'filter': 'opentrons_96_filtertiprack_200ul'
         }
     }
 
@@ -82,6 +102,10 @@ def run(ctx):
 
     for line in transfer_info:
         new_tip, _, s_slot, s_well, h, _, d_slot, d_well, vol = line[:9]
+        if pip.type == 'multi' and (
+                parse_well(s_well) != 'A' or parse_well(d_well) != 'A'):
+            ctx.pause('Warning: attempting to use multi-channel pipette on \
+rows other than row A.')
         source = ctx.loaded_labwares[
             int(s_slot)].wells_by_name()[parse_well(s_well)].bottom(float(h))
         dest = ctx.loaded_labwares[

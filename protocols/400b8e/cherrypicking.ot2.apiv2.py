@@ -9,9 +9,10 @@ metadata = {
 def run(ctx):
 
     [pipette_type, pipette_mount, tip_type,
-     tip_reuse, transfer_csv] = get_values(  # noqa: F821
+     tip_reuse, transfer_csv, tempdeck_slot, tempdeck_name,
+     temp] = get_values(  # noqa: F821
         "pipette_type", "pipette_mount", "tip_type", "tip_reuse",
-        "transfer_csv")
+        "transfer_csv", "tempdeck_slot", "tempdeck_name", "temp")
 
     tiprack_map = {
         'p10_single': {
@@ -44,7 +45,11 @@ def run(ctx):
         }
     }
 
-    # load labware
+    # load labware and module
+    if tempdeck_slot:
+        tempdeck = ctx.load_module(tempdeck_name, tempdeck_slot)
+        tempdeck.set_temperature(temp)
+
     transfer_info = [[val.strip().lower() for val in line.split(',')]
                      for line in transfer_csv.splitlines()
                      if line.split(',')[0].strip()][1:]
@@ -54,7 +59,12 @@ def run(ctx):
             s_lw, s_slot, d_lw, d_slot = line[1:3] + line[5:7]
             for slot, lw in zip([s_slot, d_slot], [s_lw, d_lw]):
                 if not int(slot) in ctx.loaded_labwares:
-                    ctx.load_labware(lw.lower(), slot)
+                    if not int(slot) in ctx.loaded_modules:
+                        ctx.load_labware(lw.lower(), slot)
+                    else:
+                        ctx.loaded_modules[int(slot)].load_labware(lw.lower(),
+                                                                   slot)
+
         else:
             block_inds.append(i)
 
@@ -62,7 +72,8 @@ def run(ctx):
     tiprack_type = tiprack_map[pipette_type][tip_type]
     tipracks = []
     for slot in range(1, 13):
-        if slot not in ctx.loaded_labwares:
+        if int(slot) not in ctx.loaded_labwares \
+                and int(slot) not in ctx.loaded_modules:
             tipracks.append(ctx.load_labware(tiprack_type, str(slot)))
 
     # setup blocks
