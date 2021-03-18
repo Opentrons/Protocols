@@ -31,76 +31,76 @@
   },
   "wells": {
     "A1": {
-      "depth": 59.3,
+      "depth": 85,
       "shape": "circular",
       "diameter": 5.23,
       "totalLiquidVolume": 10,
       "x": 59.38,
       "y": 74.23,
-      "z": 30.7
+      "z": 5
     },
     "B1": {
-      "depth": 59.3,
+      "depth": 85,
       "shape": "circular",
       "diameter": 5.23,
       "totalLiquidVolume": 10,
       "x": 59.38,
       "y": 65.23,
-      "z": 30.7
+      "z": 5
     },
     "C1": {
-      "depth": 59.3,
+      "depth": 85,
       "shape": "circular",
       "diameter": 5.23,
       "totalLiquidVolume": 10,
       "x": 59.38,
       "y": 56.23,
-      "z": 30.7
+      "z": 5
     },
     "D1": {
-      "depth": 59.3,
+      "depth": 85,
       "shape": "circular",
       "diameter": 5.23,
       "totalLiquidVolume": 10,
       "x": 59.38,
       "y": 47.23,
-      "z": 30.7
+      "z": 5
     },
     "E1": {
-      "depth": 59.3,
+      "depth": 85,
       "shape": "circular",
       "diameter": 5.23,
       "totalLiquidVolume": 10,
       "x": 59.38,
       "y": 38.23,
-      "z": 30.7
+      "z": 5
     },
     "F1": {
-      "depth": 59.3,
+      "depth": 85,
       "shape": "circular",
       "diameter": 5.23,
       "totalLiquidVolume": 10,
       "x": 59.38,
       "y": 29.23,
-      "z": 30.7
+      "z": 5
     },
     "G1": {
-      "depth": 59.3,
+      "depth": 85,
       "shape": "circular",
       "diameter": 5.23,
       "totalLiquidVolume": 10,
       "x": 59.38,
       "y": 20.23,
-      "z": 30.7
+      "z": 5
     },
     "H1": {
-      "depth": 59.3,
+      "depth": 85,
       "shape": "circular",
       "diameter": 5.23,
       "totalLiquidVolume": 10,
       "x": 59.38,
       "y": 11.23,
-      "z": 30.7
+      "z": 5
     }
   },
   "groups": [
@@ -121,7 +121,7 @@
   "parameters": {
     "format": "irregular",
     "isTiprack": true,
-    "tipLength": 59.3,
+    "tipLength": 85,
     "isMagneticModuleCompatible": false,
     "loadName": "vpscientific_8_tiprack_10ul"
   },
