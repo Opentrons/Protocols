@@ -11,7 +11,7 @@
   {
     "type": "dropDown",
     "label": "P10-Multi Mount",
-    "name": "mnt20",
+    "name": "mnt10",
     "options": [
       {"label": "Left", "value": "left"},
       {"label": "Right", "value": "right"}
