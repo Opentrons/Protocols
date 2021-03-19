@@ -47,6 +47,7 @@ Using the customization fields below, set up your protocol.
 * Magnetic bead engage height: Specify the depth to which the magnets on the module will infiltrate the plate. A value of 0 returns the top of the magnets flush with the bottom of the wells.
 * Bead drying time: Specify the amount of incubation time for the beads to dry at room temperature while magnetically engaged.
 * Bead drying time (with nuclease free water): Specify the amount of time to to dry the beads at room temperature after adding nuclease free water.
+* Nuclease water volume: Specify the amount of nuclease free water to add to the beads
 * P20 single GEN2 mount: Specify which mount to load the P20 single GEN2 pipette.
 * P300 multi GEN2 mount: Specify which mount to load the P300 multi GEN2 pipette.
 
