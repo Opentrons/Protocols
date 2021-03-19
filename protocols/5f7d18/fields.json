@@ -72,6 +72,12 @@
     "default": 10.0
   },
   {
+    "type": "int",
+    "label": "Nuclease-free water volume to add (30-100ul)",
+    "name": "nuc_free_water_vol_well",
+    "default": 100
+  },
+  {
     "type": "dropDown",
     "label": "P20 single GEN2 mount",
     "name": "p20_mount",
