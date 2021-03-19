@@ -2,13 +2,6 @@ import math
 from opentrons.types import Point
 from opentrons import protocol_api
 
-
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"num_col":12,"samp_and_lys_rep":1,"shake_well":10,"incubate_bind_time": 5, "asp_flow_rate":94.0, "disp_flow_rate":94.0, "mag_engage_time":7,"asp_height":1,"length_from_side":1.1,"mag_engage_height":19, "bead_dry_time":5,"bead_dry_time_nuc_water":10,"nuc_free_water_vol_well": 30,"p20_mount":"left","p300_mount":"right" }""")
-    return [_all_values[n] for n in names]
-
-
 metadata = {
     'protocolName': 'Viral Nucleic Acid Isolation from Oral and Nasal swabs',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
