@@ -2,7 +2,7 @@
   {
     "type": "int",
     "label": "Number of columns (1-12)",
-    "name": "num_samples",
+    "name": "num_col",
     "default": 12
   },
   {
