@@ -43,7 +43,11 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 </br>
 **Slot 7**: [Corning 96-Well Plate](https://labware.opentrons.com/corning_96_wellplate_360ul_flat?category=wellPlate) (Drug Dilution 10µM)</br>
 </br>
+**Slot 8**: [Axygen 1-Well Reservoir](https://labware.opentrons.com/axygen_1_reservoir_90ml/) (containing Media for 1st transfer)</br>
+</br>
 **Slot 10**: [Corning 96-Well Plate](https://labware.opentrons.com/corning_96_wellplate_360ul_flat?category=wellPlate) (Drug Stock)</br>
+</br>
+**Slot 11**: [Axygen 1-Well Reservoir](https://labware.opentrons.com/axygen_1_reservoir_90ml/) (containing Cells for 2nd transfer)</br>
 </br>
 
 ### Robot
