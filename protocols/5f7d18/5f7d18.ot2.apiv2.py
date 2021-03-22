@@ -57,6 +57,29 @@ def run(ctx):
             pip.reset_tipracks()
             pip.pick_up_tip()
 
+    # number of tips trash will accommodate before prompting user to empty
+    switch = True
+    drop_count = 0
+    drop_threshold = 120
+
+    def _drop(pip):
+        nonlocal switch
+        nonlocal drop_count
+        side = 30 if switch else -18
+        drop_loc = ctx.loaded_labwares[12].wells()[0].top().move(
+            Point(x=side))
+        pip.drop_tip(drop_loc)
+        switch = not switch
+        if pip.type == 'multi':
+            drop_count += 8
+        else:
+            drop_count += 1
+        if drop_count >= drop_threshold:
+            m300.home()
+            ctx.pause('Please empty tips from waste before resuming.')
+            ctx.home()  # home before continuing with protocol
+            drop_count = 0
+
     m300.flow_rate.aspirate = asp_flow_rate
     m300.flow_rate.dispense = disp_flow_rate
 
@@ -102,7 +125,7 @@ of the Nest 15mL reservoir on Slot 11.\n''')
                       col.top(),
                       new_tip='never')
         m300.mix(samp_and_lys_rep, 200, col)
-        m300.drop_tip()
+        _drop(m300)
 
     # add binding buffer
     ctx.comment('\n--------- ADDING BINDING BUFFER ---------\n')
@@ -112,11 +135,11 @@ of the Nest 15mL reservoir on Slot 11.\n''')
                       s,
                       col.top(),
                       new_tip='never')
-    m300.drop_tip()
+    _drop(m300)
     for col in mag_plate.rows()[0][:num_col]:
         pick_up(m300)
         m300.mix(15, 200, col)
-        m300.drop_tip()
+        _drop(m300)
 
     ctx.delay(minutes=incubate_bind_time)
 
@@ -125,8 +148,7 @@ of the Nest 15mL reservoir on Slot 11.\n''')
     for col in mag_plate.rows()[0][:num_col]:
         pick_up(m300)
         m300.mix(shake_well, 200, col)
-        m300.drop_tip()
-
+        _drop(m300)
     # engage magnetic module, remove supernatant with 2 ethanol washes
     ctx.comment('\n--------- ENGAGE MAGDECK WITH 2 ETHANOL WASHES ---------\n')
     for i in range(3):
@@ -143,10 +165,9 @@ of the Nest 15mL reservoir on Slot 11.\n''')
             pick_up(m300)
             m300.transfer(500 if i > 0 else 1000,
                           aspirate_loc,
-                          d_col,
+                          d_col.top(),
                           new_tip='never')
-            m300.drop_tip()
-
+            _drop(m300)
         # only use the top half of this loop for 3rd iteration
         if i > 1:
             break
@@ -161,12 +182,11 @@ of the Nest 15mL reservoir on Slot 11.\n''')
                           s_col,
                           d_col.top(),
                           new_tip='never')
-        m300.drop_tip()
+        _drop(m300)
         for col in mag_plate.rows()[0][:num_col]:
             pick_up(m300)
             m300.mix(15, 200, col)
-            m300.drop_tip()
-
+            _drop(m300)
     ctx.delay(minutes=bead_dry_time)
     mag_deck.disengage()
 
@@ -178,11 +198,11 @@ of the Nest 15mL reservoir on Slot 11.\n''')
                       nuc_free_water,
                       col.top(),
                       new_tip='never')
-    m300.drop_tip()
+    _drop(m300)
     for col in mag_plate.rows()[0][:num_col]:
         pick_up(m300)
         m300.mix(15, nuc_free_water_vol_well-10, col)
-        m300.drop_tip()
+        _drop(m300)
     ctx.delay(minutes=bead_dry_time_nuc_water)
     mag_deck.engage(height_from_base=mag_engage_height)
     ctx.delay(minutes=mag_engage_time)
