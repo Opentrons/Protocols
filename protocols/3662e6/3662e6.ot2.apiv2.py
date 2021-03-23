@@ -88,12 +88,12 @@ def run(protocol):
     protocol.comment('Transferring 100µL of cells to all wells...')
     tipctr = 0
     m300.flow_rate.dispense = 200
-    m300.starting_tip = tips300[0]['A2']
 
     for well in allPlateWells:
         if tipctr == 0:
-            m300.pick_up_tip()
+            m300.pick_up_tip(tips300[0]['A2'])
         m300.mix(5, 300, cells['A1'])
+        m300.blow_out(cells['A1'])
         m300.aspirate(20, cells['A1'].top())
         m300.aspirate(60, cells['A1'])
         m300.dispense(60, cells['A1'])
@@ -103,10 +103,9 @@ def run(protocol):
         m300.blow_out()
         tipctr += 1
         if tipctr == 4:
-            m300.return_tip()
-            m300.starting_tip = tips300[0]['A2']
+            m300.drop_tip(tips300[0]['A2'])
             tipctr = 0
     if m300.has_tip:
-        m300.return_tip()
+        m300.drop_tip(tips300[0]['A2'])
 
     protocol.comment('Protocol complete!')
