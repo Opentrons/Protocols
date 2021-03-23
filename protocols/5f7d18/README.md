@@ -24,8 +24,7 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 * [Opentrons 96 Filter Tip Rack 200 µL](https://labware.opentrons.com/opentrons_96_filtertiprack_200ul?category=tipRack)
 * [Opentrons NEST 96 well plate 100ul PCR full skirt](https://labware.opentrons.com/?category=wellPlate)
 * [Opentrons NEST 12-Well Reservoir](https://shop.opentrons.com/collections/reservoirs/products/nest-12-well-reservoir-15-ml)
-* [Opentrons 4-in-1 Tube Rack Set](https://shop.opentrons.com/collections/racks-and-adapters/products/tube-rack-set-1)
-* [Kingfisher deep 96-well plate 2mL](https://www.thermofisher.com/order/catalog/product/95040450?ICID=search-product#/95040450?ICID=search-product)
+* [Opentrons 4-in-1 Tube Rack Set (24-tube insert)](https://shop.opentrons.com/collections/racks-and-adapters/products/tube-rack-set-1)
 
 
 
@@ -35,7 +34,7 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 For this protocol, be sure that the pipettes (P20 and P300) are attached.
 
 Using the customization fields below, set up your protocol.
-* Number of columns: Specify the number of columns of samples loaded onto the Kingfisher plate. Note that runs should only be completed in multiples of full columns (8 samples).
+* Number of columns: Specify the number of columns of samples loaded onto the NEST deep well plate. Note that runs should only be completed in multiples of full columns (8 samples).
 * Sample and lysis buffer mix repetitions: Specify the number of repetitions to mix the sample and lysis buffer as mentioned in Step 1 of the MAGBIO protocol
 * Mix repetitions before first magnetic engage: Specify the number of mix repetitions to re-suspend the MAG-S1 particles before use (i.e. "shake well" in Step 3 of the MAGBIO protocol).
 * Incubation time: Specify the amount of incubation time to allow RNA to bind to the beads
@@ -44,7 +43,6 @@ Using the customization fields below, set up your protocol.
 * Multi_channel pipette aspiration flow rate (ul/s): Specify the aspiration flow rate
 * Multi-channel pippette dispense flow rate (ul/s): Specify the dispense flow rate
 * Distance from side of well opposite beads (1mm - 4.15mm): Specify the distance from the side of the well opposite the engaged magnetic beads to aspirate from. A value of 4.15mm returns the center of the well, with 1mm returning 1mm from the side of the well opposite the engaged beads.
-* Magnetic bead engage height: Specify the depth to which the magnets on the module will infiltrate the plate. A value of 0 returns the top of the magnets flush with the bottom of the wells.
 * Bead drying time: Specify the amount of incubation time for the beads to dry at room temperature while magnetically engaged.
 * Bead drying time (with nuclease free water): Specify the amount of time to to dry the beads at room temperature after adding nuclease free water.
 * Nuclease water volume: Specify the amount of nuclease free water to add to the beads
@@ -57,15 +55,15 @@ When prompted to replace the 300ul tip racks, be sure to re-load all 3 tip racks
 
 **Labware Setup**
 
-Slots 1: Opentrons Magnetic Module with loaded Kingfisher plate. 200ul of viral samples loaded into each well.
+Slots 1: Opentrons Magnetic Module with loaded NEST 96 2mL deep well plate. 200ul of viral sample pre-loaded into each well.
 
 Slot 2, 5: Opentrons 96 Filter Tip Rack 20 µL
 
 Slot 3, 6, 9: Opentrons 96 Filter Tip Rack 200 µL
 
-Slot 4: Opentrons 4-in-1 Tube Rack Set
+Slot 4: Opentrons NEST 12-Well Reservoir (empty)
 
-Slot 7: Opentrons NEST 12-Well Reservoir
+Slot 7: Opentrons 4-in-1 Tube Rack Set. Mastermix loaded into tubes A1, B1.
 
 Slot 8: Opentrons NEST 96 well plate 100ul PCR full skirt
 

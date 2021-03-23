@@ -54,12 +54,6 @@
   "default": 1.0125
   },
   {
-  "type": "float",
-  "label": "Magnetic engage height (0-19mm)",
-  "name": "mag_engage_height",
-  "default": 6.0
-  },
-  {
     "type": "float",
     "label": "Bead drying time (minutes)",
     "name": "bead_dry_time",

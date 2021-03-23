@@ -14,12 +14,12 @@ def run(ctx):
 
     [num_col, samp_and_lys_rep, shake_well, incubate_bind_time,
      mag_engage_time, asp_height, asp_flow_rate, disp_flow_rate,
-     length_from_side, mag_engage_height, bead_dry_time,
+     length_from_side, bead_dry_time,
      bead_dry_time_nuc_water, nuc_free_water_vol_well, p20_mount,
      p300_mount] = get_values(  # noqa: F821
         "num_col", "samp_and_lys_rep", "shake_well", "incubate_bind_time",
         "mag_engage_time", "asp_height", "asp_flow_rate", "disp_flow_rate",
-        "length_from_side", "mag_engage_height", "bead_dry_time",
+        "length_from_side", "bead_dry_time",
         "bead_dry_time_nuc_water", "nuc_free_water_vol_well", "p20_mount",
         "p300_mount")
 
@@ -27,15 +27,14 @@ def run(ctx):
         raise Exception("Enter a number of columns between 1 and 12")
     if not 1 <= length_from_side <= 4.15:
         raise Exception("Enter an aspiration distance from well side 1-4.15mm")
-    if not 0 <= mag_engage_height <= 19.0:
-        raise Exception("Enter a magnetic engage height 0-19mm")
 
     # load labware
     mag_deck = ctx.load_module('magnetic module gen2', '1')
-    mag_plate = mag_deck.load_labware('thermofisher_96_wellplate_2000ul')
+    mag_plate = mag_deck.load_labware('nest_96_wellplate_2ml_deep')
     supernat = ctx.load_labware('nest_12_reservoir_15ml', '4')
     ethanol = ctx.load_labware('nest_12_reservoir_15ml', '10')
-    mastermix_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '7')
+    mastermix_tubes = ctx.load_labware(
+            'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '7')
     pcr_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '8')
     reservoir = ctx.load_labware('nest_12_reservoir_15ml', '11')
     tiprack_300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
@@ -101,7 +100,7 @@ def run(ctx):
     mix_vol_per_col = 8*20
     mastermix_vol_case1 = num_samp*20 if num_col <= 6 else mix_vol_per_col*6
     mastermix_vol_case2 = mix_vol_per_col*(num_col-6)
-    case2_str = f"and {mastermix_vol_case2}ul in tube A2"if num_col > 6 else ""
+    case2_str = f"and {mastermix_vol_case2}ul in tube B1"if num_col > 6 else ""
 
     ctx.pause(f'''Please confirm that the following volumes are in their
 respective labware before beginning the protocol:\n
@@ -152,7 +151,7 @@ of the Nest 15mL reservoir on Slot 11.\n''')
     # engage magnetic module, remove supernatant with 2 ethanol washes
     ctx.comment('\n--------- ENGAGE MAGDECK WITH 2 ETHANOL WASHES ---------\n')
     for i in range(3):
-        mag_deck.engage(height_from_base=mag_engage_height)
+        mag_deck.engage()
         ctx.delay(minutes=mag_engage_time)
 
         # remove supernat
@@ -160,8 +159,9 @@ of the Nest 15mL reservoir on Slot 11.\n''')
         for index, (s_col, d_col) in enumerate(zip(
              mag_plate.rows()[0][:num_col], supernat.rows()[0])):
             side = -1 if index % 2 == 0 else 1
-            aspirate_loc = s_col.bottom(asp_height).move(
-                    Point(x=(s_col.diameter/2-length_from_side)*side))
+            m300.move_to(s_col.center())
+            aspirate_loc = s_col.bottom(z=asp_height).move(
+                    Point(x=(s_col.length/2-length_from_side)*side))
             pick_up(m300)
             m300.transfer(500 if i > 0 else 1000,
                           aspirate_loc,
@@ -204,7 +204,7 @@ of the Nest 15mL reservoir on Slot 11.\n''')
         m300.mix(15, nuc_free_water_vol_well-10, col)
         _drop(m300)
     ctx.delay(minutes=bead_dry_time_nuc_water)
-    mag_deck.engage(height_from_base=mag_engage_height)
+    mag_deck.engage()
     ctx.delay(minutes=mag_engage_time)
 
     # transfer eluate and mastermix to pcr plate
@@ -217,9 +217,10 @@ of the Nest 15mL reservoir on Slot 11.\n''')
         p20.dispense(5+airgap, d)
         p20.blow_out()
         p20.drop_tip()
+    mag_deck.disengage()
     ctx.comment('\n--------- ADDING MASTERMIX TO PCR PLATE ---------\n')
     p20.pick_up_tip()
     for i, well in enumerate(pcr_plate.wells()[:num_samp]):
-        p20.aspirate(20, mastermix_plate.wells()[0 if i < 48 else 1])
+        p20.aspirate(20, mastermix_tubes.wells()[0 if i < 48 else 1])
         p20.dispense(20, well.top())
     p20.drop_tip()
