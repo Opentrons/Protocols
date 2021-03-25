@@ -12,9 +12,9 @@ metadata = {
 def run(ctx):
 
     [num_samp, asp_height, asp_flow_rate, disp_flow_rate,
-     length_from_side, m300_mount] = get_values(  # noqa: F821
+     length_from_side, disp_height, m300_mount] = get_values(  # noqa: F821
         "num_samp", "asp_height", "asp_flow_rate", "disp_flow_rate",
-        "length_from_side", "m300_mount")
+        "length_from_side", "disp_height", "m300_mount")
 
     if not 1 <= num_samp <= 96:
         raise Exception("Enter a sample number between 1-96")
@@ -54,7 +54,7 @@ def run(ctx):
                 m300.aspirate(vol, aspirate_loc)
                 m300.air_gap(airgap)
                 m300.dispense(vol+airgap,
-                              liquid_waste.wells()[0].top(z=15))
+                              liquid_waste.wells()[0].top(z=disp_height))
                 m300.blow_out(location=liquid_waste.wells()[0].top(z=15))
             ctx.comment('\n')
             m300.drop_tip(park)

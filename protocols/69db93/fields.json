@@ -30,6 +30,12 @@
   "default": 1.0125
   },
   {
+  "type": "float",
+  "label": "Dispense height from top of liquid waste reservoir",
+  "name": "disp_height",
+  "default": 1.0125
+  },
+  {
     "type": "dropDown",
     "label": "P300 multi GEN2 mount",
     "name": "m300_mount",
