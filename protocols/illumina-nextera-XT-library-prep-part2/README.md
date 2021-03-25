@@ -4,8 +4,8 @@
 [Opentrons (verified)](https://opentrons.com/)
 
 ## Categories
-* NGS Library Prep
-     * Illumina Nextera XT
+* FEATURED
+     * NGS Library Prep: Illumina Nextera XT
 
 ## Description
 Part 2 of 4: Clean Up Libraries
