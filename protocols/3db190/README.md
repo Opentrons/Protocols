@@ -4,7 +4,7 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* PCR
+* FEATURED
 	* PCR Prep
 
 ## Description
