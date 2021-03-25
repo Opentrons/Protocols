@@ -4,7 +4,7 @@
 [Opentrons (verified)](https://opentrons.com/)
 
 ## Categories
-* Sample Prep
+* FEATURED
 	* Cherrypicking
 
 ## Description
