@@ -40,23 +40,26 @@ def run(ctx):
         'nest_96_wellplate_100ul_pcr_full_skirt', '2', 'elution plate')
     tips300 = [
         ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-        for slot in ['5', '6', '8', '9', '10', '11', '3']]
+        for slot in ['6', '8', '9', '10', '11', '3']]
     if park_tips:
         rack = ctx.load_labware(
-            'opentrons_96_tiprack_300ul', '4', 'tiprack for parking')
+            'opentrons_96_tiprack_300ul', '5', 'tiprack for parking')
         parking_spots = rack.rows()[0][:num_cols]
     else:
         rack = ctx.load_labware(
-            'opentrons_96_tiprack_300ul', '4', '200µl filtertiprack')
+            'opentrons_96_tiprack_300ul', '5', '200µl filtertiprack')
         parking_spots = [None for none in range(12)]
     tips300.insert(0, rack)
 
     deep96 = ctx.load_labware('nest_96_wellplate_2ml_deep', '7',
                               'reagent deepwell plate')
+    waste_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '4',
+                                   'waste deepwell plate')
 
     # sample setup
     mag_samples = mag_plate.rows()[0][:num_cols]
     elution_samples = elution_plate.rows()[0][:num_cols]
+    waste = [chan.top(-5) for chan in waste_plate.rows()[0][:num_cols]]
     num_drying_sets = math.ceil(num_cols/4)  # process 4 columns at a time
     drying_sets = [
         mag_samples[i*4:i*4+4] if i < num_drying_sets - 1
@@ -66,12 +69,15 @@ def run(ctx):
         parking_spots[i*4:i*4+4] if i < num_drying_sets - 1
         else parking_spots[i*4:]
         for i in range(num_drying_sets)]
+    waste_sets = [
+        waste[i*4:i*4+4] if i < num_drying_sets - 1
+        else waste[i*4:]
+        for i in range(num_drying_sets)]
 
     # reagents
     beads = deep96.rows()[0][0]
     etoh = deep96.rows()[0][1]
     eb_buff = deep96.rows()[0][2]
-    waste = [chan.top(-2) for chan in deep96.rows()[0][9:]]
 
     # pipettes
     m300 = ctx.load_instrument(
@@ -172,18 +178,18 @@ magnet for ' + str(bead_incubation_time_in_minutes) + ' minutes.')
 on magnet for ' + str(etoh_inc) + ' minutes.')
 
     # remove supernatant
-    for m, p in zip(mag_samples, parking_spots):
+    for m, p, w in zip(mag_samples, parking_spots, waste):
         pick_up(m300, p)
         m300.aspirate(120, m.bottom(0.5))
         m300.air_gap(20)
-        m300.dispense(140, waste[0], rate=0.7)
-        m300.blow_out(waste[0])
+        m300.dispense(140, w, rate=0.7)
+        m300.blow_out(w)
         m300.air_gap(20)
         drop(m300, p)
 
     # 2x EtOH washes
     etoh_loc = None
-    for wash in range(1, 3):
+    for wash in range(2):
         if mix_etoh:
             magdeck.disengage()
 
@@ -214,7 +220,7 @@ on magnet for ' + str(etoh_inc) + ' minutes.')
 
         # remove supernatant
         if wash == 0:
-            for m, p in zip(mag_samples, parking_spots):
+            for m, p, w in zip(mag_samples, parking_spots, waste):
                 if mix_etoh:
                     pick_up(m300, p)
                 else:
@@ -222,12 +228,12 @@ on magnet for ' + str(etoh_inc) + ' minutes.')
                         pick_up(m300, p)
                 m300.aspirate(vol_etoh, m.bottom(0.5))
                 m300.air_gap(20)
-                m300.dispense(vol_etoh+20, waste[wash], rate=0.7)
-                m300.blow_out(waste[wash])
+                m300.dispense(vol_etoh+20, w, rate=0.7)
+                m300.blow_out(w)
                 m300.air_gap(20)
                 drop(m300, p)
         else:
-            for m, p in zip(mag_samples, parking_spots):
+            for m, p, w in zip(mag_samples, parking_spots, waste):
                 if mix_etoh:
                     pick_up(m300, p)
                 else:
@@ -235,7 +241,7 @@ on magnet for ' + str(etoh_inc) + ' minutes.')
                         pick_up(m300, p)
                 m300.aspirate(vol_etoh - 15, m.bottom(0.5))
                 m300.air_gap(20)
-                m300.dispense(vol_etoh - 15 + 20, waste[wash], rate=0.7)
+                m300.dispense(vol_etoh - 15 + 20, w, rate=0.7)
                 m300.air_gap(20)
                 drop(m300, p)
 
@@ -243,15 +249,15 @@ on magnet for ' + str(etoh_inc) + ' minutes.')
 material on the side of the wells. Then, replace plate on magnetic module.')
 
             eb_tip = None
-            for set_ind, (sample_set, parking_set) in enumerate(
-                    zip(drying_sets, parking_sets)):
+            for set_ind, (sample_set, parking_set, waste_set) in enumerate(
+                    zip(drying_sets, parking_sets, waste_sets)):
                 m300.flow_rate.aspirate = 20
-                for m, p in zip(sample_set, parking_set):
+                for m, p, w in zip(sample_set, parking_set, waste_set):
                     pick_up(m300, p)
                     m300.aspirate(20, m.bottom(0.5))
                     m300.air_gap(20)
-                    m300.dispense(40, waste[wash], rate=0.7)
-                    m300.blow_out(waste[wash])
+                    m300.dispense(40, w, rate=0.7)
+                    m300.blow_out(w)
                     m300.air_gap(20)
                     drop(m300)
                 m300.flow_rate.aspirate = 100
@@ -265,10 +271,23 @@ material on the side of the wells. Then, replace plate on magnetic module.')
                     eb_tip = pick_up(m300)
                 else:
                     pick_up(m300, eb_tip)
-                m300.distribute(volume_EB_in_ul, eb_buff,
-                                [m.top(2) for m in sample_set], blow_out=True,
-                                blowout_location='source well',
-                                new_tip='never')
+
+                # custom distribution
+                col_per_asp = math.floor(180/volume_EB_in_ul)
+                num_asp = math.ceil(len(sample_set)/col_per_asp)
+                dist_sets = [
+                    sample_set[i*col_per_asp:i*col_per_asp+col_per_asp]
+                    if i < num_asp - 1
+                    else sample_set[i*col_per_asp:]
+                    for i in range(num_asp)]
+                for dist_set in dist_sets:
+                    m300.dispense(m300.current_volume, eb_buff.top())
+                    m300.distribute(volume_EB_in_ul, eb_buff,
+                                    [m.top(2) for m in dist_set],
+                                    blow_out=True,
+                                    blowout_location='source well',
+                                    new_tip='never')
+                    m300.air_gap(20)
                 if set_ind == len(sample_set) - 1:
                     drop(m300)
                 else:
