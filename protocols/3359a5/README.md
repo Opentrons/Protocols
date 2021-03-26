@@ -4,7 +4,7 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* FEATURED
+* Featured Protocols
 	* Cherrypicking
 
 
