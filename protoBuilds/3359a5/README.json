@@ -1,7 +1,7 @@
 {
     "author": "Opentrons",
     "categories": {
-        "Featured Protocols": [
+        "Featured": [
             "Cherrypicking"
         ]
     },
@@ -9,7 +9,7 @@
     "internal": "1211",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
-        "categories": "* Featured Protocols\n\t* Cherrypicking\n\n\n",
+        "categories": "* Featured\n\t* Cherrypicking\n\n\n",
         "description": "With this protocol, your robot can perform multiple well-to-well liquid transfers using a single-channel pipette by parsing through a user-defined .csv file.\n\nThe .csv file should be formatted as shown in [this template](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/3359a5/template.csv), **including headers**.\n\nAll available empty slots will be filled with the necessary tipracks, and the user will be prompted to refill the tipracks if all are emptied in the middle of the protocol.\n\n",
         "internal": "1211\n",
         "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
