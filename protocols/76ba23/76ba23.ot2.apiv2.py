@@ -22,8 +22,7 @@ def run(ctx):
     sample_volume = int(float(ml_line[
      ml_line.find(',')+1:ml_line.find(' ml')])*1000)
 
-    if sample_volume > 1500:
-        sample_volume = 1500
+    sample_volume = 1000
 
     # tips (max volume 200 ul if filter tips, otherwise 300 ul)
     tips_300 = [ctx.load_labware(choose_tip_rack, slot) for slot in ['6', '9']]
