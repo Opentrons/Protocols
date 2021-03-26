@@ -4,7 +4,7 @@
 [Opentrons (verified)](https://opentrons.com/)
 
 ## Categories
-* FEATURED
+* Featured Protocols
     * Nucleic Acid Purification with Magnetic Beads (Universal)
 
 ## Description
