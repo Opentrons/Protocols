@@ -4,7 +4,7 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Covid-19 Workstation
+* Covid-19 Protocols
 	* qPCR Setup
 
 

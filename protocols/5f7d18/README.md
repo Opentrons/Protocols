@@ -4,7 +4,7 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* NUCLEIC ACID EXTRACTION & PURIFICATION
+* Nucleic Acid Extraction & Purification
 	* RNA Extraction
 
 ## Description
