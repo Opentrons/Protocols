@@ -30,6 +30,8 @@ def run(ctx):
                                          '4', label='Parked Tip Rack 1')
     parked_tips_rack2 = ctx.load_labware('opentrons_96_filtertiprack_200ul',
                                          '7', label='Parked Tip Rack 2')
+    parked_tips_rack3 = ctx.load_labware('opentrons_96_filtertiprack_200ul',
+                                         '10', label='Parked Tip Rack 3')
     tipracks = [ctx.load_labware('opentrons_96_filtertiprack_200ul', str(slot))
                 for slot in [5, 6, 8, 9]]
     liquid_waste = ctx.load_labware('nest_1_reservoir_195ml', '11')
@@ -125,7 +127,7 @@ def run(ctx):
             m300.dispense(vol+airgap, col.top(-2))
             m300.blow_out()
         ctx.comment('\n\n')
-    m300.drop_tip(ctx.loaded_labwares[6].wells_by_name()['A2'])
+    m300.return_tip()
 
     ctx.comment('\n-------- MIXING MAGPLATE AND PARKING TIPS (13) ---------\n')
     mix(150, park_tips_in=parked_tips_rack2)  # use parked tips from step 10
@@ -146,11 +148,11 @@ def run(ctx):
         m300.dispense(65+airgap, col.top(-2))
         m300.blow_out()
         ctx.comment('\n\n')
-    m300.drop_tip(ctx.loaded_labwares[6].wells_by_name()['A3'])
+    m300.return_tip()
 
     ctx.comment('\n-------- MIXING MAGPLATE AND PARKING TIPS (20) ---------\n')
     mix(50,
-        park_tips_in=ctx.loaded_labwares[5],  # park tips in empty slot 5
+        park_tips_in=parked_tips_rack3,
         use_new_tips=True,
         blowout='dest')
 
@@ -160,7 +162,7 @@ def run(ctx):
     for index, (s, d) in enumerate(zip(x_plate.rows()[0][:num_col],
                                        pcr_plate.rows()[0])):
         # use parked tips from step 20
-        m300.pick_up_tip(ctx.loaded_labwares[5].rows()[0][index])
+        m300.pick_up_tip(parked_tips_rack3.rows()[0][index])
         m300.aspirate(65, s)
         m300.air_gap(airgap)
         m300.dispense(65+airgap, d.bottom(z=0.5))
