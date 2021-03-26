@@ -1,7 +1,7 @@
 {
     "author": "Opentrons",
     "categories": {
-        "FEATURED": [
+        "Featured Protocols": [
             "Cherrypicking"
         ]
     },
@@ -9,7 +9,7 @@
     "internal": "7fc7b1",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
-        "categories": "* FEATURED\n\t* Cherrypicking\n\n",
+        "categories": "* Featured Protocols\n\t* Cherrypicking\n\n",
         "description": "With this protocol, your robot can perform a custom PCR preparation using a P20-multi pipette.\n\nThe .csv file should be formatted as shown in [this template](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/7fc7b1/7fc7b1_csv_template.csv), **including headers line**.\n\nAll available empty slots will be filled with tipracks, and the user will be prompted to refill the tipracks if all are emptied in the middle of the protocol.\n\nIf you choose a 96-well plate for mastermix, the mastermix should be filled in the first columns in as many columns as necessary. The protocol will automatically calculate when the second column should be acccessed for mastermix once the first column has run out of volume, then the third column, etc.\n\nIf you choose a 12-channel reservoir for mastermix, the mastermix should be filled in the first channel of the reservoir alone.\n\n---\n![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)\n\n* [Greiner Bio-One 96-Well Plates 200\u00b5l #652290](https://shop.gbo.com/pt/brazil/products/bioscience/biologia-molecular/pcr-microplates/bs-96-well-polypropylene-microplates/652290.html)\n* [Sarstedt 384-Well Plates 40\u00b5l #72.1984.202](https://www.sarstedt.com/en/products/laboratory/pcr-molecular-biology/pcr-plates/product/72.1984.202/)\n* [Opentrons P20 GEN2 multi-channel electronic pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)\n* [Opentrons 20\u00b5l tipracks](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)\n\n",
         "internal": "7fc7b1\n",
         "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
