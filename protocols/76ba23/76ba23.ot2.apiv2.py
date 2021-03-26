@@ -12,8 +12,8 @@ def run(ctx):
 
     ctx.set_rail_lights(True)
 
-    [dry_time, increment_vol, baseline_vol, choose_tip_rack, uploaded_csv
-     ] = get_values(  # noqa: F821
+    [dry_time, increment_vol, baseline_vol, choose_tip_rack,
+     uploaded_csv] = get_values(  # noqa: F821
         "dry_time", "increment_vol", "baseline_vol", "choose_tip_rack",
         "uploaded_csv")
 
