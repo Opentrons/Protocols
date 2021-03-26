@@ -7,7 +7,7 @@
 [Swift Biosciences](https://swiftbiosci.com/)
 
 ## Categories
-* Featured Protocols
+* Featured
 	* NGS Library Prep: Swift 2S Turbo
 
 

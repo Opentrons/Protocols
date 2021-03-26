@@ -7,7 +7,7 @@
 [BP Genomics](https://bpgenomics.com/)
 
 ## Categories
-* Covid-19 Workstation
+* Covid Workstation
 	* RNA Extraction
 
 
