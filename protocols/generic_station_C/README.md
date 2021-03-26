@@ -5,7 +5,7 @@
 
 ## Categories
 * Covid-19 Workstation
-	* Station C: qPCR Setup
+	* qPCR Setup
 
 
 ## Description
