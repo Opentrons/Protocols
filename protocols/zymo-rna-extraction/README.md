@@ -4,7 +4,7 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Covid-19 Workstation
+* Covid Workstation
 	* RNA Extraction
 
 
