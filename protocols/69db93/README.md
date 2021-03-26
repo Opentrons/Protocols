@@ -59,13 +59,9 @@ Slot 2: Nest 12 well reservoir with binding buffer + Etoh, wash buffer, and TE l
 
 Slot 3: Opentrons NEST 96 well plate 100ul PCR full skirt.
 
-Slot 4: Opentrons 96 Filter Tip Rack 200 µL (empty for parking).
+Slot 4, 7, 10: Opentrons 96 Filter Tip Rack 200 µL (empty for parking).
 
-Slot 7: Opentrons 96 Filter Tip Rack 200 µL (empty for parking).
-
-Slot 5, 6, 8, 9: Opentrons 96 Filter Tip Rack 200 µL (empty for parking).
-
-Slot 10: Empty
+Slot 5, 6, 8, 9: Opentrons 96 Filter Tip Rack 200 µL.
 
 Slot 11: Nest 1-well reservoir
 
