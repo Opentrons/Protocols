@@ -5,7 +5,7 @@
 
 ## Categories
 * Covid-19 Workstation
-	* Station B: RNA Extraction
+	* RNA Extraction
 
 
 ## Description

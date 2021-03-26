@@ -5,7 +5,7 @@
 
 ## Categories
 * Covid-19 Workstation
-	* Station A: Sample Plating
+	* Sample Plating
 
 
 ## Description
