@@ -4,7 +4,7 @@
 [Opentrons (verified)](https://opentrons.com/)
 
 ## Categories
-* FEATURED
+* Featured Protocols
      * NGS Library Prep: Illumina Nextera XT
 
 ## Description
