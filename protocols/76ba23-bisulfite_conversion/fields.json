@@ -1,0 +1,11 @@
+[
+  {
+    "type": "dropDown",
+    "label": "Choose Filtered or Standard Tips for P300 multi",
+    "name": "choose_tip_rack",
+    "options": [
+      { "label": "Filtered Tips", "value": "opentrons_96_filtertiprack_200ul" },
+      { "label": "Standard Tips", "value": "opentrons_96_tiprack_300ul" }
+    ]
+  }
+]
