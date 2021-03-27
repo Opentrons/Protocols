@@ -30,7 +30,7 @@ def run(ctx):
     p300m = ctx.load_instrument(
         "p300_multi_gen2", 'right', tip_racks=tips_300)
 
-    # primary dna extraction plate in slot 2
+    # primary DNA extraction plate in slot 2
     dna_extraction_plates = [ctx.load_labware(
      "usascientific_96_wellplate_2.4ml_deep", '2')]
 
@@ -42,7 +42,7 @@ def run(ctx):
     reagent_reservoir = ctx.load_labware("nest_1_reservoir_195ml", '3')
     premix = wash = etoh = reagent_reservoir.wells()[0]
 
-    # waste revervoir
+    # waste reservoir
     reservoir = ctx.load_labware("nest_1_reservoir_195ml", '11')
     waste = reservoir.wells()[0]
 
@@ -102,7 +102,7 @@ def run(ctx):
                 rep_max_transfer(duplicate_premix_vol, premix, column[0])
     p300m.drop_tip()
 
-    # sample to dna extraction plates
+    # sample to DNA extraction plates
     sample_tips = tips_300[0].next_tip()
     for index, column in enumerate(sample_plate.columns()):
         p300m.pick_up_tip()
@@ -167,11 +167,11 @@ def run(ctx):
         for index, column in enumerate(target.columns()):
             rep_max_transfer(add_vol, origin, column[0].top())
 
-    # engage magnets 20 min (primary dna extraction plate)
+    # engage magnets 20 min (primary DNA extraction plate)
     mag.engage(height=mag_height['usascientific_96_wellplate_2.4ml_deep'])
     ctx.delay(minutes=20)
 
-    # remove sup, final traces of sup (primary dna extraction plate)
+    # remove sup, final traces of sup (primary DNA extraction plate)
     remove_waste(premix_vol + vol_primary)
     reuse_tips(sample_tips)
     remove_waste(50)
@@ -196,7 +196,7 @@ def run(ctx):
         p300m.return_tip()
         etoh_tips = tips_300[1].next_tip()
 
-        # remove sup, remaining traces of sup (duplicate dna extraction plate)
+        # remove sup, remaining traces of sup (duplicate DNA extraction plate)
         reuse_tips(sample_tips)
         remove_waste(duplicate_premix_vol + vol_duplicate)
         reuse_tips(sample_tips)
@@ -226,7 +226,7 @@ def run(ctx):
             p300m.return_tip()
 
     else:
-        # add 400 ul wash to primary dna extraction plate (on magnetic module)
+        # add 400 ul wash to primary DNA extraction plate (on magnetic module)
         wash = reagent_reservoir
         wash_tips = tips_300[0].next_tip()
         p300m.pick_up_tip()
@@ -245,9 +245,10 @@ def run(ctx):
 
     # remove sup
     reuse_tips(sample_tips)
-    remove_waste(
-     (lambda sample_volume: 500 if sample_volume >= 1000 else 400)
-     (sample_volume))
+    if sample_volume >= 1000:
+        remove_waste(500)
+    else:
+        remove_waste(400)
 
     # add 2nd wash 400 ul all beads
     reuse_tips(wash_tips)
