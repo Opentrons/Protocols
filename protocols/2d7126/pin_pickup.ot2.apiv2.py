@@ -37,10 +37,9 @@ def run(ctx):
 
         # plate 2
         m300.default_speed = 40
-        for _ in range(3):
-            m300.move_to(col2.top(1))
-            m300.move_to(col2.bottom(-0.5))
-            ctx.delay(seconds=3)
+        m300.move_to(col2.top(1))
+        m300.move_to(col2.bottom(-0.5))
+        ctx.delay(seconds=3)
         m300.default_speed = 400
 
     m300.default_speed = 40
