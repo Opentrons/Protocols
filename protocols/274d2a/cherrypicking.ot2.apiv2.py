@@ -101,16 +101,17 @@ def run(ctx):
         return letter.upper() + str(int(number))
 
     for line in transfer_info:
-        new_tip, _, s_slot, s_well, h, _, d_slot, d_well, vol = line[:9]
+        [new_tip, _, s_slot, s_well, s_h, _, d_slot, d_well, d_h,
+         vol] = line[:10]
         if pip.type == 'multi' and (
                 parse_well(s_well)[0] not in 'AB'
                 or parse_well(d_well)[0] not in 'AB'):
             ctx.pause('Warning: attempting to use multi-channel pipette on \
 rows other than row A.')
         source = ctx.loaded_labwares[
-            int(s_slot)].wells_by_name()[parse_well(s_well)].bottom(float(h))
+            int(s_slot)].wells_by_name()[parse_well(s_well)].bottom(float(s_h))
         dest = ctx.loaded_labwares[
-            int(d_slot)].wells_by_name()[parse_well(d_well)]
+            int(d_slot)].wells_by_name()[parse_well(d_well)].bottom(float(d_h))
 
         if new_tip:
             if new_tip.lower()[0] == 'y':
