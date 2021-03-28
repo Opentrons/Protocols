@@ -38,10 +38,10 @@ Your cherrypicking transfers must be saved as a comma separated value (.csv) fil
 Here's an example of how a short cherrypicking protocol should be properly formatted:
 
 ```
-New Tip,Source Labware,Source Slot,Source Well,Source Aspiration Height Above Bottom (in mm),Dest Labware,Dest Slot,Dest Well,Volume (in ul)
-yes,agilent_1_reservoir_290ml,1,A1,1,nest_96_wellplate_100ul_pcr_full_skirt,4,A11,1
-,nest_12_reservoir_15ml,2,A1,1,corning_384_wellplate_112ul_flat,5,B11,3
-yes,nest_1_reservoir_195ml,3,A1,1,corning_384_wellplate_112ul_flat,5,A12,7
+New Tip,Source Labware,Source Slot,Source Well,Source Aspiration Height Above Bottom (in mm),Dest Labware,Dest Slot,Dest Well,Dest Dispense Height Above Bottom (in mm),Volume (in ul)
+yes,agilent_1_reservoir_290ml,1,A1,1,nest_96_wellplate_100ul_pcr_full_skirt,4,A11,2,1
+,nest_12_reservoir_15ml,2,A1,1,corning_384_wellplate_112ul_flat,5,B11,2,3
+yes,nest_1_reservoir_195ml,3,A1,1,corning_384_wellplate_112ul_flat,5,A12,2,7
 ```
 
 In the above example, 1μL will be transferred from 1mm above the bottom of well A1 in an Agilent 1-well 290ml reservoir (slot 1) to well A11 in the destination NEST 96-well plate 100µl (slot 4) with a new tip. After this, 3μL will be transferred from 1mm above the bottom of well A1 in a NEST 12-well 15ml reservoir (slot 2) to well A5 in the destination NEST 96-well plate 100µl (slot 5) with the same tip. Last, 7μL will be transferred from 1mm above the bottom of well A1 in a NEST 1-well 195ml reservoir (slot 3) to well H12 in the destination NEST 96-well plate 100µl (slot 5) with a new tip.
