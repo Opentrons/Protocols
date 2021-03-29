@@ -1,0 +1,41 @@
+[
+    {
+        "type": "dropDown",
+        "label": "P20 Multichannel Mount",
+        "name": "m20_mount",
+        "options": [
+          { "label": "Left", "value": "left" },
+          { "label": "Right", "value": "right" }
+        ]
+    },
+    {
+        "type": "int",
+        "label": "Sample Number",
+        "name": "samples",
+        "default": 384
+    },
+    {
+        "type": "float",
+        "label": "PCR Mix Transfer Volume (uL)",
+        "name": "pcr_mix_vol",
+        "default": 7.5
+    },
+    {
+        "type": "float",
+        "label": "Sample Transfer Volume (uL)",
+        "name": "sample_vol",
+        "default": 7.5
+    },
+    {
+        "type": "float",
+        "label": "Aspiration Height Above Bottom of the Well (mm)",
+        "name": "asp_height",
+        "default": 1
+    },
+    {
+        "type": "float",
+        "label": "Dispensing Height Above Bottom of the Well (mm)",
+        "name": "disp_height",
+        "default": 1
+    }
+]
