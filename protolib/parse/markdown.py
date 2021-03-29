@@ -13,6 +13,7 @@ ALLOWED_HEADERS = [
     'modules',
     'notes',
     'partner',
+    'pipettes',
     'preview',
     'process',
     'protocol steps',
