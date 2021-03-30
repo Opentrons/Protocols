@@ -3,6 +3,28 @@ import re
 from bs4 import BeautifulSoup
 import markdown
 
+# NOTE(IL, 2021-03-16): these were gathered from existing READMEs.
+ALLOWED_HEADERS = [
+    'author',
+    'categories',
+    'deck setup',
+    'description',
+    'internal',
+    'modules',
+    'notes',
+    'partner',
+    'pipettes',
+    'preview',
+    'process',
+    'protocol steps',
+    'reagents',
+    'reagent setup',
+    'robot',
+    'subcategories',
+    'time-estimate',
+    'title'
+]
+
 
 def markdown_to_dom(text):
     """
@@ -171,6 +193,13 @@ def parse(filename):
 
     with open(filename) as md:
         md = parse_headers(split_markdown(list(md)))
+
+        md = {
+            key: value
+            for key, value in md.items()
+            if key in ALLOWED_HEADERS
+        }
+
         return {
             **parse_values(md),
             'markdown': md

@@ -4,8 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Covid-19 Workstation
-	* Station B: RNA Extraction
+* Covid Workstation
+	* RNA Extraction
 
 
 ## Description

@@ -4,8 +4,8 @@
 [Opentrons (verified)](https://opentrons.com/)
 
 ## Categories
-* Covid-19 Workstation
-    * Station B: RNA Extraction
+* Covid Workstation
+    * RNA Extraction
 
 ## Description
 This is a flexible protocol accommodating a wide range of commercial RNA extraction workflows for COVID-19 sample processing. The protocol is broken down into 5 main parts:

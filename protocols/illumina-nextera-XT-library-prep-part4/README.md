@@ -4,8 +4,8 @@
 [Opentrons (verified)](https://opentrons.com/)
 
 ## Categories
-* NGS Library Prep
-     * Illumina Nextera XT
+* Featured
+     * NGS Library Prep: Illumina Nextera XT
 
 ## Description
 Part 4 of 4: Pool Libraries

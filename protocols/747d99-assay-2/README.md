@@ -4,8 +4,8 @@
 [Opentrons (verified)](https://opentrons.com/)
 
 ## Categories
-* Covid-19 Workstation
-    * Station B: RNA Extraction
+* Covid Workstation
+    * RNA Extraction
 
 ## Description
 This protocol is a full COVID-19 diagnostic workflow up to RNA amplification. Samples are loaded in 15ml tubes and transferred to a 96-wellplate for lysis and temperature incubations on an Opentrons temperature module. The samples are then transferred to a deepwell plate mounted on an Opentrons magnetic module for a 1-wash magnetic bead-based RNA extraction.

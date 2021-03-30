@@ -7,8 +7,8 @@
 [Swift Biosciences](https://swiftbiosci.com/)
 
 ## Categories
-* NGS Library Prep
-	* Swift 2S Turbo
+* Featured
+	* NGS Library Prep: Swift 2S Turbo
 
 
 ## Description

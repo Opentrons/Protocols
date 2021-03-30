@@ -18,7 +18,7 @@ def run(ctx):
         raise Exception("Enter a dispense volume between 1 and 85µL")
 
     # load labware
-    plate = ctx.load_labware('invoy_216_well_cartridge_plate', '1')
+    plate = ctx.load_labware('generic_216_wellplate_85ul_flat', '1')
     reservoir = ctx.load_labware('nest_1_reservoir_195ml', '6')
     tiprack = ctx.load_labware('opentrons_96_tiprack_300ul', '9')
 

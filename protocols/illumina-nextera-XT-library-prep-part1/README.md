@@ -4,8 +4,8 @@
 [Opentrons (verified)](https://opentrons.com/)
 
 ## Categories
-* NGS Library Prep
-     * Illumina Nextera XT
+* Featured
+     * NGS Library Prep: Illumina Nextera XT
 
 ## Description
 Part 1 of 4: Tagment Genomic DNA and Amplify Libraries

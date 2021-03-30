@@ -4,8 +4,8 @@
 [Opentrons (verified)](https://opentrons.com/)
 
 ## Categories
-* Covid-19 Workstation
-	* Station C: qPCR Setup
+* Covid Workstation
+	* qPCR Setup
 
 
 ## Description

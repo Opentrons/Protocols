@@ -35,7 +35,7 @@ Explanation of complex parameters below:
 * [OT-2](https://opentrons.com/ot-2)
 
 ## Process
-1. Input the respective mount sides for your P20 and P300 multi-channel pipettes and the number of samples to process.
+1. Input your protocol parameters.
 2. Download your protocol.
 3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
 4. Set up your deck according to the deck map.

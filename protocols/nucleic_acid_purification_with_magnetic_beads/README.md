@@ -4,7 +4,7 @@
 [Opentrons (verified)](https://opentrons.com/)
 
 ## Categories
-* Nucleic Acid Extraction & Purification
+* Featured
     * Nucleic Acid Purification with Magnetic Beads (Universal)
 
 ## Description
