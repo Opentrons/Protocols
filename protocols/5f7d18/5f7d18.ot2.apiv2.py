@@ -158,11 +158,10 @@ of the Nest 15mL reservoir on Slot 11.\n''')
         ctx.comment('\n--------- REMOVING SUPERNATANT ---------\n')
         for index, (s_col, d_col) in enumerate(zip(
              mag_plate.rows()[0][:num_col], supernat.rows()[0])):
+            pick_up(m300)
             side = -1 if index % 2 == 0 else 1
-            m300.move_to(s_col.center())
             aspirate_loc = s_col.bottom(z=asp_height).move(
                     Point(x=(s_col.length/2-length_from_side)*side))
-            pick_up(m300)
             m300.transfer(500 if i > 0 else 1000,
                           aspirate_loc,
                           d_col.top(),
@@ -208,6 +207,13 @@ of the Nest 15mL reservoir on Slot 11.\n''')
     ctx.delay(minutes=mag_engage_time)
 
     # transfer eluate and mastermix to pcr plate
+    ctx.comment('\n--------- ADDING MASTERMIX TO PCR PLATE ---------\n')
+    p20.pick_up_tip()
+    for i, well in enumerate(pcr_plate.wells()[:num_samp]):
+        p20.aspirate(20, mastermix_tubes.wells()[0 if i < 48 else 1])
+        p20.dispense(20, well.top())
+    p20.drop_tip()
+
     ctx.comment('\n--------- ADDING ELUATE TO PCR PLATE ---------\n')
     airgap = 5
     for s, d in zip(mag_plate.wells()[:num_samp], pcr_plate.wells()):
@@ -215,12 +221,7 @@ of the Nest 15mL reservoir on Slot 11.\n''')
         p20.aspirate(5, s)
         p20.air_gap(airgap)
         p20.dispense(5+airgap, d)
-        p20.blow_out()
+        p20.mix(2, 15, d)
+        p20.blow_out(d.top())
         p20.drop_tip()
     mag_deck.disengage()
-    ctx.comment('\n--------- ADDING MASTERMIX TO PCR PLATE ---------\n')
-    p20.pick_up_tip()
-    for i, well in enumerate(pcr_plate.wells()[:num_samp]):
-        p20.aspirate(20, mastermix_tubes.wells()[0 if i < 48 else 1])
-        p20.dispense(20, well.top())
-    p20.drop_tip()
