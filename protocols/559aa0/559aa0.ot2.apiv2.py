@@ -1,5 +1,5 @@
 metadata = {
-    'protocolName': 'PCR/qPCR prep: distribute primers to 384 well plate',
+    'protocolName': 'PCR/qPCR prep: distribute primers to 384 well plates',
     'author': 'Steve Plonk <protocols@opentrons.com>',
     'apiLevel': '2.9'
 }
@@ -17,14 +17,13 @@ def run(ctx):
     ctx.set_rail_lights(True)
 
     # a samp_col_count value between 1-12 specified for each 384-well plate
-    if len(samp_col_counts.split(',')) != plate_count:
+    if len(samp_col_counts.split(',')) != int(plate_count):
         raise Exception('''A count of patient sample columns (between 1 and 12,
         for downstream steps) must be specified for each 384-well plate.''')
 
     for num in samp_col_counts.split(','):
         if (int(num) < 1) or (int(num) > 12):
-            raise Exception('''Invalid number of sample columns specified (
-            for downstream steps, must be 1-12).''')
+            raise Exception('Invalid number of sample columns specified')
 
     # patient sample column count (in downstream steps) for each 384-well plate
     col_counts = samp_col_counts.split(',')
@@ -43,7 +42,8 @@ def run(ctx):
     available_slots = [
      str(slot) for slot in [*range(1, 12)] if ctx.deck[slot] is None]
     plates = [ctx.load_labware(
-     labware_384_well_plate, slot) for slot in available_slots[:plate_count]]
+     labware_384_well_plate, slot) for slot in available_slots[
+     :int(plate_count)]]
 
     for mod, col, well in zip(
      [0, 0, 1, 1], [n1_col, rp_col, n2_col, ntc_col], [0, 1, 0, 1]):
