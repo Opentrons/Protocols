@@ -1,12 +1,5 @@
 import math
 
-
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"m20_mount":"left",samples":384, "pcr_mix_vol":7.5, "sample_vol":5, "asp_height":1, "disp_height":1}""")
-    return [_all_values[n] for n in names]
-
-
 metadata = {
     'protocolName': 'Sample Plate Filling 96 Wells to 384 Well Plate',
     'author': 'Sakib <sakib.hossain@opentrons.com>',
