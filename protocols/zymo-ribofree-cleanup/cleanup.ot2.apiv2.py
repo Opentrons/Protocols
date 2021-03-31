@@ -14,17 +14,13 @@ MagBead Clean-up (robot 2)',
 
 def run(ctx):
 
-    [number_of_samples, cleanup_stage, p10_mount,
-        p300_mount] = get_values(  # noqa: F821
-            'number_of_samples', 'cleanup_stage', 'p10_mount', 'p300_mount')
-    # [number_of_samples, cleanup_stage, p10_mount, p300_mount] = [
-    #     96, 'post-first-strand synthesis and universal depletion', 'right',
-    #     'left'
-    # ]
+    [number_of_samples, cleanup_stage, p20_mount,
+     p300_mount] = get_values(  # noqa: F821
+     'number_of_samples', 'cleanup_stage', 'p20_mount', 'p300_mount')
 
     # load modules and labware
-    racks10 = [
-        ctx.load_labware('opentrons_96_tiprack_10ul', slot)
+    racks20 = [
+        ctx.load_labware('opentrons_96_tiprack_20ul', slot)
         for slot in ['1', '4']
     ]
     elution_plate = ctx.load_labware(
@@ -41,50 +37,48 @@ def run(ctx):
         'agilent_1_reservoir_290ml', '9', 'waste reservoir').wells()[0].top()
 
     # pipettes
-    if p10_mount == p300_mount:
+    if p20_mount == p300_mount:
         raise Exception('Pipette mounts cannot match.')
-    m10 = ctx.load_instrument('p10_multi', p10_mount)
-    m300 = ctx.load_instrument('p300_multi', p300_mount)
+    m20 = ctx.load_instrument('p20_multi_gen2', p20_mount)
+    m300 = ctx.load_instrument('p300_multi_gen2', p300_mount)
 
     file_path = '/data/csv/tip_track.json'
     # file_path = 'protocols/tip_track.json'
     if os.path.isfile(file_path):
         with open(file_path) as json_file:
             data = json.load(json_file)
-            if 'tips10' in data:
-                tip10_count = data['tips10']
+            if 'tips20' in data:
+                tip20_count = data['tips20']
             else:
-                tip10_count = 0
+                tip20_count = 0
             if 'tips300' in data:
                 tip300_count = data['tips300']
             else:
                 tip300_count = 0
     else:
-        tip10_count = 0
+        tip20_count = 0
         tip300_count = 0
 
-    all_tips10 = [tip for rack in racks10 for tip in rack.rows()[0]]
+    all_tips20 = [tip for rack in racks20 for tip in rack.rows()[0]]
     all_tips300 = [tip for rack in racks300 for tip in rack.rows()[0]]
-    tip10_max = len(all_tips10)
+    tip20_max = len(all_tips20)
     tip300_max = len(all_tips300)
 
     def pick_up(pip):
-        nonlocal tip10_count
+        nonlocal tip20_count
         nonlocal tip300_count
-        if pip == m10:
-            if tip10_count == tip10_max:
-                ctx.pause('Replace 10µl tipracks before resuming.')
-                tip10_count = 0
+        if pip == m20:
+            if tip20_count == tip20_max:
+                ctx.pause('Replace 20µl tipracks before resuming.')
+                tip20_count = 0
                 [rack.reset() for rack in racks300]
-                print('10 OUT')
-            pip.pick_up_tip(all_tips10[tip10_count])
-            tip10_count += 1
+            pip.pick_up_tip(all_tips20[tip20_count])
+            tip20_count += 1
         else:
             if tip300_count == tip300_max:
                 ctx.pause('Replace tipracks before resuming.')
                 tip300_count = 0
                 [rack.reset() for rack in racks300]
-                print('300 OUT')
             pip.pick_up_tip(all_tips300[tip300_count])
             tip300_count += 1
 
@@ -206,23 +200,23 @@ stored at ≤ 4°C overnight or ≤ -20°C for long-term storage.'
     for i, m in enumerate(mag_samples):
         side = 1 if i % 2 == 0 else -1
         loc = m.bottom().move(Point(x=side*m.diameter/2*0.9, y=0, z=2))
-        pick_up(m10)
+        pick_up(m20)
         if elution_vol > 10:
             pre_vol = elution_vol - 10
-            m10.transfer(pre_vol, dna_eb, m.top(), new_tip='never')
-            m10.blow_out(m.top())
-        m10.aspirate(10, dna_eb)
-        m10.move_to(m.center())
-        m10.dispense(10, loc)
-        m10.mix(10, 9, m)
-        m10.blow_out(m.top(-2))
-        m10.air_gap(5)
-        m10.drop_tip()
+            m20.transfer(pre_vol, dna_eb, m.top(), new_tip='never')
+            m20.blow_out(m.top())
+        m20.aspirate(10, dna_eb)
+        m20.move_to(m.center())
+        m20.dispense(10, loc)
+        m20.mix(10, 9, m)
+        m20.blow_out(m.top(-2))
+        m20.air_gap(5)
+        m20.drop_tip()
 
     if inc_temp and inc_time:
         tempdeck.set_temperature(inc_temp)
-        # m10.move_to(tempplate.wells()[0].top(10))
-        m10.home()
+        # m20.move_to(tempplate.wells()[0].top(10))
+        m20.home()
         ctx.pause('Transfer plate from magnetic module to aluminum block on \
 temperature module. Once you resume, the plate will incubate for \
 ' + str(inc_temp) + ' minutes.')
@@ -235,11 +229,11 @@ on temperature module.')
 
     # transfer elution to new plate
     for m, e in zip(mag_samples, elution_samples):
-        pick_up(m10)
-        m10.transfer(elution_vol, m, e, new_tip='never')
-        m10.blow_out(e.top(-2))
-        m10.air_gap(5)
-        m10.drop_tip()
+        pick_up(m20)
+        m20.transfer(elution_vol, m, e, new_tip='never')
+        m20.blow_out(e.top(-2))
+        m20.air_gap(5)
+        m20.drop_tip()
 
     magdeck.disengage()
     if cleanup_stage == 'post-first-strand synthesis and universal depletion':
@@ -252,12 +246,12 @@ on temperature module.')
         # file_path = '/protocols/tip_track.json'
         if cleanup_stage == 'post-library index PCR':
             data = {
-                'tips10': 0,
+                'tips20': 0,
                 'tips300': 0
             }
         else:
             data = {
-                'tips10': tip10_count,
+                'tips20': tip20_count,
                 'tips300': tip300_count
             }
         with open(file_path, 'w') as outfile:
