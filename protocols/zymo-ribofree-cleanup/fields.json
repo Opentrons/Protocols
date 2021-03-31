@@ -18,8 +18,8 @@
   },
   {
     "type": "dropDown",
-    "label": "P10 GEN1 multi-channel mount",
-    "name": "p10_mount",
+    "label": "P20 GEN2 multi-channel mount",
+    "name": "p20_mount",
     "options": [
       { "label": "right", "value": "right" },
       { "label": "left", "value": "left" }
@@ -27,7 +27,7 @@
   },
   {
     "type": "dropDown",
-    "label": "P300 GEN1 multi-channel mount",
+    "label": "P300 GEN2 multi-channel mount",
     "name": "p300_mount",
     "options": [
       { "label": "left", "value": "left" },
