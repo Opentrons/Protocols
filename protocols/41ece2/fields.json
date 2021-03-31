@@ -22,8 +22,8 @@
     "label": "Add Cells + Media?",
     "name": "cellsmedia",
     "options": [
-      {"label": "Yes", "value": True},
-      {"label": "No", "value": False}
+      {"label": "Yes", "value": 1},
+      {"label": "No", "value": 0}
     ]
   }
 ]
