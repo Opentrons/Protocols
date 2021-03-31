@@ -1,5 +1,27 @@
 [
   {
+    "type": "str",
+    "label": "Comma-Separated Counts of Filled Columns (for each downstream 96-well patient sample plate)",
+    "name": "samp_col_counts",
+    "default": "12,12,12,12,12,12,12,12,12"
+  },
+  {
+    "type": "dropDown",
+    "label": "Number of 384-Well Plates",
+    "name": "plate_count",
+    "options": [
+      { "label": "Prepare 9 Plates", "value": 9 },
+      { "label": "Prepare 8 Plates", "value": 8 },
+      { "label": "Prepare 7 Plates", "value": 7 },
+      { "label": "Prepare 6 Plates", "value": 6 },
+      { "label": "Prepare 5 Plates", "value": 5 },
+      { "label": "Prepare 4 Plates", "value": 4 },
+      { "label": "Prepare 3 Plates", "value": 3 },
+      { "label": "Prepare 2 Plates", "value": 2 },
+      { "label": "Prepare 1 Plates", "value": 1 }
+    ]
+  },
+  {
     "type": "dropDown",
     "label": "Choose your labware (384-well plate)",
     "name": "labware_384_well_plate",
