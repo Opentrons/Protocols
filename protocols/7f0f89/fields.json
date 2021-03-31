@@ -13,8 +13,26 @@
   },
   {
     "type": "float",
+    "label": "Aspiration Flow Rate (in ul/sec)",
+    "name": "asp_rate",
+    "default": 20.0
+  },
+  {
+    "type": "float",
     "label": "Dispense Flow Rate (in ul/sec)",
     "name": "disp_rate",
+    "default": 20.0
+  },
+  {
+    "type": "float",
+    "label": "Delay after aspiration (in seconds)",
+    "name": "asp_delay_time",
+    "default": 20.0
+  },
+  {
+    "type": "float",
+    "label": "Delay after dispense (in seconds)",
+    "name": "disp_delay_time",
     "default": 20.0
   },
   {
