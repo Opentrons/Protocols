@@ -1,7 +1,7 @@
-import math
+from opentrons import types
 
 metadata = {
-    'protocolName': 'PCR/qPCR prep: distribute samples to 384 well plate',
+    'protocolName': 'PCR/qPCR prep: distribute samples to 384 well plates',
     'author': 'Steve Plonk <protocols@opentrons.com>',
     'apiLevel': '2.9'
 }
@@ -10,33 +10,57 @@ metadata = {
 def run(ctx):
 
     # bring in constant values from json string above
-    [labware_384_well_plate, patient_sample_vol, disposal_vol,
-     patient_sample_count
+    [plate_count, samp_col_counts, labware_384_well_plate, patient_sample_vol,
+     disposal_vol, patient_sample_count
      ] = get_values(  # noqa: F821
-      'labware_384_well_plate', 'patient_sample_vol', 'disposal_vol',
-      'patient_sample_count')
+      'plate_count', 'samp_col_counts', 'labware_384_well_plate',
+      'patient_sample_vol', 'disposal_vol', 'patient_sample_count')
 
     ctx.set_rail_lights(True)
 
-    # p20 multi channel, tips
-    tips20 = [ctx.load_labware("opentrons_96_filtertiprack_20ul", '3')]
+    # a samp_col_count value between 1-12 specified for each 384-well plate
+    if len(samp_col_counts.split(',')) != plate_count:
+        raise Exception('''A count of patient sample columns (between 1 and 12)
+        must be specified for each 384-well plate.''')
 
+    for num in samp_col_counts.split(','):
+        if (int(num) < 1) or (int(num) > 12):
+            raise Exception('''Invalid number of sample columns specified
+            (must be 1-12).''')
+
+    # patient sample column count for each 384-well plate
+    col_counts = samp_col_counts.split(',')
+
+    # tips
+    tips20 = [
+     ctx.load_labware("opentrons_96_filtertiprack_20ul", slot) for slot in [
+      str(slot) for slot in [1, 4, 7]][:plate_count]]
+
+    # p20 multi channel
     p20m = ctx.load_instrument(
         "p20_multi_gen2", "right", tip_racks=tips20)
 
     # source and destination plates
-    patient_samples = ctx.load_labware("nunc_96_wellplate_1000ul", '2')
-    three_eighty_four = ctx.load_labware(
-     labware_384_well_plate, '4')
+    patient_samples = [
+     ctx.load_labware("nunc_96_wellplate_1000ul", slot) for slot in [
+      str(slot) for slot in [2, 5, 8]][:plate_count]]
+    plates_384 = [
+     ctx.load_labware(labware_384_well_plate, slot) for slot in [
+      str(slot) for slot in [3, 6, 9]][:plate_count]]
 
-    # number of patient sample columns
-    num_cols = math.ceil(patient_sample_count / 8)
-
-    # to yield next 384 column
-    next_col = (column for column in three_eighty_four.columns())
+    # patient sample column count for each 384-well plate
+    col_counts = samp_col_counts.split(',')
 
     # distribute sample in "384 plate map.png" arrangement
-    for column in patient_samples.columns()[:num_cols]:
-        p20m.distribute(
-         patient_sample_vol, column, [
-          next(next_col), next(next_col)], disposal_volume=disposal_vol)
+    for i, plate in enumerate(patient_samples):
+        # to yield next 384 column
+        next_col = (
+         column for column in plates_384[i].columns()[:2*int(col_counts[i])])
+        for column in patient_samples[i].columns()[:int(col_counts[i])]:
+            p20m.distribute(
+             patient_sample_vol, [column[0], column[0]],
+             [well.center().move(types.Point(
+              well.diameter*0.25, -well.diameter*0.25, 0)) for well in next(
+              next_col)[:2]] + [well.center().move(types.Point(
+               well.diameter*0.25, -well.diameter*0.25, 0)) for well in next(
+               next_col)[:2]], disposal_volume=disposal_vol)
