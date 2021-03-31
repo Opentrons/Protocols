@@ -27,13 +27,13 @@
     "type": "float",
     "label": "Delay after aspiration (in seconds)",
     "name": "asp_delay_time",
-    "default": 20.0
+    "default": 3
   },
   {
     "type": "float",
     "label": "Delay after dispense (in seconds)",
     "name": "disp_delay_time",
-    "default": 20.0
+    "default": 1.5
   },
   {
     "type": "dropDown",
