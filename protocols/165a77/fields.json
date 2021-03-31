@@ -1,6 +1,22 @@
 [
   {
     "type": "dropDown",
+    "label": "Number of Patient Sample Plates",
+    "name": "plate_count",
+    "options": [
+      { "label": "Three Patient Sample Plates", "value": 3 },
+      { "label": "Two Patient Sample Plates", "value": 2 },
+      { "label": "One Patient Sample Plate", "value": 1 }
+    ]
+  },
+  {
+    "type": "str",
+    "label": "(Comma-Separated String) Count of Filled Columns for Each Patient Sample Plate",
+    "name": "samp_col_counts",
+    "default": "12,12,12"
+  },
+  {
+    "type": "dropDown",
     "label": "Choose your labware (384-well plate)",
     "name": "labware_384_well_plate",
     "options": [

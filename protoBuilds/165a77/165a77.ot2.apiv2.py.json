@@ -1,5 +1,5 @@
 {
-    "content": "import math\n\nmetadata = {\n    'protocolName': 'PCR/qPCR prep: distribute samples to 384 well plate',\n    'author': 'Steve Plonk <protocols@opentrons.com>',\n    'apiLevel': '2.9'\n}\n\n\ndef run(ctx):\n\n    # bring in constant values from json string above\n    [labware_384_well_plate, patient_sample_vol, disposal_vol,\n     patient_sample_count\n     ] = get_values(  # noqa: F821\n      'labware_384_well_plate', 'patient_sample_vol', 'disposal_vol',\n      'patient_sample_count')\n\n    ctx.set_rail_lights(True)\n\n    # p20 multi channel, tips\n    tips20 = [ctx.load_labware(\"opentrons_96_filtertiprack_20ul\", '3')]\n\n    p20m = ctx.load_instrument(\n        \"p20_multi_gen2\", \"right\", tip_racks=tips20)\n\n    # source and destination plates\n    patient_samples = ctx.load_labware(\"nunc_96_wellplate_1000ul\", '2')\n    three_eighty_four = ctx.load_labware(\n     labware_384_well_plate, '4')\n\n    # number of patient sample columns\n    num_cols = math.ceil(patient_sample_count / 8)\n\n    # to yield next 384 column\n    next_col = (column for column in three_eighty_four.columns())\n\n    # distribute sample in \"384 plate map.png\" arrangement\n    for column in patient_samples.columns()[:num_cols]:\n        p20m.distribute(\n         patient_sample_vol, column, [\n          next(next_col), next(next_col)], disposal_volume=disposal_vol)\n",
+    "content": "from opentrons import types\n\nmetadata = {\n    'protocolName': 'PCR/qPCR prep: distribute samples to 384 well plates',\n    'author': 'Steve Plonk <protocols@opentrons.com>',\n    'apiLevel': '2.9'\n}\n\n\ndef run(ctx):\n\n    # bring in constant values from json string above\n    [plate_count, samp_col_counts, labware_384_well_plate, patient_sample_vol,\n     disposal_vol, patient_sample_count\n     ] = get_values(  # noqa: F821\n      'plate_count', 'samp_col_counts', 'labware_384_well_plate',\n      'patient_sample_vol', 'disposal_vol', 'patient_sample_count')\n\n    ctx.set_rail_lights(True)\n\n    # a samp_col_count value between 1-12 specified for each 384-well plate\n    if len(samp_col_counts.split(',')) != plate_count:\n        raise Exception('''A count of patient sample columns (between 1 and 12)\n        must be specified for each 384-well plate.''')\n\n    for num in samp_col_counts.split(','):\n        if (int(num) < 1) or (int(num) > 12):\n            raise Exception('''Invalid number of sample columns specified\n            (must be 1-12).''')\n\n    # patient sample column count for each 384-well plate\n    col_counts = samp_col_counts.split(',')\n\n    # tips\n    tips20 = [\n     ctx.load_labware(\"opentrons_96_filtertiprack_20ul\", slot) for slot in [\n      str(slot) for slot in [1, 4, 7]][:plate_count]]\n\n    # p20 multi channel\n    p20m = ctx.load_instrument(\n        \"p20_multi_gen2\", \"right\", tip_racks=tips20)\n\n    # source and destination plates\n    patient_samples = [\n     ctx.load_labware(\"nunc_96_wellplate_1000ul\", slot) for slot in [\n      str(slot) for slot in [2, 5, 8]][:plate_count]]\n    plates_384 = [\n     ctx.load_labware(labware_384_well_plate, slot) for slot in [\n      str(slot) for slot in [3, 6, 9]][:plate_count]]\n\n    # patient sample column count for each 384-well plate\n    col_counts = samp_col_counts.split(',')\n\n    # distribute sample in \"384 plate map.png\" arrangement\n    for i, plate in enumerate(patient_samples):\n        # to yield next 384 column\n        next_col = (\n         column for column in plates_384[i].columns()[:2*int(col_counts[i])])\n        for column in patient_samples[i].columns()[:int(col_counts[i])]:\n            p20m.distribute(\n             patient_sample_vol, [column[0], column[0]],\n             [well.center().move(types.Point(\n              well.diameter*0.25, -well.diameter*0.25, 0)) for well in next(\n              next_col)[:2]] + [well.center().move(types.Point(\n               well.diameter*0.25, -well.diameter*0.25, 0)) for well in next(\n               next_col)[:2]], disposal_volume=disposal_vol)\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -5450,6 +5450,31 @@
     ],
     "fields": [
         {
+            "label": "Number of Patient Sample Plates",
+            "name": "plate_count",
+            "options": [
+                {
+                    "label": "Three Patient Sample Plates",
+                    "value": 3
+                },
+                {
+                    "label": "Two Patient Sample Plates",
+                    "value": 2
+                },
+                {
+                    "label": "One Patient Sample Plate",
+                    "value": 1
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": "12,12,12",
+            "label": "(Comma-Separated String) Count of Filled Columns for Each Patient Sample Plate",
+            "name": "samp_col_counts",
+            "type": "str"
+        },
+        {
             "label": "Choose your labware (384-well plate)",
             "name": "labware_384_well_plate",
             "options": [
@@ -5487,21 +5512,57 @@
     ],
     "labware": [
         {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 1",
+            "share": false,
+            "slot": "1",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
             "name": "Nunc 96 Well Plate 1000 \u00b5L on 2",
             "share": false,
             "slot": "2",
             "type": "nunc_96_wellplate_1000ul"
         },
         {
-            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 3",
+            "name": "Applied Biosystems 384 Well Plate 40 \u00b5L on 3",
             "share": false,
             "slot": "3",
+            "type": "appliedbiosystems_384_wellplate_40ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 4",
+            "share": false,
+            "slot": "4",
             "type": "opentrons_96_filtertiprack_20ul"
         },
         {
-            "name": "Applied Biosystems 384 Well Plate 40 \u00b5L on 4",
+            "name": "Nunc 96 Well Plate 1000 \u00b5L on 5",
             "share": false,
-            "slot": "4",
+            "slot": "5",
+            "type": "nunc_96_wellplate_1000ul"
+        },
+        {
+            "name": "Applied Biosystems 384 Well Plate 40 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "appliedbiosystems_384_wellplate_40ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Nunc 96 Well Plate 1000 \u00b5L on 8",
+            "share": false,
+            "slot": "8",
+            "type": "nunc_96_wellplate_1000ul"
+        },
+        {
+            "name": "Applied Biosystems 384 Well Plate 40 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
             "type": "appliedbiosystems_384_wellplate_40ul"
         },
         {
@@ -5514,7 +5575,7 @@
     "metadata": {
         "apiLevel": "2.9",
         "author": "Steve Plonk <protocols@opentrons.com>",
-        "protocolName": "PCR/qPCR prep: distribute samples to 384 well plate"
+        "protocolName": "PCR/qPCR prep: distribute samples to 384 well plates"
     },
     "modules": []
 }
