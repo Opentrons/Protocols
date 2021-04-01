@@ -24,6 +24,11 @@ Example: For sample traceability and consistency, samples are mapped directly fr
 
 Explanation of complex parameters below:
 * `park tips`: If set to `yes` (recommended), the protocol will conserve tips between reagent addition and removal. Tips will be stored in the wells of an empty rack corresponding to the well of the sample that they access (tip parked in A1 of the empty rack will only be used for sample A1, tip parked in B1 only used for sample B1, etc.). If set to `no`, tips will always be used only once, and the user will be prompted to manually refill tipracks mid-protocol for high throughput runs.
+* `input .csv file`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:
+```
+source,dest,vol
+A1,B1,4
+```
 
 ---
 
@@ -67,8 +72,8 @@ Explanation of complex parameters below:
 
 ### Process
 1. Input your protocol parameters above.
-2. Download and unzip your protocol package.
-3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions).
+2. Download your protocol and unzip if needed.
+3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.
 4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.
 5. Set up your deck according to the deck map.
 6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).
