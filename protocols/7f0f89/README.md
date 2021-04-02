@@ -9,7 +9,7 @@
 
 
 ## Description
-This protocol transfers a specified volume of developer solution into reservoir cartridges within a custom 216-well plate. The developer solution is aspirated from a Nest 195mL reservoir, then distributed to the 216-well plate 3 wells at a time down the column. Extra developer solution is aspirated to ensure that each cartridge receives adequate distribution. A blow out step at the end of each iteration returns any extra solution back to the Nest reservoir.
+This protocol transfers a specified volume of developer solution into reservoir cartridges within a custom 216-well plate. The developer solution is aspirated from a Nest 195mL reservoir, then distributed to the 216-well plate down by column. Transfers are distributed in chunks of 3 between the reservoir and plate, with a delay and blow out step for viscous liquid considerations. Extra developer solution is aspirated to ensure that each cartridge receives adequate distribution.
 
 
 ---
@@ -41,9 +41,13 @@ Slot 9: Opentrons 96 Tip Rack 300 µL
 </br>
 </br>
 **Using the customizations field (below), set up your protocol.**
+* **Number of Samples**: Specify the number of samples in your protocol run.
 * **Dispense Height Above Cartridge**: Specify the height (mm) above the cartridge the pipette will dispense liquid
 * **Dispense Volume**: Specify the volume (µL) of developer solution dispensed into each cartridge
+* **Dispense Flow Rate**: Specify the rate (µL/sec) at which the pipette will aspirate solution into each cartridge
 * **Dispense Flow Rate**: Specify the rate (µL/sec) at which the pipette will dispense solution into each cartridge
+* **Aspirate Delay Time**: Specify the time to delay after each aspiration (in seconds)
+* **Dispense Delay Time**: Specify the time to delay after each dispense (in seconds)
 * **P300 Single GEN2 Mount**: Specify the mount side for the P300 Single GEN2 pipette
 
 ### Robot
