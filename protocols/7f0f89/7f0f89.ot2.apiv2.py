@@ -1,3 +1,5 @@
+import math
+
 metadata = {
     'protocolName': 'Adding Developer Solution to 216 Well Cartridge Plate',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
@@ -8,10 +10,13 @@ metadata = {
 
 def run(ctx):
 
-    [height_above_cartridge,
-        disp_vol, disp_rate, p300_mount] = get_values(  # noqa: F821
-        "height_above_cartridge", "disp_vol", "disp_rate", "p300_mount")
+    [num_samp, height_above_cartridge, disp_vol, asp_rate, disp_rate,
+     asp_delay_time, disp_delay_time, p300_mount] = get_values(  # noqa: F821
+        "num_samp", "height_above_cartridge", "disp_vol", "asp_rate",
+        "disp_rate", "asp_delay_time", "disp_delay_time", "p300_mount")
 
+    if not 1 <= num_samp <= 216:
+        raise Exception("Enter a sample number between 1 and 216")
     if not 0.1 <= height_above_cartridge <= 10:
         raise Exception("Enter a height between 1 and 10mm")
     if not 1 <= disp_vol <= 85:
@@ -27,14 +32,23 @@ def run(ctx):
                                tip_racks=[tiprack])
 
     # protocol
+    p300.flow_rate.dispense = asp_rate
     p300.flow_rate.dispense = disp_rate
-    chunks = [plate.wells()[i:i+3] for i in range(0, len(plate.wells()), 3)]
+    chunks = [plate.wells()[i:i+3] for i in range(
+              0, len(plate.wells()), 3)][:math.ceil(num_samp/3)]
+    if num_samp % 3 == 1:
+        chunks[-1].pop()
+        chunks[-1].pop()
+    elif num_samp % 3 == 2:
+        chunks[-1].pop()
+
     p300.pick_up_tip()
     for chunk in chunks:
-        p300.distribute(disp_vol, reservoir.wells()[0],
-                        [well.top(height_above_cartridge)
-                        for well in chunk],
-                        new_tip='never',
-                        blow_out=True,
-                        blowout_location='source well')
+        p300.aspirate(disp_vol*3+20, reservoir.wells()[0])  # aspirate extra
+        ctx.delay(seconds=asp_delay_time)
+        for well in chunk:
+            p300.dispense(disp_vol, well.top(height_above_cartridge))
+            ctx.delay(seconds=disp_delay_time)
+        p300.dispense(20, reservoir.wells()[0])
+    p300.blow_out(reservoir.wells()[0])
     p300.drop_tip()
