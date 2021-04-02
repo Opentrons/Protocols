@@ -25,7 +25,7 @@ def run(ctx):
         ctx.load_labware('opentrons_96_tiprack_20ul', slot)
         for slot in ['1', '2', '3', '6']
     ]
-    tempdeck = ctx.load_module('tempdeck', '4')
+    tempdeck = ctx.load_module('temperature module gen2', '4')
     tempdeck.set_temperature(4)
     tempblock = tempdeck.load_labware(
         'opentrons_24_aluminumblock_nest_1.5ml_screwcap')
