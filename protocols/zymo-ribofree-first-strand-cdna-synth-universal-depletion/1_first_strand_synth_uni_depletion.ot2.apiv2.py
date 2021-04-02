@@ -28,7 +28,7 @@ def run(ctx):
         ctx.load_labware('opentrons_96_tiprack_20ul', slot)
         for slot in ['1', '2', '3']
     ]
-    tempdeck = ctx.load_module('tempdeck', '4')
+    tempdeck = ctx.load_module('temperature module gen2', '4')
     tempdeck.set_temperature(4)
     tempblock = tempdeck.load_labware(
         'opentrons_24_aluminumblock_nest_1.5ml_screwcap')
@@ -139,7 +139,7 @@ def run(ctx):
             pick_up(p20)
             for well in col:
                 p20.transfer(
-                    vol_per_well, d_reagent, well, air_gap=2, new_tip='never')
+                    vol_per_well, d_reagent, well, air_gap=1, new_tip='never')
                 p20.blow_out(well.top(-5))
                 p20.touch_tip(well)
             p20.drop_tip()

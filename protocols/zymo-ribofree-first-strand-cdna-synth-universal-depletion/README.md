@@ -24,12 +24,12 @@ Links:
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
-* [Opentrons thermocycler module](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module) with [NEST 96-well PCR plate, full skirt](https://shop.opentrons.com/collections/verified-labware/products/nest-0-1-ml-96-well-pcr-plate-full-skirt)
-* [Opentrons temperature module](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck) with [4x6 aluminum block](https://shop.opentrons.com/collections/hardware-modules/products/aluminum-block-set) for [NEST 1.5ml screwcap reagent tubes](https://shop.opentrons.com/collections/verified-consumables/products/nest-1-5-ml-sample-vial)
+* [Opentrons Thermocycler Module](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module) with [NEST 96-well PCR plate, full skirt](https://shop.opentrons.com/collections/verified-labware/products/nest-0-1-ml-96-well-pcr-plate-full-skirt)
+* [Opentrons Temperature Module GEN2](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck) with [4x6 aluminum block](https://shop.opentrons.com/collections/hardware-modules/products/aluminum-block-set) for [NEST 1.5ml screwcap reagent tubes](https://shop.opentrons.com/collections/verified-consumables/products/nest-1-5-ml-sample-vial)
 * [NEST 12-channel reservoir 15ml](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
 * [Opentrons P20 GEN2 single-channel pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette)
-* [Opentrons P50 GEN1 multi-channel pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette?variant=5984202457117)
-* [Opentrons 20µl and 50/300µl tipracks](https://shop.opentrons.com/collections/opentrons-tips)
+* [Opentrons P20 GEN2 multi-channel pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)
+* [Opentrons 20µl tipracks](https://shop.opentrons.com/collections/opentrons-tips)
 
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)

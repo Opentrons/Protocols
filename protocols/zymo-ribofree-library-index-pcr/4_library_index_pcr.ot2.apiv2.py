@@ -14,9 +14,9 @@ PCR (robot 1)',
 def run(ctx):
 
     [number_of_samples, rna_input, p20_mount,
-        p50_mount] = get_values(  # noqa: F821
-            'number_of_samples', 'rna_input', 'p20_mount', 'p50_mount')
-    # [number_of_samples, rna_input, p20_mount, p50_mount] = [
+        m20_mount] = get_values(  # noqa: F821
+            'number_of_samples', 'rna_input', 'p20_mount', 'm20_mount')
+    # [number_of_samples, rna_input, p20_mount, m20_mount] = [
     #     96, '> 1µg', 'right', 'left']
 
     # load modules and labware
@@ -24,11 +24,11 @@ def run(ctx):
     tc.set_lid_temperature(100)
     tc.set_block_temperature(4)
     tc_plate = tc.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
-    racks20 = [
+    racks20s = [
         ctx.load_labware('opentrons_96_tiprack_20ul', slot)
         for slot in ['1', '2']
     ]
-    tempdeck = ctx.load_module('tempdeck', '4')
+    tempdeck = ctx.load_module('temperature module gen2', '4')
     tempdeck.set_temperature(4)
     tempblock = tempdeck.load_labware(
         'opentrons_24_aluminumblock_nest_1.5ml_screwcap')
@@ -37,19 +37,19 @@ def run(ctx):
     index_plate = ctx.load_labware(
         'opentrons_96_aluminumblock_nest_wellplate_100ul',
         '9', 'UDI primer plate')
-    racks50 = [
-        ctx.load_labware('opentrons_96_tiprack_300ul', slot)
+    racks20m = [
+        ctx.load_labware('opentrons_96_tiprack_20ul', slot)
         for slot in ['3', '6']
     ]
 
     # pipettes
-    if p20_mount == p50_mount:
+    if p20_mount == m20_mount:
         raise Exception('Pipette mounts cannot match.')
-    p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tip_racks=racks20)
+    p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tip_racks=racks20s)
     p20.flow_rate.aspirate = 10
     p20.flow_rate.dispense = 20
     p20.flow_rate.blow_out = 30
-    m50 = ctx.load_instrument('p50_multi', p50_mount, tip_racks=racks50)
+    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=racks20m)
 
     # file_path = 'protocols/tip_track.json'
     if not ctx.is_simulating():
@@ -57,40 +57,40 @@ def run(ctx):
         if os.path.isfile(file_path):
             with open(file_path) as json_file:
                 data = json.load(json_file)
-                if 'tips20' in data:
-                    tip20_count = data['tips20'] % 96
+                if 'tips20s' in data:
+                    tip20s_count = data['tips20s'] % 96
                 else:
-                    tip20_count = 0
-                if 'tips50' in data:
-                    tip50_count = data['tips50'] % 96
+                    tip20s_count = 0
+                if 'tips20m' in data:
+                    tip20m_count = data['tips20m'] % 12
                 else:
-                    tip50_count = 0
+                    tip20m_count = 0
     else:
-        tip20_count = 0
-        tip50_count = 0
+        tip20s_count = 0
+        tip20m_count = 0
 
-    all_tips20 = [tip for rack in racks20 for tip in rack.wells()]
-    all_tips50 = [tip for rack in racks50 for tip in rack.rows()[0]]
-    tip20_max = len(all_tips20)
-    tip50_max = len(all_tips50)
+    all_tips20s = [tip for rack in racks20s for tip in rack.wells()]
+    all_tips20m = [tip for rack in racks20m for tip in rack.rows()[0]]
+    tip20s_max = len(all_tips20s)
+    tip20m_max = len(all_tips20m)
 
     def pick_up(pip):
-        nonlocal tip20_count
-        nonlocal tip50_count
+        nonlocal tip20s_count
+        nonlocal tip20m_count
         if pip == p20:
-            if tip20_count == tip20_max:
+            if tip20s_count == tip20s_max:
                 ctx.pause('Replace tipracks before resuming.')
-                tip20_count = 0
-                [rack.reset() for rack in racks20]
-            pip.pick_up_tip(all_tips20[tip20_count])
-            tip20_count += 1
+                tip20s_count = 0
+                [rack.reset() for rack in racks20s]
+            pip.pick_up_tip(all_tips20s[tip20s_count])
+            tip20s_count += 1
         else:
-            if tip50_count == tip50_max:
+            if tip20m_count == tip20m_max:
                 ctx.pause('Replace tipracks before resuming.')
-                tip50_count = 0
-                [rack.reset() for rack in racks50]
-            pip.pick_up_tip(all_tips50[tip50_count])
-            tip50_count += 1
+                tip20m_count = 0
+                [rack.reset() for rack in racks20m]
+            pip.pick_up_tip(all_tips20m[tip20m_count])
+            tip20m_count += 1
 
     # reagents and sample setup
     if number_of_samples > 96 or number_of_samples < 1:
@@ -107,11 +107,11 @@ def run(ctx):
 
     # transfer UDI primers
     for m in samples_multi:
-        pick_up(m50)
-        m50.transfer(
-            5, udi_primers, m, mix_after=(3, 15), air_gap=5, new_tip='never')
-        m50.blow_out(m.top(-2))
-        m50.drop_tip()
+        pick_up(m20)
+        m20.transfer(
+            5, udi_primers, m, mix_after=(3, 15), air_gap=1, new_tip='never')
+        m20.blow_out(m.top(-2))
+        m20.drop_tip()
 
     # transfer taq premix
     for s in samples:
@@ -153,11 +153,11 @@ def run(ctx):
 
     # transfer elution buffer
     for m in samples_multi:
-        pick_up(m50)
-        m50.transfer(50, dna_eb, m, new_tip='never')
-        m50.mix(5, 40, m)
-        m50.blow_out(m.top(-2))
-        m50.drop_tip()
+        pick_up(m20)
+        m20.transfer(50, dna_eb, m.top(-2), new_tip='never')
+        m20.mix(5, 15, m)
+        m20.blow_out(m.top(-2))
+        m20.drop_tip()
 
     ctx.comment('Carefully remove sample plate from thermocycler and proceed \
 with cleanup.')

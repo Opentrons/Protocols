@@ -24,11 +24,11 @@ Links:
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
-* [Opentrons temperature module](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
-* [Opentrons magnetic module](https://shop.opentrons.com/collections/hardware-modules/products/magdeck) for [NEST 96-well PCR plate, full skirt](https://shop.opentrons.com/collections/verified-labware/products/nest-0-1-ml-96-well-pcr-plate-full-skirt)
+* [Opentrons Temperature Module GEN2](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
+* [Opentrons Magnetic Module GEN2](https://shop.opentrons.com/collections/hardware-modules/products/magdeck) for [NEST 96-well PCR plate, full skirt](https://shop.opentrons.com/collections/verified-labware/products/nest-0-1-ml-96-well-pcr-plate-full-skirt)
 * [NEST 12-channel reservoir 15ml](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
-* [Opentrons P10 and P300 GEN1 multi-channel pipettes](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)
-* [Opentrons 10µl and 50/300µl tipracks](https://shop.opentrons.com/collections/opentrons-tips)
+* [Opentrons P20 and P300 GEN2 multi-channel pipettes](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)
+* [Opentrons 20µl and 50/300µl tipracks](https://shop.opentrons.com/collections/opentrons-tips)
 
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
