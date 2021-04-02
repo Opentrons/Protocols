@@ -212,6 +212,7 @@ of the Nest 15mL reservoir on Slot 11.\n''')
     for i, well in enumerate(pcr_plate.wells()[:num_samp]):
         p20.aspirate(20, mastermix_tubes.wells()[0 if i < 48 else 1])
         p20.dispense(20, well.top())
+        p20.blow_out()
     p20.drop_tip()
 
     ctx.comment('\n--------- ADDING ELUATE TO PCR PLATE ---------\n')
