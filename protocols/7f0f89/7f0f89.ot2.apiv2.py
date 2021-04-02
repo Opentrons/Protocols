@@ -1,8 +1,3 @@
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"num_samp": 1, "height_above_cartridge":2,"disp_vol":80, "asp_delay_time": 2,"disp_delay_time":2,"asp_rate":20,"disp_rate":20,"p300_mount":"right"}""")
-    return [_all_values[n] for n in names]
-
 import math
 
 metadata = {
