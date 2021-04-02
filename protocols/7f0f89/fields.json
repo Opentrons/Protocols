@@ -1,5 +1,11 @@
 [
   {
+    "type": "int",
+    "label": "Number of samples",
+    "name": "num_samp",
+    "default": 216
+  },
+  {
     "type": "float",
     "label": "Dispense Height Above Cartridge (0.1-10mm)",
     "name": "height_above_cartridge",
