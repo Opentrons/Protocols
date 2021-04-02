@@ -27,8 +27,8 @@
   },
   {
     "type": "dropDown",
-    "label": "P50 GEN1 multi-channel mount",
-    "name": "p50_mount",
+    "label": "P20 GEN2 multi-channel mount",
+    "name": "m20_mount",
     "options": [
       { "label": "left", "value": "left" },
       { "label": "right", "value": "right" }

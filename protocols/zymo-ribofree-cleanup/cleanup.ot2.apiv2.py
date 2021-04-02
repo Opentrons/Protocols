@@ -27,7 +27,7 @@ def run(ctx):
         'nest_96_wellplate_100ul_pcr_full_skirt', '2', 'elution PCR plate')
     reagent_res = ctx.load_labware(
         'nest_12_reservoir_15ml', '3', 'reagent reservoir')
-    magdeck = ctx.load_module('magdeck', '6')
+    magdeck = ctx.load_module('magnetic module gen2', '6')
     mag_plate = magdeck.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
     racks300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
@@ -97,7 +97,7 @@ def run(ctx):
         start_vol = 75
         bead_vol = 150
         elution_vol = 10
-        tempdeck = ctx.load_module('tempdeck', '7')
+        tempdeck = ctx.load_module('temperature module gen2', '7')
         # tempplate = tempdeck.load_labware(
         #     'opentrons_96_aluminumblock_nest_wellplate_100ul')
         inc_temp = 95
@@ -142,7 +142,7 @@ stored at ≤ 4°C overnight or ≤ -20°C for long-term storage.'
             bead_vol,
             beads,
             m,
-            air_gap=30,
+            air_gap=20,
             mix_after=(5, bead_vol),
             new_tip='never'
         )
@@ -157,9 +157,9 @@ stored at ≤ 4°C overnight or ≤ -20°C for long-term storage.'
     for i, m in enumerate(mag_samples):
         pick_up(m300)
         m300.aspirate(supernatant_vol*1.1, m)
-        m300.air_gap(30)
+        m300.air_gap(20)
         m300.dispense(supernatant_vol*1.1+30, waste)
-        m300.air_gap(30)
+        m300.air_gap(20)
         # m300.transfer(
         #     supernatant_vol*1.1, m, waste[i//6], air_gap=30, new_tip='never')
         m300.drop_tip()
@@ -173,24 +173,20 @@ stored at ≤ 4°C overnight or ≤ -20°C for long-term storage.'
                 200,
                 wash_buffer[chan],
                 m.top(),
-                air_gap=30,
+                air_gap=20,
                 new_tip='never'
             )
         for i, m in enumerate(mag_samples):
             if not m300.hw_pipette['has_tip']:
                 pick_up(m300)
             chan = (i+wash*12)//8
-            # m300.transfer(
-            #     210,
-            #     m,
-            #     waste[chan+2],
-            #     air_gap=30,
-            #     new_tip='never'
-            # )
+            side = -1 if i % 2 == 0 else 1
+            loc = m.bottom().move(Point(x=side*m.diameter/2*0.9, z=0.5))
+            m300.move_to(m.center())
             m300.aspirate(supernatant_vol*1.1, m)
-            m300.air_gap(30)
+            m300.air_gap(20)
             m300.dispense(supernatant_vol*1.1+30, waste)
-            m300.air_gap(30)
+            m300.air_gap(20)
             m300.drop_tip()
 
     magdeck.disengage()
@@ -199,7 +195,7 @@ stored at ≤ 4°C overnight or ≤ -20°C for long-term storage.'
     # resuspend in elution buffer
     for i, m in enumerate(mag_samples):
         side = 1 if i % 2 == 0 else -1
-        loc = m.bottom().move(Point(x=side*m.diameter/2*0.9, y=0, z=2))
+        loc = m.bottom().move(Point(x=side*m.diameter/2*0.9, y=0, z=0.5))
         pick_up(m20)
         if elution_vol > 10:
             pre_vol = elution_vol - 10
@@ -230,7 +226,10 @@ on temperature module.')
     # transfer elution to new plate
     for m, e in zip(mag_samples, elution_samples):
         pick_up(m20)
-        m20.transfer(elution_vol, m, e, new_tip='never')
+        side = -1 if i % 2 == 0 else 1
+        loc = m.bottom().move(Point(x=side*m.diameter/2*0.9, z=0.5))
+        m20.move_to(m.center())
+        m20.transfer(elution_vol, loc, e, new_tip='never')
         m20.blow_out(e.top(-2))
         m20.air_gap(5)
         m20.drop_tip()
