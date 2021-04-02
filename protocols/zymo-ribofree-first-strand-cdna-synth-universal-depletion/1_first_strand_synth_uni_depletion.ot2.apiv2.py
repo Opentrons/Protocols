@@ -13,9 +13,9 @@ cDNA Synthesis and RiboFreeTM Universal Depletion (robot 1)',
 def run(ctx):
 
     [number_of_samples, starting_vol, rna_input, p20_mount,
-        p50_mount] = get_values(  # noqa: F821
-            'number_of_samples', 'starting_vol', 'rna_input', 'p20_mount',
-            'p50_mount')
+     m20_mount] = get_values(  # noqa: F821
+     'number_of_samples', 'starting_vol', 'rna_input', 'p20_mount',
+     'm20_mount')
     # [number_of_samples, starting_vol, rna_input, p20_mount, p50_mount] = [
     #     96, 5, '> 1µg', 'right', 'left']
 
@@ -24,26 +24,26 @@ def run(ctx):
     tc.set_lid_temperature(100)
     tc.set_block_temperature(4)
     tc_plate = tc.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
-    racks20 = [
+    racks20s = [
         ctx.load_labware('opentrons_96_tiprack_20ul', slot)
         for slot in ['1', '2', '3']
     ]
-    tempdeck = ctx.load_module('tempdeck', '4')
+    tempdeck = ctx.load_module('temperature module gen2', '4')
     tempdeck.set_temperature(4)
     tempblock = tempdeck.load_labware(
         'opentrons_24_aluminumblock_nest_1.5ml_screwcap')
     reagent_res = ctx.load_labware(
         'nest_12_reservoir_15ml', '5', 'reagent reservoir')
-    racks50 = [ctx.load_labware('opentrons_96_tiprack_300ul', '6')]
+    racks20m = [ctx.load_labware('opentrons_96_tiprack_20ul', '6')]
 
     # pipettes
-    if p20_mount == p50_mount:
+    if p20_mount == m20_mount:
         raise Exception('Pipette mounts cannot match.')
-    p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tip_racks=racks20)
+    p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tip_racks=racks20s)
     p20.flow_rate.aspirate = 10
     p20.flow_rate.dispense = 20
     p20.flow_rate.blow_out = 30
-    m50 = ctx.load_instrument('p50_multi', p50_mount, tip_racks=racks50)
+    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=racks20m)
 
     # reagents and sample setup
     if number_of_samples > 96 or number_of_samples < 1:
@@ -54,30 +54,30 @@ def run(ctx):
     d1, d2, d3 = tempblock.rows()[1][:3]
     etoh = reagent_res.wells()[0]
 
-    tip20_count = 0
-    all_tips20 = [tip for rack in racks20 for tip in rack.wells()]
-    all_tips50 = [tip for rack in racks50 for tip in rack.rows()[0]]
-    tip50_count = 0
-    tip50_max = len(racks50*12)
-    tip20_max = len(racks20*96)
+    tip20s_count = 0
+    all_tips20s = [tip for rack in racks20s for tip in rack.wells()]
+    all_tips20m = [tip for rack in racks20m for tip in rack.rows()[0]]
+    tip20m_count = 0
+    tip20m_max = len(racks20m*12)
+    tip20s_max = len(racks20s*96)
 
     def pick_up(pip):
-        nonlocal tip20_count
-        nonlocal tip50_count
+        nonlocal tip20s_count
+        nonlocal tip20m_count
         if pip == p20:
-            if tip20_count == tip20_max:
+            if tip20s_count == tip20s_max:
                 ctx.pause('Replace tipracks before resuming.')
-                tip20_count = 0
-                [rack.reset() for rack in racks20]
-            pip.pick_up_tip(all_tips20[tip20_count])
-            tip20_count += 1
+                tip20s_count = 0
+                [rack.reset() for rack in racks20s]
+            pip.pick_up_tip(all_tips20s[tip20s_count])
+            tip20s_count += 1
         else:
-            if tip50_count == tip50_max:
+            if tip20m_count == tip20m_max:
                 ctx.pause('Replace tipracks before resuming.')
-                tip50_count = 0
-                [rack.reset() for rack in racks50]
-            pip.pick_up_tip(all_tips50[tip50_count])
-            tip50_count += 1
+                tip20m_count = 0
+                [rack.reset() for rack in racks20m]
+            pip.pick_up_tip(all_tips20m[tip20m_count])
+            tip20m_count += 1
 
     """ Section 1.1: First-Strand cDNA Synthesis (Yellow Caps) """
     if tc.lid_position == 'closed':
@@ -139,12 +139,12 @@ def run(ctx):
             pick_up(p20)
             for well in col:
                 p20.transfer(
-                    vol_per_well, d_reagent, well, air_gap=2, new_tip='never')
+                    vol_per_well, d_reagent, well, air_gap=1, new_tip='never')
                 p20.blow_out(well.top(-5))
                 p20.touch_tip(well)
             p20.drop_tip()
         d1, d2, d3 = predispense_plate.rows()[0][:3]
-        d_pip = m50
+        d_pip = m20
         d_samples = samples_multi
     else:
         d_pip = p20
@@ -206,12 +206,13 @@ def run(ctx):
 
     # transfer EtOH
     for m in samples_multi:
-        pick_up(m50)
-        m50.transfer(
-            25, etoh, m, mix_after=(5, 40), air_gap=10, new_tip='never')
-        m50.blow_out(m.top(-2))
-        m50.air_gap(10)
-        m50.drop_tip()
+        pick_up(m20)
+        m20.transfer(
+            25, etoh, m.top(-2), air_gap=2, new_tip='never')
+        m20.mix(5, 40, m),
+        m20.blow_out(m.top(-2))
+        m20.air_gap(2)
+        m20.drop_tip()
 
     ctx.comment('Carefully remove sample plate from thermocycler and proceed \
 with cleanup.')
@@ -221,8 +222,8 @@ with cleanup.')
         file_path = '/data/csv/tip_track.json'
         # file_path = '/protocols/tip_track.json'
         data = {
-            'tips20': tip20_count,
-            'tips50': tip50_count
+            'tips20s': tip20s_count,
+            'tips20m': tip20m_count
         }
         with open(file_path, 'w') as outfile:
             json.dump(data, outfile)
