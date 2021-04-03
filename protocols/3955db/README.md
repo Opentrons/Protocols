@@ -13,15 +13,10 @@
 ## Description
 This flexible protocol automates the pooling of samples in 12mL tubes and the transfer of pooled samples to Visby device for rapid Covid testing.</br>
 </br>
-Explanation of adjustable parameters below:
-* `P1000 Single GEN2 Mount`: Select which mount (left, right) the pipette is attached to.
-* `Total Volume of Pooled Samples`: Specify the volume (in µL) that should be transferred to the Visby. This volume will be divided by the `Number of Samples per Pool` to determine how much volume from each individual sample when creating the pools. Example: if this is set to 500 and there are 5 samples per pool, 100µL will be transferred from each individual sample to the pooled sample tube, then 500µL of the pooled volume will be added to the Visby.
-* `Number of Visbys`: Select the number of Visbys (1-6).
-* `Number of Samples per Pool`: Select the number of samples to pool into one tube (2-5).
 
 ---
-**Protocol Steps**</br>
 </br>
+**Protocol Steps**</br>
 1. The protocol begins by pooling samples (1-5) from Tube Racks in slots 2 and 3 into tubes in slot 5.
 2. Once all samples are pooled appropriately, *total volume of pooled samples* will be added from pooled sample to Visby.
 
@@ -39,7 +34,17 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
+</br>
+**Deck Layout**</br>
+</br>
 ![full deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/3955db/Visby+OT2+Maximum.png)
+</br>
+</br>
+Explanation of adjustable parameters below:
+* `P1000 Single GEN2 Mount`: Select which mount (left, right) the pipette is attached to.
+* `Total Volume of Pooled Samples`: Specify the volume (in µL) that should be transferred to the Visby. This volume will be divided by the `Number of Samples per Pool` to determine how much volume from each individual sample when creating the pools. Example: if this is set to 500 and there are 5 samples per pool, 100µL will be transferred from each individual sample to the pooled sample tube, then 500µL of the pooled volume will be added to the Visby.
+* `Number of Visbys`: Select the number of Visbys (1-6).
+* `Number of Samples per Pool`: Select the number of samples to pool into one tube (2-5).
 
 
 ### Robot
