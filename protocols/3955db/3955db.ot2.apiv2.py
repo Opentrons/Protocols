@@ -32,7 +32,6 @@ def run(protocol):
         iSamps += protocol.load_labware(
             'basisdx_15_tuberack_12000ul', '3').rows()
     gap = 50
-    print(iSamps)
 
     protocol.comment(f'\nPooling Samples: {pvol}uL-->{poolVol}uL\n')
     for samps, pool in zip(iSamps, pooledSamps):
