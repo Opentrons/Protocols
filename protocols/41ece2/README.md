@@ -17,7 +17,9 @@ After the media is added, the p10-multi channel pipette is used for the dilution
 Finally, the p300-multi will be used again, this time transferring 100µL from the reservoir in slot 11 to the three dilution plates. These transfers will follow the same pattern for tip usage as the earlier transfer with the p300-multi, but instead use the tips from column 2.</br>
 </br>
 **Modifications**: In this modified version of the protocol, 100µL of media is added to columns 2-12 of the first two plates and 90µL of media is added to columns 2-12 of the last plate. When performing the dilution, only columns 2-11 are accessed, leaving column 1 completely empty and column 12 without drug. Finally, there is an optional parameter, *Add Cells + Media?*, that if selected, will add 100µL from the reservoir to columns 2-12 of the three dilution plates, 2mm above the dispense height of the original protocol, otherwise, the protocol will end after the dilution.
-
+</br>
+</br>
+**Update**: A new parameter - *Number of Dilution Plates* - has been added that will give the user the ability to choose 3 or 4 total dilution plates. This change also includes a change to the location of the labware.</br>
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
@@ -36,17 +38,23 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 
 **Deck Layout**</br>
 </br>
-**Slot 1**: [Corning 96-Well Plate](https://labware.opentrons.com/corning_96_wellplate_360ul_flat?category=wellPlate) (Drug Dilution 0.1µM)</br>
+**Slot 1**: [Corning 96-Well Plate](https://labware.opentrons.com/corning_96_wellplate_360ul_flat?category=wellPlate) (Drug Dilution 0.01µM), if using</br>
 </br>
-**Slot 2**: [Opentrons 300µl Pipette tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)</br>
+**Slot 2**: [Axygen 1-Well Reservoir, 90mL](https://labware.opentrons.com/axygen_1_reservoir_90ml/) (containing media, added to columns 2-12 of dilution plates)</br>
 </br>
-**Slot 4**: [Corning 96-Well Plate](https://labware.opentrons.com/corning_96_wellplate_360ul_flat?category=wellPlate) (Drug Dilution 1µM)</br>
+**Slot 3**: [Opentrons 300µl Pipette tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)</br>
 </br>
-**Slot 5**: [Opentrons 10µL Pipette Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-20ul-filter-tips)</br>
+**Slot 4**: [Corning 96-Well Plate](https://labware.opentrons.com/corning_96_wellplate_360ul_flat?category=wellPlate) (Drug Dilution 0.1µM)</br>
 </br>
-**Slot 7**: [Corning 96-Well Plate](https://labware.opentrons.com/corning_96_wellplate_360ul_flat?category=wellPlate) (Drug Dilution 10µM)</br>
+**Slot 5**: [Axygen 1-Well Reservoir, 90mL](https://labware.opentrons.com/axygen_1_reservoir_90ml/) (containing cells, added to columns 2-12 of dilution plate), if using</br>
 </br>
-**Slot 10**: [Corning 96-Well Plate](https://labware.opentrons.com/corning_96_wellplate_360ul_flat?category=wellPlate) (Drug Stock)</br>
+**Slot 6**: [Opentrons 10µL Pipette Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-20ul-filter-tips)</br>
+</br>
+**Slot 7**: [Corning 96-Well Plate](https://labware.opentrons.com/corning_96_wellplate_360ul_flat?category=wellPlate) (Drug Dilution 1µM)</br>
+</br>
+**Slot 10**: [Corning 96-Well Plate](https://labware.opentrons.com/corning_96_wellplate_360ul_flat?category=wellPlate) (Drug Dilution 10µM)</br>
+</br>
+**Slot 11**: [Corning 96-Well Plate](https://labware.opentrons.com/corning_96_wellplate_360ul_flat?category=wellPlate) (Drug Stock)</br>
 </br>
 
 ### Robot
