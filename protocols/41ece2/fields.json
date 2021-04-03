@@ -25,5 +25,14 @@
       {"label": "Yes", "value": 1},
       {"label": "No", "value": 0}
     ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Number of Dilution Plates",
+    "name": "np",
+    "options": [
+      {"label": "3", "value": 3},
+      {"label": "4", "value": 4}
+    ]
   }
 ]
