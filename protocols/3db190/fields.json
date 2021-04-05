@@ -1,35 +1,26 @@
 [
-    {
-      "type": "int",
-      "label": "Total PCR samples",
-      "name": "total_samples",
-      "default": 1
-    },
-    {
-        "type": "dropDown",
-        "label": "P20-single GEN2 mount",
-        "name": "p20_mount",
-        "options": [
-          {"label": "right", "value": "right"},
-          {"label": "left", "value": "left"}
-        ]
-    },
-    {
-        "type": "dropDown",
-        "label": "P1000-single GEN2 mount",
-        "name": "p1000_mount",
-        "options": [
-          {"label": "left", "value": "left"},
-          {"label": "right", "value": "right"}
-        ]
-    },
-    {
+  {
+    "type": "int",
+    "label": "Total PCR samples (Max: 96)",
+    "name": "total_samples",
+    "default": 1
+  },
+  {
       "type": "dropDown",
-      "label": "Home after each tip drop",
-      "name": "home",
+      "label": "P20-multi GEN2 mount",
+      "name": "p20_mount",
       "options": [
-        {"label": "False", "value": "False"},
-        {"label": "True", "value": "True"}
+        {"label": "right", "value": "right"},
+        {"label": "left", "value": "left"}
+      ]
+  },
+  {
+      "type": "dropDown",
+      "label": "P300-multi GEN2 mount",
+      "name": "p300_mount",
+      "options": [
+        {"label": "left", "value": "left"},
+        {"label": "right", "value": "right"}
       ]
   }
-  ]
+]
