@@ -1,7 +1,7 @@
 import math
 
 metadata = {
-    'protocolName': 'PCR/qPCR Prep',
+    'protocolName': 'Lyra Direct SARS-CoV Assay Sample Prep',
     'author': 'Sakib <sakib.hossain@opentrons.com>',
     'description': 'Custom Protocol Request',
     'apiLevel': '2.9'
