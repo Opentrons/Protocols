@@ -11,12 +11,14 @@ def run(ctx):
     # Load Labware
     plate1 = ctx.load_labware('corning_6_wellplate_16.8ml_flat', 1, 'Plate 1')
     plate2 = ctx.load_labware('corning_24_wellplate_3.4ml_flat', 2, 'Plate 2')
-    trash_plate = ctx.load_labware('agilent_1_reservoir_290ml', 3, 'Trash Plate')
+    trash_plate = ctx.load_labware('agilent_1_reservoir_290ml', 3,
+                                   'Trash Plate')
     tiprack = ctx.load_labware('opentrons_96_tiprack_300ul', 4)
     p300 = ctx.load_instrument('p300_single_gen2', 'left', tip_racks=[tiprack])
 
     # Custom Distribute Function
-    def distribute_custom(pipette, vol, source, dest, overage, blowout, air_gap):
+    def distribute_custom(pipette, vol, source, dest, overage,
+                          blowout, air_gap):
 
         use_vol = pipette.max_volume - overage
         num_distribute = use_vol // vol
@@ -54,4 +56,5 @@ def run(ctx):
             pipette.dispense(pipette.max_volume, blowout)
         pipette.drop_tip()
 
-    distribute_custom(p300, 50, plate1['A1'], plate2.rows_by_name()['A'], 30, trash_plate['A1'], 10)
+    distribute_custom(p300, 50, plate1['A1'], plate2.rows_by_name()['A'], 30,
+                      trash_plate['A1'], 10)
