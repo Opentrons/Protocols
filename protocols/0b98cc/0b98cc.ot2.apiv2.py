@@ -54,7 +54,6 @@ def run(ctx):
 
     analysis_dish_final_cols = [analysis_dish[i]['A12'] for i in range(4)]
 
-
     ### Add Media to Dilution Plates ###
 
     # Get columns for addition of media based on sample columns number
@@ -72,6 +71,29 @@ def run(ctx):
     ### Dilute Samples and Transfer to Analysis Dish ###
 
     well_counter = 0
+
+    def dilution(disp_rate, message):
+        nonlocal well_counter
+        pick_up(m300)
+        m300.flow_rate.dispense = disp_rate
+        m300.mix(3, 150, dilution_dish_wells[well_counter])
+        m300.aspirate(sample_trans_vol, dilution_dish_wells[well_counter].bottom(z=2))
+        m300.air_gap(20)
+        well_counter += 1
+        m300.dispense(sample_trans_vol+20, dilution_dish_wells[well_counter].bottom(z=2.5))
+        m300.touch_tip(v_offset=13)
+        m300.mix(10, 200)
+        m300.touch_tip(v_offset=13)
+        m300.flow_rate.dispense = 50
+        m300.aspirate(100, dilution_dish_wells[well_counter].bottom(z=4))
+        m300.air_gap(20)
+        m300.dispense(100+20, analysis_dish_wells[well_counter].bottom(z=5.5))
+        m300.mix(2, 100)
+        m300.touch_tip(v_offset=6.5)
+        m300.air_gap(20)
+        m300.drop_tip()
+        ctx.comment(message)
+
     for sample in sample_wells:
         if not m300.has_tip:
             pick_up(m300)
@@ -83,7 +105,7 @@ def run(ctx):
         m300.mix(2, 50, sample)
         m300.aspirate(sample_trans_vol, sample.bottom(z=2))
         m300.air_gap(20)
-        m300.dispense(sample_trans_vol, dilution_dish_wells[well_counter].bottom(z=2.5))
+        m300.dispense(sample_trans_vol+20, dilution_dish_wells[well_counter].bottom(z=2.5))
         m300.blow_out()
         m300.touch_tip(v_offset=13)
         ctx.comment("Undiluted Sample Transferred to First Dilution Block!")
@@ -103,66 +125,14 @@ def run(ctx):
         ctx.comment("First Dilution and Transfer Complete!")
 
         # Perform second dilution (10^-2) and transfer to analysis dish
-        pick_up(m300)
-        m300.flow_rate.dispense = 200
-        m300.mix(3, 150, dilution_dish_wells[well_counter])
-        m300.aspirate(sample_trans_vol, dilution_dish_wells[well_counter].bottom(z=2))
-        m300.air_gap(20)
-        well_counter += 1
-        m300.dispense(sample_trans_vol+20, dilution_dish_wells[well_counter].bottom(z=2.5))
-        m300.mix(10, 200)
-        m300.touch_tip(v_offset=13)
-        m300.flow_rate.dispense = 50
-        m300.aspirate(100, dilution_dish_wells[well_counter].bottom(z=4))
-        m300.air_gap(20)
-        m300.dispense(100+20, analysis_dish_wells[well_counter].bottom(z=5.5))
-        m300.mix(2, 100)
-        m300.touch_tip(v_offset=6.5)
-        m300.air_gap(20)
-        m300.drop_tip()
-        ctx.comment("Second Dilution and Transfer Complete!")
+        dilution(200, "Second Dilution and Transfer Complete!")
 
         # Perform third dilution (10^-3) and transfer to analysis dish
-        m300.flow_rate.aspirate = 94
-        pick_up(m300)
-        m300.mix(3, 150, dilution_dish_wells[well_counter])
-        m300.aspirate(sample_trans_vol, dilution_dish_wells[well_counter].bottom(z=2))
-        m300.air_gap(20)
-        well_counter += 1
-        m300.dispense(sample_trans_vol+20, dilution_dish_wells[well_counter].bottom(z=2.5))
-        m300.touch_tip(v_offset=13)
-        m300.mix(10, 200)
-        m300.touch_tip(v_offset=13)
-        m300.flow_rate.dispense = 50
-        m300.aspirate(100, dilution_dish_wells[well_counter].bottom(z=4))
-        m300.air_gap(20)
-        m300.dispense(100+20, analysis_dish_wells[well_counter].bottom(z=5.5))
-        m300.mix(2, 100)
-        m300.touch_tip(v_offset=6.5)
-        m300.air_gap(20)
-        m300.drop_tip()
-        ctx.comment("Third Dilution and Transfer Complete!")
+        dilution(94, "Third Dilution and Transfer Complete!")
 
         # Perform fourth dilution (10^-4) and transfer to analysis dish
-        m300.flow_rate.aspirate = 94
-        pick_up(m300)
-        m300.mix(3, 150, dilution_dish_wells[well_counter])
-        m300.aspirate(sample_trans_vol, dilution_dish_wells[well_counter].bottom(z=2))
-        m300.air_gap(20)
-        well_counter += 1
-        m300.dispense(sample_trans_vol+20, dilution_dish_wells[well_counter].bottom(z=2.5))
-        m300.touch_tip(v_offset=13)
-        m300.mix(10, 200)
-        m300.touch_tip(v_offset=13)
-        m300.flow_rate.dispense = 50
-        m300.aspirate(100, dilution_dish_wells[well_counter].bottom(z=4))
-        m300.air_gap(20)
-        m300.dispense(100+20, analysis_dish_wells[well_counter].bottom(z=5.5))
-        m300.mix(2, 100)
-        m300.touch_tip(v_offset=6.5)
-        m300.air_gap(20)
-        m300.drop_tip()
-        ctx.comment("Fourth Dilution and Transfer Complete!")
+        dilution(94, "Fourth Dilution and Transfer Complete!")
 
+        # Check if Analysis Dish is complete and then prompt for removal
         if analysis_dish_wells[well_counter] in analysis_dish_final_cols:
             ctx.pause(f"{analysis_dish_wells[well_counter]} is complete please remove the plate.")
