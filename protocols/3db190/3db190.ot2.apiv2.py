@@ -39,7 +39,7 @@ def run(protocol):
     p20.flow_rate.aspirate = 12
     p20.flow_rate.dispense = 12
 
-    # Proccess Buffer (A1)
+    # Proccess Buffer
     # 10 mL per channel, enough for 3 columns of sample
     reservoir = protocol.load_labware('nest_12_reservoir_15ml', 1)
     buffer_wells = [well for well in reservoir.rows()[0][:cols]

@@ -36,10 +36,10 @@ Deck Setup
 
 ## Process
 1. Input the total sample number (including controls, For Example: if you have 38 patient samples and 2 controls, you would enter 40), select P20-multi channel mount, select P300-multi channel mount.)
-3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
-4. Set up your deck according to the deck map.
-5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).
-6. Hit "Run".
+2. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
+3. Set up your deck according to the deck map.
+4. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).
+5. Hit "Run".
 
 ### Additional Notes
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
