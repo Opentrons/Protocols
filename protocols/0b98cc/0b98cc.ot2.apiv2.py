@@ -2,7 +2,7 @@ import math
 from opentrons import protocol_api
 
 metadata = {
-    'protocolName': 'JB Titration V2',
+    'protocolName': 'Viral Sample Titration',
     'author': 'Sakib <sakib.hossain@opentrons.com>',
     'description': 'Custom Protocol Request',
     'apiLevel': '2.9'
