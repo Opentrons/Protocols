@@ -1,4 +1,4 @@
-# PCR/qPCR Prep
+# Lyra Direct SARS-CoV Assay Sample Prep
 
 ### Author
 [Opentrons](https://opentrons.com/)
