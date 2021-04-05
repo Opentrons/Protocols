@@ -1,0 +1,72 @@
+{
+    "content": "metadata = {\n    'protocolName': 'mock pooling',\n    'author': 'Steve <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.9'\n}\n\n\ndef run(ctx):\n\n    ctx.set_rail_lights(True)\n\n    [pool_location, wells_to_be_pooled, tip_rack\n     ] = get_values(  # noqa: F821\n        \"pool_location\", \"wells_to_be_pooled\", \"tip_rack\")\n\n    # tips and p300 multi\n    tipracks = [ctx.load_labware('opentrons_96_tiprack_300ul', '4')]\n    p300m = ctx.load_instrument('p300_multi_gen2', 'right')\n\n    # labware\n    [ninety_six_2_ml, tube_rack] = [\n     ctx.load_labware(labware, slot) for labware, slot in zip(\n      ['nest_96_wellplate_2ml_deep',\n       'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap'], ['5', '6'])]\n\n    # pool tube\n    pool = tube_rack.wells_by_name()[pool_location]\n\n    # use only the rear-most channel of the p300 multi\n    num_channels_per_pickup = 1  # (only pickup tips on rear-most channel)\n    tips_ordered = [\n        tip for rack in tipracks\n        for row in rack.rows()[\n         len(rack.rows())-num_channels_per_pickup::-1*num_channels_per_pickup]\n        for tip in row]\n\n    tip_count = 0\n\n    def pick_up(pip):\n        nonlocal tip_count\n        pip.pick_up_tip(tips_ordered[tip_count])\n        tip_count += 1\n\n    # transfer 20 ul from designated wells to pool\n    for well in wells_to_be_pooled.split(','):\n        pick_up(p300m)\n        p300m.aspirate(20, ninety_six_2_ml.wells_by_name()[well])\n        p300m.dispense(20, pool)\n        p300m.drop_tip()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": "A1",
+            "label": "Pool Well Location",
+            "name": "pool_location",
+            "type": "str"
+        },
+        {
+            "default": "A1,B12,C5,G3,H9",
+            "label": "Wells to be Pooled (comma-separated string)",
+            "name": "wells_to_be_pooled",
+            "type": "str"
+        },
+        {
+            "label": "Choose Standard or Filtered Tips for P300 multi",
+            "name": "tip_rack",
+            "options": [
+                {
+                    "label": "Standard Tips",
+                    "value": "opentrons_96_tiprack_300ul"
+                },
+                {
+                    "label": "Filtered Tips",
+                    "value": "opentrons_96_filtertiprack_200ul"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "right",
+            "name": "p300_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "NEST 96 Deepwell Plate 2mL on 5",
+            "share": false,
+            "slot": "5",
+            "type": "nest_96_wellplate_2ml_deep"
+        },
+        {
+            "name": "Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.9",
+        "author": "Steve <protocols@opentrons.com>",
+        "protocolName": "mock pooling",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}
