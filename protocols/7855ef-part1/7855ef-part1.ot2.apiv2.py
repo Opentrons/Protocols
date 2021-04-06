@@ -89,12 +89,13 @@ def run(protocol):
         m20.blow_out()
     m20.return_tip()
 
-    # add DNA to samp
+    # add DNA
     for s, d in zip(sample_plate_cols, reaction_plate_cols):
         pick_up()
         m20.aspirate(3, s)
         m20.air_gap(airgap)
         m20.dispense(3+airgap, d.top())
+        m20.mix(2, 5)
         m20.blow_out()
         m20.return_tip()
 

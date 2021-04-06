@@ -80,6 +80,7 @@ def run(protocol):
         m20.aspirate(2, pre_ligation_mix)
         m20.air_gap(airgap)
         m20.dispense(airgap+2, col.top())
+        m20.mix(2, 8)
         m20.blow_out()
         m20.return_tip()
         protocol.comment('\n')
