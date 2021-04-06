@@ -8,7 +8,7 @@
   {
     "type": "dropDown",
     "label": "P20 Single GEN2 mount",
-    "name": "p20_mount",
+    "name": "m20_mount",
     "options": [
        { "label": "right", "value": "right" },
        { "label": "left", "value": "left" }
