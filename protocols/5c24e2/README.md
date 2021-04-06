@@ -1,7 +1,7 @@
 # Plate Filling Sample in AB 384 Well Plate
 
 ### Author
-[Opentrons (verified)](https://opentrons.com/)
+[Opentrons](https://opentrons.com/)
 
 ## Categories
 * Sample Prep

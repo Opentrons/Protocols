@@ -1,7 +1,7 @@
 # Nucleic Acid Purification
 
 ### Author
-[Opentrons (verified)](https://opentrons.com/)
+[Opentrons](https://opentrons.com/)
 
 ## Categories
 * Nucleic Acid Extraction & Purification

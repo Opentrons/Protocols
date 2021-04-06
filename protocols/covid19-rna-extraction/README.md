@@ -1,7 +1,7 @@
 # COVID-19 RNA Extraction
 
 ### Author
-[Opentrons (verified)](https://opentrons.com/)
+[Opentrons](https://opentrons.com/)
 
 ## Categories
 * Covid Workstation
