@@ -11,19 +11,21 @@
 This protocol performs viral titration (serial dilution) of viral samples. It adds media to the dilution plates and then begins the serial dilution process of up to 12 columns worth of samples. It will dilute the samples in one of four dilution plates and then add it to the analysis dish in a specific order (skipping 3 columns for every dilution).
 
 ---
+![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
-### Labware
 * [Opentrons 200uL Filter Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)
 * [Corning 96 Well Round Bottom 1mL](https://ecatalog.corning.com/life-sciences/b2c/US/en/Genomics-&-Molecular-Biology/Automation-Consumables/Deep-Well-Plate/Corning%C2%AE-96-well-Polypropylene-Storage-Blocks/p/3958)
 * [Corning 96-well Flat Clear Bottom Black Polystyrene TC-treated Microplate](https://ecatalog.corning.com/life-sciences/b2c/US/en/Microplates/Assay-Microplates/96-Well-Microplates/Corning%C2%AE-96-well-Black-Clear-and-White-Clear-Bottom-Polystyrene-Microplates/p/3603)
 * [NEST 1 Well 195mL Reservoir](https://shop.opentrons.com/collections/reservoirs/products/nest-1-well-reservoir-195-ml)
-
-### Pipettes
 * [P300 Multichannel GEN2](https://shop.opentrons.com/collections/ot-2-robot/products/8-channel-electronic-pipette?variant=5984202489885)
 
----
+For more detailed information on compatible labware, please visit our [Labware Library](https://labware.opentrons.com/).
 
-### Deck Setup
+
+
+---
+![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
+
 **Note:** The Dilution Plates utilize the Corning 96 Well Round Bottom 1mL and the Analysis Dishes utilize the Corning 96-well Flat Clear Bottom Black Polystyrene TC-treated Microplate.
 ![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0b98cc/0b98cc.png)
 
@@ -32,9 +34,8 @@ This protocol performs viral titration (serial dilution) of viral samples. It ad
 * Analysis Dish: Corning 96-well Flat Clear Bottom Black Polystyrene TC-treated Microplate
 * Samples: NEST 96 Well Plate 100uL PCR Full Skirt
 * Media Reservoir: NEST 1 Well 195mL Reservoir
----
 
-### Protocol Steps
+**Protocol Steps**
 1. Transfer appropriate volumes of media from the reservoir to each dilution plate on a per column basis using the multichannel pipette.
 2. Sample from the first column (A1) is transferred to A1 of Dilution Plate 1 where it is mixed and then transffered to A1 on analysis dish 1.
 3. Diluted sample is transferred from A1 of Dilution Plate 1 to A1 of Dilution Plate 2. It is thoroughly mixed and then transferred to A4 on Analysis Dish 1.
@@ -42,7 +43,11 @@ This protocol performs viral titration (serial dilution) of viral samples. It ad
 5. Diluted sample is transferred from A1 of Dilution Plate 3 to A1 of Dilution Plate 4. It is thoroughly mixed and then transferred to A10 on Analysis Dish 1.
 6. This completes one set of samples. This cycle will repeat for up to 12 columns worth of samples across four analysis dishes.
 
-### Process
+### Robot
+* [OT-2](https://opentrons.com/ot-2)
+
+## Process
+
 1. Input your protocol parameters above.
 2. Download your protocol and unzip if needed.
 3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.
@@ -52,6 +57,7 @@ This protocol performs viral titration (serial dilution) of viral samples. It ad
 7. Hit 'Run'.
 
 ### Additional Notes
+
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
