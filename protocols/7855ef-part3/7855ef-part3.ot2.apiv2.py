@@ -12,12 +12,6 @@ metadata = {
 }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"num_samp": 288,"m20_mount":"left", "reset_tipracks":false}""")
-    return [_all_values[n] for n in names]
-
-
 def run(protocol):
 
     [num_samp, m20_mount, reset_tipracks] = get_values(  # noqa: F821
