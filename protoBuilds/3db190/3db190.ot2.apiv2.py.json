@@ -1,5 +1,5 @@
 {
-    "content": "import math\n\nmetadata = {\n    'protocolName': 'Lyra Direct SARS-CoV Assay Sample Prep',\n    'author': 'Sakib <sakib.hossain@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.9'\n}\n\n\ndef run(protocol):\n\n    [total_samples, p20_mount, p300_mount] = get_values(  # noqa: F821\n        \"total_samples\", \"p20_mount\", \"p300_mount\")\n\n    total_samples = int(total_samples)\n    cols = math.ceil(total_samples/8)\n\n    # Load Tip Racks\n    tipracks_20ul = [protocol.load_labware('opentrons_96_filtertiprack_20ul',\n                                           slot) for slot in ['7', '8']]\n    tipracks_200ul = [protocol.load_labware(\n        'opentrons_96_filtertiprack_200ul', slot) for slot in ['4', '5']]\n\n    # Load Plates\n    # 1 mL Deepwell Microtiter Plate\n    deepwell_plate = protocol.load_labware('eppendorf_96_deepwell_1000ul', 2)\n    # PCR Plate resting on top of the thermal block\n    pcr_plate = protocol.load_labware('enduraplate_96_wellplate_200ul', 3)\n\n    # Load Instruments\n    p20 = protocol.load_instrument('p20_multi_gen2', p20_mount,\n                                   tip_racks=tipracks_20ul)\n    p300 = protocol.load_instrument('p300_multi_gen2', p300_mount,\n                                    tip_racks=tipracks_200ul)\n\n    p300.flow_rate.aspirate = 300\n    p300.flow_rate.dispense = 300\n    p20.flow_rate.aspirate = 12\n    p20.flow_rate.dispense = 12\n\n    # Proccess Buffer\n    # 10 mL per channel, enough for 3 columns of sample\n    reservoir = protocol.load_labware('nest_12_reservoir_15ml', 1)\n    buffer_wells = [well for well in reservoir.rows()[0][:cols]\n                    for i in range(3)]\n\n    # Sample Wells\n    deep_samples = deepwell_plate.rows()[0][:cols]\n    pcr_samples = pcr_plate.rows()[0][:cols]\n\n    # Protocol Steps\n\n    # Add 400 uL of Process Buffer to Required Wells in Deep Well Block\n    protocol.comment(f'Adding 400 uL of process buffer \\\n                     sequentially to {total_samples} wells...')\n    p300.pick_up_tip()\n    for well, buffer in zip(deep_samples, buffer_wells):\n        p300.transfer(400, buffer, well,\n                      new_tip='never')\n    p300.drop_tip()\n\n    # PAUSE PROTOCOL #\n    protocol.pause('Pausing protocol for further specimen processing and \\\n                   addition of 15uL of master mix to the PCR plate. Click \\\n                   Resume when ready...')\n\n    # Mix and Add 5 uL from Deep Well Block to PCR Plate\n    # Mix 5x with P300 set at 150 uL, (Uses new tip each time)\n    # then transfer with P20 at 5 uL (Uses new tip each time)\n    protocol.comment('Starting the mixing and transfer of specimen process...')\n    for source, dest in zip(deep_samples, pcr_samples):\n        p300.pick_up_tip()\n        p300.mix(5, 150, source)\n        p300.drop_tip()\n        p20.transfer(5, source,\n                     dest, new_tip='always')\n",
+    "content": "import math\n\nmetadata = {\n    'protocolName': 'Lyra Direct SARS-CoV Assay Sample Prep',\n    'author': 'Sakib <sakib.hossain@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.9'\n}\n\n\ndef run(protocol):\n\n    [total_samples, pipette_types, pip_l, pip_r,\n        tip_type] = get_values(  # noqa: F821\n        \"total_samples\", \"pipette_types\", \"pip_l\", \"pip_r\", \"tip_type\")\n\n    # Column Calculation for Multichannel\n    total_samples = int(total_samples)\n    cols = math.ceil(total_samples/8)\n\n    tiprack_map = {\n        'p20_single_gen2': {\n            'standard': 'opentrons_96_tiprack_20ul',\n            'filter': 'opentrons_96_filtertiprack_20ul'\n        },\n        'p1000_single_gen2': {\n            'standard': 'opentrons_96_tiprack_1000ul',\n            'filter': 'opentrons_96_filtertiprack_1000ul'\n        },\n        'p20_multi_gen2': {\n            'standard': 'opentrons_96_tiprack_20ul',\n            'filter': 'opentrons_96_filtertiprack_20ul'\n        },\n        'p300_multi_gen2': {\n            'standard': 'opentrons_96_tiprack_300ul',\n            'filter': 'opentrons_96_filtertiprack_200ul'\n        }\n    }\n\n    # Load Tip Racks\n    tipracks_l = [protocol.load_labware(tiprack_map[pip_l][tip_type],\n                                        slot) for slot in ['7', '8']]\n    tipracks_r = [protocol.load_labware(\n        tiprack_map[pip_r][tip_type], slot) for slot in ['4', '5']]\n\n    # Load Plates\n    # 1 mL Deepwell Microtiter Plate\n    deepwell_plate = protocol.load_labware('eppendorf_96_deepwell_1000ul', 2)\n    # PCR Plate resting on top of the thermal block\n    pcr_plate = protocol.load_labware('enduraplate_96_wellplate_200ul', 3)\n\n    # Load Instruments\n    pip_left = protocol.load_instrument(pip_l, 'left',\n                                        tip_racks=tipracks_l)\n    pip_right = protocol.load_instrument(pip_r, 'right',\n                                         tip_racks=tipracks_r)\n\n    if pipette_types == 'single':\n        # Proccess Buffer (A1)\n        buffer = protocol.load_labware(\n            'opentrons_6_tuberack_falcon_50ml_conical', 1)['A1'].bottom(z=10)\n\n        deep_samples = deepwell_plate.wells()[:total_samples]\n        pcr_samples = pcr_plate.wells()[:total_samples]\n\n    if pipette_types == 'multi':\n        # Proccess Buffer\n        # 10 mL per channel, enough for 3 columns of sample\n        reservoir = protocol.load_labware('nest_12_reservoir_15ml', 1)\n        buffer_wells = [well for well in reservoir.rows()[0][:cols]\n                        for i in range(3)]\n\n        # Sample Wells\n        deep_samples = deepwell_plate.rows()[0][:cols]\n        pcr_samples = pcr_plate.rows()[0][:cols]\n\n    # Protocol Steps\n\n    # Add 400 uL of Process Buffer to Required Wells in Deep Well Block\n    protocol.comment(f'''Adding 400 uL of process buffer\n                     sequentially to {total_samples} wells...''')\n    pip = pip_left if pip_left.max_volume > 20 else pip_right\n    pip.pick_up_tip()\n    if pipette_types == 'single':\n        for well in deep_samples:\n            pip.transfer(400, buffer, well,\n                         new_tip='never')\n    if pipette_types == 'multi':\n        for well, buffer in zip(deep_samples, buffer_wells):\n            pip.transfer(400, buffer, well,\n                         new_tip='never')\n    pip.drop_tip()\n\n    # PAUSE PROTOCOL #\n    protocol.pause('''Pausing protocol for further specimen processing and\n                   addition of 15uL of master mix to the PCR plate. Click\n                   Resume when ready...''')\n\n    # Mix and Add 5 uL from Deep Well Block to PCR Plate\n    # Mix 5x with P300 set at 150 uL, (Uses new tip each time)\n    # then transfer with P20 at 5 uL (Uses new tip each time)\n    protocol.comment('Starting the mixing and transfer of specimen process...')\n    for source, dest in zip(deep_samples, pcr_samples):\n        pip = pip_left if pip_left.max_volume > 20 else pip_right\n        pip.pick_up_tip()\n        pip.mix(5, 150, source)\n        pip.drop_tip()\n        pip = pip_left if pip_left.max_volume < 300 else pip_right\n        pip.transfer(5, source,\n                     dest, new_tip='always')\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -2258,37 +2258,83 @@
     ],
     "fields": [
         {
-            "default": 1,
+            "default": 96,
             "label": "Total PCR samples (Max: 96)",
             "name": "total_samples",
             "type": "int"
         },
         {
-            "label": "P20-multi GEN2 mount",
-            "name": "p20_mount",
+            "label": "Pipette Types",
+            "name": "pipette_types",
             "options": [
                 {
-                    "label": "right",
-                    "value": "right"
+                    "label": "Single Channel Pipettes",
+                    "value": "single"
                 },
                 {
-                    "label": "left",
-                    "value": "left"
+                    "label": "Multichannel Pipettes",
+                    "value": "multi"
                 }
             ],
             "type": "dropDown"
         },
         {
-            "label": "P300-multi GEN2 mount",
-            "name": "p300_mount",
+            "label": "Left Pipette Type",
+            "name": "pip_l",
             "options": [
                 {
-                    "label": "left",
-                    "value": "left"
+                    "label": "P1000 Single GEN2",
+                    "value": "p1000_single_gen2"
                 },
                 {
-                    "label": "right",
-                    "value": "right"
+                    "label": "P20 Single GEN2",
+                    "value": "p20_single_gen2"
+                },
+                {
+                    "label": "P300 Multi GEN2",
+                    "value": "p300_multi_gen2"
+                },
+                {
+                    "label": "P20 Multi GEN2",
+                    "value": "p20_multi_gen2"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Right Pipette Type",
+            "name": "pip_r",
+            "options": [
+                {
+                    "label": "P20 Single GEN2",
+                    "value": "p20_single_gen2"
+                },
+                {
+                    "label": "P1000 Single GEN2",
+                    "value": "p1000_single_gen2"
+                },
+                {
+                    "label": "P300 Multi GEN2",
+                    "value": "p300_multi_gen2"
+                },
+                {
+                    "label": "P20 Multi GEN2",
+                    "value": "p20_multi_gen2"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Tip Type",
+            "name": "tip_type",
+            "options": [
+                {
+                    "label": "Filter",
+                    "value": "filter"
+                },
+                {
+                    "label": "Standard",
+                    "value": "standard"
                 }
             ],
             "type": "dropDown"
@@ -2297,19 +2343,19 @@
     "instruments": [
         {
             "mount": "left",
-            "name": "p300_multi_gen2"
+            "name": "p1000_single_gen2"
         },
         {
             "mount": "right",
-            "name": "p20_multi_gen2"
+            "name": "p20_single_gen2"
         }
     ],
     "labware": [
         {
-            "name": "NEST 12 Well Reservoir 15 mL on 1",
+            "name": "Opentrons 6 Tube Rack with Falcon 50 mL Conical on 1",
             "share": false,
             "slot": "1",
-            "type": "nest_12_reservoir_15ml"
+            "type": "opentrons_6_tuberack_falcon_50ml_conical"
         },
         {
             "name": "Eppendorf 96 Deep Well Block 1000ul on 2",
@@ -2324,28 +2370,28 @@
             "type": "enduraplate_96_wellplate_200ul"
         },
         {
-            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 4",
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 4",
             "share": false,
             "slot": "4",
-            "type": "opentrons_96_filtertiprack_200ul"
+            "type": "opentrons_96_filtertiprack_20ul"
         },
         {
-            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 5",
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 5",
             "share": false,
             "slot": "5",
-            "type": "opentrons_96_filtertiprack_200ul"
+            "type": "opentrons_96_filtertiprack_20ul"
         },
         {
-            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 7",
+            "name": "Opentrons 96 Filter Tip Rack 1000 \u00b5L on 7",
             "share": false,
             "slot": "7",
-            "type": "opentrons_96_filtertiprack_20ul"
+            "type": "opentrons_96_filtertiprack_1000ul"
         },
         {
-            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 8",
+            "name": "Opentrons 96 Filter Tip Rack 1000 \u00b5L on 8",
             "share": false,
             "slot": "8",
-            "type": "opentrons_96_filtertiprack_20ul"
+            "type": "opentrons_96_filtertiprack_1000ul"
         },
         {
             "name": "Opentrons Fixed Trash on 12",
