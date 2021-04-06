@@ -7,20 +7,11 @@
   },
   {
     "type": "dropDown",
-    "label": "P20 Single GEN2 mount",
+    "label": "P20 Multi GEN2 mount",
     "name": "m20_mount",
     "options": [
        { "label": "right", "value": "right" },
        { "label": "left", "value": "left" }
-     ]
-  },
-  {
-    "type": "dropDown",
-    "label": "P300 Single GEN2 mount",
-    "name": "p300_mount",
-    "options": [
-       { "label": "left", "value": "left" },
-       { "label": "right", "value": "right" }
      ]
   },
   {
