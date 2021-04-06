@@ -1,7 +1,7 @@
 # Plate Filling QE in NEST Plate
 
 ### Author
-[Opentrons (verified)](https://opentrons.com/)
+[Opentrons](https://opentrons.com/)
 
 ## Categories
 * Sample Prep

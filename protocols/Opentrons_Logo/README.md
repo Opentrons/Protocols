@@ -1,7 +1,7 @@
 # Opentrons Logo Protocol
 
 ### Author
-[Opentrons (verified)](https://opentrons.com/)
+[Opentrons](https://opentrons.com/)
 
 ## Categories
 * Getting Started
