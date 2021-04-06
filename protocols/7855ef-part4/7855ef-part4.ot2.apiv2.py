@@ -11,15 +11,10 @@ metadata = {
 }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"num_samp": 240,"p20_mount":"left", "p300_mount":"right", "reset_tipracks":false}""")
-    return [_all_values[n] for n in names]
-
-
 def run(protocol):
 
-    [num_samp, p20_mount, p300_mount, reset_tipracks] = get_values(  # noqa: F821
+    [num_samp, p20_mount, p300_mount,
+        reset_tipracks] = get_values(  # noqa: F821
         "num_samp", "p20_mount", "p300_mount", "reset_tipracks")
 
     if not 1 <= num_samp <= 288:
