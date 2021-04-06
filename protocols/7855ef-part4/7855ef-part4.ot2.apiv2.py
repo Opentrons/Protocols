@@ -102,6 +102,7 @@ def run(protocol):
 
     for s, d in zip(pool_plate1.wells()[:pool_counter], pool_plate2.wells()):
         pickup(p300)
+        p300.mix(2, 60)
         p300.transfer(45, s, d, new_tip='never')
         p300.return_tip()
 
