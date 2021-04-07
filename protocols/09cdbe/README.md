@@ -1,7 +1,7 @@
 # Consolidation from .csv
 
 ### Author
-[Opentrons (verified)](https://opentrons.com/)
+[Opentrons](https://opentrons.com/)
 
 ## Categories
 * Sample Prep

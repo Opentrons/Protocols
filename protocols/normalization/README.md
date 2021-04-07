@@ -1,7 +1,7 @@
 # Normalization
 
 ### Author
-[Opentrons (verified)](https://opentrons.com/)
+[Opentrons](https://opentrons.com/)
 
 ## Categories
 * Featured

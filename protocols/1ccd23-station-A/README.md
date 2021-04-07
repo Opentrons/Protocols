@@ -1,10 +1,10 @@
 # Generic Sample Plating Protocol (Station A)
 
 ### Author
-[Opentrons (verified)](https://opentrons.com/)
+[Opentrons](https://opentrons.com/)
 
 ## Categories
-* Covid Workstation 
+* Covid Workstation
 	* Sample Plating
 
 
