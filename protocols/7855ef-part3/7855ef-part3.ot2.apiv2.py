@@ -64,10 +64,12 @@ def run(protocol):
     m20 = protocol.load_instrument('p20_multi_gen2', m20_mount,
                                    tip_racks=tiprack20)
 
+    tips = [col for tipbox in tiprack20 for col in tipbox.rows()[0]]
+
     def pick_up():
         nonlocal tip_counter
         try:
-            m20.pick_up_tip(tiprack20.rows()[0][tip_counter])
+            m20.pick_up_tip(tips[tip_counter])
             tip_counter += 1
         except protocol_api.labware.OutOfTipsError:
             protocol.pause('Replace 20 ul tip racks on Slots 9, 10, and 11')
