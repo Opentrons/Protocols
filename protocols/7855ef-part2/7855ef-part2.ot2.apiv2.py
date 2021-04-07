@@ -1,5 +1,4 @@
 import math
-from opentrons import protocol_api
 import csv
 import os
 
@@ -63,14 +62,14 @@ def run(protocol):
 
     def pick_up():
         nonlocal tip_counter
-        try:
-            m20.pick_up_tip(tips[tip_counter])
-            tip_counter += 1
-        except protocol_api.labware.OutOfTipsError:
+        if tip_counter == 36:
             protocol.pause('Replace 20 ul tip racks on Slots 9, 10, and 11')
             m20.reset_tipracks()
             m20.pick_up_tip()
             tip_counter = 0
+        else:
+            m20.pick_up_tip(tips[tip_counter])
+            tip_counter += 1
 
     # load reagents
     pre_ligation_mix = mmx_plate.rows()[0][1]
