@@ -1,7 +1,7 @@
 # SP3 Proteomics Mass Spec Sample Prep
 
 ### Author
-[Opentrons (verified)](https://opentrons.com/)
+[Opentrons](https://opentrons.com/)
 
 ## Categories
 * Sample Prep

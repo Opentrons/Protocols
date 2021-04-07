@@ -1,7 +1,7 @@
 # Omega Mag-Bind® Blood & Tissue DNA 96 Kit - 250μL Blood Protocol
 
 ### Author
-[Opentrons (verified)](https://opentrons.com/)
+[Opentrons](https://opentrons.com/)
 
 ## Categories
 * Nucleic Acid Extraction & Purification
