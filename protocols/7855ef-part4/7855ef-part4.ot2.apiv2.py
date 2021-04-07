@@ -42,7 +42,7 @@ def run(protocol):
             csv_reader = csv.reader(csv_file, delimiter=',')
             tip_count_list = next(csv_reader)
 
-    tip_counter = int(tip_count_list[0])*8-1
+    tip_counter = int(tip_count_list[0])*8
 
     # load labware
     pool_plate1 = protocol.load_labware('customendura_96_wellplate_200ul', '1',
@@ -65,16 +65,18 @@ def run(protocol):
     p300 = protocol.load_instrument('p300_single_gen2', p300_mount,
                                     tip_racks=tiprack200)
 
+    tips = [well for tipbox in tiprack20 for well in tipbox.wells()]
+
     def pick_up_20():
         nonlocal tip_counter
-        try:
-            p20.pick_up_tip(tiprack20.wells()[tip_counter])
-            tip_counter += 1
-        except protocol_api.labware.OutOfTipsError:
+        if tip_counter == 288:
             protocol.pause('Replace 20 ul tip racks on Slots 9, 10, and 11')
             p20.reset_tipracks()
             p20.pick_up_tip()
             tip_counter = 0
+        else:
+            p20.pick_up_tip(tips[tip_counter])
+            tip_counter += 1
 
     def pick_up_300():
         try:
