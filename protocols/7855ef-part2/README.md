@@ -44,7 +44,7 @@ Using the customization fields below, set up your protocol.
 
 **Note about 20µL tip racks**
 
-When prompted to replace the 300ul tip racks, be sure to re-load all 3 tip racks as in the original configuration of the deck.
+When prompted to replace the 20ul tip racks, be sure to re-load all 3 tip racks as in the original configuration of the deck.
 
 **Labware Setup**
 

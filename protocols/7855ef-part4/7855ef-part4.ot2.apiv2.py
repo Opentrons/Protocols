@@ -34,16 +34,15 @@ def run(protocol):
 
     tip_count_list = []
     if protocol.is_simulating():
-        tip_count_list = [0, 0]
+        tip_count_list = [0]
     elif reset_tipracks:
-        tip_count_list = [0, 0]
+        tip_count_list = [0]
     else:
         with open(file_path) as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=',')
             tip_count_list = next(csv_reader)
 
-    num_one = int(tip_count_list[0])
-    num_two = int(tip_count_list[1])
+    tip_counter = int(tip_count_list[0])*8-1
 
     # load labware
     pool_plate1 = protocol.load_labware('customendura_96_wellplate_200ul', '1',
@@ -66,13 +65,24 @@ def run(protocol):
     p300 = protocol.load_instrument('p300_single_gen2', p300_mount,
                                     tip_racks=tiprack200)
 
-    def pickup(pip):
+    def pick_up_20():
+        nonlocal tip_counter
         try:
-            pip.pick_up_tip()
+            p20.pick_up_tip(tiprack20.wells()[tip_counter])
+            tip_counter += 1
         except protocol_api.labware.OutOfTipsError:
-            protocol.pause("Replace all 20 ul tip racks on Slots 9, 10 and 11")
-            pip.reset_tipracks()
-            pip.pick_up_tip()
+            protocol.pause('Replace 20 ul tip racks on Slots 9, 10, and 11')
+            p20.reset_tipracks()
+            p20.pick_up_tip()
+            tip_counter = 0
+
+    def pick_up_300():
+        try:
+            p300.pick_up_tip()
+        except protocol_api.labware.OutOfTipsError:
+            protocol.pause('Replace 200 ul tip rack on slot 8')
+            p300.reset_tipracks()
+            p300.pick_up_tip()
 
     # pool each row of plates
     num_col = math.ceil(num_samp/8)
@@ -89,7 +99,7 @@ def run(protocol):
         wells_by_row = [well for row in reaction_plates[i].rows()
                         for well in row[:length_row]]
         for well in wells_by_row:
-            pickup(p20)
+            pick_up_20()
             p20.aspirate(5, well)
             p20.dispense(5, pool_plate1.wells()[pool_counter])
             p20.blow_out()
@@ -101,13 +111,13 @@ def run(protocol):
             protocol.comment('\n')
 
     for s, d in zip(pool_plate1.wells()[:pool_counter], pool_plate2.wells()):
-        pickup(p300)
+        pick_up_300()
         p300.mix(2, 60)
         p300.transfer(45, s, d, new_tip='never')
         p300.return_tip()
 
     # write updated tipcount to CSV
-    new_tip_count = str(num_one)+", "+str(num_two)+"\n"
+    new_tip_count = str(tip_counter)+", "+"\n"
     if not protocol.is_simulating():
         with open(file_path, 'w') as outfile:
             outfile.write(new_tip_count)
