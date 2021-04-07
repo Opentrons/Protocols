@@ -1,4 +1,4 @@
-import math
+ import math
 from opentrons import protocol_api
 import csv
 import os
@@ -35,16 +35,15 @@ def run(protocol):
 
     tip_count_list = []
     if protocol.is_simulating():
-        tip_count_list = [0, 0]
+        tip_count_list = [0]
     elif reset_tipracks:
-        tip_count_list = [0, 0]
+        tip_count_list = [0]
     else:
         with open(file_path) as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=',')
             tip_count_list = next(csv_reader)
 
-    num_one = int(tip_count_list[0])
-    num_two = int(tip_count_list[1])
+    tip_counter = int(tip_count_list[0])
 
     # load labware
     sample_plates = [protocol.load_labware(
@@ -64,12 +63,15 @@ def run(protocol):
                                    tip_racks=tiprack20)
 
     def pick_up():
+        nonlocal tip_counter
         try:
-            m20.pick_up_tip()
+            m20.pick_up_tip(tiprack20.rows()[0][tip_counter])
+            tip_counter += 1
         except protocol_api.labware.OutOfTipsError:
-            protocol.pause('Replace 200 ul tip racks on Slots 9, 10, and 11')
+            protocol.pause('Replace 20 ul tip racks on Slots 9, 10, and 11')
             m20.reset_tipracks()
             m20.pick_up_tip()
+            tip_counter = 0
 
     sample_plate_cols = [col for plate in sample_plates
                          for col in plate.rows()[0]][:num_col]
@@ -105,7 +107,7 @@ def run(protocol):
                    Part 2 - Pre-ligation.''')
 
     # write updated tipcount to CSV
-    new_tip_count = str(num_one)+", "+str(num_two)+"\n"
+    new_tip_count = str(tip_counter)+", "+"\n"
     if not protocol.is_simulating():
         with open(file_path, 'w') as outfile:
             outfile.write(new_tip_count)

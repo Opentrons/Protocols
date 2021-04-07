@@ -36,16 +36,15 @@ def run(protocol):
 
     tip_count_list = []
     if protocol.is_simulating():
-        tip_count_list = [0, 0]
+        tip_count_list = [0]
     elif reset_tipracks:
-        tip_count_list = [0, 0]
+        tip_count_list = [0]
     else:
         with open(file_path) as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=',')
             tip_count_list = next(csv_reader)
 
-    num_one = int(tip_count_list[0])
-    num_two = int(tip_count_list[1])
+    tip_counter = int(tip_count_list[0])
 
     # load labware
     barcode_plate = [protocol.load_labware('customendura_96_wellplate_200ul',
@@ -65,13 +64,16 @@ def run(protocol):
     m20 = protocol.load_instrument('p20_multi_gen2', m20_mount,
                                    tip_racks=tiprack20)
 
-    def pickup():
+    def pick_up():
+        nonlocal tip_counter
         try:
-            m20.pick_up_tip()
+            m20.pick_up_tip(tiprack20.rows()[0][tip_counter])
+            tip_counter += 1
         except protocol_api.labware.OutOfTipsError:
-            protocol.pause("Replace all 20 ul tip racks on Slots 9, 10 and 11")
+            protocol.pause('Replace 20 ul tip racks on Slots 9, 10, and 11')
             m20.reset_tipracks()
             m20.pick_up_tip()
+            tip_counter = 0
 
     # load reagents
     barcode_rxn_mix = mmx_plate.rows()[0][2]
@@ -83,7 +85,7 @@ def run(protocol):
     # add barcode adapter
     airgap = 5
     for s, d in zip(barcode_plate_cols, reaction_plate_cols):
-        pickup()
+        pick_up()
         m20.aspirate(1, s)
         m20.air_gap(airgap)
         m20.dispense(1+airgap, d)
@@ -93,7 +95,7 @@ def run(protocol):
 
     # add barcode reaction mix
     for col in reaction_plate_cols:
-        pickup()
+        pick_up()
         m20.aspirate(3, barcode_rxn_mix)
         m20.air_gap(airgap)
         m20.dispense(1+airgap, col)
@@ -105,7 +107,7 @@ def run(protocol):
                    centrifuge and PCR steps if needed as a break point''')
 
     # write updated tipcount to CSV
-    new_tip_count = str(num_one)+", "+str(num_two)+"\n"
+    new_tip_count = str(tip_counter)+", "+"\n"
     if not protocol.is_simulating():
         with open(file_path, 'w') as outfile:
             outfile.write(new_tip_count)

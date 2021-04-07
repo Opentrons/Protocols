@@ -19,8 +19,9 @@
     "label": "Reset Tipracks?",
     "name": "reset_tipracks",
     "options": [
-       { "label": "No", "value": false },
-       { "label": "Yes", "value": true }
+       { "label": "Yes", "value": true },
+       { "label": "No", "value": false }
+
      ]
   }
 ]
