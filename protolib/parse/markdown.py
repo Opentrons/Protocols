@@ -7,7 +7,7 @@ import markdown
 ALLOWED_HEADERS = [
     'author',
     'categories',
-    'deck setup',
+    'deck-setup',
     'description',
     'internal',
     'modules',
@@ -16,9 +16,9 @@ ALLOWED_HEADERS = [
     'pipettes',
     'preview',
     'process',
-    'protocol steps',
+    'protocol-steps',
     'reagents',
-    'reagent setup',
+    'reagent-setup',
     'robot',
     'subcategories',
     'time-estimate',
@@ -99,7 +99,10 @@ def header_to_key(header):
     overrides = {
         'time estimate': 'time-estimate',
         'sub categories': 'subcategories',
-        'additional notes': 'notes'
+        'additional notes': 'notes',
+        'deck setup': 'deck-setup',
+        'reagent setup': 'reagent-setup',
+        'protocol steps': 'protocol-steps'
     }
 
     return overrides.get(header, header)
