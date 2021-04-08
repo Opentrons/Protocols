@@ -9,8 +9,8 @@ metadata = {
 
 
 def run(protocol):
-    [num_samples, p300m, s_pip] = get_values(  # noqa: F821
-    'num_samples', 'p300m', 's_pip')
+    [num_samples, p300m, s_pip, mag_gen] = get_values(  # noqa: F821
+     'num_samples', 'p300m', 's_pip', 'mag_gen')
 
     # load labware and pipettes
     samps = int(num_samples)  # this num represents columns and should be 1-6
@@ -30,8 +30,8 @@ def run(protocol):
     small_pip = protocol.load_instrument(s_pip, 'right', tip_racks=[s_tips])
     p300 = protocol.load_instrument(p300m, 'left')
 
-    magdeck = protocol.load_module('magdeck', '4')
-    magheight = 13.7
+    magdeck = protocol.load_module(mag_gen, '4')
+    magheight = 13.7 if mag_gen == 'magdeck' else 6.85
     magplate = magdeck.load_labware('nest_96_wellplate_2ml_deep')
     flatplate = protocol.load_labware(
                 'nest_96_wellplate_100ul_pcr_full_skirt', '3')
