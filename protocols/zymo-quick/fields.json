@@ -23,6 +23,15 @@
   },
   {
     "type": "dropDown",
+    "label": "Magnetic Module Generation",
+    "name": "mag_gen",
+    "options": [
+      {"label": "GEN 2", "value": "magnetic module gen2"},
+      {"label": "GEN 1", "value": "magdeck"}
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "Single Channel Pipette",
     "name": "s_pip",
     "options": [
