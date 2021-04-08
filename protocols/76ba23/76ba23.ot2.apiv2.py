@@ -28,7 +28,7 @@ def run(ctx):
 
     # p300 multi
     p300m = ctx.load_instrument(
-        "p300_multi_gen2", 'right', tip_racks=tips_300)
+        "p300_multi", 'right', tip_racks=tips_300)
 
     # primary DNA extraction plate in slot 2
     dna_extraction_plates = [ctx.load_labware(
@@ -227,11 +227,11 @@ def run(ctx):
 
     else:
         # add 400 ul wash to primary DNA extraction plate (on magnetic module)
-        wash = reagent_reservoir
         wash_tips = tips_300[0].next_tip()
         p300m.pick_up_tip()
         add_reagent(wash, mag_plate, 400)
         p300m.return_tip()
+        etoh_tips = tips_300[1].next_tip()
 
     # suspend all beads in wash on magnetic module
     reuse_tips(sample_tips)
