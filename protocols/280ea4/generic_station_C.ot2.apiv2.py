@@ -8,7 +8,7 @@ metadata = {
     'protocolName': 'PCR Prep',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.8'
+    'apiLevel': '2.9'
 }
 
 
