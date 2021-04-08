@@ -1,7 +1,7 @@
 # Nextera XT DNA Library Prep Kit Protocol: Part 3/4 - Normalize Libraries
 
 ### Author
-[Opentrons (verified)](https://opentrons.com/)
+[Opentrons](https://opentrons.com/)
 
 ## Categories
 * Featured

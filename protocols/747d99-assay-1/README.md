@@ -1,7 +1,7 @@
 # COVID-19 Diagnostic Workflow: Assay 1
 
 ### Author
-[Opentrons (verified)](https://opentrons.com/)
+[Opentrons](https://opentrons.com/)
 
 ## Categories
 * Covid Workstation

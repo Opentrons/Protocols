@@ -1,7 +1,7 @@
 # Zymo Quick-DNA/RNA Viral Kit
 
 ### Author
-[Opentrons (verified)](https://opentrons.com/)
+[Opentrons](https://opentrons.com/)
 
 ## Categories
 * Nucleic Acid Extraction & Purification

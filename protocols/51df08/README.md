@@ -1,7 +1,7 @@
 # Mass Spec Sample Prep on Custom Slide
 
 ### Author
-[Opentrons (verified)](https://opentrons.com/)
+[Opentrons](https://opentrons.com/)
 
 ## Categories
 * Proteins & Proteomics
