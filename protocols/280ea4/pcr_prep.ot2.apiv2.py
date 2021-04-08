@@ -12,36 +12,36 @@ metadata = {
 }
 
 
-def run(ctx: protocol_api.ProtocolContext):
-    [num_samples, assay, strip_type, prepare_mastermix,
+def run(ctx):
+    [num_samples, assay, prepare_mastermix, p300_mount,
      tip_track] = get_values(  # noqa: F821
-        'num_samples', 'assay', 'strip_type', 'prepare_mastermix', 'tip_track')
+        'num_samples', 'assay', 'prepare_mastermix',
+        'p300_mount', 'tip_track')
 
     # check source (elution) labware type
-    source_plate = ctx.load_labware(
-        'opentrons_96_aluminumblock_nest_wellplate_100ul', '1',
-        'chilled elution plate on block from Station B')
+    source_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
+                                    '1', 'DNA source plate')
     tips300 = [
         ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
         for slot in ['5', '6', '8', '9']]
     tips20 = []
-    tempdeck = ctx.load_module('Temperature Module Gen2', '4')
-    pcr_plate = tempdeck.load_labware(
-        'opentrons_96_aluminumblock_nest_wellplate_100ul', 'PCR plate')
-    mm_strips = ctx.load_labware(strip_type, '7', 'mastermix strips')
+    tempdeck = ctx.load_module('Temperature Module Gen2', '7')
+    pcr_plate = tempdeck.load_labware('biorad_96_aluminumblock_200ul',
+                                      'PCR strips')
     tempdeck.set_temperature(4)
     tube_block = ctx.load_labware(
-        'opentrons_24_aluminumblock_nest_2ml_screwcap', '5',
-        '2ml screw tube aluminum block for mastermix + controls')
+        'opentrons_24_aluminumblock_nest_2ml_screwcap', '3',
+        '2ml screw tube aluminum block for mastermix + reagents')
 
     # pipette
-    p300 = ctx.load_instrument('p300_single_gen2', 'left', tip_racks=tips300)
-    m20 = 'None'
+    p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
+                               tip_racks=tips300)
+    m20_mount = 'left' if p300_mount == 'right' else 'right'
+    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount)
 
     # setup up sample sources and destinations
-    num_cols = math.ceil(num_samples/8)
-    sources = source_plate.rows()[0][:num_cols]
-    sample_dests = pcr_plate.rows()[0][:num_cols]
+    sources = source_plate.wells()[:num_samples]
+    sample_dests = pcr_plate.wells()[:num_samples]
 
     tip_log = {'count': {}}
     folder_path = '/data/C'
@@ -93,7 +93,7 @@ resuming.')
             'components': {
                 tube: vol for tube, vol in zip(
                     [mmx, enzyme, primer1, primer2, primer3, primer4, primer5,
-                     primer6, nfh2o]
+                     primer6, nfh2o],
                     [25, 2, 2, 2, 2, 2, 2, 2, 11])
             }
         },
@@ -159,7 +159,7 @@ resuming.')
             p300.air_gap(20-vol)
             p300.aspirate(vol, source)
             p300.dispense(vol, dest)
-            p300.dispense(p300.current_vol, dest.top())
+            p300.dispense(p300.current_volume, dest.top())
         else:
             num_trans = math.ceil(vol/260)
             vol_per_trans = vol/num_trans
@@ -179,7 +179,7 @@ resuming.')
         p300.flow_rate.aspirate = 15
         p300.flow_rate.dispense = 30
         vol_overage = 1.2 if num_samples > 48 else 1.1
-        if mm_dict['mm_vol']*num_samples*vol_overage > 2000:
+        if mm_dict['mm_vol']*num_samples*vol_overage > 1700:
             num_mm_tubes = 2
         else:
             num_mm_tubes = 1
@@ -193,28 +193,35 @@ resuming.')
         mm_total_vol_per_tube = mm_vol*(num_samples)*vol_overage/num_mm_tubes
         if not p300.hw_pipette['has_tip']:
             pick_up(p300)
-        mix_vol = mm_total_vol / 2 if mm_total_vol / 2 <= 200 else 200
-        mix_loc = mm_tube.bottom(20) if num_samples > 48 else mm_tube.bottom(5)
-        p300.mix(7, mix_vol, mix_loc)
-        # p300.blow_out(mm_tube.top())
-        p300.touch_tip()
-
-
+        if mm_total_vol_per_tube / 2 <= 300:
+            mix_vol = mm_total_vol_per_tube / 2
+        else:
+            mix_vol = 300
+        for tube in mm_tubes[:num_mm_tubes]:
+            if num_samples > 48:
+                mix_loc = mm_tube.bottom(20)
+            else:
+                mix_loc = mm_tube.bottom(5)
+            p300.mix(7, mix_vol, mix_loc)
+            # p300.blow_out(mm_tube.top())
+            p300.touch_tip()
 
     # transfer mastermix to plate
-    pick_up(m20)
-    m20.transfer(mm_vol, mm_strip[0].bottom(0.5), sample_dests,
-                 new_tip='never')
-    m20.drop_tip()
+    if num_mm_tubes == 1:
+        sample_dest_sets = [sample_dests]
+    else:
+        split_ind = math.ceil(num_samples/2)
+        sample_dest_sets = [sample_dests[:split_ind], sample_dests[split_ind:]]
+    for mm_tube, dest_set in zip(mm_tubes, sample_dest_sets):
+        p300.distribute(mm_dict['mm_vol'], mm_tube, dest_set,
+                        new_tip='never')
+    p300.drop_tip()
 
     # transfer samples to corresponding locations
     for s, d in zip(sources, sample_dests):
-        pick_up(m20)
-        m20.transfer(sample_vol, s.bottom(2), d.bottom(2), new_tip='never')
-        m20.mix(1, 10, d.bottom(2))
-        m20.blow_out(d.top(-2))
-        m20.aspirate(5, d.top(2))
-        m20.drop_tip()
+        pick_up(p300)
+        p300_transfer(sample_vol, s, d)
+        p300.drop_tip()
 
     # track final used tip
     if tip_track and not ctx.is_simulating():
