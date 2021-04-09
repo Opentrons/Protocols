@@ -1,8 +1,3 @@
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"csv_sample":"Sample ID,sample type,ct_value,plate name,plate position,target,transfer\\nV2107679,cDNA,28.0,210217-NGS-fresh,A:1,30,done\\nV2107680,cDNA,26.0,210217-NGS-fresh,B:1,30,","transfer_vol":2.5,"p20_mount":"right","reset_counter":true}""")
-    return [_all_values[n] for n in names]
-
 from opentrons import protocol_api
 import csv
 import os
