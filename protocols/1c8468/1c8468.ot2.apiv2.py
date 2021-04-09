@@ -45,7 +45,7 @@ def run(protocol):
         p30ctr = int(counter_list[1])
 
     # load labware
-    s_plate = protocol.load_labware('thermoscientific_96_wellplate_200ul', '1')
+    s_plate = protocol.load_labware('life_96_aluminumblock_240ul', '1')
     plate25 = protocol.load_labware('thermoscientific_96_wellplate_200ul', '2')
     plate30 = protocol.load_labware('thermoscientific_96_wellplate_200ul', '4')
     tiprack = protocol.load_labware('opentrons_96_filtertiprack_20ul', '5')
