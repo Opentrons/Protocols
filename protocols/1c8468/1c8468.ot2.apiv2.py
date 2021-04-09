@@ -1,3 +1,8 @@
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"csv_sample":"Sample ID,sample type,ct_value,plate name,plate position,target,transfer\\nV2107679,cDNA,28.0,210217-NGS-fresh,A:1,30,done\\nV2107680,cDNA,26.0,210217-NGS-fresh,B:1,30,","transfer_vol":2.5,"p20_mount":"right","reset_counter":true}""")
+    return [_all_values[n] for n in names]
+
 from opentrons import protocol_api
 import csv
 import os
@@ -45,7 +50,7 @@ def run(protocol):
         p30ctr = int(counter_list[1])
 
     # load labware
-    s_plate = protocol.load_labware('thermoscientific_96_wellplate_200ul', '1')
+    s_plate = protocol.load_labware('life_96_aluminumblock_240ul', '1')
     plate25 = protocol.load_labware('thermoscientific_96_wellplate_200ul', '2')
     plate30 = protocol.load_labware('thermoscientific_96_wellplate_200ul', '4')
     tiprack = protocol.load_labware('opentrons_96_filtertiprack_20ul', '5')
