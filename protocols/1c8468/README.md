@@ -47,7 +47,7 @@ The first row should contain headers (like above). All of the following rows sho
 
 **Labware Setup**
 
-Slots 1: Source Plate
+Slots 1: Custom Endura Source Plate on Opentrons 96 well Aluminum Block
 
 Slot 2: ThermoScientific 96-well 25-Cycle Target Plate
 
