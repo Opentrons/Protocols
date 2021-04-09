@@ -14,21 +14,24 @@ Using a [Single-Channel Pipette](https://shop.opentrons.com/collections/ot-2-pip
 You can select any of the 5 mastermix compositions shown below:  
 ![mm](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/280ea4/image.png)
 
-### Modules
-* [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
+---
 
-### Labware
+![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)  
+
+To purchase tips, reagents, or pipettes, please visit our [online store](https://shop.opentrons.com/) or contact our sales team at [info@opentrons.com](mailto:info@opentrons.com)
+
+* [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
 * [NEST PCR Plate](https://shop.opentrons.com/collections/lab-plates/products/nest-0-1-ml-96-well-pcr-plate-full-skirt) containing purified nucleic acid samples
 * [Opentrons Tips](https://shop.opentrons.com/collections/opentrons-tips)
 * [2ml NEST screwcap tubes or equivalent](https://shop.opentrons.com/collections/tubes/products/nest-microcentrifuge-tubes) in Opentrons aluminum block containing PCR reagents
-
-### Pipettes
 * [Opentrons P300 Single-Channel GEN2 Pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette)
 
-### Deck Setup
+---
+
+![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
+
 ![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/280ea4/deck.png)
 
-### Reagent Setup
 ![reagent layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/280ea4/reagents.png)
 
 ## Process
