@@ -1,5 +1,11 @@
 [
   {
+    "type": "float",
+    "label": "Mix Rate (flow rate for mixing will be multiplied by this number)",
+    "name": "mix_rate",
+    "default": 3
+  },
+  {
     "type": "str",
     "label": "Tiprack Slot",
     "name": "tiprack_slot",
