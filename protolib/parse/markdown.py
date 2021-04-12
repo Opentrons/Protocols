@@ -12,6 +12,7 @@ ALLOWED_HEADERS = [
     'internal',
     'modules',
     'notes',
+    'labware',
     'partner',
     'pipettes',
     'preview',
@@ -196,6 +197,10 @@ def parse(filename):
 
     with open(filename) as md:
         md = parse_headers(split_markdown(list(md)))
+
+        for key, value in md.items():
+            if not key in ALLOWED_HEADERS:
+                raise ValueError("invalid header: '{}'".format(key))
 
         md = {
             key: value
