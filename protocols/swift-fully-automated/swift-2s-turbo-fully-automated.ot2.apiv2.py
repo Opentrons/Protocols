@@ -61,7 +61,7 @@ def run(protocol):
         enzymatic_300 = [enzymatic_prep_samples[0]]
         pcr_prep_samples = tc_samps['2']
         pcr_300 = [pcr_prep_samples[0]]
-        purified_samples = tc_samps['3'][0]
+        purified_samples = [tc_samps['3'][0]]
         # samps_300 = purified_samples[0]
         mag_samples = mag_cols['1']
         mag_300 = [mag_samples[0]]
