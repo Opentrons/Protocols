@@ -3,7 +3,7 @@ from opentrons import protocol_api
 
 metadata = {
     'protocolName': 'Zymo Quick-DNA/RNA Viral Kit with PCR Prep',
-    'author': 'Chaz <chaz@opentrons.com>',
+    'author': 'Rami Farawi <chaz@opentrons.com>',
     'source': 'Protocol Library',
     'apiLevel': '2.5'
 }
