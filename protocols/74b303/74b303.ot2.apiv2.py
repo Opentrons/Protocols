@@ -10,12 +10,12 @@ metadata = {
 
 def run(ctx):
 
-    [tiprack_slot, reservoir_slot, tube_rack_slot, mix_volume, mix_repetitions,
-        pooling_volume, pipette_type, pipette_mount, column_count, row_count,
-        uploaded_csv] = get_values(  # noqa: F821
-        "tiprack_slot", "reservoir_slot", "tube_rack_slot", "mix_volume",
-        "mix_repetitions", "pooling_volume", "pipette_type", "pipette_mount",
-        "column_count", "row_count", "uploaded_csv")
+    [mix_rate, tiprack_slot, reservoir_slot, tube_rack_slot, mix_volume,
+     mix_repetitions, pooling_volume, pipette_type, pipette_mount,
+     column_count, row_count, uploaded_csv] = get_values(  # noqa: F821
+        "mix_rate", "tiprack_slot", "reservoir_slot", "tube_rack_slot",
+        "mix_volume", "mix_repetitions", "pooling_volume", "pipette_type",
+        "pipette_mount", "column_count", "row_count", "uploaded_csv")
 
     tiprack_map = {
         'p10_single': 'opentrons_96_filtertiprack_10ul',
@@ -26,6 +26,9 @@ def run(ctx):
         'p300_single_gen2': 'opentrons_96_filtertiprack_200ul',
         'p1000_single_gen2': 'opentrons_96_filtertiprack_1000ul'
     }
+
+    if mix_rate < 1 or mix_rate > 5:
+        raise Exception('Invalid mix rate (must be 1-5).')
 
     # row references
     rows = [*string.ascii_uppercase[:row_count]]
@@ -95,7 +98,8 @@ def run(ctx):
     # mix first, then pool 5 ul aliquots using one tip per plate
     for index, plate in enumerate(plate_names):
         pip.pick_up_tip()
-        pip.transfer(
-          pooling_volume, plate.wells(), pools[index], mix_before=(
-            mix_repetitions, mix_volume), new_tip="never")
+        for well in plate.wells():
+            pip.mix(mix_repetitions, mix_volume, well.bottom(), mix_rate)
+            pip.aspirate(pooling_volume, well.bottom())
+            pip.dispense(pooling_volume, pools[index])
         pip.drop_tip()
