@@ -199,7 +199,7 @@ def parse(filename):
         md = parse_headers(split_markdown(list(md)))
 
         for key, value in md.items():
-            if not key in ALLOWED_HEADERS:
+            if key not in ALLOWED_HEADERS:
                 raise ValueError("invalid header: '{}'".format(key))
 
         md = {
