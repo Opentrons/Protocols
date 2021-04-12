@@ -96,4 +96,4 @@ Prepare all reagents according to Zymo manual.</br>
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-zymo-quick-custom
+zymo-quick-pcr
