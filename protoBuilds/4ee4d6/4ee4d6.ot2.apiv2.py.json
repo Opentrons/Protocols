@@ -1,0 +1,102 @@
+{
+    "content": "metadata = {\n    'protocolName': '''Illumina DNA Prep with Enrichment:\n    Part 1 - Tagmentation, Clean Up, Amplify Tagmented DNA''',\n    'author': 'Steve Plonk <protocols@opentrons.com>',\n    'apiLevel': '2.9'\n}\n\n\ndef run(ctx):\n\n    # bring in constant values from json string above\n    [twb_rate, sample_count, disp_vol, engage_time\n     ] = get_values(  # noqa: F821\n      'twb_rate', 'sample_count', 'disp_vol', 'engage_time')\n\n    ctx.set_rail_lights(True)\n\n    if sample_count < 1 or sample_count > 12:\n        raise Exception('Invalid number of samples (must be 1-12).')\n\n    # tips and pipettes\n    tips300 = [ctx.load_labware(\"opentrons_96_filtertiprack_200ul\", '5')]\n    p300s = ctx.load_instrument(\n        \"p300_single_gen2\", 'right', tip_racks=tips300)\n    tips20 = [ctx.load_labware(\"opentrons_96_filtertiprack_20ul\", '4')]\n    p20s = ctx.load_instrument(\n        \"p20_single_gen2\", 'left', tip_racks=tips20)\n\n    # temperature module\n    temp = ctx.load_module('Temperature Module', '9')\n    temp_block = temp.load_labware(\n        \"opentrons_24_aluminumblock_nest_2ml_snapcap\")\n    reagents_temp = {}\n    for reagent, well in zip(\n     ['smb', 'eew', 'empty 1', 'empty 2', 'empty 3', 'empty 4', 'empty 5'],\n     ['A1', 'B1', 'A2', 'A3', 'A4', 'A5', 'A6']):\n        reagents_temp[reagent] = temp_block.wells_by_name()[well]\n\n    # helper function to avoid edge wells during thermocycling steps\n    def no_edges(plate):\n        return [\n         well for column in [\n          column for column in plate.columns()[1:11]] for well in column[1:7]]\n\n    # thermocycler module\n    tc = ctx.load_module('thermocycler')\n    tc.open_lid()\n    tc_plate = tc.load_labware(\"nest_96_wellplate_100ul_pcr_full_skirt\")\n    [heat_wells, pcr_wells] = [\n     no_edges(tc_plate)[\n      start_index:sample_count + start_index] for start_index in [0, 12]]\n\n    # magnetic module\n    mag = ctx.load_module('magnetic module gen2', '6')\n    mag_plate = mag.load_labware(\"nest_96_wellplate_100ul_pcr_full_skirt\")\n    mag.disengage()\n    [mag_wells, post_pcr_mag_wells, clean_mag_wells, sup_mag_wells] = [\n     mag_plate.wells()[\n      start_index:sample_count + start_index] for start_index in [\n      0, 16, 32, 48]]\n\n    # initial samples\n    sample_plate = ctx.load_labware(\n     \"nest_96_wellplate_100ul_pcr_full_skirt\", '1')\n    samples = sample_plate.wells()[:sample_count]\n\n    # block\n    block = ctx.load_labware(\n     \"opentrons_24_aluminumblock_nest_2ml_snapcap\", '3')\n    reagents_block = {}\n    for reagent, well in zip(\n     ['eblt', 'tbs', 'empty 1', 'st2', 'epm', 'empty 2', 'rsb', 'nhb2',\n      'enrich', 'ehb2'],\n     ['A1', 'B1', 'C1', 'D1', 'A2', 'B2', 'C2', 'D2', 'A3', 'B3']):\n        reagents_block[reagent] = block.wells_by_name()[well]\n\n    # reservoir\n    reservoir = ctx.load_labware(\"nest_12_reservoir_15ml\", '2')\n    reagents_res = {}\n    for reagent, well in zip(\n     ['twb', 'water', 'beads', 'waste', 'etoh'],\n     ['A1', 'A2', 'A3', 'A4', 'A5']):\n        reagents_res[reagent] = reservoir.wells_by_name()[well]\n\n    # mix eBLT and tbs, 20 ul to cycler wells, add 30 ul sample and mix\n    p300s.transfer(\n     138, reagents_block['eblt'],\n     reagents_block['empty 1'], mix_before=(10, 100))\n    p300s.pick_up_tip()\n    p300s.transfer(\n     138, reagents_block['tbs'], reagents_block['empty 1'],\n     mix_after=(10, 100), new_tip='never')\n    p300s.distribute(\n     20, reagents_block['empty 1'], heat_wells,\n     new_tip='never', disposal_volume=disp_vol)\n    p300s.drop_tip()\n    p300s.transfer(\n     30, samples, heat_wells, mix_after=(10, 40), new_tip='always')\n\n    # 55 Celsius 5 minutes\n    tc.set_lid_temperature(75)\n    tc.close_lid()\n    profile = [\n            {'temperature': 55, 'hold_time_seconds': 5},\n            {'temperature': 10, 'hold_time_seconds': 30}]\n    tc.execute_profile(steps=profile, repetitions=1, block_max_volume=50)\n    tc.open_lid()\n    tc.deactivate_lid()\n\n    # add st2 and mix, transfer to magnetic module, engage magnets, remove sup\n    p20s.transfer(10, reagents_block['st2'], heat_wells, new_tip='always')\n    for well in heat_wells:\n        p300s.pick_up_tip()\n        p300s.mix(10, 50, well.bottom())\n        p300s.drop_tip()\n\n    p300s.transfer(60, heat_wells, mag_wells, new_tip='always')\n    ctx.delay(minutes=5)\n    mag.engage()\n    ctx.delay(minutes=engage_time)\n    p300s.transfer(60, mag_wells, reagents_res['waste'], new_tip='always')\n    mag.disengage()\n\n    # reduce asp and disp rates, add twb, mix, engage magnets, remove sup\n    # repeat twice, prepare mix on 3rd rep\n    p300s.flow_rate.aspirate = twb_rate\n    p300s.flow_rate.dispense = twb_rate\n    for rep in range(3):\n        if rep == 1:\n            ctx.set_rail_lights(False)\n            ctx.pause(\"Please refill the p300 tip box.\")\n            ctx.set_rail_lights(True)\n            p300s.reset_tipracks()\n        p300s.transfer(\n         100, reagents_res['twb'], mag_wells,\n         mix_after=(10, 70), new_tip='always')\n        mag.engage()\n        if rep == 2:\n            p300s.transfer(\n             [138, 138], reagents_block['epm'],\n             [reagents_block['empty 2'], reagents_block['empty 2']])\n            p300s.pick_up_tip()\n            p300s.transfer(\n             [138, 138], reagents_res['water'],\n             [reagents_block['empty 2'].top(), reagents_block[\n              'empty 2'].top()], new_tip='never')\n            p300s.mix(10, 200, reagents_block['empty 2'].bottom())\n            p300s.drop_tip()\n        ctx.delay(minutes=engage_time - 1)\n        p300s.transfer(100, mag_wells, reagents_res['waste'], new_tip='always')\n\n    # set asp and disp rates to default, add 40 ul of mix, mix after\n    p300s.flow_rate.aspirate = 94\n    p300s.flow_rate.dispense = 94\n    mag.disengage()\n    p300s.transfer(\n     40, reagents_block['empty 2'], mag_wells,\n     mix_after=(10, 30), new_tip='always')\n\n    # transfer to cycler, add index, mix, pcr\n    p300s.transfer(45, mag_wells, pcr_wells, new_tip='always')\n\n    ctx.set_rail_lights(False)\n    ctx.pause('''Please remove the 96 well plate from the thermocycler\n                 and add 10 ul from the index adapter plate to A3-H3, A4-B4.\n                 Then return the plate to the thermocycler.''')\n    ctx.set_rail_lights(True)\n\n    for well in pcr_wells:\n        p300s.pick_up_tip()\n        p300s.mix(10, 40, well.bottom())\n        p300s.drop_tip()\n\n    # pcr profiles\n    profiles = [\n     [{'temperature': 72, 'hold_time_seconds': 180}],\n     [{'temperature': 98, 'hold_time_seconds': 180}],\n     [{'temperature': temp, 'hold_time_seconds': sec} for temp,\n      sec in zip([98, 60, 72], [20, 30, 60])]]\n\n    # run pcr\n    tc.close_lid()\n    tc.set_lid_temperature(105)\n    for profile, reps in zip(profiles, [1, 1, 9]):\n        tc.execute_profile(\n         steps=profile, repetitions=reps, block_max_volume=50)\n    tc.set_block_temperature(10)\n    tc.open_lid()\n    tc.deactivate_lid()\n\n    ctx.set_rail_lights(False)\n    ctx.pause('''Part 1 - Tagmentation, Clean Up,\n                 Amplify Tagmented DNA steps are complete.''')\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 20,
+            "label": "Reduced Pipette Flow Rate (ul/sec) for TWB",
+            "name": "twb_rate",
+            "type": "int"
+        },
+        {
+            "default": 12,
+            "label": "Sample Count (between 1 and 12)",
+            "name": "sample_count",
+            "type": "int"
+        },
+        {
+            "default": 0,
+            "label": "Disposal Volume (ul) for Distribute",
+            "name": "disp_vol",
+            "type": "float"
+        },
+        {
+            "default": 5,
+            "label": "Engage Time (minutes) for Magnetic Module",
+            "name": "engage_time",
+            "type": "int"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p20_single_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p300_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on 1",
+            "share": false,
+            "slot": "1",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on 2",
+            "share": false,
+            "slot": "2",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Opentrons 24 Well Aluminum Block with NEST 2 mL Snapcap on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_24_aluminumblock_nest_2ml_snapcap"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Magnetic Module GEN2 on 6",
+            "share": false,
+            "slot": "6",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Thermocycler Module on 7",
+            "share": false,
+            "slot": "7",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons 24 Well Aluminum Block with NEST 2 mL Snapcap on Temperature Module GEN1 on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_24_aluminumblock_nest_2ml_snapcap"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.9",
+        "author": "Steve Plonk <protocols@opentrons.com>",
+        "protocolName": "Illumina DNA Prep with Enrichment:\n    Part 1 - Tagmentation, Clean Up, Amplify Tagmented DNA"
+    },
+    "modules": []
+}
