@@ -7,9 +7,9 @@ metadata = {
 
 
 def run(protocol):
-    [no_samps, pip_tip, p300tips,
+    [no_samps, pip_tip, p300tips, magmod,
     a_index, cycles, f_time] = get_values(  # noqa: F821
-    'no_samps', 'pip_tip', 'p300tips', 'a_index', 'cycles', 'f_time')
+    'no_samps', 'pip_tip', 'p300tips', 'magmod', 'a_index', 'cycles', 'f_time')
 
     # raise exceptions
     if cycles < 3 or cycles > 15:
@@ -30,7 +30,7 @@ def run(protocol):
 
     rt_reagents = protocol.load_labware('nest_12_reservoir_15ml', '2')
 
-    magdeck = protocol.load_module('Magnetic Module', '1')
+    magdeck = protocol.load_module(magmod, '1')
     mag_plate = magdeck.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
 
     tempdeck = protocol.load_module('Temperature Module', '3')
