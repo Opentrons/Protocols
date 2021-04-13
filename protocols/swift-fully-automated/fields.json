@@ -25,8 +25,17 @@
     "label": "P300 8-Channel Pipette Tip Type",
     "name": "p300tips",
     "options": [
-      {"label": "Opentrons 50µL/300µL Tips", "value": "opentrons_96_tiprack_300ul"},
-      {"label": "Opentrons 200µL Filter Tips", "value": "opentrons_96_filtertiprack_200ul"}
+      {"label": "Opentrons 200µL Filter Tips", "value": "opentrons_96_filtertiprack_200ul"},
+      {"label": "Opentrons 300µL Tips", "value": "opentrons_96_tiprack_300ul"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Magnetic Module",
+    "name": "magmod",
+    "options": [
+      {"label": "GEN1", "value": "magnetic module"},
+      {"label": "GEN2", "value": "magnetic module gen2"}
     ]
   },
   {
