@@ -9,11 +9,8 @@ metadata = {
 
 
 def run(protocol):
-    # [pipinfo, sampnum] = get_values(  # noqa: F821
-    #  'pipinfo', 'sampnum')
-
-    pipinfo = "p1000_single_gen2 opentrons_96_tiprack_1000ul"
-    sampnum = 25
+    [pipinfo, sampnum] = get_values(  # noqa: F821
+     'pipinfo', 'sampnum')
 
     # load labware
     tips20 = [
