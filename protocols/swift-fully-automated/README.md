@@ -20,7 +20,8 @@ With this protocol, your [OT-2](https://shop.opentrons.com/collections/ot-2-robo
 
 For more information about the Swift 2S Turbo Kit and the [Swift 2S Turbo Unique Dual Indexing Primer Kit](https://shop.opentrons.com/products/swift-2s-turbo-unique-dual-indexing-primer-kit-96-rxns?_pos=1&_sid=f1fb599e7&_ss=r) on the OT-2, please see our Application Note here: [Rapid high quality next generation sequencing library preparation with Swift 2S Turbo DNA Library Kits on the Opentrons OT-2](https://opentrons-landing-img.s3.amazonaws.com/bundles/swift_automated_ngs_application_note.pdf)</br>
 </br>
-**Update (April 12, 2021)**: This protocol has been updated to fix an issue with the final elution destination when selecting 16 samples.
+**Update (April 12, 2021)**: This protocol has been updated to fix an issue with the final elution destination when selecting 16 samples.</br>
+**Update (April 13, 2021)**: This protocol has been updated to accommodate the GEN2 Magnetic Module and fix an issue when using 200µL filter tips.
 
 
 ---
