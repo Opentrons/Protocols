@@ -23,7 +23,7 @@ def run(ctx):
     for reservoir column tracking between protocol runs
     """
     # for reservoir column tracking between protocol runs
-    if ctx.is_simulating():
+    if not ctx.is_simulating():
         file_path = 'temporary/columnandtiptracking.csv'
         file_dir = os.path.dirname(file_path)
         # check for file directory
@@ -37,7 +37,7 @@ def run(ctx):
                  "A1 of Opentrons 96 Filter Tip Rack 200 µL on 11", "\n"]))
 
     current_data_list = []
-    if not ctx.is_simulating():
+    if ctx.is_simulating():
         current_data_list = [0,
                              "A1 of Opentrons 96 Filter Tip Rack 20 µL on 10",
                              "A1 of Opentrons 96 Filter Tip Rack 200 µL on 11"]
@@ -179,6 +179,6 @@ def run(ctx):
     # write future column and starting tips to csv for next protocol run
     new_data = ",".join([
      str(new_col_index), str(future_tip_20), str(future_tip_300), '\n'])
-    if ctx.is_simulating():
+    if not ctx.is_simulating():
         with open(file_path, 'w') as outfile:
             outfile.write(new_data)
