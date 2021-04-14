@@ -1,0 +1,50 @@
+[
+  {
+    "type": "float",
+    "label": "Dispense Height (mm) Above Bottom of Well",
+    "name": "dispense_height",
+    "default": 4
+  },
+  {
+    "type": "float",
+    "label": "Aspirate Height (mm) Above Bottom of Well",
+    "name": "aspirate_height",
+    "default": 1
+  },
+  {
+    "type": "float",
+    "label": "Radius for Touch Tip (decimal fraction of well radius)",
+    "name": "touch_radius",
+    "default": 0.75
+  },
+  {
+    "type": "float",
+    "label": "Vertical Offset for Touch Tip (mm below well top, expressed as negative number)",
+    "name": "touch_v_offset",
+    "default": -2
+  },
+  {
+    "type": "float",
+    "label": "Speed of Movement during Touch Tip (mm/sec)",
+    "name": "touch_speed",
+    "default": 10
+  },
+  {
+    "type": "float",
+    "label": "Maximum Volume Capacity for p300 Tips (uL)",
+    "name": "tip_max",
+    "default": 200
+  },
+  {
+    "type": "float",
+    "label": "Volume of DNA Dilution to Combine with PCR Mix (uL)",
+    "name": "dna_volume",
+    "default": 852
+  },
+  {
+    "type": "float",
+    "label": "Volume of DNA/PCR Mix Mixture Transferred to Reservoir (uL)",
+    "name": "reservoir_fill_volume",
+    "default": 1700
+  }
+]
