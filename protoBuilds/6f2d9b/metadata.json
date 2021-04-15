@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "test.ot2.apiv2.py"
+            "6f2d9b.ot2.apiv2.py"
         ],
         "description": [
             "README.md"
@@ -11,10 +11,10 @@
     "flags": {
         "embedded-app": false,
         "feature": false,
-        "hide-from-search": true,
+        "hide-from-search": false,
         "skip-tests": false
     },
-    "path": "protocols/test-readme",
-    "slug": "test-readme",
+    "path": "protocols/6f2d9b",
+    "slug": "6f2d9b",
     "status": "ok"
 }
