@@ -1,0 +1,181 @@
+{
+  "wells": {
+    "A1": {
+      "totalLiquidVolume": 500,
+      "diameter": 7,
+      "shape": "circular",
+      "depth": 29,
+      "x": 18.21,
+      "y": 48.47,
+      "z": 22
+    },
+    "B1": {
+      "totalLiquidVolume": 500,
+      "diameter": 7,
+      "shape": "circular",
+      "depth": 29,
+      "x": 18.21,
+      "y": 29.27,
+      "z": 22
+    },
+    "C1": {
+      "totalLiquidVolume": 500,
+      "diameter": 7,
+      "shape": "circular",
+      "depth": 29,
+      "x": 18.21,
+      "y": 10.07,
+      "z": 22
+    },
+    "A2": {
+      "totalLiquidVolume": 500,
+      "diameter": 7,
+      "shape": "circular",
+      "depth": 29,
+      "x": 38.01,
+      "y": 48.47,
+      "z": 22
+    },
+    "B2": {
+      "totalLiquidVolume": 500,
+      "diameter": 7,
+      "shape": "circular",
+      "depth": 29,
+      "x": 38.01,
+      "y": 29.27,
+      "z": 22
+    },
+    "C2": {
+      "totalLiquidVolume": 500,
+      "diameter": 7,
+      "shape": "circular",
+      "depth": 29,
+      "x": 38.01,
+      "y": 10.07,
+      "z": 22
+    },
+    "A3": {
+      "totalLiquidVolume": 500,
+      "diameter": 7,
+      "shape": "circular",
+      "depth": 29,
+      "x": 57.81,
+      "y": 48.47,
+      "z": 22
+    },
+    "B3": {
+      "totalLiquidVolume": 500,
+      "diameter": 7,
+      "shape": "circular",
+      "depth": 29,
+      "x": 57.81,
+      "y": 29.27,
+      "z": 22
+    },
+    "C3": {
+      "totalLiquidVolume": 500,
+      "diameter": 7,
+      "shape": "circular",
+      "depth": 29,
+      "x": 57.81,
+      "y": 10.07,
+      "z": 22
+    },
+    "A4": {
+      "totalLiquidVolume": 500,
+      "diameter": 7,
+      "shape": "circular",
+      "depth": 29,
+      "x": 77.61,
+      "y": 48.47,
+      "z": 22
+    },
+    "B4": {
+      "totalLiquidVolume": 500,
+      "diameter": 7,
+      "shape": "circular",
+      "depth": 29,
+      "x": 77.61,
+      "y": 29.27,
+      "z": 22
+    },
+    "C4": {
+      "totalLiquidVolume": 500,
+      "diameter": 7,
+      "shape": "circular",
+      "depth": 29,
+      "x": 77.61,
+      "y": 10.07,
+      "z": 22
+    }
+  },
+  "groups": [
+    {
+      "metadata": {},
+      "wells": [
+        "A1",
+        "B1",
+        "C1",
+        "A2",
+        "B2",
+        "C2",
+        "A3",
+        "B3",
+        "C3",
+        "A4",
+        "B4",
+        "C4"
+      ]
+    }
+  ],
+  "brand": {
+    "brand": "generic"
+  },
+  "metadata": {
+    "displayName": "Multi 12x Tube Rack",
+    "displayCategory": "tubeRack",
+    "displayVolumeUnits": "mL",
+    "tags": []
+  },
+  "dimensions": {
+    "xDimension": 127.75,
+    "yDimension": 85.7,
+    "zDimension": 85
+  },
+  "parameters": {
+    "format": "irregular",
+    "isTiprack": false,
+    "isMagneticModuleCompatible": false,
+    "loadName": "12x_multi_tuberack"
+  },
+  "ordering": [
+    [
+      "A1",
+      "B1",
+      "C1"
+    ],
+    [
+      "A2",
+      "B2",
+      "C2"
+    ],
+    [
+      "A3",
+      "B3",
+      "C3"
+    ],
+    [
+      "A4",
+      "B4",
+      "C4"
+    ]
+  ],
+  "namespace": "custom_beta",
+  "version": 1,
+  "schemaVersion": 2,
+  "cornerOffsetFromSlot": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  }
+}
