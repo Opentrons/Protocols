@@ -11,11 +11,12 @@ metadata = {
 
 def run(ctx):
 
-    [dispense_height, aspirate_height, touch_radius, touch_v_offset,
-     touch_speed, tip_max, dna_volume,
+    [tracking_reset, dispense_height, aspirate_height, touch_radius,
+     touch_v_offset, touch_speed, tip_max, dna_volume,
      reservoir_fill_volume] = get_values(  # noqa: F821
-        "dispense_height", "aspirate_height", "touch_radius", "touch_v_offset",
-        "touch_speed", "tip_max", "dna_volume", "reservoir_fill_volume")
+        "tracking_reset", "dispense_height", "aspirate_height", "touch_radius",
+        "touch_v_offset", "touch_speed", "tip_max", "dna_volume",
+        "reservoir_fill_volume")
 
     ctx.set_rail_lights(True)
 
@@ -24,7 +25,7 @@ def run(ctx):
     """
     # for reservoir column tracking between protocol runs
     if not ctx.is_simulating():
-        file_path = 'temporary/columnandtiptracking.csv'
+        file_path = '/data/temporary/columnandtiptracking.csv'
         file_dir = os.path.dirname(file_path)
         # check for file directory
         if not os.path.exists(file_dir):
@@ -181,4 +182,9 @@ def run(ctx):
      str(new_col_index), str(future_tip_20), str(future_tip_300), '\n'])
     if not ctx.is_simulating():
         with open(file_path, 'w') as outfile:
-            outfile.write(new_data)
+            if not tracking_reset:
+                outfile.write(new_data)
+            else:
+                outfile.write(",".join([
+                 "0", "A1 of Opentrons 96 Filter Tip Rack 20 µL on 10",
+                 "A1 of Opentrons 96 Filter Tip Rack 200 µL on 11", "\n"]))

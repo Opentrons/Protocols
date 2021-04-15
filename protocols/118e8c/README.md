@@ -4,8 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* qPCR Setup
-     * FluoGene HLA
+* PCR
+     * PCR Prep
 
 ## Description
 FluoGene HLA NX 96-Well Setup. This protocol performs the setup of two Fluogene 96-well trays to perform a multiplexed TaqMan-based assay.

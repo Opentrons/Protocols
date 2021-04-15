@@ -1,5 +1,14 @@
 [
   {
+    "type": "boolean",
+    "label": "Delete and Restart Tip and Column Tracking Data? (only necessary to interrupt usual tracking in mid-stream to replace all labware at the same time)",
+    "name": "tracking_reset",
+    "options": [
+      { "label": "Continue Tracking as Usual", "value": false },
+      { "label": "Restart Tracking with Fresh Reservoir and Tip Boxes", "value": true }
+    ]
+  },
+  {
     "type": "float",
     "label": "Dispense Height (mm) Above Bottom of Well",
     "name": "dispense_height",
