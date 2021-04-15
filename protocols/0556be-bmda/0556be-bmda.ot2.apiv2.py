@@ -12,12 +12,12 @@ def run(ctx):
         comp1_vol, comp2_vol, comp3_vol, comp4_vol, comp5_vol, comp6_vol,
         comp7_vol, comp8_vol, comp9_vol, comp10_vol, comp11_vol,
         comp12_vol, mm_vol, mix_reps, mix_vol, asp_delay,
-        disp_delay] = get_values(  # noqa: F821
+        disp_delay, air_gap_vol] = get_values(  # noqa: F821
         "p300_mount", "temperature", "final_tubes", "comp_asp_speed",
         "comp_disp_speed", "comp1_vol", "comp2_vol", "comp3_vol",
         "comp4_vol", "comp5_vol", "comp6_vol", "comp7_vol", "comp8_vol",
         "comp9_vol", "comp10_vol", "comp11_vol", "comp12_vol", "mm_vol",
-        "mix_reps", "mix_vol", "asp_delay", "disp_delay")
+        "mix_reps", "mix_vol", "asp_delay", "disp_delay", "air_gap_vol")
 
     # Load Labware
     temp_mod = ctx.load_module('temperature module gen2', 10)
@@ -49,9 +49,11 @@ def run(ctx):
     p300.flow_rate.dispense = comp_disp_speed
     for vol, source in zip(volumes, components):
         p300.pick_up_tip()
+        p300.air_gap(air_gap_vol)
         p300.aspirate(vol, source)
         ctx.delay(seconds=asp_delay)
-        p300.dispense(vol, mm)
+        p300.air_gap(air_gap_vol)
+        p300.dispense(vol+air_gap_vol*2, mm)
         ctx.delay(seconds=disp_delay)
         p300.drop_tip()
     p300.pick_up_tip()
@@ -70,9 +72,13 @@ def run(ctx):
     # Add Master Mix to 32 wells
     p300.pick_up_tip()
     for dest in pcr_plate_wells:
+        p300.air_gap(air_gap_vol)
         p300.aspirate(mm_vol, mm)
         ctx.delay(seconds=asp_delay)
-        p300.dispense(mm_vol, dest)
+        p300.air_gap(air_gap_vol)
+        p300.touch_tip()
+        p300.dispense(mm_vol+air_gap_vol*2, dest)
+        p300.touch_tip()
         ctx.delay(seconds=disp_delay)
     p300.drop_tip()
 
