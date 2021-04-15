@@ -1,15 +1,15 @@
 {
     "author": "Opentrons",
     "categories": {
-        "qPCR Setup": [
-            "FluoGene HLA"
+        "PCR": [
+            "PCR Prep"
         ]
     },
     "description": "FluoGene HLA NX 96-Well Setup. This protocol performs the setup of two Fluogene 96-well trays to perform a multiplexed TaqMan-based assay.\nLinks:\n* json protocol\nThis protocol is a translation of the attached json protocol to python with a couple additional features for faster completion time and tracking of reservoir columns and tips between protocol runs: A multi-channel p20 pipette is used to dispense 4 ul of water and 4 ul pcr mix to well H1 of each tray by using only the rear-most channel of the pipette. Then the p300 single is used to mix the DNA dilution with the pcr mix and transfer it to the reagent reservoir. The p20 multi is then used to distribute 8 ul of this mixture to each of the remaining wells of the two 96-well trays.\nThe deck layout can be displayed by uploading the attached json protocol to the Opentrons Protocol Designer web page.",
     "internal": "118e8c",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
-        "categories": "* qPCR Setup\n     * FluoGene HLA\n\n",
+        "categories": "* PCR\n     * PCR Prep\n\n",
         "description": "FluoGene HLA NX 96-Well Setup. This protocol performs the setup of two Fluogene 96-well trays to perform a multiplexed TaqMan-based assay.\n\nLinks:\n* [json protocol](https://s3.amazonaws.com/pf-upload-01/u-4256/0/2021-04-02/dc23h0c/FluoGene%20HLA%20NX%20Match-96%20ver.%2057%20with%207.5.json)\n\nThis protocol is a translation of the attached json protocol to python with a couple additional features for faster completion time and tracking of reservoir columns and tips between protocol runs: A multi-channel p20 pipette is used to dispense 4 ul of water and 4 ul pcr mix to well H1 of each tray by using only the rear-most channel of the pipette. Then the p300 single is used to mix the DNA dilution with the pcr mix and transfer it to the reagent reservoir. The p20 multi is then used to distribute 8 ul of this mixture to each of the remaining wells of the two 96-well trays.\nThe deck layout can be displayed by uploading the attached json protocol to the [Opentrons Protocol Designer web page](https://opentrons.com/protocols/designer/).\n",
         "internal": "118e8c\n",
         "process": "1. Input your liquid handling parameters below.\n2. Download your protocol.\n3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).\n4. Set up your deck according to the deck map below.\n5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support article](https://support.opentrons.com/ot-2/getting-started-software-setup/deck-calibration).\n6. Hit \"Run\".\n\n",
