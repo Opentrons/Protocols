@@ -1,6 +1,6 @@
 [
   {
-    "type": "boolean",
+    "type": "dropDown",
     "label": "Delete and Restart Tip and Column Tracking Data? (only necessary to interrupt usual tracking in mid-stream to replace all labware at the same time)",
     "name": "tracking_reset",
     "options": [
