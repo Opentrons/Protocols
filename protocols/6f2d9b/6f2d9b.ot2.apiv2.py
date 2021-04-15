@@ -10,15 +10,18 @@ metadata = {
 
 def run(ctx):
 
-    [p1000_mount, extraction_type, samples, sample_vol] = get_values(  # noqa: F821
+    [p1000_mount, extraction_type, samples,
+        sample_vol] = get_values(  # noqa: F821
         "p1000_mount", "extraction_type", "samples", "sample_vol")
 
     if extraction_type == "single":
         if not 1 <= samples <= 94:
-            raise Exception("Please enter a sample number between 1 and 94 for single extraction.")
+            raise Exception('''Please enter a sample number between 1
+                            and 94 for single extraction.''')
     elif extraction_type == "double":
         if not 1 <= samples <= 47:
-            raise Exception("Please enter a sample number between 1 and 47 for double extraction.")
+            raise Exception('''Please enter a sample number between
+                            1 and 47 for double extraction.''')
 
     def pick_up(pip):
         """Function that can be used instead of .pick_up_tip() that will pause
@@ -34,19 +37,23 @@ def run(ctx):
 
     # Load Labware
     dwp = ctx.load_labware('kingfisher_96_deepwell_plate_2ml', 2)
-    tuberacks = [ctx.load_labware('12x_multi_tuberack', slot) for slot in range(4, 12)]
+    tuberacks = [ctx.load_labware('12x_multi_tuberack', slot)
+                 for slot in range(4, 12)]
     tiprack_1000ul = ctx.load_labware('opentrons_96_filtertiprack_1000ul', 1)
 
     # Load Pipettes
-    p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount, tip_racks=[tiprack_1000ul])
+    p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,
+                                tip_racks=[tiprack_1000ul])
 
     # Get sample and tube rack wells
     if extraction_type == "single":
         sample_wells = dwp.wells()[:samples]
-        tube_wells = [well for rack in tuberacks for well in rack.wells()][:samples]
+        tube_wells = [well for rack in tuberacks
+                      for well in rack.wells()][:samples]
     elif extraction_type == "double":
         sample_wells = dwp.wells()[:samples*2]
-        tube_wells = [well for rack in tuberacks for well in rack.wells() for _ in range(2)][:samples*2]
+        tube_wells = [well for rack in tuberacks for well in rack.wells()
+                      for _ in range(2)][:samples*2]
 
     # Transfer Patient Samples to each well
     for source, dest in zip(tube_wells, sample_wells):
