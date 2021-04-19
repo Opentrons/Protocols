@@ -65,7 +65,7 @@ def run(protocol):
 
     # Tip tracking between runs
     if not protocol.is_simulating():
-        file_path = '/data/csv/tiptracking.csv'
+        file_path = '/data/csv/tiptracking407d5e.csv'
         file_dir = os.path.dirname(file_path)
         # check for file directory
         if not os.path.exists(file_dir):
