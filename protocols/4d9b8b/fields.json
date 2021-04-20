@@ -3,13 +3,13 @@
     "type": "textFile",
     "label": "Source Plate CSV",
     "name": "csv",
-    "default": "Wafer well, Transfervol1, Transfervol2, Transfervol3, Transfervoltowafer \\n A1, 1, 2, 4, 12\\n B1, 2, 2, 2, 13\\nC1, 3, 10, 10, 14\\n", "grid": "wafer_6x4_grid"
+    "default": "Wafer well, Transfervol1, Transfervol2, Transfervol3, Transfervoltowafer \\n A1, 1, 2, 4, 12\\n B1, 2, 2, 2, 13\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\n", "grid": "wafer_6x4_grid"
   },
   {
     "type": "int",
     "label": "Number of Samples (1-96)",
     "name": "num_samp",
-    "default": 24
+    "default": 3
   },
   {
     "type": "int",
