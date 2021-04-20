@@ -14,7 +14,7 @@
   {
     "type": "int",
     "label": "Initial Volume in Solution 1 (Tube A1) in mL",
-    "name": "vol_tube1"
+    "name": "vol_tube1",
     "default": 100
   },
   {
