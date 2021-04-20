@@ -1,11 +1,6 @@
 import math
 from opentrons import protocol_api
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"m300_mount":"left","sample_cols":12,"media_trans_vol":270,"sample_trans_vol":30,"tip_strategy":"dilution"}""")
-    return [_all_values[n] for n in names]
-
 metadata = {
     'protocolName': 'Viral Sample Titration',
     'author': 'Sakib <sakib.hossain@opentrons.com>',
@@ -16,10 +11,10 @@ metadata = {
 
 def run(ctx):
 
-    [sample_cols, m300_mount, media_trans_vol,
+    [sample_cols, m300_type, m300_mount, media_trans_vol,
         sample_trans_vol, tip_strategy] = get_values(  # noqa: F821
-        "sample_cols", "m300_mount", "media_trans_vol", "sample_trans_vol",
-        "tip_strategy")
+        "sample_cols", "m300_type", "m300_mount", "media_trans_vol",
+        "sample_trans_vol", "tip_strategy")
 
     # Load Labware
     analysis_dish = [ctx.load_labware('corning_96_wellplate_flat_bottom_360ul',
@@ -35,7 +30,7 @@ def run(ctx):
                                      4, 'Samples Plate')
 
     # Load Pipettes
-    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,
+    m300 = ctx.load_instrument(m300_type, m300_mount,
                                tip_racks=[tiprack])
 
     # Pickup and Track Tips
