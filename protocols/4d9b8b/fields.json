@@ -9,7 +9,7 @@
     "type": "int",
     "label": "Number of Samples (1-96)",
     "name": "num_samp",
-    "default": 3
+    "default": 24
   },
   {
     "type": "int",
