@@ -1,5 +1,5 @@
 metadata = {
-    'protocolName': 'SuperScript III: qRT-PCR Prep with CSV File',
+    'protocolName': 'SuperScript III: qRT-PCR Prep with csv_samp File',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.7'
@@ -8,8 +8,8 @@ metadata = {
 
 def run(ctx):
 
-    [csv_samp, num_samp, p20_mount, p300_mount] = get_values(  # noqa: F821
-        "csv_samp", "num_samp", "p20_mount", "p300_mount")
+    [csv_samp_samp, num_samp, p20_mount, p300_mount] = get_values(  # noqa: F821
+        "csv_samp_samp", "num_samp", "p20_mount", "p300_mount")
 
     # load labware
     thermocyc = ctx.load_module('thermocycler')
@@ -41,7 +41,7 @@ def run(ctx):
     thermocyc.set_lid_temperature(25)
 
     data = [[val.strip() for val in line.split(',')]
-            for line in csv.splitlines()
+            for line in csv_samp.splitlines()
             if line.split(',')[0].strip()][1:]
 
     # make mix, mix, then distribute
@@ -60,7 +60,7 @@ def run(ctx):
     p20.drop_tip()
 
     ctx.comment('\nAdding RNA to plate\n')
-    # add rna sample from csv
+    # add rna sample from csv_samp
     for vol, s, d, in zip(data,
                           sample_tubes.wells(),
                           tc_plate.wells()[32:32+num_samp]):
