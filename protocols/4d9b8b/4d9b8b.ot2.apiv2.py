@@ -72,7 +72,7 @@ def run(ctx):
             p20.return_tip()
         ctx.comment('\nAdding to Wafer Plate\n')
         p20.pick_up_tip(tips[start])
-        p20.mix(mix_reps, mix_vol))
+        p20.mix(mix_reps, mix_vol)
         p20.aspirate(int(transfer[i][4]), mix_well)
         p20.dispense(int(transfer[i][4]), dest_well.top(z=disp_height))
         p20.drop_tip()
