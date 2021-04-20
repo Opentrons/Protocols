@@ -1,0 +1,38 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "PCR": [
+            "Cleanup"
+        ]
+    },
+    "deck-setup": "",
+    "description": "This is a flexible protocol accommodating Beckman Coulter AMPure XP PCR Cleanup and Size Selection. It consists of the following major sections:\n binding beads pre-addition\n sample pooling and mixing with binding beads\n 2x ethanol wash\n final elution in H2O\nSamples to be pooled should be loaded in 2 PCR plates on the deck. For reagent layout used in this protocol, please see \"Setup\" below.\nFor sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 7) to the elution PCR plate (slot 8). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.\nExplanation of complex parameters below:\n park tips: If set to yes (recommended), the protocol will conserve tips between reagent addition and removal. Tips will be stored in the wells of an empty rack corresponding to the well of the sample that they access (tip parked in A1 of the empty rack will only be used for sample A1, tip parked in B1 only used for sample B1, etc.). If set to no, tips will always be used only once, and the user will be prompted to manually refill tipracks mid-protocol for high throughput runs.\n track tips across protocol runs: If set to yes, tip racks will be assumed to be in the same state that they were in the previous run. For example, if one completed protocol run accessed tips through column 5 of the 3rd tiprack, the next run will access tips starting at column 6 of the 3rd tiprack. If set to no, tips will be picked up from column 1 of the 1st tiprack.\n",
+    "internal": "53fec2",
+    "labware": "\nEppendorf 96-deepwell plate 500\u00b5l\nEppendorf 96-well PCR plate 200\u00b5l, skirted\nEppendorf 1-channel automation reservoirs 30ml/100ml\nOpentrons 96 Filter Tip Rack 200 \u00b5L\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* PCR\n    * Cleanup\n\n",
+        "deck-setup": "\n![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/53fec2/decksetup.png)\n\n",
+        "description": "This is a flexible protocol accommodating Beckman Coulter AMPure XP PCR Cleanup and Size Selection. It consists of the following major sections:\n* binding beads pre-addition\n* sample pooling and mixing with binding beads\n* 2x ethanol wash\n* final elution in H2O\n\nSamples to be pooled should be loaded in 2 PCR plates on the deck. For reagent layout used in this protocol, please see \"Setup\" below.\n\nFor sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 7) to the elution PCR plate (slot 8). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.\n\nExplanation of complex parameters below:\n* `park tips`: If set to `yes` (recommended), the protocol will conserve tips between reagent addition and removal. Tips will be stored in the wells of an empty rack corresponding to the well of the sample that they access (tip parked in A1 of the empty rack will only be used for sample A1, tip parked in B1 only used for sample B1, etc.). If set to `no`, tips will always be used only once, and the user will be prompted to manually refill tipracks mid-protocol for high throughput runs.\n* `track tips across protocol runs`: If set to `yes`, tip racks will be assumed to be in the same state that they were in the previous run. For example, if one completed protocol run accessed tips through column 5 of the 3rd tiprack, the next run will access tips starting at column 6 of the 3rd tiprack. If set to `no`, tips will be picked up from column 1 of the 1st tiprack.\n\n---\n\n",
+        "internal": "53fec2\n",
+        "labware": "* Eppendorf 96-deepwell plate 500\u00b5l\n* Eppendorf 96-well PCR plate 200\u00b5l, skirted\n* Eppendorf 1-channel automation reservoirs 30ml/100ml\n* [Opentrons 96 Filter Tip Rack 200 \u00b5L](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)\n\n",
+        "modules": "* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [P300 Multi-Channel GEN2 Electrnoic Pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "protocol-steps": "1. Binding buffer is mixed and pre-added to the magnetic module plate.\n2. Corresponding columns from each sample plate are consolidated into the magnetic module.\n3. Supernatant is removed, and each sample is washed 2x with ethanol, without bead resuspension.\n4. Beads are resuspended in H2O.\n5. The beads are separated, and final elutions are transferred to a clean PCR plate.\n\n",
+        "reagents": "* [Beckman Coulter AMPure XP for PCR Purification](https://www.beckman.com/reagents/genomic/cleanup-and-size-selection/pcr)\n\n",
+        "title": "Beckman Coulter AMPure XP PCR Cleanup and Size Selection"
+    },
+    "modules": [
+        "Magnetic Module (GEN2)"
+    ],
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nP300 Multi-Channel GEN2 Electrnoic Pipette\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "protocol-steps": "\nBinding buffer is mixed and pre-added to the magnetic module plate.\nCorresponding columns from each sample plate are consolidated into the magnetic module.\nSupernatant is removed, and each sample is washed 2x with ethanol, without bead resuspension.\nBeads are resuspended in H2O.\nThe beads are separated, and final elutions are transferred to a clean PCR plate.\n",
+    "reagents": [
+        "Beckman Coulter AMPure XP for PCR Purification"
+    ],
+    "title": "Beckman Coulter AMPure XP PCR Cleanup and Size Selection"
+}
