@@ -10,10 +10,10 @@ metadata = {
 
 def run(ctx):
 
-    [num_samp, p20_mount, csv, mix_reps,
+    [num_samp, p20_mount, csv_samp, mix_reps,
         disp_height, disp_rate, mix_vol,
         vol_tube1, vol_tube2, vol_tube3, grid] = get_values(  # noqa: F821
-        "num_samp", "p20_mount", "csv", "mix_reps",
+        "num_samp", "p20_mount", "csv_samp", "mix_reps",
             "disp_height", "disp_rate", "mix_vol",
             "vol_tube1", "vol_tube2", "vol_tube3", "grid")
 
@@ -36,9 +36,9 @@ def run(ctx):
     p20 = ctx.load_instrument('p20_single_gen2', p20_mount,
                               tip_racks=tipracks)
 
-    # csv file --> nested list
+    # csv_samp file --> nested list
     transfer = [[val.strip().lower() for val in line.split(',')]
-                for line in csv.splitlines()
+                for line in csv_samp.splitlines()
                 if line.split(',')[0].strip()][1:]
 
     # liquid height tracking
