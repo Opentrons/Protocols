@@ -29,7 +29,7 @@
   {
     "type": "float",
     "label": "Aspirate Height (mm) Above Bottom of Well",
-    "name": "aspirate_height",
+    "name": "reservoir_aspirate_height",
     "default": 1
   },
   {
