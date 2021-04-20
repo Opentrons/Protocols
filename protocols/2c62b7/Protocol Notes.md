@@ -26,41 +26,59 @@ Use Pause
    Pause -  Briefly vortex the plate once during incubation.
    Perform a second incubation at 95°C for 2 minutes.
 9. Pause - Centrifuge at >2000g for 10 minutes at room temp.
-10. Transfer 200 uL supernatant from E-Z 96 Plate to a new 96-well Racked Microtubes
-11. Pause - Transfer Prechilled P2 Buffer into reservoir
+10. Transfer 200 uL supernatant from E-Z 96 Plate to a new 96-well Racked Microtubes (Manual Step)
+11. Pause - Transfer Prechilled P2 Buffer into reservoir (Manual Step, better to do manually)
     Add 67 uL of P2 buffer to new 96-well Racked Microtubes(?)
     Add 100 uL of cHTR reagent to new 96-well Racked Microtubes(?)
 12. Pause - Centrifuge >2000g for 5 minutes
 13. Transfer supernatant from 96-well Racked Microtubes(?) to NEST 2 mL 96-Well Deep Well Plate, V Bottom (on top of mag mod)
-14. Add 1 volume XP1 Buffer and 20 µL Mag-Bind® Particles RQ (Master Mix 2). 
-    Mix thoroughly by pipetting up and down 10 times.
+
+Tip Isolator on Hamilton ()
+
+Plate with water underneath the tip rack. Fill empty tip rack with water for parking tips.
+
+Note: Kit does not allow dead volume.
+
+14. Add 1 volume XP1 Buffer and 20 µL Mag-Bind® Particles RQ (Master Mix 2) (280 + 20 uL). (First Step on OT-2 according to Nelson)
+    Mix thoroughly by pipetting up and down 10 times. (Mix half the volume, start mixing from the middle, then the bottom, then back to the top) (Bead Suspend: 5 mid, 5 bottom, 5 mid) (Tip mix 3 columns and then transfer)
+
+Mix reservoir (MM2) and then add to 3 columns on NEST at a time (new tip). Then mix again.
+
 15. Pause - Incubate at Room Temp for 10 minutes (Mixing?)
     Mix Each Column 1-2 times (How many full plate mixes can be done in 10 minutes?) (Also park tips)
+    (Mix thoroughly at medium height, half the volume, fast mixing)(Each round of mixing mix 5 mm lower)
+    (Mix 10 times each round 1)
+    (Mix 5 times round 2)
+    (last column might not have binded fast enough, give it more time)
+* Crucial Step
+
+
 ### Engage + Remove Supernatant
 16. Engage Mag Mod and Delay for 5 minutes to allow mag beads to settle on the walls. (Engage and Wait Step) (5 minutes default)
     Mix while the magmod is engaged using same tips from step 15
-17. Aspirate supernatant and discard without touching the magnetic beads. (Might require putting pipette to the side, Remove Supernatant Step)
+17. Aspirate (all of the liquid ~600+ uL, about 10uL can be left behind) supernatant and discard without touching the magnetic beads. (Might require putting pipette to the side, Remove Supernatant Step) (Remove supernatant column by column, cycle through to prevent beads to be drying, slow aspiration and dispense) (discard tips)
 18. Disengage Mag Mod
 ### Wash Step
-19. Add 500 uL of VHB Buffer to NEST 2 mL 96-Well Deep Well Plate, V Bottom
-20. Pause - Vortex 30-60 seconds at RT
+19. Add 500 uL (Add 300uL (Max) instead of 500) of VHB Buffer to NEST 2 mL 96-Well Deep Well Plate, V Bottom (Dispense at a very fast rate)
+20. Pause - Vortex 30-60 seconds at RT (Mix with Pipette, make sure pellet is being disrupted) (Tip Mixing, conserve tips)
 ### Engage + Remove Supernatant
 21. Engage Mag Mod and Delay for X minutes
 22. Aspirate supernatant and discard without touching the magnetic beads. (Might require putting pipette to the side)
 23. Disengage Mag Mod
 ### Wash Step
 24. Add 500 uL of 70% Ethanol to NEST 2 mL 96-Well Deep Well Plate, V Bottom
-25. Pause - Vortex for 30-60 seconds at RT
+25. Pause - Vortex for 30-60 seconds at RT (use tip mixing tips)
 ### Engage + Remove Supernatant
 26. Engage Mag Mod and Delay for X minutes (5 minutes default)
 27. Aspirate supernatant and discard without touching the magnetic beads. (Might require putting pipette to the side)
 28. Repeat 23-27 for a second ethanol wash ***
+EXTRA Ethanol wash if needed (if 300 uL is not good) (Discard tips)
 29. While the plate is on top of the mag mod and is engaged, delay 1 minute and then remove any liquid (Aspirate for the opposite side of the pellet, remove supernatant).
 30. While mag mod is engaged, delay for 10 minutes to allow mag beads to dry
-31. Add 50-100 uL of elution buffer preheated to 70C? (Does this need to stay at 70C at all times? If so we can leave this on the temp mod and use the thermocycler for other heating steps)
-32. Pause - Vortex for 5 minutes
-33. Engage Mag Mod and Delay for X minutes to allow mag beads to settle on the walls (Let sit at room temperature until the Mag-Bind® Particles RQ are completely cleared from solution.)
-34. Transfer clear supernatant containing purified DNA to NEST 0.1 mL 96 Well PCR Plate, Full Skirt
+31. Add 50-100 uL of elution buffer preheated to 70C? (Does this need to stay at 70C at all times? If so we can leave this on the temp mod and use the thermocycler for other heating steps) (new tips)
+32. Pause - Vortex for 5 minutes (tip mixing)
+33. Engage Mag Mod and Delay for 2-3 minutes to allow mag beads to settle on the walls (Let sit at room temperature until the Mag-Bind® Particles RQ are completely cleared from solution.)
+34. Transfer clear supernatant (only 5 ul extra from default volume) containing purified DNA to NEST 0.1 mL 96 Well PCR Plate, Full Skirt (dispense from medium height to low height 5mm from the bottom, slow speed)
 
 ## Reagents
 Lysozyme
@@ -143,3 +161,8 @@ VHB Buffer
 32. Pause - Vortex for 5 minutes
 33. Engage Mag Mod and Delay for X minutes to allow mag beads to settle on the walls (Let sit at room temperature until the Mag-Bind® Particles RQ are completely cleared from solution.)
 34. Transfer clear supernatant containing purified DNA to NEST 0.1 mL 96 Well PCR Plate, Full Skirt
+
+
+Debug conditional: True -> pause after each aspiration
+
+Test run with 3 columns of real samples and 3 with no samples
