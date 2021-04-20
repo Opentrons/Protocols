@@ -4,10 +4,6 @@ metadata = {
     'source': 'Custom Protocol Request',
     'apiLevel': '2.7'
 }
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"num_samp":24,"p20_mount":"left", "p300_mount": "right", "csv": "Well, Transfer Vol\\n A1, 1\\n A2, 18\\n A3, 3\\n A4, 4\\n A5, 3\\n A6, 2\\n B1, 19\\n B2, 2\\n B3, 3\\n B4, 4\\n B5, 5\\n B6, 6\\n C1, 1\\n C2, 2\\n C3, 3\\n C4, 4\\n C5, 5\\n C6, 6\\n D1, 1\\n D2, 2\\n D3, 3\\n D4, 4\\n D5, 5\\n D6, 16"}""")
-    return [_all_values[n] for n in names]
 
 
 def run(ctx):
