@@ -133,5 +133,11 @@
       "label": "Delay After Dispensing (seconds)",
       "name": "disp_delay",
       "default": 2
+    },
+    {
+      "type": "float",
+      "label": "Air Gap Volume (Before and After Each Aspirate)",
+      "name": "air_gap_vol",
+      "default": 20
     }
   ]

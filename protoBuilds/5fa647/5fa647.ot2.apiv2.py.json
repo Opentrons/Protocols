@@ -1,0 +1,426 @@
+{
+    "content": "metadata = {\n    'protocolName': 'SuperScript III: qRT-PCR Prep with CSV File',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.7'\n}\n\n\ndef run(ctx):\n\n    [csv_samp, num_samp, p20_mount, p300_mount] = get_values(  # noqa: F821\n        \"csv_samp\", \"num_samp\", \"p20_mount\", \"p300_mount\")\n\n    # load labware\n    thermocyc = ctx.load_module('thermocycler')\n    tc_plate = thermocyc.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')\n    sample_tubes = ctx.load_labware(\n                        'opentrons_24_aluminumblock_1500ul', '1')\n    reagent_tubes = ctx.load_labware(\n                        'opentrons_24_aluminumblock_1500ul', '2')\n    tiprack20 = ctx.load_labware('opentrons_96_filtertiprack_20ul', '3')\n    tiprack200 = ctx.load_labware('opentrons_96_filtertiprack_200ul', '4')\n\n    # load instruments\n    p20 = ctx.load_instrument('p20_single_gen2', p20_mount,\n                              tip_racks=[tiprack20])\n    p300 = ctx.load_instrument('p300_single_gen2', p300_mount,\n                               tip_racks=[tiprack200])\n\n    # load reagents\n    rxn_mix = reagent_tubes.wells_by_name()['A1']\n    enzyme_mix = reagent_tubes.wells_by_name()['A2']\n    mix_tube = reagent_tubes.wells_by_name()['A3']\n    rnase = reagent_tubes.wells_by_name()['A4']\n    water = reagent_tubes.wells_by_name()['A5']\n    rxn_mix_vol = 10*num_samp+10  # extra 10ul to ensure full distribution\n    enzyme_mix_vol = 2*num_samp+10  # extra 10ul to ensure full distribution\n\n    if thermocyc.lid_position != 'open':\n        thermocyc.lid_position == 'open'\n    thermocyc.set_lid_temperature(25)\n\n    data = [[val.strip() for val in line.split(',')]\n            for line in csv_samp.splitlines()\n            if line.split(',')[0].strip()][1:]\n\n    # make mix, mix, then distribute\n    ctx.comment('\\nMixing 2x RT Reaction Mix and Enzyme Mix\\n')\n    p300.transfer(rxn_mix_vol, rxn_mix, mix_tube)\n    p300.transfer(enzyme_mix_vol, enzyme_mix, mix_tube)\n    p300.pick_up_tip()\n    p300.mix(10, rxn_mix_vol+enzyme_mix_vol\n             if rxn_mix_vol+enzyme_mix_vol < 200 else 200, mix_tube)\n    p300.drop_tip()\n    ctx.comment('\\nTransferring mix to plate\\n')\n    p20.pick_up_tip()\n    for well in tc_plate.wells()[32:32+num_samp]:  # put rxn in middle of plate\n        p20.aspirate(12, mix_tube)\n        p20.dispense(12, well)\n    p20.drop_tip()\n\n    ctx.comment('\\nAdding RNA to plate\\n')\n    # add rna sample from csv_samp\n    for vol, s, d, in zip(data,\n                          sample_tubes.wells(),\n                          tc_plate.wells()[32:32+num_samp]):\n        p20.pick_up_tip()\n        p20.aspirate(int(vol[1]), s)\n        p20.dispense(int(vol[1]), d)\n        p20.mix(5, 20, d)\n        p20.drop_tip()\n\n        profile = [\n            {'temperature': 25, 'hold_time_minutes': 10},\n            {'temperature': 50, 'hold_time_minutes': 30},\n            {'temperature': 85, 'hold_time_minutes': 5},\n            {'temperature': 37, 'hold_time_minutes': 20},\n        ]\n\n    all_volumes = [int(line[1]) for line in data]\n    thermocyc.close_lid()\n    thermocyc.execute_profile(steps=profile[0:3],\n                              repetitions=1,\n                              block_max_volume=max(all_volumes))\n    thermocyc.open_lid()\n    ctx.pause('''Please remove sample plate from thermocycler and chill on ice.\n                 Once chilled, put sample plate back in the thermocycler for\n                 additon of RNase H and water.''')\n\n    p20.distribute(1,\n                   rnase,\n                   [well.top(z=1)\n                    for well in tc_plate.wells()][32:32+num_samp],\n                   new_tip='always',\n                   blow_out=True,\n                   blowout_location='source well')\n\n    thermocyc.execute_profile(steps=profile[3:],\n                              repetitions=1,\n                              block_max_volume=max(all_volumes)+1)\n\n    for well in tc_plate.wells()[32:32+num_samp]:\n        p300.pick_up_tip()\n        p300.aspirate(60, water)\n        p300.dispense(60, well)\n        p300.drop_tip()\n\n    ctx.comment('Protocol complete - remove sample plate and store on ice.')\n",
+    "custom_labware_defs": [
+        {
+            "brand": {
+                "brand": "Opentrons",
+                "brandId": []
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 127.75,
+                "yDimension": 85.5,
+                "zDimension": 42
+            },
+            "groups": [
+                {
+                    "metadata": {
+                        "displayCategory": "tubeRack",
+                        "wellBottomShape": "u"
+                    },
+                    "wells": [
+                        "A1",
+                        "B1",
+                        "C1",
+                        "D1",
+                        "A2",
+                        "B2",
+                        "C2",
+                        "D2",
+                        "A3",
+                        "B3",
+                        "C3",
+                        "D3",
+                        "A4",
+                        "B4",
+                        "C4",
+                        "D4",
+                        "A5",
+                        "B5",
+                        "C5",
+                        "D5",
+                        "A6",
+                        "B6",
+                        "C6",
+                        "D6"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "aluminumBlock",
+                "displayName": "Opentrons 24 Aluminum Block 1500 \u00b5L",
+                "displayVolumeUnits": "\u00b5L",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1",
+                    "B1",
+                    "C1",
+                    "D1"
+                ],
+                [
+                    "A2",
+                    "B2",
+                    "C2",
+                    "D2"
+                ],
+                [
+                    "A3",
+                    "B3",
+                    "C3",
+                    "D3"
+                ],
+                [
+                    "A4",
+                    "B4",
+                    "C4",
+                    "D4"
+                ],
+                [
+                    "A5",
+                    "B5",
+                    "C5",
+                    "D5"
+                ],
+                [
+                    "A6",
+                    "B6",
+                    "C6",
+                    "D6"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "opentrons_24_aluminumblock_1500ul",
+                "quirks": []
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 40,
+                    "diameter": 13,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 20.75,
+                    "y": 68.63,
+                    "z": 2
+                },
+                "A2": {
+                    "depth": 40,
+                    "diameter": 13,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 38,
+                    "y": 68.63,
+                    "z": 2
+                },
+                "A3": {
+                    "depth": 40,
+                    "diameter": 13,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 55.25,
+                    "y": 68.63,
+                    "z": 2
+                },
+                "A4": {
+                    "depth": 40,
+                    "diameter": 13,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 72.5,
+                    "y": 68.63,
+                    "z": 2
+                },
+                "A5": {
+                    "depth": 40,
+                    "diameter": 13,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 89.75,
+                    "y": 68.63,
+                    "z": 2
+                },
+                "A6": {
+                    "depth": 40,
+                    "diameter": 13,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 107,
+                    "y": 68.63,
+                    "z": 2
+                },
+                "B1": {
+                    "depth": 40,
+                    "diameter": 13,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 20.75,
+                    "y": 51.38,
+                    "z": 2
+                },
+                "B2": {
+                    "depth": 40,
+                    "diameter": 13,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 38,
+                    "y": 51.38,
+                    "z": 2
+                },
+                "B3": {
+                    "depth": 40,
+                    "diameter": 13,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 55.25,
+                    "y": 51.38,
+                    "z": 2
+                },
+                "B4": {
+                    "depth": 40,
+                    "diameter": 13,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 72.5,
+                    "y": 51.38,
+                    "z": 2
+                },
+                "B5": {
+                    "depth": 40,
+                    "diameter": 13,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 89.75,
+                    "y": 51.38,
+                    "z": 2
+                },
+                "B6": {
+                    "depth": 40,
+                    "diameter": 13,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 107,
+                    "y": 51.38,
+                    "z": 2
+                },
+                "C1": {
+                    "depth": 40,
+                    "diameter": 13,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 20.75,
+                    "y": 34.13,
+                    "z": 2
+                },
+                "C2": {
+                    "depth": 40,
+                    "diameter": 13,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 38,
+                    "y": 34.13,
+                    "z": 2
+                },
+                "C3": {
+                    "depth": 40,
+                    "diameter": 13,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 55.25,
+                    "y": 34.13,
+                    "z": 2
+                },
+                "C4": {
+                    "depth": 40,
+                    "diameter": 13,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 72.5,
+                    "y": 34.13,
+                    "z": 2
+                },
+                "C5": {
+                    "depth": 40,
+                    "diameter": 13,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 89.75,
+                    "y": 34.13,
+                    "z": 2
+                },
+                "C6": {
+                    "depth": 40,
+                    "diameter": 13,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 107,
+                    "y": 34.13,
+                    "z": 2
+                },
+                "D1": {
+                    "depth": 40,
+                    "diameter": 13,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 20.75,
+                    "y": 16.88,
+                    "z": 2
+                },
+                "D2": {
+                    "depth": 40,
+                    "diameter": 13,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 38,
+                    "y": 16.88,
+                    "z": 2
+                },
+                "D3": {
+                    "depth": 40,
+                    "diameter": 13,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 55.25,
+                    "y": 16.88,
+                    "z": 2
+                },
+                "D4": {
+                    "depth": 40,
+                    "diameter": 13,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 72.5,
+                    "y": 16.88,
+                    "z": 2
+                },
+                "D5": {
+                    "depth": 40,
+                    "diameter": 13,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 89.75,
+                    "y": 16.88,
+                    "z": 2
+                },
+                "D6": {
+                    "depth": 40,
+                    "diameter": 13,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 107,
+                    "y": 16.88,
+                    "z": 2
+                }
+            }
+        }
+    ],
+    "fields": [
+        {
+            "default": "Well, Transfer Vol\n A1, 1\n A2, 18\n A3, 3\n A4, 4\n A5, 3\n A6, 2\n B1, 19\n B2, 2\n B3, 3\n B4, 4\n B5, 5\n B6, 6\n C1, 1\n C2, 2\n C3, 3\n C4, 4\n C5, 5\n C6, 6\n D1, 1\n D2, 2\n D3, 3\n D4, 4\n D5, 5\n D6, 16",
+            "label": "CSV File",
+            "name": "csv_samp",
+            "type": "textFile"
+        },
+        {
+            "default": 24,
+            "label": "Number of samples (1-24)",
+            "name": "num_samp",
+            "type": "int"
+        },
+        {
+            "label": "P300 Single Gen2 Mount",
+            "name": "p300_mount",
+            "options": [
+                {
+                    "label": "left",
+                    "value": "left"
+                },
+                {
+                    "label": "right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P20 Single Gen2 Mount",
+            "name": "p20_mount",
+            "options": [
+                {
+                    "label": "right",
+                    "value": "right"
+                },
+                {
+                    "label": "left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_single_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p20_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Opentrons 24 Aluminum Block 1500 \u00b5L on 1",
+            "share": false,
+            "slot": "1",
+            "type": "opentrons_24_aluminumblock_1500ul"
+        },
+        {
+            "name": "Opentrons 24 Aluminum Block 1500 \u00b5L on 2",
+            "share": false,
+            "slot": "2",
+            "type": "opentrons_24_aluminumblock_1500ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Thermocycler Module on 7",
+            "share": false,
+            "slot": "7",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.7",
+        "author": "Rami Farawi <rami.farawi@opentrons.com>",
+        "protocolName": "SuperScript III: qRT-PCR Prep with CSV File",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}
