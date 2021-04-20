@@ -15,25 +15,25 @@
     "type": "int",
     "label": "Initial Volume in Solution 1 (Tube A1) in mL",
     "name": "vol_tube1",
-    "default": 100
+    "default": 34
   },
   {
     "type": "int",
     "label": "Initial Volume in Solution 2 (Tube A2) in mL",
     "name": "vol_tube2",
-    "default": 100
+    "default": 34
   },
   {
     "type": "int",
     "label": "Initial Volume in Solution 3 (Tube A3) in mL",
     "name": "vol_tube3",
-    "default": 100
+    "default": 34
   },
   {
     "type": "float",
     "label": "Dispense Height Above Wafer",
     "name": "disp_height",
-    "default": 0.0
+    "default": -1
   },
   {
     "type": "float",
