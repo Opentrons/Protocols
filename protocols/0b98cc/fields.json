@@ -25,5 +25,14 @@
         "label": "Sample Transfer Volume (uL)",
         "name": "sample_trans_vol",
         "default": 30
+    },
+    {
+        "type": "dropDown",
+        "label": "Tip Change Strategy",
+        "name": "tip_strategy",
+        "options": [
+          { "label": "Every Dilution", "value": "dilution" },
+          { "label": "Every Sample", "value": "sample" }
+        ]
     }
 ]
