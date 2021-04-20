@@ -108,6 +108,7 @@ def run(ctx):
         if tip_strategy == "sample":
             if dilution_counter == 3:
                 m300.drop_tip()
+                dilution_counter = 0
         ctx.comment(message)
 
     for sample in sample_wells:
