@@ -7,6 +7,11 @@ metadata = {
     'apiLevel': '2.7'
 }
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"vol_tube1": 36.746, "vol_tube2": 34, "vol_tube3": 34.21, "mix_vol": 20, "disp_rate": 7.56, "disp_height": -1, "mix_reps": 5, "num_samp":96,"p20_mount":"left", "csv": "Wafer well, Transfervol1, Transfervol2, Transfervol3, Transfervoltowafer \\n A1, 1, 2, 4, 12\\n B1, 2, 2, 2, 13\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\nC1, 3, 10, 10, 14\\n", "grid": "wafer_6x4_grid", "grid": "wafer_4x24_grid"}""")
+    return [_all_values[n] for n in names]
+
 
 def run(ctx):
 
