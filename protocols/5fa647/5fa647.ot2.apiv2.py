@@ -1,5 +1,5 @@
 metadata = {
-    'protocolName': 'SuperScript III: qRT-PCR Prep with csv_samp File',
+    'protocolName': 'SuperScript III: qRT-PCR Prep with CSV File',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.7'
@@ -8,8 +8,8 @@ metadata = {
 
 def run(ctx):
 
-    [csv_samp_samp, num_samp, p20_mount, p300_mount] = get_values(  # noqa: F821
-        "csv_samp_samp", "num_samp", "p20_mount", "p300_mount")
+    [csv_samp, num_samp, p20_mount, p300_mount] = get_values(  # noqa: F821
+        "csv_samp", "num_samp", "p20_mount", "p300_mount")
 
     # load labware
     thermocyc = ctx.load_module('thermocycler')
