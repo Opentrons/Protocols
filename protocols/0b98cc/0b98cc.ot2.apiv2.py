@@ -1,6 +1,11 @@
 import math
 from opentrons import protocol_api
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"m300_mount":"left","sample_cols":12,"media_trans_vol":270,"sample_trans_vol":30,"tip_strategy":"dilution"}""")
+    return [_all_values[n] for n in names]
+
 metadata = {
     'protocolName': 'Viral Sample Titration',
     'author': 'Sakib <sakib.hossain@opentrons.com>',
@@ -12,8 +17,9 @@ metadata = {
 def run(ctx):
 
     [sample_cols, m300_mount, media_trans_vol,
-        sample_trans_vol] = get_values(  # noqa: F821
-        "sample_cols", "m300_mount", "media_trans_vol", "sample_trans_vol")
+        sample_trans_vol, tip_strategy] = get_values(  # noqa: F821
+        "sample_cols", "m300_mount", "media_trans_vol", "sample_trans_vol",
+        "tip_strategy")
 
     # Load Labware
     analysis_dish = [ctx.load_labware('corning_96_wellplate_flat_bottom_360ul',
@@ -76,10 +82,13 @@ def run(ctx):
     ''' Dilute Samples and Transfer to Analysis Dish '''
 
     well_counter = 0
+    dilution_counter = 0
 
     def dilution(disp_rate, message):
         nonlocal well_counter
-        pick_up(m300)
+        nonlocal dilution_counter
+        if not m300.has_tip:
+            pick_up(m300)
         m300.flow_rate.dispense = disp_rate
         m300.mix(3, 150, dilution_dish_wells[well_counter])
         m300.aspirate(sample_trans_vol,
@@ -89,7 +98,7 @@ def run(ctx):
         m300.dispense(sample_trans_vol+20,
                       dilution_dish_wells[well_counter].bottom(z=2.5))
         m300.touch_tip(v_offset=13)
-        m300.mix(10, 200)
+        m300.mix(10, 150)
         m300.touch_tip(v_offset=13)
         m300.flow_rate.dispense = 50
         m300.aspirate(100, dilution_dish_wells[well_counter].bottom(z=4))
@@ -97,8 +106,13 @@ def run(ctx):
         m300.dispense(100+20, analysis_dish_wells[well_counter].bottom(z=5.5))
         m300.mix(2, 100)
         m300.touch_tip(v_offset=6.5)
-        m300.air_gap(20)
-        m300.drop_tip()
+        if tip_strategy == "dilution":
+            m300.air_gap(20)
+            m300.drop_tip()
+        dilution_counter += 1
+        if tip_strategy == "sample":
+            if dilution_counter == 3:
+                m300.drop_tip()
         ctx.comment(message)
 
     for sample in sample_wells:
@@ -129,7 +143,8 @@ def run(ctx):
         m300.mix(2, 100)
         m300.touch_tip(v_offset=6.5)
         m300.air_gap(20)
-        m300.drop_tip()
+        if tip_strategy == "dilution":
+            m300.drop_tip()
         ctx.comment("First Dilution and Transfer Complete!")
 
         # Perform second dilution (10^-2) and transfer to analysis dish
