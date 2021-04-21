@@ -213,7 +213,7 @@ def run(protocol):
         for mag_samp in mag_300:
             if not p300.hw_pipette['has_tip']:
                 p300.pick_up_tip()
-            p300.air_gap(10)
+            p300.air_gap(5)
             p300.aspirate(190, mag_samp)
             p300.air_gap(5)
             p300.dispense(210, waste.bottom(1.5))
@@ -381,7 +381,7 @@ def run(protocol):
                 p300.pick_up_tip()
             p300.air_gap(5)
             p300.aspirate(190, mag_samps.bottom(1.5))
-            p300.air_gap(10)
+            p300.air_gap(5)
             p300.dispense(210, waste2)
             p300.drop_tip()
 
