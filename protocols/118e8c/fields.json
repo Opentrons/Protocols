@@ -1,5 +1,17 @@
 [
   {
+    "type": "float",
+    "label": "Reduced Value for Pick Up Current (mAmp) for p20 Multi-Channel One-Tip Pick Ups (0.1 to 0.15)",
+    "name": "reduced_pick_up_current",
+    "default": 0.15
+  },
+  {
+    "type": "float",
+    "label": "Aspirate Height (mm) Above Bottom of Well for p20 Multi and 2 mL tubes",
+    "name": "tube_aspirate_height",
+    "default": 6
+  },
+  {
     "type": "dropDown",
     "label": "Delete and Restart Tip and Column Tracking Data? (only necessary to interrupt usual tracking in mid-stream to replace all labware at the same time)",
     "name": "tracking_reset",
@@ -17,7 +29,7 @@
   {
     "type": "float",
     "label": "Aspirate Height (mm) Above Bottom of Well",
-    "name": "aspirate_height",
+    "name": "reservoir_aspirate_height",
     "default": 1
   },
   {

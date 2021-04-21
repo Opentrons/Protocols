@@ -11,14 +11,21 @@ metadata = {
 
 def run(ctx):
 
-    [tracking_reset, dispense_height, aspirate_height, touch_radius,
-     touch_v_offset, touch_speed, tip_max, dna_volume,
+    [reduced_pick_up_current, tube_aspirate_height, tracking_reset,
+     dispense_height, reservoir_aspirate_height, touch_radius, touch_v_offset,
+     touch_speed, tip_max, dna_volume,
      reservoir_fill_volume] = get_values(  # noqa: F821
-        "tracking_reset", "dispense_height", "aspirate_height", "touch_radius",
+        "reduced_pick_up_current", "tube_aspirate_height", "tracking_reset",
+        "dispense_height", "reservoir_aspirate_height", "touch_radius",
         "touch_v_offset", "touch_speed", "tip_max", "dna_volume",
         "reservoir_fill_volume")
 
     ctx.set_rail_lights(True)
+
+    # constrain reduced_pick_up_current value to acceptable range
+    if reduced_pick_up_current < 0.1 or reduced_pick_up_current > 0.15:
+        raise Exception('''Invalid value for reduced_pick_up_current parameter
+                           (must be between 0.1 and 0.15).''')
 
     """
     for reservoir column tracking between protocol runs
@@ -31,7 +38,7 @@ def run(ctx):
         if not os.path.exists(file_dir):
             os.makedirs(file_dir)
         # check for file; if not there, create initial csv
-        if not os.path.isfile(file_path):
+        if (not os.path.isfile(file_path) or tracking_reset):
             with open(file_path, 'w') as outfile:
                 outfile.write(",".join([
                  "0", "A1 of Opentrons 96 Filter Tip Rack 20 µL on 10",
@@ -70,8 +77,8 @@ def run(ctx):
     # tips and p300 multi
     tips300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '11')]
     tips20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '10')]
-    p300s = ctx.load_instrument('p300_single_gen2', 'right', tip_racks=tips300)
-    p20m = ctx.load_instrument('p20_multi_gen2', 'left', tip_racks=tips20)
+    p300s = ctx.load_instrument('p300_single_gen2', 'left', tip_racks=tips300)
+    p20m = ctx.load_instrument('p20_multi_gen2', 'right', tip_racks=tips20)
 
     # trays
     trays = [
@@ -107,11 +114,38 @@ def run(ctx):
     # p20m "single channel" 4 ul each of water and PCR mx to H1 of each tray
     p20m.flow_rate.aspirate = 3.8
     p20m.flow_rate.dispense = 3.8
+
+    # capture and report original value for p20m pick_up_current
+    default_current = ctx._implementation._hw_manager.hardware.\
+        _attached_instruments[p20m._implementation.get_mount()].\
+        config.pick_up_current
+    ctx.comment("""Tip pick-up current for the p20 multi-channel pipette
+    initially configured to {} mAmp.""".format(str(default_current)))
+
+    # temporarily reduce p20m pick_up_current for one-channel tip pickup
+    ctx._implementation._hw_manager.hardware._attached_instruments[
+     p20m._implementation.get_mount()].update_config_item(
+     'pick_up_current', reduced_pick_up_current)
+    ctx.comment("""Tip pick-up current configuration for the p20 multi-channel
+    pipette temporarily reduced to {} mAmp for one-tip pickup.""".format(
+     str(reduced_pick_up_current)))
+
+    # one-tip pickup with p20m
     pick_up(p20m)
+
+    # reset p20m pick_up_current to original value
+    ctx._implementation._hw_manager.hardware._attached_instruments[
+     p20m._implementation.get_mount()].update_config_item(
+     'pick_up_current', default_current)
+    ctx.comment("""Tip pick-up current for the p20 multi-channel pipette
+    restored to initial value of {} mAmp for standard 8-tip pickup.""".format(
+     str(ctx._implementation._hw_manager.hardware._attached_instruments[
+      p20m._implementation.get_mount()].config.pick_up_current)))
+
     for tray in trays:
         for reagent in [water, pcr_mix]:
-            p20m.mix(1, 4, reagent)
-            p20m.aspirate(4, reagent)
+            p20m.mix(1, 4, reagent.bottom(tube_aspirate_height))
+            p20m.aspirate(4, reagent.bottom(tube_aspirate_height))
             p20m.dispense(
              4, tray.wells_by_name()['H1'].bottom(dispense_height))
             p20m.touch_tip(
@@ -149,7 +183,7 @@ def run(ctx):
      current_starting_tip_20.split()[0]]
     p20m.pick_up_tip()
     for tray in trays:
-        p20m.aspirate(8, reservoir_mix.bottom(aspirate_height))
+        p20m.aspirate(8, reservoir_mix.bottom(reservoir_aspirate_height))
         p20m.dispense(8, tray.columns()[0][0].bottom(dispense_height))
         p20m.touch_tip(
          tray.columns()[0][0], radius=touch_radius,
@@ -162,9 +196,11 @@ def run(ctx):
         for index, column in enumerate(tray.columns()[1:]):
             if not index % 2:
                 if index < len(tray.columns()[1:]) - 1:
-                    p20m.aspirate(16, reservoir_mix.bottom(aspirate_height))
+                    p20m.aspirate(
+                     16, reservoir_mix.bottom(reservoir_aspirate_height))
                 else:
-                    p20m.aspirate(8, reservoir_mix.bottom(aspirate_height))
+                    p20m.aspirate(
+                     8, reservoir_mix.bottom(reservoir_aspirate_height))
             p20m.dispense(8, column[0].bottom(dispense_height))
             p20m.touch_tip(
              column[0], radius=touch_radius,
@@ -182,9 +218,4 @@ def run(ctx):
      str(new_col_index), str(future_tip_20), str(future_tip_300), '\n'])
     if not ctx.is_simulating():
         with open(file_path, 'w') as outfile:
-            if not tracking_reset:
-                outfile.write(new_data)
-            else:
-                outfile.write(",".join([
-                 "0", "A1 of Opentrons 96 Filter Tip Rack 20 µL on 10",
-                 "A1 of Opentrons 96 Filter Tip Rack 200 µL on 11", "\n"]))
+            outfile.write(new_data)
