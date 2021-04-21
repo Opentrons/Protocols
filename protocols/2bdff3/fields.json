@@ -72,7 +72,7 @@
       {
         "type": "float",
         "label": "Step 1 Mixing Volume",
-        "name": "trans_vol1",
+        "name": "step1_mix_vol",
         "default": 4
     },
     {
