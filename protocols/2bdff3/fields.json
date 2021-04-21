@@ -55,8 +55,8 @@
         "label": "P300 Single Channel Mount Position",
         "name": "p300_mount",
         "options": [
-          {"label": "Single Extraction", "value": "single"},
-          {"label": "Double Extraction", "value": "double"}
+          {"label": "Right", "value": "right"},
+          {"label": "Left", "value": "left"}
         ]
       },
       {
