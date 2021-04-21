@@ -5,7 +5,7 @@
 
 ## Categories
 * Sample Prep
-	* Plate Filing
+	* Plate Filling
 
 ## Description
 Automates fifth JSON portion of protocol [7e4c3e](https://docs.google.com/document/d/1odr2TfSuiJhDRY0qyfBs5fz-swU-nJTulUdvRRDV4ec/edit?ts=5fbbeb03)
