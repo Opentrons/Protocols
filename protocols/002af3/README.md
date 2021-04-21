@@ -5,7 +5,7 @@
 
 ## Categories
 * PCR
-	* PCR prep
+	* PCR Prep
 
 ## Description
 This protocol builds a 384 well plate with from up to 14 columns from up to 2 96 well plates. It is a pythonization of [this protocol](https://s3.amazonaws.com/pf-upload-01/u-4256/0/2020-07-17/uo03r2t/Covid-19%2012%20columns%20.json), which only could not run a variable number of columns. This protocol is used for building qPCR plates.
