@@ -5,7 +5,7 @@
 
 ## Categories
 * Sample Prep
-    * Sample Pooling
+    * Pooling
 
 ## Description
 This protocol uses two p1000-single channel (GEN2) pipettes to pool 500 ul aliquots of up to 96 patient samples to create up to 32 pools (when pool_size is specified in the parameters below as 3 samples combined) or up to 48 pools (when pool_size is specified in the parameters below as 2 samples combined) using an Opentrons OT-2 robot. This is a pythonized version (and modified to make use of two pipettes) of a [Protocol Designer protocol](https://designer.opentrons.com/). Sample racks are in deck slots 1, 3, 4, 6, 7, 9, and 10 and pool racks are in deck slots 2, 5, and 8 unless otherwise specified in the parameters below. 3:1 pools are kept apart on the deck to minimize risk of cross-contamination by leaving row "B" empty as much as possible. When more than 45 pools are created, column 5 of the last sample rack is used to locate the 46th, 47th and 48th pools.

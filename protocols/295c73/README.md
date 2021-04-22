@@ -1,8 +1,8 @@
-# swiftbiosci.com accel-amplicon-plus-egfr-pathway-panel
+# Accel-Amplicon® Plus EGFR Pathway Panel
 
 ## Categories
 * NGS Library Prep
-	* accel-amplicon-plus-egfr-pathway-panel
+	* Accel-Amplicon Plus EGFR Pathway Panel
 
 
 ## Description
