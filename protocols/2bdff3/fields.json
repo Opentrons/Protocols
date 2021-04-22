@@ -1,0 +1,84 @@
+[
+    {
+      "type": "dropDown",
+      "label": "Run Step 1",
+      "name": "step1",
+      "options": [
+        {"label": "Yes", "value": "True"},
+        {"label": "No", "value": "False"}
+      ]
+    },
+    {
+        "type": "dropDown",
+        "label": "Run Step 2",
+        "name": "step2",
+        "options": [
+          {"label": "Yes", "value": "True"},
+          {"label": "No", "value": "False"}
+        ]
+    },
+    {
+        "type": "int",
+        "label": "Quadrant 1 Columns (Max 12)",
+        "name": "quad1_cols",
+        "default": 12
+      },
+      {
+        "type": "int",
+        "label": "Quadrant 2 Columns (Max 12)",
+        "name": "quad2_cols",
+        "default": 12
+      },
+      {
+        "type": "int",
+        "label": "Quadrant 3 Columns (Max 12)",
+        "name": "quad3_cols",
+        "default": 12
+      },
+      {
+        "type": "int",
+        "label": "Quadrant 4 Columns (Max 12)",
+        "name": "quad4_cols",
+        "default": 12
+      },
+    {
+      "type": "dropDown",
+      "label": "P20 Multichannel Mount Position",
+      "name": "m20_mount",
+      "options": [
+        {"label": "Left", "value": "left"},
+        {"label": "Right", "value": "right"}
+      ]
+    },
+    {
+        "type": "dropDown",
+        "label": "P300 Single Channel Mount Position",
+        "name": "p300_mount",
+        "options": [
+          {"label": "Right", "value": "right"},
+          {"label": "Left", "value": "left"}
+        ]
+      },
+      {
+        "type": "dropDown",
+        "label": "Donor 384 Well Plate Type",
+        "name": "donor_384_type",
+        "options": [
+          {"label": "4-titude FrameStar 384 Well Plate", "value": "4titudeframestar_384_wellplate_55ul"},
+          {"label": "BIOplastics 384 Well Plate", "value": "bioplastics_384_wellplate_50ul"},
+          {"label": "Eppendorf Twin.tec LoBind 384 Well Plate", "value": "eppendorftwin.teclobind_384_wellplate_40ul"}
+        ]
+      },
+      {
+        "type": "float",
+        "label": "Step 1 Mixing Volume",
+        "name": "step1_mix_vol",
+        "default": 4
+    },
+    {
+      "type": "float",
+      "label": "Step 1 Transfer Volume",
+      "name": "trans_vol1",
+      "default": 8
+    }
+]
