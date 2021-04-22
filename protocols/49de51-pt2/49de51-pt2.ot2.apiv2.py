@@ -194,7 +194,7 @@ def run(protocol):
     protocol.pause('Please place plate on thermomixer for allocated time. \
     When ready to resume, replace plate on OT-2 and click RESUME')
 
-    magdeck.engage()
+    magdeck.engage(height=magheight[deep_plate])
     protocol.comment('Engaging Magdeck for 5 minutes.')
     protocol.delay(minutes=5)
 
