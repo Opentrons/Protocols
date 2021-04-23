@@ -10,9 +10,6 @@
 Use Pause
 1. Pause Function - Centrifuge E-Z 96 Disruptor Plate C Plus (E-Z 96 Plate) to remove ceramic beads
 2. Add Samples to E-Z 96 Plate
-
-## Begin Main Protocol (Customized) (OT-2):
-
 3. Add 525 uL SLX-Mlus Buffer and 2 µL RNase A buffer to E-Z 96 Plate (Master Mix 1).
    Add 20 uL of Lysozyme
    Incubate at 37C for 20 minutes
@@ -38,6 +35,8 @@ Tip Isolator on Hamilton ()
 Plate with water underneath the tip rack. Fill empty tip rack with water for parking tips.
 
 Note: Kit does not allow dead volume.
+
+## Begin Main Protocol (Customized) (OT-2):
 
 14. Add 1 volume XP1 Buffer and 20 µL Mag-Bind® Particles RQ (Master Mix 2) (280 + 20 uL). (First Step on OT-2 according to Nelson)
     Mix thoroughly by pipetting up and down 10 times. (Mix half the volume, start mixing from the middle, then the bottom, then back to the top) (Bead Suspend: 5 mid, 5 bottom, 5 mid) (Tip mix 3 columns and then transfer)
