@@ -25,9 +25,9 @@ Explanation of complex parameters below:
 * `Aspiration flow rate for P10-Multi (ul/sec)`: Specify the aspiration flow rate for the P10-Multi.
 * `Aspiration flow rate for P50-Multi (ul/sec)`: Specify the aspiration flow rate for the P50-Multi.
 * `Dispense flow rate for P10-Multi (ul/sec)`: Specify the dispense flow rate for the P10-Multi.
-* `Aspiration flow rate for P50-Multi (ul/sec)`: Specify the dispense flow rate for the P50-Multi.
-* `Use Temperature Module`: If `Yes`is selected, the temperature module will be engaged over the course of the protocol with the user-specified temperature. A selection of `No` disengages the temperature module over the course of the protocol.
-* `Temperature Module Temperature`: Specify the temperature the temperature module will hold over the duration of the protocol is `Yes` is selected in the `Use Temperature Module` parameter.
+* `Dispense flow rate for P50-Multi (ul/sec)`: Specify the dispense flow rate for the P50-Multi.
+* `Use Temperature Module`: If `Yes` is selected, the temperature module will be engaged over the course of the protocol with the user-specified temperature. A selection of `No` disengages the temperature module over the course of the protocol.
+* `Temperature Module Temperature`: Specify the temperature the temperature module will hold over the duration of the protocol if `Yes` is selected in the `Use Temperature Module` parameter.
 * `P10-Multi mount`: Specify which side the P10-Multi pipette will be mounted.
 * `P50-Multi mount`: Specify which side the P10-Multi pipette will be mounted.
 
@@ -77,8 +77,8 @@ qPCR: [IQ SYBR Green Supermix (BIO-RAD #170-8884)](https://www.bio-rad.com/webro
 1. cDNA from the first user-specified column is transferred to  Supermix in column 1, slot 1.
 2. The resulting Mastermix is then distributed to rows (A, C, E, G, I, K, M, O) four columns at a time. This step is repeated until all aforementioned rows are populated across the entire 24 column tray.
 3. cDNA is then transferred from the other user-specified column and is transferred to the Supermix in column 2, slot 2.
-4. Step (2) is repeated but with rows (B, D, F, H, J, L, N, P). 384 well plate is completely populated with mastermix after this step.
-5. PrimerPairs from each column in slot 3 are distributed to two columns in on the 384 well PCR plate in slot 2 by row (A, C, E, G, I, K, M, O), and then (B, D, F, H, J, L, N, P). This allows for each reaction to be run in duplicates on the PCR plate.
+4. Step (2) is repeated but with rows (B, D, F, H, J, L, N, P). 384 well plate is completely populated with mastermix after this step if running full primer pairs.
+5. PrimerPairs from each column in slot 3 are distributed to two columns on the 384 well PCR plate in slot 2 by row (A, C, E, G, I, K, M, O), and then (B, D, F, H, J, L, N, P). This allows for each reaction to be run in duplicates on the PCR plate.
 
 
 ### Process
