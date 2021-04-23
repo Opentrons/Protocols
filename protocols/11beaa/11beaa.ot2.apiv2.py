@@ -6,12 +6,6 @@ metadata = {
 }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"num_samp": 12, "temp_mod_on": false,"temp": 6,"p10_mount":"left", "p50_mount": "right","asp_bottom_clearance":1, "asp_flowrate_p10":5,"disp_flowrate_p10":10,"asp_flowrate_p50":50,"disp_flowrate_p50":50, "disp_bottom_clearance":1, "cDNA_col_num1": 6, "cDNA_col_num2": 7}""")
-    return [_all_values[n] for n in names]
-
-
 def run(ctx):
 
     [num_samp, cDNA_col_num1, cDNA_col_num2, asp_bottom_clearance,
