@@ -13,8 +13,8 @@
       "label": "Tip Type",
       "name": "tip_type",
       "options": [
-        {"label": "Opentrons 20 uL Filter", "value": "filter"},
-        {"label": "Opentrons 20 uL Standard", "value": "standard"}
+        {"label": "Opentrons 20 uL Filter", "value": "opentrons_96_filtertiprack_20ul"},
+        {"label": "Opentrons 20 uL Standard", "value": "opentrons_96_tiprack_20ul"}
       ]
     },
     {
