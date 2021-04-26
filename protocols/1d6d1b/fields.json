@@ -79,5 +79,14 @@
       {"label": "right", "value": "right"},
       {"label": "left", "value": "left"}
     ]
+  },
+  {
+    "type": "dropDown",
+    "label": "pipette attachment type",
+    "name": "tip_type",
+    "options": [
+      {"label": "custom pins", "value": "vpscientific_8_tiprack_10ul"},
+      {"label": "Opentrons 300µl tips", "value": "opentrons_96_tiprack_300ul"}
+    ]
   }
 ]

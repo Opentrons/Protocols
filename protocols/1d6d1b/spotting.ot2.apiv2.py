@@ -13,10 +13,10 @@ def run(ctx):
 
     [num_plates, num_samples, num_slides, array_pattern, blot_dwell_time,
      slow_speed_up, slow_speed_down, sample_height, sample_dwell_time,
-     slide_dwell_time, m300_mount] = get_values(  # noqa: F821
+     slide_dwell_time, m300_mount, tip_type] = get_values(  # noqa: F821
         'num_plates', 'num_samples', 'num_slides', 'array_pattern',
         'blot_dwell_time', 'slow_speed_up', 'slow_speed_down', 'sample_height',
-        'sample_dwell_time', 'slide_dwell_time', 'm300_mount')
+        'sample_dwell_time', 'slide_dwell_time', 'm300_mount', 'tip_type')
 
     # space for parameters
     num_plates = num_plates
@@ -42,7 +42,7 @@ def run(ctx):
                                     'pin wash reservoir')
     blot_res = ctx.load_labware('axygen_4_reservoir_73000ul', '8',
                                 'blot reservoir')
-    tiprack300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '10')]
+    tiprack300 = [ctx.load_labware(tip_type, '10')]
     m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,
                                tip_racks=tiprack300)
 
