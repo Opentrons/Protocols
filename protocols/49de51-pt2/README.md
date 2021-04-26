@@ -14,6 +14,8 @@ This protocol automates the ThermoFischer MagMAX Plant DNA Isolation Kit on up t
 In this protocol, 25µL of magnetic beads plus 400µL of ethanol is added to 400µL of sample (from [part 1](https://develop.protocols.opentrons.com/protocol/49de51-pt1)). After off-deck mixing, the plate is returned to the OT-2 for supernatant removal. This process continues with wash buffer 1, wash buffer 2, and the elution buffer. However, the supernatant of the elution buffer is preserved in a 96-well PCR plate and can be used for further downstream application.
 </br>
 </br>
+*Update 4/26/2021*: The addition of magnetic beads has been made optional.</br>
+</br>
 If you have any questions about this protocol, please email our Applications Engineering team at [protocols@opentrons.com](mailto:protocols@opentrons.com).
 
 ---
@@ -70,12 +72,13 @@ Slot 2: [Opentrons 200µL Filter Tip Rack](https://shop.opentrons.com/collection
 Slot 3: [Opentrons 200µL Filter Tip Rack](https://shop.opentrons.com/collections/opentrons-tips) (*see note 2 below*)</br>
 </br>
 </br>
-**Note 1**: The Magnetic Beads can be placed in well 1 of the [NEST 12-Well Reservoir](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml) (in slot 7) or in column 1 of a different piece of labware (in slot 10)</br>
+**Note 1**: If using, the Magnetic Beads can be placed in well 1 of the [NEST 12-Well Reservoir](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml) (in slot 7) or in column 1 of a different piece of labware (in slot 10)</br>
 **Note 2**: Eight (8) columns of tips are needed per column of sample and will be accessed in the following order: slot 5, 6, 2, 3. In the case that more than 48 samples are used, the user will be prompted midway through the protocol to replace the tips.</br>
 </br>
 **Using the customization fields below, set up your protocol.**
 * Number of Samples: specify the number of samples (1-96)
 * Deep Well Plate Type: select the type of deep well plate used (holding samples)
+* Automate Bead Addition: select whether or not to automate the addition of magnetic beads
 * Location of Magnetic Beads: select the location of the magnetic beads (*labware*; *deck slot*: *well*)
 </br>
 </br>
