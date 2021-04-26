@@ -10,8 +10,8 @@ metadata = {
 
 
 def run(protocol):
-    [num_samples, deep_plate, bead_loc] = get_values(  # noqa: F821
-     'num_samples', 'deep_plate', 'bead_loc')
+    [num_samples, deep_plate, bead_add, bead_loc] = get_values(  # noqa: F821
+     'num_samples', 'deep_plate', 'bead_add', 'bead_loc')
 
     # load labware and m300ette
     magdeck = protocol.load_module('magnetic module gen2', '4')
@@ -161,14 +161,15 @@ def run(protocol):
         magdeck.disengage()
 
     # start protocol
-    # add 25uL of beads
-    protocol.comment('Adding 25uL of beads')
-    m300.pick_up_tip(t1[0])
-    for well in magsamps:
-        m300.mix(3, 50, beads)
-        m300.aspirate(25, beads)
-        m300.dispense(25, well.top(-2))
-        m300.blow_out()
+    if bead_add:
+        # add 25uL of beads, if automating
+        protocol.comment('Adding 25uL of beads')
+        m300.pick_up_tip(t1[0])
+        for well in magsamps:
+            m300.mix(3, 50, beads)
+            m300.aspirate(25, beads)
+            m300.dispense(25, well.top(-2))
+            m300.blow_out()
 
     wash_step('Ethanol', etoh, 400, 5, t1, t2, t1,
               5, 500, 'room temp', True, tt_tips, 825)
