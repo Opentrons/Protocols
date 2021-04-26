@@ -28,7 +28,7 @@ def run(ctx):
     deepwell_pro = ctx.load_labware('deepwellpro_96_wellplate_450ul', '1')
     pcr_plate = ctx.load_labware('pcr_384_wellplate_50ul', '2')
     primer_pairs = ctx.load_labware('deepwellpro_96_wellplate_450ul', '3')
-    temp_mod = ctx.load_module('temperature module gen2', '4')
+    temp_mod = ctx.load_module('tempdeck', '4')
     temp_plate = temp_mod.load_labware('biorad_96_aluminumblock_200ul')
     tipracks10 = [ctx.load_labware('opentrons_96_filtertiprack_10ul', slot)
                   for slot in ['6', '9']]
