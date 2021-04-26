@@ -1,14 +1,10 @@
 metadata = {
-    'protocolName': 'Reformat 96 Well Plates to 384 Well Plate',
+    'protocolName': 'Reformat 96 Well Plates to 384 Well Plate for qPCR',
     'author': 'Sakib <sakib.hossain@opentrons.com>',
     'description': 'Custom Protocol Request',
     'apiLevel': '2.9'
 }
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"p20_mount":"left", "tip_type":"opentrons_96_tiprack_20ul", "plate1_samples":94, "plate2_samples":94, "plate3_samples":94, "plate4_samples":94, "mm_vol":10, "mm_res_vol":1400, "sample_vol":10}""")
-    return [_all_values[n] for n in names]
 
 def run(ctx):
 
