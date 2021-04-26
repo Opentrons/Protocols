@@ -165,7 +165,7 @@ def run(protocol):
     protocol.comment('Adding 25uL of beads')
     m300.pick_up_tip(t1[0])
     for well in magsamps:
-        m300.mix(3, 50)
+        m300.mix(3, 50, beads)
         m300.aspirate(25, beads)
         m300.dispense(25, well.top(-2))
         m300.blow_out()
