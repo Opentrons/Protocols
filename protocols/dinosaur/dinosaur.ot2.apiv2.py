@@ -25,7 +25,7 @@ def run(ctx):
     blue = reservoir['A2']
 
     # Wells to dispense green
-    green_wells = [well.bottom() for well in plate.wells(
+    green_wells = [well for well in plate.wells(
         'E1', 'D2', 'E2', 'D3', 'E3', 'F3', 'G3', 'H3',
         'C4', 'D4', 'E4', 'F4', 'G4', 'H4', 'C5', 'D5',
         'E5', 'F5', 'G5', 'C6', 'D6', 'E6', 'F6', 'G6',
@@ -34,7 +34,7 @@ def run(ctx):
         'H12')]
 
     # Wells to dispense blue
-    blue_wells = [well.bottom() for well in plate.wells(
+    blue_wells = [well for well in plate.wells(
                   'C3', 'B4', 'A5', 'B5', 'B6', 'A7', 'B7',
                   'C8', 'C9', 'D9', 'E10', 'E11', 'F11', 'G12')]
 
