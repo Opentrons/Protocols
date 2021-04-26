@@ -17,7 +17,7 @@
   },
   {
     "type": "dropDown",
-    "label": "Automate Bead Addition?",
+    "label": "Automate Bead Addition",
     "name": "bead_add",
     "options": [
       {"label": "No (beads are added manually)", "value": 0},
