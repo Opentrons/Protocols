@@ -17,7 +17,16 @@
   },
   {
     "type": "dropDown",
-    "label": "Location of Magnetic Beads",
+    "label": "Automate Bead Addition",
+    "name": "bead_add",
+    "options": [
+      {"label": "No (beads are added manually)", "value": 0},
+      {"label": "Yes (OT-2 adds beads)", "value": 1}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Location of Magnetic Beads (if automating)",
     "name": "bead_loc",
     "options": [
       {"label": "NEST 12-Well Reservoir; Slot 7; A1", "value": "NEST_reservoir"},

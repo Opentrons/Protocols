@@ -25,13 +25,19 @@
       },
       {
         "type": "float",
+        "label": "Water Reservoir Volume per Well (uL)",
+        "name": "water_res_vol",
+        "default": 1500
+      },
+      {
+        "type": "float",
         "label": "Final Concentration (ng/ul)",
         "name": "final_conc",
         "default": 15
       },
       {
         "type": "float",
-        "label": "Nuclease-Free Water Transfer Volume (uL)",
+        "label": "Step 2 Nuclease-Free Water Transfer Volume (uL)",
         "name": "water_vol",
         "default": 32.5
       }
