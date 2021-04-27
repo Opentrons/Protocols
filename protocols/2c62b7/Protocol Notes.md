@@ -30,6 +30,10 @@ Use Pause
 12. Pause - Centrifuge >2000g for 5 minutes
 13. Transfer supernatant from 96-well Racked Microtubes(?) to NEST 2 mL 96-Well Deep Well Plate, V Bottom (on top of mag mod)
 
+
+<!-- ################################### -->
+
+
 Tip Isolator on Hamilton ()
 
 Plate with water underneath the tip rack. Fill empty tip rack with water for parking tips.
@@ -55,7 +59,7 @@ Mix reservoir (MM2) and then add to 3 columns on NEST at a time (new tip). Then 
 ### Engage + Remove Supernatant
 16. Engage Mag Mod and Delay for 5 minutes to allow mag beads to settle on the walls. (Engage and Wait Step) (5 minutes default)
     Mix while the magmod is engaged using same tips from step 15
-17. Aspirate (all of the liquid ~600+ uL, about 10uL can be left behind) supernatant and discard without touching the magnetic beads. (Might require putting pipette to the side, Remove Supernatant Step) (Remove supernatant column by column, cycle through to prevent beads to be drying, slow aspiration and dispense) (discard tips)
+17. Aspirate (all of the liquid ~600+ uL, about 10uL can be left behind) supernatant and discard without touching the magnetic beads. (Might require putting pipette to the side, Remove Supernatant Step) (Remove supernatant column by column, cycle through to prevent beads to be drying, slow aspiration and dispense)(consider increasing axis speed after aspirating and dispensing) (discard tips)
 18. Disengage Mag Mod
 ### Wash Step
 19. Add 500 uL (Add 300uL (Max) instead of 500) of VHB Buffer to NEST 2 mL 96-Well Deep Well Plate, V Bottom (Dispense at a very fast rate)
