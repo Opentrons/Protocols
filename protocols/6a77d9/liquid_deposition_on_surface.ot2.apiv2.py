@@ -17,7 +17,7 @@ def run(ctx):
     tiprack20 = [ctx.load_labware('opentrons_96_tiprack_20ul', '11')]
     plate = ctx.load_labware('custom_1_other_20ul', '1')
     if p20_type == 'p20_multi_gen2':
-        sources = res.rows([0][:2])
+        sources = res.rows()[0][:2]
     else:
         sources = res.columns()[0]
 
