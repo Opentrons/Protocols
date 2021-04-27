@@ -1,7 +1,7 @@
 [
   {
     "type": "dropDown",
-    "label": "number of source plates",
+    "label": "number of source plates (1-4)",
     "name": "num_plates",
     "options": [
       {"label": "1", "value": 1},
