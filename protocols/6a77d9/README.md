@@ -23,7 +23,7 @@ x offset (in mm),y offset (in mm)
 50, 70
 ```
 
-The above example will transfer to 3 grids with specified offsets in addition to the starting grid that is calibrated too.
+The above example will transfer to 3 grids with specified offsets in addition to the starting grid to which the protocol is calibrated.
 
 You can also download and modify [this template](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/6a77d9/ex.csv).
 
