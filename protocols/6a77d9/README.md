@@ -45,7 +45,8 @@ For more detailed information on compatible labware, please visit our [Labware L
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
-* The liquid to be transferred should be loaded in well A1 of the USA Scientific wellplate in slot 10.
+* If using a multi-channel pipette, liquids A-D should be in reservoir wells A1-D1, and liquids E-H should be in reservoir wells E2-H2.  
+* If using a single-channel pipette, liquids A-H should be in reservoir wells A1-H1.
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)

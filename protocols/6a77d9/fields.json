@@ -13,9 +13,10 @@
   },
   {
     "type": "dropDown",
-    "label": "P20 GEN2 type",
+    "label": "P20 GEN2 pipette type",
     "name": "p20_type",
     "options": [
+      { "label": "multi", "value": "p20_multi_gen2" },
       { "label": "single", "value": "p20_single_gen2" }
     ]
   },
