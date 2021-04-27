@@ -34,7 +34,7 @@ def run(ctx):
     sample_plates = [
         ctx.load_labware('eppendorf_96_wellplate_350ul', slot,
                          'sample plate ' + str(i+1))
-        for i, slot in enumerate(['1', '3'][:num_plates])]
+        for i, slot in enumerate(['1', '3', '4', '6'][:num_plates])]
     slides_mount = ctx.load_labware(
         'gracebiolabsflexwell_768_other_192x10ul_192x10ul_192x10ul_192x10ul',
         '2', 'slides')
