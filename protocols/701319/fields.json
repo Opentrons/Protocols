@@ -39,7 +39,7 @@
         "type": "float",
         "label": "Acetonitrile Wash 1 Volume (uL)",
         "name": "mecn_wash1_vol",
-        "default": 1539
+        "default": 950
     },
     {
         "type": "float",
@@ -57,7 +57,7 @@
         "type": "float",
         "label": "First Supernatant Removal Volume (uL)",
         "name": "supernat_1_vol",
-        "default": 1620
+        "default": 1000
     },
     {
         "type": "float",
