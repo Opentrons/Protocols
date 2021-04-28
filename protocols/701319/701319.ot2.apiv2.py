@@ -10,12 +10,12 @@ metadata = {
 
 def run(ctx):
 
-    [samples, m20_mount, m300_mount, bead_vol, asp_speed,
+    [samples, m20_mount, m300_mount, mag_engage_height, bead_vol, asp_speed,
         mecn_wash1_vol, mecn_wash2_vol, mecn_wash3_vol,
         supernat_1_vol, supernat_2_vol, supernat_3_vol,
         elution_buff_vol, peptide_supernat_vol, formic_acid_vol,
         irt_vol] = get_values(  # noqa: F821
-        "samples", "m20_mount", "m300_mount", "bead_vol",
+        "samples", "m20_mount", "m300_mount", "mag_engage_height", "bead_vol",
         "asp_speed", "mecn_wash1_vol", "mecn_wash2_vol",
         "mecn_wash3_vol", "supernat_1_vol", "supernat_2_vol",
         "supernat_3_vol", "elution_buff_vol", "peptide_supernat_vol",
@@ -28,7 +28,7 @@ def run(ctx):
 
     # Load Modules
     mag_mod = ctx.load_module("magnetic module gen2", 4)
-    dwp = mag_mod.load_labware("nest_96_wellplate_2ml_deep")
+    dwp = mag_mod.load_labware("stellarscientific_96_cluster_tubes_1200ul")
 
     # Load Labware
     tiprack_300 = [ctx.load_labware("opentrons_96_tiprack_300ul",
@@ -75,7 +75,7 @@ def run(ctx):
         m300.flow_rate.aspirate = 94
 
     def magnet(delay_mins):
-        mag_mod.engage()
+        mag_mod.engage(height_from_base=mag_engage_height)
         ctx.delay(minutes=delay_mins, msg='Allowing beads to settle.')
 
     # Transfer Beads to Samples
@@ -94,19 +94,20 @@ def run(ctx):
     ctx.delay(minutes=2, msg="Allowing mixture to settle.")
 
     # Series of Wash and Remove Steps
-    magnet(1)
+    magnet(5)
     remove_supernat(supernat_1_vol)
     mecn_wash(mecn_wash2_vol, mecn_set2)
-    magnet(1)
+    magnet(5)
     remove_supernat(supernat_2_vol)
     mecn_wash(mecn_wash3_vol, mecn_set2)
-    magnet(1)
+    magnet(5)
     remove_supernat(supernat_3_vol)
     mag_mod.disengage()
 
     # Transfer Elution Buffer
     m20.transfer(elution_buff_vol, elution_buffer, sample_wells)
     mix_wells(m20, 25, 20, sample_wells)
+    magnet(5)
     remove_supernat(peptide_supernat_vol, pcr_wells_set1)
 
     # Pause to Swap PCR plate and Sample DWP positions
@@ -123,7 +124,7 @@ def run(ctx):
     pcr_wells_set2 = pcr_plate.rows()[0][1::2][:columns]
 
     # Engage, Transfer Peptide Supernatant, Add Formic Acid and iRT
-    magnet(1)
+    magnet(5)
     remove_supernat(peptide_supernat_vol, sample_wells_reloaded,
                     pcr_wells_set2)
     m20.transfer(formic_acid_vol, formic_acid, pcr_wells_set2)

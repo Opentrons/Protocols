@@ -25,6 +25,12 @@
       },
       {
         "type": "float",
+        "label": "Magnetic Module Engage Height from Well Bottom (mm)",
+        "name": "mag_engage_height",
+        "default": 13.5
+      },
+      {
+        "type": "float",
         "label": "Aspiration Rate (uL/s)",
         "name": "asp_speed",
         "default": 30
@@ -39,7 +45,7 @@
         "type": "float",
         "label": "Acetonitrile Wash 1 Volume (uL)",
         "name": "mecn_wash1_vol",
-        "default": 1539
+        "default": 950
     },
     {
         "type": "float",
@@ -57,7 +63,7 @@
         "type": "float",
         "label": "First Supernatant Removal Volume (uL)",
         "name": "supernat_1_vol",
-        "default": 1620
+        "default": 1000
     },
     {
         "type": "float",
