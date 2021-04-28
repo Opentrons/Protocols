@@ -31,7 +31,9 @@ Deck Setup
 * Opentrons 300 uL Tip Rack (Slot 5, Slot 8)
 * Opentrons 20 uL Tip Rack (Slot 6, Slot 9)
 
-NOTE: Switch the NEST Deep Well Plate with the NEST PCR Plate on the Magnetic Module once the Pause step is reached.
+NOTE: Switch the Cluster Tubes Plate with the NEST PCR Plate on the Magnetic Module once the Pause step is reached.
+
+**Magnetic Module Engage Height from Well Bottom (mm)** refers to the height the magnet will move to from the bottom of the well. A value of 13.5 mm will move the tops of the magnets to level with that height value.
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
