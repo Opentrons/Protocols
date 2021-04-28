@@ -10,12 +10,12 @@ metadata = {
 
 def run(ctx):
 
-    [samples, m20_mount, m300_mount, bead_vol, asp_speed,
+    [samples, m20_mount, m300_mount, engage_height, bead_vol, asp_speed,
         mecn_wash1_vol, mecn_wash2_vol, mecn_wash3_vol,
         supernat_1_vol, supernat_2_vol, supernat_3_vol,
         elution_buff_vol, peptide_supernat_vol, formic_acid_vol,
         irt_vol] = get_values(  # noqa: F821
-        "samples", "m20_mount", "m300_mount", "bead_vol",
+        "samples", "m20_mount", "m300_mount", "engage_height", "bead_vol",
         "asp_speed", "mecn_wash1_vol", "mecn_wash2_vol",
         "mecn_wash3_vol", "supernat_1_vol", "supernat_2_vol",
         "supernat_3_vol", "elution_buff_vol", "peptide_supernat_vol",
@@ -75,7 +75,7 @@ def run(ctx):
         m300.flow_rate.aspirate = 94
 
     def magnet(delay_mins):
-        mag_mod.engage()
+        mag_mod.engage(height_from_base=engage_height)
         ctx.delay(minutes=delay_mins, msg='Allowing beads to settle.')
 
     # Transfer Beads to Samples
