@@ -27,7 +27,7 @@ Deck Setup
 * NEST 0.1 mL 96-Well PCR Plate, Full Skirt (Slot 2)
 * NEST 12-well reservoir, 15 mL,Opentrons (Slot 3)
 * Opentrons Magnetic Module GEN2 (Slot 4)
-* NEST 2mL 96-Deep Well Plate (Slot 4, On Magnetic Module)
+* Stellar Scientific Cluster Tubes Racked, 1.2 mL (Slot 4, On Magnetic Module)
 * Opentrons 300 uL Tip Rack (Slot 5, Slot 8)
 * Opentrons 20 uL Tip Rack (Slot 6, Slot 9)
 

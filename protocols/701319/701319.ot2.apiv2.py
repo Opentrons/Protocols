@@ -119,7 +119,7 @@ def run(ctx):
     del ctx.deck['2']
     mag_mod = ctx.load_module("magnetic module gen2", 4)
     pcr_plate = mag_mod.load_labware("nest_96_wellplate_100ul_pcr_full_skirt")
-    dwp = ctx.load_labware("nest_96_wellplate_2ml_deep", 2)
+    dwp = ctx.load_labware("stellarscientific_96_cluster_tubes_1200ul", 2)
     sample_wells_reloaded = dwp.rows()[0][:columns]
     pcr_wells_set2 = pcr_plate.rows()[0][1::2][:columns]
 
