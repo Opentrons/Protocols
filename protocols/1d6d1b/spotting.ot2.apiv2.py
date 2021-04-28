@@ -12,11 +12,13 @@ metadata = {
 def run(ctx):
 
     [num_plates, num_samples, num_slides, array_pattern, blot_dwell_time,
-     slow_speed_up, slow_speed_down, sample_height, sample_dwell_time,
-     slide_dwell_time, m300_mount, tip_type] = get_values(  # noqa: F821
+     wash_scheme, slow_speed_up, slow_speed_down, sample_height,
+     sample_dwell_time, slide_dwell_time, m300_mount,
+     tip_type] = get_values(  # noqa: F821
         'num_plates', 'num_samples', 'num_slides', 'array_pattern',
-        'blot_dwell_time', 'slow_speed_up', 'slow_speed_down', 'sample_height',
-        'sample_dwell_time', 'slide_dwell_time', 'm300_mount', 'tip_type')
+        'blot_dwell_time', 'wash_scheme', 'slow_speed_up', 'slow_speed_down',
+        'sample_height', 'sample_dwell_time', 'slide_dwell_time', 'm300_mount',
+        'tip_type')
 
     sample_plates = [
         ctx.load_labware('abgene_96_wellplate_200ul', slot,
@@ -64,12 +66,15 @@ def run(ctx):
     def wash_blot():
         for wash, blot in zip(pin_wash_res.wells(), blot_locs):
             movement_locs = [
-                wash.center().move(Point(x=side*5)) for side in [-1, 1]]
+                wash.center().move(Point(z=side*5)) for side in [-1, 1]]
             m300.move_to(wash.center())
             ctx.max_speeds['X'] = 100
-            for _ in range(5):
-                for m in movement_locs:
-                    m300.move_to(m)
+            if wash_scheme == 'shake':
+                for _ in range(5):
+                    for m in movement_locs:
+                        m300.move_to(m)
+            else:
+                ctx.delay(seconds=5)
             m300.move_to(wash.center())
             del ctx.max_speeds['X']
 
