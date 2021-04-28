@@ -44,6 +44,15 @@
     "default": 1
   },
   {
+    "type": "dropDown",
+    "label": "wash scheme",
+    "name": "wash_scheme",
+    "options": [
+      {"label": "vertical movement", "value": "vertical movement"},
+      {"label": "dip and hold", "value": "dip and hold"}
+    ]
+  },
+  {
     "type": "float",
     "label": "slow vertical speed up (in mm/s)",
     "name": "slow_speed_up",
