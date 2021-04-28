@@ -69,7 +69,7 @@ def run(ctx):
                 wash.center().move(Point(z=side*5)) for side in [-1, 1]]
             m300.move_to(wash.center())
             ctx.max_speeds['X'] = 100
-            if wash_scheme == 'shake':
+            if wash_scheme == 'vertical movement':
                 for _ in range(5):
                     for m in movement_locs:
                         m300.move_to(m)

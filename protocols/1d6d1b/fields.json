@@ -48,8 +48,8 @@
     "label": "wash scheme",
     "name": "wash_scheme",
     "options": [
-      {"label": "shake", "value": "shake"},
-      {"label": "dip", "value": "dip"}
+      {"label": "vertical movement", "value": "vertical movement"},
+      {"label": "dip and hold", "value": "dip and hold"}
     ]
   },
   {
