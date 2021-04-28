@@ -25,6 +25,12 @@
       },
       {
         "type": "float",
+        "label": "Magnetic Module Engage Height from Well Bottom (mm)",
+        "name": "engage_height",
+        "default": 13.5
+      },
+      {
+        "type": "float",
         "label": "Aspiration Rate (uL/s)",
         "name": "asp_speed",
         "default": 30
