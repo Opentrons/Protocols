@@ -28,7 +28,7 @@ def run(ctx):
 
     # Load Modules
     mag_mod = ctx.load_module("magnetic module gen2", 4)
-    dwp = mag_mod.load_labware("nest_96_wellplate_2ml_deep")
+    dwp = mag_mod.load_labware("stellarscientific_96_cluster_tubes_1200ul")
 
     # Load Labware
     tiprack_300 = [ctx.load_labware("opentrons_96_tiprack_300ul",
