@@ -24,7 +24,7 @@ def run(ctx):
         for i, slot in enumerate(['1', '3', '4', '6'][:num_plates])]
     slides_mount = ctx.load_labware(
         'gracebiolabsflexwell', '2', 'slides')
-    pin_wash_res = ctx.load_labware('axygen_4_reservoir_73000ul', '7',
+    pin_wash_res = ctx.load_labware('axygen_4_reservoir_73000ul', '11',
                                     'pin wash reservoir')
     blot_res = ctx.load_labware('customblotpaper_1_reservoir_870000ul', '8',
                                 'blot paper reservoir')
