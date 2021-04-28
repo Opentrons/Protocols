@@ -26,7 +26,7 @@
       {
         "type": "float",
         "label": "Magnetic Module Engage Height from Well Bottom (mm)",
-        "name": "engage_height",
+        "name": "mag_engage_height",
         "default": 13.5
       },
       {
