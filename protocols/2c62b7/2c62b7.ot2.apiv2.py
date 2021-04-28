@@ -14,13 +14,13 @@ metadata = {
 
 def get_values(*names):
     import json
-    _all_values = json.loads("""{"debug":"True","samples":96,"m300_mount":"left","tip_type":"standard", "mm2_vol":300}""")
+    _all_values = json.loads("""{"debug":"True","samples":96,"m300_mount":"left","tip_type":"standard", "mm2_vol":300,"settling_time":5}""")
     return [_all_values[n] for n in names]
 
 def run(ctx):
 
-    [debug, samples, m300_mount, tip_type, mm2_vol] = get_values(  # noqa: F821
-        "debug", "samples", "m300_mount", "tip_type", "mm2_vol")
+    [debug, samples, m300_mount, tip_type, mm2_vol, settling_time] = get_values(  # noqa: F821
+        "debug", "samples", "m300_mount", "tip_type", "mm2_vol", "settling_time")
 
     samples = 96
     cols = math.ceil(samples/8)
@@ -35,36 +35,32 @@ def run(ctx):
     mag_mod = ctx.load_module('magnetic module gen2', 1)
     mag_plate = mag_mod.load_labware('nest_96_wellplate_2ml_deep')
     tipracks = [ctx.load_labware(tiprack_type[tip_type], slot) for slot in range(7,11)]
-    tip_isolator = ctx.load_labware('opentrons_96_filtertiprack_200ul', 11, 'Tip Isolator')
+    tip_isolator = ctx.load_labware(tiprack_type[tip_type], 11, 'Tip Isolator')
     res1 = ctx.load_labware('nest_12_reservoir_15ml', 4)
     res2 = ctx.load_labware('nest_12_reservoir_15ml', 5)
+    trash = ctx.loaded_labwares[12]['A1']
 
     # Load Pipettes
     m300 = ctx.load_instrument('p300_multi_gen2', m300_mount, tip_racks=tipracks)
+    max_tip_volume = tipracks[0]['A1'].geometry.max_volume
 
     # Reagents
     # Splitting A1 and A2 for 6 columns of sample each, 12 columns total
     mm2 = [well for well in res1.wells()[:2] for i in range(6)]
+    vhb = [well for well in res1.wells()[2:6] for i in range(3)]
 
     # Helper Functions
     def debug_mode(msg, debug_setting=debug):
         if debug_setting == "True":
             ctx.pause(msg)
 
-    def supernatant_removal(vol, src, dest, side):
+    def supernatant_removal(vol, src, dest, side=-1):
         m300.flow_rate.aspirate = 20
-        asp_ctr = 0
-        while vol > 180:
+        while vol >= max_tip_volume:
             m300.aspirate(
-                180, src.bottom().move(types.Point(x=side, y=0, z=0.5)))
-            m300.dispense(180, dest)
-            m300.aspirate(10, dest)
-            vol -= 180
-            asp_ctr += 1
-        m300.aspirate(
-            vol, src.bottom().move(types.Point(x=side, y=0, z=0.5)))
-        dvol = 10*asp_ctr + vol
-        m300.dispense(dvol, dest)
+                max_tip_volume, src.bottom().move(types.Point(x=side, y=0, z=0.5)))
+            m300.dispense(max_tip_volume, dest)
+            vol -= max_tip_volume
         m300.flow_rate.aspirate = 50
 
     def reset_flow_rates():
@@ -105,6 +101,26 @@ def run(ctx):
         elif park_tip:
             m300.drop_tip(tip_isolator.columns()[mag_plate_wells[well]][0])
 
+    def bind_and_remove(vol, src, dest=trash, use_park_tip=True):
+        if mag_mod.status != 'engaged':
+            mag_mod.engage()
+        ctx.delay(minutes=settling_time, msg=f'''Incubating on MagDeck for {settling_time} minutes.''')
+
+        if use_park_tip:
+            pick_up(m300, tip_isolator.columns()[mag_plate_wells[src]][0])
+        elif not use_park_tip:
+            pick_up(m300)
+        supernatant_removal(vol, src, dest, side=-1)
+        m300.drop_tip()
+
+    def wash(vol, src, dest):
+        m300.flow_rate.dispense = 200
+        pick_up(m300)
+        m300.transfer(vol, src, dest, new_tip='never')
+        m300.drop_tip()
+        m300.flow_rate.dispense = 94
+
+
     # Wells
     # mag_plate_wells = mag_plate.rows()[0]
     mag_plate_wells = {well:column for well, column in zip(mag_plate.rows()[0][:cols], range(cols))}
@@ -138,3 +154,14 @@ def run(ctx):
 
     for well in mag_plate_wells:
         tip_mix(well, mm2_vol/2, 5, park_tip=True, tip_loc=tip_isolator.columns()[mag_plate_wells[well]][0], tip_map=mag_plate_wells, asp_speed=94, disp_speed=94)
+
+    # Steps 16-18
+    debug_mode(msg=f"Debug: Engage Magnet for {settling_time} minutes and then remove supernatant (Steps 16-18)")
+    for well in mag_plate_wells:
+        bind_and_remove(600, well, use_park_tip=True)
+    if mag_mod.status == 'engaged':
+        mag_mod.disengage()
+
+    # Steps 19-20
+    for src, dest in zip(vhb, mag_plate_wells):
+        wash(500, src, dest)
