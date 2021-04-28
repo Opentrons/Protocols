@@ -61,7 +61,7 @@ def run(ctx):
     # wash and blot
     blot_locs = [
         blot_res.wells()[0].bottom().move(Point(x=shift, z=-1))
-        for shift in [-40, -20, 20, 40]]
+        for shift in [-30, -10, 10, 30]]
 
     def wash_blot():
         for wash, blot in zip(pin_wash_res.wells(), blot_locs):
