@@ -83,6 +83,11 @@ def run(ctx):
             del ctx.max_speeds['Z']
 
     m300.pick_up_tip()
+    ctx.comment('"Ghost" aspirations to ensure all labware is calibrated.')
+    for plate in sample_plates + [slides_mount, pin_wash_res, blot_res]:
+        m300.aspirate(1, plate.wells()[0].top(5))
+        m300.dispense(1, plate.wells()[0].top(5))
+
     wash_blot()
 
     for sample_set, slide_set in zip(sample_sets, slide_sets):
