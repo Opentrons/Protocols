@@ -35,8 +35,9 @@ def run(ctx):
     # setup samples
     num_cols = math.ceil(num_samples/8)
     if array_pattern == 1:
+        y_space = 9/num_plates
         slide_sets = [
-            [well.top().move(Point(y=move*-2.25)) for set in [
+            [well.top().move(Point(y=move*-1*y_space)) for set in [
                 slides_mount.rows()[0][i*8:i*8+8]
              for i in range(num_slides)] for well in set]
             for move in range(num_plates)]
