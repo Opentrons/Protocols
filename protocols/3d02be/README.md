@@ -21,7 +21,7 @@ the CSV should be formatted like so:
 
 `Source Column` | `Source Aspiration Height from Bottom` | `Volume Aspirated`| `Volume Dispensed`
 
-Example Row: `1`, `10`, `40`, `12`,
+Example Row: `1`, `1`, `40`, `12`,
 
 The first row should contain headers (like above). All following rows should just include necessary information. </br>
 

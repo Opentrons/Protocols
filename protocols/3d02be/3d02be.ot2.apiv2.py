@@ -36,9 +36,9 @@ def run(ctx):
 
     for line, chunk in zip(transfer, destinations):
         p300.pick_up_tip()
-        p300.aspirate(int(line[4]),
-                      source_plate.rows()[0][int(line[2])-1].bottom(
-                      z=int(line[3])))
-        [p300.dispense(int(line[6]), dest.top()) for dest in chunk]
-        p300.blow_out(source_plate.rows()[0][int(line[2])-1])
+        p300.aspirate(int(line[2]),
+                      source_plate.rows()[0][int(line[0])-1].bottom(
+                      z=int(line[1])))
+        [p300.dispense(int(line[3]), dest.top()) for dest in chunk]
+        p300.blow_out(source_plate.rows()[0][int(line[0])-1])
         p300.drop_tip()
