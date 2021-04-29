@@ -23,7 +23,7 @@ x offset (in mm),y offset (in mm)
 50, 70
 ```
 
-The above example will transfer to 3 grids with specified offsets in addition to the starting grid that is calibrated too.
+The above example will transfer to 3 grids with specified offsets in addition to the starting grid to which the protocol is calibrated.
 
 You can also download and modify [this template](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/6a77d9/ex.csv).
 
@@ -45,7 +45,8 @@ For more detailed information on compatible labware, please visit our [Labware L
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
-* The liquid to be transferred should be loaded in well A1 of the USA Scientific wellplate in slot 10.
+* If using a multi-channel pipette, liquids A-D should be in reservoir wells A1-D1, and liquids E-H should be in reservoir wells E2-H2.  
+* If using a single-channel pipette, liquids A-H should be in reservoir wells A1-H1.
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)

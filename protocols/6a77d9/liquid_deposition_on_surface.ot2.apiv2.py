@@ -15,8 +15,11 @@ def run(ctx):
 
     res = ctx.load_labware('usascientific_96_wellplate_2.4ml_deep', '10')
     tiprack20 = [ctx.load_labware('opentrons_96_tiprack_20ul', '11')]
-    source = res.rows()[0][0]
     plate = ctx.load_labware('custom_1_other_20ul', '1')
+    if p20_type == 'p20_multi_gen2':
+        sources = res.rows()[0][:2]
+    else:
+        sources = res.columns()[0]
 
     p20 = ctx.load_instrument(p20_type, p20_mount, tip_racks=tiprack20)
     # match mount to axis
@@ -57,17 +60,36 @@ def run(ctx):
 
     # setup destinations depending on pipette type
     if p20_type == 'p20_multi_gen2':
-        dests = [col[0] for grid in grids for col in grid]
-        # update when P20 multi is received
-    else:
         for grid in grids:
-            dests = [well for col in grid for well in col]
+            dests = [col[0] for col in grid]
             p20.pick_up_tip()
-            for dest in dests:
+            for i, d in enumerate(dests):
+                # if i % 4 == 0:
+                source = sources[i//4]
+                # shift to tips 5-8 if accessing second set of columns
+                dest = d.move(Point(y=(i//4)*36))
                 p20.aspirate(volume, source)
                 p20.move_to(dest.move(Point(z=10)))
                 ctx.max_speeds[axis_map[p20_mount]] = 10
                 p20.move_to(dest)
                 p20.dispense(volume, dest)
                 del ctx.max_speeds[axis_map[p20_mount]]
+                # if (i+1) % 4 == 0:
             p20.drop_tip()
+
+    else:
+        for grid in grids:
+            dest_sets = [
+                [col[well] for col in grid[set*4:(set+1)*4]]
+                for set in range(2)
+                for well in range(4)]
+            for source, dest_set in zip(sources, dest_sets):
+                p20.pick_up_tip()
+                for dest in dest_set:
+                    p20.aspirate(volume, source)
+                    p20.move_to(dest.move(Point(z=10)))
+                    ctx.max_speeds[axis_map[p20_mount]] = 10
+                    p20.move_to(dest)
+                    p20.dispense(volume, dest)
+                    del ctx.max_speeds[axis_map[p20_mount]]
+                p20.drop_tip()

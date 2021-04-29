@@ -37,8 +37,8 @@ def run(ctx):
 
     # Load Labware
     dwp = ctx.load_labware('kingfisher_96_deepwell_plate_2ml', 2)
-    tuberacks = [ctx.load_labware('12x_multi_tuberack', slot)
-                 for slot in range(4, 12)]
+    tuberacks = [ctx.load_labware('iclean_15_tuberack', slot)
+                 for slot in range(4, 11)]
     tiprack_1000ul = ctx.load_labware('opentrons_96_filtertiprack_1000ul', 1)
 
     # Load Pipettes

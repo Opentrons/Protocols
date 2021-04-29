@@ -1,187 +1,6 @@
 {
-    "content": "from opentrons import protocol_api\n\nmetadata = {\n    'protocolName': 'COVID-19 Patient Sample Prep',\n    'author': 'Sakib <sakib.hossain@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.9'\n}\n\n\ndef run(ctx):\n\n    [p1000_mount, extraction_type, samples,\n        sample_vol] = get_values(  # noqa: F821\n        \"p1000_mount\", \"extraction_type\", \"samples\", \"sample_vol\")\n\n    if extraction_type == \"single\":\n        if not 1 <= samples <= 94:\n            raise Exception('''Please enter a sample number between 1\n                            and 94 for single extraction.''')\n    elif extraction_type == \"double\":\n        if not 1 <= samples <= 47:\n            raise Exception('''Please enter a sample number between\n                            1 and 47 for double extraction.''')\n\n    def pick_up(pip):\n        \"\"\"Function that can be used instead of .pick_up_tip() that will pause\n        robot when robot runs out of tips, prompting user to replace tips\n        before resuming\"\"\"\n        try:\n            pip.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            pip.home()\n            ctx.pause(\"Please replace the empty tip rack.\")\n            pip.reset_tipracks()\n            pip.pick_up_tip()\n\n    # Load Labware\n    dwp = ctx.load_labware('kingfisher_96_deepwell_plate_2ml', 2)\n    tuberacks = [ctx.load_labware('12x_multi_tuberack', slot)\n                 for slot in range(4, 12)]\n    tiprack_1000ul = ctx.load_labware('opentrons_96_filtertiprack_1000ul', 1)\n\n    # Load Pipettes\n    p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,\n                                tip_racks=[tiprack_1000ul])\n\n    # Get sample and tube rack wells\n    if extraction_type == \"single\":\n        sample_wells = dwp.wells()[:samples]\n        tube_wells = [well for rack in tuberacks\n                      for well in rack.wells()][:samples]\n    elif extraction_type == \"double\":\n        sample_wells = dwp.wells()[:samples*2]\n        tube_wells = [well for rack in tuberacks for well in rack.wells()\n                      for _ in range(2)][:samples*2]\n\n    # Transfer Patient Samples to each well\n    for source, dest in zip(tube_wells, sample_wells):\n        pick_up(p1000)\n        p1000.aspirate(sample_vol, source)\n        p1000.dispense(sample_vol, dest)\n        p1000.drop_tip()\n",
+    "content": "from opentrons import protocol_api\n\nmetadata = {\n    'protocolName': 'COVID-19 Patient Sample Prep',\n    'author': 'Sakib <sakib.hossain@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.9'\n}\n\n\ndef run(ctx):\n\n    [p1000_mount, extraction_type, samples,\n        sample_vol] = get_values(  # noqa: F821\n        \"p1000_mount\", \"extraction_type\", \"samples\", \"sample_vol\")\n\n    if extraction_type == \"single\":\n        if not 1 <= samples <= 94:\n            raise Exception('''Please enter a sample number between 1\n                            and 94 for single extraction.''')\n    elif extraction_type == \"double\":\n        if not 1 <= samples <= 47:\n            raise Exception('''Please enter a sample number between\n                            1 and 47 for double extraction.''')\n\n    def pick_up(pip):\n        \"\"\"Function that can be used instead of .pick_up_tip() that will pause\n        robot when robot runs out of tips, prompting user to replace tips\n        before resuming\"\"\"\n        try:\n            pip.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            pip.home()\n            ctx.pause(\"Please replace the empty tip rack.\")\n            pip.reset_tipracks()\n            pip.pick_up_tip()\n\n    # Load Labware\n    dwp = ctx.load_labware('kingfisher_96_deepwell_plate_2ml', 2)\n    tuberacks = [ctx.load_labware('iclean_15_tuberack', slot)\n                 for slot in range(4, 11)]\n    tiprack_1000ul = ctx.load_labware('opentrons_96_filtertiprack_1000ul', 1)\n\n    # Load Pipettes\n    p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,\n                                tip_racks=[tiprack_1000ul])\n\n    # Get sample and tube rack wells\n    if extraction_type == \"single\":\n        sample_wells = dwp.wells()[:samples]\n        tube_wells = [well for rack in tuberacks\n                      for well in rack.wells()][:samples]\n    elif extraction_type == \"double\":\n        sample_wells = dwp.wells()[:samples*2]\n        tube_wells = [well for rack in tuberacks for well in rack.wells()\n                      for _ in range(2)][:samples*2]\n\n    # Transfer Patient Samples to each well\n    for source, dest in zip(tube_wells, sample_wells):\n        pick_up(p1000)\n        p1000.aspirate(sample_vol, source)\n        p1000.dispense(sample_vol, dest)\n        p1000.drop_tip()\n",
     "custom_labware_defs": [
-        {
-            "brand": {
-                "brand": "generic"
-            },
-            "cornerOffsetFromSlot": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-            },
-            "dimensions": {
-                "xDimension": 127.75,
-                "yDimension": 85.7,
-                "zDimension": 85
-            },
-            "groups": [
-                {
-                    "metadata": {},
-                    "wells": [
-                        "A1",
-                        "B1",
-                        "C1",
-                        "A2",
-                        "B2",
-                        "C2",
-                        "A3",
-                        "B3",
-                        "C3",
-                        "A4",
-                        "B4",
-                        "C4"
-                    ]
-                }
-            ],
-            "metadata": {
-                "displayCategory": "tubeRack",
-                "displayName": "Multi 12x Tube Rack",
-                "displayVolumeUnits": "mL",
-                "tags": []
-            },
-            "namespace": "custom_beta",
-            "ordering": [
-                [
-                    "A1",
-                    "B1",
-                    "C1"
-                ],
-                [
-                    "A2",
-                    "B2",
-                    "C2"
-                ],
-                [
-                    "A3",
-                    "B3",
-                    "C3"
-                ],
-                [
-                    "A4",
-                    "B4",
-                    "C4"
-                ]
-            ],
-            "parameters": {
-                "format": "irregular",
-                "isMagneticModuleCompatible": false,
-                "isTiprack": false,
-                "loadName": "12x_multi_tuberack"
-            },
-            "schemaVersion": 2,
-            "version": 1,
-            "wells": {
-                "A1": {
-                    "depth": 29,
-                    "diameter": 7,
-                    "shape": "circular",
-                    "totalLiquidVolume": 500,
-                    "x": 18.21,
-                    "y": 48.47,
-                    "z": 22
-                },
-                "A2": {
-                    "depth": 29,
-                    "diameter": 7,
-                    "shape": "circular",
-                    "totalLiquidVolume": 500,
-                    "x": 38.01,
-                    "y": 48.47,
-                    "z": 22
-                },
-                "A3": {
-                    "depth": 29,
-                    "diameter": 7,
-                    "shape": "circular",
-                    "totalLiquidVolume": 500,
-                    "x": 57.81,
-                    "y": 48.47,
-                    "z": 22
-                },
-                "A4": {
-                    "depth": 29,
-                    "diameter": 7,
-                    "shape": "circular",
-                    "totalLiquidVolume": 500,
-                    "x": 77.61,
-                    "y": 48.47,
-                    "z": 22
-                },
-                "B1": {
-                    "depth": 29,
-                    "diameter": 7,
-                    "shape": "circular",
-                    "totalLiquidVolume": 500,
-                    "x": 18.21,
-                    "y": 29.27,
-                    "z": 22
-                },
-                "B2": {
-                    "depth": 29,
-                    "diameter": 7,
-                    "shape": "circular",
-                    "totalLiquidVolume": 500,
-                    "x": 38.01,
-                    "y": 29.27,
-                    "z": 22
-                },
-                "B3": {
-                    "depth": 29,
-                    "diameter": 7,
-                    "shape": "circular",
-                    "totalLiquidVolume": 500,
-                    "x": 57.81,
-                    "y": 29.27,
-                    "z": 22
-                },
-                "B4": {
-                    "depth": 29,
-                    "diameter": 7,
-                    "shape": "circular",
-                    "totalLiquidVolume": 500,
-                    "x": 77.61,
-                    "y": 29.27,
-                    "z": 22
-                },
-                "C1": {
-                    "depth": 29,
-                    "diameter": 7,
-                    "shape": "circular",
-                    "totalLiquidVolume": 500,
-                    "x": 18.21,
-                    "y": 10.07,
-                    "z": 22
-                },
-                "C2": {
-                    "depth": 29,
-                    "diameter": 7,
-                    "shape": "circular",
-                    "totalLiquidVolume": 500,
-                    "x": 38.01,
-                    "y": 10.07,
-                    "z": 22
-                },
-                "C3": {
-                    "depth": 29,
-                    "diameter": 7,
-                    "shape": "circular",
-                    "totalLiquidVolume": 500,
-                    "x": 57.81,
-                    "y": 10.07,
-                    "z": 22
-                },
-                "C4": {
-                    "depth": 29,
-                    "diameter": 7,
-                    "shape": "circular",
-                    "totalLiquidVolume": 500,
-                    "x": 77.61,
-                    "y": 10.07,
-                    "z": 22
-                }
-            }
-        },
         {
             "brand": {
                 "brand": "KingFisher",
@@ -1308,6 +1127,222 @@
                     "z": 1.7
                 }
             }
+        },
+        {
+            "brand": {
+                "brand": "iClean"
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 121,
+                "yDimension": 79,
+                "zDimension": 109.5
+            },
+            "groups": [
+                {
+                    "metadata": {},
+                    "wells": [
+                        "A1",
+                        "B1",
+                        "C1",
+                        "A2",
+                        "B2",
+                        "C2",
+                        "A3",
+                        "B3",
+                        "C3",
+                        "A4",
+                        "B4",
+                        "C4",
+                        "A5",
+                        "B5",
+                        "C5"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "tubeRack",
+                "displayName": "iClean Sample Tubes",
+                "displayVolumeUnits": "mL",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1",
+                    "B1",
+                    "C1"
+                ],
+                [
+                    "A2",
+                    "B2",
+                    "C2"
+                ],
+                [
+                    "A3",
+                    "B3",
+                    "C3"
+                ],
+                [
+                    "A4",
+                    "B4",
+                    "C4"
+                ],
+                [
+                    "A5",
+                    "B5",
+                    "C5"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "iclean_15_tuberack"
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 97.7,
+                    "diameter": 14.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 10.5,
+                    "y": 65,
+                    "z": 11.8
+                },
+                "A2": {
+                    "depth": 97.7,
+                    "diameter": 14.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 35.5,
+                    "y": 65,
+                    "z": 11.8
+                },
+                "A3": {
+                    "depth": 97.7,
+                    "diameter": 14.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 60.5,
+                    "y": 65,
+                    "z": 11.8
+                },
+                "A4": {
+                    "depth": 97.7,
+                    "diameter": 14.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 85.5,
+                    "y": 65,
+                    "z": 11.8
+                },
+                "A5": {
+                    "depth": 97.7,
+                    "diameter": 14.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 110.5,
+                    "y": 65,
+                    "z": 11.8
+                },
+                "B1": {
+                    "depth": 97.7,
+                    "diameter": 14.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 10.5,
+                    "y": 40,
+                    "z": 11.8
+                },
+                "B2": {
+                    "depth": 97.7,
+                    "diameter": 14.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 35.5,
+                    "y": 40,
+                    "z": 11.8
+                },
+                "B3": {
+                    "depth": 97.7,
+                    "diameter": 14.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 60.5,
+                    "y": 40,
+                    "z": 11.8
+                },
+                "B4": {
+                    "depth": 97.7,
+                    "diameter": 14.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 85.5,
+                    "y": 40,
+                    "z": 11.8
+                },
+                "B5": {
+                    "depth": 97.7,
+                    "diameter": 14.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 110.5,
+                    "y": 40,
+                    "z": 11.8
+                },
+                "C1": {
+                    "depth": 97.7,
+                    "diameter": 14.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 10.5,
+                    "y": 15,
+                    "z": 11.8
+                },
+                "C2": {
+                    "depth": 97.7,
+                    "diameter": 14.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 35.5,
+                    "y": 15,
+                    "z": 11.8
+                },
+                "C3": {
+                    "depth": 97.7,
+                    "diameter": 14.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 60.5,
+                    "y": 15,
+                    "z": 11.8
+                },
+                "C4": {
+                    "depth": 97.7,
+                    "diameter": 14.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 85.5,
+                    "y": 15,
+                    "z": 11.8
+                },
+                "C5": {
+                    "depth": 97.7,
+                    "diameter": 14.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1500,
+                    "x": 110.5,
+                    "y": 15,
+                    "z": 11.8
+                }
+            }
         }
     ],
     "fields": [
@@ -1374,52 +1409,46 @@
             "type": "kingfisher_96_deepwell_plate_2ml"
         },
         {
-            "name": "Multi 12x Tube Rack on 4",
+            "name": "iClean Sample Tubes on 4",
             "share": false,
             "slot": "4",
-            "type": "12x_multi_tuberack"
+            "type": "iclean_15_tuberack"
         },
         {
-            "name": "Multi 12x Tube Rack on 5",
+            "name": "iClean Sample Tubes on 5",
             "share": false,
             "slot": "5",
-            "type": "12x_multi_tuberack"
+            "type": "iclean_15_tuberack"
         },
         {
-            "name": "Multi 12x Tube Rack on 6",
+            "name": "iClean Sample Tubes on 6",
             "share": false,
             "slot": "6",
-            "type": "12x_multi_tuberack"
+            "type": "iclean_15_tuberack"
         },
         {
-            "name": "Multi 12x Tube Rack on 7",
+            "name": "iClean Sample Tubes on 7",
             "share": false,
             "slot": "7",
-            "type": "12x_multi_tuberack"
+            "type": "iclean_15_tuberack"
         },
         {
-            "name": "Multi 12x Tube Rack on 8",
+            "name": "iClean Sample Tubes on 8",
             "share": false,
             "slot": "8",
-            "type": "12x_multi_tuberack"
+            "type": "iclean_15_tuberack"
         },
         {
-            "name": "Multi 12x Tube Rack on 9",
+            "name": "iClean Sample Tubes on 9",
             "share": false,
             "slot": "9",
-            "type": "12x_multi_tuberack"
+            "type": "iclean_15_tuberack"
         },
         {
-            "name": "Multi 12x Tube Rack on 10",
+            "name": "iClean Sample Tubes on 10",
             "share": false,
             "slot": "10",
-            "type": "12x_multi_tuberack"
-        },
-        {
-            "name": "Multi 12x Tube Rack on 11",
-            "share": false,
-            "slot": "11",
-            "type": "12x_multi_tuberack"
+            "type": "iclean_15_tuberack"
         },
         {
             "name": "Opentrons Fixed Trash on 12",

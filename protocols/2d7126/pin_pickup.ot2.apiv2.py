@@ -25,8 +25,12 @@ def run(ctx):
 
     # pipette
     m300 = ctx.load_instrument(m300_type, m300_mount, tip_racks=pinrack)
-
     m300.pick_up_tip()
+    m300.aspirate(1, plate1.rows()[0][0].top(1))
+    m300.dispense(1)
+    m300.aspirate(1, plate2.rows()[0][0].top(1))
+    m300.dispense(1)
+
     for col1, col2 in zip(plate1.rows()[0], plate2.rows()[0]):
         # plate 1
         m300.default_speed = 40

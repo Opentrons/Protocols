@@ -1,11 +1,13 @@
 [
   {
     "type": "dropDown",
-    "label": "number of source plates",
+    "label": "number of source plates (1-4)",
     "name": "num_plates",
     "options": [
       {"label": "1", "value": 1},
-      {"label": "2", "value": 2}
+      {"label": "2", "value": 2},
+      {"label": "3", "value": 3},
+      {"label": "4", "value": 4}
     ]
   },
   {
@@ -40,6 +42,15 @@
     "label": "blot dwell time (in seconds)",
     "name": "blot_dwell_time",
     "default": 1
+  },
+  {
+    "type": "dropDown",
+    "label": "wash scheme",
+    "name": "wash_scheme",
+    "options": [
+      {"label": "vertical movement", "value": "vertical movement"},
+      {"label": "dip and hold", "value": "dip and hold"}
+    ]
   },
   {
     "type": "float",
@@ -78,6 +89,15 @@
     "options": [
       {"label": "right", "value": "right"},
       {"label": "left", "value": "left"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "pipette attachment type",
+    "name": "tip_type",
+    "options": [
+      {"label": "custom pins", "value": "vpscientific_8_tiprack_10ul"},
+      {"label": "Opentrons 300µl tips", "value": "opentrons_96_tiprack_300ul"}
     ]
   }
 ]
