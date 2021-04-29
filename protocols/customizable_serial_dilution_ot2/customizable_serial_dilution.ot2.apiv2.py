@@ -43,7 +43,8 @@ def run(protocol_context):
         )
 
         # Dilution of samples across the 96-well flat bottom plate
-        pipette.pick_up_tip()
+        if tip_use_strategy == 'never':
+            pipette.pick_up_tip()
 
         for s, d in zip(
                 plate.rows()[0][:num_of_dilutions],
