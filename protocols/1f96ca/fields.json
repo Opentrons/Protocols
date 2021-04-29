@@ -28,7 +28,7 @@
     "label": "Labware Selection for DNA Sample Plate",
     "name": "labware_dna_sample_plate",
     "options": [
-      { "ThermoFisher Armadillo 96 PCR Plate": "armadillo_96_pcr_plate" }
+      { "label": "ThermoFisher Armadillo 96 PCR Plate", "value": "armadillo_96_pcr_plate" }
     ]
   },
   {
@@ -36,7 +36,7 @@
     "label": "Labware Selection for Pre-PCR Plate",
     "name": "labware_pre_pcr_plate",
     "options": [
-      { "NEST 100 ul PCR Plate Full Skirt": "nest_96_wellplate_100ul_pcr_full_skirt" }
+      { "label": "NEST 100 ul PCR Plate Full Skirt", "value": "nest_96_wellplate_100ul_pcr_full_skirt" }
     ]
   },
   {
@@ -44,7 +44,7 @@
     "label": "Labware Selection for Reagents (Tube Strip or Plate)",
     "name": "labware_tube_strip_or_plate",
     "options": [
-      { "Opentrons 96-Well Aluminum Block and Generic 200 ul Tube Strip": "opentrons_96_aluminumblock_generic_pcr_strip_200ul" }
+      { "label": "Opentrons 96-Well Aluminum Block and Generic 200 ul Tube Strip", "value": "opentrons_96_aluminumblock_generic_pcr_strip_200ul" }
     ]
   },
   {
