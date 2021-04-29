@@ -2,13 +2,11 @@ from opentrons.types import Point
 import json
 import os
 import math
-import threading
-from time import sleep
 
 metadata = {
     'protocolName': 'COVID-19 Station B RNA Extraction',
     'author': 'Opentrons <protocols@opentrons.com>',
-    'apiLevel': '2.4'
+    'apiLevel': '2.9'
 }
 
 
@@ -18,37 +16,9 @@ Here is where you can modify the magnetic module engage height:
 MAG_HEIGHT = 6.8
 
 
-# Definitions for deck light flashing
-class CancellationToken:
-    def __init__(self):
-        self.is_continued = False
-
-    def set_true(self):
-        self.is_continued = True
-
-    def set_false(self):
-        self.is_continued = False
-
-
-def turn_on_blinking_notification(hardware, pause):
-    while pause.is_continued:
-        hardware.set_lights(rails=True)
-        sleep(1)
-        hardware.set_lights(rails=False)
-        sleep(1)
-
-
-def create_thread(ctx, cancel_token):
-    t1 = threading.Thread(target=turn_on_blinking_notification,
-                          args=(ctx._hw_manager.hardware, cancel_token))
-    t1.start()
-    return t1
-
-
 # Start protocol
 def run(ctx):
     # Setup for flashing lights notification to empty trash
-    cancellationToken = CancellationToken()
 
     [num_samples, starting_vol, binding_buffer_vol, wash1_vol, wash2_vol,
      elution_vol, mix_reps, settling_time, park_tips, tip_track,
@@ -67,7 +37,7 @@ def run(ctx):
                                     'deepwell plate')
     tempdeck = ctx.load_module('Temperature Module Gen2', '1')
     elutionplate = tempdeck.load_labware(
-        'appliedbiosystems_96_aluminumblock_200ul', 'elution strips')
+        'biorad_96_wellplate_200ul_pcr', 'elution strips')
     waste = [
         well.top() for well in
         ctx.load_labware(
@@ -163,16 +133,9 @@ resuming.')
             drop_count += 1
         if drop_count >= drop_threshold:
             # Setup for flashing lights notification to empty trash
-            if flash:
-                if not ctx._hw_manager.hardware.is_simulator:
-                    cancellationToken.set_true()
-                thread = create_thread(ctx, cancellationToken)
             m300.home()
             ctx.pause('Please empty tips from waste before resuming.')
             ctx.home()  # home before continuing with protocol
-            if flash:
-                cancellationToken.set_false()  # stop light flashing after home
-                thread.join()
             drop_count = 0
 
     waste_vol = 0
@@ -194,19 +157,11 @@ resuming.')
             nonlocal waste_ind
             if waste_vol + vol >= waste_threshold and waste_ind == 11:
                 # Setup for flashing lights notification to empty liquid waste
-                if flash:
-                    if not ctx._hw_manager.hardware.is_simulator:
-                        cancellationToken.set_true()
-                    thread = create_thread(ctx, cancellationToken)
                 m300.home()
                 ctx.pause('Please empty liquid waste (slot 11) before \
 resuming.')
 
                 ctx.home()  # home before continuing with protocol
-                if flash:
-                    # stop light flashing after home
-                    cancellationToken.set_false()
-                    thread.join()
 
                 waste_vol = 0
                 waste_ind = 0
@@ -412,7 +367,7 @@ strips before resuming.')
             m300.transfer(vol, loc, e.bottom(5), air_gap=20, new_tip='never')
             m300.blow_out(e.top(-2))
             m300.air_gap(20)
-            m300.drop_tip()
+            _drop(m300)
 
         magdeck.engage(height=MAG_HEIGHT)
         ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
