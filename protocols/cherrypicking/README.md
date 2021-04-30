@@ -8,68 +8,61 @@
 	* Cherrypicking
 
 ## Description
+
+Our most robust cherrypicking protocol. Specify aspiration height, labware, pipette, as well as source and destination wells with this all inclusive cherrypicking protocol.
+
 ![Cherrypicking Example](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/cherrypicking/cherrypicking_example.png)
 
-Cherrypicking, or hit-picking, is a key component of many workflows from high-throughput screening to microbial transfections. With this protocol, you can easily select specific wells in any labware without worrying about missing or selecting the wrong well. Just upload your properly formatted CSV file (keep scrolling for an example), customize your parameters, and download your ready-to-run protocol.
+Explanation of complex parameters below:
 
----
-![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
-
-To purchase tips, reagents, or pipettes, please visit our [online store](https://shop.opentrons.com/) or contact our sales team at [info@opentrons.com](mailto:info@opentrons.com)
-
-* [Opentrons OT-2](https://shop.opentrons.com/collections/ot-2-robot/products/ot-2)
-* [Opentrons OT-2 Run App (Version 3.15.0 or later)](https://opentrons.com/ot-app/)
-* [Opentrons Single-Channel Pipette](https://shop.opentrons.com/collections/ot-2-pipettes) and corresponding [Tips](https://shop.opentrons.com/collections/opentrons-tips)
-* [Microplates (96-well or 384-well)](https://labware.opentrons.com/?category=wellPlate)
-
-For more detailed information on compatible labware, please visit our [Labware Library](https://labware.opentrons.com/).
+* `input .csv file`: Here, you should upload a .csv file formatted in the [following way](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1211/example.csv), making sure to include headers in your csv file. Refer to our [Labware Library](https://labware.opentrons.com/?category=wellPlate) to copy API names for labware to include in the `Source Labware` and `Dest Labware` columns of the .csv.
+* `Pipette Model`: Select which pipette you will use for this protocol.
+* `Pipette Mount`: Specify which mount your single-channel pipette is on (left or right)
+* `Tip Type`: Specify whether you want to use filter tips.
+* `Tip Usage Strategy`: Specify whether you'd like to use a new tip for each transfer, or keep the same tip throughout the protocol.
 
 
 
 ---
-![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
-
-Labware will be loaded automatically by specifying the labware loadname and labware slot in the .csv file. All available empty slots will be filled with the necessary [tipracks](https://shop.opentrons.com/collections/opentrons-tips), and the user will be prompted to refill the tipracks if all are emptied in the middle of the protocol.
-
-**CSV Format**
-
-Your cherrypicking transfers must be saved as a comma separated value (.csv) file type. Your CSV must contain values corresponding to volumes in microliters (μL). Note that the header line (first row of the .csv file) should also be included!
-
-Here's an example of how a short cherrypicking protocol should be properly formatted:
-
-```
-Source Labware,Source Slot,Source Well,Source Aspiration Height Above Bottom (in mm),Dest Labware,Dest Slot,Dest Well,Volume (in ul)
-agilent_1_reservoir_290ml,1,A1,1,nest_96_wellplate_100ul_pcr_full_skirt,4,A11,1
-nest_12_reservoir_15ml,2,A1,1,nest_96_wellplate_2ml_deep,5,A5,3
-nest_1_reservoir_195ml,3,A1,1,nest_96_wellplate_2ml_deep,5,H12,7
-```
-
-In this example, 1μL will be transferred from 1mm above the bottom of well A1 in an Agilent 1-well 290ml reservoir (slot 1) to well A11 in the destination NEST 96-well plate 100µl (slot 4). After this, 3μL will be transferred from 1mm above the bottom of well A1 in a NEST 12-well 15ml reservoir (slot 2) to well A5 in the destination NEST 96-well plate 100µl (slot 5). Last, 7μL will be transferred from 1mm above the bottom of well A1 in a NEST 1-well 195ml reservoir (slot 3) to well H12 in the destination NEST 96-well plate 100µl (slot 5).
-
-If you’d like to follow our template, you can make a copy of [this spreadsheet](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1211/example.csv), fill out your values, and export as CSV for use with this protocol.
-
-Using the customizations fields, below set up your protocol.
-* Transfer .csv File: Upload the .csv file containing your well locations, volumes, and source plate (optional).
-* Pipette Model: Select which pipette you will use for this protocol.
-* Pipette Mount: Specify which mount your single-channel pipette is on (left or right)
-* Tip Type: Specify whether you want to use filter tips.
-* Tip Usage Strategy: Specify whether you'd like to use a new tip for each transfer, or keep the same tip throughout the protocol.
 
 
-### Robot
-* [OT-2](https://opentrons.com/ot-2)
+### Labware
+* Any verified labware found in our [Labware Library](https://labware.opentrons.com/?category=wellPlate)
 
-## Process
+### Pipettes
+* [P20 Single GEN2 Pipette](https://opentrons.com/pipettes/)
+* [P300 Single GEN2 Pipette](https://opentrons.com/pipettes/)
+* [P1000 Single GEN2 Pipette](https://opentrons.com/pipettes/)
+* P10 Single GEN1 Pipette
+* P50 Single GEN1 Pipette
+* P300 Single GEN1 Pipette
+* P1000 Single GEN1 Pipette
 
-1. Create your CSV file according to our instructions.
-2. Upload your CSV and select all desired settings according to the “Setup” section above to customize your protocol run.
-3. Download your customized OT-2 protocol using the blue “Download” button, located above the deckmap.
-4. Upload your protocol into the Opentrons App and follow the instructions there to set up your deck, calibrate your labware, and proceed to run.
-5. Make sure to add samples to your labware before placing them on the deck! Your source plate should contain the samples you want to pick.
+
+---
+
+### Deck Setup
+* Example deck setup - tip racks loaded onto remining slots.
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/cherrypicking/Screen+Shot+2021-04-29+at+3.10.02+PM.png)
+
+---
+
+### Protocol Steps
+1. Pipette will aspirate a user-specified volume at the designated labware and well according to the imported csv file. Slot is also specified, as well as aspiration height from the bottom of the well.
+2. Pipette will dispense this volume into user-specified labware and well according to the imported csv file. Slot is also specified.
+3. Steps 1 and 2 repeated over the duration of the CSV.
+
+### Process
+1. Input your protocol parameters above.
+2. Download your protocol and unzip if needed.
+3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.
+4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.
+5. Set up your deck according to the deck map.
+6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).
+7. Hit 'Run'.
 
 ### Additional Notes
-
-If you’d like to request a protocol supporting multiple destination plates or require other changes to this script, please fill out our [Protocol Request Form](https://opentrons-protocol-dev.paperform.co/). You can also modify the Python file directly by following our [API Documentation](https://docs.opentrons.com/v2/). If you’d like to chat with an automation engineer about changes, please contact us at [protocols@opentrons.com](mailto:protocols@opentrons.com).
+If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
 cherrypicking
