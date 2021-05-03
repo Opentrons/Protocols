@@ -61,7 +61,7 @@ def run(protocol):
     magsamps = magplate.rows()[0][:num_cols]
     pcrsamps = pcrplate.rows()[0][:num_cols]
 
-    etoh = [w for w in rsvr[0].wells()[:3] for _ in range(4)][:num_cols]
+    etoh = [w for w in rsvr[0].wells()[1:4] for _ in range(4)][:num_cols]
     wb1 = [w for w in rsvr[0].wells()[9:] for _ in range(4)][:num_cols]
     wb2_1 = [w for w in rsvr[1].wells()[:3] for _ in range(4)][:num_cols]
     wb2_2 = [w for w in rsvr[1].wells()[3:6] for _ in range(4)][:num_cols]
@@ -159,7 +159,10 @@ def run(protocol):
 
     # start protocol
     if bead_add:
-        bead_labware = protocol.load_labware(bead_loc, '10')
+        if bead_loc != 'NEST_reservoir':
+            bead_labware = protocol.load_labware(bead_loc, '10')
+        else:
+            bead_labware = rsvr[0]
         beads = bead_labware['A1']
         # add 25uL of beads, if automating
         protocol.comment('Adding 25uL of beads')
