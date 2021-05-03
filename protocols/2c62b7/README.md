@@ -8,7 +8,7 @@
 
 ## Categories
 * Nucleic Acid Extraction & Purification
-	* Mag-Bind® Environmental DNA 96 Kit
+    * Mag-Bind® Environmental DNA 96 Kit
 
 ## Description
 This protocol automates the Soil Protocol from the [Mag-Bind® Environmental DNA 96 Kit](https://www.omegabiotek.com/product/mag-bind-environmental-dna-kit/?cn-reloaded=1) from Omega Bio-tek.
