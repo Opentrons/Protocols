@@ -127,11 +127,7 @@ __Using the customizations fields, below set up your protocol.__
 6. Hit "Run".
 
 ### Additional Notes
-
-Please reference our [Application Note](https://opentrons-landing-img.s3.amazonaws.com/bundles/NGS_Fully_Automated_OT2_Application_Note.pdf) for more information about the expected output of this protocol.
-
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
-
 
 ###### Internal
 swift-fully-automated
