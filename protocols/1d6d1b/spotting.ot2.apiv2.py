@@ -30,9 +30,9 @@ def run(ctx):
                                     'pin wash reservoir')
     blot_res = ctx.load_labware('customblotpaper_1_reservoir_870000ul', '8',
                                 'blot paper reservoir')
-    tiprack300 = [ctx.load_labware(tip_type, '10')]
+    tiprack300 = ctx.load_labware(tip_type, '10')
     m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,
-                               tip_racks=tiprack300)
+                               tip_racks=[tiprack300])
 
     # setup samples
     num_cols = math.ceil(num_samples/8)
@@ -116,4 +116,8 @@ def run(ctx):
             del ctx.max_speeds['Z']
             wash_blot()
 
-    m300.return_tip()
+    m300.move_to(tiprack300.wells()[0].top())
+    ctx.pause('Protocol complete. Continue descending 50mm before dropping \
+tip?\nIf yes, click \'Resume\'.\nIf no, cancel run, and remove tips/pins \
+manually.')
+    m300.drop_tip(tiprack300.wells()[0].top().move(Point(z=-50)))
