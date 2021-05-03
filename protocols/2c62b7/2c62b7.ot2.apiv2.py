@@ -3,7 +3,7 @@ from opentrons import protocol_api
 import math
 
 metadata = {
-    'protocolName': 'Omega Bio-tek Mag-Bind® Environmental DNA 96 Kit',
+    'protocolName': 'Omega Bio-tek Mag-Bind Environmental DNA 96 Kit',
     'author': 'Sakib <sakib.hossain@opentrons.com>',
     'description': 'Custom Protocol Request',
     'apiLevel': '2.9'
