@@ -50,7 +50,7 @@ def run(protocol):
     all_tips = [tr['A'+str(i)] for tr in tip_racks for i in range(1, 13)]
 
     if num_cols > 6:
-        [t1, t2, t3, t4, t5] = [tips.rows()[0][:num_cols] for tips in tip_racks]
+        [t1, t2, t3, t4, t5] = [t.rows()[0][:num_cols] for t in tip_racks]
         [t6, t7, t8, t9, t10] = [t1, t2, t3, t4, t5]
         tt_tips = False
     else:
