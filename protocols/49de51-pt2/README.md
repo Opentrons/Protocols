@@ -14,8 +14,11 @@ This protocol automates the ThermoFischer MagMAX Plant DNA Isolation Kit on up t
 In this protocol, 25µL of magnetic beads plus 400µL of ethanol is added to 400µL of sample (from [part 1](https://develop.protocols.opentrons.com/protocol/49de51-pt1)). After off-deck mixing, the plate is returned to the OT-2 for supernatant removal. This process continues with wash buffer 1, wash buffer 2, and the elution buffer. However, the supernatant of the elution buffer is preserved in a 96-well PCR plate and can be used for further downstream application.
 </br>
 </br>
-*Update 4/26/2021*: The addition of magnetic beads has been made optional.</br>
+**Update April 26, 2021**: The addition of magnetic beads has been made optional.</br>
 </br>
+**Update May 3, 2021**: A second wash step has been added and heights of aspiration adjusted.</br>
+</br>
+
 If you have any questions about this protocol, please email our Applications Engineering team at [protocols@opentrons.com](mailto:protocols@opentrons.com).
 
 ---
@@ -43,37 +46,54 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 </br>
 Slot 11: [NEST 1-Well Reservoir, 195mL](https://shop.opentrons.com/collections/verified-labware/products/nest-1-well-reservoir-195-ml) (for liquid waste)</br>
 </br>
-Slot 7: [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
+Slot 4: [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
 * A1: Magnetic Beads (*see note 1 below*)
 * A2: Ethanol (Samples 1-32)
 * A3: Ethanol (Samples 33-64)
 * A4: Ethanol (Samples 65-96)
-* A5: Wash Buffer 1 (Samples 1-32)
-* A6: Wash Buffer 1 (Samples 33-64)
-* A7: Wash Buffer 1 (Samples 65-96)
-* A8: Wash Buffer 2 (Samples 1-32)
-* A9: Wash Buffer 2 (Samples 33-64)
-* A10: Wash Buffer 2 (Samples 65-96)
+* A5: *empty*
+* A6: *empty*
+* A7: *empty*
+* A8: *empty*
+* A9: *empty*
+* A10: Wash Buffer 1 (Samples 1-32)
+* A11: Wash Buffer 1 (Samples 33-64)
+* A12: Wash Buffer 1 (Samples 65-96)
+
+Slot 5: [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
+* A1: Wash Buffer 2 (Samples 1-32)
+* A2: Wash Buffer 2 (Samples 33-64)
+* A3: Wash Buffer 2 (Samples 65-96)
+* A4: Wash Buffer 2 (Samples 1-32)
+* A5: Wash Buffer 2 (Samples 33-64)
+* A6: Wash Buffer 2 (Samples 65-96)
+* A7: *empty*
+* A8: *empty*
+* A9: *empty*
+* A10: *empty*
 * A11: Elution Buffer (Samples 1-48)
 * A12: Elution Buffer (Samples 49-96)
 
 Slot 10: Labware Containing Magnetic Beads (*see note 1 below*)</br>
 </br>
-Slot 4: [Opentrons Magnetic Module, GEN2](https://shop.opentrons.com/collections/hardware-modules/products/magdeck) with [NEST 96-Well Deep Well Plate](https://labware.opentrons.com/nest_96_wellplate_2ml_deep?category=wellPlate) containing Samples</br>
+Slot 7: [Opentrons Magnetic Module, GEN2](https://shop.opentrons.com/collections/hardware-modules/products/magdeck) with [NEST 96-Well Deep Well Plate](https://labware.opentrons.com/nest_96_wellplate_2ml_deep?category=wellPlate) containing Samples</br>
 </br>
 Slot 1: [NEST 96-Well PCR Plate](https://shop.opentrons.com/collections/verified-labware/products/nest-0-1-ml-96-well-pcr-plate-full-skirt)</br>
 </br>
-Slot 5: [Opentrons 200µL Filter Tip Rack](https://shop.opentrons.com/collections/opentrons-tips) (*see note 2 below*)</br>
+Slot 8: [Opentrons 200µL Filter Tip Rack](https://shop.opentrons.com/collections/opentrons-tips) (*see note 2 below*)</br>
+</br>
+Slot 9: [Opentrons 200µL Filter Tip Rack](https://shop.opentrons.com/collections/opentrons-tips) (*see note 2 below*)</br>
 </br>
 Slot 6: [Opentrons 200µL Filter Tip Rack](https://shop.opentrons.com/collections/opentrons-tips) (*see note 2 below*)</br>
-</br>
-Slot 2: [Opentrons 200µL Filter Tip Rack](https://shop.opentrons.com/collections/opentrons-tips) (*see note 2 below*)</br>
 </br>
 Slot 3: [Opentrons 200µL Filter Tip Rack](https://shop.opentrons.com/collections/opentrons-tips) (*see note 2 below*)</br>
 </br>
 </br>
-**Note 1**: If using, the Magnetic Beads can be placed in well 1 of the [NEST 12-Well Reservoir](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml) (in slot 7) or in column 1 of a different piece of labware (in slot 10)</br>
-**Note 2**: Eight (8) columns of tips are needed per column of sample and will be accessed in the following order: slot 5, 6, 2, 3. In the case that more than 48 samples are used, the user will be prompted midway through the protocol to replace the tips.</br>
+Slot 2: [Opentrons 200µL Filter Tip Rack](https://shop.opentrons.com/collections/opentrons-tips) (*see note 2 below*)</br>
+</br>
+</br>
+**Note 1**: If using, the Magnetic Beads can be placed in well 1 of the [NEST 12-Well Reservoir](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml) (in slot 4) or in column 1 of a different piece of labware (in slot 10)</br>
+**Note 2**: Ten (10) columns of tips are needed per column of sample and will be accessed in the following order: slot 8, 9, 6, 3, 2. In the case that more than 48 samples are used, the user will be prompted midway through the protocol to replace the tips.</br>
 </br>
 **Using the customization fields below, set up your protocol.**
 * Number of Samples: specify the number of samples (1-96)
