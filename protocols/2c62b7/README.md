@@ -3,9 +3,6 @@
 ### Author
 [Opentrons](https://opentrons.com/)
 
-### Partner
-[Omega Bio-tek](https://www.omegabiotek.com/)
-
 ## Categories
 * Nucleic Acid Extraction & Purification
     * Omega Mag-Bind Environmental DNA 96 Kit
@@ -16,42 +13,38 @@ This protocol automates the Soil Protocol from the [Mag-Bind® Environmental DNA
 The protocol on the OT-2 begins at Step 14 with the addition of the XP1 Buffer and Mag-Bind® Particles RQ. These two reagents should be prepared as a master mix (referred to as Master Mix 2) in the OT-2 protocol. The first 13 steps of the protocol should be prepared and performed manually. Please refer to the protocol steps section below for corresponding OT-2 steps.
 
 ---
+![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
-### Modules
 * [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
 * [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
-
-### Labware
 * [NEST 2 mL 96-Well Deep Well Plate](https://shop.opentrons.com/collections/lab-plates/products/nest-0-2-ml-96-well-deep-well-plate-v-bottom)
 * [NEST 96 Well Plate 100 µL PCR Full Skirt](https://shop.opentrons.com/collections/lab-plates/products/nest-0-1-ml-96-well-pcr-plate-full-skirt)
 * [Opentrons 96-well Aluminum Block](https://shop.opentrons.com/collections/racks-and-adapters/products/aluminum-block-set)
 * [NEST 12-Well Reservoirs, 15 mL](https://shop.opentrons.com/collections/reservoirs/products/nest-12-well-reservoir-15-ml)
 * [Opentrons 300uL Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
 * [Opentrons 200uL Filter Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)
-
-### Pipettes
 * [P300 8-Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-robot/products/8-channel-electronic-pipette?variant=5984202489885)
-
-### Reagents
 * [Mag-Bind® Environmental DNA 96 Kit](https://www.omegabiotek.com/product/mag-bind-environmental-dna-kit/?cn-reloaded=1)
 
----
+For more detailed information on compatible labware, please visit our [Labware Library](https://labware.opentrons.com/).
 
-### Deck Setup
+---
+![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
+
+**Deck Setup**
 ![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2c62b7/MagBind+Environment+Deck+Layout.png)
 
 **Note**: The **Tip Isolator** is simply an empty Opentrons tip rack that is filled with water. The water should be filled up to the level that is enough for the tips to be slightly touching the surface of the water. The top of a standard Opentrons ti rack is detachable from the base (looks like a deep well plate). The tip isolator is used to conserve tips at specific steps.
 
-### Reagent Setup
+**Reagent Setup**
+
 * This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:
 * Reservoir 1: Slot 5
 ![Reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2c62b7/res1.png)
 * Reservoir 2: Slot 2  
 ![Reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2c62b7/res2.png)
 
----
-
-### Protocol Steps
+**Reagent Steps**
 **Note**: Steps 1-13 are performed manually as instructed in the [kit manual](https://ensur.omegabio.com/ensur/contentAction.aspx?key=Production.4023.S2R4E1A3.20190920.67.4679917). The protocol starts on the OT-2 from step 14 and has modified steps that are written below.
 
 14. Add 1 volume XP1 Buffer and 20 µL Mag-Bind® Particles RQ (Prepared as Master Mix 2). Mixing is performed 10 times thoroughly, referred to as `tip mixing` (start mixing from the middle, then the bottom, then back to the top)
@@ -98,7 +91,10 @@ The protocol on the OT-2 begins at Step 14 with the addition of the XP1 Buffer a
 
 34. Transfer 100 uL of  clear supernatant containing purified DNA to NEST 0.1 mL 96 Well PCR Plate, Full Skirt.
 
-### Process
+### Robot
+* [OT-2](https://opentrons.com/ot-2)
+
+## Process
 1. Input your protocol parameters above.
 2. Download your protocol and unzip if needed.
 3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.
@@ -108,6 +104,7 @@ The protocol on the OT-2 begins at Step 14 with the addition of the XP1 Buffer a
 7. Hit 'Run'.
 
 ### Additional Notes
+
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
