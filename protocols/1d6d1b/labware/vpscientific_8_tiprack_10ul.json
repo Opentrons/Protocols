@@ -27,7 +27,7 @@
   "dimensions": {
     "xDimension": 127.76,
     "yDimension": 85.47,
-    "zDimension": 90
+    "zDimension": 100
   },
   "wells": {
     "A1": {
@@ -37,7 +37,7 @@
       "totalLiquidVolume": 10,
       "x": 59.38,
       "y": 74.23,
-      "z": 5
+      "z": 15
     },
     "B1": {
       "depth": 85,
@@ -46,7 +46,7 @@
       "totalLiquidVolume": 10,
       "x": 59.38,
       "y": 65.23,
-      "z": 5
+      "z": 15
     },
     "C1": {
       "depth": 85,
@@ -55,7 +55,7 @@
       "totalLiquidVolume": 10,
       "x": 59.38,
       "y": 56.23,
-      "z": 5
+      "z": 15
     },
     "D1": {
       "depth": 85,
@@ -64,7 +64,7 @@
       "totalLiquidVolume": 10,
       "x": 59.38,
       "y": 47.23,
-      "z": 5
+      "z": 15
     },
     "E1": {
       "depth": 85,
@@ -73,7 +73,7 @@
       "totalLiquidVolume": 10,
       "x": 59.38,
       "y": 38.23,
-      "z": 5
+      "z": 15
     },
     "F1": {
       "depth": 85,
@@ -82,7 +82,7 @@
       "totalLiquidVolume": 10,
       "x": 59.38,
       "y": 29.23,
-      "z": 5
+      "z": 15
     },
     "G1": {
       "depth": 85,
@@ -91,7 +91,7 @@
       "totalLiquidVolume": 10,
       "x": 59.38,
       "y": 20.23,
-      "z": 5
+      "z": 15
     },
     "H1": {
       "depth": 85,
@@ -100,7 +100,7 @@
       "totalLiquidVolume": 10,
       "x": 59.38,
       "y": 11.23,
-      "z": 5
+      "z": 15
     }
   },
   "groups": [
