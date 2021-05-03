@@ -116,6 +116,29 @@ def run(ctx):
             del ctx.max_speeds['Z']
             wash_blot()
 
+    for sample_set, slide_set in zip(sample_sets, slide_sets):
+        for sample, slide_spot in zip(sample_set, slide_set):
+            for _ in range(3):
+                ctx.max_speeds['A'] = slow_speed_down
+                ctx.max_speeds['Z'] = slow_speed_down
+                m300.move_to(sample.top(1))
+                m300.move_to(sample.bottom(sample_height))
+                ctx.delay(seconds=sample_dwell_time)
+                ctx.max_speeds['A'] = slow_speed_up
+                ctx.max_speeds['Z'] = slow_speed_up
+            m300.move_to(sample.top(2))
+            m300.move_to(slide_spot.move(Point(z=5)))
+            ctx.max_speeds['A'] = slow_speed_down
+            ctx.max_speeds['Z'] = slow_speed_down
+            m300.move_to(slide_spot)
+            ctx.delay(seconds=slide_dwell_time)
+            ctx.max_speeds['A'] = slow_speed_up
+            ctx.max_speeds['Z'] = slow_speed_up
+            m300.move_to(slide_spot.move(Point(z=5)))
+            del ctx.max_speeds['A']
+            del ctx.max_speeds['Z']
+            wash_blot()
+
     m300.move_to(tiprack300.wells()[0].top())
     ctx.pause('Protocol complete. Continue descending 20mm before dropping \
 tip?\nIf yes, click \'Resume\'.\nIf no, cancel run, and remove tips/pins \
