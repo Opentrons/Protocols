@@ -117,7 +117,7 @@ def run(ctx):
             wash_blot()
 
     m300.move_to(tiprack300.wells()[0].top())
-    ctx.pause('Protocol complete. Continue descending 50mm before dropping \
+    ctx.pause('Protocol complete. Continue descending 20mm before dropping \
 tip?\nIf yes, click \'Resume\'.\nIf no, cancel run, and remove tips/pins \
 manually.')
-    m300.drop_tip(tiprack300.wells()[0].top().move(Point(z=-50)))
+    m300.drop_tip(tiprack300.wells()[0].top().move(Point(z=-20)))
