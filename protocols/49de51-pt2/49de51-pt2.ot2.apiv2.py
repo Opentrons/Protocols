@@ -14,7 +14,7 @@ def run(protocol):
      'num_samples', 'deep_plate', 'bead_add', 'bead_loc')
 
     # load labware and m300ette
-    magdeck = protocol.load_module('magnetic module gen2', '4')
+    magdeck = protocol.load_module('magnetic module gen2', '7')
     magplate = magdeck.load_labware(deep_plate)
     magheight = {
         'omni_96_wellplate_2000ul': 8.5,
@@ -24,7 +24,7 @@ def run(protocol):
 
     l_waste = protocol.load_labware(
         'nest_1_reservoir_195ml', '11').wells()[0].top()
-    reservoir = protocol.load_labware('nest_12_reservoir_15ml', '7')
+    rsvr = [protocol.load_labware('nest_12_reservoir_15ml', s) for s in [4, 5]]
 
     pcrplate = protocol.load_labware(
         'nest_96_wellplate_100ul_pcr_full_skirt', '1')
@@ -33,10 +33,11 @@ def run(protocol):
         protocol.load_labware(
             'opentrons_96_tiprack_300ul',
             x, 'Opentrons 200uL Filter Tips') for x in [
-            '5',
+            '8',
+            '9',
             '6',
-            '2',
-            '3']]
+            '3',
+            '2']]
 
     m300 = protocol.load_instrument('p300_multi_gen2', 'right')
 
@@ -49,30 +50,26 @@ def run(protocol):
     all_tips = [tr['A'+str(i)] for tr in tip_racks for i in range(1, 13)]
 
     if num_cols > 6:
-        [t1, t2, t3, t4] = [tips.rows()[0][:num_cols] for tips in tip_racks]
-        [t5, t6, t7, t8] = [t1, t2, t3, t4]
+        [t1, t2, t3, t4, t5] = [tips.rows()[0][:num_cols] for tips in tip_racks]
+        [t6, t7, t8, t9, t10] = [t1, t2, t3, t4, t5]
         tt_tips = False
     else:
-        [t1, t2, t3, t4, t5, t6, t7, t8] = [
-            all_tips[i*num_cols:(i+1)*num_cols] for i in range(8)]
-        tt_tips = True
+        [t1, t2, t3, t4, t5, t6, t7, t8, t9, t10] = [
+            all_tips[i*num_cols:(i+1)*num_cols] for i in range(10)]
+        tt_tips = False
 
     magsamps = magplate.rows()[0][:num_cols]
     pcrsamps = pcrplate.rows()[0][:num_cols]
 
-    beads = reservoir['A1']
-    if bead_loc != 'NEST_reservoir':
-        bead_labware = protocol.load_labware(bead_loc, '10')
-        beads = bead_labware['A1']
-
-    etoh = [w for w in reservoir.wells()[1:4] for _ in range(4)][:num_cols]
-    wb1 = [w for w in reservoir.wells()[4:7] for _ in range(4)][:num_cols]
-    wb2 = [w for w in reservoir.wells()[7:10] for _ in range(4)][:num_cols]
-    eb = [w for w in reservoir.wells()[10:] for _ in range(6)][:num_cols]
+    etoh = [w for w in rsvr[0].wells()[:3] for _ in range(4)][:num_cols]
+    wb1 = [w for w in rsvr[0].wells()[9:] for _ in range(4)][:num_cols]
+    wb2_1 = [w for w in rsvr[1].wells()[:3] for _ in range(4)][:num_cols]
+    wb2_2 = [w for w in rsvr[1].wells()[3:6] for _ in range(4)][:num_cols]
+    eb = [w for w in rsvr[1].wells()[10:] for _ in range(6)][:num_cols]
 
     def well_mix(reps, loc, v, side):
-        loc1 = loc.bottom().move(types.Point(x=side, y=0, z=3))
-        loc2 = loc.bottom().move(types.Point(x=side*-1, y=0, z=0.6))
+        loc1 = loc.bottom().move(types.Point(x=side, y=0, z=4))
+        loc2 = loc.bottom().move(types.Point(x=side*-1, y=0, z=2))
         m300.aspirate(20, loc1)
         mvol = v-20
         for _ in range(reps-1):
@@ -85,11 +82,11 @@ def run(protocol):
         m300.aspirate(10, src.top())
         while vol > 200:
             m300.aspirate(
-                200, src.bottom().move(types.Point(x=side, y=0, z=0.5)))
+                200, src.bottom().move(types.Point(x=side, y=0, z=2.5)))
             m300.dispense(210, dest)
             m300.aspirate(10, dest)
             vol -= 200
-        m300.aspirate(vol, src.bottom().move(types.Point(x=side, y=0, z=0.5)))
+        m300.aspirate(vol, src.bottom().move(types.Point(x=side, y=0, z=2.5)))
         m300.dispense(vol, dest)
         m300.dispense(10, dest)
         m300.flow_rate.aspirate = 100
@@ -162,6 +159,8 @@ def run(protocol):
 
     # start protocol
     if bead_add:
+        bead_labware = protocol.load_labware(bead_loc, '10')
+        beads = bead_labware['A1']
         # add 25uL of beads, if automating
         protocol.comment('Adding 25uL of beads')
         m300.pick_up_tip(t1[0])
@@ -177,11 +176,13 @@ def run(protocol):
               1, 1500, '70C', tt_tips, tt_tips)
     if num_cols > 6:
         protocol.pause('Please replace used tips with clean tips in \
-        slots 5, 6, 2, and 3. When ready, click RESUME')
-    wash_step('Wash Buffer 2', wb2, 400, 5, t5, t6, t1,
+        slots 8, 9, 6, and 3. When ready, click RESUME')
+    wash_step('Wash Buffer 2', wb2_1, 400, 5, t5, t6, t1,
+              1, 1500, '70C', True, tt_tips)
+    wash_step('Wash Buffer 2', wb2_2, 400, 5, t7, t8, t1,
               1, 1500, '70C', True, tt_tips)
 
-    for tip, tret, well, buff in zip(t7, t6, magsamps, eb):
+    for tip, tret, well, buff in zip(t9, t8, magsamps, eb):
         m300.pick_up_tip(tip)
         m300.aspirate(175, buff)
         m300.dispense(175, well)
@@ -194,6 +195,9 @@ def run(protocol):
 
     protocol.pause('Please place plate on thermomixer for allocated time. \
     When ready to resume, replace plate on OT-2 and click RESUME')
+    if num_cols > 6:
+        protocol.comment('Please replace empty tips with clean tips in \
+        slot 2 as well.')
 
     magdeck.engage(height=magheight[deep_plate])
     protocol.comment('Engaging Magdeck for 5 minutes.')
@@ -201,7 +205,7 @@ def run(protocol):
 
     m300.flow_rate.aspirate = 30
 
-    for tip, tret, src, dest in zip(t8, t7, magsamps, pcrsamps):
+    for tip, tret, src, dest in zip(t10, t9, magsamps, pcrsamps):
         m300.pick_up_tip(tip)
         m300.aspirate(175, src)
         m300.dispense(175, dest)
