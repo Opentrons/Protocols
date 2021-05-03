@@ -10,7 +10,7 @@
     "internal": "2c62b7",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
-        "categories": "* Nucleic Acid Extraction & Purification\n\t* Mag-Bind\u00ae Environmental DNA 96 Kit\n\n",
+        "categories": "* Nucleic Acid Extraction & Purification\n    * Mag-Bind\u00ae Environmental DNA 96 Kit\n\n",
         "deck setup": "![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2c62b7/MagBind+Environment+Deck+Layout.png)\n\n**Note**: The **Tip Isolator** is simply an empty Opentrons tip rack that is filled with water. The water should be filled up to the level that is enough for the tips to be slightly touching the surface of the water. The top of a standard Opentrons ti rack is detachable from the base (looks like a deep well plate). The tip isolator is used to conserve tips at specific steps.\n\n",
         "description": "This protocol automates the Soil Protocol from the [Mag-Bind\u00ae Environmental DNA 96 Kit](https://www.omegabiotek.com/product/mag-bind-environmental-dna-kit/?cn-reloaded=1) from Omega Bio-tek.\n\nThe protocol on the OT-2 begins at Step 14 with the addition of the XP1 Buffer and Mag-Bind\u00ae Particles RQ. These two reagents should be prepared as a master mix (referred to as Master Mix 2) in the OT-2 protocol. The first 13 steps of the protocol should be prepared and performed manually. Please refer to the protocol steps section below for corresponding OT-2 steps.\n\n---\n\n",
         "internal": "2c62b7",
