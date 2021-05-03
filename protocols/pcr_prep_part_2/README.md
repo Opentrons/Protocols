@@ -43,6 +43,8 @@ Slot 1: PCR plate with DNA samples
 Slot 2: Empty PCR plate
 Slot 3: 12-channel reservoir with master mix solution in well A1
 
+Please reference our [Application Note](https://opentrons-protocol-library-website.s3.amazonaws.com/Technical+Notes/Thermocycler+PCR+Application+Note.pdf) for more information about the expected output of this protocol.
+
 ---
 
 If you have any questions about this protocol, please contact protocols@opentrons.com.
