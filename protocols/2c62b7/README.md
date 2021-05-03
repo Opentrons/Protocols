@@ -1,4 +1,4 @@
-# Omega Bio-tek Mag-Bind® Environmental DNA 96 Kit - Soil Protocol
+# Omega Bio-tek Mag-Bind Environmental DNA 96 Kit
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -8,7 +8,7 @@
 
 ## Categories
 * Nucleic Acid Extraction & Purification
-    * Omega Mag-Bind® Environmental DNA 96 Kit
+    * Omega Mag-Bind Environmental DNA 96 Kit
 
 ## Description
 This protocol automates the Soil Protocol from the [Mag-Bind® Environmental DNA 96 Kit](https://www.omegabiotek.com/product/mag-bind-environmental-dna-kit/?cn-reloaded=1) from Omega Bio-tek.
