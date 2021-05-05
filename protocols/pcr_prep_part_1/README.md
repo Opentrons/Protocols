@@ -41,6 +41,8 @@ Slot 1: 2 mL Eppendorf Tube Rack
 Slot 2: 2 mL Screwcap Tube Rack
 Slot 3: 12-well Trough
 
+Please reference our [Application Note](https://opentrons-protocol-library-website.s3.amazonaws.com/Technical+Notes/Thermocycler+PCR+Application+Note.pdf) for more information about the expected output of this protocol.
+
 ---
 
 ![csv_layout](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1473-acies-bio/CSV.png)
