@@ -27,7 +27,7 @@
     "type": "int",
     "label": "Dispense height from well bottom",
     "name": "disp_bottom_clearance",
-    "default": 384
+    "default": 1
   },
   {
     "type": "int",
@@ -49,7 +49,7 @@
   },
   {
     "type": "int",
-    "label": "Aspiration flowrate for P50-Multi (ul/sec)",
+    "label": "Dispense flowrate for P50-Multi (ul/sec)",
     "name": "disp_flowrate_p50",
     "default": 30
   },
