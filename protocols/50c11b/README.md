@@ -1,82 +1,76 @@
-# Protein  Labeling with Incubation
+# Custom PCR Setup
 
 ### Author
-[Opentrons](http://www.opentrons.com/)
+[Opentrons](https://opentrons.com/)
 
 ## Categories
-* Proteins & Proteomics
-    * Assay
+* PCR
+	* PCR Prep
 
 ## Description
-This workflow is comprised of a protein labelling protocol that begins by adding several reagents to samples and then incubating at 37C for several days (up to 4) and aliquoting 20µL of the incubating samples. For more information about this protocol, including materials needed and customizable parameters, please see below before downloading.</br>
-</br>
+This section of the README (especially the first paragraph) should grip a prospective user with the overarching purpose/flow of the protocol, but should not include fine details of the protocol steps themselves.
+
+Example: This is a flexible protocol accommodating a wide range of commercial RNA extraction workflows for COVID-19 sample processing. The protocol is broken down into 5 main parts:
+* binding buffer addition to samples
+* bead wash 3x using magnetic module
+* final elution to chilled PCR plate
+
+Subsequent paragraphs can give some more insight into the details of the protocol, but a step-by-step description should be included in the 'Protocol Steps' section below.
+
+Example: For sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 4) to the elution PCR plate (temperature module, slot 1). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.
+
+Explanation of complex parameters below:
+* `park tips`: If set to `yes` (recommended), the protocol will conserve tips between reagent addition and removal. Tips will be stored in the wells of an empty rack corresponding to the well of the sample that they access (tip parked in A1 of the empty rack will only be used for sample A1, tip parked in B1 only used for sample B1, etc.). If set to `no`, tips will always be used only once, and the user will be prompted to manually refill tipracks mid-protocol for high throughput runs.
+* `input .csv file`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:
+```
+source,dest,vol
+A1,B1,4
+```
 
 ---
-![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
-To purchase tips, reagents, or pipettes, please visit our [online store](https://shop.opentrons.com/) or contact our sales team at [info@opentrons.com](mailto:info@opentrons.com)
+### Labware
+* [Opentrons 20µL Filter Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-20ul-filter-tips)
+* KingFisher 96 Deepwell Plate (containing samples)
+* Applied Biosystems MicroAmp Optical 384-Well Reaction Plate
 
-* [Opentrons Temperature Module with Aluminum Blocks](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
-* [P300 Single-Channel Pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette)
-* [P20 Single-Channel Pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette)
-* [Opentrons 300µl Pipette Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
-* [Opentrons 20µL Pipette Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
-* [NEST 96-Well PCR Plates](https://shop.opentrons.com/collections/verified-labware/products/nest-0-1-ml-96-well-pcr-plate-full-skirt)
-* [NEST 1.5mL Microcentrifuge Tubes](https://shop.opentrons.com/collections/verified-consumables/products/nest-microcentrifuge-tubes) & Tubes for Samples
-* Reagents
-* Samples
+### Pipettes
+* [P20 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)
 
+### Reagents
+* Mastermix (pre-filled in 384-well plate)
 
 ---
-![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
-**Using the customizations field (below), set up your protocol.**
-* **Number of Samples (1-19)**: Specify the number of samples to run (1-19).
-* **Number of Incubations**: Specify the number of incubations. The protocol will transfer 20µL to the destination plate and repeat the process, up to three times, at the 1, 2, and 4 day mark.
-* **Labware Containing Samples**: Select the type of tube that will be used to contain the samples. This tube should be place in the 24-Well Aluminum Block.
-* **Temperature Module**: Select which generation of the Temperature Module will be used.
-* **Reset Tipracks?**: This protocol can save the state of the tipracks after each run for the P300 and the P20. If this is set to "Yes" (or the protocol is run for the first time on the robot), the protocol will begin picking up tips from the A1 of Tiprack 1 for each pipette. If set to "No", the saved tip state from the previous run will be accessed and the pipette will begin using tips where the previous protocol run left off. The user will be prompted to replace the corresponding tip racks.
-</br>
-</br>
+### Deck Setup
+* If the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/50c11b/50c11b_deck.png)
 
-**Deck Layout**</br>
-</br>
-**Slot 1**: Destination Plate ([NEST 96-Well PCR Plates](https://shop.opentrons.com/collections/verified-labware/products/nest-0-1-ml-96-well-pcr-plate-full-skirt)) - 20µL of sample aliquots will be transferred here. This should be replaced for transfer after incubation(s).</br>
-</br>
-**Slot 2**: [24-Well Aluminum Block](https://shop.opentrons.com/collections/hardware-modules/products/aluminum-block-set) containing Tubes (specified by user) with Samples</br>
-</br>
-**Slot 3**: [Opentrons 20µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips) (Tiprack 3)</br>
-</br>
-**Slot 4**: [Opentrons Temperature Module](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck) with 96-Well Aluminum Block and [NEST 96-Well PCR Plates](https://shop.opentrons.com/collections/verified-labware/products/nest-0-1-ml-96-well-pcr-plate-full-skirt)</br>
-</br>
-**Slot 5**: [NEST 96-Well PCR Plates](https://shop.opentrons.com/collections/verified-labware/products/nest-0-1-ml-96-well-pcr-plate-full-skirt) (Empty, for mixing)</br>
-</br>
-**Slot 6**: [Opentrons 20µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips) (Tiprack 2)</br>
-</br>
-**Slot 7**: [24-Well Aluminum Block](https://shop.opentrons.com/collections/hardware-modules/products/aluminum-block-set) containing 1.5mL NEST Tubes with Reagents</br>
-</br>
-**Slot 8**: [Opentrons 300µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips) (Tiprack 1)</br>
-</br>
-**Slot 9**: [Opentrons 20µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips) (Tiprack 1)</br>
-</br>
-**Slot 10**: [Opentrons 300µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips) (Tiprack 3)</br>
-</br>
-**Slot 11**: [Opentrons 300µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips) (Tiprack 2)</br>
-</br>
+### Reagent Setup
+* This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:
+* Reservoir 1: slot 5
+![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res1_v2.png)
+* Reservoir 2: slot 2  
+![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res2.png)
 
-### Robot
-* [OT-2](https://opentrons.com/ot-2)
+---
 
-## Process
-1. Specify your parameters on this page.
+### Protocol Steps
+1. This section should consist of a numerical outline of the protocol steps, somewhat analogous to the steps outlined by the user in their custom protocol submission.
+2. example step: Samples are transferred from the source tuberacks on slots 1-2 to the PCR plate on slot 3, down columns and then across rows.
+3. example step: Waste is removed from each sample on the magnetic module, ensuring the bead pellets are not contacted by the pipette tips.
+
+### Process
+1. Input your protocol parameters above.
 2. Download your protocol.
-3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
-4. Set up your deck according to the deck map.
-5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support article](https://support.opentrons.com/ot-2/getting-started-software-setup/deck-calibration).
-6. Hit "Run".
+3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions), if needed.
+4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.
+5. Set up your deck according to the deck map.
+6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).
+7. Hit 'Run'.
 
 ### Additional Notes
-If you have any questions about this protocol, please contact protocols@opentrons.com.
+If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-407d5e
+50c11b

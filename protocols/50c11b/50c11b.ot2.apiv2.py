@@ -1,7 +1,7 @@
 import math
 
 metadata = {
-    'protocolName': 'PCR Setup',
+    'protocolName': 'Custom PCR Setup',
     'author': 'Chaz <chaz@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.9'
