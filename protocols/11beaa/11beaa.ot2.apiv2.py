@@ -20,9 +20,9 @@ def run(ctx):
     if num_samp % 2 != 0:
         raise Exception("Enter number of Primer-Pairs that is divisible by 2")
     if not 1 <= cDNA_col_num1 <= 12:
-        raise Exception("Enter a column number between 1-12")
-    if not 1 <= cDNA_col_num1 <= 12:
-        raise Exception("Enter a column number between 1-12")
+        raise Exception("Enter a column number between 0-12")
+    if not 0 <= cDNA_col_num2 <= 12:
+        raise Exception("Enter a column number between 0-12")
 
     # load labware
     deepwell_pro = ctx.load_labware('deepwellpro_96_wellplate_450ul', '1')
@@ -63,6 +63,10 @@ def run(ctx):
               disp_sets[:6][:num_col_from_samp],
               disp_sets[6:][:num_col_from_samp]
               ]
+    runs = 2
+    if cDNA_col_num2 == 0:
+        rounds.pop()
+        runs = 1
 
     for cDNA_col, supermix_col, tip_col, round in zip(cDNA_cols, supermix,
                                                       tip_cols, rounds):
@@ -92,8 +96,11 @@ def run(ctx):
                         for i in range(0, len(
                          pcr_plate.rows()[0][:num_samp*2]), 2)]
 
+    print(pcr_destinations)
+    print(primer_pairs.rows()[0])
+
     ctx.comment('\nTransfer from PrimerPair-stockPlate to Mastermixes\n')
-    for s, d in zip(primer_pairs.rows()[0]*2, pcr_destinations):
+    for s, d in zip(primer_pairs.rows()[0]*runs, pcr_destinations):
         p10.pick_up_tip()
         p10.aspirate(5, s)
         p10.dispense(2, s)
