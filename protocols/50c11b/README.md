@@ -8,24 +8,19 @@
 	* PCR Prep
 
 ## Description
-This section of the README (especially the first paragraph) should grip a prospective user with the overarching purpose/flow of the protocol, but should not include fine details of the protocol steps themselves.
+This protocol automates two different PCR setup protocols, transferring up to 96 samples from up to 4 different source plates to a single 384-well plate.
 
-Example: This is a flexible protocol accommodating a wide range of commercial RNA extraction workflows for COVID-19 sample processing. The protocol is broken down into 5 main parts:
-* binding buffer addition to samples
-* bead wash 3x using magnetic module
-* final elution to chilled PCR plate
+Using the [P20 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette), samples are transferred from KingFisher 96-Deepwell plates to an Applied Biosystems MicroAmp Optical 384-Well Reaction Plate (pre-filled with mastermix), mixing the samples slightly before transfer and again after transfer.
 
-Subsequent paragraphs can give some more insight into the details of the protocol, but a step-by-step description should be included in the 'Protocol Steps' section below.
-
-Example: For sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 4) to the elution PCR plate (temperature module, slot 1). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.
+To optimize waste bin storage and reduce the need for human interference, tips used after the first plate of transfers are replaced in the empty tiprack slots from the earlier transfers (ex. tips used for Plate 2 transfers are replaced in the tiprack used for Plate 1 transfers).
 
 Explanation of complex parameters below:
-* `park tips`: If set to `yes` (recommended), the protocol will conserve tips between reagent addition and removal. Tips will be stored in the wells of an empty rack corresponding to the well of the sample that they access (tip parked in A1 of the empty rack will only be used for sample A1, tip parked in B1 only used for sample B1, etc.). If set to `no`, tips will always be used only once, and the user will be prompted to manually refill tipracks mid-protocol for high throughput runs.
-* `input .csv file`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:
-```
-source,dest,vol
-A1,B1,4
-```
+* **Protocol Type**: If set to *Covid*, 5.3µl of sample will be transferred to the destination plate and 12µL will be mixed within the well. If set to *UTI & More*, 2µl of sample will be transferred to the destination plate and 4µL will be mixed within the well.
+* **Plate 1 Number of Samples**: Specify the number of samples in Plate 1 (up to 96). The plate can be skipped by setting this value to 0 (zero).
+* **Plate 2 Number of Samples**: Specify the number of samples in Plate 2 (up to 96). The plate can be skipped by setting this value to 0 (zero).
+* **Plate 3 Number of Samples**: Specify the number of samples in Plate 3 (up to 96). The plate can be skipped by setting this value to 0 (zero).
+* **Plate 4 Number of Samples**: Specify the number of samples in Plate 4 (up to 96). The plate can be skipped by setting this value to 0 (zero).
+* **P20-Multi Mount**: Select which mount the P20-Multi Pipette is attached to.
 
 ---
 
@@ -43,22 +38,34 @@ A1,B1,4
 ---
 
 ### Deck Setup
-* If the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:
+The deck should be setup as follows:</br>
 ![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/50c11b/50c11b_deck.png)
+</br>
+**Tipracks**: These will be accessed in the numbered order (starting with slot 8 and ending with slot 7)</br>
+**Sample Plates**: These can be loaded as needed and with as many samples as available, with the locations of plates being static. In the image above, Plates 1 and 2 are loaded completely while Plates 3 and 4 only have 16 samples.</br>
+**Destination Plate**: This is the 384-well plate and should be pre-filled with the corresponding mastermix needed for the protocol.
 
 ### Reagent Setup
-* This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:
-* Reservoir 1: slot 5
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res1_v2.png)
-* Reservoir 2: slot 2  
-![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res2.png)
+The mastermix needed for the protocol should be filled into the 384-well plate beforehand. The image below illustrates how the 0T-2 transfers samples from a 96-well plate to a 384-well plate.</br>
+Samples from Plate 1 and 2 will fill every other column beginning with column A; samples from Plate 1 will begin in column 1, samples from Plate 2 will begin in column 13. Samples from Plate 3 and 4 will fill every other column beginning with column B; samples from Plate 3 will begin in column 1, samples from Plate 4 will begin in column 13.
+![384-well plate](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/50c11b/50c11b_384wellplate.png)
 
 ---
 
 ### Protocol Steps
-1. This section should consist of a numerical outline of the protocol steps, somewhat analogous to the steps outlined by the user in their custom protocol submission.
-2. example step: Samples are transferred from the source tuberacks on slots 1-2 to the PCR plate on slot 3, down columns and then across rows.
-3. example step: Waste is removed from each sample on the magnetic module, ensuring the bead pellets are not contacted by the pipette tips.
+1. For each column of samples in Plate 1, the pipette will pick up tips.
+2. Samples will be mixed, then transferred to the 384-well plate (Rows A/C/E..., Columns 1-12) and mixed.
+3. Tips will be disposed of in the waste bin.
+4. For each column of samples in Plate 2, the pipette will pick up tips.
+5. Samples will be mixed, then transferred to the 384-well plate (Rows A/C/E..., Columns 13-24) and mixed.
+6. Tips will be disposed of in empty tip slots used for Plate 1.
+7. For each column of samples in Plate 3, the pipette will pick up tips.
+8. Samples will be mixed, then transferred to the 384-well plate (Rows B/D/F..., Columns 1-12) and mixed.
+9. Tips will be disposed of in empty tip slots used for Plate 2.
+10. For each column of samples in Plate 4, the pipette will pick up tips.
+11. Samples will be mixed, then transferred to the 384-well plate (Rows B/D/F..., Columns 13-24) and mixed.
+12. Tips will be disposed of in empty tip slots used for Plate 3.
+13. End of the protocol.
 
 ### Process
 1. Input your protocol parameters above.
