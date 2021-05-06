@@ -12,6 +12,8 @@ def run(ctx):
         p300_mount, aspirate_delay_time] = get_values(  # noqa: F821
         "num_samp", "p20_mount", "p300_mount", "aspirate_delay_time")
 
+    aspirate_delay_time = int(aspirate_delay_time)
+
     # load labware
     saliva = ctx.load_labware('opentrons_15_tuberack_falcon_15ml_conical', '1')
     buffer = ctx.load_labware('nunc_96_wellplate_450ul', '2')
