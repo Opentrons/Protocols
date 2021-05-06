@@ -9,9 +9,8 @@ metadata = {
 def run(ctx):
 
     [num_plates, reagent, p20_mount,
-        p300_mount, aspirate_delay_time] = get_values(  # noqa: F821
-        "num_plates", "reagent", "p20_mount", "p300_mount",
-        "aspirate_delay_time")
+        p300_mount] = get_values(  # noqa: F821
+        "num_plates", "reagent", "p20_mount", "p300_mount")
 
     if not 1 <= num_plates <= 10:
         raise Exception("Enter a plate number 1-9")
