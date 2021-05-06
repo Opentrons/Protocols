@@ -14,12 +14,11 @@ def run(ctx):
             "dest_plate2", "dest_plate3")
 
     # load labware
-    source_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '1')
+    source_plate = ctx.load_labware(source_plate, '1')
     dest_plate1 = ctx.load_labware(dest_plate1, '4')
     dest_plate2 = ctx.load_labware(dest_plate2, '7')
     dest_plate3 = ctx.load_labware(dest_plate3, '10')
     dest_plates = [dest_plate1, dest_plate2, dest_plate3]
-
     tiprack = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '3')]
 
     # load instrument
@@ -32,13 +31,18 @@ def run(ctx):
 
     cols = [col for plate in dest_plates for col in plate.rows()[0]]
     destinations = [cols[i::12] for i in range(0, len(cols))][:12]
-    print(destinations)
 
+    airgap = 10
     for line, chunk in zip(transfer, destinations):
         p300.pick_up_tip()
         p300.aspirate(int(line[2]),
                       source_plate.rows()[0][int(line[0])-1].bottom(
                       z=int(line[1])))
-        [p300.dispense(int(line[3]), dest.top()) for dest in chunk]
-        p300.blow_out(source_plate.rows()[0][int(line[0])-1])
+        p300.air_gap(airgap)
+        p300.touch_tip()
+        for dest in chunk:
+            p300.dispense(int(line[3])+airgap, dest.top())
+            p300.air_gap(airgap)
+            p300.touch_tip()
+        p300.air_gap(airgap)
         p300.drop_tip()
