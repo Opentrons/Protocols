@@ -13,12 +13,10 @@ def run(ctx):
 
     [num_plates, num_samples, num_slides, array_pattern, blot_dwell_time,
      wash_scheme, slow_speed_up, slow_speed_down, sample_height,
-     sample_dwell_time, slide_dwell_time, m300_mount,
-     tip_type] = get_values(  # noqa: F821
+     slide_dwell_time, m300_mount, tip_type] = get_values(  # noqa: F821
         'num_plates', 'num_samples', 'num_slides', 'array_pattern',
         'blot_dwell_time', 'wash_scheme', 'slow_speed_up', 'slow_speed_down',
-        'sample_height', 'sample_dwell_time', 'slide_dwell_time', 'm300_mount',
-        'tip_type')
+        'sample_height', 'slide_dwell_time', 'm300_mount', 'tip_type')
 
     sample_plates = [
         ctx.load_labware('abgene_96_wellplate_200ul', slot,
@@ -97,46 +95,18 @@ def run(ctx):
 
     for sample_set, slide_set in zip(sample_sets, slide_sets):
         for sample, slide_spot in zip(sample_set, slide_set):
-            ctx.max_speeds['A'] = slow_speed_down
-            ctx.max_speeds['Z'] = slow_speed_down
-            m300.move_to(sample.bottom(sample_height))
-            ctx.delay(seconds=sample_dwell_time)
-            ctx.max_speeds['A'] = slow_speed_up
-            ctx.max_speeds['Z'] = slow_speed_up
-            m300.move_to(sample.top())
-            m300.move_to(slide_spot.move(Point(z=5)))
-            ctx.max_speeds['A'] = slow_speed_down
-            ctx.max_speeds['Z'] = slow_speed_down
-            m300.move_to(slide_spot)
-            ctx.delay(seconds=slide_dwell_time)
-            ctx.max_speeds['A'] = slow_speed_up
-            ctx.max_speeds['Z'] = slow_speed_up
-            m300.move_to(slide_spot.move(Point(z=5)))
-            del ctx.max_speeds['A']
-            del ctx.max_speeds['Z']
-            wash_blot()
-
-    for sample_set, slide_set in zip(sample_sets, slide_sets):
-        for sample, slide_spot in zip(sample_set, slide_set):
+            m300.default_speed = 40
             for _ in range(3):
-                ctx.max_speeds['A'] = slow_speed_down
-                ctx.max_speeds['Z'] = slow_speed_down
                 m300.move_to(sample.top(1))
                 m300.move_to(sample.bottom(sample_height))
-                ctx.delay(seconds=sample_dwell_time)
-                ctx.max_speeds['A'] = slow_speed_up
-                ctx.max_speeds['Z'] = slow_speed_up
+            m300.default_speed = 400
             m300.move_to(sample.top(2))
             m300.move_to(slide_spot.move(Point(z=5)))
-            ctx.max_speeds['A'] = slow_speed_down
-            ctx.max_speeds['Z'] = slow_speed_down
+            m300.default_speed = 40
             m300.move_to(slide_spot)
             ctx.delay(seconds=slide_dwell_time)
-            ctx.max_speeds['A'] = slow_speed_up
-            ctx.max_speeds['Z'] = slow_speed_up
+            m300.default_speed = 400
             m300.move_to(slide_spot.move(Point(z=5)))
-            del ctx.max_speeds['A']
-            del ctx.max_speeds['Z']
             wash_blot()
 
     m300.move_to(tiprack300.wells()[0].top())
