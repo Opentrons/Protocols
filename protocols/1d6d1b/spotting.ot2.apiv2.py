@@ -38,7 +38,7 @@ def run(ctx):
         y_space = 9/num_plates
         slide_sets = [
             [well.top().move(Point(y=move*-1*y_space)) for set in [
-                slides_mount.rows()[0][i*8:i*8+8]
+                slides_mount.rows()[0][i*num_cols:(i+1)*num_cols]
              for i in range(num_slides)] for well in set]
             for move in range(num_plates)]
     elif array_pattern == 2:
@@ -95,6 +95,8 @@ def run(ctx):
 
     for sample_set, slide_set in zip(sample_sets, slide_sets):
         for sample, slide_spot in zip(sample_set, slide_set):
+
+            print(slide_spot.point)
             m300.default_speed = 40
             for _ in range(3):
                 m300.move_to(sample.top(1))
