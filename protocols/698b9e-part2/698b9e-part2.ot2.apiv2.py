@@ -34,7 +34,7 @@ def run(ctx):
         for i, saliva_tube in enumerate(saliva.wells()[:tube_counter]):
             p300.pick_up_tip()
             p300.aspirate(80, saliva_tube)
-            ctx.delay(aspirate_delay_time)
+            ctx.delay(seconds=aspirate_delay_time)
             p300.air_gap(airgap)
             p300.touch_tip()
             p300.dispense(80+airgap, buffer.wells()[i+well_ctr])
@@ -55,7 +55,7 @@ def run(ctx):
                     mastermix_plate.wells()):
         p20.pick_up_tip()
         p20.aspirate(2.4, s)
-        ctx.delay(aspirate_delay_time)
+        ctx.delay(seconds=aspirate_delay_time)
         p20.air_gap(airgap)
         p20.touch_tip()
         p20.dispense(2.4+airgap, d)
