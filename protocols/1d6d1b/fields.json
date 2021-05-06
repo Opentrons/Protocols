@@ -72,15 +72,9 @@
   },
   {
     "type": "float",
-    "label": "sample dwell time (in seconds)",
-    "name": "sample_dwell_time",
-    "default": 2
-  },
-  {
-    "type": "float",
     "label": "slide dwell time (in seconds)",
     "name": "slide_dwell_time",
-    "default": 1
+    "default": 3.0
   },
   {
     "type": "dropDown",

@@ -1,5 +1,5 @@
 {
-    "content": "metadata = {\n    'protocolName': 'swiftbiosci.com accel-amplicon-plus-egfr-pathway-panel',\n    'author': 'Steve Plonk <protocols@opentrons.com>',\n    'apiLevel': '2.9'\n}\n\n\ndef run(ctx):\n\n    # bring in constant values from json string above\n    [sample_count, hold_pcr_plate_on_ice_until_block_reaches_98, sample_volume,\n     mm_volume, room_temp, mm_well, beads_well, index_rxn_mx_well,\n     PEG_NaCl_well, post_PCR_TE_well, initial_sample_col, indexing_sample_col,\n     output_sample_col, mag_sample_col, mag_post_index_col\n     ] = get_values(  # noqa: F821\n      'sample_count', 'hold_pcr_plate_on_ice_until_block_reaches_98',\n      'sample_volume', 'mm_volume', 'room_temp', 'mm_well', 'beads_well',\n      'index_rxn_mx_well', 'PEG_NaCl_well', 'post_PCR_TE_well',\n      'initial_sample_col', 'indexing_sample_col', 'output_sample_col',\n      'mag_sample_col', 'mag_post_index_col')\n\n    ctx.set_rail_lights(True)\n\n    ctx.delay(seconds=10)\n\n    if sample_count < 1 or sample_count > 24:\n        raise Exception('Invalid number of DNA samples (must be 1-24).')\n\n    # turn off rail lights to bring the pause to the user's attention\n    ctx.set_rail_lights(False)\n    ctx.pause(\"\"\"Please pre-cool both the thermocycler block and the\n    temperature module to 4 degrees via settings in the Opentrons app prior to\n    running this protocol. Please add multiplex master mix and PCR plate\n    containing 10 ul DNA samples to their locations on the OT-2 deck\"\"\")\n    ctx.set_rail_lights(True)\n\n    # setup p20 single channel, p300 single channel, tips\n    tips20 = [ctx.load_labware(\"opentrons_96_filtertiprack_20ul\", '5')]\n    tips300 = [ctx.load_labware(\"opentrons_96_tiprack_300ul\", '9')]\n    p20 = ctx.load_instrument(\n        \"p20_single_gen2\", 'left', tip_racks=tips20)\n    p300 = ctx.load_instrument(\n        \"p300_single_gen2\", 'right', tip_racks=tips300)\n\n    # setup temperature module at 4 degrees for multiplex mastermix\n    temp = ctx.load_module('Temperature Module', '3')\n    temp_reagents = temp.load_labware(\n        'opentrons_24_aluminumblock_nest_0.5ml_screwcap',\n        'Opentrons 24-Well Aluminum Block')\n    temp.set_temperature(4)\n\n    # setup 4 degree thermocycler for mastermix addition to initial samples\n    tc = ctx.load_module('thermocycler')\n    tc.open_lid()\n    tc_plate = tc.load_labware(\"biorad_96_wellplate_200ul_pcr\")\n    tc.set_block_temperature(4)\n\n    # setup magnetic module with status 'disengaged'\n    mag = ctx.load_module('magnetic module gen2', 6)\n    mag_plate = mag.load_labware(\"nest_96_wellplate_100ul_pcr_full_skirt\")\n    mag.disengage()\n\n    # define initial DNA sample locations\n    # avoid wells located at plate edge to minimize evaporation during PCR\n    # example B2 to G2, B3 to G3, B4 to G4, B5 to G5 for 24 samples\n    initial_sample = [well for column in tc_plate.columns()[\n      initial_sample_col:] for well in column[1:len(column)-1]][:sample_count]\n\n    # setup samples, indices, etoh, master mix, beads, waste, output\n    column_well_count = len(tc_plate.columns()[0])\n    indexing_sample = tc_plate.wells()[\n      indexing_sample_col*column_well_count:sample_count +\n      indexing_sample_col*column_well_count]\n    output_sample = tc_plate.wells()[\n      output_sample_col*column_well_count:sample_count +\n      output_sample_col*column_well_count]\n    multiplex_mm = temp_reagents.wells_by_name()[mm_well]\n    index = ctx.load_labware(\"biorad_96_wellplate_200ul_pcr\", 4)\n    reservoir = ctx.load_labware(\"nest_12_reservoir_15ml\", '2')\n    etoh = reservoir.wells()[0]\n    mag_waste = reservoir.wells()[1]\n    mag_sample = mag_plate.wells()[\n      mag_sample_col*column_well_count:sample_count +\n      mag_sample_col*column_well_count]\n    mag_post_index = mag_plate.wells()[\n      mag_post_index_col*column_well_count:sample_count +\n      mag_post_index_col*column_well_count]\n    beads = temp_reagents.wells_by_name()[beads_well]\n\n    # thoroughly mix multiplex mastermix, return tip for reuse\n    ctx.set_rail_lights(False)\n    ctx.set_rail_lights(True)\n    p300.pick_up_tip()\n    p300.mix(4, mm_volume*sample_count / 2, multiplex_mm)\n    p300.return_tip()\n    p300.reset_tipracks()\n\n    # mix DNA samples and multiplex master mix at 4 degrees\n    # then (optional) manually transfer plate\n    # directly to pre-heated 98 degree thermocycler block\n    p20.flow_rate.aspirate = 25\n    p20.flow_rate.dispense = 50\n    p20.flow_rate.blow_out = 1000\n    p20.transfer(\n      mm_volume, multiplex_mm, initial_sample, mix_after=(4, 15),\n      new_tip='always', disposal_volume=0)\n\n    # deactivate temp deck for later use with room temp cleanup reagents\n    temp.deactivate()\n\n    # pcr\n    if hold_pcr_plate_on_ice_until_block_reaches_98:\n        ctx.set_rail_lights(False)\n        ctx.pause(\"\"\"Please remove the thermocycler plate and place it on ice.\n        Then click resume.\"\"\")\n        ctx.set_rail_lights(True)\n\n    tc.set_lid_temperature(105)\n    tc.set_block_temperature(98)\n\n    if hold_pcr_plate_on_ice_until_block_reaches_98:\n        ctx.set_rail_lights(False)\n        ctx.pause(\"\"\"Please place thermocycler plate back on the pre-heated\n        98 degree block and immediately click resume\"\"\")\n        ctx.set_rail_lights(True)\n    tc.close_lid()\n\n    # define cycling profiles\n    profile1 = [{'temperature': 98, 'hold_time_seconds': 30}]\n\n    profile2 = [\n        {'temperature': 98, 'hold_time_seconds': 10},\n        {'temperature': 63, 'hold_time_minutes': 5},\n        {'temperature': 65, 'hold_time_minutes': 1}]\n\n    profile3 = [\n        {'temperature': 98, 'hold_time_seconds': 10},\n        {'temperature': 64, 'hold_time_minutes': 1}]\n\n    profile4 = [\n        {'temperature': 65, 'hold_time_minutes': 1}]\n\n    # run pcr\n    rxn_volume = sample_volume + mm_volume\n    tc.execute_profile(\n      steps=profile1, repetitions=1, block_max_volume=rxn_volume)\n    tc.execute_profile(\n      steps=profile2, repetitions=4, block_max_volume=rxn_volume)\n    tc.execute_profile(\n      steps=profile3, repetitions=23, block_max_volume=rxn_volume)\n    tc.execute_profile(\n      steps=profile4, repetitions=1, block_max_volume=rxn_volume)\n    tc.set_block_temperature(4, hold_time_seconds=30)\n    tc.set_block_temperature(room_temp)\n    tc.set_lid_temperature(room_temp)\n    tc.open_lid()\n\n    # clean up post-pcr samples\n    bead_mix_volume = sample_count*10\n    p300.pick_up_tip()\n\n    # suspend the beads\n    ctx.set_rail_lights(False)\n    ctx.pause(\n      \"Please add beads and ethanol to their locations on the OT-2 deck\")\n    ctx.set_rail_lights(True)\n    p300.mix(10, bead_mix_volume, beads)\n\n    # dispense beads to wells of mag module plate, return tip for later reuse\n    p300.flow_rate.aspirate = 10\n    p300.flow_rate.dispense = 10\n    for mag_samp in mag_sample:\n        if not p300.has_tip:\n            p300.pick_up_tip()\n        p300.aspirate(36, beads)\n        p300.default_speed = 50\n        p300.move_to(mag_samp.top(-2))\n        p300.default_speed = 400\n        p300.dispense(36, mag_samp.top(-5))\n        p300.blow_out()\n        p300.return_tip()\n    p300.reset_tipracks()\n\n    # pre-cool temperature deck to 4 degrees for cold indexing reaction mix\n    temp.set_temperature(4)\n    index_rxn_mx = temp_reagents.wells_by_name()[index_rxn_mx_well]\n\n    # dispense post-PCR sample to magnetic module plate (magnets disengaged)\n    # mix, let stand 5 min room temp\n    # return tip for reuse with supernatant removal on same sample\n    p300.transfer(\n      30, initial_sample, mag_sample, mix_after=(4, 15),\n      new_tip=\"always\", trash=False)\n    p300.reset_tipracks()\n\n    # set thermocycler block temperature to 37 for indexing step\n    ctx.set_rail_lights(False)\n    ctx.pause(\"\"\"Please add index plate and cold indexing reaction mix to\n    their locations on the OT-2 deck\"\"\")\n    ctx.set_rail_lights(True)\n    tc.set_block_temperature(37)\n    ctx.delay(minutes=5)\n\n    # magnets engaged, let stand 5 min\n    mag.engage()\n    ctx.delay(minutes=5)\n\n    # remove sup, return tips for later supernatant removal on same sample\n    p300.flow_rate.aspirate = 20\n    p300.flow_rate.dispense = 50\n    p300.transfer(\n      60, [mag_samp.bottom(2) for mag_samp in mag_sample],\n      mag_waste.top(1.5), new_tip='always', trash=False)\n    p300.reset_tipracks()\n\n    # wash samples 2x with 180 ul 80% etoh\n    # reuse etoh tip to distribute etoh in second and later washes\n    # reuse other tips for supernatant removal from same sample\n    p300.default_speed = 200\n    p300.flow_rate.aspirate = 75\n    p300.flow_rate.dispense = 50\n    for i in range(2):\n        p300.pick_up_tip(tips300[0]['A4'])\n        for mag_samp in mag_sample:\n            p300.air_gap(10)\n            p300.aspirate(180, etoh)\n            p300.air_gap(5)\n            p300.dispense(210, mag_samp.top(-2))\n        p300.return_tip()\n        if sample_count <= 8:\n            ctx.delay(seconds=15)\n        for mag_samp in mag_sample:\n            p300.pick_up_tip()\n            p300.air_gap(10)\n            p300.aspirate(190, mag_samp)\n            p300.air_gap(5)\n            p300.dispense(210, mag_waste.top(1.5))\n            p300.return_tip()\n        p300.reset_tipracks()\n\n    # aspirate last traces of etoh\n    for mag_samp in mag_sample:\n        p300.pick_up_tip()\n        p300.aspirate(30, mag_samp.bottom(-0.5))\n        p300.air_gap(5)\n        p300.dispense(35, mag_waste.top(1.5))\n        p300.return_tip()\n\n    if sample_count <= 8:\n        ctx.comment(\"Letting beads dry for 3 minutes.\")\n        ctx.delay(minutes=3)\n    mag.disengage()\n\n    # indexing step with post-pcr sample bead pellets\n    # distribute cold index reaction mix to post-pcr bead pellets\n    p300.pick_up_tip(tips300[0]['B4'])\n    p300.distribute(\n      35, index_rxn_mx, [mag_samp.top(-2) for mag_samp in mag_sample],\n      new_tip='never', trash=False)\n    p300.return_tip()\n\n    # add indices to bead pellets and mix\n    p20.transfer(\n      15, index.wells()[:sample_count], [mag_samp for mag_samp in mag_sample],\n      mix_after=(4, 20), new_tip='always')\n\n    # transfer suspended bead pellet to 37 degree thermocycler plate\n    p300.starting_tip = tips300[0]['A7']\n    p300.transfer(\n      55, [mag_samp for mag_samp in mag_sample],\n      [ind_samp for ind_samp in indexing_sample],\n      new_tip='always', trash=False)\n\n    # define thermocycler profile for indexing\n    profile5 = [{'temperature': 37, 'hold_time_minutes': 20}]\n    tc.close_lid()\n    tc.execute_profile(steps=profile5, repetitions=1)\n    tc.set_block_temperature(room_temp)\n\n    # set temp module for room temperature PEG NaCl and post-PCR TE\n    temp.set_temperature(room_temp)\n    ctx.set_rail_lights(False)\n    ctx.pause(\"\"\"Please add room temperature PEG NaCl and post PCR TE to their\n    locations on the OT-2 deck\"\"\")\n    ctx.set_rail_lights(True)\n    PEG_NaCl = temp_reagents.wells_by_name()[PEG_NaCl_well]\n    post_PCR_TE = temp_reagents.wells_by_name()[post_PCR_TE_well]\n\n    # post indexing clean up\n    # distribute room temperature PEG NaCl to magnetic module plate wells\n    p300.pick_up_tip(tips300[0]['C4'])\n    p300.distribute(\n      42.5, PEG_NaCl, [mag_post_ind for mag_post_ind in mag_post_index],\n      new_tip='never')\n    p300.drop_tip()\n\n    # transfer post-indexing sample to magnetic module plate\n    # mix with room temperature PEG NaCl\n    tc.open_lid()\n    p300.starting_tip = tips300[0]['A10']\n    p300.transfer(\n      50, [ind_samp for ind_samp in indexing_sample],\n      [mag_post_ind for mag_post_ind in mag_post_index],\n      mix_after=(4, 45), new_tip='always', trash=False)\n\n    # let stand 5 minutes magnets disengaged\n    ctx.delay(minutes=5)\n\n    # let stand 5 minutes magnets engaged\n    mag.engage()\n    ctx.delay(minutes=5)\n\n    # remove supernatant with magnet engaged\n    p300.reset_tipracks()\n    p300.starting_tip = tips300[0]['A10']\n    p300.transfer(\n      50, [mag_post_ind.bottom(2) for mag_post_ind in mag_post_index],\n      mag_waste.bottom(1.5), new_tip='always', trash=False)\n    p300.reset_tipracks()\n    p300.starting_tip = tips300[0]['A10']\n\n    # post-indexing wash 2x with 180 ul 80% etoh\n    # reuse etoh tip to distribute etoh\n    # reuse other tips for supernatant removal from same sample\n    p300.default_speed = 200\n    p300.flow_rate.aspirate = 75\n    p300.flow_rate.dispense = 50\n    for i in range(2):\n        p300.pick_up_tip(tips300[0]['A4'])\n        for mag_samp in mag_sample:\n            p300.air_gap(10)\n            p300.aspirate(180, etoh)\n            p300.air_gap(5)\n            p300.dispense(210, mag_samp.top(-2))\n        p300.return_tip()\n        if sample_count <= 8:\n            ctx.delay(seconds=15)\n        for mag_samp in mag_sample:\n            p300.pick_up_tip()\n            p300.air_gap(10)\n            p300.aspirate(190, mag_samp)\n            p300.air_gap(5)\n            p300.dispense(210, mag_waste.top(1.5))\n            p300.return_tip()\n        p300.reset_tipracks()\n        p300.starting_tip = tips300[0]['A10']\n\n    # aspirate last traces of etoh\n    for mag_samp in mag_sample:\n        p300.pick_up_tip()\n        p300.aspirate(30, mag_samp.bottom(-0.5))\n        p300.air_gap(5)\n        p300.dispense(35, mag_waste.top(1.5))\n        p300.return_tip()\n\n    if sample_count <= 8:\n        ctx.comment(\"Letting beads dry for 3 minutes.\")\n        ctx.delay(minutes=3)\n    mag.disengage()\n\n    # elute by mixing with 20 ul post-PCR TE\n    p20.distribute(\n      20, post_PCR_TE,\n      [mag_post_ind.top(-2) for mag_post_ind in mag_post_index],\n      disposal_volume=0, trash=False)\n    p20.reset_tipracks()\n    p20.starting_tip = tips20[0]['A7']\n    for mag_post_ind in mag_post_index:\n        p20.pick_up_tip()\n        p20.mix(4, 10, mag_post_ind)\n        p20.drop_tip()\n\n    # let stand 2 minutes magnets disengaged\n    ctx.delay(minutes=2)\n\n    # let stand 3 minutes magnets engaged\n    mag.engage()\n    ctx.delay(minutes=3)\n\n    # transfer eluate to output well\n    p20.transfer(\n      20, [mag_post_ind for mag_post_ind in mag_post_index],\n      [output_samp for output_samp in output_sample], new_tip='always')\n\n    # hold at 4 degrees\n    tc.set_block_temperature(4)\n",
+    "content": "import math\n\nmetadata = {\n    'protocolName': 'swiftbiosci.com accel-amplicon-plus-egfr-pathway-panel',\n    'author': 'Steve Plonk <protocols@opentrons.com>',\n    'apiLevel': '2.9'\n}\n\n\ndef run(ctx):\n\n    # get parameter values from json above\n    [sample_count, mm_volume\n     ] = get_values(  # noqa: F821\n      'sample_count', 'mm_volume')\n\n    ctx.set_rail_lights(True)\n    ctx.delay(seconds=10)\n    if sample_count < 1 or sample_count > 24:\n        raise Exception('Invalid number of DNA samples (must be 1-24).')\n\n    def pause_attention(message):\n        ctx.set_rail_lights(False)\n        ctx.delay(seconds=10)\n        ctx.pause(message)\n        ctx.set_rail_lights(True)\n\n    pause_attention(\"\"\"PCR set up: Pre-cool temp module to 4 degrees, pre-heat\n    cycler block (98) and lid (105) with OT app settings, sample plate slot 1\n    with up to 24 samples (in column order A1-H1), master mix tube A1 of block\n    on slot 5.\"\"\")\n\n    # tips, p20 single, p300 multi\n    tips20 = [ctx.load_labware(\"opentrons_96_filtertiprack_20ul\", '3')]\n    p20s = ctx.load_instrument(\n        \"p20_single_gen2\", 'left', tip_racks=tips20)\n    tips300 = [ctx.load_labware(\"opentrons_96_filtertiprack_200ul\", '4')]\n    p300m = ctx.load_instrument(\n        \"p300_multi_gen2\", 'right', tip_racks=tips300)\n    tip_max = 150\n    named_tips = {}\n    for name, well in zip([\n     'etoh_tips', 'sup_tips', 'index_rxn_tips'], ['A1', 'A2', 'A5']):\n        named_tips[name] = tips300[0][well]\n\n    # helper functions\n    def no_edges(plate):\n        return [well for column in [\n         column for column in plate.columns()[1:11]] for well in column[1:7]]\n\n    def create_chunks(list_name, n):\n        for i in range(0, len(list_name), n):\n            yield list_name[i:i+n]\n\n    def slow_tip_withdrawal(pipette, well_location, to_center=False):\n        if pipette.mount == 'right':\n            axis = 'A'\n        else:\n            axis = 'Z'\n        ctx.max_speeds[axis] = 10\n        if to_center is False:\n            pipette.move_to(well_location.top())\n        else:\n            pipette.move_to(well_location.center())\n        ctx.max_speeds[axis] = None\n\n    def etoh_settings():\n        p300m.flow_rate.blow_out = 300\n\n    def default_settings():\n        p300m.flow_rate.blow_out = 94\n\n    def rep_max_transfer(\n     remaining, source, dest, tip_max_vol=tip_max, air=0, blow=0,\n     touch=False):\n        vol = tip_max_vol - air\n        while remaining > vol:\n            p300m.aspirate(vol, source)\n            if air > 0:\n                p300m.air_gap(air)\n            p300m.dispense(tip_max_vol, dest)\n            if blow > 0:\n                for rep in range(blow):\n                    if rep > 0:\n                        p300m.aspirate(tip_max, dest)\n                    ctx.delay(seconds=1)\n                    p300m.blow_out(dest)\n            if touch is True:\n                p300m.touch_tip(radius=0.75, v_offset=-2, speed=20)\n            remaining -= vol\n        p300m.aspirate(remaining, source)\n        if air > 0:\n            p300m.air_gap(air)\n        p300m.dispense(remaining + air, dest)\n        if blow > 0:\n            for rep in range(blow):\n                if rep > 0:\n                    p300m.aspirate(tip_max, dest)\n                ctx.delay(seconds=1)\n                p300m.blow_out(dest)\n        if touch is True:\n            p300m.touch_tip(radius=0.75, v_offset=-2, speed=20)\n\n    def reuse_tips(which_tips):\n        p300m.reset_tipracks()\n        p300m.starting_tip = named_tips[which_tips]\n\n    # temp mod 4 deg, 96-well block, 96-well plate, DNA samples and master mix\n    temp = ctx.load_module('Temperature Module', '6')\n    output_plate = temp_plate = temp.load_labware(\n     'opentrons_96_aluminumblock_nest_wellplate_100ul')\n    temp.set_temperature(4)\n    pcr_setups = no_edges(temp_plate)[:sample_count]\n\n    # pre-chilled aluminum block containing master mix tube in well A1\n    block = ctx.load_labware(\n     'opentrons_24_aluminumblock_nest_2ml_snapcap', '5')\n    mm = beads = index_rxn_mx = peg_nacl = block.wells_by_name()['A1']\n\n    # thermocycler pre-heated block (98) and lid (105)\n    tc = ctx.load_module('thermocycler')\n    tc.open_lid()\n    tc_plate = tc.load_labware(\"nest_96_wellplate_100ul_pcr_full_skirt\")\n    tc.set_lid_temperature(105)\n    tc.set_block_temperature(98)\n\n    # magnetic module disengaged\n    mag = ctx.load_module('magnetic module gen2', 9)\n    mag_plate = mag.load_labware(\"nest_96_wellplate_100ul_pcr_full_skirt\")\n    mag.disengage()\n    mag_samps = mag_plate.wells()[:sample_count]\n    mag_samps_indx = mag_plate.wells()[32:sample_count + 32]\n\n    # 96-well plate slot 1 (sample plate, later index plate)\n    temporary_plate = ctx.load_labware(\n     \"nest_96_wellplate_100ul_pcr_full_skirt\", '1')\n    initial_dna = indexes = temporary_plate.wells()[:sample_count]\n\n    # reservoir for etoh, waste, te\n    reservoir = ctx.load_labware(\"nest_12_reservoir_15ml\", '2')\n    [etoh, waste, post_pcr_te] = [reservoir.wells_by_name()[\n     well] for well in ['A1', 'A3', 'A5']]\n\n    # PCR setup: p300m \"single channel\" distribute master mix to 4 degree wells\n    p300m.pick_up_tip(tips300[0]['H9'])\n    p300m.well_bottom_clearance.aspirate = 8\n    p300m.aspirate(10, mm, rate=0.25)\n    ctx.delay(seconds=1)\n    for chunk in create_chunks(pcr_setups, 6):\n        p300m.aspirate(len(chunk)*mm_volume, mm, rate=0.25)\n        ctx.delay(seconds=3)\n        slow_tip_withdrawal(p300m, mm)\n        p300m.well_bottom_clearance.aspirate -= 2\n        for well in chunk:\n            p300m.dispense(20, well.bottom(2), rate=0.25)\n            ctx.delay(seconds=2)\n            slow_tip_withdrawal(p300m, well)\n    p300m.drop_tip()\n    p300m.well_bottom_clearance.aspirate = 1\n\n    # mix DNA with master mix at 4 degrees\n    for dna, rxn in zip(initial_dna, pcr_setups):\n        p20s.pick_up_tip()\n        p20s.aspirate(10, dna)\n        p20s.dispense(8, rxn)\n        for rep in range(5):\n            p20s.aspirate(15, rxn.bottom(2), rate=0.5)\n            ctx.delay(seconds=1)\n            p20s.dispense(15, rxn.bottom(2), rate=0.5)\n            ctx.delay(seconds=1)\n        slow_tip_withdrawal(p20s, rxn, to_center=True)\n        p20s.dispense(2, rxn.center())\n        ctx.delay(seconds=1)\n        p20s.blow_out()\n        p20s.touch_tip(rxn, radius=0.75, v_offset=-2, speed=10.0)\n        p20s.drop_tip()\n\n    pause_attention(\"\"\"Set up complete. Please transfer plate from temperature\n    module to pre-heated cycler and resume to run PCR.\"\"\")\n\n    # cycling profiles\n    profiles = [[{\n     'temperature': temp, 'hold_time_seconds': sec\n     } for temp, sec in zip([98], [30])], [{\n      'temperature': temp, 'hold_time_seconds': sec\n      } for temp, sec in zip([98, 63, 65], [10, 300, 60])], [{\n       'temperature': temp, 'hold_time_seconds': sec\n       } for temp, sec in zip([98, 64], [10, 60])], [{\n        'temperature': temp, 'hold_time_seconds': sec\n        } for temp, sec in zip([65], [60])]]\n\n    # run pcr\n    tc.close_lid()\n    for profile, reps in zip(profiles, [1, 4, 23, 1]):\n        tc.execute_profile(\n         steps=profile, repetitions=reps, block_max_volume=30)\n    tc.set_block_temperature(4, hold_time_seconds=30)\n    tc.deactivate_block()\n    tc.deactivate_lid()\n    tc.open_lid()\n\n    # post pcr clean up\n    pause_attention(\n      \"\"\"Post-PCR clean up: place beads (A1 of block in slot 5) and ethanol\n      (A1 of reservoir in slot 2) on OT-2 deck.\"\"\")\n\n    # one-tip dispense beads to columns of mag plate\n    num_cols = math.ceil(sample_count / 8)\n    p300m.pick_up_tip(tips300[0]['G9'])\n    p300m.aspirate(10, beads, rate=0.25)\n    ctx.delay(seconds=1)\n    for rep in range(10):\n        p300m.aspirate(100, beads.bottom(2), rate=0.25)\n        ctx.delay(seconds=2)\n        p300m.dispense(100, beads.bottom(2), rate=0.25)\n        ctx.delay(seconds=2)\n    for index, column in enumerate(mag_plate.columns()[:num_cols]):\n        p300m.aspirate(144, beads, rate=0.25)\n        ctx.delay(seconds=5)\n        slow_tip_withdrawal(p300m, beads)\n        for well in column[:4]:\n            p300m.dispense(36, well.bottom(2), rate=0.25)\n            ctx.delay(seconds=1)\n            slow_tip_withdrawal(p300m, well)\n        if index == len(mag_plate.columns()[:num_cols]) - 1:\n            p300m.aspirate(136, beads, rate=0.25)\n        else:\n            p300m.aspirate(144, beads, rate=0.25)\n        ctx.delay(seconds=5)\n        slow_tip_withdrawal(p300m, beads)\n        for well in column[4:]:\n            p300m.dispense(36, well.bottom(2), rate=0.25)\n            ctx.delay(seconds=1)\n            slow_tip_withdrawal(p300m, well)\n    p300m.drop_tip()\n\n    # post-PCR sample to mag mod (reformat columns of 6 to columns of 8), mix\n    for tip, source, dest in zip(['C10', 'A10', 'E11', 'A11', 'G12', 'A12'],\n                                 ['B2', 'B3', 'D3', 'B4', 'F4', 'B5'],\n                                 ['A1', 'G1', 'A2', 'E2', 'A3', 'C3']):\n        p300m.pick_up_tip(tips300[0][tip])\n        p300m.aspirate(30, tc_plate.wells_by_name()[source], rate=0.5)\n        ctx.delay(seconds=1)\n        p300m.dispense(25, mag_plate.wells_by_name()[dest], rate=0.5)\n        ctx.delay(seconds=1)\n        for rep in range(10):\n            p300m.aspirate(30, mag_plate.wells_by_name()[dest], rate=0.25)\n            ctx.delay(seconds=2)\n            if rep == 9:\n                p300m.dispense(35, mag_plate.wells_by_name()[dest], rate=0.25)\n            else:\n                p300m.dispense(30, mag_plate.wells_by_name()[dest], rate=0.25)\n            ctx.delay(seconds=2)\n        p300m.drop_tip()\n\n    # set thermocycler block temperature to 37 for indexing step\n    tc.set_block_temperature(37)\n\n    # magnets engaged, let stand 5 min\n    ctx.delay(minutes=5)\n    mag.engage()\n    ctx.delay(minutes=5)\n\n    # remove sup\n    reuse_tips('sup_tips')\n    for column in mag_plate.columns()[:num_cols]:\n        p300m.pick_up_tip()\n        p300m.aspirate(60, column[0].bottom(2), rate=0.25)\n        ctx.delay(seconds=2)\n        p300m.dispense(60, waste.top())\n        ctx.delay(seconds=1)\n        p300m.return_tip()\n\n    # wash 2x 180 ul 80% etoh, reuse tips\n    etoh_settings()\n    p300m.reset_tipracks()\n    p300m.pick_up_tip()\n    for repeat in range(2):\n        if repeat == 1:\n            reuse_tips('etoh_tips')\n            p300m.pick_up_tip()\n        # prewet tips with ethanol\n        for rep in range(2):\n            p300m.aspirate(100, etoh.bottom(2))\n            p300m.dispense(100, etoh.bottom(2))\n        for column in mag_plate.columns()[:num_cols]:\n            rep_max_transfer(\n             180, etoh.bottom(2), column[0].top(), air=15, blow=2)\n        p300m.return_tip()\n        reuse_tips('sup_tips')\n        for column in mag_plate.columns()[:num_cols]:\n            p300m.pick_up_tip()\n            rep_max_transfer(\n             180, column[0].bottom(2), waste.top(), air=15, blow=2)\n            p300m.return_tip()\n\n    pause_attention(\"\"\"Indexing: Place index plate (slot 1) and\n    index rxn mx tube (A1 chilled block on slot 5) on OT-2 deck.\"\"\")\n\n    # aspirate last traces of etoh\n    reuse_tips('sup_tips')\n    for column in mag_plate.columns()[:num_cols]:\n        p300m.pick_up_tip()\n        rep_max_transfer(30, column[0].bottom(2), waste.top(), air=15, blow=2)\n        p300m.return_tip()\n    default_settings()\n    ctx.comment(\"Beads drying for 3 minutes.\")\n    ctx.delay(minutes=3)\n    mag.disengage()\n\n    # indexing post-pcr beads, one-tip pickup, rxn mix to bead pellets\n    p300m.pick_up_tip(tips300[0]['F9'])\n    for chunk in create_chunks(mag_samps, 3):\n        p300m.aspirate(105, index_rxn_mx.bottom(2))\n        for well in chunk:\n            p300m.dispense(35, well.top(-2))\n    p300m.drop_tip()\n\n    # indices to bead pellets, mix, transfer beads to 37 degree cycler plate\n    p20s.transfer(\n      15, [well.bottom(2) for well in indexes[:sample_count]],\n      [mag_samp.bottom(2) for mag_samp in mag_samps], new_tip='always')\n\n    p300m.transfer(\n      55, [mag_col[0].bottom(2) for mag_col in mag_plate.columns()[:num_cols]],\n      [indx_col[0].bottom(2) for indx_col in tc_plate.columns()[6:num_cols+6]],\n      mix_before=(5, 27), new_tip='always', trash=False)\n\n    # define thermocycler profile for indexing\n    profile5 = [{'temperature': 37, 'hold_time_minutes': 20}]\n    tc.close_lid()\n    tc.execute_profile(steps=profile5, repetitions=1)\n    tc.deactivate_block()\n\n    pause_attention(\"\"\"Second clean up: Place PEG NaCl (A1 of block in slot 5)\n    and TE (A5 of reservoir in slot 2) on OT-2 deck. Replenish ethanol\n    (A1 of reservoir in slot 2).\"\"\")\n\n    # post-indexing clean up, PEG NaCl to fresh mag plate wells, 1-tip pickup\n    p300m.pick_up_tip(tips300[0]['E9'])\n    p300m.well_bottom_clearance.aspirate = 8\n    p300m.aspirate(10, peg_nacl, rate=0.25)\n    ctx.delay(seconds=1)\n    for chunk in create_chunks(mag_samps_indx, 3):\n        p300m.aspirate(len(chunk)*42.5, peg_nacl, rate=0.25)\n        ctx.delay(seconds=5)\n        slow_tip_withdrawal(p300m, peg_nacl)\n        p300m.well_bottom_clearance.aspirate -= 2\n        for well in chunk:\n            p300m.dispense(42.5, well.bottom(2), rate=0.25)\n            ctx.delay(seconds=2)\n            slow_tip_withdrawal(p300m, well)\n    p300m.drop_tip()\n    p300m.well_bottom_clearance.aspirate = 1\n\n    # indexed sample to mag plate, mix with PEG NaCl\n    tc.open_lid()\n    reuse_tips('index_rxn_tips')\n    p300m.transfer(50, [\n     indx_col[0].bottom(2) for indx_col in tc_plate.columns()[6:num_cols+6]],\n      [mag_col[0].bottom(2) for mag_col in mag_plate.columns()[4:num_cols+4]],\n      mix_after=(4, 45), new_tip='always', trash=False)\n\n    ctx.delay(minutes=5)\n    mag.engage()\n    ctx.delay(minutes=5)\n\n    # remove supernatant\n    reuse_tips('index_rxn_tips')\n    for column in mag_plate.columns()[4:num_cols+4]:\n        p300m.pick_up_tip()\n        p300m.aspirate(92, column[0].bottom(2), rate=0.25)\n        ctx.delay(seconds=2)\n        slow_tip_withdrawal(p300m, column[0])\n        p300m.dispense(92, waste.top(), rate=0.25)\n        ctx.delay(seconds=2)\n        p300m.blow_out()\n        p300m.return_tip()\n\n    # post_indexing wash 2x 180 ul 80% etoh\n    etoh_settings()\n    reuse_tips('etoh_tips')\n    p300m.pick_up_tip()\n    for repeat in range(2):\n        if repeat == 1:\n            reuse_tips('etoh_tips')\n            p300m.pick_up_tip()\n        # prewet tips with ethanol\n        for rep in range(2):\n            p300m.aspirate(100, etoh.bottom(2))\n            p300m.dispense(100, etoh.bottom(2))\n        for column in mag_plate.columns()[4:num_cols+4]:\n            rep_max_transfer(\n             180, etoh.bottom(2), column[0].top(), air=15, blow=2)\n        p300m.return_tip()\n        reuse_tips('index_rxn_tips')\n        for column in mag_plate.columns()[4:num_cols+4]:\n            p300m.pick_up_tip()\n            rep_max_transfer(\n             180, column[0].bottom(2), waste.top(), air=15, blow=2)\n            p300m.return_tip()\n\n    pause_attention(\"\"\"Place output plate on temperature module.\"\"\")\n\n    # aspirate last traces of etoh\n    reuse_tips('index_rxn_tips')\n    for column in mag_plate.columns()[4:num_cols+4]:\n        p300m.pick_up_tip()\n        rep_max_transfer(30, column[0].bottom(2), waste.top(), air=15, blow=2)\n        p300m.return_tip()\n    default_settings()\n    ctx.comment(\"Beads drying for 3 minutes.\")\n    ctx.delay(minutes=3)\n    mag.disengage()\n\n    # elute, mix, transfer eluate to output plate and hold at 4 degrees C\n    p20s.transfer(20, post_pcr_te, [\n     well.bottom() for well in mag_plate.wells()[32:sample_count+32]],\n     mix_after=(4, 10), new_tip='always')\n    ctx.delay(minutes=2)\n    mag.engage()\n    ctx.delay(minutes=5)\n    p20s.transfer(20, [well.bottom() for well in mag_plate.wells()[\n     32:sample_count+32]], [well.bottom() for well in output_plate.wells()[\n      :sample_count]], new_tip='always')\n",
     "custom_labware_defs": [],
     "fields": [
         {
@@ -9,97 +9,10 @@
             "type": "int"
         },
         {
-            "label": "Hold PCR plate on ice until block reaches 98 degrees?",
-            "name": "hold_pcr_plate_on_ice_until_block_reaches_98",
-            "options": [
-                {
-                    "label": "YES",
-                    "value": true
-                },
-                {
-                    "label": "NO",
-                    "value": false
-                }
-            ],
-            "type": "dropDown"
-        },
-        {
-            "default": 10,
-            "label": "Sample Volume",
-            "name": "sample_volume",
-            "type": "int"
-        },
-        {
             "default": 20,
             "label": "Mastermix Volume",
             "name": "mm_volume",
-            "type": "int"
-        },
-        {
-            "default": 22,
-            "label": "Room Temperature",
-            "name": "room_temp",
-            "type": "int"
-        },
-        {
-            "default": "A1",
-            "label": "Mastermix Well",
-            "name": "mm_well",
-            "type": "str"
-        },
-        {
-            "default": "A2",
-            "label": "Beads Well",
-            "name": "beads_well",
-            "type": "str"
-        },
-        {
-            "default": "A3",
-            "label": "Indexing Reaction Mix Well",
-            "name": "index_rxn_mx_well",
-            "type": "str"
-        },
-        {
-            "default": "A4",
-            "label": "PEG NaCl Well",
-            "name": "PEG_NaCl_well",
-            "type": "str"
-        },
-        {
-            "default": "A5",
-            "label": "Post PCR TE Well",
-            "name": "post_PCR_TE_well",
-            "type": "str"
-        },
-        {
-            "default": 1,
-            "label": "Initial Sample Starting Column",
-            "name": "initial_sample_col",
-            "type": "int"
-        },
-        {
-            "default": 5,
-            "label": "Indexing Sample Starting Column",
-            "name": "indexing_sample_col",
-            "type": "int"
-        },
-        {
-            "default": 8,
-            "label": "Output Sample Starting Column",
-            "name": "output_sample_col",
-            "type": "int"
-        },
-        {
-            "default": 0,
-            "label": "First Cleanup Sample Starting Column",
-            "name": "mag_sample_col",
-            "type": "int"
-        },
-        {
-            "default": 3,
-            "label": "Second Cleanup Sample Starting Column",
-            "name": "mag_post_index_col",
-            "type": "int"
+            "type": "float"
         }
     ],
     "instruments": [
@@ -109,10 +22,16 @@
         },
         {
             "mount": "right",
-            "name": "p300_single_gen2"
+            "name": "p300_multi_gen2"
         }
     ],
     "labware": [
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on 1",
+            "share": false,
+            "slot": "1",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
         {
             "name": "NEST 12 Well Reservoir 15 mL on 2",
             "share": false,
@@ -120,40 +39,40 @@
             "type": "nest_12_reservoir_15ml"
         },
         {
-            "name": "Opentrons 24-Well Aluminum Block on Temperature Module GEN1 on 3",
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 3",
             "share": false,
             "slot": "3",
-            "type": "opentrons_24_aluminumblock_nest_0.5ml_screwcap"
-        },
-        {
-            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 4",
-            "share": false,
-            "slot": "4",
-            "type": "biorad_96_wellplate_200ul_pcr"
-        },
-        {
-            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 5",
-            "share": false,
-            "slot": "5",
             "type": "opentrons_96_filtertiprack_20ul"
         },
         {
-            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Magnetic Module GEN2 on 6",
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 24 Well Aluminum Block with NEST 2 mL Snapcap on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_24_aluminumblock_nest_2ml_snapcap"
+        },
+        {
+            "name": "Opentrons 96 Well Aluminum Block with NEST Well Plate 100 \u00b5L on Temperature Module GEN1 on 6",
             "share": false,
             "slot": "6",
+            "type": "opentrons_96_aluminumblock_nest_wellplate_100ul"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Thermocycler Module on 7",
+            "share": false,
+            "slot": "7",
             "type": "nest_96_wellplate_100ul_pcr_full_skirt"
         },
         {
-            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on Thermocycler Module on 7",
-            "share": false,
-            "slot": "7",
-            "type": "biorad_96_wellplate_200ul_pcr"
-        },
-        {
-            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 9",
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Magnetic Module GEN2 on 9",
             "share": false,
             "slot": "9",
-            "type": "opentrons_96_tiprack_300ul"
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
         },
         {
             "name": "Opentrons Fixed Trash on 12",
