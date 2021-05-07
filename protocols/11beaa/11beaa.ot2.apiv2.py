@@ -6,12 +6,6 @@ metadata = {
 }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"num_samp":12,"cDNA_col_num1":4,"cDNA_col_num2":5,"asp_bottom_clearance":1,"disp_bottom_clearance":1,"asp_flowrate_p10":5,"asp_flowrate_p50":30,"disp_flowrate_p10":10,"disp_flowrate_p50":30,"temp_mod_on":true,"temp":6,"p10_mount":"left","p50_mount":"right"}""")
-    return [_all_values[n] for n in names]
-
-
 def run(ctx):
 
     [num_samp, cDNA_col_num1, cDNA_col_num2, asp_bottom_clearance,
@@ -61,7 +55,7 @@ def run(ctx):
     cDNA_cols = [temp_plate.rows()[0][cDNA_col-1]
                  for cDNA_col in [cDNA_col_num1, cDNA_col_num2]]
     tip_cols200 = [tiprack200.rows()[0][cDNA_col-1]
-                for cDNA_col in [cDNA_col_num1, cDNA_col_num2]]
+                   for cDNA_col in [cDNA_col_num1, cDNA_col_num2]]
     tip_cols10 = [tipracks10[2].rows()[0][cDNA_col-1]
                   for cDNA_col in [cDNA_col_num1, cDNA_col_num2]]
     num_col_from_samp = int(num_samp/2)
@@ -99,7 +93,7 @@ def run(ctx):
                 p10.dispense(10, col)
             ctx.comment('\n')
         p10.drop_tip()
-#[p10.transfer(50, supermix_col, col, new_tip='never') for col in chunk]
+
     # Transfer from PrimerPair-stockPlate to Mastermixes
     pcr_destinations = [pcr_plate.rows()[row_start][i:i+2]
                         for row_start in [0, 1]
