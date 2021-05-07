@@ -31,7 +31,7 @@ def run(ctx):
     temp_mod = ctx.load_module('tempdeck', '4')
     temp_plate = temp_mod.load_labware('biorad_96_aluminumblock_200ul')
     tipracks10 = [ctx.load_labware('opentrons_96_filtertiprack_10ul', slot)
-                  for slot in ['6', '9']]
+                  for slot in ['6', '9', '10']]
     tiprack200 = ctx.load_labware('opentrons_96_filtertiprack_200ul', '7')
 
     if temp_mod_on:
@@ -54,8 +54,10 @@ def run(ctx):
                 for cDNA_col in [cDNA_col_num1, cDNA_col_num2]]
     cDNA_cols = [temp_plate.rows()[0][cDNA_col-1]
                  for cDNA_col in [cDNA_col_num1, cDNA_col_num2]]
-    tip_cols = [tiprack200.rows()[0][cDNA_col-1]
-                for cDNA_col in [cDNA_col_num1, cDNA_col_num2]]
+    tip_cols200 = [tiprack200.rows()[0][cDNA_col-1]
+                   for cDNA_col in [cDNA_col_num1, cDNA_col_num2]]
+    tip_cols10 = [tipracks10[2].rows()[0][cDNA_col-1]
+                  for cDNA_col in [cDNA_col_num1, cDNA_col_num2]]
     num_col_from_samp = int(num_samp/2)
     disp_sets = [pcr_plate.rows()[row_start][i:i+4] for row_start in [0, 1]
                  for i in range(0, len(pcr_plate.rows()[0]), 4)]
@@ -68,36 +70,35 @@ def run(ctx):
         rounds.pop()
         runs = 1
 
-    for cDNA_col, supermix_col, tip_col, round in zip(cDNA_cols, supermix,
-                                                      tip_cols, rounds):
+    for cDNA_col, supermix_col, tip_col200, tip_col10, round in zip(
+                                                      cDNA_cols, supermix,
+                                                      tip_cols200, tip_cols10,
+                                                      rounds):
 
         # transfer cDNA to the SuperMix
         ctx.comment('\nMasterMix Preparation-Transfer cDNA to the SuperMix\n')
-        p50.pick_up_tip(tip_col)
+        p50.pick_up_tip(tip_col200)
         p50.aspirate(30, cDNA_col)
         p50.dispense(30, supermix_col)
         p50.mix(4, 40)
         p50.blow_out(supermix[0].top())
+        p50.drop_tip()
 
         # transfer of mastermixes to pcr Plate
         ctx.comment('\nTransferring Mastermix to PCR Plate\n')
+        p10.pick_up_tip(tip_col10)
         for chunk in round:
-            p50.aspirate(50, supermix_col)
-            p50.touch_tip()
-            p50.dispense(5, supermix_col)
-            [p50.dispense(10, col) for col in chunk]
-            p50.dispense(5, supermix_col)
+            for col in chunk:
+                p10.aspirate(10, supermix_col)
+                p10.dispense(10, col)
             ctx.comment('\n')
-        p50.drop_tip()
+        p10.drop_tip()
 
     # Transfer from PrimerPair-stockPlate to Mastermixes
     pcr_destinations = [pcr_plate.rows()[row_start][i:i+2]
                         for row_start in [0, 1]
                         for i in range(0, len(
                          pcr_plate.rows()[0][:num_samp*2]), 2)]
-
-    print(pcr_destinations)
-    print(primer_pairs.rows()[0])
 
     ctx.comment('\nTransfer from PrimerPair-stockPlate to Mastermixes\n')
     for s, d in zip(primer_pairs.rows()[0]*runs, pcr_destinations):
