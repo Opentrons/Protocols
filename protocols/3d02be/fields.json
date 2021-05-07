@@ -42,6 +42,24 @@
      ]
   },
   {
+  "type": "int",
+  "label": "Dispense Height",
+  "name": "disp_height",
+  "default": 1
+  },
+  {
+  "type": "int",
+  "label": "Aspirate Speed (ul/sec)",
+  "name": "asp_speed",
+  "default": 94
+  },
+  {
+  "type": "int",
+  "label": "Dispense Speed (ul/sec)",
+  "name": "disp_speed",
+  "default": 94
+  },
+  {
     "type": "dropDown",
     "label": "P300 Multi GEN2 Mount",
     "name": "mount",
