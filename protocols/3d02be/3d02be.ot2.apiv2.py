@@ -9,9 +9,11 @@ metadata = {
 def run(ctx):
 
     [csv_sample, mount, source_plate, dest_plate1,
-        dest_plate2, dest_plate3] = get_values(  # noqa: F821
+        dest_plate2, dest_plate3,
+        disp_height, asp_speed, disp_speed] = get_values(  # noqa: F821
         "csv_sample", "mount", "source_plate", "dest_plate1",
-            "dest_plate2", "dest_plate3")
+            "dest_plate2", "dest_plate3",
+            "disp_height", "asp_speed", "disp_speed")
 
     # load labware
     source_plate = ctx.load_labware(source_plate, '1')
@@ -23,6 +25,8 @@ def run(ctx):
 
     # load instrument
     p300 = ctx.load_instrument('p300_multi_gen2', mount, tip_racks=tiprack)
+    p300.flow_rate.aspirate = asp_speed
+    p300.flow_rate.dispense = disp_speed
 
     # csv file --> nested list
     transfer = [[val.strip().lower() for val in line.split(',')]
@@ -41,8 +45,8 @@ def run(ctx):
         p300.air_gap(airgap)
         p300.touch_tip()
         for dest in chunk:
-            p300.dispense(int(line[3])+airgap, dest.top())
-            p300.air_gap(airgap)
+            p300.dispense(int(line[3])+airgap, dest.bottom(disp_height))
             p300.touch_tip()
+            p300.air_gap(airgap)
         p300.air_gap(airgap)
         p300.drop_tip()

@@ -32,6 +32,9 @@ The `Volume Aspirated` will be dispensed from the source column to the analogous
 * `Destination Plate 1 - Slot 4`: Specify which plate you will be using as the destination plate on Slot 4 of the deck.
 * `Destination Plate 2 - Slot 7`: Specify which plate you will be using as the destination plate on Slot 7 of the deck.
 * `Destination Plate 3 - Slot 10`: Specify which plate you will be using as the destination plate on Slot 10 of the deck.
+* `Dispense Height`: Specify the height (in mm) above the bottom of the well for dispenses (e.g. a value of `1` is 1mm above the bottom of the well)
+* `Aspirate Speed`: Specify the speed (in ul/sec) to aspirate liquid.
+* `Dispense Speed`: Specify the speed (in ul/sec) to dispense liquid.
 
 ---
 

@@ -40,6 +40,7 @@ def run(ctx):
         p20m.pick_up_tip()
         p20m.aspirate(
          5, dna_template.columns()[index][0].bottom(clearance_aspirate))
+        p20m.move_to(dna_template.columns()[index][0].top(z=10))
         ctx.delay(seconds=2)
         p20m.dispense(5, column[0].bottom(clearance_dispense))
         p20m.drop_tip()
