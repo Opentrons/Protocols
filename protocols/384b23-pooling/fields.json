@@ -14,7 +14,7 @@
     "name": "tuberackA_tube",
     "options": [
       { "label": "T1, T2, T3", "value": "6x5_half_inch_t1_t3" },
-      { "label": "T7", "value": "value": "6x5_0.5inch_7" }
+      { "label": "T7", "value": "value": "6x5_halfinch_7" }
     ]
   },
   {
