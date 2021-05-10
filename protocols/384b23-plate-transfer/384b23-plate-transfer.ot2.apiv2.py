@@ -6,11 +6,6 @@ metadata = {
 }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"num_samp":4, "p1000_mount":"left", "delay": 5}""")
-    return [_all_values[n] for n in names]
-
 def run(ctx):
 
     [num_samp, delay, p1000_mount] = get_values(  # noqa: F821
