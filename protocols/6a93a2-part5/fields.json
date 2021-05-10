@@ -7,7 +7,7 @@
     "options": [
        { "label": "8", "value": "8" },
        { "label": "16", "value": "16" },
-       { "label": "24", "value": "24" },
+       { "label": "24", "value": "24" }
      ]
   },
   {
@@ -55,7 +55,7 @@
   {
     "type": "dropDown",
     "label": "P20 Single GEN2 Mount",
-    "name": "P20_mount",
+    "name": "p20_mount",
     "options": [
        { "label": "left", "value": "left" },
        { "label": "right", "value": "right" }
