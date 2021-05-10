@@ -9,7 +9,7 @@ metadata = {
 def run(ctx):
 
     [use_tuberack_A, tuberackA_tube, num_rows_A,
-     tuberackB_tube, use_tuberack_B, num_rows_B,
+     use_tuberack_B, tuberackB_tube, num_rows_B,
      delay, p300_mount] = get_values(  # noqa: F821
             "use_tuberack_A", "tuberackA_tube", "num_rows_A",
             "use_tuberack_B", "tuberackB_tube",
