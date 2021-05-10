@@ -1,5 +1,5 @@
 {
-    "content": "metadata = {\n    'protocolName': 'Sample Transfer to 96 Well-Plate',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.9'\n}\n\n\ndef get_values(*names):\n    import json\n    _all_values = json.loads(\"\"\"{\"num_samp\":4, \"p1000_mount\":\"left\", \"delay\": 5}\"\"\")\n    return [_all_values[n] for n in names]\n\ndef run(ctx):\n\n    [num_samp, delay, p1000_mount] = get_values(  # noqa: F821\n             \"num_samp\", \"delay\", \"p1000_mount\")\n\n    if not 1 <= num_samp <= 96:\n        raise Exception(\"Enter a sample number between 1-96\")\n\n    # load labware\n    tuberack_96 = [ctx.load_labware('6x4_0.6inch_t6', slot, label='Tuberack')\n                   for slot in ['1', '4', '7', '10']]\n    plate = ctx.load_labware('microamp_96_wellplate_100ul', '2')\n    tiprack = ctx.load_labware('opentrons_96_tiprack_1000ul', '5')\n\n    # load instrument\n    p1000 = ctx.load_instrument('p1000_single_gen2',\n                                p1000_mount, tip_racks=[tiprack])\n\n    tubes = [tube for tuberack in tuberack_96 for tube in tuberack.wells()]\n\n    # protocol\n    for samp, dest in zip(tubes, plate.wells()):\n        p1000.pick_up_tip()\n        p1000.aspirate(200, samp)\n        ctx.delay(seconds=delay)\n        p1000.dispense(200, dest)\n        p1000.drop_tip()\n",
+    "content": "metadata = {\n    'protocolName': 'Sample Transfer to 96 Well-Plate',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.9'\n}\n\n\ndef run(ctx):\n\n    [num_samp, delay, p1000_mount] = get_values(  # noqa: F821\n             \"num_samp\", \"delay\", \"p1000_mount\")\n\n    if not 1 <= num_samp <= 96:\n        raise Exception(\"Enter a sample number between 1-96\")\n\n    # load labware\n    tuberack_96 = [ctx.load_labware('6x4_0.6inch_t6', slot, label='Tuberack')\n                   for slot in ['1', '4', '7', '10']]\n    plate = ctx.load_labware('microamp_96_wellplate_100ul', '2')\n    tiprack = ctx.load_labware('opentrons_96_tiprack_1000ul', '5')\n\n    # load instrument\n    p1000 = ctx.load_instrument('p1000_single_gen2',\n                                p1000_mount, tip_racks=[tiprack])\n\n    tubes = [tube for tuberack in tuberack_96 for tube in tuberack.wells()]\n\n    # protocol\n    for samp, dest in zip(tubes, plate.wells()):\n        p1000.pick_up_tip()\n        p1000.aspirate(200, samp)\n        ctx.delay(seconds=delay)\n        p1000.dispense(200, dest)\n        p1000.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -1475,7 +1475,7 @@
     ],
     "instruments": [
         {
-            "mount": "left",
+            "mount": "right",
             "name": "p1000_single_gen2"
         }
     ],
