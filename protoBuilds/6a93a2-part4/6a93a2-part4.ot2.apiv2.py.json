@@ -1,0 +1,133 @@
+{
+    "content": "import math\nfrom opentrons.types import Point\n\nmetadata = {\n    'protocolName': 'Swift Rapid NGS Part 4 - SPRI Clean',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.7'\n}\n\n\ndef run(ctx):\n\n    [num_samp, tip_type, overage_percent, bead_dry_time,\n        p300_mount] = get_values(  # noqa: F821\n        \"num_samp\", \"tip_type\", \"overage_percent\",\n        \"bead_dry_time\", \"p300_mount\")\n\n    # keep user in range\n    num_samp = int(num_samp)\n    if not 0.0 <= overage_percent <= 10.0:\n        raise Exception(\"Enter a an overage percent between 5-10%\")\n    overage_percent = 1+overage_percent/100\n    num_cols = math.ceil(int(num_samp/8))\n\n    # load labware\n    mag_mod = ctx.load_module('magnetic module gen2', '1')\n    mag_plate = mag_mod.load_labware(\n        'nest_96_wellplate_100ul_pcr_full_skirt')\n    final_plate = ctx.load_labware(\n                    'nest_96_wellplate_100ul_pcr_full_skirt', '9')\n    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '2')\n    tiprack300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)\n                  for slot in ['4', '5']]\n\n    # load instrument\n    m300 = ctx.load_instrument('p300_multi', p300_mount, tip_racks=tiprack300)\n\n    num_cols = math.ceil(int(num_samp/8))\n    sample_cols = mag_plate.rows()[0][8:8+num_cols]\n    beads = reservoir.wells()[1]\n    ethanol = reservoir.wells()[11]\n    trash = reservoir.wells()[4]\n    te = reservoir.wells()[0]\n\n    # adding magbeads\n    ctx.comment('\\nAdding magbeads\\n')\n    m300.pick_up_tip()\n    m300.distribute(30, beads,\n                    [col.top() for col in sample_cols],\n                    mix_before=(5, 200),\n                    new_tip='never')\n    m300.drop_tip()\n\n    # mix solution, cut flow rate to avoid bubbles\n    m300.flow_rate.aspirate = 7.56  # same flow rate as p20\n    m300.flow_rate.dispense = 7.56\n    for col in sample_cols:\n        m300.pick_up_tip()\n        m300.mix(10, 80, col)\n        m300.touch_tip()\n        m300.drop_tip()\n    m300.flow_rate.aspirate = 150  # set flow rate back to default\n    m300.flow_rate.dispense = 300\n\n    ctx.delay(minutes=7.5)\n    ctx.pause('''Remove magnetic plate from deck, seal and spin down -\n                 place back on the magnetic module\n                 If needed, please empty trash.''')\n\n    # magnetic Engage, extraction\n    ctx.comment('\\nEngaging magnetic module in extraction step\\n')\n    mag_mod.engage()\n    ctx.delay(minutes=5)\n\n    # remove supernatant before ethanol wash\n    for i, col in enumerate(sample_cols):\n        side = -1 if i % 2 == 0 else 1\n        m300.pick_up_tip()\n        m300.move_to(col.center())\n        m300.aspirate(55, col.bottom().move(\n                Point(x=(col.diameter/2-1)*side)))\n        m300.dispense(55, trash.top())\n        m300.drop_tip()\n\n    # 2x ethanol washes\n    for i in range(2):\n        # add ethanol to beads and incubate\n        m300.pick_up_tip()\n        for col in sample_cols:\n            m300.aspirate(200, ethanol)\n            m300.dispense(200, col.top())\n        m300.drop_tip()\n        ctx.delay(seconds=30)\n\n        # trash ethanol\n        for col in sample_cols:\n            side = -1 if i % 2 == 0 else 1\n            m300.pick_up_tip()\n            m300.move_to(col.center())\n            m300.aspirate(200, col.bottom().move(\n                    Point(x=(col.diameter/2-1)*side)))\n            m300.dispense(200, trash.top())\n            m300.drop_tip()\n            ctx.comment('\\n\\n')\n    mag_mod.disengage()\n    ctx.pause('''Seal and spin down sample plate -\n                if needed, please empty trash.''')\n    ctx.delay(minutes=bead_dry_time)\n\n    # add te and mix\n    m300.pick_up_tip()\n    for col in sample_cols:\n        m300.aspirate(22, te)\n        m300.dispense(22, col.top())\n    m300.drop_tip()\n\n    m300.flow_rate.aspirate = 7.56  # same flow rate as p20\n    m300.flow_rate.dispense = 7.56\n    for col in sample_cols:\n        m300.pick_up_tip()\n        m300.mix(5, 10, col)\n        m300.blow_out()\n        m300.drop_tip()\n    m300.flow_rate.aspirate = 150  # set flow rate back to default\n    m300.flow_rate.dispense = 300\n\n    # incubate for 4 minutes at RT\n    ctx.delay(minutes=4)\n    ctx.pause('''Seal and spin down sample plate -\n             remove seal, then place back on magnet.\n             If needed, please empty trash.''')\n    mag_mod.engage()\n    ctx.delay(minutes=3)\n\n    for i, (well, dest) in enumerate(zip(sample_cols,\n                                     final_plate.rows()[0][4:])):\n        side = -1 if i % 2 == 0 else 1\n        m300.pick_up_tip()\n        m300.aspirate(20, well.bottom().move(\n                Point(x=(well.diameter/2-1)*side)))\n        m300.dispense(20, dest)\n        m300.drop_tip()\n        ctx.comment('\\n\\n')\n    ctx.comment('''Protocol complete -\n    If desired, this is a safe stopping point.\n    Supernatant is in columns 5, 6, and 7.\n    Samples can be stored in -20C freezer.''')\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "label": "Number of Samples",
+            "name": "num_samp",
+            "options": [
+                {
+                    "label": "8",
+                    "value": "8"
+                },
+                {
+                    "label": "16",
+                    "value": "16"
+                },
+                {
+                    "label": "24",
+                    "value": "24"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 7.5,
+            "label": "PCR Mastermix and Ligation Mastermix Overage Percent (0-10%)",
+            "name": "overage_percent",
+            "type": "float"
+        },
+        {
+            "default": 1,
+            "label": "Bead Drying Time (in minutes)",
+            "name": "bead_dry_time",
+            "type": "float"
+        },
+        {
+            "label": "Opentrons 96 Tip Rack 20ul Tip Type",
+            "name": "tip_type",
+            "options": [
+                {
+                    "label": "Filtertips",
+                    "value": "opentrons_96_filtertiprack_20ul"
+                },
+                {
+                    "label": "Non-Filtertips",
+                    "value": "opentrons_96_tiprack_20ul"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Opentrons 96 Tip Rack 20ul Tip Type",
+            "name": "tip_type",
+            "options": [
+                {
+                    "label": "Filtertips",
+                    "value": "opentrons_96_filtertiprack_200ul"
+                },
+                {
+                    "label": "Non-Filtertips",
+                    "value": "opentrons_96_tiprack_20ul"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P300 Multi GEN2 Mount",
+            "name": "p300_mount",
+            "options": [
+                {
+                    "label": "right",
+                    "value": "right"
+                },
+                {
+                    "label": "left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "right",
+            "name": "p300_multi"
+        }
+    ],
+    "labware": [
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Magnetic Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on 2",
+            "share": false,
+            "slot": "2",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on 9",
+            "share": false,
+            "slot": "9",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.7",
+        "author": "Rami Farawi <rami.farawi@opentrons.com>",
+        "protocolName": "Swift Rapid NGS Part 4 - SPRI Clean",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}
