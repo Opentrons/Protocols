@@ -1,25 +1,36 @@
 [
   {
     "type": "int",
+    "label": "Magnetic Module Engage Time (minutes)",
+    "name": "engage_time",
+    "default": 7
+  },
+  {
+    "type": "float",
+    "label": "Default Well Bottom Clearance for Reservoirs (mm)",
+    "name": "clearance_reservoir",
+    "default": 4
+  },
+  {
+    "type": "dropDown",
+    "label": "Choose Reservoir Labware",
+    "name": "labware_reservoir",
+    "options": [
+      { "label": "agilent_1_reservoir_290ml", "value": "agilent_1_reservoir_290ml" },
+      { "label": "nest_1_reservoir_195ml", "value": "nest_1_reservoir_195ml" }
+    ]
+  },
+  {
+    "type": "int",
+    "label": "Tip Max Volume Capacity (ul)",
+    "name": "set_tip_max",
+    "default": 150
+  },
+  {
+    "type": "int",
     "label": "Minutes to Air Dry Beads",
     "name": "dry_time",
     "default": 20
-  },
-  {
-    "type": "dropDown",
-    "label": "Sample Handling in 250 ul Increments",
-    "name": "increment_vol",
-    "options": [
-      { "label": "250 ul Increments", "value": 250 }
-    ]
-  },
-  {
-    "type": "dropDown",
-    "label": "Baseline Sample Volume",
-    "name": "baseline_vol",
-    "options": [
-      { "label": "500 ul Baseline Sample Volume", "value": 500 }
-    ]
   },
   {
     "type": "dropDown",
