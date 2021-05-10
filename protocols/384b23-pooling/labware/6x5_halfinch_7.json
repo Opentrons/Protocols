@@ -370,7 +370,7 @@
     "format": "irregular",
     "isTiprack": false,
     "isMagneticModuleCompatible": false,
-    "loadName": "6x5_0.5inch_7"
+    "loadName": "6x5_halfinch_7"
   },
   "namespace": "custom_beta",
   "version": 1,
