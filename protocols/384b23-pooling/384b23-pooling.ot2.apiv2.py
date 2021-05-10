@@ -19,9 +19,9 @@ def run(ctx):
     num_rows_B = int(num_rows_B)
 
     # load labware
-    tuberack_A = ctx.load_labware("6x5_half_inch_t1_t3", '1',
+    tuberack_A = ctx.load_labware(tuberackA_tube, '1',
                                   label='Tuberack A')
-    tuberack_B = ctx.load_labware("t4_t5_6x5", '2', label='Tuberack B')
+    tuberack_B = ctx.load_labware(tuberackB_tube, '2', label='Tuberack B')
     tiprack = ctx.load_labware('opentrons_96_filtertiprack_200ul', '4')
 
     # load instrument
