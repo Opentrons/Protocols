@@ -150,7 +150,8 @@ def run(ctx):
         p300m.aspirate(len(chunk)*mm_volume, mm, rate=0.25)
         ctx.delay(seconds=3)
         slow_tip_withdrawal(p300m, mm)
-        p300m.well_bottom_clearance.aspirate -= 2
+        if p300m.well_bottom_clearance.aspirate >= 3:
+            p300m.well_bottom_clearance.aspirate -= 2
         for well in chunk:
             p300m.dispense(20, well.bottom(2), rate=0.25)
             ctx.delay(seconds=2)
@@ -345,7 +346,8 @@ def run(ctx):
         p300m.aspirate(len(chunk)*42.5, peg_nacl, rate=0.25)
         ctx.delay(seconds=5)
         slow_tip_withdrawal(p300m, peg_nacl)
-        p300m.well_bottom_clearance.aspirate -= 2
+        if p300m.well_bottom_clearance.aspirate >= 2:
+            p300m.well_bottom_clearance.aspirate -= 1
         for well in chunk:
             p300m.dispense(42.5, well.bottom(2), rate=0.25)
             ctx.delay(seconds=2)
