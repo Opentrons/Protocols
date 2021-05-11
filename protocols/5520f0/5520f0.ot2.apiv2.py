@@ -1,5 +1,3 @@
-import math
-
 metadata = {
     'protocolName': 'Staining Cell-Based Assay Plates',
     'author': 'Sakib <sakib.hossain@opentrons.com>',
@@ -7,10 +5,6 @@ metadata = {
     'apiLevel': '2.9'
 }
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"m300_mount":"left","cols":1}""")
-    return [_all_values[n] for n in names]
 
 def run(ctx):
 
@@ -22,24 +16,25 @@ def run(ctx):
     pbs_reservoir = ctx.load_labware('nest_12_reservoir_15ml', 2)
     reagent_reservoir = ctx.load_labware('nest_12_reservoir_15ml', 3)
     pbs_waste_reservoir = ctx.load_labware('nest_12_reservoir_15ml', 4)
-    tipracks = [ctx.load_labware('opentrons_96_tiprack_300ul', slot) for slot in range(5,9)]
+    tipracks = [ctx.load_labware('opentrons_96_tiprack_300ul',
+                                 slot) for slot in range(5, 9)]
 
     # Load Pipette
-    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount, tip_racks=tipracks)
+    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,
+                               tip_racks=tipracks)
 
     # Single Well Reagents
     primary_antibody = reagent_reservoir.rows()[0][4]
     secondary_antibody = reagent_reservoir.rows()[0][5]
 
-    # Waste Wells
-    media_waste = pbs_waste_reservoir.rows()[0][10]
-
     # Destination Wells
-    dest_wells = [plate.rows()[i][col] for col in range(cols) for i in range(2)][:cols*2]
+    dest_wells = [plate.rows()[i][col] for col in range(cols) for i in
+                  range(2)][:cols*2]
 
     # Volume Tracking
     class VolTracker:
-        def __init__(self, labware, well_vol, pip_type='single', mode='reagent', start=0, end=12):
+        def __init__(self, labware, well_vol, pip_type='single',
+                     mode='reagent', start=0, end=12):
             self.labware_wells = dict.fromkeys(labware.wells()[start:end], 0)
             self.well_vol = well_vol
             self.pip_type = pip_type
@@ -62,14 +57,17 @@ def run(ctx):
             elif self.pip_type == 'single':
                 self.labware_wells[well] = self.labware_wells[well] + vol
             if self.mode == 'waste':
-                ctx.comment(f'{well}: {int(self.labware_wells[well])} uL of total waste')
+                ctx.comment(f'''{well}: {int(self.labware_wells[well])} uL of
+                            total waste''')
             else:
-                ctx.comment(f'{int(self.labware_wells[well])} uL of liquid used from {well}')
+                ctx.comment(f'''{int(self.labware_wells[well])} uL of liquid
+                            used from {well}''')
             return well
 
     # Volume Trackers for Multi-well Reagents
     pbsWasteTrack = VolTracker(pbs_waste_reservoir, 15000, 'multi', 'waste')
-    reagentWasteTrack = VolTracker(reagent_reservoir, 15000, 'multi', 'waste', 6, 12)
+    reagentWasteTrack = VolTracker(reagent_reservoir, 15000, 'multi', 'waste',
+                                   6, 12)
     pbsTrack = VolTracker(pbs_reservoir, 15000, 'multi')
     pfaTrack = VolTracker(reagent_reservoir, 10000, 'multi', start=0, end=2)
     permTrack = VolTracker(reagent_reservoir, 10000, 'multi', start=2, end=4)
@@ -91,7 +89,6 @@ def run(ctx):
     for well in dest_wells:
         m300.transfer(45, well, pbsWasteTrack.tracker(45), new_tip='never')
     m300.drop_tip()
-    
     # Add/Remove PBS (2-3)
     add_remove_pbs(dest_wells, 50)
     # Add/Remove PBS (4-5)
