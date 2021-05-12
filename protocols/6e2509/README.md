@@ -10,10 +10,12 @@
 ## Description
 This protocol automates the transfer of PCR mix and samples from up to four 96-well elution plates to a 384-well plate. It follows a specific format detailed in the image below. Columns from the 96 well elution plates correspond to specific wells on the 384 well plate. Each elution plate contains a control that is also transferred into the 384-well plate. For runs that have less than four plates, the controls will need to be added manually for the corresponding elution plate.
 
-**96 Well Elution Plate Format**:\
+**96 Well Elution Plate Format**:
+
 ![96-Well Elution Plates](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/6e2509/elution-plates.png)
 
-**384 Well Plate Format**:\
+**384 Well Plate Format**:
+
 ![384-Well Plate](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/6e2509/384-well-plate.png)
 
 ---
@@ -39,23 +41,31 @@ Using the customization fields below, set up your protocol.
 * Number of samples: Input the total number of samples in all four plates. Supports up to 384 samples.
 * PCR Mix Transfer Volume: Input the volume of PCR mix to transfer per well. Default is 7.5 uL.
 * Sample Transfer Volume: Input the volume of sample to transfer per well. Default is 5 uL.
-* Aspiration Height Above Bottom of the Well: Specify the height from the bottom of the well in which the pipette will aspirate.
-* Dispensing Height Above Bottom of the Well: Specify the height from the bottom of the well in which the pipette will dispense.
+* Sample Aspiration Height Above Bottom of the Well: Specify the height from the bottom of the well in which the pipette will aspirate.
+* Sample Dispensing Height Above Bottom of the Well: Specify the height from the bottom of the well in which the pipette will dispense.
+* Master Mix Aspiration Height Above Bottom of the Well: Specify the height from the bottom of the well in which the pipette will aspirate.
+* Master Mix Dispensing Height Above Bottom of the Well: Specify the height from the bottom of the well in which the pipette will dispense.
 
 
 **Note About Reagents:**
-PCR Mix should be placed into channel A1 of the 12-well reservoir.
+PCR Mix should be placed into column A1 of the 96 well plate.
 
 
 **Labware Setup**
 
-Slot 1: Plate 1 \
-Slot 2: Plate 2 \
-Slot 4: Plate 3 \
-Slot 5: Plate 4 \
-Slot 3: 384 Well PCR Plate \
-Slot 6:  Nest 12 well reservoir (PCR Mix in A1) \
-Slots 7 - 11: Opentrons 96 Filter Tip Rack 20 uL \
+Slot 1: Plate 1
+
+Slot 2: Plate 2
+
+Slot 4: Plate 3
+
+Slot 5: Plate 4
+
+Slot 3: 384 Well PCR Plate
+
+Slot 6:  96 Well Plate (PCR Mix in Column A1)
+
+Slots 7 - 11: Opentrons 96 Filter Tip Rack 20 uL
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
