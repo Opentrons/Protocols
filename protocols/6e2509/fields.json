@@ -4,8 +4,8 @@
         "label": "P20 Multichannel Mount",
         "name": "m20_mount",
         "options": [
-          { "label": "Left", "value": "left" },
-          { "label": "Right", "value": "right" }
+          { "label": "Right", "value": "right" },
+          { "label": "Left", "value": "left" }
         ]
     },
     {
@@ -24,18 +24,30 @@
         "type": "float",
         "label": "Sample Transfer Volume (uL)",
         "name": "sample_vol",
-        "default": 7.5
+        "default": 5
     },
     {
         "type": "float",
-        "label": "Aspiration Height Above Bottom of the Well (mm)",
-        "name": "asp_height",
+        "label": "Sample Aspiration Height Above Bottom of the Well (mm)",
+        "name": "sample_asp_height",
+        "default": 3
+    },
+    {
+        "type": "float",
+        "label": "Sample Dispensing Height Above Bottom of the Well (mm)",
+        "name": "sample_disp_height",
+        "default": 3
+    },
+    {
+        "type": "float",
+        "label": "Master Mix Aspiration Height Above Bottom of the Well (mm)",
+        "name": "mm_asp_height",
         "default": 1
     },
     {
         "type": "float",
-        "label": "Dispensing Height Above Bottom of the Well (mm)",
-        "name": "disp_height",
+        "label": "Master Mix Dispensing Height Above Bottom of the Well (mm)",
+        "name": "mm_disp_height",
         "default": 1
     }
 ]
