@@ -24,10 +24,10 @@ def run(ctx):
         'appliedbiosystems_microamp_optical_384_wellplate_30ul', 3,
         '384 Well PCR Plate')
     elution_plates = [ctx.load_labware('molgen_96_well_elution_plate',
-                                       slot) for slot in [1, 2, 4, 5]]
+                                       slot, f'Elution Plate {i}') for i, slot in enumerate([1, 2, 4, 5], 1)]
 
     # Load Pipettes
-    m20 = ctx.load_instrument('p20_multi_gen2', 'left',
+    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount,
                               tip_racks=tipracks_20ul)
 
     # Get columns
