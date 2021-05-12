@@ -4,7 +4,7 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Nucleic Acid Extraction & Purification
+* Featured
     * Beckman Coulter RNAdvance Viral
 
 ## Description
