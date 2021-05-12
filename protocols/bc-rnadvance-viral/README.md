@@ -5,7 +5,7 @@
 
 ## Categories
 * Nucleic Acid Extraction & Purification
-    * Beckman Coulter RNAdvance Viral
+    * Viral RNA
 
 ## Description
 This protocol performs viral RNA isolation on up to 96 samples using the [Beckman Coulter RNAdvance Viral RNA Isolation](https://www.beckman.com/reagents/genomic/rna-isolation/viral/c63510) kit and workflow.
