@@ -10,19 +10,22 @@ def run(ctx):
 
     [num_samp, cDNA_col_num1, cDNA_col_num2, asp_bottom_clearance,
      disp_bottom_clearance, asp_flowrate_p10, asp_flowrate_p50,
-     disp_flowrate_p10, disp_flowrate_p50, temp_mod_on, temp, p10_mount,
+     disp_flowrate_p10, disp_flowrate_p50,
+     temp_mod_on, temp, small_pip, big_pip, p10_mount,
      p50_mount] = get_values(  # noqa: F821
         "num_samp", "cDNA_col_num1", "cDNA_col_num2", "asp_bottom_clearance",
         "disp_bottom_clearance", "asp_flowrate_p10", "asp_flowrate_p50",
         "disp_flowrate_p10", "disp_flowrate_p50", "temp_mod_on", "temp",
-        "p10_mount", "p50_mount")
+         "small_pip", "big_pip", "p10_mount", "p50_mount")
 
-    if num_samp % 2 != 0:
-        raise Exception("Enter number of Primer-Pairs that is divisible by 2")
     if not 1 <= cDNA_col_num1 <= 12:
-        raise Exception("Enter a column number between 0-12")
+        raise Exception("Enter a primer-pair number between 1-12")
+    if not 1 <= cDNA_col_num1 <= 12:
+        raise Exception("Enter a column number between 1-12")
     if not 0 <= cDNA_col_num2 <= 12:
         raise Exception("Enter a column number between 0-12")
+    if cDNA_col_num1 == cDNA_col_num2:
+        raise Exception("cDNA columns must be different")
 
     # load labware
     deepwell_pro = ctx.load_labware('deepwellpro_96_wellplate_450ul', '1')
@@ -38,8 +41,8 @@ def run(ctx):
         temp_mod.set_temperature(temp)
 
     # load instruments, define pipette settings
-    p10 = ctx.load_instrument('p10_multi', p10_mount, tip_racks=tipracks10)
-    p50 = ctx.load_instrument('p50_multi', p50_mount, tip_racks=[tiprack200])
+    p10 = ctx.load_instrument(small_pip, p10_mount, tip_racks=tipracks10)
+    p50 = ctx.load_instrument(big_pip, p50_mount, tip_racks=[tiprack200])
     p10.well_bottom_clearance.dispense = asp_bottom_clearance
     p10.well_bottom_clearance.dispense = disp_bottom_clearance
     p10.flow_rate.aspirate = asp_flowrate_p10
@@ -58,22 +61,20 @@ def run(ctx):
                    for cDNA_col in [cDNA_col_num1, cDNA_col_num2]]
     tip_cols10 = [tipracks10[2].rows()[0][cDNA_col-1]
                   for cDNA_col in [cDNA_col_num1, cDNA_col_num2]]
-    num_col_from_samp = int(num_samp/2)
-    disp_sets = [pcr_plate.rows()[row_start][i:i+4] for row_start in [0, 1]
-                 for i in range(0, len(pcr_plate.rows()[0]), 4)]
-    rounds = [
-              disp_sets[:6][:num_col_from_samp],
-              disp_sets[6:][:num_col_from_samp]
-              ]
+    num_col_to_fill = int(num_samp*2)
+    num_384_cols = pcr_plate.rows()[0][:num_col_to_fill]
+
     runs = 2
     if cDNA_col_num2 == 0:
-        rounds.pop()
+        cDNA_cols.pop()
         runs = 1
 
-    for cDNA_col, supermix_col, tip_col200, tip_col10, round in zip(
+    for i, (cDNA_col, supermix_col, tip_col200, tip_col10) in enumerate(zip(
                                                       cDNA_cols, supermix,
-                                                      tip_cols200, tip_cols10,
-                                                      rounds):
+                                                      tip_cols200, tip_cols10
+                                                      )):
+
+        num_384_cols = pcr_plate.rows()[i][:num_col_to_fill]
 
         # transfer cDNA to the SuperMix
         ctx.comment('\nMasterMix Preparation-Transfer cDNA to the SuperMix\n')
@@ -87,11 +88,10 @@ def run(ctx):
         # transfer of mastermixes to pcr Plate
         ctx.comment('\nTransferring Mastermix to PCR Plate\n')
         p10.pick_up_tip(tip_col10)
-        for chunk in round:
-            for col in chunk:
-                p10.aspirate(10, supermix_col)
-                p10.dispense(10, col)
-            ctx.comment('\n')
+        for col in num_384_cols:
+            p10.aspirate(10, supermix_col)
+            p10.dispense(10, col)
+        ctx.comment('\n')
         p10.drop_tip()
 
     # Transfer from PrimerPair-stockPlate to Mastermixes
@@ -99,12 +99,20 @@ def run(ctx):
                         for row_start in [0, 1]
                         for i in range(0, len(
                          pcr_plate.rows()[0][:num_samp*2]), 2)]
+    rounds = [
+              pcr_destinations[:num_samp],
+              pcr_destinations[num_samp:]
+              ]
+    runs = 2
+    if cDNA_col_num2 == 0:
+        rounds.pop()
 
     ctx.comment('\nTransfer from PrimerPair-stockPlate to Mastermixes\n')
-    for s, d in zip(primer_pairs.rows()[0]*runs, pcr_destinations):
-        p10.pick_up_tip()
-        p10.aspirate(5, s)
-        p10.dispense(2, s)
-        [p10.dispense(1, col) for col in d]
-        p10.drop_tip()
-        ctx.comment('\n')
+    for round in rounds:
+        for s, d in zip(primer_pairs.rows()[0]*runs, round):
+            p10.pick_up_tip()
+            p10.aspirate(5, s)
+            p10.dispense(2, s)
+            [p10.dispense(1, col) for col in d]
+            p10.drop_tip()
+            ctx.comment('\n')

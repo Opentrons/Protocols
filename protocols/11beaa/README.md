@@ -19,7 +19,7 @@ Since this protocol relies on the transfer of small amounts of liquid (in some c
 Explanation of complex parameters below:
 
 * `Number of Samples`: Specify the number of primer pairs you will be running in this run (1-12, and wholly divisible by 2). A value of 2 will provide enough primer for 4 columns on the 384 well PCR plate, a value of 4 will accommodate 8 columns, and so forth.
-* `cDNA Column`: Specify which columns the cDNA will be hosted in Slot 4 of the deck.
+* `cDNA Column`: Specify which columns the cDNA will be hosted in Slot 4 of the deck. Select `0` for column 2 if only running one cDNA column.
 * `Aspiration height from well bottom`: Specify (in mm) the distance above the well bottom all aspirations steps will aspirate from.
 * `Dispense height from well bottom`: Specify (in mm) the distance above the well bottom all dispense steps will dispense from.
 * `Aspiration flow rate for P10-Multi (ul/sec)`: Specify the aspiration flow rate for the P10-Multi.
@@ -28,6 +28,8 @@ Explanation of complex parameters below:
 * `Dispense flow rate for P50-Multi (ul/sec)`: Specify the dispense flow rate for the P50-Multi.
 * `Use Temperature Module`: If `Yes` is selected, the temperature module will be engaged over the course of the protocol with the user-specified temperature. A selection of `No` disengages the temperature module over the course of the protocol.
 * `Temperature Module Temperature`: Specify the temperature the temperature module will hold over the duration of the protocol if `Yes` is selected in the `Use Temperature Module` parameter.
+* `Small Volume Pipette`: Specify where a GEN1 or GEN2 pipette will be employed.
+* `Large Volume Pipette`: Specify where a GEN1 or GEN2 pipette will be employed.
 * `P10-Multi mount`: Specify which side the P10-Multi pipette will be mounted.
 * `P50-Multi mount`: Specify which side the P10-Multi pipette will be mounted.
 
@@ -60,7 +62,7 @@ qPCR: [IQ SYBR Green Supermix (BIO-RAD #170-8884)](https://www.bio-rad.com/webro
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/11beaa/Screen+Shot+2021-04-21+at+4.35.39+PM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/11beaa/Screen+Shot+2021-05-12+at+2.33.53+PM.png)
 
 ### Reagent Setup
 * SuperMix on slot 1:
