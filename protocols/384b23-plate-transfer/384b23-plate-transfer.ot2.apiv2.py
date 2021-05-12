@@ -8,8 +8,8 @@ metadata = {
 
 def run(ctx):
 
-    [num_samp, delay, p1000_mount] = get_values(  # noqa: F821
-             "num_samp", "delay", "p1000_mount")
+    [num_samp, delay, asp_height, p1000_mount] = get_values(  # noqa: F821
+             "num_samp", "delay", "asp_height", "p1000_mount")
 
     if not 1 <= num_samp <= 96:
         raise Exception("Enter a sample number between 1-96")
@@ -23,6 +23,7 @@ def run(ctx):
     # load instrument
     p1000 = ctx.load_instrument('p1000_single_gen2',
                                 p1000_mount, tip_racks=[tiprack])
+    p1000.well_bottom_clearance.aspirate = asp_height
 
     tubes = [tube for tuberack in tuberack_96 for tube in tuberack.wells()]
 
