@@ -42,7 +42,7 @@ def run(ctx):
     pcr_dests = [a for b in zip(pcr_plate.rows()[0],
                  pcr_plate.rows()[1]) for a in b][:columns]
 
-    # Add RT-PCR Mix
+    # Add RT-PCR Mix use spare tip rack
     m20.pick_up_tip(tipracks_20ul[-1]['A1'])
     for dest in pcr_dests:
         m20.transfer(pcr_mix_vol, pcr_mix.bottom(mm_asp_height),
