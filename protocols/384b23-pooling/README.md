@@ -46,6 +46,7 @@ Slot 4: Opentrons 200µL Filter Tip Rack
 * **Number of pooling rows for Tuberack B**: Specify how many rows to pool (1-5).
 * **Delay Time after Aspirating (in seconds)**: Since saliva is being transferred, often times a delay after aspiration allows the pipette to achieve the full volume. Specify the amount of time in seconds after each aspiration (a value of 0 can be inputted).
 * **P300 Single GEN2 Mount**: Specify the mount side for the P300 Single GEN2 pipette
+* **P300 Single GEN2 Mount**: Specify the mount side for the P300 Single GEN2 pipette
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)

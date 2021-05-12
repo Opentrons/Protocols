@@ -39,7 +39,8 @@ Slot 5: Opentrons 1000µL Filter Tip Rack
 **Using the customizations field (below), set up your protocol.**
 * **Number of Samples**: Specify number of samples in the source plate to be transferred. Note, samples should be put in tube racks by column starting from the tube rack in Slot 1. The tube rack in Slot 1 will be transferred down by column before the tube rack in Slot 4 is transferred, and so on.
 * **Delay Time after Aspirating (in seconds)**: Since saliva is being transferred, often times a delay after aspiration allows the pipette to achieve the full volume. Specify the amount of time in seconds after each aspiration (a value of 0 can be inputted).
-* **P300 Single GEN2 Mount**: Specify the mount side for the P300 Single GEN2 pipette
+* **Aspiration Height**: Specify the height (in mm) from the bottom of the tubes the pipette will aspirate from.  
+* **P1000 Single GEN2 Mount**: Specify the mount side for the P300 Single GEN2 pipette
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)

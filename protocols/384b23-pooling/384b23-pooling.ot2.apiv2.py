@@ -10,10 +10,10 @@ def run(ctx):
 
     [use_tuberack_A, tuberackA_tube, num_rows_A,
      use_tuberack_B, tuberackB_tube, num_rows_B,
-     delay, p300_mount] = get_values(  # noqa: F821
+     delay, asp_height, p300_mount] = get_values(  # noqa: F821
             "use_tuberack_A", "tuberackA_tube", "num_rows_A",
             "use_tuberack_B", "tuberackB_tube",
-            "num_rows_B", "delay", "p300_mount")
+            "num_rows_B", "delay", "asp_height", "p300_mount")
 
     num_rows_A = int(num_rows_A)
     num_rows_B = int(num_rows_B)
@@ -27,6 +27,7 @@ def run(ctx):
     # load instrument
     p300 = ctx.load_instrument('p300_single_gen2',
                                p300_mount, tip_racks=[tiprack])
+    p300.well_bottom_clearance.aspirate = asp_height
 
     # protocol
     if use_tuberack_A:
