@@ -26,14 +26,14 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 ### Deck Setup
 * Opentrons p300 tips (Deck Slot 4)
 * 'nest_96_wellplate_2ml_deep' (Deck Slot 5)
-* 'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap' (Deck Slot 6)
+* 'lvltechnologies_48_wellplate_2000ul' (Deck Slot 6)
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
 
 
 ## Process
-1. Provide a list of designated source wells (as a comma-separated string like "A1,B2,C3") using the parameters below.
+1. Use the parameters below to provide a list of designated source wells (as a comma-separated string like "A1,B2,C3" with no spaces), provide the row and column location of the pool tube (example "A1"), answer "YES" if using the same tip for pooling and provide well bottom clearance for aspirate and dispense (in mm).
 2. Download your protocol.
 3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
 4. Set up your deck according to the deck map below.
