@@ -1,5 +1,26 @@
 [
   {
+    "type": "dropDown",
+    "label": "Use Same Tip for Pooling?",
+    "name": "same_tip",
+    "options": [
+      { "label": "NO", "value": false },
+      { "label": "YES", "value": true }
+    ]
+  },
+  {
+    "type": "float",
+    "label": "Well Bottom Clearance for Aspirate (mm)",
+    "name": "clearance_aspirate",
+    "default": 2
+  },
+  {
+    "type": "float",
+    "label": "Well Bottom Clearance for Dispense (mm)",
+    "name": "clearance_dispense",
+    "default": 2
+  },
+  {
     "type": "str",
     "label": "Pool Well Location",
     "name": "pool_location",
