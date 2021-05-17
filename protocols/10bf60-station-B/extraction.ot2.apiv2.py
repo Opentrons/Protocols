@@ -140,7 +140,7 @@ resuming.')
 
     waste_vol = 0
     waste_ind = 0
-    waste_threshold = 14500
+    waste_threshold = 14000
 
     def remove_supernatant(vol, park=False):
         """
@@ -191,7 +191,7 @@ resuming.')
                 m300.transfer(vol_per_trans, loc, waste_loc, new_tip='never',
                               air_gap=20)
                 m300.blow_out(waste_loc)
-                m300.air_gap(20)
+                # m300.air_gap(20)
             _drop(m300)
         m300.flow_rate.aspirate = 150
 
