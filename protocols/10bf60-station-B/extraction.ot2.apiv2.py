@@ -155,7 +155,8 @@ resuming.')
         def _waste_track(vol):
             nonlocal waste_vol
             nonlocal waste_ind
-            if waste_vol + vol >= waste_threshold and waste_ind == 11:
+
+            if waste_vol + vol*8 >= waste_threshold and waste_ind == 11:
                 # Setup for flashing lights notification to empty liquid waste
                 m300.home()
                 ctx.pause('Please empty liquid waste (slot 11) before \
@@ -165,10 +166,10 @@ resuming.')
 
                 waste_vol = 0
                 waste_ind = 0
-            elif waste_vol + vol >= waste_threshold and waste_ind < 11:
+            elif waste_vol + vol*8 >= waste_threshold and waste_ind < 11:
                 waste_ind += 1
                 waste_vol = 0
-            waste_vol += vol
+            waste_vol += vol*8
             return waste[waste_ind]
 
         m300.flow_rate.aspirate = 30
