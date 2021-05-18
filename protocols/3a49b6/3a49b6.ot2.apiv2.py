@@ -25,7 +25,7 @@ def run(ctx):
      ctx.load_labware(
       "opentrons_96_filtertiprack_20ul", str(slot)) for slot in [8, 5]]
     p20s = ctx.load_instrument(
-        "p20_single_gen2", 'right', tip_racks=tips20)
+        "p20_single_gen2", 'left', tip_racks=tips20)
 
     # labware
     [tube_rack, intermediate_plate, dest_plate] = [
