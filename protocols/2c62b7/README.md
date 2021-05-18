@@ -32,7 +32,7 @@ For more detailed information on compatible labware, please visit our [Labware L
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
 **Deck Setup**
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2c62b7/MagBind+Environment+Deck+Layout.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2c62b7/2c62b7.png)
 
 **Note**: The **Tip Isolator** is simply an empty Opentrons tip rack that is filled with water. The water should be filled up to the level that is enough for the tips to be slightly touching the surface of the water. The top of a standard Opentrons ti rack is detachable from the base (looks like a deep well plate). The tip isolator is used to conserve tips at specific steps.
 
@@ -40,7 +40,7 @@ For more detailed information on compatible labware, please visit our [Labware L
 
 * This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:
 * Reservoir 1: Slot 5
-![Reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2c62b7/res1.png)
+![Reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2c62b7/resv1.png)
 * Reservoir 2: Slot 2  
 ![Reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2c62b7/res2.png)
 
@@ -83,7 +83,7 @@ For more detailed information on compatible labware, please visit our [Labware L
 
 30. While Magnetic Module is engaged, delay for 10 minutes to allow mag beads to dry.
 
-31. Heat elution buffer to 70C on the Temperature Module, then transfer 100 uL of elution buffer.
+31. Transfer Elution buffer from A12 of Reservoir 1 to plate on temperature module. Heat elution buffer to 70C on the Temperature Module, then transfer 100 uL of elution buffer to samples.
 
 32. Tip Mixing is performed (Tips are discarded).
 
