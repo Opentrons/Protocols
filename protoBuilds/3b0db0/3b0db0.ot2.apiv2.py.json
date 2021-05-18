@@ -1,0 +1,121 @@
+{
+    "content": "metadata = {\n    'protocolName': 'Temperature Controlled PCR Prep With Tube Strips',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.7'\n}\n\n\ndef run(ctx):\n\n    [num_col, asp_delay, p20_mount, m20_mount] = get_values(  # noqa: F821\n        \"num_col\", \"asp_delay\", \"p20_mount\", \"m20_mount\")\n\n    if not 1 <= num_col <= 12:\n        raise Exception(\"Enter a column number between 1-12\")\n\n    # load labware\n    temp_mod = ctx.load_module('temperature module gen2', '1')\n    sample_plate = temp_mod.load_labware('biorad_96_wellplate_200ul_pcr')\n    tip_rack = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)\n                for slot in ['3', '6']]\n    saliva = [ctx.load_labware(\n            'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', slot)\n            for slot in ['2', '5', '8', '11']]\n    reagent_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '4')\n\n    # load instrument\n    p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tip_racks=tip_rack)\n    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tip_rack)\n\n    # reagents, setup\n    temp_mod.set_temperature(4)\n    mastermix = reagent_plate.rows()[0][:2]\n    tubes = [tube for tuberack in saliva for tube in tuberack.wells()]\n\n    # add mastermix\n    m20.pick_up_tip()\n    for i, col in enumerate(sample_plate.rows()[0][:num_col]):\n        m20.aspirate(15, mastermix[0] if i < 6 else mastermix[1])\n        m20.dispense(15, col)\n    m20.drop_tip()\n\n    # add saliva\n    airgap = 5\n    for s, d in zip(tubes[:num_col*8], sample_plate.wells()):\n        p20.pick_up_tip()\n        p20.aspirate(5, s)\n        p20.air_gap(airgap)\n        ctx.delay(seconds=asp_delay)\n        p20.dispense(5+airgap, d)\n        p20.mix(3, 18, d)\n        p20.blow_out()\n        p20.drop_tip()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 12,
+            "label": "Number of columns",
+            "name": "num_col",
+            "type": "int"
+        },
+        {
+            "default": 3,
+            "label": "Delay after aspiration (in seconds)",
+            "name": "asp_delay",
+            "type": "float"
+        },
+        {
+            "label": "P20 Multi GEN2 Mount",
+            "name": "m20_mount",
+            "options": [
+                {
+                    "label": "right",
+                    "value": "right"
+                },
+                {
+                    "label": "left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P20 Single GEN2 Mount",
+            "name": "p20_mount",
+            "options": [
+                {
+                    "label": "left",
+                    "value": "left"
+                },
+                {
+                    "label": "right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p20_single_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p20_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on Temperature Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap on 2",
+            "share": false,
+            "slot": "2",
+            "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 4",
+            "share": false,
+            "slot": "4",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
+        },
+        {
+            "name": "Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.7",
+        "author": "Rami Farawi <rami.farawi@opentrons.com>",
+        "protocolName": "Temperature Controlled PCR Prep With Tube Strips",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}
