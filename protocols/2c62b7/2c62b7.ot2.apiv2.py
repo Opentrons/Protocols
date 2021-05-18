@@ -245,7 +245,8 @@ def run(ctx):
     bind(delay=10)
 
     # Step 31
-    debug_mode(msg='''Debug: Transferring Elution Buffer to plate on temperature module (Step 31)''')
+    debug_mode(msg='''Debug: Transferring Elution Buffer to plate on
+               temperature module (Step 31)''')
     m300.transfer(elution_buffer_vol, elution_buffer, elution_wells)
     debug_mode(msg='''Debug: Heating elution buffer on temperature module to
                70C (Step 31)''')
