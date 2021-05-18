@@ -50,7 +50,8 @@ def run(ctx):
     vhb = [well for well in res1.wells()[2:6] for i in range(3)]
     etoh1 = [well for well in res2.wells()[:4] for i in range(3)]
     etoh2 = [well for well in res2.wells()[4:8] for i in range(3)]
-    elution = temp_plate.rows()[0][:cols]
+    elution_buffer = res1.wells()[11]
+    elution_wells = temp_plate.rows()[0][:cols]
 
     # Helper Functions
     def debug_mode(msg, debug_setting=debug):
@@ -244,12 +245,14 @@ def run(ctx):
     bind(delay=10)
 
     # Step 31
+    debug_mode(msg='''Debug: Transferring Elution Buffer to plate on temperature module (Step 31)''')
+    m300.transfer(elution_buffer_vol, elution_buffer, elution_wells)
     debug_mode(msg='''Debug: Heating elution buffer on temperature module to
                70C (Step 31)''')
     temp_mod.set_temperature(70)
     debug_mode(msg='''Debug: Transferring elution buffer to sample wells
                (Step 31)''')
-    for src, dest in zip(elution, mag_plate_wells):
+    for src, dest in zip(elution_wells, mag_plate_wells):
         m300.transfer(elution_buffer_vol, src, dest)
 
     # Step 32
@@ -266,7 +269,7 @@ def run(ctx):
     # Step 34
     debug_mode(msg='''Debug: Transfer clear supernatant containing purified
                DNA to NEST 0.1 mL 96 Well PCR Plate (Step 34)''')
-    for src, dest in zip(elution, dna_plate_wells):
+    for src, dest in zip(elution_wells, dna_plate_wells):
         pick_up(m300)
         m300.aspirate(elution_buffer_vol, src)
         m300.dispense(elution_buffer_vol, dest.bottom(z=5))
