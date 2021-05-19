@@ -21,6 +21,7 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 * [Opentrons OT-2 Run App (Version 3.19.0 or later)](https://opentrons.com/ot-app/)
 * [Opentrons P1000 Single-Channel Pipette](https://shop.opentrons.com/collections/ot-2-pipettes)
 * [Opentrons 1000µL Filter Tip Rack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-1000ul-filter-tips)
+* [Opentrons 200µL Filter Tips](hhttps://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)
 * Custom Opentrons 24-tube tube rack
 
 
@@ -32,12 +33,15 @@ Slots 1, 4, 7, 10: Custom 24-tube tube rack
 
 Slot 2: 96-well plate
 
+Slot 3: Opentrons 200µL Filter Tip Rack
+
 Slot 5: Opentrons 1000µL Filter Tip Rack
 
 </br>
 </br>
 **Using the customizations field (below), set up your protocol.**
 * **Number of Samples**: Specify number of samples in the source plate to be transferred. Note, samples should be put in tube racks by column starting from the tube rack in Slot 1. The tube rack in Slot 1 will be transferred down by column before the tube rack in Slot 4 is transferred, and so on.
+* **Volume Dispensed**: Specify the volume (in microliters) to transfer from the tube rack to the plate. A value greater than 100 will use the P1000 pipette. A value less than 100 will use the P300 pipette. 
 * **Delay Time after Aspirating (in seconds)**: Since saliva is being transferred, often times a delay after aspiration allows the pipette to achieve the full volume. Specify the amount of time in seconds after each aspiration (a value of 0 can be inputted).
 * **Aspiration Height**: Specify the height (in mm) from the bottom of the tubes the pipette will aspirate from.  
 * **P1000 Single GEN2 Mount**: Specify the mount side for the P300 Single GEN2 pipette
