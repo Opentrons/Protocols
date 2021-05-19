@@ -4,8 +4,8 @@
     "label": "Mount for p20 Single",
     "name": "p20_side",
     "options": [
-      { "p20 Single on the Left Side": "left" },
-      { "p20 Single on the Right Side": "right" }
+      { "label": "Left Side", "value": "left" },
+      { "label": "Right Side", "value": "right" }
     ]
   },
   {
@@ -25,9 +25,9 @@
     "label": "Flow Rate for Aspiration and Dispense",
     "name": "flow_rate_factor",
     "options": [
-      { "Multiply the Flow Rate x 2": 2 },
-      { "Multiply the Flow Rate x 3": 3 },
-      { "Keep the Default Flow Rate": 1 }
+      { "label": "Multiply the Flow Rate x 2", "value": 2 },
+      { "label": "Multiply the Flow Rate x 3", "value": 3 },
+      { "label": "Use the Default Flow Rate", "value": 1 }
     ]
   },
   {
