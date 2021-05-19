@@ -11,7 +11,9 @@ def run(ctx):
     ctx.set_rail_lights(True)
 
     # uploaded csv
-    [uploaded_csv] = get_values(  # noqa: F821
+    [p20_side, clearance_water, mix_count, flow_rate_factor,
+     uploaded_csv] = get_values(  # noqa: F821
+        "p20_side", "clearance_water", "mix_count", "flow_rate_factor",
         "uploaded_csv")
 
     # data from csv
@@ -25,7 +27,16 @@ def run(ctx):
      ctx.load_labware(
       "opentrons_96_filtertiprack_20ul", str(slot)) for slot in [8, 5]]
     p20s = ctx.load_instrument(
-        "p20_single_gen2", 'left', tip_racks=tips20)
+        "p20_single_gen2", p20_side, tip_racks=tips20)
+
+    # helper function
+    def flow_rate_settings():
+        if 0.5 <= flow_rate_factor <= 3:
+            speed = flow_rate_factor*7.34
+            p20s.flow_rate.aspirate = speed
+            p20s.flow_rate.dispense = speed
+
+    flow_rate_settings()
 
     # labware
     [tube_rack, intermediate_plate, dest_plate] = [
@@ -49,18 +60,18 @@ def run(ctx):
     for item in data:
         if float(item['Vol RNA']) > 2:
             p20s.transfer(
-             round(float(item['Vol H2O']), 2), water,
+             round(float(item['Vol H2O']), 2), water.bottom(clearance_water),
              dest_plate.wells_by_name()[item['Well']],
-             new_tip='never', trash=False)
+             new_tip='never')
         # for concentrated RNA samples
         # (4*Vol RNA) less water (to make room for 5X diluted RNA below)
         else:
             p20s.transfer(
              round(float(item['Vol H2O']) - (4*float(item['Vol RNA'])), 2),
-             water, dest_plate.wells_by_name()[item['Well']],
-             new_tip='never', trash=False)
-    p20s.return_tip()
-    p20s.reset_tipracks()
+             water.bottom(clearance_water), dest_plate.wells_by_name()[
+              item['Well']],
+             new_tip='never')
+    p20s.drop_tip()
 
     # rna to destination plate
     for item in data:
@@ -69,18 +80,19 @@ def run(ctx):
              round(float(item['Vol RNA']), 2),
              rna.wells_by_name()[item['Well']],
              dest_plate.wells_by_name()[item['Well']],
-             mix_after=(4, 10), new_tip='always')
+             mix_after=(mix_count, 10), new_tip='always')
         # for concentrated RNA samples
         # 5X intermediate dilution of the RNA sample and tranfer 5* Vol RNA
         else:
             p20s.pick_up_tip()
             p20s.consolidate(
-             [12, 3], [water, rna.wells_by_name()[item['Well']]],
+             [12, 3], [water.bottom(clearance_water), rna.wells_by_name()[
+              item['Well']]],
              intermediate_plate.wells_by_name()[item['Well']],
-             mix_after=(4, 10), new_tip='never')
+             mix_after=(mix_count, 10), new_tip='never')
             p20s.transfer(
-             round(float(item['Vol RNA']), 2)*5,
+             round(5*float(item['Vol RNA']), 2),
              intermediate_plate.wells_by_name()[item['Well']],
              dest_plate.wells_by_name()[item['Well']],
-             mix_after=(4, 10), new_tip='never')
+             mix_after=(mix_count, 10), new_tip='never')
             p20s.drop_tip()
