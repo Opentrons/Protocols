@@ -75,6 +75,8 @@ def run(ctx):
                 p20.dispense(volume, dest)
                 del ctx.max_speeds[axis_map[p20_mount]]
                 # if (i+1) % 4 == 0:
+            p20.move_to(tiprack20[0].wells()[-1].top().move(
+                        Point(y=-20, z=30)))
             p20.drop_tip()
 
     else:
@@ -92,4 +94,6 @@ def run(ctx):
                     p20.move_to(dest)
                     p20.dispense(volume, dest)
                     del ctx.max_speeds[axis_map[p20_mount]]
+                p20.move_to(tiprack20[0].wells()[-1].top().move(
+                            Point(y=-20, z=30)))
                 p20.drop_tip()
