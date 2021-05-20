@@ -50,7 +50,7 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 * [OT-2](https://opentrons.com/ot-2)
 
 ## Process
-1. Upload your csv file using the parameters below.
+1. Upload your csv file using the parameters below. Also choose the right or left pipette mount for the p20, the tube bottom clearance in millimeters for the water aspiration, the number of mixes to perform, and the preferred flow rate (default, 2 x default, or 3x default) for aspirate and dispense with the p20.
 2. Download your protocol.
 3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
 4. Set up your deck according to the deck map.

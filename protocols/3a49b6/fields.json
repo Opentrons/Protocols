@@ -1,5 +1,36 @@
 [
   {
+    "type": "dropDown",
+    "label": "Mount for p20 Single",
+    "name": "p20_side",
+    "options": [
+      { "label": "Left Side", "value": "left" },
+      { "label": "Right Side", "value": "right" }
+    ]
+  },
+  {
+    "type": "float",
+    "label": "Tube Bottom Clearance for Water (mm)",
+    "name": "clearance_water",
+    "default": 10.0
+  },
+  {
+    "type": "int",
+    "label": "Number of Times to Mix",
+    "name": "mix_count",
+    "default": 2
+  },
+  {
+    "type": "dropDown",
+    "label": "Flow Rate for Aspiration and Dispense",
+    "name": "flow_rate_factor",
+    "options": [
+      { "label": "Multiply the Flow Rate x 2", "value": 2 },
+      { "label": "Multiply the Flow Rate x 3", "value": 3 },
+      { "label": "Use the Default Flow Rate", "value": 1 }
+    ]
+  },
+  {
     "type": "textFile",
     "label": "Upload CSV",
     "name": "uploaded_csv",
