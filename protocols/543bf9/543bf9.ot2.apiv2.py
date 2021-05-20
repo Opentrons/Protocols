@@ -1,3 +1,5 @@
+import math
+
 metadata = {
     'protocolName': 'Standard Curve Dilutions with CSV File',
     'author': 'Sakib <sakib.hossain@opentrons.com>',
@@ -8,13 +10,9 @@ metadata = {
 
 def run(ctx):
 
-    [p300_mount, csv_file, curves, stock1_conc,
-        stock2_conc] = get_values(  # noqa: F821
-        "p300_mount", "csv_file", "curves", "stock1_conc", "stock2_conc")
-
-    curves = int(curves)
-    stock1_conc = stock1_conc*10**6
-    stock2_conc = stock2_conc*10**6
+    [p50_mount, csv_file_1, csv_file_2,
+        diluent_vol] = get_values(  # noqa: F821
+        "p50_mount", "csv_file_1", "csv_file_2", "diluent_vol")
 
     # Load Labware
     plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', 6)
@@ -24,12 +22,13 @@ def run(ctx):
                                  slot) for slot in range(1, 3)]
 
     # Load Pipette
-    p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
-                               tip_racks=tipracks)
+    p50 = ctx.load_instrument('p50_single', p50_mount,
+                              tip_racks=tipracks)
+    max_vol = p50.max_volume
 
     # Reagents
     stock1 = tuberack['A1']
-    diluent = tuberack['B1']
+    stock2 = tuberack['A2']
 
     well_positions_curve1 = {"Int1": "A1", "Int2": "A2", "Int3": "A3",
                              "Int4": "A4", "Std1": "B1", "Std2": "B2",
@@ -45,14 +44,19 @@ def run(ctx):
                              "Blank (Std9)": "F9", "QC1": "G1",
                              "QC2": "G2", "QC3": "G3", "QC4": "G4"}
 
-    data = [[val.strip() for val in line.split(',')] for line in
-            csv_file.splitlines() if line.split(',')[0].strip()]
+    data_c1 = [[val.strip() for val in line.split(',')] for line in
+               csv_file_1.splitlines() if line.split(',')[0].strip()]
+
+    data_c2 = [[val.strip() for val in line.split(',')] for line in
+               csv_file_2.splitlines() if line.split(',')[0].strip()]
 
     transformed_data_c1 = []
     transformed_data_c2 = []
 
-    def transform_data(data, stock_conc, well_positions, results):
+    def transform_data(data, well_positions, results):
         for i, line in enumerate(data):
+            if line[4] == '':
+                continue
             if line[0] in well_positions_curve1:
                 if line[1] == '':
                     src_conc = None
@@ -63,16 +67,53 @@ def run(ctx):
                     results.append([src_conc, sample_src, dest, dil_vol,
                                     src_vol])
                     continue
-                src_conc = stock_conc if i == 2 else float(line[1])
+                src_conc = float(line[1])
                 if line[2] == 'stock1':
                     sample_src = stock1
+                elif line[2] == 'stock2':
+                    sample_src = stock2
                 else:
                     sample_src = plate[well_positions[line[2]]]
                 # Round to nearest 0.5
-                src_vol = round((float(line[5])*float(line[6])/src_conc)*2)/2
+                # src_vol = round((float(line[5])*float(line[6])/src_conc)*2)/2
+                # dil_vol = float(line[6]) - src_vol
                 dest = plate[well_positions[line[0]]]
-                dil_vol = float(line[6]) - src_vol
+                src_vol = float(line[3])
+                dil_vol = float(line[4])
                 results.append([src_conc, sample_src, dest, dil_vol, src_vol])
+
+    # Volume Tracking
+    class VolTracker:
+        def __init__(self, labware, well_vol, pip_type='single',
+                     mode='reagent'):
+            self.labware_wells = dict.fromkeys(labware, 0)
+            self.well_vol = well_vol
+            self.pip_type = pip_type
+            self.mode = mode
+
+        def tracker(self, vol):
+            '''tracker() will track how much liquid
+            was used up per well. If the volume of
+            a given well is greater than self.well_vol
+            it will remove it from the dictionary and iterate
+            to the next well which will act as the reservoir.'''
+            well = next(iter(self.labware_wells))
+            if self.labware_wells[well] + vol >= self.well_vol:
+                del self.labware_wells[well]
+                well = next(iter(self.labware_wells))
+            if self.pip_type == 'multi':
+                self.labware_wells[well] = self.labware_wells[well] + vol*8
+            elif self.pip_type == 'single':
+                self.labware_wells[well] = self.labware_wells[well] + vol
+            if self.mode == 'waste':
+                ctx.comment(f'''{well}: {int(self.labware_wells[well])} uL of
+                            total waste''')
+            else:
+                ctx.comment(f'''{int(self.labware_wells[well])} uL of liquid
+                            used from {well}''')
+            return well
+
+    diluentTrack = VolTracker(tuberack.rows()[1][:3], diluent_vol)
 
     # Liquid Handling Steps
     def liquid_handle(data):
@@ -83,26 +124,33 @@ def run(ctx):
             dil_vol = line[3]
             src_vol = line[4]
             # Add diluent and then transfer samples
-            p300.pick_up_tip()
-            p300.aspirate(dil_vol, diluent)
-            p300.dispense(dil_vol, dest)
-            p300.drop_tip()
+            p50.pick_up_tip()
+            num_trans = math.ceil(dil_vol/max_vol)
+            vol_per_trans = dil_vol/num_trans
+            for _ in range(num_trans):
+                p50.aspirate(vol_per_trans,
+                             diluentTrack.tracker(vol_per_trans))
+                p50.dispense(vol_per_trans, dest)
+            p50.drop_tip()
             if src_conc is not None:
-                p300.pick_up_tip()
-                p300.aspirate(src_vol, sample_src)
-                p300.dispense(src_vol, dest)
-                p300.mix(3, (src_vol+dil_vol)/2)
-                p300.blow_out()
-                p300.touch_tip()
-                p300.drop_tip()
+                p50.pick_up_tip()
+                num_trans = math.ceil(src_vol/max_vol)
+                vol_per_trans = src_vol/num_trans
+                for _ in range(num_trans):
+                    p50.aspirate(vol_per_trans, sample_src)
+                    p50.dispense(vol_per_trans, dest)
+                p50.mix(3, (src_vol+dil_vol)/2)
+                p50.blow_out()
+                p50.touch_tip()
+                p50.drop_tip()
 
     # First Standard Curve
-    transform_data(data, stock1_conc, well_positions_curve1,
+    transform_data(data_c1, well_positions_curve1,
                    transformed_data_c1)
     liquid_handle(transformed_data_c1)
 
     # Second Standard Curve
-    if curves == 2:
-        transform_data(data, stock2_conc, well_positions_curve2,
+    if len(data_c2) > 0:
+        transform_data(data_c2, well_positions_curve2,
                        transformed_data_c2)
         liquid_handle(transformed_data_c2)
