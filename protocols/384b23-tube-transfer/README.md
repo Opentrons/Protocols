@@ -1,4 +1,4 @@
-# Sample Transfer to 96 Well-Plate
+# Custom Tube to Tube transfer
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -9,7 +9,7 @@
 
 
 ## Description
-This protocol transfers 200µL from vials in 24 tube tuberacks to a 96-well plate. New tips are granted between each transfer. Transfers are completed by column in each tube rack starting at the tube rack in slot 1.
+This protocol transfers 500µL from tubes in 24 tube tuberacks to a 6x5 tube rack. New tips are granted between each transfer. Transfers are completed by column in the source tube rack and dispensed by row to the recipient tube racks. A new row starts with each column.
 
 
 ---
@@ -21,29 +21,27 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 * [Opentrons OT-2 Run App (Version 3.19.0 or later)](https://opentrons.com/ot-app/)
 * [Opentrons P1000 Single-Channel Pipette](https://shop.opentrons.com/collections/ot-2-pipettes)
 * [Opentrons 1000µL Filter Tip Rack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-1000ul-filter-tips)
-* [Opentrons 200µL Filter Tips](hhttps://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)
 * Custom Opentrons 24-tube tube rack
+* Custom Opentrons 30-tube tube rack
 
 
 
 ---
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
-Slots 1, 4, 7, 10: Custom 24-tube tube rack
+Slots 1: Source tube rack (6x4)
 
-Slot 2: 96-well plate
+Slot 2: Destination tube rack (6x5)
 
-Slot 3: Opentrons 200µL Filter Tip Rack
-
-Slot 5: Opentrons 1000µL Filter Tip Rack
+Slot 3: Opentrons 1000µL Filter Tip Rack
 
 </br>
 </br>
 **Using the customizations field (below), set up your protocol.**
-* **Number of Samples**: Specify number of samples in the source plate to be transferred. Note, samples should be put in tube racks by column starting from the tube rack in Slot 1. The tube rack in Slot 1 will be transferred down by column before the tube rack in Slot 4 is transferred, and so on.
-* **Volume Dispensed**: Specify the volume (in microliters) to transfer from the tube rack to the plate. A value greater than 100 will use the P1000 pipette. A value less than 100 will use the P300 pipette. 
+* **Number of Samples**: Specify number of samples in the source tube rack to be transferred.
 * **Delay Time after Aspirating (in seconds)**: Since saliva is being transferred, often times a delay after aspiration allows the pipette to achieve the full volume. Specify the amount of time in seconds after each aspiration (a value of 0 can be inputted).
-* **Aspiration Height**: Specify the height (in mm) from the bottom of the tubes the pipette will aspirate from.  
+* **Aspiration Height for Recipient tube**: Specify the height (in mm) from the bottom of the tubes in the recipient tube rack the pipette will aspirate from. Change this value if switching between T4, T5, or T6 tubes.
+* **Dispense Height for Recipient tube**: Specify the height (in mm) from the bottom of the tubes in the destination tube rack the pipette will dispense at.  
 * **P1000 Single GEN2 Mount**: Specify the mount side for the P300 Single GEN2 pipette
 
 ### Robot
@@ -62,4 +60,4 @@ Slot 5: Opentrons 1000µL Filter Tip Rack
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-384b23-96-plate-transfer
+384b23-tube-transfer

@@ -1,5 +1,5 @@
 {
-    "content": "metadata = {\n    'protocolName': 'Sample Transfer to 96 Well-Plate',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.9'\n}\n\n\ndef run(ctx):\n\n    [num_samp, delay, asp_height, p1000_mount] = get_values(  # noqa: F821\n             \"num_samp\", \"delay\", \"asp_height\", \"p1000_mount\")\n\n    if not 1 <= num_samp <= 96:\n        raise Exception(\"Enter a sample number between 1-96\")\n\n    # load labware\n    tuberack_96 = [ctx.load_labware('6x4_0.6inch_t6', slot, label='Tuberack')\n                   for slot in ['1', '4', '7', '10']]\n    plate = ctx.load_labware('microamp_96_wellplate_100ul', '2')\n    tiprack = ctx.load_labware('opentrons_96_tiprack_1000ul', '5')\n\n    # load instrument\n    p1000 = ctx.load_instrument('p1000_single_gen2',\n                                p1000_mount, tip_racks=[tiprack])\n    p1000.well_bottom_clearance.aspirate = asp_height\n\n    tubes = [tube for tuberack in tuberack_96 for tube in tuberack.wells()]\n\n    # protocol\n    for samp, dest in zip(tubes, plate.wells()):\n        p1000.pick_up_tip()\n        p1000.aspirate(200, samp)\n        ctx.delay(seconds=delay)\n        p1000.dispense(200, dest)\n        p1000.drop_tip()\n",
+    "content": "metadata = {\n    'protocolName': 'Sample Transfer to 96 Well-Plate',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.9'\n}\n\n\ndef run(ctx):\n\n    [num_samp, vol_dispensed, delay,\n        asp_height, p300_mount, p1000_mount] = get_values(  # noqa: F821\n             \"num_samp\", \"vol_dispensed\", \"delay\",\n             \"asp_height\", \"p300_mount\", \"p1000_mount\")\n\n    if not 1 <= num_samp <= 96:\n        raise Exception(\"Enter a sample number between 1-96\")\n\n    # load labware\n    tuberack_96 = [ctx.load_labware('6x4_0.6inch_t6', slot, label='Tuberack')\n                   for slot in ['1', '4', '7', '10']]\n    plate = ctx.load_labware('microamp_96_wellplate_100ul', '2')\n    tiprack1000 = ctx.load_labware('opentrons_96_tiprack_1000ul', '5')\n    tiprack200 = ctx.load_labware('opentrons_96_filtertiprack_200ul', '3')\n\n    # load instrument\n    p1000 = ctx.load_instrument('p1000_single_gen2',\n                                p1000_mount, tip_racks=[tiprack1000])\n    p300 = ctx.load_instrument('p300_single_gen2',\n                               p300_mount, tip_racks=[tiprack200])\n    p1000.well_bottom_clearance.aspirate = asp_height\n    p300.well_bottom_clearance.aspirate = asp_height\n\n    tubes = [tube for tuberack in tuberack_96 for tube in tuberack.wells()]\n    if vol_dispensed < 100:\n        pip = p300\n    else:\n        pip = p1000\n\n    # protocol\n    for samp, dest in zip(tubes, plate.wells()):\n        pip.pick_up_tip()\n        pip.aspirate(200, samp)\n        ctx.delay(seconds=delay)\n        pip.dispense(200, dest)\n        pip.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -1452,6 +1452,12 @@
             "type": "int"
         },
         {
+            "default": 96,
+            "label": "Volume Transferred",
+            "name": "vol_dispensed",
+            "type": "int"
+        },
+        {
             "default": 3,
             "label": "Delay Time after Aspirating (in seconds)",
             "name": "delay",
@@ -1464,8 +1470,8 @@
             "type": "int"
         },
         {
-            "label": "P1000 Single GEN2 Mount",
-            "name": "p1000_mount",
+            "label": "P300 Single GEN2 Mount",
+            "name": "p300_mount",
             "options": [
                 {
                     "label": "right",
@@ -1477,12 +1483,31 @@
                 }
             ],
             "type": "dropDown"
+        },
+        {
+            "label": "P1000 Single GEN2 Mount",
+            "name": "p1000_mount",
+            "options": [
+                {
+                    "label": "left",
+                    "value": "left"
+                },
+                {
+                    "label": "right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
         }
     ],
     "instruments": [
         {
-            "mount": "right",
+            "mount": "left",
             "name": "p1000_single_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p300_single_gen2"
         }
     ],
     "labware": [
@@ -1497,6 +1522,12 @@
             "share": false,
             "slot": "2",
             "type": "microamp_96_wellplate_100ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_filtertiprack_200ul"
         },
         {
             "name": "Tuberack on 4",
