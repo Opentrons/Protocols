@@ -66,6 +66,12 @@ def run(ctx):
             for i, d in enumerate(dests):
                 # if i % 4 == 0:
                 source = sources[i//4]
+                # change tips after first 4 solutions
+                if i == 4:
+                    p20.move_to(tiprack20[0].wells()[-1].top().move(
+                                Point(y=-20, z=30)))
+                    p20.drop_tip()
+                    p20.pick_up_tip()
                 # shift to tips 5-8 if accessing second set of columns
                 dest = d.move(Point(y=(i//4)*36))
                 p20.aspirate(volume, source)
@@ -75,6 +81,8 @@ def run(ctx):
                 p20.dispense(volume, dest)
                 del ctx.max_speeds[axis_map[p20_mount]]
                 # if (i+1) % 4 == 0:
+            p20.move_to(tiprack20[0].wells()[-1].top().move(
+                        Point(y=-20, z=30)))
             p20.drop_tip()
 
     else:
@@ -92,4 +100,6 @@ def run(ctx):
                     p20.move_to(dest)
                     p20.dispense(volume, dest)
                     del ctx.max_speeds[axis_map[p20_mount]]
+                p20.move_to(tiprack20[0].wells()[-1].top().move(
+                            Point(y=-20, z=30)))
                 p20.drop_tip()
