@@ -11,7 +11,7 @@ def run(ctx):
     [num_samp, delay, asp_height_recipient,
      disp_height_dest, p1000_mount] = get_values(  # noqa: F821
             "num_samp", "delay", "asp_height_recipient",
-            "disp_height_dest", "p300_mount")
+            "disp_height_dest", "p1000_mount")
 
     if not 1 <= num_samp <= 24:
         raise Exception("Enter a sample number between 1-24")
