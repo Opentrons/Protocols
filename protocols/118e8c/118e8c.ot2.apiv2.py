@@ -159,24 +159,67 @@ def run(ctx):
     p20m.drop_tip()
 
     # helper function for repeat large vol transfers
-    def repeat_max_transfer(remaining, source, dest, flowrate):
+    def repeat_max_transfer(current_pipette, remaining, source, dest,
+                            flowrate, track_liquid=False,
+                            start_clearance_asp=1, stop_clearance_asp=1,
+                            start_clearance_disp=1, stop_clearance_disp=1):
+        if (start_clearance_asp < 0 or stop_clearance_asp < 0 or
+           start_clearance_disp < 0 or stop_clearance_disp < 0):
+            raise Exception('Clearances must be greater than 0.')
+        total = remaining
+        initial_clearance_asp = current_pipette.well_bottom_clearance.aspirate
+        initial_clearance_disp = current_pipette.well_bottom_clearance.dispense
+        if track_liquid is True:
+            current_pipette.well_bottom_clearance.aspirate =\
+             start_clearance_asp
+            current_pipette.well_bottom_clearance.dispense =\
+                start_clearance_disp
+            clearance_increment_asp = round((
+             start_clearance_asp - stop_clearance_asp) / (total / tip_max))
+            clearance_increment_disp = round((
+             start_clearance_disp - stop_clearance_disp) / (total / tip_max))
         while remaining > tip_max:
-            p300s.aspirate(tip_max, source, rate=flowrate)
-            p300s.dispense(tip_max, dest, rate=flowrate)
+            current_pipette.aspirate(tip_max, source, rate=flowrate)
+            current_pipette.dispense(tip_max, dest, rate=flowrate)
+            if track_liquid is True:
+                if current_pipette.well_bottom_clearance.aspirate >=\
+                 stop_clearance_asp + clearance_increment_asp:
+                    current_pipette.well_bottom_clearance.aspirate -=\
+                     clearance_increment_asp
+                else:
+                    current_pipette.well_bottom_clearance.aspirate =\
+                     stop_clearance_asp
+                if current_pipette.well_bottom_clearance.dispense >=\
+                   stop_clearance_disp + clearance_increment_disp:
+                    current_pipette.well_bottom_clearance.dispense -=\
+                     clearance_increment_disp
+                else:
+                    current_pipette.well_bottom_clearance.dispense =\
+                     stop_clearance_disp
             remaining -= tip_max
-        p300s.aspirate(remaining, source, rate=flowrate)
-        p300s.dispense(remaining, dest, rate=flowrate)
+        current_pipette.aspirate(remaining, source, rate=flowrate)
+        current_pipette.dispense(remaining, dest, rate=flowrate)
+        restore_initial_clearances(current_pipette, initial_clearance_asp,
+                                   initial_clearance_disp)
+
+    def restore_initial_clearances(current_pipette, initial_clearance_asp,
+                                   initial_clearance_disp):
+        current_pipette.well_bottom_clearance.aspirate = initial_clearance_asp
+        current_pipette.well_bottom_clearance.dispense = initial_clearance_disp
 
     # combine DNA dilution with pcr mix and fill reservoir
     p300s.starting_tip = tips300[0].wells_by_name()[
      current_starting_tip_300.split()[0]]
     p300s.pick_up_tip()
     p300s.mix(10, 200, dna_dilution.bottom(p300_mixing_height), rate=3.2)
-    repeat_max_transfer(dna_volume, dna_dilution.bottom(
+    repeat_max_transfer(p300s, dna_volume, dna_dilution.bottom(
      p300_transfer_height), pcr_mix.bottom(p300_transfer_height), 0.5)
     p300s.mix(20, 200, pcr_mix.bottom(p300_mixing_height), rate=3.2)
-    repeat_max_transfer(reservoir_fill_volume, pcr_mix.bottom(
-     p300_transfer_height), reservoir_mix.bottom(p300_reservoir_height), 0.5)
+    repeat_max_transfer(
+     p300s, reservoir_fill_volume, pcr_mix,
+     reservoir_mix.bottom(p300_reservoir_height), 0.5, track_liquid=True,
+     start_clearance_asp=p300_mixing_height,
+     stop_clearance_asp=p300_transfer_height)
     for repeat in range(reservoir_mix_count):
         p300s.aspirate(200, reservoir_mix.bottom(
          p300_reservoir_height), rate=3.2)
