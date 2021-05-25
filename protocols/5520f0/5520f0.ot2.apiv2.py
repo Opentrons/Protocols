@@ -20,7 +20,7 @@ def run(ctx):
     reagent_reservoir = ctx.load_labware('nest_12_reservoir_15ml', 8)
     waste_reservoir = ctx.load_labware('nest_12_reservoir_15ml', 9)
     tipracks = [ctx.load_labware('opentrons_96_tiprack_300ul',
-                                 slot) for slot in range(10, 11)]
+                                 slot) for slot in range(10, 12)]
 
     # Load Pipette
     m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,
