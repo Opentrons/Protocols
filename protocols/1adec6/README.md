@@ -21,6 +21,7 @@ Finally, the OT-2 will transfer user specified aliquots to destination plates.
 Explanation of complex parameters below:
 * **P300-Multi Mount**: Select which mount the P300-Multi Pipette is attached to.
 * **Number of Destination Plates**: Select the number of destination plates.
+* **DMSO Volume (µL)**: Specify the volume of DMSO that will be transferred in the first step.
 * **Aliquot Volume (µL)**: Specify the volume of the aliquots that will be transferred from the source plate to the destination plate(s).
 
 ---
@@ -59,9 +60,9 @@ Explanation of complex parameters below:
 
 ### Protocol Steps
 1. The [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette) will pick up the first column of [Opentrons 300µL Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips) in Slot 7.
-2. The [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette) will transfer 44µL of DMSO (from `Column 1` of [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)) to columns 6-9 of the Sample Plate.
+2. The [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette) will transfer user-defined amount of DMSO (from `Column 1` of [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)) to columns 6-9 of the Sample Plate.
 3.  The [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette) will return the tips and pick up 5 tips from column 1.
-4. The [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette) will transfer 44µL of DMSO (from `Column 1` of [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)) to column 10, skipping rows F-H.
+4. The [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette) will transfer user-defined amount of DMSO (from `Column 1` of [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)) to column 10, skipping rows F-H.
 5. The [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette) will return the tips to column 1.
 6. For `Columns 1-4` of the Sample Plate, the [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette) will pick up a column of tips, transfer 33µL of sample from the corresponding column to the column 5 columns over (ex. Column 1 --> Column 6), then return the tips.
 7. The above step will be replicated again, but only three tips will be picked up so the sample transfer only occurs between rows A-C as samples are transferred from `Column 5` to `Column 10`.
