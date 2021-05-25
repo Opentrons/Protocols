@@ -8,14 +8,17 @@ metadata = {
 
 def run(ctx):
 
-    [m300_mount, plates, new_tip, disp_speed, asp_height] = get_values(  # noqa: F821
-        "m300_mount", "plates", "new_tip", "disp_speed", "asp_height")
+    [m300_mount, plates, new_tip, disp_speed,
+        asp_height] = get_values(  # noqa: F821
+        "m300_mount", "plates", "new_tip", "disp_speed",
+        "asp_height")
 
     cols = 24
 
     # Load Labware
     plates = [ctx.load_labware(
-        'perkinelmer_384_wellplate_145ul', slot) for slot in range(1, plates+1)]
+              'perkinelmer_384_wellplate_145ul', slot)
+              for slot in range(1, plates+1)]
     pbs_reservoir = ctx.load_labware('nest_12_reservoir_15ml', 7)
     reagent_reservoir = ctx.load_labware('nest_12_reservoir_15ml', 8)
     waste_reservoir = ctx.load_labware('nest_12_reservoir_15ml', 9)
@@ -79,17 +82,18 @@ def run(ctx):
     # Volume Trackers for Multi-well Reagents
     wasteTrack = VolTracker(
         waste_reservoir, 14900, 'multi', 'waste', msg='Empty Waste Reservoir')
-    # reagentWasteTrack = VolTracker(reagent_reservoir, 15000, 'multi', 'waste',
-    #                                6, 12)
     pbsTrack = VolTracker(pbs_reservoir, 14900, 'multi', msg='Replenish PBS')
     pfaTrack = VolTracker(reagent_reservoir, 14900, 'multi',
                           start=0, end=4, msg='Replenish 4% PFA')
     permTrack = VolTracker(reagent_reservoir, 14900,
-                           'multi', start=4, end=8, msg='Replenish Perm Buffer')
+                           'multi', start=4, end=8,
+                           msg='Replenish Perm Buffer')
     primaryAntiTrack = VolTracker(reagent_reservoir, 14900,
-                                  'multi', start=8, end=10, msg='Replenish Primary Antibody')
+                                  'multi', start=8, end=10,
+                                  msg='Replenish Primary Antibody')
     secondaryAntiTrack = VolTracker(reagent_reservoir, 14900,
-                                    'multi', start=10, end=12, msg='Replenish Secondary Antibody')
+                                    'multi', start=10, end=12,
+                                    msg='Replenish Secondary Antibody')
 
     # Protocol Steps
 
