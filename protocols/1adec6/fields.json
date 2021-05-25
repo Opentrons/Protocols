@@ -9,6 +9,12 @@
     ]
   },
   {
+    "type": "float",
+    "label": "DMSO Volume (µL)",
+    "name": "avol",
+    "default": 44.0
+  },
+  {
     "type": "dropDown",
     "label": "Number of Destination Plates",
     "name": "numPlates",
