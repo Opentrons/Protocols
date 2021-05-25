@@ -2,8 +2,9 @@ from opentrons.types import Point
 import json
 import os
 import math
+import contextlib
 import threading
-from time import sleep
+from opentrons import protocol_api
 
 metadata = {
     'protocolName': 'COVID-19 Station B RNA Extraction',
@@ -19,37 +20,71 @@ MAG_HEIGHT = 4.5
 
 
 # Definitions for deck light flashing
-class CancellationToken:
-    def __init__(self):
-        self.is_continued = False
+@contextlib.contextmanager
+def flashing_rail_lights(
+    protocol: protocol_api.ProtocolContext, seconds_per_flash_cycle=1.0
+):
+    """Flash the rail lights on and off in the background.
 
-    def set_true(self):
-        self.is_continued = True
+    Source: https://github.com/Opentrons/opentrons/issues/7742
 
-    def set_false(self):
-        self.is_continued = False
+    Example usage:
 
+        # While the robot is doing nothing for 2 minutes, flash lights quickly.
+        with flashing_rail_lights(protocol, seconds_per_flash_cycle=0.25):
+            protocol.delay(minutes=2)
 
-def turn_on_blinking_notification(hardware, pause):
-    while pause.is_continued:
-        hardware.set_lights(rails=True)
-        sleep(1)
-        hardware.set_lights(rails=False)
-        sleep(1)
+    When the ``with`` block exits, the rail lights are restored to their
+    original state.
 
+    Exclusive control of the rail lights is assumed. For example, within the
+    ``with`` block, you must not call `ProtocolContext.set_rail_lights`
+    yourself, inspect `ProtocolContext.rail_lights_on`, or nest additional
+    calls to `flashing_rail_lights`.
+    """
+    original_light_status = protocol.rail_lights_on
 
-def create_thread(ctx, cancel_token):
-    t1 = threading.Thread(target=turn_on_blinking_notification,
-                          args=(ctx._hw_manager.hardware, cancel_token))
-    t1.start()
-    return t1
+    stop_flashing_event = threading.Event()
+
+    def background_loop():
+        while True:
+            protocol.set_rail_lights(not protocol.rail_lights_on)
+            # Wait until it's time to toggle the lights for the next flash or
+            # we're told to stop flashing entirely, whichever comes first.
+            got_stop_flashing_event = stop_flashing_event.wait(
+                timeout=seconds_per_flash_cycle/2
+            )
+            if got_stop_flashing_event:
+                break
+
+    background_thread = threading.Thread(
+        target=background_loop, name="Background thread for flashing rail \
+lights"
+    )
+
+    try:
+        if not protocol.is_simulating():
+            background_thread.start()
+        yield
+
+    finally:
+        # The ``with`` block might be exiting normally, or it might be exiting
+        # because something inside it raised an exception.
+        #
+        # This accounts for user-issued cancelations because currently
+        # (2021-05-04), the Python Protocol API happens to implement user-
+        # issued cancellations by raising an exception from internal API code.
+        if not protocol.is_simulating():
+            stop_flashing_event.set()
+            background_thread.join()
+
+        # This is questionable: it may issue a command to the API while the API
+        # is in an inconsistent state after raising an exception.
+        protocol.set_rail_lights(original_light_status)
 
 
 # Start protocol
 def run(ctx):
-    # Setup for flashing lights notification to empty trash
-    cancellationToken = CancellationToken()
-
     [num_samples, starting_vol, binding_buffer_vol, bead_vol, wash1_vol,
      wash2_vol, elution_vol, mix_reps, settling_time, park_tips, tip_track,
      flash] = get_values(  # noqa: F821
@@ -156,18 +191,14 @@ resuming.')
             drop_count += 8
         else:
             drop_count += 1
-        if drop_count >= drop_threshold:
+        if drop_count == drop_threshold:
             # Setup for flashing lights notification to empty trash
-            if flash:
-                if not ctx._hw_manager.hardware.is_simulator:
-                    cancellationToken.set_true()
-                thread = create_thread(ctx, cancellationToken)
-            m300.home()
-            ctx.pause('Please empty tips from waste before resuming.')
             ctx.home()  # home before continuing with protocol
             if flash:
-                cancellationToken.set_false()  # stop light flashing after home
-                thread.join()
+                if not ctx._hw_manager.hardware.is_simulator:
+                    with flashing_rail_lights(ctx, seconds_per_flash_cycle=1):
+                        ctx.pause('Please empty tips from waste before \
+resuming.')
             drop_count = 0
 
     waste_channels = waste_res.wells()
@@ -193,19 +224,13 @@ resuming.')
                 chan = waste_channels[1]
             if waste[chan] + inc >= waste_max and chan == waste_channels[1]:
                 # Setup for flashing lights notification to empty liquid waste
+                ctx.home()
                 if flash:
                     if not ctx._hw_manager.hardware.is_simulator:
-                        cancellationToken.set_true()
-                    thread = create_thread(ctx, cancellationToken)
-                m300.home()
-                ctx.pause('Please empty liquid waste (slot 11) before \
-resuming.')
-
-                ctx.home()  # home before continuing with protocol
-                if flash:
-                    # stop light flashing after home
-                    cancellationToken.set_false()
-                    thread.join()
+                        with flashing_rail_lights(ctx,
+                                                  seconds_per_flash_cycle=1):
+                            ctx.pause('Please empty liquid waste (slot 11) \
+before resuming.')
                 for key in waste:
                     waste[key] = 0
 
