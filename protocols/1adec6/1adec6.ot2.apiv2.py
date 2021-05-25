@@ -7,8 +7,8 @@ metadata = {
 
 
 def run(protocol):
-    [mnt300, numPlates, avol] = get_values(  # noqa: F821
-     'mnt300', 'numPlates', 'avol')
+    [mnt300, numPlates, dmsovol, avol] = get_values(  # noqa: F821
+     'mnt300', 'numPlates', 'dmsovol', 'avol')
 
     # load labware
     tips = [
@@ -24,18 +24,18 @@ def run(protocol):
 
     p1 = plates[0]
 
-    # Add 44uL of DMSO to columns 6-10 (neglecting F-H in 10)
+    # Add dmsovol of DMSO to columns 6-10 (neglecting F-H in 10)
     dmso = rsvr['A1']
 
     m300.pick_up_tip()
 
     for dest in p1.rows()[0][5:9]:
-        m300.transfer(44, dmso, dest, new_tip='never')
+        m300.transfer(dmsovol, dmso, dest, new_tip='never')
 
     m300.return_tip()
 
     m300.pick_up_tip(tips[0]['D1'])
-    m300.transfer(44, dmso, p1['A10'], new_tip='never')
+    m300.transfer(dmsovol, dmso, p1['A10'], new_tip='never')
     m300.drop_tip(tips[0]['D1'])
 
     # Transfer 33uL between columns
@@ -47,7 +47,7 @@ def run(protocol):
         m300.return_tip()
 
     m300.pick_up_tip(tips[0]['F6'])
-    m300.transfer(44, p1['A5'], p1['A10'], new_tip='never')
+    m300.transfer(dmsovol, p1['A5'], p1['A10'], new_tip='never')
     m300.mix(4, 67, p1['A10'])
     m300.drop_tip(tips[0]['F6'])
 
