@@ -1,4 +1,4 @@
-# Beckman Coulter RNAdvance Viral RNA Isolation
+# Promega Maxwell® HT Viral TNA Kit
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -8,7 +8,7 @@
     * Viral RNA
 
 ## Description
-This protocol performs viral RNA isolation on up to 96 samples using the [Beckman Coulter RNAdvance Viral RNA Isolation](https://www.beckman.com/reagents/genomic/rna-isolation/viral/c63510) kit and workflow.
+This protocol performs viral RNA isolation on up to 96 samples using the [Promega Maxwell® HT Viral TNA Kit](https://www.promega.com/products/nucleic-acid-extraction/viral-rna-extraction-viral-dna-extraction/maxwell-ht-viral-tna-kit/?catNum=AX2340) and workflow.
 
 The protocol begins at the stage of adding binding beads to lysed samples loaded on the magnetic module in a NEST 96-deepwell plate. For reagent layout in the 2 12-channel reservoirs used in this protocol, please see "Setup" below.
 
@@ -41,13 +41,14 @@ For sample traceability and consistency, samples are mapped directly from the ma
 ### Reagent Setup
 * Reservoir 1: slot 2
 * Reservoir 2: slot 3  
-![reservoirs](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-10+at+3.48.53+PM.png)
+![reservoirs](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/promega-maxwell/Screen+Shot+2021-05-25+at+5.49.51+PM.png)
 
 Volumes per reservoir channel: (for 96-sample run, not including dead volume):
-* 10mL of 100% Isopropanol + 250uL of bead BBD
-* 10mL of Wash WBE
-* 10mL of 70% Ethanol
-* 4mL of nuclease-free water
+* 7mL of binding buffer
+* 15mL of Wash 1
+* 11mL of Wash 2
+* 11mL of Wash 3
+* 6mL of elution buffer
 
 ---
 
@@ -64,4 +65,4 @@ Volumes per reservoir channel: (for 96-sample run, not including dead volume):
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-bc-rnadvance-viral
+promega-maxwell
