@@ -10,8 +10,29 @@
     },
     {
         "type": "int",
-        "label": "Number of Sample Columns",
-        "name": "cols",
-        "default": 24
+        "label": "Number of Plates (Max: 6)",
+        "name": "plates",
+        "default": 6
+    },
+    {
+      "type": "dropDown",
+      "label": "New Tip per Plate",
+      "name": "new_tip",
+      "options": [
+        { "label": "Never", "value": "never" },
+        { "label": "Always", "value": "always" }
+      ]
+    },
+    {
+        "type": "float",
+        "label": "Dispense Flow Rate (uL/s)",
+        "name": "disp_speed",
+        "default": 50
+    },
+    {
+        "type": "float",
+        "label": "Aspiration Height from Well Bottom (mm)",
+        "name": "asp_height",
+        "default": 0.5
     }
   ]
