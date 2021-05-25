@@ -12,7 +12,7 @@
         "type": "int",
         "label": "Number of Plates (Max: 6)",
         "name": "plates",
-        "default": 24
+        "default": 6
     },
     {
       "type": "dropDown",
