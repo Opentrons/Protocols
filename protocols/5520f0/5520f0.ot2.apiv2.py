@@ -43,7 +43,7 @@ def run(ctx):
             try:
                 self.labware_wells = dict.fromkeys(
                     labware.wells()[start:end], 0)
-            except:
+            except Exception:
                 self.labware_wells = dict.fromkeys(
                     labware, 0)
             self.labware_wells_backup = self.labware_wells.copy()
