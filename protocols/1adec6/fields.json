@@ -19,6 +19,12 @@
   },
   {
     "type": "float",
+    "label": "DMSO Volume (µL)",
+    "name": "dmsovol",
+    "default": 44.0
+  },
+  {
+    "type": "float",
     "label": "Aliquot Volume (µL)",
     "name": "avol",
     "default": 25.0
