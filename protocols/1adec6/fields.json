@@ -20,7 +20,7 @@
   {
     "type": "float",
     "label": "DMSO Volume (µL)",
-    "name": "avol",
+    "name": "dmsovol",
     "default": 44.0
   },
   {
