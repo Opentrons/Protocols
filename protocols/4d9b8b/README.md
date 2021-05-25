@@ -34,6 +34,7 @@ Samples will be referenced in this protocol, as well as referenced in the CSV in
 * `Mix Repetitions`: Specify the number of times each well will be mixed in the mix well plate before being transferred onto the wafer.
 * `Mix Volume`: Specify the volume at which each well be mixed.
 * `Initial Volume in Solution`: Specify the initial volumes in all 3 tubes. This parameter is used for liquid tracking and ensuring the pipette is not submerged in solution.
+* `Delay after dispense before returning tip`: Specify the amount of time (in seconds) before the tip is returned to the tip rack after dispense. Following the dispense, there will be a delay, then blow out and touch tip. 
 * `P20 Single Mount`: Specify which mount the P20 is on (left or right).
 
 ---
