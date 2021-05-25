@@ -12,10 +12,11 @@ def run(ctx):
 
     [num_samp, p20_mount, csv_samp, mix_reps,
         disp_height, disp_rate, mix_vol,
-        vol_tube1, vol_tube2, vol_tube3, grid] = get_values(  # noqa: F821
+        vol_tube1, vol_tube2,
+        vol_tube3, grid, delay_time] = get_values(  # noqa: F821
         "num_samp", "p20_mount", "csv_samp", "mix_reps",
             "disp_height", "disp_rate", "mix_vol",
-            "vol_tube1", "vol_tube2", "vol_tube3", "grid")
+            "vol_tube1", "vol_tube2", "vol_tube3", "grid", "delay_time")
 
     if not 1 <= num_samp <= 24 and grid == "wafer_6x4_grid":
         raise Exception("Enter a sample number between 1-24")
@@ -66,13 +67,18 @@ def run(ctx):
                                          tips[:3]*num_samp,
                                          h_naughts,
                                          chunks[i]):
+            if vol == '0':
+                continue
             p20.pick_up_tip(tip)
             p20.aspirate(int(vol), tube.bottom(z=h-dz-10 if h-dz > 11 else 1))
             p20.dispense(int(vol), mix_well)
+            ctx.delay(seconds=delay_time)
+            p20.blow_out()
+            p20.touch_tip()
             p20.return_tip()
         ctx.comment('\nAdding to Wafer Plate\n')
         p20.pick_up_tip(tips[start])
-        p20.mix(mix_reps, mix_vol)
+        p20.mix(mix_reps, mix_vol, mix_well)
         p20.aspirate(int(transfer[i][4]), mix_well)
         p20.dispense(int(transfer[i][4]), dest_well.top(z=disp_height))
         p20.drop_tip()
