@@ -1,0 +1,35 @@
+[
+    {
+      "type": "int",
+      "label": "Number of Samples (Max: 94)",
+      "name": "samples",
+      "default": 94
+    },
+    {
+      "type": "str",
+      "label": "Starting Well Name",
+      "name": "starting_well",
+      "default": "A1"
+    },
+    {
+      "type": "dropDown",
+      "label": "P300 Single GEN2 Mount Position",
+      "name": "p300_mount",
+      "options": [
+        { "label": "Right", "value": "right" },
+        { "label": "Left", "value": "left" }
+      ]
+    },
+    {
+        "type": "float",
+        "label": "Thermocycler Hold Temperature (°C)",
+        "name": "tc_temp",
+        "default": 4
+    },
+    {
+        "type": "float",
+        "label": "Magnetic Module Engage Height (mm)",
+        "name": "engage_height",
+        "default": 5
+    }
+  ]
