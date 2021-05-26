@@ -9,13 +9,6 @@ metadata = {
 }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"num_samp":384,"overage_percent": 15,"mix_reps":1,"p20_mount":"left","p300_mount":"right"}""")
-    return [_all_values[n] for n in
-    names]
-
-
 def run(ctx):
 
     [num_samp, overage_percent, mix_reps,
