@@ -1,5 +1,3 @@
-import math
-
 metadata = {
     'protodestName': 'Extraction Prep with Kingfisher Flex Extractor',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
