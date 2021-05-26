@@ -11,7 +11,7 @@
 
 ## Description
 
-This protocol automates the purification of RNA using magnetic beads. It can support up to 94 samples and can have a custom starting well position. The protocol is also optimized for tip conservation and resuses tips for various steps.
+This protocol automates the purification of RNA using magnetic beads. It can support up to 94 samples and can have a custom starting well position. The protocol is also optimized for tip conservation and reuses tips for various steps.
 
 Explanation of parameters below:
 
