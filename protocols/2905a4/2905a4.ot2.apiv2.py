@@ -1,4 +1,5 @@
 from opentrons import types, protocol_api
+from opentrons.types import Point
 
 metadata = {
     'protocolName': 'RNA Purification with Magnetic Beads',
@@ -7,16 +8,12 @@ metadata = {
     'apiLevel': '2.10'
 }
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"samples":94, "starting_well":"A1","p300_mount":"right"}""")
-    return [_all_values[n] for n in names]
-
 
 def run(ctx):
 
-    [samples, starting_well, p300_mount] = get_values(  # noqa: F821
-        "samples", "starting_well", "p300_mount")
+    [samples, starting_well, p300_mount, tc_temp,
+        engage_height] = get_values(  # noqa: F821
+        "samples", "starting_well", "p300_mount", "tc_temp", "engage_height")
 
     # Load Labware
     tc_mod = ctx.load_module('thermocycler')
@@ -54,7 +51,7 @@ def run(ctx):
 
     # 96 Well Plate Map
     # Create a map of well names by index
-    # (tc_plate is used as the reference plate)
+    # (tc_plate is used as the reference 96 well plate)
     plate_well_positions = dict(zip(range(0, len(tc_plate.wells())),
                                 tc_plate.wells()))
     # Retrieve well index by using well name
@@ -108,6 +105,9 @@ def run(ctx):
         p300.flow_rate.dispense = 46.43
 
     # PROTOCOL STEPS
+    # Set Thermocycler at 4C
+    tc_mod.set_block_temperature(tc_temp)
+
     # Dilute Magnetic Beads (1)
     pick_up(p300, available_tips[0])
     for dest in mag_plate_wells:
@@ -129,7 +129,7 @@ def run(ctx):
     reset_flow_rates()
 
     # Recover beads (3)
-    mag_mod.engage(height=5)
+    mag_mod.engage(height=engage_height)
     # Attracting beads (4)
     ctx.delay(minutes=2, msg='Attracting beads')
 
@@ -140,13 +140,12 @@ def run(ctx):
     p300.drop_tip()
     available_tips.pop(0)
 
-    # Thermocycler Step (6)
-
     # Setup Dedicated Tips
     dedicated_tips = dict(zip(range(samples), available_tips[:samples]))
     available_tips = available_tips[samples::]
 
-    # Dilute Sample (7)
+    # Open Thermocycler Lid and Dilute Sample (7)
+    tc_mod.open_lid()
     for i, dest in enumerate(tc_plate_wells):
         pick_up(p300, dedicated_tips[i])
         p300.flow_rate.dispense = 100
@@ -189,7 +188,8 @@ def run(ctx):
     for i, dest in enumerate(mag_plate_wells):
         p300.flow_rate.dispense = 300
         pick_up(p300, dedicated_tips[i])
-        p300.mix(10, 200, dest)
+        mix_loc = dest.bottom(0.5).move(Point(x=0.75))
+        p300.mix(10, 200, mix_loc)
         p300.blow_out()
         p300.return_tip()
     reset_flow_rates()
@@ -199,7 +199,7 @@ def run(ctx):
               (first add PCR tape to close plate)''')
 
     # Recover beads (13)
-    mag_mod.engage(height=5)
+    mag_mod.engage(height=engage_height)
     # Attracting beads (14)
     ctx.delay(minutes=2, msg='Attracting beads')
 
@@ -225,13 +225,14 @@ def run(ctx):
     for i, dest in enumerate(mag_plate_wells):
         p300.flow_rate.dispense = 300
         pick_up(p300, dedicated_tips[i])
-        p300.mix(7, 150, dest)
+        mix_loc = dest.bottom(0.5).move(Point(x=0.75))
+        p300.mix(7, 150, mix_loc)
         p300.blow_out()
         p300.return_tip()
     reset_flow_rates()
 
     # Engage Magnet (19)
-    mag_mod.engage(height=5)
+    mag_mod.engage(height=engage_height)
     # Extracting beads (20)
     ctx.delay(minutes=2, msg='Extracting beads from volume - 2min')
 
@@ -258,7 +259,8 @@ def run(ctx):
         p300.flow_rate.dispense = 300
         p300.aspirate(50, rfw.bottom(60))
         p300.dispense(50, dest.bottom(1.5))
-        p300.mix(7, 40)
+        mix_loc = dest.bottom(1.5).move(Point(x=0.75))
+        p300.mix(7, 40, mix_loc)
         p300.blow_out()
         p300.return_tip()
     reset_flow_rates()
@@ -267,7 +269,7 @@ def run(ctx):
     ctx.delay(minutes=5, msg='Eluting RNA from magnet')
 
     # Engage Magnet (26)
-    mag_mod.engage(height=5)
+    mag_mod.engage(height=engage_height)
     # Extracting beads (27)
     ctx.delay(minutes=2)
 
@@ -301,7 +303,8 @@ def run(ctx):
     for i, dest in enumerate(mag_plate_wells):
         p300.flow_rate.dispense = 300
         pick_up(p300, dedicated_tips[i])
-        p300.mix(7, 40, dest.bottom(1.5))
+        mix_loc = dest.bottom(1.5).move(Point(x=0.75))
+        p300.mix(7, 40, mix_loc)
         p300.touch_tip()
         p300.blow_out()
         p300.drop_tip()
@@ -311,7 +314,7 @@ def run(ctx):
     ctx.delay(minutes=5, msg='Eluting RNA from beads')
 
     # Engage Magnet (34)
-    mag_mod.engage(height=5)
+    mag_mod.engage(height=engage_height)
     # Extracting beads (35)
     ctx.delay(minutes=2, msg='Extracting beads')
 
@@ -322,5 +325,9 @@ def run(ctx):
         p300.drop_tip()
     reset_flow_rates()
 
+    # Deactivate All Modules
     mag_mod.disengage()
     temp_mod.deactivate()
+    tc_mod.deactivate()
+
+    ctx.comment('Protocol Completed!')
