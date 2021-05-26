@@ -13,12 +13,14 @@ This protocol automates the DNA Repair and End Prep portion for preparing sequen
 Explanation of parameters below:
 * `Number of Samples`: Specify the number of samples in multiples of 8 (Max: 96).
 * `P300 Multichannel GEN2 Mount Position`: Specify the mount position of the P300 Multichannel.
+* `P300 Single GEN2 Mount Position`: Specify the mount position of the P300 Multichannel.
 * `Magnetic Module Engage Height from Well Bottom (mm)`: Specify the height of the magnets from the bottom of the well.
 
 ---
 
 ### Modules
 * [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
+* [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
 * [Thermocycler Module](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module)
 
 ### Labware
@@ -29,27 +31,23 @@ Explanation of parameters below:
 
 ### Pipettes
 * [P300 GEN2 Multi-Channel Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/8-channel-electronic-pipette)
+* [P300 GEN2 Single-Channel Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/single-channel-electronic-pipette?variant=5984549109789)
 
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/516336/516336_deck.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/516336/516336_new_layout.png)
 
 ### Reagent Setup
 
-* Reservoir: Slot 4
-
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/516336/res1_516336.png)
-
-* Aluminum Tube Rack: Slot 5
-
-![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/516336/res2_516336.png)
+![reservoirs](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/516336/516336_reagents.png)
 
 ---
 
 ### Protocol Steps
-1. Take reagents from reservoir and put into PCR plate (Plate should contain samples)
-2. Mix plate and pause for spin down step.
+0. Cool Temperature Module to 6C
+1. Transfer master mix and put into PCR plate
+2. Mix plate and pause for spin down step. Afterwards, Pre-Heat Thermocycler to 20C and Lid Temperature to 70C.
 3. Incubate on Thermocycler at 20C for 5 mins and 65C for 5 mins
 4. Resuspend AMPure beads by pipette mixing
 5. Transfer samples from BioRad Plate on TC to MIDI Plate on Mag Mod
@@ -66,7 +64,7 @@ Explanation of parameters below:
 16. While engaged, remove any residual ethanol. Delay for 30 seconds for drying.
 17. Disengage mag mod and add 61 uL of nuclease-free water. Delay for 2 mins at room temp.
 18. Engage magnet until eluate is clear (5 minutes)
-19. Transfer 61 uL of eluate into MIDI plate part 2
+19. Transfer 61 uL of eluate into Bio-Rad PCR Plate (Slot 2) for part 2.
 
 
 ### Process
