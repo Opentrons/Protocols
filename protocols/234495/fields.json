@@ -1,0 +1,70 @@
+[
+  {
+    "type": "dropDown",
+    "label": "Chooose 20 ul Tips",
+    "name": "labware_tips20",
+    "options": [
+      { "label": "Standard 20 ul Tips", "value": "opentrons_96_tiprack_20ul" },
+      { "label": "20 ul Filter Tips", "value": "opentrons_96_filtertiprack_20ul" }
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Chooose 300 ul Tips",
+    "name": "labware_tips300",
+    "options": [
+      { "label": "Standard 300 ul Tips", "value": "opentrons_96_tiprack_300ul" },
+      { "label": "300 ul Filter Tips", "value": "opentrons_96_filtertiprack_300ul" }
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Labware for Tube Rack",
+    "name": "labware_tuberack",
+    "options": [
+      { "label": "opentrons_24_tuberack_nest_1.5ml_snapcap", "value": "opentrons_24_tuberack_nest_1.5ml_snapcap" }
+    ]
+  },
+  {
+    "type": "float",
+    "label": "Aspirate and Dispense Height for MeOH:Water Tube (mm)",
+    "name": "clearance_meoh_water",
+    "default": 5
+  },
+  {
+    "type": "float",
+    "label": "Dispense Height for Serial Dilutions (mm)",
+    "name": "clearance_dil_dispense",
+    "default": 5
+  },
+  {
+    "type": "float",
+    "label": "Touch Tip Radius for Serial Dilutions (fraction of a radius)",
+    "name": "touch_radius",
+    "default": 0.3
+  },
+  {
+    "type": "float",
+    "label": "Touch Tip Vertical Offset for Serial Dilutions (mm from top)",
+    "name": "touch_v_offset",
+    "default": -10
+  },
+  {
+    "type": "int",
+    "label": "Starting Aspirate Height for Golden Plasma (mm)",
+    "name": "track_start",
+    "default": 10
+  },
+  {
+    "type": "float",
+    "label": "Well Bottom Clearance for TFA in Reservoir (mm)",
+    "name": "clearance_tfa",
+    "default": 3
+  },
+  {
+    "type": "float",
+    "label": "Well Bottom Clearance for Acetonitrile in Reservoir (mm)",
+    "name": "clearance_mecn",
+    "default": 3
+  }
+]
