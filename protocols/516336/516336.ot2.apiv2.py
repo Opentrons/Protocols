@@ -189,8 +189,11 @@ def run(ctx):
     for _ in range(2):
         # Wash Beads with Ethanol (12)
         for well in mag_plate_wells:
-            m300.transfer(200, ethanolTrack.tracker(200), well.top(-3),
-                          mix_after=(3, 200))
+            pick_up(m300)
+            m300.aspirate(200, ethanolTrack.tracker(200))
+            m300.dispense(200, well.top(-3))
+            m300.mix(3, 100)
+            m300.drop_tip()
 
         # Remove Supernatant (11)
         for well, side in zip(mag_plate_wells, sides):
