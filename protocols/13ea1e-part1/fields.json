@@ -1,9 +1,9 @@
 [
   {
     "type": "int",
-    "label": "Number of Samples (1-94)",
+    "label": "Number of wells (1-96)",
     "name": "num_samp",
-
+    "default": 96
   },
   {
     "type": "int",
