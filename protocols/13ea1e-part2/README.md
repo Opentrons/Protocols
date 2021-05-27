@@ -50,7 +50,7 @@ Explanation of complex parameters below:
 ### Reagent Setup
 * Tube rack: Slot 5
 
-![tube rack](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/13ea1e/pt1/Screen+Shot+2021-05-24+at+9.09.13+AM.png)
+![tube rack](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/13ea1e/pt2/Screen+Shot+2021-05-26+at+2.17.27+PM.png)
 
 ---
 
