@@ -108,7 +108,7 @@ def run(protocol):
         for d in vol20:
             m20.transfer(
                 float(d[3]), proteinPlate[d[0]],
-                plateDict[d[1]][d[2]], mix_after=(5, 20)
+                plateDict[d[1]][d[2]], mix_after=(4, 20)
                 )
 
     if not protocol.is_simulating() and pw != '********':
