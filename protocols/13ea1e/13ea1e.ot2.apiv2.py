@@ -27,7 +27,7 @@ def run(ctx):
                   for slot in ['9', '8']]
     tiprack1000 = [ctx.load_labware('opentrons_96_tiprack_1000ul', '10')]
     tuberack = ctx.load_labware(
-            'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '11')
+            'opentrons_24_tuberack_1500ul', '11')
 
     # load instrument
     p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,
