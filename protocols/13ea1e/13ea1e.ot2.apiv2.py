@@ -17,11 +17,11 @@ def run(ctx):
     # load labware
     reservoir = ctx.load_labware('nest_12_reservoir_15ml', '1')
     reservoir2 = ctx.load_labware('nest_12_reservoir_15ml', '2')
-    npw4_block = ctx.load_labware('nest_96_wellplate_2ml_deep', '3')
-    sample_block = ctx.load_labware('nest_96_wellplate_2ml_deep', '4')
-    elution_block = ctx.load_labware('nest_96_wellplate_2ml_deep', '5')
-    ethanol_block = ctx.load_labware('nest_96_wellplate_2ml_deep', '6')
-    npw3_block = ctx.load_labware('nest_96_wellplate_2ml_deep', '7')
+    npw4_block = ctx.load_labware('nest_96_wellplate_2200ul_flat', '3')
+    sample_block = ctx.load_labware('nest_96_wellplate_2200ul_flat', '4')
+    elution_block = ctx.load_labware('nest_96_wellplate_2200ul_flat', '5')
+    ethanol_block = ctx.load_labware('nest_96_wellplate_2200ul_flat', '6')
+    npw3_block = ctx.load_labware('nest_96_wellplate_2200ul_flat', '7')
 
     tiprack300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
                   for slot in ['9', '8']]
