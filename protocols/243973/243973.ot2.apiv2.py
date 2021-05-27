@@ -22,12 +22,12 @@ def run(protocol):
 
     rsvr = protocol.load_labware('nest_12_reservoir_15ml', '9').wells()[0]
     proteinPlate = protocol.load_labware(
-        'nest_96_wellplate_100ul_pcr_full_skirt', '8')
+        'greinerbioone_96_wellplate_200ul_650161', '8')
 
     plateDict = {}
     plates = [
         protocol.load_labware(
-            'nest_96_wellplate_100ul_pcr_full_skirt', s) for s in range(1, 8)
+            'greinerbioone_96_wellplate_200ul_650161', s) for s in range(1, 8)
         ][:numPlates]
 
     for i in range(numPlates):
