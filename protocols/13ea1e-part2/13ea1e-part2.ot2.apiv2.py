@@ -27,11 +27,10 @@ def run(ctx):
         raise Exception("Enter a sample number between 1-384")
 
     # load labware
-    sample_plates = [ctx.load_labware('nest_96_wellplate_2ml_deep', slot)
+    sample_plates = [ctx.load_labware('nest_96_wellplate_2200ul_flat', slot)
                      for slot in plates]
-    tuberack = ctx.load_labware(
-        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '5')
-    pcr_plate_384 = ctx.load_labware('corning_384_wellplate_112ul_flat', '6')
+    tuberack = ctx.load_labware('opentrons_24_tuberack_1500ul', '5')
+    pcr_plate_384 = ctx.load_labware('pr1ma_384_wellplate_50ul', '6')
     tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
                  for slot in ['8', '9', '11']]
     tiprack300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
