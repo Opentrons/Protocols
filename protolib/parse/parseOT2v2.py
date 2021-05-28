@@ -4,8 +4,8 @@ from pathlib import Path
 import opentrons
 from opentrons.protocols.execution.execute import run_protocol
 from opentrons.protocols.parse import parse as parse_protocol
-from opentrons.protocols.implementations.simulators.protocol_context \
-    import SimProtocolContext
+from opentrons.protocols.context.simulator.protocol_context \
+    import ProtocolContextSimulation
 
 
 def filter_none(arr):
@@ -108,7 +108,7 @@ def parse(protocol_path):
     assert protocol.api_level >= (2, 0)
 
     # Use a simulating protocol context
-    context_impl = SimProtocolContext()
+    context_impl = ProtocolContextSimulation()
 
     context = opentrons.protocol_api.contexts.ProtocolContext(
         implementation=context_impl)
