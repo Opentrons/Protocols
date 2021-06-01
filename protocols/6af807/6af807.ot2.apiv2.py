@@ -2,7 +2,7 @@ metadata = {
     'protocolName': '384 Well Plate PCR Plate with Triplicates',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.7'
+    'apiLevel': '2.8'
 }
 
 
