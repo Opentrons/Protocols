@@ -39,7 +39,7 @@ def run(ctx):
     # load instrument
     p300 = ctx.load_instrument('p300_multi_gen2', p300_mount,
                                tip_racks=tiprack300)
-    p20 = ctx.load_instrument('p20_multi_gen2', p20_mount,
+    p20 = ctx.load_instrument('p20_single_gen2', p20_mount,
                               tip_racks=tiprack20)
 
     num_channels_per_pickup = 1  # (only pickup tips on front-most channel)
