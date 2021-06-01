@@ -16,7 +16,7 @@ def run(ctx):
         "disp_rate", "asp_delay_time", "disp_delay_time", "p300_mount")
 
     if not 1 <= num_samp <= 216:
-        raise Exception("Enter a sample number between 1 and 216")
+        raise Exception("Enter a sample number between 1 and 216 samples")
     if not 0.1 <= height_above_cartridge <= 10:
         raise Exception("Enter a height between 1 and 10mm")
     if not 1 <= disp_vol <= 85:
