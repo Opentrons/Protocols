@@ -6,7 +6,7 @@ metadata = {
 }
 
 
-def run(ctx):
+def run(protocol):
 
     [num_gene, num_mastermix, p20_mount] = get_values(  # noqa: F821
         "num_gene", "num_mastermix", "p20_mount")
@@ -17,16 +17,16 @@ def run(ctx):
         raise Exception("Enter a number of cDNA 1-5")
 
     # load labware
-    plate = ctx.load_labware('100ul_384_wellplate_100ul', '1')
-    mastermix = ctx.load_labware(
+    plate = protocol.load_labware('100ul_384_wellplate_100ul', '1')
+    mastermix = protocol.load_labware(
                 'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '2')
-    cDNA = ctx.load_labware(
+    cDNA = protocol.load_labware(
                 'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '3')
-    tiprack = [ctx.load_labware('opentrons_96_tiprack_20ul', '4')]
+    tiprack = [protocol.load_labware('opentrons_96_tiprack_20ul', '4')]
 
     # load instrument
-    p20 = ctx.load_instrument('p20_single_gen2',
-                              p20_mount, tip_racks=tiprack)
+    p20 = protocol.load_instrument('p20_single_gen2',
+                                   p20_mount, tip_racks=tiprack)
 
     # protocol
     cDNA_tubes = cDNA.rows()[0][:num_gene]
@@ -40,7 +40,7 @@ def run(ctx):
             p20.air_gap(airgap)
             p20.dispense(4, well)
             p20.blow_out()
-        ctx.comment('\n')
+        protocol.comment('\n')
         p20.drop_tip()
 
     for tube, column in zip(mastermix.wells(),
