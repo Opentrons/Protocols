@@ -1,7 +1,7 @@
 metadata = {
     'ctxName': '384 Well Plate PCR Plate with Triplicates',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
-    'source': 'Custom ctx Request',
+    'source': 'Custom Protocol Request',
     'apiLevel': '2.7'
 }
 
@@ -26,7 +26,7 @@ def run(ctx):
 
     # load instrument
     p20 = ctx.load_instrument('p20_single_gen2',
-                                   p20_mount, tip_racks=tiprack)
+                              p20_mount, tip_racks=tiprack)
 
     # ctx
     cDNA_tubes = cDNA.rows()[0][:num_gene]
