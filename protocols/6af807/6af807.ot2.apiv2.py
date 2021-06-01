@@ -1,12 +1,12 @@
 metadata = {
-    'protocolName': '384 Well Plate PCR Plate with Triplicates',
+    'ctxName': '384 Well Plate PCR Plate with Triplicates',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
-    'source': 'Custom Protocol Request',
+    'source': 'Custom ctx Request',
     'apiLevel': '2.7'
 }
 
 
-def run(protocol):
+def run(ctx):
 
     [num_gene, num_mastermix, p20_mount] = get_values(  # noqa: F821
         "num_gene", "num_mastermix", "p20_mount")
@@ -17,18 +17,18 @@ def run(protocol):
         raise Exception("Enter a number of cDNA 1-5")
 
     # load labware
-    plate = protocol.load_labware('100ul_384_wellplate_100ul', '1')
-    mastermix = protocol.load_labware(
+    plate = ctx.load_labware('100ul_384_wellplate_100ul', '1')
+    mastermix = ctx.load_labware(
                 'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '2')
-    cDNA = protocol.load_labware(
+    cDNA = ctx.load_labware(
                 'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '3')
-    tiprack = [protocol.load_labware('opentrons_96_tiprack_20ul', '4')]
+    tiprack = [ctx.load_labware('opentrons_96_tiprack_20ul', '4')]
 
     # load instrument
-    p20 = protocol.load_instrument('p20_single_gen2',
+    p20 = ctx.load_instrument('p20_single_gen2',
                                    p20_mount, tip_racks=tiprack)
 
-    # protocol
+    # ctx
     cDNA_tubes = cDNA.rows()[0][:num_gene]
     well_map = [[well for col in plate.columns()[:num_mastermix]
                 for well in col[i:i+3]] for i in range(0, num_gene*3, 3)]
@@ -40,7 +40,7 @@ def run(protocol):
             p20.air_gap(airgap)
             p20.dispense(4, well)
             p20.blow_out()
-        protocol.comment('\n')
+        ctx.comment('\n')
         p20.drop_tip()
 
     for tube, column in zip(mastermix.wells(),
