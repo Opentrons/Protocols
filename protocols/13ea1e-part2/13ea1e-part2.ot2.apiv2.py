@@ -91,6 +91,7 @@ def run(ctx):
     positive_control = tuberack.rows()[3][5]
 
     mastermix_tube_vols = [0 for tube in range(0, num_mastermix_tubes)]
+
     liquid_prompt = f'''Please ensure you have:
                     {one_step_buffer_vol}ul  of one step buffer in all tubes
                     out of {num_mastermix_tubes} one step buffer tubes.
@@ -164,13 +165,19 @@ def run(ctx):
                                               num_samp > 96 else num_samp]
     plate2_to_384 = [well for column in pcr_plate_384.columns()[1::2]
                      for well in column[::2]][:96 if num_samp > 192
-                                              else num_samp-96]
+                                              else num_samp-96
+                                              if num_samp-96 > 0 else 0]
     plate3_to_384 = [well for column in pcr_plate_384.columns()[::2]
                      for well in column[1::2]][:96 if
                                                num_samp > 288
-                                               else num_samp-192]
+                                               else num_samp-192
+                                               if num_samp-192 > 0 else 0]
     plate4_to_384 = [well for column in pcr_plate_384.columns()[1::2]
-                     for well in column[1::2]][:num_samp-289]  # 289 for ctrl
+                     for well in column[1::2]][:num_samp-288
+                                               if num_samp-288 > 0 else 0]
+    if num_samp == 384:
+        plate4_to_384.pop()
+
     plates = {
                 0: plate1_to_384,
                 1: plate2_to_384,
@@ -194,15 +201,10 @@ def run(ctx):
     p20.air_gap(airgap)
     p20.dispense(7+airgap, pcr_plate_384.wells()[-1].top())
 
-    tube_ctr = 0
     for i, plate in enumerate(sample_plates):
-        for j, well in enumerate(plates[i]):
-            p20.aspirate(7, mastermix_tube[tube_ctr])
-            p20.air_gap(airgap)
+        for source, well in zip(mastermix_tube*num_samp, plates[i]):
+            p20.aspirate(7, source)
             p20.dispense(7+airgap, well.top())
-            mastermix_tube_vols[tube_ctr] -= 7
-            if mastermix_tube_vols[tube_ctr] < 21:
-                tube_ctr += 1
         ctx.comment('\n\n\n\n\n\n')
     p20.drop_tip()
 
@@ -214,6 +216,6 @@ def run(ctx):
             p20.aspirate(5.5, s)
             p20.air_gap(airgap)
             p20.dispense(5.5+airgap, d)
-            # p20.mix(mix_reps, 12.5, d)
+            p20.mix(mix_reps, 12.5, d)
             p20.blow_out()
             p20.drop_tip()
