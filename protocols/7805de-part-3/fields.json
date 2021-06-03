@@ -1,0 +1,98 @@
+[
+  {
+    "type": "int",
+    "label": "Sample Count (up to 48)",
+    "name": "sample_count",
+    "default": 48
+  },
+  {
+    "type": "dropDown",
+    "label": "Choose Tips for the p300",
+    "name": "labware_tips300",
+    "options": [
+      { "label": "Filter Tips", "value": "opentrons_96_filtertiprack_200ul" },
+      { "label": "Standard Tips", "value": "opentrons_96_tiprack_300ul" }
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Choose Tips for the p20",
+    "name": "labware_tips20",
+    "options": [
+      { "label": "Filter Tips", "value": "opentrons_96_filtertiprack_20ul" },
+      { "label": "Standard Tips", "value": "opentrons_96_tiprack_20ul" }
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Labware for PCR Plate",
+    "name": "labware_pcr_plate",
+    "options": [
+      { "label": "nest_96_wellplate_100ul_pcr_full_skirt", "value": "nest_96_wellplate_100ul_pcr_full_skirt" }
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Labware for Reagent Reservoir",
+    "name": "labware_reservoir",
+    "options": [
+      { "label": "nest_12_reservoir_15ml", "value": "nest_12_reservoir_15ml" }
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Labware for Reagent Tube Strips on the Temperature Module",
+    "name": "labware_tube_strip",
+    "options": [
+      { "label": "opentrons_96_aluminumblock_generic_pcr_strip_200ul", "value": "opentrons_96_aluminumblock_generic_pcr_strip_200ul" }
+    ]
+  },
+  {
+    "type": "float",
+    "label": "Well Bottom Clearance for Sample Plate (mm)",
+    "name": "clearance_sample_plate",
+    "default": 1
+  },
+  {
+    "type": "float",
+    "label": "Well Bottom Clearance for Reservoir (mm)",
+    "name": "clearance_reservoir",
+    "default": 2
+  },
+  {
+    "type": "float",
+    "label": "Well Bottom Clearance for Strip Tubes (mm)",
+    "name": "clearance_strip_tubes",
+    "default": 2
+  },
+  {
+    "type": "float",
+    "label": "Well Bottom Clearance for Bead Pellet (mm)",
+    "name": "clearance_bead_pellet",
+    "default": 2
+  },
+  {
+    "type": "int",
+    "label": "Delay Time after Bead Aspiration and Dispense (sec)",
+    "name": "delay_beads",
+    "default": 1
+  },
+  {
+    "type": "float",
+    "label": "Reduced Flow Rate for Pipetting Beads (ul/sec)",
+    "name": "flow_rate_beads",
+    "default": 60
+  },
+  {
+    "type": "int",
+    "label": "Engage Time for Magnetic Module (min)",
+    "name": "engage_time",
+    "default": 5
+  },
+  {
+    "type": "int",
+    "label": "Air Dry Time for Beads (min)",
+    "name": "dry_time",
+    "default": 5
+  }
+]
