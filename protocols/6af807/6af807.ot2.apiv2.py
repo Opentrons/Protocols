@@ -22,7 +22,7 @@ def run(ctx):
                 'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '2')
     cDNA = ctx.load_labware(
                 'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '3')
-    tiprack = [ctx.load_labware('opentrons_96_tiprack_20ul', '4')]
+    tiprack = [ctx.load_labware('art_20ul_tiprack_thermobarrier', '4')]
 
     # load instrument
     p20 = ctx.load_instrument('p20_single_gen2',
