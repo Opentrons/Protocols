@@ -177,7 +177,7 @@ def run(ctx):
                                                if num_samp-288 > 0 else 0]
     if num_samp == 384:
         plate4_to_384.pop()
-    print(plate4_to_384)
+
     plates = {
                 0: plate1_to_384,
                 1: plate2_to_384,
