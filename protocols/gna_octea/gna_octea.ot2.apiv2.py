@@ -43,6 +43,10 @@ def run(protocol):
     mblyo = deepPlate['D11']
     mmlyo = deepPlate['D12']
 
+    if numSamps != 8:
+        raise Exception('Number of Samples is currently being tested and \
+        should be set to 8')
+
     # protocol
     # set temperature module and magdeck
     tempDeck.set_temperature(90)
