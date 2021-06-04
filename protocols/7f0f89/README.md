@@ -33,9 +33,11 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 
 Slots 1, 2, 4, 5, 7, 8, 10, 11: Invoy 216-Well Cartridge Plate
 
-Slot 6: Nest 1-Well Reservoir 195 mL
+Slot 6: Opentrons 96 Tip Rack 300 µL
 
-Slot 9: Opentrons 96 Tip Rack 300 µL
+Slot 9: Nest 1-Well Reservoir 195 mL
+
+
 
 
 </br>
