@@ -1,5 +1,5 @@
 {
-    "content": "import math\n\nmetadata = {\n    'protocolName': 'Adding Developer Solution to 216 Well Cartridge Plate',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.9'\n}\n\n\ndef run(ctx):\n\n    [num_samp, height_above_cartridge, disp_vol, asp_rate, disp_rate,\n     asp_delay_time, disp_delay_time, p300_mount] = get_values(  # noqa: F821\n        \"num_samp\", \"height_above_cartridge\", \"disp_vol\", \"asp_rate\",\n        \"disp_rate\", \"asp_delay_time\", \"disp_delay_time\", \"p300_mount\")\n\n    if not 1 <= num_samp <= 216:\n        raise Exception(\"Enter a sample number between 1 and 216 samples\")\n    if not 0.1 <= height_above_cartridge <= 10:\n        raise Exception(\"Enter a height between 1 and 10mm\")\n    if not 1 <= disp_vol <= 85:\n        raise Exception(\"Enter a dispense volume between 1 and 85\u00b5L\")\n\n    # load labware\n    plate = ctx.load_labware('generic_216_wellplate_85ul_flat', '1')\n    reservoir = ctx.load_labware('nest_1_reservoir_195ml', '6')\n    tiprack = ctx.load_labware('opentrons_96_tiprack_300ul', '9')\n\n    # load instruments\n    p300 = ctx.load_instrument('p300_single_gen2', p300_mount,\n                               tip_racks=[tiprack])\n\n    # protocol\n    p300.flow_rate.dispense = asp_rate\n    p300.flow_rate.dispense = disp_rate\n    chunks = [plate.wells()[i:i+3] for i in range(\n              0, len(plate.wells()), 3)][:math.ceil(num_samp/3)]\n    if num_samp % 3 == 1:\n        chunks[-1].pop()\n        chunks[-1].pop()\n    elif num_samp % 3 == 2:\n        chunks[-1].pop()\n\n    p300.pick_up_tip()\n    for chunk in chunks:\n        p300.aspirate(disp_vol*3+20, reservoir.wells()[0])  # aspirate extra\n        ctx.delay(seconds=asp_delay_time)\n        for well in chunk:\n            p300.dispense(disp_vol, well.top(height_above_cartridge))\n            ctx.delay(seconds=disp_delay_time)\n        p300.dispense(20, reservoir.wells()[0])\n    p300.blow_out(reservoir.wells()[0])\n    p300.drop_tip()\n",
+    "content": "import math\n\nmetadata = {\n    'protocolName': 'Adding Developer Solution to 216 Well Cartridge Plate',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.9'\n}\n\n\ndef run(ctx):\n\n    [num_samp, height_above_cartridge, disp_vol, asp_rate, disp_rate,\n     asp_delay_time, disp_delay_time, p300_mount] = get_values(  # noqa: F821\n        \"num_samp\", \"height_above_cartridge\", \"disp_vol\", \"asp_rate\",\n        \"disp_rate\", \"asp_delay_time\", \"disp_delay_time\", \"p300_mount\")\n\n    if not 1 <= num_samp <= 216:\n        raise Exception(\"Enter a sample number between 1 and 216 samples\")\n    if not 0.1 <= height_above_cartridge <= 10:\n        raise Exception(\"Enter a height between 1 and 10mm\")\n    if not 1 <= disp_vol <= 85:\n        raise Exception(\"Enter a dispense volume between 1 and 85\u00b5L\")\n\n    # load labware\n    plate = ctx.load_labware('generic_216_wellplate_85ul_flat', '1')\n    reservoir = ctx.load_labware('nest_1_reservoir_195ml', '9')\n    tiprack = ctx.load_labware('opentrons_96_tiprack_300ul', '6')\n\n    # load instruments\n    p300 = ctx.load_instrument('p300_multi_gen2', p300_mount,\n                               tip_racks=[tiprack])\n\n    # protocol\n    p300.flow_rate.dispense = asp_rate\n    p300.flow_rate.dispense = disp_rate\n    num_transfers = math.floor(num_samp/4)\n    plate_map = [well for well in plate.wells()[::4]][:num_transfers]\n    remainder = num_samp % 4 if num_samp > 4 else 0\n\n    p300.pick_up_tip()\n    for well in plate_map:\n        p300.aspirate(disp_vol+20, reservoir.wells()[0])  # aspirate extra\n        ctx.delay(seconds=asp_delay_time)\n        p300.dispense(disp_vol, well.top(height_above_cartridge))\n        ctx.delay(seconds=disp_delay_time)\n        p300.dispense(20, reservoir.wells()[0])\n        p300.blow_out(reservoir.wells()[0])\n        ctx.comment('\\n')\n    p300.return_tip()\n\n    if remainder != 0:\n        p300.pick_up_tip(tiprack.wells()[-1])\n        for well in plate.wells()[num_samp-remainder:num_samp]:\n            p300.aspirate(disp_vol+20, reservoir.wells()[0])  # aspirate extra\n            ctx.delay(seconds=asp_delay_time)\n            p300.dispense(disp_vol, well.top(height_above_cartridge))\n            ctx.delay(seconds=disp_delay_time)\n            p300.dispense(20, reservoir.wells()[0])\n            p300.blow_out(reservoir.wells()[0])\n            ctx.comment('\\n')\n        p300.return_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -2507,7 +2507,7 @@
     "instruments": [
         {
             "mount": "right",
-            "name": "p300_single_gen2"
+            "name": "p300_multi_gen2"
         }
     ],
     "labware": [
@@ -2518,16 +2518,16 @@
             "type": "generic_216_wellplate_85ul_flat"
         },
         {
-            "name": "NEST 1 Well Reservoir 195 mL on 6",
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 6",
             "share": false,
             "slot": "6",
-            "type": "nest_1_reservoir_195ml"
+            "type": "opentrons_96_tiprack_300ul"
         },
         {
-            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 9",
+            "name": "NEST 1 Well Reservoir 195 mL on 9",
             "share": false,
             "slot": "9",
-            "type": "opentrons_96_tiprack_300ul"
+            "type": "nest_1_reservoir_195ml"
         },
         {
             "name": "Opentrons Fixed Trash on 12",
