@@ -61,7 +61,7 @@ def run(protocol):
     m300.starting_tip = tips[0]['A7']
     wells = [plate.rows()[0] for plate in plates]
 
-    for i in range(12):
+    for i in range(10):
         m300.pick_up_tip()
         m300.transfer(avol, wells[0][i], wells[1][i], new_tip='never')
         if numPlates == 3:
