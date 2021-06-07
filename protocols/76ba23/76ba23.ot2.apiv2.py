@@ -138,17 +138,17 @@ def run(ctx):
 
     def default_settings():
         p300m.flow_rate.dispense = 94
-        p300m.flow_rate.blow_out = 94
+        p300m.flow_rate.blow_out = 300
 
     def viscous_settings():
-        p300m.flow_rate.aspirate = 40
-        p300m.flow_rate.dispense = 40
-        p300m.flow_rate.blow_out = 40
+        p300m.flow_rate.aspirate = 60
+        p300m.flow_rate.dispense = 60
+        p300m.flow_rate.blow_out = 300
 
     def aqueous_settings():
         p300m.flow_rate.aspirate = 60
         p300m.flow_rate.dispense = 60
-        p300m.flow_rate.blow_out = 60
+        p300m.flow_rate.blow_out = 300
 
     def rep_max_transfer(
      remaining, source, dest, tip_max_vol=tip_max, air=0, blow=0, touch=False,
@@ -211,7 +211,8 @@ def run(ctx):
             if index == 0:
                 pick_up_or_refill(p300m)
             change_every_n(p300m, index, change_freq)
-            rep_max_transfer(waste_vol, column[0], waste.top())
+            rep_max_transfer(
+             waste_vol, column[0], waste.top(), blow=3, blow_delay=1)
         p300m.drop_tip()
 
     # mix premix and distribute to DNA extraction plates
