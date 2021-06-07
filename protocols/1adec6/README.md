@@ -18,6 +18,8 @@ At this point, the user is prompted to manually add reagents before the protocol
 
 Finally, the OT-2 will transfer user specified aliquots to destination plates.
 
+**Update (06/07/2021)**: This protocol has been updated and will no longer transfer the aliquots at the end from columns 11 and 12.
+
 Explanation of complex parameters below:
 * **P300-Multi Mount**: Select which mount the P300-Multi Pipette is attached to.
 * **Number of Destination Plates**: Select the number of destination plates.
