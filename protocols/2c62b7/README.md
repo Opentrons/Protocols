@@ -32,7 +32,7 @@ For more detailed information on compatible labware, please visit our [Labware L
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
 **Deck Setup**
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2c62b7/2c62b7.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2c62b7/MagBind_Environment_Layout_New.png)
 
 **Note**: The **Tip Isolator** is simply an empty Opentrons tip rack that is filled with water. The water should be filled up to the level that is enough for the tips to be slightly touching the surface of the water. The top of a standard Opentrons ti rack is detachable from the base (looks like a deep well plate). The tip isolator is used to conserve tips at specific steps.
 
@@ -42,7 +42,7 @@ For more detailed information on compatible labware, please visit our [Labware L
 * Reservoir 1: Slot 5
 ![Reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2c62b7/resv1.png)
 * Reservoir 2: Slot 2  
-![Reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2c62b7/res2.png)
+![Reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2c62b7/res2_new.png)
 
 **Reagent Steps**
 **Note**: Steps 1-13 are performed manually as instructed in the [kit manual](https://ensur.omegabio.com/ensur/contentAction.aspx?key=Production.4023.S2R4E1A3.20190920.67.4679917). The protocol starts on the OT-2 from step 14 and has modified steps that are written below.
