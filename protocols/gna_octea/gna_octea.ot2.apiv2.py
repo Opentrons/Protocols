@@ -92,14 +92,17 @@ def run(protocol):
 
     for well in tempSamps:
         m300.mix(5, 90, well)
+    m300.move_to(well.top())
 
     # change temperature and incubate
+
     tempDeck.set_temperature(80)
     protocol.delay(minutes=2)
     tempDeck.set_temperature(56)
 
     for well in tempSamps:
         m300.mix(5, 90, well)
+    m300.move_to(well.top())
 
     protocol.delay(minutes=3)
 
@@ -146,7 +149,7 @@ def run(protocol):
         m300.transfer(40, well, magLast, mix_before=(5, 30), new_tip='never')
 
     m300.mix(5, 160, magLast)
-
+    m300.move_to(magLast.top())
     # Engage magdeck and remove supernatant
     magDeck.engage()
     protocol.delay(minutes=3)
