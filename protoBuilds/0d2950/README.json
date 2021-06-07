@@ -1,0 +1,38 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Sample Prep": [
+            "Plate Filling"
+        ]
+    },
+    "deck-setup": "",
+    "description": "This protocol preps a sample plate with up to 95 samples (with one control) as well as the necessary ethanol, buffer, and elution solution blocks. Mag beads are added to the sample. The protocol pauses if more than 45 samples are run to allow the user to replace sample tube racks. The P1000 Single channel GEN2 pipette tracks liquid height in 50mL tubes to prevent overflowing from submersion.\nExplanation of complex parameters below:\n Number of Samples: Specify the number of samples that will be processed. Up to 95 samples can be run, leaving room for a control.\n P20 Single GEN2 Mount: Specify which mount (left or right) to load the P20 single channel pipette.\n* P1000 single GEN2 Mount: Specify which mount (left or right) to load the P1000 single channel pipette.\n",
+    "internal": "0d2950",
+    "labware": "\nNEST 2 mL 96-Well Deep Well Plate, V Bottom\nOpentrons 20\u00b5L Tips\nOpentrons 1000uL Tips\nOpentrons 4-in-1 Tube Rack Set\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* Sample Prep\n\t* Plate Filling\n\n",
+        "deck-setup": "![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0d2950/Screen+Shot+2021-06-07+at+9.46.22+AM.png)\n\n",
+        "description": "This protocol preps a sample plate with up to 95 samples (with one control) as well as the necessary ethanol, buffer, and elution solution blocks. Mag beads are added to the sample. The protocol pauses if more than 45 samples are run to allow the user to replace sample tube racks. The P1000 Single channel GEN2 pipette tracks liquid height in 50mL tubes to prevent overflowing from submersion.\n\nExplanation of complex parameters below:\n* `Number of Samples`: Specify the number of samples that will be processed. Up to 95 samples can be run, leaving room for a control.\n* `P20 Single GEN2 Mount`: Specify which mount (left or right) to load the P20 single channel pipette.\n* `P1000 single GEN2 Mount`: Specify which mount (left or right) to load the P1000 single channel pipette.\n---\n",
+        "internal": "0d2950\n",
+        "labware": "* [NEST 2 mL 96-Well Deep Well Plate, V Bottom](https://shop.opentrons.com/collections/lab-plates/products/nest-0-2-ml-96-well-deep-well-plate-v-bottom)\n* [Opentrons 20\u00b5L Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)\n* [Opentrons 1000uL Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-1000ul-tips)\n* [Opentrons 4-in-1 Tube Rack Set](https://shop.opentrons.com/collections/racks-and-adapters/products/tube-rack-set-1)\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "partner": "[appliedbiosystems](https://www.thermofisher.com/content/dam/LifeTech/Documents/PDFs/clinical/taqpath-COVID-19-combo-kit-full-instructions-for-use.pdf)\n\n",
+        "pipettes": "* [P1000 GEN2 Single Channel Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/single-channel-electronic-pipette)\n* [P20 GEN2 Single Channel Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/single-channel-electronic-pipette)\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "protocol-steps": "1. Buffer plate made according to total number of samples.\n2. Ethanol plate made according to total number of samples.\n3. Elution plate made according to total number of samples.\n4. Proteinase K added to sample block\n5. Samples placed on sample block. Protocol pauses if running more than 45 samples to replace sample tube racks. If replacing tube racks, samples should be loaded down by column starting from slot 1, then to slot 2 and so on.\n6. Control added to sample plate.\n7. Mag beads added to samples with pre-mix step to resuspend beads.\n8. MS2 added to samples.\n\n\n\n\n",
+        "reagent-setup": "* 50mL Tube rack\n\n* Note : if running 48 or less samples, prepare ethanol in only tube A1. If running more than 48 samples, split the total ethanol required between tubes A1 and A2 (e.g. 24,000ul of ethanol in A1 for 24 samples, 25,000ul of ethanol and A1 and A2 for 50 samples).\n\n![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0d2950/Screen+Shot+2021-06-07+at+9.47.12+AM.png)\n\n* 1.5mL Tube rack\n\n![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0d2950/Screen+Shot+2021-06-07+at+9.47.32+AM.png)\n\n---\n\n",
+        "reagents": "* [TaqPath Covid-19 Combo Kit](https://www.thermofisher.com/content/dam/LifeTech/Documents/PDFs/clinical/taqpath-COVID-19-combo-kit-full-instructions-for-use.pdf)\n\n---\n\n",
+        "title": "Extraction Prep for TaqPath Covid-19 Combo Kit"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "partner": "appliedbiosystems",
+    "pipettes": "\nP1000 GEN2 Single Channel Pipette\nP20 GEN2 Single Channel Pipette\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "protocol-steps": "\nBuffer plate made according to total number of samples.\nEthanol plate made according to total number of samples.\nElution plate made according to total number of samples.\nProteinase K added to sample block\nSamples placed on sample block. Protocol pauses if running more than 45 samples to replace sample tube racks. If replacing tube racks, samples should be loaded down by column starting from slot 1, then to slot 2 and so on.\nControl added to sample plate.\nMag beads added to samples with pre-mix step to resuspend beads.\nMS2 added to samples.\n",
+    "reagent-setup": "\n\n50mL Tube rack\n\n\nNote : if running 48 or less samples, prepare ethanol in only tube A1. If running more than 48 samples, split the total ethanol required between tubes A1 and A2 (e.g. 24,000ul of ethanol in A1 for 24 samples, 25,000ul of ethanol and A1 and A2 for 50 samples).\n\n\n\n\n1.5mL Tube rack\n\n\n",
+    "reagents": [
+        "TaqPath Covid-19 Combo Kit"
+    ],
+    "title": "Extraction Prep for TaqPath Covid-19 Combo Kit"
+}
