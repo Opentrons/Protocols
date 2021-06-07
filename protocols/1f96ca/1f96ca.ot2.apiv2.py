@@ -21,7 +21,7 @@ def run(ctx):
       'labware_pre_pcr_plate', 'labware_tube_strip_or_plate', 'sample_count')
 
     ctx.set_rail_lights(True)
-    ctx.delay(seconds=10)
+    ctx.delay(seconds=12)
     if sample_count < 1 or sample_count > 96:
         raise Exception('Invalid number of DNA samples (must be 1-96).')
 
