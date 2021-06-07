@@ -44,12 +44,12 @@ def run(protocol):
         m300.pick_up_tip()
         m300.transfer(33, p1.rows()[0][i], p1.rows()[0][i+5], new_tip='never')
         m300.mix(4, 67, p1.rows()[0][i+5])
-        m300.return_tip()
+        m300.drop_tip()
 
     m300.pick_up_tip(tips[0]['F6'])
     m300.transfer(dmsovol, p1['A5'], p1['A10'], new_tip='never')
     m300.mix(4, 67, p1['A10'])
-    m300.drop_tip(tips[0]['F6'])
+    m300.drop_tip()
 
     for _ in range(6):
         protocol.set_rail_lights(not protocol.rail_lights_on)
@@ -66,6 +66,6 @@ def run(protocol):
         m300.transfer(avol, wells[0][i], wells[1][i], new_tip='never')
         if numPlates == 3:
             m300.transfer(avol, wells[0][i], wells[2][i], new_tip='never')
-        m300.return_tip()
+        m300.drop_tip()
 
     protocol.comment('\nProtocol complete!')
