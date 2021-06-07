@@ -31,8 +31,8 @@ def run(ctx):
     mag_mod = ctx.load_module('magnetic module gen2', 1)
     mag_plate = mag_mod.load_labware('nest_96_wellplate_2ml_deep')
     tipracks = [ctx.load_labware(tiprack_type[tip_type], slot) for slot in
-                range(7, 12)]
-    tip_isolator = ctx.load_labware(tiprack_type[tip_type], 4, 'Tip Isolator')
+                [4, 7, 8, 9, 10]]
+    tip_isolator = ctx.load_labware(tiprack_type[tip_type], 11, 'Tip Isolator')
     res1 = ctx.load_labware('nest_12_reservoir_15ml', 5)
     res2 = ctx.load_labware('nest_12_reservoir_15ml', 2)
     dna_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', 6)
@@ -159,6 +159,42 @@ def run(ctx):
         if mag_mod.status == 'engaged':
             mag_mod.disengage()
 
+    # Volume Tracking
+    class VolTracker:
+        def __init__(self, labware, well_vol, pip_type='single',
+                     mode='reagent', start=0, end=12):
+            self.labware_wells = dict.fromkeys(labware.wells()[start:end], 0)
+            self.well_vol = well_vol
+            self.pip_type = pip_type
+            self.mode = mode
+            self.start = start
+            self.end = end
+
+        def tracker(self, vol):
+            '''tracker() will track how much liquid
+            was used up per well. If the volume of
+            a given well is greater than self.well_vol
+            it will remove it from the dictionary and iterate
+            to the next well which will act as the reservoir.'''
+            well = next(iter(self.labware_wells))
+            if self.labware_wells[well] >= self.well_vol:
+                del self.labware_wells[well]
+                well = next(iter(self.labware_wells))
+            if self.pip_type == 'multi':
+                self.labware_wells[well] = self.labware_wells[well] + vol*8
+            elif self.pip_type == 'single':
+                self.labware_wells[well] = self.labware_wells[well] + vol
+            if self.mode == 'waste':
+                ctx.comment(f'''{well}: {int(self.labware_wells[well])} uL of
+                            total waste''')
+            else:
+                ctx.comment(f'''{int(self.labware_wells[well])} uL of liquid
+                            used from {well}''')
+            return well
+
+    # Track Reagent Volumes
+    water = VolTracker(res2, 14400, 'multi', 'reagent', start=10, end=12)
+
     # Wells
     # mag_plate_wells = mag_plate.rows()[0]
     mag_plate_wells = {well: column for well, column in zip(
@@ -166,6 +202,14 @@ def run(ctx):
     dna_plate_wells = dna_plate.rows()[0][:cols]
 
     # Protocol Steps
+
+    # Add 300 uL of Water to each well in tip isolator
+    ctx.comment('''Transferring 300 uL of water to
+                each well in the tip isolator''')
+    pick_up(m300)
+    for col in tip_isolator.rows()[0]:
+        m300.transfer(300, water.tracker(300), col, new_tip='never')
+    m300.return_tip()
 
     # Step 14
     # Transfer Master Mix 2 (XP1 Buffer + Mag-Bind® Particles RQ) to Mag Plate
