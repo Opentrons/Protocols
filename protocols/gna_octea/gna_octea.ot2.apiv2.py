@@ -1,3 +1,5 @@
+from opentrons import types
+
 metadata = {
     'protocolName': 'Automated Sample Prep for GNA Octea',
     'author': 'Chaz <chaz@opentrons.com>',
@@ -49,15 +51,22 @@ def run(protocol):
 
     # protocol
     # set temperature module and magdeck
-    tempDeck.set_temperature(90)
+    tempDeck.start_set_temperature(90)
     magDeck.engage()
 
     # Transfer 360 HB1 to MB LYO, mix and transfer to deep plate
     p300.pick_up_tip()
     p300.transfer(360, hb1, mblyo.top(-2), new_tip='never')
     p300.mix(5, 180, mblyo)
-    # p300.aspirate(180, mblyo)
-    p300.distribute(40, mblyo, sampsHB1, new_tip='never')
+    pip_vol = 0
+    for well in sampsHB1:
+        if pip_vol < 40:
+            p300.dispense(pip_vol, mblyo)
+            p300.aspirate(180, mblyo)
+            pip_vol = 180
+        p300.dispense(40, well)
+        pip_vol -= 40
+    p300.dispense(pip_vol, mblyo)
     p300.drop_tip()
 
     # Transfer HB1 with multi channel to deep plate and to samples
@@ -77,11 +86,12 @@ def run(protocol):
     m300.drop_tip()
 
     # Transfer 800ul (160 at a time) to temperature module
+    tempDeck.await_temperature(90)
     m300.pick_up_tip()
     m300.transfer(160, sampsUTM[0], tempSamps, new_tip='never')
 
     for well in tempSamps:
-        m300.mix(5, 180, well)
+        m300.mix(5, 90, well)
 
     # change temperature and incubate
     tempDeck.set_temperature(80)
@@ -89,7 +99,7 @@ def run(protocol):
     tempDeck.set_temperature(56)
 
     for well in tempSamps:
-        m300.mix(5, 180, well)
+        m300.mix(5, 90, well)
 
     protocol.delay(minutes=3)
 
@@ -97,7 +107,7 @@ def run(protocol):
 
     # Mix and transfer samples from temperature module to magdeck
     for well in tempSamps:
-        m300.mix(5, 180, well)
+        m300.mix(5, 90, well)
 
     for src, dest in zip(tempSamps, magSamps):
         m300.transfer(160, src, dest, new_tip='never')
@@ -121,7 +131,15 @@ def run(protocol):
     m300.pick_up_tip()
     m300.flow_rate.aspirate = 92.86
 
-    m300.transfer(40, wb1, [w.top(-2) for w in magSamps], new_tip='never')
+    pip_vol = 0
+    for well in magSamps:
+        if pip_vol < 40:
+            m300.dispense(pip_vol, wb1)
+            m300.aspirate(180, wb1)
+            pip_vol = 180
+        m300.dispense(40, well.top(-2))
+        pip_vol -= 40
+    m300.dispense(pip_vol, wb1)
     magLast = magSamps[-1]
 
     for well in magSamps[:-1]:
@@ -151,6 +169,15 @@ def run(protocol):
     p300.mix(5, 175, mmlyo)
 
     p300.transfer(40, mmlyo, [w.top() for w in magSamps2], new_tip='never')
+    pip_vol = 0
+    for well in magSamps2:
+        if pip_vol < 40:
+            p300.dispense(pip_vol, mmlyo)
+            p300.aspirate(180, mmlyo)
+            pip_vol = 180
+        p300.dispense(40, well.top(-2))
+        pip_vol -= 40
+    p300.dispense(pip_vol, mmlyo)
     p300.drop_tip()
 
     m300.pick_up_tip()
@@ -160,6 +187,10 @@ def run(protocol):
     # transfer samples to octea plate
 
     for src, dest in zip(magSamps2, octeaPlate.rows()[0][:numSamps]):
-        p300.transfer(40, src, dest)
+        p300.pick_up_tip()
+        p300.aspirate(40, src)
+        p300.dispense(20, well.bottom().move(types.Point(x=-1, y=1, z=1)))
+        p300.dispense(20, well.bottom().move(types.Point(x=1, y=-1, z=1)))
+        p300.drop_tip()
 
     # p300.transfer(40, mmlyo, octeaPlate.wells()[numSamps:])
