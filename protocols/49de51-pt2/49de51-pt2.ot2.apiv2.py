@@ -72,7 +72,7 @@ def run(protocol):
     else:
         [t1, t2, t3, t4, t5] = tip_racks.rows()[0][:5]
         elute_tips = tip_racks.rows()[0][5:]
-        ret_tips = tipr_racks.rows()[0][1:]
+        ret_tips = tip_racks.rows()[0][1:]
         done_tips = tip_racks.rows()[0]
 
     magsamps = magplate.rows()[0][:num_cols]
