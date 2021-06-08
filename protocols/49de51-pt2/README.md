@@ -18,6 +18,8 @@ In this protocol, 25µL of magnetic beads plus 400µL of ethanol is added to 400
 </br>
 **Update May 3, 2021**: A second wash step has been added and heights of aspiration adjusted.</br>
 </br>
+**Update June 8, 2021**: Added the ability to park tips. This will cut down on tip usage when using 48+ samples.</br>
+</br>
 
 If you have any questions about this protocol, please email our Applications Engineering team at [protocols@opentrons.com](mailto:protocols@opentrons.com).
 
@@ -100,6 +102,7 @@ Slot 2: [Opentrons 200µL Filter Tip Rack](https://shop.opentrons.com/collection
 * Deep Well Plate Type: select the type of deep well plate used (holding samples)
 * Automate Bead Addition: select whether or not to automate the addition of magnetic beads
 * Location of Magnetic Beads: select the location of the magnetic beads (*labware*; *deck slot*: *well*)
+* Park Tips: Select **Yes** or **No**. If **Yes** is selected, one tiprack (in slot 2) will be used for all mixing and supernatant removals; the other tips should be placed in slot 3 and 6.
 </br>
 </br>
 
