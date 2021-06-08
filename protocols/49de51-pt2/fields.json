@@ -36,7 +36,7 @@
   },
   {
     "type": "dropDown",
-    "label": "Automate Bead Addition",
+    "label": "Park Tips",
     "name": "park_tips",
     "options": [
       {"label": "No", "value": 0},
