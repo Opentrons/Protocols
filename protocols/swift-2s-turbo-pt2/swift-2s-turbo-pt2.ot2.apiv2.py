@@ -6,7 +6,7 @@ metadata = {
     Ligation Clean-Up & PCR Prep',
     'author': 'Opentrons <protocols@opentrons.com>',
     'source': 'Protocol Library',
-    'apiLevel': '2.1'
+    'apiLevel': '2.10'
 }
 
 
