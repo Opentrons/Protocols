@@ -35,8 +35,8 @@ def run(protocol):
             protocol.load_labware(
                 'opentrons_96_tiprack_300ul',
                 x, 'Opentrons 200uL Filter Tips') for x in [
-                '6',
-                '3']]
+                '3',
+                '6']]
         parked_tips = protocol.load_labware(
             'opentrons_96_tiprack_300ul', '2',
             'Parked Tips (200uL Filter)').rows()[0]
