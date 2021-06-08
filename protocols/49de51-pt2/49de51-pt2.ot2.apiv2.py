@@ -38,7 +38,8 @@ def run(protocol):
                 '6',
                 '3']]
         parked_tips = protocol.load_labware(
-            'opentrons_96_tiprack_300ul', '2', 'Parked Tips (200uL Filter)')
+            'opentrons_96_tiprack_300ul', '2',
+            'Parked Tips (200uL Filter)').rows()[0]
     else:
         tip_racks = [
             protocol.load_labware(
@@ -69,7 +70,10 @@ def run(protocol):
             all_tips[i*num_cols:(i+1)*num_cols] for i in range(10)]
         tt_tips = False
     else:
-        pass  # this needs to change
+        [t1, t2, t3, t4, t5] = tip_racks.rows()[0][:5]
+        elute_tips = tip_racks.rows()[0][5:]
+        ret_tips = tipr_racks.rows()[0][1:]
+        done_tips = tip_racks.rows()[0]
 
     magsamps = magplate.rows()[0][:num_cols]
     pcrsamps = pcrplate.rows()[0][:num_cols]
@@ -147,6 +151,9 @@ def run(protocol):
                 else:
                     m300.drop_tip(tret)
         if park_tips:
+            if m300.has_tip:
+                m300.drop_tip()
+
             for well, tip, side in zip(magsamps, parked_tips, sides):
                 m300.pick_up_tip(tip)
                 well_mix(mix, well, 180, side)
@@ -249,3 +256,60 @@ def run(protocol):
         protocol.comment('Protocol complete!')
     else:
         # start protocol; parked tips
+        if bead_add:
+            if bead_loc != 'NEST_reservoir':
+                bead_labware = protocol.load_labware(bead_loc, '10')
+            else:
+                bead_labware = rsvr[0]
+            beads = bead_labware['A1']
+            # add 25uL of beads, if automating
+            protocol.comment('Adding 25uL of beads')
+            m300.pick_up_tip(t1)
+            for well in magsamps:
+                m300.mix(3, 50, beads)
+                m300.aspirate(25, beads)
+                m300.dispense(25, well.top(-2))
+                m300.blow_out()
+        m300.drop_tip()
+        m300.pick_up_tip(t2)
+        wash_step('Ethanol', etoh, 400, 5, t1, t2, t1,
+                  5, 500, 'room temp', True, tt_tips, 825)
+
+        m300.pick_up_tip(t3)
+        wash_step('Wash Buffer 1', wb1, 400, 5, t3, t4, t2,
+                  1, 1500, '70C', tt_tips, tt_tips)
+
+        m300.pick_up_tip(t4)
+        wash_step('Wash Buffer 2', wb2_1, 400, 5, t5, t6, t1,
+                  1, 1500, '70C', True, tt_tips)
+
+        m300.pick_up_tip(t5)
+        wash_step('Wash Buffer 2', wb2_2, 400, 5, t7, t8, t1,
+                  1, 1500, '70C', True, tt_tips)
+
+        for tip, tret, well, buff in zip(elute_tips, ret_tips, magsamps, eb):
+            m300.pick_up_tip(tip)
+            m300.aspirate(175, buff)
+            m300.dispense(175, well)
+            m300.mix(3, 160, well)
+            m300.blow_out()
+            m300.drop_tip(tret)
+
+        protocol.pause('Please place plate on thermomixer for allocated time. \
+        When ready to resume, replace plate on OT-2 and click RESUME')
+
+        magdeck.engage(height=magheight[deep_plate])
+        protocol.comment('Engaging Magdeck for 5 minutes.')
+        protocol.delay(minutes=5)
+
+        m300.flow_rate.aspirate = 30
+
+        for tip, tr, src, dest in zip(ret_tips, done_tips, magsamps, pcrsamps):
+            m300.pick_up_tip(tip)
+            m300.aspirate(175, src)
+            m300.dispense(175, dest)
+            m300.blow_out()
+            m300.drop_tip(tr)
+
+        magdeck.disengage()
+        protocol.comment('Protocol complete!')
