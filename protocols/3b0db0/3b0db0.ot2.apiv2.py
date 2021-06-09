@@ -34,7 +34,10 @@ def run(ctx):
     # load instrument
     p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tip_racks=tip_rack)
     m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tip_rack)
-
+    p20.well_bottom_clearance.aspirate = 2.5
+    p20.well_bottom_clearance.dispense = 2.5
+    m20.well_bottom_clearance.aspirate = 2.5
+    m20.well_bottom_clearance.dispense = 2.5
     # reagents, setup
     temp_mod.set_temperature(4)
     mastermix = reagent_plate.rows()[0][:2]
