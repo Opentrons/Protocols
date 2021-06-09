@@ -46,7 +46,11 @@ def run(protocol):
     pip.pick_up_tip()
 
     for well in plate1.wells()[:numSamps]:
-        pip.transfer(500, wash1, well, new_tip='never')
+        for _ in range(2):
+            pip.aspirate(175, wash1)
+            pip.dispense(175, well)
+        pip.aspirate(150, wash1)
+        pip.dispense(150, well)
 
     pip.drop_tip()
 
@@ -56,8 +60,9 @@ def run(protocol):
     pip.pick_up_tip()
 
     for well in plate2.wells()[:numSamps]:
-        pip.transfer(1000, wash2, well, new_tip='never')
-
+        for _ in range(5):
+            pip.aspirate(200, wash2)
+            pip.dispense(200, well)
     pip.drop_tip()
 
     # Transfer Elution
@@ -70,6 +75,7 @@ def run(protocol):
             pip.aspirate(200, elution)
         pip.dispense(50, well)
 
+    pip.dispense(pip.current_volume, elution)
     pip.drop_tip()
 
     # Transfer Proteinase K
@@ -78,8 +84,9 @@ def run(protocol):
     pip.pick_up_tip()
 
     for well, src in zip(platePK.wells()[:numSamps], protK):
-        if pip.current_volume == 0:
-            pip.aspirate(120, src)
+        if pip.current_volume < 25:
+            pip.dispense(pip.current_volume, src)
+            pip.aspirate(140, src)
         pip.dispense(5, well)
 
     pip.drop_tip()
