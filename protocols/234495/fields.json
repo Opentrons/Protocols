@@ -22,7 +22,7 @@
     "label": "Labware for Tube Rack",
     "name": "labware_tuberack",
     "options": [
-      { "label": "opentrons_24_tuberack_nest_1.5ml_snapcap", "value": "opentrons_24_tuberack_nest_1.5ml_snapcap" }
+      { "label": "filters_and_eppendorfs_24_tuberack_1500ul", "value": "filters_and_eppendorfs_24_tuberack_1500ul" }
     ]
   },
   {
@@ -35,7 +35,7 @@
     "type": "float",
     "label": "Dispense Height for Serial Dilutions (mm)",
     "name": "clearance_dil_dispense",
-    "default": 5
+    "default": 1
   },
   {
     "type": "float",
@@ -47,7 +47,7 @@
     "type": "float",
     "label": "Touch Tip Vertical Offset for Serial Dilutions (mm from top)",
     "name": "touch_v_offset",
-    "default": -10
+    "default": -16
   },
   {
     "type": "int",
@@ -66,5 +66,11 @@
     "label": "Well Bottom Clearance for Acetonitrile in Reservoir (mm)",
     "name": "clearance_mecn",
     "default": 3
+  },
+  {
+    "type": "int",
+    "label": "Number of Mix Repetitions for Serial Dilutions",
+    "name": "mix_reps",
+    "default": 10
   }
 ]

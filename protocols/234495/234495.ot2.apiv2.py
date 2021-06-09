@@ -13,10 +13,11 @@ def run(ctx):
     # get parameter values from json above
     [labware_tips20, labware_tips300, labware_tuberack, clearance_meoh_water,
      clearance_dil_dispense, touch_radius, touch_v_offset, track_start,
-     clearance_tfa, clearance_mecn] = get_values(  # noqa: F821
+     clearance_tfa, clearance_mecn, mix_reps] = get_values(  # noqa: F821
       'labware_tips20', 'labware_tips300', 'labware_tuberack',
       'clearance_meoh_water', 'clearance_dil_dispense', 'touch_radius',
-      'touch_v_offset', 'track_start', 'clearance_tfa', 'clearance_mecn')
+      'touch_v_offset', 'track_start', 'clearance_tfa', 'clearance_mecn',
+      'mix_reps')
 
     ctx.set_rail_lights(True)
 
@@ -92,6 +93,14 @@ def run(ctx):
             current_pipette.flow_rate.dispense = 7.56
             current_pipette.flow_rate.blow_out = 7.56
 
+    """
+    **custom tube rack definition**
+    **theoretically extends eppendorfs**
+    **to 6 mm above the top of the rack**
+    **to match height of filters**
+    **locations relative to top and center coded accordingly**
+    """
+
     ctx.comment("""
     tube rack in deck slot 1:
     A1-A6,B1-B6 - 200 uM unlabeled solution
@@ -161,9 +170,9 @@ def run(ctx):
         for rep in range(3):
             if rep > 0:
                 p300s.aspirate(
-                 100, dilution.bottom(clearance_dil_dispense))
+                 100, dilution.bottom(5))
             ctx.delay(seconds=1)
-            p300s.blow_out(dilution.bottom(clearance_dil_dispense))
+            p300s.blow_out(dilution.bottom(5))
         p300s.touch_tip(radius=touch_radius, v_offset=touch_v_offset, speed=20)
         if index == 0:
             source = unlabeled_soln_200um.bottom(1)
@@ -172,15 +181,14 @@ def run(ctx):
         p300s.aspirate(20, source)
         p300s.air_gap(15)
         p300s.dispense(35, dilution.bottom(clearance_dil_dispense))
+        p300s.mix(mix_reps, 20, dilution.bottom(clearance_dil_dispense))
         for rep in range(3):
             if rep > 0:
                 p300s.aspirate(
-                 100, dilution.bottom(clearance_dil_dispense))
+                 100, dilution.bottom(5))
             ctx.delay(seconds=1)
-            p300s.blow_out(dilution.bottom(clearance_dil_dispense))
+            p300s.blow_out(dilution.bottom(5))
         p300s.touch_tip(radius=touch_radius, v_offset=touch_v_offset, speed=20)
-        p300s.move_to(dilution.top().move(types.Point(x=0, y=0, z=25)))
-        ctx.pause("""Vortex and return the tube.""")
         p300s.drop_tip()
     default_flow_rates(p300s)
 
@@ -231,10 +239,12 @@ def run(ctx):
         slow_tip_withdrawal(p20s, samples[index], to_center=True)
         for rep in range(3):
             if rep > 0:
-                p20s.aspirate(10, samples[index].center())
+                p20s.aspirate(
+                 10, samples[index].center().move(types.Point(x=0, y=0, z=-3)))
             ctx.delay(seconds=1)
-            p20s.blow_out(samples[index].center())
-        p20s.touch_tip(radius=0.75, v_offset=-2, speed=20)
+            p20s.blow_out(
+             samples[index].center().move(types.Point(x=0, y=0, z=-3)))
+        p20s.touch_tip(radius=0.75, v_offset=-8, speed=20)
         p20s.drop_tip()
     default_flow_rates(p20s)
 
@@ -249,8 +259,8 @@ def run(ctx):
         p20s.aspirate(10, nem_100mm.bottom(3))
         p20s.dispense(10, sample.bottom(3))
         slow_tip_withdrawal(p20s, sample, to_center=True)
-        p20s.blow_out(sample.center())
-        p20s.touch_tip(radius=0.75, v_offset=-2, speed=20)
+        p20s.blow_out(sample.center().move(types.Point(x=0, y=0, z=-3)))
+        p20s.touch_tip(radius=0.75, v_offset=-8, speed=20)
         p20s.drop_tip()
 
     pause_attention("Vortex samples 15 min and return.")
@@ -270,10 +280,11 @@ def run(ctx):
         slow_tip_withdrawal(p20s, sample, to_center=True)
         for rep in range(3):
             if rep > 0:
-                p20s.aspirate(10, sample.center())
+                p20s.aspirate(
+                 10, sample.center().move(types.Point(x=0, y=0, z=-3)))
             ctx.delay(seconds=1)
-            p20s.blow_out(sample.center())
-        p20s.touch_tip(radius=0.75, v_offset=-2, speed=20)
+            p20s.blow_out(sample.center().move(types.Point(x=0, y=0, z=-3)))
+        p20s.touch_tip(radius=0.75, v_offset=-8, speed=20)
         p20s.drop_tip()
     default_flow_rates(p20s)
 
@@ -292,12 +303,12 @@ def run(ctx):
         for rep in range(3):
             p300s.aspirate(180, tfa.bottom(clearance_tfa))
             p300s.air_gap(15)
-            p300s.dispense(195, sample.top())
+            p300s.dispense(195, sample.top(-6))
             for rep in range(3):
                 if rep > 0:
-                    p300s.aspirate(180, sample.top())
+                    p300s.aspirate(180, sample.top(-6))
                 ctx.delay(seconds=1)
-                p300s.blow_out(sample.top())
+                p300s.blow_out(sample.top(-6))
     p300s.drop_tip()
     default_flow_rates(p300s)
 
@@ -314,10 +325,10 @@ def run(ctx):
     for index, sample in enumerate(samples):
         p300s.pick_up_tip()
         default_flow_rates(p300s)
-        pre_wet(p300s, 150, sample.bottom(5))
+        pre_wet(p300s, 150, sample.bottom(10))
         meoh_flow_rates(p300s)
         for rep in range(3):
-            p300s.aspirate(166.7, sample.bottom(5))
+            p300s.aspirate(166.7, sample.bottom(round(16/(rep + 1))))
             p300s.air_gap(15)
             p300s.dispense(181.7, amicon_filters[index].top())
             for rep in range(3):
