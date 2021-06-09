@@ -9,7 +9,7 @@
 
 
 ## Description
-This is a preliminary protocol for slide-spotting based on the workflow outlined [here](https://s3.amazonaws.com/pf-upload-01/u-4256/0/2021-01-25/sn33zim/20210122_MW_Opentrons2.pptx).
+This is a protocol developed for automating a custom slide-spotting workflow.
 
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
