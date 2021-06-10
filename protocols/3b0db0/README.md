@@ -13,7 +13,8 @@ This protocol distributes reliance One Step Mulitplex RT-qPCR supermix to each w
 Explanation of complex parameters below:
 * `Number of columns`: Specify the number of columns that the OT-2 will distribute mastermix to on the 96 well plate (1-12).
 * `Delay after aspiration`: Specify the number of seconds after aspirating for the pipette to pause to achieve full volumes.
-* `Mix repetitions`: Specify the number of times to mix the mastermix and saliva. 
+* `Mix repetitions`: Specify the number of times to mix the mastermix and saliva.
+* `Tube Aspiration Height`: Specify the aspiration height from the bottom of the tube (in mm) to aspirate from when transferring saliva in the final step. 
 * `P20 Multi GEN2 Mount`: Specify the mount (left or right) of the P20 Multi GEN2 Pipette.
 * `P20 Single GEN2 Mount`: Specify the mount (left or right) of the P20 single GEN2 Pipette.
 

@@ -160,7 +160,7 @@ resuming.')
             p300.dispense(vol, dest)
             p300.dispense(p300.current_volume, dest.top())
         else:
-            num_trans = math.ceil(vol/260)
+            num_trans = math.ceil(vol/160)
             vol_per_trans = vol/num_trans
             for _ in range(num_trans):
                 p300.air_gap(20)
@@ -192,10 +192,10 @@ resuming.')
         mm_total_vol_per_tube = mm_vol*(num_samples)*vol_overage/num_mm_tubes
         if not p300.hw_pipette['has_tip']:
             pick_up(p300)
-        if mm_total_vol_per_tube / 2 <= 300:
+        if mm_total_vol_per_tube / 2 <= 200:
             mix_vol = mm_total_vol_per_tube / 2
         else:
-            mix_vol = 300
+            mix_vol = 100
         for tube in mm_tubes[:num_mm_tubes]:
             if num_samples > 48:
                 mix_loc = mm_tube.bottom(20)
