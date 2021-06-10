@@ -319,7 +319,7 @@ resuming.')
         for col in mag_plate_cols:
             m300.transfer(100, ethanol, col.top(), new_tip='never')
         m300.drop_tip()
-        
+
         ctx.delay(seconds=30, msg='''Incubating reaction mixture for
                   30 seconds at room temperature''')
 
