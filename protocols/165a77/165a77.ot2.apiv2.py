@@ -10,11 +10,13 @@ metadata = {
 def run(ctx):
 
     # bring in constant values from json string above
-    [plate_count, samp_col_counts, labware_384_well_plate, patient_sample_vol,
-     disposal_vol, patient_sample_count
+    [plate_count, samp_col_counts, labware_384_well_plate,
+     labware_patient_samples, patient_sample_vol, disposal_vol,
+     patient_sample_count, include_ntc
      ] = get_values(  # noqa: F821
       'plate_count', 'samp_col_counts', 'labware_384_well_plate',
-      'patient_sample_vol', 'disposal_vol', 'patient_sample_count')
+      'labware_patient_samples', 'patient_sample_vol', 'disposal_vol',
+      'patient_sample_count', 'include_ntc')
 
     ctx.set_rail_lights(True)
 
@@ -42,7 +44,7 @@ def run(ctx):
 
     # source and destination plates
     patient_samples = [
-     ctx.load_labware("nunc_96_wellplate_1000ul", slot) for slot in [
+     ctx.load_labware(labware_patient_samples, slot) for slot in [
       str(slot) for slot in [2, 5, 8]][:plate_count]]
     plates_384 = [
      ctx.load_labware(labware_384_well_plate, slot) for slot in [
@@ -51,6 +53,12 @@ def run(ctx):
     # patient sample column count for each 384-well plate
     col_counts = samp_col_counts.split(',')
 
+    # to optionally skip no-template control
+    if include_ntc:
+        well_index = 2
+    else:
+        well_index = 1
+
     # distribute sample in "384 plate map.png" arrangement
     for i, plate in enumerate(patient_samples):
         # to yield next 384 column
@@ -58,9 +66,9 @@ def run(ctx):
          column for column in plates_384[i].columns()[:2*int(col_counts[i])])
         for column in patient_samples[i].columns()[:int(col_counts[i])]:
             p20m.distribute(
-             patient_sample_vol, [column[0], column[0]],
-             [well.center().move(types.Point(
-              well.diameter*0.25, -well.diameter*0.25, 0)) for well in next(
-              next_col)[:2]] + [well.center().move(types.Point(
+             patient_sample_vol, [column[0], column[0]], [
+              well.center().move(types.Point(
                well.diameter*0.25, -well.diameter*0.25, 0)) for well in next(
-               next_col)[:2]], disposal_volume=disposal_vol)
+               next_col)[:2]] + [well.center().move(types.Point(
+                well.diameter*0.25, -well.diameter*0.25, 0)) for well in next(
+                next_col)[:well_index]], disposal_volume=disposal_vol)
