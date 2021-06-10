@@ -1,5 +1,5 @@
 metadata = {
-    'protocolName': 'Small Molecule Library Prep',
+    'protocolName': 'Small Molecule Library Prep (Updated)',
     'author': 'Chaz <chaz@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.9'
@@ -7,49 +7,68 @@ metadata = {
 
 
 def run(protocol):
-    [mnt300, numPlates, dmsovol, avol] = get_values(  # noqa: F821
+    [mnt20, numPlates, dmsovol, avol] = get_values(  # noqa: F821
      'mnt300', 'numPlates', 'dmsovol', 'avol')
 
     # load labware
     tips = [
-        protocol.load_labware('opentrons_96_tiprack_300ul', s) for s in [7, 8]]
+        protocol.load_labware('opentrons_96_tiprack_20ul', s) for s in [7, 8]]
 
-    m300 = protocol.load_instrument('p300_multi_gen2', mnt300, tip_racks=tips)
+    m20 = protocol.load_instrument('p20_multi_gen2', mnt20, tip_racks=tips)
 
     rsvr = protocol.load_labware('nest_12_reservoir_15ml', '9')
 
-    plates = [
-        protocol.load_labware('spl_96_wellplate_200ul', s) for s in [1, 2, 3]
+    srcPlate = protocol.load_labware()
+    destPlate = protocol.load_labware()
+    finalPlates = [
+        protocol.load_labware('', s) for s in [1, 2, 3]
         ][:numPlates]
 
-    p1 = plates[0]
-
-    # Add dmsovol of DMSO to columns 6-10 (neglecting F-H in 10)
+    # Create variables
     dmso = rsvr['A1']
+    pbs = rsvr['A2']
 
-    m300.pick_up_tip()
+    # Add 10µL of PBS to columns 1-4 + A5, B5
+    m20.pick_up_tip()
 
-    for dest in p1.rows()[0][5:9]:
-        m300.transfer(dmsovol, dmso, dest, new_tip='never')
+    for dest in destPlate.rows()[0][:4]:
+        m20.transfer(10, pbs, dest, new_tip='never')
 
-    m300.return_tip()
+    m20.drop_tip()
 
-    m300.pick_up_tip(tips[0]['D1'])
-    m300.transfer(dmsovol, dmso, p1['A10'], new_tip='never')
-    m300.drop_tip(tips[0]['D1'])
+    m20.pick_up_tip(tips[0]['G2'])
+    m20.transfer(10, pbs, destPlate['A5'], new_tip='never')
+    m20.drop_tip()
 
-    # Transfer 33uL between columns
+    # Add 20µL of DMSO to columns 6-10 (neglecting F-H in 10)
 
-    for i in range(4):
-        m300.pick_up_tip()
-        m300.transfer(33, p1.rows()[0][i], p1.rows()[0][i+5], new_tip='never')
-        m300.mix(4, 67, p1.rows()[0][i+5])
-        m300.drop_tip()
+    m20.pick_up_tip()
 
-    m300.pick_up_tip(tips[0]['F6'])
-    m300.transfer(dmsovol, p1['A5'], p1['A10'], new_tip='never')
-    m300.mix(4, 67, p1['A10'])
-    m300.drop_tip()
+    for dest in destPlate.rows()[0][5:9]:
+        m20.transfer(20, dmso, dest, new_tip='never')
+
+    m20.drop_tip()
+
+    m20.pick_up_tip(tips[0]['E2'])
+    m20.transfer(dmsovol, dmso, destPlate['A10'], new_tip='never')
+    m20.drop_tip()
+
+    # Transfer 20uL from source to destination
+    for src, dest in zip([p.rows()[0][:4] for p in [srcPlate, destPlate]]):
+        m20.transfer(20, src, dest, mix_after=(4, 20))
+
+    m20.pick_up_tip(tips[0]['C2'])
+    m20.transfer(20, srcPlate['A5'], destPlate['A5'],
+                 mix_after=(4, 20), new_tip='never')
+    m20.drop_tip()
+
+    for src, dest in zip([p.rows()[0][5:9] for p in [srcPlate, destPlate]]):
+        m20.transfer(20, src, dest, mix_after=(4, 20))
+
+    m20.pick_up_tip(tips[0]['A2'])
+    m20.transfer(20, srcPlate['A5'], destPlate['A10'],
+                 mix_after=(4, 20), new_tip='never')
+    m20.drop_tip()
 
     for _ in range(6):
         protocol.set_rail_lights(not protocol.rail_lights_on)
@@ -58,14 +77,10 @@ def run(protocol):
     protocol.pause('Please manually add reagents. When ready, click RESUME.')
 
     # Transfer aliquots to destination plate
-    m300.starting_tip = tips[0]['A7']
-    wells = [plate.rows()[0] for plate in plates]
-
     for i in range(10):
-        m300.pick_up_tip()
-        m300.transfer(avol, wells[0][i], wells[1][i], new_tip='never')
-        if numPlates == 3:
-            m300.transfer(avol, wells[0][i], wells[2][i], new_tip='never')
-        m300.drop_tip()
+        m20.pick_up_tip()
+        for plate in finalPlates:
+            m20.aspirate(10, destPlate.rows()[0][i])
+            m20.dispense(10, plate.rows()[0][i])
 
     protocol.comment('\nProtocol complete!')
