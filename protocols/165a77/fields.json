@@ -24,6 +24,15 @@
     ]
   },
   {
+    "type": "dropDown",
+    "label": "Choose your labware (Patient Sample plate)",
+    "name": "labware_patient_samples",
+    "options": [
+      { "label": "Thermo KingFisher 200 ul 96 well plate (97002540)", "value": "kingfisher_96_wellplate_200ul" },
+      { "label": "Nunc 1 mL plate", "value": "nunc_96_wellplate_1000ul" }
+    ]
+  },
+  {
     "type": "float",
     "label": "Patient Sample Volume",
     "name": "patient_sample_vol",
@@ -40,5 +49,14 @@
     "label": "Patient Sample Count (up to 96)",
     "name": "patient_sample_count",
     "default": 96
+  },
+  {
+    "type": "dropDown",
+    "label": "Are No-Template Control Primers Included?",
+    "name": "include_ntc",
+    "options": [
+      { "label": "NTC Primers Not Included", "value": false },
+      { "label": "Yes NTC Primers are Included", "value": true }
+    ]
   }
 ]
