@@ -10,9 +10,10 @@ metadata = {
 
 def run(ctx):
 
-    [num_samp, asp_delay, mix_reps,
+    [num_samp, asp_delay, mix_reps, asp_height,
      p20_mount, m20_mount] = get_values(  # noqa: F821
-        "num_samp", "asp_delay", "mix_reps", "p20_mount", "m20_mount")
+        "num_samp", "asp_delay", "mix_reps", "asp_height",
+        "p20_mount", "m20_mount")
 
     if not 1 <= num_samp <= 96:
         raise Exception("Enter a sample number between 1-96")
@@ -34,10 +35,7 @@ def run(ctx):
     # load instrument
     p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tip_racks=tip_rack)
     m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tip_rack)
-    p20.well_bottom_clearance.aspirate = 2.5
-    p20.well_bottom_clearance.dispense = 2.5
-    m20.well_bottom_clearance.aspirate = 2.5
-    m20.well_bottom_clearance.dispense = 2.5
+
     # reagents, setup
     temp_mod.set_temperature(4)
     mastermix = reagent_plate.rows()[0][:2]
@@ -49,8 +47,6 @@ def run(ctx):
         m20.aspirate(15, mastermix[0] if i < 6 else mastermix[1])
         m20.dispense(15, col)
     m20.drop_tip()
-    ctx.comment('\n\n hello')
-    print(remain)
 
     p20.pick_up_tip()
     for mix, well in zip(reagent_plate.wells()[:remain]
@@ -66,7 +62,7 @@ def run(ctx):
     airgap = 5
     for s, d in zip(tubes[:num_samp], sample_plate.wells()):
         p20.pick_up_tip()
-        p20.aspirate(5, s)
+        p20.aspirate(5, s.bottom(z=asp_height))
         p20.air_gap(airgap)
         ctx.delay(seconds=asp_delay)
         p20.dispense(5+airgap, d)
