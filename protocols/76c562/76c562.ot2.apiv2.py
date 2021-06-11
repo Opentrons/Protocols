@@ -4,7 +4,7 @@ metadata = {
     'protocolName': 'Cherrypicking and Normalization',
     'author': 'Chaz <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.5'
+    'apiLevel': '2.10'
 }
 
 
