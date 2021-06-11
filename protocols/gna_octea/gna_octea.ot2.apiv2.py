@@ -9,9 +9,12 @@ metadata = {
 
 
 def run(protocol):
-    [mntMulti, mntSingle, numSamps] = get_values(  # noqa: F821
-     'mntMulti', 'mntSingle', 'numSamps')
+    # [mntMulti, mntSingle, numSamps] = get_values(  # noqa: F821
+    #  'mntMulti', 'mntSingle', 'numSamps')
 
+    mntMulti = 'left'
+    mntSingle = 'right'
+    numSamps = 8
     # load labware
     tips = [
         protocol.load_labware('opentrons_96_filtertiprack_200ul', '10')]
@@ -77,22 +80,53 @@ def run(protocol):
 
     m300.pick_up_tip()
     m300.transfer(300, hb1, sampsUTM[0].top(-2), new_tip='never')
-    m300.mix(5, 180, sampsUTM[0])
+
+    def deep_well_mix(reps, vol, loc):
+        vol -= 20
+        loc1 = loc.bottom().move(types.Point(x=1, y=0, z=1))
+        loc2 = loc.bottom().move(types.Point(x=1, y=0, z=4))
+        loc3 = loc.bottom().move(types.Point(x=-1, y=0, z=1))
+        loc4 = loc.bottom().move(types.Point(x=-1, y=0, z=4))
+        m300.aspirate(20, loc1)
+        for _ in range(reps-1):
+            m300.aspirate(vol, loc1)
+            m300.dispense(vol, loc4)
+            m300.aspirate(vol, loc3)
+            m300.dispense(vol, loc2)
+        m300.dispense(20, loc2)
+    # m300.mix(5, 180, sampsUTM[0])
+    deep_well_mix(4, 180, sampsUTM[0])
 
     for vol in [150, 150, 100]:
-        m300.transfer(vol, sampsHB1[0], sampsUTM[0], new_tip='never')
+        m300.transfer(
+            vol, sampsHB1[0], sampsUTM[0], new_tip='never', air_gap=20)
 
-    m300.mix(5, 180, sampsUTM[0])
+    # m300.mix(5, 180, sampsUTM[0])
+    deep_well_mix(4, 180, sampsUTM[0])
     m300.drop_tip()
 
     # Transfer 800ul (160 at a time) to temperature module
     tempDeck.await_temperature(90)
     m300.pick_up_tip()
-    m300.transfer(160, sampsUTM[0], tempSamps, new_tip='never')
+    m300.transfer(160, sampsUTM[0], tempSamps, new_tip='never', air_gap=20)
+
+    def set_default_rate(rate=92.86):
+        m300.flow_rate.aspirate = rate
+        m300.flow_rate.dispense = rate
+        m300.flow_rate.blow_out = rate
+
+    def temp_well_mix(rep, vol, loc, mix_rate=300):
+        m300.flow_rate.aspirate = mix_rate
+        m300.flow_rate.dispense = mix_rate
+        for _ in range(rep):
+            m300.aspirate(vol, loc.bottom(1))
+            m300.dispense(vol, loc.bottom(0.5))
+        set_default_rate()
 
     for well in tempSamps:
-        m300.mix(5, 90, well)
-    m300.move_to(well.top())
+        # m300.mix(5, 90, well)
+        temp_well_mix(5, 90, well)
+    m300.move_to(tempSamps[-1].top())
 
     # change temperature and incubate
 
@@ -101,8 +135,9 @@ def run(protocol):
     tempDeck.set_temperature(56)
 
     for well in tempSamps:
-        m300.mix(5, 90, well)
-    m300.move_to(well.top())
+        # m300.mix(5, 90, well)
+        temp_well_mix(5, 90, well)
+    m300.move_to(tempSamps[-1].top())
 
     protocol.delay(minutes=3)
 
@@ -110,10 +145,11 @@ def run(protocol):
 
     # Mix and transfer samples from temperature module to magdeck
     for well in tempSamps:
-        m300.mix(5, 90, well)
+        # m300.mix(5, 90, well)
+        temp_well_mix(5, 90, well)
 
     for src, dest in zip(tempSamps, magSamps):
-        m300.transfer(160, src, dest, new_tip='never')
+        m300.transfer(160, src, dest, new_tip='never', air_gap=20)
 
     m300.drop_tip()
 
@@ -124,7 +160,7 @@ def run(protocol):
     m300.flow_rate.aspirate = 20
 
     for src in magSamps:
-        m300.transfer(160, src, waste, new_tip='never')
+        m300.transfer(160, src, waste, new_tip='never', air_gap=20)
 
     magDeck.disengage()
 
@@ -146,7 +182,8 @@ def run(protocol):
     magLast = magSamps[-1]
 
     for well in magSamps[:-1]:
-        m300.transfer(40, well, magLast, mix_before=(5, 30), new_tip='never')
+        m300.transfer(
+            40, well, magLast, mix_before=(5, 30), new_tip='never', air_gap=20)
 
     m300.mix(5, 160, magLast)
     m300.move_to(magLast.top())
@@ -156,7 +193,7 @@ def run(protocol):
 
     m300.flow_rate.aspirate = 20
     for _ in range(2):
-        m300.transfer(100, magLast, waste, new_tip='never')
+        m300.transfer(100, magLast, waste, new_tip='never', air_gap=20)
 
     magDeck.disengage()
     m300.drop_tip()
