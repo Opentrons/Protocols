@@ -7,21 +7,22 @@ metadata = {
 
 
 def run(protocol):
-    [mnt20, numPlates, dmsovol, avol] = get_values(  # noqa: F821
-     'mnt300', 'numPlates', 'dmsovol', 'avol')
+    [mnt20, numPlates] = get_values(  # noqa: F821
+     'mnt20', 'numPlates')
 
     # load labware
     tips = [
-        protocol.load_labware('opentrons_96_tiprack_20ul', s) for s in [7, 8]]
+        protocol.load_labware('opentrons_96_tiprack_20ul', s) for s in [7, 10]]
 
     m20 = protocol.load_instrument('p20_multi_gen2', mnt20, tip_racks=tips)
 
-    rsvr = protocol.load_labware('nest_12_reservoir_15ml', '9')
+    rsvr = protocol.load_labware('nest_12_reservoir_15ml', '6')
 
-    srcPlate = protocol.load_labware()
-    destPlate = protocol.load_labware()
+    srcPlate = protocol.load_labware('thermofast_96_wellplate_200ul', '4')
+    destPlate = protocol.load_labware('thermofast_96_wellplate_200ul', '5')
     finalPlates = [
-        protocol.load_labware('', s) for s in [1, 2, 3]
+        protocol.load_labware(
+            'spl_96_wellplate_200ul_flat', s) for s in [1, 2, 3]
         ][:numPlates]
 
     # Create variables
@@ -50,7 +51,7 @@ def run(protocol):
     m20.drop_tip()
 
     m20.pick_up_tip(tips[0]['E2'])
-    m20.transfer(dmsovol, dmso, destPlate['A10'], new_tip='never')
+    m20.transfer(20, dmso, destPlate['A10'], new_tip='never')
     m20.drop_tip()
 
     # Transfer 20uL from source to destination
