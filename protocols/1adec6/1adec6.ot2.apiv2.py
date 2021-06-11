@@ -55,7 +55,7 @@ def run(protocol):
     m20.drop_tip()
 
     # Transfer 20uL from source to destination
-    for src, dest in zip([p.rows()[0][:4] for p in [srcPlate, destPlate]]):
+    for src, dest in zip(srcPlate.rows()[0][:4], destPlate.rows()[0][:4]):
         m20.transfer(20, src, dest, mix_after=(4, 20))
 
     m20.pick_up_tip(tips[0]['C2'])
@@ -63,7 +63,7 @@ def run(protocol):
                  mix_after=(4, 20), new_tip='never')
     m20.drop_tip()
 
-    for src, dest in zip([p.rows()[0][5:9] for p in [srcPlate, destPlate]]):
+    for src, dest in zip(srcPlate.rows()[0][5:9], destPlate.rows()[0][5:9]):
         m20.transfer(20, src, dest, mix_after=(4, 20))
 
     m20.pick_up_tip(tips[0]['A2'])
@@ -83,5 +83,6 @@ def run(protocol):
         for plate in finalPlates:
             m20.aspirate(10, destPlate.rows()[0][i])
             m20.dispense(10, plate.rows()[0][i])
+        m20.drop_tip()
 
     protocol.comment('\nProtocol complete!')
