@@ -9,10 +9,11 @@ def run(ctx):
 
     # bring in constant values from json string above
     [samp_col_counts, plate_count, labware_384_well_plate, n1_col, n2_col,
-     rp_col, ntc_col, primer_volume
+     rp_col, ntc_col, primer_volume, disposal_vol, include_ntc, include_multi
      ] = get_values(  # noqa: F821
       'samp_col_counts', 'plate_count', 'labware_384_well_plate', 'n1_col',
-      'n2_col', 'rp_col', 'ntc_col', 'primer_volume')
+      'n2_col', 'rp_col', 'ntc_col', 'primer_volume', 'disposal_vol',
+      'include_ntc', 'include_multi')
 
     ctx.set_rail_lights(True)
 
@@ -45,15 +46,38 @@ def run(ctx):
     plates = [ctx.load_labware(
      labware_384_well_plate, slot) for slot in available_slots[:plate_count]]
 
-    for mod, col, well in zip(
-     [0, 0, 1, 1], [n1_col, rp_col, n2_col, ntc_col], [0, 1, 0, 1]):
+    # optional single or multi dispenses
+    if include_multi:
+        multi = 2
+    else:
+        multi = 1
+
+    # define pipetting steps
+    def primer_transfer():
         p20m.pick_up_tip()
         for i, plate in enumerate(plates):
             col_count = int(col_counts[i])*2
+            vol_in_tip = 0
             for index, column in enumerate(plate.columns()[:col_count]):
                 if index % 2 == mod:
-                    p20m.aspirate(
-                     primer_volume,
-                     one_ml_plate.columns_by_name()[str(col)][0])
+                    if vol_in_tip < primer_volume:
+                        p20m.blow_out(
+                         one_ml_plate.columns_by_name()[str(col)][0].bottom())
+                        vol_in_tip = 0
+                        p20m.aspirate(
+                         (multi*primer_volume) + disposal_vol,
+                         one_ml_plate.columns_by_name()[str(col)][0])
+                        vol_in_tip += ((multi*primer_volume) + disposal_vol)
                     p20m.dispense(primer_volume, column[well])
+                    vol_in_tip -= primer_volume
         p20m.drop_tip()
+
+    # distribute primers (optionally skipping no-template control primer)
+    if include_ntc:
+        for mod, col, well in zip(
+         [0, 0, 1, 1], [n1_col, rp_col, n2_col, ntc_col], [0, 1, 0, 1]):
+            primer_transfer()
+    else:
+        for mod, col, well in zip(
+         [0, 0, 1], [n1_col, rp_col, n2_col], [0, 1, 0]):
+            primer_transfer()
