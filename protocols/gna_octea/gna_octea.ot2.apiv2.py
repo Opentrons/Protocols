@@ -9,12 +9,9 @@ metadata = {
 
 
 def run(protocol):
-    # [mntMulti, mntSingle, numSamps] = get_values(  # noqa: F821
-    #  'mntMulti', 'mntSingle', 'numSamps')
+    [mntMulti, mntSingle, numSamps] = get_values(  # noqa: F821
+     'mntMulti', 'mntSingle', 'numSamps')
 
-    mntMulti = 'left'
-    mntSingle = 'right'
-    numSamps = 8
     # load labware
     tips = [
         protocol.load_labware('opentrons_96_filtertiprack_200ul', '10')]
