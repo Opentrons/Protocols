@@ -14,6 +14,8 @@ This protocol is still a work in progress and will be updated.
 
 **Update (06/07/2021)**: This protocol has been updated per conversation and has several modifications (slight), such as, changing the distribution of reagent to multi-dispense and allowing the temperature module to heat up while pipetting occurs.
 
+**Update (06/10/2021)**: This protocol has been updated and now includes new mixing functions and incorporated air gaps.
+
 Explanation of complex parameters below:
 * **P300-Multi Mount**: Select which mount the [P300 Multi-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette) is attached to.
 * **P300-Single Mount**: Select which mount the [P300 Single-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette) is attached to.

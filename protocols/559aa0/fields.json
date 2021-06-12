@@ -88,5 +88,29 @@
     "label": "Primer Volume (per well of 384 well plate)",
     "name": "primer_volume",
     "default": 7.5
+  },
+  {
+    "type": "float",
+    "label": "Disposal Volume (if using multi-transfer option)",
+    "name": "disposal_vol",
+    "default": 0
+  },
+  {
+    "type": "dropDown",
+    "label": "Include No-Template Control Primer?",
+    "name": "include_ntc",
+    "options": [
+      { "label": "Skip No-Template Control Primer", "value": false },
+      { "label": "Include No-Template Control Primer", "value": true }
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Include 15 ul Multi-Dispenses?",
+    "name": "include_multi",
+    "options": [
+      { "label": "Perform 15 ul Multi-Dispenses", "value": true },
+      { "label": "Perform 7.5 ul Single-Dispenses", "value": false }
+    ]
   }
 ]
