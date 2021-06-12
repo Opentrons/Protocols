@@ -1,4 +1,4 @@
-# Small Molecule Library Prep
+# Small Molecule Library Prep (Updated)
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -8,69 +8,73 @@
 	* Assay
 
 ## Description
-This protocol is the first protocol of several that are involved in this protein quantification protocol.
+**Updated**
+This protocol has been updated based on feedback from the user.
 
-This protocol begins by adding 44µL of DMSO columns 6-10 of a 96-well plate (neglecting rows F-H in column 10).
-
-After the addition of DMSO to columns 6-10, 33µL of sample is transferred between columns on the plate.
-
-At this point, the user is prompted to manually add reagents before the protocol resumes and completes.
-
-Finally, the OT-2 will transfer user specified aliquots to destination plates.
-
-**Update (06/07/2021)**: This protocol has been updated and will no longer transfer the aliquots at the end from columns 11 and 12.
+This protocol now utilizes the [P20 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette) (instead of the P300), uses additional plates, and has modified liquid handling. The steps of this updated version can be found below.
 
 Explanation of complex parameters below:
-* **P300-Multi Mount**: Select which mount the P300-Multi Pipette is attached to.
+* **P20-Multi Mount**: Select which mount the P20-Multi Pipette is attached to.
 * **Number of Destination Plates**: Select the number of destination plates.
-* **DMSO Volume (µL)**: Specify the volume of DMSO that will be transferred in the first step.
-* **Aliquot Volume (µL)**: Specify the volume of the aliquots that will be transferred from the source plate to the destination plate(s).
 
 ---
 
 ### Labware
-* [Opentrons 300µL Tipracks](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
+* [Opentrons 20µL Tipracks](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-20ul-tips)
 * [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
 * SPL 96-Well Cell Culture Plates
+* Thermo-Fast 96-Well, Fully Skirted Plates
 
 ### Pipettes
-* [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)
+* [P20 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)
 
 ### Reagents
 * DMSO (Column 1 of 12-Well Reservoir)
+* PBS (Column 2 of 12-Well Reservoir)
 
 ---
 
 ### Deck Setup
-**Slot 1**: Sample Plate (SPL 96-Well Cell Culture Plates)</br>
+**Slot 1**: Aliquot Plate 1 (SPL 96-Well Cell Culture Plat)</br>
 </br>
-**Slot 2**: Aliquot Destination Plate 1 (SPL 96-Well Cell Culture Plates)</br>
+**Slot 2**: Aliquot Plate 2 (SPL 96-Well Cell Culture Plate)</br>
 </br>
-**Slot 3**: Aliquot Destination Plate 2 (SPL 96-Well Cell Culture Plates)</br>
+**Slot 3**: Aliquot Plate 3 (SPL 96-Well Cell Culture Plate)</br>
 </br>
-**Slot 7**: [Opentrons 300µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)</br>
+**Slot 4**: Sample Plate (Thermo-Fast 96-Well, Fully Skirted Plate)</br>
 </br>
-**Slot 8**: [Opentrons 300µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)</br>
+**Slot 5**: Destination Plate (Thermo-Fast 96-Well, Fully Skirted Plate)</br>
 </br>
-**Slot 9**: [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)</br>
+**Slot 6**: [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)</br>
+</br>
+**Slot 7**: [Opentrons 20µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-20ul-tips)</br>
+</br>
+**Slot 8**: [Opentrons 20µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-20ul-tips)</br>
 </br>
 
+
 ### Reagent Setup
-1. Load DMSO in `Column 1` of the [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
+1. Load DMSO in **Column 1** of the [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
+2. Load PBS in **Column 2** of the [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
 
 ---
 
 ### Protocol Steps
-1. The [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette) will pick up the first column of [Opentrons 300µL Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips) in Slot 7.
-2. The [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette) will transfer user-defined amount of DMSO (from `Column 1` of [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)) to columns 6-9 of the Sample Plate.
-3.  The [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette) will return the tips and pick up 5 tips from column 1.
-4. The [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette) will transfer user-defined amount of DMSO (from `Column 1` of [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)) to column 10, skipping rows F-H.
-5. The [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette) will return the tips to column 1.
-6. For `Columns 1-4` of the Sample Plate, the [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette) will pick up a column of tips, transfer 33µL of sample from the corresponding column to the column 5 columns over (ex. Column 1 --> Column 6), then return the tips.
-7. The above step will be replicated again, but only three tips will be picked up so the sample transfer only occurs between rows A-C as samples are transferred from `Column 5` to `Column 10`.
-8. The protocol will pause and the user will be prompted to manually add reagents. When ready, the user will click RESUME and the protocol will complete.
-9. For each column of the Sample Plate, the [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette) will pick up tips, transfer the specified aliquot volume from the column to the corresponding column in the destination plate(s), then return the tips.
-10. End of the protocol.
+1. Destination plate, [P20 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette): Add 10 µl PBS ([NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml), Row 2) into columns 1-4 rows A-H, column 5 rows A-B (will access new tips for last transfer).
+2. Destination plate, [P20 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette): Add 20 µl 66% DMSO ([NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml), Row 1) into columns 6-9 rows A-H, column 10 rows A-B (will access new tips for last transfer).
+3. Source plate, [P20 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette): Take 20 µl of column 1-4 rows A-H, column 5 rows A-B, and transfer into the destination plate in the same orientation (columns 1-4 rows A-H, column 5 rows A-B). Replace tips between columns.
+4. Destination plate, [P20 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette): Mix columns 1-4, 5A-B. pipette 20 µl up & down 4 times. Replace tips between columns.
+5. Destination plate, [P20 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette): Take 10 µl of column 1-4 rows A-H, column 5 rows A-B, and transfer into column 6-9 rows A-H, column 10 rows A-B (column 1->6, 2->7, 3->8, 4->9, 5->10). Replace tips between columns.
+6. Destination plate, [P20 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette): Mix columns 5-9, 10A-B. pipette 20 µl up & down 4 times. Replace tips between columns.
+7. Aliquot the library plate (columns 1-10, rows A-H) into 2-3 empty SPL 96-Well Cell Culture Plates: [P20 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette).
+- Take 10 µl of column A rows A-H of the prepared library plate and add to
+column A rows A-H in empty plate 1
+- Take 10 µl of column A rows A-H of the prepared library plate and add to
+column A rows A-H in empty plate 2 (if using)
+- Take 10 µl of column A rows A-H of the prepared library plate and add to
+column A rows A-H in empty plate 3 (if using)
+Replace tips and repeat these steps for columns 2-10 (Replace tips between columns)
+8. End of the protocol.
 
 ### Process
 1. Input your protocol parameters above.
