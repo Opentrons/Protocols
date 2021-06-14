@@ -12,6 +12,8 @@
 
 This protocol performs the normalization of samples by adjusting the concentration in Micronic 96 rack. Once normalized it will transfer nuclease-free water to the corresponding wells in a PCR plate and then transfer samples to the corresponding wells in the PCR plate.
 
+In this protocol, the ThermoFisher Nunc 96 Well Plate 2mL is used as the reservoir for water. You can define the volume of water placed in each well at the `Water Reservoir Volume per Well` parameter below. By default this value is 1500 uL. The robot will assume that each well it needs has a volume of 1500 uL and will keep track of how much water it has used per well before moving onto a new well. While, it keeps track of the volume per well, it will also adjust the height of how low the pipette moves to aspirate.
+
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
