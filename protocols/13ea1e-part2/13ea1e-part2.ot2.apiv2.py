@@ -1,6 +1,5 @@
 import math
 from opentrons import protocol_api
-from opentrons import types
 
 
 metadata = {
@@ -115,7 +114,7 @@ def run(ctx):
                 pip = p20
                 pick_up_20()
             tube_vol = 0
-            pip.aspirate(vol, tube.bottom(1.5))
+            pip.aspirate(vol, tube.bottom(z=1.5))
             if vol < 15:
                 pip.air_gap(airgap)
             pip.dispense(vol+airgap, mix_tubes)
@@ -148,8 +147,8 @@ def run(ctx):
         pip.flow_rate.aspirate = pip.flow_rate.aspirate/2
         pip.flow_rate.dispense = pip.flow_rate.dispense/2
         for _ in range(number_transfers):
-            pip.aspirate(300, source_tube.bottom(1.5))
-            pip.dispense(300, dest_tube.bottom(1.5))
+            pip.aspirate(300, source_tube.bottom(z=1.5))
+            pip.dispense(300, dest_tube.bottom(z=1.5))
             ctx.delay(seconds=5)
             pip.blow_out()
             pip.touch_tip()
@@ -162,8 +161,8 @@ def run(ctx):
             pip = p20
             if not pip.has_tip:
                 pick_up_20()
-        pip.aspirate(remainder, source_tube.bottom(1.5))
-        pip.dispense(remainder, dest_tube.bottom(1.5))
+        pip.aspirate(remainder, source_tube.bottom(z=1.5))
+        pip.dispense(remainder, dest_tube.bottom(z=1.5))
         tube_vol += remainder
         mastermix_tube_vols[i] += tube_vol
         pip.flow_rate.aspirate = pip.flow_rate.aspirate*2
@@ -178,7 +177,7 @@ def run(ctx):
     for tube in mastermix_tube:
         p300.mix(mix_reps,
                  total_mix_vol if total_mix_vol < 270 else 270,
-                 tube.bottom(1.5))
+                 tube.bottom(z=1.5))
     p300.drop_tip()
 
     # plate mapping
@@ -210,14 +209,14 @@ def run(ctx):
     # distribute mastermix
     ctx.comment('Distributing Mastermix')
     pick_up_20()
-    p20.aspirate(7, mastermix_tube[0].bottom(1.5))
+    p20.aspirate(7, mastermix_tube[0].bottom(z=1.5))
     p20.air_gap(airgap)
     p20.dispense(7+airgap, pcr_plate_384.wells()[-1])
 
     for i, plate in enumerate(sample_plates):
         for source, well in zip(mastermix_tube*num_samp, plates[i]):
 
-            p20.aspirate(7, source.bottom(1.5))
+            p20.aspirate(7, source.bottom(z=1.5))
             p20.dispense(7+airgap, well)
     p20.drop_tip()
     ctx.comment('\n\n\n\n\n\n')
@@ -236,7 +235,7 @@ def run(ctx):
     for i, plate in enumerate(sample_plates):
         for s, d in zip(sample_wells, plates[i]):
             pick_up_20()
-            p20.aspirate(5.5, s.bottom(-2.75))
+            p20.aspirate(5.5, s.bottom(z=-2.75))
             p20.air_gap(airgap)
             p20.dispense(5.5+airgap, d)
             p20.mix(mix_reps, 12.5, d)
