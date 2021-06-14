@@ -18,7 +18,7 @@ The protocol is broken down into 3 main parts:
 * Sample added to 384 well plate.  
 * Positive control added to plate.
 
-Note: For all transfers between tubes to well plate, transfers will always iterate over all tubes in the source. For example, mastermix will be transferred from tube C1 to plate, C2 to plate, C3 to plate, C4 to plate, C5 to plate, C6 to plate, C1 to plate, etc. Consequently, all reagent volumes should be split equally into respective tubes as seen in the deck layout.
+Note: The protocol will prompt the user to put the specified amount of volume for all 3 mastermix reagents in the specified number of tubes at the beginning of the protocol.
 
 Explanation of complex parameters below:
 * `Number of samples`: Specify the number of samples (1-96) that the sample block, elution buffer block, ethanol block, NPW3 block, and NPW4 block will be filled.

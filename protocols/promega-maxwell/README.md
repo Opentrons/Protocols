@@ -8,7 +8,7 @@
     * Viral RNA
 
 ## Description
-This protocol performs viral RNA isolation on up to 96 samples using the [Promega Maxwell® HT Viral TNA Kit](https://www.promega.com/products/nucleic-acid-extraction/viral-rna-extraction-viral-dna-extraction/maxwell-ht-viral-tna-kit/?catNum=AX2340) and workflow.
+This protocol performs viral RNA isolation on up to 96 samples using the [Promega Maxwell® HT Viral TNA Kit](https://www.promega.com/products/nucleic-acid-extraction/viral-rna-extraction-viral-dna-extraction/maxwell-ht-viral-tna-kit/?catNum=AX2340) and [workflow](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/promega-maxwell-extraction/viral-rna-universal-transport-medium-maxwell-ht-viral-tna-kit-96-well-manual-format.pdf).
 
 The protocol begins at the stage of adding binding beads to lysed samples loaded on the magnetic module in a NEST 96-deepwell plate. For reagent layout in the 2 12-channel reservoirs used in this protocol, please see "Setup" below.
 
@@ -31,7 +31,7 @@ For sample traceability and consistency, samples are mapped directly from the ma
 * [Opentrons P300 8-Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)
 
 ### Reagents
-* [Beckman Coulter RNAdvance Viral kit](https://www.beckman.com/reagents/genomic/rna-isolation/viral/c63510)
+* [Promega Maxwell® HT Viral TNA kit](https://www.promega.com/products/nucleic-acid-extraction/viral-rna-extraction-viral-dna-extraction/maxwell-ht-viral-tna-kit/?catNum=AX2340)
 
 ---
 

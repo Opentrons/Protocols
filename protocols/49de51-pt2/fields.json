@@ -33,5 +33,14 @@
       {"label": "PCR Strip in Aluminum Block; Slot 10; Column 1", "value": "opentrons_96_aluminumblock_generic_pcr_strip_200ul"},
       {"label": "NEST 96-Deep Well Plate; Slot 10; Column 1", "value": "nest_96_wellplate_2ml_deep"}
     ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Park Tips",
+    "name": "park_tips",
+    "options": [
+      {"label": "No", "value": 0},
+      {"label": "Yes", "value": 1}
+    ]
   }
 ]

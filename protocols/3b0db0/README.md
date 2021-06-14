@@ -13,6 +13,8 @@ This protocol distributes reliance One Step Mulitplex RT-qPCR supermix to each w
 Explanation of complex parameters below:
 * `Number of columns`: Specify the number of columns that the OT-2 will distribute mastermix to on the 96 well plate (1-12).
 * `Delay after aspiration`: Specify the number of seconds after aspirating for the pipette to pause to achieve full volumes.
+* `Mix repetitions`: Specify the number of times to mix the mastermix and saliva.
+* `Tube Aspiration Height`: Specify the aspiration height from the bottom of the tube (in mm) to aspirate from when transferring saliva in the final step.
 * `P20 Multi GEN2 Mount`: Specify the mount (left or right) of the P20 Multi GEN2 Pipette.
 * `P20 Single GEN2 Mount`: Specify the mount (left or right) of the P20 single GEN2 Pipette.
 
@@ -37,13 +39,13 @@ Explanation of complex parameters below:
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/3b0db0/Screen+Shot+2021-05-18+at+8.41.43+AM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/3b0db0/Screen+Shot+2021-06-03+at+11.14.47+AM.png)
 
 ### Reagent Setup
 
 PCR tube strips should be placed in the first two columns of the well plate on slot 4. The first PCR tube strip (column 1 on slot 4) is responsible for providing mastermix to 6 columns of the well plate on slot 1. Columns 7-12 of the well plate on slot 1 are populated with the PCR strip in column 2 on slot 4.
 
-Saliva tube samples should be placed by column (A1, B1, etc.) starting from tube rack 1 on slot 2. The OT-2 will do 1-to-1 tube to well transfers by column, with one tube rack completely picked before moving on (to slots 5, 8, and 11).
+Saliva tube samples should be placed by column (A1, B1, etc.) starting from tube rack 1 on slot 2. The OT-2 will do 1-to-1 tube to well transfers by column, with one tube rack completely picked before moving on (tube racks move in order from slot 5 to slot 11).
 
 
 ---

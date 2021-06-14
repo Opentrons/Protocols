@@ -1,15 +1,27 @@
 [
   {
     "type": "int",
-    "label": "Number of columns",
-    "name": "num_col",
-    "default": 12
+    "label": "Number of samples",
+    "name": "num_samp",
+    "default": 96
   },
   {
   "type": "float",
   "label": "Delay after aspiration (in seconds)",
   "name": "asp_delay",
   "default": 3
+  },
+  {
+    "type": "int",
+    "label": "Mix repetitions",
+    "name": "mix_reps",
+    "default": 5
+  },
+  {
+    "type": "int",
+    "label": "Tube Aspiration Height (mm)",
+    "name": "asp_height",
+    "default": 12
   },
   {
     "type": "dropDown",

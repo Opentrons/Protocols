@@ -25,11 +25,11 @@
   },
   {
     "type": "dropDown",
-    "label": "Labware Selection for DNA Sample Plate",
+    "label": "Labware Selection DNA Sample Plate",
     "name": "labware_dna_sample_plate",
     "options": [
-      { "label": "ThermoFisher KingFisher 96 PCR Plate", "value": "kingfisher_96_wellplate_200ul" },
-      { "label": "ThermoFisher Armadillo 96 PCR Plate", "value": "armadillo_96_pcr_plate" }
+      { "label": "KingFisher 96 PCR Plate", "value": "kingfisher_96_wellplate_200ul" },
+      { "label": "Armadillo 96 PCR Plate", "value": "armadillo_96_pcr_plate" }
     ]
   },
   {

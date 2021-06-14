@@ -25,6 +25,8 @@ def run(ctx):
 
     # Wells
     sample_cols = plate.rows()[0]
+    sample_cols1 = plate.rows()[0][:6]
+    sample_cols2 = plate.rows()[0][6:12]
     pbs_cols = [plate.rows()[0][i] for i in range(12) if i not in [0, 6]]
 
     # Protocol Steps
@@ -35,17 +37,38 @@ def run(ctx):
     m300.drop_tip()
 
     # Dilution (Columns 1-6)
-    for i, col in enumerate(sample_cols[:5]):
+    # for i, col in enumerate(sample_cols[:5]):
+    #     m300.pick_up_tip()
+    #     m300.mix(6, 200, col)
+    #     m300.transfer(20, col, sample_cols[i+1], mix_after=(10, 20),
+    #                   new_tip='never')
+    #     m300.drop_tip()
+
+    # # Dilution (Columns 7-12)
+    # for i, col in enumerate(sample_cols[6:11], 6):
+    #     m300.pick_up_tip()
+    #     m300.mix(6, 200, col)
+    #     m300.transfer(20, col, sample_cols[i+1], mix_after=(10, 20),
+    #                   new_tip='never')
+    #     m300.drop_tip()
+
+    p1 = sample_cols[:5]
+    p2 = sample_cols[6:11]
+
+    # Alternating Dilution
+    for i, (col1, col2) in enumerate(zip(p1, p2)):
         m300.pick_up_tip()
-        m300.mix(6, 200, col)
-        m300.transfer(20, col, sample_cols[i+1], mix_after=(10, 20),
+        m300.mix(6, 200, col1)
+        m300.transfer(20, col1, sample_cols1[i+1], mix_after=(10, 20),
+                      touch_tip=True, blow_out=True,
+                      blowout_location='destination well',
                       new_tip='never')
         m300.drop_tip()
 
-    # Dilution (Columns 7-12)
-    for i, col in enumerate(sample_cols[6:11], 6):
         m300.pick_up_tip()
-        m300.mix(6, 200, col)
-        m300.transfer(20, col, sample_cols[i+1], mix_after=(10, 20),
+        m300.mix(6, 200, col2)
+        m300.transfer(20, col2, sample_cols2[i+1], mix_after=(10, 20),
+                      touch_tip=True, blow_out=True,
+                      blowout_location='destination well',
                       new_tip='never')
         m300.drop_tip()

@@ -144,6 +144,7 @@ def run(ctx):
             if not pip.has_tip:
                 pick_up_20()
         tube_vol = 0
+
         pip.flow_rate.aspirate = pip.flow_rate.aspirate/2
         pip.flow_rate.dispense = pip.flow_rate.dispense/2
         for _ in range(number_transfers):
@@ -152,21 +153,23 @@ def run(ctx):
             ctx.delay(seconds=5)
             pip.blow_out()
             pip.touch_tip()
-            tube_vol += 300
-        if remainder > 20:
-            pip = p300
-            if not pip.has_tip:
-                pick_up_300()
-        else:
-            pip = p20
-            if not pip.has_tip:
-                pick_up_20()
+
+        for _ in range(number_transfers):
+            pip.aspirate(300, source_tube)
+            pip.dispense(300, dest_tube)
+
         pip.aspirate(remainder, source_tube.bottom(z=1.5))
         pip.dispense(remainder, dest_tube.bottom(z=1.5))
         tube_vol += remainder
         mastermix_tube_vols[i] += tube_vol
         pip.flow_rate.aspirate = pip.flow_rate.aspirate*2
         pip.flow_rate.dispense = pip.flow_rate.dispense*2
+
+        pip.aspirate(remainder, source_tube)
+        pip.dispense(remainder, dest_tube)
+        tube_vol += remainder
+        mastermix_tube_vols[i] += tube_vol
+
 
     if p20.has_tip:
         p20.drop_tip()
@@ -178,6 +181,7 @@ def run(ctx):
         p300.mix(mix_reps,
                  total_mix_vol if total_mix_vol < 270 else 270,
                  tube.bottom(z=1.5))
+
     p300.drop_tip()
 
     # plate mapping

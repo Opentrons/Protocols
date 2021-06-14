@@ -24,31 +24,39 @@ def run(ctx):
 
     # load labware
     plate = ctx.load_labware('generic_216_wellplate_85ul_flat', '1')
-    reservoir = ctx.load_labware('nest_1_reservoir_195ml', '6')
-    tiprack = ctx.load_labware('opentrons_96_tiprack_300ul', '9')
+    reservoir = ctx.load_labware('nest_1_reservoir_195ml', '9')
+    tiprack = ctx.load_labware('opentrons_96_tiprack_300ul', '6')
 
     # load instruments
-    p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
+    p300 = ctx.load_instrument('p300_multi_gen2', p300_mount,
                                tip_racks=[tiprack])
 
     # protocol
     p300.flow_rate.dispense = asp_rate
     p300.flow_rate.dispense = disp_rate
-    chunks = [plate.wells()[i:i+3] for i in range(
-              0, len(plate.wells()), 3)][:math.ceil(num_samp/3)]
-    if num_samp % 3 == 1:
-        chunks[-1].pop()
-        chunks[-1].pop()
-    elif num_samp % 3 == 2:
-        chunks[-1].pop()
+    num_transfers = math.floor(num_samp/4)
+    plate_map = [well for well in plate.wells()[::4]][:num_transfers]
+    remainder = num_samp % 4 if num_samp > 4 else 0
 
     p300.pick_up_tip()
-    for chunk in chunks:
-        p300.aspirate(disp_vol*3+20, reservoir.wells()[0])  # aspirate extra
+    for well in plate_map:
+        p300.aspirate(disp_vol+20, reservoir.wells()[0])  # aspirate extra
         ctx.delay(seconds=asp_delay_time)
-        for well in chunk:
+        p300.dispense(disp_vol, well.top(height_above_cartridge))
+        ctx.delay(seconds=disp_delay_time)
+        p300.dispense(20, reservoir.wells()[0])
+        p300.blow_out(reservoir.wells()[0])
+        ctx.comment('\n')
+    p300.return_tip()
+
+    if remainder != 0:
+        p300.pick_up_tip(tiprack.wells()[-1])
+        for well in plate.wells()[num_samp-remainder:num_samp]:
+            p300.aspirate(disp_vol+20, reservoir.wells()[0])  # aspirate extra
+            ctx.delay(seconds=asp_delay_time)
             p300.dispense(disp_vol, well.top(height_above_cartridge))
             ctx.delay(seconds=disp_delay_time)
-        p300.dispense(20, reservoir.wells()[0])
-    p300.blow_out(reservoir.wells()[0])
-    p300.drop_tip()
+            p300.dispense(20, reservoir.wells()[0])
+            p300.blow_out(reservoir.wells()[0])
+            ctx.comment('\n')
+        p300.return_tip()
