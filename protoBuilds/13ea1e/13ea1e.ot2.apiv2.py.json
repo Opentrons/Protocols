@@ -1,5 +1,5 @@
 {
-    "content": "metadata = {\n    'protodestName': 'Extraction Prep with Kingfisher Flex Extractor',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protodest Request',\n    'apiLevel': '2.7'\n}\n\n\ndef run(ctx):\n\n    [num_samp, mix_reps, p300_mount, p1000_mount] = get_values(  # noqa: F821\n        \"num_samp\", \"mix_reps\", \"p300_mount\", \"p1000_mount\")\n\n    if not 0 <= num_samp <= 96:\n        raise Exception(\"Enter a sample number between 1-96\")\n\n    # load labware\n    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '1')\n    reservoir2 = ctx.load_labware('nest_12_reservoir_15ml', '2')\n    npw4_block = ctx.load_labware('nest_96_wellplate_2200ul_flat', '3')\n    sample_block = ctx.load_labware('nest_96_wellplate_2200ul_flat', '4')\n    elution_block = ctx.load_labware('nest_96_wellplate_2200ul_flat', '5')\n    ethanol_block = ctx.load_labware('nest_96_wellplate_2200ul_flat', '6')\n    npw3_block = ctx.load_labware('nest_96_wellplate_2200ul_flat', '7')\n\n    tiprack300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)\n                  for slot in ['9', '8']]\n    tiprack1000 = [ctx.load_labware('opentrons_96_tiprack_1000ul', '10')]\n    tuberack = ctx.load_labware(\n            'opentrons_24_tuberack_1500ul', '11')\n\n    # load instrument\n    p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,\n                                tip_racks=tiprack1000)\n    p300 = ctx.load_instrument('p300_multi_gen2', p300_mount,\n                               tip_racks=tiprack300)\n\n    num_channels_per_pickup = 1  # (only pickup tips on front-most channel)\n    tips_ordered = [\n        tip for rack in tiprack300\n        for row in rack.rows()[\n         len(rack.rows())-num_channels_per_pickup::-1*num_channels_per_pickup]\n        for tip in row]\n    tip_count = 0\n\n    def pick_up(pip):\n        nonlocal tip_count\n        pip.pick_up_tip(tips_ordered[tip_count])\n        tip_count += 1\n\n    # reagents\n    mag_beads = reservoir.rows()[0][:4]\n    ethanol = reservoir.rows()[0][4:8]\n    npw3 = reservoir.rows()[0][8:12]\n    npw4 = reservoir2.rows()[0][:4]\n\n    proteinase_k = tuberack.rows()[0][:2]\n    ntc = tuberack.rows()[1][0]\n    hsc = tuberack.rows()[2][0]\n    elution_buffer = tuberack.rows()[3][:4]\n\n    # add controls\n    p1000.pick_up_tip()\n    p1000.transfer(400, ntc, sample_block.wells()[0], new_tip='never')\n    p1000.drop_tip()\n\n    p1000.pick_up_tip()\n    p1000.transfer(400, hsc, sample_block.wells()[1], new_tip='never')\n    p1000.drop_tip()\n    ctx.comment('\\n\\n\\n\\n\\n')\n\n    # add proteinase k and incubate for 15 minutes\n    for s, d in zip(proteinase_k*num_samp, sample_block.wells()[:num_samp]):\n        pick_up(p300)\n        p300.aspirate(24, s)\n        p300.dispense(24, d)\n        p300.mix(mix_reps, 300, d)\n        p300.drop_tip()\n    ctx.delay(minutes=15)\n    ctx.comment('\\n\\n\\n\\n\\n')\n\n    # add magnetic beads\n    p1000.pick_up_tip()\n    for mag_well, dest in zip(mag_beads*num_samp,\n                              sample_block.wells()[:num_samp]):\n        p1000.mix(5, 1000, mag_well)\n        p1000.transfer(595, mag_well, dest.top(), new_tip='never')\n    p1000.drop_tip()\n    ctx.comment('\\n\\n\\n\\n\\n')\n\n    # make npw3, npw4 and ethanol npw3_block\n    # ethanol\n    p1000.pick_up_tip()\n    for ethanol_well, dest in zip(ethanol*num_samp,\n                                  ethanol_block.wells()[:num_samp]):\n        p1000.transfer(600, ethanol_well, dest.top(), new_tip='never')\n    p1000.drop_tip()\n    ctx.comment('\\n\\n\\n\\n\\n')\n\n    # npw3\n    p1000.pick_up_tip()\n    for npw3_well, dest in zip(npw3*num_samp,\n                               npw3_block.wells()[:num_samp]):\n        p1000.transfer(600, npw3_well, dest.top(), new_tip='never')\n    p1000.drop_tip()\n    ctx.comment('\\n\\n\\n\\n\\n')\n\n    # npw4\n    p1000.pick_up_tip()\n    for npw4_well, dest in zip(npw4*num_samp, npw4_block.wells()[:num_samp]):\n        p1000.transfer(600, npw4_well, dest.top(), new_tip='never')\n    p1000.drop_tip()\n\n    # elution buffer\n    pick_up(p300)\n    for elution_tubes, elution_well in zip(elution_buffer*num_samp,\n                                           elution_block.wells()[:num_samp]):\n        p300.aspirate(50, elution_tubes)\n        p300.dispense(50, elution_well.top())\n    p300.drop_tip()\n",
+    "content": "metadata = {\n    'protodestName': 'Extraction Prep with Kingfisher Flex Extractor',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protodest Request',\n    'apiLevel': '2.7'\n}\n\n\ndef run(ctx):\n\n    [num_samp, mix_reps, p300_mount, p1000_mount] = get_values(  # noqa: F821\n        \"num_samp\", \"mix_reps\", \"p300_mount\", \"p1000_mount\")\n\n    if not 0 <= num_samp <= 96:\n        raise Exception(\"Enter a sample number between 1-96\")\n\n    # load labware\n    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '1')\n    reservoir2 = ctx.load_labware('nest_12_reservoir_15ml', '2')\n    npw4_block = ctx.load_labware('nest_96_wellplate_2ml_deep', '3')\n    sample_block = ctx.load_labware('nest_96_wellplate_2ml_deep', '4')\n    elution_block = ctx.load_labware('nest_96_wellplate_2ml_deep', '5')\n    ethanol_block = ctx.load_labware('nest_96_wellplate_2ml_deep', '6')\n    npw3_block = ctx.load_labware('nest_96_wellplate_2ml_deep', '7')\n\n    tiprack300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)\n                  for slot in ['9', '8']]\n    tiprack1000 = [ctx.load_labware('opentrons_96_tiprack_1000ul', '10')]\n    tuberack = ctx.load_labware(\n            'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '11')\n\n    # load instrument\n    p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,\n                                tip_racks=tiprack1000)\n    p300 = ctx.load_instrument('p300_multi_gen2', p300_mount,\n                               tip_racks=tiprack300)\n\n    num_channels_per_pickup = 1  # (only pickup tips on front-most channel)\n    tips_ordered = [\n        tip for rack in tiprack300\n        for row in rack.rows()[\n         len(rack.rows())-num_channels_per_pickup::-1*num_channels_per_pickup]\n        for tip in row]\n    tip_count = 0\n\n    def pick_up(pip):\n        nonlocal tip_count\n        pip.pick_up_tip(tips_ordered[tip_count])\n        tip_count += 1\n\n    # reagents\n    mag_beads = reservoir.rows()[0][:4]\n    ethanol = reservoir.rows()[0][4:8]\n    npw3 = reservoir.rows()[0][8:12]\n    npw4 = reservoir2.rows()[0][:4]\n\n    proteinase_k = tuberack.rows()[0][:2]\n    ntc = tuberack.rows()[1][0]\n    hsc = tuberack.rows()[2][0]\n    elution_buffer = tuberack.rows()[3][:4]\n\n    # add controls\n    airgap = 100\n    p1000.pick_up_tip()\n    p1000.aspirate(400, ntc)\n    p1000.air_gap(airgap)\n    p1000.dispense(400+airgap, sample_block.wells()[0])\n    p1000.blow_out()\n    p1000.drop_tip()\n\n    p1000.pick_up_tip()\n    p1000.aspirate(400, hsc)\n    p1000.air_gap(airgap)\n    p1000.dispense(400+airgap, sample_block.wells()[1])\n    p1000.blow_out()\n    p1000.drop_tip()\n    ctx.comment('\\n\\n\\n\\n\\n')\n\n    # add proteinase k and incubate for 15 minutes\n    airgap = 20\n    for s, d in zip(proteinase_k*num_samp, sample_block.wells()[:num_samp]):\n        pick_up(p300)\n        p300.aspirate(24, s)\n        p300.air_gap(airgap)\n        p300.dispense(24+airgap, d)\n        p300.blow_out()\n        p300.mix(mix_reps, 300, d)\n        p300.drop_tip()\n    ctx.delay(minutes=15)\n    ctx.comment('\\n\\n\\n\\n\\n')\n\n    # add magnetic beads\n    airgap = 100\n    p1000.pick_up_tip()\n    for mag_well, dest in zip(mag_beads*num_samp,\n                              sample_block.wells()[:num_samp]):\n        p1000.mix(5, 1000, mag_well)\n        p1000.aspirate(595, mag_well)\n        p1000.air_gap(airgap)\n        p1000.dispense(595+airgap, dest.top())\n        p1000.blow_out()\n    p1000.drop_tip()\n    ctx.comment('\\n\\n\\n\\n\\n')\n\n    # make npw3, npw4 and ethanol npw3_block\n    # ethanol\n    p1000.pick_up_tip()\n    for ethanol_well, dest in zip(ethanol*num_samp,\n                                  ethanol_block.wells()[:num_samp]):\n        p1000.aspirate(600, ethanol_well)\n        p1000.air_gap(airgap)\n        p1000.dispense(600+airgap, dest.top())\n        p1000.blow_out()\n    p1000.drop_tip()\n    ctx.comment('\\n\\n\\n\\n\\n')\n\n    # npw3\n    p1000.pick_up_tip()\n    for npw3_well, dest in zip(npw3*num_samp,\n                               npw3_block.wells()[:num_samp]):\n        p1000.aspirate(600, npw3_well)\n        p1000.air_gap(airgap)\n        p1000.dispense(600+airgap, dest.top())\n        p1000.blow_out()\n    p1000.drop_tip()\n    ctx.comment('\\n\\n\\n\\n\\n')\n\n    # npw4\n    p1000.pick_up_tip()\n    for npw4_well, dest in zip(npw4*num_samp, npw4_block.wells()[:num_samp]):\n        p1000.aspirate(600, npw4_well)\n        p1000.air_gap(airgap)\n        p1000.dispense(600+airgap, dest.top())\n        p1000.blow_out()\n    p1000.drop_tip()\n\n    # elution buffer\n    airgap = 25\n    pick_up(p300)\n    for elution_tubes, elution_well in zip(elution_buffer*num_samp,\n                                           elution_block.wells()[:num_samp]):\n        p300.aspirate(50, elution_tubes)\n        p300.air_gap(airgap)\n        p300.dispense(50, elution_well.top())\n        p300.blow_out()\n    p300.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -1611,34 +1611,34 @@
             "type": "nest_12_reservoir_15ml"
         },
         {
-            "name": "Nest 2.2mL 96 well plate on 3",
+            "name": "NEST 96 Deepwell Plate 2mL on 3",
             "share": false,
             "slot": "3",
-            "type": "nest_96_wellplate_2200ul_flat"
+            "type": "nest_96_wellplate_2ml_deep"
         },
         {
-            "name": "Nest 2.2mL 96 well plate on 4",
+            "name": "NEST 96 Deepwell Plate 2mL on 4",
             "share": false,
             "slot": "4",
-            "type": "nest_96_wellplate_2200ul_flat"
+            "type": "nest_96_wellplate_2ml_deep"
         },
         {
-            "name": "Nest 2.2mL 96 well plate on 5",
+            "name": "NEST 96 Deepwell Plate 2mL on 5",
             "share": false,
             "slot": "5",
-            "type": "nest_96_wellplate_2200ul_flat"
+            "type": "nest_96_wellplate_2ml_deep"
         },
         {
-            "name": "Nest 2.2mL 96 well plate on 6",
+            "name": "NEST 96 Deepwell Plate 2mL on 6",
             "share": false,
             "slot": "6",
-            "type": "nest_96_wellplate_2200ul_flat"
+            "type": "nest_96_wellplate_2ml_deep"
         },
         {
-            "name": "Nest 2.2mL 96 well plate on 7",
+            "name": "NEST 96 Deepwell Plate 2mL on 7",
             "share": false,
             "slot": "7",
-            "type": "nest_96_wellplate_2200ul_flat"
+            "type": "nest_96_wellplate_2ml_deep"
         },
         {
             "name": "Opentrons 96 Tip Rack 300 \u00b5L on 8",
@@ -1659,10 +1659,10 @@
             "type": "opentrons_96_tiprack_1000ul"
         },
         {
-            "name": "Opentrons 24 Tube Rack 1500 \u00b5L on 11",
+            "name": "Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap on 11",
             "share": false,
             "slot": "11",
-            "type": "opentrons_24_tuberack_1500ul"
+            "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
         },
         {
             "name": "Opentrons Fixed Trash on 12",
