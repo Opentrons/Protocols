@@ -17,17 +17,17 @@ def run(ctx):
     # load labware
     reservoir = ctx.load_labware('nest_12_reservoir_15ml', '1')
     reservoir2 = ctx.load_labware('nest_12_reservoir_15ml', '2')
-    npw4_block = ctx.load_labware('nest_96_wellplate_2200ul_flat', '3')
-    sample_block = ctx.load_labware('nest_96_wellplate_2200ul_flat', '4')
-    elution_block = ctx.load_labware('nest_96_wellplate_2200ul_flat', '5')
-    ethanol_block = ctx.load_labware('nest_96_wellplate_2200ul_flat', '6')
-    npw3_block = ctx.load_labware('nest_96_wellplate_2200ul_flat', '7')
+    npw4_block = ctx.load_labware('nest_96_wellplate_2ml_deep', '3')
+    sample_block = ctx.load_labware('nest_96_wellplate_2ml_deep', '4')
+    elution_block = ctx.load_labware('nest_96_wellplate_2ml_deep', '5')
+    ethanol_block = ctx.load_labware('nest_96_wellplate_2ml_deep', '6')
+    npw3_block = ctx.load_labware('nest_96_wellplate_2ml_deep', '7')
 
     tiprack300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
                   for slot in ['9', '8']]
     tiprack1000 = [ctx.load_labware('opentrons_96_tiprack_1000ul', '10')]
     tuberack = ctx.load_labware(
-            'opentrons_24_tuberack_1500ul', '11')
+            'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '11')
 
     # load instrument
     p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,
@@ -60,31 +60,45 @@ def run(ctx):
     elution_buffer = tuberack.rows()[3][:4]
 
     # add controls
+    airgap = 100
     p1000.pick_up_tip()
-    p1000.transfer(400, ntc, sample_block.wells()[0], new_tip='never')
+    p1000.aspirate(400, ntc)
+    p1000.air_gap(airgap)
+    p1000.dispense(400+airgap, sample_block.wells()[0])
+    p1000.blow_out()
     p1000.drop_tip()
 
     p1000.pick_up_tip()
-    p1000.transfer(400, hsc, sample_block.wells()[1], new_tip='never')
+    p1000.aspirate(400, hsc)
+    p1000.air_gap(airgap)
+    p1000.dispense(400+airgap, sample_block.wells()[1])
+    p1000.blow_out()
     p1000.drop_tip()
     ctx.comment('\n\n\n\n\n')
 
     # add proteinase k and incubate for 15 minutes
+    airgap = 20
     for s, d in zip(proteinase_k*num_samp, sample_block.wells()[:num_samp]):
         pick_up(p300)
         p300.aspirate(24, s)
-        p300.dispense(24, d)
+        p300.air_gap(airgap)
+        p300.dispense(24+airgap, d)
+        p300.blow_out()
         p300.mix(mix_reps, 300, d)
         p300.drop_tip()
     ctx.delay(minutes=15)
     ctx.comment('\n\n\n\n\n')
 
     # add magnetic beads
+    airgap = 100
     p1000.pick_up_tip()
     for mag_well, dest in zip(mag_beads*num_samp,
                               sample_block.wells()[:num_samp]):
         p1000.mix(5, 1000, mag_well)
-        p1000.transfer(595, mag_well, dest.top(), new_tip='never')
+        p1000.aspirate(595, mag_well)
+        p1000.air_gap(airgap)
+        p1000.dispense(595+airgap, dest.top())
+        p1000.blow_out()
     p1000.drop_tip()
     ctx.comment('\n\n\n\n\n')
 
@@ -93,7 +107,10 @@ def run(ctx):
     p1000.pick_up_tip()
     for ethanol_well, dest in zip(ethanol*num_samp,
                                   ethanol_block.wells()[:num_samp]):
-        p1000.transfer(600, ethanol_well, dest.top(), new_tip='never')
+        p1000.aspirate(600, ethanol_well)
+        p1000.air_gap(airgap)
+        p1000.dispense(600+airgap, dest.top())
+        p1000.blow_out()
     p1000.drop_tip()
     ctx.comment('\n\n\n\n\n')
 
@@ -101,20 +118,29 @@ def run(ctx):
     p1000.pick_up_tip()
     for npw3_well, dest in zip(npw3*num_samp,
                                npw3_block.wells()[:num_samp]):
-        p1000.transfer(600, npw3_well, dest.top(), new_tip='never')
+        p1000.aspirate(600, npw3_well)
+        p1000.air_gap(airgap)
+        p1000.dispense(600+airgap, dest.top())
+        p1000.blow_out()
     p1000.drop_tip()
     ctx.comment('\n\n\n\n\n')
 
     # npw4
     p1000.pick_up_tip()
     for npw4_well, dest in zip(npw4*num_samp, npw4_block.wells()[:num_samp]):
-        p1000.transfer(600, npw4_well, dest.top(), new_tip='never')
+        p1000.aspirate(600, npw4_well)
+        p1000.air_gap(airgap)
+        p1000.dispense(600+airgap, dest.top())
+        p1000.blow_out()
     p1000.drop_tip()
 
     # elution buffer
+    airgap = 25
     pick_up(p300)
     for elution_tubes, elution_well in zip(elution_buffer*num_samp,
                                            elution_block.wells()[:num_samp]):
         p300.aspirate(50, elution_tubes)
+        p300.air_gap(airgap)
         p300.dispense(50, elution_well.top())
+        p300.blow_out()
     p300.drop_tip()
