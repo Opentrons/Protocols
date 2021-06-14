@@ -1,3 +1,5 @@
+import math
+
 metadata = {
     'protocolName': 'Custom Normalization & Transfer',
     'author': 'Sakib <sakib.hossain@opentrons.com>',
@@ -30,6 +32,51 @@ def run(ctx):
                                tip_racks=tipracks_300ul)
     p20 = ctx.load_instrument('p20_single_gen2', p20_mount,
                               tip_racks=tipracks_20ul)
+
+    # Volume and Height Tracking
+    class VolHeightTracker:
+        def __init__(self, labware, well_vol, start=0, end=12,
+                     min_height=1, comp_coeff=0.9, msg='Reset Labware'):
+            try:
+                self.labware_wells = dict.fromkeys(
+                    labware.wells()[start:end], 0)
+            except Exception:
+                self.labware_wells = dict.fromkeys(
+                    labware, 0)
+            self.labware_wells_backup = self.labware_wells.copy()
+            self.well_vol = well_vol
+            self.start = start
+            self.end = end
+            self.min_height = min_height
+            self.comp_coeff = comp_coeff
+            self.radius = labware.wells()[0].diameter/2
+            self.area = math.pi*self.radius**2
+            self.msg = msg
+
+        def tracker(self, vol):
+            '''tracker() will track how much liquid
+            was used up per well. If the volume of
+            a given well is greater than self.well_vol
+            it will remove it from the dictionary and iterate
+            to the next well which will act as the reservoir.'''
+            well = next(iter(self.labware_wells))
+            if self.labware_wells[well] + vol >= self.well_vol:
+                del self.labware_wells[well]
+                if len(self.labware_wells) < 1:
+                    ctx.pause(self.msg)
+                    self.labware_wells = self.labware_wells_backup.copy()
+                well = next(iter(self.labware_wells))
+            dh = (self.well_vol - self.labware_wells[well]) / self.area \
+                * self.comp_coeff
+            height = self.min_height if dh < 1 else round(dh, 2)
+            self.labware_wells[well] = self.labware_wells[well] + vol
+            ctx.comment(f'''{int(self.labware_wells[well])} uL of liquid
+                        used from {well}''')
+            ctx.comment(f'Current Liquid Height of {well}: {height}mm')
+            return well.bottom(height)
+
+    waterTrack = VolHeightTracker(water, well_vol=water_res_vol, start=0,
+                                  end=96)
 
     data = [[val.strip() for val in line.split(',')]
             for line in norm_data.splitlines()
@@ -69,7 +116,7 @@ def run(ctx):
             failed_wells.append(well)
             continue
         pip = p20 if vol < 20 else p300
-        pip.transfer(vol, water_tracker(vol), sample_plate[well],
+        pip.transfer(vol, waterTrack.tracker(vol), sample_plate[well],
                      new_tip='always',
                      mix_after=(3, 15))
         dna_wells.append(well)
@@ -80,8 +127,8 @@ def run(ctx):
                 the PCR plate.''')
     p300.pick_up_tip()
     for well in dna_wells:
-        p300.transfer(water_vol, water_tracker(water_vol), pcr_plate[well],
-                      new_tip='never')
+        p300.transfer(water_vol, waterTrack.tracker(water_vol),
+                      pcr_plate[well], new_tip='never')
     p300.drop_tip()
 
     ctx.comment('Transferring samples to PCR plate!')
