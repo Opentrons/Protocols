@@ -1,6 +1,15 @@
 [
   {
     "type": "dropDown",
+    "label": "Include Standards Only?",
+    "name": "include_standards_only",
+    "options": [
+      { "label": "Standards and Pooled Samples", "value": false },
+      { "label": "Standards Only", "value": true }
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "Chooose 20 ul Tips",
     "name": "labware_tips20",
     "options": [
