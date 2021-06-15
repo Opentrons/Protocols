@@ -60,7 +60,7 @@ def run(ctx):
         try:
             p20.pick_up_tip()
         except protocol_api.labware.OutOfTipsError:
-            ctx.pause("Replace empty tip racks")
+            ctx.pause("Replace empty tip racks.")
             p20.reset_tipracks()
             pick_up_20()
 
@@ -100,20 +100,35 @@ def run(ctx):
     print('\n\n', liquid_prompt, '\n\n')
 
     # make mastermix pt. 1
-    for tube, vol in zip(reagents, vols):
-        if vol > 20:
-            pip = p300
-            pick_up_300()
-        else:
-            pip = p20
-            pick_up_20()
+    airgap = 5
+    p20.flow_rate.aspirate = p20.flow_rate.aspirate/3
+    p300.flow_rate.aspirate = p300.flow_rate.aspirate/3
+    p20.flow_rate.dispense = p20.flow_rate.dispense/3
+    p300.flow_rate.dispense = p300.flow_rate.dispense/3
+    for i, (tube, vol) in enumerate(zip(reagents, vols)):
         for j, mix_tubes in enumerate(mastermix_tube):
+            if vol > 20:
+                pip = p300
+                pick_up_300()
+            else:
+                pip = p20
+                pick_up_20()
             tube_vol = 0
-            pip.aspirate(vol, tube)
-            pip.dispense(vol, mix_tubes.top())
+            pip.aspirate(vol, tube.bottom(z=1.5))
+            if vol < 15:
+                pip.air_gap(airgap)
+            pip.dispense(vol+airgap, mix_tubes)
+            ctx.delay(seconds=5)
+            pip.blow_out()
+            pip.touch_tip()
             tube_vol += vol
             mastermix_tube_vols[j] += tube_vol
-        pip.drop_tip()
+            pip.drop_tip()
+            ctx.comment('\n')
+    p20.flow_rate.aspirate = p20.flow_rate.aspirate*3
+    p300.flow_rate.aspirate = p300.flow_rate.aspirate*3
+    p20.flow_rate.dispense = p20.flow_rate.dispense*3
+    p300.flow_rate.dispense = p300.flow_rate.dispense*3
 
     # make mastermix pt.2
     remainder = one_step_buffer_vol % 300
@@ -129,9 +144,14 @@ def run(ctx):
             if not pip.has_tip:
                 pick_up_20()
         tube_vol = 0
+        pip.flow_rate.aspirate = pip.flow_rate.aspirate/2
+        pip.flow_rate.dispense = pip.flow_rate.dispense/2
         for _ in range(number_transfers):
-            pip.aspirate(300, source_tube)
-            pip.dispense(300, dest_tube)
+            pip.aspirate(300, source_tube.bottom(z=1.5))
+            pip.dispense(300, dest_tube.bottom(z=1.5))
+            ctx.delay(seconds=5)
+            pip.blow_out()
+            pip.touch_tip()
             tube_vol += 300
         if remainder > 20:
             pip = p300
@@ -141,22 +161,23 @@ def run(ctx):
             pip = p20
             if not pip.has_tip:
                 pick_up_20()
-        pip.aspirate(remainder, source_tube)
-        pip.dispense(remainder, dest_tube)
+        pip.aspirate(remainder, source_tube.bottom(z=1.5))
+        pip.dispense(remainder, dest_tube.bottom(z=1.5))
         tube_vol += remainder
         mastermix_tube_vols[i] += tube_vol
+        pip.flow_rate.aspirate = pip.flow_rate.aspirate*2
+        pip.flow_rate.dispense = pip.flow_rate.dispense*2
 
     if p20.has_tip:
         p20.drop_tip()
-    if p300.has_tip:
-        p300.drop_tip()
+    if not p300.has_tip:
+        p300.pick_up_tip()
 
     # mix mastermix solution
-    pick_up_300()
     for tube in mastermix_tube:
         p300.mix(mix_reps,
                  total_mix_vol if total_mix_vol < 270 else 270,
-                 tube)
+                 tube.bottom(z=1.5))
     p300.drop_tip()
 
     # plate mapping
@@ -185,27 +206,28 @@ def run(ctx):
                 3: plate4_to_384
             }
 
-    # add positive control
-    airgap = 5
-    ctx.comment('Adding Positive Control')
-    pick_up_20()
-    p20.aspirate(5.5, positive_control)
-    p20.air_gap(airgap)
-    p20.dispense(7+airgap, pcr_plate_384.wells()[-1].top())
-    p20.drop_tip()
-
     # distribute mastermix
     ctx.comment('Distributing Mastermix')
     pick_up_20()
-    p20.aspirate(7, mastermix_tube[0])
+    p20.aspirate(7, mastermix_tube[0].bottom(z=1.5))
     p20.air_gap(airgap)
-    p20.dispense(7+airgap, pcr_plate_384.wells()[-1].top())
+    p20.dispense(7+airgap, pcr_plate_384.wells()[-1])
 
     for i, plate in enumerate(sample_plates):
         for source, well in zip(mastermix_tube*num_samp, plates[i]):
-            p20.aspirate(7, source)
-            p20.dispense(7+airgap, well.top())
-        ctx.comment('\n\n\n\n\n\n')
+
+            p20.aspirate(7, source.bottom(z=1.5))
+            p20.dispense(7+airgap, well)
+    p20.drop_tip()
+    ctx.comment('\n\n\n\n\n\n')
+
+    # add positive control
+    ctx.comment('Adding Positive Control')
+    pick_up_20()
+    p20.aspirate(5.5, positive_control.bottom(z=1.5))
+    p20.air_gap(airgap)
+    p20.dispense(7+airgap, pcr_plate_384.wells()[-1])
+    p20.mix(mix_reps, 12.5, pcr_plate_384.wells()[-1])
     p20.drop_tip()
 
     # add sample and mix
@@ -213,7 +235,7 @@ def run(ctx):
     for i, plate in enumerate(sample_plates):
         for s, d in zip(sample_wells, plates[i]):
             pick_up_20()
-            p20.aspirate(5.5, s)
+            p20.aspirate(5.5, s.bottom(z=-2.75))
             p20.air_gap(airgap)
             p20.dispense(5.5+airgap, d)
             p20.mix(mix_reps, 12.5, d)

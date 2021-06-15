@@ -37,13 +37,9 @@ Explanation of parameters below:
 
 ### Deck Setup
 
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/5520f0/5520f0_deck.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/5520f0/5520f0_deck_new.png)
 
 ### Reagent Setup
-
-- Reservoir: Slot 7
-
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/5520f0/pbs_reservoir.png)
 
 - Reservoir: Slot 8
 
