@@ -51,7 +51,7 @@ Explanation of complex parameters below:
 
 ### Reagent Setup
 
-* Note: Diluent tubes are switched after 1350ul of diluent is transferred to wells A1, A2, A3, A4, A5, A6, B1, B2, B3, B4, B5, B6, C1, C2, C3, C4, C5, C6, D1, and D2 of the masterblock. Thus, at least 30mL of diluent should be in diluent tube A1, and 23mL of diluent should be in tube 2 for each run.
+* Note: Diluent tubes are switched after 1350ul of diluent is transferred to wells A1, A2, A3, A4, A5, A6, B1, B2, B3, B4, B5, B6, C1, C2, C3, C4, C5, C6, D1, and D2 of the masterblock. Thus, at least 29mL of diluent should be in diluent tube A1, and 23mL of diluent should be in tube 2 for each run.
 
 * Tube Rack: Slot 8
 ![](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/6be1f8/Screen+Shot+2021-06-14+at+12.25.09+PM.png)
