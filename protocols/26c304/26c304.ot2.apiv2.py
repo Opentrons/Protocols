@@ -195,4 +195,4 @@ def run(ctx):
     p1000.pick_up_tip()
     for s, d1, d2 in zip(master_block.columns()[2][:2]*3,
                          map_384_A2, map_384_L24):
-        p1000.distribute(180, s, [d1, d2], new_tip='never')
+        p1000.distribute(180, s, [d1.top(z=-3), d2.top(z=-3)], new_tip='never')
