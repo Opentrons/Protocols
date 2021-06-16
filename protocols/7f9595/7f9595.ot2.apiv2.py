@@ -8,8 +8,8 @@ metadata = {
 
 def run(ctx):
 
-    [m300_mount, reservoir_type] = get_values(  # noqa: F821
-        "m300_mount", "reservoir_type")
+    [m300_mount, reservoir_type, blowout_height] = get_values(  # noqa: F821
+        "m300_mount", "reservoir_type", "blowout_height")
 
     # Load Labware
     tiprack = ctx.load_labware('opentrons_96_tiprack_300ul', 1)
@@ -59,16 +59,26 @@ def run(ctx):
     for i, (col1, col2) in enumerate(zip(p1, p2)):
         m300.pick_up_tip()
         m300.mix(6, 200, col1)
-        m300.transfer(20, col1, sample_cols1[i+1], mix_after=(10, 20),
-                      touch_tip=True, blow_out=True,
-                      blowout_location='destination well',
-                      new_tip='never')
+        # m300.transfer(20, col1, sample_cols1[i+1], mix_after=(10, 20),
+        #               touch_tip=True, blow_out=True,
+        #               blowout_location='destination well',
+        #               new_tip='never')
+        m300.aspirate(20, col1)
+        m300.dispense(20, sample_cols1[i+1])
+        m300.mix(10, 20, sample_cols1[i+1])
+        m300.touch_tip()
+        m300.blow_out(sample_cols1[i+1].bottom(blowout_height))
         m300.drop_tip()
 
         m300.pick_up_tip()
         m300.mix(6, 200, col2)
-        m300.transfer(20, col2, sample_cols2[i+1], mix_after=(10, 20),
-                      touch_tip=True, blow_out=True,
-                      blowout_location='destination well',
-                      new_tip='never')
+        # m300.transfer(20, col2, sample_cols2[i+1], mix_after=(10, 20),
+        #               touch_tip=True, blow_out=True,
+        #               blowout_location='destination well',
+        #               new_tip='never')
+        m300.aspirate(20, col2)
+        m300.dispense(20, sample_cols2[i+1])
+        m300.mix(10, 20, sample_cols2[i+1])
+        m300.touch_tip()
+        m300.blow_out(sample_cols2[i+1].bottom(blowout_height))
         m300.drop_tip()
