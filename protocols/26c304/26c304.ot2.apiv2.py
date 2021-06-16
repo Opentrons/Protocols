@@ -42,14 +42,14 @@ def run(ctx):
     # 300 ug/ml distribution of diluent
     p20.pick_up_tip()
     for d in conc_300:
-        p20.aspirate(17.5, diluent)
+        p20.aspirate(17.5, diluent.bottom(z=20))
         p20.dispense(17.5, d)
     p20.drop_tip()
 
     # 100 ug/ml distribution of diluent
     p20.pick_up_tip()
     for d in conc_100:
-        p20.transfer(36, diluent, d, new_tip='never')
+        p20.transfer(36, diluent.bottom(z=20), d, new_tip='never')
     p20.drop_tip()
 
     # 300 ug/ml distribution of antibody
@@ -71,7 +71,7 @@ def run(ctx):
     # distribute diluent to second stepped down row
     p1000.pick_up_tip()
     for d in reagent.rows()[1]:
-        p1000.aspirate(180, diluent)
+        p1000.aspirate(180, diluent.bottom(z=18))
         p1000.dispense(180, d.top())
     p1000.drop_tip()
 
