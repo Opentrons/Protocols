@@ -8,7 +8,7 @@
 	* Illumina COVIDSeq Test
 
 ## Description
-The Illumina COVIDSeq Test is a high-throughput, next-generation sequencing test that is used fo detecting SARS-CoV-2 in patient samples. This protocol is the fourth part of a seven part protocol that is run on the OT-2 for this kit.
+The Illumina COVIDSeq Test is a high-throughput, next-generation sequencing test that is used fo detecting SARS-CoV-2 in patient samples. This protocol is the fourth part of a seven-part protocol that is run on the OT-2 for this kit.
 
 * Part 1: Anneal RNA
 * Part 2: Synthesize First Strand cDNA
