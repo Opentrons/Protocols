@@ -175,7 +175,7 @@ def run(ctx):
                    for well in plate.columns()[22][8::2]]
     p1000.pick_up_tip()
     for s, d1, d2 in zip(master_block.wells()[:4]*3, map_384_A1, map_384_I23):
-        p1000.distribute(180, s, [d1, d2], new_tip='never')
+        p1000.distribute(180, s, [d1.top(z=-3), d2.top(z=-3)], new_tip='never')
 
     # transfer 3022 (100 conc)
     map_384_B1 = [well for plate in ctrl_plates
@@ -184,7 +184,7 @@ def run(ctx):
                    for well in plate.columns()[22][9::2]]
     for s, d1, d2 in zip(master_block.columns()[1][:4]*3,
                          map_384_B1, map_384_J23):
-        p1000.distribute(180, s, [d1, d2], new_tip='never')
+        p1000.distribute(180, s, [d1.top(z=-3), d2.top(z=-3)], new_tip='never')
     p1000.drop_tip()
 
     # transfer mAb45 (300 & 100 conc)
