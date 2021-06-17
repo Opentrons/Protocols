@@ -8,7 +8,7 @@
 	* Serial Dilution
 
 ## Description
-This protocol automates the serial dilution of two separate sample columns and also adds PBS buffer to the necessary wells. It will perform additional mixing steps before and after the addition of reagents.
+This protocol automates the serial dilution of two separate sample columns and also adds PBS buffer to the necessary wells. It will perform additional mixing steps before and after the addition of reagents. Each transfer performs a blow out in the destination well.
 
 Serial Dilution Plate Map:
 ![Serial Dilution Plate Map](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/7f9595/7f9595_dilution_map.png)
@@ -16,6 +16,7 @@ Serial Dilution Plate Map:
 Explanation of parameters below:
 * `P300 Multichannel GEN2 Mount`: Specify which mount (left or right) to load the P300 multi channel pipette.
 * `Reservoir Type`: Specify the type of reservoir being used in Slot 1.
+* `Blowout Height from Well Bottom (mm)`: The height the blowout should occur from the bottom of the well. For example, a volume of 200 uL in this plate will have a height of approximately 5.4 mm from the bottom of the well.
 
 ---
 
