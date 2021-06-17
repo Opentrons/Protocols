@@ -10,16 +10,16 @@
 ## Description
 The Illumina COVIDSeq Test is a high-throughput, next-generation sequencing test that is used fo detecting SARS-CoV-2 in patient samples. This protocol is the third part of a seven part protocol that is run on the OT-2 for this kit.
 
-* Part 1: Anneal RNA
-* Part 2: Synthesize First Strand cDNA
-* Part 3: Amplify cDNA
-* Part 4: Tagment PCR Amplicons
-* Part 5: Post Tagmentation Clean Up
-* Part 6: Amplify Tagmented Amplicons
-* Part 7: Pool and Clean Up Libraries
+* Part 1: [Anneal RNA](https://protocols.opentrons.com/protocol/04eeb1)
+* Part 2: [Synthesize First Strand cDNA](https://protocols.opentrons.com/protocol/04eeb1-part-2)
+* Part 3: [Amplify cDNA](https://protocols.opentrons.com/protocol/04eeb1-part-3)
+* Part 4: [Tagment PCR Amplicons](https://protocols.opentrons.com/protocol/04eeb1-part-4)
+* Part 5: [Post Tagmentation Clean Up](https://protocols.opentrons.com/protocol/04eeb1-part-5)
+* Part 6: [Amplify Tagmented Amplicons](https://protocols.opentrons.com/protocol/04eeb1-part-6)
+* Part 7: [Pool and Clean Up Libraries](https://protocols.opentrons.com/protocol/04eeb1-part-7)
 
 Explanation of complex parameters below:
-* `P20 Multichannel GEN2 Pipette Mount`: Choose the mount position of your P20 Multichannel pipette, either left or right.
+* `P300 Multichannel GEN2 Pipette Mount`: Choose the mount position of your P300 Multichannel pipette, either left or right.
 
 ---
 

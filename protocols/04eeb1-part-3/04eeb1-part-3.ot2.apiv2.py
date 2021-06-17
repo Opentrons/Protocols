@@ -10,8 +10,8 @@ metadata = {
 
 def run(ctx):
 
-    [m20_mount] = get_values(  # noqa: F821
-        "m20_mount")
+    [m300_mount] = get_values(  # noqa: F821
+        "m300_mount")
 
     # Labware
     tips200ul = ctx.load_labware('opentrons_96_filtertiprack_200ul', 10)
@@ -23,8 +23,8 @@ def run(ctx):
                                "Plate CPP2")
 
     # Pipettes
-    m20 = ctx.load_instrument('p300_multi_gen2', m20_mount,
-                              tip_racks=[tips200ul])
+    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,
+                               tip_racks=[tips200ul])
 
     # Wells
     plate_1_wells = plate_1.rows()[0]
@@ -66,5 +66,5 @@ def run(ctx):
         pipette.drop_tip()
 
     # Protocol Steps
-    distribute(m20, 20, reservoir['A1'], plate_1_wells, 0, 1, 1)
-    distribute(m20, 20, reservoir['A12'], plate_2_wells, 0, 1, 1)
+    distribute(m300, 20, reservoir['A1'], plate_1_wells, 0, 1, 1)
+    distribute(m300, 20, reservoir['A12'], plate_2_wells, 0, 1, 1)
