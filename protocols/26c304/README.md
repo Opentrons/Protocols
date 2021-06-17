@@ -13,9 +13,9 @@
 ## Description
 This protocol preps 3, 384 well control plates for further testing of antibodies as part of a larger ELISA protocol. The protocol can be considered in 3 main parts:
 
-* Serial dilution of antibody
-* 96 well block prepped with diluent and antibody
-* Transfer of antibody to 3, 384 well control plates
+* Serial dilution of antibody.
+* 96 well block prepped with diluent and antibody.
+* Transfer of antibody to 3, 384 well control plates.
 
 Explanation of complex parameters below:
 * `P20 Pipette Mount`: Specify which mount (left or right) to load your pipette.
