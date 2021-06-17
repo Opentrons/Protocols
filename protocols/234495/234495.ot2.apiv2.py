@@ -10,14 +10,15 @@ metadata = {
 
 def run(ctx):
 
-    # get parameter values from json above
-    [labware_tips20, labware_tips300, labware_tuberack, clearance_meoh_water,
-     clearance_dil_dispense, touch_radius, touch_v_offset, track_start,
-     clearance_tfa, clearance_mecn, mix_reps] = get_values(  # noqa: F821
-      'labware_tips20', 'labware_tips300', 'labware_tuberack',
-      'clearance_meoh_water', 'clearance_dil_dispense', 'touch_radius',
-      'touch_v_offset', 'track_start', 'clearance_tfa', 'clearance_mecn',
-      'mix_reps')
+    # get the parameter values from json above
+    [include_standards_only, labware_tips20, labware_tips300, labware_tuberack,
+     clearance_meoh_water, clearance_dil_dispense, touch_radius,
+     touch_v_offset, track_start, clearance_tfa, clearance_mecn,
+     mix_reps] = get_values(  # noqa: F821
+      'include_standards_only', 'labware_tips20', 'labware_tips300',
+      'labware_tuberack', 'clearance_meoh_water', 'clearance_dil_dispense',
+      'touch_radius', 'touch_v_offset', 'track_start', 'clearance_tfa',
+      'clearance_mecn', 'mix_reps')
 
     ctx.set_rail_lights(True)
 
@@ -105,6 +106,8 @@ def run(ctx):
     tube rack in deck slot 1:
     A1-A6,B1-B6 - 200 uM unlabeled solution
     followed by 11 serial 1:2 dilutions
+    C1-C3 three pooled samples (if included)
+    C4-C6 amicon filters (for pooled samples if included)
     D1 - 100 uM labeled solution
     D2 - 1:1 MeOH:Water
     D3 - 100 mM NEM
@@ -131,6 +134,27 @@ def run(ctx):
     [*samples] = [well for row in sample_tuberack.rows() for well in row][:12]
     [*amicon_filters] = [
      well for row in sample_tuberack.rows() for well in row][12:]
+
+    # pooled samples if included
+    if not include_standards_only:
+        ctx.comment("""
+        ***POOLED SAMPLES INCLUDED IN THIS RUN***
+        tube rack in deck slot 1:
+        C1-C3 three pooled samples
+        C4-C6 corresponding amicon filters
+        """)
+        [*samples_pooled] = [
+         well for row in tuberack.rows() for well in row][12:15]
+        [*amicon_filters_pooled] = [
+         well for row in tuberack.rows() for well in row][15:18]
+    else:
+        ctx.comment("""
+        ***THIS RUN INCLUDES STANDARDS ONLY***
+        ***NO POOLED SAMPLES INCLUDED IN THIS RUN***
+        tube rack in deck slot 1:
+        C1-C3 Empty
+        C4-C6 Empty
+        """)
 
     ctx.delay(seconds=10)
     pause_attention("""
@@ -225,6 +249,7 @@ def run(ctx):
 
     ctx.comment("""
     transfer 10 ul of each serial dilution to the corresponding sample tube
+    transfer 10 ul 1:1 MeOH:Water to pooled samples (if included)
     vortex 5 min
     use liquid handling method for MeOH:Water
     """)
@@ -248,12 +273,37 @@ def run(ctx):
         p20s.drop_tip()
     default_flow_rates(p20s)
 
+    if not include_standards_only:
+        meoh_flow_rates(p20s)
+        for pooled_sample in samples_pooled:
+            p20s.pick_up_tip()
+            pre_wet(p20s, 20, meoh_water.bottom(clearance_meoh_water))
+            p20s.aspirate(10, meoh_water.bottom(clearance_meoh_water))
+            p20s.air_gap(2)
+            p20s.dispense(12, pooled_sample.bottom(3))
+            slow_tip_withdrawal(p20s, pooled_sample, to_center=True)
+            for rep in range(3):
+                if rep > 0:
+                    p20s.aspirate(
+                     10, pooled_sample.center().move(
+                      types.Point(x=0, y=0, z=-3)))
+                ctx.delay(seconds=1)
+                p20s.blow_out(
+                 pooled_sample.center().move(types.Point(x=0, y=0, z=-3)))
+            p20s.touch_tip(radius=0.75, v_offset=-8, speed=20)
+            p20s.drop_tip()
+        default_flow_rates(p20s)
+
     pause_attention("Vortex samples 5 min and return.")
 
     ctx.comment("""
-    add 10 ul NEM to each sample tube
+    add 10 ul NEM to each tube
     vortex 15 min
     """)
+    if not include_standards_only:
+        for pooled_sample in samples_pooled:
+            samples.append(pooled_sample)
+
     for sample in samples:
         p20s.pick_up_tip()
         p20s.aspirate(10, nem_100mm.bottom(3))
@@ -263,10 +313,10 @@ def run(ctx):
         p20s.touch_tip(radius=0.75, v_offset=-8, speed=20)
         p20s.drop_tip()
 
-    pause_attention("Vortex samples 15 min and return.")
+    pause_attention("Vortex tubes 15 min and return.")
 
     ctx.comment("""
-    add 5 ul 100 uM labelled standard to each sample tube
+    add 5 ul 100 uM labelled standard to each tube
     vortex 5 min
     use liquid handling method for MeOH:Water
     """)
@@ -288,10 +338,10 @@ def run(ctx):
         p20s.drop_tip()
     default_flow_rates(p20s)
 
-    pause_attention("Vortex samples 5 min and return.")
+    pause_attention("Vortex tubes 5 min and return.")
 
     ctx.comment("""
-    add 540 ul TFA in acetonitrile to each sample tube
+    add 540 ul TFA in acetonitrile to each tube
     vortex 10 min
     spin 15 min
     use same liquid handling method as for MeOH:Water
@@ -312,16 +362,19 @@ def run(ctx):
     p300s.drop_tip()
     default_flow_rates(p300s)
 
-    pause_attention("Vortex samples 10 min, spin 15 min, and return.")
+    pause_attention("Vortex tubes 10 min, spin 15 min, and return.")
 
     ctx.comment("""
-    transfer 500 ul sup from each sample tube to Amicon filter
+    transfer 500 ul sup from each tube to Amicon filter
     spin 2.5 hours
     dry in speedvac aqueous dry setting 1.5 hours
     return
     resuspend in 4:1 acetonitrile:water
     use same liquid handling method as for MeOH:Water
     """)
+    if not include_standards_only:
+        for pooled_filter in amicon_filters_pooled:
+            amicon_filters.append(pooled_filter)
     for index, sample in enumerate(samples):
         p300s.pick_up_tip()
         default_flow_rates(p300s)
