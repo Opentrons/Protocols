@@ -79,7 +79,7 @@ def run(ctx):
                     {total_mix_vol/num_mastermix_tubes}ul  of mastermix
                     in all tubes out of
                     {num_mastermix_tubes} mastermix tubes.'''
-    ctx.comment('\n\n', liquid_prompt, '\n\n')
+    ctx.comment(liquid_prompt)
 
     # plate mapping
     plate1_to_384 = [well for column in pcr_plate_384.columns()[::2]
