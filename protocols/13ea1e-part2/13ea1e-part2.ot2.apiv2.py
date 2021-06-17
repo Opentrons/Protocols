@@ -69,116 +69,16 @@ def run(ctx):
                     for well in plate.wells()][:num_samp]
 
     # reagents
-    rp_blue = tuberack.rows()[0][0]
-    n1_pink = tuberack.rows()[0][1]
-    reagents = [rp_blue, n1_pink]
+    total_mix_vol = 7*overage*num_samp
+    num_mastermix_tubes = math.ceil((total_mix_vol)/1000)
 
-    n1_pink_vol_tot = (0.39*num_samp*overage)
-    rp_blue_vol_tot = n1_pink_vol_tot
-    one_step_buffer_vol_tot = (6.25*num_samp*overage)
-    num_mastermix_tubes = math.ceil(
-            (n1_pink_vol_tot+rp_blue_vol_tot+one_step_buffer_vol_tot)/1000)
-
-    n1_pink_vol = (0.39*num_samp*overage)/num_mastermix_tubes
-    rp_blue_vol = n1_pink_vol
-    one_step_buffer_vol = (6.25*num_samp*overage)/num_mastermix_tubes
-
-    vols = [rp_blue_vol, n1_pink_vol]
-    total_mix_vol = n1_pink_vol+rp_blue_vol+one_step_buffer_vol
-
-    one_step_buffer = tuberack.rows()[1][:num_mastermix_tubes]
-    mastermix_tube = tuberack.rows()[2][:num_mastermix_tubes]
+    mastermix_tube = tuberack.rows()[0][:num_mastermix_tubes]
     positive_control = tuberack.rows()[3][5]
 
-    mastermix_tube_vols = [0 for tube in range(0, num_mastermix_tubes)]
-
     liquid_prompt = f'''Please ensure you have:
-                    {one_step_buffer_vol}ul  of one step buffer in all tubes
-                    out of {num_mastermix_tubes} one step buffer tubes.
-                    As well as {n1_pink_vol}ul of n1 pink, and
-                    {rp_blue_vol}ul of rp blue in their respective tubes.'''
+                    {total_mix_vol/num_mastermix_tubes}ul  of mastermix in all tubes
+                    out of {num_mastermix_tubes} mastermix tubes.'''
     print('\n\n', liquid_prompt, '\n\n')
-
-    # make mastermix pt. 1
-    airgap = 5
-    p20.flow_rate.aspirate = p20.flow_rate.aspirate/3
-    p300.flow_rate.aspirate = p300.flow_rate.aspirate/3
-    p20.flow_rate.dispense = p20.flow_rate.dispense/3
-    p300.flow_rate.dispense = p300.flow_rate.dispense/3
-    for i, (tube, vol) in enumerate(zip(reagents, vols)):
-        for j, mix_tubes in enumerate(mastermix_tube):
-            if vol > 20:
-                pip = p300
-                pick_up_300()
-            else:
-                pip = p20
-                pick_up_20()
-            tube_vol = 0
-            pip.aspirate(vol, tube.bottom(z=1.5))
-            if vol < 15:
-                pip.air_gap(airgap)
-            pip.dispense(vol+airgap, mix_tubes)
-            ctx.delay(seconds=5)
-            pip.blow_out()
-            pip.touch_tip()
-            tube_vol += vol
-            mastermix_tube_vols[j] += tube_vol
-            pip.drop_tip()
-            ctx.comment('\n')
-    p20.flow_rate.aspirate = p20.flow_rate.aspirate*3
-    p300.flow_rate.aspirate = p300.flow_rate.aspirate*3
-    p20.flow_rate.dispense = p20.flow_rate.dispense*3
-    p300.flow_rate.dispense = p300.flow_rate.dispense*3
-
-    # make mastermix pt.2
-    remainder = one_step_buffer_vol % 300
-    number_transfers = math.floor(one_step_buffer_vol/300)
-    for i, (source_tube, dest_tube) in enumerate(
-                                zip(one_step_buffer, mastermix_tube)):
-        if one_step_buffer_vol > 20:
-            pip = p300
-            if not pip.has_tip:
-                pick_up_300()
-        else:
-            pip = p20
-            if not pip.has_tip:
-                pick_up_20()
-        tube_vol = 0
-        pip.flow_rate.aspirate = pip.flow_rate.aspirate/2
-        pip.flow_rate.dispense = pip.flow_rate.dispense/2
-        for _ in range(number_transfers):
-            pip.aspirate(300, source_tube.bottom(z=1.5))
-            pip.dispense(300, dest_tube.bottom(z=1.5))
-            ctx.delay(seconds=5)
-            pip.blow_out()
-            pip.touch_tip()
-            tube_vol += 300
-        if remainder > 20:
-            pip = p300
-            if not pip.has_tip:
-                pick_up_300()
-        else:
-            pip = p20
-            if not pip.has_tip:
-                pick_up_20()
-        pip.aspirate(remainder, source_tube.bottom(z=1.5))
-        pip.dispense(remainder, dest_tube.bottom(z=1.5))
-        tube_vol += remainder
-        mastermix_tube_vols[i] += tube_vol
-        pip.flow_rate.aspirate = pip.flow_rate.aspirate*2
-        pip.flow_rate.dispense = pip.flow_rate.dispense*2
-
-    if p20.has_tip:
-        p20.drop_tip()
-    if not p300.has_tip:
-        p300.pick_up_tip()
-
-    # mix mastermix solution
-    for tube in mastermix_tube:
-        p300.mix(mix_reps,
-                 total_mix_vol if total_mix_vol < 270 else 270,
-                 tube.bottom(z=1.5))
-    p300.drop_tip()
 
     # plate mapping
     plate1_to_384 = [well for column in pcr_plate_384.columns()[::2]
@@ -207,6 +107,7 @@ def run(ctx):
             }
 
     # distribute mastermix
+    airgap = 5
     ctx.comment('Distributing Mastermix')
     pick_up_20()
     p20.aspirate(7, mastermix_tube[0].bottom(z=1.5))
