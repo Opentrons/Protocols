@@ -10,7 +10,7 @@ metadata = {
 
 def run(ctx):
 
-    # get parameter values from json above
+    # get the parameter values from json above
     [include_standards_only, labware_tips20, labware_tips300, labware_tuberack,
      clearance_meoh_water, clearance_dil_dispense, touch_radius,
      touch_v_offset, track_start, clearance_tfa, clearance_mecn,
