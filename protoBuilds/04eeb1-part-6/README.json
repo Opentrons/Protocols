@@ -1,0 +1,38 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "NGS Library Prep": [
+            "Illumina COVIDSeq Test"
+        ]
+    },
+    "deck-setup": "\nNote: AMP Master Mix should be added in Column 3 (A3).\n",
+    "description": "The Illumina COVIDSeq Test is a high-throughput, next-generation sequencing test that is used fo detecting SARS-CoV-2 in patient samples. This protocol is the sixth part of a seven-part protocol that is run on the OT-2 for this kit.\n\nPart 1: Anneal RNA\nPart 2: Synthesize First Strand cDNA\nPart 3: Amplify cDNA\nPart 4: Tagment PCR Amplicons\nPart 5: Post Tagmentation Clean Up\nPart 6: Amplify Tagmented Amplicons\nPart 7: Pool and Clean Up Libraries\n\nExplanation of complex parameters below:\n* P300 Multichannel GEN2 Pipette Mount: Choose the mount position of your P300 Multichannel pipette, either left or right.\n",
+    "internal": "04eeb1-part-6",
+    "labware": "\nOpentrons 200 uL Filter Tips\nBio-Rad Hard-Shell 96 Well Plate 200 \u00b5L PCR\nNEST 12-Well Reservoirs, 15 mL\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* NGS Library Prep\n\t* Illumina COVIDSeq Test\n\n",
+        "deck-setup": "![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/04eeb1/04eeb1-part-6.png)\n\n**Note**: AMP Master Mix should be added in Column 3 (A3).\n\n---\n\n",
+        "description": "The Illumina COVIDSeq Test is a high-throughput, next-generation sequencing test that is used fo detecting SARS-CoV-2 in patient samples. This protocol is the sixth part of a seven-part protocol that is run on the OT-2 for this kit.\n\n* Part 1: Anneal RNA\n* Part 2: Synthesize First Strand cDNA\n* Part 3: Amplify cDNA\n* Part 4: Tagment PCR Amplicons\n* Part 5: Post Tagmentation Clean Up\n* Part 6: Amplify Tagmented Amplicons\n* Part 7: Pool and Clean Up Libraries\n\nExplanation of complex parameters below:\n* `P300 Multichannel GEN2 Pipette Mount`: Choose the mount position of your P300 Multichannel pipette, either left or right.\n\n---\n\n",
+        "internal": "04eeb1-part-6",
+        "labware": "* [Opentrons 200 uL Filter Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)\n* [Bio-Rad Hard-Shell 96 Well Plate 200 \u00b5L PCR](https://labware.opentrons.com/biorad_96_wellplate_200ul_pcr/)\n* [NEST 12-Well Reservoirs, 15 mL](https://shop.opentrons.com/collections/reservoirs/products/nest-12-well-reservoir-15-ml)\n\n",
+        "modules": "* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-robot/products/8-channel-electronic-pipette)\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "protocol-steps": "1. Engage Magnetic Module.\n2. Pick up 200 uL tips from slot 4\n3. Aspirate 120 uL from Column 1 (A1) of the Magnetic Plate on Slot 3\n4. Dispense into trash and discard tips.\n\n**Steps 2-4 will repeat for the entire plate. This step also included a 10 uL residual volume.**\n\n5. Pick up 200 uL tips from slot 4\n6. Aspirate 40 uL of AMP Master Mix\n7. Dispense 40 uL of Wash Buffer into Column 1 (A1) of the Magnetic Plate on Slot 3\n8. Discard tips into the trash\n\n**Steps 5-8 will repeat for the entire plate.**\n\n\n",
+        "reagents": "* [Illumina COVIDSeq Test](https://www.illumina.com/products/by-type/ivd-products/covidseq.html)\n\n---\n\n",
+        "title": "Illumina COVIDSeq Test: Amplify Tagmented Amplicons"
+    },
+    "modules": [
+        "Magnetic Module (GEN2)"
+    ],
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nP300 8-Channel Pipette (GEN2)\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "protocol-steps": "\nEngage Magnetic Module.\nPick up 200 uL tips from slot 4\nAspirate 120 uL from Column 1 (A1) of the Magnetic Plate on Slot 3\nDispense into trash and discard tips.\n\nSteps 2-4 will repeat for the entire plate. This step also included a 10 uL residual volume.\n\nPick up 200 uL tips from slot 4\nAspirate 40 uL of AMP Master Mix\nDispense 40 uL of Wash Buffer into Column 1 (A1) of the Magnetic Plate on Slot 3\nDiscard tips into the trash\n\nSteps 5-8 will repeat for the entire plate.",
+    "reagents": [
+        "Illumina COVIDSeq Test"
+    ],
+    "title": "Illumina COVIDSeq Test: Amplify Tagmented Amplicons"
+}
