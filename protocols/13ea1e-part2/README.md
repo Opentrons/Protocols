@@ -14,7 +14,7 @@
 This protocol preps a 384 well sample plate with mastermix. Up to four plates can be loaded onto the deck with a no template control and human sample control in wells A1 and B1, respectively. Sample plates are transferred to the 384 well plate skipping wells down a column, as well as skipping columns (e.g. plate 1 to A1, C1, E1....H1, A3, C3, E3...etc). A positive control is added to the last well in the 384 well plate.
 
 The protocol is broken down into 3 main parts:
-* Mastermix made and distributed to 384 well plate.
+* Mastermix distributed to 384 well plate.
 * Sample added to 384 well plate.  
 * Positive control added to plate.
 
@@ -45,21 +45,22 @@ Explanation of complex parameters below:
 ### Deck Setup
 
 * Deck Layout with samples and controls loaded onto 96 well plates.
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/13ea1e/pt2/Screen+Shot+2021-05-26+at+2.17.10+PM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/13ea1e/pt2/Screen+Shot+2021-06-17+at+3.41.05+PM.png)
 
 ### Reagent Setup
-* Tube rack: Slot 5
+* Tube rack: Slot 5. Positive control D6.
 
-![tube rack](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/13ea1e/pt2/Screen+Shot+2021-05-26+at+2.17.27+PM.png)
+* Note on tube rack: please refer to the Opentrons app at the beginning of the protocol to determine how many mastermix tubes are needed. The by hand calculation, for reference, is 7ul X (number of samples) X (overage_percent)/1000. A new mastermix tube is "made" on the deck every 1000ul, (i.e. maximum volume per mastermix tube is 1000ul). If the volume exceeds 1000ul, split the volumes between the tubes equally, as the OT-2 will access mastermix tubes sequentially when distributing (e.g. A1 to plate, A2 to plate, A3 to plate, A1 to plate, etc.). Examples: (a) 900ul of mastermix just in tube A1. (b) 1100ul of mastermix is split into 550ul between tubes A1 and A2. This is all demonstrated in the app at the beginning of the protocol.  
+
+![tube rack](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/13ea1e/pt2/Screen+Shot+2021-06-17+at+3.41.32+PM.png)
 
 ---
 
 ### Protocol Steps
-1. Mastermix is made on the tube rack
-2. Mastermix is mixed
-3. Mastermix is distributed to the 384 well plate depending on which wells will eventually have sample.
-4. Sample is added to these wells and mixed.
-5. Positive control is added to the last well in the plate.
+
+1. Mastermix is distributed to the 384 well plate depending on which wells will eventually have sample.
+2. Sample is added to these wells and mixed.
+3. Positive control is added to the last well in the plate.
 
 ### Process
 1. Input your protocol parameters above.
