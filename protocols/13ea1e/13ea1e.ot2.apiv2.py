@@ -82,7 +82,7 @@ def run(ctx):
     for s, d in zip(proteinase_k*num_samp, sample_block.wells()[:num_samp]):
         p300.aspirate(24, s)
         p300.air_gap(airgap)
-        p300.dispense(24+airgap, d.top())
+        p300.dispense(24+airgap, d.top(z=-3))
         p300.blow_out()
     p300.drop_tip()
     ctx.delay(minutes=15)
