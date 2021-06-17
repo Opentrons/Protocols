@@ -97,8 +97,8 @@ def run(protocol):
         pick_up()
         m20.aspirate(3, s)
         m20.air_gap(airgap)
-        m20.dispense(3+airgap, d.top())
-        m20.mix(2, 5)
+        m20.dispense(3+airgap, d)
+        m20.mix(2, 5, d)
         m20.blow_out()
         m20.return_tip()
 
