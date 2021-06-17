@@ -78,13 +78,13 @@ def run(ctx):
 
     # add proteinase k and incubate for 15 minutes
     airgap = 20
+    pick_up(p300)
     for s, d in zip(proteinase_k*num_samp, sample_block.wells()[:num_samp]):
-        pick_up(p300)
         p300.aspirate(24, s)
         p300.air_gap(airgap)
-        p300.dispense(24+airgap, d)
+        p300.dispense(24+airgap, d.top())
         p300.blow_out()
-        p300.drop_tip()
+    p300.drop_tip()
     ctx.delay(minutes=15)
     ctx.comment('\n\n\n\n\n')
 
