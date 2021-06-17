@@ -8,7 +8,7 @@
 	* Serial Dilution
 
 ## Description
-This protocol automates the serial dilution of two separate sample columns and also adds PBS buffer to the necessary wells. It will perform additional mixing steps before and after the addition of reagents.
+This protocol automates the serial dilution of two separate sample columns and also adds PBS buffer to the necessary wells. It will perform additional mixing steps before and after the addition of reagents. Each transfer performs a blow out in the destination well.
 
 Serial Dilution Plate Map:
 ![Serial Dilution Plate Map](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/7f9595/7f9595_dilution_map.png)
