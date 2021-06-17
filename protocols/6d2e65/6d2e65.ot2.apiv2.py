@@ -143,7 +143,7 @@ def run(ctx):
 
     ctx.delay(seconds=10)
     pause_attention("""
-    Set up for bead cleanup steps:
+    Set up for bead cleanup:
 
     reagent reservoir in deck slot 4:
     col 1 - beads
