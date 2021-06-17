@@ -50,7 +50,7 @@ Explanation of complex parameters below:
 **Steps 3 will repeat for the entire plate. This step also included a 10 uL residual volume.**
 4. Drop tips into Opentrons Fixed Trash Bin
 
-**Steps 1-4 will repeat for Plate 2**
+**Steps 1-4 will be repeated for Plate 2**
 
 
 ### Process
