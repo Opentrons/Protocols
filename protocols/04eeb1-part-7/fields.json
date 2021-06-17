@@ -13,8 +13,8 @@
         "label": "P20 Multichannel GEN2 Pipette Mount",
         "name": "m20_mount",
         "options": [
-          { "label": "Left", "value": "left" },
-          { "label": "Right", "value": "right" }
+          { "label": "Right", "value": "right" },
+          { "label": "Left", "value": "left" }
         ]
     }
 ]
