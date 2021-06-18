@@ -1,0 +1,17 @@
+[
+  {
+    "type": "dropDown",
+    "label": "P20-Single Mount",
+    "name": "mnt20",
+    "options": [
+      {"label": "Left", "value": "left"},
+      {"label": "Right", "value": "right"}
+    ]
+  },
+  {
+  "type": "textFile",
+  "label": "Transfer CSV",
+  "name": "transferCSV",
+  "default": "\nA1,3,A1\nA1,4,B1"
+  }
+]
