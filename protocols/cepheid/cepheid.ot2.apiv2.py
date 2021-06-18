@@ -1,22 +1,22 @@
-from opentrons import types
-import math
-
 metadata = {
-    'protocolName': 'Cepheid Pooling 30 Samples',
-    'author': 'Dipro <dipro@basisdx.org>',
+    'protocolName': 'Pooling Samples and Distribution to Cepheid',
+    'author': 'Dipro <dipro@basisdx.org>; Chaz <chaz@opentrons.com>',
     'source': 'Covid-19 Diagnostics',
     'apiLevel': '2.6'
 }
 
 
 def run(protocol):
+    [numSamps] = get_values(  # noqa: F821
+     'numSamps')
 
     # load labware and pipettes
     tips1000 = protocol.load_labware('opentrons_96_filtertiprack_1000ul', '8')
 
     p1000 = protocol.load_instrument(
         'p1000_single_gen2', 'right', tip_racks=[tips1000])
-    
+
+
     samp_tuberack_1 = protocol.load_labware('basisdx_15_tuberack_12000ul', '4')
     samp_tuberack_2 = protocol.load_labware('basisdx_15_tuberack_12000ul', '6')
 
@@ -61,8 +61,6 @@ def run(protocol):
     samp_28 = samp_tuberack_2['C3']
     samp_29 = samp_tuberack_2['C4']
     samp_30 = samp_tuberack_2['C5']
-
-
 
     pool_1 = pool_rack['A1']
     pool_2 = pool_rack['A5']
@@ -115,8 +113,10 @@ def run(protocol):
                 p1000.drop_tip()
 
     pool_party(my_list_of_samples_1,pool_1,cepheid_well_1)
-    pool_party(my_list_of_samples_2,pool_2,cepheid_well_2)
-    pool_party(my_list_of_samples_3,pool_3,cepheid_well_3)
+    if numSamps > 10:
+        pool_party(my_list_of_samples_2,pool_2,cepheid_well_2)
+    if numSamps > 20:
+        pool_party(my_list_of_samples_3,pool_3,cepheid_well_3)
 
     # Finish
     protocol.comment('Protocol complete!')
