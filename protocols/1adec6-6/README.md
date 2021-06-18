@@ -10,13 +10,13 @@
 ## Description
 This protocol is part six of a larger workflow. The entire workflow can be found below</br>
 
-Part 1: [Small Molecule Library Prep](./1adec6)
-Part 2: [Seed Cells](./1adec6-2)
-Part 3: [Transfer Small Molecules](./1adec6-3)
-Part 4: [Transfer Small Molecules - CSV Input](./1adec6-4)
-Part 5: [Custom Supernatant Removal](./1adec6-5)
-Part 6: [ProcartaPlex Protocol-1](./1adec6-6)
-Part 7: [ProcartaPlex Protocol-2](./1adec6-7)
+Part 1: [Small Molecule Library Prep](./1adec6)</br>
+Part 2: [Seed Cells](./1adec6-2)</br>
+Part 3: [Transfer Small Molecules](./1adec6-3)</br>
+Part 4: [Transfer Small Molecules - CSV Input](./1adec6-4)</br>
+Part 5: [Custom Supernatant Removal](./1adec6-5)</br>
+Part 6: [ProcartaPlex Protocol-1](./1adec6-6)</br>
+Part 7: [ProcartaPlex Protocol-2](./1adec6-7)</br>
 </br>
 This protocol is the first half of a custom, ProcartaPlex protocol. In this protocol, 50µL of Magnetic Beads are added to all the wells of the Destination Plate. The user is then prompted to remove the plate and incubate off the deck before returning to the robot. Once the Destination Plate is replaced, Wash Buffer is added and then 50µL of samples (columns 1-10 of Sample Plate) and standards (columns 1 and 2 of Standards Plate) are added to the Destination Plate. The user is then prompted to perform some off-deck steps before incubating overnight. Once incubation is complete, users can move on to [ProcartaPlex Protocol-2](./1adec6-7).
 

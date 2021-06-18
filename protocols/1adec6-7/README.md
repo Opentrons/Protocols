@@ -10,13 +10,13 @@
 ## Description
 This protocol is part seven of a larger workflow. The entire workflow can be found below</br>
 
-Part 1: [Small Molecule Library Prep](./1adec6)
-Part 2: [Seed Cells](./1adec6-2)
-Part 3: [Transfer Small Molecules](./1adec6-3)
-Part 4: [Transfer Small Molecules - CSV Input](./1adec6-4)
-Part 5: [Custom Supernatant Removal](./1adec6-5)
-Part 6: [ProcartaPlex Protocol-1](./1adec6-6)
-Part 7: [ProcartaPlex Protocol-2](./1adec6-7)
+Part 1: [Small Molecule Library Prep](./1adec6)</br>
+Part 2: [Seed Cells](./1adec6-2)</br>
+Part 3: [Transfer Small Molecules](./1adec6-3)</br>
+Part 4: [Transfer Small Molecules - CSV Input](./1adec6-4)</br>
+Part 5: [Custom Supernatant Removal](./1adec6-5)</br>
+Part 6: [ProcartaPlex Protocol-1](./1adec6-6)</br>
+Part 7: [ProcartaPlex Protocol-2](./1adec6-7)</br>
 </br>
 This protocol is the second half of a custom, ProcartaPlex protocol - the first half can be found [here](./1adec6-6). This protocol begins after the overnight incubation from the first half with two wash steps. After the washes, 25µL of Detection Antibodies are added to the wells and the user is prompted to remove the plate for off-deck processing. Once the plate is returned, two more wash steps occur. Once the washes are complete, 50µL of SAP is added to the wells and the user is again prompted to remove the deck for off-deck processing. Once the plate is returned, the final two wash steps occur, before 120µL of Reading Buffer is added to the wells - completing the automated portion of this workflow.
 
