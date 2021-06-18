@@ -10,13 +10,13 @@
 ## Description
 This protocol is part five of a larger workflow. The entire workflow can be found below</br>
 
-Part 1: [Small Molecule Library Prep](./1adec6)
-Part 2: [Seed Cells](./1adec6-2)
-Part 3: [Transfer Small Molecules](./1adec6-3)
-Part 4: [Transfer Small Molecules - CSV Input](./1adec6-4)
-Part 5: [Custom Supernatant Removal](./1adec6-5)
-Part 6: [ProcartaPlex Protocol-1](./1adec6-6)
-Part 7: [ProcartaPlex Protocol-2](./1adec6-7)
+Part 1: [Small Molecule Library Prep](./1adec6)</br>
+Part 2: [Seed Cells](./1adec6-2)</br>
+Part 3: [Transfer Small Molecules](./1adec6-3)</br>
+Part 4: [Transfer Small Molecules - CSV Input](./1adec6-4)</br>
+Part 5: [Custom Supernatant Removal](./1adec6-5)</br>
+Part 6: [ProcartaPlex Protocol-1](./1adec6-6)</br>
+Part 7: [ProcartaPlex Protocol-2](./1adec6-7)</br>
 </br>
 In this protocol, the [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-Channel-electronic-pipette) transfers 220µL of supernatant from source plate containing cells to a destination plate. Once complete, the [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-Channel-electronic-pipette) will transfer 100µL of PBS to the original source plate.
 
