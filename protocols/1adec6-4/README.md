@@ -10,26 +10,26 @@
 ## Description
 This protocol is part four of a larger workflow. The entire workflow can be found below</br>
 
-Part 1: [Small Molecule Library Prep](./1adec6)
-Part 2: [Seed Cells](./1adec6-2)
-Part 3: [Transfer Small Molecules](./1adec6-3)
-Part 4: [Transfer Small Molecules - CSV Input](./1adec6-4)
-Part 5: [Custom Supernatant Removal](./1adec6-5)
-Part 6: [ProcartaPlex Protocol-1](./1adec6-6)
-Part 7: [ProcartaPlex Protocol-2](./1adec6-7)
+Part 1: [Small Molecule Library Prep](./1adec6)</br>
+Part 2: [Seed Cells](./1adec6-2)</br>
+Part 3: [Transfer Small Molecules](./1adec6-3)</br>
+Part 4: [Transfer Small Molecules - CSV Input](./1adec6-4)</br>
+Part 5: [Custom Supernatant Removal](./1adec6-5)</br>
+Part 6: [ProcartaPlex Protocol-1](./1adec6-6)</br>
+Part 7: [ProcartaPlex Protocol-2](./1adec6-7)</br>
 </br>
 In this protocol, a CSV is used to dictate the volume and destination of liquid transfers using the [P20 Single-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/Single-Channel-electronic-pipette).
 
 Explanation of complex parameters below:
 * **P20-Single Mount**: Select which mount the P20-Single Pipette is attached to.
 * **Transfer CSV**: Upload the CSV containing the liquid transfers. The CSV should be formatted as follows:</br>
+</br>
 
-
-| Source Well | Volume | Destination Well |
-| ----------- | ------ | ---------------- |
-| A1          | 3      | C2               |
-| A1          | 2      | B4               |
-| A2          | 5      | D7               |
+| Source Well | Volume | Destination Well |</br>
+| ----------- | ------ | ---------------- |</br>
+| A1          | 3      | C2               |</br>
+| A1          | 2      | B4               |</br>
+| A2          | 5      | D7               |</br>
 
 
 ---
