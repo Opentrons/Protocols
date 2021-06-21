@@ -1,9 +1,8 @@
 import math
 from opentrons import types
-from opentrons.protocol_api.labware import OutOfTipsError
 
 metadata = {
-    'protocolName': '''Bead Cleanup with Omega MagBind TotalPure NGS Beads''',
+    'protocolName': '''Auto_Manual Hybrid Bead Cleanup 96-wells_v2''',
     'author': 'Steve Plonk <protocols@opentrons.com>',
     'apiLevel': '2.9'
 }
@@ -12,113 +11,37 @@ metadata = {
 def run(ctx):
 
     # get parameter values from json above
-    [sample_count, labware_tips300, labware_pcr_plate_1, labware_pcr_plate_2,
-     labware_reservoir, clearance_reservoir,
-     clearance_elution, clearance_bead_pellet,
-     flow_rate_beads, delay_beads, engage_height, engage_time, dry_time
+    [sample_count, clearance_bead_pellet, x_offset_bead_pellet,
+     clearance_elution, x_offset_elution, flow_rate_elution
      ] = get_values(  # noqa: F821
-      'sample_count', 'labware_tips300', 'labware_pcr_plate_1',
-      'labware_pcr_plate_2', 'labware_reservoir', 'clearance_reservoir',
-      'clearance_elution', 'clearance_bead_pellet', 'flow_rate_beads',
-      'delay_beads', 'engage_height', 'engage_time', 'dry_time')
+      'sample_count', 'clearance_bead_pellet', 'x_offset_bead_pellet',
+      'clearance_elution', 'x_offset_elution', 'flow_rate_elution')
 
     ctx.set_rail_lights(True)
+
+    # restrict clearances to 0-4 mm and x offsets to 0-2.5 mm
     if not 1 <= sample_count <= 96:
         raise Exception('Invalid number of samples (must be 1-96).')
+    if not 0 <= x_offset_bead_pellet <= 2.5:
+        raise Exception('x_offset_bead_pellet must be between 0 and 2.5 mm.')
+    if not 0 <= clearance_bead_pellet <= 4:
+        raise Exception('clearance_bead_pellet must be between 0 and 4 mm.')
+    if not 0 <= x_offset_elution <= 2.5:
+        raise Exception('x_offset_elution must be between 0 and 2.5 mm.')
+    if not 0 <= clearance_elution <= 4:
+        raise Exception('clearance_elution must be between 0 and 4 mm.')
 
     # tips, p300 multi gen2
     tips300 = [
-     ctx.load_labware(labware_tips300, str(slot)) for slot in [5, 6, 7, 8, 10]]
+     ctx.load_labware(
+      'opentrons_96_filtertiprack_200ul', str(slot)) for slot in [
+      5, 6, 7, 8, 10, 11]]
     p300m = ctx.load_instrument(
-        "p300_multi_gen2", 'right', tip_racks=tips300)
+        "p300_multi_gen2", 'left', tip_racks=tips300)
 
     """
-    helper functions
+    helper functions for tip parking
     """
-    def pick_up_or_refill(current_pipette):
-        try:
-            current_pipette.pick_up_tip()
-        except OutOfTipsError:
-            pause_attention(
-             "Please Refill the {} Tip Boxes".format(current_pipette))
-            current_pipette.reset_tipracks()
-            current_pipette.pick_up_tip()
-
-    def pause_attention(message):
-        ctx.set_rail_lights(False)
-        ctx.delay(seconds=10)
-        ctx.pause(message)
-        ctx.set_rail_lights(True)
-
-    def aspirate_with_delay(current_pipette, volume, source, delay_seconds):
-        current_pipette.aspirate(volume, source)
-        if delay_seconds > 0:
-            ctx.delay(seconds=delay_seconds)
-
-    def dispense_with_delay(current_pipette, volume, dest, delay_seconds):
-        current_pipette.dispense(volume, dest)
-        if delay_seconds > 0:
-            ctx.delay(seconds=delay_seconds)
-
-    def mix_with_delay(current_pipette, volume, location, delay_seconds):
-        current_pipette.aspirate(volume, location)
-        if delay_seconds > 0:
-            ctx.delay(seconds=delay_seconds)
-        current_pipette.dispense(volume, location)
-        if delay_seconds > 0:
-            ctx.delay(seconds=delay_seconds)
-
-    def slow_tip_withdrawal(current_pipette, well_location, to_center=False):
-        if current_pipette.mount == 'right':
-            axis = 'A'
-        else:
-            axis = 'Z'
-        ctx.max_speeds[axis] = 10
-        if to_center is False:
-            current_pipette.move_to(well_location.top())
-        else:
-            current_pipette.move_to(well_location.center())
-        ctx.max_speeds[axis] = None
-
-    def pre_wet(current_pipette, volume, location):
-        for rep in range(2):
-            current_pipette.aspirate(volume, location)
-            current_pipette.dispense(volume, location)
-
-    def set_default_clearances(
-     current_pipette, aspirate_setting, dispense_setting):
-        if 0 < aspirate_setting < 5 and 0 < dispense_setting < 5:
-            current_pipette.well_bottom_clearance.aspirate = aspirate_setting
-            current_pipette.well_bottom_clearance.dispense = dispense_setting
-
-    def restore_default_clearances(current_pipette):
-        current_pipette.well_bottom_clearance.aspirate = 1
-        current_pipette.well_bottom_clearance.dispense = 1
-
-    def custom_flow_rates(current_pipette):
-        current_pipette.flow_rate.aspirate = flow_rate_beads
-        current_pipette.flow_rate.dispense = flow_rate_beads
-        current_pipette.flow_rate.blow_out = 300
-
-    def etoh_flow_rates(current_pipette):
-        if (current_pipette.name == 'p300_multi_gen2' or
-           current_pipette.name == 'p300_single_gen2'):
-            current_pipette.flow_rate.aspirate = 92.86
-            current_pipette.flow_rate.dispense = 92.86
-            current_pipette.flow_rate.blow_out = 300
-
-    def default_flow_rates(current_pipette):
-        if (current_pipette.name == 'p300_multi_gen2' or
-           current_pipette.name == 'p300_single_gen2'):
-            current_pipette.flow_rate.aspirate = 92.86
-            current_pipette.flow_rate.dispense = 92.86
-            current_pipette.flow_rate.blow_out = 92.86
-        elif (current_pipette.name == 'p20_multi_gen2' or
-              current_pipette.name == 'p20_single_gen2'):
-            current_pipette.flow_rate.aspirate = 7.56
-            current_pipette.flow_rate.dispense = 7.56
-            current_pipette.flow_rate.blow_out = 7.56
-
     named_tips = {}
 
     def name_the_tips(tip_box, name_list, well_list):
@@ -141,192 +64,167 @@ def run(ctx):
                 return (tips300[index], current_starting_tip.well_name)
                 break
 
-    ctx.delay(seconds=10)
-    pause_attention("""
-    Set up for bead cleanup:
-
-    reagent reservoir in deck slot 4:
-    col 1 - beads
-    col 2 - 80 percent ethanol
-    col 3 - 80 percent ethanol
-    col 5 - water
-    col 11 - liquid waste
-    col 12 - liquid waste
-
-    PCR1 plate on Magnetic Module
-    Magnetic Module in deck slot 3
-
-    Clean plate (PCR2) in deck slot 1
-
-    p300 tips in slots 5,6,7,8,10
-    """)
-    reagent_reservoir = ctx.load_labware(
-     labware_reservoir, '4', 'Reagent Reservoir')
-    [beads, etoh_1, etoh_2, water, waste_1, waste_2] = [
-     reagent_reservoir.wells_by_name()[well] for well in [
-      'A1', 'A2', 'A3', 'A5', 'A12', 'A11']]
-    mag = ctx.load_module('magnetic module gen2', '3')
-    mag.disengage()
-    mag_plate = mag.load_labware(labware_pcr_plate_1, 'PCR1 Mag Plate')
-
-    ctx.comment("""
-    PCR1 plate on Magnetic Module:
-    containing samples arranged in columns of 8
-    up to 96 samples total
-    {} samples in this run
-    """.format(str(sample_count)))
+    # number of sample columns
     num_cols = math.ceil(sample_count / 8)
 
-    ctx.comment("""
-    Clean plate (PCR2 plate) in deck slot 1
-    """)
-    pcr2_plate = ctx.load_labware(
-     labware_pcr_plate_2, '1', 'PCR2 Plate')
+    # CLEAN PLATE (slot 1)
+    clean_plate = ctx.load_labware(
+     'neptunescientificgeneseescientificadaptor_96_wellplate_200ul',
+     '1', 'CLEAN PLATE')
 
-    ctx.comment("""
-    mix beads before each aspiration 2X 100 ul
-    transfer 36 ul beads to each PCR1 column
-    mix after 6X 50 ul
-    wait, engage
+    # NO MAG (slot 2)
+    no_mag = ctx.load_labware(
+     'neptunescientificgeneseescientificadaptor_96_wellplate_200ul',
+     '2', 'NO MAG')
 
-    liquid handling method for beads:
-    slow flow rate for aspiration and dispense
-    wait for liquid to finish moving after aspiration and dispense
-    withdraw tip slowly from liquid
-    blowout at top of destination well
-    touch tip
-    """)
-    custom_flow_rates(p300m)
-    for column in mag_plate.columns()[:num_cols]:
+    # MAGPLATE (slot 3)
+    mag_plate = ctx.load_labware(
+     'alpaqua96sneptune_96_wellplate_200ul', '3', 'MAGPLATE')
+
+    # NEST 12 well reservoir (slot 4)
+    reagent_reservoir = ctx.load_labware(
+     'nest_12_reservoir_15ml', '4')
+    [beads, etoh_1, etoh_2, water, waste_1, waste_2] = [
+     reagent_reservoir.wells_by_name()[well] for well in [
+      'A1', 'A2', 'A3', 'A4', 'A12', 'A11']]
+
+    # step 1: 36 ul beads at 30 ul/sec to NO MAG columns
+    for column in no_mag.columns()[:num_cols]:
+        p300m.flow_rate.aspirate = 50
+        p300m.flow_rate.dispense = 50
         p300m.pick_up_tip()
-        for rep in range(2):
-            mix_with_delay(
-             p300m, 100, beads.bottom(clearance_reservoir), delay_beads)
-        aspirate_with_delay(
-         p300m, 36, beads.bottom(clearance_reservoir), delay_beads)
-        slow_tip_withdrawal(p300m, beads)
-        dispense_with_delay(p300m, 36, column[0].bottom(3), delay_beads)
-        for repeat in range(6):
-            mix_with_delay(p300m, 50, column[0].bottom(3), delay_beads)
-        slow_tip_withdrawal(p300m, column[0])
-        p300m.blow_out(column[0].top())
-        p300m.touch_tip(radius=0.75, v_offset=-2, speed=20)
+        p300m.mix(2, 50, beads.bottom(1))
+        p300m.flow_rate.aspirate = 30
+        p300m.flow_rate.dispense = 30
+        p300m.transfer(
+         36, beads.bottom(1), column[0].bottom(3), new_tip='never')
+        p300m.mix(6, 40, column[0].bottom(1))
+        p300m.move_to(column[0].top())
+        p300m.air_gap(20)
         p300m.drop_tip()
-    ctx.delay(minutes=2)
-    mag.engage(height=engage_height)
-    ctx.delay(minutes=engage_time)
 
-    ctx.comment("""
-        remove sup to reservoir col 12
-        with tips to side to avoid bead pellet
-        park tips
+    # step 2: pause with message
+    ctx.pause("""
+    Bring to hood. Incubate 2 minutes, set on mag plate until clear (~5 min).
+    Aspirate out all liquid. Set MagPlate in Slot 3 and Resume.
+    """)
 
-        two repeats:
-        add EtOH dispensing 3 mm above top
-        use parked tips to remove sup to col 11
+    # step 3: 80 ul EtOH (A2) at 20 ul/sec to MAGPLATE columns
+    p300m.flow_rate.aspirate = 20
+    p300m.flow_rate.dispense = 20
+    p300m.transfer(
+     80, etoh_1.bottom(1), [
+      column[0].bottom(26) for column in mag_plate.columns()[:num_cols]])
 
-        dry beads
-
-        liquid handling method for ethanol:
-        pre-wet tips (to saturate air inside tip)
-        15 ul air gap after aspiration (to avoid drips)
-        repeated delayed blowout (for complete dispense)
-        """)
+    # step 4: 80 ul MAGPLATE sup (aspirate to side to avoid bead pellet)
+    # at 20 ul/sec to NEST reservoir A12 (dispense from top), return tips
     for index, column in enumerate(mag_plate.columns()[:num_cols]):
-        capture_current_starting_tip()
-        name_the_tips(capture_current_starting_tip()[0], ['sup_tips'], [
+        ccst = capture_current_starting_tip()
+        name_the_tips(ccst[0], ['sup_tips'], [
          named_tips['current_tip'].well_name])
         p300m.pick_up_tip()
         if index % 2 != 1:
-            # offset 1 mm to right for even columns to avoid bead pellet
+            # offset to right (for even columns) to avoid bead pellet
             aspirate_location = column[0].bottom(
-             clearance_bead_pellet).move(types.Point(x=1, y=0, z=0))
+             clearance_bead_pellet).move(
+             types.Point(x=x_offset_bead_pellet, y=0, z=0))
         else:
-            # offset 1 mm to left for odd columns to avoid bead pellet
+            # offset to left (for odd columns) to avoid bead pellet
             aspirate_location = column[0].bottom(
-             clearance_bead_pellet).move(types.Point(x=-1, y=0, z=0))
-        aspirate_with_delay(p300m, 60, aspirate_location, delay_beads)
-        slow_tip_withdrawal(p300m, column[0])
-        dispense_with_delay(p300m, 60, waste_1.top(3), delay_beads)
-        p300m.blow_out(waste_1.top(3))
+             clearance_bead_pellet).move(
+             types.Point(x=-1*x_offset_bead_pellet, y=0, z=0))
+        p300m.move_to(column[0].top())
+        ctx.max_speeds['Z'] = 10
+        p300m.move_to(column[0].bottom(4))
+        p300m.aspirate(40, column[0].bottom(4))
+        p300m.aspirate(40, aspirate_location)
+        p300m.move_to(column[0].top())
+        ctx.max_speeds['Z'] = None
+        p300m.air_gap(20)
+        p300m.dispense(100, waste_1.top(3))
+        p300m.air_gap(20)
         p300m.return_tip()
-    for source in [etoh_1, etoh_2]:
-        p300m.pick_up_tip()
-        for column in mag_plate.columns()[:num_cols]:
-            pre_wet(p300m, 150, source.bottom(clearance_reservoir))
-            p300m.aspirate(80, source.bottom(clearance_reservoir))
-            p300m.air_gap(20)
-            p300m.dispense(100, column[0].top(3))
-            for rep in range(3):
-                if rep != 0:
-                    p300m.aspirate(150, column[0].top(3))
-                ctx.delay(seconds=1)
-                p300m.blow_out(column[0].top(3))
-        p300m.drop_tip()
-        for index, column in enumerate(mag_plate.columns()[:num_cols]):
-            p300m.pick_up_tip(named_tips['sup_tips'][index])
-            if index % 2 != 1:
-                # offset 1 mm to right for even columns to avoid bead pellet
-                aspirate_location = column[0].bottom(
-                 clearance_bead_pellet).move(types.Point(x=1, y=0, z=0))
-            else:
-                # offset 1 mm to left for odd columns to avoid bead pellet
-                aspirate_location = column[0].bottom(
-                 clearance_bead_pellet).move(types.Point(x=-1, y=0, z=0))
-            p300m.aspirate(85, aspirate_location)
-            p300m.air_gap(20)
-            p300m.dispense(105, waste_2.top(3))
-            for rep in range(3):
-                if rep != 0:
-                    p300m.aspirate(150, waste_2.top(3))
-                ctx.delay(seconds=1)
-                p300m.blow_out(waste_2.top(3))
-            if source == etoh_1:
-                p300m.return_tip()
-            else:
-                p300m.drop_tip()
 
-    ctx.delay(minutes=dry_time)
-    mag.disengage()
-    ctx.comment("""
-    add water and mix
-    wait
-    engage magnets
-    transfer eluate to clean plate
+    # step 5: 80 ul EtOH (A3) at 20 ul/sec to MAGPLATE columns
+    p300m.flow_rate.aspirate = 20
+    p300m.flow_rate.dispense = 20
+    p300m.transfer(
+     80, etoh_2.bottom(1), [
+      column[0].bottom(26) for column in mag_plate.columns()[:num_cols]])
 
-    liquid handling method for beads:
-    slow flow rate for aspiration and dispense
-    wait for liquid to finish moving after aspiration and dispense
-    withdraw tip slowly from liquid
-    blowout at top of destination well
-    touch tip
-    """)
+    # step 6: 80 ul MAGPLATE sup (aspirate to side to avoid bead pellet)
+    # at 20 ul/sec to NEST reservoir A11 (dispense from top), return tips
     for index, column in enumerate(mag_plate.columns()[:num_cols]):
-        p300m.pick_up_tip()
-        p300m.aspirate(43, water.bottom(clearance_reservoir))
-        p300m.dispense(43, column[0].bottom(clearance_elution))
-        for rep in range(10):
-            mix_with_delay(
-             p300m, 20, column[0].bottom(clearance_elution), delay_beads)
-        slow_tip_withdrawal(p300m, column[0])
-        p300m.blow_out(column[0].top())
-        p300m.touch_tip(radius=0.75, v_offset=-2, speed=20)
+        p300m.pick_up_tip(named_tips['sup_tips'][index])
+        if index % 2 != 1:
+            # offset to right (for even columns) to avoid bead pellet
+            aspirate_location = column[0].bottom(clearance_bead_pellet).move(
+             types.Point(x=x_offset_bead_pellet, y=0, z=0))
+        else:
+            # offset to left (for odd columns) to avoid bead pellet
+            aspirate_location = column[0].bottom(clearance_bead_pellet).move(
+             types.Point(x=-1*x_offset_bead_pellet, y=0, z=0))
+        p300m.move_to(column[0].top())
+        ctx.max_speeds['Z'] = 10
+        p300m.move_to(column[0].bottom(4))
+        p300m.aspirate(40, column[0].bottom(4))
+        p300m.aspirate(40, aspirate_location)
+        p300m.move_to(column[0].top())
+        ctx.max_speeds['Z'] = None
+        p300m.air_gap(20)
+        p300m.dispense(100, waste_2.bottom(3.5))
+        p300m.air_gap(20)
         p300m.drop_tip()
-    ctx.delay(minutes=2)
-    mag.engage(height=engage_height)
-    ctx.delay(minutes=engage_time)
+
+    # step 7: pause with message
+    ctx.pause("Bead Drying. Move plate to Slot 2 (Blue GenSci rack).")
+
+    # step 8: 43 ul water to NO MAG at 30 ul/sec, mix 6X to resuspend beads
+    p300m.flow_rate.aspirate = flow_rate_elution
+    p300m.flow_rate.dispense = flow_rate_elution
+    for index, column in enumerate(no_mag.columns()[:num_cols]):
+        p300m.pick_up_tip()
+        if index % 2 != 1:
+            # offset to left (for even columns) to be closer to bead pellet
+            dispense_location = column[0].bottom(clearance_elution).move(
+             types.Point(x=-1*x_offset_elution, y=0, z=0))
+        else:
+            # offset to right (for odd columns) to be closer to bead pellet
+            dispense_location = column[0].bottom(clearance_elution).move(
+             types.Point(x=x_offset_elution, y=0, z=0))
+        p300m.move_to(column[0].top())
+        p300m.move_to(column[0].bottom(4))
+        p300m.aspirate(43, water.bottom(1))
+        p300m.dispense(43, dispense_location)
+        p300m.mix(6, 40, dispense_location)
+        p300m.move_to(column[0].top())
+        p300m.air_gap(20)
+        p300m.drop_tip()
+
+    # step 9: pause with message
+    ctx.pause("""
+    Incubate 2 min with beads. Move to Slot 3 (MagPlate).
+    Resume when solution is clear.
+    """)
+
+    # step 10: 40 ul MAGPLATE eluate to CLEAN PLATE at 20 ul/sec
+    p300m.flow_rate.aspirate = 20
+    p300m.flow_rate.dispense = 20
     for index, column in enumerate(mag_plate.columns()[:num_cols]):
         p300m.pick_up_tip()
         if index % 2 != 1:
-            # offset 1 mm to right for even columns to avoid bead pellet
-            aspirate_location = column[0].bottom(
-             clearance_elution).move(types.Point(x=1, y=0, z=0))
+            # offset to right (for even columns) to avoid bead pellet
+            aspirate_location = column[0].bottom(1).move(
+             types.Point(x=x_offset_bead_pellet, y=0, z=0))
         else:
-            # offset 1 mm to left for odd columns to avoid bead pellet
-            aspirate_location = column[0].bottom(
-             clearance_elution).move(types.Point(x=-1, y=0, z=0))
+            # offset to left (for odd columns) to avoid bead pellet
+            aspirate_location = column[0].bottom(1).move(
+             types.Point(x=-1*x_offset_bead_pellet, y=0, z=0))
+        p300m.move_to(column[0].top())
+        p300m.move_to(column[0].bottom(4))
         p300m.aspirate(40, aspirate_location)
-        p300m.dispense(
-         40, pcr2_plate.columns()[index][0].bottom(clearance_elution))
+        p300m.dispense(40, clean_plate.columns()[index][0].bottom(0.5))
+        p300m.mix(1, 20, clean_plate.columns()[index][0].bottom(0.5))
+        p300m.move_to(column[0].top())
+        p300m.air_gap(20)
         p300m.drop_tip()
-    default_flow_rates(p300m)
