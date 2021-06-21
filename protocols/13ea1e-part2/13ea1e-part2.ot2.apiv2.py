@@ -120,6 +120,7 @@ def run(ctx):
 
             p20.aspirate(7, source.bottom(z=1.5))
             p20.dispense(7+airgap, well)
+            p20.blow_out()
     p20.drop_tip()
     ctx.comment('\n\n\n\n\n\n')
 
