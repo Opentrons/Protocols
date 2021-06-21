@@ -1,5 +1,5 @@
 {
-    "content": "metadata = {\n    'protocolName': 'Post RC-PCR Pooling of Nimagen SARS CoV-2 Library Prep',\n    'author': 'Sakib <sakib.hossain@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.9'\n}\n\n\ndef run(ctx):\n\n    [step1, step2, quad1_cols, quad2_cols, quad3_cols, quad4_cols, m20_mount,\n        p300_mount, donor_384_type, trans_vol1,\n        step1_mix_vol] = get_values(  # noqa: F821\n        \"step1\", \"step2\", \"quad1_cols\", \"quad2_cols\", \"quad3_cols\",\n        \"quad4_cols\", \"m20_mount\", \"p300_mount\", \"donor_384_type\",\n        \"trans_vol1\", \"step1_mix_vol\")\n\n    # Load Labware\n    donor_384_plate = ctx.load_labware(donor_384_type, 1)\n    recipient_96_plate = ctx.load_labware(\n        'eppendorftwin.tec_96_wellplate_150ul', 2)\n    tiprack_20ul = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)\n                    for slot in [4, 5, 6, 7]]\n    tiprack_200ul = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)\n                     for slot in [8]]\n    tuberack = ctx.load_labware(\n            'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', 3)['A1']\n\n    # Load Pipettes\n    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount,\n                              tip_racks=tiprack_20ul)\n    p300 = ctx.load_instrument('p300_single_gen2', p300_mount,\n                               tip_racks=tiprack_200ul)\n\n    # Get wells by quadrant\n    quad1 = [col for col in donor_384_plate.rows()[0][::2]][:quad1_cols]\n    quad2 = [col for col in donor_384_plate.rows()[0][1::2]][:quad2_cols]\n    quad3 = [col for col in donor_384_plate.rows()[1][::2]][:quad3_cols]\n    quad4 = [col for col in donor_384_plate.rows()[1][1::2]][:quad4_cols]\n\n    # Step 1\n    if step1 == \"True\":\n        for quad in [quad1, quad2, quad3, quad4]:\n            for col in quad:\n                m20.pick_up_tip()\n                m20.transfer(trans_vol1, col, recipient_96_plate['A1'],\n                             new_tip='never', mix_before=(3, step1_mix_vol))\n                m20.drop_tip()\n\n    # Step 2\n    if step2 == \"True\":\n        # Calculate max volume per well\n        max_well_vol = (quad1_cols + quad2_cols + quad3_cols +\n                        quad4_cols) * trans_vol1\n        source_wells = recipient_96_plate.columns()[0]\n\n        for source in source_wells:\n            p300.pick_up_tip()\n            p300.transfer(max_well_vol, source, tuberack, new_tip='never',\n                          mix_before=(3, max_well_vol/2))\n            p300.drop_tip()\n",
+    "content": "metadata = {\n    'protocolName': 'Post RC-PCR Pooling of Nimagen SARS CoV-2 Library Prep',\n    'author': 'Sakib <sakib.hossain@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.9'\n}\n\n\ndef run(ctx):\n\n    [step1, step2, quad1_exclude_cols, quad2_exclude_cols, quad3_exclude_cols,\n        quad4_exclude_cols, m20_mount,\n        p300_mount, donor_384_type, trans_vol1,\n        step1_mix_vol, pre_asp_air, delay_after_asp, delay_after_disp,\n        disp_speed] = get_values(  # noqa: F821\n        \"step1\", \"step2\", \"quad1_exclude_cols\", \"quad2_exclude_cols\",\n        \"quad3_exclude_cols\",\n        \"quad4_exclude_cols\", \"m20_mount\", \"p300_mount\", \"donor_384_type\",\n        \"trans_vol1\", \"step1_mix_vol\", \"pre_asp_air\", \"delay_after_asp\",\n        \"delay_after_disp\", \"disp_speed\")\n\n    # Load Labware\n    donor_384_plate = ctx.load_labware(donor_384_type, 1)\n    recipient_96_plate = ctx.load_labware(\n        'eppendorftwin.tec_96_wellplate_150ul', 2)\n    tiprack_20ul = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)\n                    for slot in [4, 5, 6, 7]]\n    tiprack_200ul = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)\n                     for slot in [8]]\n    tuberack = ctx.load_labware(\n            'opentrons_24_aluminumblock_nest_1.5ml_snapcap', 3)['A1']\n\n    # Load Pipettes\n    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount,\n                              tip_racks=tiprack_20ul)\n    p300 = ctx.load_instrument('p300_single_gen2', p300_mount,\n                               tip_racks=tiprack_200ul)\n\n    # Helper Functions\n    def preWet(pipette, volume, location):\n        for _ in range(1):\n            pipette.aspirate(volume, location)\n            pipette.dispense(volume, location)\n\n    def excludeQuadCols(excludedCols, quadList):\n        quad_exclude_cols = []\n        if excludedCols != \"\":\n            quad_exclude_cols = [int(i)-1 for i in excludedCols.split(\",\")]\n            quad_dests = [col for i, col in enumerate(quadList) if i\n                          not in quad_exclude_cols]\n            return quad_dests\n        else:\n            quad_dests = [col for i, col in enumerate(quadList) if i\n                          not in quad_exclude_cols]\n            return quad_dests\n\n    # Get wells by quadrant\n    quad1 = [col for col in donor_384_plate.rows()[0][::2]]\n    quad2 = [col for col in donor_384_plate.rows()[0][1::2]]\n    quad3 = [col for col in donor_384_plate.rows()[1][::2]]\n    quad4 = [col for col in donor_384_plate.rows()[1][1::2]]\n\n    quad1_dests = excludeQuadCols(quad1_exclude_cols, quad1)\n    quad2_dests = excludeQuadCols(quad2_exclude_cols, quad2)\n    quad3_dests = excludeQuadCols(quad3_exclude_cols, quad3)\n    quad4_dests = excludeQuadCols(quad4_exclude_cols, quad4)\n\n    # Step 1\n    if step1 == \"True\":\n        m20.flow_rate.dispense = disp_speed\n        for quad in [quad1_dests, quad2_dests, quad3_dests, quad4_dests]:\n            for col in quad:\n                m20.pick_up_tip()\n                ctx.comment('Pre-Wetting the tip')\n                preWet(m20, trans_vol1, col)\n                ctx.comment('Mixing before transfer to recepient plate.')\n                m20.mix(3, step1_mix_vol, col)\n                ctx.comment('Pre-Aspirating a 5 uL Air Gap.')\n                m20.aspirate(pre_asp_air, col.top())\n                ctx.comment('Starting transfer to recipient plate.')\n                m20.aspirate(trans_vol1, col)\n                ctx.delay(seconds=delay_after_asp, msg=f'''{delay_after_asp}\n                          second delay after aspirating.''')\n                m20.dispense(trans_vol1, recipient_96_plate['A1'])\n                ctx.delay(seconds=delay_after_disp, msg=f'''{delay_after_disp}\n                          second delay after dispensing.''')\n                m20.air_gap(10)\n                m20.drop_tip()\n\n    # Step 2\n    if step2 == \"True\":\n        # Calculate max volume per well\n        max_well_vol = (len(quad1_dests) + len(quad2_dests) +\n                        len(quad3_dests) + len(quad4_dests)) * trans_vol1\n        source_wells = recipient_96_plate.columns()[0]\n\n        for source in source_wells:\n            p300.pick_up_tip()\n            p300.transfer(max_well_vol, source, tuberack, new_tip='never',\n                          mix_before=(3, max_well_vol/2))\n            p300.air_gap(20)\n            p300.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -14118,28 +14118,28 @@
             "type": "dropDown"
         },
         {
-            "default": 12,
-            "label": "Quadrant 1 Columns (Max 12)",
-            "name": "quad1_cols",
-            "type": "int"
+            "default": "1,12",
+            "label": "Quadrant 1 Columns to Exclude",
+            "name": "quad1_exclude_cols",
+            "type": "str"
         },
         {
-            "default": 12,
-            "label": "Quadrant 2 Columns (Max 12)",
-            "name": "quad2_cols",
-            "type": "int"
+            "default": "1,12",
+            "label": "Quadrant 2 Columns to Exclude",
+            "name": "quad2_exclude_cols",
+            "type": "str"
         },
         {
-            "default": 12,
-            "label": "Quadrant 3 Columns (Max 12)",
-            "name": "quad3_cols",
-            "type": "int"
+            "default": "1,12",
+            "label": "Quadrant 3 Columns to Exclude",
+            "name": "quad3_exclude_cols",
+            "type": "str"
         },
         {
-            "default": 12,
-            "label": "Quadrant 4 Columns (Max 12)",
-            "name": "quad4_cols",
-            "type": "int"
+            "default": "1,12",
+            "label": "Quadrant 4 Columns to Exclude",
+            "name": "quad4_exclude_cols",
+            "type": "str"
         },
         {
             "label": "P20 Multichannel Mount Position",
@@ -14201,6 +14201,30 @@
             "label": "Step 1 Transfer Volume",
             "name": "trans_vol1",
             "type": "float"
+        },
+        {
+            "default": 5,
+            "label": "Volume of Air to Pre-Aspirate",
+            "name": "pre_asp_air",
+            "type": "float"
+        },
+        {
+            "default": 1,
+            "label": "Delay After Aspirating (seconds)",
+            "name": "delay_after_asp",
+            "type": "float"
+        },
+        {
+            "default": 1,
+            "label": "Delay After Dispensing (seconds)",
+            "name": "delay_after_disp",
+            "type": "float"
+        },
+        {
+            "default": 3,
+            "label": "Dispensing Speed (uL/second)",
+            "name": "disp_speed",
+            "type": "float"
         }
     ],
     "instruments": [
@@ -14227,10 +14251,10 @@
             "type": "eppendorftwin.tec_96_wellplate_150ul"
         },
         {
-            "name": "Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap on 3",
+            "name": "Opentrons 24 Well Aluminum Block with NEST 1.5 mL Snapcap on 3",
             "share": false,
             "slot": "3",
-            "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
+            "type": "opentrons_24_aluminumblock_nest_1.5ml_snapcap"
         },
         {
             "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 4",
