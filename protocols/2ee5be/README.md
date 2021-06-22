@@ -10,6 +10,14 @@
 ## Description
 This protocol performs PCR prep by reformatting 4 different 96 Well King Fisher plates into a MicroAmp 384 Well PCR plate. It begins by creating an adequate amount of mastermix depending on the number of samples.
 
+**96 Well Plate Format**
+
+![96 Well Plates](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2ee5be/96_plates.png)
+
+**384 Well Plate Format**
+
+![384 Well Plate](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2ee5be/384_plate.png)
+
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
