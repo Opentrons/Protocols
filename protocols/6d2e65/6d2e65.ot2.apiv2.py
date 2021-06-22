@@ -184,6 +184,7 @@ def run(ctx):
     p300m.flow_rate.dispense = flow_rate_elution
     for index, column in enumerate(no_mag.columns()[:num_cols]):
         p300m.pick_up_tip()
+        p300m.aspirate(43, water.bottom(1))
         if index % 2 != 1:
             # offset to left (for even columns) to be closer to bead pellet
             dispense_location = column[0].bottom(clearance_elution).move(
@@ -194,7 +195,6 @@ def run(ctx):
              types.Point(x=x_offset_elution, y=0, z=0))
         p300m.move_to(column[0].top())
         p300m.move_to(column[0].bottom(4))
-        p300m.aspirate(43, water.bottom(1))
         p300m.dispense(43, dispense_location)
         p300m.mix(6, 40, dispense_location)
         p300m.move_to(column[0].top())
@@ -214,17 +214,17 @@ def run(ctx):
         p300m.pick_up_tip()
         if index % 2 != 1:
             # offset to right (for even columns) to avoid bead pellet
-            aspirate_location = column[0].bottom(1).move(
+            aspirate_location = column[0].bottom(2).move(
              types.Point(x=x_offset_bead_pellet, y=0, z=0))
         else:
             # offset to left (for odd columns) to avoid bead pellet
-            aspirate_location = column[0].bottom(1).move(
+            aspirate_location = column[0].bottom(2).move(
              types.Point(x=-1*x_offset_bead_pellet, y=0, z=0))
         p300m.move_to(column[0].top())
         p300m.move_to(column[0].bottom(4))
         p300m.aspirate(40, aspirate_location)
         p300m.dispense(40, clean_plate.columns()[index][0].bottom(0.5))
         p300m.mix(1, 20, clean_plate.columns()[index][0].bottom(0.5))
-        p300m.move_to(column[0].top())
+        p300m.move_to(clean_plate.columns()[index][0].top())
         p300m.air_gap(20)
         p300m.drop_tip()
