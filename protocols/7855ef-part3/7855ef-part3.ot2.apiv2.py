@@ -90,7 +90,7 @@ def run(protocol):
         m20.aspirate(1, s)
         m20.air_gap(airgap)
         m20.dispense(1+airgap, d)
-        m20.mix(2, 8)
+        m20.mix(2, 8, d)
         m20.blow_out()
         m20.return_tip()
 
@@ -100,7 +100,7 @@ def run(protocol):
         m20.aspirate(3, barcode_rxn_mix)
         m20.air_gap(airgap)
         m20.dispense(1+airgap, col)
-        m20.mix(2, 8)
+        m20.mix(2, 8, col)
         m20.blow_out()
         m20.return_tip()
 
