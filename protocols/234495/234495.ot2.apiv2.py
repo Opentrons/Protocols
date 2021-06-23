@@ -62,8 +62,8 @@ def run(ctx):
         if (current_pipette.name == 'p300_multi_gen2' or
            current_pipette.name == 'p300_single_gen2'):
             current_pipette.flow_rate.aspirate = 92.86
-            current_pipette.flow_rate.dispense = 300
-            current_pipette.flow_rate.blow_out = 300
+            current_pipette.flow_rate.dispense = 100
+            current_pipette.flow_rate.blow_out = 100
         elif (current_pipette.name == 'p20_multi_gen2' or
               current_pipette.name == 'p20_single_gen2'):
             current_pipette.flow_rate.aspirate = 7.56
@@ -187,31 +187,31 @@ def run(ctx):
     meoh_flow_rates(p300s)
     for index, dilution in enumerate(dilutions):
         p300s.pick_up_tip()
-        pre_wet(p300s, 150, meoh_water.bottom(clearance_meoh_water))
+        pre_wet(p300s, 50, meoh_water.bottom(clearance_meoh_water))
         p300s.aspirate(20, meoh_water.bottom(clearance_meoh_water))
-        p300s.air_gap(15)
-        p300s.dispense(35, dilution.bottom(clearance_dil_dispense))
+        p300s.air_gap(5)
+        p300s.dispense(25, dilution.bottom(clearance_dil_dispense))
         for rep in range(3):
             if rep > 0:
                 p300s.aspirate(
-                 100, dilution.bottom(5))
+                 25, dilution.bottom(10))
             ctx.delay(seconds=1)
-            p300s.blow_out(dilution.bottom(5))
+            p300s.blow_out(dilution.bottom(10))
         p300s.touch_tip(radius=touch_radius, v_offset=touch_v_offset, speed=20)
         if index == 0:
             source = unlabeled_soln_200um.bottom(1)
         else:
             source = dilutions[index-1].bottom(1)
         p300s.aspirate(20, source)
-        p300s.air_gap(15)
-        p300s.dispense(35, dilution.bottom(clearance_dil_dispense))
+        p300s.air_gap(5)
+        p300s.dispense(25, dilution.bottom(clearance_dil_dispense))
         p300s.mix(mix_reps, 20, dilution.bottom(clearance_dil_dispense))
         for rep in range(3):
             if rep > 0:
                 p300s.aspirate(
-                 100, dilution.bottom(5))
+                 25, dilution.bottom(10))
             ctx.delay(seconds=1)
-            p300s.blow_out(dilution.bottom(5))
+            p300s.blow_out(dilution.bottom(10))
         p300s.touch_tip(radius=touch_radius, v_offset=touch_v_offset, speed=20)
         p300s.drop_tip()
     default_flow_rates(p300s)
@@ -353,12 +353,13 @@ def run(ctx):
         for rep in range(3):
             p300s.aspirate(180, tfa.bottom(clearance_tfa))
             p300s.air_gap(15)
-            p300s.dispense(195, sample.top(-6))
+            p300s.dispense(195, sample.top(-12))
             for rep in range(3):
                 if rep > 0:
-                    p300s.aspirate(180, sample.top(-6))
+                    p300s.aspirate(180, sample.top(-12))
                 ctx.delay(seconds=1)
-                p300s.blow_out(sample.top(-6))
+                p300s.blow_out(sample.top(-12))
+                p300s.touch_tip(radius=0.75, v_offset=-8, speed=20)
     p300s.drop_tip()
     default_flow_rates(p300s)
 
