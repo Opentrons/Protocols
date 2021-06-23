@@ -6,86 +6,33 @@
     "default": 96
   },
   {
-    "type": "dropDown",
-    "label": "Labware for p300 Tips",
-    "name": "labware_tips300",
-    "options": [
-      { "label": "Opentrons 200 ul Filter Tips", "value": "opentrons_96_filtertiprack_200ul" },
-      { "label": "Opentrons 300 ul Standard Tips", "value": "opentrons_96_tiprack_300ul" }
-    ]
-  },
-  {
-    "type": "dropDown",
-    "label": "Labware for PCR1 Plate (on Magnetic Module)",
-    "name": "labware_pcr_plate_1",
-    "options": [
-      { "label": "nest_96_wellplate_100ul_pcr_full_skirt", "value": "nest_96_wellplate_100ul_pcr_full_skirt" }
-    ]
-  },
-  {
-    "type": "dropDown",
-    "label": "Labware for PCR2 Plate (clean plate for elution)",
-    "name": "labware_pcr_plate_2",
-    "options": [
-      { "label": "neptunescientificgeneseescientificadaptor_96_wellplate_200ul", "value": "neptunescientificgeneseescientificadaptor_96_wellplate_200ul" },
-      { "label": "alpaqua96sneptune_96_wellplate_200ul", "value": "alpaqua96sneptune_96_wellplate_200ul" },
-      { "label": "nest_96_wellplate_100ul_pcr_full_skirt", "value": "nest_96_wellplate_100ul_pcr_full_skirt" }
-    ]
-  },
-  {
-    "type": "dropDown",
-    "label": "Labware for Reservoir",
-    "name": "labware_reservoir",
-    "options": [
-      { "label": "nest_12_reservoir_15ml", "value": "nest_12_reservoir_15ml" }
-    ]
-  },
-  {
     "type": "float",
-    "label": "Well Bottom Clearance for Reservoir (mm)",
-    "name": "clearance_reservoir",
-    "default": 2
-  },
-  {
-    "type": "float",
-    "label": "Well Bottom Clearance for Elution (mm)",
-    "name": "clearance_elution",
-    "default": 1
-  },
-  {
-    "type": "float",
-    "label": "Well Bottom Clearance to use with Bead Pellet (mm)",
+    "label": "Well Bottom Clearance (avoiding bead pellet step 4 and 6 aspiration) (0-4 mm)",
     "name": "clearance_bead_pellet",
     "default": 2
   },
   {
     "type": "float",
-    "label": "Aspirate and Dispense Flow Rate (ul/sec)",
-    "name": "flow_rate_beads",
-    "default": 30
-  },
-  {
-    "type": "int",
-    "label": "Delay after Aspiration and Dispense of Beads (seconds)",
-    "name": "delay_beads",
-    "default": 1
+    "label": "(0-2.5) Millimeters to Move to Side (avoiding bead pellet step 4 and 6 aspiration) (0-2.5)",
+    "name": "x_offset_bead_pellet",
+    "default": 1.5
   },
   {
     "type": "float",
-    "label": "Magnetic Module Engage Height (mm)",
-    "name": "engage_height",
-    "default": 20
+    "label": "Well Bottom Clearance (targeting bead pellet step 8) (0-4 mm)",
+    "name": "clearance_elution",
+    "default": 0.5
+  },
+  {
+    "type": "float",
+    "label": "(0-2.5) Millimeters to Move to Side (targeting bead pellet step 8)",
+    "name": "x_offset_elution",
+    "default": 1.5
   },
   {
     "type": "int",
-    "label": "Magnetic Module Engage Time (minutes)",
-    "name": "engage_time",
-    "default": 5
-  },
-  {
-    "type": "int",
-    "label": "Bead Dry Time (minutes)",
-    "name": "dry_time",
-    "default": 5
+    "label": "Flow Rates When Suspending Bead Pellet (step 8)",
+    "name": "flow_rate_elution",
+    "default": 30
   }
 ]

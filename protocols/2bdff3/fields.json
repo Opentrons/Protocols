@@ -18,28 +18,28 @@
         ]
     },
     {
-        "type": "int",
-        "label": "Quadrant 1 Columns (Max 12)",
-        "name": "quad1_cols",
-        "default": 12
+        "type": "str",
+        "label": "Quadrant 1 Columns to Exclude",
+        "name": "quad1_exclude_cols",
+        "default": "1,12"
       },
       {
-        "type": "int",
-        "label": "Quadrant 2 Columns (Max 12)",
-        "name": "quad2_cols",
-        "default": 12
+        "type": "str",
+        "label": "Quadrant 2 Columns to Exclude",
+        "name": "quad2_exclude_cols",
+        "default": "1,12"
       },
       {
-        "type": "int",
-        "label": "Quadrant 3 Columns (Max 12)",
-        "name": "quad3_cols",
-        "default": 12
+        "type": "str",
+        "label": "Quadrant 3 Columns to Exclude",
+        "name": "quad3_exclude_cols",
+        "default": "1,12"
       },
       {
-        "type": "int",
-        "label": "Quadrant 4 Columns (Max 12)",
-        "name": "quad4_cols",
-        "default": 12
+        "type": "str",
+        "label": "Quadrant 4 Columns to Exclude",
+        "name": "quad4_exclude_cols",
+        "default": "1,12"
       },
     {
       "type": "dropDown",
@@ -80,5 +80,29 @@
       "label": "Step 1 Transfer Volume",
       "name": "trans_vol1",
       "default": 8
+    },
+    {
+      "type": "float",
+      "label": "Volume of Air to Pre-Aspirate",
+      "name": "pre_asp_air",
+      "default": 5
+    },
+    {
+      "type": "float",
+      "label": "Delay After Aspirating (seconds)",
+      "name": "delay_after_asp",
+      "default": 1
+    },
+    {
+      "type": "float",
+      "label": "Delay After Dispensing (seconds)",
+      "name": "delay_after_disp",
+      "default": 1
+    },
+    {
+      "type": "float",
+      "label": "Dispensing Speed (uL/second)",
+      "name": "disp_speed",
+      "default": 3
     }
 ]

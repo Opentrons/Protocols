@@ -18,6 +18,11 @@ This protocol preps 3, 384 well control plates for further testing of antibodies
 * Transfer of antibody to 3, 384 well control plates.
 
 Explanation of complex parameters below:
+* `Mix repetitions`: Specify the number of mix repetitions.
+* `Mix volume`: Specify the mix volume in microliters.
+* `Initial volume diluent tubes`: Specify the initial volume in both diluent tubes. This is used for liquid height tracking.
+* `P1000 aspiration/dispense bottom clearance (mm)`: Specify the aspiration and dispense clearance from the bottom of the well for the P1000 pipette (to avoid plate pick up). The default value is 1mm from the bottom of the well.
+* `Mix height clearance`: Specify the height from the bottom of the well to mix (to prevent overflowing).
 * `P20 Pipette Mount`: Specify which mount (left or right) to load your pipette.
 * `P1000 Pipette Mount`: Specify which mount (left or right) to load your pipette.
 
