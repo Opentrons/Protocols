@@ -74,7 +74,6 @@ def run(ctx):
     ab = [cr3022, mab45, mab269]
     tf = reagent.rows()[3][1:5]
     negative = reagent.rows()[3][5]
-    print(tf)
 
     # liquid height tracking
     v_naught1 = v_0_tube1
@@ -415,9 +414,9 @@ def run(ctx):
     for plate in ctrl_plates:
         p1000.pick_up_tip()
         for dest in dests:
-            p1000.aspirate(1000, diluent)
-            adjust_height(1000, 2)
-            p1000.dispense(1000, plate.wells_by_name()[dest])
+            p1000.aspirate(180, diluent)
+            adjust_height(180, 2)
+            p1000.dispense(180, plate.wells_by_name()[dest])
             p1000.blow_out()
             p1000.touch_tip()
         p1000.drop_tip()
