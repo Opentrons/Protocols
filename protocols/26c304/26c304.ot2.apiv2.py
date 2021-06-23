@@ -7,10 +7,7 @@ metadata = {
     'apiLevel': '2.7'
 }
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"mix_clearance": 2, "mix_reps": 5, "mix_vol": 800, "v_0_tube1": 30000, "v_0_tube2": 20000, "clearance": 2, "p20_mount":"left","p1000_mount":"right"}""")
-    return [_all_values[n] for n in names]
+
 def run(ctx):
 
     # load labware
