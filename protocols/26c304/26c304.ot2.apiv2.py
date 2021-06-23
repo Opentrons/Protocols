@@ -7,7 +7,10 @@ metadata = {
     'apiLevel': '2.7'
 }
 
-
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"mix_clearance": 2, "mix_reps": 5, "mix_vol": 800, "v_0_tube1": 30000, "v_0_tube2": 20000, "clearance": 2, "p20_mount":"left","p1000_mount":"right"}""")
+    return [_all_values[n] for n in names]
 def run(ctx):
 
     # load labware
@@ -69,8 +72,9 @@ def run(ctx):
     mab45 = reagent.rows()[2][1]
     mab269 = reagent.rows()[2][2]
     ab = [cr3022, mab45, mab269]
-    tf = reagent.rows()[3][4:5]
+    tf = reagent.rows()[3][1:5]
     negative = reagent.rows()[3][5]
+    print(tf)
 
     # liquid height tracking
     v_naught1 = v_0_tube1
@@ -227,9 +231,10 @@ def run(ctx):
     ctx.comment('\n\n\n')
 
     # transfer postive control
-    for tube, well in zip(tf, master_block.wells()[4:7:2]):
+    ctx.comment('jjjj')
+    for tube, well in zip(tf, master_block.wells()[4:7:2]*2):
         p1000.pick_up_tip()
-        p1000.transfer(1600, tube, well.top(z=-5), new_tip='never')
+        p1000.transfer(800, tube, well.top(z=-5), new_tip='never')
         p1000.mix(mix_reps, mix_vol, well.bottom(z=mix_clearance))
         p1000.blow_out()
         p1000.touch_tip()
