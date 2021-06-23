@@ -70,10 +70,12 @@ def run(protocol):
     def pick_up_20():
         nonlocal tip_counter
         if tip_counter == 288:
+            protocol.home()
             protocol.pause('Replace 20 ul tip racks on Slots 9, 10, and 11')
             p20.reset_tipracks()
-            p20.pick_up_tip()
             tip_counter = 0
+            p20.pick_up_20()
+
         else:
             p20.pick_up_tip(tips[tip_counter])
             tip_counter += 1
@@ -82,6 +84,7 @@ def run(protocol):
         try:
             p300.pick_up_tip()
         except protocol_api.labware.OutOfTipsError:
+            protocol.home()
             protocol.pause('Replace 200 ul tip rack on slot 8')
             p300.reset_tipracks()
             p300.pick_up_tip()
