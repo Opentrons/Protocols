@@ -1,0 +1,21 @@
+[
+    {
+        "type": "dropDown",
+        "label": "P20 Multichannel GEN2 Pipette Mount",
+        "name": "m20_mount",
+        "options": [
+          { "label": "Left", "value": "left" },
+          { "label": "Right", "value": "right" }
+        ]
+      },
+      {
+        "type": "dropDown",
+        "label": "Reservoir Labware Type",
+        "name": "reservoir_type",
+        "options": [
+          { "label": "Bio-Rad Hardshell 96 Well Plate 200 µL", "value": "biorad_96_wellplate_200ul_pcr" },
+          { "label": "NEST 96 Deepwell Plate 2mL", "value": "nest_96_wellplate_2ml_deep" },
+          { "label": "NEST 12 Well Reservoir 15 mL", "value": "nest_12_reservoir_15ml" }
+        ]
+      }
+]

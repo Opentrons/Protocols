@@ -54,9 +54,12 @@ def run(ctx):
 
     sample_wells = [well for i in range(4) for well in
                     deep_well[i].rows()[0]][:columns]
-    dest_sets = [pcr_plate.rows()[r][c::2] for r in range(2) for c in range(2)]
-    flat_dests = [well for dest_set in dest_sets
-                  for well in dest_set][:columns]
+
+    pcr_wells = [[a, b] for a, b in zip(pcr_plate.rows()[0],
+                 pcr_plate.rows()[1])]
+
+    flat_dests = [well for pcr_wells in pcr_wells
+                  for well in pcr_wells][:columns]
 
     def pick_up(pip):
         try:

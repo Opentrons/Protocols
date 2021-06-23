@@ -9,7 +9,7 @@
     "type": "int",
     "label": "Mix Repetitions to Re-suspend beads",
     "name": "mix_reps",
-    "default": 15
+    "default": 3
   },
   {
     "type": "dropDown",
