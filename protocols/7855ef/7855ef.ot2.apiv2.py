@@ -66,10 +66,11 @@ def run(protocol):
     def pick_up():
         nonlocal tip_counter
         if tip_counter == 36:
+            protocol.home()
             protocol.pause('Replace 20 ul tip racks on Slots 9, 10, and 11')
             m20.reset_tipracks()
-            m20.pick_up_tip()
             tip_counter = 0
+            pick_up()
         else:
             m20.pick_up_tip(tips[tip_counter])
             tip_counter += 1
@@ -102,6 +103,7 @@ def run(protocol):
         m20.blow_out()
         m20.return_tip()
 
+    protocol.home()
     protocol.pause('''Protocol method complete. Please remove reaction plates
                    from deck and proceed with PCR and centrifuge steps.
                    Return reaction plates back to deck and continue to
