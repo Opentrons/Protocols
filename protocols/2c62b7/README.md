@@ -40,9 +40,9 @@ For more detailed information on compatible labware, please visit our [Labware L
 
 * This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:
 * Reservoir 1: Slot 5
-![Reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2c62b7/resv1.png)
+![Reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2c62b7/res1_20210623.png)
 * Reservoir 2: Slot 2  
-![Reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2c62b7/res2_new.png)
+![Reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2c62b7/res2_20210623.png)
 
 **Reagent Steps**
 **Note**: Steps 1-13 are performed manually as instructed in the [kit manual](https://ensur.omegabio.com/ensur/contentAction.aspx?key=Production.4023.S2R4E1A3.20190920.67.4679917). The protocol starts on the OT-2 from step 14 and has modified steps that are written below.

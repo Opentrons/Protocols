@@ -46,8 +46,8 @@ def run(ctx):
     # Reagents
     # Splitting columns for an even 12 column transfer
     # based on volume total
-    mm2 = [well for well in res1.wells()[:2] for i in range(6)]
-    vhb = [well for well in res1.wells()[2:6] for i in range(3)]
+    mm2 = [well for well in res1.wells()[:3] for i in range(4)]
+    vhb = [well for well in res1.wells()[4:8] for i in range(3)]
     etoh1 = [well for well in res2.wells()[:4] for i in range(3)]
     etoh2 = [well for well in res2.wells()[4:8] for i in range(3)]
     elution_buffer = res1.wells()[11]
@@ -104,11 +104,13 @@ def run(ctx):
             else:
                 pick_up(m300)
         ctx.comment('Mixing from the middle')
-        m300.mix(reps, vol, well.center())
+        m300.mix(reps, vol, well.bottom(z=4))
         ctx.comment('Mixing from the bottom')
         m300.mix(reps, vol, well.bottom())
         ctx.comment('Mixing from the middle')
-        m300.mix(reps, vol, well.center())
+        m300.mix(reps, vol, well.bottom(z=4))
+        m300.blow_out()
+        m300.touch_tip()
 
         if not park_tip:
             m300.drop_tip()
@@ -193,7 +195,7 @@ def run(ctx):
             return well
 
     # Track Reagent Volumes
-    water = VolTracker(res2, 14400, 'multi', 'reagent', start=10, end=12)
+    water = VolTracker(res2, 14400, 'multi', 'reagent', start=9, end=12)
 
     # Wells
     # mag_plate_wells = mag_plate.rows()[0]
@@ -206,10 +208,9 @@ def run(ctx):
     # Add 300 uL of Water to each well in tip isolator
     ctx.comment('''Transferring 300 uL of water to
                 each well in the tip isolator''')
-    pick_up(m300)
+    pick_up(m300, tip_isolator['A1'])
     for col in tip_isolator.rows()[0]:
         m300.transfer(300, water.tracker(300), col, new_tip='never')
-    m300.return_tip()
 
     # Step 14
     # Transfer Master Mix 2 (XP1 Buffer + Mag-Bind® Particles RQ) to Mag Plate
@@ -219,10 +220,11 @@ def run(ctx):
         if transfer_count == 3:
             transfer_count = 0
         if transfer_count == 0:
-            pick_up(m300)
-            m300.mix(10, 300, mm.center())
+            if not m300.has_tip:
+                pick_up(m300)
+            m300.mix(10, 300, mm.bottom(z=4))
             if cols > 6:
-                m300.mix(10, 300, mm2[6].center())
+                m300.mix(10, 300, mm2[6].bottom())
             m300.drop_tip()
         pick_up(m300)
         m300.aspirate(mm2_vol, mm)
