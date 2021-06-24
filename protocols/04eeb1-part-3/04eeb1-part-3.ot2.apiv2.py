@@ -58,7 +58,8 @@ def run(ctx):
             pipette.aspirate(asp_vol, source.bottom(z=asp_height))
 
             # Add Movement Path Code Here
-            pipette.move_to(ctx.deck.position_for('4').move(types.Point(z=50)))
+            pipette.move_to(ctx.deck.position_for('4').move(types.Point(x=20,
+                            z=50)))
 
             for well in wells:
                 pipette.dispense(vol, well.bottom(z=disp_height))
