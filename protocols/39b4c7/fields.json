@@ -18,6 +18,12 @@
       ]
     },
     {
+      "type": "float",
+      "label": "Temperature (C)",
+      "name": "temperature",
+      "default": 4
+    },
+    {
       "type": "int",
       "label": "Plate 1 Samples (Max: 94)",
       "name": "plate1_samples",
