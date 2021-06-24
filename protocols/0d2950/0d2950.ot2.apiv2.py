@@ -10,8 +10,10 @@ metadata = {
 
 def run(ctx):
 
-    [num_samp, p20_mount, p1000_mount] = get_values(  # noqa: F821
-        "num_samp", "p20_mount", "p1000_mount")
+    [num_samp, p1000_sample_height,
+     p1000_water_height, p20_mount, p1000_mount] = get_values(  # noqa: F821
+        "num_samp", "p1000_sample_height",
+        "p1000_water_height", "p20_mount", "p1000_mount")
 
     if not 1 <= num_samp <= 95:
         raise Exception("Enter a sample number between 1-95")
@@ -50,10 +52,14 @@ def run(ctx):
 
     # reagents
     buffer = buff_reg.wells()[1]
-    ethanol = buff_reg.wells()[0] if num_samp < 48 else buff_reg.rows()[0][:2]
-    ethanol = buff_reg.rows()[0][:2]
+
+    if num_samp < 48:
+        ethanol = [buff_reg.wells()[0]]
+    else:
+        ethanol = buff_reg.rows()[0][:2]
+
     mag_beads = buff_reg.rows()[0][2]
-    elution_solution = proK_water.wells()[0]
+    elution_solution = buff_reg.rows()[1][1]
     proK = proK_water.wells()[0]
     water = proK_water.wells()[1]
     ms2 = proK_water.wells()[2]
@@ -107,17 +113,21 @@ def run(ctx):
     p1000.drop_tip()
 
     # add proteinase k
+    p20.flow_rate.dispense = 3.78
     p20.pick_up_tip()
     for well in sample_map:
         p20.aspirate(5, proK)
         p20.dispense(5, well.top())
+        p20.blow_out()
     p20.drop_tip()
+    p20.flow_rate.dispense = 7.56
 
     # add patient samples
     samp_ctr = 0
     for sample, well in zip(sample_tube_map, sample_map):
         p1000.pick_up_tip()
-        p1000.aspirate(200, sample_tube_map[samp_ctr])
+        p1000.aspirate(200,
+                       sample_tube_map[samp_ctr].bottom(z=p1000_sample_height))
         p1000.dispense(200, well)
         p1000.drop_tip()
         samp_ctr += 1
@@ -129,7 +139,7 @@ def run(ctx):
     ctx.comment('Adding control')
     p1000.pick_up_tip()
     p1000.aspirate(200, water)
-    p1000.dispense(200, sample_map[samp_ctr])
+    p1000.dispense(200, sample_map[samp_ctr].bottom(z=p1000_water_height))
     p1000.drop_tip()
 
     # add mag beads
