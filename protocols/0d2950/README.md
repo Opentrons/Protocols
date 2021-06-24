@@ -15,7 +15,8 @@ This protocol preps a sample plate with up to 95 samples (with one control) as w
 
 Explanation of complex parameters below:
 * `Number of Samples`: Specify the number of samples that will be processed. Up to 95 samples can be run, leaving room for a control.
-* `P20 Single GEN2 Mount`: Specify which mount (left or right) to load the P20 single channel pipette.
+* `P1000 water tube aspiration height`: Specify the height (in mm) for the P1000 pipette to aspirate when visiting water tubes. Default is 1mm.
+* `P1000 sample tube aspiration height`: Specify the height (in mm) for the P1000 pipette to aspirate when visiting sample tubes. Default is 1mm.  
 * `P1000 single GEN2 Mount`: Specify which mount (left or right) to load the P1000 single channel pipette.
 ---
 ### Labware
@@ -34,18 +35,18 @@ Explanation of complex parameters below:
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0d2950/Screen+Shot+2021-06-07+at+9.46.22+AM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0d2950/Screen+Shot+2021-06-24+at+2.53.32+PM.png)
 
 ### Reagent Setup
 * 50mL Tube rack
 
 * Note : if running 48 or less samples, prepare ethanol in only tube A1. If running more than 48 samples, split the total ethanol required between tubes A1 and A2 (e.g. 24,000ul of ethanol in A1 for 24 samples, 25,000ul of ethanol and A1 and A2 for 50 samples).
 
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0d2950/Screen+Shot+2021-06-07+at+9.47.12+AM.png)
+![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0d2950/Screen+Shot+2021-06-24+at+2.54.19+PM.png)
 
 * 1.5mL Tube rack
 
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0d2950/Screen+Shot+2021-06-07+at+9.47.32+AM.png)
+![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0d2950/Screen+Shot+2021-06-24+at+2.54.25+PM.png)
 
 ---
 
