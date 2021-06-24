@@ -34,7 +34,7 @@ def run(ctx):
         for well in dest:
             pipette.pick_up_tip()
             pipette.aspirate(vol, src)
-            pipette.move_to(ctx.deck.position_for('1').move(types.Point(x=0,
+            pipette.move_to(ctx.deck.position_for('1').move(types.Point(x=20,
                             y=31.5, z=100)))
             pipette.dispense(vol, well)
             pipette.drop_tip()
