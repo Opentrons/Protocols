@@ -81,10 +81,10 @@ def run(ctx):
     # Transfer mastermix to PCR plate
     p20.pick_up_tip()
     for well in quad_wells:
-        p20.distribute(mm_vol, mm_tracker(mm_vol).bottom(z=0.5), well,
+        p20.distribute(mm_vol, mm_tracker(mm_vol), well,
                        new_tip='never')
     p20.drop_tip()
 
     # Transfer patient samples to PCR plate
     for source, dest in zip(sample_wells, quad_wells):
-        p20.transfer(sample_vol, source, dest, new_tip='always')
+        p20.transfer(sample_vol, source.bottom(z=0.5), dest, new_tip='always')
