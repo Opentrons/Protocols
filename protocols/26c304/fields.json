@@ -43,7 +43,7 @@
   },
   {
     "type": "int",
-    "label": "P1000 aspirate flow rate",
+    "label": "P1000 dispense flow rate",
     "name": "p1000_flow_rate_disp",
     "default": 274
   },
