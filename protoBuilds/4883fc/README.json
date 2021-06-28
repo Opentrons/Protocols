@@ -1,0 +1,32 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Sample Prep": [
+            "Normalization"
+        ]
+    },
+    "deck-setup": "\n\nif sources are arranged in 1.5ml tubes:\n\n\n\nif sources are arranged in a 96-well plate:\n\n\n",
+    "description": "\nConcentration normalization is a key component of many genomic and proteomic applications, such as NGS library prep. With this protocol, you can easily normalize the concentrations of samples in a 96-well plate from either 1.5ml snapcap tubes, or another 96-well plate. The transfers should be specified as an input .csv file formatted as shown here:\nSample number,Slot no number,Source well,Destination well,Start Concentration (ug/uL) Source,Final Concentraion (ug/ml) Destination,Sample volume (uL),Diluent Volume(ul),Total Volume(ul) Destination\n1,4,A1,A1,5,2,40,60,100.0\n2,4,C1,B1,3,2,67,33,100.0\n3,4,D1,C1,10,2,20,80,100.0\n4,4,E3,D1,20,2,10,90,100.0\nYou can also download and edit this template.\n",
+    "internal": "4883fc",
+    "labware": "\nNEST 96 Well Plate 100 \u00b5L PCR Full Skirt\nOpentrons 4-in-1 Tube Rack Set with NEST 1.5 mL Microcentrifuge Tube\nOpentrons pipette tips\nNEST 12 Well Reservoir 15 mL\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* Sample Prep\n\t* Normalization\n\n",
+        "deck-setup": "* if sources are arranged in 1.5ml tubes:  \n![tubes](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/4883fc/tuberack.png)\n\n* if sources are arranged in a 96-well plate:  \n![plate](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/4883fc/plate.png)\n\n",
+        "description": "![Normalization Example](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/normalization/normalization_example.png)\n\nConcentration normalization is a key component of many genomic and proteomic applications, such as NGS library prep. With this protocol, you can easily normalize the concentrations of samples in a 96-well plate from either 1.5ml snapcap tubes, or another 96-well plate. The transfers should be specified as an input .csv file formatted as shown here:\n\n```\nSample number,Slot no number,Source well,Destination well,Start Concentration (ug/uL) Source,Final Concentraion (ug/ml) Destination,Sample volume (uL),Diluent Volume(ul),Total Volume(ul) Destination\n1,4,A1,A1,5,2,40,60,100.0\n2,4,C1,B1,3,2,67,33,100.0\n3,4,D1,C1,10,2,20,80,100.0\n4,4,E3,D1,20,2,10,90,100.0\n```\n\nYou can also download and edit [this template](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/4883fc/ex.csv).\n\n---\n\n",
+        "internal": "4883fc\n",
+        "labware": "* [NEST 96 Well Plate 100 \u00b5L PCR Full Skirt](https://shop.opentrons.com/collections/verified-labware/products/nest-0-1-ml-96-well-pcr-plate-full-skirt)\n* [Opentrons 4-in-1 Tube Rack Set](https://shop.opentrons.com/collections/verified-labware/products/tube-rack-set-1) with [NEST 1.5 mL Microcentrifuge Tube](https://shop.opentrons.com/collections/verified-consumables/products/nest-microcentrifuge-tubes)\n* [Opentrons pipette tips](https://shop.opentrons.com/collections/opentrons-tips)\n* [NEST 12 Well Reservoir 15 mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [Opentrons Single-Channel Electronic Pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette)\n\n---\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "protocol-steps": "1. Diluent is transferred in the proper amounts to each destination well of the end PCR plate using 1 tip for the entire set of transfers.\n2. The first sample is transferred to its specified destination well with pre-added diluent, the well is mixed 3x. After dispense, a blowout and touch tip are performed. The tip is then dropped.\n3. Step 2 is repeated for as many samples as specified in the .csv file.\n\n",
+        "reagent-setup": "* NEST 12-channel reservoir (slot 9): diluent (channel 1)\n\n",
+        "title": "Normalization"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons Single-Channel Electronic Pipette\n\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "protocol-steps": "\nDiluent is transferred in the proper amounts to each destination well of the end PCR plate using 1 tip for the entire set of transfers.\nThe first sample is transferred to its specified destination well with pre-added diluent, the well is mixed 3x. After dispense, a blowout and touch tip are performed. The tip is then dropped.\nStep 2 is repeated for as many samples as specified in the .csv file.\n",
+    "reagent-setup": "\nNEST 12-channel reservoir (slot 9): diluent (channel 1)\n",
+    "title": "Normalization"
+}
