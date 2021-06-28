@@ -12,9 +12,11 @@ def run(ctx):
 
     # load labware
     [mix_reps, mix_vol, v_0_tube1, v_0_tube2, clearance, mix_clearance,
-     p20_mount, p1000_mount] = get_values(  # noqa: F821
+        p1000_flow_rate_asp, p1000_flow_rate_disp,
+        p20_mount, p1000_mount] = get_values(  # noqa: F821
         'mix_reps', 'mix_vol', 'v_0_tube1', 'v_0_tube2', 'clearance',
-        'mix_clearance', 'p20_mount', 'p1000_mount')
+        'mix_clearance', "p1000_flow_rate_asp", "p1000_flow_rate_disp",
+        'p20_mount', 'p1000_mount')
 
     ctrl_plates = [ctx.load_labware('greiner_384_wellplate_200ul', slot)
                    for slot in ['9', '6', '3']]
@@ -34,9 +36,12 @@ def run(ctx):
 
     p1000.well_bottom_clearance.aspirate = clearance
     p1000.well_bottom_clearance.dispense = clearance
+    p1000.flow_rate.aspirate = p1000_flow_rate_asp
+    p1000.flow_rate.dispense = p1000_flow_rate_disp
 
     def move_384(source, dest1, dest2):
         p1000.aspirate(400, s)
+        p1000.touch_tip()
         p1000.dispense(180, dest1.top(z=-8))
         p1000.touch_tip()
         p1000.dispense(180, dest2.top(z=-8))
@@ -108,6 +113,7 @@ def run(ctx):
     for s, d in zip(ab, conc_300):
         p20.pick_up_tip()
         p20.aspirate(7.5, s)
+        p20.touch_tip()
         p20.dispense(7.5, d)
         p20.blow_out()
         p20.touch_tip()
@@ -118,6 +124,7 @@ def run(ctx):
     for s, d in zip(ab, conc_100):
         p20.pick_up_tip()
         p20.aspirate(4, s)
+        p20.touch_tip()
         p20.dispense(4, d)
         p20.blow_out()
         p20.touch_tip()
@@ -125,7 +132,6 @@ def run(ctx):
     ctx.comment('\n\n\n')
 
     # distribute diluent to second stepped down row
-
     for d in reagent.rows()[1]:
         p1000.pick_up_tip()
         p1000.aspirate(180, diluent.bottom(z=h1))
@@ -142,6 +148,7 @@ def run(ctx):
         p20.pick_up_tip()
         p20.mix(5, 17, conc_well.bottom(z=3))
         p20.aspirate(20, conc_well)
+        p20.touch_tip()
         p20.dispense(20, dilute_well)
         p20.blow_out()
         p20.touch_tip()
@@ -155,26 +162,38 @@ def run(ctx):
     map1 = [well for row in master_block.rows()[:3] for well in row[:6]]
     p1000.pick_up_tip()
     for d in map1:
-        p1000.transfer(1350, diluent, d, new_tip='never')
+        p1000.transfer(1350, diluent, d, new_tip='never', blow_out=True,
+                       touch_tip=True)
         adjust_height(1350, 1)
     p1000.transfer(1350, diluent, [master_block.wells()[3],
-                   master_block.rows()[3][1]], new_tip='never')
+                   master_block.rows()[3][1]], new_tip='never', blow_out=True,
+                   touch_tip=True)
     adjust_height(1350, 1)
 
     diluent = diluent_tubes[1]  # switch diluent tubes
     p1000.transfer(1470, diluent,
-                   master_block.wells_by_name()['D6'], new_tip='never')
+                   master_block.wells_by_name()['D6'],
+                   new_tip='never',
+                   blow_out=True,
+                   touch_tip=True)
     adjust_height(1470, 2)
     p1000.transfer(400, diluent,
-                   [master_block.wells()[4:7:2]], new_tip='never')  # E1, G1
+                   [master_block.wells()[4:7:2]],
+                   new_tip='never',
+                   blow_out=True,
+                   touch_tip=True)  # E1, G1
     adjust_height(400, 2)
     p1000.transfer(1840, diluent,
-                   [master_block.wells()[5:8:2]], new_tip='never')  # F1, H1
+                   [master_block.wells()[5:8:2]],
+                   new_tip='never',
+                   blow_out=True,
+                   touch_tip=True)  # F1, H1
     adjust_height(1840, 2)
 
     map2 = [well for row in master_block.rows()[4:8] for well in row[1:5]]
     for d in map2:
-        p1000.transfer(1000, diluent, d, new_tip='never')
+        p1000.transfer(1000, diluent, d, new_tip='never', blow_out=True,
+                       touch_tip=True)
         adjust_height(1000, 2)
     p1000.drop_tip()
     ctx.comment('\n\n\n')
@@ -183,6 +202,7 @@ def run(ctx):
     for tube, well in zip(reagent.rows()[1], master_block.rows()[0]):
         p1000.pick_up_tip()
         p1000.aspirate(150, tube)
+        p1000.touch_tip()
         p1000.dispense(150, well)
         p1000.mix(mix_reps, mix_vol, well.bottom(z=mix_clearance))
         p1000.blow_out()
@@ -198,6 +218,7 @@ def run(ctx):
                             master_block.rows()[row_start+1]):
             p1000.pick_up_tip()
             p1000.aspirate(150, conc_well)
+            p1000.touch_tip()
             p1000.dispense(150, dilut_well)
             p1000.mix(mix_reps, mix_vol, dilut_well.bottom(z=mix_clearance))
             p1000.blow_out()
@@ -210,6 +231,7 @@ def run(ctx):
                                      master_block.rows()[3][:2]):  # C1C2->D1D2
         p1000.pick_up_tip()
         p1000.aspirate(150, conc_well)
+        p1000.touch_tip()
         p1000.dispense(150, dilut_well)
         p1000.blow_out()
         p1000.touch_tip()
@@ -219,25 +241,29 @@ def run(ctx):
 
     # transfer negative
     p1000.pick_up_tip()
-    p1000.aspirate(300, negative)
-    p1000.dispense(300, master_block.wells_by_name()['D6'])
+    p1000.aspirate(30, negative)
+    p1000.touch_tip()
+    p1000.dispense(30, master_block.wells_by_name()['D6'])
     p1000.blow_out()
     p1000.touch_tip()
     p1000.drop_tip()
     ctx.comment('\n\n\n')
 
     # transfer postive control
-    ctx.comment('jjjj')
     for tube, well in zip(tf, master_block.wells()[4:7:2]*2):
         p1000.pick_up_tip()
-        p1000.transfer(800, tube, well.top(z=-5), new_tip='never')
+        p1000.aspirate(800, tube)
+        p1000.touch_tip()
+        p1000.dispense(800, well.top(z=-5))
         p1000.mix(mix_reps, mix_vol, well.bottom(z=mix_clearance))
         p1000.blow_out()
         p1000.touch_tip()
         p1000.drop_tip()
     for tube, well in zip(tf, master_block.wells()[5:8:2]):
         p1000.pick_up_tip()
-        p1000.transfer(160, tube, well.top(z=-5), new_tip='never')
+        p1000.aspirate(160, tube)
+        p1000.touch_tip()
+        p1000.dispense(160, well.top(z=-5))
         p1000.mix(mix_reps, mix_vol, well.bottom(z=mix_clearance))
         p1000.blow_out()
         p1000.touch_tip()
@@ -252,6 +278,7 @@ def run(ctx):
                             master_block.columns()[col_start+1][4:8]):
             p1000.pick_up_tip()
             p1000.aspirate(1000, conc_well)
+            p1000.touch_tip()
             p1000.dispense(1000, dilut_well)
             p1000.mix(mix_reps, mix_vol, dilut_well.bottom(z=mix_clearance))
             p1000.blow_out()
@@ -269,6 +296,7 @@ def run(ctx):
     for s, d1, d2 in zip(master_block.wells()[:4]*3, map_384_A1, map_384_I23):
         p1000.pick_up_tip()
         p1000.aspirate(400, s)
+        p1000.touch_tip()
         p1000.dispense(180, d1.top(z=-8))
         p1000.touch_tip()
         p1000.dispense(180, d2.top(z=-8))
@@ -325,6 +353,7 @@ def run(ctx):
     for s, d in zip(sources, dests):
         p1000.pick_up_tip()
         p1000.aspirate(600, master_block.wells_by_name()[s])
+        p1000.touch_tip()
         for i in range(3):
             p1000.dispense(180, ctrl_plates[i].wells_by_name()[d].top(z=-8))
             p1000.touch_tip()
@@ -345,6 +374,7 @@ def run(ctx):
     for s, d in zip(sources, dests):
         p1000.pick_up_tip()
         p1000.aspirate(400, master_block.wells_by_name()[s])
+        p1000.touch_tip()
         for i in range(2):
             p1000.dispense(180, ctrl_plates[i].wells_by_name()[d].top(z=-8))
             p1000.touch_tip()
@@ -360,6 +390,7 @@ def run(ctx):
                          map_384_E2, map_384_A24):
         p1000.pick_up_tip()
         p1000.aspirate(400, s)
+        p1000.touch_tip()
         p1000.dispense(180, d1.top(z=-8))
         p1000.touch_tip()
         p1000.dispense(180, d2.top(z=-8))
@@ -375,6 +406,7 @@ def run(ctx):
                          map_384_F2, map_384_B24):
         p1000.pick_up_tip()
         p1000.aspirate(400, s)
+        p1000.touch_tip()
         p1000.dispense(180, d1.top(z=-8))
         p1000.touch_tip()
         p1000.dispense(180, d2.top(z=-8))
@@ -389,6 +421,7 @@ def run(ctx):
 
     p1000.pick_up_tip()
     p1000.aspirate(600, master_block.wells_by_name()['D6'])
+    p1000.touch_tip()
     for dest in i24:
         p1000.dispense(180, dest)
         p1000.touch_tip()
@@ -398,6 +431,7 @@ def run(ctx):
 
     p1000.pick_up_tip()
     p1000.aspirate(600, master_block.wells_by_name()['D6'])
+    p1000.touch_tip()
     for dest in k24:
         p1000.dispense(180, dest)
         p1000.touch_tip()
@@ -405,15 +439,18 @@ def run(ctx):
     ctx.comment('\n\n\n')
 
     # step 50
-    dests = ['J1', 'K1', 'L1', 'M1', 'N1',
-             'O1', 'P1', 'O2', 'P2', 'P24']
+    chunks = [['J1', 'K1', 'L1', 'M1', 'N1'],
+              ['O1', 'P1', 'O2', 'P2', 'P24']]
 
     for plate in ctrl_plates:
         p1000.pick_up_tip()
-        for dest in dests:
-            p1000.aspirate(180, diluent)
+        for chunk in chunks:
+            p1000.aspirate(180*len(chunks[0])+50, diluent)
+            p1000.touch_tip()
             adjust_height(180, 2)
-            p1000.dispense(180, plate.wells_by_name()[dest])
-            p1000.blow_out()
+            [p1000.dispense(180,
+             plate.wells_by_name()[dest]) for dest in chunk]
+            p1000.dispense(50, diluent.top())
+            p1000.blow_out(diluent)
             p1000.touch_tip()
         p1000.drop_tip()
