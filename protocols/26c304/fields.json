@@ -36,6 +36,18 @@
     "default": 10
   },
   {
+    "type": "int",
+    "label": "P1000 aspirate flow rate",
+    "name": "p1000_flow_rate_asp",
+    "default": 274
+  },
+  {
+    "type": "int",
+    "label": "P1000 dispense flow rate",
+    "name": "p1000_flow_rate_disp",
+    "default": 274
+  },
+  {
     "type": "dropDown",
     "label": "P20 Pipette Mount",
     "name": "p20_mount",
