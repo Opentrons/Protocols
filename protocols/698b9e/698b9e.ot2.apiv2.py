@@ -30,6 +30,7 @@ def run(ctx):
         pipette = 'p20_single_gen2'
         mount = p20_mount
         reagent_vol = 7.6
+        airgap = 3
 
     # load labware
     plates = [ctx.load_labware(plate, slot) for slot in plate_slots]
@@ -46,6 +47,8 @@ def run(ctx):
             for col in plate.rows()[0]:
                 pip.aspirate(reagent_vol, reservoir.wells()[i])
                 pip.dispense(reagent_vol, col)
+                pip.blow_out()
+                pip.touch_tip()
         pip.drop_tip()
 
     elif reagent == 'mastermix':
@@ -53,7 +56,11 @@ def run(ctx):
         chunks = [wells[i:i+2] for i in range(0, len(wells), 2)]
         pip.pick_up_tip()
         for chunk in chunks:
-            pip.aspirate(reagent_vol*2, reservoir.wells()[0])
-            [pip.dispense(reagent_vol, well) for well in chunk]
-            pip.blow_out(reservoir.wells()[0])
+            pip.aspirate(reagent_vol, reservoir.wells()[0])
+            pip.air_gap(airgap)
+            pip.aspirate(reagent_vol, reservoir.wells()[0])
+            pip.touch_tip()
+            for well in chunk:
+                pip.dispense(reagent_vol+airgap, well)
+                pip.touch_tip()
         pip.drop_tip()
