@@ -23,6 +23,7 @@ Explanation of complex parameters below:
 * `Initial volume diluent tubes`: Specify the initial volume in both diluent tubes. This is used for liquid height tracking.
 * `P1000 aspiration/dispense bottom clearance (mm)`: Specify the aspiration and dispense clearance from the bottom of the well for the P1000 pipette (to avoid plate pick up). The default value is 1mm from the bottom of the well.
 * `Mix height clearance`: Specify the height from the bottom of the well to mix (to prevent overflowing).
+* `P1000 aspirate/dispense flow rate`: Specify the p1000 aspirate and dispense flow rates.
 * `P20 Pipette Mount`: Specify which mount (left or right) to load your pipette.
 * `P1000 Pipette Mount`: Specify which mount (left or right) to load your pipette.
 

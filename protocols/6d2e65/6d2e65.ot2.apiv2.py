@@ -98,10 +98,10 @@ def run(ctx):
         p300m.flow_rate.dispense = 30
         p300m.transfer(
          36, beads.bottom(1), column[0].bottom(3), new_tip='never')
-        p300m.mix(6, 40, column[0].bottom(1))
+        p300m.mix(6, 40, column[0].bottom(2))
         p300m.move_to(column[0].top())
         p300m.air_gap(20)
-        p300m.drop_tip()
+        p300m.return_tip()
 
     # step 2: pause with message
     ctx.pause("""
