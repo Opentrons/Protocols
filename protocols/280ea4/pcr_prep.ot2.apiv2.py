@@ -12,18 +12,18 @@ metadata = {
 
 
 def run(ctx):
-    [num_samples, assay, prepare_mastermix, p300_mount,
-     tip_track] = get_values(  # noqa: F821
+    [num_samples, assay, prepare_mastermix, p300_single_mount,
+     p300_multi_mount, tip_track] = get_values(  # noqa: F821
         'num_samples', 'assay', 'prepare_mastermix',
-        'p300_mount', 'tip_track')
+        'p300_single_mount', 'p300_multi_mount', 'tip_track')
 
     # check source (elution) labware type
     source_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
                                     '1', 'DNA source plate')
-    tips300 = [
+    tips300s = [
         ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
         for slot in ['5', '6', '8', '9']]
-    tips20 = []
+    tips300m = []
     tempdeck = ctx.load_module('Temperature Module Gen2', '7')
     pcr_plate = tempdeck.load_labware('biorad_96_aluminumblock_200ul',
                                       'PCR strips')
@@ -33,10 +33,9 @@ def run(ctx):
         '2ml screw tube aluminum block for mastermix + reagents')
 
     # pipette
-    p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
-                               tip_racks=tips300)
-    m20_mount = 'left' if p300_mount == 'right' else 'right'
-    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount)
+    p300 = ctx.load_instrument('p300_single_gen2', p300_single_mount,
+                               tip_racks=tips300s)
+    m300 = ctx.load_instrument('p300_multi_gen2', p300_multi_mount)
 
     # setup up sample sources and destinations
     sources = source_plate.wells()[:num_samples]
@@ -49,26 +48,26 @@ def run(ctx):
         if os.path.isfile(tip_file_path):
             with open(tip_file_path) as json_file:
                 data = json.load(json_file)
-                if 'tips20' in data:
-                    tip_log['count'][m20] = data['tips20']
+                if 'tips300m' in data:
+                    tip_log['count'][m300] = data['tips300m']
                 else:
-                    tip_log['count'][m20] = 0
-                if 'tips300' in data:
-                    tip_log['count'][p300] = data['tips300']
+                    tip_log['count'][m300] = 0
+                if 'tips300s' in data:
+                    tip_log['count'][p300] = data['tips300s']
                 else:
                     tip_log['count'][p300] = 0
         else:
-            tip_log['count'] = {m20: 0, p300: 0}
+            tip_log['count'] = {m300: 0, p300: 0}
     else:
-        tip_log['count'] = {m20: 0, p300: 0}
+        tip_log['count'] = {m300: 0, p300: 0}
 
     tip_log['tips'] = {
-        m20: [tip for rack in tips20 for tip in rack.rows()[0]],
-        p300: [tip for rack in tips300 for tip in rack.wells()]
+        m300: [tip for rack in tips300m for tip in rack.rows()[0]],
+        p300: [tip for rack in tips300s for tip in rack.wells()]
     }
     tip_log['max'] = {
         pip: len(tip_log['tips'][pip])
-        for pip in [m20, p300]
+        for pip in [m300, p300]
     }
 
     def pick_up(pip):
@@ -227,8 +226,8 @@ resuming.')
         if not os.path.isdir(folder_path):
             os.mkdir(folder_path)
         data = {
-            'tips20': tip_log['count'][m20],
-            'tips300': tip_log['count'][p300]
+            'tips300m': tip_log['count'][m300],
+            'tips300s': tip_log['count'][p300]
         }
         with open(tip_file_path, 'w') as outfile:
             json.dump(data, outfile)
