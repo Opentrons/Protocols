@@ -977,7 +977,7 @@
         },
         {
             "default": 2.3,
-            "label": "space between duplicate samples (in mm)",
+            "label": "space between duplicate samples (y-direction, in mm)",
             "name": "y_offset",
             "type": "float"
         },
