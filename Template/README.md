@@ -22,6 +22,9 @@ Subsequent paragraphs can give some more insight into the details of the protoco
 
 Example: For sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 4) to the elution PCR plate (temperature module, slot 1). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.
 
+Results of the Opentrons Science team's internal testing of this protocol on the OT-2 are shown below:  
+![results](link_to_results.png)
+
 Explanation of complex parameters below:
 * `park tips`: If set to `yes` (recommended), the protocol will conserve tips between reagent addition and removal. Tips will be stored in the wells of an empty rack corresponding to the well of the sample that they access (tip parked in A1 of the empty rack will only be used for sample A1, tip parked in B1 only used for sample B1, etc.). If set to `no`, tips will always be used only once, and the user will be prompted to manually refill tipracks mid-protocol for high throughput runs.
 * `input .csv file`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:

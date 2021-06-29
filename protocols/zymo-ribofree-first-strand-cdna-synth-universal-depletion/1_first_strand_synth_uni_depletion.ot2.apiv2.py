@@ -209,7 +209,7 @@ def run(ctx):
         pick_up(m20)
         m20.transfer(
             25, etoh, m.top(-2), air_gap=2, new_tip='never')
-        m20.mix(5, 40, m),
+        m20.mix(5, 20, m),
         m20.blow_out(m.top(-2))
         m20.air_gap(2)
         m20.drop_tip()
