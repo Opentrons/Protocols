@@ -37,7 +37,8 @@ def run(ctx):
         well = line[3]
         p300.transfer(vol_water, reservoir['A1'],
                       pcr_plate.wells_by_name()[well], new_tip='never')
-    p300.drop_tip()
+    if p300.has_tip:
+        p300.drop_tip()
 
     for line in transfer:
         vol_dna = float(line[1])
