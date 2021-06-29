@@ -8,16 +8,6 @@ metadata = {
 }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"num_col":2, "sample_vol":5, "mmx_vol":1,"source_asp_height_plate":1, "source_asp_height_plate_mmx":1,
-        "source_asp_flow_rate_plate":7.3, "delay":3, "source_asp_flow_rate_mmx":7.1,
-        "dispense_height":2, "dest_flow_rate_sample":3,
-        "dest_flow_rate_mmx":2, "mix_vol":10, "mix_reps":5,
-        "m20_mount":"left", "p20_mount":"right"}""")
-    return [_all_values[n] for n in names]
-
-
 def run(ctx):
 
     [num_col, sample_vol, mmx_vol, source_asp_height_plate,
