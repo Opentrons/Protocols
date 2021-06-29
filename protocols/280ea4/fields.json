@@ -29,10 +29,19 @@
   {
     "type": "dropDown",
     "label": "P300 single-channel pipette GEN2 mount",
-    "name": "p300_mount",
+    "name": "p300_single_mount",
     "options": [
       {"label": "right", "value": "right"},
       {"label": "left", "value": "left"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "P300 multi-channel pipette GEN2 mount",
+    "name": "p300_multi_mount",
+    "options": [
+      {"label": "left", "value": "left"},
+      {"label": "right", "value": "right"}
     ]
   },
   {
