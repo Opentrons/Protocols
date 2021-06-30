@@ -20,7 +20,7 @@ def run(ctx):
     end_plate = ctx.load_labware(
         'nest_96_wellplate_100ul_pcr_full_skirt', '6', 'end plate')
     diluent_res = ctx.load_labware('nest_12_reservoir_15ml', '9',
-                               'diluent (channel 1)')
+                                   'diluent (channel 1)')
 
     # pipette
     pip_range = pipette_type.split('_')[0][1:]
