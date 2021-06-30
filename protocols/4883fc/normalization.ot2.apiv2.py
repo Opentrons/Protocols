@@ -19,8 +19,8 @@ def run(ctx):
         ctx.load_labware(source_type, '5', 'source plate')
     end_plate = ctx.load_labware(
         'nest_96_wellplate_100ul_pcr_full_skirt', '6', 'end plate')
-    diluent = ctx.load_labware('nest_12_reservoir_15ml', '9',
-                               'diluent (channel 1)').wells()[0]
+    diluent_res = ctx.load_labware('nest_12_reservoir_15ml', '9',
+                               'diluent (channel 1)')
 
     # pipette
     pip_range = pipette_type.split('_')[0][1:]
@@ -37,11 +37,27 @@ def run(ctx):
         if line and line.split(',')[0].strip()][1:]
 
     # transfer diluent
+    dil_chan = 0
+    dil_vol = 10000
+
+    def diluent_track(vol):
+        nonlocal dil_chan
+        nonlocal dil_vol
+        if dil_vol - vol < 100:
+            if dil_chan < 11:
+                dil_chan += 1
+            else:
+                ctx.pause('Refill diluent reservoir before resuming.')
+                dil_chan = 0
+            dil_vol = 10000
+        dil_vol -= vol
+        return diluent_res.wells(dil_chan)
+
     pip.pick_up_tip()
     for line in data:
         dest_well = end_plate.wells_by_name()[line[3]]
-        dil_vol = float(line[7])
-        pip.transfer(dil_vol, diluent, dest_well, new_tip='never')
+        d_vol = float(line[7])
+        pip.transfer(d_vol, diluent_track(d_vol), dest_well, new_tip='never')
     pip.drop_tip()
 
     # transfer sample and mix
@@ -53,8 +69,8 @@ def run(ctx):
         source_well = ctx.loaded_labwares[source_slot].wells_by_name()[line[2]]
         dest_well = end_plate.wells_by_name()[line[3]]
         sample_vol = float(line[6])
-        dil_vol = float(line[7])
-        total_vol = sample_vol + dil_vol
+        d_vol = float(line[7])
+        total_vol = sample_vol + d_vol
 
         pip.pick_up_tip()
         if 0.8*total_vol < pip.max_volume:
