@@ -6,7 +6,10 @@ metadata = {
     'source': 'Custom Protocol Request',
     'apiLevel': '2.7'
 }
-
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"num_samp":41,"asp_delay":3,"mix_reps":5,"asp_height":12,"m20_mount":"right","p20_mount":"left"}""")
+    return [_all_values[n] for n in names]
 
 def run(ctx):
 
@@ -21,6 +24,8 @@ def run(ctx):
     num_col_floor = math.floor(num_samp/8)
     num_col = math.ceil(num_samp/8)
     remain = num_samp % 8
+    print(num_col_floor)
+    print(num_col)
 
     # load labware
     temp_mod = ctx.load_module('temperature module gen2', '3')
@@ -38,20 +43,20 @@ def run(ctx):
 
     # reagents, setup
     temp_mod.set_temperature(4)
-    mastermix = reagent_plate.rows()[0][:2]
+    mastermix = reagent_plate.rows()[0][:4]
     tubes = [tube for tuberack in saliva for tube in tuberack.wells()]
 
-    # add mastermix
     m20.pick_up_tip()
+    col_ctr = 0
     for i, col in enumerate(sample_plate.rows()[0][:num_col_floor]):
-        m20.aspirate(15, mastermix[0] if i < 6 else mastermix[1])
+        if i % 3 == 0 and i != 0:
+            col_ctr += 1
+        m20.aspirate(15, mastermix[col_ctr])
         m20.dispense(15, col)
     m20.drop_tip()
 
     p20.pick_up_tip()
-    for mix, well in zip(reagent_plate.wells()[:remain]
-                         if num_col <= 6 else
-                         reagent_plate.wells()[8:8+remain],
+    for mix, well in zip(reagent_plate.wells()[:remain],
                          sample_plate.wells()
                          [num_col_floor*8:num_col_floor*8+remain]):
         p20.aspirate(15, mix)
