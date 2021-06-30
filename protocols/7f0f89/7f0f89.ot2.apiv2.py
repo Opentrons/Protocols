@@ -58,5 +58,5 @@ def run(ctx):
             ctx.delay(seconds=disp_delay_time)
             p300.dispense(20, reservoir.wells()[0])
             p300.blow_out(reservoir.wells()[0])
-            ctx.comment('\n')
+            ctx.comment('\n\n')
         p300.return_tip()
