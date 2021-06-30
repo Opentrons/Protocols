@@ -20,7 +20,7 @@ Sample number,Slot no number,Source well,Destination well,Start Concentration (u
 4,4,E3,D1,20,2,10,90,100.0
 ```
 
-You can also download and edit [this template](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/4883fc/ex.csv).
+You can also download and edit [this template](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/4883fc/example.xlsx). Be sure to export the `.xlsx` format to `.csv` format before inputting as the `input .csv file` below!
 
 ---
 
