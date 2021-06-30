@@ -1,5 +1,3 @@
-import math
-
 metadata = {
     'protocolName': 'PCR Prep with Frozen Aluminum Block',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
