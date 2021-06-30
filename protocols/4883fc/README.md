@@ -43,7 +43,7 @@ You can also download and edit [this template](https://opentrons-protocol-librar
 ![plate](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/4883fc/plate.png)
 
 ### Reagent Setup
-* NEST 12-channel reservoir (slot 9): diluent (channel 1)
+* NEST 12-channel reservoir (slot 9): diluent (10000µl per channel, dependent on number of normalizations)
 
 ### Protocol Steps
 1. Diluent is transferred in the proper amounts to each destination well of the end PCR plate using 1 tip for the entire set of transfers.
