@@ -10114,7 +10114,7 @@
             "type": "dropDown"
         },
         {
-            "default": 48,
+            "default": 96,
             "label": "number of samples per plate (1-96)",
             "name": "num_samples",
             "type": "int"

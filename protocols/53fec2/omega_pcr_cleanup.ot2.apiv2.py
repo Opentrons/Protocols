@@ -127,12 +127,13 @@ resuming.')
         side = 30 if switch else -18
         drop_loc = ctx.loaded_labwares[12].wells()[0].top().move(
             Point(x=side))
-        pip.drop_tip(drop_loc)
-        switch = not switch
-        if pip.type == 'multi':
-            drop_count += 8
-        else:
-            drop_count += 1
+        if pip.has_tip:
+            pip.drop_tip(drop_loc)
+            switch = not switch
+            if pip.type == 'multi':
+                drop_count += 8
+            else:
+                drop_count += 1
         if drop_count >= drop_threshold:
             # Setup for flashing lights notification to empty trash
             drop_count = 0
@@ -213,6 +214,7 @@ resuming.')
                           new_tip='never')
             m300.blow_out(well.top(-2))
             m300.air_gap(20)
+            m300.drop_tip(spot)
 
     def wash(vol, source, mix_reps=15, park=True, start_park=False,
              resuspend=True):
