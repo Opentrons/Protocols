@@ -1,5 +1,5 @@
 {
-    "content": "from opentrons import types\n\nmetadata = {\n    'protocolName': 'Illumina COVIDSeq Test: Synthesize First Strand cDNA',\n    'author': 'Sakib <sakib.hossain@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.10'\n}\n\n\ndef run(ctx):\n\n    [m20_mount, reservoir_type] = get_values(  # noqa: F821\n        \"m20_mount\", \"reservoir_type\")\n\n    # Labware\n    tips200ul = [ctx.load_labware('opentrons_96_filtertiprack_20ul',\n                 slot) for slot in [10, 7]]\n    reservoir = ctx.load_labware(reservoir_type, 4, \"Master Mix Reservoir\")\n    plate_1 = ctx.load_labware('biorad_96_wellplate_200ul_pcr', 11, \"Plate 1\")\n    plate_2 = ctx.load_labware('biorad_96_wellplate_200ul_pcr', 8, \"Plate 2\")\n\n    # Pipettes\n    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount,\n                              tip_racks=tips200ul)\n\n    # Wells\n    plate_1_wells = plate_1.rows()[0]\n    plate_2_wells = plate_2.rows()[0]\n    mm = reservoir['A1']\n\n    # Helper Functions\n    def transfer(pipette, vol, src, dest):\n        for well in dest:\n            pipette.pick_up_tip()\n            pipette.aspirate(vol, src)\n            pipette.move_to(ctx.deck.position_for('1').move(types.Point(x=20,\n                            y=31.5, z=100)))\n            pipette.dispense(vol, well)\n            pipette.drop_tip()\n\n    # Protocol Steps\n    transfer(m20, 8, mm, plate_1_wells)\n    if reservoir_type == 'biorad_96_wellplate_200ul_pcr':\n        ctx.pause('''Please refill the master mix before continuing to Plate 2.\n                Click Resume when ready.''')\n    transfer(m20, 8, mm, plate_2_wells)\n",
+    "content": "from opentrons import types\n\nmetadata = {\n    'protocolName': 'Illumina COVIDSeq Test: Synthesize First Strand cDNA',\n    'author': 'Sakib <sakib.hossain@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.10'\n}\n\n\ndef run(ctx):\n\n    [m20_mount, reservoir_type, plate_1_cols,\n        plate_2_cols, temperature] = get_values(  # noqa: F821\n        \"m20_mount\", \"reservoir_type\", \"plate_1_cols\", \"plate_2_cols\",\n        \"temperature\")\n\n    # Labware\n    tips200ul = [ctx.load_labware('opentrons_96_filtertiprack_20ul',\n                 slot) for slot in [10, 7]]\n    temp_mod = ctx.load_module('temperature module gen2', 1)\n    reservoir = temp_mod.load_labware(reservoir_type, \"Master Mix Reservoir\")\n    plate_1 = ctx.load_labware('biorad_96_wellplate_200ul_pcr', 11, \"Plate 1\")\n    plate_2 = ctx.load_labware('biorad_96_wellplate_200ul_pcr', 8, \"Plate 2\")\n\n    # Pipettes\n    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount,\n                              tip_racks=tips200ul)\n\n    # Wells\n    plate_1_wells = plate_1.rows()[0]\n    plate_2_wells = plate_2.rows()[0]\n    mm = reservoir['A1']\n\n    # Helper Functions\n    def includeCols(includedCols, plateCols):\n        included_cols = []\n        if includedCols != \"\":\n            included_cols = [int(i)-1 for i in includedCols.split(\",\")]\n            dests = [col for i, col in enumerate(plateCols) if i\n                     in included_cols]\n            return dests\n\n    def transfer(pipette, vol, src, dest):\n        for well in dest:\n            pipette.pick_up_tip()\n            pipette.aspirate(vol, src)\n            pipette.move_to(ctx.deck.position_for('4').move(types.Point(x=20,\n                            y=31.5, z=100)))\n            pipette.dispense(vol, well)\n            pipette.drop_tip()\n\n    # Protocol Steps\n    temp_mod.set_temperature(temperature)\n    transfer(m20, 8, mm, includeCols(plate_1_cols, plate_1_wells))\n    if reservoir_type == 'biorad_96_wellplate_200ul_pcr':\n        ctx.pause('''Please refill the master mix before continuing to Plate 2.\n                Click Resume when ready.''')\n    transfer(m20, 8, mm, includeCols(plate_2_cols, plate_2_wells))\n",
     "custom_labware_defs": [],
     "fields": [
         {
@@ -22,8 +22,8 @@
             "name": "reservoir_type",
             "options": [
                 {
-                    "label": "Bio-Rad Hardshell 96 Well Plate 200 \u00b5L",
-                    "value": "biorad_96_wellplate_200ul_pcr"
+                    "label": "Opentrons 96 Well Aluminum Block with Bio-Rad Well Plate 200 \u00b5L",
+                    "value": "opentrons_96_aluminumblock_biorad_wellplate_200ul"
                 },
                 {
                     "label": "NEST 96 Deepwell Plate 2mL",
@@ -35,6 +35,24 @@
                 }
             ],
             "type": "dropDown"
+        },
+        {
+            "default": "1,2,3,4,5,6,7,8,9,10,11,12",
+            "label": "Plate 1 Columns",
+            "name": "plate_1_cols",
+            "type": "str"
+        },
+        {
+            "default": "1,2,3,4,5,6,7,8,9,10,11,12",
+            "label": "Plate 2 Columns",
+            "name": "plate_2_cols",
+            "type": "str"
+        },
+        {
+            "default": 4,
+            "label": "Temperature (C)",
+            "name": "temperature",
+            "type": "float"
         }
     ],
     "instruments": [
@@ -45,10 +63,10 @@
     ],
     "labware": [
         {
-            "name": "Master Mix Reservoir on 4",
+            "name": "Master Mix Reservoir on Temperature Module GEN2 on 1",
             "share": false,
-            "slot": "4",
-            "type": "biorad_96_wellplate_200ul_pcr"
+            "slot": "1",
+            "type": "opentrons_96_aluminumblock_biorad_wellplate_200ul"
         },
         {
             "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 7",
