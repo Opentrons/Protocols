@@ -12,10 +12,6 @@ metadata = {
     'apiLevel': '2.4'
 }
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"num_samples":8,"deepwell_type":"nest_96_wellplate_2ml_deep","res_type":"nest_12_reservoir_15ml","starting_vol":430,"elution_vol":50,"park_tips":false, "mag_gen":"magdeck", "m300_mount": "right"}""")
-    return [_all_values[n] for n in names]
 
 # Start protocol
 def run(ctx):
