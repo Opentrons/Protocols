@@ -80,7 +80,9 @@ def run(ctx):
     m300.flow_rate.dispense = 150
     m300.flow_rate.blow_out = 300
 
-    def _pick_up(pip):
+    def _pick_up(pip, loc=None):
+        if loc:
+            pip.pick_up_tip(loc)
         try:
             pip.pick_up_tip()
         except ctx.labware.OutOfTipsError:
