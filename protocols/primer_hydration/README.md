@@ -16,9 +16,9 @@ Explanation of complex parameters below:
 * `input .csv file`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:
 ```
 source,dest,vol
-A1,B1,4
+A1,B1,400
 ```
-The volume of each row can be above 300uL, but be careful not to surpass 5000uL for a single falcon tube. If you need to transfer more than 5000uL, ensure you add more falcon tubes and update the 'source' value in the csv
+The above input will make the robot pipette 400 uL from well A01 of 15mL falcon tube rack on slot 5 to well B01 of the 2mL generic tube rack on slot 6.The volume of each row can be above 300uL, but be careful not to surpass 5000uL for a single falcon tube. If you need to transfer more than 5000uL, ensure you add more falcon tubes and update the 'source' value in the csv
 
 ---
 
@@ -46,7 +46,7 @@ The volume of each row can be above 300uL, but be careful not to surpass 5000uL 
 * You must ensure that there is at least 15mL of water in the falcon tubes to ensure the pipette can aspirate. Also ensure that in the csv you are not transferring more than 5mL per falcon tube. If you need to transfer more than 5mL, you need to add more falcon tubes and modify your csv. 
 * Reservoir 1: slot 5
 ![15mL Falcon Tube Rack](./water_tube_rack.PNG)
-* Reservoir 2: slot 2  
+* Reservoir 2: slot 6  
 ![24 well 2mL screw cap tube rack](./primer_tube_rack.PNG)
 
 ---
