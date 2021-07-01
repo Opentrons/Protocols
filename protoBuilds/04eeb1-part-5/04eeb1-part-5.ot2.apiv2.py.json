@@ -1,5 +1,5 @@
 {
-    "content": "from opentrons import protocol_api, types\n\nmetadata = {\n    'protocolName': 'Illumina COVIDSeq Test: Post Tagmentation Clean Up',\n    'author': 'Sakib <sakib.hossain@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.10'\n}\n\n\ndef run(ctx):\n\n    [m300_mount] = get_values(  # noqa: F821\n        \"m300_mount\")\n\n    # Labware\n    tips200ul = ctx.load_labware('opentrons_96_filtertiprack_200ul', 4)\n    reservoir = ctx.load_labware('nest_12_reservoir_15ml', 1,\n                                 \"Master Mix Reservoir\")\n    mag_mod = ctx.load_module('magnetic module gen2', 3)\n    plate_1 = mag_mod.load_labware('biorad_96_wellplate_200ul_pcr')\n\n    # Pipettes\n    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,\n                               tip_racks=[tips200ul])\n\n    # Wells\n    plate_1_wells = plate_1.rows()[0]\n    wb = reservoir['A2']\n    trash = ctx.loaded_labwares[12]['A1']\n\n    # Helper Functions\n    def remove_supernatant(vol, src, dest, side):\n        m300.flow_rate.aspirate = 20\n        m300.aspirate(10, src.top())\n        while vol > 200:\n            m300.aspirate(\n                200, src.bottom().move(types.Point(x=side, y=0, z=0.5)))\n            m300.dispense(200, dest)\n            m300.aspirate(10, dest)\n            vol -= 200\n        m300.aspirate(vol, src.bottom().move(types.Point(x=side, y=0, z=0.5)))\n        m300.dispense(vol, dest)\n        m300.dispense(10, dest)\n        m300.flow_rate.aspirate = 50\n\n    def pick_up(pip):\n        try:\n            pip.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            pip.home()\n            ctx.pause(\"Please replace the tips and click Resume.\")\n            pip.reset_tipracks()\n            pip.pick_up_tip()\n\n    # Protocol Steps\n\n    # Pellet Beads\n    mag_mod.engage()\n    ctx.delay(minutes=3, msg=\"Waiting for 3 minutes for beads to pellet.\")\n\n    # Remove Supernatant\n    for col in plate_1_wells:\n        pick_up(m300)\n        remove_supernatant(60, col, trash, -1)\n        m300.drop_tip()\n\n    # Wash Buffer\n    for col in plate_1_wells:\n        pick_up(m300)\n        m300.transfer(100, wb, col, new_tip='never')\n        m300.drop_tip()\n\n    # Shake and Centrifuge\n    mag_mod.disengage()\n    ctx.pause('''Seal, Shake and Centrifuge. Then place back on the\n              Magnetic Module and click Resume.''')\n    mag_mod.engage()\n    ctx.delay(minutes=3, msg=\"Waiting for 3 minutes for beads to pellet.\")\n\n    # Remove Supernatant\n    for col in plate_1_wells:\n        pick_up(m300)\n        remove_supernatant(100, col, trash, -1)\n        m300.drop_tip()\n\n    # Wash Buffer\n    for col in plate_1_wells:\n        pick_up(m300)\n        m300.transfer(100, wb, col, new_tip='never')\n        m300.drop_tip()\n",
+    "content": "from opentrons import protocol_api, types\n\nmetadata = {\n    'protocolName': 'Illumina COVIDSeq Test: Post Tagmentation Clean Up',\n    'author': 'Sakib <sakib.hossain@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.10'\n}\n\n\ndef run(ctx):\n\n    [m300_mount, plate_1_cols, temperature,\n        wb_col] = get_values(  # noqa: F821\n        \"m300_mount\", \"plate_1_cols\", \"temperature\", \"wb_col\")\n\n    # Labware\n    tips200ul = ctx.load_labware('opentrons_96_filtertiprack_200ul', 4)\n    temp_mod = ctx.load_module('temperature module gen2', 1)\n    reservoir = temp_mod.load_labware('nest_12_reservoir_15ml',\n                                      \"Master Mix Reservoir\")\n    mag_mod = ctx.load_module('magnetic module gen2', 3)\n    plate_1 = mag_mod.load_labware('biorad_96_wellplate_200ul_pcr')\n\n    # Pipettes\n    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,\n                               tip_racks=[tips200ul])\n\n    # Helper Functions\n    def includeCols(includedCols, plateCols):\n        included_cols = []\n        if includedCols != \"\":\n            included_cols = [int(i)-1 for i in includedCols.split(\",\")]\n            dests = [col for i, col in enumerate(plateCols) if i\n                     in included_cols]\n            return dests\n\n    def remove_supernatant(vol, src, dest, side):\n        m300.flow_rate.aspirate = 20\n        m300.aspirate(10, src.top())\n        while vol > 200:\n            m300.aspirate(\n                200, src.bottom().move(types.Point(x=side, y=0, z=0.5)))\n            m300.dispense(200, dest)\n            m300.aspirate(10, dest)\n            vol -= 200\n        m300.aspirate(vol, src.bottom().move(types.Point(x=side, y=0, z=0.5)))\n        m300.dispense(vol, dest)\n        m300.dispense(10, dest)\n        m300.flow_rate.aspirate = 50\n\n    def pick_up(pip):\n        try:\n            pip.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            pip.home()\n            ctx.pause(\"Please replace the tips and click Resume.\")\n            pip.reset_tipracks()\n            pip.pick_up_tip()\n\n    # Wells\n    plate_1_wells = includeCols(plate_1_cols, plate_1.rows()[0])\n    wb = reservoir[wb_col]\n    trash = ctx.loaded_labwares[12]['A1']\n\n    # Protocol Steps\n    temp_mod.set_temperature(temperature)\n    # Pellet Beads\n    mag_mod.engage()\n    ctx.delay(minutes=3, msg=\"Waiting for 3 minutes for beads to pellet.\")\n\n    # Remove Supernatant\n    for col in plate_1_wells:\n        pick_up(m300)\n        remove_supernatant(60, col, trash, -1)\n        m300.drop_tip()\n\n    # Wash Buffer\n    for col in plate_1_wells:\n        pick_up(m300)\n        m300.transfer(100, wb, col, new_tip='never')\n        m300.drop_tip()\n\n    # Shake and Centrifuge\n    mag_mod.disengage()\n    ctx.pause('''Seal, Shake and Centrifuge. Then place back on the\n              Magnetic Module and click Resume.''')\n    mag_mod.engage()\n    ctx.delay(minutes=3, msg=\"Waiting for 3 minutes for beads to pellet.\")\n\n    # Remove Supernatant\n    for col in plate_1_wells:\n        pick_up(m300)\n        remove_supernatant(100, col, trash, -1)\n        m300.drop_tip()\n\n    # Wash Buffer\n    for col in plate_1_wells:\n        pick_up(m300)\n        m300.transfer(100, wb, col, new_tip='never')\n        m300.drop_tip()\n",
     "custom_labware_defs": [],
     "fields": [
         {
@@ -16,6 +16,73 @@
                 }
             ],
             "type": "dropDown"
+        },
+        {
+            "default": "1,2,3,4,5,6,7,8,9,10,11,12",
+            "label": "Plate 1 Columns",
+            "name": "plate_1_cols",
+            "type": "str"
+        },
+        {
+            "default": 4,
+            "label": "Temperature (C)",
+            "name": "temperature",
+            "type": "float"
+        },
+        {
+            "label": "Wash Buffer Column",
+            "name": "wb_col",
+            "options": [
+                {
+                    "label": "A1",
+                    "value": "A1"
+                },
+                {
+                    "label": "A2",
+                    "value": "A2"
+                },
+                {
+                    "label": "A3",
+                    "value": "A3"
+                },
+                {
+                    "label": "A4",
+                    "value": "A4"
+                },
+                {
+                    "label": "A5",
+                    "value": "A5"
+                },
+                {
+                    "label": "A6",
+                    "value": "A6"
+                },
+                {
+                    "label": "A7",
+                    "value": "A7"
+                },
+                {
+                    "label": "A8",
+                    "value": "A8"
+                },
+                {
+                    "label": "A9",
+                    "value": "A9"
+                },
+                {
+                    "label": "A10",
+                    "value": "A10"
+                },
+                {
+                    "label": "A11",
+                    "value": "A11"
+                },
+                {
+                    "label": "A12",
+                    "value": "A12"
+                }
+            ],
+            "type": "dropDown"
         }
     ],
     "instruments": [
@@ -26,7 +93,7 @@
     ],
     "labware": [
         {
-            "name": "Master Mix Reservoir on 1",
+            "name": "Master Mix Reservoir on Temperature Module GEN2 on 1",
             "share": false,
             "slot": "1",
             "type": "nest_12_reservoir_15ml"

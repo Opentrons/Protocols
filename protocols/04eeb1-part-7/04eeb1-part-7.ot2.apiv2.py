@@ -17,9 +17,9 @@ def run(ctx):
     tips200ul = [ctx.load_labware('opentrons_96_filtertiprack_200ul', 4)]
     tips20ul = ctx.load_labware('opentrons_96_filtertiprack_20ul', 7)
     pcr_strip = ctx.load_labware(
-                'opentrons_96_aluminumblock_generic_pcr_strip_200ul', 9)
+                'opentrons_96_aluminumblock_generic_pcr_strip_200ul', 8)
     tuberack = ctx.load_labware(
-                'opentrons_24_aluminumblock_nest_1.5ml_snapcap', 6)
+                'opentrons_24_aluminumblock_nest_1.5ml_snapcap', 5)
     mag_mod = ctx.load_module('magnetic module gen2', 3)
     plate_1 = mag_mod.load_labware('biorad_96_wellplate_200ul_pcr')
 
