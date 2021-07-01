@@ -21,6 +21,9 @@ The Illumina COVIDSeq Test is a high-throughput, next-generation sequencing test
 Explanation of complex parameters below:
 * `P20 Multichannel GEN2 Pipette Mount`: Choose the mount position of your P20 Multichannel pipette, either left or right.
 * `Reservoir Labware Type`: Choose the type of reservoir that will be used for holding the master mix. **Note: Only the Bio-Rad Hard-Shell 96 Well Plate 200 µL plate will resume after Plate 1 and prompt for a refill of the master mix.**
+* `Plate 1 Columns`: Choose which columns master mix should be added on plate 1. Separate column numbers with a comman (Ex: 1,2,3,4).
+* `Plate 2 Columns`: Choose which columns master mix should be added on plate 2. Separate column numbers with a comman (Ex: 1,2,3,4).
+* `Temperature (C)`: Choose the temperature the temperature module should be set at in the beginning of the protocol.
 
 ---
 
@@ -39,7 +42,7 @@ Explanation of complex parameters below:
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/04eeb1/04eeb1-part-2_layout.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/04eeb1/04eeb1-p2.png)
 
 **Note**: Master Mix should be added in Column 2 (A2) of any reservoir type.
 
