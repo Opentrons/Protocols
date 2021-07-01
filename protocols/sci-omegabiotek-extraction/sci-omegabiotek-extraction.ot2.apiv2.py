@@ -1,6 +1,4 @@
 from opentrons.types import Point
-import json
-import os
 import math
 from opentrons import types
 
@@ -11,10 +9,7 @@ metadata = {
     'source': 'Custom Protocol Request',
     'apiLevel': '2.4'
 }
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"num_samples":8,"deepwell_type":"nest_96_wellplate_2ml_deep","res_type":"nest_12_reservoir_15ml","starting_vol":430,"binding_buffer_vol":370,"wash1_vol":500,"wash2_vol":500,"wash3_vol":500,"elution_vol":50,"mix_reps":15,"settling_time":7,"park_tips":false,"tip_track":false,"flash":false}""")
-    return [_all_values[n] for n in names]
+
 
 # Start protocol
 def run(ctx):
@@ -85,23 +80,13 @@ def run(ctx):
     m300.flow_rate.dispense = 150
     m300.flow_rate.blow_out = 300
 
-    tip_log['tips'] = {
-        m300: [tip for rack in tips300 for tip in rack.rows()[0]]}
-    tip_log['max'] = {m300: len(tip_log['tips'][m300])}
-
-    def _pick_up(pip, loc=None):
-        nonlocal tip_log
-        if tip_log['count'][pip] == tip_log['max'][pip] and not loc:
-            ctx.pause('Replace ' + str(pip.max_volume) + 'µl tipracks before \
-resuming.')
+    def _pick_up(pip):
+        try:
+            pip.pick_up_tip()
+        except ctx.labware.OutOfTipsError:
+            pip.pause("Replace all 300ul tip racks. Empty trash if needed.")
             pip.reset_tipracks()
-            tip_log['count'][pip] = 0
-        if loc:
-            pip.pick_up_tip(loc)
-        else:
-            pip.pick_up_tip(tip_log['tips'][pip][tip_log['count'][pip]])
-            tip_log['count'][pip] += 1
-            print(tip_log['count'])
+            pip.pick_up_tip()
 
     switch = True
     drop_count = 0
