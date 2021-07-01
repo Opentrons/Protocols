@@ -10,16 +10,20 @@
 ## Description
 The Illumina COVIDSeq Test is a high-throughput, next-generation sequencing test that is used fo detecting SARS-CoV-2 in patient samples. This protocol is the fourth part of a seven-part protocol that is run on the OT-2 for this kit.
 
-* Part 1: Anneal RNA
-* Part 2: Synthesize First Strand cDNA
-* Part 3: Amplify cDNA
-* Part 4: Tagment PCR Amplicons
-* Part 5: Post Tagmentation Clean Up
-* Part 6: Amplify Tagmented Amplicons
-* Part 7: Pool and Clean Up Libraries
+* Part 1: [Anneal RNA](https://protocols.opentrons.com/protocol/04eeb1)
+* Part 2: [Synthesize First Strand cDNA](https://protocols.opentrons.com/protocol/04eeb1-part-2)
+* Part 3: [Amplify cDNA](https://protocols.opentrons.com/protocol/04eeb1-part-3)
+* Part 4: [Tagment PCR Amplicons](https://protocols.opentrons.com/protocol/04eeb1-part-4)
+* Part 5: [Post Tagmentation Clean Up](https://protocols.opentrons.com/protocol/04eeb1-part-5)
+* Part 6: [Amplify Tagmented Amplicons](https://protocols.opentrons.com/protocol/04eeb1-part-6)
+* Part 7: [Pool and Clean Up Libraries](https://protocols.opentrons.com/protocol/04eeb1-part-7)
 
 Explanation of complex parameters below:
 * `P300 Multichannel GEN2 Pipette Mount`: Choose the mount position of your P20 Multichannel pipette, either left or right.
+* `Plate 1 Columns`: Choose which columns master mix should be added on plate 1. Separate column numbers with a comman (Ex: 1,2,3,4).
+* `Plate 2 Columns`: Choose which columns master mix should be added on plate 2. Separate column numbers with a comman (Ex: 1,2,3,4).
+* `Temperature (C)`: Choose the temperature the temperature module should be set at in the beginning of the protocol.
+* `Master Mix Column`: Choose the column on the 12-channel reservoir for the master mix for Plate 1.
 
 ---
 
@@ -37,9 +41,7 @@ Explanation of complex parameters below:
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/04eeb1/04eeb1-part-4.png)
-
-**Note**: Master Mix should be added in Column 1 (A1).
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/04eeb1/04eeb1-p4.png)
 
 ---
 
