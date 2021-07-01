@@ -27,7 +27,6 @@ The volume of each row can be above 300uL, but be careful not to surpass 5000uL 
 
 * [Opentrons 10 Tube Rack with Falcon 4x50 mL, 6x15 mL Conical](https://labware.opentrons.com/opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical)
 * [Opentrons 24 Well Aluminum Block with Generic 2 mL Screwcap](https://labware.opentrons.com/opentrons_24_aluminumblock_generic_2ml_screwcap)
-* 
 
 ### Pipettes
 * [P300 8-Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette?variant=5984202489885)
