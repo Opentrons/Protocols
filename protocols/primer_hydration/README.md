@@ -1,4 +1,4 @@
-# Protocol Title (should match metadata of .py file)
+# Multiple Primer hydration
 
 ### Author
 [REM Analytics](https://www.remanalytics.ch/)
