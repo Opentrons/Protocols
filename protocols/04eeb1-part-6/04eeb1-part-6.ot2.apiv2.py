@@ -10,13 +10,14 @@ metadata = {
 
 def run(ctx):
 
-    [m300_mount] = get_values(  # noqa: F821
-        "m300_mount")
+    [m300_mount, plate_1_cols, temperature, mm_col] = get_values(  # noqa: F821
+        "m300_mount", "plate_1_cols", "temperature", "mm_col")
 
     # Labware
     tips200ul = ctx.load_labware('opentrons_96_filtertiprack_200ul', 4)
-    reservoir = ctx.load_labware('nest_12_reservoir_15ml', 1,
-                                 "Master Mix Reservoir")
+    temp_mod = ctx.load_module('temperature module gen2', 1)
+    reservoir = temp_mod.load_labware('nest_12_reservoir_15ml',
+                                      "Master Mix Reservoir")
     mag_mod = ctx.load_module('magnetic module gen2', 3)
     plate_1 = mag_mod.load_labware('biorad_96_wellplate_200ul_pcr')
 
@@ -24,12 +25,15 @@ def run(ctx):
     m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,
                                tip_racks=[tips200ul])
 
-    # Wells
-    plate_1_wells = plate_1.rows()[0]
-    mm = reservoir['A3']
-    trash = ctx.loaded_labwares[12]['A1']
-
     # Helper Functions
+    def includeCols(includedCols, plateCols):
+        included_cols = []
+        if includedCols != "":
+            included_cols = [int(i)-1 for i in includedCols.split(",")]
+            dests = [col for i, col in enumerate(plateCols) if i
+                     in included_cols]
+            return dests
+
     def remove_supernatant(vol, src, dest, side):
         m300.flow_rate.aspirate = 20
         m300.aspirate(10, src.top())
@@ -53,8 +57,14 @@ def run(ctx):
             pip.reset_tipracks()
             pip.pick_up_tip()
 
+    # Wells
+    plate_1_wells = includeCols(plate_1_cols, plate_1.rows()[0])
+    mm = reservoir[mm_col]
+    trash = ctx.loaded_labwares[12]['A1']
+
     # Protocol Steps
 
+    temp_mod.set_temperature(temperature)
     # Engage Mag Mod
     mag_mod.engage()
 
