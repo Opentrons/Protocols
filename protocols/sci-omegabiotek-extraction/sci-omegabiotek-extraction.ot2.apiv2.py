@@ -1,6 +1,8 @@
 from opentrons.types import Point
 import math
 from opentrons import types
+import os
+import json
 
 
 metadata = {
@@ -10,6 +12,10 @@ metadata = {
     'apiLevel': '2.4'
 }
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"num_samples":8,"deepwell_type":"nest_96_wellplate_2ml_deep","res_type":"nest_12_reservoir_15ml","starting_vol":430,"elution_vol":50,"park_tips":false, "mag_gen":"magdeck", "m300_mount": "right"}""")
+    return [_all_values[n] for n in names]
 
 # Start protocol
 def run(ctx):
@@ -79,16 +85,39 @@ def run(ctx):
     m300.flow_rate.aspirate = 50
     m300.flow_rate.dispense = 150
     m300.flow_rate.blow_out = 300
+    tip_track = False
+
+    folder_path = '/data/B'
+    tip_file_path = folder_path + '/tip_log.json'
+    tip_log = {'count': {}}
+    if tip_track and not ctx.is_simulating():
+        if os.path.isfile(tip_file_path):
+            with open(tip_file_path) as json_file:
+                data = json.load(json_file)
+                if 'tips300' in data:
+                    tip_log['count'][m300] = data['tips300']
+                else:
+                    tip_log['count'][m300] = 0
+        else:
+            tip_log['count'][m300] = 0
+    else:
+        tip_log['count'] = {m300: 0}
+    tip_log['tips'] = {
+        m300: [tip for rack in tips300 for tip in rack.rows()[0]]}
+    tip_log['max'] = {m300: len(tip_log['tips'][m300])}
 
     def _pick_up(pip, loc=None):
+        nonlocal tip_log
+        if tip_log['count'][pip] == tip_log['max'][pip] and not loc:
+            ctx.pause('Replace ' + str(pip.max_volume) + 'µl tipracks before \
+resuming.')
+            pip.reset_tipracks()
+            tip_log['count'][pip] = 0
         if loc:
             pip.pick_up_tip(loc)
-        try:
-            pip.pick_up_tip()
-        except ctx.labware.OutOfTipsError:
-            pip.pause("Replace all 300ul tip racks. Empty trash if needed.")
-            pip.reset_tipracks()
-            pip.pick_up_tip()
+        else:
+            pip.pick_up_tip(tip_log['tips'][pip][tip_log['count'][pip]])
+            tip_log['count'][pip] += 1
 
     switch = True
     drop_count = 0
