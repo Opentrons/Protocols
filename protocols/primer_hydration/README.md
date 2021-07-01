@@ -52,9 +52,10 @@ The above input will make the robot pipette 400 uL from well A01 of 15mL falcon 
 ---
 
 ### Protocol Steps
-1. This section should consist of a numerical outline of the protocol steps, somewhat analogous to the steps outlined by the user in their custom protocol submission.
-2. example step: Samples are transferred from the source tuberacks on slots 1-2 to the PCR plate on slot 3, down columns and then across rows.
-3. example step: Waste is removed from each sample on the magnetic module, ensuring the bead pellets are not contacted by the pipette tips.
+1. Individual tip is taken from well H1 of tip rack.
+2. For each csv row:
+   1. Transfer specified volume from source in 15mL falcon tube rack to destination in 2mL tube rack containing dry primer pellet. 
+3. Drop tip in waste bin.  
 
 ### Process
 1. Input your protocol csv file above.
