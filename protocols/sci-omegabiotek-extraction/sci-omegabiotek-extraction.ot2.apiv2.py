@@ -2,8 +2,6 @@ from opentrons.types import Point
 import json
 import os
 import math
-import threading
-from time import sleep
 from opentrons import types
 
 
@@ -13,55 +11,25 @@ metadata = {
     'source': 'Custom Protocol Request',
     'apiLevel': '2.4'
 }
-
-
-# Definitions for deck light flashing
-class CancellationToken:
-    def __init__(self):
-        self.is_continued = False
-
-    def set_true(self):
-        self.is_continued = True
-
-    def set_false(self):
-        self.is_continued = False
-
-
-def turn_on_blinking_notification(hardware, pause):
-    while pause.is_continued:
-        hardware.set_lights(rails=True)
-        sleep(1)
-        hardware.set_lights(rails=False)
-        sleep(1)
-
-
-def create_thread(ctx, cancel_token):
-    t1 = threading.Thread(target=turn_on_blinking_notification,
-                          args=(ctx._hw_manager.hardware, cancel_token))
-    t1.start()
-    return t1
-
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"num_samples":8,"deepwell_type":"nest_96_wellplate_2ml_deep","res_type":"nest_12_reservoir_15ml","starting_vol":430,"binding_buffer_vol":370,"wash1_vol":500,"wash2_vol":500,"wash3_vol":500,"elution_vol":50,"mix_reps":15,"settling_time":7,"park_tips":false,"tip_track":false,"flash":false}""")
+    return [_all_values[n] for n in names]
 
 # Start protocol
 def run(ctx):
-    # Setup for flashing lights notification to empty trash
-    cancellationToken = CancellationToken()
 
-    [num_samples, deepwell_type, res_type, starting_vol, binding_buffer_vol,
-     wash1_vol, wash2_vol, wash3_vol, elution_vol, mix_reps, settling_time,
-     park_tips, tip_track, flash,
-     mag_gen, m300_mount] = get_values(  # noqa: F821
+    [num_samples, deepwell_type, res_type, starting_vol,
+     elution_vol, park_tips, mag_gen, m300_mount] = get_values(  # noqa: F821
         'num_samples', 'deepwell_type', 'res_type', 'starting_vol',
-        'binding_buffer_vol', 'wash1_vol', 'wash2_vol', 'wash3_vol',
-        'elution_vol', 'mix_reps', 'settling_time', 'park_tips', 'tip_track',
-        'flash', 'mag_gen', 'm300_mount')
+        'elution_vol', 'park_tips', 'mag_gen', 'm300_mount')
 
     if num_samples % 8 != 0:
         raise Exception("Enter a sample number wholly divisible by 8")
     if not 0 <= num_samples <= 96:
         raise Exception("Enter a sample number between 1-96")
 
-    if mag_gen == 'gen1':
+    if mag_gen == 'magdeck':
         MAG_HEIGHT = 13.6
     else:
         MAG_HEIGHT = 6.8
@@ -70,10 +38,10 @@ def run(ctx):
     Here is where you can change the locations of your labware and modules
     (note that this is the recommended configuration)
     """
-    magdeck = ctx.load_module('magdeck', '6')
+    magdeck = ctx.load_module(mag_gen, '6')
     magdeck.disengage()
     magplate = magdeck.load_labware(deepwell_type, 'deepwell plate')
-#    tempdeck = ctx.load_module('Temperature Module Gen2', '1')
+    # tempdeck = ctx.load_module('Temperature Module Gen2', '1')
     elutionplate = ctx.load_labware(
                 'opentrons_96_aluminumblock_nest_wellplate_100ul',
                 '1')
@@ -117,22 +85,6 @@ def run(ctx):
     m300.flow_rate.dispense = 150
     m300.flow_rate.blow_out = 300
 
-    folder_path = '/data/B'
-    tip_file_path = folder_path + '/tip_log.json'
-    tip_log = {'count': {}}
-    if tip_track and not ctx.is_simulating():
-        if os.path.isfile(tip_file_path):
-            with open(tip_file_path) as json_file:
-                data = json.load(json_file)
-                if 'tips300' in data:
-                    tip_log['count'][m300] = data['tips300']
-                else:
-                    tip_log['count'][m300] = 0
-        else:
-            tip_log['count'][m300] = 0
-    else:
-        tip_log['count'] = {m300: 0}
-
     tip_log['tips'] = {
         m300: [tip for rack in tips300 for tip in rack.rows()[0]]}
     tip_log['max'] = {m300: len(tip_log['tips'][m300])}
@@ -149,6 +101,7 @@ resuming.')
         else:
             pip.pick_up_tip(tip_log['tips'][pip][tip_log['count'][pip]])
             tip_log['count'][pip] += 1
+            print(tip_log['count'])
 
     switch = True
     drop_count = 0
@@ -168,17 +121,9 @@ resuming.')
         else:
             drop_count += 1
         if drop_count >= drop_threshold:
-            # Setup for flashing lights notification to empty trash
-            if flash:
-                if not ctx._hw_manager.hardware.is_simulator:
-                    cancellationToken.set_true()
-                thread = create_thread(ctx, cancellationToken)
             m300.home()
             ctx.pause('Please empty tips from waste before resuming.')
             ctx.home()  # home before continuing with protocol
-            if flash:
-                cancellationToken.set_false()  # stop light flashing after home
-                thread.join()
             drop_count = 0
 
     waste_vol = 0
@@ -197,21 +142,10 @@ resuming.')
         def _waste_track(vol):
             nonlocal waste_vol
             if waste_vol + vol >= waste_threshold:
-                # Setup for flashing lights notification to empty liquid waste
-                if flash:
-                    if not ctx._hw_manager.hardware.is_simulator:
-                        cancellationToken.set_true()
-                    thread = create_thread(ctx, cancellationToken)
                 m300.home()
                 ctx.pause('Please empty liquid waste (slot 11) before \
 resuming.')
-
                 ctx.home()  # home before continuing with protocol
-                if flash:
-                    # stop light flashing after home
-                    cancellationToken.set_false()
-                    thread.join()
-
                 waste_vol = 0
             waste_vol += vol
 
@@ -331,13 +265,12 @@ resuming.')
                 _drop(m300)
         ctx.delay(minutes=10, msg='Bind off-deck on a heater/shaker')
         magdeck.engage(height=MAG_HEIGHT)
-        ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
-' + str(settling_time) + ' minutes.')
+        ctx.delay(minutes=7, msg='Incubating on MagDeck for seven minutes.')
 
         # remove initial supernatant
         remove_supernatant(vol+starting_vol, park=park)
 
-    def wash(vol, source, mix_reps=15, park=True, resuspend=True):
+    def wash(vol, source, park=True, resuspend=True):
         """
         `wash` will perform bead washing for the extraction protocol.
         :param vol (float): The amount of volume to aspirate from each
@@ -386,8 +319,7 @@ resuming.')
         if magdeck.status == 'disengaged':
             magdeck.engage(height=MAG_HEIGHT)
 
-        ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
-' + str(settling_time) + ' minutes.')
+        ctx.delay(minutes=7, msg='Incubating on MagDeck for seven minutes.')
 
         remove_supernatant(vol, park=park)
 
@@ -414,7 +346,7 @@ resuming.')
             m300.aspirate(vol, elution_solution)
             m300.move_to(m.center())
             m300.dispense(vol, loc)
-            m300.mix(mix_reps, 0.8*vol, loc)
+            m300.mix(15, 0.8*vol, loc)
             m300.blow_out(m.bottom(5))
             m300.air_gap(20)
             if park:
@@ -424,8 +356,7 @@ resuming.')
 
         ctx.delay(minutes=5, msg='Delay for 5 minutes for elution')
         magdeck.engage(height=MAG_HEIGHT)
-        ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
-' + str(settling_time) + ' minutes.')
+        ctx.delay(minutes=7, msg='Incubating on MagDeck for seven minutes.')
 
         for i, (m, e, spot) in enumerate(
                 zip(mag_samples_m, elution_samples_m, parking_spots)):
@@ -444,17 +375,9 @@ resuming.')
     Here is where you can call the methods defined above to fit your specific
     protocol. The normal sequence is:
     """
-    bind(binding_buffer_vol, park=park_tips)
-    wash(wash1_vol, wash1, park=park_tips)
-    wash(wash2_vol, wash2, park=park_tips)
-    wash(wash3_vol, wash3, park=park_tips)
+    bind(370, park=park_tips)
+    wash(500, wash1, park=park_tips)
+    wash(500, wash2, park=park_tips)
+    wash(500, wash3, park=park_tips)
     ctx.delay(minutes=5, msg='Incubate for 5 minutes to dry beads')
     elute(elution_vol, park=park_tips)
-
-    # track final used tip
-    if tip_track and not ctx.is_simulating():
-        if not os.path.isdir(folder_path):
-            os.mkdir(folder_path)
-        data = {'tips300': tip_log['count'][m300]}
-        with open(tip_file_path, 'w') as outfile:
-            json.dump(data, outfile)
