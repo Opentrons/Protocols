@@ -2,17 +2,11 @@ from opentrons import types, protocol_api
 import math
 
 metadata = {
-    'protocolName': 'Example',
+    'protocolName': 'Custom NGS Library Prep',
     'author': 'Sakib <sakib.hossain@opentrons.com>',
     'description': 'Custom Protocol Request',
     'apiLevel': '2.10'
 }
-
-
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"m20_mount":"left", "m300_mount":"right","samples":96}""")
-    return [_all_values[n] for n in names]
 
 
 def run(ctx):
