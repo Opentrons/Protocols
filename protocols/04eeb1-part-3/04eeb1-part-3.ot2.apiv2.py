@@ -10,13 +10,17 @@ metadata = {
 
 def run(ctx):
 
-    [m300_mount] = get_values(  # noqa: F821
-        "m300_mount")
+    [m300_mount, plate_1_cols,
+        plate_2_cols, temperature, mm1_col,
+        mm2_col] = get_values(  # noqa: F821
+        "m300_mount", "plate_1_cols", "plate_2_cols",
+        "temperature", "mm1_col", "mm2_col")
 
     # Labware
     tips200ul = ctx.load_labware('opentrons_96_filtertiprack_200ul', 10)
-    reservoir = ctx.load_labware('nest_12_reservoir_15ml', 7,
-                                 "Master Mix Reservoir")
+    temp_mod = ctx.load_module('temperature module gen2', 1)
+    reservoir = temp_mod.load_labware('nest_12_reservoir_15ml',
+                                      "Master Mix Reservoir")
     plate_1 = ctx.load_labware('biorad_96_wellplate_200ul_pcr', 11,
                                "Plate CPP1")
     plate_2 = ctx.load_labware('biorad_96_wellplate_200ul_pcr', 8,
@@ -31,6 +35,14 @@ def run(ctx):
     plate_2_wells = plate_2.rows()[0]
 
     # Helper Functions
+    def includeCols(includedCols, plateCols):
+        included_cols = []
+        if includedCols != "":
+            included_cols = [int(i)-1 for i in includedCols.split(",")]
+            dests = [col for i, col in enumerate(plateCols) if i
+                     in included_cols]
+            return dests
+
     def distribute(pipette, vol, source, dest, disposal_vol, asp_height,
                    disp_height):
 
@@ -67,5 +79,8 @@ def run(ctx):
         pipette.drop_tip()
 
     # Protocol Steps
-    distribute(m300, 20, reservoir['A1'], plate_1_wells, 0, 1, 1)
-    distribute(m300, 20, reservoir['A12'], plate_2_wells, 0, 1, 1)
+    temp_mod.set_temperature(temperature)
+    distribute(m300, 20, reservoir[mm1_col],
+               includeCols(plate_1_cols, plate_1_wells), 0, 1, 1)
+    distribute(m300, 20, reservoir[mm2_col],
+               includeCols(plate_2_cols, plate_2_wells), 0, 1, 1)
