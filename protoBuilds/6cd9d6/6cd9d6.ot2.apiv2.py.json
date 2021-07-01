@@ -1,0 +1,121 @@
+{
+    "content": "from opentrons import types, protocol_api\nimport math\n\nmetadata = {\n    'protocolName': 'Custom NGS Library Prep',\n    'author': 'Sakib <sakib.hossain@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.10'\n}\n\n\ndef run(ctx):\n\n    [m20_mount, m300_mount, samples] = get_values(  # noqa: F821\n        \"m20_mount\", \"m300_mount\", \"samples\")\n\n    cols = math.ceil(samples/8)\n\n    # Load Modules\n    temperature_module_a = ctx.load_module('temperature module gen2', 1)\n    temperature_module_b = ctx.load_module('temperature module gen2', 3)\n    mag_mod = ctx.load_module('magnetic module gen2', 4)\n    mag_plate = mag_mod.load_labware('biorad_96_wellplate_200ul_pcr')\n\n    # Load Labware\n    temp_plate_a = temperature_module_a.load_labware(\n                    'biorad_96_wellplate_200ul_pcr')\n    temp_plate_b = temperature_module_b.load_labware(\n                    'opentrons_96_aluminumblock_generic_pcr_strip_200ul')\n    reagent2_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', 2)\n\n    tipracks200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)\n                   for slot in [7, 8]]\n    tipracks20 = [ctx.load_labware('opentrons_96_tiprack_20ul', slot)\n                  for slot in [10, 11]]\n    trash = ctx.deck['12']['A1']\n\n    # Load Pipettes\n    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount,\n                              tip_racks=tipracks20)\n    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,\n                               tip_racks=tipracks200)\n\n    # Helper Functions\n    def replace_labware(slot_number, new_labware):\n        del ctx.deck[str(slot_number)]\n        return ctx.load_labware(new_labware, str(slot_number))\n\n    def aspirate_with_delay(pipette, volume, source, delay_seconds):\n        pipette.aspirate(volume, source)\n        if delay_seconds > 0:\n            ctx.delay(seconds=delay_seconds)\n\n    def dispense_with_delay(pipette, volume, dest, delay_seconds):\n        pipette.dispense(volume, dest)\n        if delay_seconds > 0:\n            ctx.delay(seconds=delay_seconds)\n\n    def pick_up(pip):\n        try:\n            pip.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            pip.home()\n            ctx.pause(\"Replace the empty tips!\")\n            pip.reset_tipracks()\n            pip.pick_up_tip()\n\n    def reset_pipette_speed(pipette):\n        if pipette.name == 'p300_multi_gen2':\n            pipette.flow_rate.aspirate = 94\n            pipette.flow_rate.dispense = 94\n        elif pipette.name == 'p20_multi_gen2':\n            pipette.flow_rate.aspirate = 7.6\n            pipette.flow_rate.dispense = 7.6\n\n    def remove_supernatant(pip, vol, src, dest, side, mode=None):\n        if mode == 'elution':\n            pip.flow_rate.aspirate = 10\n        else:\n            pip.flow_rate.aspirate = 20\n        while vol > 200:\n            pip.aspirate(\n                200, src.bottom().move(types.Point(x=side, y=0, z=0.5)))\n            pip.dispense(200, dest)\n            pip.aspirate(10, dest)\n            vol -= 200\n        pip.aspirate(vol, src.bottom().move(types.Point(x=side, y=0, z=0.5)))\n        pip.dispense(vol, dest)\n        if dest == trash:\n            pip.blow_out()\n        pip.flow_rate.aspirate = 50\n\n    # Volume Tracking\n    class VolTracker:\n        def __init__(self, labware, well_vol, pip_type='single',\n                     mode='reagent', start=0, end=12, msg='Reset Labware'):\n            try:\n                self.labware_wells = dict.fromkeys(\n                    labware.wells()[start:end], 0)\n            except Exception:\n                self.labware_wells = dict.fromkeys(\n                    labware, 0)\n            self.labware_wells_backup = self.labware_wells.copy()\n            self.well_vol = well_vol\n            self.pip_type = pip_type\n            self.mode = mode\n            self.start = start\n            self.end = end\n            self.msg = msg\n\n        def tracker(self, vol):\n            '''tracker() will track how much liquid\n            was used up per well. If the volume of\n            a given well is greater than self.well_vol\n            it will remove it from the dictionary and iterate\n            to the next well which will act as the reservoir.'''\n            well = next(iter(self.labware_wells))\n            if self.labware_wells[well] + vol >= self.well_vol:\n                del self.labware_wells[well]\n                if len(self.labware_wells) < 1:\n                    ctx.pause(self.msg)\n                    self.labware_wells = self.labware_wells_backup.copy()\n                well = next(iter(self.labware_wells))\n            if self.pip_type == 'multi':\n                self.labware_wells[well] = self.labware_wells[well] + vol*8\n            elif self.pip_type == 'single':\n                self.labware_wells[well] = self.labware_wells[well] + vol\n            if self.mode == 'waste':\n                ctx.comment(f'''{well}: {int(self.labware_wells[well])} uL of\n                            total waste''')\n            else:\n                ctx.comment(f'''{int(self.labware_wells[well])} uL of liquid\n                            used from {well}''')\n            return well\n\n    # Wells\n    sample_wells = temp_plate_a.rows()[0][:cols]\n    reagent1 = temp_plate_b['A1']\n    reagent2 = reagent2_plate['A1']\n\n    # Protocol Steps\n    # Set both Temp Mods to 4C\n    temperature_module_a.set_temperature(4)\n    temperature_module_b.set_temperature(4)\n\n    # Step 1: Transfer Reagent 1 to Samples\n    for col in sample_wells:\n        pick_up(m20)\n        m20.flow_rate.aspirate = 5\n        m20.flow_rate.dispense = 5\n        aspirate_with_delay(m20, 2, reagent1, 1)\n        dispense_with_delay(m20, 2, col, 1)\n        m20.drop_tip()\n    reset_pipette_speed(m20)\n\n    # Step 2: Transfer Reagent 2 to Samples\n    for col in sample_wells:\n        pick_up(m20)\n        m20.flow_rate.aspirate = 4\n        m20.flow_rate.dispense = 4\n        aspirate_with_delay(m20, 12, reagent2, 2)\n        dispense_with_delay(m20, 12, col, 2)\n        m20.drop_tip()\n    reset_pipette_speed(m20)\n\n    ctx.pause('''Seal the sample plate. Mix, Spin down and place in a thermocycler.\n              Return sample plate to the magnetic module once completed.\n              Remove plates/strips containing Reagents 1 and 2.  Place the\n              12-channel reservoir on the temperature module in Slot 1. Place\n              the Primer Plate on the temperature module in Slot 3. Place empty\n              indexing plate in Slot 2. Click Resume when ready to proceed.''')\n\n    # Swapping Labware at Pause\n    del ctx.deck[str(1)]\n    temperature_module_a = ctx.load_module('temperature module gen2', 1)\n    reservoir = temperature_module_a.load_labware('nest_12_reservoir_15ml')\n    ethanol = ctx.load_labware('nest_1_reservoir_195ml', 6)['A1']\n\n    del ctx.deck[str(3)]\n    temperature_module_b = ctx.load_module('temperature module gen2', 3)\n    primer = temperature_module_b.load_labware('biorad_96_wellplate_200ul_pcr')\n\n    indexing_plate = replace_labware(2, 'biorad_96_wellplate_200ul_pcr')\n\n    # Wells\n    mag_plate_wells = mag_plate.rows()[0][:cols]\n    buffer1Track = VolTracker(reservoir, 1008, 'multi', start=8, end=10,\n                              msg='Replenish Buffer 1')\n    spriTrack = VolTracker(reservoir, 1140, 'multi', start=0, end=8,\n                           msg='Replenish SPRI')\n    mmTrack = VolTracker(reservoir, 1200, 'multi', start=10, end=12,\n                         msg='Master Mix Track')\n    indexing_plate_wells = indexing_plate.rows()[0][:cols]\n    primer_plate_wells = primer.rows()[0][:cols]\n    side_x = 1\n    sides = [-side_x, side_x] * (cols // 2)\n\n    # Continue Protocol\n    # Step 3: Add SPRI solution to Samples\n    for col in mag_plate_wells:\n        pick_up(m300)\n        m300.transfer(95, spriTrack.tracker(95), col, new_tip='never',\n                      mix_after=(5, 60))\n        m300.drop_tip()\n\n    # Step 4: Incubate SPRI at RT\n    ctx.delay(minutes=10, msg='''Allowing the mixed SPRI reaction to incubate\n                                 for 10 minutes at Room Temperature.''')\n\n    # Step 5: Engage Magnet\n    mag_mod.engage()\n    ctx.delay(minutes=3, msg=\"Concentrating the beads for 3 minutes.\")\n\n    # Step 6: Remove Supernatant from samples\n    for col, side in zip(mag_plate_wells, sides):\n        pick_up(m300)\n        remove_supernatant(m300, 130, col, trash, side)\n        m300.drop_tip()\n\n    # Step 10: Repeat Ethanol Wash\n    for _ in range(2):\n        # Step 7: Add Ethanol to sammples\n        for col in mag_plate_wells:\n            pick_up(m300)\n            m300.transfer(180, ethanol, col, new_tip='never')\n            m300.drop_tip()\n\n        # Step 8: Allow ethanol to sit\n        ctx.delay(minutes=1, msg=\"Allowing Ethanol to sit for 1 minute.\")\n\n        # Step 9: Remove Supernatant from samples\n        for col, side in zip(mag_plate_wells, sides):\n            pick_up(m300)\n            remove_supernatant(m300, 190, col, trash, side)\n            m300.drop_tip()\n\n    # Step 11: Remove Supernatant from samples\n    for col, side in zip(mag_plate_wells, sides):\n        pick_up(m300)\n        remove_supernatant(m300, 130, col, trash, side)\n        m300.drop_tip()\n\n    # Step 12: Allow beads to dry\n    ctx.delay(minutes=5, msg='Allowing beads to dry...')\n\n    # Step 13: Transfer Buffer 1 to samples\n    for col in mag_plate_wells:\n        pick_up(m300)\n        m300.transfer(21, buffer1Track.tracker(21), col, new_tip='never',\n                      mix_after=(5, 15))\n        m300.drop_tip()\n\n    # Step 14: Allow beads to incubate\n    ctx.delay(minutes=5, msg='''Allow beads to incubate for\n                             5 minutes at Room Temperature''')\n\n    # Step 15: Add PCR Master Mix to indexing plate\n    pick_up(m300)\n    for col in indexing_plate_wells:\n        m300.transfer(25, mmTrack.tracker(25), col, new_tip='never')\n    m300.drop_tip()\n\n    # Step 16: Transfer Primer Mix to Indexing Plate\n    for src, dest in zip(primer_plate_wells, indexing_plate_wells):\n        pick_up(m20)\n        m20.transfer(5, src, dest, new_tip='never')\n        m20.drop_tip()\n\n    # Step 17: Concentrate sample plate beads\n    ctx.delay(minutes=3, msg='''Concentrate beads for 3 minutes''')\n\n    # Step 18: Transfer supernatant from samples to indexing plate\n    for src, dest, side in zip(mag_plate_wells, indexing_plate_wells, sides):\n        pick_up(m300)\n        remove_supernatant(m300, 20, src, dest, side)\n        m300.drop_tip()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "label": "P20 Multichannel GEN2 Mount Position",
+            "name": "m20_mount",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P300 Multichannel GEN2 Mount Position",
+            "name": "m300_mount",
+            "options": [
+                {
+                    "label": "Right",
+                    "value": "right"
+                },
+                {
+                    "label": "Left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 96,
+            "label": "Number of Samples",
+            "name": "samples",
+            "type": "int"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p20_multi_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p300_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on Temperature Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 2",
+            "share": false,
+            "slot": "2",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on Temperature Module GEN2 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on Magnetic Module GEN2 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "NEST 1 Well Reservoir 195 mL on 6",
+            "share": false,
+            "slot": "6",
+            "type": "nest_1_reservoir_195ml"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 10",
+            "share": false,
+            "slot": "10",
+            "type": "opentrons_96_tiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_96_tiprack_20ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.10",
+        "author": "Sakib <sakib.hossain@opentrons.com>",
+        "description": "Custom Protocol Request",
+        "protocolName": "Custom NGS Library Prep"
+    },
+    "modules": []
+}
