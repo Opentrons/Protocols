@@ -3,15 +3,12 @@
 ### Author
 [Opentrons (verified)](https://opentrons.com/)
 
-### Partner
-[Omega Bio-tek](https://www.omegabiotek.com/product/mag-bind-hdq-blood-dna-96-kit/?cn-reloaded=1)
-
 ## Categories
 * Nucleic Acid Extraction & Purification
 	* RNA Extraction
 
 ## Description
-With this protocol, your OT-2 can fully automate the entire Omega Bio-tek Mag-Bind® Blood & Tissue DNA HDQ 96 Kit. Buffer systems tailored specifically for each type of starting material are added to samples to undergo lysis. Samples are then mixed with HDQ Binding Buffer and Mag-Bind® Particles HDQ to bind magnetic beads to DNA. DNA is eluted in the Elution Buffer after rapid wash steps.
+After lysing samples, your OT-2 can fully automate the entire Omega Bio-tek Mag-Bind® Blood & Tissue DNA HDQ 96 Kit. Buffer systems tailored specifically for each type of starting material are added to samples to undergo lysis. Samples are then mixed with HDQ Binding Buffer and Mag-Bind® Particles HDQ to bind magnetic beads to DNA. DNA is eluted in the Elution Buffer after rapid wash steps.
 
 Results of the Opentrons Science team's internal testing of this protocol on the OT-2 are shown below:  
 
@@ -22,16 +19,8 @@ Explanation of complex parameters below:
 * `Deepwell type`: Specify which well plate will be mounted on the magnetic module.
 * `Reservoir Type`: Specify which reservoir will be employed.
 * `Starting Volume`: Specify starting volume of sample (ul).
-* `Binding Buffer Volume`: Specify starting volume of binding buffer (ul).
-* `Wash 1 Volume`: Specify wash 1 volume in reservoir 1 (ul).
-* `Wash 2 Volume`: Specify wash 2 volume in reservoir 1 (ul).
-* `Wash 3 Volume`: Specify wash 3 volume in reservoir 2 (ul).
 * `Elution Volume`: Specify elution volume (ul).
-* `Mix Repetitions`: Specify number of mix repetitions in wash steps and for resuspending beads in elution.
-* `Settling Time`: Specify incubation period on magdeck.
 * `Park Tips`: Specify whether to park tips or drop tips.
-* `Tip Tracking`: Select `yes` to track tips or `no` to start with a replenished starting deck state.
-* `Flashing Lights`: Select `yes` to flash lights when the user is prompted empty tips or liquid waste.
 * `Mag Deck Generation`: Specify whether GEN1 or GEN2 magnetic module will be used.
 * `P300 Multi Channel Pipette Mount`: Specify whether the P300 multi channel pipette will be on the left or right mount.
 
