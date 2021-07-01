@@ -41,7 +41,7 @@ Explanation of complex parameters below:
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/04eeb1/04eeb1-part-7.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/04eeb1/04eeb1-p7.png)
 
 **Note**: Add PCR strip on Column 1 of 96 Well Aluminum block in Slot 9. Add 1.7 mL tube to A1 of 24 Well Aluminum block on slot 6.
 
