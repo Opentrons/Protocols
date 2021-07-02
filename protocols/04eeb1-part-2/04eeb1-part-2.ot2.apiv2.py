@@ -10,13 +10,16 @@ metadata = {
 
 def run(ctx):
 
-    [m20_mount, reservoir_type] = get_values(  # noqa: F821
-        "m20_mount", "reservoir_type")
+    [m20_mount, reservoir_type, plate_1_cols,
+        plate_2_cols, temperature] = get_values(  # noqa: F821
+        "m20_mount", "reservoir_type", "plate_1_cols", "plate_2_cols",
+        "temperature")
 
     # Labware
     tips200ul = [ctx.load_labware('opentrons_96_filtertiprack_20ul',
                  slot) for slot in [10, 7]]
-    reservoir = ctx.load_labware(reservoir_type, 4, "Master Mix Reservoir")
+    temp_mod = ctx.load_module('temperature module gen2', 1)
+    reservoir = temp_mod.load_labware(reservoir_type, "Master Mix Reservoir")
     plate_1 = ctx.load_labware('biorad_96_wellplate_200ul_pcr', 11, "Plate 1")
     plate_2 = ctx.load_labware('biorad_96_wellplate_200ul_pcr', 8, "Plate 2")
 
@@ -30,18 +33,27 @@ def run(ctx):
     mm = reservoir['A1']
 
     # Helper Functions
+    def includeCols(includedCols, plateCols):
+        included_cols = []
+        if includedCols != "":
+            included_cols = [int(i)-1 for i in includedCols.split(",")]
+            dests = [col for i, col in enumerate(plateCols) if i
+                     in included_cols]
+            return dests
+
     def transfer(pipette, vol, src, dest):
         for well in dest:
             pipette.pick_up_tip()
             pipette.aspirate(vol, src)
-            pipette.move_to(ctx.deck.position_for('1').move(types.Point(x=20,
+            pipette.move_to(ctx.deck.position_for('4').move(types.Point(x=20,
                             y=31.5, z=100)))
             pipette.dispense(vol, well)
             pipette.drop_tip()
 
     # Protocol Steps
-    transfer(m20, 8, mm, plate_1_wells)
+    temp_mod.set_temperature(temperature)
+    transfer(m20, 8, mm, includeCols(plate_1_cols, plate_1_wells))
     if reservoir_type == 'biorad_96_wellplate_200ul_pcr':
         ctx.pause('''Please refill the master mix before continuing to Plate 2.
                 Click Resume when ready.''')
-    transfer(m20, 8, mm, plate_2_wells)
+    transfer(m20, 8, mm, includeCols(plate_2_cols, plate_2_wells))

@@ -20,6 +20,9 @@ The Illumina COVIDSeq Test is a high-throughput, next-generation sequencing test
 
 Explanation of complex parameters below:
 * `P300 Multichannel GEN2 Pipette Mount`: Choose the mount position of your P300 Multichannel pipette, either left or right.
+* `Plate 1 Columns`: Choose which columns master mix should be added on plate 1. Separate column numbers with a comman (Ex: 1,2,3,4).
+* `Temperature (C)`: Choose the temperature the temperature module should be set at in the beginning of the protocol.
+* `Wash Buffer Column`: Choose the column on the 12-channel reservoir for the master mix for Plate 1.
 
 ---
 
@@ -40,7 +43,7 @@ Explanation of complex parameters below:
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/04eeb1/04eeb1-part-5.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/04eeb1/04eeb1-p5.png)
 
 **Note**: Wash Buffer should be added in Column 2 (A2).
 

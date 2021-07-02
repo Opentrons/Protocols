@@ -53,11 +53,6 @@ def run(ctx):
             current_pipette.move_to(well_location.center())
         ctx.max_speeds[axis] = None
 
-    def pre_wet(current_pipette, volume, location):
-        for rep in range(2):
-            current_pipette.aspirate(volume, location)
-            current_pipette.dispense(volume, location)
-
     def meoh_flow_rates(current_pipette):
         if (current_pipette.name == 'p300_multi_gen2' or
            current_pipette.name == 'p300_single_gen2'):
@@ -112,9 +107,9 @@ def run(ctx):
     D2 - 1:1 MeOH:Water
     D3 - 100 mM NEM
     D4 - Golden Plasma
+    D5 - 4:1 MeCN:Water
     reservoir in deck slot 5:
     A1 - TFA in MeCN
-    A2 - 4:1 MeCN:Water
     """)
 
     # reagents and dilutions
@@ -122,11 +117,10 @@ def run(ctx):
      labware_tuberack, '1', 'Tube Rack')
     unlabeled_soln_200um, *dilutions = [
      well for row in tuberack.rows() for well in row][:12]
-    labeled_soln_100um, meoh_water, nem_100mm, golden_plasma = [
-     tuberack.wells_by_name()[well] for well in ['D1', 'D2', 'D3', 'D4']]
+    labeled_soln_100um, meoh_water, nem_100mm, golden_plasma, mecn = [
+     tuberack.wells_by_name()[well] for well in ['D1', 'D2', 'D3', 'D4', 'D5']]
     reservoir = ctx.load_labware('nest_12_reservoir_15ml', '5', 'Reservoir')
     tfa = reservoir.wells_by_name()['A1']
-    mecn = reservoir.wells_by_name()['A2']
 
     # samples
     sample_tuberack = ctx.load_labware(
@@ -164,6 +158,7 @@ def run(ctx):
     Labeled 100 uM soln in D1 tuberack slot 1
     100 mM NEM in D3 tuberack slot 1
     Golden Plasma in D4 tuberack slot 1
+    4:1 acetonitrile:water in D5 of tuberack slot 1
     12 sample tubes in A1-A6, B1-B6 of tuberack deck slot 4
     12 amicon filters in C1-C6, D1-D6 of tuberack deck slot 4
     reservoir with TFA in MeCN and MeCN:Water in deck slot 5
@@ -177,7 +172,6 @@ def run(ctx):
 
     liquid handling method for methanol:water:
     fast flow rate for blow out
-    pre-wet the tips twice (saturate air)
     15 ul air gap
     delayed blowout after dispense (let meoh fall to bottom of tip first)
     repeat blowout (for complete dispense)
@@ -187,7 +181,6 @@ def run(ctx):
     meoh_flow_rates(p300s)
     for index, dilution in enumerate(dilutions):
         p300s.pick_up_tip()
-        pre_wet(p300s, 50, meoh_water.bottom(clearance_meoh_water))
         p300s.aspirate(20, meoh_water.bottom(clearance_meoh_water))
         p300s.air_gap(5)
         p300s.dispense(25, dilution.bottom(clearance_dil_dispense))
@@ -221,7 +214,6 @@ def run(ctx):
 
     use liquid handling method for plasma
     aspirate extra volume
-    prewet tip
     reduced aspirate and dispense speeds
     slow tip withdrawal from plasma
     avoid over-immersion of tip (liquid height tracking)
@@ -234,7 +226,6 @@ def run(ctx):
     ending_clearance = 2
     increment = (starting_clearance - ending_clearance) / len(samples)
     p300s.aspirate(35, golden_plasma.bottom(starting_clearance))
-    pre_wet(p300s, 100, golden_plasma.bottom(starting_clearance))
     for sample in samples:
         p300s.aspirate(90, golden_plasma.bottom(tracking_clearance))
         slow_tip_withdrawal(p300s, golden_plasma)
@@ -257,7 +248,6 @@ def run(ctx):
     dilutions.insert(0, unlabeled_soln_200um)
     for index, dilution in enumerate(dilutions):
         p20s.pick_up_tip()
-        pre_wet(p20s, 20, meoh_water.bottom(clearance_meoh_water))
         p20s.aspirate(10, dilution.bottom(clearance_dil_dispense))
         p20s.air_gap(2)
         p20s.dispense(12, samples[index].bottom(3))
@@ -277,7 +267,6 @@ def run(ctx):
         meoh_flow_rates(p20s)
         for pooled_sample in samples_pooled:
             p20s.pick_up_tip()
-            pre_wet(p20s, 20, meoh_water.bottom(clearance_meoh_water))
             p20s.aspirate(10, meoh_water.bottom(clearance_meoh_water))
             p20s.air_gap(2)
             p20s.dispense(12, pooled_sample.bottom(3))
@@ -323,7 +312,6 @@ def run(ctx):
     meoh_flow_rates(p20s)
     for sample in samples:
         p20s.pick_up_tip()
-        pre_wet(p20s, 15, labeled_soln_100um.bottom(2))
         p20s.aspirate(5, labeled_soln_100um.bottom(2))
         p20s.air_gap(2)
         p20s.dispense(7, sample.bottom(3))
@@ -347,20 +335,20 @@ def run(ctx):
     use same liquid handling method as for MeOH:Water
     """)
     meoh_flow_rates(p300s)
-    p300s.pick_up_tip()
     for sample in samples:
-        pre_wet(p300s, 150, tfa.bottom(clearance_tfa))
         for rep in range(3):
+            p300s.pick_up_tip()
             p300s.aspirate(180, tfa.bottom(clearance_tfa))
             p300s.air_gap(15)
-            p300s.dispense(195, sample.top(-12))
+            p300s.dispense(195, sample.bottom(3))
+            p300s.move_to(sample.top(-12))
             for rep in range(3):
                 if rep > 0:
                     p300s.aspirate(180, sample.top(-12))
                 ctx.delay(seconds=1)
                 p300s.blow_out(sample.top(-12))
-                p300s.touch_tip(radius=0.75, v_offset=-8, speed=20)
-    p300s.drop_tip()
+            p300s.touch_tip(radius=0.75, v_offset=-8, speed=20)
+            p300s.drop_tip()
     default_flow_rates(p300s)
 
     pause_attention("Vortex tubes 10 min, spin 15 min, and return.")
@@ -379,7 +367,6 @@ def run(ctx):
     for index, sample in enumerate(samples):
         p300s.pick_up_tip()
         default_flow_rates(p300s)
-        pre_wet(p300s, 150, sample.bottom(10))
         meoh_flow_rates(p300s)
         for rep in range(3):
             p300s.aspirate(166.7, sample.bottom(round(16/(rep + 1))))
@@ -396,19 +383,20 @@ def run(ctx):
 
     pause_attention("Spin filters 2.5 hours, dry 1.5 hours, return.")
 
+    # filters removed (tube alone same as eppendorf) dispense .bottom(5)
     meoh_flow_rates(p300s)
     for filter in amicon_filters:
         p300s.pick_up_tip()
-        pre_wet(p300s, 150, mecn.bottom(clearance_mecn))
         p300s.aspirate(40, mecn.bottom(clearance_mecn))
         p300s.air_gap(15)
-        p300s.dispense(55, filter.top())
+        p300s.dispense(55, filter.bottom(5))
+        p300s.move_to(filter.top(-12))
         for rep in range(3):
             if rep > 0:
-                p300s.aspirate(180, filter.top())
+                p300s.aspirate(180, filter.top(-12))
             ctx.delay(seconds=1)
-            p300s.blow_out(filter.top())
-        p300s.touch_tip(radius=0.75, v_offset=-2, speed=20)
+            p300s.blow_out(filter.top(-12))
+        p300s.touch_tip(radius=0.75, v_offset=-8, speed=20)
         p300s.drop_tip()
     default_flow_rates(p300s)
 

@@ -39,14 +39,14 @@ Explanation of complex parameters below:
 ---
 
 ### Deck Setup
+
 ![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/3b0db0/Screen+Shot+2021-06-03+at+11.14.47+AM.png)
 
 ### Reagent Setup
 
-PCR tube strips should be placed in the first two columns of the well plate on slot 4. The first PCR tube strip (column 1 on slot 4) is responsible for providing mastermix to 6 columns of the well plate on slot 1. Columns 7-12 of the well plate on slot 1 are populated with the PCR strip in column 2 on slot 4.
+PCR tube strips should be placed in the first four columns of the well plate on slot 4. The first PCR tube strip (column 1 on slot 4) is responsible for providing mastermix to 3 columns of the well plate on slot 1. Columns 4-6 of the well plate on slot 1 are populated with the PCR strip in column 2 on slot 4, and so on and so forth. Note, if the number of samples is not divisible by 8 (not full columns), the protocol will switch to using the P20 to populate the last unfilled column.The P20 single channel pipette will access mastermix from PCR tubes A1, B1, C1... and so on (starting from first PCR strip).
 
 Saliva tube samples should be placed by column (A1, B1, etc.) starting from tube rack 1 on slot 2. The OT-2 will do 1-to-1 tube to well transfers by column, with one tube rack completely picked before moving on (tube racks move in order from slot 5 to slot 11).
-
 
 ---
 

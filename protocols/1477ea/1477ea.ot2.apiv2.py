@@ -25,10 +25,15 @@ def run(ctx):
     tips20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '7')]
     p20s = ctx.load_instrument("p20_single_gen2", 'right', tip_racks=tips20)
 
+    # set default flow rates for p20 to match PD tool default values
+    p20s.flow_rate.aspirate = 3.78
+    p20s.flow_rate.dispense = 3.78
+
     [lb, source, dest] = [ctx.load_labware(
      labware, str(slot), display_name) for labware, slot, display_name in zip(
-     ['nest_1_reservoir_195ml', 'tpp_96well_plate_340ul',
-      'white_96well_plate_340ul'], [5, 8, 6], [
+     ['nest_1_reservoir_195ml', 'white_96well_plate_340ul',
+      'tpp_96well_plate_340ul'
+      ], [5, 8, 6], [
       'NEST 1 WELL RESERVOIR 195 ML', 'SOURCE', 'DESTINATION'])]
 
     # step 1: p300m transfer 198 ul LB to destination columns with same tips
@@ -43,11 +48,17 @@ def run(ctx):
 
     # step 3: p20s 2 ul SOURCE A2, A11, 30 custom to DESTINATION top
     # step 4: p20s 2 ul SOURCE 30 custom, H2, H11 to DESTINATION bottom
+    # top dispense of air gap volume to replicate PD tool behavior
     for line in csv_reader:
-        p20s.transfer(2, source.wells_by_name()[
-         line['source well']].bottom(1), dest.wells_by_name()[
-         line['destination well']].bottom(0.5), air_gap=2, mix_after=(5, 5),
-         new_tip='always')
+        p20s.pick_up_tip()
+        p20s.aspirate(2, source.wells_by_name()[line['source well']].bottom(1))
+        p20s.air_gap(2)
+        p20s.dispense(2, dest.wells_by_name()[line['destination well']].top())
+        p20s.dispense(
+         2, dest.wells_by_name()[line['destination well']].bottom(0.5))
+        p20s.mix(
+         5, 5, dest.wells_by_name()[line['destination well']].bottom(0.5))
+        p20s.drop_tip()
 
     # step 5: p300m mix columns of DESTINATION 80 ul 5X
     for column in dest.columns():
