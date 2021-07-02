@@ -24,80 +24,80 @@
     "default": 5
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "RR1 Volume",
     "name": "rr1",
     "default": 14.6
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "RR2 Volume",
     "name": "rr2",
     "default": 10
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "RR3 Volume",
     "name": "rr3",
     "default": 7.9
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "TR1 Volume",
     "name": "tr1",
     "default": 7.5
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "TR2 Volume",
     "name": "tr2",
     "default": 7.5
   },
 
   {
-    "type": "int",
+    "type": "float",
     "label": "TR3 Volume",
     "name": "tr3",
     "default": 7.5
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "TR4 Volume",
     "name": "tr4",
     "default": 7.5
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "TR5 Volume",
     "name": "tr5",
     "default": 5
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "TR6 Volume",
     "name": "tr6",
     "default": 20
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "TR7 Volume",
     "name": "tr7",
     "default": 2.5
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "TR8 Volume",
     "name": "tr8",
     "default": 5
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "TR9 Volume",
     "name": "tr9",
     "default": 5
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "TR10 Volume",
     "name": "tr10",
     "default": 5
