@@ -9,9 +9,9 @@ metadata = {
 def run(ctx):
 
     [m300_mount, reservoir_type, blowout_height, asp_rate,
-        asp_disp] = get_values(  # noqa: F821
+        disp_rate] = get_values(  # noqa: F821
         "m300_mount", "reservoir_type", "blowout_height",
-        "asp_rate", "asp_disp")
+        "asp_rate", "disp_rate")
 
     # Load Labware
     tiprack = ctx.load_labware('opentrons_96_tiprack_300ul', 1)
@@ -73,7 +73,7 @@ def run(ctx):
     # Alternating Dilution
     for i, (col1, col2) in enumerate(zip(p1, p2)):
         m300.pick_up_tip()
-        mixing_flow_rate(m300, asp_rate, asp_disp)
+        mixing_flow_rate(m300, asp_rate, disp_rate)
         m300.mix(6, 200, col1)
         reset_pipette_speed(m300)
         # m300.transfer(20, col1, sample_cols1[i+1], mix_after=(10, 20),
@@ -82,7 +82,7 @@ def run(ctx):
         #               new_tip='never')
         m300.aspirate(20, col1)
         m300.dispense(20, sample_cols1[i+1])
-        mixing_flow_rate(m300, asp_rate, asp_disp)
+        mixing_flow_rate(m300, asp_rate, disp_rate)
         m300.mix(10, 20, sample_cols1[i+1])
         reset_pipette_speed(m300)
         m300.touch_tip()
@@ -90,7 +90,7 @@ def run(ctx):
         m300.drop_tip()
 
         m300.pick_up_tip()
-        mixing_flow_rate(m300, asp_rate, asp_disp)
+        mixing_flow_rate(m300, asp_rate, disp_rate)
         m300.mix(6, 200, col2)
         reset_pipette_speed(m300)
         # m300.transfer(20, col2, sample_cols2[i+1], mix_after=(10, 20),
@@ -99,7 +99,7 @@ def run(ctx):
         #               new_tip='never')
         m300.aspirate(20, col2)
         m300.dispense(20, sample_cols2[i+1])
-        mixing_flow_rate(m300, asp_rate, asp_disp)
+        mixing_flow_rate(m300, asp_rate, disp_rate)
         m300.mix(10, 20, sample_cols2[i+1])
         reset_pipette_speed(m300)
         m300.touch_tip()
