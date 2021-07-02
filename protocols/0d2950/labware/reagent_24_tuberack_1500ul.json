@@ -3,27 +3,38 @@
         [
             "A1",
             "B1",
-            "C1"
+            "C1",
+            "D1"
         ],
         [
             "A2",
             "B2",
-            "C2"
+            "C2",
+            "D2"
         ],
         [
             "A3",
             "B3",
-            "C3"
+            "C3",
+            "D3"
         ],
         [
             "A4",
             "B4",
-            "C4"
+            "C4",
+            "D4"
         ],
         [
             "A5",
             "B5",
-            "C5"
+            "C5",
+            "D5"
+        ],
+        [
+            "A6",
+            "B6",
+            "C6",
+            "D6"
         ]
     ],
     "brand": {
@@ -31,14 +42,14 @@
         "brandId": []
     },
     "metadata": {
-        "displayName": "Reagent 15 Tube Rack 1500 µL",
+        "displayName": "Reagent 24 Tube Rack 1500 µL",
         "displayCategory": "tubeRack",
         "displayVolumeUnits": "µL",
         "tags": []
     },
     "dimensions": {
-        "xDimension": 127.76,
-        "yDimension": 85.48,
+        "xDimension": 127.75,
+        "yDimension": 85.5,
         "zDimension": 81
     },
     "wells": {
@@ -47,8 +58,8 @@
             "totalLiquidVolume": 1500,
             "shape": "circular",
             "diameter": 9,
-            "x": 13.88,
-            "y": 67.74,
+            "x": 18.21,
+            "y": 75.43,
             "z": 41
         },
         "B1": {
@@ -56,8 +67,8 @@
             "totalLiquidVolume": 1500,
             "shape": "circular",
             "diameter": 9,
-            "x": 13.88,
-            "y": 42.74,
+            "x": 18.21,
+            "y": 56.15,
             "z": 41
         },
         "C1": {
@@ -65,8 +76,17 @@
             "totalLiquidVolume": 1500,
             "shape": "circular",
             "diameter": 9,
-            "x": 13.88,
-            "y": 17.74,
+            "x": 18.21,
+            "y": 36.87,
+            "z": 41
+        },
+        "D1": {
+            "depth": 40,
+            "totalLiquidVolume": 1500,
+            "shape": "circular",
+            "diameter": 9,
+            "x": 18.21,
+            "y": 17.59,
             "z": 41
         },
         "A2": {
@@ -74,8 +94,8 @@
             "totalLiquidVolume": 1500,
             "shape": "circular",
             "diameter": 9,
-            "x": 38.88,
-            "y": 67.74,
+            "x": 38.1,
+            "y": 75.43,
             "z": 41
         },
         "B2": {
@@ -83,8 +103,8 @@
             "totalLiquidVolume": 1500,
             "shape": "circular",
             "diameter": 9,
-            "x": 38.88,
-            "y": 42.74,
+            "x": 38.1,
+            "y": 56.15,
             "z": 41
         },
         "C2": {
@@ -92,8 +112,17 @@
             "totalLiquidVolume": 1500,
             "shape": "circular",
             "diameter": 9,
-            "x": 38.88,
-            "y": 17.74,
+            "x": 38.1,
+            "y": 36.87,
+            "z": 41
+        },
+        "D2": {
+            "depth": 40,
+            "totalLiquidVolume": 1500,
+            "shape": "circular",
+            "diameter": 9,
+            "x": 38.1,
+            "y": 17.59,
             "z": 41
         },
         "A3": {
@@ -101,8 +130,8 @@
             "totalLiquidVolume": 1500,
             "shape": "circular",
             "diameter": 9,
-            "x": 63.88,
-            "y": 67.74,
+            "x": 57.99,
+            "y": 75.43,
             "z": 41
         },
         "B3": {
@@ -110,8 +139,8 @@
             "totalLiquidVolume": 1500,
             "shape": "circular",
             "diameter": 9,
-            "x": 63.88,
-            "y": 42.74,
+            "x": 57.99,
+            "y": 56.15,
             "z": 41
         },
         "C3": {
@@ -119,8 +148,17 @@
             "totalLiquidVolume": 1500,
             "shape": "circular",
             "diameter": 9,
-            "x": 63.88,
-            "y": 17.74,
+            "x": 57.99,
+            "y": 36.87,
+            "z": 41
+        },
+        "D3": {
+            "depth": 40,
+            "totalLiquidVolume": 1500,
+            "shape": "circular",
+            "diameter": 9,
+            "x": 57.99,
+            "y": 17.59,
             "z": 41
         },
         "A4": {
@@ -128,8 +166,8 @@
             "totalLiquidVolume": 1500,
             "shape": "circular",
             "diameter": 9,
-            "x": 88.88,
-            "y": 67.74,
+            "x": 77.88,
+            "y": 75.43,
             "z": 41
         },
         "B4": {
@@ -137,8 +175,8 @@
             "totalLiquidVolume": 1500,
             "shape": "circular",
             "diameter": 9,
-            "x": 88.88,
-            "y": 42.74,
+            "x": 77.88,
+            "y": 56.15,
             "z": 41
         },
         "C4": {
@@ -146,8 +184,17 @@
             "totalLiquidVolume": 1500,
             "shape": "circular",
             "diameter": 9,
-            "x": 88.88,
-            "y": 17.74,
+            "x": 77.88,
+            "y": 36.87,
+            "z": 41
+        },
+        "D4": {
+            "depth": 40,
+            "totalLiquidVolume": 1500,
+            "shape": "circular",
+            "diameter": 9,
+            "x": 77.88,
+            "y": 17.59,
             "z": 41
         },
         "A5": {
@@ -155,8 +202,8 @@
             "totalLiquidVolume": 1500,
             "shape": "circular",
             "diameter": 9,
-            "x": 113.88,
-            "y": 67.74,
+            "x": 97.77,
+            "y": 75.43,
             "z": 41
         },
         "B5": {
@@ -164,8 +211,8 @@
             "totalLiquidVolume": 1500,
             "shape": "circular",
             "diameter": 9,
-            "x": 113.88,
-            "y": 42.74,
+            "x": 97.77,
+            "y": 56.15,
             "z": 41
         },
         "C5": {
@@ -173,8 +220,53 @@
             "totalLiquidVolume": 1500,
             "shape": "circular",
             "diameter": 9,
-            "x": 113.88,
-            "y": 17.74,
+            "x": 97.77,
+            "y": 36.87,
+            "z": 41
+        },
+        "D5": {
+            "depth": 40,
+            "totalLiquidVolume": 1500,
+            "shape": "circular",
+            "diameter": 9,
+            "x": 97.77,
+            "y": 17.59,
+            "z": 41
+        },
+        "A6": {
+            "depth": 40,
+            "totalLiquidVolume": 1500,
+            "shape": "circular",
+            "diameter": 9,
+            "x": 117.66,
+            "y": 75.43,
+            "z": 41
+        },
+        "B6": {
+            "depth": 40,
+            "totalLiquidVolume": 1500,
+            "shape": "circular",
+            "diameter": 9,
+            "x": 117.66,
+            "y": 56.15,
+            "z": 41
+        },
+        "C6": {
+            "depth": 40,
+            "totalLiquidVolume": 1500,
+            "shape": "circular",
+            "diameter": 9,
+            "x": 117.66,
+            "y": 36.87,
+            "z": 41
+        },
+        "D6": {
+            "depth": 40,
+            "totalLiquidVolume": 1500,
+            "shape": "circular",
+            "diameter": 9,
+            "x": 117.66,
+            "y": 17.59,
             "z": 41
         }
     },
@@ -188,18 +280,27 @@
                 "A1",
                 "B1",
                 "C1",
+                "D1",
                 "A2",
                 "B2",
                 "C2",
+                "D2",
                 "A3",
                 "B3",
                 "C3",
+                "D3",
                 "A4",
                 "B4",
                 "C4",
+                "D4",
                 "A5",
                 "B5",
-                "C5"
+                "C5",
+                "D5",
+                "A6",
+                "B6",
+                "C6",
+                "D6"
             ]
         }
     ],
@@ -208,7 +309,7 @@
         "quirks": [],
         "isTiprack": false,
         "isMagneticModuleCompatible": false,
-        "loadName": "reagent_15_tuberack_1500ul"
+        "loadName": "reagent_24_tuberack_1500ul"
     },
     "namespace": "custom_beta",
     "version": 1,
