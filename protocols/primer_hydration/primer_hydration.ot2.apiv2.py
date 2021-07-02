@@ -23,14 +23,14 @@ def run (protocol:protocol_api.ProtocolContext):
 	#Define labware
 	holder_falcon = protocol.load_labware('opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical', '5')##DO NOT MOVE TO slots 1-2-3 because you won't be able to access bottom tubes
 	holder_tube = protocol.load_labware('opentrons_24_tuberack_generic_2ml_screwcap', '6')##DO NOT MOVE TO slots 1-2-3 because you won't be able to access bottom tubes
-	plate = protocol.load_labware('96w_pcr_plate', '2')
-	#falcon_offset= np.linspace(-40), -45, len())
+	
+	
 	#Define instruments and assign tips
 	p300_multi = protocol.load_instrument('p300_multi_gen2', 'right')
 	p300_multi.flow_rate.aspirate = 150
 	p300_multi.flow_rate.dispense = 50
 
-	csv_raw = get_values( #noqa: F821
+	[csv_raw] = get_values( #noqa: F821
 		'volume_transfers')
 	## Expected csv file 
 # 	csv_raw = '''
@@ -46,22 +46,25 @@ def run (protocol:protocol_api.ProtocolContext):
 # '''
 	#csv parsing
 	csv_data = csv_raw.splitlines()[1:]  # Discard the blank first line.
-	csv_reader = csv.DictReader(csv_data)
+	csv_reader = csv.DictReader(csv_data,fieldnames=['source_well','destination_well','transfer_volume'])
 	
 	#validation (since we are using 15mL falcon tubes, we want the transfer volume to not surpass 5mL)
 	max_cumulative_volume = 5000
 	cum_volumes = {}
-	for csv_row in sorted(csv_reader):
-		if csv_row['source_well'] not in cum_volumes:
-			cum_volumes[csv_row['source_well']] = 0
-		cum_volumes[csv_row['source_well']] += csv_row['transfer_volume']
-		if cum_volumes[csv_row['source_well']] > max_cumulative_volume: #ensure cumulative volume is less than 5mL
-			raise Exception(f"Cumulative volume from well {csv_row['source_well']} should not surpass {str(max_cumulative_volume)}. \
+	for csv_row in (csv_reader):
+		source_well = csv_row['source_well']
+		transfer_volume = float(csv_row['transfer_volume'])
+		assert transfer_volume > 0
+		if source_well not in cum_volumes:
+			cum_volumes[source_well] = 0
+		cum_volumes[source_well] += transfer_volume
+		if cum_volumes[source_well] > max_cumulative_volume: #ensure cumulative volume is less than 5mL
+			raise Exception(f"Cumulative volume from well {source_well} should not surpass {str(max_cumulative_volume)}. \
 			Add more falcon tubes and modify csv.")
 	
 	#start protocol
 	p300_multi.pick_up_tip(tiprack_300["H1"])
-	for i,csv_row in enumerate(csv_reader):
+	for csv_row in (csv_reader):
 		source_well = csv_row['source_well']
 		destination_well = csv_row['destination_well']
 
