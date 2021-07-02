@@ -3,14 +3,9 @@ import csv
 
 metadata = {
     "protocolName": "Multiple Primer hydration",
-    "description": "Used to transfer water from 15mL falcon tube to 2mL tubes.\
-		Uses multi-channel as single-channel. \
-			Pipette will reuse tips. Also make sure to decrease\
-				pipette current",
+    "description": "Used to transfer water/tris-edta from 15mL falcon tube to 2mL tubes.",
     "apiLevel": "2.8",
 }
-# DECREASE THE CURRENT FOR PICKING UP TIPS TO 0.1amps
-# Normal is at0.8amps
 
 
 def run(protocol: protocol_api.ProtocolContext):
@@ -69,8 +64,7 @@ def run(protocol: protocol_api.ProtocolContext):
         # ensure cumulative volume is less than 5mL
         if cum_volumes[source_well] > max_cumulative_volume:
             raise Exception(
-                f"Cumulative volume from well {source_well} should not surpass {str(max_cumulative_volume)}. \
-			Add more falcon tubes and modify csv."
+                f"Cumulative volume from well {source_well} should not surpass {str(max_cumulative_volume)}. \Add more falcon tubes and modify csv."
             )
 
     # start protocol
