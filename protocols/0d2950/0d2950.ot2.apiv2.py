@@ -100,19 +100,20 @@ def run(ctx):
         p1000.aspirate(500, buffer.bottom(z=h_track_buff))
         p1000.dispense(500, well)
         h_track_buff -= dh_buff if h_track_buff > 5 else 0
-        print(h_track_buff)
+        if h_track_buff < 5:
+            h_track_buff = 2.5
     p1000.drop_tip()
 
     # make ethanol plate
     h_track_eth = h0_eth*0.85
     pick_up1000()
     for i, (tube, well) in enumerate(zip(ethanol*num_samp, ethanol_map)):
-        p1000.aspirate(1000, tube.bottom(
-                        z=h_track_eth))
+        p1000.aspirate(1000, tube.bottom(z=h_track_eth))
         p1000.dispense(1000, well)
         if i % 2 == 0:
             h_track_eth -= dh_eth if h_track_eth > 5 else 0
-
+        if h_track_eth < 5:
+            h_track_eth = 2.5
     p1000.drop_tip()
 
     # make elution buffer plate
@@ -127,7 +128,6 @@ def run(ctx):
             p1000.dispense(50, well)
             # ctx.delay(seconds=1.5)
     ctx.comment('\n\n')
-
     p1000.dispense(floor, elution_solution)
     p1000.blow_out()
     p1000.drop_tip()
@@ -141,7 +141,6 @@ def run(ctx):
         p20.blow_out()
         p20.touch_tip()
         p20.drop_tip()
-    p20.flow_rate.dispense = 7.56
 
     # add patient samples
     samp_ctr = 0
