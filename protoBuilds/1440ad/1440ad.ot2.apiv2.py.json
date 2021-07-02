@@ -30,79 +30,79 @@
             "default": 14.6,
             "label": "RR1 Volume",
             "name": "rr1",
-            "type": "int"
+            "type": "float"
         },
         {
             "default": 10,
             "label": "RR2 Volume",
             "name": "rr2",
-            "type": "int"
+            "type": "float"
         },
         {
             "default": 7.9,
             "label": "RR3 Volume",
             "name": "rr3",
-            "type": "int"
+            "type": "float"
         },
         {
             "default": 7.5,
             "label": "TR1 Volume",
             "name": "tr1",
-            "type": "int"
+            "type": "float"
         },
         {
             "default": 7.5,
             "label": "TR2 Volume",
             "name": "tr2",
-            "type": "int"
+            "type": "float"
         },
         {
             "default": 7.5,
             "label": "TR3 Volume",
             "name": "tr3",
-            "type": "int"
+            "type": "float"
         },
         {
             "default": 7.5,
             "label": "TR4 Volume",
             "name": "tr4",
-            "type": "int"
+            "type": "float"
         },
         {
             "default": 5,
             "label": "TR5 Volume",
             "name": "tr5",
-            "type": "int"
+            "type": "float"
         },
         {
             "default": 20,
             "label": "TR6 Volume",
             "name": "tr6",
-            "type": "int"
+            "type": "float"
         },
         {
             "default": 2.5,
             "label": "TR7 Volume",
             "name": "tr7",
-            "type": "int"
+            "type": "float"
         },
         {
             "default": 5,
             "label": "TR8 Volume",
             "name": "tr8",
-            "type": "int"
+            "type": "float"
         },
         {
             "default": 5,
             "label": "TR9 Volume",
             "name": "tr9",
-            "type": "int"
+            "type": "float"
         },
         {
             "default": 5,
             "label": "TR10 Volume",
             "name": "tr10",
-            "type": "int"
+            "type": "float"
         },
         {
             "label": "P20 Single Channel Pipette Mount",

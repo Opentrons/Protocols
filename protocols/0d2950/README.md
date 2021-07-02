@@ -40,7 +40,7 @@ Explanation of complex parameters below:
 ### Reagent Setup
 * 50mL Tube rack
 
-* Note : if running 48 or less samples, prepare ethanol in only tube A1. If running more than 48 samples, split the total ethanol required between tubes A1 and A2 (e.g. 24,000ul of ethanol in A1 for 24 samples, 25,000ul of ethanol and A1 and A2 for 50 samples).
+* Note : if running 48 or less samples, prepare ethanol in only tube A1. If running more than 48 samples (including control), split the total ethanol required between tubes A1 and A2 (e.g. 24,000ul of ethanol in A1 for 24 samples, 25,000ul of ethanol and A1 and A2 for 50 samples).
 
 ![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0d2950/Screen+Shot+2021-06-24+at+2.54.19+PM.png)
 
