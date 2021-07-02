@@ -22,5 +22,17 @@
         "label": "Blowout Height from Well Bottom (mm)",
         "name": "blowout_height",
         "default": 5.2
+      },
+      {
+        "type": "float",
+        "label": "Mix Aspiration Flow Rate (uL/s)",
+        "name": "asp_rate",
+        "default": 100
+      },
+      {
+        "type": "float",
+        "label": "Mix Dispensing Flow Rate (uL/s)",
+        "name": "disp_rate",
+        "default": 100
       }
   ]
