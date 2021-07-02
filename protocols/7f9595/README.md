@@ -17,6 +17,8 @@ Explanation of parameters below:
 * `P300 Multichannel GEN2 Mount`: Specify which mount (left or right) to load the P300 multi channel pipette.
 * `Reservoir Type`: Specify the type of reservoir being used in Slot 1.
 * `Blowout Height from Well Bottom (mm)`: The height the blowout should occur from the bottom of the well. For example, a volume of 200 uL in this plate will have a height of approximately 5.4 mm from the bottom of the well.
+* `Mix Aspiration Flow Rate (uL/s)`: Flow rate when aspiration occurs in a mixing step.
+* `Mix Dispensing Flow Rate (uL/s)`: Flow rate when dispensing occurs in a mixing step.
 
 ---
 
