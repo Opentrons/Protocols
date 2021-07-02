@@ -32,7 +32,7 @@
       {
         "type": "float",
         "label": "Mix Dispensing Flow Rate (uL/s)",
-        "name": "asp_delay",
+        "name": "disp_rate",
         "default": 100
       }
   ]
