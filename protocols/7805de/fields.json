@@ -7,24 +7,6 @@
   },
   {
     "type": "dropDown",
-    "label": "Choose Tips for the p300",
-    "name": "labware_tips300",
-    "options": [
-      { "label": "Filter Tips", "value": "opentrons_96_filtertiprack_200ul" },
-      { "label": "Standard Tips", "value": "opentrons_96_tiprack_300ul" }
-    ]
-  },
-  {
-    "type": "dropDown",
-    "label": "Choose Tips for the p20",
-    "name": "labware_tips20",
-    "options": [
-      { "label": "Filter Tips", "value": "opentrons_96_filtertiprack_20ul" },
-      { "label": "Standard Tips", "value": "opentrons_96_tiprack_20ul" }
-    ]
-  },
-  {
-    "type": "dropDown",
     "label": "Labware for PCR Plate",
     "name": "labware_pcr_plate",
     "options": [

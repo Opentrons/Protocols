@@ -13,12 +13,12 @@ metadata = {
 def run(ctx):
 
     # get parameter values from json above
-    [sample_count, labware_tips300, labware_tips20, labware_pcr_plate,
+    [sample_count, labware_pcr_plate,
      labware_reservoir, labware_tube_strip, clearance_reservoir,
      clearance_sample_plate, clearance_bead_pellet, clearance_strip_tubes,
      flow_rate_beads, delay_beads, engage_height, engage_time, dry_time
      ] = get_values(  # noqa: F821
-      'sample_count', 'labware_tips300', 'labware_tips20', 'labware_pcr_plate',
+      'sample_count', 'labware_pcr_plate',
       'labware_reservoir', 'labware_tube_strip', 'clearance_reservoir',
       'clearance_sample_plate', 'clearance_bead_pellet',
       'clearance_strip_tubes', 'flow_rate_beads', 'delay_beads',
@@ -30,10 +30,12 @@ def run(ctx):
 
     # tips, p20 multi gen2, p300 multi gen2
     tips20 = [ctx.load_labware(
-     labware_tips20, str(slot)) for slot in [2, 5]]
+     "opentrons_96_filtertiprack_20ul", str(slot)) for slot in [2]]
     p20m = ctx.load_instrument(
         "p20_multi_gen2", 'left', tip_racks=tips20)
-    tips300 = [ctx.load_labware(labware_tips300, str(slot)) for slot in [6, 9]]
+    tips300 = [
+     ctx.load_labware(
+      "opentrons_96_filtertiprack_200ul", str(slot)) for slot in [6, 9]]
     p300m = ctx.load_instrument(
         "p300_multi_gen2", 'right', tip_racks=tips300)
 
@@ -46,7 +48,8 @@ def run(ctx):
             current_pipette.pick_up_tip()
         except OutOfTipsError:
             pause_attention(
-             "Please Refill the {} Tip Boxes".format(current_pipette))
+             """Please Refill the {} Tip Boxes
+                and Empty the Tip Waste.""".format(current_pipette))
             current_pipette.reset_tipracks()
             current_pipette.pick_up_tip()
 
@@ -144,25 +147,26 @@ def run(ctx):
     (up to 48 samples arranged in columns of 8).
 
     Reagents in strip tubes on 4 degree temp module:
-    column 12 - first-strand rxn bf/random primers
+    column 1 - first-strand rxn bf/random primers
     (mixed and prepared see NEB instructions)
 
-    p20 tips in slot 2 and 5, p300 tips in slot 6 and 9.
+    p20 tips in slot 2, p300 tips in slot 6 and 9.
     """)
 
     ctx.comment("""
     reagent reservoir in deck slot 1:
     col 1 - washed (NEB instructions) oligo dT beads
-    col 2 - wash buffer
-    col 3 - Tris buffer
-    col 4 - RNA binding buffer
-    col 12 - waste
+    col 2,3,4 - wash buffer
+    col 5 - Tris buffer
+    col 6 - RNA binding buffer
+    col 10,11,12 - waste
     """)
     reagent_reservoir = ctx.load_labware(
      labware_reservoir, '1', 'Reagent Reservoir')
-    [oligo_dt_beads, wash_buffer, tris_buffer, rna_binding_buffer, waste] = [
+    [oligo_dt_beads, wash_buffer_1, wash_buffer_2, wash_buffer_3,
+     tris_buffer, rna_binding_buffer, waste_1, waste_2, waste_3] = [
      reagent_reservoir.wells_by_name()[well] for well in [
-      'A1', 'A2', 'A3', 'A4', 'A12']]
+      'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A10', 'A11', 'A12']]
 
     ctx.comment("""
     mag plate on magnetic module
@@ -207,9 +211,7 @@ def run(ctx):
         slow_tip_withdrawal(p300m, oligo_dt_beads)
         dispense_with_delay(p300m, 50, column[0].bottom(
          clearance_sample_plate), delay_beads)
-        for repeat in range(6):
-            mix_with_delay(p300m, 50, column[0].bottom(
-             clearance_sample_plate), delay_beads)
+        p300m.mix(6, 50, column[0].bottom(3), rate=2)
         p300m.drop_tip()
     default_flow_rates(p300m)
 
@@ -241,9 +243,7 @@ def run(ctx):
     viscous_flow_rates(p300m)
     for column in mag_plate.columns()[:num_cols]:
         p300m.pick_up_tip()
-        for repeat in range(6):
-            mix_with_delay(p300m, 50, column[0].bottom(
-             clearance_sample_plate), delay_beads)
+        p300m.mix(6, 50, column[0].bottom(3), rate=2)
         slow_tip_withdrawal(p300m, column[0])
         p300m.drop_tip()
     default_flow_rates(p300m)
@@ -251,19 +251,24 @@ def run(ctx):
     mag.engage()
     ctx.delay(minutes=engage_time)
     for column in mag_plate.columns()[:num_cols]:
-        p300m.transfer(100, column[0].bottom(
-         clearance_bead_pellet), waste.top(), new_tip='always')
+        p300m.pick_up_tip()
+        p300m.aspirate(100, column[0].bottom(clearance_bead_pellet))
+        p300m.air_gap(15)
+        p300m.dispense(115, waste_1.top())
+        p300m.air_gap(15)
+        p300m.drop_tip()
     mag.disengage()
     for rep in range(2):
         for column in mag_plate.columns()[:num_cols]:
             pick_up_or_refill(p300m)
-            p300m.aspirate(150, wash_buffer.bottom(clearance_reservoir))
+            if rep == 0:
+                wsh = wash_buffer_1
+            else:
+                wsh = wash_buffer_2
+            p300m.aspirate(150, wsh.bottom(clearance_reservoir))
             p300m.dispense(150, column[0].bottom(clearance_sample_plate))
             viscous_flow_rates(p300m)
-            for rep in range(6):
-                mix_with_delay(
-                 p300m, 75, column[0].bottom(
-                  clearance_sample_plate), delay_beads)
+            p300m.mix(10, 75, column[0].bottom(3), rate=2)
             slow_tip_withdrawal(p300m, column[0])
             default_flow_rates(p300m)
             p300m.drop_tip()
@@ -271,8 +276,14 @@ def run(ctx):
         ctx.delay(minutes=engage_time)
         for column in mag_plate.columns()[:num_cols]:
             pick_up_or_refill(p300m)
-            p300m.transfer(150, column[0].bottom(
-             clearance_bead_pellet), waste.top(), new_tip='never')
+            if rep == 0:
+                wst = waste_1
+            else:
+                wst = waste_2
+            p300m.aspirate(150, column[0].bottom(clearance_bead_pellet))
+            p300m.air_gap(15)
+            p300m.dispense(165, wst.top())
+            p300m.air_gap(15)
             p300m.drop_tip()
         mag.disengage()
 
@@ -285,9 +296,7 @@ def run(ctx):
         p300m.aspirate(50, tris_buffer.bottom(clearance_reservoir))
         p300m.dispense(50, column[0].bottom(clearance_sample_plate))
         viscous_flow_rates(p300m)
-        for rep in range(6):
-            mix_with_delay(p300m, 25, column[0].bottom(
-             clearance_sample_plate), delay_beads)
+        p300m.mix(10, 25, column[0].bottom(2), rate=2)
         slow_tip_withdrawal(p300m, column[0])
         default_flow_rates(p300m)
         p300m.drop_tip()
@@ -314,9 +323,7 @@ def run(ctx):
         p300m.aspirate(50, rna_binding_buffer.bottom(clearance_reservoir))
         p300m.dispense(50, column[0].bottom(clearance_sample_plate))
         viscous_flow_rates(p300m)
-        for rep in range(6):
-            mix_with_delay(p300m, 25, column[0].bottom(
-             clearance_sample_plate), delay_beads)
+        p300m.mix(10, 25, column[0].bottom(2), rate=2)
         slow_tip_withdrawal(p300m, column[0])
         default_flow_rates(p300m)
         p300m.drop_tip()
@@ -325,8 +332,10 @@ def run(ctx):
     ctx.delay(minutes=engage_time)
     for column in mag_plate.columns()[:num_cols]:
         pick_up_or_refill(p300m)
-        p300m.transfer(100, column[0].bottom(
-         clearance_bead_pellet), waste.top(), new_tip='never')
+        p300m.aspirate(100, column[0].bottom(clearance_bead_pellet))
+        p300m.air_gap(15)
+        p300m.dispense(115, waste_2.top())
+        p300m.air_gap(15)
         p300m.drop_tip()
     mag.disengage()
     ctx.comment("""
@@ -335,12 +344,10 @@ def run(ctx):
         """)
     for column in mag_plate.columns()[:num_cols]:
         pick_up_or_refill(p300m)
-        p300m.aspirate(150, wash_buffer.bottom(clearance_reservoir))
+        p300m.aspirate(150, wash_buffer_3.bottom(clearance_reservoir))
         p300m.dispense(150, column[0].bottom(clearance_sample_plate))
         viscous_flow_rates(p300m)
-        for rep in range(6):
-            mix_with_delay(p300m, 75, column[0].bottom(
-             clearance_sample_plate), delay_beads)
+        p300m.mix(10, 75, column[0].bottom(3), rate=2)
         slow_tip_withdrawal(p300m, column[0])
         default_flow_rates(p300m)
         p300m.drop_tip()
@@ -353,13 +360,19 @@ def run(ctx):
     ctx.delay(minutes=engage_time)
     for column in mag_plate.columns()[:num_cols]:
         pick_up_or_refill(p300m)
-        p300m.transfer(150, column[0].bottom(
-         clearance_bead_pellet), waste.top(), new_tip='never')
+        p300m.aspirate(150, column[0].bottom(clearance_bead_pellet))
+        p300m.air_gap(15)
+        p300m.dispense(165, waste_3.top())
+        p300m.air_gap(15)
         p300m.drop_tip()
-    pause_attention("""
-        Spin the plate. Return it.
-        Manually remove traces of sup with 10 ul tip. Resume.""")
     mag.disengage()
+    pause_attention("""
+        Remove and spin the plate.
+        Then return it to the magnetic module. Resume.""")
+    mag.engage()
+    ctx.delay(minutes=1)
+    pause_attention("""
+        Manually remove traces of supernatant with a 10 ul tip. Resume.""")
     ctx.comment("""
         add first strand synthesis rxn bf random primer mix
         mix
@@ -369,12 +382,8 @@ def run(ctx):
         p20m.aspirate(
          11.5, fs_rxn_bf_random_primers[0].bottom(clearance_strip_tubes))
         p20m.dispense(11.5, column[0].bottom(clearance_sample_plate))
-        viscous_flow_rates(p20m)
-        for rep in range(6):
-            mix_with_delay(
-             p20m, 5, column[0].bottom(clearance_sample_plate), delay_beads)
+        p20m.mix(10, 5, column[0].bottom(1), rate=2)
         slow_tip_withdrawal(p20m, column[0])
-        default_flow_rates(p20m)
         p20m.drop_tip()
 
     pause_attention("""
@@ -396,7 +405,7 @@ def run(ctx):
         transfer 10 ul sup to elution plate
         """)
     mag.engage()
-    ctx.delay(engage_time)
+    ctx.delay(minutes=engage_time)
     p20m.transfer(
      10, [column[0].bottom(
       clearance_bead_pellet) for column in mag_plate.columns()[
