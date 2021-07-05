@@ -1,3 +1,8 @@
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"samples":24,"m300_mount":"left","p20_mount":"right","initial_denaturation_cycles":1,"denat_anneal_cycles":6,"final_extension_cycles":1,"beads_vol_1":41,"elution_buff_vol":17,"rxn_mix_vol_p3":15,"beads_vol_2":40,"p5_mix_vol":20}""")
+    return [_all_values[n] for n in names]
+
 from opentrons import types
 import json
 import os
@@ -15,9 +20,9 @@ metadata = {
 def run(ctx):
 
     [samples, m300_mount, p20_mount, initial_denaturation_cycles,
-     denat_anneal_cycles, final_extension_cycles] = get_values(  # noqa: F821
+     denat_anneal_cycles, final_extension_cycles, beads_vol_1, elution_buff_vol, rxn_mix_vol_p3, beads_vol_2, p5_mix_vol] = get_values(  # noqa: F821
         "samples", "m300_mount", "p20_mount", "initial_denaturation_cycles",
-        "denat_anneal_cycles", "final_extension_cycles")
+        "denat_anneal_cycles", "final_extension_cycles", "beads_vol_1", "elution_buff_vol", "rxn_mix_vol_p3", "beads_vol_2", "p5_mix_vol")
 
     if samples < 1 or samples > 24:
         raise Exception('Invalid number of DNA samples (must be 1-24).')
@@ -33,7 +38,7 @@ def run(ctx):
     tc_mod = ctx.load_module('Thermocycler Module')
     tc_plate = tc_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
 
-    mag_mod = ctx.load_module('magnetic module gen2', 4)
+    mag_mod = ctx.load_module('magnetic module gen2', 1)
     mag_plate = mag_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
 
     tips200ul = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
@@ -140,11 +145,11 @@ resuming.')
     # Add components to reaction mixture (2)
     for well in frag_dna_wells:
         _pick_up(p20)
-        p20.transfer(1.5, enzyme_mix, well, new_tip='never')
+        p20.transfer(3.5, rxn_buff, well, new_tip='never')
         p20.drop_tip()
 
         _pick_up(p20)
-        p20.transfer(3.5, rxn_buff, well, new_tip='never')
+        p20.transfer(1.5, enzyme_mix, well, new_tip='never')
         p20.drop_tip()
 
     ctx.pause('''Please remove the reagents from the temperature module.''')
@@ -245,6 +250,9 @@ resuming.')
         p20.transfer(1.5, user_enzyme, well, new_tip='never')
         p20.drop_tip()
 
+    ctx.pause('''Please remove the USER Enzyme in A1 of the temperature module.
+                Click Resume when completed.''')
+
     # Resuspend reaction mixture 10x, 40 uL (11, 12)
     for col in tc_sample_cols:
         _pick_up(m300)
@@ -276,8 +284,8 @@ resuming.')
     # III. Cleanup of Adaptor-Ligated DNA
     ctx.comment('Starting Cleanup of Adaptor-Ligated DNA!')
     ctx.pause('''Add the NEST 12-well reservoir with the correct reagents
-              in the channels to slot''')
-    reservoir = ctx.load_labware('nest_12_reservoir_15ml', 1)
+              in the channels to slot 4.''')
+    reservoir = ctx.load_labware('nest_12_reservoir_15ml', 4)
 
     # Reservoir Reagents
     ethanol = reservoir['A1']
@@ -287,7 +295,7 @@ resuming.')
     # Add AMPure XP Beads (1)
     for col in tc_sample_cols:
         _pick_up(m300)
-        m300.transfer(41, beads, col, new_tip='never')
+        m300.transfer(beads_vol_1, beads, col, new_tip='never')
         m300.drop_tip()
 
     # Resuspend Reaction Mixture (2, 3)
@@ -299,6 +307,7 @@ resuming.')
     ctx.pause('''Please remove the reaction mixture plate from the
               thermocycler in order to centrifuge the mixture. Return the plate
               on the Magnetic Module and click Resume.''')
+
     ctx.delay(minutes=5, msg='''Incubating reaction mixture for 5 minutes
               at Room Temperature.''')
 
@@ -337,7 +346,7 @@ resuming.')
     ctx.comment('Adding Elution Buffer to Samples!')
     _pick_up(m300)
     for col in mag_plate_cols:
-        m300.transfer(17, elution_buff, col.top(), new_tip='never')
+        m300.transfer(elution_buff_vol, elution_buff, col.top(), new_tip='never')
     m300.drop_tip()
 
     # Resuspend Reaction Mixture (17)
@@ -365,7 +374,7 @@ resuming.')
     # Transfer Reaction Mixure to PCR Tubes
     for src, dest in zip(mag_plate_cols, pcr_tube_cols):
         _pick_up(m300)
-        remove_supernatant(15, src, dest, -1)
+        remove_supernatant(rxn_mix_vol_p3, src, dest, -1)
         m300.drop_tip()
 
     mag_mod.disengage()
@@ -450,20 +459,25 @@ resuming.')
 
     # Transfer Components to PCR Product Mixture (1)
     # Add Elution Buffer
-    ctx.comment('Adding Elution Buffer to PCR Product Mixtures!')
-    _pick_up(m300)
-    for col in tc_sample_cols:
-        m300.transfer(25, elution_buff, col.top(), new_tip='never')
-    m300.drop_tip()
+    # ctx.comment('Adding Elution Buffer to PCR Product Mixtures!')
+    # _pick_up(m300)
+    # for col in tc_sample_cols:
+    #     m300.transfer(25, elution_buff, col.top(), new_tip='never')
+    # m300.drop_tip()
 
     # Add AMPure XP Beads
     ctx.comment('Adding AMPure XP Beads to PCR Product Mixtures!')
     for col in tc_sample_cols:
         _pick_up(m300)
-        m300.transfer(40, beads, col, new_tip='never')
+        m300.transfer(beads_vol_2, beads, col, new_tip='never')
         m300.drop_tip()
 
-    # Incubate at Room Temperature (2)
+    # Resuspend and Incubate at Room Temperature (2)
+    for col in tc_sample_cols:
+        _pick_up(m300)
+        m300.mix(10, p5_mix_vol, col)
+        m300.drop_tip()
+
     ctx.delay(minutes=5, msg='Incubating reaction mixture for 5 minutes.')
 
     # Move Plate to Magnetic Module (3)
