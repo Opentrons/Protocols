@@ -20,6 +20,9 @@ Explanation of parameters below:
 - `P300 Single GEN2 Mount Position`: Specify which mount (left or right) to load the P300 single channel pipette.
 - `Thermocycler Hold Temperature (°C)`: The temperature the thermocycler will be set to and held for the entire protocol.
 - `Magnetic Module Engage Height (mm)`: The height the magnets should raise.
+- `Supernatant Removal Radius (X-dimension) (mm)`: The radius in the X-dimension of how far the pipette should move before aspirating supernatant. **Note: Only enter positive values. The protocol will automatically determine the side (+/-) based on the well/column.**
+- `Supernatant Removal Aspirate Flow Rate (uL/s)`: The aspiration flow rate at which the pipette will aspirate supernatant.
+- `Supernatant Removal Dispense Flow Rate (uL/s)`: The aspiration flow rate at which the pipette will dispense supernatant.
 
 ---
 

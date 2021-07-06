@@ -31,5 +31,25 @@
         "label": "Magnetic Module Engage Height (mm)",
         "name": "engage_height",
         "default": 5
+    },
+    {
+      "type": "float",
+      "label": "Supernatant Removal Radius (X-dimension) (mm)",
+      "name": "side_x_radius",
+      "default": 2
+    },
+    {
+      "type": "float",
+      "label": "Supernatant Removal Aspirate Flow Rate (uL/s)",
+      "name": "super_asp_rate",
+      "default": 10
+    },
+    {
+      "type": "float",
+      "label": "Supernatant Removal Dispense Flow Rate (uL/s)",
+      "name": "super_disp_rate",
+      "default": 30
     }
+
+
   ]
