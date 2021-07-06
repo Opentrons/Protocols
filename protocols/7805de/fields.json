@@ -1,9 +1,9 @@
 [
   {
     "type": "int",
-    "label": "Sample Count (up to 48)",
+    "label": "Sample Count (up to 24)",
     "name": "sample_count",
-    "default": 48
+    "default": 24
   },
   {
     "type": "dropDown",
@@ -67,9 +67,9 @@
   },
   {
     "type": "float",
-    "label": "Engage Height for Magnetic Module (mm)",
-    "name": "engage_height",
-    "default": 5
+    "label": "Offset (mm) Applied to Default Engage Height for Magnetic Module",
+    "name": "engage_offset",
+    "default": 0
   },
   {
     "type": "int",
