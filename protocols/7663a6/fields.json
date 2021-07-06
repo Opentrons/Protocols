@@ -101,7 +101,7 @@
    {
       "type": "dropDown",
       "label": "Blowout?",
-      "name": "blow_tip",
+      "name": "blow_out",
       "options": [
         { "label": "Yes, blowout", "value": true },
         { "label": "No, do not blowout", "value": false }
