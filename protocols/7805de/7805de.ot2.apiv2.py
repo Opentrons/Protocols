@@ -16,17 +16,17 @@ def run(ctx):
     [sample_count, labware_pcr_plate,
      labware_reservoir, labware_tube_strip, clearance_reservoir,
      clearance_sample_plate, clearance_bead_pellet, clearance_strip_tubes,
-     flow_rate_beads, delay_beads, engage_height, engage_time, dry_time
+     flow_rate_beads, delay_beads, engage_offset, engage_time, dry_time
      ] = get_values(  # noqa: F821
       'sample_count', 'labware_pcr_plate',
       'labware_reservoir', 'labware_tube_strip', 'clearance_reservoir',
       'clearance_sample_plate', 'clearance_bead_pellet',
       'clearance_strip_tubes', 'flow_rate_beads', 'delay_beads',
-      'engage_height', 'engage_time', 'dry_time')
+      'engage_offset', 'engage_time', 'dry_time')
 
     ctx.set_rail_lights(True)
-    if not 1 <= sample_count <= 48:
-        raise Exception('Invalid number of samples (must be 1-48).')
+    if not 1 <= sample_count <= 24:
+        raise Exception('Invalid number of samples (must be 1-24).')
 
     # tips, p20 multi gen2, p300 multi gen2
     tips20 = [ctx.load_labware(
@@ -144,7 +144,7 @@ def run(ctx):
     Set up for RNA Isolation, Fragmentation, Priming:
 
     RNA sample plate in deck slot 7 (50 ul total RNA)
-    (up to 48 samples arranged in columns of 8).
+    (up to 24 samples arranged in columns of 8).
 
     Reagents in strip tubes on 4 degree temp module:
     column 1 - first-strand rxn bf/random primers
@@ -156,17 +156,17 @@ def run(ctx):
     ctx.comment("""
     reagent reservoir in deck slot 1:
     col 1 - washed (NEB instructions) oligo dT beads
-    col 2,3,4 - wash buffer
-    col 5 - Tris buffer
-    col 6 - RNA binding buffer
+    col 2 - wash buffer
+    col 3 - Tris buffer
+    col 4 - RNA binding buffer
     col 10,11,12 - waste
     """)
     reagent_reservoir = ctx.load_labware(
      labware_reservoir, '1', 'Reagent Reservoir')
-    [oligo_dt_beads, wash_buffer_1, wash_buffer_2, wash_buffer_3,
+    [oligo_dt_beads, wash_buffer,
      tris_buffer, rna_binding_buffer, waste_1, waste_2, waste_3] = [
      reagent_reservoir.wells_by_name()[well] for well in [
-      'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A10', 'A11', 'A12']]
+      'A1', 'A2', 'A3', 'A4', 'A10', 'A11', 'A12']]
 
     ctx.comment("""
     mag plate on magnetic module
@@ -187,7 +187,7 @@ def run(ctx):
     RNA sample plate in deck slot 7:
     containing 50 ul total RNA
     samples arranged in columns of 8
-    up to 48 samples total
+    up to 24 samples total
     {} samples in this run
     """.format(str(sample_count)))
     num_cols = math.ceil(sample_count / 8)
@@ -206,6 +206,7 @@ def run(ctx):
     viscous_flow_rates(p300m)
     for column in sample_plate.columns()[:num_cols]:
         p300m.pick_up_tip()
+        p300m.mix(3, 100, oligo_dt_beads.bottom(clearance_reservoir), rate=2)
         aspirate_with_delay(p300m, 50, oligo_dt_beads.bottom(
          clearance_reservoir), delay_beads)
         slow_tip_withdrawal(p300m, oligo_dt_beads)
@@ -248,7 +249,7 @@ def run(ctx):
         p300m.drop_tip()
     default_flow_rates(p300m)
     ctx.delay(minutes=5)
-    mag.engage()
+    mag.engage(offset=engage_offset)
     ctx.delay(minutes=engage_time)
     for column in mag_plate.columns()[:num_cols]:
         p300m.pick_up_tip()
@@ -261,18 +262,14 @@ def run(ctx):
     for rep in range(2):
         for column in mag_plate.columns()[:num_cols]:
             pick_up_or_refill(p300m)
-            if rep == 0:
-                wsh = wash_buffer_1
-            else:
-                wsh = wash_buffer_2
-            p300m.aspirate(150, wsh.bottom(clearance_reservoir))
+            p300m.aspirate(150, wash_buffer.bottom(clearance_reservoir))
             p300m.dispense(150, column[0].bottom(clearance_sample_plate))
             viscous_flow_rates(p300m)
             p300m.mix(10, 75, column[0].bottom(3), rate=2)
             slow_tip_withdrawal(p300m, column[0])
             default_flow_rates(p300m)
             p300m.drop_tip()
-        mag.engage()
+        mag.engage(offset=engage_offset)
         ctx.delay(minutes=engage_time)
         for column in mag_plate.columns()[:num_cols]:
             pick_up_or_refill(p300m)
@@ -328,7 +325,7 @@ def run(ctx):
         default_flow_rates(p300m)
         p300m.drop_tip()
     ctx.delay(minutes=5)
-    mag.engage()
+    mag.engage(offset=engage_offset)
     ctx.delay(minutes=engage_time)
     for column in mag_plate.columns()[:num_cols]:
         pick_up_or_refill(p300m)
@@ -344,7 +341,7 @@ def run(ctx):
         """)
     for column in mag_plate.columns()[:num_cols]:
         pick_up_or_refill(p300m)
-        p300m.aspirate(150, wash_buffer_3.bottom(clearance_reservoir))
+        p300m.aspirate(150, wash_buffer.bottom(clearance_reservoir))
         p300m.dispense(150, column[0].bottom(clearance_sample_plate))
         viscous_flow_rates(p300m)
         p300m.mix(10, 75, column[0].bottom(3), rate=2)
@@ -356,7 +353,7 @@ def run(ctx):
         engage magnets
         remove sup
         """)
-    mag.engage()
+    mag.engage(offset=engage_offset)
     ctx.delay(minutes=engage_time)
     for column in mag_plate.columns()[:num_cols]:
         pick_up_or_refill(p300m)
@@ -369,7 +366,7 @@ def run(ctx):
     pause_attention("""
         Remove and spin the plate.
         Then return it to the magnetic module. Resume.""")
-    mag.engage()
+    mag.engage(offset=engage_offset)
     ctx.delay(minutes=1)
     pause_attention("""
         Manually remove traces of supernatant with a 10 ul tip. Resume.""")
@@ -404,8 +401,8 @@ def run(ctx):
         wait
         transfer 10 ul sup to elution plate
         """)
-    mag.engage()
-    ctx.delay(minutes=engage_time)
+    mag.engage(offset=engage_offset)
+    ctx.delay(minutes=2)
     p20m.transfer(
      10, [column[0].bottom(
       clearance_bead_pellet) for column in mag_plate.columns()[
