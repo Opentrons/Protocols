@@ -1,6 +1,7 @@
 from opentrons import types, protocol_api
 from opentrons.types import Point
 
+
 metadata = {
     'protocolName': 'RNA Purification with Magnetic Beads',
     'author': 'Sakib <sakib.hossain@opentrons.com>',
@@ -12,13 +13,15 @@ metadata = {
 def run(ctx):
 
     [samples, starting_well, p300_mount, tc_temp,
-        engage_height] = get_values(  # noqa: F821
-        "samples", "starting_well", "p300_mount", "tc_temp", "engage_height")
+        engage_height, side_x_radius, super_asp_rate,
+        super_disp_rate] = get_values(  # noqa: F821
+        "samples", "starting_well", "p300_mount", "tc_temp", "engage_height",
+        "side_x_radius", "super_asp_rate", "super_disp_rate")
 
     # Load Labware
     tc_mod = ctx.load_module('thermocycler')
     tc_plate = tc_mod.load_labware(
-                    'nestforthermocycl12.5_96_wellplate_100ul',
+                    'nest_96_wellplate_100ul_pcr_full_skirt',
                     'Origin RNA Sample Plate')
     tips200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
                for slot in range(1, 4)]
@@ -28,10 +31,10 @@ def run(ctx):
                     'opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical', 5)
     temp_mod = ctx.load_module('temperature module gen2', 6)
     temp_plate = temp_mod.load_labware(
-                    'nestforthermocycl12.5_96_wellplate_100ul',
+                    'nest_96_wellplate_100ul_pcr_full_skirt',
                     'Recipient Cooled Plate')
     mag_mod = ctx.load_module('magnetic module gen2', 9)
-    mag_plate = mag_mod.load_labware('eppendorfmagdeck_96_wellplate_1000ul',
+    mag_plate = mag_mod.load_labware('nest_96_wellplate_2ml_deep',
                                      'Mag Deck Plate')
     trash = ctx.loaded_labwares[12]['A1']
 
@@ -66,8 +69,14 @@ def run(ctx):
                         starting_well_index:starting_well_index+samples]
     temp_plate_wells = temp_plate.wells()[
                         starting_well_index:starting_well_index+samples]
+    sides = [-side_x_radius + (((n // 8) % 2) * side_x_radius*2)
+             for n in range(96)]
 
     # Helper Functions
+    def getWellSide(well, plate):
+        index = plate.wells().index(well)
+        return sides[index]
+
     def pick_up(pip, loc=None):
         """Function that can be used instead of .pick_up_tip() that will pause
         robot when robot runs out of tips, prompting user to replace tips
@@ -87,7 +96,8 @@ def run(ctx):
         if mode == 'elution':
             p300.flow_rate.aspirate = 10
         else:
-            p300.flow_rate.aspirate = 20
+            p300.flow_rate.aspirate = super_asp_rate
+            p300.flow_rate.dispense = super_disp_rate
         while vol > 200:
             p300.aspirate(
                 200, src.bottom().move(types.Point(x=side, y=0, z=0.5)))
@@ -96,6 +106,8 @@ def run(ctx):
             vol -= 200
         p300.aspirate(vol, src.bottom().move(types.Point(x=side, y=0, z=0.5)))
         p300.dispense(vol, dest)
+        if mode == 'elution':
+            p300.blow_out()
         if dest == trash:
             p300.blow_out()
         p300.flow_rate.aspirate = 50
@@ -120,7 +132,7 @@ def run(ctx):
     pick_up(p300, available_tips[0])
     for dest in mag_plate_wells:
         p300.flow_rate.dispense = 300
-        p300.aspirate(30, beads.bottom(25))
+        p300.aspirate(30, beads.bottom(15))
         p300.dispense(30, dest.bottom(2))
         p300.mix(7, 75)
         p300.touch_tip()
@@ -136,7 +148,7 @@ def run(ctx):
     # Remove supernatant (5)
     pick_up(p300, available_tips[0])
     for well in mag_plate_wells:
-        remove_supernatant(120, well, trash, -1)
+        remove_supernatant(120, well, trash, getWellSide(well, mag_plate))
     p300.drop_tip()
     available_tips.pop(0)
 
@@ -150,7 +162,7 @@ def run(ctx):
         pick_up(p300, dedicated_tips[i])
         p300.flow_rate.dispense = 100
         p300.aspirate(80, rfw.bottom(60))
-        p300.dispense(80, dest.bottom(2))
+        p300.dispense(80, dest.bottom(1))
         p300.mix(3, 75)
         p300.touch_tip()
         p300.blow_out()
@@ -165,8 +177,9 @@ def run(ctx):
         pick_up(p300, dedicated_tips[i])
         p300.flow_rate.dispense = 300
         p300.aspirate(120, src.bottom(0.3))
-        p300.dispense(120, dest.bottom(2))
-        p300.mix(10, 80)
+        p300.dispense(120, dest.bottom(1))
+        p300.mix(10, 80, dest.bottom(1).move(types.Point(x=getWellSide(dest,
+                 mag_plate))))
         p300.touch_tip()
         p300.blow_out()
         p300.return_tip()
@@ -178,7 +191,7 @@ def run(ctx):
         p300.flow_rate.dispense = 300
         p300.aspirate(180, rbb.bottom(5))
         p300.air_gap(20)
-        p300.dispense(200, dest.bottom(10))
+        p300.dispense(200, dest.bottom(15))
         p300.blow_out()
     p300.drop_tip()
     available_tips.pop(0)
@@ -188,7 +201,7 @@ def run(ctx):
     for i, dest in enumerate(mag_plate_wells):
         p300.flow_rate.dispense = 300
         pick_up(p300, dedicated_tips[i])
-        mix_loc = dest.bottom(0.5).move(Point(x=0.75))
+        mix_loc = dest.bottom(0.5).move(Point(x=2))
         p300.mix(10, 200, mix_loc)
         p300.blow_out()
         p300.return_tip()
@@ -206,7 +219,7 @@ def run(ctx):
     # Remove Supernatant (15)
     for i, well in enumerate(mag_plate_wells):
         pick_up(p300, dedicated_tips[i])
-        remove_supernatant(320, well, trash, -1)
+        remove_supernatant(320, well, trash, getWellSide(well, mag_plate))
         p300.return_tip()
 
     # Disengage Mag Deck (16)
@@ -216,7 +229,7 @@ def run(ctx):
     pick_up(p300, available_tips[0])
     for dest in mag_plate_wells:
         p300.aspirate(200, wb.bottom(60))
-        p300.dispense(200, dest.bottom(10))
+        p300.dispense(200, dest.bottom(15))
         p300.blow_out()
     p300.drop_tip()
     available_tips.pop(0)
@@ -225,7 +238,7 @@ def run(ctx):
     for i, dest in enumerate(mag_plate_wells):
         p300.flow_rate.dispense = 300
         pick_up(p300, dedicated_tips[i])
-        mix_loc = dest.bottom(0.5).move(Point(x=0.75))
+        mix_loc = dest.bottom(1).move(Point(x=2))
         p300.mix(7, 150, mix_loc)
         p300.blow_out()
         p300.return_tip()
@@ -239,7 +252,7 @@ def run(ctx):
     # Remove WB (21)
     for i, well in enumerate(mag_plate_wells):
         pick_up(p300, dedicated_tips[i])
-        remove_supernatant(250, well, trash, -1)
+        remove_supernatant(250, well, trash, getWellSide(well, mag_plate))
         p300.drop_tip()
 
     # Drying magnetic beads (22)
@@ -259,7 +272,7 @@ def run(ctx):
         p300.flow_rate.dispense = 300
         p300.aspirate(50, rfw.bottom(60))
         p300.dispense(50, dest.bottom(1.5))
-        mix_loc = dest.bottom(1.5).move(Point(x=0.75))
+        mix_loc = dest.bottom(1).move(Point(x=2))
         p300.mix(7, 40, mix_loc)
         p300.blow_out()
         p300.return_tip()
@@ -283,7 +296,8 @@ def run(ctx):
     # First Elution to Recipient Plate (29)
     for i, (src, dest) in enumerate(zip(mag_plate_wells, temp_plate_wells)):
         pick_up(p300, dedicated_tips_set2[i])
-        remove_supernatant(55, src, dest, -1, 'elution')
+        remove_supernatant(55, src, dest, getWellSide(src, mag_plate),
+                           'elution')
         p300.return_tip()
     reset_flow_rates()
 
@@ -321,13 +335,13 @@ def run(ctx):
     # Second Elution to Recipient Plate (36)
     for i, (src, dest) in enumerate(zip(mag_plate_wells, temp_plate_wells)):
         pick_up(p300, dedicated_tips_set2[i])
-        remove_supernatant(55, src, dest, -1, 'elution')
+        remove_supernatant(55, src, dest, getWellSide(src, mag_plate),
+                           'elution')
         p300.drop_tip()
     reset_flow_rates()
 
     # Deactivate All Modules
     mag_mod.disengage()
-    temp_mod.deactivate()
     tc_mod.deactivate()
 
     ctx.comment('Protocol Completed!')
