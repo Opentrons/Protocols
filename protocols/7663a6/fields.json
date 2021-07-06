@@ -7,6 +7,18 @@
   },
   {
     "type": "int",
+    "label": "Source Plate Starting Column",
+    "name": "source_start_col",
+    "default": 1
+  },
+  {
+    "type": "int",
+    "label": "Destination Plate Starting Column",
+    "name": "dest_start_col",
+    "default": 1
+  },
+  {
+    "type": "int",
     "label": "Sample Volume (ul)",
     "name": "sample_vol",
     "default": 5
@@ -77,6 +89,24 @@
     "name": "mix_reps",
     "default": 10
   },
+  {
+     "type": "dropDown",
+     "label": "Touch Tip?",
+     "name": "touch_tip",
+     "options": [
+       { "label": "Yes, touch tip", "value": true },
+       { "label": "No, do not touch tip", "value": false }
+     ]
+   },
+   {
+      "type": "dropDown",
+      "label": "Blowout?",
+      "name": "blow_out",
+      "options": [
+        { "label": "Yes, blowout", "value": true },
+        { "label": "No, do not blowout", "value": false }
+      ]
+    },
   {
      "type": "dropDown",
      "label": "P20 Single Mount",
