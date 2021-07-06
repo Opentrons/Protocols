@@ -1,11 +1,23 @@
 {
-    "content": "metadata = {\n    'protocolName': 'PCR Prep with Frozen Aluminum Block',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.9'\n}\n\n\ndef run(ctx):\n\n    [num_col, sample_vol, mmx_vol, source_asp_height_plate,\n     source_asp_height_plate_mmx, source_asp_flow_rate_plate, delay,\n     source_asp_flow_rate_mmx, dispense_height, dest_flow_rate_sample,\n     dest_flow_rate_mmx, mix_vol, mix_reps,\n     p20_mount, m20_mount] = get_values(  # noqa: F821\n        \"num_col\", \"sample_vol\", \"mmx_vol\", \"source_asp_height_plate\",\n        \"source_asp_height_plate_mmx\", \"source_asp_flow_rate_plate\", \"delay\",\n        \"source_asp_flow_rate_mmx\", \"dispense_height\", \"dest_flow_rate_sample\",\n        \"dest_flow_rate_mmx\", \"mix_vol\", \"mix_reps\", \"p20_mount\", \"m20_mount\")\n\n    if not 0 <= num_col <= 12:\n        raise Exception(\"Enter a column number between 1 and 12\")\n\n    # load labware\n    sample_plate = ctx.load_labware(\n                'nest_96_wellplate_100ul_pcr_full_skirt', '1')\n    dest_plate = ctx.load_labware(\n                'nest_96_wellplate_100ul_pcr_full_skirt', '2')\n    mastermix = ctx.load_labware(\n                'opentrons_24_aluminumblock_nest_1.5ml_snapcap', '3')\n    tiprack_single = ctx.load_labware('opentrons_96_filtertiprack_20ul', '4')\n    tiprack_multi = ctx.load_labware('opentrons_96_filtertiprack_20ul', '5')\n\n    # load pipette\n    p20 = ctx.load_instrument('p20_single_gen2',\n                              p20_mount, tip_racks=[tiprack_single])\n    m20 = ctx.load_instrument('p20_multi_gen2',\n                              m20_mount, tip_racks=[tiprack_multi])\n\n    # load reagents\n    mmx = mastermix.wells()[0]\n\n    # PROTOCOL\n    p20.flow_rate.aspirate = source_asp_flow_rate_mmx\n    p20.flow_rate.dispense = dest_flow_rate_mmx\n    m20.flow_rate.aspirate = source_asp_flow_rate_plate\n    m20.flow_rate.dispense = dest_flow_rate_sample\n    num_samp = num_col*8\n    airgap = 3\n\n    # transfer mastermix to plate\n    p20.pick_up_tip()\n    for i, dest in enumerate(dest_plate.wells()[:num_samp]):\n        if not p20.has_tip:\n            p20.pick_up_tip()\n        p20.aspirate(mmx_vol, mmx.bottom(source_asp_height_plate_mmx))\n        ctx.delay(seconds=delay)\n        p20.touch_tip()\n        p20.dispense(mmx_vol, dest.bottom(dispense_height))\n        p20.blow_out()\n        if (i+1) % 8 == 0:\n            p20.drop_tip()\n            ctx.comment('\\n')\n\n    # transfer sample to plate\n    for s_col, d_col in zip(sample_plate.rows()[0][:num_col],\n                            dest_plate.rows()[0]):\n        m20.pick_up_tip()\n        m20.aspirate(sample_vol, s_col.bottom(source_asp_height_plate))\n        m20.air_gap(airgap)\n        m20.touch_tip()\n        m20.dispense(sample_vol+airgap, d_col.bottom(dispense_height))\n        m20.mix(mix_reps, mix_vol, d_col)\n        m20.blow_out()\n        m20.drop_tip()\n",
+    "content": "metadata = {\n    'protocolName': 'PCR Prep with Frozen Aluminum Block',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.9'\n}\n\n\ndef run(ctx):\n\n    [num_col, source_start_col, dest_start_col, sample_vol, mmx_vol,\n     source_asp_height_plate, source_asp_height_plate_mmx,\n     source_asp_flow_rate_plate, delay,\n     source_asp_flow_rate_mmx, dispense_height, dest_flow_rate_sample,\n     dest_flow_rate_mmx, mix_vol, mix_reps, touch_tip, blow_out,\n     p20_mount, m20_mount] = get_values(  # noqa: F821\n        \"num_col\", \"source_start_col\", \"dest_start_col\", \"sample_vol\",\n        \"mmx_vol\", \"source_asp_height_plate\",\n        \"source_asp_height_plate_mmx\", \"source_asp_flow_rate_plate\", \"delay\",\n        \"source_asp_flow_rate_mmx\", \"dispense_height\", \"dest_flow_rate_sample\",\n        \"dest_flow_rate_mmx\", \"mix_vol\", \"mix_reps\",\n        \"touch_tip\", \"blow_out\", \"p20_mount\", \"m20_mount\")\n\n    if not 0 <= num_col <= 12:\n        raise Exception(\"Enter a column number between 1 and 12\")\n    if not 0 <= source_start_col <= 12:\n        raise Exception(\"Enter a column number between 1 and 12\")\n    if not 0 <= dest_start_col <= 12:\n        raise Exception(\"Enter a column number between 1 and 12\")\n    source_start_col -= 1\n    dest_start_col -= 1\n\n    # load labware\n    sample_plate = ctx.load_labware(\n                'nest_96_wellplate_100ul_pcr_full_skirt', '1')\n    dest_plate = ctx.load_labware(\n                'nest_96_wellplate_100ul_pcr_full_skirt', '2')\n    mastermix = ctx.load_labware(\n                'opentrons_24_aluminumblock_nest_1.5ml_snapcap', '3')\n    tiprack_single = ctx.load_labware('opentrons_96_filtertiprack_20ul', '4')\n    tiprack_multi = ctx.load_labware('opentrons_96_filtertiprack_20ul', '5')\n\n    # load pipette\n    p20 = ctx.load_instrument('p20_single_gen2',\n                              p20_mount, tip_racks=[tiprack_single])\n    m20 = ctx.load_instrument('p20_multi_gen2',\n                              m20_mount, tip_racks=[tiprack_multi])\n\n    # load reagents\n    mmx = mastermix.wells()[0]\n\n    # PROTOCOL\n    p20.flow_rate.aspirate = source_asp_flow_rate_mmx\n    p20.flow_rate.dispense = dest_flow_rate_mmx\n    m20.flow_rate.aspirate = source_asp_flow_rate_plate\n    m20.flow_rate.dispense = dest_flow_rate_sample\n    num_samp = num_col*8\n    airgap = 3\n\n    # transfer mastermix to plate\n    p20.pick_up_tip()\n    for i, dest in enumerate(\n                            dest_plate.wells()[dest_start_col*8:\n                                               dest_start_col*8+num_samp]):\n        if not p20.has_tip:\n            p20.pick_up_tip()\n        p20.aspirate(mmx_vol, mmx.bottom(source_asp_height_plate_mmx))\n        ctx.delay(seconds=delay)\n        if touch_tip:\n            p20.touch_tip()\n        p20.dispense(mmx_vol, dest.bottom(dispense_height))\n        if blow_out:\n            p20.blow_out()\n        if (i+1) % 8 == 0:\n            p20.drop_tip()\n            ctx.comment('\\n')\n\n    # transfer sample to plate\n    for s_col, d_col in zip(sample_plate.rows()[0][source_start_col:\n                            source_start_col+num_col],\n                            dest_plate.rows()[0][dest_start_col:\n                            dest_start_col+num_col]):\n        m20.pick_up_tip()\n        m20.aspirate(sample_vol, s_col.bottom(source_asp_height_plate))\n        m20.air_gap(airgap)\n        if touch_tip:\n            m20.touch_tip()\n        m20.dispense(sample_vol+airgap, d_col.bottom(dispense_height))\n        m20.mix(mix_reps, mix_vol, d_col)\n        if blow_out:\n            m20.blow_out()\n        m20.drop_tip()\n",
     "custom_labware_defs": [],
     "fields": [
         {
             "default": 12,
             "label": "Number of Columns (1-12)",
             "name": "num_col",
+            "type": "int"
+        },
+        {
+            "default": 1,
+            "label": "Source Plate Starting Column",
+            "name": "source_start_col",
+            "type": "int"
+        },
+        {
+            "default": 1,
+            "label": "Destination Plate Starting Column",
+            "name": "dest_start_col",
             "type": "int"
         },
         {
@@ -79,6 +91,36 @@
             "label": "Mix Repetitions",
             "name": "mix_reps",
             "type": "float"
+        },
+        {
+            "label": "Touch Tip?",
+            "name": "touch_tip",
+            "options": [
+                {
+                    "label": "Yes, touch tip",
+                    "value": true
+                },
+                {
+                    "label": "No, do not touch tip",
+                    "value": false
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Blowout?",
+            "name": "blow_out",
+            "options": [
+                {
+                    "label": "Yes, blowout",
+                    "value": true
+                },
+                {
+                    "label": "No, do not blowout",
+                    "value": false
+                }
+            ],
+            "type": "dropDown"
         },
         {
             "label": "P20 Single Mount",
