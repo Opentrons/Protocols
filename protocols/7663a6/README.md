@@ -13,6 +13,8 @@ This protocol preps a 96 well plate by column with mastermix and sample. Masterm
 
 Explanation of complex parameters below:
 * `Number of Columns`: Input number of sample columns for this run.
+* `Source Plate Starting Column`: Specify the source plate starting column for samples.
+* `Destination Plate Starting Column`: Specify the destination plate starting column.
 * `Sample Volume (ul)`: Specify sample volume in ul.
 * `Mastermix Volume (ul)`: Specify mastermix volume in ul.
 * `Source Aspiration Height (Plate)`: Specify aspiration height (in mm) from the bottom of the well in the sample plate.
@@ -24,6 +26,8 @@ Explanation of complex parameters below:
 * `Dispense Flow Rate Sample`: Specify the dispense flow rate of sample into destination plate.
 * `Dispense Flow Rate Mastermix`: Specify the dispense flow rate of mastermix into destination plate.
 * `Mix Repetitions`: Specify number of mix steps.
+* `Touch Tip?`: Specify whether to include touch tip in this run.
+* `Blowout?`: Specify whether to include blow out in this run.
 * `P20 Single Mount`: Specify left or right mount for the P20 single.
 * `P20 Multi Mount`: Specify left or right mount for the P20 multi.
 
