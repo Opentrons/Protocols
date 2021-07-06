@@ -8,18 +8,27 @@ metadata = {
 
 def run(ctx):
 
-    [num_col, sample_vol, mmx_vol, source_asp_height_plate,
-     source_asp_height_plate_mmx, source_asp_flow_rate_plate, delay,
+    [num_col, source_start_col, dest_start_col, sample_vol, mmx_vol,
+     source_asp_height_plate, source_asp_height_plate_mmx,
+     source_asp_flow_rate_plate, delay,
      source_asp_flow_rate_mmx, dispense_height, dest_flow_rate_sample,
-     dest_flow_rate_mmx, mix_vol, mix_reps,
+     dest_flow_rate_mmx, mix_vol, mix_reps, touch_tip, blow_out,
      p20_mount, m20_mount] = get_values(  # noqa: F821
-        "num_col", "sample_vol", "mmx_vol", "source_asp_height_plate",
+        "num_col", "source_start_col", "dest_start_col", "sample_vol",
+        "mmx_vol", "source_asp_height_plate",
         "source_asp_height_plate_mmx", "source_asp_flow_rate_plate", "delay",
         "source_asp_flow_rate_mmx", "dispense_height", "dest_flow_rate_sample",
-        "dest_flow_rate_mmx", "mix_vol", "mix_reps", "p20_mount", "m20_mount")
+        "dest_flow_rate_mmx", "mix_vol", "mix_reps",
+        "touch_tip", "blow_out", "p20_mount", "m20_mount")
 
     if not 0 <= num_col <= 12:
         raise Exception("Enter a column number between 1 and 12")
+    if not 0 <= source_start_col <= 12:
+        raise Exception("Enter a column number between 1 and 12")
+    if not 0 <= dest_start_col <= 12:
+        raise Exception("Enter a column number between 1 and 12")
+    source_start_col -= 1
+    dest_start_col -= 1
 
     # load labware
     sample_plate = ctx.load_labware(
@@ -50,26 +59,34 @@ def run(ctx):
 
     # transfer mastermix to plate
     p20.pick_up_tip()
-    for i, dest in enumerate(dest_plate.wells()[:num_samp]):
+    for i, dest in enumerate(
+                            dest_plate.wells()[dest_start_col*8:
+                                               dest_start_col*8+num_samp]):
         if not p20.has_tip:
             p20.pick_up_tip()
         p20.aspirate(mmx_vol, mmx.bottom(source_asp_height_plate_mmx))
         ctx.delay(seconds=delay)
-        p20.touch_tip()
+        if touch_tip:
+            p20.touch_tip()
         p20.dispense(mmx_vol, dest.bottom(dispense_height))
-        p20.blow_out()
+        if blow_out:
+            p20.blow_out()
         if (i+1) % 8 == 0:
             p20.drop_tip()
             ctx.comment('\n')
 
     # transfer sample to plate
-    for s_col, d_col in zip(sample_plate.rows()[0][:num_col],
-                            dest_plate.rows()[0]):
+    for s_col, d_col in zip(sample_plate.rows()[0][source_start_col:
+                            source_start_col+num_col],
+                            dest_plate.rows()[0][dest_start_col:
+                            dest_start_col+num_col]):
         m20.pick_up_tip()
         m20.aspirate(sample_vol, s_col.bottom(source_asp_height_plate))
         m20.air_gap(airgap)
-        m20.touch_tip()
+        if touch_tip:
+            m20.touch_tip()
         m20.dispense(sample_vol+airgap, d_col.bottom(dispense_height))
         m20.mix(mix_reps, mix_vol, d_col)
-        m20.blow_out()
+        if blow_out:
+            m20.blow_out()
         m20.drop_tip()
