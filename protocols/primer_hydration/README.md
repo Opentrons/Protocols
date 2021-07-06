@@ -39,15 +39,14 @@ The above input will make the robot pipette 400 uL from well A01 of 15mL falcon 
 
 ### Deck Setup
 * To start the protocol, it is necessary to use the middle row to avoid any damage to the pipette. The water 15mL falcon tubes will be placed in the middle slot, and the primer pellet 2mL screw cap tubes will be placed in the right slot.
-
-![deck layout](./deck_layout.PNG)
+![deck layout](https://imagesopentrons.blob.core.windows.net/pictures/deck_layout.PNG) 
 
 ### Reagent Setup
 * You must ensure that there is at least 15mL of water in the falcon tubes to ensure the pipette can aspirate. Also ensure that in the csv you are not transferring more than 5mL per falcon tube. If you need to transfer more than 5mL, you need to add more falcon tubes and modify your csv. 
 * Reservoir 1: slot 5
-![15mL Falcon Tube Rack](./water_tube_rack.PNG)
+![15mL Falcon Tube Rack](https://imagesopentrons.blob.core.windows.net/pictures/water_tube_rack.PNG)
 * Reservoir 2: slot 6  
-![24 well 2mL screw cap tube rack](./primer_tube_rack.PNG)
+![24 well 2mL screw cap tube rack](https://imagesopentrons.blob.core.windows.net/pictures/primer_tube_rack.PNG)
 
 ---
 
