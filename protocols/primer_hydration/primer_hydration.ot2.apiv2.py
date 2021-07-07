@@ -23,7 +23,8 @@ def run(protocol: protocol_api.ProtocolContext):
     # DO NOT MOVE TO slots 1-2-3 because
     # you won't be able to access bottom tubes
     h_tubes = protocol.load_labware(
-        "opentrons_24_tuberack_generic_2ml_screwcap", "6")
+        "opentrons_24_tuberack_generic_2ml_screwcap", "6"
+    )
 
     # Define instruments and assign tips
     p300_multi = protocol.load_instrument("p300_multi_gen2", "right")
@@ -35,13 +36,6 @@ def run(protocol: protocol_api.ProtocolContext):
     # 	csv_raw = '''
     # source_well,destination_well,transfer_volume
     # A1,A1,546
-    # A1,A2,700
-    # A1,A3,300
-    # A1,A4,300
-    # A1,A4,100
-    # A1,A5,255
-    # A1,A6,267
-    # A2,D6,250
     # '''
     # csv parsing
     csv_data = csv_raw.splitlines()[1:]  # Discard the blank first line.
@@ -78,9 +72,9 @@ def run(protocol: protocol_api.ProtocolContext):
             transfer_volume = min(p300_multi.max_volume, v_left)
             v_left -= transfer_volume
             p300_multi.move_to(h_falcon.wells(source_well)).top()
-            p300_multi\
-                .aspirate(
-                    transfer_volume, h_falcon.wells(source_well).top(z=-40))
+            p300_multi.aspirate(
+                transfer_volume, h_falcon.wells(source_well).top(z=-40)
+            )
 
             p300_multi.move_to(h_tubes.wells(destination_well).top())
             p300_multi.dispense(
@@ -89,6 +83,7 @@ def run(protocol: protocol_api.ProtocolContext):
             )
             protocol.delay(seconds=0.5)
             p300_multi.blow_out(
-                h_tubes.wells_by_name()[destination_well].top())
+                h_tubes.wells_by_name()[destination_well].top()
+            )
     p300_multi.drop_tip()
     return
