@@ -111,6 +111,6 @@ def run(ctx):
             destinations = [
                 well for well in final_plate.columns_by_name()[col]]
         else:
-            destinations = final_plate.wells_by_name()[parse_well(d_well)]
+            destinations = [final_plate.wells_by_name()[parse_well(d_well)]]
         for d in destinations:
             primer_pip.transfer(primer_vol, primer.bottom(2), dest)
