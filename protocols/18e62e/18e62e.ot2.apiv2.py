@@ -9,8 +9,8 @@ metadata = {
 
 
 def run(protocol):
-    [numSamps, pipMnt, tipTrash] = get_values(  # noqa: F821
-     'numSamps', 'pipMnt', 'tipTrash')
+    [p1n, p2n, p3n, p4n, pipMnt, tipTrash] = get_values(  # noqa: F821
+     'p1n', 'p2n', 'p3n', 'p4n', 'pipMnt', 'tipTrash')
 
     # load labware
     tips = [
@@ -27,14 +27,14 @@ def run(protocol):
             'kingfisher_96_deepwell_plate_2ml',
             s,
             n) for s, n in zip(
-                ['2', '4', '7', '10'],
+                ['1', '4', '7', '10'],
                 ['KF Deepwell-96 Sample Plate 1',
                  'KF Deepwell-96 Sample Plate 2',
                  'KF Deepwell-96 Sample Plate 3',
                  'KF Deepwell-96 Sample Plate 4'])][:math.ceil(numSamps/96)]
 
     destPlate = protocol.load_labware(
-        'microampoptical_384_wellplate_30ul', '1',)
+        'microampoptical_384_wellplate_30ul', '2',)
 
     # Create Variables
     water = [well for well in tempPlate.rows()[0][:4] for _ in range(12)]
@@ -42,9 +42,12 @@ def run(protocol):
     mm = [well for well in tempPlate.rows()[0][5:7] for _ in range(24)]
     tipLocs = [w for rack in tips for w in rack.rows()[0]]
 
-    sampCols = math.ceil(numSamps/8)
-    samps = [w for plate in sampPlates for w in plate.rows()[0]][:sampCols]
-    dests = [well for row in destPlate.rows()[:2] for well in row][:sampCols]
+    # sampCols = math.ceil(numSamps/8)
+    sampCols = [math.ceil(n/8) for n in [p1n, p2n, p3n, p4n]]
+
+    destWells = [destPlate.rows()[r][w:w+n] for r, w, n in zip(
+        [0, 0, 1, 1], [0, 12, 0, 12], sampCols)]
+    destWellsFlat = [well for plate in destWells for well in plate]
 
     # function for transferring reaction mix reagents
     def mm_creation(reagent, vol, rename):
@@ -60,7 +63,7 @@ def run(protocol):
         protocol.comment(f'\nTransferring {vol}uL of {rename} to \
         {sampCols*8} wells in 384-Well Plate...')
 
-        for well, re in zip(dests, reagent):
+        for well, re in zip(destWellsFlat, reagent):
             pip.aspirate(vol, re)
             pip.aspirate(2, re.top())
             pip.dispense(vol+2, well.top(-3))
@@ -91,20 +94,22 @@ def run(protocol):
     mm_creation(mm, 5, 'Master Mix')
 
     # Transfer samples to wells with mastermix
-    protocol.comment('\nTransferring samples to plate...')
-    for src, dest, in zip(samps, dests):
-        pip.pick_up_tip()
+    for plate, col, dest in zip(sampPlates, sampCols, destWells):
+        protocol.comment(f'\nTransferring Samples from {plate}\n')
 
-        pip.mix(2, 5, src)
-        pip.aspirate(5, src)
-        pip.dispense(5, dest)
-        pip.mix(3, 10, dest)
-        # pip.blow_out(dest.top(-2))
-        # pip.touch_tip(dest)
+        for s, d in zip(plate.rows()[0][:col], dest):
+            pip.pick_up_tip()
 
-        if tipTrash:
-            pip.drop_tip()
-        else:
-            drop_tip_rack()
+            pip.mix(2, 5, s)
+            pip.aspirate(5, s)
+            pip.dispense(5, d)
+            pip.mix(3, 10, d)
+            # pip.blow_out(d.top(-2))
+            # pip.touch_tip(d)
+
+            if tipTrash:
+                pip.drop_tip()
+            else:
+                drop_tip_rack()
 
     protocol.comment('\nProtocol is complete!')
