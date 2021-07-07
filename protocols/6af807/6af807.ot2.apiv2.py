@@ -4,7 +4,10 @@ metadata = {
     'source': 'Custom Protocol Request',
     'apiLevel': '2.8'
 }
-
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"num_gene":5,"num_mastermix":24,"p20_mount":"left"}""")
+    return [_all_values[n] for n in names]
 
 def run(ctx):
 
@@ -22,7 +25,7 @@ def run(ctx):
                 'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '2')
     cDNA = ctx.load_labware(
                 'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '3')
-    tiprack = [ctx.load_labware('art_20ul_tiprack_thermobarrier', '4')]
+    tiprack = [ctx.load_labware('thermofisherart_96_tiprack_10ul', '4')]
 
     # load instrument
     p20 = ctx.load_instrument('p20_single_gen2',
@@ -47,7 +50,6 @@ def run(ctx):
                             plate.columns()[:num_mastermix]):
         p20.pick_up_tip()
         for i, well in enumerate(column[:num_gene*3]):
-            p20.aspirate(16, tube)
-            p20.dispense(16, well.top())
+            p20.transfer(16, tube, well.top(), new_tip='never')
             p20.blow_out()
         p20.drop_tip()
