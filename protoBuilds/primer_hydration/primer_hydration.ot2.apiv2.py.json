@@ -1,0 +1,49 @@
+{
+    "content": "from opentrons import protocol_api\nimport csv\n\nmetadata = {\n    \"protocolName\": \"Multiple Primer hydration\",\n    \"apiLevel\": \"2.8\",\n}\n\n\ndef run(protocol: protocol_api.ProtocolContext):\n    p300_multi: protocol_api.InstrumentContext\n    protocol.pause(\n        \"Ensure pipette current is decreased \\\n        from 0.8Amps (normal) to 0.1Amps\"\n    )\n    # Define tips\n    tiprack_300 = protocol.load_labware(\"opentrons_96_tiprack_300ul\", \"4\")\n\n    # Define labware\n    h_falcon = protocol.load_labware(\n        \"opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical\", \"5\"\n    )\n    # DO NOT MOVE TO slots 1-2-3 because\n    # you won't be able to access bottom tubes\n    h_tubes = protocol.load_labware(\n        \"opentrons_24_tuberack_generic_2ml_screwcap\", \"6\"\n    )\n\n    # Define instruments and assign tips\n    p300_multi = protocol.load_instrument(\"p300_multi_gen2\", \"right\")\n    p300_multi.flow_rate.aspirate = 150\n    p300_multi.flow_rate.dispense = 50\n\n    [csv_raw] = get_values(\"volume_transfers\")  # noqa: F821\n    # Expected csv file\n    # \tcsv_raw = '''\n    # source_well,destination_well,transfer_volume\n    # A1,A1,546\n    # '''\n    # csv parsing\n    csv_data = csv_raw.splitlines()[1:]  # Discard the blank first line.\n    field_names = [\"source_well\", \"destination_well\", \"transfer_volume\"]\n    csv_reader = csv.DictReader(csv_data, fieldnames=field_names)\n\n    # validation (since we are using 15mL falcon tubes,\n    # we want the transfer volume to not surpass 5mL)\n    max_cum_v = 5000\n    cum_volumes = {}\n    for csv_row in csv_reader:\n        source_well = csv_row[\"source_well\"]\n        transfer_volume = float(csv_row[\"transfer_volume\"])\n        assert transfer_volume > 0\n        if source_well not in cum_volumes:\n            cum_volumes[source_well] = 0\n        cum_volumes[source_well] += transfer_volume\n        # ensure cumulative volume is less than 5mL\n        if cum_volumes[source_well] > max_cum_v:\n            raise Exception(\n                f\"Cumulative volume from well\\\n                    {source_well} should not surpass {max_cum_v}.\\\n                    Add more falcon tubes and modify csv.\"\n            )\n\n    # start protocol\n    p300_multi.pick_up_tip(tiprack_300[\"H1\"])\n    for csv_row in csv_reader:\n        source_well = csv_row[\"source_well\"]\n        destination_well = csv_row[\"destination_well\"]\n\n        v_left = float(csv_row[\"transfer_volume\"])\n        while v_left > 0:\n            transfer_volume = min(p300_multi.max_volume, v_left)\n            v_left -= transfer_volume\n            p300_multi.move_to(h_falcon.wells(source_well)).top()\n            p300_multi.aspirate(\n                transfer_volume, h_falcon.wells(source_well).top(z=-40)\n            )\n\n            p300_multi.move_to(h_tubes.wells(destination_well).top())\n            p300_multi.dispense(\n                transfer_volume,\n                h_tubes.wells_by_name()[destination_well].top(z=-15),\n            )\n            protocol.delay(seconds=0.5)\n            p300_multi.blow_out(\n                h_tubes.wells_by_name()[destination_well].top()\n            )\n    p300_multi.drop_tip()\n    return\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": "source_well,destination_well,transfer_volume\nA1,A1,546\nA1,A2,700\nA1,A3,300\nA1,A4,300\nA1,A4,100\nA1,A5,255\nA1,A6,267\nA2,D6,250",
+            "label": "Volume Transfers",
+            "name": "volume_transfers",
+            "type": "textFile"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "right",
+            "name": "p300_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 10 Tube Rack with Falcon 4x50 mL, 6x15 mL Conical on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical"
+        },
+        {
+            "name": "Opentrons 24 Tube Rack with Generic 2 mL Screwcap on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_24_tuberack_generic_2ml_screwcap"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.8",
+        "protocolName": "Multiple Primer hydration"
+    },
+    "modules": []
+}
