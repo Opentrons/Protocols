@@ -1,27 +1,9 @@
 [
   {
     "type": "int",
-    "label": "Sample Count (up to 48)",
+    "label": "Sample Count (up to 24)",
     "name": "sample_count",
-    "default": 48
-  },
-  {
-    "type": "dropDown",
-    "label": "Choose Tips for the p300",
-    "name": "labware_tips300",
-    "options": [
-      { "label": "Filter Tips", "value": "opentrons_96_filtertiprack_200ul" },
-      { "label": "Standard Tips", "value": "opentrons_96_tiprack_300ul" }
-    ]
-  },
-  {
-    "type": "dropDown",
-    "label": "Choose Tips for the p20",
-    "name": "labware_tips20",
-    "options": [
-      { "label": "Filter Tips", "value": "opentrons_96_filtertiprack_20ul" },
-      { "label": "Standard Tips", "value": "opentrons_96_tiprack_20ul" }
-    ]
+    "default": 24
   },
   {
     "type": "dropDown",
@@ -88,6 +70,12 @@
     "label": "Engage Time for Magnetic Module (min)",
     "name": "engage_time",
     "default": 5
+  },
+  {
+    "type": "float",
+    "label": "Offset (mm) Applied to Default Engage Height for Magnetic Module",
+    "name": "engage_offset",
+    "default": 0
   },
   {
     "type": "int",
