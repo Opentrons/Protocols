@@ -38,8 +38,8 @@ def run(protocol):
 
     # Create Variables
     water = [well for well in tempPlate.rows()[0][:4] for _ in range(12)]
-    primer = [tempPlate['A5'] for row in range(48)]
-    mm = [well for well in tempPlate.rows()[0][5:7] for _ in range(24)]
+    primer = [tempPlate['A6'] for row in range(48)]
+    mm = [well for well in tempPlate.rows()[0][7:9] for _ in range(24)]
     tipLocs = [w for rack in tips for w in rack.rows()[0]]
 
     # sampCols = math.ceil(numSamps/8)
