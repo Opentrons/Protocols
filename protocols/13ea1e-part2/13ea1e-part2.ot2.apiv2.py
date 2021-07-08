@@ -15,7 +15,7 @@ def run(ctx):
     [num_samp, overage_percent, mix_reps, asp_height,
         p20_mount, p300_mount] = get_values(  # noqa: F821
         "num_samp", "overage_percent",
-        "mix_reps", "asp_height" "p20_mount", "p300_mount")
+        "mix_reps", "asp_height", "p20_mount", "p300_mount")
 
     if not 0 <= num_samp <= 384:
         raise Exception("Enter a sample number between 1-384")
