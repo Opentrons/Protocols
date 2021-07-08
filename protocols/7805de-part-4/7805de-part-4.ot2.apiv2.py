@@ -13,26 +13,28 @@ metadata = {
 def run(ctx):
 
     # get parameter values from json above
-    [sample_count, labware_tips300, labware_tips20, labware_pcr_plate,
+    [sample_count, labware_pcr_plate,
      labware_reservoir, labware_tube_strip, clearance_sample_plate,
      clearance_reservoir, clearance_strip_tubes, clearance_bead_pellet,
-     delay_beads, flow_rate_beads, engage_time, dry_time
+     delay_beads, flow_rate_beads, engage_time, engage_offset, dry_time
      ] = get_values(  # noqa: F821
-      'sample_count', 'labware_tips300', 'labware_tips20', 'labware_pcr_plate',
+      'sample_count', 'labware_pcr_plate',
       'labware_reservoir', 'labware_tube_strip', 'clearance_sample_plate',
       'clearance_reservoir', 'clearance_strip_tubes', 'clearance_bead_pellet',
-      'delay_beads', 'flow_rate_beads', 'engage_time', 'dry_time')
+      'delay_beads', 'flow_rate_beads', 'engage_time', 'engage_offset',
+      'dry_time')
 
     ctx.set_rail_lights(True)
-    if not 1 <= sample_count <= 48:
-        raise Exception('Invalid number of samples (must be 1-48).')
+    if not 1 <= sample_count <= 24:
+        raise Exception('Invalid number of samples (must be 1-24).')
 
     # tips, p20 multi gen2, p300 multi gen2
     tips20 = [ctx.load_labware(
-     labware_tips20, str(slot)) for slot in [2, 5]]
+     "opentrons_96_filtertiprack_20ul", str(slot)) for slot in [2, 5]]
     p20m = ctx.load_instrument(
         "p20_multi_gen2", 'left', tip_racks=tips20)
-    tips300 = [ctx.load_labware(labware_tips300, str(slot)) for slot in [6, 9]]
+    tips300 = [ctx.load_labware(
+     "opentrons_96_filtertiprack_200ul", str(slot)) for slot in [6, 9]]
     p300m = ctx.load_instrument(
         "p300_multi_gen2", 'right', tip_racks=tips300)
 
@@ -49,7 +51,8 @@ def run(ctx):
             current_pipette.pick_up_tip()
         except OutOfTipsError:
             pause_attention(
-             "Please Refill the {} Tip Boxes".format(current_pipette))
+             """Please Refill the {} Tip Boxes
+             and Empty the Tip Waste""".format(current_pipette))
             current_pipette.reset_tipracks()
             current_pipette.pick_up_tip()
 
@@ -145,11 +148,13 @@ def run(ctx):
 
     sample plate (from part 3) on deck slot 7
     (15 ul end-prepped, adaptor ligated cDNA with
-    up to 48 samples arranged in columns of 8)
+    up to 24 samples arranged in columns of 8)
 
     Reagents in strip tubes on 4 degree temp module:
     column 1 - NEBNext Q5 Master Mix
-    column 2 - index primer mix
+    column 2 - index primer mix 1 (for 1st column of samples)
+    column 3 - index primer mix 2 (if 2nd column of samples)
+    column 4 - index primer mix 3 (if 3rd column of samples)
 
     p20 tips in slot 2 and 5.
     """)
@@ -159,12 +164,15 @@ def run(ctx):
     col 1 - beads
     col 2 - freshly prepared 80 percent ethanol
     col 4 - 0.1x TE
+    col 10 - waste
+    col 11 - waste
     col 12 - waste
     """)
     reagent_reservoir = ctx.load_labware(
      labware_reservoir, '1', 'Reagent Reservoir')
-    [beads, etoh, te, waste] = [reagent_reservoir.wells_by_name()[
-     well] for well in ['A1', 'A2', 'A4', 'A12']]
+    [beads, etoh, te, waste_1, waste_2, waste_3] = [
+     reagent_reservoir.wells_by_name()[
+      well] for well in ['A1', 'A2', 'A4', 'A10', 'A11', 'A12']]
 
     ctx.comment("""
     mag plate on magnetic module
@@ -178,14 +186,14 @@ def run(ctx):
     """)
     temp = ctx.load_module('temperature module gen2', '3')
     reagent_block = temp.load_labware(labware_tube_strip, '4 Degree Block')
-    [q5_mm, index_mx] = [
-     reagent_block.columns_by_name()[str(name + 1)] for name in [*range(2)]]
+    [q5_mm, index_mx_1, index_mx_2, index_mx_3] = [
+     reagent_block.columns_by_name()[str(name + 1)] for name in [*range(4)]]
 
     ctx.comment("""
     Sample plate in deck slot 7:
     containing 15 ul double-stranded cDNA
     samples arranged in columns of 8
-    up to 48 samples total
+    up to 24 samples total
     {} samples in this run
     """.format(str(sample_count)))
     num_cols = math.ceil(sample_count / 8)
@@ -223,9 +231,12 @@ def run(ctx):
         p300m.drop_tip()
     default_flow_rates(p300m)
     p20m.transfer(
-     10, index_mx[0].bottom(clearance_strip_tubes), [column[0].bottom(
-      clearance_sample_plate) for column in sample_plate.columns()[
-      :num_cols]], mix_after=(10, 20), new_tip='always')
+     10, [
+      index_mx_1[0].bottom(clearance_strip_tubes),
+      index_mx_2[0].bottom(clearance_strip_tubes),
+      index_mx_3[0].bottom(clearance_strip_tubes)], [column[0].bottom(
+       clearance_sample_plate) for column in sample_plate.columns()[
+       :num_cols]], mix_after=(10, 20), new_tip='always')
 
     pause_attention("""
         pausing for off-deck steps
@@ -250,7 +261,6 @@ def run(ctx):
         col 1 - beads
         col 2 - freshly prepared 80 percent ethanol
         col 4 - 0.1x TE
-        col 12 - waste
         place elution plate in deck slot 8
         resume
         """)
@@ -270,14 +280,14 @@ def run(ctx):
     viscous_flow_rates(p300m)
     for column in mag_plate.columns()[:num_cols]:
         p300m.pick_up_tip()
+        p300m.mix(3, 100, beads.bottom(clearance_reservoir), rate=2)
         aspirate_with_delay(p300m, 45, beads.bottom(
          clearance_reservoir), delay_beads)
         slow_tip_withdrawal(p300m, beads)
         dispense_with_delay(p300m, 45, column[0].bottom(
          clearance_sample_plate), delay_beads)
-        for repeat in range(10):
-            mix_with_delay(p300m, 50, column[0].bottom(
-             clearance_sample_plate), delay_beads)
+        p300m.mix(6, 50, column[0].bottom(3), rate=2)
+        slow_tip_withdrawal(p300m, column[0])
         p300m.drop_tip()
     default_flow_rates(p300m)
     ctx.delay(minutes=5)
@@ -285,7 +295,7 @@ def run(ctx):
     spin and return the plate
     resume
     """)
-    mag.engage()
+    mag.engage(offset=engage_offset)
     ctx.delay(minutes=engage_time)
     ctx.comment("""
     remove sup
@@ -305,7 +315,8 @@ def run(ctx):
     for column in mag_plate.columns()[:num_cols]:
         pick_up_or_refill(p300m)
         p300m.transfer(95, column[0].bottom(
-         clearance_bead_pellet), waste.top(), new_tip='never')
+         clearance_bead_pellet), waste_1.top(), air_gap=15, new_tip='never')
+        p300m.air_gap(15)
         p300m.drop_tip()
     etoh_flow_rates(p300m)
     for rep in range(2):
@@ -321,24 +332,31 @@ def run(ctx):
                 ctx.delay(seconds=1)
                 p300m.blow_out(column[0].top())
         p300m.drop_tip()
+        if rep == 0:
+            wst = waste_2
+        else:
+            wst = waste_3
         ctx.delay(seconds=30)
         for column in mag_plate.columns()[:num_cols]:
             pick_up_or_refill(p300m)
             p300m.aspirate(150, column[0].bottom(clearance_bead_pellet))
             p300m.air_gap(15)
-            p300m.dispense(165, waste.top())
+            p300m.dispense(165, wst.top())
             for rep in range(3):
                 if rep > 0:
-                    p300m.aspirate(150, waste.top())
+                    p300m.aspirate(150, wst.top())
                 ctx.delay(seconds=1)
-                p300m.blow_out(waste.top())
+                p300m.blow_out(wst.top())
+            p300m.air_gap(15)
             p300m.drop_tip()
     default_flow_rates(p300m)
+    mag.disengage()
     pause_attention("""
-    spin and return the plate
+    remove plate, spin, return the plate to the magnetic module
     resume
     """)
-    mag.engage()
+    mag.engage(offset=engage_offset)
+    ctx.delay(minutes=1)
     pause_attention("""
     manually remove last traces of ethanol with 10 ul tip
     resume
@@ -362,7 +380,7 @@ def run(ctx):
     resume
     """)
     ctx.delay(minutes=2)
-    mag.engage()
+    mag.engage(offset=engage_offset)
     ctx.delay(minutes=engage_time)
     ctx.comment("""
     transfer to elution plate
