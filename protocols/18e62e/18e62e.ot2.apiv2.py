@@ -22,6 +22,7 @@ def run(protocol):
     tempDeck.set_temperature(4)
     tempPlate = tempDeck.load_labware(
         'opentrons_96_aluminumblock_generic_pcr_strip_200ul')
+    nums = [p1n, p2n, p3n, p4n]
     sampPlates = [
         protocol.load_labware(
             'kingfisher_96_deepwell_plate_2ml',
@@ -31,7 +32,7 @@ def run(protocol):
                 ['KF Deepwell-96 Sample Plate 1',
                  'KF Deepwell-96 Sample Plate 2',
                  'KF Deepwell-96 Sample Plate 3',
-                 'KF Deepwell-96 Sample Plate 4'])][:math.ceil(numSamps/96)]
+                 'KF Deepwell-96 Sample Plate 4'])][:math.ceil(sum(nums)/96)]
 
     destPlate = protocol.load_labware(
         'microampoptical_384_wellplate_30ul', '2',)
@@ -42,8 +43,7 @@ def run(protocol):
     mm = [well for well in tempPlate.rows()[0][7:9] for _ in range(24)]
     tipLocs = [w for rack in tips for w in rack.rows()[0]]
 
-    # sampCols = math.ceil(numSamps/8)
-    sampCols = [math.ceil(n/8) for n in [p1n, p2n, p3n, p4n]]
+    sampCols = [math.ceil(n/8) for n in nums]
 
     destWells = [destPlate.rows()[r][w:w+n] for r, w, n in zip(
         [0, 0, 1, 1], [0, 12, 0, 12], sampCols)]
