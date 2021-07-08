@@ -12,10 +12,10 @@ metadata = {
 
 def run(ctx):
 
-    [num_samp, overage_percent, mix_reps,
+    [num_samp, overage_percent, mix_reps, asp_height,
         p20_mount, p300_mount] = get_values(  # noqa: F821
         "num_samp", "overage_percent",
-        "mix_reps", "p20_mount", "p300_mount")
+        "mix_reps", "asp_height", "p20_mount", "p300_mount")
 
     if not 0 <= num_samp <= 384:
         raise Exception("Enter a sample number between 1-384")
@@ -28,9 +28,10 @@ def run(ctx):
         raise Exception("Enter a sample number between 1-384")
 
     # load labware
-    sample_plates = [ctx.load_labware('nest_96_wellplate_2ml_deep', slot)
+    sample_plates = [ctx.load_labware('nest_96_wellplate_2200ul', slot)
                      for slot in plates]
-    tuberack = ctx.load_labware('opentrons_24_tuberack_1500ul', '5')
+    tuberack = ctx.load_labware(
+            'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '5')
     pcr_plate_384 = ctx.load_labware('pr1ma_384_wellplate_50ul', '6')
     tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
                  for slot in ['8', '9', '11']]
@@ -79,7 +80,7 @@ def run(ctx):
                     {total_mix_vol/num_mastermix_tubes}ul  of mastermix
                     in all tubes out of
                     {num_mastermix_tubes} mastermix tubes.'''
-    ctx.comment(liquid_prompt)
+    ctx.pause(liquid_prompt)
 
     # plate mapping
     plate1_to_384 = [well for column in pcr_plate_384.columns()[::2]
@@ -111,14 +112,13 @@ def run(ctx):
     airgap = 5
     ctx.comment('Distributing Mastermix')
     pick_up_20()
-    p20.aspirate(7, mastermix_tube[0].bottom(z=1.5))
+    p20.aspirate(7, mastermix_tube[0].bottom(z=asp_height))
     p20.air_gap(airgap)
     p20.dispense(7+airgap, pcr_plate_384.wells()[-1])
 
     for i, plate in enumerate(sample_plates):
         for source, well in zip(mastermix_tube*num_samp, plates[i]):
-
-            p20.aspirate(7, source.bottom(z=1.5))
+            p20.aspirate(7, source.bottom(z=asp_height))
             p20.dispense(7+airgap, well)
             p20.blow_out()
     p20.drop_tip()
@@ -127,7 +127,7 @@ def run(ctx):
     # add positive control
     ctx.comment('Adding Positive Control')
     pick_up_20()
-    p20.aspirate(5.5, positive_control.bottom(z=1.5))
+    p20.aspirate(5.5, positive_control.bottom(z=asp_height))
     p20.air_gap(airgap)
     p20.dispense(7+airgap, pcr_plate_384.wells()[-1])
     p20.mix(mix_reps, 12.5, pcr_plate_384.wells()[-1])
@@ -138,7 +138,7 @@ def run(ctx):
     for i, plate in enumerate(sample_plates):
         for s, d in zip(sample_wells, plates[i]):
             pick_up_20()
-            p20.aspirate(5.5, s.bottom(z=-2.75))
+            p20.aspirate(5.5, s)
             p20.air_gap(airgap)
             p20.dispense(5.5+airgap, d)
             p20.mix(mix_reps, 12.5, d)
