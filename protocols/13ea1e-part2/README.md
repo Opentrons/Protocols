@@ -25,6 +25,7 @@ Explanation of complex parameters below:
 * `P20 Single Channel Mount (GEN2)`: Specify which mount the P20 Single Channel pipette will be mounted.
 * `Percent overage`: Specify the overage percent to which mastermix will be made and distributed to the 384 well plate.
 * `Mix repetitions`: Specify the number of mix repetitions for making mastermix, as well as after distributing sample to the mastermix.
+* `Tube Aspiration Height`: Specify the height in mm to aspirate from the 1.5mm tube bottoms. 
 * `P300 Multi Channel Mount (GEN2)`: Specify which mount the P300 Multi Channel pipette will be mounted.
 ---
 

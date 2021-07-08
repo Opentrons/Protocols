@@ -12,6 +12,12 @@
     "default": 3
   },
   {
+  "type": "int",
+  "label": "Tube Aspiration Height",
+  "name": "asp_height",
+  "default": 2
+  },
+  {
     "type": "dropDown",
     "label": "P1000 Single Channel Mount (GEN2)",
     "name": "p1000_mount",
