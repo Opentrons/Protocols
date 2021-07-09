@@ -35,8 +35,6 @@ def run(ctx):
     pcr_plate_384 = ctx.load_labware('pr1ma_384_wellplate_50ul', '6')
     tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
                  for slot in ['8', '9', '11']]
-    tiprack300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
-                  for slot in ['7', '10']]
 
     # load instrument
     p20 = ctx.load_instrument('p20_single_gen2', p20_mount,
