@@ -5,7 +5,7 @@ import math
 # metadata
 metadata = {
     'protocolName': 'Logix Smart Nasopharyngeal/Saliva Covid-19 PCR Prep \
-(Station C)',
+(Station B)',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.10'

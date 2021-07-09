@@ -1,4 +1,4 @@
-# Logix Smart Nasopharyngeal/Saliva Covid-19 PCR Prep (Station C)
+# Logix Smart Nasopharyngeal/Saliva Covid-19 PCR Prep (Station B)
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -10,7 +10,7 @@
 ## Description
 Links:  
 * [Logix Smart Nasopharyngeal Covid-19 Plating (Station A)](./313086)
-* [Logix Smart Nasopharyngeal/Saliva Covid-19 PCR Prep (Station C)](./313086-station-C)
+* [Logix Smart Nasopharyngeal/Saliva Covid-19 PCR Prep (Station B)](./313086-logixsmart-station-B)
 
 This protocol performs PCR prep in a NEST 96-well PCR plate. Samples with buffer pre-added should be arranged in a NEST 96-deepwell, and mastermix and controls should be loaded in 1.5ml microcentrifuge tubes in the Opentrons 4x6 tuberack. The transfer order is as shown below:  
 ![order](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/demo/order.png)
