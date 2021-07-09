@@ -37,14 +37,5 @@
       { "label": "right", "value": "right" },
       { "label": "left", "value": "left" }
     ]
-  },
-  {
-    "type": "dropDown",
-    "label": "P300 Single Channel Mount (GEN2)",
-    "name": "p300_mount",
-    "options": [
-      { "label": "left", "value": "left" },
-      { "label": "right", "value": "right" }
-    ]
   }
 ]
