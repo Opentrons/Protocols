@@ -47,7 +47,7 @@ For more detailed information on compatible labware, please visit our [Labware L
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1bcd67/deck_setup.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1bcd67/deck_setup2.png)
 
 ---
 
