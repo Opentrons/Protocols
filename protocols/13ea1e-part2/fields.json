@@ -18,10 +18,16 @@
     "default": 15
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "Tube Aspiration Height",
     "name": "asp_height",
     "default": 2
+  },
+  {
+    "type": "float",
+    "label": "Sample Aspiration Height in 96 well Plate",
+    "name": "sample_asp_height",
+    "default": 0.5
   },
   {
     "type": "dropDown",
@@ -30,15 +36,6 @@
     "options": [
       { "label": "right", "value": "right" },
       { "label": "left", "value": "left" }
-    ]
-  },
-  {
-    "type": "dropDown",
-    "label": "P300 Single Channel Mount (GEN2)",
-    "name": "p300_mount",
-    "options": [
-      { "label": "left", "value": "left" },
-      { "label": "right", "value": "right" }
     ]
   }
 ]

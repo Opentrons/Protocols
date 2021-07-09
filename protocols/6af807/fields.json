@@ -12,6 +12,15 @@
     "default": 24
   },
   {
+  "type": "dropDown",
+  "label": "Reset Tipracks?",
+  "name": "reset_tipracks",
+  "options": [
+     { "label": "Yes", "value": true },
+     { "label": "No", "value": false }
+   ]
+  },
+  {
     "type": "dropDown",
     "label": "P20 single channel mount",
     "name": "p20_mount",
