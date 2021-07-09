@@ -1,0 +1,152 @@
+{
+    "content": "import math\n\nmetadata = {\n    'protocolName': 'OT-2 Demo',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.10'\n}\n\n\ndef run(ctx):\n\n    [left_pip, right_pip, source_lw, dest_lw, num_samples, sample_vol,\n     using_magdeck, incubation_time_mins] = get_values(  # noqa: F821\n        'left_pip', 'right_pip', 'source_lw', 'dest_lw', 'num_samples',\n        'sample_vol', 'using_magdeck', 'incubation_time_mins')\n\n    # load labware\n    source_labware = ctx.load_labware(source_lw, '1')\n    dest_labware = ctx.load_labware(dest_lw, '2')\n    if using_magdeck:\n        magdeck = ctx.load_module('magnetic module gen2', '7')\n\n    # load instrument\n    pip_l = ctx.load_instrument(left_pip, 'left')\n    pip_r = ctx.load_instrument(right_pip, 'right')\n\n    tipracks_l_type = f'opentrons_96_tiprack_{pip_l.max_volume}ul'\n    tipracks_r_type = f'opentrons_96_tiprack_{pip_r.max_volume}ul'\n    tipracks_l = [ctx.load_labware(tipracks_l_type, '4')]\n    tipracks_r = [ctx.load_labware(tipracks_r_type, '5')]\n\n    pip_l.tip_racks = tipracks_l\n    pip_r.tip_racks = tipracks_r\n\n    # protocol\n    ctx.pause('''Welcome to the OT-2 Demo Protocol-\n                    This is the `Pause` function.\n                    Pauses can be put at any point during a protocol\n                    to replace plates, reagents, spin down plates,\n                    or for any other instance where human intervention\n                    is needed. Protocols continue after a `Pause` when\n                    the `Resume` button is selected. Select `Resume`\n                    to see more OT-2 features.''')\n\n    if 'tuberack' in source_lw:\n        pip = pip_l\n        sources = source_labware.wells()[:math.ceil(num_samples/4)]\n        destinations = dest_labware.wells()[:num_samples]\n\n        for i, d in enumerate(destinations):\n            pip.transfer(sample_vol, sources[i//4], d)\n\n    else:\n        pip = pip_r\n        sources = source_labware.wells()[:math.ceil(num_samples/8)]\n        destinations = dest_labware.rows()[0][:math.ceil(num_samples/8)]\n\n        for s, d in zip(sources, destinations):\n            pip.transfer(sample_vol, s, d)\n\n    ctx.comment('Engaging magnetic module...')\n    if using_magdeck:\n        magdeck.engage(height=18)\n        ctx.delay(minutes=incubation_time_mins,\n                  msg=f'Incubating for {incubation_time_mins} minutes')\n        ctx.comment('Protocol complete. Move labware to magnetic module for \\\nbead separation.')\n    else:\n        ctx.comment('Protocol complete. Please remove your plate for further \\\nprocessing')\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "label": "left pipette",
+            "name": "left_pip",
+            "options": [
+                {
+                    "label": "P20 Single GEN2",
+                    "value": "p20_single_gen2"
+                },
+                {
+                    "label": "P300 Single GEN2",
+                    "value": "p300_single_gen2"
+                },
+                {
+                    "label": "p1000 Single GEN2",
+                    "value": "p1000_single_gen2"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "right pipette",
+            "name": "right_pip",
+            "options": [
+                {
+                    "label": "P20 Multi GEN2",
+                    "value": "p20_multi_gen2"
+                },
+                {
+                    "label": "P300 Multi GEN2",
+                    "value": "p300_multi_gen2"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "source labware type",
+            "name": "source_lw",
+            "options": [
+                {
+                    "label": "NEST 12 Well Reservoir 15ml",
+                    "value": "nest_12_reservoir_15ml"
+                },
+                {
+                    "label": "Opentrons 24 Tube Rack with Eppendorf 2 mL Safe-Lock Snapcap",
+                    "value": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "destination labware type",
+            "name": "dest_lw",
+            "options": [
+                {
+                    "label": "NEST 96 Deepwell Plate 2mL",
+                    "value": "nest_96_wellplate_2ml_deep"
+                },
+                {
+                    "label": "NEST 96 Well Plate 200 \u00b5L Flat",
+                    "value": "nest_96_wellplate_200ul_flat"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 96,
+            "label": "number of samples (1-96)",
+            "name": "num_samples",
+            "type": "float"
+        },
+        {
+            "default": 200,
+            "label": "starting sample volume (1-500\u00b5l)",
+            "name": "sample_vol",
+            "type": "float"
+        },
+        {
+            "label": "using magnetic module GEN2",
+            "name": "using_magdeck",
+            "options": [
+                {
+                    "label": "yes",
+                    "value": true
+                },
+                {
+                    "label": "no",
+                    "value": false
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 1,
+            "label": "incubation time (in minutes)",
+            "name": "incubation_time_mins",
+            "type": "float"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p20_single_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p20_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on 1",
+            "share": false,
+            "slot": "1",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "NEST 96 Deepwell Plate 2mL on 2",
+            "share": false,
+            "slot": "2",
+            "type": "nest_96_wellplate_2ml_deep"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_tiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_tiprack_20ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.10",
+        "author": "Nick <protocols@opentrons.com>",
+        "protocolName": "OT-2 Demo",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}
