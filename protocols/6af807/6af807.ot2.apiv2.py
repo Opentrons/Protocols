@@ -7,10 +7,7 @@ metadata = {
     'source': 'Custom Protocol Request',
     'apiLevel': '2.8'
 }
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"reset_tipracks":true,"num_gene":100,"num_mastermix":100,"p20_mount":"left"}""")
-    return [_all_values[n] for n in names]
+
 
 def run(ctx):
 
