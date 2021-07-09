@@ -13,10 +13,10 @@ metadata = {
 def run(ctx):
 
     [num_samp, overage_percent, mix_reps, asp_height, sample_asp_height,
-        p20_mount, p300_mount] = get_values(  # noqa: F821
+        p20_mount] = get_values(  # noqa: F821
         "num_samp", "overage_percent",
         "mix_reps", "asp_height", "sample_asp_height",
-        "p20_mount", "p300_mount")
+        "p20_mount")
 
     if not 0 <= num_samp <= 384:
         raise Exception("Enter a sample number between 1-384")
@@ -41,19 +41,6 @@ def run(ctx):
     # load instrument
     p20 = ctx.load_instrument('p20_single_gen2', p20_mount,
                               tip_racks=tiprack20)
-
-    num_channels_per_pickup = 1  # (only pickup tips on front-most channel)
-    tips_ordered = [
-        tip for rack in tiprack300
-        for row in rack.rows()[
-         len(rack.rows())-num_channels_per_pickup::-1*num_channels_per_pickup]
-        for tip in row]
-    tip_count = 0
-
-    def pick_up_300():
-        nonlocal tip_count
-        p300.pick_up_tip(tips_ordered[tip_count])
-        tip_count += 1
 
     def pick_up_20():
         try:
