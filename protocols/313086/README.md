@@ -9,6 +9,10 @@
 
 
 ## Description
+Links:  
+* [Logix Smart Nasopharyngeal Covid-19 Plating (Station A)](./313086)
+* [Logix Smart Nasopharyngeal/Saliva Covid-19 PCR Prep (Station C)](./313086-station-C)
+
 This protocol plates lysis/binding buffer, samples, and elution buffer in a NEST 96-deepwell plate. Samples should be arranged in up to 4x Opentrons tuberacks, and buffers should be loaded in a NEST 12-channel reservoir. The transfer order is as shown below:  
 ![order](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/demo/order.png)
 
