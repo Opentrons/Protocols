@@ -12,10 +12,11 @@ metadata = {
 
 def run(ctx):
 
-    [num_samp, overage_percent, mix_reps, asp_height,
-        p20_mount, p300_mount] = get_values(  # noqa: F821
+    [num_samp, overage_percent, mix_reps, asp_height, sample_asp_height,
+        p20_mount] = get_values(  # noqa: F821
         "num_samp", "overage_percent",
-        "mix_reps", "asp_height", "p20_mount", "p300_mount")
+        "mix_reps", "asp_height", "sample_asp_height",
+        "p20_mount")
 
     if not 0 <= num_samp <= 384:
         raise Exception("Enter a sample number between 1-384")
@@ -30,32 +31,14 @@ def run(ctx):
     # load labware
     sample_plates = [ctx.load_labware('nest_96_wellplate_2200ul', slot)
                      for slot in plates]
-    tuberack = ctx.load_labware(
-            'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '5')
+    tuberack = ctx.load_labware('opentrons_24_tuberack_1500ul', '5')
     pcr_plate_384 = ctx.load_labware('pr1ma_384_wellplate_50ul', '6')
     tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
                  for slot in ['8', '9', '11']]
-    tiprack300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
-                  for slot in ['7', '10']]
 
     # load instrument
-    p300 = ctx.load_instrument('p300_multi_gen2', p300_mount,
-                               tip_racks=tiprack300)
     p20 = ctx.load_instrument('p20_single_gen2', p20_mount,
                               tip_racks=tiprack20)
-
-    num_channels_per_pickup = 1  # (only pickup tips on front-most channel)
-    tips_ordered = [
-        tip for rack in tiprack300
-        for row in rack.rows()[
-         len(rack.rows())-num_channels_per_pickup::-1*num_channels_per_pickup]
-        for tip in row]
-    tip_count = 0
-
-    def pick_up_300():
-        nonlocal tip_count
-        p300.pick_up_tip(tips_ordered[tip_count])
-        tip_count += 1
 
     def pick_up_20():
         try:
@@ -138,7 +121,7 @@ def run(ctx):
     for i, plate in enumerate(sample_plates):
         for s, d in zip(sample_wells, plates[i]):
             pick_up_20()
-            p20.aspirate(5.5, s)
+            p20.aspirate(5.5, s.bottom(z=sample_asp_height))
             p20.air_gap(airgap)
             p20.dispense(5.5+airgap, d)
             p20.mix(mix_reps, 12.5, d)
