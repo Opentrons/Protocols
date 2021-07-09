@@ -1,58 +1,52 @@
-# OT-2 Guided Walk-through
+# OT-2 Demo
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
 ## Categories
 * Getting Started
-	* OT-2 Guided Walk-through
+	* OT-2 Demo
 
 ## Description
-Learn the OT-2 in under 10 minutes! This protocol will walk you through most of the OT-2 capabilities which include but are not limited to: touch tip, blow out, return tip, and distribute functions (for all functions covered in this protocol, see `Protocol Steps` section below).  
+Learn the function OT-2 quickly! This simple plating protocol shows the flexibility of custom protocols hosted on our Protocol Library.
 
-Understand what each OT-2 function does, and see it in real time before incorporating it into your own biology workflow.
+Reagents are transferred down columns and then across rows as shown here.  
+![order](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/demo/order.png)  
 
-Explanation of complex parameters below:
-* `Well Plate`: Select which well plate will be loaded onto the deck.
-* `Pipette`: Select which single-channel pipette will be loaded onto the deck.
-* `Pipette Tips`: Select which pipette tips will accommodate the pipette you selected above.
-`Pipette Mount`: Select which mount your pipette will be hosted on.
+If the source labware is selected to be a 24x tuberack, reagents will be transferred in quadrupliate (ex: reagent tube A1 to destination labware wells A1-D1, reagent tube B1 to destination labware wells E1-H1, reagent tube C1 to destination labware wells A2-D2, etc.)
+
+If the source labware is selected to be a 12-channel reservoir, reagents will be transferred column to column (ex: reservoir channel 1 to destination labware column 1, reservoir channel 2 to destination labware column 2, etc.)
+
 ---
+### Modules
+* [Opentrons Magnetic Module GEN2](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
 
 ### Labware
-* All well plates found in our [labware library](https://labware.opentrons.com/?category=wellPlate) can be used in this protocol.
-* All Opentrons tip racks found in our [labware library](https://labware.opentrons.com/?category=tipRack) can be used in this protocol.
+* [NEST 12 Well Reservoir 15 mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
+* [NEST 2 mL 96-Well Deep Well Plate, V Bottom](https://shop.opentrons.com/collections/verified-labware/products/nest-0-2-ml-96-well-deep-well-plate-v-bottom)
+* [NEST 96 Well Plate 200 µL Flat](https://shop.opentrons.com/collections/verified-labware/products/nest-96-well-cell-culture-plate)
+* [Opentrons 4x6 Tube Rack](https://shop.opentrons.com/collections/verified-labware/products/tube-rack-set-1) with Eppendorf 2 mL Safe-Lock Snapcap
+* Any [Opentrons 96 tiprack](https://shop.opentrons.com/collections/opentrons-tips) depending on what pipette is selected.
 
 ### Pipettes
-* All Opentrons [Single channel pipettes](https://opentrons.com/pipettes/) can be used in this protocol.
-
-### Reagents
-* Load the plate with water or food coloring.
+* Any [Opentrons single-channel GEN2 pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette) can be used in this protocol.
+* Any [Opentrons multi-channel GEN2 pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette) can be used in this protocol.
 
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/test_drive/Screen+Shot+2021-06-01+at+12.44.20+PM.png)
+Here's an example deck setup (note that this will vary based on your selected parameters below):  
+![deck setup](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/demo/deck_setup.png)
 
 ### Reagent Setup
-Place your water/food coloring in the first column of the selected 96 well plate.
-![reagent layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/test_drive/Screen+Shot+2021-06-01+at+12.44.41+PM.png)
+* Place your reagent arranged down the rows and then across the columns of your source labware.
 
 ---
 
 ### Protocol Steps
-1. Move to function
-2. Aspirate from various locations within well
-3. Dispense various locations within well
-4. Pause function
-5. Mix function
-6. Flow rate function
-7. Touch tip function
-8. Drop tip function
-9. Return tip function
-10. Airgap function (two ways)
-11. Distribute function
-12. Consolidate function
+1. Reagents are transferred sequentially from the source labware to the corresponding positions of the destination labware.
+2. If you are using the magnetic module, the module engages 18mm.
+3. The protocol finishes execution and prompts the user for next steps.
 
 ### Process
 1. Input your protocol parameters above.
@@ -67,4 +61,4 @@ Place your water/food coloring in the first column of the selected 96 well plate
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-testdrive
+demo

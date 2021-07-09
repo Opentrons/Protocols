@@ -11,14 +11,15 @@ metadata = {
 def run(ctx):
 
     [left_pip, right_pip, source_lw, dest_lw, num_samples, sample_vol,
-     incubation_time_mins] = get_values(  # noqa: F821
+     using_magdeck, incubation_time_mins] = get_values(  # noqa: F821
         'left_pip', 'right_pip', 'source_lw', 'dest_lw', 'num_samples',
-        'sample_vol', 'incubation_time_mins')
+        'sample_vol', 'using_magdeck', 'incubation_time_mins')
 
     # load labware
     source_labware = ctx.load_labware(source_lw, '1')
     dest_labware = ctx.load_labware(dest_lw, '2')
-    magdeck = ctx.load_module('magnetic module gen2', '7')
+    if using_magdeck:
+        magdeck = ctx.load_module('magnetic module gen2', '7')
 
     # load instrument
     pip_l = ctx.load_instrument(left_pip, 'left')
@@ -57,3 +58,14 @@ def run(ctx):
 
         for s, d in zip(sources, destinations):
             pip.transfer(sample_vol, s, d)
+
+    ctx.comment('Engaging magnetic module...')
+    if using_magdeck:
+        magdeck.engage(height=18)
+        ctx.delay(minutes=incubation_time_mins,
+                  msg=f'Incubating for {incubation_time_mins} minutes')
+        ctx.comment('Protocol complete. Move labware to magnetic module for \
+bead separation.')
+    else:
+        ctx.comment('Protocol complete. Please remove your plate for further \
+processing')

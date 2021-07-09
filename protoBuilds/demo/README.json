@@ -2,35 +2,35 @@
     "author": "Opentrons",
     "categories": {
         "Getting Started": [
-            "OT-2 Guided Walk-through"
+            "OT-2 Demo"
         ]
     },
-    "deck-setup": "",
-    "description": "Learn the OT-2 in under 10 minutes! This protocol will walk you through most of the OT-2 capabilities which include but are not limited to: touch tip, blow out, return tip, and distribute functions (for all functions covered in this protocol, see Protocol Steps section below).  \nUnderstand what each OT-2 function does, and see it in real time before incorporating it into your own biology workflow.\nExplanation of complex parameters below:\n Well Plate: Select which well plate will be loaded onto the deck.\n Pipette: Select which single-channel pipette will be loaded onto the deck.\n* Pipette Tips: Select which pipette tips will accommodate the pipette you selected above.\nPipette Mount: Select which mount your pipette will be hosted on.\n",
-    "internal": "testdrive",
-    "labware": "\nAll well plates found in our labware library can be used in this protocol.\nAll Opentrons tip racks found in our labware library can be used in this protocol.\n",
+    "deck-setup": "Here's an example deck setup (note that this will vary based on your selected parameters below):\n",
+    "description": "Learn the function OT-2 quickly! This simple plating protocol shows the flexibility of custom protocols hosted on our Protocol Library.\nReagents are transferred down columns and then across rows as shown here.\n \nIf the source labware is selected to be a 24x tuberack, reagents will be transferred in quadrupliate (ex: reagent tube A1 to destination labware wells A1-D1, reagent tube B1 to destination labware wells E1-H1, reagent tube C1 to destination labware wells A2-D2, etc.)\nIf the source labware is selected to be a 12-channel reservoir, reagents will be transferred column to column (ex: reservoir channel 1 to destination labware column 1, reservoir channel 2 to destination labware column 2, etc.)\n",
+    "internal": "demo",
+    "labware": "\nNEST 12 Well Reservoir 15 mL\nNEST 2 mL 96-Well Deep Well Plate, V Bottom\nNEST 96 Well Plate 200 \u00b5L Flat\nOpentrons 4x6 Tube Rack with Eppendorf 2 mL Safe-Lock Snapcap\nAny Opentrons 96 tiprack depending on what pipette is selected.\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
-        "categories": "* Getting Started\n\t* OT-2 Guided Walk-through\n\n",
-        "deck-setup": "![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/test_drive/Screen+Shot+2021-06-01+at+12.44.20+PM.png)\n\n",
-        "description": "Learn the OT-2 in under 10 minutes! This protocol will walk you through most of the OT-2 capabilities which include but are not limited to: touch tip, blow out, return tip, and distribute functions (for all functions covered in this protocol, see `Protocol Steps` section below).  \n\nUnderstand what each OT-2 function does, and see it in real time before incorporating it into your own biology workflow.\n\nExplanation of complex parameters below:\n* `Well Plate`: Select which well plate will be loaded onto the deck.\n* `Pipette`: Select which single-channel pipette will be loaded onto the deck.\n* `Pipette Tips`: Select which pipette tips will accommodate the pipette you selected above.\n`Pipette Mount`: Select which mount your pipette will be hosted on.\n---\n\n",
-        "internal": "testdrive\n",
-        "labware": "* All well plates found in our [labware library](https://labware.opentrons.com/?category=wellPlate) can be used in this protocol.\n* All Opentrons tip racks found in our [labware library](https://labware.opentrons.com/?category=tipRack) can be used in this protocol.\n\n",
+        "categories": "* Getting Started\n\t* OT-2 Demo\n\n",
+        "deck-setup": "Here's an example deck setup (note that this will vary based on your selected parameters below):  \n![deck setup](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/demo/deck_setup.png)\n\n",
+        "description": "Learn the function OT-2 quickly! This simple plating protocol shows the flexibility of custom protocols hosted on our Protocol Library.\n\nReagents are transferred down columns and then across rows as shown here.  \n![order](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/demo/order.png)  \n\nIf the source labware is selected to be a 24x tuberack, reagents will be transferred in quadrupliate (ex: reagent tube A1 to destination labware wells A1-D1, reagent tube B1 to destination labware wells E1-H1, reagent tube C1 to destination labware wells A2-D2, etc.)\n\nIf the source labware is selected to be a 12-channel reservoir, reagents will be transferred column to column (ex: reservoir channel 1 to destination labware column 1, reservoir channel 2 to destination labware column 2, etc.)\n\n---\n",
+        "internal": "demo\n",
+        "labware": "* [NEST 12 Well Reservoir 15 mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)\n* [NEST 2 mL 96-Well Deep Well Plate, V Bottom](https://shop.opentrons.com/collections/verified-labware/products/nest-0-2-ml-96-well-deep-well-plate-v-bottom)\n* [NEST 96 Well Plate 200 \u00b5L Flat](https://shop.opentrons.com/collections/verified-labware/products/nest-96-well-cell-culture-plate)\n* [Opentrons 4x6 Tube Rack](https://shop.opentrons.com/collections/verified-labware/products/tube-rack-set-1) with Eppendorf 2 mL Safe-Lock Snapcap\n* Any [Opentrons 96 tiprack](https://shop.opentrons.com/collections/opentrons-tips) depending on what pipette is selected.\n\n",
+        "modules": "* [Opentrons Magnetic Module GEN2](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)\n\n",
         "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
-        "pipettes": "* All Opentrons [Single channel pipettes](https://opentrons.com/pipettes/) can be used in this protocol.\n\n",
+        "pipettes": "* Any [Opentrons single-channel GEN2 pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette) can be used in this protocol.\n* Any [Opentrons multi-channel GEN2 pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette) can be used in this protocol.\n\n---\n\n",
         "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
-        "protocol-steps": "1. Move to function\n2. Aspirate from various locations within well\n3. Dispense various locations within well\n4. Pause function\n5. Mix function\n6. Flow rate function\n7. Touch tip function\n8. Drop tip function\n9. Return tip function\n10. Airgap function (two ways)\n11. Distribute function\n12. Consolidate function\n\n",
-        "reagent-setup": "Place your water/food coloring in the first column of the selected 96 well plate.\n![reagent layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/test_drive/Screen+Shot+2021-06-01+at+12.44.41+PM.png)\n\n---\n\n",
-        "reagents": "* Load the plate with water or food coloring.\n\n---\n\n",
-        "title": "OT-2 Guided Walk-through"
+        "protocol-steps": "1. Reagents are transferred sequentially from the source labware to the corresponding positions of the destination labware.\n2. If you are using the magnetic module, the module engages 18mm.\n3. The protocol finishes execution and prompts the user for next steps.\n\n",
+        "reagent-setup": "* Place your reagent arranged down the rows and then across the columns of your source labware.\n\n---\n\n",
+        "title": "OT-2 Demo"
     },
-    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
-    "pipettes": "\nAll Opentrons Single channel pipettes can be used in this protocol.\n",
-    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
-    "protocol-steps": "\nMove to function\nAspirate from various locations within well\nDispense various locations within well\nPause function\nMix function\nFlow rate function\nTouch tip function\nDrop tip function\nReturn tip function\nAirgap function (two ways)\nDistribute function\nConsolidate function\n",
-    "reagent-setup": "Place your water/food coloring in the first column of the selected 96 well plate.\n\n",
-    "reagents": [
-        "Load the plate with water or food coloring."
+    "modules": [
+        "Opentrons Magnetic Module GEN2"
     ],
-    "title": "OT-2 Guided Walk-through"
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nAny Opentrons single-channel GEN2 pipette can be used in this protocol.\nAny Opentrons multi-channel GEN2 pipette can be used in this protocol.\n\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "protocol-steps": "\nReagents are transferred sequentially from the source labware to the corresponding positions of the destination labware.\nIf you are using the magnetic module, the module engages 18mm.\nThe protocol finishes execution and prompts the user for next steps.\n",
+    "reagent-setup": "\nPlace your reagent arranged down the rows and then across the columns of your source labware.\n\n",
+    "title": "OT-2 Demo"
 }

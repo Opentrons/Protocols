@@ -49,6 +49,15 @@
     "default": 200
   },
   {
+    "type": "dropDown",
+    "label": "using magnetic module GEN2",
+    "name": "using_magdeck",
+    "options": [
+       { "label": "yes", "value": true },
+       { "label": "no", "value": false }
+     ]
+  },
+  {
     "type": "float",
     "label": "incubation time (in minutes)",
     "name": "incubation_time_mins",
