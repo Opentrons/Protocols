@@ -1,33 +1,33 @@
-# Logix Smart Nasopharyngeal Covid-19 Plating (Station A)
+# Logix Smart Nasopharyngeal/Saliva Covid-19 PCR Prep (Station C)
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
 ## Categories
 * Covid Workstation
-	* Sample Plating
-
+	* qPCR Setup
 
 ## Description
-This protocol plates lysis/binding buffer, samples, and elution buffer in a NEST 96-deepwell plate. Samples should be arranged in up to 4x Opentrons tuberacks, and buffers should be loaded in a NEST 12-channel reservoir. The transfer order is as shown below:  
-![order](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/demo/order.png)
+Links:  
+* [Logix Smart Nasopharyngeal Covid-19 Plating (Station A)](./313086)
+* [Logix Smart Nasopharyngeal/Saliva Covid-19 PCR Prep (Station C)](./313086-station-C)
 
-Deepwells A1 and B1 are left empty for controls to be added later on.
+This protocol performs PCR prep in a NEST 96-well PCR plate. Samples with buffer pre-added should be arranged in a NEST 96-deepwell, and mastermix and controls should be loaded in 1.5ml microcentrifuge tubes in the Opentrons 4x6 tuberack. The transfer order is as shown below:  
+![order](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/demo/order.png)
 
 ---
 
 ### Labware
-* [NEST 12-Well Reservoirs, 15 mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
 * [NEST 2 mL 96-Well Deep Well Plate, V Bottom](https://shop.opentrons.com/collections/verified-labware/products/nest-0-2-ml-96-well-deep-well-plate-v-bottom)
 * [Opentrons 24 tuberack](https://shop.opentrons.com/collections/verified-labware/products/tube-rack-set-1) with [NEST 1.5 mL Microcentrifuge Tubes](https://shop.opentrons.com/collections/verified-consumables/products/nest-microcentrifuge-tubes)
-* [Opentrons 300µl tipracks](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
-* [Opentrons 1000µl tipracks](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-1000ul-tips)
+* [NEST 0.1 mL 96-Well PCR Plate, Full Skirt](https://shop.opentrons.com/collections/verified-labware/products/nest-0-1-ml-96-well-pcr-plate-full-skirt)
+* [Opentrons 10µl tipracks](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
 
 To purchase tips, reagents, or pipettes, please visit our [online store](https://shop.opentrons.com/) or contact our sales team at [info@opentrons.com](mailto:info@opentrons.com)
 
 ### Pipettes
-* [P300 Single-channel electronic pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette)
-* [P1000 Single-channel electronic pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette)
+* [P10 Single-channel electronic pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette)
+* [P10 Multi-channel electronic pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)
 
 ### Reagents
 * [Logix Smart Nasopharyngeal Covid-19 Kit](https://codiagnostics.com/products/diagnostic-solutions/logix-smart-covid19/)
@@ -35,10 +35,11 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 ---
 
 ### Deck Setup
-* green: lysis/binding buffer (13ml per channel)
-* pink: elution buffer: (9ml per channel)
-* blue: starting samples  
-![deck setup](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/313086/deck_setup.png)
+* green: mastermix
+* pink: positive control
+* purple: negative control  
+* blue: starting samples
+![deck setup](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/313086-station-C/deck_setup2.png)
 
 ---
 
