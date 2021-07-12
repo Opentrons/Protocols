@@ -98,6 +98,12 @@
   },
   {
     "type": "float",
+    "label": "magnetic engage height (in mm)",
+    "name": "mag_height",
+    "default": 11.6
+  },
+  {
+    "type": "float",
     "label": "bead settling time (in minutes)",
     "name": "settling_time",
     "default": 2.0

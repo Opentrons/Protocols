@@ -87,12 +87,13 @@ lights"
 def run(ctx):
     [num_samples, deepwell_type, elution_type, res12_type, res1_type,
      magdeck_gen, p300_gen, starting_vol, binding_buffer_vol, wash1_vol,
-     wash2_vol, elution_vol, mix_reps, settling_time, park_tips, tip_track,
-     flash] = get_values(  # noqa: F821
+     wash2_vol, elution_vol, mix_reps, mag_height, settling_time, park_tips,
+     tip_track, flash] = get_values(  # noqa: F821
         'num_samples', 'deepwell_type', 'elution_type', 'res12_type',
         'res1_type', 'magdeck_gen', 'p300_gen', 'starting_vol',
         'binding_buffer_vol', 'wash1_vol', 'wash2_vol', 'elution_vol',
-        'mix_reps', 'settling_time', 'park_tips', 'tip_track', 'flash')
+        'mix_reps', 'mag_height', 'settling_time', 'park_tips', 'tip_track',
+        'flash')
 
     """
     Here is where you can change the locations of your labware and modules
