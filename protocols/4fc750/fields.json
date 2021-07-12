@@ -19,6 +19,7 @@
     "label": "96-well elution plate type",
     "name": "elution_type",
     "options": [
+      {"label": "USA Scientific", "value": "usascientific_96_wellplate_2.4ml_deep"},
       {"label": "Bio-Rad", "value": "biorad_96_wellplate_200ul_pcr"},
       {"label": "NEST", "value": "nest_96_wellplate_100ul_pcr_full_skirt"}
     ]
