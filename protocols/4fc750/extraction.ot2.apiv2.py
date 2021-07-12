@@ -418,10 +418,7 @@ before resuming.')
             m300.mix(10, 0.8*vol, loc)
             m300.blow_out(m.bottom(5))
             m300.air_gap(20)
-            if park:
-                m300.drop_tip(spot)
-            else:
-                _drop(m300)
+            _drop(m300)
 
         magdeck.engage()
         ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
@@ -429,10 +426,7 @@ before resuming.')
 
         for i, (m, e, spot) in enumerate(
                 zip(mag_samples_m, elution_samples_m, parking_spots)):
-            if park:
-                _pick_up(m300, spot)
-            else:
-                _pick_up(m300)
+            _pick_up(m300)
             side = -1 if i % 2 == 0 else 1
             loc = m.bottom(0.5).move(Point(x=side*2))
             m300.transfer(vol, loc, e.bottom(5), air_gap=20, new_tip='never')
