@@ -439,7 +439,8 @@ minutes.')
                 _pick_up(m300)
                 side = -1 if i % 2 == 0 else 1
                 loc = m.bottom(0.5).move(Point(x=side*2))
-                m300.transfer(vol, loc, e.bottom(5), air_gap=20, new_tip='never')
+                m300.transfer(vol, loc, e.bottom(5), air_gap=20,
+                              new_tip='never')
                 m300.blow_out(e.top(-2))
                 m300.air_gap(20)
                 m300.drop_tip()
