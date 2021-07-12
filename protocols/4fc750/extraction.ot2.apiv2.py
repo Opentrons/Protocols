@@ -87,13 +87,13 @@ lights"
 def run(ctx):
     [num_samples, deepwell_type, elution_type, res12_type, res1_type,
      magdeck_gen, p300_gen, starting_vol, binding_buffer_vol, wash1_vol,
-     wash2_vol, elution_vol, mix_reps, mag_height, settling_time,
+     wash2_vol, elution_vol, air_dry_time, mix_reps, mag_height, settling_time,
      elute_on_robot, park_tips, tip_track, flash] = get_values(  # noqa: F821
         'num_samples', 'deepwell_type', 'elution_type', 'res12_type',
         'res1_type', 'magdeck_gen', 'p300_gen', 'starting_vol',
         'binding_buffer_vol', 'wash1_vol', 'wash2_vol', 'elution_vol',
-        'mix_reps', 'mag_height', 'settling_time', 'elute_on_robot',
-        'park_tips', 'tip_track', 'flash')
+        'air_dry_time', 'mix_reps', 'mag_height', 'settling_time',
+        'elute_on_robot', 'park_tips', 'tip_track', 'flash')
 
     """
     Here is where you can change the locations of your labware and modules
@@ -321,7 +321,8 @@ before resuming.')
         # remove initial supernatant
         remove_supernatant(vol+starting_vol, park=park)
 
-    def wash(vol, source, mix_reps=15, park=True, resuspend=True):
+    def wash(vol, source, mix_reps=15, park=True, resuspend=True,
+             air_dry=False):
         """
         `wash` will perform bead washing for the extraction protocol.
         :param vol (float): The amount of volume to aspirate from each
@@ -374,6 +375,9 @@ before resuming.')
 ' + str(settling_time) + ' minutes.')
 
         remove_supernatant(vol, park=park)
+        if air_dry:
+            ctx.delay(minutes=air_dry_time, msg=f'Air drying {air_dry_time} \
+minutes.')
 
     def elute(vol, park=True):
         """
@@ -449,7 +453,7 @@ before resuming.')
     bind(binding_buffer_vol, park=park_tips)
     wash(wash1_vol, wash1, park=park_tips)
     wash(wash1_vol, wash2, park=park_tips)
-    wash(wash2_vol, wash3, park=park_tips)
+    wash(wash2_vol, wash3, park=park_tips, air_dry=True)
     elute(elution_vol, park=park_tips)
 
     # track final used tip
