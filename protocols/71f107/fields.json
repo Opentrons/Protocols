@@ -1,0 +1,38 @@
+[
+  {
+    "type": "float",
+    "label": "Location for End Dispenses on Reference Electrode Bars (mm from bar center)",
+    "name": "offset_end",
+    "default": 12
+  },
+  {
+    "type": "float",
+    "label": "Default Well Bottom Clearance for Dispense of Ag,AgCl to Reference Electrode Bars (mm)",
+    "name": "clearance_bar",
+    "default": 1
+  },
+  {
+    "type": "float",
+    "label": "Default Well Bottom Clearance for Aspiration from Reservoir (mm)",
+    "name": "clearance_reservoir",
+    "default": 2
+  },
+  {
+    "type": "float",
+    "label": "Default Well Bottom Clearance for Dispenses of PVC Membrane to Small Electrode Wells (mm)",
+    "name": "clearance_small_well",
+    "default": 1
+  },
+  {
+    "type": "float",
+    "label": "Default Well Bottom Clearance for Dispenses of PVC Membrane to Reference Electrode Bars (mm)",
+    "name": "clearance_bar_pvc",
+    "default": 1
+  },
+  {
+    "type": "float",
+    "label": "Default Well Bottom Clearance for Dispenses of Aqueous Conditioning Solution (mm)",
+    "name": "clearance_aqueous_conditioning",
+    "default": 1
+  }
+]

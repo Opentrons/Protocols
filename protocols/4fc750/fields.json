@@ -19,6 +19,7 @@
     "label": "96-well elution plate type",
     "name": "elution_type",
     "options": [
+      {"label": "USA Scientific", "value": "usascientific_96_wellplate_2.4ml_deep"},
       {"label": "Bio-Rad", "value": "biorad_96_wellplate_200ul_pcr"},
       {"label": "NEST", "value": "nest_96_wellplate_100ul_pcr_full_skirt"}
     ]
@@ -55,8 +56,8 @@
     "label": "P300 multi-channel pipette generation",
     "name": "p300_gen",
     "options": [
-      {"label": "GEN1", "value": "p300_multi_gen2"},
-      {"label": "GEN2", "value": "p300_multi"}
+      {"label": "GEN1", "value": "p300_multi"},
+      {"label": "GEN2", "value": "p300_multi_gen2"}
     ]
   },
   {
@@ -85,6 +86,12 @@
   },
   {
     "type": "float",
+    "label": "final wash air drying time (in minutes)",
+    "name": "air_dry_time",
+    "default": 8
+  },
+  {
+    "type": "float",
     "label": "final elution volume (in ul)",
     "name": "elution_vol",
     "default": 100.0
@@ -97,9 +104,24 @@
   },
   {
     "type": "float",
+    "label": "magnetic engage height (in mm)",
+    "name": "mag_height",
+    "default": 11.6
+  },
+  {
+    "type": "float",
     "label": "bead settling time (in minutes)",
     "name": "settling_time",
     "default": 2.0
+  },
+  {
+    "type": "dropDown",
+    "label": "perform elution on robot",
+    "name": "elute_on_robot",
+    "options": [
+      {"label": "yes", "value": true},
+      {"label": "no", "value": false}
+    ]
   },
   {
     "type": "dropDown",
