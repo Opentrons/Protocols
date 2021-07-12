@@ -86,6 +86,12 @@
   },
   {
     "type": "float",
+    "label": "final wash air drying time (in minutes)",
+    "name": "air_dry_time",
+    "default": 8
+  },
+  {
+    "type": "float",
     "label": "final elution volume (in ul)",
     "name": "elution_vol",
     "default": 100.0
