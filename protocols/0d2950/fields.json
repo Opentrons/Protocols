@@ -7,7 +7,7 @@
   },
   {
     "type": "int",
-    "label": "P1000 water tube aspiration height",
+    "label": "P1000 1.5mL tube aspiration height",
     "name": "p1000_water_height",
     "default": 2
   },
@@ -16,6 +16,18 @@
     "label": "P1000 sample tube aspiration height",
     "name": "p1000_sample_height",
     "default": 2
+  },
+  {
+    "type": "int",
+    "label": "50 mL Tubes Aspiration Height",
+    "name": "fiftymil_h_stop",
+    "default": 5
+  },
+  {
+    "type": "int",
+    "label": "Mag Bead Mix Speed",
+    "name": "mag_bead_mix_speed",
+    "default": 60
   },
   {
     "type": "dropDown",
