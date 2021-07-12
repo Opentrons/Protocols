@@ -110,6 +110,15 @@
   },
   {
     "type": "dropDown",
+    "label": "perform elution on robot",
+    "name": "elute_on_robot",
+    "options": [
+      {"label": "yes", "value": true},
+      {"label": "no", "value": false}
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "park tips",
     "name": "park_tips",
     "options": [
