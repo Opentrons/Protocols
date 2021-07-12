@@ -317,7 +317,7 @@ before resuming.')
 
         ctx.delay(minutes=3, msg='Incubating off MagDeck for 3 minutes.')
 
-        magdeck.engage()
+        magdeck.engage(mag_height)
         ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
 ' + str(settling_time) + ' minutes.')
 
@@ -370,7 +370,7 @@ before resuming.')
                 _drop(m300)
 
         if magdeck.status == 'disengaged':
-            magdeck.engage()
+            magdeck.engage(mag_height)
 
         ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
 ' + str(settling_time) + ' minutes.')
@@ -421,7 +421,7 @@ before resuming.')
             m300.air_gap(20)
             _drop(m300)
 
-        magdeck.engage()
+        magdeck.engage(mag_height)
         ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
 ' + str(settling_time) + ' minutes.')
 
