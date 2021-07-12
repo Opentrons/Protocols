@@ -14,9 +14,12 @@
 This protocol preps a sample plate with up to 95 samples (with one control) as well as the necessary ethanol, buffer, and elution solution blocks. Mag beads are added to the sample. The protocol pauses if more than 45 samples are run to allow the user to replace sample tube racks. The P1000 Single channel GEN2 pipette tracks liquid height in 50mL tubes to prevent overflowing from submersion.
 
 Explanation of complex parameters below:
-* `Number of Samples`: Specify the number of samples that will be processed. Up to 95 samples can be run, leaving room for a control.
-* `P1000 water tube aspiration height`: Specify the height (in mm) for the P1000 pipette to aspirate when visiting water tubes. Default is 1mm.
+* `Number of samples`: Specify the number of samples that will be processed. Up to 95 samples can be run, leaving room for a control.
+* `P1000 1.5mL tube aspiration height`: Specify the height (in mm) for the P1000 pipette to aspirate when visiting water, proK, or MS2 1.5mL tubes. Default is 1mm.
 * `P1000 sample tube aspiration height`: Specify the height (in mm) for the P1000 pipette to aspirate when visiting sample tubes. Default is 1mm.  
+* `50mL tube aspiration height`: Specify the height (in mm) for the P1000 pipette to aspirate from when visiting 50mL conical tubes. Default is 1mm.  
+* `MagBead mix speed`: Specify the speed (in ul/sec) to mix mag beads.
+* `P20 single GEN2 Mount`: Specify which mount (left or right) to load the P20 single channel pipette.
 * `P1000 single GEN2 Mount`: Specify which mount (left or right) to load the P1000 single channel pipette.
 ---
 ### Labware

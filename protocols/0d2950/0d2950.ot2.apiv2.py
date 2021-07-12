@@ -5,21 +5,24 @@ metadata = {
     'protocolName': 'Extraction Prep for TaqPath Covid-19 Combo Kit',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.7'
+    'apiLevel': '2.10'
 }
 
 
 def run(ctx):
 
     [num_samp, p1000_sample_height,
-     p1000_water_height, p20_mount, p1000_mount] = get_values(  # noqa: F821
-        "num_samp", "p1000_sample_height",
-        "p1000_water_height", "p20_mount", "p1000_mount")
+     p1000_water_height, fiftymil_h_stop, mag_bead_mix_speed,
+     p20_mount, p1000_mount] = get_values(  # noqa: F821
+        "num_samp", "p1000_sample_height", "p1000_water_height",
+        "fiftymil_h_stop", "mag_bead_mix_speed",
+        "p20_mount", "p1000_mount")
 
     if not 1 <= num_samp <= 95:
         raise Exception("Enter a sample number between 1-95")
 
     num_samp = num_samp+1
+    mix_rate = mag_bead_mix_speed/274.7
 
     # load labware
     samples = [ctx.load_labware('sample_15_tuberack_5000ul', slot)
@@ -100,8 +103,8 @@ def run(ctx):
         p1000.aspirate(500, buffer.bottom(z=h_track_buff))
         p1000.dispense(500, well)
         h_track_buff -= dh_buff if h_track_buff > 5 else 0
-        if h_track_buff < 5:
-            h_track_buff = 2.5
+        if h_track_buff < 20:
+            h_track_buff = fiftymil_h_stop
     p1000.drop_tip()
 
     # make ethanol plate
@@ -112,8 +115,8 @@ def run(ctx):
         p1000.dispense(1000, well)
         if i % 2 == 0:
             h_track_eth -= dh_eth if h_track_eth > 5 else 0
-        if h_track_eth < 5:
-            h_track_eth = 2.5
+        if h_track_eth < 20:
+            h_track_eth = fiftymil_h_stop
     p1000.drop_tip()
 
     # make elution buffer plate
@@ -123,10 +126,9 @@ def run(ctx):
     chunks = [elution_map[i:i+12] for i in range(0, len(elution_map), 12)]
 
     for chunk in chunks:
-        p1000.aspirate(50*len(chunk), elution_solution)
+        p1000.aspirate(50*len(chunk), elution_solution.bottom(fiftymil_h_stop))
         for well in chunk:
             p1000.dispense(50, well)
-            # ctx.delay(seconds=1.5)
     ctx.comment('\n\n')
     p1000.dispense(floor, elution_solution)
     p1000.blow_out()
@@ -136,7 +138,7 @@ def run(ctx):
     p20.flow_rate.dispense = 3.78
     for well in sample_map:
         pick_up20()
-        p20.aspirate(5, proK)
+        p20.aspirate(5, proK.bottom(z=p1000_water_height))
         p20.dispense(5, well)
         p20.blow_out()
         p20.touch_tip()
@@ -150,7 +152,6 @@ def run(ctx):
                        sample_tube_map[samp_ctr].bottom(z=p1000_sample_height))
         p1000.dispense(200, well)
         p1000.blow_out()
-        p1000.touch_tip()
         p1000.drop_tip()
         samp_ctr += 1
         if samp_ctr == 45:
@@ -160,24 +161,24 @@ def run(ctx):
     # add control
     ctx.comment('Adding control')
     pick_up1000()
-    p1000.aspirate(200, water)
-    p1000.dispense(200, sample_map[samp_ctr].bottom(z=p1000_water_height))
+    p1000.aspirate(200, water.bottom(z=p1000_water_height))
+    p1000.dispense(200, sample_map[samp_ctr])
     p1000.drop_tip()
 
     # add mag beads
-    p1000.flow_rate.aspirate = 91
-    p1000.flow_rate.dispense = 91
     pick_up1000()
-    p1000.mix(15, 750, mag_beads.bottom(z=2))
+    p1000.mix(15, 750, mag_beads.bottom(z=fiftymil_h_stop), rate=mix_rate)
     for well in sample_map:
-        p1000.aspirate(275, mag_beads)
+        if not p1000.has_tip:
+            pick_up1000()
+        p1000.aspirate(275, mag_beads.bottom(z=fiftymil_h_stop))
         p1000.dispense(275, well.top())
-    p1000.drop_tip()
+        p1000.drop_tip()
 
     # add ms2
-    pick_up20()
     for well in sample_map:
-        p20.aspirate(5, ms2)
-        p20.dispense(5, well.top())
+        pick_up20()
+        p20.aspirate(5, ms2.bottom(z=p1000_water_height))
+        p20.dispense(5, well)
         p20.blow_out()
-    p20.drop_tip()
+        p20.drop_tip()
