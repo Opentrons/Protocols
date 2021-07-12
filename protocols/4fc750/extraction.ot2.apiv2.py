@@ -107,18 +107,10 @@ def run(ctx):
     elutionplate = ctx.load_labware(deepwell_type, '4', 'elution plate')
     tips300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot,
                                 '200µl filtertiprack')
-               for slot in ['6', '7', '8', '9', '10']]
+               for slot in ['5', '6', '7', '8', '9', '10']]
     waste_res = ctx.load_labware(res1_type, '11', 'Liquid Waste')
     waste = waste_res.wells()[0].top()
     num_cols = math.ceil(num_samples/8)
-    if park_tips:
-        parkingrack = ctx.load_labware(
-            'opentrons_96_tiprack_300ul', '5', 'tiprack for parking')
-        parking_spots = parkingrack.rows()[0][:num_cols]
-    else:
-        tips300.insert(0, ctx.load_labware('opentrons_96_tiprack_300ul', '5',
-                                           '200µl filtertiprack'))
-        parking_spots = [None for none in range(12)]
 
     # load P300M pipette
     m300 = ctx.load_instrument(p300_gen, 'left', tip_racks=tips300)
@@ -160,6 +152,13 @@ def run(ctx):
     tip_log['tips'] = {
         m300: [tip for rack in tips300 for tip in rack.rows()[0]]}
     tip_log['max'] = {m300: len(tip_log['tips'][m300])}
+
+    parking_spots = []
+
+    def _update_parking_spots(pip):
+        nonlocal parking_spots
+        count = tip_log['count'][pip]
+        parking_spots = tip_log['tips'][m300][count:count+num_cols]
 
     def _pick_up(pip, loc=None):
         nonlocal tip_log
@@ -268,11 +267,9 @@ before resuming.')
                                supernatant to the final clean elutions PCR
                                plate.
         """
+        _update_parking_spots(m300)
         for i, (well, spot) in enumerate(zip(mag_samples_m, parking_spots)):
-            if park:
-                _pick_up(m300, spot)
-            else:
-                _pick_up(m300)
+            _pick_up(m300)
             num_trans = math.ceil(vol/200)
             vol_per_trans = vol/num_trans
             asp_per_chan = (0.95*res1.wells()[0].max_volume)//(vol_per_trans*8)
@@ -346,6 +343,7 @@ before resuming.')
         if resuspend and magdeck.status == 'engaged':
             magdeck.disengage()
 
+        _update_parking_spots(m300)
         num_trans = math.ceil(vol/200)
         vol_per_trans = vol/num_trans
         for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
@@ -393,6 +391,8 @@ before resuming.')
         # resuspend beads in elution
         if magdeck.status == 'enagaged':
             magdeck.disengage()
+
+        _update_parking_spots(m300)
         for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
             _pick_up(m300)
             side = 1 if i % 2 == 0 else -1
