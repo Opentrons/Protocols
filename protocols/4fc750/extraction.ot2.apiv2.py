@@ -87,13 +87,13 @@ lights"
 def run(ctx):
     [num_samples, deepwell_type, elution_type, res12_type, res1_type,
      magdeck_gen, p300_gen, starting_vol, binding_buffer_vol, wash1_vol,
-     wash2_vol, elution_vol, mix_reps, mag_height, settling_time, park_tips,
-     tip_track, flash] = get_values(  # noqa: F821
+     wash2_vol, elution_vol, mix_reps, mag_height, settling_time,
+     elute_on_robot, park_tips, tip_track, flash] = get_values(  # noqa: F821
         'num_samples', 'deepwell_type', 'elution_type', 'res12_type',
         'res1_type', 'magdeck_gen', 'p300_gen', 'starting_vol',
         'binding_buffer_vol', 'wash1_vol', 'wash2_vol', 'elution_vol',
-        'mix_reps', 'mag_height', 'settling_time', 'park_tips', 'tip_track',
-        'flash')
+        'mix_reps', 'mag_height', 'settling_time', 'elute_on_robot',
+        'park_tips', 'tip_track', 'flash')
 
     """
     Here is where you can change the locations of your labware and modules
@@ -408,6 +408,8 @@ before resuming.')
             else:
                 _drop(m300)
 
+        ctx.delay(minutes=3, msg='Incubate at RT/65°C for 3 mins.')
+
         # agitate after resuspension
         for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
             if park:
@@ -416,24 +418,29 @@ before resuming.')
                 _pick_up(m300)
             side = 1 if i % 2 == 0 else -1
             loc = m.bottom(0.5).move(Point(x=side*2))
-            m300.mix(10, 0.8*vol, loc)
+            m300.mix(mix_reps, 0.8*vol, loc)
             m300.blow_out(m.bottom(5))
             m300.air_gap(20)
             _drop(m300)
 
-        magdeck.engage(mag_height)
-        ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
+        ctx.delay(minutes=3, msg='Incubate at RT/65°C for 3 mins.')
+
+        if elute_on_robot:
+            magdeck.engage(mag_height)
+            ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
 ' + str(settling_time) + ' minutes.')
 
-        for i, (m, e, spot) in enumerate(
-                zip(mag_samples_m, elution_samples_m, parking_spots)):
-            _pick_up(m300)
-            side = -1 if i % 2 == 0 else 1
-            loc = m.bottom(0.5).move(Point(x=side*2))
-            m300.transfer(vol, loc, e.bottom(5), air_gap=20, new_tip='never')
-            m300.blow_out(e.top(-2))
-            m300.air_gap(20)
-            m300.drop_tip()
+            for i, (m, e, spot) in enumerate(
+                    zip(mag_samples_m, elution_samples_m, parking_spots)):
+                _pick_up(m300)
+                side = -1 if i % 2 == 0 else 1
+                loc = m.bottom(0.5).move(Point(x=side*2))
+                m300.transfer(vol, loc, e.bottom(5), air_gap=20, new_tip='never')
+                m300.blow_out(e.top(-2))
+                m300.air_gap(20)
+                m300.drop_tip()
+        else:
+            ctx.comment('Manually transfer DNA to 1.5ml eppendrof tubes.')
 
     """
     Here is where you can call the methods defined above to fit your specific
