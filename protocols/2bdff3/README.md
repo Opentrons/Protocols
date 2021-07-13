@@ -35,7 +35,7 @@ For more detailed information on compatible labware, please visit our [Labware L
 
 ![Deck Layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2bdff3/2bdff3_new_layout.png)
 
-**Note: Slots 9, 10, 11 contain empty tip racks for the 20 uL tips.**
+**Note: Slots 9, 10, 11 contain empty tip racks for the Opentrons 20 uL tips.**
 
 **Protocol Steps**
 
