@@ -32,8 +32,10 @@ For more detailed information on compatible labware, please visit our [Labware L
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
 **Deck Setup**
-![Deck Layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2bdff3/2bdff3-layout.png)
 
+![Deck Layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2bdff3/2bdff3_new_layout.png)
+
+**Note: Slots 9, 10, 11 contain empty tip racks for the 20 uL tips.**
 
 **Protocol Steps**
 
