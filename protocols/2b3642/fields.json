@@ -40,5 +40,35 @@
         "label": "Final Extension Cycles",
         "name": "final_extension_cycles",
         "default": 1
+      },
+      {
+        "type": "float",
+        "label": "AMPure XP Beads Volume (uL, Part III)",
+        "name": "beads_vol_1",
+        "default": 41
+      },
+      {
+        "type": "float",
+        "label": "Elution Buffer Volume (uL, Part III)",
+        "name": "elution_buff_vol",
+        "default": 17
+      },
+      {
+        "type": "float",
+        "label": "Reaction Mixture Transfer Volume (uL, Part III: Step 18)",
+        "name": "rxn_mix_vol_p3",
+        "default": 15
+      },
+      {
+        "type": "float",
+        "label": "AMPure XP Beads Volume (uL, Part V)",
+        "name": "beads_vol_2",
+        "default": 41
+      },
+      {
+        "type": "float",
+        "label": "Part V Resuspension Volume (uL, Part V)",
+        "name": "p5_mix_vol",
+        "default": 20
       }
 ]
