@@ -27,7 +27,13 @@
     "type": "int",
     "label": "Mag Bead Mix Speed",
     "name": "mag_bead_mix_speed",
-    "default": 60
+    "default": 91
+  },
+  {
+    "type": "int",
+    "label": "P1000 aspiration/dispense speed for mag bead transfer",
+    "name": "p1000_mag_flow_rate",
+    "default": 133
   },
   {
     "type": "dropDown",

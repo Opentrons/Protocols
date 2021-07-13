@@ -19,6 +19,7 @@ Explanation of complex parameters below:
 * `P1000 sample tube aspiration height`: Specify the height (in mm) for the P1000 pipette to aspirate when visiting sample tubes. Default is 1mm.  
 * `50mL tube aspiration height`: Specify the height (in mm) for the P1000 pipette to aspirate from when visiting 50mL conical tubes. Default is 1mm.  
 * `MagBead mix speed`: Specify the speed (in ul/sec) to mix mag beads.
+`P1000 aspiration/dispense speed for mag bead transfer`: Specify the aspiration/dispense speed for mag bead transfer of the p1000 pipette. 
 * `P20 single GEN2 Mount`: Specify which mount (left or right) to load the P20 single channel pipette.
 * `P1000 single GEN2 Mount`: Specify which mount (left or right) to load the P1000 single channel pipette.
 ---
