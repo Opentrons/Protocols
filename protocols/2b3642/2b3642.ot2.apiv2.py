@@ -1,8 +1,3 @@
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"samples":24,"m300_mount":"left","p20_mount":"right","initial_denaturation_cycles":1,"denat_anneal_cycles":6,"final_extension_cycles":1,"beads_vol_1":41,"elution_buff_vol":17,"rxn_mix_vol_p3":15,"beads_vol_2":40,"p5_mix_vol":20}""")
-    return [_all_values[n] for n in names]
-
 from opentrons import types
 import json
 import os
@@ -20,9 +15,12 @@ metadata = {
 def run(ctx):
 
     [samples, m300_mount, p20_mount, initial_denaturation_cycles,
-     denat_anneal_cycles, final_extension_cycles, beads_vol_1, elution_buff_vol, rxn_mix_vol_p3, beads_vol_2, p5_mix_vol] = get_values(  # noqa: F821
+     denat_anneal_cycles, final_extension_cycles, beads_vol_1,
+     elution_buff_vol, rxn_mix_vol_p3, beads_vol_2,
+     p5_mix_vol] = get_values(  # noqa: F821
         "samples", "m300_mount", "p20_mount", "initial_denaturation_cycles",
-        "denat_anneal_cycles", "final_extension_cycles", "beads_vol_1", "elution_buff_vol", "rxn_mix_vol_p3", "beads_vol_2", "p5_mix_vol")
+        "denat_anneal_cycles", "final_extension_cycles", "beads_vol_1",
+        "elution_buff_vol", "rxn_mix_vol_p3", "beads_vol_2", "p5_mix_vol")
 
     if samples < 1 or samples > 24:
         raise Exception('Invalid number of DNA samples (must be 1-24).')
@@ -62,6 +60,8 @@ def run(ctx):
     trash = ctx.loaded_labwares[12]['A1']
     frag_dna_wells = pcr_block.wells()[:cols*8]
     frag_dna_cols = pcr_block.rows()[0][:cols]
+    sides = [-1, 1] * (cols)
+    sides = sides[:cols]
 
     # Helper Functions
     tip_track = True
@@ -316,9 +316,9 @@ resuming.')
     ctx.delay(minutes=5, msg='Waiting 5 minutes for beads to pellet.')
 
     # Remove Supernatant (8, 9)
-    for col in mag_plate_cols:
+    for col, side in zip(mag_plate_cols, sides):
         _pick_up(m300)
-        remove_supernatant(100, col, trash, -1)
+        remove_supernatant(100, col, trash, side)
         m300.drop_tip()
 
     # Ethanol Wash (10-13)
@@ -332,9 +332,9 @@ resuming.')
         ctx.delay(seconds=30, msg='''Incubating reaction mixture for
                   30 seconds at room temperature''')
 
-        for col in mag_plate_cols:
+        for col, side in zip(mag_plate_cols, sides):
             _pick_up(m300)
-            remove_supernatant(100, col, trash, -1)
+            remove_supernatant(100, col, trash, side)
             m300.drop_tip()
 
     mag_mod.disengage()
@@ -346,7 +346,8 @@ resuming.')
     ctx.comment('Adding Elution Buffer to Samples!')
     _pick_up(m300)
     for col in mag_plate_cols:
-        m300.transfer(elution_buff_vol, elution_buff, col.top(), new_tip='never')
+        m300.transfer(elution_buff_vol, elution_buff, col.top(),
+                      new_tip='never')
     m300.drop_tip()
 
     # Resuspend Reaction Mixture (17)
@@ -372,9 +373,9 @@ resuming.')
     pcr_tube_wells = pcr_block.wells()[:cols*8]
 
     # Transfer Reaction Mixure to PCR Tubes
-    for src, dest in zip(mag_plate_cols, pcr_tube_cols):
+    for src, dest, side in zip(mag_plate_cols, pcr_tube_cols, sides):
         _pick_up(m300)
-        remove_supernatant(rxn_mix_vol_p3, src, dest, -1)
+        remove_supernatant(rxn_mix_vol_p3, src, dest, side)
         m300.drop_tip()
 
     mag_mod.disengage()
@@ -384,25 +385,15 @@ resuming.')
     ctx.comment('Starting PCR Amplification!')
     ctx.pause('''Place the proper reagents in the temperature module.
     NEBNext Ultra II Q5 Master Mix in A1.
-    UDI Primers in B1. Add new PCR tubes starting in A10 in slot 2,
-    corresponding to the total number of samples.''')
+    UDI Primers in B1.''')
 
     # Reagent Components
-    rxn_mixture_cols = pcr_block.rows()[0][9:9+cols]
-    rxn_mixture_wells = pcr_block.wells()[72:72+cols*8]
     q5_mm = temp_block['A1']
     udi_primers = temp_block['B1']
 
     # Add Components to new PCR Tubes (1)
-    # Transfer Adapter-Ligated DNA
-    ctx.comment('Transferring 7.5 uL of Adapter-Ligated DNA to new PCR tubes')
-    for src, dest in zip(pcr_tube_wells, rxn_mixture_wells):
-        _pick_up(p20)
-        p20.transfer(7.5, src, dest, new_tip='never')
-        p20.drop_tip()
-
     # Transfer Master Mix and Primers
-    for well in rxn_mixture_wells:
+    for well in pcr_tube_wells:
         _pick_up(p20)
         p20.transfer(12.5, q5_mm, well, new_tip='never')
         p20.drop_tip()
@@ -414,7 +405,7 @@ resuming.')
     ctx.pause('''Remove reagents from the temperature module.''')
 
     # Resuspend reaction mixture 10x, 20 uL (2, 3)
-    for col in rxn_mixture_cols:
+    for col in pcr_tube_cols:
         _pick_up(m300)
         m300.mix(10, 20, col)
         m300.drop_tip()
@@ -426,7 +417,7 @@ resuming.')
               transferring reaction mixture to the thermocycler.''')
 
     # Transfer Reaction Mixture to Thermocycler (5)
-    for src, dest in zip(rxn_mixture_cols, tc_sample_cols):
+    for src, dest in zip(pcr_tube_cols, tc_sample_cols):
         _pick_up(m300)
         m300.transfer(22.5, src, dest, new_tip='never')
         m300.drop_tip()
@@ -489,9 +480,9 @@ resuming.')
     ctx.delay(minutes=5, msg='Engaging magnets for 5 minutes.')
 
     # Remove Supernatant (5, 6)
-    for col in mag_plate_cols:
+    for col, side in zip(mag_plate_cols, sides):
         _pick_up(m300)
-        remove_supernatant(65, col, trash, -1)
+        remove_supernatant(65, col, trash, side)
         m300.drop_tip()
 
     # Ethanol Wash with Delays (7-10)
@@ -505,9 +496,9 @@ resuming.')
         ctx.delay(seconds=30, msg='''Incubating reaction mixture for
                   30 seconds at room temperature''')
 
-        for col in mag_plate_cols:
+        for col, side in zip(mag_plate_cols, sides):
             _pick_up(m300)
-            remove_supernatant(100, col, trash, -1)
+            remove_supernatant(100, col, trash, side)
             m300.drop_tip()
 
     mag_mod.disengage()
@@ -541,7 +532,7 @@ resuming.')
     ctx.delay(minutes=5, msg='Engaging Magnetic Module for 5 minutes.')
 
     # Transfer supernatant to new PCR tubes (18)
-    for src, dest in zip(mag_plate_cols, pcr_tube_cols):
+    for src, dest, side in zip(mag_plate_cols, pcr_tube_cols, sides):
         _pick_up(m300)
-        remove_supernatant(30, src, dest, -1)
+        remove_supernatant(30, src, dest, side)
         m300.drop_tip()
