@@ -44,7 +44,7 @@ Explanation of complex parameters below:
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2b3642/2b3642_deck_layout.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2b3642/2b3642_new_layout.png)
 **Note:** The deck layout shown in the image above will change throughout the protocol as labware is moved around. The image above represents the starting layout of the protocol. Please refer to the protocol steps below for more detailed instructions.
 
 ### Reagent Setup
