@@ -13,9 +13,9 @@ def run(ctx):
 
     [num_samp, p1000_sample_height,
      p1000_water_height, fiftymil_h_stop, mag_bead_mix_speed,
-     p20_mount, p1000_mount] = get_values(  # noqa: F821
+     p1000_mag_flow_rate, p20_mount, p1000_mount] = get_values(  # noqa: F821
         "num_samp", "p1000_sample_height", "p1000_water_height",
-        "fiftymil_h_stop", "mag_bead_mix_speed",
+        "fiftymil_h_stop", "mag_bead_mix_speed", "p1000_mag_flow_rate",
         "p20_mount", "p1000_mount")
 
     if not 1 <= num_samp <= 95:
@@ -91,8 +91,10 @@ def run(ctx):
     rad = 14
     v0_eth = 1000*num_samp/2 if num_samp > 49 else num_samp*1000
     v0_buf = 500*num_samp
-    h0_eth = v0_eth/(math.pi*rad**2) if v0_eth/(math.pi*rad**2) > 44 else 0
-    h0_buff = v0_buf/(math.pi*rad**2)-15 if v0_buf/(math.pi*rad**2) > 44 else 0
+    h0_eth = v0_eth/(math.pi*rad**2) if v0_eth/(math.pi*rad**2) > 44 \
+        else fiftymil_h_stop
+    h0_buff = v0_buf/(math.pi*rad**2)-15 if v0_buf/(math.pi*rad**2) > 44 \
+        else fiftymil_h_stop
     dh_eth = 1000/(math.pi*rad**2)*1.2
     dh_buff = 0.5*dh_eth*1.2
 
@@ -100,6 +102,7 @@ def run(ctx):
     pick_up1000()
     h_track_buff = h0_buff*0.85
     for well in buffer_map:
+        print(h_track_buff)
         p1000.aspirate(500, buffer.bottom(z=h_track_buff))
         p1000.dispense(500, well)
         h_track_buff -= dh_buff if h_track_buff > 5 else 0
@@ -111,6 +114,7 @@ def run(ctx):
     h_track_eth = h0_eth*0.85
     pick_up1000()
     for i, (tube, well) in enumerate(zip(ethanol*num_samp, ethanol_map)):
+        print(h_track_eth)
         p1000.aspirate(1000, tube.bottom(z=h_track_eth))
         p1000.dispense(1000, well)
         if i % 2 == 0:
@@ -168,9 +172,11 @@ def run(ctx):
     # add mag beads
     pick_up1000()
     p1000.mix(15, 750, mag_beads.bottom(z=fiftymil_h_stop), rate=mix_rate)
+    p1000.drop_tip()
+    p1000.flow_rate.aspirate = p1000_mag_flow_rate
+    p1000.flow_rate.dispense = p1000_mag_flow_rate
     for well in sample_map:
-        if not p1000.has_tip:
-            pick_up1000()
+        pick_up1000()
         p1000.aspirate(275, mag_beads.bottom(z=fiftymil_h_stop))
         p1000.dispense(275, well.top())
         p1000.drop_tip()
