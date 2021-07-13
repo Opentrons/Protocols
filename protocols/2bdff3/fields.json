@@ -104,5 +104,23 @@
       "label": "Dispensing Speed (uL/second)",
       "name": "disp_speed",
       "default": 3
+    },
+    {
+      "type": "float",
+      "label": "Delay Height after Dispensing (Stage 1, mm)",
+      "name": "height_after_disp",
+      "default": 0.5
+    },
+    {
+      "type": "float",
+      "label": "Aspirate Flow Rate for Mixing (Stage 2, mm)",
+      "name": "stage2_asp_speed",
+      "default": 46
+    },
+    {
+      "type": "float",
+      "label": "Aspirate Flow Rate for Mixing (Stage 2, mm)",
+      "name": "stage2_disp_speed",
+      "default": 46
     }
 ]

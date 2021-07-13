@@ -12,12 +12,14 @@ def run(ctx):
         quad4_exclude_cols, m20_mount,
         p300_mount, donor_384_type, trans_vol1,
         step1_mix_vol, pre_asp_air, delay_after_asp, delay_after_disp,
-        disp_speed] = get_values(  # noqa: F821
+        disp_speed, height_after_disp, stage2_asp_speed,
+        stage2_disp_speed] = get_values(  # noqa: F821
         "step1", "step2", "quad1_exclude_cols", "quad2_exclude_cols",
         "quad3_exclude_cols",
         "quad4_exclude_cols", "m20_mount", "p300_mount", "donor_384_type",
         "trans_vol1", "step1_mix_vol", "pre_asp_air", "delay_after_asp",
-        "delay_after_disp", "disp_speed")
+        "delay_after_disp", "disp_speed", "height_after_disp",
+        "stage2_asp_speed", "stage2_disp_speed")
 
     # Load Labware
     donor_384_plate = ctx.load_labware(donor_384_type, 1)
@@ -29,6 +31,8 @@ def run(ctx):
                      for slot in [8]]
     tuberack = ctx.load_labware(
             'opentrons_24_aluminumblock_nest_1.5ml_snapcap', 3)['A1']
+    empty_racks = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
+                   for slot in [9, 10, 11]]
 
     # Load Pipettes
     m20 = ctx.load_instrument('p20_multi_gen2', m20_mount,
@@ -54,6 +58,31 @@ def run(ctx):
                           not in quad_exclude_cols]
             return quad_dests
 
+    empty_racks_wells = [row for rack in empty_racks for row in rack.rows()[0]]
+
+    def drop_loc(pip):
+        nonlocal empty_racks_wells
+        if len(empty_racks_wells) == 0:
+            ctx.pause('''Discard tips in the empty tip racks and return the racks to the
+                      OT-2.''')
+            empty_racks_wells = [row for rack in empty_racks
+                                 for row in rack.rows()[0]]
+        empty_slot = empty_racks_wells[0]
+        empty_racks_wells.pop(0)
+        return empty_slot
+
+    def change_flow_rates(pip, asp_speed, disp_speed):
+        pip.flow_rate.aspirate = asp_speed
+        pip.flow_rate.dispense = disp_speed
+
+    def reset_flow_rates(pip):
+        if pip.name == 'p20_multi_gen2':
+            pip.flow_rate.aspirate = 7.6
+            pip.flow_rate.dispense = 7.6
+        else:
+            pip.flow_rate.aspirate = 92.86
+            pip.flow_rate.dispense = 92.86
+
     # Get wells by quadrant
     quad1 = [col for col in donor_384_plate.rows()[0][::2]]
     quad2 = [col for col in donor_384_plate.rows()[0][1::2]]
@@ -75,17 +104,18 @@ def run(ctx):
                 preWet(m20, trans_vol1, col)
                 ctx.comment('Mixing before transfer to recepient plate.')
                 m20.mix(3, step1_mix_vol, col)
-                ctx.comment('Pre-Aspirating a 5 uL Air Gap.')
-                m20.aspirate(pre_asp_air, col.top())
+                # ctx.comment('Pre-Aspirating a 5 uL Air Gap.')
+                # m20.aspirate(pre_asp_air, col.top())
                 ctx.comment('Starting transfer to recipient plate.')
                 m20.aspirate(trans_vol1, col)
                 ctx.delay(seconds=delay_after_asp, msg=f'''{delay_after_asp}
                           second delay after aspirating.''')
                 m20.dispense(trans_vol1, recipient_96_plate['A1'])
+                m20.move_to(recipient_96_plate['A1'].bottom(height_after_disp))
                 ctx.delay(seconds=delay_after_disp, msg=f'''{delay_after_disp}
                           second delay after dispensing.''')
                 m20.air_gap(10)
-                m20.drop_tip()
+                m20.drop_tip(drop_loc(m20))
 
     # Step 2
     if step2 == "True":
@@ -96,7 +126,9 @@ def run(ctx):
 
         for source in source_wells:
             p300.pick_up_tip()
+            change_flow_rates(p300, stage2_asp_speed, stage2_disp_speed)
             p300.transfer(max_well_vol, source, tuberack, new_tip='never',
                           mix_before=(3, max_well_vol/2))
+            reset_flow_rates(p300)
             p300.air_gap(20)
             p300.drop_tip()
