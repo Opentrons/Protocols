@@ -102,7 +102,6 @@ def run(ctx):
     pick_up1000()
     h_track_buff = h0_buff*0.85
     for well in buffer_map:
-        print(h_track_buff)
         p1000.aspirate(500, buffer.bottom(z=h_track_buff))
         p1000.dispense(500, well)
         h_track_buff -= dh_buff if h_track_buff > 5 else 0
@@ -114,7 +113,6 @@ def run(ctx):
     h_track_eth = h0_eth*0.85
     pick_up1000()
     for i, (tube, well) in enumerate(zip(ethanol*num_samp, ethanol_map)):
-        print(h_track_eth)
         p1000.aspirate(1000, tube.bottom(z=h_track_eth))
         p1000.dispense(1000, well)
         if i % 2 == 0:
