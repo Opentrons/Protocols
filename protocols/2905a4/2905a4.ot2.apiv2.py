@@ -73,8 +73,10 @@ def run(ctx):
              for n in range(96)]
 
     # Helper Functions
-    def getWellSide(well, plate):
+    def getWellSide(well, plate, custom_sides=None):
         index = plate.wells().index(well)
+        if custom_sides:
+            return custom_sides[index]
         return sides[index]
 
     def pick_up(pip, loc=None):
@@ -178,7 +180,7 @@ def run(ctx):
         p300.flow_rate.dispense = 300
         p300.aspirate(120, src.bottom(0.3))
         p300.dispense(120, dest.bottom(1))
-        p300.mix(10, 80, dest.bottom(1).move(types.Point(x=getWellSide(dest,
+        p300.mix(10, 80, dest.bottom(1).move(types.Point(x=-1*getWellSide(dest,
                  mag_plate))))
         p300.touch_tip()
         p300.blow_out()
@@ -189,10 +191,11 @@ def run(ctx):
     pick_up(p300, available_tips[0])
     for dest in mag_plate_wells:
         p300.flow_rate.dispense = 300
-        p300.aspirate(180, rbb.bottom(5))
-        p300.air_gap(20)
-        p300.dispense(200, dest.bottom(15))
-        p300.blow_out()
+        for _ in range(2):
+            p300.aspirate(100, rbb.bottom(5))
+            p300.air_gap(20)
+            p300.dispense(120, dest.bottom(15))
+            p300.blow_out()
     p300.drop_tip()
     available_tips.pop(0)
     reset_flow_rates()
@@ -238,9 +241,11 @@ def run(ctx):
     for i, dest in enumerate(mag_plate_wells):
         p300.flow_rate.dispense = 300
         pick_up(p300, dedicated_tips[i])
-        mix_loc = dest.bottom(1).move(Point(x=2))
+        mix_loc = dest.bottom(1).move(Point(x=-1*getWellSide(dest,
+                                            mag_plate)))
         p300.mix(7, 150, mix_loc)
-        p300.blow_out()
+        for _ in range(2):
+            p300.blow_out()
         p300.return_tip()
     reset_flow_rates()
 
@@ -272,7 +277,8 @@ def run(ctx):
         p300.flow_rate.dispense = 300
         p300.aspirate(50, rfw.bottom(60))
         p300.dispense(50, dest.bottom(1.5))
-        mix_loc = dest.bottom(1).move(Point(x=2))
+        mix_loc = dest.bottom(1).move(Point(x=-1*getWellSide(dest,
+                                            mag_plate)))
         p300.mix(7, 40, mix_loc)
         p300.blow_out()
         p300.return_tip()
@@ -287,7 +293,7 @@ def run(ctx):
     ctx.delay(minutes=2)
 
     # Cool Temp Mod to 4C (28)
-    temp_mod.set_temperature(4)
+    temp_mod.start_set_temperature(4)
 
     # Setup Second Set of Dedicated Tips
     dedicated_tips_set2 = dict(zip(range(samples), available_tips[:samples]))
@@ -314,10 +320,13 @@ def run(ctx):
     available_tips.pop(0)
 
     # Mixing Beads with Second Elution Buffer (32)
+    mix_sides = [-0.75 + (((n // 8) % 2) * 0.75*2)
+                 for n in range(96)]
     for i, dest in enumerate(mag_plate_wells):
         p300.flow_rate.dispense = 300
         pick_up(p300, dedicated_tips[i])
-        mix_loc = dest.bottom(1.5).move(Point(x=0.75))
+        mix_loc = dest.bottom(1.5).move(Point(x=-1*getWellSide(dest, mag_plate,
+                                        mix_sides)))
         p300.mix(7, 40, mix_loc)
         p300.touch_tip()
         p300.blow_out()
@@ -333,6 +342,7 @@ def run(ctx):
     ctx.delay(minutes=2, msg='Extracting beads')
 
     # Second Elution to Recipient Plate (36)
+    temp_mod.await_temperature(4)
     for i, (src, dest) in enumerate(zip(mag_plate_wells, temp_plate_wells)):
         pick_up(p300, dedicated_tips_set2[i])
         remove_supernatant(55, src, dest, getWellSide(src, mag_plate),
