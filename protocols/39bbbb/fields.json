@@ -11,7 +11,7 @@
     "name": "labware_tube_rack",
     "options": [
       { "label": "Opentrons 24 Tube Rack with 1.5 mL Eppendorf Tubes", "value": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap" },
-      { "label": "Opentrons 24 Tube Rack with 2.0 mL Eppendorf Tubes", "value": opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap }
+      { "label": "Opentrons 24 Tube Rack with 2.0 mL Eppendorf Tubes", "value": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap" }
     ]
   },
   {
