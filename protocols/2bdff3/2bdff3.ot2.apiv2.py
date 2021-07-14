@@ -83,6 +83,18 @@ def run(ctx):
             pip.flow_rate.aspirate = 92.86
             pip.flow_rate.dispense = 92.86
 
+    def slow_tip_withdrawal(current_pipette, well_location, to_center=False):
+        if current_pipette.mount == 'right':
+            axis = 'A'
+        else:
+            axis = 'Z'
+        ctx.max_speeds[axis] = 10
+        if to_center is False:
+            current_pipette.move_to(well_location.top())
+        else:
+            current_pipette.move_to(well_location.center())
+        ctx.max_speeds[axis] = None
+
     # Get wells by quadrant
     quad1 = [col for col in donor_384_plate.rows()[0][::2]]
     quad2 = [col for col in donor_384_plate.rows()[0][1::2]]
@@ -108,27 +120,40 @@ def run(ctx):
                 # m20.aspirate(pre_asp_air, col.top())
                 ctx.comment('Starting transfer to recipient plate.')
                 m20.aspirate(trans_vol1, col)
+                slow_tip_withdrawal(m20, col)
                 ctx.delay(seconds=delay_after_asp, msg=f'''{delay_after_asp}
                           second delay after aspirating.''')
                 m20.dispense(trans_vol1, recipient_96_plate['A1'])
                 m20.move_to(recipient_96_plate['A1'].bottom(height_after_disp))
                 ctx.delay(seconds=delay_after_disp, msg=f'''{delay_after_disp}
                           second delay after dispensing.''')
+                slow_tip_withdrawal(m20, recipient_96_plate['A1'])
                 m20.air_gap(10)
                 m20.drop_tip(drop_loc(m20))
 
     # Step 2
     if step2 == "True":
         # Calculate max volume per well
-        max_well_vol = (len(quad1_dests) + len(quad2_dests) +
-                        len(quad3_dests) + len(quad4_dests)) * trans_vol1
         source_wells = recipient_96_plate.columns()[0]
 
         for source in source_wells:
+            max_well_vol = (len(quad1_dests) + len(quad2_dests) +
+                            len(quad3_dests) + len(quad4_dests)) * trans_vol1
             p300.pick_up_tip()
             change_flow_rates(p300, stage2_asp_speed, stage2_disp_speed)
-            p300.transfer(max_well_vol, source, tuberack, new_tip='never',
-                          mix_before=(3, max_well_vol/2))
+            p300.mix(3, max_well_vol/2, source)
+            while max_well_vol > 200:
+                p300.aspirate(200, source)
+                slow_tip_withdrawal(p300, source)
+                p300.dispense(200, tuberack)
+                slow_tip_withdrawal(p300, tuberack)
+                max_well_vol -= 200
+            p300.aspirate(max_well_vol, source)
+            slow_tip_withdrawal(p300, source)
+            p300.dispense(max_well_vol, tuberack)
+            slow_tip_withdrawal(p300, tuberack)
+            # p300.transfer(max_well_vol, source, tuberack, new_tip='never',
+            #               mix_before=(3, max_well_vol/2))
             reset_flow_rates(p300)
             p300.air_gap(20)
             p300.drop_tip()
