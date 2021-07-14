@@ -48,7 +48,9 @@ def run(ctx):
     # Add 180 uL of PBS
     m300.pick_up_tip()
     for col in pbs_cols:
-        m300.transfer(180, pbs, col.top(z=-5), new_tip='never')
+        m300.aspirate(180, pbs)
+        m300.dispense(180, col.top(z=-5))
+        m300.blow_out(col.top(z=-5))
     m300.drop_tip()
 
     # Dilution (Columns 1-6)
@@ -76,16 +78,11 @@ def run(ctx):
         mixing_flow_rate(m300, asp_rate, disp_rate)
         m300.mix(6, 200, col1)
         reset_pipette_speed(m300)
-        # m300.transfer(20, col1, sample_cols1[i+1], mix_after=(10, 20),
-        #               touch_tip=True, blow_out=True,
-        #               blowout_location='destination well',
-        #               new_tip='never')
         m300.aspirate(20, col1)
         m300.dispense(20, sample_cols1[i+1])
         mixing_flow_rate(m300, asp_rate, disp_rate)
         m300.mix(10, 20, sample_cols1[i+1])
         reset_pipette_speed(m300)
-        m300.touch_tip()
         m300.blow_out(sample_cols1[i+1].bottom(blowout_height))
         m300.drop_tip()
 
@@ -93,15 +90,10 @@ def run(ctx):
         mixing_flow_rate(m300, asp_rate, disp_rate)
         m300.mix(6, 200, col2)
         reset_pipette_speed(m300)
-        # m300.transfer(20, col2, sample_cols2[i+1], mix_after=(10, 20),
-        #               touch_tip=True, blow_out=True,
-        #               blowout_location='destination well',
-        #               new_tip='never')
         m300.aspirate(20, col2)
         m300.dispense(20, sample_cols2[i+1])
         mixing_flow_rate(m300, asp_rate, disp_rate)
         m300.mix(10, 20, sample_cols2[i+1])
         reset_pipette_speed(m300)
-        m300.touch_tip()
         m300.blow_out(sample_cols2[i+1].bottom(blowout_height))
         m300.drop_tip()
