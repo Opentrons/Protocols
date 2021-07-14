@@ -93,16 +93,17 @@ def run(ctx):
     v0_buf = 500*num_samp
     h0_eth = v0_eth/(math.pi*rad**2) if v0_eth/(math.pi*rad**2) > 44 \
         else fiftymil_h_stop
-    h0_buff = v0_buf/(math.pi*rad**2)-15 if v0_buf/(math.pi*rad**2) > 44 \
+    h0_buff = v0_buf/(math.pi*rad**2) if v0_buf/(math.pi*rad**2) > 44 \
         else fiftymil_h_stop
     dh_eth = 1000/(math.pi*rad**2)*1.2
     dh_buff = 0.5*dh_eth*1.2
 
     # make buffer plate
     pick_up1000()
-    h_track_buff = h0_buff*0.85
+    h_track_buff = h0_buff*0.95
     for well in buffer_map:
         p1000.aspirate(500, buffer.bottom(z=h_track_buff))
+        p1000.touch_tip()
         p1000.dispense(500, well)
         h_track_buff -= dh_buff if h_track_buff > 5 else 0
         if h_track_buff < 20:
@@ -110,10 +111,11 @@ def run(ctx):
     p1000.drop_tip()
 
     # make ethanol plate
-    h_track_eth = h0_eth*0.85
+    h_track_eth = h0_eth*0.95
     pick_up1000()
     for i, (tube, well) in enumerate(zip(ethanol*num_samp, ethanol_map)):
         p1000.aspirate(1000, tube.bottom(z=h_track_eth))
+        p1000.touch_tip()
         p1000.dispense(1000, well)
         if i % 2 == 0:
             h_track_eth -= dh_eth if h_track_eth > 5 else 0
@@ -126,9 +128,9 @@ def run(ctx):
     pick_up1000()
     p1000.aspirate(floor, elution_solution)
     chunks = [elution_map[i:i+12] for i in range(0, len(elution_map), 12)]
-
     for chunk in chunks:
         p1000.aspirate(50*len(chunk), elution_solution.bottom(fiftymil_h_stop))
+        p1000.touch_tip()
         for well in chunk:
             p1000.dispense(50, well)
     ctx.comment('\n\n')
@@ -138,17 +140,18 @@ def run(ctx):
 
     # add proteinase k
     p20.flow_rate.dispense = 3.78
+    pick_up20()
     for well in sample_map:
-        pick_up20()
         p20.aspirate(5, proK.bottom(z=p1000_water_height))
         p20.dispense(5, well)
         p20.blow_out()
         p20.touch_tip()
-        p20.drop_tip()
+    p20.drop_tip()
 
     # add patient samples
     samp_ctr = 0
-    for sample, well in zip(sample_tube_map, sample_map):
+
+    for sample, well in zip(sample_tube_map*3, sample_map[:num_samp-1]):
         pick_up1000()
         p1000.aspirate(200,
                        sample_tube_map[samp_ctr].bottom(z=p1000_sample_height))
@@ -164,7 +167,7 @@ def run(ctx):
     ctx.comment('Adding control')
     pick_up1000()
     p1000.aspirate(200, water.bottom(z=p1000_water_height))
-    p1000.dispense(200, sample_map[samp_ctr])
+    p1000.dispense(200, sample_map[num_samp-1])
     p1000.drop_tip()
 
     # add mag beads
@@ -176,6 +179,7 @@ def run(ctx):
     for well in sample_map:
         pick_up1000()
         p1000.aspirate(275, mag_beads.bottom(z=fiftymil_h_stop))
+        p1000.touch_tip()
         p1000.dispense(275, well.top())
         p1000.drop_tip()
 
