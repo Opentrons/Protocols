@@ -19,7 +19,7 @@
     "label": "Choice of Labware for Sample Prep Plate",
     "name": "labware_sample_plate",
     "options": [
-      { "label": "Corning 96 Well Plate 360 ul Flat", "value": "corning_96_wellplate_360ul_flat" }
+      { "label": "96 Well Plate", "value": "biorad_96_wellplate_200ul_pcr" }
     ]
   },
   {
