@@ -13,9 +13,9 @@ def run(ctx):
 
     [num_samp, p1000_sample_height,
      p1000_water_height, fiftymil_h_stop, mag_bead_mix_speed,
-     p20_mount, p1000_mount] = get_values(  # noqa: F821
+     p1000_mag_flow_rate, p20_mount, p1000_mount] = get_values(  # noqa: F821
         "num_samp", "p1000_sample_height", "p1000_water_height",
-        "fiftymil_h_stop", "mag_bead_mix_speed",
+        "fiftymil_h_stop", "mag_bead_mix_speed", "p1000_mag_flow_rate",
         "p20_mount", "p1000_mount")
 
     if not 1 <= num_samp <= 95:
@@ -91,8 +91,10 @@ def run(ctx):
     rad = 14
     v0_eth = 1000*num_samp/2 if num_samp > 49 else num_samp*1000
     v0_buf = 500*num_samp
-    h0_eth = v0_eth/(math.pi*rad**2) if v0_eth/(math.pi*rad**2) > 44 else 0
-    h0_buff = v0_buf/(math.pi*rad**2)-15 if v0_buf/(math.pi*rad**2) > 44 else 0
+    h0_eth = v0_eth/(math.pi*rad**2) if v0_eth/(math.pi*rad**2) > 44 \
+        else fiftymil_h_stop
+    h0_buff = v0_buf/(math.pi*rad**2)-15 if v0_buf/(math.pi*rad**2) > 44 \
+        else fiftymil_h_stop
     dh_eth = 1000/(math.pi*rad**2)*1.2
     dh_buff = 0.5*dh_eth*1.2
 
@@ -168,9 +170,11 @@ def run(ctx):
     # add mag beads
     pick_up1000()
     p1000.mix(15, 750, mag_beads.bottom(z=fiftymil_h_stop), rate=mix_rate)
+    p1000.drop_tip()
+    p1000.flow_rate.aspirate = p1000_mag_flow_rate
+    p1000.flow_rate.dispense = p1000_mag_flow_rate
     for well in sample_map:
-        if not p1000.has_tip:
-            pick_up1000()
+        pick_up1000()
         p1000.aspirate(275, mag_beads.bottom(z=fiftymil_h_stop))
         p1000.dispense(275, well.top())
         p1000.drop_tip()
