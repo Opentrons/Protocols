@@ -3,9 +3,6 @@
 ### Author
 [Opentrons](https://opentrons.com/)
 
-### Partner
-[Partner Name](partner website link)
-
 ## Categories
 * PCR
 	* PCR Prep
