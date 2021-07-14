@@ -5,11 +5,6 @@ metadata = {
     'apiLevel': '2.9'
 }
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"step1":"True","step2":"True","quad1_exclude_cols":"1,12","quad2_exclude_cols":"1,12","quad3_exclude_cols":"1,12","quad4_exclude_cols":"1,12","m20_mount":"left","p300_mount":"right","donor_384_type":"4titudeframestar_384_wellplate_55ul","step1_mix_vol":4,"trans_vol1":8,"pre_asp_air":5,"delay_after_asp":1,"delay_after_disp":1,"disp_speed":3,"height_after_disp":0.5,"stage2_asp_speed":46,"stage2_disp_speed":46}""")
-    return [_all_values[n] for n in names]
-
 
 def run(ctx):
 
