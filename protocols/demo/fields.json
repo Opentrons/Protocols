@@ -56,11 +56,5 @@
        { "label": "yes", "value": true },
        { "label": "no", "value": false }
      ]
-  },
-  {
-    "type": "float",
-    "label": "incubation time (in minutes)",
-    "name": "incubation_time_mins",
-    "default": 1
   }
 ]
