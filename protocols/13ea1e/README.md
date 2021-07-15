@@ -24,7 +24,6 @@ Note: For all transfers between reservoirs/tubes to well plate, transfers will a
 Explanation of complex parameters below:
 * `Number of samples`: Specify the number of populated wells (1-96, include controls) that the sample block, elution buffer block, ethanol block, NPW3 block, and NPW4 block will be filled.
 * `Mix repetitions to resuspend beads`: Specify the amount of mix steps to re-suspend beads each time the pipette returns to the reservoir.
-* `Tube Aspiration Height`: Specify the height in mm to aspirate from the 1.5mm tube bottoms. 
 * `P1000 Single Channel Mount (GEN2)`: Specify which mount the P1000 Single Channel pipette will be mounted.
 * `P300 Multi Channel Mount (GEN2)`: Specify which mount the P300 Multi Channel pipette will be mounted.
 ---
