@@ -6,16 +6,16 @@ metadata = {
     'protocolName': 'PCR Plate Prep with 384 Well Plate',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.9'
+    'apiLevel': '2.10'
 }
 
 
 def run(ctx):
 
-    [num_samp, overage_percent, mix_reps, asp_height, sample_asp_height,
+    [num_samp, overage_percent, mix_reps,
         p20_mount] = get_values(  # noqa: F821
         "num_samp", "overage_percent",
-        "mix_reps", "asp_height", "sample_asp_height",
+        "mix_reps",
         "p20_mount")
 
     if not 0 <= num_samp <= 384:
@@ -95,13 +95,13 @@ def run(ctx):
     airgap = 5
     ctx.comment('Distributing Mastermix')
     pick_up_20()
-    p20.aspirate(7, mastermix_tube[0].bottom(z=asp_height))
+    p20.aspirate(7, mastermix_tube[0])
     p20.air_gap(airgap)
     p20.dispense(7+airgap, pcr_plate_384.wells()[-1])
 
     for i, plate in enumerate(sample_plates):
         for source, well in zip(mastermix_tube*num_samp, plates[i]):
-            p20.aspirate(7, source.bottom(z=asp_height))
+            p20.aspirate(7, source)
             p20.dispense(7+airgap, well)
             p20.blow_out()
     p20.drop_tip()
@@ -110,7 +110,7 @@ def run(ctx):
     # add positive control
     ctx.comment('Adding Positive Control')
     pick_up_20()
-    p20.aspirate(5.5, positive_control.bottom(z=asp_height))
+    p20.aspirate(5.5, positive_control)
     p20.air_gap(airgap)
     p20.dispense(7+airgap, pcr_plate_384.wells()[-1])
     p20.mix(mix_reps, 12.5, pcr_plate_384.wells()[-1])
@@ -121,7 +121,7 @@ def run(ctx):
     for i, plate in enumerate(sample_plates):
         for s, d in zip(sample_wells, plates[i]):
             pick_up_20()
-            p20.aspirate(5.5, s.bottom(z=sample_asp_height))
+            p20.aspirate(5.5, s)
             p20.air_gap(airgap)
             p20.dispense(5.5+airgap, d)
             p20.mix(mix_reps, 12.5, d)

@@ -2,23 +2,23 @@ metadata = {
     'protodestName': 'Extraction Prep with Kingfisher Flex Extractor',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
     'source': 'Custom Protodest Request',
-    'apiLevel': '2.7'
+    'apiLevel': '2.10'
 }
 
 
 def run(ctx):
 
-    [num_samp, mix_reps, asp_height,
+    [num_samp, mix_reps,
         p300_mount, p1000_mount] = get_values(  # noqa: F821
-        "num_samp", "mix_reps", "asp_height",
+        "num_samp", "mix_reps",
             "p300_mount", "p1000_mount")
 
     if not 0 <= num_samp <= 96:
         raise Exception("Enter a sample number between 1-96")
 
     # load labware
-    reservoir = ctx.load_labware('nest_12_reservoir_15000ul', '1')
-    reservoir2 = ctx.load_labware('nest_12_reservoir_15000ul', '2')
+    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '1')
+    reservoir2 = ctx.load_labware('nest_12_reservoir_15ml', '2')
     npw4_block = ctx.load_labware('nest_96_wellplate_2200ul', '3')
     sample_block = ctx.load_labware('nest_96_wellplate_2200ul', '4')
     elution_block = ctx.load_labware('nest_96_wellplate_2200ul', '5')
@@ -63,14 +63,14 @@ def run(ctx):
     # add controls
     airgap = 100
     p1000.pick_up_tip()
-    p1000.aspirate(400, ntc.bottom(z=asp_height))
+    p1000.aspirate(400, ntc)
     p1000.air_gap(airgap)
     p1000.dispense(400+airgap, sample_block.wells()[0])
     p1000.blow_out()
     p1000.drop_tip()
 
     p1000.pick_up_tip()
-    p1000.aspirate(400, hsc.bottom(z=asp_height))
+    p1000.aspirate(400, hsc)
     p1000.air_gap(airgap)
     p1000.dispense(400+airgap, sample_block.wells()[1])
     p1000.blow_out()
@@ -81,9 +81,9 @@ def run(ctx):
     airgap = 20
     pick_up(p300)
     for s, d in zip(proteinase_k*num_samp, sample_block.wells()[:num_samp]):
-        p300.aspirate(24, s.bottom(z=asp_height))
+        p300.aspirate(24, s)
         p300.air_gap(airgap)
-        p300.dispense(24+airgap, d.top(z=-3))
+        p300.dispense(24+airgap, d.top(z=-5))
         p300.blow_out()
     p300.drop_tip()
     ctx.comment('\n\n\n\n\n')
@@ -125,7 +125,7 @@ def run(ctx):
     pick_up(p300)
     for elution_tubes, elution_well in zip(elution_buffer*num_samp,
                                            elution_block.wells()[:num_samp]):
-        p300.aspirate(50, elution_tubes.bottom(z=asp_height))
+        p300.aspirate(50, elution_tubes)
         p300.air_gap(airgap)
         p300.dispense(50, elution_well)
         p300.blow_out()
@@ -139,7 +139,7 @@ def run(ctx):
         p1000.mix(mix_reps, 1000, mag_well)
         p1000.aspirate(595, mag_well)
         p1000.air_gap(airgap)
-        p1000.dispense(595+airgap, dest.top())
+        p1000.dispense(595+airgap, dest.top(z=-5))
         p1000.blow_out()
     p1000.drop_tip()
     ctx.comment('\n\n\n\n\n')

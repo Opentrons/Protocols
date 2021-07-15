@@ -18,18 +18,6 @@
     "default": 15
   },
   {
-    "type": "float",
-    "label": "Tube Aspiration Height",
-    "name": "asp_height",
-    "default": 2
-  },
-  {
-    "type": "float",
-    "label": "Sample Aspiration Height in 96 well Plate",
-    "name": "sample_asp_height",
-    "default": 0.5
-  },
-  {
     "type": "dropDown",
     "label": "P20 Single Channel Mount (GEN2)",
     "name": "p20_mount",
