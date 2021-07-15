@@ -104,7 +104,7 @@ def run(ctx):
     magplate = magdeck.load_labware(deepwell_type, 'deepwell plate')
     res1 = ctx.load_labware(res12_type, '2', 'reagent reservoir 1')
     res2 = ctx.load_labware(res12_type, '3', 'reagent reservoir 2')
-    elutionplate = ctx.load_labware(deepwell_type, '4', 'elution plate')
+    elutionplate = ctx.load_labware(elution_type, '4', 'elution plate')
     tips300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot,
                                 '200µl filtertiprack')
                for slot in ['5', '6', '7', '8', '9', '10']]
