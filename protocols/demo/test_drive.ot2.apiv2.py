@@ -32,6 +32,7 @@ def run(ctx):
 
     pip_l.tip_racks = tipracks_l
     pip_r.tip_racks = tipracks_r
+    ctx.set_rail_lights(on=True)
 
     # protocol
     ctx.pause('''Welcome to the OT-2 Demo Protocol-
