@@ -9,7 +9,7 @@ metadata = {
 
 def run(ctx):
 
-    # get parameter values from json above
+    # get parameter values from json
     [sample_count, labware_tube_rack, labware_sample_plate,
      labware_elisa_plate, clearance_sample_tube,
      clearance_sample_prep] = get_values(  # noqa: F821
