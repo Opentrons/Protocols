@@ -25,5 +25,29 @@
         "label": "Diluent Tube(s) Volume (uL)",
         "name": "diluent_vol",
         "default": 1000
+      },
+      {
+        "type": "float",
+        "label": "Aspirate Flow Rate (uL/s)",
+        "name": "asp_speed",
+        "default": 10
+      },
+      {
+        "type": "float",
+        "label": "Dispense Flow Rate (uL/s)",
+        "name": "disp_speed",
+        "default": 10
+      },
+      {
+        "type": "float",
+        "label": "Air Gap Volume (uL)",
+        "name": "air_gap_vol",
+        "default": 10
+      },
+      {
+        "type": "float",
+        "label": "Delay After Aspirate and Dispense (seconds)",
+        "name": "delay_time",
+        "default": 2
       }
   ]
