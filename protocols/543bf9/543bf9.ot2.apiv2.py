@@ -12,7 +12,7 @@ def run(ctx):
 
     [p50_mount, csv_file_1, csv_file_2,
         diluent_vol, asp_speed, disp_speed,
-        air_gap_vol] = get_values(  # noqa: F821
+        air_gap_vol, delay_time] = get_values(  # noqa: F821
         "p50_mount", "csv_file_1", "csv_file_2", "diluent_vol", "asp_speed",
         "disp_speed", "air_gap_vol", "delay_time")
 
