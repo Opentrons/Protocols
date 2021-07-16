@@ -19,7 +19,8 @@
     "label": "Choice of Labware for Sample Prep Plate",
     "name": "labware_sample_plate",
     "options": [
-      { "label": "Corning 96 Well Plate 360ul Flat", "value": "corning_96_wellplate_360ul_flat" }
+      { "label": "Corning 3897", "value": "corning_96_wellplate_320ul" },
+      { "label": "Nunc 249570", "value": "nunc_96_wellplate_250ul" }
     ]
   },
   {
