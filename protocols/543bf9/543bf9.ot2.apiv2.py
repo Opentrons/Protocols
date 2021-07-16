@@ -11,8 +11,10 @@ metadata = {
 def run(ctx):
 
     [p50_mount, csv_file_1, csv_file_2,
-        diluent_vol] = get_values(  # noqa: F821
-        "p50_mount", "csv_file_1", "csv_file_2", "diluent_vol")
+        diluent_vol, asp_speed, disp_speed,
+        air_gap_vol] = get_values(  # noqa: F821
+        "p50_mount", "csv_file_1", "csv_file_2", "diluent_vol", "asp_speed",
+        "disp_speed", "air_gap_vol", "delay_time")
 
     # Load Labware
     plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', 6)
@@ -24,7 +26,7 @@ def run(ctx):
     # Load Pipette
     p50 = ctx.load_instrument('p50_single', p50_mount,
                               tip_racks=tipracks)
-    max_vol = p50.max_volume
+    max_vol = p50.max_volume - air_gap_vol
 
     # Reagents
     stock1 = tuberack['A1']
@@ -74,13 +76,37 @@ def run(ctx):
                     sample_src = stock2
                 else:
                     sample_src = plate[well_positions[line[2]]]
-                # Round to nearest 0.5
-                # src_vol = round((float(line[5])*float(line[6])/src_conc)*2)/2
-                # dil_vol = float(line[6]) - src_vol
                 dest = plate[well_positions[line[0]]]
                 src_vol = float(line[3])
                 dil_vol = float(line[4])
                 results.append([src_conc, sample_src, dest, dil_vol, src_vol])
+
+    def change_flow_rates(asp_speed, disp_speed):
+        p50.flow_rate.aspirate = asp_speed
+        p50.flow_rate.dispense = disp_speed
+
+    def reset_flow_rates():
+        p50.flow_rate.aspirate = 25
+        p50.flow_rate.dispense = 50
+
+    def slow_tip_withdrawal(current_pipette, well_location, to_center=False):
+        if current_pipette.mount == 'right':
+            axis = 'A'
+        else:
+            axis = 'Z'
+        ctx.max_speeds[axis] = 10
+        if to_center is False:
+            current_pipette.move_to(well_location.top())
+        else:
+            current_pipette.move_to(well_location.center())
+        ctx.max_speeds[axis] = None
+
+    def preWet(volume, location):
+        ctx.comment(f"Pre-Wetting the tip at {location}")
+        p50.aspirate(volume, location)
+        slow_tip_withdrawal(p50, location)
+        p50.dispense(volume, location)
+        slow_tip_withdrawal(p50, location)
 
     # Volume Tracking
     class VolTracker:
@@ -91,7 +117,7 @@ def run(ctx):
             self.pip_type = pip_type
             self.mode = mode
 
-        def tracker(self, vol):
+        def tracker(self, vol, well_only=False):
             '''tracker() will track how much liquid
             was used up per well. If the volume of
             a given well is greater than self.well_vol
@@ -101,6 +127,10 @@ def run(ctx):
             if self.labware_wells[well] + vol >= self.well_vol:
                 del self.labware_wells[well]
                 well = next(iter(self.labware_wells))
+                if well_only:
+                    return well
+            if well_only:
+                return well
             if self.pip_type == 'multi':
                 self.labware_wells[well] = self.labware_wells[well] + vol*8
             elif self.pip_type == 'single':
@@ -117,6 +147,7 @@ def run(ctx):
 
     # Liquid Handling Steps
     def liquid_handle(data):
+        change_flow_rates(asp_speed, disp_speed)
         for line in data:
             src_conc = line[0]
             sample_src = line[1]
@@ -127,22 +158,37 @@ def run(ctx):
             p50.pick_up_tip()
             num_trans = math.ceil(dil_vol/max_vol)
             vol_per_trans = dil_vol/num_trans
+            preWet(vol_per_trans, diluentTrack.tracker(vol_per_trans))
             for _ in range(num_trans):
+                loc = diluentTrack.tracker(vol_per_trans, well_only=True)
                 p50.aspirate(vol_per_trans,
                              diluentTrack.tracker(vol_per_trans))
-                p50.dispense(vol_per_trans, dest)
+                ctx.delay(seconds=2)
+                slow_tip_withdrawal(p50, loc)
+                p50.air_gap(air_gap_vol)
+                p50.dispense(vol_per_trans+air_gap_vol, dest)
+                ctx.delay(seconds=2)
+                slow_tip_withdrawal(p50, dest)
             p50.drop_tip()
             if src_conc is not None:
                 p50.pick_up_tip()
                 num_trans = math.ceil(src_vol/max_vol)
                 vol_per_trans = src_vol/num_trans
+                preWet(vol_per_trans, sample_src)
                 for _ in range(num_trans):
                     p50.aspirate(vol_per_trans, sample_src)
-                    p50.dispense(vol_per_trans, dest)
+                    ctx.delay(seconds=2)
+                    slow_tip_withdrawal(p50, sample_src)
+                    p50.air_gap(air_gap_vol)
+                    p50.dispense(vol_per_trans+air_gap_vol, dest)
+                    ctx.delay(seconds=2)
+                    slow_tip_withdrawal(p50, dest)
                 p50.mix(3, (src_vol+dil_vol)/2)
+                slow_tip_withdrawal(p50, dest)
                 p50.blow_out()
                 p50.touch_tip()
                 p50.drop_tip()
+        reset_flow_rates()
 
     # First Standard Curve
     transform_data(data_c1, well_positions_curve1,
