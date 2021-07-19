@@ -27,6 +27,12 @@
         ]
       },
       {
+        "type": "float",
+        "label": "Temperature Module Hold Temperature (C)",
+        "name": "temp_mod_temperature",
+        "default": 4
+      },
+      {
         "type": "textFile",
         "label": "Input CSV File",
         "name": "input_csv",
