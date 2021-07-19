@@ -10,9 +10,9 @@ metadata = {
 
 def run(ctx):
 
-    [left_pipette_type, right_pipette_type, d_csv,
+    [left_pipette_type, right_pipette_type, d_csv1,
      s_csv, diluent_scheme, mix] = get_values(  # noqa: F821
-        "left_pipette_type", "right_pipette_type", "d_csv", "s_csv",
+        "left_pipette_type", "right_pipette_type", "d_csv1", "s_csv",
         "diluent_scheme", "mix")
 
     tiprack_map = {
@@ -27,7 +27,7 @@ def run(ctx):
 
     # load labware
     transfer_info_d = [[val.strip().lower() for val in line.split(',')]
-                       for line in d_csv.splitlines()
+                       for line in d_csv1.splitlines()
                        if line.split(',')[0].strip()][1:]
 
     transfer_info_s = [[val.strip().lower() for val in line.split(',')]
@@ -93,14 +93,18 @@ resuming.'.format(pip.max_volume))
         return letter.upper() + str(int(number))
 
     ctx.comment('Transferring diluent to wells based on Dilutant CSV...')
+    last_dil = None
     for line in transfer_info_d:
         [_, s_slot, s_well, asp_h, _, d_slot, d_well, disp_h, vol,
          pip] = line[:10]
         pipette = pipettes[pip]
-        if diluent_scheme == 'always':
-            pick_up(pipette)
         source = ctx.loaded_labwares[
             int(s_slot)].wells_by_name()[parse_well(s_well)]
+        if pipette.has_tip and source != last_dil:
+            pipette.drop_tip()
+        if diluent_scheme == 'always' or not pipette.has_tip:
+            pick_up(pipette)
+        last_dil = source
         dest = ctx.loaded_labwares[
             int(d_slot)].wells_by_name()[parse_well(d_well)]
         if not pipette.has_tip:
@@ -130,4 +134,4 @@ resuming.'.format(pip.max_volume))
         pipette.blow_out()
         pipette.drop_tip()
 
-    ctx.comment('Protocol complete.')
+    ctx.comment('Protocol is complete.')
