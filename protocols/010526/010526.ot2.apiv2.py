@@ -10,17 +10,19 @@ def run(ctx):
 
     [p20_mount, p300_mount, sample_container, input_csv, rxn_vol,
         enzyme_vol, enz_asp_rate, enz_disp_rate, digest_duration,
-        heat_kill_temperature, heat_kill_duration] = get_values(  # noqa: F821
+        heat_kill_temperature, heat_kill_duration,
+        temp_mod_temperature] = get_values(  # noqa: F821
         "p20_mount", "p300_mount", "sample_container",
         "input_csv", "rxn_vol", "enzyme_vol", "enz_asp_rate", "enz_disp_rate",
-        "digest_duration", "heat_kill_temperature", "heat_kill_duration")
+        "digest_duration", "heat_kill_temperature", "heat_kill_duration",
+        "temp_mod_temperature")
 
     # Load Labware
     tc_mod = ctx.load_module('thermocycler module')
     tc_plate = tc_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
     temp_mod = ctx.load_module('temperature module gen2', 1)
     temp_block = temp_mod.load_labware(
-                        'opentrons_24_aluminumblock_nest_1.5ml_snapcap')
+                        'opentrons_24_aluminumblock_18x0.5ml_3x1.5ml_3x1.5ml')
     tiprack_20ul = [ctx.load_labware('opentrons_96_tiprack_20ul', slot)
                     for slot in [3, 5]]
     tiprack_300ul = ctx.load_labware('opentrons_96_tiprack_300ul', 6)
@@ -117,8 +119,8 @@ def run(ctx):
         sample_wells = sample_plate.wells()[:samples]
 
     # Protocol Steps
-    temp_mod.set_temperature(4)
-    ctx.pause('''Load Enzymes into the cooled Aluminum
+    temp_mod.start_set_temperature(temp_mod_temperature)
+    ctx.pause('''Load Enzymes into the Aluminum
               Block on the Temperature Module.''')
     tc_mod.set_block_temperature(4)
 
@@ -151,9 +153,11 @@ def run(ctx):
         sample_vol = float(line[2])
         dest = line[5]
         pip = p300 if sample_vol > 20 else p20
-        pip.transfer(sample_vol, src, tc_plate[dest], mix_after=(2, 20))
+        pip.transfer(sample_vol, src.bottom(0.3), tc_plate[dest],
+                     mix_after=(2, 20))
 
     # Transfer Enzyme to PCR Wells
+    temp_mod.await_temperature(temp_mod_temperature)
     change_flow_rates(p20, enz_asp_rate, enz_disp_rate)
     for line in data:
         enzymes = line[4].split(';')
