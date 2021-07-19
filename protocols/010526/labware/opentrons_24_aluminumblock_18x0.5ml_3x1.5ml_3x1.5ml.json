@@ -316,7 +316,7 @@
       "D6"
     ]
   ],
-  "namespace": "opentrons",
+  "namespace": "custom_beta",
   "version": 1,
   "schemaVersion": 2,
   "cornerOffsetFromSlot": {
