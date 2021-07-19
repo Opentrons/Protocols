@@ -163,11 +163,11 @@ def run(ctx):
                 loc = diluentTrack.tracker(vol_per_trans, well_only=True)
                 p50.aspirate(vol_per_trans,
                              diluentTrack.tracker(vol_per_trans))
-                ctx.delay(seconds=2)
+                ctx.delay(seconds=delay_time)
                 slow_tip_withdrawal(p50, loc)
                 p50.air_gap(air_gap_vol)
                 p50.dispense(vol_per_trans+air_gap_vol, dest)
-                ctx.delay(seconds=2)
+                ctx.delay(seconds=delay_time)
                 slow_tip_withdrawal(p50, dest)
             p50.drop_tip()
             if src_conc is not None:
@@ -177,11 +177,11 @@ def run(ctx):
                 preWet(vol_per_trans, sample_src)
                 for _ in range(num_trans):
                     p50.aspirate(vol_per_trans, sample_src)
-                    ctx.delay(seconds=2)
+                    ctx.delay(seconds=delay_time)
                     slow_tip_withdrawal(p50, sample_src)
                     p50.air_gap(air_gap_vol)
                     p50.dispense(vol_per_trans+air_gap_vol, dest)
-                    ctx.delay(seconds=2)
+                    ctx.delay(seconds=delay_time)
                     slow_tip_withdrawal(p50, dest)
                 p50.mix(3, (src_vol+dil_vol)/2)
                 slow_tip_withdrawal(p50, dest)
