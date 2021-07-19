@@ -1,0 +1,212 @@
+{
+    "content": "from opentrons.types import Point\n\n\nmetadata = {\n    'protocolName': 'Ilumina DNA Prep Part 2 - Post Tagmentation Cleanup',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.10'\n}\n\n\ndef run(ctx):\n\n    [num_samp, index_start_col, tip_park_start_col,\n        asp_height, length_from_side,\n        m20_mount, m300_mount] = get_values(  # noqa: F821\n      \"num_samp\", \"index_start_col\", \"tip_park_start_col\", \"asp_height\",\n      \"length_from_side\", \"m20_mount\", \"m300_mount\")\n\n    if not 1 <= index_start_col <= 12:\n        raise Exception(\"Enter an index start column 1-12\")\n    if not 1 <= index_start_col <= 12:\n        raise Exception(\"Enter an index start column 1-12\")\n\n    num_samp = int(num_samp)\n    num_col = int(num_samp/8)\n    if num_col - tip_park_start_col < 0:\n        raise Exception(\"Not enough tips on slot 11. Refill tip rack on 11.\")\n\n    index_start_col = int(index_start_col)-1\n    tip_park_start_col = int(tip_park_start_col)-1\n\n    # load labware\n    mag_module = ctx.load_module('magnetic module gen2', '1')\n    sample_plate = mag_module.load_labware('biorad_96_wellplate_200ul_pcr')\n    reagent_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '2')\n    index_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '3')\n    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '4')\n    tiprack = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)\n               for slot in ['5', '6']]\n    tiprack300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)\n                  for slot in ['7', '8', '9', '10']]\n    park_tips_300 = ctx.load_labware(\n                                'opentrons_96_filtertiprack_200ul', '11')\n\n    # load instrument\n    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tiprack)\n    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,\n                               tip_racks=tiprack300)\n\n    def change_speeds(pip, speed):\n        pip.flow_rate.aspirate = speed\n        pip.flow_rate.dispense = speed\n\n    def remove_supernatant(vol, index, loc):\n        side = -1 if index % 2 == 0 else 1\n        aspirate_loc = col.bottom(z=asp_height).move(\n                Point(x=(col.diameter/2-length_from_side)*side))\n        m300.aspirate(vol, aspirate_loc)\n        m300.dispense(vol, waste)\n        m300.blow_out()\n\n    def mix_at_beads(vol, index, loc):\n        side = 1 if index % 2 == 0 else -1\n        aspirate_loc = loc.bottom(z=asp_height).move(\n                Point(x=(loc.diameter/2-length_from_side)*side))\n        dispense_loc = loc.bottom(z=asp_height+4).move(\n                Point(x=(loc.diameter/2-length_from_side)*side))\n        for _ in range(15):\n            m300.aspirate(vol, aspirate_loc)\n            m300.dispense(vol, dispense_loc)\n\n    # reagents\n    twb = reservoir.wells()[1]\n    tsb = reagent_plate.rows()[0][1]\n    epm = reagent_plate.rows()[0][2:4]\n    waste = reservoir.wells()[11]\n\n    # transfer tsb from mastermix plate to sample plate\n    airgap = 5\n    for col in sample_plate.rows()[0][:num_col]:\n        m20.pick_up_tip()\n        m20.aspirate(5, tsb)\n        m20.air_gap(airgap)\n        m20.dispense(5+airgap, col)\n        m20.mix(10, 17, col, rate=0.5)\n        m20.blow_out()\n        m20.touch_tip()\n        m20.drop_tip()\n\n    ctx.pause(\n        '''\n            Seal the plate with Microseal 'B', place on the preprogrammed\n            thermal cycler, and run the PTC program. Afterwards, place plate\n            back on magnetic module and select \"Resume\" on the Opentrons App.\n            Empty trash if needed.\n\n        '''\n    )\n\n    for wash in range(3):\n        mag_module.engage()\n        ctx.delay(minutes=5)\n\n        # remove supernatant\n        ctx.comment('\\n Removing Supernatant \\n')\n        for i, col in enumerate(sample_plate.rows()[0][:num_col]):\n            m300.pick_up_tip(park_tips_300.rows()[0][i+tip_park_start_col])\n            remove_supernatant(30 if wash == 0 else 50, i, col)\n            m300.blow_out()\n            m300.return_tip()\n        mag_module.disengage()\n\n        # add 50ul of twb over beads and mix at bead location\n        ctx.comment('\\n Adding TWB \\n')\n        change_speeds(m300, 35)\n        for i, col in enumerate(sample_plate.rows()[0][:num_col]):\n            m300.pick_up_tip()\n            m300.aspirate(50, twb)\n            m300.dispense(50, col)\n            mix_at_beads(40, i, col)\n            m300.drop_tip()\n        change_speeds(m300, 94)\n\n    ctx.pause(\n        '''\n        Put EPM Mastermix onto columns 3 and 4 of the reagent plate,\n        then select \"Resume\" on the Opentrons App. Empty trash if needed.\n        '''\n    )\n\n    # engage magnet, remove supernatant\n    mag_module.engage()\n    for i, col in enumerate(sample_plate.rows()[0][:num_col]):\n        m300.pick_up_tip(park_tips_300.rows()[0][i+tip_park_start_col])\n        remove_supernatant(50, i, col)\n        m300.drop_tip()  # drop parked tips\n    mag_module.disengage()\n\n    # add epm, mix at bead location\n    ctx.comment('\\n Adding EPM \\n')\n    for i, (epm_reagent, dest_col) in enumerate(\n                                    zip(epm*num_col,\n                                        sample_plate.rows()[0][:num_col])):\n        m300.pick_up_tip()\n        m300.aspirate(20, epm_reagent)\n        m300.dispense(20, dest_col)\n        mix_at_beads(20, i, dest_col)\n        m300.blow_out()\n        m300.drop_tip()\n    ctx.pause('''\n    Prepare plate for index addition.\n    Select \"Resume\" on the Opentrons App. Empty trash if needed.\n    ''')\n\n    for source_col, dest_col in zip(index_plate.rows()[0][index_start_col:\n                                                          index_start_col\n                                                          + num_col],\n                                    sample_plate.rows()[0]):\n        m20.pick_up_tip()\n        m20.aspirate(5, source_col, rate=0.75)\n        m20.dispense(5, dest_col, rate=0.75)\n        m20.mix(10, 18, dest_col)\n        m20.blow_out()\n        m20.drop_tip()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "label": "Number of samples",
+            "name": "num_samp",
+            "options": [
+                {
+                    "label": 8,
+                    "value": 8
+                },
+                {
+                    "label": 16,
+                    "value": 16
+                },
+                {
+                    "label": 24,
+                    "value": 24
+                },
+                {
+                    "label": 32,
+                    "value": 32
+                },
+                {
+                    "label": 40,
+                    "value": 40
+                },
+                {
+                    "label": 48,
+                    "value": 48
+                },
+                {
+                    "label": 56,
+                    "value": 56
+                },
+                {
+                    "label": 64,
+                    "value": 64
+                },
+                {
+                    "label": 72,
+                    "value": 72
+                },
+                {
+                    "label": 80,
+                    "value": 80
+                },
+                {
+                    "label": 88,
+                    "value": 88
+                },
+                {
+                    "label": 96,
+                    "value": 96
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 1,
+            "label": "Index start column (1-12)",
+            "name": "index_start_col",
+            "type": "int"
+        },
+        {
+            "default": 1,
+            "label": "Aspiration height (mm)",
+            "name": "asp_height",
+            "type": "int"
+        },
+        {
+            "default": 1.5,
+            "label": "Length from side (mm)",
+            "name": "length_from_side",
+            "type": "int"
+        },
+        {
+            "default": 1,
+            "label": "Index start column (1-12)",
+            "name": "index_start_col",
+            "type": "int"
+        },
+        {
+            "default": 1,
+            "label": "P300 tip start column on slot 11 (1-12)",
+            "name": "tip_park_start_col",
+            "type": "int"
+        },
+        {
+            "label": "P20 Multi-Channel GEN2 Mount",
+            "name": "m20_mount",
+            "options": [
+                {
+                    "label": "left",
+                    "value": "left"
+                },
+                {
+                    "label": "right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P300 Multi Channel GEN2 Mount",
+            "name": "m300_mount",
+            "options": [
+                {
+                    "label": "right",
+                    "value": "right"
+                },
+                {
+                    "label": "left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p20_multi_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p300_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on Magnetic Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 2",
+            "share": false,
+            "slot": "2",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 3",
+            "share": false,
+            "slot": "3",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on 4",
+            "share": false,
+            "slot": "4",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 10",
+            "share": false,
+            "slot": "10",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.10",
+        "author": "Rami Farawi <rami.farawi@opentrons.com>",
+        "protocolName": "Ilumina DNA Prep Part 2 - Post Tagmentation Cleanup",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}
