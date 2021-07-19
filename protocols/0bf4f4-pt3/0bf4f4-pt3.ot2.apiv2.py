@@ -12,10 +12,10 @@ metadata = {
 
 def run(ctx):
 
-    [num_samp, index_start_col, plate_A_start_col, plate_B_start_col,
+    [num_samp, plate_A_start_col, plate_B_start_col,
      plate_C_start_col, tip_park_start_col, asp_height,
      length_from_side, m20_mount, m300_mount] = get_values(  # noqa: F821
-      "num_samp", "index_start_col", "plate_A_start_col", "plate_B_start_col",
+      "num_samp", "plate_A_start_col", "plate_B_start_col",
       "plate_C_start_col", "tip_park_start_col", "asp_height",
       "length_from_side", "m20_mount", "m300_mount")
 
