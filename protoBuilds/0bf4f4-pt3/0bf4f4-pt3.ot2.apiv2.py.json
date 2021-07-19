@@ -1,0 +1,218 @@
+{
+    "content": "from opentrons.types import Point\nfrom opentrons import protocol_api\n\n\nmetadata = {\n    'protocolName': 'Ilumina DNA Prep Part 3 - Clean up Libraries',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.10'\n}\n\n\ndef run(ctx):\n\n    [num_samp, plate_A_start_col, plate_B_start_col,\n     plate_C_start_col, tip_park_start_col, asp_height,\n     length_from_side, m20_mount, m300_mount] = get_values(  # noqa: F821\n      \"num_samp\", \"plate_A_start_col\", \"plate_B_start_col\",\n      \"plate_C_start_col\", \"tip_park_start_col\", \"asp_height\",\n      \"length_from_side\", \"m20_mount\", \"m300_mount\")\n\n    if not 0 <= plate_A_start_col and plate_B_start_col \\\n            and plate_C_start_col and tip_park_start_col <= 12:\n        raise Exception(\"Enter a start column between 1-12\")\n\n    num_samp = int(num_samp)\n    num_col = int(num_samp/8)\n    plate_A_start_col = int(plate_A_start_col) - 1\n    plate_B_start_col = int(plate_B_start_col) - 1\n    plate_C_start_col = int(plate_C_start_col) - 1\n    tip_park_start_col = int(tip_park_start_col) - 1\n\n    # load labware\n    mag_module = ctx.load_module('magnetic module gen2', '1')\n    mag_plate = mag_module.load_labware('biorad_96_wellplate_200ul_pcr')\n    plate_a = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '2')\n    plate_b = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '3')\n    plate_c = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '4')\n    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '5')\n    tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)\n                 for slot in ['6']]\n    tiprack = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)\n               for slot in ['7', '8', '9', '10']]\n    park_rack = ctx.load_labware('opentrons_96_filtertiprack_200ul', '11')\n\n    # load instrument\n    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,\n                               tip_racks=tiprack)\n    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tiprack20)\n\n    def pick_up300():\n        try:\n            m300.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            ctx.pause(\"Replace all 200ul tip racks\")\n            m300.reset_tipracks()\n            m300.pick_up_tip()\n\n    def remove_supernatant(vol, index, loc, trash=False, pip=m300):\n        side = -1 if index % 2 == 0 else 1\n        aspirate_loc = loc.bottom(z=asp_height).move(\n                Point(x=(loc.diameter/2-length_from_side)*side))\n        pip.aspirate(vol, aspirate_loc)\n        if trash:\n            pip.dispense(vol, waste)\n            pip.blow_out()\n\n    def mix_at_beads(vol, index, loc):\n        side = 1 if index % 2 == 0 else -1\n        aspirate_loc = loc.bottom(z=asp_height).move(\n                Point(x=(loc.diameter/2-length_from_side)*side))\n        dispense_loc = loc.bottom(z=asp_height+4).move(\n                Point(x=(loc.diameter/2-length_from_side)*side))\n        for _ in range(12):\n            m300.aspirate(vol, aspirate_loc)\n            m300.dispense(vol, dispense_loc)\n        m300.blow_out()\n\n    # reagents\n    rsb_buffer = reservoir.wells()[3]\n    ethanol = reservoir.wells()[4:7]\n    diluted_magbeads = reservoir.wells()[7]\n    waste = reservoir.wells()[11]\n\n    # engage, incubate, remove supernatant, user replaces\n    # plate with plate b\n    mag_module.engage()\n    ctx.delay(minutes=5)\n    for i, (s_col, d_col) in enumerate(zip(mag_plate.rows()[0][:num_col],\n                                       plate_a.rows()[0][plate_A_start_col:\n                                                         plate_A_start_col\n                                                         + num_col]\n                                           )):\n        pick_up300()\n        remove_supernatant(22.5, i, s_col)\n        m300.dispense(22.5, d_col)\n        m300.blow_out()\n        m300.drop_tip()\n    mag_module.disengage()\n    ctx.pause('''Remove plate on magnetic module and replace with newly\n    populated Plate A. Ensure Plate B is on the deck populated with magnetic\n    beads. If needed, empty trash.''')\n\n    # pre-mix diluted beads, add to plate A\n    pick_up300()\n    m300.mix(20, 200, diluted_magbeads)\n    m300.drop_tip()\n\n    for col in plate_a.rows()[0][plate_A_start_col:plate_A_start_col+num_col]:\n        pick_up300()\n        m300.aspirate(42.5, diluted_magbeads)\n        m300.dispense(42.5, col)\n        m300.mix(10, 50, col)\n        m300.blow_out()\n        m300.drop_tip()\n\n    # incubate, engage, remove supernatant to plate B\n    ctx.delay(minutes=5)\n    mag_module.engage()\n    ctx.delay(minutes=5)\n    for i, (s_col, d_col) in enumerate(zip(\n                                mag_plate.rows()[0][plate_A_start_col:\n                                                    plate_A_start_col\n                                                    + num_col],\n                                       plate_b.rows()[0][plate_B_start_col:\n                                                         plate_B_start_col\n                                                         + num_col]\n                                       )):\n        pick_up300()\n        remove_supernatant(62.5, i, s_col)\n        m300.dispense(62.5, d_col)\n        m300.mix(10, 55, d_col)\n        m300.blow_out()\n        m300.drop_tip()\n    ctx.delay(minutes=5)\n    mag_module.disengage()\n\n    ctx.pause('''Remove Plate A on magnetic module and replace with newly\n    populated Plate B. If needed, empty trash.''')\n\n    # engage magnet, remove supernatant\n    mag_module.engage()\n    ctx.delay(minutes=5)\n    for i, s_col in enumerate(\n                                mag_plate.rows()[0][plate_B_start_col:\n                                                    plate_B_start_col\n                                                    + num_col]):\n        pick_up300()\n        remove_supernatant(65, i, s_col, trash=True)\n        m300.drop_tip()\n    ctx.delay(minutes=5)\n\n    # two ethanol washes\n    for wash in range(2):\n        pick_up300()\n        for eth, sample in zip(ethanol*num_col,\n                               mag_plate.rows()[0][\n                                                    plate_B_start_col:\n                                                    plate_B_start_col\n                                                    + num_col\n                                                    ]):\n            m300.aspirate(200, eth)\n            m300.dispense(200, sample.top())\n            ctx.delay(seconds=1.5)\n            m300.blow_out()\n        m300.drop_tip()\n        ctx.delay(seconds=30)\n        for i, sample in enumerate(mag_plate.rows()[0][\n                                                         plate_B_start_col:\n                                                         plate_B_start_col\n                                                         + num_col\n                                                         ]):\n            m300.pick_up_tip(park_rack.rows()[0][i+tip_park_start_col])\n            remove_supernatant(200, i, sample, trash=True)\n            if wash == 0:\n                m300.return_tip()\n            else:\n                m300.drop_tip()\n\n    # remove excess with p20\n    for i, sample in enumerate(mag_plate.rows()[0][\n                                                     plate_B_start_col:\n                                                     plate_B_start_col\n                                                     + num_col\n                                                     ]):\n        m20.pick_up_tip()\n        remove_supernatant(20, i, sample, trash=True, pip=m20)\n        m20.drop_tip()\n\n    # delay, add rsb\n    ctx.delay(minutes=5)\n    ctx.pause('''Prepare plate for addition of RSB. Empty trash if needed''')\n\n    pick_up300()\n    for sample in mag_plate.rows()[0][plate_B_start_col:plate_B_start_col\n                                      + num_col]:\n        m300.aspirate(32, rsb_buffer)\n        m300.dispense(200, sample.top())\n        m300.blow_out()\n    m300.drop_tip()\n\n    # resuspend beads\n    for i, sample in enumerate(mag_plate.rows()[0][\n                                                     plate_B_start_col:\n                                                     plate_B_start_col\n                                                     + num_col\n                                                     ]):\n        pick_up300()\n        mix_at_beads(25, i, sample)\n        m300.drop_tip()\n\n    ctx.delay(minutes=2)\n    mag_module.engage()\n    ctx.delay(minutes=3)\n\n    # transfer elute to plate_c\n    for i, (s_col, d_col) in enumerate(zip(\n                                mag_plate.rows()[0][plate_B_start_col:\n                                                    plate_B_start_col\n                                                    + num_col],\n                                       plate_c.rows()[0][plate_C_start_col:\n                                                         plate_C_start_col\n                                                         + num_col]\n                                       )):\n        pick_up300()\n        remove_supernatant(30, i, s_col)\n        m300.dispense(30, d_col)\n        m300.blow_out()\n        m300.drop_tip()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "label": "Number of samples",
+            "name": "num_samp",
+            "options": [
+                {
+                    "label": 8,
+                    "value": 8
+                },
+                {
+                    "label": 16,
+                    "value": 16
+                },
+                {
+                    "label": 24,
+                    "value": 24
+                },
+                {
+                    "label": 32,
+                    "value": 32
+                },
+                {
+                    "label": 40,
+                    "value": 40
+                },
+                {
+                    "label": 48,
+                    "value": 48
+                },
+                {
+                    "label": 56,
+                    "value": 56
+                },
+                {
+                    "label": 64,
+                    "value": 64
+                },
+                {
+                    "label": 72,
+                    "value": 72
+                },
+                {
+                    "label": 80,
+                    "value": 80
+                },
+                {
+                    "label": 88,
+                    "value": 88
+                },
+                {
+                    "label": 96,
+                    "value": 96
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 1,
+            "label": "Plate A Start Column (1-12)",
+            "name": "plate_A_start_col",
+            "type": "int"
+        },
+        {
+            "default": 1,
+            "label": "Plate B Start Column (1-12)",
+            "name": "plate_B_start_col",
+            "type": "int"
+        },
+        {
+            "default": 1,
+            "label": "Plate C Start Column (1-12)",
+            "name": "plate_C_start_col",
+            "type": "int"
+        },
+        {
+            "default": 1,
+            "label": "P300 tip start column on slot 11 (1-12)",
+            "name": "tip_park_start_col",
+            "type": "int"
+        },
+        {
+            "default": 1,
+            "label": "Aspiration height (mm)",
+            "name": "asp_height",
+            "type": "int"
+        },
+        {
+            "default": 1.5,
+            "label": "Length from side (mm)",
+            "name": "length_from_side",
+            "type": "int"
+        },
+        {
+            "label": "P20 Multi-Channel GEN2 Mount",
+            "name": "m20_mount",
+            "options": [
+                {
+                    "label": "left",
+                    "value": "left"
+                },
+                {
+                    "label": "right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P300 Multi Channel GEN2 Mount",
+            "name": "m300_mount",
+            "options": [
+                {
+                    "label": "right",
+                    "value": "right"
+                },
+                {
+                    "label": "left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p20_multi_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p300_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on Magnetic Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 2",
+            "share": false,
+            "slot": "2",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 3",
+            "share": false,
+            "slot": "3",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 4",
+            "share": false,
+            "slot": "4",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on 5",
+            "share": false,
+            "slot": "5",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 10",
+            "share": false,
+            "slot": "10",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.10",
+        "author": "Rami Farawi <rami.farawi@opentrons.com>",
+        "protocolName": "Ilumina DNA Prep Part 3 - Clean up Libraries",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}
