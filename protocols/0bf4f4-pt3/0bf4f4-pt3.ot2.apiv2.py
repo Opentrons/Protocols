@@ -19,8 +19,9 @@ def run(ctx):
       "plate_C_start_col", "tip_park_start_col", "asp_height",
       "length_from_side", "m20_mount", "m300_mount")
 
-    if not 0 <= index_start_col <= 12:
-        raise Exception("Enter an index start column 1-12")
+    if not 0 <= plate_A_start_col and plate_B_start_col \
+            and plate_C_start_col and tip_park_start_col <= 12:
+        raise Exception("Enter a start column between 1-12")
 
     num_samp = int(num_samp)
     num_col = int(num_samp/8)

@@ -27,14 +27,20 @@
   },
   {
   "type": "int",
-  "label": "Plate A Start Column (1-12)",
+  "label": "Plate B Start Column (1-12)",
   "name": "plate_B_start_col",
   "default": 1
   },
   {
   "type": "int",
-  "label": "Plate A Start Column (1-12)",
+  "label": "Plate C Start Column (1-12)",
   "name": "plate_C_start_col",
+  "default": 1
+  },
+  {
+  "type": "int",
+  "label": "P300 tip start column on slot 11 (1-12)",
+  "name": "tip_park_start_col",
   "default": 1
   },
   {
