@@ -204,7 +204,7 @@ def run(ctx):
     for i, dest in enumerate(mag_plate_wells):
         p300.flow_rate.dispense = 300
         pick_up(p300, dedicated_tips[i])
-        mix_loc = dest.bottom(0.5).move(Point(x=2))
+        mix_loc = dest.bottom(1).move(Point(x=-1*getWellSide(dest, mag_plate)))
         p300.mix(10, 200, mix_loc)
         p300.blow_out()
         p300.return_tip()
@@ -217,7 +217,7 @@ def run(ctx):
     # Recover beads (13)
     mag_mod.engage(height=engage_height)
     # Attracting beads (14)
-    ctx.delay(minutes=2, msg='Attracting beads')
+    ctx.delay(minutes=10, msg='Attracting beads')
 
     # Remove Supernatant (15)
     for i, well in enumerate(mag_plate_wells):
@@ -245,14 +245,15 @@ def run(ctx):
                                             mag_plate)))
         p300.mix(7, 150, mix_loc)
         for _ in range(2):
-            p300.blow_out()
+            p300.blow_out(dest.top(-3))
+            ctx.delay(seconds=3)
         p300.return_tip()
     reset_flow_rates()
 
     # Engage Magnet (19)
     mag_mod.engage(height=engage_height)
     # Extracting beads (20)
-    ctx.delay(minutes=2, msg='Extracting beads from volume - 2min')
+    ctx.delay(minutes=5, msg='Extracting beads from volume - 5 min')
 
     # Remove WB (21)
     for i, well in enumerate(mag_plate_wells):
