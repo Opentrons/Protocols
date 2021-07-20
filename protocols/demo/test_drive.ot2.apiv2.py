@@ -11,9 +11,9 @@ metadata = {
 def run(ctx):
 
     [left_pip, right_pip, source_lw, dest_lw, num_samples, sample_vol,
-     using_magdeck, incubation_time_mins] = get_values(  # noqa: F821
+     using_magdeck] = get_values(  # noqa: F821
         'left_pip', 'right_pip', 'source_lw', 'dest_lw', 'num_samples',
-        'sample_vol', 'using_magdeck', 'incubation_time_mins')
+        'sample_vol', 'using_magdeck')
 
     # load labware
     source_labware = ctx.load_labware(source_lw, '1')
@@ -32,6 +32,7 @@ def run(ctx):
 
     pip_l.tip_racks = tipracks_l
     pip_r.tip_racks = tipracks_r
+    ctx.set_rail_lights(on=True)
 
     # protocol
     ctx.pause('''Welcome to the OT-2 Demo Protocol-
@@ -59,11 +60,11 @@ def run(ctx):
         for s, d in zip(sources, destinations):
             pip.transfer(sample_vol, s, d)
 
-    ctx.comment('Engaging magnetic module...')
     if using_magdeck:
-        magdeck.engage(height=18)
-        ctx.delay(minutes=incubation_time_mins,
-                  msg=f'Incubating for {incubation_time_mins} minutes')
+        ctx.comment('Engaging magnetic module...')
+        for _ in range(3):
+            magdeck.engage(height=18)
+            magdeck.disengage()
         ctx.comment('Protocol complete. Move labware to magnetic module for \
 bead separation.')
     else:

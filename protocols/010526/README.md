@@ -30,6 +30,7 @@ UID,ng/ul,800ng (ul),Water (ul),Enzyme,Location
 1368-2,183,4,31,BamHI; HindIII,A11
 1368-3,231,3,32,BamHI; HindIII,A12
 ```
+* `Temperature Module Hold Temperature (C)`: The temperature the temperature module should reach and hold to keep reagents cool. 
 * `Reaction Volume (uL)`: Total reaction volume for all samples in microliters (uL).
 * `Enzyme Volume (uL)`: The enzyme volume used for individual enzyme transfers to the sample wells in microliters (uL).
 * `Enzyme Transfer Aspirate Flow Rate (uL/s)`: The aspirate flow rate for the enzyme transfer step in microliters/second (uL/s).
