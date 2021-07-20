@@ -1,4 +1,4 @@
-# Ilumina DNA Prep Part 2 - Post Tagmentation Cleanup
+# Ilumina DNA Prep Part 3 - Clean up Libraries
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -10,8 +10,8 @@
 ## Description
 This protocol is part 3 of a 3 part series which preps a 96 well Bio-Rad 200ul plate in accordance with the [Ilumina DNA Prep Kit](https://emea.support.illumina.com/content/dam/illumina-support/documents/documentation/chemistry_documentation/illumina_prep/illumina-dna-prep-reference-guide-1000000025416-09.pdf).
 
-[Part 1: Tagment DNA](https://protocols.opentrons.com/protocol/0bf4f4)
-[Part 2: Cleanup libraries](https://protocols.opentrons.com/protocol/0bf4f4-pt2)
+* [Part 1: Tagment DNA](https://protocols.opentrons.com/protocol/0bf4f4)
+* [Part 2: Cleanup libraries](https://protocols.opentrons.com/protocol/0bf4f4-pt2)
 
 Explanation of complex parameters below:
 * `Number of samples`: Specify the number of samples for this run.
