@@ -19,6 +19,8 @@ This protocol preps 3, 384 well control plates for further testing of antibodies
 * Transfer of antibody to 3, 384 well control plates
 
 Explanation of complex parameters below:
+* `P1000 aspirate/dispense flow rate`: Specify the p1000 aspirate and dispense flow rates.
+* `P1000 aspiration/dispense bottom clearance (mm)`: Specify the aspiration and dispense clearance from the bottom of the well for the P1000 pipette (to avoid plate pick up). The default value is 1mm from the bottom of the well.
 * `P20 Pipette Mount`: Specify which mount (left or right) to load your pipette.
 * `P1000 Pipette Mount`: Specify which mount (left or right) to load your pipette.
 
