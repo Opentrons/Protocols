@@ -2,15 +2,21 @@ metadata = {
     'protocolName': 'Sample Prep for ELISA Test',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.7'
+    'apiLevel': '2.10'
 }
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"p20_mount":"left","p1000_mount":"right", "p1000_flow_rate_asp":1, "p1000_flow_rate_disp":1, "clearance":1}""")
+    return [_all_values[n] for n in names]
 
 def run(ctx):
 
     # load labware
-    [p20_mount, p1000_mount] = get_values(  # noqa: F821
-        'p20_mount', 'p1000_mount')
+    [p1000_flow_rate_asp, p1000_flow_rate_disp, clearance,
+     p20_mount, p1000_mount] = get_values(  # noqa: F821
+        "p1000_flow_rate_asp", "p1000_flow_rate_disp", "clearance",
+        "p20_mount", "p1000_mount")
     ctrl_plates = [ctx.load_labware('greiner_384_wellplate_200ul', slot)
                    for slot in ['9', '6', '3']]
     diluent_tubes = ctx.load_labware(
@@ -26,6 +32,11 @@ def run(ctx):
     p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,
                                 tip_racks=tiprack1000)
 
+    p1000.well_bottom_clearance.aspirate = clearance
+    p1000.well_bottom_clearance.dispense = clearance
+    p1000.flow_rate.aspirate = p1000_flow_rate_asp
+    p1000.flow_rate.dispense = p1000_flow_rate_disp
+
     # load reagents
     diluent = diluent_tubes.wells()[0]
     mab207 = reagent.rows()[0][1]
@@ -33,38 +44,47 @@ def run(ctx):
     mab210_100_conc = reagent.rows()[1][0]
     mab210_20_conc = reagent.rows()[1][1]
     mab210_2_conc = reagent.rows()[1][2]
-    ctrl_plates_one_two = ctrl_plates[:2]
-    ctrl_plates_three = ctrl_plates[2]
 
     # STEP DOWN STOCK
     airgap = 5
     p20.pick_up_tip()
-    p20.transfer(55.4, diluent, mab210_100_conc, new_tip='never')
+    p20.transfer(55.4, diluent, mab210_100_conc, new_tip='never',
+                 touch_tip=True)
     p20.drop_tip()
     p20.pick_up_tip()
     p20.aspirate(4.6, mab210_stock)
     p20.air_gap(airgap)
+    p20.touch_tip()
     p20.dispense(4.6+airgap, mab210_100_conc)
+    p20.touch_tip()
     p20.blow_out()
     p20.mix(25, 20, mab210_100_conc)  # mixing extra b/c only mixing 1/3 totvol
+    p20.touch_tip()
     p20.drop_tip()
 
     p1000.pick_up_tip()
     p1000.aspirate(160, diluent)
+    p1000.touch_tip()
     p1000.dispense(160, mab210_20_conc)
+    p1000.touch_tip()
     p20.pick_up_tip()
-    p20.transfer(40, mab210_100_conc, mab210_20_conc, new_tip='never')
+    p20.transfer(40, mab210_100_conc, mab210_20_conc, new_tip='never',
+                 touch_tip=True)
     p20.drop_tip()
     p1000.mix(15, 180, mab210_20_conc)
     p1000.blow_out()
+    p1000.touch_tip()
     p1000.drop_tip()
 
     p1000.pick_up_tip()
-    p1000.transfer(720, diluent, mab210_2_conc, new_tip='never')
+    p1000.transfer(720, diluent, mab210_2_conc, new_tip='never',
+                   touch_tip=True)
     p20.pick_up_tip()
-    p20.transfer(80, mab210_20_conc, mab210_2_conc, new_tip='never')
+    p20.transfer(80, mab210_20_conc, mab210_2_conc, new_tip='never',
+                 touch_tip=True)
     p20.drop_tip()
     p1000.mix(15, 700, mab210_2_conc)
+    p1000.touch_tip()
     p1000.blow_out()
     p1000.drop_tip()
 
@@ -84,7 +104,7 @@ def run(ctx):
     for vols, wellname in zip(volumes, dest_wells):
         p1000.transfer(vols, diluent,
                        master_block.wells_by_name()[wellname].top(),
-                       new_tip='never')
+                       new_tip='never', touch_tip=True)
     p1000.drop_tip()
 
     # add 207f
@@ -104,52 +124,144 @@ def run(ctx):
             pip.pick_up_tip()
         pip.transfer(vols, mab207,
                      master_block.wells_by_name()[wellname].top(),
-                     new_tip='never')
+                     new_tip='never', touch_tip=True)
 
     p1000.drop_tip()
     p20.drop_tip()
 
     for well in master_block.wells()[:16]:
         p1000.pick_up_tip()
-        p1000.mix(15, 800, well)
+        p1000.mix(15, 800, well.bottom(z=5))
+        p1000.touch_tip()
         p1000.drop_tip()
 
     # CREATE MASTERBLOCK - 210 PREP
     p1000.pick_up_tip()
-    vols_dil = [1700, 1850, 1900, 1920, 1940, 1970, 1985, 1990]
+    for wells in master_block.columns()[2]:
+        p1000.transfer(1000, diluent,
+                       wells.bottom(z=12), new_tip='never', touch_tip=True)
+
+    vols_dil = [700, 850, 900, 920, 940, 970, 985, 990]
     for wells, vol in zip(master_block.columns()[2], vols_dil):
         p1000.transfer(vol, diluent,
-                       wells.top(), new_tip='never')
+                       wells.bottom(z=12), new_tip='never', touch_tip=True)
     p1000.drop_tip()
 
     p1000.pick_up_tip()
     vols_mab = [300, 150, 100, 80, 60, 30, 15, 10]
     for wells, vol in zip(master_block.columns()[2], vols_mab):
         p1000.transfer(vol, mab210_2_conc,
-                       wells.top(), new_tip='never')
+                       wells.top(), new_tip='never', touch_tip=True)
     p1000.drop_tip()
     for wells in master_block.columns()[2]:
         p1000.pick_up_tip()
-        p1000.mix(15, 1000, well)
+        p1000.mix(15, 1000, well.bottom(z=12))
+        p1000.touch_tip()
         p1000.drop_tip()
 
-    # TRANSFER TO 384
-    row_start = 0
-    for i in range(4):
-        for plate in ctrl_plates_one_two:
-            for s, d in zip(master_block.columns()[i if i <= 2 else 2],
-                            plate.wells()[row_start
-                            if i < 2 else row_start+16:32:2]):
-                p1000.pick_up_tip()
-                p1000.transfer(180, s, d.top(z=3), new_tip='never')
-                p1000.drop_tip()
-        ctx.comment('\n\n')
+    # transfer to 384 well plate
+    wells = [
+                ['A1', 'A23'],
+                ['C1', 'C23'],
+                ['E1', 'E23'],
+                ['G1', 'G23'],
+                ['I1', 'I23'],
+                ['K1', 'K23'],
+                ['M1', 'M23'],
+                ['O1', 'O23'],
 
-        for s, d in zip(master_block.columns()[i if i <= 2 else 2],
-                        ctrl_plates_three.wells()[row_start
-                        if i < 2 else row_start+16:32:2]):
-            p20.pick_up_tip()
-            p20.transfer(80, s, d.top(z=3), new_tip='never')
-            p20.drop_tip()
-        row_start += 1 if row_start == 0 else -1
-        ctx.comment('\n\n\n\n\n')
+                ['B1', 'B23'],
+                ['D1', 'D23'],
+                ['F1', 'F23'],
+                ['H1', 'H23'],
+                ['J1', 'J23'],
+                ['L1', 'L23'],
+                ['N1', 'N23'],
+                ['P1', 'P23'],
+
+                ['A2', 'A24'],
+                ['B2', 'B24'],
+                ['C2', 'C24'],
+                ['D2', 'D24'],
+                ['E2', 'E24'],
+                ['F2', 'F24'],
+                ['G2', 'G24'],
+                ['H2', 'H24'],
+                ['I2', 'I24'],
+                ['J2', 'J24'],
+                ['K2', 'K24'],
+                ['L2', 'L24'],
+                ['M2', 'M24'],
+                ['N2', 'N24'],
+                ['O2', 'O24'],
+                ['P2', 'P24'],
+            ]
+
+    source_wells = [
+                    'A1', 'B1', 'C1', 'D1', 'E1', 'F1', 'G1', 'H1',
+                    'A2', 'B2', 'C2', 'D2', 'E2', 'F2', 'G2', 'H2',
+                    'A3', 'A3', 'B3', 'B3', 'C3', 'C3', 'D3', 'D3',
+                    'E3', 'E3', 'F3', 'F3', 'G3', 'G3', 'H3', 'H3',
+                    ]
+
+    heights = [
+        [1, 1],
+        [1, 1],
+        [1, 1],
+        [1, 1],
+        [1, 1],
+        [1, 1],
+        [1, 1],
+        [1, 1],
+
+        [1, 1],
+        [1, 1],
+        [1, 1],
+        [1, 1],
+        [1, 1],
+        [1, 1],
+        [1, 1],
+        [1, 1],
+
+        [12, 5],
+        [1, 1],
+        [12, 5],
+        [1, 1],
+        [12, 5],
+        [1, 1],
+        [12, 5],
+        [1, 1],
+        [12, 5],
+        [1, 1],
+        [12, 5],
+        [1, 1],
+        [12, 5],
+        [1, 1],
+        [12, 5],
+        [1, 1],
+    ]
+
+    for i, (source_well, chunk, height) in enumerate(zip(source_wells,
+                                                         wells,
+                                                         heights)):
+        p1000.pick_up_tip()
+        p1000.aspirate(820, master_block.wells_by_name()[source_well].bottom(
+                                                                z=height[0]))
+        p1000.touch_tip()
+        for plate in range(2):
+            for well in chunk:
+                p1000.dispense(180, ctrl_plates[plate].wells_by_name()[well])
+                p1000.touch_tip()
+        p1000.dispense(100, master_block.wells_by_name()[source_well])
+        p1000.touch_tip()
+        p1000.aspirate(260, master_block.wells_by_name()[source_well].bottom(
+                                                                z=height[1]))
+        p1000.touch_tip()
+        for well in chunk:
+            p1000.dispense(80, ctrl_plates[2].wells_by_name()[well])
+            p1000.touch_tip()
+        p1000.dispense(100, master_block.wells_by_name()[source_well])
+        p1000.blow_out()
+        p1000.touch_tip()
+        p1000.drop_tip()
+        ctx.comment('\n\n')
