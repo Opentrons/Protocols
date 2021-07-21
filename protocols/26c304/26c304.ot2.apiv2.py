@@ -323,20 +323,21 @@ def run(ctx):
                     ]
     for i, (source_well, chunk) in enumerate(zip(source_wells, wells)):
         p1000.pick_up_tip()
-        p1000.aspirate(760, master_block.wells_by_name()[source_well])
+        p1000.aspirate(820, master_block.wells_by_name()[source_well])
         p1000.touch_tip()
         for plate in range(2):
             for well in chunk:
                 p1000.dispense(180, ctrl_plates[plate].wells_by_name()[well])
                 p1000.touch_tip()
-        p1000.dispense(40, master_block.wells_by_name()[source_well])
-        p1000.aspirate(400, master_block.wells_by_name()[source_well])
+        p1000.dispense(100, master_block.wells_by_name()[source_well])
+        p1000.aspirate(460, master_block.wells_by_name()[source_well])
         p1000.touch_tip()
         for well in chunk:
             p1000.dispense(180, ctrl_plates[2].wells_by_name()[well])
             p1000.touch_tip()
-        p1000.dispense(40, master_block.wells_by_name()[source_well])
+        p1000.dispense(100, master_block.wells_by_name()[source_well])
         p1000.blow_out()
+        p1000.touch_tip()
         p1000.drop_tip()
         ctx.comment('\n\n')
 
@@ -352,6 +353,7 @@ def run(ctx):
             p1000.dispense(180, ctrl_plates[i].wells_by_name()[d].top(z=-8))
             p1000.touch_tip()
         p1000.dispense(60, master_block.wells_by_name()[s].top(z=-5))
+        p1000.touch_tip()
         p1000.drop_tip()
     ctx.comment('\n\n\n')
 
@@ -381,7 +383,7 @@ def run(ctx):
                                     source_wells_400,
                                     wells)):
         p1000.pick_up_tip()
-        p1000.aspirate(760,
+        p1000.aspirate(820,
                        master_block.wells_by_name()[source_well_760].bottom(
                         z=1 if i < 4 else 12
                        ))
@@ -390,16 +392,17 @@ def run(ctx):
             for well in chunk:
                 p1000.dispense(180, ctrl_plates[plate].wells_by_name()[well])
                 p1000.touch_tip()
-        p1000.dispense(40, master_block.wells_by_name()[source_well_760])
-        p1000.aspirate(400,
+        p1000.dispense(100, master_block.wells_by_name()[source_well_760])
+        p1000.aspirate(460,
                        master_block.wells_by_name()[source_well_400].bottom(
                         z=1 if i < 4 else 12))
         p1000.touch_tip()
         for well in chunk:
             p1000.dispense(180, ctrl_plates[2].wells_by_name()[well])
             p1000.touch_tip()
-        p1000.dispense(40, master_block.wells_by_name()[source_well_400])
+        p1000.dispense(100, master_block.wells_by_name()[source_well_400])
         p1000.blow_out()
+        p1000.touch_tip()
         p1000.drop_tip()
         ctx.comment('\n\n')
 
