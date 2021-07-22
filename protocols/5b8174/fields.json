@@ -2,7 +2,7 @@
     {
         "type": "dropDown",
         "label": "P20 Single Channel Pipette Mount Position",
-        "name": "example_dropdown",
+        "name": "p20_mount",
         "options": [
           { "label": "Left", "value": "left" },
           { "label": "Right", "value": "right" }
