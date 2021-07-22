@@ -1,0 +1,35 @@
+[
+    {
+        "type": "dropDown",
+        "label": "P20 Single Channel Pipette Mount Position",
+        "name": "example_dropdown",
+        "options": [
+          { "label": "Left", "value": "left" },
+          { "label": "Right", "value": "right" }
+        ]
+      },
+      {
+        "type": "textFile",
+        "label": "Control CSV File",
+        "name": "ctrl_csv",
+        "default": "Rack,Sr.Barcode, ,Dest.Barcode,Dest.List Name,\n1,,PCRCTR15000004,,,\n2,,,,,\n3,,,,,\n4,,,,,\n,,,,,\nSource Labware,Source Slot,Source Well,Dest Labware,Dest Slot,Dest Well\neppendorf_24_tuberack_generic_2.0ml_screwcap,1,C1,appliedbiosystems_384_wellplate_20ul,6,B1\neppendorf_24_tuberack_generic_2.0ml_screwcap,1,A1,appliedbiosystems_384_wellplate_20ul,6,A4\neppendorf_24_tuberack_generic_2.0ml_screwcap,1,A1,appliedbiosystems_384_wellplate_20ul,6,D2\neppendorf_24_tuberack_generic_2.0ml_screwcap,1,A1,appliedbiosystems_384_wellplate_20ul,6,E2\neppendorf_24_tuberack_generic_2.0ml_screwcap,1,A1,appliedbiosystems_384_wellplate_20ul,6,A1\neppendorf_24_tuberack_generic_2.0ml_screwcap,1,A1,appliedbiosystems_384_wellplate_20ul,6,A2\neppendorf_24_tuberack_generic_2.0ml_screwcap,1,A1,appliedbiosystems_384_wellplate_20ul,6,A3\neppendorf_24_tuberack_generic_2.0ml_screwcap,1,A1,appliedbiosystems_384_wellplate_20ul,6,D1\neppendorf_24_tuberack_generic_2.0ml_screwcap,4,A1,appliedbiosystems_384_wellplate_20ul,6,E1\neppendorf_24_tuberack_generic_2.0ml_screwcap,4,D1,appliedbiosystems_384_wellplate_20ul,6,B2\neppendorf_24_tuberack_generic_2.0ml_screwcap,4,D1,appliedbiosystems_384_wellplate_20ul,6,B3\neppendorf_24_tuberack_generic_2.0ml_screwcap,4,D1,appliedbiosystems_384_wellplate_20ul,6,B4\neppendorf_24_tuberack_generic_2.0ml_screwcap,4,D1,appliedbiosystems_384_wellplate_20ul,6,B4\neppendorf_24_tuberack_generic_2.0ml_screwcap,4,D1,appliedbiosystems_384_wellplate_20ul,6,D4\neppendorf_24_tuberack_generic_2.0ml_screwcap,7,D1,appliedbiosystems_384_wellplate_20ul,6,D6\neppendorf_24_tuberack_generic_2.0ml_screwcap,7,D1,appliedbiosystems_384_wellplate_20ul,6,D7\neppendorf_24_tuberack_generic_2.0ml_screwcap,7,D1,appliedbiosystems_384_wellplate_20ul,6,D8\neppendorf_24_tuberack_generic_2.0ml_screwcap,7,A2,appliedbiosystems_384_wellplate_20ul,6,E7\neppendorf_24_tuberack_generic_2.0ml_screwcap,7,A2,appliedbiosystems_384_wellplate_20ul,6,E6\neppendorf_24_tuberack_generic_2.0ml_screwcap,7,A2,appliedbiosystems_384_wellplate_20ul,6,E7\neppendorf_24_tuberack_generic_2.0ml_screwcap,7,A2,appliedbiosystems_384_wellplate_20ul,6,E8\n"
+      },
+      {
+        "type": "textFile",
+        "label": "Assembly CSV File",
+        "name": "assembly_csv",
+        "default": "Rack,Sr.Barcode, ,Dest.Barcode,Dest.List Name,\n1,,,,,\n2,,,,,\n3,,,,,\n4,,,,,\n,,,,,\nSource Labware,Source Slot,Source Well,Dest Labware,Dest Slot,Dest Well\nappliedbiosystems_96_wellplate_200ul_on_eppendorf_cooling_block,2,C11,appliedbiosystems_384_wellplate_20ul,6,B1\nappliedbiosystems_96_wellplate_200ul_on_eppendorf_cooling_block,2,E11,appliedbiosystems_384_wellplate_20ul,6,A4\nappliedbiosystems_96_wellplate_200ul_on_eppendorf_cooling_block,2,E11,appliedbiosystems_384_wellplate_20ul,6,D2\nappliedbiosystems_96_wellplate_200ul_on_eppendorf_cooling_block,2,E11,appliedbiosystems_384_wellplate_20ul,6,E2\nappliedbiosystems_96_wellplate_200ul_on_eppendorf_cooling_block,2,E12,appliedbiosystems_384_wellplate_20ul,6,A1\nappliedbiosystems_96_wellplate_200ul_on_eppendorf_cooling_block,2,E12,appliedbiosystems_384_wellplate_20ul,6,A2\nappliedbiosystems_96_wellplate_200ul_on_eppendorf_cooling_block,2,E12,appliedbiosystems_384_wellplate_20ul,6,A3\nappliedbiosystems_96_wellplate_200ul_on_eppendorf_cooling_block,2,E12,appliedbiosystems_384_wellplate_20ul,6,D1\nappliedbiosystems_96_wellplate_200ul_on_eppendorf_cooling_block,3,E12,appliedbiosystems_384_wellplate_20ul,6,E1\nappliedbiosystems_96_wellplate_200ul_on_eppendorf_cooling_block,3,F11,appliedbiosystems_384_wellplate_20ul,6,B2\nappliedbiosystems_96_wellplate_200ul_on_eppendorf_cooling_block,3,F11,appliedbiosystems_384_wellplate_20ul,6,B3\nappliedbiosystems_96_wellplate_200ul_on_eppendorf_cooling_block,3,F12,appliedbiosystems_384_wellplate_20ul,6,B4\nappliedbiosystems_96_wellplate_200ul_on_eppendorf_cooling_block,3,F12,appliedbiosystems_384_wellplate_20ul,6,B4\nappliedbiosystems_96_wellplate_200ul_on_eppendorf_cooling_block,3,G11,appliedbiosystems_384_wellplate_20ul,6,D4\nappliedbiosystems_96_wellplate_200ul_on_eppendorf_cooling_block,5,G11,appliedbiosystems_384_wellplate_20ul,6,D6\nappliedbiosystems_96_wellplate_200ul_on_eppendorf_cooling_block,5,G12,appliedbiosystems_384_wellplate_20ul,6,D7\nappliedbiosystems_96_wellplate_200ul_on_eppendorf_cooling_block,5,G12,appliedbiosystems_384_wellplate_20ul,6,D8\nappliedbiosystems_96_wellplate_200ul_on_eppendorf_cooling_block,5,H11,appliedbiosystems_384_wellplate_20ul,6,E7\nappliedbiosystems_96_wellplate_200ul_on_eppendorf_cooling_block,5,H11,appliedbiosystems_384_wellplate_20ul,6,E6\nappliedbiosystems_96_wellplate_200ul_on_eppendorf_cooling_block,5,H12,appliedbiosystems_384_wellplate_20ul,6,E7\nappliedbiosystems_96_wellplate_200ul_on_eppendorf_cooling_block,5,H12,appliedbiosystems_384_wellplate_20ul,6,E8\n"
+      },
+      {
+        "type": "float",
+        "label": "Positive Control Transfer Volume (uL)",
+        "name": "ctrl_transfer_vol",
+        "default": 1.5
+      },
+      {
+        "type": "float",
+        "label": "Patient DNA Transfer Volume (uL)",
+        "name": "assembly_transfer_vol",
+        "default": 1.5
+      }
+]
