@@ -54,8 +54,8 @@ def run(ctx):
 
     def remove_supernatant(vol, index, loc):
         side = -1 if index % 2 == 0 else 1
-        aspirate_loc = col.bottom(z=asp_height).move(
-                Point(x=(col.diameter/2-length_from_side)*side))
+        aspirate_loc = loc.bottom(z=asp_height).move(
+                Point(x=(loc.diameter/2-length_from_side)*side))
         m300.aspirate(vol, aspirate_loc)
         m300.dispense(vol, waste)
         m300.blow_out()
