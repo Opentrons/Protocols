@@ -22,7 +22,7 @@
   {
     "type": "dropDown",
     "label": "Index Start Row",
-    "name": "num_samp",
+    "name": "index_start_row",
     "options": [
        { "label": "Row A", "value": 0 },
        { "label": "Row B", "value": 1 }
