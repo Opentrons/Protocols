@@ -40,6 +40,12 @@
       },
       {
         "type": "float",
+        "label": "Sample Transfer Aspiration Height (mm)",
+        "name": "sample_asp_height",
+        "default": 0.3
+      },
+      {
+        "type": "float",
         "label": "Reaction Volume (uL)",
         "name": "rxn_vol",
         "default": 40
