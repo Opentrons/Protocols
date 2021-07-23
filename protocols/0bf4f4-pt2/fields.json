@@ -20,6 +20,15 @@
      ]
   },
   {
+    "type": "dropDown",
+    "label": "Index Start Row",
+    "name": "num_samp",
+    "options": [
+       { "label": "Row A", "value": 0 },
+       { "label": "Row B", "value": 1 }
+     ]
+  },
+  {
   "type": "int",
   "label": "Index start column (1-12)",
   "name": "index_start_col",

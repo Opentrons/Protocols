@@ -11,10 +11,11 @@ metadata = {
 
 def run(ctx):
 
-    [num_samp, index_start_col, tip_park_start_col,
+    [num_samp, index_start_row, index_start_col, tip_park_start_col,
         asp_height, length_from_side,
         m20_mount, m300_mount] = get_values(  # noqa: F821
-      "num_samp", "index_start_col", "tip_park_start_col", "asp_height",
+      "num_samp", "index_start_row", "index_start_col",
+      "tip_park_start_col", "asp_height",
       "length_from_side", "m20_mount", "m300_mount")
 
     if not 1 <= index_start_col <= 12:
@@ -34,7 +35,7 @@ def run(ctx):
     mag_module = ctx.load_module('magnetic module gen2', '1')
     sample_plate = mag_module.load_labware('biorad_96_wellplate_200ul_pcr')
     reagent_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '2')
-    index_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '3')
+    index_plate = ctx.load_labware('eppendorf_384_wellplate_150ul', '3')
     reservoir = ctx.load_labware('nest_12_reservoir_15ml', '4')
     tiprack = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
                for slot in ['5', '6']]
@@ -153,7 +154,8 @@ def run(ctx):
     Select "Resume" on the Opentrons App. Empty trash if needed.
     ''')
 
-    for source_col, dest_col in zip(index_plate.rows()[0][index_start_col:
+    for source_col, dest_col in zip(index_plate.rows()[index_start_row][
+                                                          index_start_col:
                                                           index_start_col
                                                           + num_col],
                                     sample_plate.rows()[0]):
