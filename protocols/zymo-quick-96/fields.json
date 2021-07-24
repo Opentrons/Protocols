@@ -1,5 +1,11 @@
 [
   {
+    "type": "int",
+    "label": "Number of Samples (1-96)",
+    "name": "numSamps",
+    "default": 96
+  },
+  {
     "type": "dropDown",
     "label": "P300-Multi Generation",
     "name": "p300m",
