@@ -1,4 +1,5 @@
 from opentrons import types
+import math
 
 metadata = {
     'protocolName': 'Zymo Quick-DNA/RNA Viral Kit [Custom]',
@@ -9,18 +10,20 @@ metadata = {
 
 
 def run(protocol):
-    [p300m, pipMnt, mag_gen] = get_values(  # noqa: F821
-        'p300m', 'pipMnt', 'mag_gen')
+    [numSamps, p300m, pipMnt, mag_gen] = get_values(  # noqa: F821
+        'numSamps', 'p300m', 'pipMnt', 'mag_gen')
 
     # load labware and pipettes
+    numCols = math.ceil(numSamps/8)
     tips200 = [
         protocol.load_labware(
             'opentrons_96_tiprack_300ul', s) for s in [
                 '8', '5', '9', '6', '2'
                 ]
             ]
-    mixTips = tips200[0].rows()[0]
-    trashTips = [t for rack in tips200[1:] for t in rack.rows()[0]]
+    allTips = [t for rack in tips200 for t in rack.rows()[0]]
+    mixTips = allTips[:numCols]
+    trashTips = allTips[numCols:]
     p300 = protocol.load_instrument(p300m, pipMnt, tip_racks=tips200)
 
     magdeck = protocol.load_module(mag_gen, '7')
@@ -37,15 +40,15 @@ def run(protocol):
     trough = protocol.load_labware(
                 'nest_12_reservoir_15ml', '4', '12-Reservoir with Reagents')
 
-    buffer = [w for w in trough.wells()[:4] for _ in range(3)]
-    wb1 = [w for w in trough.wells()[4:8] for _ in range(3)]
-    wb2 = [w for w in trough.wells()[8:] for _ in range(3)]
-    ethanol1 = [w for w in trough2.wells()[:4] for _ in range(3)]
-    ethanol2 = [w for w in trough2.wells()[4:8] for _ in range(3)]
+    buffer = [w for w in trough.wells()[:4] for _ in range(3)][:numCols]
+    wb1 = [w for w in trough.wells()[4:8] for _ in range(3)][:numCols]
+    wb2 = [w for w in trough.wells()[8:] for _ in range(3)][:numCols]
+    ethanol1 = [w for w in trough2.wells()[:4] for _ in range(3)][:numCols]
+    ethanol2 = [w for w in trough2.wells()[4:8] for _ in range(3)][:numCols]
     water = trough2['A12']
 
-    magsamps = magplate.rows()[0]
-    elutes = flatplate.rows()[0]
+    magsamps = magplate.rows()[0][:numCols]
+    elutes = flatplate.rows()[0][:numCols]
     sides = [1, -1]*6
 
     p300.flow_rate.aspirate = 50
