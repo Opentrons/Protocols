@@ -10,8 +10,11 @@
 ## Description
 This protocol automates nucleic acid purification with the [Zymo Quick-DNA/RNA Viral MagBead Kit](https://www.zymoresearch.com/collections/quick-dna-rna-viral-kits/products/quick-dna-rna-viral-magbead) and is a modifed version of [this protocol](https://protocols.opentrons.com/protocol/zymo-quick). In this version, tips are conserved to allow for a fully automated run of 96 samples.</br>
 </br>
+**Update (July 24, 2021)**: Added a new parameter - *Number of Samples* - to allow user to specify the number of samples used per run.</br>
+</br> 
 
 Explanation of complex parameters below:
+**Number of Samples (1-96)**: Specify how many samples are used</br>
 **P300-Multi Generation**: Select which P300-Multi is being used</br>
 **P300-Mult Mount**: Select which mount the pipette is attached to</br>
 **Magnetic Module Generation**: Select which version of the Magnetic Module is used
