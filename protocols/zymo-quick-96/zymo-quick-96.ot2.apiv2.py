@@ -150,7 +150,7 @@ def run(protocol):
 
     for well, tip, side in zip(magsamps, mixTips, sides):
         p300.pick_up_tip(tip)
-        supernatant_removal(900, well, waste1, side, zz=55)
+        supernatant_removal(900, well, waste1, side, zz=25)
         p300.return_tip()
 
     magdeck.disengage()
