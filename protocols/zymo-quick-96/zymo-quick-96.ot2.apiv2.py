@@ -127,19 +127,19 @@ def run(protocol):
     protocol.delay(minutes=5)
 
     # Step 5 - Remove supernatant
-    def supernatant_removal(vol, src, dest, s, yy=0):
+    def supernatant_removal(vol, src, dest, s, zz=0.5):
         p300.flow_rate.aspirate = 20
         tvol = vol
         asp_ctr = 0
         while tvol > 180:
             p300.aspirate(
-                180, src.bottom().move(types.Point(x=-s, y=yy, z=0.5)))
+                180, src.bottom().move(types.Point(x=-s, y=0, z=zz)))
             p300.dispense(180, dest)
             p300.aspirate(10, dest)
             tvol -= 180
             asp_ctr += 1
-            if yy > 10:
-                yy -= 10
+            if zz > 10:
+                zz -= 10
         p300.aspirate(
             tvol, src.bottom().move(types.Point(x=-s, y=0, z=0.5)))
         dvol = 10*asp_ctr + tvol
@@ -150,7 +150,7 @@ def run(protocol):
 
     for well, tip, side in zip(magsamps, mixTips, sides):
         p300.pick_up_tip(tip)
-        supernatant_removal(900, well, waste1, side, yy=55)
+        supernatant_removal(900, well, waste1, side, zz=55)
         p300.return_tip()
 
     magdeck.disengage()
