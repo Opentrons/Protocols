@@ -149,7 +149,7 @@
   {
     "type": "dropDown",
     "label": "Waste water mode?",
-    "name": "reset_tipracks",
+    "name": "waste_water_mode",
     "options": [
        { "label": "Yes waste water mode", "value": true },
        { "label": "No skip", "value": false }
