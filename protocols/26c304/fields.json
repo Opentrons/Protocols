@@ -56,13 +56,13 @@
   {
     "type": "float",
     "label": "Touch tip z-offset",
-    "name": "touchtip_offset",
+    "name": "touchtip_z",
     "default": -1.0
   },
   {
     "type": "float",
     "label": "Touch tip speed",
-    "name": "touchtip_z",
+    "name": "touchtip_speed",
     "default": 60.0
   },
   {
