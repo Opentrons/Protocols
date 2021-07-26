@@ -8,14 +8,14 @@ metadata = {
 
 def run(ctx):
 
-    [p20_mount, p300_mount, sample_container, input_csv, rxn_vol,
-        enzyme_vol, enz_asp_rate, enz_disp_rate, digest_duration,
+    [p20_mount, p300_mount, sample_container, input_csv,
+        rxn_vol, enzyme_vol, enz_asp_rate, enz_disp_rate, digest_duration,
         heat_kill_temperature, heat_kill_duration,
-        temp_mod_temperature] = get_values(  # noqa: F821
+        temp_mod_temperature, sample_asp_height] = get_values(  # noqa: F821
         "p20_mount", "p300_mount", "sample_container",
         "input_csv", "rxn_vol", "enzyme_vol", "enz_asp_rate", "enz_disp_rate",
         "digest_duration", "heat_kill_temperature", "heat_kill_duration",
-        "temp_mod_temperature")
+        "temp_mod_temperature", "sample_asp_height")
 
     # Load Labware
     tc_mod = ctx.load_module('thermocycler module')
@@ -153,7 +153,7 @@ def run(ctx):
         sample_vol = float(line[2])
         dest = line[5]
         pip = p300 if sample_vol > 20 else p20
-        pip.transfer(sample_vol, src.bottom(0.3), tc_plate[dest],
+        pip.transfer(sample_vol, src.bottom(sample_asp_height), tc_plate[dest],
                      mix_after=(2, 20))
 
     # Transfer Enzyme to PCR Wells
