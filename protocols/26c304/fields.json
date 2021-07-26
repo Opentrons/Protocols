@@ -48,6 +48,24 @@
     "default": 274
   },
   {
+    "type": "float",
+    "label": "Touch tip radius",
+    "name": "touchtip_radius",
+    "default": 1.0
+  },
+  {
+    "type": "float",
+    "label": "Touch tip z-offset",
+    "name": "touchtip_offset",
+    "default": -1.0
+  },
+  {
+    "type": "float",
+    "label": "Touch tip speed",
+    "name": "touchtip_speed",
+    "default": 60.0
+  },
+  {
     "type": "dropDown",
     "label": "P20 Pipette Mount",
     "name": "p20_mount",
