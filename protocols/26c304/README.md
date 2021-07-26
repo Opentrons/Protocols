@@ -24,6 +24,9 @@ Explanation of complex parameters below:
 * `P1000 aspiration/dispense bottom clearance (mm)`: Specify the aspiration and dispense clearance from the bottom of the well for the P1000 pipette (to avoid plate pick up). The default value is 1mm from the bottom of the well.
 * `Mix height clearance`: Specify the height from the bottom of the well to mix (to prevent overflowing).
 * `P1000 aspirate/dispense flow rate`: Specify the p1000 aspirate and dispense flow rates.
+* `Touch tip radius`: Describes the proportion of the target well’s radius. When radius=1.0, the pipette tip will move to the edge of the target well; when radius=0.5, it will move to 50% of the well’s radius. Default: 1.0 (100%)
+* `Touch tip v-offset`:  Specify the offset in mm from the top of the well to touch tip A positive offset moves the tip higher above the well, while a negative offset moves it lower into the well Default: -1.0 mm
+* `Touch tip speed`:Specify the speed for touch tip motion, in mm/s. Default: 60.0 mm/s, Max:80.0 mm/s, Min: 20.0 mm/s
 * `P20 Pipette Mount`: Specify which mount (left or right) to load your pipette.
 * `P1000 Pipette Mount`: Specify which mount (left or right) to load your pipette.
 
