@@ -62,7 +62,7 @@
   {
     "type": "float",
     "label": "Touch tip speed",
-    "name": "touchtip_speed",
+    "name": "touchtip_z",
     "default": 60.0
   },
   {
