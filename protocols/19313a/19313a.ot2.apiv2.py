@@ -10,22 +10,6 @@ metadata = {
 }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"num_samp": 2,
-    "reset_tipracks": true, "mix_reps1": 5, "mix_reps2": 5,
-    "mix_reps_wash1": 5, "mix_reps_wash2": 5, "mix_reps_elution1": 5,
-    "mix_reps_elution2": 5, "settling_1": 5, "settling_2": 5, "settling_3": 5,
-    "settling_wash": 5, "settling_drying": 5, "settling_elution1": 5,
-    "settling_elution2": 5, "wash1_vol": 150, "wash2_vol": 150,
-    "elution_vol": 150, "asp_height":1, "length_from_side":2,
-    "lysis_vol": 100, "move_vol": 100, "binding_buffer_vol": 100,
-    "final_vol": 100,
-    "heating_module_temp": 65, "mag_height_1": 4.5,
-    "waste_water_mode": true, "p300_mount":"left"}""")
-    return [_all_values[n] for n in names]
-
-
 def run(ctx):
 
     [num_samp, reset_tipracks, mix_reps1, mix_reps2, mix_reps_wash1,
