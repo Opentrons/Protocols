@@ -94,8 +94,8 @@ def run(ctx):
 
     num_one = int(tip_count_list[0])
     num_two = int(tip_count_list[1])
-    tips_300 = [tip for tiprack in tiprack300 for tip in tiprack.wells()]
 
+    tips_300 = [tip for tiprack in tiprack300 for tip in tiprack.wells()]
     p300.starting_tip = tips_300[num_one]
 
     def pick_up300():
@@ -114,7 +114,7 @@ def run(ctx):
             p300.pick_up_tip(tiprack200.wells()[filter_tip_count])
             filter_tip_count += 1
         except filter_tip_count == 96:
-            ctx.pause("Replace all 300ul non-filter tip racks")
+            ctx.pause("Replace all 200ul filter tip racks")
             filter_tip_count = 0
             p300.pick_up_tip(tiprack200.wells()[filter_tip_count])
 
