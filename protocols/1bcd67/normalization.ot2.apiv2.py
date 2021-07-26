@@ -151,6 +151,18 @@ resuming.')
         for h in [1, mix_height]:
             m300.mix(3, mix_vol, mix_well.bottom(h))
 
+    p1000_tip = tip_log[p1000]['tips'][tip_log[p1000]['count']]
+    p1000_tip_slot = p1000_tip.parent.parent
+    p1000_tip_name = p1000_tip.display_name.split(' ')[0]
+    m300_tip = tip_log[m300]['tips'][tip_log[m300]['count']]
+    m300_tip_slot = m300_tip.parent.parent
+    m300_tip_name = m300_tip.display_name.split(' ')[0]
+    ctx.pause(f'''
+        P1000 single pipette beginning at tip {p1000_tip_name} on slot \
+{p1000_tip_slot}
+        P300 multi pipette beginning at tip {m300_tip_name} on slot \
+{m300_tip_slot}''')
+
     # perform dilutions
     chunks = []
     for i, chunk in enumerate(data_chunks):
