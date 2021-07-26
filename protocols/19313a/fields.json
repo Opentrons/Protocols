@@ -10,8 +10,8 @@
     "label": "Reset tipracks?",
     "name": "reset_tipracks",
     "options": [
-       { "label": "Yes, reset", "value": true },
-       { "label": "No, do not reset", "value": false }
+       { "label": "Yes reset", "value": true },
+       { "label": "No do not reset", "value": false }
   },
   {
     "type": "int",
@@ -150,8 +150,8 @@
     "label": "Waste water mode?",
     "name": "reset_tipracks",
     "options": [
-       { "label": "Yes, waste water mode", "value": true },
-       { "label": "No, skip", "value": false }
+       { "label": "Yes waste water mode", "value": true },
+       { "label": "No skip", "value": false }
   },
   {
     "type": "int",
