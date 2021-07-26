@@ -12,21 +12,21 @@ metadata = {
 
 def run(ctx):
 
-    # [num_samp, reset_tipracks, mix_reps1, mix_reps2, mix_reps_wash1,
-    #  mix_reps_wash2, mix_reps_elution1, mix_reps_elution2, settling_1,
-    #  settling_2, settling_3, settling_wash, settling_drying, settling_elution1,
-    #  settling_elution2, wash1_vol, wash2_vol, elution_vol, lysis_vol, move_vol,
-    #  binding_buffer_vol, final_vol, heating_module_temp, mag_height_1,
-    #  waste_water_mode, asp_height, length_from_side,
-    #  p300_mount] = get_values(  # noqa: F821
-    #     "num_samp", "reset_tipracks", "mix_reps1", "mix_reps2",
-    #     "mix_reps_wash1", "mix_reps_wash2", "mix_reps_elution1",
-    #     "mix_reps_elution2", "settling_1", "settling_2", "settling_3",
-    #     "settling_wash", "settling_drying", "settling_elution1",
-    #     "settling_elution2", "wash1_vol", "wash2_vol", "elution_vol",
-    #     "lysis_vol", "move_vol", "binding_buffer_vol", "final_vol",
-    #     "heating_module_temp", "mag_height_1", "waste_water_mode",
-    #     "asp_height", "length_from_side", "p300_mount")
+    [num_samp, reset_tipracks, mix_reps1, mix_reps2, mix_reps_wash1,
+     mix_reps_wash2, mix_reps_elution1, mix_reps_elution2, settling_1,
+     settling_2, settling_3, settling_wash, settling_drying, settling_elution1,
+     settling_elution2, wash1_vol, wash2_vol, elution_vol, lysis_vol, move_vol,
+     binding_buffer_vol, final_vol, heating_module_temp, mag_height_1,
+     waste_water_mode, asp_height, length_from_side,
+     p300_mount] = get_values(  # noqa: F821
+        "num_samp", "reset_tipracks", "mix_reps1", "mix_reps2",
+        "mix_reps_wash1", "mix_reps_wash2", "mix_reps_elution1",
+        "mix_reps_elution2", "settling_1", "settling_2", "settling_3",
+        "settling_wash", "settling_drying", "settling_elution1",
+        "settling_elution2", "wash1_vol", "wash2_vol", "elution_vol",
+        "lysis_vol", "move_vol", "binding_buffer_vol", "final_vol",
+        "heating_module_temp", "mag_height_1", "waste_water_mode",
+        "asp_height", "length_from_side", "p300_mount")
 
     if not 0 <= num_samp <= 4:
         raise Exception('Please enter a sample number between 1-4')
