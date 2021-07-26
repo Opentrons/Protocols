@@ -28,8 +28,8 @@ def run(ctx):
         "heating_module_temp", "mag_height_1", "waste_water_mode",
         "asp_height", "length_from_side", "p300_mount")
 
-    if not 0 <= num_samp <= 4:
-        raise Exception('Please enter a sample number between 1-4')
+    # if not 0 <= num_samp <= 4:
+    #     raise Exception('Please enter a sample number between 1-4')
 
     # load labware
     mag_mod = ctx.load_module('magnetic module gen2', '7')
