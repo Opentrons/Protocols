@@ -12,6 +12,7 @@
     "options": [
        { "label": "Yes reset", "value": true },
        { "label": "No do not reset", "value": false }
+     ]
   },
   {
     "type": "int",
@@ -152,6 +153,7 @@
     "options": [
        { "label": "Yes waste water mode", "value": true },
        { "label": "No skip", "value": false }
+     ]
   },
   {
     "type": "int",
