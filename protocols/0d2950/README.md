@@ -15,6 +15,7 @@ This protocol preps a sample plate with up to 95 samples (with one control) as w
 
 Explanation of complex parameters below:
 * `Number of samples`: Specify the number of samples that will be processed. Up to 95 samples can be run, leaving room for a control.
+* `P1000 sample tube aspiration height`: Specify the height (in mm) for the P1000 pipette to aspirate when visiting sample tubes. Default is 1mm.
 * `MagBead mix speed`: Specify the speed (in ul/sec) to mix mag beads.
 `P1000 aspiration/dispense speed for mag bead transfer`: Specify the aspiration/dispense speed for mag bead transfer of the p1000 pipette.
 * `P20 single GEN2 Mount`: Specify which mount (left or right) to load the P20 single channel pipette.
