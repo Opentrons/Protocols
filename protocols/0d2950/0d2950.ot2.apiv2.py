@@ -13,38 +13,41 @@ def run(ctx):
 
     [num_samp, p1000_sample_height,
      p1000_water_height, fiftymil_h_stop, mag_bead_mix_speed,
-     p1000_mag_flow_rate, p20_mount, p1000_mount] = get_values(  # noqa: F821
+     p1000_mag_flow_rate, p300_mount, p1000_mount] = get_values(  # noqa: F821
         "num_samp", "p1000_sample_height", "p1000_water_height",
         "fiftymil_h_stop", "mag_bead_mix_speed", "p1000_mag_flow_rate",
-        "p20_mount", "p1000_mount")
+        "p300_mount", "p1000_mount")
 
     if not 1 <= num_samp <= 95:
         raise Exception("Enter a sample number between 1-95")
 
+    num_col = math.floor(num_samp/8)
     num_samp = num_samp+1
     mix_rate = mag_bead_mix_speed/274.7
+    remainder = num_samp-num_col*8
 
     # load labware
     samples = [ctx.load_labware('sample_15_tuberack_5000ul', slot)
                for slot in ['1', '2', '3']]
-    ethanol_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '4')
-    buffer_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '5')
-    elution_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '6')
-    sample_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '7')
-    buff_reg = ctx.load_labware('buffer_6_tuberack_50000ul', '8')
-    proK_water = ctx.load_labware('reagent_24_tuberack_1500ul', '9')
+    ethanol_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '4',
+                                     label='Ethanol plate')
+    buffer_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '5',
+                                    label='Buffer plate')
+    elution_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '6',
+                                     label='Elution plate')
+    sample_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '7',
+                                    label='Sample plate')
+    reagents = ctx.load_labware('nest_12_reservoir_15ml', '8')
+    ethanol = ctx.load_labware('nest_1_reservoir_195ml', '9',
+                               label='Ethanol reservoir')
     tiprack1000 = [ctx.load_labware('opentrons_96_tiprack_1000ul', '10')]
-    tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '11')]
+    tiprack300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '11')]
 
     # load instrument
-    p20 = ctx.load_instrument('p20_single_gen2',
-                              p20_mount, tip_racks=tiprack20)
+    p300 = ctx.load_instrument('p300_multi_gen2',
+                               p300_mount, tip_racks=tiprack300)
     p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,
                                 tip_racks=tiprack1000)
-    p20.well_bottom_clearance.aspirate = 2.5
-    p20.well_bottom_clearance.dispense = 2.5
-    p1000.well_bottom_clearance.aspirate = 2.5
-    p1000.well_bottom_clearance.dispense = 2.5
 
     def pick_up1000():
         try:
@@ -54,103 +57,107 @@ def run(ctx):
             p1000.reset_tipracks()
             p1000.pick_up_tip()
 
-    def pick_up20():
+    def pick_up300():
         try:
-            p20.pick_up_tip()
+            p300.pick_up_tip()
         except protocol_api.labware.OutOfTipsError:
-            ctx.pause("Replace all 20ul tip racks. Empty trash if needed.")
-            p20.reset_tipracks()
-            p20.pick_up_tip()
+            ctx.pause("Replace all 300ul tip racks. Empty trash if needed.")
+            p300.reset_tipracks()
+            p300.pick_up_tip()
 
-    # protocol
-    sample_tube_map = [tube for tuberack in samples
-                       for tube in tuberack.wells()][:num_samp-1]
-    ethanol_map = [well for row in ethanol_plate.rows()
-                   for well in row][:num_samp]
-    buffer_map = [well for row in buffer_plate.rows()
-                  for well in row][:num_samp]
-    elution_map = [well for row in elution_plate.rows()
-                   for well in row][:num_samp]
-    sample_map = [well for row in sample_plate.rows()
-                  for well in row][:num_samp]
+    # PROTOCOL
 
     # reagents
-    buffer = buff_reg.wells()[1]
-
-    if num_samp < 48:
-        ethanol = [buff_reg.wells()[0]]
-    else:
-        ethanol = buff_reg.rows()[0][:2]
-
-    mag_beads = buff_reg.rows()[0][2]
-    elution_solution = buff_reg.rows()[1][1]
-    proK = proK_water.wells()[0]
-    water = proK_water.wells()[1]
-    ms2 = proK_water.wells()[2]
-
-    rad = 14
-    v0_eth = 1000*num_samp/2 if num_samp > 49 else num_samp*1000
-    v0_buf = 500*num_samp
-    h0_eth = v0_eth/(math.pi*rad**2) if v0_eth/(math.pi*rad**2) > 44 \
-        else fiftymil_h_stop
-    h0_buff = v0_buf/(math.pi*rad**2) if v0_buf/(math.pi*rad**2) > 44 \
-        else fiftymil_h_stop
-    dh_eth = 1000/(math.pi*rad**2)*1.2
-    dh_buff = 0.5*dh_eth*1.2
+    buffer = reagents.wells()[:4]
+    elution_solution = reagents.wells()[4]
+    mag_beads = reagents.wells()[5:7]
+    eth = ethanol.wells()[0]
+    sample_tube_map = [tube for tuberack in samples
+                       for tube in tuberack.wells()][:num_samp-1]
+    sample_map = [well for row in sample_plate.columns()
+                  for well in row][:num_samp]
 
     # make buffer plate
-    pick_up1000()
-    h_track_buff = h0_buff*0.95
-    for well in buffer_map:
-        p1000.aspirate(500, buffer.bottom(z=h_track_buff))
-        p1000.touch_tip()
-        p1000.dispense(500, well)
-        h_track_buff -= dh_buff if h_track_buff > 5 else 0
-        if h_track_buff < 20:
-            h_track_buff = fiftymil_h_stop
-    p1000.drop_tip()
+    pick_up300()
+    for buffer_col, dest_col in zip(buffer*num_col,
+                                    buffer_plate.rows()[0][
+                                        :num_col if num_samp % 8 != 0
+                                        else num_col+1]):
+        p300.transfer(500,
+                      buffer_col,
+                      dest_col,
+                      new_tip='never',
+                      touch_tip=True)
+    p300.drop_tip()
+
+    if num_samp % 8 != 0:
+        pick_up1000()
+        for buffer_well, dest_well in zip(buffer*num_col,
+                                          buffer_plate.wells()[
+                                                            num_col*8:
+                                                            num_col*8+remainder
+                                                            ]):
+            p1000.aspirate(500, buffer_well)
+            p1000.dispense(500, dest_well)
+        p1000.drop_tip()
+    ctx.comment('\n\n\n')
 
     # make ethanol plate
-    h_track_eth = h0_eth*0.95
-    pick_up1000()
-    for i, (tube, well) in enumerate(zip(ethanol*num_samp, ethanol_map)):
-        p1000.aspirate(1000, tube.bottom(z=h_track_eth))
-        p1000.touch_tip()
-        p1000.dispense(1000, well)
-        if i % 2 == 0:
-            h_track_eth -= dh_eth if h_track_eth > 5 else 0
-        if h_track_eth < 20:
-            h_track_eth = fiftymil_h_stop
-    p1000.drop_tip()
+    ctx.comment('\n\n\n')
+    pick_up300()
+    for eth_col in buffer_plate.rows()[0][:num_col if num_samp % 8 != 0
+                                          else num_col+1]:
+        p300.transfer(1000,
+                      eth,
+                      eth_col,
+                      new_tip='never',
+                      touch_tip=True)
+    p300.drop_tip()
+    if num_samp % 8 != 0:
+        pick_up1000()
+        for eth_well in ethanol_plate.wells()[num_col*8:num_col*8+remainder]:
+            p1000.aspirate(1000, eth)
+            p1000.dispense(1000, eth_well)
+        p1000.drop_tip()
 
     # make elution buffer plate
-    floor = 115
-    pick_up1000()
-    p1000.aspirate(floor, elution_solution)
-    chunks = [elution_map[i:i+12] for i in range(0, len(elution_map), 12)]
-    for chunk in chunks:
-        p1000.aspirate(50*len(chunk), elution_solution.bottom(fiftymil_h_stop))
-        p1000.touch_tip()
-        for well in chunk:
-            p1000.dispense(50, well)
-    ctx.comment('\n\n')
-    p1000.dispense(floor, elution_solution)
-    p1000.blow_out()
-    p1000.drop_tip()
+    chunks = [
+                elution_plate.rows()[0][i:i+4]
+                [
+                    :num_col+1 if num_samp % 8 == 0
+                    else num_col % 4 if i+4 >= num_col+1 else 4
+                ]
+                for i in range(0, len(elution_plate.rows()[0][:num_col]), 4)
+              ]
 
-    # add proteinase k
-    p20.flow_rate.dispense = 3.78
-    pick_up20()
-    for well in sample_map:
-        p20.aspirate(5, proK.bottom(z=p1000_water_height))
-        p20.dispense(5, well)
-        p20.blow_out()
-        p20.touch_tip()
-    p20.drop_tip()
+    if num_samp > 8:
+        pick_up300()
+    for chunk in chunks:
+        p300.aspirate(50*len(chunk)+50, elution_solution)
+        p300.touch_tip()
+        for well in chunk:
+            p300.dispense(50, well)
+        p300.dispense(50, elution_solution)
+        p300.blow_out()
+    if p300.has_tip:
+        p300.drop_tip()
+
+    if num_samp % 8 != 0 or num_samp == 8:
+        ctx.comment('\n\n\n')
+        floor = 115
+        pick_up1000()
+        p1000.aspirate(floor+50*remainder, elution_solution)
+        for elution_well in elution_plate.wells()[
+                                                    num_col*8:
+                                                    num_col*8+remainder
+                                                    ]:
+            p1000.dispense(50, elution_well)
+        p1000.dispense(floor, elution_solution)
+        p1000.blow_out()
+        p1000.drop_tip()
 
     # add patient samples
     samp_ctr = 0
-
     for sample, well in zip(sample_tube_map*3, sample_map[:num_samp-1]):
         pick_up1000()
         p1000.aspirate(200,
@@ -163,30 +170,35 @@ def run(ctx):
             ctx.pause("Replace sample racks")
             samp_ctr = 0
 
-    # add control
-    ctx.comment('Adding control')
-    pick_up1000()
-    p1000.aspirate(200, water.bottom(z=p1000_water_height))
-    p1000.dispense(200, sample_map[num_samp-1])
-    p1000.drop_tip()
-
     # add mag beads
-    pick_up1000()
-    p1000.mix(15, 750, mag_beads.bottom(z=fiftymil_h_stop), rate=mix_rate)
-    p1000.drop_tip()
+    pick_up300()
+    for well in mag_beads:
+        p300.mix(15, 300, well, rate=mix_rate)
+    p300.drop_tip()
     p1000.flow_rate.aspirate = p1000_mag_flow_rate
     p1000.flow_rate.dispense = p1000_mag_flow_rate
-    for well in sample_map:
-        pick_up1000()
-        p1000.aspirate(275, mag_beads.bottom(z=fiftymil_h_stop))
-        p1000.touch_tip()
-        p1000.dispense(275, well.top())
-        p1000.drop_tip()
 
-    # add ms2
-    for well in sample_map:
-        pick_up20()
-        p20.aspirate(5, ms2.bottom(z=p1000_water_height))
-        p20.dispense(5, well)
-        p20.blow_out()
-        p20.drop_tip()
+    for beads, dest_col in zip(mag_beads*num_col,
+                               sample_plate.rows()[0][
+                                        :num_col if num_samp % 8 != 0
+                                        else num_col+1]):
+        pick_up300()
+        p300.transfer(275,
+                      beads,
+                      dest_col,
+                      new_tip='never',
+                      touch_tip=True)
+        p300.drop_tip()
+
+    if num_samp % 8 != 0:
+
+        for beads, dest_well in zip(mag_beads*num_col,
+                                    sample_plate.wells()[
+                                                        num_col*8:
+                                                        num_col*8+remainder
+                                                        ]):
+            pick_up1000()
+            p1000.aspirate(275, beads)
+            p1000.dispense(275, dest_well)
+            p1000.drop_tip()
+    ctx.comment('\n\n\n')
