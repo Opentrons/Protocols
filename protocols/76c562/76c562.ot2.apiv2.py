@@ -130,7 +130,11 @@ resuming.'.format(pip.max_volume))
         pick_up(pipette)
         pipette.transfer(float(vol), source, dest, new_tip='never')
         if mix:
-            pipette.mix(3, float(vol), dest)
+            if float(vol) < pipette.max_volume:
+                mix_vol = float(vol)
+            else:
+                mix_vol = pipette.max_volume
+            pipette.mix(3, mix_vol, dest)
         pipette.blow_out()
         pipette.drop_tip()
 
