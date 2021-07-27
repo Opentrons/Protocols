@@ -156,13 +156,13 @@
      ]
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "Remove supernatant aspiration height (mm)",
     "name": "asp_height",
     "default": 1
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "Length from side of the well opposite magnetically engaged beads (mm)",
     "name": "length_from_side",
     "default": 2
