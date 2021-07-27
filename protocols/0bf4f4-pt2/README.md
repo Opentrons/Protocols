@@ -43,7 +43,7 @@ Explanation of complex parameters below:
 
 * Deck setup with a full plate of samples. Tip rack on slot 11 will be used to park tips in ethanol wash steps.
 
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0bf4f4/pt2/Screen+Shot+2021-07-23+at+2.40.55+PM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0bf4f4/pt2/Screen+Shot+2021-07-16+at+12.46.50+PM.png)
 
 ### Reagent Setup
 
