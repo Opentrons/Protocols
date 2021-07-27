@@ -7,6 +7,12 @@
   },
   {
     "type": "int",
+    "label": "P1000 sample tube aspiration height",
+    "name": "p1000_sample_height",
+    "default": 2
+  },
+  {
+    "type": "int",
     "label": "Mag Bead Mix Speed",
     "name": "mag_bead_mix_speed",
     "default": 91
