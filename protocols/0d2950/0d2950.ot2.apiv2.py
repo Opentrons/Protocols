@@ -11,11 +11,9 @@ metadata = {
 
 def run(ctx):
 
-    [num_samp, p1000_sample_height,
-     p1000_water_height, fiftymil_h_stop, mag_bead_mix_speed,
+    [num_samp, mag_bead_mix_speed,
      p1000_mag_flow_rate, p300_mount, p1000_mount] = get_values(  # noqa: F821
-        "num_samp", "p1000_sample_height", "p1000_water_height",
-        "fiftymil_h_stop", "mag_bead_mix_speed", "p1000_mag_flow_rate",
+        "num_samp", "mag_bead_mix_speed", "p1000_mag_flow_rate",
         "p300_mount", "p1000_mount")
 
     if not 1 <= num_samp <= 95:
