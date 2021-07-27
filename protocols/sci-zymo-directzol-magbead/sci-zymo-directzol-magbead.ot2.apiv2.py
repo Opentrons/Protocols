@@ -5,22 +5,6 @@ import math
 from opentrons import types
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{
-    "num_samples":8,
-    "deepwell_type":"nest_96_wellplate_2ml_deep",
-    "res_type":"nest_12_reservoir_15ml",
-    "starting_vol":400,
-    "binding_buffer_vol":430,
-    "elution_vol":50,
-    "park_tips":false,
-    "mag_gen":"magnetic module gen2",
-    "m300_mount": "left"
-    }""")
-    return [_all_values[n] for n in names]
-
-
 metadata = {
     'protocolName': 'Zymo Research Direct-zol™-96 MagBead RNA Kit',
     'author': 'Opentrons <protocols@opentrons.com>',
