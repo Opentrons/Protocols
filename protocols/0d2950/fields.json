@@ -7,21 +7,9 @@
   },
   {
     "type": "int",
-    "label": "P1000 1.5mL tube aspiration height",
-    "name": "p1000_water_height",
-    "default": 2
-  },
-  {
-    "type": "int",
     "label": "P1000 sample tube aspiration height",
     "name": "p1000_sample_height",
     "default": 2
-  },
-  {
-    "type": "int",
-    "label": "50 mL Tubes Aspiration Height",
-    "name": "fiftymil_h_stop",
-    "default": 5
   },
   {
     "type": "int",
@@ -37,8 +25,8 @@
   },
   {
     "type": "dropDown",
-    "label": "P20 Single GEN2 Mount",
-    "name": "p20_mount",
+    "label": "P300 Multi GEN2 Mount",
+    "name": "p300_mount",
     "options": [
        { "label": "left", "value": "left" },
        { "label": "right", "value": "right" }
