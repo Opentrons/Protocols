@@ -51,43 +51,43 @@
     "default": 6
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "Settling time 1",
     "name": "settling_1",
     "default": 4
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "Settling time 2",
     "name": "settling_2",
     "default": 5
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "Settling time 3",
     "name": "settling_3",
     "default": 1
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "Settling wash time",
     "name": "settling_wash",
     "default": 0.5
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "Settling dry time",
     "name": "settling_drying",
     "default": 3
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "Settling elution 1",
     "name": "settling_elution1",
     "default": 1
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "Settling elution 2",
     "name": "settling_elution2",
     "default": 5
@@ -141,7 +141,7 @@
     "default": 65
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "Magnetic module engage height",
     "name": "mag_height_1",
     "default": 4.5
