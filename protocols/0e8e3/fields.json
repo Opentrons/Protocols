@@ -1,0 +1,80 @@
+[
+  {
+    "type": "int",
+    "label": "number of samples (1-96)",
+    "name": "num_samples",
+    "default": 24
+  },
+  {
+    "type": "float",
+    "label": "volume of DNAse buffer (in µl)",
+    "name": "vol_dna_buff",
+    "default": 20.0
+  },
+  {
+    "type": "int",
+    "label": "transfer volume plate A to B (in µl)",
+    "name": "vol_a_to_b",
+    "default": 20.0
+  },
+  {
+    "type": "int",
+    "label": "dilution buffer volume to plate D (in µl)",
+    "name": "vol_dil_to_d",
+    "default": 20.0
+  },
+  {
+    "type": "int",
+    "label": "dilution buffer volume to plate E (in µl)",
+    "name": "vol_dil_to_e",
+    "default": 20.0
+  },
+  {
+    "type": "int",
+    "label": "transfer volume plate C to D (in µl)",
+    "name": "vol_c_to_d",
+    "default": 20.0
+  },
+  {
+    "type": "int",
+    "label": "transfer volume plate D to E (in µl)",
+    "name": "vol_d_to_e",
+    "default": 20.0
+  },
+  {
+    "type": "dropDown",
+    "label": "P20 GEN2 type",
+    "name": "p20_type",
+    "options": [
+       { "label": "multi", "value": "p20_multi_gen2" },
+       { "label": "single", "value": "p20_single_gen2" }
+     ]
+  },
+  {
+    "type": "dropDown",
+    "label": "P20 Mount",
+    "name": "p20_mount",
+    "options": [
+       { "label": "left", "value": "left" },
+       { "label": "right", "value": "right" }
+     ]
+  },
+  {
+    "type": "dropDown",
+    "label": "P300 GEN2 type",
+    "name": "p300_type",
+    "options": [
+       { "label": "multi", "value": "p300_multi_gen2" },
+       { "label": "single", "value": "p300_single_gen2" }
+     ]
+  },
+  {
+    "type": "dropDown",
+    "label": "P300 Mount",
+    "name": "p300_mount",
+    "options": [
+       { "label": "right", "value": "right" },
+       { "label": "left", "value": "left" }
+     ]
+  }
+]

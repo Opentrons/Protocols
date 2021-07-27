@@ -35,7 +35,7 @@ def run(ctx):
     mag_module = ctx.load_module('magnetic module gen2', '1')
     sample_plate = mag_module.load_labware('biorad_96_wellplate_200ul_pcr')
     reagent_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '2')
-    index_plate = ctx.load_labware('eppendorf_384_wellplate_150ul', '3')
+    index_plate = ctx.load_labware('illumina_96_wellplate_200ul', '3')
     reservoir = ctx.load_labware('nest_12_reservoir_15ml', '4')
     tiprack = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
                for slot in ['5', '6']]
