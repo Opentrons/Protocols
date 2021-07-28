@@ -20,21 +20,6 @@
      ]
   },
   {
-    "type": "dropDown",
-    "label": "Index Start Row",
-    "name": "index_start_row",
-    "options": [
-       { "label": "Row A", "value": 0 },
-       { "label": "Row B", "value": 1 }
-     ]
-  },
-  {
-  "type": "int",
-  "label": "Index start column (1-12)",
-  "name": "index_start_col",
-  "default": 1
-  },
-  {
   "type": "int",
   "label": "Aspiration height (mm)",
   "name": "asp_height",

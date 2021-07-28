@@ -11,10 +11,10 @@ metadata = {
 
 def run(ctx):
 
-    [num_samp, index_start_row, index_start_col, tip_park_start_col,
+    [num_samp, index_start_col, tip_park_start_col,
         asp_height, length_from_side,
         m20_mount, m300_mount] = get_values(  # noqa: F821
-      "num_samp", "index_start_row", "index_start_col",
+      "num_samp", "index_start_col",
       "tip_park_start_col", "asp_height",
       "length_from_side", "m20_mount", "m300_mount")
 
@@ -154,8 +154,7 @@ def run(ctx):
     Select "Resume" on the Opentrons App. Empty trash if needed.
     ''')
 
-    for source_col, dest_col in zip(index_plate.rows()[index_start_row][
-                                                          index_start_col:
+    for source_col, dest_col in zip(index_plate.rows()[0][index_start_col:
                                                           index_start_col
                                                           + num_col],
                                     sample_plate.rows()[0]):
