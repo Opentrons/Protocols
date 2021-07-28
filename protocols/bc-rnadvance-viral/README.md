@@ -3,6 +3,9 @@
 ### Author
 [Opentrons](https://opentrons.com/)
 
+### Partner
+[Beckman Coulter Life Sciences](https://www.beckmancoulter.com/)
+
 ## Categories
 * Nucleic Acid Extraction & Purification
     * Viral RNA
@@ -13,6 +16,8 @@ This protocol performs viral RNA isolation on up to 96 samples using the [Beckma
 The protocol begins at the stage of adding binding beads to lysed samples loaded on the magnetic module in a NEST 96-deepwell plate. For reagent layout in the 2 12-channel reservoirs used in this protocol, please see "Setup" below.
 
 For sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 6) to the elution PCR plate (temperature module, slot 1). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.
+
+For more information on the [Beckman Coulter RNAdvance Viral RNA Isolation](https://www.beckman.com/reagents/genomic/rna-isolation/viral/c63510) on the OT-2, please see the [Application Note](https://opentrons-landing-img.s3.amazonaws.com/application+notes/BECLS+and+Opentrons_RNAdvance+Viral+app+note_Final_05_21.pdf).
 
 ---
 
