@@ -1,9 +1,9 @@
 [
   {
     "type": "int",
-    "label": "Number of Samples (up to 57)",
+    "label": "Number of Samples (up to 56)",
     "name": "sample_count",
-    "default": 57
+    "default": 56
   },
   {
     "type": "dropDown",
