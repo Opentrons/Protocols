@@ -15,7 +15,6 @@ This protocol is part 2 of a 3 part series which preps a 96 well Bio-Rad 200ul p
 
 Explanation of complex parameters below:
 * `Number of samples`: Specify the number of samples for this run.
-* `Index start row`: Specify whether to pick from Row A or Row B in the 384 well plate with the multi-channel pipette.
 * `Index start column`: Specify which column to start aspirating from on the index plate.
 * `P300 tip start column on slot 11 (1-12)`: The number of columns of tips used on slot 11 is equal to the number of columns of samples. Slot 11 tip rack is used for tip parking on the two ethanol washes to save tips. Specify which column to start picking tips up from.
 * `Length from side`: Specify the length from the side of the well to aspirate from magnetically engaged beads. A value of 1 would be 1mm from the side of the well opposite beads. A value of 2.73 means the exact center of the well. This distance is also used when re-suspending beads, and mixing at bead location.
