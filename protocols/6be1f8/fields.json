@@ -12,7 +12,7 @@
   "default": 30000
 },
 {
-"type": "int",
+"type": "float",
 "label": "P1000 aspiration/dispense bottom clearance (mm)",
 "name": "clearance",
 "default": 1

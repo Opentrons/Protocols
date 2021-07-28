@@ -5,13 +5,6 @@ metadata = {
     'source': 'Custom Protocol Request',
     'apiLevel': '2.10'
 }
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"touchtip_radius":2, "touchtip_z":2,
-    "touchtip_speed":2,"mix_reps":10,"mix_vol":1000,"v_0_tube":30000,
-    "clearance":1,"mix_clearance":10,"p1000_flow_rate_asp":274,
-    "p1000_flow_rate_disp":274,"p20_mount":"left","p1000_mount":"right"}""")
-    return [_all_values[n] for n in names]
 
 
 def run(ctx):
