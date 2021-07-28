@@ -64,5 +64,11 @@
       "label": "Patient Sample Transfer Volume (uL)",
       "name": "sample_vol",
       "default": 10
+    },
+    {
+      "type": "float",
+      "label": "Patient Sample Air Gap Volume (uL)",
+      "name": "sample_air_gap",
+      "default": 5
     }
   ]

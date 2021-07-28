@@ -10,10 +10,10 @@ def run(ctx):
 
     [p20_mount, tip_type, temperature, plate1_samples, plate2_samples,
         plate3_samples, plate4_samples, mm_vol, mm_res_vol,
-        sample_vol] = get_values(  # noqa: F821
+        sample_vol, sample_air_gap] = get_values(  # noqa: F821
         "p20_mount", "tip_type", "temperature", "plate1_samples",
         "plate2_samples", "plate3_samples", "plate4_samples", "mm_vol",
-        "mm_res_vol", "sample_vol")
+        "mm_res_vol", "sample_vol", "sample_air_gap")
 
     # Load Labware
     pcr_plate = ctx.load_labware(
@@ -87,4 +87,5 @@ def run(ctx):
 
     # Transfer patient samples to PCR plate
     for source, dest in zip(sample_wells, quad_wells):
-        p20.transfer(sample_vol, source.bottom(z=0.5), dest, new_tip='always')
+        p20.transfer(sample_vol, source.bottom(z=0.5), dest,
+                     air_gap=sample_air_gap, new_tip='always')
