@@ -49,7 +49,7 @@ def run(ctx):
 
     # liquid height tracking
     v_naught = v_0_tube
-    radius = diluent_tubes[0].diameter/2
+    radius = diluent.diameter/2
     h_naught = v_naught/(math.pi*radius**2)
     h = h_naught
 
@@ -72,39 +72,39 @@ def run(ctx):
     p20.pick_up_tip()
     p20.aspirate(4.6, mab210_stock)
     p20.air_gap(airgap)
-    p20.p20.touch_tip(radius=touchtip_radius,
-                      v_offset=touchtip_z,
-                      speed=touchtip_speed)
+    p20.touch_tip(radius=touchtip_radius,
+                  v_offset=touchtip_z,
+                  speed=touchtip_speed)
     p20.dispense(4.6+airgap, mab210_100_conc)
-    p20.p20.touch_tip(radius=touchtip_radius,
-                      v_offset=touchtip_z,
-                      speed=touchtip_speed)
+    p20.touch_tip(radius=touchtip_radius,
+                  v_offset=touchtip_z,
+                  speed=touchtip_speed)
     p20.blow_out()
     p20.mix(mix_reps, 20, mab210_100_conc)  # mix extra b/c mixing 1/3 totvol
-    p20.p20.touch_tip(radius=touchtip_radius,
-                      v_offset=touchtip_z,
-                      speed=touchtip_speed)
+    p20.touch_tip(radius=touchtip_radius,
+                  v_offset=touchtip_z,
+                  speed=touchtip_speed)
     p20.drop_tip()
 
     p1000.pick_up_tip()
     p1000.aspirate(160, diluent)
     adjust_height(160)
-    p1000.p20.touch_tip(radius=touchtip_radius,
-                        v_offset=touchtip_z,
-                        speed=touchtip_speed)
+    p1000.touch_tip(radius=touchtip_radius,
+                    v_offset=touchtip_z,
+                    speed=touchtip_speed)
     p1000.dispense(160, mab210_20_conc)
-    p1000.p20.touch_tip(radius=touchtip_radius,
-                        v_offset=touchtip_z,
-                        speed=touchtip_speed)
+    p1000.touch_tip(radius=touchtip_radius,
+                    v_offset=touchtip_z,
+                    speed=touchtip_speed)
     p20.pick_up_tip()
     p20.transfer(40, mab210_100_conc, mab210_20_conc, new_tip='never',
                  touch_tip=True)
     p20.drop_tip()
     p1000.mix(mix_reps, 180, mab210_20_conc)
     p1000.blow_out()
-    p1000.p20.touch_tip(radius=touchtip_radius,
-                        v_offset=touchtip_z,
-                        speed=touchtip_speed)
+    p1000.touch_tip(radius=touchtip_radius,
+                    v_offset=touchtip_z,
+                    speed=touchtip_speed)
     p1000.drop_tip()
 
     p1000.pick_up_tip()
@@ -116,9 +116,9 @@ def run(ctx):
                  touch_tip=True)
     p20.drop_tip()
     p1000.mix(mix_reps, 700, mab210_2_conc)
-    p1000.p20.touch_tip(radius=touchtip_radius,
-                        v_offset=touchtip_z,
-                        speed=touchtip_speed)
+    p1000.touch_tip(radius=touchtip_radius,
+                    v_offset=touchtip_z,
+                    speed=touchtip_speed)
     p1000.blow_out()
     p1000.drop_tip()
 
@@ -137,13 +137,13 @@ def run(ctx):
     p1000.pick_up_tip()
     for vols, wellname in zip(volumes, dest_wells):
         p1000.aspirate(vols, diluent)
-        p1000.p20.touch_tip(radius=touchtip_radius,
-                            v_offset=touchtip_z,
-                            speed=touchtip_speed)
+        p1000.touch_tip(radius=touchtip_radius,
+                        v_offset=touchtip_z,
+                        speed=touchtip_speed)
         p1000.dispense(vols, master_block.wells_by_name()[wellname].top())
-        p1000.p20.touch_tip(radius=touchtip_radius,
-                            v_offset=touchtip_z,
-                            speed=touchtip_speed)
+        p1000.touch_tip(radius=touchtip_radius,
+                        v_offset=touchtip_z,
+                        speed=touchtip_speed)
         adjust_height(vols)
     p1000.drop_tip()
 
@@ -172,34 +172,34 @@ def run(ctx):
     for well in master_block.wells()[:16]:
         p1000.pick_up_tip()
         p1000.mix(mix_reps, 800, well.bottom(z=5))
-        p1000.p20.touch_tip(radius=touchtip_radius,
-                            v_offset=touchtip_z,
-                            speed=touchtip_speed)
+        p1000.touch_tip(radius=touchtip_radius,
+                        v_offset=touchtip_z,
+                        speed=touchtip_speed)
         p1000.drop_tip()
 
     # CREATE MASTERBLOCK - 210 PREP
     p1000.pick_up_tip()
     for wells in master_block.columns()[2]:
         p1000.aspirate(1000, diluent)
-        p1000.p20.touch_tip(radius=touchtip_radius,
-                            v_offset=touchtip_z,
-                                speed=touchtip_speed)
+        p1000.touch_tip(radius=touchtip_radius,
+                        v_offset=touchtip_z,
+                        speed=touchtip_speed)
         p1000.dispense(1000, wells.bottom(z=12))
-        p1000.p20.touch_tip(radius=touchtip_radius,
-                            v_offset=touchtip_z,
-                            speed=touchtip_speed)
+        p1000.touch_tip(radius=touchtip_radius,
+                        v_offset=touchtip_z,
+                        speed=touchtip_speed)
         adjust_height(1000)
 
     vols_dil = [700, 850, 900, 920, 940, 970, 985, 990]
     for wells, vol in zip(master_block.columns()[2], vols_dil):
         p1000.aspirate(vol, diluent)
-        p1000.p20.touch_tip(radius=touchtip_radius,
-                            v_offset=touchtip_z,
-                            speed=touchtip_speed)
+        p1000.touch_tip(radius=touchtip_radius,
+                        v_offset=touchtip_z,
+                        speed=touchtip_speed)
         p1000.dispense(vol, wells.bottom(z=12))
-        p1000.p20.touch_tip(radius=touchtip_radius,
-                            v_offset=touchtip_z,
-                            speed=touchtip_speed)
+        p1000.touch_tip(radius=touchtip_radius,
+                        v_offset=touchtip_z,
+                        speed=touchtip_speed)
         adjust_height(vol)
     p1000.drop_tip()
 
@@ -212,9 +212,9 @@ def run(ctx):
     for wells in master_block.columns()[2]:
         p1000.pick_up_tip()
         p1000.mix(mix_reps, 1000, well.bottom(z=12))
-        p1000.p20.touch_tip(radius=touchtip_radius,
-                            v_offset=touchtip_z,
-                            speed=touchtip_speed)
+        p1000.touch_tip(radius=touchtip_radius,
+                        v_offset=touchtip_z,
+                        speed=touchtip_speed)
         p1000.drop_tip()
 
     # transfer to 384 well plate
@@ -305,33 +305,33 @@ def run(ctx):
         p1000.pick_up_tip()
         p1000.aspirate(820, master_block.wells_by_name()[source_well].bottom(
                                                                 z=height[0]))
-        p1000.p20.touch_tip(radius=touchtip_radius,
-                            v_offset=touchtip_z,
-                            speed=touchtip_speed)
+        p1000.touch_tip(radius=touchtip_radius,
+                        v_offset=touchtip_z,
+                        speed=touchtip_speed)
         for plate in range(2):
             for well in chunk:
                 p1000.dispense(180, ctrl_plates[plate].wells_by_name()[well])
-                p1000.p20.touch_tip(radius=touchtip_radius,
-                                    v_offset=touchtip_z,
-                                    speed=touchtip_speed)
-        p1000.dispense(100, master_block.wells_by_name()[source_well])
-        p1000.p20.touch_tip(radius=touchtip_radius,
-                            v_offset=touchtip_z,
-                            speed=touchtip_speed)
-        p1000.aspirate(260, master_block.wells_by_name()[source_well].bottom(
-                                                                z=height[1]))
-        p1000.p20.touch_tip(radius=touchtip_radius,
-                            v_offset=touchtip_z,
-                            speed=touchtip_speed)
-        for well in chunk:
-            p1000.dispense(80, ctrl_plates[2].wells_by_name()[well])
-            p1000.p20.touch_tip(radius=touchtip_radius,
+                p1000.touch_tip(radius=touchtip_radius,
                                 v_offset=touchtip_z,
                                 speed=touchtip_speed)
         p1000.dispense(100, master_block.wells_by_name()[source_well])
-        p1000.blow_out()
-        p1000.p20.touch_tip(radius=touchtip_radius,
+        p1000.touch_tip(radius=touchtip_radius,
+                        v_offset=touchtip_z,
+                        speed=touchtip_speed)
+        p1000.aspirate(260, master_block.wells_by_name()[source_well].bottom(
+                                                                z=height[1]))
+        p1000.touch_tip(radius=touchtip_radius,
+                        v_offset=touchtip_z,
+                        speed=touchtip_speed)
+        for well in chunk:
+            p1000.dispense(80, ctrl_plates[2].wells_by_name()[well])
+            p1000.touch_tip(radius=touchtip_radius,
                             v_offset=touchtip_z,
                             speed=touchtip_speed)
+        p1000.dispense(100, master_block.wells_by_name()[source_well])
+        p1000.blow_out()
+        p1000.touch_tip(radius=touchtip_radius,
+                        v_offset=touchtip_z,
+                        speed=touchtip_speed)
         p1000.drop_tip()
         ctx.comment('\n\n')
