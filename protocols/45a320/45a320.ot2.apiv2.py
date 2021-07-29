@@ -1,4 +1,4 @@
-"""Protocol."""
+
 metadata = {
     'protocolName': 'ReliaPrep™ Viral TNA Miniprep System, Custom',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
@@ -8,7 +8,7 @@ metadata = {
 
 
 def run(ctx):
-    """Protocol."""
+
     [num_samp, p20_mount, p1000_mount] = get_values(  # noqa: F821
         "num_samp", "p20_mount", "p1000_mount")
 
