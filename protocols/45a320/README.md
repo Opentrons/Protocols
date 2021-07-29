@@ -41,7 +41,7 @@ Explanation of complex parameters below:
 ### Deck Setup
 
 * On slot 2, empty tubes should be placed in the first 3 columns of the labware, which the protocol refers to as the "left side" when it pauses and prompts the user for instruction. Columns 4, 5, and 6 are known as the "right side" of the tube rack. Please see protocol steps below.
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/45a320/Screen+Shot+2021-07-26+at+4.15.43+PM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/45a320/Screen+Shot+2021-07-29+at+6.37.40+PM.png)
 
 ### Reagent Setup
 
