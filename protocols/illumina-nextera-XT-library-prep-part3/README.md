@@ -29,7 +29,7 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 
 * [Opentrons OT-2](https://shop.opentrons.com/collections/ot-2-robot/products/ot-2)
 * [Opentrons OT-2 Run App (Version 3.15.0 or later)](https://opentrons.com/ot-app/)
-* [Opentrons Single-Channel P50 or P300 Pipette](https://shop.opentrons.com/collections/ot-2-pipettes) and corresponding [Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
+* [Opentrons P300 or P50 Pipette (Single or 8-Channel)](https://shop.opentrons.com/collections/ot-2-pipettes) and corresponding [Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
 * [Opentrons Magnetic Module](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
 * [Bio-Rad 96-Well Plate, 200μl](https://labware.opentrons.com/biorad_96_wellplate_200ul_pcr) containing samples from [Part 1](http://protocols.opentrons.com/protocol/illumina-nextera-XT-library-prep-part1)
 * [Bio-Rad 96-Well Plate, 200μl](https://labware.opentrons.com/biorad_96_wellplate_200ul_pcr), clean and empty (x2)
@@ -52,7 +52,7 @@ Slot 2: [USA Scientific 12-Channel Reservoir](https://labware.opentrons.com/usas
 * A3: Library Normalization Wash 1 (LNW1)
 * A4: Library Normalization Storage Buffer 1 (LNS1)
 * A5: 0.1 N NaOH
-* A6: Empty - LNA1 & LNB1 will be combined here
+* A6: Empty - LNA1 & LNB1 will be combined here, if not pre-mixed
 * A12: Liquid Waste
 
 Slot 4: [Magnetic Module](https://shop.opentrons.com/collections/hardware-modules/products/magdeck) with [Bio-Rad Plate](https://labware.opentrons.com/biorad_96_wellplate_200ul_pcr?category=wellPlate) (clean and empty)
@@ -70,12 +70,12 @@ Using the customization fields below, set up your protocol.
 * Pipette Model: Select which pipette (P50/P300) you will use for this protocol.
 * Pipette Mount: Specify which mount your single-channel pipette is on (left or right).
 * Number of Samples: Select the number of samples (1-96) to be run in the protocol. NOTE ~ selecting 24 or less samples will result in only the top-left corner of the plates being used (A1 - D6).
-
+* Mix LNA1 & LNB1 with OT-2: Select whether the OT-2 should mix the LNA1 or LNB1 together. If **yes**, the OT-2 will transfer the reagents from A1 and A2 of the reservoir, respectively, and mix in A6. Otherwise, the pre-mixed reagent should be loaded directly in A6 of the 12-well reservoir.
 
 
 
 ### Robot
-* [OT 2](https://opentrons.com/ot-2
+* [OT 2](https://opentrons.com/ot-2)
 
 ### Modules
 * [Magnetic Module](https://opentrons.com/modules)
