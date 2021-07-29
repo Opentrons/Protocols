@@ -1,3 +1,5 @@
+import math
+
 metadata = {
     'protocolName': 'Illumina Nextera XT NGS Prep 3: Normalize Libraries',
     'author': 'Opentrons <protocols@opentrons.com>',
@@ -7,8 +9,8 @@ metadata = {
 
 
 def run(protocol):
-    [pip_type, pip_mount, no_of_samps] = get_values(  # noqa: F821
-    'pip_type', 'pip_mount', 'no_of_samps')
+    [pip_type, pip_mount, no_of_samps, mixLN] = get_values(  # noqa: F821
+     'pip_type', 'pip_mount', 'no_of_samps', 'mixLN')
 
     # labware setup
     mag_deck = protocol.load_module('magdeck', '4')
@@ -38,17 +40,13 @@ def run(protocol):
     ]
 
     pip = protocol.load_instrument(pip_type, pip_mount, tip_racks=tips)
+    pipC = pip_type.split('_')[1]
 
-    if no_of_samps <= 24:
-        inputs = [well
-                  for col in in_plate.columns()[:6]
-                  for well in col[:4]][:no_of_samps]
-        mag = [well
-               for col in mag_plate.columns()[:6]
-               for well in col[:4]][:no_of_samps]
-        outputs = [well
-                   for col in out_plate.columns()[:6]
-                   for well in col[:4]][:no_of_samps]
+    if pipC == 'multi':
+        num_cols = math.ceil(no_of_samps/8)
+        inputs = in_plate.rows()[0][:num_cols]
+        mag = mag_plate.rows()[0][:num_cols]
+        outputs = out_plate.rows()[0][:num_cols]
     else:
         inputs = [well for well in in_plate.wells()][:no_of_samps]
         mag = [well for well in mag_plate.wells()][:no_of_samps]
@@ -57,17 +55,17 @@ def run(protocol):
     # Transfer 20 uL supernatant to new plate
     pip.transfer(20, inputs, mag, new_tip='always')
 
-    # Transfer 44 uL LNA1 per sample to trough
-    lna_vol = round(no_of_samps*1.05*44)
-    pip.transfer(lna_vol, lna1, trough['A6'])
-
-    # Transfer 8 uL LNB1 per sample to trough
-    lnb_vol = round(no_of_samps*1.05*8)
-    pip.pick_up_tip()
-    pip.mix(5, 50, lnb1)
-    pip.transfer(lnb_vol, lnb1, trough['A6'], new_tip='never')
-    pip.mix(10, 50, trough['A6'])
-    pip.drop_tip()
+    # Transfer 44 uL LNA1 per sample to trough and
+    # 8 uL LNB1 per sample to trough if mixing
+    if mixLN:
+        lna_vol = round(no_of_samps*1.05*44)
+        pip.transfer(lna_vol, lna1, trough['A6'])
+        lnb_vol = round(no_of_samps*1.05*8)
+        pip.pick_up_tip()
+        pip.mix(5, 50, lnb1)
+        pip.transfer(lnb_vol, lnb1, trough['A6'], new_tip='never')
+        pip.mix(10, 50, trough['A6'])
+        pip.drop_tip()
 
     # Transfer 45 uL combined LNA1 and LNB1 to each library
     pip.transfer(45, trough['A6'], [well.top() for well in mag])
