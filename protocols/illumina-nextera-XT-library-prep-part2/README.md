@@ -29,7 +29,7 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 
 * [Opentrons OT-2](https://shop.opentrons.com/collections/ot-2-robot/products/ot-2)
 * [Opentrons OT-2 Run App (Version 3.15.0 or later)](https://opentrons.com/ot-app/)
-* [Opentrons Single-Channel P50 or P300 Pipette](https://shop.opentrons.com/collections/ot-2-pipettes) and corresponding [Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
+* [Opentrons P300 or P50 Pipette (Single or 8-Channel)](https://shop.opentrons.com/collections/ot-2-pipettes) and corresponding [Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
 * [Opentrons Magnetic Module](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
 * [Bio-Rad 96-Well Plate, 200μl](https://labware.opentrons.com/biorad_96_wellplate_200ul_pcr) containing samples from [Part 1](http://protocols.opentrons.com/protocol/illumina-nextera-XT-library-prep-part1)
 * [Bio-Rad 96-Well Plate, 200μl](https://labware.opentrons.com/biorad_96_wellplate_200ul_pcr), clean and empty (x2)
@@ -50,6 +50,11 @@ Slot 2: [USA Scientific 12-Channel Reservoir](https://labware.opentrons.com/usas
 * A1: Resuspension Buffer
 * A2: AMPure XP Beads
 * A3: 80% Ethanol
+* A4: 80% Ethanol (if needed)
+* A5: 80% Ethanol (if needed)
+* A9: Liquid Waste
+* A10: Liquid Waste
+* A11: Liquid Waste
 * A12: Liquid Waste
 
 Slot 4: [Magnetic Module](https://shop.opentrons.com/collections/hardware-modules/products/magdeck) with [Bio-Rad Plate](https://labware.opentrons.com/biorad_96_wellplate_200ul_pcr?category=wellPlate) (clean and empty)
@@ -65,11 +70,14 @@ Slot 8: [Opentrons Tip Rack](https://shop.opentrons.com/collections/opentrons-ti
 
 
 Using the customization fields below, set up your protocol.
-* Pipette Model: Select which pipette (P50/P300) you will use for this protocol.
+* Pipette Model: Select which pipette (P50/P300; Single/8-Channel) you will use for this protocol.
 * Pipette Mount: Specify which mount your single-channel pipette is on (left or right).
-* Number of Samples: Select the number of samples (1-96) to be run in the protocol. NOTE ~ selecting 24 or less samples will result in only the top-left corner of the plates being used (A1 - D6).
-* PCR Product Volume (µl): Select the starting volume of PCR product to be used in the protocol.
+* Magnetic Module Gen: Specify which Magnetic Module is in use
+* Number of Samples: Select the number of samples (1-96) to be run in the protocol.
+* Initial Product Volume (µl): Select the starting volume of PCR product to be used in the protocol.
 * Bead Ratio: Select the bead ratio. 1.8 is recommended for small (300-500 bp) inputs, and 0.6 is recommended for larger (>500 bp) samples. Please see [documentation](https://support.illumina.com/content/dam/illumina-support/documents/documentation/chemistry_documentation/samplepreps_nextera/nextera-xt/nextera-xt-library-prep-reference-guide-15031942-05.pdf) for more information.
+* Resuspension Buffer Volume (µL): Specify how much Resuspension Buffer is added to the wells.
+* Final PCR Product Volume (µL): Specify the final elution volume to be transferred.
 * Dry Time (minutes): Specify how long (in minutes) you would like to let the beads dry after the wash steps and before adding the resuspension buffer.
 
 
