@@ -82,5 +82,11 @@
     "label": "Air Dry Time for Beads (min)",
     "name": "dry_time",
     "default": 5
+  },
+  {
+    "type": "float",
+    "label": "Offset in X Direction to Avoid Bead Bellet during Aspiration (mm)",
+    "name": "x_offset_bead_pellet",
+    "default": 1.5
   }
 ]
