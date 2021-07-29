@@ -27,7 +27,7 @@
         ]
     ],
     "brand": {
-        "brand": "Opentrons",
+        "brand": null,
         "brandId": []
     },
     "metadata": {
