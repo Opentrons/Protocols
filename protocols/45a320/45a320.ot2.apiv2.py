@@ -16,7 +16,7 @@ def run(ctx):
     samples = ctx.load_labware('opentrons_15_tuberack_nest_15ml_conical', '1',
                                label='Sample Tube Rack')
     final_tuberack = ctx.load_labware(
-                'opentrons_24_tuberack_1500ul', '2',
+                'opentrons_24_tuberack_nest_0.5ml_screwcap', '2',
                 label='Final tube rack')
     reservoir = ctx.load_labware('nest_12_reservoir_15ml',
                                  '3', label='Reservoir')
