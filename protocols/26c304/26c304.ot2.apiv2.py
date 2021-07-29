@@ -41,15 +41,6 @@ def run(ctx):
     p1000.flow_rate.aspirate = p1000_flow_rate_asp
     p1000.flow_rate.dispense = p1000_flow_rate_disp
 
-    def move_384(source, dest1, dest2):
-        p1000.aspirate(400, s)
-        p1000.touch_tip()
-        p1000.dispense(180, dest1.top(z=-8))
-        p1000.touch_tip()
-        p1000.dispense(180, dest2.top(z=-8))
-        p1000.touch_tip()
-        p1000.dispense(40, source.top(z=-5))
-
     def adjust_height(vol, diluent_tube):
         nonlocal h1
         nonlocal h2

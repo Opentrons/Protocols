@@ -11,15 +11,15 @@ def run(ctx):
     [step1, step2, quad1_exclude_cols, quad2_exclude_cols, quad3_exclude_cols,
         quad4_exclude_cols, m20_mount,
         p300_mount, donor_384_type, trans_vol1,
-        step1_mix_vol, pre_asp_air, delay_after_asp, delay_after_disp,
+        step1_mix_vol, delay_after_asp, delay_after_disp,
         disp_speed, height_after_disp, stage2_asp_speed,
-        stage2_disp_speed] = get_values(  # noqa: F821
+        stage2_disp_speed, stage1_dispense_height] = get_values(  # noqa: F821
         "step1", "step2", "quad1_exclude_cols", "quad2_exclude_cols",
         "quad3_exclude_cols",
         "quad4_exclude_cols", "m20_mount", "p300_mount", "donor_384_type",
-        "trans_vol1", "step1_mix_vol", "pre_asp_air", "delay_after_asp",
+        "trans_vol1", "step1_mix_vol", "delay_after_asp",
         "delay_after_disp", "disp_speed", "height_after_disp",
-        "stage2_asp_speed", "stage2_disp_speed")
+        "stage2_asp_speed", "stage2_disp_speed", "stage1_dispense_height")
 
     # Load Labware
     donor_384_plate = ctx.load_labware(donor_384_type, 1)
@@ -116,14 +116,13 @@ def run(ctx):
                 preWet(m20, trans_vol1, col)
                 ctx.comment('Mixing before transfer to recepient plate.')
                 m20.mix(3, step1_mix_vol, col)
-                # ctx.comment('Pre-Aspirating a 5 uL Air Gap.')
-                # m20.aspirate(pre_asp_air, col.top())
                 ctx.comment('Starting transfer to recipient plate.')
                 m20.aspirate(trans_vol1, col)
                 slow_tip_withdrawal(m20, col)
                 ctx.delay(seconds=delay_after_asp, msg=f'''{delay_after_asp}
                           second delay after aspirating.''')
-                m20.dispense(trans_vol1, recipient_96_plate['A1'])
+                m20.dispense(trans_vol1, recipient_96_plate['A1'].bottom(
+                             stage1_dispense_height))
                 m20.move_to(recipient_96_plate['A1'].bottom(height_after_disp))
                 ctx.delay(seconds=delay_after_disp, msg=f'''{delay_after_disp}
                           second delay after dispensing.''')
