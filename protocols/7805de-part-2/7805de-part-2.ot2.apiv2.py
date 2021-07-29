@@ -156,7 +156,6 @@ def run(ctx):
     column 3 - second strand reaction buffer w dUTP mix
     column 4 - second strand synthesis enzyme mix
     column 5 - nuclease-free water
-    column 6 - nuclease-free water
 
     p20 tips in slots 2 and 5
     p300 tips in slots 6 and 9
@@ -189,8 +188,8 @@ def run(ctx):
     """)
     temp = ctx.load_module('temperature module gen2', '3')
     reagent_block = temp.load_labware(labware_tube_strip, '4 Degree Block')
-    [ss_rgnt, fs_enz, ss_rxn_bf, ss_enz, water_1, water_2] = [
-     reagent_block.columns_by_name()[str(name + 1)] for name in [*range(6)]]
+    [ss_rgnt, fs_enz, ss_rxn_bf, ss_enz, water] = [
+     reagent_block.columns_by_name()[str(name + 1)] for name in [*range(5)]]
 
     ctx.comment("""
     RNA plate in deck slot 7:
@@ -254,12 +253,8 @@ def run(ctx):
       :num_cols]], new_tip='always')
     for index, chunk in enumerate(
      create_chunks(sample_plate.columns()[:num_cols], 3)):
-        if index == 0:
-            water = water_1[0]
-        else:
-            water = water_2[0]
         p300m.transfer(
-         48, water.bottom(clearance_strip_tubes), [column[0].bottom(
+         48, water[0].bottom(clearance_strip_tubes), [column[0].bottom(
           clearance_sample_plate) for column in chunk], mix_after=(
           10, 40), new_tip='always')
 
@@ -325,7 +320,6 @@ def run(ctx):
     remove sup
 
     add 80 percent ethanol
-    wait 30 sec
     remove sup
     repeat
 
@@ -344,7 +338,7 @@ def run(ctx):
         p300m.air_gap(15)
         p300m.drop_tip()
     etoh_flow_rates(p300m)
-    for rep in range(2):
+    for repeat in range(2):
         pick_up_or_refill(p300m)
         for column in mag_plate.columns()[
          :num_cols]+mag_plate.columns()[6:num_cols+6]:
@@ -358,9 +352,12 @@ def run(ctx):
                 ctx.delay(seconds=1)
                 p300m.blow_out(column[0].top())
         p300m.drop_tip()
-        ctx.delay(seconds=30)
-        if rep == 0:
+        if repeat == 0:
             wst = waste_2
+            pause_attention(
+             """Please Refill the p300 Tip Boxes
+             and Empty the Tip Waste""")
+            p300m.reset_tipracks()
         else:
             wst = waste_3
         for column in mag_plate.columns()[
