@@ -20,7 +20,7 @@ def run(ctx):
                 label='Final tube rack')
     reservoir = ctx.load_labware('nest_12_reservoir_15ml',
                                  '3', label='Reservoir')
-    final_plate_384 = ctx.load_labware('filtrouslab_384_wellplate_50ul', '8')
+    final_plate_384 = ctx.load_labware('corning_384_wellplate_112ul_flat', '8')
     tiprack1000 = ctx.load_labware('opentrons_96_tiprack_1000ul', '4')
     tiprack20 = ctx.load_labware('opentrons_96_filtertiprack_20ul', '5')
 
