@@ -13,7 +13,7 @@ def run(ctx):
         "num_samp", "p20_mount", "p1000_mount")
 
     # load labware
-    samples = ctx.load_labware('opentrons_15_tuberack_8000ul', '1',
+    samples = ctx.load_labware('opentrons_15_tuberack_nest_15ml_conical', '1',
                                label='Sample Tube Rack')
     final_tuberack = ctx.load_labware(
                 'opentrons_24_tuberack_1500ul', '2',
