@@ -1,4 +1,5 @@
 import math
+from opentrons import types
 from opentrons.protocol_api.labware import OutOfTipsError
 
 metadata = {
@@ -16,13 +17,14 @@ def run(ctx):
     [sample_count, labware_pcr_plate,
      labware_reservoir, labware_tube_strip, clearance_sample_plate,
      clearance_reservoir, clearance_strip_tubes, clearance_bead_pellet,
-     delay_beads, flow_rate_beads, engage_time, engage_offset, dry_time
+     delay_beads, flow_rate_beads, engage_time, engage_offset, dry_time,
+     x_offset_bead_pellet
      ] = get_values(  # noqa: F821
       'sample_count', 'labware_pcr_plate',
       'labware_reservoir', 'labware_tube_strip', 'clearance_sample_plate',
       'clearance_reservoir', 'clearance_strip_tubes', 'clearance_bead_pellet',
       'delay_beads', 'flow_rate_beads', 'engage_time', 'engage_offset',
-      'dry_time')
+      'dry_time', 'x_offset_bead_pellet')
 
     ctx.set_rail_lights(True)
     if not 1 <= sample_count <= 24:
@@ -365,7 +367,6 @@ def run(ctx):
     remove sup
 
     add 80 percent ethanol
-    wait 30 sec
     remove sup
     repeat
 
@@ -376,15 +377,32 @@ def run(ctx):
     repeated delayed blowout
     increased blow out flow rate
     """)
-    for column in mag_plate.columns()[
-     :num_cols]+mag_plate.columns()[6:num_cols+6]:
+    for index, column in enumerate(mag_plate.columns()[
+     :num_cols]+mag_plate.columns()[6:num_cols+6]):
         pick_up_or_refill(p300m)
-        p300m.transfer(91.5, column[0].bottom(
-         clearance_bead_pellet), waste_1.top(), air_gap=15, new_tip='never')
+        if index % 2 != 1:
+            # offset to right (for even columns) to avoid bead pellet
+            aspirate_location = column[0].bottom(
+             clearance_bead_pellet).move(
+             types.Point(x=x_offset_bead_pellet, y=0, z=0))
+        else:
+            # offset to left (for odd columns) to avoid bead pellet
+            aspirate_location = column[0].bottom(
+             clearance_bead_pellet).move(
+             types.Point(x=-1*x_offset_bead_pellet, y=0, z=0))
+        p300m.move_to(column[0].top())
+        ctx.max_speeds['Z'] = 10
+        p300m.move_to(column[0].bottom(4))
+        p300m.aspirate(50, column[0].bottom(4), rate=0.33)
+        p300m.aspirate(50, aspirate_location, rate=0.33)
+        p300m.move_to(column[0].top())
+        ctx.max_speeds['Z'] = None
+        p300m.air_gap(20)
+        p300m.dispense(120, waste_1.top())
         p300m.air_gap(15)
         p300m.drop_tip()
     etoh_flow_rates(p300m)
-    for rep in range(2):
+    for repeat in range(2):
         pick_up_or_refill(p300m)
         for column in mag_plate.columns()[
          :num_cols]+mag_plate.columns()[6:num_cols+6]:
@@ -398,20 +416,39 @@ def run(ctx):
                 ctx.delay(seconds=1)
                 p300m.blow_out(column[0].top())
         p300m.drop_tip()
-        if rep == 0:
+        if repeat == 0:
             wst = waste_2
+            pause_attention(
+             """Please Refill the p300 Tip Boxes
+             and Empty the Tip Waste""")
+            p300m.reset_tipracks()
         else:
             wst = waste_3
-        ctx.delay(seconds=30)
-        for column in mag_plate.columns()[
-         :num_cols]+mag_plate.columns()[6:num_cols+6]:
+        for index, column in enumerate(mag_plate.columns()[
+         :num_cols]+mag_plate.columns()[6:num_cols+6]):
             pick_up_or_refill(p300m)
-            p300m.aspirate(100, column[0].bottom(clearance_bead_pellet))
-            p300m.air_gap(15)
-            p300m.dispense(115, wst.top())
+            if index % 2 != 1:
+                # offset to right (for even columns) to avoid bead pellet
+                aspirate_location = column[0].bottom(
+                 clearance_bead_pellet).move(
+                 types.Point(x=x_offset_bead_pellet, y=0, z=0))
+            else:
+                # offset to left (for odd columns) to avoid bead pellet
+                aspirate_location = column[0].bottom(
+                 clearance_bead_pellet).move(
+                 types.Point(x=-1*x_offset_bead_pellet, y=0, z=0))
+            p300m.move_to(column[0].top())
+            ctx.max_speeds['Z'] = 10
+            p300m.move_to(column[0].bottom(4))
+            p300m.aspirate(60, column[0].bottom(4), rate=0.5)
+            p300m.aspirate(50, aspirate_location, rate=0.5)
+            p300m.move_to(column[0].top())
+            ctx.max_speeds['Z'] = None
+            p300m.air_gap(20)
+            p300m.dispense(130, wst.top())
             for rep in range(3):
                 if rep > 0:
-                    p300m.aspirate(100, wst.top())
+                    p300m.aspirate(150, wst.top())
                 ctx.delay(seconds=1)
                 p300m.blow_out(wst.top())
             p300m.air_gap(15)

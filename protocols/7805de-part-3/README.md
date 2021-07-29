@@ -52,7 +52,7 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 * [OT-2](https://opentrons.com/ot-2)
 
 ## Process
-1. Set the "Sample Count (up to 48)" in the parameters below.
+1. Set the "Sample Count (up to 24)" in the parameters below.
 2. Download your protocol.
 3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
 4. Set up your deck according to the deck map.
