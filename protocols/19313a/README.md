@@ -1,4 +1,4 @@
-# RNA Extraction with Magnetic Life
+# RNA Extraction with Life Magnetics
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -8,7 +8,7 @@
 	* Nucleic Acid Purification
 
 ## Description
-This protocol extracts RNA with a temperature module and magnetic module. User has the choice to include a "Waste water mode" which consists of adding and mixing binding buffer on magnetically engaged beads. Tips are tracked between protocols with the protocol pausing and prompting the user to replace tip racks when a tip rack is depleted. 
+This protocol extracts RNA with a temperature module and magnetic module. User has the choice to include a "Waste water mode" which consists of adding and mixing binding buffer on magnetically engaged beads. Tips are tracked between protocols with the protocol pausing and prompting the user to replace tip racks when a tip rack is depleted.
 
 Explanation of complex parameters below:
 * Most customizable variables below are in reference to the original protocol request coded by the user. All additional parameters are explained:
@@ -48,17 +48,16 @@ Explanation of complex parameters below:
 
 ### Protocol Steps
 1. Temperature reached, magnetic module engaged
-2. If wastewater mode, samples are mixed, binding buffer added, 200ul of supernatant removed.  
-3. Remove 300ul of storage buffer in samples
+2. If normal mode, samples are mixed, binding buffer added and mixed, 200ul of supernatant removed.
+3. If wastewater mode, remove up to 1.5 ml of storage buffer in samples
 4. RPS wash, remove supernatant in samples
-5. Two ethanol washes
+5. Two ethanol washes, remove supernatant in samples
 6. Settling time, drying, remove 300ul from sample wells.
 7. Aspirate elution volume, mix
 8. Dispense in temperature module (well to well transfer).
-9. Move samples from temperature module to next column for each triplicate on mag deck.
-10. Mix, incubate (3 times)
-11. Engage magnet
-12. Move final volume to next column or each triplicate on mag deck.
+9. Mix, incubate (3 times)
+10. Dispense in magnetic module (well to well transfer), engage magnet
+11. Move final volume to next column or each triplicate on mag deck (well to well transfer)
 
 ### Process
 1. Input your protocol parameters above.
