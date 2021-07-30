@@ -1,6 +1,5 @@
 import csv
 import os
-from opentrons import types
 
 metadata = {
     'protocolName': 'FluoGene HLA NX 96-Well Setup',
@@ -13,17 +12,15 @@ metadata = {
 def run(ctx):
 
     [p20_blowout_height, disposal_volume, p300_transfer_height,
-     p300_reservoir_height, reservoir_mix_count, dispense_volume,
-     p300_mixing_height, reduced_pick_up_current, p20_tube_height,
-     tracking_reset, p20_dispense_height, p20_reservoir_height, touch_radius,
-     touch_v_offset, touch_speed, tip_max, dna_volume,
-     reservoir_fill_volume] = get_values(  # noqa: F821
+     dispense_volume, p300_mixing_height, reduced_pick_up_current,
+     p20_tube_height, tracking_reset, p20_dispense_height,
+     p20_reservoir_height, touch_radius, touch_v_offset, touch_speed, tip_max,
+     dna_volume, reservoir_fill_volume] = get_values(  # noqa: F821
         "p20_blowout_height", "disposal_volume", "p300_transfer_height",
-        "p300_reservoir_height", "reservoir_mix_count", "dispense_volume",
-        "p300_mixing_height", "reduced_pick_up_current", "p20_tube_height",
-        "tracking_reset", "p20_dispense_height", "p20_reservoir_height",
-        "touch_radius", "touch_v_offset", "touch_speed", "tip_max",
-        "dna_volume", "reservoir_fill_volume")
+        "dispense_volume", "p300_mixing_height", "reduced_pick_up_current",
+        "p20_tube_height", "tracking_reset", "p20_dispense_height",
+        "p20_reservoir_height", "touch_radius", "touch_v_offset",
+        "touch_speed", "tip_max", "dna_volume", "reservoir_fill_volume")
 
     ctx.set_rail_lights(True)
 
@@ -36,6 +33,7 @@ def run(ctx):
     for reservoir column tracking between protocol runs
     """
     # for reservoir column tracking between protocol runs
+    # if ctx.is_simulating():    # logic reversed for simulation
     if not ctx.is_simulating():
         file_path = '/data/temporary/columnandtiptracking.csv'
         file_dir = os.path.dirname(file_path)
@@ -50,6 +48,7 @@ def run(ctx):
                  "A1 of Opentrons 96 Filter Tip Rack 200 µL on 11", "\n"]))
 
     current_data_list = []
+    # if not ctx.is_simulating():    # logic reversed for simulation
     if ctx.is_simulating():
         current_data_list = [0,
                              "A1 of Opentrons 96 Filter Tip Rack 20 µL on 10",
@@ -64,7 +63,7 @@ def run(ctx):
      current_data_list[i] for i in range(1, 3)]
 
     # reservoir with column tracking between protocol runs
-    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '7')
+    reservoir = ctx.load_labware('nunc_96_wellplate_500ul', '7')
 
     # increment column index for future protocol run
     if current_col_index < len(reservoir.columns()) - 1:
@@ -75,8 +74,7 @@ def run(ctx):
     protocol steps using tracked reservoir column
     """
     # reagent mix in reservoir column tracked across protocol runs
-    reservoir_mix = reservoir.columns()[current_col_index][0]
-
+    reservoir_mix = reservoir.columns()[current_col_index]
     ctx.set_rail_lights(True)
 
     # tips and p300 multi
@@ -207,7 +205,7 @@ def run(ctx):
         current_pipette.well_bottom_clearance.aspirate = initial_clearance_asp
         current_pipette.well_bottom_clearance.dispense = initial_clearance_disp
 
-    # combine DNA dilution with pcr mix and fill reservoir
+    # combine DNA dilution with pcr mix
     p300s.starting_tip = tips300[0].wells_by_name()[
      current_starting_tip_300.split()[0]]
     p300s.pick_up_tip()
@@ -215,20 +213,17 @@ def run(ctx):
     repeat_max_transfer(p300s, dna_volume, dna_dilution.bottom(
      p300_transfer_height), pcr_mix.bottom(p300_transfer_height), 0.5)
     p300s.mix(20, 200, pcr_mix.bottom(p300_mixing_height), rate=3.2)
-    repeat_max_transfer(
-     p300s, reservoir_fill_volume, pcr_mix,
-     reservoir_mix.bottom(p300_reservoir_height), 0.5, track_liquid=True,
-     start_clearance_asp=p300_mixing_height,
-     stop_clearance_asp=p300_transfer_height)
-    for repeat in range(reservoir_mix_count):
-        p300s.aspirate(200, reservoir_mix.bottom(
-         p300_reservoir_height), rate=3.2)
-        p300s.dispense(200, reservoir_mix.bottom(p300_reservoir_height).move(
-         types.Point(x=0, y=((reservoir_mix.width*3) / 8), z=0)), rate=3.2)
-        p300s.aspirate(200, reservoir_mix.bottom(
-         p300_reservoir_height), rate=3.2)
-        p300s.dispense(200, reservoir_mix.bottom(p300_reservoir_height).move(
-         types.Point(x=0, y=-((reservoir_mix.width*3) / 8), z=0)), rate=3.2)
+
+    # reservoir filling
+    increment = round((p300_mixing_height - p300_transfer_height) / 7)
+    height = p300_mixing_height
+    for well in reservoir_mix:
+        for rep in range(2):
+            repeat_max_transfer(
+             p300s, reservoir_fill_volume / 16, pcr_mix.bottom(height),
+             well.bottom(5), 0.5)
+        if height > 3:
+            height -= increment
     p300s.drop_tip()
     if tips300[0].next_tip(1, p300s.starting_tip) is not None:
         future_tip_300 = tips300[0].next_tip(1, p300s.starting_tip)
@@ -242,7 +237,7 @@ def run(ctx):
      current_starting_tip_20.split()[0]]
     p20m.pick_up_tip()
     for tray in trays:
-        p20m.aspirate(dispense_volume, reservoir_mix.bottom(
+        p20m.aspirate(dispense_volume, reservoir_mix[0].bottom(
          p20_reservoir_height))
         p20m.dispense(dispense_volume, tray.columns()[0][0].bottom(
          p20_dispense_height))
@@ -258,11 +253,11 @@ def run(ctx):
             if not index % 2:
                 if index < len(tray.columns()[1:]) - 1:
                     p20m.aspirate(
-                     2*dispense_volume + disposal_volume, reservoir_mix.bottom(
-                      p20_reservoir_height))
+                     2*dispense_volume + disposal_volume, reservoir_mix[
+                      0].bottom(p20_reservoir_height))
                 else:
                     p20m.aspirate(
-                     dispense_volume, reservoir_mix.bottom(
+                     dispense_volume, reservoir_mix[0].bottom(
                       p20_reservoir_height))
             p20m.dispense(dispense_volume, column[0].bottom(
              p20_dispense_height))
@@ -270,7 +265,7 @@ def run(ctx):
              column[0], radius=touch_radius,
              v_offset=touch_v_offset, speed=touch_speed)
             if index % 2:
-                p20m.dispense(disposal_volume, reservoir_mix.bottom(
+                p20m.dispense(disposal_volume, reservoir_mix[0].bottom(
                  p20_blowout_height))
     p20m.drop_tip()
     if tips20[0].next_tip(8, p20m.starting_tip) is not None:
@@ -283,6 +278,7 @@ def run(ctx):
     # write future column and starting tips to csv for next protocol run
     new_data = ",".join([
      str(new_col_index), str(future_tip_20), str(future_tip_300), '\n'])
+    # if ctx.is_simulating():    # logic reversed for simulation
     if not ctx.is_simulating():
         with open(file_path, 'w') as outfile:
             outfile.write(new_data)
