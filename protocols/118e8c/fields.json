@@ -19,18 +19,6 @@
   },
   {
     "type": "float",
-    "label": "p300 Reservoir Aspiration and Dispense Height (mm)",
-    "name": "p300_reservoir_height",
-    "default": 3
-  },
-  {
-    "type": "int",
-    "label": "Number of p300 Reservoir Mixes (aspirate from well center, dispense to both ends of well)",
-    "name": "reservoir_mix_count",
-    "default": 2
-  },
-  {
-    "type": "float",
     "label": "p20 Dispense Volume (ul) to Trays",
     "name": "dispense_volume",
     "default": 8
