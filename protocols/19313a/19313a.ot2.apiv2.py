@@ -1,3 +1,4 @@
+"""Protocol."""
 import os
 import csv
 from opentrons.types import Point
@@ -9,21 +10,9 @@ metadata = {
     'apiLevel': '2.10'
 }
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"num_samp":1,"reset_tipracks":true,
-    "mix_reps1":10,"mix_reps2":10,"mix_reps_wash1":6,"mix_reps_wash2":6,
-    "mix_reps_elution1":6,"mix_reps_elution2":6,"settling_1":4,"settling_2":5,
-    "settling_3":1,"settling_wash":1,"settling_drying":3,"settling_elution1":1,
-    "settling_elution2":5,"wash1_vol":300,"wash2_vol":300,"elution_vol":50,
-    "lysis_vol":100,"move_vol":200,"binding_buffer_vol":100,"final_vol":50,
-    "heating_module_temp":65,"mag_height_1":5,"waste_water_mode":false,
-    "asp_height":1,"length_from_side":2,"p300_mount":"left"}""")
-    return [_all_values[n] for n in names]
-
 
 def run(ctx):
-
+    """Protocol."""
     [num_samp, reset_tipracks, mix_reps1, mix_reps2, mix_reps_wash1,
      mix_reps_wash2, mix_reps_elution1, mix_reps_elution2, settling_1,
      settling_2, settling_3, settling_wash, settling_drying, settling_elution1,
