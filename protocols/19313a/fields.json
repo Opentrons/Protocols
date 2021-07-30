@@ -52,45 +52,45 @@
   },
   {
     "type": "float",
-    "label": "Settling time 1",
+    "label": "Settling time 1 (minutes)",
     "name": "settling_1",
-    "default": 4
+    "default": 4.0
   },
   {
     "type": "float",
-    "label": "Settling time 2",
+    "label": "Settling time 2 (minutes)",
     "name": "settling_2",
-    "default": 5
+    "default": 5.0
   },
   {
     "type": "float",
-    "label": "Settling time 3",
+    "label": "Settling time 3 (minutes)",
     "name": "settling_3",
-    "default": 1
+    "default": 1.0
   },
   {
     "type": "float",
-    "label": "Settling wash time",
+    "label": "Settling wash time (minutes)",
     "name": "settling_wash",
     "default": 0.5
   },
   {
     "type": "float",
-    "label": "Settling dry time",
+    "label": "Settling dry time (minutes)",
     "name": "settling_drying",
-    "default": 3
+    "default": 3.0
   },
   {
     "type": "float",
-    "label": "Settling elution 1",
+    "label": "Settling elution 1 (minutes)",
     "name": "settling_elution1",
-    "default": 1
+    "default": 1.0
   },
   {
     "type": "float",
-    "label": "Settling elution 2",
+    "label": "Settling elution 2 (minutes)",
     "name": "settling_elution2",
-    "default": 5
+    "default": 5.0
   },
   {
     "type": "int",
@@ -142,17 +142,17 @@
   },
   {
     "type": "float",
-    "label": "Magnetic module engage height",
+    "label": "Magnetic module engage height (mm)",
     "name": "mag_height_1",
-    "default": 4.5
+    "default": 4.50
   },
   {
     "type": "dropDown",
     "label": "Waste water mode?",
     "name": "waste_water_mode",
     "options": [
-       { "label": "Yes waste water mode", "value": true },
-       { "label": "No skip", "value": false }
+       { "label": "Normal Extraction", "value": false },
+       { "label": "Waste Water Mode", "value": true }
      ]
   },
   {
