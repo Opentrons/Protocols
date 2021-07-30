@@ -13,14 +13,14 @@ def run(ctx):
         "num_samp", "p20_mount", "p1000_mount")
 
     # load labware
-    samples = ctx.load_labware('opentrons_15_tuberack_nest_15ml_conical', '1',
+    samples = ctx.load_labware('opentrons_15_tuberack_8000ul', '1',
                                label='Sample Tube Rack')
     final_tuberack = ctx.load_labware(
-                'opentrons_24_tuberack_nest_0.5ml_screwcap', '2',
+                'opentrons_24_tuberack_1500ul', '2',
                 label='Final tube rack')
     reservoir = ctx.load_labware('nest_12_reservoir_15ml',
                                  '3', label='Reservoir')
-    final_plate_384 = ctx.load_labware('corning_384_wellplate_112ul_flat', '8')
+    final_plate_384 = ctx.load_labware('filtrouslab_384_wellplate_50ul', '8')
     tiprack1000 = ctx.load_labware('opentrons_96_tiprack_1000ul', '4')
     tiprack20 = ctx.load_labware('opentrons_96_filtertiprack_20ul', '5')
 
