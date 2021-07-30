@@ -6,19 +6,6 @@ metadata = {'projectName': 'Automated RoboZooMS Protocol',
             'description': 'ZooMS Protocol',
             'apiLevel': '2.10'}
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"sample_size":2,
-    "acid_volume":2,
-    "na_oh_volume":2,
-    "am_bic_volume":2,
-    "transfer_volume":2,
-    "trypsin_volume":2,
-    "quench_volume":2,
-    "acid_demin_yn":2,
-    "na_oh_wash_yn":2,
-    "one_rack_yn":2}""")
-    return [_all_values[n] for n in names]
 
 # string of asterisks show a pause step that is hidden for testing purposes.
 
