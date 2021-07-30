@@ -64,7 +64,6 @@ IMPORTANT:
 ### Reagent Setup
 ![reagent layout](https://ibb.co/c2fZ8jr)
 
-### Well Plate Layout
 ![well plate layout](https://ibb.co/jr5kGzv)
 
 ---
