@@ -9,6 +9,18 @@ metadata = {
     'apiLevel': '2.10'
 }
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"num_samp":1,"reset_tipracks":true,
+    "mix_reps1":10,"mix_reps2":10,"mix_reps_wash1":6,"mix_reps_wash2":6,
+    "mix_reps_elution1":6,"mix_reps_elution2":6,"settling_1":4,"settling_2":5,
+    "settling_3":1,"settling_wash":1,"settling_drying":3,"settling_elution1":1,
+    "settling_elution2":5,"wash1_vol":300,"wash2_vol":300,"elution_vol":50,
+    "lysis_vol":100,"move_vol":200,"binding_buffer_vol":100,"final_vol":50,
+    "heating_module_temp":65,"mag_height_1":5,"waste_water_mode":false,
+    "asp_height":1,"length_from_side":2,"p300_mount":"left"}""")
+    return [_all_values[n] for n in names]
+
 
 def run(ctx):
 
@@ -113,6 +125,7 @@ def run(ctx):
     waste = waste_tuberack.wells()[0]
 
     def remove_supernatant(vol, index, loc):
+        ctx.comment('Removing Supernatant')
         side = -1 if index % 2 == 0 else 1
         aspirate_loc = loc.bottom(z=asp_height).move(
                 Point(x=(loc.length/2-length_from_side)*side))
@@ -129,7 +142,8 @@ def run(ctx):
                Select "Resume" on the Opentrons app to begin the protocol.
                ''')
 
-    if waste_water_mode:
+    ctx.comment('\n\n\n\nNormal Mode')
+    if not waste_water_mode:
         mag_mod.disengage()
         for sample in samples:
             pick_up_filter()
@@ -137,7 +151,7 @@ def run(ctx):
             p300.touch_tip()
             p300.drop_tip()
         ctx.delay(minutes=settling_1)
-        ctx.comment('\n\n\n')
+        ctx.comment('\n')
 
         # binding
         for sample in samples:
@@ -147,7 +161,7 @@ def run(ctx):
             p300.mix(mix_reps2, 180, sample)
             p300.touch_tip()
             p300.drop_tip()
-        ctx.comment('\n\n\n')
+        ctx.comment('\n')
 
         if not mag_mod.status == 'enaged':
             mag_mod.engage(height_from_base=mag_height_1)
@@ -158,19 +172,20 @@ def run(ctx):
             pick_up_filter()
             remove_supernatant(200, i, sample)
             p300.drop_tip()
-    ctx.comment('\n\n\n')
+    ctx.comment('End Normal Mode\n\n\n\n\n\n\n\n\n')
 
-    # remove storage buffer
-    ctx.delay(minutes=settling_3)
-    for sample in samples:
-        pick_up300()
-        for _ in range(5):
-            p300.aspirate(300, sample)
-            p300.dispense(300, waste.top(z=-3))
-            p300.blow_out()
-        p300.drop_tip()
-    mag_mod.disengage()
-    ctx.comment('\n\n\n')
+    if waste_water_mode:
+        # remove storage buffer
+        ctx.delay(minutes=settling_3)
+        for sample in samples:
+            pick_up300()
+            for _ in range(5):
+                p300.aspirate(300, sample)
+                p300.dispense(300, waste.top(z=-3))
+                p300.blow_out()
+            p300.drop_tip()
+        mag_mod.disengage()
+        ctx.comment('\n\n\n')
 
     # RPS wash
     for i, sample in enumerate(samples):
