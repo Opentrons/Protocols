@@ -31,16 +31,16 @@ Explanation of complex parameters below:
 * [Thermocycler Module](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module)
 
 ### Labware
-* [Labware name](link to labware on shop.opentrons.com when applicable)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [Opentrons Filter Tips](https://shop.opentrons.com/collections/opentrons-tips)
+* [NEST 96 Well 100 uL PCR Plate](https://shop.opentrons.com/collections/lab-plates/products/nest-0-1-ml-96-well-pcr-plate-full-skirt)
+* [Opentrons Aluminum Block Set](https://shop.opentrons.com/collections/racks-and-adapters/products/aluminum-block-set)
 
 ### Pipettes
-* [Pipette name](link to pipette on shop.opentrons.com)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [P300 Single GEN2 Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/single-channel-electronic-pipette?variant=5984549109789)
+* [P20 Single GEN2 Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/single-channel-electronic-pipette?variant=31059478970462)
 
 ### Reagents
-* [kit name when applicable](link to kit)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [GeneRead QIAact Lung DNA UMI Panel Kit](https://www.qiagen.com/us/products/instruments-and-automation/genereader-system/generead-qiaact-lung-panels-ww/)
 
 ---
 
@@ -53,8 +53,11 @@ Explanation of complex parameters below:
 
 Samples should be loaded going down the column first.
 * Samples (1.5 mL Tubes): Slot 2
+
 ![Samples Tubes](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/6d7fc3/samples_tubes.png)
+
 * Samples (96 Well NEST-100 uL PCR Plate): Slot 2
+
 ![Samples Plate](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/6d7fc3/samples_plate.png)
 
 **Reagent Setup**
@@ -62,6 +65,7 @@ Samples should be loaded going down the column first.
 **Blue**: Master Mix
 
 **Magenta**: Fragmentation Enzyme Mix
+
 ![Reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/6d7fc3/reagents.png)
 
 ---
