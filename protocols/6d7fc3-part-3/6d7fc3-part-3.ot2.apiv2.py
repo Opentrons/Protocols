@@ -90,9 +90,9 @@ def run(ctx):
     def remove_residiual_supernatant():
         for well in mag_plate_wells:
             pick_up(p20)
-            p20.aspirate(10, src.bottom().move(types.Point(
+            p20.aspirate(10, well.bottom().move(types.Point(
                         x=getWellSide(well, mag_plate), y=0, z=0.5)))
-            p20.dispense(10, dest)
+            p20.dispense(10, trash)
             p20.drop_tip()
 
     # Wells
