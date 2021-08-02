@@ -44,8 +44,8 @@ Explanation of complex parameters below:
 ---
 
 ### Deck Setup
-* The example below illustrates the starting deck layout for Part 5 (Universal PCR Amplification).
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/6d7fc3/6d7fc3-part-4-layout.png)
+* The example below illustrates the starting deck layout for Part 6 (Universal PCR Amplification).
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/6d7fc3/6d7fc3-part-6-layout.png)
 
 ### Reagent Setup
 
