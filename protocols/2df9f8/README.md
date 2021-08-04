@@ -15,7 +15,7 @@ This protocol preps a 96 well plate with heat inactivated Covid samples and mast
 * Samples added to 96 well plate
 
 Explanation of complex parameters below:
-* `Number of Samples`: Specify the number of samples (1-94) to run on this protocol. Note: samples will be picked by row in the tube racks, in order of slots 5, 6, 10, and 11.
+* `Number of Samples`: Specify the number of samples (1-94) to run on this protocol. Note: samples will be picked by row in the tube racks, in order of slots 7, 8, 10, and 11.
 * `Plate`: Specify whether loading the microamp (I48HO) 96 well plate, or another 96 well plate.
 * `P20 Mount`: Specify which side to mount your P20 Multi Channel Pipette.
 
@@ -34,12 +34,12 @@ Explanation of complex parameters below:
 ---
 
 ### Deck Setup
-* This is the deck setup for a run with 84 samples (bottom two rows of slot 11 are not populated).
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2df9f8/Screen+Shot+2021-06-16+at+4.43.07+PM.png)
+* This is the deck setup for a run with 94 samples (bottom two rows of slot 11 are not populated).
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2df9f8/Screen+Shot+2021-08-04+at+10.09.08+AM.png)
 
 ### Reagent Setup
-* Note: Mastermix and positive/negative control tubes should be the same.
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2df9f8/Screen+Shot+2021-06-22+at+10.48.40+AM.png)
+* Note: Mastermix and positive/negative control tubes should be the same tube.
+![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2df9f8/Screen+Shot+2021-08-04+at+10.09.25+AM.png)
 
 
 ---

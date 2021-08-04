@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "5414fa.ot2.apiv2.py"
+            "sci-zymo-quick-dna-rna-magbead.ot2.apiv2.py"
         ],
         "description": [
             "README.md"
@@ -14,7 +14,7 @@
         "hide-from-search": false,
         "skip-tests": false
     },
-    "path": "protocols/5414fa",
-    "slug": "5414fa",
+    "path": "protocols/sci-zymo-quick-dna-rna-magbead",
+    "slug": "sci-zymo-quick-dna-rna-magbead",
     "status": "ok"
 }
