@@ -1,3 +1,4 @@
+"""Protocol."""
 metadata = {
     'protocolName': 'Plate Filling Heat Inactivated Covid Samples for PCR',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
@@ -6,14 +7,8 @@ metadata = {
 }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"num_samp":4,"plate":"microamp_96_wellplate_200ul","m20_mount":"left"}""")
-    return [_all_values[n] for n in names]
-
-
 def run(ctx):
-
+    """Protocol."""
     [num_samp, plate, m20_mount] = get_values(  # noqa: F821
         'num_samp', 'plate', 'm20_mount')
 
