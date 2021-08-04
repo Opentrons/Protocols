@@ -1,5 +1,5 @@
 {
-    "content": "metadata = {\n    'protocolName': 'Plate Filling Heat Inactivated Covid Samples for PCR',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.7'\n}\n\n\ndef run(ctx):\n\n    [num_samp, plate, m20_mount] = get_values(  # noqa: F821\n        'num_samp', 'plate', 'm20_mount')\n\n    if not 1 <= num_samp <= 94:\n        raise Exception(\"Enter a number of samples between 1-94\")\n\n    # load labware\n    plate = ctx.load_labware(plate, '4')\n    tiprack = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '5')]\n    tuberacks = [ctx.load_labware(\n        'samples_24_tuberack_1500ul', slot)\n        for slot in ['6', '7', '8', '9']]\n    reagent_rack = ctx.load_labware(\n        'mastermix_24_tuberack_2000ul', 1)\n\n    # load instrument\n    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tiprack)\n\n    # multi as single channel\n    num_chan_per_pickup = 1  # (only pickup tips on front-most channel)\n    tips_ordered = [\n        tip for rack in tiprack\n        for row in rack.rows()[\n            len(rack.rows())-num_chan_per_pickup::-1*num_chan_per_pickup]\n        for tip in row]\n\n    tip_count = 0\n\n    def pick_up():\n        nonlocal tip_count\n        m20.pick_up_tip(tips_ordered[tip_count])\n        tip_count += 1\n\n    # protocol\n    sample_tubes = [tube for rack in tuberacks\n                    for row in rack.rows()\n                    for tube in row][:num_samp]\n    negative_ctrl = reagent_rack.rows()[0][0]\n    positive_ctrl = reagent_rack.rows()[0][1]\n    ctrls = [negative_ctrl, positive_ctrl]\n    mastermix = reagent_rack.rows()[0][5]\n    if num_samp <= 48:\n        mastermix = mastermix[0]\n\n    plate_wells = [well for row in plate.rows() for well in row][:num_samp]\n\n    # distribute controls, mastermix\n    airgap = 5\n    for s, d in zip(ctrls, plate.rows()[0]):\n        pick_up()\n        m20.aspirate(5, s)\n        m20.air_gap(airgap)\n        m20.dispense(5+airgap, d)\n        m20.blow_out()\n        m20.drop_tip()\n\n    pick_up()\n    for d in plate_wells:\n        m20.aspirate(15, mastermix)\n        m20.dispense(15, d.top())\n        m20.blow_out()\n    m20.drop_tip()\n\n    # distribute sample\n    for s, d in zip(sample_tubes, plate_wells[2:]):\n        pick_up()\n        m20.aspirate(5, s)\n        m20.air_gap(airgap)\n        m20.dispense(5+airgap, d)\n        m20.mix(5, 17, d)\n        m20.blow_out()\n        m20.drop_tip()\n",
+    "content": "\"\"\"Protocol.\"\"\"\nmetadata = {\n    'protocolName': 'Plate Filling Heat Inactivated Covid Samples for PCR',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.7'\n}\n\n\ndef run(ctx):\n    \"\"\"Protocol.\"\"\"\n    [num_samp, plate, m20_mount] = get_values(  # noqa: F821\n        'num_samp', 'plate', 'm20_mount')\n\n    if not 1 <= num_samp <= 94:\n        raise Exception(\"Enter a number of samples between 1-94\")\n\n    # load labware\n    plate = ctx.load_labware(plate, '4')\n    tiprack = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)\n               for slot in ['5', '6']]\n    tuberacks = [ctx.load_labware(\n        'samples_24_tuberack_1500ul', slot)\n        for slot in ['7', '8', '10', '11']]\n    reagent_rack = ctx.load_labware(\n        'mastermix_24_tuberack_2000ul', 1)\n\n    # load instrument\n    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tiprack)\n\n    # multi as single channel\n    num_chan_per_pickup = 1  # (only pickup tips on front-most channel)\n    tips_ordered = [\n        tip for rack in tiprack\n        for row in rack.rows()[\n            len(rack.rows())-num_chan_per_pickup::-1*num_chan_per_pickup]\n        for tip in row]\n\n    tip_count = 0\n\n    def pick_up():\n        nonlocal tip_count\n        m20.pick_up_tip(tips_ordered[tip_count])\n        tip_count += 1\n\n    # protocol\n    sample_tubes = [tube for rack in tuberacks\n                    for row in rack.rows()\n                    for tube in row][:num_samp]\n    negative_ctrl = reagent_rack.rows()[0][0]\n    positive_ctrl = reagent_rack.rows()[0][1]\n    ctrls = [negative_ctrl, positive_ctrl]\n    mastermix = reagent_rack.rows()[0][5]\n\n    plate_wells = [well for row in plate.rows() for well in row]\n\n    # distribute controls, mastermix\n    airgap = 5\n    for s, d in zip(ctrls, plate.rows()[0]):\n        pick_up()\n        m20.aspirate(5, s)\n        m20.air_gap(airgap)\n        m20.dispense(5+airgap, d)\n        m20.blow_out()\n        m20.drop_tip()\n\n    pick_up()\n    for d in plate_wells[:num_samp+2]:\n        m20.aspirate(15, mastermix)\n        m20.dispense(15, d.top())\n        m20.blow_out()\n    m20.drop_tip()\n\n    # distribute sample\n    for s, d in zip(sample_tubes, plate_wells[2:]):\n        pick_up()\n        m20.aspirate(5, s)\n        m20.air_gap(airgap)\n        m20.dispense(5+airgap, d)\n        m20.mix(5, 17, d)\n        m20.blow_out()\n        m20.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -2958,10 +2958,10 @@
             "type": "opentrons_96_filtertiprack_20ul"
         },
         {
-            "name": "Samples 24 Tube Rack 1500 \u00b5L on 6",
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 6",
             "share": false,
             "slot": "6",
-            "type": "samples_24_tuberack_1500ul"
+            "type": "opentrons_96_filtertiprack_20ul"
         },
         {
             "name": "Samples 24 Tube Rack 1500 \u00b5L on 7",
@@ -2976,9 +2976,15 @@
             "type": "samples_24_tuberack_1500ul"
         },
         {
-            "name": "Samples 24 Tube Rack 1500 \u00b5L on 9",
+            "name": "Samples 24 Tube Rack 1500 \u00b5L on 10",
             "share": false,
-            "slot": "9",
+            "slot": "10",
+            "type": "samples_24_tuberack_1500ul"
+        },
+        {
+            "name": "Samples 24 Tube Rack 1500 \u00b5L on 11",
+            "share": false,
+            "slot": "11",
             "type": "samples_24_tuberack_1500ul"
         },
         {
