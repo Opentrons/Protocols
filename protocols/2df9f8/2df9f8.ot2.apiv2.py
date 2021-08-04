@@ -6,6 +6,12 @@ metadata = {
 }
 
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"num_samp":4,"plate":"microamp_96_wellplate_200ul","m20_mount":"left"}""")
+    return [_all_values[n] for n in names]
+
+
 def run(ctx):
 
     [num_samp, plate, m20_mount] = get_values(  # noqa: F821
@@ -16,10 +22,11 @@ def run(ctx):
 
     # load labware
     plate = ctx.load_labware(plate, '4')
-    tiprack = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '5')]
+    tiprack = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
+               for slot in ['5', '6']]
     tuberacks = [ctx.load_labware(
         'samples_24_tuberack_1500ul', slot)
-        for slot in ['6', '7', '8', '9']]
+        for slot in ['7', '8', '10', '11']]
     reagent_rack = ctx.load_labware(
         'mastermix_24_tuberack_2000ul', 1)
 
@@ -49,10 +56,8 @@ def run(ctx):
     positive_ctrl = reagent_rack.rows()[0][1]
     ctrls = [negative_ctrl, positive_ctrl]
     mastermix = reagent_rack.rows()[0][5]
-    if num_samp <= 48:
-        mastermix = mastermix[0]
 
-    plate_wells = [well for row in plate.rows() for well in row][:num_samp]
+    plate_wells = [well for row in plate.rows() for well in row]
 
     # distribute controls, mastermix
     airgap = 5
@@ -65,7 +70,7 @@ def run(ctx):
         m20.drop_tip()
 
     pick_up()
-    for d in plate_wells:
+    for d in plate_wells[:num_samp+2]:
         m20.aspirate(15, mastermix)
         m20.dispense(15, d.top())
         m20.blow_out()
