@@ -27,6 +27,7 @@ The OT-2 will perform the following steps:
 4. Stop reaction- transfer stop buffer to wells of deep well plate on the Magnetic Module, mix, pause to incubate 10 minutes with occasional mixing, engage magnets for 7 minutes, transfer supernatants to liquid waste reservoir.
 5. Bead drying- pause to let beads air dry.
 6. Elution- transfer elution buffer to wells of deep well plate on the Magnetic Module, mix, engage magnets for 7 minutes, transfer eluate to elution plate held at 4 degrees on the Temperature Module.
+
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
