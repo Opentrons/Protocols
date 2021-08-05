@@ -38,6 +38,7 @@ Explanation of complex parameters below:
 ---
 
 ### Deck Setup
+Please ensure sample plate is loaded with pro-k and MS2 prior to the run. 
 ![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0d2950/Screen+Shot+2021-07-27+at+5.33.11+PM.png)
 
 ### Reagent Setup
