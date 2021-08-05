@@ -1,3 +1,4 @@
+"""Protocol."""
 import math
 from opentrons import protocol_api
 
@@ -10,7 +11,7 @@ metadata = {
 
 
 def run(ctx):
-
+    """Protocol."""
     [num_samp, p1000_sample_height, mag_bead_mix_speed,
      p1000_mag_flow_rate, p300_mount, p1000_mount] = get_values(  # noqa: F821
         "num_samp", "p1000_sample_height", "mag_bead_mix_speed",
@@ -77,19 +78,36 @@ def run(ctx):
                   for well in row][:num_samp]
 
     # make buffer plate
-    pick_up300()
-    for buffer_col, dest_col in zip(buffer*num_col,
-                                    buffer_plate.rows()[0][
-                                        :num_col if num_samp % 8 != 0
-                                        else num_col+1]):
-        p300.transfer(500,
-                      buffer_col,
-                      dest_col,
+    if num_samp == 8:
+        pick_up300()
+        p300.transfer(500, buffer[0], buffer_plate.rows()[0][0],
                       new_tip='never',
                       touch_tip=True)
-    p300.drop_tip()
+        p300.drop_tip()
+    if num_samp > 8:
+        pick_up300()
+        for buffer_col, dest_col in zip(buffer*num_col,
+                                        buffer_plate.rows()[0][
+                                            :num_col if num_samp % 8 != 0
+                                            else num_col+1]):
+            p300.transfer(500,
+                          buffer_col,
+                          dest_col,
+                          new_tip='never',
+                          touch_tip=True)
+    if p300.has_tip:
+        p300.drop_tip()
 
-    if num_samp % 8 != 0:
+    if num_samp < 8:
+        pick_up1000()
+        for buffer_well, dest_well in zip(buffer*num_samp,
+                                          buffer_plate.wells()[:num_samp]):
+            p1000.aspirate(500, buffer_well)
+            p1000.dispense(500, dest_well)
+        p1000.drop_tip()
+
+    if num_samp % 8 != 0 and num_samp > 8:
+        ctx.comment('rrrr')
         pick_up1000()
         for buffer_well, dest_well in zip(buffer*num_col,
                                           buffer_plate.wells()[
@@ -103,15 +121,24 @@ def run(ctx):
 
     # make ethanol plate
     ctx.comment('\n\n\n')
-    pick_up300()
-    for eth_col in buffer_plate.rows()[0][:num_col if num_samp % 8 != 0
-                                          else num_col+1]:
-        p300.transfer(1000,
-                      eth,
-                      eth_col,
+    if num_samp == 8:
+        pick_up300()
+        p300.transfer(1000, eth, ethanol_plate.rows()[0][0],
                       new_tip='never',
                       touch_tip=True)
-    p300.drop_tip()
+        p300.drop_tip()
+    if num_samp > 8:
+        pick_up300()
+        for eth_col in ethanol_plate.rows()[0][:num_col if num_samp % 8 != 0
+                                               else num_col+1]:
+            p300.transfer(1000,
+                          eth,
+                          eth_col,
+                          new_tip='never',
+                          touch_tip=True)
+    if p300.has_tip:
+        p300.drop_tip()
+
     if num_samp % 8 != 0:
         pick_up1000()
         for eth_well in ethanol_plate.wells()[num_col*8:num_col*8+remainder]:
@@ -120,6 +147,7 @@ def run(ctx):
         p1000.drop_tip()
 
     # make elution buffer plate
+    ctx.comment('\n\n\n')
     chunks = [
                 elution_plate.rows()[0][i:i+4]
                 [
@@ -129,20 +157,24 @@ def run(ctx):
                 for i in range(0, len(elution_plate.rows()[0][:num_col]), 4)
               ]
 
+    if num_samp == 8:
+        pick_up300()
+        p300.transfer(50, elution_solution, elution_plate.rows()[0][0],
+                      new_tip='never')
+        p300.drop_tip()
     if num_samp > 8:
         pick_up300()
-    for chunk in chunks:
-        p300.aspirate(50*len(chunk)+50, elution_solution)
-        p300.touch_tip()
-        for well in chunk:
-            p300.dispense(50, well)
-        p300.dispense(50, elution_solution)
-        p300.blow_out()
+        for chunk in chunks:
+            p300.aspirate(50*len(chunk)+50, elution_solution)
+            p300.touch_tip()
+            for well in chunk:
+                p300.dispense(50, well)
+            p300.dispense(50, elution_solution)
+            p300.blow_out()
     if p300.has_tip:
         p300.drop_tip()
 
-    if num_samp % 8 != 0 or num_samp == 8:
-        ctx.comment('\n\n\n')
+    if num_samp % 8 != 0:
         floor = 115
         pick_up1000()
         p1000.aspirate(floor+50*remainder, elution_solution)
@@ -154,6 +186,7 @@ def run(ctx):
         p1000.dispense(floor, elution_solution)
         p1000.blow_out()
         p1000.drop_tip()
+    ctx.comment('\n\n\n')
 
     # add patient samples
     samp_ctr = 0
@@ -170,24 +203,44 @@ def run(ctx):
             samp_ctr = 0
 
     # add mag beads
+    ctx.comment('Adding Mag-Beads')
     pick_up300()
     for well in mag_beads:
-        p300.mix(15, 300, well, rate=mix_rate)
+        p300.mix(3, 300, well, rate=mix_rate)
     p300.drop_tip()
+
     p1000.flow_rate.aspirate = p1000_mag_flow_rate
     p1000.flow_rate.dispense = p1000_mag_flow_rate
 
-    for beads, dest_col in zip(mag_beads*num_col,
-                               sample_plate.rows()[0][
-                                        :num_col if num_samp % 8 != 0
-                                        else num_col+1]):
+    if num_samp == 8:
         pick_up300()
-        p300.transfer(275,
-                      beads,
-                      dest_col,
+        p300.transfer(275, mag_beads[0], sample_plate.rows()[0][0],
                       new_tip='never',
                       touch_tip=True)
         p300.drop_tip()
+
+    if num_samp > 8:
+        for beads, dest_col in zip(mag_beads*num_col,
+                                   sample_plate.rows()[0][
+                                            :num_col if num_samp % 8 != 0
+                                            else num_col+1]):
+            pick_up300()
+            p300.transfer(275,
+                          beads,
+                          dest_col,
+                          new_tip='never',
+                          touch_tip=True)
+            p300.drop_tip()
+    if p300.has_tip:
+        p300.drop_tip()
+
+    if num_samp < 8:
+        pick_up1000()
+        for mag_well, dest_well in zip(mag_beads*num_samp,
+                                       sample_plate.wells()[:num_samp]):
+            p1000.aspirate(275, mag_well)
+            p1000.dispense(275, dest_well)
+        p1000.drop_tip()
 
     if num_samp % 8 != 0:
 
