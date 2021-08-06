@@ -123,7 +123,6 @@ def run(ctx):
         p300.blow_out()
 
     # initialize temp mod and magnetic mod
-    temp_mod.set_temperature(heating_module_temp)
     mag_mod.engage(height_from_base=mag_height_1)
 
     if not waste_water_mode:
@@ -154,6 +153,7 @@ def run(ctx):
         ctx.comment('End Normal Mode\n\n\n\n\n\n\n\n\n')
 
     if waste_water_mode:
+        temp_mod.set_temperature(heating_module_temp)
         # remove storage buffer
         ctx.delay(minutes=settling_3)
         for sample in samples:
