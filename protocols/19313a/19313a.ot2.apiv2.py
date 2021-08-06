@@ -129,7 +129,6 @@ def run(ctx):
     if not waste_water_mode:
         ctx.comment('\n\n\n\nNormal Mode')
         mag_mod.disengage()
-        temp_mod.set_temperature(heating_module_temp)
 
         # binding
         for sample in samples:
@@ -141,8 +140,7 @@ def run(ctx):
             p300.drop_tip()
         ctx.comment('\n')
 
-        if not mag_mod.status == 'engaged':
-            mag_mod.engage(height_from_base=mag_height_1)
+        mag_mod.engage(height_from_base=mag_height_1)
         ctx.delay(minutes=settling_2)
 
         # remove 200ul of supernatant
