@@ -3,6 +3,16 @@ import os
 import csv
 from opentrons.types import Point
 
+
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"num_samp":1,"reset_tipracks":true,"mix_reps1":10,"mix_reps2":10,"mix_reps_wash1":6,
+    "mix_reps_wash2":6,"mix_reps_elution1":6,"mix_reps_elution2":6,"settling_1":4,"settling_2":5,"settling_3":1,
+    "settling_wash":0.5,"settling_drying":3,"settling_elution1":1,"settling_elution2":5,"wash1_vol":300,
+    "wash2_vol":300,"elution_vol":50,"lysis_vol":100,"move_vol":200,"binding_buffer_vol":100,"final_vol":50,
+    "heating_module_temp":65,"mag_height_1":4.5,"waste_water_mode":true,"asp_height":1,"length_from_side":2,
+    "p300_mount":"left"}""")
+    return [_all_values[n] for n in names]
 metadata = {
     'protocolName': 'RNA Extraction with Magnetic Life',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
@@ -125,22 +135,11 @@ def run(ctx):
     # initialize temp mod and magnetic mod
     temp_mod.set_temperature(heating_module_temp)
     mag_mod.engage(height_from_base=mag_height_1)
-    ctx.pause('''
-                Temperature module at desired temperature,
-                and magnetic module is enageged.
-               Select "Resume" on the Opentrons app to begin the protocol.
-               ''')
 
-    ctx.comment('\n\n\n\nNormal Mode')
     if not waste_water_mode:
+        ctx.comment('\n\n\n\nNormal Mode')
         mag_mod.disengage()
-        for sample in samples:
-            pick_up_filter()
-            p300.mix(mix_reps1, 80, sample)
-            p300.touch_tip()
-            p300.drop_tip()
-        ctx.delay(minutes=settling_1)
-        ctx.comment('\n')
+        temp_mod.set_temperature(heating_module_temp)
 
         # binding
         for sample in samples:
@@ -152,7 +151,7 @@ def run(ctx):
             p300.drop_tip()
         ctx.comment('\n')
 
-        if not mag_mod.status == 'enaged':
+        if not mag_mod.status == 'engaged':
             mag_mod.engage(height_from_base=mag_height_1)
         ctx.delay(minutes=settling_2)
 
@@ -161,7 +160,8 @@ def run(ctx):
             pick_up_filter()
             remove_supernatant(200, i, sample)
             p300.drop_tip()
-    ctx.comment('End Normal Mode\n\n\n\n\n\n\n\n\n')
+        mag_mod.disengage()
+        ctx.comment('End Normal Mode\n\n\n\n\n\n\n\n\n')
 
     if waste_water_mode:
         # remove storage buffer
@@ -177,11 +177,13 @@ def run(ctx):
         ctx.comment('\n\n\n')
 
     # RPS wash
+    ctx.comment("RPS")
     for i, sample in enumerate(samples):
         pick_up300()
         p300.aspirate(wash1_vol, rps_wash_buffer)
         p300.dispense(wash1_vol, sample)
-        p300.mix(mix_reps_wash1)
+        p300.mix(mix_reps_wash1, wash1_vol, sample)
+        p300.move_to(sample.top())
         mag_mod.engage(height_from_base=mag_height_1)
         ctx.delay(minutes=settling_wash)
         remove_supernatant(300, i, sample)
@@ -198,6 +200,7 @@ def run(ctx):
             p300.aspirate(wash2_vol, wash_buffer)
             p300.dispense(wash2_vol, sample)
             p300.mix(mix_reps_wash1, 300, sample)
+            p300.move_to(sample.top())
             mag_mod.engage(height_from_base=mag_height_1)
             ctx.delay(minutes=settling_wash)
             remove_supernatant(300, i, sample)
