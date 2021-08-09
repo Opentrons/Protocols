@@ -1,6 +1,12 @@
 [
   {
     "type": "float",
+    "label": "Increase in Height of Master Mix Disposal (mm)",
+    "name": "blowout_vertical_offset",
+    "default": 0
+  },
+  {
+    "type": "float",
     "label": "Well Bottom Clearance for Aspiration (mm)",
     "name": "clearance_aspirate",
     "default": 1
