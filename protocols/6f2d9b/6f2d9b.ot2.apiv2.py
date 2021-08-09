@@ -11,8 +11,9 @@ metadata = {
 def run(ctx):
 
     [p1000_mount, extraction_type, samples,
-        sample_vol] = get_values(  # noqa: F821
-        "p1000_mount", "extraction_type", "samples", "sample_vol")
+        sample_vol, sample_air_gap] = get_values(  # noqa: F821
+        "p1000_mount", "extraction_type", "samples", "sample_vol",
+        "sample_air_gap")
 
     if extraction_type == "single":
         if not 1 <= samples <= 94:
@@ -59,5 +60,6 @@ def run(ctx):
     for source, dest in zip(tube_wells, sample_wells):
         pick_up(p1000)
         p1000.aspirate(sample_vol, source)
-        p1000.dispense(sample_vol, dest)
+        p1000.air_gap(sample_air_gap)
+        p1000.dispense(sample_vol+sample_air_gap, dest)
         p1000.drop_tip()
