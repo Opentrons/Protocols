@@ -1,4 +1,4 @@
-# RNA Extraction with Life Magnetics
+# Life Magnetics C-Prep
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -48,7 +48,7 @@ Explanation of complex parameters below:
 
 ### Protocol Steps
 1. Temperature reached, magnetic module engaged
-2. If normal mode, samples are mixed, binding buffer added and mixed, 200ul of supernatant removed.
+2. If normal mode, user does first mix step as temperature is reached, binding buffer added and mixed, 200ul of supernatant removed.
 3. If wastewater mode, remove up to 1.5 ml of storage buffer in samples
 4. RPS wash, remove supernatant in samples
 5. Two ethanol washes, remove supernatant in samples

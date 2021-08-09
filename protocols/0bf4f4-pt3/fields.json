@@ -44,13 +44,13 @@
   "default": 1
   },
   {
-  "type": "int",
+  "type": "float",
   "label": "Aspiration height (mm)",
   "name": "asp_height",
   "default": 1
   },
   {
-  "type": "int",
+  "type": "float",
   "label": "Length from side (mm)",
   "name": "length_from_side",
   "default": 1.5

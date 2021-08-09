@@ -1,3 +1,4 @@
+"""Protocol."""
 from opentrons.types import Point
 from opentrons import protocol_api
 
@@ -11,7 +12,7 @@ metadata = {
 
 
 def run(ctx):
-
+    """Protocol."""
     [num_samp, plate_A_start_col, plate_B_start_col,
      plate_C_start_col, tip_park_start_col, asp_height,
      length_from_side, m20_mount, m300_mount] = get_values(  # noqa: F821
@@ -48,6 +49,27 @@ def run(ctx):
                                tip_racks=tiprack)
     m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tiprack20)
 
+    switch = True
+    drop_count = 0
+    drop_threshold = 120
+
+    def _drop(pip):
+        nonlocal switch
+        nonlocal drop_count
+        side = 30 if switch else -18
+        drop_loc = ctx.loaded_labwares[12].wells()[0].top().move(Point(x=side))
+        pip.drop_tip(drop_loc)
+        switch = not switch
+        if pip.type == 'multi':
+            drop_count += 8
+        else:
+            drop_count += 1
+        if drop_count >= drop_threshold:
+            m300.home()
+            ctx.pause('Please empty tips from waste before resuming.')
+            ctx.home()  # home before continuing with protocol
+            drop_count = 0
+
     def pick_up300():
         try:
             m300.pick_up_tip()
@@ -63,7 +85,7 @@ def run(ctx):
         pip.aspirate(vol, aspirate_loc)
         if trash:
             pip.dispense(vol, waste)
-            pip.blow_out()
+            pip.blow_out(waste.top())
 
     def mix_at_beads(vol, index, loc):
         side = 1 if index % 2 == 0 else -1
@@ -74,7 +96,7 @@ def run(ctx):
         for _ in range(12):
             m300.aspirate(vol, aspirate_loc)
             m300.dispense(vol, dispense_loc)
-        m300.blow_out()
+        m300.blow_out(loc.top())
 
     # reagents
     rsb_buffer = reservoir.wells()[3]
@@ -94,8 +116,8 @@ def run(ctx):
         pick_up300()
         remove_supernatant(22.5, i, s_col)
         m300.dispense(22.5, d_col)
-        m300.blow_out()
-        m300.drop_tip()
+        m300.blow_out(d_col.top())
+        _drop(m300)
     mag_module.disengage()
     ctx.pause('''Remove plate on magnetic module and replace with newly
     populated Plate A. Ensure Plate B is on the deck populated with magnetic
@@ -104,15 +126,15 @@ def run(ctx):
     # pre-mix diluted beads, add to plate A
     pick_up300()
     m300.mix(20, 200, diluted_magbeads)
-    m300.drop_tip()
+    _drop(m300)
 
     for col in plate_a.rows()[0][plate_A_start_col:plate_A_start_col+num_col]:
         pick_up300()
         m300.aspirate(42.5, diluted_magbeads)
         m300.dispense(42.5, col)
         m300.mix(10, 50, col)
-        m300.blow_out()
-        m300.drop_tip()
+        m300.blow_out(col.top())
+        _drop(m300)
 
     # incubate, engage, remove supernatant to plate B
     ctx.delay(minutes=5)
@@ -130,8 +152,8 @@ def run(ctx):
         remove_supernatant(62.5, i, s_col)
         m300.dispense(62.5, d_col)
         m300.mix(10, 55, d_col)
-        m300.blow_out()
-        m300.drop_tip()
+        m300.blow_out(d_col.top())
+        _drop(m300)
     ctx.delay(minutes=5)
     mag_module.disengage()
 
@@ -147,7 +169,7 @@ def run(ctx):
                                                     + num_col]):
         pick_up300()
         remove_supernatant(65, i, s_col, trash=True)
-        m300.drop_tip()
+        _drop(m300)
     ctx.delay(minutes=5)
 
     # two ethanol washes
@@ -162,8 +184,8 @@ def run(ctx):
             m300.aspirate(200, eth)
             m300.dispense(200, sample.top())
             ctx.delay(seconds=1.5)
-            m300.blow_out()
-        m300.drop_tip()
+            m300.blow_out(sample.top())
+        _drop(m300)
         ctx.delay(seconds=30)
         for i, sample in enumerate(mag_plate.rows()[0][
                                                          plate_B_start_col:
@@ -175,7 +197,7 @@ def run(ctx):
             if wash == 0:
                 m300.return_tip()
             else:
-                m300.drop_tip()
+                _drop(m300)
 
     # remove excess with p20
     for i, sample in enumerate(mag_plate.rows()[0][
@@ -185,7 +207,7 @@ def run(ctx):
                                                      ]):
         m20.pick_up_tip()
         remove_supernatant(20, i, sample, trash=True, pip=m20)
-        m20.drop_tip()
+        _drop(m20)
 
     # delay, add rsb
     ctx.delay(minutes=5)
@@ -196,8 +218,8 @@ def run(ctx):
                                       + num_col]:
         m300.aspirate(32, rsb_buffer)
         m300.dispense(200, sample.top())
-        m300.blow_out()
-    m300.drop_tip()
+        m300.blow_out(sample.top())
+    _drop(m300)
 
     # resuspend beads
     for i, sample in enumerate(mag_plate.rows()[0][
@@ -207,7 +229,7 @@ def run(ctx):
                                                      ]):
         pick_up300()
         mix_at_beads(25, i, sample)
-        m300.drop_tip()
+        _drop(m300)
 
     ctx.delay(minutes=2)
     mag_module.engage()
@@ -225,5 +247,5 @@ def run(ctx):
         pick_up300()
         remove_supernatant(30, i, s_col)
         m300.dispense(30, d_col)
-        m300.blow_out()
-        m300.drop_tip()
+        m300.blow_out(d_col.top())
+        _drop(m300)

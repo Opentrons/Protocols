@@ -1,3 +1,4 @@
+"""Protocol."""
 from opentrons.types import Point
 
 
@@ -10,7 +11,7 @@ metadata = {
 
 
 def run(ctx):
-
+    """Protocol."""
     [num_samp, index_start_col, tip_park_start_col,
         asp_height, length_from_side,
         m20_mount, m300_mount] = get_values(  # noqa: F821
@@ -48,6 +49,26 @@ def run(ctx):
     m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tiprack)
     m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,
                                tip_racks=tiprack300)
+    switch = True
+    drop_count = 0
+    drop_threshold = 120
+
+    def _drop(pip):
+        nonlocal switch
+        nonlocal drop_count
+        side = 30 if switch else -18
+        drop_loc = ctx.loaded_labwares[12].wells()[0].top().move(Point(x=side))
+        pip.drop_tip(drop_loc)
+        switch = not switch
+        if pip.type == 'multi':
+            drop_count += 8
+        else:
+            drop_count += 1
+        if drop_count >= drop_threshold:
+            m300.home()
+            ctx.pause('Please empty tips from waste before resuming.')
+            ctx.home()  # home before continuing with protocol
+            drop_count = 0
 
     def change_speeds(pip, speed):
         pip.flow_rate.aspirate = speed
@@ -59,7 +80,7 @@ def run(ctx):
                 Point(x=(loc.diameter/2-length_from_side)*side))
         m300.aspirate(vol, aspirate_loc)
         m300.dispense(vol, waste)
-        m300.blow_out()
+        m300.blow_out(waste.top())
 
     def mix_at_beads(vol, index, loc):
         side = 1 if index % 2 == 0 else -1
@@ -85,9 +106,9 @@ def run(ctx):
         m20.air_gap(airgap)
         m20.dispense(5+airgap, col)
         m20.mix(10, 17, col, rate=0.5)
-        m20.blow_out()
+        m20.blow_out(col.top())
         m20.touch_tip()
-        m20.drop_tip()
+        _drop(m20)
 
     ctx.pause(
         '''
@@ -108,7 +129,7 @@ def run(ctx):
         for i, col in enumerate(sample_plate.rows()[0][:num_col]):
             m300.pick_up_tip(park_tips_300.rows()[0][i+tip_park_start_col])
             remove_supernatant(30 if wash == 0 else 50, i, col)
-            m300.blow_out()
+            m300.blow_out(col.top())
             m300.return_tip()
         mag_module.disengage()
 
@@ -120,7 +141,7 @@ def run(ctx):
             m300.aspirate(50, twb)
             m300.dispense(50, col)
             mix_at_beads(40, i, col)
-            m300.drop_tip()
+            _drop(m300)
         change_speeds(m300, 94)
 
     ctx.pause(
@@ -135,7 +156,7 @@ def run(ctx):
     for i, col in enumerate(sample_plate.rows()[0][:num_col]):
         m300.pick_up_tip(park_tips_300.rows()[0][i+tip_park_start_col])
         remove_supernatant(50, i, col)
-        m300.drop_tip()  # drop parked tips
+        _drop(m300)  # drop parked tips
     mag_module.disengage()
 
     # add epm, mix at bead location
@@ -147,8 +168,8 @@ def run(ctx):
         m300.aspirate(20, epm_reagent)
         m300.dispense(20, dest_col)
         mix_at_beads(20, i, dest_col)
-        m300.blow_out()
-        m300.drop_tip()
+        m300.blow_out(dest_col.top())
+        _drop(m300)
     ctx.pause('''
     Prepare plate for index addition.
     Select "Resume" on the Opentrons App. Empty trash if needed.
@@ -162,5 +183,5 @@ def run(ctx):
         m20.aspirate(5, source_col, rate=0.75)
         m20.dispense(5, dest_col, rate=0.75)
         m20.mix(10, 18, dest_col)
-        m20.blow_out()
-        m20.drop_tip()
+        m20.blow_out(dest_col.top())
+        _drop(m20)

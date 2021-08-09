@@ -125,22 +125,10 @@ def run(ctx):
     # initialize temp mod and magnetic mod
     temp_mod.set_temperature(heating_module_temp)
     mag_mod.engage(height_from_base=mag_height_1)
-    ctx.pause('''
-                Temperature module at desired temperature,
-                and magnetic module is enageged.
-               Select "Resume" on the Opentrons app to begin the protocol.
-               ''')
 
-    ctx.comment('\n\n\n\nNormal Mode')
     if not waste_water_mode:
+        ctx.comment('\n\n\n\nNormal Mode')
         mag_mod.disengage()
-        for sample in samples:
-            pick_up_filter()
-            p300.mix(mix_reps1, 80, sample)
-            p300.touch_tip()
-            p300.drop_tip()
-        ctx.delay(minutes=settling_1)
-        ctx.comment('\n')
 
         # binding
         for sample in samples:
@@ -152,8 +140,7 @@ def run(ctx):
             p300.drop_tip()
         ctx.comment('\n')
 
-        if not mag_mod.status == 'enaged':
-            mag_mod.engage(height_from_base=mag_height_1)
+        mag_mod.engage(height_from_base=mag_height_1)
         ctx.delay(minutes=settling_2)
 
         # remove 200ul of supernatant
@@ -161,7 +148,8 @@ def run(ctx):
             pick_up_filter()
             remove_supernatant(200, i, sample)
             p300.drop_tip()
-    ctx.comment('End Normal Mode\n\n\n\n\n\n\n\n\n')
+        mag_mod.disengage()
+        ctx.comment('End Normal Mode\n\n\n\n\n\n\n\n\n')
 
     if waste_water_mode:
         # remove storage buffer
@@ -177,11 +165,13 @@ def run(ctx):
         ctx.comment('\n\n\n')
 
     # RPS wash
+    ctx.comment("RPS")
     for i, sample in enumerate(samples):
         pick_up300()
         p300.aspirate(wash1_vol, rps_wash_buffer)
         p300.dispense(wash1_vol, sample)
-        p300.mix(mix_reps_wash1)
+        p300.mix(mix_reps_wash1, wash1_vol, sample)
+        p300.move_to(sample.top())
         mag_mod.engage(height_from_base=mag_height_1)
         ctx.delay(minutes=settling_wash)
         remove_supernatant(300, i, sample)
@@ -198,6 +188,7 @@ def run(ctx):
             p300.aspirate(wash2_vol, wash_buffer)
             p300.dispense(wash2_vol, sample)
             p300.mix(mix_reps_wash1, 300, sample)
+            p300.move_to(sample.top())
             mag_mod.engage(height_from_base=mag_height_1)
             ctx.delay(minutes=settling_wash)
             remove_supernatant(300, i, sample)

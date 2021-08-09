@@ -28,5 +28,11 @@
       "label": "Patient Sample Volume",
       "name": "sample_vol",
       "default": 200
+    },
+    {
+      "type": "float",
+      "label": "Sample Air Gap",
+      "name": "sample_air_gap",
+      "default": 30
     }
 ]

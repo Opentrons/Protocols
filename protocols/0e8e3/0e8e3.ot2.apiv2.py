@@ -14,26 +14,27 @@ def run(ctx):
 
     [num_samples, vol_dna_buff, vol_a_to_b, p20_type, p20_mount,
      p300_type, p300_mount, vol_dil_to_d, vol_dil_to_e,
-     vol_c_to_d, vol_d_to_e] = get_values(  # noqa: F821
+     vol_c_to_d, vol_d_to_e, pcr_mix_vol,
+     template_vol] = get_values(  # noqa: F821
         'num_samples', 'vol_dna_buff', 'vol_a_to_b', 'p20_type', 'p20_mount',
         'p300_type', 'p300_mount', 'vol_dil_to_d', 'vol_dil_to_e',
-        'vol_c_to_d', 'vol_d_to_e')
+        'vol_c_to_d', 'vol_d_to_e', 'pcr_mix_vol', 'template_vol')
 
     # modules and labware
     plate_a = ctx.load_labware('thermofishernunc_96_wellplate_450ul', '1',
-                               'plate A')
+                               'Plate A (Sample Plate)')
     plate_c = ctx.load_labware('thermofishernunc_96_wellplate_450ul', '2',
-                               'plate C')
+                               'Plate C (DNAse Reaction Plate)')
     plate_d = ctx.load_labware('thermofishernunc_96_wellplate_450ul', '3',
-                               'plate D')
+                               'Plate D (Dilution Buffer Plate 1)')
     tempdeck = ctx.load_module('temperature module gen2', '4')
-    tempdeck.set_temperature(37)
+    tempdeck.deactivate()
     plate_b = tempdeck.load_labware('thermofishernunc_96_aluminumblock_450ul',
-                                    'plate B')
+                                    'Plate B (DNAse Dilution Plate)')
     reservoir = ctx.load_labware('nest_12_reservoir_15ml', '5',
                                  'reagent reservoir')
     plate_e = ctx.load_labware('thermofishernunc_96_wellplate_450ul', '6',
-                               'plate E')
+                               'Plate E (Template Plate)')
     final_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '9',
                                    'final Bio-Rad PCR plate')
     tipracks20 = [
@@ -132,14 +133,18 @@ resuming.')
         p20.transfer(5, s, d, mix_after=(5, 15), new_tip='never')
         p20.drop_tip()
 
-    ctx.delay(minutes=60, msg='Holding plate B at 37C for 1hr')
+    ctx.pause('Apply foil to top of DNAse Reaction Plate befroe tempdeck ramps \
+to 37C')
+    tempdeck.set_temperature(37)
+    ctx.delay(minutes=60, msg='Holding plate C at 37C for 1hr')
+    ctx.pause('Remove foil from plate before proceeding')
     tempdeck.set_temperature(4)
-    ctx.comment('Holding plate B at 4C indefinitely.')
+    tempdeck.deactivate()
 
     for d in _get_samples(plate_c, p20):
         _pick_up(p20)
         p20.transfer(5, edta, d, new_tip='never')
-        pip.drop_tip()
+        p20.drop_tip()
 
     pip = p20 if vol_dil_to_d <= 20 else p300
     _pick_up(pip)
@@ -158,24 +163,24 @@ resuming.')
     pip = p20 if vol_c_to_d <= 20 else p300
     for s, d in zip(_get_samples(plate_c, pip), _get_samples(plate_d, pip)):
         _pick_up(pip)
-        pip.transfer(vol_c_to_d, s, d, mix_after=(5, 15), new_tip='never')
+        pip.transfer(vol_c_to_d, s, d, mix_after=(10, 20), new_tip='never')
         pip.drop_tip()
 
     pip = p20 if vol_d_to_e <= 20 else p300
     for s, d in zip(_get_samples(plate_d, pip), _get_samples(plate_e, pip)):
         _pick_up(pip)
-        pip.transfer(vol_d_to_e, s, d, mix_after=(5, 15), new_tip='never')
+        pip.transfer(vol_d_to_e, s, d, mix_after=(10, 20), new_tip='never')
         pip.drop_tip()
 
     _pick_up(p300)
     for d in _get_samples(final_plate, p300):
-        p300.transfer(22.5, pcr_mix, d, new_tip='never')
+        p300.transfer(pcr_mix_vol, pcr_mix.bottom(0.3), d, new_tip='never')
     p300.drop_tip()
 
     for s, d in zip(_get_samples(plate_e, p20),
                     _get_samples(final_plate, p20)):
         _pick_up(p20)
-        p20.transfer(2.5, s, d, mix_after=(5, 15), new_tip='never')
+        p20.transfer(template_vol, s, d, mix_after=(5, 15), new_tip='never')
         p20.drop_tip()
 
     ctx.comment('Plate is ready for Droplet Generation')

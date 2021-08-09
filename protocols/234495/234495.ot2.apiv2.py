@@ -1,3 +1,4 @@
+from opentrons.protocol_api.labware import OutOfTipsError
 from opentrons import types
 
 metadata = {
@@ -11,14 +12,15 @@ metadata = {
 def run(ctx):
 
     # get the parameter values from json above
-    [include_standards_only, labware_tips20, labware_tips300, labware_tuberack,
-     clearance_meoh_water, clearance_dil_dispense, touch_radius,
-     touch_v_offset, track_start, clearance_tfa, clearance_mecn,
-     mix_reps] = get_values(  # noqa: F821
-      'include_standards_only', 'labware_tips20', 'labware_tips300',
-      'labware_tuberack', 'clearance_meoh_water', 'clearance_dil_dispense',
-      'touch_radius', 'touch_v_offset', 'track_start', 'clearance_tfa',
-      'clearance_mecn', 'mix_reps')
+    [full_volume, include_standards_only, include_patient_samples,
+     labware_tips20, labware_tips300, labware_tuberack, clearance_meoh_water,
+     clearance_dil_dispense, touch_radius, touch_v_offset, track_start,
+     clearance_tfa, clearance_mecn, mix_reps] = get_values(  # noqa: F821
+      'full_volume', 'include_standards_only', 'include_patient_samples',
+      'labware_tips20', 'labware_tips300', 'labware_tuberack',
+      'clearance_meoh_water', 'clearance_dil_dispense', 'touch_radius',
+      'touch_v_offset', 'track_start', 'clearance_tfa', 'clearance_mecn',
+      'mix_reps')
 
     ctx.set_rail_lights(True)
 
@@ -34,6 +36,15 @@ def run(ctx):
     """
     helper functions
     """
+    def pick_up_or_refill(current_pipette):
+        try:
+            current_pipette.pick_up_tip()
+        except OutOfTipsError:
+            pause_attention(
+             """Please Refill the {} Tip Boxes
+                and Empty the Tip Waste.""".format(current_pipette))
+            current_pipette.reset_tipracks()
+            current_pipette.pick_up_tip()
 
     def pause_attention(message):
         ctx.set_rail_lights(False)
@@ -141,6 +152,33 @@ def run(ctx):
          well for row in tuberack.rows() for well in row][12:15]
         [*amicon_filters_pooled] = [
          well for row in tuberack.rows() for well in row][15:18]
+
+        if include_patient_samples:
+            ctx.comment("""
+            ***24 PATIENT SAMPLES INCLUDED IN THIS RUN***
+            tube rack in deck slot 7:
+            A1-A6,B1-B6 1st twelve patient samples
+            C1-C6,D1-D6 corresponding amicon filters
+            tube rack in deck slot 10:
+            A1-A6,B1-B6 another twelve patient samples
+            C1-C6,D1-D6 corresponding amicon filters
+            """)
+
+            # patient samples
+            [*pt_tuberacks] = [
+             ctx.load_labware(labware_tuberack, str(slot),
+                              'Patient Tube Rack') for slot in [7, 10]]
+
+            pt_samples = []
+            for rack in pt_tuberacks:
+                new = [well for row in rack.rows() for well in row][:12]
+                pt_samples.extend(new)
+
+            pt_amicon_filters = []
+            for rack in pt_tuberacks:
+                new = [well for row in rack.rows() for well in row][12:]
+                pt_amicon_filters.extend(new)
+
     else:
         ctx.comment("""
         ***THIS RUN INCLUDES STANDARDS ONLY***
@@ -166,8 +204,16 @@ def run(ctx):
     p300 tips in slot 6.
     """)
 
+    if not full_volume:
+        div = 2
+        ctx.comment("""
+        ****half-volumes will be used****
+        """)
+    else:
+        div = 1
+
     ctx.comment("""
-    add 20 ul 1:1 MeOH:Water (one tube at a time, pausing to vortex)
+    add {} ul 1:1 MeOH:Water
     to make 11 serial dilutions 1:2 from unlabelled 200 um solution in A1
 
     liquid handling method for methanol:water:
@@ -176,48 +222,54 @@ def run(ctx):
     delayed blowout after dispense (let meoh fall to bottom of tip first)
     repeat blowout (for complete dispense)
     tip touch
-    """)
+    """.format(str(20 / div)))
 
-    meoh_flow_rates(p300s)
+    if full_volume:
+        pip = p300s
+    else:
+        pip = p20s
+    meoh_flow_rates(pip)
     for index, dilution in enumerate(dilutions):
-        p300s.pick_up_tip()
-        p300s.aspirate(20, meoh_water.bottom(clearance_meoh_water))
-        p300s.air_gap(5)
-        p300s.dispense(25, dilution.bottom(clearance_dil_dispense))
+        pip.pick_up_tip()
+        pip.aspirate(20 / div, meoh_water.bottom(clearance_meoh_water))
+        pip.air_gap(5 / div)
+        pip.dispense(
+         (20 / div)+(5 / div), dilution.bottom(clearance_dil_dispense))
         for rep in range(3):
             if rep > 0:
-                p300s.aspirate(
-                 25, dilution.bottom(10))
+                pip.aspirate(
+                 20, dilution.bottom(10))
             ctx.delay(seconds=1)
-            p300s.blow_out(dilution.bottom(10))
-        p300s.touch_tip(radius=touch_radius, v_offset=touch_v_offset, speed=20)
+            pip.blow_out(dilution.bottom(10))
+        pip.touch_tip(radius=touch_radius, v_offset=touch_v_offset, speed=20)
         if index == 0:
             source = unlabeled_soln_200um.bottom(1)
         else:
             source = dilutions[index-1].bottom(1)
-        p300s.aspirate(20, source)
-        p300s.air_gap(5)
-        p300s.dispense(25, dilution.bottom(clearance_dil_dispense))
-        p300s.mix(mix_reps, 20, dilution.bottom(clearance_dil_dispense))
+        pip.aspirate(20 / div, source)
+        pip.air_gap(5 / div)
+        pip.dispense(
+         (20 / div)+(5 / div), dilution.bottom(clearance_dil_dispense))
+        pip.mix(mix_reps, 20 / div, dilution.bottom(clearance_dil_dispense))
         for rep in range(3):
             if rep > 0:
-                p300s.aspirate(
-                 25, dilution.bottom(10))
+                pip.aspirate(
+                 20, dilution.bottom(10))
             ctx.delay(seconds=1)
-            p300s.blow_out(dilution.bottom(10))
-        p300s.touch_tip(radius=touch_radius, v_offset=touch_v_offset, speed=20)
-        p300s.drop_tip()
-    default_flow_rates(p300s)
+            pip.blow_out(dilution.bottom(10))
+        pip.touch_tip(radius=touch_radius, v_offset=touch_v_offset, speed=20)
+        pip.drop_tip()
+    default_flow_rates(pip)
 
     ctx.comment("""
-    add 90 ul Golden Plasma to each of 12 sample tubes
+    add {} ul Golden Plasma to each of 12 sample tubes
 
     use liquid handling method for plasma
     aspirate extra volume
     reduced aspirate and dispense speeds
     slow tip withdrawal from plasma
     avoid over-immersion of tip (liquid height tracking)
-    """)
+    """.format(str(90 / div)))
 
     plasma_flow_rates(p300s)
     p300s.pick_up_tip()
@@ -225,32 +277,32 @@ def run(ctx):
     tracking_clearance = starting_clearance
     ending_clearance = 2
     increment = (starting_clearance - ending_clearance) / len(samples)
-    p300s.aspirate(35, golden_plasma.bottom(starting_clearance))
+    p300s.aspirate(35 / div, golden_plasma.bottom(starting_clearance))
     for sample in samples:
-        p300s.aspirate(90, golden_plasma.bottom(tracking_clearance))
+        p300s.aspirate(90 / div, golden_plasma.bottom(tracking_clearance))
         slow_tip_withdrawal(p300s, golden_plasma)
         if tracking_clearance >= ending_clearance + increment:
             tracking_clearance -= increment
         else:
             tracking_clearance = ending_clearance
-        p300s.dispense(90, sample.bottom(2))
+        p300s.dispense(90 / div, sample.bottom(2))
         slow_tip_withdrawal(p300s, sample)
     p300s.drop_tip()
     default_flow_rates(p300s)
 
     ctx.comment("""
-    transfer 10 ul of each serial dilution to the corresponding sample tube
-    transfer 10 ul 1:1 MeOH:Water to pooled samples (if included)
+    transfer {} ul of each serial dilution to the corresponding sample tube
+    transfer {} ul 1:1 MeOH:Water to pooled and patient samples (if included)
     vortex 5 min
     use liquid handling method for MeOH:Water
-    """)
+    """.format(str(10 / div), str(10 / div)))
     meoh_flow_rates(p20s)
     dilutions.insert(0, unlabeled_soln_200um)
     for index, dilution in enumerate(dilutions):
         p20s.pick_up_tip()
-        p20s.aspirate(10, dilution.bottom(clearance_dil_dispense))
+        p20s.aspirate(10 / div, dilution.bottom(clearance_dil_dispense))
         p20s.air_gap(2)
-        p20s.dispense(12, samples[index].bottom(3))
+        p20s.dispense((10 / div)+2, samples[index].bottom(3))
         slow_tip_withdrawal(p20s, samples[index], to_center=True)
         for rep in range(3):
             if rep > 0:
@@ -267,9 +319,9 @@ def run(ctx):
         meoh_flow_rates(p20s)
         for pooled_sample in samples_pooled:
             p20s.pick_up_tip()
-            p20s.aspirate(10, meoh_water.bottom(clearance_meoh_water))
+            p20s.aspirate(10 / div, meoh_water.bottom(clearance_meoh_water))
             p20s.air_gap(2)
-            p20s.dispense(12, pooled_sample.bottom(3))
+            p20s.dispense((10 / div)+2, pooled_sample.bottom(3))
             slow_tip_withdrawal(p20s, pooled_sample, to_center=True)
             for rep in range(3):
                 if rep > 0:
@@ -283,20 +335,45 @@ def run(ctx):
             p20s.drop_tip()
         default_flow_rates(p20s)
 
+        if include_patient_samples:
+            meoh_flow_rates(p20s)
+            for pt_sample in pt_samples:
+                pick_up_or_refill(p20s)
+                p20s.aspirate(
+                 10 / div, meoh_water.bottom(clearance_meoh_water))
+                p20s.air_gap(2)
+                p20s.dispense((10 / div)+2, pt_sample.bottom(3))
+                slow_tip_withdrawal(p20s, pt_sample, to_center=True)
+                for rep in range(3):
+                    if rep > 0:
+                        p20s.aspirate(
+                         10, pt_sample.center().move(
+                          types.Point(x=0, y=0, z=-3)))
+                    ctx.delay(seconds=1)
+                    p20s.blow_out(
+                     pt_sample.center().move(types.Point(x=0, y=0, z=-3)))
+                p20s.touch_tip(radius=0.75, v_offset=-8, speed=20)
+                p20s.drop_tip()
+            default_flow_rates(p20s)
+
     pause_attention("Vortex samples 5 min and return.")
 
     ctx.comment("""
-    add 10 ul NEM to each tube
+    add {} ul NEM to each tube
     vortex 15 min
-    """)
+    """.format(str(10 / div)))
     if not include_standards_only:
         for pooled_sample in samples_pooled:
             samples.append(pooled_sample)
 
+        if include_patient_samples:
+            for pt_sample in pt_samples:
+                samples.append(pt_sample)
+
     for sample in samples:
-        p20s.pick_up_tip()
-        p20s.aspirate(10, nem_100mm.bottom(3))
-        p20s.dispense(10, sample.bottom(3))
+        pick_up_or_refill(p20s)
+        p20s.aspirate(10 / div, nem_100mm.bottom(3))
+        p20s.dispense(10 / div, sample.bottom(3))
         slow_tip_withdrawal(p20s, sample, to_center=True)
         p20s.blow_out(sample.center().move(types.Point(x=0, y=0, z=-3)))
         p20s.touch_tip(radius=0.75, v_offset=-8, speed=20)
@@ -305,16 +382,22 @@ def run(ctx):
     pause_attention("Vortex tubes 15 min and return.")
 
     ctx.comment("""
-    add 5 ul 100 uM labelled standard to each tube
+    add {} ul 100 uM labelled standard to each tube
     vortex 5 min
     use liquid handling method for MeOH:Water
-    """)
+    """.format(str(5 if div == 1 else 2)))
     meoh_flow_rates(p20s)
     for sample in samples:
-        p20s.pick_up_tip()
-        p20s.aspirate(5, labeled_soln_100um.bottom(2))
+        pick_up_or_refill(p20s)
+        if full_volume:
+            p20s.aspirate(5, labeled_soln_100um.bottom(2))
+        else:
+            p20s.aspirate(2, labeled_soln_100um.bottom(2))
         p20s.air_gap(2)
-        p20s.dispense(7, sample.bottom(3))
+        if full_volume:
+            p20s.dispense(7, sample.bottom(3))
+        else:
+            p20s.dispense(4, sample.bottom(3))
         slow_tip_withdrawal(p20s, sample, to_center=True)
         for rep in range(3):
             if rep > 0:
@@ -329,18 +412,18 @@ def run(ctx):
     pause_attention("Vortex tubes 5 min and return.")
 
     ctx.comment("""
-    add 540 ul TFA in acetonitrile to each tube
+    add {} ul TFA in acetonitrile to each tube
     vortex 10 min
     spin 15 min
     use same liquid handling method as for MeOH:Water
-    """)
+    """.format(str(540 / div)))
     meoh_flow_rates(p300s)
     for sample in samples:
         for rep in range(3):
-            p300s.pick_up_tip()
-            p300s.aspirate(180, tfa.bottom(clearance_tfa))
+            pick_up_or_refill(p300s)
+            p300s.aspirate(180 / div, tfa.bottom(clearance_tfa))
             p300s.air_gap(15)
-            p300s.dispense(195, sample.bottom(3))
+            p300s.dispense((180 / div)+15, sample.bottom(3))
             p300s.move_to(sample.top(-12))
             for rep in range(3):
                 if rep > 0:
@@ -354,27 +437,32 @@ def run(ctx):
     pause_attention("Vortex tubes 10 min, spin 15 min, and return.")
 
     ctx.comment("""
-    transfer 500 ul sup from each tube to Amicon filter
+    transfer {} ul sup from each tube to Amicon filter
     spin 2.5 hours
     dry in speedvac aqueous dry setting 1.5 hours
     return
     resuspend in 4:1 acetonitrile:water
     use same liquid handling method as for MeOH:Water
-    """)
+    """.format(str(500 / div)))
     if not include_standards_only:
         for pooled_filter in amicon_filters_pooled:
             amicon_filters.append(pooled_filter)
+
+        if include_patient_samples:
+            for pt_filter in pt_amicon_filters:
+                amicon_filters.append(pt_filter)
+
     for index, sample in enumerate(samples):
-        p300s.pick_up_tip()
-        default_flow_rates(p300s)
+        pick_up_or_refill(p300s)
         meoh_flow_rates(p300s)
         for rep in range(3):
-            p300s.aspirate(166.7, sample.bottom(round(16/(rep + 1))))
+            p300s.aspirate(166.7 / div, sample.bottom(round(16/(rep + 1))))
             p300s.air_gap(15)
-            p300s.dispense(181.7, amicon_filters[index].top())
+            p300s.dispense((166.7 / div)+15, amicon_filters[index].top())
             for rep in range(3):
                 if rep > 0:
-                    p300s.aspirate(180, amicon_filters[index].top())
+                    p300s.aspirate(
+                     180, amicon_filters[index].top())
                 ctx.delay(seconds=1)
                 p300s.blow_out(amicon_filters[index].top())
             p300s.touch_tip(radius=0.75, v_offset=-2, speed=20)
@@ -386,10 +474,10 @@ def run(ctx):
     # filters removed (tube alone same as eppendorf) dispense .bottom(5)
     meoh_flow_rates(p300s)
     for filter in amicon_filters:
-        p300s.pick_up_tip()
-        p300s.aspirate(40, mecn.bottom(clearance_mecn))
+        pick_up_or_refill(p300s)
+        p300s.aspirate(40 / div, mecn.bottom(clearance_mecn))
         p300s.air_gap(15)
-        p300s.dispense(55, filter.bottom(5))
+        p300s.dispense((40 / div)+15, filter.bottom(5))
         p300s.move_to(filter.top(-12))
         for rep in range(3):
             if rep > 0:

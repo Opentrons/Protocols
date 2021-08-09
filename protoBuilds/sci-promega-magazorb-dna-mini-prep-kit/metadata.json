@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "6401f1.ot2.apiv2.py"
+            "sci-promega-magazorb-dna-mini-prep-kit.ot2.apiv2.py"
         ],
         "description": [
             "README.md"
@@ -14,7 +14,7 @@
         "hide-from-search": false,
         "skip-tests": false
     },
-    "path": "protocols/6401f1",
-    "slug": "6401f1",
+    "path": "protocols/sci-promega-magazorb-dna-mini-prep-kit",
+    "slug": "sci-promega-magazorb-dna-mini-prep-kit",
     "status": "ok"
 }

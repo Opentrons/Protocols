@@ -84,14 +84,14 @@ def run(ctx):
     for rxn in rxns:
         for lbwr in loaded_labwr:
             if lbwr.name == rxn['MMSource']:
-                if lbwr.wells()[
-                 int(rxn['MMSourceTube'])-1] not in sources.keys():
-                    sources[lbwr.wells()[int(rxn['MMSourceTube'])-1]] = []
-                    sources[lbwr.wells()[int(rxn['MMSourceTube'])-1]].append(
-                     round(float(rxn['MMXferVol']), 1))
+                mm_well = [well for row in lbwr.rows() for well in row][
+                 int(rxn['MMSourceTube'])-1]
+                mm_vol = round(float(rxn['MMXferVol']), 1)
+                if mm_well not in sources.keys():
+                    sources[mm_well] = []
+                    sources[mm_well].append(mm_vol)
                 else:
-                    sources[lbwr.wells()[int(rxn['MMSourceTube'])-1]].append(
-                     round(float(rxn['MMXferVol']), 1))
+                    sources[mm_well].append(mm_vol)
 
     # distribute master mixes
     for source, vol_list in sources.items():
@@ -104,10 +104,11 @@ def run(ctx):
             for lbwr in loaded_labwr:
                 if lbwr.name == dest_plate:
                     dest = lbwr
-            p300s.dispense(
-             vol, dest.wells()[int(dest_well)].bottom(1), rate=0.7)
+            disp_well = [well for row in dest.rows() for well in row][
+             int(dest_well)-1]
+            p300s.dispense(vol, disp_well.bottom(1), rate=0.7)
             p300s.delay(1)
-            p300s.slow_tip_withdrawal(10, dest.wells()[int(dest_well)])
+            p300s.slow_tip_withdrawal(10, disp_well)
         p300s.drop_tip()
 
     # distribute samples and controls following input csv
@@ -121,6 +122,8 @@ def run(ctx):
             clearance = 16
         else:
             clearance = 1
-        p20s.transfer(float(rxn['SampleXferVol']), samp.wells()[
-         int(rxn['SampleSourceWell'])-1].bottom(clearance), pcr.wells()[
+        p20s.transfer(float(rxn['SampleXferVol']), [
+         well for row in samp.rows() for well in row][
+         int(rxn['SampleSourceWell'])-1].bottom(clearance), [
+         well for row in pcr.rows() for well in row][
          int(rxn['DestWell'])-1].bottom(1), new_tip='always')

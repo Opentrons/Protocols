@@ -11,9 +11,16 @@ metadata = {
 def run(ctx):
 
     # get parameter values from json above
-    [clearance_aspirate, clearance_dispense, sample_count
+    [blowout_vertical_offset, clearance_aspirate, clearance_dispense,
+     sample_count
      ] = get_values(  # noqa: F821
-      'clearance_aspirate', 'clearance_dispense', 'sample_count')
+      'blowout_vertical_offset', 'clearance_aspirate', 'clearance_dispense',
+      'sample_count')
+
+    # constrain blowout_vertical_offset value to acceptable range
+    if blowout_vertical_offset > 25 or blowout_vertical_offset < 0:
+        raise Exception('''
+        Vertical offset for blowout must be between 0 and 25 mm.''')
 
     num_cols = math.ceil(sample_count / 8)
     tip_max = 50
@@ -50,7 +57,9 @@ def run(ctx):
             p50m.aspirate(dist_vol*len(chunk), source)
             for column in chunk:
                 p50m.dispense(dist_vol, column[0].bottom(clearance_dispense))
-            p50m.blow_out(source.move(types.Point(x=0, y=0, z=0)))
+            # blowout changed to dispense of disposal volume to avoid bubbles
+            p50m.dispense(disposal, source.move(types.Point(
+             x=0, y=0, z=blowout_vertical_offset)))
 
     # 20 ul master mix to two columns, blow out to bottom of reservoir, repeat
     p50m.pick_up_tip()
