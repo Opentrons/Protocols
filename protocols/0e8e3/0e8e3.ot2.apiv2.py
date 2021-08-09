@@ -174,7 +174,7 @@ to 37C')
 
     _pick_up(p300)
     for d in _get_samples(final_plate, p300):
-        p300.transfer(pcr_mix_vol, pcr_mix, d, new_tip='never')
+        p300.transfer(pcr_mix_vol, pcr_mix.bottom(0.3), d, new_tip='never')
     p300.drop_tip()
 
     for s, d in zip(_get_samples(plate_e, p20),
