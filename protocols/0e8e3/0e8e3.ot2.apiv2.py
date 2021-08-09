@@ -162,13 +162,13 @@ to 37C')
     pip = p20 if vol_c_to_d <= 20 else p300
     for s, d in zip(_get_samples(plate_c, pip), _get_samples(plate_d, pip)):
         _pick_up(pip)
-        pip.transfer(vol_c_to_d, s, d, mix_after=(5, 15), new_tip='never')
+        pip.transfer(vol_c_to_d, s, d, mix_after=(10, 20), new_tip='never')
         pip.drop_tip()
 
     pip = p20 if vol_d_to_e <= 20 else p300
     for s, d in zip(_get_samples(plate_d, pip), _get_samples(plate_e, pip)):
         _pick_up(pip)
-        pip.transfer(vol_d_to_e, s, d, mix_after=(5, 15), new_tip='never')
+        pip.transfer(vol_d_to_e, s, d, mix_after=(10, 20), new_tip='never')
         pip.drop_tip()
 
     _pick_up(p300)
