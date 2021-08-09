@@ -1,11 +1,29 @@
 [
   {
     "type": "dropDown",
+    "label": "Use Full Volumes?",
+    "name": "full_volume",
+    "options": [
+      { "label": "Use Full Volumes", "value": true },
+      { "label": "Use Half Volumes", "value": false }
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "Include Standards Only?",
     "name": "include_standards_only",
     "options": [
       { "label": "Standards and Pooled Samples", "value": false },
       { "label": "Standards Only", "value": true }
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Include Patient Samples (yes or no)?",
+    "name": "include_patient_samples",
+    "options": [
+      { "label": "YES", "value": true },
+      { "label": "NO", "value": false }
     ]
   },
   {
