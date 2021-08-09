@@ -144,7 +144,7 @@ to 37C')
     for d in _get_samples(plate_c, p20):
         _pick_up(p20)
         p20.transfer(5, edta, d, new_tip='never')
-        pip.drop_tip()
+        p20.drop_tip()
 
     pip = p20 if vol_dil_to_d <= 20 else p300
     _pick_up(pip)
