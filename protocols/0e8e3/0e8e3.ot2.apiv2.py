@@ -27,7 +27,7 @@ def run(ctx):
     plate_d = ctx.load_labware('thermofishernunc_96_wellplate_450ul', '3',
                                'Plate D (Dilution Buffer Plate 1)')
     tempdeck = ctx.load_module('temperature module gen2', '4')
-    tempdeck.set_temperature(37)
+    tempdeck.deactivate()
     plate_b = tempdeck.load_labware('thermofishernunc_96_aluminumblock_450ul',
                                     'Plate B (DNAse Dilution Plate)')
     reservoir = ctx.load_labware('nest_12_reservoir_15ml', '5',
@@ -132,9 +132,13 @@ resuming.')
         p20.transfer(5, s, d, mix_after=(5, 15), new_tip='never')
         p20.drop_tip()
 
-    ctx.delay(minutes=60, msg='Holding plate B at 37C for 1hr')
+    ctx.pause('Apply foil to top of DNAse Reaction Plate befroe tempdeck ramps \
+to 37C')
+    tempdeck.set_temperature(37)
+    ctx.delay(minutes=60, msg='Holding plate C at 37C for 1hr')
+    ctx.pause('Remove foil from plate before proceeding')
     tempdeck.set_temperature(4)
-    ctx.comment('Holding plate B at 4C indefinitely.')
+    tempdeck.deactivate()
 
     for d in _get_samples(plate_c, p20):
         _pick_up(p20)
