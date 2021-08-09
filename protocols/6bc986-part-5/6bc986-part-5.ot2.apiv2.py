@@ -35,8 +35,8 @@ def run(ctx):
             yield list_name[i:i+n]
 
     def repeat_dispense(dist_vol, source, dest, max_asp=tip_max, disposal=0):
-        for chunk in create_chunks(dest.columns()[
-         :num_cols], math.floor((max_asp - disposal) / dist_vol)):
+        # chunk size math.floor((max_asp - disposal) / dist_vol) for multi disp
+        for chunk in create_chunks(dest.columns()[:num_cols], 1):
             if disposal > 0:
                 p50m.aspirate(disposal, source)
             p50m.aspirate(dist_vol*len(chunk), source)
@@ -47,5 +47,5 @@ def run(ctx):
     # distribute 20 ul elution buffer, blow out to bottom of reservoir, repeat
     p50m.pick_up_tip()
     repeat_dispense(20, elution_buffer.wells_by_name()[
-     'A1'].bottom(clearance_aspirate), thermo_plate, disposal=5)
+     'A1'].bottom(clearance_aspirate), thermo_plate, disposal=10)
     p50m.drop_tip()
