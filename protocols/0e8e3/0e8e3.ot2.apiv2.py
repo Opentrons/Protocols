@@ -14,10 +14,11 @@ def run(ctx):
 
     [num_samples, vol_dna_buff, vol_a_to_b, p20_type, p20_mount,
      p300_type, p300_mount, vol_dil_to_d, vol_dil_to_e,
-     vol_c_to_d, vol_d_to_e] = get_values(  # noqa: F821
+     vol_c_to_d, vol_d_to_e, pcr_mix_vol,
+     template_vol] = get_values(  # noqa: F821
         'num_samples', 'vol_dna_buff', 'vol_a_to_b', 'p20_type', 'p20_mount',
         'p300_type', 'p300_mount', 'vol_dil_to_d', 'vol_dil_to_e',
-        'vol_c_to_d', 'vol_d_to_e')
+        'vol_c_to_d', 'vol_d_to_e', 'pcr_mix_vol', 'template_vol')
 
     # modules and labware
     plate_a = ctx.load_labware('thermofishernunc_96_wellplate_450ul', '1',
@@ -173,13 +174,13 @@ to 37C')
 
     _pick_up(p300)
     for d in _get_samples(final_plate, p300):
-        p300.transfer(22.5, pcr_mix, d, new_tip='never')
+        p300.transfer(pcr_mix_vol, pcr_mix, d, new_tip='never')
     p300.drop_tip()
 
     for s, d in zip(_get_samples(plate_e, p20),
                     _get_samples(final_plate, p20)):
         _pick_up(p20)
-        p20.transfer(2.5, s, d, mix_after=(5, 15), new_tip='never')
+        p20.transfer(template_vol, s, d, mix_after=(5, 15), new_tip='never')
         p20.drop_tip()
 
     ctx.comment('Plate is ready for Droplet Generation')
