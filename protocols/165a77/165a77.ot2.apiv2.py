@@ -65,10 +65,12 @@ def run(ctx):
         next_col = (
          column for column in plates_384[i].columns()[:2*int(col_counts[i])])
         for column in patient_samples[i].columns()[:int(col_counts[i])]:
-            p20m.distribute(
-             patient_sample_vol, [column[0], column[0]], [
+            dest = [
               well.center().move(types.Point(
-               well.diameter*0.25, -well.diameter*0.25, 0)) for well in next(
+               well.diameter*0.08, -well.diameter*0.08, 1)) for well in next(
                next_col)[:2]] + [well.center().move(types.Point(
-                well.diameter*0.25, -well.diameter*0.25, 0)) for well in next(
-                next_col)[:well_index]], disposal_volume=disposal_vol)
+                well.diameter*0.08, -well.diameter*0.08, 1)) for well in next(
+                next_col)[:well_index]]
+            p20m.distribute(
+             patient_sample_vol, [column[0], column[0]], dest,
+             disposal_volume=disposal_vol)
