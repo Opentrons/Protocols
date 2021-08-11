@@ -32,7 +32,7 @@ def run(ctx):
      labware_plate, str(slot), 'Plate') for slot in [
      1, 2, 3, 4, 5, 6][:plate_count]]
 
-    # comment added to satisfy linter
+    # comment to satisfy linter
     ctx.comment(
      """Elution plate labware loaded: {}.""".format(plates))
 
