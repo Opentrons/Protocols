@@ -50,12 +50,12 @@ def run(ctx):
     for pick in picks:
         for lbwr in loaded_lbwr:
             if pick['Source_location'] == lbwr.parent:
-                source = lbwr[pick['source_well']]
+                srce = lbwr[pick['source_well']]
             elif pick['Destination_location'] == lbwr.parent:
-                dest = lbwr[pick['destination_well']]
+                dst = lbwr[pick['destination_well']]
         vol = int(pick['transfer_volume'])
         p300s.pick_up_tip()
-        p300s.aspirate(vol, source.bottom(1))
+        p300s.aspirate(vol, srce.bottom(1))
         p300s.air_gap(5)
-        p300s.dispense(vol, dest.bottom(1))
+        p300s.dispense(vol, dst.bottom(1))
         p300s.drop_tip()
