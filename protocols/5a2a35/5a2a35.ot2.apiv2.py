@@ -49,10 +49,12 @@ def run(ctx):
 
     for pick in picks:
         p300s.transfer(int(pick['transfer_volume']),
-                       [lbwr[pick['source_well']].bottom(1)
+                       [lbwr.wells_by_name()[
+                        pick['source_well']].bottom(1)
                         for lbwr in loaded_lbwr if str(
                             lbwr.parent) == pick['Source_location']],
-                       [lbwr[pick['destination_well']].bottom(1)
+                       [lbwr.wells_by_name()[
+                        pick['destination_well']].bottom(1)
                         for lbwr in loaded_lbwr if str(
                             lbwr.parent) == pick['Destination_location']],
                        air_gap=5,
