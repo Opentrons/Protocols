@@ -21,7 +21,8 @@ def run(ctx):
     tip_slots = [7, 8, 9]
     if starting_tip_slot not in tip_slots:
         raise Exception(
-         "Starting tip must be located in deck slots {}".format(tip_slots))
+         """Starting tip must be located in deck slots {}""".format(
+          str(tip_slots)))
     tips300 = [ctx.load_labware(
      'opentrons_96_filtertiprack_200ul', str(slot)) for slot in tip_slots]
     p300s = ctx.load_instrument("p300_single_gen2", 'right', tip_racks=tips300)
