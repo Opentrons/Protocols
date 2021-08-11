@@ -1,0 +1,45 @@
+[
+  {
+    "type": "dropDown",
+    "label": "Which Deck Slot Contains the Starting Tip?",
+    "name": "starting_tip_slot",
+    "options": [
+      { "label": "DECK SLOT 7", "value": 7 },
+      { "label": "DECK SLOT 8", "value": 8 },
+      { "label": "DECK SLOT 9", "value": 9 }
+    ]
+  },
+  {
+    "type": "str",
+    "label": "Starting Tip Well Location",
+    "name": "starting_tip_well",
+    "default": "A1"
+  },
+  {
+    "type": "dropDown",
+    "label": "How Many Plates on Deck? (1-6 with deck slot fill order 1,2,3,4,5,6)",
+    "name": "plate_count",
+    "options": [
+      { "label": "ONE PLATE in SLOT 1", "value": 1 },
+      { "label": "TWO PLATES in SLOTS 1-2", "value": 2 },
+      { "label": "THREE PLATES in SLOTS 1-3", "value": 3 },
+      { "label": "FOUR PLATES in SLOTS 1-4", "value": 4 },
+      { "label": "FIVE PLATES in SLOTS 1-5", "value": 5 },
+      { "label": "SIX PLATES in SLOTS 1-6", "value": 6 }
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Choice of Plate Labware",
+    "name": "labware_plate",
+    "options": [
+      { "label": "elutionplate_96_wellplate_500ul", "value": "elutionplate_96_wellplate_500ul" }
+    ]
+  },
+  {
+    "type": "textFile",
+    "label": "Upload CSV Input File (Upload CSV-formatted Excel File-with formatting of data values and file identical to example)",
+    "name": "uploaded_csv",
+    "default": "Source_location,source_well,Destination_location,destination_well,transfer_volume\n5,A1,1,A12,50\n4,B1,2,B12,40\n6,C1,3,C12,30\n5,D1,1,D12,40\n6,E1,2,E12,20\n"
+  }
+]
