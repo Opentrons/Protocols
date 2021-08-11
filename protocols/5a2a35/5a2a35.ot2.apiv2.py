@@ -48,6 +48,7 @@ def run(ctx):
     picks = [line for line in csv.DictReader(uploaded_csv.splitlines())]
 
     for pick in picks:
+        source = None
         for lbwr in loaded_lbwr:
             if str(lbwr.parent) == pick['Source_location']:
                 source = lbwr.wells_by_name()[pick['source_well']]
