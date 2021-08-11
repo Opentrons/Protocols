@@ -50,9 +50,9 @@ def run(ctx):
     for pick in picks:
         for lbwr in loaded_lbwr:
             if str(lbwr.parent) == pick['Source_location']:
-                source = lbwr[pick['source_well']]
+                source = lbwr.wells_by_name()[pick['source_well']]
             elif str(lbwr.parent) == pick['Destination_location']:
-                dest = lbwr[pick['destination_well']]
+                dest = lbwr.wells_by_name()[pick['destination_well']]
         vol = int(pick['transfer_volume'])
         p300s.pick_up_tip()
         p300s.aspirate(vol, source.bottom(1))
