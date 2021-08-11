@@ -42,7 +42,7 @@ def run(ctx):
             p50m.aspirate(dist_vol*len(chunk), source)
             for column in chunk:
                 p50m.dispense(dist_vol, column[0].bottom(clearance_dispense))
-            p50m.blow_out(source.move(types.Point(x=0, y=0, z=0)))
+            p50m.dispense(disposal, source.move(types.Point(x=0, y=0, z=0)))
 
     # distribute 20 ul elution buffer, blow out to bottom of reservoir, repeat
     p50m.pick_up_tip()
