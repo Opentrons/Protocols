@@ -348,7 +348,6 @@ def run(ctx):
         slow_tip_withdrawal(p300m, column[0])
         default_flow_rates(p300m)
         p300m.drop_tip()
-    pause_attention("Spin the plate. Return it and resume.")
     ctx.comment("""
         engage magnets
         remove sup
@@ -370,6 +369,7 @@ def run(ctx):
     ctx.delay(minutes=1)
     pause_attention("""
         Manually remove traces of supernatant with a 10 ul tip. Resume.""")
+    mag.disengage()
     ctx.comment("""
         add first strand synthesis rxn bf random primer mix
         mix
