@@ -33,7 +33,7 @@
     "label": "Choice of Plate Labware",
     "name": "labware_plate",
     "options": [
-      { "label": "elutionplate_96_wellplate_500ul", "value": "elutionplate_96_wellplate_500ul" }
+      { "label": "elutionplate_96_wellplate_500ul", "value": "biorad_96_wellplate_200ul_pcr" }
     ]
   },
   {
