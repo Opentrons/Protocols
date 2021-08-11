@@ -46,7 +46,7 @@ def run(ctx):
     # Protocol Steps
 
     # Pre-Cool Thermocycler and Temperature Module to 4C
-    ctx.comment('Pre-Cooling Thermocycler to 4°C')
+    ctx.comment('Pre-Heating Thermocycler to 65°C')
     ctx.comment('Pre-Cooling Temperature Module to 4°C')
     temp_mod.start_set_temperature(4)
     tc_mod.set_block_temperature(65)
