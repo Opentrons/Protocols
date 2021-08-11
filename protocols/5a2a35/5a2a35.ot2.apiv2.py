@@ -49,9 +49,9 @@ def run(ctx):
 
     for pick in picks:
         for lbwr in loaded_lbwr:
-            if int(lbwr.parent) == int(pick['Source_location']):
+            if pick['Source_location'] == lbwr.parent:
                 source = lbwr[pick['source_well']]
-            elif int(lbwr.parent) == int(pick['Destination_location']):
+            elif pick['Destination_location'] == lbwr.parent:
                 dest = lbwr[pick['destination_well']]
         vol = int(pick['transfer_volume'])
         p300s.pick_up_tip()
