@@ -48,14 +48,14 @@ def run(ctx):
     picks = [line for line in csv.DictReader(uploaded_csv.splitlines())]
 
     for pick in picks:
-        p300s.transfer(int(pick['transfer_volume']),
-                       [lbwr.wells_by_name()[
-                        pick['source_well']].bottom(1)
-                        for lbwr in loaded_lbwr if str(
-                            lbwr.parent) == pick['Source_location']],
-                       [lbwr.wells_by_name()[
-                        pick['destination_well']].bottom(1)
-                        for lbwr in loaded_lbwr if str(
-                            lbwr.parent) == pick['Destination_location']],
-                       air_gap=5,
-                       new_tip='always')
+        for lbwr in loaded_lbwr:
+            if str(lbwr.parent) == pick['Source_location']:
+                source = lbwr[pick['source_well']]
+            elif str(lbwr.parent) == pick['Destination_location']:
+                dest = lbwr[pick['destination_well']]
+        vol = int(pick['transfer_volume'])
+        p300s.pick_up_tip()
+        p300s.aspirate(vol, source.bottom(1))
+        p300s.air_gap(5)
+        p300s.dispense(vol, dest.bottom(1))
+        p300s.drop_tip()
