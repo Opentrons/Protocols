@@ -24,8 +24,10 @@ def run(ctx):
     temp_mod = ctx.load_module('temperature module gen2', 3)
     temp_plate = temp_mod.load_labware(
                     'opentrons_96_aluminumblock_nest_wellplate_100ul')
-    samples_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', 2)
-    pcr_plate_deck = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', 5)
+    samples_plate = ctx.load_labware(
+                        'nest_96_wellplate_100ul_pcr_full_skirt', 2)
+    pcr_plate_deck = ctx.load_labware(
+                        'nest_96_wellplate_100ul_pcr_full_skirt', 5)
 
     # Load Pipettes
     p20 = ctx.load_instrument('p20_single_gen2', p20_mount,
