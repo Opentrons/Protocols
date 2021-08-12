@@ -40,12 +40,12 @@ def run(ctx):
     # list each csv input line (represents a transfer) as dict
     picks = [line for line in csv.DictReader(uploaded_csv.splitlines())]
 
-    # perform transfers in csv order
+    # perform transfers in order
     for pick in picks:
         for plate in plates:
-            if str(plate.parent) == pick['Source_location']:
+            if pick['Source_location'] == str(plate.parent):
                 source = plate.wells_by_name()[pick['source_well']]
-            elif str(plate.parent) == pick['Destination_location']:
+            elif pick['Destination_location'] == str(plate.parent):
                 dest = plate.wells_by_name()[pick['destination_well']]
         vol = int(pick['transfer_volume'])
         p300s.pick_up_tip()
