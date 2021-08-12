@@ -41,9 +41,10 @@ def run(ctx):
     picks = [line for line in csv.DictReader(uploaded_csv.splitlines())]
 
     # perform transfers in order
-    # source = plates[0].wells_by_name()['A1']
-    # dest = plates[0].wells_by_name()['A1']
-    # vol = 20
+    # s = plates[0].wells_by_name()['A1']
+    # d = plates[0].wells_by_name()['A1']
+    s = None
+    d = None
     for pick in picks:
         for plate in plates:
             if pick['Source_location'] == str(plate.parent):
