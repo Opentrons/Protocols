@@ -41,19 +41,15 @@ def run(ctx):
     picks = [line for line in csv.DictReader(uploaded_csv.splitlines())]
 
     # perform transfers in order
-    # s = plates[0].wells_by_name()['A1']
-    # d = plates[0].wells_by_name()['A1']
-    s = None
-    d = None
-    for pick in picks:
-        for plate in plates:
-            if pick['Source_location'] == str(plate.parent):
-                s = plate.wells_by_name()[pick['source_well']]
-            elif pick['Destination_location'] == str(plate.parent):
-                d = plate.wells_by_name()[pick['destination_well']]
-        vol = int(pick['transfer_volume'])
-        p300s.pick_up_tip()
-        p300s.aspirate(vol, s.bottom(1))
-        p300s.air_gap(5)
-        p300s.dispense(vol, d.bottom(1))
-        p300s.drop_tip()
+    for plate in plates:
+        for pick in picks:
+            if pick['Source_location'] == plate.parent:
+                vol = int(pick['transfer_volume'])
+                p300s.pick_up_tip()
+                p300s.aspirate(vol, plate[pick['source_well']].bottom(1))
+                p300s.air_gap(5)
+                for plt in plates:
+                    if pick['Destination_location'] == plt.parent:
+                        p300s.dispense(
+                         vol, plt[pick['destination_well']].bottom(1))
+                p300s.drop_tip()
