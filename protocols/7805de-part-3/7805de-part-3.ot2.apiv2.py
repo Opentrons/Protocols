@@ -377,19 +377,19 @@ def run(ctx):
     repeated delayed blowout
     increased blow out flow rate
     """)
-    for index, column in enumerate(mag_plate.columns()[
-     :num_cols]+mag_plate.columns()[6:num_cols+6]):
+    for column in mag_plate.columns()[
+     :num_cols]+mag_plate.columns()[6:num_cols+6]:
         pick_up_or_refill(p300m)
-        if index % 2 != 1:
-            # offset to right (for even columns) to avoid bead pellet
-            aspirate_location = column[0].bottom(
-             clearance_bead_pellet).move(
-             types.Point(x=x_offset_bead_pellet, y=0, z=0))
-        else:
-            # offset to left (for odd columns) to avoid bead pellet
+        if mag_plate.columns().index(column) % 2 != 1:
+            # offset to left for odd col no to avoid bead pellet
             aspirate_location = column[0].bottom(
              clearance_bead_pellet).move(
              types.Point(x=-1*x_offset_bead_pellet, y=0, z=0))
+        else:
+            # offset to right for even col no to avoid bead pellet
+            aspirate_location = column[0].bottom(
+             clearance_bead_pellet).move(
+             types.Point(x=x_offset_bead_pellet, y=0, z=0))
         p300m.move_to(column[0].top())
         ctx.max_speeds['Z'] = 10
         p300m.move_to(column[0].bottom(4))
@@ -424,24 +424,24 @@ def run(ctx):
             p300m.reset_tipracks()
         else:
             wst = waste_3
-        for index, column in enumerate(mag_plate.columns()[
-         :num_cols]+mag_plate.columns()[6:num_cols+6]):
+        for column in mag_plate.columns()[
+         :num_cols]+mag_plate.columns()[6:num_cols+6]:
             pick_up_or_refill(p300m)
-            if index % 2 != 1:
-                # offset to right (for even columns) to avoid bead pellet
-                aspirate_location = column[0].bottom(
-                 clearance_bead_pellet).move(
-                 types.Point(x=x_offset_bead_pellet, y=0, z=0))
-            else:
-                # offset to left (for odd columns) to avoid bead pellet
+            if mag_plate.columns().index(column) % 2 != 1:
+                # offset to left for odd col no to avoid bead pellet
                 aspirate_location = column[0].bottom(
                  clearance_bead_pellet).move(
                  types.Point(x=-1*x_offset_bead_pellet, y=0, z=0))
+            else:
+                # offset to right for even col no to avoid bead pellet
+                aspirate_location = column[0].bottom(
+                 clearance_bead_pellet).move(
+                 types.Point(x=x_offset_bead_pellet, y=0, z=0))
             p300m.move_to(column[0].top())
             ctx.max_speeds['Z'] = 10
             p300m.move_to(column[0].bottom(4))
-            p300m.aspirate(60, column[0].bottom(4), rate=0.5)
-            p300m.aspirate(50, aspirate_location, rate=0.5)
+            p300m.aspirate(60, column[0].bottom(4), rate=0.33)
+            p300m.aspirate(50, aspirate_location, rate=0.33)
             p300m.move_to(column[0].top())
             ctx.max_speeds['Z'] = None
             p300m.air_gap(20)
@@ -476,9 +476,17 @@ def run(ctx):
     for column in mag_plate.columns()[
      :num_cols]+mag_plate.columns()[6:num_cols+6]:
         pick_up_or_refill(p20m)
+        # offset to right to target beads (odd col numbers)
+        if mag_plate.columns().index(column) % 2 != 1:
+            f = 1
+        # offset to left to target beads (even col numbers)
+        else:
+            f = -1
         p20m.transfer(
          8.5, te.bottom(clearance_reservoir), column[0].bottom(
-          clearance_sample_plate), mix_after=(10, 5), new_tip='never')
+          clearance_sample_plate).move(types.Point(
+           x=f*x_offset_bead_pellet, y=0, z=0)
+           ), mix_after=(10, 5), new_tip='never')
         p20m.drop_tip()
     pause_attention("""
     spin and return the plate
@@ -492,9 +500,18 @@ def run(ctx):
     """)
     for index, column in enumerate(mag_plate.columns()[:num_cols]):
         pick_up_or_refill(p20m)
-        p20m.aspirate(7.5, column[0].bottom(clearance_bead_pellet))
+        # offset to left to avoid beads (odd col numbers)
+        if mag_plate.columns().index(column) % 2 != 1:
+            f = -1
+        # offset to right to avoid beads (even col numbers)
+        else:
+            f = 1
+        p20m.aspirate(7.5, column[0].bottom(clearance_bead_pellet).move(
+         types.Point(x=f*x_offset_bead_pellet, y=0, z=0)), rate=0.33)
         p20m.aspirate(
-         7.5, mag_plate.columns()[index+6][0].bottom(clearance_bead_pellet))
+         7.5, mag_plate.columns()[index+6][0].bottom(
+          clearance_bead_pellet).move(types.Point(
+           x=f*x_offset_bead_pellet, y=0, z=0)), rate=0.33)
         p20m.dispense(
          15, elution_plate.columns()[index][0].bottom(clearance_sample_plate))
         p20m.drop_tip()
