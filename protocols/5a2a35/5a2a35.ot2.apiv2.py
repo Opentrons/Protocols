@@ -40,7 +40,7 @@ def run(ctx):
     # list each csv input line (represents a transfer) as dict
     picks = [line for line in csv.DictReader(uploaded_csv.splitlines())]
 
-    # perform transfers in order
+    # perform transfers in csv order
     for plate in plates:
         for pick in picks:
             if pick['Source_location'] == plate.parent:
