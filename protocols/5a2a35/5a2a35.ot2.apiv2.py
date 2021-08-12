@@ -46,6 +46,8 @@ def run(ctx):
     # vol = 20
     for pick in picks:
         for plate in plates:
+            global source
+            global dest
             if pick['Source_location'] == str(plate.parent):
                 source = plate.wells_by_name()[pick['source_well']]
             elif pick['Destination_location'] == str(plate.parent):
