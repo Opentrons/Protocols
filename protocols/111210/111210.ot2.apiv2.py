@@ -75,7 +75,7 @@ def run(ctx):
 
     tc_mod.close_lid()
     tc_mod.set_block_temperature(65, hold_time_minutes=5)
-    tc_mod.close_lid()
+    tc_mod.open_lid()
     ctx.pause('''Place the plate on either the temperature module or on ice for
                 at least 2 minutes. Then centrifuge and begin the next part of
                 the protocol.''')
