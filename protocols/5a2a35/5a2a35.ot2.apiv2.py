@@ -32,30 +32,24 @@ def run(ctx):
      labware_plate, str(slot), 'Plate') for slot in [
      1, 2, 3, 4, 5, 6][:plate_count]]
 
-    # comment to satisfy linter
-    ctx.comment(
-     """Elution plate labware loaded: {}.""".format(plates))
-
-    # list loaded labware
-    loaded_lbwr = ctx.loaded_labwares.values()
-
     # starting tip
-    for lbwr in loaded_lbwr:
-        if int(lbwr.parent) == starting_tip_slot:
-            p300s.starting_tip = lbwr[starting_tip_well]
+    for box in tips300:
+        if int(box.parent) == starting_tip_slot:
+            p300s.starting_tip = box[starting_tip_well]
 
-    # csv input
+    # list each csv input line (represents a transfer) as dict
     picks = [line for line in csv.DictReader(uploaded_csv.splitlines())]
 
+    # perform transfers in csv order
     for pick in picks:
-        for lbwr in loaded_lbwr:
-            if pick['Source_location'] == lbwr.parent:
-                srce = lbwr[pick['source_well']]
-            elif pick['Destination_location'] == lbwr.parent:
-                dst = lbwr[pick['destination_well']]
+        for plate in plates:
+            if str(plate.parent) == pick['Source_location']:
+                source = plate.wells_by_name()[pick['source_well']]
+            elif str(plate.parent) == pick['Destination_location']:
+                dest = plate.wells_by_name()[pick['destination_well']]
         vol = int(pick['transfer_volume'])
         p300s.pick_up_tip()
-        p300s.aspirate(vol, srce.bottom(1))
+        p300s.aspirate(vol, source.bottom(1))
         p300s.air_gap(5)
-        p300s.dispense(vol, dst.bottom(1))
+        p300s.dispense(vol, dest.bottom(1))
         p300s.drop_tip()
