@@ -46,15 +46,13 @@ def run(ctx):
     # vol = 20
     for pick in picks:
         for plate in plates:
-            global source
-            global dest
             if pick['Source_location'] == str(plate.parent):
-                source = plate.wells_by_name()[pick['source_well']]
+                s = plate.wells_by_name()[pick['source_well']]
             elif pick['Destination_location'] == str(plate.parent):
-                dest = plate.wells_by_name()[pick['destination_well']]
+                d = plate.wells_by_name()[pick['destination_well']]
         vol = int(pick['transfer_volume'])
         p300s.pick_up_tip()
-        p300s.aspirate(vol, source.bottom(1))
+        p300s.aspirate(vol, s.bottom(1))
         p300s.air_gap(5)
-        p300s.dispense(vol, dest.bottom(1))
+        p300s.dispense(vol, d.bottom(1))
         p300s.drop_tip()
