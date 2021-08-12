@@ -1,5 +1,23 @@
 [
   {
+    "type": "dropDown",
+    "label": "Park Tips? (yes or no)",
+    "name": "park_tips",
+    "options": [
+      { "label": "YES", "value": true },
+      { "label": "NO", "value": false }
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Reduced Gantry Speed Limits? (yes or no)",
+    "name": "reduced_speed_limit",
+    "options": [
+      { "label": "YES", "value": true },
+      { "label": "NO", "value": false }
+    ]
+  },
+  {
     "type": "textFile",
     "label": "Upload Input CSV File",
     "name": "uploaded_csv",
