@@ -1,14 +1,14 @@
-# GeneRead QIAact Lung RNA Fusion UMI Panel Kit: Target Enrichment PCR
+# GeneRead QIAact Lung DNA UMI Panel Kit: Universal PCR Amplification
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
 ## Categories
 * NGS Library Prep
-	* GeneRead QIAact Lung RNA Fusion UMI Panel Kit
+	* GeneRead QIAact Lung DNA UMI Panel Kit
 
 ## Description
-This protocol automates the seventh part of a ten part protocol for the [GeneRead QIAact Lung RNA Fusion UMI Panel Kit](https://www.qiagen.com/us/products/instruments-and-automation/genereader-system/generead-qiaact-lung-panels-ww/?catno=181936) which constructs molecularly bar-coded DNA libraries for digital sequencing. This protocol automates the Target Enrichment PCR part described in the [GeneRead QIAact Lung RNA Fusion UMI Panel Handbook](https://www.qiagen.com/us/resources/download.aspx?id=1a71d98a-c45c-44fa-b4af-874cd1d2b61f&lang=en).
+This protocol automates the ninth part of a ten part protocol for the [GeneRead QIAact Lung RNA Fusion UMI Panel Kit](https://www.qiagen.com/us/products/instruments-and-automation/genereader-system/generead-qiaact-lung-panels-ww/?catno=181936) which constructs molecularly bar-coded DNA libraries for digital sequencing. This protocol automates the Cleanup of Target Enrichment PCR with QIAseq Beads part described in the [GeneRead QIAact Lung RNA Fusion UMI Panel Handbook](https://www.qiagen.com/us/resources/download.aspx?id=1a71d98a-c45c-44fa-b4af-874cd1d2b61f&lang=en).
 
 * Part 1: [GeneRead QIAact Lung RNA Fusion UMI](https://protocols.opentrons.com/protocol/111210)
 * Part 2: [Reverse transcription](https://protocols.opentrons.com/protocol/111210-part-2)
@@ -24,6 +24,7 @@ This protocol automates the seventh part of a ten part protocol for the [GeneRea
 
 Explanation of complex parameters below:
 * `Number of Samples`: The total number of DNA samples. Samples must range between 1 (minimum) and 12 (maximum).
+* `P300 Single GEN2 Pipette Mount Position`: The position of the pipette, either left or right.
 * `P20 Single GEN2 Pipette Mount Position`: The position of the pipette, either left or right.
 
 ---
@@ -42,19 +43,19 @@ Explanation of complex parameters below:
 * [P20 Single GEN2 Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/single-channel-electronic-pipette?variant=31059478970462)
 
 ### Reagents
-* [GeneRead QIAact Lung RNA Fusion UMI Panel Kit](https://www.qiagen.com/us/products/instruments-and-automation/genereader-system/generead-qiaact-lung-panels-ww/?catno=181936)
+[GeneRead QIAact Lung RNA Fusion UMI Panel Kit](https://www.qiagen.com/us/products/instruments-and-automation/genereader-system/generead-qiaact-lung-panels-ww/?catno=181936)
 
 ---
 
 ### Deck Setup
-* The example below illustrates the starting deck layout for Part 4 (Target Enrichment PCR).
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/6d7fc3/6d7fc3-part-4-layout.png)
+* The example below illustrates the starting deck layout for Part 6 (Universal PCR Amplification).
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/6d7fc3/6d7fc3-part-6-layout.png)
 
 ### Reagent Setup
 
-* Slot 2: PCR Tubes with DNA Library from Part 3
+* Slot 2: PCR Tubes with enriched DNA from Part 5
 
-* Slot 3: **Red**: Forward Target Enrichment Master Mix (A1) **Blue**: Reverse Target Enrichment Master Mix (B1)
+* Slot 3: **Blue**: Master Mix (A1)
 
 * Thermocycler: Empty NEST 100 uL PCR Plate
 
@@ -62,17 +63,17 @@ Explanation of complex parameters below:
 
 ### Protocol Steps
 1. Pre-Cool Temperature Module to 4°C.
-2. Mix both Forward and Reverse Enrichment Master Mixes
-3. Transfer reactions from PCR Tubes to PCR Plate in thermocycler
+2. Add Master Mix to PCR tubes with enriched DNA.
+3. Transfer samples from PCR Tubes to PCR Plate in thermocycler
 4. Begin Thermocycler Process with parameters below.
 
 Lid Temperature: 103°C
 
 95°C - 15 minutes - 1 cycle
 
-95°C - 15 seconds - 8 cycles
+95°C - 15 seconds - 25 cycles
 
-68°C - 10 minutes - 8 cycles
+60°C - 2 minutes - 25 cycles
 
 72°C - 5 minutes - 1 cycle
 
@@ -93,4 +94,4 @@ Lid Temperature: 103°C
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-111210-part-7
+111210-part-9
