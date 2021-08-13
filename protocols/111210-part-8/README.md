@@ -1,4 +1,4 @@
-# GeneRead QIAact Lung RNA Fusion UMI Panel Kit: Target Enrichment PCR
+# GeneRead QIAact Lung RNA Fusion UMI Panel Kit: Cleanup of Target Enrichment PCR with QIAseq Beads
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -8,7 +8,7 @@
 	* GeneRead QIAact Lung RNA Fusion UMI Panel Kit
 
 ## Description
-This protocol automates the seventh part of a ten part protocol for the [GeneRead QIAact Lung RNA Fusion UMI Panel Kit](https://www.qiagen.com/us/products/instruments-and-automation/genereader-system/generead-qiaact-lung-panels-ww/?catno=181936) which constructs molecularly bar-coded DNA libraries for digital sequencing. This protocol automates the Target Enrichment PCR part described in the [GeneRead QIAact Lung RNA Fusion UMI Panel Handbook](https://www.qiagen.com/us/resources/download.aspx?id=1a71d98a-c45c-44fa-b4af-874cd1d2b61f&lang=en).
+This protocol automates the seventh part of a ten part protocol for the [GeneRead QIAact Lung RNA Fusion UMI Panel Kit](https://www.qiagen.com/us/products/instruments-and-automation/genereader-system/generead-qiaact-lung-panels-ww/?catno=181936) which constructs molecularly bar-coded DNA libraries for digital sequencing. This protocol automates the Cleanup of Target Enrichment PCR with QIAseq Beads part described in the [GeneRead QIAact Lung RNA Fusion UMI Panel Handbook](https://www.qiagen.com/us/resources/download.aspx?id=1a71d98a-c45c-44fa-b4af-874cd1d2b61f&lang=en).
 
 * Part 1: [Fragmentation, End-repair and A-addition](https://protocols.opentrons.com/protocol/6d7fc3)
 * Part 2: [Adapter Ligation](https://protocols.opentrons.com/protocol/6d7fc3-part-2)
@@ -20,13 +20,15 @@ This protocol automates the seventh part of a ten part protocol for the [GeneRea
 
 Explanation of complex parameters below:
 * `Number of Samples`: The total number of DNA samples. Samples must range between 1 (minimum) and 12 (maximum).
+* `P300 Single GEN2 Pipette Mount Position`: The position of the pipette, either left or right.
 * `P20 Single GEN2 Pipette Mount Position`: The position of the pipette, either left or right.
+* `Magnetic Module Engage Height (mm)`: The height the magnets should raise.
 
 ---
 
 ### Modules
 * [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
-* [Thermocycler Module](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module)
+* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
 
 ### Labware
 * [Opentrons Filter Tips](https://shop.opentrons.com/collections/opentrons-tips)
@@ -43,38 +45,40 @@ Explanation of complex parameters below:
 ---
 
 ### Deck Setup
-* The example below illustrates the starting deck layout for Part 4 (Target Enrichment PCR).
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/6d7fc3/6d7fc3-part-4-layout.png)
+* The example below illustrates the starting deck layout for Part 5 (Cleanup of Target Enrichment PCR with QIAact Beads).
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/6d7fc3/6d7fc3-part-5-layout.png)
 
 ### Reagent Setup
 
-* Slot 2: PCR Tubes with DNA Library from Part 3
+* Thermocycler (Slot 7): PCR Products from PCR Enrichment
 
-* Slot 3: **Red**: Forward Target Enrichment Master Mix (A1) **Blue**: Reverse Target Enrichment Master Mix (B1)
+* Slot 1: Magnetic Module with NEST 96 Well Deep Well Plate
 
-* Thermocycler: Empty NEST 100 uL PCR Plate
+* Slot 2: 96 Well Aluminum Block with Empty PCR Tubes.
+
+* Slot 3: Temperature Module with 24 Well Aluminum Block. Add QIAact Beads in 1.5 mL tube in position A1.
+
+* Slot 5: NEST 12 Well Reservoir: 80% Ethanol (A1, Blue) and Nuclease-Free Water (A12, Pink)
 
 ---
 
 ### Protocol Steps
-1. Pre-Cool Temperature Module to 4°C.
-2. Mix both Forward and Reverse Enrichment Master Mixes
-3. Transfer reactions from PCR Tubes to PCR Plate in thermocycler
-4. Begin Thermocycler Process with parameters below.
-
-Lid Temperature: 103°C
-
-95°C - 15 minutes - 1 cycle
-
-95°C - 15 seconds - 8 cycles
-
-68°C - 10 minutes - 8 cycles
-
-72°C - 5 minutes - 1 cycle
-
-4°C - 5 minutes - 1 cycle
-
-4°C - Hold
+1. Centrifuge Forward and Reverse PCR products.
+2. Combine each forward and reverse PCR product into the magnetic plate.
+3. Add 60 uL of Nuclease-free water to make total volume 100 uL.
+4. Add 100 uL of QIAact beads to samples on magnetic plate and mix thoroughly.
+5. Incubate at Room Temperature for 5 minutes.
+6. Engage magnet for 10 minutes to separate beads.
+7. Remove supernatant from samples.
+8. Completely remove residual supernatant from the samples.
+9. Perform an 80% ethanol wash.
+10. Repeat previous step.
+11. Centrifuge samples and replace on the magnetic module.
+12. Engage magnet for 2 minutes.
+13. Completely remove residual supernatant from the samples.
+14. Air dry beads for 10 minutes.
+15. Elute DNA from beads using 16 uL of nuclease-free water.
+16. Transfer 13.4 uL of supernatant into fresh PCR tubes in slot 2.
 
 ### Process
 1. Input your protocol parameters above.
@@ -89,4 +93,4 @@ Lid Temperature: 103°C
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-111210-part-7
+111210-part-8
