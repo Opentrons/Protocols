@@ -39,7 +39,7 @@ def run(ctx):
                                    'final Bio-Rad PCR plate')
     tipracks20 = [
         ctx.load_labware('opentrons_96_tiprack_20ul', slot)
-        for slot in ['7', '4']]
+        for slot in ['4', '7']]
     tipracks300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
         for slot in ['8', '11']]
