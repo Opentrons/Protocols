@@ -8,15 +8,19 @@
 	* GeneRead QIAact Lung RNA Fusion UMI Panel Kit
 
 ## Description
-This protocol automates the seventh part of a ten part protocol for the [GeneRead QIAact Lung RNA Fusion UMI Panel Kit](https://www.qiagen.com/us/products/instruments-and-automation/genereader-system/generead-qiaact-lung-panels-ww/?catno=181936) which constructs molecularly bar-coded DNA libraries for digital sequencing. This protocol automates the Cleanup of Target Enrichment PCR with QIAseq Beads part described in the [GeneRead QIAact Lung RNA Fusion UMI Panel Handbook](https://www.qiagen.com/us/resources/download.aspx?id=1a71d98a-c45c-44fa-b4af-874cd1d2b61f&lang=en).
+This protocol automates the eigth part of a ten part protocol for the [GeneRead QIAact Lung RNA Fusion UMI Panel Kit](https://www.qiagen.com/us/products/instruments-and-automation/genereader-system/generead-qiaact-lung-panels-ww/?catno=181936) which constructs molecularly bar-coded DNA libraries for digital sequencing. This protocol automates the Cleanup of Target Enrichment PCR with QIAseq Beads part described in the [GeneRead QIAact Lung RNA Fusion UMI Panel Handbook](https://www.qiagen.com/us/resources/download.aspx?id=1a71d98a-c45c-44fa-b4af-874cd1d2b61f&lang=en).
 
-* Part 1: [Fragmentation, End-repair and A-addition](https://protocols.opentrons.com/protocol/6d7fc3)
-* Part 2: [Adapter Ligation](https://protocols.opentrons.com/protocol/6d7fc3-part-2)
-* Part 3: [Cleanup of Adapter-ligated DNA with QIAact Beads.](https://protocols.opentrons.com/protocol/6d7fc3-part-3)
-* Part 4: [Target Enrichment PCR](https://protocols.opentrons.com/protocol/6d7fc3-part-4)
-* Part 5: [Cleanup of Target Enrichment PCR with QIAact Beads](https://protocols.opentrons.com/protocol/6d7fc3-part-5)
-* Part 6: [Universal PCR Amplification.](https://protocols.opentrons.com/protocol/6d7fc3-part-6)
-* Part 7: [Cleanup of Universal PCR with QIAact Beads](https://protocols.opentrons.com/protocol/6d7fc3-part-7)
+* Part 1: [GeneRead QIAact Lung RNA Fusion UMI](https://protocols.opentrons.com/protocol/111210)
+* Part 2: [Reverse transcription](https://protocols.opentrons.com/protocol/111210-part-2)
+* Part 3: [Second strand synthesis](https://protocols.opentrons.com/protocol/111210-part-3)
+* Part 4: [End repair / dA tailing](https://protocols.opentrons.com/protocol/111210-part-4)
+* Part 5: [Adaptor ligation](https://protocols.opentrons.com/protocol/111210-part-5)
+* Part 6: [Cleanup of Adapter-ligated DNA with QIAseq Beads](https://protocols.opentrons.com/protocol/111210-part-6)
+* Part 7: [Target Enrichment PCR](https://protocols.opentrons.com/protocol/111210-part-7)
+* Part 8: [Cleanup of Target Enrichment PCR with QIAseq Beads](https://protocols.opentrons.com/protocol/111210-part-8)
+* Part 9: [Universal PCR Amplification](https://protocols.opentrons.com/protocol/111210-part-9)
+* Part 10: [Cleanup of Universal PCR with QIAseq Beads](https://protocols.opentrons.com/protocol/111210-part-10)
+
 
 Explanation of complex parameters below:
 * `Number of Samples`: The total number of DNA samples. Samples must range between 1 (minimum) and 12 (maximum).
