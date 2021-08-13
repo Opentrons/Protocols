@@ -27,7 +27,7 @@ def run(ctx):
                                'Plate C (DNAse Reaction Plate)')
     plate_d = ctx.load_labware('thermofishernunc_96_wellplate_450ul', '3',
                                'Plate D (Dilution Buffer Plate 1)')
-    tempdeck = ctx.load_module('temperature module gen2', '4')
+    tempdeck = ctx.load_module('temperature module gen2', '10')
     tempdeck.deactivate()
     plate_b = tempdeck.load_labware('thermofishernunc_96_aluminumblock_450ul',
                                     'Plate B (DNAse Dilution Plate)')
@@ -39,7 +39,7 @@ def run(ctx):
                                    'final Bio-Rad PCR plate')
     tipracks20 = [
         ctx.load_labware('opentrons_96_tiprack_20ul', slot)
-        for slot in ['7', '10']]
+        for slot in ['7', '4']]
     tipracks300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
         for slot in ['8', '11']]
