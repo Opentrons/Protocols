@@ -80,14 +80,13 @@ lights"
 
 # Start protocol
 def run(ctx):
-    [num_samples, deepwell_type, mag_height, z_offset, radial_offset, res_type,
-     starting_vol, binding_buffer_vol, wash1_vol, wash2_vol, wash3_vol,
-     elution_vol, mix_reps, settling_time, park_tips, tip_track,
-     flash] = get_values(  # noqa: F821
-        'num_samples', 'deepwell_type', 'mag_height', 'z_offset',
-        'radial_offset', 'res_type', 'starting_vol', 'binding_buffer_vol',
-        'wash1_vol', 'wash2_vol', 'wash3_vol', 'elution_vol', 'mix_reps',
-        'settling_time', 'park_tips', 'tip_track', 'flash')
+    [num_samples, mag_height, z_offset, radial_offset, starting_vol,
+     binding_buffer_vol, wash1_vol, wash2_vol, elution_vol, mix_reps,
+     settling_time, park_tips, tip_track, flash] = get_values(  # noqa: F821
+        'num_samples', 'mag_height', 'z_offset', 'radial_offset',
+        'starting_vol', 'binding_buffer_vol', 'wash1_vol', 'wash2_vol',
+        'elution_vol', 'mix_reps', 'settling_time', 'park_tips', 'tip_track',
+        'flash')
 
     """
     Here is where you can change the locations of your labware and modules
@@ -95,22 +94,18 @@ def run(ctx):
     """
     magdeck = ctx.load_module('magnetic module gen2', '4')
     magdeck.disengage()
-    magplate = magdeck.load_labware(deepwell_type, 'deepwell plate')
-    tempdeck = ctx.load_module('Temperature Module Gen2', '1')
-    elutionplate = tempdeck.load_labware(
-                'opentrons_96_aluminumblock_nest_wellplate_100ul',
-                'elution plate')
+    magplate = magdeck.load_labware('biorad_96_wellplate_200ul_pcr',
+                                    'PCR plate')
     waste = ctx.load_labware('nest_1_reservoir_195ml', '11',
                              'Liquid Waste').wells()[0].top()
-    res2 = ctx.load_labware(res_type, '2', 'reagent reservoir 2')
-    res1 = ctx.load_labware(res_type, '5', 'reagent reservoir 1')
+    res1 = ctx.load_labware('usascientific_12_reservoir_22ml', '5',
+                            'reagent reservoir')
     num_cols = math.ceil(num_samples/8)
     tips300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot,
                                 '200µl filtertiprack')
-               for slot in ['3', '6', '8', '9', '10']]
+               for slot in ['2', '3', '6', '8', '9', '10']]
     tips20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot,
-                               '20µl filtertiprack')
-              for slot in ['3', '6', '8', '9', '10']]
+                               '20µl filtertiprack') for slot in ['1']]
     if park_tips:
         rack = ctx.load_labware(
             'opentrons_96_tiprack_300ul', '7', 'tiprack for parking')
@@ -131,18 +126,15 @@ def run(ctx):
     """
     Here is where you can define the locations of your reagents.
     """
-    binding_buffer = res1.wells()[:11]
-    elution_solution = res1.wells()[-1]
-    wash1 = res2.wells()[:4]
-    wash2 = res2.wells()[4:8]
-    wash3 = res2.wells()[8:]
+    binding_buffer = res1.wells()[:1]
+    etoh1 = res1.wells()[1:2]
+    etoh2 = res1.wells()[2:3]
+    post_pcr_te_buff = res1.wells()[3]
 
     mag_samples_m = magplate.rows()[0][:num_cols]
-    elution_samples_m = elutionplate.rows()[0][:num_cols]
-    radius = mag_samples_m[0].width
+    radius = mag_samples_m[0].diameter/2
 
     magdeck.disengage()  # just in case
-    tempdeck.set_temperature(4)
 
     m300.flow_rate.aspirate = 50
     m300.flow_rate.dispense = 150
@@ -281,28 +273,16 @@ before resuming.')
                                supernatant to the final clean elutions PCR
                                plate.
         """
-        latest_chan = -1
         for i, (well, spot) in enumerate(zip(mag_samples_m, parking_spots)):
             _pick_up(m300)
-            num_trans = math.ceil(vol/200)
-            vol_per_trans = vol/num_trans
-            asp_per_chan = (0.95*res1.wells()[0].max_volume)//(vol_per_trans*8)
-            for t in range(num_trans):
-                chan_ind = int((i*num_trans + t)//asp_per_chan)
-                source = binding_buffer[chan_ind]
-                if m300.current_volume > 0:
-                    # void air gap if necessary
-                    m300.dispense(m300.current_volume, source.top())
-                if chan_ind > latest_chan:  # mix if accessing new channel
-                    for _ in range(5):
-                        m300.aspirate(180, source.bottom(0.5))
-                        m300.dispense(180, source.bottom(5))
-                    latest_chan = chan_ind
-                m300.transfer(vol_per_trans, source, well.top(), air_gap=20,
-                              new_tip='never')
-                if t < num_trans - 1:
-                    m300.air_gap(20)
-            m300.mix(5, 200, well)
+            source = binding_buffer[0]
+            m300.aspirate(30, source.bottom(0.5))
+            m300.dispense(30, source.bottom(5))
+            m300.transfer(vol, source.bottom(0.5), well.bottom(0.5),
+                          new_tip='never')
+            ctx.delay(seconds=1)
+            m300.blow_out(source.top(-1))
+            m300.mix(5, starting_vol, well)
             m300.blow_out(well.top(-2))
             m300.air_gap(20)
             if park:
@@ -366,10 +346,9 @@ before resuming.')
         if magdeck.status == 'disengaged':
             magdeck.engage(height=mag_height)
 
-        ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
-' + str(settling_time) + ' minutes.')
+        ctx.delay(seconds=30, msg='Incubating on MagDeck for 30 seconds.')
 
-        remove_supernatant(vol, park=park)
+        remove_supernatant(vol+2, park=park)
 
     def elute(vol, park=True):
         """
@@ -388,65 +367,24 @@ before resuming.')
         if magdeck.status == 'enagaged':
             magdeck.disengage()
         for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
-            _pick_up(m300)
+            _pick_up(m20)
             side = 1 if i % 2 == 0 else -1
             loc = m.bottom().move(Point(x=side*radius*radial_offset,
                                         z=z_offset))
-            m300.aspirate(vol, elution_solution)
-            m300.move_to(m.center())
-            m300.dispense(vol, loc)
-            m300.mix(mix_reps, 0.8*vol, loc)
-            m300.blow_out(m.bottom(5))
-            m300.air_gap(20)
-            if park:
-                m300.drop_tip(spot)
-            else:
-                _drop(m300)
+            m20.aspirate(vol, post_pcr_te_buff)
+            m20.move_to(m.center())
+            m20.dispense(vol, loc)
+            m20.mix(mix_reps, 0.8*vol, loc)
+            m20.blow_out(m.bottom(5))
+            m20.air_gap(20)
+            _drop(m20)
 
-        # agitate after resuspension
-        for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
-            if park:
-                _pick_up(m300, spot)
-            else:
-                _pick_up(m300)
-            side = 1 if i % 2 == 0 else -1
-            loc = m.bottom().move(Point(x=side*radius*radial_offset,
-                                        z=z_offset))
-            m300.mix(10, 0.8*vol, loc)
-            m300.blow_out(m.bottom(5))
-            m300.air_gap(20)
-            if park:
-                m300.drop_tip(spot)
-            else:
-                _drop(m300)
-
-        magdeck.engage(height=mag_height)
-        ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
-' + str(settling_time) + ' minutes.')
-
-        for i, (m, e, spot) in enumerate(
-                zip(mag_samples_m, elution_samples_m, parking_spots)):
-            if park:
-                _pick_up(m300, spot)
-            else:
-                _pick_up(m300)
-            side = -1 if i % 2 == 0 else 1
-            loc = m.bottom().move(Point(x=side*radius*radial_offset,
-                                        z=z_offset))
-            m300.transfer(vol, loc, e.bottom(5), air_gap=20, new_tip='never')
-            m300.blow_out(e.top(-2))
-            m300.air_gap(20)
-            m300.drop_tip()
-
-    """
-    Here is where you can call the methods defined above to fit your specific
-    protocol. The normal sequence is:
-    """
-    bind(binding_buffer_vol, park=park_tips)
-    wash(wash1_vol, wash1, park=park_tips)
-    wash(wash2_vol, wash2, park=park_tips)
-    wash(wash3_vol, wash3, park=park_tips)
+    """function calls"""
+    bind(binding_buffer_vol, park=False)
+    wash(wash1_vol, etoh1, park=park_tips, resuspend=False)
+    wash(wash2_vol, etoh2, park=park_tips, resuspend=False)
     elute(elution_vol, park=park_tips)
+    ctx.comment('Proceed to the Indexing PCR step.')
 
     # track final used tip
     if tip_track and not ctx.is_simulating():

@@ -1,21 +1,21 @@
-# COVID-19 RNA Extraction
+# Swift Normalase Amplicon Panels (SNAP): Size Selection and Cleanup Part 1/2
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Covid Workstation
-    * RNA Extraction
+* NGS Library Prep
+    * Swift Normalase Amplicon Panels (SNAP)
 
 ## Description
-This is a flexible protocol accommodating a wide range of commercial RNA extraction workflows for COVID-19 sample processing. The protocol is broken down into 5 main parts:
-* binding buffer addition to samples
-* bead wash 3x using magnetic module
-* final elution to chilled PCR plate
 
-Lysed samples should be loaded on the magnetic module in a NEST or USA Scientific 96-deepwell plate. For reagent layout in the 2 12-channel reservoirs used in this protocol, please see "Setup" below.
+Links:
+* [Part 1](./74841a)
+* [Part 2](./74841a-2)
 
-For sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 4) to the elution PCR plate (temperature module, slot 1). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.
+This is Part 1/2 of the Swift Normalase Amplicon Panels (SNAP) Size Selection and Cleanup protocol.
+
+Lysed samples should be loaded on the magnetic module in a Bio-Rad 96-well PCR plate.
 
 Explanation of complex parameters below:
 * `park tips`: If set to `yes` (recommended), the protocol will conserve tips between reagent addition and removal. Tips will be stored in the wells of an empty rack corresponding to the well of the sample that they access (tip parked in A1 of the empty rack will only be used for sample A1, tip parked in B1 only used for sample B1, etc.). If set to `no`, tips will always be used only once, and the user will be prompted to manually refill tipracks mid-protocol for high throughput runs.
@@ -24,38 +24,46 @@ Explanation of complex parameters below:
 
 ---
 
-![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)  
-
-To purchase tips, reagents, or pipettes, please visit our [online store](https://shop.opentrons.com/) or contact our sales team at [info@opentrons.com](mailto:info@opentrons.com)
-
+### Modules
 * [Opentrons magnetic module](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
-* [Opentrons temperature module](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
-* [NEST 12 Well Reservoir 15 mL](https://labware.opentrons.com/nest_12_reservoir_15ml) or [USA Scientific 12 Well Reservoir 22 mL](https://labware.opentrons.com/usascientific_12_reservoir_22ml)
-* [NEST 1 Well Reservoir 195 mL](https://labware.opentrons.com/nest_1_reservoir_195ml)
-* [NEST 96 Well Plate 100 µL PCR Full Skirt](https://labware.opentrons.com/nest_96_wellplate_100ul_pcr_full_skirt)
-* [NEST 96 Deepwell Plate 2mL](https://labware.opentrons.com/nest_96_wellplate_2ml_deep) or [USA Scientific 96 Deep Well Plate 2.4 mL](https://labware.opentrons.com/usascientific_96_wellplate_2.4ml_deep)
+
+### Labware
+* [USA Scientific 12 Well Reservoir 22 mL](https://labware.opentrons.com/usascientific_12_reservoir_22ml)
+* [NEST 1 Well Reservoir 195 mL](https://labware.opentrons.com/nest_1_reservoir_195ml) or equivalent for waste
+* [Bio-Rad 96 Well Plate 200 µL PCR Full Skirt](https://www.bio-rad.com/en-us/sku/hsp9601-hard-shell-96-well-pcr-plates-low-profile-thin-wall-skirted-white-clear?ID=hsp9601)
 * [Opentrons 96 Filter Tip Rack 200 µL](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)
+* [Opentrons 96 Filter Tip Rack 20 µL](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-20ul-filter-tips)
+
+### Pipettes
+* [Opentrons P300 8-Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)
+* [Opentrons P20 8-Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)
+
+### Reagents
+* [Swift Normalase Amplicon Panels (SNAP)](https://swiftbiosci.com/wp-content/uploads/2021/06/PRT-028-Swift-Normalase-Amplicon-Panel-SNAP-SARS-CoV-2-Panels-Rev-9-1.pdf)
 
 ---
-![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
-* Reservoir 1: slot 5
-* Reservoir 2: slot 2  
-![reservoirs](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/covid-19-station-b/reagent_layout.png)
+### Deck Setup
+![Setup](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/74841a/deck_setup.png)
 
-### Robot
-* [OT-2](https://opentrons.com/ot-2)
+### Reagent Setup
+Reagent Reservoir (slot 5; volumes for 96-sample run):  
+* channel 1: magnetic beads, 2880µl
+* channel 2: EtOH, 17280µl
+* channel 3: EtOH, 17280µl
+* channel 4: POST-PCR TE buffer, 1670.4
 
-## Process
-1. Select your protocol parameters.
-2. Download your protocol.
-3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
-4. Set up your deck according to the deck map.
-5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support article](https://support.opentrons.com/ot-2/getting-started-software-setup/deck-calibration).
-6. Hit "Run".
+### Process
+1. Input your protocol parameters above.
+2. Download your protocol and unzip if needed.
+3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.
+4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.
+5. Set up your deck according to the deck map.
+6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).
+7. Hit 'Run'.
 
 ### Additional Notes
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-covid-19-rna-extraction
+74841a

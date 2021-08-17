@@ -6,19 +6,10 @@
     "default": 96
   },
   {
-    "type": "dropDown",
-    "label": "96-deepwell plate type",
-    "name": "deepwell_type",
-    "options": [
-      {"label": "NEST", "value": "nest_96_wellplate_2ml_deep"},
-      {"label": "USA Scientific", "value": "usascientific_96_wellplate_2.4ml_deep"}
-    ]
-  },
-  {
     "type": "float",
     "label": "magnetic engage height (in mm)",
     "name": "mag_height",
-    "default": 6.8
+    "default": 18
   },
   {
     "type": "float",
@@ -33,49 +24,34 @@
     "default": 0.8
   },
   {
-    "type": "dropDown",
-    "label": "12-well reservoir type",
-    "name": "res_type",
-    "options": [
-      {"label": "NEST", "value": "nest_12_reservoir_15ml"},
-      {"label": "USA Scientific", "value": "usascientific_12_reservoir_22ml"}
-    ]
-  },
-  {
     "type": "float",
     "label": "intitial volume (sample + lysis buffer, in ul)",
     "name": "starting_vol",
-    "default": 440.0
+    "default": 28.5
   },
   {
     "type": "float",
     "label": "binding buffer volume (in ul)",
     "name": "binding_buffer_vol",
-    "default": 600.0
+    "default": 30.0
   },
   {
     "type": "float",
     "label": "wash 1 volume (in ul, up to 500ul)",
     "name": "wash1_vol",
-    "default": 500.0
+    "default": 180.0
   },
   {
     "type": "float",
     "label": "wash 2 volume (in ul, up to 500ul)",
     "name": "wash2_vol",
-    "default": 500.0
-  },
-  {
-    "type": "float",
-    "label": "wash 3 volume (in ul, up to 500ul)",
-    "name": "wash3_vol",
-    "default": 500.0
+    "default": 180.0
   },
   {
     "type": "float",
     "label": "final elution volume (in ul)",
     "name": "elution_vol",
-    "default": 50.0
+    "default": 17.4
   },
   {
     "type": "int",
