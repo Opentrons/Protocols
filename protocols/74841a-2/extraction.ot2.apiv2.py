@@ -8,7 +8,7 @@ from opentrons import protocol_api
 
 metadata = {
     'protocolName': 'Swift NormalaseTM Amplicon Panels (SNAP): Size Selection \
-and Cleanup Part 1/2',
+and Cleanup Part 2/2',
     'author': 'Opentrons <protocols@opentrons.com>',
     'apiLevel': '2.10'
 }
@@ -81,16 +81,19 @@ lights"
 # Start protocol
 def run(ctx):
     [num_samples, mag_height, z_offset, radial_offset, starting_vol,
-     binding_buffer_vol, wash1_vol, elution_vol, mix_reps,
+     wash1_vol, wash2_vol, elution_vol, mix_reps,
      settling_time, park_tips, tip_track, flash] = get_values(  # noqa: F821
         'num_samples', 'mag_height', 'z_offset', 'radial_offset',
-        'starting_vol', 'binding_buffer_vol', 'wash1_vol', 'elution_vol',
-        'mix_reps', 'settling_time', 'park_tips', 'tip_track', 'flash')
+        'starting_vol', 'wash1_vol', 'wash2_vol',
+        'elution_vol', 'mix_reps', 'settling_time', 'park_tips', 'tip_track',
+        'flash')
 
     """
     Here is where you can change the locations of your labware and modules
     (note that this is the recommended configuration)
     """
+    elutionplate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '1',
+                                    'elution plate')
     magdeck = ctx.load_module('magnetic module gen2', '4')
     magdeck.disengage()
     magplate = magdeck.load_labware('biorad_96_wellplate_200ul_pcr',
@@ -102,9 +105,9 @@ def run(ctx):
     num_cols = math.ceil(num_samples/8)
     tips300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot,
                                 '200µl filtertiprack')
-               for slot in ['2', '3', '6', '8', '9', '10']]
+               for slot in ['8', '9', '10']]
     tips20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot,
-                               '20µl filtertiprack') for slot in ['1']]
+                               '20µl filtertiprack') for slot in ['2', '3']]
     if park_tips:
         rack = ctx.load_labware(
             'opentrons_96_tiprack_300ul', '7', 'tiprack for parking')
@@ -125,12 +128,13 @@ def run(ctx):
     """
     Here is where you can define the locations of your reagents.
     """
-    binding_buffer = res1.wells()[:1]
-    etoh1 = res1.wells()[1:2]
-    etoh2 = res1.wells()[2:3]
-    post_pcr_te_buff = res1.wells()[3]
+    peg = res1.wells()[4:5]
+    etoh1 = res1.wells()[5:6]
+    etoh2 = res1.wells()[6:7]
+    post_pcr_te_buff = res1.wells()[7]
 
     mag_samples_m = magplate.rows()[0][:num_cols]
+    elution_samples_m = elutionplate.rows()[0][:num_cols]
     radius = mag_samples_m[0].diameter/2
 
     magdeck.disengage()  # just in case
@@ -257,45 +261,6 @@ before resuming.')
             _drop(m300)
         m300.flow_rate.aspirate = 150
 
-    def bind(vol, park=True):
-        """
-        `bind` will perform magnetic bead binding on each sample in the
-        deepwell plate. Each channel of binding beads will be mixed before
-        transfer, and the samples will be mixed with the binding beads after
-        the transfer. The magnetic deck activates after the addition to all
-        samples, and the supernatant is removed after bead bining.
-        :param vol (float): The amount of volume to aspirate from the elution
-                            buffer source and dispense to each well containing
-                            beads.
-        :param park (boolean): Whether to save sample-corresponding tips
-                               between adding elution buffer and transferring
-                               supernatant to the final clean elutions PCR
-                               plate.
-        """
-        for i, (well, spot) in enumerate(zip(mag_samples_m, parking_spots)):
-            _pick_up(m300)
-            source = binding_buffer[0]
-            m300.aspirate(30, source.bottom(0.5))
-            m300.dispense(30, source.bottom(5))
-            m300.transfer(vol, source.bottom(0.5), well.bottom(0.5),
-                          new_tip='never')
-            ctx.delay(seconds=1)
-            m300.blow_out(source.top(-1))
-            m300.mix(5, starting_vol, well)
-            m300.blow_out(well.top(-2))
-            m300.air_gap(20)
-            if park:
-                m300.drop_tip(spot)
-            else:
-                _drop(m300)
-
-        magdeck.engage(height=mag_height)
-        ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
-' + str(settling_time) + ' minutes.')
-
-        # remove initial supernatant
-        remove_supernatant(vol+starting_vol, park=park)
-
     def wash(vol, source, mix_reps=15, park=True, resuspend=True):
         """
         `wash` will perform bead washing for the extraction protocol.
@@ -376,14 +341,34 @@ before resuming.')
             m20.mix(mix_reps, 0.8*vol, loc)
             m20.blow_out(m.bottom(5))
             m20.air_gap(20)
-            _drop(m20)
+            if park:
+                m20.drop_tip(spot)
+            else:
+                _drop(m20)
+
+        magdeck.engage(height=mag_height)
+        ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
+' + str(settling_time) + ' minutes.')
+
+        for i, (m, e, spot) in enumerate(
+                zip(mag_samples_m, elution_samples_m, parking_spots)):
+            if park:
+                _pick_up(m20, spot)
+            else:
+                _pick_up(m20)
+            side = -1 if i % 2 == 0 else 1
+            loc = m.bottom().move(Point(x=side*radius*radial_offset,
+                                        z=z_offset))
+            m20.transfer(vol, loc, e.bottom(5), new_tip='never')
+            m20.blow_out(e.top(-2))
+            m20.air_gap(20)
+            m20.drop_tip()
 
     """function calls"""
-    bind(binding_buffer_vol, park=False)
-    wash(wash1_vol, etoh1, park=park_tips, resuspend=False)
-    wash(wash1_vol, etoh2, park=park_tips, resuspend=False)
-    elute(elution_vol, park=park_tips)
-    ctx.comment('Proceed to the Indexing PCR step.')
+    wash(wash1_vol, peg, park=False)
+    wash(wash2_vol, etoh1, park=park_tips, resuspend=False)
+    wash(wash2_vol, etoh2, park=park_tips, resuspend=False)
+    elute(elution_vol, park=False)
 
     # track final used tip
     if tip_track and not ctx.is_simulating():
