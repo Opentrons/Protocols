@@ -27,25 +27,25 @@
     "type": "float",
     "label": "intitial volume (sample + lysis buffer, in ul)",
     "name": "starting_vol",
-    "default": 28.5
+    "default": 57.5
   },
   {
     "type": "float",
-    "label": "binding buffer volume (in ul)",
-    "name": "binding_buffer_vol",
-    "default": 30.0
+    "label": "PEG volume (in ul)",
+    "name": "wash1_vol",
+    "default": 32.5
   },
   {
     "type": "float",
     "label": "EtOH volume (in ul)",
-    "name": "wash1_vol",
+    "name": "wash2_vol",
     "default": 180.0
   },
   {
     "type": "float",
-    "label": "Post-PCR TE buffer volume",
+    "label": "Post-PCR TE buffer elution volume (in ul)",
     "name": "elution_vol",
-    "default": 17.4
+    "default": 20.0
   },
   {
     "type": "int",

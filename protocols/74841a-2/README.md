@@ -1,4 +1,4 @@
-# Swift Normalase Amplicon Panels (SNAP): Size Selection and Cleanup Part 1/2
+# Swift Normalase Amplicon Panels (SNAP): Size Selection and Cleanup Part 2/2
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -13,9 +13,7 @@ Links:
 * [Part 1](./74841a)
 * [Part 2](./74841a-2)
 
-This is Part 1/2 of the Swift Normalase Amplicon Panels (SNAP) Size Selection and Cleanup protocol.
-
-Lysed samples should be loaded on the magnetic module in a Bio-Rad 96-well PCR plate.
+This is Part 2/2 of the Swift Normalase Amplicon Panels (SNAP) Size Selection and Cleanup protocol.
 
 Explanation of complex parameters below:
 * `park tips`: If set to `yes` (recommended), the protocol will conserve tips between reagent addition and removal. Tips will be stored in the wells of an empty rack corresponding to the well of the sample that they access (tip parked in A1 of the empty rack will only be used for sample A1, tip parked in B1 only used for sample B1, etc.). If set to `no`, tips will always be used only once, and the user will be prompted to manually refill tipracks mid-protocol for high throughput runs.
@@ -48,10 +46,10 @@ Explanation of complex parameters below:
 
 ### Reagent Setup
 Reagent Reservoir (slot 5; volumes for 96-sample run):  
-* channel 1: magnetic beads, 2880µl
-* channel 2: EtOH, 17280µl
-* channel 3: EtOH, 17280µl
-* channel 4: POST-PCR TE buffer, 1670.4µl
+* channel 5: PEG, 3120µl
+* channel 6: EtOH, 17280µl
+* channel 7: EtOH, 17280µl
+* channel 8: POST-PCR TE buffer, 1920µl
 
 ### Process
 1. Input your protocol parameters above.
