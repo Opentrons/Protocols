@@ -8,6 +8,9 @@
 	* Assay
 
 ## Description
+**Updated**</br>
+This protocol has been updated based on feedback from the user.
+</br>
 This protocol is part three of a larger workflow. The entire workflow can be found below</br>
 
 Part 1: [Small Molecule Library Prep](./1adec6)</br>
@@ -23,16 +26,20 @@ In this protocol, 1µL is transferred from the small molecule library plate to t
 Explanation of complex parameters below:
 * **P20-Multi Mount**: Select which mount the P20-Multi Pipette is attached to.
 * **Number of Destination Plates**: Select the number of destination plates.
+* **Transfer volume (in µL)**: Specify the volume to be transferred.
+* **Mix with P300-Multi**: Select whether or not to add an optional mix step with the P300-Multi Pipette (200µL, 3 times) after the transfer occurs
 
 ---
 
 ### Labware
 * [Opentrons 20µL Tipracks](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-20ul-tips)
+* * [Opentrons 300µL Tipracks](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips) (optional)
 * Thermo-Fast 96-Well, Fully Skirted Plate
 * SPL 96-Well Cell Culture Plates
 
 ### Pipettes
 * [P20 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)
+* [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette) (optional)
 
 ### Reagents
 * Small Molecule Library
@@ -48,11 +55,17 @@ Explanation of complex parameters below:
 </br>
 **Slot 4**: [Opentrons 20µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-20ul-tips)</br>
 </br>
-**Slot 5**: Small Molecule Library Plate (Thermo-Fast 96-Well, Fully Skirted Plate)</br>
+**Slot 5**: [Opentrons 300µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips) (optional, for mixing)</br>
+</br>
+**Slot 6**: Small Molecule Library Plate (Thermo-Fast 96-Well, Fully Skirted Plate)</br>
 </br>
 **Slot 7**: [Opentrons 20µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-20ul-tips)</br>
 </br>
+**Slot 8**: [Opentrons 300µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips) (optional, for mixing)</br>
+</br>
 **Slot 10**: [Opentrons 20µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-20ul-tips)</br>
+</br>
+**Slot 11**: [Opentrons 300µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips) (optional, for mixing)</br>
 </br>
 
 
@@ -64,8 +77,9 @@ For each of the columns (1-10) in each destination plate (1-3), the following st
 2. [P20 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette) will mix library in corresponding column.
 3. [P20 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette) will transfer 1µL from the corresponding column of the Small Molecule Library Plate to the same column of the destination plate.
 4. [P20 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette) will drop used tips in the waste bin.
-5. Steps 1-4 will repeat for each column/destination plate.
-6. End of the protocol.
+5. **Optional**: [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette) will pick up tips, mix column, drop tip (repeat for each column), if **Mix with P300-Multi** is set to **Yes**.
+6. Steps 1-5 will repeat for each column/destination plate.
+7. End of the protocol.
 
 ### Process
 1. Input your protocol parameters above.
