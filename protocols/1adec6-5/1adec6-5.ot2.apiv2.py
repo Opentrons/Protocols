@@ -43,9 +43,5 @@ def run(protocol):
     m300.flow_rate.aspirate = 50
     m300.pick_up_tip()
     for well in srcWells:
-        m300.transfer(
-            100, pbs, well.top(-2),
-            mix_before=(2, 50), air_gap=20, new_tip='never'
-            )
-
+        m300.transfer(100, pbs, well.top(-2), air_gap=20, new_tip='never')
     m300.drop_tip()
