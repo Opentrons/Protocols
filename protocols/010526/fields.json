@@ -27,6 +27,15 @@
         ]
       },
       {
+        "type": "dropDown",
+        "label": "Tube Type",
+        "name": "tube_type",
+        "options": [
+          { "label": "1.5 mL Eppendorf Tubes", "value": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap" },
+          { "label": "Pink Fisher Tubes", "value": "opentrons_24_pink_fisher_tubes_1500ul" }
+        ]
+      },
+      {
         "type": "float",
         "label": "Temperature Module Hold Temperature (C)",
         "name": "temp_mod_temperature",
