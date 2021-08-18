@@ -9,7 +9,7 @@
     ],
     "schemaVersion": 2,
     "version": 1,
-    "namespace": "opentrons",
+    "namespace": "custom_beta",
     "metadata": {
       "tags": [],
       "displayName": "Opentrons 24 Pink Fisher Tubes 1.5 mL",
