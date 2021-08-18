@@ -8,11 +8,11 @@ metadata = {
 
 def run(ctx):
 
-    [p20_mount, p300_mount, sample_container, input_csv,
+    [p20_mount, p300_mount, sample_container, tube_type, input_csv,
         rxn_vol, enzyme_vol, enz_asp_rate, enz_disp_rate, digest_duration,
         heat_kill_temperature, heat_kill_duration,
         temp_mod_temperature, sample_asp_height] = get_values(  # noqa: F821
-        "p20_mount", "p300_mount", "sample_container",
+        "p20_mount", "p300_mount", "sample_container", "tube_type",
         "input_csv", "rxn_vol", "enzyme_vol", "enz_asp_rate", "enz_disp_rate",
         "digest_duration", "heat_kill_temperature", "heat_kill_duration",
         "temp_mod_temperature", "sample_asp_height")
@@ -27,9 +27,7 @@ def run(ctx):
                     for slot in [3, 5]]
     tiprack_300ul = ctx.load_labware('opentrons_96_tiprack_300ul', 6)
     if sample_container == "tuberacks":
-        tuberacks = [ctx.load_labware(
-                    'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap',
-                    slot) for slot in [2, 4]]
+        tuberacks = [ctx.load_labware(tube_type, slot) for slot in [2, 4]]
     elif sample_container == "plate":
         sample_plate = ctx.load_labware(
                         'nest_96_wellplate_100ul_pcr_full_skirt', 2)
