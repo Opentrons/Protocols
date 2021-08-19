@@ -1,0 +1,189 @@
+{
+    "content": "import os\nimport csv\nimport math\n\nmetadata = {\n    'title': 'Cap Filling',\n    'author': 'Steve Plonk',\n    'apiLevel': '2.10'\n}\n\n\ndef run(ctx):\n\n    [cap_count, rack_count, remove_empty_racks, arrange_tips, track_tips,\n     change_tips, clearance_reservoir,\n     tracking_reset, labware_rack] = get_values(  # noqa: F821\n        \"cap_count\", \"rack_count\", \"remove_empty_racks\", \"arrange_tips\",\n        \"track_tips\", \"change_tips\", \"clearance_reservoir\", \"tracking_reset\",\n        \"labware_rack\")\n\n    ctx.set_rail_lights(True)\n    ctx.delay(seconds=10)\n    \"\"\"\n    keep parameter value selections within acceptable range\n    \"\"\"\n    if cap_count < 1 or cap_count > 96:\n        raise Exception('Cap count must be in range 1-96.')\n\n    if rack_count < 1 or rack_count > 4:\n        raise Exception('Rack count must be in range 1-4.')\n\n    if rack_count < math.ceil(cap_count / 24):\n        raise Exception('Rack count must be at least {}'.format(\n         str(math.ceil(cap_count / 24))))\n\n    if clearance_reservoir < 1:\n        raise Exception('Reservoir bottom clearance must be at least 1 mm.')\n\n    if remove_empty_racks:\n        rack_count = math.ceil(cap_count / 24)\n\n    # p300 multi, tips\n    tip_slots = [10, 11]\n    tips300 = [ctx.load_labware(\n     'opentrons_96_tiprack_300ul', str(slot)) for slot in tip_slots]\n    p300m = ctx.load_instrument(\"p300_multi_gen2\", 'right', tip_racks=tips300)\n\n    \"\"\"\n    prepare custom tip arrangement\n    \"\"\"\n\n    if arrange_tips:\n        ctx.pause(\"\"\"Important. Please make sure the tip box in slot 10 is\n        completely full and the tip box in slot 11 is completely empty before\n        clicking resume.\"\"\")\n\n        empty300 = tips300.pop(1)\n\n        for full, empty in zip(tips300, [empty300]):\n            for index, column in enumerate(full.columns()):\n                p300m.pick_up_tip(column[4])\n                p300m.drop_tip(empty.columns()[index][0])\n\n        for box in tips300+[empty300]:\n            for column in box.columns():\n                for s in range(1, 6, 2):\n                    p300m.pick_up_tip(column[s])\n                    p300m.drop_tip(column[s+1])\n\n        p300m.reset_tipracks()\n\n        tips300.append(empty300)\n\n    \"\"\"\n    get starting tip based on previous run\n    \"\"\"\n    if track_tips:\n        # if ctx.is_simulating():  # reversed logic for simulation\n        if not ctx.is_simulating():\n            file_path = '/data/temporary/tiptracking.csv'\n            file_dir = os.path.dirname(file_path)\n            # check for file directory\n            if not os.path.exists(file_dir):\n                os.makedirs(file_dir)\n            # check for file; if not there, create initial csv\n            if (not os.path.isfile(file_path) or tracking_reset):\n                with open(file_path, 'w') as outfile:\n                    outfile.write(\",\".join([\n                     \"0\", \"\\n\"]))\n\n        current_data = []\n        # if not ctx.is_simulating():  # reversed logic for simulation\n        if ctx.is_simulating():\n            current_data = [\"0\"]\n        else:\n            with open(file_path) as csv_file:\n                csv_reader = csv.reader(csv_file, delimiter=',')\n                current_data = next(csv_reader)\n\n        current_starting_tip = current_data[0]\n\n    else:\n        current_starting_tip = 0\n\n    # yield currently available tips\n    tip_list = tips300[0].rows()[0]+tips300[1].rows()[0]\n\n    def tip_loc():\n        unused_list = tip_list[int(current_starting_tip):]\n        yield from unused_list\n\n    use_tip = tip_loc()\n\n    # custom racks\n    rack_slots = [1, 2, 4, 5]\n    [*racks] = [ctx.load_labware(\n     labware_rack, str(\n      slot), 'Rack') for slot in rack_slots[:rack_count]]\n\n    # reservoir\n    reservoir = ctx.load_labware('nest_1_reservoir_195ml', '3', 'Reservoir')\n\n    def pick_up():\n        if track_tips:\n            try:\n                nonlocal use_tip\n                p300m.pick_up_tip(next(use_tip))\n            except StopIteration:\n                ctx.pause(\"Please add full tipracks to slots 10 and 11\")\n                current_starting_tip = 0\n                # to satisfy the linter\n                ctx.comment(\"current starting tip reset to {}\".format(\n                 current_starting_tip))\n                use_tip = tip_loc()\n                p300m.pick_up_tip(next(use_tip))\n        else:\n            p300m.pick_up_tip()\n\n    \"\"\"\n    process steps to fill the caps\n    \"\"\"\n    for index, rack in enumerate(racks):\n        remaining = cap_count - (index*24)\n        num_cols = math.ceil(remaining / 4) if (index == (len(racks)-1)) else 6\n        for column in rack.columns()[:num_cols]:\n            if not p300m.has_tip:\n                pick_up()\n            p300m.aspirate(300, reservoir['A1'].bottom(clearance_reservoir))\n            p300m.dispense(300, column[0].top(-2))\n            if change_tips:\n                p300m.drop_tip()\n    if p300m.has_tip:\n        p300m.drop_tip()\n\n    \"\"\"\n    keep track of starting tip for the next run\n    \"\"\"\n    if track_tips:\n        try:\n            future_tip = tip_list.index(next(use_tip))\n        except StopIteration:\n            ctx.pause(\"Please add full tipracks to slots 10 and 11\")\n            current_starting_tip = 0\n            use_tip = tip_loc()\n            future_tip = tip_list.index(next(use_tip))\n\n        # write future starting tip to csv\n        new_data = \",\".join([str(future_tip), '\\n'])\n        # if ctx.is_simulating():  # reversed logic for simulation\n        if not ctx.is_simulating():\n            with open(file_path, 'w') as outfile:\n                outfile.write(new_data)\n                ctx.comment(\" new_data {}\".format(new_data))\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 96,
+            "label": "Number of Caps (up to 96)",
+            "name": "cap_count",
+            "type": "int"
+        },
+        {
+            "label": "Number of Racks (1-4 with slot fill order 1,2,4,5)",
+            "name": "rack_count",
+            "options": [
+                {
+                    "label": "Four Custom Racks (slots 1,2,4,5)",
+                    "value": 4
+                },
+                {
+                    "label": "Three Custom Racks (slots 1,2,4)",
+                    "value": 3
+                },
+                {
+                    "label": "Two Custom Racks (slots 1,2)",
+                    "value": 2
+                },
+                {
+                    "label": "One Custom Rack (slot 1)",
+                    "value": 1
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Do you Plan to Have All Four Custom Racks on Deck (even in runs with fewer than 96 caps)? (yes or no)",
+            "name": "remove_empty_racks",
+            "options": [
+                {
+                    "label": "YES - Keep All Four Custom Racks on Deck",
+                    "value": false
+                },
+                {
+                    "label": "NO - Calculate the Number of Custom Racks on Deck Based on the Number of Caps",
+                    "value": true
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Include a Step to Custom Arrange Tips at the Start of This Run (by default keep this set to no)? (yes or no)",
+            "name": "arrange_tips",
+            "options": [
+                {
+                    "label": "NO - tips are already in place",
+                    "value": false
+                },
+                {
+                    "label": "YES - place a full box in slot 10 and an empty box in slot 11",
+                    "value": true
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Keep Track of the Starting Tip from One Protocol Run to the Next? (yes or no)",
+            "name": "track_tips",
+            "options": [
+                {
+                    "label": "YES",
+                    "value": true
+                },
+                {
+                    "label": "NO - user will add fresh tip boxes at the start of each run",
+                    "value": false
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Change Tips After Every Dispense? (yes or no)",
+            "name": "change_tips",
+            "options": [
+                {
+                    "label": "NO - same four tips will be used for all dispenses",
+                    "value": false
+                },
+                {
+                    "label": "YES",
+                    "value": true
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 5,
+            "label": "Height of Tip Above Bottom of Reservoir During Aspiration (mm)",
+            "name": "clearance_reservoir",
+            "type": "float"
+        },
+        {
+            "label": "Restart Tip Tracking (by default keep this set to no)? (yes or no)",
+            "name": "tracking_reset",
+            "options": [
+                {
+                    "label": "NO - continue tracking tips as usual",
+                    "value": false
+                },
+                {
+                    "label": "YES - restart tip tracking at A1 slot 10 and add fresh tip boxes",
+                    "value": true
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Custom Rack Labware Definition",
+            "name": "labware_rack",
+            "options": [
+                {
+                    "label": "Temporary Stand In Opentrons 24 Tube Rack",
+                    "value": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "right",
+            "name": "p300_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Rack on 1",
+            "share": false,
+            "slot": "1",
+            "type": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
+        },
+        {
+            "name": "Rack on 2",
+            "share": false,
+            "slot": "2",
+            "type": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
+        },
+        {
+            "name": "Reservoir on 3",
+            "share": false,
+            "slot": "3",
+            "type": "nest_1_reservoir_195ml"
+        },
+        {
+            "name": "Rack on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
+        },
+        {
+            "name": "Rack on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 10",
+            "share": false,
+            "slot": "10",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.10",
+        "author": "Steve Plonk",
+        "title": "Cap Filling"
+    },
+    "modules": []
+}
