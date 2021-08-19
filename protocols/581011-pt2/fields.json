@@ -14,7 +14,7 @@
   {
     "type": "dropDown",
     "label": "Pre-mix before aspirating in 96 well plate?",
-    "name": "pre-mix",
+    "name": "pre_mix",
     "options": [
       {"label": "Yes, pre-mix", "value": true},
       {"label": "No, do not pre-mix", "value": false}
