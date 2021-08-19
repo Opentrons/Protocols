@@ -139,9 +139,10 @@ def run(ctx):
     """
     process steps to fill the caps
     """
-    for index, rack in enumerate(racks):
+    for index, rack in enumerate(racks[:math.ceil(cap_count / 24)]):
         remaining = cap_count - (index*24)
-        num_cols = math.ceil(remaining / 4) if (index == (len(racks)-1)) else 6
+        num_cols = math.ceil(remaining / 4) if (index == (len(racks[
+         :math.ceil(cap_count / 24)])-1)) else 6
         for column in rack.columns()[:num_cols]:
             if not p300m.has_tip:
                 pick_up()
