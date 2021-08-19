@@ -32,7 +32,7 @@ Explanation of complex parameters below:
 
 ### Labware
 * [Opentrons 300µL Tipracks](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
-* SPL 96-Well Cell Culture Plates
+* ProcartaPlex 96-Well Cell Culture Plates
 * [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
 
 ### Pipettes
@@ -45,17 +45,17 @@ Explanation of complex parameters below:
 ---
 
 ### Deck Setup
-**Slot 1**: **Optional**, Destination Plate 2 (SPL 96-Well Cell Culture Plate)</br>
+**Slot 1**: **Optional**, Destination Plate 2 (ProcartaPlex 96-Well Cell Culture Plate)</br>
 </br>
-**Slot 2**: **Optional**, Sample Plate 2 (SPL 96-Well Cell Culture Plate)</br>
+**Slot 2**: **Optional**, Sample Plate 2 (ProcartaPlex 96-Well Cell Culture Plate)</br>
 </br>
 **Slot 3**: [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)</br>
 </br>
-**Slot 4**: Destination Plate 1 (SPL 96-Well Cell Culture Plate)</br>
+**Slot 4**: Destination Plate 1 (ProcartaPlex 96-Well Cell Culture Plate)</br>
 </br>
-**Slot 5**: Sample Plate 1 (SPL 96-Well Cell Culture Plate)</br>
+**Slot 5**: Sample Plate 1 (ProcartaPlex 96-Well Cell Culture Plate)</br>
 </br>
-**Slot 6**: Standards Plate (SPL 96-Well Cell Culture Plate)</br>
+**Slot 6**: Standards Plate (ProcartaPlex 96-Well Cell Culture Plate)</br>
 </br>
 **Slot 7**: [Opentrons 300µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)</br>
 </br>

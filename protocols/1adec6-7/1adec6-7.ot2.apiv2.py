@@ -9,36 +9,28 @@ metadata = {
 
 
 def run(protocol):
-    [mnt300, numPlates] = get_values(  # noqa: F821
-     'mnt300', 'numPlates')
+    # [mnt300, numPlates] = get_values(  # noqa: F821
+    #  'mnt300', 'numPlates')
 
     # load labware
+    mnt300 = 'right'
+    numPlates = 3
     tips = [
         protocol.load_labware('opentrons_96_filtertiprack_200ul', '7')
         ]
 
     m300 = protocol.load_instrument('p300_multi_gen2', mnt300, tip_racks=tips)
-    destPlate = protocol.load_labware('spl_96_wellplate_200ul_flat', '1')
-    rsvr = protocol.load_labware('nest_12_reservoir_15ml', '3')
+    destPlates = [
+        protocol.load_labware(
+            'procartaplex_96_wellplate_655096', s) for s in range(4, 7)
+        ][:numPlates]
+    rsvrs = [
+        protocol.load_labware('nest_12_reservoir_15ml', s) for s in range(1, 4)
+        ]
 
     # Variables
-    washBuffer = rsvr.wells()[:6]
-    antibody = rsvr['A8']
-    sap = rsvr['A10']
-    readingBuffer = rsvr['A12']
-
-    destWells = destPlate.rows()[0]
-
-    if numPlates == "Two":
-        destPlate2 = protocol.load_labware('spl_96_wellplate_200ul_flat', '4')
-        rsvr2 = protocol.load_labware('nest_12_reservoir_15ml', '6')
-        # Variables
-        washBuffer2 = rsvr2.wells()[:6]
-        antibody2 = rsvr2['A8']
-        sap2 = rsvr2['A10']
-        readingBuffer2 = rsvr2['A12']
-
-        destWells2 = destPlate2.rows()[0]
+    washBuffers = [rsvr.wells()[:6] for rsvr in rsvrs]
+    destWells = [plate.rows()[0] for plate in destPlates]
 
     def slow_tip_withdrawal(self, speed_limit, well_location, to_center=False):
         if self.mount == 'right':
@@ -84,20 +76,11 @@ def run(protocol):
         processing.
         Param num: Location of wash buffer (should be number)
         """
-        src = washBuffer[num]
+
         m300.pick_up_tip()
-        for well in destWells:
-            m300.aspirate(30, src.top())
-            m300.aspirate(150, src)
-            m300.delay(1)
-            m300.slow_tip_withdrawal(10, src)
-            m300.air_gap(20)
-            m300.dispense(200, well.top(-2))
-            m300.blow_out()
-            m300.delay(1)
-        if numPlates == "Two":
-            src = washBuffer2[num]
-            for well in destWells2:
+        for wells, wb in zip(destWells, washBuffers):
+            src = wb[num]
+            for well in wells:
                 m300.aspirate(30, src.top())
                 m300.aspirate(150, src)
                 m300.delay(1)
@@ -128,21 +111,13 @@ def run(protocol):
 
     m300.pick_up_tip()
 
-    for well in destWells:
-        m300.mix(3, 100, antibody)
-        m300.aspirate(25, antibody, rate=0.7)
-        m300.delay(2)
-        m300.slow_tip_withdrawal(5, antibody)
-        m300.air_gap(20)
-        m300.dispense(45, well.top(-4), rate=0.7)
-        m300.delay(1)
-        m300.blow_out()
-    if numPlates == "Two":
-        for well in destWells2:
-            m300.mix(3, 100, antibody2)
-            m300.aspirate(25, antibody2, rate=0.7)
+    for wells, rsvr in zip(destWells, rsvrs):
+        antibody = rsvr['A8']
+        for well in wells:
+            m300.mix(3, 100, antibody)
+            m300.aspirate(25, antibody, rate=0.7)
             m300.delay(2)
-            m300.slow_tip_withdrawal(5, antibody2)
+            m300.slow_tip_withdrawal(5, antibody)
             m300.air_gap(20)
             m300.dispense(45, well.top(-4), rate=0.7)
             m300.delay(1)
@@ -170,21 +145,13 @@ def run(protocol):
 
     m300.pick_up_tip()
 
-    for well in destWells:
-        m300.mix(3, 100, sap)
-        m300.aspirate(50, sap, rate=0.7)
-        m300.delay(2)
-        m300.slow_tip_withdrawal(5, sap)
-        m300.air_gap(20)
-        m300.dispense(70, well.top(-4), rate=0.7)
-        m300.delay(1)
-        m300.blow_out()
-    if numPlates == "Two":
-        for well in destWells2:
-            m300.mix(3, 100, sap2)
-            m300.aspirate(50, sap2, rate=0.7)
+    for wells, rsvr in zip(destWells, rsvrs):
+        sap = rsvr['A10']
+        for well in wells:
+            m300.mix(3, 100, sap)
+            m300.aspirate(50, sap, rate=0.7)
             m300.delay(2)
-            m300.slow_tip_withdrawal(5, sap2)
+            m300.slow_tip_withdrawal(5, sap)
             m300.air_gap(20)
             m300.dispense(70, well.top(-4), rate=0.7)
             m300.delay(1)
@@ -212,21 +179,13 @@ def run(protocol):
 
     m300.pick_up_tip()
 
-    for well in destWells:
-        m300.mix(3, 100, readingBuffer)
-        m300.aspirate(120, readingBuffer, rate=0.7)
-        m300.delay(2)
-        m300.slow_tip_withdrawal(5, readingBuffer)
-        m300.air_gap(20)
-        m300.dispense(140, well.top(-4), rate=0.7)
-        m300.delay(1)
-        m300.blow_out()
-    if numPlates == "Two":
-        for well in destWells2:
-            m300.mix(3, 100, readingBuffer2)
-            m300.aspirate(120, readingBuffer2, rate=0.7)
+    for wells, rsvr in zip(destWells, rsvrs):
+        readingBuffer = rsvr['A12']
+        for well in wells:
+            m300.mix(3, 100, readingBuffer)
+            m300.aspirate(120, readingBuffer, rate=0.7)
             m300.delay(2)
-            m300.slow_tip_withdrawal(5, readingBuffer2)
+            m300.slow_tip_withdrawal(5, readingBuffer)
             m300.air_gap(20)
             m300.dispense(140, well.top(-4), rate=0.7)
             m300.delay(1)
