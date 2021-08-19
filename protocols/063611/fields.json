@@ -27,7 +27,7 @@
   },
   {
     "type": "dropDown",
-    "label": "Include a Step to Custom Arrange Tips at the Start of This Run (by default keep this set to "no")? ("yes" or "no")",
+    "label": "Include a Step to Custom Arrange Tips at the Start of This Run (by default keep this set to no)? (yes or no)",
     "name": "arrange_tips",
     "options": [
       { "label": "NO - tips are already in place", "value": false },
@@ -36,7 +36,7 @@
   },
   {
     "type": "dropDown",
-    "label": "Keep Track of the Starting Tip from One Protocol Run to the Next? ("yes" or "no")",
+    "label": "Keep Track of the Starting Tip from One Protocol Run to the Next? (yes or no)",
     "name": "track_tips",
     "options": [
       { "label": "YES", "value": true },
@@ -45,7 +45,7 @@
   },
   {
     "type": "dropDown",
-    "label": "Change Tips After Every Dispense? ("yes" or "no")",
+    "label": "Change Tips After Every Dispense? (yes or no)",
     "name": "change_tips",
     "options": [
       { "label": "NO - same four tips will be used for all dispenses", "value": false },
@@ -60,7 +60,7 @@
   },
   {
     "type": "dropDown",
-    "label": "Restart Tip Tracking (by default keep this set to "no")? ("yes" or "no")",
+    "label": "Restart Tip Tracking (by default keep this set to no)? (yes or no)",
     "name": "tracking_reset",
     "options": [
       { "label": "NO - continue tracking tips as usual", "value": false },
