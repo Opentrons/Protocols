@@ -32,7 +32,7 @@ Explanation of complex parameters below:
 ### Labware
 * [Opentrons 300µL Tipracks](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
 * [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
-* SPL 96-Well Cell Culture Plates
+* SPL 96-Well Cell Culture Plates (Round Bottom)
 
 ### Pipettes
 * [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)
@@ -44,7 +44,7 @@ Explanation of complex parameters below:
 ---
 
 ### Deck Setup
-**Slot 1**: Destination Plate 1 (SPL 96-Well Cell Culture Plat)</br>
+**Slot 1**: Destination Plate 1 (SPL 96-Well Cell Culture Plate)</br>
 </br>
 **Slot 2**: Destination Plate 2 (SPL 96-Well Cell Culture Plate)</br>
 </br>
