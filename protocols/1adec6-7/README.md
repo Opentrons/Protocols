@@ -8,6 +8,9 @@
 	* Assay
 
 ## Description
+**Updated**</br>
+This protocol has been updated based on feedback from the user.
+</br>
 This protocol is part seven of a larger workflow. The entire workflow can be found below</br>
 
 Part 1: [Small Molecule Library Prep](./1adec6)</br>
@@ -22,6 +25,7 @@ This protocol is the second half of a custom, ProcartaPlex protocol - the first 
 
 Explanation of complex parameters below:
 * **P300-Multi Mount**: Select which mount the P300-Multi Pipette is attached to.
+* **Number of destination plates**: Select how many destination plates will be used in the protocol (1 or 2).
 
 
 ---
@@ -45,7 +49,11 @@ Explanation of complex parameters below:
 ### Deck Setup
 **Slot 1**: Destination Plate (SPL 96-Well Cell Culture Plate)</br>
 </br>
-**Slot 6**: [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)</br>
+**Slot 3**: [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)</br>
+</br>
+**Slot 4**: **Optional**, Destination Plate 2 (SPL 96-Well Cell Culture Plate)</br>
+</br>
+**Slot 6**: **Optional**, [NEST 12-Well Reservoir 2, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)</br>
 </br>
 **Slot 7**: [Opentrons 300µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)</br>
 </br>
@@ -56,6 +64,7 @@ Explanation of complex parameters below:
 2. Load **Detection Antibodies** in **Column 8** of the [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
 3. Load **SAP** in **Column 10** of the [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
 4. Load **Reading Buffer** in **Column 12** of the [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
+**Note**: If processing two plates, repeat this setup in a second [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
 
 
 ---
