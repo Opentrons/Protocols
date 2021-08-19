@@ -1,7 +1,7 @@
 import math
 
 metadata = {
-    'protocolName': '',
+    'protocolName': 'Cherrypicking with Multi-Channel Pipette and CSV-Part 2',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.10'

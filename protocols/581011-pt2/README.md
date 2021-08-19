@@ -1,4 +1,4 @@
-# Cherrypicking with Multi-Channel Pipette and CSV
+# Cherrypicking with Multi-Channel Pipette and CSV - Part 2
 
 ### Author
 [Opentrons](https://opentrons.com/)
