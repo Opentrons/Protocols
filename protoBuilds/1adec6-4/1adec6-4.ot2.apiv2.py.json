@@ -1,5 +1,5 @@
 {
-    "content": "metadata = {\n    'protocolName': 'Transfer Small Molecules - CSV Input [4/7]',\n    'author': 'Chaz <chaz@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.9'\n}\n\n\ndef run(protocol):\n    [mnt20, transferCSV] = get_values(  # noqa: F821\n     'mnt20', 'transferCSV')\n\n    # Load Labware\n    tips = [\n        protocol.load_labware(\n            'opentrons_96_tiprack_20ul', s) for s in [4, 7, 10]\n            ]\n\n    p20 = protocol.load_instrument('p20_single_gen2', mnt20, tip_racks=tips)\n\n    srcPlate = protocol.load_labware('thermofast_96_wellplate_200ul', '1')\n    destPlate = protocol.load_labware('spl_96_wellplate_200ul_flat', '2')\n\n    # Parse CSV; Each line should be --> Src Well, Vol, Dest Well\n    data = [r.split(',') for r in transferCSV.strip().splitlines() if r][1:]\n\n    # Make transfers based on CSV\n    for line in data:\n        src, vol, dest = line\n        p20.transfer(\n            float(vol), srcPlate[src], destPlate[dest], mix_before=(5, 15))\n",
+    "content": "metadata = {\n    'protocolName': 'Transfer Small Molecules - CSV Input [4/7]',\n    'author': 'Chaz <chaz@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.9'\n}\n\n\ndef run(protocol):\n    [mnt20, pip, transferCSV] = get_values(  # noqa: F821\n     'mnt20', 'pip', 'transferCSV')\n\n    # Load Labware\n    tips = [\n        protocol.load_labware(\n            'opentrons_96_tiprack_20ul', s) for s in [4, 5, 7, 8, 10, 11]\n            ]\n\n    p20 = protocol.load_instrument('p20_single_gen2', mnt20, tip_racks=tips)\n\n    srcPlate = protocol.load_labware('thermofast_96_wellplate_200ul', '1')\n    destPlate = protocol.load_labware('spl_96_wellplate_200ul_flat', '2')\n\n    # Parse CSV; Each line should be --> Src Well, Vol, Dest Well\n    data = [r.split(',') for r in transferCSV.strip().splitlines() if r][1:]\n\n    # Make transfers based on CSV\n    for line in data:\n        src, vol, dest = line\n        p20.transfer(\n            float(vol), srcPlate[src], destPlate[dest],\n            mix_before=(5, 15), mix_after=(3, 20))\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -2258,7 +2258,7 @@
     ],
     "fields": [
         {
-            "label": "P20-Single Mount",
+            "label": "P20 Mount",
             "name": "mnt20",
             "options": [
                 {
@@ -2273,7 +2273,22 @@
             "type": "dropDown"
         },
         {
-            "default": "\nA1,3,A1\nA1,4,B1",
+            "label": "P20 Selection (Single or Multi)",
+            "name": "pip",
+            "options": [
+                {
+                    "label": "P20-Single",
+                    "value": "p20_single_gen2"
+                },
+                {
+                    "label": "P20-Multi",
+                    "value": "p20_multi_gen2"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": "\nA1,3,A1\nA1,4,A2",
             "label": "Transfer CSV",
             "name": "transferCSV",
             "type": "textFile"
@@ -2305,15 +2320,33 @@
             "type": "opentrons_96_tiprack_20ul"
         },
         {
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_tiprack_20ul"
+        },
+        {
             "name": "Opentrons 96 Tip Rack 20 \u00b5L on 7",
             "share": false,
             "slot": "7",
             "type": "opentrons_96_tiprack_20ul"
         },
         {
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_tiprack_20ul"
+        },
+        {
             "name": "Opentrons 96 Tip Rack 20 \u00b5L on 10",
             "share": false,
             "slot": "10",
+            "type": "opentrons_96_tiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 11",
+            "share": false,
+            "slot": "11",
             "type": "opentrons_96_tiprack_20ul"
         },
         {

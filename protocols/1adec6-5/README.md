@@ -8,6 +8,9 @@
 	* Assay
 
 ## Description
+**Updated**</br>
+This protocol has been updated based on feedback from the user.
+</br>
 This protocol is part five of a larger workflow. The entire workflow can be found below</br>
 
 Part 1: [Small Molecule Library Prep](./1adec6)</br>
@@ -18,11 +21,12 @@ Part 5: [Custom Supernatant Removal](./1adec6-5)</br>
 Part 6: [ProcartaPlex Protocol-1](./1adec6-6)</br>
 Part 7: [ProcartaPlex Protocol-2](./1adec6-7)</br>
 </br>
-In this protocol, the [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-Channel-electronic-pipette) transfers 220µL of supernatant from source plate containing cells to a destination plate. Once complete, the [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-Channel-electronic-pipette) will transfer 100µL of PBS to the original source plate.
+In this protocol, the [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-Channel-electronic-pipette) transfers 220µL of supernatant from source plate containing cells to a destination plate. Once complete, the [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-Channel-electronic-pipette) will transfer 100µL of Cell medium+10% PrestoBlue to the original source plate.
 
 Explanation of complex parameters below:
 * **P300-Multi Mount**: Select which mount the P300-Multi Pipette is attached to.
 * **Aspirate from Well Bottom Height**: Specify the height from the bottom of the well (in mm) that the pipette will aspirate supernatant (note: default height is 1mm from bottom).
+* **Perform 2nd aliquot**: Specify whether or not to perform a second aliquot (110µL transferred to plate in slot 5)
 
 
 ---
@@ -36,7 +40,7 @@ Explanation of complex parameters below:
 * [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-Channel-electronic-pipette)
 
 ### Reagents
-* PBS
+* Cell medium+10% PrestoBlue
 
 ---
 
@@ -45,6 +49,8 @@ Explanation of complex parameters below:
 </br>
 **Slot 4**: Destination Plate (SPL 96-Well Cell Culture Plate)</br>
 </br>
+**Slot 5**: **Optional**, Second Destination Plate (SPL 96-Well Cell Culture Plate)</br>
+</br>
 **Slot 6**: [[NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)</br>
 </br>
 **Slot 10**: [Opentrons 300µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)</br>
@@ -52,21 +58,22 @@ Explanation of complex parameters below:
 
 
 ### Reagent Setup
-1. Load PBS in **Column 2** of the [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
+1. Load Cell medium+10% PrestoBlue in **Column 2** of the [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
 
 
 ---
 
 ### Protocol Steps
 1. [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-Channel-electronic-pipette) will pick up tips.
-2. [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-Channel-electronic-pipette) will transfer 220µL of supernatant from Column 1 of the Source Plate to Column 2 of the Destination Plate.
-3. [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-Channel-electronic-pipette) will drop used tips in the waste bin.
-4. Steps 1-3 will be repeated for columns 2-10.
-5. [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-Channel-electronic-pipette) will pick up tips.
-6. [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-Channel-electronic-pipette) will mix PBS, then transfer 100µL of PBS to Column 1 of the Source Plate (dispensing at the top of the well).
-7. Step 6 will be repeated for columns 2-10 of the Source Plate.
-8. [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-Channel-electronic-pipette) will drop used tips in the waste bin.
-9. End of the protocol.
+2. [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-Channel-electronic-pipette) will transfer 220µL of supernatant from Column 1 of the Source Plate to Column 1 of the Destination Plate.
+3. If performing the second aliquot, the [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-Channel-electronic-pipette) will transfer 100µL of supernatant from Column 1 of the Source Plate to Column 1 of the Second Destination Plate.
+4. [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-Channel-electronic-pipette) will drop used tips in the waste bin.
+5. Steps 1-4 will be repeated for columns 2-10.
+6. [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-Channel-electronic-pipette) will pick up tips.
+7. [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-Channel-electronic-pipette) will mix Cell medium+10% PrestoBlue, then transfer 100µL of Cell medium+10% PrestoBlue to Column 1 of the Source Plate (dispensing at the top of the well).
+8. Step 7 will be repeated for columns 2-10 of the Source Plate.
+9. [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-Channel-electronic-pipette) will drop used tips in the waste bin.
+10. End of the protocol.
 
 ### Process
 1. Input your protocol parameters above.

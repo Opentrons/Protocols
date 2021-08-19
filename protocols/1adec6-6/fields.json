@@ -7,5 +7,14 @@
       {"label": "Left", "value": "left"},
       {"label": "Right", "value": "right"}
     ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Number of destination plates",
+    "name": "numPlates",
+    "options": [
+      {"label": "One", "value": "One"},
+      {"label": "Two", "value": "Two"}
+    ]
   }
 ]
