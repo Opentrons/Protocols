@@ -42,8 +42,10 @@ Explanation of complex parameters below:
 ---
 
 ### Deck Setup
-* Deck layout - example 384 plate populated with effector cells, random column chosen for effector cells. Note: only one column of effector cells should be loaded, but any column can be loaded. Effector cells should always be put in the 96 well plate from row A down (i.e. effector cell 1 should always be A1, A2, A3, A4,..., or A12).
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/581011/Screen+Shot+2021-08-19+at+11.37.48+AM.png)
+* Deck layout - example 384 plate populated with target cells, random column chosen for effector cells. Note: only one column of effector cells should be loaded, but any column can be loaded. Effector cells should always be put in the 96 well plate from row A down (i.e. effector cell 1 should always be A1, A2, A3, A4,..., or A12).
+
+
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/581011/Screen+Shot+2021-08-19+at+12.19.37+PM.png)
 
 ---
 
