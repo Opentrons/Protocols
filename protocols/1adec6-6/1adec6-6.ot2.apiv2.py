@@ -124,8 +124,8 @@ def run(protocol):
         m300.slow_tip_withdrawal(5, beads)
         m300.air_gap(20)
         m300.dispense(70, well.top(-4), rate=0.7)
-        m300.blow_out()
         m300.delay(1)
+        m300.blow_out()
     if numPlates == 'Two':
         for well in destWells2:
             m300.mix(3, 100, beads)
@@ -134,8 +134,8 @@ def run(protocol):
             m300.slow_tip_withdrawal(5, beads)
             m300.air_gap(20)
             m300.dispense(70, well.top(-4), rate=0.7)
-            m300.blow_out()
             m300.delay(1)
+            m300.blow_out()
 
     m300.drop_tip()
 
