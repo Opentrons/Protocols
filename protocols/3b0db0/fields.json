@@ -18,37 +18,37 @@
     "default": 5
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "Tube Aspiration Height for Single Channel (mm)",
     "name": "asp_height",
     "default": 12
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "Tube-Strip Aspiration Height for Multi Channel (mm)",
     "name": "asp_height_m20",
     "default": 2
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "Aspiration Rate Single Channel",
     "name": "asp_rate",
     "default": 0.5
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "Dispense Rate Single Channel",
     "name": "disp_rate",
     "default": 0.5
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "Aspiration Rate Multi Channel",
     "name": "asp_rate_m20",
     "default": 0.5
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "Dispense Rate Multi Channel",
     "name": "disp_rate_m20",
     "default": 0.5
