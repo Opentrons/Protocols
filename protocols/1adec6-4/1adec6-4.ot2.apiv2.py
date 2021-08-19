@@ -7,13 +7,13 @@ metadata = {
 
 
 def run(protocol):
-    [mnt20, transferCSV] = get_values(  # noqa: F821
-     'mnt20', 'transferCSV')
+    [mnt20, pip, transferCSV] = get_values(  # noqa: F821
+     'mnt20', 'pip', 'transferCSV')
 
     # Load Labware
     tips = [
         protocol.load_labware(
-            'opentrons_96_tiprack_20ul', s) for s in [4, 7, 10]
+            'opentrons_96_tiprack_20ul', s) for s in [4, 5, 7, 8, 10, 11]
             ]
 
     p20 = protocol.load_instrument('p20_single_gen2', mnt20, tip_racks=tips)
@@ -28,4 +28,5 @@ def run(protocol):
     for line in data:
         src, vol, dest = line
         p20.transfer(
-            float(vol), srcPlate[src], destPlate[dest], mix_before=(5, 15))
+            float(vol), srcPlate[src], destPlate[dest],
+            mix_before=(5, 15), mix_after=(3, 20))

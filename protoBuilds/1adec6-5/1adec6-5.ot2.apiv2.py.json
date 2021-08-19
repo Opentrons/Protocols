@@ -1,5 +1,5 @@
 {
-    "content": "metadata = {\n    'protocolName': 'Custom Supernatant Removal [5/7]',\n    'author': 'Chaz <chaz@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.9'\n}\n\n\ndef run(protocol):\n    [mnt300, cellHt] = get_values(  # noqa: F821\n     'mnt300', 'cellHt')\n\n    # load labware\n    tips = [\n        protocol.load_labware('opentrons_96_tiprack_300ul', '7')\n        ]\n\n    m300 = protocol.load_instrument('p300_multi_gen2', mnt300, tip_racks=tips)\n    srcPlate = protocol.load_labware('spl_96_wellplate_200ul_flat', '1')\n    destPlate = protocol.load_labware('spl_96_wellplate_200ul_flat', '4')\n    rsvr = protocol.load_labware('nest_12_reservoir_15ml', '6')\n\n    # Variables\n    pbs = rsvr['A2']\n    srcWells = srcPlate.rows()[0][:10]\n    destWells = destPlate.rows()[0][:10]\n\n    # Transfer 220uL supernatant from src to dest\n    m300.flow_rate.aspirate = 30\n    for src, dest in zip(srcWells, destWells):\n        m300.transfer(220, src.bottom(cellHt), dest, air_gap=20)\n\n    # Transfer 100uL PBS to src wells\n    m300.flow_rate.aspirate = 50\n    m300.pick_up_tip()\n    for well in srcWells:\n        m300.transfer(\n            100, pbs, well.top(-2),\n            mix_before=(2, 50), air_gap=20, new_tip='never'\n            )\n\n    m300.drop_tip()\n",
+    "content": "metadata = {\n    'protocolName': 'Custom Supernatant Removal [5/7]',\n    'author': 'Chaz <chaz@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.9'\n}\n\n\ndef run(protocol):\n    [mnt300, cellHt, transfer2] = get_values(  # noqa: F821\n     'mnt300', 'cellHt', 'transfer2')\n\n    # load labware\n    tips = [\n        protocol.load_labware('opentrons_96_tiprack_300ul', '7')\n        ]\n\n    m300 = protocol.load_instrument('p300_multi_gen2', mnt300, tip_racks=tips)\n    srcPlate = protocol.load_labware('spl_96_wellplate_200ul_flat', '1')\n    destPlate = protocol.load_labware('spl_96_wellplate_200ul_flat', '4')\n    if transfer2:\n        destPlate2 = protocol.load_labware('spl_96_wellplate_200ul_flat', '5')\n    rsvr = protocol.load_labware('nest_12_reservoir_15ml', '6')\n\n    # Variables\n    pbs = rsvr['A2']\n    srcWells = srcPlate.rows()[0][:10]\n    destWells = destPlate.rows()[0][:10]\n    dest2Wells = destPlate2.rows()[0][:10]\n\n    # Transfer 220uL supernatant from src to dest\n    m300.flow_rate.aspirate = 30\n    for src, dest, dest2 in zip(srcWells, destWells, dest2Wells):\n        m300.pick_up_tip()\n        m300.transfer(\n            220, src.bottom(cellHt), dest, air_gap=20, new_tip='never')\n        if transfer2:\n            m300.transfer(\n                110, src.bottom(cellHt), dest2, air_gap=20, new_tip='never')\n        m300.drop_tip()\n\n    # Transfer 100uL PBS to src wells\n    m300.flow_rate.aspirate = 50\n    m300.pick_up_tip()\n    for well in srcWells:\n        m300.transfer(100, pbs, well.top(-2), air_gap=20, new_tip='never')\n    m300.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -1146,10 +1146,25 @@
             "type": "dropDown"
         },
         {
-            "default": 3.0,
+            "default": 5.0,
             "label": "Aspirate from Well Bottom Height",
             "name": "cellHt",
             "type": "float"
+        },
+        {
+            "label": "Perform 2nd aliquot",
+            "name": "transfer2",
+            "options": [
+                {
+                    "label": "Yes",
+                    "value": 1
+                },
+                {
+                    "label": "No",
+                    "value": 0
+                }
+            ],
+            "type": "dropDown"
         }
     ],
     "instruments": [
@@ -1169,6 +1184,12 @@
             "name": "SPL Cell Culture Plate 96 Well Flat Bottom on 4",
             "share": false,
             "slot": "4",
+            "type": "spl_96_wellplate_200ul_flat"
+        },
+        {
+            "name": "SPL Cell Culture Plate 96 Well Flat Bottom on 5",
+            "share": false,
+            "slot": "5",
             "type": "spl_96_wellplate_200ul_flat"
         },
         {

@@ -20,15 +20,15 @@ def run(protocol):
     rsvr = protocol.load_labware('nest_12_reservoir_15ml', '4')
     finalPlates = [
         protocol.load_labware(
-            'spl_96_wellplate_200ul_flat', s) for s in [1, 2, 3]
+            'spl_96_wellplate_200ul_round', s) for s in [1, 2, 3]
         ][:numPlates]
 
     # Create variable
-    cells1 = rsvr['A3']
-    cells2 = rsvr['A4']
+    rsvr1 = rsvr.wells()[2:7:2]
+    rsvr2 = rsvr.wells()[3:8:2]
 
     # Perform transfer of cells from reservoir to
-    for plate in finalPlates:
+    for plate, cells1, cells2 in zip(finalPlates, rsvr1, rsvr2):
         m300.pick_up_tip()
         m300.mix(4, 200, cells1)
 
