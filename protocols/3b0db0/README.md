@@ -11,10 +11,12 @@
 This protocol distributes reliance One Step Mulitplex RT-qPCR supermix to each well on a cool (4C) 96 well plate. After, saliva samples from custom Opentrons tube racks are distributed to each well containing mastermix, with a mix step to follow.
 
 Explanation of complex parameters below:
-* `Number of columns`: Specify the number of columns that the OT-2 will distribute mastermix to on the 96 well plate (1-12).
+* `Number of columns`: Specify the number of samples (wholly divisible by 8) that the OT-2 will distribute mastermix to on the 96 well plate (1-96).
 * `Delay after aspiration`: Specify the number of seconds after aspirating for the pipette to pause to achieve full volumes.
 * `Mix repetitions`: Specify the number of times to mix the mastermix and saliva.
 * `Tube Aspiration Height`: Specify the aspiration height from the bottom of the tube (in mm) to aspirate from when transferring saliva in the final step.
+* `Tube-Strip Aspiration Height for Multi Channel`: Specify the aspiration height from the bottom of the tube strip that the multi-channel pipette visits.
+* `Aspiration/Dispense Rate`: Specify the aspiration/dispense rate for the single and multi-channel pipettes. A value of 1 returns the default speed, 0.5 would return half of the default speed, etc. 
 * `P20 Multi GEN2 Mount`: Specify the mount (left or right) of the P20 Multi GEN2 Pipette.
 * `P20 Single GEN2 Mount`: Specify the mount (left or right) of the P20 single GEN2 Pipette.
 
