@@ -8,6 +8,9 @@
 	* Assay
 
 ## Description
+**Updated**</br>
+This protocol has been updated based on feedback from the user.
+</br>
 This protocol is part six of a larger workflow. The entire workflow can be found below</br>
 
 Part 1: [Small Molecule Library Prep](./1adec6)</br>
@@ -22,13 +25,14 @@ This protocol is the first half of a custom, ProcartaPlex protocol. In this prot
 
 Explanation of complex parameters below:
 * **P300-Multi Mount**: Select which mount the P300-Multi Pipette is attached to.
+* **Number of destination plates**: Select how many destination plates will be used in the protocol (1 or 2).
 
 
 ---
 
 ### Labware
 * [Opentrons 300µL Tipracks](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
-* SPL 96-Well Cell Culture Plates
+* ProcartaPlex 96-Well Cell Culture Plates
 * [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
 
 ### Pipettes
@@ -41,15 +45,21 @@ Explanation of complex parameters below:
 ---
 
 ### Deck Setup
-**Slot 1**: Destination Plate (SPL 96-Well Cell Culture Plate)</br>
+**Slot 1**: **Optional**, Destination Plate 2 (ProcartaPlex 96-Well Cell Culture Plate)</br>
 </br>
-**Slot 4**: Sample Plate (SPL 96-Well Cell Culture Plate)</br>
+**Slot 2**: **Optional**, Sample Plate 2 (ProcartaPlex 96-Well Cell Culture Plate)</br>
 </br>
-**Slot 5**: Standards Plate (SPL 96-Well Cell Culture Plate)</br>
+**Slot 3**: [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)</br>
 </br>
-**Slot 6**: [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)</br>
+**Slot 4**: Destination Plate 1 (ProcartaPlex 96-Well Cell Culture Plate)</br>
+</br>
+**Slot 5**: Sample Plate 1 (ProcartaPlex 96-Well Cell Culture Plate)</br>
+</br>
+**Slot 6**: Standards Plate (ProcartaPlex 96-Well Cell Culture Plate)</br>
 </br>
 **Slot 7**: [Opentrons 300µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)</br>
+</br>
+**Slot 8**: [Opentrons 300µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)</br>
 </br>
 **Slot 10**: [Opentrons 300µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)</br>
 </br>
@@ -57,6 +67,7 @@ Explanation of complex parameters below:
 ### Reagent Setup
 1. Load **Magnetic Beads** in **Column 1** of the [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
 2. Load **Wash Buffer** in **Column 2** of the [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
+3. If using two destination plates, Load **Wash Buffer** in **Column 3** of the [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
 
 
 ---
@@ -66,7 +77,7 @@ Explanation of complex parameters below:
 2. [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-Channel-electronic-pipette) will transfer 50µL of Magnetic Beads from Column 1 of the [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml) to all wells of the Destination Plate (dispensing from the top of the well).
 3. [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-Channel-electronic-pipette) will drop used tips in the waste bin.
 4. User will be prompted to remove Destination Plate for off-deck processing
-5. Once returned, for each transfer between the samples (Columns 1-10, Sample Plate) and standards (Columns 1-2, Standards Plate) to Columns 1-12 of the Destination Plate, the [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-Channel-electronic-pipette) will pick up tips, mix in the source well, transfer 50µL, then dispose of used tips in the waste bin.
+5. Once returned, for each transfer between the samples (Columns 1-10, Sample Plate) and standards (Columns 1, Standards Plate, two times) to Columns 1-12 of the Destination Plate, the [P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-Channel-electronic-pipette) will pick up tips, mix in the source well, transfer 50µL, then dispose of used tips in the waste bin. **Optional**: If using two destination plates, samples will be transferred from the second sample plate (Columns 1-10, deck slot 2) and two times from Column 2 of the Standards Plate.
 6. User will be prompted to remove Destination Plate for off-deck processing and overnight incubation (end of this protocol).
 
 ### Process

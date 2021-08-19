@@ -8,6 +8,9 @@
 	* Assay
 
 ## Description
+**Updated**</br>
+This protocol has been updated based on feedback from the user.
+</br>
 This protocol is part four of a larger workflow. The entire workflow can be found below</br>
 
 Part 1: [Small Molecule Library Prep](./1adec6)</br>
@@ -21,16 +24,18 @@ Part 7: [ProcartaPlex Protocol-2](./1adec6-7)</br>
 In this protocol, a CSV is used to dictate the volume and destination of liquid transfers using the [P20 Single-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/Single-Channel-electronic-pipette).
 
 Explanation of complex parameters below:
-* **P20-Single Mount**: Select which mount the P20-Single Pipette is attached to.
+* **P20 Mount**: Select which mount the P20 Pipette is attached to.
+* **P20 Selection (Single or Multi)**: Select which pipette is used (please see note below)
 * **Transfer CSV**: Upload the CSV containing the liquid transfers. The CSV should be formatted as follows:</br>
 </br>
 
-| Source Well | Volume | Destination Well |</br>
-| ----------- | ------ | ---------------- |</br>
-| A1          | 3      | C2               |</br>
-| A1          | 2      | B4               |</br>
-| A2          | 5      | D7               |</br>
+| Source Well | Volume | Destination Well |
+| ----------- | ------ | ---------------- |
+| A1          | 3      | C2               |
+| A1          | 2      | B4               |
+| A2          | 5      | D7               |
 
+**Note**: If using the [P20 Multi-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-Channel-electronic-pipette), you should only use Row A when selecting a *destination well* in the CSV.
 
 ---
 
@@ -40,7 +45,7 @@ Explanation of complex parameters below:
 * SPL 96-Well Cell Culture Plates
 
 ### Pipettes
-* [P20 Single-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/Single-Channel-electronic-pipette)
+* [P20 Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/Single-Channel-electronic-pipette)
 
 ### Reagents
 * Small Molecule Library
@@ -54,9 +59,15 @@ Explanation of complex parameters below:
 </br>
 **Slot 4**: [Opentrons 20µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-20ul-tips)</br>
 </br>
+**Slot 5**: [Opentrons 20µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-20ul-tips)</br>
+</br>
 **Slot 7**: [Opentrons 20µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-20ul-tips)</br>
 </br>
+**Slot 8**: [Opentrons 20µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-20ul-tips)</br>
+</br>
 **Slot 10**: [Opentrons 20µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-20ul-tips)</br>
+</br>
+**Slot 11**: [Opentrons 20µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-20ul-tips)</br>
 </br>
 
 
@@ -64,10 +75,10 @@ Explanation of complex parameters below:
 
 ### Protocol Steps
 For each of the lines in the CSV, the following steps will occur:
-1. [P20 Single-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/Single-Channel-electronic-pipette) will pick up a tip.
-2. [P20 Single-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/Single-Channel-electronic-pipette) will mix library in corresponding column.
-3. [P20 Single-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/Single-Channel-electronic-pipette) will transfer specified volume from the well of the source plate to the well of the destination plate listed in the CSV.
-4. [P20 Single-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/Single-Channel-electronic-pipette) will drop used tips in the waste bin.
+1. [P20 Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/Single-Channel-electronic-pipette) will pick up a tip.
+2. [P20 Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/Single-Channel-electronic-pipette) will mix library in corresponding column.
+3. [P20 Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/Single-Channel-electronic-pipette) will transfer specified volume from the well of the source plate to the well of the destination plate listed in the CSV.
+4. [P20 Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/Single-Channel-electronic-pipette) will drop used tips in the waste bin.
 5. Steps 1-4 will repeat for each line in the CSV.
 6. End of the protocol.
 

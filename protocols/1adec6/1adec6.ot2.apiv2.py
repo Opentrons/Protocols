@@ -7,8 +7,10 @@ metadata = {
 
 
 def run(protocol):
-    [mnt20, numPlates] = get_values(  # noqa: F821
-     'mnt20', 'numPlates')
+    [mnt20, numPlates, pbsVol, dmsoVol,
+     dilVol, destDilVol, libVol] = get_values(  # noqa: F821
+     'mnt20', 'numPlates', 'pbsVol', 'dmsoVol',
+     'dilVol', 'destDilVol', 'libVol')
 
     # load labware
     tips = [
@@ -22,52 +24,52 @@ def run(protocol):
     destPlate = protocol.load_labware('thermofast_96_wellplate_200ul', '5')
     finalPlates = [
         protocol.load_labware(
-            'spl_96_wellplate_200ul_flat', s) for s in [1, 2, 3]
+            'thermofast_96_wellplate_200ul', s) for s in [1, 2, 3]
         ][:numPlates]
 
     # Create variables
     dmso = rsvr['A1']
     pbs = rsvr['A2']
 
-    # Add 10µL of PBS to columns 1-4 + A5, B5
+    # Add pbsVol of PBS to columns 1-4 + A5, B5
     m20.pick_up_tip()
 
     for dest in destPlate.rows()[0][:4]:
-        m20.transfer(10, pbs, dest, new_tip='never')
+        m20.transfer(pbsVol, pbs, dest, new_tip='never')
 
     m20.drop_tip()
 
     m20.pick_up_tip(tips[0]['G2'])
-    m20.transfer(10, pbs, destPlate['A5'], new_tip='never')
+    m20.transfer(pbsVol, pbs, destPlate['A5'], new_tip='never')
     m20.drop_tip()
 
-    # Add 20µL of DMSO to columns 6-10 (neglecting F-H in 10)
+    # Add dmsoVol of DMSO to columns 6-10 (neglecting F-H in 10)
 
     m20.pick_up_tip()
 
     for dest in destPlate.rows()[0][5:9]:
-        m20.transfer(20, dmso, dest, new_tip='never')
+        m20.transfer(dmsoVol, dmso, dest, new_tip='never')
 
     m20.drop_tip()
 
     m20.pick_up_tip(tips[0]['E2'])
-    m20.transfer(20, dmso, destPlate['A10'], new_tip='never')
+    m20.transfer(dmsoVol, dmso, destPlate['A10'], new_tip='never')
     m20.drop_tip()
 
-    # Transfer 20uL from source to destination
+    # Transfer dilution volume from source to destination
     for src, dest in zip(srcPlate.rows()[0][:4], destPlate.rows()[0][:4]):
-        m20.transfer(20, src, dest, mix_after=(4, 20))
+        m20.transfer(dilVol, src, dest, mix_after=(4, 20))
 
     m20.pick_up_tip(tips[0]['C2'])
-    m20.transfer(20, srcPlate['A5'], destPlate['A5'],
+    m20.transfer(dilVol, srcPlate['A5'], destPlate['A5'],
                  mix_after=(4, 20), new_tip='never')
     m20.drop_tip()
 
     for src, dest in zip(srcPlate.rows()[0][5:9], destPlate.rows()[0][5:9]):
-        m20.transfer(20, src, dest, mix_after=(4, 20))
+        m20.transfer(destDilVol, src, dest, mix_after=(4, 20))
 
     m20.pick_up_tip(tips[0]['A2'])
-    m20.transfer(20, srcPlate['A5'], destPlate['A10'],
+    m20.transfer(destDilVol, srcPlate['A5'], destPlate['A10'],
                  mix_after=(4, 20), new_tip='never')
     m20.drop_tip()
 
@@ -81,8 +83,8 @@ def run(protocol):
     for i in range(10):
         m20.pick_up_tip()
         for plate in finalPlates:
-            m20.aspirate(10, destPlate.rows()[0][i])
-            m20.dispense(10, plate.rows()[0][i])
+            m20.aspirate(libVol, destPlate.rows()[0][i])
+            m20.dispense(libVol, plate.rows()[0][i])
         m20.drop_tip()
 
     protocol.comment('\nProtocol complete!')

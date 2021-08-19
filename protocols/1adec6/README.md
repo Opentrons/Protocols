@@ -8,7 +8,7 @@
 	* Assay
 
 ## Description
-**Updated**
+**Updated**</br>
 This protocol has been updated based on feedback from the user.
 
 This protocol now utilizes the [P20 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette) (instead of the P300), uses additional plates, and has modified liquid handling. The steps of this updated version can be found below.
@@ -24,30 +24,34 @@ Part 7: [ProcartaPlex Protocol-2](./1adec6-7)</br>
 Explanation of complex parameters below:
 * **P20-Multi Mount**: Select which mount the P20-Multi Pipette is attached to.
 * **Number of Destination Plates**: Select the number of destination plates.
+* **Destination plate PBS volume (µl)**: Specify the volume of PBS to transfer to Destination plate (step 1).
+* **Destination plate 66% DMSO volume (µl)**: Specify the volume of 66% DMSO to transfer to Destination plate (step 2).
+* **Source plate volume for dilution (µl)**: Specify the volume for first dilution transfer (step 3).
+* **Destination plate volume for dilution (µl)**: Specify the volume for second dilution transfer (step 5).
+* **Library aliquot volume (µl)**: Specify the volume for the library aliquot (step 7).
 
 ---
 
 ### Labware
 * [Opentrons 20µL Tipracks](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-20ul-tips)
 * [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
-* SPL 96-Well Cell Culture Plates
 * Thermo-Fast 96-Well, Fully Skirted Plates
 
 ### Pipettes
 * [P20 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)
 
 ### Reagents
-* DMSO (Column 1 of 12-Well Reservoir)
+* 66% DMSO (Column 1 of 12-Well Reservoir)
 * PBS (Column 2 of 12-Well Reservoir)
 
 ---
 
 ### Deck Setup
-**Slot 1**: Aliquot Plate 1 (SPL 96-Well Cell Culture Plat)</br>
+**Slot 1**: Aliquot Plate 1 (Thermo-Fast 96-Well, Fully Skirted Plates)</br>
 </br>
-**Slot 2**: Aliquot Plate 2 (SPL 96-Well Cell Culture Plate)</br>
+**Slot 2**: Aliquot Plate 2 (Thermo-Fast 96-Well, Fully Skirted Plates)</br>
 </br>
-**Slot 3**: Aliquot Plate 3 (SPL 96-Well Cell Culture Plate)</br>
+**Slot 3**: Aliquot Plate 3 (Thermo-Fast 96-Well, Fully Skirted Plates)</br>
 </br>
 **Slot 4**: Sample Plate (Thermo-Fast 96-Well, Fully Skirted Plate)</br>
 </br>
@@ -62,24 +66,24 @@ Explanation of complex parameters below:
 
 
 ### Reagent Setup
-1. Load DMSO in **Column 1** of the [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
+1. Load 66% DMSO in **Column 1** of the [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
 2. Load PBS in **Column 2** of the [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
 
 ---
 
 ### Protocol Steps
-1. Destination plate, [P20 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette): Add 10 µl PBS ([NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml), Row 2) into columns 1-4 rows A-H, column 5 rows A-B (will access new tips for last transfer).
-2. Destination plate, [P20 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette): Add 20 µl 66% DMSO ([NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml), Row 1) into columns 6-9 rows A-H, column 10 rows A-B (will access new tips for last transfer).
-3. Source plate, [P20 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette): Take 20 µl of column 1-4 rows A-H, column 5 rows A-B, and transfer into the destination plate in the same orientation (columns 1-4 rows A-H, column 5 rows A-B). Replace tips between columns.
+1. Destination plate, [P20 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette): Add **Destination plate PBS volume** of PBS ([NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml), Row 2) into columns 1-4 rows A-H, column 5 rows A-B (will access new tips for last transfer).
+2. Destination plate, [P20 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette): Add **Destination plate 66% DMSO volume** of 66% DMSO ([NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml), Row 1) into columns 6-9 rows A-H, column 10 rows A-B (will access new tips for last transfer).
+3. Source plate, [P20 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette): Take **Source plate volume for dilution** of column 1-4 rows A-H, column 5 rows A-B, and transfer into the destination plate in the same orientation (columns 1-4 rows A-H, column 5 rows A-B). Replace tips between columns.
 4. Destination plate, [P20 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette): Mix columns 1-4, 5A-B. pipette 20 µl up & down 4 times. Replace tips between columns.
-5. Destination plate, [P20 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette): Take 10 µl of column 1-4 rows A-H, column 5 rows A-B, and transfer into column 6-9 rows A-H, column 10 rows A-B (column 1->6, 2->7, 3->8, 4->9, 5->10). Replace tips between columns.
+5. Destination plate, [P20 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette): Take **Destination plate volume for dilution** of column 6-9 rows A-H, column 10 rows A-B, and transfer into column 6-9 rows A-H, column 10 rows A-B. Replace tips between columns.
 6. Destination plate, [P20 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette): Mix columns 5-9, 10A-B. pipette 20 µl up & down 4 times. Replace tips between columns.
 7. Aliquot the library plate (columns 1-10, rows A-H) into 2-3 empty SPL 96-Well Cell Culture Plates: [P20 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette).
-- Take 10 µl of column A rows A-H of the prepared library plate and add to
+- Take **Library aliquot volume** of column A rows A-H of the prepared library plate and add to
 column A rows A-H in empty plate 1
-- Take 10 µl of column A rows A-H of the prepared library plate and add to
+- Take **Library aliquot volume** of column A rows A-H of the prepared library plate and add to
 column A rows A-H in empty plate 2 (if using)
-- Take 10 µl of column A rows A-H of the prepared library plate and add to
+- Take **Library aliquot volume** of column A rows A-H of the prepared library plate and add to
 column A rows A-H in empty plate 3 (if using)
 Replace tips and repeat these steps for columns 2-10 (Replace tips between columns)
 8. End of the protocol.
