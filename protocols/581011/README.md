@@ -45,7 +45,8 @@ Explanation of complex parameters below:
 
 ### Deck Setup
 * Deck layout with 6 target cells in the reservoir on Slot 5.
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/581011/Screen+Shot+2021-08-19+at+12.19.37+PM.png)
+
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/581011/Screen+Shot+2021-08-19+at+11.37.48+AM.png)
 
 ---
 
