@@ -1,5 +1,5 @@
 {
-    "content": "metadata = {\n    'protocolName': 'ProcartaPlex Protocol-1 [6/7]',\n    'author': 'Chaz <chaz@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.9'\n}\n\n\ndef run(protocol):\n    [mnt300] = get_values(  # noqa: F821\n     'mnt300')\n\n    # load labware\n    tips = [\n        protocol.load_labware(\n            'opentrons_96_filtertiprack_200ul', s) for s in [7, 10]\n        ]\n\n    m300 = protocol.load_instrument('p300_multi_gen2', mnt300, tip_racks=tips)\n    sampPlate = protocol.load_labware('spl_96_wellplate_200ul_flat', '4')\n    standardsPlate = protocol.load_labware('spl_96_wellplate_200ul_flat', '5')\n    destPlate = protocol.load_labware('spl_96_wellplate_200ul_flat', '1')\n    rsvr = protocol.load_labware('nest_12_reservoir_15ml', '6')\n\n    # Variables\n    beads, washBuffer = rsvr.wells()[:2]\n\n    destWells = destPlate.rows()[0]\n    sampsAndStandards = sampPlate.rows()[0][:10]+standardsPlate.rows()[0]\n\n    # create functions\n    def msg_with_alert(msg, time=6):\n        \"\"\"\n        This function will flash the on-deck lights, once per 2 seconds\n        and display the 'msg' in the pause step in the OT app.\n        Param msg: Message to be included in the pause step.\n        Param time: Number of seconds to flash lights\n        \"\"\"\n        for _ in range(time):\n            protocol.set_rail_lights(not protocol.rail_lights_on)\n            protocol.delay(seconds=1)\n\n        protocol.pause(msg)\n\n    def wash(src):\n        \"\"\"\n        This function contains all of the steps neeeded for this custom wash.\n        The pipette will pick up tips and using the same set of tips,\n        transfer 150uL of Wash Buffer to all of the wells in the destination\n        plate (top of the well to prevent cross contamination).\n        Once complete, the pipette will trash the tips and the OT-2 will begin\n        blinking to signify that the user can remove the plate for off deck\n        processing.\n        Param src: Location of wash buffer (should be well)\n        \"\"\"\n        m300.pick_up_tip()\n        for well in destWells:\n            m300.transfer(\n                150, src, well.top(-2), new_tip='never', air_gap=30)\n        m300.drop_tip()\n\n        msg_with_alert(\"\"\"\n        Wash Buffer added. Please remove plate for off robot processing.\n        When complete, please return plate to deck and click RESUME.\n        \"\"\")\n\n    # Add 50uL of beads to all the wells in dest plate\n    protocol.comment('Adding 50uL of beads to wells...')\n\n    m300.pick_up_tip()\n\n    for well in destWells:\n        m300.transfer(\n            50, beads, well.top(-4), mix_before=(3, 100),\n            air_gap=20, new_tip='never'\n            )\n\n    m300.drop_tip()\n\n    msg_with_alert(\"\"\"\n    Please remove plate and incubate on magnet for 2 minutes.\n    Once complete, please replace plate on deck and click RESUME\n    \"\"\")\n\n    # Wash 1\n    wash(washBuffer)\n    msg_with_alert(\"\"\"\n    Please add Sample Plate and Standard Plate if not on the deck.\n    When ready, click RESUME\n    \"\"\")\n\n    # Transfer samples and standards to destination plate\n    protocol.comment('Transferring 50uL of sample and standards to wells...')\n\n    for src, dest in zip(sampsAndStandards, destWells):\n        m300.transfer(50, src, dest, mix_before=(3, 50), air_gap=20)\n\n    msg_with_alert(\"\"\"\n    Please remove plate and incubate for 30 minutes on rotator.\n    Afterwards, please incubate overnight at 4 deg C.\n    When ready to resume, begin PROTOCOL NAME PART 2\n    \"\"\")\n",
+    "content": "from types import MethodType\n\nmetadata = {\n    'protocolName': 'ProcartaPlex Protocol-1 [6/7]',\n    'author': 'Chaz <chaz@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.9'\n}\n\n\ndef run(protocol):\n    [mnt300, numPlates] = get_values(  # noqa: F821\n     'mnt300', 'numPlates')\n\n    # load labware\n    tips = [\n        protocol.load_labware(\n            'opentrons_96_filtertiprack_200ul', s) for s in [7, 8, 10]\n        ]\n\n    m300 = protocol.load_instrument('p300_multi_gen2', mnt300, tip_racks=tips)\n    sampPlate = protocol.load_labware('spl_96_wellplate_200ul_flat', '5')\n    standardsPlate = protocol.load_labware('spl_96_wellplate_200ul_flat', '6')\n    destPlate = protocol.load_labware('spl_96_wellplate_200ul_flat', '4')\n    rsvr = protocol.load_labware('nest_12_reservoir_15ml', '3')\n\n    # Variables\n    beads, washBuffer = rsvr.wells()[:2]\n\n    destWells = destPlate.rows()[0]\n    sampsAndStandards = sampPlate.rows()[0][:10]\n    for _ in range(2):\n        sampsAndStandards.append(standardsPlate['A1'])\n\n    if numPlates == 'Two':\n        destPlate2 = protocol.load_labware('spl_96_wellplate_200ul_flat', '1')\n        sampPlate2 = protocol.load_labware('spl_96_wellplate_200ul_flat', '2')\n        washBuffer2 = rsvr.wells()[2]\n        destWells2 = destPlate2.rows()[0]\n        sampsAndStandards2 = sampPlate2.rows()[0][:10]\n        for _ in range(2):\n            sampsAndStandards2.append(standardsPlate['A2'])\n\n    def slow_tip_withdrawal(self, speed_limit, well_location, to_center=False):\n        if self.mount == 'right':\n            axis = 'A'\n        else:\n            axis = 'Z'\n        protocol.max_speeds[axis] = speed_limit\n        if to_center is False:\n            self.move_to(well_location.top())\n        else:\n            self.move_to(well_location.center())\n        protocol.max_speeds[axis] = None\n\n    def delay(self, delay_time):\n        protocol.delay(seconds=delay_time)\n\n    # bind methods to pipette\n    for method in [delay, slow_tip_withdrawal]:\n        setattr(m300, method.__name__, MethodType(method, m300))\n\n    # create functions\n    def msg_with_alert(msg, time=6):\n        \"\"\"\n        This function will flash the on-deck lights, once per 2 seconds\n        and display the 'msg' in the pause step in the OT app.\n        Param msg: Message to be included in the pause step.\n        Param time: Number of seconds to flash lights\n        \"\"\"\n        for _ in range(time):\n            protocol.set_rail_lights(not protocol.rail_lights_on)\n            protocol.delay(seconds=1)\n\n        protocol.pause(msg)\n\n    def wash(src):\n        \"\"\"\n        This function contains all of the steps neeeded for this custom wash.\n        The pipette will pick up tips and using the same set of tips,\n        transfer 150uL of Wash Buffer to all of the wells in the destination\n        plate (top of the well to prevent cross contamination).\n        Once complete, the pipette will trash the tips and the OT-2 will begin\n        blinking to signify that the user can remove the plate for off deck\n        processing.\n        Param src: Location of wash buffer (should be well)\n        \"\"\"\n        m300.pick_up_tip()\n        for well in destWells:\n            m300.aspirate(30, src.top())\n            m300.aspirate(150, src)\n            m300.delay(1)\n            m300.slow_tip_withdrawal(10, src)\n            m300.air_gap(20)\n            m300.dispense(200, well.top(-2))\n            m300.blow_out()\n            m300.delay(1)\n        if numPlates == 'Two':\n            for well in destWells2:\n                m300.aspirate(30, washBuffer2.top())\n                m300.aspirate(150, washBuffer2)\n                m300.delay(1)\n                m300.slow_tip_withdrawal(10, washBuffer2)\n                m300.air_gap(20)\n                m300.dispense(200, well.top(-2))\n                m300.blow_out()\n                m300.delay(1)\n        m300.drop_tip()\n\n        msg_with_alert(\"\"\"\n        Wash Buffer added. Please remove plate for off robot processing.\n        When complete, please return plate to deck and click RESUME.\n        \"\"\")\n\n    # Add 50uL of beads to all the wells in dest plate\n    protocol.comment('Adding 50uL of beads to wells...')\n\n    m300.pick_up_tip()\n\n    for well in destWells:\n        m300.mix(3, 100, beads)\n        m300.aspirate(50, beads, rate=0.7)\n        m300.delay(2)\n        m300.slow_tip_withdrawal(5, beads)\n        m300.air_gap(20)\n        m300.dispense(70, well.top(-4), rate=0.7)\n        m300.blow_out()\n        m300.delay(1)\n    if numPlates == 'Two':\n        for well in destWells2:\n            m300.mix(3, 100, beads)\n            m300.aspirate(50, beads, rate=0.7)\n            m300.delay(2)\n            m300.slow_tip_withdrawal(5, beads)\n            m300.air_gap(20)\n            m300.dispense(70, well.top(-4), rate=0.7)\n            m300.blow_out()\n            m300.delay(1)\n\n    m300.drop_tip()\n\n    msg_with_alert(\"\"\"\n    Please remove plate and incubate on magnet for 2 minutes.\n    Once complete, please replace plate on deck and click RESUME\n    \"\"\")\n\n    # Wash 1\n    wash(washBuffer)\n    msg_with_alert(\"\"\"\n    Please add Sample Plate and Standard Plate if not on the deck.\n    When ready, click RESUME\n    \"\"\")\n\n    # Transfer samples and standards to destination plate\n    protocol.comment('Transferring 50uL of sample and standards to wells...')\n\n    for src, dest in zip(sampsAndStandards, destWells):\n        m300.pick_up_tip()\n        m300.mix(3, 50, src)\n        m300.aspirate(50, src, rate=0.7)\n        m300.delay(2)\n        m300.slow_tip_withdrawal(5, src)\n        m300.air_gap(20)\n        m300.dispense(70, dest, rate=0.7)\n        m300.delay(1)\n        m300.slow_tip_withdrawal(10, dest)\n        m300.drop_tip()\n\n    if numPlates == \"Two\":\n        for src, dest in zip(sampsAndStandards2, destWells2):\n            m300.pick_up_tip()\n            m300.mix(3, 50, src)\n            m300.aspirate(50, src, rate=0.7)\n            m300.delay(2)\n            m300.slow_tip_withdrawal(5, src)\n            m300.air_gap(20)\n            m300.dispense(70, dest, rate=0.7)\n            m300.delay(1)\n            m300.slow_tip_withdrawal(10, dest)\n            m300.drop_tip()\n\n    msg_with_alert(\"\"\"\n    Please remove plate and incubate for 30 minutes on rotator.\n    Afterwards, please incubate overnight at 4 deg C.\n    When ready to resume, begin PROTOCOL NAME PART 2\n    \"\"\")\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -1144,6 +1144,21 @@
                 }
             ],
             "type": "dropDown"
+        },
+        {
+            "label": "Number of destination plates",
+            "name": "numPlates",
+            "options": [
+                {
+                    "label": "One",
+                    "value": "One"
+                },
+                {
+                    "label": "Two",
+                    "value": "Two"
+                }
+            ],
+            "type": "dropDown"
         }
     ],
     "instruments": [
@@ -1154,10 +1169,10 @@
     ],
     "labware": [
         {
-            "name": "SPL Cell Culture Plate 96 Well Flat Bottom on 1",
+            "name": "NEST 12 Well Reservoir 15 mL on 3",
             "share": false,
-            "slot": "1",
-            "type": "spl_96_wellplate_200ul_flat"
+            "slot": "3",
+            "type": "nest_12_reservoir_15ml"
         },
         {
             "name": "SPL Cell Culture Plate 96 Well Flat Bottom on 4",
@@ -1172,15 +1187,21 @@
             "type": "spl_96_wellplate_200ul_flat"
         },
         {
-            "name": "NEST 12 Well Reservoir 15 mL on 6",
+            "name": "SPL Cell Culture Plate 96 Well Flat Bottom on 6",
             "share": false,
             "slot": "6",
-            "type": "nest_12_reservoir_15ml"
+            "type": "spl_96_wellplate_200ul_flat"
         },
         {
             "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 7",
             "share": false,
             "slot": "7",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 8",
+            "share": false,
+            "slot": "8",
             "type": "opentrons_96_filtertiprack_200ul"
         },
         {
