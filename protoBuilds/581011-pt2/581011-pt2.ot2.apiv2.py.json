@@ -1,0 +1,135 @@
+{
+    "content": "import math\n\nmetadata = {\n    'protocolName': 'Cherrypicking with Multi-Channel Pipette and CSV-Part 2',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.10'\n}\n\n\ndef run(ctx):\n\n    [csv_samp, vol_effector_cell, pre_mix, mix_asp_height,\n     premix_reps, mix_vol, mix_rate,\n     asp_height, disp_height, asp_rate,\n        disp_rate, m300_mount] = get_values(  # noqa: F821\n        \"csv_samp\", \"vol_effector_cell\", \"pre_mix\",\n        \"mix_asp_height\", \"premix_reps\", \"mix_vol\", \"mix_rate\",\n        \"asp_height\", \"disp_height\", \"asp_rate\", \"disp_rate\", \"m300_mount\")\n\n    # load labware\n    plate = ctx.load_labware('corning_384_wellplate_112ul_flat', '4')\n    effector_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '5')\n    tiprack = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)\n               for slot in ['7']]\n\n    # load instrument\n    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,\n                               tip_racks=tiprack)\n\n    m300.well_bottom_clearance.aspirate = asp_height\n    m300.well_bottom_clearance.dispense = disp_height\n    m300.flow_rate.aspirate = asp_rate*m300.flow_rate.aspirate\n    m300.flow_rate.dispense = disp_rate*m300.flow_rate.dispense\n\n    # plate map excluding 1st column and row\n    plate_map = [[val.strip() for val in line.split(',')][1:]\n                 for line in csv_samp.splitlines()\n                 if line.split(',')[0].strip()][1:]\n\n    # find the num channels per pickup\n    letter_to_num = {'A': '1', 'B': '2', 'C': '3', 'D': '4',\n                     'E': '5', 'F': '6', 'G': '7', 'H': '8'}\n    effector_numbers = []\n\n    for row in plate_map:\n        for well in row:\n            if '/' in well:\n                elements = well.split('/')\n                if elements[1] == '0' or elements[0] == '0':\n                    continue\n                else:\n                    effector_numbers.append(int(letter_to_num[elements[1][0]]))\n\n    max_effector_number = max(effector_numbers)\n    num_channels_per_pickup = max_effector_number\n    num_channels_per_pickup = 4\n    tips_ordered = [\n        tip for rack in tiprack\n        for row in rack.rows()[\n            len(rack.rows())-num_channels_per_pickup::\n            -1*num_channels_per_pickup]\n        for tip in row]\n\n    # pick up function\n    tip_count = 0\n\n    def pickup():\n        nonlocal tip_count\n        m300.pick_up_tip(tips_ordered[tip_count])\n        tip_count += 1\n\n    # find start well\n    start_well = 0\n    for row in plate_map:\n        for well in row:\n            if '/' in well:\n                break\n            start_well += 1\n        if '/' in well:\n            break\n    start_row = math.floor(start_well/24)\n\n    # find effecot cell column\n    for row in plate_map:\n        for well in row:\n            if '/' in well:\n                left_and_right = well.split('/')\n                right = left_and_right[1]\n                if 'A' in right:\n                    effector_column_name = right\n                    break\n\n    # transfer effector cell\n    num_wells_to_dispense = 0\n    for well in plate_map[start_row]:\n        if 'x' not in well or 'X' not in well:\n            num_wells_to_dispense += 1\n    wells_by_row = [well for row in plate.rows() for well in row]\n\n    def check_volume(counter, tot_vol, source_well):\n        if m300.current_volume < vol_effector_cell:\n            if m300.current_volume > 0:\n                m300.dispense(m300.current_volume, source_well)\n            if counter != len(plate_map[start_row])-1:\n                if pre_mix:\n                    m300.mix(premix_reps, mix_vol,\n                             source_well.bottom(mix_asp_height), rate=mix_rate)\n                m300.aspirate(tot_vol if tot_vol < 200 else\n                              200-0.15*vol_effector_cell, source_well)\n\n    pickup()\n    tot_vol = vol_effector_cell*num_wells_to_dispense*2+20\n\n    source_well = effector_plate.wells_by_name()[effector_column_name]\n\n    if vol_effector_cell >= 100:\n        for j, well in enumerate(plate_map[start_row]):\n            if 'x' in well or 'X' in well:\n                if j > 0:\n                    start_well += 1\n                continue\n\n            if pre_mix:\n                m300.mix(premix_reps, mix_vol,\n                         source_well.bottom(mix_asp_height),\n                         rate=mix_rate)\n            m300.aspirate(vol_effector_cell, source_well)\n            m300.dispense(vol_effector_cell, wells_by_row[start_well])\n            if pre_mix:\n                m300.mix(premix_reps, mix_vol,\n                         source_well.bottom(mix_asp_height),\n                         rate=mix_rate)\n            m300.aspirate(vol_effector_cell,\n                          source_well)\n            m300.dispense(vol_effector_cell,\n                          wells_by_row[start_well+24])\n            start_well += 1\n\n    else:\n\n        for j, well in enumerate(plate_map[start_row]):\n            if 'x' in well or 'X' in well:\n                if j > 0:\n                    start_well += 1\n                continue\n\n            if m300.current_volume < vol_effector_cell:\n                if pre_mix:\n                    m300.mix(premix_reps, mix_vol,\n                             source_well.bottom(mix_asp_height),\n                             rate=mix_rate)\n                m300.aspirate(tot_vol if tot_vol < 200\n                              else 200-0.15*vol_effector_cell,\n                              source_well)\n\n            # first row dispense\n            m300.dispense(vol_effector_cell, wells_by_row[start_well])\n            tot_vol -= vol_effector_cell\n            check_volume(j, tot_vol, source_well)\n\n            # second row dispense\n            m300.dispense(vol_effector_cell,\n                          wells_by_row[start_well+24])\n            tot_vol -= vol_effector_cell\n            check_volume(j, tot_vol, source_well)\n\n            start_well += 1\n        if m300.current_volume > 0:\n            m300.dispense(m300.current_volume,\n                          source_well)\n        m300.drop_tip()\n        ctx.comment('\\n\\n')\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24\nnA, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x\nnA, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x\nnB, x, A1/A1, A1/A1, A1/A1, A1/A1, A1/A1, A2/A1, A2/A1, A3/A1, A3/A1, x, A4/A1, A4/A1, A4/A1, A5/A1,A5/A1, A5/A1, A6/A1, A6/A1, A6/A1, x, 0/A1, 0/A1, x\nnP, x, A1/0, A1/0, A1/0, A2/0, A2/0, A2/0, A3/0, A3/0, A3/0, x, A4/0, A4/0, A4/0, A5/0, A5/0, A5/0, A6/0, A6/0, A6/0, x, x, x, x",
+            "label": ".CSV File",
+            "name": "csv_samp",
+            "type": "textFile"
+        },
+        {
+            "default": 40,
+            "label": "Transfer Volume Effector Cell",
+            "name": "vol_effector_cell",
+            "type": "int"
+        },
+        {
+            "label": "Pre-mix before aspirating in 96 well plate?",
+            "name": "pre_mix",
+            "options": [
+                {
+                    "label": "Yes, pre-mix",
+                    "value": true
+                },
+                {
+                    "label": "No, do not pre-mix",
+                    "value": false
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 1,
+            "label": "Pre-mix height in 96 well plate",
+            "name": "mix_asp_height",
+            "type": "float"
+        },
+        {
+            "default": 3,
+            "label": "Pre-mix repetitions",
+            "name": "premix_reps",
+            "type": "int"
+        },
+        {
+            "default": 3,
+            "label": "Pre-mix Volume",
+            "name": "mix_vol",
+            "type": "int"
+        },
+        {
+            "default": 1,
+            "label": "Pre-mix Rate",
+            "name": "mix_rate",
+            "type": "float"
+        },
+        {
+            "default": 1,
+            "label": "Transfer Aspiration Height",
+            "name": "asp_height",
+            "type": "float"
+        },
+        {
+            "default": 1,
+            "label": "Transfer Dispense Height",
+            "name": "disp_height",
+            "type": "float"
+        },
+        {
+            "default": 1,
+            "label": "Aspiration Rate",
+            "name": "asp_rate",
+            "type": "float"
+        },
+        {
+            "default": 1,
+            "label": "Dispense Rate",
+            "name": "disp_rate",
+            "type": "float"
+        },
+        {
+            "label": "P300 Multi-Channel Mount",
+            "name": "m300_mount",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Corning 384 Well Plate 112 \u00b5L Flat on 4",
+            "share": false,
+            "slot": "4",
+            "type": "corning_384_wellplate_112ul_flat"
+        },
+        {
+            "name": "NEST 96 Deepwell Plate 2mL on 5",
+            "share": false,
+            "slot": "5",
+            "type": "nest_96_wellplate_2ml_deep"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.10",
+        "author": "Rami Farawi <rami.farawi@opentrons.com>",
+        "protocolName": "Cherrypicking with Multi-Channel Pipette and CSV-Part 2",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}
