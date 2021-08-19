@@ -20,7 +20,7 @@ def run(protocol):
     rsvr = protocol.load_labware('nest_12_reservoir_15ml', '4')
     finalPlates = [
         protocol.load_labware(
-            'spl_96_wellplate_200ul_flat', s) for s in [1, 2, 3]
+            'spl_96_wellplate_200ul_round', s) for s in [1, 2, 3]
         ][:numPlates]
 
     # Create variable
