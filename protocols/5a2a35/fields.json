@@ -1,19 +1,24 @@
 [
   {
-    "type": "dropDown",
-    "label": "Which Deck Slot Contains the Starting Tip?",
-    "name": "starting_tip_slot",
-    "options": [
-      { "label": "DECK SLOT 7", "value": 7 },
-      { "label": "DECK SLOT 8", "value": 8 },
-      { "label": "DECK SLOT 9", "value": 9 }
-    ]
+    "type": "int",
+    "label": "Gantry Speed Limit (integer between 100-400 mm/sec)",
+    "name": "gantryspeed",
+    "default": 400
   },
   {
-    "type": "str",
-    "label": "Starting Tip Well Location",
-    "name": "starting_tip_well",
-    "default": "A1"
+    "type": "float",
+    "label": "Aspirate and Dispense Rate (1 for default rates or enter float between 0.25 and 3)",
+    "name": "flowrate",
+    "default": 1
+  },
+  {
+    "type": "dropDown",
+    "label": "Tip Touch after Dispense (yes or no)?",
+    "name": "tip_touch",
+    "options": [
+      { "label": "YES", "value": true },
+      { "label": "NO", "value": false }
+    ]
   },
   {
     "type": "dropDown",
@@ -40,6 +45,6 @@
     "type": "textFile",
     "label": "Upload CSV Input File (Upload CSV-formatted Excel File-with formatting of data values and file identical to example)",
     "name": "uploaded_csv",
-    "default": "Source_location,source_well,Destination_location,destination_well,transfer_volume\n5,A1,1,A12,50\n4,B1,2,B12,40\n6,C1,3,C12,30\n5,D1,1,D12,40\n6,E1,2,E12,20"
+    "default": "Source_location,source_well,Destination_location,destination_well,transfer_volume,Starting_tip,tip_box_location\n5,A1,1,A12,50,F1,7\n4,B1,2,B12,40,,\n6,C1,3,C12,30,,\n5,D1,1,D12,40,,\n6,E1,2,E12,20,,"
   }
 ]
