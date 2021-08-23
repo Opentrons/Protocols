@@ -157,7 +157,7 @@ resuming.')
     m300_tip = tip_log[m300]['tips'][tip_log[m300]['count']]
     m300_tip_slot = m300_tip.parent.parent
     m300_tip_name = m300_tip.display_name.split(' ')[0]
-    ctx.pause(f'''
+    ctx.comment(f'''
         P1000 single pipette beginning at tip {p1000_tip_name} on slot \
 {p1000_tip_slot}
         P300 multi pipette beginning at tip {m300_tip_name} on slot \
