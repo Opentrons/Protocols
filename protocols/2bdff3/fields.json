@@ -95,7 +95,7 @@
     },
     {
       "type": "float",
-      "label": "Dispensing Speed (uL/second)",
+      "label": "Dispensing Speed (uL/s)",
       "name": "disp_speed",
       "default": 3
     },
@@ -109,18 +109,30 @@
       "type": "float",
       "label": "Delay Height after Dispensing (Stage 1, mm)",
       "name": "height_after_disp",
-      "default": 0.5
+      "default": 1
     },
     {
       "type": "float",
-      "label": "Aspirate Flow Rate for Mixing (Stage 2, mm)",
+      "label": "Aspirate Flow Rate for Mixing (Stage 2, uL/s)",
       "name": "stage2_asp_speed",
       "default": 46
     },
     {
       "type": "float",
-      "label": "Dispense Flow Rate for Mixing (Stage 2, mm)",
+      "label": "Dispense Flow Rate for Mixing (Stage 2, uL/s)",
       "name": "stage2_disp_speed",
       "default": 46
+    },
+    {
+      "type": "float",
+      "label": "Dispense Height (Stage 2, mm)",
+      "name": "stage2_dispense_height",
+      "default": 0.5
+    },
+    {
+      "type": "float",
+      "label": "Delay Height after Dispensing (Stage 2, mm)",
+      "name": "stage2_height_after_disp",
+      "default": 1
     }
 ]

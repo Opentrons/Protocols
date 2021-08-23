@@ -1,3 +1,5 @@
+from opentrons.types import Point
+
 metadata = {
     'protocolName': 'Post RC-PCR Pooling of Nimagen SARS CoV-2 Library Prep',
     'author': 'Sakib <sakib.hossain@opentrons.com>',
@@ -13,13 +15,15 @@ def run(ctx):
         p300_mount, donor_384_type, trans_vol1,
         step1_mix_vol, delay_after_asp, delay_after_disp,
         disp_speed, height_after_disp, stage2_asp_speed,
-        stage2_disp_speed, stage1_dispense_height] = get_values(  # noqa: F821
+        stage2_disp_speed, stage1_dispense_height, stage2_dispense_height,
+        stage2_height_after_disp] = get_values(  # noqa: F821
         "step1", "step2", "quad1_exclude_cols", "quad2_exclude_cols",
         "quad3_exclude_cols",
         "quad4_exclude_cols", "m20_mount", "p300_mount", "donor_384_type",
         "trans_vol1", "step1_mix_vol", "delay_after_asp",
         "delay_after_disp", "disp_speed", "height_after_disp",
-        "stage2_asp_speed", "stage2_disp_speed", "stage1_dispense_height")
+        "stage2_asp_speed", "stage2_disp_speed", "stage1_dispense_height",
+        "stage2_dispense_height", "stage2_height_after_disp")
 
     # Load Labware
     donor_384_plate = ctx.load_labware(donor_384_type, 1)
@@ -41,6 +45,31 @@ def run(ctx):
                                tip_racks=tiprack_200ul)
 
     # Helper Functions
+
+    switch = True
+    drop_count = 0
+    # number of tips trash will accommodate before prompting user to empty
+    drop_threshold = 192
+
+    def _drop(pip):
+        nonlocal switch
+        nonlocal drop_count
+        side = 30 if switch else -18
+        drop_loc = ctx.loaded_labwares[12].wells()[0].top().move(
+            Point(x=side))
+        # pip.drop_tip(drop_loc)
+        switch = not switch
+        if pip.type == 'multi':
+            drop_count += 8
+        else:
+            drop_count += 1
+        if drop_count >= drop_threshold:
+            pip.home()
+            ctx.pause('Please empty tips from waste before resuming.')
+            ctx.home()  # home before continuing with protocol
+            drop_count = 0
+        return drop_loc
+
     def preWet(pipette, volume, location):
         for _ in range(1):
             pipette.aspirate(volume, location)
@@ -63,10 +92,7 @@ def run(ctx):
     def drop_loc(pip):
         nonlocal empty_racks_wells
         if len(empty_racks_wells) == 0:
-            ctx.pause('''Discard tips in the empty tip racks and return the racks to the
-                      OT-2.''')
-            empty_racks_wells = [row for rack in empty_racks
-                                 for row in rack.rows()[0]]
+            return _drop(pip)
         empty_slot = empty_racks_wells[0]
         empty_racks_wells.pop(0)
         return empty_slot
@@ -138,21 +164,28 @@ def run(ctx):
         for source in source_wells:
             max_well_vol = (len(quad1_dests) + len(quad2_dests) +
                             len(quad3_dests) + len(quad4_dests)) * trans_vol1
+            ctx.comment(f'The max well volume is {max_well_vol}')
             p300.pick_up_tip()
             change_flow_rates(p300, stage2_asp_speed, stage2_disp_speed)
-            p300.mix(3, max_well_vol/2, source)
+            mix_vol = 200 if max_well_vol*0.75 > 200 else max_well_vol*0.75
+            p300.mix(3, mix_vol, source)
             while max_well_vol > 200:
                 p300.aspirate(200, source)
                 slow_tip_withdrawal(p300, source)
-                p300.dispense(200, tuberack)
+                p300.dispense(200, tuberack.bottom(stage2_dispense_height))
+                p300.move_to(tuberack.bottom(stage2_height_after_disp))
+                ctx.delay(seconds=delay_after_disp, msg=f'''{delay_after_disp}
+                          second delay after dispensing.''')
                 slow_tip_withdrawal(p300, tuberack)
                 max_well_vol -= 200
             p300.aspirate(max_well_vol, source)
             slow_tip_withdrawal(p300, source)
-            p300.dispense(max_well_vol, tuberack)
+            p300.dispense(max_well_vol,
+                          tuberack.bottom(stage2_dispense_height))
+            p300.move_to(tuberack.bottom(stage2_height_after_disp))
+            ctx.delay(seconds=delay_after_disp, msg=f'''{delay_after_disp}
+                          second delay after dispensing.''')
             slow_tip_withdrawal(p300, tuberack)
-            # p300.transfer(max_well_vol, source, tuberack, new_tip='never',
-            #               mix_before=(3, max_well_vol/2))
             reset_flow_rates(p300)
             p300.air_gap(20)
             p300.drop_tip()

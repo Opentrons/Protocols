@@ -1,0 +1,20 @@
+{
+    "files": {
+        "OT 1 protocol": [],
+        "OT 2 protocol": [
+            "sci-promega-magnesil-total-rna-mini-isolation-system.ot2.apiv2.py"
+        ],
+        "description": [
+            "README.md"
+        ]
+    },
+    "flags": {
+        "embedded-app": false,
+        "feature": false,
+        "hide-from-search": false,
+        "skip-tests": false
+    },
+    "path": "protocols/sci-promega-magnesil-total-rna-mini-isolation-system",
+    "slug": "sci-promega-magnesil-total-rna-mini-isolation-system",
+    "status": "ok"
+}
