@@ -1,0 +1,29 @@
+name: Create Develop to Master PR
+on:
+  schedule:
+    - cron: '30 8 * * 1-5'
+
+jobs:
+  create-pull-request:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v2
+
+    - name: Get current date
+      id: date
+      run: echo "::set-output name=today::$(date +'%Y-%m-%d')"
+
+    - name: pull-request
+      uses: repo-sync/pull-request@v2
+      with:
+        destination_branch: "master"
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        pr_label: "chore,automated-pr"
+        pr_title: "chore(Release): ${{ steps.date.outputs.today }}"
+        pr_body: |
+          ### Overview
+
+          This PR adds all changes made to `develop`, making the changes live on the [Protocol Library](https://protocols.opentrons.com)
+        pr_reviewer: chazmanc
+        pr_assignee: chazmanc
