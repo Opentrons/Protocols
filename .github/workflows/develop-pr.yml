@@ -12,7 +12,7 @@ jobs:
 
     - name: Get current date
       id: date
-      run: run: echo "::set-output name=today::$(date +'%Y-%m-%d')"
+      run: echo "::set-output name=today::$(date +'%Y-%m-%d')"
 
     - name: pull-request
       uses: repo-sync/pull-request@v2
