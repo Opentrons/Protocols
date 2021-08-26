@@ -1,0 +1,26 @@
+[
+  {
+    "type": "int",
+    "label": "Number of Samples (1-384)",
+    "name": "num_samp",
+    "default": 96
+  },
+  {
+    "type": "dropDown",
+    "label": "P20 Single-Channel GEN2 Mount",
+    "name": "p1000_mount",
+    "options": [
+      {"label": "Right", "value": "right"},
+      {"label": "Left", "value": "left"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "P300 Single-Channel GEN2 Mount",
+    "name": "p1000_mount",
+    "options": [
+      {"label": "Left", "value": "left"},
+      {"label": "Right", "value": "right"}
+    ]
+  }
+]
