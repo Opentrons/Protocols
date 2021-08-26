@@ -1,0 +1,186 @@
+{
+    "content": "# import from the python types module\nfrom types import MethodType\nimport math\nfrom opentrons.protocol_api.labware import Well, OutOfTipsError\n# import opentrons.types\nfrom opentrons import types\n\n\nmetadata = {\n    'protocolName': '''Custom Nucleic Acid Extraction and Bead Clean Up''',\n    'author': 'Steve Plonk <protocols@opentrons.com>',\n    'apiLevel': '2.9'\n}\n\n\ndef run(ctx):\n\n    # get parameter values from json above\n    [sample_count, park_tips, labware_reservoir, labware_pcr_plate,\n     labware_deep_well, res_dead_vol, tube_dead_vol, clearance_reservoir,\n     clearance_magplate, clearance_bead_pellet, engage_time,\n     x_offset_bead_pellet\n     ] = get_values(  # noqa: F821\n      'sample_count', 'park_tips', 'labware_reservoir', 'labware_pcr_plate',\n      'labware_deep_well', 'res_dead_vol', 'tube_dead_vol',\n      'clearance_reservoir', 'clearance_magplate', 'clearance_bead_pellet',\n      'engage_time', 'x_offset_bead_pellet')\n\n    ctx.set_rail_lights(True)\n    ctx.delay(seconds=10)\n    if not 1 <= sample_count <= 96:\n        raise Exception('Invalid number of samples (must be 1-96).')\n\n    def pause_attention(message):\n        ctx.set_rail_lights(False)\n        ctx.delay(seconds=10)\n        ctx.pause(message)\n        ctx.set_rail_lights(True)\n\n    # 300 ul tips and p300 multi gen2\n    num_steps_300 = 5 if not park_tips else 3\n    num_cols = math.ceil(sample_count / 8)\n    num_tips300 = int((num_cols / 12)*num_steps_300)\n    tips300 = [ctx.load_labware(\"opentrons_96_tiprack_300ul\", str(slot)\n                                ) for slot in [4, 5, 7, 8, 9][:num_tips300]]\n\n    p300m = ctx.load_instrument(\"p300_multi_gen2\", 'right', tip_racks=tips300)\n\n    # reservoir, elution plate, 50 mL tube rack\n    reservoir = ctx.load_labware(labware_reservoir, '2', 'Reservoir')\n    elution_plate = ctx.load_labware(labware_pcr_plate, '1', 'Elution Plate')\n    tubes = ctx.load_labware(\n     \"opentrons_6_tuberack_falcon_50ml_conical\", '3', '50 mL Tube Rack')\n\n    # beads, TE, liquid waste, 70 percent EtOH\n    beads = reservoir['A1']\n    vol_b = 25*(num_cols*8)*1.05 + res_dead_vol\n\n    te = reservoir['A2']\n    vol_t = 50*(num_cols*8)*1.05 + res_dead_vol\n\n    waste = reservoir.wells()[2:]\n\n    tube_count = 2 if (950*(num_cols*8)*1.05 + tube_dead_vol) > 50000 else 1\n    vol_e = (950*(num_cols*8)*1.05) + tube_dead_vol*tube_count\n    etoh = tubes.columns()[1][:tube_count]\n    etoh_sup = tubes.columns()[2][:tube_count]\n\n    pause_attention(\"\"\"\n        Place {0} mL beads into {1}, {2} mL TE into {3}, and a total of\n        {4} mL 70 percent EtOH into {5} and resume.\n        \"\"\".format(str(round(vol_b / 1000, 1)), beads,\n                   str(round(vol_t / 1000, 1)), te,\n                   str(round(vol_e / 1000, 1)), etoh))\n\n    class WellH(Well):\n        def __init__(self, well, min_height=5, comp_coeff=1.15,\n                     current_volume=0):\n            super().__init__(well._impl)\n            self.well = well\n            self.min_height = min_height\n            self.comp_coeff = comp_coeff\n            self.current_volume = current_volume\n            if self.diameter is not None:\n                self.radius = self.diameter/2\n                cse = math.pi*(self.radius**2)\n            elif self.length is not None:\n                cse = self.length*self.width\n            self.height = current_volume/cse\n            if self.height < min_height:\n                self.height = min_height\n            elif self.height > well.parent.highest_z:\n                raise Exception(\"\"\"Specified liquid volume\n                can not exceed the height of the labware.\"\"\")\n\n        def height_dec(self, vol):\n            if self.diameter is not None:\n                cse = math.pi*(self.radius**2)\n            elif self.length is not None:\n                cse = self.length*self.width\n            dh = (vol/cse)*self.comp_coeff\n            if self.height - dh > self.min_height:\n                self.height = self.height - dh\n            else:\n                self.height = self.min_height\n            if self.current_volume - vol > 0:\n                self.current_volume = self.current_volume - vol\n            else:\n                self.current_volume = 0\n            return(self.well.bottom(self.height))\n\n        def height_inc(self, vol, top=False):\n            if self.diameter is not None:\n                cse = math.pi*(self.radius**2)\n            elif self.length is not None:\n                cse = self.length*self.width\n            ih = (vol/cse)*self.comp_coeff\n            if self.height < self.min_height:\n                self.height = self.min_height\n            if self.height + ih < self.depth:\n                self.height = self.height + ih\n            else:\n                self.height = self.depth\n            self.current_volume += vol\n            if top is False:\n                return(self.well.bottom(self.height))\n            else:\n                return(self.well.top())\n\n    # track volume and liquid height (70 percent EtOH tubes)\n    etoh_sources = []\n    for index, tube in enumerate(etoh):\n        if index == 0:\n            v = 50000 if vol_e > 50000 else vol_e\n        else:\n            v = vol_e - 50000\n        new = WellH(tube, min_height=3, current_volume=v)\n        etoh_sources.append(new)\n\n    def etoh_tubes():\n        yield from etoh_sources\n\n    etoh_tube = etoh_tubes()\n    etoh_source = next(etoh_tube)\n\n    # track volume and liquid height (reservoir wells for waste)\n    waste_destinations = []\n    for well in waste:\n        new = WellH(well, min_height=3)\n        waste_destinations.append(new)\n\n    def waste_wells():\n        yield from waste_destinations\n\n    waste_well = waste_wells()\n    waste_dest = next(waste_well)\n\n    # track volume and liquid height (waste tubes)\n    etoh_sups = []\n    for index, tube in enumerate(etoh_sup):\n        if index == 0:\n            v = 50000 if vol_e > 50000 else vol_e\n        else:\n            v = vol_e - 50000\n        new = WellH(tube, min_height=3, current_volume=v)\n        etoh_sups.append(new)\n\n    def sup_tubes():\n        yield from etoh_sups\n\n    sup_tube = sup_tubes()\n    sup_waste = next(sup_tube)\n\n    # magnetic module with deep well plate\n    magdeck = ctx.load_module('magdeck', '6')\n    magdeck.disengage()\n    magplate = magdeck.load_labware(labware_deep_well, 'Deep Well Plate')\n\n    # 1000 ul tips (up to num boxes needed) in remaining available deck slots\n    num_steps_1000 = 3\n    num_tips1000 = int(math.ceil((sample_count / 96)*num_steps_1000))\n    free_slots = [slot for slot in [str(num+1) for num in range(12)]\n                  if ctx.deck[slot] is None]\n    tips1000 = [ctx.load_labware(\"opentrons_96_tiprack_1000ul\", str(slot))\n                for slot in free_slots[:num_tips1000]]\n\n    # p1000 single gen2\n    p1000s = ctx.load_instrument(\n     \"p1000_single_gen2\", 'left', tip_racks=tips1000)\n\n    def pick_up_or_refill(self):\n        try:\n            self.pick_up_tip()\n        except OutOfTipsError:\n            pause_attention(\n             \"\"\"Please Refill the {} Tip Boxes\n                and Empty the Tip Waste.\"\"\".format(self))\n            self.reset_tipracks()\n            self.pick_up_tip()\n\n    def slow_tip_withdrawal(self, speed_limit, well_location, to_center=False):\n        if self.mount == 'right':\n            axis = 'A'\n        else:\n            axis = 'Z'\n        previous_limit = None\n        if axis in ctx.max_speeds.keys():\n            for key, value in ctx.max_speeds.items():\n                if key == axis:\n                    previous_limit = value\n        ctx.max_speeds[axis] = speed_limit\n        if to_center is False:\n            self.move_to(well_location.top())\n        else:\n            self.move_to(well_location.center())\n        ctx.max_speeds[axis] = previous_limit\n\n    def delay(self, delay_time):\n        ctx.delay(seconds=delay_time)\n\n    def prewet_tips(self, well_location, vol=None, reps=2):\n        for rep in range(reps):\n            if vol is None:\n                vol = self.max_volume\n            else:\n                vol = vol\n            self.aspirate(vol, well_location.height_dec(vol))\n            self.dispense(vol, well_location.height_inc(vol))\n\n    def blow_out_solvent(self, well_location, reps=3, delay=1, touch=False):\n        for rep in range(reps):\n            if rep > 0:\n                self.aspirate(self.max_volume, well_location.top())\n            ctx.delay(seconds=delay)\n            self.blow_out(well_location.top())\n        if touch is True:\n            self.touch_tip(radius=0.75, v_offset=-2, speed=20)\n\n    for pipette_object in [p300m, p1000s]:\n        for method in [prewet_tips, delay, slow_tip_withdrawal,\n                       blow_out_solvent, pick_up_or_refill]:\n            setattr(\n             pipette_object, method.__name__,\n             MethodType(method, pipette_object))\n\n    # STEP 1: add beads to used columns and mix\n    for column in magplate.columns()[:num_cols]:\n        p300m.pick_up_tip()\n        p300m.aspirate(25, beads.bottom(clearance_reservoir), rate=0.66)\n        p300m.delay(1)\n        p300m.slow_tip_withdrawal(10, beads)\n        p300m.dispense(25, column[0].bottom(clearance_magplate), rate=0.33)\n        p300m.delay(1)\n        for rep in range(5):\n            p300m.aspirate(\n             200, column[0].bottom(clearance_magplate), rate=0.33)\n            p300m.delay(1)\n            p300m.dispense(\n             200, column[0].bottom(clearance_magplate), rate=0.33)\n            p300m.delay(1)\n        p300m.blow_out(column[0].top(-2))\n        p300m.air_gap(20)\n        if park_tips:\n            p300m.return_tip()\n            p300m.reset_tipracks()\n        else:\n            p300m.drop_tip()\n\n    # STEPS 2-4: delay 1 min, engage magnets, delay\n    ctx.delay(minutes=1)\n    magdeck.engage()\n    ctx.delay(minutes=engage_time)\n\n    # STEP 5: remove supernatant\n    for column in magplate.columns()[:num_cols]:\n        p300m.pick_up_tip()\n        if (waste_dest.current_volume <= waste[0].max_volume - 275):\n            pass\n        else:\n            try:\n                waste_dest = next(waste_well)\n            except StopIteration:\n                pause_attention(\"Please empty the liquid waste\")\n                waste_well = waste_wells()\n                waste_dest = next(waste_well)\n        # offset to left to avoid beads (odd col numbers)\n        if magplate.columns().index(column) % 2 != 1:\n            f = -1\n        # offset to right to avoid beads (even col numbers)\n        else:\n            f = 1\n        p300m.move_to(column[0].top())\n        ctx.max_speeds['A'] = 10\n        p300m.move_to(column[0].bottom(4))\n        p300m.aspirate(225, column[0].bottom(4), rate=0.33)\n        p300m.aspirate(50, column[0].bottom(clearance_bead_pellet).move(\n         types.Point(x=f*x_offset_bead_pellet, y=0, z=0)), rate=0.33)\n        p300m.move_to(column[0].top())\n        ctx.max_speeds['A'] = None\n        p300m.air_gap(20)\n        p300m.dispense(295, waste_dest.height_inc(275, top=True))\n        p300m.blow_out(waste_dest.top(-2))\n        p300m.air_gap(20)\n        if park_tips:\n            p300m.return_tip()\n            p300m.reset_tipracks()\n        else:\n            p300m.drop_tip()\n\n    # STEP 6: disengage magnets\n    magdeck.disengage()\n\n    # STEP 7: add 750 ul EtOH and mix\n    for well in magplate.wells()[:num_cols*8]:\n        p1000s.pick_up_tip()\n        if etoh_source.current_volume >= 2000:\n            p1000s.prewet_tips(etoh_source)\n        else:\n            try:\n                etoh_source = next(etoh_tube)\n            except StopIteration:\n                pause_attention(\n                 \"Please replenish the 70 percent ethanol tubes.\")\n                etoh_tube = etoh_tubes()\n                etoh_source = next(etoh_tube)\n            p1000s.prewet_tips(etoh_source)\n        p1000s.aspirate(750, etoh_source.height_dec(750))\n        p1000s.air_gap(25)\n        p1000s.dispense(775, well.bottom(clearance_bead_pellet))\n        p1000s.mix(5, 650, well.bottom(clearance_bead_pellet))\n        p1000s.blow_out_solvent(well, touch=True)\n        p1000s.air_gap(25)\n        p1000s.drop_tip()\n\n    # STEPS 8-9: engage magnets, delay\n    magdeck.engage()\n    ctx.delay(minutes=engage_time)\n\n    # STEP 10: remove supernatant\n    for well in magplate.wells()[:num_cols*8]:\n        p1000s.pick_up_tip()\n        p1000s.move_to(well.top())\n        ctx.max_speeds['Z'] = 10\n        p1000s.move_to(well.bottom(4))\n        p1000s.aspirate(700, well.bottom(4), rate=0.33)\n        p1000s.aspirate(50, well.bottom(clearance_bead_pellet), rate=0.33)\n        p1000s.air_gap(25)\n        p1000s.move_to(well.top())\n        ctx.max_speeds['Z'] = None\n        if sup_waste.current_volume + 750 > 50000:\n            try:\n                sup_waste = next(sup_tube)\n            except StopIteration:\n                pause_attention(\"Please empty the ethanol waste tubes.\")\n                sup_tube = sup_tubes()\n                sup_waste = next(sup_tube)\n        p1000s.dispense(775, sup_waste.height_inc(750, top=True))\n        p1000s.blow_out_solvent(sup_waste)\n        p1000s.air_gap(25)\n        p1000s.drop_tip()\n\n    # STEP 11: disengage magnets\n    magdeck.disengage()\n\n    # STEP 12: add 200 ul EtOH and mix\n    for well in magplate.wells()[:num_cols*8]:\n        p1000s.pick_up_or_refill()\n        if etoh_source.current_volume >= 2000:\n            pass\n        else:\n            try:\n                etoh_source = next(etoh_tube)\n            except StopIteration:\n                pause_attention(\n                 \"Please replenish the 70 percent ethanol tubes.\")\n                etoh_tube = etoh_tubes()\n                etoh_source = next(etoh_tube)\n        p1000s.prewet_tips(etoh_source, vol=200)\n        p1000s.aspirate(200, etoh_source.height_dec(200))\n        p1000s.air_gap(25)\n        p1000s.dispense(225, well.bottom(clearance_bead_pellet))\n        p1000s.mix(5, 100, well.bottom(1))\n        p1000s.blow_out_solvent(well, touch=True)\n        p1000s.air_gap(25)\n        p1000s.drop_tip()\n\n    # STEPS 13-14: engage magnets, delay\n    magdeck.engage()\n    ctx.delay(minutes=engage_time)\n\n    # STEP 15: remove supernatant\n    for column in magplate.columns()[:num_cols]:\n        p300m.pick_up_or_refill()\n        if (waste_dest.current_volume <= waste[0].max_volume - 275):\n            pass\n        else:\n            try:\n                waste_dest = next(waste_well)\n            except StopIteration:\n                pause_attention(\"Please empty the liquid waste\")\n                waste_well = waste_wells()\n                waste_dest = next(waste_well)\n        # offset to left to avoid beads (odd col numbers)\n        if magplate.columns().index(column) % 2 != 1:\n            f = -1\n        # offset to right to avoid beads (even col numbers)\n        else:\n            f = 1\n        p300m.move_to(column[0].top())\n        ctx.max_speeds['A'] = 10\n        p300m.move_to(column[0].bottom(4))\n        p300m.aspirate(150, column[0].bottom(4), rate=0.33)\n        p300m.aspirate(50, column[0].bottom(clearance_bead_pellet).move(\n         types.Point(x=f*x_offset_bead_pellet, y=0, z=0)), rate=0.33)\n        p300m.move_to(column[0].top())\n        ctx.max_speeds['A'] = None\n        p300m.air_gap(20)\n        p300m.dispense(220, waste_dest.height_inc(200, top=True))\n        p300m.blow_out(waste_dest.top(-2))\n        p300m.air_gap(20)\n        p300m.drop_tip()\n\n    # STEPS 16-17: air dry, disengage magnets\n    ctx.delay(minutes=5)\n    magdeck.disengage()\n\n    # STEP 18: add TE and mix\n    for column in magplate.columns()[:num_cols]:\n        p300m.pick_up_or_refill()\n        p300m.aspirate(50, te.bottom(clearance_reservoir))\n        # offset to right to target beads (odd col numbers)\n        if magplate.columns().index(column) % 2 != 1:\n            f = 1\n        # offset to left to target beads (even col numbers)\n        else:\n            f = -1\n        p300m.dispense(50, column[0].bottom(clearance_magplate).move(\n         types.Point(x=f*x_offset_bead_pellet, y=0, z=0)))\n        for rep in range(5):\n            p300m.aspirate(30, column[0].bottom(1).move(\n             types.Point(x=f*x_offset_bead_pellet, y=0, z=0)))\n            p300m.dispense(30, column[0].bottom(1).move(\n             types.Point(x=f*x_offset_bead_pellet, y=0, z=0)))\n        p300m.blow_out(column[0].top(-2))\n        p300m.drop_tip()\n\n    # STEPS 19-20: engage magnets, delay\n    magdeck.engage()\n    ctx.delay(minutes=engage_time)\n\n    # STEP 21: transfer eluate to pcr plate\n    for index, column in enumerate(magplate.columns()[:num_cols]):\n        p300m.pick_up_or_refill()\n        # offset to left to avoid beads (odd col numbers)\n        if magplate.columns().index(column) % 2 != 1:\n            f = -1\n        # offset to right to avoid beads (even col numbers)\n        else:\n            f = 1\n        p300m.move_to(column[0].top())\n        ctx.max_speeds['A'] = 10\n        p300m.move_to(column[0].bottom(4))\n        p300m.aspirate(50, column[0].bottom(1).move(\n         types.Point(x=f*x_offset_bead_pellet, y=0, z=0)), rate=0.33)\n        p300m.move_to(column[0].top())\n        ctx.max_speeds['A'] = None\n        p300m.dispense(50, elution_plate.columns()[index][0].bottom(2))\n        p300m.drop_tip()\n\n    # STEP 22: disengage magnets\n    magdeck.disengage()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 96,
+            "label": "Number of Input Samples in Deep Well Plate on Magnetic Module (up to 96)",
+            "name": "sample_count",
+            "type": "int"
+        },
+        {
+            "label": "Park 300 ul Tips (use same tips for bead mix and sup removal? (yes or no)",
+            "name": "park_tips",
+            "options": [
+                {
+                    "label": "YES",
+                    "value": true
+                },
+                {
+                    "label": "NO",
+                    "value": false
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Labware for Reagent Reservoir",
+            "name": "labware_reservoir",
+            "options": [
+                {
+                    "label": "nest_12_reservoir_15ml",
+                    "value": "nest_12_reservoir_15ml"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Labware for PCR Plate (Elution Plate)",
+            "name": "labware_pcr_plate",
+            "options": [
+                {
+                    "label": "nest_96_wellplate_100ul_pcr_full_skirt",
+                    "value": "nest_96_wellplate_100ul_pcr_full_skirt"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Labware for Deep Well Plate (on Magnetic Module)",
+            "name": "labware_deep_well",
+            "options": [
+                {
+                    "label": "nest_96_wellplate_2ml_deep",
+                    "value": "nest_96_wellplate_2ml_deep"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 1000,
+            "label": "Reservoir Dead Volume (small amount of left-over, inaccessible volume) (ul)",
+            "name": "res_dead_vol",
+            "type": "int"
+        },
+        {
+            "default": 1000,
+            "label": "50 mL Tube Dead Volume (small amount of left-over, inaccessible volume) (ul)",
+            "name": "tube_dead_vol",
+            "type": "int"
+        },
+        {
+            "default": 3,
+            "label": "Well Bottom Clearance for Reservoir (mm)",
+            "name": "clearance_reservoir",
+            "type": "int"
+        },
+        {
+            "default": 3,
+            "label": "Well Bottom Clearance for Deep Well Plate (on Magnetic Module) (mm)",
+            "name": "clearance_magplate",
+            "type": "int"
+        },
+        {
+            "default": 3,
+            "label": "Well Bottom Clearance With Bead Pellets (mm)",
+            "name": "clearance_bead_pellet",
+            "type": "int"
+        },
+        {
+            "default": 5,
+            "label": "Magnet Engage Time (min)",
+            "name": "engage_time",
+            "type": "int"
+        },
+        {
+            "default": 1.5,
+            "label": "Magnitude of Move to Side to Target or Avoid Bead Pellet (mm)",
+            "name": "x_offset_bead_pellet",
+            "type": "float"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p1000_single_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p300_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Elution Plate on 1",
+            "share": false,
+            "slot": "1",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Reservoir on 2",
+            "share": false,
+            "slot": "2",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "50 mL Tube Rack on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_6_tuberack_falcon_50ml_conical"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Deep Well Plate on Magnetic Module GEN1 on 6",
+            "share": false,
+            "slot": "6",
+            "type": "nest_96_wellplate_2ml_deep"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 1000 \u00b5L on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_tiprack_1000ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 1000 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_tiprack_1000ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 1000 \u00b5L on 10",
+            "share": false,
+            "slot": "10",
+            "type": "opentrons_96_tiprack_1000ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.9",
+        "author": "Steve Plonk <protocols@opentrons.com>",
+        "protocolName": "Custom Nucleic Acid Extraction and Bead Clean Up"
+    },
+    "modules": []
+}
