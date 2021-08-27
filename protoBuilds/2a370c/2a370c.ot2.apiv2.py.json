@@ -1,0 +1,121 @@
+{
+    "content": "from opentrons import protocol_api, types\n\nmetadata = {\n    'protocolName': 'Omega Mag-Bind Bacterial DNA 96 Kit',\n    'author': 'Sakib <sakib.hossain@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx):\n\n    [samples, p300_mount, p1000_mount,\n        engage_height] = get_values(  # noqa: F821\n        \"samples\", \"p300_mount\", \"p1000_mount\", \"engage_height\")\n\n    # Load Labware\n    tipracks_200ul = [ctx.load_labware('opentrons_96_filtertiprack_200ul',\n                                       slot) for slot in [4, 5]]\n    tipracks_1000ul = [ctx.load_labware('opentrons_96_filtertiprack_1000ul',\n                                        slot) for slot in [7, 8]]\n    reservoir = ctx.load_labware('usascientific_12_reservoir_22ml', 2)\n    ethanol_reservoir = ctx.load_labware('axygen_1_reservoir_90ml', 3)\n    tuberack = ctx.load_labware(\n                    'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', 6)\n    mag_mod = ctx.load_module('magnetic module gen2', 1)\n    mag_plate = mag_mod.load_labware('nest_96_wellplate_2ml_deep')\n    trash = ctx.loaded_labwares[12]['A1']\n\n    # Load Pipettes\n    p300 = ctx.load_instrument('p300_single_gen2', p300_mount,\n                               tip_racks=tipracks_200ul)\n    p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,\n                                tip_racks=tipracks_1000ul)\n\n    # Helper Functions\n    def pick_up(pip, loc=None):\n        try:\n            if loc:\n                pip.pick_up_tip(loc)\n            else:\n                pip.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            pip.home()\n            ctx.pause(\"Please replace the empty tip racks!\")\n            pip.reset_tipracks()\n            pip.pick_up_tip()\n\n    sides = [-1 + (((n // 8) % 2) * 1*2)\n             for n in range(96)]\n\n    def getWellSide(well, plate, custom_sides=None):\n        index = plate.wells().index(well)\n        if custom_sides:\n            return custom_sides[index]\n        return sides[index]\n\n    def reset_flow_rates():\n        p1000.flow_rate.aspirate = 274.7\n        p1000.flow_rate.dispense = 274.7\n\n    def remove_residual_supernatant(pip, vol):\n        p1000.flow_rate.aspirate = 75\n        p1000.flow_rate.dispense = 75\n        for well in mag_plate_wells[:samples]:\n            pick_up(pip)\n            pip.aspirate(vol, well.bottom().move(types.Point(\n                        x=getWellSide(well, mag_plate), y=0, z=0.5)))\n            pip.dispense(vol, trash)\n            pip.drop_tip()\n        reset_flow_rates()\n\n    # Volume Tracking\n    class VolTracker:\n        def __init__(self, labware, well_vol, pip_type='single',\n                     mode='reagent', start=0, end=12, msg='Reset Labware'):\n            try:\n                self.labware_wells = dict.fromkeys(\n                    labware.wells()[start:end], 0)\n            except Exception:\n                self.labware_wells = dict.fromkeys(\n                    labware, 0)\n            self.labware_wells_backup = self.labware_wells.copy()\n            self.well_vol = well_vol\n            self.pip_type = pip_type\n            self.mode = mode\n            self.start = start\n            self.end = end\n            self.msg = msg\n\n        def tracker(self, vol):\n            '''tracker() will track how much liquid\n            was used up per well. If the volume of\n            a given well is greater than self.well_vol\n            it will remove it from the dictionary and iterate\n            to the next well which will act as the reservoir.'''\n            well = next(iter(self.labware_wells))\n            if self.labware_wells[well] + vol >= self.well_vol:\n                del self.labware_wells[well]\n                if len(self.labware_wells) < 1:\n                    ctx.pause(self.msg)\n                    self.labware_wells = self.labware_wells_backup.copy()\n                well = next(iter(self.labware_wells))\n            if self.pip_type == 'multi':\n                self.labware_wells[well] = self.labware_wells[well] + vol*8\n            elif self.pip_type == 'single':\n                self.labware_wells[well] = self.labware_wells[well] + vol\n            if self.mode == 'waste':\n                ctx.comment(f'''{well}: {int(self.labware_wells[well])} uL of\n                            total waste''')\n            else:\n                ctx.comment(f'''{int(self.labware_wells[well])} uL of liquid\n                            used from {well}''')\n            return well\n\n    # Wells\n    mag_plate_wells = mag_plate.wells()[:samples]\n    rnase = tuberack['A1']\n    beads = tuberack['B1']\n    ethanol = ethanol_reservoir['A1']\n    msl = VolTracker(reservoir, 45000, 'single', start=0, end=4,\n                     msg='Replenish MSL')\n    spm = VolTracker(reservoir, 77000, 'single', start=6, end=12,\n                     msg='Replenish SPM')\n\n    # Protocol Steps\n\n    # DNA Purification\n    # Add 5 uL RNase A to Samples\n    for well in mag_plate_wells:\n        pick_up(p300)\n        p300.aspirate(5, rnase)\n        p300.dispense(5, well)\n        p300.mix(20, 25)\n        p300.drop_tip()\n\n    # Delay at Room Temperature\n    ctx.delay(minutes=5, msg=\"Incubating at Room Temperature for 5 minutes.\")\n\n    # Transfer 400 uL of MSL Buffer\n    pick_up(p1000)\n    for well in mag_plate_wells:\n        p1000.transfer(400, msl.tracker(400), well.top(), new_tip='never')\n    p1000.drop_tip()\n\n    # Transfer 10 uL of Mag-Bind Particles\n    for well in mag_plate_wells:\n        pick_up(p300)\n        p300.aspirate(10, beads)\n        p300.dispense(10, well)\n        p300.mix(20, 200)\n        p300.drop_tip()\n\n    # Transfer 528 uL of Ethnanol\n    for well in mag_plate_wells:\n        pick_up(p1000)\n        p1000.aspirate(528, ethanol)\n        p1000.dispense(528, well)\n        p1000.mix(20, 500)\n        p1000.drop_tip()\n\n    # Delay at Room Temperature\n    ctx.delay(minutes=5, msg=\"Incubating at Room Temperature for 5 minutes.\")\n\n    # Magnetic Separation\n    mag_mod.engage(height=engage_height)\n    ctx.delay(minutes=5, msg='Engaging Magnetic Module for 15 minutes.')\n\n    # Remove Supernatant\n    remove_residual_supernatant(p1000, 1000)\n\n    for i in range(2):\n        # Transfer 400 uL of SPM Buffer\n        mag_mod.disengage()\n        for well in mag_plate_wells:\n            pick_up(p1000)\n            p1000.aspirate(400, spm.tracker(400))\n            p1000.dispense(400, well)\n            p1000.mix(20, 200)\n            p1000.drop_tip()\n\n        # Incubation\n        ctx.delay(minutes=3, msg=\"Incubate for 3 minutes at room temperature.\")\n\n        # Mix Mixture\n        for well in mag_plate_wells:\n            pick_up(p300)\n            p300.mix(20, 200, well)\n            p300.drop_tip()\n\n        # Magnetic Separation\n        mag_mod.engage(height=engage_height)\n        ctx.delay(minutes=15, msg='Engaging Magnetic Module for 15 minutes.')\n\n        # Remove Supernatant\n        remove_residual_supernatant(p1000, 1000)\n\n    # Air Dry\n    ctx.delay(minutes=5, msg='Drying beads for 5 minutes.')\n\n    # Remove Supernatant\n    remove_residual_supernatant(p1000, 1000)\n\n    # Air Dry\n    ctx.delay(minutes=15, msg='Drying beads for 15 minutes.')\n\n    mag_mod.disengage()\n    ctx.comment('Protocol Complete!')\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 96,
+            "label": "Number of Samples",
+            "name": "samples",
+            "type": "int"
+        },
+        {
+            "label": "P300 Single GEN2 Pipette Mount Position",
+            "name": "p300_mount",
+            "options": [
+                {
+                    "label": "Right",
+                    "value": "right"
+                },
+                {
+                    "label": "Left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P1000 Single GEN2 Pipette Mount Position",
+            "name": "p1000_mount",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 5,
+            "label": "Magnetic Module Engage Height",
+            "name": "engage_height",
+            "type": "float"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p1000_single_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p300_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "NEST 96 Deepwell Plate 2mL on Magnetic Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "nest_96_wellplate_2ml_deep"
+        },
+        {
+            "name": "USA Scientific 12 Well Reservoir 22 mL on 2",
+            "share": false,
+            "slot": "2",
+            "type": "usascientific_12_reservoir_22ml"
+        },
+        {
+            "name": "Axygen 1 Well Reservoir 90 mL on 3",
+            "share": false,
+            "slot": "3",
+            "type": "axygen_1_reservoir_90ml"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 24 Tube Rack with Eppendorf 2 mL Safe-Lock Snapcap on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 1000 \u00b5L on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_filtertiprack_1000ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 1000 \u00b5L on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_filtertiprack_1000ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.11",
+        "author": "Sakib <sakib.hossain@opentrons.com>",
+        "description": "Custom Protocol Request",
+        "protocolName": "Omega Mag-Bind Bacterial DNA 96 Kit"
+    },
+    "modules": []
+}
