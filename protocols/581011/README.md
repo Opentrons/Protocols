@@ -24,7 +24,7 @@ Explanation of complex parameters below:
 * `Pre-mix repetitions`: If `Pre-mix` variable is set to `Yes`, specify the number of repetitions to mix before each transfer.
 * `Pre-mix Volume`: If `Pre-mix` variable is set to `Yes`, specify the pre-mix volume (in ul).
 * `Pre-mix Rate`: If `Pre-mix` variable is set to `Yes`, specify the mix rate. A value of `1` is default mix speed, whereas a value of `0.5` is half of the default mix speed, etc.
-* `Transfer Aspiration Height`: Specify the height in which to aspirate from in the well plate. Default is 1mm from the bottom of the reservoir.
+* `Transfer Aspiration/Dispense Height`: Specify the height in which to aspirate/dispense from in the well plate. Default is 1mm from the bottom of the reservoir.
 * `Transfer Dispense Height`: Specify the height in which to dispense from in the well plate. Default is 1mm from the bottom of the reservoir.
 * `Aspiration Rate`: Specify the aspiration rate for transfers. A value of `1` is default aspiration speed, whereas a value of `0.5` is half of the default aspiration speed, etc.
 * `Dispense Rate`: Specify the dispense rate for transfers. A value of `1` is default dispense speed, whereas a value of `0.5` is half of the default dispense speed, etc.
