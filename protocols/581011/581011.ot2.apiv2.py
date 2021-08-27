@@ -67,8 +67,6 @@ def run(ctx):
                     control_row_counter += 1
                     break
 
-    print(control_row_counter)
-
     control_row_counter = math.floor(control_row_counter/2)
     num_channels_per_pickup = max_effector_number+control_row_counter
     tips_ordered = [
@@ -197,9 +195,3 @@ def run(ctx):
     ctx.comment('\n\nADDING TARGET CELL\n\n')
     dispense(start_well, second_well=True)
     num_channels_per_pickup = 1
-
-    ctx.comment('\n\nADDING CONTROL\n\n')
-    tips_ordered = [tip for rack in tiprack for column
-                    in rack.columns() for tip in column[::-1]]
-    tip_count = tip_count*8 + max_effector_number
-    dispense(start_well+48, second_well=False)
