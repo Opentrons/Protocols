@@ -1,0 +1,86 @@
+[
+  {
+    "type": "textFile",
+    "label": ".CSV File",
+    "name": "csv_samp",
+    "default": "1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24\nnA, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x\nnA, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, x\nnB, x, A1/A1, A1/A1, A1/A1, A1/A1, A1/A1, A2/A1, A2/A1, A3/A1, A3/A1, x, A4/A1, A4/A1, A4/A1, A5/A1,A5/A1, A5/A1, A6/A1, A6/A1, A6/A1, x, 0/A1, 0/A1, x\nnP, x, A1/0, A1/0, A1/0, A2/0, A2/0, A2/0, A3/0, A3/0, A3/0, x, A4/0, A4/0, A4/0, A5/0, A5/0, A5/0, A6/0, A6/0, A6/0, x, x, x, x"
+  },
+  {
+    "type": "int",
+    "label": "Transfer Volume Target Cell",
+    "name": "vol_target_cell",
+    "default": 40
+  },
+  {
+    "type": "dropDown",
+    "label": "Pre-mix before aspirating in source reservoir?",
+    "name": "pre_mix",
+    "options": [
+      {"label": "Yes, pre-mix", "value": true},
+      {"label": "No, do not pre-mix", "value": false}
+    ]
+  },
+  {
+    "type": "float",
+    "label": "Pre-mix aspiration height in reservoir",
+    "name": "mix_asp_height",
+    "default": 1
+  },
+  {
+    "type": "float",
+    "label": "Pre-mix dispense height in reservoir",
+    "name": "mix_disp_height",
+    "default": 1
+  },
+  {
+    "type": "int",
+    "label": "Pre-mix repetitions",
+    "name": "premix_reps",
+    "default": 3
+  },
+  {
+    "type": "int",
+    "label": "Pre-mix Volume",
+    "name": "mix_vol",
+    "default": 3
+  },
+  {
+    "type": "float",
+    "label": "Pre-mix Rate",
+    "name": "mix_rate",
+    "default": 1
+  },
+  {
+    "type": "float",
+    "label": "Transfer Aspiration Height",
+    "name": "asp_height",
+    "default": 1
+  },
+  {
+    "type": "float",
+    "label": "Transfer Dispense Height",
+    "name": "disp_height",
+    "default": 1
+  },
+  {
+    "type": "float",
+    "label": "Aspiration Rate",
+    "name": "asp_rate",
+    "default": 1
+  },
+  {
+    "type": "float",
+    "label": "Dispense Rate",
+    "name": "disp_rate",
+    "default": 1
+  },
+  {
+    "type": "dropDown",
+    "label": "P300 Multi-Channel Mount",
+    "name": "m300_mount",
+    "options": [
+      {"label": "Left", "value": "left"},
+      {"label": "Right", "value": "right"}
+    ]
+  }
+]
