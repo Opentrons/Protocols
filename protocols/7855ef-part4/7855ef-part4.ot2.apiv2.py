@@ -90,6 +90,7 @@ def run(protocol):
             p300.pick_up_tip()
 
     # pool each row of plates
+    airgap = 2
     num_col = math.ceil(num_samp/8)
     pool_counter = 0
     vol_counter = 0
@@ -106,8 +107,12 @@ def run(protocol):
         for well in wells_by_row:
             pick_up_20()
             p20.aspirate(5, well)
+            p20.touch_tip()
+            p20.air_gap(airgap)
+            p20.dispense(airgap, pool_plate1.wells()[pool_counter].top())
             p20.dispense(5, pool_plate1.wells()[pool_counter])
             p20.blow_out()
+            p20.touch_tip()
             vol_counter += 5
             if vol_counter % 60 == 0:
                 pool_counter += 1
@@ -115,10 +120,11 @@ def run(protocol):
             p20.return_tip()
             protocol.comment('\n')
 
+    airgap = 5
     for s, d in zip(pool_plate1.wells()[:pool_counter], pool_plate2.wells()):
         pick_up_300()
         p300.mix(2, 60, s)
-        p300.transfer(45, s, d, new_tip='never')
+        p300.transfer(45, s, d, new_tip='never', touch_tip=True, blow_out=True)
         p300.return_tip()
 
     # write updated tipcount to CSV
