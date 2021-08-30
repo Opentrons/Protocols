@@ -40,11 +40,5 @@
     "options": [
       { "label": "elutionplate_96_wellplate_500ul", "value": "elutionplate_96_wellplate_500ul" }
     ]
-  },
-  {
-    "type": "textFile",
-    "label": "Upload CSV Input File (Upload CSV-formatted Excel File-with formatting of data values and file identical to example)",
-    "name": "uploaded_csv",
-    "default": "Source_location,source_well,Destination_location,destination_well,transfer_volume,Starting_tip,tip_box_location\n5,A1,1,A12,50,F1,7\n4,B1,2,B12,40,,\n6,C1,3,C12,30,,\n5,D1,1,D12,40,,\n6,E1,2,E12,20,,"
   }
 ]
