@@ -84,23 +84,29 @@ def run(protocol):
     amplify_mix = mmx_plate.rows()[0][0]
 
     # add amplification mix
-    airgap = 5
+    airgap = 2
     pick_up()
     for col in reaction_plate_cols:
         m20.aspirate(7, amplify_mix)
+        m20.touch_tip()
         m20.air_gap(airgap)
-        m20.dispense(7+airgap, col)
+        m20.dispense(airgap, col.top())
+        m20.dispense(7, col)
         m20.blow_out()
+        m20.touch_tip()
     m20.return_tip()
 
     # add DNA
     for s, d in zip(sample_plate_cols, reaction_plate_cols):
         pick_up()
         m20.aspirate(3, s)
+        m20.touch_tip()
         m20.air_gap(airgap)
-        m20.dispense(3+airgap, d)
+        m20.dispense(airgap, d.top())
+        m20.dispense(3, d)
         m20.mix(2, 5, d)
         m20.blow_out()
+        m20.touch_tip()
         m20.return_tip()
 
     protocol.home()
