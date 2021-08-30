@@ -10,7 +10,6 @@ metadata = {
 }
 
 
-
 def run(protocol):
 
     [num_samp, m20_mount, reset_tipracks] = get_values(  # noqa: F821
