@@ -9,10 +9,10 @@ metadata = {
 
 def run(ctx):
 
-    [gantryspeed, flowrate, tip_touch, plate_count, labware_plate,
-     uploaded_csv] = get_values(  # noqa: F821
+    [gantryspeed, flowrate, tip_touch, plate_count,
+     labware_plate] = get_values(  # noqa: F821
         "gantryspeed", "flowrate", "tip_touch", "plate_count",
-        "labware_plate", "uploaded_csv")
+        "labware_plate")
 
     ctx.set_rail_lights(True)
     ctx.delay(seconds=10)
@@ -37,7 +37,16 @@ def run(ctx):
      1, 2, 3, 4, 5, 6][:plate_count]]
 
     # list each csv input line (represents a transfer) as dict
-    picks = [line for line in csv.DictReader(uploaded_csv.splitlines())]
+
+    # if datafile.csv on PC Desktop (to simulate protocol on PC)
+    # file =  'C:\\Users\\**your**username**here**\\Desktop\\datafile.csv'
+
+    # if datafile.csv in OT-2 jupyter notebook (to run protocol on OT-2)
+    file = 'var/lib/jupyter/notebooks/datafile.csv'
+
+    with open(file, 'r') as csvfile:
+        csv_reader = csv.DictReader(csvfile)
+        picks = [line for line in csv_reader]
 
     if int(picks[0]['tip_box_location']) not in tip_slots:
         raise Exception(
