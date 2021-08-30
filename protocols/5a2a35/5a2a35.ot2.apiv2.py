@@ -44,9 +44,18 @@ def run(ctx):
     # if datafile.csv in OT-2 jupyter notebook (to run protocol on OT-2)
     file = 'var/lib/jupyter/notebooks/datafile.csv'
 
-    with open(file, 'r') as csvfile:
-        csv_reader = csv.DictReader(csvfile)
-        picks = [line for line in csv_reader]
+    try:
+        with open(file, 'r') as csvfile:
+            csv_reader = csv.DictReader(csvfile)
+            picks = [line for line in csv_reader]
+    except OSError:
+        ctx.comment("""An input csv file named datafile.csv must be available
+        at {}""".format(file))
+        picks = [
+         {'tip_box_location': tip_slots[0], 'Starting_tip':'A1',
+          'Source_location':1, 'source_well':'A1',
+          'Destination_location':1, 'destination_well':'A1',
+          'transfer_volume':0}]
 
     if int(picks[0]['tip_box_location']) not in tip_slots:
         raise Exception(
