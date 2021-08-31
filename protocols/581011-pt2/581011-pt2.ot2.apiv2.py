@@ -91,6 +91,8 @@ def run(ctx):
                               200-0.15*vol_effector_cell, source_well)
 
     def mix_diff_height(well):
+        m300.flow_rate.aspirate = m300.flow_rate.aspirate/asp_rate
+        m300.flow_rate.dispense = m300.flow_rate.dispense/disp_rate
         for rep in range(premix_reps):
             m300.aspirate(mix_vol,
                           well.bottom(
@@ -100,6 +102,8 @@ def run(ctx):
                           well.bottom(
                            mix_disp_height),
                           rate=mix_rate)
+        m300.flow_rate.aspirate = asp_rate*m300.flow_rate.aspirate
+        m300.flow_rate.dispense = disp_rate*m300.flow_rate.dispense
 
     # find start well
     start_well = 0
