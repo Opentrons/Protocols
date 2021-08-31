@@ -150,8 +150,6 @@ def run(ctx):
 
             if pre_mix:
                 mix_diff_height(source_well)
-            if vol_effector_cell == 0:
-                break
 
             m300.aspirate(vol_effector_cell,
                           source_well)
