@@ -33,12 +33,6 @@
     "default": 1
   },
   {
-    "type": "float",
-    "label": "Pre-mix height in 96 well plate",
-    "name": "mix_asp_height",
-    "default": 1
-  },
-  {
     "type": "int",
     "label": "Pre-mix repetitions",
     "name": "premix_reps",
