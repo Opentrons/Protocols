@@ -99,21 +99,28 @@ def run(ctx):
     dispense_wells = [list(j) for i, j in groupby(plate_map[start_row])]
     wells_by_row = [well for row in plate.rows() for well in row]
 
+    def mix_diff_height(well):
+        m300.flow_rate.aspirate = m300.flow_rate.aspirate/asp_rate
+        m300.flow_rate.dispense = m300.flow_rate.dispense/disp_rate
+        for rep in range(premix_reps):
+            m300.aspirate(mix_vol,
+                          well.bottom(
+                           mix_asp_height),
+                          rate=mix_rate)
+            m300.dispense(mix_vol,
+                          well.bottom(
+                           mix_disp_height),
+                          rate=mix_rate)
+        m300.flow_rate.aspirate = asp_rate*m300.flow_rate.aspirate
+        m300.flow_rate.dispense = disp_rate*m300.flow_rate.dispense
+
     def check_volume(counter, tot_vol, chunk, source_well):
         if m300.current_volume < vol_target_cell:
             if m300.current_volume > 0:
                 m300.dispense(m300.current_volume, source_well)
             if counter != len(chunk)-1:
                 if pre_mix:
-                    for rep in range(premix_reps):
-                        m300.aspirate(mix_vol,
-                                      source_well.bottom(
-                                       mix_asp_height),
-                                      rate=mix_rate)
-                        m300.dispense(mix_vol,
-                                      source_well.bottom(
-                                       mix_disp_height),
-                                      rate=mix_rate)
+                    mix_diff_height(source_well)
                 m300.aspirate(tot_vol if tot_vol < 200 else
                               200-0.15*vol_target_cell, source_well)
 
@@ -130,27 +137,11 @@ def run(ctx):
                 source_well = target_res.wells_by_name()[str(chunk[0][0:2])]
                 if vol_target_cell >= 100:
                     if pre_mix:
-                        for rep in range(premix_reps):
-                            m300.aspirate(mix_vol,
-                                          source_well.bottom(
-                                           mix_asp_height),
-                                          rate=mix_rate)
-                            m300.dispense(mix_vol,
-                                          source_well.bottom(
-                                           mix_disp_height),
-                                          rate=mix_rate)
+                        mix_diff_height(source_well)
                     m300.aspirate(vol_target_cell, source_well)
                     m300.dispense(vol_target_cell, wells_by_row[start_well])
                     if pre_mix:
-                        for rep in range(premix_reps):
-                            m300.aspirate(mix_vol,
-                                          source_well.bottom(
-                                           mix_asp_height),
-                                          rate=mix_rate)
-                            m300.dispense(mix_vol,
-                                          source_well.bottom(
-                                           mix_disp_height),
-                                          rate=mix_rate)
+                        mix_diff_height(source_well)
                     m300.aspirate(vol_target_cell,
                                   source_well)
                     m300.dispense(vol_target_cell, wells_by_row[start_well+24])
@@ -159,15 +150,7 @@ def run(ctx):
                 else:
                     if m300.current_volume < vol_target_cell:
                         if pre_mix:
-                            for rep in range(premix_reps):
-                                m300.aspirate(mix_vol,
-                                              source_well.bottom(
-                                               mix_asp_height),
-                                              rate=mix_rate)
-                                m300.dispense(mix_vol,
-                                              source_well.bottom(
-                                               mix_disp_height),
-                                              rate=mix_rate)
+                            mix_diff_height(source_well)
                         m300.aspirate(tot_vol if tot_vol < 200
                                       else 200-0.15*vol_target_cell,
                                       source_well)

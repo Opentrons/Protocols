@@ -22,8 +22,14 @@
   },
   {
     "type": "float",
-    "label": "Pre-mix height in 96 well plate",
+    "label": "Pre-mix aspiration height in reservoir",
     "name": "mix_asp_height",
+    "default": 1
+  },
+  {
+    "type": "float",
+    "label": "Pre-mix dispense height in reservoir",
+    "name": "mix_disp_height",
     "default": 1
   },
   {
