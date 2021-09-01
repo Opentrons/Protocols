@@ -64,5 +64,11 @@
         "label": "Magnetic Module Bead Settling Time (Minutes)",
         "name": "settling_time",
         "default": 5
+    },
+    {
+        "type": "int",
+        "label": "Trash Tip Threshold (number of tips before emptying)",
+        "name": "tip_threshold",
+        "default": 288
     }
 ]
