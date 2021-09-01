@@ -156,14 +156,14 @@ def run(ctx):
             shake_locs = [well.top().move(Point(x=side*radius/2, y=0,
                           z=z_offset))
                           for side in [-1, 1]]
-            print(f'Performing {shake_mode} shakes!')
+            ctx.comment(f'Performing {shake_mode} shakes!')
             for _ in range(reps):
                 for loc in shake_locs:
                     pip.move_to(loc)
         elif shake_mode == 'vertical':
             shake_locs = [well.top().move(Point(x=0, y=0, z=side*z_offset))
                           for side in [-1, 1]]
-            print(f'Performing {shake_mode} shakes!')
+            ctx.comment(f'Performing {shake_mode} shakes!')
             for _ in range(reps):
                 for loc in shake_locs:
                     pip.move_to(loc)
