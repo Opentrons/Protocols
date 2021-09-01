@@ -8,7 +8,7 @@
 	* Assay
 
 ## Description
-**Updated**</br>
+**Updated Sept 1, 2021**</br>
 This protocol has been updated based on feedback from the user.
 
 This protocol now utilizes the [P20 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette) (instead of the P300), uses additional plates, and has modified liquid handling. The steps of this updated version can be found below.
