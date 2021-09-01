@@ -1,5 +1,8 @@
 from opentrons import types
+from opentrons.types import Point
 from opentrons import protocol_api
+import contextlib
+import threading
 import math
 
 metadata = {
@@ -10,12 +13,73 @@ metadata = {
 }
 
 
+@contextlib.contextmanager
+def flashing_rail_lights(
+    protocol: protocol_api.ProtocolContext, seconds_per_flash_cycle=1.0
+):
+    """Flash the rail lights on and off in the background.
+
+    Source: https://github.com/Opentrons/opentrons/issues/7742
+
+    Example usage:
+
+        # While the robot is doing nothing for 2 minutes, flash lights quickly.
+        with flashing_rail_lights(protocol, seconds_per_flash_cycle=0.25):
+            protocol.delay(minutes=2)
+
+    When the ``with`` block exits, the rail lights are restored to their
+    original state.
+
+    Exclusive control of the rail lights is assumed. For example, within the
+    ``with`` block, you must not call `ProtocolContext.set_rail_lights`
+    yourself, inspect `ProtocolContext.rail_lights_on`, or nest additional
+    calls to `flashing_rail_lights`.
+    """
+    original_light_status = protocol.rail_lights_on
+
+    stop_flashing_event = threading.Event()
+
+    def background_loop():
+        while True:
+            protocol.set_rail_lights(not protocol.rail_lights_on)
+            got_stop_flashing_event = stop_flashing_event.wait(
+                timeout=seconds_per_flash_cycle/2
+            )
+            if got_stop_flashing_event:
+                break
+
+    background_thread = threading.Thread(
+        target=background_loop, name="thread for flashing rail lights"
+    )
+
+    try:
+        if not protocol.is_simulating():
+            background_thread.start()
+        yield
+
+    finally:
+        # The ``with`` block might be exiting normally, or it might be
+        # exiting because something inside it raised an exception.
+        # This accounts for user-issued cancelations because currently
+        # (2021-05-04),
+        # the Python Protocol API happens to implement user-issued
+        # cancellations by raising an exception from internal API code.
+        if not protocol.is_simulating():
+            stop_flashing_event.set()
+            background_thread.join()
+
+        # This is questionable: it may issue a command to the API while the API
+        # is in an inconsistent state after raising an exception.
+        protocol.set_rail_lights(original_light_status)
+
+
 def run(ctx):
 
     [debug, samples, m300_mount, m20_mount, tip_type, mm2_vol, vhb_vol,
-        elution_buffer_vol, settling_time] = get_values(  # noqa: F821
+        elution_buffer_vol, settling_time,
+        tip_threshold] = get_values(  # noqa: F821
         "debug", "samples", "m300_mount", "m20_mount", "tip_type", "mm2_vol",
-        "vhb_vol", "elution_buffer_vol", "settling_time")
+        "vhb_vol", "elution_buffer_vol", "settling_time", "tip_threshold")
 
     cols = math.ceil(samples/8)
 
@@ -52,25 +116,77 @@ def run(ctx):
     etoh2 = [well for well in res2.wells()[4:8] for i in range(3)]
     elution_buffer = res1.wells()[11]
     elution_wells = temp_plate.rows()[0][:cols]
+    side_x = 1
+    sides = [-side_x, side_x] * (cols // 2)
 
     # Helper Functions
     def debug_mode(msg, debug_setting=debug):
         if debug_setting == "True":
-            ctx.pause(msg)
+            with flashing_rail_lights(ctx, seconds_per_flash_cycle=0.5):
+                ctx.pause(msg)
 
-    def supernatant_removal(vol, src, dest, side=-1):
+    switch = True
+    drop_count = 0
+    # number of tips trash will accommodate before prompting user to empty
+    drop_threshold = tip_threshold
+
+    def _drop(pip):
+        nonlocal switch
+        nonlocal drop_count
+        side = 30 if switch else -18
+        drop_loc = ctx.loaded_labwares[12].wells()[0].top().move(
+            Point(x=side))
+        # pip.drop_tip(drop_loc)
+        switch = not switch
+        if pip.type == 'multi':
+            drop_count += 8
+        else:
+            drop_count += 1
+        if drop_count >= drop_threshold:
+            pip.home()
+            with flashing_rail_lights(ctx, seconds_per_flash_cycle=0.5):
+                ctx.pause('Please empty tips from waste before resuming.')
+            ctx.home()  # home before continuing with protocol
+            drop_count = 0
+        return drop_loc
+
+    def shake(pip, well, reps, shake_mode, z_offset=-2):
+        if shake_mode == 'lateral':
+            radius = well.length/2
+            shake_locs = [well.top().move(Point(x=side*radius/2, y=0,
+                          z=z_offset))
+                          for side in [-1, 1]]
+            print(f'Performing {shake_mode} shakes!')
+            for _ in range(reps):
+                for loc in shake_locs:
+                    pip.move_to(loc)
+        elif shake_mode == 'vertical':
+            shake_locs = [well.top().move(Point(x=0, y=0, z=side*z_offset))
+                          for side in [-1, 1]]
+            print(f'Performing {shake_mode} shakes!')
+            for _ in range(reps):
+                for loc in shake_locs:
+                    pip.move_to(loc)
+
+    def supernatant_removal(vol, src, dest, side, trash_mode=False):
         m300.flow_rate.aspirate = 20
         while vol >= max_tip_volume:
             m300.aspirate(
                 max_tip_volume, src.bottom().move(
                     types.Point(x=side, y=0, z=0.5)))
             m300.dispense(max_tip_volume, dest)
+            if trash_mode:
+                m300.blow_out()
+                shake(m300, trash, 5, 'lateral')
             vol -= max_tip_volume
 
         if vol < max_tip_volume:
             m300.aspirate(vol, src.bottom().move(
                         types.Point(x=side, y=0, z=0.5)))
             m300.dispense(vol, dest)
+            if trash_mode:
+                m300.blow_out()
+                shake(m300, trash, 5, 'lateral')
         m300.flow_rate.aspirate = 50
 
     def reset_flow_rates():
@@ -88,7 +204,8 @@ def run(ctx):
                 pip.pick_up_tip()
         except protocol_api.labware.OutOfTipsError:
             pip.home()
-            ctx.pause("Replace the tips")
+            with flashing_rail_lights(ctx, seconds_per_flash_cycle=0.5):
+                ctx.pause("Replace the tips")
             pip.reset_tipracks()
             pip.pick_up_tip()
 
@@ -103,17 +220,21 @@ def run(ctx):
                 pick_up(m300, tip_loc)
             else:
                 pick_up(m300)
-        ctx.comment('Mixing from the middle')
-        m300.mix(reps, vol, well.bottom(z=4))
-        ctx.comment('Mixing from the bottom')
-        m300.mix(reps, vol, well.bottom())
-        ctx.comment('Mixing from the middle')
-        m300.mix(reps, vol, well.bottom(z=4))
+        if vol <= 50:
+            ctx.comment('Mixing from the bottom')
+            m300.mix(reps*3, vol, well.bottom(z=2))
+        else:
+            ctx.comment('Mixing from the middle')
+            m300.mix(reps, vol, well.bottom(z=6))
+            ctx.comment('Mixing from the bottom')
+            m300.mix(reps, vol, well.bottom(z=4))
+            ctx.comment('Mixing from the middle')
+            m300.mix(reps, vol, well.bottom(z=6))
         m300.blow_out()
         m300.touch_tip()
 
         if not park_tip:
-            m300.drop_tip()
+            m300.drop_tip(_drop(m300))
         elif park_tip:
             m300.drop_tip(tip_isolator.columns()[mag_plate_wells[well]][0])
         reset_flow_rates()
@@ -124,19 +245,21 @@ def run(ctx):
         ctx.delay(minutes=delay, msg=f'''Incubating on MagDeck for
                   {delay} minute(s).''')
 
-    def remove(vol, src, dest=trash, use_park_tip=True):
+    def remove(vol, src, side, dest=trash, use_park_tip=True,
+               trash_mode=False):
         if use_park_tip:
             pick_up(m300, tip_isolator.columns()[mag_plate_wells[src]][0])
         elif not use_park_tip:
             pick_up(m300)
-        supernatant_removal(vol=vol, src=src, dest=dest)
-        m300.drop_tip()
+        supernatant_removal(vol=vol, src=src, dest=dest, side=side,
+                            trash_mode=trash_mode)
+        m300.drop_tip(_drop(m300))
 
     def wash(vol, src, dest):
         m300.flow_rate.dispense = 200
         pick_up(m300)
         m300.transfer(vol, src, dest, new_tip='never')
-        m300.drop_tip()
+        m300.drop_tip(_drop(m300))
         m300.flow_rate.dispense = 94
 
     def etoh_wash(reservoir, park=True):
@@ -156,10 +279,10 @@ def run(ctx):
         debug_mode(msg=f'''Debug: Engage Magnet for {settling_time} minutes
                         and then remove supernatant''')
         bind()
-        for well in mag_plate_wells:
-            remove(500, well, use_park_tip=False)
-        if mag_mod.status == 'engaged':
-            mag_mod.disengage()
+        for well, side in zip(mag_plate_wells, sides):
+            remove(500, well, use_park_tip=False, side=side, trash_mode=True)
+        # if mag_mod.status == 'engaged':
+        #     mag_mod.disengage()
 
     # Volume Tracking
     class VolTracker:
@@ -194,9 +317,6 @@ def run(ctx):
                             used from {well}''')
             return well
 
-    # Track Reagent Volumes
-    water = VolTracker(res2, 14400, 'multi', 'reagent', start=9, end=12)
-
     # Wells
     # mag_plate_wells = mag_plate.rows()[0]
     mag_plate_wells = {well: column for well, column in zip(
@@ -209,8 +329,10 @@ def run(ctx):
     ctx.comment('''Transferring 300 uL of water to
                 each well in the tip isolator''')
     pick_up(m300, tip_isolator['A1'])
-    for col in tip_isolator.rows()[0]:
-        m300.transfer(300, water.tracker(300), col, new_tip='never')
+    m300.transfer(300, [well for well in res2.wells()[9:12]
+                        for _ in range(4)][:cols],
+                  tip_isolator.rows()[0][:cols], new_tip='never')
+    m300.drop_tip(_drop(m300))
 
     # Step 14
     # Transfer Master Mix 2 (XP1 Buffer + Mag-Bind® Particles RQ) to Mag Plate
@@ -222,14 +344,14 @@ def run(ctx):
         if transfer_count == 0:
             if not m300.has_tip:
                 pick_up(m300)
-            m300.mix(10, 300, mm.bottom(z=4))
+            m300.mix(10, 300, mm.bottom(z=5))
             if cols > 6:
-                m300.mix(10, 300, mm2[6].bottom())
-            m300.drop_tip()
+                m300.mix(10, 300, mm2[6].bottom(z=5))
+            m300.drop_tip(_drop(m300))
         pick_up(m300)
         m300.aspirate(mm2_vol, mm)
         m300.dispense(mm2_vol, dest)
-        m300.drop_tip()
+        m300.drop_tip(_drop(m300))
         transfer_count += 1
 
     # Step 15
@@ -249,8 +371,8 @@ def run(ctx):
     debug_mode(msg=f'''Debug: Engage Magnet for {settling_time} minutes
                     and then remove supernatant (Steps 16-18)''')
     bind()
-    for well in mag_plate_wells:
-        remove(600, well, use_park_tip=True)
+    for well, side in zip(mag_plate_wells, sides):
+        remove(600, well, use_park_tip=True, side=side, trash_mode=True)
     if mag_mod.status == 'engaged':
         mag_mod.disengage()
 
@@ -269,8 +391,8 @@ def run(ctx):
     debug_mode(msg=f'''Debug: Engage Magnet for {settling_time} minutes and
                then remove supernatant (Steps 21-23)''')
     bind()
-    for well in mag_plate_wells:
-        remove(400, well, use_park_tip=False)
+    for well, side in zip(mag_plate_wells, sides):
+        remove(600, well, use_park_tip=False, side=side, trash_mode=True)
     if mag_mod.status == 'engaged':
         mag_mod.disengage()
 
@@ -282,13 +404,16 @@ def run(ctx):
     debug_mode(msg='''Debug: Engaging Magnet for 1 minute and removing any
                supernatant (Step 29)''')
     bind(delay=1)
-    for well in mag_plate_wells:
-        remove(200, well, dest=trash, use_park_tip=False)
+    for well, side in zip(mag_plate_wells, sides):
+        remove(200, well, dest=trash, use_park_tip=False, side=side,
+               trash_mode=True)
 
     # Step 30
     debug_mode(msg='''Debug: Engaging Magnet for 10 minutes to allow beads to
                dry (Step 30)''')
     bind(delay=10)
+    if mag_mod.status == 'engaged':
+        mag_mod.disengage()
 
     # Step 31
     debug_mode(msg='''Debug: Transferring Elution Buffer to plate on
@@ -301,23 +426,26 @@ def run(ctx):
                (Step 31)''')
     for src, dest in zip(elution_wells, mag_plate_wells):
         m300.transfer(elution_buffer_vol, src, dest)
+    temp_mod.deactivate()
 
     # Step 32
-    debug_mode(msg='''Debug: Tip Mixing (Vortex) (Step 32)''')
-    for well in mag_plate_wells:
-        tip_mix(well, elution_buffer_vol/2, 10, park_tip=False, tip_loc=None,
-                tip_map=None, asp_speed=94, disp_speed=94)
+    for i in range(2):
+        debug_mode(msg=f'''Debug: Tip Mixing (Vortex) (Step 32)
+                        (Tip Mix #{i+1})''')
+        for well in mag_plate_wells:
+            tip_mix(well, elution_buffer_vol/2, 10, park_tip=False,
+                    tip_loc=None, tip_map=None, asp_speed=94, disp_speed=94)
 
     # Step 33
-    debug_mode(msg='''Debug: Engaging Magnetic Module for 2 minutes to allow
+    debug_mode(msg='''Debug: Engaging Magnetic Module for 5 minutes to allow
                beads to settle (Step 33)''')
-    bind(delay=2)
+    bind(delay=5)
 
     # Step 34
     debug_mode(msg='''Debug: Transfer clear supernatant containing purified
                DNA to NEST 0.1 mL 96 Well PCR Plate (Step 34)''')
-    for src, dest in zip(elution_wells, dna_plate_wells):
+    for src, dest in zip(mag_plate_wells, dna_plate_wells):
         pick_up(m300)
         m300.aspirate(elution_buffer_vol, src)
         m300.dispense(elution_buffer_vol, dest.bottom(z=5))
-        m300.drop_tip()
+        m300.drop_tip(_drop(m300))
