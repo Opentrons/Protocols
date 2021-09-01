@@ -78,15 +78,8 @@ def run(ctx):
             if m300.current_volume > 0:
                 m300.dispense(m300.current_volume, source_well)
             if counter != len(plate_map[start_row])-1:
-                for rep in range(premix_reps):
-                    m300.aspirate(mix_vol,
-                                  source_well.bottom(
-                                   mix_asp_height),
-                                  rate=mix_rate)
-                    m300.dispense(mix_vol,
-                                  source_well.bottom(
-                                   mix_disp_height),
-                                  rate=mix_rate)
+                if pre_mix:
+                    mix_diff_height(source_well)
                 m300.aspirate(tot_vol if tot_vol < 200 else
                               200-0.15*vol_effector_cell, source_well)
 
