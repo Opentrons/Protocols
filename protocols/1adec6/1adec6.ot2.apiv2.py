@@ -31,7 +31,7 @@ def run(protocol):
     dmso = rsvr['A1']
     pbs = rsvr['A2']
 
-    # Add pbsVol of PBS to columns 1-4 + A5, B5
+    # Add pbsVol of PBS to columns 1-4 + A5-E5
     m20.pick_up_tip()
 
     for dest in destPlate.rows()[0][:4]:
@@ -39,7 +39,7 @@ def run(protocol):
 
     m20.drop_tip()
 
-    m20.pick_up_tip(tips[0]['G2'])
+    m20.pick_up_tip(tips[0]['D8'])
     m20.transfer(pbsVol, pbs, destPlate['A5'], new_tip='never')
     m20.drop_tip()
 
@@ -52,26 +52,28 @@ def run(protocol):
 
     m20.drop_tip()
 
-    m20.pick_up_tip(tips[0]['E2'])
+    m20.pick_up_tip(tips[0]['D9'])
     m20.transfer(dmsoVol, dmso, destPlate['A10'], new_tip='never')
     m20.drop_tip()
 
     # Transfer dilution volume from source to destination
-    for src, dest in zip(srcPlate.rows()[0][:4], destPlate.rows()[0][:4]):
-        m20.transfer(dilVol, src, dest, mix_after=(4, 20))
+    for src, dest, i in zip(
+            srcPlate.rows()[0][:4], destPlate.rows()[0][:4], range(1, 5)):
+        m20.pick_up_tip()
+        m20.transfer(dilVol, src, dest, mix_after=(4, 20), new_tip='never')
+        m20.drop_tip(tips[0]['A'+str(i)])
 
-    m20.pick_up_tip(tips[0]['C2'])
+    m20.pick_up_tip(tips[0]['D9'])
     m20.transfer(dilVol, srcPlate['A5'], destPlate['A5'],
                  mix_after=(4, 20), new_tip='never')
-    m20.drop_tip()
+    m20.drop_tip(tips[0]['A5'])
 
-    for src, dest in zip(srcPlate.rows()[0][5:9], destPlate.rows()[0][5:9]):
+    m20.reset_tipracks()
+
+    for src, dest in zip(destPlate.rows()[0][:5], destPlate.rows()[0][5:10]):
         m20.transfer(destDilVol, src, dest, mix_after=(4, 20))
 
-    m20.pick_up_tip(tips[0]['A2'])
-    m20.transfer(destDilVol, srcPlate['A5'], destPlate['A10'],
-                 mix_after=(4, 20), new_tip='never')
-    m20.drop_tip()
+    m20.starting_tip = tips[0]['A10']
 
     for _ in range(6):
         protocol.set_rail_lights(not protocol.rail_lights_on)
