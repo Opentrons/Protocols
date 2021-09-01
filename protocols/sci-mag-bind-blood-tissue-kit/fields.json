@@ -13,7 +13,7 @@
         {"label": "NEST", "value": "nest_96_wellplate_2ml_deep"},
         {"label": "USA Scientific", "value": "usascientific_96_wellplate_2.4ml_deep"}
       ]
-    }
+    },
     {
       "type": "dropDown",
       "label": "12-well reservoir type",
