@@ -10,7 +10,7 @@
   },
   {
     "type": "dropDown",
-    "label": "Pipette and Tip Type",
+    "label": "Single Pipette and Tip Type",
     "name": "pip_tip",
     "options": [
       {"label": "P50 & 50µL/300µL Tips", "value": "p50_single opentrons_96_tiprack_300ul"},
@@ -18,6 +18,15 @@
       {"label": "P20 & 10µL/20µL Tips", "value": "p20_single_gen2 opentrons_96_tiprack_20ul"},
       {"label": "P20 & 20µL Filter Tips", "value": "p20_single_gen2 opentrons_96_filtertiprack_20ul"},
       {"label": "P20 & 10µL Filter Tips", "value": "p20_single_gen2 opentrons_96_filtertiprack_10ul"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "P300 8-Channel Pipette Type",
+    "name": "p300gen",
+    "options": [
+      {"label": "GEN1", "value": "p300_multi"},
+      {"label": "GEN2", "value": "p300_multi_gen2"}
     ]
   },
   {
