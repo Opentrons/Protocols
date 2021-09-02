@@ -137,7 +137,7 @@ def run(ctx):
             p300m.pick_up_tip()
 
     """
-    process steps to fill the caps
+    process steps to fill caps
     """
     for index, rack in enumerate(racks[:math.ceil(cap_count / 24)]):
         remaining = cap_count - (index*24)
