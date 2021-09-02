@@ -7,9 +7,10 @@ metadata = {
 
 
 def run(protocol):
-    [no_samps, pip_tip, p300tips, magmod,
-    a_index, cycles, f_time] = get_values(  # noqa: F821
-    'no_samps', 'pip_tip', 'p300tips', 'magmod', 'a_index', 'cycles', 'f_time')
+    [no_samps, pip_tip, p300gen, p300tips, magmod,
+     a_index, cycles, f_time] = get_values(  # noqa: F821
+     'no_samps', 'pip_tip', 'p300gen', 'p300tips', 'magmod',
+     'a_index', 'cycles', 'f_time')
 
     # raise exceptions
     if cycles < 3 or cycles > 15:
@@ -26,7 +27,7 @@ def run(protocol):
                 p300tips, s) for s in ['5', '6', '9']]
 
     small_pip = protocol.load_instrument(pip_type, 'left', tip_racks=s_tips)
-    p300 = protocol.load_instrument('p300_multi', 'right', tip_racks=p300tips)
+    p300 = protocol.load_instrument(p300gen, 'right', tip_racks=p300tips)
 
     rt_reagents = protocol.load_labware('nest_12_reservoir_15ml', '2')
 
@@ -322,10 +323,10 @@ def run(protocol):
     """PCR Purication"""
     # Transfer samples to the Magnetic Module
     p300.flow_rate.aspirate = 10
-    for src, dest in zip(pcr_prep_samples, mag_pure):
+    for src, dest in zip(pcr_300, mag_pure):
         p300.pick_up_tip()
         p300.aspirate(60, src)
-        p300.dispense(50, dest.top(-4))
+        p300.dispense(60, dest.top(-4))
         p300.blow_out(dest.top(-4))
         p300.drop_tip()
 
