@@ -8,10 +8,6 @@ metadata = {
     'apiLevel': '2.10'
 }
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"num_samp":8, "m300_mount":"left", "asp_vol_1":2,"incubation_time":0.5, "slow_asp_rate":0.5, "asp_height_1":2, "asp_height":2, "length_from_side":2}""")
-    return [_all_values[n] for n in names]
 
 def run(ctx):
     """PROTOCOL."""
