@@ -5,6 +5,7 @@ import contextlib
 import threading
 import math
 
+
 metadata = {
     'protocolName': 'Omega Bio-tek Mag-Bind Environmental DNA 96 Kit',
     'author': 'Sakib <sakib.hossain@opentrons.com>',
@@ -150,23 +151,9 @@ def run(ctx):
             drop_count = 0
         return drop_loc
 
-    def shake(pip, well, reps, shake_mode, z_offset=-2):
-        if shake_mode == 'lateral':
-            radius = well.length/2
-            shake_locs = [well.top().move(Point(x=side*radius/2, y=0,
-                          z=z_offset))
-                          for side in [-1, 1]]
-            ctx.comment(f'Performing {shake_mode} shakes!')
-            for _ in range(reps):
-                for loc in shake_locs:
-                    pip.move_to(loc)
-        elif shake_mode == 'vertical':
-            shake_locs = [well.top().move(Point(x=0, y=0, z=side*z_offset))
-                          for side in [-1, 1]]
-            ctx.comment(f'Performing {shake_mode} shakes!')
-            for _ in range(reps):
-                for loc in shake_locs:
-                    pip.move_to(loc)
+    def reset_flow_rates():
+        m300.flow_rate.aspirate = 94
+        m300.flow_rate.dispense = 94
 
     def supernatant_removal(vol, src, dest, side, trash_mode=False):
         m300.flow_rate.aspirate = 20
@@ -176,8 +163,8 @@ def run(ctx):
                     types.Point(x=side, y=0, z=0.5)))
             m300.dispense(max_tip_volume, dest)
             if trash_mode:
-                m300.blow_out()
-                shake(m300, trash, 5, 'lateral')
+                for _ in range(2):
+                    m300.blow_out()
             vol -= max_tip_volume
 
         if vol < max_tip_volume:
@@ -185,13 +172,10 @@ def run(ctx):
                         types.Point(x=side, y=0, z=0.5)))
             m300.dispense(vol, dest)
             if trash_mode:
-                m300.blow_out()
-                shake(m300, trash, 5, 'lateral')
+                for _ in range(2):
+                    m300.blow_out()
         m300.flow_rate.aspirate = 50
-
-    def reset_flow_rates():
-        m300.flow_rate.aspirate = 94
-        m300.flow_rate.dispense = 94
+        reset_flow_rates()
 
     def pick_up(pip, loc=None):
         """Function that can be used instead of .pick_up_tip() that will pause
@@ -222,7 +206,7 @@ def run(ctx):
                 pick_up(m300)
         if vol <= 50:
             ctx.comment('Mixing from the bottom')
-            m300.mix(reps*3, vol, well.bottom(z=2))
+            m300.mix(reps*3, vol, well.bottom())
         else:
             ctx.comment('Mixing from the middle')
             m300.mix(reps, vol, well.bottom(z=6))
@@ -258,9 +242,10 @@ def run(ctx):
     def wash(vol, src, dest):
         m300.flow_rate.dispense = 200
         pick_up(m300)
-        m300.transfer(vol, src, dest, new_tip='never')
+        m300.transfer(vol, src.bottom(z=2.2), dest, new_tip='never')
         m300.drop_tip(_drop(m300))
         m300.flow_rate.dispense = 94
+        reset_flow_rates()
 
     def etoh_wash(reservoir, park=True):
         # Steps 24-25
@@ -337,22 +322,13 @@ def run(ctx):
     # Step 14
     # Transfer Master Mix 2 (XP1 Buffer + Mag-Bind® Particles RQ) to Mag Plate
     debug_mode(msg="Debug: Transfer Master Mix 2 to Mag Plate (Step 14)")
-    transfer_count = 0
     for mm, dest in zip(mm2, mag_plate_wells):
-        if transfer_count == 3:
-            transfer_count = 0
-        if transfer_count == 0:
-            if not m300.has_tip:
-                pick_up(m300)
-            m300.mix(10, 300, mm.bottom(z=5))
-            if cols > 6:
-                m300.mix(10, 300, mm2[6].bottom(z=5))
-            m300.drop_tip(_drop(m300))
-        pick_up(m300)
+        if not m300.has_tip:
+            pick_up(m300)
+        m300.mix(10, 300, mm.bottom(z=5))
         m300.aspirate(mm2_vol, mm)
         m300.dispense(mm2_vol, dest)
         m300.drop_tip(_drop(m300))
-        transfer_count += 1
 
     # Step 15
     # Incubate at Room Temp for 10 Minutes while mixing
@@ -398,6 +374,7 @@ def run(ctx):
 
     # Steps 24-28
     etoh_wash(etoh1)
+    mag_mod.disengage()
     etoh_wash(etoh2, park=False)
 
     # Step 29
@@ -418,7 +395,13 @@ def run(ctx):
     # Step 31
     debug_mode(msg='''Debug: Transferring Elution Buffer to plate on
                temperature module (Step 31)''')
-    m300.transfer(elution_buffer_vol, elution_buffer, elution_wells)
+
+    pick_up(m300)
+    for well in elution_wells:
+        m300.aspirate(elution_buffer_vol+20, elution_buffer)
+        m300.dispense(elution_buffer_vol+20, well)
+    m300.drop_tip()
+
     debug_mode(msg='''Debug: Heating elution buffer on temperature module to
                70C (Step 31)''')
     temp_mod.set_temperature(70)
