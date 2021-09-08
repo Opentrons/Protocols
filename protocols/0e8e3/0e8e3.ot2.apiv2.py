@@ -23,8 +23,8 @@ def run(ctx):
     # modules and labware
     plate_a = ctx.load_labware('thermofishernunc_96_wellplate_450ul', '1',
                                'Plate A (Sample Plate)')
-    plate_c = ctx.load_labware('thermofishernunc_96_wellplate_450ul', '2',
-                               'Plate C (DNAse Reaction Plate)')
+    # plate_c = ctx.load_labware('thermofishernunc_96_wellplate_450ul', '2',
+    #                            'Plate C (DNAse Reaction Plate)')
     plate_d = ctx.load_labware('thermofishernunc_96_wellplate_450ul', '3',
                                'Plate D (Dilution Buffer Plate 1)')
     tempdeck = ctx.load_module('temperature module gen2', '10')
@@ -50,10 +50,10 @@ def run(ctx):
 
     # samples and reagents
     num_cols = math.ceil(num_samples/8)
-    dnase = reservoir.wells()[0]
-    edta = reservoir.wells()[1]
-    dil_buff = reservoir.wells()[2]
-    pcr_mix = reservoir.wells()[3]
+    dnase = reservoir.wells()[0].bottom()
+    edta = reservoir.wells()[1].bottom()
+    dil_buff = [chan.bottom() for chan in reservoir.wells()[2:7]]
+    pcr_mix = reservoir.wells()[7].bottom()
 
     tip_log = {val: {} for val in ctx.loaded_instruments.values()}
 
@@ -107,7 +107,7 @@ resuming.')
     pip = p20 if vol_dna_buff <= 20 else p300
     _pick_up(pip)
     for d in _get_samples(plate_b, pip):
-        pip.transfer(vol_dna_buff, dnase, d, new_tip='never')
+        pip.transfer(vol_dna_buff, dnase, d.bottom(), new_tip='never')
 
     pip2 = p20 if vol_a_to_b <= 20 else p300
     if not pip2 == pip:
@@ -119,19 +119,10 @@ resuming.')
             mix_vol = vol_a_to_b
         else:
             mix_vol = pip2.max_volume
-        pip2.transfer(vol_a_to_b, s, d, mix_after=(5, mix_vol),
-                      new_tip='never')
+        pip2.transfer(vol_a_to_b, s, d, mix_before=(5, 15),
+                      mix_after=(5, mix_vol), new_tip='never')
+        pip2.blow_out(d.top(-1))
         pip2.drop_tip()
-
-    _pick_up(p300)
-    for d in _get_samples(plate_c, p300):
-        p300.transfer(45, dnase, d, new_tip='never')
-    p300.drop_tip()
-
-    for s, d in zip(_get_samples(plate_b, p20), _get_samples(plate_c, p20)):
-        _pick_up(p20)
-        p20.transfer(5, s, d, mix_after=(5, 15), new_tip='never')
-        p20.drop_tip()
 
     ctx.pause('Apply foil to top of DNAse Reaction Plate befroe tempdeck ramps \
 to 37C')
@@ -141,15 +132,31 @@ to 37C')
     tempdeck.set_temperature(4)
     tempdeck.deactivate()
 
-    for d in _get_samples(plate_c, p20):
+    for d in _get_samples(plate_b, p20):
         _pick_up(p20)
         p20.transfer(5, edta, d, new_tip='never')
         p20.drop_tip()
 
+    dil_vol = 10000
+    dil_chan_ind = 0
+
+    def dil_track(pip, vol):
+        nonlocal dil_vol
+        nonlocal dil_chan_ind
+        if pip.type == 'multi':
+            trans_vol = vol*8
+        else:
+            trans_vol = vol
+        if dil_vol - vol < 0:
+            dil_vol = 10000
+            dil_chan_ind += 1
+        dil_vol -= trans_vol
+
     pip = p20 if vol_dil_to_d <= 20 else p300
     _pick_up(pip)
     for d in _get_samples(plate_d, pip):
-        pip.transfer(vol_dil_to_d, dil_buff, d, new_tip='never')
+        dil_track(pip, vol_dil_to_d)
+        pip.transfer(vol_dil_to_d, dil_buff[dil_chan_ind], d, new_tip='never')
 
     pip2 = p20 if vol_dil_to_e <= 20 else p300
     if not pip2 == pip:
@@ -157,11 +164,12 @@ to 37C')
     for d in _get_samples(plate_e, pip):
         if not pip2.has_tip:
             _pick_up(pip2)
-        pip2.transfer(vol_dil_to_e, dil_buff, d, new_tip='never')
+        dil_track(pip, vol_dil_to_e)
+        pip2.transfer(vol_dil_to_e, dil_buff[dil_chan_ind], d, new_tip='never')
     pip2.drop_tip()
 
     pip = p20 if vol_c_to_d <= 20 else p300
-    for s, d in zip(_get_samples(plate_c, pip), _get_samples(plate_d, pip)):
+    for s, d in zip(_get_samples(plate_b, pip), _get_samples(plate_d, pip)):
         _pick_up(pip)
         pip.transfer(vol_c_to_d, s, d, mix_after=(10, 20), new_tip='never')
         pip.drop_tip()
@@ -174,7 +182,7 @@ to 37C')
 
     _pick_up(p300)
     for d in _get_samples(final_plate, p300):
-        p300.transfer(pcr_mix_vol, pcr_mix.bottom(0.3), d, new_tip='never')
+        p300.transfer(pcr_mix_vol, pcr_mix, d, new_tip='never')
     p300.drop_tip()
 
     for s, d in zip(_get_samples(plate_e, p20),
