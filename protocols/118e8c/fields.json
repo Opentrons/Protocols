@@ -1,5 +1,14 @@
 [
   {
+    "type": "dropDown",
+    "label": "Use 96-Well or 384-Well Trays?",
+    "name": "use_384",
+    "options": [
+      { "label": "Use Two 96-Well Trays", "value": false },
+      { "label": "Use A Single 384-Well Tray", "value": true }
+    ]
+  },
+  {
     "type": "float",
     "label": "p20 Height (mm) for Dispense of Disposal Volume Back to Reservoir",
     "name": "p20_blowout_height",
@@ -31,15 +40,15 @@
   },
   {
     "type": "float",
-    "label": "Reduced Value for Pick Up Current (mAmp) for p20 Multi-Channel One-Tip Pick Ups (0.1 to 0.15)",
-    "name": "reduced_pick_up_current",
-    "default": 0.15
-  },
-  {
-    "type": "float",
     "label": "p20 Aspirate Height (mm) Above Bottom of 2 mL Tube",
     "name": "p20_tube_height",
     "default": 10
+  },
+  {
+    "type": "float",
+    "label": "Mixing Height for Tubes (fraction of total liquid height)",
+    "name": "relative_height",
+    "default": 0.5
   },
   {
     "type": "dropDown",
@@ -52,39 +61,27 @@
   },
   {
     "type": "float",
-    "label": "p20 Dispense Height (mm) Above Bottom of Tray Wells",
-    "name": "p20_dispense_height",
-    "default": 8.8
-  },
-  {
-    "type": "float",
     "label": "p20 Aspirate Height (mm) Above Bottom of Reservoir",
     "name": "p20_reservoir_height",
     "default": 3
   },
   {
     "type": "float",
-    "label": "Radius for Touch Tip (decimal fraction of well radius)",
-    "name": "touch_radius",
-    "default": 0.75
-  },
-  {
-    "type": "float",
-    "label": "Vertical Offset for Touch Tip (mm below well top, expressed as negative number)",
-    "name": "touch_v_offset",
-    "default": -2
-  },
-  {
-    "type": "float",
-    "label": "Speed of Movement during Touch Tip (mm/sec)",
-    "name": "touch_speed",
-    "default": 10
-  },
-  {
-    "type": "float",
     "label": "Maximum Volume Capacity for p300 Tips (uL)",
     "name": "tip_max",
     "default": 200
+  },
+  {
+    "type": "float",
+    "label": "Initial Volume of Water in Tube (uL)",
+    "name": "water_volume",
+    "default": 1000
+  },
+  {
+    "type": "float",
+    "label": "Initial Volume of Fluomix in Tube (uL)",
+    "name": "fluomix_volume",
+    "default": 900
   },
   {
     "type": "float",
