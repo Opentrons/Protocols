@@ -1,8 +1,11 @@
+from opentrons.protocol_api.labware import Well
+from opentrons import types
+import math
 import csv
 import os
 
 metadata = {
-    'protocolName': 'FluoGene HLA NX 96-Well Setup',
+    'protocolName': 'FluoGene HLA NX 96-Well or 384-Well Setup',
     'author': 'Steve <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.9'
@@ -11,18 +14,25 @@ metadata = {
 
 def run(ctx):
 
-    [p20_blowout_height, disposal_volume, p300_transfer_height,
-     dispense_volume, p300_mixing_height, reduced_pick_up_current,
-     p20_tube_height, tracking_reset, p20_dispense_height,
-     p20_reservoir_height, touch_radius, touch_v_offset, touch_speed, tip_max,
+    [use_384, p20_blowout_height, disposal_volume, p300_transfer_height,
+     dispense_volume, p300_mixing_height,
+     p20_tube_height, relative_height, tracking_reset,
+     p20_reservoir_height, tip_max, water_volume, fluomix_volume,
      dna_volume, reservoir_fill_volume] = get_values(  # noqa: F821
-        "p20_blowout_height", "disposal_volume", "p300_transfer_height",
-        "dispense_volume", "p300_mixing_height", "reduced_pick_up_current",
-        "p20_tube_height", "tracking_reset", "p20_dispense_height",
-        "p20_reservoir_height", "touch_radius", "touch_v_offset",
-        "touch_speed", "tip_max", "dna_volume", "reservoir_fill_volume")
+        "use_384", "p20_blowout_height", "disposal_volume",
+        "p300_transfer_height", "dispense_volume", "p300_mixing_height",
+        "p20_tube_height", "relative_height", "tracking_reset",
+        "p20_reservoir_height", "tip_max", "water_volume", "fluomix_volume",
+        "dna_volume", "reservoir_fill_volume")
 
     ctx.set_rail_lights(True)
+    ctx.delay(seconds=10)
+
+    # constant values
+    reduced_pick_up_current = 0.15
+    touch_radius = 0.75
+    touch_v_offset = -3
+    touch_speed = 10
 
     # constrain reduced_pick_up_current value to acceptable range
     if reduced_pick_up_current < 0.1 or reduced_pick_up_current > 0.15:
@@ -62,6 +72,9 @@ def run(ctx):
     [current_starting_tip_20, current_starting_tip_300] = [
      current_data_list[i] for i in range(1, 3)]
 
+    if current_col_index == 0:
+        ctx.pause("Please place an unused, clean source plate in deck slot 7.")
+
     # reservoir with column tracking between protocol runs
     reservoir = ctx.load_labware('nunc_96_wellplate_500ul', '7')
 
@@ -74,7 +87,7 @@ def run(ctx):
     protocol steps using tracked reservoir column
     """
     # reagent mix in reservoir column tracked across protocol runs
-    reservoir_mix = reservoir.columns()[current_col_index]
+    reservoir_col = reservoir.columns()[current_col_index]
     ctx.set_rail_lights(True)
 
     # tips and p300 multi
@@ -84,16 +97,78 @@ def run(ctx):
     p20m = ctx.load_instrument('p20_multi_gen2', 'right', tip_racks=tips20)
 
     # trays
-    trays = [
-     ctx.load_labware(labware, slot) for labware, slot in zip(
-      ['innotrainot2pcrplate_96_wellplate_200ul',
-       'innotrainot22pcrplate_96_wellplate_200ul'], ['5', '6'])]
+    if not use_384:
+        trays = [
+         ctx.load_labware(labware, slot) for labware, slot in zip(
+          ['innotrainot2pcrplate_96_wellplate_200ul',
+           'innotrainot22pcrplate_96_wellplate_200ul'], ['5', '6'])]
+    else:
+        trays = [ctx.load_labware('custom_384_well_tray', '5')]
 
     # tube rack rxn components: water in A1, pcr mix in A2, DNA dilution in A3
     tube_rack = ctx.load_labware(
      'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', '4')
-    [water, pcr_mix, dna_dilution] = [
+    [w, p, d] = [
      tube_rack.wells_by_name()[well] for well in ['A1', 'A2', 'A3']]
+
+    class WellH(Well):
+        def __init__(self, well, min_height=5, comp_coeff=1.15,
+                     current_volume=0):
+            super().__init__(well._impl)
+            self.well = well
+            self.min_height = min_height
+            self.comp_coeff = comp_coeff
+            self.current_volume = current_volume
+            if self.diameter is not None:
+                self.radius = self.diameter/2
+                cse = math.pi*(self.radius**2)
+            elif self.length is not None:
+                cse = self.length*self.width
+            self.height = current_volume/cse
+            if self.height < min_height:
+                self.height = min_height
+            elif self.height > well.parent.highest_z:
+                raise Exception("""Specified liquid volume
+                can not exceed the height of the labware.""")
+
+        def height_dec(self, vol):
+            if self.diameter is not None:
+                cse = math.pi*(self.radius**2)
+            elif self.length is not None:
+                cse = self.length*self.width
+            dh = (vol/cse)*self.comp_coeff
+            if self.height - dh > self.min_height:
+                self.height = self.height - dh
+            else:
+                self.height = self.min_height
+            if self.current_volume - vol > 0:
+                self.current_volume = self.current_volume - vol
+            else:
+                self.current_volume = 0
+            return(self.well.bottom(self.height))
+
+        def height_inc(self, vol, top=False):
+            if self.diameter is not None:
+                cse = math.pi*(self.radius**2)
+            elif self.length is not None:
+                cse = self.length*self.width
+            ih = (vol/cse)*self.comp_coeff
+            if self.height < self.min_height:
+                self.height = self.min_height
+            if self.height + ih < self.depth:
+                self.height = self.height + ih
+            else:
+                self.height = self.depth
+            self.current_volume += vol
+            if top is False:
+                return(self.well.bottom(self.height))
+            else:
+                return(self.well.top())
+
+    # to track liquid height
+    water = WellH(w, min_height=1, current_volume=water_volume)
+    pcr_mix = WellH(p, min_height=1, current_volume=fluomix_volume)
+    dna_dilution = WellH(d, min_height=1, current_volume=dna_volume)
 
     """
     pick_up() function to use only the rear-most channel of the p20 multi
@@ -114,7 +189,7 @@ def run(ctx):
         pip.pick_up_tip(tips_ordered[tip_count])
         tip_count += 1
 
-    # p20m "single channel" 4 ul each of water and PCR mx to H1 of each tray
+    # one-tip transfer water, fluomix to 1st col last well
     p20m.flow_rate.aspirate = 3.8
     p20m.flow_rate.dispense = 3.8
 
@@ -145,92 +220,67 @@ def run(ctx):
      str(ctx._implementation._hw_manager.hardware._attached_instruments[
       p20m._implementation.get_mount()].config.pick_up_current)))
 
-    for tray in trays:
-        for reagent in [water, pcr_mix]:
-            p20m.mix(1, 4, reagent.bottom(p20_tube_height))
-            p20m.aspirate(4, reagent.bottom(p20_tube_height))
+    # water then fluomix to last well of 1st col each tray
+    for reagent in [water, pcr_mix]:
+        for tray in trays:
+            p20m.aspirate(4, reagent.height_dec(4))
+            p20m.dispense(4, reagent.height_inc(4))
+            p20m.aspirate(4, reagent.height_dec(4))
+            d_height = -3 if use_384 else -11.2
             p20m.dispense(
-             4, tray.wells_by_name()['H1'].bottom(p20_dispense_height))
+             4, tray.columns()[0][-1].top(d_height))
             p20m.touch_tip(
-             tray.wells_by_name()['H1'], radius=touch_radius,
+             tray.columns()[0][-1], radius=touch_radius,
              v_offset=touch_v_offset, speed=touch_speed)
     p20m.drop_tip()
 
     # helper function for repeat large vol transfers
     def repeat_max_transfer(current_pipette, remaining, source, dest,
-                            flowrate, track_liquid=False,
-                            start_clearance_asp=1, stop_clearance_asp=1,
-                            start_clearance_disp=1, stop_clearance_disp=1):
-        if (start_clearance_asp < 0 or stop_clearance_asp < 0 or
-           start_clearance_disp < 0 or stop_clearance_disp < 0):
-            raise Exception('Clearances must be greater than 0.')
-        total = remaining
-        initial_clearance_asp = current_pipette.well_bottom_clearance.aspirate
-        initial_clearance_disp = current_pipette.well_bottom_clearance.dispense
-        if track_liquid is True:
-            current_pipette.well_bottom_clearance.aspirate =\
-             start_clearance_asp
-            current_pipette.well_bottom_clearance.dispense =\
-                start_clearance_disp
-            clearance_increment_asp = round((
-             start_clearance_asp - stop_clearance_asp) / (total / tip_max))
-            clearance_increment_disp = round((
-             start_clearance_disp - stop_clearance_disp) / (total / tip_max))
+                            flowrate):
         while remaining > tip_max:
-            current_pipette.aspirate(tip_max, source, rate=flowrate)
-            current_pipette.dispense(tip_max, dest, rate=flowrate)
-            if track_liquid is True:
-                if current_pipette.well_bottom_clearance.aspirate >=\
-                 stop_clearance_asp + clearance_increment_asp:
-                    current_pipette.well_bottom_clearance.aspirate -=\
-                     clearance_increment_asp
-                else:
-                    current_pipette.well_bottom_clearance.aspirate =\
-                     stop_clearance_asp
-                if current_pipette.well_bottom_clearance.dispense >=\
-                   stop_clearance_disp + clearance_increment_disp:
-                    current_pipette.well_bottom_clearance.dispense -=\
-                     clearance_increment_disp
-                else:
-                    current_pipette.well_bottom_clearance.dispense =\
-                     stop_clearance_disp
+            current_pipette.aspirate(
+             tip_max, source.height_dec(tip_max), rate=flowrate)
+            current_pipette.dispense(
+             tip_max, dest.height_inc(tip_max), rate=flowrate)
             remaining -= tip_max
-        current_pipette.aspirate(remaining, source, rate=flowrate)
-        current_pipette.dispense(remaining, dest, rate=flowrate)
-        restore_initial_clearances(current_pipette, initial_clearance_asp,
-                                   initial_clearance_disp)
-
-    def restore_initial_clearances(current_pipette, initial_clearance_asp,
-                                   initial_clearance_disp):
-        current_pipette.well_bottom_clearance.aspirate = initial_clearance_asp
-        current_pipette.well_bottom_clearance.dispense = initial_clearance_disp
+        current_pipette.aspirate(
+         remaining, source.height_dec(remaining), rate=flowrate)
+        current_pipette.dispense(
+         remaining, dest.height_inc(remaining), rate=flowrate)
 
     # combine DNA dilution with pcr mix
     p300s.starting_tip = tips300[0].wells_by_name()[
      current_starting_tip_300.split()[0]]
     p300s.pick_up_tip()
-    p300s.mix(10, 200, dna_dilution.bottom(p300_mixing_height), rate=3.2)
-    repeat_max_transfer(p300s, dna_volume, dna_dilution.bottom(
-     p300_transfer_height), pcr_mix.bottom(p300_transfer_height), 0.5)
-    p300s.mix(20, 200, pcr_mix.bottom(p300_mixing_height), rate=3.2)
+    for rep in range(10):
+        p300s.aspirate(200, dna_dilution.height_dec(200).move(
+         types.Point(x=0, y=0, z=-dna_dilution.height*(relative_height))),
+         rate=3.2)
+        p300s.dispense(200, dna_dilution.height_inc(200).move(
+         types.Point(x=0, y=0, z=-dna_dilution.height*(relative_height))),
+         rate=3.2)
+    repeat_max_transfer(p300s, dna_volume, dna_dilution, pcr_mix, 0.5)
+    for rep in range(20):
+        p300s.aspirate(200, pcr_mix.height_dec(200).move(
+         types.Point(x=0, y=0, z=-pcr_mix.height*(relative_height))), rate=3.2)
+        p300s.dispense(200, pcr_mix.height_inc(200).move(
+         types.Point(x=0, y=0, z=-pcr_mix.height*(relative_height))), rate=3.2)
 
     # reservoir filling
-    increment = round((p300_mixing_height - p300_transfer_height) / 7)
-    height = p300_mixing_height
+    reservoir_mix = [WellH(well, min_height=3) for well in reservoir_col]
     for well in reservoir_mix:
         for rep in range(2):
             repeat_max_transfer(
-             p300s, reservoir_fill_volume / 16, pcr_mix.bottom(height),
-             well.bottom(5), 0.5)
-        if height > 3:
-            height -= increment
+             p300s, reservoir_fill_volume / 16, pcr_mix,
+             well, 0.5)
     p300s.drop_tip()
     if tips300[0].next_tip(1, p300s.starting_tip) is not None:
         future_tip_300 = tips300[0].next_tip(1, p300s.starting_tip)
     else:
         future_tip_300 = "A1 of Opentrons 96 Filter Tip Rack 200 µL on 11"
 
-    # standard multi transfer 8 ul to remaining tray wells A1-G1 in column 1
+    # 7-tip transfer 8 ul to wells A1-G1 if 96-well tray
+    # 7-tip transfer 8 ul to wells B1, D1, F1, H1, J1, L1, N1 if 384
     p20m.flow_rate.dispense = 22
     p20m.reset_tipracks()
     p20m.starting_tip = tips20[0].wells_by_name()[
@@ -239,34 +289,61 @@ def run(ctx):
     for tray in trays:
         p20m.aspirate(dispense_volume, reservoir_mix[0].bottom(
          p20_reservoir_height))
-        p20m.dispense(dispense_volume, tray.columns()[0][0].bottom(
-         p20_dispense_height))
+        d_height = -3 if use_384 else -11.2
+        d_well = 1 if use_384 else 0
+        p20m.dispense(dispense_volume, tray.columns()[0][d_well].top(d_height))
         p20m.touch_tip(
-         tray.columns()[0][0], radius=touch_radius,
+         tray.columns()[0][d_well], radius=touch_radius,
          v_offset=touch_v_offset, speed=touch_speed)
     p20m.drop_tip()
 
-    # standard multi distribute 8 ul to remaining tray wells in columns 2-12
     p20m.pick_up_tip()
+    # 8-tip transfer 8 ul to wells A1, C1, E1, G1, I1, K1, M1, O1 if 384
+    if use_384:
+        for tray in trays:
+            p20m.aspirate(dispense_volume, reservoir_mix[0].bottom(
+             p20_reservoir_height))
+            d_height = -3
+            d_well = 0
+            p20m.dispense(
+             dispense_volume, tray.columns()[0][d_well].top(d_height))
+            p20m.touch_tip(
+             tray.columns()[0][d_well], radius=touch_radius,
+             v_offset=touch_v_offset, speed=touch_speed)
+
+    # 8-tip transfer 8 ul to columns 2-12 of each tray
     for tray in trays:
-        for index, column in enumerate(tray.columns()[1:]):
-            if not index % 2:
-                if index < len(tray.columns()[1:]) - 1:
-                    p20m.aspirate(
-                     2*dispense_volume + disposal_volume, reservoir_mix[
-                      0].bottom(p20_reservoir_height))
-                else:
-                    p20m.aspirate(
-                     dispense_volume, reservoir_mix[0].bottom(
-                      p20_reservoir_height))
-            p20m.dispense(dispense_volume, column[0].bottom(
-             p20_dispense_height))
+        for index, column in enumerate(tray.columns()[1:12]):
+            if use_384:
+                p20m.aspirate(2*dispense_volume + disposal_volume,
+                              reservoir_mix[0].bottom(p20_reservoir_height))
+            else:
+                if not index % 2:
+                    if index < len(tray.columns()[1:]) - 1:
+                        p20m.aspirate(
+                         2*dispense_volume + disposal_volume, reservoir_mix[
+                          0].bottom(p20_reservoir_height))
+                    else:
+                        p20m.aspirate(
+                         dispense_volume, reservoir_mix[0].bottom(
+                          p20_reservoir_height))
+            d_height = -3 if use_384 else -11.2
+            p20m.dispense(dispense_volume, column[0].top(d_height))
             p20m.touch_tip(
              column[0], radius=touch_radius,
              v_offset=touch_v_offset, speed=touch_speed)
-            if index % 2:
-                p20m.dispense(disposal_volume, reservoir_mix[0].bottom(
-                 p20_blowout_height))
+            if use_384:
+                p20m.dispense(dispense_volume, column[1].top(d_height))
+                p20m.touch_tip(
+                 column[1], radius=touch_radius,
+                 v_offset=touch_v_offset, speed=touch_speed)
+                p20m.dispense(
+                 disposal_volume, reservoir_mix[0].bottom(p20_blowout_height))
+            else:
+                if index % 2:
+                    p20m.dispense(disposal_volume, reservoir_mix[0].bottom(
+                     p20_blowout_height))
+
     p20m.drop_tip()
     if tips20[0].next_tip(8, p20m.starting_tip) is not None:
         future_tip_20 = tips20[0].next_tip(8, p20m.starting_tip)
