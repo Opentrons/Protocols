@@ -1,6 +1,12 @@
 [
   {
     "type": "int",
+    "label": "Fill Volume (215-250 uL)",
+    "name": "fill_volume",
+    "default": 250
+  },
+  {
+    "type": "int",
     "label": "Number of Caps (up to 96)",
     "name": "cap_count",
     "default": 96
