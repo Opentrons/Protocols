@@ -11,18 +11,22 @@ metadata = {
 
 def run(ctx):
 
-    [cap_count, rack_count, remove_empty_racks, arrange_tips, track_tips,
-     change_tips, clearance_reservoir,
-     tracking_reset, labware_rack] = get_values(  # noqa: F821
-        "cap_count", "rack_count", "remove_empty_racks", "arrange_tips",
-        "track_tips", "change_tips", "clearance_reservoir", "tracking_reset",
-        "labware_rack")
+    [fill_volume, cap_count, rack_count, remove_empty_racks, arrange_tips,
+     track_tips, change_tips, clearance_reservoir, tracking_reset,
+     labware_rack] = get_values(  # noqa: F821
+        "fill_volume", "cap_count", "rack_count", "remove_empty_racks",
+        "arrange_tips", "track_tips", "change_tips", "clearance_reservoir",
+        "tracking_reset", "labware_rack")
 
     ctx.set_rail_lights(True)
     ctx.delay(seconds=10)
     """
     keep parameter value selections within acceptable range
     """
+
+    if fill_volume < 215 or fill_volume > 250:
+        raise Exception('Fill volume must be in range 215-250.')
+
     if cap_count < 1 or cap_count > 96:
         raise Exception('Cap count must be in range 1-96.')
 
@@ -146,8 +150,9 @@ def run(ctx):
         for column in rack.columns()[:num_cols]:
             if not p300m.has_tip:
                 pick_up()
-            p300m.aspirate(300, reservoir['A1'].bottom(clearance_reservoir))
-            p300m.dispense(300, column[0].top(-2))
+            p300m.aspirate(
+             fill_volume, reservoir['A1'].bottom(clearance_reservoir))
+            p300m.dispense(fill_volume, column[0].top(-2))
             if change_tips:
                 p300m.drop_tip()
     if p300m.has_tip:
