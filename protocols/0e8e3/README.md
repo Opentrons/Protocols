@@ -30,8 +30,8 @@ This protocol performs a custom PCR prep across 6 96-well plates. It accommodate
 Reagent reservoir:  
 * channel 1: DNAse buffer
 * channel 2: EDTA
-* channel 3: dilution buffer
-* channel 4: PCR mix
+* channels 3-7: dilution buffer
+* channel 8: PCR mix
 
 ---
 
