@@ -23,8 +23,8 @@ def run(ctx):
     # modules and labware
     plate_a = ctx.load_labware('thermofishernunc_96_wellplate_450ul', '1',
                                'Plate A (Sample Plate)')
-    plate_c = ctx.load_labware('thermofishernunc_96_wellplate_450ul', '2',
-                               'Plate C (DNAse Reaction Plate)')
+    # plate_c = ctx.load_labware('thermofishernunc_96_wellplate_450ul', '2',
+    #                            'Plate C (DNAse Reaction Plate)')
     plate_d = ctx.load_labware('thermofishernunc_96_wellplate_450ul', '3',
                                'Plate D (Dilution Buffer Plate 1)')
     tempdeck = ctx.load_module('temperature module gen2', '10')
