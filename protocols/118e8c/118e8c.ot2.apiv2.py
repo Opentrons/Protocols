@@ -167,7 +167,7 @@ def run(ctx):
 
     # to track liquid height
     water = WellH(w, min_height=1, current_volume=water_volume)
-    pcr_mix = WellH(p, min_height=1, current_volume=fluomix_volume)
+    pcr_mix = WellH(p, min_height=1, current_volume=0.9*fluomix_volume)
     dna_dilution = WellH(d, min_height=1, current_volume=dna_volume)
 
     """
