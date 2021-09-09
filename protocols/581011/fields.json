@@ -52,6 +52,12 @@
   },
   {
     "type": "float",
+    "label": "Dispense Reservoir Height",
+    "name": "disp_res_height",
+    "default": 1
+  },
+  {
+    "type": "float",
     "label": "Transfer Aspiration Height",
     "name": "asp_height",
     "default": 1
