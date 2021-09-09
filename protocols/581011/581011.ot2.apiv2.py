@@ -2,6 +2,7 @@
 from itertools import groupby
 import math
 
+
 metadata = {
     'protocolName': 'Cherrypicking with Multi-Channel Pipette and CSV',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
@@ -13,12 +14,12 @@ metadata = {
 def run(ctx):
     """PROTOCOL."""
     [csv_samp, vol_target_cell, pre_mix, mix_asp_height, mix_disp_height,
-     premix_reps, mix_vol, mix_rate,
+     premix_reps, mix_vol, mix_rate, disp_res_height,
      asp_height, disp_height, asp_rate,
         disp_rate, m300_mount] = get_values(  # noqa: F821
         "csv_samp", "vol_target_cell", "pre_mix",
         "mix_asp_height", "mix_disp_height", "premix_reps",
-        "mix_vol", "mix_rate",
+        "mix_vol", "mix_rate", "disp_res_height",
         "asp_height", "disp_height", "asp_rate", "disp_rate", "m300_mount")
 
     # load labware
@@ -117,7 +118,8 @@ def run(ctx):
     def check_volume(counter, tot_vol, chunk, source_well):
         if m300.current_volume < vol_target_cell:
             if m300.current_volume > 0:
-                m300.dispense(m300.current_volume, source_well)
+                m300.dispense(m300.current_volume,
+                              source_well.bottom(disp_res_height))
             if counter != len(chunk)-1:
                 if pre_mix:
                     mix_diff_height(source_well)
