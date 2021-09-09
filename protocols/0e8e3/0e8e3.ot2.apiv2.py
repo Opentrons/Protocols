@@ -39,10 +39,10 @@ def run(ctx):
                                    'final Bio-Rad PCR plate')
     tipracks20 = [
         ctx.load_labware('opentrons_96_tiprack_20ul', slot)
-        for slot in ['4', '7']]
+        for slot in ['7', '8', '11']]
     tipracks300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
-        for slot in ['8', '11']]
+        for slot in ['4']]
 
     # pipettes
     p20 = ctx.load_instrument(p20_type, p20_mount, tip_racks=tipracks20)
