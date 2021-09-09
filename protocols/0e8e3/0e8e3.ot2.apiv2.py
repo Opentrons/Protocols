@@ -134,7 +134,7 @@ to 37C')
 
     for d in _get_samples(plate_b, p20):
         _pick_up(p20)
-        p20.transfer(5, edta, d, new_tip='never')
+        p20.transfer(5, edta, d, mix_after=(5, 15), new_tip='never')
         p20.drop_tip()
 
     dil_vol = 10000
