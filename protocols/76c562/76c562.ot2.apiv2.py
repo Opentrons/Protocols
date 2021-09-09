@@ -171,10 +171,11 @@ resuming.'.format(pip.max_volume))
         pick_up(pipette)
         pipette.transfer(float(vol), source, dest, new_tip='never')
         if mix:
-            if float(vol) < pipette.max_volume:
+            max = pipette.tip_racks[0].wells()[0].max_volume
+            if float(vol) < max:
                 mix_vol = float(vol)
             else:
-                mix_vol = pipette.max_volume
+                mix_vol = max
             pipette.mix(3, mix_vol, dest)
         pipette.blow_out()
         pipette.drop_tip()
