@@ -39,10 +39,10 @@ def run(ctx):
                                    'final Bio-Rad PCR plate')
     tipracks20 = [
         ctx.load_labware('opentrons_96_tiprack_20ul', slot)
-        for slot in ['4', '7']]
+        for slot in ['7', '8', '11']]
     tipracks300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
-        for slot in ['8', '11']]
+        for slot in ['4']]
 
     # pipettes
     p20 = ctx.load_instrument(p20_type, p20_mount, tip_racks=tipracks20)
@@ -128,13 +128,13 @@ resuming.')
 to 37C')
     tempdeck.set_temperature(37)
     ctx.delay(minutes=60, msg='Holding plate C at 37C for 1hr')
-    ctx.pause('Remove foil from plate before proceeding')
     tempdeck.set_temperature(4)
+    ctx.pause('Remove foil from plate before proceeding')
     tempdeck.deactivate()
 
     for d in _get_samples(plate_b, p20):
         _pick_up(p20)
-        p20.transfer(5, edta, d, new_tip='never')
+        p20.transfer(5, edta, d, mix_after=(5, 15), new_tip='never')
         p20.drop_tip()
 
     dil_vol = 10000
