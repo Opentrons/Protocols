@@ -30,6 +30,30 @@
     ]
   },
   {
+    "type": "str",
+    "label": "left pipette start slot",
+    "name": "left_pip_slot",
+    "default": "7"
+  },
+  {
+    "type": "str",
+    "label": "right pipette start slot",
+    "name": "right_pip_slot",
+    "default": "9"
+  },
+  {
+    "type": "str",
+    "label": "left pipette start tip",
+    "name": "left_pip_tip",
+    "default": "A1"
+  },
+  {
+    "type": "str",
+    "label": "right pipette start tip",
+    "name": "right_pip_tip",
+    "default": "A1"
+  },
+  {
     "type": "textFile",
     "label": "diluent 1 CSV",
     "name": "d_csv1",
