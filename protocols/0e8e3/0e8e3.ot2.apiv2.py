@@ -128,8 +128,8 @@ resuming.')
 to 37C')
     tempdeck.set_temperature(37)
     ctx.delay(minutes=60, msg='Holding plate C at 37C for 1hr')
-    ctx.pause('Remove foil from plate before proceeding')
     tempdeck.set_temperature(4)
+    ctx.pause('Remove foil from plate before proceeding')
     tempdeck.deactivate()
 
     for d in _get_samples(plate_b, p20):
