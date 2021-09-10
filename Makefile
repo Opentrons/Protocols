@@ -55,6 +55,7 @@ $(BUILD_DIR)/%.ot2.apiv2.py.json: protocols/%.ot2.apiv2.py
 	source venvs/ot2/bin/activate && \
 	export OVERRIDE_SETTINGS_DIR=$(OT2_MONOREPO_DIR)/api/tests/opentrons/data && \
 	python protolib/parse/parseOT2v2.py $< $@ && \
+	python scripts/pd-generate.py $< && \
 	deactivate
 
 .PHONY: parse-README
