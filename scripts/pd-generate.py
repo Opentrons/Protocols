@@ -3,6 +3,7 @@ import os
 import uuid
 import json
 import time
+from pathlib import Path
 
 # be sure to cd to Protocols repo top level
 
@@ -105,7 +106,6 @@ def create_pd_json(folder):
     for file in os.listdir(protobuilds_folder):
         if '.py.json' in file:
             protobuilds_file = protobuilds_folder + '/' + file
-            print(protobuilds_file)
             with open(protobuilds_file) as pb_file:
                 protobuilds_data = json.load(pb_file)
 
@@ -191,7 +191,6 @@ def create_pd_json(folder):
 def write_file_to_protocol_folder(folder):
     protocol_folder = 'protocols/' + folder
     if 'supplements' not in os.listdir(protocol_folder):
-        print('test')
         os.mkdir(protocol_folder + '/supplements')
     out_path = protocol_folder + '/supplements/pd.json'
     data = create_pd_json(folder)
@@ -200,5 +199,6 @@ def write_file_to_protocol_folder(folder):
 
 
 if __name__ == '__main__':
-    source_folder_path = sys.argv[1]
+    source_file_path = sys.argv[1]
+    source_folder_path = str(Path(source_file_path).parent).split('/')[-1]
     write_file_to_protocol_folder(source_folder_path)
