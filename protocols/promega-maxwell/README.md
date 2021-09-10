@@ -44,7 +44,7 @@ For sample traceability and consistency, samples are mapped directly from the ma
 ![reservoirs](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/promega-maxwell/Screen+Shot+2021-05-25+at+5.49.51+PM.png)
 
 Volumes per reservoir channel: (for 96-sample run, not including dead volume):
-* 7mL of binding buffer
+* 9mL of binding buffer
 * 15mL of Wash 1
 * 11mL of Wash 2
 * 11mL of Wash 3
