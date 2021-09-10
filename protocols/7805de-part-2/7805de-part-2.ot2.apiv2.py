@@ -1,4 +1,5 @@
 import math
+from opentrons import types
 from opentrons.protocol_api.labware import OutOfTipsError
 
 metadata = {
@@ -16,13 +17,14 @@ def run(ctx):
     [sample_count, labware_pcr_plate,
      labware_reservoir, labware_tube_strip, clearance_sample_plate,
      clearance_reservoir, clearance_strip_tubes, clearance_bead_pellet,
-     delay_beads, flow_rate_beads, engage_time, engage_offset, dry_time
+     delay_beads, flow_rate_beads, engage_time, engage_offset, dry_time,
+     x_offset_bead_pellet
      ] = get_values(  # noqa: F821
       'sample_count', 'labware_pcr_plate',
       'labware_reservoir', 'labware_tube_strip', 'clearance_sample_plate',
       'clearance_reservoir', 'clearance_strip_tubes', 'clearance_bead_pellet',
       'delay_beads', 'flow_rate_beads', 'engage_time', 'engage_offset',
-      'dry_time')
+      'dry_time', 'x_offset_bead_pellet')
 
     ctx.set_rail_lights(True)
     if not 1 <= sample_count <= 24:
@@ -333,8 +335,23 @@ def run(ctx):
     for column in mag_plate.columns()[
      :num_cols]+mag_plate.columns()[6:num_cols+6]:
         pick_up_or_refill(p300m)
-        p300m.transfer(112, column[0].bottom(
-         clearance_bead_pellet), waste_1.top(), air_gap=15, new_tip='never')
+        if mag_plate.columns().index(column) % 2 != 1:
+            # offset to left to avoid beads (odd col numbers)
+            f = -1
+        else:
+            # offset to right to avoid beads (even col numbers)
+            f = 1
+        p300m.move_to(column[0].top())
+        ctx.max_speeds['Z'] = 10
+        p300m.move_to(column[0].bottom(4))
+        p300m.aspirate(62, column[0].bottom(4), rate=0.33)
+        p300m.aspirate(50, column[0].bottom(
+         clearance_bead_pellet).move(types.Point(
+          x=f*x_offset_bead_pellet, y=0, z=0)), rate=0.33)
+        p300m.move_to(column[0].top())
+        ctx.max_speeds['Z'] = None
+        p300m.air_gap(15)
+        p300m.dispense(127, waste_1.top())
         p300m.air_gap(15)
         p300m.drop_tip()
     etoh_flow_rates(p300m)
@@ -363,7 +380,21 @@ def run(ctx):
         for column in mag_plate.columns()[
          :num_cols]+mag_plate.columns()[6:num_cols+6]:
             pick_up_or_refill(p300m)
-            p300m.aspirate(100, column[0].bottom(clearance_bead_pellet))
+            if mag_plate.columns().index(column) % 2 != 1:
+                # offset to left to avoid beads (odd col numbers)
+                f = -1
+            else:
+                # offset to right to avoid beads (even col numbers)
+                f = 1
+            p300m.move_to(column[0].top())
+            ctx.max_speeds['Z'] = 10
+            p300m.move_to(column[0].bottom(4))
+            p300m.aspirate(50, column[0].bottom(4), rate=0.33)
+            p300m.aspirate(50, column[0].bottom(
+             clearance_bead_pellet).move(types.Point(
+              x=f*x_offset_bead_pellet, y=0, z=0)), rate=0.33)
+            p300m.move_to(column[0].top())
+            ctx.max_speeds['Z'] = None
             p300m.air_gap(15)
             p300m.dispense(115, wst.top())
             for rep in range(3):
@@ -379,7 +410,7 @@ def run(ctx):
     remove plate, spin, return the plate to the magnetic module
     resume
     """)
-    mag.engage(offset=engage_offset)
+    mag.engage()
     ctx.delay(minutes=1)
     pause_attention("""
     remove residual ethanol manually with a 10 ul tip
@@ -396,9 +427,16 @@ def run(ctx):
     for column in mag_plate.columns()[
      :num_cols]+mag_plate.columns()[6:num_cols+6]:
         pick_up_or_refill(p300m)
-        p300m.transfer(
-         26.5, te.bottom(clearance_reservoir), column[0].bottom(
-          clearance_sample_plate), mix_after=(10, 15), new_tip='never')
+        # offset to right to target beads (odd col numbers)
+        if mag_plate.columns().index(column) % 2 != 1:
+            f = 1
+        # offset to left to target beads (even col numbers)
+        else:
+            f = -1
+        p300m.transfer(26.5, te.bottom(clearance_reservoir), column[0].bottom(
+         clearance_sample_plate).move(types.Point(
+          x=f*x_offset_bead_pellet, y=0, z=0)), mix_after=(10, 15),
+          new_tip='never')
         slow_tip_withdrawal(p300m, column[0])
         p300m.drop_tip()
     pause_attention("""
@@ -406,16 +444,29 @@ def run(ctx):
     resume
     """)
     ctx.delay(minutes=2)
-    mag.engage(offset=engage_offset)
+    mag.engage()
     ctx.delay(minutes=engage_time)
     ctx.comment("""
     combine eluates and transfer to elution plate
     """)
     for index, column in enumerate(mag_plate.columns()[:num_cols]):
         pick_up_or_refill(p300m)
-        p300m.aspirate(25, column[0].bottom(clearance_bead_pellet))
-        p300m.aspirate(
-         25, mag_plate.columns()[index+6][0].bottom(clearance_bead_pellet))
+        # offset to left to avoid beads (odd col numbers)
+        if mag_plate.columns().index(column) % 2 != 1:
+            f = -1
+        # offset to right to avoid beads (even col numbers)
+        else:
+            f = 1
+        p300m.move_to(column[0].top())
+        p300m.move_to(column[0].bottom(4))
+        p300m.aspirate(25, column[0].bottom(
+         clearance_bead_pellet).move(types.Point(
+          x=f*x_offset_bead_pellet, y=0, z=0)), rate=0.33)
+        p300m.move_to(mag_plate.columns()[index+6][0].top())
+        p300m.move_to(mag_plate.columns()[index+6][0].bottom(4))
+        p300m.aspirate(25, mag_plate.columns()[index+6][0].bottom(
+         clearance_bead_pellet).move(types.Point(
+          x=f*x_offset_bead_pellet, y=0, z=0)), rate=0.33)
         p300m.dispense(
          50, elution_plate.columns()[index][0].bottom(clearance_sample_plate))
         p300m.drop_tip()
