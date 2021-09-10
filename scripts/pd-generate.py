@@ -18,11 +18,11 @@ def get_now_ms():
     return round(time.time()*1000)
 
 
-def get_category(folder):
-    readme_data_path = 'protoBuilds' + '/' + folder + '/README.json'
-    with open(readme_data_path) as readme_data_file:
-        readme_data = json.load(readme_data_file)
-        return(readme_data['categories'])
+# def get_category(folder):
+    # readme_data_path = 'protoBuilds' + '/' + folder + '/README.json'
+    # with open(readme_data_path) as readme_data_file:
+    #     readme_data = json.load(readme_data_file)
+    #     return(readme_data['categories'])
 
 
 def get_initial_setup():
@@ -130,7 +130,7 @@ def create_pd_json(folder):
         if load_name == 'opentrons_1_trash_1100ml_fixed':
             id = 'trashId'
         else:
-            id = generate_uuid() + ':' + full_labware_name
+            id = None
         all_labware_dict[load_name] = {
                 'fullname': full_labware_name,
                 'definition': lw,
@@ -144,7 +144,11 @@ def create_pd_json(folder):
         display_name = lw['name']
 
         corr_id_lw = all_labware_dict[load_name]
-        labware[corr_id_lw['id']] = {
+        if not corr_id_lw['id']:
+            id = f'{generate_uuid()}:{corr_id_lw["fullname"]}'
+        else:
+            id = corr_id_lw['id']
+        labware[id] = {
             'slot': slot,
             'displayName': display_name,
             'definitionId': corr_id_lw['fullname']
@@ -156,17 +160,17 @@ def create_pd_json(folder):
 
     protobuilds_metadata = protobuilds_data['metadata']
     now = get_now_ms()
-    categories = get_category(folder)
-    category = [key for key in categories.keys()][0]
-    subcategory = categories[category][0]
+    # categories = get_category(folder)
+    # category = [key for key in categories.keys()][0]
+    # subcategory = categories[category][0]
     metadata = {
         'protocolName': protobuilds_metadata['protocolName'],
         'author': protobuilds_metadata['author'],
         'description': '',
         'created': now,
         'lastModified': now,
-        'category': category,
-        'subcategory': subcategory,
+        'category': None,
+        'subcategory': None,
         'tags': []
     }
 
@@ -195,7 +199,7 @@ def write_file_to_protocol_folder(folder):
     out_path = protocol_folder + '/supplements/pd.json'
     data = create_pd_json(folder)
     with open(out_path, 'w') as out_file:
-        json.dump(data, out_file)
+        json.dump(data, out_file, indent=4)
 
 
 if __name__ == '__main__':
