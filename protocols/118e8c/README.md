@@ -26,7 +26,7 @@ The deck layout can be displayed by uploading the attached json protocol to the 
 2. Download your protocol.
 3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
 4. Set up your deck according to the deck map below.
-5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support article](https://support.opentrons.com/ot-2/getting-started-software-setup/deck-calibration).
+5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support article](https://support.opentrons.com/ot-2/getting-started-software-setup/deck-calibration). For optimal calibration of the custom 384-well tray (2.5 mm well diameter), use [384-well tray calibration protocol](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/118e8c/for_384_tray_calibration.py) after performing the regular protocol labware calibration. 
 6. Hit "Run".
 
 ###### Internal
