@@ -1,0 +1,541 @@
+{
+    "content": "metadata = {\n    'protocolName': 'Tube to Plate Viral Media Transfer',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.10'\n}\n\n\ndef run(ctx):\n\n    [num_samp, p1000_mount] = get_values(  # noqa: F821\n        \"num_samp\", \"p1000_mount\")\n\n    # load labware\n    wellplate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '3')\n    tiprack = [ctx.load_labware('opentrons_96_filtertiprack_1000ul', '6')]\n    tuberacks = [ctx.load_labware(\n                 'nest_32_tuberack_8x15ml_8x15ml_8x15ml_8x15ml', slot)\n                 for slot in ['1', '4', '7']]\n\n    # load instruments\n    p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,\n                                tip_racks=tiprack)\n\n    # PROTOCOL\n    tubes = [tube for tuberack in tuberacks for row in tuberack.rows()\n             for tube in row][:num_samp]\n    wells = [well for row in wellplate.rows() for well in row]\n\n    for tube, well in zip(tubes, wells):\n        p1000.pick_up_tip()\n        p1000.aspirate(200, tube)\n        p1000.dispense(200, well)\n        p1000.drop_tip()\n",
+    "custom_labware_defs": [
+        {
+            "brand": {
+                "brand": "Opentrons",
+                "brandId": [],
+                "links": []
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 260,
+                "yDimension": 85.5,
+                "zDimension": 121.3
+            },
+            "groups": [
+                {
+                    "brand": {
+                        "brand": "NEST",
+                        "brandId": [],
+                        "links": []
+                    },
+                    "metadata": {
+                        "displayCategory": "tubeRack",
+                        "displayName": "NEST 15 mL Conical",
+                        "wellBottomShape": "v"
+                    },
+                    "wells": [
+                        "A1",
+                        "C1",
+                        "A3",
+                        "C3",
+                        "A5",
+                        "C5",
+                        "A7",
+                        "C7"
+                    ]
+                },
+                {
+                    "brand": {
+                        "brand": "NEST",
+                        "brandId": [],
+                        "links": []
+                    },
+                    "metadata": {
+                        "displayCategory": "tubeRack",
+                        "displayName": "NEST 15 mL Conical",
+                        "wellBottomShape": "v"
+                    },
+                    "wells": [
+                        "A2",
+                        "C2",
+                        "A4",
+                        "C4",
+                        "A6",
+                        "C6",
+                        "A8",
+                        "C8"
+                    ]
+                },
+                {
+                    "brand": {
+                        "brand": "NEST",
+                        "brandId": [],
+                        "links": []
+                    },
+                    "metadata": {
+                        "displayCategory": "tubeRack",
+                        "displayName": "NEST 15 mL Conical",
+                        "wellBottomShape": "v"
+                    },
+                    "wells": [
+                        "B1",
+                        "D1",
+                        "B3",
+                        "D3",
+                        "B5",
+                        "D5",
+                        "B7",
+                        "D7"
+                    ]
+                },
+                {
+                    "brand": {
+                        "brand": "NEST",
+                        "brandId": [],
+                        "links": []
+                    },
+                    "metadata": {
+                        "displayCategory": "tubeRack",
+                        "displayName": "NEST 15 mL Conical",
+                        "wellBottomShape": "v"
+                    },
+                    "wells": [
+                        "B2",
+                        "D2",
+                        "B4",
+                        "D4",
+                        "B6",
+                        "D6",
+                        "B8",
+                        "D8"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "tubeRack",
+                "displayName": "NEST 32 Tuberack 15ml (2 Slot)",
+                "displayVolumeUnits": "mL",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1",
+                    "B1",
+                    "C1",
+                    "D1"
+                ],
+                [
+                    "A2",
+                    "B2",
+                    "C2",
+                    "D2"
+                ],
+                [
+                    "A3",
+                    "B3",
+                    "C3",
+                    "D3"
+                ],
+                [
+                    "A4",
+                    "B4",
+                    "C4",
+                    "D4"
+                ],
+                [
+                    "A5",
+                    "B5",
+                    "C5",
+                    "D5"
+                ],
+                [
+                    "A6",
+                    "B6",
+                    "C6",
+                    "D6"
+                ],
+                [
+                    "A7",
+                    "B7",
+                    "C7",
+                    "D7"
+                ],
+                [
+                    "A8",
+                    "B8",
+                    "C8",
+                    "D8"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "nest_32_tuberack_8x15ml_8x15ml_8x15ml_8x15ml"
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 24.87,
+                    "y": 72.76,
+                    "z": 3.55
+                },
+                "A2": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 60.87,
+                    "y": 72.76,
+                    "z": 3.55
+                },
+                "A3": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 87.37,
+                    "y": 72.76,
+                    "z": 3.55
+                },
+                "A4": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 123.37,
+                    "y": 72.76,
+                    "z": 3.55
+                },
+                "A5": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 149.87,
+                    "y": 72.76,
+                    "z": 3.55
+                },
+                "A6": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 185.87,
+                    "y": 72.76,
+                    "z": 3.55
+                },
+                "A7": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 212.37,
+                    "y": 72.76,
+                    "z": 3.55
+                },
+                "A8": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 248.37,
+                    "y": 72.76,
+                    "z": 3.55
+                },
+                "B1": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 11.62,
+                    "y": 52.75,
+                    "z": 3.55
+                },
+                "B2": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 47.62,
+                    "y": 52.75,
+                    "z": 3.55
+                },
+                "B3": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 74.12,
+                    "y": 52.75,
+                    "z": 3.55
+                },
+                "B4": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 110.12,
+                    "y": 52.75,
+                    "z": 3.55
+                },
+                "B5": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 136.62,
+                    "y": 52.75,
+                    "z": 3.55
+                },
+                "B6": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 172.62,
+                    "y": 52.75,
+                    "z": 3.55
+                },
+                "B7": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 199.12,
+                    "y": 52.75,
+                    "z": 3.55
+                },
+                "B8": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 235.12,
+                    "y": 52.75,
+                    "z": 3.55
+                },
+                "C1": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 24.87,
+                    "y": 32.74,
+                    "z": 3.55
+                },
+                "C2": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 60.87,
+                    "y": 32.74,
+                    "z": 3.55
+                },
+                "C3": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 87.37,
+                    "y": 32.74,
+                    "z": 3.55
+                },
+                "C4": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 123.37,
+                    "y": 32.74,
+                    "z": 3.55
+                },
+                "C5": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 149.87,
+                    "y": 32.74,
+                    "z": 3.55
+                },
+                "C6": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 185.87,
+                    "y": 32.74,
+                    "z": 3.55
+                },
+                "C7": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 212.37,
+                    "y": 32.74,
+                    "z": 3.55
+                },
+                "C8": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 248.37,
+                    "y": 32.74,
+                    "z": 3.55
+                },
+                "D1": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 11.62,
+                    "y": 12.73,
+                    "z": 3.55
+                },
+                "D2": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 47.62,
+                    "y": 12.73,
+                    "z": 3.55
+                },
+                "D3": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 74.12,
+                    "y": 12.73,
+                    "z": 3.55
+                },
+                "D4": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 110.12,
+                    "y": 12.73,
+                    "z": 3.55
+                },
+                "D5": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 136.62,
+                    "y": 12.73,
+                    "z": 3.55
+                },
+                "D6": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 172.62,
+                    "y": 12.73,
+                    "z": 3.55
+                },
+                "D7": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 199.12,
+                    "y": 12.73,
+                    "z": 3.55
+                },
+                "D8": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 235.12,
+                    "y": 12.73,
+                    "z": 3.55
+                }
+            }
+        }
+    ],
+    "fields": [
+        {
+            "default": 96,
+            "label": "Number of Sampels (1-96)",
+            "name": "num_samp",
+            "type": "int"
+        },
+        {
+            "label": "P1000 Single-Channel Mount",
+            "name": "p1000_mount",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p1000_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "NEST 32 Tuberack 15ml (2 Slot) on 1",
+            "share": false,
+            "slot": "1",
+            "type": "nest_32_tuberack_8x15ml_8x15ml_8x15ml_8x15ml"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 3",
+            "share": false,
+            "slot": "3",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "NEST 32 Tuberack 15ml (2 Slot) on 4",
+            "share": false,
+            "slot": "4",
+            "type": "nest_32_tuberack_8x15ml_8x15ml_8x15ml_8x15ml"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 1000 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_filtertiprack_1000ul"
+        },
+        {
+            "name": "NEST 32 Tuberack 15ml (2 Slot) on 7",
+            "share": false,
+            "slot": "7",
+            "type": "nest_32_tuberack_8x15ml_8x15ml_8x15ml_8x15ml"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.10",
+        "author": "Rami Farawi <rami.farawi@opentrons.com>",
+        "protocolName": "Tube to Plate Viral Media Transfer",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}
