@@ -12,7 +12,7 @@ def run(ctx):
         "num_samp", "p1000_mount")
 
     # load labware
-    wellplate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '3')
+    wellplate = ctx.load_labware('qiagen_96_wellplate_2250ul', '3')
     tiprack = [ctx.load_labware('opentrons_96_filtertiprack_1000ul', '6')]
     tuberacks = [ctx.load_labware(
                  'nest_32_tuberack_8x15ml_8x15ml_8x15ml_8x15ml', slot)
