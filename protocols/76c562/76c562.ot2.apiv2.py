@@ -105,6 +105,10 @@ def run(ctx):
         else:
             start_slot = right_pip_slot
             start_tip_well = right_pip_tip
+        allowable_slots = [rack.parent for rack in pip.tip_racks]
+        if start_slot not in allowable_slots:
+            raise Exception(f'Start Sot for {mount} pipette must be in \
+{allowable_slots}.')
         starting_tip = ctx.loaded_labwares[
             int(start_slot)].wells_by_name()[start_tip_well]
         if pip.type == 'single':
