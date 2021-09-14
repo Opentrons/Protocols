@@ -1,4 +1,4 @@
-# Protein Crystallization Screening
+# Protein Crystallization Screen Formulator
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -9,11 +9,12 @@
 
 ## Description
 
-This protocol uses p300 single channel and p1000 single channel pipettes to transfer and mix custom volumes (ranging from 20 ul - 2 mL specified in input csv file) of water and each of up to 8 stock reagents to the wells of a 96-deep-well plate followed by mixing of the well contents.
+This protocol uses p300 single channel and p1000 single channel pipettes to transfer and mix custom volumes (ranging from 20 ul - 2 mL specified in input csv file) of water and each of up to 8 stock reagents to the wells of a 96-deep-well plate followed by optional mixing of the well contents.
 
 Links:
 * [example reagent csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/38efd4/Configuration_0725.csv)
 * [example formulation csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/38efd4/Formulation_0725.csv)
+* [supplemental information spreadsheet](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/38efd4/ScreenMaker.xlsx)
 
 This protocol was developed to combine and mix custom volumes (specified in input csv file) of water and up to 8 stock reagents for the screening of protein crystallization conditions in support of protein structure studies.
 
@@ -23,7 +24,7 @@ Set up: Crystallization plate (96-deep-well plate) in deck slot 9, p300 tips in 
 
 The OT-2 will perform the following steps:
 1. step 1- For water and each of up to 8 reagents in reagents csv, transfer designated volumes to designated wells of the crystallization plate in slot 9.
-2. step 2- Perform a mix of all wells in the crystallization plate.
+2. step 2- Optionally, perform a mix of all wells in the crystallization plate.
 
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
