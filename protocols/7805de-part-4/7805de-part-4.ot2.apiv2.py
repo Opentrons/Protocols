@@ -154,11 +154,8 @@ def run(ctx):
 
     Reagents in strip tubes on 4 degree temp module:
     column 1 - NEBNext Q5 Master Mix
-    column 2 - index primer mix 1 (for 1st column of samples)
-    column 3 - index primer mix 2 (if 2nd column of samples)
-    column 4 - index primer mix 3 (if 3rd column of samples)
 
-    p20 tips in slot 2 and 5.
+    p20 tips in slot 2.
     """)
 
     ctx.comment("""
@@ -188,8 +185,8 @@ def run(ctx):
     """)
     temp = ctx.load_module('temperature module gen2', '3')
     reagent_block = temp.load_labware(labware_tube_strip, '4 Degree Block')
-    [q5_mm, index_mx_1, index_mx_2, index_mx_3] = [
-     reagent_block.columns_by_name()[str(name + 1)] for name in [*range(4)]]
+    [q5_mm] = [
+     reagent_block.columns_by_name()[str(name + 1)] for name in [*range(1)]]
 
     ctx.comment("""
     Sample plate in deck slot 7:
@@ -210,8 +207,6 @@ def run(ctx):
     ctx.comment("""
     PCR enrichment:
     add NEBNext Q5 Master Mix and mix
-    add index primer mix
-    mix
 
     liquid handling method for master mix:
     slow flow rate for aspiration and dispense
@@ -232,18 +227,13 @@ def run(ctx):
         slow_tip_withdrawal(p300m, column[0])
         p300m.drop_tip()
     default_flow_rates(p300m)
-    p20m.transfer(
-     10, [
-      index_mx_1[0].bottom(clearance_strip_tubes),
-      index_mx_2[0].bottom(clearance_strip_tubes),
-      index_mx_3[0].bottom(clearance_strip_tubes)], [column[0].bottom(
-       clearance_sample_plate) for column in sample_plate.columns()[
-       :num_cols]], mix_after=(10, 20), new_tip='always')
 
     pause_attention("""
         pausing for off-deck steps
 
-        first, spin the plate
+        add 10 uL primer from selected primer plate cols, mix
+
+        spin the plate
         then, on thermocycler-
 
         30 sec 98 C
@@ -316,15 +306,15 @@ def run(ctx):
     for index, column in enumerate(mag_plate.columns()[:num_cols]):
         pick_up_or_refill(p300m)
         if index % 2 != 1:
-            # offset to right (for even columns) to avoid bead pellet
-            aspirate_location = column[0].bottom(
-             clearance_bead_pellet).move(
-             types.Point(x=x_offset_bead_pellet, y=0, z=0))
-        else:
-            # offset to left (for odd columns) to avoid bead pellet
+            # offset to left for odd col no to avoid bead pellet
             aspirate_location = column[0].bottom(
              clearance_bead_pellet).move(
              types.Point(x=-1*x_offset_bead_pellet, y=0, z=0))
+        else:
+            # offset to right for even col no to avoid bead pellet
+            aspirate_location = column[0].bottom(
+             clearance_bead_pellet).move(
+             types.Point(x=x_offset_bead_pellet, y=0, z=0))
         p300m.move_to(column[0].top())
         ctx.max_speeds['Z'] = 10
         p300m.move_to(column[0].bottom(4))
@@ -361,20 +351,20 @@ def run(ctx):
         for index, column in enumerate(mag_plate.columns()[:num_cols]):
             pick_up_or_refill(p300m)
             if index % 2 != 1:
-                # offset to right (for even columns) to avoid bead pellet
-                aspirate_location = column[0].bottom(
-                 clearance_bead_pellet).move(
-                 types.Point(x=x_offset_bead_pellet, y=0, z=0))
-            else:
-                # offset to left (for odd columns) to avoid bead pellet
+                # offset to left for odd col no to avoid bead pellet
                 aspirate_location = column[0].bottom(
                  clearance_bead_pellet).move(
                  types.Point(x=-1*x_offset_bead_pellet, y=0, z=0))
+            else:
+                # offset to right for even col no to avoid bead pellet
+                aspirate_location = column[0].bottom(
+                 clearance_bead_pellet).move(
+                 types.Point(x=x_offset_bead_pellet, y=0, z=0))
             p300m.move_to(column[0].top())
             ctx.max_speeds['Z'] = 10
             p300m.move_to(column[0].bottom(4))
-            p300m.aspirate(100, column[0].bottom(4), rate=0.5)
-            p300m.aspirate(50, aspirate_location, rate=0.5)
+            p300m.aspirate(100, column[0].bottom(4), rate=0.33)
+            p300m.aspirate(50, aspirate_location, rate=0.33)
             p300m.move_to(column[0].top())
             ctx.max_speeds['Z'] = None
             p300m.air_gap(20)
@@ -406,11 +396,20 @@ def run(ctx):
     ctx.comment("""
     add TE and mix
     """)
-    for column in mag_plate.columns()[:num_cols]:
+    for index, column in enumerate(mag_plate.columns()[:num_cols]):
         pick_up_or_refill(p300m)
+        # offset to right to target beads (odd col numbers)
+        if index % 2 != 1:
+            f = 1
+        # offset to left to target beads (even col numbers)
+        else:
+            f = -1
         p300m.transfer(
          23, te.bottom(clearance_reservoir), column[0].bottom(
-          clearance_sample_plate), mix_after=(10, 15), new_tip='never')
+          clearance_sample_plate).move(types.Point(
+           x=f*x_offset_bead_pellet, y=0, z=0)
+           ), mix_after=(10, 15), new_tip='never')
+        slow_tip_withdrawal(p300m, column[0])
         p300m.drop_tip()
     pause_attention("""
     spin and return the plate
@@ -424,7 +423,17 @@ def run(ctx):
     """)
     for index, column in enumerate(mag_plate.columns()[:num_cols]):
         pick_up_or_refill(p20m)
-        p20m.transfer(
-         20, column[0].bottom(clearance_bead_pellet), elution_plate.columns()[
-          index][0].bottom(clearance_sample_plate), new_tip='never')
+        # offset to left to avoid beads (odd col numbers)
+        if index % 2 != 1:
+            f = -1
+        # offset to right to avoid beads (even col numbers)
+        else:
+            f = 1
+        p20m.move_to(column[0].top())
+        p20m.move_to(column[0].bottom(4))
+        p20m.aspirate(20, column[0].bottom(
+         clearance_bead_pellet).move(types.Point(
+          x=f*x_offset_bead_pellet, y=0, z=0)), rate=0.33)
+        p20m.dispense(
+         20, elution_plate.columns()[index][0].bottom(clearance_sample_plate))
         p20m.drop_tip()

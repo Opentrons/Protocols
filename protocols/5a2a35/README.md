@@ -9,12 +9,12 @@
 
 ## Description
 
-This protocol uses a p300 single channel pipette to transfer custom volumes of DNA from a source plate to a destination plate (starting tip, volume, deck slots and well locations specified by user in a csv file uploaded at the time of protocol download).
+This protocol uses a p300 single channel pipette to transfer custom volumes of DNA from a source plate to a destination plate (starting tip, volume, deck slots and well locations specified in a csv file which has been made available by the user on the OT-2 using the OT-2 jupyter notebook).
 
 Links:
 * [example input csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/5a2a35/Cherrypicking+CSV.csv)
 
-This protocol was developed to transfer custom volumes of DNA from one of possibly several source plates to one of possibly several destination plates according to volumes, deck slot numbers, and well locations in the uploaded csv file.
+This protocol was developed to transfer custom volumes of DNA from one of possibly several source plates to one of possibly several destination plates according to volumes, deck slot numbers, and well locations in a csv file made available by the user on the OT-2 using the OT-2 jupyter notebook.
 
 ## Protocol Steps
 
@@ -55,12 +55,13 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 * [OT-2](https://opentrons.com/ot-2)
 
 ## Process
-1. User the protocol parameter settings on this page to choose the number of plates on deck and upload the input csv file (containing info about starting tip, source and destination plate deck slots, well locations and transfer volumes-see example for data and file format).
+1. Use the protocol parameter settings on this page to choose the number of plates on deck.
 2. Download your protocol.
-3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
-4. Set up your deck according to the deck map.
-5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).
-6. Hit "Run".
+3. This step applies only to this particular protocol. Be sure that an input csv file with file name datafile.csv (containing info about starting tip, source and destination plate deck slots, well locations and transfer volumes-see example for data and file format) has been made available on the OT-2 filesystem in the expected directory location using the OT-2 jupyter notebook.
+4. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
+5. Set up your deck according to the deck map.
+6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).
+7. Hit "Run".
 
 ### Additional Notes
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).

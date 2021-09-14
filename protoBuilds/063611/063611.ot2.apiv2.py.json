@@ -1,7 +1,340 @@
 {
-    "content": "import os\nimport csv\nimport math\n\nmetadata = {\n    'title': 'Cap Filling',\n    'author': 'Steve Plonk',\n    'apiLevel': '2.10'\n}\n\n\ndef run(ctx):\n\n    [cap_count, rack_count, remove_empty_racks, arrange_tips, track_tips,\n     change_tips, clearance_reservoir,\n     tracking_reset, labware_rack] = get_values(  # noqa: F821\n        \"cap_count\", \"rack_count\", \"remove_empty_racks\", \"arrange_tips\",\n        \"track_tips\", \"change_tips\", \"clearance_reservoir\", \"tracking_reset\",\n        \"labware_rack\")\n\n    ctx.set_rail_lights(True)\n    ctx.delay(seconds=10)\n    \"\"\"\n    keep parameter value selections within acceptable range\n    \"\"\"\n    if cap_count < 1 or cap_count > 96:\n        raise Exception('Cap count must be in range 1-96.')\n\n    if rack_count < 1 or rack_count > 4:\n        raise Exception('Rack count must be in range 1-4.')\n\n    if rack_count < math.ceil(cap_count / 24):\n        raise Exception('Rack count must be at least {}'.format(\n         str(math.ceil(cap_count / 24))))\n\n    if clearance_reservoir < 1:\n        raise Exception('Reservoir bottom clearance must be at least 1 mm.')\n\n    if remove_empty_racks:\n        rack_count = math.ceil(cap_count / 24)\n\n    # p300 multi, tips\n    tip_slots = [10, 11]\n    tips300 = [ctx.load_labware(\n     'opentrons_96_tiprack_300ul', str(slot)) for slot in tip_slots]\n    p300m = ctx.load_instrument(\"p300_multi_gen2\", 'right', tip_racks=tips300)\n\n    \"\"\"\n    prepare custom tip arrangement\n    \"\"\"\n\n    if arrange_tips:\n        ctx.pause(\"\"\"Important. Please make sure the tip box in slot 10 is\n        completely full and the tip box in slot 11 is completely empty before\n        clicking resume.\"\"\")\n\n        empty300 = tips300.pop(1)\n\n        for full, empty in zip(tips300, [empty300]):\n            for index, column in enumerate(full.columns()):\n                p300m.pick_up_tip(column[4])\n                p300m.drop_tip(empty.columns()[index][0])\n\n        for box in tips300+[empty300]:\n            for column in box.columns():\n                for s in range(1, 6, 2):\n                    p300m.pick_up_tip(column[s])\n                    p300m.drop_tip(column[s+1])\n\n        p300m.reset_tipracks()\n\n        tips300.append(empty300)\n\n    \"\"\"\n    get starting tip based on previous run\n    \"\"\"\n    if track_tips:\n        # if ctx.is_simulating():  # reversed logic for simulation\n        if not ctx.is_simulating():\n            file_path = '/data/temporary/tiptracking.csv'\n            file_dir = os.path.dirname(file_path)\n            # check for file directory\n            if not os.path.exists(file_dir):\n                os.makedirs(file_dir)\n            # check for file; if not there, create initial csv\n            if (not os.path.isfile(file_path) or tracking_reset):\n                with open(file_path, 'w') as outfile:\n                    outfile.write(\",\".join([\n                     \"0\", \"\\n\"]))\n\n        current_data = []\n        # if not ctx.is_simulating():  # reversed logic for simulation\n        if ctx.is_simulating():\n            current_data = [\"0\"]\n        else:\n            with open(file_path) as csv_file:\n                csv_reader = csv.reader(csv_file, delimiter=',')\n                current_data = next(csv_reader)\n\n        current_starting_tip = current_data[0]\n\n    else:\n        current_starting_tip = 0\n\n    # yield currently available tips\n    tip_list = tips300[0].rows()[0]+tips300[1].rows()[0]\n\n    def tip_loc():\n        unused_list = tip_list[int(current_starting_tip):]\n        yield from unused_list\n\n    use_tip = tip_loc()\n\n    # custom racks\n    rack_slots = [1, 2, 4, 5]\n    [*racks] = [ctx.load_labware(\n     labware_rack, str(\n      slot), 'Rack') for slot in rack_slots[:rack_count]]\n\n    # reservoir\n    reservoir = ctx.load_labware('nest_1_reservoir_195ml', '3', 'Reservoir')\n\n    def pick_up():\n        if track_tips:\n            try:\n                nonlocal use_tip\n                p300m.pick_up_tip(next(use_tip))\n            except StopIteration:\n                ctx.pause(\"Please add full tipracks to slots 10 and 11\")\n                current_starting_tip = 0\n                # to satisfy the linter\n                ctx.comment(\"current starting tip reset to {}\".format(\n                 current_starting_tip))\n                use_tip = tip_loc()\n                p300m.pick_up_tip(next(use_tip))\n        else:\n            p300m.pick_up_tip()\n\n    \"\"\"\n    process steps to fill the caps\n    \"\"\"\n    for index, rack in enumerate(racks[:math.ceil(cap_count / 24)]):\n        remaining = cap_count - (index*24)\n        num_cols = math.ceil(remaining / 4) if (index == (len(racks[\n         :math.ceil(cap_count / 24)])-1)) else 6\n        for column in rack.columns()[:num_cols]:\n            if not p300m.has_tip:\n                pick_up()\n            p300m.aspirate(300, reservoir['A1'].bottom(clearance_reservoir))\n            p300m.dispense(300, column[0].top(-2))\n            if change_tips:\n                p300m.drop_tip()\n    if p300m.has_tip:\n        p300m.drop_tip()\n\n    \"\"\"\n    keep track of starting tip for the next run\n    \"\"\"\n    if track_tips:\n        try:\n            future_tip = tip_list.index(next(use_tip))\n        except StopIteration:\n            ctx.pause(\"Please add full tipracks to slots 10 and 11\")\n            current_starting_tip = 0\n            use_tip = tip_loc()\n            future_tip = tip_list.index(next(use_tip))\n\n        # write future starting tip to csv\n        new_data = \",\".join([str(future_tip), '\\n'])\n        # if ctx.is_simulating():  # reversed logic for simulation\n        if not ctx.is_simulating():\n            with open(file_path, 'w') as outfile:\n                outfile.write(new_data)\n                ctx.comment(\" new_data {}\".format(new_data))\n",
-    "custom_labware_defs": [],
+    "content": "import os\nimport csv\nimport math\n\nmetadata = {\n    'title': 'Cap Filling',\n    'author': 'Steve Plonk',\n    'apiLevel': '2.10'\n}\n\n\ndef run(ctx):\n\n    [fill_volume, cap_count, rack_count, remove_empty_racks, arrange_tips,\n     track_tips, change_tips, clearance_reservoir, tracking_reset,\n     labware_rack] = get_values(  # noqa: F821\n        \"fill_volume\", \"cap_count\", \"rack_count\", \"remove_empty_racks\",\n        \"arrange_tips\", \"track_tips\", \"change_tips\", \"clearance_reservoir\",\n        \"tracking_reset\", \"labware_rack\")\n\n    ctx.set_rail_lights(True)\n    ctx.delay(seconds=10)\n    \"\"\"\n    keep parameter value selections within acceptable range\n    \"\"\"\n\n    if fill_volume < 215 or fill_volume > 250:\n        raise Exception('Fill volume must be in range 215-250.')\n\n    if cap_count < 1 or cap_count > 96:\n        raise Exception('Cap count must be in range 1-96.')\n\n    if rack_count < 1 or rack_count > 4:\n        raise Exception('Rack count must be in range 1-4.')\n\n    if rack_count < math.ceil(cap_count / 24):\n        raise Exception('Rack count must be at least {}'.format(\n         str(math.ceil(cap_count / 24))))\n\n    if clearance_reservoir < 1:\n        raise Exception('Reservoir bottom clearance must be at least 1 mm.')\n\n    if remove_empty_racks:\n        rack_count = math.ceil(cap_count / 24)\n\n    # p300 multi, tips\n    tip_slots = [10, 11]\n    tips300 = [ctx.load_labware(\n     'opentrons_96_tiprack_300ul', str(slot)) for slot in tip_slots]\n    p300m = ctx.load_instrument(\"p300_multi_gen2\", 'right', tip_racks=tips300)\n\n    \"\"\"\n    prepare custom tip arrangement\n    \"\"\"\n\n    if arrange_tips:\n        ctx.pause(\"\"\"Important. Please make sure the tip box in slot 10 is\n        completely full and the tip box in slot 11 is completely empty before\n        clicking resume.\"\"\")\n\n        empty300 = tips300.pop(1)\n\n        for full, empty in zip(tips300, [empty300]):\n            for index, column in enumerate(full.columns()):\n                p300m.pick_up_tip(column[4])\n                p300m.drop_tip(empty.columns()[index][0])\n\n        for box in tips300+[empty300]:\n            for column in box.columns():\n                for s in range(1, 6, 2):\n                    p300m.pick_up_tip(column[s])\n                    p300m.drop_tip(column[s+1])\n\n        p300m.reset_tipracks()\n\n        tips300.append(empty300)\n\n    \"\"\"\n    get starting tip based on previous run\n    \"\"\"\n    if track_tips:\n        # if ctx.is_simulating():  # reversed logic for simulation\n        if not ctx.is_simulating():\n            file_path = '/data/temporary/tiptracking.csv'\n            file_dir = os.path.dirname(file_path)\n            # check for file directory\n            if not os.path.exists(file_dir):\n                os.makedirs(file_dir)\n            # check for file; if not there, create initial csv\n            if (not os.path.isfile(file_path) or tracking_reset):\n                with open(file_path, 'w') as outfile:\n                    outfile.write(\",\".join([\n                     \"0\", \"\\n\"]))\n\n        current_data = []\n        # if not ctx.is_simulating():  # reversed logic for simulation\n        if ctx.is_simulating():\n            current_data = [\"0\"]\n        else:\n            with open(file_path) as csv_file:\n                csv_reader = csv.reader(csv_file, delimiter=',')\n                current_data = next(csv_reader)\n\n        current_starting_tip = current_data[0]\n\n    else:\n        current_starting_tip = 0\n\n    # yield currently available tips\n    tip_list = tips300[0].rows()[0]+tips300[1].rows()[0]\n\n    def tip_loc():\n        unused_list = tip_list[int(current_starting_tip):]\n        yield from unused_list\n\n    use_tip = tip_loc()\n\n    # custom racks\n    rack_slots = [1, 2, 4, 5]\n    [*racks] = [ctx.load_labware(\n     labware_rack, str(\n      slot), 'Rack') for slot in rack_slots[:rack_count]]\n\n    # reservoir\n    reservoir = ctx.load_labware('nest_1_reservoir_195ml', '3', 'Reservoir')\n\n    def pick_up():\n        if track_tips:\n            try:\n                nonlocal use_tip\n                p300m.pick_up_tip(next(use_tip))\n            except StopIteration:\n                ctx.pause(\"Please add full tipracks to slots 10 and 11\")\n                current_starting_tip = 0\n                # to satisfy the linter\n                ctx.comment(\"current starting tip reset to {}\".format(\n                 current_starting_tip))\n                use_tip = tip_loc()\n                p300m.pick_up_tip(next(use_tip))\n        else:\n            p300m.pick_up_tip()\n\n    \"\"\"\n    process steps to fill caps\n    \"\"\"\n    for index, rack in enumerate(racks[:math.ceil(cap_count / 24)]):\n        remaining = cap_count - (index*24)\n        num_cols = math.ceil(remaining / 4) if (index == (len(racks[\n         :math.ceil(cap_count / 24)])-1)) else 6\n        for column in rack.columns()[:num_cols]:\n            if not p300m.has_tip:\n                pick_up()\n            p300m.aspirate(\n             fill_volume, reservoir['A1'].bottom(clearance_reservoir))\n            p300m.dispense(fill_volume, column[0].top(-2))\n            if change_tips:\n                p300m.drop_tip()\n    if p300m.has_tip:\n        p300m.drop_tip()\n\n    \"\"\"\n    keep track of starting tip for the next run\n    \"\"\"\n    if track_tips:\n        try:\n            future_tip = tip_list.index(next(use_tip))\n        except StopIteration:\n            ctx.pause(\"Please add full tipracks to slots 10 and 11\")\n            current_starting_tip = 0\n            use_tip = tip_loc()\n            future_tip = tip_list.index(next(use_tip))\n\n        # write future starting tip to csv\n        new_data = \",\".join([str(future_tip), '\\n'])\n        # if ctx.is_simulating():  # reversed logic for simulation\n        if not ctx.is_simulating():\n            with open(file_path, 'w') as outfile:\n                outfile.write(new_data)\n                ctx.comment(\" new_data {}\".format(new_data))\n",
+    "custom_labware_defs": [
+        {
+            "brand": {
+                "brand": "custom",
+                "brandId": []
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 127.76,
+                "yDimension": 85.48,
+                "zDimension": 30.65
+            },
+            "groups": [
+                {
+                    "brand": {
+                        "brand": "custom",
+                        "brandId": []
+                    },
+                    "metadata": {
+                        "displayCategory": "tubeRack",
+                        "wellBottomShape": "flat"
+                    },
+                    "wells": [
+                        "A1",
+                        "B1",
+                        "C1",
+                        "D1",
+                        "A2",
+                        "B2",
+                        "C2",
+                        "D2",
+                        "A3",
+                        "B3",
+                        "C3",
+                        "D3",
+                        "A4",
+                        "B4",
+                        "C4",
+                        "D4",
+                        "A5",
+                        "B5",
+                        "C5",
+                        "D5",
+                        "A6",
+                        "B6",
+                        "C6",
+                        "D6"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "tubeRack",
+                "displayName": "custom_24_well_rack",
+                "displayVolumeUnits": "\u00b5L",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1",
+                    "B1",
+                    "C1",
+                    "D1"
+                ],
+                [
+                    "A2",
+                    "B2",
+                    "C2",
+                    "D2"
+                ],
+                [
+                    "A3",
+                    "B3",
+                    "C3",
+                    "D3"
+                ],
+                [
+                    "A4",
+                    "B4",
+                    "C4",
+                    "D4"
+                ],
+                [
+                    "A5",
+                    "B5",
+                    "C5",
+                    "D5"
+                ],
+                [
+                    "A6",
+                    "B6",
+                    "C6",
+                    "D6"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "custom_24_well_rack",
+                "quirks": []
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 24.4,
+                    "diameter": 7.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1000,
+                    "x": 16.38,
+                    "y": 71.13,
+                    "z": 6.25
+                },
+                "A2": {
+                    "depth": 24.4,
+                    "diameter": 7.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1000,
+                    "x": 35.38,
+                    "y": 71.13,
+                    "z": 6.25
+                },
+                "A3": {
+                    "depth": 24.4,
+                    "diameter": 7.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1000,
+                    "x": 54.38,
+                    "y": 71.13,
+                    "z": 6.25
+                },
+                "A4": {
+                    "depth": 24.4,
+                    "diameter": 7.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1000,
+                    "x": 73.38,
+                    "y": 71.13,
+                    "z": 6.25
+                },
+                "A5": {
+                    "depth": 24.4,
+                    "diameter": 7.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1000,
+                    "x": 92.38,
+                    "y": 71.13,
+                    "z": 6.25
+                },
+                "A6": {
+                    "depth": 24.4,
+                    "diameter": 7.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1000,
+                    "x": 111.38,
+                    "y": 71.13,
+                    "z": 6.25
+                },
+                "B1": {
+                    "depth": 24.4,
+                    "diameter": 7.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1000,
+                    "x": 16.38,
+                    "y": 52.13,
+                    "z": 6.25
+                },
+                "B2": {
+                    "depth": 24.4,
+                    "diameter": 7.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1000,
+                    "x": 35.38,
+                    "y": 52.13,
+                    "z": 6.25
+                },
+                "B3": {
+                    "depth": 24.4,
+                    "diameter": 7.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1000,
+                    "x": 54.38,
+                    "y": 52.13,
+                    "z": 6.25
+                },
+                "B4": {
+                    "depth": 24.4,
+                    "diameter": 7.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1000,
+                    "x": 73.38,
+                    "y": 52.13,
+                    "z": 6.25
+                },
+                "B5": {
+                    "depth": 24.4,
+                    "diameter": 7.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1000,
+                    "x": 92.38,
+                    "y": 52.13,
+                    "z": 6.25
+                },
+                "B6": {
+                    "depth": 24.4,
+                    "diameter": 7.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1000,
+                    "x": 111.38,
+                    "y": 52.13,
+                    "z": 6.25
+                },
+                "C1": {
+                    "depth": 24.4,
+                    "diameter": 7.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1000,
+                    "x": 16.38,
+                    "y": 33.13,
+                    "z": 6.25
+                },
+                "C2": {
+                    "depth": 24.4,
+                    "diameter": 7.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1000,
+                    "x": 35.38,
+                    "y": 33.13,
+                    "z": 6.25
+                },
+                "C3": {
+                    "depth": 24.4,
+                    "diameter": 7.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1000,
+                    "x": 54.38,
+                    "y": 33.13,
+                    "z": 6.25
+                },
+                "C4": {
+                    "depth": 24.4,
+                    "diameter": 7.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1000,
+                    "x": 73.38,
+                    "y": 33.13,
+                    "z": 6.25
+                },
+                "C5": {
+                    "depth": 24.4,
+                    "diameter": 7.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1000,
+                    "x": 92.38,
+                    "y": 33.13,
+                    "z": 6.25
+                },
+                "C6": {
+                    "depth": 24.4,
+                    "diameter": 7.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1000,
+                    "x": 111.38,
+                    "y": 33.13,
+                    "z": 6.25
+                },
+                "D1": {
+                    "depth": 24.4,
+                    "diameter": 7.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1000,
+                    "x": 16.38,
+                    "y": 14.13,
+                    "z": 6.25
+                },
+                "D2": {
+                    "depth": 24.4,
+                    "diameter": 7.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1000,
+                    "x": 35.38,
+                    "y": 14.13,
+                    "z": 6.25
+                },
+                "D3": {
+                    "depth": 24.4,
+                    "diameter": 7.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1000,
+                    "x": 54.38,
+                    "y": 14.13,
+                    "z": 6.25
+                },
+                "D4": {
+                    "depth": 24.4,
+                    "diameter": 7.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1000,
+                    "x": 73.38,
+                    "y": 14.13,
+                    "z": 6.25
+                },
+                "D5": {
+                    "depth": 24.4,
+                    "diameter": 7.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1000,
+                    "x": 92.38,
+                    "y": 14.13,
+                    "z": 6.25
+                },
+                "D6": {
+                    "depth": 24.4,
+                    "diameter": 7.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1000,
+                    "x": 111.38,
+                    "y": 14.13,
+                    "z": 6.25
+                }
+            }
+        }
+    ],
     "fields": [
+        {
+            "default": 250,
+            "label": "Fill Volume (215-250 uL)",
+            "name": "fill_volume",
+            "type": "int"
+        },
         {
             "default": 96,
             "label": "Number of Caps (up to 96)",
@@ -117,8 +450,8 @@
             "name": "labware_rack",
             "options": [
                 {
-                    "label": "Temporary Stand In Opentrons 24 Tube Rack",
-                    "value": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
+                    "label": "Custom 24-Well Rack",
+                    "value": "custom_24_well_rack"
                 }
             ],
             "type": "dropDown"
@@ -135,13 +468,13 @@
             "name": "Rack on 1",
             "share": false,
             "slot": "1",
-            "type": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
+            "type": "custom_24_well_rack"
         },
         {
             "name": "Rack on 2",
             "share": false,
             "slot": "2",
-            "type": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
+            "type": "custom_24_well_rack"
         },
         {
             "name": "Reservoir on 3",
@@ -153,13 +486,13 @@
             "name": "Rack on 4",
             "share": false,
             "slot": "4",
-            "type": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
+            "type": "custom_24_well_rack"
         },
         {
             "name": "Rack on 5",
             "share": false,
             "slot": "5",
-            "type": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
+            "type": "custom_24_well_rack"
         },
         {
             "name": "Opentrons 96 Tip Rack 300 \u00b5L on 10",

@@ -1,6 +1,12 @@
 [
   {
     "type": "int",
+    "label": "Fill Volume (215-250 uL)",
+    "name": "fill_volume",
+    "default": 250
+  },
+  {
+    "type": "int",
     "label": "Number of Caps (up to 96)",
     "name": "cap_count",
     "default": 96
@@ -72,7 +78,7 @@
     "label": "Custom Rack Labware Definition",
     "name": "labware_rack",
     "options": [
-      { "label": "Temporary Stand In Opentrons 24 Tube Rack", "value": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap" }
+      { "label": "Custom 24-Well Rack", "value": "custom_24_well_rack" }
     ]
   }
 ]

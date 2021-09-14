@@ -1,5 +1,7 @@
+"""PROTOCOL."""
 from itertools import groupby
 import math
+
 
 metadata = {
     'protocolName': 'Cherrypicking with Multi-Channel Pipette and CSV',
@@ -10,13 +12,14 @@ metadata = {
 
 
 def run(ctx):
-
-    [csv_samp, vol_target_cell, pre_mix, mix_asp_height,
-     premix_reps, mix_vol, mix_rate,
+    """PROTOCOL."""
+    [csv_samp, vol_target_cell, pre_mix, mix_asp_height, mix_disp_height,
+     premix_reps, mix_vol, mix_rate, disp_res_height,
      asp_height, disp_height, asp_rate,
         disp_rate, m300_mount] = get_values(  # noqa: F821
         "csv_samp", "vol_target_cell", "pre_mix",
-        "mix_asp_height", "premix_reps", "mix_vol", "mix_rate",
+        "mix_asp_height", "mix_disp_height", "premix_reps",
+        "mix_vol", "mix_rate", "disp_res_height",
         "asp_height", "disp_height", "asp_rate", "disp_rate", "m300_mount")
 
     # load labware
@@ -35,6 +38,9 @@ def run(ctx):
     m300.flow_rate.dispense = disp_rate*m300.flow_rate.dispense
 
     # plate map excluding 1st column and row
+    # remove first comma in csv sample if found
+    if csv_samp[0] == ',':
+        csv_samp = csv_samp[1:]
     plate_map = [[val.strip() for val in line.split(',')][1:]
                  for line in csv_samp.splitlines()
                  if line.split(',')[0].strip()][1:]
@@ -53,7 +59,17 @@ def run(ctx):
                     effector_numbers.append(int(letter_to_num[elements[1][0]]))
 
     max_effector_number = max(effector_numbers)
-    num_channels_per_pickup = max_effector_number
+    control_row_counter = 0
+    for row in plate_map:
+        for well in row:
+            if '/' in well:
+                elements = well.split('/')
+                if elements[1] == '0':
+                    control_row_counter += 1
+                    break
+
+    control_row_counter = math.floor(control_row_counter/2)
+    num_channels_per_pickup = max_effector_number+control_row_counter
     tips_ordered = [
         tip for rack in tiprack
         for row in rack.rows()[
@@ -84,14 +100,29 @@ def run(ctx):
     dispense_wells = [list(j) for i, j in groupby(plate_map[start_row])]
     wells_by_row = [well for row in plate.rows() for well in row]
 
+    def mix_diff_height(well):
+        m300.flow_rate.aspirate = m300.flow_rate.aspirate/asp_rate
+        m300.flow_rate.dispense = m300.flow_rate.dispense/disp_rate
+        for rep in range(premix_reps):
+            m300.aspirate(mix_vol,
+                          well.bottom(
+                           mix_asp_height),
+                          rate=mix_rate)
+            m300.dispense(mix_vol,
+                          well.bottom(
+                           mix_disp_height),
+                          rate=mix_rate)
+        m300.flow_rate.aspirate = asp_rate*m300.flow_rate.aspirate
+        m300.flow_rate.dispense = disp_rate*m300.flow_rate.dispense
+
     def check_volume(counter, tot_vol, chunk, source_well):
         if m300.current_volume < vol_target_cell:
             if m300.current_volume > 0:
-                m300.dispense(m300.current_volume, source_well)
+                m300.dispense(m300.current_volume,
+                              source_well.bottom(disp_res_height))
             if counter != len(chunk)-1:
                 if pre_mix:
-                    m300.mix(premix_reps, mix_vol,
-                             source_well.bottom(mix_asp_height), rate=mix_rate)
+                    mix_diff_height(source_well)
                 m300.aspirate(tot_vol if tot_vol < 200 else
                               200-0.15*vol_target_cell, source_well)
 
@@ -108,15 +139,11 @@ def run(ctx):
                 source_well = target_res.wells_by_name()[str(chunk[0][0:2])]
                 if vol_target_cell >= 100:
                     if pre_mix:
-                        m300.mix(premix_reps, mix_vol,
-                                 source_well.bottom(mix_asp_height),
-                                 rate=mix_rate)
+                        mix_diff_height(source_well)
                     m300.aspirate(vol_target_cell, source_well)
                     m300.dispense(vol_target_cell, wells_by_row[start_well])
                     if pre_mix:
-                        m300.mix(premix_reps, mix_vol,
-                                 source_well.bottom(mix_asp_height),
-                                 rate=mix_rate)
+                        mix_diff_height(source_well)
                     m300.aspirate(vol_target_cell,
                                   source_well)
                     m300.dispense(vol_target_cell, wells_by_row[start_well+24])
@@ -125,9 +152,7 @@ def run(ctx):
                 else:
                     if m300.current_volume < vol_target_cell:
                         if pre_mix:
-                            m300.mix(premix_reps, mix_vol,
-                                     source_well.bottom(mix_asp_height),
-                                     rate=mix_rate)
+                            mix_diff_height(source_well)
                         m300.aspirate(tot_vol if tot_vol < 200
                                       else 200-0.15*vol_target_cell,
                                       source_well)
@@ -155,9 +180,3 @@ def run(ctx):
     ctx.comment('\n\nADDING TARGET CELL\n\n')
     dispense(start_well, second_well=True)
     num_channels_per_pickup = 1
-
-    ctx.comment('\n\nADDING CONTROL\n\n')
-    tips_ordered = [tip for rack in tiprack for column
-                    in rack.columns() for tip in column[::-1]]
-    tip_count = tip_count*8 + max_effector_number
-    dispense(start_well+48, second_well=False)

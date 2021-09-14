@@ -79,14 +79,17 @@ def run(protocol):
                            for col in plate.rows()[0]][:num_col]
 
     # add amplification mix
-    airgap = 5
+    airgap = 2
     for col in reaction_plate_cols:
         pick_up()
         m20.aspirate(2, pre_ligation_mix)
+        m20.touch_tip()
         m20.air_gap(airgap)
-        m20.dispense(airgap+2, col)
+        m20.dispense(airgap, col.top())
+        m20.dispense(2, col)
         m20.mix(2, 8, col)
         m20.blow_out()
+        m20.touch_tip()
         m20.return_tip()
         protocol.comment('\n')
 
