@@ -123,8 +123,9 @@ def run(ctx):
     # Helper Functions
     def debug_mode(msg, debug_setting=debug):
         if debug_setting == "True":
-            with flashing_rail_lights(ctx, seconds_per_flash_cycle=0.5):
-                ctx.pause(msg)
+            ctx.set_rail_lights(True)
+            ctx.pause(msg)
+            ctx.set_rail_lights(False)
 
     switch = True
     drop_count = 0
@@ -145,8 +146,9 @@ def run(ctx):
             drop_count += 1
         if drop_count >= drop_threshold:
             pip.home()
-            with flashing_rail_lights(ctx, seconds_per_flash_cycle=0.5):
-                ctx.pause('Please empty tips from waste before resuming.')
+            ctx.set_rail_lights(True)
+            ctx.pause('Please empty tips from waste before resuming.')
+            ctx.set_rail_lights(False)
             ctx.home()  # home before continuing with protocol
             drop_count = 0
         return drop_loc
@@ -188,8 +190,10 @@ def run(ctx):
                 pip.pick_up_tip()
         except protocol_api.labware.OutOfTipsError:
             pip.home()
-            with flashing_rail_lights(ctx, seconds_per_flash_cycle=0.5):
-                ctx.pause("Replace the tips")
+            # with flashing_rail_lights(ctx, seconds_per_flash_cycle=0.5):
+            ctx.set_rail_lights(True)
+            ctx.pause("Replace the tips")
+            ctx.set_rail_lights(False)
             pip.reset_tipracks()
             pip.pick_up_tip()
 
@@ -252,7 +256,7 @@ def run(ctx):
         # 70% Ethanol Wash
         debug_mode(msg="Debug: Wash with 70% Ethanol")
         for src, dest in zip(reservoir, mag_plate_wells):
-            wash(500, src, dest)
+            wash(500, src, dest.top(z=-2))
         # Tip Mix (Vortex)
         debug_mode(msg="Debug: Tip Mixing (Vortex)")
         for well in mag_plate_wells:
@@ -356,7 +360,7 @@ def run(ctx):
     # Add VHB Buffer
     debug_mode(msg="Debug: Wash with VHB Buffer (Step 19)")
     for src, dest in zip(vhb, mag_plate_wells):
-        wash(500, src, dest)
+        wash(500, src, dest.top(z=-2))
     # Tip Mix (Vortex)
     debug_mode(msg="Debug: Tip Mixing (Vortex) (Step 20)")
     for well in mag_plate_wells:
