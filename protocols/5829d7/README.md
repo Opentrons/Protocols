@@ -8,10 +8,13 @@
 	* Plate Filling
 
 ## Description
-200ul of viral transport media (VTM) is reformatted from (up to) 96 tubes split amongst 3 tube racks to a  96 well plate. Tubes are reformatted by row in tube racks 1 (slot 1), 2 (slot 4), and then 3 (slot 7). 
+200ul of viral transport media (VTM) is reformatted from (up to) 96 tubes split amongst 3 tube racks to a  96 well plate. Tubes are reformatted by row in tube racks 1 (slot 1), 2 (slot 4), and then 3 (slot 7).
 
 Explanation of complex parameters below:
 * `Number of Samples`: Specify the number of samples for this run.
+* `Tube Aspiration Height`: Specify the aspiration height in the tubes. Default is 1mm.
+* `Well Dispense Height`: Specify the dispense height in the wells. Default is 1mm.
+* `Aspirate/Dispense Flow rate`: Specify the aspirate/dispense flow rate in the wells. Default is 274ul/sec.
 * `P1000 Single-Channel Mount`: Specify (left) or (right) mount for the P1000 single channel pipette.
 
 ---
