@@ -16,7 +16,7 @@ def run(ctx):
     # load labware
     plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '1')
     tiprack = [ctx.load_labware('opentrons_96_tiprack_1000ul', '2')]
-    tuberacks = [ctx.load_labware('opentrons_15_tuberack_nest_15ml_conical',
+    tuberacks = [ctx.load_labware('opentrons_15_tuberack_15000ul',
                  slot) for slot in ['4', '5', '6', '7', '8', '9', '10']]
 
     # load instrument

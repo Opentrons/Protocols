@@ -10,10 +10,12 @@ metadata = {
 
 def run(ctx):
 
-    [left_pipette_type, right_pipette_type, d_csv1,
-     s_csv, diluent_scheme, mix] = get_values(  # noqa: F821
-        "left_pipette_type", "right_pipette_type", "d_csv1", "s_csv",
-        "diluent_scheme", "mix")
+    [left_pipette_type, right_pipette_type, left_pip_slot, right_pip_slot,
+     left_pip_tip, right_pip_tip, d_csv1, s_csv, diluent_scheme,
+     mix] = get_values(  # noqa: F821
+        'left_pipette_type', 'right_pipette_type', 'left_pip_slot',
+        'right_pip_slot', 'left_pip_tip', 'right_pip_tip', 'd_csv1', 's_csv',
+        'diluent_scheme', 'mix')
 
     tiprack_map = {
         'p10_single': 'opentrons_96_filtertiprack_10ul',
@@ -47,14 +49,36 @@ def run(ctx):
                 ctx.load_labware(lw.lower(), slot)
 
     # load tipracks in remaining slots
+    slot_order = {
+        '10': 0,
+        '11': 1,
+        '7': 2,
+        '8': 3,
+        '9': 4,
+        '4': 5,
+        '5': 6,
+        '6': 7,
+        '1': 8,
+        '2': 9,
+        '3': 10
+    }
+
     avail_slots = [str(slot) for slot in range(1, 13)
                    if slot not in ctx.loaded_labwares]
+    sorted_slots_tup = sorted(slot_order.items(), key=lambda x: x[1])
+    sorted_slots = [
+        slot_tup[0] for slot_tup in sorted_slots_tup
+        if slot_tup[0] in avail_slots]
     num_avail_slots = len(avail_slots)
     num_pipettes = len([pip for pip in [left_pipette_type, right_pipette_type]
                         if pip])
     if num_pipettes == 0:
         raise Exception('Must select at least 1 pipette.')
-    pipettes = {'left': None, 'right': None}
+    pipettes = {
+        'left': None,
+        'right': None
+    }
+
     for i, (pip_type, side) in enumerate(
             zip([left_pipette_type, right_pipette_type], pipettes.keys())):
         if pip_type:
@@ -62,21 +86,42 @@ def run(ctx):
             tipracks = []
             if i == 0:
                 num_racks = math.ceil(num_avail_slots/num_pipettes)
-                slots = avail_slots[:num_racks]
+                slots = sorted_slots[:num_racks]
             else:
                 num_racks = math.floor(num_avail_slots/num_pipettes)
                 start = num_avail_slots - num_racks
-                slots = avail_slots[start:]
+                slots = sorted_slots[start:]
             for slot in slots:
                 tipracks.append(ctx.load_labware(tiprack_type, str(slot)))
         # load pipette
         pipettes[side] = ctx.load_instrument(pip_type, side,
                                              tip_racks=tipracks)
 
-    tip_log = {
-        pip: {'count': 0, 'max': len(pip.tip_racks*96)}
-        for pip in pipettes.values() if pip
-    }
+    tip_log = {}
+    for mount, pip in pipettes.items():
+        if mount == 'left':
+            start_slot = left_pip_slot
+            start_tip_well = left_pip_tip
+        else:
+            start_slot = right_pip_slot
+            start_tip_well = right_pip_tip
+        allowable_slots = [rack.parent for rack in pip.tip_racks]
+        if start_slot not in allowable_slots:
+            raise Exception(f'Start Sot for {mount} pipette must be in \
+{allowable_slots}.')
+        starting_tip = ctx.loaded_labwares[
+            int(start_slot)].wells_by_name()[start_tip_well]
+        if pip.type == 'single':
+            tip_log[pip] = {
+                'tips': [
+                    tip for rack in pip.tip_racks for tip in rack.wells()],
+                'max': len(pip.tip_racks*96)}
+        else:
+            tip_log[pip] = {
+                'tips': [
+                    tip for rack in pip.tip_racks for tip in rack.rows()[0]],
+                'max': len(pip.tip_racks*96)}
+        tip_log[pip]['count'] = tip_log[pip]['tips'].index(starting_tip)
 
     def pick_up(pip):
         if tip_log[pip]['count'] == tip_log[pip]['max']:
@@ -84,7 +129,7 @@ def run(ctx):
 resuming.'.format(pip.max_volume))
             pip.reset_tipracks()
             tip_log[pip]['count'] = 0
-        pip.pick_up_tip()
+        pip.pick_up_tip(tip_log[pip]['tips'][tip_log[pip]['count']])
         tip_log[pip]['count'] += 1
 
     def parse_well(well):
@@ -130,10 +175,11 @@ resuming.'.format(pip.max_volume))
         pick_up(pipette)
         pipette.transfer(float(vol), source, dest, new_tip='never')
         if mix:
-            if float(vol) < pipette.max_volume:
+            max = pipette.tip_racks[0].wells()[0].max_volume
+            if float(vol) < max:
                 mix_vol = float(vol)
             else:
-                mix_vol = pipette.max_volume
+                mix_vol = max
             pipette.mix(3, mix_vol, dest)
         pipette.blow_out()
         pipette.drop_tip()
