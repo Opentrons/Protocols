@@ -20,13 +20,13 @@
   {
     "type": "int",
     "label": "Aspiration Flow Rate",
-    "name": "num_samp",
+    "name": "flow_rate_asp",
     "default": 200
   },
   {
     "type": "int",
     "label": "Dispense Flow Rate",
-    "name": "num_samp",
+    "name": "flow_rate_disp",
     "default": 200
   },
   {
