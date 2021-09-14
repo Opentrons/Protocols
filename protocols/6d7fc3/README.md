@@ -20,7 +20,7 @@ This protocol automates the first part of a seven part protocol for the [GeneRea
 
 Explanation of complex parameters below:
 * `Number of Samples`: The total number of DNA samples. Samples must range between 1 (minimum) and 12 (maximum).
-* `Samples Labware Type`: The starting samples can be placed in either 1.5 mL tubes on the Opentrons Tube Rack OR in a 96 Well Plate.
+* `Samples Labware Type`: The starting samples can be placed in either NEST 2.0 mL tubes on the Opentrons Tube Rack OR in a 96 Well Plate.
 * `P300 Single GEN2 Pipette Mount Position`: The position of the pipette, either left or right.
 * `P20 Single GEN2 Pipette Mount Position`: The position of the pipette, either left or right.
 
