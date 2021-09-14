@@ -35,6 +35,7 @@ def run(ctx):
     for tube, well in zip(tubes, wells):
         p1000.pick_up_tip()
         p1000.aspirate(200, tube.bottom(z=tube_asp_height))
+        ctx.delay(seconds=0.5)
         p1000.dispense(200, well.bottom(z=well_disp_height))
         p1000.blow_out()
         p1000.drop_tip()
