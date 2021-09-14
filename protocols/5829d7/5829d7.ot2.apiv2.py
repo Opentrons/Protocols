@@ -8,9 +8,11 @@ metadata = {
 
 def run(ctx):
 
-    [num_samp, tube_asp_height, well_disp_height,
+    [num_samp, tube_asp_height, well_disp_height, flow_rate_asp,
+        flow_rate_disp,
      p1000_mount] = get_values(  # noqa: F821
-        "num_samp", "tube_asp_height", "well_disp_height", "p1000_mount")
+        "num_samp", "tube_asp_height", "well_disp_height", "flow_rate_asp",
+        "flow_rate_disp", "p1000_mount")
 
     # load labware
     wellplate = ctx.load_labware('qiagen_96_wellplate_2250ul', '3')
@@ -22,6 +24,8 @@ def run(ctx):
     # load instruments
     p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,
                                 tip_racks=tiprack)
+    p1000.flow_rate.aspirate = flow_rate_asp
+    p1000.flow_rate.dispense = flow_rate_disp
 
     # PROTOCOL
     tubes = [tube for tuberack in tuberacks for row in tuberack.rows()
@@ -32,4 +36,5 @@ def run(ctx):
         p1000.pick_up_tip()
         p1000.aspirate(200, tube.bottom(z=tube_asp_height))
         p1000.dispense(200, well.bottom(z=well_disp_height))
+        p1000.blow_out()
         p1000.drop_tip()
