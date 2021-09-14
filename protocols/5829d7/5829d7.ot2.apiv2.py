@@ -8,8 +8,9 @@ metadata = {
 
 def run(ctx):
 
-    [num_samp, p1000_mount] = get_values(  # noqa: F821
-        "num_samp", "p1000_mount")
+    [num_samp, tube_asp_height, well_disp_height,
+     p1000_mount] = get_values(  # noqa: F821
+        "num_samp", "tube_asp_height", "well_disp_height", "p1000_mount")
 
     # load labware
     wellplate = ctx.load_labware('qiagen_96_wellplate_2250ul', '3')
@@ -29,6 +30,6 @@ def run(ctx):
 
     for tube, well in zip(tubes, wells):
         p1000.pick_up_tip()
-        p1000.aspirate(200, tube)
-        p1000.dispense(200, well)
+        p1000.aspirate(200, tube.bottom(z=tube_asp_height))
+        p1000.dispense(200, well.bottom(z=well_disp_height))
         p1000.drop_tip()

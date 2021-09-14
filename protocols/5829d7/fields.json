@@ -6,6 +6,18 @@
     "default": 96
   },
   {
+    "type": "float",
+    "label": "Tube Aspiration Height",
+    "name": "tube_asp_height",
+    "default": 2
+  },
+  {
+    "type": "float",
+    "label": "Well Dispense Height",
+    "name": "well_disp_height",
+    "default": 2
+  },
+  {
     "type": "dropDown",
     "label": "P1000 Single-Channel Mount",
     "name": "p1000_mount",
