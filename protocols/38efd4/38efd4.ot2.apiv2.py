@@ -4,7 +4,7 @@ import math
 import csv
 
 metadata = {
-    'title': '''Protein Crystallization Screening''',
+    'title': 'Protein Crystallization Screen Formulator',
     'author': 'Steve Plonk',
     'apiLevel': '2.10'
 }
