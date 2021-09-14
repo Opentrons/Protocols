@@ -1,9 +1,8 @@
 """User Protocol."""
 from opentrons import protocol_api
 
-metadata = {'projectName': 'Automated RoboZooMS Protocol',
+metadata = {'protocolName': 'Automated RoboZooMS Protocol',
             'author': 'Daniel Marfiewicz-Dickinson',
-            'description': 'ZooMS Protocol',
             'apiLevel': '2.10'}
 
 

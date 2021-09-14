@@ -26,7 +26,7 @@ def run(ctx):
     tc_plate = tc_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
     temp_mod = ctx.load_module('temperature module gen2', 3)
     temp_plate = temp_mod.load_labware(
-                    'opentrons_24_aluminumblock_nest_1.5ml_screwcap')
+                    'opentrons_24_aluminumblock_nest_2ml_snapcap')
     pcr_tubes = ctx.load_labware(
                     'opentrons_96_aluminumblock_generic_pcr_strip_200ul',
                     2)

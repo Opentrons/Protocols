@@ -4,7 +4,7 @@ import math
 import csv
 
 metadata = {
-    'title': 'Protein Crystallization Screening',
+    'title': 'Protein Crystallization Screen Formulator',
     'author': 'Steve Plonk',
     'apiLevel': '2.10'
 }
@@ -12,11 +12,12 @@ metadata = {
 
 def run(ctx):
 
-    [labware1, labware2, labware3, labware4, labware5, labware6, labware7,
-     labware8, reagents_csv, formulation_csv
+    [skip_mix_step, labware1, labware2, labware3, labware4, labware5, labware6,
+     labware7, labware8, reagents_csv, formulation_csv
      ] = get_values(  # noqa: F821
-        "labware1", "labware2", "labware3", "labware4", "labware5", "labware6",
-        "labware7", "labware8", "reagents_csv", "formulation_csv")
+        "skip_mix_step", "labware1", "labware2", "labware3", "labware4",
+        "labware5", "labware6", "labware7", "labware8", "reagents_csv",
+        "formulation_csv")
 
     ctx.set_rail_lights(True)
     ctx.delay(seconds=10)
@@ -26,9 +27,9 @@ def run(ctx):
      'opentrons_96_tiprack_300ul', str(slot)) for slot in [10]]
     tips1000 = [ctx.load_labware(
      'opentrons_96_tiprack_1000ul', str(slot)) for slot in [11]]
-    p300s = ctx.load_instrument("p300_single_gen2", 'right', tip_racks=tips300)
+    p300s = ctx.load_instrument("p300_single_gen2", 'left', tip_racks=tips300)
     p1000s = ctx.load_instrument(
-     "p1000_single_gen2", 'left', tip_racks=tips1000)
+     "p1000_single_gen2", 'right', tip_racks=tips1000)
 
     # load labware for reagents (based on protocol parameters)
     reagent_labware = [
@@ -323,13 +324,14 @@ def run(ctx):
         for pipette in [p300s, p1000s]:
             if pipette.has_tip:
                 pipette.drop_tip()
-    for row in dest_wells:
-        for well in row:
-            if well.current_volume > 0:
-                p1000s.pick_up_or_refill()
-                mix_volume = well.current_volume / 2
-                if (well.current_volume / 2) > 1000:
-                    mix_volume = 1000
-                p1000s.mix(
-                 10, mix_volume, well.bottom(well.height / 2), rate=0.25)
-                p1000s.drop_tip()
+    if not skip_mix_step:
+        for row in dest_wells:
+            for well in row:
+                if well.current_volume > 0:
+                    p1000s.pick_up_or_refill()
+                    mix_volume = well.current_volume / 2
+                    if (well.current_volume / 2) > 1000:
+                        mix_volume = 1000
+                    p1000s.mix(
+                     10, mix_volume, well.bottom(well.height / 2), rate=0.25)
+                    p1000s.drop_tip()

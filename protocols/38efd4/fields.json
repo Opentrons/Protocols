@@ -1,6 +1,15 @@
 [
   {
     "type": "dropDown",
+    "label": "Skip Mixing Step? (yes or no)",
+    "name": "skip_mix_step",
+    "options": [
+      { "label": "YES - skip the mix step", "value": true },
+      { "label": "NO - do not skip the mix step", "value": false }
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "Tube Rack in Deck Slot 1",
     "name": "labware1",
     "options": [

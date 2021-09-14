@@ -1371,37 +1371,37 @@
             "default": 12,
             "label": "Tube Aspiration Height for Single Channel (mm)",
             "name": "asp_height",
-            "type": "int"
+            "type": "float"
         },
         {
             "default": 2,
             "label": "Tube-Strip Aspiration Height for Multi Channel (mm)",
             "name": "asp_height_m20",
-            "type": "int"
+            "type": "float"
         },
         {
             "default": 0.5,
             "label": "Aspiration Rate Single Channel",
             "name": "asp_rate",
-            "type": "int"
+            "type": "float"
         },
         {
             "default": 0.5,
             "label": "Dispense Rate Single Channel",
             "name": "disp_rate",
-            "type": "int"
+            "type": "float"
         },
         {
             "default": 0.5,
             "label": "Aspiration Rate Multi Channel",
             "name": "asp_rate_m20",
-            "type": "int"
+            "type": "float"
         },
         {
             "default": 0.5,
             "label": "Dispense Rate Multi Channel",
             "name": "disp_rate_m20",
-            "type": "int"
+            "type": "float"
         },
         {
             "label": "P20 Multi GEN2 Mount",
