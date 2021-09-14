@@ -1,5 +1,5 @@
 {
-    "content": "metadata = {\n    'protocolName': 'Tube to Plate Viral Media Transfer',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.10'\n}\n\n\ndef run(ctx):\n\n    [num_samp, p1000_mount] = get_values(  # noqa: F821\n        \"num_samp\", \"p1000_mount\")\n\n    # load labware\n    wellplate = ctx.load_labware('qiagen_96_wellplate_2250ul', '3')\n    tiprack = [ctx.load_labware('opentrons_96_filtertiprack_1000ul', '6')]\n    tuberacks = [ctx.load_labware(\n                 'nest_32_tuberack_8x15ml_8x15ml_8x15ml_8x15ml', slot)\n                 for slot in ['1', '4', '7']]\n\n    # load instruments\n    p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,\n                                tip_racks=tiprack)\n\n    # PROTOCOL\n    tubes = [tube for tuberack in tuberacks for row in tuberack.rows()\n             for tube in row][:num_samp]\n    wells = [well for row in wellplate.rows() for well in row]\n\n    for tube, well in zip(tubes, wells):\n        p1000.pick_up_tip()\n        p1000.aspirate(200, tube)\n        p1000.dispense(200, well)\n        p1000.drop_tip()\n",
+    "content": "metadata = {\n    'protocolName': 'Tube to Plate Viral Media Transfer',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.10'\n}\n\n\ndef run(ctx):\n\n    [num_samp, tube_asp_height, well_disp_height,\n     p1000_mount] = get_values(  # noqa: F821\n        \"num_samp\", \"tube_asp_height\", \"well_disp_height\", \"p1000_mount\")\n\n    # load labware\n    wellplate = ctx.load_labware('qiagen_96_wellplate_2250ul', '3')\n    tiprack = [ctx.load_labware('opentrons_96_filtertiprack_1000ul', '6')]\n    tuberacks = [ctx.load_labware(\n                 'nest_32_tuberack_8x15ml_8x15ml_8x15ml_8x15ml', slot)\n                 for slot in ['1', '4', '7']]\n\n    # load instruments\n    p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,\n                                tip_racks=tiprack)\n\n    # PROTOCOL\n    tubes = [tube for tuberack in tuberacks for row in tuberack.rows()\n             for tube in row][:num_samp]\n    wells = [well for row in wellplate.rows() for well in row]\n\n    for tube, well in zip(tubes, wells):\n        p1000.pick_up_tip()\n        p1000.aspirate(200, tube.bottom(z=tube_asp_height))\n        p1000.dispense(200, well.bottom(z=well_disp_height))\n        p1000.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -1691,6 +1691,18 @@
             "label": "Number of Sampels (1-96)",
             "name": "num_samp",
             "type": "int"
+        },
+        {
+            "default": 2,
+            "label": "Tube Aspiration Height",
+            "name": "tube_asp_height",
+            "type": "float"
+        },
+        {
+            "default": 2,
+            "label": "Well Dispense Height",
+            "name": "well_disp_height",
+            "type": "float"
         },
         {
             "label": "P1000 Single-Channel Mount",
