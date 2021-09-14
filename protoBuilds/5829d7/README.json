@@ -1,0 +1,30 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Sample Prep": [
+            "Plate Filling"
+        ]
+    },
+    "deck-setup": "\nDeck layout with example 90 tubes. Note: tubes should be placed by row in the tube racks, starting from the tube rack in slot 1. Tubes are transferred 1-1 with well plate wells by row.\n\n\n",
+    "description": "200ul of viral transport media (VTM) is reformatted from (up to) 96 tubes split amongst 3 tube racks to a  96 well plate. Tubes are reformatted by row in tube racks 1 (slot 1), 2 (slot 4), and then 3 (slot 7). \nExplanation of complex parameters below:\n Number of Samples: Specify the number of samples for this run.\n P1000 Single-Channel Mount: Specify (left) or (right) mount for the P1000 single channel pipette.\n",
+    "internal": "5829d7",
+    "labware": "\nOpentrons 1000uL Filter Tips\nQiagen 96 Well plate\n(3) Custom Opentrons 32-tube tube racks.\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* Sample Prep\n\t* Plate Filling\n\n",
+        "deck-setup": "* Deck layout with example 90 tubes. Note: tubes should be placed by row in the tube racks, starting from the tube rack in slot 1. Tubes are transferred 1-1 with well plate wells by row.\n![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/5829d7/Screen+Shot+2021-09-13+at+11.30.47+AM.png)\n\n---\n\n",
+        "description": "200ul of viral transport media (VTM) is reformatted from (up to) 96 tubes split amongst 3 tube racks to a  96 well plate. Tubes are reformatted by row in tube racks 1 (slot 1), 2 (slot 4), and then 3 (slot 7). \n\nExplanation of complex parameters below:\n* `Number of Samples`: Specify the number of samples for this run.\n* `P1000 Single-Channel Mount`: Specify (left) or (right) mount for the P1000 single channel pipette.\n\n---\n\n\n",
+        "internal": "5829d7\n",
+        "labware": "* [Opentrons 1000uL Filter Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-1000ul-filter-tips)\n* Qiagen 96 Well plate\n* (3) Custom Opentrons 32-tube tube racks.\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [P1000 Single Channel Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/single-channel-electronic-pipette)\n\n\n---\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "protocol-steps": "1. Pick up tip\n2. Aspirate 200ul of VTM\n3. Dispense 200ul of VTM\n4. Drop tip\n5. 1-4 repeated by row in the tube racks.\n\n",
+        "title": "Tube to Plate Viral Media Transfer"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nP1000 Single Channel Pipette\n\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "protocol-steps": "\nPick up tip\nAspirate 200ul of VTM\nDispense 200ul of VTM\nDrop tip\n1-4 repeated by row in the tube racks.\n",
+    "title": "Tube to Plate Viral Media Transfer"
+}
