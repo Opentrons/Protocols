@@ -56,7 +56,7 @@ Explanation of complex parameters below:
 
 * Slot 2: 96 Well Aluminum Block with Empty PCR Tubes.
 
-* Slot 3: Temperature Module with 24 Well Aluminum Block. Add QIAact Beads in 1.5 mL tube in position A1.
+* Slot 3: Temperature Module with 24 Well Aluminum Block. Add QIAact Beads in 2.0 mL tube in position A1.
 
 * Slot 5: NEST 12 Well Reservoir: 80% Ethanol (A1, Blue) and Nuclease-Free Water (A12, Pink)
 
