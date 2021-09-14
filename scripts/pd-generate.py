@@ -163,8 +163,15 @@ def create_pd_json(folder):
     # categories = get_category(folder)
     # category = [key for key in categories.keys()][0]
     # subcategory = categories[category][0]
+
+    if 'protocolName' in protobuilds_metadata.keys():
+        name = protobuilds_metadata['protocolName']
+    elif 'title' in protobuilds_metadata.keys():
+        name = protobuilds_metadata['title']
+    else:
+        raise Exception('No appropriate metadata key for protocol name.')
     metadata = {
-        'protocolName': protobuilds_metadata['protocolName'],
+        'protocolName': name,
         'author': protobuilds_metadata['author'],
         'description': '',
         'created': now,
