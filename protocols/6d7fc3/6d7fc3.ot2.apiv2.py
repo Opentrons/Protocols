@@ -26,11 +26,11 @@ def run(ctx):
     tc_plate = tc_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
     temp_mod = ctx.load_module('temperature module gen2', 3)
     temp_plate = temp_mod.load_labware(
-                    'opentrons_24_aluminumblock_nest_1.5ml_screwcap')
+                    'opentrons_24_aluminumblock_nest_2ml_snapcap')
 
     if samples_labware == 'tube':
         sample_plate = ctx.load_labware(
-                        'opentrons_24_tuberack_nest_1.5ml_screwcap', 2)
+                        'opentrons_24_tuberack_nest_2ml_snapcap', 2)
     elif samples_labware == 'plate':
         sample_plate = ctx.load_labware(
                         'nest_96_wellplate_100ul_pcr_full_skirt', 2)
