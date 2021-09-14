@@ -18,6 +18,18 @@
     "default": 2
   },
   {
+    "type": "int",
+    "label": "Aspiration Flow Rate",
+    "name": "num_samp",
+    "default": 200
+  },
+  {
+    "type": "int",
+    "label": "Dispense Flow Rate",
+    "name": "num_samp",
+    "default": 200
+  },
+  {
     "type": "dropDown",
     "label": "P1000 Single-Channel Mount",
     "name": "p1000_mount",
