@@ -47,6 +47,21 @@ def run(ctx):
     # list loaded labware
     loaded_labwr = ctx.loaded_labwares.values()
 
+    # helper functions
+    def chunks_by_volume(volume_list, tip_max):
+        new_list = []
+        for index, element in enumerate(volume_list):
+            if index != len(volume_list) - 1:
+                if sum(new_list) + element <= tip_max:
+                    new_list.append(element)
+                else:
+                    yield new_list
+                    new_list = []
+                    new_list.append(element)
+            else:
+                new_list.append(element)
+                yield new_list
+
     # unbound methods
     def slow_tip_withdrawal(self, speed_limit, well_location, to_center=False):
         if self.mount == 'right':
@@ -73,13 +88,7 @@ def run(ctx):
     # csv input
     rxns = [line for line in csv.DictReader(uploaded_csv.splitlines())]
 
-    # yield destination locations
-    def dests():
-        yield from ((rxn['Dest'], rxn['DestWell']) for rxn in rxns)
-
-    dst = dests()
-
-    # master mix locations and volumes from input csv
+    # master mix locations, volumes, destinations from input csv
     sources = {}
     for rxn in rxns:
         for lbwr in loaded_labwr:
@@ -87,31 +96,39 @@ def run(ctx):
                 mm_well = [well for row in lbwr.rows() for well in row][
                  int(rxn['MMSourceTube'])-1]
                 mm_vol = round(float(rxn['MMXferVol']), 1)
+                mm_dplt = rxn['Dest']
+                mm_dwell = rxn['DestWell']
                 if mm_well not in sources.keys():
-                    sources[mm_well] = []
-                    sources[mm_well].append(mm_vol)
-                else:
-                    sources[mm_well].append(mm_vol)
+                    sources[mm_well] = {'vol': [], 'dplt': [], 'dwell': []}
+                sources[mm_well]['vol'].append(mm_vol)
+                sources[mm_well]['dplt'].append(mm_dplt)
+                sources[mm_well]['dwell'].append(mm_dwell)
+
+    tip_max = tips300[0].wells()[0].max_volume
 
     # distribute master mixes
-    for source, vol_list in sources.items():
+    for source, dct in sources.items():
         p300s.pick_up_tip()
-        p300s.aspirate(sum(vol_list)+10, source.bottom(1), rate=0.7)
-        p300s.delay(3)
-        p300s.slow_tip_withdrawal(5, source)
-        for vol in vol_list:
-            dest_plate, dest_well = next(dst)
-            for lbwr in loaded_labwr:
-                if lbwr.name == dest_plate:
-                    dest = lbwr
-            disp_well = [well for row in dest.rows() for well in row][
-             int(dest_well)-1]
-            p300s.dispense(vol, disp_well.bottom(1), rate=0.7)
-            p300s.delay(1)
-            p300s.slow_tip_withdrawal(10, disp_well)
+        count = 0
+        for chunk in chunks_by_volume(dct['vol'], tip_max-5):
+            p300s.aspirate(sum(chunk)+5, source.bottom(1), rate=0.7)
+            p300s.delay(3)
+            p300s.slow_tip_withdrawal(5, source)
+            for vol in chunk:
+                plate = dct['dplt'][count]
+                well = dct['dwell'][count]
+                for lbwr in loaded_labwr:
+                    if lbwr.name == plate:
+                        dest = lbwr
+                disp_well = [well for row in dest.rows() for well in row][
+                 int(well)-1]
+                p300s.dispense(vol, disp_well.bottom(1), rate=0.7)
+                p300s.delay(1)
+                p300s.slow_tip_withdrawal(10, disp_well)
+                count += 1
         p300s.drop_tip()
 
-    # distribute samples and controls following input csv
+    # transfer samples and controls following input csv
     for rxn in rxns:
         for lbwr in loaded_labwr:
             if lbwr.name == rxn['SampleSource']:
