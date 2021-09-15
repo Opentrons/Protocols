@@ -22,18 +22,18 @@
         "label": "AmBic volume",
         "name": "am_bic_volume",
         "default": 100
-    }, 
+    },
     {
         "type": "int",
         "label": "Transfer volume",
         "name": "transfer_volume",
         "default": 50
-    },   
+    },
     {
         "type": "int",
         "label": "Trypsin volume",
         "name": "trypsin_volume",
-        "default": 1
+        "default": 50
     },
     {
         "type": "int",
@@ -45,7 +45,7 @@
         "type": "dropDown",
         "label": "Acid demineralisation",
         "name": "acid_demin_yn",
-        "options": 
+        "options":
             [
                 {"label": "Yes", "value": "yes"},
                 {"label": "No", "value": "no"}
@@ -55,7 +55,7 @@
         "type": "dropDown",
         "label": "Sodium hydroxide wash",
         "name": "na_oh_wash_yn",
-        "options": 
+        "options":
             [
                 {"label": "Yes", "value": "yes"},
                 {"label": "No", "value": "no"}
@@ -65,7 +65,7 @@
         "type": "dropDown",
         "label": "One Eppendorf rack",
         "name": "one_rack_yn",
-        "options": 
+        "options":
             [
                 {"label": "Yes", "value": "yes"},
                 {"label": "No", "value": "no"}
