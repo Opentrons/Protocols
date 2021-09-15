@@ -62,7 +62,6 @@ Note that the 12 well reservoir in slot 11 is simply used as an aqueous waste (A
 ### Reagent Setup
 ![reagent layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/user-upload_ZooMS_Protocol/Reagent_Setup.png)
 
-### Well Plate Layout
 ![well plate layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/user-upload_ZooMS_Protocol/Well_Setup.png)
 
 ---
