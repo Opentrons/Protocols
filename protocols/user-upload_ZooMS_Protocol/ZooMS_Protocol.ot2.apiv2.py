@@ -1,15 +1,15 @@
-"""User Protocol."""
 from opentrons import protocol_api
 
 metadata = {'protocolName': 'Automated RoboZooMS Protocol',
             'author': 'Daniel Marfiewicz-Dickinson',
+            'description': 'ZooMS Protocol',
             'apiLevel': '2.10'}
 
 
 # string of asterisks show a pause step that is hidden for testing purposes.
 
 def run(protocol: protocol_api.ProtocolContext):
-    """User Protocol."""
+
     [sample_size,
      acid_volume,
      na_oh_volume,
@@ -94,7 +94,7 @@ def run(protocol: protocol_api.ProtocolContext):
                   HCl,
                   wells_in_use)
 
-        protocol.pause("Manually centrifuge before next step.")
+        protocol.pause("Place samples in fridge for 24 hrs minimum (1-14 days), then centrifuge and continue. DO NOT SWITCH OFF THE ROBOT")  # noqa: E501
         # Technician would manually centrifuge and press "continue"
 
     # ~~~~~~~~~~~~~~~~~~~NaOH Wash~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -118,7 +118,11 @@ def run(protocol: protocol_api.ProtocolContext):
                wells_in_use,
                transfer_volume,
                sample_size,
-               ext_wells_in_use)
+               ext_wells_in_use,
+               waste_reservoir,
+               acid_demin_yn,
+               na_oh_wash_yn,
+               acid_volume)
 
     # ~~~~~~~~~~~~~~~~~~~Trypsin digestion~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # distribute diluted trypsin into samples
@@ -151,7 +155,6 @@ def run(protocol: protocol_api.ProtocolContext):
 
 
 def load_pipettes(protocol, tiprack_1, tiprack_2, ziptip_rack):
-    """User Protocol."""
     p1000 = protocol.load_instrument('p1000_single',
                                      'right',
                                      tip_racks=[tiprack_1, tiprack_2])
@@ -170,14 +173,14 @@ def load_deck(protocol,
               ziptip_rack_location,
               waste_reservoir_location,
               wellplate_location):
-    """User Protocol."""
+
     # list of string references to imported labware for easy changing
     eppendorf_rack_name = 'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap'  # noqa: E501
     falcon_tuberack_name = 'opentrons_6_tuberack_falcon_50ml_conical'
     tiprack_1000uL_name = 'opentrons_96_tiprack_1000ul'
     tiprack_300ul_name = 'opentrons_96_tiprack_300ul'
     waste_reservoir_name = 'nest_12_reservoir_15ml'
-    wellplate_name = 'corning_96_wellplate_360ul_flat'
+    wellplate_name = 'nest_96_wellplate_200ul_flat'
 
     tube_rack = protocol.load_labware(
                                       eppendorf_rack_name,
@@ -229,7 +232,6 @@ def load_deck(protocol,
 
 
 def parse_logic(acid_demin_yn, na_oh_wash_yn, one_rack_yn):
-    """User Protocol."""
     if acid_demin_yn == 'yes':
         acid_demin = True
     else:
@@ -254,7 +256,6 @@ def initialize_wells(ziptip_wellplate,
                      tube_rack,
                      ext_tube_rack,
                      one_rack):
-    """User Protocol."""
     wells_in_use = []
     ext_wells_in_use = []
 
@@ -339,7 +340,6 @@ def initialize_wells(ziptip_wellplate,
 
 
 def reset_pipette_parameters(pipette):
-    """User Protocol."""
     # custom method to make sure no settings carry over accidentally
     # can be called at the end of every preparative step
     pipette.well_bottom_clearance.dispense = 1
@@ -349,7 +349,6 @@ def reset_pipette_parameters(pipette):
 
 
 def acid_step(pipette, acid_volume, HCl, wells_in_use):
-    """User Protocol."""
     # ~~~~~~~~~~~~~~~~~~~~~~~acidification step~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # due to dispensing clearance don't need tip changing,
     # due to not being a quantitative step exact vol of acid is
@@ -382,7 +381,7 @@ def na_oh_wash(protocol,
                waste_reservoir,
                na_oh_volume,
                NaOH):
-    """User Protocol."""
+
     # remove acid from the samples to prepare for NaOH wash
     remove_acid(pipette, acid_volume, wells_in_use, waste_reservoir)
 
@@ -397,7 +396,6 @@ def na_oh_wash(protocol,
 
 
 def remove_naoh(pipette, na_oh_volume, wells_in_use, waste_reservoir):
-    """User Protocol."""
     # remove NaOH wash into AqWast
     pipette.transfer(na_oh_volume,
                      wells_in_use,
@@ -406,10 +404,9 @@ def remove_naoh(pipette, na_oh_volume, wells_in_use, waste_reservoir):
 
 
 def dispense_naoh(pipette, na_oh_volume, NaOH, wells_in_use):
-    """User Protocol."""
     # dispense basic wash to samples
     pipette.pick_up_tip()
-    pipette.well_bottom_clearance.dispense = 20
+    pipette.well_bottom_clearance.dispense = 25
     pipette.distribute(na_oh_volume,
                        NaOH,
                        wells_in_use,
@@ -420,9 +417,8 @@ def dispense_naoh(pipette, na_oh_volume, NaOH, wells_in_use):
 
 
 def remove_acid(pipette, acid_volume, wells_in_use, waste_reservoir):
-    """User Protocol."""
     # to make sure you don't hit the samples, in mm
-    pipette.well_bottom_clearance.aspirate = 3
+    pipette.well_bottom_clearance.aspirate = 7
 
     # remove NaOH wash into AqWaste
     pipette.transfer(acid_volume,
@@ -431,7 +427,7 @@ def remove_acid(pipette, acid_volume, wells_in_use, waste_reservoir):
                      new_tip='always')
 
     # to make sure you don't hit the samples, in mm
-    pipette.well_bottom_clearance.dispense = 20
+    pipette.well_bottom_clearance.dispense = 25
 
 
 def gelatinize(protocol,
@@ -441,8 +437,28 @@ def gelatinize(protocol,
                wells_in_use,
                transfer_volume,
                sample_size,
-               ext_wells_in_use):
-    """User Protocol."""
+               ext_wells_in_use,
+               waste_reservoir,
+               acid_demin_yn,
+               na_oh_wash_yn,
+               acid_volume):
+
+    # acid removal step only in NaOH wash
+    # so make sure that if there is acid but no wash, acid is still removed!
+    if acid_demin_yn is True and na_oh_wash_yn is False:
+        remove_acid(pipette,
+                    acid_volume,
+                    wells_in_use,
+                    waste_reservoir)
+
+    # wash sample with ambic three times before
+    # adding final ambic to gelatinise
+    for i in range(3):
+        distribute_am_bic(pipette, am_bic_volume, AmBic, wells_in_use)
+        protocol.pause("Vortex briefly followed by 1 min of centrifuge at 130k RPM.")  # noqa: E501
+        remove_am_bic(pipette, am_bic_volume, waste_reservoir, wells_in_use)
+
+    # incubation addition of ambic
     distribute_am_bic(pipette, am_bic_volume, AmBic, wells_in_use)
 
     protocol.pause("1 hr incubation period @ 65degrees C, followed by centrifuge for 1 min.")  # noqa E501
@@ -459,12 +475,12 @@ def transfer_am_bic(pipette,
                     transfer_volume,
                     wells_in_use,
                     ext_wells_in_use):
-    """User Protocol."""
+
     # transfer ambic extract
     # into a seperate eppendorf tube for trypsin digestion
 
     # some clearance to avoid collisions
-    pipette.well_bottom_clearance.aspirate = 3
+    pipette.well_bottom_clearance.aspirate = 7
     for i in range(sample_size):
         pipette.transfer(transfer_volume,
                          wells_in_use[i],
@@ -475,7 +491,6 @@ def transfer_am_bic(pipette,
 
 
 def distribute_am_bic(pipette, am_bic_volume, AmBic, wells_in_use):
-    """User Protocol."""
     # distribute Ammonium Bicarbonate to the samples
     pipette.well_bottom_clearance.dispense = 20
     pipette.flow_rate.aspirate = 1000
@@ -488,6 +503,21 @@ def distribute_am_bic(pipette, am_bic_volume, AmBic, wells_in_use):
     reset_pipette_parameters(pipette)
 
 
+def remove_am_bic(pipette, am_bic_volume, waste_reservoir, wells_in_use):
+
+    # distribute Ammonium Bicarbonate to the samples
+    pipette.well_bottom_clearance.dispense = 20
+    pipette.flow_rate.aspirate = 1000
+
+    pipette.transfer(am_bic_volume,
+                     wells_in_use,
+                     waste_reservoir.wells()[0],
+                     disposal_volume=0,
+                     new_tip='always')
+
+    reset_pipette_parameters(pipette)
+
+
 def digestion(protocol,
               pipette,
               trypsin_volume,
@@ -495,8 +525,9 @@ def digestion(protocol,
               ext_wells_in_use,
               quench_volume,
               washing_solution):
-    """User Protocol."""
+
     # adding trypsin to the EXT samples
+
     distribute_trypsin(pipette, trypsin_volume, trypsin, ext_wells_in_use)
     protocol.pause("Incubate overnight @37deg C")
 
@@ -506,22 +537,21 @@ def digestion(protocol,
 
 
 def quench_trypsin(pipette, quench_volume, washing_solution, ext_wells_in_use):
-    """User Protocol."""
     pipette.transfer(quench_volume,
                      washing_solution,
                      ext_wells_in_use,
-                     mix_after=(5, 200),  # instead of vortex, mix quickly
+                     mix_after=(5, 100),  # instead of vortex, mix quickly
                      disposal_volume=0,
                      new_tip='always')
 
 
 def distribute_trypsin(pipette, trypsin_volume, trypsin, ext_wells_in_use):
-    """User Protocol."""
+    """Protocol."""
     pipette.transfer(trypsin_volume,
                      trypsin,
                      ext_wells_in_use,
                      new_tip='always',  # avoid contamination
-                     mix_after=(5, 200))  # mix the added trypsin
+                     mix_after=(5, 100))  # mix the added trypsin
 
     reset_pipette_parameters(pipette)
 
@@ -536,7 +566,7 @@ def zip_tip(p1000,
             waste_reservoir,
             ext_wells_in_use,
             eluting_wells):
-    """User Protocol."""
+    """Protocol."""
     # prepare the wellplate with all of the appropriate wells
     prepare_wellplates(p1000,
                        conditioning_solution,
@@ -577,7 +607,7 @@ def isolate_peptides(p300,
                      washing_wells,
                      waste_reservoir,
                      ext_wells_in_use):
-    """User Protocol."""
+    """Protocol."""
     p300.pick_up_tip()
 
     # Condition the zip tip with 100 ul conditioning solution twice
@@ -596,7 +626,7 @@ def isolate_peptides(p300,
     # draw up sample 10 times with 100 ul to isolate peptide in the filter tip
     p300.mix(10, 100, ext_wells_in_use[i])
 
-    # wash the zip tip with 100 ul of washing solution twice again
+    # wash the zip tip with 50 ul of washing solution twice again
     for x in range(2):
         p300.transfer(50,
                       washing_wells[i],
@@ -611,7 +641,7 @@ def prepare_wellplates(p1000,
                        washing_solution,
                        washing_wells,
                        p300):
-    """User Protocol."""
+    """Protocol."""
     # Conditioning solution added to well plate
     p1000.distribute(250,
                      conditioning_solution,
