@@ -11,9 +11,10 @@ metadata = {
 def run(ctx):
 
     [p20_mount, ctrl_csv, assembly_csv, ctrl_transfer_vol,
-        assembly_transfer_vol, pipette_homing] = get_values(  # noqa: F821
+        assembly_transfer_vol, pipette_homing,
+        asp_height] = get_values(  # noqa: F821
         "p20_mount", "ctrl_csv", "assembly_csv", "ctrl_transfer_vol",
-        "assembly_transfer_vol", "pipette_homing")
+        "assembly_transfer_vol", "pipette_homing", "asp_height")
 
     # Load Labware
     temp_mod = ctx.load_module('temperature module gen2', 9)
@@ -102,7 +103,7 @@ def run(ctx):
         s_slot, s_well, d_slot, d_well = line[1:3] + line[4:6]
         p20.pick_up_tip()
         p20.aspirate(assembly_transfer_vol, ctx.loaded_labwares[int(s_slot)][
-                          s_well.upper()].bottom(0.5))
+                          s_well.upper()].bottom(asp_height))
         p20.dispense(assembly_transfer_vol,
                      ctx.loaded_labwares[int(d_slot)][d_well.upper()])
         if pipette_homing == "False":
