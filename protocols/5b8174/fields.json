@@ -33,6 +33,12 @@
         "default": 1.5
       },
       {
+        "type": "float",
+        "label": "96 Well Plates Aspiration Height (mm)",
+        "name": "asp_height",
+        "default": 0.5
+      },
+      {
         "type": "dropDown",
         "label": "Pipette Home After Drop Tip",
         "name": "pipette_homing",
