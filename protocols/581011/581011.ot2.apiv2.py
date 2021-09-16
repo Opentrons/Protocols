@@ -2,11 +2,6 @@
 from itertools import groupby
 import math
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"csv_samp":",1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24\\nA,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nB,x,A1/A1,A1/A1,A1/A1,A2/A1,A2/A1,A2/A1,A3/A1,A3/A1,A3/A1,0/A1,0/A1,A4/A2,A4/A2,A4/A2,A5/A2,A5/A2,A5/A2,A6/A2,A6/A2,A6/A2,0/A2,0/A2,x\\nC,x,A1/A1,A1/A1,A1/A1,A2/A1,A2/A1,A2/A1,A3/A1,A3/A1,A3/A1,0/A1,0/A1,A4/A2,A4/A2,A4/A2,A5/A2,A5/A2,A5/A2,A6/A2,A6/A2,A6/A2,0/A2,0/A2,x\\nD,x,A1/B1,A1/B1,A1/B1,A2/B1,A2/B1,A2/B1,A3/B1,A3/B1,A3/B1,0/B1,0/B1,A4/B2,A4/B2,A4/B2,A5/B2,A5/B2,A5/B2,A6/B2,A6/B2,A6/B2,0/B2,0/B2,x\\nE,x,A1/B1,A1/B1,A1/B1,A2/B1,A2/B1,A2/B1,A3/B1,A3/B1,A3/B1,0/B1,0/B1,A4/B2,A4/B2,A4/B2,A5/B2,A5/B2,A5/B2,A6/B2,A6/B2,A6/B2,0/B2,0/B2,x\\nF,x,A1/C1,A1/C1,A1/C1,A2/C1,A2/C1,A2/C1,A3/C1,A3/C1,A3/C1,0/C1,0/C1,A4/C2,A4/C2,A4/C2,A5/C2,A5/C2,A5/C2,A6/C2,A6/C2,A6/C2,0/C3,0/C3,x\\nG,x,A1/C1,A1/C1,A1/C1,A2/C1,A2/C1,A2/C1,A3/C1,A3/C1,A3/C1,0/C1,0/C1,A4/C2,A4/C2,A4/C2,A5/C2,A5/C2,A5/C2,A6/C2,A6/C2,A6/C2,0/C3,0/C3,x\\nH,x,A1/D1,A1/D1,A1/D1,A2/D1,A2/D1,A2/D1,A3/D1,A3/D1,A3/D1,0/D1,0/D1,A4/0,A4/0,A4/0,A5/0,A5/0,A5/0,A6/0,A6/0,A6/0,x,x,x\\nI,x,A1/D1,A1/D1,A1/D1,A2/D1,A2/D1,A2/D1,A3/D1,A3/D1,A3/D1,0/D1,0/D1,A4/0,A4/0,A4/0,A5/0,A5/0,A5/0,A6/0,A6/0,A6/0,x,x,x\\nJ,x,A1/0,A1/0,A1/0,A2/0,A2/0,A2/0,A3/0,A3/0,A3/0,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nK,x,A1/0,A1/0,A1/0,A2/0,A2/0,A2/0,A3/0,A3/0,A3/0,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nL,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nM,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nN,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nO,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nP,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\n","vol_target_cell":40,"pre_mix":false,"mix_asp_height":1,"mix_disp_height":1,"premix_reps":3,"mix_vol":3,"mix_rate":1,"disp_res_height":1,"asp_height":1,"disp_height":1,"asp_rate":1,"disp_rate":1,"m300_mount":"left"}""")
-    return [_all_values[n] for n in names]
-
 metadata = {
     'protocolName': 'Cherrypicking with Multi-Channel Pipette and CSV',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
@@ -70,7 +65,6 @@ def run(ctx):
         else:
             num_tips_in_each_column.append('x')
 
-
     # find start well
     start_well = 0
     for row in plate_map:
@@ -102,6 +96,7 @@ def run(ctx):
             check_control.insert(i, 'x')
 
     tip_count = 0
+
     def pickup(num_channels_per_pickup):
         nonlocal tip_count
         tips_ordered = [
