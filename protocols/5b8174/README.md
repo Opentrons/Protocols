@@ -39,6 +39,7 @@ appliedbiosystems_96_wellplate_200ul_on_eppendorf_cooling_block,2,E11,appliedbio
 appliedbiosystems_96_wellplate_200ul_on_eppendorf_cooling_block,2,E11,appliedbiosystems_384_wellplate_20ul,6,D2
 appliedbiosystems_96_wellplate_200ul_on_eppendorf_cooling_block,2,E11,appliedbiosystems_384_wellplate_20ul,6,E2
 ```
+* `96 Well Plates Aspiration Height (mm)`: The aspiration height from the bottom of the well when aspirating from the assembly 96 well plates.
 
 **Control Conversion Table**
 ```
