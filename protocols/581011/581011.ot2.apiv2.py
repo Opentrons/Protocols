@@ -2,7 +2,6 @@
 from itertools import groupby
 import math
 
-
 metadata = {
     'protocolName': 'Cherrypicking with Multi-Channel Pipette and CSV',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
@@ -45,45 +44,26 @@ def run(ctx):
                  for line in csv_samp.splitlines()
                  if line.split(',')[0].strip()][1:]
 
-    # find the num channels per pickup
+    # FIND NUMBER OF TIPS PER COLUMN
     letter_to_num = {'A': '1', 'B': '2', 'C': '3', 'D': '4',
                      'E': '5', 'F': '6', 'G': '7', 'H': '8'}
-    effector_numbers = []
-    for row in plate_map:
-        for well in row:
+    num_tips_in_each_column = []
+
+    for column in range(24):
+        check_highest_letter = []
+        for row in plate_map:
+            well = row[column]
             if '/' in well:
                 elements = well.split('/')
                 if elements[1] == '0' or elements[0] == '0':
                     continue
                 else:
-                    effector_numbers.append(int(letter_to_num[elements[1][0]]))
-
-    max_effector_number = max(effector_numbers)
-    control_row_counter = 0
-    for row in plate_map:
-        for well in row:
-            if '/' in well:
-                elements = well.split('/')
-                if elements[1] == '0':
-                    control_row_counter += 1
-                    break
-
-    control_row_counter = math.floor(control_row_counter/2)
-    num_channels_per_pickup = max_effector_number+control_row_counter
-    tips_ordered = [
-        tip for rack in tiprack
-        for row in rack.rows()[
-            len(rack.rows())-num_channels_per_pickup::
-            -1*num_channels_per_pickup]
-        for tip in row]
-
-    # pick up function
-    tip_count = 0
-
-    def pickup():
-        nonlocal tip_count
-        m300.pick_up_tip(tips_ordered[tip_count])
-        tip_count += 1
+                    check_highest_letter.append(int(
+                        letter_to_num[elements[1][0]]))
+        if len(check_highest_letter) > 0:
+            num_tips_in_each_column.append(max(check_highest_letter))
+        else:
+            num_tips_in_each_column.append('x')
 
     # find start well
     start_well = 0
@@ -95,6 +75,38 @@ def run(ctx):
         if '/' in well:
             break
     start_row = math.floor(start_well/24)
+
+    # find control
+    check_control = []
+    for column in range(24):
+        for row in plate_map[::-1]:
+            well = row[column]
+            if '/' in well:
+                elements = well.split('/')
+                if elements[1] == '0':
+                    check_control.append(int(1))
+                    break
+                else:
+                    check_control.append(int(0))
+                    break
+
+    # add x's to the rest
+    for i, template in enumerate(plate_map[start_row]):
+        if 'x' in template or 'X' in template:
+            check_control.insert(i, 'x')
+
+    tip_count = 0
+
+    def pickup(num_channels_per_pickup):
+        nonlocal tip_count
+        tips_ordered = [
+            tip for rack in tiprack
+            for row in rack.rows()[
+                len(rack.rows())-num_channels_per_pickup::
+                -1*num_channels_per_pickup]
+            for tip in row]
+        m300.pick_up_tip(tips_ordered[tip_count])
+        tip_count += 1
 
     # transfer target cell
     dispense_wells = [list(j) for i, j in groupby(plate_map[start_row])]
@@ -126,57 +138,57 @@ def run(ctx):
                 m300.aspirate(tot_vol if tot_vol < 200 else
                               200-0.15*vol_target_cell, source_well)
 
-    def dispense(start_well, second_well=True):
-        for j, chunk in enumerate(dispense_wells):
-            if 'x' in chunk or 'X' in chunk or chunk[0][0] == '0':
-                if j > 0:
-                    start_well += 1
-                continue
-            pickup()
-            tot_vol = vol_target_cell*len(chunk)*2+20 if \
-                second_well else vol_target_cell*len(chunk)+20
-            for i, well in enumerate(chunk):
-                source_well = target_res.wells_by_name()[str(chunk[0][0:2])]
-                if vol_target_cell >= 100:
-                    if pre_mix:
-                        mix_diff_height(source_well)
-                    m300.aspirate(vol_target_cell, source_well)
-                    m300.dispense(vol_target_cell, wells_by_row[start_well])
-                    if pre_mix:
-                        mix_diff_height(source_well)
-                    m300.aspirate(vol_target_cell,
-                                  source_well)
-                    m300.dispense(vol_target_cell, wells_by_row[start_well+24])
-                    start_well += 1
+    tip_col_ctr = 0
 
-                else:
-                    if m300.current_volume < vol_target_cell:
-                        if pre_mix:
-                            mix_diff_height(source_well)
-                        m300.aspirate(tot_vol if tot_vol < 200
-                                      else 200-0.15*vol_target_cell,
-                                      source_well)
+    for j, chunk in enumerate(dispense_wells):
+        if 'x' in chunk or 'X' in chunk or chunk[0][0] == '0':
+            if j > 0:
+                start_well += len(chunk)
+                tip_col_ctr += len(chunk)
+            else:
+                tip_col_ctr += len(chunk)
+            continue
 
-                    # first row dispense
-                    m300.dispense(vol_target_cell, wells_by_row[start_well])
-                    tot_vol -= vol_target_cell
-                    check_volume(i, tot_vol, chunk, source_well)
-
-                    # second row dispense
-                    if second_well:
-                        m300.dispense(vol_target_cell,
-                                      wells_by_row[start_well+24])
-                        tot_vol -= vol_target_cell
-                        check_volume(i, tot_vol, chunk, source_well)
-
-                    start_well += 1
-            if m300.current_volume > 0:
-                m300.dispense(m300.current_volume,
+        pickup(num_tips_in_each_column[tip_col_ctr]+check_control[tip_col_ctr])
+        tot_vol = vol_target_cell*len(chunk)*2+20
+        for i, well in enumerate(chunk):
+            source_well = target_res.wells_by_name()[str(chunk[0][0:2])]
+            if vol_target_cell >= 100:
+                if pre_mix:
+                    mix_diff_height(source_well)
+                m300.aspirate(vol_target_cell, source_well)
+                m300.dispense(vol_target_cell, wells_by_row[start_well])
+                if pre_mix:
+                    mix_diff_height(source_well)
+                m300.aspirate(vol_target_cell,
                               source_well)
-            m300.drop_tip()
-            ctx.comment('\n\n')
+                m300.dispense(vol_target_cell, wells_by_row[start_well+24])
+                start_well += 1
+                tip_col_ctr += 1
 
-    # add target cells
-    ctx.comment('\n\nADDING TARGET CELL\n\n')
-    dispense(start_well, second_well=True)
-    num_channels_per_pickup = 1
+            else:
+                if m300.current_volume < vol_target_cell:
+                    if pre_mix:
+                        mix_diff_height(source_well)
+                    m300.aspirate(tot_vol if tot_vol < 200
+                                  else 200-0.15*vol_target_cell,
+                                  source_well)
+
+                # first row dispense
+                m300.dispense(vol_target_cell, wells_by_row[start_well])
+                tot_vol -= vol_target_cell
+                check_volume(i, tot_vol, chunk, source_well)
+
+                # second row dispense
+                m300.dispense(vol_target_cell,
+                              wells_by_row[start_well+24])
+                tot_vol -= vol_target_cell
+                check_volume(i, tot_vol, chunk, source_well)
+
+                start_well += 1
+                tip_col_ctr += 1
+        if m300.current_volume > 0:
+            m300.dispense(m300.current_volume,
+                          source_well)
+        m300.drop_tip()
+        ctx.comment('\n\n')
