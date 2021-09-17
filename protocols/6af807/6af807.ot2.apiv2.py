@@ -1,5 +1,7 @@
+"""Protocol."""
 import os
 import csv
+import math
 
 metadata = {
     'protocolName': '384 Well Plate PCR Plate with Triplicates',
@@ -10,15 +12,15 @@ metadata = {
 
 
 def run(ctx):
-
+    """Protocol."""
     [num_gene, num_mastermix,
         reset_tipracks, p20_mount] = get_values(  # noqa: F821
         "num_gene", "num_mastermix", "reset_tipracks", "p20_mount")
 
     if not 1 <= num_mastermix <= 24:
         raise Exception("Enter a number of mastermixes between 1-24")
-    if not 1 <= num_gene <= 5:
-        raise Exception("Enter a number of cDNA 1-5")
+    if not 1 <= num_gene <= 24:
+        raise Exception("Enter a number of cDNA 1-24")
 
     # Tip tracking between runs
     if not ctx.is_simulating():
@@ -71,23 +73,60 @@ def run(ctx):
             tip_counter += 1
 
     # ctx
-    cDNA_tubes = cDNA.rows()[0][:num_gene]
-    well_map = [[well for col in plate.columns()[:num_mastermix]
-                for well in col[i:i+3]] for i in range(0, num_gene*3, 3)]
+    cDNA_tubes = cDNA.wells()[:num_gene]
 
-    for tube, chunk in zip(cDNA_tubes, well_map):
+    num_mastermix_in_row = math.floor(24/num_mastermix)
+    row_stride = math.floor(24/num_mastermix_in_row)
+    chopped_plate = [plate.columns()[i][:15]
+                     for i in range(0, len(plate.columns()))]
+    plate_map = [well for col in chopped_plate[::row_stride]
+                 for i in range(0, num_gene*3, 3)
+                 for well in col[i:i+3]]
+    chunks = [plate_map[i:i+3] for i in range(0, len(plate_map), 3)]
+
+    num_mastermix_in_row = int(math.floor(24/num_mastermix)/(num_mastermix*3))
+    airgap = 2
+    for tube, chunk in zip(cDNA_tubes, chunks):
         pick_up()
         for well in chunk:
             p20.aspirate(4, tube)
-            p20.dispense(4, well)
+            p20.touch_tip()
+            p20.air_gap(airgap)
+            p20.dispense(4+airgap, well)
             p20.blow_out()
+            p20.touch_tip()
         ctx.comment('\n')
         p20.drop_tip()
 
-    for tube, column in zip(mastermix.wells(),
-                            plate.columns()[:num_mastermix]):
+    num_rows_in_each_column = []
+    remaining_wells = math.floor(num_gene*3 % 15)
+
+    for i, col in enumerate(chopped_plate[:num_mastermix]):
+        if num_gene > 5:
+            if i != len(chopped_plate[:num_mastermix])-1:
+                num_rows_in_each_column.append(15)
+            else:
+                if remaining_wells == 0:
+                    num_rows_in_each_column.append(15)
+                else:
+                    num_rows_in_each_column.append(remaining_wells)
+        else:
+            num_rows_in_each_column.append(num_gene*3)
+
+    for tube, column, num_rows in zip(mastermix.wells(),
+                                      chopped_plate[:num_mastermix],
+                                      num_rows_in_each_column):
         pick_up()
-        for i, well in enumerate(column[:num_gene*3]):
-            p20.transfer(16, tube, well.top(), new_tip='never')
+        for i, well in enumerate(column[:num_rows]):
+            p20.aspirate(10, tube, rate=0.5)
+            ctx.delay(seconds=1)
+            p20.dispense(10, well.top(), rate=0.5)
             p20.blow_out()
+
+            p20.aspirate(6, tube, rate=0.5)
+            ctx.delay(seconds=1)
+            p20.dispense(10, well.top(), rate=0.5)
+            p20.blow_out()
+
         p20.drop_tip()
+        ctx.comment('\n')
