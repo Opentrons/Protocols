@@ -60,10 +60,10 @@ def run(ctx):
     temperature_mod.set_temperature(4)
 
     # METHOD 1 - MAKING AND DISTRIBUTING MASTERMIX
-    rapid_enzyme1 = alum_tuberack.wells()[0]
-    rapid_enzyme2 = alum_tuberack.wells()[1]
-    nuc_free_water = alum_tuberack.wells()[2]
-    mastermix = alum_tuberack.wells()[3]
+    rapid_enzyme1 = alum_tuberack.rows()[0][0]
+    rapid_enzyme2 = alum_tuberack.rows()[0][1]
+    nuc_free_water = alum_tuberack.rows()[0][2]
+    mastermix = alum_tuberack.rows()[0][3]
 
     # make mastermix
     for i, tube in enumerate([rapid_enzyme1, rapid_enzyme2, nuc_free_water]):
