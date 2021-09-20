@@ -1,49 +1,41 @@
-# Cherrypicking
+# Verogen ForenSeq DNA Signature Prep Kit Part 1/5: Cherrypicking
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Featured
-	* Cherrypicking
+* NGS Library Prep
+	* Verogen ForenSeq DNA Signature Prep Kit
 
 ## Description
 
-Our most robust cherrypicking protocol. Specify aspiration height, labware, pipette, as well as source and destination wells with this all inclusive cherrypicking protocol.
+This custom Cherrypicking protocol is part 1/5 of the [Verogen ForenSeq DNA Signature Prep kit](https://verogen.com/products/forenseq-dna-signature-prep-kit/?utm_term=&utm_campaign=Product+Campaigns&utm_source=adwords&utm_medium=ppc&hsa_acc=2964416997&hsa_cam=12070402317&hsa_grp=115534580817&hsa_ad=544522374879&hsa_src=g&hsa_tgt=dsa-19959388920&hsa_kw=&hsa_mt=b&hsa_net=adwords&hsa_ver=3&gclid=CjwKCAjw4qCKBhAVEiwAkTYsPP4JakJA06WcfvubM80x5gzv7kIFucad6jw9WrACitcG6qERBSAU1xoCaOEQAvD_BwE). In this protocol, mastermix is pre-added to a clean PCR plate. Then, samples from up to 4 source plates specified in the `.csv` file are transferred to the plate containing mastermix and mixed (optionally).
 
-![Cherrypicking Example](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/cherrypicking/cherrypicking_example.png)
-
-Explanation of complex parameters below:
-
-* `input .csv file`: Here, you should upload a .csv file formatted in the [following way](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1211/example.csv), making sure to include headers in your csv file. Refer to our [Labware Library](https://labware.opentrons.com/?category=wellPlate) to copy API names for labware to include in the `Source Labware` and `Dest Labware` columns of the .csv.
-* `Pipette Model`: Select which pipette you will use for this protocol.
-* `Pipette Mount`: Specify which mount your single-channel pipette is on (left or right)
-* `Tip Type`: Specify whether you want to use filter tips.
-* `Tip Usage Strategy`: Specify whether you'd like to use a new tip for each transfer, or keep the same tip throughout the protocol.
-
-
+The .csv file should be formatted as shown below (**including header line**):
+```
+volume,source plate # (1-4),source column (1-12),destination column(1-12)
+8,1,2,1
+8,2,3,2
+8,2,12,3
+```
 
 ---
 
-
 ### Labware
-* Any verified labware found in our [Labware Library](https://labware.opentrons.com/?category=wellPlate)
+* Amplifyt 96 Well Plate 200 µL
+* [Opentrons 20µl Tipracks](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)
+* [Opentrons 96 Well Aluminum Block](https://shop.opentrons.com/collections/hardware-modules/products/aluminum-block-set) with Generic PCR Strip 200 µL
 
 ### Pipettes
-* [P20 Single GEN2 Pipette](https://opentrons.com/pipettes/)
-* [P300 Single GEN2 Pipette](https://opentrons.com/pipettes/)
-* [P1000 Single GEN2 Pipette](https://opentrons.com/pipettes/)
-* P10 Single GEN1 Pipette
-* P50 Single GEN1 Pipette
-* P300 Single GEN1 Pipette
-* P1000 Single GEN1 Pipette
+* [P20 Multi GEN2 Pipette](https://opentrons.com/pipettes/)
 
+### Reagents
+* [Verogen ForenSeq DNA Signature Prep kit](https://verogen.com/products/forenseq-dna-signature-prep-kit/?utm_term=&utm_campaign=Product+Campaigns&utm_source=adwords&utm_medium=ppc&hsa_acc=2964416997&hsa_cam=12070402317&hsa_grp=115534580817&hsa_ad=544522374879&hsa_src=g&hsa_tgt=dsa-19959388920&hsa_kw=&hsa_mt=b&hsa_net=adwords&hsa_ver=3&gclid=CjwKCAjw4qCKBhAVEiwAkTYsPP4JakJA06WcfvubM80x5gzv7kIFucad6jw9WrACitcG6qERBSAU1xoCaOEQAvD_BwE)
 
 ---
 
 ### Deck Setup
-* Example deck setup - tip racks loaded onto remining slots.
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/cherrypicking/Screen+Shot+2021-04-29+at+3.10.02+PM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/17d210/deck1.png)
 
 ---
 
@@ -65,4 +57,4 @@ Explanation of complex parameters below:
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-cherrypicking
+17d210

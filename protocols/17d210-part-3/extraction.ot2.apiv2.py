@@ -80,12 +80,12 @@ lights"
 # Start protocol
 def run(ctx):
     [num_samples, deepwell_type, mag_height, z_offset, radial_offset, res_type,
-     starting_vol, binding_buffer_vol, wash1_vol, wash2_vol, wash3_vol,
+     starting_vol, binding_buffer_vol, wash1_vol, wash2_vol,
      elution_vol, mix_reps, settling_time, park_tips, tip_track,
      flash] = get_values(  # noqa: F821
         'num_samples', 'deepwell_type', 'mag_height', 'z_offset',
         'radial_offset', 'res_type', 'starting_vol', 'binding_buffer_vol',
-        'wash1_vol', 'wash2_vol', 'wash3_vol', 'elution_vol', 'mix_reps',
+        'wash1_vol', 'wash2_vol', 'elution_vol', 'mix_reps',
         'settling_time', 'park_tips', 'tip_track', 'flash')
 
     """
@@ -96,7 +96,7 @@ def run(ctx):
     magdeck.disengage()
     magplate = magdeck.load_labware('abgenemidi_96_wellplate_800ul',
                                     'deepwell plate')
-    elutionplate = ctx.load_labware('axygen_96_wellplate_200ul',
+    elutionplate = ctx.load_labware('axygen_96_wellplate_200ul', '1',
                                     'elution plate')
     waste = ctx.load_labware('nest_1_reservoir_195ml', '11',
                              'Liquid Waste').wells()[0].top()
@@ -129,14 +129,12 @@ def run(ctx):
     elution_solution = res1.wells()[-1]
     wash1 = res2.wells()[:4]
     wash2 = res2.wells()[4:8]
-    wash3 = res2.wells()[8:]
 
     mag_samples_m = magplate.rows()[0][:num_cols]
     elution_samples_m = elutionplate.rows()[0][:num_cols]
-    radius = mag_samples_m[0].width
+    radius = mag_samples_m[0].diameter/2
 
     magdeck.disengage()  # just in case
-    tempdeck.set_temperature(4)
 
     m300.flow_rate.aspirate = 50
     m300.flow_rate.dispense = 150
@@ -439,7 +437,6 @@ before resuming.')
     bind(binding_buffer_vol, park=park_tips)
     wash(wash1_vol, wash1, park=park_tips)
     wash(wash2_vol, wash2, park=park_tips)
-    wash(wash3_vol, wash3, park=park_tips)
     elute(elution_vol, park=park_tips)
 
     # track final used tip
