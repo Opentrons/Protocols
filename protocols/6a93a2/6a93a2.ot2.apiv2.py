@@ -9,6 +9,10 @@ metadata = {
     'apiLevel': '2.7'
 }
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"num_samp":"8","overage_percent":7.5,"tip_type":"opentrons_96_filtertiprack_20ul","p300_mount":"right","bead_dry_time":1,"p20_mount":"left"}""")
+    return [_all_values[n] for n in names]
 
 def run(ctx):
 
@@ -60,10 +64,10 @@ def run(ctx):
     temperature_mod.set_temperature(4)
 
     # METHOD 1 - MAKING AND DISTRIBUTING MASTERMIX
-    rapid_enzyme1 = alum_tuberack.wells()[0]
-    rapid_enzyme2 = alum_tuberack.wells()[1]
-    nuc_free_water = alum_tuberack.wells()[2]
-    mastermix = alum_tuberack.wells()[3]
+    rapid_enzyme1 = alum_tuberack.rows()[0][0]
+    rapid_enzyme2 = alum_tuberack.rows()[0][1]
+    nuc_free_water = alum_tuberack.rows()[0][2]
+    mastermix = alum_tuberack.rows()[0][3]
 
     # make mastermix
     for i, tube in enumerate([rapid_enzyme1, rapid_enzyme2, nuc_free_water]):
