@@ -17,7 +17,7 @@ def run(ctx):
                           '6', 'mastermix tubes (strip column 1)').wells()[0]
     source_plates = {
         str(i+1): ctx.load_labware('amplifyt_96_wellplate_200ul', slot,
-                                   f'plate f{i+1}')
+                                   f'plate {i+1}')
         for i, slot in enumerate(['11', '8', '5', '2'])
     }
     tips20m = [
