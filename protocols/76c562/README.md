@@ -19,13 +19,17 @@ The two .csv files should be formatted as shown in the example below, **includin
 Source Labware,Source Slot,Source Well,Source Aspiration Height Above Bottom (in mm),Dest Labware,Dest Slot,Dest Well,Dest Dispense Height Above Bottom (in mm),Volume (in ul),Pipette
 agilent_1_reservoir_290ml,1,A1,1,nest_96_wellplate_100ul_pcr_full_skirt,4,A11,1,5,right
 nest_12_reservoir_15ml,2,A1,1,nest_96_wellplate_2ml_deep,5,A5,5,3,right
-nest_1_reservoir_195ml,3,A1,1,nest_96_wellplate_2ml_deep,5,H12,5,7,left
+nest_1_reservoir_195ml,3,A1,1,nest_96_wellplate_2ml_deep,5,H12,5,7,right
 ```
 
 All available empty slots will be filled with the necessary tipracks, and the user will be prompted to refill the tipracks if all are emptied in the middle of the protocol.
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
+
+### Deck Setup
+* example layout based on example `.csv` above:  
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/76c562/deckex.png)
 
 ## Process
 1. Input your protocol parameters.
