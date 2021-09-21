@@ -6,7 +6,7 @@ metadata = {
     'protocolName': 'Swift Rapid NGS Part 1 - Reverse Transcription',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.7'
+    'apiLevel': '2.11'
 }
 
 
@@ -20,7 +20,7 @@ def run(ctx):
     # keep user in range
     num_samp = int(num_samp)
     if not 0.0 <= overage_percent <= 10.0:
-        raise Exception("Enter a an overage percent between 5-10%")
+        raise Exception("Enter an overage percent between 5-10%")
     overage_percent = 1+overage_percent/100
     num_cols = math.ceil(int(num_samp/8))
 
@@ -30,7 +30,7 @@ def run(ctx):
             'nest_96_wellplate_100ul_pcr_full_skirt')
     temperature_mod = ctx.load_module('temperature module gen2', '3')
     alum_tuberack = temperature_mod.load_labware(
-                        'opentrons_24_aluminumblock_nest_1.5ml_screwcap')
+                        'opentrons_24_aluminumblock_generic_2ml_screwcap')
     mag_mod = ctx.load_module('magnetic module gen2', '1')
     mag_plate = mag_mod.load_labware(
         'nest_96_wellplate_100ul_pcr_full_skirt')
