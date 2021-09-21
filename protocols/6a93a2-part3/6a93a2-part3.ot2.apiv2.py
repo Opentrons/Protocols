@@ -30,7 +30,7 @@ def run(ctx):
             'nest_96_wellplate_100ul_pcr_full_skirt')
     temperature_mod = ctx.load_module('temperature module gen2', '3')
     alum_tuberack = temperature_mod.load_labware(
-                        'opentrons_24_aluminumblock_nest_1.5ml_screwcap')
+                        'opentrons_24_aluminumblock_generic_2ml_screwcap')
     mag_mod = ctx.load_module('magnetic module gen2', '1')
     mag_plate = mag_mod.load_labware(
         'nest_96_wellplate_100ul_pcr_full_skirt')
