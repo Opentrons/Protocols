@@ -35,7 +35,7 @@ volume,source plate # (1-4),source column (1-12),destination column(1-12)
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/17d210/deck1.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/17d210/deck1-2.png)
 
 ---
 
