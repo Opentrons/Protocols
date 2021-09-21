@@ -33,13 +33,13 @@
     "type": "str",
     "label": "left pipette start slot",
     "name": "left_pip_slot",
-    "default": "7"
+    "default": "10"
   },
   {
     "type": "str",
     "label": "right pipette start slot",
     "name": "right_pip_slot",
-    "default": "9"
+    "default": "11"
   },
   {
     "type": "str",
@@ -57,7 +57,7 @@
     "type": "textFile",
     "label": "diluent 1 CSV",
     "name": "d_csv1",
-    "default": "Source Labware,Source Slot,Source Well,Source Aspiration Height Above Bottom (in mm),Dest Labware,Dest Slot,Dest Well,Dest Dispense Height Above Bottom (in mm),Volume (in ul),Pipette\nagilent_1_reservoir_290ml,1,A1,1,nest_96_wellplate_100ul_pcr_full_skirt,4,A11,5,1,left\nnest_12_reservoir_15ml,2,A1,1,nest_96_wellplate_2ml_deep,5,A5,5,3,left\nnest_1_reservoir_195ml,11,A1,1,nest_96_wellplate_2ml_deep,5,H12,5,7,left"
+    "default": "Source Labware,Source Slot,Source Well,Source Aspiration Height Above Bottom (in mm),Dest Labware,Dest Slot,Dest Well,Dest Dispense Height Above Bottom (in mm),Volume (in ul),Pipette\nagilent_1_reservoir_290ml,1,A1,1,nest_96_wellplate_100ul_pcr_full_skirt,4,A11,5,1,left\nnest_12_reservoir_15ml,2,A1,1,nest_96_wellplate_2ml_deep,5,A5,5,3,left\nnest_1_reservoir_195ml,7,A1,1,nest_96_wellplate_2ml_deep,5,H12,5,7,left"
   },
   {
     "type": "textFile",

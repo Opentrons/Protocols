@@ -78,7 +78,6 @@ def run(ctx):
         'left': None,
         'right': None
     }
-
     for i, (pip_type, side) in enumerate(
             zip([left_pipette_type, right_pipette_type], pipettes.keys())):
         if pip_type:
@@ -87,10 +86,12 @@ def run(ctx):
             if i == 0:
                 num_racks = math.ceil(num_avail_slots/num_pipettes)
                 slots = sorted_slots[:num_racks]
+                if right_pipette_type and '11' in slots:
+                    slots.remove('11')
+                for slot in slots:
+                    sorted_slots.remove(slot)
             else:
-                num_racks = math.floor(num_avail_slots/num_pipettes)
-                start = num_avail_slots - num_racks
-                slots = sorted_slots[start:]
+                slots = sorted_slots
             for slot in slots:
                 tipracks.append(ctx.load_labware(tiprack_type, str(slot)))
         # load pipette
