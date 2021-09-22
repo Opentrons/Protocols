@@ -156,7 +156,7 @@ def run(ctx):
                  If needed, please empty trash.''')
 
     # engage magnets with 5 minute rest
-    ctx.comment('\nEngaging magnetic module in extraction step\n')
+    ctx.comment('\nEngaging Magnetic Module in Extraction Step\n')
     mag_mod.engage()
     ctx.delay(minutes=5)
 
