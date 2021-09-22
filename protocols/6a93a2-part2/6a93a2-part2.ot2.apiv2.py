@@ -4,7 +4,7 @@ metadata = {
     'protocolName': 'Swift Rapid NGS Part 2 - Adaptase',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.7'
+    'apiLevel': '2.11'
 }
 
 
@@ -28,7 +28,7 @@ def run(ctx):
             'nest_96_wellplate_100ul_pcr_full_skirt')
     temperature_mod = ctx.load_module('temperature module gen2', '3')
     alum_tuberack = temperature_mod.load_labware(
-                        'opentrons_24_aluminumblock_nest_1.5ml_screwcap')
+                        'opentrons_24_aluminumblock_generic_2ml_screwcap')
     tiprack20 = [ctx.load_labware(tip_type, slot) for slot in ['6', '9']]
     tiprack300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
                   for slot in ['4', '5']]
