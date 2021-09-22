@@ -153,7 +153,7 @@ def run(ctx):
     ctx.delay(minutes=7.5)
     ctx.pause('''Remove magnetic plate from deck, seal and spin down -
                  place back on the magnetic module.
-                 If needed, please empty trash.''')
+                 If needed, please empty trash!''')
 
     # engage magnets with 5 minute rest
     ctx.comment('\nEngaging Magnetic Module in Extraction Step\n')
