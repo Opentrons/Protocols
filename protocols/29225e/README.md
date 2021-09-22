@@ -13,17 +13,18 @@ This protocol uses p300 and p20 single channel pipettes to transfer custom volum
 
 Links:
 * [example input csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/29225e/RNA+normalization+123456.csv)
+
 * [Part 2 - qRT-PCR Setup](https://protocols.opentrons.com/protocol/29225e-part-2)
 
 This protocol was developed to transfer custom volumes of up to 96 input RNA samples from one of up to four 24-tube racks (or alternatively from a single 96-well RNA-source plate) to a single 96-well destination plate according to volumes, rack number (1-4) or plate number (1), and tube locations (A1-D6) or well locations (A1-H12) in the uploaded csv file.
 
 ## Protocol Steps
 
-Set up: Use the OT app to pre-cool the temperature module to 4 degrees prior to running this protocol. Place the 96-well destination plate on the temperature module (deck slot 1). Up to 96 input RNA samples in up to a total of four 24-tube racks (deck slots 2, 3, 5, 6) or a single 96-well plate (deck slot 2), Opentrons 20 ul (deck slot 10) and 200 ul filter tips (deck slot 11). A single 1.5 mL eppendorf tube containing RNAse-free water in well A1 of a 24-tube rack (deck slot 4).
+Set up: Use the OT app to pre-cool the temperature module to 4 degrees prior to running this protocol. Place the 96-well destination plate on the temperature module (deck slot 1). Up to 96 input RNA samples in up to a total of four 24-tube racks (deck slots 2, 3, 5, 6) or a single 96-well plate (deck slot 2), Opentrons 20 ul (deck slot 10) and 200 ul filter tips (deck slot 11). 1.5 mL eppendorf tubes containing RNAse-free water in well A1, B1, C1, D1, A2 of a 24-tube rack (deck slot 4).
 
 The OT-2 will perform the following steps:
-1. Distribute smaller volumes of water (10 uL or less) from the water tube to wells of the destination plate according to the uploaded csv file.
-2. Distribute remaining volumes of water (greater than 10 uL) from the water tube to wells of the destination plate according to the uploaded csv file.
+1. Distribute smaller volumes of water (10 uL or less) from the water tubes to wells of the destination plate according to the uploaded csv file.
+2. Distribute remaining volumes of water (greater than 10 uL) from the water tubes to wells of the destination plate according to the uploaded csv file.
 3. Transfer each input RNA sample to the destination plate according to the uploaded csv file. Mix the RNA with the water.
 
 ---
@@ -45,7 +46,7 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 * Opentrons 200ul filter tips (Deck Slot 11)
 * Opentrons 20ul filter tips (Deck Slot 10)
 * Selected Labware for Input RNA Samples (Deck Slots 2, 3, 5, 6)
-* Opentrons 24-tube rack with RNAse-Free Water Tube in A1 (Deck Slot 4)
+* Opentrons 24-tube rack with Water Tubes in A1, B1, C1, D1, A2 (Deck Slot 4)
 * Opentrons Temperature Module with 96-well Destination Plate (Deck Slot 1)
 
 ![input csv data and file format](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/29225e/example_csv.png)
