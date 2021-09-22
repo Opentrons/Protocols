@@ -21,7 +21,7 @@ def run(ctx):
 
     if not 500 <= vol_h2o <= 1500:
         raise Exception(
-         'Starting volume of water must be between 500 and 1500 uL.')
+         'Starting volume of water must be between 500 and 1500 uL per tube.')
 
     tfers = [line for line in csv.DictReader(uploaded_csv.splitlines())]
 
@@ -31,9 +31,9 @@ def run(ctx):
 
     # p300 single, p20 single, tips
     tips20 = [ctx.load_labware(
-     'opentrons_96_tiprack_20ul', str(slot)) for slot in [10]]
+     'opentrons_96_filtertiprack_20ul', str(slot)) for slot in [10]]
     tips300 = [ctx.load_labware(
-     'opentrons_96_tiprack_300ul', str(slot)) for slot in [11]]
+     'opentrons_96_filtertiprack_200ul', str(slot)) for slot in [11]]
     p20s = ctx.load_instrument("p20_single_gen2", 'left', tip_racks=tips20)
     p300s = ctx.load_instrument("p300_single_gen2", 'right', tip_racks=tips300)
 
@@ -47,7 +47,7 @@ def run(ctx):
         raise Exception(
          'Adjustments to the protocol are needed for this labware.')
 
-    # water tube with tracking of volume and liquid height
+    # water tubes with tracking of volume and liquid height
     rack = ctx.load_labware(
      'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap',
      '4', 'Reagent Rack')
@@ -106,21 +106,41 @@ def run(ctx):
             else:
                 return(self.well.top())
 
-    water = WellH(rack.wells()[0], min_height=1, current_volume=vol_h2o)
+    water_tubes = []
+    num_tubes = math.ceil(sum([float(
+     tfer['water vol']) for tfer in tfers]) / vol_h2o)
+    for index, tube in enumerate(rack.wells()[:num_tubes]):
+        new = WellH(rack.wells()[index], min_height=1, current_volume=vol_h2o)
+        water_tubes.append(new)
+
+    ctx.pause(
+     "Please place {0} tubes each containing {1} uL water in {2}".format(
+      num_tubes, vol_h2o, rack))
+
+    def wtr_tubes():
+        yield from water_tubes
+
+    water_tube = wtr_tubes()
+
+    water = next(water_tube)
 
     def distribute_water(pip, lst, disposal):
+        nonlocal water
         if lst != []:
             disp = []
             in_tip = 0
             pip.pick_up_tip()
+            pip.aspirate(disposal, water.height_dec(disposal))
+            in_tip += disposal
             for index, tfer in enumerate(lst):
                 vol = float(tfer['water vol'])
                 dst = dest_plate.wells_by_name()[tfer['dest well']]
-                if vol + in_tip <= pip.max_volume:
-                    pip.aspirate(vol, water.height_dec(vol))
-                    in_tip += vol
-                    disp.append((vol, dst))
-                else:
+                if water.current_volume <= 50:
+                    try:
+                        water = next(water_tube)
+                    except StopIteration:
+                        ctx.comment("The next water tube was not found.")
+                if vol + in_tip > pip._tip_racks[0].wells()[0].max_volume:
                     for d in disp:
                         pip.dispense(float(d[0]), d[1].bottom(clearance_dest))
                     disp = []
@@ -128,6 +148,12 @@ def run(ctx):
                     in_tip = 0
                     pip.aspirate(disposal, water.height_dec(disposal))
                     in_tip += disposal
+                pip.aspirate(vol, water.height_dec(vol))
+                in_tip += vol
+                disp.append((vol, dst))
+                if index == len(lst)-1:
+                    for d in disp:
+                        pip.dispense(float(d[0]), d[1].bottom(clearance_dest))
             pip.drop_tip()
 
     # 4 degree temperature module with destination plate
