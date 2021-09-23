@@ -1,4 +1,3 @@
-"""Protocol."""
 import math
 from itertools import groupby
 
@@ -11,7 +10,7 @@ metadata = {
 
 
 def run(ctx):
-    """Protocol."""
+
     [csv_samp, vol_effector_cell, pre_mix, mix_asp_height, mix_disp_height,
      premix_reps, mix_vol, mix_rate, disp_res_height,
      asp_height, disp_height, asp_rate,
