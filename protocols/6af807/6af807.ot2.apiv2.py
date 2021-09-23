@@ -13,9 +13,10 @@ metadata = {
 
 def run(ctx):
     """Protocol."""
-    [num_gene, num_mastermix,
+    [num_gene, num_mastermix, dispense_rate,
         reset_tipracks, p20_mount] = get_values(  # noqa: F821
-        "num_gene", "num_mastermix", "reset_tipracks", "p20_mount")
+        "num_gene", "num_mastermix", "dispense_rate",
+            "reset_tipracks", "p20_mount")
 
     if not 1 <= num_mastermix <= 24:
         raise Exception("Enter a number of mastermixes between 1-24")
@@ -143,11 +144,13 @@ def run(ctx):
             for well in column[:num_rows]:
                 p20.aspirate(10, tube, rate=0.5)
                 ctx.delay(seconds=1)
-                p20.dispense(10, well.top(), rate=0.5)
+                p20.dispense(10, well.top(), rate=dispense_rate)
+                ctx.delay(seconds=2)
                 p20.blow_out()
                 p20.aspirate(6, tube, rate=0.5)
                 ctx.delay(seconds=1)
-                p20.dispense(6, well.top(), rate=0.5)
+                p20.dispense(6, well.top(), rate=dispense_rate)
+                ctx.delay(seconds=2)
                 p20.blow_out()
         p20.drop_tip()
         ctx.comment('\n')
