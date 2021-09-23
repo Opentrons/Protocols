@@ -16,6 +16,7 @@ This protocol preps a 384 well plate for up to 5 cDNA samples in triplicates. Th
 Explanation of complex parameters below:
 * `Number of genes`: Specify the number of cDNA tubes that will be loaded onto the tube rack.
 * `Number of mastermix tubes`: Specify the number of mastermix tubes that will be added to the cDNA.
+* `Dispense Flow Rate`: Specify the rate to dispense mastermix. A value of 1 is default, a value of 0.5 is half of the default value, and a value of 1.2 would be 20% higher than the default value, for example.
 * `Reset Tipracks?`: The OT-2 will track tips from run to run of the protocol (e.g. tip leaves off in H11 at the end of protocol 1; first tip pick up will be from H12 in Part 2). When tips run out for any particular run, the user will be prompted to replace all tip racks. The user will also have the option to "Reset Tip Racks" in the customized parameters section. Reset tip racks to pick up from A1 of the first tip rack of any one protocol.
 * `P20 Mount`: Specify the mount (left or right) for the P20 single channel pipette.
 
