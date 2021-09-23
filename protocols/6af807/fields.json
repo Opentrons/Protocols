@@ -12,6 +12,12 @@
     "default": 24
   },
   {
+    "type": "float",
+    "label": "Dispense Mastermix Flow Rate",
+    "name": "dispense_rate",
+    "default": 1.0
+  },
+  {
   "type": "dropDown",
   "label": "Reset Tipracks?",
   "name": "reset_tipracks",
