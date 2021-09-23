@@ -112,7 +112,6 @@ def run(ctx):
         for small_chunk in chunk:
             for well in small_chunk:
                 p20.aspirate(4, tube)
-                p20.touch_tip()
                 p20.air_gap(airgap)
                 p20.dispense(4+airgap, well)
                 p20.blow_out()
@@ -148,7 +147,7 @@ def run(ctx):
                 p20.blow_out()
                 p20.aspirate(6, tube, rate=0.5)
                 ctx.delay(seconds=1)
-                p20.dispense(10, well.top(), rate=0.5)
+                p20.dispense(6, well.top(), rate=0.5)
                 p20.blow_out()
         p20.drop_tip()
         ctx.comment('\n')
