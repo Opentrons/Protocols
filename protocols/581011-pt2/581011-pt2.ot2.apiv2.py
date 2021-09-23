@@ -18,8 +18,7 @@ def run(ctx):
         "csv_samp", "vol_effector_cell", "pre_mix",
         "mix_asp_height", "mix_disp_height", "premix_reps",
         "mix_vol", "mix_rate", "disp_res_height",
-        "asp_height", "disp_height",
-        "asp_rate", "disp_rate", "m300_mount")
+        "asp_height", "disp_height", "asp_rate", "disp_rate", "m300_mount")
 
     # load labware
     plate = ctx.load_labware('corning_384_wellplate_112ul_flat', '4')
