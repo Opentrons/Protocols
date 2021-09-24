@@ -18,6 +18,12 @@
     "default": 1.0
   },
   {
+    "type": "float",
+    "label": "Blow Out Rate",
+    "name": "blowout_rate",
+    "default": 1.0
+  },
+  {
   "type": "dropDown",
   "label": "Reset Tipracks?",
   "name": "reset_tipracks",
