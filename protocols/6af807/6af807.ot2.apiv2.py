@@ -3,10 +3,6 @@ import os
 import csv
 import math
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"num_gene":5,"num_mastermix":2,"dispense_rate":1, "blowout_rate":1,"reset_tipracks":true,"p20_mount":"left"}""")
-    return [_all_values[n] for n in names]
 
 metadata = {
     'protocolName': '384 Well Plate PCR Plate with Triplicates',
