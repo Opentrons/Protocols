@@ -190,7 +190,7 @@ def run(ctx):
              ["reagent", "slot", "wells", "vols", "liq", "viscosity", "sticky"
               ], [
               line["Reagent"], line["Deck_Slot"], line["Positions"].split(),
-              line["Initial Volumes"].split(), line["Liquid Class"],
+              line["Initial Volumes"].split(), line["Liquid class"],
               line["Viscosity"], line["Stickiness"]]):
                 new[key] = value
             reagents.append(new)
