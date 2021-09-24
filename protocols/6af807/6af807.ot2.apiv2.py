@@ -3,6 +3,7 @@ import os
 import csv
 import math
 
+
 metadata = {
     'protocolName': '384 Well Plate PCR Plate with Triplicates',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
@@ -13,9 +14,9 @@ metadata = {
 
 def run(ctx):
     """Protocol."""
-    [num_gene, num_mastermix, dispense_rate,
+    [num_gene, num_mastermix, dispense_rate, blowout_rate,
         reset_tipracks, p20_mount] = get_values(  # noqa: F821
-        "num_gene", "num_mastermix", "dispense_rate",
+        "num_gene", "num_mastermix", "dispense_rate", "blowout_rate",
             "reset_tipracks", "p20_mount")
 
     if not 1 <= num_mastermix <= 24:
@@ -133,6 +134,7 @@ def run(ctx):
             num_rows_in_each_column.append(remaining_wells)
 
     num_gene_to_dispense = math.ceil(num_gene*3/15)
+    p20.flow_rate.blow_out = blowout_rate*p20.flow_rate.blow_out
     for j, tube in enumerate(mastermix.wells()[:num_mastermix]):
         pick_up()
         for i, (column, num_rows) in enumerate(zip(
@@ -145,12 +147,14 @@ def run(ctx):
                 p20.aspirate(10, tube, rate=0.5)
                 ctx.delay(seconds=1)
                 p20.dispense(10, well.top(), rate=dispense_rate)
-                ctx.delay(seconds=2)
+                ctx.delay(seconds=3)
                 p20.blow_out()
+                p20.touch_tip(radius=0.33)
                 p20.aspirate(6, tube, rate=0.5)
                 ctx.delay(seconds=1)
                 p20.dispense(6, well.top(), rate=dispense_rate)
-                ctx.delay(seconds=2)
+                ctx.delay(seconds=3)
                 p20.blow_out()
+                p20.touch_tip(radius=0.33)
         p20.drop_tip()
         ctx.comment('\n')

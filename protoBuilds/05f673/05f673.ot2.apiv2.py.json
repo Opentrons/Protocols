@@ -1,0 +1,108 @@
+{
+    "content": "from opentrons import protocol_api\n\nmetadata = {\n    'protocolName': 'Cell Normalization',\n    'author': 'Opentrons <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.10'\n}\n\n\ndef run(protocol: protocol_api.ProtocolContext):\n    [p1000mnt, transfer_csv] = get_values(  # noqa: F821\n        'p1000mnt', 'transfer_csv')\n\n    # load labware\n    reservoir = protocol.load_labware('agilent_1_reservoir_290ml', '4')\n    buffer = reservoir['A1']\n\n    source = [protocol.load_labware('corning_24_wellplate_3.4ml_flat', slot)\n              for slot in ['1', '2', '3', '5']]\n    outputs = [protocol.load_labware('corning_24_wellplate_3.4ml_flat', slot)\n               for slot in ['6', '8', '9', '11']]\n\n    tipracks1000 = [protocol.load_labware('opentrons_96_tiprack_1000ul', '7')]\n\n    # load pipette\n    p1000 = protocol.load_instrument(\n        'p1000_single_gen2', p1000mnt, tip_racks=tipracks1000)\n\n    def tip_pick_up(pip):\n        try:\n            pip.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            protocol.set_rail_lights(False)\n            protocol.pause(\"Replace the tips\")\n            pip.reset_tipracks()\n            protocol.set_rail_lights(True)\n            pip.pick_up_tip()\n\n    # process csv\n    csv_data = [\n        l.split(',') for l in transfer_csv.strip().splitlines() if l][1:]\n\n    # transfer buffer\n    protocol.set_rail_lights(True)\n    tip_pick_up(p1000)\n    for line in csv_data:\n        destPlate = int(line[2]) - 1\n        destWell = line[3]\n        volBuff = int(line[4])\n\n        p1000.aspirate(volBuff, buffer)\n        p1000.dispense(volBuff, outputs[destPlate][destWell])\n    p1000.drop_tip()\n\n    # transfer samples\n    for line in csv_data:\n        srcPlate = int(line[0]) - 1\n        srcWell = line[1]\n        destPlate = int(line[2]) - 1\n        destWell = line[3]\n        volSamp = int(line[5])\n\n        tip_pick_up(p1000)\n        p1000.mix(3, volSamp, source[srcPlate][srcWell])\n        p1000.aspirate(volSamp, source[srcPlate][srcWell])\n        p1000.dispense(volSamp, outputs[destPlate][destWell])\n        p1000.drop_tip()\n\n    protocol.set_rail_lights(False)\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "label": "P1000 (GEN2) Mount",
+            "name": "p1000mnt",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": "Source Plate, Source Well,Dest Plate,Dest Well,Buffer Volume,Culture Volume\n2,A1,1,A1,300,400",
+            "label": "Normalization CSV",
+            "name": "transfer_csv",
+            "type": "textFile"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p1000_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Corning 24 Well Plate 3.4 mL Flat on 1",
+            "share": false,
+            "slot": "1",
+            "type": "corning_24_wellplate_3.4ml_flat"
+        },
+        {
+            "name": "Corning 24 Well Plate 3.4 mL Flat on 2",
+            "share": false,
+            "slot": "2",
+            "type": "corning_24_wellplate_3.4ml_flat"
+        },
+        {
+            "name": "Corning 24 Well Plate 3.4 mL Flat on 3",
+            "share": false,
+            "slot": "3",
+            "type": "corning_24_wellplate_3.4ml_flat"
+        },
+        {
+            "name": "Agilent 1 Well Reservoir 290 mL on 4",
+            "share": false,
+            "slot": "4",
+            "type": "agilent_1_reservoir_290ml"
+        },
+        {
+            "name": "Corning 24 Well Plate 3.4 mL Flat on 5",
+            "share": false,
+            "slot": "5",
+            "type": "corning_24_wellplate_3.4ml_flat"
+        },
+        {
+            "name": "Corning 24 Well Plate 3.4 mL Flat on 6",
+            "share": false,
+            "slot": "6",
+            "type": "corning_24_wellplate_3.4ml_flat"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 1000 \u00b5L on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_tiprack_1000ul"
+        },
+        {
+            "name": "Corning 24 Well Plate 3.4 mL Flat on 8",
+            "share": false,
+            "slot": "8",
+            "type": "corning_24_wellplate_3.4ml_flat"
+        },
+        {
+            "name": "Corning 24 Well Plate 3.4 mL Flat on 9",
+            "share": false,
+            "slot": "9",
+            "type": "corning_24_wellplate_3.4ml_flat"
+        },
+        {
+            "name": "Corning 24 Well Plate 3.4 mL Flat on 11",
+            "share": false,
+            "slot": "11",
+            "type": "corning_24_wellplate_3.4ml_flat"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.10",
+        "author": "Opentrons <protocols@opentrons.com>",
+        "protocolName": "Cell Normalization",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}

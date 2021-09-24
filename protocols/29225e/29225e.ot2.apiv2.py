@@ -37,15 +37,10 @@ def run(ctx):
     p20s = ctx.load_instrument("p20_single_gen2", 'left', tip_racks=tips20)
     p300s = ctx.load_instrument("p300_single_gen2", 'right', tip_racks=tips300)
 
-    # input RNA samples
-    if labware_rna == "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap":
-        rna = [ctx.load_labware(labware_rna, slot, "Input RNA Tube Rack")
-               for slot in [2, 3, 5, 6][:math.ceil(sample_count / 24)]]
-    elif labware_rna == "nest_96_wellplate_2ml_deep":
-        rna = ctx.load_labware(labware_rna, '2', "Input RNA Plate")
-    else:
-        raise Exception(
-         'Adjustments to the protocol are needed for this labware.')
+    # count unique values in csv, load input RNA lbwr instances
+    rna = [
+     ctx.load_labware(labware_rna, slot, "Input RNA Samples") for slot in [
+      2, 3, 5, 6][:len(set([tfer['source rack or plate'] for tfer in tfers]))]]
 
     # water tubes with tracking of volume and liquid height
     rack = ctx.load_labware(
