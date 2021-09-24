@@ -1,4 +1,4 @@
-# Verogen ForenSeq DNA Signature Prep Kit Part 2/5: Indexing
+# Verogen ForenSeq DNA Signature Prep Kit Part 5/5: Pooling
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -16,18 +16,17 @@ Links:
 * [Part 4](./17d210-part-4)
 * [Part 5](./17d210-part-5)
 
-This custom indexing protocol is part 2/5 of the [Verogen ForenSeq DNA Signature Prep kit](https://verogen.com/products/forenseq-dna-signature-prep-kit/?utm_term=&utm_campaign=Product+Campaigns&utm_source=adwords&utm_medium=ppc&hsa_acc=2964416997&hsa_cam=12070402317&hsa_grp=115534580817&hsa_ad=544522374879&hsa_src=g&hsa_tgt=dsa-19959388920&hsa_kw=&hsa_mt=b&hsa_net=adwords&hsa_ver=3&gclid=CjwKCAjw4qCKBhAVEiwAkTYsPP4JakJA06WcfvubM80x5gzv7kIFucad6jw9WrACitcG6qERBSAU1xoCaOEQAvD_BwE). In this protocol, indexes are transferred to their corresponding wells in a PCR plate containing samples. Then, PCR2 buffer is added to each sample and mixed using fresh tips for each transfer.
+This custom pooling protocol is part 5/5 of the [Verogen ForenSeq DNA Signature Prep kit](https://verogen.com/products/forenseq-dna-signature-prep-kit/?utm_term=&utm_campaign=Product+Campaigns&utm_source=adwords&utm_medium=ppc&hsa_acc=2964416997&hsa_cam=12070402317&hsa_grp=115534580817&hsa_ad=544522374879&hsa_src=g&hsa_tgt=dsa-19959388920&hsa_kw=&hsa_mt=b&hsa_net=adwords&hsa_ver=3&gclid=CjwKCAjw4qCKBhAVEiwAkTYsPP4JakJA06WcfvubM80x5gzv7kIFucad6jw9WrACitcG6qERBSAU1xoCaOEQAvD_BwE). In this protocol, samples are pooled from a PCR plate to a final pooling strip.
 
 ---
 
 ### Labware
-* Abgene Midi 96 Well Plate 800 µL
 * Amplifyt 96 Well Plate 200 µL
-* [Opentrons 20µl and 300µl Tipracks](https://shop.opentrons.com/collections/opentrons-tips)
+* [Opentrons 20µl Tiprack](https://shop.opentrons.com/collections/opentrons-tips)
+* [Opentrons 96 Well Aluminum Block](https://shop.opentrons.com/collections/hardware-modules/products/aluminum-block-set) with Generic PCR Strip 200 µL
 
 ### Pipettes
 * [P20 Multi GEN2 Pipette](https://opentrons.com/pipettes/)
-* [P300 Multi GEN2 Pipette](https://opentrons.com/pipettes/)
 
 ### Reagents
 * [Verogen ForenSeq DNA Signature Prep kit](https://verogen.com/products/forenseq-dna-signature-prep-kit/?utm_term=&utm_campaign=Product+Campaigns&utm_source=adwords&utm_medium=ppc&hsa_acc=2964416997&hsa_cam=12070402317&hsa_grp=115534580817&hsa_ad=544522374879&hsa_src=g&hsa_tgt=dsa-19959388920&hsa_kw=&hsa_mt=b&hsa_net=adwords&hsa_ver=3&gclid=CjwKCAjw4qCKBhAVEiwAkTYsPP4JakJA06WcfvubM80x5gzv7kIFucad6jw9WrACitcG6qERBSAU1xoCaOEQAvD_BwE)
@@ -35,10 +34,9 @@ This custom indexing protocol is part 2/5 of the [Verogen ForenSeq DNA Signature
 ---
 
 ### Deck Setup
-* blue: PCR2 buffer  
-* pink: samples  
-* green: indexes  
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/17d210/deck2-2.png)
+* blue: pooling strip  
+* green: samples  
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/17d210/deck5.png)
 
 ---
 
