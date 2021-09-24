@@ -9,7 +9,14 @@
 
 ## Description
 
-This custom Cherrypicking protocol is part 1/5 of the [Verogen ForenSeq DNA Signature Prep kit](https://verogen.com/products/forenseq-dna-signature-prep-kit/?utm_term=&utm_campaign=Product+Campaigns&utm_source=adwords&utm_medium=ppc&hsa_acc=2964416997&hsa_cam=12070402317&hsa_grp=115534580817&hsa_ad=544522374879&hsa_src=g&hsa_tgt=dsa-19959388920&hsa_kw=&hsa_mt=b&hsa_net=adwords&hsa_ver=3&gclid=CjwKCAjw4qCKBhAVEiwAkTYsPP4JakJA06WcfvubM80x5gzv7kIFucad6jw9WrACitcG6qERBSAU1xoCaOEQAvD_BwE). In this protocol, mastermix is pre-added to a clean PCR plate. Then, samples from up to 4 source plates specified in the `.csv` file are transferred to the plate containing mastermix and mixed (optionally).
+Links:  
+* [Part 1](./17d210)
+* [Part 2](./17d210-part-2)
+* [Part 3](./17d210-part-3)
+* [Part 4](./17d210-part-4)
+* [Part 5](./17d210-part-5)
+
+This custom cherrypicking protocol is part 1/5 of the [Verogen ForenSeq DNA Signature Prep kit](https://verogen.com/products/forenseq-dna-signature-prep-kit/?utm_term=&utm_campaign=Product+Campaigns&utm_source=adwords&utm_medium=ppc&hsa_acc=2964416997&hsa_cam=12070402317&hsa_grp=115534580817&hsa_ad=544522374879&hsa_src=g&hsa_tgt=dsa-19959388920&hsa_kw=&hsa_mt=b&hsa_net=adwords&hsa_ver=3&gclid=CjwKCAjw4qCKBhAVEiwAkTYsPP4JakJA06WcfvubM80x5gzv7kIFucad6jw9WrACitcG6qERBSAU1xoCaOEQAvD_BwE). In this protocol, mastermix is pre-added to a clean PCR plate. Then, samples from up to 4 source plates specified in the `.csv` file are transferred to the plate containing mastermix and mixed (optionally).
 
 The .csv file should be formatted as shown below (**including header line**):
 ```
