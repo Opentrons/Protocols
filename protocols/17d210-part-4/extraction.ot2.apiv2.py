@@ -4,8 +4,8 @@ import os
 import math
 
 metadata = {
-    'protocolName': 'Verogen ForenSeq DNA Signature Prep Kit Part 3/5: \
-Extraction 1',
+    'protocolName': 'Verogen ForenSeq DNA Signature Prep Kit Part 4/5: \
+Extraction 2',
     'author': 'Opentrons <protocols@opentrons.com>',
     'apiLevel': '2.10'
 }
@@ -61,9 +61,10 @@ def run(ctx):
     Here is where you can define the locations of your reagents.
     """
     binding_buffer = res1.wells()[:1]
-    wash1 = res1.wells()[1:3]
-    wash2 = res1.wells()[3:5]
-    elution_solution = res1.wells()[-1]
+    wash1 = res1.wells()[1:2]
+    wash2 = res1.wells()[1:2]
+    elution_solution = res1.wells()[10]
+    lns2 = res1.wells()[11]
 
     starting_samples = pcr_plate.rows()[0][:num_cols]
     mag_samples_m = magplate.rows()[0][:num_cols]
@@ -236,7 +237,7 @@ resuming.')
             else:
                 _drop(m300)
 
-        ctx.delay(minutes=5, msg='Incubating off magnet for 5 minutes.')
+        ctx.pause()
         magdeck.engage(height=mag_height)
         ctx.delay(minutes=settling_time, msg=f'Incubating on MagDeck for \
 {settling_time} minutes.')
@@ -244,7 +245,7 @@ resuming.')
         # remove initial supernatant
         remove_supernatant(vol+sample_vol, park=park)
 
-    def wash(vol, source, mix_reps=15, park=True, resuspend=False):
+    def wash(vol, source, mix_reps=10, park=True, resuspend=True):
         """
         `wash` will perform bead washing for the extraction protocol.
         :param vol (float): The amount of volume to aspirate from each
@@ -344,7 +345,13 @@ resuming.')
             m300.transfer(vol, loc, e.bottom(5), air_gap=20, new_tip='never')
             m300.blow_out(e.top(-2))
             m300.air_gap(20)
-            m300.drop_tip()
+            _drop(m300)
+
+        for e in elution_samples_m:
+            _pick_up(m300)
+            m300.transfer(30, lns2, e, new_tip='never')
+            m300.air_gap(20)
+            _drop(m300)
 
     """
     Here is where you can call the methods defined above to fit your specific
