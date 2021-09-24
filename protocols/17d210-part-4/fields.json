@@ -46,7 +46,7 @@
     "type": "float",
     "label": "sample volume",
     "name": "sample_vol",
-    "default": 45.0
+    "default": 20.0
   },
   {
     "type": "float",
@@ -58,19 +58,19 @@
     "type": "float",
     "label": "wash 1 volume (in ul, up to 500ul)",
     "name": "wash1_vol",
-    "default": 200.0
+    "default": 45.0
   },
   {
     "type": "float",
     "label": "wash 2 volume (in ul, up to 500ul)",
     "name": "wash2_vol",
-    "default": 200.0
+    "default": 45.0
   },
   {
     "type": "float",
     "label": "final elution volume (in ul)",
     "name": "elution_vol",
-    "default": 50.0
+    "default": 30.0
   },
   {
     "type": "float",
