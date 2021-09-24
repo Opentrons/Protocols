@@ -1,0 +1,17 @@
+[
+  {
+    "type": "dropDown",
+    "label": "P1000 (GEN2) Mount",
+    "name": "p1000mnt",
+    "options": [
+      {"label": "Left", "value": "left"},
+      {"label": "Right", "value": "right"}
+    ]
+  },
+  {
+    "type": "textFile",
+    "label": "Normalization CSV",
+    "name": "transfer_csv",
+    "default": "Source Plate, Source Well,Dest Plate,Dest Well,Buffer Volume,Culture Volume\n2,A1,1,A1,300,400"
+  }
+]
