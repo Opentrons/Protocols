@@ -1,4 +1,4 @@
-# Verogen ForenSeq DNA Signature Prep Kit Part 3/5: Extraction 1
+# Verogen ForenSeq DNA Signature Prep Kit Part 4/5: Extraction 2
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -16,7 +16,7 @@ Links:
 * [Part 4](./17d210-part-4)
 * [Part 5](./17d210-part-5)
 
-This custom extraction protocol is part 3/5 of the [Verogen ForenSeq DNA Signature Prep kit](https://verogen.com/products/forenseq-dna-signature-prep-kit/?utm_term=&utm_campaign=Product+Campaigns&utm_source=adwords&utm_medium=ppc&hsa_acc=2964416997&hsa_cam=12070402317&hsa_grp=115534580817&hsa_ad=544522374879&hsa_src=g&hsa_tgt=dsa-19959388920&hsa_kw=&hsa_mt=b&hsa_net=adwords&hsa_ver=3&gclid=CjwKCAjw4qCKBhAVEiwAkTYsPP4JakJA06WcfvubM80x5gzv7kIFucad6jw9WrACitcG6qERBSAU1xoCaOEQAvD_BwE). The protocol is broken down into 4 main parts:
+This custom extraction protocol is part 4/5 of the [Verogen ForenSeq DNA Signature Prep kit](https://verogen.com/products/forenseq-dna-signature-prep-kit/?utm_term=&utm_campaign=Product+Campaigns&utm_source=adwords&utm_medium=ppc&hsa_acc=2964416997&hsa_cam=12070402317&hsa_grp=115534580817&hsa_ad=544522374879&hsa_src=g&hsa_tgt=dsa-19959388920&hsa_kw=&hsa_mt=b&hsa_net=adwords&hsa_ver=3&gclid=CjwKCAjw4qCKBhAVEiwAkTYsPP4JakJA06WcfvubM80x5gzv7kIFucad6jw9WrACitcG6qERBSAU1xoCaOEQAvD_BwE). The protocol is broken down into 4 main parts:
 * binding buffer addition to samples
 * bead wash 2x using magnetic module
 * final elution to chilled PCR plate
@@ -52,9 +52,10 @@ Explanation of complex parameters below:
 ### Deck Setup
 * green: samples
 * blue: binding bead buffer
-* pink: 80% EtOH  
-* purple: elution buffer
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/17d210/deck3-2.18.24+AM.png)
+* pink: wash solution  
+* purple: HP3 dilution
+* orange: LNS2
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/17d210/deck4.png)
 
 ---
 

@@ -124,7 +124,7 @@
     "type": "textFile",
     "label": "Reagents CSV (Upload CSV-formatted Excel File-with formatting of data values and file identical to example)",
     "name": "reagents_csv",
-    "default": "Reagent,Deck_Slot,Positions,Initial Volumes,Liquid Class,Viscosity,Stickiness\nH2O,4,A1 B1 A2 B2,15000 15000 15000 15000,aqueous,,\n1,4,A3 B3,15000 15000,viscous,45.86,\n2,2,A1 B1 C1 D1 A2 B2 C2 D2,1200 1500 1000 1250 1500 1500 1500 1500,aqueous,,\n3,2,A3 B3 C3 D3 A4 B4 C4 D4,1200 1500 1000 1250 1500 1500 1500 1500,volatile,,\n4,5,A1 A2 A3 A4 A6,450 2000 2000 2000 2000,aqueous,,\n5,5,D1 D2 D3 D4 D6,2000 2000 2000 2000 2000,volatile,,\n6,None,,,,,\n7,None,,,,,\n8,None,,,,,\n"
+    "default": "Reagent,Deck_Slot,Positions,Initial Volumes,Liquid class,Viscosity,Stickiness\nH2O,4,A1 B1 A2 B2,15000 15000 15000 15000,aqueous,,\n1,4,A3 B3,15000 15000,viscous,45.86,\n2,2,A1 B1 C1 D1 A2 B2 C2 D2,1200 1500 1000 1250 1500 1500 1500 1500,aqueous,,\n3,2,A3 B3 C3 D3 A4 B4 C4 D4,1200 1500 1000 1250 1500 1500 1500 1500,volatile,,\n4,5,A1 A2 A3 A4 A6,450 2000 2000 2000 2000,aqueous,,\n5,5,D1 D2 D3 D4 D6,2000 2000 2000 2000 2000,volatile,,\n6,None,,,,,\n7,None,,,,,\n8,None,,,,,\n"
   },
   {
     "type": "textFile",
