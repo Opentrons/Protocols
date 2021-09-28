@@ -2,12 +2,13 @@ import math
 from opentrons import protocol_api
 import os
 import csv
+from opentrons.types import Point
 
 metadata = {
     'protocolName': 'Agriseq Library Prep Part 4 - Pooling',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.7'
+    'apiLevel': '2.11'
 }
 
 
@@ -80,6 +81,14 @@ def run(protocol):
             p20.pick_up_tip(tips[tip_counter])
             tip_counter += 1
 
+    def touchtip(pip, well):
+        knock_loc = well.top(z=-1).move(
+                    Point(x=-(well.diameter/2.25)))
+        knock_loc2 = well.top(z=-1).move(
+                    Point(x=(well.diameter/2.25)))
+        pip.move_to(knock_loc)
+        pip.move_to(knock_loc2)
+
     def pick_up_300():
         try:
             p300.pick_up_tip()
@@ -107,12 +116,12 @@ def run(protocol):
         for well in wells_by_row:
             pick_up_20()
             p20.aspirate(5, well)
-            p20.touch_tip()
+            touchtip(p20, well)
             p20.air_gap(airgap)
             p20.dispense(airgap, pool_plate1.wells()[pool_counter].top())
             p20.dispense(5, pool_plate1.wells()[pool_counter])
             p20.blow_out()
-            p20.touch_tip()
+            touchtip(p20, pool_plate1.wells()[pool_counter])
             vol_counter += 5
             if vol_counter % 60 == 0:
                 pool_counter += 1
@@ -124,7 +133,11 @@ def run(protocol):
     for s, d in zip(pool_plate1.wells()[:pool_counter], pool_plate2.wells()):
         pick_up_300()
         p300.mix(2, 60, s)
-        p300.transfer(45, s, d, new_tip='never', touch_tip=True, blow_out=True)
+        p300.aspirate(45, s)
+        touchtip(p300, s)
+        p300.dispense(45, d)
+        touchtip(p300, d)
+        p300.blow_out()
         p300.return_tip()
 
     # write updated tipcount to CSV
