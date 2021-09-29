@@ -1,5 +1,4 @@
 """Protocol."""
-import math
 metadata = {
     'protocolName': 'Plate Filling Heat Inactivated Covid Samples for PCR - Part 3',  # noqa: E501
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
