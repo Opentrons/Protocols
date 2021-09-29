@@ -14,8 +14,8 @@
   },
   {
     "type": "dropDown",
-    "label": "P20 Multi GEN2 Mount",
-    "name": "m20_mount",
+    "label": "P1000 Single Channel Mount",
+    "name": "p1000_mount",
     "options": [
        { "label": "left", "value": "left" },
        { "label": "right", "value": "right" }
