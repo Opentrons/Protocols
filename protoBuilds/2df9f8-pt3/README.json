@@ -6,14 +6,14 @@
         ]
     },
     "deck-setup": "\nThis is the deck setup for a run with 94 samples (bottom two rows of slot 11 are not populated).\n\n\n",
-    "description": "This protocol preps multiple 96 deep well plates with 500ul of saline up to the specified number of wells in each of the specified number of plates. \nExplanation of complex parameters below:\n Number of Samples: Specify the number of samples (1-96) to fill each 96 deep well plate starting from A1.\n Number of Plates: Specify the number of plates to fill starting from slot 4.\n* P1000 Mount: Specify which side to mount your P1000 Single-Channel Pipette.\n",
+    "description": "This protocol preps multiple 96 deep well plates with 500ul of saline up to the specified number of wells in each of the specified number of plates.\nExplanation of complex parameters below:\n Number of Samples: Specify the number of samples (1-96) to fill each 96 deep well plate starting from A1.\n Number of Plates: Specify the number of plates to fill starting from slot 4.\n* P1000 Mount: Specify which side to mount your P1000 Single-Channel Pipette.\n",
     "internal": "2df9f8-pt3",
     "labware": "\nOpentrons 1000ul tips\nNEST 2mL 96 well deep well plate\nNEST 195mL Reservoir\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
         "categories": "* PCR\n\t* PCR Prep\n\n",
-        "deck-setup": "* This is the deck setup for a run with 94 samples (bottom two rows of slot 11 are not populated).\n![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2df9f8/Screen+Shot+2021-08-04+at+10.09.08+AM.png)\n\n\n\n---\n\n",
-        "description": "This protocol preps multiple 96 deep well plates with 500ul of saline up to the specified number of wells in each of the specified number of plates. \n\nExplanation of complex parameters below:\n* `Number of Samples`: Specify the number of samples (1-96) to fill each 96 deep well plate starting from A1.\n* `Number of Plates`: Specify the number of plates to fill starting from slot 4.\n* `P1000 Mount`: Specify which side to mount your P1000 Single-Channel Pipette.\n\n---\n\n",
+        "deck-setup": "* This is the deck setup for a run with 94 samples (bottom two rows of slot 11 are not populated).\n![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2df9f8/Screen+Shot+2021-09-29+at+10.02.57+AM.png)\n\n\n\n---\n\n",
+        "description": "This protocol preps multiple 96 deep well plates with 500ul of saline up to the specified number of wells in each of the specified number of plates.\n\nExplanation of complex parameters below:\n* `Number of Samples`: Specify the number of samples (1-96) to fill each 96 deep well plate starting from A1.\n* `Number of Plates`: Specify the number of plates to fill starting from slot 4.\n* `P1000 Mount`: Specify which side to mount your P1000 Single-Channel Pipette.\n\n---\n\n",
         "internal": "2df9f8-pt3\n",
         "labware": "* [Opentrons 1000ul tips](https://shop.opentrons.com/collections/opentrons-tips)\n* [NEST 2mL 96 well deep well plate](nest_96_wellplate_2ml_deep)\n* [NEST 195mL Reservoir](https://shop.opentrons.com/collections/reservoirs)\n\n\n",
         "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",

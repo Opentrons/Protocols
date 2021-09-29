@@ -12,7 +12,7 @@
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
         "categories": "* PCR\n\t* PCR Prep\n\n",
-        "deck-setup": "* This is the deck setup for a run with 94 samples (bottom two rows of slot 11 are not populated).\n![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2df9f8/Screen+Shot+2021-08-04+at+10.09.08+AM.png)\n\n\n---\n\n",
+        "deck-setup": "* This is the deck setup for a run with 94 samples (bottom two rows of slot 11 are not populated).\n![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2df9f8/Screen+Shot+2021-09-29+at+10.11.59+AM.png)\n\n\n---\n\n",
         "description": "This protocol preps a 96 well plate with heat inactivated Covid samples and mastermix, for further processing on a Quant-5. A1 and A2 are left for positive and negative conrols. The protocol can be considered in 2 main sections:\n\n* Mastermix added to 96 well plate\n* Samples added to 96 well plate\n\nExplanation of complex parameters below:\n* `Number of Samples`: Specify the number of samples (1-94) to run on this protocol. Note: samples will be picked by row in the tube racks, in order of slots 7, 8, 10, and 11.\n* `Plate`: Specify whether loading the microamp (I48HO) 96 well plate, or another 96 well plate.\n* `P20 Mount`: Specify which side to mount your P20 Multi Channel Pipette.\n\n---\n\n",
         "internal": "2df9f8\n",
         "labware": "* [Opentrons 200ul tips](https://shop.opentrons.com/collections/opentrons-tips)\n* Microamp 200ul well plate\n* Opentrons 4-in-1 tuberack with 4x6 tube insert (1.5mL tubes)\n\n\n",
