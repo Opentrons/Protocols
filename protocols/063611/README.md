@@ -9,20 +9,20 @@
 
 ## Description
 
-This protocol uses a p300 multi-channel pipette to top-dispense 300 ul of liquid from a reservoir into as many as 96 caps housed in up to four custom racks (each rack has 6 columns of 4 caps each). The 300 ul tips are required to be in a custom arrangement (tiprack rows B, D, F, H are empty to permit a mode of non-standard, multi-channel pipetting with 4 tips mounted on alternating nozzles) to support use of custom racks having 6 columns of 4 wells each. The custom tip arrangement can be set up manually, with a separate preparative OT-2 protocol (part-2) attached on this page (recommended), or as a first step at the start of the main protocol.  
+This protocol uses a p300 multi-channel pipette to top-dispense 250 ul of liquid from a reservoir into as many as 96 caps housed in up to four custom racks (each rack has 6 columns of 4 caps each). The 300 ul tips are required to be in a custom arrangement (tiprack rows B, D, F, H are empty to permit a mode of non-standard, multi-channel pipetting with 4 tips mounted on alternating nozzles) to support use of custom racks having 6 columns of 4 wells each. The custom tip arrangement can be set up manually, with a separate preparative OT-2 protocol (part-2) attached on this page (recommended), or as a first step at the start of the main protocol.  
 
 Links:
 * [Custom Cap Filling](https://protocols.opentrons.com/protocol/063611)
 * [Custom Tip Arranging](https://protocols.opentrons.com/protocol/063611-part-2)
 
-This protocol was developed to transfer 300 ul of liquid from a reservoir into as many as 96 caps arranged in columns of 4 in up to 4 custom racks. Tip change after every dispense is optional. Tip tracking to keep track of the starting tip from run to run is optional. Preparation of the custom tip arrangement at the start of this main protocol is optional (recommendation is to handle tip arrangement as a separate process by using protocol Custom Tip Arranging attached above as part 2).
+This protocol was developed to transfer 250 ul of liquid from a reservoir into as many as 96 caps arranged in columns of 4 in up to 4 custom racks. Tip change after every rack is optional. Tip tracking to keep track of the starting tip from run to run is optional. Preparation of the custom tip arrangement at the start of this main protocol is optional (recommendation is to handle tip arrangement as a separate process by using protocol Custom Tip Arranging attached above as part 2).
 
 ## Protocol Steps
 
-Set up: Up to 4 custom 24-well racks (6 columns of 4 caps each) in deck slot fill order 1, 2, 4, 5. Opentrons 300 ul tips (in custom arrangement) in slots 10 and 11.
+Set up: Up to 4 custom 24-well racks (6 columns of 4 caps each) in deck slot fill order 4, 1, 5, 2. Opentrons 300 ul tips (in custom arrangement) in slots 10 and 11.
 
 The OT-2 will perform the following steps:
-1. Aspirate 300 ul of liquid from the reservoir and top dispense 300 ul per cap to each column of caps in the custom racks. By default drop tips only after all caps are filled or optionally change tips after every dispense.
+1. Aspirate 250 ul of liquid from the reservoir and top dispense 250 ul per cap to each column of caps in the custom racks. By default drop tips after all caps in a rack are filled or optionally change tips after every dispense.
 
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
@@ -41,7 +41,7 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 ![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/063611/063611_layout.png)
 
 * Opentrons p300 tips in a custom arrangement (Deck Slots 10, 11)
-* Custom Racks (4 columns of 6) (Deck Slots 1,2,4,5)
+* Custom Racks (4 columns of 6) (Deck Slots 4,1,5,2)
 * Reservoir nest_1_reservoir_195ml (Deck Slot 3)
 
 ### Robot

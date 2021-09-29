@@ -13,13 +13,13 @@
   },
   {
     "type": "dropDown",
-    "label": "Number of Racks (1-4 with slot fill order 1,2,4,5)",
+    "label": "Number of Racks (1-4 with slot fill order 4,1,5,2)",
     "name": "rack_count",
     "options": [
-      { "label": "Four Custom Racks (slots 1,2,4,5)", "value": 4 },
-      { "label": "Three Custom Racks (slots 1,2,4)", "value": 3 },
-      { "label": "Two Custom Racks (slots 1,2)", "value": 2 },
-      { "label": "One Custom Rack (slot 1)", "value": 1 }
+      { "label": "Four Custom Racks (slots 4,1,5,2)", "value": 4 },
+      { "label": "Three Custom Racks (slots 4,1,5)", "value": 3 },
+      { "label": "Two Custom Racks (slots 4,1)", "value": 2 },
+      { "label": "One Custom Rack (slot 4)", "value": 1 }
     ]
   },
   {
@@ -54,7 +54,7 @@
     "label": "Change Tips After Every Dispense? (yes or no)",
     "name": "change_tips",
     "options": [
-      { "label": "NO - same four tips will be used for all dispenses", "value": false },
+      { "label": "NO - change tips after every rack", "value": false },
       { "label": "YES", "value": true }
     ]
   },
