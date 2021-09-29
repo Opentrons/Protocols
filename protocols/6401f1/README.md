@@ -12,7 +12,7 @@
 This protocol uses a p300 single channel and p20 single channel pipette to transfer custom volumes of master mixes to a 96-well PCR plate followed by addition of custom volumes of sample, positive control, or no-template control.
 
 Links:
-* [example input csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/6401f1/Sample+add+example+file_2329C.csv)
+* [example input csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/6401f1/Sample%2Badd%2Bexample%2Bfile_2329C_updated.csv)
 
 This protocol was developed to combine custom volumes of master mixes with custom volumes of sample, positive control, or no-template control for PCR/qPCR setup.
 
@@ -46,7 +46,7 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 * Positive and No Template Control Plate lvl_96_wellplate_1317.97ul (Deck Slot 6)
 * 24-Tube Rack (Master Mixes) beckman_24_tuberack_1000ul (Deck Slot 2)
 
-![input csv data and file format](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/6401f1/input+csv.png)
+![input csv data and file format](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/6401f1/screenshot_example_csv.png)
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
