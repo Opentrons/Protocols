@@ -29,7 +29,7 @@ Explanation of complex parameters below:
 
 ### Deck Setup
 * This is the deck setup for a run with 94 samples (bottom two rows of slot 11 are not populated).
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2df9f8/Screen+Shot+2021-08-04+at+10.09.08+AM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2df9f8/Screen+Shot+2021-09-29+at+10.02.24+AM.png)
 
 
 
