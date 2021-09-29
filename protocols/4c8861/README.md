@@ -42,7 +42,7 @@ Plate number (1, 2, or 3), Well, Concentration, Units, Dilution Volume, Sample V
 ---
 
 ### Deck Setup
-![deck layout]()
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/4c8861/Screen+Shot+2021-09-29+at+3.06.43+PM.png)
 
 
 ---
