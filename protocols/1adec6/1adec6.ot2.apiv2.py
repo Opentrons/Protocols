@@ -7,12 +7,18 @@ metadata = {
 
 
 def run(protocol):
-    [mnt20, numPlates, pbsVol, dmsoVol,
-     dilVol, destDilVol, libVol] = get_values(  # noqa: F821
-     'mnt20', 'numPlates', 'pbsVol', 'dmsoVol',
-     'dilVol', 'destDilVol', 'libVol')
+    # [mnt20, numPlates, pbsVol, dmsoVol,
+    #  dilVol, destDilVol, libVol] = get_values(  # noqa: F821
+    #  'mnt20', 'numPlates', 'pbsVol', 'dmsoVol',
+    #  'dilVol', 'destDilVol', 'libVol')
 
     # load labware
+    mnt20 = 'left'
+    numPlates = 1
+    pbsVol = 10
+    dilVol = 10
+    destDilVol = 10
+    libVol = 10
     tips = [
         protocol.load_labware('opentrons_96_tiprack_20ul', s) for s in [7, 10]]
 
