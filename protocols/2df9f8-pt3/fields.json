@@ -2,18 +2,15 @@
 
   {
     "type": "int",
-    "label": "Number of samples (1-94)",
+    "label": "Number of wells to fill in each plate (1-96)",
     "name": "num_samp",
-    "default": 94
+    "default": 96
   },
   {
-    "type": "dropDown",
-    "label": "Plate",
-    "name": "plate",
-    "options": [
-       { "label": "Microamp 200ul (I48HO) 96 well", "value": "microamp_96_wellplate_200ul" },
-       { "label": "Microamp 200ul well plate", "value": "microamp_96_wellplate_200ul_flat" }
-     ]
+    "type": "int",
+    "label": "Number of plates to fill (starting from slot 4)",
+    "name": "num_plates",
+    "default": 8
   },
   {
     "type": "dropDown",
