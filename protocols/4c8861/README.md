@@ -7,8 +7,8 @@
 [Partner Name](partner website link)
 
 ## Categories
-* Normalization
-	* Normalization and Pooling
+* Sample Prep
+	* Normalization
 
 ## Description
 This protocol normalizes up to (3) 96 well plates with diluent from 3 source plates to 3 destination plates. Destination plates exactly mirror source plates. The protocol begins by transferring diluent to all relevant wells in all 3 plates (up to 96 for each plate), and then continues to do a 1-1 well to well transfer between the source and destination plates. A csv is parsed to determine the transfer volume for each well of each plate.
