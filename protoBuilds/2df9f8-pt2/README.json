@@ -12,7 +12,7 @@
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
         "categories": "* PCR\n\t* PCR Prep\n\n",
-        "deck-setup": "* This is the deck setup for a run with 94 samples (bottom two rows of slot 11 are not populated).\n![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2df9f8/Screen+Shot+2021-08-04+at+10.09.08+AM.png)\n\n\n\n---\n\n",
+        "deck-setup": "* This is the deck setup for a run with 94 samples (bottom two rows of slot 11 are not populated).\n![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2df9f8/Screen+Shot+2021-09-29+at+10.02.24+AM.png)\n\n\n\n---\n\n",
         "description": "This protocol preps a 96 well plate by transferring 6ul from a source plate deepwell plate to a destination deepwell plate.\n\nExplanation of complex parameters below:\n* `Number of Samples`: Specify the number of samples (1-94) to run on this protocol. Note: samples will be picked by row in the tube racks, in order of slots 7, 8, 10, and 11.\n* `P20 Mount`: Specify which side to mount your P20 Multi Channel Pipette.\n\n---\n\n",
         "internal": "2df9f8-pt2\n",
         "labware": "* [Opentrons 20ul tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)\n* [NEST 2 mL 96-Well Deep Well Plate, V Bottom](https://shop.opentrons.com/collections/lab-plates/products/nest-0-2-ml-96-well-deep-well-plate-v-bottom)\n\n\n",
