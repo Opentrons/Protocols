@@ -17,8 +17,8 @@
   },
   {
     "type": "dropDown",
-    "label": "P300 Multi GEN2 Mount",
-    "name": "m300_mount",
+    "label": "P20 Multi GEN2 Mount",
+    "name": "m20_mount",
     "options": [
        { "label": "left", "value": "left" },
        { "label": "right", "value": "right" }

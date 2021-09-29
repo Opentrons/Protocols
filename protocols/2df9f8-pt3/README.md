@@ -1,4 +1,4 @@
-# Plate Filling Heat Inactivated Covid Samples for PCR
+# Plate Filling Heat Inactivated Covid Samples for PCR - Part 3
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -8,26 +8,23 @@
 	* PCR Prep
 
 ## Description
-This protocol preps a 96 well plate with heat inactivated Covid samples and mastermix, for further processing on a Quant-5. A1 and A2 are left for positive and negative conrols. The protocol can be considered in 2 main sections:
-
-* Mastermix added to 96 well plate
-* Samples added to 96 well plate
+This protocol preps multiple 96 deep well plates with 500ul of saline up to the specified number of wells in each of the specified number of plates. 
 
 Explanation of complex parameters below:
-* `Number of Samples`: Specify the number of samples (1-94) to run on this protocol. Note: samples will be picked by row in the tube racks, in order of slots 7, 8, 10, and 11.
-* `Plate`: Specify whether loading the microamp (I48HO) 96 well plate, or another 96 well plate.
-* `P20 Mount`: Specify which side to mount your P20 Multi Channel Pipette.
+* `Number of Samples`: Specify the number of samples (1-96) to fill each 96 deep well plate starting from A1.
+* `Number of Plates`: Specify the number of plates to fill starting from slot 4.
+* `P1000 Mount`: Specify which side to mount your P1000 Single-Channel Pipette.
 
 ---
 
 ### Labware
-* [Opentrons 200ul tips](https://shop.opentrons.com/collections/opentrons-tips)
-* Microamp 200ul well plate
-* Opentrons 4-in-1 tuberack with 4x6 tube insert (1.5mL tubes)
+* [Opentrons 1000ul tips](https://shop.opentrons.com/collections/opentrons-tips)
+* [NEST 2mL 96 well deep well plate](nest_96_wellplate_2ml_deep)
+* [NEST 195mL Reservoir](https://shop.opentrons.com/collections/reservoirs)
 
 
 ### Pipettes
-* [P300 Multi Channel Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/8-channel-electronic-pipette)
+* [P1000 Single-Channel Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/single-channel-electronic-pipette?variant=5984549142557)
 
 
 ---
@@ -37,11 +34,11 @@ Explanation of complex parameters below:
 ![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2df9f8/Screen+Shot+2021-08-04+at+10.09.08+AM.png)
 
 
+
 ---
 
 ### Protocol Steps
-1. Mastermix (250ul) added to 96 well plate for all wells containing sample.
-2. Samples (250ul) added to 96 well plate starting from well A3 across the row
+1. Saline is added to each well up to the number of wells psecified up to the number of plates specified starting from slot 4.
 
 ### Process
 1. Input your protocol parameters above.
@@ -56,4 +53,4 @@ Explanation of complex parameters below:
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-2df9f8
+2df9f8-pt3
