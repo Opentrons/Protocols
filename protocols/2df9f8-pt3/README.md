@@ -8,7 +8,7 @@
 	* PCR Prep
 
 ## Description
-This protocol preps multiple 96 deep well plates with 500ul of saline up to the specified number of wells in each of the specified number of plates. 
+This protocol preps multiple 96 deep well plates with 500ul of saline up to the specified number of wells in each of the specified number of plates.
 
 Explanation of complex parameters below:
 * `Number of Samples`: Specify the number of samples (1-96) to fill each 96 deep well plate starting from A1.
@@ -31,7 +31,7 @@ Explanation of complex parameters below:
 
 ### Deck Setup
 * This is the deck setup for a run with 94 samples (bottom two rows of slot 11 are not populated).
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2df9f8/Screen+Shot+2021-08-04+at+10.09.08+AM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2df9f8/Screen+Shot+2021-09-29+at+10.02.57+AM.png)
 
 
 
