@@ -1,0 +1,32 @@
+[
+  {
+    "type": "textFile",
+    "label": ".CSV File",
+    "name": "csv_samp",
+    "default": "Plate, Well, Conc, Units, Dilution volume (ul), Sample Volume (ul)\nn 1, A1, 230, ng/ul, 100, 20\nn1, A1, 230, ng/ul, 100, 20\nn2, H12, 230, ng/ul, 100, 40\nn2, H12, 230, ng/ul, 100, 40\nn3, F12, 230, ng/ul, 100, 16\nn"
+  },
+  {
+    "type": "int",
+    "label": "Tip Start for 200ul tip rack",
+    "name": "tip_start",
+    "default": 1
+  },
+  {
+    "type": "dropDown",
+    "label": "P300 Single-Channel Mount",
+    "name": "p300_mount",
+    "options": [
+      {"label": "Left", "value": "left"},
+      {"label": "Right", "value": "right"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "P20 Single-Channel Mount",
+    "name": "p20_mount",
+    "options": [
+      {"label": "Right", "value": "right"},
+      {"label": "Left", "value": "left"}
+    ]
+  }
+]
