@@ -1,0 +1,260 @@
+{
+    "content": "from itertools import groupby\n\nmetadata = {\n    'protocolName': 'Normalization with Input .CSV File',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx):\n    [csv_samp, tip_start, p20_mount, p300_mount] = get_values(  # noqa: F821\n        \"csv_samp\", \"tip_start\", \"p20_mount\", \"p300_mount\")\n\n    # load labware\n    source_plates = [ctx.load_labware('biorad_96_wellplate_200ul_pcr', slot)\n                     for slot in ['3', '6', '9']]\n    dest_plates = [ctx.load_labware('biorad_96_wellplate_200ul_pcr', slot)\n                   for slot in ['2', '5', '8']]\n    tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)\n                 for slot in ['1', '4', '7']]\n    tiprack200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '11')]\n    diluent_rack = ctx.load_labware(\n                    'opentrons_6_tuberack_50000ul', '10')\n\n    # load instrument\n    p20 = ctx.load_instrument('p20_single_gen2', p20_mount,\n                              tip_racks=tiprack20)\n    p300 = ctx.load_instrument('p300_single_gen2', p300_mount,\n                               tip_racks=tiprack200)\n    p300.starting_tip = tiprack200[0].wells()[tip_start-1]\n\n    plate_map = [[val.strip() for val in line.split(',')]\n                 for line in csv_samp.splitlines()\n                 if line.split(',')[0].strip()][1:]\n\n    # csv numbers\n    plate_num = 0\n    well = 1\n    dil_vol = 4\n    sample_vol = 5\n\n    plate_lengths = []\n    for row in plate_map:\n        plate_lengths.append(row[plate_num])\n\n    grouped_plates = [list(b) for a, b in groupby(plate_lengths)]\n\n    # transfer diluent\n    p300.pick_up_tip()\n    for row in plate_map:\n        p300.aspirate(int(row[dil_vol]), diluent_rack.wells()[0])\n        p300.dispense(int(row[dil_vol]),\n                      dest_plates[int(row[plate_num])-1].wells_by_name()[\n                        row[well]])\n        p300.blow_out()\n    p300.drop_tip()\n    ctx.comment('\\n\\n\\n')\n\n    ctx.pause('''\n                 Diluent is transferred to all plates.\n                 Place the first sample source plate in slot 3 to begin\n                 after selecting \"Resume\" on the Opentrons App.\n             ''')\n\n    row_ctr = 0\n    for i, chunk in enumerate(grouped_plates):\n        for row, plate in zip(plate_map[row_ctr:], chunk):\n            p20.pick_up_tip()\n            p20.distribute(int(row[sample_vol]),\n                           source_plates[int(row[plate_num])-1].wells_by_name()\n                           [row[well]],\n                           dest_plates[int(row[plate_num])-1].wells_by_name()[\n                              row[well]],\n                           new_tip='never',\n                           blowout_location='source well')\n            p20.blow_out()\n            p20.drop_tip()\n            row_ctr += 1\n        if i < 2:\n            ctx.pause(f'''Source plate {i+1} is transferred,\n                    please load source plate {i+2}\n                    and select \"Resume on the Opentrons App.\"\n                    ''')\n",
+    "custom_labware_defs": [
+        {
+            "brand": {
+                "brand": "Corning",
+                "brandId": [
+                    "2341111"
+                ]
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 127.76,
+                "yDimension": 85.48,
+                "zDimension": 122
+            },
+            "groups": [
+                {
+                    "metadata": {
+                        "displayCategory": "tubeRack",
+                        "wellBottomShape": "v"
+                    },
+                    "wells": [
+                        "A1",
+                        "B1",
+                        "A2",
+                        "B2",
+                        "A3",
+                        "B3"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "tubeRack",
+                "displayName": "Opentrons 6 Tube Rack with Corning 50 mL",
+                "displayVolumeUnits": "\u00b5L",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1",
+                    "B1"
+                ],
+                [
+                    "A2",
+                    "B2"
+                ],
+                [
+                    "A3",
+                    "B3"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "opentrons_6_tuberack_50000ul",
+                "quirks": []
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 114,
+                    "diameter": 28,
+                    "shape": "circular",
+                    "totalLiquidVolume": 50000,
+                    "x": 35.5,
+                    "y": 60.24,
+                    "z": 8
+                },
+                "A2": {
+                    "depth": 114,
+                    "diameter": 28,
+                    "shape": "circular",
+                    "totalLiquidVolume": 50000,
+                    "x": 70.5,
+                    "y": 60.24,
+                    "z": 8
+                },
+                "A3": {
+                    "depth": 114,
+                    "diameter": 28,
+                    "shape": "circular",
+                    "totalLiquidVolume": 50000,
+                    "x": 105.5,
+                    "y": 60.24,
+                    "z": 8
+                },
+                "B1": {
+                    "depth": 114,
+                    "diameter": 28,
+                    "shape": "circular",
+                    "totalLiquidVolume": 50000,
+                    "x": 35.5,
+                    "y": 25.24,
+                    "z": 8
+                },
+                "B2": {
+                    "depth": 114,
+                    "diameter": 28,
+                    "shape": "circular",
+                    "totalLiquidVolume": 50000,
+                    "x": 70.5,
+                    "y": 25.24,
+                    "z": 8
+                },
+                "B3": {
+                    "depth": 114,
+                    "diameter": 28,
+                    "shape": "circular",
+                    "totalLiquidVolume": 50000,
+                    "x": 105.5,
+                    "y": 25.24,
+                    "z": 8
+                }
+            }
+        }
+    ],
+    "fields": [
+        {
+            "default": "Plate, Well, Conc, Units, Dilution volume (ul), Sample Volume (ul)\\n 1, A1, 230, ng/ul, 100, 20\\n1, A1, 230, ng/ul, 100, 20\\n2, H12, 230, ng/ul, 100, 40\\n2, H12, 230, ng/ul, 100, 40\\n3, F12, 230, ng/ul, 100, 16\\n",
+            "label": ".CSV File",
+            "name": "csv_samp",
+            "type": "textFile"
+        },
+        {
+            "default": 1,
+            "label": "Tip Start for 200ul tip rack",
+            "name": "tip_start",
+            "type": "int"
+        },
+        {
+            "label": "P300 Single-Channel Mount",
+            "name": "p300_mount",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P20 Single-Channel Mount",
+            "name": "p20_mount",
+            "options": [
+                {
+                    "label": "Right",
+                    "value": "right"
+                },
+                {
+                    "label": "Left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_single_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p20_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 1",
+            "share": false,
+            "slot": "1",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 2",
+            "share": false,
+            "slot": "2",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 3",
+            "share": false,
+            "slot": "3",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 5",
+            "share": false,
+            "slot": "5",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 6",
+            "share": false,
+            "slot": "6",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 8",
+            "share": false,
+            "slot": "8",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 9",
+            "share": false,
+            "slot": "9",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Opentrons 6 Tube Rack with Corning 50 mL on 10",
+            "share": false,
+            "slot": "10",
+            "type": "opentrons_6_tuberack_50000ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.11",
+        "author": "Rami Farawi <rami.farawi@opentrons.com>",
+        "protocolName": "Normalization with Input .CSV File",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}

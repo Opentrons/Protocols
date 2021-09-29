@@ -1,13 +1,14 @@
 import math
 import csv
 import os
+from opentrons.types import Point
 
 
 metadata = {
     'protocolName': 'Agriseq Library Prep Part 3 - Barcoding',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.7'
+    'apiLevel': '2.11'
 }
 
 
@@ -77,6 +78,14 @@ def run(protocol):
             m20.pick_up_tip(tips[tip_counter])
             tip_counter += 1
 
+    def touchtip(pip, well):
+        knock_loc = well.top(z=-1).move(
+                    Point(x=-(well.diameter/2.25)))
+        knock_loc2 = well.top(z=-1).move(
+                    Point(x=(well.diameter/2.25)))
+        pip.move_to(knock_loc)
+        pip.move_to(knock_loc2)
+
     # load reagents
     barcode_rxn_mix = mmx_plate.rows()[0][2]
     reaction_plate_cols = [col for plate in reaction_plates
@@ -89,26 +98,26 @@ def run(protocol):
     for s, d in zip(barcode_plate_cols, reaction_plate_cols):
         pick_up()
         m20.aspirate(1, s)
-        m20.touch_tip()
+        touchtip(m20, s)
         m20.air_gap(airgap)
         m20.dispense(airgap, d.top())
         m20.dispense(1, d)
         m20.mix(2, 8, d)
         m20.blow_out()
-        m20.touch_tip()
+        touchtip(m20, d)
         m20.return_tip()
 
     # add barcode reaction mix
     for col in reaction_plate_cols:
         pick_up()
         m20.aspirate(3, barcode_rxn_mix)
-        m20.touch_tip()
+        touchtip(m20, barcode_rxn_mix)
         m20.air_gap(airgap)
         m20.dispense(airgap, col.top())
         m20.dispense(1, col)
         m20.mix(2, 8, col)
         m20.blow_out()
-        m20.touch_tip()
+        touchtip(m20, col)
         m20.return_tip()
 
     protocol.comment('''Barcoding sample libraries complete. Store at -20C after
