@@ -39,7 +39,7 @@ def run(protocol):
 
     m20.drop_tip()
 
-    m20.pick_up_tip(tips[0]['D8'])
+    m20.pick_up_tip(tips[0]['D7'])
     m20.transfer(pbsVol, pbs, destPlate['A5'], new_tip='never')
     m20.drop_tip()
 
@@ -52,7 +52,7 @@ def run(protocol):
 
     m20.drop_tip()
 
-    m20.pick_up_tip(tips[0]['D9'])
+    m20.pick_up_tip(tips[0]['D8'])
     m20.transfer(dmsoVol, dmso, destPlate['A10'], new_tip='never')
     m20.drop_tip()
 
@@ -79,14 +79,16 @@ def run(protocol):
         protocol.set_rail_lights(not protocol.rail_lights_on)
         protocol.delay(seconds=1)
 
-    protocol.pause('Please manually add reagents. When ready, click RESUME.')
+    if numPlates != 0:
+        protocol.pause(
+            'Please manually add reagents. When ready, click RESUME.')
 
-    # Transfer aliquots to destination plate
-    for i in range(10):
-        m20.pick_up_tip()
-        for plate in finalPlates:
-            m20.aspirate(libVol, destPlate.rows()[0][i])
-            m20.dispense(libVol, plate.rows()[0][i])
-        m20.drop_tip()
+        # Transfer aliquots to destination plate
+        for i in range(10):
+            m20.pick_up_tip()
+            for plate in finalPlates:
+                m20.aspirate(libVol, destPlate.rows()[0][i])
+                m20.dispense(libVol, plate.rows()[0][i])
+            m20.drop_tip()
 
     protocol.comment('\nProtocol complete!')
