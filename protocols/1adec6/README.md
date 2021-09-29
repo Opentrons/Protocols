@@ -8,10 +8,10 @@
 	* Assay
 
 ## Description
-**Updated Sept 1, 2021**</br>
-This protocol has been updated based on feedback from the user.
-
 This protocol now utilizes the [P20 8-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette) (instead of the P300), uses additional plates, and has modified liquid handling. The steps of this updated version can be found below.
+
+**Updated Sept 29, 2021**</br>
+This protocol has been updated based on feedback from the user. User can now select **None** when selecting a "**Number of Destination Plates**" (skipping the aliquoting step). Additionally, this update fixes an issue with the way tips are handled when using less than 8 tips with the multi-channel pipette.
 
 Part 1: [Small Molecule Library Prep](./1adec6)</br>
 Part 2: [Seed Cells](./1adec6-2)</br>
