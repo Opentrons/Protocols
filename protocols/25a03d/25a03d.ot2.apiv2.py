@@ -6,15 +6,6 @@ metadata = {
 }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{ "num_samp":24,
-                                "final_plate_slot3":"biorad_96_wellplate_200ul_pcr",
-                                "p300_mount":"left", "p20_mount":"right",
-                                "control_plate": "opentrons_96_aluminumblock_generic_pcr_strip_200ul"}""")
-    return [_all_values[n] for n in names]
-
-
 def run(ctx):
 
     [num_samp, final_plate_slot3, control_plate,
