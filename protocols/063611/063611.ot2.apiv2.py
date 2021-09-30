@@ -116,7 +116,7 @@ def run(ctx):
     use_tip = tip_loc()
 
     # custom racks
-    rack_slots = [1, 2, 4, 5]
+    rack_slots = [4, 1, 5, 2]
     [*racks] = [ctx.load_labware(
      labware_rack, str(
       slot), 'Rack') for slot in rack_slots[:rack_count]]
@@ -155,8 +155,8 @@ def run(ctx):
             p300m.dispense(fill_volume, column[0].top(-2))
             if change_tips:
                 p300m.drop_tip()
-    if p300m.has_tip:
-        p300m.drop_tip()
+        if p300m.has_tip:
+            p300m.drop_tip()
 
     """
     keep track of starting tip for the next run

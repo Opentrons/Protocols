@@ -1,5 +1,14 @@
 [
   {
+  "type": "dropDown",
+  "label": "Mastermix in triplicates across columns (new) or whole columns (original)?",
+  "name": "cDNA_down_column",
+  "options": [
+     { "label": "Triplicates across columns (new)", "value": true },
+     { "label": "Down the entire column up to the number of cDNA samples*3 (original)", "value": false }
+   ]
+  },
+  {
     "type": "int",
     "label": "Number of genes (1-5)",
     "name": "num_gene",
@@ -9,7 +18,7 @@
     "type": "int",
     "label": "Number of mastermix tubes (1-24)",
     "name": "num_mastermix",
-    "default": 24
+    "default": 5
   },
   {
     "type": "float",
