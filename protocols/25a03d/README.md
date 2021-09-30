@@ -8,7 +8,7 @@
 
 ## Categories
 * PCR
-	* qPCR setup
+	* PCR Prep
 
 ## Description
 This protocol preps a 96-well plate with mastermix and DNA with one column for controls. The mastermix is viscous and handled accordingly with air gaps, touch tips, blow outs, delays after aspiration, as well as a decreased pipetting flow rate. Mastermix is added into every third column dependent on how many samples are selected, and the control column is added afterwards. After DNA is added to the mastermix and mixed, 20ul of the solution are transferred to the two subsequent columns following that column of interest.
