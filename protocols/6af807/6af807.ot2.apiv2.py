@@ -8,21 +8,24 @@ metadata = {
     'protocolName': '384 Well Plate PCR Plate with Triplicates',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.8'
+    'apiLevel': '2.11'
 }
 
 
 def run(ctx):
     """Protocol."""
-    [num_gene, num_mastermix, dispense_rate, blowout_rate,
+    [cDNA_down_column, num_gene, num_mastermix, dispense_rate, blowout_rate,
         reset_tipracks, p20_mount] = get_values(  # noqa: F821
-        "num_gene", "num_mastermix", "dispense_rate", "blowout_rate",
-            "reset_tipracks", "p20_mount")
+        "cDNA_down_column", "num_gene", "num_mastermix", "dispense_rate",
+        "blowout_rate", "reset_tipracks", "p20_mount")
 
-    if not 1 <= num_mastermix <= 24:
-        raise Exception("Enter a number of mastermixes between 1-24")
-    if not 1 <= num_gene <= 24:
-        raise Exception("Enter a number of cDNA 1-24")
+    if cDNA_down_column:
+
+        if not 1 <= num_mastermix <= 5:
+            raise Exception("Enter a number of mastermixes between 1-5")
+        if not 1 <= num_gene <= 24:
+            raise Exception("Enter a number of cDNA 1-24")
+        num_gene, num_mastermix = num_mastermix, num_gene
 
     # Tip tracking between runs
     if not ctx.is_simulating():
@@ -75,13 +78,16 @@ def run(ctx):
             tip_counter += 1
 
     # ctx
-    cDNA_tubes = cDNA.wells()[:num_gene]
+    if cDNA_down_column:
+        cDNA_tubes = cDNA.wells()[:num_mastermix]
+
+    else:
+        cDNA_tubes = cDNA.wells()[:num_gene]
 
     # remove P-row
     chopped_plate = [plate.columns()[i][:15]
                      for i in range(0, len(plate.columns()))]
 
-    # chunk columns by number of mastermixes
     chunked_columns = [chopped_plate[i:i+num_mastermix] for i in range(
                       0, len(chopped_plate), num_mastermix)]
 
@@ -108,53 +114,90 @@ def run(ctx):
     # remove empty brackets
     final_dispense_wells = [x for x in final_dispense_wells if x != [[]]]
 
-    airgap = 2
-    for tube, chunk in zip(cDNA_tubes, final_dispense_wells):
-        pick_up()
-        for small_chunk in chunk:
-            for well in small_chunk:
+    if cDNA_down_column:
+        cDNA_wells = [well for col in chopped_plate[:num_mastermix]
+                      for well in col[:num_gene*3]]
+        cDNA_chunks = [cDNA_wells[i:i+num_gene*3] for i in range(0,
+                       len(cDNA_wells), num_gene*3)]
+
+        airgap = 2
+        for tube, chunk in zip(cDNA_tubes, cDNA_chunks):
+            pick_up()
+            for well in chunk:
                 p20.aspirate(4, tube)
                 p20.air_gap(airgap)
                 p20.dispense(4+airgap, well)
                 p20.blow_out()
-                p20.touch_tip()
-        p20.drop_tip()
-        ctx.comment('\n')
-    ctx.comment('\n\n\n\n\n\n\n')
+            p20.drop_tip()
+            ctx.comment('\n')
+        ctx.comment('\n\n\n\n\n\n\n')
 
-    num_rows_in_each_column = []
-    remaining_wells = math.floor(num_gene*3 % 15)
+        p20.flow_rate.blow_out = blowout_rate*p20.flow_rate.blow_out
+        for tube, chunk in zip(mastermix.wells()[:num_gene],
+                               final_dispense_wells):
+            pick_up()
+            for small_chunk in chunk:
+                for well in small_chunk:
+                    p20.aspirate(10, tube, rate=0.5)
+                    ctx.delay(seconds=1)
+                    p20.dispense(10, well.top(), rate=dispense_rate)
+                    ctx.delay(seconds=3)
+                    p20.blow_out()
+                    p20.touch_tip(radius=0.33)
+                    p20.aspirate(6, tube, rate=0.5)
+                    ctx.delay(seconds=1)
+                    p20.dispense(6, well.top(), rate=dispense_rate)
+                    ctx.delay(seconds=3)
+                    p20.blow_out()
+                    p20.touch_tip(radius=0.33)
+            p20.drop_tip()
 
-    # num_rows_in_each_column = [remaining_wells for _ in range(num_mastermix)]
-    for _ in range(num_mastermix):
-        if num_gene >= 5:
-            num_rows_in_each_column.append(15)
-    for _ in range(num_mastermix):
-        if remaining_wells > 0:
-            num_rows_in_each_column.append(remaining_wells)
+    else:
+        airgap = 2
+        for tube, chunk in zip(cDNA_tubes, final_dispense_wells):
+            pick_up()
+            for small_chunk in chunk:
+                for well in small_chunk:
+                    p20.aspirate(4, tube)
+                    p20.air_gap(airgap)
+                    p20.dispense(4+airgap, well)
+                    p20.blow_out()
+            p20.drop_tip()
+            ctx.comment('\n')
+        ctx.comment('\n\n\n\n\n\n\n')
 
-    num_gene_to_dispense = math.ceil(num_gene*3/15)
-    p20.flow_rate.blow_out = blowout_rate*p20.flow_rate.blow_out
-    for j, tube in enumerate(mastermix.wells()[:num_mastermix]):
-        pick_up()
-        for i, (column, num_rows) in enumerate(zip(
-                                                chopped_plate[
-                                                    j::num_mastermix][
-                                                    :num_gene_to_dispense],
-                                                num_rows_in_each_column[
-                                                    j::num_mastermix])):
-            for well in column[:num_rows]:
-                p20.aspirate(10, tube, rate=0.5)
-                ctx.delay(seconds=1)
-                p20.dispense(10, well.top(), rate=dispense_rate)
-                ctx.delay(seconds=3)
-                p20.blow_out()
-                p20.touch_tip(radius=0.33)
-                p20.aspirate(6, tube, rate=0.5)
-                ctx.delay(seconds=1)
-                p20.dispense(6, well.top(), rate=dispense_rate)
-                ctx.delay(seconds=3)
-                p20.blow_out()
-                p20.touch_tip(radius=0.33)
-        p20.drop_tip()
-        ctx.comment('\n')
+        num_rows_in_each_column = []
+        remaining_wells = math.floor(num_gene*3 % 15)
+
+        for _ in range(num_mastermix):
+            if num_gene >= 5:
+                num_rows_in_each_column.append(15)
+        for _ in range(num_mastermix):
+            if remaining_wells > 0:
+                num_rows_in_each_column.append(remaining_wells)
+
+        num_gene_to_dispense = math.ceil(num_gene*3/15)
+        p20.flow_rate.blow_out = blowout_rate*p20.flow_rate.blow_out
+        for j, tube in enumerate(mastermix.wells()[:num_mastermix]):
+            pick_up()
+            for i, (column, num_rows) in enumerate(zip(
+                                                    chopped_plate[
+                                                        j::num_mastermix][
+                                                        :num_gene_to_dispense],
+                                                    num_rows_in_each_column[
+                                                        j::num_mastermix])):
+                for well in column[:num_rows]:
+                    p20.aspirate(10, tube, rate=0.5)
+                    ctx.delay(seconds=1)
+                    p20.dispense(10, well.top(), rate=dispense_rate)
+                    ctx.delay(seconds=3)
+                    p20.blow_out()
+                    p20.touch_tip(radius=0.33)
+                    p20.aspirate(6, tube, rate=0.5)
+                    ctx.delay(seconds=1)
+                    p20.dispense(6, well.top(), rate=dispense_rate)
+                    ctx.delay(seconds=3)
+                    p20.blow_out()
+                    p20.touch_tip(radius=0.33)
+            p20.drop_tip()
+            ctx.comment('\n')
