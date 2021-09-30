@@ -84,7 +84,7 @@ def run(ctx):
         use_tiprack_on_slot('8')
         for col in samples.rows()[0][:num_col]:
             m300.pick_up_tip()
-            m300.mix(5, 200, beads)
+            m300.mix(5, 200, col)
             m300.return_tip()
         ctx.delay(minutes=4 if i < 4 else 10)
         ctx.comment('\n\n\n')
