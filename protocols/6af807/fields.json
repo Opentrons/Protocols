@@ -18,7 +18,7 @@
     "type": "int",
     "label": "Number of mastermix tubes (1-24)",
     "name": "num_mastermix",
-    "default": 24
+    "default": 5
   },
   {
     "type": "float",
