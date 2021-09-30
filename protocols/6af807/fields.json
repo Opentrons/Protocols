@@ -2,7 +2,7 @@
   {
   "type": "dropDown",
   "label": "Mastermix in triplicates across columns (new) or whole columns (original)?",
-  "name": "cDNA_down_column"",
+  "name": "cDNA_down_column",
   "options": [
      { "label": "Triplicates across columns (new)", "value": true },
      { "label": "Down the entire column up to the number of cDNA samples*3 (original)", "value": false }
