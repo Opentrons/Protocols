@@ -30,7 +30,7 @@
   {
     "type": "dropDown",
     "label": "P20 Multi-Channel Mount",
-    "name": "m20_mount",
+    "name": "p20_mount",
     "options": [
       {"label": "Right", "value": "right"},
       {"label": "Left", "value": "left"}
