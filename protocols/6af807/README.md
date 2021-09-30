@@ -14,6 +14,7 @@ This protocol preps a 384 well plate for up to 5 cDNA samples in triplicates. Th
 * Mastermix is added to the cDNA
 
 Explanation of complex parameters below:
+* `Mastermix in triplicates across columns (new) or whole columns (original)`: Specify whether to run the new protocol (box method) or original protocol (which may break a box method). 
 * `Number of genes`: Specify the number of cDNA tubes that will be loaded onto the tube rack.
 * `Number of mastermix tubes`: Specify the number of mastermix tubes that will be added to the cDNA.
 * `Dispense Flow Rate`: Specify the rate to dispense mastermix. A value of 1 is default, a value of 0.5 is half of the default value, and a value of 1.2 would be 20% higher than the default value, for example.
