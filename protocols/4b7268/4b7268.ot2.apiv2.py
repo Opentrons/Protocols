@@ -40,7 +40,7 @@ def run(ctx):
     # 300 ul tips and p300 multi gen2
     num_steps_300 = 5 if not park_tips else 3
     num_cols = math.ceil(sample_count / 8)
-    num_tips300 = int((num_cols / 12)*num_steps_300)
+    num_tips300 = math.ceil((num_cols / 12)*num_steps_300)
     tips300 = [ctx.load_labware("opentrons_96_tiprack_300ul", str(slot)
                                 ) for slot in [4, 5, 7, 8, 9][:num_tips300]]
 
