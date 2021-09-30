@@ -49,8 +49,8 @@ def run(ctx):
     # transfer diluent
     p300.pick_up_tip()
     for row in plate_map:
-        p300.aspirate(int(row[dil_vol]), diluent_rack.wells()[0])
-        p300.dispense(int(row[dil_vol]),
+        p300.aspirate(float(row[dil_vol]), diluent_rack.wells()[0])
+        p300.dispense(float(row[dil_vol]),
                       dest_plates[int(row[plate_num])-1].wells_by_name()[
                         row[well]])
         p300.blow_out()
@@ -67,7 +67,7 @@ def run(ctx):
     for i, chunk in enumerate(grouped_plates):
         for row, plate in zip(plate_map[row_ctr:], chunk):
             p20.pick_up_tip()
-            p20.distribute(int(row[sample_vol]),
+            p20.distribute(float(row[sample_vol]),
                            source_plates[int(row[plate_num])-1].wells_by_name()
                            [row[well]],
                            dest_plates[int(row[plate_num])-1].wells_by_name()[
