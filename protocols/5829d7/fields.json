@@ -15,7 +15,7 @@
     "type": "float",
     "label": "Well Dispense Height",
     "name": "well_disp_height",
-    "default": 2
+    "default": 1
   },
   {
     "type": "int",
