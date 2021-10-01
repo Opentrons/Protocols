@@ -15,7 +15,7 @@ def run(ctx):
         "flow_rate_disp", "p1000_mount")
 
     # load labware
-    wellplate = ctx.load_labware('rallls_96_wellplate_2250ul', '3')
+    wellplate = ctx.load_labware('qiagen_96_wellplate_2250ul', '3')
     tiprack = [ctx.load_labware('opentrons_96_filtertiprack_1000ul', '6')]
     tuberacks = [ctx.load_labware(
                  'nest_32_tuberack_8x15ml_8x15ml_8x15ml_8x15ml', slot)
