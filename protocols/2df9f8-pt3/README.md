@@ -8,23 +8,22 @@
 	* PCR Prep
 
 ## Description
-This protocol preps multiple 96 deep well plates with 500ul of saline up to the specified number of wells in each of the specified number of plates.
+This protocol preps multiple 96 deep well plates with 600ul of saline up to the specified number of plates. All plates are fully filled with 600ul of saline. The left and right multi-channel pipettes aspirate and dispense two columns at a time. 
 
 Explanation of complex parameters below:
-* `Number of Samples`: Specify the number of samples (1-96) to fill each 96 deep well plate starting from A1.
 * `Number of Plates`: Specify the number of plates to fill starting from slot 4.
-* `P1000 Mount`: Specify which side to mount your P1000 Single-Channel Pipette.
+
 
 ---
 
 ### Labware
-* [Opentrons 1000ul tips](https://shop.opentrons.com/collections/opentrons-tips)
+* [Opentrons 300ul tips](https://shop.opentrons.com/collections/opentrons-tips)
 * [NEST 2mL 96 well deep well plate](nest_96_wellplate_2ml_deep)
 * [NEST 195mL Reservoir](https://shop.opentrons.com/collections/reservoirs)
 
 
 ### Pipettes
-* [P1000 Single-Channel Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/single-channel-electronic-pipette?variant=5984549142557)
+* [P300 Multi-Channel Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/single-channel-electronic-pipette?variant=5984549142557)
 
 
 ---
