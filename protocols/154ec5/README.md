@@ -12,7 +12,7 @@
 This protocol uses a p20 single channel pipette to transfer custom volumes (2-10 uL) from source wells located in one of up to 10 pieces of 24-well, 96-well or 384-well labware on the OT-2 deck to a destination well in one of the ten pieces of loaded labware. The labware, deck slot locations, source plate, source well, destination plate, destination well and transfer volume are supplied by the user in a csv file uploaded at the time of protocol download (see example for file and data format).
 
 Links:
-* [example input csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/154ec5/example+CSV.csv)
+* [example input csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/154ec5/example%2BCSV.csv)
 
 This protocol was developed to transfer custom volumes (2-10 uL) from source wells to destination wells as described above.
 
