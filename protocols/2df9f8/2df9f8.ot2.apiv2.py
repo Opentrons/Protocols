@@ -18,7 +18,8 @@ def run(ctx):
     # load labware
     plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '5')
     reservoir = ctx.load_labware('nest_1_reservoir_195ml', '1')
-    tiprack = [ctx.load_labware('opentrons_96_tiprack_300ul', '4')]
+    tiprack = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
+               for slot in ['3', '4']]
     tuberacks = [ctx.load_labware(
         'opentrons_15_tuberack_5000ul', slot)
         for slot in ['6', '7', '8', '9', '10', '11', '2']]
@@ -28,14 +29,12 @@ def run(ctx):
                                tip_racks=tiprack)
 
     # multi as single channel
-    num_chan_per_pickup = 1  # (only pickup tips on front-most channel)
-    tips_ordered = [
-        tip for rack in tiprack
-        for row in rack.rows()[
-            len(rack.rows())-num_chan_per_pickup::-1*num_chan_per_pickup]
-        for tip in row]
-
+    num_chan = 1
     tip_count = 0
+    tips_ordered = [tip
+                    for row in tiprack[1].rows()[
+                     len(tiprack[1].rows())-num_chan::-1*num_chan]
+                    for tip in row]
 
     def pick_up():
         nonlocal tip_count
@@ -50,11 +49,11 @@ def run(ctx):
     plate_wells = [well for row in plate.rows() for well in row]
 
     # distribute saline
-    pick_up()
-    for d in plate_wells[2:]:
+    m300.pick_up_tip()
+    for col in plate.rows()[0]:
         m300.aspirate(250, reservoir.wells()[0])
         m300.touch_tip()
-        m300.dispense(250, d)
+        m300.dispense(250, col)
         m300.blow_out()
     m300.drop_tip()
 
