@@ -24,7 +24,7 @@ def run(ctx):
      'opentrons_96_tiprack_20ul', str(slot)) for slot in [11]]
     p20s = ctx.load_instrument("p20_single_gen2", 'left', tip_racks=tips20)
 
-    # csv input
+    # csv file input
     tfers = [line for line in csv.DictReader(uploaded_csv.splitlines())]
 
     # labware types from protocol parameter input
