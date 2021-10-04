@@ -172,7 +172,7 @@ def run(ctx):
     sup_waste = next(sup_tube)
 
     # magnetic module with deep well plate
-    magdeck = ctx.load_module('magdeck', '6')
+    magdeck = ctx.load_module('magnetic module gen2', '6')
     magdeck.disengage()
     magplate = magdeck.load_labware(labware_deep_well, 'Deep Well Plate')
 
