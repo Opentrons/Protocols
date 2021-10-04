@@ -1,16 +1,10 @@
 """Protocol."""
-import math
 metadata = {
     'protocolName': 'Plate Filling Heat Inactivated Covid Samples for PCR - Part 3',  # noqa: E501
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'
 }
-
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"num_plates":8}""")
-    return [_all_values[n] for n in names]
 
 
 def run(ctx):
