@@ -1,24 +1,8 @@
 [
-
-  {
-    "type": "int",
-    "label": "Number of wells to fill in each plate (1-96)",
-    "name": "num_samp",
-    "default": 96
-  },
   {
     "type": "int",
     "label": "Number of plates to fill (starting from slot 4)",
     "name": "num_plates",
     "default": 8
-  },
-  {
-    "type": "dropDown",
-    "label": "P1000 Single Channel Mount",
-    "name": "p1000_mount",
-    "options": [
-       { "label": "left", "value": "left" },
-       { "label": "right", "value": "right" }
-     ]
   }
 ]
