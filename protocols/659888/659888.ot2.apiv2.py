@@ -48,7 +48,7 @@ def run(ctx):
     for col_ctr in range(num_col):
         pick_up()
         for _ in range(num_plates):
-            m20.aspirate(2.5*num_plates, dilution_plate.rows()[0][col_ctr])
+            m20.aspirate(2.5, dilution_plate.rows()[0][col_ctr])
             m20.touch_tip()
             m20.air_gap(airgap)
         for plate in plates:
