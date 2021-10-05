@@ -10,7 +10,7 @@
   },
   {
     "type": "int",
-    "label": "Number of genes (1-5)",
+    "label": "Number of cDNA (1-24)",
     "name": "num_gene",
     "default": 5
   },
