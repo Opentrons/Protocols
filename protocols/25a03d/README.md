@@ -42,10 +42,12 @@ Explanation of complex parameters below:
 ---
 
 ### Protocol Steps
-1. Use p300 single channel pipette to transfer 48ul of MasterMix from 2.0 ml tube (slot 1) to columns 1, 4, 7, and 10 of the plate/strip tubes in slot 3 (final qPCR plate). Want to be able to use either strip tubes or a plate for the final qPCR reactions in slot 1. Solution will be viscous so want to make sure all is expelled from tips.
-2. Use p20 multi-channel pipette to trasnfer 12ul of DNA from strip tubes in slot 7 to the qPCR plate in slot 1. Transfer column 1 of strip tubes to column 1 of plate; column 2 of strip tubes to column 4 of plate; and column 3 of strip tubes to column 7 of plate.
-3. Use p20 multi-channel pipette to trasnfer 12ul of DNA from strip tubes in slot 9 to the qPCR plate in slot 1. Transfer column 12 of strip tubes to column 10 of plate. (Could possibly put this strip tube with the DNA in slot 7 but would want it to remain in column 12 so it is not near the other DNA samples. This is the control DNA and we do not want to contaminate the test samples).
-4. Use p20 multi-channel pipette to mix column 1 of qPCR plate (slot 3) 5 times (set a 20ul). Then transfer 20ul of column 1 to column 2 and column 3 of the qPCR plate. Repeat with MM/sample in column 4 and transfer 20ul to columns 5 and 6. Repeat with MM/sample in column 7 and transfer 20ul to columns 8 and 9. Repeat with MM/sample in column 10 and transfer 20ul to columns 11 and 12. Solution will be viscous so want to make sure all is expelled from tips.
+1. Use p300 single channel pipette to transfer 48ul of MasterMix (MM) from 2.0 ml tube (slot 1) to columns 1, 4, 7, and 10 of the plate/strip tubes in slot 4 (final qPCR plate). Want to be able to use either strip tubes or a plate for the final qPCR reactions in slot 4. Solution will be viscous so want to make sure all is expelled from tips.
+2. Use p20 multi-channel pipette to transfer 12ul of DNA from strip tubes in slot 7 to the final qPCR plate in slot 4. Transfer column 1 of DNA samples to column 1 of final plate; column 2 of DNA samples to column 4 of final plate; and column 3 of DNA samples to column 7 of final plate.
+3. Use p20 multi-channel pipette to transfer 12ul of DNA from strip tubes in slot 9 to the final qPCR plate in slot 4. Transfer column 12 of strip tubes to column 10 of plate. (Could possibly put this strip tube with the DNA in slot 7 but would want it to remain in column 12 so it is not near the other DNA samples. This is the control DNA and we do not want to contaminate the test samples).
+4. Use p20 multi-channel pipette to mix column 1 of final qPCR plate (slot 4) 5 times (set a 20ul). Then transfer 20ul of column 1 to column 2 and column 3 of the final qPCR plate. Repeat with MM/DNA sample in column 4 and transfer 20ul to columns 5 and 6. Repeat with MM/DNA sample in column 7 and transfer 20ul to columns 8 and 9. Repeat with MM/DNA sample in column 10 and transfer 20ul to columns 11 and 12. Solution will be viscous so want to make sure all is expelled from tips.
+
+
 
 ### Process
 1. Input your protocol parameters above.
