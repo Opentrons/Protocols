@@ -8,19 +8,19 @@ metadata = {
 
 def run(ctx):
 
-    [num_samp, final_plate_slot3, control_plate,
+    [num_samp, final_plate_slot4, control_plate,
      p20_mount, p300_mount] = get_values(  # noqa: F821
-        "num_samp", "final_plate_slot3",
+        "num_samp", "final_plate_slot4",
         "control_plate", "p20_mount", "p300_mount")
 
     num_samp = int(num_samp)
 
     # load labware
-    final_plate = ctx.load_labware(final_plate_slot3, '4')
+    final_plate = ctx.load_labware(final_plate_slot4, '4')
     mastermix_rack = ctx.load_labware(
-                    'opentrons_24_aluminumblock_generic_2ml_screwcap', '1')
+                    'usalowbind_24_aluminumblock_2000ul', '1')
     dna_samples = ctx.load_labware(
-                  'opentrons_96_aluminumblock_generic_pcr_strip_200ul', '7')
+                  'usastrips_96_aluminumblock_200ul', '7')
     control_plate = ctx.load_labware(control_plate, '9')
 
     tiprack200 = [ctx.load_labware('opentrons_96_tiprack_300ul', '10')]
