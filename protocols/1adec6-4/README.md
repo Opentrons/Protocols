@@ -29,11 +29,11 @@ Explanation of complex parameters below:
 * **Transfer CSV**: Upload the CSV containing the liquid transfers. The CSV should be formatted as follows:</br>
 </br>
 
-| Source Well | Volume | Destination Well |
-| ----------- | ------ | ---------------- |
-| A1          | 3      | C2               |
-| A1          | 2      | B4               |
-| A2          | 5      | D7               |
+| Source Well | Volume | Destination Well |</br>
+| ----------- | ------ | ---------------- |</br>
+| A1          | 3      | C2               |</br>
+| A1          | 2      | B4               |</br>
+| A2          | 5      | D7               |</br>
 
 **Note**: If using the [P20 Multi-Channel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-Channel-electronic-pipette), you should only use Row A when selecting a *destination well* in the CSV.
 
@@ -41,11 +41,13 @@ Explanation of complex parameters below:
 
 ### Labware
 * [Opentrons 20µL Tipracks](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-20ul-tips)
+* [Opentrons 300µL Tipracks](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
 * Thermo-Fast 96-Well, Fully Skirted Plate
 * SPL 96-Well Cell Culture Plates
 
 ### Pipettes
 * [P20 Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/Single-Channel-electronic-pipette)
+* [P300 8-Channeel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-Channel-electronic-pipette)
 
 ### Reagents
 * Small Molecule Library
@@ -56,6 +58,8 @@ Explanation of complex parameters below:
 **Slot 1**: Small Molecule Library Plate (Thermo-Fast 96-Well, Fully Skirted Plate)</br>
 </br>
 **Slot 2**: Destination Plate (SPL 96-Well Cell Culture Plate)</br>
+</br>
+**Slot 3**: [Opentrons 300µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-20ul-tips)</br>
 </br>
 **Slot 4**: [Opentrons 20µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-20ul-tips)</br>
 </br>
@@ -80,7 +84,8 @@ For each of the lines in the CSV, the following steps will occur:
 3. [P20 Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/Single-Channel-electronic-pipette) will transfer specified volume from the well of the source plate to the well of the destination plate listed in the CSV.
 4. [P20 Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/Single-Channel-electronic-pipette) will drop used tips in the waste bin.
 5. Steps 1-4 will repeat for each line in the CSV.
-6. End of the protocol.
+6. *Update*: The [P300 8-Channeel Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-Channel-electronic-pipette) will pick up tips and mix each column that had samples transferred to it. The first set of tips will be disposed in the trash and subsequent tips will be dropped into empty slots (to save space in the waste bin).
+7. End of the protocol.
 
 ### Process
 1. Input your protocol parameters above.
