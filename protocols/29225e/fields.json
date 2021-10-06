@@ -16,6 +16,7 @@
     "label": "Labware Containing Input RNA Samples",
     "name": "labware_rna",
     "options": [
+      { "label": "nest_96_wellplate_500ul", "value": "nest_96_wellplate_500ul" },
       { "label": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap", "value": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap" },
       { "label": "nest_96_wellplate_2ml_deep", "value": "nest_96_wellplate_2ml_deep" }
     ]
