@@ -1,5 +1,5 @@
 {
-    "content": "metadata = {\n    'protocolName': 'Transfer Small Molecules - CSV Input [4/7]',\n    'author': 'Chaz <chaz@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.9'\n}\n\n\ndef run(protocol):\n    [mnt20, pip, transferCSV] = get_values(  # noqa: F821\n     'mnt20', 'pip', 'transferCSV')\n\n    # Load Labware\n    tips = [\n        protocol.load_labware(\n            'opentrons_96_tiprack_20ul', s) for s in [4, 5, 7, 8, 10, 11]\n            ]\n\n    p20 = protocol.load_instrument('p20_single_gen2', mnt20, tip_racks=tips)\n\n    srcPlate = protocol.load_labware('thermofast_96_wellplate_200ul', '1')\n    destPlate = protocol.load_labware('spl_96_wellplate_200ul_flat', '2')\n\n    # Parse CSV; Each line should be --> Src Well, Vol, Dest Well\n    data = [r.split(',') for r in transferCSV.strip().splitlines() if r][1:]\n\n    # Make transfers based on CSV\n    for line in data:\n        src, vol, dest = line\n        p20.transfer(\n            float(vol), srcPlate[src], destPlate[dest],\n            mix_before=(5, 15), mix_after=(3, 20))\n",
+    "content": "metadata = {\n    'protocolName': 'Transfer Small Molecules - CSV Input [4/7]',\n    'author': 'Chaz <chaz@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.9'\n}\n\n\ndef run(protocol):\n    [pip, mnt20, mnt300, transferCSV] = get_values(  # noqa: F821\n     'pip', 'mnt20', 'mnt300', 'transferCSV')\n\n    # Load Labware\n    tips = [\n        protocol.load_labware(\n            'opentrons_96_tiprack_20ul', s) for s in [4, 5, 7, 8, 10, 11]\n            ]\n\n    p20 = protocol.load_instrument(pip, mnt20, tip_racks=tips)\n\n    tips300 = [protocol.load_labware('opentrons_96_tiprack_300ul', '3')]\n    m300 = protocol.load_instrument(\n        'p300_multi_gen2', mnt300, tip_racks=tips300)\n\n    srcPlate = protocol.load_labware('thermofast_96_wellplate_200ul', '1')\n    destPlate = protocol.load_labware('spl_96_wellplate_200ul_flat', '2')\n\n    # Parse CSV; Each line should be --> Src Well, Vol, Dest Well\n    data = [r.split(',') for r in transferCSV.strip().splitlines() if r][1:]\n\n    # Make transfers based on CSV and create dest columns to mix\n    destSet = set()\n    for line in data:\n        src, vol, dest = line\n        p20.transfer(\n            float(vol), srcPlate[src], destPlate[dest],\n            mix_before=(3, 15))\n        destSet.add(int(dest[1:]))\n\n    destList = sorted(destSet)\n    destList = [x-1 for x in destList]\n\n    # mix cells in wells\n    for i, col in enumerate(destList):\n        dest = destPlate.rows()[0][col]\n        m300.pick_up_tip()\n        m300.mix(4, 200, dest)\n        m300.drop_tip(tips300[0].rows()[0][i-1]) if i != 0 else m300.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -2258,21 +2258,6 @@
     ],
     "fields": [
         {
-            "label": "P20 Mount",
-            "name": "mnt20",
-            "options": [
-                {
-                    "label": "Left",
-                    "value": "left"
-                },
-                {
-                    "label": "Right",
-                    "value": "right"
-                }
-            ],
-            "type": "dropDown"
-        },
-        {
             "label": "P20 Selection (Single or Multi)",
             "name": "pip",
             "options": [
@@ -2288,6 +2273,36 @@
             "type": "dropDown"
         },
         {
+            "label": "P20 Mount",
+            "name": "mnt20",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P300 Mount",
+            "name": "mnt300",
+            "options": [
+                {
+                    "label": "Right",
+                    "value": "right"
+                },
+                {
+                    "label": "Left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
             "default": "\nA1,3,A1\nA1,4,A2",
             "label": "Transfer CSV",
             "name": "transferCSV",
@@ -2298,6 +2313,10 @@
         {
             "mount": "left",
             "name": "p20_single_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p300_multi_gen2"
         }
     ],
     "labware": [
@@ -2312,6 +2331,12 @@
             "share": false,
             "slot": "2",
             "type": "spl_96_wellplate_200ul_flat"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_tiprack_300ul"
         },
         {
             "name": "Opentrons 96 Tip Rack 20 \u00b5L on 4",
