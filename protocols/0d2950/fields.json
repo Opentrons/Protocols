@@ -9,28 +9,7 @@
     "type": "int",
     "label": "P1000 sample tube aspiration height",
     "name": "p1000_sample_height",
-    "default": 2
-  },
-  {
-    "type": "int",
-    "label": "Mag Bead Mix Speed",
-    "name": "mag_bead_mix_speed",
-    "default": 91
-  },
-  {
-    "type": "int",
-    "label": "P1000 aspiration/dispense speed for mag bead transfer",
-    "name": "p1000_mag_flow_rate",
-    "default": 133
-  },
-  {
-    "type": "dropDown",
-    "label": "P300 Multi GEN2 Mount",
-    "name": "p300_mount",
-    "options": [
-       { "label": "left", "value": "left" },
-       { "label": "right", "value": "right" }
-     ]
+    "default": 1
   },
   {
     "type": "dropDown",
