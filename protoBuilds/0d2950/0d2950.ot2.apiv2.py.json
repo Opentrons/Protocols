@@ -1,9 +1,9 @@
 {
-    "content": "\"\"\"Protocol.\"\"\"\nimport math\nfrom opentrons import protocol_api\n\nmetadata = {\n    'protocolName': 'Extraction Prep for TaqPath Covid-19 Combo Kit',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.10'\n}\n\n\ndef run(ctx):\n    \"\"\"Protocol.\"\"\"\n    [num_samp, p1000_sample_height, mag_bead_mix_speed,\n     p1000_mag_flow_rate, p300_mount, p1000_mount] = get_values(  # noqa: F821\n        \"num_samp\", \"p1000_sample_height\", \"mag_bead_mix_speed\",\n        \"p1000_mag_flow_rate\",\n        \"p300_mount\", \"p1000_mount\")\n\n    if not 1 <= num_samp <= 95:\n        raise Exception(\"Enter a sample number between 1-95\")\n\n    num_col = math.floor(num_samp/8)\n    num_samp = num_samp+1\n    mix_rate = mag_bead_mix_speed/274.7\n    remainder = num_samp-num_col*8\n\n    # load labware\n    samples = [ctx.load_labware('sample_15_tuberack_5000ul', slot)\n               for slot in ['1', '2', '3']]\n    ethanol_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '4',\n                                     label='Ethanol plate')\n    buffer_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '5',\n                                    label='Buffer plate')\n    elution_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '6',\n                                     label='Elution plate')\n    sample_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '7',\n                                    label='Sample plate')\n    reagents = ctx.load_labware('nest_12_reservoir_15ml', '8')\n    ethanol = ctx.load_labware('nest_1_reservoir_195ml', '9',\n                               label='Ethanol reservoir')\n    tiprack1000 = [ctx.load_labware('opentrons_96_tiprack_1000ul', '10')]\n    tiprack300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '11')]\n\n    # load instrument\n    p300 = ctx.load_instrument('p300_multi_gen2',\n                               p300_mount, tip_racks=tiprack300)\n    p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,\n                                tip_racks=tiprack1000)\n\n    def pick_up1000():\n        try:\n            p1000.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            ctx.pause(\"Replace all 1000ul tip racks. Empty trash if needed.\")\n            p1000.reset_tipracks()\n            p1000.pick_up_tip()\n\n    def pick_up300():\n        try:\n            p300.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            ctx.pause(\"Replace all 300ul tip racks. Empty trash if needed.\")\n            p300.reset_tipracks()\n            p300.pick_up_tip()\n\n    # PROTOCOL\n\n    # reagents\n    buffer = reagents.wells()[:4]\n    elution_solution = reagents.wells()[4]\n    mag_beads = reagents.wells()[5:7]\n    eth = ethanol.wells()[0]\n    sample_tube_map = [tube for tuberack in samples\n                       for tube in tuberack.wells()][:num_samp-1]\n    sample_map = [well for row in sample_plate.columns()\n                  for well in row][:num_samp]\n\n    # make buffer plate\n    if num_samp == 8:\n        pick_up300()\n        p300.transfer(500, buffer[0], buffer_plate.rows()[0][0],\n                      new_tip='never',\n                      touch_tip=True)\n        p300.drop_tip()\n    if num_samp > 8:\n        pick_up300()\n        for buffer_col, dest_col in zip(buffer*num_col,\n                                        buffer_plate.rows()[0][\n                                            :num_col if num_samp % 8 != 0\n                                            else num_col+1]):\n            p300.transfer(500,\n                          buffer_col,\n                          dest_col,\n                          new_tip='never',\n                          touch_tip=True)\n    if p300.has_tip:\n        p300.drop_tip()\n\n    if num_samp < 8:\n        pick_up1000()\n        for buffer_well, dest_well in zip(buffer*num_samp,\n                                          buffer_plate.wells()[:num_samp]):\n            p1000.aspirate(500, buffer_well)\n            p1000.dispense(500, dest_well)\n        p1000.drop_tip()\n\n    if num_samp % 8 != 0 and num_samp > 8:\n        ctx.comment('rrrr')\n        pick_up1000()\n        for buffer_well, dest_well in zip(buffer*num_col,\n                                          buffer_plate.wells()[\n                                                            num_col*8:\n                                                            num_col*8+remainder\n                                                            ]):\n            p1000.aspirate(500, buffer_well)\n            p1000.dispense(500, dest_well)\n        p1000.drop_tip()\n    ctx.comment('\\n\\n\\n')\n\n    # make ethanol plate\n    ctx.comment('\\n\\n\\n')\n    if num_samp == 8:\n        pick_up300()\n        p300.transfer(1000, eth, ethanol_plate.rows()[0][0],\n                      new_tip='never',\n                      touch_tip=True)\n        p300.drop_tip()\n    if num_samp > 8:\n        pick_up300()\n        for eth_col in ethanol_plate.rows()[0][:num_col if num_samp % 8 != 0\n                                               else num_col+1]:\n            p300.transfer(1000,\n                          eth,\n                          eth_col,\n                          new_tip='never',\n                          touch_tip=True)\n    if p300.has_tip:\n        p300.drop_tip()\n\n    if num_samp % 8 != 0:\n        pick_up1000()\n        for eth_well in ethanol_plate.wells()[num_col*8:num_col*8+remainder]:\n            p1000.aspirate(1000, eth)\n            p1000.dispense(1000, eth_well)\n        p1000.drop_tip()\n\n    # make elution buffer plate\n    ctx.comment('\\n\\n\\n')\n    chunks = [\n                elution_plate.rows()[0][i:i+4]\n                [\n                    :num_col+1 if num_samp % 8 == 0\n                    else num_col % 4 if i+4 >= num_col+1 else 4\n                ]\n                for i in range(0, len(elution_plate.rows()[0][:num_col]), 4)\n              ]\n\n    if num_samp == 8:\n        pick_up300()\n        p300.transfer(50, elution_solution, elution_plate.rows()[0][0],\n                      new_tip='never')\n        p300.drop_tip()\n    if num_samp > 8:\n        pick_up300()\n        for chunk in chunks:\n            p300.aspirate(50*len(chunk)+50, elution_solution)\n            p300.touch_tip()\n            for well in chunk:\n                p300.dispense(50, well)\n            p300.dispense(50, elution_solution)\n            p300.blow_out()\n    if p300.has_tip:\n        p300.drop_tip()\n\n    if num_samp % 8 != 0:\n        floor = 115\n        pick_up1000()\n        p1000.aspirate(floor+50*remainder, elution_solution)\n        for elution_well in elution_plate.wells()[\n                                                    num_col*8:\n                                                    num_col*8+remainder\n                                                    ]:\n            p1000.dispense(50, elution_well)\n        p1000.dispense(floor, elution_solution)\n        p1000.blow_out()\n        p1000.drop_tip()\n    ctx.comment('\\n\\n\\n')\n\n    # add patient samples\n    samp_ctr = 0\n    for sample, well in zip(sample_tube_map*3, sample_map[:num_samp-1]):\n        pick_up1000()\n        p1000.aspirate(200,\n                       sample_tube_map[samp_ctr].bottom(z=p1000_sample_height))\n        p1000.dispense(200, well)\n        p1000.blow_out()\n        p1000.drop_tip()\n        samp_ctr += 1\n        if samp_ctr == 45:\n            ctx.pause(\"Replace sample racks\")\n            samp_ctr = 0\n\n    # add mag beads\n    ctx.comment('Adding Mag-Beads')\n    pick_up300()\n    for well in mag_beads:\n        p300.mix(3, 300, well, rate=mix_rate)\n    p300.drop_tip()\n\n    p1000.flow_rate.aspirate = p1000_mag_flow_rate\n    p1000.flow_rate.dispense = p1000_mag_flow_rate\n\n    if num_samp == 8:\n        pick_up300()\n        p300.transfer(275, mag_beads[0], sample_plate.rows()[0][0],\n                      new_tip='never',\n                      touch_tip=True)\n        p300.drop_tip()\n\n    if num_samp > 8:\n        for beads, dest_col in zip(mag_beads*num_col,\n                                   sample_plate.rows()[0][\n                                            :num_col if num_samp % 8 != 0\n                                            else num_col+1]):\n            pick_up300()\n            p300.transfer(275,\n                          beads,\n                          dest_col,\n                          new_tip='never',\n                          touch_tip=True)\n            p300.drop_tip()\n    if p300.has_tip:\n        p300.drop_tip()\n\n    if num_samp < 8:\n        pick_up1000()\n        for mag_well, dest_well in zip(mag_beads*num_samp,\n                                       sample_plate.wells()[:num_samp]):\n            p1000.aspirate(275, mag_well)\n            p1000.dispense(275, dest_well)\n        p1000.drop_tip()\n\n    if num_samp % 8 != 0:\n\n        for beads, dest_well in zip(mag_beads*num_col,\n                                    sample_plate.wells()[\n                                                        num_col*8:\n                                                        num_col*8+remainder\n                                                        ]):\n            pick_up1000()\n            p1000.aspirate(275, beads)\n            p1000.dispense(275, dest_well)\n            p1000.drop_tip()\n    ctx.comment('\\n\\n\\n')\n",
+    "content": "\"\"\"Protocol.\"\"\"\n\nmetadata = {\n    'protocolName': 'Extraction Prep for TaqPath Covid-19 Combo Kit',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.10'\n}\n\n\ndef run(ctx):\n    \"\"\"Protocol.\"\"\"\n    [num_samp, p1000_sample_height, p1000_mount] = get_values(  # noqa: F821\n        \"num_samp\", \"p1000_sample_height\", \"p1000_mount\")\n\n    if not 1 <= num_samp <= 95:\n        raise Exception(\"Enter a sample number between 1-95\")\n\n    num_samp = num_samp+1\n\n    # load labware\n    samples = [ctx.load_labware('opentrons_15_tuberack_5000ul', slot)\n               for slot in ['1', '2', '3', '4', '5', '6', '7']]\n    sample_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '8',\n                                    label='Sample plate')\n    tiprack1000 = [ctx.load_labware('opentrons_96_tiprack_1000ul', '9')]\n\n    # load instrument\n    p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,\n                                tip_racks=tiprack1000)\n\n    # PROTOCOL\n\n    # reagents\n    sample_tube_map = [tube for tuberack in samples\n                       for tube in tuberack.wells()][:num_samp-1]\n    sample_map = [well for row in sample_plate.columns()\n                  for well in row][:num_samp]\n\n    # add patient samples\n    for i, (sample, well) in enumerate(zip(sample_tube_map*3,\n                                           sample_map[:num_samp-1])):\n        p1000.pick_up_tip()\n        p1000.aspirate(200, sample_tube_map[i].bottom(z=p1000_sample_height))\n        p1000.dispense(200, well)\n        p1000.blow_out()\n        p1000.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
-                "brand": "buffer",
+                "brand": "custom",
                 "brandId": []
             },
             "cornerOffsetFromSlot": {
@@ -14,131 +14,13 @@
             "dimensions": {
                 "xDimension": 127.76,
                 "yDimension": 85.48,
-                "zDimension": 121
+                "zDimension": 111.13
             },
             "groups": [
                 {
                     "metadata": {
                         "displayCategory": "tubeRack",
-                        "wellBottomShape": "flat"
-                    },
-                    "wells": [
-                        "A1",
-                        "B1",
-                        "A2",
-                        "B2",
-                        "A3",
-                        "B3"
-                    ]
-                }
-            ],
-            "metadata": {
-                "displayCategory": "tubeRack",
-                "displayName": "Buffer 6 Tube Rack 50000 \u00b5L",
-                "displayVolumeUnits": "\u00b5L",
-                "tags": []
-            },
-            "namespace": "custom_beta",
-            "ordering": [
-                [
-                    "A1",
-                    "B1"
-                ],
-                [
-                    "A2",
-                    "B2"
-                ],
-                [
-                    "A3",
-                    "B3"
-                ]
-            ],
-            "parameters": {
-                "format": "irregular",
-                "isMagneticModuleCompatible": false,
-                "isTiprack": false,
-                "loadName": "buffer_6_tuberack_50000ul",
-                "quirks": []
-            },
-            "schemaVersion": 2,
-            "version": 1,
-            "wells": {
-                "A1": {
-                    "depth": 114,
-                    "diameter": 28,
-                    "shape": "circular",
-                    "totalLiquidVolume": 50000,
-                    "x": 35.5,
-                    "y": 60.24,
-                    "z": 7
-                },
-                "A2": {
-                    "depth": 114,
-                    "diameter": 28,
-                    "shape": "circular",
-                    "totalLiquidVolume": 50000,
-                    "x": 70.5,
-                    "y": 60.24,
-                    "z": 7
-                },
-                "A3": {
-                    "depth": 114,
-                    "diameter": 28,
-                    "shape": "circular",
-                    "totalLiquidVolume": 50000,
-                    "x": 105.5,
-                    "y": 60.24,
-                    "z": 7
-                },
-                "B1": {
-                    "depth": 114,
-                    "diameter": 28,
-                    "shape": "circular",
-                    "totalLiquidVolume": 50000,
-                    "x": 35.5,
-                    "y": 25.24,
-                    "z": 7
-                },
-                "B2": {
-                    "depth": 114,
-                    "diameter": 28,
-                    "shape": "circular",
-                    "totalLiquidVolume": 50000,
-                    "x": 70.5,
-                    "y": 25.24,
-                    "z": 7
-                },
-                "B3": {
-                    "depth": 114,
-                    "diameter": 28,
-                    "shape": "circular",
-                    "totalLiquidVolume": 50000,
-                    "x": 105.5,
-                    "y": 25.24,
-                    "z": 7
-                }
-            }
-        },
-        {
-            "brand": {
-                "brand": "sample",
-                "brandId": []
-            },
-            "cornerOffsetFromSlot": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-            },
-            "dimensions": {
-                "xDimension": 127.76,
-                "yDimension": 85.48,
-                "zDimension": 91
-            },
-            "groups": [
-                {
-                    "metadata": {
-                        "displayCategory": "tubeRack",
-                        "wellBottomShape": "u"
+                        "wellBottomShape": "v"
                     },
                     "wells": [
                         "A1",
@@ -161,7 +43,7 @@
             ],
             "metadata": {
                 "displayCategory": "tubeRack",
-                "displayName": "Sample 15 Tube Rack 5000 \u00b5L",
+                "displayName": "opentrons 15mL tube rack",
                 "displayVolumeUnits": "\u00b5L",
                 "tags": []
             },
@@ -197,468 +79,146 @@
                 "format": "irregular",
                 "isMagneticModuleCompatible": false,
                 "isTiprack": false,
-                "loadName": "sample_15_tuberack_5000ul",
+                "loadName": "opentrons_15_tuberack_5000ul",
                 "quirks": []
             },
             "schemaVersion": 2,
             "version": 1,
             "wells": {
                 "A1": {
-                    "depth": 84,
-                    "diameter": 17,
+                    "depth": 100,
+                    "diameter": 12.7,
                     "shape": "circular",
                     "totalLiquidVolume": 5000,
                     "x": 13.88,
                     "y": 67.74,
-                    "z": 7
+                    "z": 11.13
                 },
                 "A2": {
-                    "depth": 84,
-                    "diameter": 17,
+                    "depth": 100,
+                    "diameter": 12.7,
                     "shape": "circular",
                     "totalLiquidVolume": 5000,
                     "x": 38.88,
                     "y": 67.74,
-                    "z": 7
+                    "z": 11.13
                 },
                 "A3": {
-                    "depth": 84,
-                    "diameter": 17,
+                    "depth": 100,
+                    "diameter": 12.7,
                     "shape": "circular",
                     "totalLiquidVolume": 5000,
                     "x": 63.88,
                     "y": 67.74,
-                    "z": 7
+                    "z": 11.13
                 },
                 "A4": {
-                    "depth": 84,
-                    "diameter": 17,
+                    "depth": 100,
+                    "diameter": 12.7,
                     "shape": "circular",
                     "totalLiquidVolume": 5000,
                     "x": 88.88,
                     "y": 67.74,
-                    "z": 7
+                    "z": 11.13
                 },
                 "A5": {
-                    "depth": 84,
-                    "diameter": 17,
+                    "depth": 100,
+                    "diameter": 12.7,
                     "shape": "circular",
                     "totalLiquidVolume": 5000,
                     "x": 113.88,
                     "y": 67.74,
-                    "z": 7
+                    "z": 11.13
                 },
                 "B1": {
-                    "depth": 84,
-                    "diameter": 17,
+                    "depth": 100,
+                    "diameter": 12.7,
                     "shape": "circular",
                     "totalLiquidVolume": 5000,
                     "x": 13.88,
                     "y": 42.74,
-                    "z": 7
+                    "z": 11.13
                 },
                 "B2": {
-                    "depth": 84,
-                    "diameter": 17,
+                    "depth": 100,
+                    "diameter": 12.7,
                     "shape": "circular",
                     "totalLiquidVolume": 5000,
                     "x": 38.88,
                     "y": 42.74,
-                    "z": 7
+                    "z": 11.13
                 },
                 "B3": {
-                    "depth": 84,
-                    "diameter": 17,
+                    "depth": 100,
+                    "diameter": 12.7,
                     "shape": "circular",
                     "totalLiquidVolume": 5000,
                     "x": 63.88,
                     "y": 42.74,
-                    "z": 7
+                    "z": 11.13
                 },
                 "B4": {
-                    "depth": 84,
-                    "diameter": 17,
+                    "depth": 100,
+                    "diameter": 12.7,
                     "shape": "circular",
                     "totalLiquidVolume": 5000,
                     "x": 88.88,
                     "y": 42.74,
-                    "z": 7
+                    "z": 11.13
                 },
                 "B5": {
-                    "depth": 84,
-                    "diameter": 17,
+                    "depth": 100,
+                    "diameter": 12.7,
                     "shape": "circular",
                     "totalLiquidVolume": 5000,
                     "x": 113.88,
                     "y": 42.74,
-                    "z": 7
+                    "z": 11.13
                 },
                 "C1": {
-                    "depth": 84,
-                    "diameter": 17,
+                    "depth": 100,
+                    "diameter": 12.7,
                     "shape": "circular",
                     "totalLiquidVolume": 5000,
                     "x": 13.88,
                     "y": 17.74,
-                    "z": 7
+                    "z": 11.13
                 },
                 "C2": {
-                    "depth": 84,
-                    "diameter": 17,
+                    "depth": 100,
+                    "diameter": 12.7,
                     "shape": "circular",
                     "totalLiquidVolume": 5000,
                     "x": 38.88,
                     "y": 17.74,
-                    "z": 7
+                    "z": 11.13
                 },
                 "C3": {
-                    "depth": 84,
-                    "diameter": 17,
+                    "depth": 100,
+                    "diameter": 12.7,
                     "shape": "circular",
                     "totalLiquidVolume": 5000,
                     "x": 63.88,
                     "y": 17.74,
-                    "z": 7
+                    "z": 11.13
                 },
                 "C4": {
-                    "depth": 84,
-                    "diameter": 17,
+                    "depth": 100,
+                    "diameter": 12.7,
                     "shape": "circular",
                     "totalLiquidVolume": 5000,
                     "x": 88.88,
                     "y": 17.74,
-                    "z": 7
+                    "z": 11.13
                 },
                 "C5": {
-                    "depth": 84,
-                    "diameter": 17,
+                    "depth": 100,
+                    "diameter": 12.7,
                     "shape": "circular",
                     "totalLiquidVolume": 5000,
                     "x": 113.88,
                     "y": 17.74,
-                    "z": 7
-                }
-            }
-        },
-        {
-            "brand": {
-                "brand": "reagent",
-                "brandId": []
-            },
-            "cornerOffsetFromSlot": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-            },
-            "dimensions": {
-                "xDimension": 127.75,
-                "yDimension": 85.5,
-                "zDimension": 81
-            },
-            "groups": [
-                {
-                    "metadata": {
-                        "displayCategory": "tubeRack",
-                        "wellBottomShape": "u"
-                    },
-                    "wells": [
-                        "A1",
-                        "B1",
-                        "C1",
-                        "D1",
-                        "A2",
-                        "B2",
-                        "C2",
-                        "D2",
-                        "A3",
-                        "B3",
-                        "C3",
-                        "D3",
-                        "A4",
-                        "B4",
-                        "C4",
-                        "D4",
-                        "A5",
-                        "B5",
-                        "C5",
-                        "D5",
-                        "A6",
-                        "B6",
-                        "C6",
-                        "D6"
-                    ]
-                }
-            ],
-            "metadata": {
-                "displayCategory": "tubeRack",
-                "displayName": "Reagent 24 Tube Rack 1500 \u00b5L",
-                "displayVolumeUnits": "\u00b5L",
-                "tags": []
-            },
-            "namespace": "custom_beta",
-            "ordering": [
-                [
-                    "A1",
-                    "B1",
-                    "C1",
-                    "D1"
-                ],
-                [
-                    "A2",
-                    "B2",
-                    "C2",
-                    "D2"
-                ],
-                [
-                    "A3",
-                    "B3",
-                    "C3",
-                    "D3"
-                ],
-                [
-                    "A4",
-                    "B4",
-                    "C4",
-                    "D4"
-                ],
-                [
-                    "A5",
-                    "B5",
-                    "C5",
-                    "D5"
-                ],
-                [
-                    "A6",
-                    "B6",
-                    "C6",
-                    "D6"
-                ]
-            ],
-            "parameters": {
-                "format": "irregular",
-                "isMagneticModuleCompatible": false,
-                "isTiprack": false,
-                "loadName": "reagent_24_tuberack_1500ul",
-                "quirks": []
-            },
-            "schemaVersion": 2,
-            "version": 1,
-            "wells": {
-                "A1": {
-                    "depth": 40,
-                    "diameter": 9,
-                    "shape": "circular",
-                    "totalLiquidVolume": 1500,
-                    "x": 18.21,
-                    "y": 75.43,
-                    "z": 41
-                },
-                "A2": {
-                    "depth": 40,
-                    "diameter": 9,
-                    "shape": "circular",
-                    "totalLiquidVolume": 1500,
-                    "x": 38.1,
-                    "y": 75.43,
-                    "z": 41
-                },
-                "A3": {
-                    "depth": 40,
-                    "diameter": 9,
-                    "shape": "circular",
-                    "totalLiquidVolume": 1500,
-                    "x": 57.99,
-                    "y": 75.43,
-                    "z": 41
-                },
-                "A4": {
-                    "depth": 40,
-                    "diameter": 9,
-                    "shape": "circular",
-                    "totalLiquidVolume": 1500,
-                    "x": 77.88,
-                    "y": 75.43,
-                    "z": 41
-                },
-                "A5": {
-                    "depth": 40,
-                    "diameter": 9,
-                    "shape": "circular",
-                    "totalLiquidVolume": 1500,
-                    "x": 97.77,
-                    "y": 75.43,
-                    "z": 41
-                },
-                "A6": {
-                    "depth": 40,
-                    "diameter": 9,
-                    "shape": "circular",
-                    "totalLiquidVolume": 1500,
-                    "x": 117.66,
-                    "y": 75.43,
-                    "z": 41
-                },
-                "B1": {
-                    "depth": 40,
-                    "diameter": 9,
-                    "shape": "circular",
-                    "totalLiquidVolume": 1500,
-                    "x": 18.21,
-                    "y": 56.15,
-                    "z": 41
-                },
-                "B2": {
-                    "depth": 40,
-                    "diameter": 9,
-                    "shape": "circular",
-                    "totalLiquidVolume": 1500,
-                    "x": 38.1,
-                    "y": 56.15,
-                    "z": 41
-                },
-                "B3": {
-                    "depth": 40,
-                    "diameter": 9,
-                    "shape": "circular",
-                    "totalLiquidVolume": 1500,
-                    "x": 57.99,
-                    "y": 56.15,
-                    "z": 41
-                },
-                "B4": {
-                    "depth": 40,
-                    "diameter": 9,
-                    "shape": "circular",
-                    "totalLiquidVolume": 1500,
-                    "x": 77.88,
-                    "y": 56.15,
-                    "z": 41
-                },
-                "B5": {
-                    "depth": 40,
-                    "diameter": 9,
-                    "shape": "circular",
-                    "totalLiquidVolume": 1500,
-                    "x": 97.77,
-                    "y": 56.15,
-                    "z": 41
-                },
-                "B6": {
-                    "depth": 40,
-                    "diameter": 9,
-                    "shape": "circular",
-                    "totalLiquidVolume": 1500,
-                    "x": 117.66,
-                    "y": 56.15,
-                    "z": 41
-                },
-                "C1": {
-                    "depth": 40,
-                    "diameter": 9,
-                    "shape": "circular",
-                    "totalLiquidVolume": 1500,
-                    "x": 18.21,
-                    "y": 36.87,
-                    "z": 41
-                },
-                "C2": {
-                    "depth": 40,
-                    "diameter": 9,
-                    "shape": "circular",
-                    "totalLiquidVolume": 1500,
-                    "x": 38.1,
-                    "y": 36.87,
-                    "z": 41
-                },
-                "C3": {
-                    "depth": 40,
-                    "diameter": 9,
-                    "shape": "circular",
-                    "totalLiquidVolume": 1500,
-                    "x": 57.99,
-                    "y": 36.87,
-                    "z": 41
-                },
-                "C4": {
-                    "depth": 40,
-                    "diameter": 9,
-                    "shape": "circular",
-                    "totalLiquidVolume": 1500,
-                    "x": 77.88,
-                    "y": 36.87,
-                    "z": 41
-                },
-                "C5": {
-                    "depth": 40,
-                    "diameter": 9,
-                    "shape": "circular",
-                    "totalLiquidVolume": 1500,
-                    "x": 97.77,
-                    "y": 36.87,
-                    "z": 41
-                },
-                "C6": {
-                    "depth": 40,
-                    "diameter": 9,
-                    "shape": "circular",
-                    "totalLiquidVolume": 1500,
-                    "x": 117.66,
-                    "y": 36.87,
-                    "z": 41
-                },
-                "D1": {
-                    "depth": 40,
-                    "diameter": 9,
-                    "shape": "circular",
-                    "totalLiquidVolume": 1500,
-                    "x": 18.21,
-                    "y": 17.59,
-                    "z": 41
-                },
-                "D2": {
-                    "depth": 40,
-                    "diameter": 9,
-                    "shape": "circular",
-                    "totalLiquidVolume": 1500,
-                    "x": 38.1,
-                    "y": 17.59,
-                    "z": 41
-                },
-                "D3": {
-                    "depth": 40,
-                    "diameter": 9,
-                    "shape": "circular",
-                    "totalLiquidVolume": 1500,
-                    "x": 57.99,
-                    "y": 17.59,
-                    "z": 41
-                },
-                "D4": {
-                    "depth": 40,
-                    "diameter": 9,
-                    "shape": "circular",
-                    "totalLiquidVolume": 1500,
-                    "x": 77.88,
-                    "y": 17.59,
-                    "z": 41
-                },
-                "D5": {
-                    "depth": 40,
-                    "diameter": 9,
-                    "shape": "circular",
-                    "totalLiquidVolume": 1500,
-                    "x": 97.77,
-                    "y": 17.59,
-                    "z": 41
-                },
-                "D6": {
-                    "depth": 40,
-                    "diameter": 9,
-                    "shape": "circular",
-                    "totalLiquidVolume": 1500,
-                    "x": 117.66,
-                    "y": 17.59,
-                    "z": 41
+                    "z": 11.13
                 }
             }
         }
@@ -671,37 +231,10 @@
             "type": "int"
         },
         {
-            "default": 2,
+            "default": 1,
             "label": "P1000 sample tube aspiration height",
             "name": "p1000_sample_height",
             "type": "int"
-        },
-        {
-            "default": 91,
-            "label": "Mag Bead Mix Speed",
-            "name": "mag_bead_mix_speed",
-            "type": "int"
-        },
-        {
-            "default": 133,
-            "label": "P1000 aspiration/dispense speed for mag bead transfer",
-            "name": "p1000_mag_flow_rate",
-            "type": "int"
-        },
-        {
-            "label": "P300 Multi GEN2 Mount",
-            "name": "p300_mount",
-            "options": [
-                {
-                    "label": "left",
-                    "value": "left"
-                },
-                {
-                    "label": "right",
-                    "value": "right"
-                }
-            ],
-            "type": "dropDown"
         },
         {
             "label": "P1000 Single GEN2 Mount",
@@ -721,80 +254,64 @@
     ],
     "instruments": [
         {
-            "mount": "left",
-            "name": "p300_multi_gen2"
-        },
-        {
             "mount": "right",
             "name": "p1000_single_gen2"
         }
     ],
     "labware": [
         {
-            "name": "Sample 15 Tube Rack 5000 \u00b5L on 1",
+            "name": "opentrons 15mL tube rack on 1",
             "share": false,
             "slot": "1",
-            "type": "sample_15_tuberack_5000ul"
+            "type": "opentrons_15_tuberack_5000ul"
         },
         {
-            "name": "Sample 15 Tube Rack 5000 \u00b5L on 2",
+            "name": "opentrons 15mL tube rack on 2",
             "share": false,
             "slot": "2",
-            "type": "sample_15_tuberack_5000ul"
+            "type": "opentrons_15_tuberack_5000ul"
         },
         {
-            "name": "Sample 15 Tube Rack 5000 \u00b5L on 3",
+            "name": "opentrons 15mL tube rack on 3",
             "share": false,
             "slot": "3",
-            "type": "sample_15_tuberack_5000ul"
+            "type": "opentrons_15_tuberack_5000ul"
         },
         {
-            "name": "Ethanol plate on 4",
+            "name": "opentrons 15mL tube rack on 4",
             "share": false,
             "slot": "4",
-            "type": "nest_96_wellplate_2ml_deep"
+            "type": "opentrons_15_tuberack_5000ul"
         },
         {
-            "name": "Buffer plate on 5",
+            "name": "opentrons 15mL tube rack on 5",
             "share": false,
             "slot": "5",
-            "type": "nest_96_wellplate_2ml_deep"
+            "type": "opentrons_15_tuberack_5000ul"
         },
         {
-            "name": "Elution plate on 6",
+            "name": "opentrons 15mL tube rack on 6",
             "share": false,
             "slot": "6",
-            "type": "nest_96_wellplate_2ml_deep"
+            "type": "opentrons_15_tuberack_5000ul"
         },
         {
-            "name": "Sample plate on 7",
+            "name": "opentrons 15mL tube rack on 7",
             "share": false,
             "slot": "7",
+            "type": "opentrons_15_tuberack_5000ul"
+        },
+        {
+            "name": "Sample plate on 8",
+            "share": false,
+            "slot": "8",
             "type": "nest_96_wellplate_2ml_deep"
         },
         {
-            "name": "NEST 12 Well Reservoir 15 mL on 8",
-            "share": false,
-            "slot": "8",
-            "type": "nest_12_reservoir_15ml"
-        },
-        {
-            "name": "Ethanol reservoir on 9",
+            "name": "Opentrons 96 Tip Rack 1000 \u00b5L on 9",
             "share": false,
             "slot": "9",
-            "type": "nest_1_reservoir_195ml"
-        },
-        {
-            "name": "Opentrons 96 Tip Rack 1000 \u00b5L on 10",
-            "share": false,
-            "slot": "10",
             "type": "opentrons_96_tiprack_1000ul"
-        },
-        {
-            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 11",
-            "share": false,
-            "slot": "11",
-            "type": "opentrons_96_tiprack_300ul"
         },
         {
             "name": "Opentrons Fixed Trash on 12",
