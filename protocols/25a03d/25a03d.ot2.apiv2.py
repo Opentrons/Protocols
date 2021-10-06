@@ -41,7 +41,7 @@ def run(ctx):
     # distribute mastermix
     mastermix = mastermix_rack.wells()[0]
     p300.pick_up_tip()
-    for i, well in enumerate(final_wells_single_chan[:num_samp+8]):
+    for i, well in enumerate(final_wells_single_chan[:num_samp]):
         p300.aspirate(48, mastermix, rate=0.75)
         ctx.delay(4)
         p300.dispense(24, mastermix, rate=0.75)
@@ -53,7 +53,17 @@ def run(ctx):
         if i % 7 == 0 and i > 0:
             p300.drop_tip()
             p300.pick_up_tip()
-            ctx.comment('\n')
+    ctx.comment('\n')
+
+    # distribute mastermix to control
+    p300.aspirate(48, mastermix, rate=0.75)
+    ctx.delay(4)
+    p300.dispense(24, mastermix, rate=0.75)
+    p300.aspirate(24, mastermix, rate=0.75)
+    ctx.delay(4)
+    p300.dispense(48, final_wells[3], rate=0.75)
+    ctx.delay(1)
+    p300.blow_out()
     ctx.comment('\n\n\n')
 
     # distribute sample to mastermix
