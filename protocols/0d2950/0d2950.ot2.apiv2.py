@@ -1,11 +1,4 @@
 """Protocol."""
-import math
-from opentrons import protocol_api
-
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"num_samp":95,"p1000_sample_height":2,"mag_bead_mix_speed":91,"p1000_mag_flow_rate":133,"p300_mount":"left","p1000_mount":"right"}""")
-    return [_all_values[n] for n in names]
 
 metadata = {
     'protocolName': 'Extraction Prep for TaqPath Covid-19 Combo Kit',
