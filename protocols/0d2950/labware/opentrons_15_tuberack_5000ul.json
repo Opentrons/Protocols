@@ -27,8 +27,8 @@
         ]
     ],
     "brand": {
-        "brand": ["opentrons"],
-        "brandId": [1234]
+        "brand": ["custom"],
+        "brandId": []
     },
     "metadata": {
         "displayName": "opentrons 15mL tube rack",
