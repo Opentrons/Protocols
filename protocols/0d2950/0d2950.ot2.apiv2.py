@@ -10,11 +10,8 @@ metadata = {
 
 def run(ctx):
     """Protocol."""
-    [num_samp, p1000_sample_height, mag_bead_mix_speed,
-     p1000_mag_flow_rate, p300_mount, p1000_mount] = get_values(  # noqa: F821
-        "num_samp", "p1000_sample_height", "mag_bead_mix_speed",
-        "p1000_mag_flow_rate",
-        "p300_mount", "p1000_mount")
+    [num_samp, p1000_sample_height, p1000_mount] = get_values(  # noqa: F821
+        "num_samp", "p1000_sample_height", "p1000_mount")
 
     if not 1 <= num_samp <= 95:
         raise Exception("Enter a sample number between 1-95")
