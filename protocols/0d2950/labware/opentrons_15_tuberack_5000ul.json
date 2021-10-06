@@ -27,7 +27,7 @@
         ]
     ],
     "brand": {
-        "brand": ["custom"],
+        "brand": "custom",
         "brandId": []
     },
     "metadata": {
