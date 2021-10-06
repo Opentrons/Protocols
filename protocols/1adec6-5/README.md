@@ -1,4 +1,4 @@
-# Custom Supernatant Removal [5/7]
+# Custom Supernatant Removal and PrestoBlue test [5/7]
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -53,7 +53,7 @@ Explanation of complex parameters below:
 </br>
 **Slot 6**: [[NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)</br>
 </br>
-**Slot 10**: [Opentrons 300µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)</br>
+**Slot 7**: [Opentrons 300µL Tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)</br>
 </br>
 
 
