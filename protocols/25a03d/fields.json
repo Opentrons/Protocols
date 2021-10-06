@@ -12,10 +12,10 @@
   {
     "type": "dropDown",
     "label": "Final Plate Labware Type",
-    "name": "final_plate_slot3",
+    "name": "final_plate_slot4",
     "options": [
-      {"label": "MicroAmp 96-well plate with support base", "value": "biorad_96_wellplate_200ul_pcr"},
-      {"label": "Tube-strips with support base", "value": "biorad_96_wellplate_200ul_pcr"}
+      {"label": "microampplate_96_supportbase_100ul", "value": "microampplate_96_supportbase_100ul"},
+      {"label": "microampstrips_96_supportbase_100ul", "value": "microampstrips_96_supportbase_100ul"}
     ]
   },
   {
@@ -23,8 +23,8 @@
     "label": "Control Plate Labware Type",
     "name": "control_plate",
     "options": [
-      {"label": "Tube strips with support base", "value": "biorad_96_wellplate_200ul_pcr"},
-      {"label": "Tube-strips with 96-well aluminum block", "value": "biorad_96_wellplate_200ul_pcr"}
+      {"label": "usastrips_96_supportbase_200ul", "value": "usastrips_96_supportbase_200ul"},
+      {"label": "usastrips_96_aluminumblock_200ul", "value": "usastrips_96_aluminumblock_200ul"}
     ]
   },
   {
