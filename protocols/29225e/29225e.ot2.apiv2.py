@@ -151,7 +151,7 @@ def run(ctx):
                         pip.dispense(float(d[0]), d[1].bottom(clearance_dest))
             pip.drop_tip()
 
-    # 4 degree temperature module with destination plate
+    # 4 degree temp module with dest plate
     temp = ctx.load_module('temperature module gen2', '1')
     dest_plate = temp.load_labware(
      labware_dest, "Destination Plate at 4 Degrees")
