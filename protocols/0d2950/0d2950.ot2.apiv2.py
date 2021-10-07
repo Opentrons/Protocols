@@ -42,6 +42,7 @@ def run(ctx):
                                            sample_map[:num_samp-1])):
         p1000.pick_up_tip()
         p1000.aspirate(200, sample_tube_map[i].bottom(z=p1000_sample_height))
+        p1000.touch_tip()
         p1000.dispense(200, well)
         p1000.blow_out()
         p1000.drop_tip()
