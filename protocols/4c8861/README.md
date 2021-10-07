@@ -20,9 +20,10 @@ Since the samples are temperature sensitive, the source plates are only loaded o
 Explanation of complex parameters below:
 * `CSV Sample`: Upload the csv sample with the following header line:
 ```
-Plate number (1, 2, or 3), Well, Concentration, Units, Dilution Volume, Sample Volume
+Plate number |	Well |	Concentration (ng/ul) |	Diluent Volume (ul) |	Sample volume (ul) |	Total volume (ul) |	Desired concentration(ng/ul)
 ```
-* `Tip Start for 200ul Pipette`: Specify where to start the tip pickup for the 200ul tip rack. The value iterates down by column. A value of 1 is A1, a value of 2 is B1, 3-C1, 4-D1, 9-A2,..., etc.
+* `Reset Tipracks`: Select `yes` to pick up the tip from A1 on the 200ul tip rack. Select `no` to pick up tip on the tip rack from where the previous run left off.
+* `Include pauess`: Select `yes` to include pause steps after buffer is added and in between source plates that are completed. Select `no` otherwise. 
 * `P20 Multi-Channel Mount`: Specify which mount (left or right) to host the P20 multi-channel pipette.
 * `P300 Single-Channel Mount`: Specify which mount (left or right) to host the P300 single-channel pipette.
 
@@ -42,7 +43,7 @@ Plate number (1, 2, or 3), Well, Concentration, Units, Dilution Volume, Sample V
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/4c8861/Screen+Shot+2021-09-29+at+3.06.43+PM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/4c8861/Screen+Shot+2021-10-07+at+3.20.33+PM.png)
 
 
 ---
