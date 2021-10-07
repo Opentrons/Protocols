@@ -42,7 +42,7 @@ def run(ctx):
      ctx.load_labware(labware_rna, slot, "Input RNA Samples") for slot in [
       2, 3, 5, 6][:len(set([tfer['source rack or plate'] for tfer in tfers]))]]
 
-    # water tubes with tracking of volume and liquid height
+    # water tubes with volume and liquid height tracking
     rack = ctx.load_labware(
      'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap',
      '4', 'Reagent Rack')
@@ -151,7 +151,7 @@ def run(ctx):
                         pip.dispense(float(d[0]), d[1].bottom(clearance_dest))
             pip.drop_tip()
 
-    # 4 degree temperature module with destination plate
+    # 4 degree temp module with dest plate
     temp = ctx.load_module('temperature module gen2', '1')
     dest_plate = temp.load_labware(
      labware_dest, "Destination Plate at 4 Degrees")
