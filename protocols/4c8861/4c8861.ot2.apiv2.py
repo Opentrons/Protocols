@@ -61,7 +61,6 @@ def run(ctx):
             csv_reader = csv.reader(csv_file, delimiter=',')
             tip_count_list = next(csv_reader)
 
-    tip_count_list = [95, 0]
     num_one = int(tip_count_list[0])
     p300.starting_tip = tiprack200[0].wells()[num_one]
 
