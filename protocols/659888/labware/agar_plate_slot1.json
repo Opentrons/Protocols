@@ -122,13 +122,13 @@
         ]
     ],
     "brand": {
-        "brand": "N/A",
+        "brand": "asdf",
         "brandId": [
-            "N/A"
+            "asdf"
         ]
     },
     "metadata": {
-        "displayName": "N/A 96 Well Plate 2.5 µL",
+        "displayName": "Plate 1 96 Well Plate 2.5 µL",
         "displayCategory": "wellPlate",
         "displayVolumeUnits": "µL",
         "tags": []
