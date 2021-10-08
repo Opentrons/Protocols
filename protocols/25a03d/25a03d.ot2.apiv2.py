@@ -83,7 +83,7 @@ def run(ctx):
         m20.touch_tip()
         m20.air_gap(airgap)
         m20.dispense(airgap, d_col.top())
-        m20.dispense(12+airgap, d_col.bottom(z=2))
+        m20.dispense(12, d_col.bottom(z=2))
         m20.blow_out(d_col.bottom(z=8))
         m20.touch_tip()
         m20.drop_tip()
