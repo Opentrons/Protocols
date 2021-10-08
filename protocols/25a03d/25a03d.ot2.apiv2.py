@@ -5,6 +5,11 @@ metadata = {
     'apiLevel': '2.11'
 }
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"num_samp":"16","final_plate_slot4":"microampstrips_96_supportbase_100ul","control_plate":"usastrips_96_supportbase_200ul","p20_mount":"right","p300_mount":"left"}""")
+    return [_all_values[n] for n in names]
+
 
 def run(ctx):
 
@@ -51,13 +56,16 @@ def run(ctx):
         p300.dispense(24, mastermix, rate=0.75)
         p300.aspirate(24, mastermix, rate=0.75)
         ctx.delay(4)
-        p300.dispense(48, well.bottom(z=2), rate=0.75)
+        p300.dispense(48, well.bottom(z=2), rate=0.6)
+        p300.move_to(well.bottom(z=8))
         ctx.delay(1)
         p300.blow_out()
-
+        p300.touch_tip()
+    p300.drop_tip()
     ctx.comment('\n\n\n')
 
     # distribute mastermix to control
+    p300.pick_up_tip()
     ctx.comment('Distributing mastermix to control')
     for well in final_wells_single_chan[24:]:
         p300.aspirate(48, mastermix, rate=0.75)
@@ -65,9 +73,12 @@ def run(ctx):
         p300.dispense(24, mastermix, rate=0.75)
         p300.aspirate(24, mastermix, rate=0.75)
         ctx.delay(4)
-        p300.dispense(48, well.bottom(z=2), rate=0.75)
+        p300.dispense(48, well.bottom(z=2), rate=0.6)
+        p300.move_to(well.bottom(z=8))
         ctx.delay(1)
         p300.blow_out()
+        p300.touch_tip()
+    p300.drop_tip()
     ctx.comment('\n\n\n')
 
     # distribute sample to mastermix
@@ -78,9 +89,10 @@ def run(ctx):
         m20.aspirate(12, s_col)
         m20.touch_tip()
         m20.air_gap(airgap)
+        m20.dispense(airgap, d_col.top())
         m20.dispense(12+airgap, d_col.bottom(z=2))
+        m20.blow_out(d_col.bottom(z=8))
         m20.touch_tip()
-        m20.blow_out()
         m20.drop_tip()
     ctx.comment('\n\n\n')
 
@@ -91,9 +103,10 @@ def run(ctx):
     m20.aspirate(12, control)
     m20.touch_tip()
     m20.air_gap(airgap)
+    m20.dispense(airgap, final_wells[3].top())
     m20.dispense(12, final_wells[3].bottom(z=2))
+    m20.blow_out(final_wells[3].bottom(z=8))
     m20.touch_tip()
-    m20.blow_out()
     m20.drop_tip()
     ctx.comment('\n\n\n')
 
@@ -117,7 +130,7 @@ def run(ctx):
     m20.aspirate(20, final_wells[3].bottom(z=2))
     m20.dispense(20, final_plate.rows()[0][10].bottom(z=2))
     m20.blow_out()
-    m20.aspirate(20, column.bottom(z=2))
+    m20.aspirate(20, final_wells[3].bottom(z=2))
     m20.dispense(20, final_plate.rows()[0][11].bottom(z=2))
     m20.blow_out()
     m20.drop_tip()
