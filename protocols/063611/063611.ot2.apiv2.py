@@ -152,7 +152,10 @@ def run(ctx):
                 pick_up()
             p300m.aspirate(
              fill_volume, reservoir['A1'].bottom(clearance_reservoir))
-            p300m.dispense(fill_volume, column[0].top(-2))
+            p300m.air_gap(25)
+            p300m.dispense(fill_volume+25, column[0].top(-2))
+            p300m.blow_out()
+            p300m.touch_tip(radius=0.75, v_offset=-2, speed=20)
             if change_tips:
                 p300m.drop_tip()
         if p300m.has_tip:
