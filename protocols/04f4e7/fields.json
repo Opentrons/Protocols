@@ -37,7 +37,7 @@
    "default": 1
  },
  {
-   "type": "int",
+   "type": "float",
    "label": "Incubation Time After Engaging Magnet",
    "name": "incubation_time",
    "default": 0.5
