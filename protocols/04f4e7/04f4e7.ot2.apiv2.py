@@ -53,9 +53,6 @@ def run(ctx):
     used_beads = res12.wells()[4]
     waste = waste_res.wells()[0]
     pbs = res.wells()[0]
-    m300.starting_tip = tipracks[0].rows()[0][4]
-    print(tipracks[0].rows()[0][4])
-    parked_tips = tipracks[0].rows()[0][1]
 
     tiprack_on_slot = {
                         '7': tipracks[0],
