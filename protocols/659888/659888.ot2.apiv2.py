@@ -5,10 +5,6 @@ metadata = {
     'apiLevel': '2.11'
 }
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"vol":6, "num_plates":8,"num_col":12,"num_row":8,"p20_mount":"left"}""")
-    return [_all_values[n] for n in names]
 
 def run(ctx):
 
