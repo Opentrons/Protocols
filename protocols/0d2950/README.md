@@ -11,7 +11,7 @@
 	* Plate Filling
 
 ## Description
-This protocol preps a sample plate with up to 95 samples (with one control). Samples should be placed by column (A1, B1, C1, A2, etc.) from slot 1 up to the number of samples specified.
+This protocol preps a sample plate with up to 95 samples (with one control). Samples in the tube rack should be placed to mirror the 96 well plate: column 1 (from the bottom up) of slots 1, 4, 7, and 10, then column two (from the bottom up of the same slots), up to column 5 of the aforementioned tube racks. Then column 1 of slots 2, 5, 8, 11 up to column 3 the tube racks in the aforementioned slots.
 
 Explanation of complex parameters below:
 * `Number of samples`: Specify the number of samples that will be processed. Up to 95 samples can be run, leaving room for a control.
@@ -32,8 +32,8 @@ Explanation of complex parameters below:
 ---
 
 ### Deck Setup
-
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0d2950/Screen+Shot+2021-10-06+at+11.55.30+AM.png)
+Example deck layout with 70 samples.
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0d2950/Screen+Shot+2021-10-11+at+11.12.37+AM.png)
 
 
 
