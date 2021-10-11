@@ -147,7 +147,10 @@ def run(ctx):
         for col in magplate.rows()[0][:num_col]:
             m300.aspirate(180, pbs)
             m300.dispense(180, col.top())
-        m300.return_tip()
+        if wash == 0:
+            m300.return_tip()
+        else:
+            m300.drop_tip()
 
         for col in magplate.rows()[0][:num_col]:
             use_tiprack_on_slot('10')
