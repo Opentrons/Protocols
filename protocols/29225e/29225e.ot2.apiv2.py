@@ -1,4 +1,5 @@
-from opentrons.protocol_api.labware import Well
+from types import MethodType
+from opentrons.protocol_api.labware import Well, OutOfTipsError
 import csv
 import math
 
@@ -11,10 +12,10 @@ metadata = {
 
 def run(ctx):
 
-    [clearance_rna, clearance_dest, labware_rna, labware_dest, vol_h2o,
-     uploaded_csv] = get_values(  # noqa: F821
-        "clearance_rna", "clearance_dest", "labware_rna", "labware_dest",
-        "vol_h2o", "uploaded_csv")
+    [mix_rate, clearance_rna, clearance_dest, labware_rna, labware_dest,
+     vol_h2o, uploaded_csv] = get_values(  # noqa: F821
+        "mix_rate", "clearance_rna", "clearance_dest", "labware_rna",
+        "labware_dest", "vol_h2o", "uploaded_csv")
 
     ctx.set_rail_lights(True)
     ctx.delay(seconds=10)
@@ -22,6 +23,18 @@ def run(ctx):
     if not 500 <= vol_h2o <= 1500:
         raise Exception(
          'Starting volume of water must be between 500 and 1500 uL per tube.')
+
+    if not 1 <= mix_rate <= 3:
+        raise Exception(
+         'p20 flow rate for mix must be 1 and 3 times the default rate.')
+
+    if not clearance_rna >= 1:
+        raise Exception(
+         'Well bottom clearance must be 1 mm or greater.')
+
+    if not clearance_dest >= 1:
+        raise Exception(
+         'Well bottom clearance must be 1 mm or greater.')
 
     tfers = [line for line in csv.DictReader(uploaded_csv.splitlines())]
 
@@ -151,6 +164,28 @@ def run(ctx):
                         pip.dispense(float(d[0]), d[1].bottom(clearance_dest))
             pip.drop_tip()
 
+    def pick_up_or_refill(self):
+        try:
+            self.pick_up_tip()
+        except OutOfTipsError:
+            pause_attention(
+             """Please Refill the {} Tip Boxes
+                and Empty the Tip Waste.""".format(self))
+            self.reset_tipracks()
+            self.pick_up_tip()
+
+    def pause_attention(message):
+        ctx.set_rail_lights(False)
+        ctx.delay(seconds=10)
+        ctx.pause(message)
+        ctx.set_rail_lights(True)
+
+    for pipette_object in [p20s, p300s]:
+        for method in [pick_up_or_refill]:
+            setattr(
+             pipette_object, method.__name__,
+             MethodType(method, pipette_object))
+
     # 4 degree temp module with dest plate
     temp = ctx.load_module('temperature module gen2', '1')
     dest_plate = temp.load_labware(
@@ -162,9 +197,9 @@ def run(ctx):
     big_tfers = []
     for tfer in tfers:
         vol = float(tfer['water vol'])
-        if vol <= 10:
+        if 0 < vol <= 10:
             small_tfers.append(tfer)
-        else:
+        elif vol > 10:
             big_tfers.append(tfer)
 
     distribute_water(p20s, small_tfers, 2)
@@ -178,9 +213,20 @@ def run(ctx):
             pip = p20s
         else:
             pip = p300s
-        pip.transfer(
+        pip.pick_up_or_refill()
+        pip.aspirate(
          vol, rna[int(tfer['source rack or plate'])-1].wells_by_name(
-         )[tfer['source well']].bottom(clearance_rna),
-         dest_plate.wells_by_name(
-          )[tfer['dest well']].bottom(clearance_dest),
-         mix_after=(6, 20), new_tip='always')
+         )[tfer['source well']].bottom(clearance_rna))
+        pip.dispense(vol, dest_plate.wells_by_name()[
+         tfer['dest well']].bottom(clearance_dest))
+        rt = mix_rate if pip == p20s else 1
+        pip.mix(6, 20, rate=rt)
+        pip.drop_tip()
+
+    for tfer in tfers:
+        vol = float(tfer['water vol']) + float(tfer['source vol'])
+        if vol > 50:
+            p300s.pick_up_or_refill()
+            p300s.mix(4, 0.8*vol, dest_plate.wells_by_name()[
+             tfer['dest well']].bottom(2))
+            p300s.drop_tip()
