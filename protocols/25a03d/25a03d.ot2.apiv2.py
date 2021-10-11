@@ -139,12 +139,6 @@ def run(ctx):
     m20.blow_out(final_plate.rows()[0][10].bottom(z=8))
     m20.touch_tip()
 
-    for _ in range(10):
-        m20.aspirate(18, final_wells[3].bottom(z=2))
-        m20.dispense(18, final_wells[3].bottom(z=8), rate=1.5)
-    ctx.delay(3)
-    m20.blow_out(final_wells[3].bottom(z=8))
-
     m20.aspirate(20, final_wells[3].bottom(z=2))
     m20.touch_tip()
     m20.dispense(20, final_plate.rows()[0][11].bottom(z=2))
