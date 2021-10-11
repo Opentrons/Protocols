@@ -5,7 +5,7 @@ metadata = {
     'protocolName': 'Cell Culture Nucleic Acid Purification',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.10'
+    'apiLevel': '2.11'
 }
 
 
@@ -84,7 +84,7 @@ def run(ctx):
         use_tiprack_on_slot('8')
         for col in samples.rows()[0][:num_col]:
             m300.pick_up_tip()
-            m300.mix(5, 200, col)
+            m300.mix(5, 300, col.bottom(z=5), rate=1.6)
             m300.return_tip()
         ctx.delay(minutes=4 if i < 4 else 10)
         ctx.comment('\n\n\n')
@@ -109,8 +109,8 @@ def run(ctx):
     for col, dest in zip(samples.rows()[0][:num_col],
                          magplate.rows()[0]):
         m300.pick_up_tip()
-        m300.mix(5, 200, beads)
-        m300.aspirate(300, beads)
+        m300.mix(5, 200, col)
+        m300.aspirate(300, col)
         m300.dispense(300, dest)
         m300.blow_out()
         m300.return_tip()
@@ -131,20 +131,28 @@ def run(ctx):
     # add pbs and remove supernatant 2x
     ctx.comment('~~~~~~~~~TWO WASHES WITH PBS~~~~~~~~~~')
     for wash in range(2):
-        if wash == 0:
-            use_tiprack_on_slot('9')
-        else:
-            use_tiprack_on_slot('10')
+        use_tiprack_on_slot('9')
 
         # add pbs
         ctx.comment(f'~~~~~~~~~ADD PBS WASH {wash+1}~~~~~~~~~~')
+        m300.pick_up_tip(tipracks[2].wells_by_name()['A1'])
         for col in magplate.rows()[0][:num_col]:
-            m300.pick_up_tip()
             m300.aspirate(180, pbs)
-            m300.dispense(180, col)
+            m300.dispense(180, col.top())
+        if wash == 0:
+            m300.return_tip()
+        else:
+            m300.drop_tip()
+
+        for col in magplate.rows()[0][:num_col]:
+            use_tiprack_on_slot('10')
+            m300.pick_up_tip()
             m300.mix(2, 100, col)
             m300.blow_out()
-            m300.return_tip()
+            if wash == 0:
+                m300.return_tip()
+            else:
+                m300.drop_tip()
         mag_mod.engage()
         ctx.delay(minutes=incubation_time)
         ctx.comment('\n\n\n')
@@ -176,7 +184,7 @@ def run(ctx):
     # add nuetralization buffer
     ctx.comment('~~~~~~~~~ADD NUETRALIZATION BUFFER~~~~~~~~~~')
     use_tiprack_on_slot('7')
-    for col in magplate.rows()[0][:num_col]:
+    for col in elution_plate.rows()[0][:num_col]:
         m300.pick_up_tip()
         m300.aspirate(50, nuet_buffer)
         m300.dispense(50, col)

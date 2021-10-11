@@ -21,21 +21,27 @@ Source Plate, Source Well, Dest Plate, Dest Well, Buffer Volume (in ul), Buffer 
 2,B1,2,B1,1629,808
 ```
 
+</br>
+**Update**: This protocol has been updated per user request and now allows for the option to use 96-well plates and (if using 96-well plates), prefill the plates with a [P300 8-Channel Pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette).</br>
 Explanation of complex parameters below:
 * **P1000 (GEN2) Mount**: Specify whether the P1000 single channel pipette is on the left or right mount.
-* **Normalization CSV**: CSV containing transfer information for normalization (as outlined above)
+* **Normalization CSV**: CSV containing transfer information for normalization (as outlined above).
+* **Labware Type**: Select between Corning 24-Well Plate and Corning 96-Well Plate.
+* **Prefill Volume**: Specify the volume (in µL) to prefill the 96-Well plates.
 
 
 ---
 
 
 ### Labware
-[Corning 24-Well Plate, 3.4mL, Flat](https://labware.opentrons.com/corning_24_wellplate_3.4ml_flat?category=wellPlate)</br>
+[Corning 24-Well Plate, 3.4mL, Flat](https://labware.opentrons.com/corning_24_wellplate_3.4ml_flat?category=wellPlate) or [Corning 96-Well Plate, 360µL, Flat](https://labware.opentrons.com/corning_96_wellplate_360ul_flat?category=wellPlate)</br>
 [Agilent 1-Well Reservoir, 290mL](https://labware.opentrons.com/agilent_1_reservoir_290ml?category=reservoir)</br>
-[Opentrons 1000uL Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-1000ul-tips)
+[Opentrons 1000uL Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-1000ul-tips)</br>
+[Opentrons 300uL Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips), optional</br>
 
 ### Pipettes
 * [P1000 Single Channel Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/single-channel-electronic-pipette)
+* [P300 8-Channel Pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette), optional
 
 ---
 

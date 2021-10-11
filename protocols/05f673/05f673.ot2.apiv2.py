@@ -9,19 +9,29 @@ metadata = {
 
 
 def run(protocol: protocol_api.ProtocolContext):
-    [p1000mnt, transfer_csv] = get_values(  # noqa: F821
-        'p1000mnt', 'transfer_csv')
+    [p1000mnt, transfer_csv, labwareType, prefill] = get_values(  # noqa: F821
+        'p1000mnt', 'transfer_csv', 'labwareType', 'prefill')
 
     # load labware
     reservoir = protocol.load_labware('agilent_1_reservoir_290ml', '4')
     buffer = reservoir['A1']
 
-    source = [protocol.load_labware('corning_24_wellplate_3.4ml_flat', slot)
+    source = [protocol.load_labware(labwareType, slot)
               for slot in ['1', '2', '3', '5']]
-    outputs = [protocol.load_labware('corning_24_wellplate_3.4ml_flat', slot)
+    outputs = [protocol.load_labware(labwareType, slot)
                for slot in ['6', '8', '9', '11']]
 
     tipracks1000 = [protocol.load_labware('opentrons_96_tiprack_1000ul', '7')]
+    if prefill:
+        if labwareType == 'corning_96_wellplate_360ul_flat':
+            tipracks300 = [
+                protocol.load_labware('opentrons_96_tiprack_300ul', '10')]
+            mnt300 = 'left' if p1000mnt == 'right' else 'right'
+            m300 = protocol.load_instrument(
+                'p300_multi_gen2', mnt300, tip_racks=tipracks300)
+        else:
+            raise Exception('The prefill volume cannot be selected \
+            with 24-well plate option.')
 
     # load pipette
     p1000 = protocol.load_instrument(
@@ -40,6 +50,14 @@ def run(protocol: protocol_api.ProtocolContext):
     # process csv
     csv_data = [
         l.split(',') for l in transfer_csv.strip().splitlines() if l][1:]
+
+    # optional prefill (should be caught by exception above if not working)
+    if prefill:
+        tip_pick_up(m300)
+        dest96plate = [well for plate in outputs for well in plate.rows()[0]]
+        for well in dest96plate:
+            m300.transfer(prefill, buffer, well, new_tip='never')
+        m300.drop_tip()
 
     # transfer buffer
     protocol.set_rail_lights(True)

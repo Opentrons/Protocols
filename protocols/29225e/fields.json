@@ -1,5 +1,15 @@
 [
   {
+    "type": "dropDown",
+    "label": "Flow Rate for p20 Mixes (up to 3x default rate)",
+    "name": "mix_rate",
+    "options": [
+      { "label": "multiply the default flow rate by 3", "value": 3 },
+      { "label": "multiply the default flow rate by 2", "value": 2 },
+      { "label": "use the default flow rate (unchanged)", "value": 1 }
+    ]
+  },
+  {
     "type": "float",
     "label": "Well Bottom Clearance for RNA Aspiration (mm)",
     "name": "clearance_rna",

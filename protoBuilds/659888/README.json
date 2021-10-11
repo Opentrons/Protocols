@@ -12,7 +12,7 @@
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
         "categories": "* Sample Prep\n\t* Plate Filling\n\n",
-        "deck-setup": "![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/659888/Screen+Shot+2021-10-04+at+4.29.58+PM.png)\n\n---\n\n",
+        "deck-setup": "![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/659888/Screen+Shot+2021-10-11+at+4.52.16+PM.png)\n\n---\n\n",
         "description": "This protocol dispenses diluted phage by column in a source 360ul corning plate to all specified agar plates. The tips are to not touch the agar medium but instead dispense right above it, saving up to 5 times the number of tips per run. Column 1 of the source plate is dispensed into into column 1 of all agar plates in a multi-dispense fashion to additionally save time.\n\nExplanation of complex parameters below:\n* `Number of plates`: Specify the number of agar plates (1-5) to fill for this run.\n* `Number of columns in each plate`: Specify the number of columns (1-12) in each agar plate to fill.\n* `Number of rows in each plate`: Specify the number of rows (1-8) in each agar plate to fill.\n* `P20 Multi-Channel Pipette Mount`: Specify which mount (left or right) to host the P20 multi-channel pipette.\n\n---\n\n",
         "internal": "659888\n",
         "labware": "* [Corning 96 Well Plate 360 \u00b5L Flat](https://labware.opentrons.com/corning_96_wellplate_360ul_flat?category=wellPlate)\n* [Opentrons 20uL Filter Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-20ul-filter-tips)\n* Custom Agar Plates\n\n",

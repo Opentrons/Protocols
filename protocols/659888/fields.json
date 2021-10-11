@@ -6,6 +6,12 @@
     "default": 5
   },
   {
+    "type": "float",
+    "label": "Dispense Volume",
+    "name": "vol",
+    "default": 2.5
+  },
+  {
     "type": "int",
     "label": "Number of columns in each plate",
     "name": "num_col",
@@ -15,7 +21,7 @@
     "type": "int",
     "label": "Number of rows in each plate",
     "name": "num_row",
-    "default": 12
+    "default": 8
   },
   {
     "type": "dropDown",
