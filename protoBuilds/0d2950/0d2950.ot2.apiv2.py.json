@@ -1,5 +1,5 @@
 {
-    "content": "\"\"\"Protocol.\"\"\"\n\nmetadata = {\n    'protocolName': 'Extraction Prep for TaqPath Covid-19 Combo Kit',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.10'\n}\n\n\ndef run(ctx):\n    \"\"\"Protocol.\"\"\"\n    [num_samp, p1000_sample_height, p1000_mount] = get_values(  # noqa: F821\n        \"num_samp\", \"p1000_sample_height\", \"p1000_mount\")\n\n    if not 1 <= num_samp <= 95:\n        raise Exception(\"Enter a sample number between 1-95\")\n\n    num_samp = num_samp+1\n\n    # load labware\n    samples = [ctx.load_labware('opentrons_15_tuberack_5000ul', slot)\n               for slot in ['1', '2', '3', '4', '5', '6', '7']]\n    sample_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '8',\n                                    label='Sample plate')\n    tiprack1000 = [ctx.load_labware('opentrons_96_tiprack_1000ul', '9')]\n\n    # load instrument\n    p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,\n                                tip_racks=tiprack1000)\n\n    # PROTOCOL\n\n    # reagents\n    sample_tube_map = [tube for tuberack in samples\n                       for tube in tuberack.wells()][:num_samp-1]\n    sample_map = [well for row in sample_plate.columns()\n                  for well in row][:num_samp]\n\n    # add patient samples\n    for i, (sample, well) in enumerate(zip(sample_tube_map*3,\n                                           sample_map[:num_samp-1])):\n        p1000.pick_up_tip()\n        p1000.aspirate(200, sample_tube_map[i].bottom(z=p1000_sample_height))\n        p1000.touch_tip()\n        p1000.dispense(200, well)\n        p1000.blow_out()\n        p1000.drop_tip()\n",
+    "content": "\"\"\"Protocol.\"\"\"\nimport math\n\nmetadata = {\n    'protocolName': 'Extraction Prep for TaqPath Covid-19 Combo Kit',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx):\n    \"\"\"Protocol.\"\"\"\n    [num_samp, p1000_sample_height, p1000_mount] = get_values(  # noqa: F821\n        \"num_samp\", \"p1000_sample_height\", \"p1000_mount\")\n\n    if not 1 <= num_samp <= 95:\n        raise Exception(\"Enter a sample number between 1-95\")\n\n    num_samp = num_samp+1\n\n    # load labware\n    samples = [ctx.load_labware('opentrons_15_tuberack_5000ul', slot)\n               for slot in ['1', '4', '7', '10', '2', '5', '8', '11']]\n    sample_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '3',\n                                    label='Sample plate')\n    tiprack1000 = [ctx.load_labware('opentrons_96_tiprack_1000ul', '6')]\n\n    # load instrument\n    p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,\n                                tip_racks=tiprack1000)\n\n    # PROTOCOL\n\n    # reagents\n    sample_map_left = [tube for i, tuberack in enumerate(\n                        samples[:4]*len(samples[0].columns()))\n                       for col in\n                       tuberack.columns()[math.floor(i/4):math.floor(i/4)+1]\n                       for tube in col[::-1]]\n    sample_map_right = [tube for i, tuberack in enumerate(\n                        samples[4:]*len(samples[0].columns()))\n                        for col in\n                        tuberack.columns()[math.floor(i/4):math.floor(i/4)+1]\n                        for tube in col[::-1]]\n\n    plate_map = [well for row in sample_plate.rows()\n                 for well in row][:num_samp-1]\n\n    # add patient samples\n    samp_ctr = 0\n    for i, well in enumerate(plate_map):\n        sample_map = sample_map_left if i < 60 else sample_map_right\n        p1000.pick_up_tip()\n        p1000.aspirate(200, sample_map[samp_ctr].bottom(z=p1000_sample_height))\n        p1000.touch_tip()\n        p1000.dispense(200, well)\n        p1000.blow_out()\n        p1000.drop_tip()\n        samp_ctr += 1\n        if samp_ctr == 60:\n            samp_ctr = 0\n            ctx.comment('\\n')\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -272,10 +272,10 @@
             "type": "opentrons_15_tuberack_5000ul"
         },
         {
-            "name": "opentrons 15mL tube rack on 3",
+            "name": "Sample plate on 3",
             "share": false,
             "slot": "3",
-            "type": "opentrons_15_tuberack_5000ul"
+            "type": "nest_96_wellplate_2ml_deep"
         },
         {
             "name": "opentrons 15mL tube rack on 4",
@@ -290,10 +290,10 @@
             "type": "opentrons_15_tuberack_5000ul"
         },
         {
-            "name": "opentrons 15mL tube rack on 6",
+            "name": "Opentrons 96 Tip Rack 1000 \u00b5L on 6",
             "share": false,
             "slot": "6",
-            "type": "opentrons_15_tuberack_5000ul"
+            "type": "opentrons_96_tiprack_1000ul"
         },
         {
             "name": "opentrons 15mL tube rack on 7",
@@ -302,16 +302,22 @@
             "type": "opentrons_15_tuberack_5000ul"
         },
         {
-            "name": "Sample plate on 8",
+            "name": "opentrons 15mL tube rack on 8",
             "share": false,
             "slot": "8",
-            "type": "nest_96_wellplate_2ml_deep"
+            "type": "opentrons_15_tuberack_5000ul"
         },
         {
-            "name": "Opentrons 96 Tip Rack 1000 \u00b5L on 9",
+            "name": "opentrons 15mL tube rack on 10",
             "share": false,
-            "slot": "9",
-            "type": "opentrons_96_tiprack_1000ul"
+            "slot": "10",
+            "type": "opentrons_15_tuberack_5000ul"
+        },
+        {
+            "name": "opentrons 15mL tube rack on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_15_tuberack_5000ul"
         },
         {
             "name": "Opentrons Fixed Trash on 12",
@@ -321,7 +327,7 @@
         }
     ],
     "metadata": {
-        "apiLevel": "2.10",
+        "apiLevel": "2.11",
         "author": "Rami Farawi <rami.farawi@opentrons.com>",
         "protocolName": "Extraction Prep for TaqPath Covid-19 Combo Kit",
         "source": "Custom Protocol Request"
