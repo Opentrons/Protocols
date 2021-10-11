@@ -106,22 +106,42 @@ def run(ctx):
     ctx.comment('Moving sample to next well')
     for i, column in enumerate(final_wells[:num_cols]):
         m20.pick_up_tip()
-        m20.mix(5, 20, column)
+        for _ in range(10):
+            m20.aspirate(18, column.bottom(z=2))
+            m20.dispense(18, column.bottom(z=8), rate=1.5)
+        ctx.delay(3)
+        m20.blow_out(column.bottom(z=8))
+
         m20.aspirate(20, column.bottom(z=2))
+        m20.touch_tip()
         m20.dispense(20, final_plate.rows()[0][i*3+1].bottom(z=2))
+        m20.touch_tip()
         m20.blow_out(final_plate.rows()[0][i*3+1].bottom(z=8))
+
         m20.aspirate(20, column.bottom(z=2))
+        m20.touch_tip()
         m20.dispense(20, final_plate.rows()[0][i*3+2].bottom(z=2))
+        m20.touch_tip()
         m20.blow_out(final_plate.rows()[0][i*3+2].bottom(z=8))
         m20.drop_tip()
 
     ctx.comment('Moving control to next well')
     m20.pick_up_tip()
-    m20.mix(5, 20, final_wells[3])
+    for _ in range(10):
+        m20.aspirate(18, final_wells[3].bottom(z=2))
+        m20.dispense(18, final_wells[3].bottom(z=8), rate=1.5)
+    ctx.delay(3)
+    m20.blow_out(final_wells[3].bottom(z=8))
+
     m20.aspirate(20, final_wells[3].bottom(z=2))
+    m20.touch_tip()
     m20.dispense(20, final_plate.rows()[0][10].bottom(z=2))
     m20.blow_out(final_plate.rows()[0][10].bottom(z=8))
+    m20.touch_tip()
+
     m20.aspirate(20, final_wells[3].bottom(z=2))
+    m20.touch_tip()
     m20.dispense(20, final_plate.rows()[0][11].bottom(z=2))
     m20.blow_out(final_plate.rows()[0][11].bottom(z=8))
+    m20.touch_tip()
     m20.drop_tip()
