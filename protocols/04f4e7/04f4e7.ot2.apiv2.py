@@ -154,7 +154,10 @@ def run(ctx):
             m300.pick_up_tip()
             m300.mix(2, 100, col)
             m300.blow_out()
-            m300.return_tip()
+            if wash == 0:
+                m300.return_tip()
+            else:
+                m300.drop_tip()
         mag_mod.engage()
         ctx.delay(minutes=incubation_time)
         ctx.comment('\n\n\n')
