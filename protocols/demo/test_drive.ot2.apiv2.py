@@ -44,21 +44,20 @@ def run(ctx):
                     the `Resume` button is selected. Select `Resume`
                     to see more OT-2 features.''')
 
-    if 'tuberack' in source_lw:
-        pip = pip_l
-        sources = source_labware.wells()[:math.ceil(num_samples/4)]
-        destinations = dest_labware.wells()[:num_samples]
+    pip = pip_l
+    sources = source_labware.wells()
+    destinations = dest_labware.wells()[:num_samples]
+    for i, d in enumerate(destinations):
+        dests_per_source = math.ceil(num_samples/len(sources))
+        source = sources[i//dests_per_source]
+        pip.transfer(sample_vol, source, d)
 
-        for i, d in enumerate(destinations):
-            pip.transfer(sample_vol, sources[i//4], d)
+    pip = pip_r
+    sources = source_labware.wells()[:math.ceil(num_samples/8)]
+    destinations = dest_labware.rows()[0][:math.ceil(num_samples/8)]
 
-    else:
-        pip = pip_r
-        sources = source_labware.wells()[:math.ceil(num_samples/8)]
-        destinations = dest_labware.rows()[0][:math.ceil(num_samples/8)]
-
-        for s, d in zip(sources, destinations):
-            pip.transfer(sample_vol, s, d)
+    for s, d in zip(sources, destinations):
+        pip.transfer(sample_vol, s, d)
 
     if using_magdeck:
         ctx.comment('Engaging magnetic module...')
