@@ -11,8 +11,13 @@ metadata = {
 
 
 def run(protocol):
-    [pip_tip, p300tips, samps, a_i] = get_values(  # noqa: F821
-    'pip_tip', 'p300tips', 'samps', 'a_i')
+    [pip_tip, p300tips, mag_gen, samps, a_i] = get_values(  # noqa: F821
+     'pip_tip', 'p300tips', 'mag_gen', 'samps', 'a_i')
+
+    if mag_gen == 'magdeck':
+        mag_height = 13.6
+    else:
+        mag_height = 6.8
 
     # Labware Setup
     pip_type, tip_name = pip_tip.split()
@@ -32,7 +37,7 @@ def run(protocol):
         'opentrons_24_aluminumblock_generic_2ml_screwcap',
         'Opentrons 24-Well Aluminum Block')
 
-    magdeck = protocol.load_module('Magnetic Module', '4')
+    magdeck = protocol.load_module(mag_gen, '4')
     mag_plate = magdeck.load_labware(
         'nest_96_wellplate_100ul_pcr_full_skirt', 'NEST 96-Well Plate')
 
@@ -178,7 +183,7 @@ def run(protocol):
     protocol.delay(minutes=5)
 
     # Engage Magnetic Module
-    magdeck.engage()
+    magdeck.engage(height=mag_height)
     protocol.comment("Engaging Magnetic Module and incubating for 6 minutes.")
     protocol.delay(minutes=6)
 
@@ -247,7 +252,7 @@ def run(protocol):
 
     # Engage Magnetic Module
     protocol.comment("Engaging Magnetic Module and incubating for 6 minutes.")
-    magdeck.engage()
+    magdeck.engage(height=mag_height)
     protocol.delay(minutes=6)
 
     # Transfer clean samples to aluminum block plate.

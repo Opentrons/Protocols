@@ -11,8 +11,13 @@ metadata = {
 
 
 def run(protocol):
-    [p300tips, samps] = get_values(  # noqa: F821
-    'p300tips', 'samps')
+    [p300tips, mag_gen, samps] = get_values(  # noqa: F821
+     'p300tips', 'mag_gen', 'samps')
+
+    if mag_gen == 'magdeck':
+        mag_height = 13.6
+    else:
+        mag_height = 6.8
 
     # Labware Setup
     big_tips1 = protocol.load_labware(p300tips, '6')
@@ -22,7 +27,7 @@ def run(protocol):
     rt_reagents = protocol.load_labware(
         'nest_12_reservoir_15ml', '2')
 
-    magdeck = protocol.load_module('Magnetic Module', '4')
+    magdeck = protocol.load_module(mag_gen, '4')
     mag_plate = magdeck.load_labware(
         'nest_96_wellplate_100ul_pcr_full_skirt', 'NEST 96-Well Plate')
 
@@ -128,7 +133,7 @@ def run(protocol):
     protocol.comment('Incubating for 5 minutes.')
     protocol.delay(minutes=5)
 
-    magdeck.engage()
+    magdeck.engage(height=mag_height)
     protocol.delay(minutes=5)
 
     # Aspirate supernatant
@@ -183,7 +188,7 @@ def run(protocol):
     then engaging Magnetic Module.")
     protocol.delay(minutes=2)
 
-    magdeck.engage()
+    magdeck.engage(height=mag_height)
     protocol.delay(minutes=5)
 
     # Transfer clean samples to aluminum block plate.
