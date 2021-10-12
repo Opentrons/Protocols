@@ -97,6 +97,7 @@ Slot 9: [Opentrons Tips for P300 8-Channel Pipette](https://shop.opentrons.com/c
 **Using the customizations fields, below set up your protocol.**
 * **P300 8-Channel Pipette Tip Type**: Select which tips (filter/non-filter) to be used for this protocol.
 * **Number of Samples**: Specify the number of samples (8, 16, or 24) you'd like to run.
+* **Magdeck Generation**: Specify whether using Generation 1 or Generation 2 magdeck. 
 
 
 __Note:__ The final elution will be transferred to column 7 (and column 8 and column 9, if running 16 samples or 24 samples, respectively) of the PCR plate (or strips) in slot 1.

@@ -12,7 +12,7 @@ metadata = {
 
 def run(protocol):
     [pip_tip, samps] = get_values(  # noqa: F821
-    'pip_tip', 'samps')
+     'pip_tip', 'samps')
 
     pip_type, tip_name = pip_tip.split()
 
