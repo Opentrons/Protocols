@@ -16,6 +16,7 @@ This protocol preps a sample plate with up to 95 samples (with one control). Sam
 Explanation of complex parameters below:
 * `Number of samples`: Specify the number of samples that will be processed. Up to 95 samples can be run, leaving room for a control.
 * `P1000 sample tube aspiration height`: Specify the height (in mm) for the P1000 pipette to aspirate when visiting sample tubes. Default is 1mm.
+* `P1000 sample dispense height (in plate)`: Specify the height (in mm) for the P1000 pipette to dispense from when visiting the plate on slot 3. Default is 1mm.
 * `P1000 single GEN2 Mount`: Specify which mount (left or right) to load the P1000 single channel pipette.
 ---
 ### Labware

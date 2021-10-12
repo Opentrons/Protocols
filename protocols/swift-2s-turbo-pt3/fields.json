@@ -9,6 +9,15 @@
     ]
   },
   {
+"type": "dropDown",
+"label": "Mag Deck Generation",
+"name": "mag_gen",
+"options": [
+  { "label": "GEN1", "value": "magdeck" },
+  { "label": "GEN2", "value": "magnetic module gen2" }
+]
+},
+  {
     "type": "dropDown",
     "label": "Number of Samples",
     "name": "samps",

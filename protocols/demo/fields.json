@@ -23,8 +23,7 @@
     "label": "source labware type",
     "name": "source_lw",
     "options": [
-       { "label": "NEST 12 Well Reservoir 15ml", "value": "nest_12_reservoir_15ml" },
-       { "label": "Opentrons 24 Tube Rack with Eppendorf 2 mL Safe-Lock Snapcap", "value": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap" }
+       { "label": "NEST 12 Well Reservoir 15ml", "value": "nest_12_reservoir_15ml" }
      ]
   },
   {

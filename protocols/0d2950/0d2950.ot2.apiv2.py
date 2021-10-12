@@ -11,8 +11,9 @@ metadata = {
 
 def run(ctx):
     """Protocol."""
-    [num_samp, p1000_sample_height, p1000_mount] = get_values(  # noqa: F821
-        "num_samp", "p1000_sample_height", "p1000_mount")
+    [num_samp, p1000_sample_height,
+        plate_height, p1000_mount] = get_values(  # noqa: F821
+        "num_samp", "p1000_sample_height", "plate_height", "p1000_mount")
 
     if not 1 <= num_samp <= 95:
         raise Exception("Enter a sample number between 1-95")
@@ -54,7 +55,7 @@ def run(ctx):
         p1000.pick_up_tip()
         p1000.aspirate(200, sample_map[samp_ctr].bottom(z=p1000_sample_height))
         p1000.touch_tip()
-        p1000.dispense(200, well)
+        p1000.dispense(200, well.bottom(z=plate_height))
         p1000.blow_out()
         p1000.drop_tip()
         samp_ctr += 1

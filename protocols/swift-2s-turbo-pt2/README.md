@@ -107,6 +107,7 @@ Slot 9: [Opentrons Tips for P300 8-Channel Pipette](https://shop.opentrons.com/c
 * **Pipette and Tip Type**: Select which pipette (P50 Single-Channel or P20 Single-Channel) and corresponding tips to be used for this protocol. **The pipette should be attached to the left mount.**
 * **P300 8-Channel Pipette Tip Type**: Select which tips (filter/non-filter) to be used for this protocol.
 * **Number of Samples**: Specify the number of samples (8, 16, or 24) you'd like to run.
+* **Magdeck Generation**: Specify whether using Generation 1 or Generation 2 magdeck. 
 * **Automate Indexing**: Specify whether the indices should be added to the samples with the OT-2, or manually.
 
 
