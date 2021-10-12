@@ -65,7 +65,7 @@ with {num_primers} primers.')
             m20.transfer(3, s, d.bottom(0.5), new_tip='never')
             m20.drop_tip()
 
-    # transfer primer
+    # transfer primers
     for primer, dest_set in zip(primer_sources, primer_dest_sets):
         for d in dest_set:
             p20.pick_up_tip()
