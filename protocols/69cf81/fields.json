@@ -24,7 +24,8 @@
       "label": "tip type",
       "name": "tip_type",
       "options": [
-        { "label": "Opentrons", "value": "opentrons_96_tiprack_20ul"}
+        { "label": "Opentrons", "value": "opentrons_96_tiprack_20ul"},
+        { "label": "Biotix", "value": "biotix_96_tiprack_20ul"}
       ]
     },
   {
