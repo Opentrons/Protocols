@@ -16,7 +16,9 @@ def run(ctx):
         'sample_vol', 'using_magdeck')
 
     # load labware
-    source_labware = ctx.load_labware(source_lw, '1')
+    source_rack = ctx.load_labware('opentrons_24_tuberack_nest_1.5ml_screwcap',
+                                   '1')
+    source_res = ctx.load_labware('nest_12_reservoir_15ml', '3')
     dest_labware = ctx.load_labware(dest_lw, '2')
     if using_magdeck:
         magdeck = ctx.load_module('magnetic module gen2', '7')
@@ -45,7 +47,7 @@ def run(ctx):
                     to see more OT-2 features.''')
 
     pip = pip_l
-    sources = source_labware.wells()
+    sources = source_rack.wells()
     destinations = dest_labware.wells()[:num_samples]
     for i, d in enumerate(destinations):
         dests_per_source = math.ceil(num_samples/len(sources))
@@ -53,7 +55,7 @@ def run(ctx):
         pip.transfer(sample_vol, source, d)
 
     pip = pip_r
-    sources = source_labware.wells()[:math.ceil(num_samples/8)]
+    sources = source_res.wells()[:math.ceil(num_samples/8)]
     destinations = dest_labware.rows()[0][:math.ceil(num_samples/8)]
 
     for s, d in zip(sources, destinations):
