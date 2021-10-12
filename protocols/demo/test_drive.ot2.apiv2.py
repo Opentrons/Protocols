@@ -16,7 +16,9 @@ def run(ctx):
         'sample_vol', 'using_magdeck')
 
     # load labware
-    source_labware = ctx.load_labware(source_lw, '1')
+    source_rack = ctx.load_labware('opentrons_24_tuberack_nest_1.5ml_screwcap',
+                                   '1')
+    source_res = ctx.load_labware('nest_12_reservoir_15ml', '3')
     dest_labware = ctx.load_labware(dest_lw, '2')
     if using_magdeck:
         magdeck = ctx.load_module('magnetic module gen2', '7')
@@ -44,21 +46,20 @@ def run(ctx):
                     the `Resume` button is selected. Select `Resume`
                     to see more OT-2 features.''')
 
-    if 'tuberack' in source_lw:
-        pip = pip_l
-        sources = source_labware.wells()[:math.ceil(num_samples/4)]
-        destinations = dest_labware.wells()[:num_samples]
+    pip = pip_l
+    sources = source_rack.wells()
+    destinations = dest_labware.wells()[:num_samples]
+    for i, d in enumerate(destinations):
+        dests_per_source = math.ceil(num_samples/len(sources))
+        source = sources[i//dests_per_source]
+        pip.transfer(sample_vol, source, d)
 
-        for i, d in enumerate(destinations):
-            pip.transfer(sample_vol, sources[i//4], d)
+    pip = pip_r
+    sources = source_res.wells()[:math.ceil(num_samples/8)]
+    destinations = dest_labware.rows()[0][:math.ceil(num_samples/8)]
 
-    else:
-        pip = pip_r
-        sources = source_labware.wells()[:math.ceil(num_samples/8)]
-        destinations = dest_labware.rows()[0][:math.ceil(num_samples/8)]
-
-        for s, d in zip(sources, destinations):
-            pip.transfer(sample_vol, s, d)
+    for s, d in zip(sources, destinations):
+        pip.transfer(sample_vol, s, d)
 
     if using_magdeck:
         ctx.comment('Engaging magnetic module...')
