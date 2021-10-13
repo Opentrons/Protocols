@@ -14,8 +14,8 @@
     "label": "Final Plate Labware Type",
     "name": "final_plate_slot4",
     "options": [
-      {"label": "microampplate_96_supportbase_100ul", "value": "microampplate_96_supportbase_100ul"},
-      {"label": "microampstrips_96_supportbase_100ul", "value": "microampstrips_96_supportbase_100ul"}
+      {"label": "microampstrips_96_supportbase_100ul", "value": "microampstrips_96_supportbase_100ul"},
+      {"label": "microampplate_96_supportbase_100ul", "value": "microampplate_96_supportbase_100ul"}
     ]
   },
   {
