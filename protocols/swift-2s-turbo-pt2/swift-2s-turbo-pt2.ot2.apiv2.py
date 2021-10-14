@@ -194,7 +194,7 @@ def run(protocol):
     for mag_samp in mag_300:
         big_pick_up()
         p300.aspirate(108, mag_samp.bottom(2))
-        p300.dispense(108, waste.bottom(1.5))
+        p300.dispense(108, waste.top(-1))
         p300.drop_tip()
 
     # Wash samples 2X with 180uL of 80% EtOH
@@ -215,10 +215,10 @@ def run(protocol):
         for mag_samp in mag_300:
             if not p300.hw_pipette['has_tip']:
                 big_pick_up()
-            p300.air_gap(10)
+            p300.air_gap(5)
             p300.aspirate(190, mag_samp)
             p300.air_gap(5)
-            p300.dispense(210, waste.bottom(1.5))
+            p300.dispense(210, waste.top(-1))
             p300.drop_tip()
 
     # remove residual ethanol
