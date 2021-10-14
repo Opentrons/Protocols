@@ -1,5 +1,8 @@
 from opentrons.protocol_api.labware import Well, OutOfTipsError
+# import from the python types module
 from types import MethodType
+# import opentrons.types
+from opentrons import types
 import math
 import csv
 
@@ -61,17 +64,28 @@ def run(ctx):
         ctx.pause(message)
         ctx.set_rail_lights(True)
 
-    def slow_tip_withdrawal(self, speed_limit, well_location, to_center=False):
+    def slow_tip_withdrawal(
+     self, speed_limit, well_location, to_surface=False):
         if self.mount == 'right':
             axis = 'A'
         else:
             axis = 'Z'
+        previous_limit = None
+        if axis in ctx.max_speeds.keys():
+            for key, value in ctx.max_speeds.items():
+                if key == axis:
+                    previous_limit = value
         ctx.max_speeds[axis] = speed_limit
-        if to_center is False:
+        if to_surface is False:
             self.move_to(well_location.top())
         else:
-            self.move_to(well_location.center())
-        ctx.max_speeds[axis] = None
+            if isinstance(well_location, WellH):
+                self.move_to(
+                 well_location.bottom().move(types.Point(
+                  x=0, y=0, z=well_location.height+10)))
+            else:
+                self.move_to(well_location.center())
+        ctx.max_speeds[axis] = previous_limit
 
     def delay(self, delay_time):
         ctx.delay(seconds=delay_time)
@@ -300,7 +314,8 @@ def run(ctx):
                          rate=adjusted_rate)
                         pip.delay(delay_time)
                         if withdraw_speed is not None:
-                            pip.slow_tip_withdrawal(withdraw_speed, source)
+                            pip.slow_tip_withdrawal(
+                             withdraw_speed, source, to_surface=True)
                         if liquid_class == "volatile":
                             pip.air_gap(air_gap_vol)
                         dispense_location = well.height_inc(
@@ -319,7 +334,8 @@ def run(ctx):
                             pip.flow_rate.blow_out = original_value
                         if top_dispenses is False:
                             if withdraw_speed is not None:
-                                pip.slow_tip_withdrawal(withdraw_speed, well)
+                                pip.slow_tip_withdrawal(
+                                 withdraw_speed, well, to_surface=True)
                             pip.drop_tip()
         for pipette in [p300s, p1000s]:
             if pipette.has_tip:
