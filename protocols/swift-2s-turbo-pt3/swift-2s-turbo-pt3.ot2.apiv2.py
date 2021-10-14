@@ -159,7 +159,7 @@ def run(protocol):
                 big_pick_up()
             p300.air_gap(5)
             p300.aspirate(190, mag_samps.bottom(1.5))
-            p300.air_gap(10)
+            p300.air_gap(5)
             p300.dispense(210, waste2)
             p300.drop_tip()
 
