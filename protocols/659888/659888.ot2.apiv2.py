@@ -65,9 +65,6 @@ def run(ctx):
         m20.distribute(vol,
                        dilution_plate.rows()[0][col_ctr],
                        [plate.rows()[0][col_ctr] for plate in plates],
-                       touch_tip=True,
-                       blow_out=True,
-                       blowout_location='source well',
                        new_tip='never')
         m20.drop_tip()
         ctx.comment('\n\n\n\n')
