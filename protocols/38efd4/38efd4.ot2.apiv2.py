@@ -308,9 +308,10 @@ def run(ctx):
                         top_dispenses = True
                         if int(vol) < 50:
                             top_dispenses = False
-                    if not pip.has_tip:
-                        pip.pick_up_or_refill()
+
                     for rep in range(reps):
+                        if not pip.has_tip:
+                            pip.pick_up_or_refill()
                         if liquid_class == "volatile":
                             pip.prewet_tips(source)
                         pip.aspirate(
