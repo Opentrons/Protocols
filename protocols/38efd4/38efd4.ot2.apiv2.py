@@ -1,5 +1,5 @@
 from opentrons.protocol_api.labware import Well, OutOfTipsError
-# import from the python types module
+# import MethodType from the python types module
 from types import MethodType
 # import opentrons.types
 from opentrons import types
