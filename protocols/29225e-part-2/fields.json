@@ -4,8 +4,8 @@
     "label": "Cherry Pick Samples? (yes or no)",
     "name": "sample_cherrypicking",
     "options": [
-      { "label": "YES - use 20 single one sample at a time", "value": true },
-      { "label": "NO - use p20 multi (be sure to choose 96-well labware for RNA)", "value": false }
+      { "label": "NO - use p20 multi (be sure to choose 96-well labware for RNA)", "value": false },
+      { "label": "YES - use 20 single one sample at a time", "value": true }
     ]
   },
   {
@@ -27,8 +27,8 @@
     "label": "Labware Containing Normalized RNA Samples",
     "name": "labware_samp",
     "options": [
-      { "label": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap", "value": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap" },
-      { "label": "nest_96_wellplate_2ml_deep", "value": "nest_96_wellplate_2ml_deep" }
+      { "label": "nest_96_wellplate_2ml_deep", "value": "nest_96_wellplate_2ml_deep" },
+      { "label": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap", "value": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap" }
     ]
   },
   {

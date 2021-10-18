@@ -56,7 +56,7 @@ def run(ctx):
     # p300 single
     p300s = ctx.load_instrument("p300_single_gen2", 'right', tip_racks=tips300)
 
-    # p20 multi(if RNA not cherry-picked and in 96-well) else single
+    # p20 multi(if RNA not cherry-picked and in 96-well) otherwise single
     pip20 = ctx.load_instrument(
      "p20_multi_gen2", 'left', tip_racks=tips20) if (
      not sample_cherrypicking and len(samps[0].wells()) == 96
