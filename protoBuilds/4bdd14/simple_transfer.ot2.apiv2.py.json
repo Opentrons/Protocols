@@ -1,5 +1,5 @@
 {
-    "content": "metadata = {\n    'ctxName': 'Simple Plate Transfer - 4 Sources',\n    'author': 'Nick <ndiehl@opentrons.com',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.8'\n}\n\n\ndef run(ctx):\n    [m300_mount, num_plates] = get_values(  # noqa: F821\n     'm300_mount', 'num_plates')\n\n    # load labware\n    tips300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '1')]\n    source_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '2',\n                                    'source plate')\n    dest_plates = [\n        ctx.load_labware('greinermicrolon_96_wellplate_340ul', str(slot),\n                         f'plate {i+1}')\n        for i, slot in enumerate(range(3, 3+num_plates))]\n\n    # load pipettes\n    m300 = ctx.load_instrument('p300_multi', m300_mount, tip_racks=tips300)\n\n    col_ind_sets = [[i, i+4, i+8] for i in range(4)]\n    for i, ind_set in enumerate(col_ind_sets):\n        m300.pick_up_tip()\n        for c in ind_set:\n            m300.distribute(50, source_plate.rows()[0][i],\n                            [plate.columns()[c] for plate in dest_plates],\n                            disposal_vol=0, new_tip='never')\n        m300.drop_tip()\n",
+    "content": "metadata = {\n    'protocolName': 'Simple Plate Transfer - 4 Sources',\n    'author': 'Nick <ndiehl@opentrons.com',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.8'\n}\n\n\ndef run(ctx):\n    [m300_mount, num_plates] = get_values(  # noqa: F821\n     'm300_mount', 'num_plates')\n\n    # load labware\n    tips300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '1')]\n    source_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '2',\n                                    'source plate')\n    dest_plates = [\n        ctx.load_labware('greinermicrolon_96_wellplate_340ul', str(slot),\n                         f'plate {i+1}')\n        for i, slot in enumerate(range(3, 3+num_plates))]\n\n    # load pipettes\n    m300 = ctx.load_instrument('p300_multi', m300_mount, tip_racks=tips300)\n\n    col_ind_sets = [[i, i+4, i+8] for i in range(4)]\n    for i, ind_set in enumerate(col_ind_sets):\n        m300.pick_up_tip()\n        for c in ind_set:\n            m300.distribute(50, source_plate.rows()[0][i],\n                            [plate.columns()[c] for plate in dest_plates],\n                            disposal_vol=0, new_tip='never')\n        m300.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -1235,7 +1235,7 @@
     "metadata": {
         "apiLevel": "2.8",
         "author": "Nick <ndiehl@opentrons.com",
-        "ctxName": "Simple Plate Transfer - 4 Sources",
+        "protocolName": "Simple Plate Transfer - 4 Sources",
         "source": "Custom Protocol Request"
     },
     "modules": []
