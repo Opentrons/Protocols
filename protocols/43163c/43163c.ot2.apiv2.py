@@ -1,4 +1,7 @@
-metadata = {"apiLevel": "2.0"}
+metadata = {
+    "protocolName": "Nanomaterial toxicity assay",
+    "author": "",
+    "apiLevel": "2.0"}
 
 
 def run(ctx):

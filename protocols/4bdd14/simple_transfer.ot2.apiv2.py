@@ -1,5 +1,5 @@
 metadata = {
-    'ctxName': 'Simple Plate Transfer - 4 Sources',
+    'protocolName': 'Simple Plate Transfer - 4 Sources',
     'author': 'Nick <ndiehl@opentrons.com',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.8'
