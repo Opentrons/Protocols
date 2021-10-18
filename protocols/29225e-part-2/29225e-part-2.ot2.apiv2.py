@@ -288,7 +288,5 @@ def run(ctx):
         pip20.dispense(
          vol, pcr_plate.wells_by_name()[
           tfer['dest well']].bottom(clearance_pcr))
-        pip20.mix(
-         6, 10, pcr_plate.wells_by_name()[
-          tfer['dest well']].bottom(clearance_pcr))
+        pip20.mix(6, 10)
         pip20.drop_tip()
