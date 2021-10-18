@@ -1,4 +1,7 @@
-metadata = {"apiLevel": "2.5"}
+metadata = {
+    "apiLevel": "2.5",
+    "protocolName": "Sarah Daley Protocol (check mesoscale.com link)",
+    "author": ""}
 
 
 def run(ctx):
