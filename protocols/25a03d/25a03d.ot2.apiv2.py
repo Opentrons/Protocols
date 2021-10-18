@@ -5,6 +5,11 @@ metadata = {
     'apiLevel': '2.11'
 }
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"num_samp":"8","final_plate_slot4":"microampplate_96_supportbase_100ul","control_plate":"usastrips_96_supportbase_200ul","p20_mount":"right","p300_mount":"left"}""")
+    return [_all_values[n] for n in names]
+
 
 def run(ctx):
 
@@ -115,14 +120,17 @@ def run(ctx):
         m20.aspirate(20, column.bottom(z=2))
         m20.touch_tip()
         m20.dispense(20, final_plate.rows()[0][i*3+1].bottom(z=2))
-        m20.touch_tip()
+        ctx.delay(3)
         m20.blow_out(final_plate.rows()[0][i*3+1].bottom(z=8))
+        m20.touch_tip()
 
         m20.aspirate(20, column.bottom(z=2))
         m20.touch_tip()
         m20.dispense(20, final_plate.rows()[0][i*3+2].bottom(z=2))
-        m20.touch_tip()
+        ctx.delay(3)
         m20.blow_out(final_plate.rows()[0][i*3+2].bottom(z=8))
+        m20.touch_tip()
+
         m20.drop_tip()
 
     ctx.comment('Moving control to next well')
@@ -136,12 +144,14 @@ def run(ctx):
     m20.aspirate(20, final_wells[3].bottom(z=2))
     m20.touch_tip()
     m20.dispense(20, final_plate.rows()[0][10].bottom(z=2))
+    ctx.delay(3)
     m20.blow_out(final_plate.rows()[0][10].bottom(z=8))
     m20.touch_tip()
 
     m20.aspirate(20, final_wells[3].bottom(z=2))
     m20.touch_tip()
     m20.dispense(20, final_plate.rows()[0][11].bottom(z=2))
+    ctx.delay(3)
     m20.blow_out(final_plate.rows()[0][11].bottom(z=8))
     m20.touch_tip()
     m20.drop_tip()
