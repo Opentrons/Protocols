@@ -1,6 +1,17 @@
 [
   {
     "type": "dropDown",
+    "label": "Dead Volume in Reagent Source Tubes (percentage of tube max volume at which to change to next tube)",
+    "name": "dead_vol",
+    "options": [
+      { "label": "Go to next tube when at 1 percent of tube max vol", "value": 0.01 },
+      { "label": "Go to next tube when at 2 percent of tube max vol", "value": 0.02 },
+      { "label": "Go to next tube when at 3 percent of tube max vol", "value": 0.03 },
+      { "label": "Go to next tube when at 0.5 percent of tube max vol", "value": 0.005 }
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "Skip Mixing Step? (yes or no)",
     "name": "skip_mix_step",
     "options": [

@@ -1,5 +1,5 @@
 from opentrons.protocol_api.labware import Well, OutOfTipsError
-# import from python types module
+# import MethodType from the python types module
 from types import MethodType
 # import opentrons.types
 from opentrons import types
@@ -15,12 +15,12 @@ metadata = {
 
 def run(ctx):
 
-    [skip_mix_step, labware1, labware2, labware3, labware4, labware5, labware6,
-     labware7, labware8, reagents_csv, formulation_csv
-     ] = get_values(  # noqa: F821
-        "skip_mix_step", "labware1", "labware2", "labware3", "labware4",
-        "labware5", "labware6", "labware7", "labware8", "reagents_csv",
-        "formulation_csv")
+    [dead_vol, skip_mix_step, labware1, labware2, labware3, labware4, labware5,
+     labware6, labware7, labware8, reagents_csv,
+     formulation_csv] = get_values(  # noqa: F821
+        "dead_vol", "skip_mix_step", "labware1", "labware2", "labware3",
+        "labware4", "labware5", "labware6", "labware7", "labware8",
+        "reagents_csv", "formulation_csv")
 
     ctx.set_rail_lights(True)
     ctx.delay(seconds=10)
@@ -80,9 +80,9 @@ def run(ctx):
             self.move_to(well_location.top())
         else:
             if isinstance(well_location, WellH):
-                self.move_to(
-                 well_location.bottom().move(types.Point(
-                  x=0, y=0, z=well_location.height+10)))
+                self.move_to(well_location.bottom().move(types.Point(
+                 x=0, y=0, z=well_location.height+(20*(self._tip_racks[
+                  0].wells()[0].depth / 88)))))
             else:
                 self.move_to(well_location.center())
         ctx.max_speeds[axis] = previous_limit
@@ -246,16 +246,15 @@ def run(ctx):
                 withdraw_speed = int(round(6.4613*(viscosity**-0.318)))
                 ctx.comment("""calculated tip withdraw speed adjusted
                 to {} mm/sec.""".format(withdraw_speed))
-                top_dispenses = False
         else:
             delay_time = 0
             adjusted_rate = 1
             withdraw_speed = None
-            top_dispenses = True
 
         source_wells = []
         for well, vol in zip(source_locations[rgnt], source_volumes[rgnt]):
-            new = WellH(well, min_height=3, current_volume=int(vol))
+            minht = 3 if well.max_volume > 2000 else 1.5
+            new = WellH(well, min_height=minht, current_volume=int(vol))
             source_wells.append(new)
         ctx.comment('''using locations as source: {}'''.format(source_wells))
 
@@ -267,20 +266,24 @@ def run(ctx):
         for row, dispense in zip(dest_wells, dispenses):
             for well, vol in zip(row, dispense[rgnt]):
                 if vol:
-                    if (source.current_volume <= 100 or (
-                     int(vol) + 100) > source.current_volume):
+                    if (source.current_volume <= (dead_vol*source.max_volume
+                                                  ) or (int(vol) + (
+                                                   dead_vol*source.max_volume
+                                                   )) > source.current_volume):
                         try:
                             source = next(reagent_well)
                         except StopIteration:
                             ctx.comment(
-                             "reagent {} supply is exhausted".format(rgnt))
+                                "reagent {} supply is exhausted".format(rgnt))
                             ctx.comment('''due to insufficient reagent volume,
                             skipped transfers (except well dispenses already
                             completed and listed above) to row {}'''.format(
-                             row))
+                                row))
                             break
-                    if (source.current_volume <= 100 or (
-                     int(vol) + 100) > source.current_volume):
+                    if (source.current_volume <= (dead_vol*source.max_volume
+                                                  ) or (int(vol) + (
+                                                   dead_vol*source.max_volume
+                                                   )) > source.current_volume):
                         ctx.comment(
                              "reagent {} supply is exhausted".format(rgnt))
                         ctx.comment('''due to insufficient reagent volume,
@@ -295,18 +298,20 @@ def run(ctx):
                         air_gap_vol = 0
                     if int(vol) + air_gap_vol > 300:
                         pip = p1000s
+                        top_dispenses = True
                         if liquid_class == "volatile":
                             air_gap_vol = 25
-                        top_dispenses = True
                         if int(vol) + air_gap_vol > 1000:
                             reps = math.ceil(int(vol) / 1000)
                     else:
                         pip = p300s
+                        top_dispenses = True
                         if int(vol) < 50:
                             top_dispenses = False
-                    if not pip.has_tip:
-                        pip.pick_up_or_refill()
+
                     for rep in range(reps):
+                        if not pip.has_tip:
+                            pip.pick_up_or_refill()
                         if liquid_class == "volatile":
                             pip.prewet_tips(source)
                         pip.aspirate(
@@ -318,6 +323,8 @@ def run(ctx):
                              withdraw_speed, source, to_surface=True)
                         if liquid_class == "volatile":
                             pip.air_gap(air_gap_vol)
+                        if liquid_class == "viscous":
+                            top_dispenses = False
                         dispense_location = well.height_inc(
                          int(vol) / reps, top=top_dispenses)
                         pip.dispense(
