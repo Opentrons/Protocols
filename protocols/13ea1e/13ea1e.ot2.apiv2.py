@@ -1,5 +1,5 @@
 metadata = {
-    'protodestName': 'Extraction Prep with Kingfisher Flex Extractor',
+    'protocolName': 'Extraction Prep with Kingfisher Flex Extractor',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
     'source': 'Custom Protodest Request',
     'apiLevel': '2.10'
