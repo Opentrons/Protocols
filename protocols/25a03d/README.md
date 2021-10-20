@@ -17,6 +17,7 @@ Explanation of complex parameters below:
 * `Number of Samples (not including controls, 1-24)`: Specify the number of samples not including controls for this run.
 * `Final Plate Labware Type`: Specify which piece of labware will be used as the final sample plate for this protocol.
 * `Control Plate Labware Type`: Specify which piece of labware will be used to hold the control.
+* `Aspiration/Dispense Flow rates`: Specify the global aspiration/dispense flow rates for the P300 and P20 pipettes. A value of 1.0 is default, a value of 0.5 is 50% of the default flow rate, 1.2 a 20% increase in default flow rate, etc. 
 * `P20 Multi-Channel Mount`: Specify which mount (left or right) to host the P20 multi-channel pipette.
 * `P300 Single-Channel Mount`: Specify which mount (left or right) to host the P300 single-channel pipette.
 
