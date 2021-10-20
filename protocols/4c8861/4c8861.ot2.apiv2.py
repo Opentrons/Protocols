@@ -128,13 +128,12 @@ def run(ctx):
         for row, plate in zip(plate_map[row_ctr:], chunk):
             p20.pick_up_tip(tiprack20[int(row[plate_num])-1].wells_by_name()
                             [row[well]])
-            p20.distribute(float(row[sample_vol]),
-                           source_plates[int(row[plate_num])-1].wells_by_name()
-                           [row[well]],
-                           dest_plates[int(row[plate_num])-1].wells_by_name()[
+            p20.transfer(float(row[sample_vol]),
+                         source_plates[int(row[plate_num])-1].wells_by_name()
+                         [row[well]],
+                         dest_plates[int(row[plate_num])-1].wells_by_name()[
                               row[well]],
-                           new_tip='never',
-                           blowout_location='source well')
+                         new_tip='never')
             p20.mix(1, 15, dest_plates[int(row[plate_num])-1].wells_by_name()[
                row[well]])
             p20.blow_out()
