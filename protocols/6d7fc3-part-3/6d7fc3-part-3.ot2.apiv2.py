@@ -104,6 +104,8 @@ def run(ctx):
 
     # Protocol Steps
 
+    temp_mod.set_temperature(20)
+
     # Transfer 50 uL of Ligation Reaction to Mag Plate
     for src, dest in zip(tc_plate_wells, mag_plate_wells):
         pick_up(p300)
@@ -137,7 +139,7 @@ def run(ctx):
     # Remove Supernatant
     for well in mag_plate_wells:
         pick_up(p300)
-        remove_supernatant(200, well, trash, getWellSide(well, mag_plate))
+        remove_supernatant(100, well, trash, getWellSide(well, mag_plate))
         p300.drop_tip()
 
     # Completely Remove Residual Supernatant

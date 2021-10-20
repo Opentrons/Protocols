@@ -52,6 +52,10 @@ def run(ctx):
 
     # Wells
     mm = temp_plate['A1']
+    upcr_buffer = temp_plate['B1']
+    pcr_primer_A = temp_plate['C1']
+    pcr_primer_B = temp_plate['D1']
+    dna_poly = temp_plate['A2']
     pcr_tube_wells = pcr_tubes.wells()[:samples]
     tc_plate_wells = tc_plate.wells()[:samples]
 
@@ -63,6 +67,43 @@ def run(ctx):
     ctx.pause('''Temperature Module has been cooled to 4°C.
               Please place your samples and reagents on the
               temperature module.''')
+
+    # Prepare Universal Master Mix
+    upcr_buffer_vol = 4*samples+2
+    pcr_primer_A_vol = 0.8*samples+0.4
+    pcr_primer_B_vol = 0.8*samples+0.4
+    dna_poly_vol = 1*samples+0.5
+    mix_vol = (upcr_buffer_vol + pcr_primer_A_vol + pcr_primer_B_vol
+               + dna_poly_vol)
+
+    pip = p300 if upcr_buffer_vol > 20 else p20
+    pick_up(pip)
+    pip.aspirate(upcr_buffer_vol, upcr_buffer)
+    pip.dispense(upcr_buffer_vol, mm)
+    pip.drop_tip()
+
+    pip = p300 if pcr_primer_A_vol > 20 else p20
+    pick_up(pip)
+    pip.aspirate(pcr_primer_A_vol, pcr_primer_A)
+    pip.dispense(pcr_primer_A_vol, mm)
+    pip.drop_tip()
+
+    pip = p300 if pcr_primer_B_vol > 20 else p20
+    pick_up(pip)
+    pip.aspirate(pcr_primer_B_vol, pcr_primer_B)
+    pip.dispense(pcr_primer_B_vol, mm)
+    pip.drop_tip()
+
+    pip = p300 if dna_poly_vol > 20 else p20
+    pick_up(pip)
+    pip.aspirate(dna_poly_vol, dna_poly)
+    pip.dispense(dna_poly_vol, mm)
+    pip.drop_tip()
+
+    pip = p300 if mix_vol > 20 else p20
+    pick_up(pip)
+    pip.mix(10, mix_vol, mm)
+    pip.drop_tip()
 
     # Add Master Mix to PCR Tubes with enriched DNA
     for well in pcr_tube_wells:
@@ -82,6 +123,7 @@ def run(ctx):
         p300.dispense(20, dest)
         p300.drop_tip()
 
+    tc_mod.close_lid()
     tc_mod.set_lid_temperature(103)
 
     profile = [

@@ -120,6 +120,9 @@ def run(ctx):
 
     # Protocol Steps
 
+    # Set Temperature Module to 20C
+    temp_mod.set_temperature(20)
+
     # Transfer PCR Product to Magnetic Plate
     for src, dest in zip(tc_plate_wells, mag_plate_wells):
         pick_up(p300)
