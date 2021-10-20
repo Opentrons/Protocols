@@ -28,6 +28,30 @@
     ]
   },
   {
+    "type": "float",
+    "label": "Global Aspiration Flow Rate for P20 Pipette",
+    "name": "asp_rate_global20",
+    "default": 1.0
+  },
+  {
+    "type": "float",
+    "label": "Global Aspiration Flow Rate for P300 Pipette",
+    "name": "asp_rate_global300",
+    "default": 1.0
+  },
+  {
+    "type": "float",
+    "label": "Global Dispense Flow Rate for P20 Pipette",
+    "name": "disp_rate_global20",
+    "default": 1.0
+  },
+  {
+    "type": "float",
+    "label": "Global Dispense Flow Rate for P300 Pipette",
+    "name": "disp_rate_global300",
+    "default": 1.0
+  },
+  {
     "type": "dropDown",
     "label": "P20 Multi-Channel Mount",
     "name": "p20_mount",
