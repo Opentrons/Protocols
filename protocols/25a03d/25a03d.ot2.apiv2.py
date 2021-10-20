@@ -9,9 +9,13 @@ metadata = {
 def run(ctx):
 
     [num_samp, final_plate_slot4, control_plate,
+        asp_rate_global20, disp_rate_global20,
+        asp_rate_global300, disp_rate_global300,
      p20_mount, p300_mount] = get_values(  # noqa: F821
         "num_samp", "final_plate_slot4",
-        "control_plate", "p20_mount", "p300_mount")
+        "control_plate", "asp_rate_global20", "disp_rate_global20",
+        "asp_rate_global300", "disp_rate_global300",
+        "p20_mount", "p300_mount")
 
     num_samp = int(num_samp)
 
@@ -31,6 +35,11 @@ def run(ctx):
                               tip_racks=tiprack20)
     p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
                                tip_racks=tiprack200)
+
+    m20.flow_rate.aspirate = asp_rate_global20*m20.flow_rate.aspirate
+    m20.flow_rate.dispense = disp_rate_global20*m20.flow_rate.dispense
+    p300.flow_rate.aspirate = asp_rate_global300*p300.flow_rate.aspirate
+    p300.flow_rate.dispense = disp_rate_global300*p300.flow_rate.dispense
 
     # PROTOCOL
     num_cols = int(num_samp/8)
@@ -106,7 +115,7 @@ def run(ctx):
     ctx.comment('Moving sample to next well')
     for i, column in enumerate(final_wells[:num_cols]):
         m20.pick_up_tip()
-        for _ in range(10):
+        for _ in range(20):
             m20.aspirate(18, column.bottom(z=2))
             m20.dispense(18, column.bottom(z=8), rate=1.5)
         ctx.delay(3)
@@ -130,7 +139,7 @@ def run(ctx):
 
     ctx.comment('Moving control to next well')
     m20.pick_up_tip()
-    for _ in range(10):
+    for _ in range(20):
         m20.aspirate(18, final_wells[3].bottom(z=2))
         m20.dispense(18, final_wells[3].bottom(z=8), rate=1.5)
     ctx.delay(3)
