@@ -2,7 +2,7 @@
   {
     "type": "dropDown",
     "label": "Use csv for this run?",
-    "name": "pre_mix",
+    "name": "use_csv",
     "options": [
       {"label": "Yes, use csv", "value": true},
       {"label": "No, do not use csv", "value": false}
