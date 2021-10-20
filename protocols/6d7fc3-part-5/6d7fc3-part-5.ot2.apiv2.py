@@ -122,6 +122,9 @@ def run(ctx):
 
     # Protocol Steps
 
+    # Set Temperature Module to 20C
+    temp_mod.set_temperature(20)
+
     # Centrifuge Product
     ctx.pause("Centrifuge the Forward and Reverse PCRs ")
 
