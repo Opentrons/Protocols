@@ -1,0 +1,56 @@
+[
+  {
+    "type": "dropDown",
+    "label": "Use csv for this run?",
+    "name": "pre_mix",
+    "options": [
+      {"label": "Yes, use csv", "value": true},
+      {"label": "No, do not use csv", "value": false}
+    ]
+  },
+  {
+    "type": "textFile",
+    "label": ".CSV File",
+    "name": "csv_samp",
+    "default": ",1,2,3,4,5,6,7,8,9,10,11,12\\nA,X,X,X,X,X,X,X,O,X,X,O,X\\nB,O,X,X,X,X,X,X,X,X,X,X,X\\nC,X,X,X,O,X,X,X,X,X,X,X,X\\nD,X,X,X,X,X,X,O,X,X,X,X,X\\nE,X,O,X,X,X,X,X,X,X,X,X,X\\nF,X,X,X,X,X,O,X,O,X,X,O,X\\nG,X,X,X,X,O,X,X,X,X,X,X,X\\nH,X,X,X,X,O,X,X,X,O,X,X,X"
+  },
+  {
+    "type": "int",
+    "label": "Number of Samples (1-81)",
+    "name": "num_samp",
+    "default": 81
+  },
+  {
+    "type": "float",
+    "label": "Initial Volume in Enzyme Hydrolysis 15mL tube (mL)",
+    "name": "v_0_tube15_enz",
+    "default": 8.2
+  },
+  {
+    "type": "float",
+    "label": "Initial Volume in Trichloroacetic acid solution 15mL tube(mL)",
+    "name": "v_0_tube15_acid",
+    "default": 11.4
+  },
+  {
+    "type": "float",
+    "label": "Initial Volume in Dilution Buffer 50mL tube (mL)",
+    "name": "v_0_tube50",
+    "default": 25
+  },
+  {
+    "type": "int",
+    "label": "Sample Aspiration Height (mm)",
+    "name": "samp_asp_height",
+    "default": 3
+  },
+  {
+    "type": "dropDown",
+    "label": "P300 Multi-Channel Mount",
+    "name": "p300_mount",
+    "options": [
+      {"label": "Left", "value": "left"},
+      {"label": "Right", "value": "right"}
+    ]
+  }
+]
