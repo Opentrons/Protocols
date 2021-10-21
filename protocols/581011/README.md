@@ -17,14 +17,14 @@ Find part two of the protocol (effector cell loading) below:
 [Part 2 - Effector Cell Loading](https://protocols.opentrons.com/protocol/581011-pt2)
 
 Explanation of complex parameters below:
-* `.CSV File`: Upload the .csv file according to the template shown [here](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/581011/co-culture_template_protocol.numbers). Any well to the left of a forward slash (`/`) will correspond to the well in the reservoir containing the desired target cell. Any well to the right of a forward slash (`/`) will correspond to the effector cell in the 96 well plate for part 2 of this protocol. If a cell is only to receive one of the effector or target cells, place a `0` (e.g. A1/0 would mean target cell from A1 of the reservoir with no effector cell). All cells that are to be skipped (receive neither effector nor target cell) should have a lowercase `'x'` in the resepective cell in the .csv file.
+* `.CSV File`: Upload the .csv file according to the template shown [here](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/581011/co-culture_template_protocol.numbers). Any well to the left of a forward slash (`/`) will correspond to the well in the reservoir containing the desired target cell. Any well to the right of a forward slash (`/`) will correspond to the effector cell in the 96 well plate for part 2 of this protocol. If a cell is only to receive one of the effector or target cells, place a `0` (e.g. A1/0 would mean target cell from A1 of the reservoir with no effector cell). All cells that are to be skipped (receive neither effector nor target cell) should have a lowercase `'x'` in the resepective cell in the .csv file. For the parameters below, make sure there are NO commas inside of the wells, and just the values.
 * `Transfer Volume Effector Cell`: Specify the volume (in ul) to transfer between effector cells in reservoir to well plate.
 * `Pre-mix before aspirating in source well plate?`: Specify whether or not to pre-mix before each transfer of target cell in reservoir to plate.
 * `Pre-mix height in well plate`: If `Pre-mix` variable is set to `Yes`, specify the height in the reservoir wells in which to pre-mix.
 * `Pre-mix repetitions`: If `Pre-mix` variable is set to `Yes`, specify the number of repetitions to mix before each transfer.
 * `Pre-mix Volume`: If `Pre-mix` variable is set to `Yes`, specify the pre-mix volume (in ul).
 * `Pre-mix Rate`: If `Pre-mix` variable is set to `Yes`, specify the mix rate. A value of `1` is default mix speed, whereas a value of `0.5` is half of the default mix speed, etc.
-* `Dispense Reservoir Height`: Specify the height above the reservoir bottom to dispense residual solution. 
+* `Dispense Reservoir Height`: Specify the height above the reservoir bottom to dispense residual solution.
 * `Transfer Aspiration/Dispense Height`: Specify the height in which to aspirate/dispense from in the well plate. Default is 1mm from the bottom of the reservoir.
 * `Transfer Dispense Height`: Specify the height in which to dispense from in the well plate. Default is 1mm from the bottom of the reservoir.
 * `Aspiration Rate`: Specify the aspiration rate for transfers. A value of `1` is default aspiration speed, whereas a value of `0.5` is half of the default aspiration speed, etc.
