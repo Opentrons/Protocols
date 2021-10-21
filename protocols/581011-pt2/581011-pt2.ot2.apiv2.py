@@ -49,8 +49,6 @@ def run(ctx):
     m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,
                                tip_racks=tiprack)
 
-
-
     m300.well_bottom_clearance.aspirate = asp_height
     m300.well_bottom_clearance.dispense = disp_height
     m300.flow_rate.aspirate = asp_rate*m300.flow_rate.aspirate
