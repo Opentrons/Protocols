@@ -9,6 +9,12 @@ metadata = {
     'apiLevel': '2.10'
 }
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"csv_samp":",1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24\\nA,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nB,x,A1/A1,A2/A1,A2/A1,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nC,x,A1/A1,A2/A1,A2/A1,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nD,x,A1/B1,A2/B1,A2/B1,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nE,x,A1/B1,A2/B1,A2/B1,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nF,x,A1/C1,A2/C1,A2/C1,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nG,x,A1/C1,A2/C1,A2/C1,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nH,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nI,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nJ,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nK,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nL,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nM,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nN,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nO,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nP,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nDay 1,30,Yes pre-mix,0.8,2,5,200,1,0.8,0.8,0.8,0.5,0.8,Right,,,,,,,,,,,\\nDay 2,30,Yes pre-mix,0.8,2,5,200,1,0.8,0.8,0.8,0.5,0.8,Right,,,,,,,,,,,"}""")
+    return [_all_values[n] for n in names]
+
+
 
 def run(ctx):
     """PROTOCOL."""
@@ -27,7 +33,7 @@ def run(ctx):
     vol_target_cell = int(day1[0])
     pre_mix = bool(day1[1])
     mix_asp_height = float(day1[2])
-    # mix_disp_height = float(day1[3])
+    mix_disp_height = float(day1[3])
     premix_reps = int(day1[4])
     mix_vol = int(day1[5])
     mix_rate = float(day1[6])
