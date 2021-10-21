@@ -1,6 +1,6 @@
 from operator import itemgetter
 from opentrons.protocol_api.labware import Well, OutOfTipsError
-# import from the python types module
+# import from python types module
 from types import MethodType
 # import types from opentrons module
 from opentrons import types
