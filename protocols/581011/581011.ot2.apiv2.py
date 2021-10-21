@@ -27,7 +27,7 @@ def run(ctx):
     vol_target_cell = int(day1[0])
     pre_mix = bool(day1[1])
     mix_asp_height = float(day1[2])
-    mix_disp_height = float(day1[3])
+    # mix_disp_height = float(day1[3])
     premix_reps = int(day1[4])
     mix_vol = int(day1[5])
     mix_rate = float(day1[6])
