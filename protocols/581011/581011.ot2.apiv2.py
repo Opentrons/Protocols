@@ -23,9 +23,8 @@ def run(ctx):
               if line.split(',')[0].strip()][17:19]
 
     day1 = fields[0]
-
     vol_target_cell = int(day1[0])
-    pre_mix = bool(day1[1])
+    pre_mix = day1[1].lower().startswith("yes")
     mix_asp_height = float(day1[2])
     mix_disp_height = float(day1[3])
     premix_reps = int(day1[4])
