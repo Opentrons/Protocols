@@ -10,15 +10,34 @@ metadata = {
 
 
 def run(ctx):
+    [csv_samp] = get_values(  # noqa: F821
+        "csv_samp")
 
-    [csv_samp, vol_effector_cell, pre_mix, mix_asp_height, mix_disp_height,
-     premix_reps, mix_vol, mix_rate, disp_res_height,
-     asp_height, disp_height, asp_rate,
-        disp_rate, m300_mount] = get_values(  # noqa: F821
-        "csv_samp", "vol_effector_cell", "pre_mix",
-        "mix_asp_height", "mix_disp_height", "premix_reps",
-        "mix_vol", "mix_rate", "disp_res_height",
-        "asp_height", "disp_height", "asp_rate", "disp_rate", "m300_mount")
+    # plate map excluding 1st column and row
+    if csv_samp[0] == ',':
+        csv_samp = csv_samp[1:]
+
+    plate_map = [[val.strip() for val in line.split(',')][1:]
+                 for line in csv_samp.splitlines()
+                 if line.split(',')[0].strip()][1:17]
+    fields = [[val.strip() for val in line.split(',')][1:]
+              for line in csv_samp.splitlines()
+              if line.split(',')[0].strip()][17:19]
+
+    day2 = fields[1]
+    vol_effector_cell = int(day2[0])
+    pre_mix = day2[1].lower().startswith("yes")
+    mix_asp_height = float(day2[2])
+    mix_disp_height = float(day2[3])
+    premix_reps = int(day2[4])
+    mix_vol = int(day2[5])
+    mix_rate = float(day2[6])
+    disp_res_height = float(day2[7])
+    asp_height = float(day2[8])
+    disp_height = float(day2[9])
+    asp_rate = float(day2[10])
+    disp_rate = float(day2[11])
+    m300_mount = day2[12]
 
     # load labware
     plate = ctx.load_labware('corning_384_wellplate_112ul_flat', '4')
@@ -34,14 +53,6 @@ def run(ctx):
     m300.well_bottom_clearance.dispense = disp_height
     m300.flow_rate.aspirate = asp_rate*m300.flow_rate.aspirate
     m300.flow_rate.dispense = disp_rate*m300.flow_rate.dispense
-
-    # plate map excluding 1st column and row
-    if csv_samp[0] == ',':
-        csv_samp = csv_samp[1:]
-
-    plate_map = [[val.strip() for val in line.split(',')][1:]
-                 for line in csv_samp.splitlines()
-                 if line.split(',')[0].strip()][1:]
 
     # FIND NUMBER OF TIPS PER COLUMN
     letter_to_num = {'A': '1', 'B': '2', 'C': '3', 'D': '4',
