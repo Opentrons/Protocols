@@ -321,29 +321,35 @@ def run(ctx):
                         if withdraw_speed is not None:
                             pip.slow_tip_withdrawal(
                              withdraw_speed, source, to_surface=True)
+                        if liquid_class == "viscous":
+                            pip.touch_tip(radius=0.75, v_offset=-2, speed=20)
+                            top_dispenses = False
                         if liquid_class == "volatile":
                             pip.air_gap(air_gap_vol)
-                        if liquid_class == "viscous":
-                            top_dispenses = False
                         dispense_location = well.height_inc(
                          int(vol) / reps, top=top_dispenses)
                         pip.dispense(
                          (int(vol) / reps)+air_gap_vol,
                          dispense_location, rate=adjusted_rate)
                         pip.delay(delay_time)
-                        if liquid_class == "volatile":
-                            pip.blow_out_solvent(well)
-                        else:
-                            original_value = pip.flow_rate.blow_out
-                            if liquid_class == "viscous":
-                                pip.flow_rate.blow_out = original_value / 10
-                            pip.blow_out()
-                            pip.flow_rate.blow_out = original_value
                         if top_dispenses is False:
                             if withdraw_speed is not None:
                                 pip.slow_tip_withdrawal(
                                  withdraw_speed, well, to_surface=True)
+                            if liquid_class == "viscous":
+                                original_value = pip.flow_rate.blow_out
+                                pip.flow_rate.blow_out = original_value / 10
+                                pip.blow_out()
+                                pip.flow_rate.blow_out = original_value
+                            else:
+                                pip.blow_out()
+                            pip.touch_tip(radius=0.75, v_offset=-2, speed=20)
                             pip.drop_tip()
+                        else:
+                            if liquid_class == "volatile":
+                                pip.blow_out_solvent(well)
+                            else:
+                                pip.blow_out()
         for pipette in [p300s, p1000s]:
             if pipette.has_tip:
                 pipette.drop_tip()
