@@ -25,9 +25,8 @@ def run(ctx):
               if line.split(',')[0].strip()][17:19]
 
     day2 = fields[1]
-
     vol_effector_cell = int(day2[0])
-    pre_mix = bool(day2[1])
+    pre_mix = day2[1].lower().startswith("yes")
     mix_asp_height = float(day2[2])
     mix_disp_height = float(day2[3])
     premix_reps = int(day2[4])
@@ -49,6 +48,8 @@ def run(ctx):
     # load instrument
     m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,
                                tip_racks=tiprack)
+
+
 
     m300.well_bottom_clearance.aspirate = asp_height
     m300.well_bottom_clearance.dispense = disp_height
