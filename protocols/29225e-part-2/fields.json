@@ -19,7 +19,10 @@
     "label": "Labware Containing Master Mixes",
     "name": "labware_mm",
     "options": [
-      { "label": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap", "value": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap" }
+      { "label": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap", "value": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap" },
+      { "label": "ambion_snap_cap_24_aluminumblock_1500ul", "value": "ambion_snap_cap_24_aluminumblock_1500ul" },
+      { "label": "eppendorf_snap_cap_24_aluminumblock_1500ul", "value": "eppendorf_snap_cap_24_aluminumblock_1500ul" },
+      { "label": "takara_snap_cap_24_aluminumblock_1500ul", "value": "takara_snap_cap_24_aluminumblock_1500ul" }
     ]
   },
   {
@@ -28,7 +31,8 @@
     "name": "labware_samp",
     "options": [
       { "label": "nest_96_wellplate_2ml_deep", "value": "nest_96_wellplate_2ml_deep" },
-      { "label": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap", "value": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap" }
+      { "label": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap", "value": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap" },
+      { "label": "opentrons_96_aluminumblock_biorad_wellplate_200ul", "value": "opentrons_96_aluminumblock_biorad_wellplate_200ul" }
     ]
   },
   {
