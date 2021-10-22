@@ -43,7 +43,7 @@ def run(ctx):
                                       for tfer in tfers]))]]
 
     # count unique values in csv, load master mix labware
-    mms = [ctx.load_labware(labware_samp, slot, "Master Mixes")
+    mms = [ctx.load_labware(labware_mm, slot, "Master Mixes")
            for slot in [4, 7, 8, 9][:len(set([tfer['master mix rack']
                                               for tfer in tfers]))]]
 
