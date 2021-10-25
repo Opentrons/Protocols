@@ -43,7 +43,7 @@ def run(ctx):
                                       for tfer in tfers]))]]
 
     # count unique values in csv, load master mix labware
-    mms = [ctx.load_labware(labware_samp, slot, "Master Mixes")
+    mms = [ctx.load_labware(labware_mm, slot, "Master Mixes")
            for slot in [4, 7, 8, 9][:len(set([tfer['master mix rack']
                                               for tfer in tfers]))]]
 
@@ -228,13 +228,15 @@ def run(ctx):
     for tfer in tfers:
         if int(tfer['water vol']):
             water_transfers.append(tfer)
-    if pip20.name == "p20_single_gen2":
-        distribute_water(pip20, water_transfers, 2)
-    else:
-        pause_attention("""Please manually dispense the indicated volumes of
-        water to the corresponding PCR plate wells and then resume
-        {}.""".format(["{0} ul to {1}".format(
-         tfer['water vol'], tfer['dest well']) for tfer in water_transfers]))
+    if water_transfers != []:
+        if pip20.name == "p20_single_gen2":
+            distribute_water(pip20, water_transfers, 2)
+        else:
+            pause_attention("""Please manually dispense the indicated volumes of
+            water to the corresponding PCR plate wells and then resume
+            {}.""".format(["{0} ul to {1}".format(
+             tfer['water vol'], tfer['dest well']
+             ) for tfer in water_transfers]))
 
     def create_chunks(list_name, n):
         for i in range(0, len(list_name), n):
@@ -244,12 +246,31 @@ def run(ctx):
     mm_source = next(mm)
     current_transfers = {'vol': [], 'dest': []}
     p300s.pick_up_tip()
-    for tfer in sorted(
-     tfers, key=itemgetter('master mix rack', 'master mix well')):
+    for index, tfer in enumerate(sorted(
+     tfers, key=itemgetter('master mix rack', 'master mix well'))):
         if mms[int(tfer['master mix rack'])-1].wells_by_name()[
          tfer['master mix well']] == mm_source:
             current_transfers['vol'].append(float(tfer['master mix vol']))
-            current_transfers['dest'].append(tfer['master mix well'])
+            current_transfers['dest'].append(tfer['dest well'])
+            if index == len(tfers) - 1:
+                dest = (dest for dest in current_transfers['dest'])
+                if not p300s.has_tip:
+                    p300s.pick_up_or_refill()
+                p300s.aspirate(15, mm_source.height_dec(15), rate=0.3)
+                for chunk in create_chunks(
+                 current_transfers['vol'], math.floor(
+                  tips300[0].wells()[0].max_volume / 20)):
+                    asp_vol = sum(chunk)
+                    p300s.aspirate(
+                     asp_vol, mm_source.height_dec(asp_vol), rate=0.3)
+                    p300s.delay(1)
+                    p300s.slow_tip_withdrawal(10, mm_source)
+                    for vol in chunk:
+                        d = pcr_plate.wells_by_name()[next(dest)]
+                        p300s.dispense(vol, d.bottom(clearance_pcr), rate=0.3)
+                        p300s.delay(1)
+                        p300s.slow_tip_withdrawal(10, d)
+
         else:
             dest = (dest for dest in current_transfers['dest'])
             if not p300s.has_tip:
@@ -273,6 +294,26 @@ def run(ctx):
             except StopIteration:
                 break
             current_transfers = {'vol': [], 'dest': []}
+            current_transfers['vol'].append(float(tfer['master mix vol']))
+            current_transfers['dest'].append(tfer['dest well'])
+            if index == len(tfers) - 1:
+                dest = (dest for dest in current_transfers['dest'])
+                if not p300s.has_tip:
+                    p300s.pick_up_or_refill()
+                p300s.aspirate(15, mm_source.height_dec(15), rate=0.3)
+                for chunk in create_chunks(
+                 current_transfers['vol'], math.floor(
+                  tips300[0].wells()[0].max_volume / 20)):
+                    asp_vol = sum(chunk)
+                    p300s.aspirate(
+                     asp_vol, mm_source.height_dec(asp_vol), rate=0.3)
+                    p300s.delay(1)
+                    p300s.slow_tip_withdrawal(10, mm_source)
+                    for vol in chunk:
+                        d = pcr_plate.wells_by_name()[next(dest)]
+                        p300s.dispense(vol, d.bottom(clearance_pcr), rate=0.3)
+                        p300s.delay(1)
+                        p300s.slow_tip_withdrawal(10, d)
 
     # transfer normalized RNA to PCR plate
     rna_tfers = sorted([tfer for tfer in tfers if (tfer['dest well'] in [
