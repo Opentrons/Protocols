@@ -9,8 +9,9 @@ metadata = {
 
 
 def run(protocol):
-    [p1n, p2n, p3n, p4n, pipMnt, tipTrash] = get_values(  # noqa: F821
-     'p1n', 'p2n', 'p3n', 'p4n', 'pipMnt', 'tipTrash')
+    [onlySamps, p1n, p2n, p3n, p4n,
+     pipMnt, tipTrash] = get_values(  # noqa: F821
+     'onlySamps', 'p1n', 'p2n', 'p3n', 'p4n', 'pipMnt', 'tipTrash')
 
     # load labware
     tips = [
@@ -18,10 +19,11 @@ def run(protocol):
             '5', '6', '8', '9', '11']]
     pip = protocol.load_instrument('p20_multi_gen2', pipMnt, tip_racks=tips)
 
-    tempDeck = protocol.load_module('temperature module gen2', '3')
-    tempDeck.set_temperature(4)
-    tempPlate = tempDeck.load_labware(
-        'opentrons_96_aluminumblock_generic_pcr_strip_200ul')
+    if not onlySamps:
+        tempDeck = protocol.load_module('temperature module gen2', '3')
+        tempDeck.set_temperature(4)
+        tempPlate = tempDeck.load_labware(
+            'opentrons_96_aluminumblock_generic_pcr_strip_200ul')
     nums = [p1n, p2n, p3n, p4n]
     sampPlates = [
         protocol.load_labware(
@@ -38,9 +40,10 @@ def run(protocol):
         'microampoptical_384_wellplate_30ul', '2',)
 
     # Create Variables
-    water = [well for well in tempPlate.rows()[0][:4] for _ in range(12)]
-    primer = [tempPlate['A6'] for row in range(48)]
-    mm = [well for well in tempPlate.rows()[0][7:9] for _ in range(24)]
+    if not onlySamps:
+        water = [well for well in tempPlate.rows()[0][:4] for _ in range(12)]
+        primer = [tempPlate['A6'] for row in range(48)]
+        mm = [well for well in tempPlate.rows()[0][7:9] for _ in range(24)]
     tipLocs = [w for rack in tips for w in rack.rows()[0]]
 
     sampCols = [math.ceil(n/8) for n in nums]
@@ -84,14 +87,16 @@ def run(protocol):
         pip.drop_tip(tipLocs[tipNum])
         tipNum += 1
 
-    # Transfer 8.5uL of water to corresponding wells
-    mm_creation(water, 8.5, 'water')
+    # Master Mix Creation and Transfer
+    if not onlySamps:
+        # Transfer 8.5uL of water to corresponding wells
+        mm_creation(water, 8.5, 'water')
 
-    # Transfer 1.5uL of Primer/Probe Mix to corresponding wells
-    mm_creation(primer, 1.5, 'Primer/Probe Mix')
+        # Transfer 1.5uL of Primer/Probe Mix to corresponding wells
+        mm_creation(primer, 1.5, 'Primer/Probe Mix')
 
-    # Transfer 5uL of Master Mix to corresponding wells
-    mm_creation(mm, 5, 'Master Mix')
+        # Transfer 5uL of Master Mix to corresponding wells
+        mm_creation(mm, 5, 'Master Mix')
 
     # Transfer samples to wells with mastermix
     for plate, col, dest in zip(sampPlates, sampCols, destWells):

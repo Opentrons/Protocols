@@ -1,5 +1,14 @@
 [
   {
+    "type": "dropDown",
+    "label": "Only Transfer Samples",
+    "name": "onlySamps",
+    "options": [
+      {"label": "Yes (only transfer samples)", "value": 1},
+      {"label": "No (transfer reagents too)", "value": 0}
+    ]
+  },
+  {
     "type": "int",
     "label": "Plate 1 Number of Samples",
     "name": "p1n",
