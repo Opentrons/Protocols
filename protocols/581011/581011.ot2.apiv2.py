@@ -15,9 +15,6 @@ def run(ctx):
     [csv_samp] = get_values(  # noqa: F821
         "csv_samp")
 
-    plate_map = [[val.strip() for val in line.split(',')][1:]
-                 for line in csv_samp.splitlines()
-                 if line.split(',')[0].strip()][1:17]
     fields = [[val.strip() for val in line.split(',')][1:]
               for line in csv_samp.splitlines()
               if line.split(',')[0].strip()][17:19]
@@ -51,6 +48,14 @@ def run(ctx):
     m300.well_bottom_clearance.dispense = disp_height
     m300.flow_rate.aspirate = asp_rate*m300.flow_rate.aspirate
     m300.flow_rate.dispense = disp_rate*m300.flow_rate.dispense
+
+    # plate map excluding 1st column and row
+    # remove first comma in csv sample if found
+    if csv_samp[0] == ',':
+        csv_samp = csv_samp[1:]
+    plate_map = [[val.strip() for val in line.split(',')][1:]
+                 for line in csv_samp.splitlines()
+                 if line.split(',')[0].strip()][1:]
 
     # FIND NUMBER OF TIPS PER COLUMN
     letter_to_num = {'A': '1', 'B': '2', 'C': '3', 'D': '4',
