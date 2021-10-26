@@ -1,4 +1,4 @@
-import itertools
+cimport itertools
 import math
 
 metadata = {
@@ -24,10 +24,10 @@ def run(ctx):
     v_0_tube15_acid *= 1000
 
     # load labware
-    tuberacks = [ctx.load_labware('opentrons_24_tuberack_nest_1.5ml_screwcap',
+    tuberacks = [ctx.load_labware('custom_24_tuberack_7500ul',
                                   slot, label="SAMPLE RACK")
                  for slot in ['4', '1', '5', '2']]
-    plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '3')
+    plate = ctx.load_labware('nest_96_wellplate_1000ul', '3')
     tiprack = ctx.load_labware('opentrons_96_tiprack_300ul', '10')
     reagents = ctx.load_labware(
                     'opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical', '6')
@@ -131,8 +131,10 @@ def run(ctx):
                           if height == 'X' or height == 'x' else 1))
         else:
             p300.aspirate(50, tube.bottom(z=samp_asp_height))
+        p300.touch_tip()
         p300.dispense(50, dest_well)
         p300.mix(5, 80, dest_well)
+        p300.blow_out()
         p300.touch_tip()
         p300.drop_tip()
     ctx.comment('\n\n\n\n\n\n')
