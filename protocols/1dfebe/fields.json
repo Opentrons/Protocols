@@ -42,7 +42,7 @@
     "type": "int",
     "label": "Sample Aspiration Height (mm)",
     "name": "samp_asp_height",
-    "default": 3
+    "default": 55
   },
   {
     "type": "dropDown",

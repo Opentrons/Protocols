@@ -55,6 +55,9 @@ def run(ctx):
     adapter_wells = temp_plate.wells()[:samples]
     ligation_mm = temp_plate['A6']
     pcr_tube_wells = pcr_tubes.wells()[:samples]
+    lig_buff = temp_plate['B6']
+    dna_lig = temp_plate['C6']
+    lig_sol = temp_plate['D6']
 
     # Protocol Steps
 
@@ -70,10 +73,27 @@ def run(ctx):
               temperature module.''')
 
     # Mix Ligation MM
-    ctx.comment('Mixing Ligation Master Mix')
-    pick_up(p300)
-    p300.mix(10, 50, ligation_mm)
-    p300.drop_tip()
+    lig_buff_vol = 10*samples+5
+    dna_lig_vol = 5*samples+2.5
+    lig_sol_vol = 7.2*samples+3.6
+
+    pip = p300 if lig_buff_vol > 20 else p20
+    pick_up(pip)
+    pip.aspirate(lig_buff_vol, lig_buff)
+    pip.dispense(lig_buff_vol, ligation_mm)
+    pip.drop_tip()
+
+    pip = p300 if dna_lig_vol > 20 else p20
+    pick_up(pip)
+    pip.aspirate(dna_lig_vol, dna_lig)
+    pip.dispense(dna_lig_vol, ligation_mm)
+    pip.drop_tip()
+
+    pip = p300 if lig_sol_vol > 20 else p20
+    pick_up(pip)
+    pip.aspirate(lig_sol_vol, lig_sol)
+    pip.dispense(lig_sol_vol, ligation_mm)
+    pip.drop_tip()
 
     # Add Adapters to PCR Tubes
     ctx.comment(f'Transferring {samples} Adapters to {samples} PCR Tubes')
@@ -116,6 +136,6 @@ def run(ctx):
 
     # Incubate Reaction for 15 mins at 20C
     tc_mod.close_lid()
-    tc_mod.set_block_temperature(4, hold_time_minutes=15, block_max_volume=50)
+    tc_mod.set_block_temperature(20, hold_time_minutes=15, block_max_volume=50)
     tc_mod.open_lid()
     ctx.comment('Protocol Complete!')

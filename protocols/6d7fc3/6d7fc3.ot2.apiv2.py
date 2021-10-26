@@ -28,12 +28,12 @@ def run(ctx):
     temp_plate = temp_mod.load_labware(
                     'opentrons_24_aluminumblock_nest_2ml_snapcap')
 
-    if samples_labware == 'tube':
-        sample_plate = ctx.load_labware(
-                        'opentrons_24_tuberack_nest_2ml_snapcap', 2)
-    elif samples_labware == 'plate':
-        sample_plate = ctx.load_labware(
-                        'nest_96_wellplate_100ul_pcr_full_skirt', 2)
+    # if samples_labware == 'tube':
+    #     sample_plate = ctx.load_labware(
+    #                     'opentrons_24_tuberack_nest_2ml_snapcap', 2)
+    # elif samples_labware == 'plate':
+    #     sample_plate = ctx.load_labware(
+    #                     'nest_96_wellplate_100ul_pcr_full_skirt', 2)
 
     # Load Pipettes
     p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
@@ -55,10 +55,12 @@ def run(ctx):
             pip.pick_up_tip()
 
     # Wells
-    sample_wells = sample_plate.wells()[:samples]
+    # sample_wells = sample_plate.wells()[:samples]
     tc_plate_wells = tc_plate.wells()[:samples]
     mm = temp_plate['A1']
     frag_enzyme_mix = temp_plate['B1']
+    frag_buff = temp_plate['A2']
+    fera = temp_plate['B2']
 
     # Protocol Steps
 
@@ -70,26 +72,37 @@ def run(ctx):
     tc_mod.open_lid()
     temp_mod.await_temperature(4)
     ctx.pause('''Temperature Module has been cooled to 4°C.
-              Please place your samples and reagents on the
+              Please place your reagents on the
               temperature module.''')
 
-    # Transfer 4 uL of DNA to Thermocycler Reaction Plate
-    for src, dest in zip(sample_wells, tc_plate_wells):
-        pick_up(p20)
-        p20.aspirate(4, src)
-        p20.dispense(4, dest)
-        p20.drop_tip()
+    # # Transfer 4 uL of DNA to Thermocycler Reaction Plate
+    # for src, dest in zip(sample_wells, tc_plate_wells):
+    #     pick_up(p20)
+    #     p20.aspirate(4, src)
+    #     p20.dispense(4, dest)
+    #     p20.drop_tip()
 
-    # Mix Master Mix
-    pick_up(p300)
-    p300.mix(10, 50, mm)
-    p300.drop_tip()
+    # Prepre Master Mix
+    frag_buff_vol = 2.5*samples+1.2
+    fera_vol = 0.75*samples+0.4
 
-    # Transfer 16 uL of Master Mix to Thermocycler Reaction Plate
+    pip = p300 if frag_buff_vol > 20 else p20
+    pick_up(pip)
+    pip.aspirate(frag_buff_vol, frag_buff)
+    pip.dispense(frag_buff_vol, mm)
+    pip.drop_tip()
+
+    pip = p300 if fera_vol > 20 else p20
+    pick_up(pip)
+    pip.aspirate(fera_vol, fera)
+    pip.dispense(fera_vol, mm)
+    pip.drop_tip()
+
+    # Transfer 3.25 uL of Master Mix to Thermocycler Reaction Plate
     for dest in tc_plate_wells:
         pick_up(p20)
-        p20.aspirate(16, mm)
-        p20.dispense(16, dest)
+        p20.aspirate(3.25, mm)
+        p20.dispense(3.25, dest)
         p20.mix(10, 10)
         p20.drop_tip()
 

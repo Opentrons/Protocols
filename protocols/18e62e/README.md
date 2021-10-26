@@ -12,6 +12,8 @@ This protocol automates a Multiplex LDT 384-Well Plate PCR prep. Using up to fou
 
 This protocol is still a work in progress and will be updated.
 
+**Update 2021-10-25:** A new parameter was added (*Only Transfer Samples*) that will skip the addition of reaction mix components and use of the temperature module; instead, simply transferring samples from 96-well plates to 384-well plate.
+
 
 Explanation of complex parameters below:
 * **Plate 1 Number of Samples**: Specify the number of samples in Plate 1 (up to 96). The plate can be skipped by setting this value to 0 (zero).

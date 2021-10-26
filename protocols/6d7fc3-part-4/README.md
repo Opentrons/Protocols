@@ -1,6 +1,7 @@
 # GeneRead QIAact Lung DNA UMI Panel Kit: Target Enrichment PCR
 
 ### Author
+
 [Opentrons](https://opentrons.com/)
 
 ## Categories
@@ -8,6 +9,7 @@
 	* GeneRead QIAact Lung DNA UMI Panel Kit
 
 ## Description
+
 This protocol automates the fourth part of a seven part protocol for the [GeneRead QIAact Lung DNA UMI Panel Kit](https://www.qiagen.com/us/products/instruments-and-automation/genereader-system/generead-qiaact-lung-panels-ww/) which constructs molecularly bar-coded DNA libraries for digital sequencing. This protocol automates the Target Enrichment PCR part described in the [GeneRead QIAact Lung DNA UMI Panel Handbook](https://www.qiagen.com/us/resources/download.aspx?id=94ab92d2-1918-4388-989b-4cefa8eed203&lang=en).
 
 * Part 1: [Fragmentation, End-repair and A-addition](https://protocols.opentrons.com/protocol/6d7fc3)
@@ -19,6 +21,7 @@ This protocol automates the fourth part of a seven part protocol for the [GeneRe
 * Part 7: [Cleanup of Universal PCR with QIAact Beads](https://protocols.opentrons.com/protocol/6d7fc3-part-7)
 
 Explanation of complex parameters below:
+
 * `Number of Samples`: The total number of DNA samples. Samples must range between 1 (minimum) and 12 (maximum).
 * `P300 Single GEN2 Pipette Mount Position`: The position of the pipette, either left or right.
 * `P20 Single GEN2 Pipette Mount Position`: The position of the pipette, either left or right.
@@ -26,25 +29,31 @@ Explanation of complex parameters below:
 ---
 
 ### Modules
+
 * [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
 * [Thermocycler Module](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module)
 
 ### Labware
+
 * [Opentrons Filter Tips](https://shop.opentrons.com/collections/opentrons-tips)
 * [NEST 96 Well 100 uL PCR Plate](https://shop.opentrons.com/collections/lab-plates/products/nest-0-1-ml-96-well-pcr-plate-full-skirt)
 * [Opentrons Aluminum Block Set](https://shop.opentrons.com/collections/racks-and-adapters/products/aluminum-block-set)
 
 ### Pipettes
+
 * [P300 Single GEN2 Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/single-channel-electronic-pipette?variant=5984549109789)
 * [P20 Single GEN2 Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/single-channel-electronic-pipette?variant=31059478970462)
 
 ### Reagents
+
 * [GeneRead QIAact Lung DNA UMI Panel Kit](https://www.qiagen.com/us/products/instruments-and-automation/genereader-system/generead-qiaact-lung-panels-ww/)
 
 ---
 
 ### Deck Setup
+
 * The example below illustrates the starting deck layout for Part 4 (Target Enrichment PCR).
+
 ![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/6d7fc3/6d7fc3-part-4-layout.png)
 
 ### Reagent Setup
@@ -53,11 +62,22 @@ Explanation of complex parameters below:
 
 * Slot 3: **Red**: Forward Target Enrichment Master Mix (A1) **Blue**: Reverse Target Enrichment Master Mix (B1)
 
+**TEPCR Buffer**: A2
+
+**Forward Primers**: B2
+
+**Reverse Primers**: C2
+
+**TEPCR Primer**: D2
+
+**DNA Polymerase**: A3
+
 * Thermocycler: Empty NEST 100 uL PCR Plate
 
 ---
 
 ### Protocol Steps
+
 1. Pre-Cool Temperature Module to 4°C.
 2. Mix both Forward and Reverse Enrichment Master Mixes
 3. Transfer reactions from PCR Tubes to PCR Plate in thermocycler
@@ -80,6 +100,7 @@ Lid Temperature: 103°C
 4°C - Hold
 
 ### Process
+
 1. Input your protocol parameters above.
 2. Download your protocol and unzip if needed.
 3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.
@@ -89,6 +110,7 @@ Lid Temperature: 103°C
 7. Hit 'Run'.
 
 ### Additional Notes
+
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
