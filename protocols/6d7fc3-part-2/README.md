@@ -5,7 +5,7 @@
 
 ## Categories
 * NGS Library Prep
-  * GeneRead QIAact Lung DNA UMI Panel Kit
+	* GeneRead QIAact Lung DNA UMI Panel Kit
 
 ## Description
 This protocol automates the second part of a seven part protocol for the [GeneRead QIAact Lung DNA UMI Panel Kit](https://www.qiagen.com/us/products/instruments-and-automation/genereader-system/generead-qiaact-lung-panels-ww/) which constructs molecularly bar-coded DNA libraries for digital sequencing. This protocol automates the Adapter Ligation part described in the [GeneRead QIAact Lung DNA UMI Panel Handbook](https://www.qiagen.com/us/resources/download.aspx?id=94ab92d2-1918-4388-989b-4cefa8eed203&lang=en).

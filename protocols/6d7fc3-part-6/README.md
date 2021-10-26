@@ -5,9 +5,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-
 * NGS Library Prep
-  * GeneRead QIAact Lung DNA UMI Panel Kit
+	* GeneRead QIAact Lung DNA UMI Panel Kit
 
 ## Description
 
