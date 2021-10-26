@@ -1,4 +1,4 @@
-cimport itertools
+import itertools
 import math
 
 metadata = {
