@@ -55,6 +55,11 @@ def run(ctx):
     tc_plate_wells_reverse = tc_plate.wells()[80:80+samples]
     forward_mm = temp_plate['A1']
     reverse_mm = temp_plate['B1']
+    tepcr_buff = temp_plate['A2']
+    fw_primers = temp_plate['B2']
+    rev_primers = temp_plate['C2']
+    tepcr_primer = temp_plate['D2']
+    dna_poly = temp_plate['A3']
     forward_pcr_wells = pcr_tubes.wells()[:samples]
     reverse_pcr_wells = pcr_tubes.wells()[80:80+samples]
 
@@ -67,15 +72,79 @@ def run(ctx):
               Please place your samples and reagents on the
               temperature module.''')
 
-    # Mix MM
-    ctx.comment('Mixing Master Mix')
-    pick_up(p300)
-    p300.mix(10, 30, forward_mm)
-    p300.drop_tip()
+    tepcr_buff_vol = 4*samples+2
+    fw_primers_vol = 5*samples+2.5
+    rev_primers_vol = 5*samples+2.5
+    tepcr_primer_vol = 0.8*samples+0.4
+    dna_poly_vol = 0.8*samples+0.4
 
-    pick_up(p300)
-    p300.mix(10, 30, reverse_mm)
-    p300.drop_tip()
+    # Prepare Forward MM
+    ctx.comment('Preparing Forward Master Mix')
+
+    pip = p300 if tepcr_buff_vol > 20 else p20
+    pick_up(pip)
+    pip.aspirate(tepcr_buff_vol, tepcr_buff)
+    pip.dispense(tepcr_buff_vol, forward_mm)
+    pip.drop_tip()
+
+    pip = p300 if fw_primers_vol > 20 else p20
+    pick_up(pip)
+    pip.aspirate(fw_primers_vol, fw_primers)
+    pip.dispense(fw_primers_vol, forward_mm)
+    pip.drop_tip()
+
+    pip = p300 if tepcr_primer_vol > 20 else p20
+    pick_up(pip)
+    pip.aspirate(tepcr_primer_vol, tepcr_primer)
+    pip.dispense(tepcr_primer_vol, forward_mm)
+    pip.drop_tip()
+
+    pip = p300 if dna_poly_vol > 20 else p20
+    pick_up(pip)
+    pip.aspirate(dna_poly_vol, dna_poly)
+    pip.dispense(dna_poly_vol, forward_mm)
+    pip.drop_tip()
+
+    mix_vol = (tepcr_buff_vol + fw_primers_vol + tepcr_primer_vol +
+               dna_poly_vol) / 2
+    pip = p300 if mix_vol > 20 else p20
+    pick_up(pip)
+    pip.mix(10, mix_vol, forward_mm)
+    pip.drop_tip()
+
+    # Prepare Reverse MM
+    ctx.comment('Preparing Reverse Master Mix')
+
+    pip = p300 if tepcr_buff_vol > 20 else p20
+    pick_up(pip)
+    pip.aspirate(tepcr_buff_vol, tepcr_buff)
+    pip.dispense(tepcr_buff_vol, reverse_mm)
+    pip.drop_tip()
+
+    pip = p300 if rev_primers_vol > 20 else p20
+    pick_up(pip)
+    pip.aspirate(rev_primers_vol, rev_primers)
+    pip.dispense(rev_primers_vol, reverse_mm)
+    pip.drop_tip()
+
+    pip = p300 if tepcr_primer_vol > 20 else p20
+    pick_up(pip)
+    pip.aspirate(tepcr_primer_vol, tepcr_primer)
+    pip.dispense(tepcr_primer_vol, reverse_mm)
+    pip.drop_tip()
+
+    pip = p300 if dna_poly_vol > 20 else p20
+    pick_up(pip)
+    pip.aspirate(dna_poly_vol, dna_poly)
+    pip.dispense(dna_poly_vol, reverse_mm)
+    pip.drop_tip()
+
+    mix_vol = (tepcr_buff_vol + rev_primers_vol + tepcr_primer_vol +
+               dna_poly_vol) / 2
+    pip = p300 if mix_vol > 20 else p20
+    pick_up(pip)
+    pip.mix(10, mix_vol, reverse_mm)
+    pip.drop_tip()
 
     # Add Master Mix to PCR Tubes with DNA Library
     for well in forward_pcr_wells:
@@ -109,6 +178,7 @@ def run(ctx):
         p20.dispense(20, dest)
         p20.drop_tip()
 
+    tc_mod.close_lid()
     tc_mod.set_lid_temperature(103)
 
     profile = [
