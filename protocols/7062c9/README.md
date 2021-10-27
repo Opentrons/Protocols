@@ -1,75 +1,62 @@
-# Normalization
+# Capping Assay: Steps 1-2
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Featured
-	* Normalization
+* Sample Prep
+    * Normalization
 
 ## Description
-![Normalization Example](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/normalization/normalization_example.png)
+This is a flexible normalization protocol accommodating sample annealing and digestion pre- and post-PCR. Normalization parameters should be input as a .csv file below, and should be formatted as shown in the following template:
 
-Concentration normalization is a key component of many genomic and proteomic applications, such as NGS library prep. With this protocol, you can easily normalize the concentrations of samples in a 96 or 384 microwell plate without worrying about missing a well or adding the wrong volume. Just upload your properly formatted CSV file (keep scrolling for an example), customize your parameters, and download your ready-to-run protocol.
+```
+sample conc. (mg/ml),sample volume (µl),water volume (µl),buffer 1 (µl),probe volume (µl),probe tube location (C1-D6),total volume (µl)
+1,40,50,10,5,A3,105
+2.2,18.2,71.8,10,5,A3,105
+2.03,19.7,70.3,10,5,A4,105
+```
 
-
----
-![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
-
-To purchase tips, reagents, or pipettes, please visit our [online store](https://shop.opentrons.com/) or contact our sales team at [info@opentrons.com](mailto:info@opentrons.com)
-
-* [Opentrons OT-2](https://shop.opentrons.com/collections/ot-2-robot/products/ot-2)
-* [Opentrons OT-2 Run App (Version 3.15.0 or later)](https://opentrons.com/ot-app/)
-* [Opentrons Single-Channel Pipette](https://shop.opentrons.com/collections/ot-2-pipettes) and corresponding [Tips](https://shop.opentrons.com/collections/opentrons-tips)
-* [Samples in a compatible plate (96-well or 384-well)](https://labware.opentrons.com/?category=wellPlate)
-* [Automation-friendly reservoir](https://labware.opentrons.com/?category=reservoir)
-* Diluent
-
-For more detailed information on compatible labware, please visit our [Labware Library](https://labware.opentrons.com/).
-
+For sample traceability and consistency, samples are mapped directly from the sample plate (slot 1) to the final normalized plate (slot 2). Sample plate well A1 is transferred to normalized plate A1, Sample plate well B1 to normalized plate B1, ..., D2 to D2, etc.
 
 ---
-![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
-**CSV Format**
+### Labware
+* [NEST 12 Well Reservoir 15 mL](https://labware.opentrons.com/nest_12_reservoir_15ml)
+* [NEST 96 Well Plate 100 µL PCR Full Skirt](https://labware.opentrons.com/nest_96_wellplate_100ul_pcr_full_skirt)
+* [Opentrons 24 Tube Rack](https://shop.opentrons.com/collections/verified-labware/products/tube-rack-set-1) with [NEST 1.5 mL Screwcap Tubes](https://shop.opentrons.com/collections/verified-consumables/products/nest-1-5-ml-sample-vial) or equivalent
+* [Opentrons 96 Filter Tip Rack 200 µL](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)
+* [Opentrons 96 Filter Tip Rack 20 µL](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-20ul-filter-tips)
 
-Your file must be saved as a comma separated value (.csv) file type. Your CSV must contain values corresponding to volumes in microliters (μL). It should be formatted in “landscape” orientation, with the value corresponding to well A1 in the upper left-hand corner of the value list.
+### Pipettes
+* [P300 Single-Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette)
+* [P20 Single-Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette)
 
-![Normalization CSV](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/normalization/normalization_csv.png)
+---
 
-In this example, 40μL will be added to A1, 41μL will be added to well B1, and so on.
+### Deck Setup
+This example starting deck state shows the layout for 24 samples:  
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/7062c9/deck.png)
 
-If you’d like to follow our template, you can make a copy of [this spreadsheet](https://docs.google.com/spreadsheets/d/1nc67E0BWlqYDlzXLwGrBSsW1ewX0qPxRYelybErs_Fk/edit?usp=sharing), fill out your values, and export as CSV from there.
+* orange on starting sample plate: sample
+* green on reagent reservoir: water
+* blue on tuberack: buffer 1
+* pink tuberack: protease
+* purple on tuberack: probes (can occupy any of last 22 tubes of tuberack)
 
-*Note about CSV*: All values corresponding to wells in the CSV must have a value (zero (0) is a valid value and nothing will be transferred to the corresponding well(s)). Additionally, the CSV can be formatted in "portrait" orientation. In portrait orientation, the bottom left corner is treated as A1 and the top right corner would correspond to the furthest well from A1 (H12 in a 96-well plate).
+---
 
-Using the customization fields below, set up your protocol.
-* Volumes CSV: Upload the CSV (.csv) containing your diluent volumes.
-* Pipette Model: Select which pipette you will use for this protocol.
-* Pipette Mount: Specify which mount your single-channel pipette is on (left or right)
-* Plate Type: Select which (destination) plate you will use for this protocol.
-* Reservoir Type: Select which (source) reservoir you will use for this protocol.
-* Filter Tips: Specify whether you want to use filter tips.
-* Tip Usage Strategy: Specify whether you'd like to use a new tip for each transfer, or keep the same tip throughout the protocol.
-
-
-
-### Robot
-* [OT-2](https://opentrons.com/ot-2)
-
-
-## Process
-
-1. Create your CSV file according to our instructions.
-2. Upload your CSV and select all desired settings according to the “Setup” section above to customize your protocol run.
-3. Download your customized OT-2 protocol using the blue “Download” button, located above the deckmap.
-4. Upload your protocol into the Opentrons App and follow the instructions there to set up your deck, calibrate your labware, and proceed to run.
-5. Make sure to add reagents to your labware before placing it on the deck! Your diluent should be in your reservoir, and the samples you’re normalizing should be in your plate.
-
+### Process
+1. Input your protocol parameters above.
+2. Download your protocol and unzip if needed.
+3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.
+4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.
+5. Set up your deck according to the deck map.
+6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).
+7. Hit 'Run'.
 
 ### Additional Notes
-
-If you’d like to request a protocol supporting multiple plates or require other changes to this script, please fill out our [Protocol Request Form](https://opentrons-protocol-dev.paperform.co/). You can also modify the Python file directly by following our [API Documentation](https://docs.opentrons.com/v2/). If you’d like to chat with an applications engineer about changes, please contact us at [protocols@opentrons.com](mailto:protocols@opentrons.com).
+If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-normalization
+7062c9
