@@ -1,0 +1,103 @@
+{
+    "content": "metadata = {\n    'protocolName': 'Capping Assay: Steps 1-2',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Protocol Library',\n    'apiLevel': '2.11'\n    }\n\n\ndef run(ctx):\n    [input_csv, p300_mount, p20_mount] = get_values(  # noqa: F821\n        'input_csv', 'p300_mount', 'p20_mount')\n\n    # labware\n    sample_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',\n                                    '1', 'sample plate')\n    final_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',\n                                   '2', 'normalized plate')\n    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '4',\n                                 'reagent reservoir')\n    tuberack = ctx.load_labware('opentrons_24_tuberack_nest_1.5ml_screwcap',\n                                '5', 'buffer + probe tuberack')\n    tipracks20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '3')]\n    tipracks200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '6')]\n\n    # pipettes\n    p300 = ctx.load_instrument('p300_single_gen2', p300_mount,\n                               tip_racks=tipracks200)\n    p20 = ctx.load_instrument('p20_single_gen2', p20_mount,\n                              tip_racks=tipracks20)\n\n    # reagents\n    water = reservoir.wells()[0]\n    buffer = tuberack.wells()[0]\n    protease = tuberack.wells()[1]\n\n    def drop_all_tips():\n        for pipette in ctx.loaded_instruments.values():\n            if pipette.has_tip:\n                pipette.drop_tip()\n\n    # parse csv\n    data = [\n        [val for val in line.split(',')]\n        for line in input_csv.splitlines()][1:]\n\n    # prealocate water,\n    for i, line in enumerate(data):\n        water_vol = float(line[2])\n        pip = p20 if water_vol <= 20 else p300\n        dest_well = final_plate.wells()[i]\n        if not pip.has_tip:\n            pip.pick_up_tip()\n        pip.transfer(water_vol, water, dest_well, new_tip='never')\n    drop_all_tips()\n\n    # prealocate buffer\n    for i, line in enumerate(data):\n        buffer_vol = float(line[3])\n        pip = p20 if water_vol <= 20 else p300\n        dest_well = final_plate.wells()[i]\n        if not pip.has_tip:\n            pip.pick_up_tip()\n        pip.transfer(buffer_vol, buffer, dest_well, new_tip='never')\n    drop_all_tips()\n\n    last_probe = None\n    for i, line in enumerate(data):\n        probe_vol = float(line[4])\n        probe = tuberack.wells_by_name()[line[5].upper().strip()]\n        pip = p20 if water_vol <= 20 else p300\n        dest_well = final_plate.wells()[i]\n        if not probe == last_probe:\n            if pip.has_tip:\n                pip.drop_tip()\n            pip.pick_up_tip()\n        pip.transfer(probe_vol, probe, dest_well, new_tip='never')\n    drop_all_tips()\n\n    # transfer sample and mix\n    for i, line in enumerate(data):\n        sample_vol = float(line[1])\n        total_vol = float(line[6])\n        pip = p20 if sample_vol > 20 else p300\n        sample_well, dest_well = [\n            sample_plate.wells()[i], final_plate.wells()[i]]\n        if 0.8*total_vol < pip.max_volume:\n            mix_vol = 0.8*total_vol\n        else:\n            mix_vol = 0.8*pip.max_volume\n        pip.transfer(sample_vol, sample_well, dest_well,\n                     mix_after=(3, mix_vol))\n\n    ctx.pause('Put sample plate in the thermal cycler for 30min')\n\n    # transfer protease\n    for i, line in enumerate(data):\n        dest_well = final_plate.wells()[i]\n        p20.transfer(5, protease, dest_well)\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": "Sample Conc. (mg/ml),sample volume (\u00b5l),water volume (\u00b5l),buffer 1 (\u00b5l),probe volume (\u00b5l),probe tube location (C1-D6),total volume (\u00b5l)\n1,40,50,10,5,A3,105\n2.2,18.2,71.8,10,5,A3,105\n2.03,19.7,70.3,10,5,A4,105\n",
+            "label": "input .csv file",
+            "name": "input_csv",
+            "type": "textFile"
+        },
+        {
+            "label": "P300 single GEN2 mount",
+            "name": "p300_mount",
+            "options": [
+                {
+                    "label": "left",
+                    "value": "left"
+                },
+                {
+                    "label": "right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P20 single GEN2 mount",
+            "name": "p20_mount",
+            "options": [
+                {
+                    "label": "right",
+                    "value": "right"
+                },
+                {
+                    "label": "left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_single_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p20_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "sample plate on 1",
+            "share": false,
+            "slot": "1",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "normalized plate on 2",
+            "share": false,
+            "slot": "2",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "reagent reservoir on 4",
+            "share": false,
+            "slot": "4",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "buffer + probe tuberack on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_24_tuberack_nest_1.5ml_screwcap"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.11",
+        "author": "Nick <protocols@opentrons.com>",
+        "protocolName": "Capping Assay: Steps 1-2",
+        "source": "Protocol Library"
+    },
+    "modules": []
+}
