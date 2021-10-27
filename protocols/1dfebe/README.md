@@ -47,10 +47,10 @@ Explanation of complex parameters below:
 ---
 
 ### Protocol Steps
-1. Use single channel to add 60 ul of Enzyme Hydrolysis Solution from 15 ml conical tube to each well containing sample.
-2. Use single channel to transfer 50 ul of urine sample from sample tube to designated well in 96 well block. Repeat for all samples using a new tip each time.
+1. Use single channel to add 60ul of Enzyme Hydrolysis Solution from 15 ml conical tube to each well containing sample.
+2. Use single channel to transfer 50ul of urine sample from sample tube to designated well in 96 well block. Repeat for all samples using a new tip each time.
 3. Delay for 30 minutes after addition of Enzyme Hydrolysis solution to last well.
-4. Use single channel to add 20 ul of Trichloroacetic acid solution from 15 ml conical tube to each well containing sample.
+4. Use single channel to add 20ul of Trichloroacetic acid solution from 15 mL conical tube to each well containing sample.
 5. Pause run until "Resume" is initiated (to manually shake the block).
 6. Use single channel to add 150 of Dilution Buffer to each well containing sample.
 
