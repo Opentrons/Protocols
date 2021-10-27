@@ -12,7 +12,7 @@ This protocol preps a 96 well plate with urine and enzyme hydrolysis, as well as
 
 Explanation of complex parameters below:
 * `Use csv for this run?`: Specify whether a csv file will be uploaded for this run. If not, nothing in `.CSV File` below will be referenced.
-* `.CSV File`: Upload the csv file for this run. The csv file will map which samples the pipette will visit the bottom of the tube. Wells marked with `X` will be aspirated from the `Sample Aspiration Height` parameter (see below). Otherwise, wells marked with `O` will be aspirated from the bottom of the tube. Refer to the csv sample below.
+* `.CSV File`: Upload the csv file for this run. The csv file will map which samples the pipette will visit the bottom of the tube. Wells marked with `X` will be aspirated from the `Sample Aspiration Height` parameter (see below). Otherwise, wells marked with `O` (capital letter O, not zero) will be aspirated from the bottom of the tube. Refer to the csv sample below.
 ![csv sample](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1dfebe/Screen+Shot+2021-10-20+at+11.52.43+AM.png)
 * `Number of Samples`: Specify the number of samples (1-81) for this run.
 * `Initial Volume in Enzyme Hydryolysis Tube (mL)`: Specify the number of milliliters of Enzyme Hydrolysis in tube A1 of the reagent tube rack.
@@ -47,10 +47,10 @@ Explanation of complex parameters below:
 ---
 
 ### Protocol Steps
-1. Use single channel to add 60 ul of Enzyme Hydrolysis Solution from 15 ml conical tube to each well containing sample.
-2. Use single channel to transfer 50 ul of urine sample from sample tube to designated well in 96 well block. Repeat for all samples using a new tip each time.
+1. Use single channel to add 60ul of Enzyme Hydrolysis Solution from 15 ml conical tube to each well containing sample.
+2. Use single channel to transfer 50ul of urine sample from sample tube to designated well in 96 well block. Repeat for all samples using a new tip each time.
 3. Delay for 30 minutes after addition of Enzyme Hydrolysis solution to last well.
-4. Use single channel to add 20 ul of Trichloroacetic acid solution from 15 ml conical tube to each well containing sample.
+4. Use single channel to add 20ul of Trichloroacetic acid solution from 15 mL conical tube to each well containing sample.
 5. Pause run until "Resume" is initiated (to manually shake the block).
 6. Use single channel to add 150 of Dilution Buffer to each well containing sample.
 

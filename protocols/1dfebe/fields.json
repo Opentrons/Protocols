@@ -4,15 +4,15 @@
     "label": "Use csv for this run?",
     "name": "use_csv",
     "options": [
-      {"label": "Yes, use csv", "value": true},
-      {"label": "No, do not use csv", "value": false}
+      {"label": "No, do not use csv", "value": false},
+      {"label": "Yes, use csv", "value": true}
     ]
   },
   {
     "type": "textFile",
     "label": ".CSV File",
     "name": "csv_samp",
-    "default": ",1,2,3,4,5,6,7,8,9,10,11,12\\nA,X,X,X,X,X,X,X,O,X,X,O,X\\nB,O,X,X,X,X,X,X,X,X,X,X,X\\nC,X,X,X,O,X,X,X,X,X,X,X,X\\nD,X,X,X,X,X,X,O,X,X,X,X,X\\nE,X,O,X,X,X,X,X,X,X,X,X,X\\nF,X,X,X,X,X,O,X,O,X,X,O,X\\nG,X,X,X,X,O,X,X,X,X,X,X,X\\nH,X,X,X,X,O,X,X,X,O,X,X,X"
+    "default": "1,2,3,4,5,6,7,8,9,10,11,12\nnA,X,X,X,X,X,X,X,O,X,X,O,X\nnB,O,X,X,X,X,X,X,X,X,X,X,X\nnC,X,X,X,O,X,X,X,X,X,X,X,X\nnD,X,X,X,X,X,X,O,X,X,X,X,X\nnE,X,O,X,X,X,X,X,X,X,X,X,X\nnF,X,X,X,X,X,O,X,O,X,X,O,X\nnG,X,X,X,X,O,X,X,X,X,X,X,X\nnH,X,X,X,X,O,X,X,X,O,X,X,X"
   },
   {
     "type": "int",
@@ -36,7 +36,7 @@
     "type": "float",
     "label": "Initial Volume in Dilution Buffer 50mL tube (mL)",
     "name": "v_0_tube50",
-    "default": 25
+    "default": 35
   },
   {
     "type": "int",
