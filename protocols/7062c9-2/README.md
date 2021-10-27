@@ -8,6 +8,11 @@
     * Nucleic Acid Extraction
 
 ## Description
+
+Links:
+* [Steps 1-2 (annealing preparation and digestion)](./7062c9)
+* [Steps 3-6 (extraction)](7062c9-2)
+
 This is a flexible protocol accommodating a multi-step nucleic acid extraction. The protocol is broken down into the following main parts:
 * magnetic beads pre-wash
 * beads binding to sample
