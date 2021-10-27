@@ -8,7 +8,12 @@
     * Normalization
 
 ## Description
-This is a flexible normalization protocol accommodating sample annealing and digestion pre- and post-PCR. Normalization parameters should be input as a .csv file below, and should be formatted as shown in the following template:
+
+Links:
+* [Steps 1-2 (annealing preparation and digestion)](./7062c9)
+* [Steps 3-6 (extraction)](7062c9-2)
+
+This is a flexible normalization protocol accommodating sample annealing preparation and digestion pre- and post-PCR. Normalization parameters should be input as a .csv file below, and should be formatted as shown in the following template:
 
 ```
 sample conc. (mg/ml),sample volume (µl),water volume (µl),buffer 1 (µl),probe volume (µl),probe tube location (C1-D6),total volume (µl)
