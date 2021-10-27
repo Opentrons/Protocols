@@ -60,7 +60,7 @@ def run(ctx):
     sample_plate = plate.wells()[controls:controls+num_samp]
     asp_height_map = asp_height_concat[controls:controls+num_samp]
 
-    # liquid height tracking
+    # liquid height tracking for 15mL and 50mL tubes
     v_naught_enz = v_0_tube15_enz
     v_naught_acid = v_0_tube15_acid
     v_naught_50 = v_0_tube50
