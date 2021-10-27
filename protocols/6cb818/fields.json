@@ -1,0 +1,104 @@
+[
+  {
+    "type": "float",
+    "label": "Starting Volume of anti-CD154 in 1.5 mL Screwcap Tube (ul)",
+    "name": "vol_cd154",
+    "default": 500
+  },
+  {
+    "type": "float",
+    "label": "Starting Volume of Peptide 1 in 1.5 mL Snapcap Tube (ul)",
+    "name": "vol_peptide1",
+    "default": 100
+  },
+  {
+    "type": "float",
+    "label": "Starting Volume of Peptide 2 in 1.5 mL Snapcap Tube (ul)",
+    "name": "vol_peptide2",
+    "default": 100
+  },
+  {
+    "type": "float",
+    "label": "Starting Volume of Peptide 3 in 1.5 mL Snapcap Tube (ul)",
+    "name": "vol_peptide3",
+    "default": 100
+  },
+  {
+    "type": "float",
+    "label": "Starting Volume of PMA-Ca in 1.5 mL Snapcap Tube (ul)",
+    "name": "vol_pma_ca",
+    "default": 100
+  },
+  {
+    "type": "float",
+    "label": "Starting Volume of Culture Medium in 1.5 mL Screwcap Tube (ul)",
+    "name": "vol_culture_medium",
+    "default": 1000
+  },
+  {
+    "type": "dropDown",
+    "label": "Labware for Culture Plate",
+    "name": "labware_cultureplate",
+    "options": [
+      { "label": "nest_96_wellplate_320ul", "value": "nest_96_wellplate_320ul" },
+      { "label": "fisherbrand_96_wellplate_320ul", "value": "fisherbrand_96_wellplate_320ul" }
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Labware for p20 Tips",
+    "name": "labware_tips",
+    "options": [
+      { "label": "Opentrons 20 uL Tips", "value": "opentrons_96_tiprack_20ul" },
+      { "label": "Opentrons 20 uL Filter Tips", "value": "opentrons_96_filtertiprack_20ul" }
+    ]
+  },
+  {
+    "type": "int",
+    "label": "Deck Slot Location for Culture Plate  (1-11)",
+    "name": "slot_cultureplate",
+    "default": 1
+  },
+  {
+    "type": "int",
+    "label": "Deck Slot Location for 20 uL Tip Box  (1-11)",
+    "name": "slot_tipbox",
+    "default": 2
+  },
+  {
+    "type": "int",
+    "label": "Deck Slot Location for 24-Well Rack with Reagents in 1.5 mL Snap Cap Tubes  (1-11)",
+    "name": "slot_snapcaps",
+    "default": 3
+  },
+  {
+    "type": "int",
+    "label": "Deck Slot Location for 24-Well Rack with Reagents in 1.5 mL Screw Cap Tubes  (1-11)",
+    "name": "slot_screwcaps",
+    "default": 4
+  },
+  {
+    "type": "float",
+    "label": "Minimum Well Bottom Clearance for Snap Cap Tubes (mm)",
+    "name": "clearance_snapcap",
+    "default": 1
+  },
+  {
+    "type": "float",
+    "label": "Minimum Well Bottom Clearance for Screw Cap Tubes (mm)",
+    "name": "clearance_screwcap",
+    "default": 1
+  },
+  {
+    "type": "float",
+    "label": "Minimum Well Bottom Clearance for Culture Plate (mm)",
+    "name": "clearance_plate",
+    "default": 1
+  },
+  {
+    "type": "float",
+    "label": "Aspiration Height for Mixing To Suspend Cells (mm above minimum height)",
+    "name": "clearance_mix",
+    "default": 1
+  }
+]
