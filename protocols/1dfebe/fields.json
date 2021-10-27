@@ -36,7 +36,7 @@
     "type": "float",
     "label": "Initial Volume in Dilution Buffer 50mL tube (mL)",
     "name": "v_0_tube50",
-    "default": 25
+    "default": 30
   },
   {
     "type": "int",
