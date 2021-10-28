@@ -14,10 +14,11 @@ metadata = {
 def run(ctx):
 
     [NUM_SAMPLES, ELUTION_VOL,
-        STARTING_VOL, PARK, m300_mount] = get_values(  # noqa: F821
-        "NUM_SAMPLES", "ELUTION_VOL", "STARTING_VOL", "PARK", "m300_mount")
+        PARK, m300_mount] = get_values(  # noqa: F821
+        "NUM_SAMPLES", "ELUTION_VOL", "PARK", "m300_mount")
 
     TIP_TRACK = False
+    STARTING_VOL = 440
 
     # load labware and pipettes
     num_cols = math.ceil(NUM_SAMPLES/8)
