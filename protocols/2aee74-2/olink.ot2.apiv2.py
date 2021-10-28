@@ -17,7 +17,7 @@ def run(ctx):
         raise Exception('Invalid number of samples (1-96)')
 
     ext_mix = ctx.load_labware(
-        'nest_12_reservoir_15ml', '4',
+        'nest_12_reservoir_15ml', '5',
         'reservoir for extension mix (channel 1)').wells()[0]
     inc_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '2',
                                  'incubation plate')

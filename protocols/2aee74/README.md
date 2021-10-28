@@ -8,6 +8,12 @@
 	* Olink Target 96
 
 ## Description
+
+Links:
+* [Part 1: Incubation](./2aee74)
+* [Part 2: Extension](./2aee74-2)
+* [Part 3: Detection](./2aee74-3)
+
 This protocol accomplishes part 1/3: Incubation for the [Olink Target 96 protocol](https://www.olink.com/products-services/target/) for protein biomarker discovery.
 
 ---
