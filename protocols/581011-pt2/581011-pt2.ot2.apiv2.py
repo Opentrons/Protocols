@@ -151,7 +151,6 @@ def run(ctx):
     # transfer effector cell
     tip_col_ctr = 0
     wells_by_row = [well for row in plate.rows() for well in row]
-    print(dispense_wells)
     for j, chunk in enumerate(dispense_wells):
         # print(tip_col_ctr)
 
