@@ -9,6 +9,12 @@ metadata = {
 }
 
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"csv_samp":",1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24\\nA,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nB,x,A1/A1,A1/A1,A2/A1,A2/A2,A2/A2,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nC,x,A1/A1,A1/A1,A2/A1,A2/A2,A2/A2,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nD,x,A1/B1,A1/B1,A2/B1,A2/B2,A2/B2,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nE,x,A1/B1,A1/B1,A2/B1,A2/B2,A2/B2,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nF,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nG,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nH,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nI,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nJ,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nK,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nL,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nM,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nN,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nO,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nP,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x\\nDay 1,50,Yes,0.5,2,5,100,1,0.8,1.5,0.8,0.5,0.8,Left,,,,,,,,,,,\\nDay 2,111,no,0.2,2,5,150,1,0.5,0.2,1.5,1,0.5,Right,,,,,,,,,,,\\n"}""")
+    return [_all_values[n] for n in names]
+
+
 def run(ctx):
     [csv_samp] = get_values(  # noqa: F821
         "csv_samp")
@@ -104,6 +110,7 @@ def run(ctx):
             if counter != len(chunk)-1:
                 if pre_mix:
                     mix_diff_height(source_well)
+            if counter < len(chunk) and tot_vol >= vol_effector_cell:
                 m300.aspirate(tot_vol if tot_vol < 200 else
                               200-0.15*vol_effector_cell, source_well)
 
@@ -144,11 +151,13 @@ def run(ctx):
         else:
             effector_columns.append(well)
 
+    # transfer target cell
     dispense_wells = [list(b) for a, b in groupby(effector_columns)]
 
     # transfer effector cell
     tip_col_ctr = 0
     wells_by_row = [well for row in plate.rows() for well in row]
+    print(dispense_wells)
     for j, chunk in enumerate(dispense_wells):
         # print(tip_col_ctr)
 

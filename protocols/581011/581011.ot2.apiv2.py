@@ -15,10 +15,6 @@ def run(ctx):
     [csv_samp] = get_values(  # noqa: F821
         "csv_samp")
 
-    # remove first comma in csv sample if found
-    if csv_samp[0] == ',':
-        csv_samp = csv_samp[1:]
-
     fields = [[val.strip() for val in line.split(',')][1:]
               for line in csv_samp.splitlines()
               if line.split(',')[0].strip()][17:19]
@@ -54,6 +50,9 @@ def run(ctx):
     m300.flow_rate.dispense = disp_rate*m300.flow_rate.dispense
 
     # plate map excluding 1st column and row
+    # remove first comma in csv sample if found
+    if csv_samp[0] == ',':
+        csv_samp = csv_samp[1:]
     plate_map = [[val.strip() for val in line.split(',')][1:]
                  for line in csv_samp.splitlines()
                  if line.split(',')[0].strip()][1:]
@@ -122,8 +121,15 @@ def run(ctx):
         m300.pick_up_tip(tips_ordered[tip_count])
         tip_count += 1
 
+    first_row_cut = []
+    for item in plate_map[start_row]:
+        if '/' in item:
+            first_row_cut.append(item[:2])
+        else:
+            first_row_cut.append(item)
+
     # transfer target cell
-    dispense_wells = [list(j) for i, j in groupby(plate_map[start_row])]
+    dispense_wells = [list(j) for i, j in groupby(first_row_cut)]
     wells_by_row = [well for row in plate.rows() for well in row]
 
     def mix_diff_height(well):
@@ -149,6 +155,7 @@ def run(ctx):
             if counter != len(chunk)-1:
                 if pre_mix:
                     mix_diff_height(source_well)
+            if counter < len(chunk) and tot_vol >= vol_target_cell:
                 m300.aspirate(tot_vol if tot_vol < 200 else
                               200-0.15*vol_target_cell, source_well)
 
