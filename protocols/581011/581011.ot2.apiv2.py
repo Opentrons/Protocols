@@ -131,7 +131,6 @@ def run(ctx):
 
     # transfer target cell
     dispense_wells = [list(j) for i, j in groupby(first_row_cut)]
-    print(dispense_wells)
     wells_by_row = [well for row in plate.rows() for well in row]
 
     def mix_diff_height(well):
