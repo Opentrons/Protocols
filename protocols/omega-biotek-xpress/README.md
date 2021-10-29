@@ -10,7 +10,7 @@
 ## Description
 This protocol fully automates the [Omega Biotek Mag-Bind Viral RNA XPress Kit](https://www.omegabiotek.com/product/viral-rna-extraction-kit-mag-bind-viral-rna-xpress/?gclid=Cj0KCQjwlOmLBhCHARIsAGiJg7l7b_wVehYVQaXLe_wBJzEiE91FvrAfySaQaLjZ6VpLZzkCRcJLl6oaAoSjEALw_wcB). This specific protocol allows the user to manipulate the number of samples, elution volume, as well as tip parking for ultimate reuse (saving up to 4 tip boxes per run).
 
-![volume reqs](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/Screen+Shot+2021-10-28+at+6.52.41+PM.png)
+![volume reqs](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/omega-biotek-xpress/Screen+Shot+2021-10-28+at+7.39.52+PM.png)
 
 Before you begin:
 1. Pre-cool the Temperature Module in the Opentrons App to 4°C
@@ -58,10 +58,10 @@ contamination and is highly recommended to avoid pauses to reuse tips. If select
 
 ### Deck Setup
 
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/Screen+Shot+2021-10-28+at+6.48.16+PM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/omega-biotek-xpress/Screen+Shot+2021-10-28+at+6.48.16+PM.png)
 
 ### Reagent Setup
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/Screen+Shot+2021-10-28+at+6.48.34+PM.png)
+![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/omega-biotek-xpress/Screen+Shot+2021-10-28+at+6.48.34+PM.png)
 
 
 ---

@@ -104,6 +104,7 @@ def run(ctx):
             if counter != len(chunk)-1:
                 if pre_mix:
                     mix_diff_height(source_well)
+            if counter < len(chunk) and tot_vol >= vol_effector_cell:
                 m300.aspirate(tot_vol if tot_vol < 200 else
                               200-0.15*vol_effector_cell, source_well)
 
@@ -144,6 +145,7 @@ def run(ctx):
         else:
             effector_columns.append(well)
 
+    # transfer target cell
     dispense_wells = [list(b) for a, b in groupby(effector_columns)]
 
     # transfer effector cell
