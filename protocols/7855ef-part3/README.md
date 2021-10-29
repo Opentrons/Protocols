@@ -46,7 +46,7 @@ Using the customization fields below, set up your protocol.
 
 Slots 1, 2, 3: Ion Code Barcode plates (Custom 96 well Endura plate)
 
-Slot 4, 5, 6: Custom 96 Well Endura Plate with reaction
+Slot 5: 384 well plate
 
 Slot 7: MMX Plate with Barcode Reaction Mix in Column 4
 
