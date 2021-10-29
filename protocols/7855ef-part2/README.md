@@ -51,7 +51,7 @@ When prompted to replace the 20ul tip racks, be sure to re-load all 3 tip racks 
 
 Slots 1, 2, 3: ThermoFisher Scientific (model AB0800) 96 well plate loaded with DNA sample.  
 
-Slot 4, 5, 6: Custom 96 Well Endura Plate with reaction
+Slot 5: 384 well plate
 
 Slot 7: MMX Plate with Pre-ligation Mix in Column 3
 
