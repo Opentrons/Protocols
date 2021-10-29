@@ -165,7 +165,7 @@ def run(ctx):
         pickup(num_tips_in_each_column[tip_col_ctr])
         tot_vol = vol_effector_cell*len(chunk)*2+20
         for i, well in enumerate(chunk):
-            source_well = effector_plate.wells_by_name()[str(chunk[0][0:2])]
+            source_well = effector_plate.wells_by_name()[str(chunk[0])]
             if vol_effector_cell >= 100:
                 if pre_mix:
                     mix_diff_height(source_well)

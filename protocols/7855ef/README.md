@@ -8,7 +8,7 @@
 	* AgriSeq HTS Library Kit
 
 ## Description
-This protocol is the first of a 4 part series for performing NGS library prep with the [ThermoFisher Scientific AgriSeq kit](https://www.thermofisher.com/order/catalog/product/A34144#/A34144). The OT-2 will distribute 7ul of Amplification Mix to each well of 96 well plates up to the number of samples specified by the user. 3ul of DNA is then added to each well containing Ampflication Mix.
+This protocol is the first of a 4 part series for performing NGS library prep with the [ThermoFisher Scientific AgriSeq kit](https://www.thermofisher.com/order/catalog/product/A34144#/A34144). The OT-2 will distribute 7ul of Amplification Mix to each well of a 384 well plate up to the number of samples specified by the user. 3ul of DNA is then added to each well containing Ampflication Mix.
 
 Links:
 * [Part 1: DNA Transfer](http://protocols.opentrons.com/protocol/7855ef)
@@ -31,6 +31,7 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 * [ThermoFisher Scientific 96 Well Plate 200ul (AB-0800)](https://www.thermofisher.com/document-connect/document-connect.html?url=https%3A%2F%2Fassets.thermofisher.com%2FTFS-Assets%2FLSG%2Fmanuals%2FMAN0014518_96well_pcr_plate_skirted_low_profile_qr.pdf&title=VGVjaG5pY2FsIERyYXdpbmcgLSBQQ1IgUGxhdGUsIDk2LXdlbGwsIExvdyBQcm9maWxlLCBTa2lydGVk)
 * [ThermoFisher Scientific 96 Well Plate 200ul (4483352)](https://www.thermofisher.com/document-connect/document-connect.html?url=https%3A%2F%2Fassets.thermofisher.com%2FTFS-Assets%2FLSG%2Fbrochures%2FEnduraPlate_96Well.pdf&title=RW5naW5lZXJpbmcgRGlhZ3JhbTogTWljcm9BbXAmcmVnOyBFbmR1cmFQbGF0ZSZ0cmFkZTsgT3B0aWNhbCA5Ni13ZWxsIFJlYWN0aW9uIFBsYXRl)
 * [BioRad Hard-shell 96-well PCR Plate Skirted](https://www.bio-rad.com/en-us/sku/hsp9631-hard-shell-96-well-pcr-plates-low-profile-thin-wall-skirted-blue-clear?ID=hsp9631)
+* [Applied Biosystems 384 Well Plate](https://www.thermofisher.com/document-connect/document-connect.html?url=https://assets.thermofisher.com/TFS-Assets%2FLSG%2Fmanuals%2Fcms_042831.pdf)
 * Custom 96 Well Endura Plate
 
 **Note About Labware**
@@ -50,7 +51,7 @@ Part 4 of this protocol will pool 5ul from wells until a 60ul pool is achieved (
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
 Using the customization fields below, set up your protocol.
-* Number of Samples: Specify the number of samples to be processed in this run (max 288).
+* Number of Samples: Specify the number of samples to be processed in this run (max 384).
 * P20 single GEN2 mount: Specify which mount to load the P20 single GEN2 pipette.
 * Reset Tip Racks: Reset tip racks to pick up from A1 of the first tip rack of any one protocol, where "first" is referring to the lowest deck slot number out of the group of tip racks needed for the protocol.
 
@@ -63,9 +64,9 @@ When prompted to replace the 20ul tip racks, be sure to re-load all 3 tip racks 
 
 Slots 1, 2, 3: ThermoFisher Scientific (model AB0800) 96 well plate loaded with DNA sample.  
 
-Slot 4, 5, 6: Custom 96 Well Endura Plate (empty)
+Slot 4: Applied Biosystems 384 well plate.
 
-Slot 7: MMX Plate with Amplification Mix in Column 1
+Slot 7: MMX Plate with Amplification Mix in Column 1 and 2
 
 Slot 9, 10, 11: Opentrons 20ul Tip Rack
 
