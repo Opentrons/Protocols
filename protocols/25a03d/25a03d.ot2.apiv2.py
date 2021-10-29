@@ -6,6 +6,10 @@ metadata = {
     'apiLevel': '2.11'
 }
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"num_samp":"8","final_plate_slot4":"microampstrips_96_supportbase_100ul","control_plate":"usastrips_96_supportbase_200ul","asp_rate_global20":1,"asp_rate_global300":1,"disp_rate_global20":1,"disp_rate_global300":1,"p20_mount":"right","p300_mount":"left"}""")
+    return [_all_values[n] for n in names]
 
 def run(ctx):
 
@@ -86,7 +90,7 @@ def run(ctx):
         p300.slow_tip_withdrawal(10, mastermix)
         p300.touch_tip()
         p300.dispense(48, well.bottom(z=2), rate=0.6)
-        ctx.delay(1)
+        ctx.delay(4)
         p300.blow_out(well.bottom(z=8))
     p300.drop_tip()
     ctx.comment('\n\n\n')
@@ -103,7 +107,7 @@ def run(ctx):
         p300.slow_tip_withdrawal(10, mastermix)
         p300.touch_tip()
         p300.dispense(48, well.bottom(z=2), rate=0.6)
-        ctx.delay(1)
+        ctx.delay(4)
         p300.blow_out(well.bottom(z=8))
     p300.drop_tip()
     ctx.comment('\n\n\n')
@@ -128,7 +132,7 @@ def run(ctx):
     ctx.comment('Adding control to mastermix')
     control = control_plate.rows()[0][-1]
     m20.pick_up_tip()
-    m20.mix(3, 15, s_col, rate=0.6)
+    m20.mix(3, 15, control, rate=0.6)
     m20.aspirate(12, control)
     m20.touch_tip()
     m20.air_gap(airgap)
@@ -145,20 +149,20 @@ def run(ctx):
         for _ in range(20):
             m20.aspirate(18, column.bottom(z=2))
             m20.dispense(18, column.bottom(z=8), rate=1.5)
-        ctx.delay(3)
+        ctx.delay(4)
         m20.blow_out(column.bottom(z=8))
 
         m20.aspirate(20, column.bottom(z=2))
         m20.touch_tip()
         m20.dispense(20, final_plate.rows()[0][i*3+1].bottom(z=2))
-        ctx.delay(3)
+        ctx.delay(4)
         m20.blow_out(final_plate.rows()[0][i*3+1].bottom(z=8))
         m20.touch_tip()
 
         m20.aspirate(20, column.bottom(z=2))
         m20.touch_tip()
         m20.dispense(20, final_plate.rows()[0][i*3+2].bottom(z=2))
-        ctx.delay(3)
+        ctx.delay(4)
         m20.blow_out(final_plate.rows()[0][i*3+2].bottom(z=8))
         m20.touch_tip()
 
@@ -169,20 +173,20 @@ def run(ctx):
     for _ in range(20):
         m20.aspirate(18, final_wells[3].bottom(z=2))
         m20.dispense(18, final_wells[3].bottom(z=8), rate=1.5)
-    ctx.delay(3)
+    ctx.delay(4)
     m20.blow_out(final_wells[3].bottom(z=8))
 
     m20.aspirate(20, final_wells[3].bottom(z=2))
     m20.touch_tip()
     m20.dispense(20, final_plate.rows()[0][10].bottom(z=2))
-    ctx.delay(3)
+    ctx.delay(4)
     m20.blow_out(final_plate.rows()[0][10].bottom(z=8))
     m20.touch_tip()
 
     m20.aspirate(20, final_wells[3].bottom(z=2))
     m20.touch_tip()
     m20.dispense(20, final_plate.rows()[0][11].bottom(z=2))
-    ctx.delay(3)
+    ctx.delay(4)
     m20.blow_out(final_plate.rows()[0][11].bottom(z=8))
     m20.touch_tip()
     m20.drop_tip()
