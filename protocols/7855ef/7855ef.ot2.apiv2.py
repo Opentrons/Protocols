@@ -10,10 +10,6 @@ metadata = {
     'apiLevel': '2.11'
 }
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"num_samp":288,"m20_mount":"right","reset_tipracks":true}""")
-    return [_all_values[n] for n in names]
 
 def run(protocol):
 
@@ -92,7 +88,6 @@ def run(protocol):
                          for col in plate.rows()[0]][:num_col]
     reaction_plate_cols = [col for j in range(2) for i in range(2)
                            for col in reaction_plate.rows()[i][j::2]][:num_col]
-
 
     # load reagents
     amplify_mix = mmx_plate.rows()[0][:2]
