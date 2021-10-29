@@ -18,8 +18,8 @@ def run(protocol):
         reset_tipracks] = get_values(  # noqa: F821
         "num_samp", "p20_mount", "p300_mount", "reset_tipracks")
 
-    if not 1 <= num_samp <= 288:
-        raise Exception("Enter a sample number between 1-288")
+    if not 1 <= num_samp <= 384:
+        raise Exception("Enter a sample number between 1-384")
 
     # Tip tracking between runs
     if not protocol.is_simulating():

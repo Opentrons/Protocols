@@ -125,7 +125,7 @@ def run(ctx):
     first_row_cut = []
     for item in plate_map[start_row]:
         if '/' in item:
-            first_row_cut.append(item[:2])
+            first_row_cut.append(item.split('/')[0])
         else:
             first_row_cut.append(item)
 
@@ -174,7 +174,7 @@ def run(ctx):
         pickup(num_tips_in_each_column[tip_col_ctr]+check_control[tip_col_ctr])
         tot_vol = vol_target_cell*len(chunk)*2+20
         for i, well in enumerate(chunk):
-            source_well = target_res.wells_by_name()[str(chunk[0][0:2])]
+            source_well = target_res.wells_by_name()[str(chunk[0])]
             if vol_target_cell >= 100:
                 if pre_mix:
                     mix_diff_height(source_well)
