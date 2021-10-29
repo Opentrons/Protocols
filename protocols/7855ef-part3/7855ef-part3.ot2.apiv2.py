@@ -17,8 +17,8 @@ def run(protocol):
     [num_samp, m20_mount, reset_tipracks] = get_values(  # noqa: F821
         "num_samp", "m20_mount", "reset_tipracks")
 
-    if not 1 <= num_samp <= 288:
-        raise Exception("Enter a sample number between 1-288")
+    if not 1 <= num_samp <= 384:
+        raise Exception("Enter a sample number between 1-384")
 
     num_col = math.ceil(num_samp/8)
 
@@ -50,10 +50,9 @@ def run(protocol):
     barcode_plate = [protocol.load_labware('customendura_96_wellplate_200ul',
                                            str(slot),
                                            label='Ion Barcode Plate')
-                     for slot in [1, 2, 3]]
-    reaction_plates = [protocol.load_labware('customendura_96_wellplate_200ul',
-                       str(slot), label='Reaction Plate')
-                       for slot in [4, 5, 6]]
+                     for slot in [1, 2, 3, 4]]
+    reaction_plate = protocol.load_labware('microamp_384_wellplate_100ul',
+                                           '5', label='Reaction Plate')
     mmx_plate = protocol.load_labware('customendura_96_wellplate_200ul', '7',
                                       label='MMX Plate')
     tiprack20 = [protocol.load_labware('opentrons_96_filtertiprack_20ul',
@@ -87,9 +86,9 @@ def run(protocol):
         pip.move_to(knock_loc2)
 
     # load reagents
-    barcode_rxn_mix = mmx_plate.rows()[0][2]
-    reaction_plate_cols = [col for plate in reaction_plates
-                           for col in plate.rows()[0]][:num_col]
+    barcode_rxn_mix = mmx_plate.rows()[0][3]
+    reaction_plate_cols = [col for j in range(2) for i in range(2)
+                           for col in reaction_plate.rows()[i][j::2]][:num_col]
     barcode_plate_cols = [col for plate in barcode_plate
                           for col in plate.rows()[0]]
 
