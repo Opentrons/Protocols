@@ -56,7 +56,7 @@ def run(ctx):
         ctx.pause(message)
         ctx.set_rail_lights(True)
 
-    # extended well class to track liquid vol and height
+    # extended well class to track liquid volume and height
     class WellH(Well):
         def __init__(self, well, min_height=5, comp_coeff=1.15,
                      current_volume=0):
