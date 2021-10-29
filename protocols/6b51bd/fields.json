@@ -10,6 +10,8 @@
     "label": "Labware for Parent and Child Plates",
     "name": "labware_plate",
     "options": [
+      { "label": "brand_96_wellplate_360ul", "value": "brand_96_wellplate_360ul" },
+      { "label": "brooksframestar_96_wellplate_200ul", "value": "brooksframestar_96_wellplate_200ul" },
       { "label": "biorad_96_wellplate_200ul_pcr", "value": "biorad_96_wellplate_200ul_pcr" }
     ]
   },
