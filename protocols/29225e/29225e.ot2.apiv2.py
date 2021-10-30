@@ -36,7 +36,14 @@ def run(ctx):
         raise Exception(
          'Well bottom clearance must be 1 mm or greater.')
 
-    tfers = [line for line in csv.DictReader(uploaded_csv.splitlines())]
+    # ignore lines that are missing both water vol and source vol
+    tfers = [line for line in csv.DictReader(
+     uploaded_csv.splitlines()) if (line['water vol'] or line['source vol'])]
+
+    # handle missing water vol as 0 uL
+    for tfer in tfers:
+        if not tfer['water vol']:
+            tfer['water vol'] = 0
 
     sample_count = len(tfers)
     if not 1 <= sample_count <= 96:
