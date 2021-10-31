@@ -57,7 +57,7 @@ def run(ctx):
     p20s = ctx.load_instrument("p20_single_gen2", 'left', tip_racks=tips20)
     p300s = ctx.load_instrument("p300_single_gen2", 'right', tip_racks=tips300)
 
-    # count unique values in csv, load input RNA lbwr instances
+    # count unique values in csv, load input RNA labware instances
     rna = [
      ctx.load_labware(labware_rna, slot, "Input RNA Samples") for slot in [
       2, 3, 5, 6][:len(set([tfer['source rack or plate'] for tfer in tfers]))]]
