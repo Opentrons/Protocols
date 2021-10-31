@@ -37,6 +37,8 @@
     "label": "Labware for Destination Plate",
     "name": "labware_dest",
     "options": [
+      { "label": "thermo_ab_0600_96_aluminumblock_300ul", "value": "thermo_ab_0600_96_aluminumblock_300ul" },
+      { "label": "thermo_ab_0900_96_aluminumblock_300ul", "value": "thermo_ab_0900_96_aluminumblock_300ul" },
       { "label": "opentrons_96_aluminumblock_biorad_wellplate_200ul", "value": "opentrons_96_aluminumblock_biorad_wellplate_200ul" }
     ]
   },
