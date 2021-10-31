@@ -30,6 +30,10 @@
     "label": "Labware Containing Normalized RNA Samples",
     "name": "labware_samp",
     "options": [
+      { "label": "thermo_ab_0600_96_aluminumblock_300ul", "value": "thermo_ab_0600_96_aluminumblock_300ul" },
+      { "label": "thermo_ab_0900_96_aluminumblock_300ul", "value": "thermo_ab_0900_96_aluminumblock_300ul" },
+      { "label": "brandtech_781333_96_aluminumblock_150ul", "value": "brandtech_781333_96_aluminumblock_150ul" },
+      { "label": "takara_snap_cap_24_aluminumblock_1500ul", "value": "takara_snap_cap_24_aluminumblock_1500ul" },
       { "label": "nest_96_wellplate_2ml_deep", "value": "nest_96_wellplate_2ml_deep" },
       { "label": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap", "value": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap" },
       { "label": "opentrons_96_aluminumblock_biorad_wellplate_200ul", "value": "opentrons_96_aluminumblock_biorad_wellplate_200ul" }
