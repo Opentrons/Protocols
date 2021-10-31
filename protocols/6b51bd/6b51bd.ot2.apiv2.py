@@ -49,7 +49,6 @@ def run(ctx):
     # p300 single, p20 single
     p300s = ctx.load_instrument("p300_single_gen2", 'right', tip_racks=tips300)
     p20s = ctx.load_instrument("p20_single_gen2", 'left', tip_racks=tips20)
-    pip = p300s
 
     def pause_attention(message):
         ctx.set_rail_lights(False)
@@ -187,7 +186,7 @@ def run(ctx):
 
     # perform parent plate to child plate transfers
     for tfer in transfers:
-        pip = p300s if float(tfer['Volume from Parent (ul)']) > 20 else p300s
+        pip = p300s if float(tfer['Volume from Parent (ul)']) > 20 else p20s
         pip.pick_up_or_refill()
         reps = math.ceil(float(
          tfer['Volume from Parent (ul)']) / pip._tip_racks[
