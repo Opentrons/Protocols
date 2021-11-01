@@ -66,7 +66,6 @@ prime the chip on the IFC Controller for approximately 20 minutes.')
         m20.dispense(7.2, col)
     m20.dispense(m20.current_volume, strip[0])
     m20.drop_tip()
-    m20.home()
 
     ctx.comment('Remove the Incubation Plate from the thermal cycler, spin \
 down the content. Place on slot 5.')

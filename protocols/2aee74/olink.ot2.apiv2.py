@@ -56,13 +56,12 @@ def run(ctx):
         m20.aspirate(3, strip[0])
         m20.dispense(3, col)
     m20.dispense(m20.current_volume, strip[0])
-    m20.home()
+    m20.drop_tip()
 
     # transfer samples
     for s, d in zip(sample_plate.rows()[0][:num_samples],
                     inc_plate.rows()[0][:num_samples]):
-        if not m20.has_tip:
-            m20.pick_up_tip()
+        m20.pick_up_tip()
         m20.transfer(1, s, d, new_tip='never')
         m20.drop_tip()
 
