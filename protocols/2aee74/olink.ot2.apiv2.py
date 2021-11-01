@@ -10,26 +10,33 @@ metadata = {
 
 def run(ctx):
 
-    num_samples, plate_type, p300_mount, m20_mount = get_values(  # noqa: F821
-        'num_samples', 'plate_type', 'p300_mount', 'm20_mount')
+    num_samples, p300_mount, m20_mount = get_values(  # noqa: F821
+        'num_samples', 'p300_mount', 'm20_mount')
 
     if not 1 <= num_samples <= 96:
         raise Exception('Invalid number of samples (1-96)')
 
     inc_mix = ctx.load_labware('opentrons_24_tuberack_nest_1.5ml_screwcap',
-                               '4',
+                               '11',
                                'tuberack for incubation mix (A1)').wells()[0]
-    inc_plate = ctx.load_labware(plate_type, '2', 'incubation plate')
-    sample_plate = ctx.load_labware(plate_type, '5', 'sample plate')
-    strip = ctx.load_labware(plate_type, '1',
+    inc_plate = ctx.load_labware('generic_96_aluminumblock_350ul', '7',
+                                 'incubation plate')
+    sample_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
+                                    '10', 'sample plate')
+    strip = ctx.load_labware('genericstrips_96_wellplate_200ul', '8',
                              'strip for distribution (column 1)').columns()[0]
-    tipracks300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '6')]
-    tipracks20 = [ctx.load_labware('opentrons_96_tiprack_20ul', '3')]
+    tipracks300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '9')]
+    tipracks20 = [
+        ctx.load_labware('opentrons_96_tiprack_20ul', slot)
+        for slot in ['3', '6']]
 
     p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
                                tip_racks=tipracks300)
     m20 = ctx.load_instrument('p20_multi_gen2', m20_mount,
                               tip_racks=tipracks20)
+
+    p300.default_speed = 100
+    m20.default_speed = 100
 
     num_cols = math.ceil(num_samples/8)
 
@@ -49,13 +56,12 @@ def run(ctx):
         m20.aspirate(3, strip[0])
         m20.dispense(3, col)
     m20.dispense(m20.current_volume, strip[0])
-    m20.home()
+    m20.drop_tip()
 
     # transfer samples
     for s, d in zip(sample_plate.rows()[0][:num_samples],
                     inc_plate.rows()[0][:num_samples]):
-        if not m20.has_tip:
-            m20.pick_up_tip()
+        m20.pick_up_tip()
         m20.transfer(1, s, d, new_tip='never')
         m20.drop_tip()
 
