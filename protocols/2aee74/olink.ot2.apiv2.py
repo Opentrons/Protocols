@@ -25,9 +25,9 @@ def run(ctx):
                                     '7', 'sample plate')
     strip = ctx.load_labware('genericstrips_96_wellplate_200ul', '11',
                              'strip for distribution (column 1)').columns()[0]
-    tipracks300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '9')]
+    tipracks300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '9')]
     tipracks20 = [
-        ctx.load_labware('opentrons_96_tiprack_20ul', slot)
+        ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
         for slot in ['3', '6']]
 
     p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
