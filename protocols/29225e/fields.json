@@ -1,5 +1,11 @@
 [
   {
+    "type": "float",
+    "label": "Remaining Volume at Which to Move on to Next Water Tube (uL)",
+    "name": "vol_dead",
+    "default": 50
+  },
+  {
     "type": "dropDown",
     "label": "Flow Rate for p20 Mixes (up to 3x default rate)",
     "name": "mix_rate",
