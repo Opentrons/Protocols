@@ -82,7 +82,7 @@ def run(ctx):
 
     def adjust_height(vol):
         nonlocal h1
-        dh = vol/(math.pi*radius**2)
+        dh = vol/(math.pi*radius**2)*10
         h1 -= dh
         if h1 < 20:
             h1 = 1
@@ -104,14 +104,15 @@ def run(ctx):
     # TRANSFER DILUENT
     pick_up300()
     for row in plate_map:
-        p300.aspirate(float(row[dil_vol]),
-                      diluent_rack.wells()[0].bottom(z=h1))
-        p300.dispense(float(row[dil_vol]),
-                      dest_plates[int(row[plate_num])-1].wells_by_name()[
-                        row[well]])
-        adjust_height(float(row[dil_vol]))
-        p300.blow_out()
-        p300.touch_tip()
+        if float(row[dil_vol]) > 0:
+            p300.aspirate(float(row[dil_vol]),
+                          diluent_rack.wells()[0].bottom(z=h1))
+            p300.dispense(float(row[dil_vol]),
+                          dest_plates[int(row[plate_num])-1].wells_by_name()[
+                            row[well]])
+            adjust_height(float(row[dil_vol]))
+            p300.blow_out()
+            p300.touch_tip()
     p300.drop_tip()
     ctx.comment('\n\n\n')
 
