@@ -10,8 +10,8 @@ metadata = {
 
 def run(ctx):
 
-    num_samples, p300_mount, m20_mount = get_values(  # noqa: F821
-        'num_samples', 'p300_mount', 'm20_mount')
+    num_samples, plate_type, p300_mount, m20_mount = get_values(  # noqa: F821
+        'num_samples', 'plate_type', 'p300_mount', 'm20_mount')
 
     if not 1 <= num_samples <= 96:
         raise Exception('Invalid number of samples (1-96)')
@@ -19,14 +19,11 @@ def run(ctx):
     det_mix = ctx.load_labware('opentrons_24_tuberack_nest_1.5ml_screwcap',
                                '4',
                                'tuberack for detection mix (A1)').wells()[0]
-    inc_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '5',
-                                 'incubation plate')
-    sample_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
-                                    '2', 'sample plate')
-    strip = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '1',
+    inc_plate = ctx.load_labware(plate_type, '5', 'incubation plate')
+    sample_plate = ctx.load_labware(plate_type, '2', 'sample plate')
+    strip = ctx.load_labware(plate_type, '1',
                              'strip for distribution (column 1)').columns()[0]
-    primer_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
-                                    '6', 'primer plate')
+    primer_plate = ctx.load_labware(plate_type, '6', 'primer plate')
     fluidigm = ctx.load_labware('fluidigm_192_wellplate_96x10ul_96x10ul', '3',
                                 'Fluidigm 96.96 Dynamic Array')
     tipracks300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '9')]
