@@ -22,6 +22,18 @@
     "default": 1
   },
   {
+    "type": "float",
+    "label": "Well Bottom Clearance for Mix Aspirate (mm)",
+    "name": "clearance_mix_aspirate",
+    "default": 1
+  },
+  {
+    "type": "float",
+    "label": "Raise the Height of the Mix Dispense (mm)",
+    "name": "raise_mix_dispense",
+    "default": 1
+  },
+  {
     "type": "dropDown",
     "label": "Labware Containing Input RNA Samples",
     "name": "labware_rna",
