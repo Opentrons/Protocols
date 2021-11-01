@@ -17,21 +17,21 @@ def run(ctx):
         raise Exception('Invalid number of samples (1-96)')
 
     det_mix = ctx.load_labware('opentrons_24_tuberack_nest_1.5ml_screwcap',
-                               '4',
+                               '7',
                                'tuberack for detection mix (A1)').wells()[0]
     inc_plate = ctx.load_labware('generic_96_aluminumblock_350ul', '5',
                                  'incubation plate')
     sample_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
-                                    '2', 'sample plate')
-    strip = ctx.load_labware('genericstrips_96_wellplate_200ul', '1',
+                                    '1', 'sample plate')
+    strip = ctx.load_labware('genericstrips_96_wellplate_200ul', '4',
                              'strip for distribution (column 1)').columns()[0]
     primer_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
-                                    '6', 'primer plate')
-    fluidigm = ctx.load_labware('fluidigm_192_wellplate_96x10ul_96x10ul', '3',
+                                    '3', 'primer plate')
+    fluidigm = ctx.load_labware('fluidigm_192_wellplate_96x10ul_96x10ul', '2',
                                 'Fluidigm 96.96 Dynamic Array')
-    tipracks300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '9')]
+    tipracks300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '10')]
     tipracks20 = [ctx.load_labware('opentrons_96_tiprack_20ul', slot)
-                  for slot in ['8', '10', '11']]
+                  for slot in ['6', '8', '9', '11']]
 
     p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
                                tip_racks=tipracks300)
@@ -65,6 +65,7 @@ prime the chip on the IFC Controller for approximately 20 minutes.')
         m20.aspirate(7.2, strip[0])
         m20.dispense(7.2, col)
     m20.dispense(m20.current_volume, strip[0])
+    m20.drop_tip()
     m20.home()
 
     ctx.comment('Remove the Incubation Plate from the thermal cycler, spin \
@@ -73,8 +74,7 @@ down the content. Place on slot 5.')
     # transfer samples
     for s, d in zip(inc_plate.rows()[0][:num_cols],
                     sample_plate.rows()[0][:num_cols]):
-        if not m20.has_tip:
-            m20.pick_up_tip()
+        m20.pick_up_tip()
         m20.transfer(2.8, s, d, new_tip='never')
         m20.drop_tip()
 
@@ -83,9 +83,9 @@ at 400 x g, 1 min at room temperature.')
 
     # transfer primer and sample to fluidigm plate
     primer_destinations = [
-        well for col in fluidigm.columns()[:6] for well in col[:2]]
-    sample_destinations = [
         well for col in fluidigm.columns()[6:] for well in col[:2]]
+    sample_destinations = [
+        well for col in fluidigm.columns()[:6] for well in col[:2]]
 
     for source, dest in zip(
             primer_plate.rows()[0] + sample_plate.rows()[0][:num_cols],
