@@ -15,8 +15,8 @@ Links:
 * [Part 3: Detection](./2aee74-3)
 
 This protocol accomplishes part 3/3: Detection for the [Olink Target 96 protocol](https://www.olink.com/products-services/target/) for protein biomarker discovery. Primers are transferred to the left 96 wells of the Fluidigm detection plate, and samples are transferred to the right 96 wells. The transfer mapping for these plates is shown in the following images:  
-![scheme1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2aee74/scheme1.png)
-![scheme2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2aee74/scheme2.png)
+![scheme1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2aee74/scheme1-2.png)
+![scheme2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2aee74/scheme2-2.png)
 
 ---
 
@@ -36,7 +36,7 @@ This protocol accomplishes part 3/3: Detection for the [Olink Target 96 protocol
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2aee74/deck3.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2aee74/deck3-2.png)
 Note: all volumes for 96 samples (including controls)
 * green on tuberack (slot 4): 790.9µl detection mix
 * blue on sample plate (slot 5): samples from extension

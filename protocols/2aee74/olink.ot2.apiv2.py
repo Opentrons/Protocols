@@ -19,10 +19,10 @@ def run(ctx):
     inc_mix = ctx.load_labware('opentrons_24_tuberack_nest_1.5ml_screwcap',
                                '11',
                                'tuberack for incubation mix (A1)').wells()[0]
-    inc_plate = ctx.load_labware('generic_96_aluminumblock_350ul', '10',
+    inc_plate = ctx.load_labware('generic_96_aluminumblock_350ul', '7',
                                  'incubation plate')
     sample_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
-                                    '7', 'sample plate')
+                                    '10', 'sample plate')
     strip = ctx.load_labware('genericstrips_96_wellplate_200ul', '8',
                              'strip for distribution (column 1)').columns()[0]
     tipracks300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '9')]
