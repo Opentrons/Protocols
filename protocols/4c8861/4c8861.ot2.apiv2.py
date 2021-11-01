@@ -3,6 +3,11 @@ import os
 import csv
 import math
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"csv_samp":"Plate number,Well,Concentration (ng/ul0,Diluent Volume (ul),Sample volume (ul),Total volume (ul),Desired concentration(ng/ul)\\n1,A1,50,2,40,100,20\\n1,F1,300,0,6.666666667,100,20\\n1,G1,400,95,5,100,20\\n2,A1,50,60,40,100,20\\n2,A2,75,73.33333333,26.66666667,100,20\\n2,A4,150,86.66666667,13.33333333,100,20\\n2,A5,200,90,10,100,20\\n2,A6,300,93.33333333,6.666666667,100,20\\n2,A7,400,95,5,100,20\\n2,A8,500,96,4,100,20\\n2,A9,50,60,40,100,20\\n2,A10,75,73.33333333,26.66666667,100,20\\n2,A11,100,80,20,100,20\\n2,A12,150,86.66666667,13.33333333,100,20\\n3,A12,200,90,10,100,20\\n3,B12,300,93.33333333,6.666666667,100,20\\n3,C12,400,95,5,100,20\\n3,D12,500,96,4,100,20\\n3,E12,50,60,40,100,20\\n3,F12,75,73.33333333,26.66666667,100,20\\n3,G12,100,80,20,100,20\\n3,H8,150,86.66666667,13.33333333,100,20\\n3,H9,200,90,10,100,20\\n3,H10,300,93.33333333,6.666666667,100,20\\n3,H11,400,95,5,100,20","reset_tipracks":true,"include_pause":true,"v_0_tube1":30000,"p300_mount":"right","p20_mount":"left"}""")
+    return [_all_values[n] for n in names]
+
 metadata = {
     'protocolName': 'Normalization with Input .CSV File',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
@@ -82,7 +87,7 @@ def run(ctx):
 
     def adjust_height(vol):
         nonlocal h1
-        dh = vol/(math.pi*radius**2)
+        dh = vol/(math.pi*radius**2)*10
         h1 -= dh
         if h1 < 20:
             h1 = 1
@@ -104,14 +109,15 @@ def run(ctx):
     # TRANSFER DILUENT
     pick_up300()
     for row in plate_map:
-        p300.aspirate(float(row[dil_vol]),
-                      diluent_rack.wells()[0].bottom(z=h1))
-        p300.dispense(float(row[dil_vol]),
-                      dest_plates[int(row[plate_num])-1].wells_by_name()[
-                        row[well]])
-        adjust_height(float(row[dil_vol]))
-        p300.blow_out()
-        p300.touch_tip()
+        if float(row[dil_vol]) > 0:
+            p300.aspirate(float(row[dil_vol]),
+                          diluent_rack.wells()[0].bottom(z=h1))
+            p300.dispense(float(row[dil_vol]),
+                          dest_plates[int(row[plate_num])-1].wells_by_name()[
+                            row[well]])
+            adjust_height(float(row[dil_vol]))
+            p300.blow_out()
+            p300.touch_tip()
     p300.drop_tip()
     ctx.comment('\n\n\n')
 
