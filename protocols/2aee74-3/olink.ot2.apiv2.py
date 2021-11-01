@@ -52,7 +52,7 @@ prime the chip on the IFC Controller for approximately 20 minutes.')
 
     # transfer incubation mix to strip with reverse pipetting
     p300.pick_up_tip()
-    p300.aspirate(20, det_mix)
+    p300.aspirate(5, det_mix)
     for well in strip:
         p300.aspirate(95, det_mix)
         p300.dispense(95, well)
@@ -61,14 +61,13 @@ prime the chip on the IFC Controller for approximately 20 minutes.')
 
     # transfer from strip to plate
     m20.pick_up_tip()
-    m20.aspirate(2, strip[0])
+    m20.aspirate(5, strip[0])
     for col in sample_plate.rows()[0][:num_cols]:
         m20.aspirate(7.2, strip[0])
         m20.dispense(7.2, col)
-    m20.dispense(m20.current_volume, strip[0])
     m20.drop_tip()
 
-    ctx.comment('Remove the Incubation Plate from the thermal cycler, spin \
+    ctx.pause('Remove the Incubation Plate from the thermal cycler, spin \
 down the content. Place on slot 5.')
 
     # transfer samples
@@ -93,5 +92,4 @@ at 400 x g, 1 min at room temperature.')
         m20.pick_up_tip()
         m20.aspirate(7, source)
         m20.dispense(5, dest.top(-1))
-        m20.dispense(m20.current_volume, source)
         m20.drop_tip()
