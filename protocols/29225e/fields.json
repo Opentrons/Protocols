@@ -11,6 +11,12 @@
   },
   {
     "type": "float",
+    "label": "Minimum Well Bottom Clearance for Water Tubes (mm)",
+    "name": "clearance_water_tube",
+    "default": 1
+  },
+  {
+    "type": "float",
     "label": "Well Bottom Clearance for RNA Aspiration (mm)",
     "name": "clearance_rna",
     "default": 1
@@ -32,6 +38,15 @@
     "label": "Raise the Height of the Mix Dispense (mm)",
     "name": "raise_mix_dispense",
     "default": 1
+  },
+  {
+    "type": "dropDown",
+    "label": "Labware for Water Tubes",
+    "name": "labware_water_tube",
+    "options": [
+      { "label": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap", "value": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap" },
+      { "label": "opentrons_15_tuberack_thomas_1188r46_5000ul", "value": "opentrons_15_tuberack_thomas_1188r46_5000ul" }
+    ]
   },
   {
     "type": "dropDown",
