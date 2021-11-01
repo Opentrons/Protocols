@@ -30,8 +30,8 @@ def run(ctx):
                                     '3', 'primer plate')
     fluidigm = ctx.load_labware('fluidigm_192_wellplate_96x10ul_96x10ul', '2',
                                 'Fluidigm 96.96 Dynamic Array')
-    tipracks300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '10')]
-    tipracks20 = [ctx.load_labware('opentrons_96_tiprack_20ul', slot)
+    tipracks300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '10')]
+    tipracks20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
                   for slot in ['6', '8', '9', '11']]
 
     p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
