@@ -17,13 +17,13 @@ def run(ctx):
         raise Exception('Invalid number of samples (1-96)')
 
     inc_mix = ctx.load_labware('opentrons_24_tuberack_nest_1.5ml_screwcap',
-                               '11',
+                               '8',
                                'tuberack for incubation mix (A1)').wells()[0]
-    inc_plate = ctx.load_labware('generic_96_aluminumblock_350ul', '7',
+    inc_plate = ctx.load_labware('generic_96_aluminumblock_350ul', '10',
                                  'incubation plate')
     sample_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
-                                    '10', 'sample plate')
-    strip = ctx.load_labware('genericstrips_96_wellplate_200ul', '8',
+                                    '7', 'sample plate')
+    strip = ctx.load_labware('genericstrips_96_wellplate_200ul', '11',
                              'strip for distribution (column 1)').columns()[0]
     tipracks300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '9')]
     tipracks20 = [

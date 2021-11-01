@@ -33,10 +33,10 @@ This protocol accomplishes part 1/3: Incubation for the [Olink Target 96 protoco
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2aee74/deck1-2.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2aee74/deck1-3.png)
 Note: all volumes for 96 samples (including controls)
-* green on tuberack (slot 4): 400.0µl incubation mix
-* blue on sample plate (slot 5): starting samples
+* green on tuberack (slot 8): 400.0µl incubation mix
+* blue on sample plate (slot 7): starting samples
 
 ---
 
