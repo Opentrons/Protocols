@@ -38,6 +38,9 @@ def run(ctx):
     m20 = ctx.load_instrument('p20_multi_gen2', m20_mount,
                               tip_racks=tipracks20)
 
+    p300.default_speed = 100
+    m20.default_speed = 100
+
     num_cols = math.ceil(num_samples/8)
 
     ctx.comment('Prepare and prime a 96.96 Dynamic ArrayTM Integrated Fluidic \
