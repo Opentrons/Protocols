@@ -42,7 +42,7 @@ def run(ctx):
 
     # transfer incubation mix to strip with reverse pipetting
     p300.pick_up_tip()
-    p300.aspirate(20, inc_mix)
+    p300.aspirate(5, inc_mix)
     for well in strip:
         p300.aspirate(47, inc_mix)
         p300.dispense(47, well)
@@ -51,7 +51,7 @@ def run(ctx):
 
     # transfer from strip to plate
     m20.pick_up_tip()
-    m20.aspirate(2, strip[0])
+    m20.aspirate(5, strip[0])
     for col in inc_plate.rows()[0][:num_cols]:
         m20.aspirate(3, strip[0])
         m20.dispense(3, col)
