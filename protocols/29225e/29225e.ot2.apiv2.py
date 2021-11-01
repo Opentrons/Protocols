@@ -1,4 +1,7 @@
+# import from python types module
 from types import MethodType
+# import from opentrons.types
+from opentrons import types
 from opentrons.protocol_api.labware import Well, OutOfTipsError
 import csv
 import math
@@ -12,9 +15,11 @@ metadata = {
 
 def run(ctx):
 
-    [mix_rate, clearance_rna, clearance_dest, labware_rna, labware_dest,
+    [mix_rate, clearance_rna, clearance_dest, clearance_mix_aspirate,
+     raise_mix_dispense, labware_rna, labware_dest,
      vol_h2o, uploaded_csv] = get_values(  # noqa: F821
-        "mix_rate", "clearance_rna", "clearance_dest", "labware_rna",
+        "mix_rate", "clearance_rna", "clearance_dest",
+        "clearance_mix_aspirate", "raise_mix_dispense", "labware_rna",
         "labware_dest", "vol_h2o", "uploaded_csv")
 
     ctx.set_rail_lights(True)
@@ -67,6 +72,7 @@ def run(ctx):
      'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap',
      '4', 'Reagent Rack')
 
+    # extended well class to track liquid volume and height
     class WellH(Well):
         def __init__(self, well, min_height=5, comp_coeff=1.15,
                      current_volume=0):
@@ -80,7 +86,8 @@ def run(ctx):
                 cse = math.pi*(self.radius**2)
             elif self.length is not None:
                 cse = self.length*self.width
-            self.height = round(current_volume/cse)
+            self.height = (
+             current_volume/cse) - (0.2*pip._tip_racks[0].wells()[0].depth)
             if self.height < min_height:
                 self.height = min_height
             elif self.height > well.parent.highest_z:
@@ -92,7 +99,7 @@ def run(ctx):
                 cse = math.pi*(self.radius**2)
             elif self.length is not None:
                 cse = self.length*self.width
-            dh = round((vol/cse)*self.comp_coeff)
+            dh = (vol/cse)*self.comp_coeff
             if self.height - dh > self.min_height:
                 self.height = self.height - dh
             else:
@@ -108,7 +115,7 @@ def run(ctx):
                 cse = math.pi*(self.radius**2)
             elif self.length is not None:
                 cse = self.length*self.width
-            ih = round((vol/cse)*self.comp_coeff)
+            ih = (vol/cse)*self.comp_coeff
             if self.height < self.min_height:
                 self.height = self.min_height
             if self.height + ih < self.depth:
@@ -124,6 +131,7 @@ def run(ctx):
     water_tubes = []
     num_tubes = math.ceil(sum([float(
      tfer['water vol']) for tfer in tfers]) / vol_h2o)
+    pip = p20s
     for index, tube in enumerate(rack.wells()[:num_tubes]):
         new = WellH(rack.wells()[index], min_height=1, current_volume=vol_h2o)
         water_tubes.append(new)
@@ -139,6 +147,16 @@ def run(ctx):
 
     water = next(water_tube)
 
+    # 4 C temp mod with dest plate, wells with liquid vol and ht tracking
+    temp = ctx.load_module('temperature module gen2', '1')
+    dest_plate = temp.load_labware(
+     labware_dest, "Destination Plate at 4 Degrees")
+    temp.set_temperature(4)
+    dest_wells = {
+     well.well_name: WellH(
+      well, min_height=clearance_dest, current_volume=0
+      ) for well in dest_plate.wells()}
+
     def distribute_water(pip, lst, disposal):
         nonlocal water
         if lst != []:
@@ -149,7 +167,7 @@ def run(ctx):
             in_tip += disposal
             for index, tfer in enumerate(lst):
                 vol = float(tfer['water vol'])
-                dst = dest_plate.wells_by_name()[tfer['dest well']]
+                dst = dest_wells[tfer['dest well']]
                 if water.current_volume <= 50:
                     try:
                         water = next(water_tube)
@@ -157,7 +175,8 @@ def run(ctx):
                         ctx.comment("The next water tube was not found.")
                 if vol + in_tip > pip._tip_racks[0].wells()[0].max_volume:
                     for d in disp:
-                        pip.dispense(float(d[0]), d[1].bottom(clearance_dest))
+                        v = float(d[0])
+                        pip.dispense(v, d[1].height_inc(v))
                     disp = []
                     pip.dispense(disposal, water.height_inc(disposal))
                     in_tip = 0
@@ -168,7 +187,8 @@ def run(ctx):
                 disp.append((vol, dst))
                 if index == len(lst)-1:
                     for d in disp:
-                        pip.dispense(float(d[0]), d[1].bottom(clearance_dest))
+                        v2 = float(d[0])
+                        pip.dispense(v2, d[1].height_inc(v2))
             pip.drop_tip()
 
     def pick_up_or_refill(self):
@@ -193,12 +213,6 @@ def run(ctx):
              pipette_object, method.__name__,
              MethodType(method, pipette_object))
 
-    # 4 degree temp module with dest plate
-    temp = ctx.load_module('temperature module gen2', '1')
-    dest_plate = temp.load_labware(
-     labware_dest, "Destination Plate at 4 Degrees")
-    temp.set_temperature(4)
-
     # transfer water
     small_tfers = []
     big_tfers = []
@@ -216,6 +230,7 @@ def run(ctx):
     # transfer RNA and mix
     for tfer in tfers:
         vol = float(tfer['source vol'])
+        dest = dest_wells[tfer['dest well']]
         if vol <= 20:
             pip = p20s
         else:
@@ -224,16 +239,28 @@ def run(ctx):
         pip.aspirate(
          vol, rna[int(tfer['source rack or plate'])-1].wells_by_name(
          )[tfer['source well']].bottom(clearance_rna))
-        pip.dispense(vol, dest_plate.wells_by_name()[
-         tfer['dest well']].bottom(clearance_dest))
+        pip.dispense(vol, dest.height_inc(vol))
         rt = mix_rate if pip == p20s else 1
-        pip.mix(6, 20, rate=rt)
+        for rep in range(6):
+            pip.aspirate(
+             20, dest.height_dec(20).move(types.Point(x=0, y=0, z=-(
+              dest.height-dest.min_height)+clearance_mix_aspirate)), rate=rt)
+            pip.dispense(20, dest.height_inc(20).move(types.Point(
+             x=0, y=0, z=raise_mix_dispense)), rate=rt)
+        pip.blow_out()
+        pip.touch_tip(radius=0.75, v_offset=-2, speed=20)
         pip.drop_tip()
 
     for tfer in tfers:
         vol = float(tfer['water vol']) + float(tfer['source vol'])
         if vol > 50:
-            p300s.pick_up_or_refill()
-            p300s.mix(4, 0.8*vol, dest_plate.wells_by_name()[
-             tfer['dest well']].bottom(2))
-            p300s.drop_tip()
+            pip = p300s
+            pip.pick_up_or_refill()
+            dest = dest_wells[tfer['dest well']]
+            for rep in range(4):
+                v = 0.8*vol
+                pip.aspirate(v, dest.height_dec(v))
+                pip.dispense(v, dest.height_inc(v))
+            pip.blow_out()
+            pip.touch_tip(radius=0.75, v_offset=-2, speed=20)
+            pip.drop_tip()
