@@ -15,13 +15,14 @@ metadata = {
 
 def run(ctx):
 
-    [mix_rate, clearance_water_tube, clearance_rna, clearance_dest,
+    [vol_dead, mix_rate, clearance_water_tube, clearance_rna, clearance_dest,
      clearance_mix_aspirate, raise_mix_dispense, labware_water_tube,
      labware_rna, labware_dest, vol_h2o,
      uploaded_csv] = get_values(  # noqa: F821
-        "mix_rate", "clearance_water_tube", "clearance_rna", "clearance_dest",
-        "clearance_mix_aspirate", "raise_mix_dispense", "labware_water_tube",
-        "labware_rna", "labware_dest", "vol_h2o", "uploaded_csv")
+        "vol_dead", "mix_rate", "clearance_water_tube", "clearance_rna",
+        "clearance_dest", "clearance_mix_aspirate", "raise_mix_dispense",
+        "labware_water_tube", "labware_rna", "labware_dest", "vol_h2o",
+        "uploaded_csv")
 
     ctx.set_rail_lights(True)
     ctx.delay(seconds=10)
@@ -171,7 +172,7 @@ def run(ctx):
             for index, tfer in enumerate(lst):
                 vol = float(tfer['water vol'])
                 dst = dest_wells[tfer['dest well']]
-                if water.current_volume <= 50:
+                if water.current_volume <= vol + vol_dead:
                     try:
                         water = next(water_tube)
                     except StopIteration:
@@ -244,12 +245,21 @@ def run(ctx):
          )[tfer['source well']].bottom(clearance_rna))
         pip.dispense(vol, dest.height_inc(vol))
         rt = mix_rate if pip == p20s else 1
-        for rep in range(6):
-            pip.aspirate(
-             20, dest.height_dec(20).move(types.Point(x=0, y=0, z=-(
-              dest.height-dest.min_height)+clearance_mix_aspirate)), rate=rt)
-            pip.dispense(20, dest.height_inc(20).move(types.Point(
-             x=0, y=0, z=raise_mix_dispense)), rate=rt)
+        if pip == p20s:
+            for rep in range(6):
+                pip.aspirate(20, dest.height_dec(20).move(
+                 types.Point(x=0, y=0, z=-(
+                  dest.height-dest.min_height)+clearance_mix_aspirate
+                 )), rate=rt)
+                pip.dispense(20, dest.height_inc(20).move(types.Point(
+                 x=0, y=0, z=raise_mix_dispense)), rate=rt)
+        else:
+            maxv = pip._tip_racks[0].wells()[0].max_volume
+            calcv = 0.8*dest.current_volume
+            v = calcv if calcv < maxv else maxv
+            for rep in range(4):
+                pip.aspirate(v, dest.height_dec(v))
+                pip.dispense(v, dest.height_inc(v))
         pip.blow_out()
         pip.touch_tip(radius=0.75, v_offset=-2, speed=20)
         pip.drop_tip()
@@ -260,8 +270,10 @@ def run(ctx):
             pip = p300s
             pip.pick_up_or_refill()
             dest = dest_wells[tfer['dest well']]
+            maxv = pip._tip_racks[0].wells()[0].max_volume
+            calcv = 0.8*dest.current_volume
+            v = calcv if calcv < maxv else maxv
             for rep in range(4):
-                v = 0.8*vol
                 pip.aspirate(v, dest.height_dec(v))
                 pip.dispense(v, dest.height_inc(v))
             pip.blow_out()
