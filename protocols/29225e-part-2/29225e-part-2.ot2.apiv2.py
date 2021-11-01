@@ -30,7 +30,7 @@ def run(ctx):
         raise Exception(
          'Starting volume of water must be between 100 and 1000 uL.')
 
-    # csv tfers as list of dictionaries
+    # csv transfers as list of dictionaries
     tfers = [line for line in csv.DictReader(uploaded_csv.splitlines())]
 
     sample_count = len(tfers)
