@@ -10,8 +10,8 @@ metadata = {
 
 def run(ctx):
 
-    num_samples, m300_mount = get_values(  # noqa: F821
-        'num_samples', 'm300_mount')
+    num_samples, plate_type, m300_mount = get_values(  # noqa: F821
+        'num_samples', 'plate_type', 'm300_mount')
 
     if not 1 <= num_samples <= 96:
         raise Exception('Invalid number of samples (1-96)')
@@ -19,8 +19,7 @@ def run(ctx):
     ext_mix = ctx.load_labware(
         'nest_12_reservoir_15ml', '5',
         'reservoir for extension mix (channel 1)').wells()[0]
-    inc_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '2',
-                                 'incubation plate')
+    inc_plate = ctx.load_labware(plate_type, '2', 'incubation plate')
     tipracks300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '6')]
 
     m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,
