@@ -16,15 +16,16 @@ def run(ctx):
     if not 1 <= num_samples <= 96:
         raise Exception('Invalid number of samples (1-96)')
 
-    det_mix = ctx.load_labware('opentrons_24_tuberack_nest_1.5ml_screwcap',
-                               '7',
-                               'tuberack for detection mix (A1)').wells()[0]
+    det_mix = ctx.load_labware(
+        'opentrons_24_tuberack_nest_1.5ml_screwcap', '7',
+        'tuberack for detection mix (A3)').wells_by_name()['A3']
     inc_plate = ctx.load_labware('generic_96_aluminumblock_350ul', '5',
                                  'incubation plate')
     sample_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
                                     '1', 'sample plate')
-    strip = ctx.load_labware('genericstrips_96_wellplate_200ul', '4',
-                             'strip for distribution (column 1)').columns()[0]
+    strip = ctx.load_labware(
+        'genericstrips_96_wellplate_200ul', '4',
+        'strip for distribution (column 7)').columns_by_name()['7']
     primer_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
                                     '3', 'primer plate')
     fluidigm = ctx.load_labware('fluidigm_192_wellplate_96x10ul_96x10ul', '2',
