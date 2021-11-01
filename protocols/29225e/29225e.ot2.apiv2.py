@@ -15,12 +15,13 @@ metadata = {
 
 def run(ctx):
 
-    [mix_rate, clearance_rna, clearance_dest, clearance_mix_aspirate,
-     raise_mix_dispense, labware_rna, labware_dest,
-     vol_h2o, uploaded_csv] = get_values(  # noqa: F821
-        "mix_rate", "clearance_rna", "clearance_dest",
-        "clearance_mix_aspirate", "raise_mix_dispense", "labware_rna",
-        "labware_dest", "vol_h2o", "uploaded_csv")
+    [mix_rate, clearance_water_tube, clearance_rna, clearance_dest,
+     clearance_mix_aspirate, raise_mix_dispense, labware_water_tube,
+     labware_rna, labware_dest, vol_h2o,
+     uploaded_csv] = get_values(  # noqa: F821
+        "mix_rate", "clearance_water_tube", "clearance_rna", "clearance_dest",
+        "clearance_mix_aspirate", "raise_mix_dispense", "labware_water_tube",
+        "labware_rna", "labware_dest", "vol_h2o", "uploaded_csv")
 
     ctx.set_rail_lights(True)
     ctx.delay(seconds=10)
@@ -69,7 +70,7 @@ def run(ctx):
 
     # water tubes with volume and liquid height tracking
     rack = ctx.load_labware(
-     'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap',
+     labware_water_tube,
      '4', 'Reagent Rack')
 
     # extended well class to track liquid volume and height
@@ -133,7 +134,9 @@ def run(ctx):
      tfer['water vol']) for tfer in tfers]) / vol_h2o)
     pip = p20s
     for index, tube in enumerate(rack.wells()[:num_tubes]):
-        new = WellH(rack.wells()[index], min_height=1, current_volume=vol_h2o)
+        new = WellH(
+         rack.wells()[index],
+         min_height=clearance_water_tube, current_volume=vol_h2o)
         water_tubes.append(new)
 
     ctx.pause(
