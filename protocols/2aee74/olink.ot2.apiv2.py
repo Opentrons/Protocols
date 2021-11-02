@@ -18,9 +18,9 @@ def run(ctx):
     if not 1 <= num_samples <= 96:
         raise Exception('Invalid number of samples (1-96)')
 
-    inc_mix = ctx.load_labware('opentrons_24_tuberack_nest_1.5ml_screwcap',
-                               '8',
-                               'tuberack for incubation mix (A1)').wells()[0]
+    inc_mix = ctx.load_labware(
+        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '8',
+        'tuberack for incubation mix (A1)').wells()[0]
     inc_plate = ctx.load_labware('generic_96_aluminumblock_350ul', '10',
                                  'incubation plate')
     sample_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
@@ -89,6 +89,7 @@ tiprack on slot 6.')
                     inc_plate.rows()[0][:num_samples]):
         m20.pick_up_tip()
         m20.transfer(1, s, d, new_tip='never')
+        m20.blow_out(d.bottom(1))
         m20.drop_tip()
 
     ctx.comment('Seal the plate with an adhesive plastic film, spin at 400 x \
