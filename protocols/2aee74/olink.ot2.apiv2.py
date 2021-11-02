@@ -1,3 +1,5 @@
+import json
+import os
 import math
 
 metadata = {
@@ -28,17 +30,41 @@ def run(ctx):
     tipracks300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '9')]
     tipracks20 = [
         ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-        for slot in ['3', '6']]
+        for slot in ['3']]
+    stationary_rack = ctx.load_labware('opentrons_96_filtertiprack_20ul', '6')
 
     p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
                                tip_racks=tipracks300)
     m20 = ctx.load_instrument('p20_multi_gen2', m20_mount,
                               tip_racks=tipracks20)
 
+    num_cols = math.ceil(num_samples/8)
+    tip_track = True
+    tip_count = 0
+
+    folder_path = '/data/olink'
+    tip_file_path = folder_path + '/tip_log.json'
+    if tip_track and not ctx.is_simulating():
+        if os.path.isfile(tip_file_path):
+            with open(tip_file_path) as json_file:
+                data = json.load(json_file)
+                if 'm20' in data:
+                    tip_count = data['m20']
+
+    def m20_pick_up():
+        nonlocal tip_count
+        if tip_count == 12:
+            ctx.pause('Please refill 20ul filter tiprack on slot 6 before \
+resuming.')
+        m20.pick_up_tip(stationary_rack.rows()[0][tip_count])
+        tip_count += 1
+
     p300.default_speed = 100
     m20.default_speed = 100
 
-    num_cols = math.ceil(num_samples/8)
+    ctx.home()
+    ctx.pause(f'P20 multi transfer will begin at column {tip_count+1} of \
+tiprack on slot 6.')
 
     # transfer incubation mix to strip with reverse pipetting
     p300.pick_up_tip()
@@ -50,7 +76,7 @@ def run(ctx):
     p300.drop_tip()
 
     # transfer from strip to plate
-    m20.pick_up_tip()
+    m20_pick_up()
     m20.aspirate(5, strip[0])
     for col in inc_plate.rows()[0][:num_cols]:
         m20.aspirate(3, strip[0])
@@ -67,3 +93,11 @@ def run(ctx):
 
     ctx.comment('Seal the plate with an adhesive plastic film, spin at 400 x \
 g, 1 min at room temperature. Incubate overnight at +4°C.')
+
+    # track final used tip
+    if tip_track and not ctx.is_simulating():
+        if not os.path.isdir(folder_path):
+            os.mkdir(folder_path)
+        data = {'m20': tip_count}
+        with open(tip_file_path, 'w') as outfile:
+            json.dump(data, outfile)
