@@ -68,7 +68,7 @@ def run(ctx):
      labware_pcr, "PCR Plate at 4 Degrees")
     temp.set_temperature(4)
 
-    # extended well class to track liquid vol and height
+    # extended well class to track liquid volume and height
     class WellH(Well):
         def __init__(self, well, min_height=5, comp_coeff=1.15,
                      current_volume=0):
@@ -82,7 +82,8 @@ def run(ctx):
                 cse = math.pi*(self.radius**2)
             elif self.length is not None:
                 cse = self.length*self.width
-            self.height = round(current_volume/cse)
+            self.height = (
+             current_volume/cse) - (0.1*pip._tip_racks[0].wells()[0].depth)
             if self.height < min_height:
                 self.height = min_height
             elif self.height > well.parent.highest_z:
@@ -94,7 +95,7 @@ def run(ctx):
                 cse = math.pi*(self.radius**2)
             elif self.length is not None:
                 cse = self.length*self.width
-            dh = round((vol/cse)*self.comp_coeff)
+            dh = (vol/cse)*self.comp_coeff
             if self.height - dh > self.min_height:
                 self.height = self.height - dh
             else:
@@ -110,7 +111,7 @@ def run(ctx):
                 cse = math.pi*(self.radius**2)
             elif self.length is not None:
                 cse = self.length*self.width
-            ih = round((vol/cse)*self.comp_coeff)
+            ih = (vol/cse)*self.comp_coeff
             if self.height < self.min_height:
                 self.height = self.min_height
             if self.height + ih < self.depth:
@@ -124,6 +125,7 @@ def run(ctx):
                 return(self.well.top())
 
     # water tube (vol and liquid height tracking)
+    pip = pip20
     water = WellH(mms[0].wells()[0], min_height=1, current_volume=vol_h2o)
 
     # master mix tubes (vol and liquid height tracking)
@@ -243,6 +245,7 @@ def run(ctx):
             yield list_name[i:i+n]
 
     # distribute master mix to PCR plate
+    pip = p300s
     mm_source = next(mm)
     current_transfers = {'vol': [], 'dest': []}
     p300s.pick_up_tip()
@@ -314,8 +317,11 @@ def run(ctx):
                         p300s.dispense(vol, d.bottom(clearance_pcr), rate=0.3)
                         p300s.delay(1)
                         p300s.slow_tip_withdrawal(10, d)
+    if p300s.has_tip:
+        p300s.drop_tip()
 
     # transfer normalized RNA to PCR plate
+    pip = pip20
     rna_tfers = sorted([tfer for tfer in tfers if (tfer['dest well'] in [
      'A'+str(num+1) for num in range(12)] and tfer['source well'] in [
      'A'+str(num+1) for num in range(12)])], key=itemgetter('dest well')
