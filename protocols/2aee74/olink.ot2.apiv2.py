@@ -81,7 +81,7 @@ tiprack on slot 6.')
     for col in inc_plate.rows()[0][:num_cols]:
         m20.aspirate(3, strip[0])
         m20.dispense(3, col)
-    m20.dispense(m20.current_volume, strip[0])
+    # m20.dispense(m20.current_volume, strip[0])
     m20.drop_tip()
 
     # transfer samples
