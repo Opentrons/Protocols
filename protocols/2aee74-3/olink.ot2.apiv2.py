@@ -19,7 +19,7 @@ def run(ctx):
         raise Exception('Invalid number of samples (1-96)')
 
     det_mix = ctx.load_labware(
-        'opentrons_24_tuberack_nest_1.5ml_screwcap', '7',
+        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '7',
         'tuberack for detection mix (A3)').wells_by_name()['A3']
     inc_plate = ctx.load_labware('generic_96_aluminumblock_350ul', '5',
                                  'incubation plate')
