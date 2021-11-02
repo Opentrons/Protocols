@@ -18,9 +18,9 @@ def run(ctx):
     if not 1 <= num_samples <= 96:
         raise Exception('Invalid number of samples (1-96)')
 
-    inc_mix = ctx.load_labware('opentrons_24_tuberack_nest_1.5ml_screwcap',
-                               '8',
-                               'tuberack for incubation mix (A1)').wells()[0]
+    inc_mix = ctx.load_labware(
+        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '8',
+        'tuberack for incubation mix (A1)').wells()[0]
     inc_plate = ctx.load_labware('generic_96_aluminumblock_350ul', '10',
                                  'incubation plate')
     sample_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
