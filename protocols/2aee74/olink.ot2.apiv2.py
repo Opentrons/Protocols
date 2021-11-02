@@ -1,3 +1,4 @@
+from opentrons.types import Point
 import json
 import os
 import math
@@ -59,6 +60,15 @@ resuming.')
         m20.pick_up_tip(stationary_rack.rows()[0][tip_count])
         tip_count += 1
 
+    side = 1
+
+    def drop(pip):
+        nonlocal side
+        drop_loc = ctx.loaded_labwares[12].wells()[0].top().move(
+            Point(x=30*side))
+        pip.drop_tip(drop_loc)
+        side = -1*side
+
     p300.default_speed = 100
     m20.default_speed = 100
 
@@ -73,7 +83,7 @@ tiprack on slot 6.')
         p300.aspirate(47, inc_mix)
         p300.dispense(47, well)
     p300.dispense(p300.current_volume, inc_mix)
-    p300.drop_tip()
+    drop(p300)
 
     # transfer from strip to plate
     m20_pick_up()
@@ -82,7 +92,7 @@ tiprack on slot 6.')
         m20.aspirate(3, strip[0])
         m20.dispense(3, col)
     # m20.dispense(m20.current_volume, strip[0])
-    m20.drop_tip()
+    drop(m20)
 
     # transfer samples
     for s, d in zip(sample_plate.rows()[0][:num_samples],
@@ -90,7 +100,7 @@ tiprack on slot 6.')
         m20.pick_up_tip()
         m20.transfer(1, s, d, new_tip='never')
         m20.blow_out(d.bottom(1))
-        m20.drop_tip()
+        drop(m20)
 
     ctx.comment('Seal the plate with an adhesive plastic film, spin at 400 x \
 g, 1 min at room temperature. Incubate overnight at +4°C.')
