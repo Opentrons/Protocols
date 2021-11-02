@@ -58,8 +58,8 @@ def run(ctx):
     def m20_pick_up():
         nonlocal tip_count
         if tip_count == 12:
-            ctx.pause('Please refill 20ul filter tiprack on slot 6 before \
-resuming.')
+            ctx.pause('\n\n\n\n\nPlease refill 20ul filter tiprack on slot 6 \
+before resuming.\n\n\n\n\n')
         m20.pick_up_tip(stationary_rack.rows()[0][tip_count])
         tip_count += 1
 
@@ -75,13 +75,15 @@ resuming.')
     p300.default_speed = 100
     m20.default_speed = 100
     ctx.home()
-    ctx.comment('Prepare and prime a 96.96 Dynamic ArrayTM Integrated Fluidic \
-Circuit (IFC) according to the manufacturer’s instructions. Briefly, inject \
-one control line fluid syringe into each accumulator on the chip, and then \
-prime the chip on the IFC Controller for approximately 20 minutes.')
-    ctx.comment('Thaw the Primer Plate, vortex and spin briefly.')
-    ctx.pause(f'P20 multi transfer will begin at column {tip_count+1} of \
-tiprack on slot 6.')
+    ctx.comment('\n\n\n\n\nPrepare and prime a 96.96 Dynamic ArrayTM \
+Integrated Fluidic Circuit (IFC) according to the manufacturer’s instructions.\
+ Briefly,inject one control line fluid syringe into each accumulator on the \
+chip, and then prime the chip on the IFC Controller for approximately 20 \
+minutes.\n\n\n\n\n')
+    ctx.comment('\n\n\n\n\nThaw the Primer Plate, vortex and spin \
+briefly.\n\n\n\n\n')
+    ctx.pause(f'\n\n\n\n\nP20 multi transfer will begin at column \
+{tip_count+1} of tiprack on slot 6.\n\n\n\n\n')
 
     # transfer detection mix to strip with reverse pipetting
     p300.pick_up_tip()
@@ -107,8 +109,8 @@ tiprack on slot 6.')
         m20.transfer(2.8, s, d, new_tip='never')
         drop(m20)
 
-    ctx.pause('Seal the plate with an adhesive plastic film, vortex and spin \
-at 400 x g, 1 min at room temperature.')
+    ctx.pause('\n\n\n\n\nSeal the plate with an adhesive plastic film, vortex \
+and spin at 400 x g, 1 min at room temperature.\n\n\n\n\n')
 
     # transfer primer and sample to fluidigm plate
     sample_destinations = [

@@ -55,8 +55,8 @@ def run(ctx):
     def m20_pick_up():
         nonlocal tip_count
         if tip_count == 12:
-            ctx.pause('Please refill 20ul filter tiprack on slot 6 before \
-resuming.')
+            ctx.pause('\n\n\n\n\nPlease refill 20ul filter tiprack on slot 6 \
+before resuming.\n\n\n\n\n')
         m20.pick_up_tip(stationary_rack.rows()[0][tip_count])
         tip_count += 1
 
@@ -102,8 +102,8 @@ tiprack on slot 6.')
         m20.blow_out(d.bottom(1))
         drop(m20)
 
-    ctx.comment('Seal the plate with an adhesive plastic film, spin at 400 x \
-g, 1 min at room temperature. Incubate overnight at +4°C.')
+    ctx.comment('\n\n\n\n\nSeal the plate with an adhesive plastic film, spin \
+at 400 x g, 1 min at room temperature. Incubate overnight at +4°C.\n\n\n\n\n')
 
     # track final used tip
     if tip_track and not ctx.is_simulating():
