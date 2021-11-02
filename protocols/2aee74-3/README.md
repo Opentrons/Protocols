@@ -36,11 +36,11 @@ This protocol accomplishes part 3/3: Detection for the [Olink Target 96 protocol
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2aee74/deck3-4.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2aee74/deck3-5.png)
 Note: all volumes for 96 samples (including controls)
-* purple on primer plate (slot 3): samples
+* purple on primer plate (slot 1): samples
 * blue on sample plate (slot 5): samples from extension
-* green on tuberack (slot 7): 790.9µl detection mix
+* green on tuberack (slot 9): 790.9µl detection mix
 
 ---
 

@@ -1,3 +1,4 @@
+from opentrons.types import Point
 import json
 import os
 import math
@@ -30,8 +31,8 @@ def run(ctx):
     tipracks300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '9')]
     tipracks20 = [
         ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-        for slot in ['3']]
-    stationary_rack = ctx.load_labware('opentrons_96_filtertiprack_20ul', '6')
+        for slot in ['1']]
+    stationary_rack = ctx.load_labware('opentrons_96_filtertiprack_20ul', '4')
 
     p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
                                tip_racks=tipracks300)
@@ -54,10 +55,19 @@ def run(ctx):
     def m20_pick_up():
         nonlocal tip_count
         if tip_count == 12:
-            ctx.pause('Please refill 20ul filter tiprack on slot 6 before \
-resuming.')
+            ctx.pause('\n\n\n\n\nPlease refill 20ul filter tiprack on slot 6 \
+before resuming.\n\n\n\n\n')
         m20.pick_up_tip(stationary_rack.rows()[0][tip_count])
         tip_count += 1
+
+    side = 1
+
+    def drop(pip):
+        nonlocal side
+        drop_loc = ctx.loaded_labwares[12].wells()[0].top().move(
+            Point(x=30*side))
+        pip.drop_tip(drop_loc)
+        side = -1*side
 
     p300.default_speed = 100
     m20.default_speed = 100
@@ -73,7 +83,7 @@ tiprack on slot 6.')
         p300.aspirate(47, inc_mix)
         p300.dispense(47, well)
     p300.dispense(p300.current_volume, inc_mix)
-    p300.drop_tip()
+    drop(p300)
 
     # transfer from strip to plate
     m20_pick_up()
@@ -81,8 +91,8 @@ tiprack on slot 6.')
     for col in inc_plate.rows()[0][:num_cols]:
         m20.aspirate(3, strip[0])
         m20.dispense(3, col)
-    m20.dispense(m20.current_volume, strip[0])
-    m20.drop_tip()
+    # m20.dispense(m20.current_volume, strip[0])
+    drop(m20)
 
     # transfer samples
     for s, d in zip(sample_plate.rows()[0][:num_samples],
@@ -90,10 +100,10 @@ tiprack on slot 6.')
         m20.pick_up_tip()
         m20.transfer(1, s, d, new_tip='never')
         m20.blow_out(d.bottom(1))
-        m20.drop_tip()
+        drop(m20)
 
-    ctx.comment('Seal the plate with an adhesive plastic film, spin at 400 x \
-g, 1 min at room temperature. Incubate overnight at +4°C.')
+    ctx.comment('\n\n\n\n\nSeal the plate with an adhesive plastic film, spin \
+at 400 x g, 1 min at room temperature. Incubate overnight at +4°C.\n\n\n\n\n')
 
     # track final used tip
     if tip_track and not ctx.is_simulating():
