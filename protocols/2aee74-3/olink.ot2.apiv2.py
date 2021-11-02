@@ -110,8 +110,8 @@ at 400 x g, 1 min at room temperature.')
             primer_plate.rows()[0] + sample_plate.rows()[0][:num_cols],
             primer_destinations + sample_destinations[:num_cols]):
         m20.pick_up_tip()
-        m20.aspirate(7, source)
-        m20.dispense(5, dest.top(-1))
+        m20.aspirate(7, source.bottom(0.5))
+        m20.dispense(5, dest.bottom(1))
         m20.drop_tip()
 
     # track final used tip
