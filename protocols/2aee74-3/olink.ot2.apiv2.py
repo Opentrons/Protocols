@@ -19,23 +19,23 @@ def run(ctx):
         raise Exception('Invalid number of samples (1-96)')
 
     det_mix = ctx.load_labware(
-        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '7',
+        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '9',
         'tuberack for detection mix (A3)').wells_by_name()['A3']
     inc_plate = ctx.load_labware('generic_96_aluminumblock_350ul', '5',
                                  'incubation plate')
     sample_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
-                                    '1', 'sample plate')
+                                    '3', 'sample plate')
     strip = ctx.load_labware(
-        'genericstrips_96_wellplate_200ul', '4',
+        'genericstrips_96_wellplate_200ul', '6',
         'strip for distribution (column 7)').columns_by_name()['7']
     primer_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
-                                    '3', 'primer plate')
+                                    '1', 'primer plate')
     fluidigm = ctx.load_labware('fluidigm_192_wellplate_96x10ul_96x10ul', '2',
                                 'Fluidigm 96.96 Dynamic Array')
     tipracks300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '10')]
     tipracks20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-                  for slot in ['8', '9', '11']]
-    stationary_rack = ctx.load_labware('opentrons_96_filtertiprack_20ul', '6')
+                  for slot in ['7', '8', '11']]
+    stationary_rack = ctx.load_labware('opentrons_96_filtertiprack_20ul', '4')
 
     p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
                                tip_racks=tipracks300)
