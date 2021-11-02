@@ -27,10 +27,6 @@ def run(ctx):
     ctx.set_rail_lights(True)
     ctx.delay(seconds=10)
 
-    if not 500 <= vol_h2o <= 1500:
-        raise Exception(
-         'Starting volume of water must be between 500 and 1500 uL per tube.')
-
     if not 1 <= mix_rate <= 3:
         raise Exception(
          'p20 flow rate for mix must be 1 and 3 times the default rate.')
@@ -73,6 +69,11 @@ def run(ctx):
     rack = ctx.load_labware(
      labware_water_tube,
      '4', 'Reagent Rack')
+
+    if not ((vol_dead + 100) <= vol_h2o <= rack.wells()[0].max_volume):
+        raise Exception(
+         '''Starting volume of water must be between {0} uL and
+         {1} uL per tube.'''.format(100+vol_dead, rack.wells()[0].max_volume))
 
     # extended well class to track liquid volume and height
     class WellH(Well):
