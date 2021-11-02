@@ -56,7 +56,7 @@ def run(ctx):
         ctx.pause(message)
         ctx.set_rail_lights(True)
 
-    # extended well class to track liquid vol and height
+    # extended well class to track liquid volume and height
     class WellH(Well):
         def __init__(self, well, min_height=5, comp_coeff=1.15,
                      current_volume=0):
@@ -70,7 +70,8 @@ def run(ctx):
                 cse = math.pi*(self.radius**2)
             elif self.length is not None:
                 cse = self.length*self.width
-            self.height = round(current_volume/cse)
+            self.height = (
+             current_volume/cse) - (0.2*pip._tip_racks[0].wells()[0].depth)
             if self.height < min_height:
                 self.height = min_height
             elif self.height > well.parent.highest_z:
@@ -82,7 +83,7 @@ def run(ctx):
                 cse = math.pi*(self.radius**2)
             elif self.length is not None:
                 cse = self.length*self.width
-            dh = round((vol/cse)*self.comp_coeff)
+            dh = (vol/cse)*self.comp_coeff
             if self.height - dh > self.min_height:
                 self.height = self.height - dh
             else:
@@ -98,7 +99,7 @@ def run(ctx):
                 cse = math.pi*(self.radius**2)
             elif self.length is not None:
                 cse = self.length*self.width
-            ih = round((vol/cse)*self.comp_coeff)
+            ih = (vol/cse)*self.comp_coeff
             if self.height < self.min_height:
                 self.height = self.min_height
             if self.height + ih < self.depth:
@@ -132,10 +133,6 @@ def run(ctx):
      at least {1} mL of buffer. Then resume.""".format(
       filledwells_count, round(vol_per_well / 1000)))
 
-    buffer = [WellH(
-     well, min_height=clearance_reservoir, current_volume=vol_per_well
-     ) for well in reservoir.wells()[:filledwells_count]]
-
     def pick_up_or_refill(self):
         try:
             self.pick_up_tip()
@@ -153,14 +150,21 @@ def run(ctx):
              pipette_object, method.__name__,
              MethodType(method, pipette_object))
 
+    # perform buffer transfers with p300s
+    pip = p300s
+
+    # instantiate height and volume tracking wells
+    buffer = [WellH(
+     well, min_height=clearance_reservoir, current_volume=vol_per_well
+     ) for well in reservoir.wells()[:filledwells_count]]
+
+    # to yield next buffer well
     def buffer_wells():
         yield from buffer
 
     buffer_well = buffer_wells()
-
-    # perform buffer transfers with p300s
     buffer_source = next(buffer_well)
-    p300s.pick_up_or_refill()
+    pip.pick_up_or_refill()
     transfers = [tfer for tfer in tfers if tfer['Volume Buffer (ul)']]
     for tfer in transfers:
         # change source to next well when vol < specified dead vol
@@ -170,19 +174,19 @@ def run(ctx):
             except StopIteration:
                 ctx.comment("buffer supply is exhausted")
                 break
-        reps = math.ceil(
-         float(tfer['Volume Buffer (ul)']) / tips300[0].wells()[0].max_volume)
+        reps = math.ceil(float(tfer[
+         'Volume Buffer (ul)']) / pip._tip_racks[0].wells()[0].max_volume)
         vol = float(tfer['Volume Buffer (ul)']) / reps
         dest = ctx.loaded_labwares[
          int(tfer['Child Plate Location'])].wells_by_name()[tfer['Location']]
         for rep in range(reps):
-            p300s.aspirate(vol, buffer_source.height_dec(vol))
-            p300s.dispense(vol, dest.bottom(clearance_plate))
-    p300s.drop_tip()
+            pip.aspirate(vol, buffer_source.height_dec(vol))
+            pip.dispense(vol, dest.bottom(clearance_plate))
+    pip.drop_tip()
 
     # perform parent plate to child plate transfers
     for tfer in transfers:
-        pip = p300s if float(tfer['Volume from Parent (ul)']) > 20 else p300s
+        pip = p300s if float(tfer['Volume from Parent (ul)']) > 20 else p20s
         pip.pick_up_or_refill()
         reps = math.ceil(float(
          tfer['Volume from Parent (ul)']) / pip._tip_racks[
