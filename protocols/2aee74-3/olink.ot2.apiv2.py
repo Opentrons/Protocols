@@ -90,9 +90,6 @@ tiprack on slot 6.')
         m20.dispense(7.2, col)
     m20.drop_tip()
 
-    ctx.pause('Remove the Incubation Plate from the thermal cycler, spin \
-down the content. Place on slot 5.')
-
     # transfer samples
     for s, d in zip(inc_plate.rows()[0][:num_cols],
                     sample_plate.rows()[0][:num_cols]):
@@ -100,7 +97,7 @@ down the content. Place on slot 5.')
         m20.transfer(2.8, s, d, new_tip='never')
         m20.drop_tip()
 
-    ctx.comment('Seal the plate with an adhesive plastic film, vortex and spin \
+    ctx.pause('Seal the plate with an adhesive plastic film, vortex and spin \
 at 400 x g, 1 min at room temperature.')
 
     # transfer primer and sample to fluidigm plate
