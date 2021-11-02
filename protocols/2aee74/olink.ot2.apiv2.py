@@ -89,6 +89,7 @@ tiprack on slot 6.')
                     inc_plate.rows()[0][:num_samples]):
         m20.pick_up_tip()
         m20.transfer(1, s, d, new_tip='never')
+        m20.blow_out(d.bottom(1))
         m20.drop_tip()
 
     ctx.comment('Seal the plate with an adhesive plastic film, spin at 400 x \
