@@ -102,9 +102,9 @@ at 400 x g, 1 min at room temperature.')
 
     # transfer primer and sample to fluidigm plate
     sample_destinations = [
-        well for row in fluidigm.rows()[:2] for well in row[:6]]
+        well for row in fluidigm.rows()[:2] for well in row[6:]]
     primer_destinations = [
-        well for col in fluidigm.rows()[:2] for well in col[6:]]
+        well for col in fluidigm.rows()[:2] for well in col[:6]]
 
     for source, dest in zip(
             primer_plate.rows()[0] + sample_plate.rows()[0][:num_cols],
