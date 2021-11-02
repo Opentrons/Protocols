@@ -30,8 +30,8 @@ def run(ctx):
     tipracks300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '9')]
     tipracks20 = [
         ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-        for slot in ['3']]
-    stationary_rack = ctx.load_labware('opentrons_96_filtertiprack_20ul', '6')
+        for slot in ['1']]
+    stationary_rack = ctx.load_labware('opentrons_96_filtertiprack_20ul', '4')
 
     p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
                                tip_racks=tipracks300)
