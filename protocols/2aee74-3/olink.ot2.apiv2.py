@@ -1,3 +1,4 @@
+from opentrons.types import Point
 import json
 import os
 import math
@@ -62,6 +63,15 @@ resuming.')
         m20.pick_up_tip(stationary_rack.rows()[0][tip_count])
         tip_count += 1
 
+    side = 1
+
+    def drop(pip):
+        nonlocal side
+        drop_loc = ctx.loaded_labwares[12].wells()[0].top().move(
+            Point(x=30*side))
+        pip.drop_tip(drop_loc)
+        side = -1*side
+
     p300.default_speed = 100
     m20.default_speed = 100
     ctx.home()
@@ -80,7 +90,7 @@ tiprack on slot 6.')
         p300.aspirate(95, det_mix)
         p300.dispense(95, well)
     p300.dispense(p300.current_volume, det_mix)
-    p300.drop_tip()
+    drop(p300)
 
     # transfer from strip to plate
     m20_pick_up()
@@ -88,14 +98,14 @@ tiprack on slot 6.')
     for col in sample_plate.rows()[0][:num_cols]:
         m20.aspirate(7.2, strip[0])
         m20.dispense(7.2, col)
-    m20.drop_tip()
+    drop(m20)
 
     # transfer samples
     for s, d in zip(inc_plate.rows()[0][:num_cols],
                     sample_plate.rows()[0][:num_cols]):
         m20.pick_up_tip()
         m20.transfer(2.8, s, d, new_tip='never')
-        m20.drop_tip()
+        drop(m20)
 
     ctx.pause('Seal the plate with an adhesive plastic film, vortex and spin \
 at 400 x g, 1 min at room temperature.')
@@ -112,7 +122,7 @@ at 400 x g, 1 min at room temperature.')
         m20.pick_up_tip()
         m20.aspirate(7, source.bottom(0.5))
         m20.dispense(5, dest.bottom(1))
-        m20.drop_tip()
+        drop(m20)
 
     # track final used tip
     if tip_track and not ctx.is_simulating():
