@@ -73,7 +73,7 @@ prime the chip on the IFC Controller for approximately 20 minutes.')
     ctx.pause(f'P20 multi transfer will begin at column {tip_count+1} of \
 tiprack on slot 6.')
 
-    # transfer incubation mix to strip with reverse pipetting
+    # transfer detection mix to strip with reverse pipetting
     p300.pick_up_tip()
     p300.aspirate(5, det_mix)
     for well in strip:
