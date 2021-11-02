@@ -77,7 +77,7 @@
   },
   {
     "type": "float",
-    "label": "Initial Volume of RNAse-Free Water in 1.5 mL Eppendorf Tube (uL)",
+    "label": "Initial Volume of RNAse-Free Water in Each Water Tube (uL)",
     "name": "vol_h2o",
     "default": 1000
   },
