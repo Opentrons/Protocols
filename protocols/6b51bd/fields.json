@@ -49,6 +49,12 @@
     "default": 5
   },
   {
+    "type": "int",
+    "label": "Count of Mix Repetitions to Perform (0-5)",
+    "name": "mix_reps",
+    "default": 3
+  },
+  {
     "type": "textFile",
     "label": "Upload CSV Input File (Upload CSV-formatted Excel File-with formatting of data values and file identical to example)",
     "name": "uploaded_csv",
