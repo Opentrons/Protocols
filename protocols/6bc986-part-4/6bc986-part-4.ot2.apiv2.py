@@ -26,8 +26,8 @@ def run(ctx):
     tip_max = 50
 
     # p50 multi, p20 multi and tips
-    tips20 = [ctx.load_labware("opentrons_96_tiprack_20ul", '1')]
-    tips300 = [ctx.load_labware("opentrons_96_tiprack_300ul", '4')]
+    tips20 = [ctx.load_labware("opentrons_96_tiprack_20ul", '4')]
+    tips300 = [ctx.load_labware("opentrons_96_tiprack_300ul", '1')]
     p20m = ctx.load_instrument(
         "p20_multi_gen2", 'right', tip_racks=tips20)
     p50m = ctx.load_instrument(
@@ -36,6 +36,10 @@ def run(ctx):
     # thermo 96 well plate on slot 6
     dna_template = ctx.load_labware("thermo_96_wellplate_200ul", '6')
     p20m.transfer(0, dna_template.wells_by_name()[
+     'A1'], dna_template.wells_by_name()['A1'], trash=False)
+
+    # to satisfy linter
+    p50m.transfer(0, dna_template.wells_by_name()[
      'A1'], dna_template.wells_by_name()['A1'], trash=False)
 
     # usa plate on slot 3
@@ -54,16 +58,16 @@ def run(ctx):
         for chunk in create_chunks(dest.columns()[
          :num_cols], 1):
             if disposal > 0:
-                p50m.aspirate(disposal, source)
-            p50m.aspirate(dist_vol*len(chunk), source)
+                p20m.aspirate(disposal, source)
+            p20m.aspirate(dist_vol*len(chunk), source)
             for column in chunk:
-                p50m.dispense(dist_vol, column[0].bottom(clearance_dispense))
+                p20m.dispense(dist_vol, column[0].bottom(clearance_dispense))
             # blowout changed to dispense of disposal volume to avoid bubbles
-            p50m.dispense(disposal, source.move(types.Point(
+            p20m.dispense(disposal, source.move(types.Point(
              x=0, y=0, z=blowout_vertical_offset)))
 
     # 20 ul master mix to two columns, blow out to bottom of reservoir, repeat
-    p50m.pick_up_tip()
-    repeat_dispense(20, reservoir.wells_by_name()[
+    p20m.pick_up_tip()
+    repeat_dispense(15, reservoir.wells_by_name()[
      'A1'].bottom(clearance_aspirate), usa_plate, disposal=5)
-    p50m.drop_tip()
+    p20m.drop_tip()
