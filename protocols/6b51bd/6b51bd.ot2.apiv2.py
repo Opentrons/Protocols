@@ -14,10 +14,10 @@ def run(ctx):
 
     [dead_vol, labware_plate, labware_reservoir, clearance_plate,
      clearance_reservoir, clearance_aspirate, clearance_dispense,
-     uploaded_csv] = get_values(  # noqa: F821
+     mix_reps, uploaded_csv] = get_values(  # noqa: F821
         "dead_vol", "labware_plate", "labware_reservoir", "clearance_plate",
         "clearance_reservoir", "clearance_aspirate", "clearance_dispense",
-        "uploaded_csv")
+        "mix_reps", "uploaded_csv")
 
     ctx.set_rail_lights(True)
     ctx.delay(seconds=10)
@@ -202,5 +202,6 @@ def run(ctx):
                 pip.pick_up_or_refill()
             pip.aspirate(vol, source.bottom(clearance_aspirate))
             pip.dispense(vol, dest.bottom(clearance_dispense))
-        pip.mix(5, 20, dest.bottom(clearance_dispense))
+        if mix_reps:
+            pip.mix(mix_reps, 20, dest.bottom(clearance_dispense))
         pip.drop_tip()
