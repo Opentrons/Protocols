@@ -47,9 +47,7 @@ or Beckman Coulter Reservoir</br>
 **Slots 2-10**: Custom Tube Racks containing Sarstedt Tubes</br>
 **Slot 11**: [Opentrons Tiprack](https://shop.opentrons.com/collections/opentrons-tips)</br>
 </br>
-Deck layout with two destination racks (48 tube), 15mL Falcon Tube in [Opentrons Tube Rack with 15 Tube Topper](https://shop.opentrons.com/collections/verified-labware/products/tube-rack-set-1), and 300µL tips (default parameters).
 
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/4a0be6/4a0be6_deck.png)
 
 ### Reagent Setup
 The amount of reagent should be noted and added as a parameter. Reagent will go into 15mL or 50mL Falcon tube and placed in A1 of tube rack. Additionally, reagent can be placed in Beckman Coulter Reservoir.
