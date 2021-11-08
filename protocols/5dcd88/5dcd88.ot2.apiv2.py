@@ -1,6 +1,3 @@
-from opentrons import protocol_api
-
-
 metadata = {
     'protocolName': 'nCoV-2019 Lo Cost protocol',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
