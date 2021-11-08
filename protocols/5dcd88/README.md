@@ -40,12 +40,9 @@ Explanation of complex parameters below:
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/5dcd88/Screen+Shot+2021-10-28+at+8.36.40+PM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/5dcd88/Screen+Shot+2021-11-03+at+5.09.47+PM.png)
 
-### Reagent Setup
-* Note: The reservoir on Slot 6 has nuclease free water in the first reservoir well.
 
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/5dcd88/Screen+Shot+2021-10-28+at+8.36.57+PM.png)
 
 ---
 

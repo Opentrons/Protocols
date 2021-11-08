@@ -1,3 +1,6 @@
+from opentrons import protocol_api
+
+
 metadata = {
     'protocolName': 'nCoV-2019 Lo Cost protocol',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
@@ -91,6 +94,7 @@ def run(ctx):
         pick_up()
         m20.aspirate(5, source)
         m20.dispense(5, dest)
+
         for _ in range(10):
             m20.aspirate(20, dest)
             m20.dispense(20, dest.top(z=-5))
@@ -99,6 +103,7 @@ def run(ctx):
             m20.return_tip()
         else:
             m20.drop_tip()
+
     ctx.comment('\n\n\n\n')
 
     ctx.comment('~~~~~~~~Adding Mastermix to Temp Plate~~~~~~~~~')
