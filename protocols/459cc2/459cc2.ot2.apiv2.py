@@ -143,7 +143,7 @@ def run(ctx):
                 p300.blow_out(dest2)
             p300.drop_tip()
 
-    # Acetonitrile (MeCN) Transfer
+    # Acetonitrile (MeCN) Transfer (Optional)
     if mecn_transfer:
         if columns == 5:
             pick_up(m300)
