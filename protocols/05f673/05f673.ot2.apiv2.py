@@ -59,16 +59,38 @@ def run(protocol: protocol_api.ProtocolContext):
             m300.transfer(prefill, buffer, well, new_tip='never')
         m300.drop_tip()
 
-    # transfer buffer
+    # transfer buffer - chunk volumes to 1000
     protocol.set_rail_lights(True)
-    tip_pick_up(p1000)
+    max_vol = 1000
+    lst_of_lsts = []
+    chunks = []
+    tmp = 0
     for line in csv_data:
         destPlate = int(line[2]) - 1
         destWell = line[3]
         volBuff = int(line[4])
+        x = [destPlate, destWell, volBuff]
+        if tmp + volBuff <= max_vol:
+            chunks.append(x)
+            tmp += volBuff
+        else:
+            if chunks:
+                lst_of_lsts.append(chunks)
+            chunks = [x]
+            tmp = volBuff
 
-        p1000.aspirate(volBuff, buffer)
-        p1000.dispense(volBuff, outputs[destPlate][destWell])
+    lst_of_lsts.append(chunks)
+
+    tip_pick_up(p1000)
+
+    for lst in lst_of_lsts:
+        totalVol = 0
+        for l in lst:
+            totalVol += l[2]
+        p1000.aspirate(totalVol, buffer)
+        for l in lst:
+            p1000.dispense(l[2], outputs[l[0]][l[1]])
+
     p1000.drop_tip()
 
     # transfer samples
@@ -80,7 +102,7 @@ def run(protocol: protocol_api.ProtocolContext):
         volSamp = int(line[5])
 
         tip_pick_up(p1000)
-        p1000.mix(3, volSamp, source[srcPlate][srcWell])
+        p1000.mix(3, 1000, source[srcPlate][srcWell], rate=2.0)
         p1000.aspirate(volSamp, source[srcPlate][srcWell])
         p1000.dispense(volSamp, outputs[destPlate][destWell])
         p1000.drop_tip()
