@@ -15,9 +15,7 @@ Explanation of complex parameters below:
 * `.CSV File`: Upload the csv file for this run. The csv file will map which samples the pipette will visit the bottom of the tube. Wells marked with `X` will be aspirated from the `Sample Aspiration Height` parameter (see below). Otherwise, wells marked with `O` (capital letter O, not zero) will be aspirated from the bottom of the tube. Refer to the csv sample below.
 ![csv sample](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1dfebe/Screen+Shot+2021-10-20+at+11.52.43+AM.png)
 * `Number of Samples`: Specify the number of samples (1-81) for this run.
-* `Initial Volume in Enzyme Hydryolysis Tube (mL)`: Specify the number of milliliters of Enzyme Hydrolysis in tube A1 of the reagent tube rack.
-* `Initial Volume in Trichloroacetic acid solution 15mL tube(mL)`: Specify the number of milliliters of Trichloroacetic acid in tube B1 of the reagent tube rack.
-* `Initial Volume in Dilution Buffer 50mL tube (mL)`:  Specify the number of milliliters of Dilution buffer in tube B4 of the reagent tube rack.
+* `Tip Withdrawal Speed`: Specify the tip withdrawal speed for the tip to leave the urine samples.
 * `Sample Aspiration Height (mm)`:  Specify the sample aspiration height (in mm) from the bottom of the urine samples to aspirate from. Any well marked `X` in the csv, if uploaded will use this height. If the csv is not uploaded, all urine samples will use this height.
 * `P300 Multi-Channel Mount`: Specify which mount (left or right) to host the P300 single channel pipette.
 
@@ -42,7 +40,7 @@ Explanation of complex parameters below:
 
 ### Deck Setup
 
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1dfebe/Screen+Shot+2021-10-19+at+5.24.26+PM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1dfebe/Screen+Shot+2021-11-08+at+5.20.33+PM.png)
 
 ---
 
