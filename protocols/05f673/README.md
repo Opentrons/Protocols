@@ -16,7 +16,7 @@ Using a [P1000 Single-Channel Pipette](https://shop.opentrons.com/collections/ot
 The .csv file should be formatted as shown in the example below, **including headers**:
 
 ```
-Source Plate, Source Well, Dest Plate, Dest Well, Buffer Volume (in ul), Buffer Volume (in ul)
+Source Plate, Source Well, Dest Plate, Dest Well, Buffer Volume (in ul), Culture Volume (in ul)
 2,A1,1,A1,1591,1870
 2,B1,2,B1,1629,808
 ```
