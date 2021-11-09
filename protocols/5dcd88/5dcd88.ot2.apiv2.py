@@ -1,6 +1,3 @@
-from opentrons import protocol_api
-
-
 metadata = {
     'protocolName': 'nCoV-2019 Lo Cost protocol',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
@@ -11,8 +8,8 @@ metadata = {
 
 def run(ctx):
 
-    [num_col, m20_mount, m300_mount] = get_values(  # noqa: F821
-        "num_col", "m20_mount", "m300_mount")
+    [num_col, m20_mount, park, m300_mount] = get_values(  # noqa: F821
+        "num_col", "m20_mount", "park", "m300_mount")
 
     num_col = int(num_col)
 
@@ -40,14 +37,21 @@ def run(ctx):
     m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tiprack20)
     m300 = ctx.load_instrument('p300_multi_gen2',
                                m300_mount, tip_racks=tiprack300)
+    tips = [tip_col for rack in tiprack20 for tip_col in rack.rows()[0]]
+
+    tip_counter = 0
 
     def pick_up():
-        try:
-            m20.pick_up_tip()
-        except protocol_api.labware.OutOfTipsError:
-            ctx.pause("Replace all 20 ul tip racks.")
+        nonlocal tip_counter
+        if tip_counter == 24:
+            ctx.home()
+            ctx.pause('Replace all 20ul tip racks')
             m20.reset_tipracks()
-            m20.pick_up_tip()
+            tip_counter = 0
+            pick_up()
+        else:
+            m20.pick_up_tip(tips[tip_counter])
+            tip_counter += 1
 
     def create_chunks(list, n):
         for i in range(0, len(list), n):
@@ -75,7 +79,9 @@ def run(ctx):
     m300.distribute(45,
                     water,
                     [col for col in final_plate.rows()[0][:num_col]],
-                    new_tip='never')
+                    new_tip='never',
+                    blow_out=True,
+                    blowout_location='source well')
     m300.drop_tip()
     ctx.comment('\n\n\n\n')
 
@@ -85,9 +91,16 @@ def run(ctx):
         pick_up()
         m20.aspirate(5, source)
         m20.dispense(5, dest)
-        m20.mix(10, 20, dest)
+
+        for _ in range(10):
+            m20.aspirate(20, dest)
+            m20.dispense(20, dest.top(z=-5))
         m20.touch_tip(radius=0.6)
-        m20.return_tip()
+        if park:
+            m20.return_tip()
+        else:
+            m20.drop_tip()
+
     ctx.comment('\n\n\n\n')
 
     ctx.comment('~~~~~~~~Adding Mastermix to Temp Plate~~~~~~~~~')
@@ -101,7 +114,8 @@ def run(ctx):
     ctx.comment('\n\n\n\n')
 
     ctx.comment('~~~~~~~~Adding Diluted PCR Product~~~~~~~~~')
-    m20.reset_tipracks()
+    if park:
+        tip_counter = 0
     for source, dest in zip(final_plate.rows()[0][:num_col],
                             temp_plate.rows()[0]):
         pick_up()
@@ -117,7 +131,6 @@ def run(ctx):
     temp_mod.set_temperature(65)
     ctx.delay(minutes=15, msg='INCUBATING AT 65C')
     temp_mod.set_temperature(25)
-    ctx.delay(minutes=15, msg='MOVING TO ROOM TEMP')
 
     ctx.pause('''
     Temperature module is at room temperature.
@@ -129,6 +142,7 @@ def run(ctx):
     ''')
 
     ctx.comment('~~~~~~~~Adding Barcode Mastermix~~~~~~~~~')
+    tip_counter += 1
     pick_up()
     for chunk in create_chunks(temp_plate.rows()[0][:num_col], 2):
         m20.aspirate(18, barcode_mmx)

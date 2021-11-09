@@ -29,6 +29,15 @@
   },
   {
     "type": "dropDown",
+    "label": "Park tips?",
+    "name": "park",
+    "options": [
+      {"label": "Yes, park", "value": true},
+      {"label": "No, don't park", "value": false}
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "P300 Multi-Channel Mount",
     "name": "m300_mount",
     "options": [

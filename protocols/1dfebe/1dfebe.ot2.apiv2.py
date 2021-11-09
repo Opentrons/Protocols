@@ -1,5 +1,5 @@
 import itertools
-import math
+from types import MethodType
 
 metadata = {
     'protocolName': 'Urine Toxicology Using Enzyme Hydrolysis',
@@ -11,17 +11,16 @@ metadata = {
 
 def run(ctx):
 
-    [use_csv, csv_samp, num_samp, v_0_tube15_enz, v_0_tube15_acid,
-        v_0_tube50, samp_asp_height, p300_mount] = get_values(  # noqa: F821
-        "use_csv", "csv_samp", "num_samp", "v_0_tube15_enz", "v_0_tube15_acid",
-            "v_0_tube50", "samp_asp_height",  "p300_mount")
+    [use_csv, csv_samp, num_samp, tip_withdrawal_speed,
+        samp_asp_height, p300_mount] = get_values(  # noqa: F821
+        "use_csv", "csv_samp", "num_samp",
+        "tip_withdrawal_speed", "samp_asp_height",  "p300_mount")
 
     if not 1 <= num_samp <= 81:
         raise Exception("Enter a sample number between 1-81")
 
-    v_0_tube50 *= 1000
-    v_0_tube15_enz *= 1000
-    v_0_tube15_acid *= 1000
+    if not 5 <= tip_withdrawal_speed <= 50:
+        raise Exception("Enter a gantry speed between 5 and 50 mm/s")
 
     # load labware
     tuberacks = [ctx.load_labware('custom_24_tuberack_7500ul',
@@ -29,8 +28,6 @@ def run(ctx):
                  for slot in ['4', '1', '5', '2']]
     plate = ctx.load_labware('nest_96_wellplate_1000ul', '3')
     tiprack = ctx.load_labware('opentrons_96_tiprack_300ul', '10')
-    reagents = ctx.load_labware(
-                    'opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical', '6')
 
     # load instrument
     p300 = ctx.load_instrument('p300_single_gen2',
@@ -60,66 +57,31 @@ def run(ctx):
     sample_plate = plate.wells()[controls:controls+num_samp]
     asp_height_map = asp_height_concat[controls:controls+num_samp]
 
-    # liquid height tracking for 15mL and 50mL tubes
-    v_naught_enz = v_0_tube15_enz
-    v_naught_acid = v_0_tube15_acid
-    v_naught_50 = v_0_tube50
-
-    radius15 = reagents.wells()[0].diameter/2
-    radius50 = reagents.wells()[-1].diameter/2
-
-    h_naught15_enz = v_naught_enz/(math.pi*radius15**2)
-    h_naught15_acid = v_naught_acid/(math.pi*radius15**2)
-    h_naught50 = v_naught_50/(math.pi*radius50**2)
-
-    h15_enz = h_naught15_enz
-    h15_acid = h_naught15_acid
-    h50 = h_naught50
-
-    def adjust_height(vol, tube):
-        nonlocal h15_enz
-        nonlocal h15_acid
-        nonlocal h50
-
-        dh15 = vol/(math.pi*radius15**2)
-        dh50 = vol/(math.pi*radius50**2)
-        if tube == 'enzyme':
-            h15_enz -= dh15
-            if h15_enz < 20:
-                h15_enz = 1
-            else:
-                return h15_enz - 10
-        elif tube == 'acid':
-            h15_acid -= dh15
-            if h15_acid < 20:
-                h15_acid = 1
-            else:
-                return h15_acid - 10
-        else:
-            h50 -= dh50
-            if h50 < 10:
-                h50 = 1
-            else:
-                return h50 - 10
-
-    # reagents
-    enzyme_hydrolysis = reagents.wells()[0]
-    trichloro_acid = reagents.wells()[1]
-    buffer = reagents.wells()[-1]
-
     def create_chunks(list, n):
         for i in range(0, len(list), n):
             yield list[i:i+n]
 
-    # move enzyme to plate
-    ctx.comment('Moving enzyme to plate')
-    p300.pick_up_tip()
-    for chunk in create_chunks(plate.wells()[:num_samp+controls], 4):
-        p300.aspirate(240, enzyme_hydrolysis)
-        [p300.dispense(60, well) for well in chunk]
-        adjust_height(240, 'enzyme')
-    p300.drop_tip()
-    ctx.comment('\n\n\n\n\n\n')
+    def slow_tip_withdrawal(
+     self, speed_limit, well_location):
+        if self.mount == 'right':
+            axis = 'A'
+        else:
+            axis = 'Z'
+        previous_limit = None
+        if axis in ctx.max_speeds.keys():
+            for key, value in ctx.max_speeds.items():
+                if key == axis:
+                    previous_limit = value
+        ctx.max_speeds[axis] = speed_limit
+        self.move_to(well_location.top())
+        ctx.max_speeds[axis] = previous_limit
+
+    # bind additional methods to pipettes
+    for pipette_object in [p300]:
+        for method in [slow_tip_withdrawal]:
+            setattr(
+             pipette_object, method.__name__,
+             MethodType(method, pipette_object))
 
     ctx.comment('Moving urine to plate')
     # move urine sample to plate
@@ -134,38 +96,7 @@ def run(ctx):
         p300.touch_tip()
         p300.dispense(50, dest_well)
         p300.mix(5, 80, dest_well)
-        p300.blow_out()
-        p300.touch_tip()
+        p300.slow_tip_withdrawal(tip_withdrawal_speed, dest_well)
+        p300.touch_tip(radius=0.9, v_offset=-2)
         p300.drop_tip()
-    ctx.comment('\n\n\n\n\n\n')
-
-    ctx.delay(minutes=30)
-
-    # move acid to plate
-    ctx.comment('Moving acid to plate')
-    disp_vol = 30
-    p300.pick_up_tip()
-    for chunk in create_chunks(plate.wells()[:num_samp+controls], 13):
-        p300.aspirate(20*len(chunk)+disp_vol, trichloro_acid)
-        [p300.dispense(20, well.top(z=-2)) for well in chunk]
-        p300.dispense(disp_vol, trichloro_acid)
-        p300.blow_out()
-        adjust_height(20, 'acid')
-    p300.drop_tip()
-    ctx.comment('\n\n\n\n\n\n')
-    ctx.pause(
-                """
-    Protocol pausing - Trichloroacetic acid solution has been added.
-    to the plate. Select "Resume" on the Opentrons App to resume the protocol.
-                """)
-
-    # move buffer to plate
-    ctx.comment('Moving buffer to plate')
-    p300.pick_up_tip()
-    for well in plate.wells()[:num_samp+controls]:
-        p300.aspirate(150, buffer)
-        p300.dispense(150, well.top())
-        p300.blow_out(well.top())
-        adjust_height(150, 'buffer')
-    p300.drop_tip()
     ctx.comment('\n\n\n\n\n\n')
