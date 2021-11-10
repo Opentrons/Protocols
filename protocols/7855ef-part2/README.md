@@ -40,12 +40,11 @@ The ThermoFisher 96 well plate (model 4483352) is to be mounted on top of the Bi
 Using the customization fields below, set up your protocol.
 * Number of Samples: Specify the number of samples to be processed in this run (max 384).
 * P20 single GEN2 mount: Specify which mount to load the P20 single GEN2 pipette.
-* Reset Tip Racks: Reset tip racks to pick up from A1 of the first tip rack of any one protocol, where "first" is referring to the lowest deck slot number out of the group of tip racks needed for the protocol.
 
 
 **Note about 20µL tip racks**
 
-When prompted to replace the 20ul tip racks, be sure to re-load all 3 tip racks as in the original configuration of the deck.
+When prompted to replace the 20ul tip racks, be sure to re-load all 4 tip racks as in the original configuration of the deck.
 
 **Labware Setup**
 
@@ -55,7 +54,7 @@ Slot 5: 384 well plate
 
 Slot 7: MMX Plate with Pre-ligation Mix in Column 3
 
-Slot 9, 10, 11: Opentrons 20ul Tip Rack
+Slot 8, 9, 10, 11: Opentrons 20ul Tip Rack
 
 
 
