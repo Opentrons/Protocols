@@ -14,21 +14,21 @@ def run(protocol):
     [num_samp, m20_mount] = get_values(  # noqa: F821
         "num_samp", "m20_mount")
 
-    if not 1 <= num_samp <= 384:
-        raise Exception("Enter a sample number between 1-384")
+    if not 1 <= num_samp <= 288:
+        raise Exception("Enter a sample number between 1-288")
 
     num_col = math.ceil(num_samp/8)
-
     tip_counter = 0
 
     # load labware
-    reaction_plate = protocol.load_labware('microamp_384_wellplate_100ul',
-                                           '5', label='Reaction Plate')
+    reaction_plates = [protocol.load_labware('customendura_96_wellplate_200ul',
+                       str(slot), label='Reaction Plate')
+                       for slot in [4, 5, 6]]
     mmx_plate = protocol.load_labware('customendura_96_wellplate_200ul', '7',
                                       label='MMX Plate')
     tiprack20 = [protocol.load_labware('opentrons_96_filtertiprack_20ul',
                  str(slot))
-                 for slot in [8, 9, 10, 11]]
+                 for slot in [9, 10, 11]]
 
     # load instruments
     m20 = protocol.load_instrument('p20_multi_gen2', m20_mount,
@@ -58,9 +58,9 @@ def run(protocol):
         pip.move_to(knock_loc2)
 
     # load reagents
-    pre_ligation_mix = mmx_plate.rows()[0][2]
-    reaction_plate_cols = [col for j in range(2) for i in range(2)
-                           for col in reaction_plate.rows()[i][j::2]][:num_col]
+    pre_ligation_mix = mmx_plate.rows()[0][1]
+    reaction_plate_cols = [col for plate in reaction_plates
+                           for col in plate.rows()[0]][:num_col]
 
     # add amplification mix
     airgap = 2

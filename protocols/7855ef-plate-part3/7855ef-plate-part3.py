@@ -12,8 +12,8 @@ metadata = {
 
 def run(protocol):
 
-    [num_samp, m20_mount, reset_tipracks] = get_values(  # noqa: F821
-        "num_samp", "m20_mount", "reset_tipracks")
+    [num_samp, m20_mount] = get_values(  # noqa: F821
+        "num_samp", "m20_mount")
 
     if not 1 <= num_samp <= 288:
         raise Exception("Enter a sample number between 1-288")
