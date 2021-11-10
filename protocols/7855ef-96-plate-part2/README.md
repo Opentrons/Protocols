@@ -73,4 +73,4 @@ Slot 9, 10, 11: Opentrons 20ul Tip Rack
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-7855ef-part2
+7855ef-96-plate-part2
