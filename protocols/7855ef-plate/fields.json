@@ -13,14 +13,5 @@
        { "label": "right", "value": "right" },
        { "label": "left", "value": "left" }
      ]
-  },
-  {
-    "type": "dropDown",
-    "label": "Reset Tipracks?",
-    "name": "reset_tipracks",
-    "options": [
-       { "label": "No", "value": false },
-       { "label": "Yes", "value": true }
-     ]
   }
 ]
