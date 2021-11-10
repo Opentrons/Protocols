@@ -17,7 +17,7 @@
   {
     "type": "int",
     "label": "Spot Volume (1-20)",
-    "name": "spot_vol",
+    "name": "spot_volume",
     "default": 1
   },
   {
