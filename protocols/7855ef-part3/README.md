@@ -28,6 +28,7 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 * [ThermoFisher Scientific 96 Well Plate 200ul (AB-0800)](https://www.thermofisher.com/document-connect/document-connect.html?url=https%3A%2F%2Fassets.thermofisher.com%2FTFS-Assets%2FLSG%2Fmanuals%2FMAN0014518_96well_pcr_plate_skirted_low_profile_qr.pdf&title=VGVjaG5pY2FsIERyYXdpbmcgLSBQQ1IgUGxhdGUsIDk2LXdlbGwsIExvdyBQcm9maWxlLCBTa2lydGVk)
 * [ThermoFisher Scientific 96 Well Plate 200ul (4483352)](https://www.thermofisher.com/document-connect/document-connect.html?url=https%3A%2F%2Fassets.thermofisher.com%2FTFS-Assets%2FLSG%2Fbrochures%2FEnduraPlate_96Well.pdf&title=RW5naW5lZXJpbmcgRGlhZ3JhbTogTWljcm9BbXAmcmVnOyBFbmR1cmFQbGF0ZSZ0cmFkZTsgT3B0aWNhbCA5Ni13ZWxsIFJlYWN0aW9uIFBsYXRl)
 * [BioRad Hard-shell 96-well PCR Plate Skirted](https://www.bio-rad.com/en-us/sku/hsp9631-hard-shell-96-well-pcr-plates-low-profile-thin-wall-skirted-blue-clear?ID=hsp9631)
+* [Applied Biosystems 384 Well Plate](https://www.thermofisher.com/document-connect/document-connect.html?url=https://assets.thermofisher.com/TFS-Assets%2FLSG%2Fmanuals%2Fcms_042831.pdf)
 * Custom 96 Well Endura Plate
 
 **Note About Labware**
@@ -39,7 +40,6 @@ The ThermoFisher 96 well plate (model 4483352) is to be mounted on top of the Bi
 Using the customization fields below, set up your protocol.
 * Number of Samples: Specify the number of samples to be processed in this run (max 384).
 * P20 single GEN2 mount: Specify which mount to load the P20 single GEN2 pipette.
-* Reset Tip Racks: Reset tip racks to pick up from A1 of the first tip rack of any one protocol, where "first" is referring to the lowest deck slot number out of the group of tip racks needed for the protocol.
 
 
 **Labware Setup**
@@ -50,7 +50,7 @@ Slot 5: 384 well plate
 
 Slot 7: MMX Plate with Barcode Reaction Mix in Column 4
 
-Slot 9, 10, 11: Opentrons 20ul Tip Rack
+Slot 8, 9, 10, 11: Opentrons 20ul Tip Rack
 
 
 
