@@ -1,5 +1,14 @@
 [
   {
+    "type": "dropDown",
+    "label": "Optionally Adjust Final Volume? (yes or no)",
+    "name": "adjust_final_vol",
+    "options": [
+      { "label": "NO - don't adjust the final volume", "value": false },
+      { "label": "YES - add culture medium for 100 uL final volume", "value": true }
+    ]
+  },
+  {
     "type": "float",
     "label": "Starting Volume of anti-CD154 in 1.5 mL Screwcap Tube (ul)",
     "name": "vol_cd154",
