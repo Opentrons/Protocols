@@ -25,7 +25,7 @@ def run(ctx):
                 'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '3')
     tiprack = ctx.load_labware('opentrons_96_filtertiprack_10ul', '4')
     slide_plates = [ctx.load_labware(spot_labware,
-                    slot) for slot in ['1', '2']][:math.ceil(num_slides/6)]
+                    slot) for slot in ['1', '2']]  # [:math.ceil(num_slides/6)]
 
     # load instrument
     p20 = ctx.load_instrument('p20_single_gen2',
