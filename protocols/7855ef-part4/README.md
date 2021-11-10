@@ -39,8 +39,9 @@ The ThermoFisher 96 well plate (model 4483352) is to be mounted on top of the Bi
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
 Using the customization fields below, set up your protocol.
-* Number of Samples: Specify the number of samples to be processed in this run (max 288).
+* Number of Samples: Specify the number of samples to be processed in this run (max 384).
 * P20 single GEN2 mount: Specify which mount to load the P20 single GEN2 pipette.
+* Reset Tip Racks: Reset tip racks to pick up from A1 of the first tip rack of any one protocol, where "first" is referring to the lowest deck slot number out of the group of tip racks needed for the protocol.
 
 
 **Labware Setup**
