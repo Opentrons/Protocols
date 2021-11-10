@@ -17,6 +17,7 @@ Explanation of complex parameters below:
 * `Number of Samples`: Specify the number of samples (1-81) for this run.
 * `Tip Withdrawal Speed`: Specify the tip withdrawal speed for the tip to leave the urine samples.
 * `Sample Aspiration Height (mm)`:  Specify the sample aspiration height (in mm) from the bottom of the urine samples to aspirate from. Any well marked `X` in the csv, if uploaded will use this height. If the csv is not uploaded, all urine samples will use this height.
+* `Sample Aspiration Height (mm)`: Specify the dispense height from the bottom of the 96 well plate to dispense sample. 
 * `P300 Multi-Channel Mount`: Specify which mount (left or right) to host the P300 single channel pipette.
 
 

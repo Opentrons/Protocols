@@ -17,7 +17,7 @@ Links:
 * [Part 4: Pooling](http://protocols.opentrons.com/protocol/7855ef-part4)
 
 **Note about tips**
-The OT-2 will track tips from Part 1 to Part 4 of the protocol (e.g. tip leaves off in H11 at the end of protocol 1; first tip pick up will be from H12 in Part 2). When tips run out for any particular Part, the user will be prompted to replace all tip racks. The user will also have the option to "Reset Tip Racks" in the customized parameters section (see for details).
+The OT-2 will track tips from Part 1 to Part 4 of the protocol (e.g. tip leaves off in H11 at the end of protocol 1; first tip pick up will be from H12 in Part 2). When tips run out for any particular Part, the user will be prompted to replace all tip racks.
 
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
@@ -53,7 +53,6 @@ Part 4 of this protocol will pool 5ul from wells until a 60ul pool is achieved (
 Using the customization fields below, set up your protocol.
 * Number of Samples: Specify the number of samples to be processed in this run (max 384).
 * P20 single GEN2 mount: Specify which mount to load the P20 single GEN2 pipette.
-* Reset Tip Racks: Reset tip racks to pick up from A1 of the first tip rack of any one protocol, where "first" is referring to the lowest deck slot number out of the group of tip racks needed for the protocol.
 
 
 **Note about 20µL tip racks**
@@ -62,14 +61,13 @@ When prompted to replace the 20ul tip racks, be sure to re-load all 3 tip racks 
 
 **Labware Setup**
 
-Slots 1, 2, 3: ThermoFisher Scientific (model AB0800) 96 well plate loaded with DNA sample.  
+Slots 1, 2, 3, 4: ThermoFisher Scientific (model AB0800) 96 well plate loaded with DNA sample.  
 
 Slot 5: 384 well plate
 
+Slot 6: MMX Plate with Amplification Mix in Column 1 and 2
 
-Slot 7: MMX Plate with Amplification Mix in Column 1 and 2
-
-Slot 9, 10, 11: Opentrons 20ul Tip Rack
+Slot 7, 8, 9, 10, 11: Opentrons 20ul Tip Rack
 
 
 
