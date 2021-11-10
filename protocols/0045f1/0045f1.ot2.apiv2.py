@@ -1,5 +1,3 @@
-import math
-
 metadata = {
     'protocolName': 'SuperScript III: qRT-PCR Prep with CSV File',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
