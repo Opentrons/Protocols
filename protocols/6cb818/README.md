@@ -9,13 +9,13 @@
 
 ## Description
 
-This protocol uses a p20 single-channel pipette to transfer 5 uL anti-CD154 from a 1.5 mL screw-cap tube to wells A1 and A2 (already containing 200 uL of suspended cells) of a 96-well culture plate. The cells are then mixed and aliquoted into wells B1-E1 and B2-E2 of the culture plate. Wells B1-B2, C1-C2, D1-D2 and E1-E2 are then treated with either one of three peptides or PMA-Ca. Finally, well volumes are adjusted to 100 uL total by addition of culture medium.
+This protocol uses a p20 single-channel pipette to transfer 5 uL anti-CD154 from a 1.5 mL screw-cap tube to wells A1 and A2 (already containing 200 uL of suspended cells) of a 96-well culture plate. The cells are then mixed and aliquoted into wells B1-E1 and B2-E2 of the culture plate. Wells B1-B2, C1-C2, D1-D2 and E1-E2 are then treated with either one of three peptides or PMA-Ca. Finally, well volumes are optionally adjusted to 100 uL total by addition of culture medium.
 
 Links:
 * [experimental protocol](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/6cb818/Protocol_ForCustom_Opentrons_9-21-21.docx)
 
 
-This protocol was developed to mix anti-CD154 with cultured cells suspended in culture medium and then aliquot the cells to wells of a 96-well culture plate where the cells are treated either with one of three different peptides or PMA-Ca. Volumes are adjusted to 100 uL total by addition of culture medium.
+This protocol was developed to mix anti-CD154 with cultured cells suspended in culture medium and then aliquot the cells to wells of a 96-well culture plate where the cells are treated either with one of three different peptides or PMA-Ca. Volumes are optionally adjusted to 100 uL total by addition of culture medium.
 
 ## Protocol Steps
 
@@ -25,7 +25,7 @@ The OT-2 will perform the following steps:
 1. Use the p20 single to mix 5 uL of anti-CD154 with the suspended cells in A1 and A2 of the culture plate. Mix.
 2. Use the p20 single to mix the suspended cells and then aliquot 40 uL to B1-E1 and B2-E2 of the culture plate.
 3. Use the p20 single to add peptide 1 to B1-B2, peptide 2 to C1-C2, peptide 3 to D1-D2, and PMA-Ca to E1-E2.
-4. Use the p20 single to add 60 uL of culture medium to A1-E1 and A2-E2 to bring the total volume per well to 100 uL.
+4. Optionally use the p20 single to add 60 uL of culture medium to A1-E1 and A2-E2 to bring the total volume per well to 100 uL.
 
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
