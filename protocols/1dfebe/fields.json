@@ -33,6 +33,12 @@
     "default": 55
   },
   {
+    "type": "int",
+    "label": "Dispense height in plate (mm)",
+    "name": "disp_height",
+    "default": 6
+  },
+  {
     "type": "dropDown",
     "label": "P300 Multi-Channel Mount",
     "name": "p300_mount",

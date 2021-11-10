@@ -12,9 +12,9 @@ metadata = {
 def run(ctx):
 
     [use_csv, csv_samp, num_samp, tip_withdrawal_speed,
-        samp_asp_height, p300_mount] = get_values(  # noqa: F821
+        samp_asp_height, disp_height, p300_mount] = get_values(  # noqa: F821
         "use_csv", "csv_samp", "num_samp",
-        "tip_withdrawal_speed", "samp_asp_height",  "p300_mount")
+        "tip_withdrawal_speed", "samp_asp_height", "disp_height", "p300_mount")
 
     if not 1 <= num_samp <= 81:
         raise Exception("Enter a sample number between 1-81")
@@ -93,10 +93,9 @@ def run(ctx):
                           if height == 'X' or height == 'x' else 1))
         else:
             p300.aspirate(50, tube.bottom(z=samp_asp_height))
+        p300.slow_tip_withdrawal(tip_withdrawal_speed, tube)
         p300.touch_tip()
-        p300.dispense(50, dest_well)
-        p300.mix(5, 80, dest_well)
-        p300.slow_tip_withdrawal(tip_withdrawal_speed, dest_well)
+        p300.dispense(50, dest_well.bottom(disp_height))
         p300.touch_tip(radius=0.9, v_offset=-2)
         p300.drop_tip()
     ctx.comment('\n\n\n\n\n\n')

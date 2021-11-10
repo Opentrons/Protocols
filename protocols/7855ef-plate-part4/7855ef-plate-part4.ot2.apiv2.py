@@ -3,7 +3,7 @@ from opentrons import protocol_api
 from opentrons.types import Point
 
 metadata = {
-    'protocolName': 'Agriseq Library Prep Part 4 - Pooling',
+    'protocolName': 'Agriseq Library Prep Part 4 - Pooling (96)',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'
@@ -15,8 +15,8 @@ def run(protocol):
     [num_samp, p20_mount, p300_mount] = get_values(  # noqa: F821
         "num_samp", "p20_mount", "p300_mount")
 
-    if not 1 <= num_samp <= 384:
-        raise Exception("Enter a sample number between 1-384")
+    if not 1 <= num_samp <= 288:
+        raise Exception("Enter a sample number between 1-288")
     tip_counter = 0
 
     # load labware
