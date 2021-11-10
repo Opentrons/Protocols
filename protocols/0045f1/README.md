@@ -3,15 +3,12 @@
 ### Author
 [Opentrons](https://opentrons.com/)
 
-### Partner
-[Partner Name](partner website link)
-
 ## Categories
 * Sample Prep
 	* Plate Filling
 
 ## Description
-This protocol spots up to 6 slides with antibody. Each slide has 8 wells, to which the protocol will spot with 8 dots for wells 2-7. The user has the ability to manipulate the spacing between the dots, as well as the volume of the dispenses. The user can also specify the number of slides spotted. Please see below for the order in which slides are spotted. 
+This protocol spots up to 6 slides with antibody. Each slide has 8 wells, to which the protocol will spot with 8 dots for wells 2-7. The user has the ability to manipulate the spacing between the dots, as well as the volume of the dispenses. The user can also specify the number of slides spotted. Please see below for the order in which slides are spotted.
 
 Explanation of complex parameters below:
 * `Number of Slides`: Specify the number of slides for this run (1-6)
