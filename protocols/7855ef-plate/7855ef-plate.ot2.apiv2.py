@@ -2,7 +2,7 @@ import math
 from opentrons.types import Point
 
 metadata = {
-    'protocolName': 'Agriseq Library Prep Part 1 - DNA transfer',
+    'protocolName': 'Agriseq Library Prep Part 1 - DNA transfer (96)',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'
