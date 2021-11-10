@@ -12,16 +12,16 @@ metadata = {
 
 def run(ctx):
 
-    [vol_cd154, vol_peptide1, vol_peptide2, vol_peptide3, vol_pma_ca,
-     vol_culture_medium, labware_cultureplate, labware_tips, slot_cultureplate,
-     slot_tipbox, slot_snapcaps, slot_screwcaps, clearance_snapcap,
-     clearance_screwcap, clearance_plate,
+    [adjust_final_vol, vol_cd154, vol_peptide1, vol_peptide2, vol_peptide3,
+     vol_pma_ca, vol_culture_medium, labware_cultureplate, labware_tips,
+     slot_cultureplate, slot_tipbox, slot_snapcaps, slot_screwcaps,
+     clearance_snapcap, clearance_screwcap, clearance_plate,
      clearance_mix] = get_values(  # noqa: F821
-        "vol_cd154", "vol_peptide1", "vol_peptide2", "vol_peptide3",
-        "vol_pma_ca", "vol_culture_medium", "labware_cultureplate",
-        "labware_tips", "slot_cultureplate", "slot_tipbox", "slot_snapcaps",
-        "slot_screwcaps", "clearance_snapcap", "clearance_screwcap",
-        "clearance_plate", "clearance_mix")
+        "adjust_final_vol", "vol_cd154", "vol_peptide1", "vol_peptide2",
+        "vol_peptide3", "vol_pma_ca", "vol_culture_medium",
+        "labware_cultureplate", "labware_tips", "slot_cultureplate",
+        "slot_tipbox", "slot_snapcaps", "slot_screwcaps", "clearance_snapcap",
+        "clearance_screwcap", "clearance_plate", "clearance_mix")
 
     ctx.set_rail_lights(True)
     ctx.delay(seconds=10)
@@ -163,15 +163,16 @@ def run(ctx):
                 p20s.dispense(20, column[index].bottom(clearance_plate))
             p20s.drop_tip()
 
-    # add 60 uL culture medium to each well
-    for column in plate_wells:
-        for well in column:
-            reps = math.ceil(
-             float(60) / p20s._tip_racks[0].wells()[0].max_volume)
-            vol = 60 / reps
-            for rep in range(reps):
-                p20s.pick_up_tip()
-                p20s.aspirate(vol, culture_medium.height_dec(vol))
-                p20s.dispense(vol, well.height_inc(vol))
-                p20s.touch_tip(radius=0.75, v_offset=-4, speed=20)
-                p20s.drop_tip()
+    # optionally add 60 uL culture medium to each well
+    if adjust_final_vol:
+        for column in plate_wells:
+            for well in column:
+                reps = math.ceil(
+                 float(60) / p20s._tip_racks[0].wells()[0].max_volume)
+                vol = 60 / reps
+                for rep in range(reps):
+                    p20s.pick_up_tip()
+                    p20s.aspirate(vol, culture_medium.height_dec(vol))
+                    p20s.dispense(vol, well.height_inc(vol))
+                    p20s.touch_tip(radius=0.75, v_offset=-4, speed=20)
+                    p20s.drop_tip()
