@@ -1,6 +1,4 @@
 import math
-import csv
-import os
 from opentrons.types import Point
 
 metadata = {
@@ -21,29 +19,7 @@ def run(protocol):
 
     num_col = math.ceil(num_samp/8)
 
-    # Tip tracking between runs
-    if not protocol.is_simulating():
-        file_path = '/data/csv/tiptracking.csv'
-        file_dir = os.path.dirname(file_path)
-        # check for file directory
-        if not os.path.exists(file_dir):
-            os.makedirs(file_dir)
-        # check for file; if not there, create initial tip count tracking
-        if not os.path.isfile(file_path):
-            with open(file_path, 'w') as outfile:
-                outfile.write("0, 0\n")
-
-    tip_count_list = []
-    if protocol.is_simulating():
-        tip_count_list = [0]
-    elif reset_tipracks:
-        tip_count_list = [0]
-    else:
-        with open(file_path) as csv_file:
-            csv_reader = csv.reader(csv_file, delimiter=',')
-            tip_count_list = next(csv_reader)
-
-    tip_counter = int(tip_count_list[0])
+    tip_counter = 0
 
     # load labware
     reaction_plate = protocol.load_labware('microamp_384_wellplate_100ul',
@@ -52,7 +28,7 @@ def run(protocol):
                                       label='MMX Plate')
     tiprack20 = [protocol.load_labware('opentrons_96_filtertiprack_20ul',
                  str(slot))
-                 for slot in [9, 10, 11]]
+                 for slot in [8, 9, 10, 11]]
 
     # load instruments
     m20 = protocol.load_instrument('p20_multi_gen2', m20_mount,
@@ -103,9 +79,3 @@ def run(protocol):
 
     protocol.comment('''Protocol complete - remove reaction plates from
                    deck and prepare Barcode Reaction Mix for Part 3. ''')
-
-    # write updated tipcount to CSV
-    new_tip_count = str(tip_counter)+", "+"\n"
-    if not protocol.is_simulating():
-        with open(file_path, 'w') as outfile:
-            outfile.write(new_tip_count)
