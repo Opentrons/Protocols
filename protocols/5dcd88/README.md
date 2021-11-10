@@ -16,6 +16,7 @@ Water and mastermix are added to samples, after which an incubation period follo
 Explanation of complex parameters below:
 * `Number of Samples`: Specify the number of samples for this run
 * `P20 Multi-Channel Mount`: Specify which mount (left or right) to host the P20 Multi-Channel Pipette.
+* `Park Tips?`: Specify whether or not you would like to park tips for this run
 * `P300 Multi-Channel Mount`: Specify which mount (left or right) to host the P300 Multi-Channel
 
 ---

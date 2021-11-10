@@ -82,9 +82,9 @@ def run(ctx):
 
     def adjust_height(vol):
         nonlocal h1
-        dh = vol/(math.pi*radius**2)*10
+        dh = vol/(math.pi*radius**2)*5
         h1 -= dh
-        if h1 < 20:
+        if h1 < 5:
             h1 = 1
         else:
             return h1 - 10

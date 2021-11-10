@@ -9,6 +9,8 @@ metadata = {
     'apiLevel': '2.11'
 }
 
+TEST_MODE = False
+
 
 def run(ctx):
     [num_samples, tip_track] = get_values(  # noqa: F821
@@ -16,24 +18,29 @@ def run(ctx):
 
     bead_vol = 100.0
     sample_vol = 110.0
-    settling_time = 1.0
     park_tips = True
-    mag_height = 6.8
+    mag_height = 6.6
     z_offset = 1.0
-    radial_offset = 0.8
-    mix_reps = 10
+    radial_offset = 0.3
     wash1_vol = 200.0
-    wash2_vol = 300.0
+    wash2_vol = 200.0
     elution_vol = 100.0
+    air_gap_vol = 0.0
+    bead_settling_time = 1.0
+    temp_time = 5.0
+    mix_reps = 10
+
+    if TEST_MODE:
+        bead_settling_time, mix_reps, temp_time = 0.0, 1, 0.0
 
     """
     Here is where you can change the locations of your labware and modules
     (note that this is the recommended configuration)
     """
-    sample_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
-                                    '1', 'starting sample plate')
+    sample_plate = ctx.load_labware(
+        'opentrons_96_aluminumblock_nest_wellplate_100ul',
+        '1', 'starting sample plate')
     magdeck = ctx.load_module('magnetic module gen2', '4')
-    magdeck.disengage()
     magplate = magdeck.load_labware('nest_96_wellplate_2ml_deep',
                                     'deepwell plate')
     tempdeck = ctx.load_module('Temperature Module Gen2', '7')
@@ -77,7 +84,10 @@ def run(ctx):
     starting_samples_m = sample_plate.rows()[0][:num_cols]
     elution_samples_m = elutionplate.rows()[0][:num_cols]
     heating_samples_m = heatingplate.rows()[0][:num_cols]
-    radius = mag_samples_m[0].width
+    if mag_samples_m[0].width:
+        radius = mag_samples_m[0].width/2
+    else:
+        radius = mag_samples_m[0].diameter/2
 
     magdeck.disengage()  # just in case
     tempdeck.set_temperature(85)
@@ -85,6 +95,9 @@ def run(ctx):
     m300.flow_rate.aspirate = 50
     m300.flow_rate.dispense = 150
     m300.flow_rate.blow_out = 300
+    ctx._implementation._hw_manager.hardware._attached_instruments[
+        m300._implementation.get_mount()].update_config_item(
+            'pick_up_current', 0.5)
 
     folder_path = '/data/B'
     tip_file_path = folder_path + '/tip_log.json'
@@ -150,7 +163,7 @@ resuming.')
     waste_vol = 0
     waste_threshold = 185000
 
-    def remove_supernatant(vol, park=False):
+    def remove_supernatant(vol, park=False, drop=True):
         """
         `remove_supernatant` will transfer supernatant from the deepwell
         extraction plate to the liquid waste reservoir.
@@ -175,10 +188,11 @@ resuming.')
         num_trans = math.ceil(vol/200)
         vol_per_trans = vol/num_trans
         for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
-            if park:
-                _pick_up(m300, spot)
-            else:
-                _pick_up(m300)
+            if not m300.has_tip:
+                if park:
+                    _pick_up(m300, spot)
+                else:
+                    _pick_up(m300)
             side = -1 if i % 2 == 0 else 1
             loc = m.bottom(0).move(Point(x=side*radius*radial_offset,
                                          z=z_offset))
@@ -189,13 +203,15 @@ resuming.')
                     m300.dispense(m300.current_volume, m.top())
                 m300.move_to(m.center())
                 m300.transfer(vol_per_trans, loc, waste, new_tip='never',
-                              air_gap=20)
+                              air_gap=air_gap_vol)
                 m300.blow_out(waste)
                 m300.air_gap(20)
-            _drop(m300)
+            if drop:
+                _drop(m300)
         m300.flow_rate.aspirate = 150
 
-    def wash(vol, source, mix_reps=15, park=True, resuspend=True):
+    def wash(vol, source, mix_reps=mix_reps, park=True, resuspend=True,
+             drop=True):
         """
         `wash` will perform bead washing for the extraction protocol.
         :param vol (float): The amount of volume to aspirate from each
@@ -220,15 +236,16 @@ resuming.')
         num_trans = math.ceil(vol/200)
         vol_per_trans = vol/num_trans
         for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
-            _pick_up(m300)
+            if not m300.has_tip:
+                _pick_up(m300)
             side = 1 if i % 2 == 0 else -1
             loc = m.bottom().move(Point(x=side*radius*radial_offset,
                                         z=z_offset))
             for n in range(num_trans):
                 if m300.current_volume > 0:
                     m300.dispense(m300.current_volume, source.top())
-                m300.transfer(vol_per_trans, source, m.top(), air_gap=20,
-                              new_tip='never')
+                m300.transfer(vol_per_trans, source, m.top(),
+                              air_gap=air_gap_vol, new_tip='never')
                 if n < num_trans - 1:  # only air_gap if going back to source
                     m300.air_gap(20)
             if resuspend:
@@ -243,10 +260,10 @@ resuming.')
         if magdeck.status == 'disengaged':
             magdeck.engage(height=mag_height)
 
-        ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
-' + str(settling_time) + ' minutes.')
+        ctx.delay(minutes=bead_settling_time, msg='Incubating on MagDeck for \
+' + str(bead_settling_time) + ' minutes.')
 
-        remove_supernatant(vol, park=park)
+        remove_supernatant(vol, park=park, drop=drop)
 
     def elute(vol, park=True):
         """
@@ -270,7 +287,7 @@ resuming.')
             side = 1 if i % 2 == 0 else -1
             loc = m.bottom().move(Point(x=side*radius*radial_offset,
                                         z=z_offset))
-            m300.aspirate(vol, elution_solution)
+            m300.aspirate(vol, h)
             m300.move_to(m.center())
             m300.dispense(vol, loc)
             m300.mix(mix_reps, 0.8*vol, loc)
@@ -280,7 +297,8 @@ resuming.')
             else:
                 _drop(m300)
 
-        ctx.delay(minutes=5, msg='Incubating at 85C for 5 minutes')
+        ctx.delay(minutes=temp_time, msg=f'Incubating at 85C for {temp_time} \
+minutes')
 
         for m, h, spot in zip(mag_samples_m, heating_samples_m,
                               parking_spots):
@@ -288,58 +306,66 @@ resuming.')
                 _pick_up(m300, spot)
             else:
                 _pick_up(m300)
-            m300.transfer(vol, h.bottom(0.2), m, mix_before=(10, 0.8*vol),
-                          new_tip='never')
-            if park:
-                m300.drop_tip(spot)
-            else:
-                _drop(m300)
+            m300.transfer(vol, h.bottom(0.2), m,
+                          mix_before=(mix_reps, 0.8*vol), new_tip='never')
+            _drop(m300)
 
         magdeck.engage(height=mag_height)
-        ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
-' + str(settling_time) + ' minutes.')
+        ctx.delay(minutes=bead_settling_time, msg='Incubating on MagDeck for \
+' + str(bead_settling_time) + ' minutes.')
 
         for i, (m, e, spot) in enumerate(
                 zip(mag_samples_m, elution_samples_m, parking_spots)):
-            if park:
-                _pick_up(m300, spot)
-            else:
-                _pick_up(m300)
+            _pick_up(m300)
             side = -1 if i % 2 == 0 else 1
             loc = m.bottom().move(Point(x=side*radius*radial_offset,
                                         z=z_offset))
-            m300.transfer(vol, loc, e.bottom(5), air_gap=20, new_tip='never')
+            m300.transfer(vol, loc, e.bottom(5), air_gap=air_gap_vol,
+                          new_tip='never')
             m300.blow_out(e.top(-2))
             m300.air_gap(20)
             m300.drop_tip()
 
     """
-    Here is where you can call the methods defined above to fit your specific
-    protocol. The normal sequence is:
+    ACTIONS
     """
+    # pre-heat elution buffer
+    _pick_up(m300)
+    for h in heating_samples_m:
+        m300.transfer(elution_vol, elution_solution, h, new_tip='never')
+
     # prewash
-    remove_supernatant(bead_vol)
+    magdeck.engage(mag_height)
+    ctx.delay(minutes=bead_settling_time, msg=f'Beads separating for \
+{bead_settling_time} minutes.')
+    remove_supernatant(bead_vol, drop=False)
+    # keep tips for wash
     for w in range(2):
-        wash(wash1_vol, wash1[w], park=park_tips)
+        wash(wash1_vol, wash1[w], park=park_tips, drop=False)
 
     # add sample and mix iteratively for ~30 minutes
     for s, d, p in zip(starting_samples_m, mag_samples_m, parking_spots):
-        _pick_up()
+        if not m300.has_tip:
+            _pick_up()
         m300.transfer(sample_vol, s, d, new_tip='never')
         m300.drop_tip(p)
 
     mixes_per_min = 2
     num_mix_cycles = int(30*mixes_per_min/num_cols)
+    if TEST_MODE:
+        num_mix_cycles = 1
     for i in range(num_mix_cycles):
         for s, p in zip(mag_samples_m, parking_spots):
             _pick_up(m300, p)
-            m300.mix(10, 0.8*sample_vol)
+            m300.mix(10, 0.8*sample_vol, s)
             if i < num_mix_cycles - 1:
                 m300.drop_tip(p)
             else:
                 _drop(m300)
 
-    # final washes
+    # sample washes
+    for w in range(2):
+        wash(wash1_vol, wash1[w], park=park_tips)
     for w in range(3):
         wash(wash2_vol, wash2[w], park=park_tips)
     elute(elution_vol, park=park_tips)
