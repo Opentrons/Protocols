@@ -1,4 +1,4 @@
-# AgriSeq Library Prep Part 1 - DNA Transfer
+# AgriSeq Library Prep Part 1 - DNA Transfer (96)
 
 ### Author
 [Opentrons](https://opentrons.com/)
