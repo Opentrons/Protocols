@@ -1,0 +1,30 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Sample Prep": [
+            "Serial Dilution"
+        ]
+    },
+    "deck-setup": "\n",
+    "description": "This protocol transfers one-to-one analyte from the analyte tube rack on slot 2 to the final tube rack on slot 3. It then transfers plasma to all tubes up to the number specified by the user in the final tube rack. The solution in each tube is mixed upon dispensing the plasma.\nExplanation of complex parameters below:\n Number of analyte tubes: Specify the number of analyte tubes for this run.\n Volume of plasma (ul): Specify the volume of plasma to distribute to each tube in the final tube rack.\n Volume of analyte: Specify the volume of analyte to distribute to each tube in the final tube rack.\n P20 Single-Channel Mount: Specify which mount (left or right) to host the P20 Single-Channel Pipette.\n* P1000 Single-Channel Mount: Specify which mount (left or right) to host the P1000 Single-Channel Pipette.\n",
+    "internal": "469c70-pt2",
+    "labware": "\nOpentrons 4-in-1 tube rack\nOpentrons 1000ul Tips\nOpentrons 20ul Tips\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* Sample Prep\n\t* Serial Dilution\n\n",
+        "deck-setup": "![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/469c70/Screen+Shot+2021-11-11+at+2.26.41+PM.png)\n\n---\n\n",
+        "description": "This protocol transfers one-to-one analyte from the analyte tube rack on slot 2 to the final tube rack on slot 3. It then transfers plasma to all tubes up to the number specified by the user in the final tube rack. The solution in each tube is mixed upon dispensing the plasma.\n\nExplanation of complex parameters below:\n* `Number of analyte tubes`: Specify the number of analyte tubes for this run.\n* `Volume of plasma (ul)`: Specify the volume of plasma to distribute to each tube in the final tube rack.\n* `Volume of analyte`: Specify the volume of analyte to distribute to each tube in the final tube rack.\n* `P20 Single-Channel Mount`: Specify which mount (left or right) to host the P20 Single-Channel Pipette.\n* `P1000 Single-Channel Mount`: Specify which mount (left or right) to host the P1000 Single-Channel Pipette.\n\n\n---\n\n",
+        "internal": "469c70-pt2\n",
+        "labware": "* [Opentrons 4-in-1 tube rack](https://shop.opentrons.com/collections/racks-and-adapters/products/tube-rack-set-1)\n* [Opentrons 1000ul Tips](https://shop.opentrons.com/collections/opentrons-tips)\n* [Opentrons 20ul Tips](https://shop.opentrons.com/collections/opentrons-tips)\n\n\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [P1000 Single-Channel Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/single-channel-electronic-pipette)\n* [P20 Single-Channel Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/single-channel-electronic-pipette)\n\n---\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "protocol-steps": "1. Add 5\u00b5l analyte from 2 mL Eppendorf tube in analyte tube rack to 2 mL Eppendorf tube in final tube rack.\n2. Transfer 195 \u00b5L of Plasma from plasma tube rack to 2 mL Eppendorf tubes in final tube rack.  \n3. Mix 5 times\n\n\n",
+        "title": "Sample Prep MALDI spotting - Fresh Spiking"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nP1000 Single-Channel Pipette\nP20 Single-Channel Pipette\n\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "protocol-steps": "\nAdd 5\u00b5l analyte from 2 mL Eppendorf tube in analyte tube rack to 2 mL Eppendorf tube in final tube rack.\nTransfer 195 \u00b5L of Plasma from plasma tube rack to 2 mL Eppendorf tubes in final tube rack.  \nMix 5 times\n",
+    "title": "Sample Prep MALDI spotting - Fresh Spiking"
+}

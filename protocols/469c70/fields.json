@@ -1,0 +1,47 @@
+[
+  {
+    "type": "int",
+    "label": "Number of dilution tubes (1-15)",
+    "name": "num_dilutions",
+    "default": 8
+  },
+  {
+    "type": "int",
+    "label": "Initial volume of stock for tube 1 (ul)",
+    "name": "initial_vol_dilution",
+    "default": 230
+  },
+  {
+    "type": "float",
+    "label": "Initial volume of dilution for tube 1 (mL)",
+    "name": "initial_vol_stock",
+    "default": 9.77
+  },
+  {
+    "type": "float",
+    "label": "Initial volume of stock for the rest of the tubes (mL)",
+    "name": "initial_vol_stock",
+    "default": 8.8
+  },
+  {
+    "type": "float",
+    "label": "Initial volume of dilution for the rest of the tubes (mL)",
+    "name": "initial_vol_stock",
+    "default": 1.2
+  },
+  {
+    "type": "float",
+    "label": "Pre-mix Rate",
+    "name": "mix_rate",
+    "default": 1
+  },
+  {
+    "type": "dropDown",
+    "label": "P300 Multi-Channel Mount",
+    "name": "m300_mount",
+    "options": [
+      {"label": "Left", "value": "left"},
+      {"label": "Right", "value": "right"}
+    ]
+  }
+]
