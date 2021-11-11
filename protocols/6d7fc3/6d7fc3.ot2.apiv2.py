@@ -11,9 +11,9 @@ metadata = {
 
 def run(ctx):
 
-    [samples, samples_labware, p300_mount,
+    [samples, p300_mount,
         p20_mount] = get_values(  # noqa: F821
-        "samples", "samples_labware", "p300_mount", "p20_mount")
+        "samples", "p300_mount", "p20_mount")
 
     if not 1 <= samples <= 12:
         raise Exception('''Invalid number of samples.
@@ -26,7 +26,7 @@ def run(ctx):
     tc_plate = tc_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
     temp_mod = ctx.load_module('temperature module gen2', 3)
     temp_plate = temp_mod.load_labware(
-                    'opentrons_24_aluminumblock_nest_2ml_snapcap')
+        'opentrons_24_aluminumblock_nest_2ml_snapcap')
 
     # if samples_labware == 'tube':
     #     sample_plate = ctx.load_labware(
@@ -75,13 +75,6 @@ def run(ctx):
               Please place your reagents on the
               temperature module.''')
 
-    # # Transfer 4 uL of DNA to Thermocycler Reaction Plate
-    # for src, dest in zip(sample_wells, tc_plate_wells):
-    #     pick_up(p20)
-    #     p20.aspirate(4, src)
-    #     p20.dispense(4, dest)
-    #     p20.drop_tip()
-
     # Prepre Master Mix
     frag_buff_vol = 2.5*samples+1.2
     fera_vol = 0.75*samples+0.4
@@ -96,6 +89,13 @@ def run(ctx):
     pick_up(pip)
     pip.aspirate(fera_vol, fera)
     pip.dispense(fera_vol, mm)
+    pip.drop_tip()
+
+    # Mix Master Mix
+    pip = p300 if frag_buff_vol + fera_vol > 20 else p20
+    pick_up(pip)
+    pip.mix(10, frag_buff_vol+fera_vol, mm)
+    pip.blow_out(mm.top())
     pip.drop_tip()
 
     # Transfer 3.25 uL of Master Mix to Thermocycler Reaction Plate
