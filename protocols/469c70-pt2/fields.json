@@ -1,0 +1,38 @@
+[
+  {
+    "type": "int",
+    "label": "Number of analyte tubes",
+    "name": "num_tubes",
+    "default": 10
+  },
+  {
+    "type": "int",
+    "label": "Volume of plasma (ul)",
+    "name": "vol_plasma",
+    "default": 195
+  },
+  {
+    "type": "float",
+    "label": "Volume of analyte",
+    "name": "vol_analyte",
+    "default": 5
+  },
+  {
+    "type": "dropDown",
+    "label": "P20 Single-Channel Mount",
+    "name": "p20_mount",
+    "options": [
+      {"label": "Right", "value": "right"},
+      {"label": "Left", "value": "left"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "P1000 Single-Channel Mount",
+    "name": "p1000_mount",
+    "options": [
+      {"label": "Left", "value": "left"},
+      {"label": "Right", "value": "right"}
+    ]
+  }
+]
