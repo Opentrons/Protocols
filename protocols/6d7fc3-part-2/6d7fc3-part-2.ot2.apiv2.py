@@ -26,10 +26,10 @@ def run(ctx):
     tc_plate = tc_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
     temp_mod = ctx.load_module('temperature module gen2', 3)
     temp_plate = temp_mod.load_labware(
-                    'opentrons_24_aluminumblock_nest_2ml_snapcap')
+        'opentrons_24_aluminumblock_nest_2ml_snapcap')
     pcr_tubes = ctx.load_labware(
-                    'opentrons_96_aluminumblock_generic_pcr_strip_200ul',
-                    2)
+        'opentrons_96_aluminumblock_generic_pcr_strip_200ul',
+        2)
 
     # Load Pipettes
     p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
@@ -72,7 +72,7 @@ def run(ctx):
               Please place your samples and reagents on the
               temperature module.''')
 
-    # Mix Ligation MM
+    # Mix Ligation Master Mix
     lig_buff_vol = 10*samples+5
     dna_lig_vol = 5*samples+2.5
     lig_sol_vol = 7.2*samples+3.6
@@ -93,6 +93,13 @@ def run(ctx):
     pick_up(pip)
     pip.aspirate(lig_sol_vol, lig_sol)
     pip.dispense(lig_sol_vol, ligation_mm)
+    pip.drop_tip()
+
+    # Mix Master Mix
+    pip = p300 if lig_buff_vol + dna_lig_vol + lig_sol_vol > 20 else p20
+    pick_up(pip)
+    pip.mix(10, 50, ligation_mm)
+    pip.blow_out(ligation_mm.top())
     pip.drop_tip()
 
     # Add Adapters to PCR Tubes
