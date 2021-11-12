@@ -46,13 +46,13 @@ Explanation of complex parameters below:
 
 ### Deck Setup
 This example starting deck state shows the layout for 24 samples:  
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/7062c9/deck2.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/7062c9/deck2-2.png)
 
-* orange on starting sample plate: 110µl annealed and digested samples
-* green on deepwell plate on magnetic module: 100µl beads and buffer
-* blue on reagent reservoir: buffer 2 (wash buffer)
-* pink on reagent reservoir: water
-* purple on reagent reservoir: buffer 3 (elution buffer)
+* pink on starting sample plate: 110µl annealed and digested samples
+* green on reagent reservoir: buffer 2 (wash buffer)
+* blue on reagent reservoir: water
+* purple on reagent reservoir: magnetic beads
+* orange on reagent reservoir: buffer 3 (elution buffer)
 
 ---
 
