@@ -12,7 +12,7 @@ This protocol spots up to 6 slides with antibody. Each slide has 8 wells, to whi
 
 Explanation of complex parameters below:
 * `Number of tubes`: Specify the number of tubes this protocol will run.
-* `Number of Slides`: Specify the number of slides for this run (1-6)
+* `Number of Slides`: Specify the number of slides for this run (1-6).
 * `Spot Spacing`: Specify the spacing between dots on the slide wells.
 * `Spot Volume`: Specify the volume of each dot.
 * `Aspiration Flow Rate`: Specify the aspiration rate. A value of 1 is the default rate, a value of 1.2 is a 20% increase of the default rate, a value of 0.5 is half of the default rate.
