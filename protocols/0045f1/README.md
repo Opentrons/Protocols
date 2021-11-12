@@ -1,4 +1,4 @@
-# Mass Spec Sample Prep (MALDI spotting, gel digests, etc.)
+# Variable Slide Dispensing
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -11,7 +11,8 @@
 This protocol spots up to 6 slides with antibody. Each slide has 8 wells, to which the protocol will spot with 8 dots for wells 2-7. The user has the ability to manipulate the spacing between the dots, as well as the volume of the dispenses. The user can also specify the number of slides spotted. Please see below for the order in which slides are spotted.
 
 Explanation of complex parameters below:
-* `Number of Slides`: Specify the number of slides for this run (1-6)
+* `Number of tubes`: Specify the number of tubes this protocol will run.
+* `Number of Slides`: Specify the number of slides for this run (1-6).
 * `Spot Spacing`: Specify the spacing between dots on the slide wells.
 * `Spot Volume`: Specify the volume of each dot.
 * `Aspiration Flow Rate`: Specify the aspiration rate. A value of 1 is the default rate, a value of 1.2 is a 20% increase of the default rate, a value of 0.5 is half of the default rate.
@@ -41,8 +42,8 @@ Explanation of complex parameters below:
 ---
 
 ### Protocol Steps
-1. Pipette will aspirate user-specified volume from tube 1, and dispense into the top-right spot on every other well starting from the second, for all slide plate positions.
-2. Pipette will aspirate user-specified volume from tube 2, and dispense into the top-right spot on every other well starting from the third, for all slide plate positions.
+1. Pipette will aspirate user-specified volume from tube 1, and dispense into the top-left spot on every other well starting from the second, for all slide plate positions.
+2. Pipette will aspirate user-specified volume from tube 2, and dispense into the bottom-left spot on every other well starting from the third, for all slide plate positions.
 3. Repeat until all slides are filled.
 
 ### Process
