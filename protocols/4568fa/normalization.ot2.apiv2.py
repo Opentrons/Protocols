@@ -53,7 +53,6 @@ def run(ctx):
     water = reservoir.wells()[0]
     hs_dil = tuberacks[-1].columns()[-1][1:]
     blank_solution = reservoir.wells()[1]
-    rna_ladder = tuberacks[1].wells_by_name()['A6']
 
     data = [
         [val.strip() for val in line.split(',')]
