@@ -41,13 +41,13 @@ For sample traceability and consistency, samples are mapped directly from the sa
 
 ### Deck Setup
 This example starting deck state shows the layout for 24 samples:  
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/7062c9/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/7062c9/deck1-3.png)
 
-* orange on starting sample plate: sample
-* green on reagent reservoir: water
-* blue on tuberack: buffer 1
-* pink tuberack: protease
-* purple on tuberack: probes (can occupy any of last 22 tubes of tuberack)
+* green on sample tuberack: starting samples
+* blue on reagent reservoir: water
+* pink on buffer + probe tuberack: buffer
+* purple on buffer + probe tuberack: protease
+* orange buffer + probe tuberack: available spots for probes
 
 ---
 
