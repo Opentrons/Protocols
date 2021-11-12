@@ -12,7 +12,7 @@
 This is a flexible normalization protocol a 2-fold dilution to an input desired concentration followed by sample aliquoting in triplicate. Normalization parameters should be input as a .csv file below, and should be formatted as shown in the following template **including headers line**:
 
 ```
-sample number,sample name,sample concentration (mg/ml)
+sample number,sample name,sample concentration (<0.25 mg/ml)
 1,007007009-403-1,1.569
 2,007007009-403-2,0.984
 3,007007009-403-3,2.128
