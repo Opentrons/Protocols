@@ -50,13 +50,12 @@ You can also access this template for download [here](https://opentrons-protocol
 
 ### Deck Setup
 This example starting deck state shows the layout for 24 samples:  
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/4568fa/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/4568fa/deck2.png)
 
 * green on tuberacks: starting samples at various concentrations (specified in .csv file)
 * blue on reservoir A1: water
-* pink on reservoir A2: HS diluent markers
-* orange on reservoir A3: blank solution
-* purple on tuberack A6: RNA ladder
+* pink on reservoir A2: blank solution
+* purple on tuberack A6-C6: HS diluent
 
 ---
 
