@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "normalization.ot2.apiv2.py"
+            "fa_workflow.ot2.apiv2.py"
         ],
         "description": [
             "README.md"
