@@ -11,14 +11,16 @@ def run(ctx):
         'input_csv', 'p300_mount', 'p20_mount')
 
     # labware
-    sample_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
-                                    '1', 'sample plate')
-    final_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
+    sample_plate = ctx.load_labware(
+        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '4',
+        'sample rack')
+    final_plate = ctx.load_labware('neptune_96_aluminumblock_200ul',
                                    '2', 'normalized plate')
-    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '4',
+    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '7',
                                  'reagent reservoir')
-    tuberack = ctx.load_labware('opentrons_24_tuberack_nest_1.5ml_screwcap',
-                                '5', 'buffer + probe tuberack')
+    tuberack = ctx.load_labware(
+        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '5',
+        'buffer + probe tuberack')
     tipracks20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '3')]
     tipracks200 = ctx.load_labware('opentrons_96_filtertiprack_200ul', '9')
 
@@ -34,8 +36,8 @@ def run(ctx):
 
     # reagents
     water = reservoir.wells()[0]
-    buffer = tuberack.wells()[0]
-    protease = tuberack.wells()[1]
+    buffer = tuberack.wells()[1]
+    protease = tuberack.wells()[2]
 
     def drop_all_tips():
         for pipette in ctx.loaded_instruments.values():
@@ -81,7 +83,7 @@ def run(ctx):
     # prealocate buffer
     for i, line in enumerate(data):
         buffer_vol = float(line[3])
-        pip = p20 if water_vol <= 20 else p300
+        pip = p20 if buffer_vol <= 20 else p300
         dest_well = final_plate.wells()[i]
         if not pip.has_tip:
             if pip == p20:
@@ -96,7 +98,7 @@ def run(ctx):
     for i, line in enumerate(data):
         probe_vol = float(line[4])
         probe = tuberack.wells_by_name()[line[5].upper().strip()]
-        pip = p20 if water_vol <= 20 else p300
+        pip = p20 if probe_vol <= 20 else p300
         dest_well = final_plate.wells()[i]
         if not probe == last_probe:
             if pip.has_tip:
@@ -134,4 +136,4 @@ def run(ctx):
     # transfer protease
     for i, line in enumerate(data):
         dest_well = final_plate.wells()[i]
-        p20.transfer(5, protease, dest_well)
+        p20.transfer(5, protease, dest_well, mix_after=(3, 20))
