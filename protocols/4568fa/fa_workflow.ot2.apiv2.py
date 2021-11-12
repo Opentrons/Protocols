@@ -67,7 +67,11 @@ def run(ctx):
     # pre-allocate water for dilution to 100µg/ml
     p300.pick_up_tip()
     for dil, line in zip(dils_1, data):
+        sample_name = line[1]
         conc = float(line[2])
+        if conc < 0.25:
+            raise Exception(f'Sample {sample_name} below allowable \
+concentration of 0.25mg/ml.')
         sample_vol = 10/conc
         dil_1_vol = 100 - sample_vol
         p300.transfer(dil_1_vol, water, dil, new_tip='never')
@@ -82,7 +86,7 @@ def run(ctx):
         conc = float(line[2])
         sample_vol = 10/conc
         p20.pick_up_tip()
-        p20.transfer(sample_vol, sample, dil1,
+        p20.transfer(sample_vol, sample, dil1, mix_before=(mix_reps, 20),
                      new_tip='never')
         p20.drop_tip()
 
