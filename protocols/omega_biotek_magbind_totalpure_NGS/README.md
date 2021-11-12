@@ -17,6 +17,8 @@ With this protocol, you can perform high-quality nucleic acid purifications usin
 
 This kit is widely used in NGS cleanup for its affordability and simplicity. It is also well-adapted for nucleic acid size selection by varying bead ratios for  the  isolation  of  a  wide  array  of  fragment  sizes. For more detailed information on how to use this protocol, please see our [Application Note](https://s3.amazonaws.com/opentrons-protocol-library-website/Technical+Notes/Omega_Application_Note.pdf).
 
+Please note this protocol is currently being updated.
+
 ---
 
 ---
@@ -30,7 +32,7 @@ To purchase tips, reagents, or our Magnetic Module, please [visit our online sto
    * [Opentrons Magnetic Module](https://shop.opentrons.com/products/magdeck)
    * [Opentrons OT-2 Run App (Version 3.1.2 or later)](http://opentrons.com/ot-app)
    * 200uL or 300 uL Tiprack ([Opentrons tips suggested](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips-racks-9-600-tips))
-   * [12-row automation-friendly trough](https://www.usascientific.com/12-channel-automation-reservoir.aspx)
+   * [12-row automation-friendly trough](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
    * [BioRad HardShell 96-Well PCR Plates](http://www.bio-rad.com/en-us/sku/hsp9601-hard-shell-96-well-pcr-plates-low-profile-thin-wall-skirted-white-clear?ID=hsp9601)
    * Ethanol
    * Elution Buffer (Typically  10 mM Tris pH 8.0, TE Buffer, or nuclease-free water)
