@@ -74,8 +74,8 @@ def run(protocol_context):
 
     # Define reagents and liquid waste
     beads = reagent_container.wells()[0]
-    ethanol = reagent_container.wells()[0]
-    elution_buffer = reagent_container.wells()[0]
+    ethanol = reagent_container.wells()[1]
+    elution_buffer = reagent_container.wells()[2]
 
     # Define bead and mix volume to resuspend beads
     bead_volume = PCR_volume*bead_ratio
