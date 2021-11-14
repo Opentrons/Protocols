@@ -37,13 +37,13 @@ This is a protocol for the FluRibogreen Assay protocol. Samples are aligned in t
 
 ### Deck Setup
 This example starting deck state shows the layout for 24 samples:  
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2ed4de/deck2.39.37+PM.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2ed4de/deck.png)
 
-* orange on sample tuberack preparation plate: samples
-* green on reagent reservoir: working standard 1
-* blue on reagent reservoir: working standard 2
-* pink on reagent reservoir: assay buffer 1
-* purple on reagent reservoir: assay buffer 2
+* green on sample tuberack: samples
+* blue on reagent reservoir: working standard 1
+* pink on reagent reservoir: assay buffer 1 (TE)
+* purple on reagent reservoir: working standard 2
+* orange on reagent reservoir: assay buffer 2 (TR)
 
 ---
 

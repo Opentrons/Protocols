@@ -1,6 +1,21 @@
 [
   {
       "type": "dropDown",
+      "label": "reagent labware",
+      "name": "reagent_labware",
+      "options": [
+        {"label": "NEST 12 Reservoir 15ml", "value": "nest_12_reservoir_15ml"},
+        {"label": "Opentrons 6 Tube Rack with Falcon 50 mL Conical", "value": "opentrons_6_tuberack_falcon_50ml_conical"}
+      ]
+  },
+  {
+      "type": "float",
+      "label": "starting sample concentration (mg/ml)",
+      "name": "starting_conc",
+      "default": 60.0
+  },
+  {
+      "type": "dropDown",
       "label": "P1000-single GEN2 mount",
       "name": "p1000_mount",
       "options": [

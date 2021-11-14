@@ -1,7 +1,28 @@
 {
-    "content": "metadata = {\n    'protocolName': 'FluRibogreen Assay',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx):\n\n    [p1000_mount, p300_mount] = get_values(  # noqa: F821\n        'p1000_mount', 'p300_mount')\n\n    final_transfer_vol = 150\n    sample_vol = 200\n\n    # load labwarex\n    sample_rack = ctx.load_labware(\n        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '1',\n        'sample tuberack')\n    deepplate = ctx.load_labware('nest_96_wellplate_2ml_deep', '2',\n                                 'standard preparation plate')\n    flatplate = ctx.load_labware('corning_96_wellplate_360ul_flat', '5',\n                                 'final plate')\n    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '3')\n    tipracks1000 = ctx.load_labware('opentrons_96_filtertiprack_1000ul', '6')\n    tipracks200 = ctx.load_labware('opentrons_96_filtertiprack_200ul', '4')\n\n    # load pipettes\n    p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,\n                                tip_racks=[tipracks1000])\n    p300 = ctx.load_instrument('p300_multi_gen2', p300_mount,\n                               tip_racks=[tipracks200])\n\n    tip_data = {\n        'single': {\n            'count': 0,\n            'tips': [\n                well for col in tipracks200.columns()[::-1]\n                for well in col[::-1]]\n        },\n        'multi': {\n            'count': 0,\n            'tips': tipracks200.rows()[0]\n        }\n    }\n\n    def pickup_p300(mode='single'):\n        current = 0.1 if mode == 'single' else 0.5\n        ctx._implementation._hw_manager.hardware._attached_instruments[\n            p300._implementation.get_mount()].update_config_item(\n                'pick_up_current', current)\n\n        p300.pick_up_tip(tip_data[mode]['tips'][tip_data[mode]['count']])\n        tip_data[mode]['count'] += 1\n\n    working_standard_1 = reservoir.wells()[0]\n    working_standard_2 = reservoir.wells()[1]\n    assay_buffer_1 = reservoir.wells()[2]\n    assay_buffer_2 = reservoir.wells()[3]\n    starting_samples = sample_rack.wells()[:8]\n    samples_1 = deepplate.columns()[3:6]\n    samples_2 = deepplate.columns()[9:]\n\n    def standard_prep(standard, buffer, column):\n        dilution_col = column[:7]\n        pickup_p300('single')\n        p300.aspirate(50, standard)\n        p300.dispense(50, dilution_col[5])\n        p300.drop_tip()\n        p1000.pick_up_tip()\n        for vol, dest in zip([900, 700, 500, 300, 100], dilution_col[:5]):\n            p1000.transfer(vol, standard, dest, new_tip='never')\n\n        for vol, dest in zip([100, 300, 500, 700, 900, 950, 1000],\n                             dilution_col):\n            p1000.transfer(vol, buffer, dest, mix_after=(5, 800),\n                           new_tip='never')\n        p1000.drop_tip()\n\n    \"\"\" PART 1 \"\"\"\n\n    # TE preparation\n    standard_prep(working_standard_1, assay_buffer_1, deepplate.columns()[0])\n\n    # TR preparation\n    standard_prep(working_standard_2, assay_buffer_2, deepplate.columns()[6])\n\n    \"\"\" PART 2 \"\"\"\n\n    # sample transfer\n    for source, dest1, dest2 in zip(\n            starting_samples, samples_1[0], samples_2[0]):\n        p1000.distribute(sample_vol, source, [dest1, dest2])\n\n    # sample normalization (TE) from 60\u00b5g/ml to 2.5\u00b5g/ml - 24:1 (1 fold)\n    sample_volume = 1000/24\n    p1000.transfer(1000-sample_volume, assay_buffer_1, samples_1[1])\n    pickup_p300('multi')\n    p300.transfer(sample_volume, samples_1[0][0], samples_1[1][0],\n                  new_tip='never')\n    p300.mix(5, 150, samples_1[1][0])\n    p300.drop_tip()\n\n    # sample normalization (TR) from 60\u00b5g/ml to 0.5\u00b5g/ml - 120:1 (2 fold)\n    sample_1_vol = 1000/10\n    sample_2_vol = 1000/12\n    dil1_vol = 1000 - sample_1_vol\n    dil2_vol = 1000 - sample_2_vol\n    pickup_p300('multi')\n    p300.transfer(dil1_vol, assay_buffer_2, samples_2[1][0],\n                  new_tip='never')\n    p300.transfer(dil2_vol, assay_buffer_2, samples_2[2][0],\n                  new_tip='never')\n\n    p300.transfer(sample_1_vol, samples_2[0][0], samples_2[1][0],\n                  new_tip='never', mix_after=(5, 150))\n    p300.transfer(sample_2_vol, samples_2[1][0], samples_2[2][0],\n                  new_tip='never', mix_after=(5, 150))\n\n    p300.drop_tip()\n\n    \"\"\" PART 3 \"\"\"\n\n    # transfer to final black plate\n    for i, source in enumerate(\n            [deepplate.rows()[0][i] for i in [0, 5, 9, 10]]):\n        pickup_p300('multi')\n        dest_set = flatplate.rows()[0][i*3:(i+1)*3]\n        for dest in dest_set:\n            p300.transfer(final_transfer_vol, source, dest, new_tip='never')\n        p300.drop_tip()\n",
+    "content": "metadata = {\n    'protocolName': 'FluRibogreen Assay',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx):\n\n    [reagent_labware, starting_conc, p1000_mount,\n     p300_mount] = get_values(  # noqa: F821\n        'reagent_labware', 'starting_conc', 'p1000_mount', 'p300_mount')\n\n    final_transfer_vol = 100\n    sample_vol = 25\n    max_working_vol = 1000\n    max_factor_1_dil = max_working_vol/sample_vol\n\n    # load labwarex\n    sample_rack = ctx.load_labware(\n        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '7',\n        'sample tuberack')\n    deepplate = ctx.load_labware('nest_96_wellplate_2ml_deep', '5',\n                                 'standard preparation plate')\n    flatplate = ctx.load_labware('corning_96_wellplate_360ul_flat', '8',\n                                 'final plate')\n    reagent_labware = ctx.load_labware(reagent_labware, '6',\n                                       'standards and buffers')\n    tipracks1000 = ctx.load_labware('opentrons_96_filtertiprack_1000ul', '9')\n    tipracks200 = ctx.load_labware('opentrons_96_filtertiprack_200ul', '4')\n\n    # load pipettes\n    p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,\n                                tip_racks=[tipracks1000])\n    p300 = ctx.load_instrument('p300_multi_gen2', p300_mount,\n                               tip_racks=[tipracks200])\n\n    tip_data = {\n        'single': {\n            'count': 0,\n            'tips': [\n                well for col in tipracks200.columns()[::-1]\n                for well in col[::-1]]\n        },\n        'multi': {\n            'count': 0,\n            'tips': tipracks200.rows()[0]\n        }\n    }\n\n    def pickup_p300(mode='single'):\n        current = 0.1 if mode == 'single' else 0.5\n        ctx._implementation._hw_manager.hardware._attached_instruments[\n            p300._implementation.get_mount()].update_config_item(\n                'pick_up_current', current)\n\n        p300.pick_up_tip(tip_data[mode]['tips'][tip_data[mode]['count']])\n        tip_data[mode]['count'] += 1\n\n    working_standard_1 = reagent_labware.wells()[0]\n    assay_buffer_1 = reagent_labware.wells()[1]\n    working_standard_2 = reagent_labware.wells()[2]\n    assay_buffer_2 = reagent_labware.wells()[3]\n    starting_samples = sample_rack.wells()[:8]\n    samples_1 = deepplate.columns()[3:6]\n    samples_2 = deepplate.columns()[9:]\n\n    def standard_prep(standard, buffer, column):\n        dilution_col = column[:7]\n        pickup_p300('single')\n        p300.aspirate(50, standard)\n        p300.dispense(50, dilution_col[5])\n        p300.drop_tip()\n        p1000.pick_up_tip()\n        for vol, dest in zip([900, 700, 500, 300, 100], dilution_col[:5]):\n            p1000.transfer(vol, standard, dest, new_tip='never')\n\n        for vol, dest in zip([100, 300, 500, 700, 900, 950, 1000],\n                             dilution_col):\n            p1000.transfer(vol, buffer, dest, mix_after=(5, 800),\n                           new_tip='never')\n        p1000.drop_tip()\n\n    def dilute(final_conc, dil_set, buffer):\n        dil_factor = starting_conc/final_conc\n        # find necessary dilution factor(s)\n        if dil_factor > max_factor_1_dil:\n            factors = [10, dil_factor/10]\n        else:\n            factors = [dil_factor]\n\n        # pre add diluent\n        for i, factor in enumerate(factors):\n            dil_vol = (factor-1)*sample_vol\n            for well in dil_set[i]:\n                p1000.transfer(dil_vol, buffer, well)\n\n        # transfer sample\n        for i, s in enumerate(starting_samples):\n            pickup_p300('single')\n            p300.aspirate(sample_vol, s)\n            p300.dispense(sample_vol, dil_set[0][i])\n            p300.drop_tip()\n\n        # perform dilution\n        for i, factor in enumerate(factors):\n            pickup_p300('multi')\n            total_vol = sample_vol*factor\n            mix_vol = total_vol*0.8 if total_vol*0.8 <= 175 else 175\n            p300.transfer(sample_vol, dil_set[i][0], dil_set[i+1][0],\n                          mix_before=(5, mix_vol), mix_after=(5, mix_vol),\n                          new_tip='never')\n            p300.drop_tip()\n\n        return dil_set[len(factors)][0]\n\n    \"\"\" PART 1 \"\"\"\n\n    # TE preparation\n    standard_prep(working_standard_1, assay_buffer_1, deepplate.columns()[0])\n\n    # TR preparation\n    standard_prep(working_standard_2, assay_buffer_2, deepplate.columns()[6])\n\n    \"\"\" PART 2 \"\"\"\n\n    # sample normalization (TE)\n    # default from 60\u00b5g/ml to 2.5\u00b5g/ml - 24:1 (1 fold)\n    sample_1_final_loc = dilute(2.5, samples_1, assay_buffer_1)\n\n    # sample normalization (TR)\n    # default from 60\u00b5g/ml to 0.5\u00b5g/ml - 120:1 (2 fold)\n    sample_2_final_loc = dilute(0.5, samples_2, assay_buffer_2)\n\n    \"\"\" PART 3 \"\"\"\n\n    # transfer to final black plate\n    for i, source in enumerate(\n            [deepplate.rows_by_name()['A'][0], sample_1_final_loc,\n             deepplate.rows_by_name()['A'][6], sample_2_final_loc]):\n        pickup_p300('multi')\n        dest_set = flatplate.rows()[0][i*3:(i+1)*3]\n        for dest in dest_set:\n            p300.transfer(final_transfer_vol, source, dest, new_tip='never')\n        p300.drop_tip()\n",
     "custom_labware_defs": [],
     "fields": [
+        {
+            "label": "reagent labware",
+            "name": "reagent_labware",
+            "options": [
+                {
+                    "label": "NEST 12 Reservoir 15ml",
+                    "value": "nest_12_reservoir_15ml"
+                },
+                {
+                    "label": "Opentrons 6 Tube Rack with Falcon 50 mL Conical",
+                    "value": "opentrons_6_tuberack_falcon_50ml_conical"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 60.0,
+            "label": "starting sample concentration (mg/ml)",
+            "name": "starting_conc",
+            "type": "float"
+        },
         {
             "label": "P1000-single GEN2 mount",
             "name": "p1000_mount",
@@ -45,39 +66,39 @@
     ],
     "labware": [
         {
-            "name": "sample tuberack on 1",
-            "share": false,
-            "slot": "1",
-            "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
-        },
-        {
-            "name": "standard preparation plate on 2",
-            "share": false,
-            "slot": "2",
-            "type": "nest_96_wellplate_2ml_deep"
-        },
-        {
-            "name": "NEST 12 Well Reservoir 15 mL on 3",
-            "share": false,
-            "slot": "3",
-            "type": "nest_12_reservoir_15ml"
-        },
-        {
             "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 4",
             "share": false,
             "slot": "4",
             "type": "opentrons_96_filtertiprack_200ul"
         },
         {
-            "name": "final plate on 5",
+            "name": "standard preparation plate on 5",
             "share": false,
             "slot": "5",
+            "type": "nest_96_wellplate_2ml_deep"
+        },
+        {
+            "name": "standards and buffers on 6",
+            "share": false,
+            "slot": "6",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "sample tuberack on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
+        },
+        {
+            "name": "final plate on 8",
+            "share": false,
+            "slot": "8",
             "type": "corning_96_wellplate_360ul_flat"
         },
         {
-            "name": "Opentrons 96 Filter Tip Rack 1000 \u00b5L on 6",
+            "name": "Opentrons 96 Filter Tip Rack 1000 \u00b5L on 9",
             "share": false,
-            "slot": "6",
+            "slot": "9",
             "type": "opentrons_96_filtertiprack_1000ul"
         },
         {
