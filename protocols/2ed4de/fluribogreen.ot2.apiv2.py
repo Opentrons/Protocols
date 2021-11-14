@@ -8,22 +8,26 @@ metadata = {
 
 def run(ctx):
 
-    [p1000_mount, p300_mount] = get_values(  # noqa: F821
-        'p1000_mount', 'p300_mount')
+    [reagent_labware, starting_conc, p1000_mount,
+     p300_mount] = get_values(  # noqa: F821
+        'reagent_labware', 'starting_conc', 'p1000_mount', 'p300_mount')
 
-    final_transfer_vol = 150
-    sample_vol = 200
+    final_transfer_vol = 100
+    sample_vol = 25
+    max_working_vol = 1000
+    max_factor_1_dil = max_working_vol/sample_vol
 
     # load labwarex
     sample_rack = ctx.load_labware(
-        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '1',
+        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '7',
         'sample tuberack')
-    deepplate = ctx.load_labware('nest_96_wellplate_2ml_deep', '2',
+    deepplate = ctx.load_labware('nest_96_wellplate_2ml_deep', '5',
                                  'standard preparation plate')
-    flatplate = ctx.load_labware('corning_96_wellplate_360ul_flat', '5',
+    flatplate = ctx.load_labware('corning_96_wellplate_360ul_flat', '8',
                                  'final plate')
-    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '3')
-    tipracks1000 = ctx.load_labware('opentrons_96_filtertiprack_1000ul', '6')
+    reagent_labware = ctx.load_labware(reagent_labware, '6',
+                                       'standards and buffers')
+    tipracks1000 = ctx.load_labware('opentrons_96_filtertiprack_1000ul', '9')
     tipracks200 = ctx.load_labware('opentrons_96_filtertiprack_200ul', '4')
 
     # load pipettes
@@ -54,10 +58,10 @@ def run(ctx):
         p300.pick_up_tip(tip_data[mode]['tips'][tip_data[mode]['count']])
         tip_data[mode]['count'] += 1
 
-    working_standard_1 = reservoir.wells()[0]
-    working_standard_2 = reservoir.wells()[1]
-    assay_buffer_1 = reservoir.wells()[2]
-    assay_buffer_2 = reservoir.wells()[3]
+    working_standard_1 = reagent_labware.wells()[0]
+    assay_buffer_1 = reagent_labware.wells()[1]
+    working_standard_2 = reagent_labware.wells()[2]
+    assay_buffer_2 = reagent_labware.wells()[3]
     starting_samples = sample_rack.wells()[:8]
     samples_1 = deepplate.columns()[3:6]
     samples_2 = deepplate.columns()[9:]
@@ -78,6 +82,39 @@ def run(ctx):
                            new_tip='never')
         p1000.drop_tip()
 
+    def dilute(final_conc, dil_set, buffer):
+        dil_factor = starting_conc/final_conc
+        # find necessary dilution factor(s)
+        if dil_factor > max_factor_1_dil:
+            factors = [10, dil_factor/10]
+        else:
+            factors = [dil_factor]
+
+        # pre add diluent
+        for i, factor in enumerate(factors):
+            dil_vol = (factor-1)*sample_vol
+            for well in dil_set[i]:
+                p1000.transfer(dil_vol, buffer, well)
+
+        # transfer sample
+        for i, s in enumerate(starting_samples):
+            pickup_p300('single')
+            p300.aspirate(sample_vol, s)
+            p300.dispense(sample_vol, dil_set[0][i])
+            p300.drop_tip()
+
+        # perform dilution
+        for i, factor in enumerate(factors):
+            pickup_p300('multi')
+            total_vol = sample_vol*factor
+            mix_vol = total_vol*0.8 if total_vol*0.8 <= 175 else 175
+            p300.transfer(sample_vol, dil_set[i][0], dil_set[i+1][0],
+                          mix_before=(5, mix_vol), mix_after=(5, mix_vol),
+                          new_tip='never')
+            p300.drop_tip()
+
+        return dil_set[len(factors)][0]
+
     """ PART 1 """
 
     # TE preparation
@@ -88,43 +125,20 @@ def run(ctx):
 
     """ PART 2 """
 
-    # sample transfer
-    for source, dest1, dest2 in zip(
-            starting_samples, samples_1[0], samples_2[0]):
-        p1000.distribute(sample_vol, source, [dest1, dest2])
+    # sample normalization (TE)
+    # default from 60µg/ml to 2.5µg/ml - 24:1 (1 fold)
+    sample_1_final_loc = dilute(2.5, samples_1, assay_buffer_1)
 
-    # sample normalization (TE) from 60µg/ml to 2.5µg/ml - 24:1 (1 fold)
-    sample_volume = 1000/24
-    p1000.transfer(1000-sample_volume, assay_buffer_1, samples_1[1])
-    pickup_p300('multi')
-    p300.transfer(sample_volume, samples_1[0][0], samples_1[1][0],
-                  new_tip='never')
-    p300.mix(5, 150, samples_1[1][0])
-    p300.drop_tip()
-
-    # sample normalization (TR) from 60µg/ml to 0.5µg/ml - 120:1 (2 fold)
-    sample_1_vol = 1000/10
-    sample_2_vol = 1000/12
-    dil1_vol = 1000 - sample_1_vol
-    dil2_vol = 1000 - sample_2_vol
-    pickup_p300('multi')
-    p300.transfer(dil1_vol, assay_buffer_2, samples_2[1][0],
-                  new_tip='never')
-    p300.transfer(dil2_vol, assay_buffer_2, samples_2[2][0],
-                  new_tip='never')
-
-    p300.transfer(sample_1_vol, samples_2[0][0], samples_2[1][0],
-                  new_tip='never', mix_after=(5, 150))
-    p300.transfer(sample_2_vol, samples_2[1][0], samples_2[2][0],
-                  new_tip='never', mix_after=(5, 150))
-
-    p300.drop_tip()
+    # sample normalization (TR)
+    # default from 60µg/ml to 0.5µg/ml - 120:1 (2 fold)
+    sample_2_final_loc = dilute(0.5, samples_2, assay_buffer_2)
 
     """ PART 3 """
 
     # transfer to final black plate
     for i, source in enumerate(
-            [deepplate.rows()[0][i] for i in [0, 5, 9, 10]]):
+            [deepplate.rows_by_name()['A'][0], sample_1_final_loc,
+             deepplate.rows_by_name()['A'][6], sample_2_final_loc]):
         pickup_p300('multi')
         dest_set = flatplate.rows()[0][i*3:(i+1)*3]
         for dest in dest_set:
