@@ -12,7 +12,7 @@
 This is a flexible normalization protocol a 2-fold dilution to an input desired concentration followed by sample aliquoting in triplicate. Normalization parameters should be input as a .csv file below, and should be formatted as shown in the following template **including headers line**:
 
 ```
-sample number,sample name,sample concentration (<0.25 mg/ml)
+sample number,sample name,sample concentration (>0.25 mg/ml)
 1,007007009-403-1,1.569
 2,007007009-403-2,0.984
 3,007007009-403-3,2.128
@@ -50,12 +50,13 @@ You can also access this template for download [here](https://opentrons-protocol
 
 ### Deck Setup
 This example starting deck state shows the layout for 24 samples:  
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/4568fa/deck2.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/4568fa/deck3.png)
 
 * green on tuberacks: starting samples at various concentrations (specified in .csv file)
 * blue on reservoir A1: water
 * pink on reservoir A2: blank solution
-* purple on tuberack A6-C6: HS diluent
+* orange on reservoir A11-A12: buffer for final plate (optional)
+* purple on tuberack B6-D6: HS diluent
 
 ---
 
