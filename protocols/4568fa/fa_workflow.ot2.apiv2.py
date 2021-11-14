@@ -5,15 +5,15 @@ metadata = {
     'apiLevel': '2.11'
 }
 
-TEST_MODE = True
+TEST_MODE = False
 
 
 def run(ctx):
 
-    [dil_csv_1, desired_conc, fill_plate_blank, p300_mount,
-     p20_mount] = get_values(  # noqa: F821
-        'dil_csv_1', 'desired_conc', 'fill_plate_blank', 'p300_mount',
-        'p20_mount')
+    [dil_csv_1, desired_conc, tube_type, rna_starting_format, fill_plate_blank,
+     fill_second_plate, p300_mount, p20_mount] = get_values(  # noqa: F821
+        'dil_csv_1', 'desired_conc', 'tube_type', 'rna_starting_format',
+        'fill_plate_blank', 'fill_second_plate', 'p300_mount', 'p20_mount')
 
     if TEST_MODE:
         mix_reps = 1
@@ -23,7 +23,7 @@ def run(ctx):
     tempdeck1 = ctx.load_module('temperature module gen2', '1')
     tempdeck1.set_temperature(4)
     dil_plate_final = ctx.load_labware(
-        'microampenduraplate_96_aluminumblock_200ul', '3', 'dilution plate 2')
+        'microampenduraplate_96_aluminumblock_200ul', '3', 'final plate')
     dil_plate_1 = ctx.load_labware(
         'microampenduraplate_96_aluminumblock_200ul', '2',
         'dilution plate 1')
@@ -31,11 +31,18 @@ def run(ctx):
                                  'reagent reservoir')
     tempdeck2 = ctx.load_module('temperature module gen2', '10')
     tempdeck2.set_temperature(70)
-    tuberacks = [
-        ctx.load_labware(
-            'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', slot,
-            f'sample tuberack {i+1}')
-        for i, slot in enumerate(['5', '6'])]
+    if rna_starting_format == 'tubes':
+        tuberacks = [
+            ctx.load_labware(tube_type, slot, f'tuberack {i+1}')
+            for i, slot in enumerate(['5', '6'])]
+        sample_sources = [
+            well for tuberack in tuberacks for well in tuberack.wells()]
+    else:
+        tuberacks = [ctx.load_labware(tube_type, '6', 'tuberack')]
+        sample_plate = tempdeck1.load_labware(rna_starting_format,
+                                              'sample sources')
+        sample_sources = sample_plate.wells()
+
     tipracks200 = [
         ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
         for slot in ['4', '7']]
@@ -48,11 +55,10 @@ def run(ctx):
     p20 = ctx.load_instrument('p20_single_gen2', p20_mount,
                               tip_racks=tipracks20)
 
-    sample_sources = [
-        well for tuberack in tuberacks for well in tuberack.wells()]
     water = reservoir.wells()[0]
     hs_dil = tuberacks[-1].columns()[-1][1:]
     blank_solution = reservoir.wells()[1]
+    final_plate_buffer = reservoir.wells()[10:]
 
     data = [
         [val.strip() for val in line.split(',')]
@@ -194,18 +200,27 @@ Must be 1-31 samples.')
     # heat samples
     ctx.pause('Seal the plate in slot 3 and place on the temperature module on \
 slot 10. Resume when finished.')
-    ctx.home()
+    p300.home()
     if not TEST_MODE:
         ctx.delay(minutes=2)
-    ctx.home()
+    p300.home()
     ctx.pause('Move the plate from temperature module on slot 10 to temperature \
 module on slot 1.')
     if not TEST_MODE:
         ctx.delay(minutes=5)
-    ctx.home()
+    p300.home()
     [td.deactivate() for td in [tempdeck1, tempdeck2]]
     ctx.pause('Centrifuge the plate on temperature module on slot 1. Replace \
-on temperature module on slot 3 when complete.')
+on temperature module on slot 3 and remove plate seal when complete.')
 
-    # transfer water to blank wells
+    # transfer blank solution to blank wells
     p300.transfer(50, blank_solution, blank_wells)
+
+    # fill second plate if selected
+    if fill_second_plate:
+        ctx.pause('Plate on slot 3 is complete. Remove and place second clean \
+plate on aluminum block on slot 3 for full-plate buffer addition.')
+        p300.pick_up_tip()
+        for i, well in enumerate(dil_plate_final.wells()):
+            p300.transfer(50, final_plate_buffer[i//48], well, new_tip='never')
+        p300.drop_tip()
