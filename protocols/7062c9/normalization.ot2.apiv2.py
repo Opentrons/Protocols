@@ -11,15 +11,13 @@ def run(ctx):
         'input_csv', 'p300_mount', 'p20_mount')
 
     # labware
-    sample_plate = ctx.load_labware(
-        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '4',
+    sample_rack = ctx.load_labware(
+        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '7',
         'sample rack')
     final_plate = ctx.load_labware('neptune_96_aluminumblock_200ul',
-                                   '2', 'normalized plate')
-    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '7',
-                                 'reagent reservoir')
+                                   '5', 'normalized plate')
     tuberack = ctx.load_labware(
-        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '5',
+        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '8',
         'buffer + probe tuberack')
     tipracks20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '3')]
     tipracks200 = ctx.load_labware('opentrons_96_filtertiprack_200ul', '9')
@@ -35,7 +33,7 @@ def run(ctx):
             'pick_up_current', 0.1)
 
     # reagents
-    water = reservoir.wells()[0]
+    water = tuberack.wells()[0]
     buffer = tuberack.wells()[1]
     protease = tuberack.wells()[2]
 
@@ -117,7 +115,7 @@ def run(ctx):
         total_vol = float(line[6])
         pip = p20 if sample_vol <= 20 else p300
         sample_well, dest_well = [
-            sample_plate.wells()[i], final_plate.wells()[i]]
+            sample_rack.wells()[i], final_plate.wells()[i]]
         if 0.8*total_vol < pip.max_volume:
             mix_vol = 0.8*total_vol
         else:
