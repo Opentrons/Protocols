@@ -41,7 +41,7 @@ For sample traceability and consistency, samples are mapped directly from the sa
 
 ### Deck Setup
 This example starting deck state shows the layout for 24 samples:  
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/7062c9/deck1-3.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/7062c9/deck1-4.png)
 
 * green on sample tuberack: starting samples
 * blue on reagent reservoir: water
