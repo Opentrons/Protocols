@@ -19,22 +19,23 @@ def run(ctx):
 
     # load labwarex
     sample_rack = ctx.load_labware(
-        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '7',
+        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '8',
         'sample tuberack')
     deepplate = ctx.load_labware('nest_96_wellplate_2ml_deep', '5',
                                  'standard preparation plate')
-    flatplate = ctx.load_labware('corning_96_wellplate_360ul_flat', '8',
+    flatplate = ctx.load_labware('corning_96_wellplate_360ul_flat', '2',
                                  'final plate')
-    reagent_labware = ctx.load_labware(reagent_labware, '6',
+    reagent_labware = ctx.load_labware(reagent_labware, '4',
                                        'standards and buffers')
-    tipracks1000 = ctx.load_labware('opentrons_96_filtertiprack_1000ul', '9')
-    tipracks200 = ctx.load_labware('opentrons_96_filtertiprack_200ul', '4')
+    tipracks1000 = ctx.load_labware('opentrons_96_filtertiprack_1000ul', '7')
+    tipracks200 = ctx.load_labware('opentrons_96_filtertiprack_200ul', '6')
+    tiprack200m = ctx.load_labware('opentrons_96_filtertiprack_200ul', '9')
 
     # load pipettes
     p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,
                                 tip_racks=[tipracks1000])
     p300 = ctx.load_instrument('p300_multi_gen2', p300_mount,
-                               tip_racks=[tipracks200])
+                               tip_racks=[tiprack200m])
 
     tip_data = {
         'single': {
@@ -60,26 +61,32 @@ def run(ctx):
 
     working_standard_1 = reagent_labware.wells()[0]
     assay_buffer_1 = reagent_labware.wells()[1]
-    working_standard_2 = reagent_labware.wells()[2]
-    assay_buffer_2 = reagent_labware.wells()[3]
+    working_standard_2 = reagent_labware.wells()[10]
+    assay_buffer_2 = reagent_labware.wells()[11]
     starting_samples = sample_rack.wells()[:8]
     samples_1 = deepplate.columns()[3:6]
     samples_2 = deepplate.columns()[9:]
 
     def standard_prep(standard, buffer, column):
         dilution_col = column[:7]
-        pickup_p300('single')
-        p300.aspirate(50, standard)
-        p300.dispense(50, dilution_col[5])
-        p300.drop_tip()
-        p1000.pick_up_tip()
         for vol, dest in zip([900, 700, 500, 300, 100], dilution_col[:5]):
+            p1000.pick_up_tip()
             p1000.transfer(vol, standard, dest, new_tip='never')
+            p1000.drop_tip()
 
         for vol, dest in zip([100, 300, 500, 700, 900, 950, 1000],
                              dilution_col):
+            p1000.pick_up_tip()
             p1000.transfer(vol, buffer, dest, mix_after=(5, 800),
                            new_tip='never')
+            p1000.drop_tip()
+        pickup_p300('single')
+        p300.aspirate(50, standard.bottom(3))
+        p300.dispense(50, dilution_col[5].bottom(3))
+        p300.mix(1, 100, dilution_col[5].bottom(3))
+        p300.drop_tip()
+        p1000.pick_up_tip()
+        p1000.mix(5, 800, dilution_col[5])
         p1000.drop_tip()
 
     def dilute(final_conc, dil_set, buffer):
@@ -92,28 +99,34 @@ def run(ctx):
 
         # pre add diluent
         for i, factor in enumerate(factors):
-            dil_vol = (factor-1)*sample_vol
+            dil_vol = (factor-1)*sample_vol*(i+1)
             for well in dil_set[i]:
                 p1000.transfer(dil_vol, buffer, well)
 
         # transfer sample
         for i, s in enumerate(starting_samples):
             pickup_p300('single')
-            p300.aspirate(sample_vol, s)
-            p300.dispense(sample_vol, dil_set[0][i])
+            p300.aspirate(sample_vol, s.bottom(3))
+            p300.dispense(sample_vol, dil_set[0][i].bottom(3))
             p300.drop_tip()
 
         # perform dilution
         for i, factor in enumerate(factors):
             pickup_p300('multi')
-            total_vol = sample_vol*factor
+            total_vol = sample_vol*(i+1)*factor
             mix_vol = total_vol*0.8 if total_vol*0.8 <= 175 else 175
-            p300.transfer(sample_vol, dil_set[i][0], dil_set[i+1][0],
-                          mix_before=(5, mix_vol), mix_after=(5, mix_vol),
-                          new_tip='never')
+            if i == 0:
+                p300.mix(5, mix_vol, dil_set[i][0])
+            else:
+                p300.transfer(sample_vol*(i+1), dil_set[i-1][0].bottom(3),
+                              dil_set[i][0].bottom(3),
+
+
+                              mix_after=(5, mix_vol),
+                              new_tip='never')
             p300.drop_tip()
 
-        return dil_set[len(factors)][0]
+        return dil_set[len(factors)-1][0]
 
     """ PART 1 """
 
@@ -139,8 +152,9 @@ def run(ctx):
     for i, source in enumerate(
             [deepplate.rows_by_name()['A'][0], sample_1_final_loc,
              deepplate.rows_by_name()['A'][6], sample_2_final_loc]):
-        pickup_p300('multi')
         dest_set = flatplate.rows()[0][i*3:(i+1)*3]
         for dest in dest_set:
-            p300.transfer(final_transfer_vol, source, dest, new_tip='never')
-        p300.drop_tip()
+            p300.pick_up_tip()
+            p300.transfer(final_transfer_vol, source.bottom(3), dest.bottom(3),
+                          new_tip='never')
+            p300.drop_tip()
