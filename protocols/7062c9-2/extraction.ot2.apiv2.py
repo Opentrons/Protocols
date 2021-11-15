@@ -30,7 +30,7 @@ def run(ctx):
     bead_settling_time = 1.0
     temp_time = 3.0
     mix_reps = 10
-    sample_mixing_time_minutes = 5.0
+    sample_mixing_time_minutes = 30.0
 
     if TEST_MODE:
         [bead_settling_time, mix_reps, temp_time,
@@ -377,7 +377,7 @@ minutes')
         m300.transfer(sample_vol, s, d, new_tip='never')
         m300.drop_tip(p)
 
-    mixes_per_min = 2
+    mixes_per_min = 1.5
     num_mix_cycles = int(sample_mixing_time_minutes*mixes_per_min/num_cols)
     if TEST_MODE or not sample_incubation_mixing:
         num_mix_cycles = 5
