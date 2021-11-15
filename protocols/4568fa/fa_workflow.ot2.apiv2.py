@@ -169,10 +169,13 @@ Must be 1-31 samples.')
 
     # pre-add HS diluent
     p300.pick_up_tip()
-
     for i, d in enumerate(dests):
-        p300.transfer(135, hs_dil[i//11], d.bottom(3), new_tip='never')
-    p300.transfer(27, hs_dil[0], final_dest.bottom(3), new_tip='never')
+        p300.aspirate(135, hs_dil[i//11])
+        p300.touch_tip(hs_dil[i//11])
+        p300.dispense(135, d.bottom(3))
+    p300.aspirate(27, hs_dil[0])
+    p300.touch_tip(hs_dil[0])
+    p300.dispense(27, final_dest.bottom(3))
     p300.drop_tip()
 
     # transfer sample
