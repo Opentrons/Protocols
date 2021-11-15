@@ -58,7 +58,7 @@ def run(ctx):
     water = reservoir.wells()[0]
     hs_dil = tuberacks[-1].columns()[-1][1:]
     blank_solution = reservoir.wells()[1]
-    final_plate_buffer = reservoir.wells()[10:]
+    rinse_buffer = reservoir.wells()[10:]
 
     data = [
         [val.strip() for val in line.split(',')]
@@ -171,13 +171,13 @@ Must be 1-31 samples.')
     p300.pick_up_tip()
 
     for i, d in enumerate(dests):
-        p300.transfer(135, hs_dil[i//11], d, new_tip='never')
-    p300.transfer(27, hs_dil[0], final_dest, new_tip='never')
+        p300.transfer(135, hs_dil[i//11], d.bottom(3), new_tip='never')
+    p300.transfer(27, hs_dil[0], final_dest.bottom(3), new_tip='never')
     p300.drop_tip()
 
     # transfer sample
     for s, d in zip(dils_2, dils_final):
-        p20.transfer(15, s, d)
+        p20.transfer(15, s, d.bottom(3))
 
     # transfer RNA ladder
     # p20.transfer(3, rna_ladder, final_dest)
@@ -187,14 +187,15 @@ Must be 1-31 samples.')
     # mix all samples with diluent
     for set in triplicate_sets:
         p300.pick_up_tip()
-        p300.mix(mix_reps, 120, set[0])
+        p300.mix(mix_reps, 120, set[0].bottom(3))
         # transfer triplicates
-        p300.transfer(50, set[0], set[1:], new_tip='never')
+        p300.transfer(50, set[0].bottom(3),
+                      [well.bottom(3) for well in set[1:]], new_tip='never')
         p300.drop_tip()
 
     # mix RNA ladder with diluent
     p300.pick_up_tip()
-    p300.mix(mix_reps, 20, final_dest)
+    p300.mix(mix_reps, 20, final_dest.bottom(2))
     p300.drop_tip()
 
     # heat samples
@@ -214,7 +215,7 @@ module on slot 1.')
 on temperature module on slot 3 and remove plate seal when complete.')
 
     # transfer blank solution to blank wells
-    p300.transfer(50, blank_solution, blank_wells)
+    p300.transfer(50, blank_solution, [b.bottom(3) for b in blank_wells])
 
     # fill second plate if selected
     if fill_second_plate:
@@ -222,5 +223,6 @@ on temperature module on slot 3 and remove plate seal when complete.')
 plate on aluminum block on slot 3 for full-plate buffer addition.')
         p300.pick_up_tip()
         for i, well in enumerate(dil_plate_final.wells()):
-            p300.transfer(50, final_plate_buffer[i//48], well, new_tip='never')
+            p300.transfer(200, rinse_buffer[i//48], well,
+                          new_tip='never')
         p300.drop_tip()
