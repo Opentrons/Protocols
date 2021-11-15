@@ -229,7 +229,6 @@ resuming.')
                               new_tip='never')
                 if t < num_trans - 1:
                     m300.air_gap(20)
-            m300.mix(10, 200, well)
             m300.blow_out(well.top(-2))
             m300.air_gap(20)
 
