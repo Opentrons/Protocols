@@ -1,0 +1,103 @@
+{
+    "content": "metadata = {\n    'protocolName': 'LCMS Urine Extraction',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n }\n\n\ndef run(ctx):\n\n    [num_samp, p300_mount, p1000_mount] = get_values(  # noqa: F821\n        \"num_samp\", \"p300_mount\", \"p1000_mount\")\n\n    if not 1 <= num_samp <= 96:\n        raise Exception(\"Enter a sample number between 1-96\")\n\n    # labware\n    urine_tube_rack = [ctx.load_labware(\n                        'opentrons_15_tuberack_nest_15ml_conical', slot)\n                       for slot in ['1']]\n    plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '2')\n    reservoir12 = ctx.load_labware(\n                            'opentrons_15_tuberack_nest_15ml_conical', '3')\n    reservoir = ctx.load_labware('agilent_1_reservoir_290ml', '9')\n    tips1000 = [ctx.load_labware('opentrons_96_filtertiprack_1000ul', '4')]\n    tips20 = [ctx.load_labware('opentrons_96_tiprack_300ul', '5')]\n\n    # instrument\n    p300 = ctx.load_instrument('p300_single_gen2', p300_mount,\n                               tip_racks=tips20)\n    p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,\n                                tip_racks=tips1000)\n\n    def create_chunks(list, n):\n        for i in range(0, len(list), n):\n            yield list[i:i+n]\n\n    # reagents\n    methanol = reservoir.wells()[0]\n    buffer = reservoir12.wells()[:3]\n    negative_urine = urine_tube_rack[0].wells()[1:8]\n    spike = urine_tube_rack[0].rows()[-1][0]\n    enzyme = urine_tube_rack[0].rows()[-1][1]\n    water = urine_tube_rack[0].rows()[-1][2]\n\n    # add enzyme to all wells\n    p300.pick_up_tip()\n    p300.distribute(60, enzyme,\n                    [well for well in plate.wells()[:num_samp]],\n                    new_tip='never')\n    p300.drop_tip()\n\n    # add buffer to all wells\n    p1000.pick_up_tip()\n    for source, chunk in zip(buffer*num_samp,\n                             create_chunks(plate.wells()[:num_samp], 2)):\n        p1000.aspirate(660, source)\n        for well in chunk:\n            p1000.dispense(340, well)\n    p1000.drop_tip()\n\n    # add negative urine (blank)\n    p300.pick_up_tip()\n    p300.aspirate(300, urine_tube_rack[0].wells()[0])\n    p300.dispense(300, plate.wells()[0])\n    p300.drop_tip()\n\n    # add negative urine (cals)\n    for tube, well in zip(negative_urine, plate.wells()[1:]):\n        p300.pick_up_tip()\n        p300.aspirate(270, tube)\n        p300.dispense(270, well)\n        p300.drop_tip()\n\n    # add spike\n    p300.pick_up_tip()\n    p300.distribute(20, spike,\n                    [well.top() for well in plate.wells()[:num_samp]],\n                    new_tip='never')\n    p300.drop_tip()\n\n    # add water\n    p300.pick_up_tip()\n    p300.distribute(30, water,\n                    [well.top() for well in plate.wells()[:num_samp]],\n                    new_tip='never')\n    p300.drop_tip()\n\n    ctx.delay(minutes=30)\n\n    # add methanol\n    p300.pick_up_tip()\n    p300.distribute(700, methanol,\n                    [well.top() for well in plate.wells()[:num_samp]],\n                    new_tip='never')\n    p300.drop_tip()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 96,
+            "label": "Number of Samples ",
+            "name": "num_samp",
+            "type": "int"
+        },
+        {
+            "label": "P300 Single-Channel Mount",
+            "name": "p300_mount",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P1000 Single-Channel Mount",
+            "name": "p1000_mount",
+            "options": [
+                {
+                    "label": "Right",
+                    "value": "right"
+                },
+                {
+                    "label": "Left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_single_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p1000_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Opentrons 15 Tube Rack with NEST 15 mL Conical on 1",
+            "share": false,
+            "slot": "1",
+            "type": "opentrons_15_tuberack_nest_15ml_conical"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 2",
+            "share": false,
+            "slot": "2",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Opentrons 15 Tube Rack with NEST 15 mL Conical on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_15_tuberack_nest_15ml_conical"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 1000 \u00b5L on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_filtertiprack_1000ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Agilent 1 Well Reservoir 290 mL on 9",
+            "share": false,
+            "slot": "9",
+            "type": "agilent_1_reservoir_290ml"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.11",
+        "author": "Rami Farawi <rami.farawi@opentrons.com>",
+        "protocolName": "LCMS Urine Extraction",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}
