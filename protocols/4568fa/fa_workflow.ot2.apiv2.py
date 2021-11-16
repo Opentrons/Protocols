@@ -10,10 +10,12 @@ TEST_MODE = False
 
 def run(ctx):
 
-    [dil_csv_1, desired_conc, tube_type, rna_starting_format, fill_plate_blank,
-     fill_second_plate, p300_mount, p20_mount] = get_values(  # noqa: F821
+    [dil_csv_1, desired_conc, tube_type, rna_starting_format, dil_plate_type,
+     fill_plate_blank, fill_second_plate, p300_mount,
+     p20_mount] = get_values(  # noqa: F821
         'dil_csv_1', 'desired_conc', 'tube_type', 'rna_starting_format',
-        'fill_plate_blank', 'fill_second_plate', 'p300_mount', 'p20_mount')
+        'dil_plate_type', 'fill_plate_blank', 'fill_second_plate',
+        'p300_mount', 'p20_mount')
 
     if TEST_MODE:
         mix_reps = 1
@@ -24,9 +26,7 @@ def run(ctx):
     tempdeck1.set_temperature(4)
     dil_plate_final = ctx.load_labware(
         'microampenduraplate_96_aluminumblock_200ul', '3', 'final plate')
-    dil_plate_1 = ctx.load_labware(
-        'microampenduraplate_96_aluminumblock_200ul', '2',
-        'dilution plate 1')
+    dil_plate_1 = ctx.load_labware(dil_plate_type, '2', 'dilution plate 1')
     reservoir = ctx.load_labware('nest_12_reservoir_15ml', '9',
                                  'reagent reservoir')
     tempdeck2 = ctx.load_module('temperature module gen2', '10')
