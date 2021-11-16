@@ -25,10 +25,10 @@
     ]
   },
   {
-    "type": "int",
+    "type": "float",
     "label": "Spot Volume (1-20)",
     "name": "spot_volume",
-    "default": 1
+    "default": 1.0
   },
   {
     "type": "float",

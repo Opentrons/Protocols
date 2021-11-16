@@ -19,7 +19,7 @@ Before you begin:
 3. Add the Binding Mastermix, RMP Buffer, Nuclease Free H20, and Lysis Buffer to the 12 well
 reservoir
 4. Create the freshly diluted 80% ethanol and add it to the 1 well reservoir in slot 2
-5. Place the deep well plate filled with lysates on top of the magnetic module in slot 4.
+5. Place the deep well plate filled with samples on top of the magnetic module in slot 4.
 6. Add a 96 well aluminum block and the 96 well PCR plate or PCR strip tubes on top of
 the Temperature Module in slot 1
 The final plate of eluates/extractions will be found on top of the temperature module in slot 1.
