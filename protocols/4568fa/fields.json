@@ -40,7 +40,7 @@
   },
   {
     "type": "dropDown",
-    "label": "fill second plate with buffer at end of process",
+    "label": "fill second plate with rinse buffer at end of process",
     "name": "fill_second_plate",
     "options": [
       {"label": "no", "value": false},
