@@ -1,3 +1,6 @@
+from opentrons.types import Point
+
+
 metadata = {
     'protocolName': 'FluRibogreen Assay',
     'author': 'Nick <protocols@opentrons.com>',
@@ -8,9 +11,10 @@ metadata = {
 
 def run(ctx):
 
-    [reagent_labware, starting_conc, p1000_mount,
+    [reagent_labware, starting_conc, prepare_standard, p1000_mount,
      p300_mount] = get_values(  # noqa: F821
-        'reagent_labware', 'starting_conc', 'p1000_mount', 'p300_mount')
+        'reagent_labware', 'starting_conc', 'prepare_standard', 'p1000_mount',
+        'p300_mount')
 
     final_transfer_vol = 100
     sample_vol = 25
@@ -19,13 +23,13 @@ def run(ctx):
 
     # load labwarex
     sample_rack = ctx.load_labware(
-        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '8',
+        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '11',
         'sample tuberack')
     deepplate = ctx.load_labware('nest_96_wellplate_2ml_deep', '5',
                                  'standard preparation plate')
     flatplate = ctx.load_labware('corning_96_wellplate_360ul_flat', '2',
                                  'final plate')
-    reagent_labware = ctx.load_labware(reagent_labware, '4',
+    reagent_labware = ctx.load_labware(reagent_labware, '8',
                                        'standards and buffers')
     tipracks1000 = ctx.load_labware('opentrons_96_filtertiprack_1000ul', '7')
     tipracks200 = ctx.load_labware('opentrons_96_filtertiprack_200ul', '6')
@@ -59,6 +63,14 @@ def run(ctx):
         p300.pick_up_tip(tip_data[mode]['tips'][tip_data[mode]['count']])
         tip_data[mode]['count'] += 1
 
+    side = 1
+
+    def drop(pip):
+        nonlocal side
+        center = ctx.loaded_labwares[12].wells()[0].top()
+        pip.drop_tip(center.move(Point(x=side*20)))
+        side = side * -1
+
     working_standard_1 = reagent_labware.wells()[0]
     assay_buffer_1 = reagent_labware.wells()[1]
     working_standard_2 = reagent_labware.wells()[10]
@@ -72,22 +84,22 @@ def run(ctx):
         for vol, dest in zip([900, 700, 500, 300, 100], dilution_col[:5]):
             p1000.pick_up_tip()
             p1000.transfer(vol, standard, dest, new_tip='never')
-            p1000.drop_tip()
+            drop(p1000)
 
         for vol, dest in zip([100, 300, 500, 700, 900, 950, 1000],
                              dilution_col):
             p1000.pick_up_tip()
             p1000.transfer(vol, buffer, dest, mix_after=(5, 800),
                            new_tip='never')
-            p1000.drop_tip()
+            drop(p1000)
         pickup_p300('single')
-        p300.aspirate(50, standard.bottom(3))
+        p300.aspirate(50, standard.bottom(2))
         p300.dispense(50, dilution_col[5].bottom(3))
         p300.mix(1, 100, dilution_col[5].bottom(3))
-        p300.drop_tip()
+        drop(p300)
         p1000.pick_up_tip()
         p1000.mix(5, 800, dilution_col[5])
-        p1000.drop_tip()
+        drop(p1000)
 
     def dilute(final_conc, dil_set, buffer):
         dil_factor = starting_conc/final_conc
@@ -101,14 +113,18 @@ def run(ctx):
         for i, factor in enumerate(factors):
             dil_vol = (factor-1)*sample_vol*(i+1)
             for well in dil_set[i]:
-                p1000.transfer(dil_vol, buffer, well)
+                p1000.pick_up_tip()
+                p1000.transfer(dil_vol, buffer, well, new_tip='never')
+                drop(p1000)
 
+        p300.flow_rate.aspirate = 40
         # transfer sample
         for i, s in enumerate(starting_samples):
             pickup_p300('single')
-            p300.aspirate(sample_vol, s.bottom(3))
+            p300.aspirate(sample_vol, s.bottom(2))
             p300.dispense(sample_vol, dil_set[0][i].bottom(3))
-            p300.drop_tip()
+            drop(p300)
+        p300.flow_rate.aspirate = 94
 
         # perform dilution
         for i, factor in enumerate(factors):
@@ -124,17 +140,20 @@ def run(ctx):
 
                               mix_after=(5, mix_vol),
                               new_tip='never')
-            p300.drop_tip()
+            drop(p300)
 
         return dil_set[len(factors)-1][0]
 
     """ PART 1 """
+    if prepare_standard:
 
-    # TE preparation
-    standard_prep(working_standard_1, assay_buffer_1, deepplate.columns()[0])
+        # TE preparation
+        standard_prep(working_standard_1, assay_buffer_1,
+                      deepplate.columns()[0])
 
-    # TR preparation
-    standard_prep(working_standard_2, assay_buffer_2, deepplate.columns()[6])
+        # TR preparation
+        standard_prep(working_standard_2, assay_buffer_2,
+                      deepplate.columns()[6])
 
     """ PART 2 """
 
@@ -157,4 +176,4 @@ def run(ctx):
             p300.pick_up_tip()
             p300.transfer(final_transfer_vol, source.bottom(3), dest.bottom(3),
                           new_tip='never')
-            p300.drop_tip()
+            drop(p300)
