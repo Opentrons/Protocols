@@ -16,6 +16,15 @@
   },
   {
       "type": "dropDown",
+      "label": "prepare standard",
+      "name": "prepare_standard",
+      "options": [
+        {"label": "yes", "value": true},
+        {"label": "no", "value": false}
+      ]
+  },
+  {
+      "type": "dropDown",
       "label": "P1000-single GEN2 mount",
       "name": "p1000_mount",
       "options": [
