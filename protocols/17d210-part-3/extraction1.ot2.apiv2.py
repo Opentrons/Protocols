@@ -13,12 +13,12 @@ Library Purification',
 
 # Start protocol
 def run(ctx):
-    # [num_samples, m20_mount, m300_mount, mag_height, sample_vol,
-    #  binding_buffer_vol, wash1_vol, wash2_vol, elution_vol,
-    #  settling_time] = get_values(  # noqa: F821
-    #     'num_samples', 'm20_mount', 'm300_mount', 'mag_height', 'sample_vol',
-    #     'binding_buffer_vol', 'wash1_vol', 'wash2_vol', 'elution_vol',
-    #     'settling_time')
+    [num_samples, m20_mount, m300_mount, mag_height, sample_vol,
+     binding_buffer_vol, wash1_vol, wash2_vol, elution_vol,
+     settling_time] = get_values(  # noqa: F821
+        'num_samples', 'm20_mount', 'm300_mount', 'mag_height', 'sample_vol',
+        'binding_buffer_vol', 'wash1_vol', 'wash2_vol', 'elution_vol',
+        'settling_time')
 
     num_samples = 96
     m20_mount = 'left'
@@ -32,20 +32,21 @@ def run(ctx):
     settling_time = 2.0
     park_tips = False
     tip_track = False
-    radial_offset = 0.8
+    radial_offset = 0.3
     z_offset = 0.5
+    air_gap_vol = 0
 
     """
     Here is where you can change the locations of your labware and modules
     (note that this is the recommended configuration)
     """
-    pcr_plate = ctx.load_labware('adapter_96_wellplate_200ul', '9',
+    pcr_plate = ctx.load_labware('amplifyt_96_wellplate_200ul', '9',
                                  'sample plate')
     magdeck = ctx.load_module('magnetic module gen2', '11')
     magdeck.disengage()
     magplate = magdeck.load_labware('abgenemidi_96_wellplate_800ul',
-                                    'wash plate')
-    elutionplate = ctx.load_labware('adapter_96_wellplate_200ul', '3',
+                                    'deepwell extraction plate')
+    elutionplate = ctx.load_labware('amplifyt_96_wellplate_200ul', '3',
                                     'elution plate')
     waste = ctx.loaded_labwares[12].wells()[0].top()
     res1 = ctx.load_labware('nest_12_reservoir_15ml', '8', 'reagent reservoir')
@@ -76,8 +77,8 @@ def run(ctx):
     Here is where you can define the locations of your reagents.
     """
     binding_buffer = res1.wells()[:1]
-    wash1 = res1.wells()[1:3]
-    wash2 = res1.wells()[3:5]
+    wash1 = res1.wells()[1:4]
+    wash2 = res1.wells()[4:7]
     elution_solution = res1.wells()[-1]
 
     starting_samples = pcr_plate.rows()[0][:num_cols]
@@ -183,10 +184,10 @@ resuming.')
                                          z=z_offset))
             _waste_track(vol)
             pip.move_to(m.center())
-            if pip == m300:
-                air_gap_vol = 20
-            else:
-                air_gap_vol = pip.max_volume - vol
+            # if pip == m300:
+            #     air_gap_vol = 20
+            # else:
+            #     air_gap_vol = pip.max_volume - vol
             pip.transfer(vol, loc, waste, new_tip='never',
                          air_gap=air_gap_vol)
             pip.blow_out(waste)
@@ -225,12 +226,13 @@ resuming.')
                         m300.aspirate(180, source.bottom(0.5))
                         m300.dispense(180, source.bottom(5))
                     latest_chan = chan_ind
-                m300.transfer(vol_per_trans, source, well.top(-2), air_gap=20,
-                              new_tip='never')
+                m300.transfer(vol_per_trans, source, well.top(),
+                              air_gap=air_gap_vol, new_tip='never')
                 if t < num_trans - 1:
-                    m300.air_gap(20)
+                    m300.air_gap(air_gap_vol)
+            m300.mix(10, 200, well)
             m300.blow_out(well.top(-2))
-            m300.air_gap(20)
+            m300.air_gap(air_gap_vol)
 
         m300.flow_rate.aspirate = 92.86
 
@@ -243,8 +245,8 @@ resuming.')
                 else:
                     _pick_up(m300)
             m300.transfer(sample_vol, source, dest, mix_after=(10, sample_vol),
-                          air_gap=20, new_tip='never')
-            m300.air_gap(20)
+                          air_gap=air_gap_vol, new_tip='never')
+            m300.air_gap(air_gap_vol)
             if park:
                 m300.drop_tip(spot)
             else:
@@ -258,7 +260,8 @@ resuming.')
         # remove initial supernatant
         remove_supernatant(vol+sample_vol, park=park)
 
-    def wash(vol, source, mix_reps=15, park=True, resuspend=False):
+    def wash(vol, source, mix_reps=15, park=True, blow_out=False,
+             resuspend=False):
         """
         `wash` will perform bead washing for the extraction protocol.
         :param vol (float): The amount of volume to aspirate from each
@@ -280,25 +283,27 @@ resuming.')
         if resuspend and magdeck.status == 'engaged':
             magdeck.disengage()
 
-        num_trans = math.ceil(vol/280)
+        num_trans = math.ceil(vol/200)
         vol_per_trans = vol/num_trans
         for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
             _pick_up(m300)
             side = 1 if i % 2 == 0 else -1
             loc = m.bottom().move(Point(x=side*radius*radial_offset,
                                         z=z_offset))
-            src = source[i//(12//len(source))]
+            src = source[i//12/len(source)]
             for n in range(num_trans):
                 if m300.current_volume > 0:
                     m300.dispense(m300.current_volume, src.top())
-                m300.transfer(vol_per_trans, src, m.top(), air_gap=20,
+                m300.transfer(vol_per_trans, src, m.top(), air_gap=air_gap_vol,
                               new_tip='never')
+                if blow_out:
+                    m300.blow_out(m.top(-1))
                 if n < num_trans - 1:  # only air_gap if going back to source
-                    m300.air_gap(20)
+                    m300.air_gap(air_gap_vol)
             if resuspend:
                 m300.mix(mix_reps, 150, loc)
             m300.blow_out(m.top())
-            m300.air_gap(20)
+            m300.air_gap(air_gap_vol)
             if park:
                 m300.drop_tip(spot)
             else:
@@ -324,8 +329,7 @@ resuming.')
         """
 
         # resuspend beads in elution
-        if magdeck.status == 'enagaged':
-            magdeck.disengage()
+        magdeck.disengage()
         for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
             _pick_up(m300)
             side = 1 if i % 2 == 0 else -1
@@ -336,7 +340,7 @@ resuming.')
             m300.dispense(vol, loc)
             m300.mix(10, 0.8*vol, loc)
             m300.blow_out(m.bottom(5))
-            m300.air_gap(20)
+            m300.air_gap(air_gap_vol)
             if park:
                 m300.drop_tip(spot)
             else:
@@ -355,9 +359,10 @@ resuming.')
             side = -1 if i % 2 == 0 else 1
             loc = m.bottom().move(Point(x=side*radius*radial_offset,
                                         z=z_offset))
-            m300.transfer(vol, loc, e.bottom(5), air_gap=20, new_tip='never')
+            m300.transfer(vol, loc, e.bottom(5), air_gap=air_gap_vol,
+                          new_tip='never')
             m300.blow_out(e.top(-2))
-            m300.air_gap(20)
+            m300.air_gap(air_gap_vol)
             m300.drop_tip()
 
     """
@@ -365,7 +370,7 @@ resuming.')
     protocol. The normal sequence is:
     """
     bind(binding_buffer_vol, park=park_tips)
-    wash(wash1_vol, wash1, park=park_tips)
+    wash(wash1_vol, wash1, park=park_tips, blow_out=True)
     wash(wash2_vol, wash2, park=park_tips)
     remove_supernatant(18, pip=m20)
     elute(elution_vol, park=park_tips)
