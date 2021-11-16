@@ -23,14 +23,14 @@ def run(ctx):
         mix_reps = 8
 
     tempdeck1 = ctx.load_module('temperature module gen2', '1')
-    tempdeck1.set_temperature(4)
+    # tempdeck1.set_temperature(4)
     dil_plate_final = ctx.load_labware(
         'microampenduraplate_96_aluminumblock_200ul', '3', 'final plate')
     dil_plate_1 = ctx.load_labware(dil_plate_type, '2', 'dilution plate 1')
     reservoir = ctx.load_labware('nest_12_reservoir_15ml', '9',
                                  'reagent reservoir')
     tempdeck2 = ctx.load_module('temperature module gen2', '10')
-    tempdeck2.set_temperature(70)
+    # tempdeck2.set_temperature(70)
     if rna_starting_format == 'tubes':
         tuberacks = [
             ctx.load_labware(tube_type, slot, f'tuberack {i+1}')
@@ -71,6 +71,11 @@ def run(ctx):
     dils_2 = dil_plate_1.wells()[48:48+num_samples]  # use half of plate
 
     # pre-allocate water for dilution to 100µg/ml
+    ctx.home()
+    ctx.pause('Ensure temperature module on slot 10 is set to 70C and \
+temperature module on slot 1 is set to 4C. If not, please cancel run, set \
+these temperatures, and run protocol again once these temperatures are \
+reached.')
     p300.pick_up_tip()
     for dil, line in zip(dils_1, data):
         sample_name = line[1]
