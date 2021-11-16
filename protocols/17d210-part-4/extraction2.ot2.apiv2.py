@@ -39,7 +39,7 @@ def run(ctx):
     Here is where you can change the locations of your labware and modules
     (note that this is the recommended configuration)
     """
-    pcr_plate = ctx.load_labware('adapter_96_wellplate_200ul', '9',
+    pcr_plate = ctx.load_labware('amplifyt_96_wellplate_200ul', '9',
                                  'sample plate')
     magdeck = ctx.load_module('magnetic module gen2', '11')
     magdeck.disengage()
