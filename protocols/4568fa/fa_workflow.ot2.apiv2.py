@@ -141,9 +141,10 @@ concentration of 0.25mg/ml.')
                 for well in set]]
 
     elif 15 < num_samples <= 31:
-        dests = dil_plate_final.rows()['A'] + dil_plate_final.rows()['D'] + [
-            dil_plate_final.wells_by_name()[well]
-            for well in ['G1', 'G4', 'G7', 'G10', 'H1', 'H4', 'H7']]
+        dests = dil_plate_final.rows_by_name()['A'] + \
+                    dil_plate_final.rows_by_name()['D'] + [
+                    dil_plate_final.wells_by_name()[well]
+                    for well in ['G1', 'G4', 'G7', 'G10', 'H1', 'H4', 'H7']]
         dests = dests[:num_samples]
         triplicates = [col[:3] for col in dil_plate_final.columns()] + [
             col[4:6] for col in dil_plate_final.columns()] + [
