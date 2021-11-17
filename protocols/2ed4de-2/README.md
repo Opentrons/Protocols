@@ -1,4 +1,4 @@
-# FluRibogreen Assay
+# Ribogreen Assay - 1 Standard and up to 24 Samples
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -9,7 +9,7 @@
 
 ## Description
 
-This is a protocol for the FluRibogreen Assay protocol. Samples are aligned in the sample tuberack (slot 1) in the following order:
+This is a protocol for the Flu Ribogreen Assay protocol. Samples are aligned in the sample tuberack (slot 1) in the following order:
 * A1 -> sample 1
 * B1 -> sample 2
 * C1 -> sample 3
@@ -18,6 +18,7 @@ This is a protocol for the FluRibogreen Assay protocol. Samples are aligned in t
 * B2 -> sample 6
 * C2 -> sample 7
 * D2 -> sample 8
+* etc.
 
 ---
 
