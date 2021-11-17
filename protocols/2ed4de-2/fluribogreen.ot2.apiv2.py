@@ -130,6 +130,7 @@ def run(ctx):
             well = dil_sets[i//8][0][i % 8]
             p300.aspirate(sample_vol, s.bottom(2))
             p300.dispense(sample_vol, well.bottom(3))
+            p300.mix(1, 20, well.bottom(3))
             drop(p300)
         p300.flow_rate.aspirate = 94
         p300.flow_rate.dispense = 94
