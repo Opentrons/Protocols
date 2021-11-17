@@ -72,8 +72,8 @@ def run(ctx):
         pip.drop_tip(center.move(Point(x=side*20)))
         side = side * -1
 
-    working_standard_1 = reagent_labware.wells()[0]
-    assay_buffer_1 = reagent_labware.wells()[1]
+    working_standard_1 = reagent_labware.wells()[5]
+    assay_buffer_1 = reagent_labware.wells()[6:9]
     starting_samples = sample_rack.wells()[:num_samples]
     num_sets = math.ceil(num_samples/8)
     all_samples = [
@@ -90,7 +90,7 @@ def run(ctx):
         for vol, dest in zip([100, 300, 500, 700, 900, 950, 1000],
                              dilution_col):
             p1000.pick_up_tip()
-            p1000.transfer(vol, buffer, dest, mix_after=(5, 800),
+            p1000.transfer(vol, buffer[0], dest, mix_after=(5, 800),
                            new_tip='never')
             drop(p1000)
         pickup_p300('single')
@@ -113,11 +113,13 @@ def run(ctx):
         # pre add diluent
         for i, factor in enumerate(factors):
             dil_vol = (factor-1)*sample_vol*(i+1)
-            for set in dil_sets:
-                for j, well in enumerate(set[i]):
-                    if i*j+j < num_samples:
+            for j, set in enumerate(dil_sets):
+                for k, well in enumerate(set[i]):
+                    if j*k+k < num_samples:
                         p1000.pick_up_tip()
-                        p1000.transfer(dil_vol, buffer, well, new_tip='never')
+                        p1000.transfer(dil_vol,
+                                       buffer[1+int((j*8+k)//(num_samples/2))],
+                                       well, new_tip='never')
                         drop(p1000)
 
         p300.flow_rate.aspirate = 40
@@ -128,6 +130,7 @@ def run(ctx):
             well = dil_sets[i//8][0][i % 8]
             p300.aspirate(sample_vol, s.bottom(2))
             p300.dispense(sample_vol, well.bottom(3))
+            p300.mix(1, 20, well.bottom(3))
             drop(p300)
         p300.flow_rate.aspirate = 94
         p300.flow_rate.dispense = 94
