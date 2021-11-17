@@ -243,7 +243,8 @@ on temperature module on slot 3 and remove plate seal when complete.')
     for set in triplicate_sets:
         p300.pick_up_tip()
         p300.transfer(50, set[0].bottom(3),
-                      [well.bottom(3) for well in set[1:]], new_tip='never')
+                      [well.bottom(3) for well in set[1:]],
+                      mix_before=(mix_reps, 50), new_tip='never')
         p300.drop_tip()
 
     # transfer blank solution to blank wells
