@@ -6,12 +6,6 @@ metadata = {
 
 }
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{ "csv":"samples, dna volume of stock, water stock, well\\n s1, 2, 98, A1\\n s2, 4, 90, A2",
-                                  "p20_mount":"right",
-                                  "p300_mount":"right"}""")
-    return [_all_values[n] for n in names]
 
 def run(ctx):
 
@@ -28,14 +22,13 @@ def run(ctx):
 
     # add instrument
     p20 = ctx.load_instrument('p20_single_gen2', p20_mount,
-                                tip_racks=tiprack20)
+                              tip_racks=tiprack20)
     p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
-                            tip_racks=[tiprack300])
-
+                               tip_racks=[tiprack300])
 
     nested_list = [[val.strip() for val in line.split(',')]
-                    for line in csv.splitlines()
-                    if line.split(',')[0].strip()][1:]
+                   for line in csv.splitlines()
+                   if line.split(',')[0].strip()][1:]
 
     # add reagent
     # let's pretend it's cherrypicking
@@ -54,7 +47,7 @@ def run(ctx):
     # add dna
     for row, final_well in zip(nested_list, final_plate.wells()):
         p20.pick_up_tip()
-        p20.aspirate(int(row[dna_vol]), row[well])
+        p20.aspirate(int(row[dna_vol]), dna_plate.wells_by_name()[row[well]])
         p20.dispense(int(row[dna_vol]), final_well)
         p20.mix(5, 20, final_well)
         p20.drop_tip()
