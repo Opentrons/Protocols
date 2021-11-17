@@ -51,7 +51,8 @@ def run(ctx):
     all_wells_chunks = [all_wells[i:i+3*num_slides]
                         for i in range(0, len(all_wells), 3*num_slides)]
 
-    p20.pick_up_tip()
     for tube, chunk in zip(tuberack.wells()[:num_tubes], all_wells_chunks):
-        p20.distribute(spot_volume, tube, chunk, new_tip='never')
-    p20.drop_tip()
+        p20.pick_up_tip()
+        p20.distribute(spot_volume, tube,
+                       [well.top() for well in chunk], new_tip='never')
+        p20.drop_tip()

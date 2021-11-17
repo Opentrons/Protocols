@@ -1,3 +1,4 @@
+import math
 from opentrons.types import Point
 
 
@@ -11,10 +12,10 @@ metadata = {
 
 def run(ctx):
 
-    [reagent_labware, starting_conc, prepare_standard, p1000_mount,
-     p300_mount] = get_values(  # noqa: F821
-        'reagent_labware', 'starting_conc', 'prepare_standard', 'p1000_mount',
-        'p300_mount')
+    [num_samples, reagent_labware, starting_conc, prepare_standard,
+     standard_type, p1000_mount, p300_mount] = get_values(  # noqa: F821
+        'num_samples', 'reagent_labware', 'starting_conc', 'prepare_standard',
+        'standard_type', 'p1000_mount', 'p300_mount')
 
     final_transfer_vol = 100
     sample_vol = 25
@@ -73,11 +74,11 @@ def run(ctx):
 
     working_standard_1 = reagent_labware.wells()[0]
     assay_buffer_1 = reagent_labware.wells()[1]
-    working_standard_2 = reagent_labware.wells()[10]
-    assay_buffer_2 = reagent_labware.wells()[11]
-    starting_samples = sample_rack.wells()[:8]
-    samples_1 = deepplate.columns()[3:6]
-    samples_2 = deepplate.columns()[9:]
+    starting_samples = sample_rack.wells()[:num_samples]
+    num_sets = math.ceil(num_samples/8)
+    all_samples = [
+        deepplate.columns()[i*3:(i+1)*3]
+        for i in range(1, 1+num_sets)]
 
     def standard_prep(standard, buffer, column):
         dilution_col = column[:7]
@@ -101,7 +102,7 @@ def run(ctx):
         p1000.mix(5, 800, dilution_col[5])
         drop(p1000)
 
-    def dilute(final_conc, dil_set, buffer):
+    def dilute(final_conc, dil_sets, buffer):
         dil_factor = starting_conc/final_conc
         # find necessary dilution factor(s)
         if dil_factor > max_factor_1_dil:
@@ -112,65 +113,60 @@ def run(ctx):
         # pre add diluent
         for i, factor in enumerate(factors):
             dil_vol = (factor-1)*sample_vol*(i+1)
-            for well in dil_set[i]:
-                p1000.pick_up_tip()
-                p1000.transfer(dil_vol, buffer, well, new_tip='never')
-                drop(p1000)
+            for set in dil_sets:
+                for j, well in enumerate(set[i]):
+                    if i*j+j < num_samples:
+                        p1000.pick_up_tip()
+                        p1000.transfer(dil_vol, buffer, well, new_tip='never')
+                        drop(p1000)
 
         p300.flow_rate.aspirate = 40
+        p300.flow_rate.dispense = 40
         # transfer sample
         for i, s in enumerate(starting_samples):
             pickup_p300('single')
+            well = dil_sets[i//8][0][i % 8]
             p300.aspirate(sample_vol, s.bottom(2))
-            p300.dispense(sample_vol, dil_set[0][i].bottom(3))
+            p300.dispense(sample_vol, well.bottom(3))
             drop(p300)
         p300.flow_rate.aspirate = 94
+        p300.flow_rate.dispense = 94
 
         # perform dilution
         for i, factor in enumerate(factors):
-            pickup_p300('multi')
-            total_vol = sample_vol*(i+1)*factor
-            mix_vol = total_vol*0.8 if total_vol*0.8 <= 175 else 175
-            if i == 0:
-                p300.mix(5, mix_vol, dil_set[i][0])
-            else:
-                p300.transfer(sample_vol*(i+1), dil_set[i-1][0].bottom(3),
-                              dil_set[i][0].bottom(3),
+            for set in dil_sets:
+                pickup_p300('multi')
+                total_vol = sample_vol*(i+1)*factor
+                mix_vol = total_vol*0.8 if total_vol*0.8 <= 175 else 175
+                if i == 0:
+                    p300.mix(5, mix_vol, set[i][0])
+                else:
+                    p300.transfer(sample_vol*(i+1), set[i-1][0].bottom(3),
+                                  set[i][0].bottom(3),
+                                  mix_after=(5, mix_vol),
+                                  new_tip='never')
+                drop(p300)
 
-
-                              mix_after=(5, mix_vol),
-                              new_tip='never')
-            drop(p300)
-
-        return dil_set[len(factors)-1][0]
+        return int(len(factors)-1)
 
     """ PART 1 """
     if prepare_standard:
 
-        # TE preparation
+        # standard preparation
         standard_prep(working_standard_1, assay_buffer_1,
                       deepplate.columns()[0])
 
-        # TR preparation
-        standard_prep(working_standard_2, assay_buffer_2,
-                      deepplate.columns()[6])
-
     """ PART 2 """
 
-    # sample normalization (TE)
-    # default from 60µg/ml to 2.5µg/ml - 24:1 (1 fold)
-    sample_1_final_loc = dilute(2.5, samples_1, assay_buffer_1)
-
-    # sample normalization (TR)
-    # default from 60µg/ml to 0.5µg/ml - 120:1 (2 fold)
-    sample_2_final_loc = dilute(0.5, samples_2, assay_buffer_2)
+    # sample normalization (TE or TR)
+    sample_1_final_ind = dilute(standard_type, all_samples, assay_buffer_1)
 
     """ PART 3 """
 
     # transfer to final black plate
-    for i, source in enumerate(
-            [deepplate.rows_by_name()['A'][0], sample_1_final_loc,
-             deepplate.rows_by_name()['A'][6], sample_2_final_loc]):
+    sources = [deepplate.rows_by_name()['A'][0]] + [
+        set[sample_1_final_ind][0] for set in all_samples]
+    for i, source in enumerate(sources):
         dest_set = flatplate.rows()[0][i*3:(i+1)*3]
         for dest in dest_set:
             p300.pick_up_tip()

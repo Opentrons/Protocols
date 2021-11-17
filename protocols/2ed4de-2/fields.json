@@ -1,5 +1,11 @@
 [
   {
+      "type": "float",
+      "label": "number of samples",
+      "name": "num_samples",
+      "default": 24
+  },
+  {
       "type": "dropDown",
       "label": "reagent labware",
       "name": "reagent_labware",
@@ -21,6 +27,15 @@
       "options": [
         {"label": "yes", "value": true},
         {"label": "no", "value": false}
+      ]
+  },
+  {
+      "type": "dropDown",
+      "label": "standard in use (if necessary)",
+      "name": "standard_type",
+      "options": [
+        {"label": "TE (2.5ug/ml dilution)", "value": 2.5},
+        {"label": "TR (0.5ug/ml dilution)", "value": 0.5}
       ]
   },
   {
