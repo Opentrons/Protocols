@@ -20,7 +20,7 @@ def run(ctx):
     if TEST_MODE:
         mix_reps = 1
     else:
-        mix_reps = 8
+        mix_reps = 10
 
     tempdeck1 = ctx.load_module('temperature module gen2', '1')
     # tempdeck1.set_temperature(4)
