@@ -36,7 +36,7 @@ This is a protocol for the FluRibogreen Assay protocol. Samples are aligned in t
 ---
 
 ### Deck Setup
-This example starting deck state shows the layout for 24 samples:  
+This example starting deck state shows the layout for 8 samples:  
 ![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2ed4de/deck4.png)
 
 * green on sample tuberack: samples
