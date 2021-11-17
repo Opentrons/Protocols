@@ -2,7 +2,7 @@ from opentrons.types import Point
 
 
 metadata = {
-    'protocolName': 'FluRibogreen Assay',
+    'protocolName': 'Ribogreen Assay - 2 Standards and up to 8 Samples',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'
