@@ -31,6 +31,15 @@
   },
   {
     "type": "dropDown",
+    "label": "dilution plate type",
+    "name": "dil_plate_type",
+    "options": [
+      {"label": "MicroAmp EnduraPlate in holder", "value": "microampenduraplate_96_aluminumblock_200ul"},
+      {"label": "Fisherbrand skirted", "value": "fisherbrand_96_wellplate_200ul"}
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "fill entire plate with blank if necessary",
     "name": "fill_plate_blank",
     "options": [

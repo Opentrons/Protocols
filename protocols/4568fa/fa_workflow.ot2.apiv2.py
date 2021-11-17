@@ -10,10 +10,12 @@ TEST_MODE = False
 
 def run(ctx):
 
-    [dil_csv_1, desired_conc, tube_type, rna_starting_format, fill_plate_blank,
-     fill_second_plate, p300_mount, p20_mount] = get_values(  # noqa: F821
+    [dil_csv_1, desired_conc, tube_type, rna_starting_format, dil_plate_type,
+     fill_plate_blank, fill_second_plate, p300_mount,
+     p20_mount] = get_values(  # noqa: F821
         'dil_csv_1', 'desired_conc', 'tube_type', 'rna_starting_format',
-        'fill_plate_blank', 'fill_second_plate', 'p300_mount', 'p20_mount')
+        'dil_plate_type', 'fill_plate_blank', 'fill_second_plate',
+        'p300_mount', 'p20_mount')
 
     if TEST_MODE:
         mix_reps = 1
@@ -21,16 +23,14 @@ def run(ctx):
         mix_reps = 10
 
     tempdeck1 = ctx.load_module('temperature module gen2', '1')
-    tempdeck1.set_temperature(4)
+    # tempdeck1.set_temperature(4)
     dil_plate_final = ctx.load_labware(
         'microampenduraplate_96_aluminumblock_200ul', '3', 'final plate')
-    dil_plate_1 = ctx.load_labware(
-        'microampenduraplate_96_aluminumblock_200ul', '2',
-        'dilution plate 1')
+    dil_plate_1 = ctx.load_labware(dil_plate_type, '2', 'dilution plate 1')
     reservoir = ctx.load_labware('nest_12_reservoir_15ml', '9',
                                  'reagent reservoir')
     tempdeck2 = ctx.load_module('temperature module gen2', '10')
-    tempdeck2.set_temperature(70)
+    # tempdeck2.set_temperature(70)
     if rna_starting_format == 'tubes':
         tuberacks = [
             ctx.load_labware(tube_type, slot, f'tuberack {i+1}')
@@ -71,6 +71,11 @@ def run(ctx):
     dils_2 = dil_plate_1.wells()[48:48+num_samples]  # use half of plate
 
     # pre-allocate water for dilution to 100µg/ml
+    ctx.home()
+    ctx.pause('Ensure temperature module on slot 10 is set to 70C and \
+temperature module on slot 1 is set to 4C. If not, please cancel run, set \
+these temperatures, and run protocol again once these temperatures are \
+reached.')
     p300.pick_up_tip()
     for dil, line in zip(dils_1, data):
         sample_name = line[1]
@@ -92,24 +97,36 @@ concentration of 0.25mg/ml.')
         conc = float(line[2])
         sample_vol = 10/conc
         p20.pick_up_tip()
-        p20.transfer(sample_vol, sample, dil1, mix_before=(mix_reps, 20),
-                     new_tip='never')
+        p20.flow_rate.aspirate = 10
+        p20.flow_rate.dispense = 10
+        p20.mix(mix_reps, 20, sample)
+        p20.flow_rate.aspirate = 3.78
+        p20.flow_rate.dispense = 7.56
+        p20.transfer(sample_vol, sample, dil1, new_tip='never')
         p20.drop_tip()
 
+    p300.flow_rate.aspirate = 100
+    p300.flow_rate.dispense = 150
     for dil1 in dils_1:
         p300.pick_up_tip()
         p300.mix(mix_reps, 80, dil1)
         p300.drop_tip()
+    p300.flow_rate.aspirate = 46.43
+    p300.flow_rate.dispense = 92.86
 
     for sample, dil1, dil2, line in zip(sample_sources, dils_1, dils_2, data):
         p20.pick_up_tip()
         p20.transfer(desired_conc, dil1, dil2, new_tip='never')
         p20.drop_tip()
 
+    p300.flow_rate.aspirate = 100
+    p300.flow_rate.dispense = 150
     for dil2 in dils_2:
         p300.pick_up_tip()
         p300.mix(mix_reps, 80, dil2)
         p300.drop_tip()
+    p300.flow_rate.aspirate = 46.43
+    p300.flow_rate.dispense = 92.86
 
     # determine transfer scheme depending on number of samples
     if 1 <= num_samples <= 15:
@@ -189,18 +206,22 @@ Must be 1-31 samples.')
     ctx.pause(f'Add 3ul RNA ladder to well {final_well_display}')
 
     # mix all samples with diluent
+    p300.flow_rate.aspirate = 100
+    p300.flow_rate.dispense = 150
     for set in triplicate_sets:
         p300.pick_up_tip()
         p300.mix(mix_reps, 120, set[0].bottom(3))
-        # transfer triplicates
-        p300.transfer(50, set[0].bottom(3),
-                      [well.bottom(3) for well in set[1:]], new_tip='never')
+        # # transfer triplicates
+        # p300.transfer(50, set[0].bottom(3),
+        #               [well.bottom(3) for well in set[1:]], new_tip='never')
         p300.drop_tip()
 
     # mix RNA ladder with diluent
     p300.pick_up_tip()
     p300.mix(mix_reps, 20, final_dest.bottom(2))
     p300.drop_tip()
+    p300.flow_rate.aspirate = 46.43
+    p300.flow_rate.dispense = 92.86
 
     # heat samples
     ctx.pause('Seal the plate in slot 3 and place on the temperature module on \
@@ -217,6 +238,13 @@ module on slot 1.')
     [td.deactivate() for td in [tempdeck1, tempdeck2]]
     ctx.pause('Centrifuge the plate on temperature module on slot 1. Replace \
 on temperature module on slot 3 and remove plate seal when complete.')
+
+    # transfer triplicates
+    for set in triplicate_sets:
+        p300.pick_up_tip()
+        p300.transfer(50, set[0].bottom(3),
+                      [well.bottom(3) for well in set[1:]], new_tip='never')
+        p300.drop_tip()
 
     # transfer blank solution to blank wells
     p300.transfer(50, blank_solution, [b.bottom(3) for b in blank_wells])
