@@ -11,7 +11,7 @@
     "flags": {
         "embedded-app": false,
         "feature": false,
-        "hide-from-search": false,
+        "hide-from-search": true,
         "skip-tests": false
     },
     "path": "protocols/17d210-part-3",
