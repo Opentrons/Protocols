@@ -11,13 +11,10 @@ Pooling',
 
 def run(ctx):
 
-    # [num_samples, m20_mount, sample_vol] = get_values(  # noqa: F821
-    #  'num_samples', 'm20_mount', 'sample_vol')
-
-    num_samples_per_plate = 96
-    m20_mount = 'left'
-    sample_vol = 5.0
-    num_plates = 5
+    [num_samples_per_plate, m20_mount, sample_vol, num_plates,
+     transfer_scheme] = get_values(  # noqa: F821
+     'num_samples_per_plate', 'm20_mount', 'sample_vol', 'num_plates',
+     'transfer_scheme')
 
     # load labware
     tips20m = [ctx.load_labware('opentrons_96_tiprack_20ul', '3')]
@@ -37,7 +34,13 @@ def run(ctx):
 
     # transfer indices
     for strip, set in zip(pool_strips, sample_sets):
-        m20.pick_up_tip()
+        if transfer_scheme == 'same':
+            m20.pick_up_tip()
         for sample in set:
+            if not m20.has_tip:
+                m20.pick_up_tip()
             m20.transfer(sample_vol, sample, strip, new_tip='never')
-        m20.drop_tip()
+            if transfer_scheme == 'change':
+                m20.drop_tip()
+        if m20.has_tip:
+            m20.drop_tip()

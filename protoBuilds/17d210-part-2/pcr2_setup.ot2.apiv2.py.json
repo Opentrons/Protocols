@@ -1,5 +1,5 @@
 {
-    "content": "import math\n\nmetadata = {\n    'protocolName': 'Verogen ForenSeq DNA Signature Prep Kit Part 2/5: \\\nPCR2 Setup',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.10'\n}\n\n\ndef run(ctx):\n\n    # [num_samples, m20_mount, m300_mount, index_vol,\n    #  pcr2_buffer_vol] = get_values(  # noqa: F821\n    #     'num_samples', 'm20_mount', 'm300_mount', 'index_vol',\n    #     'pcr2_buffer_vol')\n    num_samples = 96\n    m20_mount = 'left'\n    m300_mount = 'right'\n    index_vol = 8.0\n    pcr2_buffer_vol = 27.0\n\n    # load labware\n    pcr2_buffer = ctx.load_labware('abgenemidi_96_wellplate_800ul', '10',\n                                   'PCR2 buffer tubes\\\n (strip column 1)').rows()[0][:2]\n    pcr_plate = ctx.load_labware('amplifyt_96_wellplate_200ul', '11',\n                                 'pcr plate')\n    index_plate = ctx.load_labware('amplifyt_96_wellplate_200ul', '8',\n                                   'index plate')\n    tips20m = [ctx.load_labware('opentrons_96_tiprack_20ul', '1')]\n    tips300m = [ctx.load_labware('opentrons_96_tiprack_300ul', '5')]\n\n    # load pipette\n    if m300_mount == m20_mount:\n        raise Exception('Pipette mounts cannot match.')\n    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tips20m)\n    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,\n                               tip_racks=tips300m)\n\n    num_cols = math.ceil(num_samples/8)\n    indices = index_plate.rows()[0][:num_cols]\n    samples = pcr_plate.rows()[0][:num_cols]\n\n    # transfer indices\n    for source, dest in zip(indices, samples):\n        m20.transfer(index_vol, source, dest)\n\n    # transfer buffer\n    for i, dest in enumerate(samples):\n        m300.transfer(pcr2_buffer_vol, pcr2_buffer[i//6], dest,\n                      mix_after=(10, pcr2_buffer_vol))\n",
+    "content": "import math\n\nmetadata = {\n    'protocolName': 'Verogen ForenSeq DNA Signature Prep Kit Part 2/5: \\\nPCR2 Setup',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.10'\n}\n\n\ndef run(ctx):\n\n    [num_samples, m20_mount, m300_mount, index_vol,\n     pcr2_buffer_vol] = get_values(  # noqa: F821\n        'num_samples', 'm20_mount', 'm300_mount', 'index_vol',\n        'pcr2_buffer_vol')\n    # num_samples = 96\n    # m20_mount = 'left'\n    # m300_mount = 'right'\n    # index_vol = 8.0\n    # pcr2_buffer_vol = 27.0\n\n    # load labware\n    pcr2_buffer = ctx.load_labware('abgenemidi_96_wellplate_800ul', '10',\n                                   'PCR2 buffer tubes\\\n (strip column 1)').rows()[0][:2]\n    pcr_plate = ctx.load_labware('amplifyt_96_wellplate_200ul', '11',\n                                 'pcr plate')\n    index_plate = ctx.load_labware('amplifyt_96_wellplate_200ul', '8',\n                                   'index plate')\n    tips20m = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '1')]\n    tips300m = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '5')]\n\n    # load pipette\n    if m300_mount == m20_mount:\n        raise Exception('Pipette mounts cannot match.')\n    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tips20m)\n    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,\n                               tip_racks=tips300m)\n\n    m300.default_speed = 200\n    m20.default_speed = 200\n\n    num_cols = math.ceil(num_samples/8)\n    indices = index_plate.rows()[0][:num_cols]\n    samples = pcr_plate.rows()[0][:num_cols]\n\n    # transfer indices\n    for source, dest in zip(indices, samples):\n        m20.transfer(index_vol, source, dest)\n\n    # transfer buffer\n    for i, dest in enumerate(samples):\n        m300.transfer(pcr2_buffer_vol, pcr2_buffer[i//6], dest,\n                      mix_after=(10, pcr2_buffer_vol))\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -3453,16 +3453,16 @@
     ],
     "labware": [
         {
-            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 1",
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 1",
             "share": false,
             "slot": "1",
-            "type": "opentrons_96_tiprack_20ul"
+            "type": "opentrons_96_filtertiprack_20ul"
         },
         {
-            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 5",
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 5",
             "share": false,
             "slot": "5",
-            "type": "opentrons_96_tiprack_300ul"
+            "type": "opentrons_96_filtertiprack_200ul"
         },
         {
             "name": "index plate on 8",

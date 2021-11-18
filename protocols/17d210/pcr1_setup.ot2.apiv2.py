@@ -9,13 +9,13 @@ PCR1 Setup',
 
 def run(ctx):
 
-    # [transfer_csv, m20_mount, mm_vol, mix_after] = get_values(  # noqa: F821
-    #     'transfer_csv', 'm20_mount', 'mm_vol', 'mix_after')
-    transfer_csv = "volume,source plate # (1-4),source column (1-12),\
-destination column(1-12)\n8,1,2,1\n8,2,3,2\n8,2,12,3"
-    m20_mount = 'left'
-    mm_vol = 7.0
-    mix_after = True
+    [transfer_csv, m20_mount, mm_vol, mix_after] = get_values(  # noqa: F821
+        'transfer_csv', 'm20_mount', 'mm_vol', 'mix_after')
+#     transfer_csv = "volume,source plate # (1-4),source column (1-12),\
+# destination column(1-12)\n8,1,2,1\n8,2,3,2\n8,2,12,3"
+#     m20_mount = 'left'
+#     mm_vol = 7.0
+#     mix_after = True
 
     # load labware
     mm = ctx.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul',

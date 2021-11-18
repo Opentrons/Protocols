@@ -13,27 +13,27 @@ Extraction 2',
 
 # Start protocol
 def run(ctx):
-    # [num_samples, m20_mount, m300_mount, mag_height, z_offset, radial_offset,
-    #  sample_vol, binding_buffer_vol, wash1_vol, wash2_vol, elution_vol,
-    #  settling_time, park_tips, tip_track] = get_values(  # noqa: F821
-    #     'num_samples', 'm20_mount', 'm300_mount', 'mag_height', 'z_offset',
-    #     'radial_offset', 'sample_vol', 'binding_buffer_vol', 'wash1_vol',
-    #     'wash2_vol', 'elution_vol', 'settling_time', 'park_tips', 'tip_track'
+    [num_samples, m20_mount, m300_mount, mag_height,
+     sample_vol, binding_buffer_vol, wash1_vol, wash2_vol, elution_vol,
+     settling_time, park_tips, tip_track] = get_values(  # noqa: F821
+        'num_samples', 'm20_mount', 'm300_mount', 'mag_height', 'sample_vol', 'binding_buffer_vol', 'wash1_vol',
+        'wash2_vol', 'elution_vol', 'settling_time', 'park_tips', 'tip_track')
 
-    num_samples = 8
-    m20_mount = 'left'
-    m300_mount = 'right'
-    mag_height = 6.8
-    sample_vol = 20.0
-    binding_buffer_vol = 45.0
-    wash1_vol = 45.0
-    wash2_vol = 45.0
-    elution_vol = 30.0
-    settling_time = 2.0
+    # num_samples = 8
+    # m20_mount = 'left'
+    # m300_mount = 'right'
+    # mag_height = 6.8
+    # sample_vol = 20.0
+    # binding_buffer_vol = 45.0
+    # wash1_vol = 45.0
+    # wash2_vol = 45.0
+    # elution_vol = 30.0
+    # settling_time = 2.0
     park_tips = False
     tip_track = False
     radial_offset = 0.3
-    z_offset = 0.4
+    z_offset = 0.5
+    air_gap_vol = 0
 
     """
     Here is where you can change the locations of your labware and modules
@@ -69,6 +69,9 @@ def run(ctx):
     m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tips20)
     m300 = ctx.load_instrument(
         'p300_multi_gen2', m300_mount, tip_racks=tips300)
+
+    m300.default_speed = 200
+    m20.default_speed = 200
 
     tip_log = {val: {} for val in ctx.loaded_instruments.values()}
 
@@ -226,12 +229,12 @@ resuming.')
                         m300.aspirate(180, source.bottom(0.5))
                         m300.dispense(180, source.bottom(5))
                     latest_chan = chan_ind
-                m300.transfer(vol_per_trans, source, well.top(), air_gap=20,
-                              new_tip='never')
+                m300.transfer(vol_per_trans, source, well.top(-2),
+                              air_gap=air_gap_vol, new_tip='never')
                 if t < num_trans - 1:
                     m300.air_gap(20)
-            m300.mix(10, 200, well)
-            m300.blow_out(well.top(-2))
+            # m300.mix(10, 200, well)
+            # m300.blow_out(well.top(-2))
             m300.air_gap(20)
 
         m300.flow_rate.aspirate = 92.86
@@ -245,14 +248,16 @@ resuming.')
                 else:
                     _pick_up(m300)
             m300.transfer(sample_vol, source, dest, mix_after=(10, sample_vol),
-                          air_gap=20, new_tip='never')
-            m300.air_gap(20)
+                          air_gap=air_gap_vol, new_tip='never')
+            m300.mix(10, 200, well)
+            m300.blow_out(well.top(-2))
+            m300.air_gap(air_gap_vol)
             if park:
                 m300.drop_tip(spot)
             else:
                 _drop(m300)
 
-        ctx.pause()
+        ctx.delay(minutes=30, msg='Sample incubation for 30 minutes.')
         magdeck.engage(height=mag_height)
         ctx.delay(minutes=settling_time, msg=f'Incubating on MagDeck for \
 {settling_time} minutes.')
@@ -306,10 +311,13 @@ resuming.')
             else:
                 _drop(m300)
 
+        ctx.delay(minutes=5, msg='Incubating off magnet for 5 minutes.')
+
         if magdeck.status == 'disengaged':
             magdeck.engage(height=mag_height)
 
-        ctx.delay(seconds=30, msg='Incubating on MagDeck for 30s seconds.')
+        ctx.delay(minutes=settling_time, msg=f'Incubating on magnet for \
+{settling_time} minutes.')
         remove_supernatant(vol, park=park)
 
     def elute(vol, park=True):
@@ -326,8 +334,7 @@ resuming.')
         """
 
         # resuspend beads in elution
-        if magdeck.status == 'enagaged':
-            magdeck.disengage()
+        magdeck.disengage()
         for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
             _pick_up(m300)
             side = 1 if i % 2 == 0 else -1
@@ -343,6 +350,8 @@ resuming.')
                 m300.drop_tip(spot)
             else:
                 _drop(m300)
+
+        ctx.delay(minutes=5, msg='Incubating off magnet for 5 minutes.')
 
         magdeck.engage(height=mag_height)
         ctx.delay(minutes=settling_time, msg=f'Incubating on MagDeck for \
@@ -365,7 +374,6 @@ resuming.')
         for e in elution_samples_m:
             _pick_up(m300)
             m300.transfer(30, lns2, e, new_tip='never')
-            m300.air_gap(20)
             _drop(m300)
 
     """

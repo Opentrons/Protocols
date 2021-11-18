@@ -25,5 +25,14 @@
     "label": "number of source plates (1-5)",
     "name": "num_plates",
     "default": 5
+  },
+  {
+    "type": "dropDown",
+    "label": "transfer scheme",
+    "name": "transfer_scheme",
+    "options": [
+      {"label": "same tip for each sample", "value": "same"},
+      {"label": "new tip for each transfer", "value": "change"}
+    ]
   }
 ]
