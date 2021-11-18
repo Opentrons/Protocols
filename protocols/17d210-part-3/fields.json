@@ -40,7 +40,7 @@
     "type": "float",
     "label": "lateral offset (as fraction of deepwell radius)",
     "name": "radial_offset",
-    "default": 0.8
+    "default": 0.3
   },
   {
     "type": "float",

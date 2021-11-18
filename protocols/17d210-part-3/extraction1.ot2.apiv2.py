@@ -20,16 +20,16 @@ def run(ctx):
         'binding_buffer_vol', 'wash1_vol', 'wash2_vol', 'elution_vol',
         'settling_time')
 
-    num_samples = 96
-    m20_mount = 'left'
-    m300_mount = 'right'
-    mag_height = 6.8
-    sample_vol = 45.0
-    binding_buffer_vol = 45.0
-    wash1_vol = 200.0
-    wash2_vol = 200.0
-    elution_vol = 50.0
-    settling_time = 2.0
+    # num_samples = 96
+    # m20_mount = 'left'
+    # m300_mount = 'right'
+    # mag_height = 6.8
+    # sample_vol = 45.0
+    # binding_buffer_vol = 45.0
+    # wash1_vol = 200.0
+    # wash2_vol = 200.0
+    # elution_vol = 50.0
+    # settling_time = 2.0
     park_tips = False
     tip_track = False
     radial_offset = 0.3
@@ -45,7 +45,7 @@ def run(ctx):
     magdeck = ctx.load_module('magnetic module gen2', '11')
     magdeck.disengage()
     magplate = magdeck.load_labware('abgenemidi_96_wellplate_800ul',
-                                    'deepwell extraction plate')
+                                    'deepwell wash plate')
     elutionplate = ctx.load_labware('amplifyt_96_wellplate_200ul', '3',
                                     'elution plate')
     waste = ctx.loaded_labwares[12].wells()[0].top()
@@ -70,6 +70,9 @@ def run(ctx):
     m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tips20)
     m300 = ctx.load_instrument(
         'p300_multi_gen2', m300_mount, tip_racks=tips300)
+
+    m300.default_speed = 200
+    m20.default_speed = 200
 
     tip_log = {val: {} for val in ctx.loaded_instruments.values()}
 
@@ -226,12 +229,12 @@ resuming.')
                         m300.aspirate(180, source.bottom(0.5))
                         m300.dispense(180, source.bottom(5))
                     latest_chan = chan_ind
-                m300.transfer(vol_per_trans, source, well.top(),
+                m300.transfer(vol_per_trans, source, well.top(-2),
                               air_gap=air_gap_vol, new_tip='never')
                 if t < num_trans - 1:
                     m300.air_gap(air_gap_vol)
-            m300.mix(10, 200, well)
-            m300.blow_out(well.top(-2))
+            # m300.mix(10, 200, well)
+            # m300.blow_out(well.top(-2))
             m300.air_gap(air_gap_vol)
 
         m300.flow_rate.aspirate = 92.86
@@ -244,8 +247,11 @@ resuming.')
                     _pick_up(m300, spot)
                 else:
                     _pick_up(m300)
+            m300.dispense(m300.current_volume, source.top())
             m300.transfer(sample_vol, source, dest, mix_after=(10, sample_vol),
                           air_gap=air_gap_vol, new_tip='never')
+            m300.mix(10, 200, dest)
+            m300.blow_out(well.top(-2))
             m300.air_gap(air_gap_vol)
             if park:
                 m300.drop_tip(spot)
@@ -290,7 +296,7 @@ resuming.')
             side = 1 if i % 2 == 0 else -1
             loc = m.bottom().move(Point(x=side*radius*radial_offset,
                                         z=z_offset))
-            src = source[i//12/len(source)]
+            src = source[int(i//(12/len(source)))]
             for n in range(num_trans):
                 if m300.current_volume > 0:
                     m300.dispense(m300.current_volume, src.top())
