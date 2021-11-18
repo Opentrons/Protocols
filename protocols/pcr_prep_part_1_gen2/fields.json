@@ -1,0 +1,38 @@
+[
+  {
+    "type": "dropDown",
+    "label": "right pipette type",
+    "name": "right_pipette",
+    "options": [
+      { "label": "GEN2 P1000 Single", "value": "p1000_single_gen2"},
+      { "label": "GEN2 P300 Single", "value": "p300_single_gen2" },
+      { "label": "GEN2 P20 Single", "value": "p20_single_gen2" },
+      { "label": "GEN1 P1000 Single", "value": "p1000_single"},
+      { "label": "GEN1 P300 Single", "value": "p300_single" },
+      { "label": "GEN1 P50 Single", "value": "p50_single" },
+      { "label": "GEN1 P10 Single", "value": "p10_single" },
+      { "label": "none", "value": null}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "left pipette type",
+    "name": "left_pipette",
+    "options": [
+      { "label": "GEN2 P1000 Single", "value": "p1000_single_gen2"},
+      { "label": "GEN2 P300 Single", "value": "p300_single_gen2" },
+      { "label": "GEN2 P20 Single", "value": "p20_single_gen2" },
+      { "label": "GEN1 P1000 Single", "value": "p1000_single"},
+      { "label": "GEN1 P300 Single", "value": "p300_single" },
+      { "label": "GEN1 P50 Single", "value": "p50_single" },
+      { "label": "GEN1 P10 Single", "value": "p10_single" },
+      { "label": "none", "value": null}
+    ]
+  },
+  {
+    "type": "textFile",
+    "label": "master mix .csv file",
+    "name": "master_mix_csv",
+    "default": "Reagent,Slot,Well,Volume\nBuffer,1,A2,3\nMgCl,1,A3,40\ndNTPs,2,A2,90\nWater,2,A3,248\nprimer 1,1,A4,25\nprimer 2,1,A5,25\n"
+  }
+]
