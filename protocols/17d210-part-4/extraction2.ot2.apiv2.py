@@ -16,8 +16,9 @@ def run(ctx):
     [num_samples, m20_mount, m300_mount, mag_height,
      sample_vol, binding_buffer_vol, wash1_vol, wash2_vol, elution_vol,
      settling_time, park_tips, tip_track] = get_values(  # noqa: F821
-        'num_samples', 'm20_mount', 'm300_mount', 'mag_height', 'sample_vol', 'binding_buffer_vol', 'wash1_vol',
-        'wash2_vol', 'elution_vol', 'settling_time', 'park_tips', 'tip_track')
+        'num_samples', 'm20_mount', 'm300_mount', 'mag_height', 'sample_vol',
+        'binding_buffer_vol', 'wash1_vol', 'wash2_vol', 'elution_vol',
+        'settling_time', 'park_tips', 'tip_track')
 
     # num_samples = 8
     # m20_mount = 'left'
