@@ -2,20 +2,11 @@ import itertools
 from opentrons.types import Point
 
 metadata = {
-    'protocolName': 'SuperScript III: qRT-PCR Prep with CSV File',
+    'protocolName': 'Extraction for PCR/qPCR prep',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'
 }
-
-
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{ "num_col":12,
-                                    "incubation_time":3,
-                                  "m300_mount":"left",
-                                  "p300_mount":"right"}""")
-    return [_all_values[n] for n in names]
 
 
 def run(ctx):
@@ -31,12 +22,12 @@ def run(ctx):
     mag_mod = ctx.load_module('magnetic module gen2', '3')
     mag_plate = mag_mod.load_labware('storplate_96_wellplate_500ul')
     sample_racks = [ctx.load_labware(
-                    'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap',
+                    'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap',
                     slot, label='tuberack') for slot in ['4', '1', '5', '2']]
     reagent_res = ctx.load_labware('nest_12_reservoir_15ml', '6')
     waste_res = ctx.load_labware('nest_1_reservoir_195ml', '11')
     tipracks = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-                for slot in ['7', '8', '9', '10']]
+                for slot in ['7', '8', '10']]
 
     # load instrument
     m300 = ctx.load_instrument('p300_multi_gen2',
@@ -46,8 +37,8 @@ def run(ctx):
                                p300_mount,
                                tip_racks=tipracks)
 
-    tips = [tip for rack in tipracks[:3] for tip in rack.wells()]
-    tips_return = [tip for tip in tipracks[3].wells()]
+    tips = [tip for rack in tipracks[:2] for tip in rack.wells()]
+    tips_return = [tip for tip in tipracks[2].wells()]
     tipcount = 0
     tipcount_return = 0
 
@@ -137,7 +128,7 @@ def run(ctx):
     for i, col in enumerate(plate_cols):
         pick_up_return(m300)
         remove_supernat(400, col, i)
-        m300.return_tip()
+        m300.drop_tip()
 
     ctx.comment('\n\nIncubation and Disengage Magnet\n')
     ctx.delay(minutes=incubation_time)
