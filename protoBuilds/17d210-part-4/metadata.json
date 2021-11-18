@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "4b4a80-adapter_ligation.ot2.apiv2.py"
+            "extraction2.ot2.apiv2.py"
         ],
         "description": [
             "README.md"
@@ -11,10 +11,10 @@
     "flags": {
         "embedded-app": false,
         "feature": false,
-        "hide-from-search": false,
+        "hide-from-search": true,
         "skip-tests": false
     },
-    "path": "protocols/4b4a80-adapter_ligation",
-    "slug": "4b4a80-adapter_ligation",
+    "path": "protocols/17d210-part-4",
+    "slug": "17d210-part-4",
     "status": "ok"
 }

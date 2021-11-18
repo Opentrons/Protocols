@@ -97,8 +97,6 @@ def run(ctx):
     tempdeck.set_temperature(85)
 
     m300.flow_rate.aspirate = 50
-    m300.flow_rate.dispense = 150
-    m300.flow_rate.blow_out = 300
     ctx._implementation._hw_manager.hardware._attached_instruments[
         m300._implementation.get_mount()].update_config_item(
             'pick_up_current', 0.5)
@@ -212,7 +210,6 @@ resuming.')
                 m300.air_gap(20)
             if drop:
                 _drop(m300)
-        m300.flow_rate.aspirate = 150
 
     def wash(vol, source, mix_reps=mix_reps, park=True, resuspend=True,
              drop=True):
@@ -253,7 +250,6 @@ resuming.')
                 if n < num_trans - 1:  # only air_gap if going back to source
                     m300.air_gap(20)
             if resuspend:
-                m300.flow_rate.dispense = 300
                 for _ in range(mix_reps):
                     m300.aspirate(150, loc)
                     m300.dispense(150, m.bottom().move(Point(
@@ -377,6 +373,9 @@ minutes')
         m300.transfer(sample_vol, s, d, new_tip='never')
         m300.drop_tip(p)
 
+    m300.default_speed = 200
+    m300.flow_rate.aspirate = 20
+    m300.flow_rate.dispense = 20
     mixes_per_min = 1.5
     num_mix_cycles = int(sample_mixing_time_minutes*mixes_per_min/num_cols)
     if TEST_MODE or not sample_incubation_mixing:
@@ -391,7 +390,11 @@ minutes')
                 m300.aspirate(sample_vol*0.8, loc)
                 m300.dispense(sample_vol*0.8, s.bottom().move(Point(
                     x=side*radius*radial_offset, z=7)))
+                m300.blow_out(s.center())
             m300.drop_tip(p)
+    m300.default_speed = 400
+    m300.flow_rate.aspirate = 30
+    m300.flow_rate.dispense = 92.86
     magdeck.engage(mag_height)
     ctx.delay(minutes=bead_settling_time)
     remove_supernatant(sample_vol, park=park_tips)

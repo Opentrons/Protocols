@@ -322,7 +322,11 @@ def run(ctx):
                             pip.slow_tip_withdrawal(
                              withdraw_speed, source, to_surface=True)
                         if liquid_class == "viscous":
-                            pip.touch_tip(radius=0.75, v_offset=-2, speed=20)
+                            speed_arg = 3.14*source.diameter
+                            r = source.diameter / 2
+                            radius_arg = (r - 0.5) / r
+                            pip.touch_tip(
+                             radius=radius_arg, v_offset=-2, speed=speed_arg)
                             top_dispenses = False
                         if liquid_class == "volatile":
                             pip.air_gap(air_gap_vol)
