@@ -1,0 +1,63 @@
+[
+  {
+    "type": "int",
+    "label": "sample number",
+    "name": "number_of_samples",
+    "default": 96
+  },
+  {
+    "type": "dropDown",
+    "label": "right pipette type",
+    "name": "right_pipette",
+    "options": [
+      { "label": "GEN2 P300 Multi", "value": "p300_multi_gen2" },
+      { "label": "GEN2 P20 Multi", "value": "p20_multi_gen2" },
+      { "label": "GEN1 P1000 Multi", "value": "p1000_multi"},
+      { "label": "GEN1 P300 Multi", "value": "p300_multi" },
+      { "label": "GEN1 P50 Multi", "value": "p50_multi" },
+      { "label": "GEN1 P10 Multi", "value": "p10_multi" },
+      { "label": "none", "value": null}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "left pipette type",
+    "name": "left_pipette",
+    "options": [
+      { "label": "GEN2 P300 Multi", "value": "p300_multi_gen2" },
+      { "label": "GEN2 P20 Multi", "value": "p20_multi_gen2" },
+      { "label": "GEN1 P1000 Multi", "value": "p1000_multi"},
+      { "label": "GEN1 P300 Multi", "value": "p300_multi" },
+      { "label": "GEN1 P50 Multi", "value": "p50_multi" },
+      { "label": "GEN1 P10 Multi", "value": "p10_multi" },
+      { "label": "none", "value": null}
+    ]
+  },
+  {
+  "type": "dropDown",
+  "label": "PCR well plate",
+  "name": "pcr_well_plate",
+  "options": [
+    { "label": "Bio-Rad 96 well 200 uL PCR plate", "value": "biorad_96_wellplate_200ul_pcr"},
+    { "label": "Plate 2", "value": "plate_2" },
+    { "label": "Plate 3", "value": "plate_3" },
+    { "label": "GEN1 P1000 Single", "value": "p1000_single"},
+    { "label": "GEN1 P300 Single", "value": "p300_single" },
+    { "label": "GEN1 P50 Single", "value": "p50_single" },
+    { "label": "GEN1 P10 Single", "value": "p10_single" },
+    { "label": "none", "value": null}
+  ]
+  },
+  {
+    "type": "float",
+    "label": "mastermix volume (in ul)",
+    "name": "mastermix_volume",
+    "default": 18
+  },
+  {
+    "type": "float",
+    "label": "DNA volume (in ul)",
+    "name": "DNA_volume",
+    "default": 2
+  }
+]
