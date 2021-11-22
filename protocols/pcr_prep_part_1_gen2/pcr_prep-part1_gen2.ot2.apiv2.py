@@ -5,6 +5,12 @@ metadata = {
     'apiLevel': '2.2'
 }
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{ "left_pipette":"p1000_single_gen2",
+                                  "right_pipette":"p300_single_gen2",
+                                  "master_mix_csv":"Reagent,Slot,Well,Volume\\nBuffer,1,A2,3\\nMgCl,1,A3,40\\ndNTPs,2,A2,90\\nWater,2,A3,248\\nprimer 1,1,A4,25\\nprimer 2,1,A5,25\\n"}""")
+    return [_all_values[n] for n in names]
 
 def run(protocol_context):
     [left_pipette, right_pipette, master_mix_csv] = get_values(  # noqa: F821
@@ -70,7 +76,8 @@ def run(protocol_context):
         for line in master_mix_csv.splitlines()[1:] if line
     ]
 
-    for line in info_list[1:]:
+    for line in info_list:
+        protocol_context.comment('Transferring ' + line[0] + ' to destination')
         source = reagents[line[1]].wells(line[2].upper())
         vol = float(line[3])
         if pipette_l and pipette_r:
