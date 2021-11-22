@@ -1,3 +1,8 @@
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"num_samples":8,"tip_track":false}""")
+    return [_all_values[n] for n in names]
+
 from opentrons.types import Point
 import json
 import os
@@ -32,6 +37,7 @@ def run(ctx):
     mix_reps = 10
     sample_mixing_time_minutes = 30.0
     mix_volume_percentage = 0.9
+    sample_mixing_blowout_height_from_bottom = 10.0
 
     if TEST_MODE:
         [bead_settling_time, mix_reps, temp_time,
@@ -248,9 +254,10 @@ resuming.')
                     m300.air_gap(20)
             if resuspend:
                 for _ in range(mix_reps):
-                    m300.aspirate(100, m.bottom())
-                    m300.dispense(100, m.bottom().move(Point(
-                        x=side*radius*radial_offset, z=3)))
+                    m300.aspirate(mix_volume_percentage*vol, m.bottom())
+                    m300.dispense(mix_volume_percentage*vol,
+                                  m.bottom().move(
+                                    Point(x=side*radius*radial_offset, z=3)))
             m300.blow_out(m.top())
             m300.air_gap(20)
             if park:
@@ -372,7 +379,7 @@ minutes')
     m300.default_speed = 200
     m300.flow_rate.aspirate = 20
     m300.flow_rate.dispense = 20
-    mixes_per_min = 1.5
+    mixes_per_min = 0.75
     num_mix_cycles = int(sample_mixing_time_minutes*mixes_per_min/num_cols)
     if TEST_MODE or not sample_incubation_mixing:
         num_mix_cycles = 5
@@ -387,7 +394,8 @@ minutes')
                 m300.dispense(sample_vol*mix_volume_percentage,
                               s.bottom().move(Point(
                                 x=side*radius*radial_offset, z=7)))
-                m300.blow_out(s.bottom(s.depth-3))
+                m300.blow_out(
+                    s.bottom(sample_mixing_blowout_height_from_bottom))
             m300.drop_tip(p)
     m300.default_speed = 400
     m300.flow_rate.aspirate = 46.43
