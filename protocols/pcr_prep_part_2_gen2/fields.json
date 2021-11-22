@@ -35,17 +35,22 @@
   },
   {
   "type": "dropDown",
-  "label": "PCR well plate",
-  "name": "pcr_well_plate",
+  "label": "PCR well plate containing template DNA",
+  "name": "DNA_well_plate",
   "options": [
     { "label": "Bio-Rad 96 well 200 uL PCR plate", "value": "biorad_96_wellplate_200ul_pcr"},
-    { "label": "Plate 2", "value": "plate_2" },
-    { "label": "Plate 3", "value": "plate_3" },
-    { "label": "GEN1 P1000 Single", "value": "p1000_single"},
-    { "label": "GEN1 P300 Single", "value": "p300_single" },
-    { "label": "GEN1 P50 Single", "value": "p50_single" },
-    { "label": "GEN1 P10 Single", "value": "p10_single" },
-    { "label": "none", "value": null}
+    { "label": "NEST 96 Well Plate 100 µL PCR Full Skirt", "value": "nest_96_wellplate_100ul_pcr_full_skirt" },
+    { "label": "Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 uL", "value": "opentrons_96_aluminumblock_generic_pcr_strip_200ul" }
+  ]
+  },
+  {
+  "type": "dropDown",
+  "label": "Destination PCR well plate",
+  "name": "destination_well_plate",
+  "options": [
+    { "label": "Bio-Rad 96 well 200 uL PCR plate", "value": "biorad_96_wellplate_200ul_pcr"},
+    { "label": "NEST 96 Well Plate 100 µL PCR Full Skirt", "value": "nest_96_wellplate_100ul_pcr_full_skirt" },
+    { "label": "Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 uL", "value": "opentrons_96_aluminumblock_generic_pcr_strip_200ul" }
   ]
   },
   {
