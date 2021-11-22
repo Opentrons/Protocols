@@ -8,12 +8,34 @@ metadata = {
     }
 
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{ "number_of_samples":"80",
+                                  "left_pipette":"p1000_single_gen2",
+                                  "right_pipette":"p300_single_gen2",
+                                  "mastermix_volume":"18",
+                                  "DNA_volume":"2",
+                                  "DNA_well_plate":"biorad_96_wellplate_200ul_pcr",
+                                  "destination_well_plate":"biorad_96_wellplate_200ul_pcr"}
+                                  """)
+    return [_all_values[n] for n in names]
+
+
 def run(protocol_context):
     [number_of_samples, left_pipette, right_pipette, mastermix_volume,
-     DNA_volume] = get_values(  # noqa: F821
+     DNA_volume, DNA_well_plate, destination_well_plate] \
+      = get_values(  # noqa: F821
         "number_of_samples", "left_pipette", 'right_pipette',
-        "mastermix_volume", "DNA_volume"
+        "mastermix_volume", "DNA_volume",
+        "DNA_well_plate", "destination_well_plate"
      )
+
+    number_of_samples = int(number_of_samples)
+    mastermix_volume = int(mastermix_volume)
+    DNA_volume = int(DNA_volume)
+
+    # TODO: There should be a check here that the selected pipettes can
+    # handle the DNA_volume and the mastermix_volume
 
     if not left_pipette and not right_pipette:
         raise Exception('You have to select at least 1 pipette.')
@@ -40,9 +62,9 @@ def run(protocol_context):
 
     # labware setup
     dna_plate = protocol_context.load_labware(
-        'biorad_96_wellplate_200ul_pcr', '1', 'DNA plate')
+        DNA_well_plate, '1', 'DNA plate')
     dest_plate = protocol_context.load_labware(
-        'biorad_96_wellplate_200ul_pcr', '2', 'Output plate')
+        destination_well_plate, '2', 'Output plate')
     res12 = protocol_context.load_labware(
         'usascientific_12_reservoir_22ml', '3', 'reservoir')
 
@@ -62,16 +84,23 @@ def run(protocol_context):
     # reagent setup
     mastermix = res12.wells()[0]
 
-    col_num = math.ceil(number_of_samples/8)
+    # The assumption here is that the samples will be a multiple of the
+    # number of samples per column, which seems like a bad assumption
+    """col_num = math.ceil(number_of_samples/8)
 
     # distribute mastermix
+    # As the protocol is written it's assumed that the number of
+    # samples are evenly divisible by the number of wells per column, i.e.
+    # the samples
     if pipette_l and pipette_r:
         if mastermix_volume <= pip_s.max_volume:
             pipette = pip_s
         else:
             pipette = pip_l
     pipette.pick_up_tip()
+    import pdb
     for dest in dest_plate.rows()[0][:col_num]:
+        pdb.set_trace()
         pipette.transfer(
             mastermix_volume,
             mastermix,
@@ -79,9 +108,35 @@ def run(protocol_context):
             new_tip='never'
         )
         pipette.blow_out(mastermix.top())
+    pipette.drop_tip()"""
+
+    # Make sure we have a pipette that can handle the volume of mastermix
+    # Ideally the smaller one
+    if pipette_l and pipette_r:
+        """if mastermix_volume <= pip_s.max_volume:
+            pipette = pip_s
+        else:
+            pipette = pip_l"""
+        pipette = pipette_selector(pip_s, pip_l, mastermix_volume)
+    pipette.pick_up_tip()
+
+    # Let's assume that the samples are in column order so that we will go down
+    # the columns first when we distribute the master mix.
+    import pdb
+    protocol_context.comment("Transferring master mix")
+    dest_wells = dest_plate.wells()[:number_of_samples]
+    # pdb.set_trace()
+    for well in dest_wells:
+        pipette.transfer(
+            mastermix_volume,
+            mastermix,
+            well,
+            new_tip='never'
+        )
+        # pipette.blow_out(mastermix.top())
     pipette.drop_tip()
 
-    # transfer DNA
+    """# Transfer DNA
     if pipette_l and pipette_r:
         if DNA_volume <= pip_s.max_volume:
             pipette = pip_s
@@ -89,4 +144,23 @@ def run(protocol_context):
             pipette = pip_l
     for source, dest in zip(dna_plate.rows()[0][:col_num],
                             dest_plate.rows()[0][:col_num]):
+        pipette.transfer(DNA_volume, source, dest)"""
+
+    # Transfer DNA
+    if pipette_l and pipette_r:
+        pipette = pipette_selector(pip_s, pip_l, DNA_volume)
+
+    protocol_context.comment("Transferring DNA")
+    for source, dest in zip(dna_plate.wells()[:number_of_samples],
+                            dest_plate.wells()[:number_of_samples]):
         pipette.transfer(DNA_volume, source, dest)
+
+def pipette_selector(small_pipette, large_pipette, volume):
+    if small_pipette and large_pipette:
+        if volume <= small_pipette.max_volume:
+            return small_pipette
+        elif volume <= right_pipette.max_volume:
+            return large_pipette
+        else:
+            raise Exception("There is no suitable pipette for this a volume of \
+             {} uL".format(volume))
