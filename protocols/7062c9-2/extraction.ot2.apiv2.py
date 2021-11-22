@@ -31,6 +31,7 @@ def run(ctx):
     temp_time = 3.0
     mix_reps = 10
     sample_mixing_time_minutes = 30.0
+    mix_volume_percentage = 0.9
 
     if TEST_MODE:
         [bead_settling_time, mix_reps, temp_time,
@@ -300,8 +301,8 @@ minutes')
             m300.move_to(m.center())
             m300.dispense(vol, loc)
             for _ in range(mix_reps):
-                m300.aspirate(vol*0.8, m.bottom())
-                m300.dispense(vol*0.8, m.bottom().move(Point(
+                m300.aspirate(vol*mix_volume_percentage, m.bottom())
+                m300.dispense(vol*mix_volume_percentage, m.bottom().move(Point(
                     x=side*radius*radial_offset, z=3)))
             m300.transfer(vol, m.bottom(), h, new_tip='never')
             m300.blow_out(h.bottom(h.depth/2))
@@ -380,12 +381,13 @@ minutes')
             _pick_up(m300, p)
             side = 1 if j % 2 == 0 else -1
             loc = s.bottom().move(Point(x=side*radius*radial_offset,
-                                        z=z_offset))
+                                        z=z_offset-1))
             for _ in range(mix_reps):
-                m300.aspirate(sample_vol*0.8, loc)
-                m300.dispense(sample_vol*0.8, s.bottom().move(Point(
-                    x=side*radius*radial_offset, z=7)))
-                m300.blow_out(s.center())
+                m300.aspirate(sample_vol*mix_volume_percentage, loc)
+                m300.dispense(sample_vol*mix_volume_percentage,
+                              s.bottom().move(Point(
+                                x=side*radius*radial_offset, z=7)))
+                m300.blow_out(s.bottom(s.depth-3))
             m300.drop_tip(p)
     m300.default_speed = 400
     m300.flow_rate.aspirate = 46.43
