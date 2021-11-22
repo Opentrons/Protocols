@@ -1,8 +1,3 @@
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"num_samples":8,"tip_track":false}""")
-    return [_all_values[n] for n in names]
-
 from opentrons.types import Point
 import json
 import os
