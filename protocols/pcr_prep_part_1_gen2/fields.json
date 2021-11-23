@@ -29,6 +29,7 @@
       { "label": "none", "value": null}
     ]
   },
+
   {
     "type": "textFile",
     "label": "master mix .csv file",

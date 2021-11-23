@@ -1,24 +1,9 @@
-import math
-
 metadata = {
-    'protocolName': 'PCR Prep',
+    'protocolName': 'PCR Prep part 2',
     'author': 'Opentrons <protocols@opentrons.com>',
     'source': 'Protocol Library',
     'apiLevel': '2.2'
     }
-
-
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{ "number_of_samples":"80",
-                                  "left_pipette":"p1000_single_gen2",
-                                  "right_pipette":"p300_single_gen2",
-                                  "mastermix_volume":"18",
-                                  "DNA_volume":"2",
-                                  "DNA_well_plate":"biorad_96_wellplate_200ul_pcr",
-                                  "destination_well_plate":"biorad_96_wellplate_200ul_pcr"}
-                                  """)
-    return [_all_values[n] for n in names]
 
 
 def run(protocol_context):
@@ -84,32 +69,6 @@ def run(protocol_context):
     # reagent setup
     mastermix = res12.wells()[0]
 
-    # The assumption here is that the samples will be a multiple of the
-    # number of samples per column, which seems like a bad assumption
-    """col_num = math.ceil(number_of_samples/8)
-
-    # distribute mastermix
-    # As the protocol is written it's assumed that the number of
-    # samples are evenly divisible by the number of wells per column, i.e.
-    # the samples
-    if pipette_l and pipette_r:
-        if mastermix_volume <= pip_s.max_volume:
-            pipette = pip_s
-        else:
-            pipette = pip_l
-    pipette.pick_up_tip()
-    import pdb
-    for dest in dest_plate.rows()[0][:col_num]:
-        pdb.set_trace()
-        pipette.transfer(
-            mastermix_volume,
-            mastermix,
-            dest_plate.rows()[0][:col_num],
-            new_tip='never'
-        )
-        pipette.blow_out(mastermix.top())
-    pipette.drop_tip()"""
-
     # Make sure we have a pipette that can handle the volume of mastermix
     # Ideally the smaller one
     if pipette_l and pipette_r:
@@ -120,12 +79,9 @@ def run(protocol_context):
         pipette = pipette_selector(pip_s, pip_l, mastermix_volume)
     pipette.pick_up_tip()
 
-    # Let's assume that the samples are in column order so that we will go down
-    # the columns first when we distribute the master mix.
-    import pdb
+    # Distribute  the master mix to the destination plate from the reservoir
     protocol_context.comment("Transferring master mix")
     dest_wells = dest_plate.wells()[:number_of_samples]
-    # pdb.set_trace()
     for well in dest_wells:
         pipette.transfer(
             mastermix_volume,
@@ -133,20 +89,9 @@ def run(protocol_context):
             well,
             new_tip='never'
         )
-        # pipette.blow_out(mastermix.top())
     pipette.drop_tip()
 
-    """# Transfer DNA
-    if pipette_l and pipette_r:
-        if DNA_volume <= pip_s.max_volume:
-            pipette = pip_s
-        else:
-            pipette = pip_l
-    for source, dest in zip(dna_plate.rows()[0][:col_num],
-                            dest_plate.rows()[0][:col_num]):
-        pipette.transfer(DNA_volume, source, dest)"""
-
-    # Transfer DNA
+    # Transfer DNA to the destination plate
     if pipette_l and pipette_r:
         pipette = pipette_selector(pip_s, pip_l, DNA_volume)
 
@@ -155,12 +100,17 @@ def run(protocol_context):
                             dest_plate.wells()[:number_of_samples]):
         pipette.transfer(DNA_volume, source, dest)
 
+
 def pipette_selector(small_pipette, large_pipette, volume):
+    """
+    This function will return the smallest volume pipette capable
+    of handling the volume parameter.
+    """
     if small_pipette and large_pipette:
         if volume <= small_pipette.max_volume:
             return small_pipette
-        elif volume <= right_pipette.max_volume:
+        elif volume <= large_pipette.max_volume:
             return large_pipette
         else:
-            raise Exception("There is no suitable pipette for this a volume of \
-             {} uL".format(volume))
+            raise Exception(("There is no suitable pipette loaded for "
+                             "pipetting a volume of {} uL").format(volume))
