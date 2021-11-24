@@ -12,22 +12,22 @@ metadata = {
 def run(ctx: protocol_api.ProtocolContext):
 
     [
-     custom_variable1,
-     custom_variable2
+     _custom_variable1,
+     _custom_variable2
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
-        "custom_variable1",
-        "custom_variable2")
+        "_custom_variable1",
+        "_custom_variable2")
 
-    if not 1 <= custom_variable1 <= 12:
+    if not 1 <= _custom_variable1 <= 12:
         raise Exception("Enter a value between 1-12")
 
     # define all custom variables above here with descriptions:
 
     # number of samples
-    custom_variable1 = custom_variable1
+    custom_variable1 = _custom_variable1
 
     # "True" for park tips, "False" for discard tips
-    custom_variable2 = custom_variable2
+    custom_variable2 = _custom_variable2
 
     # load modules
 
