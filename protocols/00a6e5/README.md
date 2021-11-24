@@ -13,6 +13,7 @@ This protocol preps a 96 well plate for an LCMS extraction. The 96 well plate is
 Explanation of complex parameters below:
 * `Number of Samples`: Specify the number of samples (1-96) for this protocol.
 * `P300 Mount`: Specify which mount (left or right) to host the P300 single-channel pipette.
+* `Aspiration height`: Specify the aspiration height for this run. A value of 1mm is the default from the bottom of the well. 
 * `P1000 Mount`: Specify which mount (left or right) to host the P1000 single-channel pipette.
 
 
