@@ -18,8 +18,8 @@ def run(protocol_context):
      )
 
     number_of_samples = int(number_of_samples)
-    mastermix_volume = int(mastermix_volume)
-    DNA_volume = int(DNA_volume)
+    mastermix_volume = float(mastermix_volume)
+    DNA_volume = float(DNA_volume)
 
     if not left_pipette and not right_pipette:
         raise Exception('You have to select at least 1 pipette.')
