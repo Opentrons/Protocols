@@ -1,4 +1,5 @@
 import math
+from opentrons import protocol_api
 
 metadata = {
     'protocolName': 'PCR Prep part 2',
@@ -8,7 +9,7 @@ metadata = {
     }
 
 
-def run(protocol_context):
+def run(protocol_context: protocol_api.ProtocolContext):
     [number_of_samples, left_pipette, right_pipette, mastermix_volume,
      DNA_volume, DNA_well_plate, destination_well_plate] \
       = get_values(  # noqa: F821
@@ -109,10 +110,10 @@ def pipette_selector(small_pipette, large_pipette, volume):
     """
     if small_pipette and large_pipette:
         if (volume <= small_pipette.max_volume
-           and volume <= small_pipette.min_volume):
+           and volume >= small_pipette.min_volume):
             return small_pipette
         elif (volume <= large_pipette.max_volume
-              and volume <= large_pipette.min_volume):
+              and volume >= large_pipette.min_volume):
             return large_pipette
         else:
             raise Exception(("There is no suitable pipette loaded for "
