@@ -15,6 +15,12 @@
     ]
   },
   {
+    "type": "int",
+    "label": "Aspiration Height",
+    "name": "asp_height",
+    "default": 1
+  },
+  {
     "type": "dropDown",
     "label": "P1000 Single-Channel Mount",
     "name": "p1000_mount",
