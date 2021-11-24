@@ -34,8 +34,8 @@
       "label": "standard in use (if necessary)",
       "name": "standard_type",
       "options": [
-        {"label": "TE (2.5ug/ml dilution)", "value": 2.5},
-        {"label": "TR (0.5ug/ml dilution)", "value": 0.5}
+        {"label": "TR (0.5ug/ml dilution)", "value": 0.5},
+        {"label": "TE (2.5ug/ml dilution)", "value": 2.5}
       ]
   },
   {
