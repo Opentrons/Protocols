@@ -9,12 +9,6 @@ metadata = {
  }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"num_samp":12,"p300_mount":"left","p1000_mount":"right", "asp_height":3}""")
-    return [_all_values[n] for n in names]
-
-
 def run(ctx):
 
     [num_samp, asp_height, p300_mount, p1000_mount] = get_values(  # noqa: F821
@@ -28,7 +22,7 @@ def run(ctx):
                     'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap',
                     slot, label='tuberack')
                        for slot in ['4', '5', '1', '2']]
-    plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '3')
+    plate = ctx.load_labware('eppendorf_96_wellplate_2000ul', '3')
     reservoir = ctx.load_labware('nest_12_reservoir_15ml', '11')
     tips1000 = [ctx.load_labware('opentrons_96_filtertiprack_1000ul', '7')]
     tips300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
@@ -59,7 +53,6 @@ def run(ctx):
     full_tube_map = list(itertools.chain.from_iterable(
                          tube_map_nest))[:num_samp_full]
 
-
     # reagents
     methanol = reservoir.wells()[6:]
     buffer = reservoir.wells()[:6]
@@ -89,10 +82,6 @@ def run(ctx):
     spike = spike[:num_tubes_spike]
     enzyme = enzyme[:num_tubes_enzyme]
     water = water[:num_tubes_water]
-
-    for item in [buffer, methanol, spike, enzyme, water]:
-        print(item)
-        ctx.comment('\n\n\n')
 
     # add enzyme to all wells
     p300.pick_up_tip()
