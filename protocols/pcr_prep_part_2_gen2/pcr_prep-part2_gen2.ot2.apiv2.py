@@ -1,3 +1,5 @@
+import math
+
 metadata = {
     'protocolName': 'PCR Prep part 2',
     'author': 'Opentrons <protocols@opentrons.com>',
@@ -18,9 +20,6 @@ def run(protocol_context):
     number_of_samples = int(number_of_samples)
     mastermix_volume = int(mastermix_volume)
     DNA_volume = int(DNA_volume)
-
-    # TODO: There should be a check here that the selected pipettes can
-    # handle the DNA_volume and the mastermix_volume
 
     if not left_pipette and not right_pipette:
         raise Exception('You have to select at least 1 pipette.')
@@ -54,62 +53,66 @@ def run(protocol_context):
         'usascientific_12_reservoir_22ml', '3', 'reservoir')
 
     # determine which pipette has the smaller volume range
-    if pipette_l and pipette_r:
-        if left_pipette == right_pipette:
-            pip_s = pipette_l
-            pip_l = pipette_r
-        else:
-            if pipette_l.max_volume < pipette_r.max_volume:
-                pip_s, pip_l = pipette_l, pipette_r
-            else:
-                pip_s, pip_l = pipette_r, pipette_l
-    else:
-        pipette = pipette_l if pipette_l else pipette_r
+    pip_s, pip_l = rank_pipettes(pipette_l, pipette_r)
 
     # reagent setup
     mastermix = res12.wells()[0]
 
     # Make sure we have a pipette that can handle the volume of mastermix
     # Ideally the smaller one
-    if pipette_l and pipette_r:
-        """if mastermix_volume <= pip_s.max_volume:
-            pipette = pip_s
-        else:
-            pipette = pip_l"""
-        pipette = pipette_selector(pip_s, pip_l, mastermix_volume)
-    pipette.pick_up_tip()
+    pipette = pipette_selector(pip_s, pip_l, mastermix_volume)
 
-    # Distribute  the master mix to the destination plate from the reservoir
+    col_num = math.ceil(number_of_samples/8)
+
     protocol_context.comment("Transferring master mix")
-    dest_wells = dest_plate.wells()[:number_of_samples]
-    for well in dest_wells:
+    pipette.pick_up_tip()
+    for dest in dest_plate.rows()[0][:col_num]:
         pipette.transfer(
             mastermix_volume,
             mastermix,
-            well,
+            dest,
             new_tip='never'
         )
+        pipette.blow_out(mastermix.top())
     pipette.drop_tip()
 
     # Transfer DNA to the destination plate
-    if pipette_l and pipette_r:
-        pipette = pipette_selector(pip_s, pip_l, DNA_volume)
+    pipette = pipette_selector(pip_s, pip_l, DNA_volume)
 
     protocol_context.comment("Transferring DNA")
-    for source, dest in zip(dna_plate.wells()[:number_of_samples],
-                            dest_plate.wells()[:number_of_samples]):
+    for source, dest in zip(dna_plate.rows()[0][:col_num],
+                            dest_plate.rows()[0][:col_num]):
         pipette.transfer(DNA_volume, source, dest)
+
+
+def rank_pipettes(pipette_l, pipette_r):
+    """
+    Given two pipettes this function will return them in the order of smallest
+    to largest. This function assumes that error checking for cases where
+    no pipettes were loaded was already done.
+    """
+    if not pipette_l:
+        return [pipette_r, pipette_r]
+    elif not pipette_r:
+        return [pipette_l, pipette_l]
+    else:
+        if pipette_l.max_volume <= pipette_r.max_volume:
+            return [pipette_l, pipette_r]
+        else:
+            return [pipette_r, pipette_l]
 
 
 def pipette_selector(small_pipette, large_pipette, volume):
     """
     This function will return the smallest volume pipette capable
-    of handling the volume parameter.
+    of handling the given volume parameter.
     """
     if small_pipette and large_pipette:
-        if volume <= small_pipette.max_volume:
+        if (volume <= small_pipette.max_volume
+           and volume <= small_pipette.min_volume):
             return small_pipette
-        elif volume <= large_pipette.max_volume:
+        elif (volume <= large_pipette.max_volume
+              and volume <= large_pipette.min_volume):
             return large_pipette
         else:
             raise Exception(("There is no suitable pipette loaded for "
