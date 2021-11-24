@@ -42,7 +42,7 @@ This is a protocol for the Flu Ribogreen Assay protocol. Samples are aligned in 
 
 ### Deck Setup
 This example starting deck state shows the layout for 24 samples:  
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2ed4de-2/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2ed4de-2/deck-buff.png)
 
 * green on sample tuberack: samples
 * blue on reagent reservoir: working standard
