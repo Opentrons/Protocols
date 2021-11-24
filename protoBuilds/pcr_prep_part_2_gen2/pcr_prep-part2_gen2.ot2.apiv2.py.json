@@ -1,0 +1,199 @@
+{
+    "content": "import math\n\nmetadata = {\n    'protocolName': 'PCR Prep part 2',\n    'author': 'Opentrons <protocols@opentrons.com>',\n    'source': 'Protocol Library',\n    'apiLevel': '2.2'\n    }\n\n\ndef run(protocol_context):\n    [number_of_samples, left_pipette, right_pipette, mastermix_volume,\n     DNA_volume, DNA_well_plate, destination_well_plate] \\\n      = get_values(  # noqa: F821\n        \"number_of_samples\", \"left_pipette\", 'right_pipette',\n        \"mastermix_volume\", \"DNA_volume\",\n        \"DNA_well_plate\", \"destination_well_plate\"\n     )\n\n    number_of_samples = int(number_of_samples)\n    mastermix_volume = int(mastermix_volume)\n    DNA_volume = int(DNA_volume)\n\n    if not left_pipette and not right_pipette:\n        raise Exception('You have to select at least 1 pipette.')\n\n    pipette_l = None\n    pipette_r = None\n\n    for pip, mount, slots in zip(\n            [left_pipette, right_pipette],\n            ['left', 'right'],\n            [['5', '6'], ['7', '8']]):\n\n        if pip:\n            range = pip.split('_')[0][1:]\n            rack = 'opentrons_96_tiprack_' + range + 'ul'\n            tipracks = [\n                protocol_context.load_labware(rack, slot) for slot in slots]\n            if mount == 'left':\n                pipette_l = protocol_context.load_instrument(\n                    pip, mount, tip_racks=tipracks)\n            else:\n                pipette_r = protocol_context.load_instrument(\n                    pip, mount, tip_racks=tipracks)\n\n    # labware setup\n    dna_plate = protocol_context.load_labware(\n        DNA_well_plate, '1', 'DNA plate')\n    dest_plate = protocol_context.load_labware(\n        destination_well_plate, '2', 'Output plate')\n    res12 = protocol_context.load_labware(\n        'usascientific_12_reservoir_22ml', '3', 'reservoir')\n\n    # determine which pipette has the smaller volume range\n    pip_s, pip_l = rank_pipettes(pipette_l, pipette_r)\n\n    # reagent setup\n    mastermix = res12.wells()[0]\n\n    # Make sure we have a pipette that can handle the volume of mastermix\n    # Ideally the smaller one\n    pipette = pipette_selector(pip_s, pip_l, mastermix_volume)\n\n    col_num = math.ceil(number_of_samples/8)\n\n    protocol_context.comment(\"Transferring master mix\")\n    pipette.pick_up_tip()\n    for dest in dest_plate.rows()[0][:col_num]:\n        pipette.transfer(\n            mastermix_volume,\n            mastermix,\n            dest,\n            new_tip='never'\n        )\n        pipette.blow_out(mastermix.top())\n    pipette.drop_tip()\n\n    # Transfer DNA to the destination plate\n    pipette = pipette_selector(pip_s, pip_l, DNA_volume)\n\n    protocol_context.comment(\"Transferring DNA\")\n    for source, dest in zip(dna_plate.rows()[0][:col_num],\n                            dest_plate.rows()[0][:col_num]):\n        pipette.transfer(DNA_volume, source, dest)\n\n\ndef rank_pipettes(pipette_l, pipette_r):\n    \"\"\"\n    Given two pipettes this function will return them in the order of smallest\n    to largest. This function assumes that error checking for cases where\n    no pipettes were loaded was already done.\n    \"\"\"\n    if not pipette_l:\n        return [pipette_r, pipette_r]\n    elif not pipette_r:\n        return [pipette_l, pipette_l]\n    else:\n        if pipette_l.max_volume <= pipette_r.max_volume:\n            return [pipette_l, pipette_r]\n        else:\n            return [pipette_r, pipette_l]\n\n\ndef pipette_selector(small_pipette, large_pipette, volume):\n    \"\"\"\n    This function will return the smallest volume pipette capable\n    of handling the given volume parameter.\n    \"\"\"\n    if small_pipette and large_pipette:\n        if (volume <= small_pipette.max_volume\n           and volume <= small_pipette.min_volume):\n            return small_pipette\n        elif (volume <= large_pipette.max_volume\n              and volume <= large_pipette.min_volume):\n            return large_pipette\n        else:\n            raise Exception((\"There is no suitable pipette loaded for \"\n                             \"pipetting a volume of {} uL\").format(volume))\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 96,
+            "label": "sample number",
+            "name": "number_of_samples",
+            "type": "int"
+        },
+        {
+            "label": "right pipette type",
+            "name": "right_pipette",
+            "options": [
+                {
+                    "label": "GEN2 P300 Multi",
+                    "value": "p300_multi_gen2"
+                },
+                {
+                    "label": "GEN2 P20 Multi",
+                    "value": "p20_multi_gen2"
+                },
+                {
+                    "label": "GEN1 P1000 Multi",
+                    "value": "p1000_multi"
+                },
+                {
+                    "label": "GEN1 P300 Multi",
+                    "value": "p300_multi"
+                },
+                {
+                    "label": "GEN1 P50 Multi",
+                    "value": "p50_multi"
+                },
+                {
+                    "label": "GEN1 P10 Multi",
+                    "value": "p10_multi"
+                },
+                {
+                    "label": "none",
+                    "value": null
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "left pipette type",
+            "name": "left_pipette",
+            "options": [
+                {
+                    "label": "GEN2 P300 Multi",
+                    "value": "p300_multi_gen2"
+                },
+                {
+                    "label": "GEN2 P20 Multi",
+                    "value": "p20_multi_gen2"
+                },
+                {
+                    "label": "GEN1 P1000 Multi",
+                    "value": "p1000_multi"
+                },
+                {
+                    "label": "GEN1 P300 Multi",
+                    "value": "p300_multi"
+                },
+                {
+                    "label": "GEN1 P50 Multi",
+                    "value": "p50_multi"
+                },
+                {
+                    "label": "GEN1 P10 Multi",
+                    "value": "p10_multi"
+                },
+                {
+                    "label": "none",
+                    "value": null
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "PCR well plate containing template DNA",
+            "name": "DNA_well_plate",
+            "options": [
+                {
+                    "label": "Bio-Rad 96 well 200 uL PCR plate",
+                    "value": "biorad_96_wellplate_200ul_pcr"
+                },
+                {
+                    "label": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt",
+                    "value": "nest_96_wellplate_100ul_pcr_full_skirt"
+                },
+                {
+                    "label": "Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 uL",
+                    "value": "opentrons_96_aluminumblock_generic_pcr_strip_200ul"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Destination PCR well plate",
+            "name": "destination_well_plate",
+            "options": [
+                {
+                    "label": "Bio-Rad 96 well 200 uL PCR plate",
+                    "value": "biorad_96_wellplate_200ul_pcr"
+                },
+                {
+                    "label": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt",
+                    "value": "nest_96_wellplate_100ul_pcr_full_skirt"
+                },
+                {
+                    "label": "Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 uL",
+                    "value": "opentrons_96_aluminumblock_generic_pcr_strip_200ul"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 18,
+            "label": "mastermix volume (in ul)",
+            "name": "mastermix_volume",
+            "type": "float"
+        },
+        {
+            "default": 2,
+            "label": "DNA volume (in ul)",
+            "name": "DNA_volume",
+            "type": "float"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_multi_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p300_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "DNA plate on 1",
+            "share": false,
+            "slot": "1",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Output plate on 2",
+            "share": false,
+            "slot": "2",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "reservoir on 3",
+            "share": false,
+            "slot": "3",
+            "type": "usascientific_12_reservoir_22ml"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.2",
+        "author": "Opentrons <protocols@opentrons.com>",
+        "protocolName": "PCR Prep part 2",
+        "source": "Protocol Library"
+    },
+    "modules": []
+}
