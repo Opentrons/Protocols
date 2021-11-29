@@ -11,11 +11,11 @@ metadata = {
 
 def run(protocol):
     [number_of_samples_to_process, p300_multi_mount,
-    volume_of_beads_in_ul, bead_separation_time_in_minutes,
-    mix_repetitions] = get_values(  # noqa: F821
-    'number_of_samples_to_process', 'p300_multi_mount',
-    'volume_of_beads_in_ul', 'bead_separation_time_in_minutes',
-    'mix_repetitions')
+        volume_of_beads_in_ul, bead_separation_time_in_minutes,
+        mix_repetitions] = get_values(  # noqa: F821
+        'number_of_samples_to_process', 'p300_multi_mount',
+        'volume_of_beads_in_ul', 'bead_separation_time_in_minutes',
+        'mix_repetitions')
 
     deep_name = 'nest_96_wellplate_2ml_deep'
 

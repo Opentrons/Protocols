@@ -16,7 +16,7 @@ def run(ctx):
     [num_samples, tip_track] = get_values(  # noqa: F821
         'num_samples', 'tip_track')
 
-    bead_vol = 100.0
+    bead_vol = 125.0
     sample_vol = 110.0
     park_tips = True
     sample_incubation_mixing = True
@@ -31,6 +31,8 @@ def run(ctx):
     temp_time = 3.0
     mix_reps = 10
     sample_mixing_time_minutes = 30.0
+    mix_volume_percentage = 0.9
+    sample_mixing_blowout_height_from_bottom = 10.0
 
     if TEST_MODE:
         [bead_settling_time, mix_reps, temp_time,
@@ -96,7 +98,6 @@ def run(ctx):
     magdeck.disengage()  # just in case
     tempdeck.set_temperature(85)
 
-    m300.flow_rate.aspirate = 50
     ctx._implementation._hw_manager.hardware._attached_instruments[
         m300._implementation.get_mount()].update_config_item(
             'pick_up_current', 0.5)
@@ -186,7 +187,6 @@ resuming.')
                 waste_vol = 0
             waste_vol += vol
 
-        m300.flow_rate.aspirate = 30
         num_trans = math.ceil(vol/200)
         vol_per_trans = vol/num_trans
         for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
@@ -240,8 +240,6 @@ resuming.')
             if not m300.has_tip:
                 _pick_up(m300)
             side = 1 if i % 2 == 0 else -1
-            loc = m.bottom().move(Point(x=side*radius*radial_offset,
-                                        z=z_offset))
             for n in range(num_trans):
                 if m300.current_volume > 0:
                     m300.dispense(m300.current_volume, source.top())
@@ -251,9 +249,10 @@ resuming.')
                     m300.air_gap(20)
             if resuspend:
                 for _ in range(mix_reps):
-                    m300.aspirate(150, loc)
-                    m300.dispense(150, m.bottom().move(Point(
-                        x=side*radius*radial_offset, z=3)))
+                    m300.aspirate(mix_volume_percentage*vol, m.bottom())
+                    m300.dispense(mix_volume_percentage*vol,
+                                  m.bottom().move(
+                                    Point(x=side*radius*radial_offset, z=3)))
             m300.blow_out(m.top())
             m300.air_gap(20)
             if park:
@@ -300,14 +299,13 @@ minutes')
             side = 1 if i % 2 == 0 else -1
             loc = m.bottom().move(Point(x=side*radius*radial_offset,
                                         z=z_offset))
-            m300.flow_rate.aspirate = 30
             m300.aspirate(vol*1.2, h)
             m300.move_to(m.center())
             m300.dispense(vol, loc)
             for _ in range(mix_reps):
-                m300.aspirate(vol*0.8, loc)
-                m300.dispense(vol*0.8, m.bottom().move(Point(
-                    x=side*radius*radial_offset, z=7)))
+                m300.aspirate(vol*mix_volume_percentage, m.bottom())
+                m300.dispense(vol*mix_volume_percentage, m.bottom().move(Point(
+                    x=side*radius*radial_offset, z=3)))
             m300.transfer(vol, m.bottom(), h, new_tip='never')
             m300.blow_out(h.bottom(h.depth/2))
             if park:
@@ -374,9 +372,9 @@ minutes')
         m300.drop_tip(p)
 
     m300.default_speed = 200
-    m300.flow_rate.aspirate = 20
-    m300.flow_rate.dispense = 20
-    mixes_per_min = 1.5
+    m300.flow_rate.aspirate = 46.43
+    m300.flow_rate.dispense = 92.86
+    mixes_per_min = 0.75
     num_mix_cycles = int(sample_mixing_time_minutes*mixes_per_min/num_cols)
     if TEST_MODE or not sample_incubation_mixing:
         num_mix_cycles = 5
@@ -385,16 +383,16 @@ minutes')
             _pick_up(m300, p)
             side = 1 if j % 2 == 0 else -1
             loc = s.bottom().move(Point(x=side*radius*radial_offset,
-                                        z=z_offset))
+                                        z=z_offset-1))
             for _ in range(mix_reps):
-                m300.aspirate(sample_vol*0.8, loc)
-                m300.dispense(sample_vol*0.8, s.bottom().move(Point(
-                    x=side*radius*radial_offset, z=7)))
-                m300.blow_out(s.center())
+                m300.aspirate(sample_vol*mix_volume_percentage, loc)
+                m300.dispense(sample_vol*mix_volume_percentage,
+                              s.bottom().move(Point(
+                                x=side*radius*radial_offset, z=7)))
+                m300.blow_out(
+                    s.bottom(sample_mixing_blowout_height_from_bottom))
             m300.drop_tip(p)
     m300.default_speed = 400
-    m300.flow_rate.aspirate = 30
-    m300.flow_rate.dispense = 92.86
     magdeck.engage(mag_height)
     ctx.delay(minutes=bead_settling_time)
     remove_supernatant(sample_vol, park=park_tips)
