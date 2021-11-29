@@ -8,7 +8,7 @@ metadata = {
 
 def run(protocol):
     [mount, tiptype, samps, lwaste] = get_values(  # noqa: F821
-    'mount', 'tiptype', 'samps', 'lwaste')
+        'mount', 'tiptype', 'samps', 'lwaste')
 
     # load labware and pipettes
     magdeck = protocol.load_module('magdeck', '1')

@@ -1,5 +1,11 @@
 [
   {
+      "type": "float",
+      "label": "number of samples",
+      "name": "num_samples",
+      "default": 8
+  },
+  {
       "type": "dropDown",
       "label": "reagent labware",
       "name": "reagent_labware",
