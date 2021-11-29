@@ -68,12 +68,6 @@
     "default": 10
   },
   {
-    "type": "int",
-    "label": "number of samples",
-    "name": "num_of_samples",
-    "default": 8
-  },
-  {
     "type": "float",
     "label": "total mixing volume (in uL)",
     "name": "total_mixing_volume",
