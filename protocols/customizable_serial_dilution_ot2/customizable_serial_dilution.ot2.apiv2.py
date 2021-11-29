@@ -29,10 +29,13 @@ def run(protocol_context):
             'trough_type', 'num_of_samples'
         )
 
+    transfer_volume = total_mixing_volume/dilution_factor
+    diluent_volume = total_mixing_volume - transfer_volume
+
     # labware
     trough = protocol_context.load_labware(
         'trough_type', '2')
-    liquid_trash = trough.wells()[0]
+    liquid_trash = trough.wells()[0]  # Todo: I have to stick to multi-well?
     plate = protocol_context.load_labware(
         'plate_type', '3')
     tiprack = [
@@ -45,8 +48,9 @@ def run(protocol_context):
     pipette = protocol_context.load_instrument(
         pipette_type, mount='left', tip_racks=tiprack)
 
-    transfer_volume = total_mixing_volume/dilution_factor
-    diluent_volume = total_mixing_volume - transfer_volume
+    # Error checking
+    pipette_min_vol_error_check(pipette, transfer_volume, "transfer")
+    pipette_min_vol_error_check(pipette, diluent_volume, "diluent")
 
     if pip_name == 'multi':
 
@@ -119,5 +123,10 @@ def run(protocol_context):
                 pipette.drop_tip()
 
 
-def match_tiprack(pipette_key):
-    print(pipette_key)
+def pipette_min_vol_error_check(pipette, volume, message):
+    """This function checks if the volumes to be pipetted are compatible with
+    the minimum volumes of the choosen pipette"""
+    if volume < pipette.min_volume:
+        raise Exception(("The selected pipette cannot pipette "
+                         "a {} volume of {} uL because the volume "
+                         "is too small for it.").format(message, volume))
