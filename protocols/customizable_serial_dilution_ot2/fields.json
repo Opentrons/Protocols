@@ -31,9 +31,11 @@
     "label": "Trough type",
     "name": "trough_type",
     "options": [
-      { "label": "Corning 97 well plate 360 uL flat", "value": "corning_96_wellplate_360ul_flat" },
-      { "label": "nest_96_wellplate_200ul_flat", "value": "NEST 96 well plate 200 uL" },
-      { "label": "NEST 96 Deepwell Plate 2mL", "value": "nest_96_wellplate_2ml_deep" },
+      { "label": "USA Scientific 12 Well Reservoir 22 mL", "value": "usascientific_12_reservoir_22ml" },
+      { "label": "Agilent 1 Well Reservoir 290 mL", "value": "agilent_1_reservoir_290ml" },
+      { "label": "Axygen 1 Well Reservoir 90 mL", "value": "axygen_1_reservoir_90ml" },
+      { "label": "NEST 12 Well Reservoir 15 mL", "value": "nest_12_reservoir_15ml" },
+      { "label": "NEST 1 Well Reservoir 195 mL", "value": "nest_1_reservoir_195ml" },
     ]
   },
   {
