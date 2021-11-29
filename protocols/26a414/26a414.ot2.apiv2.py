@@ -8,7 +8,7 @@ metadata = {
 
 def run(protocol):
     [v_csv, p10_mnt, p50_mnt] = get_values(  # noqa: F821
-    'v_csv', 'p10_mnt', 'p50_mnt')
+        'v_csv', 'p10_mnt', 'p50_mnt')
 
     # create pipettes and labware
     tips10 = protocol.load_labware(

@@ -11,7 +11,7 @@ metadata = {
 
 def run(protocol):
     [samps, mnt20, m1k, reagent_labware] = get_values(  # noqa: F821
-    'samps', 'mnt20', 'm1k', 'reagent_labware')
+        'samps', 'mnt20', 'm1k', 'reagent_labware')
 
     # load labware and pipettes
     if samps > 16:

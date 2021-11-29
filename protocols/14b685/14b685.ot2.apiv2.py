@@ -10,7 +10,7 @@ metadata = {
 
 def run(protocol):
     [p300mnt, p20mnt, mag_mod, num_samples, s_vol] = get_values(  # noqa: F821
-    'p300mnt', 'p20mnt', 'mag_mod', 'num_samples', 's_vol')
+        'p300mnt', 'p20mnt', 'mag_mod', 'num_samples', 's_vol')
 
     # load labware and pipette
     magDeck = protocol.load_module(mag_mod, '10')
