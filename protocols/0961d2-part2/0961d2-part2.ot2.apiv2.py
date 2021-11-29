@@ -8,7 +8,7 @@ metadata = {
 
 def run(protocol):
     [p10_mnt, num_pl] = get_values(  # noqa: F821
-    'p10_mnt', 'num_pl')
+        'p10_mnt', 'num_pl')
 
     # check for correct number of plates
     if num_pl > 4 or num_pl < 1:

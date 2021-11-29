@@ -8,7 +8,7 @@ metadata = {
 
 def run(protocol):
     [p10mnt] = get_values(  # noqa: F821
-    'p10mnt')
+        'p10mnt')
 
     # load labware and pipettes
     res = protocol.load_labware('nest_12_reservoir_15ml', '1')

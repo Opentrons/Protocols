@@ -8,7 +8,7 @@ metadata = {
 
 def run(protocol):
     [samp_num, p50mnt, p1kmnt, mag_time, water_vol] = get_values(  # noqa: F821
-    'samp_num', 'p50mnt', 'p1kmnt', 'mag_time', 'water_vol')
+        'samp_num', 'p50mnt', 'p1kmnt', 'mag_time', 'water_vol')
 
     # load labware and pipettes
     tips1k = [protocol.load_labware(
