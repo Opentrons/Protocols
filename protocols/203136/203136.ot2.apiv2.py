@@ -8,7 +8,7 @@ metadata = {
 
 def run(protocol):
     [p300mnt, p50mnt, samp_no] = get_values(  # noqa: F821
-    'p300mnt', 'p50mnt', 'samp_no')
+        'p300mnt', 'p50mnt', 'samp_no')
 
     # load labware and pipettes
     tips = [protocol.load_labware('opentrons_96_filtertiprack_200ul', s)

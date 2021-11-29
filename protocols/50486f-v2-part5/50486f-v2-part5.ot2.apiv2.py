@@ -8,7 +8,7 @@ metadata = {
 
 def run(protocol):
     [p20_mount, tip_strategy] = get_values(  # noqa: F821
-    'p20_mount', 'tip_strategy')
+        'p20_mount', 'tip_strategy')
 
     ctp = 'custom_pcr_plate_for_tempdeck'
 

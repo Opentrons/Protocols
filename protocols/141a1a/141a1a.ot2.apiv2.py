@@ -10,7 +10,7 @@ metadata = {
 
 def run(protocol):
     [mm_csv, noRep, noCe, noBlank, p20mnt, p300mnt] = get_values(  # noqa: F821
-    'mm_csv', 'noRep', 'noCe', 'noBlank', 'p20mnt', 'p300mnt')
+        'mm_csv', 'noRep', 'noCe', 'noBlank', 'p20mnt', 'p300mnt')
 
     # Sanity checks - raise exceptions, if needed
     if noRep < 1 or noRep > 3:

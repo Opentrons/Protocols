@@ -8,7 +8,7 @@ metadata = {
 
 def run(protocol):
     [p10_mnt] = get_values(  # noqa: F821
-    'p10_mnt')
+        'p10_mnt')
 
     # create pipettes and labware
     tips10 = [protocol.load_labware('opentrons_96_filtertiprack_10ul', str(s))
