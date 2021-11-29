@@ -11,6 +11,16 @@
     ]
   },
   {
+    "type": "dropDown",
+    "label": "Dilution plate type",
+    "name": "plate_type",
+    "options": [
+      { "label": "Corning 97 well plate 360 uL flat", "value": "corning_96_wellplate_360ul_flat" },
+      { "label": "nest_96_wellplate_200ul_flat", "value": "NEST 96 well plate 200 uL" },
+      { "label": "NEST 96 Deepwell Plate 2mL", "value": "nest_96_wellplate_2ml_deep" },
+    ]
+  },
+  {
     "type": "float",
     "label": "dilution factor",
     "name": "dilution_factor",
@@ -21,6 +31,12 @@
     "label": "number of dilutions",
     "name": "num_of_dilutions",
     "default": 10
+  },
+  {
+    "type": "int",
+    "label": "number of samples",
+    "name": "num_of_samples",
+    "default": 8
   },
   {
     "type": "float",
