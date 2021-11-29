@@ -6,19 +6,35 @@ metadata = {
     }
 
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{ "pipette_type":"p300_single",
+                                  "dilution_factor":"1.5",
+                                  "num_of_dilutions":"11",
+                                  "total_mixing_volume":"200",
+                                  "tip_use_strategy":"never",
+                                  "plate_type":"corning_96_wellplate_360ul_flat",
+                                  "trough_type":"usascientific_12_reservoir_22ml"}
+                                  "num_of_samples":"8"}
+                                  """)
+    return [_all_values[n] for n in names]
+
+
 def run(protocol_context):
     [pipette_type, dilution_factor, num_of_dilutions, total_mixing_volume,
-        tip_use_strategy] = get_values(  # noqa: F821
+        tip_use_strategy, plate_type, trough_type,
+        num_of_samples] = get_values(  # noqa: F821
             'pipette_type', 'dilution_factor', 'num_of_dilutions',
-            'total_mixing_volume', 'tip_use_strategy'
+            'total_mixing_volume', 'tip_use_strategy', 'plate_type',
+            'trough_type', 'num_of_samples'
         )
 
     # labware
     trough = protocol_context.load_labware(
-        'usascientific_12_reservoir_22ml', '2')
+        'trough_type', '2')
     liquid_trash = trough.wells()[0]
     plate = protocol_context.load_labware(
-        'corning_96_wellplate_360ul_flat', '3')
+        'plate_type', '3')
     tiprack = [
         protocol_context.load_labware('opentrons_96_tiprack_300ul', slot)
         for slot in ['1', '4']
@@ -101,3 +117,7 @@ def run(protocol_context):
 
             if tip_use_strategy == 'never':
                 pipette.drop_tip()
+
+
+def match_tiprack(pipette_key):
+    print(pipette_key)
