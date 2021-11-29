@@ -15,7 +15,6 @@ def get_values(*names):
                                   "tip_use_strategy":"never",
                                   "plate_type":"corning_96_wellplate_360ul_flat",
                                   "trough_type":"usascientific_12_reservoir_22ml"}
-                                  "num_of_samples":"8"}
                                   """)
     return [_all_values[n] for n in names]
 
@@ -26,7 +25,7 @@ def run(protocol_context):
         num_of_samples] = get_values(  # noqa: F821
             'pipette_type', 'dilution_factor', 'num_of_dilutions',
             'total_mixing_volume', 'tip_use_strategy', 'plate_type',
-            'trough_type', 'num_of_samples'
+            'trough_type'
         )
 
     transfer_volume = total_mixing_volume/dilution_factor
