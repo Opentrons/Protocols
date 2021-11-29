@@ -10,7 +10,7 @@ metadata = {
 
 def run(protocol):
     [p_csv, num_samples, ex_opti] = get_values(  # noqa: F821
-    'p_csv', 'num_samples', 'ex_opti')
+        'p_csv', 'num_samples', 'ex_opti')
 
     # load labware and pipettes
     tip20 = [

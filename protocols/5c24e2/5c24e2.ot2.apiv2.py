@@ -8,7 +8,7 @@ metadata = {
 
 def run(protocol):
     [pip_type, pipmnt, s_vol, sec_plate, p384] = get_values(  # noqa: F821
-    'pip_type', 'pipmnt', 's_vol', 'sec_plate', 'p384')
+        'pip_type', 'pipmnt', 's_vol', 'sec_plate', 'p384')
 
     # load labware and pipettes
     tips = [
