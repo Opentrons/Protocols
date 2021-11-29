@@ -10,7 +10,7 @@ metadata = {
 
 def run(protocol):
     [p50_mnt, p300_mnt, samps] = get_values(  # noqa: F821
-    'p50_mnt', 'p300_mnt', 'samps')
+        'p50_mnt', 'p300_mnt', 'samps')
 
     # load labware and pipette
     pip50 = protocol.load_instrument('p50_multi', p50_mnt)
