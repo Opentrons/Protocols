@@ -10,9 +10,9 @@ metadata = {
 
 def run(protocol):
     [num_samples, rm_num, mm_vol, samp_vol,
-    single_pip_info, multi_pip_info] = get_values(  # noqa: F821
-    'num_samples', 'rm_num', 'mm_vol', 'samp_vol',
-    'single_pip_info', 'multi_pip_info')
+     single_pip_info, multi_pip_info] = get_values(  # noqa: F821
+        'num_samples', 'rm_num', 'mm_vol', 'samp_vol',
+        'single_pip_info', 'multi_pip_info')
 
     rm_num = int(rm_num)
 
