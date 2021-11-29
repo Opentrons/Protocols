@@ -52,7 +52,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     labware_name = ctx.load_labware('{loadname}', '{slot number}')
 
-    If loading labware on a module, load with:
+    If loading labware on a module, you can load with:
 
     labware_name = module_name.load_labware('{loadname}')
     where module_name is defined above.
