@@ -10,7 +10,7 @@ metadata = {
 
 def run(protocol):
     [p300mnt, num_samples] = get_values(  # noqa: F821
-    'p300mnt', 'num_samples')
+        'p300mnt', 'num_samples')
 
     # load labware and pipettes
     num_cols = math.ceil(num_samples/8)

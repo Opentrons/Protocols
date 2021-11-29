@@ -8,7 +8,7 @@ metadata = {
 
 def run(protocol):
     [mnt, vol, cols] = get_values(  # noqa: F821
-    'mnt', 'vol', 'cols')
+        'mnt', 'vol', 'cols')
 
     # load labware and pipettes
     p300 = protocol.load_instrument('p300_multi_gen2', mount=mnt)
