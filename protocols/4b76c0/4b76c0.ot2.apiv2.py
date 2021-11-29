@@ -33,7 +33,7 @@ def well_csv_to_list(csv_string):
 
 def run(protocol):
     [volumes_csv, p10mnt] = get_values(  # noqa: F821
-    'volumes_csv', 'p10mnt')
+        'volumes_csv', 'p10mnt')
 
     # load labware and pipettes
 

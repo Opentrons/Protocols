@@ -11,7 +11,7 @@ metadata = {
 def run(ctx):
 
     [num_samples, mm_vol, sample_vol, m20_mount,
-        p20_mount] = get_values(  # noqa: F821
+     p20_mount] = get_values(  # noqa: F821
         'num_samples', 'mm_vol', 'sample_vol', 'm20_mount', 'p20_mount')
 
     # labware and modules

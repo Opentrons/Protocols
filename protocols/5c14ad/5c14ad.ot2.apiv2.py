@@ -8,7 +8,7 @@ metadata = {
 
 def run(protocol):
     [lysis, pip_type, pip_mnt, no_plates, tip_no] = get_values(  # noqa: F821
-    'lysis', 'pip_type', 'pip_mnt', 'no_plates', 'tip_no')
+        'lysis', 'pip_type', 'pip_mnt', 'no_plates', 'tip_no')
 
     # load labware
     tips = protocol.load_labware('generic_96_tiprack_200ul', '1', 'Tips')

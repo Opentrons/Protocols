@@ -49,7 +49,7 @@ def run(protocol: protocol_api.ProtocolContext):
 
     # process csv
     csv_data = [
-        l.split(',') for l in transfer_csv.strip().splitlines() if l][1:]
+        el.split(',') for el in transfer_csv.strip().splitlines() if el][1:]
 
     # optional prefill (should be caught by exception above if not working)
     if prefill:
@@ -85,11 +85,11 @@ def run(protocol: protocol_api.ProtocolContext):
 
     for lst in lst_of_lsts:
         totalVol = 0
-        for l in lst:
-            totalVol += l[2]
+        for el in lst:
+            totalVol += el[2]
         p1000.aspirate(totalVol, buffer)
-        for l in lst:
-            p1000.dispense(l[2], outputs[l[0]][l[1]])
+        for el in lst:
+            p1000.dispense(el[2], outputs[el[0]][el[1]])
 
     p1000.drop_tip()
 

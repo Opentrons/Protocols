@@ -8,7 +8,7 @@ metadata = {
 
 def run(protocol):
     [pip_type, pip_mnt, tt_asp, tt_disp] = get_values(  # noqa: F821
-    'pip_type', 'pip_mnt', 'tt_asp', 'tt_disp')
+        'pip_type', 'pip_mnt', 'tt_asp', 'tt_disp')
 
     # load labware
     tips = protocol.load_labware('opentrons_96_filtertiprack_200ul', '1')

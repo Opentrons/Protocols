@@ -11,14 +11,15 @@ metadata = {
 
 def run(ctx):
 
-    [reagent_labware, starting_conc, prepare_standard, p1000_mount,
-     p300_mount] = get_values(  # noqa: F821
-        'reagent_labware', 'starting_conc', 'prepare_standard', 'p1000_mount',
-        'p300_mount')
+    [num_samples, reagent_labware, starting_conc, prepare_standard,
+     p1000_mount, p300_mount] = get_values(  # noqa: F821
+        'num_samples', 'reagent_labware', 'starting_conc', 'prepare_standard',
+        'p1000_mount', 'p300_mount')
 
     final_transfer_vol = 100
     sample_vol = 25
     max_working_vol = 1000
+    mix_reps = 10
     max_factor_1_dil = max_working_vol/sample_vol
 
     # load labwarex
@@ -75,7 +76,7 @@ def run(ctx):
     assay_buffer_1 = reagent_labware.wells()[1]
     working_standard_2 = reagent_labware.wells()[10]
     assay_buffer_2 = reagent_labware.wells()[11]
-    starting_samples = sample_rack.wells()[:8]
+    starting_samples = sample_rack.wells()[:num_samples]
     samples_1 = deepplate.columns()[3:6]
     samples_2 = deepplate.columns()[9:]
 
@@ -98,7 +99,7 @@ def run(ctx):
         p300.mix(1, 100, dilution_col[5].bottom(3))
         drop(p300)
         p1000.pick_up_tip()
-        p1000.mix(5, 800, dilution_col[5])
+        p1000.mix(mix_reps, 800, dilution_col[5])
         drop(p1000)
 
     def dilute(final_conc, dil_set, buffer):
@@ -112,7 +113,7 @@ def run(ctx):
         # pre add diluent
         for i, factor in enumerate(factors):
             dil_vol = (factor-1)*sample_vol*(i+1)
-            for well in dil_set[i]:
+            for well in dil_set[i][:num_samples]:
                 p1000.pick_up_tip()
                 p1000.transfer(dil_vol, buffer, well, new_tip='never')
                 drop(p1000)
@@ -133,7 +134,7 @@ def run(ctx):
             total_vol = sample_vol*(i+1)*factor
             mix_vol = total_vol*0.8 if total_vol*0.8 <= 175 else 175
             if i == 0:
-                p300.mix(5, mix_vol, dil_set[i][0])
+                p300.mix(mix_reps, mix_vol, dil_set[i][0])
             else:
                 p300.transfer(sample_vol*(i+1), dil_set[i-1][0].bottom(3),
                               dil_set[i][0].bottom(3),
@@ -176,5 +177,6 @@ def run(ctx):
         for dest in dest_set:
             p300.pick_up_tip()
             p300.transfer(final_transfer_vol, source.bottom(3), dest.bottom(3),
+                          mix_before=(mix_reps, 0.8*final_transfer_vol),
                           new_tip='never')
             drop(p300)

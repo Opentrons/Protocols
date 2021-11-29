@@ -154,7 +154,7 @@ concentration of 0.25mg/ml.')
                     for well in ['G1', 'G4', 'G7', 'G10', 'H1', 'H4', 'H7']]
         dests = dests[:num_samples]
         triplicates = [col[:3] for col in dil_plate_final.columns()] + [
-            col[4:6] for col in dil_plate_final.columns()] + [
+            col[3:6] for col in dil_plate_final.columns()] + [
             dil_plate_final.rows_by_name()['G'][i*3:(i+1)*3]
                 for i in range(4)] + [
             dil_plate_final.rows_by_name()['H'][i*3:(i+1)*3] for i in range(3)]
