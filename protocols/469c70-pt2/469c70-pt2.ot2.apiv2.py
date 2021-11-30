@@ -67,7 +67,6 @@ def run(ctx):
         source_well = _[tube_source]
         dest = all_labware[int(_[slot_num_dest])-1]
         dest_well = _[tube_dest]
-
         transfer_vol = float(_[vol])
         pip = p20 if transfer_vol < 100 else p1000
         if i == 0:
