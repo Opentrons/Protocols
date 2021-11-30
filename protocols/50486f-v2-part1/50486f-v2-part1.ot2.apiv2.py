@@ -8,7 +8,7 @@ metadata = {
 
 def run(protocol):
     [p20_mount, number_of_plates] = get_values(  # noqa: F821
-    'p20_mount', 'number_of_plates')
+        'p20_mount', 'number_of_plates')
 
     # load labware and pipette
     pcrcoolplate = 'labcon_96_wellplate_pcr_on_cooler'

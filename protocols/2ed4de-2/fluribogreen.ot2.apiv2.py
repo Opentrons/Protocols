@@ -114,6 +114,7 @@ def run(ctx):
         # pre add diluent
         for i, factor in enumerate(factors):
             dil_vol = (factor-1)*sample_vol*(i+1)
+            print(dil_vol)
             for j, set in enumerate(dil_sets):
                 for k, well in enumerate(set[i]):
                     if j*k+k < num_samples:
@@ -127,6 +128,7 @@ def run(ctx):
         p300.flow_rate.dispense = 40
         # transfer sample
         for i, s in enumerate(starting_samples):
+            print(sample_vol)
             pickup_p300('single')
             well = dil_sets[i//8][0][i % 8]
             p300.aspirate(sample_vol, s.bottom(2))
@@ -145,6 +147,7 @@ def run(ctx):
                 if i == 0:
                     p300.mix(mix_reps, mix_vol, set[i][0])
                 else:
+                    print(sample_vol*(i+1))
                     p300.transfer(sample_vol*(i+1), set[i-1][0].bottom(3),
                                   set[i][0].bottom(3),
                                   mix_after=(5, mix_vol),

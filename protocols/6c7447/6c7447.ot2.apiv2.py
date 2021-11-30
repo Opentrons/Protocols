@@ -8,7 +8,7 @@ metadata = {
 
 def run(protocol):
     [p10mnt, p300mnt, wet_tip] = get_values(  # noqa: F821
-    'p10mnt', 'p300mnt', 'wet_tip')
+        'p10mnt', 'p300mnt', 'wet_tip')
 
     # labware and pipette set-up
     tuberack = protocol.load_labware(
