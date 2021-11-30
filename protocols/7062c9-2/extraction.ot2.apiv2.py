@@ -30,7 +30,7 @@ def run(ctx):
     bead_settling_time = 1.0
     temp_time = 3.0
     mix_reps = 10
-    sample_mixing_time_minutes = 30.0
+    sample_mixing_time_minutes = 15.0
     mix_volume_percentage = 0.9
     sample_mixing_blowout_height_from_bottom = 10.0
 
@@ -211,8 +211,8 @@ resuming.')
             if drop:
                 _drop(m300)
 
-    def wash(vol, source, mix_reps=mix_reps, park=True, resuspend=True,
-             drop=True):
+    def wash(vol, source, change_tips_for_samples=True, mix_reps=mix_reps,
+             park=True, resuspend=True, drop=True):
         """
         `wash` will perform bead washing for the extraction protocol.
         :param vol (float): The amount of volume to aspirate from each
@@ -255,10 +255,11 @@ resuming.')
                                     Point(x=side*radius*radial_offset, z=3)))
             m300.blow_out(m.top())
             m300.air_gap(20)
-            if park:
-                m300.drop_tip(spot)
-            else:
-                _drop(m300)
+            if change_tips_for_samples:
+                if park:
+                    m300.drop_tip(spot)
+                else:
+                    _drop(m300)
 
         if magdeck.status == 'disengaged':
             magdeck.engage(mag_height)
@@ -361,7 +362,8 @@ minutes')
     # keep tips for wash
 
     for w in range(2):
-        wash(wash1_vol, wash1[w], park=park_tips, drop=False)
+        wash(wash1_vol, wash1[w], park=park_tips, drop=False,
+             change_tips_for_samples=False)
 
     # add sample and mix iteratively for ~30 minutes
     magdeck.disengage()
@@ -374,7 +376,7 @@ minutes')
     m300.default_speed = 200
     m300.flow_rate.aspirate = 46.43
     m300.flow_rate.dispense = 92.86
-    mixes_per_min = 0.75
+    mixes_per_min = 0.5
     num_mix_cycles = int(sample_mixing_time_minutes*mixes_per_min/num_cols)
     if TEST_MODE or not sample_incubation_mixing:
         num_mix_cycles = 5
