@@ -120,13 +120,13 @@ def run(protocol_context):
                     new_tip=tip_use_strategy
                 )
 
-                pipette.transfer(
-                    transfer_volume,
-                    row[num_of_dilutions],
-                    liquid_trash,
-                    new_tip=tip_use_strategy,
-                    blow_out=True
-                )
+            pipette.transfer(
+                transfer_volume,
+                row[num_of_dilutions],
+                liquid_trash,
+                new_tip=tip_use_strategy,
+                blow_out=True
+            )
 
             if tip_use_strategy == 'never':
                 pipette.drop_tip()
