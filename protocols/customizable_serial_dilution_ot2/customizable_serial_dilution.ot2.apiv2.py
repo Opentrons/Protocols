@@ -6,20 +6,6 @@ metadata = {
     }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{ "pipette_type":"p300_single",
-                                  "dilution_factor":"1.5",
-                                  "num_of_dilutions":"11",
-                                  "total_mixing_volume":"200",
-                                  "tip_use_strategy":"never",
-                                  "plate_type":"corning_96_wellplate_360ul_flat",
-                                  "trough_type":"axygen_1_reservoir_90ml",
-                                  "tiprack_type":"opentrons_96_tiprack_300ul"}
-                                  """)
-    return [_all_values[n] for n in names]
-
-
 def run(protocol_context):
     [pipette_type, dilution_factor, num_of_dilutions, total_mixing_volume,
         tip_use_strategy, plate_type, trough_type,
@@ -28,10 +14,6 @@ def run(protocol_context):
             'total_mixing_volume', 'tip_use_strategy', 'plate_type',
             'trough_type', 'tiprack_type'
         )
-
-    total_mixing_volume = float(total_mixing_volume)
-    dilution_factor = float(dilution_factor)
-    num_of_dilutions = int(num_of_dilutions)
 
     transfer_volume = total_mixing_volume/dilution_factor
     diluent_volume = total_mixing_volume - transfer_volume
@@ -102,9 +84,6 @@ def run(protocol_context):
         for col in plate.columns()[1:1+num_of_dilutions]:
             pipette.distribute(
                 diluent_volume, trough.wells()[0], [well for well in col])
-
-        # import pdb
-        # pdb.set_trace()
 
         for row in plate.rows():
             if tip_use_strategy == 'never':
