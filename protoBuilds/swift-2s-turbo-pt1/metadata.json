@@ -1,0 +1,20 @@
+{
+    "files": {
+        "OT 1 protocol": [],
+        "OT 2 protocol": [
+            "swift-2s-turbo-pt1.ot2.apiv2.py"
+        ],
+        "description": [
+            "README.md"
+        ]
+    },
+    "flags": {
+        "embedded-app": false,
+        "feature": true,
+        "hide-from-search": false,
+        "skip-tests": false
+    },
+    "path": "protocols/swift-2s-turbo-pt1",
+    "slug": "swift-2s-turbo-pt1",
+    "status": "ok"
+}

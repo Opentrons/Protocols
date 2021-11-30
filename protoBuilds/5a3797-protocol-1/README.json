@@ -1,0 +1,30 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "PCR": [
+            "PCR Prep"
+        ]
+    },
+    "deck-setup": "\nOpentrons 200 uL Filter Tip Rack (Slot 1)\nWash 1 Deep Well Plate (Slot 4)\nWash 2 Deep Well Plate (Slot 5)\nElution Buffer Deep Well Plate (Slot 6)\n12-well reservoir (Wash 1 Solution) (Slot 7)\n12-well reservoir (Wash 2 Solution) (Slot 8)\n12-well reservoir (Elution Buffer Solution) (Slot 9)\n",
+    "description": "This protocol performs aliquoting of multiple buffers from different reservoirs into multiple 2 mL KingFisher deep well plates.",
+    "internal": "5a3797-protocol-1",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* PCR\n\t* PCR Prep\n\n",
+        "deck-setup": "* Opentrons 200 uL Filter Tip Rack (Slot 1)\n* Wash 1 Deep Well Plate (Slot 4)\n* Wash 2 Deep Well Plate (Slot 5)\n* Elution Buffer Deep Well Plate (Slot 6)\n* 12-well reservoir (Wash 1 Solution) (Slot 7)\n* 12-well reservoir (Wash 2 Solution) (Slot 8)\n* 12-well reservoir (Elution Buffer Solution) (Slot 9)\n\n",
+        "description": "This protocol performs aliquoting of multiple buffers from different reservoirs into multiple 2 mL KingFisher deep well plates.\n\n",
+        "internal": "5a3797-protocol-1",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "process": "1. Select the mount position for the P300-multichannel pipette.\n2. Download your protocol.\n3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).\n4. Set up your deck according to the deck map.\n5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n6. Hit \"Run\".\n\n",
+        "protocol-steps": "\n1. Aliquot 500uL from a 15mL -12 section reservoir (wash 1 solution) into a 96, 2mL deep well plate.\n2. Aliquot 1000uL from a 15mL-12 section reservoir (wash 2 (80% ETOH) into a second 96, 2 mL deep well plate.\n3. Aliquot 50uL from a 15mL-12 section reservoir (elution buffer) into a 96, 2mL deep well plate.\n\n\n---\n![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)\n\n* [KingFisher\u2122 Plastics for 96 deep-well format](https://www.thermofisher.com/order/catalog/product/95040450#/95040450)\n\n---\n![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)\n\n",
+        "robot": "* [OT-2](https://opentrons.com/ot-2)\n\n",
+        "title": "Protocol 1 for Wash Aliquoting"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "process": "\nSelect the mount position for the P300-multichannel pipette.\nDownload your protocol.\nUpload your protocol into the OT App.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "protocol-steps": "\nAliquot 500uL from a 15mL -12 section reservoir (wash 1 solution) into a 96, 2mL deep well plate.\nAliquot 1000uL from a 15mL-12 section reservoir (wash 2 (80% ETOH) into a second 96, 2 mL deep well plate.\nAliquot 50uL from a 15mL-12 section reservoir (elution buffer) into a 96, 2mL deep well plate.\n\n\n\n\nKingFisher\u2122 Plastics for 96 deep-well format\n\n\n",
+    "robot": [
+        "OT-2"
+    ],
+    "title": "Protocol 1 for Wash Aliquoting"
+}

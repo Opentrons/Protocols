@@ -1,0 +1,93 @@
+{
+    "content": "from opentrons import protocol_api\n\nmetadata = {\n    'protocolName': 'Custom CSV Transfer',\n    'author': 'Chaz <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.8'\n}\n\n\ndef run(protocol):\n    [transfer_csv] = get_values(  # noqa: F821\n     'transfer_csv')\n\n    # convert CSV/multi-line string to list\n\n    transfer_info = [\n        line.split(',')\n        for line in transfer_csv.splitlines() if line\n    ][1:]\n    source_plate_slots = []\n    source_wells = []\n    target_plate_slots = []\n    target_wells = []\n    volumes = []\n\n    # parse for transfer information\n    for line in transfer_info:\n        source_plate_slots.append(line[0].strip())\n        source_wells.append(line[1].strip())\n        volumes.append(float(line[4].strip()))\n        target_plate_slots.append(line[2].strip())\n        target_wells.append(line[3].strip())\n\n    # create dictionary based on slots found and labware\n    labware_dict = {}\n    labware_dict['9'] = protocol.load_labware(\n        'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', '9')\n    labware_dict['6'] = protocol.load_labware(\n        'corning_96_wellplate_360ul_flat', '6')\n    labware_dict['10'] = protocol.load_labware(\n        'corning_96_wellplate_360ul_flat', '10')\n    labware_dict['3'] = protocol.load_labware(\n        'usascientific_12_reservoir_22ml', '3')\n    labware_dict['2'] = protocol.load_labware(\n        'corning_96_wellplate_360ul_flat', '2')\n    labware_dict['5'] = protocol.load_labware(\n        'corning_96_wellplate_360ul_flat', '5')\n    labware_dict['8'] = protocol.load_labware(\n        'corning_96_wellplate_360ul_flat', '8')\n    labware_dict['11'] = protocol.load_labware(\n        'corning_96_wellplate_360ul_flat', '11')\n    # tips50 = [protocol.load_labware('opentrons_96_tiprack_300ul', '1')]\n    tips300 = [protocol.load_labware(\n        'opentrons_96_tiprack_300ul', s) for s in ['4', '7']]\n\n    # p50 = protocol.load_instrument('p50_single', 'right', tip_racks=tips50)\n    m300 = protocol.load_instrument('p300_multi', 'left', tip_racks=tips300)\n\n    def pick_up(pip):\n        try:\n            pip.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            protocol.pause(\"Replace the tips\")\n            pip.reset_tipracks()\n            pip.pick_up_tip()\n\n    # perform transfers\n    pick_up(m300)\n\n    for s_slot, s_well, t_slot, t_well, vol in zip(\n            source_plate_slots,\n            source_wells,\n            target_plate_slots,\n            target_wells,\n            volumes):\n\n        m300.transfer(\n            vol,\n            labware_dict[s_slot][s_well],\n            labware_dict[t_slot][t_well],\n            new_tip='never'\n        )\n        mix_vol = vol\n        if mix_vol > m300.max_volume:\n            mix_vol = m300.max_volume\n        m300.mix(10, mix_vol)\n        m300.blow_out()\n\n    m300.drop_tip()\n\n    protocol.comment('Protocol complete!')\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": "source deck,Source well,Destination deck,Destination well,volume\n10,A4,11,A1,30",
+            "label": "Cherrypicking Transfer CSV",
+            "name": "transfer_csv",
+            "type": "textFile"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_multi"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Corning 96 Well Plate 360 \u00b5L Flat on 2",
+            "share": false,
+            "slot": "2",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "USA Scientific 12 Well Reservoir 22 mL on 3",
+            "share": false,
+            "slot": "3",
+            "type": "usascientific_12_reservoir_22ml"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Corning 96 Well Plate 360 \u00b5L Flat on 5",
+            "share": false,
+            "slot": "5",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Corning 96 Well Plate 360 \u00b5L Flat on 6",
+            "share": false,
+            "slot": "6",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Corning 96 Well Plate 360 \u00b5L Flat on 8",
+            "share": false,
+            "slot": "8",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Opentrons 24 Tube Rack with Eppendorf 2 mL Safe-Lock Snapcap on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
+        },
+        {
+            "name": "Corning 96 Well Plate 360 \u00b5L Flat on 10",
+            "share": false,
+            "slot": "10",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Corning 96 Well Plate 360 \u00b5L Flat on 11",
+            "share": false,
+            "slot": "11",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.8",
+        "author": "Chaz <protocols@opentrons.com>",
+        "protocolName": "Custom CSV Transfer",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}

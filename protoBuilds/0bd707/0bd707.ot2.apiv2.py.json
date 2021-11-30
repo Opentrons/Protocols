@@ -1,0 +1,441 @@
+{
+    "content": "metadata = {\n    'protocolName': 'Media Aliquotting',\n    'author': 'Chaz <chaz@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.3'\n}\n\n\ndef run(protocol):\n    [num_plates, transfer_vol, p1000_mount] = get_values(  # noqa: F821\n        'num_plates', 'transfer_vol', 'p1000_mount')\n\n    # labware\n    source = [protocol.load_labware(\n                'nest_1_reservoir_195ml', s,\n                'liquid reservoir').wells()[0] for s in ['11', '10']]\n\n    tuberacks = [protocol.load_labware(\n                    'custom_24_tuberack_2000ul',\n                    slot, 'custom tuberack') for slot in [\n                        2, 3, 5, 6, 7, 8, 9]][:num_plates]\n    tiprack = [\n        protocol.load_labware(\n            'opentrons_96_tiprack_1000ul',\n            slot, '1000\u00b5l tiprack') for slot in [1, 4]]\n\n    # pipette\n    p1000 = protocol.load_instrument(\n        'p1000_single_gen2', p1000_mount, tip_racks=tiprack)\n\n    if transfer_vol > 1000 or transfer_vol < 100:\n        raise Exception(\n            'The Transfer Volume must be within P1000 range (100-1000).')\n\n    if num_plates < 1 or num_plates > 7:\n        raise Exception('The Number of Plates must be between 1 and 7.')\n\n    # perform transfers from source 1\n    for tubes in tuberacks[:3]:\n        for t in tubes.wells():\n            p1000.pick_up_tip()\n            for _ in range(2):\n                p1000.transfer(\n                    transfer_vol, source[0], t, air_gap=50, new_tip='never')\n            p1000.air_gap(50)\n            p1000.drop_tip()\n\n    # perform transfers from source 2\n    for tubes in tuberacks[3:]:\n        for t in tubes.wells():\n            p1000.pick_up_tip()\n            for _ in range(2):\n                p1000.transfer(\n                    transfer_vol, source[1], t, air_gap=50, new_tip='never')\n            p1000.air_gap(50)\n            p1000.drop_tip()\n",
+    "custom_labware_defs": [
+        {
+            "brand": {
+                "brand": "custom",
+                "brandId": []
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 127.76,
+                "yDimension": 85.47,
+                "zDimension": 42.5
+            },
+            "groups": [
+                {
+                    "metadata": {
+                        "wellBottomShape": "u"
+                    },
+                    "wells": [
+                        "A1",
+                        "B1",
+                        "C1",
+                        "D1",
+                        "A2",
+                        "B2",
+                        "C2",
+                        "D2",
+                        "A3",
+                        "B3",
+                        "C3",
+                        "D3",
+                        "A4",
+                        "B4",
+                        "C4",
+                        "D4",
+                        "A5",
+                        "B5",
+                        "C5",
+                        "D5",
+                        "A6",
+                        "B6",
+                        "C6",
+                        "D6"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "tubeRack",
+                "displayName": "Custom 24 Tube Rack with Cryotubes",
+                "displayVolumeUnits": "\u00b5L",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1",
+                    "B1",
+                    "C1",
+                    "D1"
+                ],
+                [
+                    "A2",
+                    "B2",
+                    "C2",
+                    "D2"
+                ],
+                [
+                    "A3",
+                    "B3",
+                    "C3",
+                    "D3"
+                ],
+                [
+                    "A4",
+                    "B4",
+                    "C4",
+                    "D4"
+                ],
+                [
+                    "A5",
+                    "B5",
+                    "C5",
+                    "D5"
+                ],
+                [
+                    "A6",
+                    "B6",
+                    "C6",
+                    "D6"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "custom_24_tuberack_2000ul"
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 37,
+                    "diameter": 9.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 13.88,
+                    "y": 73.65,
+                    "z": 5.5
+                },
+                "A2": {
+                    "depth": 37,
+                    "diameter": 9.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 33.88,
+                    "y": 73.65,
+                    "z": 5.5
+                },
+                "A3": {
+                    "depth": 37,
+                    "diameter": 9.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 53.88,
+                    "y": 73.65,
+                    "z": 5.5
+                },
+                "A4": {
+                    "depth": 37,
+                    "diameter": 9.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 73.88,
+                    "y": 73.65,
+                    "z": 5.5
+                },
+                "A5": {
+                    "depth": 37,
+                    "diameter": 9.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 93.88,
+                    "y": 73.65,
+                    "z": 5.5
+                },
+                "A6": {
+                    "depth": 37,
+                    "diameter": 9.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 113.88,
+                    "y": 73.65,
+                    "z": 5.5
+                },
+                "B1": {
+                    "depth": 37,
+                    "diameter": 9.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 13.88,
+                    "y": 53.65,
+                    "z": 5.5
+                },
+                "B2": {
+                    "depth": 37,
+                    "diameter": 9.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 33.88,
+                    "y": 53.65,
+                    "z": 5.5
+                },
+                "B3": {
+                    "depth": 37,
+                    "diameter": 9.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 53.88,
+                    "y": 53.65,
+                    "z": 5.5
+                },
+                "B4": {
+                    "depth": 37,
+                    "diameter": 9.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 73.88,
+                    "y": 53.65,
+                    "z": 5.5
+                },
+                "B5": {
+                    "depth": 37,
+                    "diameter": 9.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 93.88,
+                    "y": 53.65,
+                    "z": 5.5
+                },
+                "B6": {
+                    "depth": 37,
+                    "diameter": 9.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 113.88,
+                    "y": 53.65,
+                    "z": 5.5
+                },
+                "C1": {
+                    "depth": 37,
+                    "diameter": 9.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 13.88,
+                    "y": 33.64,
+                    "z": 5.5
+                },
+                "C2": {
+                    "depth": 37,
+                    "diameter": 9.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 33.88,
+                    "y": 33.64,
+                    "z": 5.5
+                },
+                "C3": {
+                    "depth": 37,
+                    "diameter": 9.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 53.88,
+                    "y": 33.64,
+                    "z": 5.5
+                },
+                "C4": {
+                    "depth": 37,
+                    "diameter": 9.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 73.88,
+                    "y": 33.64,
+                    "z": 5.5
+                },
+                "C5": {
+                    "depth": 37,
+                    "diameter": 9.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 93.88,
+                    "y": 33.64,
+                    "z": 5.5
+                },
+                "C6": {
+                    "depth": 37,
+                    "diameter": 9.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 113.88,
+                    "y": 33.64,
+                    "z": 5.5
+                },
+                "D1": {
+                    "depth": 37,
+                    "diameter": 9.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 13.88,
+                    "y": 13.64,
+                    "z": 5.5
+                },
+                "D2": {
+                    "depth": 37,
+                    "diameter": 9.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 33.88,
+                    "y": 13.64,
+                    "z": 5.5
+                },
+                "D3": {
+                    "depth": 37,
+                    "diameter": 9.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 53.88,
+                    "y": 13.64,
+                    "z": 5.5
+                },
+                "D4": {
+                    "depth": 37,
+                    "diameter": 9.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 73.88,
+                    "y": 13.64,
+                    "z": 5.5
+                },
+                "D5": {
+                    "depth": 37,
+                    "diameter": 9.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 93.88,
+                    "y": 13.64,
+                    "z": 5.5
+                },
+                "D6": {
+                    "depth": 37,
+                    "diameter": 9.5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 113.88,
+                    "y": 13.64,
+                    "z": 5.5
+                }
+            }
+        }
+    ],
+    "fields": [
+        {
+            "default": 7,
+            "label": "Number of Plates (1-6)",
+            "name": "num_plates",
+            "type": "int"
+        },
+        {
+            "default": 925.0,
+            "label": "transfer volume (100-1000, in \u00b5l)",
+            "name": "transfer_vol",
+            "type": "float"
+        },
+        {
+            "label": "P1000 single-channel (GEN2) pipette mount",
+            "name": "p1000_mount",
+            "options": [
+                {
+                    "label": "right",
+                    "value": "right"
+                },
+                {
+                    "label": "left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "right",
+            "name": "p1000_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "1000\u00b5l tiprack on 1",
+            "share": false,
+            "slot": "1",
+            "type": "opentrons_96_tiprack_1000ul"
+        },
+        {
+            "name": "custom tuberack on 2",
+            "share": false,
+            "slot": "2",
+            "type": "custom_24_tuberack_2000ul"
+        },
+        {
+            "name": "custom tuberack on 3",
+            "share": false,
+            "slot": "3",
+            "type": "custom_24_tuberack_2000ul"
+        },
+        {
+            "name": "1000\u00b5l tiprack on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_tiprack_1000ul"
+        },
+        {
+            "name": "custom tuberack on 5",
+            "share": false,
+            "slot": "5",
+            "type": "custom_24_tuberack_2000ul"
+        },
+        {
+            "name": "custom tuberack on 6",
+            "share": false,
+            "slot": "6",
+            "type": "custom_24_tuberack_2000ul"
+        },
+        {
+            "name": "custom tuberack on 7",
+            "share": false,
+            "slot": "7",
+            "type": "custom_24_tuberack_2000ul"
+        },
+        {
+            "name": "custom tuberack on 8",
+            "share": false,
+            "slot": "8",
+            "type": "custom_24_tuberack_2000ul"
+        },
+        {
+            "name": "custom tuberack on 9",
+            "share": false,
+            "slot": "9",
+            "type": "custom_24_tuberack_2000ul"
+        },
+        {
+            "name": "liquid reservoir on 10",
+            "share": false,
+            "slot": "10",
+            "type": "nest_1_reservoir_195ml"
+        },
+        {
+            "name": "liquid reservoir on 11",
+            "share": false,
+            "slot": "11",
+            "type": "nest_1_reservoir_195ml"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.3",
+        "author": "Chaz <chaz@opentrons.com>",
+        "protocolName": "Media Aliquotting",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}

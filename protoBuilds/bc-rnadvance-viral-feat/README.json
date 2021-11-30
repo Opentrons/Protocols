@@ -1,0 +1,41 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Featured": [
+            "Beckman Coulter RNAdvance Viral"
+        ]
+    },
+    "deck-setup": "",
+    "description": "This protocol performs viral RNA isolation on up to 96 samples using the Beckman Coulter RNAdvance Viral RNA Isolation kit and workflow.\nThe protocol begins at the stage of adding binding beads to lysed samples loaded on the magnetic module in a NEST 96-deepwell plate. For reagent layout in the 2 12-channel reservoirs used in this protocol, please see \"Setup\" below.\nFor sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 6) to the elution PCR plate (temperature module, slot 1). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.\n",
+    "internal": "bc-rnadvance-viral",
+    "labware": "\nNEST 12 Well Reservoir 15 mL, 2x\nNEST 1 Well Reservoir 195 mL\nNEST 96 Well Plate 100 \u00b5L PCR Full Skirt\nNEST 96 Deepwell Plate 2mL\nOpentrons 96 Filter Tip Rack 200 \u00b5L, up to 10x depending on throughput\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* Featured\n    * Beckman Coulter RNAdvance Viral\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)\n\n",
+        "description": "This protocol performs viral RNA isolation on up to 96 samples using the [Beckman Coulter RNAdvance Viral RNA Isolation](https://www.beckman.com/reagents/genomic/rna-isolation/viral/c63510) kit and workflow.\n\nThe protocol begins at the stage of adding binding beads to lysed samples loaded on the magnetic module in a NEST 96-deepwell plate. For reagent layout in the 2 12-channel reservoirs used in this protocol, please see \"Setup\" below.\n\nFor sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 6) to the elution PCR plate (temperature module, slot 1). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.\n\n---\n\n",
+        "internal": "bc-rnadvance-viral\n",
+        "labware": "* [NEST 12 Well Reservoir 15 mL, 2x](https://labware.opentrons.com/nest_12_reservoir_15ml)\n* [NEST 1 Well Reservoir 195 mL](https://labware.opentrons.com/nest_1_reservoir_195ml)\n* [NEST 96 Well Plate 100 \u00b5L PCR Full Skirt](https://labware.opentrons.com/nest_96_wellplate_100ul_pcr_full_skirt)\n* [NEST 96 Deepwell Plate 2mL](https://labware.opentrons.com/nest_96_wellplate_2ml_deep)\n* [Opentrons 96 Filter Tip Rack 200 \u00b5L, up to 10x depending on throughput](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)\n\n",
+        "modules": "* [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)\n* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [Opentrons P300 8-Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette)\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "protocol-steps": "1. This section should consist of a numerical outline of the protocol steps, somewhat analogous to the steps outlined by the user in their custom protocol submission.\n2. example step: Samples are transferred from the source tuberacks on slots 1-2 to the PCR plate on slot 3, down columns and then across rows.\n3. example step: Waste is removed from each sample on the magnetic module, ensuring the bead pellets are not contacted by the pipette tips.\n\n",
+        "reagent-setup": "* Reservoir 1: slot 2\n* Reservoir 2: slot 3  \n![reservoirs](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-10+at+3.48.53+PM.png)\n\nVolumes per reservoir channel: (for 96-sample run, not including dead volume):\n* 10mL of 100% Isopropanol + 250uL of bead BBD\n* 10mL of Wash WBE\n* 10mL of 70% Ethanol\n* 4mL of nuclease-free water\n\n---\n\n",
+        "reagents": "* [Beckman Coulter RNAdvance Viral kit](https://www.beckman.com/reagents/genomic/rna-isolation/viral/c63510)\n\n---\n\n",
+        "title": "Beckman Coulter RNAdvance Viral RNA Isolation"
+    },
+    "modules": [
+        "Temperature Module (GEN2)",
+        "Magnetic Module (GEN2)"
+    ],
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons P300 8-Channel Electronic Pipette (GEN2)\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "protocol-steps": "\nThis section should consist of a numerical outline of the protocol steps, somewhat analogous to the steps outlined by the user in their custom protocol submission.\nexample step: Samples are transferred from the source tuberacks on slots 1-2 to the PCR plate on slot 3, down columns and then across rows.\nexample step: Waste is removed from each sample on the magnetic module, ensuring the bead pellets are not contacted by the pipette tips.\n",
+    "reagent-setup": "\nReservoir 1: slot 2\nReservoir 2: slot 3\n\n\nVolumes per reservoir channel: (for 96-sample run, not including dead volume):\n 10mL of 100% Isopropanol + 250uL of bead BBD\n 10mL of Wash WBE\n 10mL of 70% Ethanol\n 4mL of nuclease-free water\n",
+    "reagents": [
+        "Beckman Coulter RNAdvance Viral kit"
+    ],
+    "title": "Beckman Coulter RNAdvance Viral RNA Isolation"
+}

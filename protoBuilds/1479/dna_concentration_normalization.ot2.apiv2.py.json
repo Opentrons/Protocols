@@ -1,0 +1,73 @@
+{
+    "content": "metadata = {\n    'protocolName': 'DNA Concentration Normalization',\n    'author': 'Opentrons <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.4'\n    }\n\n\ndef run(ctx):\n    [volume_csv, max_reaction_volume] = get_values(  # noqa: F821\n        'volume_csv', 'max_reaction_volume')\n\n    p10_tip_count = 0\n    p50_tip_count = 0\n\n    def update_p10_tip_count(num):\n        nonlocal p10_tip_count\n        p10_tip_count += num\n        if p10_tip_count > 96:\n            ctx.pause('The P10 tips have run out. Replenish tip rack before \\\n    resuming protocol.')\n            p10.reset_tip_tracking()\n            p10_tip_count = 0\n\n    def update_p50_tip_count(num):\n        nonlocal p50_tip_count\n        p50_tip_count += num\n        if p50_tip_count > 96:\n            ctx.pause('The P50 tips have run out. Replenish tip rack before \\\n    resuming protocol.')\n            p50.reset_tip_tracking()\n            p50_tip_count = 0\n\n    def csv_to_list(csv_string):\n        sources, dests, dna_vol, diluent_vol = [], [], [], []\n        info_list = [cell for line in csv_string.splitlines() if line\n                     for cell in [line.split(',')]]\n        labware_dict = {}\n        for line in info_list[1:]:\n            source_slot = line[0].split(' ')[-1]\n            if source_slot not in labware_dict:\n                labware_dict[source_slot] = ctx.load_labware(\n                    'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap',\n                    source_slot)\n            source_well = line[1]\n            dest_well = line[2]\n            vol_dna = float(line[3])\n            vol_dil = float(line[4])\n            sources.append(\n                labware_dict[source_slot].wells_by_name()[source_well])\n            dests.append(pcr_plate.wells_by_name()[dest_well])\n            dna_vol.append(vol_dna)\n            diluent_vol.append(vol_dil)\n\n        return sources, dests, dna_vol, diluent_vol\n\n    # labware setup\n    tuberack = ctx.load_labware(\n        'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap', '2')\n    pcr_plate = ctx.load_labware(\n        'opentrons_96_aluminumblock_generic_pcr_strip_200ul', '1',\n        'PCR strips')\n\n    tipracks_10 = ctx.load_labware('opentrons_96_tiprack_10ul', '7')\n    tiprack_300 = ctx.load_labware('opentrons_96_tiprack_300ul', '9')\n\n    # instruments setup\n    p10 = ctx.load_instrument(\n        'p10_single', mount='left', tip_racks=[tipracks_10])\n    p50 = ctx.load_instrument(\n        'p50_single', mount='right', tip_racks=[tiprack_300])\n\n    # reagent setup\n    buffer = tuberack.wells()[0]\n\n    sources, dests, dna_vols, diluent_vols = csv_to_list(volume_csv)\n\n    # distribute buffer\n    for vol, dest in zip(diluent_vols, dests):\n        if vol >= 5:\n            pipette = p50\n        elif vol > 0 and vol < 5:\n            pipette = p10\n        else:\n            continue\n        if not pipette.hw_pipette['has_tip']:\n            pipette.pick_up_tip()\n            pipette.aspirate(vol, buffer)\n        if vol > pipette.current_volume:\n            pipette.aspirate(\n                pipette.max_volume - pipette.current_volume, buffer)\n        pipette.dispense(vol, dest)\n    if p50.hw_pipette['has_tip']:\n        p50.drop_tip()\n        update_p50_tip_count(1)\n    if p10.hw_pipette['has_tip']:\n        p10.drop_tip()\n        update_p10_tip_count(1)\n\n    # transfer and mix samples\n    for source, vol, dest in zip(sources, dna_vols, dests):\n        if vol > 10:\n            pipette = p50\n            update_p50_tip_count(1)\n        else:\n            pipette = p10\n            update_p10_tip_count(1)\n        pipette.pick_up_tip()\n        pipette.transfer(vol, source, dest, new_tip='never')\n        pipette.mix(3, max_reaction_volume / 2, dest)\n        pipette.drop_tip()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": "Source tube rack,Source tube well,Destination well,Vol. of DNA  (?gL),Vol. of diluent  (?gL)\r\nSlot 3,A1,A1,7,8\r\nSlot 3,B1,B1,6.4,8.6\r\nSlot 3,C1,C1,9.2,5.8\r\nSlot 3,D1,D1,6,9\r\nSlot 3,A2,E1,14.7,0.3\r\nSlot 3,B2,F1,7.8,7.2\r\nSlot 3,C2,G1,5.3,9.7\r\nSlot 3,D2,H1,9.6,5.4\r\nSlot 3,A3,A2,10.3,4.7\r\nSlot 3,B3,B2,16.9,-1.9\r\nSlot 3,C3,C2,8.1,6.9\r\nSlot 3,D3,D2,5,10\r\nSlot 3,A4,E2,9.8,5.2\r\nSlot 3,B4,F2,6.1,8.9\r\nSlot 3,C4,G2,7.7,7.3",
+            "label": "input csv file",
+            "name": "volume_csv",
+            "type": "textFile"
+        },
+        {
+            "default": 15,
+            "label": "max reaction volume (in ul)",
+            "name": "max_reaction_volume",
+            "type": "float"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p10_single"
+        },
+        {
+            "mount": "right",
+            "name": "p50_single"
+        }
+    ],
+    "labware": [
+        {
+            "name": "PCR strips on 1",
+            "share": false,
+            "slot": "1",
+            "type": "opentrons_96_aluminumblock_generic_pcr_strip_200ul"
+        },
+        {
+            "name": "Opentrons 24 Tube Rack with Eppendorf 2 mL Safe-Lock Snapcap on 2",
+            "share": false,
+            "slot": "2",
+            "type": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
+        },
+        {
+            "name": "Opentrons 24 Tube Rack with Eppendorf 2 mL Safe-Lock Snapcap on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 10 \u00b5L on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_tiprack_10ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.4",
+        "author": "Opentrons <protocols@opentrons.com>",
+        "protocolName": "DNA Concentration Normalization",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}

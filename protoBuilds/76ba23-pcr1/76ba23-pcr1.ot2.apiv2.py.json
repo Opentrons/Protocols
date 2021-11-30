@@ -1,0 +1,108 @@
+{
+    "content": "metadata = {\n    'protocolName': 'PCR 1',\n    'author': 'Steve <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.9'\n}\n\n\ndef run(ctx):\n\n    ctx.set_rail_lights(True)\n\n    # uploaded parameter values\n    [choose_tip_rack, uploaded_csv] = get_values(  # noqa: F821\n        \"choose_tip_rack\", \"uploaded_csv\")\n\n    # sample type from manifest\n    type_line = uploaded_csv.splitlines()[2]\n    sample_type = type_line[type_line.find('(')+1:type_line.find(')')]\n\n    # tips and p300 multi\n    tips300 = [\n     ctx.load_labware(choose_tip_rack, str(slot)) for slot in [6, 9, 8, 11]]\n    p300m = ctx.load_instrument(\n        \"p300_multi_gen2\", 'right', tip_racks=tips300)\n\n    # magnetic module with magnets disengaged\n    mag = ctx.load_module('magnetic module gen2', '4')\n    mag.disengage()\n    mag_plate = mag.load_labware(\"nest_96_wellplate_100ul_pcr_full_skirt\")\n\n    # labware, CT converted cf DNA (barcoded pcr plate) in slot 1\n    [barcoded_pcr_plate, pcr1_mm_plate, pcr_plate, trough, etoh_reservoir] = [\n     ctx.load_labware(labware, slot) for labware, slot in zip(\n        [\"nest_96_wellplate_100ul_pcr_full_skirt\",\n         \"corning_96_wellplate_360ul_flat\",\n         \"nest_96_wellplate_100ul_pcr_full_skirt\", \"nest_12_reservoir_15ml\",\n         \"nest_1_reservoir_195ml\"],\n        [str(num) for num in [1, 3, 2, 5, 7]])]\n\n    # PCR 1 master mix in slot 3\n    pcr1_mm = pcr1_mm_plate.columns_by_name()['1'][0]\n\n    # beads, water, waste in wells A1, A2, A3 of trough in slot 5\n    beads, water, waste = [trough.wells_by_name()[\n     well_name] for well_name in ['A1', 'A2', 'A3']]\n\n    # ethanol reservoir in slot 7\n    etoh = etoh_reservoir.wells()[0]\n\n    # helper function to reuse tips\n    def reuse_tips(which_tips):\n        p300m.reset_tipracks()\n        p300m.starting_tip = which_tips\n\n    # transfer bisulfite converted sample DNA and master mix to PCR plate\n    p300m.distribute(\n     23, pcr1_mm, [column[0] for column in pcr_plate.columns()])\n    p300m.transfer(\n     2, [column[0] for column in barcoded_pcr_plate.columns()],\n     [column[0] for column in pcr_plate.columns()],\n     new_tip='always', mix_after=(4, 15))\n\n    if sample_type == \"saliva\":\n        ctx.pause(\"\"\"Please proceed to PCR1 thermocycling.\n                     When cycling is finished, proceed to the PCR2 step.\"\"\")\n    else:\n        ctx.pause(\"\"\"Pause for PCR1 thermocycling.\n                     Be sure to return the plate to the magnetic module when\n                     cycling is finished to proceed with PCR1 clean up steps.\n                     Please replenish the used tips and then click resume.\"\"\")\n\n        # add pre-warmed beads\n        p300m.reset_tipracks()\n        p300m.transfer(\n         45, beads, [column[0] for column in mag_plate.columns()],\n         mix_after=(4, 35), new_tip='always', trash=False)\n\n        mag.engage()\n        ctx.delay(minutes=5)\n\n        # remove sup\n        p300m.reset_tipracks()\n        p300m.transfer(\n         70, [column[0] for column in mag_plate.columns()],\n         waste, new_tip='always', trash=False)\n\n        # add 70 percent etoh keep magnets engaged, remove sup, repeat\n        etoh_tips = tips300[1].next_tip()\n        for rep in range(2):\n            reuse_tips(etoh_tips)\n            p300m.pick_up_tip()\n            p300m.transfer(\n             150, etoh, [column[0].top() for column in mag_plate.columns()],\n             air_gap=25, new_tip='never')\n            p300m.return_tip()\n            ctx.delay(seconds=15)\n            p300m.reset_tipracks()\n            p300m.transfer(\n             150, [column[0].top() for column in mag_plate.columns()], waste,\n             air_gap=25, new_tip='always', Trash=False)\n\n        # air dry beads\n        ctx.delay(minutes=10)\n\n        # add water, mix, and recover\n        water_tips = tips300[2].next_tip()\n        recovery_tips = tips300[3].next_tip()\n        reuse_tips(water_tips)\n        p300m.pick_up_tip()\n        p300m.distribute(\n         25, water, [column[0].top() for column in mag_plate.columns()],\n         new_tip='never')\n        p300m.return_tip()\n        reuse_tips(water_tips)\n        for column in mag_plate.columns():\n            p300m.pick_up_tip()\n            p300m.mix(4, 15, column[0])\n            p300m.drop_tip()\n        reuse_tips(recovery_tips)\n        ctx.pause(\"Please add a fresh barcoded pcr plate to deck slot 1.\")\n        p300m.transfer(\n         25, [column[0] for column in mag_plate.columns()],\n         [column[0] for column in barcoded_pcr_plate.columns()],\n         new_tip='always')\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "label": "Choose Filtered or Standard Tips for P300 multi",
+            "name": "choose_tip_rack",
+            "options": [
+                {
+                    "label": "Filtered Tips",
+                    "value": "opentrons_96_filtertiprack_200ul"
+                },
+                {
+                    "label": "Standard Tips",
+                    "value": "opentrons_96_tiprack_300ul"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": "Run date,200612,,,,,,\nTechnician ID,7687654,,,,,,\nProgram,EpiAge (plasma),SOP Number: HKGEPI-028,,,,,\nVolume ,2.30 ml,,,,,,\n,,,,,,,\nDate,Reseller/test,Sample barcode,Plate barcode,Reverse index,Forward index,Well,Program\n180612,govita /aging,GP26,EPIF2,B001,2,A1,EpiAge\n180612,govita aging,GP28,EPIF2,B002,2,A2,EpiAge\n180612,govita aging,GP26,EPIF2,B003,2,A3,EpiAge\n180612,govita aging,GP229,EPIF2,B004,2,A4,EpiAge\n180612,govita aging,GP25,EPIF2,B005,2,A5,EpiAge\n180612,govita aging,GGTL10,EPIF2,B006,2,A6,EpiAge\n180612,govita aging,GP30,EPIF2,B007,2,A7,EpiAge\n180612,govita aging,GP32,EPIF2,B008,2,A8,EpiAge\n180612,govita aging,GP4,EPIF2,B009,2,A9,EpiAge\n180612,govita aging,GP7,EPIF2,B010,2,A10,EpiAge\n180612,govita aging,GP10,EPIF2,B011,2,A11,EpiAge\n180612,govita aging,GP11,EPIF2,B012,2,A12,EpiAge\n180612,govita aging,GP18,EPIF2,B013,2,B1,EpiAge\n180612,govita aging,GP20,EPIF2,B014,2,B2,EpiAge\n180612,govita aging,GP21,EPIF2,B015,2,B3,EpiAge\n180612,govita aging,GP22,EPIF2,B016,2,B4,EpiAge\n180612,govita aging,GP23,EPIF2,B017,2,B5,EpiAge\n180612,govita aging,GP25,EPIF2,B018,2,B6,EpiAge\n180612,govita aging,GP34,EPIF2,B019,2,B7,EpiAge\n180612,govita aging,GP36,EPIF2,B020,2,B8,EpiAge\n180612,govita aging,GP37,EPIF2,B021,2,B9,EpiAge\n180612,govita aging,GP42,EPIF2,B022,2,B10,EpiAge\n180612,govita aging,GP43,EPIF2,B023,2,B11,EpiAge\n180612,govita aging,GP44,EPIF2,B024,2,B12,EpiAge\n180612,govita aging,GP47,EPIF2,B025,2,C1,EpiAge\n180612,govita aging,GP49,EPIF2,B026,2,C2,EpiAge\n180612,govita aging,GP50,EPIF2,B027,2,C3,EpiAge\n180612,govita aging,GP51,EPIF2,B028,2,C4,EpiAge\n180612,govita aging,GP52,EPIF2,B029,2,C5,EpiAge\n180612,govita aging,GP55,EPIF2,B030,2,C6,EpiAge\n180612,govita aging,GP56,EPIF2,B031,2,C7,EpiAge\n180612,govita aging,GP57,EPIF2,B032,2,C8,EpiAge\n180612,govita aging,GP60,EPIF2,B033,2,C9,EpiAge\n180612,govita aging,GP61,EPIF2,B034,2,C10,EpiAge\n180612,govita aging,GP58,EPIF2,B035,2,C11,EpiAge\n180612,govita aging,GP78,EPIF2,B036,2,C12,EpiAge\n180612,govita aging,GP79,EPIF2,B037,2,D1,EpiAge\n180612,govita aging,GP80,EPIF2,B038,2,D2,EpiAge\n180612,govita aging,GP86,EPIF2,B039,2,D3,EpiAge\n180612,govita aging,GP110,EPIF2,B040,2,D4,EpiAge\n180612,govita aging,GP126,EPIF2,B041,2,D5,EpiAge\n180612,govita aging,GP127,EPIF2,B042,2,D6,EpiAge\n180612,govita aging,GP137,EPIF2,B043,2,D7,EpiAge\n180612,govita aging,GP138,EPIF2,B044,2,D8,EpiAge\n180612,govita aging,GP254,EPIF2,B045,2,D9,EpiAge\n180612,govita aging,GP255,EPIF2,B046,2,D10,EpiAge\n180612,govita aging,GP33,EPIF2,B047,2,D11,EpiAge\n180612,govita aging,GP0,EPIF2,B048,2,D12,EpiAge\n180612,govita aging,GP2,EPIF2,B049,2,E1,EpiAge\n180612,govita aging,GP24,EPIF2,B050,2,E2,EpiAge\n180612,govita aging,GP45,EPIF2,B051,2,E3,EpiAge\n180612,govita aging,GP48,EPIF2,B052,2,E4,EpiAge\n180612,govita aging,GP59,EPIF2,B053,2,E5,EpiAge\n180612,govita aging,GS100,EPIF2,B054,2,E6,EpiAge\n180612,govita aging,GS80,EPIF2,B055,2,E7,EpiAge\n180612,govita aging,GS60,EPIF2,B056,2,E8,EpiAge\n180612,govita aging,GS40,EPIF2,B057,2,E9,EpiAge\n180612,govita aging,GS20,EPIF2,B058,2,E10,EpiAge\n180612,govita aging,GS0,EPIF2,B059,2,E11,EpiAge\n180612,Isaac aging,GMIXP26,EPIF2,B060,2,E12,EpiAge\n180612,Isaac aging,GMIXP28,EPIF2,B061,2,F1,EpiAge\n180612,Isaac aging,GMIXP27,EPIF2,B062,2,F2,EpiAge\n180612,Isaac aging,GMIXGTL10,EPIF2,B063,2,F3,EpiAge\n180612,Isaac aging,GMIXP31,EPIF2,B064,2,F4,EpiAge\n180613,Isaac aging,GMIXP32,EPIF2,B065,2,F5,EpiAge\n180614,Isaac aging,GMIXP33,EPIF2,B066,2,F6,EpiAge\n180615,Isaac aging,GMIXP34,EPIF2,B067,2,F7,EpiAge\n180616,Isaac aging,GMIXP35,EPIF2,B068,2,F8,EpiAge\n180617,Isaac aging,GMIXP36,EPIF2,B069,2,F9,EpiAge\n180618,Isaac aging,GMIXP37,EPIF2,B070,2,F10,EpiAge\n180619,Isaac aging,GMIXP38,EPIF2,B071,2,F11,EpiAge\n180620,Isaac aging,GMIXP39,EPIF2,B072,2,F12,EpiAge\n180621,Isaac aging,GMIXP40,EPIF2,B073,2,G1,EpiAge\n180622,Isaac aging,GMIXP41,EPIF2,B074,2,G2,EpiAge\n180623,Isaac aging,GMIXP42,EPIF2,B075,2,G3,EpiAge\n180624,Isaac aging,GMIXP43,EPIF2,B076,2,G4,EpiAge\n180625,Isaac aging,GMIXP44,EPIF2,B077,2,G5,EpiAge\n180626,Isaac aging,GMIXP45,EPIF2,B078,2,G6,EpiAge\n180627,Isaac aging,GMIXP46,EPIF2,B079,2,G7,EpiAge\n180628,Isaac aging,GMIXP47,EPIF2,B080,2,G8,EpiAge\n180629,Isaac aging,GMIXP48,EPIF2,B081,2,G9,EpiAge\n180630,Isaac aging,GMIXP49,EPIF2,B082,2,G10,EpiAge\n180631,Isaac aging,GMIXP50,EPIF2,B083,2,G11,EpiAge\n180632,Isaac aging,GMIXP51,EPIF2,B084,2,G12,EpiAge\n180633,Isaac aging,GMIXP52,EPIF2,B085,2,H1,EpiAge\n180634,Isaac aging,GMIXP53,EPIF2,B086,2,H2,EpiAge\n180635,Isaac aging,GMIXP54,EPIF2,B087,2,H3,EpiAge\n180636,Isaac aging,GMIXP55,EPIF2,B088,2,H4,EpiAge\n180637,Isaac aging,GMIXP56,EPIF2,B089,2,H5,EpiAge\n180638,Isaac aging,GMIXP57,EPIF2,B090,2,H6,EpiAge\n180639,Isaac aging,GMIXP58,EPIF2,B091,2,H7,EpiAge\n180640,Isaac aging,GMIXP59,EPIF2,B092,2,H8,EpiAge\n180640,Isaac aging,GMIXP60,EPIF2,B093,2,H9,EpiAge\n180640,Isaac aging,GMIXP61,EPIF2,B094,2,H10,EpiAge\n180640,Isaac aging,GMIXP62,EPIF2,B095,2,H11,EpiAge\n180640,Isaac aging,GMIXP63,EPIF2,B096,2,H12,EpiAge",
+            "label": "Uploaded CSV Copy of Sample Manifest",
+            "name": "uploaded_csv",
+            "type": "textFile"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "right",
+            "name": "p300_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on 1",
+            "share": false,
+            "slot": "1",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on 2",
+            "share": false,
+            "slot": "2",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Corning 96 Well Plate 360 \u00b5L Flat on 3",
+            "share": false,
+            "slot": "3",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Magnetic Module GEN2 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on 5",
+            "share": false,
+            "slot": "5",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "NEST 1 Well Reservoir 195 mL on 7",
+            "share": false,
+            "slot": "7",
+            "type": "nest_1_reservoir_195ml"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.9",
+        "author": "Steve <protocols@opentrons.com>",
+        "protocolName": "PCR 1",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}

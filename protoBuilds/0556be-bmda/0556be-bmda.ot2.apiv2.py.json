@@ -1,0 +1,192 @@
+{
+    "content": "metadata = {\n    'protocolName': 'BMDA - Dengue Protocol',\n    'author': 'Sakib <sakib.hossain@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.8'\n}\n\n\ndef run(ctx):\n\n    [p300_mount, temperature, final_tubes, comp_asp_speed, comp_disp_speed,\n        comp1_vol, comp2_vol, comp3_vol, comp4_vol, comp5_vol, comp6_vol,\n        comp7_vol, comp8_vol, comp9_vol, comp10_vol, comp11_vol,\n        comp12_vol, mm_vol, mix_reps, mix_vol, asp_delay,\n        disp_delay, air_gap_vol] = get_values(  # noqa: F821\n        \"p300_mount\", \"temperature\", \"final_tubes\", \"comp_asp_speed\",\n        \"comp_disp_speed\", \"comp1_vol\", \"comp2_vol\", \"comp3_vol\",\n        \"comp4_vol\", \"comp5_vol\", \"comp6_vol\", \"comp7_vol\", \"comp8_vol\",\n        \"comp9_vol\", \"comp10_vol\", \"comp11_vol\", \"comp12_vol\", \"mm_vol\",\n        \"mix_reps\", \"mix_vol\", \"asp_delay\", \"disp_delay\", \"air_gap_vol\")\n\n    # Load Labware\n    temp_mod = ctx.load_module('temperature module gen2', 10)\n    reagents = temp_mod.load_labware(\n        'opentrons_24_aluminumblock_nest_1.5ml_snapcap')\n    pcr_plate = ctx.load_labware(\n        'opentrons_96_aluminumblock_generic_pcr_strip_200ul', 8)\n    tiprack_200ul = ctx.load_labware('opentrons_96_filtertiprack_200ul', 1)\n\n    # Load Instruments\n    p300 = ctx.load_instrument('p300_single_gen2', p300_mount,\n                               tip_racks=[tiprack_200ul])\n\n    # Get Sample Wells\n    mm = reagents.wells()[0]\n    components = reagents.wells()[12:]\n    volumes = [int(vol) for vol in [comp1_vol, comp2_vol, comp3_vol, comp4_vol,\n                                    comp5_vol, comp6_vol, comp7_vol, comp8_vol,\n                                    comp9_vol, comp10_vol, comp11_vol,\n                                    comp12_vol]]\n    final_tubes = int(final_tubes)\n    mm_vol = float(mm_vol)\n\n    # Set Temperature to 8C\n    temp_mod.set_temperature(temperature)\n\n    # Add Components to Master Mix\n    p300.flow_rate.aspirate = comp_asp_speed\n    p300.flow_rate.dispense = comp_disp_speed\n    for vol, source in zip(volumes, components):\n        p300.pick_up_tip()\n        p300.air_gap(air_gap_vol)\n        p300.aspirate(vol, source)\n        ctx.delay(seconds=asp_delay)\n        p300.air_gap(air_gap_vol)\n        p300.dispense(vol+air_gap_vol*2, mm)\n        ctx.delay(seconds=disp_delay)\n        p300.drop_tip()\n    p300.pick_up_tip()\n    p300.mix(mix_reps, mix_vol, mm)\n    p300.drop_tip()\n\n    # Reset Flow Rates\n    p300.flow_rate.aspirate = 92.86\n    p300.flow_rate.dispense = 92.86\n\n    # Get well distribution for PCR plate\n    pcr_plate_wells = [pcr_plate.columns()[i] for i in [0, 3, 6, 9]]\n    pcr_plate_wells = [wells for well in pcr_plate_wells\n                       for wells in well][:final_tubes]\n\n    # Add Master Mix to 32 wells\n    p300.pick_up_tip()\n    for dest in pcr_plate_wells:\n        p300.air_gap(air_gap_vol)\n        p300.aspirate(mm_vol, mm)\n        ctx.delay(seconds=asp_delay)\n        p300.air_gap(air_gap_vol)\n        p300.touch_tip()\n        p300.dispense(mm_vol+air_gap_vol*2, dest)\n        p300.touch_tip()\n        ctx.delay(seconds=disp_delay)\n    p300.drop_tip()\n\n    # Deactivate Temp Mod\n    temp_mod.deactivate()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "label": "P300-single GEN2 mount",
+            "name": "p300_mount",
+            "options": [
+                {
+                    "label": "right",
+                    "value": "right"
+                },
+                {
+                    "label": "left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 8,
+            "label": "Temperature in Celsius (Temperature Module)",
+            "name": "temperature",
+            "type": "int"
+        },
+        {
+            "default": 32,
+            "label": "Final Tubes Number (Max: 32)",
+            "name": "final_tubes",
+            "type": "int"
+        },
+        {
+            "default": 50,
+            "label": "Component Aspirate Flow Rate (uL/s)",
+            "name": "comp_asp_speed",
+            "type": "float"
+        },
+        {
+            "default": 50,
+            "label": "Component Dispense Flow Rate (uL/s)",
+            "name": "comp_disp_speed",
+            "type": "float"
+        },
+        {
+            "default": 51,
+            "label": "Component 1 Volume (uL)",
+            "name": "comp1_vol",
+            "type": "float"
+        },
+        {
+            "default": 85,
+            "label": "Component 2 Volume (uL)",
+            "name": "comp2_vol",
+            "type": "float"
+        },
+        {
+            "default": 51,
+            "label": "Component 3 Volume (uL)",
+            "name": "comp3_vol",
+            "type": "float"
+        },
+        {
+            "default": 119,
+            "label": "Component 4 Volume (uL)",
+            "name": "comp4_vol",
+            "type": "float"
+        },
+        {
+            "default": 136,
+            "label": "Component 5 Volume (uL)",
+            "name": "comp5_vol",
+            "type": "float"
+        },
+        {
+            "default": 34,
+            "label": "Component 6 Volume (uL)",
+            "name": "comp6_vol",
+            "type": "float"
+        },
+        {
+            "default": 34,
+            "label": "Component 7 Volume (uL)",
+            "name": "comp7_vol",
+            "type": "float"
+        },
+        {
+            "default": 34,
+            "label": "Component 8 Volume (uL)",
+            "name": "comp8_vol",
+            "type": "float"
+        },
+        {
+            "default": 34,
+            "label": "Component 9 Volume (uL)",
+            "name": "comp9_vol",
+            "type": "float"
+        },
+        {
+            "default": 34,
+            "label": "Component 10 Volume (uL)",
+            "name": "comp10_vol",
+            "type": "float"
+        },
+        {
+            "default": 34,
+            "label": "Component 11 Volume (uL)",
+            "name": "comp11_vol",
+            "type": "float"
+        },
+        {
+            "default": 34,
+            "label": "Component 12 Volume (uL)",
+            "name": "comp12_vol",
+            "type": "float"
+        },
+        {
+            "default": 20,
+            "label": "Master Mix Volume (uL)",
+            "name": "mm_vol",
+            "type": "float"
+        },
+        {
+            "default": 10,
+            "label": "Mix Repititions",
+            "name": "mix_reps",
+            "type": "int"
+        },
+        {
+            "default": 200,
+            "label": "Mixing Volume (uL)",
+            "name": "mix_vol",
+            "type": "float"
+        },
+        {
+            "default": 2,
+            "label": "Delay After Aspirating (seconds)",
+            "name": "asp_delay",
+            "type": "float"
+        },
+        {
+            "default": 2,
+            "label": "Delay After Dispensing (seconds)",
+            "name": "disp_delay",
+            "type": "float"
+        },
+        {
+            "default": 20,
+            "label": "Air Gap Volume (Before and After Each Aspirate)",
+            "name": "air_gap_vol",
+            "type": "float"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "right",
+            "name": "p300_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 1",
+            "share": false,
+            "slot": "1",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 \u00b5L on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_aluminumblock_generic_pcr_strip_200ul"
+        },
+        {
+            "name": "Opentrons 24 Well Aluminum Block with NEST 1.5 mL Snapcap on Temperature Module GEN2 on 10",
+            "share": false,
+            "slot": "10",
+            "type": "opentrons_24_aluminumblock_nest_1.5ml_snapcap"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.8",
+        "author": "Sakib <sakib.hossain@opentrons.com>",
+        "description": "Custom Protocol Request",
+        "protocolName": "BMDA - Dengue Protocol"
+    },
+    "modules": []
+}

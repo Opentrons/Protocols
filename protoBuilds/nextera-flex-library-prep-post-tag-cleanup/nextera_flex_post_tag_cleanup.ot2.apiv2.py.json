@@ -1,0 +1,111 @@
+{
+    "content": "import math\nfrom opentrons.types import Point\n\nmetadata = {\n    'protocolName': 'Nextera DNA Flex NGS Library Prep: Post Tagmentation \\\nCleanup',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.2'\n}\n\n\ndef run(ctx):\n\n    [number_of_samples_to_process, p300_type,\n        p300_mount] = get_values(  # noqa: F821\n            'number_of_samples_to_process', 'p300_type', 'p300_mount')\n\n    # load labware and modules\n    magdeck = ctx.load_module('magdeck', '1')\n    mag_plate = magdeck.load_labware(\n        'biorad_96_wellplate_200ul_pcr', '1')\n    res12 = ctx.load_labware(\n        'usascientific_12_reservoir_22ml', '3', 'reagent reservoir')\n\n    twb = [chan.bottom(5) for chan in res12.wells()[:2]]\n    liquid_waste = [chan.top() for chan in res12.wells()[10:]]\n\n    # check:\n    if number_of_samples_to_process > 96 or number_of_samples_to_process < 1:\n        raise Exception('Invalid number of samples to process (must be between \\\n1 and 96).')\n\n    num_cols = math.ceil(number_of_samples_to_process/8)\n    num_300_racks = math.ceil((num_cols*6)/12)\n    slots300 = [str(slot) for slot in range(5, 5+num_300_racks)]\n    tips300 = [\n        ctx.load_labware('opentrons_96_tiprack_300ul', slot)\n        for slot in slots300\n    ]\n\n    # pipettes\n    pip300 = ctx.load_instrument(p300_type, p300_mount, tip_racks=tips300)\n    if p300_type == 'p300_multi':\n        samples300 = mag_plate.rows()[0][:num_cols]\n    else:\n        samples300 = mag_plate.wells()[:number_of_samples_to_process]\n    pip300.flow_rate.aspirate = 75\n    pip300.flow_rate.dispense = 90\n\n    magdeck.engage(height=18)\n    ctx.delay(minutes=3, msg='Incubating beads on magnet for 3 minutes.')\n\n    # remove and discard supernatant\n    for s in samples300:\n        pip300.pick_up_tip()\n        pip300.transfer(65, s.bottom(1), liquid_waste[0], new_tip='never')\n        pip300.blow_out()\n        pip300.drop_tip()\n\n    # TWB washes 3x\n    count = 0\n    total_twb = 96*3\n    for wash in range(3):\n        magdeck.disengage()\n\n        # resuspend beads in TWB\n        for i, s in enumerate(samples300):\n            ind = (count*len(twb))//total_twb\n            count += 1\n\n            side = i % 2 if p300_type == 'multi' else math.floor(i/8) % 2\n            angle = 1 if side == 0 else -1\n            disp_loc = s.bottom().move(\n                Point(x=0.85*(s.diameter/2)*angle, y=0, z=3))\n            pip300.pick_up_tip()\n            pip300.aspirate(100, twb[ind])\n            pip300.move_to(s.center())\n            pip300.dispense(100, disp_loc)\n            pip300.mix(10, 80, disp_loc)\n            pip300.drop_tip()\n\n        magdeck.engage(height=18)\n\n        if wash < 2:\n            ctx.delay(\n                minutes=3, msg='Incubating beads on magnet for 3 minutes')\n            # remove and discard supernatant\n            for s in samples300:\n                pip300.pick_up_tip()\n                pip300.transfer(\n                    120, s.bottom(1), liquid_waste[wash], new_tip='never')\n                pip300.blow_out()\n                pip300.drop_tip()\n\n    ctx.comment('Seal the plate, and keep on the magnetic module. The TWB \\\nremains in the wells to prevent overdrying of the beads')\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 96,
+            "label": "number of samples to prcoess",
+            "name": "number_of_samples_to_process",
+            "type": "int"
+        },
+        {
+            "label": "P300 pipette type",
+            "name": "p300_type",
+            "options": [
+                {
+                    "label": "single",
+                    "value": "p300_single"
+                },
+                {
+                    "label": "multi",
+                    "value": "p300_multi"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P300 pipette mount",
+            "name": "p300_mount",
+            "options": [
+                {
+                    "label": "right",
+                    "value": "right"
+                },
+                {
+                    "label": "left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "right",
+            "name": "p300_single"
+        }
+    ],
+    "labware": [
+        {
+            "name": "1 on Magnetic Module GEN1 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "reagent reservoir on 3",
+            "share": false,
+            "slot": "3",
+            "type": "usascientific_12_reservoir_22ml"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 10",
+            "share": false,
+            "slot": "10",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.2",
+        "author": "Nick <protocols@opentrons.com>",
+        "protocolName": "Nextera DNA Flex NGS Library Prep: Post Tagmentation Cleanup",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}

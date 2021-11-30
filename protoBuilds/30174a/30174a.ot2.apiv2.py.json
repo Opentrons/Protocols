@@ -1,0 +1,67 @@
+{
+    "content": "\nmetadata = {\n    'protocolName': 'DNA dilution using .csv file',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.5'\n}\n\n# csv_input = open(\"example.csv\", \"r\").read()\n\n\ndef run(ctx):\n\n    csv_input = get_values(  # noqa: F821\n            'csv_input')\n\n    plate1 = ctx.load_labware(\n        'nest_96_wellplate_100ul_pcr_full_skirt',\n        '6',\n        label=\"Plate 1\")\n    plate2 = ctx.load_labware(\n        'nest_96_wellplate_100ul_pcr_full_skirt',\n        '9',\n        label=\"Plate 2\")\n    te = ctx.load_labware('nest_1_reservoir_195ml', '8').wells()[0]\n\n    p300s_tips = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '7')]\n    p20s_tips = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '5')]\n\n    p300s = ctx.load_instrument(\n        'p300_single_gen2',\n        'right',\n        tip_racks=p300s_tips)\n    p20s = ctx.load_instrument('p20_single_gen2', 'left', tip_racks=p20s_tips)\n\n    data = [\n        [val.strip().upper() for val in line.split(',')]\n        for line in csv_input\n        if line and line.split(',')[0].strip()][1:]\n\n    dna_transfer = []\n    te_transfer = []\n    wells = []\n\n    for w, d, t in data:\n        dna_transfer.append(float(d))\n        te_transfer.append(float(t))\n        wells.append(w)\n\n    p300s.pick_up_tip()\n    for i, vol in enumerate(te_transfer):\n        p300s.transfer(\n            vol, te, plate2.wells_by_name()[\n                wells[i]], new_tip='never')\n    p300s.drop_tip()\n\n    for i, vol in enumerate(dna_transfer):\n        p20s.transfer(\n            vol, plate1.wells_by_name()[\n                wells[i]], plate2.wells_by_name()[\n                wells[i]], mix=(\n                3, 2))\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": "plate1,DNA,TE buffer,\nA1,1.0,39.0",
+            "label": "Transfer .csv input file",
+            "name": "csv_input",
+            "type": "textFile"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p20_single_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p300_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Plate 1 on 6",
+            "share": false,
+            "slot": "6",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "NEST 1 Well Reservoir 195 mL on 8",
+            "share": false,
+            "slot": "8",
+            "type": "nest_1_reservoir_195ml"
+        },
+        {
+            "name": "Plate 2 on 9",
+            "share": false,
+            "slot": "9",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.5",
+        "author": "Nick <protocols@opentrons.com>",
+        "protocolName": "DNA dilution using .csv file",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}

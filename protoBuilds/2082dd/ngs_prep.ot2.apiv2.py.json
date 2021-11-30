@@ -1,0 +1,133 @@
+{
+    "content": "import math\n\n# metadata\nmetadata = {\n    'protocolName': 'NGS Prep from .csv',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.0'\n}\n\n\ndef run(ctx):\n\n    [p20_single_mount, p300_single_mount, csv_file] = get_values(  # noqa: F821\n        'p20_single_mount', 'p300_single_mount', 'csv_file'\n    )\n\n    plate_a, plate_b, plate_c = [\n        ctx.load_labware('biorad_96_wellplate_200ul_pcr', slot, 'plate ' + pl)\n        for slot, pl in zip(['1', '2', '3'], ['A', 'B', 'C'])\n    ]\n    te_buffer = ctx.load_labware(\n        'opentrons_15_tuberack_falcon_15ml_conical',\n        '4',\n        '3x5 15ml tube rack for TE buffer').wells()[0]\n    micro_rack = ctx.load_labware(\n        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap',\n        '5',\n        '4x6 microtube rack for mix and pool tubes (loaded empty)'\n    )\n    racks20 = [\n        ctx.load_labware('opentrons_96_tiprack_20ul', slot)\n        for slot in ['6', '7', '8']\n    ]\n    racks300 = [\n        ctx.load_labware('opentrons_96_tiprack_300ul', slot)\n        for slot in ['9', '10', '11']\n    ]\n\n    # pipettes\n    p20 = ctx.load_instrument(\n        'p20_single_gen2', p20_single_mount, tip_racks=racks20)\n    p300 = ctx.load_instrument(\n        'p300_single_gen2', p300_single_mount, tip_racks=racks300)\n\n    # reagents\n    mix_tube, final_tube = micro_rack.rows()[0][:2]\n\n    # parse .csv file\n    all_vals = [\n        [float(val) for val in line.split(',')]\n        for line in csv_file.splitlines() if line\n    ]\n    num_cols = len(all_vals[0])\n    dil_b, dil_c, a_to_b, b_to_c, c_to_pool = [\n        [line[col] for col in range(num_cols) for line in all_vals[i*8:i*8+8]]\n        for i in range(5)\n    ]\n\n    h = 80\n    r = te_buffer.diameter/2\n\n    def h_track(vol):\n        nonlocal h\n        dh = vol/(math.pi*(r**2))*1.05\n        h = h - dh if h - dh > 10 else 10\n        return h\n\n    # transfer diluent into plates B and C\n    for dil, plate in zip([dil_b, dil_c], [plate_b, plate_c]):\n        for vol, well in zip(dil, plate.wells()):\n            if vol > 0:\n                pip = p20 if vol <= 20 else p300\n                if pip.hw_pipette['has_tip'] is False:\n                    pip.pick_up_tip()\n                pip.transfer(\n                    vol, te_buffer.bottom(h_track(vol)), well, new_tip='never')\n                pip.blow_out(well.top(-2))\n\n    # transfer libraries from plate A to plate B and mix:\n    for vol, source, dest, check in zip(\n            a_to_b, plate_a.wells(), plate_b.wells(), dil_b):\n        if vol > 0:\n            pip = p20 if vol <= 20 else p300\n            if pip.hw_pipette['has_tip'] is False:\n                pip.pick_up_tip()\n            pip.transfer(vol, source, dest, new_tip='never')\n            if check > 0:\n                pip.mix(5, vol*.8, dest)\n            pip.blow_out(well.top(-2))\n            pip.drop_tip()\n\n    if p20.hw_pipette['has_tip'] is True:\n        p20.drop_tip()\n    if p300.hw_pipette['has_tip'] is True:\n        p300.drop_tip()\n\n    # transfer libraries from plate B to plate C and mix:\n    for vol, source, dest, check in zip(\n            b_to_c, plate_b.wells(), plate_c.wells(), dil_c):\n        if vol > 0:\n            pip = p20 if vol <= 20 else p300\n            pip.pick_up_tip()\n            pip.transfer(vol, source, dest, new_tip='never')\n            if check > 0:\n                pip.mix(5, vol*.8, dest)\n            pip.blow_out(well.top(-2))\n            pip.drop_tip()\n\n    # pool final-diluted libraries\n    for vol, source in zip(c_to_pool, plate_c.wells()):\n        if vol > 0:\n            pip = p20 if vol <= 20 else p300\n            pip.pick_up_tip()\n            pip.transfer(vol, source, mix_tube.bottom(5), new_tip='never')\n            pip.blow_out(mix_tube.top(-2))\n            pip.drop_tip()\n\n    # mix tube and transfer\n    total_vol = sum(c_to_pool)\n    mix_vol = total_vol*.8 if total_vol*.8 < 270 else 270\n    p300.pick_up_tip()\n    p300.mix(3, mix_vol, mix_tube)\n    p300.transfer(\n        25, mix_tube.bottom(5), final_tube.bottom(5), new_tip='never')\n    p300.blow_out(final_tube.top(-5))\n    p300.drop_tip()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "label": "P20 GEN2 single-channel mount",
+            "name": "p20_single_mount",
+            "options": [
+                {
+                    "label": "left",
+                    "value": "left"
+                },
+                {
+                    "label": "right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P300 GEN2 single-channel mount",
+            "name": "p300_single_mount",
+            "options": [
+                {
+                    "label": "right",
+                    "value": "right"
+                },
+                {
+                    "label": "left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": "3,0,20,0,3,0\n0,0,11,13,0,0\n0,0,8,0,0,0\n0,0,0,0,3,0\n7,17,10,24,10,0\n9,6,35,11,2,1\n0,0,27,10,21,9\n65,0,0,0,5,0\n195,100,195,141,195,56\n37,101,195,195,133,49\n124,152,195,20,10,2\n11,3,11,17,195,5\n195,195,195,195,195,140\n195,195,195,195,195,195\n7,75,195,195,195,195\n195,130,31,16,195,4\n7,7,7,7,7,7\n7,7,7,7,7,7\n7,7,7,7,7,7\n7,7,7,7,7,7\n7,7,7,7,7,7\n7,7,7,7,7,7\n7,7,7,7,7,7\n7,7,7,7,7,7\n5,5,5,5,5,5\n5,5,5,5,5,5\n5,5,5,5,5,5\n5,5,5,5,5,5\n5,5,5,5,5,5\n5,5,5,5,5,5\n5,5,5,5,5,5\n5,5,5,5,5,5\n3,3,3,3,3,3\n3,3,3,3,3,3\n3,3,3,3,3,3\n3,3,3,3,3,3\n3,3,3,3,3,3\n3,3,3,3,3,3\n3,3,3,3,3,3\n3,3,3,3,3,3",
+            "label": ".csv file for volumes",
+            "name": "csv_file",
+            "type": "textFile"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p20_single_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p300_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "plate A on 1",
+            "share": false,
+            "slot": "1",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "plate B on 2",
+            "share": false,
+            "slot": "2",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "plate C on 3",
+            "share": false,
+            "slot": "3",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "3x5 15ml tube rack for TE buffer on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_15_tuberack_falcon_15ml_conical"
+        },
+        {
+            "name": "4x6 microtube rack for mix and pool tubes (loaded empty) on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_tiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_tiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_tiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 10",
+            "share": false,
+            "slot": "10",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.0",
+        "author": "Nick <protocols@opentrons.com>",
+        "protocolName": "NGS Prep from .csv",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}
