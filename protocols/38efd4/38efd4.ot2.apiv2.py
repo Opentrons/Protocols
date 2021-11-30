@@ -7,7 +7,7 @@ import math
 import csv
 
 metadata = {
-    'title': 'Protein Crystallization Screen Formulator',
+    'title': 'Protein Crystallization Screen Builder',
     'author': 'Steve Plonk',
     'apiLevel': '2.10'
 }
@@ -34,7 +34,7 @@ def run(ctx):
     p1000s = ctx.load_instrument(
      "p1000_single_gen2", 'right', tip_racks=tips1000)
 
-    # load labware for reagents (based on protocol parameters)
+    # labware for reagents (based on protocol parameters)
     reagent_labware = [
      ctx.load_labware(labware, slot) for labware, slot in zip(
       [labware1, labware2, labware3, labware4, labware5, labware6, labware7,
