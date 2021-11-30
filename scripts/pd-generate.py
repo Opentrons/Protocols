@@ -170,9 +170,14 @@ def create_pd_json(folder):
         name = protobuilds_metadata['title']
     else:
         name = ' '
+
+    if 'author' in protobuilds_metadata.keys():
+        author = protobuilds_metadata['author']
+    else:
+        author = ' '
     metadata = {
         'protocolName': name,
-        'author': protobuilds_metadata['author'],
+        'author': author,
         'description': '',
         'created': now,
         'lastModified': now,
