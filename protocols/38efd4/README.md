@@ -1,4 +1,4 @@
-# Protein Crystallization Screen Formulator
+# Protein Crystallization Screen Builder
 
 ### Author
 [Opentrons](https://opentrons.com/)
