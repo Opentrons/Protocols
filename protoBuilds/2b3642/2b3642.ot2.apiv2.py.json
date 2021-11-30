@@ -1,0 +1,163 @@
+{
+    "content": "from opentrons import types\nimport json\nimport os\nimport math\n\nmetadata = {\n    'protocolName': '''NEBNext Ultra II DNA Library Preparation Kit\n                       for Illumina E7645S''',\n    'author': 'Sakib <sakib.hossain@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.10'\n}\n\n\ndef run(ctx):\n\n    [samples, m300_mount, p20_mount, initial_denaturation_cycles,\n     denat_anneal_cycles, final_extension_cycles, beads_vol_1,\n     elution_buff_vol, rxn_mix_vol_p3, beads_vol_2,\n     p5_mix_vol] = get_values(  # noqa: F821\n        \"samples\", \"m300_mount\", \"p20_mount\", \"initial_denaturation_cycles\",\n        \"denat_anneal_cycles\", \"final_extension_cycles\", \"beads_vol_1\",\n        \"elution_buff_vol\", \"rxn_mix_vol_p3\", \"beads_vol_2\", \"p5_mix_vol\")\n\n    if samples < 1 or samples > 24:\n        raise Exception('Invalid number of DNA samples (must be 1-24).')\n\n    cols = math.ceil(samples/8)\n\n    ctx.set_rail_lights(True)\n\n    # Labware\n    temp_mod = ctx.load_module('temperature module gen2', 3)\n    temp_block = temp_mod.load_labware(\n                    'opentrons_24_aluminumblock_nest_2ml_screwcap')\n    tc_mod = ctx.load_module('Thermocycler Module')\n    tc_plate = tc_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')\n\n    mag_mod = ctx.load_module('magnetic module gen2', 1)\n    mag_plate = mag_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')\n\n    tips200ul = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)\n                 for slot in [6, 9]]\n    tips20ul = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)\n                for slot in [5]]\n    pcr_block = ctx.load_labware(\n                    'opentrons_96_aluminumblock_generic_pcr_strip_200ul', 2)\n\n    # Pipettes\n    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,\n                               tip_racks=tips200ul)\n    p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tip_racks=tips20ul)\n\n    # Wells\n    enzyme_mix = temp_block['A1']\n    rxn_buff = temp_block['B1']\n    tc_sample_wells = tc_plate.wells()[:cols*8]\n    tc_sample_cols = tc_plate.rows()[0][:cols]\n    mag_plate_cols = mag_plate.rows()[0][:cols]\n    trash = ctx.loaded_labwares[12]['A1']\n    frag_dna_wells = pcr_block.wells()[:cols*8]\n    frag_dna_cols = pcr_block.rows()[0][:cols]\n    sides = [-1, 1] * (cols)\n    sides = sides[:cols]\n\n    # Helper Functions\n    tip_track = True\n\n    tip_log = {val: {} for val in ctx.loaded_instruments.values()}\n\n    folder_path = '/data/tiptracking'\n    tip_file_path = folder_path + '/tip_log.json'\n    if tip_track and not ctx.is_simulating():\n        if os.path.isfile(tip_file_path):\n            with open(tip_file_path) as json_file:\n                data = json.load(json_file)\n                for pip in tip_log:\n                    if pip.name in data:\n                        tip_log[pip]['count'] = data[pip.name]\n                    else:\n                        tip_log[pip]['count'] = 0\n        else:\n            for pip in tip_log:\n                tip_log[pip]['count'] = 0\n    else:\n        for pip in tip_log:\n            tip_log[pip]['count'] = 0\n\n    for pip in tip_log:\n        if pip.type == 'multi':\n            tip_log[pip]['tips'] = [tip for rack in pip.tip_racks\n                                    for tip in rack.rows()[0]]\n        else:\n            tip_log[pip]['tips'] = [tip for rack in pip.tip_racks\n                                    for tip in rack.wells()]\n        tip_log[pip]['max'] = len(tip_log[pip]['tips'])\n\n    def _pick_up(pip, loc=None):\n        if tip_log[pip]['count'] == tip_log[pip]['max'] and not loc:\n            ctx.pause('Replace ' + str(pip.max_volume) + '\u00b5l tipracks before \\\nresuming.')\n            pip.reset_tipracks()\n            tip_log[pip]['count'] = 0\n        if loc:\n            pip.pick_up_tip(loc)\n        else:\n            pip.pick_up_tip(tip_log[pip]['tips'][tip_log[pip]['count']])\n            tip_log[pip]['count'] += 1\n\n    \"\"\" All of your protocol steps go here. Be sure to use _pick_up(pip) to\n    keep track of your tips rather than the standard in\n    pip.pick_up_tip() function. \"\"\"\n\n    # track final used tip\n    if tip_track and not ctx.is_simulating():\n        if not os.path.isdir(folder_path):\n            os.mkdir(folder_path)\n        data = {pip.name: tip_log[pip]['count'] for pip in tip_log}\n        with open(tip_file_path, 'w') as outfile:\n            json.dump(data, outfile)\n\n    def remove_supernatant(vol, src, dest, side):\n        m300.flow_rate.aspirate = 20\n        m300.aspirate(10, src.top())\n        while vol > 200:\n            m300.aspirate(\n                200, src.bottom().move(types.Point(x=side, y=0, z=0.5)))\n            m300.dispense(200, dest)\n            m300.aspirate(10, dest)\n            vol -= 200\n        m300.aspirate(vol, src.bottom().move(types.Point(x=side, y=0, z=0.5)))\n        m300.dispense(vol, dest)\n        m300.dispense(10, dest)\n        m300.flow_rate.aspirate = 50\n\n    # I. End Preparation\n    ctx.comment('Starting End Preparation')\n    ctx.comment('Cooling temperature module to 4C.')\n    # Set temperature to 4C (1)\n    temp_mod.set_temperature(4)\n\n    ctx.pause('''Please place reagents and libraries in the correct positions\n                 on the temperature module. Click Resume to continue.''')\n\n    # Add components to reaction mixture (2)\n    for well in frag_dna_wells:\n        _pick_up(p20)\n        p20.transfer(3.5, rxn_buff, well, new_tip='never')\n        p20.drop_tip()\n\n        _pick_up(p20)\n        p20.transfer(1.5, enzyme_mix, well, new_tip='never')\n        p20.drop_tip()\n\n    ctx.pause('''Please remove the reagents from the temperature module.''')\n\n    # Resuspend reaction mixture 10x, 25 uL (3, 4)\n    for col in frag_dna_cols:\n        _pick_up(m300)\n        m300.mix(10, 25, col)\n        m300.drop_tip()\n\n    # Centrifuge Plate (5)\n    ctx.pause('''Please remove the reaction mixture in order to centrifuge the mixture and\n              click Resume for the lid temperature to reach 75C.''')\n\n    # Raise Lid Temperature (6)\n    tc_mod.close_lid()\n    tc_mod.set_lid_temperature(75)\n    tc_mod.open_lid()\n\n    # Move Reaction Mixture Plate into Thermocycler (7)\n    ctx.pause('''Thermocycler lid temperature has reached 75C. Click Resume to transfer\n              Reaction Mixture to Thermocycler''')\n\n    for src, dest in zip(frag_dna_cols, tc_sample_cols):\n        _pick_up(m300)\n        m300.transfer(30, src, dest, new_tip='never')\n        m300.drop_tip()\n\n    tc_mod.close_lid()\n\n    # Thermocycler Profile (8)\n    profile = [\n                {'temperature': 20, 'hold_time_minutes': 30},\n                {'temperature': 65, 'hold_time_minutes': 30}]\n    tc_mod.execute_profile(steps=profile, repetitions=1, block_max_volume=30)\n    tc_mod.set_block_temperature(4)\n    tc_mod.open_lid()\n    ctx.comment('End Preparation Completed!')\n\n    # II. Adaptor Ligation\n    ctx.comment('Starting Adaptor Ligation!')\n    ctx.comment('Deactivating Thermocycler Lid')\n    ctx.pause('''Please place Adaptor Ligation reagents on the temperature module\n              and click Resume to begin Deactivating the Thermocycler Lid.''')\n    tc_mod.deactivate_lid()\n    ctx.comment('Thermocycler Lid Deactivated!')\n\n    # Reagent Wells\n    illumina_adaptor = temp_block['A1']\n    ligation_enhancer = temp_block['B1']\n    ligation_mm = temp_block['C1']\n\n    # Add Components to the Reaction Mixture (1)\n    for well in tc_sample_wells:\n        _pick_up(p20)\n        p20.transfer(1.25, illumina_adaptor, well, new_tip='never')\n        p20.drop_tip()\n\n        _pick_up(p20)\n        p20.transfer(0.5, ligation_enhancer, well, new_tip='never')\n        p20.drop_tip()\n\n    # Resuspend Ligation Master Mix and Add to Reaction Mixture (2, 3, 4)\n    for i, well in enumerate(tc_sample_wells):\n        _pick_up(p20)\n        if i == 0:\n            p20.mix(10, 20, ligation_mm)\n        p20.transfer(15, ligation_mm, well, new_tip='never')\n        p20.drop_tip()\n\n    ctx.pause('''Please remove the reagents from the temperature module.''')\n\n    # Resuspend reaction mixture 10x, 40 uL (5, 6)\n    for col in tc_sample_cols:\n        _pick_up(m300)\n        m300.mix(10, 40, col)\n        m300.drop_tip()\n\n    # Centrifuge Reaction Mixture Plate (7, 8)\n    ctx.pause('''Please remove the reaction mixture plate from the\n              thermocycler in order to centrifuge the mixture.\n              Return the plate to the thermocycler and click\n              Resume once completed.''')\n\n    # Incubate at 20C for 15 minutes (9)\n    tc_mod.close_lid()\n    tc_mod.set_block_temperature(20, hold_time_minutes=15)\n    tc_mod.open_lid()\n\n    ctx.pause('''Please place the USER Enzyme in A1 of the temperature module.\n              Click Resume when completed.''')\n\n    user_enzyme = temp_block['A1']\n\n    # Add USER Enzyme to Reaction Mixture (10)\n    for well in tc_sample_wells:\n        _pick_up(p20)\n        p20.transfer(1.5, user_enzyme, well, new_tip='never')\n        p20.drop_tip()\n\n    ctx.pause('''Please remove the USER Enzyme in A1 of the temperature module.\n                Click Resume when completed.''')\n\n    # Resuspend reaction mixture 10x, 40 uL (11, 12)\n    for col in tc_sample_cols:\n        _pick_up(m300)\n        m300.mix(10, 40, col)\n        m300.drop_tip()\n\n    # Centrifuge Reaction Mixture Plate (13)\n    ctx.pause('''Please remove the reaction mixture plate from the\n              thermocycler in order to centrifuge the mixture and\n              click Resume for the lid temperature to reach 47C. ''')\n\n    # Raise Lid Temperature to 47C (14)\n    tc_mod.close_lid()\n    tc_mod.set_lid_temperature(47)\n    tc_mod.open_lid()\n\n    # Plate Reaction Mixture Plate into Thermocycler (15)\n    ctx.pause('''Thermocycler lid temperature has reached 47C. Please put the\n              reaction mixture plate into the thermocycler\n              and click Resume.''')\n    tc_mod.close_lid()\n\n    # Incubate at 37C for 15 minutes (16)\n    tc_mod.set_block_temperature(37, hold_time_minutes=15)\n    tc_mod.open_lid()\n    ctx.comment('''Adaptor Ligation Completed!\n                Please setup Part 2 of the protocol.''')\n\n    # III. Cleanup of Adaptor-Ligated DNA\n    ctx.comment('Starting Cleanup of Adaptor-Ligated DNA!')\n    ctx.pause('''Add the NEST 12-well reservoir with the correct reagents\n              in the channels to slot 4.''')\n    reservoir = ctx.load_labware('nest_12_reservoir_15ml', 4)\n\n    # Reservoir Reagents\n    ethanol = reservoir['A1']\n    elution_buff = reservoir['A3']\n    beads = reservoir['A12']\n\n    # Add AMPure XP Beads (1)\n    for col in tc_sample_cols:\n        _pick_up(m300)\n        m300.transfer(beads_vol_1, beads, col, new_tip='never')\n        m300.drop_tip()\n\n    # Resuspend Reaction Mixture (2, 3)\n    for col in tc_sample_cols:\n        _pick_up(m300)\n        m300.mix(10, 85, col)\n        m300.drop_tip()\n\n    ctx.pause('''Please remove the reaction mixture plate from the\n              thermocycler in order to centrifuge the mixture. Return the plate\n              on the Magnetic Module and click Resume.''')\n\n    ctx.delay(minutes=5, msg='''Incubating reaction mixture for 5 minutes\n              at Room Temperature.''')\n\n    # Engage Magnetic Module (7)\n    mag_mod.engage()\n    ctx.delay(minutes=5, msg='Waiting 5 minutes for beads to pellet.')\n\n    # Remove Supernatant (8, 9)\n    for col, side in zip(mag_plate_cols, sides):\n        _pick_up(m300)\n        remove_supernatant(100, col, trash, side)\n        m300.drop_tip()\n\n    # Ethanol Wash (10-13)\n    for _ in range(2):\n        ctx.comment('Performing Ethanol Wash!')\n        _pick_up(m300)\n        for col in mag_plate_cols:\n            m300.transfer(100, ethanol, col.top(), new_tip='never')\n        m300.drop_tip()\n\n        ctx.delay(seconds=30, msg='''Incubating reaction mixture for\n                  30 seconds at room temperature''')\n\n        for col, side in zip(mag_plate_cols, sides):\n            _pick_up(m300)\n            remove_supernatant(100, col, trash, side)\n            m300.drop_tip()\n\n    mag_mod.disengage()\n    ctx.pause('''Magnetic Module Disengaged!\n              Pausing to allow beads to dry.\n              Click Resume when beads are dry.''')\n\n    # Add Elution Buffer (15)\n    ctx.comment('Adding Elution Buffer to Samples!')\n    _pick_up(m300)\n    for col in mag_plate_cols:\n        m300.transfer(elution_buff_vol, elution_buff, col.top(),\n                      new_tip='never')\n    m300.drop_tip()\n\n    # Resuspend Reaction Mixture (17)\n    for col in mag_plate_cols:\n        _pick_up(m300)\n        m300.mix(10, 15, col)\n        m300.drop_tip()\n\n    # Incubate at Room Temp (18)\n    ctx.delay(minutes=2, msg='''Incubating Reaction Mixture for\n              2 minutes at Room Temperature''')\n\n    # Engage Magnetic Module\n    ctx.comment('Engaging Magnetic Module!')\n    mag_mod.engage()\n\n    ctx.delay(minutes=5, msg='Waiting 5 minutes for beads to pellet.')\n    ctx.pause('''Add new PCR tubes to Almuminum Block in Slot 2.\n              Tubes should start in A1 and correspond to the\n              number of total samples.''')\n\n    pcr_tube_cols = pcr_block.rows()[0][:cols]\n    pcr_tube_wells = pcr_block.wells()[:cols*8]\n\n    # Transfer Reaction Mixure to PCR Tubes\n    for src, dest, side in zip(mag_plate_cols, pcr_tube_cols, sides):\n        _pick_up(m300)\n        remove_supernatant(rxn_mix_vol_p3, src, dest, side)\n        m300.drop_tip()\n\n    mag_mod.disengage()\n    ctx.comment('Cleanup of Adaptor-Ligated DNA Completed!')\n\n    # IV. PCR Amplification\n    ctx.comment('Starting PCR Amplification!')\n    ctx.pause('''Place the proper reagents in the temperature module.\n    NEBNext Ultra II Q5 Master Mix in A1.\n    UDI Primers in B1.''')\n\n    # Reagent Components\n    q5_mm = temp_block['A1']\n    udi_primers = temp_block['B1']\n\n    # Add Components to new PCR Tubes (1)\n    # Transfer Master Mix and Primers\n    for well in pcr_tube_wells:\n        _pick_up(p20)\n        p20.transfer(12.5, q5_mm, well, new_tip='never')\n        p20.drop_tip()\n\n        _pick_up(p20)\n        p20.transfer(2.5, udi_primers, well, new_tip='never')\n        p20.drop_tip()\n\n    ctx.pause('''Remove reagents from the temperature module.''')\n\n    # Resuspend reaction mixture 10x, 20 uL (2, 3)\n    for col in pcr_tube_cols:\n        _pick_up(m300)\n        m300.mix(10, 20, col)\n        m300.drop_tip()\n\n    # Centrifugation (4)\n    ctx.pause('''Remove reaction mixture from the deck for centrifugation.\n              Return the reaction mixture and click Resume.''')\n    ctx.pause('''Add a new PCR plate into the thermocycler and click Resume to begin\n              transferring reaction mixture to the thermocycler.''')\n\n    # Transfer Reaction Mixture to Thermocycler (5)\n    for src, dest in zip(pcr_tube_cols, tc_sample_cols):\n        _pick_up(m300)\n        m300.transfer(22.5, src, dest, new_tip='never')\n        m300.drop_tip()\n\n    # Thermocycler Profile (6)\n    tc_mod.close_lid()\n\n    # Initial Denaturation\n    for _ in range(initial_denaturation_cycles):\n        tc_mod.set_block_temperature(98, hold_time_seconds=30)\n\n    profile = [\n            {'temperature': 98, 'hold_time_seconds': 10},\n            {'temperature': 65, 'hold_time_seconds': 75}]\n    tc_mod.execute_profile(steps=profile, repetitions=denat_anneal_cycles,\n                           block_max_volume=25)\n\n    # Final Extension\n    for _ in range(final_extension_cycles):\n        tc_mod.set_block_temperature(98, hold_time_seconds=30)\n\n    # Hold\n    tc_mod.set_block_temperature(4)\n    tc_mod.open_lid()\n    ctx.comment('PCR Amplification Completed!')\n\n    # V. Cleanup of PCR Reaction\n    ctx.pause('''Ensure reagents are in there proper place. The Cleanup of\n    PCR Reactions will require Ethanol, Elution Buffer and AMPure XP Beads''')\n\n    # Transfer Components to PCR Product Mixture (1)\n    # Add Elution Buffer\n    # ctx.comment('Adding Elution Buffer to PCR Product Mixtures!')\n    # _pick_up(m300)\n    # for col in tc_sample_cols:\n    #     m300.transfer(25, elution_buff, col.top(), new_tip='never')\n    # m300.drop_tip()\n\n    # Add AMPure XP Beads\n    ctx.comment('Adding AMPure XP Beads to PCR Product Mixtures!')\n    for col in tc_sample_cols:\n        _pick_up(m300)\n        m300.transfer(beads_vol_2, beads, col, new_tip='never')\n        m300.drop_tip()\n\n    # Resuspend and Incubate at Room Temperature (2)\n    for col in tc_sample_cols:\n        _pick_up(m300)\n        m300.mix(10, p5_mix_vol, col)\n        m300.drop_tip()\n\n    ctx.delay(minutes=5, msg='Incubating reaction mixture for 5 minutes.')\n\n    # Move Plate to Magnetic Module (3)\n    ctx.pause('''Move the PCR plate from the Thermocycler to\n              the Magnetic Module and then click Resume.''')\n\n    # Engage Magnet (4)\n    mag_mod.engage()\n    ctx.delay(minutes=5, msg='Engaging magnets for 5 minutes.')\n\n    # Remove Supernatant (5, 6)\n    for col, side in zip(mag_plate_cols, sides):\n        _pick_up(m300)\n        remove_supernatant(65, col, trash, side)\n        m300.drop_tip()\n\n    # Ethanol Wash with Delays (7-10)\n    for _ in range(2):\n        ctx.comment('Performing Ethanol Wash!')\n        _pick_up(m300)\n        for col in mag_plate_cols:\n            m300.transfer(100, ethanol, col.top(), new_tip='never')\n        m300.drop_tip()\n\n        ctx.delay(seconds=30, msg='''Incubating reaction mixture for\n                  30 seconds at room temperature''')\n\n        for col, side in zip(mag_plate_cols, sides):\n            _pick_up(m300)\n            remove_supernatant(100, col, trash, side)\n            m300.drop_tip()\n\n    mag_mod.disengage()\n    ctx.pause('''Magnetic Module Disengaged!\n              Pausing to allow beads to dry.\n              Click Resume when beads are dry.''')\n\n    # Add Elution Buffer (11, 12)\n    ctx.comment('Adding Elution Buffer to Reaction Mixture.')\n    _pick_up(m300)\n    for col in mag_plate_cols:\n        m300.transfer(20, elution_buff, col.top(), new_tip='never')\n    m300.drop_tip()\n\n    # Resuspend reaction mixture 10x, 15 uL (13)\n    for col in mag_plate_cols:\n        _pick_up(m300)\n        m300.mix(10, 15, col)\n        m300.drop_tip()\n\n    # Centrifugation (14)\n    ctx.pause('''Remove reaction mixture from the magnetic module for centrifugation.\n              Also add new PCR tubes starting in A1 on slot 2.\n              Return the reaction mixture and click Resume.''')\n\n    # Incubation (15)\n    ctx.delay(minutes=2, msg='Incubating reaction mixture for 2 minutes.')\n\n    # Engage Magnetic Module (16, 17)\n    mag_mod.engage()\n    ctx.delay(minutes=5, msg='Engaging Magnetic Module for 5 minutes.')\n\n    # Transfer supernatant to new PCR tubes (18)\n    for src, dest, side in zip(mag_plate_cols, pcr_tube_cols, sides):\n        _pick_up(m300)\n        remove_supernatant(30, src, dest, side)\n        m300.drop_tip()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 24,
+            "label": "Number of Samples (Max: 24)",
+            "name": "samples",
+            "type": "int"
+        },
+        {
+            "label": "P300 Multichannel GEN2 Mount Position",
+            "name": "m300_mount",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P20 Single Channel GEN2 Mount Position",
+            "name": "p20_mount",
+            "options": [
+                {
+                    "label": "Right",
+                    "value": "right"
+                },
+                {
+                    "label": "Left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 1,
+            "label": "Initial Denaturation Cycles",
+            "name": "initial_denaturation_cycles",
+            "type": "int"
+        },
+        {
+            "default": 6,
+            "label": "Denaturation and Annealing/Extension Cycles",
+            "name": "denat_anneal_cycles",
+            "type": "int"
+        },
+        {
+            "default": 1,
+            "label": "Final Extension Cycles",
+            "name": "final_extension_cycles",
+            "type": "int"
+        },
+        {
+            "default": 41,
+            "label": "AMPure XP Beads Volume (uL, Part III)",
+            "name": "beads_vol_1",
+            "type": "float"
+        },
+        {
+            "default": 17,
+            "label": "Elution Buffer Volume (uL, Part III)",
+            "name": "elution_buff_vol",
+            "type": "float"
+        },
+        {
+            "default": 15,
+            "label": "Reaction Mixture Transfer Volume (uL, Part III: Step 18)",
+            "name": "rxn_mix_vol_p3",
+            "type": "float"
+        },
+        {
+            "default": 41,
+            "label": "AMPure XP Beads Volume (uL, Part V)",
+            "name": "beads_vol_2",
+            "type": "float"
+        },
+        {
+            "default": 20,
+            "label": "Part V Resuspension Volume (uL, Part V)",
+            "name": "p5_mix_vol",
+            "type": "float"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_multi_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p20_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Magnetic Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 \u00b5L on 2",
+            "share": false,
+            "slot": "2",
+            "type": "opentrons_96_aluminumblock_generic_pcr_strip_200ul"
+        },
+        {
+            "name": "Opentrons 24 Well Aluminum Block with NEST 2 mL Screwcap on Temperature Module GEN2 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_24_aluminumblock_nest_2ml_screwcap"
+        },
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on 4",
+            "share": false,
+            "slot": "4",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Thermocycler Module on 7",
+            "share": false,
+            "slot": "7",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.10",
+        "author": "Sakib <sakib.hossain@opentrons.com>",
+        "description": "Custom Protocol Request",
+        "protocolName": "NEBNext Ultra II DNA Library Preparation Kit\n                       for Illumina E7645S"
+    },
+    "modules": []
+}

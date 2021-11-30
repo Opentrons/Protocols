@@ -1,0 +1,341 @@
+{
+    "content": "from opentrons import types\n\nmetadata = {\n    'protocolName': 'Automated Sample Prep for GNA Octea',\n    'author': 'Chaz <chaz@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.9'\n}\n\n\ndef run(protocol):\n    [mntMulti, mntSingle, numSamps] = get_values(  # noqa: F821\n     'mntMulti', 'mntSingle', 'numSamps')\n\n    # load labware\n    tips = [\n        protocol.load_labware('opentrons_96_filtertiprack_200ul', '10')]\n    m300 = protocol.load_instrument(\n        'p300_multi_gen2', mntMulti, tip_racks=tips)\n    p300 = protocol.load_instrument(\n        'p300_single_gen2', mntSingle, tip_racks=tips)\n\n    magDeck = protocol.load_module('magnetic module gen2', '4')\n    tempDeck = protocol.load_module('temperature module gen2', '6')\n    magPlate = magDeck.load_labware('biorad_96_wellplate_200ul_pcr')\n    tempPlate = tempDeck.load_labware(\n        'opentrons_96_aluminumblock_biorad_wellplate_200ul')\n\n    rsvr = protocol.load_labware('nest_12_reservoir_15ml', '7')\n\n    deepPlate = protocol.load_labware('nest_96_wellplate_2ml_deep', '8')\n\n    octeaPlate = protocol.load_labware('octea_16_wellplate_40ul', '2')\n\n    # Declare reagents/wells\n    wb1 = rsvr['A1']\n    hb1 = rsvr['A3']\n    waste = rsvr['A12'].top(-2)\n\n    sampsUTM = deepPlate.wells()[:numSamps]\n    sampsHB1 = deepPlate.wells()[8:8+numSamps]\n    tempSamps = tempPlate.rows()[0][:5]\n    magSamps = magPlate.rows()[0][:5]\n    rb1 = deepPlate['A12']\n    mblyo = deepPlate['D11']\n    mmlyo = deepPlate['D12']\n\n    if numSamps != 8:\n        raise Exception('Number of Samples is currently being tested and \\\n        should be set to 8')\n\n    # protocol\n    # set temperature module and magdeck\n    tempDeck.start_set_temperature(90)\n    magDeck.engage()\n\n    # Transfer 360 HB1 to MB LYO, mix and transfer to deep plate\n    p300.pick_up_tip()\n    p300.transfer(360, hb1, mblyo.top(-2), new_tip='never')\n    p300.mix(5, 180, mblyo)\n    pip_vol = 0\n    for well in sampsHB1:\n        if pip_vol < 40:\n            p300.dispense(pip_vol, mblyo)\n            p300.aspirate(180, mblyo)\n            pip_vol = 180\n        p300.dispense(40, well)\n        pip_vol -= 40\n    p300.dispense(pip_vol, mblyo)\n    p300.drop_tip()\n\n    # Transfer HB1 with multi channel to deep plate and to samples\n    m300.pick_up_tip()\n    m300.transfer(360, hb1, sampsHB1[0].top(-2), new_tip='never')\n    m300.mix(5, 180, sampsHB1[0])\n    m300.drop_tip()\n\n    m300.pick_up_tip()\n    m300.transfer(300, hb1, sampsUTM[0].top(-2), new_tip='never')\n\n    def deep_well_mix(reps, vol, loc):\n        vol -= 20\n        loc1 = loc.bottom().move(types.Point(x=1, y=0, z=1))\n        loc2 = loc.bottom().move(types.Point(x=1, y=0, z=4))\n        loc3 = loc.bottom().move(types.Point(x=-1, y=0, z=1))\n        loc4 = loc.bottom().move(types.Point(x=-1, y=0, z=4))\n        m300.aspirate(20, loc1)\n        for _ in range(reps-1):\n            m300.aspirate(vol, loc1)\n            m300.dispense(vol, loc4)\n            m300.aspirate(vol, loc3)\n            m300.dispense(vol, loc2)\n        m300.dispense(20, loc2)\n    # m300.mix(5, 180, sampsUTM[0])\n    deep_well_mix(4, 180, sampsUTM[0])\n\n    for vol in [150, 150, 100]:\n        m300.transfer(\n            vol, sampsHB1[0], sampsUTM[0], new_tip='never', air_gap=20)\n\n    # m300.mix(5, 180, sampsUTM[0])\n    deep_well_mix(4, 180, sampsUTM[0])\n    m300.drop_tip()\n\n    # Transfer 800ul (160 at a time) to temperature module\n    tempDeck.await_temperature(90)\n    m300.pick_up_tip()\n    m300.transfer(160, sampsUTM[0], tempSamps, new_tip='never', air_gap=20)\n\n    def set_default_rate(rate=92.86):\n        m300.flow_rate.aspirate = rate\n        m300.flow_rate.dispense = rate\n        m300.flow_rate.blow_out = rate\n\n    def temp_well_mix(rep, vol, loc, mix_rate=300):\n        m300.flow_rate.aspirate = mix_rate\n        m300.flow_rate.dispense = mix_rate\n        for _ in range(rep):\n            m300.aspirate(vol, loc.bottom(1))\n            m300.dispense(vol, loc.bottom(0.5))\n        set_default_rate()\n\n    for well in tempSamps:\n        # m300.mix(5, 90, well)\n        temp_well_mix(5, 90, well)\n    m300.move_to(tempSamps[-1].top())\n\n    # change temperature and incubate\n\n    tempDeck.set_temperature(80)\n    protocol.delay(minutes=2)\n    tempDeck.set_temperature(56)\n\n    for well in tempSamps:\n        # m300.mix(5, 90, well)\n        temp_well_mix(5, 90, well)\n    m300.move_to(tempSamps[-1].top())\n\n    protocol.delay(minutes=3)\n\n    tempDeck.deactivate()\n\n    # Mix and transfer samples from temperature module to magdeck\n    for well in tempSamps:\n        # m300.mix(5, 90, well)\n        temp_well_mix(5, 90, well)\n\n    for src, dest in zip(tempSamps, magSamps):\n        m300.transfer(160, src, dest, new_tip='never', air_gap=20)\n\n    m300.drop_tip()\n\n    # Incubate on magdeck and transfer supernatant\n    protocol.delay(minutes=3)\n\n    m300.pick_up_tip()\n    m300.flow_rate.aspirate = 20\n\n    for src in magSamps:\n        m300.transfer(160, src, waste, new_tip='never', air_gap=20)\n\n    magDeck.disengage()\n\n    m300.drop_tip()\n\n    # Transfer wb1 to samples on the magdeck and re-combine\n    m300.pick_up_tip()\n    m300.flow_rate.aspirate = 92.86\n\n    pip_vol = 0\n    for well in magSamps:\n        if pip_vol < 40:\n            m300.dispense(pip_vol, wb1)\n            m300.aspirate(180, wb1)\n            pip_vol = 180\n        m300.dispense(40, well.top(-2))\n        pip_vol -= 40\n    m300.dispense(pip_vol, wb1)\n    magLast = magSamps[-1]\n\n    for well in magSamps[:-1]:\n        m300.transfer(\n            40, well, magLast, mix_before=(5, 30), new_tip='never', air_gap=20)\n\n    m300.mix(5, 160, magLast)\n    m300.move_to(magLast.top())\n    # Engage magdeck and remove supernatant\n    magDeck.engage()\n    protocol.delay(minutes=3)\n\n    m300.flow_rate.aspirate = 20\n    for _ in range(2):\n        m300.transfer(100, magLast, waste, new_tip='never', air_gap=20)\n\n    magDeck.disengage()\n    m300.drop_tip()\n    m300.flow_rate.aspirate = 92.86\n\n    # transfer RB1 to MMLYO and distribute\n    magSamps2 = magPlate.wells()[32:32+numSamps]\n    p300.pick_up_tip()\n\n    for _ in range(2):\n        p300.transfer(175, rb1, mmlyo.top(-2), new_tip='never')\n\n    p300.mix(5, 175, mmlyo)\n\n    p300.transfer(40, mmlyo, [w.top() for w in magSamps2], new_tip='never')\n    pip_vol = 0\n    for well in magSamps2:\n        if pip_vol < 40:\n            p300.dispense(pip_vol, mmlyo)\n            p300.aspirate(180, mmlyo)\n            pip_vol = 180\n        p300.dispense(40, well.top(-2))\n        pip_vol -= 40\n    p300.dispense(pip_vol, mmlyo)\n    p300.drop_tip()\n\n    m300.pick_up_tip()\n    m300.mix(7, 30, magLast)\n    m300.drop_tip()\n\n    # transfer samples to octea plate\n\n    for src, dest in zip(magSamps2, octeaPlate.rows()[0][:numSamps]):\n        p300.pick_up_tip()\n        p300.aspirate(40, src)\n        p300.dispense(20, well.bottom().move(types.Point(x=-1, y=1, z=1)))\n        p300.dispense(20, well.bottom().move(types.Point(x=1, y=-1, z=1)))\n        p300.drop_tip()\n\n    # p300.transfer(40, mmlyo, octeaPlate.wells()[numSamps:])\n",
+    "custom_labware_defs": [
+        {
+            "brand": {
+                "brand": "Octea",
+                "brandId": []
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 127.75,
+                "yDimension": 85.59,
+                "zDimension": 21.44
+            },
+            "groups": [
+                {
+                    "metadata": {
+                        "wellBottomShape": "flat"
+                    },
+                    "wells": [
+                        "A1",
+                        "B1",
+                        "A2",
+                        "B2",
+                        "A3",
+                        "B3",
+                        "A4",
+                        "B4",
+                        "A5",
+                        "B5",
+                        "A6",
+                        "B6",
+                        "A7",
+                        "B7",
+                        "A8",
+                        "B8"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "wellPlate",
+                "displayName": "Octea 16 Well Plate 40 \u00b5L",
+                "displayVolumeUnits": "\u00b5L",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1",
+                    "B1"
+                ],
+                [
+                    "A2",
+                    "B2"
+                ],
+                [
+                    "A3",
+                    "B3"
+                ],
+                [
+                    "A4",
+                    "B4"
+                ],
+                [
+                    "A5",
+                    "B5"
+                ],
+                [
+                    "A6",
+                    "B6"
+                ],
+                [
+                    "A7",
+                    "B7"
+                ],
+                [
+                    "A8",
+                    "B8"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "octea_16_wellplate_40ul",
+                "quirks": []
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 4.5,
+                    "diameter": 5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 40,
+                    "x": 42.12,
+                    "y": 56.11,
+                    "z": 16.94
+                },
+                "A2": {
+                    "depth": 4.5,
+                    "diameter": 5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 40,
+                    "x": 51.12,
+                    "y": 56.11,
+                    "z": 16.94
+                },
+                "A3": {
+                    "depth": 4.5,
+                    "diameter": 5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 40,
+                    "x": 60.12,
+                    "y": 56.11,
+                    "z": 16.94
+                },
+                "A4": {
+                    "depth": 4.5,
+                    "diameter": 5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 40,
+                    "x": 69.12,
+                    "y": 56.11,
+                    "z": 16.94
+                },
+                "A5": {
+                    "depth": 4.5,
+                    "diameter": 5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 40,
+                    "x": 78.12,
+                    "y": 56.11,
+                    "z": 16.94
+                },
+                "A6": {
+                    "depth": 4.5,
+                    "diameter": 5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 40,
+                    "x": 87.12,
+                    "y": 56.11,
+                    "z": 16.94
+                },
+                "A7": {
+                    "depth": 4.5,
+                    "diameter": 5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 40,
+                    "x": 96.12,
+                    "y": 56.11,
+                    "z": 16.94
+                },
+                "A8": {
+                    "depth": 4.5,
+                    "diameter": 5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 40,
+                    "x": 105.12,
+                    "y": 56.11,
+                    "z": 16.94
+                },
+                "B1": {
+                    "depth": 4.5,
+                    "diameter": 5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 40,
+                    "x": 42.12,
+                    "y": 22.89,
+                    "z": 16.94
+                },
+                "B2": {
+                    "depth": 4.5,
+                    "diameter": 5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 40,
+                    "x": 51.12,
+                    "y": 22.89,
+                    "z": 16.94
+                },
+                "B3": {
+                    "depth": 4.5,
+                    "diameter": 5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 40,
+                    "x": 60.12,
+                    "y": 22.89,
+                    "z": 16.94
+                },
+                "B4": {
+                    "depth": 4.5,
+                    "diameter": 5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 40,
+                    "x": 69.12,
+                    "y": 22.89,
+                    "z": 16.94
+                },
+                "B5": {
+                    "depth": 4.5,
+                    "diameter": 5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 40,
+                    "x": 78.12,
+                    "y": 22.89,
+                    "z": 16.94
+                },
+                "B6": {
+                    "depth": 4.5,
+                    "diameter": 5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 40,
+                    "x": 87.12,
+                    "y": 22.89,
+                    "z": 16.94
+                },
+                "B7": {
+                    "depth": 4.5,
+                    "diameter": 5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 40,
+                    "x": 96.12,
+                    "y": 22.89,
+                    "z": 16.94
+                },
+                "B8": {
+                    "depth": 4.5,
+                    "diameter": 5,
+                    "shape": "circular",
+                    "totalLiquidVolume": 40,
+                    "x": 105.12,
+                    "y": 22.89,
+                    "z": 16.94
+                }
+            }
+        }
+    ],
+    "fields": [
+        {
+            "label": "P300-Multi Mount",
+            "name": "mntMulti",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P300-Single Mount",
+            "name": "mntSingle",
+            "options": [
+                {
+                    "label": "Right",
+                    "value": "right"
+                },
+                {
+                    "label": "Left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 8,
+            "label": "Number of Samples",
+            "name": "numSamps",
+            "type": "int"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_multi_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p300_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Octea 16 Well Plate 40 \u00b5L on 2",
+            "share": false,
+            "slot": "2",
+            "type": "octea_16_wellplate_40ul"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on Magnetic Module GEN2 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Opentrons 96 Well Aluminum Block with Bio-Rad Well Plate 200 \u00b5L on Temperature Module GEN2 on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_aluminumblock_biorad_wellplate_200ul"
+        },
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on 7",
+            "share": false,
+            "slot": "7",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "NEST 96 Deepwell Plate 2mL on 8",
+            "share": false,
+            "slot": "8",
+            "type": "nest_96_wellplate_2ml_deep"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 10",
+            "share": false,
+            "slot": "10",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.9",
+        "author": "Chaz <chaz@opentrons.com>",
+        "protocolName": "Automated Sample Prep for GNA Octea",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}

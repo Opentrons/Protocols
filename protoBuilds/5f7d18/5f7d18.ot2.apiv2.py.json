@@ -1,0 +1,199 @@
+{
+    "content": "import math\nfrom opentrons.types import Point\nfrom opentrons import protocol_api\n\nmetadata = {\n    'protocolName': 'Viral Nucleic Acid Isolation from Oral and Nasal swabs',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.7'\n}\n\n\ndef run(ctx):\n\n    [num_col, samp_and_lys_rep, shake_well, incubate_bind_time,\n     mag_engage_time, asp_height, asp_flow_rate, disp_flow_rate,\n     length_from_side, bead_dry_time,\n     bead_dry_time_nuc_water, nuc_free_water_vol_well, p20_mount,\n     p300_mount] = get_values(  # noqa: F821\n        \"num_col\", \"samp_and_lys_rep\", \"shake_well\", \"incubate_bind_time\",\n        \"mag_engage_time\", \"asp_height\", \"asp_flow_rate\", \"disp_flow_rate\",\n        \"length_from_side\", \"bead_dry_time\",\n        \"bead_dry_time_nuc_water\", \"nuc_free_water_vol_well\", \"p20_mount\",\n        \"p300_mount\")\n\n    if not 1 <= num_col <= 12:\n        raise Exception(\"Enter a number of columns between 1 and 12\")\n    if not 1 <= length_from_side <= 4.15:\n        raise Exception(\"Enter an aspiration distance from well side 1-4.15mm\")\n\n    # load labware\n    mag_deck = ctx.load_module('magnetic module gen2', '1')\n    mag_plate = mag_deck.load_labware('nest_96_wellplate_2ml_deep')\n    supernat = ctx.load_labware('nest_12_reservoir_15ml', '4')\n    ethanol = ctx.load_labware('nest_12_reservoir_15ml', '10')\n    mastermix_tubes = ctx.load_labware(\n            'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '7')\n    pcr_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '8')\n    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '11')\n    tiprack_300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)\n                   for slot in ['3', '6', '9']]\n    tiprack_20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)\n                  for slot in ['2', '5']]\n\n    # load instruments\n    p20 = ctx.load_instrument('p20_single_gen2', 'left',\n                              tip_racks=tiprack_20)\n    m300 = ctx.load_instrument('p300_multi_gen2', 'right',\n                               tip_racks=tiprack_300)\n\n    def pick_up(pip):\n        try:\n            pip.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            ctx.pause(\"Replace all 200 ul tip racks on Slots 3, 6, and 9\")\n            pip.reset_tipracks()\n            pip.pick_up_tip()\n\n    # number of tips trash will accommodate before prompting user to empty\n    switch = True\n    drop_count = 0\n    drop_threshold = 120\n\n    def _drop(pip):\n        nonlocal switch\n        nonlocal drop_count\n        side = 30 if switch else -18\n        drop_loc = ctx.loaded_labwares[12].wells()[0].top().move(\n            Point(x=side))\n        pip.drop_tip(drop_loc)\n        switch = not switch\n        if pip.type == 'multi':\n            drop_count += 8\n        else:\n            drop_count += 1\n        if drop_count >= drop_threshold:\n            m300.home()\n            ctx.pause('Please empty tips from waste before resuming.')\n            ctx.home()  # home before continuing with protocol\n            drop_count = 0\n\n    m300.flow_rate.aspirate = asp_flow_rate\n    m300.flow_rate.dispense = disp_flow_rate\n\n    # reagents\n    lysis_buffer = reservoir.wells()[0:2]\n    isoprop_beads = reservoir.wells()[3:7]\n    isoprop_beads_ext = isoprop_beads*3\n    nuc_free_water = reservoir.wells_by_name()[\"A12\"]\n\n    # protocol volumes for user\n    num_samp = num_col*8\n    lys_vol_needed_per_col = 8*290\n    lys_vol_case1 = num_samp*290 if num_col <= 6 else lys_vol_needed_per_col*6\n    lys_vol_case2 = lys_vol_needed_per_col*(num_col-6)\n    case2_str = f\"and {lys_vol_case2}ul in row A2\" if num_col > 6 else \"\"\n    isoprop_beads_vol = 8*510*math.ceil(num_col/4)\n    nuc_free_water_vol = num_samp*nuc_free_water_vol_well\n    ethanol_vol = math.ceil(1000*num_samp/12)\n    mix_vol_per_col = 8*20\n    mastermix_vol_case1 = num_samp*20 if num_col <= 6 else mix_vol_per_col*6\n    mastermix_vol_case2 = mix_vol_per_col*(num_col-6)\n    case2_str = f\"and {mastermix_vol_case2}ul in tube B1\"if num_col > 6 else \"\"\n\n    ctx.pause(f'''Please confirm that the following volumes are in their\nrespective labware before beginning the protocol:\\n\nMinimum {lys_vol_case1}ul of MagBio CTL medium in row A1 {case2_str}\nof the Nest 15mL reservoir on Slot 11.\\n\nMinimum {isoprop_beads_vol}ul of isopropanol + magnetic bead mastermix is in\neach row from row A4 to row A7 of the nest 15mL reservoir on Slot 11.\\n\nMinimum {nuc_free_water_vol}ul of nuclease free water in row 10 of the\nNest 15mL reservoir on Slot 11.\\n\nMinimum {ethanol_vol}ul of ethanol for each row up to row {num_col} of the\nNest 15mL reservoir on Slot 10.\\n\nMinimum {mastermix_vol_case1}ul of PCR mastermix in tube A1 {case2_str}\nof the Nest 15mL reservoir on Slot 11.\\n''')\n\n    # add MagBio CTL medium lysis buffer\n    ctx.comment('\\n--------- ADDING MAGBIO CTL MEDIUM ---------\\n')\n    for i, col in enumerate(mag_plate.rows()[0][:num_col]):\n        pick_up(m300)\n        m300.transfer(290,\n                      lysis_buffer[0 if i < 6 else 1],\n                      col.top(),\n                      new_tip='never')\n        m300.mix(samp_and_lys_rep, 200, col)\n        _drop(m300)\n\n    # add binding buffer\n    ctx.comment('\\n--------- ADDING BINDING BUFFER ---------\\n')\n    pick_up(m300)\n    for s, col in zip(isoprop_beads_ext, mag_plate.rows()[0][:num_col]):\n        m300.transfer(510,\n                      s,\n                      col.top(),\n                      new_tip='never')\n    _drop(m300)\n    for col in mag_plate.rows()[0][:num_col]:\n        pick_up(m300)\n        m300.mix(15, 200, col)\n        _drop(m300)\n\n    ctx.delay(minutes=incubate_bind_time)\n\n    # resuspend MAG-S1 particles before engaging magnet\n    ctx.comment('\\n--------- RESUSPEND MAG-S1 BEADS BEFORE ENGAGE ---------\\n')\n    for col in mag_plate.rows()[0][:num_col]:\n        pick_up(m300)\n        m300.mix(shake_well, 200, col)\n        _drop(m300)\n    # engage magnetic module, remove supernatant with 2 ethanol washes\n    ctx.comment('\\n--------- ENGAGE MAGDECK WITH 2 ETHANOL WASHES ---------\\n')\n    for i in range(3):\n        mag_deck.engage()\n        ctx.delay(minutes=mag_engage_time)\n\n        # remove supernat\n        ctx.comment('\\n--------- REMOVING SUPERNATANT ---------\\n')\n        for index, (s_col, d_col) in enumerate(zip(\n             mag_plate.rows()[0][:num_col], supernat.rows()[0])):\n            pick_up(m300)\n            side = -1 if index % 2 == 0 else 1\n            aspirate_loc = s_col.bottom(z=asp_height).move(\n                    Point(x=(s_col.length/2-length_from_side)*side))\n            m300.transfer(500 if i > 0 else 1000,\n                          aspirate_loc,\n                          d_col.top(),\n                          new_tip='never')\n            _drop(m300)\n        # only use the top half of this loop for 3rd iteration\n        if i > 1:\n            break\n\n        # add ethanol and mix\n        ctx.comment('\\n--------- ADDING ETHANOL ---------\\n')\n        mag_deck.disengage()\n        pick_up(m300)\n        for s_col, d_col in zip(\n         ethanol.wells(), mag_plate.rows()[0][:num_col]):\n            m300.transfer(500,\n                          s_col,\n                          d_col.top(),\n                          new_tip='never')\n        _drop(m300)\n        for col in mag_plate.rows()[0][:num_col]:\n            pick_up(m300)\n            m300.mix(15, 200, col)\n            _drop(m300)\n    ctx.delay(minutes=bead_dry_time)\n    mag_deck.disengage()\n\n    # add nuclease free nuclease free water\n    ctx.comment('\\n--------- ADDING NUCLEASE-FREE WATER ---------\\n')\n    pick_up(m300)\n    for col in mag_plate.rows()[0][:num_col]:\n        m300.transfer(nuc_free_water_vol_well,\n                      nuc_free_water,\n                      col.top(),\n                      new_tip='never')\n    _drop(m300)\n    for col in mag_plate.rows()[0][:num_col]:\n        pick_up(m300)\n        m300.mix(15, nuc_free_water_vol_well-10, col)\n        _drop(m300)\n    ctx.delay(minutes=bead_dry_time_nuc_water)\n    mag_deck.engage()\n    ctx.delay(minutes=mag_engage_time)\n\n    # transfer eluate and mastermix to pcr plate\n    ctx.comment('\\n--------- ADDING MASTERMIX TO PCR PLATE ---------\\n')\n    p20.pick_up_tip()\n    for i, well in enumerate(pcr_plate.wells()[:num_samp]):\n        p20.aspirate(20, mastermix_tubes.wells()[0 if i < 48 else 1])\n        p20.dispense(20, well.top())\n        p20.blow_out()\n    p20.drop_tip()\n\n    ctx.comment('\\n--------- ADDING ELUATE TO PCR PLATE ---------\\n')\n    airgap = 5\n    for s, d in zip(mag_plate.wells()[:num_samp], pcr_plate.wells()):\n        p20.pick_up_tip()\n        p20.aspirate(5, s)\n        p20.air_gap(airgap)\n        p20.dispense(5+airgap, d)\n        p20.mix(2, 15, d)\n        p20.blow_out(d.top())\n        p20.drop_tip()\n    mag_deck.disengage()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 12,
+            "label": "Number of columns (1-12)",
+            "name": "num_col",
+            "type": "int"
+        },
+        {
+            "default": 2,
+            "label": "Sample and lysis buffer mix repetitions",
+            "name": "samp_and_lys_rep",
+            "type": "int"
+        },
+        {
+            "default": 10,
+            "label": "Mix repetitions before first magnetic engage",
+            "name": "shake_well",
+            "type": "int"
+        },
+        {
+            "default": 5.0,
+            "label": "Incubation time (minutes)",
+            "name": "incubate_bind_time",
+            "type": "float"
+        },
+        {
+            "default": 7.0,
+            "label": "Magnetic bead engagement time (minutes)",
+            "name": "mag_engage_time",
+            "type": "float"
+        },
+        {
+            "default": 1.0,
+            "label": "Aspiration height from bottom of well (mm)",
+            "name": "asp_height",
+            "type": "float"
+        },
+        {
+            "default": 96.0,
+            "label": "Multi-channel pippette aspiration flow rate (ul/s)",
+            "name": "asp_flow_rate",
+            "type": "float"
+        },
+        {
+            "default": 96.0,
+            "label": "Multi-channel pippette dispense flow rate (ul/s)",
+            "name": "disp_flow_rate",
+            "type": "float"
+        },
+        {
+            "default": 1.0125,
+            "label": "Distance from side of well (1mm - 4.15mm)",
+            "name": "length_from_side",
+            "type": "float"
+        },
+        {
+            "default": 5.0,
+            "label": "Bead drying time (minutes)",
+            "name": "bead_dry_time",
+            "type": "float"
+        },
+        {
+            "default": 10.0,
+            "label": "Bead drying time with nuclease free water (minutes)",
+            "name": "bead_dry_time_nuc_water",
+            "type": "float"
+        },
+        {
+            "default": 100,
+            "label": "Nuclease-free water volume to add (30-100ul)",
+            "name": "nuc_free_water_vol_well",
+            "type": "int"
+        },
+        {
+            "label": "P20 single GEN2 mount",
+            "name": "p20_mount",
+            "options": [
+                {
+                    "label": "left",
+                    "value": "left"
+                },
+                {
+                    "label": "right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P300 multi GEN2 mount",
+            "name": "p300_mount",
+            "options": [
+                {
+                    "label": "right",
+                    "value": "right"
+                },
+                {
+                    "label": "left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p20_single_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p300_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "NEST 96 Deepwell Plate 2mL on Magnetic Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "nest_96_wellplate_2ml_deep"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 2",
+            "share": false,
+            "slot": "2",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on 4",
+            "share": false,
+            "slot": "4",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on 8",
+            "share": false,
+            "slot": "8",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on 10",
+            "share": false,
+            "slot": "10",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on 11",
+            "share": false,
+            "slot": "11",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.7",
+        "author": "Rami Farawi <rami.farawi@opentrons.com>",
+        "protocolName": "Viral Nucleic Acid Isolation from Oral and Nasal swabs",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}

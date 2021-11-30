@@ -1,0 +1,124 @@
+{
+    "content": "import math\nfrom opentrons.types import Point\n\nmetadata = {\n    'protocolName': 'Nextera DNA Flex NGS Library Prep: Amplify Tagmented DNA',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.2'\n}\n\n\ndef run(ctx):\n\n    [number_of_samples_to_process, p300_type, p300_mount,\n        p50_single_mount] = get_values(  # noqa: F821\n            'number_of_samples_to_process', 'p300_type', 'p50_single_mount',\n            'p300_mount')\n\n    # load labware and modules\n    magdeck = ctx.load_module('magdeck', '1')\n    mag_plate = magdeck.load_labware('biorad_96_wellplate_200ul_pcr', '1')\n    tempdeck = ctx.load_module('tempdeck', '4')\n    tubeblock = tempdeck.load_labware(\n        'opentrons_24_aluminumblock_nest_1.5ml_snapcap', '4')\n    tempdeck.set_temperature(4)\n    tips50 = [\n        ctx.load_labware('opentrons_96_tiprack_300ul', slot)\n        for slot in ['5', '6']\n    ]\n    tips300 = [\n        ctx.load_labware('opentrons_96_tiprack_300ul', slot)\n        for slot in ['7', '8']\n    ]\n    liquid_waste = ctx.load_labware(\n        'agilent_1_reservoir_290ml', '9', 'liquid waste').wells()[0].top()\n\n    # reagents\n    mm = tubeblock.columns()[0][:3]\n    epm = [well.bottom() for well in tubeblock.columns()[1]]\n    nuc_free_water = tubeblock.columns()[2][:2]\n\n    # check:\n    if p50_single_mount == p300_mount:\n        raise Exception('Input different mounts for P50 and P300 multi-channel \\\npipettes')\n    if number_of_samples_to_process > 96 or number_of_samples_to_process < 1:\n        raise Exception('Invalid number of samples to process (must be between \\\n1 and 96).')\n\n    num_cols = math.ceil(number_of_samples_to_process/8)\n\n    # pipettes\n    p50 = ctx.load_instrument(\n        'p50_single', mount=p50_single_mount, tip_racks=tips50)\n    samples50 = mag_plate.wells()[:number_of_samples_to_process]\n\n    if p300_type == 'multi':\n        pip300 = ctx.load_instrument(\n            'p300_multi', mount=p300_mount, tip_racks=tips300)\n        samples300 = mag_plate.rows()[0][:num_cols]\n    else:\n        pip300 = ctx.load_instrument(\n            'p300_single', mount=p300_mount, tip_racks=tips300)\n        samples300 = mag_plate.wells()[:number_of_samples_to_process]\n\n    magdeck.engage(height=18)\n\n    # create mastermix\n    if p300_type == 'multi':\n        pip = p50\n        num_transfers_each = math.ceil(22*number_of_samples_to_process/50)\n        max_transfers = math.ceil(22*96/50)\n    else:\n        pip = pip300\n        num_transfers_each = math.ceil(22*number_of_samples_to_process/300)\n        max_transfers = math.ceil(22*96/300)\n    vol_per_transfer = 22*number_of_samples_to_process/num_transfers_each\n\n    max_mm_ind = 0\n    pip.pick_up_tip()\n    for reagent in [nuc_free_water, epm]:\n        for i in range(num_transfers_each):\n            r_ind = i*len(reagent)//max_transfers\n            mm_ind = i*len(mm)//max_transfers\n            if mm_ind > max_mm_ind:\n                max_mm_ind = mm_ind\n            pip.transfer(\n                vol_per_transfer,\n                reagent[r_ind],\n                mm[mm_ind].top(),\n                new_tip='never'\n            )\n            pip.blow_out(mm[mm_ind].top())\n            pip.move_to(mm[mm_ind].top(10))\n\n    # mix used mastermix tubes\n    p50.flow_rate.aspirate = 40\n    if not p50.hw_pipette['has_tip']:\n        p50.pick_up_tip()\n    for tube in mm[:max_mm_ind+1]:\n        for i in range(10):\n            p50.aspirate(50, tube.bottom(4))\n            p50.dispense(50, tube.bottom(15))\n        p50.blow_out(tube.top())\n    p50.drop_tip()\n    p50.flow_rate.aspirate = 25\n\n    # remove supernatant\n    for s in samples300:\n        if not pip300.hw_pipette['has_tip']:\n            pip300.pick_up_tip()\n        pip300.transfer(120, s.bottom(1), liquid_waste, new_tip='never')\n        pip300.blow_out()\n        pip300.drop_tip()\n\n    magdeck.disengage()\n\n    # distribute mastermix\n    if p300_type == 'single':\n        for i, s in enumerate(samples50):\n            mm_ind = i//32\n            angle = 1 if (i//8) % 2 == 0 else -1\n            disp_loc = s.bottom().move(\n                Point(x=0.85*(s.diameter/2)*angle, y=0, z=3))\n            p50.pick_up_tip()\n            p50.aspirate(40, mm[mm_ind])\n            p50.move_to(s.center())\n            p50.dispense(40, disp_loc)\n            p50.mix(10, 30, disp_loc)\n            p50.blow_out(s.top())\n            p50.drop_tip()\n\n    else:\n        mm_plate = ctx.load_labware(\n            'opentrons_96_aluminumblock_biorad_wellplate_200ul',\n            '3',\n            'mastermix plate on chilled aluminum block'\n        )\n        # transfer mm to plate columns\n        p50.pick_up_tip()\n        for i in range(num_cols):\n            col_ind = i//4\n            for j, well in enumerate(mm_plate.columns()[col_ind]):\n                well_ind = i*8+j\n                mm_ind = well_ind//32\n                p50.transfer(44, mm[mm_ind], well, new_tip='never')\n                p50.blow_out()\n                if (i+1) % 3 == 0:\n                    p50.transfer(10, well, well.bottom(7), new_tip='never')\n        p50.drop_tip()\n\n        # distribute mm to sample columns\n        for i, dest in enumerate(samples300):\n            source = mm_plate.rows()[0][i//4]\n            angle = 0 if i % 2 == 0 else math.pi\n            disp_loc = dest.bottom().move(\n                Point(x=0.85*(s.diameter/2)*angle, y=0, z=3))\n            pip300.pick_up_tip()\n            pip300.aspirate(40, source)\n            pip300.move_to(dest.bottom(5))\n            pip300.dispense(40, disp_loc)\n            pip300.mix(10, 20, disp_loc)\n            pip300.blow_out(dest.top())\n            pip300.drop_tip()\n\n    ctx.comment('Add the appropriate index adapters to each sample and mix. \\\nSeal the plate, centrifuge, and run the BLT PCR program.')\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 96,
+            "label": "number of samples to prcoess",
+            "name": "number_of_samples_to_process",
+            "type": "int"
+        },
+        {
+            "label": "P300 pipette type",
+            "name": "p300_type",
+            "options": [
+                {
+                    "label": "single",
+                    "value": "single"
+                },
+                {
+                    "label": "multi",
+                    "value": "multi"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P300 pipette mount",
+            "name": "p300_mount",
+            "options": [
+                {
+                    "label": "right",
+                    "value": "right"
+                },
+                {
+                    "label": "left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P50 single-channel pipette mount",
+            "name": "p50_single_mount",
+            "options": [
+                {
+                    "label": "left",
+                    "value": "left"
+                },
+                {
+                    "label": "right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_single"
+        },
+        {
+            "mount": "right",
+            "name": "p50_single"
+        }
+    ],
+    "labware": [
+        {
+            "name": "1 on Magnetic Module GEN1 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "4 on Temperature Module GEN1 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_24_aluminumblock_nest_1.5ml_snapcap"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "liquid waste on 9",
+            "share": false,
+            "slot": "9",
+            "type": "agilent_1_reservoir_290ml"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.2",
+        "author": "Nick <protocols@opentrons.com>",
+        "protocolName": "Nextera DNA Flex NGS Library Prep: Amplify Tagmented DNA",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}

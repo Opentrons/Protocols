@@ -1,0 +1,26 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "PCR": [
+            "PCR Prep"
+        ]
+    },
+    "description": "This protocol performs mastermix and DNA sample transfer to a custom 384-well plate. All DNA samples are transferred in quadruplicate in adjacent wells forming 2x2 well squares on the 384-well plate (12x8 squares mapping to the 12x8 input from the 96-well DNA plate), as in the following image:  \n\n\n\n\nMicroAmp Optical 384-well plate\nUSA Scientific 96 Well Plate 100 \u00b5L\nCustom single-channel reservoir 25ml (will span slots 4 and 1)\nOpentrons P10 multi-channel GEN1 pipette\nOpentrons 10\u00b5l tiprack\n\n\n",
+    "internal": "131de0",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "*  PCR\n\t* PCR Prep\n\n",
+        "description": "This protocol performs mastermix and DNA sample transfer to a custom 384-well plate. All DNA samples are transferred in quadruplicate in adjacent wells forming 2x2 well squares on the 384-well plate (12x8 squares mapping to the 12x8 input from the 96-well DNA plate), as in the following image:  \n\n![transfer scheme](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/131de0/transfer_scheme.png)\n\n---\n![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)\n\n* MicroAmp Optical 384-well plate\n* USA Scientific 96 Well Plate 100 \u00b5L\n* Custom single-channel reservoir 25ml (will span slots 4 and 1)\n* [Opentrons P10 multi-channel GEN1 pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette?variant=5984202489885)\n* [Opentrons 10\u00b5l tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)\n\n---\n![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)\n\n",
+        "internal": "131de0\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "process": "1. Input the mount side for your P10 multi-channel GEN1 pipette and the number of DNA samples to process (1-96, processed in columns of 8).\n2. Download your protocol package.\n3. Upload your custom labware and protocol script into the [OT App](https://opentrons.com/ot-app).\n4. Set up your deck according to the deck map.\n5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n6. Hit \"Run\".\n\n",
+        "robot": "* [OT-2](https://opentrons.com/ot-2)\n\n",
+        "title": "Copy Number Variant (CNV) Plating"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "process": "\nInput the mount side for your P10 multi-channel GEN1 pipette and the number of DNA samples to process (1-96, processed in columns of 8).\nDownload your protocol package.\nUpload your custom labware and protocol script into the OT App.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "robot": [
+        "OT-2"
+    ],
+    "title": "Copy Number Variant (CNV) Plating"
+}

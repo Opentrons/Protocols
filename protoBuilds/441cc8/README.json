@@ -1,0 +1,29 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "NGS Library Prep": [
+            "PCR Prep"
+        ]
+    },
+    "description": "This protocol uses a p300 multi-channel pipette to suspend a column of indexing primers (contained in a 96-well PCR plate) in master mix (contained in a reagent reservoir) and then distributes 14 ul of this mixture to the corresponding column of each of 9 PCR plates (in order as shown in the attached deck map). This process is repeated for all columns of the primer plate to fill all columns of the 9 PCR plates.\nThe liquid handling method used for the master mix includes the following features:\nslow flow rate for aspiration and dispense\nwait for liquid to finish moving after aspiration and dispense\navoid introducing air into liquid (avoid complete dispenses)\ndispense to a surface\nwithdraw tip slowly from liquid\nLinks:\n Deck Layout\n Process Steps\nWith this protocol, your robot can prepare stock plates containing master mix and indexing primers to be used for the indexing step of an NGS library prep workflow.",
+    "internal": "441cc8",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* NGS Library Prep\n     * PCR Prep\n\n",
+        "description": "This protocol uses a p300 multi-channel pipette to suspend a column of indexing primers (contained in a 96-well PCR plate) in master mix (contained in a reagent reservoir) and then distributes 14 ul of this mixture to the corresponding column of each of 9 PCR plates (in order as shown in the attached deck map). This process is repeated for all columns of the primer plate to fill all columns of the 9 PCR plates.\n\nThe liquid handling method used for the master mix includes the following features:\n\nslow flow rate for aspiration and dispense\nwait for liquid to finish moving after aspiration and dispense\navoid introducing air into liquid (avoid complete dispenses)\ndispense to a surface\nwithdraw tip slowly from liquid\n\nLinks:\n* [Deck Layout](https://s3.amazonaws.com/pf-upload-01/u-4256/0/2021-04-29/ic13rvh/deck_layout_v2.pdf)\n* [Process Steps](https://s3.amazonaws.com/pf-upload-01/u-4256/0/2021-04-29/zs03rlp/Opentrons%20-%20protocol%20development%20Quiagen%20multiplex%20plus%201.pdf)\n\nWith this protocol, your robot can prepare stock plates containing master mix and indexing primers to be used for the indexing step of an NGS library prep workflow.\n\n",
+        "internal": "441cc8\n",
+        "process": "1. Input your reduced pipetting flow rate for the master mix (in ul/sec), delay times for aspirate and dispense (in seconds), well bottom clearances (in millimeters), and labware choice for 200 ul tips, reagent reservoir and pcr plates.\n2. Download your protocol.\n3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).\n4. Set up your deck according to the deck map below.\n5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support article](https://support.opentrons.com/ot-2/getting-started-software-setup/deck-calibration).\n6. Hit \"Run\".\n\n",
+        "reagents": "* [QIAGEN Multiplex PCR Kit](https://www.qiagen.com/us/shop/pcr/qiagen-multiplex-pcr-kit/)\n* [Illumina primers](https://support.illumina.com/bulletins/2020/06/illumina-adapter-portfolio.html)\n\n",
+        "robot": "* [OT-2](https://opentrons.com/ot-2)\n\n",
+        "title": "Prepare Stock Plates for Indexing with Universal Illumina Primers"
+    },
+    "process": "\nInput your reduced pipetting flow rate for the master mix (in ul/sec), delay times for aspirate and dispense (in seconds), well bottom clearances (in millimeters), and labware choice for 200 ul tips, reagent reservoir and pcr plates.\nDownload your protocol.\nUpload your protocol into the OT App.\nSet up your deck according to the deck map below.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support article.\nHit \"Run\".\n",
+    "reagents": [
+        "QIAGEN Multiplex PCR Kit",
+        "Illumina primers"
+    ],
+    "robot": [
+        "OT-2"
+    ],
+    "title": "Prepare Stock Plates for Indexing with Universal Illumina Primers"
+}

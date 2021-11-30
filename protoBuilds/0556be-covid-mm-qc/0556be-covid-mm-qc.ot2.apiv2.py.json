@@ -1,0 +1,151 @@
+{
+    "content": "import math\n\nmetadata = {\n    'protocolName': 'COVID MM-QC Protocol',\n    'author': 'Sakib <sakib.hossain@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.8'\n}\n\n\ndef run(ctx):\n\n    [p300_mount, p20_mount, temperature, component_1_volume,\n        component_2_volume, component_1_height,\n        component_2_height, tube1_vol,\n        component_3_volume, pcr_tubes,\n        pcr_tube_height] = get_values(  # noqa: F821\n        \"p300_mount\", \"p20_mount\", \"temperature\", \"component_1_volume\",\n        \"component_2_volume\", \"component_1_height\", \"component_2_height\",\n        \"tube1_vol\", \"component_3_volume\", \"pcr_tubes\", \"pcr_tube_height\")\n\n    component_1_volume = float(component_1_volume)\n    component_2_volume = float(component_2_volume)\n    component_3_volume = float(component_3_volume)\n    tube1_vol = float(tube1_vol)\n\n    # Load Labware\n    tuberack = ctx.load_labware(\n        'opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical', 8)\n    temp_mod = ctx.load_module('temperature module gen2', 10)\n    dest_tubes = temp_mod.load_labware(\n        'opentrons_24_aluminumblock_generic_2ml_screwcap')\n    component_3 = ctx.load_labware(\n        'opentrons_24_aluminumblock_generic_2ml_screwcap', 9).wells()[0]\n    pcr_plate = ctx.load_labware(\n        'opentrons_96_aluminumblock_generic_pcr_strip_200ul', 6)\n    tiprack_200ul = ctx.load_labware('opentrons_96_filtertiprack_200ul', 1)\n    tiprack_20ul = ctx.load_labware('opentrons_96_filtertiprack_20ul', 4)\n\n    # Load Instruments\n    p300 = ctx.load_instrument('p300_single_gen2', p300_mount,\n                               tip_racks=[tiprack_200ul])\n    p20 = ctx.load_instrument('p20_single_gen2', p20_mount,\n                              tip_racks=[tiprack_20ul])\n\n    # Liquid Level Tracking\n    min_h = 1\n    compensation_coeff = 1.1\n    component_1_height = float(component_1_height)\n    component_2_height = float(component_2_height)\n    heights = dict(zip(tuberack.wells()[:2], [component_1_height,\n                                              component_2_height]))\n\n    def h_track(vol, tube):\n        nonlocal heights\n\n        # calculate height decrement based on volume\n        dh = ((math.pi*((tube.diameter/2)**2))/vol)*compensation_coeff\n\n        # make sure height decrement will not crash into the bottom of the tube\n        h = heights[tube] - dh if heights[tube] - dh > min_h else min_h\n        heights[tube] = h\n        return h\n\n    # Set Temperature (8C)\n    temp_mod.set_temperature(temperature)\n\n    # Transfer Component 1 to 24 Well Block Tubes\n    p300.pick_up_tip()\n    for d_tubes in dest_tubes.wells()[:24]:\n        h = h_track(component_1_volume, tuberack['A1'])\n        p300.transfer(component_1_volume, tuberack['A1'].bottom(h),\n                      d_tubes, new_tip='never')\n    p300.drop_tip()\n\n    # Transfer Component 2 to 24 Well Block Tubes\n    for d_tubes in dest_tubes.wells()[:24]:\n        h = h_track(60, tuberack['B1'])\n        num_trans = math.ceil(component_2_volume/200)\n        vol_per_trans = component_2_volume/num_trans\n        for _ in range(num_trans):\n            p300.transfer(vol_per_trans,\n                          tuberack['B1'].bottom(h),\n                          d_tubes, new_tip='always')\n\n    pcr_tubes = pcr_tubes.split(',')\n\n    # Get Select PCR Tube Wells\n    pcr_wells = [pcr_plate[well] for well in pcr_tubes]\n\n    # Mix Tube A1, Slot 10\n    p300.pick_up_tip()\n    p300.mix(10, 200, dest_tubes['A1'])\n    p300.drop_tip()\n\n    # Transfer from Tube 1 to Select PCR Tubes\n    for well in pcr_wells:\n        p300.transfer(tube1_vol, dest_tubes['A1'],\n                      well.bottom(pcr_tube_height), new_tip='always')\n\n    # Mix Component 3, 5 times\n    p300.pick_up_tip()\n    p300.mix(5, 200, component_3)\n    p300.drop_tip()\n\n    # Transfer Component 3 to Select PCR Tube Wells\n    for well in pcr_wells[-3:]:\n        p20.transfer(component_3_volume, component_3,\n                     well.bottom(pcr_tube_height),\n                     mix_after=(5, 9), new_tip='always')\n\n    # Deactivate Temperature Module\n    temp_mod.deactivate()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "label": "P300-single GEN2 mount",
+            "name": "p300_mount",
+            "options": [
+                {
+                    "label": "right",
+                    "value": "right"
+                },
+                {
+                    "label": "left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P20-single GEN2 mount",
+            "name": "p20_mount",
+            "options": [
+                {
+                    "label": "left",
+                    "value": "left"
+                },
+                {
+                    "label": "right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 8,
+            "label": "Temperature in Celsius (Temperature Module)",
+            "name": "temperature",
+            "type": "int"
+        },
+        {
+            "default": 26,
+            "label": "Component 1 Volume (uL)",
+            "name": "component_1_volume",
+            "type": "float"
+        },
+        {
+            "default": 546,
+            "label": "Component 2 Volume (uL)",
+            "name": "component_2_volume",
+            "type": "float"
+        },
+        {
+            "default": 22,
+            "label": "Component 3 Volume (uL)",
+            "name": "tube1_vol",
+            "type": "float"
+        },
+        {
+            "default": 18,
+            "label": "Tube 1 Transfer Volume (uL)",
+            "name": "component_3_volume",
+            "type": "float"
+        },
+        {
+            "default": 75,
+            "label": "Component 1 Height (mm)",
+            "name": "component_1_height",
+            "type": "float"
+        },
+        {
+            "default": 75,
+            "label": "Component 2 Height (mm)",
+            "name": "component_2_height",
+            "type": "float"
+        },
+        {
+            "default": 3,
+            "label": "PCR Tube Dispense Height (mm)",
+            "name": "pcr_tube_height",
+            "type": "float"
+        },
+        {
+            "default": "A1,A2,A3,A6,A7,A8,C1,C2,C3",
+            "label": "Select PCR Tubes/Wells",
+            "name": "pcr_tubes",
+            "type": "str"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p20_single_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p300_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 1",
+            "share": false,
+            "slot": "1",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_aluminumblock_generic_pcr_strip_200ul"
+        },
+        {
+            "name": "Opentrons 10 Tube Rack with Falcon 4x50 mL, 6x15 mL Conical on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical"
+        },
+        {
+            "name": "Opentrons 24 Well Aluminum Block with Generic 2 mL Screwcap on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_24_aluminumblock_generic_2ml_screwcap"
+        },
+        {
+            "name": "Opentrons 24 Well Aluminum Block with Generic 2 mL Screwcap on Temperature Module GEN2 on 10",
+            "share": false,
+            "slot": "10",
+            "type": "opentrons_24_aluminumblock_generic_2ml_screwcap"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.8",
+        "author": "Sakib <sakib.hossain@opentrons.com>",
+        "description": "Custom Protocol Request",
+        "protocolName": "COVID MM-QC Protocol"
+    },
+    "modules": []
+}

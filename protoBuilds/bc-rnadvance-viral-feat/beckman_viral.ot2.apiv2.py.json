@@ -1,0 +1,110 @@
+{
+    "content": "from opentrons.types import Point\nimport json\nimport os\nimport math\n\nmetadata = {\n    'protocolName': 'Beckman Coulter RNAdvance Viral RNA Isolation',\n    'author': 'Opentrons <protocols@opentrons.com>',\n    'apiLevel': '2.9'\n}\n\n\n\"\"\"\nHere is where you can modify the magnetic module engage height:\n\"\"\"\nMAG_HEIGHT = 6.8\n\n\ndef run(ctx):\n\n    [num_samples, starting_vol, elution_vol] = get_values(  # noqa: F821\n        'num_samples', 'starting_vol', 'elution_vol')\n    [binding_buffer_vol, wash1_vol, wash2_vol, wash3_vol, mix_reps,\n     settling_time, park_tips, tip_track] = [\n     200, 400, 400, 400, 10, 5, False, False]\n\n    if not 100 <= starting_vol <= 400:\n        raise Exception('Starting volume should be from 100-400\u00b5l.')\n    if not 40 <= elution_vol <= 100:\n        raise Exception('Elution volume should be from 40-100\u00b5l.')\n\n    \"\"\"\n    Here is where you can change the locations of your labware and modules\n    (note that this is the recommended configuration)\n    \"\"\"\n    magdeck = ctx.load_module('magnetic module gen2', '6')\n    magdeck.disengage()\n    magplate = magdeck.load_labware('nest_96_wellplate_2ml_deep',\n                                    'deepwell plate')\n    tempdeck = ctx.load_module('Temperature Module Gen2', '1')\n    elutionplate = tempdeck.load_labware(\n                'opentrons_96_aluminumblock_nest_wellplate_100ul',\n                'elution plate')\n    waste = ctx.load_labware('nest_1_reservoir_195ml', '9',\n                             'Liquid Waste').wells()[0].top()\n    res2 = ctx.load_labware(\n        'nest_12_reservoir_15ml', '3', 'reagent reservoir 2')\n    res1 = ctx.load_labware(\n        'nest_12_reservoir_15ml', '2', 'reagent reservoir 1')\n    num_cols = math.ceil(num_samples/8)\n    tips300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot,\n                                '200\u00b5l filtertiprack')\n               for slot in ['4', '7', '8', '10', '11']]\n    if park_tips:\n        parkingrack = ctx.load_labware(\n            'opentrons_96_tiprack_300ul', '5', 'tiprack for parking')\n        parking_spots = parkingrack.rows()[0][:num_cols]\n    else:\n        tips300.insert(0, ctx.load_labware('opentrons_96_tiprack_300ul', '5',\n                                           '200\u00b5l filtertiprack'))\n        parking_spots = [None for none in range(12)]\n\n    # load P300M pipette\n    m300 = ctx.load_instrument(\n        'p300_multi_gen2', 'left', tip_racks=tips300)\n\n    \"\"\"\n    Here is where you can define the locations of your reagents.\n    \"\"\"\n    binding_buffer = res1.wells()[:2]\n    elution_solution = res2.wells()[-1]\n    wash1 = res1.wells()[4:8]\n    wash2 = res1.wells()[8:]\n    wash3 = res2.wells()[:4]\n\n    mag_samples_m = magplate.rows()[0][:num_cols]\n    elution_samples_m = elutionplate.rows()[0][:num_cols]\n\n    tempdeck.set_temperature(4)\n\n    m300.flow_rate.aspirate = 50\n    m300.flow_rate.dispense = 150\n    m300.flow_rate.blow_out = 300\n\n    folder_path = '/data/B'\n    tip_file_path = folder_path + '/tip_log.json'\n    tip_log = {'count': {}}\n    if tip_track and not ctx.is_simulating():\n        if os.path.isfile(tip_file_path):\n            with open(tip_file_path) as json_file:\n                data = json.load(json_file)\n                if 'tips300' in data:\n                    tip_log['count'][m300] = data['tips300']\n                else:\n                    tip_log['count'][m300] = 0\n        else:\n            tip_log['count'][m300] = 0\n    else:\n        tip_log['count'] = {m300: 0}\n\n    tip_log['tips'] = {\n        m300: [tip for rack in tips300 for tip in rack.rows()[0]]}\n    tip_log['max'] = {m300: len(tip_log['tips'][m300])}\n\n    def _pick_up(pip, loc=None):\n        nonlocal tip_log\n        if tip_log['count'][pip] == tip_log['max'][pip] and not loc:\n            ctx.pause('Replace ' + str(pip.max_volume) + '\u00b5l tipracks before \\\nresuming.')\n            pip.reset_tipracks()\n            tip_log['count'][pip] = 0\n        if loc:\n            pip.pick_up_tip(loc)\n        else:\n            pip.pick_up_tip(tip_log['tips'][pip][tip_log['count'][pip]])\n            tip_log['count'][pip] += 1\n\n    switch = True\n    drop_count = 0\n    # number of tips trash will accommodate before prompting user to empty\n    drop_threshold = 120\n\n    def _drop(pip):\n        nonlocal switch\n        nonlocal drop_count\n        side = 30 if switch else -18\n        drop_loc = ctx.loaded_labwares[12].wells()[0].top().move(\n            Point(x=side))\n        pip.drop_tip(drop_loc)\n        switch = not switch\n        drop_count += 8\n        if drop_count == drop_threshold:\n            m300.home()\n            ctx.pause('Please empty tips from waste before resuming.')\n\n            ctx.home()  # home before continuing with protocol\n\n            drop_count = 0\n\n    waste_vol = 0\n    waste_threshold = 185000\n\n    def remove_supernatant(vol, park=False):\n        \"\"\"\n        `remove_supernatant` will transfer supernatant from the deepwell\n        extraction plate to the liquid waste reservoir.\n        :param vol (float): The amount of volume to aspirate from all deepwell\n                            sample wells and dispense in the liquid waste.\n        :param park (boolean): Whether to pick up sample-corresponding tips\n                               in the 'parking rack' or to pick up new tips.\n        \"\"\"\n\n        def _waste_track(vol):\n            nonlocal waste_vol\n            if waste_vol + vol >= waste_threshold:\n                ctx.pause('Please empty liquid waste (slot 11) before \\\nresuming.')\n\n                ctx.home()  # home before continuing with protocol\n                waste_vol = 0\n            waste_vol += vol\n\n        m300.flow_rate.aspirate = 30\n        num_trans = math.ceil(vol/200)\n        vol_per_trans = vol/num_trans\n        for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):\n            if park:\n                _pick_up(m300, spot)\n            else:\n                _pick_up(m300)\n            side = -1 if i % 2 == 0 else 1\n            loc = m.bottom(0.5).move(Point(x=side*2))\n            for _ in range(num_trans):\n                _waste_track(vol_per_trans*8)\n                if m300.current_volume > 0:\n                    # void air gap if necessary\n                    m300.dispense(m300.current_volume, m.top())\n                m300.move_to(m.center())\n                m300.transfer(vol_per_trans, loc, waste, new_tip='never',\n                              air_gap=20)\n                m300.blow_out(waste)\n                m300.air_gap(20)\n            _drop(m300)\n        m300.flow_rate.aspirate = 150\n\n    def bind(vol, park=True):\n        \"\"\"\n        `bind` will perform magnetic bead binding on each sample in the\n        deepwell plate. Each channel of binding beads will be mixed before\n        transfer, and the samples will be mixed with the binding beads after\n        the transfer. The magnetic deck activates after the addition to all\n        samples, and the supernatant is removed after bead bining.\n        :param vol (float): The amount of volume to aspirate from the elution\n                            buffer source and dispense to each well containing\n                            beads.\n        :param park (boolean): Whether to save sample-corresponding tips\n                               between adding elution buffer and transferring\n                               supernatant to the final clean elutions PCR\n                               plate.\n        \"\"\"\n        for i, (well, spot) in enumerate(zip(mag_samples_m, parking_spots)):\n            if park:\n                _pick_up(m300, spot)\n            else:\n                _pick_up(m300)\n            num_trans = math.ceil(vol/200)\n            vol_per_trans = vol/num_trans\n            for t in range(num_trans):\n                src = binding_buffer[i//(12//len(binding_buffer))]\n                if m300.current_volume > 0:\n                    # void air gap if necessary\n                    m300.dispense(m300.current_volume, src.top())\n                for _ in range(5):\n                    m300.aspirate(180, src.bottom(0.5))\n                    m300.dispense(180, src.bottom(5))\n                m300.transfer(vol_per_trans, src, well.top(), air_gap=20,\n                              new_tip='never')\n                if t < num_trans - 1:\n                    m300.air_gap(20)\n            m300.mix(5, 200, well)\n            m300.blow_out(well.top(-2))\n            m300.air_gap(20)\n            if park:\n                m300.drop_tip(spot)\n            else:\n                _drop(m300)\n        ctx.delay(minutes=5, msg='Incubate for 5 minutes')\n        magdeck.engage(height=MAG_HEIGHT)\n        ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \\\n' + str(settling_time) + ' minutes.')\n\n        # remove initial supernatant\n        remove_supernatant(vol+starting_vol, park=park)\n\n    def wash(vol, source, mix_reps=15, park=True, resuspend=True):\n        \"\"\"\n        `wash` will perform bead washing for the extraction protocol.\n        :param vol (float): The amount of volume to aspirate from each\n                            source and dispense to each well containing beads.\n        :param source (List[Well]): A list of wells from where liquid will be\n                                    aspirated. If the length of the source list\n                                    > 1, `wash` automatically calculates\n                                    the index of the source that should be\n                                    accessed.\n        :param mix_reps (int): The number of repititions to mix the beads with\n                               specified wash buffer (ignored if resuspend is\n                               False).\n        :param park (boolean): Whether to save sample-corresponding tips\n                               between adding wash buffer and removing\n                               supernatant.\n        :param resuspend (boolean): Whether to resuspend beads in wash buffer.\n        \"\"\"\n\n        if resuspend and magdeck.status == 'engaged':\n            magdeck.disengage()\n\n        num_trans = math.ceil(vol/200)\n        vol_per_trans = vol/num_trans\n        for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):\n            _pick_up(m300)\n            side = 1 if i % 2 == 0 else -1\n            loc = m.bottom(0.5).move(Point(x=side*2))\n            src = source[i//(12//len(source))]\n            for n in range(num_trans):\n                if m300.current_volume > 0:\n                    m300.dispense(m300.current_volume, src.top())\n                m300.transfer(vol_per_trans, src, m.top(), air_gap=20,\n                              new_tip='never')\n                if n < num_trans - 1:  # only air_gap if going back to source\n                    m300.air_gap(20)\n            if resuspend:\n                m300.mix(mix_reps, 150, loc)\n            m300.blow_out(m.top())\n            m300.air_gap(20)\n            if park:\n                m300.drop_tip(spot)\n            else:\n                _drop(m300)\n\n        if magdeck.status == 'disengaged':\n            magdeck.engage(height=MAG_HEIGHT)\n\n        ctx.delay(minutes=7, msg='Incubating on MagDeck for 7 minutes.')\n\n        remove_supernatant(vol, park=park)\n\n    def elute(vol, park=True):\n        \"\"\"\n        `elute` will perform elution from the deepwell extraciton plate to the\n        final clean elutions PCR plate to complete the extraction protocol.\n        :param vol (float): The amount of volume to aspirate from the elution\n                            buffer source and dispense to each well containing\n                            beads.\n        :param park (boolean): Whether to save sample-corresponding tips\n                               between adding elution buffer and transferring\n                               supernatant to the final clean elutions PCR\n                               plate.\n        \"\"\"\n\n        # resuspend beads in elution\n        if magdeck.status == 'enagaged':\n            magdeck.disengage()\n        for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):\n            _pick_up(m300)\n            side = 1 if i % 2 == 0 else -1\n            loc = m.bottom(0.5).move(Point(x=side*2))\n            m300.aspirate(vol, elution_solution)\n            m300.move_to(m.center())\n            m300.dispense(vol, loc)\n            m300.mix(mix_reps, 0.8*vol, loc)\n            m300.blow_out(m.bottom(5))\n            m300.air_gap(20)\n            if park:\n                m300.drop_tip(spot)\n            else:\n                _drop(m300)\n\n        magdeck.engage(height=MAG_HEIGHT)\n        ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \\\n' + str(settling_time) + ' minutes.')\n\n        for i, (m, e, spot) in enumerate(\n                zip(mag_samples_m, elution_samples_m, parking_spots)):\n            if park:\n                _pick_up(m300, spot)\n            else:\n                _pick_up(m300)\n            side = -1 if i % 2 == 0 else 1\n            loc = m.bottom(0.5).move(Point(x=side*2))\n            m300.transfer(vol, loc, e.bottom(5), air_gap=20, new_tip='never')\n            m300.blow_out(e.top(-2))\n            m300.air_gap(20)\n            m300.drop_tip()\n\n    \"\"\"\n    Here is where you can call the methods defined above to fit your specific\n    protocol. The normal sequence is:\n    \"\"\"\n    bind(binding_buffer_vol, park=park_tips)\n    wash(wash1_vol, wash1, park=park_tips, resuspend=True)\n    wash(wash2_vol, wash2, park=park_tips, resuspend=False)\n    wash(wash3_vol, wash3, park=park_tips, resuspend=False)\n    elute(elution_vol, park=park_tips)\n\n    # track final used tip\n    if tip_track and not ctx.is_simulating():\n        if not os.path.isdir(folder_path):\n            os.mkdir(folder_path)\n        data = {'tips300': tip_log['count'][m300]}\n        with open(tip_file_path, 'w') as outfile:\n            json.dump(data, outfile)\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 96,
+            "label": "number of samples + controls (1-96)",
+            "name": "num_samples",
+            "type": "int"
+        },
+        {
+            "default": 200.0,
+            "label": "starting volume (100-400\u00b5l)",
+            "name": "starting_vol",
+            "type": "float"
+        },
+        {
+            "default": 40.0,
+            "label": "elution volume (40-100\u00b5l)",
+            "name": "elution_vol",
+            "type": "int"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "elution plate on Temperature Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "opentrons_96_aluminumblock_nest_wellplate_100ul"
+        },
+        {
+            "name": "reagent reservoir 1 on 2",
+            "share": false,
+            "slot": "2",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "reagent reservoir 2 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "200\u00b5l filtertiprack on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "200\u00b5l filtertiprack on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "deepwell plate on Magnetic Module GEN2 on 6",
+            "share": false,
+            "slot": "6",
+            "type": "nest_96_wellplate_2ml_deep"
+        },
+        {
+            "name": "200\u00b5l filtertiprack on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "200\u00b5l filtertiprack on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Liquid Waste on 9",
+            "share": false,
+            "slot": "9",
+            "type": "nest_1_reservoir_195ml"
+        },
+        {
+            "name": "200\u00b5l filtertiprack on 10",
+            "share": false,
+            "slot": "10",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "200\u00b5l filtertiprack on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.9",
+        "author": "Opentrons <protocols@opentrons.com>",
+        "protocolName": "Beckman Coulter RNAdvance Viral RNA Isolation"
+    },
+    "modules": []
+}

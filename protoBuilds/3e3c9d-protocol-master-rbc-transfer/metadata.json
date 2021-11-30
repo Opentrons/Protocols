@@ -1,0 +1,20 @@
+{
+    "files": {
+        "OT 1 protocol": [],
+        "OT 2 protocol": [
+            "3e3c9d-protocol-master-rbc-transfer.ot2.apiv2.py"
+        ],
+        "description": [
+            "README.md"
+        ]
+    },
+    "flags": {
+        "embedded-app": false,
+        "feature": false,
+        "hide-from-search": false,
+        "skip-tests": false
+    },
+    "path": "protocols/3e3c9d-protocol-master-rbc-transfer",
+    "slug": "3e3c9d-protocol-master-rbc-transfer",
+    "status": "ok"
+}

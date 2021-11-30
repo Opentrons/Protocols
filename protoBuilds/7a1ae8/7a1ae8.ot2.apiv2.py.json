@@ -1,0 +1,154 @@
+{
+    "content": "import math\nfrom opentrons import types\n\nmetadata = {\n    'protocolName': 'Zymobiomics Magbead Nucleic Acid Purification',\n    'author': 'Chaz <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.5'\n}\n\n\ndef run(protocol):\n    [p300_multi_mount, p300_single_mount, number_of_samples,\n     volume_of_beads_in_ul, bead_separation_time_in_minutes,\n     dry_on_temperature_module] = get_values(  # noqa: F821\n     'p300_multi_mount', 'p300_single_mount', 'number_of_samples',\n     'volume_of_beads_in_ul', 'bead_separation_time_in_minutes',\n     'dry_on_temperature_module')\n\n    # load labware\n    deep_name = 'nest_96_wellplate_2ml_deep'\n    magdeck = protocol.load_module('magdeck', '1')\n    mag_plate = magdeck.load_labware(\n        deep_name, 'deepwell plate (on magdeck)')\n    output_rack = protocol.load_labware(\n        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap',\n        '2',\n        'output 1.5ml snapcap tubes'\n    )\n    mbb = protocol.load_labware(\n        'opentrons_6_tuberack_falcon_50ml_conical', '3').wells()[0]\n    orig_tuberack = protocol.load_labware(\n        'opentrons_24_aluminumblock_generic_2ml_screwcap',\n        '4',\n        'original 2ml screwcap tubes in aluminum block'\n    )\n    res12 = protocol.load_labware(\n        'usascientific_12_reservoir_22ml', '5', 'reagent reservoir')\n    tipracks_m = [\n        protocol.load_labware(\n            'opentrons_96_tiprack_300ul', slot, '300ul tiprack')\n        for slot in ['6', '9']\n    ]\n    tipracks_s = protocol.load_labware(\n        'opentrons_96_tiprack_300ul', '8', '300ul tiprack')\n    waste = protocol.load_labware(\n        'agilent_1_reservoir_290ml', '11', 'liquid waste').wells()[0].top()\n\n    # check\n    if number_of_samples > 24:\n        raise Exception('Can only process up to 24 samples.')\n    if volume_of_beads_in_ul < 30:\n        raise Exception('WARNING: bead volume \\\n' + str(volume_of_beads_in_ul) + ' is lower than P300 range.')\n\n    # pipette\n    if p300_multi_mount == p300_single_mount:\n        raise Exception('Pipette mounts cannot match.')\n\n    m300 = protocol.load_instrument(\n        'p300_multi', p300_multi_mount, tip_racks=tipracks_m)\n    p300 = protocol.load_instrument(\n        'p300_single', p300_single_mount, tip_racks=[tipracks_s])\n\n    # reagent setup\n    beads = res12.wells()[0]\n    magwash1 = res12.wells()[1]\n    magwash2 = res12.wells()[2:4]\n\n    # sample setup\n    source_tubes = orig_tuberack.wells()[:number_of_samples]\n    mag_samples = mag_plate.wells()[:number_of_samples]\n    num_cols = math.ceil(number_of_samples/8)\n    mag_cols = mag_plate.rows()[0][:num_cols]\n    output_tubes = output_rack.wells()[:number_of_samples]\n\n    if dry_on_temperature_module == 'yes':\n        tempdeck = protocol.load_module('tempdeck', '7')\n        temp_plate = tempdeck.load_labware(\n            deep_name, 'spot for drying mid-protocol')\n        p300.pick_up_tip()\n        p300.aspirate(30, temp_plate.wells()[0].top(10))\n        p300.dispense(30, temp_plate.wells()[0].top(10))\n\n    # transfer samples to magnetic plate\n    for s, d in zip(source_tubes, mag_samples):\n        if not p300.hw_pipette['has_tip']:\n            p300.pick_up_tip()\n        p300.transfer(200, s.bottom(5), d.bottom(10), new_tip='never')\n        p300.blow_out()\n        p300.drop_tip()\n\n    mbb_h = 70\n    r = 27.81/2\n\n    # transfer mag binding buffer\n    p300.pick_up_tip()\n    dh = 600/(math.pi*(r**2))*1.1  # adjust height from which to aspirate MBB\n    for m in mag_samples:\n        if mbb_h - dh > 10:\n            mbb_h -= dh\n        else:\n            mbb_h = 10\n        p300.transfer(600, mbb.bottom(mbb_h), m.top(), new_tip='never')\n        p300.blow_out()\n    p300.drop_tip()\n\n    # mix and transfer beads\n    m300.pick_up_tip()\n    for _ in range(10):\n        m300.aspirate(100, beads.bottom(5))\n        m300.dispense(100, beads.bottom(20))\n    m300.blow_out(beads.top(-5))\n    for m in mag_cols:\n        if not m300.hw_pipette['has_tip']:\n            m300.pick_up_tip()\n        m300.transfer(volume_of_beads_in_ul, beads, m, new_tip='never')\n        m300.mix(5, 200, m.bottom(5))\n        m300.blow_out(m.top(-5))\n        m300.drop_tip()\n\n    # remove supernatant\n    magdeck.engage(height=14.94)\n    protocol.delay(minutes=bead_separation_time_in_minutes)\n    for m in mag_cols:\n        m300.transfer(900, m, waste)\n\n    # 3x magwashes\n    angles_s = [\n        0.85 if i//8 % 2 == 0 else -0.85\n        for i, col in enumerate(mag_cols)\n    ]\n    angles_m = [\n        0.85 if i % 2 == 0 else -0.85 for i, col in enumerate(mag_cols)]\n    mix_locs_s, mix_locs_m = [\n        [col.bottom().move(types.Point(x=angle, y=0, z=0.8))\n         for col, angle in zip(mag_cols, angles)]\n        for angles in [angles_s, angles_m]\n    ]\n    for wash in [magwash1] + [w for w in magwash2]:\n        magdeck.disengage()\n        for m, mix_loc in zip(mag_cols, mix_locs_m):\n            # resuspend beads in wash\n            m300.pick_up_tip()\n            m300.transfer(900, wash, m.top(), new_tip='never')\n            m300.move_to(m.bottom(0.5))\n            m300.mix(10, 250, mix_loc)\n            m300.blow_out(m.top())\n            # separate out beads and remove supernatant\n            magdeck.engage(height=14.94)\n            protocol.delay(minutes=bead_separation_time_in_minutes)\n            m300.transfer(950, m, waste, new_tip='never')\n            m300.drop_tip()\n\n    # dry beads\n    if dry_on_temperature_module == 'yes':\n        protocol.comment('Temperature module reaching temp (37C)...')\n        tempdeck.set_temperature(37)\n        protocol.pause('Replace tubes A1-C1 in original sample rack (slot 2) \\\n        with molecular grade water. Move plate from magnetic module to \\\n        temperature module to dry. Replace the plate on the magnetic module \\\n        and resume when ready.')\n    else:\n        protocol.pause('Replace tubes A1-C1 in original sample rack (slot 2) \\\n    with molecular grade water. Resume once the beads are sufficiently dry.')\n\n    # transfer water and mix iteratively\n    magdeck.disengage()\n    water_tubes = orig_tuberack.wells()[:3]\n    for i, (m, mix_loc) in enumerate(zip(mag_samples, mix_locs_s)):\n        water_tube = water_tubes[i//8]\n        p300.pick_up_tip()\n        p300.transfer(200, water_tube, m, new_tip='never')\n        p300.move_to(m.bottom(5))\n        p300.mix(10, 100, mix_loc)\n        p300.blow_out(m.top(-5))\n        p300.drop_tip()\n\n    tips_dist = 1+5*num_cols\n    tips_locs = [\n        tr['A'+str(i)] for tr in tipracks_m for i in range(1, 13)\n        ][tips_dist:tips_dist+num_cols]\n    for mix in range(4):\n        protocol.delay(minutes=1)\n        for m, mix_loc, tip in zip(mag_cols, mix_locs_m, tips_locs):\n            m300.pick_up_tip(tip)\n            m300.move_to(m.bottom(5))\n            m300.mix(10, 100, mix_loc)\n            m300.blow_out(m.top(-5))\n            if mix == 3:\n                m300.drop_tip()\n            else:\n                m300.return_tip()\n\n    # separate beads and transfer eluent to new tubes\n    magdeck.engage(height=14.94)\n    protocol.delay(minutes=bead_separation_time_in_minutes)\n    for s, d in zip(source_tubes, output_tubes):\n        p300.transfer(200, s, d.top(-5))\n\n    magdeck.disengage()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "label": "P300-Multi Mount",
+            "name": "p300_multi_mount",
+            "options": [
+                {
+                    "label": "Right side",
+                    "value": "right"
+                },
+                {
+                    "label": "Left side",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P300-Single Mount",
+            "name": "p300_single_mount",
+            "options": [
+                {
+                    "label": "Left side",
+                    "value": "left"
+                },
+                {
+                    "label": "Right side",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 2,
+            "label": "Number of Samples (1-24)",
+            "name": "number_of_samples",
+            "type": "int"
+        },
+        {
+            "default": 30,
+            "label": "Volume of Beads (in \u00b5L)",
+            "name": "volume_of_beads_in_ul",
+            "type": "int"
+        },
+        {
+            "default": 2,
+            "label": "Bead separation time (in minutes)",
+            "name": "bead_separation_time_in_minutes",
+            "type": "int"
+        },
+        {
+            "label": "Dry on temperature module?",
+            "name": "dry_on_temperature_module",
+            "options": [
+                {
+                    "label": "Yes",
+                    "value": "yes"
+                },
+                {
+                    "label": "No",
+                    "value": "no"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_single"
+        },
+        {
+            "mount": "right",
+            "name": "p300_multi"
+        }
+    ],
+    "labware": [
+        {
+            "name": "deepwell plate (on magdeck) on Magnetic Module GEN1 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "nest_96_wellplate_2ml_deep"
+        },
+        {
+            "name": "output 1.5ml snapcap tubes on 2",
+            "share": false,
+            "slot": "2",
+            "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
+        },
+        {
+            "name": "Opentrons 6 Tube Rack with Falcon 50 mL Conical on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_6_tuberack_falcon_50ml_conical"
+        },
+        {
+            "name": "original 2ml screwcap tubes in aluminum block on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_24_aluminumblock_generic_2ml_screwcap"
+        },
+        {
+            "name": "reagent reservoir on 5",
+            "share": false,
+            "slot": "5",
+            "type": "usascientific_12_reservoir_22ml"
+        },
+        {
+            "name": "300ul tiprack on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "spot for drying mid-protocol on Temperature Module GEN1 on 7",
+            "share": false,
+            "slot": "7",
+            "type": "nest_96_wellplate_2ml_deep"
+        },
+        {
+            "name": "300ul tiprack on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "300ul tiprack on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "liquid waste on 11",
+            "share": false,
+            "slot": "11",
+            "type": "agilent_1_reservoir_290ml"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.5",
+        "author": "Chaz <protocols@opentrons.com>",
+        "protocolName": "Zymobiomics Magbead Nucleic Acid Purification",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}

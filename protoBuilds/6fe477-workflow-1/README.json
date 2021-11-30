@@ -1,0 +1,26 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Nucleic Acid Extraction & Purification": [
+            "Nucleic Acid Purification"
+        ]
+    },
+    "description": "This protocol automates variable pooling of samples and addition of lysis buffer for automated extraction downstream. \nWorkflow 2\n\n\n\nP300 single-channel GEN2 electronic pipette\nP300 multi-channel GEN2 electronic pipette\nOpentrons 200ul filter tiprack\nOpentrons 300ul tiprack\nNunc\u2122 96-Well Polypropylene DeepWell\u2122 Storage Plates\nCaplugs\u2122 30mL Centrifuge Tubes\n\n\n\nDeck Setup\n Opentrons 200ul filter tiprack (Slot 5)\n Opentrons 300ul tiprack (Slot 6)\n Deep Well Plate (Slot 2)\n NEST 195 mL Reservoir (Slot 3)\n* 30 mL Caplug Tubes in Opentrons 6 Tube Rack (Slots 1, 4, 7, 8, 9, 10, 11)",
+    "internal": "6fe477",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* Nucleic Acid Extraction & Purification\n\t* Nucleic Acid Purification\n\n",
+        "description": "This protocol automates variable pooling of samples and addition of lysis buffer for automated extraction downstream. \n[Workflow 2](https://develop.protocols.opentrons.com/protocol/6fe477-workflow-2)\n\n---\n![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)\n\n* [P300 single-channel GEN2 electronic pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette)\n* [P300 multi-channel GEN2 electronic pipette](https://shop.opentrons.com/collections/ot-2-robot/products/8-channel-electronic-pipette)\n* [Opentrons 200ul filter tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)\n* [Opentrons 300ul tiprack](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)\n* [Nunc\u2122 96-Well Polypropylene DeepWell\u2122 Storage Plates](https://www.thermofisher.com/order/catalog/product/260251#/260251)\n* [Caplugs\u2122 30mL Centrifuge Tubes](https://www.fishersci.com/shop/products/evergreen-scientific-30ml-centrifuge-tubes-30ml-freestanding-tubes-with-caps-sterile-500-cs-50-bags-10/22044320)\n\n---\n![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)\n\nDeck Setup\n* Opentrons 200ul filter tiprack (Slot 5)\n* Opentrons 300ul tiprack (Slot 6)\n* Deep Well Plate (Slot 2)\n* NEST 195 mL Reservoir (Slot 3)\n* 30 mL Caplug Tubes in Opentrons 6 Tube Rack (Slots 1, 4, 7, 8, 9, 10, 11)\n\n",
+        "internal": "6fe477",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "process": "1. Input total sample number (number of 30 mL tubes), pool size (between 2-5), choose deep well plate, and pipette mounts.\n2. Download your protocol.\n3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).\n4. Set up your deck according to the deck map.\n5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n6. Hit \"Run\".\n\n",
+        "robot": "* [OT-2](https://opentrons.com/ot-2)\n\n",
+        "title": "Nucleic Acid Purification - Workflow 1"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "process": "\nInput total sample number (number of 30 mL tubes), pool size (between 2-5), choose deep well plate, and pipette mounts.\nDownload your protocol.\nUpload your protocol into the OT App.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "robot": [
+        "OT-2"
+    ],
+    "title": "Nucleic Acid Purification - Workflow 1"
+}

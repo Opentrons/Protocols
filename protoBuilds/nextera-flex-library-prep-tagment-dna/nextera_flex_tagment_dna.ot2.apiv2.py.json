@@ -1,0 +1,72 @@
+{
+    "content": "import math\n\nmetadata = {\n    'protocolName': 'Nextera DNA Flex NGS Library Prep: Tagment DNA',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.0'\n}\n\n\ndef run(ctx):\n\n    [number_of_samples_to_process,\n        p50_single_mount] = get_values(  # noqa: F821\n            'number_of_samples_to_process', 'p50_single_mount')\n\n    # check:\n    if number_of_samples_to_process > 96 or number_of_samples_to_process < 1:\n        raise Exception('Invalid number of samples to process (must be between \\\n1 and 96).')\n\n    # load labware and modules\n    rxn_plate = ctx.load_labware(\n        'biorad_96_wellplate_200ul_pcr', '1', 'tagmentation reaction plate')\n    tuberack = ctx.load_labware(\n        'opentrons_24_aluminumblock_nest_1.5ml_snapcap',\n        '2',\n        'reagent tuberack'\n    )\n\n    # reagents\n    mm = tuberack.columns()[0][:2]\n    blt = [well.top(-19) for well in tuberack.columns()[1]]\n    tb1 = [well.top(-19) for well in tuberack.columns()[2]]\n\n    samples = rxn_plate.wells()[:number_of_samples_to_process]\n\n    # pipettes\n    tips50s = [\n        ctx.load_labware('opentrons_96_tiprack_300ul', slot)\n        for slot in ['4', '5']\n    ]\n    p50 = ctx.load_instrument(\n        'p50_single', mount=p50_single_mount, tip_racks=tips50s)\n\n    # create mastermix\n    num_transfers = math.ceil(number_of_samples_to_process/4)\n    p50.pick_up_tip()\n    for i, reagent in enumerate([blt, tb1]):\n        for n in range(num_transfers):\n            v_track = n*44\n            reagent_tube = reagent[v_track//264]\n            mm_tube = mm[v_track//528]\n            p50.transfer(\n                44,\n                reagent_tube,\n                mm_tube.bottom(5),\n                new_tip='never'\n            )\n            if reagent == tb1:\n                p50.blow_out()\n            p50.move_to(mm_tube.top(10))\n\n    # num_transfers_each = math.ceil(11*number_of_samples_to_process/50)\n    # max_transfers = math.ceil(11*96/50)\n    # vol_per_transfer = 11*number_of_samples_to_process/num_transfers_each\n    #\n    # max_mm_ind = 0\n    # p50.pick_up_tip()\n    # for reagent in [blt, tb1]:\n    #     r_ind_prev = 0\n    #     for i in range(num_transfers_each):\n    #         r_ind = i*len(reagent)//max_transfers\n    #         mm_ind = i*len(mm)//max_transfers\n    #         if r_ind != r_ind_prev:\n    #            p50.transfer(\n    #                10,\n    #                reagent[r_ind], mm[mm_ind].bottom(5), new_tip='never')\n    #             r_ind_prev = r_ind\n    #         if mm_ind > max_mm_ind:\n    #             max_mm_ind = mm_ind\n    #         p50.transfer(\n    #             vol_per_transfer,\n    #             reagent[r_ind],\n    #             mm[mm_ind].bottom(5),\n    #             new_tip='never'\n    #         )\n    #         if reagent == tb1:\n    #             p50.blow_out()\n    #         p50.move_to(mm[mm_ind].top(10))\n\n    # mix used mastermix tubes\n    p50.flow_rate.aspirate = 40\n    mix_tubes = mm[:math.ceil(number_of_samples_to_process/48)]\n    for tube in mix_tubes:\n        for i in range(10):\n            p50.aspirate(50, tube)\n            p50.dispense(50, tube.bottom(15))\n        p50.blow_out(tube.top())\n\n    # distribute mastermix\n    p50.flow_rate.aspirate = 25\n    for i, s in enumerate(samples):\n        if i > 0:\n            p50.pick_up_tip()\n        mm_ind = i//48\n        p50.transfer(20, mm[mm_ind], s, new_tip='never')\n        p50.mix(10, 15, s)\n        p50.blow_out()\n        p50.drop_tip()\n\n    ctx.comment('Seal the plate and thermocycle running the TAG program.')\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 96,
+            "label": "number of samples to prcoess",
+            "name": "number_of_samples_to_process",
+            "type": "int"
+        },
+        {
+            "label": "P50 single-channel mount",
+            "name": "p50_single_mount",
+            "options": [
+                {
+                    "label": "left",
+                    "value": "left"
+                },
+                {
+                    "label": "right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p50_single"
+        }
+    ],
+    "labware": [
+        {
+            "name": "tagmentation reaction plate on 1",
+            "share": false,
+            "slot": "1",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "reagent tuberack on 2",
+            "share": false,
+            "slot": "2",
+            "type": "opentrons_24_aluminumblock_nest_1.5ml_snapcap"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.0",
+        "author": "Nick <protocols@opentrons.com>",
+        "protocolName": "Nextera DNA Flex NGS Library Prep: Tagment DNA",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}

@@ -1,0 +1,115 @@
+{
+    "content": "from opentrons import protocol_api, types\n\nmetadata = {\n    'protocolName': '''GeneRead QIAact Lung DNA UMI Panel Kit:\n                       Cleanup of Universal PCR with QIAact Beads''',\n    'author': 'Sakib <sakib.hossain@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx):\n\n    [samples, p300_mount,\n        p20_mount, engage_height] = get_values(  # noqa: F821\n        \"samples\", \"p300_mount\", \"p20_mount\", \"engage_height\")\n\n    if not 1 <= samples <= 12:\n        raise Exception('''Invalid number of samples.\n                        Sample number must be between 1-12.''')\n\n    # Load Labware\n    tipracks_200ul = ctx.load_labware('opentrons_96_filtertiprack_200ul', 9)\n    tipracks_20ul = ctx.load_labware('opentrons_96_filtertiprack_20ul', 6)\n    tc_mod = ctx.load_module('thermocycler module')\n    tc_plate = tc_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')\n    mag_mod = ctx.load_module('magnetic module gen2', 1)\n    mag_plate = mag_mod.load_labware('nest_96_wellplate_2ml_deep')\n    temp_mod = ctx.load_module('temperature module gen2', 3)\n    temp_plate = temp_mod.load_labware(\n                    'opentrons_24_aluminumblock_nest_2ml_snapcap')\n    pcr_tubes = ctx.load_labware(\n                    'opentrons_96_aluminumblock_generic_pcr_strip_200ul',\n                    2)\n    reservoir = ctx.load_labware('nest_12_reservoir_15ml', 5)\n    trash = ctx.loaded_labwares[12]['A1']\n\n    # Load Pipettes\n    p300 = ctx.load_instrument('p300_single_gen2', p300_mount,\n                               tip_racks=[tipracks_200ul])\n    p20 = ctx.load_instrument('p20_single_gen2', p20_mount,\n                              tip_racks=[tipracks_20ul])\n\n    # Wells\n    mag_plate_wells = mag_plate.wells()[:samples]\n    tc_plate_wells = tc_plate.wells()[:samples]\n    beads = temp_plate['A1']\n    nfw = reservoir['A12']\n    ethanol = reservoir['A1']\n\n    # Helper Functions\n    def pick_up(pip, loc=None):\n        try:\n            if loc:\n                pip.pick_up_tip(loc)\n            else:\n                pip.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            pip.home()\n            pip.pause(\"Please replace the empty tip racks!\")\n            pip.reset_tipracks()\n            pip.pick_up_tip()\n\n    sides = [-1 + (((n // 8) % 2) * 1*2)\n             for n in range(96)]\n\n    def getWellSide(well, plate, custom_sides=None):\n        index = plate.wells().index(well)\n        if custom_sides:\n            return custom_sides[index]\n        return sides[index]\n\n    def remove_supernatant(vol, src, dest, side, pip=p300, mode=None):\n        if mode == 'elution':\n            p300.flow_rate.aspirate = 10\n        else:\n            p300.flow_rate.aspirate = 30\n            p300.flow_rate.dispense = 30\n        while vol > 200:\n            p300.aspirate(\n                200, src.bottom().move(types.Point(x=side, y=0, z=0.5)))\n            p300.dispense(200, dest)\n            p300.aspirate(10, dest)\n            vol -= 200\n        p300.aspirate(vol, src.bottom().move(types.Point(x=side, y=0, z=0.5)))\n        p300.dispense(vol, dest)\n        if mode == 'elution':\n            p300.blow_out()\n        if dest == trash:\n            p300.blow_out()\n        p300.flow_rate.aspirate = 50\n\n    def reset_flow_rates():\n        p300.flow_rate.aspirate = 46.43\n        p300.flow_rate.dispense = 46.43\n\n    def remove_residiual_supernatant():\n        for well in mag_plate_wells:\n            pick_up(p20)\n            p20.aspirate(10, well.bottom().move(types.Point(\n                        x=getWellSide(well, mag_plate), y=0, z=0.5)))\n            p20.dispense(10, trash)\n            p20.drop_tip()\n\n    def etoh_wash(reps):\n        for _ in range(reps):\n            pick_up(p300)\n            for well in mag_plate_wells:\n                p300.aspirate(200, ethanol)\n                p300.dispense(200, well.top(10))\n            p300.drop_tip()\n\n            ctx.delay(minutes=2, msg=\"Waiting for solution to clear.\")\n\n            for well in mag_plate_wells:\n                pick_up(p300)\n                remove_supernatant(200, well, trash, getWellSide(well,\n                                                                 mag_plate))\n                p300.drop_tip()\n\n    # Protocol Steps\n\n    # Set Temperature Module to 20C\n    temp_mod.set_temperature(20)\n\n    # Transfer PCR Product to Magnetic Plate\n    for src, dest in zip(tc_plate_wells, mag_plate_wells):\n        pick_up(p300)\n        p300.aspirate(20, src)\n        p300.dispense(20, dest)\n        p300.drop_tip()\n\n    # Add 80 uL of Nuclease-free water\n    pick_up(p300)\n    for well in mag_plate_wells:\n        p300.aspirate(80, nfw)\n        p300.dispense(80, well.top(-5))\n    p300.drop_tip()\n\n    # Add 100 uL of Beads to Samples\n    for well in mag_plate_wells:\n        pick_up(p300)\n        p300.aspirate(100, beads)\n        p300.dispense(100, well)\n        p300.mix(10, 100)\n        p300.drop_tip()\n\n    # Incubate at Room Temperature\n    ctx.delay(minutes=5, msg=\"Incubating at Room Temperature\")\n\n    # Engage Magnetic Module\n    mag_mod.engage(height=engage_height)\n    ctx.delay(minutes=10, msg='Engaging Magnetic Module for 10 minutes.')\n\n    # Remove Supernatant\n    for well in mag_plate_wells:\n        pick_up(p300)\n        remove_supernatant(200, well, trash, getWellSide(well, mag_plate))\n        p300.drop_tip()\n\n    # Completely Remove Residual Supernatant\n    remove_residiual_supernatant()\n\n    # Ethanol Wash (2x)\n    etoh_wash(2)\n\n    # Centrifuge Samples\n    mag_mod.disengage()\n    ctx.pause('''Centrifuge the samples and replace the\n                 plate on the magnetic module.''')\n\n    # Engaging Magnet for 2 minutes\n    mag_mod.engage(height=engage_height)\n    ctx.delay(minutes=2, msg='Engaging Magnetic Module for 2 minutes.')\n\n    # Centrifuge Samples\n    ctx.pause('''Briefly centrifuge the samples and replace\n               on the magnetic module.''')\n\n    # Completely Remove Residual Supernatant\n    remove_residiual_supernatant()\n\n    # Air Dry Beads for 10 minutes\n    ctx.delay(minutes=10, msg='Air Drying Beads for 10 minutes.')\n    mag_mod.disengage()\n\n    # Add 30 uL of Nuclease-Free Water to Elute DNA\n    for well in mag_plate_wells:\n        pick_up(p300)\n        p300.aspirate(30, nfw)\n        p300.dispense(30, well.bottom(3))\n        p300.mix(10, 20, well.bottom(1))\n        p300.drop_tip()\n\n    # Engaging Magnet for 5 minutes\n    mag_mod.engage(height=engage_height)\n    ctx.delay(minutes=5, msg='Engaging Magnetic Module for 5 minutes.')\n\n    pcr_tube_wells = pcr_tubes.wells()[:samples]\n\n    # Transfer Supernatant to PCR Tubes\n    for src, dest in zip(mag_plate_wells, pcr_tube_wells):\n        pick_up(p300)\n        p300.aspirate(28, src.bottom().move(types.Point(\n                        x=getWellSide(well, mag_plate), y=0, z=0.5)))\n        p300.dispense(28, dest)\n        p300.drop_tip()\n\n    ctx.comment('Protocol Complete!')\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 12,
+            "label": "Number of Samples",
+            "name": "samples",
+            "type": "float"
+        },
+        {
+            "label": "P300 Single GEN2 Pipette Mount Position",
+            "name": "p300_mount",
+            "options": [
+                {
+                    "label": "Right",
+                    "value": "right"
+                },
+                {
+                    "label": "Left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P20 Single GEN2 Pipette Mount Position",
+            "name": "p20_mount",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 6.8,
+            "label": "Magnetic Module Engage Height",
+            "name": "engage_height",
+            "type": "float"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p20_single_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p300_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "NEST 96 Deepwell Plate 2mL on Magnetic Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "nest_96_wellplate_2ml_deep"
+        },
+        {
+            "name": "Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 \u00b5L on 2",
+            "share": false,
+            "slot": "2",
+            "type": "opentrons_96_aluminumblock_generic_pcr_strip_200ul"
+        },
+        {
+            "name": "Opentrons 24 Well Aluminum Block with NEST 2 mL Snapcap on Temperature Module GEN2 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_24_aluminumblock_nest_2ml_snapcap"
+        },
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on 5",
+            "share": false,
+            "slot": "5",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Thermocycler Module on 7",
+            "share": false,
+            "slot": "7",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.11",
+        "author": "Sakib <sakib.hossain@opentrons.com>",
+        "description": "Custom Protocol Request",
+        "protocolName": "GeneRead QIAact Lung DNA UMI Panel Kit:\n                       Cleanup of Universal PCR with QIAact Beads"
+    },
+    "modules": []
+}

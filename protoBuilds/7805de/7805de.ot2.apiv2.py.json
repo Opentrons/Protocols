@@ -1,0 +1,165 @@
+{
+    "content": "import math\nfrom opentrons.protocol_api.labware import OutOfTipsError\n\nmetadata = {\n    'protocolName': '''NEBNext Ultra II Directional RNA Library Prep Kit\n    for Illumina with poly(A) selection: part 1 -\n    RNA Isolation, Fragmentation and Priming''',\n    'author': 'Steve Plonk <protocols@opentrons.com>',\n    'apiLevel': '2.9'\n}\n\n\ndef run(ctx):\n\n    # get parameter values from json above\n    [sample_count, labware_pcr_plate,\n     labware_reservoir, labware_tube_strip, clearance_reservoir,\n     clearance_sample_plate, clearance_bead_pellet, clearance_strip_tubes,\n     flow_rate_beads, delay_beads, engage_offset, engage_time, dry_time\n     ] = get_values(  # noqa: F821\n      'sample_count', 'labware_pcr_plate',\n      'labware_reservoir', 'labware_tube_strip', 'clearance_reservoir',\n      'clearance_sample_plate', 'clearance_bead_pellet',\n      'clearance_strip_tubes', 'flow_rate_beads', 'delay_beads',\n      'engage_offset', 'engage_time', 'dry_time')\n\n    ctx.set_rail_lights(True)\n    if not 1 <= sample_count <= 24:\n        raise Exception('Invalid number of samples (must be 1-24).')\n\n    # tips, p20 multi gen2, p300 multi gen2\n    tips20 = [ctx.load_labware(\n     \"opentrons_96_filtertiprack_20ul\", str(slot)) for slot in [2]]\n    p20m = ctx.load_instrument(\n        \"p20_multi_gen2\", 'left', tip_racks=tips20)\n    tips300 = [\n     ctx.load_labware(\n      \"opentrons_96_filtertiprack_200ul\", str(slot)) for slot in [6, 9]]\n    p300m = ctx.load_instrument(\n        \"p300_multi_gen2\", 'right', tip_racks=tips300)\n\n    \"\"\"\n    helper functions\n    \"\"\"\n\n    def pick_up_or_refill(current_pipette):\n        try:\n            current_pipette.pick_up_tip()\n        except OutOfTipsError:\n            pause_attention(\n             \"\"\"Please Refill the {} Tip Boxes\n                and Empty the Tip Waste.\"\"\".format(current_pipette))\n            current_pipette.reset_tipracks()\n            current_pipette.pick_up_tip()\n\n    def pause_attention(message):\n        ctx.set_rail_lights(False)\n        ctx.delay(seconds=10)\n        ctx.pause(message)\n        ctx.set_rail_lights(True)\n\n    def aspirate_with_delay(current_pipette, volume, source, delay_seconds):\n        current_pipette.aspirate(volume, source)\n        if delay_seconds > 0:\n            ctx.delay(seconds=delay_seconds)\n\n    def dispense_with_delay(current_pipette, volume, dest, delay_seconds):\n        current_pipette.dispense(volume, dest)\n        if delay_seconds > 0:\n            ctx.delay(seconds=delay_seconds)\n\n    def mix_with_delay(current_pipette, volume, location, delay_seconds):\n        current_pipette.aspirate(volume, location)\n        if delay_seconds > 0:\n            ctx.delay(seconds=delay_seconds)\n        current_pipette.dispense(volume, location)\n        if delay_seconds > 0:\n            ctx.delay(seconds=delay_seconds)\n\n    def slow_tip_withdrawal(current_pipette, well_location, to_center=False):\n        if current_pipette.mount == 'right':\n            axis = 'A'\n        else:\n            axis = 'Z'\n        ctx.max_speeds[axis] = 10\n        if to_center is False:\n            current_pipette.move_to(well_location.top())\n        else:\n            current_pipette.move_to(well_location.center())\n        ctx.max_speeds[axis] = None\n\n    def pre_wet(current_pipette, volume, location):\n        for rep in range(2):\n            current_pipette.aspirate(volume, location)\n            current_pipette.dispense(volume, location)\n\n    def set_default_clearances(\n     current_pipette, aspirate_setting, dispense_setting):\n        if 0 < aspirate_setting < 5 and 0 < dispense_setting < 5:\n            current_pipette.well_bottom_clearance.aspirate = aspirate_setting\n            current_pipette.well_bottom_clearance.dispense = dispense_setting\n\n    def restore_default_clearances(current_pipette):\n        current_pipette.well_bottom_clearance.aspirate = 1\n        current_pipette.well_bottom_clearance.dispense = 1\n\n    def viscous_flow_rates(current_pipette):\n        current_pipette.flow_rate.aspirate = flow_rate_beads\n        current_pipette.flow_rate.dispense = flow_rate_beads\n        current_pipette.flow_rate.blow_out = flow_rate_beads\n\n    def etoh_flow_rates(current_pipette):\n        if (current_pipette.name == 'p300_multi_gen2' or\n           current_pipette.name == 'p300_single_gen2'):\n            current_pipette.flow_rate.aspirate = 92.86\n            current_pipette.flow_rate.dispense = 92.86\n            current_pipette.flow_rate.blow_out = 300\n\n    def default_flow_rates(current_pipette):\n        if (current_pipette.name == 'p300_multi_gen2' or\n           current_pipette.name == 'p300_single_gen2'):\n            current_pipette.flow_rate.aspirate = 92.86\n            current_pipette.flow_rate.dispense = 92.86\n            current_pipette.flow_rate.blow_out = 92.86\n        elif (current_pipette.name == 'p20_multi_gen2' or\n              current_pipette.name == 'p20_single_gen2'):\n            current_pipette.flow_rate.aspirate = 7.56\n            current_pipette.flow_rate.dispense = 7.56\n            current_pipette.flow_rate.blow_out = 7.56\n\n    def reuse_tips(current_pipette, which_tips):\n        current_pipette.reset_tipracks()\n        current_pipette.starting_tip = named_tips[which_tips]\n\n    named_tips = {}\n\n    def name_the_tips(tip_box, name_list, well_list):\n        for name, well in zip(\n         name_list, well_list):\n            named_tips[name] = tip_box[well]\n\n    ctx.delay(seconds=10)\n    pause_attention(\"\"\"\n    Set up for RNA Isolation, Fragmentation, Priming:\n\n    RNA sample plate in deck slot 7 (50 ul total RNA)\n    (up to 24 samples arranged in columns of 8).\n\n    Reagents in strip tubes on 4 degree temp module:\n    column 1 - first-strand rxn bf/random primers\n    (mixed and prepared see NEB instructions)\n\n    p20 tips in slot 2, p300 tips in slot 6 and 9.\n    \"\"\")\n\n    ctx.comment(\"\"\"\n    reagent reservoir in deck slot 1:\n    col 1 - washed (NEB instructions) oligo dT beads\n    col 2 - wash buffer\n    col 3 - Tris buffer\n    col 4 - RNA binding buffer\n    col 10,11,12 - waste\n    \"\"\")\n    reagent_reservoir = ctx.load_labware(\n     labware_reservoir, '1', 'Reagent Reservoir')\n    [oligo_dt_beads, wash_buffer,\n     tris_buffer, rna_binding_buffer, waste_1, waste_2, waste_3] = [\n     reagent_reservoir.wells_by_name()[well] for well in [\n      'A1', 'A2', 'A3', 'A4', 'A10', 'A11', 'A12']]\n\n    ctx.comment(\"\"\"\n    mag plate on magnetic module\n    \"\"\")\n    mag = ctx.load_module('magnetic module gen2', '4')\n    mag.disengage()\n    mag_plate = mag.load_labware(labware_pcr_plate, 'Mag Plate')\n\n    ctx.comment(\"\"\"\n    reagent block for tube strips on 4 degree temperature module\n    \"\"\")\n    temp = ctx.load_module('temperature module gen2', '3')\n    reagent_block = temp.load_labware(labware_tube_strip, '4 Degree Block')\n    [fs_rxn_bf_random_primers] = [\n     reagent_block.columns_by_name()[str(name + 1)] for name in [*range(1)]]\n\n    ctx.comment(\"\"\"\n    RNA sample plate in deck slot 7:\n    containing 50 ul total RNA\n    samples arranged in columns of 8\n    up to 24 samples total\n    {} samples in this run\n    \"\"\".format(str(sample_count)))\n    num_cols = math.ceil(sample_count / 8)\n    sample_plate = elution_plate = ctx.load_labware(\n     labware_pcr_plate, '7', 'RNA Sample Plate')\n\n    ctx.comment(\"\"\"\n    add beads to RNA and mix\n    wait, engage magnet, wait\n\n    liquid handling method for beads:\n    slow flow rate for aspiration and dispense\n    wait for liquid to finish moving after aspiration and dispense\n    withdraw tip slowly from liquid\n    \"\"\")\n    viscous_flow_rates(p300m)\n    for column in sample_plate.columns()[:num_cols]:\n        p300m.pick_up_tip()\n        p300m.mix(3, 100, oligo_dt_beads.bottom(clearance_reservoir), rate=2)\n        aspirate_with_delay(p300m, 50, oligo_dt_beads.bottom(\n         clearance_reservoir), delay_beads)\n        slow_tip_withdrawal(p300m, oligo_dt_beads)\n        dispense_with_delay(p300m, 50, column[0].bottom(\n         clearance_sample_plate), delay_beads)\n        p300m.mix(6, 50, column[0].bottom(3), rate=2)\n        p300m.drop_tip()\n    default_flow_rates(p300m)\n\n    pause_attention(\"\"\"\n        pausing for off-deck thermocycler steps\n\n        denaturation and binding:\n        5 min 65 C\n        30 sec 4 C\n\n        return plate to the magnetic module and resume\n        as soon as temperature reaches 4 degrees\n        \"\"\")\n\n    ctx.comment(\"\"\"\n        mix beads\n        room temp 5 min\n        engage magnets\n        wait\n        remove sup\n        disengage magnet\n\n        two repeats:\n        add wash and mix\n        engage magnets\n        remove sup\n        disengage magnets\n        \"\"\")\n    viscous_flow_rates(p300m)\n    for column in mag_plate.columns()[:num_cols]:\n        p300m.pick_up_tip()\n        p300m.mix(6, 50, column[0].bottom(3), rate=2)\n        slow_tip_withdrawal(p300m, column[0])\n        p300m.drop_tip()\n    default_flow_rates(p300m)\n    ctx.delay(minutes=5)\n    mag.engage(offset=engage_offset)\n    ctx.delay(minutes=engage_time)\n    for column in mag_plate.columns()[:num_cols]:\n        p300m.pick_up_tip()\n        p300m.aspirate(100, column[0].bottom(clearance_bead_pellet))\n        p300m.air_gap(15)\n        p300m.dispense(115, waste_1.top())\n        p300m.air_gap(15)\n        p300m.drop_tip()\n    mag.disengage()\n    for rep in range(2):\n        for column in mag_plate.columns()[:num_cols]:\n            pick_up_or_refill(p300m)\n            p300m.aspirate(150, wash_buffer.bottom(clearance_reservoir))\n            p300m.dispense(150, column[0].bottom(clearance_sample_plate))\n            viscous_flow_rates(p300m)\n            p300m.mix(10, 75, column[0].bottom(3), rate=2)\n            slow_tip_withdrawal(p300m, column[0])\n            default_flow_rates(p300m)\n            p300m.drop_tip()\n        mag.engage(offset=engage_offset)\n        ctx.delay(minutes=engage_time)\n        for column in mag_plate.columns()[:num_cols]:\n            pick_up_or_refill(p300m)\n            if rep == 0:\n                wst = waste_1\n            else:\n                wst = waste_2\n            p300m.aspirate(150, column[0].bottom(clearance_bead_pellet))\n            p300m.air_gap(15)\n            p300m.dispense(165, wst.top())\n            p300m.air_gap(15)\n            p300m.drop_tip()\n        mag.disengage()\n\n    ctx.comment(\"\"\"\n        add Tris buffer\n        mix\n        \"\"\")\n    for column in mag_plate.columns()[:num_cols]:\n        pick_up_or_refill(p300m)\n        p300m.aspirate(50, tris_buffer.bottom(clearance_reservoir))\n        p300m.dispense(50, column[0].bottom(clearance_sample_plate))\n        viscous_flow_rates(p300m)\n        p300m.mix(10, 25, column[0].bottom(2), rate=2)\n        slow_tip_withdrawal(p300m, column[0])\n        default_flow_rates(p300m)\n        p300m.drop_tip()\n\n    pause_attention(\"\"\"\n        pausing for off-deck thermocycler steps\n\n        2 min 80 C\n        30 sec 25 C\n\n        return plate to magnetic module and resume\n        \"\"\")\n\n    ctx.comment(\"\"\"\n        add RNA binding buffer\n        mix\n        room temp 5 min\n        engage magnets\n        remove sup\n        disengage magnets\n        \"\"\")\n    for column in mag_plate.columns()[:num_cols]:\n        pick_up_or_refill(p300m)\n        p300m.aspirate(50, rna_binding_buffer.bottom(clearance_reservoir))\n        p300m.dispense(50, column[0].bottom(clearance_sample_plate))\n        viscous_flow_rates(p300m)\n        p300m.mix(10, 25, column[0].bottom(2), rate=2)\n        slow_tip_withdrawal(p300m, column[0])\n        default_flow_rates(p300m)\n        p300m.drop_tip()\n    ctx.delay(minutes=5)\n    mag.engage(offset=engage_offset)\n    ctx.delay(minutes=engage_time)\n    for column in mag_plate.columns()[:num_cols]:\n        pick_up_or_refill(p300m)\n        p300m.aspirate(100, column[0].bottom(clearance_bead_pellet))\n        p300m.air_gap(15)\n        p300m.dispense(115, waste_2.top())\n        p300m.air_gap(15)\n        p300m.drop_tip()\n    mag.disengage()\n    ctx.comment(\"\"\"\n        add wash buffer\n        mix\n        \"\"\")\n    for column in mag_plate.columns()[:num_cols]:\n        pick_up_or_refill(p300m)\n        p300m.aspirate(150, wash_buffer.bottom(clearance_reservoir))\n        p300m.dispense(150, column[0].bottom(clearance_sample_plate))\n        viscous_flow_rates(p300m)\n        p300m.mix(10, 75, column[0].bottom(3), rate=2)\n        slow_tip_withdrawal(p300m, column[0])\n        default_flow_rates(p300m)\n        p300m.drop_tip()\n    ctx.comment(\"\"\"\n        engage magnets\n        remove sup\n        \"\"\")\n    mag.engage(offset=engage_offset)\n    ctx.delay(minutes=engage_time)\n    for column in mag_plate.columns()[:num_cols]:\n        pick_up_or_refill(p300m)\n        p300m.aspirate(150, column[0].bottom(clearance_bead_pellet))\n        p300m.air_gap(15)\n        p300m.dispense(165, waste_3.top())\n        p300m.air_gap(15)\n        p300m.drop_tip()\n    mag.disengage()\n    pause_attention(\"\"\"\n        Remove and spin the plate.\n        Then return it to the magnetic module. Resume.\"\"\")\n    mag.engage(offset=engage_offset)\n    ctx.delay(minutes=1)\n    pause_attention(\"\"\"\n        Manually remove traces of supernatant with a 10 ul tip. Resume.\"\"\")\n    mag.disengage()\n    ctx.comment(\"\"\"\n        add first strand synthesis rxn bf random primer mix\n        mix\n        \"\"\")\n    for column in mag_plate.columns()[:num_cols]:\n        p20m.pick_up_tip()\n        p20m.aspirate(\n         11.5, fs_rxn_bf_random_primers[0].bottom(clearance_strip_tubes))\n        p20m.dispense(11.5, column[0].bottom(clearance_sample_plate))\n        p20m.mix(10, 5, column[0].bottom(1), rate=2)\n        slow_tip_withdrawal(p20m, column[0])\n        p20m.drop_tip()\n\n    pause_attention(\"\"\"\n        pausing for off-deck thermocycler steps\n\n        15 min 94 C\n        ***plate on ice 1 min as it reaches 65 degrees***\n        ***do not wait until plate reaches 4 degrees***\n        30 sec 4 C\n\n        spin plate\n        return plate to magnetic module\n        place fresh pcr plate in deck slot 7\n        resume\n        \"\"\")\n    ctx.comment(\"\"\"\n        engage magnet\n        wait\n        transfer 10 ul sup to elution plate\n        \"\"\")\n    mag.engage(offset=engage_offset)\n    ctx.delay(minutes=2)\n    p20m.transfer(\n     10, [column[0].bottom(\n      clearance_bead_pellet) for column in mag_plate.columns()[\n       :num_cols]], [column[0].bottom(\n        clearance_sample_plate) for column in elution_plate.columns()[\n        :num_cols]], new_tip='always')\n    pause_attention(\"\"\"\n        put elution plate on ice\n        proceed with first strand cDNA synthesis\n\n        part 1 process steps\n        RNA isolation, fragmentation and priming\n        are complete\n        \"\"\")\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 24,
+            "label": "Sample Count (up to 24)",
+            "name": "sample_count",
+            "type": "int"
+        },
+        {
+            "label": "Labware for PCR Plate",
+            "name": "labware_pcr_plate",
+            "options": [
+                {
+                    "label": "nest_96_wellplate_100ul_pcr_full_skirt",
+                    "value": "nest_96_wellplate_100ul_pcr_full_skirt"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Labware for Reagent Reservoir",
+            "name": "labware_reservoir",
+            "options": [
+                {
+                    "label": "nest_12_reservoir_15ml",
+                    "value": "nest_12_reservoir_15ml"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Labware for Reagent Tube Strips on the Temperature Module",
+            "name": "labware_tube_strip",
+            "options": [
+                {
+                    "label": "opentrons_96_aluminumblock_generic_pcr_strip_200ul",
+                    "value": "opentrons_96_aluminumblock_generic_pcr_strip_200ul"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 2,
+            "label": "Well Bottom Clearance for Reservoir (mm)",
+            "name": "clearance_reservoir",
+            "type": "float"
+        },
+        {
+            "default": 1,
+            "label": "Well Bottom Clearance for Sample Plate (mm)",
+            "name": "clearance_sample_plate",
+            "type": "float"
+        },
+        {
+            "default": 2,
+            "label": "Well Bottom Clearance for Bead Pellet (mm)",
+            "name": "clearance_bead_pellet",
+            "type": "float"
+        },
+        {
+            "default": 2,
+            "label": "Well Bottom Clearance for Strip Tubes (mm)",
+            "name": "clearance_strip_tubes",
+            "type": "float"
+        },
+        {
+            "default": 60,
+            "label": "Reduced Flow Rate for Pipetting Beads (ul/sec)",
+            "name": "flow_rate_beads",
+            "type": "float"
+        },
+        {
+            "default": 1,
+            "label": "Delay Time after Bead Aspiration and Dispense (sec)",
+            "name": "delay_beads",
+            "type": "int"
+        },
+        {
+            "default": 0,
+            "label": "Offset (mm) Applied to Default Engage Height for Magnetic Module",
+            "name": "engage_offset",
+            "type": "float"
+        },
+        {
+            "default": 5,
+            "label": "Engage Time for Magnetic Module (min)",
+            "name": "engage_time",
+            "type": "int"
+        },
+        {
+            "default": 5,
+            "label": "Air Dry Time for Beads (min)",
+            "name": "dry_time",
+            "type": "int"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p20_multi_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p300_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Reagent Reservoir on 1",
+            "share": false,
+            "slot": "1",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 2",
+            "share": false,
+            "slot": "2",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "4 Degree Block on Temperature Module GEN2 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_aluminumblock_generic_pcr_strip_200ul"
+        },
+        {
+            "name": "Mag Plate on Magnetic Module GEN2 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "RNA Sample Plate on 7",
+            "share": false,
+            "slot": "7",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.9",
+        "author": "Steve Plonk <protocols@opentrons.com>",
+        "protocolName": "NEBNext Ultra II Directional RNA Library Prep Kit\n    for Illumina with poly(A) selection: part 1 -\n    RNA Isolation, Fragmentation and Priming"
+    },
+    "modules": []
+}

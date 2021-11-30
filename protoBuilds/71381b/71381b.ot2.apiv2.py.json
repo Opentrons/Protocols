@@ -1,0 +1,151 @@
+{
+    "content": "from opentrons.types import Point\n\nmetadata = {\n    'protocolName': 'Zymo Quick DNA HMW + Labelling',\n    'author': 'Chaz <chaz@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.9'\n}\n\n\ndef run(protocol):\n    [mnt20, mnt300, label, purify] = get_values(  # noqa: F821\n     'mnt20', 'mnt300', 'label', 'purify')\n\n    # load labware and pipette\n    m20 = protocol.load_instrument('p20_multi_gen2', mnt20)\n    tempdeck = protocol.load_module('temperature module gen2', '1')\n    tempplate = tempdeck.load_labware(\n        'opentrons_96_aluminumblock_biorad_wellplate_200ul')\n    samps = tempplate.rows()[0][:4]\n\n    res = protocol.load_labware('nest_12_reservoir_15ml', '5')\n\n    t20 = {}\n    t20['tr2'] = protocol.load_labware('opentrons_96_tiprack_20ul', '6')\n\n    if label:\n        t20['tr1'] = protocol.load_labware('opentrons_96_tiprack_20ul', '3')\n        lplate = protocol.load_labware('biorad_96_wellplate_200ul_pcr', '2')\n\n    if purify:\n        t300 = [\n            protocol.load_labware(\n                'opentrons_96_tiprack_300ul', s) for s in ['7', '8', '10']]\n        m300 = protocol.load_instrument(\n            'p300_multi_gen2', mnt300, tip_racks=t300)\n        t20['tr3'] = protocol.load_labware('opentrons_96_tiprack_20ul', '11')\n        magdeck = protocol.load_module('magnetic module gen2', '4')\n        magplate = magdeck.load_labware('biorad_96_wellplate_200ul_pcr')\n\n    switch = True\n\n    def _drop(pip):\n        nonlocal switch\n        side = 30 if switch else -18\n        drop_loc = protocol.loaded_labwares[12].wells()[0].top().move(\n            Point(x=side))\n        pip.drop_tip(drop_loc)\n        switch = not switch\n\n    \"\"\" LABELLING \"\"\"\n    if label:\n        mQ = res['A1']\n        csb = lplate['A3']\n        mTaql = lplate['A5']\n        mtc22 = lplate['A1']\n        pk = lplate['A7']\n\n        stpctr = 1\n\n        def ltransfer(\n                lbl, src, vol1, loc1, tips,\n                vol2=0, loc2=1, mix=0, rtips=[0]*4):\n            nonlocal stpctr\n            protocol.comment(f'\\nStep {stpctr}: Adding {vol1+vol2}uL {lbl}...')\n            for samp, tip, rt in zip(samps, tips, rtips):\n                m20.pick_up_tip(tip)\n                m20.aspirate(vol1, src)\n                m20.dispense(vol1, samp.bottom(loc1))\n                if vol2:\n                    m20.aspirate(vol2, src)\n                    m20.dispense(vol2, samp.bottom(loc2))\n                if mix:\n                    m20.mix(mix, 20, samp)\n                m20.blow_out()\n                if rtips:\n                    m20.drop_tip(rt)\n                else:\n                    _drop(m20)\n            stpctr += 1\n\n        # Step 1\n        ltransfer('mQ', mQ, 10, 10, t20['tr1'].rows()[0][:4], 13, 1)\n\n        # Step 2\n        ltransfer('CSB', csb, 4, 1, t20['tr1'].rows()[0][4:8])\n\n        # Step 3\n        ltransfer('M.Taql', mTaql, 2, 1, t20['tr1'].rows()[0][8:])\n\n        # Step 4\n        ltransfer(\n            'MTC22', mtc22, 1, 1, t20['tr2'].rows()[0][:4],\n            mix=10, rtips=t20['tr1'].rows()[0][:4]\n            )\n\n        # Step 5\n        protocol.comment('\\nStep 5: Setting temperature to 65C and incubating \\\n        for 60 minutes...')\n        tempdeck.set_temperature(65)\n        protocol.delay(minutes=60)\n        tempdeck.deactivate()\n        stpctr = 6\n\n        # Step 6\n        ltransfer(\n            'Proteinase K', pk, 2, 1, t20['tr2'].rows()[0][4:8],\n            mix=10, rtips=t20['tr1'].rows()[0][4:8]\n            )\n\n        # Step 7\n        protocol.comment('\\nStep 7: Setting temperature to 50C and incubating \\\n        for 60 minutes...')\n        tempdeck.set_temperature(50)\n        protocol.delay(minutes=60)\n\n        protocol.comment('Labelling complete!')\n\n    \"\"\" PURIFICATION \"\"\"\n    if purify:\n        magbeads = res['A2']\n        magbuff = res['A3']\n        wb1 = res['A4']\n        wb2 = res['A5']\n        ebuff = res['A6']\n        msamps1 = magplate.rows()[0][:4]\n        msamps2 = magplate.rows()[0][4:8]\n        msamps3 = magplate.rows()[0][8:]\n        tsamps2 = tempplate.rows()[0][4:8]\n        tsamps3 = tempplate.rows()[0][8:]\n        waste1 = res['A7'].top(-2)\n\n        # Step 1\n        protocol.comment('\\nStep 1: Resuspend Magbeads and add 10uL...')\n        for samp, tip in zip(samps, t20['tr2'].rows()[0][8:]):\n            m20.pick_up_tip(tip)\n            m20.mix(25, 20, magbeads)\n            m20.aspirate(10, magbeads)\n            m20.dispense(10, samp)\n            m20.blow_out()\n            _drop(m20)\n\n        def pTransRemoval(\n                src, vol, dest, waste,\n                rtips=[0]*4, dest2=[0]*4, rvol=0, tvol=75, remove=True):\n            for d, rt, d2 in zip(dest, rtips, dest2):\n                m300.pick_up_tip()\n                m300.aspirate(vol, src)\n                m300.dispense(vol, d)\n                m300.mix(25, vol, d)\n                if d2:\n                    for _ in range(2):\n                        m300.transfer(tvol, d, d2, new_tip='never')\n                protocol.delay(seconds=10)\n                m300.blow_out()\n                if remove:\n                    magdeck.engage()\n                    protocol.delay(minutes=1)\n                    rvol = vol + 20 if rvol == 0 else rvol\n                    if d2:\n                        m300.transfer(rvol, d2, waste, new_tip='never')\n                    else:\n                        m300.transfer(rvol, d, waste, new_tip='never')\n                if rtips:\n                    m300.drop_tip(rt)\n                else:\n                    _drop(m300)\n                magdeck.disengage()\n\n        def extraRemoval(vol, srcs, waste, tips, rtips=[0]*4):\n            magdeck.engage()\n            for src, tip, rt in zip(srcs, tips, rtips):\n                m20.pick_up_tip(tip)\n                m20.aspirate(vol, src)\n                m20.dispense(vol, waste)\n                if label:\n                    m20.drop_tip(rt)\n                else:\n                    _drop(m20)\n            magdeck.disengage()\n\n        # Step 2\n        protocol.comment('\\nStep 2: Adding 50uL MagBinding Buffer, \\\n        Transferring to MagDeck, & Removing Supernatant...')\n        pTransRemoval(magbuff, 50, samps, waste1, dest2=msamps1, rvol=120)\n\n        # Step 3\n        protocol.comment('\\nStep 3: Adding 50uL MagBinding Buffer \\\n        & Removing Supernatant...')\n        pTransRemoval(magbuff, 50, msamps1, waste1, rvol=75)\n\n        # Step 4\n        protocol.comment('\\nStep 4: Removing leftover buffer...')\n        extraRemoval(\n            5, msamps1, waste1, t20['tr3'].rows()[0][:4],\n            t20['tr2'].rows()[0][:4])\n\n        # Step 5\n        protocol.comment('\\nStep 5: Adding 100uL Wash Buffer 1 \\\n        & Removing Supernatant...')\n        pTransRemoval(wb1, 100, msamps1, waste1)\n\n        # Step 6\n        protocol.comment('\\nStep 6: Removing leftover buffer...')\n        extraRemoval(\n            5, msamps1, waste1, t20['tr3'].rows()[0][4:8],\n            t20['tr2'].rows()[0][4:8])\n\n        # Step 7\n        protocol.comment('\\nStep 7: Adding 100uL Wash Buffer 2 \\\n        & Removing Supernatant...')\n        pTransRemoval(wb2, 100, msamps1, waste1, rtips=t300[0].rows()[0][:4])\n\n        # Step 8\n        protocol.comment('\\nStep 8: Adding 100uL Wash Buffer 2 \\\n        & Removing Supernatant...')\n        pTransRemoval(wb2, 100, msamps1, waste1, rtips=t300[0].rows()[0][4:8])\n\n        # Step 9\n        protocol.comment('\\nStep 9: Adding 100uL Wash Buffer 2, \\\n        Transferring Samples, & Removing Supernatant...')\n        pTransRemoval(\n            wb2, 100, msamps1, waste1, dest2=msamps2,\n            rtips=t300[0].rows()[0][8:])\n\n        # Step 10\n        protocol.comment('\\nStep 10: Removing leftover buffer...')\n        extraRemoval(\n            5, msamps2, waste1, t20['tr3'].rows()[0][8:],\n            t20['tr2'].rows()[0][8:])\n        magdeck.engage()\n\n        # Step 11\n        protocol.comment('\\nStep 11: Drying Magbeads for 30 minutes...')\n        tempdeck.set_temperature(65)\n        protocol.delay(minutes=25)  # assuming tempdeck takes 5 minutes...\n\n        # Step 12\n        protocol.comment('\\nStep 12: Adding 50uL Elution Buffer, \\\n        Transferring Samples, & Removing Supernatant...')\n        pTransRemoval(\n            ebuff, 50, msamps2, waste1, dest2=tsamps2,\n            rtips=t300[1].rows()[0][:4], tvol=30, remove=False)\n\n        # Step 13\n        protocol.comment('\\nStep 13: Waiting 5 minutes...')\n        protocol.delay(minutes=5)\n\n        # Step 14\n        protocol.comment('\\nStep 14: Mixing samples...')\n        utips = t300[2].rows()[0][4:8]\n        for samp, tip in zip(tsamps2, utips):\n            m300.pick_up_tip()\n            m300.mix(25, 50, samp)\n            m300.move_to(samp.bottom(4))\n            protocol.delay(seconds=10)\n            m300.blow_out()\n            m300.drop_tip(tip)\n\n        # Step 15\n        protocol.comment('\\nStep 15: Waiting 5 minutes...')\n        protocol.delay(minutes=5)\n\n        # Step 16\n        protocol.comment('\\nStep 16: Mixing samples & transferring...')\n        wtips = t300[1].rows()[0][4:8]\n        for s, s2, t, t2 in zip(tsamps2, msamps3, utips, wtips):\n            m300.pick_up_tip(t)\n            m300.mix(25, 50, s)\n            for _ in range(2):\n                m300.transfer(30, s, s2, new_tip='never')\n            m300.move_to(s2.bottom(4))\n            protocol.delay(seconds=10)\n            m300.blow_out()\n            m300.drop_tip(t2)\n\n        # Step 17\n        protocol.comment('\\nStep 17: Setting Temperature Module to 22C \\\n        and waiting 1 minute...')\n        tempdeck.set_temperature(22)\n\n        # Step 18\n        protocol.comment('\\nStep 18: Transfer solution to Temperature Module')\n        xtips = t300[2].rows()[0][8:]\n        ytips = t300[1].rows()[0][8:]\n        magdeck.engage()\n        for s, s2, t, t2 in zip(msamps3, tsamps3, xtips, ytips):\n            m300.pick_up_tip(t)\n            m300.transfer(50, s, s2, new_tip='never')\n            m300.drop_tip(t2)\n\n        protocol.comment('\\nPurification complete!')\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "label": "P20-Multi Mount",
+            "name": "mnt20",
+            "options": [
+                {
+                    "label": "Right",
+                    "value": "right"
+                },
+                {
+                    "label": "Left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P300-Multi Mount",
+            "name": "mnt300",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Labelling Step",
+            "name": "label",
+            "options": [
+                {
+                    "label": "Yes",
+                    "value": 1
+                },
+                {
+                    "label": "No",
+                    "value": 0
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Purification Step",
+            "name": "purify",
+            "options": [
+                {
+                    "label": "Yes",
+                    "value": 1
+                },
+                {
+                    "label": "No",
+                    "value": 0
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_multi_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p20_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Opentrons 96 Well Aluminum Block with Bio-Rad Well Plate 200 \u00b5L on Temperature Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "opentrons_96_aluminumblock_biorad_wellplate_200ul"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 2",
+            "share": false,
+            "slot": "2",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_tiprack_20ul"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on Magnetic Module GEN2 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on 5",
+            "share": false,
+            "slot": "5",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_tiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 10",
+            "share": false,
+            "slot": "10",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_96_tiprack_20ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.9",
+        "author": "Chaz <chaz@opentrons.com>",
+        "protocolName": "Zymo Quick DNA HMW + Labelling",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}

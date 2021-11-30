@@ -1,0 +1,20 @@
+{
+    "files": {
+        "OT 1 protocol": [],
+        "OT 2 protocol": [
+            "rna_isolation.ot2.apiv2.py"
+        ],
+        "description": [
+            "README.md"
+        ]
+    },
+    "flags": {
+        "embedded-app": false,
+        "feature": false,
+        "hide-from-search": true,
+        "skip-tests": false
+    },
+    "path": "protocols/007992",
+    "slug": "007992",
+    "status": "ok"
+}

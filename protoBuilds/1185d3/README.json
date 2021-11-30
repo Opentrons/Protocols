@@ -1,0 +1,26 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Nucleic Acid Extraction & Purification": [
+            "MagMAX Nucleic Acid Isolation Kit"
+        ]
+    },
+    "description": "This protocol automates the wash steps of the MagMAX Viral/Pathogen Nucleic Acid Isolation Kit. As inputs, it requires a deep well plate with sample beads, a single well trough of 80% ethanol, a single well trough of wash buffer, a single well trash, and an output 96 well plate.\nThere are 2 pauses during the protocol that require human intervention - to drain the liquid trash + to replace tip racks + to add elution buffer, and to add the deep well plate to a 65c incubator for 10 minutes.\n\n\n\nOpentrons P300-multi channel electronic pipettes (GEN2)\nOpentrons 200ul Filter Tips\nNEST 1 Well Reservoir 195 mL\nNEST 96 Deepwell Plate 2mL\nNEST 0.1 mL 96-Well PCR Plate, Full Skirt\nMagMAX Viral/Pathogen Nucleic Acid Isolation Kit\n",
+    "internal": "1185d3",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* Nucleic Acid Extraction & Purification\n\t* MagMAX Nucleic Acid Isolation Kit\n\n",
+        "description": "This protocol automates the wash steps of the MagMAX Viral/Pathogen Nucleic Acid Isolation Kit. As inputs, it requires a deep well plate with sample beads, a single well trough of 80% ethanol, a single well trough of wash buffer, a single well trash, and an output 96 well plate.\n\nThere are 2 pauses during the protocol that require human intervention - to drain the liquid trash + to replace tip racks + to add elution buffer, and to add the deep well plate to a 65c incubator for 10 minutes.\n\n---\n![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)\n\n* [Opentrons P300-multi channel electronic pipettes (GEN2)](https://shop.opentrons.com/collections/ot-2-robot/products/8-channel-electronic-pipette?variant=5984202489885)\n* [Opentrons 200ul Filter Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)\n* [NEST 1 Well Reservoir 195 mL](http://www.cell-nest.com/page94?_l=en&product_id=102)\n* [NEST 96 Deepwell Plate 2mL](http://www.cell-nest.com/page94?product_id=101&_l=en)\n* [NEST 0.1 mL 96-Well PCR Plate, Full Skirt](https://shop.opentrons.com/collections/verified-labware/products/nest-0-1-ml-96-well-pcr-plate-full-skirt)\n* [MagMAX Viral/Pathogen Nucleic Acid Isolation Kit](https://www.thermofisher.com/order/catalog/product/A42352?SID=srch-hj-A42352#/A42352?SID=srch-hj-A42352)\n\n",
+        "internal": "1185d3\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "process": "1. Load reagents to deck. At least 50ml of wash buffer are required per run, and at least 75ml of 80% ethanol.\n2. After second ethanol wash step, drain liquid trash, replace tip boxes, and replace 80% ethanol with at least 5-6ml of elution buffer.\n3. After samples are resuspended in elution solution, move deep well plate to a 65c incubator for 10 minutes.\n4. Move samples back to magdeck. Samples will be eluted into the 96 well plate on deck position 5.\n\n",
+        "robot": "* [OT-2](https://opentrons.com/ot-2)\n\n",
+        "title": "MagMAX Viral/Pathogen Nucleic Acid Isolation Kit wash steps"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "process": "\nLoad reagents to deck. At least 50ml of wash buffer are required per run, and at least 75ml of 80% ethanol.\nAfter second ethanol wash step, drain liquid trash, replace tip boxes, and replace 80% ethanol with at least 5-6ml of elution buffer.\nAfter samples are resuspended in elution solution, move deep well plate to a 65c incubator for 10 minutes.\nMove samples back to magdeck. Samples will be eluted into the 96 well plate on deck position 5.\n",
+    "robot": [
+        "OT-2"
+    ],
+    "title": "MagMAX Viral/Pathogen Nucleic Acid Isolation Kit wash steps"
+}

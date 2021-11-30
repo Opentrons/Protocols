@@ -1,0 +1,120 @@
+{
+    "content": "import math\n\nmetadata = {\n    'protocolName': 'Version Update - Adding BTM to DBS',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.7'\n}\n\n\ndef run(protocol):\n\n    [number_of_samples, tip_start_column] = get_values(  # noqa: F821\n        \"number_of_samples\", \"tip_start_column\")\n\n    number_of_samples = int(number_of_samples)\n    tip_start_column = int(tip_start_column)\n    num_columns = math.ceil(number_of_samples/8)\n\n    if not 1 <= number_of_samples <= 96:\n        raise Exception(\"Enter a sample number between 1-96\")\n    if not 1 <= tip_start_column <= 12:\n        raise Exception(\"Enter a column number between 1-12\")\n\n    # labware setup\n    plate = protocol.load_labware('corning_96_wellplate_360ul_flat', '2')\n    trough = protocol.load_labware(\n                        'electronmicroscopysciences_1_reservoir_100000ul', '1')\n    tiprack = protocol.load_labware('opentrons_96_tiprack_300ul', '4')\n\n    # instrument setup\n    m300 = protocol.load_instrument('p300_multi', 'left', tip_racks=[tiprack])\n\n    # reagent setup\n    source = trough['A1']\n\n    # protocol\n    if number_of_samples >= 12:\n        plate_loc = [col for col in plate.rows()[0]]\n\n    else:\n        plate_loc = [col for col in plate.rows()[0]][:num_columns]\n\n    m300.pick_up_tip(tiprack.rows()[0][tip_start_column], presses=4)\n    m300.mix(3, 300, source)\n    m300.blow_out(source)\n\n    for dest in plate_loc:\n        m300.transfer(250, source, dest.top(), blow_out=True, new_tip='never')\n    m300.drop_tip()\n",
+    "custom_labware_defs": [
+        {
+            "brand": {
+                "brand": "Electron Microscopy Sciences",
+                "brandId": []
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 127.76,
+                "yDimension": 85.48,
+                "zDimension": 40
+            },
+            "groups": [
+                {
+                    "metadata": {
+                        "wellBottomShape": "flat"
+                    },
+                    "wells": [
+                        "A1"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "reservoir",
+                "displayName": "Electron Microscopy Sciences 1 Reservoir 100000 \u00b5L",
+                "displayVolumeUnits": "\u00b5L",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "electronmicroscopysciences_1_reservoir_100000ul",
+                "quirks": [
+                    "centerMultichannelOnWells",
+                    "touchTipDisabled"
+                ]
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 25,
+                    "shape": "rectangular",
+                    "totalLiquidVolume": 100000,
+                    "x": 63.88,
+                    "xDimension": 85,
+                    "y": 42.74,
+                    "yDimension": 66,
+                    "z": 15
+                }
+            }
+        }
+    ],
+    "fields": [
+        {
+            "default": 96,
+            "label": "Number of Samples (1-96)",
+            "name": "number_of_samples",
+            "type": "int"
+        },
+        {
+            "default": 1,
+            "label": "Tip Start Column",
+            "name": "tip_start_column",
+            "type": "int"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_multi"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Electron Microscopy Sciences 1 Reservoir 100000 \u00b5L on 1",
+            "share": false,
+            "slot": "1",
+            "type": "electronmicroscopysciences_1_reservoir_100000ul"
+        },
+        {
+            "name": "Corning 96 Well Plate 360 \u00b5L Flat on 2",
+            "share": false,
+            "slot": "2",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.7",
+        "author": "Rami Farawi <rami.farawi@opentrons.com>",
+        "protocolName": "Version Update - Adding BTM to DBS",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}

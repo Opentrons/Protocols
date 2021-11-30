@@ -1,0 +1,138 @@
+{
+    "content": "import math\nimport json\nimport os\n\nmetadata = {\n    'protocolName': 'Zymo-Seq RiboFree\u2122 Total RNA Library Prep Library Index \\\nPCR (robot 1)',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.0'\n}\n\n\ndef run(ctx):\n\n    [number_of_samples, rna_input, p20_mount,\n        m20_mount] = get_values(  # noqa: F821\n            'number_of_samples', 'rna_input', 'p20_mount', 'm20_mount')\n    # [number_of_samples, rna_input, p20_mount, m20_mount] = [\n    #     96, '> 1\u00b5g', 'right', 'left']\n\n    # load modules and labware\n    tc = ctx.load_module('thermocycler')\n    tc.set_lid_temperature(100)\n    tc.set_block_temperature(4)\n    tc_plate = tc.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')\n    racks20s = [\n        ctx.load_labware('opentrons_96_tiprack_20ul', slot)\n        for slot in ['1', '2']\n    ]\n    tempdeck = ctx.load_module('temperature module gen2', '4')\n    tempdeck.set_temperature(4)\n    tempblock = tempdeck.load_labware(\n        'opentrons_24_aluminumblock_nest_1.5ml_screwcap')\n    reagent_res = ctx.load_labware(\n        'nest_12_reservoir_15ml', '5', 'reagent reservoir')\n    index_plate = ctx.load_labware(\n        'opentrons_96_aluminumblock_nest_wellplate_100ul',\n        '9', 'UDI primer plate')\n    racks20m = [\n        ctx.load_labware('opentrons_96_tiprack_20ul', slot)\n        for slot in ['3', '6']\n    ]\n\n    # pipettes\n    if p20_mount == m20_mount:\n        raise Exception('Pipette mounts cannot match.')\n    p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tip_racks=racks20s)\n    p20.flow_rate.aspirate = 10\n    p20.flow_rate.dispense = 20\n    p20.flow_rate.blow_out = 30\n    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=racks20m)\n\n    # file_path = 'protocols/tip_track.json'\n    if not ctx.is_simulating():\n        file_path = '/data/csv/tip_track.json'\n        if os.path.isfile(file_path):\n            with open(file_path) as json_file:\n                data = json.load(json_file)\n                if 'tips20s' in data:\n                    tip20s_count = data['tips20s'] % 96\n                else:\n                    tip20s_count = 0\n                if 'tips20m' in data:\n                    tip20m_count = data['tips20m'] % 12\n                else:\n                    tip20m_count = 0\n    else:\n        tip20s_count = 0\n        tip20m_count = 0\n\n    all_tips20s = [tip for rack in racks20s for tip in rack.wells()]\n    all_tips20m = [tip for rack in racks20m for tip in rack.rows()[0]]\n    tip20s_max = len(all_tips20s)\n    tip20m_max = len(all_tips20m)\n\n    def pick_up(pip):\n        nonlocal tip20s_count\n        nonlocal tip20m_count\n        if pip == p20:\n            if tip20s_count == tip20s_max:\n                ctx.pause('Replace tipracks before resuming.')\n                tip20s_count = 0\n                [rack.reset() for rack in racks20s]\n            pip.pick_up_tip(all_tips20s[tip20s_count])\n            tip20s_count += 1\n        else:\n            if tip20m_count == tip20m_max:\n                ctx.pause('Replace tipracks before resuming.')\n                tip20m_count = 0\n                [rack.reset() for rack in racks20m]\n            pip.pick_up_tip(all_tips20m[tip20m_count])\n            tip20m_count += 1\n\n    # reagents and sample setup\n    if number_of_samples > 96 or number_of_samples < 1:\n        raise Exception('Invalid number of samples (must be 1-96).')\n    samples = tc_plate.wells()[:number_of_samples]\n    udi_primers = index_plate.rows()[0][:math.ceil(number_of_samples/8)]\n    samples_multi = tc_plate.rows()[0][:math.ceil(number_of_samples/8)]\n    taq_premix = tempblock.rows()[3][0]\n    dna_eb = reagent_res.wells()[1]\n\n    \"\"\" Section 2.3: Library Index PCR (Green Caps) \"\"\"\n    if tc.lid_position == 'closed':\n        tc.open_lid()\n\n    # transfer UDI primers\n    for m in samples_multi:\n        pick_up(m20)\n        m20.transfer(\n            5, udi_primers, m, mix_after=(3, 15), air_gap=1, new_tip='never')\n        m20.blow_out(m.top(-2))\n        m20.drop_tip()\n\n    # transfer taq premix\n    for s in samples:\n        for i, vol in enumerate([15, 10]):\n            pick_up(p20)\n            p20.transfer(vol, taq_premix, s.bottom(1), new_tip='never')\n            if i == 0:\n                p20.drop_tip()\n        p20.mix(3, 15, s)\n        p20.blow_out(s.top(-2))\n        p20.drop_tip()\n    ctx.pause('Briefly spin down sample plate and replace on thermoycler.')\n\n    # run first part of profile 1\n    tc.close_lid()\n    if rna_input == '> 1\u00b5g':\n        cycles = 10\n    elif rna_input == '250ng-1\u00b5g':\n        cycles = 11\n    elif rna_input == '100ng-250ng':\n        cycles = 12\n    elif rna_input == '< 100ng':\n        cycles = 13\n    profile_2_4 = [{'temperature': 95, 'hold_time_minutes': 10}]\n    profile_2_5 = [\n        {'temperature': 95, 'hold_time_seconds': 30},\n        {'temperature': 60, 'hold_time_seconds': 30},\n        {'temperature': 72, 'hold_time_minutes': 1}\n    ]\n    profile_2_6 = [\n        {'temperature': 72, 'hold_time_minutes': 7},\n        {'temperature': 4, 'hold_time_seconds': 10}\n    ]\n    tc.execute_profile(steps=profile_2_4, repetitions=1, block_max_volume=50)\n    tc.execute_profile(\n        steps=profile_2_5, repetitions=cycles, block_max_volume=50)\n    tc.execute_profile(steps=profile_2_6, repetitions=1, block_max_volume=50)\n    tc.open_lid()\n\n    # transfer elution buffer\n    for m in samples_multi:\n        pick_up(m20)\n        m20.transfer(50, dna_eb, m.top(-2), new_tip='never')\n        m20.mix(5, 15, m)\n        m20.blow_out(m.top(-2))\n        m20.drop_tip()\n\n    ctx.comment('Carefully remove sample plate from thermocycler and proceed \\\nwith cleanup.')\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 96,
+            "label": "number of samples",
+            "name": "number_of_samples",
+            "type": "int"
+        },
+        {
+            "label": "RNA input",
+            "name": "rna_input",
+            "options": [
+                {
+                    "label": "> 1\u00b5g",
+                    "value": "> 1\u00b5g"
+                },
+                {
+                    "label": "250ng-1\u00b5g",
+                    "value": "250ng-1\u00b5g"
+                },
+                {
+                    "label": "100ng-250ng",
+                    "value": "100ng-250ng"
+                },
+                {
+                    "label": "< 100ng",
+                    "value": "< 100ng"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P20 GEN2 single-channel mount",
+            "name": "p20_mount",
+            "options": [
+                {
+                    "label": "right",
+                    "value": "right"
+                },
+                {
+                    "label": "left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P20 GEN2 multi-channel mount",
+            "name": "m20_mount",
+            "options": [
+                {
+                    "label": "left",
+                    "value": "left"
+                },
+                {
+                    "label": "right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p20_multi_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p20_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 1",
+            "share": false,
+            "slot": "1",
+            "type": "opentrons_96_tiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 2",
+            "share": false,
+            "slot": "2",
+            "type": "opentrons_96_tiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_tiprack_20ul"
+        },
+        {
+            "name": "Opentrons 24 Well Aluminum Block with NEST 1.5 mL Screwcap on Temperature Module GEN2 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_24_aluminumblock_nest_1.5ml_screwcap"
+        },
+        {
+            "name": "reagent reservoir on 5",
+            "share": false,
+            "slot": "5",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_tiprack_20ul"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Thermocycler Module on 7",
+            "share": false,
+            "slot": "7",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "UDI primer plate on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_aluminumblock_nest_wellplate_100ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.0",
+        "author": "Nick <protocols@opentrons.com>",
+        "protocolName": "Zymo-Seq RiboFree\u2122 Total RNA Library Prep Library Index PCR (robot 1)",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}

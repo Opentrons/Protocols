@@ -1,0 +1,101 @@
+{
+    "content": "from opentrons.protocol_api.labware import OutOfTipsError\nfrom types import MethodType\nimport csv\n\nmetadata = {\n    'title': 'Custom Cherrypicking',\n    'author': 'Steve Plonk',\n    'apiLevel': '2.10'\n}\n\n\ndef run(ctx):\n\n    [clearance_source, clearance_dest, labware_384, labware_24, labware_96,\n     uploaded_csv] = get_values(  # noqa: F821\n        \"clearance_source\", \"clearance_dest\", \"labware_384\", \"labware_24\",\n        \"labware_96\", \"uploaded_csv\")\n\n    ctx.set_rail_lights(True)\n    ctx.delay(seconds=10)\n\n    # p20 single, tips\n    tips20 = [ctx.load_labware(\n     'opentrons_96_tiprack_20ul', str(slot)) for slot in [11]]\n    p20s = ctx.load_instrument(\"p20_single_gen2\", 'left', tip_racks=tips20)\n\n    # csv file input\n    tfers = [line for line in csv.DictReader(uploaded_csv.splitlines())]\n\n    # labware types from protocol parameter input\n    lb_types = {key: lb for key, lb in zip(['384', '24', '96'],\n                [labware_384, labware_24, labware_96])}\n\n    # labware type for each deck slot listed as source or dest in csv input\n    lbwr = {}\n    for tfer in tfers:\n        if tfer['Source Slot'] not in lbwr.keys():\n            lbwr[tfer['Source Slot']] = lb_types[tfer['Source Plate Type']]\n        if tfer['Dest Slot'] not in lbwr.keys():\n            lbwr[tfer['Dest Slot']] = lb_types[tfer['Dest Plate Type']]\n\n    # load source and dest labware\n    for slot in lbwr.keys():\n        ctx.load_labware(lbwr[slot], slot)\n\n    # list loaded labware\n    loaded_lbwr = ctx.loaded_labwares.values()\n    ctx.comment(\"Labware loaded for this run: {}\".format(loaded_lbwr))\n\n    # unbound methods\n    def pick_up_or_refill(self):\n        try:\n            self.pick_up_tip()\n        except OutOfTipsError:\n            pause_attention(\n             \"\"\"Please Refill the {} Tip Boxes\n                and Empty the Tip Waste.\"\"\".format(self))\n            self.reset_tipracks()\n            self.pick_up_tip()\n\n    def pause_attention(message):\n        ctx.set_rail_lights(False)\n        ctx.delay(seconds=10)\n        ctx.pause(message)\n        ctx.set_rail_lights(True)\n\n    def prewet_tips(self, well_location, vol=None, reps=2):\n        for rep in range(reps):\n            if vol is None:\n                vol = self.max_volume\n            else:\n                vol = vol\n            self.aspirate(vol, well_location)\n            self.dispense(vol, well_location)\n\n    # bind methods to pipette\n    for pipette_object in [p20s]:\n        for method in [pick_up_or_refill, prewet_tips]:\n            setattr(\n             pipette_object, method.__name__,\n             MethodType(method, pipette_object))\n\n    # perform transfers following input csv\n    for tfer in tfers:\n        p20s.pick_up_or_refill()\n        for lbwr in loaded_lbwr:\n            if lbwr.parent == tfer['Source Slot']:\n                source = lbwr\n            if lbwr.parent == tfer['Dest Slot']:\n                dest = lbwr\n        p20s.prewet_tips(\n         source.wells_by_name()[tfer['Source Well']].bottom(clearance_source),\n         vol=float(tfer['Volume Transfer']))\n        p20s.transfer(\n         float(tfer['Volume Transfer']),\n         source.wells_by_name()[tfer['Source Well']].bottom(clearance_source),\n         dest.wells_by_name()[tfer['Dest Well']].bottom(clearance_dest),\n         new_tip='never')\n        p20s.drop_tip()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 1,
+            "label": "Height of Tip Above Bottom of Source Well During Aspiration (mm)",
+            "name": "clearance_source",
+            "type": "float"
+        },
+        {
+            "default": 1,
+            "label": "Height of Tip Above Bottom of Destination Well During Dispense (mm)",
+            "name": "clearance_dest",
+            "type": "float"
+        },
+        {
+            "label": "384-Well Labware",
+            "name": "labware_384",
+            "options": [
+                {
+                    "label": "corning_384_wellplate_112ul_flat",
+                    "value": "corning_384_wellplate_112ul_flat"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "24-Well Labware",
+            "name": "labware_24",
+            "options": [
+                {
+                    "label": "corning_24_wellplate_3.4ml_flat",
+                    "value": "corning_24_wellplate_3.4ml_flat"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "96-Well Labware",
+            "name": "labware_96",
+            "options": [
+                {
+                    "label": "corning_96_wellplate_360ul_flat",
+                    "value": "corning_96_wellplate_360ul_flat"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": "Source Slot,Source Plate Barcode,Source Plate Type,Source Well,Dest Slot,Dest Plate Barcode,Dest Plate Type,Dest Well,Volume Transfer\n1,xyz123,96,B2,1,xyz321,384,A1,6\n1,xyz123,96,B12,1,xyz321,384,A2,6\n2,xyz124,384,P18,1,xyz321,384,B1,10\n3,xyz125,24,A6,1,xyz321,384,B2,10\n",
+            "label": "Upload CSV Input File (Upload CSV-formatted Excel File-with formatting of data values and file identical to example)",
+            "name": "uploaded_csv",
+            "type": "textFile"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p20_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Corning 96 Well Plate 360 \u00b5L Flat on 1",
+            "share": false,
+            "slot": "1",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Corning 384 Well Plate 112 \u00b5L Flat on 2",
+            "share": false,
+            "slot": "2",
+            "type": "corning_384_wellplate_112ul_flat"
+        },
+        {
+            "name": "Corning 24 Well Plate 3.4 mL Flat on 3",
+            "share": false,
+            "slot": "3",
+            "type": "corning_24_wellplate_3.4ml_flat"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_96_tiprack_20ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.10",
+        "author": "Steve Plonk",
+        "title": "Custom Cherrypicking"
+    },
+    "modules": []
+}

@@ -1,0 +1,97 @@
+{
+    "content": "from opentrons import protocol_api\n\nmetadata = {\n    'protocolName': '''GeneRead QIAact Lung DNA UMI Panel Kit:\n                       Target Enrichment PCR''',\n    'author': 'Sakib <sakib.hossain@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx):\n\n    [samples, p300_mount,\n        p20_mount] = get_values(  # noqa: F821\n        \"samples\", \"p300_mount\", \"p20_mount\")\n\n    if not 1 <= samples <= 12:\n        raise Exception('''Invalid number of samples.\n                        Sample number must be between 1-12.''')\n\n    # Load Labware\n    tipracks_200ul = ctx.load_labware('opentrons_96_filtertiprack_200ul', 9)\n    tipracks_20ul = ctx.load_labware('opentrons_96_filtertiprack_20ul', 6)\n    tc_mod = ctx.load_module('thermocycler module')\n    tc_plate = tc_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')\n    temp_mod = ctx.load_module('temperature module gen2', 3)\n    temp_plate = temp_mod.load_labware(\n                    'opentrons_24_aluminumblock_nest_2ml_snapcap')\n    pcr_tubes = ctx.load_labware(\n                    'opentrons_96_aluminumblock_generic_pcr_strip_200ul',\n                    2)\n\n    # Load Pipettes\n    p300 = ctx.load_instrument('p300_single_gen2', p300_mount,\n                               tip_racks=[tipracks_200ul])\n    p20 = ctx.load_instrument('p20_single_gen2', p20_mount,\n                              tip_racks=[tipracks_20ul])\n\n    # Helper Functions\n    def pick_up(pip, loc=None):\n        try:\n            if loc:\n                pip.pick_up_tip(loc)\n            else:\n                pip.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            pip.home()\n            pip.pause(\"Please replace the empty tip racks!\")\n            pip.reset_tipracks()\n            pip.pick_up_tip()\n\n    # Wells\n    tc_plate_wells_forward = tc_plate.wells()[:samples]\n    tc_plate_wells_reverse = tc_plate.wells()[80:80+samples]\n    forward_mm = temp_plate['A1']\n    reverse_mm = temp_plate['B1']\n    tepcr_buff = temp_plate['A2']\n    fw_primers = temp_plate['B2']\n    rev_primers = temp_plate['C2']\n    tepcr_primer = temp_plate['D2']\n    dna_poly = temp_plate['A3']\n    forward_pcr_wells = pcr_tubes.wells()[:samples]\n    reverse_pcr_wells = pcr_tubes.wells()[80:80+samples]\n\n    # Protocol Steps\n\n    # Pre-Cool Thermocycler and Temperature Module to 4C\n    ctx.comment('Pre-Cooling Temperature Module to 4\u00b0C')\n    temp_mod.set_temperature(4)\n    ctx.pause('''Temperature Module has been cooled to 4\u00b0C.\n              Please place your samples and reagents on the\n              temperature module.''')\n\n    tepcr_buff_vol = 4*samples+2\n    fw_primers_vol = 5*samples+2.5\n    rev_primers_vol = 5*samples+2.5\n    tepcr_primer_vol = 0.8*samples+0.4\n    dna_poly_vol = 0.8*samples+0.4\n\n    # Prepare Forward MM\n    ctx.comment('Preparing Forward Master Mix')\n\n    pip = p300 if tepcr_buff_vol > 20 else p20\n    pick_up(pip)\n    pip.aspirate(tepcr_buff_vol, tepcr_buff)\n    pip.dispense(tepcr_buff_vol, forward_mm)\n    pip.drop_tip()\n\n    pip = p300 if fw_primers_vol > 20 else p20\n    pick_up(pip)\n    pip.aspirate(fw_primers_vol, fw_primers)\n    pip.dispense(fw_primers_vol, forward_mm)\n    pip.drop_tip()\n\n    pip = p300 if tepcr_primer_vol > 20 else p20\n    pick_up(pip)\n    pip.aspirate(tepcr_primer_vol, tepcr_primer)\n    pip.dispense(tepcr_primer_vol, forward_mm)\n    pip.drop_tip()\n\n    pip = p300 if dna_poly_vol > 20 else p20\n    pick_up(pip)\n    pip.aspirate(dna_poly_vol, dna_poly)\n    pip.dispense(dna_poly_vol, forward_mm)\n    pip.drop_tip()\n\n    mix_vol = (tepcr_buff_vol + fw_primers_vol + tepcr_primer_vol +\n               dna_poly_vol) / 2\n    pip = p300 if mix_vol > 20 else p20\n    pick_up(pip)\n    pip.mix(10, mix_vol, forward_mm)\n    pip.drop_tip()\n\n    # Prepare Reverse MM\n    ctx.comment('Preparing Reverse Master Mix')\n\n    pip = p300 if tepcr_buff_vol > 20 else p20\n    pick_up(pip)\n    pip.aspirate(tepcr_buff_vol, tepcr_buff)\n    pip.dispense(tepcr_buff_vol, reverse_mm)\n    pip.drop_tip()\n\n    pip = p300 if rev_primers_vol > 20 else p20\n    pick_up(pip)\n    pip.aspirate(rev_primers_vol, rev_primers)\n    pip.dispense(rev_primers_vol, reverse_mm)\n    pip.drop_tip()\n\n    pip = p300 if tepcr_primer_vol > 20 else p20\n    pick_up(pip)\n    pip.aspirate(tepcr_primer_vol, tepcr_primer)\n    pip.dispense(tepcr_primer_vol, reverse_mm)\n    pip.drop_tip()\n\n    pip = p300 if dna_poly_vol > 20 else p20\n    pick_up(pip)\n    pip.aspirate(dna_poly_vol, dna_poly)\n    pip.dispense(dna_poly_vol, reverse_mm)\n    pip.drop_tip()\n\n    mix_vol = (tepcr_buff_vol + rev_primers_vol + tepcr_primer_vol +\n               dna_poly_vol) / 2\n    pip = p300 if mix_vol > 20 else p20\n    pick_up(pip)\n    pip.mix(10, mix_vol, reverse_mm)\n    pip.drop_tip()\n\n    # Add Master Mix to PCR Tubes with DNA Library\n    for well in forward_pcr_wells:\n        pick_up(p20)\n        p20.aspirate(10.6, forward_mm)\n        p20.dispense(10.6, well)\n        p20.mix(7, 10)\n        p20.drop_tip()\n\n    for well in reverse_pcr_wells:\n        pick_up(p20)\n        p20.aspirate(10.6, reverse_mm)\n        p20.dispense(10.6, well)\n        p20.mix(7, 10)\n        p20.drop_tip()\n\n    ctx.pause('''Centrifuge tubes as needed and return them to the\n                 aluminum block.''')\n\n    # Transfer Reactions to PCR Plate in thermal cycler\n    tc_mod.open_lid()\n    for src, dest in zip(forward_pcr_wells, tc_plate_wells_forward):\n        pick_up(p20)\n        p20.aspirate(20, src)\n        p20.dispense(20, dest)\n        p20.drop_tip()\n\n    for src, dest in zip(reverse_pcr_wells, tc_plate_wells_reverse):\n        pick_up(p20)\n        p20.aspirate(20, src)\n        p20.dispense(20, dest)\n        p20.drop_tip()\n\n    tc_mod.close_lid()\n    tc_mod.set_lid_temperature(103)\n\n    profile = [\n        {'temperature': 98, 'hold_time_seconds': 15},\n        {'temperature': 68, 'hold_time_minutes': 10}\n    ]\n\n    tc_mod.set_block_temperature(95, hold_time_minutes=13, block_max_volume=20)\n    tc_mod.set_block_temperature(98, hold_time_minutes=2, block_max_volume=20)\n    tc_mod.execute_profile(steps=profile, repetitions=8, block_max_volume=20)\n    tc_mod.set_block_temperature(72, hold_time_minutes=5, block_max_volume=20)\n    tc_mod.set_block_temperature(4, hold_time_minutes=5, block_max_volume=20)\n    tc_mod.set_block_temperature(4)\n    tc_mod.open_lid()\n    tc_mod.deactivate_lid()\n\n    ctx.comment('Protocol Complete!')\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 12,
+            "label": "Number of Samples",
+            "name": "samples",
+            "type": "float"
+        },
+        {
+            "label": "P300 Single GEN2 Pipette Mount Position",
+            "name": "p300_mount",
+            "options": [
+                {
+                    "label": "Right",
+                    "value": "right"
+                },
+                {
+                    "label": "Left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P20 Single GEN2 Pipette Mount Position",
+            "name": "p20_mount",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p20_single_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p300_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 \u00b5L on 2",
+            "share": false,
+            "slot": "2",
+            "type": "opentrons_96_aluminumblock_generic_pcr_strip_200ul"
+        },
+        {
+            "name": "Opentrons 24 Well Aluminum Block with NEST 2 mL Snapcap on Temperature Module GEN2 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_24_aluminumblock_nest_2ml_snapcap"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Thermocycler Module on 7",
+            "share": false,
+            "slot": "7",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.11",
+        "author": "Sakib <sakib.hossain@opentrons.com>",
+        "description": "Custom Protocol Request",
+        "protocolName": "GeneRead QIAact Lung DNA UMI Panel Kit:\n                       Target Enrichment PCR"
+    },
+    "modules": []
+}

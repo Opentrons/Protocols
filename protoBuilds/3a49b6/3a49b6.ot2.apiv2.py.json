@@ -1,0 +1,109 @@
+{
+    "content": "metadata = {\n    'protocolName': 'Normalization',\n    'author': 'Steve <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.9'\n}\n\n\ndef run(ctx):\n\n    ctx.set_rail_lights(True)\n\n    # uploaded csv\n    [p20_side, clearance_water, mix_count, flow_rate_factor,\n     uploaded_csv] = get_values(  # noqa: F821\n        \"p20_side\", \"clearance_water\", \"mix_count\", \"flow_rate_factor\",\n        \"uploaded_csv\")\n\n    # data from csv\n    header_line, *data_lines = uploaded_csv.splitlines()\n    data = [\n     dict(zip([item for item in header_line.split(\",\") if any(item)],\n          [item for item in line.split(',')])) for line in data_lines]\n\n    # tips and p20 single\n    tips20 = [\n     ctx.load_labware(\n      \"opentrons_96_filtertiprack_20ul\", str(slot)) for slot in [8, 5]]\n    p20s = ctx.load_instrument(\n        \"p20_single_gen2\", p20_side, tip_racks=tips20)\n\n    # helper function\n    def flow_rate_settings():\n        if 0.5 <= flow_rate_factor <= 3:\n            speed = flow_rate_factor*7.34\n            p20s.flow_rate.aspirate = speed\n            p20s.flow_rate.dispense = speed\n\n    flow_rate_settings()\n\n    # labware\n    [tube_rack, dest_plate] = [\n     ctx.load_labware(labware, slot) for labware, slot in zip(\n        [\"opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical\",\n         \"nest_96_wellplate_100ul_pcr_full_skirt\"],\n        [str(num) for num in [11, 6, 9]])]\n\n    # water in well A1 of tube rack in slot 11\n    water = tube_rack.wells_by_name()['A1']\n\n    # temperature module with pcr plate containing RNA in slot 3\n    temp_mod = ctx.load_module('temperature module gen2', '3')\n    rna = temp_mod.load_labware(\"nest_96_wellplate_100ul_pcr_full_skirt\")\n    temp_mod.set_temperature(4)\n\n    # water to destination plate\n    # if Vol RNA < 1 ul, set data['Vol RNA']='1'\n    # if Vol H2O < 1 ul, set data['Vol H2O']='0'\n    p20s.pick_up_tip()\n    for item in data:\n        if float(item['Vol RNA']) < 1:\n            item['Vol RNA'] = '1'\n        if float(item['Vol H2O']) < 1:\n            item['Vol H2O'] = '0'\n        p20s.transfer(\n         round(float(item['Vol H2O']), 2), water.bottom(clearance_water),\n         dest_plate.wells_by_name()[item['Well']],\n         new_tip='never')\n    p20s.drop_tip()\n\n    # rna to destination plate\n    for item in data:\n        p20s.transfer(\n         round(float(item['Vol RNA']), 2),\n         rna.wells_by_name()[item['Well']],\n         dest_plate.wells_by_name()[item['Well']],\n         mix_after=(mix_count, 10), new_tip='always')\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "label": "Mount for p20 Single",
+            "name": "p20_side",
+            "options": [
+                {
+                    "label": "Left Side",
+                    "value": "left"
+                },
+                {
+                    "label": "Right Side",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 10.0,
+            "label": "Tube Bottom Clearance for Water (mm)",
+            "name": "clearance_water",
+            "type": "float"
+        },
+        {
+            "default": 2,
+            "label": "Number of Times to Mix",
+            "name": "mix_count",
+            "type": "int"
+        },
+        {
+            "label": "Flow Rate for Aspiration and Dispense",
+            "name": "flow_rate_factor",
+            "options": [
+                {
+                    "label": "Multiply the Flow Rate x 2",
+                    "value": 2
+                },
+                {
+                    "label": "Multiply the Flow Rate x 3",
+                    "value": 3
+                },
+                {
+                    "label": "Use the Default Flow Rate",
+                    "value": 1
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": "Well,Vol RNA,Vol H2O,,,,,\nA1,1.287448734,18.71255127,,,,,\nA2,0.656364365,19.34363564,,,,,\nA3,0.925625894,19.07437411,,,,,\nA4,0.887395588,19.11260441,,,,,\nA5,6.721108876,13.27889112,,,,,\nA6,4.076243598,15.9237564,,,,,\nA7,8.444624654,11.55537535,,,,,\nA8,2.184419109,17.81558089,,,,,\nA9,9.610817168,10.38918283,,,,,\nA10,0.843480364,19.15651964,,,,,\nA11,1.968783888,18.03121611,,,,,\nA12,1.137007279,18.86299272,,,,,\nB1,3.073896594,16.92610341,,,,,\nB2,2.262561482,17.73743852,,,,,\nB3,2.022939354,17.97706065,,,,,\nB4,1.603448484,18.39655152,,,,,\nB5,1.396982113,18.60301789,,,,,\nB6,1.959993614,18.04000639,,,,,\nB7,2.343214426,17.65678557,,,,,\nB8,1.465947442,18.53405256,,,,,\nB9,1.068906346,18.93109365,,,,,\nB10,1.040855069,18.95914493,,,,,\nB11,1.099067631,18.90093237,,,,,\nB12,1.432582771,18.56741723,,,,,\nC1,1.159938014,18.84006199,,,,,\nC2,0.571340427,19.42865957,,,,,\nC3,0.63633666,19.36366334,,,,,\nC4,0.687529822,19.31247018,,,,,\nC5,12.56004796,7.439952036,,,,,\nC6,8.60717109,11.39282891,,,,,\nC7,20,0,,,,,\nC8,1.660416291,18.33958371,,,,,\nC9,14.46990462,5.530095376,,,,,\nC10,0.715513309,19.28448669,,,,,\nC11,2.021259412,17.97874059,,,,,\nC12,1.513278798,18.4867212,,,,,\nD1,7.019330564,12.98066944,,,,,\nD2,2.842786172,17.15721383,,,,,\nD3,2.400511874,17.59948813,,,,,\nD4,1.528414044,18.47158596,,,,,\nD5,1.313253488,18.68674651,,,,,\nD6,2.505746652,17.49425335,,,,,\nD7,2.176083504,17.8239165,,,,,\nD8,0.729984214,19.27001579,,,,,\nD9,1.087077641,18.91292236,,,,,\nD10,1.062186063,18.93781394,,,,,\nD11,0.806866208,19.19313379,,,,,\nD12,5.554986555,14.44501345,,,,,\nE1,5.661192235,14.33880776,,,,,\nE2,11.29235329,8.70764671,,,,,\nE3,15.10643532,4.893564683,,,,,\nE4,1.642484856,18.35751514,,,,,\nE5,7.972007573,12.02799243,,,,,\nE6,16.54979278,3.450207215,,,,,\nE7,20,0,,,,,\nE8,1.844798792,18.15520121,,,,,\nE9,0.914951795,19.0850482,,,,,\nE10,5.606402716,14.39359728,,,,,\nE11,4.056327687,15.94367231,,,,,\nE12,4.480967464,15.51903254,,,,,\nF1,3.654002432,16.34599757,,,,,\nF2,2.698321011,17.30167899,,,,,\nF3,2.39676196,17.60323804,,,,,\nF4,0.593182204,19.4068178,,,,,\nF5,3.70753518,16.29246482,,,,,\nF6,8.9136119,11.0863881,,,,,\nF7,5.128787891,14.87121211,,,,,\nF8,2.206476505,17.7935235,,,,,\nF9,2.549956894,17.45004311,,,,,\nF10,0.930143367,19.06985663,,,,,\nF11,5.795965921,14.20403408,,,,,\nF12,0.388969836,19.61103016,,,,,\nG1,0.757251832,19.24274817,,,,,\nG2,0.647894931,19.35210507,,,,,\nG3,0.771106145,19.22889386,,,,,\nG4,1.501583958,18.49841604,,,,,\nG5,3.704864907,16.29513509,,,,,\nG6,0.176673,19.823327,,,,,\nG7,0.306333605,19.69366639,,,,,\nG8,1.336279071,18.66372093,,,,,\nG9,1.098835428,18.90116457,,,,,\nG10,1.578002458,18.42199754,,,,,\nG11,1.059944887,18.94005511,,,,,\nG12,1.855629162,18.14437084,,,,,\nH1,1.36376231,18.63623769,,,,,\nH2,4.422960566,15.57703943,,,,,\nH3,2.226970217,17.77302978,,,,,\nH4,9.922640158,10.07735984,,,,,\nH5,2.78955382,17.21044618,,,,,\nH6,6.812489784,13.18751022,,,,,\nH7,20,0,,,,,\nH8,20,0,,,,,\nH9,4.620812168,15.37918783,,,,,\nH10,1.331711424,18.66828858,,,,,\nH11,1.551538575,18.44846142,,,,,\nH12,20,0,,,,,",
+            "label": "Upload CSV",
+            "name": "uploaded_csv",
+            "type": "textFile"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p20_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Temperature Module GEN2 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on 6",
+            "share": false,
+            "slot": "6",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons 10 Tube Rack with Falcon 4x50 mL, 6x15 mL Conical on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.9",
+        "author": "Steve <protocols@opentrons.com>",
+        "protocolName": "Normalization",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}
