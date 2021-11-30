@@ -30,7 +30,7 @@
       { "label": "Opentrons 96 Filter Tip Rack 1000 uL", "value": "opentrons_96_filtertiprack_1000ul" },
       { "label": "Opentrons 96 Filter Tip Rack 200 uL", "value": "opentrons_96_filtertiprack_200ul" },
       { "label": "Opentrons 96 Filter Tip Rack 20 uL", "value": "opentrons_96_filtertiprack_20ul" },
-      { "label": "Opentrons 96 Filter Tip Rack 10 uL", "value": "opentrons_96_filtertiprack_10ul" },
+      { "label": "Opentrons 96 Filter Tip Rack 10 uL", "value": "opentrons_96_filtertiprack_10ul" }
     ]
   },
   {
@@ -40,7 +40,7 @@
     "options": [
       { "label": "Corning 97 well plate 360 uL flat", "value": "corning_96_wellplate_360ul_flat" },
       { "label": "NEST 96 well plate 200 uL", "value": "nest_96_wellplate_200ul_flat" },
-      { "label": "NEST 96 Deepwell Plate 2mL", "value": "nest_96_wellplate_2ml_deep" },
+      { "label": "NEST 96 Deepwell Plate 2mL", "value": "nest_96_wellplate_2ml_deep" }
     ]
   },
   {
@@ -52,7 +52,7 @@
       { "label": "Agilent 1 Well Reservoir 290 mL", "value": "agilent_1_reservoir_290ml" },
       { "label": "Axygen 1 Well Reservoir 90 mL", "value": "axygen_1_reservoir_90ml" },
       { "label": "NEST 12 Well Reservoir 15 mL", "value": "nest_12_reservoir_15ml" },
-      { "label": "NEST 1 Well Reservoir 195 mL", "value": "nest_1_reservoir_195ml" },
+      { "label": "NEST 1 Well Reservoir 195 mL", "value": "nest_1_reservoir_195ml" }
     ]
   },
   {
