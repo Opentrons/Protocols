@@ -14,7 +14,7 @@ def get_values(*names):
                                   "total_mixing_volume":"200",
                                   "tip_use_strategy":"never",
                                   "plate_type":"corning_96_wellplate_360ul_flat",
-                                  "trough_type":"usascientific_12_reservoir_22ml",
+                                  "trough_type":"axygen_1_reservoir_90ml",
                                   "tiprack_type":"opentrons_96_tiprack_300ul"}
                                   """)
     return [_all_values[n] for n in names]
@@ -47,8 +47,6 @@ def run(protocol_context):
         protocol_context.load_labware('opentrons_96_tiprack_300ul', slot)
         for slot in ['1', '4']
     ]
-    # import pdb
-    # pdb.set_trace()
 
     pipette = protocol_context.load_instrument(
         pipette_type, mount='left', tip_racks=tiprack)
@@ -57,7 +55,10 @@ def run(protocol_context):
     pipette_vol_error_check(pipette, transfer_volume, "transfer")
     pipette_vol_error_check(pipette, diluent_volume, "diluent")
 
-    if "multi" in pip_name:
+    # import pdb
+    # pdb.set_trace()
+
+    if "multi" in pipette_type:
 
         # Distribute diluent across the plate to the the number of samples
         # And add diluent to one column after the number of samples for a blank
@@ -101,6 +102,9 @@ def run(protocol_context):
         for col in plate.columns()[1:1+num_of_dilutions]:
             pipette.distribute(
                 diluent_volume, trough.wells()[0], [well for well in col])
+
+        # import pdb
+        # pdb.set_trace()
 
         for row in plate.rows():
             if tip_use_strategy == 'never':
