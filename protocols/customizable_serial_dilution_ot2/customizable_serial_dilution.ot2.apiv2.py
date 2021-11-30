@@ -34,8 +34,10 @@ def run(protocol_context):
         pipette_type, mount='left', tip_racks=tiprack)
 
     # Error checking
-    pipette_vol_error_check(pipette, transfer_volume, "transfer")
-    pipette_vol_error_check(pipette, diluent_volume, "diluent")
+    pipette_vol_error_check(protocol_context,
+                            pipette, transfer_volume, "transfer")
+    pipette_vol_error_check(protocol_context,
+                            pipette, diluent_volume, "diluent")
 
     # import pdb
     # pdb.set_trace()
@@ -111,18 +113,20 @@ def run(protocol_context):
                 pipette.drop_tip()
 
 
-def pipette_vol_error_check(pipette, volume, message):
+def pipette_vol_error_check(context, pipette, volume, message):
     """
     This function checks if the volumes to be pipetted are compatible with
     the  volumes of the choosen pipette
     """
     if volume < pipette.min_volume:
-        raise Exception(("The mounted pipette cannot pipette "
+        context.message(("Warning: The mounted pipette ({}) cannot pipette "
                          "a {} volume of {} uL because the volume "
-                         "is too small for it.").format(message, volume)
+                         "is too small for it.").format(
+                         pipette.model, message, volume)
                         )
     if volume > pipette.max_volume:
-        raise Exception(("The mounted pipette cannot pipette "
+        context.message(("Warning: The mounted pipette ({}) cannot pipette "
                          "a {} volume of {} uL because the volume "
-                         "is too large for it.").format(message, volume)
+                         "is too large for it.").format(
+                         pipette.model, message, volume)
                         )
