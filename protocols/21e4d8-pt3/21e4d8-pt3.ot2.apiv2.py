@@ -12,8 +12,8 @@ metadata = {
 def run(protocol):
     [p20type, p300type, num, mag_gen, mag_plate,
      cold, sp, res, mm, waste] = get_values(  # noqa: F821
-    'p20type', 'p300type', 'num', 'mag_gen', 'mag_plate',
-    'cold', 'sp', 'res', 'mm', 'waste')
+        'p20type', 'p300type', 'num', 'mag_gen', 'mag_plate',
+        'cold', 'sp', 'res', 'mm', 'waste')
 
     # Variables; these are injected when downloaded from the protocol
     # Library. Listed here for ease of access.

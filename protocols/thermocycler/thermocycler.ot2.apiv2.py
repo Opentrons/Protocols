@@ -11,7 +11,7 @@ def run(protocol):
         d_temp, d_time, a_temp, a_time,
         e_temp, e_time, no_cycles,
         fe_temp, fe_time, final_temp] = get_values(  # noqa: F821
-    'well_vol', 'lid_temp', 'init_temp', 'init_time', 'd_temp', 'd_time',
+        'well_vol', 'lid_temp', 'init_temp', 'init_time', 'd_temp', 'd_time',
         'a_temp', 'a_time', 'e_temp', 'e_time', 'no_cycles',
         'fe_temp', 'fe_time', 'final_temp')
 

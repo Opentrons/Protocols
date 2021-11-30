@@ -8,7 +8,7 @@ metadata = {
 
 def run(protocol):
     [p300_mnt, p1k_mnt, inc_time] = get_values(  # noqa: F821
-    'p300_mnt', 'p1k_mnt', 'inc_time')
+        'p300_mnt', 'p1k_mnt', 'inc_time')
 
     # load labware
     tempdeck = protocol.load_module('tempdeck', '4')

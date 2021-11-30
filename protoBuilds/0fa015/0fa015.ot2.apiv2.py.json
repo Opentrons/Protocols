@@ -1,0 +1,81 @@
+{
+    "content": "from opentrons import types\n\nmetadata = {\n    'protocolName': 'Plate Filling QE in NEST Plate',\n    'author': 'Chaz <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.5'\n}\n\n\ndef run(protocol):\n    [piptype, pipmnt, num_plates] = get_values(  # noqa: F821\n        'piptype', 'pipmnt', 'num_plates')\n\n    # load labware and pipettes\n    pip_name, tip_name = piptype.split()\n    tips = protocol.load_labware(tip_name, '10')\n    pip = protocol.load_instrument(pip_name, pipmnt, tip_racks=[tips])\n    res = protocol.load_labware('nest_12_reservoir_15ml', '11')\n    mm1 = [res['A1']]*5+[res['A2']]*4\n    num_plates += 1\n    plates = [\n        protocol.load_labware(\n            'nest_96_wellplate_100ul_pcr_full_skirt',\n            s) for s in range(1, num_plates)]\n\n    # max_vol = 15 if pip_name == 'p20_multi_gen2' else 180\n\n    # distribute 10ul of QE\n    pip.pick_up_tip()\n    for plate, mm, r in zip(plates, mm1, range(1, 10)):\n        wells = plate.rows()[0]\n        disp_vol = 12\n        protocol.comment(f'Distributing 10ul to plate {r}...')\n        for well in wells:\n            pip.aspirate(10, mm)\n            protocol.max_speeds['X'] = 25\n            pip.move_to(mm.top().move(types.Point(x=3.5, y=0, z=-4)))\n            pip.move_to(mm.top().move(types.Point(x=-3.5, y=0, z=-2)))\n            protocol.max_speeds['X'] = None\n            pip.dispense(disp_vol, well)\n            pip.blow_out(well)\n            pip.aspirate(2, well.top())\n    pip.drop_tip()\n\n    protocol.comment('Protocol complete.')\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "label": "Pipette Type",
+            "name": "piptype",
+            "options": [
+                {
+                    "label": "P20 Multi",
+                    "value": "p20_multi_gen2 opentrons_96_tiprack_20ul"
+                },
+                {
+                    "label": "P300 Multi",
+                    "value": "p300_multi_gen2 opentrons_96_tiprack_300ul"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Pipette Mount",
+            "name": "pipmnt",
+            "options": [
+                {
+                    "label": "Right",
+                    "value": "right"
+                },
+                {
+                    "label": "Left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 1,
+            "label": "Number of Plates (1-9)",
+            "name": "num_plates",
+            "type": "int"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "right",
+            "name": "p20_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on 1",
+            "share": false,
+            "slot": "1",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 10",
+            "share": false,
+            "slot": "10",
+            "type": "opentrons_96_tiprack_20ul"
+        },
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on 11",
+            "share": false,
+            "slot": "11",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.5",
+        "author": "Chaz <protocols@opentrons.com>",
+        "protocolName": "Plate Filling QE in NEST Plate",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}

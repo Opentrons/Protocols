@@ -10,7 +10,7 @@ metadata = {
 
 def run(protocol):
     [num_samps, spike_in, return_tips] = get_values(  # noqa: F821
-    'num_samps', 'spike_in', 'return_tips')
+        'num_samps', 'spike_in', 'return_tips')
 
     samps = int(num_samps)
 

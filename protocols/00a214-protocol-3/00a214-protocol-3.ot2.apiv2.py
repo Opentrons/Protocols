@@ -11,8 +11,8 @@ metadata = {
 
 def run(protocol):
     [num_plates, asp_speed,
-    asp_height, disp_height] = get_values(  # noqa: F821
-    'num_plates', 'asp_speed', 'asp_height', 'disp_height')
+     asp_height, disp_height] = get_values(  # noqa: F821
+        'num_plates', 'asp_speed', 'asp_height', 'disp_height')
 
     # load labware and pipettes
     tips300 = protocol.load_labware('opentrons_96_tiprack_300ul', '1')

@@ -1,0 +1,163 @@
+{
+    "content": "import math\nfrom opentrons.types import Point\n\nmetadata = {\n    'protocolName': 'Nextera DNA Flex NGS Library Prep: Cleanup Libraries',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.2'\n}\n\n\ndef run(ctx):\n    [number_of_samples_to_process, p50_type, p50_mount, p300_type,\n        p300_mount] = get_values(  # noqa: F821\n            'number_of_samples_to_process', 'p50_type', 'p50_mount',\n            'p300_type', 'p300_mount')\n\n    # load labware and modules\n    magdeck = ctx.load_module('magdeck', '1')\n    mag_plate = magdeck.load_labware('biorad_96_wellplate_200ul_pcr')\n    new_plate = ctx.load_labware(\n        'biorad_96_wellplate_200ul_pcr', '2', 'new PCR plate')\n    res12 = ctx.load_labware(\n        'usascientific_12_reservoir_22ml', '3', 'reagent reservoir')\n    slots50 = [str(slot) for slot in range(4, 8)]\n    tips50 = [\n        ctx.load_labware('opentrons_96_tiprack_300ul', slot)\n        for slot in slots50\n    ]\n    slots300 = [str(slot) for slot in range(8, 12)]\n    tips300 = [\n        ctx.load_labware('opentrons_96_tiprack_300ul', slot)\n        for slot in slots300\n    ]\n\n    # reagents\n    spb = res12.wells()[0]\n    nuc_free_water = res12.wells()[1].bottom(5)\n    rsb = res12.wells()[2].bottom(5)\n    etoh = [chan.bottom(5) for chan in res12.wells()[3:5]]\n    liquid_waste = [chan.top() for chan in res12.wells()[9:12]]\n\n    # check:\n    if p50_mount == p300_mount:\n        raise Exception('Input different mounts for P50 and P300 multi-channel \\\npipettes')\n    if number_of_samples_to_process > 96 or number_of_samples_to_process < 1:\n        raise Exception('Invalid number of samples to process (must be between \\\n1 and 96).')\n\n    # pipettes\n    num_cols = math.ceil(number_of_samples_to_process/8)\n\n    pip50 = ctx.load_instrument(p50_type, p50_mount, tip_racks=tips50)\n    pip300 = ctx.load_instrument(p300_type, p300_mount, tip_racks=tips300)\n    if p50_type == 'p50_multi':\n        [mag_samples50, new_samples50] = [\n            plate.rows()[0][:num_cols] for plate in [mag_plate, new_plate]]\n    else:\n        [mag_samples50, new_samples50] = [\n            plate.wells()[:number_of_samples_to_process]\n            for plate in [mag_plate, new_plate]\n        ]\n    if p300_type == 'p300_multi':\n        [mag_samples300, new_samples300] = [\n            plate.rows()[0][:num_cols] for plate in [mag_plate, new_plate]]\n    else:\n        [mag_samples300, new_samples300] = [\n            plate.wells()[:number_of_samples_to_process]\n            for plate in [mag_plate, new_plate]\n        ]\n\n    def slot_parse(slots):\n        slot_str = ''\n        for i, s in enumerate(slots):\n            if i < len(slots)-1:\n                slot_str += s + ', '\n            else:\n                slot_str += s\n        return slot_str\n\n    slot_str50 = slot_parse(slots50)\n    slot_str300 = slot_parse(slots300)\n\n    tip50_max = len(tips50)*12 if p50_type == 'multi' else len(tips50)*96\n    tip300_max = len(tips300)*12 if p300_type == 'multi' else len(tips300)*96\n    tip50_count = 0\n    tip300_count = 0\n\n    def pick_up(pip):\n        nonlocal tip50_count\n        nonlocal tip300_count\n\n        if pip == 'pip50':\n            if tip50_count == tip50_max:\n                ctx.pause('Replace 300ul tipracks in slots \\\n' + slot_str50 + ' before resuming.')\n                pip50.reset_tipracks()\n                tip50_count = 0\n            pip50.pick_up_tip()\n            tip50_count += 1\n        else:\n            if tip300_count == tip300_max:\n                ctx.pause('Replace 300ul tipracks in slots \\\n' + slot_str300 + ' before resuming.')\n                pip300.reset_tipracks()\n                tip300_count = 0\n            pip300.pick_up_tip()\n            tip300_count += 1\n\n    lng = 71.88\n    wid = 8.33\n    h = 25\n\n    def track_bead_height(pip, vol):\n        nonlocal h\n        dv = vol if pip == 'single' else vol*8\n        dh = dv/(lng*wid)\n        h = h - dh if h - dh > 5 else 5\n        return h\n\n    if magdeck.status == 'disengaged':\n        magdeck.engage(height=18)\n    ctx.delay(minutes=5, msg='Incubating on magnet for 5 minutes.')\n\n    # transfer supernatant from mag plate to new plate\n    for source, dest in zip(mag_samples50, new_samples50):\n        pick_up('pip50')\n        pip50.transfer(45, source.bottom(0.5), dest, new_tip='never')\n        pip50.blow_out()\n        pip50.drop_tip()\n\n    ctx.pause('Vortex beads and add to channel 1 of the 12-channel reservoir \\\nin slot 3.')\n\n    for s in new_samples300:\n        pick_up('pip300')\n        pip300.transfer(40, nuc_free_water, s.top(), new_tip='never')\n        pip300.blow_out(s.top())\n        h = track_bead_height(p300_type, 45)\n        pip300.transfer(45, spb.bottom(h), s, new_tip='never')\n        pip300.mix(10, 100, s)\n        pip300.blow_out(s.top())\n        pip300.drop_tip()\n\n    ctx.pause('Seal PCR plate in slot 2 and incubate at room \\\ntemperature for 5 minutes. Then discard the original plate on the magnetic \\\nstand and place the plate from slot 2 on the engaged magnetic deck. Place a \\\nnew PCR plate in slot 2, and resume.')\n\n    if p300_type == 'multi':\n        pick_up('pip300')\n        pip300.mix(20, 200, spb.bottom(5))\n        pip300.blow_out(spb.top())\n        pip300.drop_tip()\n    pick_up('pip50')\n    for s in new_samples50:\n        h = track_bead_height(p50_type, 15)\n        pip50.transfer(15, spb.bottom(h), s.top(), new_tip='never')\n        pip50.blow_out(s.top())\n    pip50.drop_tip()\n    ctx.delay(minutes=3, msg='Incubating beads on magnet for 3 more minutes.')\n\n    # transfer supernatant to corresponding well of new PCR plate\n    for source, dest in zip(mag_samples300, new_samples300):\n        pick_up('pip300')\n        pip300.transfer(125, source.bottom(1), dest, new_tip='never')\n        pip300.mix(10, 100, dest)\n        pip300.blow_out(dest.top())\n        pip300.drop_tip()\n    magdeck.disengage()\n\n    ctx.pause('Incubate for 5 minutes at room temperature before placing \\\nthe PCR plate from slot 2 on the magnetic module in slot 1. Discard the \\\noriginal plate occupying the magnetic module. Place another fresh PCR plate \\\non slot 2 for the final elution.')\n\n    magdeck.engage(height=18)\n    ctx.delay(minutes=5, msg='Incubating beads on magnet for 5 minutes.')\n\n    # remove supernatant\n    for s in mag_samples300:\n        pick_up('pip300')\n        pip300.transfer(150, s.bottom(1), liquid_waste[2], new_tip='never')\n        pip300.drop_tip()\n\n    # 2x EtOH wash\n    for wash in range(2):\n        pick_up('pip300')\n        for i, s in enumerate(mag_samples300):\n            pip300.transfer(190, etoh[wash], s.top(), new_tip='never')\n            pip300.blow_out()\n        for s in mag_samples300:\n            if not pip300.hw_pipette['has_tip']:\n                pick_up('pip300')\n            pip300.transfer(\n                200, s.bottom(1), liquid_waste[wash], new_tip='never')\n            pip300.drop_tip()\n\n    # remove residual supernatant\n    for s in mag_samples50:\n        pick_up('pip50')\n        pip50.aspirate(20, s.bottom(0.3))\n        pip50.drop_tip()\n\n    # airdry for 5 minutes\n    ctx.delay(minutes=5, msg='Airdrying for 5 minutes.')\n    magdeck.disengage()\n\n    # add RSB\n    for i, s in enumerate(mag_samples50):\n        side = i % 2 if p50_type == 'multi' else math.floor(i/8) % 2\n        angle = 1 if side == 0 else -1\n        disp_loc = s.bottom().move(\n            Point(x=0.85*(s.diameter/2)*angle, y=0, z=3))\n\n        pick_up('pip50')\n        pip50.aspirate(32, rsb)\n        pip50.move_to(s.center())\n        pip50.dispense(32, disp_loc)\n        pip50.mix(10, 20, disp_loc)\n        pip50.blow_out(s.top())\n        pip50.drop_tip()\n\n    ctx.delay(minutes=2, msg='Incubating off then on magnet (2 mins each)')\n    magdeck.engage(height=18)\n    ctx.delay(minutes=2)\n\n    # transfer elution to new plate\n    for source, dest in zip(mag_samples50, new_samples50):\n        pick_up('pip50')\n        pip50.transfer(30, source.bottom(1), dest, new_tip='never')\n        pip50.blow_out()\n        pip50.drop_tip()\n\n    magdeck.disengage()\n\n    ctx.comment('If you are stopping, seal the plate with Microseal B \\\nadhesive or Microseal F foil seal, and store at -25\u00b0C to -15\u00b0C for up to 30 \\\ndays.')\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 96,
+            "label": "number of samples to prcoess",
+            "name": "number_of_samples_to_process",
+            "type": "int"
+        },
+        {
+            "label": "P50 pipette type",
+            "name": "p50_type",
+            "options": [
+                {
+                    "label": "single",
+                    "value": "p50_single"
+                },
+                {
+                    "label": "multi",
+                    "value": "p50_multi"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "p50 pipette mount",
+            "name": "p50_mount",
+            "options": [
+                {
+                    "label": "left",
+                    "value": "left"
+                },
+                {
+                    "label": "right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P300 pipette type",
+            "name": "p300_type",
+            "options": [
+                {
+                    "label": "single",
+                    "value": "p300_single"
+                },
+                {
+                    "label": "multi",
+                    "value": "p300_multi"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P300 pipette mount",
+            "name": "p300_mount",
+            "options": [
+                {
+                    "label": "right",
+                    "value": "right"
+                },
+                {
+                    "label": "left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p50_single"
+        },
+        {
+            "mount": "right",
+            "name": "p300_single"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on Magnetic Module GEN1 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "new PCR plate on 2",
+            "share": false,
+            "slot": "2",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "reagent reservoir on 3",
+            "share": false,
+            "slot": "3",
+            "type": "usascientific_12_reservoir_22ml"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 10",
+            "share": false,
+            "slot": "10",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.2",
+        "author": "Nick <protocols@opentrons.com>",
+        "protocolName": "Nextera DNA Flex NGS Library Prep: Cleanup Libraries",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}

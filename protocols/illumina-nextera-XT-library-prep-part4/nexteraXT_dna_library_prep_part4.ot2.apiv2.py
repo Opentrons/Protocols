@@ -8,7 +8,7 @@ metadata = {
 
 def run(protocol):
     [pip_type, pip_mount, samps, pools, pool_vol] = get_values(  # noqa: F821
-    'pip_type', 'pip_mount', 'samps', 'pools', 'pool_vol')
+        'pip_type', 'pip_mount', 'samps', 'pools', 'pool_vol')
 
     total_tips = samps * pools
     total_tr = total_tips // 96 + (1 if total_tips % 96 > 0 else 0)
