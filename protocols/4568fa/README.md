@@ -50,7 +50,7 @@ You can also access this template for download [here](https://opentrons-protocol
 
 ### Deck Setup
 This example starting deck state shows the layout for 24 samples:  
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/4568fa/deck3.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/4568fa/deck4.png)
 
 * green on tuberacks: starting samples at various concentrations (specified in .csv file)
 * blue on reservoir A1: water

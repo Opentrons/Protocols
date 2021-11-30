@@ -56,8 +56,9 @@ def run(ctx):
                               tip_racks=tipracks20)
 
     water = reservoir.wells()[0]
-    hs_dil = tuberacks[-1].columns()[-1][1:]
     blank_solution = reservoir.wells()[1]
+    # hs_dil = tuberacks[-1].columns()[-1][1:]
+    hs_dil = reservoir.wells()[2]
     rinse_buffer = reservoir.wells()[10:]
 
     data = [
@@ -188,11 +189,11 @@ Must be 1-31 samples.')
     # pre-add HS diluent
     p300.pick_up_tip()
     for i, d in enumerate(dests):
-        p300.aspirate(135, hs_dil[i//11].bottom(3))
-        p300.touch_tip(hs_dil[i//11])
+        p300.aspirate(135, hs_dil.bottom(1))
+        # p300.touch_tip(hs_dil[i//11])
         p300.dispense(135, d.bottom(3))
-    p300.aspirate(27, hs_dil[0])
-    p300.touch_tip(hs_dil[0])
+    p300.aspirate(27, hs_dil.bottom(1))
+    # p300.touch_tip(hs_dil[0])
     p300.dispense(27, final_dest.bottom(3))
     p300.drop_tip()
 
