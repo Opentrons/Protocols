@@ -1,4 +1,4 @@
-# Sample Prep MALDI spotting - Fresh Spiking
+# Fresh Spiking with CSV
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -11,11 +11,11 @@
 This protocol transfers one-to-one analyte from the analyte tube rack on slot 2 to the final tube rack on slot 3. It then transfers plasma to all tubes up to the number specified by the user in the final tube rack. The solution in each tube is mixed upon dispensing the plasma.
 
 Explanation of complex parameters below:
-* `Number of analyte tubes`: Specify the number of analyte tubes for this run.
-* `Volume of plasma (ul)`: Specify the volume of plasma to distribute to each tube in the final tube rack.
-* `Volume of analyte`: Specify the volume of analyte to distribute to each tube in the final tube rack.
-* `P20 Single-Channel Mount`: Specify which mount (left or right) to host the P20 Single-Channel Pipette.
-* `P1000 Single-Channel Mount`: Specify which mount (left or right) to host the P1000 Single-Channel Pipette.
+* `csv`: Import a csv file with the following format (you do not need to specify mix steps):
+![csv layout](d)
+
+* `P20 Single-Channel Mount`: Specify which mount (left or right) to host the P20 single-channel pipette.
+* `P1000 Single-Channel Mount`: Specify which mount (left or right) to host the P1000 single-channel pipette.
 
 
 ---
@@ -34,14 +34,14 @@ Explanation of complex parameters below:
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/469c70/Screen+Shot+2021-11-11+at+2.26.41+PM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/469c70/Screen+Shot+2021-11-30+at+7.50.04+AM.png)
 
 ---
 
 ### Protocol Steps
-1. Add 5µl analyte from 2 mL Eppendorf tube in analyte tube rack to 2 mL Eppendorf tube in final tube rack.
-2. Transfer 195 µL of Plasma from plasma tube rack to 2 mL Eppendorf tubes in final tube rack.  
-3. Mix 5 times
+1. Matrix is added to the final racks on slot 2 and 4 via multi dispense (1 tip) according to the csv.
+2. Analyte is added to final racks according to csv. Mix after with 2 repetitions.
+3. Resulting solutions in final racks are transferred according to the csv. Mix after with two repetitions.
 
 
 ### Process
