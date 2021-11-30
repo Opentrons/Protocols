@@ -39,9 +39,6 @@ def run(protocol_context):
     pipette_vol_error_check(protocol_context,
                             pipette, diluent_volume, "diluent")
 
-    # import pdb
-    # pdb.set_trace()
-
     if "multi" in pipette_type:
 
         # Distribute diluent across the plate to the the number of samples
