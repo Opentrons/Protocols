@@ -8,9 +8,9 @@ metadata = {
 
 def run(protocol):
     [num_samples, samp_vol, plate_type,
-    tube_type, pip_type] = get_values(  # noqa: F821
-    'num_samples', 'samp_vol', 'plate_type',
-    'tube_type', 'pip_type')
+     tube_type, pip_type] = get_values(  # noqa: F821
+        'num_samples', 'samp_vol', 'plate_type',
+        'tube_type', 'pip_type')
 
     # load labware and pipettes
     pip_name, tip_name = pip_type.split()

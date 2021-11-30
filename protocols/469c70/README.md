@@ -1,4 +1,4 @@
-# Sample Prep MALDI spotting - Serial Dilution
+# Serial Dilution of Analyte Stock
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -8,15 +8,15 @@
 	* Serial Dilution
 
 ## Description
-This protocol serially dilutes stock from tube A1 of the stock tube rack (slot 1) to up to 15 tubes in the dilution rack (see diagram below). The `initial volume of stock for tube 1` and `initial volume of dilution for tube 1` volumes are added to A1 of the tuberack in slot 2, and from there the `Initial volume of stock for the rest of the tubes (mL)` and `Initial volume of dilution for the rest of the tubes (mL)` volume parameters are used to step down up from tube A2 to the number of tubes specified by the user. Mix steps are also included at full pipette tip volume.
+This protocol serially dilutes stock from the stock tube rack (slot 4) to up to 15 tubes in the dilution rack (see diagram below). Volume, tube source, tube destination, and slot source/destination are all read by the robot to perform all transfer steps. 2 mix steps are also included at half tube depth to avoid pipette submersion.
 
 Explanation of complex parameters below:
-* `Number of dilution tubes (1-15)`: Specify the number of dilution tubes to step down in slot 2.
-* `Initial volume of stock for tube 1 (ul)`: Specify the volume of stock for the initial tube.
-* `Initial volume of dilution for tube 1 (mL)`: Specify the volume of dilution for the initial tube.
-* `Initial volume of stock for the rest of the tubes (mL)`: Specify the volume of stock for all other tubes.
-* `Initial volume of dilution for the rest of the tubes (mL)`: Specify the volume of stock for all other tubes.
+* `csv`: Import a csv file with the following format (you do not need to specify mix steps):
+![csv layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/469c70/Screen+Shot+2021-11-30+at+10.36.56+AM.png)
+
 * `P1000 Single-Channel Mount`: Specify which mount (left or right) to host the P1000 single-channel pipette.
+
+
 
 
 ---
@@ -34,18 +34,15 @@ Explanation of complex parameters below:
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/469c70/Screen+Shot+2021-11-11+at+12.59.57+PM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/469c70/Screen+Shot+2021-11-30+at+7.51.44+AM.png)
 
 ---
 
 ### Protocol Steps
-1. Transfer 230µl of stock solution from 2 mL Eppendorf tube (9.6x 4.7mm) or 15 mL Falcon tube (17.5 mm Diameter) → 15 mL Falcon tube (17.5 mm Diameter)
-2. Transfer 9.770 mL of diluent from Source. 500mL or 1000mL media storage bottle (100 x 400mm or 100 x 900mm) → above 15 mL Falcon tube (17.5 mm Diameter)
-3. Mix 5 times (Aspiration) (Sample ID. STD 8)
-4. Transfer 1.2 mL of STD 8 from 15 mL Falcon tube (17.5 mm Diameter) → 15 mL Falcon tube (17.5 mm Diameter).
-5. Transfer 8.8 mL of diluent from Source. 500mL or 1000mL media storage bottle (100 x 400mm or 100 x 900mm) → above 15 mL Falcon tube (17.5 mm Diameter)
-6. Mix 5 times (Aspiration) (Sample ID. STD 7)
-7. (Likewise, the serial dilutions shall be prepared as STD6, STD5, STD4, STD3, STD2 & STD1).
+1. Stock is transferred from tube 1 of the stock rack to the first dilution rack.
+2. The stock is stepped down according to the csv.
+3. Steps 1 and 2 are repeated for all stock tubes.
+
 
 ### Process
 1. Input your protocol parameters above.

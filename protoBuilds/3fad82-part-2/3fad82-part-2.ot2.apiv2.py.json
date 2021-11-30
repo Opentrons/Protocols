@@ -1,0 +1,167 @@
+{
+    "content": "import math\n\nmetadata = {\n    'protocolName': '''Quarter Volume NEBNext Ultra II DNA Library Prep Kit\n    for Illumina: part 2 - purification of samples and PCR''',\n    'author': 'Steve Plonk <protocols@opentrons.com>',\n    'apiLevel': '2.9'\n}\n\n\ndef run(ctx):\n\n    # get parameter values from json above\n    [sample_count, labware_tips300, labware_tips20, labware_pcr_plate,\n     clearance_reservoir, clearance_samp_plate, flow_rate_beads, delay_beads,\n     engage_height, engage_time, dry_time\n     ] = get_values(  # noqa: F821\n      'sample_count', 'labware_tips300', 'labware_tips20', 'labware_pcr_plate',\n      'clearance_reservoir', 'clearance_samp_plate', 'flow_rate_beads',\n      'delay_beads', 'engage_height', 'engage_time', 'dry_time')\n\n    ctx.set_rail_lights(True)\n\n    # tips, p20 multi gen2, p300 multi gen2\n    tips20 = [ctx.load_labware(\n     labware_tips20, str(slot)) for slot in [2, 3, 5]]\n    p20m = ctx.load_instrument(\n        \"p20_multi_gen2\", 'left', tip_racks=tips20)\n    tips300 = [ctx.load_labware(labware_tips300, str(slot)) for slot in [6, 9]]\n    p300m = ctx.load_instrument(\n        \"p300_multi_gen2\", 'right', tip_racks=tips300)\n\n    \"\"\"\n    helper functions\n    \"\"\"\n    def pause_attention(message):\n        ctx.set_rail_lights(False)\n        ctx.delay(seconds=10)\n        ctx.pause(message)\n        ctx.set_rail_lights(True)\n\n    def aspirate_with_delay(current_pipette, volume, source, delay_seconds):\n        current_pipette.aspirate(volume, source)\n        if delay_seconds > 0:\n            ctx.delay(seconds=delay_seconds)\n\n    def dispense_with_delay(current_pipette, volume, dest, delay_seconds):\n        current_pipette.dispense(volume, dest)\n        if delay_seconds > 0:\n            ctx.delay(seconds=delay_seconds)\n\n    def mix_with_delay(current_pipette, volume, location, delay_seconds):\n        current_pipette.aspirate(volume, location)\n        if delay_seconds > 0:\n            ctx.delay(seconds=delay_seconds)\n        current_pipette.dispense(volume, location)\n        if delay_seconds > 0:\n            ctx.delay(seconds=delay_seconds)\n\n    def slow_tip_withdrawal(current_pipette, well_location, to_center=False):\n        if current_pipette.mount == 'right':\n            axis = 'A'\n        else:\n            axis = 'Z'\n        ctx.max_speeds[axis] = 10\n        if to_center is False:\n            current_pipette.move_to(well_location.top())\n        else:\n            current_pipette.move_to(well_location.center())\n        ctx.max_speeds[axis] = None\n\n    def pre_wet(current_pipette, volume, location):\n        for rep in range(2):\n            current_pipette.aspirate(volume, location)\n            current_pipette.dispense(volume, location)\n\n    def set_default_clearances(\n     current_pipette, aspirate_setting, dispense_setting):\n        if 0 < aspirate_setting < 5 and 0 < dispense_setting < 5:\n            current_pipette.well_bottom_clearance.aspirate = aspirate_setting\n            current_pipette.well_bottom_clearance.dispense = dispense_setting\n\n    def restore_default_clearances(current_pipette):\n        current_pipette.well_bottom_clearance.aspirate = 1\n        current_pipette.well_bottom_clearance.dispense = 1\n\n    def viscous_flow_rates(current_pipette):\n        current_pipette.flow_rate.aspirate = flow_rate_beads\n        current_pipette.flow_rate.dispense = flow_rate_beads\n        current_pipette.flow_rate.blow_out = flow_rate_beads\n\n    def etoh_flow_rates(current_pipette):\n        if (current_pipette.name == 'p300_multi_gen2' or\n           current_pipette.name == 'p300_single_gen2'):\n            current_pipette.flow_rate.aspirate = 92.86\n            current_pipette.flow_rate.dispense = 92.86\n            current_pipette.flow_rate.blow_out = 300\n\n    def default_flow_rates(current_pipette):\n        if (current_pipette.name == 'p300_multi_gen2' or\n           current_pipette.name == 'p300_single_gen2'):\n            current_pipette.flow_rate.aspirate = 92.86\n            current_pipette.flow_rate.dispense = 92.86\n            current_pipette.flow_rate.blow_out = 92.86\n        elif (current_pipette.name == 'p20_multi_gen2' or\n              current_pipette.name == 'p20_single_gen2'):\n            current_pipette.flow_rate.aspirate = 7.56\n            current_pipette.flow_rate.dispense = 7.56\n            current_pipette.flow_rate.blow_out = 7.56\n\n    def reuse_tips(current_pipette, which_tips):\n        current_pipette.reset_tipracks()\n        current_pipette.starting_tip = named_tips[which_tips]\n\n    named_tips = {}\n\n    def name_the_tips(tip_box, name_list, well_list):\n        for name, well in zip(\n         name_list, well_list):\n            named_tips[name] = tip_box[well]\n\n    ctx.delay(seconds=10)\n    pause_attention(\"\"\"\n    Set up for part 2: Remove master mix plate and used tip boxes.\n    Move sample plate to magnetic module. PCR plate (8.7 ul PCR master mix\n    with indexes) on cycler, reagent reservoir in deck slot 1, p20 tips\n    in slots 2, 3 and 5, p300 tips in slots 6 and 9.\n    \"\"\")\n\n    ctx.comment(\"\"\"\n    reagent reservoir in deck slot 1:\n    col 1 - beads\n    col 2 - 80% ethanol\n    col 4 - water\n    col 12 - waste\n    \"\"\")\n    reagent_reservoir = ctx.load_labware(\n     'nest_12_reservoir_15ml', '1', 'Reagent Reservoir')\n    [beads, etoh, water, waste] = [reagent_reservoir.wells_by_name()[\n     well] for well in ['A1', 'A2', 'A4', 'A12']]\n\n    ctx.comment(\"\"\"\n    sample plate on magnetic module:\n    samples arranged in columns of 8\n    up to 96 samples total\n    {} samples in this run\n    \"\"\".format(str(sample_count)))\n    num_cols = math.ceil(sample_count / 8)\n    mag = ctx.load_module('magnetic module', '4')\n    mag.disengage()\n    sample_plate = mag.load_labware(labware_pcr_plate, 'Sample Plate')\n\n    ctx.comment(\"\"\"\n    PCR plate on cycler:\n    containing 8.7 ul PCR master mix with indexes\n    \"\"\")\n    tc = ctx.load_module('thermocycler')\n    tc.open_lid()\n    pcr_plate = tc.load_labware(labware_pcr_plate, 'Sample Plate')\n\n    ctx.comment(\"\"\"\n    transfer beads to sample plate\n    wait, engage magnet, wait\n\n    liquid handling method for beads:\n    slow flow rate for aspiration and dispense\n    wait for liquid to finish moving after aspiration and dispense\n    dispense to a surface\n    withdraw tip slowly from liquid\n    \"\"\")\n\n    viscous_flow_rates(p20m)\n    for column in sample_plate.columns()[:num_cols]:\n        p20m.pick_up_tip()\n        aspirate_with_delay(p20m, 9.5, beads.bottom(\n         clearance_reservoir), delay_beads)\n        slow_tip_withdrawal(p20m, beads)\n        dispense_with_delay(p20m, 9.5, column[0].bottom(\n         clearance_samp_plate), delay_beads)\n        for repeat in range(5):\n            mix_with_delay(p20m, 10, column[0].bottom(\n             clearance_samp_plate), delay_beads)\n        p20m.drop_tip()\n    default_flow_rates(p20m)\n    ctx.delay(minutes=5)\n    mag.engage(height=engage_height)\n    ctx.delay(minutes=engage_time)\n\n    ctx.comment(\"\"\"\n    remove supernatant from beads\n    \"\"\")\n    for column in sample_plate.columns()[:num_cols]:\n        p20m.transfer(19, column[0].bottom(\n         clearance_samp_plate), waste.top(), new_tip='always')\n\n    ctx.comment(\"\"\"\n    wash beads twice with 80 percent ethanol\n    return tips for reuse with 2nd wash\n\n    liquid handling method for ethanol:\n    fast flow rate for blow out\n    pre-wet the tips twice (saturate air)\n    15 ul air gap\n    dispense from top\n    no tip touch (tip reuse)\n    delayed blowout after dispense (let etoh fall to bottom of tip first)\n    repeat blowout (for complete dispense)\n    \"\"\")\n    etoh_flow_rates(p300m)\n    for wash in range(2):\n        if wash == 0:\n            name_the_tips(tips300[0], ['etoh_tips'], [\n             tips300[0].next_tip().well_name])\n        else:\n            reuse_tips(p300m, 'etoh_tips')\n        p300m.pick_up_tip()\n        for column in sample_plate.columns()[:num_cols]:\n            if wash == 0:\n                pre_wet(p300m, 100, etoh.bottom(2))\n            p300m.aspirate(100, etoh.bottom(2))\n            p300m.air_gap(15)\n            p300m.dispense(115, column[0].top())\n            for rep in range(3):\n                if rep > 0:\n                    p300m.aspirate(200, column[0].top())\n                ctx.delay(seconds=1)\n                p300m.blow_out(column[0].top())\n        if wash == 0:\n            p300m.return_tip()\n            name_the_tips(tips300[0], ['sup_tips'], [\n             tips300[0].next_tip().well_name])\n            p300m.transfer(100, [column[0].bottom(\n             clearance_samp_plate) for column in sample_plate.columns()[\n             :num_cols]], waste.top(), air_gap=15, new_tip='always',\n             trash=False)\n        else:\n            p300m.drop_tip()\n            reuse_tips(p300m, 'sup_tips')\n            p300m.transfer(100, [column[0].bottom(\n             clearance_samp_plate) for column in sample_plate.columns()[\n             :num_cols]], waste.top(), air_gap=15, new_tip='always')\n    default_flow_rates(p300m)\n\n    ctx.comment(\"\"\"\n        let beads air dry\n        \"\"\")\n    ctx.delay(minutes=dry_time)\n    mag.disengage()\n\n    ctx.comment(\"\"\"\n        add water to beads and mix\n        wait\n        engage magnet\n        wait\n        \"\"\")\n    p20m.transfer(5, water.bottom(clearance_reservoir), [column[0].bottom(\n     clearance_samp_plate) for column in sample_plate.columns()[\n     :num_cols]], mix_after=(4, 5), new_tip='always')\n    ctx.delay(minutes=2)\n    mag.engage(height=engage_height)\n    ctx.delay(minutes=engage_time)\n\n    ctx.pause(\"\"\"\n    Please remove all tip boxes from the deck and place one fresh box of\n    p20 tips in deck slot 2.\n    \"\"\")\n    p20m.reset_tipracks()\n\n    ctx.comment(\"\"\"\n        transfer eluate to PCR plate and mix\n        \"\"\")\n    p20m.transfer(3.75, [column[0].bottom(\n     clearance_samp_plate) for column in sample_plate.columns()[\n     :num_cols]], [column[0].bottom(\n      clearance_samp_plate) for column in pcr_plate.columns()[\n      :num_cols]], mix_after=(3, 5), new_tip='always')\n\n    ctx.comment(\"\"\"\n        PCR cycling:\n\n        30 sec 98 C\n\n        repeat 10 cycles:\n        10 sec 90 C\n        75 sec 65 C\n\n        5 min 65 C\n        hold 4 C\n\n        \"\"\")\n\n    profiles = [\n     [{'temperature': temp, 'hold_time_seconds': sec} for temp, sec in zip(\n      [98], [30])], [\n      {'temperature': temp, 'hold_time_seconds': sec} for temp, sec in zip(\n       [90, 65], [10, 75])], [\n      {'temperature': temp, 'hold_time_seconds': sec} for temp, sec in zip(\n       [65], [300])]]\n\n    tc.close_lid()\n    tc.set_lid_temperature(100)\n    for profile, reps in zip(profiles, [1, 10, 1]):\n        tc.execute_profile(\n         steps=profile, repetitions=reps, block_max_volume=12)\n    tc.set_block_temperature(4)\n    tc.deactivate_lid()\n    pause_attention(\"\"\"Process steps and PCR cycling for part 2 are complete.\n    Click resume to open the cycler and finish the protocol run. Please proceed\n    to part 3.\"\"\")\n    tc.open_lid()\n    tc.deactivate_block()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 96,
+            "label": "Sample Count (between 1 and 96)",
+            "name": "sample_count",
+            "type": "int"
+        },
+        {
+            "label": "Choice of p300 Tips",
+            "name": "labware_tips300",
+            "options": [
+                {
+                    "label": "Opentrons 200 ul Filter Tips",
+                    "value": "opentrons_96_filtertiprack_200ul"
+                },
+                {
+                    "label": "Opentrons 300 ul Tips",
+                    "value": "opentrons_96_tiprack_300ul"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Choice of p20 Tips",
+            "name": "labware_tips20",
+            "options": [
+                {
+                    "label": "Opentrons p20 Filter Tips",
+                    "value": "opentrons_96_filtertiprack_20ul"
+                },
+                {
+                    "label": "Opentrons p20 Tips",
+                    "value": "opentrons_96_tiprack_20ul"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Choice of PCR Plate",
+            "name": "labware_pcr_plate",
+            "options": [
+                {
+                    "label": "biorad_96_wellplate_200ul_pcr",
+                    "value": "biorad_96_wellplate_200ul_pcr"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 2,
+            "label": "Well Bottom Clearance for Reservoir (millimeters)",
+            "name": "clearance_reservoir",
+            "type": "float"
+        },
+        {
+            "default": 1,
+            "label": "Well Bottom Clearance for Sample Plate (millimeters)",
+            "name": "clearance_samp_plate",
+            "type": "float"
+        },
+        {
+            "default": 3,
+            "label": "Reduced Flow Rate for Beads (ul/sec)",
+            "name": "flow_rate_beads",
+            "type": "float"
+        },
+        {
+            "default": 1,
+            "label": "Delay After Aspirate and Dispense for Beads (seconds)",
+            "name": "delay_beads",
+            "type": "int"
+        },
+        {
+            "default": 5,
+            "label": "Magnet Engage Height for BioRad Plate (millimeters)",
+            "name": "engage_height",
+            "type": "float"
+        },
+        {
+            "default": 5,
+            "label": "Engage Time for Magnet (minutes)",
+            "name": "engage_time",
+            "type": "int"
+        },
+        {
+            "default": 5,
+            "label": "Dry Time for Beads (minutes)",
+            "name": "dry_time",
+            "type": "int"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p20_multi_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p300_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Reagent Reservoir on 1",
+            "share": false,
+            "slot": "1",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 2",
+            "share": false,
+            "slot": "2",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Sample Plate on Magnetic Module GEN1 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Sample Plate on Thermocycler Module on 7",
+            "share": false,
+            "slot": "7",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.9",
+        "author": "Steve Plonk <protocols@opentrons.com>",
+        "protocolName": "Quarter Volume NEBNext Ultra II DNA Library Prep Kit\n    for Illumina: part 2 - purification of samples and PCR"
+    },
+    "modules": []
+}

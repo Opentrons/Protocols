@@ -1,6 +1,6 @@
 language: python
 python:
-  - "3.7.4"
+  - "3.8.4"
 
 install:
   - export OT_UPLOAD_BRANCH=$(python scripts/getBranch.py)
@@ -8,7 +8,7 @@ install:
   - echo $PATH
   - pip install -e otcustomizers
   - pip install -r protolib/requirements.txt
-  - pip install flake8==3.5.0 pytest
+  - pip install flake8==3.8.4 pytest
   - make setup
 
 addons:

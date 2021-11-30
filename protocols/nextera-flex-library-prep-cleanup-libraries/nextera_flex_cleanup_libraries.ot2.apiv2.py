@@ -236,5 +236,5 @@ on slot 2 for the final elution.')
     magdeck.disengage()
 
     ctx.comment('If you are stopping, seal the plate with Microseal B \
-adhesive or Microseal 'F' foil seal, and store at -25°C to -15°C for up to 30 \
+adhesive or Microseal F foil seal, and store at -25°C to -15°C for up to 30 \
 days.')

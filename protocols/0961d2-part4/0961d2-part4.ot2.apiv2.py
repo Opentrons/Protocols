@@ -8,7 +8,7 @@ metadata = {
 
 def run(protocol):
     [mnt, num_tubes] = get_values(  # noqa: F821
-    'mnt', 'num_tubes')
+        'mnt', 'num_tubes')
 
     # check for number of tubes
     if num_tubes > 12 or num_tubes < 1:
