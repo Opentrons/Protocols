@@ -41,9 +41,9 @@
   {
     "type": "dropDown",
     "label": "Tiprack type",
-    "name": "trough_type",
+    "name": "tiprack_type",
     "options": [
-      { "label": "", "value": "opentrons_96_tiprack_300ul" },
+      { "label": "Opentrons 96 Tip Rack 300 uL", "value": "opentrons_96_tiprack_300ul" },
       { "label": "Opentrons 96 Tip Rack 1000 uL", "value": "opentrons_96_tiprack_1000ul" },
       { "label": "Opentrons 96 Tip Rack 20 uL", "value": "opentrons_96_tiprack_20ul" },
       { "label": "Opentrons 96 Tip Rack 10 uL", "value": "opentrons_96_tiprack_10ul" },
