@@ -11,11 +11,11 @@ metadata = {
 
 def run(protocol):
     [num_samps, n_cor, cd4_dil, cd8_dil, fox_dil, pdl1_dil, ki_dil, pan_dil,
-    ds_520, ds_570, ds_540,
-    ds_620, ds_650, ds_690] = get_values(  # noqa: F821
-    'num_samps', 'n_cor', 'cd4_dil', 'cd8_dil', 'fox_dil', 'pdl1_dil',
-    'ki_dil', 'pan_dil', 'ds_520', 'ds_570', 'ds_540',
-    'ds_620', 'ds_650', 'ds_690')
+     ds_520, ds_570, ds_540,
+     ds_620, ds_650, ds_690] = get_values(  # noqa: F821
+        'num_samps', 'n_cor', 'cd4_dil', 'cd8_dil', 'fox_dil', 'pdl1_dil',
+        'ki_dil', 'pan_dil', 'ds_520', 'ds_570', 'ds_540',
+        'ds_620', 'ds_650', 'ds_690')
 
     init_cond_dict = {
       '520': [0, 'A1'],

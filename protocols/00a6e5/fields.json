@@ -1,9 +1,9 @@
 [
   {
     "type": "int",
-    "label": "Number of Samples ",
+    "label": "Number of Samples (1-84)",
     "name": "num_samp",
-    "default": 96
+    "default": 84
   },
   {
     "type": "dropDown",
@@ -13,6 +13,12 @@
       {"label": "Left", "value": "left"},
       {"label": "Right", "value": "right"}
     ]
+  },
+  {
+    "type": "int",
+    "label": "Aspiration Height",
+    "name": "asp_height",
+    "default": 1
   },
   {
     "type": "dropDown",

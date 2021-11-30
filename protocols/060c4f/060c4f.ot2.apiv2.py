@@ -8,7 +8,7 @@ metadata = {
 
 def run(protocol):
     [plate_cols, pip_mount] = get_values(  # noqa: F821
-    'plate_cols', 'pip_mount')
+        'plate_cols', 'pip_mount')
 
     # load labware and pipettes
     tips300 = [protocol.load_labware('opentrons_96_tiprack_300ul', '2')]
