@@ -39,7 +39,7 @@ This protocol uses the inputs you define for "***Dilution Factor***" and "***Tot
 
 -- [Opentrons OT-2 Run App (Version 3.1.2 or later)](http://opentrons.com/ot-app)
 
--- 200uL or 300 uL Tiprack ([Opentrons tips suggested](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips-racks-9-600-tips))
+-- 10 uL up to 1000 uL Tiprack ([Opentrons tips suggested](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips-racks-9-600-tips))
 
 -- [12-row automation-friendly trough](https://www.usascientific.com/12-channel-automation-reservoir.aspx)
 
@@ -49,15 +49,20 @@ This protocol uses the inputs you define for "***Dilution Factor***" and "***Tot
 
 -- Samples/Standards (Pre-loaded in Column 1 of a standard flat-bottom 96-well plate)
 
+
+
 ## Process
 1. Choose the pipette you want to use from the dropdown menu above. ***Note:*** Your pipette should be installed on the ***left mount*** of your OT-2.
-2. Set your dilution factor.***Example:*** If you want a 1:2 ratio of sample to total reaction volume, you would set your dilution factor to 2.
-3. Set your number of dilutions (max = 11)
-4. Set your total mixing volume. (Total mixing volume = transfer volume + diluent volume). Be careful to make sure this number does not exceed the volume capacity of your plate. To see how this number is used, scroll to the example above.
-5. Set your tip reuse strategy. ***Note:*** This defaults to no tip changes; adjust only if you want to change tips between each well.
-6. Download your customized OT-2 Serial Dilution protocol using the blue "Download" button.
-7. Upload into the Opentrons Run App and follow the instructions there to set up your deck and proceed to run!
-8. Make sure to add diluent to the first row of your 12-row trough and load your desired samples/standards into column 1 of your plate before running your protocol in the run app!
+2. Choose the pipette tips to use from the dropdown menu (note that we recommend using Opentrons pipette racks only, other racks have not been validated!)
+3. Choose the trough from the dropdown menu above.
+4. Choose the 96-well flat bottom plate you want to use from the dropdown menu above.
+5. Set your dilution factor.***Example:*** If you want a 1:2 ratio of sample to total reaction volume, you would set your dilution factor to 2.
+6. Set your number of dilutions (max = 11)
+7. Set your total mixing volume. (Total mixing volume = transfer volume + diluent volume). Be careful to make sure this number does not exceed the volume capacity of your plate. To see how this number is used, scroll to the example above.
+8. Set your tip reuse strategy. ***Note:*** This defaults to no tip changes; adjust only if you want to change tips between each well.
+9. Download your customized OT-2 Serial Dilution protocol using the blue "Download" button.
+10. Upload into the Opentrons Run App and follow the instructions there to set up your deck and proceed to run!
+11. Make sure to add diluent to the first row of your 12-row trough if you are using that and load your desired samples/standards into column 1 of your plate before running your protocol in the run app! Please be aware that excess volume in the last column of the 96-well plate will be emptied back into the trough at the end of the run.
 
 ### Additional Notes
 Please reference our [Technical Note](https://s3.amazonaws.com/opentrons-protocol-library-website/Technical+Notes/Serial+Dilution+OT2+Technical+Note.pdf) for more information about the expected output of this protocol, in addition to expanded sample data from the Opentrons lab.
