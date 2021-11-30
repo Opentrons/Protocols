@@ -188,7 +188,7 @@ Must be 1-31 samples.')
     # pre-add HS diluent
     p300.pick_up_tip()
     for i, d in enumerate(dests):
-        p300.aspirate(135, hs_dil[i//11])
+        p300.aspirate(135, hs_dil[i//11].bottom(3))
         p300.touch_tip(hs_dil[i//11])
         p300.dispense(135, d.bottom(3))
     p300.aspirate(27, hs_dil[0])
@@ -242,9 +242,9 @@ on temperature module on slot 3 and remove plate seal when complete.')
     # transfer triplicates
     for set in triplicate_sets:
         p300.pick_up_tip()
+        p300.mix(mix_reps, 50, set[0].bottom(3))
         p300.transfer(50, set[0].bottom(3),
-                      [well.bottom(3) for well in set[1:]],
-                      mix_before=(mix_reps, 50), new_tip='never')
+                      [well.bottom(3) for well in set[1:]], new_tip='never')
         p300.drop_tip()
 
     # transfer blank solution to blank wells

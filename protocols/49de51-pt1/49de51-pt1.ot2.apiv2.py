@@ -8,7 +8,7 @@ metadata = {
 
 def run(protocol):
     [num_plates, deep_plate] = get_values(  # noqa: F821
-    'num_plates', 'deep_plate')
+        'num_plates', 'deep_plate')
 
     # load labware and pipette
     plate1, plate2 = [protocol.load_labware(
