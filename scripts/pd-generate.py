@@ -169,10 +169,15 @@ def create_pd_json(folder):
     elif 'title' in protobuilds_metadata.keys():
         name = protobuilds_metadata['title']
     else:
-        raise Exception('No appropriate metadata key for protocol name.')
+        name = ' '
+
+    if 'author' in protobuilds_metadata.keys():
+        author = protobuilds_metadata['author']
+    else:
+        author = ' '
     metadata = {
         'protocolName': name,
-        'author': protobuilds_metadata['author'],
+        'author': author,
         'description': '',
         'created': now,
         'lastModified': now,
