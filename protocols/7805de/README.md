@@ -16,7 +16,7 @@ Links:
 * [Part 3: End Prep and Adapter Ligation](http://protocols.opentrons.com/protocol/7805de-part-3)
 * [Part 4: PCR Enrichment](http://protocols.opentrons.com/protocol/7805de-part-4)
 
-With this protocol, your robot can perform the NEBNext Ultra II Directional RNA Library Prep Kit for Illumina protocol described by the [NEB Instruction Manual](https://s3.amazonaws.com/pf-upload-01/u-4256/0/2021-05-20/dv23jqz/NEBNext%20Ultra%20II%20Directional%20RNA%20library%20Prep%20kit%20manualE7760_E7765.pdf).
+With this protocol, your robot can perform the NEBNext Ultra II Directional RNA Library Prep Kit for Illumina protocol as described by the [NEB Instruction Manual](https://s3.amazonaws.com/pf-upload-01/u-4256/0/2021-05-20/dv23jqz/NEBNext%20Ultra%20II%20Directional%20RNA%20library%20Prep%20kit%20manualE7760_E7765.pdf).
 
 This is part 1 of the protocol: RNA Isolation, Fragmentation and Priming.
 
