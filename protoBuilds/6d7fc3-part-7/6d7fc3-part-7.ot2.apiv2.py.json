@@ -39,7 +39,7 @@
             "type": "dropDown"
         },
         {
-            "default": 5,
+            "default": 6.8,
             "label": "Magnetic Module Engage Height",
             "name": "engage_height",
             "type": "float"

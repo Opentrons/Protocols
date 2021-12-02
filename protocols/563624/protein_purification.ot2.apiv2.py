@@ -50,7 +50,7 @@ def run(ctx):
         # create air gap
         tip_loc = tiprack.rows_by_name()['A'][col]
         m300.pick_up_tip(tip_loc)
-        m300.aspirate(30, tiprack.rows_by_name()['A'][col].top(5))
+        m300.aspirate(30, mix_plates[0].rows_by_name()['A'][col].top(5))
 
         # perform
         plate_mix(2, 90, mix_plates[0], col)

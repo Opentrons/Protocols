@@ -97,6 +97,7 @@ def run(ctx):
         for s, d_set in zip(mm_sources, mm_dest_sets):
             m10.pick_up_tip()
             for d in d_set:
+                m10.move_to(s.top())
                 m10.air_gap(2)
                 m10.aspirate(8, s)
                 m10.dispense(10, d)
@@ -115,6 +116,7 @@ def run(ctx):
             for dupe in d_sets:
                 m10.pick_up_tip()
                 for d in dupe:
+                    m10.move_to(s.top())
                     m10.air_gap(3)
                     m10.aspirate(2, s)
                     m10.air_gap(2)

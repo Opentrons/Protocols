@@ -10,7 +10,7 @@ metadata = {
     'protocolName': 'Omega Bio-tek Mag-Bind Environmental DNA 96 Kit',
     'author': 'Sakib <sakib.hossain@opentrons.com>',
     'description': 'Custom Protocol Request',
-    'apiLevel': '2.9'
+    'apiLevel': '2.10'
 }
 
 
@@ -318,9 +318,12 @@ def run(ctx):
     ctx.comment('''Transferring 300 uL of water to
                 each well in the tip isolator''')
     pick_up(m300, tip_isolator['A1'])
-    m300.transfer(300, [well for well in res2.wells()[9:12]
-                        for _ in range(4)][:cols],
-                  tip_isolator.rows()[0][:cols], new_tip='never')
+    try:
+        m300.transfer(300, [well for well in res2.wells()[9:12]
+                            for _ in range(4)][:cols],
+                      tip_isolator.rows()[0][:cols], new_tip='never')
+    except Exception:
+        pass
     m300.drop_tip(_drop(m300))
 
     # Step 14
