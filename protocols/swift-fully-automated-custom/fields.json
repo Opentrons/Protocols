@@ -50,7 +50,7 @@
   {
     "type": "dropDown",
     "label": "Temperature Module Generation",
-    "name": "magmod",
+    "name": "temp_gen",
     "options": [
       {"label": "GEN1", "value": "temperature module"},
       {"label": "GEN2", "value": "temperature module gen2"}

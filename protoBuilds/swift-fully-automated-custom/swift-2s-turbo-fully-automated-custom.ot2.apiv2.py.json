@@ -1,0 +1,208 @@
+{
+    "content": "from opentrons import protocol_api\n\nmetadata = {\n    'protocolName': 'Swift 2S Turbo DNA Library Kit: Fully Automated (custom)',\n    'author': 'Opentrons <protocols@opentrons.com>',\n    'source': 'Protocol Library',\n    'apiLevel': '2.10'\n}\n\n\ndef run(protocol):\n\n    [no_samps, pip_tip, p300gen, p300tips, magmod, temp_gen,\n     a_index, cycles, f_time] = get_values(  # noqa: F821\n     'no_samps', 'pip_tip', 'p300gen', 'p300tips', 'magmod', 'temp_gen',\n     'a_index', 'cycles', 'f_time')\n\n    # raise exceptions\n    if cycles < 3 or cycles > 15:\n        raise Exception('Number of Thermocycles should be between 3 and 15.')\n    if f_time < 6 or f_time > 30:\n        raise Exception('Fragmentation Time should be between 6 & 30 minutes.')\n\n    # labware setup\n    pip_type, tip_name = pip_tip.split()\n    s_tips = [protocol.load_labware(tip_name, '4')]\n    p300tips = [protocol.load_labware(\n                p300tips, s) for s in ['5', '6', '9']]\n    small_pip = protocol.load_instrument(pip_type, 'left', tip_racks=s_tips)\n    p300 = protocol.load_instrument(p300gen, 'right', tip_racks=p300tips)\n    rt_reagents = protocol.load_labware('nest_12_reservoir_15ml', '2')\n    magdeck = protocol.load_module(magmod, '1')\n    mag_plate = magdeck.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')\n    tempdeck = protocol.load_module(temp_gen, '3')\n    cool_reagents = tempdeck.load_labware(\n        'opentrons_24_aluminumblock_generic_2ml_screwcap')\n    thermocycler = protocol.load_module('thermocycler')\n    reaction_plate = thermocycler.load_labware(\n        'nest_96_wellplate_100ul_pcr_full_skirt')\n\n    # Reagent Setup\n    enzymatic_prep_mm = cool_reagents.wells_by_name()['A1']\n    ligation_mm = cool_reagents.wells_by_name()['A2']\n    pcr_mm = cool_reagents.wells_by_name()['A3']\n    beads = rt_reagents.wells_by_name()['A2']\n    ethanol = rt_reagents.wells_by_name()['A3']\n    ethanol2 = rt_reagents.wells_by_name()['A4']\n    te = rt_reagents.wells_by_name()['A6']\n    waste = rt_reagents.wells_by_name()['A11']\n    waste2 = rt_reagents.wells_by_name()['A12']\n\n    # Well Setup\n    tc_samps = reaction_plate.columns_by_name()\n    mag_cols = mag_plate.columns_by_name()\n\n    if no_samps == '8':\n        enzymatic_prep_samples = tc_samps['1']\n        enzymatic_300 = [enzymatic_prep_samples[0]]\n        pcr_prep_samples = tc_samps['2']\n        pcr_300 = [pcr_prep_samples[0]]\n        purified_samples = [tc_samps['3'][0]]\n        # samps_300 = purified_samples[0]\n        mag_samples = mag_cols['1']\n        mag_300 = [mag_samples[0]]\n        mag_pure = [mag_cols['2'][0]]\n    elif no_samps == '16':\n        enzymatic_prep_samples = tc_samps['1'] + tc_samps['2']\n        enzymatic_300 = [tc_samps['1'][0], tc_samps['2'][0]]\n        pcr_prep_samples = tc_samps['3'] + tc_samps['4']\n        pcr_300 = [tc_samps['3'][0], tc_samps['4'][0]]\n        purified_samples = [tc_samps['5'][0], tc_samps['6'][0]]\n        mag_samples = mag_cols['1'] + mag_cols['2']\n        mag_300 = [mag_cols['1'][0], mag_cols['2'][0]]\n        mag_pure = [mag_cols['3'][0], mag_cols['4'][0]]\n    else:\n        enzymatic_prep_samples = tc_samps['1'] + tc_samps['2'] + tc_samps['3']\n        enzymatic_300 = [tc_samps['1'][0], tc_samps['2'][0], tc_samps['3'][0]]\n        pcr_prep_samples = tc_samps['3'] + tc_samps['4'] + tc_samps['5']\n        pcr_300 = [tc_samps['3'][0], tc_samps['4'][0], tc_samps['5'][0]]\n        purified_samples = [tc_samps['5'][0], tc_samps['6'][0],\n                            tc_samps['7'][0]]\n        mag_samples = mag_cols['1'] + mag_cols['2'] + mag_cols['3']\n        mag_300 = [mag_cols['1'][0], mag_cols['2'][0], mag_cols['3'][0]]\n        mag_pure = [mag_cols['3'][0], mag_cols['4'][0], mag_cols['5'][0]]\n\n    small_pip.flow_rate.aspirate = 150\n    small_pip.flow_rate.dispense = 300\n    small_pip.flow_rate.blow_out = 300\n\n    def pick_up():\n        try:\n            p300.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            protocol.pause(\"Replace all tip racks on Slots 5, 6, and 9\")\n            p300.reset_tipracks()\n            p300.pick_up_tip()\n\n    # Create function for transferring with single pipette in different configs\n    small_max = int(tip_name.split('_')[-1][:-2])\n    if small_max > 100:\n        small_max = 50\n    s_vol = small_max * 0.8\n\n    def vol_trans(vol, src, dest):\n        nonlocal small_max\n        nonlocal s_vol\n\n        if vol <= small_max:\n            small_pip.transfer(vol, src, dest, new_tip='never')\n        else:\n            while vol > s_vol:\n                small_pip.transfer(s_vol, src, dest, new_tip='never')\n                small_pip.blow_out(dest)\n                small_pip.drop_tip()\n                vol -= s_vol\n                small_pip.pick_up_tip()\n            small_pip.transfer(vol, src, dest, new_tip='never')\n\n    def get_rate(pip, direction_flow, speed):\n        if direction_flow == 'aspirate':\n            rate = speed/pip.flow_rate.aspirate\n            return rate\n        elif direction_flow == 'dispense':\n            rate = speed/pip.flow_rate.aspirate\n            return rate\n\n    # Actively cool the samples and enzymes\n    tempdeck.set_temperature(4)\n    thermocycler.set_block_temperature(4)\n\n    # Make sure to vortex mastermix right before the run\n    # Dispense Enzymatic Prep Master Mix to the samples\n    for well in enzymatic_prep_samples:\n        small_pip.pick_up_tip()\n        vol_trans(10.5, enzymatic_prep_mm.bottom(0.2), well)\n        small_pip.blow_out()\n        small_pip.mix(2, 10, well.top(-13.5))\n        small_pip.move_to(well.top(-12))\n        protocol.delay(seconds=0.5)\n        small_pip.blow_out()\n        small_pip.drop_tip()\n\n    # Run Enzymatic Prep Profile\n    thermocycler.close_lid()\n    thermocycler.set_lid_temperature(70)\n    thermocycler.set_block_temperature(32, hold_time_minutes=f_time)\n    thermocycler.set_block_temperature(65, hold_time_minutes=30)\n    thermocycler.set_block_temperature(4)\n    thermocycler.deactivate_lid()\n    thermocycler.open_lid()\n\n    # Transfer Ligation Master Mix to the samples\n\n    small_pip.pick_up_tip()\n    small_pip.mix(5, s_vol, ligation_mm)\n    small_pip.blow_out(ligation_mm.top())\n\n    for well in enzymatic_prep_samples:\n        if not small_pip.hw_pipette['has_tip']:\n            small_pip.pick_up_tip()\n        vol_trans(30, ligation_mm, well.top(-7))\n        small_pip.mix(2, s_vol, well.top(-13.5))\n        small_pip.blow_out(well.top(-7))\n        small_pip.drop_tip()\n\n    thermocycler.set_block_temperature(20, hold_time_minutes=20)\n    thermocycler.set_block_temperature(4)\n\n    \"\"\"Ligation Purification\"\"\"\n\n    # Transfer samples to the Magnetic Module\n    p300.flow_rate.aspirate = 10\n    for enz_samp, mag_samp in zip(enzymatic_300, mag_300):\n        pick_up()\n        p300.aspirate(60, enz_samp)\n        p300.dispense(60, mag_samp.top(-4))\n        p300.blow_out(mag_samp.top(-4))\n        p300.drop_tip()\n\n    # Transfer beads to the samples on the Magnetic Module\n    p300.flow_rate.aspirate = 75\n    pick_up()\n    p300.mix(10, 200, beads)\n\n    for mag_samp in mag_300:\n        if not p300.hw_pipette['has_tip']:\n            pick_up()\n        p300.flow_rate.aspirate = 10\n        p300.flow_rate.dispense = 10\n        p300.aspirate(48, beads)\n        p300.default_speed = 50\n        p300.move_to(mag_samp.top(-2))\n        p300.default_speed = 400\n        p300.dispense(48, mag_samp.top(-5))\n        p300.blow_out()\n        p300.flow_rate.aspirate = 50\n        p300.flow_rate.dispense = 50\n        p300.mix(10, 80, mag_samp.top(-13.5))\n        p300.blow_out(mag_samp.top(-5))\n        p300.drop_tip()\n\n    # Incubating for 5 minutes\n    protocol.comment(\"Incubating for 5 minutes.\")\n    protocol.delay(minutes=5)\n\n    # Engage Magnetic Module\n    magdeck.engage()\n    protocol.comment(\"Engaging Magnetic Module and incubating for 6 minutes.\")\n    protocol.delay(minutes=8)\n\n    # Remove supernatant\n    p300.flow_rate.aspirate = 3\n    p300.flow_rate.dispense = 50\n\n    for mag_samp in mag_300:\n        pick_up()\n        p300.aspirate(103, mag_samp.bottom(2))\n        p300.dispense(103, waste.bottom(1.5))\n        p300.drop_tip()\n\n    # Wash samples 2X with 180uL of 80% EtOH\n    p300.default_speed = 200\n    p300.flow_rate.aspirate = 75\n    p300.flow_rate.dispense = 50\n\n    protocol.comment('\\n TWO WASHES\\n\\n')\n    for i in range(2):\n        for mag_samp in mag_300:\n            if not p300.hw_pipette['has_tip']:\n                pick_up()\n            p300.air_gap(10)\n            p300.aspirate(150, ethanol)\n            p300.air_gap(5)\n            p300.dispense(170, mag_samp.top(-2))\n        if no_samps == '8':\n            protocol.delay(seconds=15)\n        protocol.comment('\\n')\n        for mag_samp in mag_300:\n            if not p300.hw_pipette['has_tip']:\n                pick_up()\n            p300.air_gap(5)\n            p300.aspirate(150 if i == 0 else 145,\n                          mag_samp, rate=get_rate(p300, 'aspirate', 3)\n                          if i == 1 else 1)\n            p300.air_gap(5)\n            p300.dispense(160 if i == 0 else 155, waste.bottom(1.5))\n            p300.drop_tip()\n        protocol.comment('\\n\\n\\n')\n\n    # remove residual ethanol\n    for mag_samp in mag_300:\n        pick_up()\n        p300.aspirate(20, mag_samp.bottom(-0.5),\n                      rate=get_rate(p300, 'aspirate', 3))\n        p300.air_gap(5)\n        p300.drop_tip()\n\n    protocol.comment(\"Letting beads dry for 30 seconds.\")\n    protocol.delay(seconds=30)\n    magdeck.disengage()\n\n    # Elute clean ligation product\n    for mag_samp in mag_300:\n        pick_up()\n        p300.aspirate(25, te)\n        p300.dispense(25, mag_samp.top(-12))\n        p300.blow_out(mag_samp.top())\n        p300.flow_rate.aspirate = 100\n        p300.flow_rate.dispense = 200\n        p300.mix(10, 20, mag_samp.top(-13.5))\n        p300.blow_out(mag_samp.top())\n        p300.flow_rate.aspirate = 75\n        p300.flow_rate.dispense = 50\n        p300.drop_tip()\n\n    # Incubate for 2 minutes\n    protocol.comment(\"Incubating for 2 minutes.\")\n    protocol.delay(minutes=2)\n\n    # Engage Magnetic Module\n    protocol.comment(\"Engaging Magnetic Module and incubating for 6 minutes.\")\n    magdeck.engage()\n    protocol.delay(minutes=8)\n\n    # Transfer clean samples to aluminum block plate.\n    protocol.comment('TRANSFER CLEAN')\n    for mag_samp, pcr_samp in zip(mag_300, pcr_300):\n        pick_up()\n        p300.aspirate(20, mag_samp.bottom(0.25),\n                      rate=get_rate(p300, 'aspirate', 3))\n        p300.dispense(20, pcr_samp)\n        p300.blow_out(pcr_samp.top())\n        p300.drop_tip()\n\n    # Disengage Magnetic Module ofr PCR purification protocol\n    magdeck.disengage()\n\n    \"\"\"PCR Prep\"\"\"\n    # Transfer Dual Indexes to the sample\n    # Primer screw tubes are shallow !!!!\n    if a_index == 'yes':\n        x = int(no_samps)\n        primers = [w for row in cool_reagents.rows()[1:] for w in row][:x]\n        for primer, well in zip(primers, pcr_prep_samples):\n            small_pip.pick_up_tip()\n            small_pip.aspirate(5, primer.top(-24))\n            small_pip.dispense(5, well)\n            small_pip.drop_tip()\n    else:\n        protocol.pause('You selected \"No\" to automated indexing. Please add \\\n        indices to samples. When ready to continue, click RESUME.')\n\n    # Transfer PCR Master Mix to the samples\n\n    small_pip.pick_up_tip()\n    small_pip.mix(6, s_vol, pcr_mm)\n\n    for well in pcr_prep_samples:\n        if not small_pip.hw_pipette['has_tip']:\n            small_pip.pick_up_tip()\n        vol_trans(25, pcr_mm, well)\n        small_pip.mix(5, s_vol, well.top(-13.5))\n        small_pip.blow_out(well.top(-12))\n        small_pip.drop_tip()\n\n    plate_temp = 4\n    t_holds = [[98, 30], [98, 10], [60, 30], [68, 60]]\n    # number of cycles is a parameter named 'cycles'\n    cycled_steps = [\n        {'temperature': t_holds[1][0], 'hold_time_seconds': t_holds[1][1]},\n        {'temperature': t_holds[2][0], 'hold_time_seconds': t_holds[2][1]},\n        {'temperature': t_holds[3][0], 'hold_time_seconds': t_holds[3][1]}\n        ]\n\n    # Set PRE temp\n    thermocycler.set_block_temperature(plate_temp)\n\n    # Set LID temp\n    thermocycler.set_lid_temperature(105)\n    thermocycler.close_lid()\n\n    # Set hold 1 temp\n    thermocycler.set_block_temperature(\n        t_holds[0][0], hold_time_seconds=t_holds[0][1])\n\n    # Loop through temp profile\n    thermocycler.execute_profile(steps=cycled_steps, repetitions=cycles)\n\n    # Set POST temp\n    thermocycler.set_block_temperature(plate_temp)\n    thermocycler.open_lid()\n\n    \"\"\"PCR Purication\"\"\"\n    # Transfer samples to the Magnetic Module\n    p300.flow_rate.aspirate = 10\n    for src, dest in zip(pcr_300, mag_pure):\n        pick_up()\n        p300.aspirate(60, src)\n        p300.dispense(60, dest.top(-4))\n        p300.blow_out(dest.top(-4))\n        p300.drop_tip()\n\n    # Transfer beads to the samples\n    p300.flow_rate.aspirate = 75\n    pick_up()\n    p300.mix(5, 60, beads)\n\n    for mag_samps in mag_pure:\n        if not p300.hw_pipette['has_tip']:\n            pick_up()\n        p300.flow_rate.aspirate = 10\n        p300.flow_rate.dispense = 10\n        p300.aspirate(32.5, beads)\n        p300.default_speed = 50\n        p300.move_to(mag_samps.top(-2))\n        p300.default_speed = 400\n        p300.dispense(32.5, mag_samps.top(-12))\n        p300.flow_rate.aspirate = 50\n        p300.flow_rate.dispense = 50\n        p300.blow_out()\n        p300.mix(10, 60, mag_samps.top(-13.5))\n        p300.blow_out(mag_samps.top(-12))\n        p300.drop_tip()\n\n    # Incubate for 5 minutes, then engage Magnetic Module and incubate\n    protocol.comment('Incubating for 8 minutes.')\n    protocol.delay(minutes=8)\n\n    magdeck.engage()\n    protocol.delay(minutes=5)\n\n    # Aspirate supernatant\n    for mag_samps in mag_pure:\n        pick_up()\n        p300.aspirate(79, mag_samps.bottom(2),\n                      rate=get_rate(p300, 'aspirate', 3))\n        p300.dispense(79, waste2)\n        p300.drop_tip()\n\n    # Wash samples 2x with 150ul of 80% EtOH\n    protocol.comment('CHECK CHECK')\n    for i in range(2):\n        for mag_samps in mag_pure:\n            if not p300.hw_pipette['has_tip']:\n                pick_up()\n            p300.air_gap(5)\n            p300.aspirate(150,\n                          ethanol2, rate=get_rate(p300, 'aspirate', 75))\n            p300.air_gap(10)\n            p300.dispense(170, mag_samps.top(-2))\n        if no_samps == '8':\n            protocol.delay(seconds=15)\n        for mag_samps in mag_pure:\n            if not p300.hw_pipette['has_tip']:\n                pick_up()\n            p300.air_gap(5)\n            p300.aspirate(150 if i == 0 else 145, mag_samps.bottom(1.5),\n                          rate=get_rate(p300, 'aspirate', 3) if i == 1 else 1)\n            p300.air_gap(5)\n            p300.dispense(210, waste2)\n            p300.drop_tip()\n\n    # Remove residual 80% EtOH\n    for mag_samps in mag_pure:\n        pick_up()\n        p300.aspirate(20, mag_samps.bottom(-0.5),\n                      rate=get_rate(p300, 'aspirate', 3))\n        p300.air_gap(5)\n        p300.drop_tip()\n\n    protocol.delay(minutes=1)\n    magdeck.disengage()\n\n    # Elute clean product\n    for mag_samps in mag_pure:\n        pick_up()\n        p300.aspirate(25, te)\n        p300.dispense(25, mag_samps.top(-12))\n        p300.blow_out(mag_samps.top())\n        p300.mix(10, 20, mag_samps.top(-13.5))\n        p300.blow_out(mag_samps.top())\n        p300.drop_tip()\n\n    # Incubate for 2 minutes, then engage Magnetic Module\n    protocol.comment(\"Incubating for 4 minutes, \\\n    then engaging Magnetic Module.\")\n    protocol.delay(minutes=4)\n\n    magdeck.engage()\n    protocol.delay(minutes=8)\n\n    # Transfer clean samples to aluminum block plate.\n    for mag_samps, p_samps in zip(mag_pure, purified_samples):\n        pick_up()\n        p300.aspirate(20, mag_samps, rate=get_rate(p300, 'aspirate', 3))\n        p300.dispense(22, p_samps.top(-12))\n        p300.blow_out()\n        p300.drop_tip()\n\n    protocol.comment('Swift 2S Turbo DNA Library Kit completed. \\\n    Store freshly prepared libraries at 4C (-20C for long term), \\\n    or proceed to quantification.')\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "label": "Number of Samples",
+            "name": "no_samps",
+            "options": [
+                {
+                    "label": "8",
+                    "value": "8"
+                },
+                {
+                    "label": "16",
+                    "value": "16"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Single Pipette and Tip Type",
+            "name": "pip_tip",
+            "options": [
+                {
+                    "label": "P50 & 50\u00b5L/300\u00b5L Tips",
+                    "value": "p50_single opentrons_96_tiprack_300ul"
+                },
+                {
+                    "label": "P50 & 200\u00b5L Filter Tips",
+                    "value": "p50_single opentrons_96_filtertiprack_200ul"
+                },
+                {
+                    "label": "P20 & 10\u00b5L/20\u00b5L Tips",
+                    "value": "p20_single_gen2 opentrons_96_tiprack_20ul"
+                },
+                {
+                    "label": "P20 & 20\u00b5L Filter Tips",
+                    "value": "p20_single_gen2 opentrons_96_filtertiprack_20ul"
+                },
+                {
+                    "label": "P20 & 10\u00b5L Filter Tips",
+                    "value": "p20_single_gen2 opentrons_96_filtertiprack_10ul"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P300 8-Channel Pipette Type",
+            "name": "p300gen",
+            "options": [
+                {
+                    "label": "GEN1",
+                    "value": "p300_multi"
+                },
+                {
+                    "label": "GEN2",
+                    "value": "p300_multi_gen2"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P300 8-Channel Pipette Tip Type",
+            "name": "p300tips",
+            "options": [
+                {
+                    "label": "Opentrons 200\u00b5L Filter Tips",
+                    "value": "opentrons_96_filtertiprack_200ul"
+                },
+                {
+                    "label": "Opentrons 300\u00b5L Tips",
+                    "value": "opentrons_96_tiprack_300ul"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Magnetic Module Generation",
+            "name": "magmod",
+            "options": [
+                {
+                    "label": "GEN1",
+                    "value": "magnetic module"
+                },
+                {
+                    "label": "GEN2",
+                    "value": "magnetic module gen2"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Temperature Module Generation",
+            "name": "temp_gen",
+            "options": [
+                {
+                    "label": "GEN1",
+                    "value": "temperature module"
+                },
+                {
+                    "label": "GEN2",
+                    "value": "temperature module gen2"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Automate Indexing",
+            "name": "a_index",
+            "options": [
+                {
+                    "label": "Yes",
+                    "value": "yes"
+                },
+                {
+                    "label": "No",
+                    "value": "no"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 5,
+            "label": "Number of Thermocycles",
+            "name": "cycles",
+            "type": "int"
+        },
+        {
+            "default": 10,
+            "label": "Fragmentation Time",
+            "name": "f_time",
+            "type": "int"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p50_single"
+        },
+        {
+            "mount": "right",
+            "name": "p300_multi"
+        }
+    ],
+    "labware": [
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Magnetic Module GEN1 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on 2",
+            "share": false,
+            "slot": "2",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Opentrons 24 Well Aluminum Block with Generic 2 mL Screwcap on Temperature Module GEN1 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_24_aluminumblock_generic_2ml_screwcap"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Thermocycler Module on 7",
+            "share": false,
+            "slot": "7",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.10",
+        "author": "Opentrons <protocols@opentrons.com>",
+        "protocolName": "Swift 2S Turbo DNA Library Kit: Fully Automated (custom)",
+        "source": "Protocol Library"
+    },
+    "modules": []
+}
