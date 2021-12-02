@@ -77,6 +77,7 @@ def run(ctx):
     # transfer corresponding primers to reactions
     for s, d in zip(primers, primer_dests):
         p20.pick_up_tip()
+        p20.move_to(s.top())
         p20.air_gap(5)
         p20.aspirate(2, s.bottom(0.5))
         p20.aspirate(5, d)
@@ -103,6 +104,7 @@ def run(ctx):
     # transfer corresponding primers to reactions
     for s, d in zip(rxn_sources, gel_dests):
         p20.pick_up_tip()
+        p20.move_to(s.top())
         p20.air_gap(5)
         p20.aspirate(5, s)
         p20.dispense(10, d)

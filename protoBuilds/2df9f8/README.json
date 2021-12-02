@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "\nThis is the deck setup for a run with 94 samples (bottom two rows of slot 11 are not populated).\n\n\n",
-    "description": "This protocol preps a 96 well plate with heat inactivated Covid samples and mastermix, for further processing on a Quant-5. A1 and A2 are left for positive and negative conrols. The protocol can be considered in 2 main sections:\n\nMastermix added to 96 well plate\nSamples added to 96 well plate\n\nExplanation of complex parameters below:\n Number of Samples: Specify the number of samples (1-94) to run on this protocol. Note: samples will be picked by row in the tube racks, in order of slots 7, 8, 10, and 11.\n Plate: Specify whether loading the microamp (I48HO) 96 well plate, or another 96 well plate.\n* P20 Mount: Specify which side to mount your P20 Multi Channel Pipette.\n",
+    "description": "This protocol preps a 96 well plate with heat inactivated Covid samples and mastermix, for further processing on a Quant-5. A1 and A2 are left for positive and negative conrols. The protocol can be considered in 2 main sections:\n\nMastermix added to 96 well plate\nSamples added to 96 well plate\n\nExplanation of complex parameters below:\n* Number of Samples: Specify the number of samples (1-94) to run on this protocol. Note: samples will be picked by row in the tube racks, in order of slots 7, 8, 10, and 11.\n* Plate: Specify whether loading the microamp (I48HO) 96 well plate, or another 96 well plate.\n* P20 Mount: Specify which side to mount your P20 Multi Channel Pipette.\n",
     "internal": "2df9f8",
     "labware": "\nOpentrons 200ul tips\nMicroamp 200ul well plate\nOpentrons 4-in-1 tuberack with 4x6 tube insert (1.5mL tubes)\n",
     "markdown": {

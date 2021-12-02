@@ -61,7 +61,7 @@ column 1 in reagent plate (slot 11).')
                     plate.rows()[0][num_cols-1:num_cols]]
         m300.pick_up_tip()
         for set in dest_sets:
-            m300.aspirate(len(set)*20+5)
+            m300.aspirate(len(set)*20+5, mm)
             m300.air_gap(10)
             for well in set:
                 m300.dispense(20, well.bottom(3.5))

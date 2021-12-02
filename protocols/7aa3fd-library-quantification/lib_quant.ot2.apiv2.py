@@ -47,6 +47,7 @@ def run(ctx):
     # transfer SPRI elution plate to DNA plate
     for s, d in zip(elution_plate.rows()[0], dna_plate.rows()[1]):
         p10.pick_up_tip()
+        p10.move_to(s.top())
         p10.air_gap(7)
         p10.aspirate(2, s)
         p10.air_gap(1)

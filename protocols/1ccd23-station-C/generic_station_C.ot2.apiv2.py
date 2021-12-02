@@ -138,6 +138,7 @@ resuming.')
             num_trans = math.ceil(comp_vol/160)
             vol_per_trans = comp_vol/num_trans
             for _ in range(num_trans):
+                p300.move_to(tube.top())
                 p300.air_gap(20)
                 p300.aspirate(vol_per_trans, tube)
                 ctx.delay(seconds=3)

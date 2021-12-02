@@ -40,6 +40,7 @@ def run(ctx):
         vol = float(volume)
         p20.pick_up_tip()
         if vol <= 17:
+            p20.move_to(source.top())
             p20.air_gap(2)
         p20.aspirate(vol, source)
         if vol <= 19:
