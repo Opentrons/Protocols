@@ -224,79 +224,6 @@
         },
         {
             "brand": {
-                "brand": "Cepheid",
-                "brandId": [
-                    "Cepheid"
-                ]
-            },
-            "cornerOffsetFromSlot": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-            },
-            "dimensions": {
-                "xDimension": 127.75,
-                "yDimension": 85.5,
-                "zDimension": 60
-            },
-            "groups": [
-                {
-                    "metadata": {
-                        "wellBottomShape": "flat"
-                    },
-                    "wells": [
-                        "A1",
-                        "A2"
-                    ]
-                }
-            ],
-            "metadata": {
-                "displayCategory": "wellPlate",
-                "displayName": "Cepheid",
-                "displayVolumeUnits": "\u00b5L",
-                "tags": []
-            },
-            "namespace": "custom_beta",
-            "ordering": [
-                [
-                    "A1"
-                ],
-                [
-                    "A2"
-                ]
-            ],
-            "parameters": {
-                "format": "irregular",
-                "isMagneticModuleCompatible": false,
-                "isTiprack": false,
-                "loadName": "cepheid",
-                "quirks": []
-            },
-            "schemaVersion": 2,
-            "version": 1,
-            "wells": {
-                "A1": {
-                    "depth": 20,
-                    "diameter": 10,
-                    "shape": "circular",
-                    "totalLiquidVolume": 1000,
-                    "x": 45,
-                    "y": 30.5,
-                    "z": 40
-                },
-                "A2": {
-                    "depth": 20,
-                    "diameter": 10,
-                    "shape": "circular",
-                    "totalLiquidVolume": 1000,
-                    "x": 100,
-                    "y": 30.5,
-                    "z": 40
-                }
-            }
-        },
-        {
-            "brand": {
                 "brand": "Basis DX",
                 "brandId": []
             },
@@ -513,6 +440,79 @@
                     "x": 113.88,
                     "y": 17.74,
                     "z": 10.5
+                }
+            }
+        },
+        {
+            "brand": {
+                "brand": "Cepheid",
+                "brandId": [
+                    "Cepheid"
+                ]
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 127.75,
+                "yDimension": 85.5,
+                "zDimension": 60
+            },
+            "groups": [
+                {
+                    "metadata": {
+                        "wellBottomShape": "flat"
+                    },
+                    "wells": [
+                        "A1",
+                        "A2"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "wellPlate",
+                "displayName": "Cepheid",
+                "displayVolumeUnits": "\u00b5L",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1"
+                ],
+                [
+                    "A2"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "cepheid",
+                "quirks": []
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 20,
+                    "diameter": 10,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1000,
+                    "x": 45,
+                    "y": 30.5,
+                    "z": 40
+                },
+                "A2": {
+                    "depth": 20,
+                    "diameter": 10,
+                    "shape": "circular",
+                    "totalLiquidVolume": 1000,
+                    "x": 100,
+                    "y": 30.5,
+                    "z": 40
                 }
             }
         }

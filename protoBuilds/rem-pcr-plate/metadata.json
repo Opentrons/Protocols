@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "6a93a2-part2.ot2.apiv2.py"
+            "rem-pcr-plate.ot2.apiv2.py"
         ],
         "description": [
             "README.md"
@@ -11,10 +11,10 @@
     "flags": {
         "embedded-app": false,
         "feature": false,
-        "hide-from-search": false,
+        "hide-from-search": true,
         "skip-tests": false
     },
-    "path": "protocols/6a93a3-part2",
-    "slug": "6a93a3-part2",
+    "path": "protocols/rem-pcr-plate",
+    "slug": "rem-pcr-plate",
     "status": "ok"
 }

@@ -1224,7 +1224,7 @@
             "type": "opentrons_96_filtertiprack_20ul"
         },
         {
-            "name": "Thermo-Fast 96 Well Plate 200 \u00b5L on Thermocycler Module on 7",
+            "name": "Thermo-Fast 96, Skirted PCR Plate on Thermocycler Module on 7",
             "share": false,
             "slot": "7",
             "type": "thermofast_96_wellplate_200ul"

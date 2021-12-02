@@ -3,310 +3,6 @@
     "custom_labware_defs": [
         {
             "brand": {
-                "brand": "V&P Scientific",
-                "brandId": [
-                    "VP 450FP1"
-                ],
-                "links": []
-            },
-            "cornerOffsetFromSlot": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-            },
-            "dimensions": {
-                "xDimension": 127.76,
-                "yDimension": 85.47,
-                "zDimension": 100
-            },
-            "groups": [
-                {
-                    "metadata": {},
-                    "wells": [
-                        "A1",
-                        "B1",
-                        "C1",
-                        "D1",
-                        "E1",
-                        "F1",
-                        "G1",
-                        "H1"
-                    ]
-                }
-            ],
-            "metadata": {
-                "displayCategory": "tipRack",
-                "displayName": "V&P Scientific 8 Pin Rack",
-                "displayVolumeUnits": "\u00b5L",
-                "tags": []
-            },
-            "namespace": "custom_beta",
-            "ordering": [
-                [
-                    "A1",
-                    "B1",
-                    "C1",
-                    "D1",
-                    "E1",
-                    "F1",
-                    "G1",
-                    "H1"
-                ]
-            ],
-            "parameters": {
-                "format": "irregular",
-                "isMagneticModuleCompatible": false,
-                "isTiprack": true,
-                "loadName": "vpscientific_8_tiprack_10ul",
-                "tipLength": 85
-            },
-            "schemaVersion": 2,
-            "version": 1,
-            "wells": {
-                "A1": {
-                    "depth": 85,
-                    "diameter": 5.23,
-                    "shape": "circular",
-                    "totalLiquidVolume": 10,
-                    "x": 59.38,
-                    "y": 74.23,
-                    "z": 15
-                },
-                "B1": {
-                    "depth": 85,
-                    "diameter": 5.23,
-                    "shape": "circular",
-                    "totalLiquidVolume": 10,
-                    "x": 59.38,
-                    "y": 65.23,
-                    "z": 15
-                },
-                "C1": {
-                    "depth": 85,
-                    "diameter": 5.23,
-                    "shape": "circular",
-                    "totalLiquidVolume": 10,
-                    "x": 59.38,
-                    "y": 56.23,
-                    "z": 15
-                },
-                "D1": {
-                    "depth": 85,
-                    "diameter": 5.23,
-                    "shape": "circular",
-                    "totalLiquidVolume": 10,
-                    "x": 59.38,
-                    "y": 47.23,
-                    "z": 15
-                },
-                "E1": {
-                    "depth": 85,
-                    "diameter": 5.23,
-                    "shape": "circular",
-                    "totalLiquidVolume": 10,
-                    "x": 59.38,
-                    "y": 38.23,
-                    "z": 15
-                },
-                "F1": {
-                    "depth": 85,
-                    "diameter": 5.23,
-                    "shape": "circular",
-                    "totalLiquidVolume": 10,
-                    "x": 59.38,
-                    "y": 29.23,
-                    "z": 15
-                },
-                "G1": {
-                    "depth": 85,
-                    "diameter": 5.23,
-                    "shape": "circular",
-                    "totalLiquidVolume": 10,
-                    "x": 59.38,
-                    "y": 20.23,
-                    "z": 15
-                },
-                "H1": {
-                    "depth": 85,
-                    "diameter": 5.23,
-                    "shape": "circular",
-                    "totalLiquidVolume": 10,
-                    "x": 59.38,
-                    "y": 11.23,
-                    "z": 15
-                }
-            }
-        },
-        {
-            "brand": {
-                "brand": "Axygen",
-                "brandId": [
-                    "RES-MW4 HP"
-                ]
-            },
-            "cornerOffsetFromSlot": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-            },
-            "dimensions": {
-                "xDimension": 127.76,
-                "yDimension": 85.47,
-                "zDimension": 43.79
-            },
-            "groups": [
-                {
-                    "metadata": {
-                        "wellBottomShape": "v"
-                    },
-                    "wells": [
-                        "A1",
-                        "A2",
-                        "A3",
-                        "A4"
-                    ]
-                }
-            ],
-            "metadata": {
-                "displayCategory": "reservoir",
-                "displayName": "Axygen 4 Reservoir 73 mL",
-                "displayVolumeUnits": "mL",
-                "tags": []
-            },
-            "namespace": "custom_beta",
-            "ordering": [
-                [
-                    "A1"
-                ],
-                [
-                    "A2"
-                ],
-                [
-                    "A3"
-                ],
-                [
-                    "A4"
-                ]
-            ],
-            "parameters": {
-                "format": "irregular",
-                "isMagneticModuleCompatible": false,
-                "isTiprack": false,
-                "loadName": "axygen_4_reservoir_73000ul",
-                "quirks": [
-                    "centerMultichannelOnWells",
-                    "touchTipDisabled"
-                ]
-            },
-            "schemaVersion": 2,
-            "version": 1,
-            "wells": {
-                "A1": {
-                    "depth": 42.09,
-                    "shape": "rectangular",
-                    "totalLiquidVolume": 73000,
-                    "x": 23.38,
-                    "xDimension": 26.11,
-                    "y": 42.73,
-                    "yDimension": 70.8,
-                    "z": 1.7
-                },
-                "A2": {
-                    "depth": 42.09,
-                    "shape": "rectangular",
-                    "totalLiquidVolume": 73000,
-                    "x": 50.38,
-                    "xDimension": 26.11,
-                    "y": 42.73,
-                    "yDimension": 70.8,
-                    "z": 1.7
-                },
-                "A3": {
-                    "depth": 42.09,
-                    "shape": "rectangular",
-                    "totalLiquidVolume": 73000,
-                    "x": 77.38,
-                    "xDimension": 26.11,
-                    "y": 42.73,
-                    "yDimension": 70.8,
-                    "z": 1.7
-                },
-                "A4": {
-                    "depth": 42.09,
-                    "shape": "rectangular",
-                    "totalLiquidVolume": 73000,
-                    "x": 104.38,
-                    "xDimension": 26.11,
-                    "y": 42.73,
-                    "yDimension": 70.8,
-                    "z": 1.7
-                }
-            }
-        },
-        {
-            "brand": {
-                "brand": "custom blot paper",
-                "brandId": []
-            },
-            "cornerOffsetFromSlot": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-            },
-            "dimensions": {
-                "xDimension": 128,
-                "yDimension": 86,
-                "zDimension": 14
-            },
-            "groups": [
-                {
-                    "metadata": {
-                        "wellBottomShape": "flat"
-                    },
-                    "wells": [
-                        "A1"
-                    ]
-                }
-            ],
-            "metadata": {
-                "displayCategory": "reservoir",
-                "displayName": "Custom Blot Paper 1 Reservoir 870000 \u00b5L",
-                "displayVolumeUnits": "\u00b5L",
-                "tags": []
-            },
-            "namespace": "custom_beta",
-            "ordering": [
-                [
-                    "A1"
-                ]
-            ],
-            "parameters": {
-                "format": "irregular",
-                "isMagneticModuleCompatible": false,
-                "isTiprack": false,
-                "loadName": "customblotpaper_1_reservoir_870000ul",
-                "quirks": [
-                    "centerMultichannelOnWells",
-                    "touchTipDisabled"
-                ]
-            },
-            "schemaVersion": 2,
-            "version": 1,
-            "wells": {
-                "A1": {
-                    "depth": 8,
-                    "shape": "rectangular",
-                    "totalLiquidVolume": 870000,
-                    "x": 64,
-                    "xDimension": 115,
-                    "y": 43,
-                    "yDimension": 75,
-                    "z": 6
-                }
-            }
-        },
-        {
-            "brand": {
                 "brand": "Abgene",
                 "brandId": [
                     "AB-077"
@@ -10085,6 +9781,310 @@
                     "x": 21.2,
                     "y": 5.1,
                     "z": 5.8
+                }
+            }
+        },
+        {
+            "brand": {
+                "brand": "Axygen",
+                "brandId": [
+                    "RES-MW4 HP"
+                ]
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 127.76,
+                "yDimension": 85.47,
+                "zDimension": 43.79
+            },
+            "groups": [
+                {
+                    "metadata": {
+                        "wellBottomShape": "v"
+                    },
+                    "wells": [
+                        "A1",
+                        "A2",
+                        "A3",
+                        "A4"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "reservoir",
+                "displayName": "Axygen 4 Reservoir 73 mL",
+                "displayVolumeUnits": "mL",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1"
+                ],
+                [
+                    "A2"
+                ],
+                [
+                    "A3"
+                ],
+                [
+                    "A4"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "axygen_4_reservoir_73000ul",
+                "quirks": [
+                    "centerMultichannelOnWells",
+                    "touchTipDisabled"
+                ]
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 42.09,
+                    "shape": "rectangular",
+                    "totalLiquidVolume": 73000,
+                    "x": 23.38,
+                    "xDimension": 26.11,
+                    "y": 42.73,
+                    "yDimension": 70.8,
+                    "z": 1.7
+                },
+                "A2": {
+                    "depth": 42.09,
+                    "shape": "rectangular",
+                    "totalLiquidVolume": 73000,
+                    "x": 50.38,
+                    "xDimension": 26.11,
+                    "y": 42.73,
+                    "yDimension": 70.8,
+                    "z": 1.7
+                },
+                "A3": {
+                    "depth": 42.09,
+                    "shape": "rectangular",
+                    "totalLiquidVolume": 73000,
+                    "x": 77.38,
+                    "xDimension": 26.11,
+                    "y": 42.73,
+                    "yDimension": 70.8,
+                    "z": 1.7
+                },
+                "A4": {
+                    "depth": 42.09,
+                    "shape": "rectangular",
+                    "totalLiquidVolume": 73000,
+                    "x": 104.38,
+                    "xDimension": 26.11,
+                    "y": 42.73,
+                    "yDimension": 70.8,
+                    "z": 1.7
+                }
+            }
+        },
+        {
+            "brand": {
+                "brand": "custom blot paper",
+                "brandId": []
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 128,
+                "yDimension": 86,
+                "zDimension": 14
+            },
+            "groups": [
+                {
+                    "metadata": {
+                        "wellBottomShape": "flat"
+                    },
+                    "wells": [
+                        "A1"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "reservoir",
+                "displayName": "Custom Blot Paper 1 Reservoir 870000 \u00b5L",
+                "displayVolumeUnits": "\u00b5L",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "customblotpaper_1_reservoir_870000ul",
+                "quirks": [
+                    "centerMultichannelOnWells",
+                    "touchTipDisabled"
+                ]
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 8,
+                    "shape": "rectangular",
+                    "totalLiquidVolume": 870000,
+                    "x": 64,
+                    "xDimension": 115,
+                    "y": 43,
+                    "yDimension": 75,
+                    "z": 6
+                }
+            }
+        },
+        {
+            "brand": {
+                "brand": "V&P Scientific",
+                "brandId": [
+                    "VP 450FP1"
+                ],
+                "links": []
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 127.76,
+                "yDimension": 85.47,
+                "zDimension": 100
+            },
+            "groups": [
+                {
+                    "metadata": {},
+                    "wells": [
+                        "A1",
+                        "B1",
+                        "C1",
+                        "D1",
+                        "E1",
+                        "F1",
+                        "G1",
+                        "H1"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "tipRack",
+                "displayName": "V&P Scientific 8 Pin Rack",
+                "displayVolumeUnits": "\u00b5L",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1",
+                    "B1",
+                    "C1",
+                    "D1",
+                    "E1",
+                    "F1",
+                    "G1",
+                    "H1"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": true,
+                "loadName": "vpscientific_8_tiprack_10ul",
+                "tipLength": 85
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 85,
+                    "diameter": 5.23,
+                    "shape": "circular",
+                    "totalLiquidVolume": 10,
+                    "x": 59.38,
+                    "y": 74.23,
+                    "z": 15
+                },
+                "B1": {
+                    "depth": 85,
+                    "diameter": 5.23,
+                    "shape": "circular",
+                    "totalLiquidVolume": 10,
+                    "x": 59.38,
+                    "y": 65.23,
+                    "z": 15
+                },
+                "C1": {
+                    "depth": 85,
+                    "diameter": 5.23,
+                    "shape": "circular",
+                    "totalLiquidVolume": 10,
+                    "x": 59.38,
+                    "y": 56.23,
+                    "z": 15
+                },
+                "D1": {
+                    "depth": 85,
+                    "diameter": 5.23,
+                    "shape": "circular",
+                    "totalLiquidVolume": 10,
+                    "x": 59.38,
+                    "y": 47.23,
+                    "z": 15
+                },
+                "E1": {
+                    "depth": 85,
+                    "diameter": 5.23,
+                    "shape": "circular",
+                    "totalLiquidVolume": 10,
+                    "x": 59.38,
+                    "y": 38.23,
+                    "z": 15
+                },
+                "F1": {
+                    "depth": 85,
+                    "diameter": 5.23,
+                    "shape": "circular",
+                    "totalLiquidVolume": 10,
+                    "x": 59.38,
+                    "y": 29.23,
+                    "z": 15
+                },
+                "G1": {
+                    "depth": 85,
+                    "diameter": 5.23,
+                    "shape": "circular",
+                    "totalLiquidVolume": 10,
+                    "x": 59.38,
+                    "y": 20.23,
+                    "z": 15
+                },
+                "H1": {
+                    "depth": 85,
+                    "diameter": 5.23,
+                    "shape": "circular",
+                    "totalLiquidVolume": 10,
+                    "x": 59.38,
+                    "y": 11.23,
+                    "z": 15
                 }
             }
         }

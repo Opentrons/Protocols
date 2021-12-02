@@ -3,6 +3,126 @@
     "custom_labware_defs": [
         {
             "brand": {
+                "brand": "Caplugs",
+                "brandId": [
+                    "2223530G80"
+                ]
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 127.76,
+                "yDimension": 85.48,
+                "zDimension": 96
+            },
+            "groups": [
+                {
+                    "metadata": {
+                        "displayCategory": "tubeRack",
+                        "wellBottomShape": "v"
+                    },
+                    "wells": [
+                        "A1",
+                        "B1",
+                        "A2",
+                        "B2",
+                        "A3",
+                        "B3"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "tubeRack",
+                "displayName": "Caplugs 6 Tube Rack 30 mL",
+                "displayVolumeUnits": "\u00b5L",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1",
+                    "B1"
+                ],
+                [
+                    "A2",
+                    "B2"
+                ],
+                [
+                    "A3",
+                    "B3"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "caplugs_6_tuberack_30ml",
+                "quirks": []
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 93,
+                    "diameter": 30,
+                    "shape": "circular",
+                    "totalLiquidVolume": 30000,
+                    "x": 35.5,
+                    "y": 60.24,
+                    "z": 3
+                },
+                "A2": {
+                    "depth": 93,
+                    "diameter": 30,
+                    "shape": "circular",
+                    "totalLiquidVolume": 30000,
+                    "x": 70.5,
+                    "y": 60.24,
+                    "z": 3
+                },
+                "A3": {
+                    "depth": 93,
+                    "diameter": 30,
+                    "shape": "circular",
+                    "totalLiquidVolume": 30000,
+                    "x": 105.5,
+                    "y": 60.24,
+                    "z": 3
+                },
+                "B1": {
+                    "depth": 93,
+                    "diameter": 30,
+                    "shape": "circular",
+                    "totalLiquidVolume": 30000,
+                    "x": 35.5,
+                    "y": 25.24,
+                    "z": 3
+                },
+                "B2": {
+                    "depth": 93,
+                    "diameter": 30,
+                    "shape": "circular",
+                    "totalLiquidVolume": 30000,
+                    "x": 70.5,
+                    "y": 25.24,
+                    "z": 3
+                },
+                "B3": {
+                    "depth": 93,
+                    "diameter": 30,
+                    "shape": "circular",
+                    "totalLiquidVolume": 30000,
+                    "x": 105.5,
+                    "y": 25.24,
+                    "z": 3
+                }
+            }
+        },
+        {
+            "brand": {
                 "brand": "NEST",
                 "brandId": [
                     "503162"
@@ -1125,126 +1245,6 @@
                     "x": 86.3,
                     "y": 11.2,
                     "z": 2.1
-                }
-            }
-        },
-        {
-            "brand": {
-                "brand": "Caplugs",
-                "brandId": [
-                    "2223530G80"
-                ]
-            },
-            "cornerOffsetFromSlot": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-            },
-            "dimensions": {
-                "xDimension": 127.76,
-                "yDimension": 85.48,
-                "zDimension": 96
-            },
-            "groups": [
-                {
-                    "metadata": {
-                        "displayCategory": "tubeRack",
-                        "wellBottomShape": "v"
-                    },
-                    "wells": [
-                        "A1",
-                        "B1",
-                        "A2",
-                        "B2",
-                        "A3",
-                        "B3"
-                    ]
-                }
-            ],
-            "metadata": {
-                "displayCategory": "tubeRack",
-                "displayName": "Caplugs 6 Tube Rack 30 mL",
-                "displayVolumeUnits": "\u00b5L",
-                "tags": []
-            },
-            "namespace": "custom_beta",
-            "ordering": [
-                [
-                    "A1",
-                    "B1"
-                ],
-                [
-                    "A2",
-                    "B2"
-                ],
-                [
-                    "A3",
-                    "B3"
-                ]
-            ],
-            "parameters": {
-                "format": "irregular",
-                "isMagneticModuleCompatible": false,
-                "isTiprack": false,
-                "loadName": "caplugs_6_tuberack_30ml",
-                "quirks": []
-            },
-            "schemaVersion": 2,
-            "version": 1,
-            "wells": {
-                "A1": {
-                    "depth": 93,
-                    "diameter": 30,
-                    "shape": "circular",
-                    "totalLiquidVolume": 30000,
-                    "x": 35.5,
-                    "y": 60.24,
-                    "z": 3
-                },
-                "A2": {
-                    "depth": 93,
-                    "diameter": 30,
-                    "shape": "circular",
-                    "totalLiquidVolume": 30000,
-                    "x": 70.5,
-                    "y": 60.24,
-                    "z": 3
-                },
-                "A3": {
-                    "depth": 93,
-                    "diameter": 30,
-                    "shape": "circular",
-                    "totalLiquidVolume": 30000,
-                    "x": 105.5,
-                    "y": 60.24,
-                    "z": 3
-                },
-                "B1": {
-                    "depth": 93,
-                    "diameter": 30,
-                    "shape": "circular",
-                    "totalLiquidVolume": 30000,
-                    "x": 35.5,
-                    "y": 25.24,
-                    "z": 3
-                },
-                "B2": {
-                    "depth": 93,
-                    "diameter": 30,
-                    "shape": "circular",
-                    "totalLiquidVolume": 30000,
-                    "x": 70.5,
-                    "y": 25.24,
-                    "z": 3
-                },
-                "B3": {
-                    "depth": 93,
-                    "diameter": 30,
-                    "shape": "circular",
-                    "totalLiquidVolume": 30000,
-                    "x": 105.5,
-                    "y": 25.24,
-                    "z": 3
                 }
             }
         },
