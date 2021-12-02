@@ -1,0 +1,36 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "PCR": [
+            "PCR Prep"
+        ]
+    },
+    "deck-setup": "\n",
+    "description": "This is a custom PCR prep protocol that transfers up to 24 RNA samples to 4 different mastermixes. The transfer scheme can be shown on the deck layout below.\n",
+    "internal": "75cfa6",
+    "labware": "\nBio-Rad 96 Well Plate 200 \u00b5L PCR seated in Opentrons 96-well aluminum block\nOpentrons 4-in-1 tuberack with Eppendorf 1.5ml snapcap microcentrifuge tubes seated in 24-tube adapter\nOpentrons 10/20\u00b5L Tips\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* PCR\n\t* PCR Prep\n\n",
+        "deck-setup": "![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/75cfa6/deck.png)\n\n---\n\n",
+        "description": "This is a custom PCR prep protocol that transfers up to 24 RNA samples to 4 different mastermixes. The transfer scheme can be shown on the deck layout below.\n\n---\n\n",
+        "internal": "75cfa6\n",
+        "labware": "* [Bio-Rad 96 Well Plate 200 \u00b5L PCR](https://www.bio-rad.com/en-us/sku/hsp9601-hard-shell-96-well-pcr-plates-low-profile-thin-wall-skirted-white-clear?ID=hsp9601) seated in [Opentrons 96-well aluminum block](https://shop.opentrons.com/collections/hardware-modules/products/aluminum-block-set)\n* [Opentrons 4-in-1 tuberack](https://shop.opentrons.com/collections/verified-labware/products/tube-rack-set-1) with Eppendorf 1.5ml snapcap microcentrifuge tubes seated in 24-tube adapter\n* [Opentrons 10/20\u00b5L Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-10ul-tips)\n\n",
+        "modules": "* [Temperature Module (GEN1)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* P10 single-channel electronic pipette (GEN1)\n* P10 multi-channel electronic pipette (GEN1)\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "reagents": "* [ThermoFisher SuperScript\u2122 IV One-Step RT-PCR System](https://www.thermofisher.com/order/catalog/product/12594025)\n\n---\n\n",
+        "title": "PCR Prep"
+    },
+    "modules": [
+        "Temperature Module (GEN1)"
+    ],
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nP10 single-channel electronic pipette (GEN1)\nP10 multi-channel electronic pipette (GEN1)\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "reagents": [
+        "ThermoFisher SuperScript\u2122 IV One-Step RT-PCR System"
+    ],
+    "title": "PCR Prep"
+}
