@@ -1,5 +1,3 @@
-from opentrons.types import Point, Location, DeckSlotName
-
 metadata = {
     'protocolName': 'Cherrypicking from Coordinates',
     'author': 'Nick <protocols@opentrons.com>',
@@ -23,16 +21,16 @@ def run(ctx):
     transfer_info = [[val.strip().lower() for val in line.split(',')[1:]]
                      for line in transfer_csv.splitlines()
                      if line.split(',')[0].strip()][1:]
-    src_a = Location(Point(
-        float(transfer_info[0][0]), float(transfer_info[0][1]),
-        float(transfer_info[0][2])), None)
-    src_b = Location(Point(
-        float(transfer_info[1][0]), float(transfer_info[1][1]),
-        float(transfer_info[1][2])), None)
+    # src_a = Location(Point(
+    #     float(transfer_info[0][0]), float(transfer_info[0][1]),
+    #     float(transfer_info[0][2])), None)
+    # src_b = Location(Point(
+    #     float(transfer_info[1][0]), float(transfer_info[1][1]),
+    #     float(transfer_info[1][2])), None)
     for line in transfer_info[2:]:
-        dest = Location(
-            Point(float(line[0]), float(line[1]), float(line[2])), None)
-        vol = float(line[3])
+        # dest = Location(
+        #     Point(float(line[0]), float(line[1]), float(line[2])), None)
+        # vol = float(line[3])
         [p.pick_up_tip() for p in pipettes]
         [pip.home() for pip in pipettes]
         # for src, p in zip([src_a, src_b], pipettes):
