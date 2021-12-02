@@ -102,10 +102,15 @@ def run(ctx):
     for line in assembly_info:
         s_slot, s_well, d_slot, d_well = line[1:3] + line[4:6]
         p20.pick_up_tip()
-        p20.aspirate(assembly_transfer_vol, ctx.loaded_labwares[int(s_slot)][
-                          s_well.upper()].bottom(asp_height))
-        p20.dispense(assembly_transfer_vol,
-                     ctx.loaded_labwares[int(d_slot)][d_well.upper()])
+        if 'tip rack' not in ctx.loaded_labwares[
+                int(s_slot)][s_well.upper()].display_name.lower():
+            p20.aspirate(assembly_transfer_vol,
+                         ctx.loaded_labwares[int(s_slot)][
+                                s_well.upper()].bottom(asp_height))
+        if 'tip rack' not in ctx.loaded_labwares[
+                int(d_slot)][d_well.upper()].display_name.lower():
+            p20.dispense(assembly_transfer_vol,
+                         ctx.loaded_labwares[int(d_slot)][d_well.upper()])
         if pipette_homing == "False":
             p20.drop_tip(drop_loc, home_after=False)
         else:

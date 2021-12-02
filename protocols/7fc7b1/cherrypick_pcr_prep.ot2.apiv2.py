@@ -74,6 +74,7 @@ def run(ctx):
     pick_up()
     dests_per_col = mm_source_vol//mm_transfer_vol
     for i, d in enumerate(all_dests):
+        m20.move_to(mm[i//dests_per_col].top())
         m20.air_gap(2)
         m20.aspirate(mm_transfer_vol, mm[i//dests_per_col])
         m20.dispense(2+mm_transfer_vol, d)

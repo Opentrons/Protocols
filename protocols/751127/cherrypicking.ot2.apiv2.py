@@ -1,10 +1,10 @@
-from opentrons.types import Point, Location
+from opentrons.types import Point, Location, DeckSlotName
 
 metadata = {
     'protocolName': 'Cherrypicking from Coordinates',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.9'
+    'apiLevel': '2.2'
 }
 
 
@@ -35,9 +35,11 @@ def run(ctx):
         vol = float(line[3])
         [p.pick_up_tip() for p in pipettes]
         [pip.home() for pip in pipettes]
-        for src, p in zip([src_a, src_b], pipettes):
-            p.aspirate(vol, src)
-            p.home()
-            p.dispense(vol, dest)
-            p.home()
+        # for src, p in zip([src_a, src_b], pipettes):
+        #     p.move_to(src)
+        #     p.aspirate(vol)
+        #     print(line)
+        #     p.home()
+        #     p.dispense(vol, dest)
+        #     p.home()
         [p.drop_tip() for p in pipettes]
