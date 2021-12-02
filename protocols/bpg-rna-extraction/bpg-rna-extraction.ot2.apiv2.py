@@ -112,6 +112,7 @@ def run(protocol):
 
     for dest in magsamps:
         pick_up(p20)
+        p20.move_to(ie_rna.top())
         p20.air_gap(2)
         p20.aspirate(4, ie_rna)
         p20.dispense(6, dest)

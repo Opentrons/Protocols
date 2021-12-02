@@ -35,7 +35,6 @@ venvs/ot2:
 	pip install -e otcustomizers && \
 	pip install -r protolib/requirements.txt && \
 	pip install pipenv==2021.5.29 && \
-	pip install bs4 && \
 	pushd $(OT2_MONOREPO_DIR)/api/ && \
 	$(MAKE) setup && \
 	python setup.py install && \
@@ -62,8 +61,6 @@ $(BUILD_DIR)/%.ot2.apiv2.py.json: protocols/%.ot2.apiv2.py
 .PHONY: parse-README
 parse-README:
 	source venvs/ot2/bin/activate && \
-	pip install bs4 && \
-	pip install markdown&& \
 	python protolib/traverse_README.py && \
 	deactivate
 

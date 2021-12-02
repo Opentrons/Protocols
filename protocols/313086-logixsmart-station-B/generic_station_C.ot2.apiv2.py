@@ -94,6 +94,7 @@ resuming.')
     # transfer mastermix
     _pick_up(p10)
     for d in all_dests:
+        p10.move_to(mm.top())
         if vol_mm <= 7:
             p10.air_gap(2)
         p10.aspirate(vol_mm, mm)
@@ -105,6 +106,7 @@ resuming.')
     # transfer sample
     for s, d in zip(source_multi, all_dests_multi):
         _pick_up(m10)
+        p10.move_to(mm.top())
         if vol_mm <= 7:
             m10.air_gap(2)
         m10.aspirate(vol_sample, mm)
@@ -116,6 +118,7 @@ resuming.')
     # transfer controls
     for s, d in zip([pos_control, neg_control], dest_plate.wells()[:2]):
         _pick_up(p10)
+        p10.move_to(mm.top())
         if vol_mm <= 7:
             p10.air_gap(2)
         p10.aspirate(vol_sample, mm)

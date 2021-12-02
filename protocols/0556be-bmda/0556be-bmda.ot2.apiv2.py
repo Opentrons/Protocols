@@ -49,6 +49,7 @@ def run(ctx):
     p300.flow_rate.dispense = comp_disp_speed
     for vol, source in zip(volumes, components):
         p300.pick_up_tip()
+        p300.move_to(source.top())
         p300.air_gap(air_gap_vol)
         p300.aspirate(vol, source)
         ctx.delay(seconds=asp_delay)
@@ -72,6 +73,7 @@ def run(ctx):
     # Add Master Mix to 32 wells
     p300.pick_up_tip()
     for dest in pcr_plate_wells:
+        p300.move_to(mm.top())
         p300.air_gap(air_gap_vol)
         p300.aspirate(mm_vol, mm)
         ctx.delay(seconds=asp_delay)

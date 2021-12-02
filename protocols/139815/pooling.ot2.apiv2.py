@@ -43,6 +43,7 @@ def run(ctx):
     # consolidate plate contents to 1 strip
     for well in plate.rows()[0]:
         m10.pick_up_tip()
+        m10.move_to(well.top())
         m10.air_gap(2)
         m10.aspirate(2, well.bottom(2))
         m10.dispense(4, strip[0].bottom(2))
