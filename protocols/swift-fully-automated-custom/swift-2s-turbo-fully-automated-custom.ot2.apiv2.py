@@ -8,7 +8,6 @@ metadata = {
 }
 
 
-
 def run(protocol):
 
     [no_samps, pip_tip, p300gen, p300tips, magmod, temp_gen,
