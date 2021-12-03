@@ -1,8 +1,3 @@
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"no_samps":"8","pip_tip":"p50_single opentrons_96_tiprack_300ul","p300gen":"p300_multi","p300tips":"opentrons_96_filtertiprack_200ul","magmod":"magnetic module","temp_gen":"temperature module","a_index":"yes","cycles":5,"f_time":10}""")
-    return [_all_values[n] for n in names]
-
 from opentrons import protocol_api
 
 metadata = {
