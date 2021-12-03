@@ -11,8 +11,8 @@
 This protocol transfers one-to-one analyte from the analyte tube rack on slot 2 to the final tube rack on slot 3. It then transfers plasma to all tubes up to the number specified by the user in the final tube rack. The solution in each tube is mixed upon dispensing the plasma.
 
 Explanation of complex parameters below:
-* `csv`: Import a csv file with the following format (you do not need to specify mix steps):
-![csv layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/469c70/Screen+Shot+2021-11-30+at+10.36.56+AM.png)
+* `csv`: Import a csv file with the following format (you do not need to specify mix steps). Note that volumes should be in microliters:
+![csv layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/469c70/Screen+Shot+2021-12-03+at+9.32.11+AM.png)
 
 * `P20 Single-Channel Mount`: Specify which mount (left or right) to host the P20 single-channel pipette.
 * `P1000 Single-Channel Mount`: Specify which mount (left or right) to host the P1000 single-channel pipette.

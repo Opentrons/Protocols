@@ -1,3 +1,8 @@
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"no_samps":"8","pip_tip":"p50_single opentrons_96_tiprack_300ul","p300gen":"p300_multi","p300tips":"opentrons_96_filtertiprack_200ul","magmod":"magnetic module","temp_gen":"temperature module","a_index":"yes","cycles":5,"f_time":10}""")
+    return [_all_values[n] for n in names]
+
 from opentrons import protocol_api
 
 metadata = {
@@ -6,6 +11,7 @@ metadata = {
     'source': 'Protocol Library',
     'apiLevel': '2.10'
 }
+
 
 
 def run(protocol):
@@ -240,8 +246,7 @@ def run(protocol):
                 pick_up()
             p300.air_gap(5)
             p300.aspirate(150 if i == 0 else 145,
-                          mag_samp, rate=get_rate(p300, 'aspirate', 3)
-                          if i == 1 else 1)
+                          mag_samp, rate=get_rate(p300, 'aspirate', 3))
             p300.air_gap(5)
             p300.dispense(160 if i == 0 else 155, waste.bottom(1.5))
             p300.drop_tip()
@@ -355,7 +360,7 @@ def run(protocol):
     p300.flow_rate.aspirate = 10
     for src, dest in zip(pcr_300, mag_pure):
         pick_up()
-        p300.aspirate(60, src)
+        p300.aspirate(60, src.bottom(0.3))
         p300.dispense(60, dest.top(-4))
         p300.blow_out(dest.top(-4))
         p300.drop_tip()
@@ -398,7 +403,7 @@ def run(protocol):
         p300.drop_tip()
 
     # Wash samples 2x with 150ul of 80% EtOH
-    protocol.comment('CHECK CHECK')
+    protocol.comment('find')
     for i in range(2):
         for mag_samps in mag_pure:
             if not p300.hw_pipette['has_tip']:
@@ -415,7 +420,7 @@ def run(protocol):
                 pick_up()
             p300.air_gap(5)
             p300.aspirate(150 if i == 0 else 145, mag_samps.bottom(1.5),
-                          rate=get_rate(p300, 'aspirate', 3) if i == 1 else 1)
+                          rate=get_rate(p300, 'aspirate', 3))
             p300.air_gap(5)
             p300.dispense(210, waste2)
             p300.drop_tip()
