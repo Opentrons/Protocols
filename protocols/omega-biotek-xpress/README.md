@@ -61,7 +61,7 @@ contamination and is highly recommended to avoid pauses to reuse tips. If select
 ![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/omega-biotek-xpress/Screen+Shot+2021-10-28+at+6.48.16+PM.png)
 
 ### Reagent Setup
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/omega-biotek-xpress/Screen+Shot+2021-10-28+at+6.48.34+PM.png)
+![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/469c70/Screen+Shot+2021-12-03+at+8.51.12+AM.png)
 
 
 ---
