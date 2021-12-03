@@ -76,8 +76,6 @@ def run(ctx):
                 source_well = _[tube_source]
             asp_height = 1
 
-        print(source, source_well)
-
         pip.pick_up_tip()
         pip.transfer(float(_[vol])*1000,
                      source.wells_by_name()[source_well].bottom(asp_height),
