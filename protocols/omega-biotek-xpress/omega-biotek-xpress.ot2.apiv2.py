@@ -39,9 +39,9 @@ def run(ctx):
     m300 = ctx.load_instrument(
         'p300_multi_gen2', 'left', tip_racks=tips300)
 
-    magdeck = ctx.load_module('magdeck', '4')
+    magdeck = ctx.load_module('magnetic module gen2', '4')
     magdeck.disengage()
-    magheight = 13.7
+    magheight = 6
     magplate = magdeck.load_labware('nest_96_wellplate_2ml_deep')
     tempdeck = ctx.load_module('Temperature Module Gen2', '1')
     flatplate = tempdeck.load_labware(
@@ -52,10 +52,10 @@ def run(ctx):
         'nest_1_reservoir_195ml', '2', 'EtOH reservoir').wells()[0:]
     res1 = ctx.load_labware(
         'nest_12_reservoir_15ml', '5', 'reagent reservoir 1')
-    binding_buffer = res1.wells()[:2]
+    binding_buffer = res1.wells()[:3]
     wash1 = res1.wells()[3:6]
     elution_solution = res1.wells()[-1]
-    lysis_buffer = res1.wells()[7:9]
+    lysis_buffer = res1.wells()[7:10]
 
     mag_samples_m = magplate.rows()[0][:num_cols]
     elution_samples_m = flatplate.rows()[0][:num_cols]
@@ -102,7 +102,7 @@ resuming.')
 
     switch = True
     drop_count = 0
-    drop_threshold = 120
+    drop_threshold = 240
 
     def drop(pip):
         nonlocal switch
@@ -156,15 +156,16 @@ resuming.')
 
     def bind(vol, park=True):
         # add bead binding buffer and mix samples
-        for i, (well, spot) in enumerate(zip(mag_samples_m, parking_spots)):
-            source = binding_buffer[i//(12//len(binding_buffer))]
+        for i, (well, spot, source) in enumerate(zip(mag_samples_m,
+                                                     parking_spots,
+                                                     binding_buffer*12)):
             if park:
                 pick_up(m300, spot)
             else:
                 pick_up(m300)
-            for _ in range(5):
-                m300.aspirate(180, source.bottom(0.5))
-                m300.dispense(180, source.bottom(5))
+            for _ in range(10):
+                m300.aspirate(200, source.bottom(1), rate=1.5)
+                m300.dispense(200, source.bottom(5), rate=2)
             num_trans = math.ceil(vol/210)
             vol_per_trans = vol/num_trans
             for t in range(num_trans):
@@ -258,7 +259,7 @@ for 2 minutes')
     # add lysis buffer to plate
     for col, spot, buffer_well in zip(mag_samples_m,
                                       parking_spots,
-                                      lysis_buffer*num_cols):
+                                      lysis_buffer*12):
         if PARK:
             pick_up(m300, spot)
         else:

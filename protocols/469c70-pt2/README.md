@@ -12,7 +12,7 @@ This protocol transfers one-to-one analyte from the analyte tube rack on slot 2 
 
 Explanation of complex parameters below:
 * `csv`: Import a csv file with the following format (you do not need to specify mix steps):
-![csv layout](d)
+![csv layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/469c70/Screen+Shot+2021-11-30+at+10.36.56+AM.png)
 
 * `P20 Single-Channel Mount`: Specify which mount (left or right) to host the P20 single-channel pipette.
 * `P1000 Single-Channel Mount`: Specify which mount (left or right) to host the P1000 single-channel pipette.
