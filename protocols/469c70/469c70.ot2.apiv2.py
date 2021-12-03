@@ -70,7 +70,10 @@ def run(ctx):
             source_well = _[tube_source]
             asp_height = asp_loc_z
         else:
-            source_well = 'A1'
+            if int(_[slot_num_source]) == 3:
+                source_well = 'A1'
+            else:
+                source_well = _[tube_source]
             asp_height = 1
 
         pip.pick_up_tip()
