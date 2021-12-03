@@ -1,7 +1,7 @@
 name: Create Develop to Master PR
 on:
   schedule:
-    - cron: '50 23 * * 1-5'
+    - cron: '45 20 * * 1-5'
 
 jobs:
   create-pull-request:
