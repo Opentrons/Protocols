@@ -1,10 +1,5 @@
 import math
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"csv":"Slot No,Position,Sample ID,Volume (mL),Slot No,Tube number,Sample ID\\n4,A1,Stock-1,0.25,1,A1,Int-1\\n3,A1,Diluent,11.75,1,A1,Int-1\\n1,A1,Int-1,1.2,1,A2,Int-2\\n3,A1,Diluent,8.8,1,A2,Int-2\\n1,A2,Int-2,1,1,A3,STD8\\n3,A1,Diluent,11,1,A3,STD8\\n1,A3,STD8,2.2,1,A4,STD7\\n3,A1,Diluent,7.8,1,A4,STD7\\n1,A4,STD7,2,1,A5,STD6\\n3,A1,Diluent,8,1,A5,STD6\\n1,A5,STD6,3.5,1,B1,STD5\\n3,A1,Diluent,6.5,1,B1,STD5\\n1,B1,STD5,4,1,B2,STD4\\n3,A1,Diluent,6,1,B2,STD4\\n1,B2,STD4,6.5,1,B3,STD3\\n3,A1,Diluent,3.5,1,B3,STD3\\n1,B3,STD3,3,1,B4,STD2\\n3,A1,Diluent,7,1,B4,STD2\\n1,B4,STD2,1.2,1,B5,STD1\\n3,A1,Diluent,8.8,1,B5,STD1\\n4,A2,Stock-2,0.3,2,A1,Int-1\\n3,A1,Diluent,9.7,2,A1,Int-1\\n2,A1,Int-1,2,2,A2,Int-2\\n3,A1,Diluent,8,2,A2,Int-2\\n2,A2,Int-2,1.5,2,A3,DQC\\n3,A1,Diluent,10.5,2,A3,DQC\\n2,A3,DQC,6.2,2,A4,HQC\\n3,A1,Diluent,3.8,2,A4,HQC\\n2,A4,HQC,3.5,2,A5,MQC\\n3,A1,Diluent,6.5,2,A5,MQC\\n2,A5,HQC,0.6,2,B1,LQC\\n3,A1,Diluent,9.4,2,B1,LQC\\n2,B1,HQC,1.2,2,B2,LLOQ QC\\n3,A1,Diluent,8.8,2,B2,LLOQ QC","mount":"left"}""")
-    return [_all_values[n] for n in names]
-
 
 metadata = {
     'protocolName': 'Serial Dilution of Analyte Stock',
