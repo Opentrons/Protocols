@@ -18,14 +18,23 @@
     "default": 9
   },
   {
-        "type": "dropDown",
-        "label": "Touch Tip on the...",
-        "name": "touch_tip",
-        "options": [
-          {"label": "Left", "value": "left"},
-          {"label": "Right", "value": "right"}
-        ]
-    }
+    "type": "dropDown",
+    "label": "Touch Tip on the...",
+    "name": "touch_tip",
+    "options": [
+      {"label": "Left", "value": "left"},
+      {"label": "Right", "value": "right"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Master Mix Source",
+    "name": "source",
+    "options": [
+      {"label": "Reservoir", "value": "trough"},
+      {"label": "Plate", "value": "plate"}
+    ]
+  }
 ]
 
 

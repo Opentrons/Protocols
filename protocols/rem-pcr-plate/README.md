@@ -15,6 +15,9 @@ plate to finish, prepare the following master mix etc. The protocol will tell yo
 into for the following plate.
 
 Explanation of parameters below:
+* `Master Mix Source`: Do you have one master mix for the whole plate (Reservoir) or one for each row (Plate). NB the
+Deck Setup diagram shows both the Plate and Reservoir (troughs), you only need to put the one
+you require in place.
 * `Number of Plates`: The total number of plates you'd like to prepare (one master mix needs to be prepared for each 
 plate)
 * `Starting Trough`: The first trough you'd like to pour the master mix into (e.g. if some troughs have already been
@@ -31,7 +34,7 @@ when adding the DNA (if applicable))
 ### Labware
 
 * [NEST 12 Well Reservoir 15 mL](https://labware.opentrons.com/nest_12_reservoir_15ml/)
-* [Shallow well plate nest 200 uL](../rem-dna-extraction-deep-well/labware/96w_pcr_plate2.json)
+* [Shallow Well Plate 200 uL (x2)](96w_pcr_plate2.json)
 
 ### Pipettes
 * [P10 8-Channel Electronic Pipette](https://docs.opentrons.com/v1/pipettes.html)
@@ -44,7 +47,7 @@ volume you need to add to the trough).
 ### Deck Setup
 * After each plate is prepared, the protocol pauses, the plate must be removed and the following plate must be placed
   in the same slot.
-  ![deck layout](https://raw.githubusercontent.com/jamiesone/images/main/Screenshot%20from%202021-12-02%2015-47-35.PNG)
+  ![deck layout](https://raw.githubusercontent.com/jamiesone/images/main/Screenshot%20from%202021-12-03%2017-14-49.png)
 
 ---
 

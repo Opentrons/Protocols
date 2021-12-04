@@ -11,8 +11,8 @@ metadata = {
 }
 
 def run(protocol: protocol_api.ProtocolContext):
-    [_no_plates, _start, _vol_dispense, _touch_tip] = get_values(  # noqa: F821
-        "no_plates", "start", "vol_dispense", "touch_tip")
+    [_source, _no_plates, _start, _vol_dispense, _touch_tip] = get_values(  # noqa: F821
+        "source", "no_plates", "start", "vol_dispense", "touch_tip")
 
     protocol.set_rail_lights(False)
     protocol.set_rail_lights(True)
@@ -22,6 +22,7 @@ def run(protocol: protocol_api.ProtocolContext):
     vol_dispense = _vol_dispense
     touch_tip = _touch_tip
     start = _start
+    source = _source
 
     # load tiprack
     tiprack_20 = protocol.load_labware('opentrons_96_tiprack_20ul', 6)
@@ -33,6 +34,10 @@ def run(protocol: protocol_api.ProtocolContext):
     # load labware
     master_troughs = protocol.load_labware(
         "nest_12_reservoir_15ml", 2, label="master trough"
+    )
+
+    master_plate = protocol.load_labware(
+        "96w_pcr_plate2", 5, label="master-plate"
     )
 
     pcr_plate = protocol.load_labware(
