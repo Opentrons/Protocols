@@ -11,7 +11,7 @@
 This protocol serially dilutes stock from the stock tube rack (slot 4) to up to 15 tubes in the dilution rack (see diagram below). Volume, tube source, tube destination, and slot source/destination are all read by the robot to perform all transfer steps. 2 mix steps are also included at half tube depth to avoid pipette submersion.
 
 Explanation of complex parameters below:
-* `csv`: Import a csv file with the following format (you do not need to specify mix steps):
+* `csv`: Import a csv file with the following format (you do not need to specify mix steps). Note that volumes should be in mL:
 ![csv layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/469c70/Screen+Shot+2021-11-30+at+10.36.56+AM.png)
 
 * `P1000 Single-Channel Mount`: Specify which mount (left or right) to host the P1000 single-channel pipette.
