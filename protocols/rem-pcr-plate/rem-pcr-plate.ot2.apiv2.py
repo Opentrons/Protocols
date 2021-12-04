@@ -37,7 +37,7 @@ def run(protocol: protocol_api.ProtocolContext):
     )
 
     master_plate = protocol.load_labware(
-        "96w_pcr_plate2", 5, label="master-plate"
+        "96w_pcr_plate2", 1, label="master-plate"
     )
 
     pcr_plate = protocol.load_labware(
@@ -76,9 +76,12 @@ def run(protocol: protocol_api.ProtocolContext):
             p10_multi.move_to(cur_position.move(Point(x=-2.7,z=-0.75)))
             p10_multi.move_to(cur_position.move(Point(x=1,z=0.75)))
 
-    def dispense_mm(vol, primer_no):
+    def dispense_mm(vol, primer_no, mm_source):
         wells = pcr_plate.columns()
-        mm = master_troughs.wells()[primer_no - 1]
+        if mm_source == "trough":
+            mm = master_troughs.wells()[primer_no - 1]
+        else:
+            mm = master_plate.columns()[primer_no - 1][0]
 
         p10_multi.pick_up_tip()
 
@@ -97,5 +100,5 @@ def run(protocol: protocol_api.ProtocolContext):
             "When you press resume, the master mix will be dispensed into the next plate. Ensure this plate is in position (in slot 5) and that at least {}uL of master mix for this plate has been added to trough {}.".format(
                 (96*vol_dispense)+275, mm)
         )
-        dispense_mm(vol_dispense, mm)
+        dispense_mm(vol_dispense, mm, source)
 
