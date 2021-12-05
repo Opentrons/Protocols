@@ -1,3 +1,6 @@
+import math
+
+
 metadata = {
     'protocolName': 'Serial Dilution of Analyte Stock',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
@@ -44,13 +47,38 @@ def run(ctx):
                    diluent_labware,
                    analyte_stock_rack]
 
-    for _ in list_of_rows:
+    total_vols = []
+    for i in range(0, len(list_of_rows)-1, 2):
+        tube_vol = float(list_of_rows[i][vol]) + float(list_of_rows[i+1][vol])
+        total_vols.append(tube_vol)
+        total_vols.append(tube_vol)
+
+    for _, tube_vol in zip(list_of_rows, total_vols):
+
+        # height tracking
+        v_naught = tube_vol*1000
+        radius = serial_rack1.wells()[0].diameter/2
+        h = v_naught/(math.pi*radius**2)-20
+        asp_loc_z = h if h > 20 else 1
+
+        # source and dest
         source = all_labware[int(_[slot_num_source])-1]
         dest = all_labware[int(_[slot_num_dest])-1]
+
+        # transfer
+        if int(_[slot_num_source]) == 1 or int(_[slot_num_source]) == 2:
+            source_well = _[tube_source]
+            asp_height = asp_loc_z
+        else:
+            if int(_[slot_num_source]) == 3:
+                source_well = 'A1'
+            else:
+                source_well = _[tube_source]
+            asp_height = 1
+
         pip.pick_up_tip()
         pip.transfer(float(_[vol])*1000,
-                     source.wells_by_name()[_[tube_source]
-                     if int(_[slot_num_source]) != 3 else 'A1'],
+                     source.wells_by_name()[source_well].bottom(asp_height),
                      dest.wells_by_name()[_[tube_dest]].top(),
                      new_tip='never',
                      blow_out=True,
