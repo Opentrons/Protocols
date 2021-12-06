@@ -11,10 +11,10 @@
 This protocol is the fourth part of a four part series for performing NGS library prep with the [ThermoFisher Scientific AgriSeq kit](https://www.thermofisher.com/order/catalog/product/A34144#/A34144). Samples in plate are pooled into 60ul pools on a well plate. After which, 45ul from each pool is transferred to the final processing plate.
 
 Links:
-* [Part 1: DNA Transfer](http://protocols.opentrons.com/protocol/7855ef)
-* [Part 2: Pre-Ligation](http://protocols.opentrons.com/protocol/7855ef-part2)
-* [Part 3: Barcoding](http://protocols.opentrons.com/protocol/7855ef-part3)
-* [Part 4: Pooling](http://protocols.opentrons.com/protocol/7855ef-part4)
+* [Part 1: DNA Transfer](http://protocols.opentrons.com/protocol/7855ef-plate)
+* [Part 2: Pre-Ligation](http://protocols.opentrons.com/protocol/7855ef-plate-part2)
+* [Part 3: Barcoding](http://protocols.opentrons.com/protocol/7855ef-plate-part3)
+* [Part 4: Pooling](http://protocols.opentrons.com/protocol/7855ef-plate-part4)
 
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)

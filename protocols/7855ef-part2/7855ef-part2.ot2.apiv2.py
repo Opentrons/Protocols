@@ -28,7 +28,7 @@ def run(protocol):
                                       label='MMX Plate')
     tiprack20 = [protocol.load_labware('opentrons_96_filtertiprack_20ul',
                  str(slot))
-                 for slot in [8, 9, 10, 11]]
+                 for slot in [8, 9, 10, 11]][:math.ceil(num_col/12)+1]
 
     # load instruments
     m20 = protocol.load_instrument('p20_multi_gen2', m20_mount,
@@ -40,7 +40,7 @@ def run(protocol):
         nonlocal tip_counter
         if tip_counter == 36:
             protocol.home()
-            protocol.pause('Replace 20 ul tip racks on Slots 9, 10, and 11')
+            protocol.pause('Replace 20 ul tip racks')
             m20.reset_tipracks()
             tip_counter = 0
             pick_up()

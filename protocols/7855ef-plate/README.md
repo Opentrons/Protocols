@@ -11,10 +11,10 @@
 This protocol is the first of a 4 part series for performing NGS library prep with the [ThermoFisher Scientific AgriSeq kit](https://www.thermofisher.com/order/catalog/product/A34144#/A34144). The OT-2 will distribute 7ul of Amplification Mix to each well of 96 well plates up to the number of samples specified by the user. 3ul of DNA is then added to each well containing Ampflication Mix.
 
 Links:
-* [Part 1: DNA Transfer](http://protocols.opentrons.com/protocol/7855ef)
-* [Part 2: Pre-Ligation](http://protocols.opentrons.com/protocol/7855ef-part2)
-* [Part 3: Barcoding](http://protocols.opentrons.com/protocol/7855ef-part3)
-* [Part 4: Pooling](http://protocols.opentrons.com/protocol/7855ef-part4)
+* [Part 1: DNA Transfer](http://protocols.opentrons.com/protocol/7855ef-plate)
+* [Part 2: Pre-Ligation](http://protocols.opentrons.com/protocol/7855ef-plate-part2)
+* [Part 3: Barcoding](http://protocols.opentrons.com/protocol/7855ef-plate-part3)
+* [Part 4: Pooling](http://protocols.opentrons.com/protocol/7855ef-plate-part4)
 
 **Note about tips**
 The OT-2 will track tips from Part 1 to Part 4 of the protocol (e.g. tip leaves off in H11 at the end of protocol 1; first tip pick up will be from H12 in Part 2). When tips run out for any particular Part, the user will be prompted to replace all tip racks.
