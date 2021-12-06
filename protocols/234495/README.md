@@ -1,4 +1,4 @@
-# LC-MS Sample Prep: Part 1 of 2: Standards/Calibration Curves
+# LC-MS Sample Prep: Standards/Calibration Curves/Patient Samples
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -8,16 +8,14 @@
      * Mass Spec
 
 ## Description
-Part 1 of 2: Prepare Standard Samples for Calibration Curves
+Prepare Standard Samples for Calibration Curves. Prepare Patient Samples.
 
 Links:
-* [Part 1: Standards/Calibration Curves](http://protocols.opentrons.com/protocol/234495)
+* [Standards/Calibration Curves/Patient Samples](http://protocols.opentrons.com/protocol/234495)
 
 With this protocol, your robot can perform sample preparation for LC-MS as described [experimental protocol](https://s3.amazonaws.com/pf-upload-01/u-4256/0/2021-05-12/eq03qff/Protocol-90%20ul-tube.pdf)
 
-This is part 1 of the protocol: Standards/Calibration Curves.
-
-This step prepares standards for calibration curves.
+This step prepares standards for calibration curves followed by patient samples.
 
 ## Protocol Steps
 
@@ -48,8 +46,8 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
 ### Deck Setup
-* Opentrons p300 tips (Deck Slot 6)
-* Opentrons p20 tips (Deck Slot 2)
+* Opentrons p300 tips (Deck Slots 6, 9)
+* Opentrons p20 tips (Deck Slots 2, 3)
 * nest_12_reservoir_15ml (Deck Slot 5)
 * opentrons_24_tuberack_nest_1.5ml_snapcap (Deck Slots 1 and 4)
 
@@ -57,7 +55,7 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 * [OT-2](https://opentrons.com/ot-2)
 
 ## Process
-1. Choose tips (filter or standard), tuberack labware and clearances in the parameters below.
+1. Choose tuberack labware and clearances in the parameters below.
 2. Download your protocol.
 3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
 4. Set up your deck according to the deck map.
