@@ -28,6 +28,10 @@ def run(ctx):
 
     # load instrument
     m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tipracks)
+    pick_up_current = 0.6
+    ctx._implementation._hw_manager.hardware._attached_instruments[
+        m20._implementation.get_mount()].update_config_item(
+            'pick_up_current', pick_up_current)
 
     samples_sources_sets = [plate.rows()[0] for plate in rna_source_plates]
     destination_sets = [
