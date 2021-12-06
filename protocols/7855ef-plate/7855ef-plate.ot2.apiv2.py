@@ -74,7 +74,7 @@ def run(protocol):
         m20.aspirate(7, amplify_mix)
         touchtip(m20, amplify_mix)
         m20.air_gap(airgap)
-        m20.dispense(airgap, col)
+        m20.dispense(airgap, col.top())
         m20.dispense(7, col)
         m20.blow_out()
         touchtip(m20, col)
