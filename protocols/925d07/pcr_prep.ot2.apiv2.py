@@ -44,7 +44,7 @@ def run(ctx):
     cols_per_mm_strip = int(len(mm_destinations)/len(mm_strips))
     m20.pick_up_tip()
     for i, d in enumerate(mm_destinations):
-        m20.transfer(mm_vol, mm_strips[i//cols_per_mm_strip], d.bottom(2),
+        m20.transfer(mm_vol, mm_strips[i//cols_per_mm_strip], d.bottom(1),
                      new_tip='never')
     m20.drop_tip()
 
