@@ -1,3 +1,5 @@
+import math
+
 metadata = {
     'protocolName': 'PCR Prep',
     'author': 'Nick Diehl <ndiehl@opentrons.com>',
@@ -8,8 +10,10 @@ metadata = {
 
 def run(ctx):
     """Protocol."""
-    [rna_plate_type, sample_vol, mm_vol, m20_mount] = get_values(  # noqa: F821
-        'rna_plate_type', 'sample_vol', 'mm_vol', 'm20_mount')
+    [rna_plate_type, sample_vol, mm_vol, num_samples_1, num_samples_2,
+     num_samples_3, num_samples_4, m20_mount] = get_values(  # noqa: F821
+        'rna_plate_type', 'sample_vol', 'mm_vol', 'num_samples_1',
+        'num_samples_2', 'num_samples_3', 'num_samples_4', 'm20_mount')
 
     # load labware
     rna_source_plates = [
@@ -33,15 +37,21 @@ def run(ctx):
         m20._implementation.get_mount()].update_config_item(
             'pick_up_current', pick_up_current)
 
-    samples_sources_sets = [plate.rows()[0] for plate in rna_source_plates]
+    num_cols_all = [
+        math.ceil(num_samples/12)
+        for num_samples in [
+            num_samples_1, num_samples_2, num_samples_3, num_samples_4]]
+    samples_sources_sets = [
+        plate.rows()[0][:num_samples]
+        for plate, num_samples in zip(rna_source_plates, num_cols_all)]
     destination_sets = [
-        dest_plate.rows()[i][j*12:(j+1)*12]
+        dest_plate.rows()[i][j*12:j*12+num_cols_all[i*2+j]]
         for i in range(2) for j in range(2)]
     mm_destinations = [
-        well for row in dest_plate.rows()[:2] for well in row]
+        well for set in destination_sets for well in set]
 
     # pre-add mastermix
-    cols_per_mm_strip = int(len(mm_destinations)/len(mm_strips))
+    cols_per_mm_strip = 16
     m20.pick_up_tip()
     for i, d in enumerate(mm_destinations):
         m20.transfer(mm_vol, mm_strips[i//cols_per_mm_strip], d.bottom(1),
