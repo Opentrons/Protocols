@@ -6,13 +6,13 @@
         ]
     },
     "deck-setup": "\nOpentrons p300 tips (Deck Slots 6, 9)\nOpentrons p20 tips (Deck Slots 2, 3)\nnest_12_reservoir_15ml (Deck Slot 5)\nopentrons_24_tuberack_nest_1.5ml_snapcap (Deck Slots 1 and 4)\n",
-    "description": "Prepare Standard Samples for Calibration Curves. Prepare Patient Samples.\nLinks:\n* Standards/Calibration Curves/Patient Samples\nWith this protocol, your robot can perform sample preparation for LC-MS as described experimental protocol\nThis step prepares standards for calibration curves followed by patient samples.",
+    "description": "Prepare Standard Samples for Calibration Curves. Prepare Pooled and or Patient Samples.\nWith this protocol, your robot can perform sample preparation for LC-MS as described experimental protocol\nThis step prepares standards for calibration curves followed by patient samples.",
     "internal": "234495",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
         "categories": "* Sample Prep\n     * Mass Spec\n\n",
         "deck-setup": "* Opentrons p300 tips (Deck Slots 6, 9)\n* Opentrons p20 tips (Deck Slots 2, 3)\n* nest_12_reservoir_15ml (Deck Slot 5)\n* opentrons_24_tuberack_nest_1.5ml_snapcap (Deck Slots 1 and 4)\n\n",
-        "description": "Prepare Standard Samples for Calibration Curves. Prepare Patient Samples.\n\nLinks:\n* [Standards/Calibration Curves/Patient Samples](http://protocols.opentrons.com/protocol/234495)\n\nWith this protocol, your robot can perform sample preparation for LC-MS as described [experimental protocol](https://s3.amazonaws.com/pf-upload-01/u-4256/0/2021-05-12/eq03qff/Protocol-90%20ul-tube.pdf)\n\nThis step prepares standards for calibration curves followed by patient samples.\n\n",
+        "description": "Prepare Standard Samples for Calibration Curves. Prepare Pooled and or Patient Samples.\n\nWith this protocol, your robot can perform sample preparation for LC-MS as described [experimental protocol](https://s3.amazonaws.com/pf-upload-01/u-4256/0/2021-05-12/eq03qff/Protocol-90%20ul-tube.pdf)\n\nThis step prepares standards for calibration curves followed by patient samples.\n\n",
         "internal": "234495\n",
         "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
         "process": "1. Choose tuberack labware and clearances in the parameters below.\n2. Download your protocol.\n3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).\n4. Set up your deck according to the deck map.\n5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n6. Hit \"Run\".\n\n",
