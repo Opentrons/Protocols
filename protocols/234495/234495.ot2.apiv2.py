@@ -16,16 +16,20 @@ metadata = {
 def run(ctx):
 
     # get the parameter values from json above
-    [full_volume, include_standards_only, include_patient_samples,
+    [count_samples, full_volume, include_standards_only,
      labware_tuberack, clearance_meoh_water, clearance_dil_dispense,
      touch_radius, touch_v_offset, track_start, clearance_tfa, clearance_mecn,
      mix_reps, vol_dead] = get_values(  # noqa: F821
-      'full_volume', 'include_standards_only', 'include_patient_samples',
+      'count_samples', 'full_volume', 'include_standards_only',
       'labware_tuberack', 'clearance_meoh_water', 'clearance_dil_dispense',
       'touch_radius', 'touch_v_offset', 'track_start', 'clearance_tfa',
       'clearance_mecn', 'mix_reps', 'vol_dead')
 
+    ctx.delay(seconds=10)
     ctx.set_rail_lights(True)
+
+    if not 12 <= count_samples <= 27:
+        raise Exception('Invalid number of samples (must be 12-27).')
 
     # tips, p20 multi gen2, p300 multi gen2
     tips20 = [ctx.load_labware(
@@ -178,8 +182,8 @@ def run(ctx):
     tube rack in deck slot 1:
     A1-A6,B1-B6 - 200 uM unlabeled solution
     followed by 11 serial 1:2 dilutions
-    C1-C3 three pooled samples (if included)
-    C4-C6 amicon filters (for pooled samples if included)
+    C1-C3 three pooled samples (if included - or 1st 3 pt samples)
+    C4-C6 amicon filters (for pooled samples if included - or 1st 3 pt samples)
     D1 - 100 uM labeled solution
     D2 - 1:1 MeOH:Water
     D3 - 100 mM NEM
@@ -244,49 +248,53 @@ def run(ctx):
     [*amicon_filters] = [
      well for row in sample_tuberack.rows() for well in row][12:]
 
-    # pooled samples if included
+    # samples if included
     if not include_standards_only:
         ctx.comment("""
-        ***POOLED SAMPLES INCLUDED IN THIS RUN***
+        *** {} SAMPLES INCLUDED IN THIS RUN***
+
         tube rack in deck slot 1:
-        C1-C3 three pooled samples
+        C1-C3 first three samples
         C4-C6 corresponding amicon filters
-        """)
+
+        tube rack in deck slot 7:
+        A1-A6,B1-B6 next twelve samples
+        C1-C6,D1-D6 corresponding amicon filters
+
+        tube rack in deck slot 10:
+        A1-A6,B1-B6 last twelve samples
+        C1-C6,D1-D6 corresponding amicon filters
+        """.format(count_samples))
+
+        # first three samples (these may or may not be pooled samples)
         [*samples_pooled] = [
          well for row in tuberack.rows() for well in row][12:15]
         [*amicon_filters_pooled] = [
          well for row in tuberack.rows() for well in row][15:18]
 
-        if include_patient_samples:
-            ctx.comment("""
-            ***24 PATIENT SAMPLES INCLUDED IN THIS RUN***
-            tube rack in deck slot 7:
-            A1-A6,B1-B6 1st twelve patient samples
-            C1-C6,D1-D6 corresponding amicon filters
-            tube rack in deck slot 10:
-            A1-A6,B1-B6 another twelve patient samples
-            C1-C6,D1-D6 corresponding amicon filters
-            """)
+        # remaining patient samples (total sample number between 12 and 27)
+        [*pt_tuberacks] = [
+         ctx.load_labware(labware_tuberack, str(slot),
+                          'Patient Tube Rack') for slot in [7, 10]]
 
-            # patient samples
-            [*pt_tuberacks] = [
-             ctx.load_labware(labware_tuberack, str(slot),
-                              'Patient Tube Rack') for slot in [7, 10]]
+        pt_samples = []
+        for rack in pt_tuberacks:
+            new = [well for row in rack.rows() for well in row][:12]
+            pt_samples.extend(new)
 
-            pt_samples = []
-            for rack in pt_tuberacks:
-                new = [well for row in rack.rows() for well in row][:12]
-                pt_samples.extend(new)
+        ptsamples = pt_samples[:count_samples - 3]
 
-            pt_amicon_filters = []
-            for rack in pt_tuberacks:
-                new = [well for row in rack.rows() for well in row][12:]
-                pt_amicon_filters.extend(new)
+        pt_amicon_filters = []
+        for rack in pt_tuberacks:
+            new = [well for row in rack.rows() for well in row][12:]
+            pt_amicon_filters.extend(new)
+
+        ptfilters = pt_amicon_filters[:count_samples - 3]
 
     else:
         ctx.comment("""
         ***THIS RUN INCLUDES STANDARDS ONLY***
-        ***NO POOLED SAMPLES INCLUDED IN THIS RUN***
+        ***NO SAMPLES INCLUDED IN THIS RUN***
         tube rack in deck slot 1:
         C1-C3 Empty
         C4-C6 Empty
@@ -439,26 +447,25 @@ def run(ctx):
             p20s.drop_tip()
         default_flow_rates(p20s)
 
-        if include_patient_samples:
-            meoh_flow_rates(p20s)
-            for pt_sample in pt_samples:
-                pick_up_or_refill(p20s)
-                p20s.aspirate(
-                 10 / div, meoh_water.bottom(clearance_meoh_water))
-                p20s.air_gap(2)
-                p20s.dispense((10 / div)+2, pt_sample.bottom(3))
-                slow_tip_withdrawal(p20s, pt_sample, to_center=True)
-                for rep in range(3):
-                    if rep > 0:
-                        p20s.aspirate(
-                         10, pt_sample.center().move(
-                          types.Point(x=0, y=0, z=-3)))
-                    ctx.delay(seconds=1)
-                    p20s.blow_out(
-                     pt_sample.center().move(types.Point(x=0, y=0, z=-3)))
-                p20s.touch_tip(radius=0.75, v_offset=-8, speed=20)
-                p20s.drop_tip()
-            default_flow_rates(p20s)
+        meoh_flow_rates(p20s)
+        for pt_sample in ptsamples:
+            pick_up_or_refill(p20s)
+            p20s.aspirate(
+             10 / div, meoh_water.bottom(clearance_meoh_water))
+            p20s.air_gap(2)
+            p20s.dispense((10 / div)+2, pt_sample.bottom(3))
+            slow_tip_withdrawal(p20s, pt_sample, to_center=True)
+            for rep in range(3):
+                if rep > 0:
+                    p20s.aspirate(
+                     10, pt_sample.center().move(
+                      types.Point(x=0, y=0, z=-3)))
+                ctx.delay(seconds=1)
+                p20s.blow_out(
+                 pt_sample.center().move(types.Point(x=0, y=0, z=-3)))
+            p20s.touch_tip(radius=0.75, v_offset=-8, speed=20)
+            p20s.drop_tip()
+        default_flow_rates(p20s)
 
     pause_attention("Vortex samples 5 min and return.")
 
@@ -470,9 +477,8 @@ def run(ctx):
         for pooled_sample in samples_pooled:
             samples.append(pooled_sample)
 
-        if include_patient_samples:
-            for pt_sample in pt_samples:
-                samples.append(pt_sample)
+        for pt_sample in ptsamples:
+            samples.append(pt_sample)
 
     for sample in samples:
         pick_up_or_refill(p20s)
@@ -559,9 +565,8 @@ def run(ctx):
         for pooled_filter in amicon_filters_pooled:
             amicon_filters.append(pooled_filter)
 
-        if include_patient_samples:
-            for pt_filter in pt_amicon_filters:
-                amicon_filters.append(pt_filter)
+        for pt_filter in ptfilters:
+            amicon_filters.append(pt_filter)
 
     for index, sample in enumerate(samples):
         pick_up_or_refill(p300s)
