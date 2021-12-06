@@ -28,24 +28,6 @@
   },
   {
     "type": "dropDown",
-    "label": "Chooose 20 ul Tips",
-    "name": "labware_tips20",
-    "options": [
-      { "label": "Standard 20 ul Tips", "value": "opentrons_96_tiprack_20ul" },
-      { "label": "20 ul Filter Tips", "value": "opentrons_96_filtertiprack_20ul" }
-    ]
-  },
-  {
-    "type": "dropDown",
-    "label": "Chooose 300 ul Tips",
-    "name": "labware_tips300",
-    "options": [
-      { "label": "Standard 300 ul Tips", "value": "opentrons_96_tiprack_300ul" },
-      { "label": "300 ul Filter Tips", "value": "opentrons_96_filtertiprack_300ul" }
-    ]
-  },
-  {
-    "type": "dropDown",
     "label": "Labware for Tube Rack",
     "name": "labware_tuberack",
     "options": [
@@ -99,5 +81,11 @@
     "label": "Number of Mix Repetitions for Serial Dilutions",
     "name": "mix_reps",
     "default": 10
+  },
+  {
+    "type": "int",
+    "label": "Volume at Which to Move on to Next Reservoir Well (uL)",
+    "name": "vol_dead",
+    "default": 2000
   }
 ]
