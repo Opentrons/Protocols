@@ -8,10 +8,7 @@
      * Mass Spec
 
 ## Description
-Prepare Standard Samples for Calibration Curves. Prepare Patient Samples.
-
-Links:
-* [Standards/Calibration Curves/Patient Samples](http://protocols.opentrons.com/protocol/234495)
+Prepare Standard Samples for Calibration Curves. Prepare Pooled and or Patient Samples.
 
 With this protocol, your robot can perform sample preparation for LC-MS as described [experimental protocol](https://s3.amazonaws.com/pf-upload-01/u-4256/0/2021-05-12/eq03qff/Protocol-90%20ul-tube.pdf)
 

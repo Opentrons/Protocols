@@ -1,5 +1,11 @@
 [
   {
+    "type": "int",
+    "label": "Number of Samples (Total Number of Pooled and or Patient Samples 12-27)",
+    "name": "count_samples",
+    "default": 27
+  },
+  {
     "type": "dropDown",
     "label": "Use Full Volumes?",
     "name": "full_volume",
@@ -10,20 +16,11 @@
   },
   {
     "type": "dropDown",
-    "label": "Include Standards Only?",
+    "label": "Include Samples (Pooled Samples and or Patient Samples)?",
     "name": "include_standards_only",
     "options": [
-      { "label": "Standards and Pooled Samples", "value": false },
-      { "label": "Standards Only", "value": true }
-    ]
-  },
-  {
-    "type": "dropDown",
-    "label": "Include Patient Samples (yes or no)?",
-    "name": "include_patient_samples",
-    "options": [
-      { "label": "YES", "value": true },
-      { "label": "NO", "value": false }
+      { "label": "YES - Standards and Samples", "value": false },
+      { "label": "NO - Standards Only", "value": true }
     ]
   },
   {
