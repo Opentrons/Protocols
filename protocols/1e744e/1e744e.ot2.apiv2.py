@@ -1,7 +1,8 @@
 # import from python types module
 from types import MethodType
 # import opentrons.types
-from opentrons.protocol_api.labware import Well, types
+from opentrons import types
+from opentrons.protocol_api.labware import Well
 import math
 import string
 
