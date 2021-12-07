@@ -44,8 +44,7 @@ primers with {num_samples} samples or {math.floor(12/num_primers)} samples \
 with {num_primers} primers.')
 
     # reagents
-    bigdye = res.wells()[0]
-    water = res.wells()[1]
+    mm = res.wells()[0]
 
     sample_sources = sample_plate.rows()[0][:num_cols]
     sample_dests_sets_m = [
@@ -58,12 +57,12 @@ with {num_primers} primers.')
          for well in col]
         for p in range(num_primers)]
 
-    # transfer samples
-    for s, d_set in zip(sample_sources, sample_dests_sets_m):
-        for d in d_set:
-            m20.pick_up_tip()
-            m20.transfer(3, s, d.bottom(0.5), new_tip='never')
-            m20.drop_tip()
+    # transfer BigDye + water mix
+    reagent_dests_multi = pcr_plate.rows()[0][:num_cols*num_primers]
+    for d in reagent_dests_multi:
+        m20.pick_up_tip()
+        m20.transfer(16, mm, d.bottom(0.5), new_tip='never')
+        m20.drop_tip()
 
     # transfer primers
     for primer, dest_set in zip(primer_sources, primer_dest_sets):
@@ -72,15 +71,9 @@ with {num_primers} primers.')
             p20.transfer(1, primer, d.bottom(0.5), new_tip='never')
             p20.drop_tip()
 
-    # transfer BigDye
-    reagent_dests_multi = pcr_plate.rows()[0][:num_cols*num_primers]
-    for d in reagent_dests_multi:
-        m20.pick_up_tip()
-        m20.transfer(4, bigdye, d.bottom(0.5), new_tip='never')
-        m20.drop_tip()
-
-    # transfer water
-    for d in reagent_dests_multi:
-        m20.pick_up_tip()
-        m20.transfer(6, water, d.bottom(0.5), new_tip='never')
-        m20.drop_tip()
+    # transfer samples
+    for s, d_set in zip(sample_sources, sample_dests_sets_m):
+        for d in d_set:
+            m20.pick_up_tip()
+            m20.transfer(3, s, d.bottom(0.5), new_tip='never')
+            m20.drop_tip()
