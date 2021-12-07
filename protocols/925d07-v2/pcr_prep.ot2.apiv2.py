@@ -1,3 +1,4 @@
+from opentrons.types import Point
 import math
 
 metadata = {
@@ -32,7 +33,7 @@ def run(ctx):
 
     # load instrument
     m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tipracks)
-    pick_up_current = 0.6
+    pick_up_current = 0.7
     ctx._implementation._hw_manager.hardware._attached_instruments[
         m20._implementation.get_mount()].update_config_item(
             'pick_up_current', pick_up_current)
@@ -53,9 +54,13 @@ def run(ctx):
     # pre-add mastermix
     cols_per_mm_strip = 16
     m20.pick_up_tip()
+    r_384 = dest_plate.wells()[0].diameter/2
     for i, d in enumerate(mm_destinations):
-        m20.transfer(mm_vol, mm_strips[i//cols_per_mm_strip], d.bottom(1),
-                     new_tip='never')
+        mm_source = mm_strips[i//cols_per_mm_strip]
+        m20.aspirate(2, mm_source.top())  # pre-air gap
+        m20.aspirate(mm_vol, mm_source)
+        m20.dispense(m20.current_volume, d.bottom(2))
+        m20.move_to(d.bottom().move(Point(x=r_384*0.5, z=2)))
     m20.drop_tip()
 
     # add samples
