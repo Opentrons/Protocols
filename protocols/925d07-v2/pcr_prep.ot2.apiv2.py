@@ -38,7 +38,7 @@ def run(ctx):
             'pick_up_current', pick_up_current)
 
     num_cols_all = [
-        math.ceil(num_samples/12)
+        math.ceil(num_samples/8)
         for num_samples in [
             num_samples_1, num_samples_2, num_samples_3, num_samples_4]]
     samples_sources_sets = [
