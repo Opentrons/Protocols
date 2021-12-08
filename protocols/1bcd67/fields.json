@@ -37,17 +37,8 @@
   },
   {
     "type": "float",
-    "label": "sample volume added manually (in µl)",
-    "name": "sample_vol",
-    "default": 15.0
-  },
-  {
-    "type": "dropDown",
-    "label": "track tips across protocol runs",
-    "name": "tip_track",
-    "options": [
-      {"label": "yes", "value": true},
-      {"label": "no", "value": false}
-    ]
+    "label": "final transfer volume to dilution plates (in µl)",
+    "name": "final_vol",
+    "default": 100
   }
 ]
