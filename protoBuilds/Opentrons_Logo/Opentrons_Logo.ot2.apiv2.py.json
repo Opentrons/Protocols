@@ -1,10 +1,10 @@
 {
-    "content": "metadata = {\n    'protocolName': 'Opentrons Logo',\n    'author': 'Opentrons <protocols@opentrons.com>',\n    'source': 'Protocol Library',\n    'apiLevel': '2.2'\n    }\n\n\ndef run(protocol):\n    [pip_model, pip_mount, dp_type, dye_type] = get_values(  # noqa: F821\n        'pip_model', 'pip_mount', 'dp_type', 'dye_type')\n\n    # create pipette and tiprack\n    tip_size = pip_model.split('_')[0][1:]\n    tip_size = '300' if tip_size == '50' else tip_size\n    tip_name = 'opentrons_96_tiprack_'+tip_size+'ul'\n    tips = [protocol.load_labware(tip_name, '1', 'Opentrons Tips')]\n\n    pipette = protocol.load_instrument(\n        pip_model, pip_mount, tip_racks=tips)\n\n    # create plates and pattern list\n    output = protocol.load_labware(dp_type, '3', 'Destination Plate')\n\n    dye_container = protocol.load_labware(dye_type, '2', 'Dye Source')\n\n    # Well Location set-up\n    dye1_wells = ['A5', 'A6', 'A8', 'A9', 'B4', 'B10', 'C3', 'C11', 'D3',\n                  'D11', 'E3', 'E11', 'F3', 'F11', 'G4', 'G10',\n                  'H5', 'H6', 'H7', 'H8', 'H9']\n\n    dye2_wells = ['C7', 'D6', 'D7', 'D8', 'E5', 'E6', 'E7', 'E8',\n                  'E9', 'F5', 'F6', 'F7', 'F8', 'F9', 'G6', 'G7', 'G8']\n\n    dye2 = dye_container['A1']\n    dye1 = dye_container['A2']\n\n    dye_vol = 100 if tip_size == '1000' else 50\n\n    pipette.distribute(\n        dye_vol,\n        dye1,\n        [output.wells_by_name()[well_name] for well_name in dye1_wells],\n        new_tip='once')\n    pipette.distribute(\n        dye_vol,\n        dye2,\n        [output.wells_by_name()[well_name] for well_name in dye2_wells],\n        new_tip='once')\n",
+    "content": "from opentrons import protocol_api\nimport math\n\nmetadata = {\n    'protocolName': 'Opentrons Logo',\n    'author': 'Opentrons <protocols@opentrons.com>',\n    'source': 'Protocol Library',\n    'apiLevel': '2.10'\n    }\n\n\ndef run(ctx: protocol_api.ProtocolContext):\n    [_pip_model, _pip_mount, _dp_type, _dye_type] = get_values(  # noqa: F821\n        '_pip_model', '_pip_mount', '_dp_type', '_dye_type')\n\n    # customizable parameters\n    pip_model = _pip_model\n    pip_mount = _pip_mount\n    dp_type = _dp_type\n    dye_type = _dye_type\n\n    # create pipette and tiprack\n    tip_size = pip_model.split('_')[0][1:]\n    tip_size = '300' if tip_size == '50' else tip_size\n    tip_name = 'opentrons_96_tiprack_'+tip_size+'ul'\n    tips = [ctx.load_labware(tip_name, '1', 'Opentrons Tips')]\n\n    pipette = ctx.load_instrument(\n        pip_model, pip_mount, tip_racks=tips)\n\n    # create plates and pattern list\n    output = ctx.load_labware(dp_type, '3', 'Destination Plate')\n\n    dye_container = ctx.load_labware(dye_type, '2', 'Dye Source')\n\n    # Well Location set-up\n    dye1_wells = ['A5', 'A6', 'A8', 'A9', 'B4', 'B10', 'C3', 'C11', 'D3',\n                  'D11', 'E3', 'E11', 'F3', 'F11', 'G4', 'G10',\n                  'H5', 'H6', 'H7', 'H8', 'H9']\n\n    dye1_dest = [output[x] for x in dye1_wells]\n\n    dye2_wells = ['C7', 'D6', 'D7', 'D8', 'E5', 'E6', 'E7', 'E8',\n                  'E9', 'F5', 'F6', 'F7', 'F8', 'F9', 'G6', 'G7', 'G8']\n\n    dye2_dest = [output[x] for x in dye2_wells]\n\n    if 'reservoir' in dye_type:\n        dye1 = [dye_container.wells()[0]] * 2\n        dye2 = [dye_container.wells()[1]] * 2\n    else:\n        dye1 = dye_container.wells()[:2]\n        dye2 = dye_container.wells()[2:4]\n\n    dye_vol = 100 if tip_size == '1000' else 50\n\n    # distribution function\n    def logo_distribute(srcs, dests):\n        \"\"\"\n        This is a function that will perform the pick_up_tip(), transfers(),\n        and drop_tip() needed to create the Opentrons logo\n        :param srcs: source wells (should be a list)\n        :param dests: destination wells (should be a list)\n        \"\"\"\n        halfDests = math.ceil(len(dests)/2)\n        pipette.pick_up_tip()\n        for src, dest in zip(srcs, [dests[:halfDests], dests[halfDests:]]):\n            for d in dest:\n                pipette.transfer(dye_vol, src, d, new_tip='never')\n        pipette.drop_tip()\n\n    logo_distribute(dye1, dye1_dest)\n    logo_distribute(dye2, dye2_dest)\n",
     "custom_labware_defs": [],
     "fields": [
         {
             "label": "Pipette Model",
-            "name": "pip_model",
+            "name": "_pip_model",
             "options": [
                 {
                     "label": "P300 Single GEN2",
@@ -35,7 +35,7 @@
         },
         {
             "label": "Pipette Mount",
-            "name": "pip_mount",
+            "name": "_pip_mount",
             "options": [
                 {
                     "label": "Right side",
@@ -50,15 +50,15 @@
         },
         {
             "label": "Destination Plate Type",
-            "name": "dp_type",
+            "name": "_dp_type",
             "options": [
-                {
-                    "label": "NEST 96-Well, 200\u00b5L Flat",
-                    "value": "nest_96_wellplate_200ul_flat"
-                },
                 {
                     "label": "NEST 96-Well, 100\u00b5L PCR",
                     "value": "nest_96_wellplate_100ul_pcr_full_skirt"
+                },
+                {
+                    "label": "NEST 96-Well, 200\u00b5L Flat",
+                    "value": "nest_96_wellplate_200ul_flat"
                 },
                 {
                     "label": "BioRad 96-Well, 200\u00b5L PCR",
@@ -73,22 +73,30 @@
         },
         {
             "label": "Dye Labware Type",
-            "name": "dye_type",
+            "name": "_dye_type",
             "options": [
-                {
-                    "label": "USA Scientific 12-Well Reservoir, 22mL",
-                    "value": "usascientific_12_reservoir_22ml"
-                },
                 {
                     "label": "NEST 12-Well, 15mL",
                     "value": "nest_12_reservoir_15ml"
                 },
                 {
-                    "label": "Opentrons 24 Tube Rack with 2mL Tubes",
+                    "label": "USA Scientific 12-Well Reservoir, 22mL",
+                    "value": "usascientific_12_reservoir_22ml"
+                },
+                {
+                    "label": "Opentrons 24 Tube Rack with 2mL NEST Tubes",
+                    "value": "opentrons_24_tuberack_nest_2ml_snapcap"
+                },
+                {
+                    "label": "Opentrons 24 Tube Rack with 1.5mL NEST Tubes",
+                    "value": "opentrons_24_tuberack_nest_1.5ml_snapcap"
+                },
+                {
+                    "label": "Opentrons 24 Tube Rack with 2mL eppendorf Tubes",
                     "value": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
                 },
                 {
-                    "label": "Opentrons 24 Tube Rack with 1.5mL Tubes",
+                    "label": "Opentrons 24 Tube Rack with 1.5mL eppendorf Tubes",
                     "value": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
                 }
             ],
@@ -112,13 +120,13 @@
             "name": "Dye Source on 2",
             "share": false,
             "slot": "2",
-            "type": "usascientific_12_reservoir_22ml"
+            "type": "nest_12_reservoir_15ml"
         },
         {
             "name": "Destination Plate on 3",
             "share": false,
             "slot": "3",
-            "type": "nest_96_wellplate_200ul_flat"
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
         },
         {
             "name": "Opentrons Fixed Trash on 12",
@@ -128,7 +136,7 @@
         }
     ],
     "metadata": {
-        "apiLevel": "2.2",
+        "apiLevel": "2.10",
         "author": "Opentrons <protocols@opentrons.com>",
         "protocolName": "Opentrons Logo",
         "source": "Protocol Library"

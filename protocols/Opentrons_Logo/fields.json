@@ -2,7 +2,7 @@
   {
     "type": "dropDown",
     "label": "Pipette Model",
-    "name": "pip_model",
+    "name": "_pip_model",
     "options": [
       {"label": "P300 Single GEN2", "value": "p300_single_gen2"},
       {"label": "P300 Single GEN1", "value": "p300_single"},
@@ -15,7 +15,7 @@
   {
     "type": "dropDown",
     "label": "Pipette Mount",
-    "name": "pip_mount",
+    "name": "_pip_mount",
     "options": [
       {"label": "Right side", "value": "right"},
       {"label": "Left side", "value": "left"}
@@ -24,10 +24,10 @@
   {
     "type": "dropDown",
     "label": "Destination Plate Type",
-    "name": "dp_type",
+    "name": "_dp_type",
     "options": [
-      {"label": "NEST 96-Well, 200µL Flat", "value": "nest_96_wellplate_200ul_flat"},
-      {"label": "NEST 96-Well, 100µL PCR", "value": "nest_96_wellplate_100ul_pcr_full_skirt"},
+        {"label": "NEST 96-Well, 100µL PCR", "value": "nest_96_wellplate_100ul_pcr_full_skirt"},
+        {"label": "NEST 96-Well, 200µL Flat", "value": "nest_96_wellplate_200ul_flat"},
       {"label": "BioRad 96-Well, 200µL PCR", "value": "biorad_96_wellplate_200ul_pcr"},
       {"label": "Corning 96-Well, 360µL Flat", "value": "corning_96_wellplate_360ul_flat"}
     ]
@@ -35,12 +35,14 @@
   {
     "type": "dropDown",
     "label": "Dye Labware Type",
-    "name": "dye_type",
+    "name": "_dye_type",
     "options": [
-      {"label": "USA Scientific 12-Well Reservoir, 22mL", "value": "usascientific_12_reservoir_22ml"},
       {"label": "NEST 12-Well, 15mL", "value": "nest_12_reservoir_15ml"},
-      {"label": "Opentrons 24 Tube Rack with 2mL Tubes", "value": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"},
-      {"label": "Opentrons 24 Tube Rack with 1.5mL Tubes", "value": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"}
+      {"label": "USA Scientific 12-Well Reservoir, 22mL", "value": "usascientific_12_reservoir_22ml"},
+      {"label": "Opentrons 24 Tube Rack with 2mL NEST Tubes", "value": "opentrons_24_tuberack_nest_2ml_snapcap"},
+      {"label": "Opentrons 24 Tube Rack with 1.5mL NEST Tubes", "value": "opentrons_24_tuberack_nest_1.5ml_snapcap"},
+      {"label": "Opentrons 24 Tube Rack with 2mL eppendorf Tubes", "value": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"},
+      {"label": "Opentrons 24 Tube Rack with 1.5mL eppendorf Tubes", "value": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"}
     ]
   }
 ]
