@@ -30,7 +30,7 @@ For more detailed information on compatible labware, please visit our [Labware L
 
 For this demo protocol, you need a clean, empty 96-well plate (where the Opentrons logo will be created) and either a 12-row trough or 1.5mL/2mL tubes in a tube rack to store the water and food dye solution.
 
-The two food dye solutions should be stored in 'A1' and 'A2' of either the 12-row trough or the tube rack.
+If using a 12-row trough, the two food dye solutions should be stored in column 1 and column 2. If using the tube rack, dye 1 should be stored in 'A1' & 'B1' and dye 2 should be stored in 'C1' & 'D1'.
 
 Using the customization fields below, set up your protocol.
 * Pipette Model: Select which pipette you will use for this protocol.
