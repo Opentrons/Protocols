@@ -5,7 +5,7 @@
             "Cherrypicking"
         ]
     },
-    "description": "This protocol performs a NGS library prep through 2 fold dilutions and final pooling. All volumes are specified in a .csv file.\n\n\n\nBio-Rad Hardshell 96-well PCR plate 200ul #HSP9601\nOpentrons 4-in-1 tuberack with 4x6 insert\nOpentrons 4-in-1 tuberack with 3x5 insert holding 15ml NEST centrifuge tubes or equivalent\nOpentrons P20 and P300 GEN2 single-channel electronic pipettes\nOpentrons 20ul and 300ul tipracks\n\n\n\n3x5 tuberack (slot 4)\n* tube A1: TE buffer (filled to at least ~3cm below tube opening)\n4x6 tuberack (slot 5)\n tubes A1: 1.5ml snapcap tube for pooling\n tube A2: 1.5ml screwcap tube for final pooled libraries",
+    "description": "This protocol performs a NGS library prep through 2 fold dilutions and final pooling. All volumes are specified in a .csv file.\n\n\n\nBio-Rad Hardshell 96-well PCR plate 200ul #HSP9601\nOpentrons 4-in-1 tuberack with 4x6 insert\nOpentrons 4-in-1 tuberack with 3x5 insert holding 15ml NEST centrifuge tubes or equivalent\nOpentrons P20 and P300 GEN2 single-channel electronic pipettes\nOpentrons 20ul and 300ul tipracks\n\n\n\n3x5 tuberack (slot 4)\n* tube A1: TE buffer (filled to at least ~3cm below tube opening)\n4x6 tuberack (slot 5)\n* tubes A1: 1.5ml snapcap tube for pooling\n* tube A2: 1.5ml screwcap tube for final pooled libraries",
     "internal": "2082dd",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
