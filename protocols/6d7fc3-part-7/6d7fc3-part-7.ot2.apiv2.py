@@ -107,7 +107,8 @@ def run(ctx):
             pick_up(p300)
             for well in mag_plate_wells:
                 p300.aspirate(200, ethanol)
-                p300.dispense(200, well.top(10))
+                p300.dispense(200, well.top(-2))
+                p300.blow_out()
             p300.drop_tip()
 
             ctx.delay(minutes=2, msg="Waiting for solution to clear.")
@@ -128,6 +129,7 @@ def run(ctx):
         pick_up(p300)
         p300.aspirate(20, src)
         p300.dispense(20, dest)
+        p300.blow_out()
         p300.drop_tip()
 
     # Add 80 uL of Nuclease-free water
@@ -135,6 +137,7 @@ def run(ctx):
     for well in mag_plate_wells:
         p300.aspirate(80, nfw)
         p300.dispense(80, well.top(-5))
+        p300.blow_out()
     p300.drop_tip()
 
     # Add 100 uL of Beads to Samples
@@ -143,6 +146,7 @@ def run(ctx):
         p300.aspirate(100, beads)
         p300.dispense(100, well)
         p300.mix(10, 100)
+        p300.blow_out()
         p300.drop_tip()
 
     # Incubate at Room Temperature
@@ -190,6 +194,7 @@ def run(ctx):
         p300.aspirate(30, nfw)
         p300.dispense(30, well.bottom(3))
         p300.mix(10, 20, well.bottom(1))
+        p300.blow_out()
         p300.drop_tip()
 
     # Engaging Magnet for 5 minutes
@@ -204,6 +209,7 @@ def run(ctx):
         p300.aspirate(28, src.bottom().move(types.Point(
                         x=getWellSide(well, mag_plate), y=0, z=0.5)))
         p300.dispense(28, dest)
+        p300.blow_out()
         p300.drop_tip()
 
     ctx.comment('Protocol Complete!')
