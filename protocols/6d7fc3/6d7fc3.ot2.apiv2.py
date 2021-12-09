@@ -83,12 +83,14 @@ def run(ctx):
     pick_up(pip)
     pip.aspirate(frag_buff_vol, frag_buff)
     pip.dispense(frag_buff_vol, mm)
+    pip.blow_out()
     pip.drop_tip()
 
     pip = p300 if fera_vol > 20 else p20
     pick_up(pip)
     pip.aspirate(fera_vol, fera)
     pip.dispense(fera_vol, mm)
+    pip.blow_out()
     pip.drop_tip()
 
     # Mix Master Mix
@@ -104,6 +106,7 @@ def run(ctx):
         p20.aspirate(3.25, mm)
         p20.dispense(3.25, dest)
         p20.mix(10, 10)
+        p20.blow_out()
         p20.drop_tip()
 
     # Transfer 5 uL of Fragmentation Enzyme Mix to Thermocycler Reaction Plate
@@ -112,6 +115,7 @@ def run(ctx):
         p20.aspirate(5, frag_enzyme_mix)
         p20.dispense(5, dest)
         p20.mix(10, 15)
+        p20.blow_out()
         p20.drop_tip()
 
     # Thermocycler Steps
