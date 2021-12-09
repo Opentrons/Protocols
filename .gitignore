@@ -111,3 +111,6 @@ smoketest/*.py
 
 # supplementary protocol bundle files
 protocols/**/supplements
+
+# credentials for Salesforce hook on data analytics
+data/salesforce/credentials.json
