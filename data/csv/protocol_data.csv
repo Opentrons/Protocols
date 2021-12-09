@@ -1,0 +1,481 @@
+,id,category,subcategory,transformed category,tuberack,plate,reservoir,trash,other,opentrons_96_tiprack_10ul,opentrons_96_tiprack_20ul,opentrons_96_tiprack_300ul,opentrons_96_tiprack_1000ul,opentrons_96_filtertiprack_10ul,opentrons_96_filtertiprack_20ul,opentrons_96_filtertiprack_200ul,opentrons_96_filtertiprack_1000ul,p10_single,p10_multi,p20_single_gen2,p20_multi_gen2,p50_single,p50_multi,p300_single,p300_multi,p300_single_gen2,p300_multi_gen2,p1000_single,p1000_single_gen2,total tipracks
+0,58d57d,sample prep,plate filling,sample prep,1,1,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
+1,2aee74-48-2,proteins & proteiomics,olink target 48,protein,0,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1
+2,1440ad,nucleic acid extraction & purification,rna extraction,extraction,2,1,2,1,2,0,2,2,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,4
+3,74b303,normalization,normalization and pooling,cherrypicking,1,1,1,1,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
+4,04eeb1-part-6,ngs library prep,illumina covidseq test,ngs,0,1,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1
+5,581011,sample prep,cherrypicking,cherrypicking,0,1,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1
+6,demo,getting started,ot-2 demo,other,1,1,1,1,0,0,2,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,2
+7,3fad82-part-2,ngs library prep,nebnext ultra ii fs dna library prep kit for illumina,ngs,0,2,1,1,0,0,0,0,0,0,3,2,0,0,0,0,1,0,0,0,0,0,1,0,0,5
+8,3e3c9d-protocol-master-rbc-transfer,sample prep,plate filling,sample prep,4,1,2,1,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1
+9,797dee-normalization,sample prep,normalization,cherrypicking,1,1,0,1,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,4
+10,cepheid,sample prep,cepheid,sample prep,3,0,0,1,3,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,1
+11,zymo-ribofree-p5-adapter-ligation,ngs library prep,zymo ribofree™ total rna library prep,ngs,0,1,1,1,1,0,5,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,5
+12,7e4c3e-5,sample prep,plate filling,sample prep,1,1,0,1,1,0,0,0,0,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0,1,3
+13,7aa3fd-library-pooling,ngs library prep,custom,ngs,1,1,0,1,1,0,0,0,0,1,0,1,0,1,0,0,0,0,0,1,0,0,0,0,0,2
+14,21e4d8-pt2,ngs library prep,twist library prep,ngs,1,3,2,1,0,0,1,2,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,3
+15,29225e-part-2,pcr,pcr prep,pcr,1,1,0,1,3,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,0,1,0,0,0,2
+16,558d02,proteins & proteomics,purification,extraction,0,2,2,1,0,0,0,4,3,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,7
+17,43163c,nucleic acid extraction & purification,plant dna,extraction,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+18,1ccd23-station-A,covid workstation,sample plating,other,4,1,0,1,1,0,0,0,0,0,3,0,2,0,0,0,1,0,0,0,0,0,0,0,1,5
+19,nextera-flex-library-prep-amplify-tagmented-dna,ngs library prep,nextera dna flex library prep,ngs,0,1,1,1,1,0,0,4,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,4
+20,18050b,sample prep,plate filling,sample prep,0,2,0,1,0,4,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,4
+21,7e4c3e-2,sample prep,plate filling,sample prep,0,1,0,1,1,0,0,0,0,0,2,0,0,0,0,0,1,0,0,0,0,0,0,0,0,2
+22,659888,sample prep,plate filling,sample prep,0,10,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1
+23,243973,sample prep,normalization,cherrypicking,0,8,1,1,0,0,1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,2
+24,313086-logixsmart-station-B,covid workstation,qpcr setup,pcr,1,2,0,1,0,8,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,8
+25,4fa62e,pcr,pcr prep,pcr,1,1,0,1,0,1,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,2
+26,295c73,ngs library prep,accel-amplicon plus egfr pathway panel,ngs,0,4,1,1,1,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,0,1,0,0,2
+27,nextera-flex-library-prep-tagment-dna,ngs library prep,nextera dna flex library prep,ngs,0,1,0,1,1,0,0,2,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,2
+28,4471ba,sample prep,plate filling,sample prep,0,2,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0
+29,76ba23-pooling,ngs library prep,zymoresearch: ez dna methylation-gold kit,ngs,1,3,1,1,0,0,0,0,0,2,0,1,0,1,0,0,0,0,0,0,0,1,0,0,0,3
+30,111210-part-8,ngs library prep,generead qiaact lung rna fusion umi panel kit,ngs,0,2,1,1,2,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,0,0,0,2
+31,2b9486,ngs library prep,custom,ngs,0,4,0,1,4,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0
+32,5a3797-protocol-3,pcr,pcr prep,pcr,7,1,1,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,1,0,1,2
+33,18d6a1,nucleic acid extraction & purification,nucleic acid extraction,extraction,0,3,2,1,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,6
+34,111210-part-6,ngs library prep,generead qiaact lung rna fusion umi panel kit,ngs,0,3,1,1,2,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,0,0,0,2
+35,2c19aa,sample prep,plate filling,sample prep,0,10,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1
+36,4568fa,sample prep,normalization,cherrypicking,2,2,1,1,0,0,0,0,0,0,2,2,0,0,0,1,0,0,0,0,0,1,0,0,0,4
+37,4a5f32,nucleic acid extraction & purification,nucleic acid purification,extraction,0,3,1,1,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,3
+38,cherrypicking,featured,cherrypicking,cherrypicking,0,2,3,1,0,6,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,6
+39,063611,sample prep,plate filling,sample prep,0,0,1,1,4,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,2
+40,154ec5,sample prep,cherrypicking,cherrypicking,0,3,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
+41,7e4c3e-3,sample prep,plate filling,sample prep,0,2,0,1,0,0,0,0,0,0,2,0,0,0,0,0,1,0,0,0,0,0,0,0,0,2
+42,1bcd67,sample prep,normalization,cherrypicking,0,4,1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,2
+43,747d99-assay-1,covid workstation,rna extraction,extraction,1,2,1,1,1,0,0,3,0,0,0,0,2,0,0,0,0,0,0,0,0,0,1,0,1,5
+44,21e4d8-pt3,ngs library prep,twist library prep,ngs,1,3,1,1,0,0,1,3,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,4
+45,arcis-single-test,nucleic acid extraction & purification,arcis blood kit,extraction,2,3,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,1
+46,7e4c3e-4,sample prep,plate filling,sample prep,1,4,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,1
+47,3fad82-part-3,ngs library prep,nebnext ultra ii fs dna library prep kit for illumina,ngs,0,2,1,1,0,0,0,0,0,0,2,2,0,0,0,0,1,0,0,0,0,0,1,0,0,4
+48,04eeb1-part-7,ngs library prep,illumina covidseq test,ngs,0,1,0,1,2,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,0,0,1,0,0,2
+49,3633ca,sample prep,plate filling,sample prep,0,1,1,1,0,0,1,2,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,3
+50,zymo-quick-custom,nucleic acid extraction & purification,zymo kit,extraction,1,2,2,1,0,0,0,5,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0,0,6
+51,2aee74-48-3,proteins & proteiomics,olink target 48,protein,1,4,0,1,1,0,0,0,0,0,4,1,0,0,0,0,1,0,0,0,0,1,0,0,0,5
+52,3a49b6,sample prep,normalization,cherrypicking,1,2,0,1,0,0,0,0,0,0,2,0,0,0,0,1,0,0,0,0,0,0,0,0,0,2
+53,581011-pt2,sample prep,cherrypicking,cherrypicking,0,2,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1
+54,sci-zymo-directzol-magbead,nucleic acid extraction & purification,rna extraction,extraction,0,2,3,1,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,6
+55,1d6d1b,sample prep,slide spotting,sample prep,0,1,2,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0
+56,111210-part-7,ngs library prep,generead qiaact lung rna fusion umi panel kit,ngs,0,1,0,1,2,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
+57,5f37a2,nucleic acid extraction & purification,magnesil,extraction,0,3,1,1,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,7
+58,pcr_prep_part_2,pcr,pcr prep,pcr,0,2,1,1,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,4
+59,illumina-nextera-XT-library-prep-part1,featured,ngs library prep: illumina nextera xt,ngs,1,3,0,1,0,0,6,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,6
+60,5a3797-protocol-2,pcr,pcr prep,pcr,0,2,0,1,1,0,0,0,0,0,2,0,0,0,0,0,1,0,0,0,0,0,0,0,0,2
+61,7a3e4b,featured,cherrypicking,cherrypicking,0,2,0,1,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,4
+62,165a77,pcr,qpcr setup,pcr,0,6,0,1,0,0,0,0,0,0,3,0,0,0,0,0,1,0,0,0,0,0,0,0,0,3
+63,bpg-rna-extraction,covid workstation,rna extraction,extraction,0,2,2,1,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,2
+64,313086-logixsmart-station-C,covid workstation,qpcr setup,pcr,1,2,0,1,0,8,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,8
+65,111210-part-9,ngs library prep,generead qiaact lung dna umi panel kit,ngs,0,1,0,1,2,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,0,0,0,2
+66,12213d,sample prep,plate filling,sample prep,0,1,1,1,0,0,1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,2
+67,25a03d,pcr,pcr prep,pcr,0,0,0,1,4,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,0,1,0,0,0,2
+68,0fa015,sample prep,plate filling,sample prep,0,1,1,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1
+69,70567f,ngs library prep,ampure xp,ngs,0,4,0,1,0,0,0,1,0,0,0,6,0,0,0,0,0,0,0,0,0,0,1,0,0,7
+70,00a6e5,sample prep,plate filling,sample prep,5,1,1,1,0,0,0,2,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,3
+71,0556be-covid-mm-qc-v3,sample prep,plate filling,sample prep,1,0,0,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,1
+72,563624,proteins & proteomics,purification,extraction,0,5,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0
+73,0e696e,sample prep,cherrypicking,cherrypicking,1,1,0,1,3,0,6,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,6
+74,5c24e2,sample prep,plate filling,sample prep,0,6,0,1,0,0,4,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,4
+75,4b4a80-fragmentation,ngs library prep,nebnext ultra ii fs dna library prep kit for illumina e6177s/l,ngs,0,1,0,1,1,0,0,1,0,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,2
+76,7f9595,sample prep,serial dilution,dilution,0,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1
+77,1c086c,sample prep,distribution,sample prep,0,2,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1
+78,0045f1,sample prep,plate filling,sample prep,1,0,0,1,2,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
+79,0add76,sample prep,plate filling,sample prep,0,2,1,1,1,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1
+80,2df9f8-pt3,pcr,pcr prep,pcr,0,8,2,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1
+81,776039,sample prep,consolidation,sample prep,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
+82,245eb2,nucleic acid extraction & purification,nucleic acid extraction,extraction,0,2,2,1,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,1,0,0,6
+83,5f7d18,nucleic acid extraction & purification,rna extraction,extraction,1,2,3,1,0,0,0,0,0,0,2,3,0,0,0,1,0,0,0,0,0,0,1,0,0,5
+84,2df9f8-pt4,sample prep,plate filling,sample prep,0,6,0,1,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,5
+85,1adec6-7,proteins & proteomics,assay,protein,0,3,3,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1
+86,6b8c90,sample prep,plate filling,sample prep,2,2,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1
+87,08e3eb,sample prep,plate filling,sample prep,0,0,1,1,9,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1
+88,6030b7,ngs library prep,lexogen quantseq,ngs,1,4,1,1,1,0,4,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,4
+89,2c62b7,nucleic acid extraction & purification,omega mag-bind environmental dna 96 kit,extraction,0,3,2,1,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,6
+90,384b23-tube-transfer,sample prep,plate filling,sample prep,0,0,0,1,2,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1
+91,74841a-2,ngs library prep,swift normalase amplicon panels (snap),ngs,0,2,2,1,0,0,0,1,0,0,2,3,0,0,0,0,1,0,0,0,0,0,1,0,0,6
+92,sci-thermofisher-magmax,nucleic acid and purification,thermofisher magmax,extraction,0,2,3,1,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,6
+93,65ed01,nucleic acid extraction & purification,nucleic acid purification,extraction,0,1,1,1,1,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,1,0,0,2
+94,covid19-rna-extraction,covid workstation,rna extraction,extraction,0,2,3,1,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,6
+95,nextera-flex-library-prep-cleanup-libraries,ngs library prep,nextera dna flex library prep,ngs,0,2,1,1,0,0,0,8,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,8
+96,1577-v2,pcr,pcr prep,pcr,0,1,0,1,3,1,0,1,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,2
+97,6151af,sample prep,plate filling,sample prep,7,1,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1
+98,49de51-pt1,nucleic acid extraction & purification,plant dna,extraction,0,4,2,1,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,1,0,0,3
+99,5fa647,pcr,pcr prep,pcr,0,1,0,1,2,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,0,0,0,2
+100,zymo-ribofree-cleanup,ngs library prep,zymo ribofree™ total rna library prep,ngs,0,2,2,1,0,0,2,4,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,6
+101,normalization,featured,normalization,cherrypicking,0,1,1,1,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,4
+102,00a214-protocol-1,sample prep,seeding plate,sample prep,0,8,2,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1
+103,543bf9,sample prep,serial dilution,dilution,1,1,0,1,0,0,0,2,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,2
+104,1adec6-6,proteins & proteomics,assay,protein,0,3,1,1,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,1,0,0,3
+105,generic_station_C,covid workstation,qpcr setup,pcr,0,1,0,1,2,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
+106,2df9f8-pt2,pcr,pcr prep,pcr,0,2,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1
+107,0bd707,sample prep,aliquoting,sample prep,7,0,2,1,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2
+108,422b1e,titration,custom titration,other,1,0,0,1,2,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1
+109,4175de,pcr,pcr prep,pcr,1,1,0,1,0,0,0,0,0,0,3,0,0,0,0,1,0,0,0,0,0,0,0,0,0,3
+110,76c562,sample prep,normalization,cherrypicking,0,2,4,1,0,0,0,0,0,5,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,5
+111,4b4a80-pcr_enrichment,ngs library prep,nebnext ultra ii fs dna library prep kit for illumina e6177s/l,ngs,0,3,1,1,1,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,3
+112,17d210,ngs library prep,verogen forenseq dna signature prep kit,ngs,0,5,0,1,1,0,2,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,2
+113,0175a4,sample prep,pooling,sample prep,10,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,2,1
+114,2aee74-48,proteins & proteiomics,olink target 48,protein,1,1,0,1,1,0,0,0,0,0,2,1,0,0,0,0,1,0,0,0,0,1,0,0,0,3
+115,sci-promega-magnesil-total-rna-mini-isolation-system,nucleic acid extraction & purification,promega kit,extraction,0,2,2,1,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,7
+116,313086-station-B,covid workstation,sample plating,other,1,2,0,1,0,8,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,8
+117,6c7447,pcr,pcr prep,pcr,1,2,0,1,0,3,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,4
+118,199721,sample prep,pooling,sample prep,8,0,0,1,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,3
+119,2df9f8,pcr,pcr prep,pcr,7,1,1,1,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,2
+120,470d8c,pcr,pcr prep,pcr,0,0,1,1,6,0,3,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,4
+121,315118,sample prep,pooling,sample prep,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1
+122,testdrive,getting started,ot-2 guided walk-through,other,0,1,0,1,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
+123,7663a6,pcr,pcr prep,pcr,0,2,0,1,1,0,0,0,0,0,2,0,0,0,0,1,1,0,0,0,0,0,0,0,0,2
+124,41ece2,sample prep,serial dilution,dilution,0,4,2,1,0,0,0,1,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,2
+125,7805de-part-2,ngs library prep,nebnext ultra ii directional library prep kit for illumina,ngs,0,3,1,1,1,0,0,0,0,0,2,2,0,0,0,0,1,0,0,0,0,0,1,0,0,4
+126,2082dd,sample prep,cherrypicking,cherrypicking,2,3,0,1,0,0,3,3,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,6
+127,gna_octea_v2,sample prep,covid,sample prep,1,2,1,1,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,1,0,0,1
+128,zymo-ribofree-first-strand-cdna-synth-universal-depletion,ngs library prep,zymo ribofree™ total rna library prep,ngs,0,2,1,1,1,0,4,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,4
+129,sci-macherey-nagel-nucleomag,nucleic acid extraction & purification,dna extraction,extraction,0,2,3,1,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,6
+130,6d3eda,nucleic acid extraction & purification,plant dna,extraction,0,4,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1
+131,44981c,sample prep,cherrypicking,cherrypicking,0,5,0,1,0,3,0,2,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,5
+132,30174a,pcr,pcr prep,pcr,0,2,1,1,0,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,0,0,0,2
+133,51df08,proteins & proteomics,assay,protein,3,0,1,1,2,0,1,4,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,5
+134,2aee74-2,proteins & proteiomics,olink target 96,protein,0,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1
+135,6b9ee3,sample prep,plate filling,sample prep,1,1,0,1,2,0,3,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,3
+136,3db190-manual,pcr,pcr prep,pcr,0,1,0,1,1,0,0,0,0,0,1,0,1,0,0,1,0,0,0,0,0,0,0,0,1,2
+137,50486f-v2-part5,pcr,pcr prep,pcr,0,4,0,1,1,0,5,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,5
+138,33b12a,pcr,pcr prep,pcr,1,2,1,1,0,0,0,0,0,0,2,0,0,0,0,0,1,0,0,0,0,0,0,0,0,2
+139,3955db,sample prep,pooling,sample prep,3,0,0,1,6,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,1
+140,4ee4d6,ngs library prep,illumina dna prep with enrichment,ngs,0,3,1,1,2,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,0,0,0,2
+141,0961d2-part1,ngs library prep,plexwell lp384,ngs,0,4,1,1,0,0,0,0,0,4,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,4
+142,76ba23,ngs library prep,zymoresearch: ez dna methylation-gold kit,ngs,0,5,2,1,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,1,0,0,2
+143,6401f1,pcr,pcr prep,pcr,1,3,0,1,0,0,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,2
+144,50486f-v2-part2,pcr,pcr prep,pcr,0,1,0,1,1,0,8,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,8
+145,3e3c9d-protocol-Adding-BTM,sample prep,plate filling,sample prep,0,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1
+146,3e3c9d-protocol-Adding-Water-RBC,sample prep,plate filling,sample prep,0,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1
+147,0a25f2,sample prep,tube filling,sample prep,0,0,0,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1
+148,6d7fc3-part-4,ngs library prep,generead qiaact lung dna umi panel kit,ngs,0,1,0,1,2,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,0,0,0,2
+149,3b3f1c,sample prep,plate filling,sample prep,8,1,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,2
+150,swift-fully-automated,ngs library prep,swift 2s turbo,ngs,0,2,1,1,1,0,0,1,0,0,0,3,0,0,0,0,0,1,0,0,1,0,0,0,0,4
+151,6b8c90-3,sample prep,plate filling,sample prep,0,4,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1
+152,6d7fc3-part-3,ngs library prep,generead qiaact lung dna umi panel kit,ngs,0,3,1,1,2,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,0,0,0,2
+153,1601a9,nucleic acid extraction & purification,illumina beachip amplification,extraction,0,2,1,1,0,2,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,2
+154,3b3d2f,pcr,pcr prep,pcr,0,1,0,1,1,0,0,0,0,0,2,0,0,0,0,1,0,0,0,0,0,0,0,0,0,2
+155,7cfbde,nucleic acid extraction & purification,rna extraction,extraction,0,2,4,1,1,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,4
+156,4d9b8b,sample prep,plate filling,sample prep,0,1,0,1,2,0,0,0,0,0,2,0,0,0,0,1,0,0,0,0,0,0,0,0,0,2
+157,469c70-pt2,sample prep,serial dilution,dilution,4,0,0,1,0,0,1,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,2
+158,2aee74-96,proteins & proteiomics,olink target 96,protein,1,2,0,1,1,0,0,0,0,0,2,1,0,0,0,0,1,0,0,0,0,1,0,0,0,3
+159,002af3,pcr,pcr prep,pcr,0,4,0,1,0,0,0,0,0,0,4,0,0,0,0,0,1,0,0,0,0,0,0,0,0,4
+160,2aee74-3,proteins & proteiomics,olink target 96,protein,1,4,0,1,1,0,0,0,0,0,4,1,0,0,0,0,1,0,0,0,0,1,0,0,0,5
+161,203136,nucleic acid extraction & purification,invitrogen chargeswitch,extraction,0,2,1,1,0,0,0,0,0,0,0,8,0,0,0,0,0,1,0,0,1,0,0,0,0,8
+162,0ef96f,sample prep,cherrypicking,cherrypicking,1,1,0,1,0,0,2,2,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,4
+163,7805de-part-4,ngs library prep,nebnext ultra ii directional library prep kit for illumina,ngs,0,3,1,1,1,0,0,0,0,0,1,2,0,0,0,0,1,0,0,0,0,0,1,0,0,3
+164,459a55,sample prep,mass spec,sample prep,0,1,0,1,1,0,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,2
+165,313086-station-C,covid workstation,qpcr setup,pcr,1,2,0,1,0,8,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,8
+166,7062c9,sample prep,normalization,cherrypicking,2,0,0,1,1,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,0,1,0,0,2
+167,74750e,sample prep,serial dilution,dilution,0,4,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1
+168,6fe477-workflow-2,nucleic acid extraction & purification,nucleic acid purification,extraction,8,0,1,1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1,2
+169,7805de-part-3,ngs library prep,nebnext ultra ii directional library prep kit for illumina,ngs,0,3,1,1,1,0,0,0,0,0,2,2,0,0,0,0,1,0,0,0,0,0,1,0,0,4
+170,6d7fc3-part-2,ngs library prep,generead qiaact lung dna umi panel kit,ngs,0,1,0,1,2,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,0,0,0,2
+171,6b8c90-2,sample prep,plate filling,sample prep,2,2,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1
+172,559aa0,pcr,qpcr setup,pcr,0,10,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1
+173,701319,sample prep,mass spec,sample prep,0,2,1,1,1,0,2,2,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,4
+174,516336-part-2,ngs library prep,oxford nanopore ligation sequencing kit,ngs,0,2,1,1,1,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,3
+175,5191b6,sample prep,cherrypicking,cherrypicking,4,0,0,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0
+176,6d7fc3-part-5,ngs library prep,generead qiaact lung dna umi panel kit,ngs,0,2,1,1,2,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,0,0,0,2
+177,640a85,pcr,pcr prep,pcr,0,2,1,1,0,0,1,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,2
+178,50486f-v2-part3,pcr,pcr prep,pcr,0,1,0,1,1,0,8,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,8
+179,1477ea,sample prep,cherrypicking,cherrypicking,0,2,1,1,0,0,0,0,0,0,2,3,0,0,0,1,0,0,0,0,0,0,1,0,0,5
+180,313086,covid workstation,sample plating,other,4,1,1,1,0,0,0,4,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,5
+181,44b1ac,ngs library prep,qiaseq targeted rnascan panel for illumina instruments,ngs,1,4,1,1,0,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,0,0,0,2
+182,50486f-v2-part4,pcr,pcr prep,pcr,0,2,0,1,2,0,7,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,7
+183,56a6a1,proteins & proteomics,assay,protein,0,0,2,1,1,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,2
+184,52d238,ngs library prep,neb ultra ii fs dna library prep,ngs,0,3,1,1,1,0,0,0,0,0,1,2,0,0,0,0,1,0,0,0,0,0,1,0,0,3
+185,sci-omegabiotek-magbind,nucleic acid extraction & purification,rna extraction,extraction,0,2,2,1,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,7
+186,bc-rnadvance-viral-feat,featured,beckman coulter rnadvance viral,other,0,2,3,1,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,6
+187,69cf81,pcr,pcr prep,pcr,0,2,1,1,1,0,4,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,4
+188,bc-rnadvance-viral,nucleic acid extraction & purification,viral rna,extraction,0,2,3,1,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,6
+189,dinosaur,getting started,dinosaur,other,0,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1
+190,17cb2d,sample prep,plate filling,sample prep,0,1,1,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1
+191,6bc986-part-6,pcr,pcr prep,pcr,0,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1
+192,13ea1e-part2,pcr,pcr prep,pcr,1,2,0,1,0,0,0,0,0,0,3,0,0,0,0,1,0,0,0,0,0,0,0,0,0,3
+193,1f96ca,ngs library prep,"kapa hyper plus 96rx, cat 07962428001 roche",ngs,0,4,1,1,1,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,0,0,1,0,0,2
+194,swift-2s-turbo-pt2,featured,ngs library prep: swift 2s turbo,ngs,0,2,1,1,1,0,0,3,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,3
+195,0bf4f4,ngs library prep,illumina dna prep,ngs,0,3,1,1,0,0,0,0,0,0,3,1,0,0,0,0,1,0,0,0,0,0,1,0,0,4
+196,111210-part-10,ngs library prep,generead qiaact lung rna fusion umi panel kit,ngs,0,2,1,1,2,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,0,0,0,2
+197,08aeaa,sample prep,normalization,cherrypicking,0,2,0,1,1,0,2,2,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,4
+198,customizable_serial_dilution_ot2,featured,serial dilution,dilution,0,1,1,1,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,2
+199,swift-fully-automated-custom,ngs library prep,swift 2s turbo,ngs,0,2,1,1,1,0,0,1,0,0,0,3,0,0,0,0,0,1,0,0,1,0,0,0,0,4
+200,33900b,nucleic acid extraction & purification,magnehis™ protein purification system,extraction,0,2,2,1,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,7
+201,0bf4f4-pt3,ngs library prep,illumina dna prep,ngs,0,4,1,1,0,0,0,0,0,0,1,5,0,0,0,0,1,0,0,0,0,0,1,0,0,6
+202,75cfa6,pcr,pcr prep,pcr,1,2,0,1,0,2,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,2
+203,3b0db0,pcr,pcr prep,pcr,7,2,0,1,0,0,0,0,0,0,2,0,0,0,0,1,1,0,0,0,0,0,0,0,0,2
+204,8nhsa0,sample prep,cherrypicking,cherrypicking,0,2,0,1,0,0,0,9,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,9
+205,19313a,nucleic acid extraction & purification,nucleic acid purification,extraction,2,2,0,1,0,0,0,2,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,3
+206,7062c9-2,nucleic acid extraction & purification,nucleic acid extraction,extraction,0,1,2,1,3,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,1,0,0,5
+207,2a370c,nucleic acid extraction & purification,omega mag-bind bacterial dna 96 kit,extraction,1,1,2,1,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,1,0,0,1,4
+208,user-upload_ZooMS_Protocol,sample prep,plate filling,sample prep,3,1,1,1,0,0,0,1,2,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,3
+209,3662e6,sample prep,serial dilution,dilution,0,4,2,1,0,0,0,1,0,1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,2
+210,pcr_test_plan,sample prep,sequencing,sample prep,1,1,0,1,0,2,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,3
+211,14b685,ngs library prep,illumina 16s,ngs,0,2,2,1,0,0,0,0,0,0,1,6,0,0,0,0,1,0,0,0,0,0,1,0,0,7
+212,ML-normalization,sample prep,normalization,cherrypicking,0,0,1,1,2,0,2,2,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,4
+213,swift-2s-turbo-pt3,featured,ngs library prep: swift 2s turbo,ngs,0,2,1,1,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,2
+214,29414b-ot,getting started,calibration,other,0,0,0,1,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1
+215,thermocycler,thermocycler,thermocycler example,other,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+216,796af8,ngs library prep,neb ultra ii fs dna library prep,ngs,0,2,1,1,1,0,0,0,0,0,3,1,0,0,0,0,1,0,0,0,0,0,1,0,0,4
+217,6af807,pcr,pcr prep,pcr,2,1,0,1,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
+218,45a320,nucleic acid extraction & purification,rna extraction,extraction,2,1,1,1,0,0,0,0,1,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,2
+219,zymo-ribofree-library-index-pcr,ngs library prep,zymo ribofree™ total rna library prep,ngs,0,2,1,1,1,0,4,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,4
+220,11beaa,pcr,pcr prep,pcr,0,3,0,1,1,0,0,0,0,3,0,1,0,0,1,0,0,0,1,0,0,0,0,0,0,4
+221,76ba23-pcr2,ngs library prep,zymoresearch: ez dna methylation-gold kit,ngs,0,7,0,1,0,0,0,0,0,4,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,4
+222,13fd88,proteins & proteomics,purification,extraction,0,6,1,1,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,4
+223,3d02be,sample prep,aliquoting,sample prep,0,4,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1
+224,Opentrons_Logo,getting started,opentrons logo,other,0,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1
+225,4b4a80-size_selection,ngs library prep,nebnext ultra ii fs dna library prep kit for illumina e6177s/l,ngs,0,3,1,1,1,0,0,2,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0,0,3
+226,18e62e,pcr,pcr prep,pcr,0,5,0,1,0,0,0,0,0,0,5,0,0,0,0,0,1,0,0,0,0,0,0,0,0,5
+227,39b4c7,pcr,qpcr setup,pcr,0,5,0,1,1,0,0,0,0,0,4,0,0,0,0,1,0,0,0,0,0,0,0,0,0,4
+228,6bc986,pcr,pcr prep,pcr,0,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1
+229,7a1ae8,nucleic acid extraction & purification,zymo kit,extraction,2,2,2,1,1,0,0,3,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,3
+230,6f4e2c,nucleic acid extraction & purification,blood sample,extraction,0,3,2,1,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,5
+231,49de51,nucleic acid extraction & purification,plant dna,extraction,0,3,4,1,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,1,0,0,4
+232,37de37,sample prep,cherrypicking,cherrypicking,0,4,1,1,0,0,2,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,2
+233,omega-biotek-xpress,covid workstation,rna extraction,extraction,0,2,3,1,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,1,0,0,6
+234,thermocycler-csv,thermocycler,thermocycler example,other,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+235,0bf4f4-pt2,ngs library prep,illumina dna prep,ngs,0,3,1,1,0,0,0,0,0,0,2,5,0,0,0,0,1,0,0,0,0,0,1,0,0,7
+236,7aa3fd-library-quantification,ngs library prep,custom,ngs,1,3,0,1,0,0,0,0,0,1,0,1,0,1,0,0,0,0,0,1,0,0,0,0,0,2
+237,1adec6,proteins & proteomics,assay,protein,0,5,1,1,0,0,2,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,2
+238,0e8e3,pcr,pcr prep,pcr,0,4,1,1,1,0,3,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,4
+239,060c4f,sample prep,plate filling,sample prep,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1
+240,3359a5,featured,cherrypicking,cherrypicking,0,2,3,1,0,0,6,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,6
+241,063611-part-2,sample prep,plate filling,sample prep,0,0,0,1,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,2
+242,19fc32,ngs library prep,clean up,ngs,0,3,1,1,0,0,0,6,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,6
+243,441cc8,ngs library prep,pcr prep,ngs,0,9,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1
+244,29414b,getting started,calibration,other,0,0,0,1,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0
+245,698b9e,pcr,pcr prep,pcr,0,9,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1
+246,sci-mag-bind-blood-tissue-kit,nucleic acid extraction & purification,dna extraction,extraction,0,2,3,1,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,6
+247,343001,nucleic acid extraction & purification,zymo extraction,extraction,2,1,1,1,1,0,0,2,4,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,6
+248,115d98,sample prep,aliquoting,sample prep,2,0,0,1,5,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,1
+249,007992,nucleic acid extraction & purification,viral rna,extraction,0,2,1,1,0,0,0,0,0,0,2,6,0,0,0,1,0,0,0,0,0,0,1,0,0,8
+250,illumina-nextera-XT-library-prep-part4,featured,ngs library prep: illumina nextera xt,ngs,1,1,0,1,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1
+251,111210-part-5,ngs library prep,generead qiaact lung rna fusion umi panel kit,ngs,0,3,0,1,0,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,0,0,0,2
+252,7855ef-part4,ngs library prep,agriseq hts library kit,ngs,0,5,0,1,0,0,0,0,0,0,3,1,0,0,0,1,0,0,0,0,0,1,0,0,0,4
+253,illumina-nextera-XT-library-prep-part3,featured,ngs library prep: illumina nextera xt,ngs,0,3,1,1,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,3
+254,111210-part-2,ngs library prep,generead qiaact lung rna fusion umi panel kit,ngs,0,2,0,1,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
+255,53fec2,pcr,cleanup,pcr,0,4,4,1,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,3
+256,7855ef-part3,ngs library prep,agriseq hts library kit,ngs,0,6,0,1,0,0,0,0,0,0,4,0,0,0,0,0,1,0,0,0,0,0,0,0,0,4
+257,2ed4de-2,sample prep,ribogreen assay,sample prep,1,2,1,1,0,0,0,0,0,0,0,2,1,0,0,0,0,0,0,0,0,0,1,0,1,3
+258,04eeb1-part-5,ngs library prep,illumina covidseq test,ngs,0,1,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1
+259,4c8861,sample prep,normalization,cherrypicking,1,6,0,1,0,0,0,0,0,0,3,1,0,0,0,1,0,0,0,0,0,1,0,0,0,4
+260,test-readme,broader category,subcategory (can be the name of a kit when applicable),other,0,1,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
+261,00bbd7,sample prep,plate filling,sample prep,7,1,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1
+262,04eeb1-part-2,ngs library prep,illumina covidseq test,ngs,0,3,0,1,0,0,0,0,0,0,2,0,0,0,0,0,1,0,0,0,0,0,0,0,0,2
+263,6b51bd,sample prep,normalization,cherrypicking,0,6,1,1,0,0,0,0,0,0,3,1,0,0,0,1,0,0,0,0,0,1,0,0,0,4
+264,1ccd23-station-B,covid workstation,rna extraction,extraction,0,2,3,1,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,6
+265,3d942d,pcr,pcr prep,pcr,1,3,0,1,0,0,0,0,0,0,3,0,0,0,0,1,0,0,0,0,0,0,0,0,0,3
+266,7e4c3e-1,sample prep,plate filling,sample prep,0,2,0,1,0,0,0,0,0,0,3,0,0,0,0,0,1,0,0,0,0,0,0,0,0,3
+267,3e3c9d-protocols-adding-wistd-water,sample prep,plate filling,sample prep,0,1,2,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1
+268,2aee74,proteins & proteiomics,olink target 96,protein,1,2,0,1,1,0,0,0,0,0,2,1,0,0,0,0,1,0,0,0,0,1,0,0,0,3
+269,7e4c3e-6,sample prep,plate filling,sample prep,1,1,0,1,1,0,0,0,0,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0,1,3
+270,74841a,ngs library prep,swift normalase amplicon panels (snap),ngs,0,1,2,1,0,0,0,1,0,0,1,6,0,0,0,0,1,0,0,0,0,0,1,0,0,8
+271,21e4d8-pt1,ngs library prep,twist library prep,ngs,1,2,0,1,0,0,1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,2
+272,26c304,sample prep,plate filling,sample prep,2,4,0,1,0,0,1,0,2,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,3
+273,111210-part-3,ngs library prep,generead qiaact lung rna fusion umi panel kit,ngs,0,2,0,1,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
+274,illumina-nextera-XT-library-prep-part2,featured,ngs library prep: illumina nextera xt,ngs,0,3,1,1,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,3
+275,5a3797-protocol-1,pcr,pcr prep,pcr,0,3,3,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1
+276,53134e,sample prep,aliquoting,sample prep,1,0,1,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1
+277,274d2a,sample prep,cherrypicking,cherrypicking,0,2,3,1,0,0,6,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,6
+278,7855ef-part2,ngs library prep,agriseq hts library kit,ngs,0,2,0,1,0,0,0,0,0,0,4,0,0,0,0,0,1,0,0,0,0,0,0,0,0,4
+279,111210-part-4,ngs library prep,generead qiaact lung rna fusion umi panel kit,ngs,0,2,0,1,1,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,0,0,0,2
+280,pcr_prep_part_1,pcr,mastermix assembly,pcr,2,0,1,1,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2
+281,04eeb1,ngs library prep,illumina covidseq test,ngs,0,3,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1
+282,118e8c,pcr,pcr prep,pcr,1,3,0,1,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,0,1,0,0,0,2
+283,cherrypicking_simple,sample prep,cherrypicking,cherrypicking,0,2,0,1,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,4
+284,5a2a35,sample prep,cherrypicking,cherrypicking,0,1,0,1,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,1,0,0,0,3
+285,6be1f8,sample prep,plate filling,sample prep,2,4,0,1,0,0,1,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,2
+286,6c27ee,sample prep,cherrypicking,cherrypicking,1,6,1,1,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,2
+287,6f2d9b,sample prep,serial dilution,dilution,7,1,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,1
+288,459cc2,sample prep,mass spec,sample prep,4,1,1,1,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,2
+289,7f0f89,sample prep,plate filling,sample prep,0,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1
+290,1e744e,pcr,pcr prep,pcr,0,1,0,1,2,0,0,0,0,0,5,0,0,0,0,0,1,0,0,0,0,0,0,0,0,5
+291,010526,sample prep,restriction digest,sample prep,2,1,0,1,1,0,2,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,3
+292,zymo-ribofree-p7-adapter-ligation,ngs library prep,zymo ribofree™ total rna library prep,ngs,0,1,0,1,1,0,4,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,4
+293,complete-pcr,pcr,complete pcr workflow,pcr,0,2,0,1,1,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,4
+294,516336,ngs library prep,oxford nanopore ligation sequencing kit,ngs,0,3,1,1,1,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,3
+295,642c73,pcr,pcr prep,pcr,5,1,0,1,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
+296,5b8174,sample prep,cherrypicking,cherrypicking,3,4,0,1,0,0,4,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,4
+297,1ccd23-station-C,covid workstation,qpcr setup,pcr,0,2,0,1,2,0,0,0,0,0,6,1,0,0,0,0,1,0,0,0,0,1,0,0,0,7
+298,6cb818,sample prep,staining,sample prep,2,1,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
+299,141a1a,sample prep,cell-free gene expression,sample prep,2,2,0,1,1,0,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,2
+300,1980cd,nucleic acid extraction & purification,plant dna,extraction,0,2,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1
+301,7363e4,sample prep,aliquoting,sample prep,2,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1
+302,747d99-assay-2,covid workstation,rna extraction,extraction,1,3,1,1,0,0,0,3,0,0,0,0,2,0,0,0,0,0,0,0,0,0,1,0,1,5
+303,04eeb1-part-3,ngs library prep,illumina covidseq test,ngs,0,2,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1
+304,6a93a2,ngs library prep,swift rapid rna library kit,ngs,0,2,1,1,1,0,0,0,0,0,2,2,0,0,0,1,0,0,0,0,1,0,0,0,0,4
+305,04eeb1-part-4,ngs library prep,illumina covidseq test,ngs,0,2,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1
+306,zymo-quick,nucleic acid extraction & purification,zymo kit,extraction,1,2,2,1,0,0,0,5,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0,0,6
+307,nextera-flex-library-prep-post-tag-cleanup,ngs library prep,nextera dna flex library prep,ngs,0,1,1,1,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,6
+308,50c11b,pcr,pcr prep,pcr,0,5,0,1,0,0,0,0,0,0,4,0,0,0,0,0,1,0,0,0,0,0,0,0,0,4
+309,sci-mgi-mgieasy-nucleic-acid-extraction-kit,nucleic acid extraction & purification,mgi kit,extraction,0,2,3,1,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,6
+310,0944e4,ngs library prep,ampure xp,ngs,0,2,1,1,0,0,0,0,0,0,1,7,0,0,0,0,1,0,0,0,0,0,1,0,0,8
+311,7855ef,ngs library prep,agriseq hts library kit,ngs,0,6,0,1,0,0,0,0,0,0,5,0,0,0,0,0,1,0,0,0,0,0,0,0,0,5
+312,5c50d9,pcr,pcr prep,pcr,6,2,1,1,0,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,0,0,0,2
+313,2e84cc,ngs library prep,illumina nextera xt,ngs,0,3,1,1,1,0,0,0,0,0,1,2,0,0,0,1,0,0,0,0,0,1,0,0,0,3
+314,0556be-covid-mm-qc,sample prep,plate filling,sample prep,1,0,0,1,3,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,0,0,0,2
+315,00a214-protocol-3,sample prep,staining,sample prep,0,4,3,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1
+316,3db190,featured,pcr prep,pcr,1,1,0,1,1,0,0,0,0,0,2,0,2,0,0,1,0,0,0,0,0,0,0,0,1,4
+317,10bf60-station-C,pcr,pcr prep,pcr,0,0,0,1,3,0,2,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,2
+318,1adec6-4,proteins & proteomics,assay,protein,0,2,0,1,0,0,6,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,7
+319,generic_station_A,covid workstation,sample plating,other,7,1,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1
+320,00a214-protocol-4,sample prep,staining,sample prep,0,6,2,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1
+321,7855ef-plate-part2,ngs library prep,agriseq hts library kit,ngs,0,4,0,1,0,0,0,0,0,0,3,0,0,0,0,0,1,0,0,0,0,0,0,0,0,3
+322,1adec6-3,proteins & proteomics,assay,protein,0,4,0,1,0,0,3,3,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,6
+323,13c0b8,sample prep,staining prep,sample prep,0,2,1,1,0,0,3,2,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,5
+324,2ed4de,sample prep,ribogreen assay,sample prep,1,2,1,1,0,0,0,0,0,0,0,2,1,0,0,0,0,0,0,0,0,0,1,0,1,3
+325,211fe1,sample prep,mass spec,sample prep,1,1,0,1,0,0,0,3,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,3
+326,2d7126,sample prep,slide spotting,sample prep,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1
+327,384b23-plate-transfer,sample prep,plate filling,sample prep,0,1,0,1,4,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1,2
+328,29effa-buffer,sample prep,plate filling,sample prep,0,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1
+329,4bdd14,sample prep,plate filling,sample prep,0,10,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1
+330,743f54,sample prep,plate filling,sample prep,1,4,3,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1
+331,5c14ad,sample prep,plate filling,sample prep,0,0,1,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0
+332,74312c,sample prep,plate filling,sample prep,0,0,1,1,1,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
+333,2aee74-96-2,proteins & proteiomics,olink target 96,protein,0,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1
+334,42d27b,nucleic acid extraction & purification,quant-it dsdna kit,extraction,0,1,1,1,1,1,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,2
+335,00a214-protocol-5,sample prep,staining,sample prep,0,4,3,1,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,2
+336,269b21,pcr,pcr prep,pcr,0,1,0,1,2,0,2,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,2
+337,1adec6-2,proteins & proteomics,assay,protein,0,3,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1
+338,7855ef-plate-part3,ngs library prep,agriseq hts library kit,ngs,0,7,0,1,0,0,0,0,0,0,3,0,0,0,0,0,1,0,0,0,0,0,0,0,0,3
+339,2d9a0c,pcr,complete pcr workflow,pcr,1,2,0,1,0,0,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,2
+340,35269b,nucleic acid extraction & purification,viral rna,extraction,0,1,1,1,0,0,0,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,1,0,0,7
+341,00a214-protocol-2,sample prep,staining,sample prep,0,4,3,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1
+342,298069,sample prep,aliquoting,sample prep,2,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1
+343,7855ef-plate-part4,ngs library prep,agriseq hts library kit,ngs,0,5,0,1,0,0,0,0,0,0,3,1,0,0,0,1,0,0,0,0,0,1,0,0,0,4
+344,1adec6-5,proteins & proteomics,assay,protein,0,3,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1
+345,10bf60-station-B,covid workstation,rna extraction,extraction,0,2,3,1,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,6
+346,4b76c0,sample prep,normalization,cherrypicking,0,1,1,1,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1
+347,primer_hydration,pcr prep,primer hydration,pcr,2,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1
+348,53e6bc_mastermix_creation,proteins & proteomics,assay,protein,2,1,0,1,0,0,0,2,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,2
+349,7fc7b1,featured,cherrypicking,cherrypicking,0,2,1,1,0,0,8,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,8
+350,5520f0,sample prep,staining,sample prep,0,6,3,1,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,2
+351,469c70,sample prep,serial dilution,dilution,3,0,1,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1
+352,6a93a3-part2,ngs library prep,swift rapid rna library kit,ngs,0,1,0,1,1,0,0,0,0,0,0,4,0,0,0,1,0,0,0,0,1,0,0,0,0,4
+353,2aee74-96-3,proteins & proteiomics,olink target 96,protein,1,4,0,1,1,0,0,0,0,0,4,1,0,0,0,0,1,0,0,0,0,1,0,0,0,5
+354,1c8468,pcr,pcr prep,pcr,0,2,0,1,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
+355,6faa1e,pcr,pcr prep,pcr,0,0,1,1,8,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1
+356,387961,sample prep,plate filling,sample prep,0,2,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1
+357,nucleic_acid_purification_with_magnetic_beads,featured,nucleic acid purification with magnetic beads (universal),extraction,0,2,1,1,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2
+358,39bbbb,sample prep,plate filling,sample prep,3,5,0,1,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,2
+359,35b1a9,sample prep,plate filling,sample prep,0,0,0,1,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0
+360,1f8b55,sample prep,plate filling,sample prep,2,0,0,1,1,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
+361,49de51-pt2,nucleic acid extraction & purification,plant dna,extraction,0,2,3,1,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,5
+362,promega-maxwell,nucleic acid extraction & purification,viral rna,extraction,0,2,3,1,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,6
+363,76ba23-bisulfite_conversion,ngs library prep,zymoresearch: ez dna methylation-gold kit,ngs,0,4,4,1,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,1,0,0,2
+364,0d2950,sample prep,plate filling,sample prep,8,1,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1
+365,44b43c,pcr,pcr prep,pcr,0,7,0,1,0,0,3,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,4
+366,7855ef-plate,ngs library prep,agriseq hts library kit,ngs,0,7,0,1,0,0,0,0,0,0,3,0,0,0,0,0,1,0,0,0,0,0,0,0,0,3
+367,50486f-v2-part1,pcr,pcr prep,pcr,0,2,0,1,1,0,8,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,8
+368,7aa3fd-size-selection,ngs library prep,custom,ngs,1,2,0,1,0,0,0,0,0,1,0,2,0,1,0,0,0,0,0,1,0,0,0,0,0,3
+369,0961d2-part2,ngs library prep,plexwell lp384,ngs,0,2,1,1,0,0,0,0,0,2,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,2
+370,5dcd88,pcr,pcr prep,pcr,0,6,1,1,0,0,0,0,0,0,2,2,0,0,0,0,1,0,0,0,0,0,1,0,0,4
+371,6ff9e9,nucleic acid extraction & purification,nucleic acid extraction,extraction,0,2,0,1,4,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,5
+372,111210,ngs library prep,generead qiaact lung rna fusion umi panel kit,ngs,1,2,0,1,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
+373,51b9a5,sample prep,agar plating,sample prep,0,10,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
+374,6d7fc3-part-7,ngs library prep,generead qiaact lung dna umi panel kit,ngs,0,2,1,1,2,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,0,0,0,2
+375,omega_biotek_magbind_totalpure_NGS,featured,ngs cleanup and size selection with omega bio-tek mag-bind® totalpure,ngs,0,2,1,1,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2
+376,48648f,nucleic acid extraction & purification,nucleic acid purification,extraction,7,1,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,1
+377,6cd9d6,ngs library prep,custom,ngs,0,3,2,1,0,0,2,0,0,0,0,2,0,0,0,0,1,0,0,0,0,0,1,0,0,4
+378,6a77d9,sample prep,slide spotting,sample prep,0,1,0,1,1,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1
+379,1ce6aa,sample prep,plate filling,sample prep,0,0,0,1,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0
+380,2ee5be,pcr,pcr prep,pcr,0,5,0,1,1,0,5,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,5
+381,3fb582,pcr,pcr prep,pcr,4,2,0,1,0,0,0,0,0,0,5,0,0,0,0,1,0,0,0,0,0,0,0,0,0,5
+382,8nhsa0-norm,sample prep,normalization,cherrypicking,0,0,1,1,2,2,0,2,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,4
+383,5654c0,sample prep,normalization,cherrypicking,0,0,1,1,5,0,2,2,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,4
+384,2905a4,nucleic acid extraction & purification,nucleic acid purification,extraction,2,3,0,1,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,1,0,0,0,3
+385,sci-zymo-quick-dna-rna-magbead,nucleic acid extraction & purification,zymo kit,extraction,0,2,3,1,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,6
+386,384b23-pooling,normalization,normalization and pooling,cherrypicking,0,0,0,1,2,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1
+387,05f673,sample prep,normalization,cherrypicking,0,8,1,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1
+388,08878b,sample prep,plate filling,sample prep,2,1,0,1,0,0,0,2,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,3
+389,1a2343,pcr,pcr prep,pcr,0,4,0,1,0,0,3,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,4
+390,1ef67e,proteins & proteomics,assay,protein,3,1,0,1,0,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,2
+391,2bdff3,sample prep,pooling,sample prep,0,2,0,1,1,0,0,0,0,0,7,1,0,0,0,0,1,0,0,0,0,1,0,0,0,8
+392,6d2e65,nucleic acid extraction & purification,nucleic acid purification,extraction,0,3,1,1,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,1,0,0,6
+393,6d7fc3-part-6,ngs library prep,generead qiaact lung dna umi panel kit,ngs,0,1,0,1,2,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,0,0,0,2
+394,0a23c6,pcr,qpcr setup,pcr,0,1,0,1,3,0,0,0,0,0,3,1,0,0,0,0,1,0,0,0,0,1,0,0,0,4
+395,56b4ec,sample prep,plate filling,sample prep,4,1,0,1,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,1,0,1
+396,38efd4,sample prep,plate filling,sample prep,3,1,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,2
+397,68ce98,sample prep,plate filling,sample prep,0,2,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1
+398,sci-promega-magazorb-dna-mini-prep-kit,nucleic acid extraction & purification,dna extraction,extraction,0,2,3,1,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,6
+399,6ec4dd,pcr,pcr prep,pcr,0,3,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1
+400,2b3642,ngs library prep,nebnext ultra ii dna library preparation kit for illumina e7645s,ngs,0,2,1,1,2,0,0,0,0,0,1,2,0,0,0,1,0,0,0,0,0,0,1,0,0,3
+401,6e2509-v2,sample prep,plate filling,sample prep,0,6,0,1,0,0,0,0,0,0,5,0,0,0,0,0,1,0,0,0,0,0,0,0,0,5
+402,13ea1e,sample prep,plate filling,sample prep,1,5,2,1,0,0,0,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,3
+403,5a5767,sample prep,plate filling,sample prep,0,2,0,1,0,0,0,4,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,4
+404,2c83f7,nucleic acid extraction & purification,zymo kit,extraction,0,2,4,1,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,5
+405,139815,sample prep,consolidation,sample prep,1,0,0,1,2,0,0,0,0,1,0,1,0,0,1,0,0,0,0,1,0,0,0,0,0,2
+406,0961d2-part3,ngs library prep,plexwell lp384,ngs,0,3,0,1,0,0,0,0,0,2,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,2
+407,1649b1,nucleic acid extraction & purification,nucleic acid extraction,extraction,0,3,5,1,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,3
+408,0556be-bmda,pcr,pcr prep,pcr,0,0,0,1,2,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1
+409,71381b,nucleic acid extraction & purification,zymo kit,extraction,0,3,1,1,0,0,3,3,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,6
+410,3fad82,ngs library prep,nebnext ultra ii fs dna library prep kit for illumina,ngs,0,2,0,1,0,0,0,0,0,0,4,0,0,0,0,0,1,0,0,0,0,0,0,0,0,4
+411,0961d2-part4,ngs library prep,plexwell lp384,ngs,1,1,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1
+412,453b5a,pcr,pcr prep,pcr,1,0,1,1,5,0,1,3,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,4
+413,0556be-covid-ntc,sample prep,plate filling,sample prep,1,0,0,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,1
+414,211a24,sample prep,serial dilution,dilution,0,6,1,1,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,4
+415,6d7eb7,sample prep,cherrypicking,cherrypicking,2,1,0,1,0,0,8,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,8
+416,6fe477-workflow-1,nucleic acid extraction & purification,nucleic acid purification,extraction,7,1,1,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,1,0,0,2
+417,131de0,pcr,pcr prep,pcr,0,3,0,1,0,3,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,3
+418,29effa-mastermix,sample prep,plate filling,sample prep,1,1,0,1,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
+419,2c81c0,featured,cherrypicking,cherrypicking,2,2,0,1,2,0,0,0,0,0,0,2,0,1,0,0,0,0,0,1,0,0,0,0,0,2
+420,17d210-part-5,ngs library prep,verogen forenseq dna signature prep kit,ngs,0,5,0,1,1,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1
+421,nextera-flex-library-prep-cherrypick-samples,ngs library prep,nextera dna flex library prep,ngs,0,10,0,1,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1
+422,6a93a2-part2,ngs library prep,swift rapid rna library kit,ngs,0,1,0,1,1,0,0,0,0,0,0,4,0,0,0,1,0,0,0,0,1,0,0,0,0,4
+423,69db93,nucleic acid extraction & purification,rna extraction,extraction,0,2,2,1,0,0,0,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,1,0,0,7
+424,17d210-part-2,ngs library prep,verogen forenseq dna signature prep kit,ngs,0,3,0,1,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,0,0,1,0,0,2
+425,0b98cc,sample prep,serial dilution,dilution,0,5,1,1,4,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1
+426,1185d3,nucleic acid extraction & purification,magmax nucleic acid isolation kit,extraction,0,2,3,1,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,1,0,0,6
+427,407d5e,proteins & proteomics,assay,protein,0,3,0,1,2,0,3,3,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,6
+428,6a93a2-part5,ngs library prep,swift rapid rna library kit,ngs,0,3,1,1,0,0,0,0,0,0,2,2,0,0,0,1,0,0,0,0,1,0,0,0,0,4
+429,4b7268,nucleic acid extraction & purification,nucleic acid purification,extraction,1,2,1,1,0,0,0,3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,6
+430,925d07-v2,pcr,pcr prep,pcr,0,5,0,1,1,0,5,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,5
+431,06ab09,sample prep,plate filling,sample prep,0,1,0,1,1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1
+432,3cf31f,sample prep,distribution,sample prep,0,0,0,1,4,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1
+433,3bc25d,ngs library prep,nanopore,ngs,1,2,0,1,1,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,0,0,0,2
+434,226d24,pcr,pcr prep,pcr,0,3,1,1,0,0,0,0,0,0,2,1,0,0,0,0,1,0,0,0,0,0,1,0,0,3
+435,arcis-multi-test,nucleic acid extraction & purification,arcis blood kit,extraction,0,3,1,1,0,0,0,2,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,2
+436,zymo-rna-extraction,covid workstation,rna extraction,extraction,1,2,2,1,0,0,0,0,0,0,1,5,0,0,0,1,0,0,0,0,0,0,1,0,0,6
+437,5829d7,sample prep,plate filling,sample prep,3,1,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,1
+438,272c63,sample prep,tube filling,sample prep,9,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1
+439,400b8e,sample prep,cherrypicking,cherrypicking,0,2,2,1,0,7,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,7
+440,234495,sample prep,mass spec,sample prep,4,0,1,1,0,0,2,2,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,4
+441,gna_octea,sample prep,covid,sample prep,0,4,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,1,0,0,1
+442,sci-omegabiotek-extraction,nucleic acid extraction & purification,rna extraction,extraction,0,2,3,1,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,6
+443,09cdbe,sample prep,consolidation,sample prep,1,5,0,1,0,0,5,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,5
+444,6d7fc3,ngs library prep,generead qiaact lung dna umi panel kit,ngs,0,1,0,1,1,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,0,0,0,2
+445,6bc986-part-5,pcr,pcr prep,pcr,0,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1
+446,13ea1e-part1,sample prep,plate filling,sample prep,1,5,2,1,0,0,0,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,3
+447,1479,sample prep,cherrypicking,cherrypicking,2,0,0,1,1,1,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,2
+448,swift-2s-turbo-pt1,featured,ngs library prep: swift 2s turbo,ngs,0,1,0,1,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1
+449,4fc750,nucleic acid extraction & purification,omega mag-bind® blood & tissue dna 96 kit,extraction,0,2,3,1,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,6
+450,1d37e5,sample prep,plate filling,sample prep,0,10,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1
+451,4568fa-2,sample prep,normalization,cherrypicking,2,2,1,1,0,0,0,0,0,0,2,2,0,0,0,1,0,0,0,0,0,1,0,0,0,4
+452,1dfebe,sample prep,plate filling,sample prep,4,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1
+453,6bc986-part-2,pcr,pcr prep,pcr,0,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1
+454,1eeb01,nucleic acid extraction & purification,nucleic acid extraction,extraction,1,1,2,1,2,0,0,0,3,0,2,0,0,0,0,1,0,0,0,0,0,0,0,0,1,5
+455,zymo-quick-96,nucleic acid extraction & purification,zymo kit,extraction,0,2,4,1,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,5
+456,751127,sample prep,cherrypicking,cherrypicking,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,1
+457,17d210-part-3,ngs library prep,verogen forenseq dna signature prep kit,ngs,0,3,1,1,0,0,0,0,0,0,1,5,0,0,0,0,1,0,0,0,0,0,1,0,0,6
+458,5c7384,sample prep,mass spec,sample prep,0,5,1,1,0,0,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,2
+459,6a93a2-part4,ngs library prep,swift rapid rna library kit,ngs,0,2,1,1,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,1,0,0,0,0,2
+460,4ee4d6-part2,ngs library prep,illumina dna prep with enrichment,ngs,0,2,1,1,2,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,0,0,0,2
+461,925d07-v3,pcr,pcr prep,pcr,0,5,0,1,1,0,5,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,5
+462,698b9e-part2,pcr,pcr prep,pcr,1,2,0,1,0,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,0,0,0,2
+463,17d210-part-4,ngs library prep,verogen forenseq dna signature prep kit,ngs,0,3,1,1,0,0,0,0,0,0,1,5,0,0,0,0,1,0,0,0,0,0,1,0,0,6
+464,6e2509,sample prep,plate filling,sample prep,0,6,0,1,0,0,0,0,0,0,5,0,0,0,0,0,1,0,0,0,0,0,0,0,0,5
+465,4a0be6,sample prep,tube filling,sample prep,1,0,0,1,2,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1
+466,6a93a2-part3,ngs library prep,swift rapid rna library kit,ngs,0,2,1,1,1,0,0,0,0,0,1,3,0,0,0,1,0,0,0,0,1,0,0,0,0,4
+467,6bc986-part-3,pcr,pcr prep,pcr,0,2,1,1,0,0,1,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,2
+468,29225e,sample prep,normalization,cherrypicking,1,1,0,1,1,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,0,0,0,2
+469,280ea4,pcr,pcr prep,pcr,0,1,0,1,2,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,1,1,0,0,4
+470,4883fc,sample prep,normalization,cherrypicking,0,2,1,1,0,0,0,2,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,2
+471,7805de,ngs library prep,nebnext ultra ii directional library prep kit for illumina,ngs,0,2,1,1,1,0,0,0,0,0,1,2,0,0,0,0,1,0,0,0,0,0,1,0,0,3
+472,6bc986-part-4,pcr,pcr prep,pcr,0,2,1,1,0,0,1,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,2
+473,26a414,sample prep,plate filling,sample prep,0,1,1,1,0,1,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,2
+474,1211,sample prep,cherrypicking,cherrypicking,0,2,3,1,0,6,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,6
+475,76ba23-pcr1,ngs library prep,zymoresearch: ez dna methylation-gold kit,ngs,0,4,2,1,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,1,0,0,4
+476,sci-omegabiotek-magbind-total-rna-96,nucleic acid extraction & purification,rna extraction,extraction,0,2,3,1,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,6
+477,1f96ca-part-2,ngs library prep,"kapa hyper plus 96rx, cat 07962428001 roche",ngs,1,2,1,1,1,0,0,0,0,0,4,2,0,0,0,0,1,0,0,0,0,0,1,0,0,6
+478,6aee6e,sample prep,plate filling,sample prep,1,2,0,1,0,0,0,0,0,0,2,0,0,0,0,1,0,0,0,0,0,0,0,0,0,2
+479,04f4e7,nucleic acid extraction & purification,nucleic acid purification,extraction,0,3,3,1,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,5

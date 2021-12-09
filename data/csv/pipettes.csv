@@ -1,0 +1,13 @@
+,0
+p10_single,0.06
+p10_multi,0.04
+p20_single_gen2,0.26
+p20_multi_gen2,0.24
+p50_single,0.05
+p50_multi,0.02
+p300_single,0.05
+p300_multi,0.08
+p300_single_gen2,0.21
+p300_multi_gen2,0.31
+p1000_single,0.01
+p1000_single_gen2,0.12

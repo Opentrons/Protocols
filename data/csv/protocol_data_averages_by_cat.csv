@@ -1,0 +1,9 @@
+transformed category,tuberack,plate,reservoir,total tipracks
+cherrypicking,0.62,2.19,0.77,3.62
+dilution,1.36,2.45,0.82,1.73
+extraction,0.62,2.15,1.92,4.68
+ngs,0.13,2.73,0.7,3.17
+other,1.2,0.8,0.47,2.13
+pcr,0.72,2.38,0.38,3.1
+protein,0.67,2.29,0.62,3.1
+sample prep,1.32,2.07,0.5,1.79
