@@ -3,7 +3,7 @@ import os
 import json
 import numpy as np
 
-protobuilds_path = '/Users/nickdiehl/Protocols/protoBuilds/'
+protobuilds_path = 'protoBuilds/'
 
 protocol_data = []
 
@@ -146,7 +146,7 @@ df['total tipracks'] = df[tiprack_types].sum(axis=1)
 df_by_category = df.groupby(['transformed category'])
 averages_consumables = df.mean()[[
     'tuberack', 'plate', 'reservoir', 'total tipracks']].round(2)
-avg_outfile = averages_consumables.to_csv('/Users/nicholasdiehl/Desktop/Opentrons Internal/data/protocol_data_averages.csv')
+avg_outfile = averages_consumables.to_csv('data/csv/protocol_data_averages.csv')
 averages_by_category_consumables = df_by_category.mean()[[
     'tuberack', 'plate', 'reservoir', 'total tipracks']].round(2)
     # 'opentrons_96_tiprack_10ul', 'opentrons_96_tiprack_20ul',
@@ -154,17 +154,17 @@ averages_by_category_consumables = df_by_category.mean()[[
     # 'opentrons_96_filtertiprack_10ul', 'opentrons_96_filtertiprack_20ul',
     # 'opentrons_96_filtertiprack_200ul',
     # 'opentrons_96_filtertiprack_1000ul']].round(2)
-avg_by_cat_outfile = averages_by_category_consumables.to_csv('/Users/nicholasdiehl/Desktop/Opentrons Internal/data/protocol_data_averages_by_cat.csv')
+avg_by_cat_outfile = averages_by_category_consumables.to_csv('data/csv/protocol_data_averages_by_cat.csv')
 pip_types = [
     'p10_single', 'p10_multi', 'p20_single_gen2', 'p20_multi_gen2',
     'p50_single', 'p50_multi', 'p300_single', 'p300_multi', 'p300_single_gen2',
     'p300_multi_gen2', 'p1000_single', 'p1000_single_gen2']
 pipettes_avg = df.mean()[pip_types].round(2)
-pip_outfile = pipettes_avg.to_csv('/Users/nicholasdiehl/Desktop/Opentrons Internal/data/pipettes.csv')
+pip_outfile = pipettes_avg.to_csv('data/csv/pipettes.csv')
 tipracks_avg = df.mean()[tiprack_types].round(3)
-tipracks_outfile = tipracks_avg.to_csv('/Users/nicholasdiehl/Desktop/Opentrons Internal/data/tipracks.csv')
+tipracks_outfile = tipracks_avg.to_csv('data/csv/tipracks.csv')
 pipettes_by_category = df_by_category.mean()[pip_types].round(2)
-pip_outfile_cat = pipettes_by_category.to_csv('/Users/nicholasdiehl/Desktop/Opentrons Internal/data/pipettes_by_cat.csv')
+pip_outfile_cat = pipettes_by_category.to_csv('data/csv/pipettes_by_cat.csv')
 # print(dir(math))
 # for pip_type in pip_types:
 #     mean = np.mean(ngs_df[pip_type])
@@ -173,5 +173,5 @@ pip_outfile_cat = pipettes_by_category.to_csv('/Users/nicholasdiehl/Desktop/Open
 #         mean - 1.958*std/np.sqrt(len(ngs_df[pip_type])),
 #         mean + 1.958*std/np.sqrt(len(ngs_df[pip_type]))]
 #     print(f'{pip_type}: {mean}\n')
-outfile = df.to_csv('/Users/nicholasdiehl/Desktop/Opentrons Internal/data/protocol_data.csv')
+outfile = df.to_csv('data/csv/protocol_data.csv')
 # 7/3/2021: more granular on tipracks on tuberacks (volumes/formats)

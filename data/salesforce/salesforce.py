@@ -39,8 +39,6 @@ else:
         }
         json.dump(creds, creds_file)
 sf = Salesforce(username=username, password=password, security_token=token)
-# session_id, instance = SalesforceLogin(username='ndiehl@opentrons.com', password='Carmine11!!salesforce', security_token='0965T796VYOBrJpl9FA7Z6P69')
-# sf = Salesforce(instance_url=instance, session_id=session_id)
 
 metadata_org = sf.describe()
 df_sobjects = pd.DataFrame(metadata_org['sobjects'])
@@ -49,13 +47,17 @@ df_sobjects = pd.DataFrame(metadata_org['sobjects'])
 protocol = sf.Protocol__c
 protocol_metadata = protocol.describe()
 df_protocol_metadata = pd.DataFrame(protocol_metadata.get('fields'))
-df_protocol_metadata.to_csv('protocol_metadata.csv', index=False)
+df_protocol_metadata.to_csv('data/csv/protocol_metadata.csv', index=False)
 
 fields = ['Github_ID__c', 'CreatedDate', 'Delivery_Date__c', 'TAT_days__c', 'Category__c', 'Status__c', 'Assignee__c']
 fields_str = ','.join(fields)
-# SOQL = f'SELECT {','.join(values)} FROM Protocol__c'
 SOQL = f'SELECT {fields_str} FROM Protocol__c'
 data = sf.query(SOQL)
 
 df_dict = {field: [d[field] for d in data['records']] for field in fields}
 df = pd.DataFrame(df_dict)
+df_new = df.rename(
+    columns={'Github_ID__c': 'id', 'CreatedDate': 'created',
+             'Delivery_Date__c': 'delivered', 'TAT_days__c': 'tat',
+             'Category__c': 'category', 'Status__c': 'status',
+             'Assignee__c': 'assignee'})
