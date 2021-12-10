@@ -85,24 +85,28 @@ def run(ctx):
     pick_up(pip)
     pip.aspirate(tepcr_buff_vol, tepcr_buff)
     pip.dispense(tepcr_buff_vol, forward_mm)
+    pip.blow_out()
     pip.drop_tip()
 
     pip = p300 if fw_primers_vol > 20 else p20
     pick_up(pip)
     pip.aspirate(fw_primers_vol, fw_primers)
     pip.dispense(fw_primers_vol, forward_mm)
+    pip.blow_out()
     pip.drop_tip()
 
     pip = p300 if tepcr_primer_vol > 20 else p20
     pick_up(pip)
     pip.aspirate(tepcr_primer_vol, tepcr_primer)
     pip.dispense(tepcr_primer_vol, forward_mm)
+    pip.blow_out()
     pip.drop_tip()
 
     pip = p300 if dna_poly_vol > 20 else p20
     pick_up(pip)
     pip.aspirate(dna_poly_vol, dna_poly)
     pip.dispense(dna_poly_vol, forward_mm)
+    pip.blow_out()
     pip.drop_tip()
 
     mix_vol = (tepcr_buff_vol + fw_primers_vol + tepcr_primer_vol +
@@ -119,24 +123,28 @@ def run(ctx):
     pick_up(pip)
     pip.aspirate(tepcr_buff_vol, tepcr_buff)
     pip.dispense(tepcr_buff_vol, reverse_mm)
+    pip.blow_out()
     pip.drop_tip()
 
     pip = p300 if rev_primers_vol > 20 else p20
     pick_up(pip)
     pip.aspirate(rev_primers_vol, rev_primers)
     pip.dispense(rev_primers_vol, reverse_mm)
+    pip.blow_out()
     pip.drop_tip()
 
     pip = p300 if tepcr_primer_vol > 20 else p20
     pick_up(pip)
     pip.aspirate(tepcr_primer_vol, tepcr_primer)
     pip.dispense(tepcr_primer_vol, reverse_mm)
+    pip.blow_out()
     pip.drop_tip()
 
     pip = p300 if dna_poly_vol > 20 else p20
     pick_up(pip)
     pip.aspirate(dna_poly_vol, dna_poly)
     pip.dispense(dna_poly_vol, reverse_mm)
+    pip.blow_out()
     pip.drop_tip()
 
     mix_vol = (tepcr_buff_vol + rev_primers_vol + tepcr_primer_vol +
@@ -144,6 +152,7 @@ def run(ctx):
     pip = p300 if mix_vol > 20 else p20
     pick_up(pip)
     pip.mix(10, mix_vol, reverse_mm)
+    pip.blow_out()
     pip.drop_tip()
 
     # Add Master Mix to PCR Tubes with DNA Library
@@ -152,6 +161,7 @@ def run(ctx):
         p20.aspirate(10.6, forward_mm)
         p20.dispense(10.6, well)
         p20.mix(7, 10)
+        p20.blow_out()
         p20.drop_tip()
 
     for well in reverse_pcr_wells:
@@ -159,6 +169,7 @@ def run(ctx):
         p20.aspirate(10.6, reverse_mm)
         p20.dispense(10.6, well)
         p20.mix(7, 10)
+        p20.blow_out()
         p20.drop_tip()
 
     ctx.pause('''Centrifuge tubes as needed and return them to the
@@ -170,12 +181,14 @@ def run(ctx):
         pick_up(p20)
         p20.aspirate(20, src)
         p20.dispense(20, dest)
+        p20.blow_out()
         p20.drop_tip()
 
     for src, dest in zip(reverse_pcr_wells, tc_plate_wells_reverse):
         pick_up(p20)
         p20.aspirate(20, src)
         p20.dispense(20, dest)
+        p20.blow_out()
         p20.drop_tip()
 
     tc_mod.close_lid()
