@@ -113,10 +113,10 @@ def get_protocol_data():
                         key for key in data['categories'].keys()][0].lower()
                     subcat = [val for val in data['categories'].values()][0]
                     if subcat:
-                        prtcl_data['subcategory'] = subcat[0].lower()
+                        prtcl_data['subcategory'] = subcat[0].lower().replace(',', '')
                     else:
                         prtcl_data['subcategory'] = [
-                            key for key in data['categories'].keys()][1].lower()
+                            key for key in data['categories'].keys()][1].lower().replace(',', '')
         lw_data['counts'] = {
             'tuberack': 0,
             'plate': 0,
