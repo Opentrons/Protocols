@@ -81,18 +81,21 @@ def run(ctx):
     pick_up(pip)
     pip.aspirate(lig_buff_vol, lig_buff)
     pip.dispense(lig_buff_vol, ligation_mm)
+    pip.blow_out()
     pip.drop_tip()
 
     pip = p300 if dna_lig_vol > 20 else p20
     pick_up(pip)
     pip.aspirate(dna_lig_vol, dna_lig)
     pip.dispense(dna_lig_vol, ligation_mm)
+    pip.blow_out()
     pip.drop_tip()
 
     pip = p300 if lig_sol_vol > 20 else p20
     pick_up(pip)
     pip.aspirate(lig_sol_vol, lig_sol)
     pip.dispense(lig_sol_vol, ligation_mm)
+    pip.blow_out()
     pip.drop_tip()
 
     # Mix Master Mix
@@ -108,6 +111,7 @@ def run(ctx):
         pick_up(p20)
         p20.aspirate(2.8, src)
         p20.dispense(2.8, dest)
+        p20.blow_out()
         p20.drop_tip()
 
     # Transfer 25 µl of each fragmentation, end-repair and
@@ -116,6 +120,7 @@ def run(ctx):
         pick_up(p300)
         p300.aspirate(25, src)
         p300.dispense(25, dest)
+        p300.blow_out()
         p300.drop_tip()
 
     # Add Ligation Master Mix to PCR Tubes
@@ -124,6 +129,7 @@ def run(ctx):
         p300.aspirate(22.2, ligation_mm)
         p300.dispense(22.2, dest)
         p300.mix(7, 25)
+        p300.blow_out()
         p300.drop_tip()
 
     ctx.pause('''Please centrifuge the PCR tubes and rest them on ice. Replace
@@ -139,6 +145,7 @@ def run(ctx):
         pick_up(p300)
         p300.aspirate(50, src)
         p300.dispense(50, dest)
+        p300.blow_out()
         p300.drop_tip()
 
     # Incubate Reaction for 15 mins at 20C

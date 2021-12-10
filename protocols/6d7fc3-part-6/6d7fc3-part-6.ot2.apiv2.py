@@ -80,24 +80,28 @@ def run(ctx):
     pick_up(pip)
     pip.aspirate(upcr_buffer_vol, upcr_buffer)
     pip.dispense(upcr_buffer_vol, mm)
+    pip.blow_out()
     pip.drop_tip()
 
     pip = p300 if pcr_primer_A_vol > 20 else p20
     pick_up(pip)
     pip.aspirate(pcr_primer_A_vol, pcr_primer_A)
     pip.dispense(pcr_primer_A_vol, mm)
+    pip.blow_out()
     pip.drop_tip()
 
     pip = p300 if pcr_primer_B_vol > 20 else p20
     pick_up(pip)
     pip.aspirate(pcr_primer_B_vol, pcr_primer_B)
     pip.dispense(pcr_primer_B_vol, mm)
+    pip.blow_out()
     pip.drop_tip()
 
     pip = p300 if dna_poly_vol > 20 else p20
     pick_up(pip)
     pip.aspirate(dna_poly_vol, dna_poly)
     pip.dispense(dna_poly_vol, mm)
+    pip.blow_out()
     pip.drop_tip()
 
     pip = p300 if mix_vol > 20 else p20
@@ -111,6 +115,7 @@ def run(ctx):
         p20.aspirate(6.6, mm)
         p20.dispense(6.6, well)
         p20.mix(7, 10)
+        p20.blow_out()
         p20.drop_tip()
 
     # Centrifuge
@@ -121,6 +126,7 @@ def run(ctx):
         pick_up(p300)
         p300.aspirate(20, src)
         p300.dispense(20, dest)
+        p300.blow_out()
         p300.drop_tip()
 
     tc_mod.close_lid()

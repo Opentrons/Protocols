@@ -111,6 +111,7 @@ def run(ctx):
         pick_up(p300)
         p300.aspirate(50, src)
         p300.dispense(50, dest)
+        p300.blow_out()
         p300.drop_tip()
 
     # Add Nuclease Free Water to Mixture to bring volume to 100 uL
@@ -118,6 +119,7 @@ def run(ctx):
     for dest in mag_plate_wells:
         p300.aspirate(50, nfw)
         p300.dispense(50, dest.top(-5))
+        p300.blow_out()
     p300.drop_tip()
 
     # Add 100 uL of Beads to DNA Mixture
@@ -126,6 +128,7 @@ def run(ctx):
         p300.aspirate(100, beads)
         p300.dispense(100, dest)
         p300.mix(10, 100)
+        p300.blow_out()
         p300.drop_tip()
 
     # Incubate Mixture for 5 minutes at Room Temperature
@@ -139,7 +142,7 @@ def run(ctx):
     # Remove Supernatant
     for well in mag_plate_wells:
         pick_up(p300)
-        remove_supernatant(100, well, trash, getWellSide(well, mag_plate))
+        remove_supernatant(200, well, trash, getWellSide(well, mag_plate))
         p300.drop_tip()
 
     # Completely Remove Residual Supernatant
@@ -150,7 +153,8 @@ def run(ctx):
         pick_up(p300)
         for well in mag_plate_wells:
             p300.aspirate(200, ethanol)
-            p300.dispense(200, well.top(10))
+            p300.dispense(200, well.top(-2))
+            p300.blow_out()
         p300.drop_tip()
 
         ctx.delay(minutes=2, msg="Waiting for solution to clear.")
@@ -182,6 +186,7 @@ def run(ctx):
         p300.aspirate(52, nfw)
         p300.dispense(52, well.bottom(3))
         p300.mix(10, 25, well.bottom(1))
+        p300.blow_out()
         p300.drop_tip()
 
     # Engaging Magnetic Module
@@ -204,6 +209,7 @@ def run(ctx):
         p300.aspirate(50, beads)
         p300.dispense(50, well)
         p300.mix(10, 50)
+        p300.blow_out()
         p300.drop_tip()
 
     # Incubate for 5 minutes in room temperature
@@ -220,7 +226,7 @@ def run(ctx):
     # Remove Supernatant
     for well in mag_plate_wells:
         pick_up(p300)
-        remove_supernatant(200, well, trash, getWellSide(well, mag_plate))
+        remove_supernatant(100, well, trash, getWellSide(well, mag_plate))
         p300.drop_tip()
 
     # Completely Remove Residual Supernatant
@@ -231,7 +237,8 @@ def run(ctx):
         pick_up(p300)
         for well in mag_plate_wells:
             p300.aspirate(200, ethanol)
-            p300.dispense(200, well.top(10))
+            p300.dispense(200, well.top(-2))
+            p300.blow_out()
         p300.drop_tip()
 
         ctx.delay(minutes=2, msg="Waiting for solution to clear.")
@@ -262,6 +269,7 @@ def run(ctx):
         p300.aspirate(22, nfw)
         p300.dispense(22, well.bottom(3))
         p300.mix(10, 20, well.bottom(1))
+        p300.blow_out()
         p300.drop_tip()
 
     # Engaging Magnet for 5 minutes
