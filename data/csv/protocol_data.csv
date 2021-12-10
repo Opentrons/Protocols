@@ -192,7 +192,7 @@
 190,17cb2d,sample prep,plate filling,sample prep,0,1,1,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1
 191,6bc986-part-6,pcr,pcr prep,pcr,0,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1
 192,13ea1e-part2,pcr,pcr prep,pcr,1,2,0,1,0,0,0,0,0,0,3,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3
-193,1f96ca,ngs library prep,"kapa hyper plus 96rx, cat 07962428001 roche",ngs,0,4,1,1,1,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0,1,2
+193,1f96ca,ngs library prep,kapa hyper plus 96rx cat 07962428001 roche,ngs,0,4,1,1,1,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0,1,2
 194,swift-2s-turbo-pt2,featured,ngs library prep: swift 2s turbo,ngs,0,2,1,1,1,0,0,3,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,1,0,3
 195,0bf4f4,ngs library prep,illumina dna prep,ngs,0,3,1,1,0,0,0,0,0,0,3,1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,4
 196,111210-part-10,ngs library prep,generead qiaact lung rna fusion umi panel kit,ngs,0,2,1,1,2,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,1,0,1,2
@@ -476,6 +476,6 @@
 474,1211,sample prep,cherrypicking,cherrypicking,0,2,3,1,0,6,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6
 475,76ba23-pcr1,ngs library prep,zymoresearch: ez dna methylation-gold kit,ngs,0,4,2,1,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,4
 476,sci-omegabiotek-magbind-total-rna-96,nucleic acid extraction & purification,rna extraction,extraction,0,2,3,1,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,1,0,6
-477,1f96ca-part-2,ngs library prep,"kapa hyper plus 96rx, cat 07962428001 roche",ngs,1,2,1,1,1,0,0,0,0,0,4,2,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0,0,6
+477,1f96ca-part-2,ngs library prep,kapa hyper plus 96rx cat 07962428001 roche,ngs,1,2,1,1,1,0,0,0,0,0,4,2,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0,0,6
 478,6aee6e,sample prep,plate filling,sample prep,1,2,0,1,0,0,0,0,0,0,2,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2
 479,04f4e7,nucleic acid extraction & purification,nucleic acid purification,extraction,0,3,3,1,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,5
