@@ -4,7 +4,7 @@ import json
 import numpy as np
 
 protobuilds_path = 'protoBuilds/'
-
+protocols_path = 'protocols/'
 protocol_data = []
 
 
@@ -41,6 +41,52 @@ def transform_category(cat, subcat):
         return 'sample prep'
     else:
         return 'other'
+
+
+def get_modules(folder):
+
+    def is_comment(line):
+        if len(line.strip()) > 0:
+            return line.strip()[0] == '#'
+        return False
+
+    mod_counts = {
+        'temperature gen2': 0,
+        'temperature gen1': 0,
+        'magnetic gen2': 0,
+        'magnetic gen1': 0,
+        'thermocycler': 0
+    }
+
+    map = {
+        'temperature module gen2': 'temperature gen2',
+        'tempdeck': 'temperature gen1',
+        'magnetic module gen2': 'magnetic gen2',
+        'magdeck': 'magnetic gen1',
+        'thermocycler': 'thermocycler'
+    }
+
+    def find_module(line):
+        for key in map.keys():
+            if key in line:
+                mod_counts[map[key]] += 1
+
+    prtcl_path = f'{protocols_path}/{folder}'
+    if os.path.isdir(prtcl_path):
+        # find protocol file
+        prtcl_file_path = None
+        for file in os.listdir(prtcl_path):
+            if file.split('.')[-1] == 'py':
+                prtcl_file_path = file
+                break
+        if prtcl_file_path:
+            full_file_path = f'{prtcl_path}/{prtcl_file_path}'
+            with open(full_file_path) as prtcl_file:
+                lines = prtcl_file.readlines()
+                for line in [line.lower() for line in lines]:
+                    if not is_comment(line) and 'load_module' in line:
+                        find_module(line)
+    return mod_counts
 
 
 def get_protocol_data():
@@ -108,17 +154,20 @@ def get_protocol_data():
             'p1000_single': 0,
             'p1000_single_gen2': 0,
         }
+        module_data = {}
+        module_data['counts'] = get_modules(folder)
         for pip in pip_data['raw']:
             pip_data['counts'][pip['name']] += 1
         prtcl_data['labware'] = lw_data
         prtcl_data['pipettes'] = pip_data
-        # prtcl_data['modules'] = mod_data
+        prtcl_data['modules'] = module_data
         prtcl_data['id'] = folder
         protocol_data.append(prtcl_data)
 
     fields = ['id', 'category', 'subcategory', 'transformed category'] + [
         key for dict in [protocol_data[0]['labware']['counts'],
-                         protocol_data[0]['pipettes']['counts']]
+                         protocol_data[0]['pipettes']['counts'],
+                         protocol_data[0]['modules']['counts']]
         for key in dict.keys()]
 
     df_dict = {
@@ -132,7 +181,8 @@ def get_protocol_data():
         df_dict['transformed category'].append(
             transform_category(p_d['category'], p_d['subcategory']))
         for dict in [p_d['labware']['counts'],
-                     p_d['pipettes']['counts']]:
+                     p_d['pipettes']['counts'],
+                     p_d['modules']['counts']]:
             for field, count in dict.items():
                 df_dict[field].append(count)
 
