@@ -64,16 +64,16 @@ with {num_primers} primers.')
         m20.transfer(16, mm, d.bottom(0.5), new_tip='never')
     m20.drop_tip()
 
-    # transfer primers
-    for primer, dest_set in zip(primer_sources, primer_dest_sets):
-        for d in dest_set:
-            p20.pick_up_tip()
-            p20.transfer(1, primer, d.bottom(0.5), new_tip='never')
-            p20.drop_tip()
-
     # transfer samples
     for s, d_set in zip(sample_sources, sample_dests_sets_m):
         for d in d_set:
             m20.pick_up_tip()
             m20.transfer(3, s, d.bottom(0.5), new_tip='never')
             m20.drop_tip()
+
+    # transfer primers
+    for primer, dest_set in zip(primer_sources, primer_dest_sets):
+        for d in dest_set:
+            p20.pick_up_tip()
+            p20.transfer(1, primer, d.bottom(0.5), new_tip='never')
+            p20.drop_tip()
