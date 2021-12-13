@@ -36,8 +36,8 @@ An example of the transfer scheme is shown in the following schematic:
 ### Deck Setup
 The following example shows a setup for 8 samples and 2 primers. Note that samples can continue across the plate, and primers can continue down and then across the tuberack.  
 * green in reagent reservoir: BigDye + water mix
-* pink in primer rack: primer 1
-* orange in primer rack: primer 2
+* pink in primer tuberack: primer 1
+* orange in primer tuberack: primer 2
 ![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/69cf81/deck-2.png)
 
 ---
