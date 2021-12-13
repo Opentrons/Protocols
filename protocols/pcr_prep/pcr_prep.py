@@ -10,22 +10,25 @@ metadata = {
 
 def get_values(*names):
     import json
-    _all_values = json.loads("""{ "left_pipette_step_1":"p20_single_gen2",
-                                  "right_pipette_step_1":"p300_single_gen2",
-                                  "left_pipette_tiprack_step_1":"opentrons_96_tiprack_20ul",
-                                  "right_pipette_tiprack_step_1":"opentrons_96_tiprack_300ul",
-                                  "left_pipette_step_2":"p20_single_gen2",
-                                  "right_pipette_step_2":"p300_single_gen2",
-                                  "left_pipette_tiprack_step_2":"opentrons_96_tiprack_20ul",
-                                  "right_pipette_tiprack_step_2":"opentrons_96_tiprack_300ul",
-                                  "temp_mod_reagents":"temperature module gen2",
-                                  "temp_mod_reagents_aux":null,
-                                  "temp_mod_target":"temperature module gen2",
-                                  "reagent_labware":"opentrons_24_aluminumblock_nest_1.5ml_snapcap",
-                                  "reagent_labware_aux":"opentrons_24_aluminumblock_nest_1.5ml_screwcap",
+    _all_values = json.loads("""{ "create_mastermix":true,
+                                  "use_same_pipettes":true,
+                                  "number_of_samples":96,
+                                  "left_pipette_part_1":"p20_single_gen2",
+                                  "right_pipette_part_1":"p300_single_gen2",
+                                  "left_pipette_tiprack_part_1":"opentrons_96_tiprack_20ul",
+                                  "right_pipette_tiprack_part_1":"opentrons_96_tiprack_300ul",
+                                  "left_pipette_part_2":"p20_single_gen2",
+                                  "right_pipette_part_2":"p300_single_gen2",
+                                  "left_pipette_tiprack_part_2":"opentrons_96_tiprack_20ul",
+                                  "right_pipette_tiprack_part_2":"opentrons_96_tiprack_300ul",
+                                  "temp_mod_slot_1":"temperature module gen2",
+                                  "temp_mod_slot_4":,"temperature module gen2",
+                                  "temp_mod_slot_7":"temperature module gen2",
+                                  "pcr_reagent_labware":"opentrons_24_aluminumblock_nest_1.5ml_snapcap",
+                                  "aux_pcr_reagent_labware":"opentrons_24_aluminumblock_nest_1.5ml_screwcap",
                                   "target_labware":"opentrons_96_aluminumblock_biorad_wellplate_200ul",
-                                  "multi_pipette_distribution":"True",
-                                  "temperature":4.0,
+                                  "mastermix_labware":null,
+                                  "mod_temperature":4.0,
                                   "master_mix_csv":"Reagent,Slot,Well,Volume\\nBuffer,1,A2,30\\nMgCl2,1,A3,40\\ndNTPs,2,A2,90\\nWater,2,A3,248\\nprimer 1,1,A4,25\\nprimer 2,1,A5,25\\n"}""")
     return [_all_values[n] for n in names]
 
@@ -33,27 +36,41 @@ def get_values(*names):
 def run(ctx: protocol_api.ProtocolContext):
 
     [
-        _left_pipette,
-        _right_pipette,
-        _right_pipette_tiprack,
-        _left_pipette_tiprack,
-        _temp_mod_reagents,
-        _temp_mod_reagents_aux,
-        _temp_mod_target,
-        _reagent_labware,
-        _reagent_labware_aux,
+        _create_mastermix,
+        _use_same_pipettes,
+        _number_of_samples,
+        _left_pipette_part_1,
+        _right_pipette_part_1,
+        _right_pipette_tiprack_part_1,
+        _left_pipette_tiprack_part_1,
+        _left_pipette_part_2,
+        _right_pipette_part_2,
+        _right_pipette_tiprack_part_2,
+        _left_pipette_tiprack_part_2,
+        _temp_mod_slot_1,
+        _temp_mod_slot_4,
+        _temp_mod_slot_7,
+        _pcr_reagent_labware,
+        _aux_pcr_reagent_labware,
         _target_labware,
+        _mastermix_labware,
         _multi_pipette_distribution,
         _temperature,
-        _master_mix_csv
+        _master_mix_csv,
+        _mastermix_volume,
+        _DNA_volume
     ] = get_values(  # noqa: F821
-                   "left_pipette",
-                   "right_pipette",
-                   "right_pipette_tiprack",
-                   "left_pipette_tiprack",
-                   "temp_mod_reagents",
-                   "temp_mod_reagents_aux",
-                   "temp_mod_target",
+                   "left_pipette_part_1",
+                   "right_pipette_part_1",
+                   "right_pipette_tiprack_part_1",
+                   "left_pipette_tiprack_part_1",
+                   "left_pipette_part_2",
+                   "right_pipette_part_2",
+                   "right_pipette_tiprack_part_2",
+                   "left_pipette_tiprack_part_2",
+                   "temp_mod_slot_1",
+                   "temp_mod_slot_4",
+                   "temp_mod_slot_7",
                    "reagent_labware",
                    "reagent_labware_aux",
                    "target_labware",
@@ -62,9 +79,38 @@ def run(ctx: protocol_api.ProtocolContext):
                    "master_mix_csv")
 
     # Do input error checking here
-    if not _left_pipette and not _right_pipette:
-        raise Exception('You have to select at least 1 pipette.')
+    if (not _left_pipette_part_1 and not _right_pipette_part_1 and
+            _create_mastermix):
+        raise Exception('You have to select at least 1 pipette for part 1')
 
+    if (not _left_pipette_part_2 and not _right_pipette_part_2
+            and not _use_same_pipettes):
+        raise Exception('You have to select at least 1 pipette for part 2')
+
+    # Error check the CSV file
+    # 1. Check that the total volume of mastermix that we create is enough
+    # to pipette into each target well
+    # Fields: Reagent | slot | well | volume
+
+    mastermix_matrix = [
+        [cell.strip() for cell in line.split(',')]
+        for line in _master_mix_csv.splitlines()[1:] if line
+    ]
+
+    mastermix_volume_sum = 0
+    for row in mastermix_matrix:
+        mastermix_volume_sum = row[3]
+
+    if mastermix_volume_sum < _DNA_volume * _number_of_samples:
+        raise Exception("The mastermix that you are creating" +
+                        "does not have sufficient volume for your DNA sampes")
+
+    # Error check that there's auxiliary labware if the CSV is requesting it
+    if _reagent_labware_aux is None:
+        for row in mastermix_matrix:
+            if row[1] == 2:
+                raise Exception("The CSV mastermix file makes use of aux. " +
+                                "labware, but none has been selected")
     # define all custom variables above here with descriptions:
 
     # load modules
@@ -83,15 +129,30 @@ def run(ctx: protocol_api.ProtocolContext):
     '''
 
     # Loading temperature modules here
-    temp_mod_list = [None, None, None]  # Reagent, reag. aux, and target T mod
-    temp_mod_slots = ['7', '8', '9']
-    temp_mod_type_list = [_temp_mod_reagents, _temp_mod_reagents_aux,
-                          _temp_mod_target]
+    # temp_mod_list = [None, None, None]
+    """
+    Slot 1: In part 1 this will hold the mastermix target container, or the
+    DNA/mastermix plate (MDNAP)
+    Slot 4: Part 1: PCR components, Part 2: DNA samples
+    Slot 7: Part 1: Auxiliary PCR components, Part 2: Mastermix container
+    """
+    """temp_mod_slots = ['1', '4', '7']
+    temp_mod_type_list = [_temp_mod_slot_1, _temp_mod_slot_4,
+                          _temp_mod_slot_7]
     for i, slot, type in zip([0, 1, 2],
                              temp_mod_slots,
                              temp_mod_type_list):
         if type is not None:
-            temp_mod_list[i] = ctx.load_module(type, slot)
+            temp_mod_list[i] = ctx.load_module(type, slot)"""
+    temp_mod_slot_1, temp_mod_slot_4, temp_mod_slot_7 = None, None, None
+
+    if _temp_mod_slot_1 is not None:
+        temp_mod_slot_1 = ctx.load_module(_temp_mod_slot_1)
+    if _temp_mod_slot_4 is not None:
+        temp_mod_slot_4 = ctx.load_module(_temp_mod_slot_4)
+    if _temp_mod_slot_7 is not None:
+        temp_mod_slot_7 = ctx.load_module(_temp_mod_slot_7)
+
     '''
 
     Add your labware here with:
@@ -104,28 +165,49 @@ def run(ctx: protocol_api.ProtocolContext):
     where module_name is defined above.
 
     '''
-    # load labware
-    labware_loadnames = [_reagent_labware, _reagent_labware_aux,
-                         _target_labware]
-    labware = [None, None, None]  # Reagent, Aux. reagent and target
-    labware_labels = ["reagent labware", "auxilliary reagent labware",
-                      "target labware"]
-    lw_dict = {
-        "reagents": 0,
-        "aux_reagents": 1,
-        "target": 2
-    }
 
-    # Load the reagent labware
-    for i, label in zip(range(0, len(labware)), labware_labels):
-        if temp_mod_list[i] is not None:
-            labware[i] = \
-                temp_mod_list[i].load_labware(labware_loadnames[i],
-                                              labware_labels[i])
+    # Load labware for part 1
+
+    pcr_reagent_labware, aux_pcr_reagent_labware, mastermix_labware = \
+        None, None, None
+
+    # Slot 1: This is either the mastermix container or the MDNAP
+    mastermix_target_label = "Mastermix target"
+    if _mastermix_labware is not None:
+        if temp_mod_slot_1 is not None:
+            mastermix_labware = \
+                temp_mod_slot_1.load_labware(_mastermix_labware,
+                                             mastermix_target_label)
         else:
-            labware[i] = ctx.load_labware(labware_loadnames[i],
-                                          temp_mod_slots[i],
-                                          labware_labels[i])
+            mastermix_labware = \
+                ctx.load_labware(_mastermix_labware,
+                                 '1',
+                                 mastermix_target_label)
+
+    # Slot 4: Primary PCR reagent component labware
+    pcr_reagent_labware_label = "PCR reagents"
+    if temp_mod_slot_4 is not None:
+        pcr_reagent_labware = \
+            temp_mod_slot_1.load_labware(_pcr_reagent_labware,
+                                         pcr_reagent_labware_label)
+    else:
+        pcr_reagent_labware = \
+            ctx.load_labware(_pcr_reagent_labware,
+                             '4',
+                             pcr_reagent_labware_label)
+
+    # Slot 7: This labware is for auxiliary PCR reagents and is optional
+    aux_pcr_reagent_labware_label = "Auxiliary PCR reagents"
+    if _aux_pcr_reagent_labware is not None:
+        if temp_mod_slot_1 is not None:
+            aux_pcr_reagent_labware = \
+                temp_mod_slot_1.load_labware(_aux_pcr_reagent_labware,
+                                             aux_pcr_reagent_labware_label)
+        else:
+            mastermix_labware = \
+                ctx.load_labware(_aux_pcr_reagent_labware,
+                                 '7',
+                                 _aux_pcr_reagent_labware_label)
 
     # load tipracks
 
@@ -148,11 +230,11 @@ def run(ctx: protocol_api.ProtocolContext):
 
     '''
 
-    left_tipracks = [ctx.load_labware(_left_pipette_tiprack, slot)
-                     for slot in ['1']]
+    left_tipracks = [ctx.load_labware(_left_pipette_tiprack_part_1, slot)
+                     for slot in ['5', '6']]
 
-    right_tipracks = [ctx.load_labware(_right_pipette_tiprack, slot)
-                      for slot in ['2']]
+    right_tipracks = [ctx.load_labware(_right_pipette_tiprack_part_1, slot)
+                      for slot in ['2', '3']]
 
     # load instrument
     '''
@@ -172,26 +254,26 @@ def run(ctx: protocol_api.ProtocolContext):
                         tip_racks=tiprack
                         )
     '''
-
+    """
     left_pipette = None
     right_pipette = None
 
     for loadname, mount, tipracks in zip(
-                                    [_left_pipette, _right_pipette],
+                                    [_left_pipette_part_1, _right_pipette_part_1],
                                     ["left", "right"],
-                                    [left_tipracks, right_tipracks]):
+                                    [left_tipracks_part_1, right_tipracks_part_1]):
         if mount == "left":
             left_pipette = ctx.load_instrument(loadname, mount,
                                                tip_racks=tipracks)
         else:
-            right_pipette = ctx.load_instrument(loadname, mount,
+            right_pipette_part_1 = ctx.load_instrument(loadname, mount,
                                                 tip_racks=tipracks)
 
     pip_s = None
     pip_l = None
 
     # determine which pipette has the smaller volume range
-    if left_pipette and right_pipette:
+    if left_pipette and right_pipette_part_1:
         # Case when pipettes are the same
         if left_pipette.name == right_pipette.name:
             pip_s = left_pipette
@@ -203,6 +285,7 @@ def run(ctx: protocol_api.ProtocolContext):
                 pip_s, pip_l = right_pipette, left_pipette
     else:
         pipette = left_pipette if left_pipette else right_pipette
+    """
 
     # pipette functions   # INCLUDE ANY BINDING TO CLASS
 
@@ -280,13 +363,13 @@ def run(ctx: protocol_api.ProtocolContext):
         # Make sure that the target labware is appropriate for distribution
         # of mastermix, appropriate targets either have 8 or more wells
         # or they are reservoirs
-        if len((labware[lw_dict["target"]].columns()[0]) <= 8
-                and not labware[lw_dict["target"]].name in "reservoir"):
+        if len((labware_part_1[lw_dict["target"]].columns()[0]) <= 8
+                and not labware_part_1[lw_dict["target"]].name in "reservoir"):
             raise Exception("Target labware does not have 8 wells per column")
-        master_mix_destination = labware[lw_dict["target"]].columns()[0]
+        master_mix_destination = labware_part_1[lw_dict["target"]].columns()[0]
     else:
         # Mix in well A1 of the target
-        master_mix_destination = labware[lw_dict["target"]].wells()[0]
+        master_mix_destination = labware_part_1[lw_dict["target"]].wells()[0]
 
     # plate, tube rack maps
 
@@ -345,9 +428,9 @@ def run(ctx: protocol_api.ProtocolContext):
     for line in info_list:
         ctx.comment('Transferring ' + line[0] + ' to destination')
         # labware is 0 indexed, so we need to subtract 1 to get the right one
-        source = labware[int(line[1])-1].wells(line[2].upper())
+        source = labware_part_1[int(line[1])-1].wells(line[2].upper())
         if (_multi_pipette_distribution == "True" and not
-                labware[lw_dict["target"]]):
+                labware_part_1[lw_dict["target"]]):
             vol = float(line[3])/8
         else:
             vol = float(line[3])
