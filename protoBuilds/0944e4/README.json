@@ -5,7 +5,7 @@
             "Ampure XP"
         ]
     },
-    "description": "This protocol performs a custom NGS library cleanup using Ampure XP beads in a variable ratio with samples. The samples are mounted on an Opentrons magnetic module, and the final elute is transferred to a fresh PCR plate.\n\n\n\nOpentrons Magnetic Module GEN2\nUSA Scientific 12-channel reservoir 22ml #1061-8150\nEppendorf twin.tec 96-well PCR plate #0030129512\nP20 multi-channel GEN2 electronic pipette\nP300 multi-channel electronic pipette\nOpentrons 20ul filter tiprack\nOpentrons 200ul filter tiprack\n\n\n\n12-channel reservoir (slot 7)\n channel 1: Ampure XP beads\n channel 2: 80% ethanol\n channel 3: EB buffer\n channels 11-12: liquid waste (loaded empty)",
+    "description": "This protocol performs a custom NGS library cleanup using Ampure XP beads in a variable ratio with samples. The samples are mounted on an Opentrons magnetic module, and the final elute is transferred to a fresh PCR plate.\n\n\n\nOpentrons Magnetic Module GEN2\nUSA Scientific 12-channel reservoir 22ml #1061-8150\nEppendorf twin.tec 96-well PCR plate #0030129512\nP20 multi-channel GEN2 electronic pipette\nP300 multi-channel electronic pipette\nOpentrons 20ul filter tiprack\nOpentrons 200ul filter tiprack\n\n\n\n12-channel reservoir (slot 7)\n* channel 1: Ampure XP beads\n* channel 2: 80% ethanol\n* channel 3: EB buffer\n* channels 11-12: liquid waste (loaded empty)",
     "internal": "0944e4",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",

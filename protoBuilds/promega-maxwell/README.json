@@ -31,7 +31,7 @@
     "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
     "pipettes": "\nOpentrons P300 8-Channel Electronic Pipette (GEN2)\n",
     "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
-    "reagent-setup": "\nReservoir 1: slot 2\nReservoir 2: slot 3\n\n\nVolumes per reservoir channel: (for 96-sample run, not including dead volume):\n 9mL of binding buffer\n 15mL of Wash 1\n 11mL of Wash 2\n 11mL of Wash 3\n* 6mL of elution buffer\n",
+    "reagent-setup": "\nReservoir 1: slot 2\nReservoir 2: slot 3\n\n\nVolumes per reservoir channel: (for 96-sample run, not including dead volume):\n* 9mL of binding buffer\n* 15mL of Wash 1\n* 11mL of Wash 2\n* 11mL of Wash 3\n* 6mL of elution buffer\n",
     "reagents": [
         "Promega Maxwell\u00ae HT Viral TNA kit"
     ],

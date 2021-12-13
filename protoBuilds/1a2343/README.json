@@ -5,7 +5,7 @@
             "PCR Prep"
         ]
     },
-    "description": "This protocol performs a custom PCR preparation for gel samples using an on-deck Opentrons Thermocycler module.\n\n\n\nOpentrons Thermocycler (occupying slots 7, 8, 10, 11) with NEST 0.1 mL 96-Well PCR Plate, Full Skirt\nOpentrons Temperature Module with USA Scientific 96 Deep Well Plate 2.4 mL\nCorning 96 Well Plate 360 \u00b5L Flat\nOpentrons 20\u00b5l and 50/300\u00b5l tipracks\n\n\n\n96-deepwell reagent block on temperature module (slot 4)\n well A1: DNTPs\n well B1: polymerase\n column 2: PCR buffer\n wells A3-H3: templates 1-8\n* column 4: water",
+    "description": "This protocol performs a custom PCR preparation for gel samples using an on-deck Opentrons Thermocycler module.\n\n\n\nOpentrons Thermocycler (occupying slots 7, 8, 10, 11) with NEST 0.1 mL 96-Well PCR Plate, Full Skirt\nOpentrons Temperature Module with USA Scientific 96 Deep Well Plate 2.4 mL\nCorning 96 Well Plate 360 \u00b5L Flat\nOpentrons 20\u00b5l and 50/300\u00b5l tipracks\n\n\n\n96-deepwell reagent block on temperature module (slot 4)\n* well A1: DNTPs\n* well B1: polymerase\n* column 2: PCR buffer\n* wells A3-H3: templates 1-8\n* column 4: water",
     "internal": "1a2343",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
