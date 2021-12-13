@@ -1,4 +1,5 @@
 from opentrons import protocol_api
+from math import ceil
 
 metadata = {
     'protocolName': 'PCR Prep',
@@ -106,7 +107,7 @@ def run(ctx: protocol_api.ProtocolContext):
                         "does not have sufficient volume for your DNA sampes")
 
     # Error check that there's auxiliary labware if the CSV is requesting it
-    if _reagent_labware_aux is None:
+    if _aux_pcr_reagent_labware is None:
         for row in mastermix_matrix:
             if row[1] == 2:
                 raise Exception("The CSV mastermix file makes use of aux. " +
@@ -188,7 +189,7 @@ def run(ctx: protocol_api.ProtocolContext):
     pcr_reagent_labware_label = "PCR reagents"
     if temp_mod_slot_4 is not None:
         pcr_reagent_labware = \
-            temp_mod_slot_1.load_labware(_pcr_reagent_labware,
+            temp_mod_slot_4.load_labware(_pcr_reagent_labware,
                                          pcr_reagent_labware_label)
     else:
         pcr_reagent_labware = \
@@ -199,15 +200,15 @@ def run(ctx: protocol_api.ProtocolContext):
     # Slot 7: This labware is for auxiliary PCR reagents and is optional
     aux_pcr_reagent_labware_label = "Auxiliary PCR reagents"
     if _aux_pcr_reagent_labware is not None:
-        if temp_mod_slot_1 is not None:
+        if temp_mod_slot_7 is not None:
             aux_pcr_reagent_labware = \
-                temp_mod_slot_1.load_labware(_aux_pcr_reagent_labware,
+                temp_mod_slot_7.load_labware(_aux_pcr_reagent_labware,
                                              aux_pcr_reagent_labware_label)
         else:
-            mastermix_labware = \
+            aux_pcr_reagent_labware = \
                 ctx.load_labware(_aux_pcr_reagent_labware,
                                  '7',
-                                 _aux_pcr_reagent_labware_label)
+                                 aux_pcr_reagent_labware_label)
 
     # load tipracks
 
@@ -257,10 +258,8 @@ def run(ctx: protocol_api.ProtocolContext):
 
     left_pipette = None
     right_pipette = None
-
     left_pipette = ctx.load_instrument(_left_pipette_part_1, "left",
                                        left_tipracks)
-
     right_pipette = ctx.load_instrument(_right_pipette_part_1, "right",
                                         right_tipracks)
 
@@ -319,6 +318,57 @@ def run(ctx: protocol_api.ProtocolContext):
 
 
     '''
+
+    '''
+    Select the best pipette for pipetting step according to economic criteria
+    '''
+    def select_pipette(volume, source):
+        # Trivial case: Both pipettes are the same
+        if left_pipette.name == right_pipette.name:
+            return left_pipette
+
+        # First criteria: is there more than one pipette?
+        if left_pipette is None:
+            return right_pipette
+        elif right_pipette is None:
+            return left_pipette
+
+        # Second criteria: If only one of the pipettes has a
+        # min_volume < volume return that one
+        if (left_pipette.min_volume <= volume
+                and right_pipette.min_volume > volume):
+            return left_pipette
+        elif (right_pipette.min_volume <= volume
+                and left_pipette.min_volume > volume):
+            return right_pipette
+
+        # Third criteria: Return the pipette that can complete the pipetting
+        # step in the least amount of movement
+        left_steps = 0
+        right_steps = 0
+        left_volume_multiplier = ceil(volume / left_pipette.max_volume)
+        right_volume_multiplier = ceil(volume / right_pipette.max_volume)
+        is_left_multi = "multi" in left_pipette.name
+        is_right_multi = "multi" in right_pipette.name
+        right_volume_multiplier = ceil(volume / right_pipette.max_volume)
+        for s_col, d_col in zip(source.columns(), dest.columns()):
+            s_len = len(s_col)
+            d_len = len(d_col)
+            col_left_steps = 1 if is_left_multi else s_len
+            col_right_steps = 1 if is_right_multi else s_len
+            left_steps = col_left_steps * left_volume_multiplier
+            right_steps = col_right_steps * right_volume_multiplier
+
+        if left_steps < right_steps:
+            return left_pipette
+        elif right_steps < left_steps:
+            return right_pipette
+
+        #4th criteria: Return the pipette that uses the smallest tips
+        if left_pipette.max_volume < right_pipette.max_volume:
+            return left_pipette
+        else:
+            return right_pipette
 
     # reagents
 
