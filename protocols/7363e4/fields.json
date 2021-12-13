@@ -1,13 +1,13 @@
 [
   {
     "type": "int",
-    "label": "In Deck Slot 8 - Count of Clinical Sample Tubes (0-24 or 0-40 depending on slot 8 rack) (max 48 combined total in slots 8 and 9)",
+    "label": "In Deck Slot 8 - Count of Clinical Sample Tubes (0-15 or 0-40 depending on slot 8 rack) (max 48 combined total in slots 8 and 9)",
     "name": "sample_count_1",
     "default": 1
   },
   {
     "type": "int",
-    "label": "In Deck Slot 9 - Count of Clinical Sample Tubes (0-24 or 0-40 depending on slot 9 rack) (max 48 combined total in slots 8 and 9)",
+    "label": "In Deck Slot 9 - Count of Clinical Sample Tubes (0-15 or 0-40 depending on slot 9 rack) (max 48 combined total in slots 8 and 9)",
     "name": "sample_count_2",
     "default": 0
   },
@@ -16,7 +16,7 @@
     "label": "Labware (Rack and Tubes) for Clinical Samples in Deck Slot 8",
     "name": "labware_clinical_samples_1",
     "options": [
-      { "label": "large tubes in custom 4 x 6 24-tube rack", "value": "custom_24_tuberack_14000ul" },
+      { "label": "large tubes in Opentrons 3 x 5 15-tube rack", "value": "opentrons_15_tuberack_14000ul" },
       { "label": "small tubes in custom 5 x 8 40-tube rack", "value": "custom_40_tuberack_6500ul" },
       { "label": "None - Deck Slot 8 Empty", "value": null }
     ]
@@ -27,7 +27,7 @@
     "name": "labware_clinical_samples_2",
     "options": [
       { "label": "None - Deck Slot 9 Empty", "value": null },
-      { "label": "large tubes in custom 4 x 6 24-tube rack", "value": "custom_24_tuberack_14000ul" },
+      { "label": "large tubes in Opentrons 3 x 5 15-tube rack", "value": "opentrons_15_tuberack_14000ul" },
       { "label": "small tubes in custom 5 x 8 40-tube rack", "value": "custom_40_tuberack_6500ul" }
     ]
   },
