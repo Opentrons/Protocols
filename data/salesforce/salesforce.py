@@ -73,8 +73,9 @@ def extract():
     with open('data/salesforce/user_map.json') as user_map_file:
         user_map = json.load(user_map_file)
         df_new['sf_assignee'].replace(user_map, inplace=True)
-    # print(df_new['sf_assignee'].value_counts())
 
+    # df_new['delivered'] = pd.to_datetime(df_new['delivered'], format='%f')
+    # df_new['created'] = pd.to_datetime(df_new['created'], format='%f')
     df_new.to_csv('data/csv/salesforce.csv')
     return df_new
 

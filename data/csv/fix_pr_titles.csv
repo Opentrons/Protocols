@@ -1,0 +1,912 @@
+"fix(protocols/6d7fc3): add blow out, adjust heights and volumes"
+feat(protocols/1bcd67): overhaul logic for dilution input
+feat(protocols/1bcd67): overhaul logic for dilution input
+feat(protocols/opentrons_logo): updated protocol logic and parameters
+fix(protocols/69cf81): improve efficiency
+fix(protocols/925d07): fully dispense mastermix
+fix(protocols/925d07): update sample column calculation
+ix(protocols/7855ef): readme and tipbox fixes
+fix 234495 process 12 to 27 pooled and or patient samples as samples
+fix(protocols/925d07): post-wet run changes
+fix 234495 remove filter tips adjust volumes add tip boxes use 3 reservoir wells
+fix(protocols/469c70): fix readme
+feat(protocols/469c70): add liquid height tracking
+fix(protocols): update aspiration from tiprack errors for all protocol packages
+fix(scripts/pd-generate.py): check for author field
+feat(protocols/4568fa): change hs diluent location
+fix(protocols/7062c9-2): update tip parking strategy
+fix 38efd4 change title for trademark reasons
+fix(scripts/pd-generate.py): remove error throwing for protocols without title
+fix(protocols/469c70): allow transfer steps to be dictated by csv input
+fix(protocols/4568fa): mix triplicates only once
+fix(.travis.yml): resolve flake8 + python versioning
+fix(protocols/00a6e5): add sample from tubes as initial step
+feat(protocols/2ed4de): parameterize sample number
+fix(protocols/7062c9-2): update sample mixing speed
+fix(protocols/7062c9-2): update mixing time and volumes
+fix(protocols/4568fa): update dilution sets for > 12 samples
+fix(protocols/7062c9-2): update mixing logic during 30min incubation
+fix(2ed4de): update mix reps logic
+fix(protocols/7062c9-2): update mixing logic for better bead resuspension
+fix(protocols/7062c9-2): decrease flow rates and head speed during iterative mixing
+fix(protocols/4568fa): mix sample before triplicate distribution
+fix(protocols/2ed4de-2): update reagent locations
+fix 38efd4 calculate tip touch radius and speed
+fix(protocols/4568fa): minimize variance across triplicates
+"fix(protocols/0045f1): increase height on labware definition, change nomenclature"
+fix(protocols/2ed4de): final onsite fixes
+fix(protocols/17d210): 5-part fixes after sample testing 
+fix(protocols/2ed4de): post sample run optimizations
+fix(protocols/7062c9-2): update mixing time to 30min
+fix(protocols/4568fa): post-day 3 fixes
+fix(protocols/2ed4de): post-onsite development fixes and features
+fix(protocols/7062c9): change deck layout
+fix(protocols/4568fa): prepare for sample testing
+fix(protocols/omega_biotek_magbind): update well location
+"fix(protocols/0045f1): allow for more spacing in the slides, number of tubes parameter"
+"fix(protocols/0045f1): allow for more spacing in the slides, number of tubes parameter"
+fix(protocols/4568fa): trigger
+fix(protocols/4568fa): update after onsite optimizations
+fix(protocols/7062c9): final onsite updates
+fix(protocols/6d7fc3): added mixing steps and adjusted magnetic module engage height
+fix 6cb818 optionally skip adjustment of final volume
+fix(protocols/7855ef): add option to have 96 well plate or 384 well plate
+fix(protocols/7062c9): onsite implementation changes
+fix(protocols/459cc2): parameters and definition updates
+feat(protocols/05f673): updated mixing and distribution
+"fix(protocols/1dfebe): remove reagent addition, decrease touch tip height"
+"fix(protocols/1dfebe): remove reagent addition, decrease touch tip height"
+fix(makefile): specify pipenv version
+"fix(protocols/5dcd88):  reduce touch tip radius, tip parking, having reagent plate instead of tuberack"
+fix 6b51bd add parameter for 0 to 5 mix reps
+fix 6bc986 part 4 use p20m and 15ul move tips to slot 4
+fix(protocols/2aee74): wet run changes
+fix 29225e part 2 adjust degree of tip immersion
+fix(protocols/2aee74): updates following wet run unit testing 
+fix 29225e exception handling max volume from labware def
+feat(protocols/2aee74): add tip tracking and small fixes
+fix(protocols/2aee74): onsite development pt 1
+fix 29225e adjust tube switch and mix
+"fix(protocols/4c8861): allow for diluent volumes of 0 to be passed in csv, skip if that's the case"
+fix 29225e add 5ml tube rack
+fix 29225e part 2 change display name in labware defs
+fix 29225e asp low dispense high during mix
+feat(protocols/2aee74): add plate option for each protocol
+fix 29225e part 2 add labware to dropdown for source
+fix 29225e add labware to dropdown
+fix 6b51bd correct pip assignment
+fix 6b51bd adjust wellh class for reservoirs
+fix 29225e handle missing csv values
+fix(protocols/7855ef): readme update
+"fix(protocols/7855ef): instead of 3 destination plate, make destination plates 384 well plate"
+fix 6b51bd add labware to pulldown
+fix(protocols/25a03d): increase delay after adding mastermix
+fix(protocols/581011): allow for tips to only be changed when changing the effector/target columns
+fix(protocols/7062c9): add links to readme
+fix(protocols/581011): adjust end row number on csv
+fix(protocol/1dfebe): inconsequential readme change
+fix(protocols/1dfebe): inconsequential readme change
+fix(protocols:1dfebe): fix fields
+"fix(protocols/25a03d): slow tip withdrawal, remove touch tip, pre-wet tips"
+"fix(protocols/1dfebe): use new labware definition, add touch tip"
+fix(protocols/581011): adjust start row of csv
+feat(protocols/18e62e): added parameter
+fix 29225e part 2 master mix distribution
+fix 29225e part 2 load labware mm for master mix
+fix 38efd4 changes to blowout and tip touch
+feat(protocols/581011): move fields parameters from website to csv
+fix 29225e part 2 add custom labware 1.5m linblock
+"fix(protocols/4c8861): increase mixing, add fields for aspirate/dispense flow rate"
+fix(protocols/4c8861): remove blow out step
+fix(protocols/6d7fc3): refactored various steps of multipart protocol
+"fix(protocols/25a03d): add delay after dispense, touch tip"
+fix 38efd4 dead vol speed limit removal min height based on tip length and well max vol
+fix(protocols/659888): remove touch tip and blow out
+fix(protocols/swift-2s-turbo): fixed logic error with 200ul tips
+fix 38efd4 slow tip withdraw release speed limit at liquid surface when isinstance wellh
+fix(protocols/25a03d): decrease tube-strip labware definition depth (again)
+fix(protocols/25a03d): decrease tube-strip labware definition depth
+feat(protocols/swift-2s-turbo): allow for magdeck generation in fields
+feat(protocols/0d2950): included field for dispense height in plate
+feat(protocols/demo): assume both single and multi for action
+feat(protocols/69cf81): add tiprack option
+fix 29225e vol of 0 mix rate p300 mix step
+"feat(protocol/659888): increase number of plate, fields for dispense volume"
+fix(protocols/05f673): added ability to select 96-well plate
+"fix(protocols/25a03d): include touch tip, increase mix reps"
+"feat(protocols/04f4e7): use one set of tips for adding pbs, park"
+feat(protocols/0d2950): change tube rack map to mirror 96 well plate
+fix(protocols/19313a): tip parking and tracking
+fix(protocols/4c8861): remove tip parking
+fix(protocols/25a03d): adjust liquid handling to avoid introducing bubbles into mastermix
+fix 063611 add blow out and tip touch
+"feat(protocols/4c8861): liquid height tracking, option for pausing, other optimizations"
+fix(protocols/25a03d): control column to be static in column 10 instead of variable
+fix 063611 air gap after aspirate
+fix(protocols/0d2950): add touch tip
+fix(protocols/17d210): remove 5-part package until confidentiality agreement
+fix 29225e add labware custom nest deep well
+fix(protocols/1adec6-5): update protocol logic
+fix(protocols/25a03d): update readme
+fix(protocols/1adec6-4): add additional pipette and update fields
+fix(protocols/25a03d): update labware and include labware options in fields.json
+fix 29225e add labware
+fix(protocols/0d2950): strip down protocol to just sample transfer.
+fix(protocol/6af807): adjusting protocol liquid handling for liquid viscosity
+feat(protocols/2df9f8): add final pooling protocol workflow
+fix 154ec5 remove space example csv
+feat(protocols/2df9f8): use multi-channel pipette. fill whole columns and aspirate dispense two columns at a time. 
+fix 4b7268 magnetic module loadname
+fix(protocols/5829d7): adjust labware definition with user-mailed labware
+fix(protocols/4c8861): csv import sample not working
+"feat(protocols/6af807): allowing for 24 mastermixes onto the plate, with option to revert to original protocol"
+feat(protocols04f4e7): mix columns between incubation steps
+fix 4b7268 calculate num tips300
+fix 063611 change tips after every rack change rack order
+fix(protocols/1adec6): add new parameters and update tip usage 
+"feat(protocols/2df9f8): change protocol procedure entirely, split into 3 parts"
+fix 6401f1 update example csv and readme links
+feat(protocol/7855ef): custom tip touch function 
+fix 38efd4 liquid class to liquid class to avoid key error
+fix 29225e labware instances from count of unique csv values
+fix(protocols/581011): fix double import of json file - fourth attempt
+fix(protocols/581011): fix double import of json file - third attempt 
+fix(protocols/581011): fix double import of json file - second attempt
+fix(protocols/581011): fix double import of json file
+feat(protocols/6af807): allow for variable mastermix number and cdna number which can repeat on plate - part2
+fix 29225e repeat dispense water from multiple tubes switch tubes automatically
+fix(protocols/6a93a2): change labware definition for tuberack
+feat(protocols/76c562): set defaults for each pipette
+fix(protocols/17d210): update display name for plates
+fix(protocols/6a93a2): fix readme diagram
+feat(protocols/6af807): allow for variable mastermix number and cdna number which can repeat on plate
+feat(protocols/581011): change number of tips picked up per column based on excel sheet
+feat(protocols/5b8174): added aspiration height parameter
+fix 6401f1 chunk by volume to repeat dispense
+fix(protocols/5829d7): add field for aspiration height
+fix(protocols/2c62b7): changed dispense height of wash steps to prevent contamination
+fix(protocols/6d7fc3): changed 1.5 ml tubes to 2.0 ml tubes
+fix 38efd4 param skip mix step readme link change title
+fix 7805de part 4 bead pellet targeting and avoiding
+fix(protocols/76c562): throw error explaining proper slot locations
+fix(protocols/promega-maxwell): updated volume in readme
+fix 7805de part 2 bead pellet avoidance and targeting
+feat(protocols/581011): add dispense height in source reservoir
+fix(protocols/0e8e3): minor changes to functionality
+fix(protocols/76c562): update tip track logic and mix volumes
+fix 118e8c adjust fluomix tracking include 384 calibration script
+fix 063611 add fill volume parameter
+fix 118e8c add 384 track liquid height pause comment for fresh plate
+fix(protocols/0e8e3): update protocol logic
+feat(scripts): create scripts for protocol designer supplement file
+fix(protocols/2c62b7): fixed logic issues in a certain steps and removed lateral shakes
+fix 063611 add custom rack def
+fix(protocols/swift-2s-turbo-fully-automated): add additional pipette option & fix well issue
+feat(protocols/581011): allow for multiple effector columns in csv
+feat: update github action 
+feat(protocols/1adec6): add additional wells and change transfers
+"feat(protocols/2c62b7): added various features such as flashing lights, custom tip drop locations and various fixes."
+fix(protocols/581011): different aspirate and dispense height for mix
+fix(protocols/581011): field for mix rate
+fix(protocols/581011): incorporated all optimizations from protocol 1 to 2
+fix(protocol/7855ef) - add touch tip and reduce airgap
+fix 5a2a35 read csv on ot2 jupyter
+fix(protocols/581011): add controls to number of channels picked up
+fix(protocols/581011): add controls to number of channels picked up
+fix(protocols/00bbd7): update tuberack definition
+fix 6bc986 part 4 change to 1 to 1 aspirate dispense
+feat(protocols/2bdff3): added stage liquid handle parameters and custom drop tip
+fix(protocols/1bcd67): change pause to comment
+fix 5a2a35 starting tip in csv params touch rates
+fix 063611 slice racks list
+fix(protocols/3b0db0): include fields for delay and aspiration height
+feat(protocols/1adec6-2): updated labware
+fix(protocols/39b4c7): removed master mix addition and added height parameter
+fix(protocols/010526): added tube type parameter
+feat(protocols/1adec6): update protocols per user feedback
+fix(protocols/0e8e3): update labels and deck slots
+fix 7805de part 3 fix bead pellet avoiding and targeting
+fix 7805de remove pause
+fix 6bc986 part 5 change disposal blowout to dispense
+fix 165a77 384 move xy reduce3x z 1mmhigher
+fix 1477ea add parameters tip parking and speed limits
+fix(protocols/0e8e3): update features after initial feedback
+feat(protocols/6f2d9b): added air gap after aspiration
+fix 6bc986 part 5 one dispense per aspirate
+fix 234495 add patient samples and half volume options and params
+fix(protocols/19313a): change temperature in wastewater mode
+fix(protocols/19313a): lift pipette tip after mixing and before magnetic engage
+fix(protocols/0d2950): blow out in top of well instead bottom
+fix 6401f1 change to row wise order
+fix 1477ea add air gaps speed limits park tips
+fix(protocols/2df9f8): use one tip for mastermix
+fix(protocols/5414fa): remove protocol
+feat(protocols/5b8174): added rack conversion map
+fix(protocols/19313a): float variable field test
+fix 118e8c use well plate as reservoir
+feat(protocols/illumina-nextera-xt-library-prep-part3): added multi-channel support
+feat(protocols/illumina-nextera-xt-library-prep-part2): added multi-channel support
+fix 7805de part 4 optimizations address bead loss
+fix 7805de part 3 optimizations address bead loss
+fix 7805de part 2 optimizations
+fix 7805de adjust readme
+feat(protocols/bc-rnadvance-viral): add application note.
+feat(protocols/6be1f8): added fields for tube clearance 
+fix 39bbbb change standards location remove sample57 add mix and tip touch
+feat(protocols/39b4c7): added air gap parameter for sample transfer
+fix(protocols/0bf4f4): remove index plate start row fields
+feat(protocols/2bdff3): added new dispense height parameter
+feat(protocols/0d2950): switch to p300 multi pipette
+fix(protocols/0bf4f4): replace labware definition for index plate
+feat(protocols/76c562): check mix volumes
+fix(protocols/19313a): made fields variables float
+feat(protocols/1bcd67): add tip prompt
+"feat(protocols/26c304): add fields for touch tip radius, speed, and height"
+feat(protocols/zymo-quick-96): adjust height
+feat(protocols/zymo-quick-96): fix
+feat(protocols/zymo-quick-96): added number of samples parameter
+feat(protocols/0bf4f4): switch for 384 well plate
+feat(protocols/010526): added aspiration height parameter
+fix(protocols/0bf4f4): change dispense locations for resuspending beads
+feat(protocols/6be1f8): add extra transfer steps
+fix(protocols/2905a4): changed blow out location/delay and mixing location in step 11.
+feat(protocols/26c304): extra transfer steps
+fix(protocols/0bf4f4) readme fix
+feat(protocols/76c562): allow multiple dilution sources
+fix(protocols/543bf9): updated delay seconds with variable
+fix(protocols/010526): added new temperature parameter and custom tuberack definition
+fix 39bbbb add 96 well labware
+feat(protocols/543bf9): added new parameters for finer control to prevent bubbling
+feat(protocols/demo): feature add for demo protocol
+fix(protocols/13ea1e): new labware definition
+fix(protocols/4fc750): fix elution plate var
+fix(protocols/7f9595): added blow out after pbs and removed all touch tip steps
+feat(protocols/0d2950): add touch tip after p1000 aspiration
+"fix(protocols/2905a4): various optimizations made to fix mixing locations, volume handling"
+feat(protocols/2bdff3): implemented slow tip withdrawal
+fix(protocols/6ec4dd): remove empty partner field
+fix(protocols/0d2950): adding fields for mix speed
+fix(protocols/71f107): remove folder
+"fix(protocols/2b3642): performed various fixes including pauses, deck setup, and parameters"
+feat(protocols/2bdff3): added additional parameters for controlling liquid handling
+fix(protocols/0d2950): add tube aspiration height
+fix(protocols/4fc750): troubleshooting request overhaul
+fix(protocols/13ea1e): labware adjustment
+fix(protocols/313086): update readme links
+fix(protocols/1bcd67): update deck image
+fix(protocol/13ea1e): added labware definitions user mailed
+fix 7805de part 4 bead mixes and parameter
+fix 7805de part 3 bead mixes and parameters
+feat(protocols/6af807): allow for custom tip rack use
+fix(protocols/0e696e): update destinations
+fix 7805de part 2 bead mixes and parameters
+"fix(protocols/0b98cc): updated various steps such as air gaps, touch tips, flow rates and speeds"
+fix 7805de change to bead mixing and engage offset
+fix(protocols/2905a4): updated supernatant removal sides and added new parameters
+feat(protocols/7663a6): specify starting column in source/destination plates
+"fix(protocols/76636): changed fields from ""int"" to ""float"""
+feat(protocols/7f9595): added parameters to control mixing flow rates
+fix 7805de changes
+fix 1477ea pd flowrates pd airgap labware change
+fix 234495 remove prewet drop tip every dispense dispense into liquid
+feat(protocols/04eeb1): various features and changes made to seven part protocol.
+feat(protocols/3b0db0): add two more pcr strips to source
+fix(protocols/4883fc): diluent
+feat(template/readme.md): update readme template (and protobuilds)
+fix(protocols/280ea4): update multi-channel pipette
+feat(protocol/26c304): addition of multi-well transfer (chunks)
+fix 6d2e65 step 1 return tips change mix height
+fix(protocols/04eeb1): fixed pipette positioning issue
+fix(protocols/39b4c7): fixed skipping of control wells and adjusted aspiration height
+fix(protocols/0d2950): adjust aspiration height in p1000
+fix(protocols/7855ef): pipette home whenever protocol pauses
+"fix(protocols/2c62b7): updated reagent wells, fixed tip isolator calibration issue"
+fix 234495 adjust prewet airgap volumes blowout height touchtip
+feat(protocols/26304): additional transfer steps
+"fix(protocols/26c304): optimizing liquid height tacking, well bottom clearance"
+fix(protocols/2ee5be): updated 96 well plates to 384 well plate formatting
+fix 6d2e65 fix locations change clearance
+feat(protocols/2bdff3): added various liquid handling capabilities and exclusion of destination columns
+feat(protocols/13ea1e): include blowout
+fix 6d2e65 0618json with tip parking and moves
+fix(protocols/1adec6): adjusted links
+fix(protocols/7855ef): change mix location
+feat(protocols/13ea1e): remove make mastermix step
+fix(protocols/7855ef): change mix location
+fix protocol
+fix 6d2e65 dummy change
+feat(protocols/7f9595): added parameter for blowout height
+fix 234495 three pooled samps and standards only param
+fix(protocols/5520f0): swapped nest 12 channel reservoirs with nest 1 reservoirs.
+fix(protocols/13ea1e): add blowout and airgap for all steps
+feat(protocols/08aeaa): added liquid height tracking for multi-well reservoir
+fix(protocols/13ea1e): add blowout and airgap for all steps
+fix(protocols/76c562): update apilevel to 2.10
+feat(protocol/3b0db0): made field for aspiration height
+feat(protocols/gna_octea): updated protocol
+feat(protocols/1adec6): updated version of protocol
+feat(protocol/3b0db0): made field for aspiration height
+feat(protocol/3b0db0): made field for aspiration height
+fix 165a77 include or skip ntc add custom labware
+fix 559aa0 include or skip ntc choose single or multi transfers
+fix(protocols/280ea4): update volumes for filtertips
+fix(protocols/1d6d1b): remove link
+fix 234495 define rack with filters change clearances track liquid height
+fix(protocol/3b0db0): change well bottom clearance height
+fix 76ba23 bisulfite conversion adjust for clearances and liquid classes
+feat(protocols/7f9595): refactored logic to alternate dilutions in the plate
+fix(protocols/swift): update apilevel
+"feat(protocols/49de51-pt2): adding ""parked tips"" to save tips"
+fix(protocols/1adec6): update columns accessed
+feat(protocols/gna_octea): protocol optimizations
+feat(protocols/76c562): expand capabilities of normalization + cherrypicking
+fix 1f96ca add labware to fields with py change
+fix(protocols/2c62b7): fixed calibration conflict with tip isolator and added water transfer
+fix 76ba23 change to sup removal blowouts
+fix 234495 adjust process steps
+feat(protocols/7f0f89): upgrade to multi-channel pipette 
+fix(protocols/6af807): update to custom tip rack
+feat(protocols/13ea1e): adjust mastermix distribution for samples < 20
+feat(protocol/3b0db0): use single channel pip for non-column transfers
+feat(protocols/13ea1e): update mastermix order
+feat(protocols/13ea1e): change how mastermix is made 
+fix(protocols/promega-maxwell): fix links
+fix(protocol/131ea1e): changed pipette
+fix(protocols/13ea1e): fixed readme
+fix(protocols/13ea1e): adding extra labware options
+fix(protocols/516336): multitude of user requested fixes
+feat(repo): promega + bc extractions
+feat(protocols/1adec6): adds new parameter for dmso vol
+fix(protocols): update flash sequence on pause 
+feature(protocols/4d9b8b): adding another grid option to silicon wafer
+feat(protocols/5520f0): refactored protocol to allow variable plates and added custom parameters
+fix 118e8c add liquid tracking
+fix 3a49b6 min vol rna 1 ul vol h2o to 0 if lt 1
+feat(protocol/384b23): add aspiration height field
+feat(protocols/6a77d9): update tip change sequence
+fix(protocols/543bf9): refactored protocol for csv control of each standard curve
+fix 3a49b6 tip drop parameters for clearance flow rate mix count
+fix 3a49b6 move p20 to left side
+fix(protocols/10bf60-station-b): air gap
+feat(protocols/2c62b7): added elution buffer addition step within the protocol
+fix(protocols/10bf60-station-b): update waste process
+fix 315118 changes to custom labware same tip clearances parameters
+fix 118e8c changes to parameters clearances reservoir mix disposal vol blowout
+fix(protocols/bc-rnadvance-viral): update bc rnadvance viral
+feat(protocol/384b23): add aspiration height field
+feat(protocol/11beaa): allow for option between gen1 and gen2 pipettes
+"feat(protocols/6e2509): added new labware, mirror tip racks with plates and new fields"
+fix 295c73 fix clearance increment
+fix 6bc986 part 3
+fix 76ba23 handle liquid tips settings
+feat(protocols/11beaa): using p10 multichannel instead of p50
+feat(protocols/3d02be): allow for dispense and aspiration speed parameters
+fix(protocols/1d6d1b): update logic for slide columns
+fix(protocols/1d6d1b): update dip sequence
+fix 295c73 change to p300multi and p20single
+fix(protocols/3d02be): added touch_tip and airgap
+feat(protocols/11beaa): add touch tip and option to choose cdna columns
+fix(protocol-library): added app notes to verified protocols
+fix(protocols/1d6d1b): update movement scheme
+fix(protocols/49de51-pt2): add 3rd wash
+fix(protocol-library) - update cherrypicking to new readme template
+fix(protocols/10bf60-station-b): update apilevel and elution labware 
+fix(protocols/customizable_serial_dilution): check to ensure no double pickup
+fix(protocols/1d6d1b): bring blot offsets closer to center
+fix(protocols/2d7126): add ghost aspirations/dispenses for calibration
+fix(protocols/701319): updated api load name and readme
+"feat(protocols/1d6d1b): update labware, make spacing symmetrical"
+fix(protocols/701319): replaced standard labware with cluster tubes and added magnet step
+fix(protocols/1d6d1b): add plates 3-4 in load labware statement
+fix(protocols): attempt to modify library fields
+fix(protocols/1d6d1b): rename field to trigger dropdown change
+fix(protocols/6f2d9b): removed dummy labware and added the true labware definition
+fix(protocols/6a77d9): update readme setup and fields
+feat(protocols/1d6d1b): allow for up to 4 plates to be spotted
+fix(protocols/6a77d9): fix readme.md typo
+"feat(protocols/6a77d9): create scheme for multiple sources, multi-pipette"
+fix(1d6d1b): update slide spot locations
+"fix(protocols/49de51-pt2): make magbead addition, optional"
+feat(protocols\08aeaa): added support for 96 well plate as water reservoir for normalization
+fix(protocols/49de51-pt2): update custom labware integration
+fix(protocols/swift-fully-automated): update code for 200ul tips
+fix(protocol-library) - fixing typoes in pl
+fix 118e8c fix tracking switch pipette sides add params reduce pick up current
+feat(protocols/0b98cc): added tip strategy and gen1 support
+feat(protocols/0556be-bmda): added air gaps before and after aspirate to prevent volume loss
+fix(protocols/swift-fully-automated): add gen2 magdeck
+fix(protocols/swift-fully-automated): update elution destination
+feat(protolib): add 'labware' to parsing headers; update test-readme
+fix 76ba23 changes tip handling reservoir aspirate height
+fix 74b303 add mix rate parameter
+fix(protocols/280ea4): revert readme.md headers
+fix(protocols/1c4658): replace source plate with custom plate
+fix(protolib/parse/markdown.py): override spaced headers
+fix 76ba23 for samps less than 1ml
+feat(protocols/zymo-quick): adding gen2 mag mod option for protocol
+"(fix/protocol-library): remove ""verified"" from readmes of unverified protocols"
+feat(protocols/3db190): added multichannel support
+fix(protocols/3955db): readme(v2)
+fix(protocols/3955db): readme
+fix(protocols/41ece2): add additional parameters
+fix(protocol/5f7d18): added blowout step after adding mastermix
+fix(protocols/zymo-ribofree): update all instruments and modules
+fix(protocols/274d2a): fix .csv template link in readme
+feat(protocol/7f0f89): add delay for aspiration and dispense on viscous liquids
+fix 165a77 changes for multiple and partial plates
+fix 559aa0 changes for multiple and partial plates
+fix(protocol/5f7d18): change order of mastermix and eluate addition 
+feat(protocols/covid19-rna-extraction): add parameters to extraction framework
+feat(protocols/274d2a): add dispense height parameter
+fix(protocols/2d7126): update repetition logic
+fix(protocol-library): updating header and sub categories
+fix(protocols/7f0f89): fix loadname for custom labware
+fix(protocol-library) experimenting with category heads and sub categories
+fix(protocols/6b8c90-3): added missing labware
+fix(protocols/70567f): add custom distribution function to avoid dripping
+fix(protocol-library): fix covid-19 workstation section of library
+fix(protocols/69db93): add extra tip rack for tip parking
+fix(protocol-library): update featured section of p.l.
+fix(protocols/3662e6): add blowout & change tip usage
+fix(protocols/274d2a): update logic gate for warning message
+fix(protocols/bc-rnadvance-viral): hide from search
+feat(protocols/0556be-bmda): added delay parameters to combat reagent viscosity
+feat(bc-rnadvance-viral): add volume parameters
+fix(protocols/70567f): add contamination preventions
+feat(protocols/400b8e): add tempdeck options
+fix(protocols/274d2a): update apilevel
+feat(protocol/0bd707): replaced tip rack with another tube rack
+fix(protocols/58d57d): remove non-categories in readme.md 
+fix(protocols/701319): remove non-categories in readme.md
+feat(protocols/274d2a): expand pipette options
+feat(protocols/1d6d1b): add in-code parameters
+fix-cp-simple
+fix(protocols/1d6d1b): update pipette z-speed
+feat(protocols/51df08): parameterize offset
+fix(protocols/bc-rnadvance-viral): remove .feature
+feat(protocols/70567f): implement set processing to avoid overdrawing
+fix(protocols/70567f): final fixes
+fix(protocols/70567f): update custom tip drop function
+feat(protocols/5a3797-protocol-3): added p1000 single channel and new parameters
+fix(protocols/70567f): modify heights and incubations
+"feat(protocols/0add76) no new tips for water transfers, changed order of dna and water transfer"
+fix(protocol/65ed01) - changing magdeck gen
+fix(protocol/65ed01) changing magdeck gen
+fix(protocols/70567f): edit tip behavior
+fix(protocol/0add76) deleting protocol
+fix(protocol/0add76)-switching pipette to first gen p300
+fix(protocol/0add76) - changed pipette from p300 gen 2 to gen 1
+fix(protocols/7cfbde): update readme
+fix(protocol/0add76) - fixed outoftiperror when switching to p10 pipette
+fix(protocol/0add76) removed extra brackets in readme
+fix(protocols/0add76) - changed pipette from p20 to p10
+#2036 fix(protocols/0175a4 ): add explicit right pipette move_to()
+fix(protocols/3e3c9d-x) 
+feat(protocols/400b8e): add time estimate on pause
+fix(protocols/0556be-covid-mm -qc): added mixing step
+fix(protocols/52d238): updated custom labware definition
+feat(protocols/5a3797-protocol-2): change 12-channel reservoir to custom pcr tube strip
+fix(protocols/2ee5be): swapped 12-channel reservoir with pcr tube strips
+fix(protocols/1d6d1b ): update wash blot sequence
+fix(protocols/bc-rnadvance-viral): update readme clarity
+fix(protocols/1ccd23-station-b): update buildfiles
+fix(protocols/1ccd23-station-b): change type of offset parameters
+feat(protocols/5a3797-protocol-3): skips control wells and pauses between transfers
+fix(protocols/0556be-covid-mm-qc): added protobuilds files
+feat(0556be-covid-mm-qc): added parameters for pcr tube dispense height and tube selection
+feat(protocols/1ccd23-station-b): create radial offset parameter
+fix(protocols/48648f): add field for sample number
+fix(protocols/0556be-covid-mm-qc): fixed liquid level tracking and changing of tips for every transfer
+feat(protocols/covid-rna-extraction): modify tip_log data structure
+feat(5a3797-protocol-3): transfer binding solution only from first 3 reservoir channels
+fix(protocols/48648f): remove irrelevant images
+fix(protocols/48648f): update readme process per apps engineering convention
+fix(protocols/48648f): update fields and title format per apps engineering convention
+fix(protocols/10bf60-station-b): change elution temperature sequence
+feat(protocols/0556be-covid-mm-qc): added parameters for all volumes
+fix(protocols): magdeck gen2 engage height defaults
+feat(protocols/5a3797-protocol-2): added parameter for sample number
+feat(protocols/5a3797-protocol-1): added sample number parameter
+"fix(5a3797-protocol-3): split volumes for 200ul filter tips, misc"
+feat(0556be-bmda): added parameters for flow rates and component volumes
+fix(protocols/1ccd23-station-b): fields.json typo
+"feat(protocols/1ccd23-station-a, b): add aspiration and mix height parameters "
+feat(protocols/illumina-nextera-xt-library-prep-part1): accommodate 96 samples
+fix(protocols/illumina-nextera-xt-library-prep-part2): fixed protocol for 96 samples
+"fix(protocols/5a3797-protocol-3): added height parameters for tubes and plates, parameter for tip type"
+fix(protocols/5a3797-protocol-2) added height parameters to prevent tips from hitting well bottom
+feat(protocols/5a3797-protocol-1) added function to minimize number of transfers
+feat(protocols/5a3797-protocol-3) add custom sample numbers and adjust aspiration speed 
+fix(protocols/2c81c0): update position of transfer at destination
+feat(protocols/0556be-covid-mm-qc) added liquid level tracking and other changes
+fix(protocols/0556be-bmda): various fixes and changes to prevent protocol issues
+feat(protocols/ml-normalization): update labware options in dropdown parameter
+fix(protocols/245eb2): change title per science team input
+feat(protocols/2c81c0): add height of destination and change flow rates
+fix(protocols/0556be-bmda): updated well distribution for master mix
+fix(protocols/0556be-covid-mm-qc): fixed pipette aspiration height issue in tube b1
+fix(protocols/0556be-covid-ntc): fixed pipette aspiration height issue
+fix(protocols/68ce98): updated variables to get correct heights
+fix(protocols/1ccd23-station-b): move lysis buffer to channel 1
+fix(protocols/cherrypicking): remove `gen1` from pipette load names 
+fix value for destination plate dropdown field
+fix(protocols/5a5767): ensure transfer is from source plate to dest plate
+fix(protocols/ml-normalization): add check for 0 volume
+feat(protocols/ml-normalization): allow for broader range of .csv input types
+fix(protocols/3b3f1c) move blow_out for suitability wells
+feat(protocols/covid19-rna-extraction): allow for multiple labware types
+fix(protocols/3b3f1c): final update after user optimization
+fix(protocols): change subcategory indentation
+fix(protocols/1ccd23): 
+fix(protocols/2c81c0): add atomic features per user input
+refactor(protocols): fix and speed up
+feat(protocols/ml-normalization): allow for multi-channel pipettes
+feat(covid19-rna-extraction): update custom tip drop function
+fix apiv2 links
+fix(protocols): change access of well geometry attributes
+3db190 fix
+fix(protocols/ml-normalization): upgrade pipettes to gen2
+797dee - fix
+zymo quick fix
+fix(protocols/0944e4): update apilevel in metadata
+fix(protocols/3b3f1c): final updates for height tracking parameters 
+fix(protocols/0944e4): update magnetic module definition
+fix(protocols): update threading calls for flash on pause functionality
+fix(3b31fc): fix readme title
+fix(1ccd23): update labware and pipette
+fix(3b3f1c): update title
+feat(protocols/3b3f1c): add air_gap parameter
+fix(1ccd23): overhaul
+fix(protobuilds/3b3f1c): fix .py protobuilds file (again)
+fix(protobuilds/3b3f1c): update .py protobuilds file
+fix(0944e4): fix pipette definition
+feat(3b3f1c): add fields to readout file
+fix(3b3f1c): update .csv lines to parse
+feat: 3b3f1c
+fix-0944e4
+fix-747d99 supernatant rmvl
+fix(protolib): update import for protolib/parseot2v2.py 
+fix(protolib): update parseot2v2 import statements
+fix-7fc7b1-2
+fix-7fc7b1-2
+fix-272c63-3
+fix-1211
+fix-272c63
+zymo quick fix
+fix-272c63
+fix-199721-void-tip
+fix-199721-add-tiptrack
+fix-199721-add-height-param
+fix-199721-2
+fix-51df08-2
+fix-199721
+fix-covid-extraction
+fix-8nhsa0
+fix-17cb2d
+fix-5c24e2
+fix 2c81c0 4
+fix-stationa-readme
+fix-12213d-v2
+fix-51df08
+fix-12213d
+fix-3633ca
+fix-2c81c0-3
+fix: nextera pt2 transfer
+fix-09cdbe
+fix links to api docs.
+fix-2c81c0-2
+fix-1211
+fix-44b43c drop tips lower in trash
+fix-44b43c-m300-gen
+fix 44b43c pipette configuration
+zymo extraction readme fix
+zymo extraction readme fix
+add build files for 558d02 fix
+fix-558d02-add-pause
+fix-44b43c
+fixes normalization filtertiprack typo (line 54)
+fix(protocols): update cherrypicking protocol readme image caption
+fix-131de0-2
+fix-640a85-2
+fix-4a0be6
+fix-2c81c0-labware-2
+fix-453b5a-labware
+fix-2c81c0-add-labware
+fix-zymo-cleanup-tempdeck
+fix-131de0
+feat(protolib): update monorepo to v3.16.1
+fix-nextera-from-center
+fix-453b5a-2
+fix-zymo-deck1
+fixes 1577 and zymo json w/r
+bpg-fix
+fix-640a85
+fix-453b5a
+fix-final-558d02
+fix: broken link in swift protocols
+swift-link-fix
+fix-zymo-postrun
+swift-quick-fix
+fix-zymo-tip-filepath
+fix-zymo-riboseq
+fix-2c81c0
+29414b-fix
+fix-nextera-tagment
+fix-558d02-3
+fix-640a85
+fix-18050b
+fix-zymo-ribofree-readme
+fix-ml-norm-mix
+fix-459a55-2
+add str to options list. fix minor typo.
+fix-459a55
+fix-558d02-mix
+fix-53e6bc-mastermix-creation
+fix-res-4c4650
+fix-558d02-2
+fix-211fe1
+fix-558d02
+fix omega biotek and nucleic acid purification protocols
+final fix for 0944e4
+feat(protocols): add 53e6bc-mm
+fix: omega biotek metadata to feature
+feat: omega-biotek-ngs update v2
+feat: 7aa3fd
+feat: 7aa3fd
+feat: cherrypicking and normalization
+feat(protolib): do not create categories for hidden protocols
+fix: readme-json
+fix: 4e4778
+fix: qiaseq fragmentation mastermix distribution to single-channel
+fix: readme-email
+feat(protocols): bring over 'pcr prep pt 2' update from apiv1 develop branch
+fix: 4ca4bd volumes
+fix: 53e6bc rack definition
+feat: 139815
+feat: 08878b
+fix: 637687-v2
+feat: 7a3e4b
+feat: illumina-and-logo
+fix: 59f50b labware layout
+fix: 716efb-2
+feat: 211fe1
+fix-44306d
+fix-56a6a1-drop-tip
+fix-53e6bc
+fix-customizable_serial_dilution
+fix-32b6ed-multiple-plates
+feat(protolib): update monorepo to v3.14.1
+initial featured v2 conversions
+fix-657ca8
+fix-64a0f9
+fix-customizable-serial-dilution-ot2
+fix-584171
+fix-716efb
+fix-0944e4-final
+fix-56a6a1-readme
+fix-0944e4-safe-path-2
+fix-0944e4-safe-travel-path
+fix-nextera-flex-post-onsite-3
+fix-nextera-flex-onsite-2
+fix-nextera-flex-multi
+"fix parse ot2v2, customizable serial dilution apiv2"
+feat: add support for p1000 to logo example
+fix-5c6979-mixing
+fix-qiaseq-washes
+fix-0944e4-add-blowouts
+fix-32b6ed
+fix-0944e4
+fix-4c4650
+fix-56a6a1-final
+fix-5c6979-change-input
+fix 1503
+fix-qiaseq
+fix-5c6979 move labware to accommodate single-pickups with multi-channel
+"fix 5157d6, 2780d4 make final growth medium addition optional"
+fix 0944e4 pcr plate depth
+fix-0944e4-parameterize-incubation-times
+fix-5c6979
+fixed title
+fix mm tube location in qiaseq pt 1
+fix elisa dispense depth and distribution volume for 77032e and 6e8459
+fix 0cb5e5 2
+nextera-onsite-fix-2
+onsite nextera fix
+"eliminates final pbst distribution, fixes liquid waste location"
+fix title in readme
+fix pcr prep part 2: merge develop into master
+fix pcr prep part 2 on develop
+fix-1610-cnv-add-mix
+fix-4a0be6-2
+fix-4a0be6
+fix-221441
+fix-56a6a1
+fix-0cb5e5
+fix-1610-3
+fix-882-agenus-bio-3
+fix logic errors in csv dilution per user report
+fix-nextera-cherrypick
+fix-0f30a4-heights
+fix-0f30a4-height-track
+fix-1570
+fix-0f30a4-2
+fix-0f30a4
+fix-parse-1610
+post-visit nextera flex fix
+fix-nextera
+fix-1479-chinese-university-of-hong-kong
+fix-1485-3
+fix-1485-2
+fix-1476-2
+fix-1617-2
+fix-1617
+fix-1611
+fix-4c464f
+fix-8249aa
+fix-1552
+fix-1488-atlas-genomics-4
+"fix-1526, added mix step"
+fix-1619-readme
+fix-1619
+fix-724bf4
+fix-1610
+fix-1488
+fix-1485
+fix-1516-3
+fix-1476
+fix-1601-4
+fix-1601
+fix-1597-2
+fix-1606
+fix-1545
+fix-1622
+fix-1612
+fix-1601-3
+fix-1599-3
+fix-1597
+fix-1516
+fix-1555-3
+fix-1599-2
+fix-1601-2
+fix-1601
+fix-1506
+fix-1579-2
+fix-1599
+fix-1530
+fix 1506
+fix-1464
+fix-1594
+fix 1464 part1
+fix 1464
+fix 1464
+fix-1592-2
+fix pcr prep on develop
+fix-1592
+fix-1546-part1
+fix-1552
+fix-1581-2
+fix-1581
+fix-1552-contango-strategies-ltd-5
+fix-1555-2
+fix-1552-contango-strategies-ltd-4
+fix-1552-contango-strategies-ltd-3
+fix-1555
+fix-1563
+fix-384_plate_filling
+fix-1516-solvay-speciality-chemicals-asia-pacific-3
+fix-1485-peptide-logic-3
+fix-1483-aurora-diagnostics-4
+fix-1464
+fix-1480
+fix-1560
+fixed where pipette delays
+fix-1526-university-of-manchester-3
+fix-1526-university-of-manchester-2
+fix-1544-smartphage-inc-dba-fayeface
+fix-1526-university-of-manchester
+fix-1516
+fix-1559
+fix omega mag bind protocol
+fix-1499
+[chore] fix-1483-aurora-diagnostics-3
+[chore] fix-1516-solvay-speciality-chemicals-asia-pacific-2
+[chore] fix-1483-aurora-diagnostics-2
+[chore] fix-1506-gencell-pharma
+[chore] fix-1516-solvay-speciality-chemicals-asia-pacific
+fix-1552-contango-strategies-ltd-2
+fix-1499-igea-pharma-nv-italian-branch-florence-it
+fixx-1476-cytec-solvay-group
+fix-1464-natrix-separations-inc-milliporesigma-4
+[chore] fix-1552-contango-strategies-ltd
+fix-1543-personalis-inc
+fix-1464-natrix-separations-inc-milliporesigma-3
+fix-1488-atlas-genomics-3
+fix-1464-natrix-separations-inc-milliporesigma-2
+fix-1532-agriculture-and-agri-food-canada
+fix-1488-atlas-genomics-2
+fix-1505-kbi-biopharma
+fix-1464-natrix-separations-inc-milliporesigma
+fix-882-agenus-bio-2
+fix-1510-ingenza-ltd
+fix-1497-protein-fluidics
+fix illumina nextera xt library prep on master
+fix-384_plate_filling-readme
+fix-1288-biofire-diagnostics
+[chore] fix-1480-thermo-fisher-scientific-roskilde-denmark
+fix illumina nextera xt library prep part 1 on master
+[bug] fix plate copying on master
+fix-gilbert-lab-protocol
+[chore] fix-1485-peptide-logic-2
+[chore] fix-1488-atlas-genomics
+fix-1502-aciesbio
+[chore] fix-1485-peptide-logic-2
+[chore] fix-1479-chinese-university-of-hong-kong
+[chore] fix cherrypicking csv protocol on protocol-delivery
+[chore] fix cherrypicking csv protocol on master
+[chore] fix-1317-university-of-texas-at-austin-3
+[chore] fix-882-agenus-bio
+[chore] fix-1485-peptide-logic
+[chore] fix-1410-1411-university-of-georgia
+[chore] fix-1250-stanford-university
+fixing readme and protocols
+fix-1455-novozymes
+fix-989-max-delbruck-center-2
+[chore] fix-1411-university-of-georgia-2
+fix 989 max delbruck center
+[chore] fix-1474-william-jorgensen-yale-university
+[chore] fix-1317-university-of-texas-at-austin
+[chore] fix-1419-key-organics-ltd
+[chore] fix-1411-university-of-georgia
+[chore] fix-farmlab-protocol
+[chore] fix-1309-md-anderson-cancer-center
+fix 1467 glenmark pharmaceutical 2
+[chore] fix 1467-glenmark-pharmaceuticals
+fix-omega-protocol
+[chore] fix nextera xt protocol on master branch
+[chore]fix-1342-clinical-development-associates-of-cape-cod-inc
+[chore]fix-1327-van-andel-research-institute-2
+[bug]fix-1291-griffith-university
+[chore] fix van andel research institute protocol
+[chore] fix readme for sunny biodiscovery protocol
+[chore] fix nextera xt protocol
+[chore] fix readme formatting
+[chore] fix-1410-rick-tarletons-lab-university-of-georgia
+fixed protocol one last time
+"revert ""fix-1141-readme"""
+fix-1141-readme
+fix-custom-serial-dilution single-channel issue
+fix-1222-eurofins-genomics
+fix-csv_padova-pharma.ot-readme
+1216-enginzyme-ab-fix-readme-image
+fixing-agenus-bio-x2
+fix 882 agenus bio
+cherrypicking csv fix
+fix cherrypicking csv
+fixed readme
+fixed custom fields
+fixed table markdown
+"love lab protocol, already fixed and approved"
+update smoketest to run manually; fix 2 ot2 protocols
+adds featured protocols
+fix containers.load monkeypatching stacking
+fix cherrypicking; update dna norm
+fixing order of categories
+feature customize stuff 2017 10 04
+feature protocols internal update
+feature fix travis branch protolib
+fixes for fp_ht_run and multiple sparse matrix screen protocols
+"""feature"" pcr setup on front page"
+dev hotfix
+"lint & smoke test, update travis, linting fixes"
+feature rename trash
+gcode protocol fixes
+fixed bio to biology
+categoryfix
+added featured protocols
+categoryfix
+reagent fix
+fixed categories to be lists and sublists instead of separate categor…
+fixed readme grammar
+fixed bradford attempt 2
+fixed bradford protocol
+fixed titles in multiple readme files
