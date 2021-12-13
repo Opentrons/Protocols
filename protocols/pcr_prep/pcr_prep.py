@@ -254,38 +254,15 @@ def run(ctx: protocol_api.ProtocolContext):
                         tip_racks=tiprack
                         )
     '''
-    """
+
     left_pipette = None
     right_pipette = None
 
-    for loadname, mount, tipracks in zip(
-                                    [_left_pipette_part_1, _right_pipette_part_1],
-                                    ["left", "right"],
-                                    [left_tipracks_part_1, right_tipracks_part_1]):
-        if mount == "left":
-            left_pipette = ctx.load_instrument(loadname, mount,
-                                               tip_racks=tipracks)
-        else:
-            right_pipette_part_1 = ctx.load_instrument(loadname, mount,
-                                                tip_racks=tipracks)
+    left_pipette = ctx.load_instrument(_left_pipette_part_1, "left",
+                                       left_tipracks)
 
-    pip_s = None
-    pip_l = None
-
-    # determine which pipette has the smaller volume range
-    if left_pipette and right_pipette_part_1:
-        # Case when pipettes are the same
-        if left_pipette.name == right_pipette.name:
-            pip_s = left_pipette
-            pip_l = right_pipette
-        else:
-            if left_pipette.max_volume < right_pipette.max_volume:
-                pip_s, pip_l = left_pipette, right_pipette
-            else:
-                pip_s, pip_l = right_pipette, left_pipette
-    else:
-        pipette = left_pipette if left_pipette else right_pipette
-    """
+    right_pipette = ctx.load_instrument(_right_pipette_part_1, "right",
+                                        right_tipracks)
 
     # pipette functions   # INCLUDE ANY BINDING TO CLASS
 
