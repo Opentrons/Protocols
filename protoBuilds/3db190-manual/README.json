@@ -5,7 +5,7 @@
             "PCR Prep"
         ]
     },
-    "description": "This protocol automates certain steps of the Lyra Direct SARS-CoV Assay. This protocol assumes buffer is being added manually. The automated steps include mixing of the deep well block, and transferring samples to the PCR plate. \n\n\n\nP20 single-channel GEN2 electronic pipette\nP1000 single-channel GEN2 electronic pipette\nOpentrons 20ul filter tiprack\nOpentrons 1000ul filter tiprack\nMicroAmp\u2122 EnduraPlate\u2122 Optical 96-Well PCR Plates\nEppendorf 96 Deep Well Block 1000ul\n\n\n\nDeck Setup\n Opentrons 1000ul filter tiprack (Slot 4)\n Opentrons 20ul filter tiprack (Slot 7)\n Eppendorf 96 Deep Well Block 1000ul (Slot 2)\n MicroAmp\u2122 EnduraPlate\u2122 Optical 96-Well PCR Plate (Slot 3, should be rested on top of the Eppendorf cooling block)",
+    "description": "This protocol automates certain steps of the Lyra Direct SARS-CoV Assay. This protocol assumes buffer is being added manually. The automated steps include mixing of the deep well block, and transferring samples to the PCR plate. \n\n\n\nP20 single-channel GEN2 electronic pipette\nP1000 single-channel GEN2 electronic pipette\nOpentrons 20ul filter tiprack\nOpentrons 1000ul filter tiprack\nMicroAmp\u2122 EnduraPlate\u2122 Optical 96-Well PCR Plates\nEppendorf 96 Deep Well Block 1000ul\n\n\n\nDeck Setup\n* Opentrons 1000ul filter tiprack (Slot 4)\n* Opentrons 20ul filter tiprack (Slot 7)\n* Eppendorf 96 Deep Well Block 1000ul (Slot 2)\n* MicroAmp\u2122 EnduraPlate\u2122 Optical 96-Well PCR Plate (Slot 3, should be rested on top of the Eppendorf cooling block)",
     "internal": "3db190",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
