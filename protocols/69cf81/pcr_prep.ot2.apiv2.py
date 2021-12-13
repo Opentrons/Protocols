@@ -59,10 +59,10 @@ with {num_primers} primers.')
 
     # transfer BigDye + water mix
     reagent_dests_multi = pcr_plate.rows()[0][:num_cols*num_primers]
+    m20.pick_up_tip()
     for d in reagent_dests_multi:
-        m20.pick_up_tip()
         m20.transfer(16, mm, d.bottom(0.5), new_tip='never')
-        m20.drop_tip()
+    m20.drop_tip()
 
     # transfer primers
     for primer, dest_set in zip(primer_sources, primer_dest_sets):
