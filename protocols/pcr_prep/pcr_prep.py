@@ -1,11 +1,12 @@
 from opentrons import protocol_api
 from math import ceil
+from opentrons.protocol_api.labware import Well
 
 metadata = {
     'protocolName': 'PCR Prep',
     'author': 'Opentrons <protocols@opentrons.com>',
     'source': 'Protocol Library',
-    'apiLevel': '2.3'
+    'apiLevel': '2.7'
 }
 
 
@@ -23,13 +24,15 @@ def get_values(*names):
                                   "left_pipette_tiprack_part_2":"opentrons_96_tiprack_20ul",
                                   "right_pipette_tiprack_part_2":"opentrons_96_tiprack_300ul",
                                   "temp_mod_slot_1":"temperature module gen2",
-                                  "temp_mod_slot_4":,"temperature module gen2",
+                                  "temp_mod_slot_4":"temperature module gen2",
                                   "temp_mod_slot_7":"temperature module gen2",
                                   "pcr_reagent_labware":"opentrons_24_aluminumblock_nest_1.5ml_snapcap",
                                   "aux_pcr_reagent_labware":"opentrons_24_aluminumblock_nest_1.5ml_screwcap",
                                   "target_labware":"opentrons_96_aluminumblock_biorad_wellplate_200ul",
                                   "mastermix_labware":null,
                                   "mod_temperature":4.0,
+                                  "DNA_volume":18.0,
+                                  "mastermix_volume":2.0,
                                   "master_mix_csv":"Reagent,Slot,Well,Volume\\nBuffer,1,A2,30\\nMgCl2,1,A3,40\\ndNTPs,2,A2,90\\nWater,2,A3,248\\nprimer 1,1,A4,25\\nprimer 2,1,A5,25\\n"}""")
     return [_all_values[n] for n in names]
 
@@ -55,12 +58,14 @@ def run(ctx: protocol_api.ProtocolContext):
         _aux_pcr_reagent_labware,
         _target_labware,
         _mastermix_labware,
-        _multi_pipette_distribution,
         _temperature,
         _master_mix_csv,
         _mastermix_volume,
         _DNA_volume
     ] = get_values(  # noqa: F821
+                   "create_mastermix",
+                   "use_same_pipettes",
+                   "number_of_samples",
                    "left_pipette_part_1",
                    "right_pipette_part_1",
                    "right_pipette_tiprack_part_1",
@@ -72,12 +77,15 @@ def run(ctx: protocol_api.ProtocolContext):
                    "temp_mod_slot_1",
                    "temp_mod_slot_4",
                    "temp_mod_slot_7",
-                   "reagent_labware",
-                   "reagent_labware_aux",
+                   "pcr_reagent_labware",
+                   "aux_pcr_reagent_labware",
                    "target_labware",
-                   "multi_pipette_distribution",
-                   "temperature",
-                   "master_mix_csv")
+                   "mastermix_labware",
+                   "mod_temperature",
+                   "master_mix_csv",
+                   "mastermix_volume",
+                   "DNA_volume"
+                   )
 
     # Do input error checking here
     if (not _left_pipette_part_1 and not _right_pipette_part_1 and
@@ -100,9 +108,9 @@ def run(ctx: protocol_api.ProtocolContext):
 
     mastermix_volume_sum = 0
     for row in mastermix_matrix:
-        mastermix_volume_sum = row[3]
+        mastermix_volume_sum += int(row[3])
 
-    if mastermix_volume_sum < _DNA_volume * _number_of_samples:
+    if mastermix_volume_sum < _mastermix_volume * _number_of_samples:
         raise Exception("The mastermix that you are creating" +
                         "does not have sufficient volume for your DNA sampes")
 
@@ -146,13 +154,12 @@ def run(ctx: protocol_api.ProtocolContext):
         if type is not None:
             temp_mod_list[i] = ctx.load_module(type, slot)"""
     temp_mod_slot_1, temp_mod_slot_4, temp_mod_slot_7 = None, None, None
-
     if _temp_mod_slot_1 is not None:
-        temp_mod_slot_1 = ctx.load_module(_temp_mod_slot_1)
+        temp_mod_slot_1 = ctx.load_module(_temp_mod_slot_1, '1')
     if _temp_mod_slot_4 is not None:
-        temp_mod_slot_4 = ctx.load_module(_temp_mod_slot_4)
+        temp_mod_slot_4 = ctx.load_module(_temp_mod_slot_4, '4')
     if _temp_mod_slot_7 is not None:
-        temp_mod_slot_7 = ctx.load_module(_temp_mod_slot_7)
+        temp_mod_slot_7 = ctx.load_module(_temp_mod_slot_7, '7')
 
     '''
 
@@ -347,6 +354,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     '''
     Select the best pipette for pipetting step according to economic criteria
+    The source is either a column of wells or a singular well
     '''
     def select_pipette(volume, source):
         # Trivial case: Both pipettes are the same
@@ -378,7 +386,8 @@ def run(ctx: protocol_api.ProtocolContext):
         # Third criteria: If the source is a single well prefer a SCP if it
         # can do the transfer in 3 steps or less (reservoirs appear as single)
         # wells, but are 8-channel reservoirs
-        if len(source.wells()) == 1 and "reservoir" not in source.parent.name:
+        if (isinstance(source, Well)
+                and "reservoir" not in source.parent.name):
             if left_volume_multiplier <= 3 or right_volume_multiplier <= 3:
                 if (not is_left_multi and
                         left_volume_multiplier <= right_volume_multiplier):
@@ -387,12 +396,15 @@ def run(ctx: protocol_api.ProtocolContext):
                     return right_pipette
 
         # 4th criteria: Pick the pipette that makes the fewest trips
-        for s_col in source.columns():
-            s_len = len(s_col)
-            col_left_steps = 1 if is_left_multi else s_len
-            col_right_steps = 1 if is_right_multi else s_len
-            left_steps = col_left_steps * left_volume_multiplier
-            right_steps = col_right_steps * right_volume_multiplier
+        s_len = 0
+        if isinstance(source, Well):
+            s_len = 1
+        if isinstance(source, list):
+            s_len = len(source)
+        col_left_steps = 1 if is_left_multi else s_len
+        col_right_steps = 1 if is_right_multi else s_len
+        left_steps = col_left_steps * left_volume_multiplier
+        right_steps = col_right_steps * right_volume_multiplier
 
         if left_steps < right_steps:
             return left_pipette
@@ -476,11 +488,11 @@ def run(ctx: protocol_api.ProtocolContext):
             ctx.comment("Transferring {}".format(line[0]))
             source = None
             volume = 0
-            if line[1] == 1:
-                source = pcr_reagent_labware.wells_by_name(line[2])
-            elif line[1] == 2:
-                source = aux_pcr_reagent_labware.wells_by_name(line[2])
-            volume = line[3] / len(mastermix_destination)
+            if int(line[1]) == 1:
+                source = pcr_reagent_labware.wells_by_name()[line[2]]
+            elif int(line[1]) == 2:
+                source = aux_pcr_reagent_labware.wells_by_name()[line[2]]
+            volume = float(line[3]) / len(mastermix_destination)
             pipette = select_pipette(volume, source)
             # Use a SCP to pipette mastermix component to a single well
             # reservoir
@@ -498,7 +510,7 @@ def run(ctx: protocol_api.ProtocolContext):
             else:
                 try:
                     rack, rack_well = get_tiprack_well_with_n_tips(pipette, 1)
-                    pipette.pick_up_tip()
+                    pipette.pick_up_tip(rack_well)
                 except protocol_api.labware.OutOfTipsError:
                     ctx.pause("Replace empty tip racks for {}".
                               format(pipette.name))
@@ -517,19 +529,22 @@ def run(ctx: protocol_api.ProtocolContext):
             pipette.pick_up_tip()
             for well in mastermix_destination:
                 if mix_volume > pipette.max_volume:
-                    pipette.mix(5)
-                    pipette.blow_out()
+                    pipette.mix(5, pipette.max_volume, well)
+                    pipette.blow_out(well)
                 else:
-                    pipette.mix(5, mix_volume)
-                    pipette.blow_out()
+                    pipette.mix(5, mix_volume, well)
+                    pipette.blow_out(well)
         else:
             if pipette.has_tip:
                 pipette.drop_tips()
-            pipette.pick_up_tip()
+            rack, rack_well = \
+                get_tiprack_well_with_n_tips(pipette,
+                                             len(mastermix_destination))
+            pipette.pick_up_tip(rack_well)
             if mix_volume > pipette.max_volume:
-                pipette.mix(5)
-                pipette.blow_out()
+                pipette.mix(5, pipette.max_volume, well)
+                pipette.blow_out(well)
             else:
-                pipette.mix(5, mix_volume)
-                pipette.blow_out()
+                pipette.mix(5, mix_volume, well)
+                pipette.blow_out(well)
         ctx.comment("Finished mixing mastermix")
