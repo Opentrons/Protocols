@@ -184,6 +184,18 @@ def run(ctx: protocol_api.ProtocolContext):
                 ctx.load_labware(_mastermix_labware,
                                  '1',
                                  mastermix_target_label)
+    else:
+        target_labware_label = "target plate"
+        if temp_mod_slot_1 is not None:
+            target_labware = \
+                temp_mod_slot_1.load_labware(_target_labware,
+                                             target_labware_label)
+        else:
+            mastermix_labware = \
+                ctx.load_labware(_mastermix_labware,
+                                 '1',
+                                 target_labware_label)
+
 
     # Slot 4: Primary PCR reagent component labware
     pcr_reagent_labware_label = "PCR reagents"
@@ -342,18 +354,26 @@ def run(ctx: protocol_api.ProtocolContext):
                 and left_pipette.min_volume > volume):
             return right_pipette
 
-        # Third criteria: Return the pipette that can complete the pipetting
-        # step in the least amount of movement
-        left_steps = 0
+        # Third criteria: If the source is a single well prefer a SCP if it
+        # can do the transfer in 3 steps or less
         right_steps = 0
+        left_steps = 0
         left_volume_multiplier = ceil(volume / left_pipette.max_volume)
         right_volume_multiplier = ceil(volume / right_pipette.max_volume)
         is_left_multi = "multi" in left_pipette.name
         is_right_multi = "multi" in right_pipette.name
-        right_volume_multiplier = ceil(volume / right_pipette.max_volume)
-        for s_col, d_col in zip(source.columns(), dest.columns()):
+
+        if len(source.wells()) == 1:
+            if left_volume_multiplier <= 3 or right_volume_multiplier <= 3:
+                if (not is_left_multi and
+                        left_volume_multiplier <= right_volume_multiplier):
+                    return left_pipette
+                elif not is_right_multi:
+                    return right_pipette
+
+        # 4th criteria: Pick the pipette that makes the fewest trips
+        for s_col in source.columns():
             s_len = len(s_col)
-            d_len = len(d_col)
             col_left_steps = 1 if is_left_multi else s_len
             col_right_steps = 1 if is_right_multi else s_len
             left_steps = col_left_steps * left_volume_multiplier
@@ -364,7 +384,8 @@ def run(ctx: protocol_api.ProtocolContext):
         elif right_steps < left_steps:
             return right_pipette
 
-        #4th criteria: Return the pipette that uses the smallest tips
+        # 5th criteria: Return the pipette that uses the smallest tips
+        # This stage would only be reached if the number of steps are the same
         if left_pipette.max_volume < right_pipette.max_volume:
             return left_pipette
         else:
@@ -384,19 +405,11 @@ def run(ctx: protocol_api.ProtocolContext):
 
     '''
 
-    master_mix_destination = None
-    if _multi_pipette_distribution is True:
-        ctx.comment("Distributing master mix")
-        # Make sure that the target labware is appropriate for distribution
-        # of mastermix, appropriate targets either have 8 or more wells
-        # or they are reservoirs
-        if len((labware_part_1[lw_dict["target"]].columns()[0]) <= 8
-                and not labware_part_1[lw_dict["target"]].name in "reservoir"):
-            raise Exception("Target labware does not have 8 wells per column")
-        master_mix_destination = labware_part_1[lw_dict["target"]].columns()[0]
+    mastermix_destination = None
+    if mastermix_labware is not None:
+        mastermix_destination = mastermix_labware.wells_by_name['A1']
     else:
-        # Mix in well A1 of the target
-        master_mix_destination = labware_part_1[lw_dict["target"]].wells()[0]
+        mastermix_destination = target_labware.columns[0]
 
     # plate, tube rack maps
 
@@ -433,37 +446,27 @@ def run(ctx: protocol_api.ProtocolContext):
 
 
     '''
-    if temp_mod_list[0] is not None or temp_mod_list[1] is not None \
-            or temp_mod_list[2] is not None:
-        ctx.comment(
-            "Setting temperature module temperatures and waiting for cooling")
-        for mod in temp_mod_list:
-            if mod is not None:
-                mod.set_temperature(_temperature)
-        ctx.comment("\nTemp modules have reached {} degrees C\n"
-                    .format(_temperature))
-        ctx.comment("\nWaiting for user to load reagents on labware\n")
-        ctx.pause("Resume after the samples have been loaded")
-        ctx.comment(
-            "\nStarting PCR prep part 1 protocol - Mastermix assembly\n")
+    if create_mastermix:
+        ctx.comment("Running part 1 of the procotol - creating mastermix")
+        if temp_mod_slot_1 is not None:
+            temp_mod_slot_1.set_temperature(_temperature)
+        if temp_mod_slot_4 is not None:
+            temp_mod_slot_4.set_temperature(_temperature)
+        if temp_mod_slot_7 is not None:
+            temp_mod_slot_7.set_temperature(_temperature)
 
-    info_list = [
-        [cell.strip() for cell in line.split(',')]
-        for line in _master_mix_csv.splitlines()[1:] if line
-    ]
-
-    for line in info_list:
-        ctx.comment('Transferring ' + line[0] + ' to destination')
-        # labware is 0 indexed, so we need to subtract 1 to get the right one
-        source = labware_part_1[int(line[1])-1].wells(line[2].upper())
-        if (_multi_pipette_distribution == "True" and not
-                labware_part_1[lw_dict["target"]]):
-            vol = float(line[3])/8
-        else:
-            vol = float(line[3])
-        if left_pipette and right_pipette:
-            if vol <= pip_s.max_volume:
-                pipette = pip_s
+        for line in info_list:
+            ctx.comment('Transferring ' + line[0] + ' to destination')
+            # labware is 0 indexed, so we need to subtract 1 to get the right one
+            source = labware_part_1[int(line[1])-1].wells(line[2].upper())
+            if (_multi_pipette_distribution == "True" and not
+                    labware_part_1[lw_dict["target"]]):
+                vol = float(line[3])/8
             else:
-                pipette = pip_l
-        pipette.transfer(vol, source, master_mix_destination)
+                vol = float(line[3])
+            if left_pipette and right_pipette:
+                if vol <= pip_s.max_volume:
+                    pipette = pip_s
+                else:
+                    pipette = pip_l
+            pipette.transfer(vol, source, master_mix_destination)
