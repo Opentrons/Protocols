@@ -310,6 +310,21 @@ def run(ctx: protocol_api.ProtocolContext):
             pipette.pick_up_tip()
 
     '''
+    def get_tiprack_well_with_n_tips(pipette, n):
+        for rack in pipette.tipracks:
+            # Iterate from bottom of the column and try to find n tips to
+            # pick up with the 8CP
+            for col in rack.columns():
+                sum_tips = 0
+                for well in col.reversed():
+                    if well.has_tip:
+                        sum_tips += 1
+                        if sum_tips == n:
+                            return rack, well
+        # If there are no column with n tips raise error
+        raise protocol_api.labware.OutOfTipsError(
+                "Can't find a tiprack with {} tips for {}"
+                .format(n, pipette.name))
 
     # helper functions
     '''
@@ -353,8 +368,6 @@ def run(ctx: protocol_api.ProtocolContext):
                 and left_pipette.min_volume > volume):
             return right_pipette
 
-        # Third criteria: If the source is a single well prefer a SCP if it
-        # can do the transfer in 3 steps or less
         right_steps = 0
         left_steps = 0
         left_volume_multiplier = ceil(volume / left_pipette.max_volume)
@@ -362,6 +375,9 @@ def run(ctx: protocol_api.ProtocolContext):
         is_left_multi = "multi" in left_pipette.name
         is_right_multi = "multi" in right_pipette.name
 
+        # Third criteria: If the source is a single well prefer a SCP if it
+        # can do the transfer in 3 steps or less (reservoirs appear as single)
+        # wells, but are 8-channel reservoirs
         if len(source.wells()) == 1 and "reservoir" not in source.parent.name:
             if left_volume_multiplier <= 3 or right_volume_multiplier <= 3:
                 if (not is_left_multi and
@@ -389,10 +405,6 @@ def run(ctx: protocol_api.ProtocolContext):
             return left_pipette
         else:
             return right_pipette
-
-    def get_tiprack_column_with_n_tips(n, tipracks):
-        for rack in tipracks:
-            well = rack.next_tip(n)
 
     # reagents
 
@@ -451,7 +463,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
 
     '''
-    if create_mastermix:
+    if _create_mastermix:
         ctx.comment("Running part 1 of the procotol - creating mastermix")
         if temp_mod_slot_1 is not None:
             temp_mod_slot_1.set_temperature(_temperature)
@@ -468,22 +480,56 @@ def run(ctx: protocol_api.ProtocolContext):
                 source = pcr_reagent_labware.wells_by_name(line[2])
             elif line[1] == 2:
                 source = aux_pcr_reagent_labware.wells_by_name(line[2])
-            volume = line[3]
+            volume = line[3] / len(mastermix_destination)
             pipette = select_pipette(volume, source)
-
             # Use a SCP to pipette mastermix component to a single well
             # reservoir
             if "single" in pipette.name:
-                if len(mastermix_destination) == 1:
+                try:
                     pipette.transfer(volume,
                                      source,
                                      mastermix_destination)
-                else:
-                    volume_per_well = volume / len(mastermix_destination)
-                    pipette.transfer(volume_per_well,
-                                     source,
-                                     mastermix_destination)
+                except protocol_api.labware.OutOfTipsError:
+                    ctx.pause("Replace empty tip racks for {}"
+                              .format(pipette.name))
+                    pipette.reset_tipracks()
             # The selected pipette is an 8CP, pick up a single tip and
             # transfer mastermix component
             else:
-                ...
+                try:
+                    rack, rack_well = get_tiprack_well_with_n_tips(pipette, 1)
+                    pipette.pick_up_tip()
+                except protocol_api.labware.OutOfTipsError:
+                    ctx.pause("Replace empty tip racks for {}".
+                              format(pipette.name))
+                    pipette.reset_tipracks()
+                pipette.pick_up_tip(rack_well)
+                for well in mastermix_destination:
+                    pipette.aspirate(volume, source)
+                    pipette.dispense(volume, well)
+                pipette.drop_tips()
+        # After the mastermix has all components added it's time to mix
+        mix_volume = mastermix_volume_sum / (2*len(mastermix_destination))
+        pipette = select_pipette(mix_volume, mastermix_destination)
+        if "single" in pipette.name:
+            if pipette.has_tip:
+                pipette.drop_tips()
+            pipette.pick_up_tip()
+            for well in mastermix_destination:
+                if mix_volume > pipette.max_volume:
+                    pipette.mix(5)
+                    pipette.blow_out()
+                else:
+                    pipette.mix(5, mix_volume)
+                    pipette.blow_out()
+        else:
+            if pipette.has_tip:
+                pipette.drop_tips()
+            pipette.pick_up_tip()
+            if mix_volume > pipette.max_volume:
+                pipette.mix(5)
+                pipette.blow_out()
+            else:
+                pipette.mix(5, mix_volume)
+                pipette.blow_out()
+        ctx.comment("Finished mixing mastermix")
