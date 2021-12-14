@@ -196,7 +196,6 @@ def run(ctx: protocol_api.ProtocolContext):
                                  '1',
                                  target_labware_label)
 
-
     # Slot 4: Primary PCR reagent component labware
     pcr_reagent_labware_label = "PCR reagents"
     if temp_mod_slot_4 is not None:
@@ -363,7 +362,7 @@ def run(ctx: protocol_api.ProtocolContext):
         is_left_multi = "multi" in left_pipette.name
         is_right_multi = "multi" in right_pipette.name
 
-        if len(source.wells()) == 1:
+        if len(source.wells()) == 1 and "reservoir" not in source.parent.name:
             if left_volume_multiplier <= 3 or right_volume_multiplier <= 3:
                 if (not is_left_multi and
                         left_volume_multiplier <= right_volume_multiplier):
@@ -391,6 +390,10 @@ def run(ctx: protocol_api.ProtocolContext):
         else:
             return right_pipette
 
+    def get_tiprack_column_with_n_tips(n, tipracks):
+        for rack in tipracks:
+            well = rack.next_tip(n)
+
     # reagents
 
     '''
@@ -408,8 +411,10 @@ def run(ctx: protocol_api.ProtocolContext):
     mastermix_destination = None
     if mastermix_labware is not None:
         mastermix_destination = mastermix_labware.wells_by_name['A1']
+    elif _number_of_samples < 8:
+        mastermix_destination = target_labware.columns()[0:_number_of_samples]
     else:
-        mastermix_destination = target_labware.columns[0]
+        mastermix_destination = target_labware.columns()[0]
 
     # plate, tube rack maps
 
@@ -455,18 +460,30 @@ def run(ctx: protocol_api.ProtocolContext):
         if temp_mod_slot_7 is not None:
             temp_mod_slot_7.set_temperature(_temperature)
 
-        for line in info_list:
-            ctx.comment('Transferring ' + line[0] + ' to destination')
-            # labware is 0 indexed, so we need to subtract 1 to get the right one
-            source = labware_part_1[int(line[1])-1].wells(line[2].upper())
-            if (_multi_pipette_distribution == "True" and not
-                    labware_part_1[lw_dict["target"]]):
-                vol = float(line[3])/8
-            else:
-                vol = float(line[3])
-            if left_pipette and right_pipette:
-                if vol <= pip_s.max_volume:
-                    pipette = pip_s
+        for line in mastermix_matrix:
+            ctx.comment("Transferring {}".format(line[0]))
+            source = None
+            volume = 0
+            if line[1] == 1:
+                source = pcr_reagent_labware.wells_by_name(line[2])
+            elif line[1] == 2:
+                source = aux_pcr_reagent_labware.wells_by_name(line[2])
+            volume = line[3]
+            pipette = select_pipette(volume, source)
+
+            # Use a SCP to pipette mastermix component to a single well
+            # reservoir
+            if "single" in pipette.name:
+                if len(mastermix_destination) == 1:
+                    pipette.transfer(volume,
+                                     source,
+                                     mastermix_destination)
                 else:
-                    pipette = pip_l
-            pipette.transfer(vol, source, master_mix_destination)
+                    volume_per_well = volume / len(mastermix_destination)
+                    pipette.transfer(volume_per_well,
+                                     source,
+                                     mastermix_destination)
+            # The selected pipette is an 8CP, pick up a single tip and
+            # transfer mastermix component
+            else:
+                ...
