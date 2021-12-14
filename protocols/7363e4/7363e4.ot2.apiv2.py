@@ -11,7 +11,7 @@ metadata = {
 
 def run(ctx):
 
-    # get parameter values from json above
+    # parameter values from json above
     [sample_count_1, sample_count_2, labware_clinical_samples_1,
      labware_clinical_samples_2, labware_aliquots, clearance_clinical_samples,
      clearance_aliquots] = get_values(  # noqa: F821

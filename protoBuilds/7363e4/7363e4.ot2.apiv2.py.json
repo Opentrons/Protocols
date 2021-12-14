@@ -1,6 +1,227 @@
 {
-    "content": "import math\nfrom opentrons.protocol_api.labware import Well\n\n\nmetadata = {\n    'protocolName': '''Custom Aliquoting''',\n    'author': 'Steve Plonk <protocols@opentrons.com>',\n    'apiLevel': '2.9'\n}\n\n\ndef run(ctx):\n\n    # get parameter values from json above\n    [sample_count_1, sample_count_2, labware_clinical_samples_1,\n     labware_clinical_samples_2, labware_aliquots, clearance_clinical_samples,\n     clearance_aliquots] = get_values(  # noqa: F821\n      'sample_count_1', 'sample_count_2', 'labware_clinical_samples_1',\n      'labware_clinical_samples_2', 'labware_aliquots',\n      'clearance_clinical_samples', 'clearance_aliquots')\n\n    ctx.set_rail_lights(True)\n    ctx.delay(seconds=10)\n    sample_count_tot = sample_count_1 + sample_count_2\n    if not 1 <= sample_count_tot <= 48:\n        raise Exception(\n         'Invalid total number of clinical samples ({}). Must be 1-48.'.format(\n          sample_count_tot))\n    if not (clearance_clinical_samples >= 1 and clearance_aliquots >= 1):\n        raise Exception('Tube bottom clearances must be at least 1 mm.')\n\n    # 1000 ul tips and p1000\n    tips1000 = [ctx.load_labware(\"opentrons_96_tiprack_1000ul\", '11')]\n\n    # p1000 single gen2\n    p1000s = ctx.load_instrument(\n     \"p1000_single_gen2\", 'left', tip_racks=tips1000)\n\n    class WellH(Well):\n        def __init__(self, well, min_height=5, comp_coeff=1.15,\n                     current_volume=0):\n            super().__init__(well._impl)\n            self.well = well\n            self.min_height = min_height\n            self.comp_coeff = comp_coeff\n            self.current_volume = current_volume\n            if self.diameter is not None:\n                self.radius = self.diameter/2\n                cse = math.pi*(self.radius**2)\n            elif self.length is not None:\n                cse = self.length*self.width\n            self.height = current_volume/cse\n            if self.height < min_height:\n                self.height = min_height\n            elif self.height > well.parent.highest_z:\n                raise Exception(\"\"\"Specified liquid volume\n                can not exceed the height of the labware.\"\"\")\n\n        def height_dec(self, vol):\n            if self.diameter is not None:\n                cse = math.pi*(self.radius**2)\n            elif self.length is not None:\n                cse = self.length*self.width\n            dh = (vol/cse)*self.comp_coeff\n            if self.height - dh > self.min_height:\n                self.height = self.height - dh\n            else:\n                self.height = self.min_height\n            if self.current_volume - vol > 0:\n                self.current_volume = self.current_volume - vol\n            else:\n                self.current_volume = 0\n            return(self.well.bottom(self.height))\n\n        def height_inc(self, vol, top=False):\n            if self.diameter is not None:\n                cse = math.pi*(self.radius**2)\n            elif self.length is not None:\n                cse = self.length*self.width\n            ih = (vol/cse)*self.comp_coeff\n            if self.height < self.min_height:\n                self.height = self.min_height\n            if self.height + ih < self.depth:\n                self.height = self.height + ih\n            else:\n                self.height = self.depth\n            self.current_volume += vol\n            if top is False:\n                return(self.well.bottom(self.height))\n            else:\n                return(self.well.top())\n\n    # clinical sample racks, clinical sample tubes with liquid height tracking\n    clinical_sample_tubes = []\n    for lbwr, slot, count in zip(\n     [labware_clinical_samples_1, labware_clinical_samples_2],\n     ['8', '9'],\n     [sample_count_1, sample_count_2]):\n        if lbwr:\n            ctx.load_labware(lbwr, slot, 'Clinical Samples')\n            if not 1 <= count <= len(ctx.deck[slot].get_wells()):\n                raise Exception('''Invalid number of samples in\n                slot {0} (must be 1-{1}).'''.format(\n                 slot, len(ctx.deck[slot].get_wells())))\n            new = [WellH(\n             tube, min_height=clearance_clinical_samples, current_volume=2000)\n             for tube in ctx.loaded_labwares[int(slot)].wells()[:count]]\n            clinical_sample_tubes.extend(new)\n        else:\n            if count:\n                raise Exception(\n                 '''Invalid number of samples in slot {}\n                 (must be 0 if no rack is specified).'''.format(slot))\n\n    # aliquots\n    [*aliquots] = [\n     ctx.load_labware(labware_aliquots, slot, \"Aliquots\") for slot in [\n      '10', '7', '4', '5', '6', '1', '2', '3'][\n      :math.ceil((sample_count_tot*4) / 24)]]\n\n    # to yield 4 aliquot tubes\n    def tube_col():\n        for rack in aliquots:\n            for column in rack.columns():\n                yield column\n\n    aliquot_tubes = tube_col()\n\n    # perform aliquotting steps\n    for tube in clinical_sample_tubes:\n        p1000s.pick_up_tip()\n        for dest, vol in zip(next(aliquot_tubes), [1000, 500, 500, 1000]):\n            p1000s.aspirate(vol, tube.height_dec(vol))\n            p1000s.dispense(vol, dest.bottom(clearance_aliquots))\n        p1000s.drop_tip()\n",
+    "content": "import math\nfrom opentrons.protocol_api.labware import Well\n\n\nmetadata = {\n    'protocolName': '''Custom Aliquoting''',\n    'author': 'Steve Plonk <protocols@opentrons.com>',\n    'apiLevel': '2.9'\n}\n\n\ndef run(ctx):\n\n    # parameter values from json above\n    [sample_count_1, sample_count_2, labware_clinical_samples_1,\n     labware_clinical_samples_2, labware_aliquots, clearance_clinical_samples,\n     clearance_aliquots] = get_values(  # noqa: F821\n      'sample_count_1', 'sample_count_2', 'labware_clinical_samples_1',\n      'labware_clinical_samples_2', 'labware_aliquots',\n      'clearance_clinical_samples', 'clearance_aliquots')\n\n    ctx.set_rail_lights(True)\n    ctx.delay(seconds=10)\n    sample_count_tot = sample_count_1 + sample_count_2\n    if not 1 <= sample_count_tot <= 48:\n        raise Exception(\n         'Invalid total number of clinical samples ({}). Must be 1-48.'.format(\n          sample_count_tot))\n    if not (clearance_clinical_samples >= 1 and clearance_aliquots >= 1):\n        raise Exception('Tube bottom clearances must be at least 1 mm.')\n\n    # 1000 ul tips and p1000\n    tips1000 = [ctx.load_labware(\"opentrons_96_tiprack_1000ul\", '11')]\n\n    # p1000 single gen2\n    p1000s = ctx.load_instrument(\n     \"p1000_single_gen2\", 'left', tip_racks=tips1000)\n\n    class WellH(Well):\n        def __init__(self, well, min_height=5, comp_coeff=1.15,\n                     current_volume=0):\n            super().__init__(well._impl)\n            self.well = well\n            self.min_height = min_height\n            self.comp_coeff = comp_coeff\n            self.current_volume = current_volume\n            if self.diameter is not None:\n                self.radius = self.diameter/2\n                cse = math.pi*(self.radius**2)\n            elif self.length is not None:\n                cse = self.length*self.width\n            self.height = current_volume/cse\n            if self.height < min_height:\n                self.height = min_height\n            elif self.height > well.parent.highest_z:\n                raise Exception(\"\"\"Specified liquid volume\n                can not exceed the height of the labware.\"\"\")\n\n        def height_dec(self, vol):\n            if self.diameter is not None:\n                cse = math.pi*(self.radius**2)\n            elif self.length is not None:\n                cse = self.length*self.width\n            dh = (vol/cse)*self.comp_coeff\n            if self.height - dh > self.min_height:\n                self.height = self.height - dh\n            else:\n                self.height = self.min_height\n            if self.current_volume - vol > 0:\n                self.current_volume = self.current_volume - vol\n            else:\n                self.current_volume = 0\n            return(self.well.bottom(self.height))\n\n        def height_inc(self, vol, top=False):\n            if self.diameter is not None:\n                cse = math.pi*(self.radius**2)\n            elif self.length is not None:\n                cse = self.length*self.width\n            ih = (vol/cse)*self.comp_coeff\n            if self.height < self.min_height:\n                self.height = self.min_height\n            if self.height + ih < self.depth:\n                self.height = self.height + ih\n            else:\n                self.height = self.depth\n            self.current_volume += vol\n            if top is False:\n                return(self.well.bottom(self.height))\n            else:\n                return(self.well.top())\n\n    # clinical sample racks, clinical sample tubes with liquid height tracking\n    clinical_sample_tubes = []\n    for lbwr, slot, count in zip(\n     [labware_clinical_samples_1, labware_clinical_samples_2],\n     ['8', '9'],\n     [sample_count_1, sample_count_2]):\n        if lbwr:\n            ctx.load_labware(lbwr, slot, 'Clinical Samples')\n            if not 1 <= count <= len(ctx.deck[slot].get_wells()):\n                raise Exception('''Invalid number of samples in\n                slot {0} (must be 1-{1}).'''.format(\n                 slot, len(ctx.deck[slot].get_wells())))\n            new = [WellH(\n             tube, min_height=clearance_clinical_samples, current_volume=2000)\n             for tube in ctx.loaded_labwares[int(slot)].wells()[:count]]\n            clinical_sample_tubes.extend(new)\n        else:\n            if count:\n                raise Exception(\n                 '''Invalid number of samples in slot {}\n                 (must be 0 if no rack is specified).'''.format(slot))\n\n    # aliquots\n    [*aliquots] = [\n     ctx.load_labware(labware_aliquots, slot, \"Aliquots\") for slot in [\n      '10', '7', '4', '5', '6', '1', '2', '3'][\n      :math.ceil((sample_count_tot*4) / 24)]]\n\n    # to yield 4 aliquot tubes\n    def tube_col():\n        for rack in aliquots:\n            for column in rack.columns():\n                yield column\n\n    aliquot_tubes = tube_col()\n\n    # perform aliquotting steps\n    for tube in clinical_sample_tubes:\n        p1000s.pick_up_tip()\n        for dest, vol in zip(next(aliquot_tubes), [1000, 500, 500, 1000]):\n            p1000s.aspirate(vol, tube.height_dec(vol))\n            p1000s.dispense(vol, dest.bottom(clearance_aliquots))\n        p1000s.drop_tip()\n",
     "custom_labware_defs": [
+        {
+            "brand": {
+                "brand": "Opentrons",
+                "brandId": []
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 127.76,
+                "yDimension": 85.48,
+                "zDimension": 107.6
+            },
+            "groups": [
+                {
+                    "metadata": {
+                        "displayCategory": "tubeRack",
+                        "wellBottomShape": "v"
+                    },
+                    "wells": [
+                        "A1",
+                        "B1",
+                        "C1",
+                        "A2",
+                        "B2",
+                        "C2",
+                        "A3",
+                        "B3",
+                        "C3",
+                        "A4",
+                        "B4",
+                        "C4",
+                        "A5",
+                        "B5",
+                        "C5"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "tubeRack",
+                "displayName": "Opentrons 15 Tube Rack with custom 14 mL",
+                "displayVolumeUnits": "\u00b5L",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1",
+                    "B1",
+                    "C1"
+                ],
+                [
+                    "A2",
+                    "B2",
+                    "C2"
+                ],
+                [
+                    "A3",
+                    "B3",
+                    "C3"
+                ],
+                [
+                    "A4",
+                    "B4",
+                    "C4"
+                ],
+                [
+                    "A5",
+                    "B5",
+                    "C5"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "opentrons_15_tuberack_14000ul",
+                "quirks": []
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 100.1,
+                    "diameter": 14,
+                    "shape": "circular",
+                    "totalLiquidVolume": 14000,
+                    "x": 13.88,
+                    "y": 67.74,
+                    "z": 7.5
+                },
+                "A2": {
+                    "depth": 100.1,
+                    "diameter": 14,
+                    "shape": "circular",
+                    "totalLiquidVolume": 14000,
+                    "x": 38.88,
+                    "y": 67.74,
+                    "z": 7.5
+                },
+                "A3": {
+                    "depth": 100.1,
+                    "diameter": 14,
+                    "shape": "circular",
+                    "totalLiquidVolume": 14000,
+                    "x": 63.88,
+                    "y": 67.74,
+                    "z": 7.5
+                },
+                "A4": {
+                    "depth": 100.1,
+                    "diameter": 14,
+                    "shape": "circular",
+                    "totalLiquidVolume": 14000,
+                    "x": 88.88,
+                    "y": 67.74,
+                    "z": 7.5
+                },
+                "A5": {
+                    "depth": 100.1,
+                    "diameter": 14,
+                    "shape": "circular",
+                    "totalLiquidVolume": 14000,
+                    "x": 113.88,
+                    "y": 67.74,
+                    "z": 7.5
+                },
+                "B1": {
+                    "depth": 100.1,
+                    "diameter": 14,
+                    "shape": "circular",
+                    "totalLiquidVolume": 14000,
+                    "x": 13.88,
+                    "y": 42.74,
+                    "z": 7.5
+                },
+                "B2": {
+                    "depth": 100.1,
+                    "diameter": 14,
+                    "shape": "circular",
+                    "totalLiquidVolume": 14000,
+                    "x": 38.88,
+                    "y": 42.74,
+                    "z": 7.5
+                },
+                "B3": {
+                    "depth": 100.1,
+                    "diameter": 14,
+                    "shape": "circular",
+                    "totalLiquidVolume": 14000,
+                    "x": 63.88,
+                    "y": 42.74,
+                    "z": 7.5
+                },
+                "B4": {
+                    "depth": 100.1,
+                    "diameter": 14,
+                    "shape": "circular",
+                    "totalLiquidVolume": 14000,
+                    "x": 88.88,
+                    "y": 42.74,
+                    "z": 7.5
+                },
+                "B5": {
+                    "depth": 100.1,
+                    "diameter": 14,
+                    "shape": "circular",
+                    "totalLiquidVolume": 14000,
+                    "x": 113.88,
+                    "y": 42.74,
+                    "z": 7.5
+                },
+                "C1": {
+                    "depth": 100.1,
+                    "diameter": 14,
+                    "shape": "circular",
+                    "totalLiquidVolume": 14000,
+                    "x": 13.88,
+                    "y": 17.74,
+                    "z": 7.5
+                },
+                "C2": {
+                    "depth": 100.1,
+                    "diameter": 14,
+                    "shape": "circular",
+                    "totalLiquidVolume": 14000,
+                    "x": 38.88,
+                    "y": 17.74,
+                    "z": 7.5
+                },
+                "C3": {
+                    "depth": 100.1,
+                    "diameter": 14,
+                    "shape": "circular",
+                    "totalLiquidVolume": 14000,
+                    "x": 63.88,
+                    "y": 17.74,
+                    "z": 7.5
+                },
+                "C4": {
+                    "depth": 100.1,
+                    "diameter": 14,
+                    "shape": "circular",
+                    "totalLiquidVolume": 14000,
+                    "x": 88.88,
+                    "y": 17.74,
+                    "z": 7.5
+                },
+                "C5": {
+                    "depth": 100.1,
+                    "diameter": 14,
+                    "shape": "circular",
+                    "totalLiquidVolume": 14000,
+                    "x": 113.88,
+                    "y": 17.74,
+                    "z": 7.5
+                }
+            }
+        },
         {
             "brand": {
                 "brand": "custom",
@@ -837,13 +1058,13 @@
     "fields": [
         {
             "default": 1,
-            "label": "In Deck Slot 8 - Count of Clinical Sample Tubes (0-24 or 0-40 depending on slot 8 rack) (max 48 combined total in slots 8 and 9)",
+            "label": "In Deck Slot 8 - Count of Clinical Sample Tubes (0-15 or 0-40 depending on slot 8 rack) (max 48 combined total in slots 8 and 9)",
             "name": "sample_count_1",
             "type": "int"
         },
         {
             "default": 0,
-            "label": "In Deck Slot 9 - Count of Clinical Sample Tubes (0-24 or 0-40 depending on slot 9 rack) (max 48 combined total in slots 8 and 9)",
+            "label": "In Deck Slot 9 - Count of Clinical Sample Tubes (0-15 or 0-40 depending on slot 9 rack) (max 48 combined total in slots 8 and 9)",
             "name": "sample_count_2",
             "type": "int"
         },
@@ -852,8 +1073,8 @@
             "name": "labware_clinical_samples_1",
             "options": [
                 {
-                    "label": "large tubes in custom 4 x 6 24-tube rack",
-                    "value": "custom_24_tuberack_14000ul"
+                    "label": "large tubes in Opentrons 3 x 5 15-tube rack",
+                    "value": "opentrons_15_tuberack_14000ul"
                 },
                 {
                     "label": "small tubes in custom 5 x 8 40-tube rack",
@@ -875,8 +1096,8 @@
                     "value": null
                 },
                 {
-                    "label": "large tubes in custom 4 x 6 24-tube rack",
-                    "value": "custom_24_tuberack_14000ul"
+                    "label": "large tubes in Opentrons 3 x 5 15-tube rack",
+                    "value": "opentrons_15_tuberack_14000ul"
                 },
                 {
                     "label": "small tubes in custom 5 x 8 40-tube rack",
@@ -924,7 +1145,7 @@
             "name": "Clinical Samples on 8",
             "share": false,
             "slot": "8",
-            "type": "custom_24_tuberack_14000ul"
+            "type": "opentrons_15_tuberack_14000ul"
         },
         {
             "name": "Aliquots on 10",

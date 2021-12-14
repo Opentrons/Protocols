@@ -18,7 +18,7 @@ Links:
 
 ## Protocol Steps
 
-Set up: Place selected custom 24-well or 40-well racks for clinical sample tubes (selected from pulldown list on this page at the time of protocol download) in one or both of deck slots 8 and 9. Place selected rack and tube type for aliquots in up to 8 deck slots and include 4 aliquot tubes for each clinical sample tube (deck slot fill order 10, 7, 4, 5, 6, 1, 2, 3). Ensure that the clinical sample tubes and aliquot tubes in all racks are in column-wise order. Place 1000 uL tips in deck slot 11.
+Set up: Place selected Opentrons 15-well or custom 40-well racks for clinical sample tubes (selected from pulldown list on this page at the time of protocol download) in one or both of deck slots 8 and 9. Place selected rack and tube type for aliquots in up to 8 deck slots and include 4 aliquot tubes for each clinical sample tube (deck slot fill order 10, 7, 4, 5, 6, 1, 2, 3). Ensure that the clinical sample tubes and aliquot tubes in all racks are in column-wise order. Place 1000 uL tips in deck slot 11.
 
 The OT-2 will perform the following steps:
 1. Aspirate 1 mL from the very first clinical sample tube (A1 of either deck slot 8 or deck slot 9).
@@ -45,10 +45,10 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/7363e4/7363e4_layout.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/7363e4/1213_updated_layout.png)
 
 * Opentrons p1000 tips (Deck Slot 11)
-* 24 or 40-well custom rack or empty slot as specified in pulldown lists (Deck Slots 8-9)
+* 15 or 40-well custom rack or empty slot as specified in pulldown lists (Deck Slots 8-9)
 * opentrons_24_tuberack_nest_1.5ml_snapcap or opentrons_24_tuberack_nest_2ml_snapcap as specified with pulldown list (up to 8 racks as displayed in OT app with deck slot fill order 10, 7, 4, 5, 6, 1, 2, 3)
 
 
@@ -56,7 +56,7 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 * [OT-2](https://opentrons.com/ot-2)
 
 ## Process
-1. Specify the following using pulldown lists or data entry fields on this page - Choose 24-well rack, 40-well rack, or empty slot for clinical samples in slots 8 and 9 and specify the number of clinical samples (48 in total maximum) to be loaded into these racks. Specify the rack and tube type for the aliquots.
+1. Specify the following using pulldown lists or data entry fields on this page - Choose 15-well rack, 40-well rack, or empty slot for clinical samples in slots 8 and 9 and specify the number of clinical samples (48 in total maximum) to be loaded into these racks. Specify the rack and tube type for the aliquots.
 2. Download your protocol.
 3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
 4. Set up your deck according to the deck map.
