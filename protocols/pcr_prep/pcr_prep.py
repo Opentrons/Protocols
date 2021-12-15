@@ -1,6 +1,5 @@
 from opentrons import protocol_api
 from math import ceil
-from opentrons.protocol_api.labware import Well
 
 metadata = {
     'protocolName': 'PCR Prep',
@@ -13,7 +12,7 @@ metadata = {
 def get_values(*names):
     import json
     _all_values = json.loads("""{ "create_mastermix":true,
-                                  "use_same_pipettes":true,
+                                  "use_same_pipettes":false,
                                   "number_of_samples":96,
                                   "left_pipette_part_1":"p300_single_gen2",
                                   "right_pipette_part_1":"p20_single_gen2",
@@ -23,13 +22,14 @@ def get_values(*names):
                                   "right_pipette_part_2":"p300_single_gen2",
                                   "left_pipette_tiprack_part_2":"opentrons_96_tiprack_20ul",
                                   "right_pipette_tiprack_part_2":"opentrons_96_tiprack_300ul",
-                                  "temp_mod_slot_1":"temperature module gen2",
                                   "temp_mod_slot_4":"temperature module gen2",
                                   "temp_mod_slot_7":"temperature module gen2",
+                                  "temp_mod_slot_10":"temperature module gen2",
                                   "pcr_reagent_labware":"opentrons_24_aluminumblock_nest_1.5ml_snapcap",
                                   "aux_pcr_reagent_labware":"opentrons_24_aluminumblock_nest_1.5ml_screwcap",
                                   "target_labware":"opentrons_96_aluminumblock_biorad_wellplate_200ul",
                                   "mastermix_labware":"nest_12_reservoir_15ml",
+                                  "DNA_sample_plate":"opentrons_96_aluminumblock_biorad_wellplate_200ul",
                                   "mod_temperature":4.0,
                                   "DNA_volume":18.0,
                                   "mastermix_volume":2.0,
@@ -51,13 +51,14 @@ def run(ctx: protocol_api.ProtocolContext):
         _right_pipette_part_2,
         _right_pipette_tiprack_part_2,
         _left_pipette_tiprack_part_2,
-        _temp_mod_slot_1,
         _temp_mod_slot_4,
         _temp_mod_slot_7,
+        _temp_mod_slot_10,
         _pcr_reagent_labware,
         _aux_pcr_reagent_labware,
         _target_labware,
         _mastermix_labware,
+        _DNA_sample_plate,
         _temperature,
         _master_mix_csv,
         _mastermix_volume,
@@ -74,13 +75,14 @@ def run(ctx: protocol_api.ProtocolContext):
                    "right_pipette_part_2",
                    "right_pipette_tiprack_part_2",
                    "left_pipette_tiprack_part_2",
-                   "temp_mod_slot_1",
                    "temp_mod_slot_4",
                    "temp_mod_slot_7",
+                   "temp_mod_slot_10",
                    "pcr_reagent_labware",
                    "aux_pcr_reagent_labware",
                    "target_labware",
                    "mastermix_labware",
+                   "DNA_sample_plate",
                    "mod_temperature",
                    "master_mix_csv",
                    "mastermix_volume",
@@ -153,13 +155,35 @@ def run(ctx: protocol_api.ProtocolContext):
                              temp_mod_type_list):
         if type is not None:
             temp_mod_list[i] = ctx.load_module(type, slot)"""
-    temp_mod_slot_1, temp_mod_slot_4, temp_mod_slot_7 = None, None, None
-    if _temp_mod_slot_1 is not None:
-        temp_mod_slot_1 = ctx.load_module(_temp_mod_slot_1, '4')
-    if _temp_mod_slot_4 is not None:
-        temp_mod_slot_4 = ctx.load_module(_temp_mod_slot_4, '7')
-    if _temp_mod_slot_7 is not None:
-        temp_mod_slot_7 = ctx.load_module(_temp_mod_slot_7, '10')
+    temp_mod_slot_4, temp_mod_slot_7, temp_mod_slot_10 = None, None, None
+
+    def load_temp_mods():
+        nonlocal temp_mod_slot_4, temp_mod_slot_7, temp_mod_slot_10
+        if _temp_mod_slot_4 is not None:
+            temp_mod_slot_4 = ctx.load_module(_temp_mod_slot_4, '4')
+        if _temp_mod_slot_7 is not None:
+            temp_mod_slot_7 = ctx.load_module(_temp_mod_slot_7, '7')
+        if _temp_mod_slot_10 is not None:
+            temp_mod_slot_10 = ctx.load_module(_temp_mod_slot_10, '10')
+    load_temp_mods()
+
+    # Dictionary defines what labware goes on what module
+    temp_mod_dict = \
+        {"mastermix": temp_mod_slot_4,
+         "pcr_reagent_labware_step_1": temp_mod_slot_7,
+         "aux_pcr_reagent_labware_step_1": temp_mod_slot_10,
+         "DNA_sample_plate_step_2": temp_mod_slot_7,
+         "target_plate_step_2": temp_mod_slot_10
+         }
+    # Dictionary that matches labware with deck slots, must match with
+    # temp_mod_dict's entries
+    lw_slot_dict = \
+        {"mastermix": 4,
+         "pcr_reagent_labware_step_1": 7,
+         "aux_pcr_reagent_labware_step_1": 10,
+         "DNA_sample_plate_step_2": 7,
+         "target_plate_step_2": 10
+         }
 
     '''
 
@@ -175,58 +199,59 @@ def run(ctx: protocol_api.ProtocolContext):
     '''
 
     # Load labware for part 1
+    if _create_mastermix:
+        pcr_reagent_labware, aux_pcr_reagent_labware, mastermix_labware = \
+            None, None, None
 
-    pcr_reagent_labware, aux_pcr_reagent_labware, mastermix_labware = \
-        None, None, None
-
-    # Slot 1: This is either the mastermix container or the MDNAP
-    mastermix_target_label = "Mastermix target"
-    if _mastermix_labware is not None:
-        if temp_mod_slot_1 is not None:
-            mastermix_labware = \
-                temp_mod_slot_1.load_labware(_mastermix_labware,
-                                             mastermix_target_label)
+        # Slot 4: This is either the mastermix container or the MDNAP
+        mastermix_target_label = "Mastermix target"
+        if _mastermix_labware is not None:
+            if temp_mod_slot_4 is not None:
+                mastermix_labware = \
+                    temp_mod_slot_4.load_labware(_mastermix_labware,
+                                                 mastermix_target_label)
+            else:
+                mastermix_labware = \
+                    ctx.load_labware(_mastermix_labware,
+                                     '4',
+                                     mastermix_target_label)
         else:
-            mastermix_labware = \
-                ctx.load_labware(_mastermix_labware,
-                                 '4',
-                                 mastermix_target_label)
-    else:
-        target_labware_label = "target plate"
-        if temp_mod_slot_1 is not None:
-            target_labware = \
-                temp_mod_slot_1.load_labware(_target_labware,
-                                             target_labware_label)
-        else:
-            mastermix_labware = \
-                ctx.load_labware(_mastermix_labware,
-                                 '4',
-                                 target_labware_label)
+            target_labware_label = "target plate"
+            if temp_mod_slot_4 is not None:
+                target_labware = \
+                    temp_mod_slot_4.load_labware(_target_labware,
+                                                 target_labware_label)
+            else:
+                mastermix_labware = \
+                    ctx.load_labware(_mastermix_labware,
+                                     '4',
+                                     target_labware_label)
 
-    # Slot 4: Primary PCR reagent component labware
-    pcr_reagent_labware_label = "PCR reagents"
-    if temp_mod_slot_4 is not None:
-        pcr_reagent_labware = \
-            temp_mod_slot_4.load_labware(_pcr_reagent_labware,
-                                         pcr_reagent_labware_label)
-    else:
-        pcr_reagent_labware = \
-            ctx.load_labware(_pcr_reagent_labware,
-                             '7',
-                             pcr_reagent_labware_label)
-
-    # Slot 7: This labware is for auxiliary PCR reagents and is optional
-    aux_pcr_reagent_labware_label = "Auxiliary PCR reagents"
-    if _aux_pcr_reagent_labware is not None:
+        # Slot 7: Primary PCR reagent component labware
+        pcr_reagent_labware_label = "PCR reagents"
         if temp_mod_slot_7 is not None:
-            aux_pcr_reagent_labware = \
-                temp_mod_slot_7.load_labware(_aux_pcr_reagent_labware,
-                                             aux_pcr_reagent_labware_label)
+            pcr_reagent_labware = \
+                temp_mod_slot_7.load_labware(_pcr_reagent_labware,
+                                             pcr_reagent_labware_label)
         else:
-            aux_pcr_reagent_labware = \
-                ctx.load_labware(_aux_pcr_reagent_labware,
-                                 '10',
-                                 aux_pcr_reagent_labware_label)
+            pcr_reagent_labware = \
+                ctx.load_labware(_pcr_reagent_labware,
+                                 '7',
+                                 pcr_reagent_labware_label)
+
+        # Slot 10: This labware is for auxiliary PCR reagents and is optional
+        aux_pcr_reagent_labware_label = "Auxiliary PCR reagents"
+        if _aux_pcr_reagent_labware is not None:
+            if temp_mod_slot_10 is not None:
+                aux_pcr_reagent_labware = \
+                    temp_mod_slot_10.load_labware(_aux_pcr_reagent_labware,
+                                                  aux_pcr_reagent_labware_label
+                                                  )
+            else:
+                aux_pcr_reagent_labware = \
+                    ctx.load_labware(_aux_pcr_reagent_labware,
+                                     '10',
+                                     aux_pcr_reagent_labware_label)
 
     # load tipracks
 
@@ -439,13 +464,13 @@ def run(ctx: protocol_api.ProtocolContext):
 
     '''
 
-    mastermix_destination = None
-    if mastermix_labware is not None:
+    mastermix_destination = [mastermix_labware.wells_by_name()['A1']]
+    '''if mastermix_labware is not None:
         mastermix_destination = [mastermix_labware.wells_by_name()['A1']]
     elif _number_of_samples < 8:
         mastermix_destination = target_labware.columns()[0:_number_of_samples]
     else:
-        mastermix_destination = target_labware.columns()[0]
+        mastermix_destination = target_labware.columns()[0]'''
 
     # plate, tube rack maps
 
@@ -484,18 +509,18 @@ def run(ctx: protocol_api.ProtocolContext):
     '''
     if _create_mastermix:
         ctx.comment("Running part 1 of the procotol - creating mastermix")
-        if temp_mod_slot_1 is not None:
-            temp_mod_slot_1.set_temperature(_temperature)
         if temp_mod_slot_4 is not None:
             temp_mod_slot_4.set_temperature(_temperature)
         if temp_mod_slot_7 is not None:
             temp_mod_slot_7.set_temperature(_temperature)
+        if temp_mod_slot_10 is not None:
+            temp_mod_slot_10.set_temperature(_temperature)
 
         for line in mastermix_matrix:
             ctx.comment("Transferring {}".format(line[0]))
             source = None
             pipette = None
-            volume = float(line[3]) / len(mastermix_destination)
+            volume = float(line[3])
             if int(line[1]) == 1:
                 source = pcr_reagent_labware.wells_by_name()[line[2]]
                 pipette = select_pipette(volume, [source],
@@ -568,3 +593,68 @@ def run(ctx: protocol_api.ProtocolContext):
                     pipette.mix(5, mix_volume, mastermix_destination)
                     pipette.blow_out(mastermix_destination)
         ctx.comment("\nFinished mixing mastermix\n")
+
+    ctx.comment("Please insert the DNA sample plate in slot {} ({})"
+                .format(lw_slot_dict["DNA_sample_plate_step_2"],
+                        _target_labware))
+    ctx.comment("and the target plate in slot {} ({})"
+                .format(lw_slot_dict["target_plate_step_2"],
+                        _DNA_sample_plate))
+    if not _use_same_pipettes:
+        ctx.comment("Change the pipettes for step 2, left: {}, right: {}"
+                    .format(_left_pipette_part_2, _right_pipette_part_2))
+    ctx.pause()
+
+    if _create_mastermix:
+        del ctx.deck[4]
+        del ctx.deck[7]
+        del ctx.deck[10]
+        temp_mod_slot_4, temp_mod_slot_7, temp_mod_slot_10 = None, None, None
+        load_temp_mods()
+
+    # We have to repopulate the dictionary since Python assigns by value.
+    temp_mod_dict = \
+        {"mastermix": temp_mod_slot_4,
+         "pcr_reagent_labware_step_1": temp_mod_slot_7,
+         "aux_pcr_reagent_labware_step_1": temp_mod_slot_10,
+         "DNA_sample_plate_step_2": temp_mod_slot_7,
+         "target_plate_step_2": temp_mod_slot_10
+         }
+
+    mastermix_label = "Mastermix container"
+    dna_label = "DNA sample plate"
+    target_label = "DNA/Mastermix target plate"
+
+    dna_sample_plate = None
+    mastermix_labware = None
+    dna_mastermix_target_plate = None
+
+    # Load mastermix container
+    if temp_mod_dict["mastermix"] is not None:
+        mastermix_labware = \
+            temp_mod_dict["mastermix"].load_labware(_mastermix_labware)
+    else:
+        mastermix_labware = \
+            ctx.load_labware(_mastermix_labware, lw_slot_dict["mastermix"],
+                             mastermix_label)
+    # Load DNA sample plate
+    if temp_mod_dict["DNA_sample_plate_step_2"] is not None:
+        dna_sample_plate = \
+            (temp_mod_dict["DNA_sample_plate_step_2"].
+                load_labware(_DNA_sample_plate, dna_label))
+    else:
+        dna_sample_plate = \
+            ctx.load_labware(_DNA_sample_plate,
+                             lw_slot_dict["DNA_sample_plate_step_2"],
+                             dna_label)
+
+    # Load the target plate
+    if temp_mod_dict["target_plate_step_2"] is not None:
+        dna_mastermix_target_plate = \
+            temp_mod_dict["target_plate_step_2"].load_labware(_target_labware,
+                                                              target_label)
+    else:
+        dna_mastermix_target_plate = \
+            ctx.load_labware(_DNA_sample_plate,
+                             lw_slot_dict["target_plate_step_2"],
+                             target_label)
