@@ -14,7 +14,7 @@ def get_values(*names):
     import json
     _all_values = json.loads("""{ "create_mastermix":true,
                                   "use_same_pipettes":false,
-                                  "number_of_samples":73,
+                                  "number_of_samples":77,
                                   "left_pipette_part_1":"p300_single_gen2",
                                   "right_pipette_part_1":"p20_multi_gen2",
                                   "left_pipette_tiprack_part_1":"opentrons_96_tiprack_300ul",
@@ -369,7 +369,7 @@ def run(ctx: protocol_api.ProtocolContext):
         return "single" in pipette.name
 
     def drop_all_tips(pipettes: list):
-        for pip in pipette:
+        for pip in pipettes:
             if pip.has_tip:
                 pip.drop_tip()
 
@@ -712,7 +712,8 @@ def run(ctx: protocol_api.ProtocolContext):
             pipette.aspirate(volume, mastermix_source)
             pipette.dispense(volume, well)
     # 8-channel to 8-channel well distribution, but no barriers between
-    # the source wells, so we can aspirate from the same "well"
+    # the source wells (i.e. "reservoirs")
+    # so we can aspirate from the same "well".
     elif classify_mastermix_labware(mastermix_labware) == "multi_well_unified":
         if is_single(pipette):
             SCP_distribute_mastermix(pipette,
@@ -781,26 +782,87 @@ def run(ctx: protocol_api.ProtocolContext):
             pipette.dispense(volume, dest_col_1[remainder])
 
     # Distribute the mastermix into the rest of the target wells
-    ctx.comment("\nDistributing mastermix into all sample wells\n")
+    drop_all_tips([left_pipette, right_pipette])
+    if n_target_columns > 1:
+        ctx.comment("\nDistributing mastermix into all sample wells\n")
+
+        mastermix_column = dna_mastermix_target_plate.columns()[0]
+        target_columns = \
+            dna_mastermix_target_plate.columns()[1:n_target_columns]
+        remainder_column = \
+            dna_mastermix_target_plate.columns()[n_target_columns+1]
+
+        pipette = select_pipette(_mastermix_volume,
+                                 mastermix_column,
+                                 dna_mastermix_target_plate)
+        if is_single(pipette):
+            for col in target_columns:
+                pipette.transfer(_mastermix_volume,
+                                 mastermix_column,
+                                 col)
+            if remainder > 0:
+                dest_col = \
+                    dna_mastermix_target_plate.columns()[n_target_columns+1]
+                pipette.transfer(_mastermix_volume,
+                                 mastermix_column[:remainder],
+                                 dest_col[:remainder])
+        else:
+            if n_target_columns > 1:
+                _, rack_well = \
+                    get_tiprack_well_with_n_tips(pipette, 8)
+                pipette.pick_up_tip(rack_well)
+                volume = eight_sample_columns_volume
+                for d_col in target_columns:
+                    pipette.aspirate(volume, mastermix_source[0])
+                    pipette.dispense(volume, d_col[0])
+            if remainder > 0:
+                _, rack_well = \
+                    get_tiprack_well_with_n_tips(pipette, remainder)
+                pipette.drop_tip()
+                pipette.pick_up_tip(rack_well)
+                pipette.aspirate(_mastermix_volume, mastermix_column[0])
+                pipette.dispense(_mastermix_volume, remainder_column[0])
+
+    # Distribute DNA into all sample wells and mix
+    ctx.comment("\nDistributing DNA samples to target plate\n")
     drop_all_tips([left_pipette, right_pipette])
 
-    mastermix_column = dna_mastermix_target_plate.columns()[0]
-    pipette = select_pipette(_mastermix_volume,
-                             mastermix_column,
-                             dna_mastermix_target_plate)
+    source_columns = dna_sample_plate.columns()[:n_target_columns-1]
+    target_columns = dna_mastermix_target_plate.columns()[:n_target_columns-1]
+    source_remainder_column = \
+        dna_sample_plate.columns()[n_target_columns]
+    target_remainder_column = \
+        dna_mastermix_target_plate.columns()[n_target_columns]
 
-    for col in dna_mastermix_target_plate.columns()[1:n_target_columns]:
-        if is_single(pipette):
-            pipette.pick_up_tip()
-            for source, dest_row in zip()
-            pipette.transfer(_mastermix_volume,
-                             mastermix_column,
-                             col
-                             )
-        else:
-            pipette.transfer(_mastermix_volume,
-                             mastermix_column[0],
-                             col[0]
-                             )
 
-    # Distribute DNA into all smaple wells and mix
+    pipette = select_pipette(_DNA_volume,
+                             dna_sample_plate.columns()[0],
+                             dna_sample_plate)
+    if is_single(pipette):
+        for s_col, d_col in zip(source_columns, target_columns):
+            pipette.transfer(_DNA_volume,
+                             s_col,
+                             d_col)
+        if remainder > 0:
+            dest_col = \
+                dna_mastermix_target_plate.columns()[n_target_columns+1]
+            source_col = \
+                dna_sample_plate.columns()[n_target_columns+1]
+            pipette.transfer(_DNA_volume,
+                             source_col[:remainder],
+                             dest_col[:remainder])
+    else:
+        _, rack_well = \
+            get_tiprack_well_with_n_tips(pipette, 8)
+        pipette.pick_up_tip(rack_well)
+        for s_col, d_col in zip(source_columns, target_columns):
+            pipette.aspirate(_DNA_volume, s_col[0])
+            pipette.dispense(volume, d_col[0])
+        if remainder > 0:
+            _, rack_well = \
+                get_tiprack_well_with_n_tips(pipette, remainder)
+            pipette.drop_tip()
+            pipette.pick_up_tip(rack_well)
+            pipette.aspirate(_DNA_volume, source_remainder_column[0])
+            pipette.dispense(_DNA_volume, target_remainder_column[0])
+    ctx.comment("Protocol complete")
