@@ -1,5 +1,6 @@
 from opentrons import protocol_api
 from math import ceil
+from math import floor
 
 metadata = {
     'protocolName': 'PCR Prep',
@@ -13,9 +14,9 @@ def get_values(*names):
     import json
     _all_values = json.loads("""{ "create_mastermix":true,
                                   "use_same_pipettes":false,
-                                  "number_of_samples":96,
+                                  "number_of_samples":73,
                                   "left_pipette_part_1":"p300_single_gen2",
-                                  "right_pipette_part_1":"p20_single_gen2",
+                                  "right_pipette_part_1":"p20_multi_gen2",
                                   "left_pipette_tiprack_part_1":"opentrons_96_tiprack_300ul",
                                   "right_pipette_tiprack_part_1":"opentrons_96_tiprack_20ul",
                                   "left_pipette_part_2":"p20_single_gen2",
@@ -205,27 +206,15 @@ def run(ctx: protocol_api.ProtocolContext):
 
         # Slot 4: This is either the mastermix container or the MDNAP
         mastermix_target_label = "Mastermix target"
-        if _mastermix_labware is not None:
-            if temp_mod_slot_4 is not None:
-                mastermix_labware = \
-                    temp_mod_slot_4.load_labware(_mastermix_labware,
-                                                 mastermix_target_label)
-            else:
-                mastermix_labware = \
-                    ctx.load_labware(_mastermix_labware,
-                                     '4',
-                                     mastermix_target_label)
+        if temp_mod_slot_4 is not None:
+            mastermix_labware = \
+                temp_mod_slot_4.load_labware(_mastermix_labware,
+                                             mastermix_target_label)
         else:
-            target_labware_label = "target plate"
-            if temp_mod_slot_4 is not None:
-                target_labware = \
-                    temp_mod_slot_4.load_labware(_target_labware,
-                                                 target_labware_label)
-            else:
-                mastermix_labware = \
-                    ctx.load_labware(_mastermix_labware,
-                                     '4',
-                                     target_labware_label)
+            mastermix_labware = \
+                ctx.load_labware(_mastermix_labware,
+                                 '4',
+                                 mastermix_target_label)
 
         # Slot 7: Primary PCR reagent component labware
         pcr_reagent_labware_label = "PCR reagents"
@@ -278,7 +267,7 @@ def run(ctx: protocol_api.ProtocolContext):
                      for slot in ['8', '9']]
 
     right_tipracks = [ctx.load_labware(_right_pipette_tiprack_part_1, slot)
-                      for slot in ['2', '3']]
+                      for slot in ['5', '6']]
 
     # load instrument
     '''
@@ -376,6 +365,13 @@ def run(ctx: protocol_api.ProtocolContext):
 
 
     '''
+    def is_single(pipette):
+        return "single" in pipette.name
+
+    def drop_all_tips(pipettes: list):
+        for pip in pipette:
+            if pip.has_tip:
+                pip.drop_tip()
 
     '''
     Select the best pipette for pipetting step according to economic criteria
@@ -449,6 +445,18 @@ def run(ctx: protocol_api.ProtocolContext):
             return left_pipette
         else:
             return right_pipette
+
+    """
+    Classifies labware that contains mastermix as single well
+    or 8-well
+    """
+    def classify_mastermix_labware(mastermix_labware):
+        name = mastermix_labware.name
+        if "reservoir" in name:
+            return "multi_well_unified"
+        if "wellplate" in name:
+            return "multi_well_distributed"
+        return "single_well"
 
     # reagents
 
@@ -531,7 +539,7 @@ def run(ctx: protocol_api.ProtocolContext):
                                          aux_pcr_reagent_labware)
             # Use a SCP to pipette mastermix component to a single well
             # reservoir
-            if "single" in pipette.name:
+            if is_single(pipette):
                 try:
                     pipette.transfer(volume,
                                      source,
@@ -558,7 +566,7 @@ def run(ctx: protocol_api.ProtocolContext):
         mix_volume = mastermix_volume_sum / (2*len(mastermix_destination))
         pipette = select_pipette(mix_volume, mastermix_destination,
                                  mastermix_labware)
-        if "single" in pipette.name:
+        if is_single(pipette):
             if pipette.has_tip:
                 pipette.drop_tips()
             pipette.pick_up_tip()
@@ -571,7 +579,7 @@ def run(ctx: protocol_api.ProtocolContext):
                     pipette.blow_out(well)
         else:
             if pipette.has_tip:
-                pipette.drop_tips()
+                pipette.drop_tip()
             rack, rack_well = \
                 get_tiprack_well_with_n_tips(pipette,
                                              len(mastermix_destination))
@@ -658,3 +666,141 @@ def run(ctx: protocol_api.ProtocolContext):
             ctx.load_labware(_DNA_sample_plate,
                              lw_slot_dict["target_plate_step_2"],
                              target_label)
+
+    # Distribute mastermix
+    ctx.comment("\nDistributing mastermix into column 1 of the target plate\n")
+    mastermix_source = mastermix_labware.columns()[0]
+
+    n_target_columns = floor(_number_of_samples / 8)
+    remainder = _number_of_samples % 8
+
+    # Pipette mastermix into the first column of the target,
+    # then distribute through the rows
+
+    # Drop any tips
+    drop_all_tips([left_pipette, right_pipette])
+
+    def SCP_distribute_mastermix(pipette, source_well, dest_plate):
+        nonlocal n_target_columns, remainder
+        col_1 = dest_plate.columns()[0]
+        for i, well in zip(range(1, len(col_1)+1), col_1):
+            volume = 0
+            pipette = None
+            if i <= remainder:
+                volume = (n_target_columns+1)*_mastermix_volume
+            else:
+                volume = n_target_columns*_mastermix_volume
+
+            if volume > 0:
+                pipette.transfer(volume,
+                                 mastermix_source,
+                                 well)
+
+    min_pipetting_volume = n_target_columns*_mastermix_volume
+    eight_sample_columns_volume = min_pipetting_volume
+    pipette = select_pipette(min_pipetting_volume,
+                             mastermix_source,
+                             mastermix_labware)
+    if classify_mastermix_labware(mastermix_labware) == "single_well":
+        if is_single(pipette):
+            SCP_distribute_mastermix(pipette,
+                                     mastermix_source,
+                                     dna_mastermix_target_plate)
+        else:
+            _, tiprack_well = get_tiprack_well_with_n_tips(pipette, 1)
+            pipette.pick_up_tip(tiprack_well)
+            pipette.aspirate(volume, mastermix_source)
+            pipette.dispense(volume, well)
+    # 8-channel to 8-channel well distribution, but no barriers between
+    # the source wells, so we can aspirate from the same "well"
+    elif classify_mastermix_labware(mastermix_labware) == "multi_well_unified":
+        if is_single(pipette):
+            SCP_distribute_mastermix(pipette,
+                                     mastermix_source,
+                                     dna_mastermix_target_plate)
+        else:
+            dest_col_1 = dna_mastermix_target_plate.columns()[0]
+            if n_target_columns > 0:
+                pipette.transfer(eight_sample_columns_volume,
+                                 mastermix_source,
+                                 dest_col_1[0])
+            if remainder > 0:
+                pipette = select_pipette(_mastermix_volume, mastermix_source,
+                                         mastermix_labware)
+                if is_single(pipette):
+                    for well in dest_col_1[:remainder]:
+                        pipette.transfer(_mastermix_volume,
+                                         mastermix_source,
+                                         well)
+                else:
+                    _, rack_well = get_tiprack_well_with_n_tips(pipette,
+                                                                remainder)
+                    pipette.pick_up_tip(rack_well)
+                    pipette.aspirate(_mastermix_volume, mastermix_source[0])
+                    pipette.dispense(_mastermix_volume, dest_col_1[0])
+    # Case when mastermix is distributed in the first 8-well column,
+    # and the wells have to be aspirated with an 8CP or individually with
+    # an SCP. An example is when mastermix is distributed into the first col.
+    # of a 96-well plate
+    elif (classify_mastermix_labware(mastermix_labware)
+            == "multi_well_distributed"):
+        dest_col_1 = dna_mastermix_target_plate.columns()[0]
+        if is_single(pipette):
+            i_range = range(1, len(mastermix_source)+1)
+            for i, s_well, d_well in zip(i_range,
+                                         mastermix_source, dest_col_1):
+                volume = 0
+                if i <= remainder:
+                    volume = eight_sample_columns_volume + _mastermix_volume
+                else:
+                    volume = eight_sample_columns_volume
+
+                if volume > 0:
+                    pipette.transfer(volume, s_well, d_well)
+        # Split the transfer into two steps; step one: transfer
+        # eight_sample_columns_volume + _mastermix_volume to rows
+        # which have n+1 wells due to the remainder.
+        # then transfer eight_sample_columns_volume to the rows where there's
+        # no remainder
+        else:  # 8CP
+            if remainder > 0:
+                _, rack_well = get_tiprack_well_with_n_tips(pipette, remainder)
+                pipette.pick_up_tip(rack_well)
+                volume = eight_sample_columns_volume+_mastermix_volume
+                pipette.aspirate(volume,
+                                 mastermix_source[0])
+                pipette.dispense(volume, dest_col_1[0])
+                pipette.drop_tip()
+
+            _, rack_well = \
+                get_tiprack_well_with_n_tips(pipette,
+                                             len(mastermix_source)-remainder)
+            pipette.pick_up_tip(rack_well)
+            volume = eight_sample_columns_volume
+            pipette.aspirate(volume, mastermix_source[remainder])
+            pipette.dispense(volume, dest_col_1[remainder])
+
+    # Distribute the mastermix into the rest of the target wells
+    ctx.comment("\nDistributing mastermix into all sample wells\n")
+    drop_all_tips([left_pipette, right_pipette])
+
+    mastermix_column = dna_mastermix_target_plate.columns()[0]
+    pipette = select_pipette(_mastermix_volume,
+                             mastermix_column,
+                             dna_mastermix_target_plate)
+
+    for col in dna_mastermix_target_plate.columns()[1:n_target_columns]:
+        if is_single(pipette):
+            pipette.pick_up_tip()
+            for source, dest_row in zip()
+            pipette.transfer(_mastermix_volume,
+                             mastermix_column,
+                             col
+                             )
+        else:
+            pipette.transfer(_mastermix_volume,
+                             mastermix_column[0],
+                             col[0]
+                             )
+
+    # Distribute DNA into all smaple wells and mix
