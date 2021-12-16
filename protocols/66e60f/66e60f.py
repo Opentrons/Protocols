@@ -259,9 +259,9 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.comment("\nTransferring water to target plate\n")
     p300.pick_up_tip()
     for well in target_plate.wells():
-        if p300.current_volume < 40:
+        if p300.current_volume < initial_water_volume:
             p300.aspirate(200-p300.current_volume, water_well)
-        p300.dispense(40, well)
+        p300.dispense(initial_water_volume, well)
     p300.blow_out(water_well)
     p300.return_tip()
     p300.reset_tipracks()
@@ -289,11 +289,11 @@ def run(ctx: protocol_api.ProtocolContext):
         else:
             p300.pick_up_tip()
             p300.transfer(volume,
-                         target_plate.wells_by_name()[well],
-                         water_well, new_tip="never")
+                          target_plate.wells_by_name()[well],
+                          water_well, new_tip="never")
             p300.transfer(volume,
-                         dna_sample_plate.wells_by_name()[well],
-                         target_plate.wells_by_name()[well], new_tip="never")
+                          dna_sample_plate.wells_by_name()[well],
+                          target_plate.wells_by_name()[well], new_tip="never")
             p300.mix(3, 20)
             p300.blow_out(liquid_waste)
             p300.drop_tip()
