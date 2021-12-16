@@ -218,7 +218,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     '''
     water_well = reservoir.wells_by_name()['A1']
-    waste_well = reservoir.wells_by_name()['A2']
+    liquid_waste = reservoir.wells_by_name()['A2']
 
     # plate, tube rack maps
 
@@ -283,6 +283,8 @@ def run(ctx: protocol_api.ProtocolContext):
             p20.transfer(volume,
                          dna_sample_plate.wells_by_name()[well],
                          target_plate.wells_by_name()[well], new_tip="never")
+            p20.mix(3, 20)
+            p20.blow_out(liquid_waste)
             p20.drop_tip()
         else:
             p300.pick_up_tip()
@@ -292,4 +294,6 @@ def run(ctx: protocol_api.ProtocolContext):
             p300.transfer(volume,
                          dna_sample_plate.wells_by_name()[well],
                          target_plate.wells_by_name()[well], new_tip="never")
+            p300.mix(3, 20)
+            p300.blow_out(liquid_waste)
             p300.drop_tip()
