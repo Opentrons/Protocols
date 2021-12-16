@@ -24,15 +24,14 @@ def run(ctx: protocol_api.ProtocolContext):
         'input_csv', 'source_type', 'dest_type')
 
     # define all custom variables above here with descriptions:
-    left_pipette_step1_loadname = 'p20_multi_gen2'
-    right_pipette_step2_loadname = 'p20_single_gen2'
-    left_pipette_step2_loadname = 'p300_single_gen2'
+    left_pipette_loadname = 'p20_single_gen2'
+    right_pipette_loadname = 'p300_single_gen2'
 
     target_plate_loader = (dest_type, '1',
                            'target plate')
     DNA_sample_plate_loader = (dest_type, '7',
                                'DNA sample plate')
-    tiprack_300uL_loader = ('opentrons_96_filtertiprack_20ul', '2')
+    tiprack_300uL_loader = ('opentrons_96_filtertiprack_200ul', '2')
     tiprack_20uL_loader = ('opentrons_96_filtertiprack_20ul', '5')
 
     reservoir_loader = ('nest_12_reservoir_15ml', '4', 'water reservoir')
@@ -41,16 +40,21 @@ def run(ctx: protocol_api.ProtocolContext):
     initial_water_volume = 40
 
     # Read CSV and format the inputs
+    # csv format: Well | Description | Concentration | volume to transfer
+    #              [0]       [1]           [2]                [3]
     data = [
         [val.strip().upper() for val in line.split(',')
             if val != '']
         for line in input_csv.splitlines()[1:]
         if line and line.split(',')[0]]
 
-    # Convert any well designation in column 1 from [A-H]0[1-9] to [A-H][1-9]     
+    # Convert any well designation in column 1 from [A-H]0[1-9] to [A-H][1-9]
+    # e.g. A01 -> A1 etc.
+    pattern = re.compile('[A-H]0[1-9]')
     for row in data:
+        if pattern.match(row[0]):
+            row[0] = row[0].replace('0', '')
 
-    import pdb; pdb.set_trace()
     # load modules
 
     '''
@@ -133,13 +137,13 @@ def run(ctx: protocol_api.ProtocolContext):
                         )
     '''
     # Load m20 and p20, m20 switches out for p300 in step 2
-    m20 = ctx.load_instrument(
-                        left_pipette_step1_loadname,
+    p20 = ctx.load_instrument(
+                        left_pipette_loadname,
                         "left",
                         tip_racks=tiprack_20_filter
                         )
     p300 = ctx.load_instrument(
-                        right_pipette_step2_loadname,
+                        right_pipette_loadname,
                         "right",
                         tip_racks=tiprack_300_filter
                         )
@@ -253,12 +257,39 @@ def run(ctx: protocol_api.ProtocolContext):
     '''
 
     ctx.comment("\nTransferring water to target plate\n")
-    m20.pick_up_tip()
-    for col in target_plate.columns():
-        m20.transfer(initial_water_volume,
-                     water_well,
-                     col[0],
-                     new_tip='never')
-    m20.blow_out(water_well)
-    m20.return_tip()
-    m20.reset_tipracks()
+    p300.pick_up_tip()
+    for well in target_plate.wells():
+        if p300.current_volume < 40:
+            p300.aspirate(200-p300.current_volume, water_well)
+        p300.dispense(40, well)
+    p300.blow_out(water_well)
+    p300.return_tip()
+    p300.reset_tipracks()
+
+    # Transfering DNA samples to target
+    ctx.comment("\nTransferring DNA sample to target plate\n")
+    for line in data:
+        description = line[1]
+        well = line[0]
+        volume = float(line[3])
+
+        ctx.comment("Normalizing sample {}".format(description))
+
+        if volume <= 20:
+            p20.pick_up_tip()
+            p20.transfer(volume,
+                         target_plate.wells_by_name()[well],
+                         water_well, new_tip="never")
+            p20.transfer(volume,
+                         dna_sample_plate.wells_by_name()[well],
+                         target_plate.wells_by_name()[well], new_tip="never")
+            p20.drop_tip()
+        else:
+            p300.pick_up_tip()
+            p300.transfer(volume,
+                         target_plate.wells_by_name()[well],
+                         water_well, new_tip="never")
+            p300.transfer(volume,
+                         dna_sample_plate.wells_by_name()[well],
+                         target_plate.wells_by_name()[well], new_tip="never")
+            p300.drop_tip()
