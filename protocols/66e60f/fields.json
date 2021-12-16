@@ -1,0 +1,28 @@
+[
+  {
+    "type": "textFile",
+    "label": ".csv input file",
+    "name": "input_csv",
+    "default": "Well,Description,Concentration,Volume_to_transfer,,,,,,,\\nA01,13377_16S_Bac,3.28,12.52,,,,,,,"
+  },
+  {
+    "type": "dropDown",
+    "label": "source plate type",
+    "name": "source_type",
+    "options": [
+      { "label": "Eppendorf (on aluminum block)", "value": "eppendorf_96_well_on_block" },
+      { "label": "Bio-Rad (on aluminum block)", "value": "opentrons_96_aluminumblock_biorad_wellplate_200ul" },
+      { "label": "Bio-Rad (off aluminum block)", "value": "biorad_96_wellplate_200ul_pcr" }
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "destination plate type",
+    "name": "dest_type",
+    "options": [
+      { "label": "Eppendorf (on aluminum block)", "value": "eppendorf_96_well_on_block" },
+      { "label": "Bio-Rad (on aluminum block)", "value": "opentrons_96_aluminumblock_biorad_wellplate_200ul" },
+      { "label": "Bio-Rad (off aluminum block)", "value": "biorad_96_wellplate_200ul_pcr" }
+    ]
+  }
+]
