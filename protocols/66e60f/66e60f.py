@@ -269,11 +269,13 @@ def run(ctx: protocol_api.ProtocolContext):
     # Transfering DNA samples to target
     ctx.comment("\nTransferring DNA sample to target plate\n")
     for line in data:
-        description = line[1]
         well = line[0]
+        description = line[1]
+        concentration = line[2]
         volume = float(line[3])
 
-        ctx.comment("Normalizing sample {}".format(description))
+        ctx.comment("Normalizing sample {} with concentration {}"
+                    .format(description, concentration))
 
         if volume <= 20:
             p20.pick_up_tip()
