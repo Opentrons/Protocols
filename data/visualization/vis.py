@@ -18,7 +18,7 @@ print(df[:5])
 # App layout
 app.layout = html.Div([
 
-    html.H1("Web Application Dashboards with Dash", style={'text-align': 'center'}),
+    html.H1("Protocol Data by Category", style={'text-align': 'center'}),
 
     dcc.Dropdown(id="category",
                  options=[{"label": c, "value": c} for c in categories],
@@ -46,6 +46,9 @@ def update_bar_chart(category):
                  barmode="group")
     fig.update_traces(marker_line_width=0.5)
     return fig
+
+# Nick 12/17
+# grouped bar chart w plotly, percentages, date range inputs
 
 
 if __name__ == '__main__':
