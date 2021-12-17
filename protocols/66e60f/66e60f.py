@@ -276,26 +276,15 @@ def run(ctx: protocol_api.ProtocolContext):
 
         ctx.comment("Normalizing sample {} with concentration {}"
                     .format(description, concentration))
-
-        if volume <= 20:
-            p20.pick_up_tip()
-            p20.transfer(volume,
-                         target_plate.wells_by_name()[well],
-                         water_well, new_tip="never")
-            p20.transfer(volume,
-                         dna_sample_plate.wells_by_name()[well],
-                         target_plate.wells_by_name()[well], new_tip="never")
-            p20.mix(3, 20)
-            p20.blow_out(liquid_waste)
-            p20.drop_tip()
-        else:
-            p300.pick_up_tip()
-            p300.transfer(volume,
-                          target_plate.wells_by_name()[well],
-                          water_well, new_tip="never")
-            p300.transfer(volume,
-                          dna_sample_plate.wells_by_name()[well],
-                          target_plate.wells_by_name()[well], new_tip="never")
-            p300.mix(3, 20)
-            p300.blow_out(liquid_waste)
-            p300.drop_tip()
+        pip = None
+        pip = p20 if volume <= 20 else p300
+        pip.pick_up_tip()
+        pip.transfer(volume,
+                     target_plate.wells_by_name()[well],
+                     liquid_waste, new_tip="never")
+        pip.transfer(volume,
+                     dna_sample_plate.wells_by_name()[well],
+                     target_plate.wells_by_name()[well], new_tip="never")
+        pip.mix(3, 20)
+        pip.blow_out(liquid_waste)
+        pip.drop_tip()
