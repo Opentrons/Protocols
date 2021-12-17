@@ -1,3 +1,5 @@
+from contextlib import suppress
+
 metadata = {
     'protocolName': 'Phytip Protein Purification',
     'author': 'Nick <protocols@opentrons.com>',
@@ -37,25 +39,24 @@ def run(ctx):
     m300.flow_rate.dispense = 5
 
     # mix sequences
-    def plate_mix(cycles, volume, plate, col, delay=20, blow_out=0):
+    def plate_mix(cycles, volume, plate, col, delay=20, blow_out=False):
         mix_loc = plate.rows_by_name()['A'][col]
         for _ in range(cycles):
             m300.aspirate(volume, mix_loc)
             ctx.delay(seconds=delay)
             m300.dispense(volume, mix_loc)
-            if blow_out > 0:
-                m300.dispense(blow_out, mix_loc.top(-2))
+            ctx.delay(seconds=delay)
+            if blow_out:
+                m300.blow_out(mix_loc.top(-2))
 
     for col in range(start_column-1, end_column):
-        # create air gap
         tip_loc = tiprack.rows_by_name()['A'][col]
         m300.pick_up_tip(tip_loc)
-        m300.aspirate(30, tiprack.rows_by_name()['A'][col].top(5))
 
         # perform
         plate_mix(2, 90, mix_plates[0], col)
-        plate_mix(4, 180, mix_plates[1], col, blow_out=10)
+        plate_mix(4, 180, mix_plates[1], col, blow_out=True)
         plate_mix(2, 180, mix_plates[2], col)
-        plate_mix(2, 180, mix_plates[3], col, blow_out=10)
-        plate_mix(4, 70, mix_plates[4], col, blow_out=10)
+        plate_mix(2, 180, mix_plates[3], col, blow_out=True)
+        plate_mix(4, 70, mix_plates[4], col, blow_out=True)
         m300.return_tip()
