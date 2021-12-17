@@ -80,3 +80,7 @@ build:
 .PHONY: data
 data:
 	pip install -r data/requirements.txt
+
+.PHONY: vis
+vis:
+	python data/visualization/vis.py
