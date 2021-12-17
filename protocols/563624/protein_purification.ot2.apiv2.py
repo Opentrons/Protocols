@@ -1,5 +1,3 @@
-from contextlib import suppress
-
 metadata = {
     'protocolName': 'Phytip Protein Purification',
     'author': 'Nick <protocols@opentrons.com>',
