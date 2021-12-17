@@ -8,7 +8,7 @@
 	* Normalization
 
 ## Description
-This protocol performs a custom sample normalization from a source PCR plate to a second PCR plate, diluting with water from a reservoir. Sample and diluent volumes are specified via .csv file in the following format, including the header line (empty lines ignored):
+This protocol performs a custom sample normalization from a source plate to a second plate, diluting with water from a reservoir. Sample and diluent volumes are specified via .csv file in the following format, including the header line (empty lines ignored):
 
 ```
 source plate well,destination plate well,volume sample (µl),volume diluent (µl)
