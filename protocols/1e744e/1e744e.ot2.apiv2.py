@@ -27,13 +27,8 @@ def run(ctx):
     ctx.set_rail_lights(True)
     ctx.delay(seconds=10)
 
-    # removed temporarily til labware def for 384 plate plus block available
-    # if not 1 <= count_samples <= 384:
-    #     raise Exception('Invalid number of samples (must be 1-384).')
-
-    # temporarily restrict to 96 samples
-    if not 1 <= count_samples <= 96:
-        raise Exception('Invalid number of samples (must be 1-96).')
+    if not 1 <= count_samples <= 384:
+        raise Exception('Invalid number of samples (must be 1-384).')
 
     # load sample plates (1-4 elution plates from extraction step)
     num_plates = math.ceil(count_samples / 96)
