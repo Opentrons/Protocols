@@ -18,26 +18,6 @@
         ]
       },
     {
-        "type": "dropDown",
-        "label": "Temperature module 1",
-        "name": "temp_mod_a",
-        "options": [
-          { "label": "Temperature module Gen2", "value": "temperature module gen2" },
-          { "label": "Temperature module Gen1", "value": "temperature module" },
-          { "label": "None", "value": null }
-        ]
-      },
-    {
-        "type": "dropDown",
-        "label": "Temperature module 2",
-        "name": "temp_mod_b",
-        "options": [
-          { "label": "Temperature module Gen2", "value": "temperature module gen2" },
-          { "label": "Temperature module Gen1", "value": "temperature module" },
-          { "label": "None", "value": null }
-        ]
-      },
-    {
         "type": "int",
         "label": "Number of Samples",
         "name": "samples",
