@@ -9,24 +9,53 @@ metadata = {
 }
 
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"m20_mount":"left",
+                             "m300_mount":"right",
+                             "samples":96,
+                             "temp_mod_a": "temperature module gen2",
+                             "temp_mod_b": "temperature module gen2"
+                             }""")
+    return [_all_values[n] for n in names]
+
+
 def run(ctx):
 
-    [m20_mount, m300_mount, samples] = get_values(  # noqa: F821
-        "m20_mount", "m300_mount", "samples")
+    [m20_mount, m300_mount, samples, temp_mod_a, temp_mod_b] = get_values(  # noqa: F821
+        "m20_mount", "m300_mount", "samples", "temp_mod_a", "temp_mod_b")
 
     cols = math.ceil(samples/8)
 
     # Load Modules
-    temperature_module_a = ctx.load_module('temperature module gen2', 1)
-    temperature_module_b = ctx.load_module('temperature module gen2', 3)
+    temp_mod_list = [None, None]
+
+    for i, temp_mod, slot in zip(range(0, 2), [temp_mod_a, temp_mod_b], [1, 3]):
+        if temp_mod is not None:
+            temp_mod_list[i] = (ctx.load_module(temp_mod, slot))
+
+    temperature_module_a = temp_mod_list[0]
+    temperature_module_b = temp_mod_list[1]
+
     mag_mod = ctx.load_module('magnetic module gen2', 4)
     mag_plate = mag_mod.load_labware('biorad_96_wellplate_200ul_pcr')
 
     # Load Labware
-    temp_plate_a = temperature_module_a.load_labware(
-                    'biorad_96_wellplate_200ul_pcr')
-    temp_plate_b = temperature_module_b.load_labware(
-                    'opentrons_96_aluminumblock_generic_pcr_strip_200ul')
+    labware_list = []
+    labware_a = 'biorad_96_wellplate_200ul_pcr'
+    labware_b = 'opentrons_96_aluminumblock_generic_pcr_strip_200ul'
+    for temp_mod, load_name, slot in \
+            (zip([temperature_module_a, temperature_module_b],
+                 [labware_a, labware_b],
+                 [1, 3])):
+        if temp_mod is not None:
+            labware_list.append(temp_mod.load_labware(load_name))
+        else:
+            labware_list.append(ctx.load_labware(load_name, slot))
+    temp_plate_a = labware_list[0]
+    temp_plate_b = labware_list[1]
+
+    # TODO: Maybe this should have a temp mod too?
     reagent2_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', 2)
 
     tipracks200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
