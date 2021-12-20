@@ -2,9 +2,9 @@ from opentrons import types, protocol_api
 import math
 
 metadata = {
-    'protocolName': 'Custom NGS Library Prep',
-    'author': 'Sakib <sakib.hossain@opentrons.com>',
-    'description': 'Custom Protocol Request',
+    'protocolName': 'Generic NGS Library Prep',
+    'author': 'Opentrons',
+    'description': 'Generic NGS library prep preparation with optional temp mods',
     'apiLevel': '2.10'
 }
 
