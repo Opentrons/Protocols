@@ -4,7 +4,7 @@ import math
 metadata = {
     'protocolName': 'Generic NGS Library Prep',
     'author': 'Opentrons',
-    'description': 'Generic NGS library prep preparation with optional temp mods',
+    'description': 'Generic NGS library prep with optional temp mods',
     'apiLevel': '2.10'
 }
 
@@ -22,15 +22,18 @@ def get_values(*names):
 
 def run(ctx):
 
-    [m20_mount, m300_mount, samples, temp_mod_a, temp_mod_b] = get_values(  # noqa: F821
-        "m20_mount", "m300_mount", "samples", "temp_mod_a", "temp_mod_b")
+    [m20_mount, m300_mount, samples,
+     temp_mod_a, temp_mod_b] = get_values(  # noqa: F821
+        "m20_mount", "m300_mount", "samples",
+        "temp_mod_a", "temp_mod_b")
 
     cols = math.ceil(samples/8)
 
     # Load Modules
     temp_mod_list = [None, None]
 
-    for i, temp_mod, slot in zip(range(0, 2), [temp_mod_a, temp_mod_b], [1, 3]):
+    for i, temp_mod, slot in \
+            zip(range(0, 2), [temp_mod_a, temp_mod_b], [1, 3]):
         if temp_mod is not None:
             temp_mod_list[i] = (ctx.load_module(temp_mod, slot))
 
