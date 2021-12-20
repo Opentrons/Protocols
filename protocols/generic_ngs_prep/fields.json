@@ -1,0 +1,46 @@
+[
+    {
+      "type": "dropDown",
+      "label": "P20 Multichannel GEN2 Mount Position",
+      "name": "m20_mount",
+      "options": [
+        { "label": "Left", "value": "left" },
+        { "label": "Right", "value": "right" }
+      ]
+    },
+    {
+        "type": "dropDown",
+        "label": "P300 Multichannel GEN2 Mount Position",
+        "name": "m300_mount",
+        "options": [
+          { "label": "Right", "value": "right" },
+          { "label": "Left", "value": "left" }
+        ]
+      },
+    {
+        "type": "dropDown",
+        "label": "Temperature module 1",
+        "name": "temp_mod_a",
+        "options": [
+          { "label": "Temperature module Gen2", "value": "temperature module gen2" },
+          { "label": "Temperature module Gen1", "value": "temperature module" },
+          { "label": "None", "value": null }
+        ]
+      },
+    {
+        "type": "dropDown",
+        "label": "Temperature module 2",
+        "name": "temp_mod_b",
+        "options": [
+          { "label": "Temperature module Gen2", "value": "temperature module gen2" },
+          { "label": "Temperature module Gen1", "value": "temperature module" },
+          { "label": "None", "value": null }
+        ]
+      },
+    {
+        "type": "int",
+        "label": "Number of Samples",
+        "name": "samples",
+        "default": 96
+      }
+  ]
