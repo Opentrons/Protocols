@@ -15,7 +15,8 @@ def get_values(*names):
                              "m300_mount":"right",
                              "samples":96,
                              "temp_mod_a": "temperature module gen2",
-                             "temp_mod_b": "temperature module gen2"
+                             "temp_mod_b": "temperature module gen2",
+                             "temp_mod_c": "temperature module gen2"
                              }""")
     return [_all_values[n] for n in names]
 
@@ -23,48 +24,61 @@ def get_values(*names):
 def run(ctx):
 
     [m20_mount, m300_mount, samples,
-     temp_mod_a, temp_mod_b] = get_values(  # noqa: F821
+     temp_mod_a, temp_mod_b, temp_mod_c] = get_values(  # noqa: F821
         "m20_mount", "m300_mount", "samples",
-        "temp_mod_a", "temp_mod_b")
+        "temp_mod_a", "temp_mod_b", "temp_mod_c")
 
     cols = math.ceil(samples/8)
+    slot_a = 1
+    slot_b = 4
+    slot_c = 7
+    mag_slot = 3
+    m20_tip_slots = [10, 11]
+    m300_tip_slots = [8, 9]
 
     # Load Modules
-    temp_mod_list = [None, None]
+    temp_mod_list = []
 
-    for i, temp_mod, slot in \
-            zip(range(0, 2), [temp_mod_a, temp_mod_b], [1, 3]):
+    for temp_mod, slot in \
+            zip([temp_mod_a, temp_mod_b, temp_mod_c],
+                [slot_a, slot_b, slot_c]):
         if temp_mod is not None:
-            temp_mod_list[i] = (ctx.load_module(temp_mod, slot))
+            temp_mod_list.append((ctx.load_module(temp_mod, slot)))
+        else:
+            temp_mod_list.append(None)
 
-    temperature_module_a = temp_mod_list[0]
-    temperature_module_b = temp_mod_list[1]
+    [temperature_module_a, temperature_module_b, temperature_module_c] = \
+        [temp_mod_list[0], temp_mod_list[1], temp_mod_list[2]]
 
-    mag_mod = ctx.load_module('magnetic module gen2', 4)
+    mag_mod = ctx.load_module('magnetic module gen2', 3)
     mag_plate = mag_mod.load_labware('biorad_96_wellplate_200ul_pcr')
 
     # Load Labware
     labware_list = []
-    labware_a = 'biorad_96_wellplate_200ul_pcr'
-    labware_b = 'opentrons_96_aluminumblock_generic_pcr_strip_200ul'
+    labware_a_loadname = 'biorad_96_wellplate_200ul_pcr'
+    labware_b_loadname = 'opentrons_96_aluminumblock_generic_pcr_strip_200ul'
+    reagent2_plate_loadname = 'biorad_96_wellplate_200ul_pcr'
     for temp_mod, load_name, slot in \
-            (zip([temperature_module_a, temperature_module_b],
-                 [labware_a, labware_b],
-                 [1, 3])):
+            (zip([temperature_module_a, temperature_module_b,
+                  temperature_module_c],
+                 [labware_a_loadname, labware_b_loadname,
+                  reagent2_plate_loadname],
+                 [slot_a, slot_b, slot_c])):
         if temp_mod is not None:
             labware_list.append(temp_mod.load_labware(load_name))
         else:
             labware_list.append(ctx.load_labware(load_name, slot))
     temp_plate_a = labware_list[0]
     temp_plate_b = labware_list[1]
+    reagent2_plate = labware_list[2]
 
-    # TODO: Maybe this should have a temp mod too?
-    reagent2_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', 2)
+    [temp_plate_a, temp_plate_b, reagent2_plate] = \
+        [labware_list[0], labware_list[1], labware_list[2]]
 
     tipracks200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-                   for slot in [7, 8]]
+                   for slot in [m300_tip_slots[0], m300_tip_slots[0]]]
     tipracks20 = [ctx.load_labware('opentrons_96_tiprack_20ul', slot)
-                  for slot in [10, 11]]
+                  for slot in [m20_tip_slots[0], m20_tip_slots[1]]]
     trash = ctx.deck['12']['A1']
 
     # Load Pipettes
