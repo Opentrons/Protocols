@@ -230,7 +230,6 @@ def run(ctx):
     primer = temperature_module_b.load_labware('biorad_96_wellplate_200ul_pcr')
     """
 
-
     reservoir_loadname = 'nest_12_reservoir_15ml'
     primer_loadname = 'biorad_96_wellplate_200ul_pcr'
     indexing_plate_loadname = 'biorad_96_wellplate_200ul_pcr'
