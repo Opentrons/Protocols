@@ -22,7 +22,7 @@ def get_values(*names):
                              "temp_c_part1": 4.0,
                              "temp_a_part2": 4.0,
                              "temp_b_part2": 4.0,
-                             "temp_c_part2": 4.0,
+                             "temp_c_part2": 4.0
                              }""")
     return [_all_values[n] for n in names]
 
@@ -35,7 +35,8 @@ def run(ctx):
      temp_a_part2, temp_b_part2, temp_c_part2] = get_values(  # noqa: F821
         "m20_mount", "m300_mount", "samples",
         "temp_mod_a", "temp_mod_b", "temp_mod_c",
-        "temperature")
+        "temp_a_part1", "temp_b_part1", "temp_c_part1",
+        "temp_a_part2", "temp_b_part2", "temp_c_part2")
 
     cols = math.ceil(samples/8)
     slot_a = 1
