@@ -277,6 +277,10 @@ def run(ctx):
     sides = [-side_x, side_x] * (cols // 2)
 
     # Continue Protocol
+    # Set temperatures for part 2
+    temperature_module_a.set_temperature(temp_a_part2)
+    temperature_module_b.set_temperature(temp_b_part2)
+    temperature_module_b.set_temperature(temp_c_part2)
     # Step 3: Add SPRI solution to Samples
     for col in mag_plate_wells:
         pick_up(m300)
