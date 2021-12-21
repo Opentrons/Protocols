@@ -69,10 +69,19 @@ app.layout = html.Div([
         ], style={'width': '48%', 'display': 'inline-block'}),
 
         html.Div([
-            dcc.Dropdown(
+            # dcc.Dropdown(
+            #     id='category-dropdown',
+            #     options=[{'label': i, 'value': i} for i in categories],
+            #     value='category'
+            # )
+            dcc.Checklist(
                 id='category-dropdown',
-                options=[{'label': i, 'value': i} for i in categories],
-                value='category'
+                options=[
+                    {'label': c, 'value': c}
+                    for c in categories
+                ],
+                value=categories,
+                labelStyle={'display': 'inline-block'}
             )
         ], style={'width': '48%', 'float': 'right', 'display': 'inline-block'})
     ]),
@@ -89,19 +98,22 @@ app.layout = html.Div([
     Input('date-end', 'date'),
     Input('category-dropdown', 'value')
 )
-def update_output(date_start, date_end, category):
+def update_output(date_start, date_end, categories):
     df_closed_on_time = df_delivered[
         (df_delivered['delivered'] >= date_start) & (df_delivered['delivered'] <= date_end)]
     df_grouped_means = df_closed_on_time.groupby(['transformed category']).mean()
     df_grouped_means = df_grouped_means.add_suffix('_mean').reset_index()
-    print(df_grouped_means[df_grouped_means['transformed category'] == category]['tat_mean'])
-    print(df_grouped_means)
-    fig = go.Figure(data=[
-        go.Bar(name=category,
-               x=['tat_mean'],
-               y=[df_grouped_means[df_grouped_means['transformed category'] == category]['tat_mean']])
-        ]
+    labware_modules_pips = df_grouped_means.columns[2:10]
+    fig = go.Figure(
+        data=[
+            go.Bar(name=c,
+                   x=labware_modules_pips,
+                   y=[df_grouped_means[df_grouped_means['transformed category'] == c][lmp].values[0] for lmp in labware_modules_pips]
+                   # y=[100])
+                   )
+            for c in categories]
     )
+
 
     date_objects = [date.fromisoformat(date_) for date_ in [date_start, date_end]]
     date_strings = [d_o_.strftime('%B %d, %Y') for d_o_ in date_objects]
