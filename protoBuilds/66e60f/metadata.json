@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "olink.ot2.apiv2.py"
+            "66e60f.ot2.apiv2.py"
         ],
         "description": [
             "README.md"
@@ -14,7 +14,7 @@
         "hide-from-search": false,
         "skip-tests": false
     },
-    "path": "protocols/2aee74-48-2",
-    "slug": "2aee74-48-2",
+    "path": "protocols/66e60f",
+    "slug": "66e60f",
     "status": "ok"
 }
