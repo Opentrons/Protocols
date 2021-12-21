@@ -52,5 +52,11 @@
         "label": "Number of Samples",
         "name": "samples",
         "default": 96
+      },
+    {
+        "type": "float",
+        "label": "Temperature for temperature modules (deg C)",
+        "name": "temperature",
+        "default": 4.0
       }
   ]

@@ -16,7 +16,8 @@ def get_values(*names):
                              "samples":96,
                              "temp_mod_a": "temperature module gen2",
                              "temp_mod_b": "temperature module gen2",
-                             "temp_mod_c": "temperature module gen2"
+                             "temp_mod_c": "temperature module gen2",
+                             "temperature": 4.0
                              }""")
     return [_all_values[n] for n in names]
 
@@ -24,9 +25,11 @@ def get_values(*names):
 def run(ctx):
 
     [m20_mount, m300_mount, samples,
-     temp_mod_a, temp_mod_b, temp_mod_c] = get_values(  # noqa: F821
+     temp_mod_a, temp_mod_b, temp_mod_c,
+     temperature] = get_values(  # noqa: F821
         "m20_mount", "m300_mount", "samples",
-        "temp_mod_a", "temp_mod_b", "temp_mod_c")
+        "temp_mod_a", "temp_mod_b", "temp_mod_c",
+        "temperature")
 
     cols = math.ceil(samples/8)
     slot_a = 1
@@ -42,7 +45,7 @@ def run(ctx):
     for temp_mod, slot in \
             zip([temp_mod_a, temp_mod_b, temp_mod_c],
                 [slot_a, slot_b, slot_c]):
-        if temp_mod is not None:
+        if temp_mod:
             temp_mod_list.append((ctx.load_module(temp_mod, slot)))
         else:
             temp_mod_list.append(None)
@@ -64,7 +67,7 @@ def run(ctx):
                  [labware_a_loadname, labware_b_loadname,
                   reagent2_plate_loadname],
                  [slot_a, slot_b, slot_c])):
-        if temp_mod is not None:
+        if temp_mod:
             labware_list.append(temp_mod.load_labware(load_name))
         else:
             labware_list.append(ctx.load_labware(load_name, slot))
@@ -76,7 +79,7 @@ def run(ctx):
         [labware_list[0], labware_list[1], labware_list[2]]
 
     tipracks200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-                   for slot in [m300_tip_slots[0], m300_tip_slots[0]]]
+                   for slot in [m300_tip_slots[0], m300_tip_slots[1]]]
     tipracks20 = [ctx.load_labware('opentrons_96_tiprack_20ul', slot)
                   for slot in [m20_tip_slots[0], m20_tip_slots[1]]]
     trash = ctx.deck['12']['A1']
@@ -186,8 +189,8 @@ def run(ctx):
 
     # Protocol Steps
     # Set both Temp Mods to 4C
-    temperature_module_a.set_temperature(4)
-    temperature_module_b.set_temperature(4)
+    temperature_module_a.set_temperature(temperature)
+    temperature_module_b.set_temperature(temperature)
 
     # Step 1: Transfer Reagent 1 to Samples
     for col in sample_wells:
@@ -217,7 +220,7 @@ def run(ctx):
               indexing plate in Slot 2. Click Resume when ready to proceed.''')
 
     # Swapping Labware at Pause
-    del ctx.deck[str(1)]
+    """del ctx.deck[str(1)]
     temperature_module_a = ctx.load_module('temperature module gen2', 1)
     reservoir = temperature_module_a.load_labware('nest_12_reservoir_15ml')
     ethanol = ctx.load_labware('nest_1_reservoir_195ml', 6)['A1']
@@ -225,7 +228,32 @@ def run(ctx):
     del ctx.deck[str(3)]
     temperature_module_b = ctx.load_module('temperature module gen2', 3)
     primer = temperature_module_b.load_labware('biorad_96_wellplate_200ul_pcr')
+    """
 
+
+    reservoir_loadname = 'nest_12_reservoir_15ml'
+    primer_loadname = 'biorad_96_wellplate_200ul_pcr'
+    indexing_plate_loadname = 'biorad_96_wellplate_200ul_pcr'
+    labware_list = []
+    temp_mod_list = []
+
+    for slot, temp_mod_loadname, load_name in zip([slot_a, slot_b],
+                                                  [temp_mod_a,
+                                                  temp_mod_b],
+                                                  [reservoir_loadname,
+                                                  primer_loadname]):
+        del(ctx.deck[slot])
+        if temp_mod_loadname:
+            temp_mod = ctx.load_module(temp_mod_loadname, slot)
+            temp_mod_list.append(temp_mod)
+            labware = temp_mod.load_labware(load_name)
+            labware_list.append(labware)
+        else:
+            labware_list.append(ctx.load_labware(load_name, slot))
+
+    reservoir = labware_list[0]
+    primer = labware_list[1]
+    ethanol = reservoir.wells_by_name()['A1']
     indexing_plate = replace_labware(2, 'biorad_96_wellplate_200ul_pcr')
 
     # Wells
