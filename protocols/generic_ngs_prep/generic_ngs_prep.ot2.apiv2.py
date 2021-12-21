@@ -50,7 +50,7 @@ def run(ctx):
     [temperature_module_a, temperature_module_b, temperature_module_c] = \
         [temp_mod_list[0], temp_mod_list[1], temp_mod_list[2]]
 
-    mag_mod = ctx.load_module('magnetic module gen2', 3)
+    mag_mod = ctx.load_module('magnetic module gen2', mag_slot)
     mag_plate = mag_mod.load_labware('biorad_96_wellplate_200ul_pcr')
 
     # Load Labware
