@@ -56,7 +56,37 @@
     {
         "type": "float",
         "label": "Temperature for temperature modules (deg C)",
-        "name": "temperature",
+        "name": "temp_a_part1",
+        "default": 4.0
+      },
+    {
+        "type": "float",
+        "label": "Temperature for temperature modules (deg C)",
+        "name": "temp_b_part1",
+        "default": 4.0
+      },
+    {
+        "type": "float",
+        "label": "Temperature for temperature modules (deg C)",
+        "name": "temp_c_part1",
+        "default": 4.0
+      },
+    {
+        "type": "float",
+        "label": "Temperature for temperature modules (deg C)",
+        "name": "temp_a_part2",
+        "default": 4.0
+      },
+    {
+        "type": "float",
+        "label": "Temperature for temperature modules (deg C)",
+        "name": "temp_b_part2",
+        "default": 4.0
+      },
+    {
+        "type": "float",
+        "label": "Temperature for temperature modules (deg C)",
+        "name": "temp_c_part2",
         "default": 4.0
       }
   ]
