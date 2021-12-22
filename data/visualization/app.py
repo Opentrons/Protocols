@@ -64,7 +64,7 @@ app.layout = html.Div([
         html.Div([
             html.Button("Download CSV", id="btn-csv"),
             dcc.Download(id="download-dataframe-csv"),
-        ], style={'width': '100%', 'display': 'inline-block'})
+        ], style={'width': '100%', 'padding-left': '10', 'display': 'inline-block'})
     ]),
     html.Div([dcc.Graph(id='protocol-bar-graph', className='row')])
 ])
@@ -109,7 +109,8 @@ def update_output(date_start, date_end, categories):
     prevent_initial_call=True,
 )
 def download(n_clicks):
-    return dcc.send_data_frame(df_closed_on_time.to_csv, "mydf.csv")
+    today_str = date.today().strftime('%m%d%Y')
+    return dcc.send_data_frame(df_closed_on_time.to_csv, f"report{today_str}.csv")
 
 
 if __name__ == '__main__':
