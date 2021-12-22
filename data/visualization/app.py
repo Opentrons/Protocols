@@ -47,6 +47,8 @@ app.layout = html.Div([
 ])
 
 app.layout = html.Div([
+    html.H3('Protocols Data'),
+
     html.Div([
 
         html.Div([
@@ -107,7 +109,7 @@ def update_output(date_start, date_end, categories):
     fig = go.Figure(
         data=[
             go.Bar(name=c,
-                   x=labware_modules_pips,
+                   x=[lmp.split('_')[0] for lmp in labware_modules_pips],
                    y=[df_grouped_means[df_grouped_means['transformed category'] == c][lmp].values[0] for lmp in labware_modules_pips]
                    # y=[100])
                    )
