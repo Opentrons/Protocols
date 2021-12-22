@@ -1,6 +1,7 @@
 import pandas as pd
 from datetime import date
 import datetime
+from dateutil.relativedelta import relativedelta
 import plotly.express as px  # (version 4.7.0 or higher)
 import plotly.graph_objects as go
 from dash import Dash, dcc, html, Input, Output  # pip install dash (version 2.0.0 or higher)
@@ -49,7 +50,10 @@ app.layout = html.Div([
 ])
 
 app.layout = html.Div([
-    html.H1('Protocols Data'),
+    html.Div([
+        html.H2("Protocol Data"),
+        html.Img(src="/assets/opentrons-logo.png")
+    ], className="banner"),
 
     html.Div([
 
@@ -59,7 +63,7 @@ app.layout = html.Div([
                 min_date_allowed=date(2018, 1, 1),
                 max_date_allowed=date(2025, 12, 31),
                 initial_visible_month=date(2021, 12, 1),
-                date=date(2021, 1, 1)
+                date=date.today() - relativedelta(months=3)
             ),
             html.H6(id='output-date-start'),
             dcc.DatePickerSingle(
@@ -137,7 +141,7 @@ def update_output(date_start, date_end, categories):
     Input("btn-csv", "n_clicks"),
     prevent_initial_call=True,
 )
-def func(n_clicks):
+def download(n_clicks):
     return dcc.send_data_frame(df_closed_on_time.to_csv, "mydf.csv")
 
 
