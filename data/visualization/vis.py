@@ -103,7 +103,7 @@ def update_output(date_start, date_end, categories):
         (df_delivered['delivered'] >= date_start) & (df_delivered['delivered'] <= date_end)]
     df_grouped_means = df_closed_on_time.groupby(['transformed category']).mean()
     df_grouped_means = df_grouped_means.add_suffix('_mean').reset_index()
-    labware_modules_pips = df_grouped_means.columns[2:10]
+    labware_modules_pips = ['plate_mean', 'reservoir_mean', 'total tipracks_mean', 'temperature gen2_mean', 'magnetic gen2_mean', 'thermocycler_mean']
     fig = go.Figure(
         data=[
             go.Bar(name=c,
