@@ -32,53 +32,27 @@ df_closed_on_time = None  # updated by dates upon app load
 app = Dash(__name__)
 
 app.layout = html.Div([
-
-    html.H1("Protocol Data by Category", style={'text-align': 'center'}),
-
-    dcc.Dropdown(id="category",
-                 options=[{"label": c, "value": c} for c in categories],
-                 multi=False,
-                 value=categories[0],
-                 style={'width': "40%"}
-                 ),
-
-    html.Div(id='output_container', children=[]),
-    html.Br(),
-
-    dcc.Graph(id='protocol_data', figure={})
-
-])
-
-app.layout = html.Div([
     html.Div([
         html.H2("Protocol Data"),
         html.Img(src="/assets/opentrons-logo.png")
     ], className="banner"),
 
     html.Div([
-
+        dcc.DatePickerRange(
+            id='my-date-picker-range',
+            clearable=True,
+            with_portal=True,
+            start_date=date.today() - relativedelta(months=3),
+            min_date_allowed=date(2018, 1, 1),
+            max_date_allowed=date(2025, 12, 31),
+            calendar_orientation='vertical',
+            initial_visible_month=date.today(),
+            end_date=date.today()
+        ),
         html.Div([
-            dcc.DatePickerRange(
-                id='my-date-picker-range',
-                clearable=True,
-                with_portal=True,
-                start_date=date.today() - relativedelta(months=3),
-                min_date_allowed=date(2018, 1, 1),
-                max_date_allowed=date(2025, 12, 31),
-                initial_visible_month=date.today(),
-                end_date=date.today()
-            )
-        ], style={'width': '48%', 'display': 'inline-block'}),
-
-        html.Div([
-            # dcc.Dropdown(
-            #     id='category-dropdown',
-            #     options=[{'label': i, 'value': i} for i in categories],
-            #     value='category'
-            # )
             html.H3('Category:'),
             dcc.Checklist(
-                id='category-dropdown',
+                id='category-checklist',
                 options=[
                     {'label': c, 'value': c}
                     for c in categories
@@ -87,13 +61,12 @@ app.layout = html.Div([
                 labelStyle={'display': 'block'}
             )
         ], style={'width': '48%', 'float': 'right', 'display': 'inline-block'}),
-        html.Button("Download CSV", id="btn-csv"),
-        dcc.Download(id="download-dataframe-csv")
-    ], className='row'),
-
-    html.Div([
-        dcc.Graph(id='protocol-bar-graph', className='row')
+        html.Div([
+            html.Button("Download CSV", id="btn-csv"),
+            dcc.Download(id="download-dataframe-csv"),
+        ], style={'width': '100%', 'display': 'inline-block'})
     ]),
+    html.Div([dcc.Graph(id='protocol-bar-graph', className='row')])
 ])
 
 
@@ -101,7 +74,7 @@ app.layout = html.Div([
     Output('protocol-bar-graph', 'figure'),
     Input('my-date-picker-range', 'start_date'),
     Input('my-date-picker-range', 'end_date'),
-    Input('category-dropdown', 'value')
+    Input('category-checklist', 'value')
 )
 def update_output(date_start, date_end, categories):
     global df_closed_on_time
