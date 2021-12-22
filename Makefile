@@ -83,4 +83,4 @@ setup-data:
 
 .PHONY: vis
 vis:
-	python data/visualization/vis.py
+	python data/visualization/app.py
