@@ -58,22 +58,16 @@ app.layout = html.Div([
     html.Div([
 
         html.Div([
-            dcc.DatePickerSingle(
-                id='date-start',
+            dcc.DatePickerRange(
+                id='my-date-picker-range',
+                clearable=True,
+                with_portal=True,
+                start_date=date.today() - relativedelta(months=3),
                 min_date_allowed=date(2018, 1, 1),
                 max_date_allowed=date(2025, 12, 31),
-                initial_visible_month=date(2021, 12, 1),
-                date=date.today() - relativedelta(months=3)
-            ),
-            html.H6(id='output-date-start'),
-            dcc.DatePickerSingle(
-                id='date-end',
-                min_date_allowed=date(2018, 1, 1),
-                max_date_allowed=date(2025, 12, 31),
-                initial_visible_month=date(2021, 12, 1),
-                date=date.today()
-            ),
-            html.H6(id='output-date-end')
+                initial_visible_month=date.today(),
+                end_date=date.today()
+            )
         ], style={'width': '48%', 'display': 'inline-block'}),
 
         html.Div([
@@ -95,18 +89,18 @@ app.layout = html.Div([
         ], style={'width': '48%', 'float': 'right', 'display': 'inline-block'}),
         html.Button("Download CSV", id="btn-csv"),
         dcc.Download(id="download-dataframe-csv")
-    ]),
+    ], className='row'),
 
-    dcc.Graph(id='protocol-bar-graph'),
+    html.Div([
+        dcc.Graph(id='protocol-bar-graph', className='row')
+    ]),
 ])
 
 
 @app.callback(
-    Output('output-date-start', 'children'),
-    Output('output-date-end', 'children'),
     Output('protocol-bar-graph', 'figure'),
-    Input('date-start', 'date'),
-    Input('date-end', 'date'),
+    Input('my-date-picker-range', 'start_date'),
+    Input('my-date-picker-range', 'end_date'),
     Input('category-dropdown', 'value')
 )
 def update_output(date_start, date_end, categories):
@@ -133,7 +127,7 @@ def update_output(date_start, date_end, categories):
     )
     date_objects = [date.fromisoformat(date_) for date_ in [date_start, date_end]]
     date_strings = [d_o_.strftime('%B %d, %Y') for d_o_ in date_objects]
-    return date_strings[0], date_strings[1], fig
+    return fig
 
 
 @app.callback(
