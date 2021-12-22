@@ -77,8 +77,8 @@ teardown:
 build:
 	python -m protolib
 
-.PHONY: data
-data:
+.PHONY: setup-data
+setup-data:
 	pip install -r data/requirements.txt
 
 .PHONY: vis
