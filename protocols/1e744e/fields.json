@@ -34,6 +34,15 @@
   },
   {
     "type": "dropDown",
+    "label": "Labware for Sample Plates",
+    "name": "labware_sampleplates",
+    "options": [
+      { "label": "nest_96_wellplate_100ul_pcr_full_skirt", "value": "nest_96_wellplate_100ul_pcr_full_skirt" },
+      { "label": "intermediate_96_wellplate_1250ul", "value": "intermediate_96_wellplate_1250ul" }
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "Labware for Mastermix Plate",
     "name": "labware_mmplate",
     "options": [
