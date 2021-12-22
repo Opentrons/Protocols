@@ -47,7 +47,7 @@ app.layout = html.Div([
 ])
 
 app.layout = html.Div([
-    html.H3('Protocols Data'),
+    html.H1('Protocols Data'),
 
     html.Div([
 
@@ -76,6 +76,7 @@ app.layout = html.Div([
             #     options=[{'label': i, 'value': i} for i in categories],
             #     value='category'
             # )
+            html.H3('Category:'),
             dcc.Checklist(
                 id='category-dropdown',
                 options=[
@@ -83,12 +84,14 @@ app.layout = html.Div([
                     for c in categories
                 ],
                 value=categories,
-                labelStyle={'display': 'inline-block'}
+                labelStyle={'display': 'block'}
             )
-        ], style={'width': '48%', 'float': 'right', 'display': 'inline-block'})
+        ], style={'width': '48%', 'float': 'right', 'display': 'inline-block'}),
+        html.Button("Download CSV", id="btn_csv"),
+        dcc.Download(id="download-dataframe-csv")
     ]),
 
-    dcc.Graph(id='protocol-bar-graph')
+    dcc.Graph(id='protocol-bar-graph'),
 ])
 
 
@@ -106,16 +109,21 @@ def update_output(date_start, date_end, categories):
     df_grouped_means = df_closed_on_time.groupby(['transformed category']).mean()
     df_grouped_means = df_grouped_means.add_suffix('_mean').reset_index()
     labware_modules_pips = ['plate_mean', 'reservoir_mean', 'total tipracks_mean', 'temperature gen2_mean', 'magnetic gen2_mean', 'thermocycler_mean']
+    # data = []
+    # for c in categories:
+    #     if
+    #
     fig = go.Figure(
         data=[
             go.Bar(name=c,
                    x=[lmp.split('_')[0] for lmp in labware_modules_pips],
-                   y=[df_grouped_means[df_grouped_means['transformed category'] == c][lmp].values[0] for lmp in labware_modules_pips]
+                   y=[df_grouped_means[df_grouped_means['transformed category'] == c][lmp].values[0]
+                      if df_grouped_means[df_grouped_means['transformed category'] == c][lmp].values.size > 0
+                      else 0 for lmp in labware_modules_pips]
                    # y=[100])
                    )
             for c in categories]
     )
-
 
     date_objects = [date.fromisoformat(date_) for date_ in [date_start, date_end]]
     date_strings = [d_o_.strftime('%B %d, %Y') for d_o_ in date_objects]
