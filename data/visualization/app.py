@@ -24,6 +24,8 @@ df['sf_status'] = df['sf_status'].str.lower()
 df_closed = df[df['sf_status'] == 'closed']
 df_delivered = df_closed[df_closed['delivered'] != '']
 
+df_closed_on_time = None  # updated by dates upon app load
+
 # ------------------------------------------------------------------------------
 # App layout
 app = Dash(__name__)
@@ -87,7 +89,7 @@ app.layout = html.Div([
                 labelStyle={'display': 'block'}
             )
         ], style={'width': '48%', 'float': 'right', 'display': 'inline-block'}),
-        html.Button("Download CSV", id="btn_csv"),
+        html.Button("Download CSV", id="btn-csv"),
         dcc.Download(id="download-dataframe-csv")
     ]),
 
@@ -104,6 +106,7 @@ app.layout = html.Div([
     Input('category-dropdown', 'value')
 )
 def update_output(date_start, date_end, categories):
+    global df_closed_on_time
     df_closed_on_time = df_delivered[
         (df_delivered['delivered'] >= date_start) & (df_delivered['delivered'] <= date_end)]
     df_grouped_means = df_closed_on_time.groupby(['transformed category']).mean()
@@ -124,10 +127,18 @@ def update_output(date_start, date_end, categories):
                    )
             for c in categories]
     )
-
     date_objects = [date.fromisoformat(date_) for date_ in [date_start, date_end]]
     date_strings = [d_o_.strftime('%B %d, %Y') for d_o_ in date_objects]
     return date_strings[0], date_strings[1], fig
+
+
+@app.callback(
+    Output("download-dataframe-csv", "data"),
+    Input("btn-csv", "n_clicks"),
+    prevent_initial_call=True,
+)
+def func(n_clicks):
+    return dcc.send_data_frame(df_closed_on_time.to_csv, "mydf.csv")
 
 
 if __name__ == '__main__':
