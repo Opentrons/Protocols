@@ -83,4 +83,6 @@ setup-data:
 
 .PHONY: vis
 vis:
+	python data/protocols/labware_data.py && \
+	python data/salesforce/salesforce.py && \
 	python data/visualization/app.py

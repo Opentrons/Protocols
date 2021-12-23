@@ -403,7 +403,7 @@
 401,401,6e2509-v2,sample prep,plate filling,sample prep,0,6,0,1,0,0,0,0,0,0,5,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,5,2021-10-27 13:53:26,,,,Closed,chazmanc
 402,402,13ea1e,sample prep,plate filling,sample prep,1,5,2,1,0,0,0,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,3,2021-09-21 18:24:33,2021-10-29,30.0,Sterile workflows (cell culture and related assays),Closed,StevenPlonk
 403,403,5a5767,sample prep,plate filling,sample prep,0,2,0,1,0,0,0,4,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,4,2021-09-14 14:41:40,,,PCR/qPCR prep,Closed,sakibh
-404,404,2c83f7,nucleic acid extraction & purification,zymo kit,extraction,0,2,4,1,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,5,2021-10-26 10:12:25,,,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),Sterile workflows (cell culture and related assays)",In Progress,StevenPlonk
+404,404,2c83f7,nucleic acid extraction & purification,zymo kit,extraction,0,2,4,1,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,5,2021-10-26 10:12:25,,,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),Sterile workflows (cell culture and related assays)",Awaiting Customer Response,StevenPlonk
 405,405,139815,sample prep,consolidation,sample prep,1,0,0,1,2,0,0,0,0,1,0,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,2,2021-10-26 20:24:22,2021-11-11,16.0,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc),FA assay protocol attached.",Closed,ncdiehl11
 406,406,0961d2-part3,ngs library prep,plexwell lp384,ngs,0,3,0,1,0,0,0,0,0,2,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2021-06-23 04:39:53,2021-07-07,15.0,reaction assembling + nucleic acid purification,Closed,ramifarawi
 407,407,1649b1,nucleic acid extraction & purification,nucleic acid extraction,extraction,0,3,5,1,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,1,0,0,3,2021-02-12 13:36:25,2021-03-04,20.0,NGS library prep,Closed,StevenPlonk
@@ -426,7 +426,7 @@
 424,424,17d210-part-2,ngs library prep,verogen forenseq dna signature prep kit,ngs,0,3,0,1,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,2,2021-02-12 21:10:22,2021-02-25,13.0,Magbead-based peptide enrichment,Closed,chazmanc
 425,425,0b98cc,sample prep,serial dilution,dilution,0,5,1,1,4,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,2021-06-23 16:01:59,,,"NGS library prep,Proprietary.",Stuck,ncdiehl11
 426,426,1185d3,nucleic acid extraction & purification,magmax nucleic acid isolation kit,extraction,0,2,3,1,0,0,0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,1,0,6,2021-02-13 08:54:46,2021-02-26,13.0,Nucleic acid purification,Closed,ramifarawi
-427,427,407d5e,proteins & proteomics,assay,protein,0,3,0,1,2,0,3,3,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,6,2021-11-09 20:01:34,,,Nucleic acid purification,In Progress,StevenPlonk
+427,427,407d5e,proteins & proteomics,assay,protein,0,3,0,1,2,0,3,3,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,6,2021-11-09 20:01:34,,,Nucleic acid purification,Awaiting Customer Response,StevenPlonk
 428,428,6a93a2-part5,ngs library prep,swift rapid rna library kit,ngs,0,3,1,1,0,0,0,0,0,0,2,2,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0,1,4,2021-11-10 08:24:40,2021-11-19,9.0,"PCR/qPCR prep,Magbead-based peptide enrichment",Closed,ramifarawi
 429,429,4b7268,nucleic acid extraction & purification,nucleic acid purification,extraction,1,2,1,1,0,0,0,3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,1,1,0,6,2021-02-14 19:42:34,2021-02-18,4.0,Nucleic acid purification,Closed,ncdiehl11
 430,430,925d07-v2,pcr,pcr prep,pcr,0,5,0,1,1,0,5,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,5,2021-11-19 17:46:26,,,NGS library prep,Canceled,ramifarawi
@@ -434,21 +434,21 @@
 432,432,3cf31f,sample prep,distribution,sample prep,0,0,0,1,4,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,1,2021-11-19 19:42:25,2021-11-29,10.0,"PCR/qPCR prep,Nucleic acid purification",Closed,StevenPlonk
 433,433,3bc25d,ngs library prep,nanopore,ngs,1,2,0,1,1,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1,1,1,1,2,2021-11-19 17:48:20,,,NGS library prep,Canceled,
 434,434,226d24,pcr,pcr prep,pcr,0,3,1,1,0,0,0,0,0,0,2,1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,3,2021-11-19 18:04:25,,,NGS library prep,Canceled,
-435,435,arcis-multi-test,nucleic acid extraction & purification,arcis blood kit,extraction,0,3,1,1,0,0,0,2,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,2,2021-11-25 17:45:21,,,Kinase Activity Assay using radioactive [g-P32]ATP,In Progress,StevenPlonk
+435,435,arcis-multi-test,nucleic acid extraction & purification,arcis blood kit,extraction,0,3,1,1,0,0,0,2,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,2,2021-11-25 17:45:21,,,Kinase Activity Assay using radioactive [g-P32]ATP,Awaiting Customer Response,StevenPlonk
 436,436,zymo-rna-extraction,covid workstation,rna extraction,extraction,1,2,2,1,0,0,0,0,0,0,1,5,0,0,0,1,0,0,0,0,0,0,1,0,0,0,1,0,1,0,6,2021-11-29 16:18:07,,,,Closed,ramifarawi
 437,437,5829d7,sample prep,plate filling,sample prep,3,1,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,2021-12-03 14:42:57,2021-12-05,2.0,PCR/qPCR prep,Closed,ncdiehl11
 438,438,272c63,sample prep,tube filling,sample prep,9,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,2021-12-03 11:44:42,,,NGS library prep,In Progress,eskila
-439,439,400b8e,sample prep,cherrypicking,cherrypicking,0,2,2,1,0,7,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,7,2021-12-06 16:12:00,,,,New,ncdiehl11
-440,440,234495,sample prep,mass spec,sample prep,4,0,1,1,0,0,2,2,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,4,2021-12-06 16:13:43,,,,New,ncdiehl11
+439,439,400b8e,sample prep,cherrypicking,cherrypicking,0,2,2,1,0,7,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,7,2021-12-06 16:12:00,,,,Awaiting Customer Response,ncdiehl11
+440,440,234495,sample prep,mass spec,sample prep,4,0,1,1,0,0,2,2,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,4,2021-12-06 16:13:43,,,,In Progress,ncdiehl11
 441,441,gna_octea,sample prep,covid,sample prep,0,4,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,1,0,0,1,1,1,1,0,1,2021-12-06 16:51:39,,,"CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",New,eskila
-442,442,sci-omegabiotek-extraction,nucleic acid extraction & purification,rna extraction,extraction,0,2,3,1,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,6,2021-12-07 16:36:01,,,Drug solution transfer from reservoir to caps,In Progress,StevenPlonk
-443,443,09cdbe,sample prep,consolidation,sample prep,1,5,0,1,0,0,5,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,2021-12-08 18:22:22,,,"NGS library prep,Nucleic acid purification,PCR/qPCR prep",New,
-444,444,6d7fc3,ngs library prep,generead qiaact lung dna umi panel kit,ngs,0,1,0,1,1,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,1,2,2021-12-10 19:21:58,,,Protein Purification and Assay Setup,New,
-445,445,6bc986-part-5,pcr,pcr prep,pcr,0,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,,,,,,
-446,446,13ea1e-part1,sample prep,plate filling,sample prep,1,5,2,1,0,0,0,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,3,,,,,,
-447,447,1479,sample prep,cherrypicking,cherrypicking,2,0,0,1,1,1,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,2,,,,,,
-448,448,swift-2s-turbo-pt1,featured,ngs library prep: swift 2s turbo,ngs,0,1,0,1,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,,,,,,
-449,449,4fc750,nucleic acid extraction & purification,omega mag-bind® blood & tissue dna 96 kit,extraction,0,2,3,1,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,6,,,,,,
+442,442,sci-omegabiotek-extraction,nucleic acid extraction & purification,rna extraction,extraction,0,2,3,1,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,6,2021-12-07 16:36:01,2021-12-15,8.0,Drug solution transfer from reservoir to caps,Closed,StevenPlonk
+443,443,09cdbe,sample prep,consolidation,sample prep,1,5,0,1,0,0,5,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,2021-12-08 18:22:22,,,"NGS library prep,Nucleic acid purification,PCR/qPCR prep",In Progress,StevenPlonk
+444,444,6d7fc3,ngs library prep,generead qiaact lung dna umi panel kit,ngs,0,1,0,1,1,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,1,2,2021-12-10 19:21:58,,,Protein Purification and Assay Setup,In Progress,ncdiehl11
+445,445,6bc986-part-5,pcr,pcr prep,pcr,0,1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,2021-12-14 22:10:21,,,Nucleic acid purification,New,chazmanc
+446,446,13ea1e-part1,sample prep,plate filling,sample prep,1,5,2,1,0,0,0,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,3,2021-12-15 17:27:55,,,"Nucleic acid purification,CSV/Excel File input (for protocols like normalization, cherry picking, DNA assembly, etc)",New,ramifarawi
+447,447,1479,sample prep,cherrypicking,cherrypicking,2,0,0,1,1,1,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,2,2021-12-21 03:12:52,,,Sterile workflows (cell culture and related assays),New,
+448,448,swift-2s-turbo-pt1,featured,ngs library prep: swift 2s turbo,ngs,0,1,0,1,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,1,2021-12-21 20:38:43,,,PCR/qPCR prep,New,
+449,449,4fc750,nucleic acid extraction & purification,omega mag-bind® blood & tissue dna 96 kit,extraction,0,2,3,1,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,6,2021-12-22 18:44:46,,,PCR/qPCR prep,New,
 450,450,1d37e5,sample prep,plate filling,sample prep,0,10,0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,,,,,,
 451,451,4568fa-2,sample prep,normalization,cherrypicking,2,2,1,1,0,0,0,0,0,0,2,2,0,0,0,1,0,0,0,0,0,1,0,0,0,2,2,0,0,0,4,,,,,,
 452,452,1dfebe,sample prep,plate filling,sample prep,4,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,,,,,,
