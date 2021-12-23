@@ -1,0 +1,17 @@
+[
+  {
+    "type": "textFile",
+    "label": ".CSV File",
+    "name": "_csv",
+    "default": "SlotSource,SourceWell,TransferVol,SlotDest,DestWell,DestVol\n3,B2,11,7,A1,11\n3,B4,12,7,E7,12\n4,A1,5,7,A1,5\n2,A1,4,7,E7,4\n"
+  },
+  {
+    "type": "dropDown",
+    "label": "P20 Single-Channel Mount",
+    "name": "_p20_mount",
+    "options": [
+      {"label": "Right", "value": "right"},
+      {"label": "Left", "value": "left"}
+    ]
+  }
+]
