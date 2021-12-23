@@ -1,3 +1,4 @@
+import dash_bootstrap_components as dbc
 import pandas as pd
 from datetime import date
 import datetime
@@ -29,7 +30,7 @@ df_closed_on_time = None  # updated by dates upon app load
 
 # ------------------------------------------------------------------------------
 # App layout
-app = Dash(__name__)
+app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 app.layout = html.Div([
     html.Div([
@@ -38,17 +39,18 @@ app.layout = html.Div([
     ], className="banner"),
 
     html.Div([
-        dcc.DatePickerRange(
-            id='my-date-picker-range',
-            clearable=True,
-            with_portal=True,
-            start_date=date.today() - relativedelta(months=3),
-            min_date_allowed=date(2018, 1, 1),
-            max_date_allowed=date(2025, 12, 31),
-            calendar_orientation='vertical',
-            initial_visible_month=date.today(),
-            end_date=date.today()
-        ),
+        html.Div([
+            dcc.DatePickerRange(
+                id='my-date-picker-range',
+                clearable=True,
+                with_portal=True,
+                start_date=date.today() - relativedelta(months=3),
+                min_date_allowed=date(2018, 1, 1),
+                max_date_allowed=date(2025, 12, 31),
+                calendar_orientation='vertical',
+                initial_visible_month=date.today(),
+                end_date=date.today()
+            )], style={'padding-left': '30px', 'width': '50%', 'float': 'left', 'display': 'inline-block'}),
         html.Div([
             html.H3('Category:'),
             dcc.Checklist(
@@ -60,11 +62,12 @@ app.layout = html.Div([
                 value=categories,
                 labelStyle={'display': 'block'}
             )
-        ], style={'width': '48%', 'float': 'right', 'display': 'inline-block'}),
+        ], style={'width': '20%', 'float': 'left', 'display': 'inline-block'}),
+
         html.Div([
-            html.Button("Download CSV", id="btn-csv"),
+            dbc.Button("Download CSV", size="lg", outline=True, color="primary", className="me-1", id="btn-csv"),
             dcc.Download(id="download-dataframe-csv"),
-        ], style={'width': '100%', 'padding-left': '10', 'display': 'inline-block'})
+        ], style={'padding-left': '30px', 'width': '100%', 'display': 'inline-block'})
     ]),
     html.Div([dcc.Graph(id='protocol-bar-graph', className='row')])
 ])
