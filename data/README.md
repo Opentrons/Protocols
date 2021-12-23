@@ -4,9 +4,10 @@ This is a location for data analytics scripts, raw `.csv` files, and visualizati
 
 ## Launching the Tool
 
-First you should make sure that you run `make setup-data` within the `protocols` top level folder.
-If you are up-to-date on all other directories you can simply run `make ` instead.
-Next you have two options:
+If you haven't already done so, ensure you clone the `Protocols` repo on your computer by running the following command in terminal:
+`git clone https://github.com/Opentrons/Protocols.git`
 
-1. From the top level folder type: `make vis`
-2. Open your browser and type in: `http://127.0.0.1:8050/`
+1. Navigate to the top level folder of the cloned `Protocols` repo in terminal via `cd path/to/Protocols`
+2. Run `make setup-data` to install dependencies and update all data
+3. Run `make vis` to launch the app
+4. Open your browser and type in: `http://127.0.0.1:8050/`
