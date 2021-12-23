@@ -26,6 +26,7 @@ categories = df['transformed category'].unique()
 df['sf_status'] = df['sf_status'].str.lower()
 df_closed = df[df['sf_status'] == 'closed']
 df_delivered = df_closed[df_closed['delivered'] != '']
+df_delivered = df_delivered.iloc[: , 1:]
 
 df_closed_on_time = pd.DataFrame()  # updated by dates upon app load
 
@@ -76,8 +77,20 @@ app.layout = html.Div([
         dash_table.DataTable(
             id="protocol-table",
             data=df_delivered.to_dict('records'),
-            columns=[{"name": i, "id": i} for i in sorted(df_delivered.columns)],
-            style_table={'overflowX': 'auto'},
+            columns=[{"name": i, "id": i} for i in df_delivered.columns],
+            style_table={
+                'overflowX': 'scroll',
+                'maxHeight': '50ex',
+                'overflowY': 'scroll',
+                'width': '100%',
+                'minWidth': '100%',
+            },
+            fixed_columns={'headers': True, 'data': 1},
+            fill_width=True,
+            style_data={
+                'backgroundColor': 'rgb(50, 50, 50)',
+                'color': 'white'
+            },
             style_cell={
                 'height': 'auto',
                 # all three widths are needed
@@ -86,7 +99,7 @@ app.layout = html.Div([
             }
 
         ),
-    ], style={'padding-left': '100px', 'width': '100%', 'display': 'inline-block'})
+    ], style={'padding-left': '100px'})
 ])
 
 
