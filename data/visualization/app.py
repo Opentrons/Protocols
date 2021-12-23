@@ -1,3 +1,4 @@
+import dash_table
 import dash_bootstrap_components as dbc
 import pandas as pd
 from datetime import date
@@ -26,7 +27,7 @@ df['sf_status'] = df['sf_status'].str.lower()
 df_closed = df[df['sf_status'] == 'closed']
 df_delivered = df_closed[df_closed['delivered'] != '']
 
-df_closed_on_time = None  # updated by dates upon app load
+df_closed_on_time = pd.DataFrame()  # updated by dates upon app load
 
 # ------------------------------------------------------------------------------
 # App layout
@@ -40,6 +41,7 @@ app.layout = html.Div([
 
     html.Div([
         html.Div([
+            html.H3('Date range:'),
             dcc.DatePickerRange(
                 id='my-date-picker-range',
                 clearable=True,
@@ -50,7 +52,7 @@ app.layout = html.Div([
                 calendar_orientation='vertical',
                 initial_visible_month=date.today(),
                 end_date=date.today()
-            )], style={'padding-left': '30px', 'width': '50%', 'float': 'left', 'display': 'inline-block'}),
+            )], style={'padding-top': '50px', 'padding-left': '100px', 'width': '50%', 'float': 'left', 'display': 'inline-block'}),
         html.Div([
             html.H3('Category:'),
             dcc.Checklist(
@@ -62,34 +64,49 @@ app.layout = html.Div([
                 value=categories,
                 labelStyle={'display': 'block'}
             )
-        ], style={'width': '20%', 'float': 'left', 'display': 'inline-block'}),
+        ], style={'padding-top': '50px', 'width': '20%', 'float': 'left', 'display': 'inline-block'}),
 
         html.Div([
             dbc.Button("Download CSV", size="lg", outline=True, color="primary", className="me-1", id="btn-csv"),
             dcc.Download(id="download-dataframe-csv"),
-        ], style={'padding-left': '30px', 'width': '100%', 'display': 'inline-block'})
+        ], style={'padding-left': '100px', 'width': '100%', 'display': 'inline-block'})
     ]),
-    html.Div([dcc.Graph(id='protocol-bar-graph', className='row')])
+    html.Div([dcc.Graph(id='protocol-bar-graph', className='row')], style={'padding': '20px'}),
+    html.Div([
+        dash_table.DataTable(
+            id="protocol-table",
+            data=df_delivered.to_dict('records'),
+            columns=[{"name": i, "id": i} for i in sorted(df_delivered.columns)],
+            style_table={'overflowX': 'auto'},
+            style_cell={
+                'height': 'auto',
+                # all three widths are needed
+                'minWidth': '180px', 'width': '180px', 'maxWidth': '180px',
+                'whiteSpace': 'normal'
+            }
+
+        ),
+    ], style={'padding-left': '100px', 'width': '100%', 'display': 'inline-block'})
 ])
 
 
 @app.callback(
     Output('protocol-bar-graph', 'figure'),
+    Output('protocol-table', 'data'),
     Input('my-date-picker-range', 'start_date'),
     Input('my-date-picker-range', 'end_date'),
     Input('category-checklist', 'value')
 )
 def update_output(date_start, date_end, categories):
     global df_closed_on_time
+    if date_start > date_end:
+        raise Exception('Invalid date range selection.')
+
     df_closed_on_time = df_delivered[
         (df_delivered['delivered'] >= date_start) & (df_delivered['delivered'] <= date_end)]
     df_grouped_means = df_closed_on_time.groupby(['transformed category']).mean()
     df_grouped_means = df_grouped_means.add_suffix('_mean').reset_index()
     labware_modules_pips = ['plate_mean', 'reservoir_mean', 'total tipracks_mean', 'temperature gen2_mean', 'magnetic gen2_mean', 'thermocycler_mean']
-    # data = []
-    # for c in categories:
-    #     if
-    #
     fig = go.Figure(
         data=[
             go.Bar(name=c,
@@ -103,7 +120,7 @@ def update_output(date_start, date_end, categories):
     )
     date_objects = [date.fromisoformat(date_) for date_ in [date_start, date_end]]
     date_strings = [d_o_.strftime('%B %d, %Y') for d_o_ in date_objects]
-    return fig
+    return fig, df_closed_on_time.to_dict('records')
 
 
 @app.callback(
