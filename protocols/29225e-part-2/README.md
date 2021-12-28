@@ -14,7 +14,9 @@ This protocol uses p300 single and p20 (single or multi channel) pipettes to dis
 Links:
 * [example master mix input csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/29225e/mastermix.csv)
 
-* [example transfers input csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/29225e/qRT-PCR.csv)
+* [example transfers input csv for p20 single](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/29225e/qRT-PCR_for_p20_single.csv)
+
+* [example transfers input csv for p20 multi](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/29225e/qRT-PCR_for_p20_multi.csv)
 
 * [Part 1 - RNA Normalization](https://protocols.opentrons.com/protocol/29225e)
 
@@ -53,7 +55,8 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 * Opentrons Temperature Module with 96-well PCR Plate (Deck Slot 1)
 
 ![input master mix csv data and file format](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/29225e/example_mastermix_csv.png)
-![input transfers csv data and file format](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/29225e/example_transfers_csv.png)
+![input transfers csv data and file format for p20 single](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/29225e/example_transfers_csv.png)
+![input transfers csv data and file format for p20 single](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/29225e/screen+capture+example+csv+multi-channel.png)
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
