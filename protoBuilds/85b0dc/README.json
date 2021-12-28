@@ -1,0 +1,30 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "PCR Prep": [
+            "Syber Green"
+        ]
+    },
+    "deck-setup": "\ngreen: starting DNA samples\nblue: possible positions for mastermixes\n\n\n",
+    "description": "This protocol performs a custom Syber Green PCR Prep for up to 96 samples. Mastermix is transferred from 1.5ml Eppendorf tubes, and samples are transferred from source strip tubes mounted in the Opentrons 96-well aluminum block into the MicroAmp PCR plate also mounted in the Opentrons 96-well aluminum block.\nThe input .csv file should be formatted in the following way, including the header line:\nsource well (A1-H12),mastermix tube (A1-D6),destination well (A1-H12)\nA1,A1,A1\nA2,A2,A2\n...\n",
+    "internal": "85b0dc",
+    "labware": "\nThermoFisher MicroAmp\u2122 Fast Optical 96-Well Reaction Plate with Barcode, 0.1 mL #4346906\nOpentrons 20uL Filter Tips\nOpentrons 4-in-1 tuberack with 4x6 insert for 1.5ml Eppendorf tubes\nOpentrons 96-well aluminum block\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* PCR Prep\n\t* Syber Green\n\n",
+        "deck-setup": "\n* green: starting DNA samples\n* blue: possible positions for mastermixes  \n![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/85b0dc/deck.png)\n\n---\n\n",
+        "description": "\nThis protocol performs a custom Syber Green PCR Prep for up to 96 samples. Mastermix is transferred from 1.5ml Eppendorf tubes, and samples are transferred from source strip tubes mounted in the Opentrons 96-well aluminum block into the MicroAmp PCR plate also mounted in the Opentrons 96-well aluminum block.\n\nThe input .csv file should be formatted in the following way, including the header line:\n\n```\nsource well (A1-H12),mastermix tube (A1-D6),destination well (A1-H12)\nA1,A1,A1\nA2,A2,A2\n...\n```\n\n---\n\n",
+        "internal": "85b0dc\n",
+        "labware": "* [ThermoFisher MicroAmp\u2122 Fast Optical 96-Well Reaction Plate with Barcode, 0.1 mL #4346906](https://www.thermofisher.com/order/catalog/product/4346906)\n* [Opentrons 20uL Filter Tips](https://shop.opentrons.com/opentrons-20ul-filter-tips/)\n* [Opentrons 4-in-1 tuberack with 4x6 insert](https://shop.opentrons.com/4-in-1-tube-rack-set/) for 1.5ml Eppendorf tubes\n* [Opentrons 96-well aluminum block](https://shop.opentrons.com/aluminum-block-set/)\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [P20 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n\n---\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "protocol-steps": "1. The user-specified volume of mastermix is transferred to the final PCR plate according to user `.csv` input.\n2. The user-specified volume of DNA sample is transferred to the final PCR plate with pre-added mastermix according to user `.csv` input.\n\n",
+        "title": "Syber Green PCR Prep with Cherrypicking"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nP20 Single Channel Electronic Pipette (GEN2)\n\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "protocol-steps": "\nThe user-specified volume of mastermix is transferred to the final PCR plate according to user .csv input.\nThe user-specified volume of DNA sample is transferred to the final PCR plate with pre-added mastermix according to user .csv input.\n",
+    "title": "Syber Green PCR Prep with Cherrypicking"
+}
