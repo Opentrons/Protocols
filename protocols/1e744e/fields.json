@@ -34,6 +34,15 @@
   },
   {
     "type": "dropDown",
+    "label": "Labware for Sample Plates",
+    "name": "labware_sampleplates",
+    "options": [
+      { "label": "nest_96_wellplate_100ul_pcr_full_skirt", "value": "nest_96_wellplate_100ul_pcr_full_skirt" },
+      { "label": "intermediate_96_wellplate_1250ul", "value": "intermediate_96_wellplate_1250ul" }
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "Labware for Mastermix Plate",
     "name": "labware_mmplate",
     "options": [
@@ -54,7 +63,7 @@
     "label": "Labware for Reaction Plate (when sample count greater than 96, up to 384 max)",
     "name": "labware_384rxnplate",
     "options": [
-      { "label": "placeholder don't use", "value": "corning_384_wellplate_112ul_flat" }
+      { "label": "AP BIO 384-Well Plate on Aluminum Block", "value": "apbio_384_aluminumblock_40ul" }
     ]
   },
   {
