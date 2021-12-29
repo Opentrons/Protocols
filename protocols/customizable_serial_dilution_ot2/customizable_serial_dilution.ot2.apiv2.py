@@ -2,29 +2,35 @@ metadata = {
     'protocolName': 'Customizable Serial Dilution',
     'author': 'Opentrons <protocols@opentrons.com>',
     'source': 'Protocol Library',
-    'apiLevel': '2.2'
+    'apiLevel': '2.5'
     }
 
 
 def run(protocol_context):
-    [pipette_type, dilution_factor, num_of_dilutions, total_mixing_volume,
+    [pipette_type, tip_type, trough_type, plate_type,
+     dilution_factor, num_of_dilutions, total_mixing_volume,
         tip_use_strategy] = get_values(  # noqa: F821
-            'pipette_type', 'dilution_factor', 'num_of_dilutions',
+            'pipette_type', 'tip_type', 'trough_type', 'plate_type',
+            'dilution_factor', 'num_of_dilutions',
             'total_mixing_volume', 'tip_use_strategy'
         )
 
     # labware
     trough = protocol_context.load_labware(
-        'usascientific_12_reservoir_22ml', '2')
-    liquid_trash = trough.wells()[0]
+        trough_type, '2')
+    liquid_trash = trough.wells()[-1]
     plate = protocol_context.load_labware(
-        'corning_96_wellplate_360ul_flat', '3')
+        plate_type, '3')
+    if 'p20' in pipette_type:
+        tip_name = 'opentrons_96_filtertiprack_20ul' if tip_type \
+            else 'opentrons_96_tiprack_20ul'
+    else:
+        tip_name = 'opentrons_96_filtertiprack_200ul' if tip_type \
+            else 'opentrons_96_tiprack_300ul'
     tiprack = [
-        protocol_context.load_labware('opentrons_96_tiprack_300ul', slot)
+        protocol_context.load_labware(tip_name, slot)
         for slot in ['1', '4']
     ]
-
-    pip_name = pipette_type.split('_')[-1]
 
     pipette = protocol_context.load_instrument(
         pipette_type, mount='left', tip_racks=tiprack)
@@ -32,7 +38,7 @@ def run(protocol_context):
     transfer_volume = total_mixing_volume/dilution_factor
     diluent_volume = total_mixing_volume - transfer_volume
 
-    if pip_name == 'multi':
+    if 'multi' in pipette_type:
 
         # Distribute diluent across the plate to the the number of samples
         # And add diluent to one column after the number of samples for a blank

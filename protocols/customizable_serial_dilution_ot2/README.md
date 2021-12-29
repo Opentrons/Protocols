@@ -22,7 +22,7 @@ This protocol uses the inputs you define for "***Dilution Factor***" and "***Tot
 
 -- Start with your samples/reagents in Column 1 of your plate. In this example, you would pre-add 150 uL of concentrated sample to the first column of your 96-well plate.
 
--- Define a ***Total Mixing Volume*** of 100uL, a ***Dilution Factor*** of 3, and set ***Number of Dilutions*** = 11.
+-- Define a ***Total Mixing Volume*** of 150uL, a ***Dilution Factor*** of 3, and set ***Number of Dilutions*** = 11.
 
 -- Your OT-2 will add 100uL of diluent to each empty well in your plate. Then it will transfer 50uL from Column 1 between each well/column in the plate.
 
@@ -37,17 +37,17 @@ This protocol uses the inputs you define for "***Dilution Factor***" and "***Tot
 
 -- [Opentrons OT-2](http://opentrons.com/ot-2)
 
--- [Opentrons OT-2 Run App (Version 3.1.2 or later)](http://opentrons.com/ot-app)
+-- [Opentrons OT-2 Run App (Version 3.19 or later)](http://opentrons.com/ot-app)
 
--- 200uL or 300 uL Tiprack ([Opentrons tips suggested](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips-racks-9-600-tips))
+-- [Opentrons Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips-racks-9-600-tips) for selected Opentrons Pipette
 
--- [12-row automation-friendly trough](https://www.usascientific.com/12-channel-automation-reservoir.aspx)
+-- [12-Row, Automation-Friendly Trough](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/)
 
--- Clear flat-bottom 96-well polystyrene 96-well plate ([Corning plate suggested](https://ecatalog.corning.com/life-sciences/b2c/US/en/Microplates/Assay-Microplates/96-Well-Microplates/Corning%C2%AE-96-well-Solid-Black-and-White-Polystyrene-Microplates/p/corning96WellSolidBlackAndWhitePolystyreneMicroplates))
+-- [96-Well Plate](https://shop.opentrons.com/nest-96-well-plate-flat/) (found in our [Labware Library](https://labware.opentrons.com/?category=wellPlate))
 
 -- Diluent (Pre-loaded in row 1 of trough)
 
--- Samples/Standards (Pre-loaded in Column 1 of a standard flat-bottom 96-well plate)
+-- Samples/Standards (Pre-loaded in Column 1 of a standard 96-well plate)
 
 ## Process
 1. Choose the pipette you want to use from the dropdown menu above. ***Note:*** Your pipette should be installed on the ***left mount*** of your OT-2.
