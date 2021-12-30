@@ -1,0 +1,30 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "PCR": [
+            "PCR Prep"
+        ]
+    },
+    "deck-setup": "\n",
+    "description": "This protocol preps one PCR plate with DNA, water, primer letter, primer number, and Kappa enzyme. New tips are granted for DNA and primers, whereas just one column of tips is used for the Kappa enzyme and water, respectively. The water is added via multi-dispensing.\nExplanation of complex parameters below:\n Number of Columns: Specify the number of DNA columns for this protocol.\n P20 Multi-Channel Mount: Specify which mount (left or right) to host the P20 multi-channel pipette.\n",
+    "internal": "1f62ba",
+    "labware": "\nNest 12-well reservoir, 15mL\n20ul Filter Tips\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n",
+        "categories": "* PCR\n\t* PCR Prep\n\n",
+        "deck-setup": "![deck layout]()\n\n\n---\n\n",
+        "description": "This protocol preps one PCR plate with DNA, water, primer letter, primer number, and Kappa enzyme. New tips are granted for DNA and primers, whereas just one column of tips is used for the Kappa enzyme and water, respectively. The water is added via multi-dispensing.\n\n\nExplanation of complex parameters below:\n* `Number of Columns`: Specify the number of DNA columns for this protocol.\n* `P20 Multi-Channel Mount`: Specify which mount (left or right) to host the P20 multi-channel pipette.\n\n---\n\n",
+        "internal": "1f62ba\n",
+        "labware": "* [Nest 12-well reservoir, 15mL](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/)\n* [20ul Filter Tips](https://shop.opentrons.com/opentrons-20ul-filter-tips/)\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [P20 Multi-Channel Pipette](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n\n---\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "protocol-steps": "1. Add 3ul of Water to each PCR well\n2. Add 10ul of Kapa Enzyme to each PCR well\n3. Add 1ul of Primer Number to each PCR well\n4. Add 1ul of Primer Letter to each PCR well\n5. add 5ul of DNA to each PCR well\n\n",
+        "title": "PCR Prep with Strip Tubes"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nP20 Multi-Channel Pipette\n\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "protocol-steps": "\nAdd 3ul of Water to each PCR well\nAdd 10ul of Kapa Enzyme to each PCR well\nAdd 1ul of Primer Number to each PCR well\nAdd 1ul of Primer Letter to each PCR well\nadd 5ul of DNA to each PCR well\n",
+    "title": "PCR Prep with Strip Tubes"
+}
