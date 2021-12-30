@@ -42,7 +42,7 @@ Explanation of complex parameters below:
 ---
 
 ### Deck Setup
-![Deck Layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)
+![Deck Layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/3e0bef/3e0bef_deck.png)
 
 ### Reagent Setup
 Reagents for this protocol are split between two [NEST 12-Well Reservoir, 15mL](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/). For each reagent, a section of 2-6 channels are dedicated and when transferring to samples, channels are used sequentially. For example, the CSPW2 Buffer can be split across 4 channels. In this example, each channel can hold enough reagent for up to 3 columns of samples (24 total samples). Continuing with this example, if 32 samples were being processed, enough reagent for 3 columns of sample would fill the first dedicated channel for the CSPW2 Buffer and enough reagent for 1 column would fill the second channel.</br>
@@ -54,14 +54,14 @@ CSPL Buffer (700µL per sample) + Proteinase K (20µL per sample): Channels 1-6<
 RNase A (5µL) + RBB Buffer (500µL) + Mag-Bind Beads (20µL): Channels 1-6 (after replacing)</br>
 CSPW1 Buffer (500µL): Channels 7-10</br>
 Elution Buffer: Channels 11-12 (added at 65C prior to liquid handling step)</br>
-![Reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res1_v2.png)
+![Reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/3e0bef/3e0bef_res1.png)
 </br>
 </br>
 **Reservoir 2: Deck Slot 3**</br>
 CSPW2 Buffer (500µL): Channels 1-4</br>
 SPM Buffer, Wash 1 (500µL): Channels 5-8</br>
 SPM Buffer, Wash 2 (500µL): Channels 9-12</br>
-![Reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res2.png)
+![Reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/3e0bef/3e0bef_res2.png)
 
 ---
 
