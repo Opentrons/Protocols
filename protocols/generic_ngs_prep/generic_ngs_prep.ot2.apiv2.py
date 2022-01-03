@@ -52,7 +52,7 @@ def run(ctx):
         [temp_mod_list[0], temp_mod_list[1], temp_mod_list[2]]
 
     mag_mod = ctx.load_module('magnetic module gen2', mag_slot)
-    mag_plate = mag_mod.load_labware('biorad_96_wellplate_200ul_pcr')
+    mag_plate = mag_mod.load_labware(samples_loadname)
 
     # Load Labware
     labware_list = []
@@ -217,16 +217,6 @@ def run(ctx):
               indexing plate in Slot 7. Click Resume when ready to proceed.''')
 
     # Swapping Labware at Pause
-    """del ctx.deck[str(1)]
-    temperature_module_a = ctx.load_module('temperature module gen2', 1)
-    reservoir = temperature_module_a.load_labware('nest_12_reservoir_15ml')
-    ethanol = ctx.load_labware('nest_1_reservoir_195ml', 6)['A1']
-
-    del ctx.deck[str(3)]
-    temperature_module_b = ctx.load_module('temperature module gen2', 3)
-    primer = temperature_module_b.load_labware('biorad_96_wellplate_200ul_pcr')
-    """
-
     labware_list = []
     temp_mod_list = []
 
