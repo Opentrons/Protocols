@@ -9,30 +9,6 @@ metadata = {
 }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"m20_mount":"left",
-                             "m300_mount":"right",
-                             "samples":96,
-                             "temp_mod_a": "temperature module gen2",
-                             "temp_mod_b": "temperature module gen2",
-                             "temp_mod_c": "temperature module gen2",
-                             "temp_a_part1": 4.0,
-                             "temp_b_part1": 4.0,
-                             "temp_c_part1": 4.0,
-                             "temp_a_part2": 4.0,
-                             "temp_b_part2": 4.0,
-                             "temp_c_part2": 4.0,
-                             "samples_loadname": "biorad_96_wellplate_200ul_pcr",
-                             "reagent1_loadname": "opentrons_96_aluminumblock_generic_pcr_strip_200ul",
-                             "reagent2_loadname": "biorad_96_wellplate_200ul_pcr",
-                             "indexing_plate_loadname": "biorad_96_wellplate_200ul_pcr",
-                             "reservoir_loadname": "nest_12_reservoir_15ml",
-                             "ethanol_res_loadname": "nest_1_reservoir_195ml"
-                             }""")
-    return [_all_values[n] for n in names]
-
-
 def run(ctx):
 
     [m20_mount, m300_mount, samples,
@@ -47,7 +23,8 @@ def run(ctx):
         "temp_a_part1", "temp_b_part1", "temp_c_part1",
         "temp_a_part2", "temp_b_part2", "temp_c_part2",
         "samples_loadname", "reagent1_loadname", "reagent2_loadname",
-        "indexing_plate_loadname", "reservoir_loadname", "ethanol_res_loadname")
+        "indexing_plate_loadname", "reservoir_loadname",
+        "ethanol_res_loadname")
 
     cols = math.ceil(samples/8)
 
