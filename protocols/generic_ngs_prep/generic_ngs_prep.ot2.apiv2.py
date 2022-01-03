@@ -16,7 +16,8 @@ def run(ctx):
      temp_a_part1, temp_b_part1, temp_c_part1,
      temp_a_part2, temp_b_part2, temp_c_part2,
      samples_loadname, reagent1_loadname, reagent2_loadname,
-     indexing_plate_loadname, reservoir_loadname, ethanol_res_loadname] = \
+     indexing_plate_loadname, reservoir_loadname, ethanol_res_loadname,
+     primer_loadname] = \
         get_values(  # noqa: F821
         "m20_mount", "m300_mount", "samples",
         "temp_mod_a", "temp_mod_b", "temp_mod_c",
@@ -24,7 +25,7 @@ def run(ctx):
         "temp_a_part2", "temp_b_part2", "temp_c_part2",
         "samples_loadname", "reagent1_loadname", "reagent2_loadname",
         "indexing_plate_loadname", "reservoir_loadname",
-        "ethanol_res_loadname")
+        "ethanol_res_loadname", "primer_loadname")
 
     cols = math.ceil(samples/8)
 
@@ -60,7 +61,7 @@ def run(ctx):
             (zip([temperature_module_a, temperature_module_b,
                   temperature_module_c],
                  [samples_loadname, reagent1_loadname,
-                  reagent2_plate_loadname],
+                  reagent2_loadname],
                  [slot_a, slot_b, slot_c])):
         if temp_mod:
             labware_list.append(temp_mod.load_labware(load_name))
