@@ -22,7 +22,13 @@ def get_values(*names):
                              "temp_c_part1": 4.0,
                              "temp_a_part2": 4.0,
                              "temp_b_part2": 4.0,
-                             "temp_c_part2": 4.0
+                             "temp_c_part2": 4.0,
+                             "samples_loadname": "biorad_96_wellplate_200ul_pcr",
+                             "reagent1_loadname": "opentrons_96_aluminumblock_generic_pcr_strip_200ul",
+                             "reagent2_loadname": "biorad_96_wellplate_200ul_pcr",
+                             "indexing_plate_loadname": "biorad_96_wellplate_200ul_pcr",
+                             "reservoir_loadname": "nest_12_reservoir_15ml",
+                             "ethanol_res_loadname": "nest_1_reservoir_195ml"
                              }""")
     return [_all_values[n] for n in names]
 
@@ -32,19 +38,27 @@ def run(ctx):
     [m20_mount, m300_mount, samples,
      temp_mod_a, temp_mod_b, temp_mod_c,
      temp_a_part1, temp_b_part1, temp_c_part1,
-     temp_a_part2, temp_b_part2, temp_c_part2] = get_values(  # noqa: F821
+     temp_a_part2, temp_b_part2, temp_c_part2,
+     samples_loadname, reagent1_loadname, reagent2_loadname,
+     indexing_plate_loadname, reservoir_loadname, ethanol_res_loadname] = \
+        get_values(  # noqa: F821
         "m20_mount", "m300_mount", "samples",
         "temp_mod_a", "temp_mod_b", "temp_mod_c",
         "temp_a_part1", "temp_b_part1", "temp_c_part1",
-        "temp_a_part2", "temp_b_part2", "temp_c_part2")
+        "temp_a_part2", "temp_b_part2", "temp_c_part2",
+        "samples_loadname", "reagent1_loadname", "reagent2_loadname",
+        "indexing_plate_loadname", "reservoir_loadname", "ethanol_res_loadname")
 
     cols = math.ceil(samples/8)
+
+    # Deck placement: slots
     slot_a = 1
     slot_b = 4
     slot_c = 7
     mag_slot = 3
     m20_tip_slots = [10, 11]
     m300_tip_slots = [8, 9]
+    ethanol_slot = 6
 
     # Load Modules
     temp_mod_list = []
@@ -65,24 +79,24 @@ def run(ctx):
 
     # Load Labware
     labware_list = []
-    labware_a_loadname = 'biorad_96_wellplate_200ul_pcr'
-    labware_b_loadname = 'opentrons_96_aluminumblock_generic_pcr_strip_200ul'
+    samples_loadname = 'biorad_96_wellplate_200ul_pcr'
+    reagent1_loadname = 'opentrons_96_aluminumblock_generic_pcr_strip_200ul'
     reagent2_plate_loadname = 'biorad_96_wellplate_200ul_pcr'
     for temp_mod, load_name, slot in \
             (zip([temperature_module_a, temperature_module_b,
                   temperature_module_c],
-                 [labware_a_loadname, labware_b_loadname,
+                 [samples_loadname, reagent1_loadname,
                   reagent2_plate_loadname],
                  [slot_a, slot_b, slot_c])):
         if temp_mod:
             labware_list.append(temp_mod.load_labware(load_name))
         else:
             labware_list.append(ctx.load_labware(load_name, slot))
-    temp_plate_a = labware_list[0]
-    temp_plate_b = labware_list[1]
+    temp_plate_a_samples = labware_list[0]
+    temp_plate_b_reagent1 = labware_list[1]
     reagent2_plate = labware_list[2]
 
-    [temp_plate_a, temp_plate_b, reagent2_plate] = \
+    [temp_plate_a_samples, temp_plate_b_reagent1, reagent2_plate] = \
         [labware_list[0], labware_list[1], labware_list[2]]
 
     tipracks200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
@@ -190,8 +204,8 @@ def run(ctx):
             return well
 
     # Wells
-    sample_wells = temp_plate_a.rows()[0][:cols]
-    reagent1 = temp_plate_b['A1']
+    sample_wells = temp_plate_a_samples.rows()[0][:cols]
+    reagent1 = temp_plate_b_reagent1['A1']
     reagent2 = reagent2_plate['A1']
 
     # Protocol Steps
@@ -200,7 +214,8 @@ def run(ctx):
     temperature_module_b.set_temperature(temp_b_part1)
     temperature_module_b.set_temperature(temp_c_part1)
 
-    # Step 1: Transfer Reagent 1 to Samples
+    # Step 1: Enzymatic reaction e.g. end repair or barcoding
+    # Step 1.1: Transfer Reagent 1 to Samples
     for col in sample_wells:
         pick_up(m20)
         m20.flow_rate.aspirate = 5
@@ -210,7 +225,7 @@ def run(ctx):
         m20.drop_tip()
     reset_pipette_speed(m20)
 
-    # Step 2: Transfer Reagent 2 to Samples
+    # Step 1.2: Transfer Reagent 2 to Samples
     for col in sample_wells:
         pick_up(m20)
         m20.flow_rate.aspirate = 4
@@ -225,7 +240,7 @@ def run(ctx):
               Remove plates/strips containing Reagents 1 and 2.  Place the
               12-channel reservoir on the temperature module in Slot 1. Place
               the Primer Plate on the temperature module in Slot 3. Place empty
-              indexing plate in Slot 2. Click Resume when ready to proceed.''')
+              indexing plate in Slot 7. Click Resume when ready to proceed.''')
 
     # Swapping Labware at Pause
     """del ctx.deck[str(1)]
@@ -244,11 +259,16 @@ def run(ctx):
     labware_list = []
     temp_mod_list = []
 
-    for slot, temp_mod_loadname, load_name in zip([slot_a, slot_b],
+    for slot, temp_mod_loadname, load_name in zip([slot_a, slot_b, slot_c,
+                                                  ethanol_slot],
                                                   [temp_mod_a,
-                                                  temp_mod_b],
+                                                  temp_mod_b,
+                                                  temp_mod_c,
+                                                  None],
                                                   [reservoir_loadname,
-                                                  primer_loadname]):
+                                                  primer_loadname,
+                                                  indexing_plate_loadname,
+                                                  ethanol_res_loadname]):
         del(ctx.deck[slot])
         if temp_mod_loadname:
             temp_mod = ctx.load_module(temp_mod_loadname, slot)
@@ -260,8 +280,9 @@ def run(ctx):
 
     reservoir = labware_list[0]
     primer = labware_list[1]
-    ethanol = reservoir.wells_by_name()['A1']
-    indexing_plate = replace_labware(2, 'biorad_96_wellplate_200ul_pcr')
+    indexing_plate = labware_list[2]
+    ethanol_reservoir = labware_list[3]
+    ethanol = ethanol_reservoir.wells_by_name()['A1']
 
     # Wells
     mag_plate_wells = mag_plate.rows()[0][:cols]
@@ -276,7 +297,7 @@ def run(ctx):
     side_x = 1
     sides = [-side_x, side_x] * (cols // 2)
 
-    # Continue Protocol
+    # Continue Protocol with DNA purification using SPRI
     # Set temperatures for part 2
     temperature_module_a.set_temperature(temp_a_part2)
     temperature_module_b.set_temperature(temp_b_part2)
