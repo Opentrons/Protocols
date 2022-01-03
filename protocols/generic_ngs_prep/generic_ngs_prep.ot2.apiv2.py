@@ -56,9 +56,6 @@ def run(ctx):
 
     # Load Labware
     labware_list = []
-    samples_loadname = 'biorad_96_wellplate_200ul_pcr'
-    reagent1_loadname = 'opentrons_96_aluminumblock_generic_pcr_strip_200ul'
-    reagent2_plate_loadname = 'biorad_96_wellplate_200ul_pcr'
     for temp_mod, load_name, slot in \
             (zip([temperature_module_a, temperature_module_b,
                   temperature_module_c],
@@ -230,9 +227,6 @@ def run(ctx):
     primer = temperature_module_b.load_labware('biorad_96_wellplate_200ul_pcr')
     """
 
-    reservoir_loadname = 'nest_12_reservoir_15ml'
-    primer_loadname = 'biorad_96_wellplate_200ul_pcr'
-    indexing_plate_loadname = 'biorad_96_wellplate_200ul_pcr'
     labware_list = []
     temp_mod_list = []
 
