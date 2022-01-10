@@ -5,13 +5,16 @@ At Opentrons, we’ve written a lot of protocols with our users and automated al
 We are sharing the code that the Opentrons team has developed to run these processes in the hopes that others can re-use the same code and continue to improve these methods. Please reach out to cookbook@opentrons.com with questions or if you’d like to submit something to the cookbook!
 
 Table of Contents:
-1. [Basic Skeleton Protocol](#basic-skeleton-protocol)
-2. [Liquid Level Tracking](#liquid-level-tracking)
-3. [Refill Tips Mid-Protocol](#refill-tips-mid-protocol)
-4. [Wash Steps](#wash-steps)
-5. [Remove Supernatant](#remove-supernatant)
-6. [Loop](#loop)
-7. [Using CSVs](#using-csvs)
+* [Basic Skeleton Protocol](#basic-skeleton-protocol)
+* [Liquid Level Tracking](#liquid-level-tracking)
+* [Refill Tips Mid-Protocol](#refill-tips-mid-protocol)
+* [Wash Steps](#wash-steps)
+* [Remove Supernatant](#remove-supernatant)
+* [Loop](#loop)
+* [Using CSVs](#using-csvs)
+* [Track Data Across Protocol Runs](track-data-across-protocol-runs)
+* [Tip Tracking with Refills](#tip-tracking-with-refills)
+* [Picking Up Fewer Than 8 Tips with a Multi-Channel Pipette](picking-up-fewer-than-8-tips-with-a-multi-channel-pipette)
 
 ## Basic Skeleton Protocol
 
@@ -168,10 +171,14 @@ for _ in range(5):
 ```
 
 ## Using CSVs
- Two approaches → copy/paste & accessing CSV on robot
-→ In this CSV example, 96 wells (in a 96 well plate) are each going to receive a different volume from a reservoir. Well 1 (A1) will get 1ul, Well 2 (A2) will get 2ul,..., Well 96 (H12) will get 96ul.
-Approach 1 (copy and paste):
+
+In this CSV example, 96 wells (in a 96 well plate) are each going to receive a different volume from a reservoir. Well 1 (A1) will get 1ul, Well 2 (A2) will get 2ul,..., Well 96 (H12) will get 96ul.
+
+### 2 Approaches:
+1. Copy and Paste:
 In this approach, CSV_DATA is a multi-line string (there was some weird formatting with ? when I copied and pasted over the code) that is then parsed. What’s really nice about this approach is that the each cell corresponds to a well, so it visually matches up.
+
+```
 metadata = {'apiLevel': '2.5'}
 
 CSV_DATA = """
@@ -201,8 +208,12 @@ def run(protocol):
    for vol, dest in zip(well_volumes, plate_wells):
        pipette.transfer(vol, reservoir, dest)
 
-Approach 2 (accessing CSV):
+```
+
+2. Accessing CSV:
 With this approach, the CSV is transferred to the directory /data/csv and is named well_data.csv
+
+```
 import csv
 import os
 
@@ -234,8 +245,13 @@ def run(protocol):
     plate_wells = [well for row in plate.rows() for well in row]
     for vol, dest in zip(well_volumes, plate_wells):
         pipette.transfer(vol, reservoir, dest)
-9. We have Using CSV input data in Python protocols but this recipe should show a worked out example
-10. Track tips/sample numbers across protocol runs (writing and reading to .json file on robot)→ Chazman Childers used CSV instead
+```
+
+## Track Data Across Protocol Runs
+
+Writing and reading sample or tip data to .json file on robot.
+
+```
 import csv
 import os
 
@@ -276,41 +292,11 @@ def run(protocol):
     if not protocol.is_simulating():
         with open(file_path, 'w') as outfile:
             outfile.write(new_tip_count)
+```
 
-11. Blinking lights on pause (code pasted by Chazman Childers , cc Nicholas Diehl for code from Station B protocol)
+## Tip Tracking with Refills
 
-import threading
-from time import sleep
-metadata = {'apiLevel': '2.5'}
-
-class CancellationToken:
-    def __init__(self):
-       self.is_continued = False
-
-    def set_true(self):
-       self.is_continued = True
-
-    def set_false(self):
-       self.is_continued = False
-
-
-def turn_on_blinking_notification(hardware, pause):
-    while pause.is_continued:
-        hardware.set_lights(rails=True)
-        sleep(1)
-        hardware.set_lights(rails=False)
-        sleep(1)
-
-
-def create_thread(ctx, cancel_token):
-    t1 = threading.Thread(target=turn_on_blinking_notification, args=(ctx._hw_manager.hardware, cancel_token))
-    t1.start()
-    return t1
-
-
-def run(protocol):
-...
-12. Tip tracking with prompts for refills
+```
 import json
 import os
 import math
@@ -378,7 +364,11 @@ resuming.')
         data = {pip.name: tip_log[pip]['count'] for pip in tip_log}
         with open(tip_file_path, 'w') as outfile:
             json.dump(data, outfile)
-13. Picking up fewer than 8 tips with a multi-channel pipette
+```
+
+## Picking Up Fewer Than 8 Tips with a Multi-Channel Pipette
+
+```
 def run(ctx):
     tipracks = [ctx.load_labware('opentrons_96_tiprack_300ul', '4')]
     m300 = ctx.load_instrument('p300_multi_gen2', 'right')
@@ -401,3 +391,4 @@ def run(ctx):
         pick_up(m300)
         # perform some step
         m300.drop_tip()
+```
