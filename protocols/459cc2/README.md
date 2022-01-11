@@ -35,7 +35,8 @@ Sample3,1,3,3,A3,6,A3
 * `P300 Multi Channel GEN2 Mount Position`: Select the pipette mount position.
 * `Blowout After Dispensing Sample`: Whether to blow out after dispensing sample.
 * `Sample Aspiration Flow Rate (uL/s)`: The flow rate when aspirating liquid.
-* `Sample Dispense Flow Rate (uL/s)`: The flow rate when dispensing liquid.
+* `Sample Dispense Flow Rate (uL/s)`: The flow rate when dispensing liquid for both the samples and MeCN.
+* `Use temperature module`: Specify whether to use the temperature module on slots 3 and 6 with mounted deepwell plates. Note: if using the temperature modules, they should be placed in slots 3, and 6 respectively, in that order depending on running 1 or 2 plates. 
 
 ---
 

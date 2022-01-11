@@ -36,8 +36,7 @@ Explanation of complex parameters below:
 
 
 ### Reagents
-* [kit name when applicable](link to kit)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [Omega Bio-Tek Mag-Bind® Plant DNA DS 96 Kit](https://www.omegabiotek.com/product/plant-extraction-mag-bind-plant-dna-ds-96/)
 
 ---
 
