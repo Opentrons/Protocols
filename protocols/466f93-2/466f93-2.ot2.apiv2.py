@@ -20,7 +20,7 @@ def run(ctx: protocol_api.ProtocolContext):
         "num_samples",
         "barcode_csv")
 
-    n_standard_mixes = 1  # Standard number of mixes, 10 in the bench ptcl.
+    n_standard_mixes = 10  # Standard number of mixes, 10 in the bench ptcl.
 
     # define all custom variables above here with descriptions:
     ALB_vol_per_sample = 2.50  # Addaptor ligation buffer
