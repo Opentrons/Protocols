@@ -1,3 +1,4 @@
+"""DNA normalization protocol."""
 from opentrons import protocol_api
 
 # DNA concentration quantified samples normalization
@@ -12,6 +13,7 @@ metadata = {
 
 
 def run(ctx: protocol_api.ProtocolContext):
+    """DNA normalization protocol entry point."""
     [
      num_samples,
      normalization_csv
