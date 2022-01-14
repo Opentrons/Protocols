@@ -41,6 +41,12 @@ def run(ctx: protocol_api.ProtocolContext):
 
     csv_rows = barcode_csv.split("\n")
 
+    # Error checking
+    if not len(csv_rows) == num_samples + 1:
+        raise ValueError(("Number of samples must match the number of " +
+                         "entries in the CSV, csv entries: {}, num_samples: {}"
+                          ).format(len(csv_rows), num_samples))
+
     # Barcoding list of lists, n rows x 5 columns
     # +1 row for the CSV header
     barcoding_LoL = ([[None]*5 for _ in range(num_samples+1)])
@@ -74,7 +80,6 @@ def run(ctx: protocol_api.ProtocolContext):
         barcode_row[3] = sample_ID
         barcode_row[4] = plate_identifier
 
-    # import pdb; pdb.set_trace()
     # load modules
 
     '''
@@ -455,8 +460,11 @@ def run(ctx: protocol_api.ProtocolContext):
             barcode_index = int(row[1])-1
             barcode_well = all_barcodes[barcode_index]
         except IndexError:
+            print(row)
             ctx.comment("""Index out of bounds. dest well: {},
                         barcode index:{}""".format(row[0], barcode_index))
+        except KeyError:
+            print(row)
         try:
             p20.pick_up_tip()
         except protocol_api.labware.OutOfTipsError:
