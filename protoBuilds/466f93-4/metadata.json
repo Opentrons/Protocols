@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "6a93a2-part2.ot2.apiv2.py"
+            "466f93-4.ot2.apiv2.py"
         ],
         "description": [
             "README.md"
@@ -14,7 +14,7 @@
         "hide-from-search": false,
         "skip-tests": false
     },
-    "path": "protocols/6a93a3-part2",
-    "slug": "6a93a3-part2",
+    "path": "protocols/466f93-4",
+    "slug": "466f93-4",
     "status": "ok"
 }

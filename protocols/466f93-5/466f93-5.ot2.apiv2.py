@@ -5,6 +5,7 @@ metadata = {
     'protocolName': '466f93-5 - Automated LifeCell_NIPT_35Plex_HV',
     'author': 'Eskil Andersen <eskil.andersen@opentrons.com>',
     'source': 'Custom Protocol Request',
+    'description': 'Normalization protocol',
     'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
                          # IN SECTION 5.2 OF THE APIV2 "VERSIONING"
 }

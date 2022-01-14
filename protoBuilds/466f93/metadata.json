@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "generic_station_C.ot2.apiv2.py"
+            "466f93.ot2.apiv2.py"
         ],
         "description": [
             "README.md"
@@ -14,7 +14,7 @@
         "hide-from-search": false,
         "skip-tests": false
     },
-    "path": "protocols/313086-station-C",
-    "slug": "313086-station-C",
+    "path": "protocols/466f93",
+    "slug": "466f93",
     "status": "ok"
 }
