@@ -3,7 +3,7 @@
       "type": "textFile",
       "label": "Sample:Barcode Input CSV File",
       "name": "barcode_csv",
-      "default": "sample_well,barcode_well\n1,13\n2,26\n3,54\n4,2\n5,9\n6,52\n7,54\n8,30\n9,29\n10,48\n11,35\n12,42\n13,26\n14,35\n15,11\n16,54\n17,27\n18,37\n19,9\n20,40\n21,56\n22,54\n23,31\n24,16\n25,54\n26,40\n27,51\n28,31\n29,7\n30,50\n31,49\n32,10\n33,47\n34,15\n35,11\n36,44"
+      "default": "DNA_sample_well,barcode_number,Adapter,Sample_ID,plate_number\\nA1,1,pmh001a,s1,adapt.01\\nB1,2,pmh002a,s2,adapt.02\\nC1,3,pmh003a,s3,adapt.03\\nD1,4,pmh004a,s4,adapt.04\\nE1,5,pmh005a,s5,adapt.05\\nF1,6,pmh006a,s6,adapt.06\\nG1,7,pmh007a,s7,adapt.07\\nH1,8,pmh008a,s8,adapt.08\\nA2,9,pmh009a,s9,adapt.09\\nB2,10,pmh010a,s10,adapt.10\\nC2,11,pmh011a,s11,adapt.11\\nD2,12,pmh012a,s12,adapt.12\\nE2,13,pmh013a,s13,adapt.13\\nF2,14,pmh014a,s14,adapt.14\\nG2,15,pmh015a,s15,adapt.15\\nH2,16,pmh016a,s16,adapt.16\\nA3,25,pmh2001a,s17,adapt.25\\nB3,26,pmh2002a,s18,adapt.26\\nC3,27,pmh2003a,s19,adapt.27\\nD3,28,pmh2004a,s20,adapt.28\\nE3,29,pmh2005a,s21,adapt.29\\nF3,30,pmh2006a,s22,adapt.30\\nG3,31,pmh2007a,s23,adapt.31\\nH3,32,pmh2008a,s24,adapt.32\\nA4,33,pmh2009a,s25,adapt.33\\nB4,34,pmh2010a,s26,adapt.34\\nC4,35,pmh2011a,s27,adapt.35"
     },
     {
       "type": "int",
