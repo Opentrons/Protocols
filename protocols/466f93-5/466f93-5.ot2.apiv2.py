@@ -20,7 +20,6 @@ def run(ctx: protocol_api.ProtocolContext):
         "normalization_csv")
 
     # load modules
-    mag_mod = ctx.load_module('magnetic module gen2', '3')
 
     '''
 
@@ -49,20 +48,11 @@ def run(ctx: protocol_api.ProtocolContext):
     where module_name is defined above.
 
     '''
-    mag_bead_cleanup_plate \
-        = mag_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
-                               'Magnetic module sample plate')
-    SPRI_bead_plate \
-        = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '9',
-                           'Magnetic bead plate')
     reservoir \
         = ctx.load_labware('nest_12_reservoir_15ml', '6',
                            'Reagent reservoir')
     qubit_sample_plate \
         = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '1',
-                           'quantification plate')
-    PCR_amplified_sample_plate \
-        = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '2',
                            'quantification plate')
     normalization_plate \
         = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '4',
@@ -90,8 +80,6 @@ def run(ctx: protocol_api.ProtocolContext):
     '''
     tiprack20s = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
                   for slot in ['10', '11']]
-    tiprack200s = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-                   for slot in ['5', '8']]
 
     # load instrument
 
@@ -113,8 +101,6 @@ def run(ctx: protocol_api.ProtocolContext):
                         )
     '''
     p20 = ctx.load_instrument("p20_single_gen2", "left", tip_racks=tiprack20s)
-    p300 = ctx.load_instrument("p300_single_gen2", "right",
-                               tip_racks=tiprack200s)
 
     # pipette functions   # INCLUDE ANY BINDING TO CLASS
 

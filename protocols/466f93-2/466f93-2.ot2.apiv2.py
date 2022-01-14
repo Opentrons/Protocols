@@ -245,7 +245,6 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # Every other well starting at B6 ending at H9
     barcodes_plate_I = yourgene_reagent_plate_I.wells()[41:72:2]
-    barcode_plate_I_vol = 21
 
     barcodes_plate_III = yourgene_reagent_plate_III.wells()[1:64:2]
 
@@ -424,7 +423,7 @@ def run(ctx: protocol_api.ProtocolContext):
             p20.transfer(end_repaired_sample_vol, s_well, d_well)
         except protocol_api.labware.OutOfTipsError:
             ctx.pause("Replace empty tip racks")
-            pipette.reset_tipracks()
+            p20.reset_tipracks()
             p20.transfer(end_repaired_sample_vol, s_well, d_well)
 
     # Parse the csv data that defines which barcode well contents gets mixed
