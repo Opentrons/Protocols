@@ -11,16 +11,6 @@ metadata = {
 }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads(
-        """{"num_samples": 36,
-           "mag_engage_time_less50uL": 5,
-           "mag_engage_time_more50uL": 7}
-        """)
-    return [_all_values[n] for n in names]
-
-
 def run(ctx: protocol_api.ProtocolContext):
 
     [
