@@ -32,7 +32,6 @@ def run(ctx: protocol_api.ProtocolContext):
     PCR_mm_vol_per_source_well = 117  # Volume of mm per well in RP-I
     primer_vol_per_sample = 0.5  # Primer volume per PCR sample on dest plate
     # Combined PCR mastermix + primer mix per PCR sample`
-    primer_vol_per_well = 45  # Volume of primer mix on reagent plate I
     PCR_smm_vol_per_sample = \
         (PCR_mastermix_vol_per_sample + primer_vol_per_sample)
 
