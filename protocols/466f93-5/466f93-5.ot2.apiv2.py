@@ -1,5 +1,4 @@
 from opentrons import protocol_api
-import csv
 
 # DNA concentration quantified samples normalization
 metadata = {
@@ -9,16 +8,6 @@ metadata = {
     'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
                          # IN SECTION 5.2 OF THE APIV2 "VERSIONING"
 }
-
-
-def get_values(*names):
-    import json
-    _all_values = json.loads(
-        """{"num_samples": 36,
-            "normalization_csv": "well,concentration\\n1,3.6\\n2,3.63\\n3,5.86\\n4,1.75\\n5,1.19\\n6,2.77\\n7,1.63\\n8,5.16\\n9,5.63\\n10,1.62\\n11,1.78\\n12,4.56\\n13,1.6\\n14,1.7\\n15,1.32\\n16,2.93\\n17,1.27\\n18,1.03\\n19,4.62\\n20,3.67\\n21,1.35\\n22,3.74\\n23,5.51\\n24,4.06\\n25,4.66\\n26,4.65\\n27,2.18\\n28,3.65\\n29,3.03\\n30,1.37\\n31,4.54\\n32,5.5\\n33,1.55\\n34,3.26\\n35,4.12\\n36,2.54"
-           }
-        """)
-    return [_all_values[n] for n in names]
 
 
 def run(ctx: protocol_api.ProtocolContext):
