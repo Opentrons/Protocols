@@ -11,15 +11,6 @@ metadata = {
 }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads(
-        """{"num_samples": 36,
-            "barcode_csv":"DNA_sample_well,barcode_number,Adapter,Sample_ID,plate_number\\nA1,1,pmh001a,s1,adapt.01\\nB1,2,pmh002a,s2,adapt.02\\nC1,3,pmh003a,s3,adapt.03\\nD1,4,pmh004a,s4,adapt.04\\nE1,5,pmh005a,s5,adapt.05\\nF1,6,pmh006a,s6,adapt.06\\nG1,7,pmh007a,s7,adapt.07\\nH1,8,pmh008a,s8,adapt.08\\nA2,9,pmh009a,s9,adapt.09\\nB2,10,pmh010a,s10,adapt.10\\nC2,11,pmh011a,s11,adapt.11\\nD2,12,pmh012a,s12,adapt.12\\nE2,13,pmh013a,s13,adapt.13\\nF2,14,pmh014a,s14,adapt.14\\nG2,15,pmh015a,s15,adapt.15\\nH2,16,pmh016a,s16,adapt.16\\nA3,25,pmh2001a,s17,adapt.25\\nB3,26,pmh2002a,s18,adapt.26\\nC3,27,pmh2003a,s19,adapt.27\\nD3,28,pmh2004a,s20,adapt.28\\nE3,29,pmh2005a,s21,adapt.29\\nF3,30,pmh2006a,s22,adapt.30\\nG3,31,pmh2007a,s23,adapt.31\\nH3,32,pmh2008a,s24,adapt.32\\nA4,33,pmh2009a,s25,adapt.33\\nB4,34,pmh2010a,s26,adapt.34\\nC4,35,pmh2011a,s27,adapt.35\\nD4,36,pmh2012a,s28,adapt.36\\nE4,37,pmh2013a,s29,adapt.37\\nF4,38,pmh2014a,s30,adapt.38\\nG4,39,pmh2015a,s31,adapt.39\\nH4,40,pmh2016a,s32,adapt.40\\nA5,41,pmh2017a,s33,adapt.41\\nB5,42,pmh2018a,s34,adapt.42\\nC5,43,pmh2019a,s35,adapt.43\\nD5,44,pmh2020a,s36,adapt.44"}
-        """)
-    return [_all_values[n] for n in names]
-
-
 def run(ctx: protocol_api.ProtocolContext):
     """Entry point of the protcol."""
     [

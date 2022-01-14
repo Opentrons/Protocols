@@ -1,3 +1,4 @@
+"""End-repair reaction preparation."""
 from opentrons import protocol_api
 import math
 
@@ -13,7 +14,7 @@ metadata = {
 
 
 def run(ctx: protocol_api.ProtocolContext):
-
+    """End-repair reaction preparation protocol entry point."""
     [
      num_samples
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)

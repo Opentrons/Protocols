@@ -1,32 +1,23 @@
-# Custom CSV Mass Spec Sample Prep
+# Fetal DNA NGS library preparation part 2 - LifeCell NIPT 35Plex HV
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
 ## Categories
 * Sample Prep
-	* Mass Spec
+	* Next Generation Sequencing (NGS)
 
 ## Description
-This protocol performs the preparation of samples from tubes to plates. It takes in a CSV file and uses the it to load the labware and make the necessary liquid transfers. It can support up to 2 sample plates.
+This protocol mixes end-repaired DNA samples with adaptor ligation mastermix and DNA barcodes specified according to a CSV input file
 
 Explanation of complex parameters below:
-* `Input CSV File`: Upload a CSV file with the formatting shown in the block below for either One Plate or Two Plates:
+* `Sample:Barcode Input CSV File`: Upload a CSV file with the formatting shown in the block below that specifies which sample is mixed with which barcode and the barcode's identifier:
 
-**One Plate**
 ```
 Sample ID,Slot number ,Rack position,Wellplate A position,Wellplate A well position
 Sample1,1,1,3,A1
 Sample2,1,2,3,A2
 Sample3,1,3,3,A3
-```
-
-**Two Plates**
-```
-Sample ID,Slot number ,Rack position,Wellplate A position,Wellplate A well position,Wellplate B position,Wellplate B well position
-Sample1,1,1,3,A1,6,A1
-Sample2,1,2,3,A2,6,A2
-Sample3,1,3,3,A3,6,A3
 ```
 
 * `Sample Volume`: The amount of sample to transfer from the tubes to the plate.

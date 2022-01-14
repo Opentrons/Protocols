@@ -1,3 +1,4 @@
+"""DNA cleanup and quantification prep."""
 from opentrons import protocol_api
 import math
 
@@ -11,18 +12,8 @@ metadata = {
 }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads(
-        """{"num_samples": 36,
-           "mag_engage_time_less50uL": 5,
-           "mag_engage_time_more50uL": 7}
-        """)
-    return [_all_values[n] for n in names]
-
-
 def run(ctx: protocol_api.ProtocolContext):
-
+    """Protocol entry point."""
     [
      num_samples,
      mag_engage_time_less50uL,
@@ -213,7 +204,7 @@ def run(ctx: protocol_api.ProtocolContext):
                      start=0, end=8,
                      mode='reagent', pip_type='single',
                      msg='Reset labware volumes'):
-            """Voltracker tracks the volume(s) used in a piece of labware
+            """Voltracker tracks the volume(s) used in a piece of labware.
 
             Args:
                 labware: The labware to track
@@ -236,11 +227,15 @@ def run(ctx: protocol_api.ProtocolContext):
             self.msg = msg
 
         def tracker(self, vol):
-            '''tracker() will track how much liquid
+            """
+            Tracker function: Track well volume and switch when too low to use.
+
+            Tracker() will track how much liquid
             was used up per well. If the volume of
             a given well is greater than self.well_vol
             it will remove it from the dictionary and iterate
-            to the next well which will act as the reservoir.'''
+            to the next well which will act as the reservoir.
+            """
             well = next(iter(self.labware_wells))
             new_well = False
             if self.labware_wells[well] + vol >= self.well_vol:
