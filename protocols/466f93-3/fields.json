@@ -1,0 +1,20 @@
+[
+    {
+      "type": "int",
+      "label": "Number of samples",
+      "name": "num_samples",
+      "default": 36
+    },
+    {
+      "type": "int",
+      "label": "Magnetic engagement time when total sample volume < 50 uL",
+      "name": "mag_engage_time_less50uL",
+      "default": 5
+    },
+    {
+      "type": "int",
+      "label": "Magnetic engagement time when total sample volume > 50 uL",
+      "name": "mag_engage_time_more50uL",
+      "default": 7
+    }
+]
