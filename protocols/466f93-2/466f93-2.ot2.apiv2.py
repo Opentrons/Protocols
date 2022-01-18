@@ -97,7 +97,6 @@ def run(ctx: protocol_api.ProtocolContext):
     For all other modules, you can load them on slots 1, 3, 4, 6, 7, 9, 10.
 
     '''
-    mag_mod = ctx.load_module('magnetic module gen2', '3')
 
     # load labware
 
@@ -127,8 +126,8 @@ def run(ctx: protocol_api.ProtocolContext):
         = ctx.load_labware('nest_12_reservoir_15ml', '6',
                            'Reagent reservoir')
     destination_plate \
-        = mag_mod.load_labware('biorad_96_wellplate_200ul_pcr',
-                               'Destination plate 2 (DP-2)')
+        = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '4',
+                           'Destination plate 2 (DP-2)')
 
     # load tipracks
 
