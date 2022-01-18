@@ -60,19 +60,19 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # load labware
     yourgene_reagent_plate_I \
-        = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '7',
+        = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '7',
                            'Reagent Plate - I')
     barcoded_sample_mag_plate \
-        = mag_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
+        = mag_mod.load_labware('biorad_96_wellplate_200ul_pcr',
                                'Magnetic module sample plate')
     SPRI_bead_plate \
-        = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '9',
+        = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '9',
                            'Magnetic bead plate')
     reservoir \
         = ctx.load_labware('nest_12_reservoir_15ml', '6',
                            'Reagent reservoir')
     PCR_destination_plate \
-        = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '2',
+        = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '2',
                            'PCR plate')
 
     '''

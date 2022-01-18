@@ -67,18 +67,18 @@ def run(ctx: protocol_api.ProtocolContext):
     # Reservoir for 80 % ethanol, e.g. a tube rack with a falcon tube
 
     yourgene_reagent_plate_I \
-        = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '7',
+        = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '7',
                            'Reagent Plate - I')
 
     # DNA sample plate
     sample_plate = \
-        ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
+        ctx.load_labware('biorad_96_wellplate_200ul_pcr',
                          '4', "Sample plate")
 
     # Destination plate - will be physically changed by the operator through-
     # out
     destination_plate = \
-        ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
+        ctx.load_labware('biorad_96_wellplate_200ul_pcr',
                          '1', "Destination plate")
 
     # load tipracks

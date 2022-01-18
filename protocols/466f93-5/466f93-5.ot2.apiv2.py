@@ -54,10 +54,10 @@ def run(ctx: protocol_api.ProtocolContext):
         = ctx.load_labware('nest_12_reservoir_15ml', '6',
                            'Reagent reservoir')
     qubit_sample_plate \
-        = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '1',
+        = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '1',
                            'quantification plate')
     normalization_plate \
-        = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '4',
+        = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '4',
                            'Normalization plate')
 
     # load tipracks
