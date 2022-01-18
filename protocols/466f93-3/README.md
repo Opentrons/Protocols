@@ -18,11 +18,14 @@ This protocol mixes end-repaired DNA samples with adaptor ligation mastermix and
 ---
 
 ### Labware
-* TBD
+* [Bio-Rad 96 well 200 µL PCR plate](https://labware.opentrons.com/biorad_96_wellplate_200ul_pcr?category=wellPlate)
+* [NEST 12-well reservoir](https://labware.opentrons.com/nest_12_reservoir_15ml/)
 
 ### Pipettes
 * [P300 Single Channel GEN2](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 * [P20 Single Channel GEN2](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
+* [Opentrons 96 Filter Tip Rack 20 µL](https://labware.opentrons.com/opentrons_96_filtertiprack_20ul/)
+* [Opentrons 96 Filter Tip Rack 200 µL](https://labware.opentrons.com/opentrons_96_filtertiprack_200ul/)
 
 ---
 

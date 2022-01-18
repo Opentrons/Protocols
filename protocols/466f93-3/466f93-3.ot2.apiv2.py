@@ -16,12 +16,11 @@ def run(ctx: protocol_api.ProtocolContext):
     """DNA cleanup and PCR amplification protocol entry point."""
     [
      num_samples,
-     mag_engage_time_less50uL,
-     mag_engage_time_more50uL
+     mag_engage_time
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
         "num_samples",
-        "mag_engage_time_less50uL",
-        "mag_engage_time_more50uL")
+        "mag_engage_time"
+        )
     # define all custom variables above here with descriptions:
     bead_volume = 25  # volume of bead solution for each sample
     bead_source_well_volume = 127
@@ -370,7 +369,7 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.pause("\n\nPulse spin plate for 5 seconds")
     ctx.comment("\n\nEngaging magnets")
     mag_mod.engage()
-    ctx.delay(0, mag_engage_time_less50uL, "binding samples to beads")
+    ctx.delay(0, mag_engage_time, "binding samples to beads")
 
     ctx.comment("\n\nDiscarding supernatant")
     for source_well in mag_plate_sample_wells:
@@ -405,7 +404,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # Remove spun-down supernatant
     mag_mod.engage()
-    ctx.delay(0, mag_engage_time_less50uL, "Attracting beads to magnets")
+    ctx.delay(0, mag_engage_time, "Attracting beads to magnets")
     for source_well in mag_plate_sample_wells:
         try:
             p300.transfer(ethanol_wash_vol, source_well, waste_well)
@@ -439,7 +438,7 @@ def run(ctx: protocol_api.ProtocolContext):
               "it back on the magnetic module")
     ctx.comment("Attracting beads")
     mag_mod.engage()
-    ctx.delay(0, mag_engage_time_less50uL)
+    ctx.delay(0, mag_engage_time)
 
     # Transfer the bead supernatant to the PCR destination plate
     ctx.comment("\n\nTransferring DNA supernatant to PCR plate")

@@ -16,12 +16,11 @@ def run(ctx: protocol_api.ProtocolContext):
     """Protocol entry point."""
     [
      num_samples,
-     mag_engage_time_less50uL,
-     mag_engage_time_more50uL
+     mag_engage_time
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
         "num_samples",
-        "mag_engage_time_less50uL",
-        "mag_engage_time_more50uL")
+        "mag_engage_time"
+        )
     # define all custom variables above here with descriptions:
     # Bead starting well: Since some of the bead wells have been used
     # in step 3 of the protocols we need to calculate which bead well to start
@@ -367,9 +366,9 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.pause("\n\nPulse spin bead/sample plate for 5s before continuing")
 
     ctx.comment("\n\nEngaging magnets for {} minutes".
-                format(mag_engage_time_less50uL))
+                format(mag_engage_time))
     mag_mod.engage()
-    ctx.delay(0, mag_engage_time_less50uL)
+    ctx.delay(0, mag_engage_time)
 
     ctx.comment("\n\nRemoving supernatant\n")
     for dest_well in mag_plate_sample_wells:
@@ -403,7 +402,7 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.pause("\n\nPulse spin the sample plate on the magnetic module for " +
               "5 seconds, then place it back on the magnetic module")
     mag_mod.engage()
-    ctx.delay(0, mag_engage_time_less50uL, "Binding the beads to the magnets")
+    ctx.delay(0, mag_engage_time, "Binding the beads to the magnets")
     ctx.comment("\n\nRemoving remaining wash supernatant from the wells\n")
     for dest_well in mag_plate_sample_wells:
         try:
@@ -433,7 +432,7 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.pause("Pulse spin the sample/bead plate for 5 seconds, then place " +
               "it back on the magnetic module")
     ctx.comment("Attracting beads")
-    ctx.delay(0, mag_engage_time_less50uL)
+    ctx.delay(0, mag_engage_time)
     ctx.comment("\n\nTransferring DNA containing supernatant to quant. plate")
 
     # Transfer DNA containing bead well supernatant to quantification plate

@@ -16,7 +16,7 @@ Explanation of parameters below:
 ---
 
 ### Labware
-* TBD
+* [Bio-Rad 96 well 200 µL PCR plate](https://labware.opentrons.com/biorad_96_wellplate_200ul_pcr?category=wellPlate)
 
 ### Pipettes
 * [P300 Single Channel GEN2](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)

@@ -27,11 +27,14 @@ C1,3,pmh003a,s3,adapt.03
 ---
 
 ### Labware
-* TBD
+* [Bio-Rad 96 well 200 µL PCR plate](https://labware.opentrons.com/biorad_96_wellplate_200ul_pcr?category=wellPlate)
+* [NEST 12-well reservoir](https://labware.opentrons.com/nest_12_reservoir_15ml/)
 
 ### Pipettes
 * [P300 Single Channel GEN2](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 * [P20 Single Channel GEN2](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
+* [Opentrons 96 Filter Tip Rack 20 µL](https://labware.opentrons.com/opentrons_96_filtertiprack_20ul/)
+* [Opentrons 96 Filter Tip Rack 200 µL](https://labware.opentrons.com/opentrons_96_filtertiprack_200ul/)
 
 ---
 
@@ -54,7 +57,7 @@ C1,3,pmh003a,s3,adapt.03
 ---
 
 ### Protocol Steps
-1. The protocol starts by creating a mastermix of Adaptor ligation buffer, enzyme I and enzyme II in well B5 and C5 of the Yourgene reagent plate I and mixes it 10 times
+1. The protocol starts by creating a mastermix of Adaptor ligation buffer, enzyme I and enzyme II, and water in well B5 and C5 of the Yourgene reagent plate I and mixes it 10 times
 2. The mastermix is transferred to Destination Plate 2 (8 µL per sample)
 3. End-repaired DNA sample from the End-repaired sample plate on Slot 1 (i.e. Destination Plate 1) is transferred to Destination Plate 2 (DP-2)
 4. Barcode oligos are transferred to each well according to the input csv (2 µL per sample)

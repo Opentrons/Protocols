@@ -8,13 +8,7 @@
     {
       "type": "int",
       "label": "Magnetic engagement time when total sample volume < 50 uL",
-      "name": "mag_engage_time_less50uL",
+      "name": "mag_engage_time",
       "default": 5
-    },
-    {
-      "type": "int",
-      "label": "Magnetic engagement time when total sample volume > 50 uL",
-      "name": "mag_engage_time_more50uL",
-      "default": 7
     }
 ]
