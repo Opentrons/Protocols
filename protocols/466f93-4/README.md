@@ -14,7 +14,6 @@ This protocol mixes end-repaired DNA samples with adaptor ligation mastermix and
 
 * `Magnetic engagement time when total sample volume < 50 uL`: How many minutes to engage the magnets when the total bead sample volume is 50 µL or less, Opentrons recommends 5 minutes.
 
-* `Magnetic engagement time when total sample volume > 50 uL`: How many minutes to engage the magnets when the total bead sample volume is more than 50, Opentrons recommends 7 minutes.
 ---
 
 ### Labware
@@ -23,6 +22,8 @@ This protocol mixes end-repaired DNA samples with adaptor ligation mastermix and
 ### Pipettes
 * [P300 Single Channel GEN2](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 * [P20 Single Channel GEN2](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
+* [Opentrons 96 Filter Tip Rack 20 µL](https://labware.opentrons.com/opentrons_96_filtertiprack_20ul/)
+* [Opentrons 96 Filter Tip Rack 200 µL](https://labware.opentrons.com/opentrons_96_filtertiprack_200ul/)
 
 ---
 
