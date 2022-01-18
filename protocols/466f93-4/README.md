@@ -10,7 +10,6 @@
 ## Description
 This protocol mixes end-repaired DNA samples with adaptor ligation mastermix and DNA barcodes specified according to a CSV input file
 
-### Parameters
 * `Number of samples`: The number of DNA samples on your sample plate. Should be between 7 and 36.
 
 * `Magnetic engagement time when total sample volume < 50 uL`: How many minutes to engage the magnets when the total bead sample volume is 50 µL or less, Opentrons recommends 5 minutes.
