@@ -76,7 +76,7 @@ def run(ctx: protocol_api.ProtocolContext):
     # DNA sample plate
     sample_plate = \
         ctx.load_labware('biorad_96_wellplate_200ul_pcr',
-                         '4', "Sample plate")
+                         '4', "DNA Sample plate")
 
     # Destination plate - will be physically changed by the operator through-
     # out
