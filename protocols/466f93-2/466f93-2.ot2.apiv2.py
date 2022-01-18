@@ -115,20 +115,20 @@ def run(ctx: protocol_api.ProtocolContext):
     '''
     yourgene_reagent_plate_I \
         = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '7',
-                           'Reagent Plate - I')
+                           'Yourgene Reagent plate - 1')
 
     yourgene_reagent_plate_III \
         = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '2',
-                           'Reagent Plate - III - Barcodes')
+                           'Yourgene Reagent plate 3 - Barcodes')
     end_repaired_sample_plate \
         = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '1',
-                           'End repaired sample plate')
+                           'End repaired sample plate (DP-1)')
     reservoir \
         = ctx.load_labware('nest_12_reservoir_15ml', '6',
                            'Reagent reservoir')
     destination_plate \
         = mag_mod.load_labware('biorad_96_wellplate_200ul_pcr',
-                               'Destination plate')
+                               'Destination plate 2 (DP-2)')
 
     # load tipracks
 

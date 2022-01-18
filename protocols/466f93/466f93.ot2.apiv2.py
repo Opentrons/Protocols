@@ -71,7 +71,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     yourgene_reagent_plate_I \
         = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '7',
-                           'Reagent Plate - I')
+                           'Yourgene Reagent plate - 1')
 
     # DNA sample plate
     sample_plate = \
@@ -82,7 +82,7 @@ def run(ctx: protocol_api.ProtocolContext):
     # out
     destination_plate = \
         ctx.load_labware('biorad_96_wellplate_200ul_pcr',
-                         '1', "Destination plate")
+                         '1', "Destination plate 1")
 
     # load tipracks
 
