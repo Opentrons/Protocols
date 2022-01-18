@@ -564,6 +564,7 @@ def run(ctx: protocol_api.ProtocolContext):
         p20.drop_tip()
     ctx.comment("\n\nTransfer the Yourgene cfdna reagent plate I back to " +
                 "the freezer")
-    ctx.comment("Pulse spin the PCR sample plate for 5 seconds and transfer " +
-                "to the thermocycler and run the cycle described in 1.2.47")
+    ctx.comment("Pulse spin the PCR sample plate (DP-3) for 5 seconds and " +
+                "transfer to the thermocycler and run the cycle " +
+                "described in 1.2.47")
     ctx.comment("\n\n~~~ End of protocol part 3 ~~~")

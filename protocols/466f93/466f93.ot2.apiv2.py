@@ -275,7 +275,6 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # Mix the ER enzyme, total volume of enz. 126 µL,
     # max volume for mastermix is 0.75 µL*36=27 µL
-
     try:
         p300.pick_up_tip()
     except protocol_api.labware.OutOfTipsError:

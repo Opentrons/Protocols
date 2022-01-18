@@ -1,84 +1,78 @@
-# Custom CSV Mass Spec Sample Prep
+# Fetal DNA NGS library preparation part 4 - LifeCell NIPT 35Plex HV - Post-PCR cleanup and preparation for quantification
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
 ## Categories
 * Sample Prep
-	* Mass Spec
+	* DNA Library prep
 
 ## Description
-This protocol performs the preparation of samples from tubes to plates. It takes in a CSV file and uses the it to load the labware and make the necessary liquid transfers. It can support up to 2 sample plates.
+This protocol mixes end-repaired DNA samples with adaptor ligation mastermix and DNA barcodes specified according to a CSV input file
 
-Explanation of complex parameters below:
-* `Input CSV File`: Upload a CSV file with the formatting shown in the block below for either One Plate or Two Plates:
+### Parameters
+* `Number of samples`: The number of DNA samples on your sample plate. Should be between 7 and 36.
 
-**One Plate**
-```
-Sample ID,Slot number ,Rack position,Wellplate A position,Wellplate A well position
-Sample1,1,1,3,A1
-Sample2,1,2,3,A2
-Sample3,1,3,3,A3
-```
+* `Magnetic engagement time when total sample volume < 50 uL`: How many minutes to engage the magnets when the total bead sample volume is 50 µL or less, Opentrons recommends 5 minutes.
 
-**Two Plates**
-```
-Sample ID,Slot number ,Rack position,Wellplate A position,Wellplate A well position,Wellplate B position,Wellplate B well position
-Sample1,1,1,3,A1,6,A1
-Sample2,1,2,3,A2,6,A2
-Sample3,1,3,3,A3,6,A3
-```
-
-* `Sample Volume`: The amount of sample to transfer from the tubes to the plate.
-* `Acetonitrile Transfer`: Whether to transfer acetonitrile into the plates (Steps 6-8).
-* `P300 Single Channel GEN2 Mount Position`: Select the pipette mount position.
-* `P300 Multi Channel GEN2 Mount Position`: Select the pipette mount position.
-* `Blowout After Dispensing Sample`: Whether to blow out after dispensing sample.
-* `Sample Aspiration Flow Rate (uL/s)`: The flow rate when aspirating liquid.
-* `Sample Dispense Flow Rate (uL/s)`: The flow rate when dispensing liquid for both the samples and MeCN.
-* `Use temperature module`: Specify whether to use the temperature module on slots 3 and 6 with mounted deepwell plates. Note: if using the temperature modules, they should be placed in slots 3, and 6 respectively, in that order depending on running 1 or 2 plates. 
-
+* `Magnetic engagement time when total sample volume > 50 uL`: How many minutes to engage the magnets when the total bead sample volume is more than 50, Opentrons recommends 7 minutes.
 ---
 
 ### Labware
 * TBD
 
 ### Pipettes
-* [P300 Single Channel GEN2](https://shop.opentrons.com/collections/ot-2-robot/products/single-channel-electronic-pipette?variant=5984549109789)
-* [P300 Multi Channel GEN2](https://shop.opentrons.com/collections/ot-2-robot/products/8-channel-electronic-pipette?variant=5984202489885)
+* [P300 Single Channel GEN2](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
+* [P20 Single Channel GEN2](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 
 ---
 
 ### Deck Setup
 
-**One Plate Example:**
-
 ![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/459cc2/459cc2-layout.png)
 
 ### Reagent Setup
-* Slot 7 Reservoir: Acetonitrile
+* Slot 1 Destination Plate 5 (DP-5) - Samples for quantification/normalization
+* Slot 2 Destination Plate 3 (DP-3) - PCR amplification DNA from Part 3
+* Slot 3 Magnetic module with Destination plate 4 (DP-4) - For cleaning up the DNA on DP-3
+* Slot 4 Empty
+* Slot 5 200 µL Opentrons filter tips
+* Slot 6 12-well reservoir (Well 1: 80 % EtOH, Well 2: nuc. free water, Well 3: Qubit workin solution, Well 12: Liquid waste)
+* Slot 7 Empty
+* Slot 8 200 µL Opentrons filter tips
+* Slot 9 Paramagnetic Bead Reagent plate 2
+* Slot 10 20 µL Opentrons filter tips
+* Slot 11 20 µL Opentrons filter tips
 
 ---
 
 ### Protocol Steps
-1. Aspirate 50 uL of the sample from tube rack using the single channel pippete P300. Add a 20 uL air gap.					
-2. Dispense sample into a A1 of Plate 1. Use blowout after dispensing. (Repeat for same well on Plate 2 if needed).
-3. Discard tip into the trash bin.
-4. Repeat steps 1-3 for all wells in the CSV file.
-5. Pick up tips with the multichannel pipette, transfer 100 uL of Acetonitrile to all wells in the plate.
-6. Discard tip into the trashbin.
+1. Transfer 25 µL of PCR amplified DNA sample to DP-4 on the magnetic module
+1. Mix the paramagnetic beads and add 25 µL to the samples on DP-2/magnetic module
+2. Ask the user to spin down the plate for 5 seconds
+3. Engage the magnets and incubate the beads according to the time parameter when total volume is < 50 µL
+4. Discard the supernatant
+5. Wash the beads in 75 µL 80 % ethanol and discard the supernatant (2 times). The magnets remain engaged throughout
+6. Ask the user to spin down the plate
+7. Remove any remaining supernatant
+8. Air dry the beads for 5 minutes
+9. The bead containing samples are resuspended in 22 µL of nuc. free water
+10. 20 µL of the resuspended DNA is transferred to DP-5
+11. Quantification samples are created on DP-5 starting at column 6 (Well A6)
+12. 198 µL of Qubit HS working solution is transferred to DP-5/column 6
+13. 2 µL of DNA sample is transferred to each corresponding DP-5/column 6 well
+14. The user is asked to vortex the plate and incubate for 2 minutes before proceeding
 
 ### Process
 1. Input your protocol parameters above.
 2. Download your protocol and unzip if needed.
-3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.
-4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.
-5. Set up your deck according to the deck map.
-6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).
-7. Hit 'Run'.
+3. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.
+4. Set up your deck according to the deck map.
+5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).
+6. Hit 'Run'.
 
 ### Additional Notes
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-459cc2
+466f93-4
