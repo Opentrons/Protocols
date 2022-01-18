@@ -482,5 +482,5 @@ def run(ctx: protocol_api.ProtocolContext):
         p20.drop_tip()
 
     ctx.pause("\n\nPulse spin the destination plate for 5 seconds")
-    ctx.comment("Perform PCR step")
+    ctx.comment("Perform the Adaptor ligation reaction described in 1.2.22")
     ctx.comment("~~~ End of protocol part 2 ~~~")

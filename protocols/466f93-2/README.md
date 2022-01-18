@@ -1,33 +1,28 @@
-# Fetal DNA NGS library preparation part 2 - LifeCell NIPT 35Plex HV
+# Fetal DNA NGS library preparation part 2 - LifeCell NIPT 35Plex HV - Barcoding
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
 ## Categories
 * Sample Prep
-	* Next Generation Sequencing (NGS)
+	* DNA Library prep
 
 ## Description
 This protocol mixes end-repaired DNA samples with adaptor ligation mastermix and DNA barcodes specified according to a CSV input file
 
+* `Number of samples`: The number of DNA samples on your sample plate. Should be between 7 and 36.
+
 Explanation of complex parameters below:
 * `Sample:Barcode Input CSV File`: Upload a CSV file with the formatting shown in the block below that specifies which sample is mixed with which barcode and the barcode's identifier:
 
+**Example**
 ```
-Sample ID,Slot number ,Rack position,Wellplate A position,Wellplate A well position
-Sample1,1,1,3,A1
-Sample2,1,2,3,A2
-Sample3,1,3,3,A3
+DNA_sample_well,barcode_number,
+Adapter,Sample_ID,plate_number
+A1,1,pmh001a,s1,adapt.01
+B1,2,pmh002a,s2,adapt.02
+C1,3,pmh003a,s3,adapt.03
 ```
-
-* `Sample Volume`: The amount of sample to transfer from the tubes to the plate.
-* `Acetonitrile Transfer`: Whether to transfer acetonitrile into the plates (Steps 6-8).
-* `P300 Single Channel GEN2 Mount Position`: Select the pipette mount position.
-* `P300 Multi Channel GEN2 Mount Position`: Select the pipette mount position.
-* `Blowout After Dispensing Sample`: Whether to blow out after dispensing sample.
-* `Sample Aspiration Flow Rate (uL/s)`: The flow rate when aspirating liquid.
-* `Sample Dispense Flow Rate (uL/s)`: The flow rate when dispensing liquid for both the samples and MeCN.
-* `Use temperature module`: Specify whether to use the temperature module on slots 3 and 6 with mounted deepwell plates. Note: if using the temperature modules, they should be placed in slots 3, and 6 respectively, in that order depending on running 1 or 2 plates.
 
 ---
 
@@ -35,41 +30,47 @@ Sample3,1,3,3,A3
 * TBD
 
 ### Pipettes
-* [P300 Single Channel GEN2](https://shop.opentrons.com/collections/ot-2-robot/products/single-channel-electronic-pipette?variant=5984549109789)
-* [P300 Multi Channel GEN2](https://shop.opentrons.com/collections/ot-2-robot/products/8-channel-electronic-pipette?variant=5984202489885)
+* [P300 Single Channel GEN2](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
+* [P20 Single Channel GEN2](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 
 ---
 
 ### Deck Setup
 
-**One Plate Example:**
-
 ![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/459cc2/459cc2-layout.png)
 
 ### Reagent Setup
-* Slot 7 Reservoir: Acetonitrile
+* Slot 1 Plate with end-repaired samples (from part 1)
+* Slot 3 Magnetic module (Not used in part 2)
+* Slot 4 Destination Plate 2
+* Slot 5 200 µL Opentrons filter tips
+* Slot 6 12-well reservoir (not used in part 2)
+* Slot 7 Yourgene cfDNA Library Prep Kit Library Preparation Plate I
+* Slot 8 200 µL Opentrons filter tips
+* Slot 9 Empty
+* Slot 10 20 µL Opentrons filter tips
+* Slot 11 20 µL Opentrons filter tips
 
 ---
 
 ### Protocol Steps
-1. Aspirate 50 uL of the sample from tube rack using the single channel pippete P300. Add a 20 uL air gap.					
-2. Dispense sample into a A1 of Plate 1. Use blowout after dispensing. (Repeat for same well on Plate 2 if needed).
-3. Discard tip into the trash bin.
-4. Repeat steps 1-3 for all wells in the CSV file.
-5. Pick up tips with the multichannel pipette, transfer 100 uL of Acetonitrile to all wells in the plate.
-6. Discard tip into the trashbin.
+1. The protocol starts by creating a mastermix of Adaptor ligation buffer, enzyme I and enzyme II in well B5 and C5 of the Yourgene reagent plate I and mixes it 10 times
+2. The mastermix is transferred to Destination Plate 2 (8 µL per sample)
+3. End-repaired DNA sample from the End-repaired sample plate on Slot 1 (i.e. Destination Plate 1) is transferred to Destination Plate 2 (DP-2)
+4. Barcode oligos are transferred to each well according to the input csv (2 µL per sample)
+5. Finally the samples on DP-2 are mixed ten times
+6. The user is asked to pulse spin the plate and perform the incubation step.
 
 ### Process
 1. Input your protocol parameters above.
 2. Download your protocol and unzip if needed.
-3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.
-4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.
-5. Set up your deck according to the deck map.
-6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).
-7. Hit 'Run'.
+3. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.
+4. Set up your deck according to the deck map.
+5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).
+6. Hit 'Run'.
 
 ### Additional Notes
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-459cc2
+466f93-2
