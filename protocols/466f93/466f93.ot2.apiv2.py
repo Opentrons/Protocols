@@ -320,11 +320,10 @@ def run(ctx: protocol_api.ProtocolContext):
             p20.pick_up_tip()
         p20.aspirate(mastermix_vol_per_sample, ER_mastermix_destination)
         p20.dispense(mastermix_vol_per_sample, well)
+        # Mix each sample ten (n_standard_mixes) times
         p20.mix(n_standard_mixes, total_rxn_vol/2)
         p20.drop_tip()
 
-    # 1.2.10 Mix the reaction ten times
-    # mix_plate(, 10, 15/2, destination_plate, False)
     ctx.comment("\nPulse spin the destination plate for 5 seconds")
     ctx.comment("Perform the end repair reaction in the thermocycler")
     ctx.comment("Remember to thaw (30 minutes) and pulse spin Reagent plate " +
