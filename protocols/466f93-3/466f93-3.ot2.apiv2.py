@@ -21,6 +21,10 @@ def run(ctx: protocol_api.ProtocolContext):
         "num_samples",
         "mag_engage_time"
         )
+
+    if not 7 <= num_samples <= 36:
+        raise Exception("The number of samples should be between 7 and 36")
+        
     # define all custom variables above here with descriptions:
     bead_volume = 25  # volume of bead solution for each sample
     bead_source_well_volume = 127

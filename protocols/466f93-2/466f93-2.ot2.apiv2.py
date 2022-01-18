@@ -20,6 +20,9 @@ def run(ctx: protocol_api.ProtocolContext):
         "num_samples",
         "barcode_csv")
 
+    if not 7 <= num_samples <= 36:
+        raise Exception("The number of samples should be between 7 and 36")
+
     n_standard_mixes = 10  # Standard number of mixes, 10 in the bench ptcl.
 
     # define all custom variables above here with descriptions:

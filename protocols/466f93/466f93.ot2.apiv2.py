@@ -20,6 +20,9 @@ def run(ctx: protocol_api.ProtocolContext):
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
         "num_samples")
 
+    if not 7 <= num_samples <= 36:
+        raise Exception("The number of samples should be between 7 and 36")
+
     # define all custom variables above here with descriptions:
     ER_buffer_I_vol_per_well = 27
     ER_enz_vol_per_well = 126
