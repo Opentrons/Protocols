@@ -1,32 +1,30 @@
 {
     "author": "Opentrons",
     "categories": {
-        "Sample Prep": [
-            "DNA Library prep"
-        ]
+        "NGS Library Prep": []
     },
     "deck-setup": "",
-    "description": "This protocol performs the preparation of samples from tubes to plates. It takes in a CSV file and uses the it to load the labware and make the necessary liquid transfers. It can support up to 2 sample plates.\nExplanation of parameters below:\n* Number of samples: The number of DNA samples on your sample plate. Should be between 7 and 36.\n",
+    "description": "This protocol mixes end repair enzyme and end repair buffer with DNA samples.\nExplanation of parameters below:\n* Number of samples: The number of DNA samples on your sample plate. Should be between 7 and 36.\n",
     "internal": "466f93",
     "labware": "\nBio-Rad 96 well 200 \u00b5L PCR plate\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
-        "categories": "* Sample Prep\n\t* DNA Library prep\n\n",
-        "deck-setup": "\n![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/)\n\n",
-        "description": "This protocol performs the preparation of samples from tubes to plates. It takes in a CSV file and uses the it to load the labware and make the necessary liquid transfers. It can support up to 2 sample plates.\n\nExplanation of parameters below:\n* `Number of samples`: The number of DNA samples on your sample plate. Should be between 7 and 36.\n\n---\n\n",
+        "categories": "* NGS Library Prep\n\n",
+        "deck-setup": "\n![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/466f93/deck_state_part1_466f93.jpeg)\n\n",
+        "description": "This protocol mixes end repair enzyme and end repair buffer with DNA samples.\n\nExplanation of parameters below:\n* `Number of samples`: The number of DNA samples on your sample plate. Should be between 7 and 36.\n\n---\n\n",
         "internal": "466f93\n",
         "labware": "* [Bio-Rad 96 well 200 \u00b5L PCR plate](https://labware.opentrons.com/biorad_96_wellplate_200ul_pcr?category=wellPlate)\n\n",
         "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
         "pipettes": "* [P300 Single Channel GEN2](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n* [P20 Single Channel GEN2](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n* [Opentrons 96 Filter Tip Rack 20 \u00b5L](https://labware.opentrons.com/opentrons_96_filtertiprack_20ul/)\n* [Opentrons 96 Filter Tip Rack 200 \u00b5L](https://labware.opentrons.com/opentrons_96_filtertiprack_200ul/)\n---\n\n",
         "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n4. Set up your deck according to the deck map.\n5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n6. Hit 'Run'.\n\n",
-        "protocol-steps": "1. Create a mastermix of End Repair buffer I and End Repair Enzyme 1 and dispense it into the unusued well B2 of Reagent Plate I (RP-I). The buffer and enzyme is mixed ten times each before the transfer.\n2. 12.75 \u00b5L of each DNA sample is transferred to the Destination Plate in Slot 1\n3. Transfer 2.25 \u00b5L of Mastermix from well B2 of RP-I to each sample well on the Destination Plate\n4. Mix the sample and Mastermix on the Destination plate 10 times\n5. Ask the user to pulse spin the destination plate and perform the repair reaction incubation in the thermocycler\n\n",
+        "protocol-steps": "1. The user places all the required labware on the deck and makes sure to replace any used or partially used tip racks\n2. Create a mastermix of End Repair buffer I and End Repair Enzyme 1 and dispense it into the unusued well B2 of Reagent Plate I (RP-I). The buffer and enzyme is mixed ten times each before the transfer.\n3. 12.75 \u00b5L of each DNA sample is transferred to the Destination Plate in Slot 1\n4. Transfer 2.25 \u00b5L of Mastermix from well B2 of RP-I to each sample well on the Destination Plate\n5. Mix the sample and Mastermix on the Destination plate 10 times\n6. Ask the user to pulse spin the destination plate and perform the repair reaction incubation in the thermocycler\n\n",
         "reagent-setup": "* Slot 1 Destination plate - This is where DNA sample gets mixed with end repair buffer and enzyme\n* Slot 3 Magnetic module (Not used in part 1)\n* Slot 4 DNA sample plate  - DNA samples\n* Slot 5 200 \u00b5L Opentrons filter tips\n* 12-well reservoir (not used in part 1)\n* Slot 7 Yourgene cfDNA Library Prep Kit Library Preparation Plate I\n* Slot 8 200 \u00b5L Opentrons filter tips\n* Slot 10 20 \u00b5L Opentrons filter tips\n* Slot 11 20 \u00b5L Opentrons filter tips\n\n---\n\n",
-        "title": "LifeCell NIPT 35Plex HV Part I"
+        "title": "LifeCell NIPT 35Plex HV Part 1 - DNA End Repair"
     },
     "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
     "pipettes": "\nP300 Single Channel GEN2\nP20 Single Channel GEN2\nOpentrons 96 Filter Tip Rack 20 \u00b5L\nOpentrons 96 Filter Tip Rack 200 \u00b5L\n\n",
     "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
-    "protocol-steps": "\nCreate a mastermix of End Repair buffer I and End Repair Enzyme 1 and dispense it into the unusued well B2 of Reagent Plate I (RP-I). The buffer and enzyme is mixed ten times each before the transfer.\n12.75 \u00b5L of each DNA sample is transferred to the Destination Plate in Slot 1\nTransfer 2.25 \u00b5L of Mastermix from well B2 of RP-I to each sample well on the Destination Plate\nMix the sample and Mastermix on the Destination plate 10 times\nAsk the user to pulse spin the destination plate and perform the repair reaction incubation in the thermocycler\n",
+    "protocol-steps": "\nThe user places all the required labware on the deck and makes sure to replace any used or partially used tip racks\nCreate a mastermix of End Repair buffer I and End Repair Enzyme 1 and dispense it into the unusued well B2 of Reagent Plate I (RP-I). The buffer and enzyme is mixed ten times each before the transfer.\n12.75 \u00b5L of each DNA sample is transferred to the Destination Plate in Slot 1\nTransfer 2.25 \u00b5L of Mastermix from well B2 of RP-I to each sample well on the Destination Plate\nMix the sample and Mastermix on the Destination plate 10 times\nAsk the user to pulse spin the destination plate and perform the repair reaction incubation in the thermocycler\n",
     "reagent-setup": "\nSlot 1 Destination plate - This is where DNA sample gets mixed with end repair buffer and enzyme\nSlot 3 Magnetic module (Not used in part 1)\nSlot 4 DNA sample plate  - DNA samples\nSlot 5 200 \u00b5L Opentrons filter tips\n12-well reservoir (not used in part 1)\nSlot 7 Yourgene cfDNA Library Prep Kit Library Preparation Plate I\nSlot 8 200 \u00b5L Opentrons filter tips\nSlot 10 20 \u00b5L Opentrons filter tips\nSlot 11 20 \u00b5L Opentrons filter tips\n\n",
-    "title": "LifeCell NIPT 35Plex HV Part I"
+    "title": "LifeCell NIPT 35Plex HV Part 1 - DNA End Repair"
 }
