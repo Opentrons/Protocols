@@ -7,7 +7,7 @@
     },
     {
       "type": "int",
-      "label": "Magnetic engagement time when total sample volume < 50 uL",
+      "label": "Magnetic engagement time for bead binding",
       "name": "mag_engage_time",
       "default": 5
     }

@@ -27,7 +27,7 @@ Explanation of parameters below:
 
 ### Deck Setup
 
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/459cc2/459cc2-layout.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/)
 
 ### Reagent Setup
 * Slot 1 Destination plate - This is where DNA sample gets mixed with end repair buffer and enzyme
