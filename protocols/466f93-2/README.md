@@ -4,8 +4,7 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Sample Prep
-	* DNA Library prep
+* NGS Library Prep
 
 ## Description
 This protocol mixes end-repaired DNA samples with adaptor ligation mastermix and DNA barcodes specified according to a CSV input file
@@ -17,12 +16,13 @@ Explanation of complex parameters below:
 
 **Example**
 ```
-DNA_sample_well,barcode_number,
-Adapter,Sample_ID,plate_number
+DNA_sample_well,barcode_number, Adapter,Sample_ID,plate_number
 A1,1,pmh001a,s1,adapt.01
 B1,2,pmh002a,s2,adapt.02
 C1,3,pmh003a,s3,adapt.03
 ```
+
+Please make sure that there is enough volume of all the barcodes you intend to use before running this protocol.
 
 ---
 
@@ -40,7 +40,9 @@ C1,3,pmh003a,s3,adapt.03
 
 ### Deck Setup
 
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/459cc2/459cc2-layout.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/466f93/deck_state_part2_466f93.jpeg)
+
+![reservoir layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/466f93/reservoir_layout_466f93_part4.jpeg)
 
 ### Reagent Setup
 * Slot 1 Plate with end-repaired samples (from part 1)
@@ -57,12 +59,13 @@ C1,3,pmh003a,s3,adapt.03
 ---
 
 ### Protocol Steps
-1. The protocol starts by creating a mastermix of Adaptor ligation buffer, enzyme I and enzyme II, and water in well B5 and C5 of the Yourgene reagent plate I and mixes it 10 times
-2. The mastermix is transferred to Destination Plate 2 (8 µL per sample)
-3. End-repaired DNA sample from the End-repaired sample plate on Slot 1 (i.e. Destination Plate 1) is transferred to Destination Plate 2 (DP-2)
-4. Barcode oligos are transferred to each well according to the input csv (2 µL per sample)
-5. Finally the samples on DP-2 are mixed ten times
-6. The user is asked to pulse spin the plate and perform the incubation step.
+1. The user places all the required labware on the deck and makes sure to replace any used or partially used tip racks
+2. The protocol starts by creating a mastermix of Adaptor ligation buffer, enzyme I and enzyme II, and water in well B5 and C5 of the Yourgene reagent plate I and mixes it 10 times
+3. The mastermix is transferred to Destination Plate 2 (8 µL per sample)
+4. End-repaired DNA sample from the End-repaired sample plate on Slot 1 (i.e. Destination Plate 1) is transferred to Destination Plate 2 (DP-2)
+5. Barcode oligos are transferred to each well according to the input csv (2 µL per sample)
+6. Finally the samples on DP-2 are mixed ten times
+7. The user is asked to pulse spin the plate and perform the incubation step.
 
 ### Process
 1. Input your protocol parameters above.

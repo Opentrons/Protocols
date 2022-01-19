@@ -4,15 +4,14 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Sample Prep
-	* DNA Library prep
+* NGS Library Prep
 
 ## Description
-This protocol mixes end-repaired DNA samples with adaptor ligation mastermix and DNA barcodes specified according to a CSV input file
+This protocol cleans up the PCR reaction from the previous step and prepares samples for DNA quantification using the Qubit HS protocol.
 
 * `Number of samples`: The number of DNA samples on your sample plate. Should be between 7 and 36.
 
-* `Magnetic engagement time when total sample volume < 50 uL`: How many minutes to engage the magnets when the total bead sample volume is 50 µL or less, Opentrons recommends 5 minutes.
+* `Magnetic engagement time`: How many minutes to engage the magnets in order to bind paramagnetic beads. Opentrons recommends at least 5 minutes for volumes less than 50 µL. 
 
 ---
 
@@ -30,7 +29,9 @@ This protocol mixes end-repaired DNA samples with adaptor ligation mastermix and
 
 ### Deck Setup
 
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/459cc2/459cc2-layout.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/466f93/deck_state_part4_466f93.jpeg)
+
+![reservoir layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/466f93/reservoir_layout_466f93_part4.jpeg)
 
 ### Reagent Setup
 * Slot 1 Destination Plate 5 (DP-5) - Samples for quantification/normalization
@@ -48,21 +49,23 @@ This protocol mixes end-repaired DNA samples with adaptor ligation mastermix and
 ---
 
 ### Protocol Steps
-1. Transfer 25 µL of PCR amplified DNA sample to DP-4 on the magnetic module
-1. Mix the paramagnetic beads and add 25 µL to the samples on DP-2/magnetic module
-2. Ask the user to spin down the plate for 5 seconds
-3. Engage the magnets and incubate the beads according to the time parameter when total volume is < 50 µL
-4. Discard the supernatant
-5. Wash the beads in 75 µL 80 % ethanol and discard the supernatant (2 times). The magnets remain engaged throughout
-6. Ask the user to spin down the plate
-7. Remove any remaining supernatant
-8. Air dry the beads for 5 minutes
-9. The bead containing samples are resuspended in 22 µL of nuc. free water
-10. 20 µL of the resuspended DNA is transferred to DP-5
-11. Quantification samples are created on DP-5 starting at column 6 (Well A6)
-12. 198 µL of Qubit HS working solution is transferred to DP-5/column 6
-13. 2 µL of DNA sample is transferred to each corresponding DP-5/column 6 well
-14. The user is asked to vortex the plate and incubate for 2 minutes before proceeding
+1. The user places all the required labware on the deck and makes sure to replace any used or partially used tip racks
+2. Transfer 25 µL of PCR amplified DNA sample to DP-4 on the magnetic module
+3. Mix the paramagnetic beads and add 25 µL to the samples on DP-4 on the magnetic module
+4. Ask the user to spin down the plate for 5 seconds
+5. Engage the magnets and incubate the beads according to the time parameter
+6. Discard the supernatant
+7. Wash the beads in 75 µL 80 % ethanol and discard the supernatant (repeat step 2 times). The magnets remain engaged throughout
+8. Ask the user to spin down the plate
+9. Remove any remaining supernatant
+10. Air dry the beads for 5 minutes
+11. The bead containing samples are resuspended in 22 µL of nuc. free water
+12. 20 µL of the resuspended DNA is transferred to DP-5 (clean DNA and quantification plate) in sequence starting at well A1
+13. Quantification samples are created on DP-5 starting at column 6 (Well A6) in sequence.
+14. 198 µL of Qubit HS working solution is transferred to the quantification samples starting at DP-5/column 6
+15. 2 µL of DNA sample is transferred to each corresponding DP-5/column 6 well
+16. The user is asked to vortex the plate and incubate for 2 minutes before proceeding.
+17. The user transfers the Qubit samples manually to appropriate vessels for the Qubit HS procedure and performs the quantification, and creates a CSV file as described in part 5.
 
 ### Process
 1. Input your protocol parameters above.

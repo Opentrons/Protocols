@@ -4,16 +4,15 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Sample Prep
-	* DNA Library prep
+* NGS Library Prep
 
 ## Description
-This protocol mixes end-repaired DNA samples with adaptor ligation mastermix and DNA barcodes specified according to a CSV input file
+This protocol uses a CSV file (as described) below to normalize DNA samples based on their concentration. After normalization all normalized samples will have a volume of 10 µL and have the same concentration as the least concentrated input sample.
 
 * `Number of samples`: The number of DNA samples on your sample plate. Should be between 7 and 36.
 
 Explanation of complex parameters below:
-* `Sample concentration Input CSV File`: Upload a CSV file with the formatting shown in the block below that specifies the concentration of the sample (ng/µL).
+* `Sample concentration Input CSV File`: Upload a CSV file with the formatting shown in the block below that specifies the concentration of the sample (ng/µL). Note: The units are arbitrary provided that they are the same for all samples.
 
 **Example**
 ```
@@ -38,16 +37,19 @@ well,concentration
 
 ### Deck Setup
 
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/466f93/deck_state_part5_466f93.jpeg)
+
+![reservoir layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/466f93/reservoir_layout_466f93_part4.jpeg)
 
 ### Reagent Setup
-* Slot 1 Plate with Qubit quantified samples (DP-5 from part 4)
+* Slot 1 Plate with Qubit HS quantified samples (DP-5 from part 4)
+* Slot 2 Empty
 * Slot 3 Empty
 * Slot 4 Destination Plate 6 - Normalization plate
 * Slot 5 200 µL Opentrons filter tips
 * Slot 6 12-well reservoir (Well 2: water (>2 mL))
 * Slot 7 Empty
-* Slot 8 200 µL Opentrons filter tips
+* Slot 8 Empty
 * Slot 9 Empty
 * Slot 10 20 µL Opentrons filter tips
 * Slot 11 20 µL Opentrons filter tips
@@ -55,8 +57,9 @@ well,concentration
 ---
 
 ### Protocol Steps
-1. The protocol reads the CSV and determines which samples has the lowest concentration of DNA according to the CSV inputs.
-2. Each sample is transferred to DP-6 on Slot 4 and is mixed with water such that all concentrations will be the same as that of the least concentrated sample and the total volume is 10 µL. Note that the p20 is not designed to transfer volumes < 1 µL. Therefore please ensure that there is no sample which differs more than 10:1 in concentration with any other sample.
+1. The user places all the required labware on the deck and makes sure to replace any used or partially used tip racks
+2. The protocol reads the CSV (describe above) and determines which samples has the lowest concentration of DNA according to the CSV inputs.
+3. Each sample is transferred to DP-6 on Slot 4 and is mixed with water such that all concentrations will be the same as that of the least concentrated sample and the total volume is 10 µL. Note that the p20 is not designed to transfer volumes < 1 µL. Therefore please ensure that there is no sample which differs more than 10:1 in concentration with any other sample.
 
 
 ### Process
