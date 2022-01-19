@@ -44,10 +44,10 @@ C1,3,pmh003a,s3,adapt.03
 
 ### Reagent Setup
 * Slot 1 Plate with end-repaired samples (from part 1)
-* Slot 3 Magnetic module (Not used in part 2)
+* Slot 3 Empty
 * Slot 4 Destination Plate 2
 * Slot 5 200 µL Opentrons filter tips
-* Slot 6 12-well reservoir (not used in part 2)
+* Slot 6 12-well reservoir Well 2: Nuclease free water (5-10 mL is plenty)
 * Slot 7 Yourgene cfDNA Library Prep Kit Library Preparation Plate I
 * Slot 8 200 µL Opentrons filter tips
 * Slot 9 Empty

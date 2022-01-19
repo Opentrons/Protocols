@@ -8,13 +8,12 @@
 	* DNA Library prep
 
 ## Description
-This protocol mixes end-repaired DNA samples with adaptor ligation mastermix and DNA barcodes specified according to a CSV input file
+This protocol mixes end-repaired DNA samples with adaptor ligation mastermix and DNA barcodes specified according to a CSV input file. Prepare at least
 
 * `Number of samples`: The number of DNA samples on your sample plate. Should be between 7 and 36.
 
-* `Magnetic engagement time when total sample volume < 50 uL`: How many minutes to engage the magnets when the total bead sample volume is 50 µL or less, Opentrons recommends 5 minutes.
+* `Magnetic engagement time`: How many minutes to engage the magnets when the total bead sample volume is 50 µL or less, Opentrons recommends at least 5 minutes.
 
-* `Magnetic engagement time when total sample volume > 50 uL`: How many minutes to engage the magnets when the total bead sample volume is more than 50, Opentrons recommends 7 minutes.
 ---
 
 ### Labware
@@ -31,7 +30,7 @@ This protocol mixes end-repaired DNA samples with adaptor ligation mastermix and
 
 ### Deck Setup
 
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/459cc2/459cc2-layout.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/)
 
 ### Reagent Setup
 * Slot 1 Empty
@@ -39,7 +38,7 @@ This protocol mixes end-repaired DNA samples with adaptor ligation mastermix and
 * Slot 3 Magnetic module with DP-2 - End-repaired and barcoded samples
 * Slot 4 Empty
 * Slot 5 200 µL Opentrons filter tips
-* Slot 6 12-well reservoir (not used in part 2)
+* Slot 6 12-well reservoir. Well 1: Water (5 mL), Well 2: 80 % Ethanol (12 mL), Well 12: liquid waste
 * Slot 7 Yourgene cfDNA Library Prep Kit Library Preparation Plate I
 * Slot 8 200 µL Opentrons filter tips
 * Slot 9 Paramagnetic Bead reagent plate 2

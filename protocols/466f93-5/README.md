@@ -38,14 +38,14 @@ well,concentration
 
 ### Deck Setup
 
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/459cc2/459cc2-layout.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/)
 
 ### Reagent Setup
 * Slot 1 Plate with Qubit quantified samples (DP-5 from part 4)
 * Slot 3 Empty
 * Slot 4 Destination Plate 6 - Normalization plate
 * Slot 5 200 µL Opentrons filter tips
-* Slot 6 12-well reservoir (Well 2: water)
+* Slot 6 12-well reservoir (Well 2: water (>2 mL))
 * Slot 7 Empty
 * Slot 8 200 µL Opentrons filter tips
 * Slot 9 Empty

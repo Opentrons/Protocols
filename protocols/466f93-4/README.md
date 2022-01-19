@@ -38,7 +38,7 @@ This protocol mixes end-repaired DNA samples with adaptor ligation mastermix and
 * Slot 3 Magnetic module with Destination plate 4 (DP-4) - For cleaning up the DNA on DP-3
 * Slot 4 Empty
 * Slot 5 200 µL Opentrons filter tips
-* Slot 6 12-well reservoir (Well 1: 80 % EtOH, Well 2: nuc. free water, Well 3: Qubit workin solution, Well 12: Liquid waste)
+* Slot 6 12-well reservoir (Well 1: 80 % EtOH, Well 2: nuc. free water, Well 3: Qubit working solution (9 mL), Well 12: Liquid waste)
 * Slot 7 Empty
 * Slot 8 200 µL Opentrons filter tips
 * Slot 9 Paramagnetic Bead Reagent plate 2
