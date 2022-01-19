@@ -1,14 +1,13 @@
-# LifeCell NIPT 35Plex HV Part I
+# LifeCell NIPT 35Plex HV Part 1 - DNA End Repair
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Sample Prep
-	* DNA Library prep
+* NGS Library Prep
 
 ## Description
-This protocol performs the preparation of samples from tubes to plates. It takes in a CSV file and uses the it to load the labware and make the necessary liquid transfers. It can support up to 2 sample plates.
+This protocol mixes end repair enzyme and end repair buffer with DNA samples.
 
 Explanation of parameters below:
 * `Number of samples`: The number of DNA samples on your sample plate. Should be between 7 and 36.
@@ -27,7 +26,7 @@ Explanation of parameters below:
 
 ### Deck Setup
 
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/466f93/deck_state_part1_466f93.jpeg)
 
 ### Reagent Setup
 * Slot 1 Destination plate - This is where DNA sample gets mixed with end repair buffer and enzyme
@@ -43,11 +42,12 @@ Explanation of parameters below:
 ---
 
 ### Protocol Steps
-1. Create a mastermix of End Repair buffer I and End Repair Enzyme 1 and dispense it into the unusued well B2 of Reagent Plate I (RP-I). The buffer and enzyme is mixed ten times each before the transfer.
-2. 12.75 µL of each DNA sample is transferred to the Destination Plate in Slot 1
-3. Transfer 2.25 µL of Mastermix from well B2 of RP-I to each sample well on the Destination Plate
-4. Mix the sample and Mastermix on the Destination plate 10 times
-5. Ask the user to pulse spin the destination plate and perform the repair reaction incubation in the thermocycler
+1. The user places all the required labware on the deck and makes sure to replace any used or partially used tip racks
+2. Create a mastermix of End Repair buffer I and End Repair Enzyme 1 and dispense it into the unusued well B2 of Reagent Plate I (RP-I). The buffer and enzyme is mixed ten times each before the transfer.
+3. 12.75 µL of each DNA sample is transferred to the Destination Plate in Slot 1
+4. Transfer 2.25 µL of Mastermix from well B2 of RP-I to each sample well on the Destination Plate
+5. Mix the sample and Mastermix on the Destination plate 10 times
+6. Ask the user to pulse spin the destination plate and perform the repair reaction incubation in the thermocycler
 
 ### Process
 1. Input your protocol parameters above.
