@@ -2,7 +2,7 @@
 
 At Opentrons, we’ve written a lot of protocols with our users and automated all kinds of different processes. While some protocols are truly one-of-a-kind, many protocols do the exact same thing. Basic processes like magnetic bead washes, liquid level tracking in tubes, keeping track of tip use, etc, etc, get coded into almost every protocol.
 
-We are sharing the code that the Opentrons team has developed to run these processes in the hopes that others can re-use the same code and continue to improve these methods. Please reach out to cookbook@opentrons.com with questions or if you’d like to submit something to the cookbook!
+We are sharing the code that the Opentrons team has developed to run these processes in the hopes that others can re-use the same code and continue to improve these methods. Please reach out to <cookbook@opentrons.com> with questions or if you’d like to submit something to the cookbook!
 
 Table of Contents:
 * [Basic Skeleton Protocol](#basic-skeleton-protocol)
