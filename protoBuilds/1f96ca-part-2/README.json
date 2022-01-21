@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "\nOpentrons Magnetic Module (Deck Slot 9)\nOpentrons p300 tips (Deck Slots 10, 11)\nOpentrons p20 tips (Deck Slots 3, 4, 7, 8)\nopentrons_96_aluminumblock_generic_pcr_strip_200ul (Deck Slot 5) with\nbeads, water, intermediate_pools in columns 1-3\npost-PCR plate (Deck Slot 1)\nnest_12_reservoir_15ml (Deck Slot 2)\npool tube and tube rack (Deck Slot 6) with pool tube in A1\n",
-    "description": "Part 2 of 2: Library Clean Up and Pooling\nLinks:\n Part 1: Fragmentation, End Repair, Adapter Ligation, Library Amplification\n Part 2: Clean Up Libraries\nWith this protocol, your robot can perform the ROCHE KAPA HyperPlus NGS library prep protocol described by the KAPA HyperPlus Kit.\nThis is part 2 of the protocol, which includes the steps (1) bead clean up (2) pooling.",
+    "description": "Part 2 of 2: Library Clean Up and Pooling\nLinks:\n* Part 1: Fragmentation, End Repair, Adapter Ligation, Library Amplification\n* Part 2: Clean Up Libraries\nWith this protocol, your robot can perform the ROCHE KAPA HyperPlus NGS library prep protocol described by the KAPA HyperPlus Kit.\nThis is part 2 of the protocol, which includes the steps (1) bead clean up (2) pooling.",
     "internal": "1f96ca",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
