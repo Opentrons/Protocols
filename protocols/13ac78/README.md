@@ -36,7 +36,7 @@ This protocol performs a custom PCR Prep from strip tubes seated in a custom coo
 
 Reagents:
 * green: mastermix
-* blue: sample
+* blue: samples
 * pink: positive control
 * purple: molecular grade water
 
