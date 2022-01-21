@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "\n\nOpentrons p300 tips (Deck Slots 10, 11)\nOpentrons p20 tips (Deck Slot 7)\n195 mL NEST 1 Well Reservoir (Deck Slot 4)\nSource Plate (TPP 96 well tissue culture plate Deck Slot 8)\nDestination Plate (NUNC WHITE 96F 236105 96 well plate Deck Slot 6)\n",
-    "description": "This protocol cherrypicks from source plate wells specified in the first column of an input CSV file and transfers 2 ul of the well's contents to destination plate wells specified in the second column of the input CSV file.\nLinks:\n Custom Cherrypicking json Protocol\n Opentrons Protocol Designer No-Code Tool\n* Sample CSV File\nThis protocol is a python translation of the attached custom cherrypicking json protocol that can be downloaded from the link above (and then uploaded to the online Opentrons Protocol Designer tool). This python translation has an added feature: upload of an input CSV file to specify source and destination wells.",
+    "description": "This protocol cherrypicks from source plate wells specified in the first column of an input CSV file and transfers 2 ul of the well's contents to destination plate wells specified in the second column of the input CSV file.\nLinks:\n* Custom Cherrypicking json Protocol\n* Opentrons Protocol Designer No-Code Tool\n* Sample CSV File\nThis protocol is a python translation of the attached custom cherrypicking json protocol that can be downloaded from the link above (and then uploaded to the online Opentrons Protocol Designer tool). This python translation has an added feature: upload of an input CSV file to specify source and destination wells.",
     "internal": "1477ea",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
