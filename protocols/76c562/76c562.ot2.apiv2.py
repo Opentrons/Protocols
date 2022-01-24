@@ -65,7 +65,6 @@ def run(ctx):
 
     avail_slots = [str(slot) for slot in range(1, 13)
                    if slot not in ctx.loaded_labwares]
-    print(avail_slots)
     sorted_slots_tup = sorted(slot_order.items(), key=lambda x: x[1])
     sorted_slots = [
         slot_tup[0] for slot_tup in sorted_slots_tup
@@ -120,7 +119,8 @@ def run(ctx):
             else:
                 tip_log[pip] = {
                     'tips': [
-                        tip for rack in pip.tip_racks for tip in rack.rows()[0]],
+                        tip
+                        for rack in pip.tip_racks for tip in rack.rows()[0]],
                     'max': len(pip.tip_racks*96)}
             tip_log[pip]['count'] = tip_log[pip]['tips'].index(starting_tip)
 
