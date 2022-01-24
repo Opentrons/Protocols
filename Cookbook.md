@@ -12,9 +12,9 @@ Table of Contents:
 * [Remove Supernatant](#remove-supernatant)
 * [Loop](#loop)
 * [Using CSVs](#using-csvs)
-* [Track Data Across Protocol Runs](track-data-across-protocol-runs)
+* [Track Data Across Protocol Runs](#track-data-across-protocol-runs)
 * [Tip Tracking with Refills](#tip-tracking-with-refills)
-* [Picking Up Fewer Than 8 Tips with a Multi-Channel Pipette](picking-up-fewer-than-8-tips-with-a-multi-channel-pipette)
+* [Picking Up Fewer Than 8 Tips with a Multi-Channel Pipette](#picking-up-fewer-than-8-tips-with-a-multi-channel-pipette)
 
 ## Basic Skeleton Protocol
 
@@ -373,7 +373,13 @@ def run(ctx):
     tipracks = [ctx.load_labware('opentrons_96_tiprack_300ul', '4')]
     m300 = ctx.load_instrument('p300_multi_gen2', 'right')
 
+    per_tip_pickup_current = .1
     num_channels_per_pickup = 1  # (only pickup tips on front-most channel)
+    pick_up_current = num_channels_per_pickup*per_tip_pickup_current
+    ctx._implementation._hw_manager.hardware._attached_instruments[
+      m300._implementation.get_mount()].update_config_item(
+          'pick_up_current', pick_up_current)
+
     tips_ordered = [
         tip for rack in tipracks
         for row in rack.rows()[
