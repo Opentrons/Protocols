@@ -14,7 +14,7 @@ make parse-errors parse-README;
 if [[ $(git ls-files --modified protoBuilds) ]]; then
     echo '***** MISSING UPDATES TO PROTOBUILDS (metadata/readme files): *****';
     git ls-files --modified protoBuilds;
-    exit 0;
+    exit 1;
 fi
 
 echo 'protoBuilds appears up-to-date!'
