@@ -73,9 +73,9 @@ def run(ctx):
         side = side * -1
 
     working_standard_1 = reagent_labware.wells()[0]
-    assay_buffer_1 = reagent_labware.wells()[1]
-    working_standard_2 = reagent_labware.wells()[10]
-    assay_buffer_2 = reagent_labware.wells()[11]
+    assay_buffer_1 = reagent_labware.wells()[1:3]
+    working_standard_2 = reagent_labware.wells()[9]
+    assay_buffer_2 = reagent_labware.wells()[10:12]
     starting_samples = sample_rack.wells()[:num_samples]
     samples_1 = deepplate.columns()[3:6]
     samples_2 = deepplate.columns()[9:]
@@ -87,10 +87,10 @@ def run(ctx):
             p1000.transfer(vol, standard, dest, new_tip='never')
             drop(p1000)
 
-        for vol, dest in zip([100, 300, 500, 700, 900, 950, 1000],
-                             dilution_col):
+        for i, (vol, dest) in enumerate(
+                zip([100, 300, 500, 700, 900, 950, 1000], dilution_col)):
             p1000.pick_up_tip()
-            p1000.transfer(vol, buffer, dest, mix_after=(5, 800),
+            p1000.transfer(vol, buffer[i//5], dest, mix_after=(5, 800),
                            new_tip='never')
             drop(p1000)
         pickup_p300('single')
@@ -113,9 +113,9 @@ def run(ctx):
         # pre add diluent
         for i, factor in enumerate(factors):
             dil_vol = (factor-1)*sample_vol*(i+1)
-            for well in dil_set[i][:num_samples]:
+            for j, well in enumerate(dil_set[i][:num_samples]):
                 p1000.pick_up_tip()
-                p1000.transfer(dil_vol, buffer, well, new_tip='never')
+                p1000.transfer(dil_vol, buffer[j//5], well, new_tip='never')
                 drop(p1000)
 
         p300.flow_rate.aspirate = 40
@@ -160,11 +160,9 @@ def run(ctx):
     """ PART 2 """
 
     # sample normalization (TE)
-    # default from 60µg/ml to 2.5µg/ml - 24:1 (1 fold)
     sample_1_final_loc = dilute(2.5, samples_1, assay_buffer_1)
 
     # sample normalization (TR)
-    # default from 60µg/ml to 0.5µg/ml - 120:1 (2 fold)
     sample_2_final_loc = dilute(0.5, samples_2, assay_buffer_2)
 
     """ PART 3 """
