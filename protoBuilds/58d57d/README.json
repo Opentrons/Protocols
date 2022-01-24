@@ -5,7 +5,7 @@
             "Plate Filling"
         ]
     },
-    "description": "This protocol performs transfers of reagents for the Promega ADP-Glo Kinase Assay. It will transfer four different liquids into the test wells with pauses for centrifugation and incubations in between transfers.\n\n\n\nP20 single-channel GEN2 electronic pipette\nGreiner Microplate 384 Wells\n\n\n\nDeck Setup\n Greiner 384 Well Plate (Slot 1)\n Opentrons 20uL Tips (Slot 2)\n* Opentrons 24 Tube Rack 1.5mL Tubes (Slot 4)\nReagent Setup: Opentrons 24 Tube Rack 1.5mL Tubes (Slot 4):\n Liquid A (A1)\n Liquid B (B1)\n Liquid C (C1)\n Liquid D (D1)",
+    "description": "This protocol performs transfers of reagents for the Promega ADP-Glo Kinase Assay. It will transfer four different liquids into the test wells with pauses for centrifugation and incubations in between transfers.\n\n\n\nP20 single-channel GEN2 electronic pipette\nGreiner Microplate 384 Wells\n\n\n\nDeck Setup\n* Greiner 384 Well Plate (Slot 1)\n* Opentrons 20uL Tips (Slot 2)\n* Opentrons 24 Tube Rack 1.5mL Tubes (Slot 4)\nReagent Setup: Opentrons 24 Tube Rack 1.5mL Tubes (Slot 4):\n* Liquid A (A1)\n* Liquid B (B1)\n* Liquid C (C1)\n* Liquid D (D1)",
     "internal": "58d57d",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
