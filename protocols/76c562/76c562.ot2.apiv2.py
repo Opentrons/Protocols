@@ -175,14 +175,15 @@ resuming.'.format(pip.max_volume))
             int(d_slot)].wells_by_name()[parse_well(d_well)]
         pipette = pipettes[pip]
         pick_up(pipette)
-        pipette.transfer(float(vol), source, dest, new_tip='never')
+        pipette.transfer(float(vol), source.bottom(asp_h), dest.bottom(disp_h),
+                         new_tip='never')
         if mix:
             max = pipette.tip_racks[0].wells()[0].max_volume
             if float(vol) < max:
                 mix_vol = float(vol)
             else:
                 mix_vol = max
-            pipette.mix(3, mix_vol, dest)
+            pipette.mix(3, mix_vol, dest.bottom(disp_h))
         pipette.blow_out()
         pipette.drop_tip()
 
