@@ -2,7 +2,7 @@ import math
 
 metadata = {
     'protocolName': 'Cherrypicking and Normalization',
-    'author': 'Chaz <protocols@opentrons.com>',
+    'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.10'
 }
@@ -65,6 +65,7 @@ def run(ctx):
 
     avail_slots = [str(slot) for slot in range(1, 13)
                    if slot not in ctx.loaded_labwares]
+    print(avail_slots)
     sorted_slots_tup = sorted(slot_order.items(), key=lambda x: x[1])
     sorted_slots = [
         slot_tup[0] for slot_tup in sorted_slots_tup
@@ -74,12 +75,10 @@ def run(ctx):
                         if pip])
     if num_pipettes == 0:
         raise Exception('Must select at least 1 pipette.')
-    pipettes = {
-        'left': None,
-        'right': None
-    }
+    sides = ['left', 'right']
+    pipettes = {}
     for i, (pip_type, side) in enumerate(
-            zip([left_pipette_type, right_pipette_type], pipettes.keys())):
+            zip([left_pipette_type, right_pipette_type], sides)):
         if pip_type:
             tiprack_type = tiprack_map[pip_type]
             tipracks = []
@@ -94,35 +93,36 @@ def run(ctx):
                 slots = sorted_slots
             for slot in slots:
                 tipracks.append(ctx.load_labware(tiprack_type, str(slot)))
-        # load pipette
-        pipettes[side] = ctx.load_instrument(pip_type, side,
-                                             tip_racks=tipracks)
+            # load pipette
+            pipettes[side] = ctx.load_instrument(pip_type, side,
+                                                 tip_racks=tipracks)
 
     tip_log = {}
     for mount, pip in pipettes.items():
-        if mount == 'left':
-            start_slot = left_pip_slot
-            start_tip_well = left_pip_tip
-        else:
-            start_slot = right_pip_slot
-            start_tip_well = right_pip_tip
-        allowable_slots = [rack.parent for rack in pip.tip_racks]
-        if start_slot not in allowable_slots:
-            raise Exception(f'Start Sot for {mount} pipette must be in \
-{allowable_slots}.')
-        starting_tip = ctx.loaded_labwares[
-            int(start_slot)].wells_by_name()[start_tip_well]
-        if pip.type == 'single':
-            tip_log[pip] = {
-                'tips': [
-                    tip for rack in pip.tip_racks for tip in rack.wells()],
-                'max': len(pip.tip_racks*96)}
-        else:
-            tip_log[pip] = {
-                'tips': [
-                    tip for rack in pip.tip_racks for tip in rack.rows()[0]],
-                'max': len(pip.tip_racks*96)}
-        tip_log[pip]['count'] = tip_log[pip]['tips'].index(starting_tip)
+        if pip:
+            if mount == 'left':
+                start_slot = left_pip_slot
+                start_tip_well = left_pip_tip
+            else:
+                start_slot = right_pip_slot
+                start_tip_well = right_pip_tip
+            allowable_slots = [rack.parent for rack in pip.tip_racks]
+            if start_slot not in allowable_slots:
+                raise Exception(f'Start Sot for {mount} pipette must be in \
+    {allowable_slots}.')
+            starting_tip = ctx.loaded_labwares[
+                int(start_slot)].wells_by_name()[start_tip_well]
+            if pip.type == 'single':
+                tip_log[pip] = {
+                    'tips': [
+                        tip for rack in pip.tip_racks for tip in rack.wells()],
+                    'max': len(pip.tip_racks*96)}
+            else:
+                tip_log[pip] = {
+                    'tips': [
+                        tip for rack in pip.tip_racks for tip in rack.rows()[0]],
+                    'max': len(pip.tip_racks*96)}
+            tip_log[pip]['count'] = tip_log[pip]['tips'].index(starting_tip)
 
     def pick_up(pip):
         if tip_log[pip]['count'] == tip_log[pip]['max']:
@@ -157,7 +157,7 @@ resuming.'.format(pip.max_volume))
             pick_up(pipette)
         pipette.transfer(float(vol), source.bottom(float(asp_h)),
                          dest.bottom(float(disp_h)), new_tip='never')
-        pipette.blow_out(vol, dest.bottom(float(disp_h)))
+        pipette.blow_out(dest.bottom(float(disp_h)))
         if diluent_scheme == 'always':
             pipette.drop_tip()
     for pip in pipettes.values():
@@ -173,17 +173,18 @@ resuming.'.format(pip.max_volume))
             int(s_slot)].wells_by_name()[parse_well(s_well)]
         dest = ctx.loaded_labwares[
             int(d_slot)].wells_by_name()[parse_well(d_well)]
+
         pipette = pipettes[pip]
         pick_up(pipette)
-        pipette.transfer(float(vol), source.bottom(asp_h), dest.bottom(disp_h),
-                         new_tip='never')
+        pipette.transfer(float(vol), source.bottom(float(asp_h)),
+                         dest.bottom(float(disp_h)), new_tip='never')
         if mix:
             max = pipette.tip_racks[0].wells()[0].max_volume
             if float(vol) < max:
                 mix_vol = float(vol)
             else:
                 mix_vol = max
-            pipette.mix(3, mix_vol, dest.bottom(disp_h))
+            pipette.mix(3, mix_vol, dest.bottom(float(disp_h)))
         pipette.blow_out()
         pipette.drop_tip()
 
