@@ -157,6 +157,7 @@ resuming.'.format(pip.max_volume))
             pick_up(pipette)
         pipette.transfer(float(vol), source.bottom(float(asp_h)),
                          dest.bottom(float(disp_h)), new_tip='never')
+        pipette.blow_out(vol, dest.bottom(float(disp_h)))
         if diluent_scheme == 'always':
             pipette.drop_tip()
     for pip in pipettes.values():
