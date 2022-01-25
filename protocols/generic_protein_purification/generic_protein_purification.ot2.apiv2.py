@@ -187,8 +187,6 @@ def run(ctx: protocol_api.ProtocolContext):
     '''
     sample_plate = mag_mod.load_labware(sample_plate_lname)
 
-    # TODO: Check that sample well is large enough for lysis reaction
-    # (including NaCl addition if used)
     sample_well = sample_plate.wells()[0]
     if total_vol_after_bead_adddn > sample_well.max_volume:
         raise Exception("The sample wells are too small to handle the " +
@@ -639,4 +637,3 @@ def run(ctx: protocol_api.ProtocolContext):
                     "target plate\n")
         transfer_plate_to_plate(elution_buf_vol, sample_plate, dest_plate)
         ctx.comment("\n\n~~~~~ End of protocol ~~~~~\n")
-        import pdb; pdb.set_trace()
