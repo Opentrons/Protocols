@@ -26,52 +26,55 @@ def get_values(*names):
                         "tube_rack_lname":"opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap",
                         "dest_temp_mod_lname":"temperature module gen2",
                         "resv_temp_mod_lname":"temperature module gen2",
-                        "has_vortex_pause":true,
-                        "do_SDS_step":false,
-                        "do_DNAse_step":true,
+                        "do_vortex_pause":"true",
+                        "do_SDS_step":"false",
+                        "do_DNAse_step":"true",
+                        "use_NaCl":"true",
                         "bead_volume":30.0,
                         "starting_volume":1000.0,
                         "wash_buf_vol":150.0,
                         "elution_buf_vol":100.0,
-                        "use_NaCl":true,
                         "n_washes":3,
                         "n_wash_mixes":5,
                         "n_elution_mixes":5,
                         "incubation_time":2,
+                        "n_bead_mixes":5
                         "sds_buffer_vol":30}
                         """)
-    return [_all_values[n] for n in names]
+    param_list = [_all_values[n] for n in names]
+    return param_list
 
 
 def run(ctx: protocol_api.ProtocolContext):
 
     [
-     mag_engage_time,
-     n_samples,
-     small_pipette_lname,
-     large_pipette_lname,
-     small_pipette_tipracks_lname,
-     large_pipette_tipracks_lname,
-     reservoir_lname,
-     destination_plate_lname,
-     sample_plate_lname,
-     mag_mod_lname,
-     tube_rack_lname,
-     dest_temp_mod_lname,
-     resv_temp_mod_lname,
-     has_vortex_pause,
-     do_SDS_step,
-     do_DNAse_step,
-     bead_volume,
-     starting_volume,
-     wash_buf_vol,
-     elution_buf_vol,
-     use_NaCl,
-     n_washes,
-     incubation_time,
-     n_wash_mixes,
-     n_elution_mixes,
-     sds_buffer_vol
+        mag_engage_time,
+        n_samples,
+        small_pipette_lname,
+        large_pipette_lname,
+        small_pipette_tipracks_lname,
+        large_pipette_tipracks_lname,
+        reservoir_lname,
+        destination_plate_lname,
+        sample_plate_lname,
+        mag_mod_lname,
+        tube_rack_lname,
+        dest_temp_mod_lname,
+        resv_temp_mod_lname,
+        do_vortex_pause,
+        do_SDS_step,
+        do_DNAse_step,
+        use_NaCl,
+        bead_volume,
+        starting_volume,
+        wash_buf_vol,
+        elution_buf_vol,
+        n_washes,
+        n_wash_mixes,
+        n_elution_mixes,
+        incubation_time,
+        n_bead_mixes,
+        sds_buffer_vol
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
         "mag_engage_time",
         "n_samples",
@@ -86,18 +89,19 @@ def run(ctx: protocol_api.ProtocolContext):
         "tube_rack_lname",
         "dest_temp_mod_lname",
         "resv_temp_mod_lname",
-        "has_vortex_pause",
+        "do_vortex_pause",
         "do_SDS_step",
         "do_DNAse_step",
+        "use_NaCl",
         "bead_volume",
         "starting_volume",
         "wash_buf_vol",
         "elution_buf_vol",
-        "use_NaCl",
         "n_washes",
-        "incubation_time",
         "n_wash_mixes",
         "n_elution_mixes",
+        "incubation_time",
+        "n_bead_mixes",
         "sds_buffer_vol"
         )
 
@@ -119,6 +123,15 @@ def run(ctx: protocol_api.ProtocolContext):
                                            nacl_first_step_vol, 1)
 
     n_columns = math.ceil(n_samples/8)
+
+    def str_to_bool(str):
+        return True if str.lower().strip() == "true" else False
+
+    # Convert string booleans to Python booleans
+    do_vortex_pause = str_to_bool(do_vortex_pause)
+    do_SDS_step = str_to_bool(do_SDS_step)
+    do_DNAse_step = str_to_bool(do_DNAse_step)
+    use_NaCl = str_to_bool(use_NaCl)
 
     # Error checking
 
@@ -174,7 +187,8 @@ def run(ctx: protocol_api.ProtocolContext):
     '''
     sample_plate = mag_mod.load_labware(sample_plate_lname)
 
-    # Check that sample well is large enough for lysis reaction after NaCl addn
+    # TODO: Check that sample well is large enough for lysis reaction
+    # after NaCl addition
     sample_well = sample_plate.wells()[0]
 
     dest_plate = None
@@ -478,7 +492,9 @@ def run(ctx: protocol_api.ProtocolContext):
     plate_wells_by_row = [well for row in plate.rows() for well in row]
 
     '''
-    sample_columns = sample_plate.columns()[0:n_columns]
+    # unused
+    # sample_columns = sample_plate.columns()[0:n_columns]
+
     sample_wells = sample_plate.wells()[0:n_samples]
 
     dest_columns = dest_plate.columns()[0:n_columns]
@@ -530,7 +546,7 @@ def run(ctx: protocol_api.ProtocolContext):
         reag_to_wells_or_col_transfer(nacl_first_step_vol, nacl_well,
                                       sample_plate, True)
 
-    if has_vortex_pause:
+    if do_vortex_pause:
         ctx.pause("Pause to vortex/resuspend your magnetic beads")
 
     # Mixing the beads in the bead well
