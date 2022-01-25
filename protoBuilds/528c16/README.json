@@ -1,0 +1,30 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Sample Prep": [
+            "Plate Filling"
+        ]
+    },
+    "deck-setup": "\n",
+    "description": "This protocol preps 1.5mL and 2mL tubes from stock solutions including but not limited to acetonitrile, water, and methanol. Sources and destinations are determined via a csv uploaded by the user, as well as transfer volumes. \nExplanation of complex parameters below:\n* csv file: The csv file should be formatted like so:\n\n* P20/P1000 Mount: Specify which mount (left or right) for each single channel pipette.\n",
+    "internal": "528c16",
+    "labware": "\nOpentrons 4-in-1 tube rack with 50mL & 15mL Falcon tubes\nOpentrons 4-in-1 tube rack with 1.5mL Eppendorf snap cap tubes\nOpentrons 1000ul tips\nOpentrons 20ul tips\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* Sample Prep\n\t* Plate Filling\n\n",
+        "deck-setup": "![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/528c16/Screen+Shot+2022-01-18+at+10.59.17+AM.png)\n\n---\n\n",
+        "description": "This protocol preps 1.5mL and 2mL tubes from stock solutions including but not limited to acetonitrile, water, and methanol. Sources and destinations are determined via a csv uploaded by the user, as well as transfer volumes. \n\n\nExplanation of complex parameters below:\n* `csv file`: The csv file should be formatted like so:\n\n![csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/528c16/Screen+Shot+2022-01-18+at+11.48.24+AM.png)\n* `P20/P1000 Mount`: Specify which mount (left or right) for each single channel pipette.\n\n---\n\n",
+        "internal": "528c16\n",
+        "labware": "* [Opentrons 4-in-1 tube rack with 50mL & 15mL Falcon tubes](https://shop.opentrons.com/4-in-1-tube-rack-set/)\n* [Opentrons 4-in-1 tube rack with 1.5mL Eppendorf snap cap tubes](https://shop.opentrons.com/4-in-1-tube-rack-set/)\n* [Opentrons 1000ul tips](https://shop.opentrons.com/universal-filter-tips/)\n* [Opentrons 20ul tips](https://shop.opentrons.com/universal-filter-tips/)\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [P20 Single-Channel Pipette](https://opentrons.com/pipettes/)\n* [P1000 Single-Channel Pipette](https://opentrons.com/pipettes/)\n\n---\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "protocol-steps": "1. Protocol parse of csv.\n2. OT-2 visits source labware, source well.\n3. Volume is transferred to destination labware, destination well as specified in the csv.\n4. New tip is granted (note for transfer volumes < 100ul, the P20 pipette is used, otherwise the P1000 pipette is used).\n5. Steps 2-4 are repeated for all lines of the csv.\n\n",
+        "title": "Bioanalysis with CSV input"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nP20 Single-Channel Pipette\nP1000 Single-Channel Pipette\n\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "protocol-steps": "\nProtocol parse of csv.\nOT-2 visits source labware, source well.\nVolume is transferred to destination labware, destination well as specified in the csv.\nNew tip is granted (note for transfer volumes < 100ul, the P20 pipette is used, otherwise the P1000 pipette is used).\nSteps 2-4 are repeated for all lines of the csv.\n",
+    "title": "Bioanalysis with CSV input"
+}

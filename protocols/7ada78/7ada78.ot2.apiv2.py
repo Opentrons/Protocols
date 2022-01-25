@@ -40,12 +40,18 @@ def run(ctx: protocol_api.ProtocolContext):
     # INSTRUMENTS
     p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tip_racks=tipracks)
 
+    def pre_wet(vol, well):
+        ctx.comment('PRE-WET')
+        p20.aspirate(vol, well, rate=0.5)
+        p20.dispense(vol, well, rate=0.5)
+        ctx.comment('DONE PRE-WET')
+
     # MAPPING
     slot_source = 0
     source_well = 1
-    transfer_vol = 2
-    slot_dest = 3
-    dest_well = 4
+    transfer_vol = 3
+    slot_dest = 4
+    dest_well = 5
 
     all_rows = [[val.strip() for val in line.split(',')]
                 for line in csv.splitlines()
@@ -60,20 +66,15 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.comment('\n\nMOVING SAMPLES TO PLATE\n')
 
     for the in all_rows:
+        if the[transfer_vol].lower() == 'x':
+            continue
+        vol = int(the[transfer_vol])
+        source = ctx.loaded_labwares[int(the[slot_source])].wells_by_name()[
+                                        the[source_well]]
+        dest = ctx.loaded_labwares[int(the[slot_dest])].wells_by_name()[
+                                        the[dest_well]]
         p20.pick_up_tip()
-        p20.aspirate(int(the[transfer_vol]),
-                     ctx.loaded_labwares[
-                     int(the[slot_source])
-                     ].wells_by_name()[
-                     the[source_well]
-                     ])
-        p20.dispense(int(the[transfer_vol]),
-                     ctx.loaded_labwares[
-                     int(the[slot_dest])
-                     ].wells_by_name()[
-                     the[dest_well]
-                     ])
-        p20.blow_out(ctx.loaded_labwares[int(the[slot_dest])].wells_by_name()[
-                    the[dest_well]].top(z=-5))
-        p20.touch_tip()
+        pre_wet(vol, source)
+        p20.aspirate(vol, source)
+        p20.dispense(vol, dest)
         p20.drop_tip()
