@@ -15,7 +15,7 @@ Explanation of complex parameters below:
 * `Number of columns`: Specify the number of columns in the thermocycler plate to dispense mastermix into. Mastermix will always come from column 1 of the 96 well plate on slot 3. The mastermix plate will replace with water plate on slot 3 after an automatic pause in the protocol.
 * `.CSV File`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line
 (use slot 7 for the thermocycler slot, and input an "x" for values that are not needed in that row):
-![csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/7ada78/pt2/Screen+Shot+2021-12-22+at+5.31.15+PM.png)
+![csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1f62ba/Screen+Shot+2022-01-25+at+11.20.56+AM.png)
 * `Pipette Mount`: Specify which mount (left or right) to host the P20 Single, and Multi-channel pipettes, respectively.
 
 ---

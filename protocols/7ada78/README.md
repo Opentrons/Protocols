@@ -14,7 +14,7 @@ This protocol reformats RNA into a 96-well plate per a .csv input. Up to 96 tube
 Explanation of complex parameters below:
 * `.CSV File`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line
 (use slot 7 for the thermocycler slot, and input an "x" for values that are not needed in that row):
-![csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/7ada78/pt1/Screen+Shot+2021-12-22+at+6.27.58+PM.png)
+![csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/7ada78/pt1/Screen+Shot+2022-01-25+at+11.16.36+AM.png)
 * `Pipette Mount`: Specify which mount (left or right) to host the P20 single-channel pipettes, respectively.
 
 ---
@@ -25,7 +25,7 @@ Explanation of complex parameters below:
 
 ### Labware
 * [NEST 0.1 mL 96-Well PCR Plate, Full Skirt](https://shop.opentrons.com/verified-labware/well-plates/)
-* [Opentrons 4-in-1 tube rack with 1.5mL Eppendoft snap cap tubes](https://shop.opentrons.com/4-in-1-tube-rack-set/)
+* [Opentrons 4-in-1 tube rack with 1.5mL Eppendorf snap cap tubes](https://shop.opentrons.com/4-in-1-tube-rack-set/)
 * [Opentrons 20ul Filter tips](https://shop.opentrons.com/universal-filter-tips/)
 * 96-W OptiPlate
 
