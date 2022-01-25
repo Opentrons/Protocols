@@ -13,12 +13,21 @@
   },
   {
      "type": "dropDown",
-     "label": "resevoir type",
+     "label": "reservoir type",
      "name": "res_type",
      "options": [
        { "label": "NEST 12-channel", "value": "nest_12_reservoir_15ml"}
      ]
    },
+   {
+      "type": "dropDown",
+      "label": "tube labware type",
+      "name": "tube_type",
+      "options": [
+        { "label": "Opentrons 24 Well Aluminum Block with NEST 1.5 mL Snapcap", "value": "opentrons_24_aluminumblock_nest_1.5ml_snapcap"},
+        { "label": "Opentrons 24 Tube Rack with NEST 1.5 mL Snapcap", "value": "opentrons_24_tuberack_nest_1.5ml_snapcap"}
+      ]
+    },
    {
       "type": "dropDown",
       "label": "tip type",
