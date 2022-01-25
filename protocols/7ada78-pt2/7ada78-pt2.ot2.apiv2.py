@@ -43,10 +43,10 @@ def run(ctx: protocol_api.ProtocolContext):
                  slot, label='Sample Tuberack')
                  for slot in ['1', '2', '4', '5']]
     tc_plate = thermocyc.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
-    water_plate = ctx.load_labware('abgene_96_wellplate_200ul', '3',
+    water_plate = ctx.load_labware('abgene_96_wellplate_330ul', '3',
                                    label='Abgene Plate')
 
-    # TIPRACKS
+    # TIPRACK
     tipracks = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
                 for slot in ['6', '9']]
 
@@ -61,6 +61,12 @@ def run(ctx: protocol_api.ProtocolContext):
             ctx.pause("Replace tip racks on Slots 6 and 9")
             pip.reset_tipracks()
             pick_up()
+
+    def pre_wet(vol, well):
+        ctx.comment('PRE-WET')
+        p20.aspirate(vol, well, rate=0.5)
+        p20.dispense(vol, well, rate=0.5)
+        ctx.comment('DONE PRE-WET')
 
     # MAPPING
     slot_source = 0
@@ -86,34 +92,32 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.comment('\n\nMOVING WATER TO PLATE\n')
     pick_up(p20)
     for water_well, the in zip(water_plate.wells(), all_rows):
-        p20.aspirate(int(the[transfer_vol_water]), water_well)
-        p20.dispense(int(the[transfer_vol_water]),
-                     ctx.loaded_labwares[
-                     int(the[slot_dest])
-                     ].wells_by_name()[
-                     the[dest_well]
-                     ])
+        if the[transfer_vol_water].lower() == 'x':
+            continue
+        vol = int(the[transfer_vol_water])
+        dest = ctx.loaded_labwares[int(the[slot_dest])].wells_by_name()[
+                                    the[dest_well]]
+        pre_wet(vol, water_well)
+        p20.aspirate(vol, water_well)
+        p20.dispense(vol, dest)
     p20.drop_tip()
 
     ctx.comment('\n\nMOVING RNA TO PLATE\n')
     for the in all_rows:
+        if the[transfer_vol_rna].lower() == 'x':
+            continue
+        vol = int(the[transfer_vol_rna])
+        source = ctx.loaded_labwares[int(the[slot_source])].wells_by_name()[
+                                        the[source_well]]
+        dest = ctx.loaded_labwares[int(the[slot_dest])].wells_by_name()[
+                                    the[dest_well]]
+
         pick_up(p20)
-        p20.aspirate(int(the[transfer_vol_rna]),
-                     ctx.loaded_labwares[
-                     int(the[slot_source])
-                     ].wells_by_name()[
-                     the[source_well]
-                     ])
-        p20.dispense(int(the[transfer_vol_rna]),
-                     ctx.loaded_labwares[
-                     int(the[slot_dest])
-                     ].wells_by_name()[
-                     the[dest_well]
-                     ])
-        p20.blow_out(ctx.loaded_labwares[int(the[slot_dest])].wells_by_name()[
-                    the[dest_well]].top(z=-5))
-        p20.touch_tip()
+        pre_wet(vol, source)
+        p20.aspirate(vol, source)
+        p20.dispense(vol, dest)
         p20.drop_tip()
+        ctx.comment('\n')
 
     ctx.pause('''
                  RNA and water on Thermocycler Plate.
@@ -130,12 +134,9 @@ def run(ctx: protocol_api.ProtocolContext):
     mmx = mmx_plate.rows()[0][0]
     for col in tc_plate.rows()[0][:num_col]:
         pick_up(m20)
-        m20.aspirate(4, mmx)
-        m20.dispense(4, col)
+        m20.aspirate(4, mmx, rate=0.5)
+        m20.dispense(4, col, rate=0.5)
         m20.mix(4, 12, col, rate=0.5)
-        m20.blow_out(ctx.loaded_labwares[int(the[slot_dest])].wells_by_name()[
-                    the[dest_well]].top(z=-5))
-        m20.touch_tip()
         m20.drop_tip()
 
     ctx.comment('\n\nRUN THERMOCYCLER PROFILE\n')
