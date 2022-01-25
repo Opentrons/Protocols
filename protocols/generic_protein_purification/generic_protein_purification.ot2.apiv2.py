@@ -38,7 +38,7 @@ def get_values(*names):
                         "n_wash_mixes":5,
                         "n_elution_mixes":5,
                         "incubation_time":2,
-                        "n_bead_mixes":5
+                        "n_bead_mixes":5,
                         "sds_buffer_vol":30}
                         """)
     param_list = [_all_values[n] for n in names]
@@ -188,8 +188,11 @@ def run(ctx: protocol_api.ProtocolContext):
     sample_plate = mag_mod.load_labware(sample_plate_lname)
 
     # TODO: Check that sample well is large enough for lysis reaction
-    # after NaCl addition
+    # (including NaCl addition if used)
     sample_well = sample_plate.wells()[0]
+    if total_vol_after_bead_adddn > sample_well.max_volume:
+        raise Exception("The sample wells are too small to handle the " +
+                        "volumes of reagents")
 
     dest_plate = None
     if dest_temp_mod_lname != "None":
@@ -636,3 +639,4 @@ def run(ctx: protocol_api.ProtocolContext):
                     "target plate\n")
         transfer_plate_to_plate(elution_buf_vol, sample_plate, dest_plate)
         ctx.comment("\n\n~~~~~ End of protocol ~~~~~\n")
+        import pdb; pdb.set_trace()
