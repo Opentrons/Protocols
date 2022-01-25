@@ -8,7 +8,6 @@ metadata = {
 }
 
 
-
 def run(ctx: protocol_api.ProtocolContext):
 
     [
