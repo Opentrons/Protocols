@@ -551,7 +551,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # Mixing the beads in the bead well
     pick_up(l_pip)
-    l_pip.mix(5, l_pip.max_volume, bead_well)
+    l_pip.mix(n_bead_mixes, l_pip.max_volume, bead_well)
 
     ctx.comment("\n\nTransferring bead solution to sample wells and mixing")
     pip, pip_is_multi = choose_pipette(bead_volume, True)
