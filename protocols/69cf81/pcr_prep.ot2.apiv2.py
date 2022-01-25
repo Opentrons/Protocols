@@ -10,16 +10,15 @@ metadata = {
 
 def run(ctx):
 
-    [num_samples, num_primers, res_type, tip_type, p20_multi_mount,
+    [num_samples, num_primers, res_type, tube_type, tip_type, p20_multi_mount,
      p20_single_mount] = get_values(  # noqa: F821
-     'num_samples', 'num_primers', 'res_type', 'tip_type', 'p20_multi_mount',
-     'p20_single_mount')
+     'num_samples', 'num_primers', 'res_type', 'tube_type', 'tip_type',
+     'p20_multi_mount', 'p20_single_mount')
 
     # labware
     pcr_plate = ctx.load_labware('thermofishermicroamp_96_wellplate_200ul',
                                  '1', 'destination PCR plate')
-    primer_rack = ctx.load_labware(
-        'opentrons_24_aluminumblock_nest_1.5ml_snapcap', '2', 'primer rack')
+    primer_rack = ctx.load_labware(tube_type, '2', 'primer rack')
     sample_plate = ctx.load_labware('thermofishermicroamp_96_wellplate_200ul',
                                     '4', 'source sample plate')
     tipracks20s = [ctx.load_labware('opentrons_96_tiprack_20ul', '3')]
