@@ -12,17 +12,17 @@ metadata = {
 def run(ctx):
 
     [m20_mount, m300_mount, samples,
-     temp_mod_a, temp_mod_b, temp_mod_c,
-     temp_a_part1, temp_b_part1, temp_c_part1,
-     temp_a_part2, temp_b_part2, temp_c_part2,
+     temp_mod_s1_lname, temp_mod_s4_lname, temp_mod_s7_lname,
+     temp_s1_part1, temp_s4_part1, temp_s7_part1,
+     temp_s1_part2, temp_s4_part2, temp_s7_part2,
      samples_loadname, reagent1_loadname, reagent2_loadname,
      indexing_plate_loadname, reservoir_loadname, ethanol_res_loadname,
      primer_loadname] = \
         get_values(  # noqa: F821
         "m20_mount", "m300_mount", "samples",
-        "temp_mod_a", "temp_mod_b", "temp_mod_c",
-        "temp_a_part1", "temp_b_part1", "temp_c_part1",
-        "temp_a_part2", "temp_b_part2", "temp_c_part2",
+        "temp_mod_s1_lname", "temp_mod_s4_lname", "temp_mod_s7_lname",
+        "temp_s1_part1", "temp_s4_part1", "temp_s7_part1",
+        "temp_s1_part2", "temp_s4_part2", "temp_s7_part2",
         "samples_loadname", "reagent1_loadname", "reagent2_loadname",
         "indexing_plate_loadname", "reservoir_loadname",
         "ethanol_res_loadname", "primer_loadname")
@@ -30,9 +30,6 @@ def run(ctx):
     cols = math.ceil(samples/8)
 
     # Deck placement: slots
-    slot_a = 1
-    slot_b = 4
-    slot_c = 7
     mag_slot = 3
     m20_tip_slots = [10, 11]
     m300_tip_slots = [8, 9]
@@ -42,8 +39,8 @@ def run(ctx):
     temp_mod_list = []
 
     for temp_mod, slot in \
-            zip([temp_mod_a, temp_mod_b, temp_mod_c],
-                [slot_a, slot_b, slot_c]):
+            zip([temp_mod_s1_lname, temp_mod_s4_lname, temp_mod_s7_lname],
+                ['1', '4', '7']):
         if temp_mod:
             temp_mod_list.append((ctx.load_module(temp_mod, slot)))
         else:
@@ -59,10 +56,10 @@ def run(ctx):
     labware_list = []
     for temp_mod, load_name, slot in \
             (zip([temperature_module_a, temperature_module_b,
-                  temperature_module_c],
+                  temperature_module_c, None],
                  [samples_loadname, reagent1_loadname,
-                  reagent2_loadname],
-                 [slot_a, slot_b, slot_c])):
+                  reagent2_loadname, reservoir_loadname],
+                 ['1', '4', '7', '2'])):
         if temp_mod:
             labware_list.append(temp_mod.load_labware(load_name))
         else:
@@ -70,6 +67,8 @@ def run(ctx):
     temp_plate_a_samples = labware_list[0]
     temp_plate_b_reagent1 = labware_list[1]
     reagent2_plate = labware_list[2]
+    reservoir = labware_list[3]
+    reservoir_loadname
 
     [temp_plate_a_samples, temp_plate_b_reagent1, reagent2_plate] = \
         [labware_list[0], labware_list[1], labware_list[2]]
@@ -185,9 +184,11 @@ def run(ctx):
 
     # Protocol Steps
     # Set both Temp Mods to 4C
-    temperature_module_a.set_temperature(temp_a_part1)
-    temperature_module_b.set_temperature(temp_b_part1)
-    temperature_module_b.set_temperature(temp_c_part1)
+    for tmod, temp in zip([temperature_module_a, temperature_module_b,
+                           temperature_module_c],
+                          [temp_s1_part1, temp_s4_part1, temp_s7_part1]):
+        if tmod is not None:
+            tmod.set_temperature(temp)
 
     # Step 1: Enzymatic reaction e.g. end repair or barcoding
     # Step 1.1: Transfer Reagent 1 to Samples
@@ -221,14 +222,12 @@ def run(ctx):
     labware_list = []
     temp_mod_list = []
 
-    for slot, temp_mod_loadname, load_name in zip([slot_a, slot_b, slot_c,
+    for slot, temp_mod_loadname, load_name in zip(['4', '7',
                                                   ethanol_slot],
-                                                  [temp_mod_a,
-                                                  temp_mod_b,
-                                                  temp_mod_c,
+                                                  [temp_mod_s4_lname,
+                                                  temp_mod_s7_lname,
                                                   None],
-                                                  [reservoir_loadname,
-                                                  primer_loadname,
+                                                  [primer_loadname,
                                                   indexing_plate_loadname,
                                                   ethanol_res_loadname]):
         del(ctx.deck[slot])
@@ -261,9 +260,14 @@ def run(ctx):
 
     # Continue Protocol with DNA purification using SPRI
     # Set temperatures for part 2
-    temperature_module_a.set_temperature(temp_a_part2)
-    temperature_module_b.set_temperature(temp_b_part2)
-    temperature_module_b.set_temperature(temp_c_part2)
+    temperature_module_a.set_temperature(temp_s1_part2)
+    temperature_module_b.set_temperature(temp_s4_part2)
+    temperature_module_b.set_temperature(temp_s7_part2)
+    for tmod, temp in zip([temperature_module_a, temperature_module_b,
+                           temperature_module_c],
+                          [temp_s1_part2, temp_s4_part2, temp_s7_part2]):
+        if tmod is not None:
+            tmod.set_temperature(temp)
     # Step 3: Add SPRI solution to Samples
     for col in mag_plate_wells:
         pick_up(m300)

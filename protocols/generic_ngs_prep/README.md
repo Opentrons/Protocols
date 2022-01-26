@@ -5,14 +5,27 @@
 
 ## Categories
 * NGS Library Prep
+  * Generic
 
 ## Description
 This protocol performs a generic NGS Library Prep. It utilizes up to three temperature modules in Slot 1, 4 and 7 for the cooling of reagents. It also utilizes the magnetic module for bead based purification of samples.
 
-Explanation of complex parameters below:
-* `P20 Multichannel GEN2 Mount Position`: Choose the mount position of the P20 Multichannel GEN2 pipette.
-* `P300 Multichannel GEN2 Mount Position`: Choose the mount position of the P300 Multichannel GEN2 pipette.
+Explanation of parameters below:
+* `P20 Multichannel GEN2 Mount Position`: Choose the mount position of the P20 Multichannel GEN2 pipette. (left or right)
+* `P300 Multichannel GEN2 Mount Position`: Choose the mount position of the P300 Multichannel GEN2 pipette. (left or right
 * `Number of Samples`: Enter total number of samples in the protocol run. **Note: Because both pipettes are 8-channels, the number of samples should be a multiple of 8 or close if possible, otherwise it will use up additional tips for an entire column.**
+* `Temperature module in slot 1` (Optional parameter) Specify which temperature module to use in slot 1 (or None). This temperature module would allow the user to control the temperature of the sample plate in part 1 of the protocol.
+*  `Temperature module in slot 1` (Optional parameter) Specify which temperature module to use in slot 4 (or None). This temperature module would allow the user to control the temperature of reagent plate 1 in part 1 of the protocol, and the primer plate in part 2.
+*  `Temperature module in slot 7` (Optional parameter) Specify which temperature module to use in slot 7 (or None). This temperature module would allow the user to control the temperature of reagent plate 2 in part 1 of the protocol, and the Indexing plate in part 2.
+* `Sample plate` The sample plate holds DNA samples and is the site of mixing with buffers and reagents in part 1.
+* `Reagent 1 plate` The reagent 1 plate holds the first mixing reagent in column 1 (e.g. a buffer or an enzyme) to be mixed with the samples
+* `Reagent 2 plate` The reagent 2 plate holds the second mixing reagent in column 1 (e.g. a buffer or an enzyme) to be mixed with the samples.
+* `Primer plate` Contains primers to be mixed with DNA samples in step 2
+* `Reagent reservoir` The (12 well) reservoir contains paramagnetic bead solution, PCR buffer, and PCR mastermix.
+* `Ethanol reservoir` Ethanol solution for washing beads, e.g. 80:20 ethanol:water. Uses 180 µL per sample
+* `Number of Samples` The number of DNA samples (up to 96)
+* `Temperature (deg C) for temperature module on slot x in part 1` These parameters for each of the temperature modules allow the user to set the temperatures for all/any temperature module in part 1.
+* `Temperature (deg C) for temperature module on slot x in part 2` These parameters for each of the temperature modules allow the user to set the temperatures for all/any temperature module in part 2.
 
 ---
 
@@ -51,22 +64,24 @@ Explanation of complex parameters below:
 **Note: The deck setup changes throughout the course of the protocol. The initial calibration layout may differ from the final setup. Please follow the initial calibration setup and any instructions during the pauses.**
 
 #### Step 1
-* Slot 1: Temperature Module A + Sample Plate
+* Slot 1: Temperature Module slot 1 + Sample Plate
+* Slot 2: Reagent reservoir (SPRI, Buffer I, Mastermix)
 * Slot 3: Magnetic Module (Empty)
-* Slot 4: Temperature Module B + Reagent #1 Plate
+* Slot 4: Temperature Module slot 4 + Reagent 1 Plate
 * Slot 6: 1 Well Reservoir (Ethanol)
-* Slot 7: Temperature Module C + Reagent 2 plate
+* Slot 7: Temperature Module slot 7 + Reagent 2 plate
 * Slot 8: Opentrons 200 uL Filter Tips
 * Slot 9: Opentrons 200 uL Filter Tips
 * Slot 10: Opentrons 20 uL Filter Tips
 * Slot 11: Opentrons 20 uL Filter Tips
 
 #### Step 2
-* Slot 1: Temperature Module A + Reagent reservoir (SPRI, Buffer I, Mastermix)
+* Slot 1: Temperature Module slot 1
+* Slot 2: Reagent reservoir (SPRI, Buffer I, Mastermix)
 * Slot 3: Magnetic Module + Sample plate
-* Slot 4: Temperature Module B + Primers
+* Slot 4: Temperature Module slot 4 + Primers
 * Slot 6: 1 Well Reservoir (Ethanol Reservoir)
-* Slot 7: Temperature Module C + Indexing plate
+* Slot 7: Temperature Module slot 7 + Indexing plate
 * Slot 8: Opentrons 200 uL Filter Tips
 * Slot 9: Opentrons 200 uL Filter Tips
 * Slot 10: Opentrons 20 uL Filter Tips
