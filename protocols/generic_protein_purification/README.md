@@ -37,22 +37,20 @@ The protocol is based on Promega's MagneHis™ system, but should work for any o
 ---
 
 ### Deck Setup
-* If the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/generic_protein_purification/deck.jpg)
 
 ### Reagent Setup
-* This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:
-* Reservoir 1: slot 5
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res1_v2.png)
-* Reservoir 2: slot 2  
-![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res2.png)
+![Reagent reservoir](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/generic_protein_purification/deck.jpg)
 
 ---
 
 ### Protocol Steps
-1. This section should consist of a numerical outline of the protocol steps, somewhat analogous to the steps outlined by the user in their custom protocol submission.
-2. example step: Samples are transferred from the source tuberacks on slots 1-2 to the PCR plate on slot 3, down columns and then across rows.
-3. example step: Waste is removed from each sample on the magnetic module, ensuring the bead pellets are not contacted by the pipette tips.
+The protocol is based on [MagneHis protein purification protocol](https://www.promega.com/-/media/files/resources/protocols/technical-manuals/0/magnehis-protein-purification-system-protocol.pdf?rev=cbf49f7cf6fa4696b965c92c1f8e9c72&sc_lang=en)
+1. Bacterial lysis: Lysis buffer is added to all the sample wells. If the DNAse step is activated DNAse will be added to each well as well. If it's not activated DNAse I should be added to the lysis buffer by the user before running the protocol (1 µL per mL of bacterial media)
+2. The protocol is paused to allow the user to shake the sample plate for 10-20 minutes at room temperature for the lysis reaction to complete
+3. Binding: The paramagnetic beads are added to the samples, along with sodium chloride, if desired. The user has an option to pause the protocol before this step in order to vortex the beads in order to resuspend them. The user may also specify a number of mixes with the pipettes to help homogenize the solution.
+4. The beads are washed with wash buffer (and optionally NaCl) and the supernatant is removed while the magnets on the magnetic module are engaged. This is repeated as many times as the user wants.
+5. Elution: Finally the wash supernatant is removed while the magnets are engaged and elution buffer (or optionally: SDS buffer replaces the EB if the user desires to run the samples on a gel) is added. The bead supernatant is transferred to the target plate.
 
 ### Process
 1. Input your protocol parameters above.
