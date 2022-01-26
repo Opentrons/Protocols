@@ -3,13 +3,13 @@
       "type": "textFile",
       "label": "Input CSV File",
       "name": "csv_file",
-      "default": "Sample ID,Slot number ,Rack position,Wellplate A position,Wellplate A well position\nSample1,1,1,3,A1\nSample2,1,2,3,A2\nSample3,1,3,3,A3\nSample4,1,4,3,A4\nSample5,1,5,3,A5\nSample6,1,6,3,A6\nSample7,1,7,3,A7\nSample8,1,8,3,A8\nSample9,1,9,3,A9\nSample10,1,10,3,A10\nSample11,1,11,3,A11\nSample12,1,12,3,A12\nSample13,1,13,3,B1\nSample14,1,14,3,B2\nSample15,1,15,3,B3\nSample16,1,16,3,B4\nSample17,1,17,3,B5\nSample18,1,18,3,B6\nSample19,1,19,3,B7\nSample20,1,20,3,B8\nSample21,1,21,3,B9\nSample22,1,22,3,B10\nSample23,1,23,3,B11\nSample24,1,24,3,B12\nSample25,2,1,3,C1\nSample26,2,2,3,C2\nSample27,2,3,3,C3\nSample28,2,4,3,C4\nSample29,2,5,3,C5\nSample30,2,6,3,C6\nSample31,2,7,3,C7\nSample32,2,8,3,C8\nSample33,2,9,3,C9\nSample34,2,10,3,C10\nSample35,2,11,3,C11\nSample36,2,12,3,C12\nSample37,2,13,3,D1\nSample38,2,14,3,D2\nSample39,2,15,3,D3\nSample40,2,16,3,D4\nSample41,2,17,3,D5\nSample42,2,18,3,D6\nSample43,2,19,3,D7\nSample44,2,20,3,D8\nSample45,2,21,3,D9\nSample46,2,22,3,D10\nSample47,2,23,3,D11\nSample48,2,24,3,D12\nSample49,4,1,3,E1\nSample50,4,2,3,E2\nSample51,4,3,3,E3\nSample52,4,4,3,E4\nSample53,4,5,3,E5\nSample54,4,6,3,E6\nSample55,4,7,3,E7\nSample56,4,8,3,E8\nSample57,4,9,3,E9\nSample58,4,10,3,E10\nSample59,4,11,3,E11\nSample60,4,12,3,E12\nSample61,4,13,3,F1\nSample62,4,14,3,F2\nSample63,4,15,3,F3\nSample64,4,16,3,F4\nSample65,4,17,3,F5\nSample66,4,18,3,F6\nSample67,4,19,3,F7\nSample68,4,20,3,F8\nSample69,4,21,3,F9\nSample70,4,22,3,F10\nSample71,4,23,3,F11\nSample72,4,24,3,F12\nSample73,5,1,3,G1\nSample74,5,2,3,G2\nSample75,5,3,3,G3\nSample76,5,4,3,G4\nSample77,5,5,3,G5\nSample78,5,6,3,G6\nSample79,5,7,3,G7\nSample80,5,8,3,G8\nSample81,5,9,3,G9\nSample82,5,10,3,G10\nSample83,5,11,3,G11\nSample84,5,12,3,G12\nSample85,5,13,3,H1\nSample86,5,14,3,H2\nSample87,5,15,3,H3\nSample88,5,16,3,H4\nSample89,5,17,3,H5\nSample90,5,18,3,H6\nSample91,5,19,3,H7\nSample92,5,20,3,H8\nSample93,5,21,3,H9\nSample94,5,22,3,H10\nSample95,5,23,3,H11\nSample96,5,24,3,H12\n"
+      "default": "Sample ID,Slot number,Rack position,Source_pickup_height_from_top,Wellplate A position,Wellplate A well position,Wellplate B position,Wellplate B well position\nWater,1,1,41,3,A1,6,A1"
     },
     {
       "type": "int",
       "label": "Sample Volume",
       "name": "sample_vol",
-      "default": 50
+      "default": 30
     },
     {
       "type": "dropDown",
@@ -39,43 +39,28 @@
         ]
       },
       {
-        "type": "dropDown",
-        "label": "Blowout After Dispensing Sample",
-        "name": "blow_out_after_dispense",
-        "options": [
-          { "label": "Yes", "value": true },
-          { "label": "No", "value": false }
-        ]
-      },
-      {
         "type": "float",
         "label": "Sample Aspiration Flow Rate (uL/s)",
         "name": "asp_rate",
-        "default": 94
+        "default": 6
       },
       {
         "type": "float",
         "label": "Sample Dispense Flow Rate (uL/s)",
         "name": "disp_rate",
-        "default": 94
+        "default": 6
       },
       {
         "type": "float",
         "label": "MeCN Aspiration Flow Rate (uL/s)",
         "name": "asp_rate_multi",
-        "default": 94
+        "default": 10
       },
       {
         "type": "float",
         "label": "MeCN Dispense Flow Rate (uL/s)",
         "name": "disp_rate_multi",
-        "default": 94
-      },
-      {
-        "type": "float",
-        "label": "MeCN Dispense Flow Rate (uL/s)",
-        "name": "disp_rate_multi",
-        "default": 94
+        "default": 10
       },
       {
         "type": "dropDown",
@@ -85,5 +70,47 @@
           { "label": "Yes, use", "value": true },
           { "label": "No, do not use", "value": false }
         ]
+      },
+      {
+        "type": "int",
+        "label": "Dispense Height in Destination Well",
+        "name": "disp_height",
+        "default": 12.5
+      },
+      {
+        "type": "int",
+        "label": "PL Blowout Height",
+        "name": "pl_blowout_height",
+        "default": 10
+      },
+      {
+        "type": "int",
+        "label": "Airgap (microliters)",
+        "name": "airgap",
+        "default": 10
+      },
+      {
+        "type": "int",
+        "label": "MeCN Volume",
+        "name": "mecn_volume",
+        "default": 90
+      },
+      {
+        "type": "int",
+        "label": "Reservoir Column (1-12)",
+        "name": "reservoir_loc",
+        "default": 1
+      },
+      {
+        "type": "int",
+        "label": "MeCN Dilution Location",
+        "name": "mecn_dil_loc",
+        "default": 3
+      },
+      {
+        "type": "int",
+        "label": "Multi-Channel starting tip pick-up column (1-12)",
+        "name": "starting_tip_col",
+        "default": 1
       }
   ]

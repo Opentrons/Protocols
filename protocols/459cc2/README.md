@@ -33,10 +33,16 @@ Sample3,1,3,3,A3,6,A3
 * `Acetonitrile Transfer`: Whether to transfer acetonitrile into the plates (Steps 6-8).
 * `P300 Single Channel GEN2 Mount Position`: Select the pipette mount position.
 * `P300 Multi Channel GEN2 Mount Position`: Select the pipette mount position.
-* `Blowout After Dispensing Sample`: Whether to blow out after dispensing sample.
-* `Sample Aspiration Flow Rate (uL/s)`: The flow rate when aspirating liquid.
-* `Sample Dispense Flow Rate (uL/s)`: The flow rate when dispensing liquid for both the samples and MeCN.
-* `Use temperature module`: Specify whether to use the temperature module on slots 3 and 6 with mounted deepwell plates. Note: if using the temperature modules, they should be placed in slots 3, and 6 respectively, in that order depending on running 1 or 2 plates. 
+* `Sample Aspiration/dispense Flow rate`: Specify the flow rate of the sample liquid handling in uL/s.
+* `MeCN Aspiration Flow Rate (uL/s)`: Specify aspiration/dispense flow rate for the multi-channel pipette.
+* `Use Temperature Module`: Specify whether to use the temperature module on slots 3 and 6 with mounted deepwell plates. Note: if using the temperature modules, they should be placed in slots 3, and 6 respectively, in that order depending on running 1 or 2 plates.
+* `Dispense Height in Destination Wells`: In millimeters.
+* `PL Blowout Height`: In millimeters.
+* `Airgap`: In microliters.
+* `Reservoir Location`: Specify which reservoir column the MeCN will transfer to and from.
+* `MeCN Dilution Location`: Specify slot MeCN is held in.
+* `Multi-Channel Starting tip pick-up column (1-12)`: Specify which column on slot 10 tip rack to start picking up tips with the multi-channel pipette. 
+
 
 ---
 
