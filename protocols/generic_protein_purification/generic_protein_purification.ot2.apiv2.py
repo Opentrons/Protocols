@@ -13,8 +13,7 @@ metadata = {
 def get_values(*names):
     import json
     _all_values = \
-        json.loads("""{ "mag_engage_time":5,
-                        "n_samples":36,
+        json.loads("""{ "n_samples":32,
                         "small_pipette_lname":"p20_single_gen2",
                         "large_pipette_lname":"p300_multi_gen2",
                         "small_pipette_tipracks_lname":"opentrons_96_tiprack_20ul",
@@ -23,6 +22,7 @@ def get_values(*names):
                         "destination_plate_lname":"biorad_96_wellplate_200ul_pcr",
                         "sample_plate_lname":"usascientific_96_wellplate_2.4ml_deep",
                         "mag_mod_lname":"magnetic module gen2",
+                        "mag_engage_time":5,
                         "tube_rack_lname":"opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap",
                         "dest_temp_mod_lname":"temperature module gen2",
                         "resv_temp_mod_lname":"temperature module gen2",
@@ -30,16 +30,16 @@ def get_values(*names):
                         "do_SDS_step":"false",
                         "do_DNAse_step":"true",
                         "use_NaCl":"true",
-                        "bead_volume":30.0,
                         "starting_volume":1000.0,
+                        "bead_volume":30.0,
                         "wash_buf_vol":150.0,
                         "elution_buf_vol":100.0,
+                        "sds_buffer_vol":30,
                         "n_washes":3,
                         "n_wash_mixes":5,
                         "n_elution_mixes":5,
                         "incubation_time":2,
-                        "n_bead_mixes":5,
-                        "sds_buffer_vol":30}
+                        "n_bead_mixes":5 }
                         """)
     param_list = [_all_values[n] for n in names]
     return param_list
@@ -166,7 +166,7 @@ def run(ctx: protocol_api.ProtocolContext):
     t_mods = []
     for mod_lname, slot in zip([dest_temp_mod_lname, resv_temp_mod_lname],
                                ['4', '7']):
-        if mod_lname != "None":
+        if mod_lname != "none":
             t_mods.append(ctx.load_module(mod_lname, slot))
     dest_temp_mod, resv_temp_mod = t_mods[0], t_mods[1]
 
