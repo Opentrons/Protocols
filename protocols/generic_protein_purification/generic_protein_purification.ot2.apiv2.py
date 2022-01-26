@@ -158,10 +158,6 @@ def run(ctx: protocol_api.ProtocolContext):
     For all other modules, you can load them on slots 1, 3, 4, 6, 7, 9, 10.
 
     '''
-
-    # import pdb; pdb.set_trace()
-    # load labware
-
     # Load temperature modules (if any)
     t_mods = []
     for mod_lname, slot in zip([dest_temp_mod_lname, resv_temp_mod_lname],
@@ -493,9 +489,6 @@ def run(ctx: protocol_api.ProtocolContext):
     plate_wells_by_row = [well for row in plate.rows() for well in row]
 
     '''
-    # unused
-    # sample_columns = sample_plate.columns()[0:n_columns]
-
     sample_wells = sample_plate.wells()[0:n_samples]
 
     dest_columns = dest_plate.columns()[0:n_columns]
