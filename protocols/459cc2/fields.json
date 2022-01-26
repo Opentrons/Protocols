@@ -9,7 +9,7 @@
       "type": "int",
       "label": "Sample Volume",
       "name": "sample_vol",
-      "default": 50
+      "default": 30
     },
     {
       "type": "dropDown",
@@ -39,43 +39,28 @@
         ]
       },
       {
-        "type": "dropDown",
-        "label": "Blowout After Dispensing Sample",
-        "name": "blow_out_after_dispense",
-        "options": [
-          { "label": "Yes", "value": true },
-          { "label": "No", "value": false }
-        ]
-      },
-      {
         "type": "float",
         "label": "Sample Aspiration Flow Rate (uL/s)",
         "name": "asp_rate",
-        "default": 94
+        "default": 6
       },
       {
         "type": "float",
         "label": "Sample Dispense Flow Rate (uL/s)",
         "name": "disp_rate",
-        "default": 94
+        "default": 6
       },
       {
         "type": "float",
         "label": "MeCN Aspiration Flow Rate (uL/s)",
         "name": "asp_rate_multi",
-        "default": 94
+        "default": 10
       },
       {
         "type": "float",
         "label": "MeCN Dispense Flow Rate (uL/s)",
         "name": "disp_rate_multi",
-        "default": 94
-      },
-      {
-        "type": "float",
-        "label": "MeCN Dispense Flow Rate (uL/s)",
-        "name": "disp_rate_multi",
-        "default": 94
+        "default": 10
       },
       {
         "type": "dropDown",
@@ -85,5 +70,47 @@
           { "label": "Yes, use", "value": true },
           { "label": "No, do not use", "value": false }
         ]
+      },
+      {
+        "type": "int",
+        "label": "Dispense Height in Destination Well",
+        "name": "disp_height",
+        "default": 12.5
+      },
+      {
+        "type": "int",
+        "label": "PL Blowout Height",
+        "name": "pl_blowout_height",
+        "default": 10
+      },
+      {
+        "type": "int",
+        "label": "Airgap (microliters)",
+        "name": "airgap",
+        "default": 10
+      },
+      {
+        "type": "int",
+        "label": "MeCN Volume",
+        "name": "mecn_volume",
+        "default": 90
+      },
+      {
+        "type": "int",
+        "label": "Reservoir Column (1-12)",
+        "name": "reservoir_loc",
+        "default": 1
+      },
+      {
+        "type": "int",
+        "label": "MeCN Dilution Location",
+        "name": "mecn_dil_loc",
+        "default": 3
+      },
+      {
+        "type": "int",
+        "label": "Multi-Channel starting tip pick-up column (1-12)",
+        "name": "starting_tip_col",
+        "default": 1
       }
   ]
