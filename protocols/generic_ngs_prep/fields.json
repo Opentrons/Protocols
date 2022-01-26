@@ -19,32 +19,32 @@
       },
     {
         "type": "dropDown",
-        "label": "Temperature module a",
-        "name": "temp_mod_a",
+        "label": "Temperature module in slot 1",
+        "name": "temp_mod_s1_lname",
         "options": [
+          { "label": "None", "value": null },
           { "label": "Temperature module Gen2", "value": "temperature module gen2" },
-          { "label": "Temperature module Gen1", "value": "temperature module" },
-          { "label": "None", "value": null }
+          { "label": "Temperature module Gen1", "value": "temperature module" }
         ]
       },
     {
         "type": "dropDown",
-        "label": "Temperature module b",
-        "name": "temp_mod_b",
+        "label": "Temperature module in slot 4",
+        "name": "temp_mod_s4_lname",
         "options": [
+          { "label": "None", "value": null },
           { "label": "Temperature module Gen2", "value": "temperature module gen2" },
-          { "label": "Temperature module Gen1", "value": "temperature module" },
-          { "label": "None", "value": null }
+          { "label": "Temperature module Gen1", "value": "temperature module" }
         ]
       },
     {
         "type": "dropDown",
-        "label": "Temperature module c",
-        "name": "temp_mod_c",
+        "label": "Temperature module in slot 7",
+        "name": "temp_mod_s7_lname",
         "options": [
+          { "label": "None", "value": null },
           { "label": "Temperature module Gen2", "value": "temperature module gen2" },
-          { "label": "Temperature module Gen1", "value": "temperature module" },
-          { "label": "None", "value": null }
+          { "label": "Temperature module Gen1", "value": "temperature module" }
         ]
       },
     {
@@ -134,38 +134,38 @@
       },
     {
         "type": "float",
-        "label": "Temperature for temperature modules (deg C)",
-        "name": "temp_a_part1",
+        "label": "Temperature (deg C) for temperature module on slot 1 in part 1",
+        "name": "temp_s1_part1",
         "default": 4.0
       },
     {
         "type": "float",
-        "label": "Temperature for temperature modules (deg C)",
-        "name": "temp_b_part1",
+        "label": "Temperature (deg C) for temperature module on slot 4 in part 1",
+        "name": "temp_s4_part1",
         "default": 4.0
       },
     {
         "type": "float",
-        "label": "Temperature for temperature modules (deg C)",
-        "name": "temp_c_part1",
+        "label": "Temperature (deg C) for temperature module on slot 7 in part 1",
+        "name": "temp_s7_part1",
         "default": 4.0
       },
     {
         "type": "float",
-        "label": "Temperature for temperature modules (deg C)",
-        "name": "temp_a_part2",
+        "label": "Temperature (deg C) for temperature module on slot 1 in part 2",
+        "name": "temp_s1_part2",
         "default": 4.0
       },
     {
         "type": "float",
-        "label": "Temperature for temperature modules (deg C)",
-        "name": "temp_b_part2",
+        "label": "Temperature (deg C) for temperature module on slot 4 in part 2",
+        "name": "temp_s4_part2",
         "default": 4.0
       },
     {
         "type": "float",
-        "label": "Temperature for temperature modules (deg C)",
-        "name": "temp_c_part2",
+        "label": "Temperature (deg C) for temperature module on slot 7 in part 2",
+        "name": "temp_s7_part2",
         "default": 4.0
       }
   ]
