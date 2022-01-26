@@ -1,0 +1,551 @@
+{
+    "content": "from opentrons import protocol_api\nimport math\n\nmetadata = {\n    'protocolName': 'Generic protein purification protocol',\n    'author': 'Opentrons <authoremail@company.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE\n                         # IN SECTION 5.2 OF THE APIV2 \"VERSIONING\"\n}\n\n\ndef get_values(*names):\n    import json\n    _all_values = \\\n        json.loads(\"\"\"{ \"n_samples\":32,\n                        \"small_pipette_lname\":\"p20_single_gen2\",\n                        \"large_pipette_lname\":\"p300_multi_gen2\",\n                        \"small_pipette_tipracks_lname\":\"opentrons_96_tiprack_20ul\",\n                        \"large_pipette_tipracks_lname\":\"opentrons_96_tiprack_300ul\",\n                        \"reservoir_lname\": \"nest_12_reservoir_15ml\",\n                        \"destination_plate_lname\":\"biorad_96_wellplate_200ul_pcr\",\n                        \"sample_plate_lname\":\"usascientific_96_wellplate_2.4ml_deep\",\n                        \"mag_mod_lname\":\"magnetic module gen2\",\n                        \"mag_engage_time\":5,\n                        \"tube_rack_lname\":\"opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap\",\n                        \"dest_temp_mod_lname\":\"temperature module gen2\",\n                        \"resv_temp_mod_lname\":\"temperature module gen2\",\n                        \"do_vortex_pause\":\"true\",\n                        \"do_SDS_step\":\"false\",\n                        \"do_DNAse_step\":\"true\",\n                        \"use_NaCl\":\"true\",\n                        \"starting_volume\":1000.0,\n                        \"bead_volume\":30.0,\n                        \"wash_buf_vol\":150.0,\n                        \"elution_buf_vol\":100.0,\n                        \"sds_buffer_vol\":30,\n                        \"n_washes\":3,\n                        \"n_wash_mixes\":5,\n                        \"n_elution_mixes\":5,\n                        \"incubation_time\":2,\n                        \"n_bead_mixes\":5 }\n                        \"\"\")\n    param_list = [_all_values[n] for n in names]\n    return param_list\n\n\ndef run(ctx: protocol_api.ProtocolContext):\n\n    [\n        mag_engage_time,\n        n_samples,\n        small_pipette_lname,\n        large_pipette_lname,\n        small_pipette_tipracks_lname,\n        large_pipette_tipracks_lname,\n        reservoir_lname,\n        destination_plate_lname,\n        sample_plate_lname,\n        mag_mod_lname,\n        tube_rack_lname,\n        dest_temp_mod_lname,\n        resv_temp_mod_lname,\n        do_vortex_pause,\n        do_SDS_step,\n        do_DNAse_step,\n        use_NaCl,\n        bead_volume,\n        starting_volume,\n        wash_buf_vol,\n        elution_buf_vol,\n        n_washes,\n        n_wash_mixes,\n        n_elution_mixes,\n        incubation_time,\n        n_bead_mixes,\n        sds_buffer_vol\n    ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)\n        \"mag_engage_time\",\n        \"n_samples\",\n        \"small_pipette_lname\",\n        \"large_pipette_lname\",\n        \"small_pipette_tipracks_lname\",\n        \"large_pipette_tipracks_lname\",\n        \"reservoir_lname\",\n        \"destination_plate_lname\",\n        \"sample_plate_lname\",\n        \"mag_mod_lname\",\n        \"tube_rack_lname\",\n        \"dest_temp_mod_lname\",\n        \"resv_temp_mod_lname\",\n        \"do_vortex_pause\",\n        \"do_SDS_step\",\n        \"do_DNAse_step\",\n        \"use_NaCl\",\n        \"bead_volume\",\n        \"starting_volume\",\n        \"wash_buf_vol\",\n        \"elution_buf_vol\",\n        \"n_washes\",\n        \"n_wash_mixes\",\n        \"n_elution_mixes\",\n        \"incubation_time\",\n        \"n_bead_mixes\",\n        \"sds_buffer_vol\"\n        )\n\n    # define all custom variables above here with descriptions:\n\n    # Calculate reagent volumes\n    # See docs for calculations\n    # 10:1, v_lysis = v_s/9, e.g. for v_s = 1000 uL, v_lysis = 1000/9=111 uL\n    lysis_buffer_vol = starting_volume/9\n    dnaseI_vol = starting_volume/1000  # 1 uL per mL\n    total_lysis_vol = starting_volume + lysis_buffer_vol + dnaseI_vol\n\n    nacl_first_step_vol = total_lysis_vol/7\n    nacl_wash_buf_vol = wash_buf_vol/7\n\n    total_vol_after_bead_adddn = round(total_lysis_vol + bead_volume, 1)\n    if use_NaCl:\n        total_vol_after_bead_adddn = round(total_vol_after_bead_adddn +\n                                           nacl_first_step_vol, 1)\n\n    n_columns = math.ceil(n_samples/8)\n\n    def str_to_bool(str):\n        return True if str.lower().strip() == \"true\" else False\n\n    # Convert string booleans to Python booleans\n    do_vortex_pause = str_to_bool(do_vortex_pause)\n    do_SDS_step = str_to_bool(do_SDS_step)\n    do_DNAse_step = str_to_bool(do_DNAse_step)\n    use_NaCl = str_to_bool(use_NaCl)\n\n    # Error checking\n\n    # If DNAse I is being added from a tube we need to make sure that\n    # a) we have a single pipette loaded and b) that dnaseI_vol > pipette min.\n    # volume\n    if ((\"single\" not in small_pipette_lname and\n         \"single\" not in large_pipette_lname) and do_DNAse_step):\n        raise Exception(\"No single channel pipette for DNAse I distribution \" +\n                        \"selected\")\n    # More error checking on this in the pipette loading section\n\n    # load modules\n\n    '''\n\n    Add your modules here with:\n\n    module_name = ctx.load_module('{module_loadname}', '{slot number}')\n\n    Note: if you are loading a thermocycler, you do not need to specify\n    a slot number - thermocyclers will always occupy slots 7, 8, 10, and 11.\n\n    For all other modules, you can load them on slots 1, 3, 4, 6, 7, 9, 10.\n\n    '''\n\n    # import pdb; pdb.set_trace()\n    # load labware\n\n    # Load temperature modules (if any)\n    t_mods = []\n    for mod_lname, slot in zip([dest_temp_mod_lname, resv_temp_mod_lname],\n                               ['4', '7']):\n        if mod_lname != \"none\":\n            t_mods.append(ctx.load_module(mod_lname, slot))\n    dest_temp_mod, resv_temp_mod = t_mods[0], t_mods[1]\n\n    # Load the magnetic module\n    mag_mod = ctx.load_module(mag_mod_lname, '1')\n\n    '''\n\n    Add your labware here with:\n\n    labware_name = ctx.load_labware('{loadname}', '{slot number}')\n\n    If loading labware on a module, you can load with:\n\n    labware_name = module_name.load_labware('{loadname}')\n    where module_name is defined above.\n\n    '''\n    sample_plate = mag_mod.load_labware(sample_plate_lname)\n\n    sample_well = sample_plate.wells()[0]\n    if total_vol_after_bead_adddn > sample_well.max_volume:\n        raise Exception(\"The sample wells are too small to handle the \" +\n                        \"volumes of reagents\")\n\n    dest_plate = None\n    if dest_temp_mod_lname != \"None\":\n        dest_plate = dest_temp_mod.load_labware(destination_plate_lname)\n    else:\n        dest_plate = ctx.load_labware(destination_plate_lname, '4')\n\n    reservoir = None\n    if resv_temp_mod_lname != \"None\":\n        reservoir = resv_temp_mod.load_labware(reservoir_lname)\n    else:\n        reservoir = ctx.load_labware(reservoir_lname, '7')\n\n    dnaseI_tuberack = None\n    if do_DNAse_step:\n        dnaseI_tuberack = ctx.load_labware(tube_rack_lname, '10')\n\n    # load tipracks\n    '''\n\n    Add your tipracks here as a list:\n\n    For a single tip rack:\n\n    tiprack_name = [ctx.load_labware('{loadname}', '{slot number}')]\n\n    For multiple tip racks of the same type:\n\n    tiprack_name = [ctx.load_labware('{loadname}', 'slot')\n                     for slot in ['1', '2', '3']]\n\n    If two different tipracks are on the deck, use convention:\n    tiprack[number of microliters]\n    e.g. tiprack10, tiprack20, tiprack200, tiprack300, tiprack1000\n\n    '''\n    tipracks_large = [ctx.load_labware(large_pipette_tipracks_lname, slot)\n                      for slot in ['5', '8', '11']]\n    tipracks_small = [ctx.load_labware(small_pipette_tipracks_lname, slot)\n                      for slot in ['6', '9']]\n\n    # load instrument\n\n    '''\n    Nomenclature for pipette:\n\n    use 'p'  for single-channel, 'm' for multi-channel,\n    followed by number of microliters.\n\n    p20, p300, p1000 (single channel pipettes)\n    m20, m300 (multi-channel pipettes)\n\n    If loading pipette, load with:\n\n    ctx.load_instrument(\n                        '{pipette api load name}',\n                        pipette_mount (\"left\", or \"right\"),\n                        tip_racks=tiprack\n                        )\n    '''\n    l_pip = ctx.load_instrument(\n                        large_pipette_lname,\n                        \"left\",\n                        tip_racks=tipracks_large\n                        )\n\n    s_pip = ctx.load_instrument(\n                        small_pipette_lname,\n                        \"right\",\n                        tip_racks=tipracks_small\n                        )\n\n    # pipette functions   # INCLUDE ANY BINDING TO CLASS\n\n    '''\n\n    Define all pipette functions, and class extensions here.\n    These may include but are not limited to:\n\n    - Custom pickup functions\n    - Custom drop tip functions\n    - Custom Tip tracking functions\n    - Custom Trash tracking functions\n    - Slow tip withdrawal\n\n    For any functions in your protocol, describe the function as well as\n    describe the parameters which are to be passed in as a docstring below\n    the function (see below).\n\n    def pick_up(pipette):\n        \"\"\"`pick_up()` will pause the protocol when all tip boxes are out of\n        tips, prompting the user to replace all tip racks. Once tipracks are\n        reset, the protocol will start picking up tips from the first tip\n        box as defined in the slot order when assigning the labware definition\n        for that tip box. `pick_up()` will track tips for both pipettes if\n        applicable.\n\n        :param pipette: The pipette desired to pick up tip\n        as definited earlier in the protocol (e.g. p300, m20).\n        \"\"\"\n        try:\n            pipette.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            ctx.pause(\"Replace empty tip racks\")\n            pipette.reset_tipracks()\n            pipette.pick_up_tip()\n\n    '''\n    def pick_up(pipette):\n        \"\"\"`pick_up()` will pause the protocol when all tip boxes are out of\n        tips, prompting the user to replace all tip racks. Once tipracks are\n        reset, the protocol will start picking up tips from the first tip\n        box as defined in the slot order when assigning the labware definition\n        for that tip box. `pick_up()` will track tips for both pipettes if\n        applicable.\n\n        :param pipette: The pipette desired to pick up tip\n        as definited earlier in the protocol (e.g. p300, m20).\n        \"\"\"\n        try:\n            pipette.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            ctx.pause(\"Replace empty tip racks\")\n            pipette.reset_tipracks()\n            pipette.pick_up_tip()\n\n    # helper functions\n    '''\n    Define any custom helper functions outside of the pipette scope here, using\n    the convention seen above.\n\n    e.g.\n\n    def remove_supernatant(vol, index):\n        \"\"\"\n        function description\n\n        :param vol:\n\n        :param index:\n        \"\"\"\n\n\n    '''\n    def choose_pipette(vol, multi_action=True):\n        \"\"\"\n        Choose pipette selects an appropriate pipette based on\n        the volume involved, and whether the pipette action involves all\n        8 columns or a single well.\n\n        :param vol: The volume to use this pipette with\n        :param multi_action: True if the pipette action will be done with\n        an 8-channel pipette, i.e. involving an 8-channel source and/or target\n\n        \"\"\"\n        nonlocal s_pip, l_pip\n        s_pip_is_multi = True if s_pip.channels == 8 else False\n        l_pip_is_multi = True if l_pip.channels == 8 else False\n\n        if s_pip.min_volume > vol:\n            raise Exception((\"The volume ({} uL)is too small to handle for \" +\n                             \"either pipette, please re-examine your\" +\n                             \"parameters\").format(vol))\n\n        # The preference is for the multi-channel pipette with the largest\n        # volume capability while the least preferred is the smallest volume\n        # single channel pipette.\n        if multi_action:\n            # Prefer the multi-channel pipettes if available\n            if l_pip_is_multi and l_pip.min_volume < vol:\n                return l_pip, True\n            elif s_pip_is_multi:\n                return s_pip, True\n            # If they are not, let a single channel pipette do the job of a\n            # multi-channel pipette\n            elif not l_pip_is_multi and l_pip.min_volume < vol:\n                return l_pip, False\n            else:\n                return s_pip, False\n        else:\n            if not l_pip_is_multi and l_pip.min_volume < vol:\n                return l_pip, False\n            elif not s_pip_is_multi:\n                return s_pip, False\n            else:\n                raise Exception((\"No approriate single channel pipette is \" +\n                                \"loaded for the volume of {} uL\".format(vol)))\n\n    def transfer(pip, volume, source, dest, **kwargs):\n        \"\"\"\n        A wrapper function for InstrumentContext.transfer that handles\n        labware.OutOfTipsError by asking the user to refill empty tipracks.\n\n        :param pip: The pipette to user for the transfer\n\n        Other parameters: See class\n        opentrons.protocol_api.contexts.InstrumentContext\n        \"\"\"\n        try:\n            pip.transfer(volume, source, dest, kwargs)\n        except protocol_api.labware.OutOfTipsError:\n            ctx.pause(\"\\n\\nReplace empty tip racks for {}\\n\".format(pip.name))\n            pip.reset_tipracks()\n            pip.transfer(volume, source, dest, kwargs)\n\n    def reag_to_wells_or_col_transfer(vol, reag_source_well, dest_plate,\n                                      multi_transfer=True, **transfer_kwargs):\n        \"\"\"\n        function description\n\n        :param vol:\n\n        :param index:\n        \"\"\"\n        nonlocal n_columns, n_samples\n        pip, pip_is_multi = choose_pipette(vol, multi_transfer)\n\n        if pip_is_multi:\n            dest_columns = dest_plate.columns()[0:n_columns]\n            for col in dest_columns:\n                transfer(pip, vol, reag_source_well, col[0],\n                         **transfer_kwargs)\n        else:  # Transfer to each well\n            transfer(pip, vol, reag_source_well,\n                     dest_plate.wells()[0:n_samples],\n                     **transfer_kwargs)\n\n    def remove_supernatant(vol, source_plate, multi_transfer=True,\n                           **transfer_kwargs):\n        \"\"\"\n        Removes a volume from each sample well of the source plate\n        (well 0 to well n_samples) and transfers it to the liquid trash\n        well of the reservoir.\n\n        :param vol (float): The volume to transfer to the trash.\n\n        :param source_plate (labware plate): The plate to aspirate from.\n\n        :param multi_transfer (Boolean): Use 8-channel pipette and transfer\n        a whole column at a time if true, otherwise use a single channel\n        pipette and transfer well by well.\n\n        :param **transfer_kwargs: Any keyword arguments that you may want\n        to pass into the transfer method calls\n        \"\"\"\n        nonlocal n_columns, n_samples\n        pip, pip_is_multi = choose_pipette(vol, multi_transfer)\n\n        if pip_is_multi:\n            source_columns = source_plate.columns()[0:n_columns]\n            for col in source_columns:\n                transfer(pip, vol, col[0], waste_well, **transfer_kwargs)\n        else:  # Transfer from each well\n            transfer(pip, vol, source_plate.wells()[0:n_samples],\n                     waste_well, **transfer_kwargs)\n\n    def transfer_plate_to_plate(vol, source_plate, destination_plate):\n        pip, is_multi = choose_pipette(vol, True)\n        if is_multi:\n            for s_col, d_col in zip(source_plate.columns(),\n                                    destination_plate.columns()):\n                transfer(pip, vol, s_col[0], d_col[0])\n        else:\n            transfer(pip, vol, sample_wells, dest_wells)\n\n    # reagents\n\n    '''\n    Define where all reagents are on the deck using the labware defined above.\n\n    e.g.\n\n    water = reservoir12.wells()[-1]\n    waste = reservoir.wells()[0]\n    samples = plate.rows()[0][0]\n    dnase = tuberack.wells_by_name()['A4']\n\n    '''\n\n    lysis_buffer_well = reservoir.wells_by_name()['A1']\n    wash_buffer_well = reservoir.wells_by_name()['A2']\n    elution_buffer_well = reservoir.wells_by_name()['A3']\n    nacl_well = reservoir.wells_by_name()['A4']\n    bead_well = reservoir.wells_by_name()['A5']\n    waste_well = reservoir.wells()[-1]  # Use the last well for waste\n    dnaseI_tube = None\n    if dnaseI_tuberack:\n        dnaseI_tube = dnaseI_tuberack.wells_by_name()['A1']\n    sds_page_buf_well = None\n    if do_SDS_step:\n        sds_page_buf_well = reservoir.wells_by_name()['A6']\n\n    # plate, tube rack maps\n\n    '''\n    Define any plate or tube maps here.\n\n    e.g.\n\n    plate_wells_by_row = [well for row in plate.rows() for well in row]\n\n    '''\n    # unused\n    # sample_columns = sample_plate.columns()[0:n_columns]\n\n    sample_wells = sample_plate.wells()[0:n_samples]\n\n    dest_columns = dest_plate.columns()[0:n_columns]\n    dest_wells = dest_plate.wells()[0:n_samples]\n\n    # protocol\n\n    '''\n\n    Include header sections as follows for each \"section\" of your protocol.\n\n    Section can be defined as a step in a bench protocol.\n\n    e.g.\n\n    ctx.comment('\\n\\nMOVING MASTERMIX TO SAMPLES IN COLUMNS 1-6\\n')\n\n    for .... in ...:\n        ...\n        ...\n\n    ctx.comment('\\n\\nRUNNING THERMOCYCLER PROFILE\\n')\n\n    ...\n    ...\n    ...\n\n\n    '''\n    ctx.comment('\\n\\nAdding lysis buffer to samples\\n')\n    pip, pip_is_multi = choose_pipette(lysis_buffer_vol)\n\n    reag_to_wells_or_col_transfer(lysis_buffer_vol, lysis_buffer_well,\n                                  sample_plate, True)\n\n    if do_DNAse_step:\n        ctx.comment('\\n\\nAdding DNAse I to sample wells\\n')\n        # Must be single channel, protocol will raise exception otherwise\n        reag_to_wells_or_col_transfer(dnaseI_vol, dnaseI_tube, sample_plate,\n                                      False)\n\n    ctx.pause(\"\\n\\nPlace sample plate on a shaker and shake for 10-20\" +\n              \" minutes at room temperature for the lysis reaction\" +\n              \" to complete\\n\")\n\n    # Optional addition of NaCl for improved binding to beads\n    if use_NaCl:\n        ctx.comment(\"Adding NaCl to samples for a final conc. of 500 mM\")\n        reag_to_wells_or_col_transfer(nacl_first_step_vol, nacl_well,\n                                      sample_plate, True)\n\n    if do_vortex_pause:\n        ctx.pause(\"Pause to vortex/resuspend your magnetic beads\")\n\n    # Mixing the beads in the bead well\n    pick_up(l_pip)\n    l_pip.mix(n_bead_mixes, l_pip.max_volume, bead_well)\n\n    ctx.comment(\"\\n\\nTransferring bead solution to sample wells and mixing\")\n    pip, pip_is_multi = choose_pipette(bead_volume, True)\n    if pip_is_multi:\n        for col in dest_columns:\n            if not pip.has_tip:\n                pick_up(pip)\n            pip.aspirate(bead_volume, bead_well)\n            pip.dispense(bead_volume, col[0])\n            mix_vol = (pip.max_volume if total_vol_after_bead_adddn/2 >\n                       pip.max_volume else total_vol_after_bead_adddn/2)\n            pip.mix(5, mix_vol, col[0])\n            pip.drop_tip()\n    else:\n        for well in sample_wells:\n            if not pip.has_tip:\n                pick_up(pip)\n            pip.aspirate(bead_volume, bead_well)\n            pip.dispense(bead_volume, well)\n            mix_vol = (pip.max_volume if total_vol_after_bead_adddn/2 >\n                       pip.max_volume else total_vol_after_bead_adddn/2)\n            pip.mix(5, mix_vol, well)\n            pip.drop_tip()\n\n    ctx.comment(\"\\n\\nIncubating beads\\n\")\n    ctx.delay(0, incubation_time)\n    ctx.comment(\"\\n\\nEngaging magnets\\n\")\n    mag_mod.engage()\n    ctx.delay(0, mag_engage_time)\n    ctx.comment(\"\\n\\nRemoving supernatant\\n\")\n    remove_supernatant(total_vol_after_bead_adddn, sample_plate)\n\n    # Wash the beads n_washes times, the standard is 3 washes\n    repetitions = 1 if do_SDS_step else n_washes\n    for i in range(0, repetitions):\n        ctx.comment(\"\\n\\nBead wash #{}\".format(i + 1))\n        mag_mod.disengage()\n        # Transfer wash buffer to the sample wells\n        supernatant_volume = (wash_buf_vol + nacl_wash_buf_vol if use_NaCl\n                              else wash_buf_vol)\n        half_supernatant_vol = supernatant_volume/2\n        mix_vol = (half_supernatant_vol if half_supernatant_vol\n                   < l_pip.max_volume else l_pip.max_volume)\n        if use_NaCl:\n            reag_to_wells_or_col_transfer(wash_buf_vol, wash_buffer_well,\n                                          sample_plate, True)\n            reag_to_wells_or_col_transfer(nacl_wash_buf_vol, nacl_well,\n                                          sample_plate, True,\n                                          mix_after=(n_wash_mixes, mix_vol))\n        else:\n            reag_to_wells_or_col_transfer(wash_buf_vol, wash_buffer_well,\n                                          sample_plate, True,\n                                          mix_after=(n_wash_mixes, mix_vol))\n        mag_mod.engage()\n        ctx.delay(0, mag_engage_time)\n        # Remove supernatant\n        remove_supernatant(supernatant_volume, sample_plate)\n\n    mag_mod.disengage()\n\n    if do_SDS_step:\n        ctx.comment(\"\\n\\nAdding 1x SDS-PAGE buffer\\n\")\n        reag_to_wells_or_col_transfer(sds_buffer_vol, sds_page_buf_well,\n                                      sample_plate, True)\n        mag_mod.engage()\n        ctx.delay(0, mag_engage_time)\n        # Transfer to target plate\n        ctx.comment(\"\\n\\nTransferring protein in SDS-buffer to target plate\\n\")\n        transfer_plate_to_plate(sds_buffer_vol, sample_plate, dest_plate)\n    # Elute\n    else:\n        ctx.comment(\"\\n\\nAdding elution buffer and mixing\\n\")\n        reag_to_wells_or_col_transfer(elution_buf_vol, elution_buffer_well,\n                                      sample_plate, True,\n                                      mix_after=(n_elution_mixes, mix_vol))\n        ctx.comment(\"\\n\\nIncubating samples with elution buffer\\n\")\n        ctx.delay(0, incubation_time)\n        ctx.comment(\"\\n\\nAttracting beads to magnets\\n\")\n        mag_mod.engage()\n        ctx.delay(0, mag_engage_time)\n        ctx.comment(\"\\n\\nTransferring protein elution supernatant to\" +\n                    \"target plate\\n\")\n        transfer_plate_to_plate(elution_buf_vol, sample_plate, dest_plate)\n        ctx.comment(\"\\n\\n~~~~~ End of protocol ~~~~~\\n\")\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 5,
+            "label": "Magnet engagment time for bead binding",
+            "name": "mag_engage_time",
+            "type": "int"
+        },
+        {
+            "default": 32,
+            "label": "Number of samples",
+            "name": "n_samples",
+            "type": "int"
+        },
+        {
+            "label": "Small pipette",
+            "name": "small_pipette_lname",
+            "options": [
+                {
+                    "label": "None",
+                    "value": "None"
+                },
+                {
+                    "label": "p20 multi-pipette gen2",
+                    "value": "p20_multi_gen2"
+                },
+                {
+                    "label": "p20 single-pipette gen2",
+                    "value": "p20_single_gen2"
+                },
+                {
+                    "label": "p300 multi-pipette gen2",
+                    "value": "p300_multi_gen2"
+                },
+                {
+                    "label": "p300 single-pipette gen2",
+                    "value": "p300_single_gen2"
+                },
+                {
+                    "label": "p1000 single-pipette gen2",
+                    "value": "p1000_single_gen2"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Large pipette",
+            "name": "large_pipette_lname",
+            "options": [
+                {
+                    "label": "None",
+                    "value": "None"
+                },
+                {
+                    "label": "p20 multi-pipette gen2",
+                    "value": "p20_multi_gen2"
+                },
+                {
+                    "label": "p20 single-pipette gen2",
+                    "value": "p20_single_gen2"
+                },
+                {
+                    "label": "p300 multi-pipette gen2",
+                    "value": "p300_multi_gen2"
+                },
+                {
+                    "label": "p300 single-pipette gen2",
+                    "value": "p300_single_gen2"
+                },
+                {
+                    "label": "p1000 single-pipette gen2",
+                    "value": "p1000_single_gen2"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Small pipette tip-racks",
+            "name": "small_pipette_tipracks_lname",
+            "options": [
+                {
+                    "label": "Opentrons 96 Tip Rack 10 uL",
+                    "value": "opentrons_96_tiprack_10ul"
+                },
+                {
+                    "label": "Opentrons 96 Tip Rack 20 uL",
+                    "value": "opentrons_96_tiprack_20ul"
+                },
+                {
+                    "label": "Opentrons 96 Tip Rack 300 uL",
+                    "value": "opentrons_96_tiprack_300ul"
+                },
+                {
+                    "label": "Opentrons 96 Tip Rack 1000 uL",
+                    "value": "opentrons_96_tiprack_1000ul"
+                },
+                {
+                    "label": "Opentrons 96 Filter Tip Rack 10 uL",
+                    "value": "opentrons_96_filtertiprack_10ul"
+                },
+                {
+                    "label": "Opentrons 96 Filter Tip Rack 20 uL",
+                    "value": "opentrons_96_filtertiprack_20ul"
+                },
+                {
+                    "label": "Opentrons 96 Filter Tip Rack 200 uL",
+                    "value": "opentrons_96_filtertiprack_200ul"
+                },
+                {
+                    "label": "Opentrons 96 Filter Tip Rack 1000 uL",
+                    "value": "opentrons_96_filtertiprack_1000ul"
+                },
+                {
+                    "label": "None",
+                    "value": "None"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Large pipette tip-racks",
+            "name": "large_pipette_tipracks_lname",
+            "options": [
+                {
+                    "label": "Opentrons 96 Tip Rack 10 uL",
+                    "value": "opentrons_96_tiprack_10ul"
+                },
+                {
+                    "label": "Opentrons 96 Tip Rack 20 uL",
+                    "value": "opentrons_96_tiprack_20ul"
+                },
+                {
+                    "label": "Opentrons 96 Tip Rack 300 uL",
+                    "value": "opentrons_96_tiprack_300ul"
+                },
+                {
+                    "label": "Opentrons 96 Tip Rack 1000 uL",
+                    "value": "opentrons_96_tiprack_1000ul"
+                },
+                {
+                    "label": "Opentrons 96 Filter Tip Rack 10 uL",
+                    "value": "opentrons_96_filtertiprack_10ul"
+                },
+                {
+                    "label": "Opentrons 96 Filter Tip Rack 20 uL",
+                    "value": "opentrons_96_filtertiprack_20ul"
+                },
+                {
+                    "label": "Opentrons 96 Filter Tip Rack 200 uL",
+                    "value": "opentrons_96_filtertiprack_200ul"
+                },
+                {
+                    "label": "Opentrons 96 Filter Tip Rack 1000 uL",
+                    "value": "opentrons_96_filtertiprack_1000ul"
+                },
+                {
+                    "label": "None",
+                    "value": "None"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Reagent reservoir",
+            "name": "reservoir_lname",
+            "options": [
+                {
+                    "label": "NEST 12 Well Reservoir 15 mL",
+                    "value": "nest_12_reservoir_15ml"
+                },
+                {
+                    "label": "USA Scientific 12 Well Reservoir 22 mL",
+                    "value": "usascientific_12_reservoir_22ml"
+                },
+                {
+                    "label": "Custom",
+                    "value": "custom"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Destination plate",
+            "name": "destination_plate_lname",
+            "options": [
+                {
+                    "label": "",
+                    "value": ""
+                },
+                {
+                    "label": "",
+                    "value": ""
+                },
+                {
+                    "label": "Custom",
+                    "value": "custom"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Sample plate",
+            "name": "sample_plate_lname",
+            "options": [
+                {
+                    "label": "Bio-Rad 96 Well Plate 200 \u00b5L PCR",
+                    "value": "biorad_96_wellplate_200ul_pcr"
+                },
+                {
+                    "label": "Corning 96 well Plate 360 \u00b5L Flat",
+                    "value": "corning_96_wellplate_360_ul_flat"
+                },
+                {
+                    "label": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt",
+                    "value": "nest_96_wellplate_100ul_pcr_full_skirt"
+                },
+                {
+                    "label": "NEST 96 Well Plate 200 \u00b5L Flat",
+                    "value": "nest_96_wellplate_200ul_flat"
+                },
+                {
+                    "label": "NEST 96 Deepwell plate 2 mL",
+                    "value": "nest_96_wellplate_2ml_deep"
+                },
+                {
+                    "label": "USA Scientific 96 Deep well Plate 2.4 mL",
+                    "value": "usascientific_96_wellplate_2.4ml_deep"
+                },
+                {
+                    "label": "Custom",
+                    "value": "custom"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Magnetic module",
+            "name": "mag_mod_lname",
+            "options": [
+                {
+                    "label": "Magnetic module Gen2",
+                    "value": "magnetic module gen2"
+                },
+                {
+                    "label": "Magnetic module Gen1",
+                    "value": "magnetic module"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Tube rack (optional)",
+            "name": "tube_rack_lname",
+            "options": [
+                {
+                    "label": "",
+                    "value": ""
+                },
+                {
+                    "label": "",
+                    "value": ""
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Tube rack (optional)",
+            "name": "tube_rack_lname",
+            "options": [
+                {
+                    "label": "None",
+                    "value": "none"
+                },
+                {
+                    "label": "Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap",
+                    "value": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
+                },
+                {
+                    "label": "Opentrons 24 Tube Rack with Eppendorf 2 mL Safe-Lock Snapcap",
+                    "value": "opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap"
+                },
+                {
+                    "label": "Opentrons 24 Tube Rack with Generic 2 mL Screwcap",
+                    "value": "opentrons_24_tuberack_generic_2ml_screwcap"
+                },
+                {
+                    "label": "Opentrons 24 Tube Rack with NEST 0.5 mL Screwcap",
+                    "value": "opentrons_24_tuberack_nest_0.5ml_screwcap"
+                },
+                {
+                    "label": "Opentrons 24 Tube Rack with NEST 1.5 mL Screwcap",
+                    "value": "opentrons_24_tuberack_nest_1.5ml_screwcap"
+                },
+                {
+                    "label": "Opentrons 24 Tube Rack with NEST 1.5 mL Snapcap",
+                    "value": "opentrons_24_tuberack_nest_1.5ml_snapcap"
+                },
+                {
+                    "label": "Opentrons 24 Tube Rack with NEST 2 mL Screwcap",
+                    "value": "opentrons_24_tuberack_nest_2ml_screwcap"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Destination plate temperature module (optional)",
+            "name": "dest_temp_mod_lname",
+            "options": [
+                {
+                    "label": "None",
+                    "value": "none"
+                },
+                {
+                    "label": "Temperature module Gen2",
+                    "value": "temperature module gen2"
+                },
+                {
+                    "label": "Temperature module Gen1",
+                    "value": "temperature module"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Reservoir temperature module (optional)",
+            "name": "dest_temp_mod_lname",
+            "options": [
+                {
+                    "label": "None",
+                    "value": "none"
+                },
+                {
+                    "label": "Temperature module Gen2",
+                    "value": "temperature module gen2"
+                },
+                {
+                    "label": "Temperature module Gen1",
+                    "value": "temperature module"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Pause robot operation to allow user to vortex magnetic beads?",
+            "name": "do_vortex_pause",
+            "options": [
+                {
+                    "label": "Yes",
+                    "value": "true"
+                },
+                {
+                    "label": "No",
+                    "value": "false"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Elute proteins in SDS buffer instead of elution buffer",
+            "name": "do_SDS_step",
+            "options": [
+                {
+                    "label": "No",
+                    "value": "false"
+                },
+                {
+                    "label": "Yes",
+                    "value": "true"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Add DNAse I to lysis sample from a tube? If not, the enzyme must be added to the lysis buffer by user",
+            "name": "do_DNAse_step",
+            "options": [
+                {
+                    "label": "No",
+                    "value": "false"
+                },
+                {
+                    "label": "Yes",
+                    "value": "true"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Add NaCl to samples to a conc. of 500 mM during wash steps to enhance protein binding?",
+            "name": "use_NaCl",
+            "options": [
+                {
+                    "label": "Yes",
+                    "value": "true"
+                },
+                {
+                    "label": "No",
+                    "value": "false"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 30,
+            "label": "Volume of paramagnetic beads to use with each sample (\u00b5L)",
+            "name": "bead_volume",
+            "type": "float"
+        },
+        {
+            "default": 1000,
+            "label": "Initial volume (of bacteria containing media in each sample well) (\u00b5L)",
+            "name": "bead_volume",
+            "type": "float"
+        },
+        {
+            "default": 150,
+            "label": "Wash buffer volume for the washing steps (\u00b5L)",
+            "name": "wash_buf_vol",
+            "type": "float"
+        },
+        {
+            "default": 100,
+            "label": "Elution buffer volume to elute proteins with (\u00b5L)",
+            "name": "elution_buf_vol",
+            "type": "float"
+        },
+        {
+            "default": 3,
+            "label": "Number of washing steps",
+            "name": "n_washes",
+            "type": "int"
+        },
+        {
+            "default": 3,
+            "label": "Number of bead washses",
+            "name": "n_washes",
+            "type": "int"
+        },
+        {
+            "default": 5,
+            "label": "Number of times to mix the wash buffer with the beads for each wash step",
+            "name": "n_wash_mixes",
+            "type": "int"
+        },
+        {
+            "default": 5,
+            "label": "Number of times to mix the elution buffer with the beads",
+            "name": "n_elution_mixes",
+            "type": "int"
+        },
+        {
+            "default": 2,
+            "label": "Bead incubation time for binding and eluting protein (before magnets are engaged)",
+            "name": "incubation_time",
+            "type": "int"
+        },
+        {
+            "default": 5,
+            "label": "Number of times to mix the bead solution before transferring beads to the samples",
+            "name": "n_bead_mixes",
+            "type": "int"
+        },
+        {
+            "default": 30,
+            "label": "SDS buffer volume to elute proteins with (optional: this only matters if you decide to elute with SDS buffer)",
+            "name": "sds_buffer_vol",
+            "type": "float"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_multi_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p20_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "USA Scientific 96 Deep Well Plate 2.4 mL on Magnetic Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "usascientific_96_wellplate_2.4ml_deep"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on Temperature Module GEN2 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_tiprack_20ul"
+        },
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on Temperature Module GEN2 on 7",
+            "share": false,
+            "slot": "7",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_tiprack_20ul"
+        },
+        {
+            "name": "Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap on 10",
+            "share": false,
+            "slot": "10",
+            "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.11",
+        "author": "Opentrons <authoremail@company.com>",
+        "protocolName": "Generic protein purification protocol",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}

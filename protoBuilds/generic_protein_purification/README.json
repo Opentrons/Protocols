@@ -1,0 +1,41 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Broader Category": [
+            "Subcategory (can be the name of a kit when applicable)"
+        ]
+    },
+    "deck-setup": "\nIf the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:\n\n",
+    "description": "The generic protein purification is a flexible protocol that starts from bacterial\nmedia ready for lysis on a well plate. From there the protocol adds lysis buffer\nand then proceeds to bind the target his-tagged proteins with nickel linked paramagnetic beads. After a variable amount of washes the user may choose to\nelute the proteins using elution buffer, or with SDS buffer if the purpose is to\nrun the samples on a gel.\nThe user is given extensive control of the protocol from the parameters. Pipettes, labware, modules (i.e. temperature and magnetic modules), protocol steps, and volumes are examples of things that can be customized to the users specifications.\nThe protocol is based on Promega's MagneHis\u2122 system, but should work for any other similar system.\n",
+    "internal": "generic_protein_purification",
+    "labware": "\nLabware Library\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* Broader Category\n\t* Subcategory (can be the name of a kit when applicable)\n\n",
+        "deck-setup": "* If the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:\n![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)\n\n",
+        "description": "\nThe generic protein purification is a flexible protocol that starts from bacterial\nmedia ready for lysis on a well plate. From there the protocol adds lysis buffer\nand then proceeds to bind the target his-tagged proteins with nickel linked paramagnetic beads. After a variable amount of washes the user may choose to\nelute the proteins using elution buffer, or with SDS buffer if the purpose is to\nrun the samples on a gel.\n\nThe user is given extensive control of the protocol from the parameters. Pipettes, labware, modules (i.e. temperature and magnetic modules), protocol steps, and volumes are examples of things that can be customized to the users specifications.\n\nThe protocol is based on Promega's MagneHis\u2122 system, but should work for any other similar system.\n\n---\n\n",
+        "internal": "generic_protein_purification\n",
+        "labware": "* [Labware Library](https://labware.opentrons.com/)\n\n",
+        "modules": "* [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)\n* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [Opentrons Pipettes](https://opentrons.com/pipettes/)\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "protocol-steps": "1. This section should consist of a numerical outline of the protocol steps, somewhat analogous to the steps outlined by the user in their custom protocol submission.\n2. example step: Samples are transferred from the source tuberacks on slots 1-2 to the PCR plate on slot 3, down columns and then across rows.\n3. example step: Waste is removed from each sample on the magnetic module, ensuring the bead pellets are not contacted by the pipette tips.\n\n",
+        "reagent-setup": "* This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:\n* Reservoir 1: slot 5\n![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res1_v2.png)\n* Reservoir 2: slot 2  \n![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res2.png)\n\n---\n\n",
+        "reagents": "* [MagneHis\u2122 Protein Purification System](https://www.promega.com/products/protein-purification/protein-purification-kits/magnehis-protein-purification-system/?catNum=V8500#protocols)\n\n---\n\n",
+        "title": "Generic protein purification protocol"
+    },
+    "modules": [
+        "Temperature Module (GEN2)",
+        "Magnetic Module (GEN2)"
+    ],
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons Pipettes\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "protocol-steps": "\nThis section should consist of a numerical outline of the protocol steps, somewhat analogous to the steps outlined by the user in their custom protocol submission.\nexample step: Samples are transferred from the source tuberacks on slots 1-2 to the PCR plate on slot 3, down columns and then across rows.\nexample step: Waste is removed from each sample on the magnetic module, ensuring the bead pellets are not contacted by the pipette tips.\n",
+    "reagent-setup": "\nThis section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:\nReservoir 1: slot 5\n\nReservoir 2: slot 2\n\n\n",
+    "reagents": [
+        "MagneHis\u2122 Protein Purification System"
+    ],
+    "title": "Generic protein purification protocol"
+}
