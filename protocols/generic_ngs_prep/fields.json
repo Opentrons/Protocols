@@ -221,5 +221,5 @@
         "label": "DNA supernatant volume",
         "name": "DNA_supernat_vol",
         "default": 20.0
-      },
+      }
   ]
