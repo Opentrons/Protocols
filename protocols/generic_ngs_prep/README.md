@@ -26,6 +26,15 @@ Explanation of parameters below:
 * `Number of Samples` The number of DNA samples (up to 96)
 * `Temperature (deg C) for temperature module on slot x in part 1` These parameters for each of the temperature modules allow the user to set the temperatures for all/any temperature module in part 1.
 * `Temperature (deg C) for temperature module on slot x in part 2` These parameters for each of the temperature modules allow the user to set the temperatures for all/any temperature module in part 2.
+* `Volume of reagent 1 to add` Volume of reagent 1 to add to samples, e.g. an enzyme or a reaction buffer
+* `Volume of reagent 2 to add` Volume of reagent 2 to add to samples, e.g. an enzyme or a reaction buffer
+* `Ethanol wash volume` The volume of ethanol solution to use for bead washing
+* `Mastermix volume` Volume of PCR mastermix for the PCR reaction in step 2, this is added to the indexing plate
+* `Primer mix volume` Volume of primer mix for the PCR reaction in step 2, this is added to the indexing plate
+* `Bead volume` Volume of paramagnetic bead solution to use for cleaning up the DNA from the enzymatic reaction in part 1 of the protocol
+* `Elution buffer volume` The volume of elution buffer to use for eluting the DNA after the ethanol cleanup
+* `Sample volume` The initial volume of DNA on the sample plate
+* `DNA supernatant volume` The volume of clean DNA to be transferred from the magnetic deck plate to the indexing plate to be used in the PCR reaction
 
 ---
 
@@ -102,12 +111,12 @@ Explanation of parameters below:
 * Step 10: Repeat Ethanol Wash
 * Step 11: Remove Supernatant from samples
 * Step 12: Allow beads to dry
-* Step 13: Transfer Buffer 1 to samples
-* Step 14: Allow beads to incubate
+* Step 13: Transfer elution buffer to bead samples
+* Step 14: Allow the elution buffer to incubate with the beads
 * Step 15: Add PCR Master Mix to indexing plate
 * Step 16: Transfer Primer Mix to Indexing Plate
-* Step 17: Concentrate sample plate beads
-* Step 18: Transfer supernatant from samples to indexing plate
+* Step 17: Waiting delay to concentrate the sample plate beads before supernatant transfer
+* Step 18: Transfer DNA supernatant from samples to indexing plate
 
 ### Process
 1. Input your protocol parameters above.
