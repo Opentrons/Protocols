@@ -1,3 +1,5 @@
+from opentrons.types import Point
+
 metadata = {
     'protocolName': 'Custom 384-Well Plate PCR Prep',
     'author': 'Opentrons <protocols@opentrons.com>',
@@ -38,7 +40,8 @@ def run(ctx):
     # mastermix
     m20.pick_up_tip()
     for i, d in enumerate(dests1):
-        m20.transfer(8.5, mm[i//16], d.center(), new_tip='never')
+        m20.transfer(8.5, mm[i//16].bottom().move(Point(x=0.5, y=0.2, z=1)),
+                     d.center(), new_tip='never')
     m20.drop_tip()
 
     ctx.pause('Ensure samples are loaded in place before resuming.')
