@@ -121,15 +121,6 @@ def run(ctx: protocol_api.ProtocolContext):
 
     n_columns = math.ceil(n_samples/8)
 
-    def str_to_bool(str):
-        return True if str.lower().strip() == "true" else False
-
-    # Convert string booleans to Python booleans
-    do_vortex_pause = str_to_bool(do_vortex_pause)
-    do_SDS_step = str_to_bool(do_SDS_step)
-    do_DNAse_step = str_to_bool(do_DNAse_step)
-    use_NaCl = str_to_bool(use_NaCl)
-
     # Error checking
 
     # If DNAse I is being added from a tube we need to make sure that
