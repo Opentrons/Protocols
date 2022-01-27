@@ -19,6 +19,37 @@ The user is given extensive control of the protocol from the parameters. Pipette
 
 The protocol is based on Promega's MagneHis™ system, but should work for any other similar system.
 
+**Parameters**
+
+* `Magnet engagment time for bead binding`
+* `Number of samples`
+* `Small pipette`
+* `Large pipette`
+* `Small pipette tip-racks`
+* `Large pipette tip-racks`
+* `Reagent reservoir`
+* `Destination plate`
+* `Sample plate`
+* `Magnetic module`
+* `Tube rack (optional)`
+* `Tube rack (optional)`
+* `Destination plate temperature module (optional)`
+* `Reservoir temperature module (optional)`
+* `Pause robot operation to allow user to vortex magnetic beads?`
+* `Elute proteins in SDS buffer instead of elution buffer`
+* `Add DNAse I to lysis sample from a tube? If not, the enzyme must be added to the lysis buffer by user`
+* `Add NaCl to samples to a conc. of 500 mM during wash steps to enhance protein binding?`
+* `Volume of paramagnetic beads to use with each sample (µL)`
+* `Initial volume (of bacteria containing media in each sample well) (µL)`
+* `Wash buffer volume for the washing steps (µL)`
+* `Elution buffer volume to elute proteins with (µL)`
+* `Number of washing steps`
+* `Number of bead washses`
+* `Number of times to mix the wash buffer with the beads for each wash step`
+* `Number of times to mix the elution buffer with the beads`
+* `Bead incubation time for binding and eluting protein (before magnets are engaged)`
+* `Number of times to mix the bead solution before transferring beads to the samples`
+* `SDS buffer volume to elute proteins with (optional: this only matters if you decide to elute with SDS buffer)`
 ---
 
 ### Modules
