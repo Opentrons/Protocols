@@ -25,7 +25,6 @@ def get_values(*names):
                         "mag_engage_time":5,
                         "tube_rack_lname":"opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap",
                         "dest_temp_mod_lname":"temperature module gen2",
-                        "resv_temp_mod_lname":"temperature module gen2",
                         "do_vortex_pause":"true",
                         "do_SDS_step":"false",
                         "do_DNAse_step":"true",
@@ -60,7 +59,6 @@ def run(ctx: protocol_api.ProtocolContext):
         mag_mod_lname,
         tube_rack_lname,
         dest_temp_mod_lname,
-        resv_temp_mod_lname,
         do_vortex_pause,
         do_SDS_step,
         do_DNAse_step,
@@ -88,7 +86,6 @@ def run(ctx: protocol_api.ProtocolContext):
         "mag_mod_lname",
         "tube_rack_lname",
         "dest_temp_mod_lname",
-        "resv_temp_mod_lname",
         "do_vortex_pause",
         "do_SDS_step",
         "do_DNAse_step",
@@ -159,12 +156,9 @@ def run(ctx: protocol_api.ProtocolContext):
 
     '''
     # Load temperature modules (if any)
-    t_mods = []
-    for mod_lname, slot in zip([dest_temp_mod_lname, resv_temp_mod_lname],
-                               ['4', '7']):
-        if mod_lname != "none":
-            t_mods.append(ctx.load_module(mod_lname, slot))
-    dest_temp_mod, resv_temp_mod = t_mods[0], t_mods[1]
+    dest_temp_mod = None
+    if dest_temp_mod_lname != "none":
+        dest_temp_mod = ctx.load_module(dest_temp_mod_lname, '4')
 
     # Load the magnetic module
     mag_mod = ctx.load_module(mag_mod_lname, '1')
@@ -195,10 +189,7 @@ def run(ctx: protocol_api.ProtocolContext):
         dest_plate = ctx.load_labware(destination_plate_lname, '4')
 
     reservoir = None
-    if resv_temp_mod_lname != "None":
-        reservoir = resv_temp_mod.load_labware(reservoir_lname)
-    else:
-        reservoir = ctx.load_labware(reservoir_lname, '7')
+    reservoir = ctx.load_labware(reservoir_lname, '7')
 
     dnaseI_tuberack = None
     if do_DNAse_step:
