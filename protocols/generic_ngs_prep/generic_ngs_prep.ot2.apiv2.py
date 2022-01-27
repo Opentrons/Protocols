@@ -46,8 +46,12 @@ def run(ctx):
         else:
             temp_mod_list.append(None)
 
-    [temperature_module_a, temperature_module_b, temperature_module_c] = \
-        [temp_mod_list[0], temp_mod_list[1], temp_mod_list[2]]
+    [temperature_mod_slot1,
+     temperature_mod_slot4,
+     temperature_module_slot7] = \
+        [temp_mod_list[0],
+         temp_mod_list[1],
+         temp_mod_list[2]]
 
     mag_mod = ctx.load_module('magnetic module gen2', mag_slot)
     mag_plate = mag_mod.load_labware(samples_loadname)
@@ -55,8 +59,8 @@ def run(ctx):
     # Load Labware
     labware_list = []
     for temp_mod, load_name, slot in \
-            (zip([temperature_module_a, temperature_module_b,
-                  temperature_module_c, None],
+            (zip([temperature_mod_slot1, temperature_mod_slot4,
+                  temperature_module_slot7, None],
                  [samples_loadname, reagent1_loadname,
                   reagent2_loadname, reservoir_loadname],
                  ['1', '4', '7', '2'])):
@@ -68,7 +72,6 @@ def run(ctx):
     temp_plate_b_reagent1 = labware_list[1]
     reagent2_plate = labware_list[2]
     reservoir = labware_list[3]
-    reservoir_loadname
 
     [temp_plate_a_samples, temp_plate_b_reagent1, reagent2_plate] = \
         [labware_list[0], labware_list[1], labware_list[2]]
@@ -184,8 +187,8 @@ def run(ctx):
 
     # Protocol Steps
     # Set both Temp Mods to 4C
-    for tmod, temp in zip([temperature_module_a, temperature_module_b,
-                           temperature_module_c],
+    for tmod, temp in zip([temperature_mod_slot1, temperature_mod_slot4,
+                           temperature_module_slot7],
                           [temp_s1_part1, temp_s4_part1, temp_s7_part1]):
         if tmod is not None:
             tmod.set_temperature(temp)
@@ -239,10 +242,9 @@ def run(ctx):
         else:
             labware_list.append(ctx.load_labware(load_name, slot))
 
-    reservoir = labware_list[0]
-    primer = labware_list[1]
-    indexing_plate = labware_list[2]
-    ethanol_reservoir = labware_list[3]
+    primer = labware_list[0]
+    indexing_plate = labware_list[1]
+    ethanol_reservoir = labware_list[2]
     ethanol = ethanol_reservoir.wells_by_name()['A1']
 
     # Wells
@@ -260,11 +262,11 @@ def run(ctx):
 
     # Continue Protocol with DNA purification using SPRI
     # Set temperatures for part 2
-    temperature_module_a.set_temperature(temp_s1_part2)
-    temperature_module_b.set_temperature(temp_s4_part2)
-    temperature_module_b.set_temperature(temp_s7_part2)
-    for tmod, temp in zip([temperature_module_a, temperature_module_b,
-                           temperature_module_c],
+    temperature_mod_slot1.set_temperature(temp_s1_part2)
+    temperature_mod_slot4.set_temperature(temp_s4_part2)
+    temperature_module_slot7.set_temperature(temp_s7_part2)
+    for tmod, temp in zip([temperature_mod_slot1, temperature_mod_slot4,
+                           temperature_module_slot7],
                           [temp_s1_part2, temp_s4_part2, temp_s7_part2]):
         if tmod is not None:
             tmod.set_temperature(temp)
