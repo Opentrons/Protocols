@@ -52,7 +52,8 @@ def run(ctx):
     # sample
     for i, d in enumerate(dests2):
         m20.pick_up_tip()
-        m20.transfer(1, samples[i//22], d, mix_after=(5, 5), new_tip='never')
+        m20.transfer(1, samples[i//22], d.bottom().move(Point(x=0.3, z=2)),
+                     mix_after=(5, 5), new_tip='never')
         m20.touch_tip(d)
         m20.drop_tip()
 
