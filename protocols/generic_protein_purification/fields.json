@@ -148,16 +148,6 @@
   },
   {
     "type": "dropDown",
-    "label": "Reservoir temperature module (optional)",
-    "name": "dest_temp_mod_lname",
-    "options": [
-      { "label": "None", "value": "none" },
-      { "label": "Temperature module Gen2", "value": "temperature module gen2" },
-      { "label": "Temperature module Gen1", "value": "temperature module" }
-    ]
-  },
-  {
-    "type": "dropDown",
     "label": "Pause robot operation to allow user to vortex magnetic beads?",
     "name": "do_vortex_pause",
     "options": [
