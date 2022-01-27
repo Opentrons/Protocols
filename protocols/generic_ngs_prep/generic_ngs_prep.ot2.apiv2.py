@@ -8,9 +8,40 @@ metadata = {
     'apiLevel': '2.10'
 }
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"m20_mount":"left",
+                             "m300_mount":"right",
+                             "n_samples":96,
+                             "temp_mod_s1_lname": null,
+                             "temp_mod_s4_lname": null,
+                             "temp_mod_s7_lname": null,
+                             "temp_s1_part1": 4.0,
+                             "temp_s4_part1": 4.0,
+                             "temp_s7_part1": 4.0,
+                             "temp_s1_part2": 4.0,
+                             "temp_s4_part2": 4.0,
+                             "temp_s7_part2": 4.0,
+                             "samples_loadname": "biorad_96_wellplate_200ul_pcr",
+                             "reagent1_loadname": "opentrons_96_aluminumblock_generic_pcr_strip_200ul",
+                             "reagent2_loadname": "biorad_96_wellplate_200ul_pcr",
+                             "indexing_plate_loadname": "biorad_96_wellplate_200ul_pcr",
+                             "reservoir_loadname": "nest_12_reservoir_15ml",
+                             "ethanol_res_loadname": "nest_1_reservoir_195ml",
+                             "primer_loadname": "biorad_96_wellplate_200ul_pcr",
+                             "reag1_vol":2.0,
+                             "reag2_vol":12.0,
+                             "ethanol_wash_vol":180.0,
+                             "mastermix_vol":25.0,
+                             "primer_mix_vol":5.0,
+                             "bead_vol":95.0,
+                             "sample_vol":19.0,
+                             "elution_buffer_vol":21.0,
+                             "DNA_supernat_vol":20.0
+                             }""")
+    return [_all_values[n] for n in names]
 
 def run(ctx):
-
     [m20_mount, m300_mount, n_samples,
      temp_mod_s1_lname, temp_mod_s4_lname, temp_mod_s7_lname,
      temp_s1_part1, temp_s4_part1, temp_s7_part1,
@@ -269,9 +300,6 @@ def run(ctx):
 
     # Continue Protocol with DNA purification using SPRI
     # Set temperatures for part 2
-    temperature_mod_slot1.set_temperature(temp_s1_part2)
-    temperature_mod_slot4.set_temperature(temp_s4_part2)
-    temperature_module_slot7.set_temperature(temp_s7_part2)
     for tmod, temp in zip([temperature_mod_slot1, temperature_mod_slot4,
                            temperature_module_slot7],
                           [temp_s1_part2, temp_s4_part2, temp_s7_part2]):
