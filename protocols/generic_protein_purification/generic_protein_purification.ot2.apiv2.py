@@ -122,7 +122,6 @@ def run(ctx: protocol_api.ProtocolContext):
     n_columns = math.ceil(n_samples/8)
 
     # Error checking
-
     # If DNAse I is being added from a tube we need to make sure that
     # a) we have a single pipette loaded and b) that dnaseI_vol > pipette min.
     # volume
@@ -368,11 +367,11 @@ def run(ctx: protocol_api.ProtocolContext):
         opentrons.protocol_api.contexts.InstrumentContext
         """
         try:
-            pip.transfer(volume, source, dest, kwargs)
+            pip.transfer(volume, source, dest, **kwargs)
         except protocol_api.labware.OutOfTipsError:
             ctx.pause("\n\nReplace empty tip racks for {}\n".format(pip.name))
             pip.reset_tipracks()
-            pip.transfer(volume, source, dest, kwargs)
+            pip.transfer(volume, source, dest, **kwargs)
 
     def reag_to_wells_or_col_transfer(vol, reag_source_well, dest_plate,
                                       multi_transfer=True, **transfer_kwargs):
