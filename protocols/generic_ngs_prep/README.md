@@ -43,27 +43,27 @@ Explanation of parameters below:
 * [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
 
 ### Labware
-#### Plate options
+**Plates**
 * [Bio-Rad 96 Well Plate 200 µL PCR](https://labware.opentrons.com/biorad_96_wellplate_200ul_pcr/)
 * [Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 µL](https://labware.opentrons.com/opentrons_96_aluminumblock_generic_pcr_strip_200ul/)
 * [Opentrons 96 Well Aluminum Block with Bio-Rad Well Plate 200 µL](https://labware.opentrons.com/opentrons_96_aluminumblock_biorad_wellplate_200ul)
 * [Opentrons 96 Well Aluminum Block with NEST Well Plate 100 µL](https://labware.opentrons.com/opentrons_96_aluminumblock_nest_wellplate_100ul)
 * [NEST 96 Well Plate 100 µL PCR Full Skirt](https://labware.opentrons.com/nest_96_wellplate_100ul_pcr_full_skirt)
 
-#### Tips
+**Tips**
 * [Opentrons 96 Filter Tip Rack 200 µL](https://labware.opentrons.com/opentrons_96_filtertiprack_200ul/)
 * [Opentrons 96 Filter Tip Rack 20 µL](https://labware.opentrons.com/opentrons_96_filtertiprack_20ul/)
 
-#### 12 well reservoir options
+**12 well reservoir options**
 * [NEST 12 Well Reservoir 15 mL](https://labware.opentrons.com/nest_12_reservoir_15ml/)
 * [USA Scientific 12 Well Reservoir 22 mL](https://labware.opentrons.com/usascientific_12_reservoir_22ml)
 
-#### 1 well reservoir options
-[Agilent 1 Well Reservoir 290 mL](https://labware.opentrons.com/agilent_1_reservoir_290ml)
-[Axygen 1 Well Reservoir 90 mL](https://labware.opentrons.com/axygen_1_reservoir_90ml)
-[NEST 1 Well Reservoir 195 mL](https://labware.opentrons.com/nest_1_reservoir_195ml)
+**reservoir options**  
+* [Agilent 1 Well Reservoir 290 mL](https://labware.opentrons.com/agilent_1_reservoir_290ml)
+* [Axygen 1 Well Reservoir 90 mL](https://labware.opentrons.com/axygen_1_reservoir_90ml)
+* [NEST 1 Well Reservoir 195 mL](https://labware.opentrons.com/nest_1_reservoir_195ml)
 
-### Pipettes
+**Pipettes**
 * [P20 Multichannel GEN2 Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/8-channel-electronic-pipette?variant=5978988707869)
 * [P300 Multichannel GEN2 Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/8-channel-electronic-pipette?variant=5984202489885)
 
