@@ -151,8 +151,8 @@
     "label": "Pause robot operation to allow user to vortex magnetic beads?",
     "name": "do_vortex_pause",
     "options": [
-      { "label": "Yes", "value": "true" },
-      { "label": "No", "value": "false" }
+      { "label": "Yes", "value": true },
+      { "label": "No", "value": false }
     ]
   },
   {
@@ -160,8 +160,8 @@
     "label": "Elute proteins in SDS buffer instead of elution buffer",
     "name": "do_SDS_step",
     "options": [
-      { "label": "No", "value": "false" },
-      { "label": "Yes", "value": "true" }
+      { "label": "No", "value": false },
+      { "label": "Yes", "value": true }
     ]
   },
   {
@@ -169,8 +169,8 @@
     "label": "Add DNAse I to lysis sample from a tube? If not, the enzyme must be added to the lysis buffer by user",
     "name": "do_DNAse_step",
     "options": [
-      { "label": "No", "value": "false" },
-      { "label": "Yes", "value": "true" }
+      { "label": "No", "value": false },
+      { "label": "Yes", "value": true }
     ]
   },
   {
@@ -178,8 +178,8 @@
     "label": "Add NaCl to samples to a conc. of 500 mM during wash steps to enhance protein binding?",
     "name": "use_NaCl",
     "options": [
-      { "label": "Yes", "value": "true" },
-      { "label": "No", "value": "false" }
+      { "label": "No", "value": false },
+      { "label": "Yes", "value": true }
     ]
   },
   {
