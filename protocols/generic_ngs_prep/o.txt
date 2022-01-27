@@ -1,0 +1,1141 @@
+Setting Temperature Module temperature to 4.0 °C (rounded off to nearest integer)
+Setting Temperature Module temperature to 4.0 °C (rounded off to nearest integer)
+Setting Temperature Module temperature to 4.0 °C (rounded off to nearest integer)
+Picking up tip from A1 of Opentrons 96 Tip Rack 20 µL on 10
+Aspirating 2.0 uL from A1 of Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 µL on Temperature Module GEN2 on 4 at 5.0 uL/sec
+Delaying for 0 minutes and 1.0 seconds
+Dispensing 2.0 uL into A1 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 1 at 5.0 uL/sec
+Delaying for 0 minutes and 1.0 seconds
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A2 of Opentrons 96 Tip Rack 20 µL on 10
+Aspirating 2.0 uL from A1 of Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 µL on Temperature Module GEN2 on 4 at 5.0 uL/sec
+Delaying for 0 minutes and 1.0 seconds
+Dispensing 2.0 uL into A2 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 1 at 5.0 uL/sec
+Delaying for 0 minutes and 1.0 seconds
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A3 of Opentrons 96 Tip Rack 20 µL on 10
+Aspirating 2.0 uL from A1 of Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 µL on Temperature Module GEN2 on 4 at 5.0 uL/sec
+Delaying for 0 minutes and 1.0 seconds
+Dispensing 2.0 uL into A3 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 1 at 5.0 uL/sec
+Delaying for 0 minutes and 1.0 seconds
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A4 of Opentrons 96 Tip Rack 20 µL on 10
+Aspirating 2.0 uL from A1 of Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 µL on Temperature Module GEN2 on 4 at 5.0 uL/sec
+Delaying for 0 minutes and 1.0 seconds
+Dispensing 2.0 uL into A4 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 1 at 5.0 uL/sec
+Delaying for 0 minutes and 1.0 seconds
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A5 of Opentrons 96 Tip Rack 20 µL on 10
+Aspirating 2.0 uL from A1 of Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 µL on Temperature Module GEN2 on 4 at 5.0 uL/sec
+Delaying for 0 minutes and 1.0 seconds
+Dispensing 2.0 uL into A5 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 1 at 5.0 uL/sec
+Delaying for 0 minutes and 1.0 seconds
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A6 of Opentrons 96 Tip Rack 20 µL on 10
+Aspirating 2.0 uL from A1 of Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 µL on Temperature Module GEN2 on 4 at 5.0 uL/sec
+Delaying for 0 minutes and 1.0 seconds
+Dispensing 2.0 uL into A6 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 1 at 5.0 uL/sec
+Delaying for 0 minutes and 1.0 seconds
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A7 of Opentrons 96 Tip Rack 20 µL on 10
+Aspirating 2.0 uL from A1 of Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 µL on Temperature Module GEN2 on 4 at 5.0 uL/sec
+Delaying for 0 minutes and 1.0 seconds
+Dispensing 2.0 uL into A7 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 1 at 5.0 uL/sec
+Delaying for 0 minutes and 1.0 seconds
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A8 of Opentrons 96 Tip Rack 20 µL on 10
+Aspirating 2.0 uL from A1 of Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 µL on Temperature Module GEN2 on 4 at 5.0 uL/sec
+Delaying for 0 minutes and 1.0 seconds
+Dispensing 2.0 uL into A8 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 1 at 5.0 uL/sec
+Delaying for 0 minutes and 1.0 seconds
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A9 of Opentrons 96 Tip Rack 20 µL on 10
+Aspirating 2.0 uL from A1 of Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 µL on Temperature Module GEN2 on 4 at 5.0 uL/sec
+Delaying for 0 minutes and 1.0 seconds
+Dispensing 2.0 uL into A9 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 1 at 5.0 uL/sec
+Delaying for 0 minutes and 1.0 seconds
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A10 of Opentrons 96 Tip Rack 20 µL on 10
+Aspirating 2.0 uL from A1 of Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 µL on Temperature Module GEN2 on 4 at 5.0 uL/sec
+Delaying for 0 minutes and 1.0 seconds
+Dispensing 2.0 uL into A10 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 1 at 5.0 uL/sec
+Delaying for 0 minutes and 1.0 seconds
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A11 of Opentrons 96 Tip Rack 20 µL on 10
+Aspirating 2.0 uL from A1 of Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 µL on Temperature Module GEN2 on 4 at 5.0 uL/sec
+Delaying for 0 minutes and 1.0 seconds
+Dispensing 2.0 uL into A11 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 1 at 5.0 uL/sec
+Delaying for 0 minutes and 1.0 seconds
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A12 of Opentrons 96 Tip Rack 20 µL on 10
+Aspirating 2.0 uL from A1 of Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 µL on Temperature Module GEN2 on 4 at 5.0 uL/sec
+Delaying for 0 minutes and 1.0 seconds
+Dispensing 2.0 uL into A12 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 1 at 5.0 uL/sec
+Delaying for 0 minutes and 1.0 seconds
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A1 of Opentrons 96 Tip Rack 20 µL on 11
+Aspirating 12.0 uL from A1 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 4.0 uL/sec
+Delaying for 0 minutes and 2.0 seconds
+Dispensing 12.0 uL into A1 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 1 at 4.0 uL/sec
+Delaying for 0 minutes and 2.0 seconds
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A2 of Opentrons 96 Tip Rack 20 µL on 11
+Aspirating 12.0 uL from A1 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 4.0 uL/sec
+Delaying for 0 minutes and 2.0 seconds
+Dispensing 12.0 uL into A2 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 1 at 4.0 uL/sec
+Delaying for 0 minutes and 2.0 seconds
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A3 of Opentrons 96 Tip Rack 20 µL on 11
+Aspirating 12.0 uL from A1 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 4.0 uL/sec
+Delaying for 0 minutes and 2.0 seconds
+Dispensing 12.0 uL into A3 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 1 at 4.0 uL/sec
+Delaying for 0 minutes and 2.0 seconds
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A4 of Opentrons 96 Tip Rack 20 µL on 11
+Aspirating 12.0 uL from A1 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 4.0 uL/sec
+Delaying for 0 minutes and 2.0 seconds
+Dispensing 12.0 uL into A4 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 1 at 4.0 uL/sec
+Delaying for 0 minutes and 2.0 seconds
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A5 of Opentrons 96 Tip Rack 20 µL on 11
+Aspirating 12.0 uL from A1 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 4.0 uL/sec
+Delaying for 0 minutes and 2.0 seconds
+Dispensing 12.0 uL into A5 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 1 at 4.0 uL/sec
+Delaying for 0 minutes and 2.0 seconds
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A6 of Opentrons 96 Tip Rack 20 µL on 11
+Aspirating 12.0 uL from A1 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 4.0 uL/sec
+Delaying for 0 minutes and 2.0 seconds
+Dispensing 12.0 uL into A6 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 1 at 4.0 uL/sec
+Delaying for 0 minutes and 2.0 seconds
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A7 of Opentrons 96 Tip Rack 20 µL on 11
+Aspirating 12.0 uL from A1 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 4.0 uL/sec
+Delaying for 0 minutes and 2.0 seconds
+Dispensing 12.0 uL into A7 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 1 at 4.0 uL/sec
+Delaying for 0 minutes and 2.0 seconds
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A8 of Opentrons 96 Tip Rack 20 µL on 11
+Aspirating 12.0 uL from A1 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 4.0 uL/sec
+Delaying for 0 minutes and 2.0 seconds
+Dispensing 12.0 uL into A8 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 1 at 4.0 uL/sec
+Delaying for 0 minutes and 2.0 seconds
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A9 of Opentrons 96 Tip Rack 20 µL on 11
+Aspirating 12.0 uL from A1 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 4.0 uL/sec
+Delaying for 0 minutes and 2.0 seconds
+Dispensing 12.0 uL into A9 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 1 at 4.0 uL/sec
+Delaying for 0 minutes and 2.0 seconds
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A10 of Opentrons 96 Tip Rack 20 µL on 11
+Aspirating 12.0 uL from A1 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 4.0 uL/sec
+Delaying for 0 minutes and 2.0 seconds
+Dispensing 12.0 uL into A10 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 1 at 4.0 uL/sec
+Delaying for 0 minutes and 2.0 seconds
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A11 of Opentrons 96 Tip Rack 20 µL on 11
+Aspirating 12.0 uL from A1 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 4.0 uL/sec
+Delaying for 0 minutes and 2.0 seconds
+Dispensing 12.0 uL into A11 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 1 at 4.0 uL/sec
+Delaying for 0 minutes and 2.0 seconds
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A12 of Opentrons 96 Tip Rack 20 µL on 11
+Aspirating 12.0 uL from A1 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 4.0 uL/sec
+Delaying for 0 minutes and 2.0 seconds
+Dispensing 12.0 uL into A12 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 1 at 4.0 uL/sec
+Delaying for 0 minutes and 2.0 seconds
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Pausing robot operation: Seal the sample plate. Mix, Spin down and place in a thermocycler.
+              Return sample plate to the magnetic module once completed.
+              Remove plates/strips containing Reagents 1 and 2.  Place the
+              12-channel reservoir on the temperature module in Slot 1. Place
+              the Primer Plate on the temperature module in Slot 3. Place empty
+              indexing plate in Slot 7. Click Resume when ready to proceed.
+Setting Temperature Module temperature to 4.0 °C (rounded off to nearest integer)
+Setting Temperature Module temperature to 4.0 °C (rounded off to nearest integer)
+Setting Temperature Module temperature to 4.0 °C (rounded off to nearest integer)
+Setting Temperature Module temperature to 4.0 °C (rounded off to nearest integer)
+Setting Temperature Module temperature to 4.0 °C (rounded off to nearest integer)
+Setting Temperature Module temperature to 4.0 °C (rounded off to nearest integer)
+Picking up tip from A1 of Opentrons 96 Filter Tip Rack 200 µL on 8
+760 uL of liquid
+                            used from A1 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 95.0 from A1 of NEST 12 Well Reservoir 15 mL on 2 to A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 95.0 uL from A1 of NEST 12 Well Reservoir 15 mL on 2 at 94.0 uL/sec
+	Dispensing 95.0 uL into A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+	Mixing 5 times with a volume of 63.333333333333336 ul
+		Aspirating 63.333333333333336 uL from A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A2 of Opentrons 96 Filter Tip Rack 200 µL on 8
+1520 uL of liquid
+                            used from A1 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 95.0 from A1 of NEST 12 Well Reservoir 15 mL on 2 to A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 95.0 uL from A1 of NEST 12 Well Reservoir 15 mL on 2 at 94.0 uL/sec
+	Dispensing 95.0 uL into A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+	Mixing 5 times with a volume of 63.333333333333336 ul
+		Aspirating 63.333333333333336 uL from A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A3 of Opentrons 96 Filter Tip Rack 200 µL on 8
+760 uL of liquid
+                            used from A2 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 95.0 from A2 of NEST 12 Well Reservoir 15 mL on 2 to A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 95.0 uL from A2 of NEST 12 Well Reservoir 15 mL on 2 at 94.0 uL/sec
+	Dispensing 95.0 uL into A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+	Mixing 5 times with a volume of 63.333333333333336 ul
+		Aspirating 63.333333333333336 uL from A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A4 of Opentrons 96 Filter Tip Rack 200 µL on 8
+1520 uL of liquid
+                            used from A2 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 95.0 from A2 of NEST 12 Well Reservoir 15 mL on 2 to A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 95.0 uL from A2 of NEST 12 Well Reservoir 15 mL on 2 at 94.0 uL/sec
+	Dispensing 95.0 uL into A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+	Mixing 5 times with a volume of 63.333333333333336 ul
+		Aspirating 63.333333333333336 uL from A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A5 of Opentrons 96 Filter Tip Rack 200 µL on 8
+760 uL of liquid
+                            used from A3 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 95.0 from A3 of NEST 12 Well Reservoir 15 mL on 2 to A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 95.0 uL from A3 of NEST 12 Well Reservoir 15 mL on 2 at 94.0 uL/sec
+	Dispensing 95.0 uL into A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+	Mixing 5 times with a volume of 63.333333333333336 ul
+		Aspirating 63.333333333333336 uL from A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A6 of Opentrons 96 Filter Tip Rack 200 µL on 8
+1520 uL of liquid
+                            used from A3 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 95.0 from A3 of NEST 12 Well Reservoir 15 mL on 2 to A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 95.0 uL from A3 of NEST 12 Well Reservoir 15 mL on 2 at 94.0 uL/sec
+	Dispensing 95.0 uL into A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+	Mixing 5 times with a volume of 63.333333333333336 ul
+		Aspirating 63.333333333333336 uL from A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A7 of Opentrons 96 Filter Tip Rack 200 µL on 8
+760 uL of liquid
+                            used from A4 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 95.0 from A4 of NEST 12 Well Reservoir 15 mL on 2 to A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 95.0 uL from A4 of NEST 12 Well Reservoir 15 mL on 2 at 94.0 uL/sec
+	Dispensing 95.0 uL into A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+	Mixing 5 times with a volume of 63.333333333333336 ul
+		Aspirating 63.333333333333336 uL from A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A8 of Opentrons 96 Filter Tip Rack 200 µL on 8
+1520 uL of liquid
+                            used from A4 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 95.0 from A4 of NEST 12 Well Reservoir 15 mL on 2 to A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 95.0 uL from A4 of NEST 12 Well Reservoir 15 mL on 2 at 94.0 uL/sec
+	Dispensing 95.0 uL into A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+	Mixing 5 times with a volume of 63.333333333333336 ul
+		Aspirating 63.333333333333336 uL from A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A9 of Opentrons 96 Filter Tip Rack 200 µL on 8
+760 uL of liquid
+                            used from A5 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 95.0 from A5 of NEST 12 Well Reservoir 15 mL on 2 to A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 95.0 uL from A5 of NEST 12 Well Reservoir 15 mL on 2 at 94.0 uL/sec
+	Dispensing 95.0 uL into A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+	Mixing 5 times with a volume of 63.333333333333336 ul
+		Aspirating 63.333333333333336 uL from A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A10 of Opentrons 96 Filter Tip Rack 200 µL on 8
+1520 uL of liquid
+                            used from A5 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 95.0 from A5 of NEST 12 Well Reservoir 15 mL on 2 to A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 95.0 uL from A5 of NEST 12 Well Reservoir 15 mL on 2 at 94.0 uL/sec
+	Dispensing 95.0 uL into A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+	Mixing 5 times with a volume of 63.333333333333336 ul
+		Aspirating 63.333333333333336 uL from A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A11 of Opentrons 96 Filter Tip Rack 200 µL on 8
+760 uL of liquid
+                            used from A6 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 95.0 from A6 of NEST 12 Well Reservoir 15 mL on 2 to A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 95.0 uL from A6 of NEST 12 Well Reservoir 15 mL on 2 at 94.0 uL/sec
+	Dispensing 95.0 uL into A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+	Mixing 5 times with a volume of 63.333333333333336 ul
+		Aspirating 63.333333333333336 uL from A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A12 of Opentrons 96 Filter Tip Rack 200 µL on 8
+1520 uL of liquid
+                            used from A6 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 95.0 from A6 of NEST 12 Well Reservoir 15 mL on 2 to A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 95.0 uL from A6 of NEST 12 Well Reservoir 15 mL on 2 at 94.0 uL/sec
+	Dispensing 95.0 uL into A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+	Mixing 5 times with a volume of 63.333333333333336 ul
+		Aspirating 63.333333333333336 uL from A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 63.333333333333336 uL from A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Dispensing 63.333333333333336 uL into A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Delaying for 10 minutes and 0.0 seconds. Allowing the mixed SPRI reaction to incubate
+                                 for 10 minutes at Room Temperature.
+Engaging Magnetic Module
+Delaying for 3 minutes and 0.0 seconds. Concentrating the beads for 3 minutes.
+Picking up tip from A1 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 128.0 uL from A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 128.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A2 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 128.0 uL from A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 128.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A3 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 128.0 uL from A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 128.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A4 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 128.0 uL from A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 128.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A5 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 128.0 uL from A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 128.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A6 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 128.0 uL from A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 128.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A7 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 128.0 uL from A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 128.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A8 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 128.0 uL from A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 128.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A9 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 128.0 uL from A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 128.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A10 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 128.0 uL from A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 128.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A11 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 128.0 uL from A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 128.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A12 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 128.0 uL from A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 128.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Homing pipette plunger on mount right
+Pausing robot operation: Replace the empty tips!
+Picking up tip from A1 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Transferring 180.0 from A1 of NEST 1 Well Reservoir 195 mL on 6 to A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 180.0 uL from A1 of NEST 1 Well Reservoir 195 mL on 6 at 50.0 uL/sec
+	Dispensing 180.0 uL into A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A2 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Transferring 180.0 from A1 of NEST 1 Well Reservoir 195 mL on 6 to A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 180.0 uL from A1 of NEST 1 Well Reservoir 195 mL on 6 at 50.0 uL/sec
+	Dispensing 180.0 uL into A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A3 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Transferring 180.0 from A1 of NEST 1 Well Reservoir 195 mL on 6 to A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 180.0 uL from A1 of NEST 1 Well Reservoir 195 mL on 6 at 50.0 uL/sec
+	Dispensing 180.0 uL into A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A4 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Transferring 180.0 from A1 of NEST 1 Well Reservoir 195 mL on 6 to A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 180.0 uL from A1 of NEST 1 Well Reservoir 195 mL on 6 at 50.0 uL/sec
+	Dispensing 180.0 uL into A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A5 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Transferring 180.0 from A1 of NEST 1 Well Reservoir 195 mL on 6 to A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 180.0 uL from A1 of NEST 1 Well Reservoir 195 mL on 6 at 50.0 uL/sec
+	Dispensing 180.0 uL into A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A6 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Transferring 180.0 from A1 of NEST 1 Well Reservoir 195 mL on 6 to A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 180.0 uL from A1 of NEST 1 Well Reservoir 195 mL on 6 at 50.0 uL/sec
+	Dispensing 180.0 uL into A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A7 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Transferring 180.0 from A1 of NEST 1 Well Reservoir 195 mL on 6 to A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 180.0 uL from A1 of NEST 1 Well Reservoir 195 mL on 6 at 50.0 uL/sec
+	Dispensing 180.0 uL into A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A8 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Transferring 180.0 from A1 of NEST 1 Well Reservoir 195 mL on 6 to A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 180.0 uL from A1 of NEST 1 Well Reservoir 195 mL on 6 at 50.0 uL/sec
+	Dispensing 180.0 uL into A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A9 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Transferring 180.0 from A1 of NEST 1 Well Reservoir 195 mL on 6 to A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 180.0 uL from A1 of NEST 1 Well Reservoir 195 mL on 6 at 50.0 uL/sec
+	Dispensing 180.0 uL into A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A10 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Transferring 180.0 from A1 of NEST 1 Well Reservoir 195 mL on 6 to A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 180.0 uL from A1 of NEST 1 Well Reservoir 195 mL on 6 at 50.0 uL/sec
+	Dispensing 180.0 uL into A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A11 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Transferring 180.0 from A1 of NEST 1 Well Reservoir 195 mL on 6 to A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 180.0 uL from A1 of NEST 1 Well Reservoir 195 mL on 6 at 50.0 uL/sec
+	Dispensing 180.0 uL into A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A12 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Transferring 180.0 from A1 of NEST 1 Well Reservoir 195 mL on 6 to A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 180.0 uL from A1 of NEST 1 Well Reservoir 195 mL on 6 at 50.0 uL/sec
+	Dispensing 180.0 uL into A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Delaying for 1 minutes and 0.0 seconds. Allowing Ethanol to sit for 1 minute.
+Picking up tip from A1 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 190.0 uL from A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 190.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A2 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 190.0 uL from A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 190.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A3 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 190.0 uL from A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 190.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A4 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 190.0 uL from A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 190.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A5 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 190.0 uL from A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 190.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A6 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 190.0 uL from A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 190.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A7 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 190.0 uL from A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 190.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A8 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 190.0 uL from A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 190.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A9 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 190.0 uL from A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 190.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A10 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 190.0 uL from A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 190.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A11 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 190.0 uL from A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 190.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A12 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 190.0 uL from A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 190.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Homing pipette plunger on mount right
+Pausing robot operation: Replace the empty tips!
+Picking up tip from A1 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Transferring 180.0 from A1 of NEST 1 Well Reservoir 195 mL on 6 to A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 180.0 uL from A1 of NEST 1 Well Reservoir 195 mL on 6 at 50.0 uL/sec
+	Dispensing 180.0 uL into A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A2 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Transferring 180.0 from A1 of NEST 1 Well Reservoir 195 mL on 6 to A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 180.0 uL from A1 of NEST 1 Well Reservoir 195 mL on 6 at 50.0 uL/sec
+	Dispensing 180.0 uL into A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A3 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Transferring 180.0 from A1 of NEST 1 Well Reservoir 195 mL on 6 to A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 180.0 uL from A1 of NEST 1 Well Reservoir 195 mL on 6 at 50.0 uL/sec
+	Dispensing 180.0 uL into A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A4 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Transferring 180.0 from A1 of NEST 1 Well Reservoir 195 mL on 6 to A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 180.0 uL from A1 of NEST 1 Well Reservoir 195 mL on 6 at 50.0 uL/sec
+	Dispensing 180.0 uL into A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A5 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Transferring 180.0 from A1 of NEST 1 Well Reservoir 195 mL on 6 to A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 180.0 uL from A1 of NEST 1 Well Reservoir 195 mL on 6 at 50.0 uL/sec
+	Dispensing 180.0 uL into A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A6 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Transferring 180.0 from A1 of NEST 1 Well Reservoir 195 mL on 6 to A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 180.0 uL from A1 of NEST 1 Well Reservoir 195 mL on 6 at 50.0 uL/sec
+	Dispensing 180.0 uL into A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A7 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Transferring 180.0 from A1 of NEST 1 Well Reservoir 195 mL on 6 to A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 180.0 uL from A1 of NEST 1 Well Reservoir 195 mL on 6 at 50.0 uL/sec
+	Dispensing 180.0 uL into A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A8 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Transferring 180.0 from A1 of NEST 1 Well Reservoir 195 mL on 6 to A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 180.0 uL from A1 of NEST 1 Well Reservoir 195 mL on 6 at 50.0 uL/sec
+	Dispensing 180.0 uL into A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A9 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Transferring 180.0 from A1 of NEST 1 Well Reservoir 195 mL on 6 to A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 180.0 uL from A1 of NEST 1 Well Reservoir 195 mL on 6 at 50.0 uL/sec
+	Dispensing 180.0 uL into A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A10 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Transferring 180.0 from A1 of NEST 1 Well Reservoir 195 mL on 6 to A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 180.0 uL from A1 of NEST 1 Well Reservoir 195 mL on 6 at 50.0 uL/sec
+	Dispensing 180.0 uL into A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A11 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Transferring 180.0 from A1 of NEST 1 Well Reservoir 195 mL on 6 to A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 180.0 uL from A1 of NEST 1 Well Reservoir 195 mL on 6 at 50.0 uL/sec
+	Dispensing 180.0 uL into A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A12 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Transferring 180.0 from A1 of NEST 1 Well Reservoir 195 mL on 6 to A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 180.0 uL from A1 of NEST 1 Well Reservoir 195 mL on 6 at 50.0 uL/sec
+	Dispensing 180.0 uL into A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Delaying for 1 minutes and 0.0 seconds. Allowing Ethanol to sit for 1 minute.
+Picking up tip from A1 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 190.0 uL from A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 190.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A2 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 190.0 uL from A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 190.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A3 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 190.0 uL from A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 190.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A4 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 190.0 uL from A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 190.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A5 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 190.0 uL from A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 190.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A6 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 190.0 uL from A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 190.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A7 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 190.0 uL from A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 190.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A8 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 190.0 uL from A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 190.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A9 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 190.0 uL from A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 190.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A10 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 190.0 uL from A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 190.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A11 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 190.0 uL from A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 190.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A12 of Opentrons 96 Filter Tip Rack 200 µL on 9
+Aspirating 190.0 uL from A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 190.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Homing pipette plunger on mount right
+Pausing robot operation: Replace the empty tips!
+Picking up tip from A1 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Aspirating 130.0 uL from A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 130.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A2 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Aspirating 130.0 uL from A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 130.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A3 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Aspirating 130.0 uL from A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 130.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A4 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Aspirating 130.0 uL from A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 130.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A5 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Aspirating 130.0 uL from A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 130.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A6 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Aspirating 130.0 uL from A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 130.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A7 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Aspirating 130.0 uL from A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 130.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A8 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Aspirating 130.0 uL from A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 130.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A9 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Aspirating 130.0 uL from A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 130.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A10 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Aspirating 130.0 uL from A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 130.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A11 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Aspirating 130.0 uL from A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 130.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A12 of Opentrons 96 Filter Tip Rack 200 µL on 8
+Aspirating 130.0 uL from A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 130.0 uL into A1 of Opentrons Fixed Trash on 12 at 94.0 uL/sec
+Blowing out at A1 of Opentrons Fixed Trash on 12
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Delaying for 5 minutes and 0.0 seconds. Allowing beads to dry...
+Picking up tip from A1 of Opentrons 96 Filter Tip Rack 200 µL on 9
+168 uL of liquid
+                            used from A9 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 21.0 from A9 of NEST 12 Well Reservoir 15 mL on 2 to A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 21.0 uL from A9 of NEST 12 Well Reservoir 15 mL on 2 at 50.0 uL/sec
+	Dispensing 21.0 uL into A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+	Mixing 5 times with a volume of 14.0 ul
+		Aspirating 14.0 uL from A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A2 of Opentrons 96 Filter Tip Rack 200 µL on 9
+336 uL of liquid
+                            used from A9 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 21.0 from A9 of NEST 12 Well Reservoir 15 mL on 2 to A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 21.0 uL from A9 of NEST 12 Well Reservoir 15 mL on 2 at 50.0 uL/sec
+	Dispensing 21.0 uL into A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+	Mixing 5 times with a volume of 14.0 ul
+		Aspirating 14.0 uL from A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A3 of Opentrons 96 Filter Tip Rack 200 µL on 9
+504 uL of liquid
+                            used from A9 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 21.0 from A9 of NEST 12 Well Reservoir 15 mL on 2 to A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 21.0 uL from A9 of NEST 12 Well Reservoir 15 mL on 2 at 50.0 uL/sec
+	Dispensing 21.0 uL into A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+	Mixing 5 times with a volume of 14.0 ul
+		Aspirating 14.0 uL from A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A4 of Opentrons 96 Filter Tip Rack 200 µL on 9
+672 uL of liquid
+                            used from A9 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 21.0 from A9 of NEST 12 Well Reservoir 15 mL on 2 to A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 21.0 uL from A9 of NEST 12 Well Reservoir 15 mL on 2 at 50.0 uL/sec
+	Dispensing 21.0 uL into A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+	Mixing 5 times with a volume of 14.0 ul
+		Aspirating 14.0 uL from A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A5 of Opentrons 96 Filter Tip Rack 200 µL on 9
+840 uL of liquid
+                            used from A9 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 21.0 from A9 of NEST 12 Well Reservoir 15 mL on 2 to A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 21.0 uL from A9 of NEST 12 Well Reservoir 15 mL on 2 at 50.0 uL/sec
+	Dispensing 21.0 uL into A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+	Mixing 5 times with a volume of 14.0 ul
+		Aspirating 14.0 uL from A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A6 of Opentrons 96 Filter Tip Rack 200 µL on 9
+1008 uL of liquid
+                            used from A9 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 21.0 from A9 of NEST 12 Well Reservoir 15 mL on 2 to A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 21.0 uL from A9 of NEST 12 Well Reservoir 15 mL on 2 at 50.0 uL/sec
+	Dispensing 21.0 uL into A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+	Mixing 5 times with a volume of 14.0 ul
+		Aspirating 14.0 uL from A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A7 of Opentrons 96 Filter Tip Rack 200 µL on 9
+168 uL of liquid
+                            used from A10 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 21.0 from A10 of NEST 12 Well Reservoir 15 mL on 2 to A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 21.0 uL from A10 of NEST 12 Well Reservoir 15 mL on 2 at 50.0 uL/sec
+	Dispensing 21.0 uL into A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+	Mixing 5 times with a volume of 14.0 ul
+		Aspirating 14.0 uL from A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A8 of Opentrons 96 Filter Tip Rack 200 µL on 9
+336 uL of liquid
+                            used from A10 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 21.0 from A10 of NEST 12 Well Reservoir 15 mL on 2 to A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 21.0 uL from A10 of NEST 12 Well Reservoir 15 mL on 2 at 50.0 uL/sec
+	Dispensing 21.0 uL into A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+	Mixing 5 times with a volume of 14.0 ul
+		Aspirating 14.0 uL from A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A9 of Opentrons 96 Filter Tip Rack 200 µL on 9
+504 uL of liquid
+                            used from A10 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 21.0 from A10 of NEST 12 Well Reservoir 15 mL on 2 to A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 21.0 uL from A10 of NEST 12 Well Reservoir 15 mL on 2 at 50.0 uL/sec
+	Dispensing 21.0 uL into A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+	Mixing 5 times with a volume of 14.0 ul
+		Aspirating 14.0 uL from A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A10 of Opentrons 96 Filter Tip Rack 200 µL on 9
+672 uL of liquid
+                            used from A10 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 21.0 from A10 of NEST 12 Well Reservoir 15 mL on 2 to A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 21.0 uL from A10 of NEST 12 Well Reservoir 15 mL on 2 at 50.0 uL/sec
+	Dispensing 21.0 uL into A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+	Mixing 5 times with a volume of 14.0 ul
+		Aspirating 14.0 uL from A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A11 of Opentrons 96 Filter Tip Rack 200 µL on 9
+840 uL of liquid
+                            used from A10 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 21.0 from A10 of NEST 12 Well Reservoir 15 mL on 2 to A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 21.0 uL from A10 of NEST 12 Well Reservoir 15 mL on 2 at 50.0 uL/sec
+	Dispensing 21.0 uL into A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+	Mixing 5 times with a volume of 14.0 ul
+		Aspirating 14.0 uL from A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A12 of Opentrons 96 Filter Tip Rack 200 µL on 9
+1008 uL of liquid
+                            used from A10 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 21.0 from A10 of NEST 12 Well Reservoir 15 mL on 2 to A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3
+	Aspirating 21.0 uL from A10 of NEST 12 Well Reservoir 15 mL on 2 at 50.0 uL/sec
+	Dispensing 21.0 uL into A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+	Mixing 5 times with a volume of 14.0 ul
+		Aspirating 14.0 uL from A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+		Aspirating 14.0 uL from A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 50.0 uL/sec
+		Dispensing 14.0 uL into A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Delaying for 5 minutes and 0.0 seconds. Allow beads to incubate for
+                             5 minutes at Room Temperature
+Homing pipette plunger on mount right
+Pausing robot operation: Replace the empty tips!
+Picking up tip from A1 of Opentrons 96 Filter Tip Rack 200 µL on 8
+200 uL of liquid
+                            used from A11 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 25.0 from A11 of NEST 12 Well Reservoir 15 mL on 2 to A1 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7
+	Aspirating 25.0 uL from A11 of NEST 12 Well Reservoir 15 mL on 2 at 50.0 uL/sec
+	Dispensing 25.0 uL into A1 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 94.0 uL/sec
+400 uL of liquid
+                            used from A11 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 25.0 from A11 of NEST 12 Well Reservoir 15 mL on 2 to A2 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7
+	Aspirating 25.0 uL from A11 of NEST 12 Well Reservoir 15 mL on 2 at 50.0 uL/sec
+	Dispensing 25.0 uL into A2 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 94.0 uL/sec
+600 uL of liquid
+                            used from A11 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 25.0 from A11 of NEST 12 Well Reservoir 15 mL on 2 to A3 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7
+	Aspirating 25.0 uL from A11 of NEST 12 Well Reservoir 15 mL on 2 at 50.0 uL/sec
+	Dispensing 25.0 uL into A3 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 94.0 uL/sec
+800 uL of liquid
+                            used from A11 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 25.0 from A11 of NEST 12 Well Reservoir 15 mL on 2 to A4 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7
+	Aspirating 25.0 uL from A11 of NEST 12 Well Reservoir 15 mL on 2 at 50.0 uL/sec
+	Dispensing 25.0 uL into A4 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 94.0 uL/sec
+1000 uL of liquid
+                            used from A11 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 25.0 from A11 of NEST 12 Well Reservoir 15 mL on 2 to A5 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7
+	Aspirating 25.0 uL from A11 of NEST 12 Well Reservoir 15 mL on 2 at 50.0 uL/sec
+	Dispensing 25.0 uL into A5 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 94.0 uL/sec
+1200 uL of liquid
+                            used from A11 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 25.0 from A11 of NEST 12 Well Reservoir 15 mL on 2 to A6 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7
+	Aspirating 25.0 uL from A11 of NEST 12 Well Reservoir 15 mL on 2 at 50.0 uL/sec
+	Dispensing 25.0 uL into A6 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 94.0 uL/sec
+200 uL of liquid
+                            used from A12 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 25.0 from A12 of NEST 12 Well Reservoir 15 mL on 2 to A7 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7
+	Aspirating 25.0 uL from A12 of NEST 12 Well Reservoir 15 mL on 2 at 50.0 uL/sec
+	Dispensing 25.0 uL into A7 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 94.0 uL/sec
+400 uL of liquid
+                            used from A12 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 25.0 from A12 of NEST 12 Well Reservoir 15 mL on 2 to A8 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7
+	Aspirating 25.0 uL from A12 of NEST 12 Well Reservoir 15 mL on 2 at 50.0 uL/sec
+	Dispensing 25.0 uL into A8 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 94.0 uL/sec
+600 uL of liquid
+                            used from A12 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 25.0 from A12 of NEST 12 Well Reservoir 15 mL on 2 to A9 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7
+	Aspirating 25.0 uL from A12 of NEST 12 Well Reservoir 15 mL on 2 at 50.0 uL/sec
+	Dispensing 25.0 uL into A9 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 94.0 uL/sec
+800 uL of liquid
+                            used from A12 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 25.0 from A12 of NEST 12 Well Reservoir 15 mL on 2 to A10 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7
+	Aspirating 25.0 uL from A12 of NEST 12 Well Reservoir 15 mL on 2 at 50.0 uL/sec
+	Dispensing 25.0 uL into A10 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 94.0 uL/sec
+1000 uL of liquid
+                            used from A12 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 25.0 from A12 of NEST 12 Well Reservoir 15 mL on 2 to A11 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7
+	Aspirating 25.0 uL from A12 of NEST 12 Well Reservoir 15 mL on 2 at 50.0 uL/sec
+	Dispensing 25.0 uL into A11 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 94.0 uL/sec
+1200 uL of liquid
+                            used from A12 of NEST 12 Well Reservoir 15 mL on 2
+Transferring 25.0 from A12 of NEST 12 Well Reservoir 15 mL on 2 to A12 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7
+	Aspirating 25.0 uL from A12 of NEST 12 Well Reservoir 15 mL on 2 at 50.0 uL/sec
+	Dispensing 25.0 uL into A12 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 94.0 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Homing pipette plunger on mount left
+Pausing robot operation: Replace the empty tips!
+Picking up tip from A1 of Opentrons 96 Tip Rack 20 µL on 10
+Transferring 5.0 from A1 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 4 to A1 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7
+	Aspirating 5.0 uL from A1 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 4 at 7.6 uL/sec
+	Dispensing 5.0 uL into A1 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 7.6 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A2 of Opentrons 96 Tip Rack 20 µL on 10
+Transferring 5.0 from A2 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 4 to A2 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7
+	Aspirating 5.0 uL from A2 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 4 at 7.6 uL/sec
+	Dispensing 5.0 uL into A2 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 7.6 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A3 of Opentrons 96 Tip Rack 20 µL on 10
+Transferring 5.0 from A3 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 4 to A3 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7
+	Aspirating 5.0 uL from A3 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 4 at 7.6 uL/sec
+	Dispensing 5.0 uL into A3 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 7.6 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A4 of Opentrons 96 Tip Rack 20 µL on 10
+Transferring 5.0 from A4 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 4 to A4 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7
+	Aspirating 5.0 uL from A4 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 4 at 7.6 uL/sec
+	Dispensing 5.0 uL into A4 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 7.6 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A5 of Opentrons 96 Tip Rack 20 µL on 10
+Transferring 5.0 from A5 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 4 to A5 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7
+	Aspirating 5.0 uL from A5 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 4 at 7.6 uL/sec
+	Dispensing 5.0 uL into A5 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 7.6 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A6 of Opentrons 96 Tip Rack 20 µL on 10
+Transferring 5.0 from A6 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 4 to A6 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7
+	Aspirating 5.0 uL from A6 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 4 at 7.6 uL/sec
+	Dispensing 5.0 uL into A6 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 7.6 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A7 of Opentrons 96 Tip Rack 20 µL on 10
+Transferring 5.0 from A7 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 4 to A7 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7
+	Aspirating 5.0 uL from A7 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 4 at 7.6 uL/sec
+	Dispensing 5.0 uL into A7 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 7.6 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A8 of Opentrons 96 Tip Rack 20 µL on 10
+Transferring 5.0 from A8 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 4 to A8 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7
+	Aspirating 5.0 uL from A8 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 4 at 7.6 uL/sec
+	Dispensing 5.0 uL into A8 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 7.6 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A9 of Opentrons 96 Tip Rack 20 µL on 10
+Transferring 5.0 from A9 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 4 to A9 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7
+	Aspirating 5.0 uL from A9 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 4 at 7.6 uL/sec
+	Dispensing 5.0 uL into A9 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 7.6 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A10 of Opentrons 96 Tip Rack 20 µL on 10
+Transferring 5.0 from A10 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 4 to A10 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7
+	Aspirating 5.0 uL from A10 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 4 at 7.6 uL/sec
+	Dispensing 5.0 uL into A10 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 7.6 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A11 of Opentrons 96 Tip Rack 20 µL on 10
+Transferring 5.0 from A11 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 4 to A11 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7
+	Aspirating 5.0 uL from A11 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 4 at 7.6 uL/sec
+	Dispensing 5.0 uL into A11 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 7.6 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A12 of Opentrons 96 Tip Rack 20 µL on 10
+Transferring 5.0 from A12 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 4 to A12 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7
+	Aspirating 5.0 uL from A12 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 4 at 7.6 uL/sec
+	Dispensing 5.0 uL into A12 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 7.6 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Delaying for 3 minutes and 0.0 seconds. Concentrate beads for 3 minutes
+Picking up tip from A1 of Opentrons 96 Tip Rack 20 µL on 11
+Aspirating 20.0 uL from A1 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 20.0 uL into A1 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 7.6 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A2 of Opentrons 96 Tip Rack 20 µL on 11
+Aspirating 20.0 uL from A2 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 20.0 uL into A2 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 7.6 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A3 of Opentrons 96 Tip Rack 20 µL on 11
+Aspirating 20.0 uL from A3 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 20.0 uL into A3 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 7.6 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A4 of Opentrons 96 Tip Rack 20 µL on 11
+Aspirating 20.0 uL from A4 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 20.0 uL into A4 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 7.6 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A5 of Opentrons 96 Tip Rack 20 µL on 11
+Aspirating 20.0 uL from A5 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 20.0 uL into A5 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 7.6 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A6 of Opentrons 96 Tip Rack 20 µL on 11
+Aspirating 20.0 uL from A6 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 20.0 uL into A6 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 7.6 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A7 of Opentrons 96 Tip Rack 20 µL on 11
+Aspirating 20.0 uL from A7 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 20.0 uL into A7 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 7.6 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A8 of Opentrons 96 Tip Rack 20 µL on 11
+Aspirating 20.0 uL from A8 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 20.0 uL into A8 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 7.6 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A9 of Opentrons 96 Tip Rack 20 µL on 11
+Aspirating 20.0 uL from A9 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 20.0 uL into A9 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 7.6 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A10 of Opentrons 96 Tip Rack 20 µL on 11
+Aspirating 20.0 uL from A10 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 20.0 uL into A10 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 7.6 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A11 of Opentrons 96 Tip Rack 20 µL on 11
+Aspirating 20.0 uL from A11 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 20.0 uL into A11 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 7.6 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12
+Picking up tip from A12 of Opentrons 96 Tip Rack 20 µL on 11
+Aspirating 20.0 uL from A12 of Bio-Rad 96 Well Plate 200 µL PCR on Magnetic Module GEN2 on 3 at 20.0 uL/sec
+Dispensing 20.0 uL into A12 of Bio-Rad 96 Well Plate 200 µL PCR on Temperature Module GEN2 on 7 at 7.6 uL/sec
+Dropping tip into A1 of Opentrons Fixed Trash on 12

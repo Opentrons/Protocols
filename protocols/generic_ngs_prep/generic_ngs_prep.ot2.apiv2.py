@@ -9,25 +9,64 @@ metadata = {
 }
 
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"m20_mount":"left",
+                             "m300_mount":"right",
+                             "n_samples":96,
+                             "temp_mod_s1_lname": "temperature module gen2",
+                             "temp_mod_s4_lname": "temperature module gen2",
+                             "temp_mod_s7_lname": "temperature module gen2",
+                             "temp_s1_part1": 4.0,
+                             "temp_s4_part1": 4.0,
+                             "temp_s7_part1": 4.0,
+                             "temp_s1_part2": 4.0,
+                             "temp_s4_part2": 4.0,
+                             "temp_s7_part2": 4.0,
+                             "samples_loadname": "biorad_96_wellplate_200ul_pcr",
+                             "reagent1_loadname": "opentrons_96_aluminumblock_generic_pcr_strip_200ul",
+                             "reagent2_loadname": "biorad_96_wellplate_200ul_pcr",
+                             "indexing_plate_loadname": "biorad_96_wellplate_200ul_pcr",
+                             "reservoir_loadname": "nest_12_reservoir_15ml",
+                             "ethanol_res_loadname": "nest_1_reservoir_195ml",
+                             "primer_loadname": "biorad_96_wellplate_200ul_pcr",
+                             "reag1_vol":2.0,
+                             "reag2_vol":12.0,
+                             "ethanol_wash_vol":180.0,
+                             "mastermix_vol":25.0,
+                             "primer_mix_vol":5.0,
+                             "bead_vol":95.0,
+                             "sample_vol":19.0,
+                             "elution_buffer_vol":21.0,
+                             "DNA_supernat_vol":20.0
+                             }""")
+    return [_all_values[n] for n in names]
+
+
 def run(ctx):
 
-    [m20_mount, m300_mount, samples,
+    [m20_mount, m300_mount, n_samples,
      temp_mod_s1_lname, temp_mod_s4_lname, temp_mod_s7_lname,
      temp_s1_part1, temp_s4_part1, temp_s7_part1,
      temp_s1_part2, temp_s4_part2, temp_s7_part2,
      samples_loadname, reagent1_loadname, reagent2_loadname,
      indexing_plate_loadname, reservoir_loadname, ethanol_res_loadname,
-     primer_loadname] = \
+     primer_loadname, reag1_vol, reag2_vol, ethanol_wash_vol,
+     mastermix_vol, primer_mix_vol, bead_vol, sample_vol,
+     elution_buffer_vol, DNA_supernat_vol] = \
         get_values(  # noqa: F821
-        "m20_mount", "m300_mount", "samples",
+        "m20_mount", "m300_mount", "n_samples",
         "temp_mod_s1_lname", "temp_mod_s4_lname", "temp_mod_s7_lname",
         "temp_s1_part1", "temp_s4_part1", "temp_s7_part1",
         "temp_s1_part2", "temp_s4_part2", "temp_s7_part2",
         "samples_loadname", "reagent1_loadname", "reagent2_loadname",
         "indexing_plate_loadname", "reservoir_loadname",
-        "ethanol_res_loadname", "primer_loadname")
+        "ethanol_res_loadname", "primer_loadname", "reag1_vol", "reag2_vol",
+        "ethanol_wash_vol", "mastermix_vol",
+        "primer_mix_vol", "bead_vol", "sample_vol", "elution_buffer_vol",
+        "DNA_supernat_vol")
 
-    cols = math.ceil(samples/8)
+    n_cols = math.ceil(n_samples/8)
 
     # Deck placement: slots
     mag_slot = 3
@@ -181,7 +220,7 @@ def run(ctx):
             return well
 
     # Wells
-    sample_wells = temp_plate_a_samples.rows()[0][:cols]
+    sample_wells = temp_plate_a_samples.rows()[0][:n_cols]
     reagent1 = temp_plate_b_reagent1['A1']
     reagent2 = reagent2_plate['A1']
 
@@ -195,24 +234,26 @@ def run(ctx):
 
     # Step 1: Enzymatic reaction e.g. end repair or barcoding
     # Step 1.1: Transfer Reagent 1 to Samples
+    pip = m300 if reag1_vol > 20 else m20
     for col in sample_wells:
-        pick_up(m20)
-        m20.flow_rate.aspirate = 5
-        m20.flow_rate.dispense = 5
-        aspirate_with_delay(m20, 2, reagent1, 1)
-        dispense_with_delay(m20, 2, col, 1)
-        m20.drop_tip()
-    reset_pipette_speed(m20)
+        pick_up(pip)
+        pip.flow_rate.aspirate = 5
+        pip.flow_rate.dispense = 5
+        aspirate_with_delay(pip, reag1_vol, reagent1, 1)
+        dispense_with_delay(pip, reag1_vol, col, 1)
+        pip.drop_tip()
+    reset_pipette_speed(pip)
 
     # Step 1.2: Transfer Reagent 2 to Samples
+    pip = m300 if reag2_vol > 20 else m20
     for col in sample_wells:
-        pick_up(m20)
-        m20.flow_rate.aspirate = 4
-        m20.flow_rate.dispense = 4
-        aspirate_with_delay(m20, 12, reagent2, 2)
-        dispense_with_delay(m20, 12, col, 2)
-        m20.drop_tip()
-    reset_pipette_speed(m20)
+        pick_up(pip)
+        pip.flow_rate.aspirate = 4
+        pip.flow_rate.dispense = 4
+        aspirate_with_delay(pip, reag2_vol, reagent2, 2)
+        dispense_with_delay(pip, reag2_vol, col, 2)
+        pip.drop_tip()
+    reset_pipette_speed(pip)
 
     ctx.pause('''Seal the sample plate. Mix, Spin down and place in a thermocycler.
               Return sample plate to the magnetic module once completed.
@@ -248,17 +289,17 @@ def run(ctx):
     ethanol = ethanol_reservoir.wells_by_name()['A1']
 
     # Wells
-    mag_plate_wells = mag_plate.rows()[0][:cols]
+    mag_plate_wells = mag_plate.rows()[0][:n_cols]
     buffer1Track = VolTracker(reservoir, 1008, 'multi', start=8, end=10,
                               msg='Replenish Buffer 1')
     spriTrack = VolTracker(reservoir, 1140, 'multi', start=0, end=8,
                            msg='Replenish SPRI')
     mmTrack = VolTracker(reservoir, 1200, 'multi', start=10, end=12,
                          msg='Master Mix Track')
-    indexing_plate_wells = indexing_plate.rows()[0][:cols]
-    primer_plate_wells = primer.rows()[0][:cols]
+    indexing_plate_wells = indexing_plate.rows()[0][:n_cols]
+    primer_plate_wells = primer.rows()[0][:n_cols]
     side_x = 1
-    sides = [-side_x, side_x] * (cols // 2)
+    sides = [-side_x, side_x] * (n_cols // 2)
 
     # Continue Protocol with DNA purification using SPRI
     # Set temperatures for part 2
@@ -271,11 +312,13 @@ def run(ctx):
         if tmod is not None:
             tmod.set_temperature(temp)
     # Step 3: Add SPRI solution to Samples
+    pip = m300 if bead_vol > 20 else m20
     for col in mag_plate_wells:
-        pick_up(m300)
-        m300.transfer(95, spriTrack.tracker(95), col, new_tip='never',
-                      mix_after=(5, 60))
-        m300.drop_tip()
+        pick_up(pip)
+        pip.transfer(bead_vol, spriTrack.tracker(bead_vol), col,
+                     new_tip='never',
+                     mix_after=(5, (2*bead_vol)/3))
+        pip.drop_tip()
 
     # Step 4: Incubate SPRI at RT
     ctx.delay(minutes=10, msg='''Allowing the mixed SPRI reaction to incubate
@@ -286,29 +329,34 @@ def run(ctx):
     ctx.delay(minutes=3, msg="Concentrating the beads for 3 minutes.")
 
     # Step 6: Remove Supernatant from samples
+    supernatant_volume = sample_vol + reag1_vol + reag2_vol + bead_vol
+    pip = m300 if supernatant_volume > 20 else m20
+
     for col, side in zip(mag_plate_wells, sides):
-        pick_up(m300)
-        remove_supernatant(m300, 130, col, trash, side)
-        m300.drop_tip()
+        pick_up(pip)
+        remove_supernatant(pip, supernatant_volume, col, trash, side)
+        pip.drop_tip()
 
     # Step 10: Repeat Ethanol Wash
     for _ in range(2):
         # Step 7: Add Ethanol to sammples
+        pip = m300 if ethanol_wash_vol > 20 else m20
         for col in mag_plate_wells:
-            pick_up(m300)
-            m300.transfer(180, ethanol, col, new_tip='never')
-            m300.drop_tip()
+            pick_up(pip)
+            pip.transfer(ethanol_wash_vol, ethanol, col, new_tip='never')
+            pip.drop_tip()
 
         # Step 8: Allow ethanol to sit
         ctx.delay(minutes=1, msg="Allowing Ethanol to sit for 1 minute.")
 
         # Step 9: Remove Supernatant from samples
+        pip = m300 if ethanol_wash_vol+10 > 20 else m20
         for col, side in zip(mag_plate_wells, sides):
-            pick_up(m300)
-            remove_supernatant(m300, 190, col, trash, side)
-            m300.drop_tip()
+            pick_up(pip)
+            remove_supernatant(pip, ethanol_wash_vol+10, col, trash, side)
+            pip.drop_tip()
 
-    # Step 11: Remove Supernatant from samples
+    # Step 11: Remove any remaining supernatant from samples
     for col, side in zip(mag_plate_wells, sides):
         pick_up(m300)
         remove_supernatant(m300, 130, col, trash, side)
@@ -317,34 +365,40 @@ def run(ctx):
     # Step 12: Allow beads to dry
     ctx.delay(minutes=5, msg='Allowing beads to dry...')
 
-    # Step 13: Transfer Buffer 1 to samples
+    # Step 13: Transfer elution buffer to samples
+    pip = m300 if elution_buffer_vol > 20 else m20
     for col in mag_plate_wells:
-        pick_up(m300)
-        m300.transfer(21, buffer1Track.tracker(21), col, new_tip='never',
-                      mix_after=(5, 15))
-        m300.drop_tip()
+        pick_up(pip)
+        pip.transfer(elution_buffer_vol,
+                     buffer1Track.tracker(elution_buffer_vol),
+                     col, new_tip='never',
+                     mix_after=(5, (2*elution_buffer_vol)/3))
+        pip.drop_tip()
 
     # Step 14: Allow beads to incubate
     ctx.delay(minutes=5, msg='''Allow beads to incubate for
                              5 minutes at Room Temperature''')
 
     # Step 15: Add PCR Master Mix to indexing plate
-    pick_up(m300)
+    pip = m300 if mastermix_vol > 20 else m20
+    pick_up(pip)
     for col in indexing_plate_wells:
-        m300.transfer(25, mmTrack.tracker(25), col, new_tip='never')
-    m300.drop_tip()
+        pip.transfer(mastermix_vol, mmTrack.tracker(25), col, new_tip='never')
+    pip.drop_tip()
 
     # Step 16: Transfer Primer Mix to Indexing Plate
+    pip = m300 if primer_mix_vol > 20 else m20
     for src, dest in zip(primer_plate_wells, indexing_plate_wells):
-        pick_up(m20)
-        m20.transfer(5, src, dest, new_tip='never')
-        m20.drop_tip()
+        pick_up(pip)
+        pip.transfer(primer_mix_vol, src, dest, new_tip='never')
+        pip.drop_tip()
 
     # Step 17: Concentrate sample plate beads
     ctx.delay(minutes=3, msg='''Concentrate beads for 3 minutes''')
 
     # Step 18: Transfer supernatant from samples to indexing plate
+    pip = m300 if DNA_supernat_vol > 20 else m20
     for src, dest, side in zip(mag_plate_wells, indexing_plate_wells, sides):
-        pick_up(m300)
-        remove_supernatant(m300, 20, src, dest, side)
-        m300.drop_tip()
+        pick_up(pip)
+        remove_supernatant(pip, DNA_supernat_vol, src, dest, side)
+        pip.drop_tip()
