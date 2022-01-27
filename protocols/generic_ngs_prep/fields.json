@@ -129,7 +129,7 @@
     {
         "type": "int",
         "label": "Number of Samples",
-        "name": "samples",
+        "name": "n_samples",
         "default": 96
       },
     {
@@ -167,5 +167,59 @@
         "label": "Temperature (deg C) for temperature module on slot 7 in part 2",
         "name": "temp_s7_part2",
         "default": 4.0
-      }
+      },
+    {
+        "type": "float",
+        "label": "Volume of reagent 1 to add",
+        "name": "reag1_vol",
+        "default": 2.0
+      },
+    {
+        "type": "float",
+        "label": "Volume of reagent 2 to add",
+        "name": "reag2_vol",
+        "default": 12.0
+      },
+    {
+        "type": "float",
+        "label": "Ethanol wash volume",
+        "name": "ethanol_wash_vol",
+        "default": 180.0
+      },
+    {
+        "type": "float",
+        "label": "Mastermix volume",
+        "name": "mastermix_vol",
+        "default": 25.0
+      },
+    {
+        "type": "float",
+        "label": "Primer mix volume",
+        "name": "primer_mix_vol",
+        "default": 5.0
+      },
+    {
+        "type": "float",
+        "label": "Bead volume",
+        "name": "bead_vol",
+        "default": 95.0
+      },
+    {
+        "type": "float",
+        "label": "Elution buffer volume",
+        "name": "elution_buffer_vol",
+        "default": 21.0
+      },
+    {
+        "type": "float",
+        "label": "Sample volume",
+        "name": "sample_vol",
+        "default": 19.0
+      },
+    {
+        "type": "float",
+        "label": "DNA supernatant volume",
+        "name": "DNA_supernat_vol",
+        "default": 20.0
+      },
   ]
