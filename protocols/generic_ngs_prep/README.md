@@ -72,7 +72,7 @@ Explanation of parameters below:
 ### Deck Setup
 **Note: The deck setup changes throughout the course of the protocol. The initial calibration layout may differ from the final setup. Please follow the initial calibration setup and any instructions during the pauses.**
 
-#### Step 1
+**Step 1**
 * Slot 1: Temperature Module slot 1 + Sample Plate
 * Slot 2: Reagent reservoir (SPRI, Buffer I, Mastermix)
 * Slot 3: Magnetic Module (Empty)
@@ -84,7 +84,7 @@ Explanation of parameters below:
 * Slot 10: Opentrons 20 uL Filter Tips
 * Slot 11: Opentrons 20 uL Filter Tips
 
-#### Step 2
+**Step 2**
 * Slot 1: Temperature Module slot 1
 * Slot 2: Reagent reservoir (SPRI, Buffer I, Mastermix)
 * Slot 3: Magnetic Module + Sample plate
