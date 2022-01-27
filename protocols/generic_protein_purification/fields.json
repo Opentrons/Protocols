@@ -224,12 +224,6 @@
   },
   {
     "type": "int",
-    "label": "Number of bead washses",
-    "name": "n_washes",
-    "default": 3
-  },
-  {
-    "type": "int",
     "label": "Number of times to mix the wash buffer with the beads for each wash step",
     "name": "n_wash_mixes",
     "default": 5

@@ -21,35 +21,32 @@ The protocol is based on Promega's MagneHis™ system, but should work for any o
 
 **Parameters**
 
-* `Magnet engagment time for bead binding`
-* `Number of samples`
-* `Small pipette`
-* `Large pipette`
-* `Small pipette tip-racks`
-* `Large pipette tip-racks`
-* `Reagent reservoir`
-* `Destination plate`
-* `Sample plate`
-* `Magnetic module`
-* `Tube rack (optional)`
-* `Tube rack (optional)`
-* `Destination plate temperature module (optional)`
-* `Reservoir temperature module (optional)`
-* `Pause robot operation to allow user to vortex magnetic beads?`
-* `Elute proteins in SDS buffer instead of elution buffer`
-* `Add DNAse I to lysis sample from a tube? If not, the enzyme must be added to the lysis buffer by user`
-* `Add NaCl to samples to a conc. of 500 mM during wash steps to enhance protein binding?`
-* `Volume of paramagnetic beads to use with each sample (µL)`
-* `Initial volume (of bacteria containing media in each sample well) (µL)`
-* `Wash buffer volume for the washing steps (µL)`
-* `Elution buffer volume to elute proteins with (µL)`
-* `Number of washing steps`
-* `Number of bead washses`
-* `Number of times to mix the wash buffer with the beads for each wash step`
-* `Number of times to mix the elution buffer with the beads`
-* `Bead incubation time for binding and eluting protein (before magnets are engaged)`
-* `Number of times to mix the bead solution before transferring beads to the samples`
-* `SDS buffer volume to elute proteins with (optional: this only matters if you decide to elute with SDS buffer)`
+* `Magnet engagment time for bead binding` How long to engage magnets in order to attract the beads before doing any pipetting steps
+* `Number of samples` How many bacterial media samples there are on the sample plate
+* `Small pipette` The smaller pipette, can be a multi-channel or single
+* `Large pipette`The larger pipette, can be a multi-channel or single
+* `Small pipette tip-racks` Tips to use with the small pipette
+* `Large pipette tip-racks` Tips to use with the large pipette
+* `Reagent reservoir` 12 well reservoir for reagents: Lysis buffer, NaCl (optional), Wash buffer, elution buffer, SDS buffer (optional), paramegnetic beads.
+* `Destination plate` Plate where eluted proteins are transferred after adding elution or SDS buffer
+* `Sample plate` Plate containing wells with bacterial media
+* `Magnetic module` Which magnetic module to use for the bead binding steps
+* `Tube rack (optional)` Tube rack for DNAse I (well 1) if used.
+* `Destination plate temperature module (optional)` A temperature module for controlling the temperature of the destination plate
+* `Pause robot operation to allow user to vortex magnetic beads?` If this parameter is on, the robot will pause before the paramagnetic bead addition step to allow the user to resuspend the beads by vortexing the solution before adding it to the reservoir.
+* `Elute proteins in SDS buffer instead of elution buffer` Allows the user to elute proteins with SDS buffer instead of elution buffer if the proteins are intended to be run on a gel
+* `Add DNAse I to lysis sample from a tube?` If yes, then DNAse will be added from well A1 of the (optional) tube rack. If no, then the DNAse should be added to the lysis buffer in the reservoir prior to running the protocol
+* `Add NaCl to samples to a conc. of 500 mM during wash steps to enhance protein binding?` Optional; If you want to do this step, Add a 4M NaCl solution to the reservoir (see picture in the deck setup section)
+* `Volume of paramagnetic beads to use with each sample (µL)` Volume of paramagnetic beads to add to each sample well after the lysis step
+* `Initial volume (of bacteria containing media in each sample well) (µL)` Initial volume of sample in each sample plate well containing bacterial culture to be lysed.
+* `Wash buffer volume for the washing steps (µL)` Volume of wash buffer to use in each washing step
+* `Elution buffer volume to elute proteins with (µL)` How much elution buffer to elute the purified protein with.
+* `Number of washing steps` How many repetitions of washing the beads to remove unwanted proteins and other contaminants.
+* `Number of times to mix the wash buffer with the beads for each wash step` Number of times to mix (pipette solution up and down) for each washing step in order to mix the solution.
+* `Number of times to mix the elution buffer with the beads` Number of times to mix the elution buffer with the samples before transferring the protein containing supernatant.
+* `Bead incubation time for binding and eluting protein (before magnets are engaged)` How many minutes to incubate beads with the lysed bacterial solution before engaging magnets, also the amount of time to incubate the beads with elution buffer before engaging magnets.
+* `Number of times to mix the bead solution before transferring beads to the samples` Optional number of times to use the large pipette to mix the bead solution before transferring the bead solution to the samples
+* `SDS buffer volume to elute proteins with (optional: this only matters if you decide to elute with SDS buffer)` In the final step you can choose whether to elute with elution buffer or SDS buffer if you want to run a gel on the samples, this parameter specifies the volume in microliter of SDS buffer.
 ---
 
 ### Modules
