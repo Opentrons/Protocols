@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "This example starting deck state shows the layout for 24 samples:\n\n\ngreen on sample tuberack: samples\nblue on reagent reservoir: working standard\npink on reagent reservoir: assay buffer (TE or TR)\n\n",
-    "description": "Links:\n* Part 1\n* Part 2\nThis is a protocol for the Flu Ribogreen Assay protocol. Samples are aligned in the sample tuberack (slot 1) in the following order:\n* A1 -> sample 1\n* B1 -> sample 2\n* C1 -> sample 3\n* D1 -> sample 4\n* A2 -> sample 5\n* B2 -> sample 6\n* C2 -> sample 7\n* D2 -> sample 8\n* etc.\n",
+    "description": "Links:\n Part 1\n Part 2\nThis is a protocol for the Flu Ribogreen Assay protocol. Samples are aligned in the sample tuberack (slot 1) in the following order:\n A1 -> sample 1\n B1 -> sample 2\n C1 -> sample 3\n D1 -> sample 4\n A2 -> sample 5\n B2 -> sample 6\n C2 -> sample 7\n D2 -> sample 8\n* etc.\n",
     "internal": "2ed4de",
     "labware": "\nCorning 96 Well Plate 360 \u00b5L Flat\nNEST 12 Well Reservoir 15 mL\nNEST 2 mL 96-Well Deep Well Plate\nOpentrons 24 Tube Rack with Eppendorf 1.5 mL Screwcap Tubes or equivalent\nOpentrons 96 Filter Tip Rack 200 \u00b5L\nOpentrons 96 Filter Tip Rack 1000 \u00b5L\n",
     "markdown": {

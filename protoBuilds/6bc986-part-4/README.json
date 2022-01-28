@@ -5,7 +5,7 @@
             "PCR Prep"
         ]
     },
-    "description": "Part 4 of 6: Distribution of Master Mix\nLinks:\n* Distribution of Sample Lysis Buffer\n* Distribution of Prot K (Apostle)\n* Transfer of DNA Template\n* Distribution of Master Mix\n* Distribution of Elution Buffer\n* Distribution of Prot K (Qiagen)\nThis protocol is a translation of the attached json protocol json protocol to python with a couple additional features for control of the blow out location in order to place it near the bottom of the source reservoir well: 20 ul Master Mix is distributed from a reservoir with a blow out of the disposal volume occuring in a location close to the bottom of the source well.\nThe deck layout can be displayed by uploading the attached json protocol to the Opentrons Protocol Designer web page.",
+    "description": "Part 4 of 6: Distribution of Master Mix\nLinks:\n Distribution of Sample Lysis Buffer\n Distribution of Prot K (Apostle)\n Transfer of DNA Template\n Distribution of Master Mix\n Distribution of Elution Buffer\n Distribution of Prot K (Qiagen)\nThis protocol is a translation of the attached json protocol json protocol to python with a couple additional features for control of the blow out location in order to place it near the bottom of the source reservoir well: 20 ul Master Mix is distributed from a reservoir with a blow out of the disposal volume occuring in a location close to the bottom of the source well.\nThe deck layout can be displayed by uploading the attached json protocol to the Opentrons Protocol Designer web page.",
     "internal": "6bc986-part-4",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",

@@ -30,5 +30,14 @@
       { "label": "NEST 96 Deepwell Plate 2mL", "value": "nest_96_wellplate_2ml_deep" },
       { "label": "USA Scientific 96 Deep Well Plate 2.4 mL", "value": "usascientific_96_wellplate_2.4ml_deep" }
     ]
+  },
+  {
+    "type": "dropDown",
+    "label": "P300 type",
+    "name": "p300_type",
+    "options": [
+      { "label": "P300 8-Channel (GEN2)", "value": "p300_multi_gen2" },
+      { "label": "P300 Single-Channel (GEN2)", "value": "p300_single_gen2" }
+    ]
   }
 ]
