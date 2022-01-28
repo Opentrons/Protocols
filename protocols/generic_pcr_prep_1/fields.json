@@ -27,7 +27,7 @@
     "name": "use_filter_tips_left",
     "options": [
       { "label": "Regular tips", "value": false},
-      { "label": "Filter tips", "value": true },
+      { "label": "Filter tips", "value": true }
     ]
   },
   {
@@ -36,7 +36,7 @@
     "name": "use_filter_tips_right",
     "options": [
       { "label": "Regular tips", "value": false},
-      { "label": "Filter tips", "value": true },
+      { "label": "Filter tips", "value": true }
     ]
   },
   {
