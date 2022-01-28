@@ -5,7 +5,7 @@
             "Nucleic Acid Purification"
         ]
     },
-    "description": "This protocol automates variable pooling of samples and addition of lysis buffer for automated extraction downstream. \nWorkflow 2\n\n\n\nP300 single-channel GEN2 electronic pipette\nP300 multi-channel GEN2 electronic pipette\nOpentrons 200ul filter tiprack\nOpentrons 300ul tiprack\nNunc\u2122 96-Well Polypropylene DeepWell\u2122 Storage Plates\nCaplugs\u2122 30mL Centrifuge Tubes\n\n\n\nDeck Setup\n* Opentrons 200ul filter tiprack (Slot 5)\n* Opentrons 300ul tiprack (Slot 6)\n* Deep Well Plate (Slot 2)\n* NEST 195 mL Reservoir (Slot 3)\n* 30 mL Caplug Tubes in Opentrons 6 Tube Rack (Slots 1, 4, 7, 8, 9, 10, 11)",
+    "description": "This protocol automates variable pooling of samples and addition of lysis buffer for automated extraction downstream. \nWorkflow 2\n\n\n\nP300 single-channel GEN2 electronic pipette\nP300 multi-channel GEN2 electronic pipette\nOpentrons 200ul filter tiprack\nOpentrons 300ul tiprack\nNunc\u2122 96-Well Polypropylene DeepWell\u2122 Storage Plates\nCaplugs\u2122 30mL Centrifuge Tubes\n\n\n\nDeck Setup\n Opentrons 200ul filter tiprack (Slot 5)\n Opentrons 300ul tiprack (Slot 6)\n Deep Well Plate (Slot 2)\n NEST 195 mL Reservoir (Slot 3)\n* 30 mL Caplug Tubes in Opentrons 6 Tube Rack (Slots 1, 4, 7, 8, 9, 10, 11)",
     "internal": "6fe477",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",

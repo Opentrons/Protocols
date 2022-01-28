@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "\n",
-    "description": "This protocol automates the pooling of samples and distribution to Cepheid for rapid Covid-19 diagnostics.\nThe protocol begins by pooling samples in groups of 10. Once pooled, the pooled samples are mixed and transferred to the Cepheid device on a custom adapter containing the Cepheid device on the deck of the OT-2.\nExplanation of complex parameters below:\n* Number of Samples: Specify the number of samples to run (in groups of 10).\n* P1000 Mount: Specify which mount the P1000 Single-Channel Pipette (GEN2) is attached to\n",
+    "description": "This protocol automates the pooling of samples and distribution to Cepheid for rapid Covid-19 diagnostics.\nThe protocol begins by pooling samples in groups of 10. Once pooled, the pooled samples are mixed and transferred to the Cepheid device on a custom adapter containing the Cepheid device on the deck of the OT-2.\nExplanation of complex parameters below:\n Number of Samples: Specify the number of samples to run (in groups of 10).\n P1000 Mount: Specify which mount the P1000 Single-Channel Pipette (GEN2) is attached to\n",
     "internal": "cepheid",
     "labware": "\nOpentrons 15-Tube Rack\n12mL Tubes\nCepheid\n",
     "markdown": {
