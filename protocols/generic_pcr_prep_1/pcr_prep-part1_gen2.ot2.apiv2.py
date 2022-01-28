@@ -1,7 +1,7 @@
 from opentrons import protocol_api
 
 metadata = {
-    'protocolName': 'Generic PCR Prep: part 1 - mastermix creation',
+    'protocolName': 'Generic PCR Prep part 1 - Mastermix creation',
     'author': 'Opentrons <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
@@ -15,12 +15,12 @@ def get_values(*names):
                                   "right_pipette_lname":"p300_single_gen2",
                                   "use_filter_tips_left":false,
                                   "use_filter_tips_right":false,
-                                  "tuberack_1_lname":"opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap",
-                                  "tuberack_2_lname":"opentrons_24_tuberack_generic_2ml_screwcap",
+                                  "labware_1_lname":"opentrons_24_aluminumblock_nest_1.5ml_snapcap",
+                                  "labware_2_lname":"opentrons_24_tuberack_generic_2ml_screwcap",
                                   "twelve_well_resv_lname":"nest_12_reservoir_15ml",
-                                  "tmod_1_lname",
-                                  "tmod_2_lname",
-                                  "master_mix_csv":"Reagent,Slot,Well,Volume\\nBuffer,1,A2,3\\nMgCl,1,A3,40\\ndNTPs,2,A2,90\\nWater,2,A3,248\\nprimer 1,1,A4,25\\nprimer 2,1,A5,25\\n"}""")
+                                  "tmod_1_lname":"temperature module gen2",
+                                  "tmod_2_lname":null,
+                                  "master_mix_csv":"Reagent,Slot,Well,Volume\\nBuffer,1,A2,3\\nMgCl,1,A3,40\\ndNTPs,2,A2,90\\nWater,2,A3,248\\nprimer 1,1,A4,25\\nprimer 2,1,A5,25\\nresevoir reagent,3,A2,25\\n"}""")
     return [_all_values[n] for n in names]
 
 
@@ -31,8 +31,8 @@ def run(ctx: protocol_api.ProtocolContext):
       right_pipette_lname,
       use_filter_tips_left,
       use_filter_tips_right,
-      tuberack_1_lname,
-      tuberack_2_lname,
+      labware_1_lname,
+      labware_2_lname,
       twelve_well_resv_lname,
       tmod_1_lname,
       tmod_2_lname,
@@ -42,8 +42,8 @@ def run(ctx: protocol_api.ProtocolContext):
       "right_pipette_lname",
       "use_filter_tips_left",
       "use_filter_tips_right",
-      "tuberack_1_lname",
-      "tuberack_2_lname",
+      "labware_1_lname",
+      "labware_2_lname",
       "twelve_well_resv_lname",
       "tmod_1_lname",
       "tmod_2_lname",
@@ -52,9 +52,11 @@ def run(ctx: protocol_api.ProtocolContext):
     if not left_pipette_lname and not right_pipette_lname:
         raise Exception('You have to select at least 1 pipette.')
 
-    tuberack_1_slot = '1'
-    tuberack_2_slot = '2'
+    labware_1_slot = '1'
+    labware_2_slot = '2'
     reservoir_slot = '3'
+    tiprack_left_slots = '4'
+    tiprack_right_slots = '5'
 
     # load modules
     '''
@@ -71,7 +73,7 @@ def run(ctx: protocol_api.ProtocolContext):
     '''
     tmod_list = []
     for tmod_lname, slot in zip([tmod_1_lname, tmod_2_lname],
-                                [tuberack_1_slot, tuberack_2_slot]):
+                                [labware_1_slot, labware_2_slot]):
         if tmod_lname:
             tmod = ctx.load_module(tmod_lname, slot)
             tmod_list.append(tmod)
@@ -92,28 +94,93 @@ def run(ctx: protocol_api.ProtocolContext):
 
     '''
     # load labware
-    # Load tuberacks
-    tuberack_list = []
-    for tuberack_lname, tmod, slot in zip([tuberack_1_lname, tuberack_2_lname],
-                                          [tmod1, tmod2],
-                                          [tuberack_1_slot, tuberack_2_slot]):
-        if tuberack_lname:
+    # Load labwares
+    labware_list = []
+    for labware_lname, tmod, slot, name in \
+        zip([labware_1_lname, labware_2_lname],
+            [tmod1, tmod2],
+            [labware_1_slot, labware_2_slot],
+            ["Tube rack 1", "Tube rack 2"]):
+        if labware_lname:
             if tmod:
-                tuberack_list.append(tmod.load_labware(tuberack_lname))
+                labware_list.append(tmod.load_labware(labware_lname, name))
             else:
-                tuberack_list.append(ctx.load_labware(tuberack_lname, slot))
+                labware_list.append(ctx.load_labware(labware_lname, slot,
+                                                     name))
         else:
-            tuberack_list.append(None)
-    tuberack1, tuberack2 = tuberack_list
+            labware_list.append(None)
+    labware1, labware2 = labware_list
 
     res12 = ctx.load_labware(
         twelve_well_resv_lname, reservoir_slot, '12-channel reservoir')
 
     reagents = {
-        '1': tuberack1,
-        '2': tuberack2,
+        '1': labware1,
+        '2': labware2,
         '3': res12
     }
+    # load tipracks
+    '''
+
+    Add your tipracks here as a list:
+
+    For a single tip rack:
+
+    tiprack_name = [ctx.load_labware('{loadname}', '{slot number}')]
+
+    For multiple tip racks of the same type:
+
+    tiprack_name = [ctx.load_labware('{loadname}', 'slot')
+                     for slot in ['1', '2', '3']]
+
+    If two different tipracks are on the deck, use convention:
+    tiprack[number of microliters]
+    e.g. tiprack10, tiprack20, tiprack200, tiprack300, tiprack1000
+
+    '''
+
+    tiprack_lnames = {
+        "p20s_filtered": "opentrons_96_filtertiprack_20ul",
+        "p20s_nonfiltered": "opentrons_96_tiprack_20ul",
+        "p300s_filtered": "opentrons_96_filtertiprack_200ul",
+        "p300s_nonfiltered": "opentrons_96_tiprack_300ul",
+        "p1000s_filtered": "opentrons_96_filtertiprack_1000ul",
+        "p1000s_nonfiltered": "opentrons_96_tiprack_1000ul"
+    }
+
+    tipracks = []
+    for pip_lname, is_filtered, slot in zip([left_pipette_lname,
+                                            right_pipette_lname],
+                                            [use_filter_tips_left,
+                                             use_filter_tips_right],
+                                            [tiprack_left_slots,
+                                             tiprack_right_slots]):
+        if "20_" in pip_lname:
+            if is_filtered:
+                tipracks.append(
+                    ctx.load_labware(tiprack_lnames["p20s_filtered"], slot))
+            else:
+                tipracks.append(
+                    ctx.load_labware(tiprack_lnames["p20s_nonfiltered"], slot))
+        elif "300_" in pip_lname:
+            if is_filtered:
+                tipracks.append(
+                    ctx.load_labware(tiprack_lnames["p300s_filtered"], slot))
+            else:
+                tipracks.append(
+                    ctx.load_labware(tiprack_lnames["p300s_nonfiltered"],
+                                     slot))
+        elif "1000_" in pip_lname:
+            if is_filtered:
+                tipracks.append(
+                    ctx.load_labware(tiprack_lnames["p100s_filtered"], slot))
+            else:
+                tipracks.append(
+                    ctx.load_labware(tiprack_lnames["p1000s_nonfiltered"],
+                                     slot))
+        else:
+            tipracks.append(None)
+    tiprack_l, tiprack_r = tipracks
 
     # load instrument
     '''
@@ -136,43 +203,20 @@ def run(ctx: protocol_api.ProtocolContext):
     pipette_l = None
     pipette_r = None
 
-    for pip, mount, slot in zip(
+    for pip, mount, tiprack in zip(
             [left_pipette_lname, right_pipette_lname],
-            ['left', 'right'], ['5', '6']):
+            ['left', 'right'],
+            [tiprack_l, tiprack_r]):
 
         if pip:
-            range = pip.split('_')[0][1:]
-            rack = 'opentrons_96_tiprack_' + range + 'ul'
-            tiprack = protocol_context.load_labware(rack, slot)
             if mount == 'left':
-                pipette_l = protocol_context.load_instrument(
+                pipette_l = ctx.load_instrument(
                     pip, mount, tip_racks=[tiprack])
             else:
-                pipette_r = protocol_context.load_instrument(
+                pipette_r = ctx.load_instrument(
                     pip, mount, tip_racks=[tiprack])
 
-    # load tipracks
-
-    '''
-
-    Add your tipracks here as a list:
-
-    For a single tip rack:
-
-    tiprack_name = [ctx.load_labware('{loadname}', '{slot number}')]
-
-    For multiple tip racks of the same type:
-
-    tiprack_name = [ctx.load_labware('{loadname}', 'slot')
-                     for slot in ['1', '2', '3']]
-
-    If two different tipracks are on the deck, use convention:
-    tiprack[number of microliters]
-    e.g. tiprack10, tiprack20, tiprack200, tiprack300, tiprack1000
-
-    '''
     # pipette functions   # INCLUDE ANY BINDING TO CLASS
-
     '''
 
     Define all pipette functions, and class extensions here.
@@ -207,6 +251,13 @@ def run(ctx: protocol_api.ProtocolContext):
             pipette.pick_up_tip()
 
     '''
+    def transfer(pipette, vol, source, dest, **transfer_kwargs):
+        try:
+            pipette.transfer(vol, source, dest, **transfer_kwargs)
+        except protocol_api.labware.OutOfTipsError:
+            ctx.pause("Replace empty tip racks")
+            pipette.reset_tipracks()
+            pipette.transfer(vol, source, dest, **transfer_kwargs)
 
     # helper functions
     '''
@@ -277,61 +328,10 @@ def run(ctx: protocol_api.ProtocolContext):
 
     '''
 
-
-metadata = {
-    'protocolName': 'Generic PCR Prep',
-    'author': 'Opentrons <protocols@opentrons.com>',
-    'source': 'Protocol Library',
-    'apiLevel': '2.11'
-}
-
-
-def run(protocol_context):
-    [left_pipette, right_pipette, master_mix_csv] = get_values(  # noqa: F821
-        "left_pipette", "right_pipette", "master_mix_csv")
-
-    if not left_pipette and not right_pipette:
-        raise Exception('You have to select at least 1 pipette.')
-
-    pipette_l = None
-    pipette_r = None
-
-    for pip, mount, slot in zip(
-            [left_pipette, right_pipette], ['left', 'right'], ['5', '6']):
-
-        if pip:
-            range = pip.split('_')[0][1:]
-            rack = 'opentrons_96_tiprack_' + range + 'ul'
-            tiprack = protocol_context.load_labware(rack, slot)
-            if mount == 'left':
-                pipette_l = protocol_context.load_instrument(
-                    pip, mount, tip_racks=[tiprack])
-            else:
-                pipette_r = protocol_context.load_instrument(
-                    pip, mount, tip_racks=[tiprack])
-
-    # labware setup
-    snaprack = protocol_context.load_labware(
-        'opentrons_24_tuberack_eppendorf_2ml_safelock_snapcap',
-        '1',
-        'snapcap 2ml tuberack'
-    )
-    screwrack = protocol_context.load_labware(
-        'opentrons_24_tuberack_generic_2ml_screwcap',
-        '2',
-        'screwcap 2ml tuberack'
-    )
-    res12 = protocol_context.load_labware(
-        'usascientific_12_reservoir_22ml', '3', '12-channel reservoir')
-    reagents = {
-        '1': snaprack,
-        '2': screwrack,
-        '3': res12
-    }
-
     # determine which pipette has the smaller volume range
+    pip_s, pip_l, pipette = [None] * 3
     if pipette_l and pipette_r:
-        if left_pipette == right_pipette:
+        if left_pipette_lname == right_pipette_lname:
             pip_s = pipette_l
             pip_l = pipette_r
         else:
@@ -351,7 +351,7 @@ def run(protocol_context):
     ]
 
     for line in info_list:
-        protocol_context.comment('Transferring ' + line[0] + ' to destination')
+        ctx.comment('Transferring ' + line[0] + ' to mastermix well')
         source = reagents[line[1]].wells(line[2].upper())
         vol = float(line[3])
         if pipette_l and pipette_r:
@@ -359,4 +359,4 @@ def run(protocol_context):
                 pipette = pip_s
             else:
                 pipette = pip_l
-        pipette.transfer(vol, source, mastermix_dest)
+        transfer(pipette, vol, source, mastermix_dest)
