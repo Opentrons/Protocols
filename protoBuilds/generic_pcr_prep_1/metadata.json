@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "pcr_prep-part1_gen2.ot2.apiv2.py"
+            "generic_pcr_prep_1.ot2.apiv2.py"
         ],
         "description": [
             "README.md"
@@ -14,7 +14,7 @@
         "hide-from-search": false,
         "skip-tests": false
     },
-    "path": "protocols/pcr_prep_part_1_gen2",
-    "slug": "pcr_prep_part_1_gen2",
+    "path": "protocols/generic_pcr_prep_1",
+    "slug": "generic_pcr_prep_1",
     "status": "ok"
 }

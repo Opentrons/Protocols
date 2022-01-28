@@ -9,21 +9,6 @@ metadata = {
 }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{ "left_pipette_lname":"p1000_single_gen2",
-                                  "right_pipette_lname":"p300_single_gen2",
-                                  "use_filter_tips_left":false,
-                                  "use_filter_tips_right":false,
-                                  "labware_1_lname":"opentrons_24_aluminumblock_nest_1.5ml_snapcap",
-                                  "labware_2_lname":"opentrons_24_tuberack_generic_2ml_screwcap",
-                                  "twelve_well_resv_lname":"nest_12_reservoir_15ml",
-                                  "tmod_1_lname":"temperature module gen2",
-                                  "tmod_2_lname":null,
-                                  "master_mix_csv":"Reagent,Slot,Well,Volume\\nBuffer,1,A2,3\\nMgCl,1,A3,40\\ndNTPs,2,A2,90\\nWater,2,A3,248\\nprimer 1,1,A4,25\\nprimer 2,1,A5,25\\nresevoir reagent,3,A2,25\\n"}""")
-    return [_all_values[n] for n in names]
-
-
 def run(ctx: protocol_api.ProtocolContext):
 
     [
