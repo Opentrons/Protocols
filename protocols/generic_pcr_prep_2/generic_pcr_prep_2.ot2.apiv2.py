@@ -9,21 +9,146 @@ metadata = {
     }
 
 
-def run(protocol_context: protocol_api.ProtocolContext):
-    [number_of_samples, left_pipette, right_pipette, mastermix_volume,
-     DNA_volume, DNA_well_plate, destination_well_plate] \
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{ "number_of_samples":"80",
+                                  "left_pipette_lname":"p300_multi_gen2",
+                                  "right_pipette_lname":"p20_multi_gen2",
+                                  "use_filter_tips_left": false,
+                                  "use_filter_tips_right": false,
+                                  "mastermix_volume":"18",
+                                  "DNA_volume":"2",
+                                  "twelve_well_reservoir_lname",
+                                  "DNA_well_plate":"biorad_96_wellplate_200ul_pcr",
+                                  "destination_well_plate":"biorad_96_wellplate_200ul_pcr",
+                                  "DNA_well_plate_tmod",
+                                  "dest_well_plate_tmod"}
+                                  """)
+    return [_all_values[n] for n in names]
+
+
+def run(ctx: protocol_api.ProtocolContext):
+    [number_of_samples, left_pipette_lname, right_pipette_lname,
+     mastermix_volume, use_filter_tips_left, use_filter_tips_right,
+     DNA_volume, twelve_well_reservoir_lname, DNA_well_plate,
+     destination_well_plate] \
       = get_values(  # noqa: F821
-        "number_of_samples", "left_pipette", 'right_pipette',
-        "mastermix_volume", "DNA_volume",
-        "DNA_well_plate", "destination_well_plate"
+        "number_of_samples", "left_pipette_lname", 'right_pipette_lname',
+        "use_filter_tips_left", "use_filter_tips_right",
+        "mastermix_volume", "DNA_volume", "twelve_well_reservoir_lname",
+        "DNA_well_plate", "destination_well_plate_lname"
      )
 
-    number_of_samples = int(number_of_samples)
-    mastermix_volume = float(mastermix_volume)
-    DNA_volume = float(DNA_volume)
-
+    # Error checking
     if not left_pipette and not right_pipette:
         raise Exception('You have to select at least 1 pipette.')
+
+    tiprack_l_slots = ['5', '6']
+    tiprack_r_slots = ['7', '8']
+
+    # load modules
+    '''
+
+    Add your modules here with:
+
+    module_name = ctx.load_module('{module_loadname}', '{slot number}')
+
+    Note: if you are loading a thermocycler, you do not need to specify
+    a slot number - thermocyclers will always occupy slots 7, 8, 10, and 11.
+
+    For all other modules, you can load them on slots 1, 3, 4, 6, 7, 9, 10.
+
+    '''
+    tmod_list = []
+    for tmod_lname, slot in zip([DNA_well_plate_tmod, dest_well_plate_tmod],
+                                [DNA_plate_slot, dest_plate_slot]):
+        if tmod_lname:
+            tmod = ctx.load_module(tmod_lname, slot)
+            tmod_list.append(tmod)
+        else:
+            tmod_list.append(None)
+    tmod_dna_plate, tmod_dest_plate = tmod_list
+    '''
+
+    Add your labware here with:
+
+    labware_name = ctx.load_labware('{loadname}', '{slot number}')
+
+    If loading labware on a module, you can load with:
+
+    labware_name = module_name.load_labware('{loadname}')
+    where module_name is defined above.
+
+    '''
+    # labware setup
+    dna_plate = protocol_context.load_labware(
+        DNA_well_plate, '1', 'DNA plate')
+    dest_plate = protocol_context.load_labware(
+        destination_well_plate, '2', 'Destination plate')
+    res12 = protocol_context.load_labware(
+        'usascientific_12_reservoir_22ml', '3', 'reservoir')
+    # load tipracks
+    '''
+
+    Add your tipracks here as a list:
+
+    For a single tip rack:
+
+    tiprack_name = [ctx.load_labware('{loadname}', '{slot number}')]
+
+    For multiple tip racks of the same type:
+
+    tiprack_name = [ctx.load_labware('{loadname}', 'slot')
+                     for slot in ['1', '2', '3']]
+
+    If two different tipracks are on the deck, use convention:
+    tiprack[number of microliters]
+    e.g. tiprack10, tiprack20, tiprack200, tiprack300, tiprack1000
+
+    '''
+
+    tiprack_lnames = {
+        "p20s_filtered": "opentrons_96_filtertiprack_20ul",
+        "p20s_nonfiltered": "opentrons_96_tiprack_20ul",
+        "p300s_filtered": "opentrons_96_filtertiprack_200ul",
+        "p300s_nonfiltered": "opentrons_96_tiprack_300ul",
+        "p1000s_filtered": "opentrons_96_filtertiprack_1000ul",
+        "p1000s_nonfiltered": "opentrons_96_tiprack_1000ul"
+    }
+
+    tipracks = []
+    for pip_lname, is_filtered, slot in zip([left_pipette_lname,
+                                            right_pipette_lname],
+                                            [use_filter_tips_left,
+                                             use_filter_tips_right],
+                                            [tiprack_l_slots,
+                                             tiprack_r_slots]):
+        if "20_" in pip_lname:
+            if is_filtered:
+                tipracks.append(
+                    ctx.load_labware(tiprack_lnames["p20s_filtered"], slot))
+            else:
+                tipracks.append(
+                    ctx.load_labware(tiprack_lnames["p20s_nonfiltered"], slot))
+        elif "300_" in pip_lname:
+            if is_filtered:
+                tipracks.append(
+                    ctx.load_labware(tiprack_lnames["p300s_filtered"], slot))
+            else:
+                tipracks.append(
+                    ctx.load_labware(tiprack_lnames["p300s_nonfiltered"],
+                                     slot))
+        elif "1000_" in pip_lname:
+            if is_filtered:
+                tipracks.append(
+                    ctx.load_labware(tiprack_lnames["p100s_filtered"], slot))
+            else:
+                tipracks.append(
+                    ctx.load_labware(tiprack_lnames["p1000s_nonfiltered"],
+                                     slot))
+        else:
+            tipracks.append(None)
+    tiprack_l, tiprack_r = tipracks
 
     pipette_l = None
     pipette_r = None
@@ -44,14 +169,6 @@ def run(protocol_context: protocol_api.ProtocolContext):
             else:
                 pipette_r = protocol_context.load_instrument(
                     pip, mount, tip_racks=tipracks)
-
-    # labware setup
-    dna_plate = protocol_context.load_labware(
-        DNA_well_plate, '1', 'DNA plate')
-    dest_plate = protocol_context.load_labware(
-        destination_well_plate, '2', 'Output plate')
-    res12 = protocol_context.load_labware(
-        'usascientific_12_reservoir_22ml', '3', 'reservoir')
 
     # determine which pipette has the smaller volume range
     pip_s, pip_l = rank_pipettes(pipette_l, pipette_r)

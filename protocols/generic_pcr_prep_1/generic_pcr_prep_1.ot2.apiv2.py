@@ -79,7 +79,6 @@ def run(ctx: protocol_api.ProtocolContext):
 
     '''
     # load labware
-    # Load labwares
     labware_list = []
     for labware_lname, tmod, slot, name in \
         zip([labware_1_lname, labware_2_lname],
