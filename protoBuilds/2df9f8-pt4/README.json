@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "\n",
-    "description": "This protocol pools up to 5 plates by column to a final destination plate. 100ul of sample is taken from each column of each specified plate and dispensed into the final deep well plate on slot 11.\nExplanation of complex parameters below:\n* Number of plates: Specify the number of agar plates (1-5) to fill for this run.\n* Number of columns in each plate: Specify the number of columns (1-12) in each agar plate to fill.\n* P300 Multi-Channel Pipette Mount: Specify which mount (left or right) to host the P300 multi-channel pipette.\n",
+    "description": "This protocol pools up to 5 plates by column to a final destination plate. 100ul of sample is taken from each column of each specified plate and dispensed into the final deep well plate on slot 11.\nExplanation of complex parameters below:\n Number of plates: Specify the number of agar plates (1-5) to fill for this run.\n Number of columns in each plate: Specify the number of columns (1-12) in each agar plate to fill.\n* P300 Multi-Channel Pipette Mount: Specify which mount (left or right) to host the P300 multi-channel pipette.\n",
     "internal": "2df9f8-pt4",
     "labware": "\nNEST 2mL 96 well deep well plate\nOpentrons 300uL Tips\n",
     "markdown": {
