@@ -610,4 +610,4 @@ def run(ctx: protocol_api.ProtocolContext):
         ctx.comment("\n\nTransferring protein elution supernatant to" +
                     "target plate\n")
         transfer_plate_to_plate(elution_buf_vol, sample_plate, dest_plate)
-        ctx.comment("\n\n~~~~~ End of protocol ~~~~~\n")
+    ctx.comment("\n\n~~~~~ End of protocol ~~~~~\n")
