@@ -81,4 +81,4 @@ For the pipette choices it is important that the pipettes selected will cover th
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-protocol-hex-code
+generic_pcr_prep_1
