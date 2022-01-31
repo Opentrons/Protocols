@@ -182,12 +182,6 @@
   },
   {
     "type": "float",
-    "label": "Initial volume (of bacteria containing media in each sample well) (µL)",
-    "name": "bead_volume",
-    "default": 1000
-  },
-  {
-    "type": "float",
     "label": "Wash buffer volume for the washing steps (µL)",
     "name": "wash_buf_vol",
     "default": 150
@@ -233,5 +227,11 @@
     "label": "SDS buffer volume to elute proteins with (optional: this only matters if you decide to elute with SDS buffer)",
     "name": "sds_buffer_vol",
     "default": 30
+  },
+  {
+    "type": "float",
+    "label": "Starting volume of bacterial media",
+    "name": "starting_volume",
+    "default": 1000
   }
 ]
