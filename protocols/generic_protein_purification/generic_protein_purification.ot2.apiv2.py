@@ -10,40 +10,6 @@ metadata = {
 }
 
 
-def get_values(*names):
-    import json
-    _all_values = \
-        json.loads("""{ "n_samples":32,
-                        "small_pipette_lname":"p20_single_gen2",
-                        "large_pipette_lname":"p300_multi_gen2",
-                        "small_pipette_tipracks_lname":"opentrons_96_tiprack_20ul",
-                        "large_pipette_tipracks_lname":"opentrons_96_tiprack_300ul",
-                        "reservoir_lname": "nest_12_reservoir_15ml",
-                        "destination_plate_lname":"biorad_96_wellplate_200ul_pcr",
-                        "sample_plate_lname":"usascientific_96_wellplate_2.4ml_deep",
-                        "mag_mod_lname":"magnetic module gen2",
-                        "mag_engage_time":5,
-                        "tube_rack_lname":"opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap",
-                        "dest_temp_mod_lname":"temperature module gen2",
-                        "do_vortex_pause":"true",
-                        "do_SDS_step":"false",
-                        "do_DNAse_step":"true",
-                        "use_NaCl":"true",
-                        "starting_volume":1000.0,
-                        "bead_volume":30.0,
-                        "wash_buf_vol":150.0,
-                        "elution_buf_vol":100.0,
-                        "sds_buffer_vol":30,
-                        "n_washes":3,
-                        "n_wash_mixes":5,
-                        "n_elution_mixes":5,
-                        "incubation_time":2,
-                        "n_bead_mixes":5 }
-                        """)
-    param_list = [_all_values[n] for n in names]
-    return param_list
-
-
 def run(ctx: protocol_api.ProtocolContext):
 
     [
@@ -64,7 +30,6 @@ def run(ctx: protocol_api.ProtocolContext):
         do_DNAse_step,
         use_NaCl,
         bead_volume,
-        starting_volume,
         wash_buf_vol,
         elution_buf_vol,
         n_washes,
@@ -72,7 +37,8 @@ def run(ctx: protocol_api.ProtocolContext):
         n_elution_mixes,
         incubation_time,
         n_bead_mixes,
-        sds_buffer_vol
+        sds_buffer_vol,
+        starting_volume
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
         "mag_engage_time",
         "n_samples",
@@ -91,7 +57,6 @@ def run(ctx: protocol_api.ProtocolContext):
         "do_DNAse_step",
         "use_NaCl",
         "bead_volume",
-        "starting_volume",
         "wash_buf_vol",
         "elution_buf_vol",
         "n_washes",
@@ -99,7 +64,8 @@ def run(ctx: protocol_api.ProtocolContext):
         "n_elution_mixes",
         "incubation_time",
         "n_bead_mixes",
-        "sds_buffer_vol"
+        "sds_buffer_vol",
+        "starting_volume"
         )
 
     # define all custom variables above here with descriptions:
