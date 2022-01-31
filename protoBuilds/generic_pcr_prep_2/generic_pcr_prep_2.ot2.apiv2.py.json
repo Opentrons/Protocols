@@ -1,0 +1,290 @@
+{
+    "content": "import math\nfrom opentrons import protocol_api\n\nmetadata = {\n    'protocolName': 'Generic PCR Prep Part 2 - Mastermix and DNA Distribution',\n    'author': 'Opentrons <protocols@opentrons.com>',\n    'source': 'Protocol Library',\n    'apiLevel': '2.11'\n    }\n\n\ndef run(ctx: protocol_api.ProtocolContext):\n    [\n      n_samples,\n      left_pipette_lname,\n      right_pipette_lname,\n      use_filter_tips_left,\n      use_filter_tips_right,\n      mastermix_volume,\n      DNA_volume,\n      mastermix_reservoir_lname,\n      DNA_well_plate_lname,\n      destination_well_plate_lname,\n      DNA_well_plate_tmod,\n      dest_well_plate_tmod\n     ] = get_values(  # noqa: F821\n      \"n_samples\",\n      \"left_pipette_lname\",\n      \"right_pipette_lname\",\n      \"use_filter_tips_left\",\n      \"use_filter_tips_right\",\n      \"mastermix_volume\",\n      \"DNA_volume\",\n      \"mastermix_reservoir_lname\",\n      \"DNA_well_plate_lname\",\n      \"destination_well_plate_lname\",\n      \"DNA_well_plate_tmod\",\n      \"dest_well_plate_tmod\"\n     )\n\n    # Error checking\n    if not left_pipette_lname and not right_pipette_lname:\n        raise Exception('You have to select at least 1 pipette.')\n\n    if not (DNA_volume > 0 or mastermix_volume > 0):\n        raise Exception('DNA or mastermix volume is 0 or less \u00b5L')\n\n    DNA_plate_slot = '9'\n    reservoir_slot = '3'\n    dest_plate_slot = '6'\n    tiprack_l_slots = ['4', '7']\n    tiprack_r_slots = ['5', '8']\n\n    # load modules\n    '''\n\n    Add your modules here with:\n\n    module_name = ctx.load_module('{module_loadname}', '{slot number}')\n\n    Note : if you are loading a thermocycler, you do not need to specify\n    a slot number - thermocyclers will always occupy slots 7, 8, 10, and 11.\n\n    For all other modules, you can load them on slots 1, 3, 4, 6, 7, 9, 10.\n\n    '''\n\n    tmod_list = []\n    for tmod_lname, slot in zip([DNA_well_plate_tmod, dest_well_plate_tmod],\n                                [DNA_plate_slot, dest_plate_slot]):\n        if tmod_lname:\n            tmod = ctx.load_module(tmod_lname, slot)\n            tmod_list. append(tmod)\n        else:\n            tmod_list.append(None)\n    tmod_dna_plate, tmod_dest_plate = tmod_list\n    '''\n\n\n    Add your labware here with:\n    labware_name = ctx.load_labware('{loadname}', '{slot number}')\n\n    If loading labware on a module, you can load with:\n\n    labware_name = module_name.load_labware('{loadname}')\n    where module_name is defined above.\n\n    '''\n\n    # labware setup\n    plate_list = []\n    for labware_lname, tmod, slot, name in \\\n        zip([DNA_well_plate_lname, destination_well_plate_lname],\n            [tmod_dna_plate, tmod_dest_plate],\n            [DNA_plate_slot, dest_plate_slot],\n            [\"DNA plate\", \"destination plate\"]):\n        if tmod:\n            plate_list.append(tmod.load_labware(labware_lname, name))\n        else:\n            plate_list.append(ctx.load_labware(labware_lname, slot, name))\n\n    DNA_well_plate, destination_well_plate = plate_list\n\n    mastermix_reservoir = ctx.load_labware(mastermix_reservoir_lname,\n                                           reservoir_slot,\n                                           'mastermix reservoir')\n    # load tipracks\n    '''\n\n\n    Add your tipracks here as a list:\n\n    For\n    a single tip rack:\n    tiprack_name = [ctx.load_labware('{loadname}', '{slot number}')]\n\n    For multiple tip racks of the same type:\n\n    tiprack_name = [ctx.load_labware('{loadname}', 'slot')\n                     for slot in ['1', '2', '3']]\n\n    If two different tipracks are on the deck, use convention:\n    tiprack[ number of microliters]\n    e. g. tiprack10, tiprack20, tiprack200, tiprack300, tiprack1000\n    '''\n\n    tiprack_lnames = {\n        \"p20s_filtered\": \"opentrons_96_filtertiprack_20ul\",\n        \"p20s_nonfiltered\": \"opentrons_96_tiprack_20ul\",\n        \"p300s_filtered\": \"opentrons_96_filtertiprack_200ul\",\n        \"p300s_nonfiltered\": \"opentrons_96_tiprack_300ul\",\n        \"p1000s_filtered\": \"opentrons_96_filtertiprack_1000ul\",\n        \"p1000s_nonfiltered\": \"opentrons_96_tiprack_1000ul\"\n    }\n\n    # Helper function for loading tipracks\n    def load_tipracks(tiprack_list, filtered_tips, non_filtered_tips,\n                      is_filtered, slot):\n        tip_type = filtered_tips if is_filtered else non_filtered_tips\n        tiprack_list.append([ctx.load_labware(tip_type, s) for s in slot])\n\n    tiprack_list = []\n\n    for pip_lname, is_filtered, slot \\\n        in zip([left_pipette_lname, right_pipette_lname],\n               [use_filter_tips_left, use_filter_tips_right],\n               [tiprack_l_slots, tiprack_r_slots]):\n\n        if \"20_\" in pip_lname:\n            load_tipracks(tiprack_list, tiprack_lnames[\"p20s_filtered\"],\n                          tiprack_lnames[\"p20s_nonfiltered\"], is_filtered,\n                          slot)\n        elif \"300_\" in pip_lname:\n            load_tipracks(tiprack_list, tiprack_lnames[\"p300s_filtered\"],\n                          tiprack_lnames[\"p300s_nonfiltered\"], is_filtered,\n                          slot)\n        elif \"1000_\" in pip_lname:\n            load_tipracks(tiprack_list, tiprack_lnames[\"p1000s_filtered\"],\n                          tiprack_lnames[\"p1000s_nonfiltered\"], is_filtered,\n                          slot)\n        else:\n            tiprack_list.append(None)\n    tiprack_l, tiprack_r = tiprack_list\n\n    # load instrument\n    '''\n    Nomenclature for pipette:\n\n    use 'p' for single-channel, 'm' for multi-channel,\n    followed by number of microliters.\n\n    p20, p300, p1000 (single channel pipettes)\n    m20, m300 (multi-channel pipettes)\n\n    If loading pipette, load with:\n    ctx.load_instrument('{pipette api load name}',\n                        pipette_mount(\"left\", or \"right\"),\n                        tip_racks= tiprack )\n    '''\n\n    pipette_l = None\n    pipette_r = None\n    pipettes = []\n    for pip, mount, tiprack in zip([left_pipette_lname, right_pipette_lname],\n                                   [\"left\", \"right\"],\n                                   [tiprack_l, tiprack_r]):\n        if pip:\n            pipettes.append(ctx.load_instrument(pip, mount, tip_racks=tiprack))\n        else:\n            pipettes.append(None)\n\n    pipette_l, pipette_r = pipettes\n    '''\n\n    Define all pipette functions, and class extensions here.\n    These may include but are not limited to:\n\n    - Custom pickup functions\n    - Custom drop tip functions\n    - Custom Tip tracking functions\n    - Custom Trash tracking functions\n    - Slow tip withdrawal\n\n    For any functions in your protocol, describe the function as well as\n    describe the parameters which are to be passed in as a docstring below\n    the function.\n    '''\n    def is_multi_channel(pip): return True if pip.channels == 8 else False\n\n    def pick_up_tip(pipette):\n        \"\"\"\n        Safe function for picking up tips in that it checks for tip\n        availability and asks user to replace tips if the tipracks\n        have run empty.\n\n        :param pipette: Pipette to pick up tip with\n        \"\"\"\n        try:\n            pipette.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            ctx.pause(\"Replace empty tip racks\")\n            pipette.reset_tipracks()\n            pipette.pick_up_tip()\n\n    def rank_pipettes(pipette_l, pipette_r):\n        \"\"\"\n        Given two pipettes this fn will return them in the order of smallest\n        to largest. This function assumes that error checking for cases where\n        no pipettes were loaded was already done.\n        \"\"\"\n        if not pipette_l:\n            return [pipette_r, pipette_r]\n        elif not pipette_r:\n            return [pipette_l, pipette_l]\n        else:\n            if pipette_l.max_volume <= pipette_r.max_volume:\n                return [pipette_l, pipette_r]\n            else:\n                return [pipette_r, pipette_l]\n\n    def pipette_selector(small_pipette, large_pipette, volume):\n        \"\"\"\n        This function will try to return a multi-channel pipette that\n        can handle the given volume, and failing that a single channel pip.\n        \"\"\"\n        if small_pipette.min_volume >= volume \\\n                and is_multi_channel(small_pipette):\n            return small_pipette\n        elif large_pipette.min_volume >= volume \\\n                and is_multi_channel(large_pipette):\n            return large_pipette\n        elif small_pipette.min_volume >= volume:\n            return small_pipette\n        elif large_pipette.min_volume >= volume:\n            return large_pipette\n        else:\n            raise Exception(\"No suitable pipette for a volume of {} loaded\".\n                            format(volume))\n\n    # helper functions\n    ''' Define any custom helper functions outside of the pipette scope here,\n    using the convention seen above.\n    e.g.\n    def\n        remove_supernatant(vol, index):\n        \"\"\"\n        function description\n        : param vol:\n        : param index:\n        \"\"\"\n\n    '''\n    def resv_to_plate_transfer(pipette, vol, source_well, dest_plate,\n                               drop_tips=False):\n        \"\"\"\n        Transfer from a reservoir to a plate. If the pipette is multi channel\n        the transfers will be column to column.\n\n        :param pipette: Pipette for the pipetting actions\n        :param vol: The volume per tip to transfer\n        :param source_well: The reservoir well to transfer from\n        :param dest_plate: The plate to transfer to\n        :param drop_tips: Whether to drop tips after each transfer or use the\n        same tips throughout. Defaults to false\n        \"\"\"\n        # If the pip is multi-channel transfer to the a row well of each col\n        if is_multi_channel(pipette):\n            n_columns = math.ceil(n_samples/8)\n            target_columns = dest_plate.columns()[0:n_columns-1]\n            if not drop_tips:\n                pick_up_tip(pipette)\n            for col in target_columns:\n                if drop_tips:\n                    pick_up_tip(pipette)\n                pipette.aspirate(vol, source_well)\n                pipette.dispense(vol, col[0])\n                if drop_tips:\n                    pipette.drop_tip()\n            if not drop_tips:\n                pipette.drop_tip()\n        # Single channel pip: well to well\n        else:\n            if not drop_tips:\n                pick_up_tip(pipette)\n            for well in dest_plate:\n                # pipette.pick_up_tip()\n                if drop_tips:\n                    pick_up_tip(pipette)\n                pipette.aspirate(vol, source_well)\n                pipette.dispense(vol, well)\n                if drop_tips:\n                    pipette.drop_tip()\n            if not drop_tips:\n                pipette.drop_tip()\n\n    def plate_to_plate_transfer(pipette, vol, source_plate, dest_plate,\n                                drop_tips=True):\n        \"\"\"\n        Transfer from a well plate to a well plate.\n        If the pipette is multi channel the transfers will be column to column.\n\n        :param pipette: Pipette for the pipetting actions\n        :param vol: The volume per tip to transfer\n        :param source_plate: The well plate to transfer from\n        :param dest_plate: The well plate to transfer to\n        :param drop_tips: Whether to drop tips after each transfer or use the\n        same tips throughout. Unlike resv_to_plate_transfer it\n        defaults to True.\n        \"\"\"\n        # Multi-channel pip: column by column transfer\n        if is_multi_channel(pipette):\n            n_columns = math.ceil(n_samples/8)\n            source_columns = source_plate.columns()[0:n_columns-1]\n            target_columns = dest_plate.columns()[0:n_columns-1]\n            if not drop_tips:\n                pick_up_tip(pipette)\n            for s_col, d_col in zip(source_columns, target_columns):\n                if drop_tips:\n                    pick_up_tip(pipette)\n                pipette.aspirate(vol, s_col[0])\n                pipette.dispense(vol, d_col[0])\n                if drop_tips:\n                    pipette.drop_tip()\n        # SCP: well by well transfer\n        else:\n            if not drop_tips:\n                pick_up_tip(pipette)\n            for s_well, d_well in zip(source_plate, dest_plate):\n                if drop_tips:\n                    pick_up_tip(pipette)\n                pipette.aspirate(vol, s_well)\n                pipette.dispense(vol, d_well)\n                if drop_tips:\n                    pipette.drop_tip()\n    # reagents\n    '''\n    Define where all reagents are on the deck using the labware defined above.\n\n    e.g.\n\n    water = reservoir12.wells()[-1]\n    waste = reservoir.wells()[0]\n    samples = plate.rows()[0][0]\n    dnase = tuberack.wells_by_name()['A4']\n\n    '''\n    mastermix = mastermix_reservoir.wells()[0]\n\n    '''\n\n    Include header sections as follows for each \"section\" of your protocol.\n\n    Section can be defined as a step in a bench protocol.\n\n    e.g.\n\n    ctx.comment('\\n\\nMOVING MASTERMIX TO SAMPLES IN COLUMNS 1-6\\n')\n\n    for .... in ...:\n        ...\n        ...\n\n    ctx.comment('\\n\\nRUNNING THERMOCYCLER PROFILE\\n')\n    '''\n\n    # determine which pipette has the smaller volume range\n    pip_s, pip_l = rank_pipettes(pipette_l, pipette_r)\n    # Make sure we have a pipette that can handle the volume of mastermix\n    # Ideally the smaller one\n    pipette = pipette_selector(pip_s, pip_l, mastermix_volume)\n    ctx.comment(\"\\n\\nTransferring master mix to target plate\\n\")\n    resv_to_plate_transfer(pipette, mastermix_volume, mastermix,\n                           destination_well_plate)\n\n    # Transfer DNA to the destination plate\n    pipette = pipette_selector(pip_s, pip_l, DNA_volume)\n    ctx.comment(\"\\n\\nTransferring DNA to target plate\\n\")\n    plate_to_plate_transfer(pipette, DNA_volume, DNA_well_plate,\n                            destination_well_plate)\n    ctx.comment(\"\\n\\n~~~~ Protocol complete ~~~~\\n\")\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 96,
+            "label": "Number of samples",
+            "name": "n_samples",
+            "type": "int"
+        },
+        {
+            "label": "Left pipette type",
+            "name": "left_pipette_lname",
+            "options": [
+                {
+                    "label": "GEN2 P20 Multi",
+                    "value": "p20_multi_gen2"
+                },
+                {
+                    "label": "GEN2 P300 Multi",
+                    "value": "p300_multi_gen2"
+                },
+                {
+                    "label": "GEN1 P10 Multi",
+                    "value": "p10_multi"
+                },
+                {
+                    "label": "GEN1 P50 Multi",
+                    "value": "p50_multi"
+                },
+                {
+                    "label": "GEN1 P300 Multi",
+                    "value": "p300_multi"
+                },
+                {
+                    "label": "none",
+                    "value": null
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Right pipette type",
+            "name": "right_pipette_lname",
+            "options": [
+                {
+                    "label": "GEN2 P300 Multi",
+                    "value": "p300_multi_gen2"
+                },
+                {
+                    "label": "GEN2 P20 Multi",
+                    "value": "p20_multi_gen2"
+                },
+                {
+                    "label": "GEN1 P10 Multi",
+                    "value": "p10_multi"
+                },
+                {
+                    "label": "GEN1 P50 Multi",
+                    "value": "p50_multi"
+                },
+                {
+                    "label": "GEN1 P300 Multi",
+                    "value": "p300_multi"
+                },
+                {
+                    "label": "none",
+                    "value": null
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Filtered or unfiltered tips for the left pipette?",
+            "name": "use_filter_tips_left",
+            "options": [
+                {
+                    "label": "Filter tips",
+                    "value": true
+                },
+                {
+                    "label": "Regular tips",
+                    "value": false
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Filtered or unfiltered tips for the right pipette?",
+            "name": "use_filter_tips_right",
+            "options": [
+                {
+                    "label": "Filter tips",
+                    "value": true
+                },
+                {
+                    "label": "Regular tips",
+                    "value": false
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 18,
+            "label": "Mastermix volume (in ul)",
+            "name": "mastermix_volume",
+            "type": "float"
+        },
+        {
+            "default": 2,
+            "label": "DNA volume (in ul)",
+            "name": "DNA_volume",
+            "type": "float"
+        },
+        {
+            "label": "Mastermix reservoir",
+            "name": "mastermix_reservoir_lname",
+            "options": [
+                {
+                    "label": "NEST 12 Well Reservoir 15 mL",
+                    "value": "nest_12_reservoir_15ml"
+                },
+                {
+                    "label": "USA Scientific 12 Well Reservoir 22 mL",
+                    "value": "usascientific_12_reservoir_22ml"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "PCR well plate (or PCR strips) containing template DNA",
+            "name": "DNA_well_plate_lname",
+            "options": [
+                {
+                    "label": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt",
+                    "value": "nest_96_wellplate_100ul_pcr_full_skirt"
+                },
+                {
+                    "label": "Bio-Rad 96 well 200 uL PCR plate",
+                    "value": "biorad_96_wellplate_200ul_pcr"
+                },
+                {
+                    "label": "Opentrons 96 Well Aluminum Block with NEST Well Plate 100 \u00b5L",
+                    "value": "opentrons_96_aluminumblock_nest_wellplate_100ul"
+                },
+                {
+                    "label": "Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 uL",
+                    "value": "opentrons_96_aluminumblock_generic_pcr_strip_200ul"
+                },
+                {
+                    "label": "Opentrons 96 Well Aluminum Block with Bio-Rad Well Plate 200 \u00b5L",
+                    "value": "opentrons_96_aluminumblock_biorad_wellplate_200ul"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Destination PCR well plate or PCR strips",
+            "name": "destination_well_plate_lname",
+            "options": [
+                {
+                    "label": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt",
+                    "value": "nest_96_wellplate_100ul_pcr_full_skirt"
+                },
+                {
+                    "label": "Bio-Rad 96 well 200 uL PCR plate",
+                    "value": "biorad_96_wellplate_200ul_pcr"
+                },
+                {
+                    "label": "Opentrons 96 Well Aluminum Block with NEST Well Plate 100 \u00b5L",
+                    "value": "opentrons_96_aluminumblock_nest_wellplate_100ul"
+                },
+                {
+                    "label": "Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 uL",
+                    "value": "opentrons_96_aluminumblock_generic_pcr_strip_200ul"
+                },
+                {
+                    "label": "Opentrons 96 Well Aluminum Block with Bio-Rad Well Plate 200 \u00b5L",
+                    "value": "opentrons_96_aluminumblock_biorad_wellplate_200ul"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Temperature module for the template sample well plate",
+            "name": "DNA_well_plate_tmod",
+            "options": [
+                {
+                    "label": "None",
+                    "value": null
+                },
+                {
+                    "label": "Temperature module Gen2",
+                    "value": "temperature module gen2"
+                },
+                {
+                    "label": "Temperature module Gen1",
+                    "value": "temperature module"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Temperature module for the destination well plate",
+            "name": "dest_well_plate_tmod",
+            "options": [
+                {
+                    "label": "None",
+                    "value": null
+                },
+                {
+                    "label": "Temperature module Gen2",
+                    "value": "temperature module gen2"
+                },
+                {
+                    "label": "Temperature module Gen1",
+                    "value": "temperature module"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p20_multi_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p300_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "mastermix reservoir on 3",
+            "share": false,
+            "slot": "3",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "destination plate on 6",
+            "share": false,
+            "slot": "6",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "DNA plate on 9",
+            "share": false,
+            "slot": "9",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.11",
+        "author": "Opentrons <protocols@opentrons.com>",
+        "protocolName": "Generic PCR Prep Part 2 - Mastermix and DNA Distribution",
+        "source": "Protocol Library"
+    },
+    "modules": []
+}

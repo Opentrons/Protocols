@@ -2,8 +2,7 @@ import math
 from opentrons import protocol_api
 
 metadata = {
-    'protocolName': 'Generic PCR Prep Part 2 - ' +
-    'Mastermix Distribution and DNA Transfer',
+    'protocolName': 'Generic PCR Prep Part 2 - Mastermix and DNA Distribution',
     'author': 'Opentrons <protocols@opentrons.com>',
     'source': 'Protocol Library',
     'apiLevel': '2.11'
@@ -24,8 +23,7 @@ def run(ctx: protocol_api.ProtocolContext):
       destination_well_plate_lname,
       DNA_well_plate_tmod,
       dest_well_plate_tmod
-     ] \
-      = get_values(  # noqa: F821
+     ] = get_values(  # noqa: F821
       "n_samples",
       "left_pipette_lname",
       "right_pipette_lname",
