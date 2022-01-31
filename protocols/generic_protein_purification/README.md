@@ -54,14 +54,20 @@ The protocol is based on Promega's MagneHis™ system, but should work for any o
 * [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
 
 ### Labware
-* [Labware Library](https://labware.opentrons.com/)
-* [12-well Reservoir](
+* [12-well Reservoirs](https://labware.opentrons.com/?category=reservoir)
+  * [NEST 12 well reservoir, 15 mL](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/)
+* [Well plates](https://labware.opentrons.com/?category=wellPlate)
+  * [NEST 2 mL 96-Well Deep Well Plate](https://shop.opentrons.com/nest-2-ml-96-well-deep-well-plate-v-bottom/)
+* [Target plate](https://labware.opentrons.com/?category=wellPlate)
+  * [NEST 96 Well Plate Flat](https://shop.opentrons.com/nest-96-well-plate-flat/)
+* [Tube racks](https://labware.opentrons.com/?category=tubeRack)
+  * [4-in-1 Tube Rack Set](https://shop.opentrons.com/4-in-1-tube-rack-set/)
 
 ### Pipettes
 * [Opentrons Pipettes](https://opentrons.com/pipettes/)
 
 ### Reagents
-* [MagneHis™ Protein Purification System](https://www.promega.com/products/protein-purification/protein-purification-kits/magnehis-protein-purification-system/?catNum=V8500#protocols)
+Protein purification kit with paramagnetic beads, for example: [MagneHis™ Protein Purification System](https://www.promega.com/products/protein-purification/protein-purification-kits/magnehis-protein-purification-system/?catNum=V8500#protocols)
 
 ---
 

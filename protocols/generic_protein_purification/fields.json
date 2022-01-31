@@ -76,7 +76,6 @@
     "options": [
       {"label": "NEST 12 Well Reservoir 15 mL", "value": "nest_12_reservoir_15ml" },
       {"label": "USA Scientific 12 Well Reservoir 22 mL", "value": "usascientific_12_reservoir_22ml" },
-      {"label": "Custom", "value": "custom" }
     ]
   },
   {
@@ -84,9 +83,12 @@
     "label": "Destination plate",
     "name": "destination_plate_lname",
     "options": [
-      {"label": "", "value": "" },
-      {"label": "", "value": "" },
-      {"label": "Custom", "value": "custom" }
+      { "label": "USA Scientific 96 Deep well Plate 2.4 mL", "value": "usascientific_96_wellplate_2.4ml_deep" },
+      { "label": "Bio-Rad 96 Well Plate 200 µL PCR", "value": "biorad_96_wellplate_200ul_pcr" },
+      { "label": "Corning 96 well Plate 360 µL Flat", "value": "corning_96_wellplate_360_ul_flat" },
+      { "label": "NEST 96 Well Plate 100 µL PCR Full Skirt", "value": "nest_96_wellplate_100ul_pcr_full_skirt" },
+      { "label": "NEST 96 Well Plate 200 µL Flat", "value": "nest_96_wellplate_200ul_flat" },
+      { "label": "NEST 96 Deepwell plate 2 mL", "value": "nest_96_wellplate_2ml_deep" }
     ]
   },
   {
@@ -94,13 +96,12 @@
     "label": "Sample plate",
     "name": "sample_plate_lname",
     "options": [
+      { "label": "NEST 96 Deepwell plate 2 mL", "value": "nest_96_wellplate_2ml_deep" },
+      { "label": "USA Scientific 96 Deep well Plate 2.4 mL", "value": "usascientific_96_wellplate_2.4ml_deep" },
       { "label": "Bio-Rad 96 Well Plate 200 µL PCR", "value": "biorad_96_wellplate_200ul_pcr" },
       { "label": "Corning 96 well Plate 360 µL Flat", "value": "corning_96_wellplate_360_ul_flat" },
       { "label": "NEST 96 Well Plate 100 µL PCR Full Skirt", "value": "nest_96_wellplate_100ul_pcr_full_skirt" },
-      { "label": "NEST 96 Well Plate 200 µL Flat", "value": "nest_96_wellplate_200ul_flat" },
-      { "label": "NEST 96 Deepwell plate 2 mL", "value": "nest_96_wellplate_2ml_deep" },
-      { "label": "USA Scientific 96 Deep well Plate 2.4 mL", "value": "usascientific_96_wellplate_2.4ml_deep" },
-      {"label": "Custom", "value": "custom" }
+      { "label": "NEST 96 Well Plate 200 µL Flat", "value": "nest_96_wellplate_200ul_flat" }
     ]
   },
   {
@@ -110,15 +111,6 @@
     "options": [
       { "label": "Magnetic module Gen2", "value": "magnetic module gen2" },
       { "label": "Magnetic module Gen1", "value": "magnetic module" }
-    ]
-  },
-  {
-    "type": "dropDown",
-    "label": "Tube rack (optional)",
-    "name": "tube_rack_lname",
-    "options": [
-      { "label": "", "value": "" },
-      { "label": "", "value": "" }
     ]
   },
   {
@@ -243,32 +235,3 @@
     "default": 30
   }
 ]
-* `Magnet engagment time for bead binding`
-* `Number of samples`
-* `Small pipette`
-* `Large pipette`
-* `Small pipette tip-racks`
-* `Large pipette tip-racks`
-* `Reagent reservoir`
-* `Destination plate`
-* `Sample plate`
-* `Magnetic module`
-* `Tube rack (optional)`
-* `Tube rack (optional)`
-* `Destination plate temperature module (optional)`
-* `Reservoir temperature module (optional)`
-* `Pause robot operation to allow user to vortex magnetic beads?`
-* `Elute proteins in SDS buffer instead of elution buffer`
-* `Add DNAse I to lysis sample from a tube? If not, the enzyme must be added to the lysis buffer by user`
-* `Add NaCl to samples to a conc. of 500 mM during wash steps to enhance protein binding?`
-* `Volume of paramagnetic beads to use with each sample (µL)`
-* `Initial volume (of bacteria containing media in each sample well) (µL)`
-* `Wash buffer volume for the washing steps (µL)`
-* `Elution buffer volume to elute proteins with (µL)`
-* `Number of washing steps`
-* `Number of bead washses`
-* `Number of times to mix the wash buffer with the beads for each wash step`
-* `Number of times to mix the elution buffer with the beads`
-* `Bead incubation time for binding and eluting protein (before magnets are engaged)`
-* `Number of times to mix the bead solution before transferring beads to the samples`
-* `SDS buffer volume to elute proteins with (optional: this only matters if you decide to elute with SDS buffer)`
