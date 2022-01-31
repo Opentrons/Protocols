@@ -56,6 +56,19 @@ For the pipette choices it is important that the pipettes selected will cover th
 * Example setup
 ![Deck](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/generic_pcr_prep_1/example_deck.jpg)
 
+
+* Slot 1: Tube rack or well plate 1
+* Slot 2: Tube rack or well plate 2
+* Slot 3: 12-Channel reservoir: Well 1 - Mastermix target
+* Slot 4: Tiprack for the left pipette
+* Slot 5: Tiprack for the right pipette
+* Slot 6: Empty
+* Slot 7: Empty
+* Slot 8: Empty
+* Slot 9: Empty
+* Slot 10: Empty
+* Slot 11: Empty
+
 ---
 
 ### Protocol Steps

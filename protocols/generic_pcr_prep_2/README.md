@@ -52,6 +52,19 @@ Explanation of parameters below:
 ![Deck](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/generic_pcr_prep_2/example_deck.jpg)
 
 
+* Slot 1: Empty
+* Slot 2: Empty
+* Slot 3: 12-Channel reservoir: Well 1 - Mastermix source
+* Slot 4: Tiprack 1 for the left pipette
+* Slot 5: Tiprack 1 for the right pipette
+* Slot 6: Destination plate (where mastermix and template DNA is combined)
+* Slot 7: Tiprack 2 for the right pipette
+* Slot 8: Tiprack 2 for the left pipette
+* Slot 9: Template DNA plate
+* Slot 10: Empty
+* Slot 11: Empty
+
+
 ### Protocol Steps
 1. Select your parameters.
 3. Download your protocol.
