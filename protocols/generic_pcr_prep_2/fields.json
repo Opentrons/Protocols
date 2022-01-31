@@ -2,16 +2,16 @@
   {
     "type": "int",
     "label": "Number of samples",
-    "name": "number_of_samples",
+    "name": "n_samples",
     "default": 96
   },
   {
     "type": "dropDown",
-    "label": "Right pipette type",
-    "name": "right_pipette",
+    "label": "Left pipette type",
+    "name": "left_pipette_lname",
     "options": [
-      { "label": "GEN2 P300 Multi", "value": "p300_multi_gen2" },
       { "label": "GEN2 P20 Multi", "value": "p20_multi_gen2" },
+      { "label": "GEN2 P300 Multi", "value": "p300_multi_gen2" },
       { "label": "GEN1 P10 Multi", "value": "p10_multi" },
       { "label": "GEN1 P50 Multi", "value": "p50_multi" },
       { "label": "GEN1 P300 Multi", "value": "p300_multi" },
@@ -20,11 +20,11 @@
   },
   {
     "type": "dropDown",
-    "label": "Left pipette type",
-    "name": "left_pipette",
+    "label": "Right pipette type",
+    "name": "right_pipette_lname",
     "options": [
-      { "label": "GEN2 P20 Multi", "value": "p20_multi_gen2" },
       { "label": "GEN2 P300 Multi", "value": "p300_multi_gen2" },
+      { "label": "GEN2 P20 Multi", "value": "p20_multi_gen2" },
       { "label": "GEN1 P10 Multi", "value": "p10_multi" },
       { "label": "GEN1 P50 Multi", "value": "p50_multi" },
       { "label": "GEN1 P300 Multi", "value": "p300_multi" },
@@ -72,7 +72,7 @@
   },
   {
   "type": "dropDown",
-  "label": "PCR well plate containing template DNA",
+  "label": "PCR well plate (or PCR strips) containing template DNA",
   "name": "DNA_well_plate_lname",
   "options": [
       { "label": "NEST 96 Well Plate 100 µL PCR Full Skirt", "value": "nest_96_wellplate_100ul_pcr_full_skirt" },
@@ -84,7 +84,7 @@
   },
   {
   "type": "dropDown",
-  "label": "Destination PCR well plate",
+  "label": "Destination PCR well plate or PCR strips",
   "name": "destination_well_plate_lname",
   "options": [
       { "label": "NEST 96 Well Plate 100 µL PCR Full Skirt", "value": "nest_96_wellplate_100ul_pcr_full_skirt" },

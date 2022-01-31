@@ -1,4 +1,4 @@
-# Generic PCR Prep Part 2 - Mastermix Distribution and DNA Transfer
+# Generic PCR Prep Part 2 - Mastermix and DNA Distribution
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -26,8 +26,8 @@ Explanation of parameters below:
 * `Mastermix volume (in µl)`: The volume of mastermix for each well on the destination labware in microliters
 * `DNA volume (in µl)`: The amount of DNA template to transfer to each destination well in microliters
 * `Mastermix reservoir`: 12 well reservoir containing your PCR mastermix in well `A1`
-* `PCR well plate containing template DNA`: Your source of template DNA, such as a 96 well plate
-* `Destination PCR well plate`: This is the labware where DNA template and PCR mastermix is transferred and mixed
+* `PCR well plate (or PCR strips) containing template DNA`: Your source of template DNA, such as a 96 well plate
+* `Destination PCR well plate or PCR strips`: This is the labware where DNA template and PCR mastermix is transferred and mixed
 * `Temperature module for the template sample well plate`: (Optional) You can load a temperature module for your template plate if you want to control the temperature.
 * `Temperature module for the destination well plate`: (Optional) You can load a temperature module for your destination plate if you want to control the temperature.
 
