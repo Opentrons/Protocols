@@ -19,8 +19,8 @@ def get_values(*names):
                                   "mastermix_volume":"18",
                                   "DNA_volume":"2",
                                   "twelve_well_reservoir_lname",
-                                  "DNA_well_plate":"biorad_96_wellplate_200ul_pcr",
-                                  "destination_well_plate":"biorad_96_wellplate_200ul_pcr",
+                                  "DNA_well_plate_lname":"biorad_96_wellplate_200ul_pcr",
+                                  "destination_well_plate_lname":"biorad_96_wellplate_200ul_pcr",
                                   "DNA_well_plate_tmod",
                                   "dest_well_plate_tmod"}
                                   """)
@@ -43,8 +43,11 @@ def run(ctx: protocol_api.ProtocolContext):
     if not left_pipette and not right_pipette:
         raise Exception('You have to select at least 1 pipette.')
 
-    tiprack_l_slots = ['5', '6']
-    tiprack_r_slots = ['7', '8']
+    dna_plate_slot = '9'
+    reservoir_slot = '3'
+    dest_plate_slot = '6'
+    tiprack_l_slots = ['4', '7']
+    tiprack_r_slots = ['5', '8']
 
     # load modules
     '''
@@ -81,11 +84,26 @@ def run(ctx: protocol_api.ProtocolContext):
 
     '''
     # labware setup
-    dna_plate = protocol_context.load_labware(
+    plate_list = []
+    for labware_lname, tmod, slot, name in \
+        zip([DNA_well_plate_lname, destination_well_plate_lname],
+            [tmod_dna_plate, tmod_dest_plate],
+            [labware_1_slot, labware_2_slot],
+            ["Tube rack 1", "Tube rack 2"]):
+        if labware_lname:
+            if tmod:
+                plate_list.append(tmod.load_labware(labware_lname, name))
+            else:
+                plate_list.append(ctx.load_labware(labware_lname, slot,
+                                                   name))
+        else:
+            plate_list.append(None)
+    labware1, labware2 = plate_list
+    dna_plate = ctx.load_labware(
         DNA_well_plate, '1', 'DNA plate')
-    dest_plate = protocol_context.load_labware(
+    dest_plate = ctx.load_labware(
         destination_well_plate, '2', 'Destination plate')
-    res12 = protocol_context.load_labware(
+    res12 = ctx.load_labware(
         'usascientific_12_reservoir_22ml', '3', 'reservoir')
     # load tipracks
     '''
@@ -150,29 +168,124 @@ def run(ctx: protocol_api.ProtocolContext):
             tipracks.append(None)
     tiprack_l, tiprack_r = tipracks
 
+    # load instrument
+    '''
+    Nomenclature for pipette:
+
+    use 'p'  for single-channel, 'm' for multi-channel,
+    followed by number of microliters.
+
+    p20, p300, p1000 (single channel pipettes)
+    m20, m300 (multi-channel pipettes)
+
+    If loading pipette, load with:
+
+    ctx.load_instrument(
+                        '{pipette api load name}',
+                        pipette_mount ("left", or "right"),
+                        tip_racks=tiprack
+                        )
+    '''
     pipette_l = None
     pipette_r = None
 
-    for pip, mount, slots in zip(
-            [left_pipette, right_pipette],
+    for pip, mount, tiprack in zip(
+            [left_pipette_lname, right_pipette_lname],
             ['left', 'right'],
-            [['5', '6'], ['7', '8']]):
+            [tiprack_l, tiprack_r]):
 
         if pip:
-            range = pip.split('_')[0][1:]
-            rack = 'opentrons_96_tiprack_' + range + 'ul'
-            tipracks = [
-                protocol_context.load_labware(rack, slot) for slot in slots]
             if mount == 'left':
-                pipette_l = protocol_context.load_instrument(
-                    pip, mount, tip_racks=tipracks)
+                pipette_l = ctx.load_instrument(
+                    pip, mount, tip_racks=[tiprack])
             else:
-                pipette_r = protocol_context.load_instrument(
-                    pip, mount, tip_racks=tipracks)
+                pipette_r = ctx.load_instrument(
+                    pip, mount, tip_racks=[tiprack])
 
     # determine which pipette has the smaller volume range
     pip_s, pip_l = rank_pipettes(pipette_l, pipette_r)
+    '''
 
+    Define all pipette functions, and class extensions here.
+    These may include but are not limited to:
+
+    - Custom pickup functions
+    - Custom drop tip functions
+    - Custom Tip tracking functions
+    - Custom Trash tracking functions
+    - Slow tip withdrawal
+
+    For any functions in your protocol, describe the function as well as
+    describe the parameters which are to be passed in as a docstring below
+    the function (see below).
+
+    def pick_up(pipette):
+        """`pick_up()` will pause the protocol when all tip boxes are out of
+        tips, prompting the user to replace all tip racks. Once tipracks are
+        reset, the protocol will start picking up tips from the first tip
+        box as defined in the slot order when assigning the labware definition
+        for that tip box. `pick_up()` will track tips for both pipettes if
+        applicable.
+
+        :param pipette: The pipette desired to pick up tip
+        as definited earlier in the protocol (e.g. p300, m20).
+        """
+        try:
+            pipette.pick_up_tip()
+        except protocol_api.labware.OutOfTipsError:
+            ctx.pause("Replace empty tip racks")
+            pipette.reset_tipracks()
+            pipette.pick_up_tip()
+
+    '''
+    def is_multi_channel(pip):
+        return True if pip.channels == 8 else False
+
+    def resv_to_plate_transfer(pipette, vol, source_well, dest):
+        is_mc = is_multi_channel(pipette)
+        if is_mc:
+            n_columns = math.ceil(number_of_samples/8)
+            target_columns = dest.columns()[0:n_columns-1]
+            for col in target_columns:
+                pipette.pick_up_tip()
+                pipette.transfer(vol, source_well, col[0], new_tip='never')
+                pipette.drop_tip()
+        else:
+            for well in dest:
+                pipette.pick_up_tip()
+                pipette.aspirate(vol, source_well)
+                pipette.dispense(vol, well)
+                pipette.drop_tip()
+
+    def plate_to_plate_transfer(pipette, vol, source_plate, dest_plate):
+        pass
+
+    def pick_up_tip(pipette):
+        try:
+            pipette.pick_up_tip()
+        except protocol_api.labware.OutOfTipsError:
+            ctx.pause("Replace empty tip racks")
+            pipette.reset_tipracks()
+            pipette.pick_up_tip()
+
+    # helper functions
+    '''
+    Define any custom helper functions outside of the pipette scope here, using
+    the convention seen above.
+
+    e.g.
+
+    def remove_supernatant(vol, index):
+        """
+        function description
+
+        :param vol:
+
+        :param index:
+        """
+
+
+    '''
     # reagent setup
     mastermix = res12.wells()[0]
 
@@ -182,7 +295,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     col_num = math.ceil(number_of_samples/8)
 
-    protocol_context.comment("Transferring master mix")
+    ctx.comment("Transferring master mix")
     pipette.pick_up_tip()
     for dest in dest_plate.rows()[0][:col_num]:
         pipette.transfer(
@@ -197,7 +310,7 @@ def run(ctx: protocol_api.ProtocolContext):
     # Transfer DNA to the destination plate
     pipette = pipette_selector(pip_s, pip_l, DNA_volume)
 
-    protocol_context.comment("Transferring DNA")
+    ctx.comment("Transferring DNA")
     for source, dest in zip(dna_plate.rows()[0][:col_num],
                             dest_plate.rows()[0][:col_num]):
         pipette.transfer(DNA_volume, source, dest)
