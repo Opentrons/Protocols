@@ -1,13 +1,13 @@
 [
   {
     "type": "int",
-    "label": "sample number",
+    "label": "Number of samples",
     "name": "number_of_samples",
     "default": 96
   },
   {
     "type": "dropDown",
-    "label": "right pipette type",
+    "label": "Right pipette type",
     "name": "right_pipette",
     "options": [
       { "label": "GEN2 P300 Multi", "value": "p300_multi_gen2" },
@@ -20,7 +20,7 @@
   },
   {
     "type": "dropDown",
-    "label": "left pipette type",
+    "label": "Left pipette type",
     "name": "left_pipette",
     "options": [
       { "label": "GEN2 P20 Multi", "value": "p20_multi_gen2" },
@@ -51,7 +51,7 @@
   },
   {
     "type": "float",
-    "label": "mastermix volume (in ul)",
+    "label": "Mastermix volume (in ul)",
     "name": "mastermix_volume",
     "default": 18
   },
