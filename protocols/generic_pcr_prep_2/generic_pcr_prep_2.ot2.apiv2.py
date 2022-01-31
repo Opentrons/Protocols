@@ -2,7 +2,8 @@ import math
 from opentrons import protocol_api
 
 metadata = {
-    'protocolName': 'Generic PCR Prep part 2 - DNA and mastermix mixing',
+    'protocolName': 'Generic PCR Prep Part 2 - ' +
+    'Mastermix Distribution and DNA Transfer',
     'author': 'Opentrons <protocols@opentrons.com>',
     'source': 'Protocol Library',
     'apiLevel': '2.11'

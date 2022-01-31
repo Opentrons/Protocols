@@ -1,4 +1,4 @@
-# Generic PCR Prep part 1 - Mastermix creation
+# Generic PCR Prep Part 1 - Mastermix Creation
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -42,6 +42,9 @@ For the pipette choices it is important that the pipettes selected will cover th
 * [Single channel pipettes](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 * [Pipette tips](https://shop.opentrons.com/universal-filter-tips/)
 
+### Robot
+* [OT-2](https://opentrons.com/ot-2)
+
 ### Reagents
 * [Example reagents: NEB Taq PCR Kit](https://www.neb.com/products/e5000-taq-pcr-kit#Product%20Information)
 
@@ -56,7 +59,7 @@ For the pipette choices it is important that the pipettes selected will cover th
 ---
 
 ### Protocol Steps
-1. Select your pipettes.
+1. Select your parameters.
 2. Upload your master mix CSV.
 3. Download your protocol.
 4. Upload your protocol into the [OT App](https://opentrons.com/ot-app).

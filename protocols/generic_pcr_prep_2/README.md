@@ -1,32 +1,68 @@
-# OT-2 PCR Prep 2/2: Master Mix Distribution and DNA Transfer
+# Generic PCR Prep Part 2 - Mastermix Distribution and DNA Transfer
 
 ### Author
-[Opentrons (verified)](https://opentrons.com/)
+[Opentrons](https://opentrons.com/)
 
 ## Categories
 * PCR
-    * PCR Prep
+    * Generic PCR Prep
 
 ## Description
 Part 2 of 2: Master Mix Distribution and DNA Transfer
 
 Links:
-* [Part 1: Master Mix Assembly](./pcr_prep_part_1)
-* [Part 2: Master Mix Distribution and DNA Transfer](./pcr_prep_part_2)
+* [Part 1: Master Mix Assembly](./pcr_prep_part_1_gen2)
+* [Part 2: Master Mix Distribution and DNA Transfer](./pcr_prep_part_2_gen2)
 
 
-This protocol allows your robot to distribute a master mix solution from well A1 of a trough to PCR strips. Robot will then transfer DNA samples to the master mix solution.
+This protocol allows your robot to distribute a master mix solution from well A1 of a reservoir to a target (a plate or PCR strips). The robot will then transfer DNA samples to the master mix solution. The protocol works with both single- and multi-channel pipettes, just be sure that the minimum end of their combined volume range covers the smallest volume. There is also an option to place the DNA template labware, and the target labware on temperature modules to keep them cool.
+
+Explanation of parameters below:
+* `Number of samples` : The number of DNA template samples to mix with PCR mastermix on the target labware (e.g. a plate or tube strips on an aluminum block)
+* `Right pipette type`: Pipette in the right mount, can be either a single channel or a multi-channel pipette
+* `Left pipette type`: Pipette in the left mount, can be either a single channel or a multi-channel pipette.
+* `Filtered or unfiltered tips for the left pipette?`: Whether the left pipette is using filter or regular tips
+* `Filtered or unfiltered tips for the right pipette?`: Whether the right pipette is using filter or regular tips
+* `Mastermix volume (in µl)`: The volume of mastermix for each well on the destination labware in microliters
+* `DNA volume (in µl)`: The amount of DNA template to transfer to each destination well in microliters
+* `Mastermix reservoir`: 12 well reservoir containing your PCR mastermix in well `A1`
+* `PCR well plate containing template DNA`: Your source of template DNA, such as a 96 well plate
+* `Destination PCR well plate`: This is the labware where DNA template and PCR mastermix is transferred and mixed
+* `Temperature module for the template sample well plate`: (Optional) You can load a temperature module for your template plate if you want to control the temperature.
+* `Temperature module for the destination well plate`: (Optional) You can load a temperature module for your destination plate if you want to control the temperature.
 
 ---
 
-You will need:
-* [12-channel reservoir](https://www.usascientific.com/12-channel-automation-reservoir.aspx)
-* [96-well PCR plate](https://www.bio-rad.com/en-us/sku/hsp9601-hard-shell-96-well-pcr-plates-low-profile-thin-wall-skirted-white-clear?ID=hsp9601)
+### Modules
+* [12-channel reservoir](https://labware.opentrons.com/?category=reservoir)
+* [96-well PCR plate]()
+* [Alternatively: Well plate/PCR strips on aluminum blocks](https://labware.opentrons.com/?category=aluminumBlock)
+
+### Pipettes
+* [Single channel pipettes](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
+* [Pipette tips](https://shop.opentrons.com/universal-filter-tips/)
 
 ### Robot
 * [OT-2](https://opentrons.com/ot-2)
 
-## Process
+---
+
+### Deck Setup
+* Example setup
+![Deck](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/generic_pcr_prep_2/example_deck.jpg)
+
+
+### Protocol Steps
+1. Select your parameters.
+3. Download your protocol.
+4. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
+5. Set up your deck according to the deck map.
+6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support article](https://support.opentrons.com/ot-2/getting-started-software-setup/deck-calibration).
+7. Hit "Run".
+8. The robot will start by transferring mastermix to the destination labware.
+9. The robot transfers DNA template samples to the destination plate
+
+### Process
 1. Input the number of samples you are processing.
 2. Select your pipettes.
 3. Input the desired master mix and DNA volume in each well.
@@ -50,4 +86,4 @@ Please reference our [Application Note](https://opentrons-protocol-library-websi
 If you have any questions about this protocol, please contact protocols@opentrons.com.
 
 ###### Internal
-OT-2 PCR Prep v2
+generic_pcr_prep_2
