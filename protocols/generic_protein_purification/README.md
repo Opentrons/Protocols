@@ -4,8 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Broader Category
-	* Subcategory (can be the name of a kit when applicable)
+* Protein purification
+    * Generic
 
 ## Description
 
@@ -55,6 +55,7 @@ The protocol is based on Promega's MagneHis™ system, but should work for any o
 
 ### Labware
 * [Labware Library](https://labware.opentrons.com/)
+* [12-well Reservoir](
 
 ### Pipettes
 * [Opentrons Pipettes](https://opentrons.com/pipettes/)
@@ -68,7 +69,7 @@ The protocol is based on Promega's MagneHis™ system, but should work for any o
 ![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/generic_protein_purification/deck.jpg)
 
 ### Reagent Setup
-![Reagent reservoir](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/generic_protein_purification/deck.jpg)
+![Reagent reservoir](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/generic_protein_purification/liquids.jpg)
 
 ---
 
