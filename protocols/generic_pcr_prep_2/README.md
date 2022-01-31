@@ -74,11 +74,6 @@ Explanation of parameters below:
 9. Robot will distribute master mix solution from trough to PCR strips in slot 2.
 10. Robot will transfer DNA from PCR strips in slot 1 to those in slot 2.
 
-### Additional Notes
-Slot 1: PCR plate with DNA samples
-Slot 2: Empty PCR plate
-Slot 3: 12-channel reservoir with master mix solution in well A1
-
 Please reference our [Application Note](https://opentrons-protocol-library-website.s3.amazonaws.com/Technical+Notes/Thermocycler+PCR+Application+Note.pdf) for more information about the expected output of this protocol.
 
 ---
