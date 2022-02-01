@@ -22,12 +22,14 @@ Explanation of parameters below:
 * `Left pipette type`: Pipette for the left mount
 For the pipette choices it is important that the pipettes selected will cover the range of volumes used in the protocol
 * `master mix .csv file`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:
+
 ![csv_layout](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/1473-acies-bio/CSV.png)
 * `Left pipette: Filter or regular tips?` Select whether you want unfiltered or filtered tips. The protocol will load the appropriate tips, e.g. 20 uL tips for a 20 uL pipette, 1000 uL filtered/nonfiltered for a 1000 uL pipette etc.
 * `Right pipette: Filter or regular tips?` Select whether you want unfiltered or filtered tips. The protocol will load the appropriate tips, e.g. 20 uL tips for a 20 uL pipette, 1000 uL filtered/nonfiltered for a 1000 uL pipette etc.
 * `Reagent labware 1` Choose the appropriate labware (such as tube racks or well plates) for your reagents, you may choose aluminum blocks if you intend to use a temperature module. This is referred to as "slot 1" in the .csv
 * `Reagent labware 2` (Optional) Choose a secondary unit of labware for your reagents, you may choose aluminum blocks if you intend to use a temperature module. This is referred to as "slot 2" in the .csv
 * `Twelve well Reservoir and mastermix destination` Select the type of 12 well reservoir to use. The mastermix will be created in well A1. You may use the other wells as sources for reagents (slot 3 in the .csv)
+
 ---
 
 ### Modules
@@ -54,7 +56,10 @@ For the pipette choices it is important that the pipettes selected will cover th
 
 ### Deck Setup
 * Example setup
+
 ![Deck](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/generic_pcr_prep_1/example_deck.jpg)
+
+![Reservoir](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/generic_pcr_prep_1/reservoir.jpg)
 
 
 * Slot 1: Tube rack or well plate 1
