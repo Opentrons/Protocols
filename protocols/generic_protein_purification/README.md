@@ -47,6 +47,7 @@ The protocol is based on Promega's MagneHis™ system, but should work for any o
 * `Bead incubation time for binding and eluting protein (before magnets are engaged)` How many minutes to incubate beads with the lysed bacterial solution before engaging magnets, also the amount of time to incubate the beads with elution buffer before engaging magnets.
 * `Number of times to mix the bead solution before transferring beads to the samples` Optional number of times to use the large pipette to mix the bead solution before transferring the bead solution to the samples
 * `SDS buffer volume to elute proteins with (optional: this only matters if you decide to elute with SDS buffer)` In the final step you can choose whether to elute with elution buffer or SDS buffer if you want to run a gel on the samples, this parameter specifies the volume in microliter of SDS buffer.
+
 ---
 
 ### Modules
@@ -80,8 +81,8 @@ Protein purification kit with paramagnetic beads, for example: [MagneHis™ Prot
 ---
 
 ### Protocol Steps
-The protocol is based on [MagneHis protein purification protocol](https://www.promega.com/-/media/files/resources/protocols/technical-manuals/0/magnehis-protein-purification-system-protocol.pdf?rev=cbf49f7cf6fa4696b965c92c1f8e9c72&sc_lang=en)
-1. Bacterial lysis: Lysis buffer is added to all the sample wells. If the DNAse step is activated DNAse will be added to each well as well. If it's not activated DNAse I should be added to the lysis buffer by the user before running the protocol (1 µL per mL of bacterial media)
+The protocol is based on [MagneHis protein purification protocol](https://www.promega.com/-/media/files/resources/protocols/technical-manuals/0/magnehis-protein-purification-system-protocol.pdf?rev=cbf49f7cf6fa4696b965c92c1f8e9c72&sc_lang=en), however a similar kit should work as well.
+1. Bacterial lysis: Lysis buffer is added to all the sample wells. If the DNAse step is activated DNAse will be added to each well as well (see parameter options below). If it's not activated DNAse I should be added to the lysis buffer by the user before running the protocol (1 µL per mL of bacterial media to lyse)
 2. The protocol is paused to allow the user to shake the sample plate for 10-20 minutes at room temperature for the lysis reaction to complete
 3. Binding: The paramagnetic beads are added to the samples, along with sodium chloride, if desired. The user has an option to pause the protocol before this step in order to vortex the beads in order to resuspend them. The user may also specify a number of mixes with the pipettes to help homogenize the solution.
 4. The beads are washed with wash buffer (and optionally NaCl) and the supernatant is removed while the magnets on the magnetic module are engaged. This is repeated as many times as the user wants.
