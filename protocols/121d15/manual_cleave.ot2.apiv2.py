@@ -37,6 +37,13 @@ def run(ctx):
             'flow-rate-asp': 50,
             'flow-rate-disp': 50,
             'blow-out': False
+        },
+        'amino': {
+            'slot': '6',
+            'volume': 200,
+            'flow-rate-asp': 50,
+            'flow-rate-disp': 50,
+            'blow-out': False
         }
     }
     reagent = ctx.load_labware(
