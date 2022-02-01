@@ -36,6 +36,8 @@ Explanation of parameters below:
 </br>
 
 ### Modules
+
+### Labware 
 * [12-channel reservoir](https://labware.opentrons.com/?category=reservoir)
 * [96-well PCR plate]()
 * [Alternatively: Well plate/PCR strips on aluminum blocks](https://labware.opentrons.com/?category=aluminumBlock)
