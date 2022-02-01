@@ -12,34 +12,40 @@ metadata = {
 
 def run(ctx):
 
-    [plate_1_rows, plate_1_cols, plate_2_rows, plate_2_cols, plate_3_rows,
-     plate_3_cols, plate_4_rows, plate_4_cols, reagent_type, m300_mount,
-     tip_track] = get_values(  # noqa: F821
-        'plate_1_rows', 'plate_1_cols', 'plate_2_rows', 'plate_2_cols',
-        'plate_3_rows', 'plate_3_cols', 'plate_4_rows', 'plate_4_cols',
-        'reagent_type', 'm300_mount', 'tip_track')
+    [occupied_well_csv1, occupied_well_csv2, occupied_well_csv3, reagent_type,
+     m300_mount, p300_mount, tip_track] = get_values(  # noqa: F821
+        'occupied_well_csv1', 'occupied_well_csv2', 'occupied_well_csv3',
+        'reagent_type', 'm300_mount', 'p300_mount', 'tip_track')
 
     # load labware
     racks = [
         ctx.load_labware('custom_96_tuberack_500ul', f'{slot}', f'plate {i+1}')
-        for i, slot in enumerate(['1', '2', '4', '5'])]
+        for i, slot in enumerate(['4', '5', '6'])]
+    tips300 = [
+        ctx.load_labware('opentrons_96_tiprack_300ul', slot,
+                         '300ul tiprack')
+        for slot in ['10', '11']]
+
     reagent_map = {
         'EDA': {
-            'slot': '3',
+            'slot': '7',
+            'tips': [col for rack in tips300 for col in rack.columns()][:8],
             'volume': 200,
             'flow-rate-asp': 50,
             'flow-rate-disp': 50,
             'blow-out': False
         },
         'ACN': {
-            'slot': '6',
+            'slot': '8',
+            'tips': [col for rack in tips300 for col in rack.columns()][8:16],
             'volume': 200,
             'flow-rate-asp': 50,
             'flow-rate-disp': 50,
             'blow-out': False
         },
         'amino': {
-            'slot': '6',
+            'slot': '9',
+            'tips': [col for rack in tips300 for col in rack.columns()][16:],
             'volume': 200,
             'flow-rate-asp': 50,
             'flow-rate-disp': 50,
@@ -49,10 +55,6 @@ def run(ctx):
     reagent = ctx.load_labware(
         'nest_1_reservoir_195ml', reagent_map[reagent_type]['slot'],
         reagent_type).wells()[0]
-    tips300 = [
-        ctx.load_labware('opentrons_96_tiprack_300ul', slot,
-                         '300ul tiprack')
-        for slot in ['7', '8', '10', '11']]
 
     def all_tips_full():
         for rack in tips300:
@@ -77,6 +79,8 @@ def run(ctx):
     # load pipette
     m300 = ctx.load_instrument(
         'p300_multi_gen2', m300_mount, tip_racks=tips300)
+    p300 = ctx.load_instrument(
+        'p300_single_gen2', p300_mount, tip_racks=tips300)
 
     # samples and reagents
     def slide_window(num_tips, col):
@@ -92,54 +96,63 @@ def run(ctx):
                 return window[0]
         return False
 
-    def scan_racks(num_tips):
-        all_columns = [col for rack in tips300 for col in rack.columns()]
+    def scan_racks(num_tips, reagent_type):
+        all_columns = reagent_map[reagent_type]['tips']
         for col in all_columns:
             pick_up_loc = slide_window(num_tips, col)
             if pick_up_loc:
                 return pick_up_loc
         return False
 
-    def pick_up(num_tips=8):
+    def pick_up(num_tips, reagent_type):
         if not 1 <= num_tips <= 8:
             raise Exception(f'INVALID NUMBER OF TIPS: {num_tips}.')
-        pip = m300
-        scan_result = scan_racks(num_tips)
-        if scan_racks(num_tips):
+        pip = m300 if num_tips > 1 else p300
+        scan_result = scan_racks(num_tips, reagent_type)
+        if scan_result:
             pip.pick_up_tip(scan_result)
         else:
             ctx.pause('REFILL TIPRACKS BEFORE RESUMING.')
             [rack.reset() for rack in tips300]
-            scan_result = scan_racks(num_tips)
+            scan_result = scan_racks(num_tips, reagent_type)
             pip.pick_up_tip(scan_result)
 
-    def check_rows(rows):
-        if not 0 <= rows <= 8:
-            raise Exception(f'Invalid number of rows: {rows}')
-
-    def check_cols(cols):
-        if not 0 <= cols <= 12:
-            raise Exception(f'Invalid number of columns: {cols}')
-
-    m300.flow_rate.aspirate = reagent_map[reagent_type]['flow-rate-asp']
-    m300.flow_rate.dispense = reagent_map[reagent_type]['flow-rate-disp']
-
-    for num_rows, num_cols, plate in zip(
-            [plate_1_rows, plate_2_rows, plate_3_rows, plate_1_rows],
-            [plate_1_cols, plate_2_cols, plate_3_cols, plate_4_cols],
+    # parse wells into chunks
+    for csv, rack in zip(
+            [occupied_well_csv1, occupied_well_csv2, occupied_well_csv3],
             racks):
-        if num_cols == 0 or num_rows == 0:
-            continue
-        check_rows(num_rows)
-        check_cols(num_cols)
-        pick_up(num_rows)
+        occupied_wells = [
+            rack.wells_by_name()[line.upper()]
+            for line in csv.splitlines() if line]
+        chunk_map = {num: [] for num in range(1, 9)}
+        for col in rack.columns():
+            running = None
+            chunk_length = 0
+            for well in col[::-1]:
+                if well in occupied_wells:
+                    running = well
+                    chunk_length += 1
+                else:
+                    if running:
+                        chunk_map[chunk_length].append(running)
+                    running = None
+                    chunk_length = 0
+            if running:
+                chunk_map[chunk_length].append(running)
 
-        for col in plate.rows()[0][:num_cols]:
-            m300.transfer(
-                reagent_map[reagent_type]['volume'], reagent, col.top(),
-                blow_out=reagent_map[reagent_type]['blow-out'],
-                new_tip='never')
-        m300.drop_tip()
+        m300.flow_rate.aspirate = reagent_map[reagent_type]['flow-rate-asp']
+        m300.flow_rate.dispense = reagent_map[reagent_type]['flow-rate-disp']
+
+        for num_tips, dests in chunk_map.items():
+            if len(dests) > 0:
+                pick_up(num_tips, reagent_type)
+                for dest in dests:
+                    m300.aspirate(reagent_map[reagent_type]['volume'], reagent)
+                    m300.dispense(reagent_map[reagent_type]['volume'],
+                                  dest.top(-1))
+                if reagent_map[reagent_type]['blow-out']:
+                    m300.blow_out(dest.top(-1))
+                m300.return_tip()
 
     # track final used tip
     tip_data = {
