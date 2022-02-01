@@ -15,10 +15,10 @@ def run(ctx: protocol_api.ProtocolContext):
     [
         mag_engage_time,
         n_samples,
-        small_pipette_lname,
-        large_pipette_lname,
-        small_pipette_tipracks_lname,
-        large_pipette_tipracks_lname,
+        left_pipette_lname,
+        right_pipette_lname,
+        left_pipette_tipracks_lname,
+        right_pipette_tipracks_lname,
         reservoir_lname,
         destination_plate_lname,
         sample_plate_lname,
@@ -42,10 +42,10 @@ def run(ctx: protocol_api.ProtocolContext):
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
         "mag_engage_time",
         "n_samples",
-        "small_pipette_lname",
-        "large_pipette_lname",
-        "small_pipette_tipracks_lname",
-        "large_pipette_tipracks_lname",
+        "left_pipette_lname",
+        "right_pipette_lname",
+        "left_pipette_tipracks_lname",
+        "right_pipette_tipracks_lname",
         "reservoir_lname",
         "destination_plate_lname",
         "sample_plate_lname",
@@ -91,8 +91,8 @@ def run(ctx: protocol_api.ProtocolContext):
     # If DNAse I is being added from a tube we need to make sure that
     # a) we have a single pipette loaded and b) that dnaseI_vol > pipette min.
     # volume
-    if (("single" not in small_pipette_lname and
-         "single" not in large_pipette_lname) and do_DNAse_step):
+    if (("single" not in left_pipette_lname and
+         "single" not in right_pipette_lname) and do_DNAse_step):
         raise Exception("No single channel pipette for DNAse I distribution " +
                         "selected")
     # More error checking on this in the pipette loading section
@@ -113,24 +113,13 @@ def run(ctx: protocol_api.ProtocolContext):
     '''
     # Load temperature modules (if any)
     dest_temp_mod = None
-    if dest_temp_mod_lname != "none":
+    if dest_temp_mod_lname:
         dest_temp_mod = ctx.load_module(dest_temp_mod_lname, '4')
 
     # Load the magnetic module
     mag_mod = ctx.load_module(mag_mod_lname, '1')
 
-    '''
-
-    Add your labware here with:
-
-    labware_name = ctx.load_labware('{loadname}', '{slot number}')
-
-    If loading labware on a module, you can load with:
-
-    labware_name = module_name.load_labware('{loadname}')
-    where module_name is defined above.
-
-    '''
+    # Load labware
     sample_plate = mag_mod.load_labware(sample_plate_lname)
 
     sample_well = sample_plate.wells()[0]
@@ -138,42 +127,26 @@ def run(ctx: protocol_api.ProtocolContext):
         raise Exception("The sample wells are too small to handle the " +
                         "volumes of reagents")
 
-    dest_plate = None
-    if dest_temp_mod_lname != "None":
-        dest_plate = dest_temp_mod.load_labware(destination_plate_lname)
-    else:
-        dest_plate = ctx.load_labware(destination_plate_lname, '4')
-
-    reservoir = None
     reservoir = ctx.load_labware(reservoir_lname, '7')
 
     dnaseI_tuberack = None
     if do_DNAse_step:
         dnaseI_tuberack = ctx.load_labware(tube_rack_lname, '10')
 
+    dest_plate = None
+    if dest_temp_mod_lname:
+        dest_plate = dest_temp_mod.load_labware(destination_plate_lname)
+    else:
+        dest_plate = ctx.load_labware(destination_plate_lname, '4')
+
     # load tipracks
-    '''
-
-    Add your tipracks here as a list:
-
-    For a single tip rack:
-
-    tiprack_name = [ctx.load_labware('{loadname}', '{slot number}')]
-
-    For multiple tip racks of the same type:
-
-    tiprack_name = [ctx.load_labware('{loadname}', 'slot')
-                     for slot in ['1', '2', '3']]
-
-    If two different tipracks are on the deck, use convention:
-    tiprack[number of microliters]
-    e.g. tiprack10, tiprack20, tiprack200, tiprack300, tiprack1000
-
-    '''
-    tipracks_large = [ctx.load_labware(large_pipette_tipracks_lname, slot)
-                      for slot in ['5', '8', '11']]
-    tipracks_small = [ctx.load_labware(small_pipette_tipracks_lname, slot)
-                      for slot in ['6', '9']]
+    tipracks_left, tipracks_right = [None] * 2
+    if left_pipette_tipracks_lname:
+        tipracks_left = [ctx.load_labware(left_pipette_tipracks_lname, slot)
+                         for slot in ['5', '8', '11']]
+    if right_pipette_tipracks_lname:
+        tipracks_right = [ctx.load_labware(right_pipette_tipracks_lname, slot)
+                          for slot in ['6', '9']]
 
     # load instrument
 
@@ -194,20 +167,38 @@ def run(ctx: protocol_api.ProtocolContext):
                         tip_racks=tiprack
                         )
     '''
-    l_pip = ctx.load_instrument(
-                        large_pipette_lname,
-                        "left",
-                        tip_racks=tipracks_large
-                        )
+    left_pip = None
+    right_pip = None
+    pipette = None  # Remains None if there are two pipettes loaded
+    if left_pipette_lname:
+        left_pip = ctx.load_instrument(
+                                left_pipette_lname,
+                                "left",
+                                tip_racks=tipracks_left
+                                )
+    if right_pipette_lname:
+        right_pip = ctx.load_instrument(
+                                right_pipette_lname,
+                                "right",
+                                tip_racks=tipracks_right
+                                )
+    if not (right_pip and left_pip):
+        if right_pip:
+            pipette = right_pip
+        else:
+            pipette = left_pip
 
-    s_pip = ctx.load_instrument(
-                        small_pipette_lname,
-                        "right",
-                        tip_racks=tipracks_small
-                        )
+    # Rank the pipettes by minimum volume
+    s_pip, l_pip = [None]*2
+    if pipette:
+        s_pip, l_pip = [pipette, pipette]
+    else:
+        if left_pip.min_volume < right_pip.min_volume:
+            s_pip, l_pip = [left_pip, right_pip]
+        else:
+            s_pip, l_pip = [right_pip, left_pip]
 
     # pipette functions   # INCLUDE ANY BINDING TO CLASS
-
     '''
 
     Define all pipette functions, and class extensions here.
@@ -289,7 +280,19 @@ def run(ctx: protocol_api.ProtocolContext):
         an 8-channel pipette, i.e. involving an 8-channel source and/or target
 
         """
-        nonlocal s_pip, l_pip
+        nonlocal s_pip, l_pip, pipette
+        # Case when only one pipette has been loaded
+        if pipette:
+            if pipette.min_volume < vol:
+                raise Exception(("\n\nThe loaded pipette has a minimum "
+                                 "volume of {} which is greater than {}. " +
+                                 "Consider adding a smaller volume pipette\n")
+                                .format(pipette.min_volume, vol))
+            if pipette.channels == 8:
+                return pipette, True
+            else:
+                return pipette, False
+
         s_pip_is_multi = True if s_pip.channels == 8 else False
         l_pip_is_multi = True if l_pip.channels == 8 else False
 
