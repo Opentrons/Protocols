@@ -420,7 +420,7 @@ def run(ctx: protocol_api.ProtocolContext):
     elution_buffer_well = reservoir.wells_by_name()['A3']
     nacl_well = reservoir.wells_by_name()['A4']
     bead_well = reservoir.wells_by_name()['A5']
-    waste_well = reservoir.wells()[-1]  # Use the last well for waste
+    waste_well = reservoir.wells()[-1].top(-2) 
     dnaseI_tube = None
     if dnaseI_tuberack:
         dnaseI_tube = dnaseI_tuberack.wells_by_name()['A1']
