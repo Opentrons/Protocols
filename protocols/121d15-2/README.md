@@ -18,15 +18,15 @@ This protocol performs a custom HPLC Picking protocol from a worklist. The workl
 ```
 Number of Redo
 8
-pos TB_RCK_1,pos MTP_1
-1,1
-2,135
-3,2
+pos TB_RCK_1,pos MTP_1,vol
+1,1,200
+2,135,200
+3,2,150
 4,100
 5,84
 6,262
 7,242
-7,218
+8,218
 ...
 ```
 

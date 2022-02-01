@@ -13,19 +13,15 @@ def run(ctx):
      p300_mount] = get_values(  # noqa: F821
         'input_file', 'replacement_vol', 'plate_type', 'p300_mount')
 
-    replacement_vol = 200
-    plate_type = 'greinermasterblock_384_wellplate_225ul'
-    p300_mount = 'left'
-
     # load labware
     racks = [
         ctx.load_labware('aluminumblock_48_tuberack_2000ul', f'{slot}',
                          f'rack {i+1}')
-        for i, slot in enumerate(['1', '4'])]
-    plate = ctx.load_labware(plate_type, '2')
+        for i, slot in enumerate(['1', '4', '2', '5'])]
+    plate = ctx.load_labware(plate_type, '3')
     tips300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
-        for slot in ['3', '6']]
+        for slot in ['6', '9', '7', '8']]
 
     # pipette
     p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
