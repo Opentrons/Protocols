@@ -36,10 +36,11 @@ Explanation of parameters below:
 </br>
 
 ### Modules
+* [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
 
-### Labware 
+### Labware
 * [12-channel reservoir](https://labware.opentrons.com/?category=reservoir)
-* [96-well PCR plate]()
+* [96-well PCR plate](https://labware.opentrons.com/?category=wellPlate)
 * [Alternatively: Well plate/PCR strips on aluminum blocks](https://labware.opentrons.com/?category=aluminumBlock)
 
 ### Pipettes
