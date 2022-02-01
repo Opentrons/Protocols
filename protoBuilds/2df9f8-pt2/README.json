@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "\nThis is the deck setup for a run with 94 samples (bottom two rows of slot 11 are not populated).\n\n\n",
-    "description": "This protocol preps a 96 well plate by transferring 6ul from a source plate deepwell plate to a destination deepwell plate.\nExplanation of complex parameters below:\n* Number of Samples: Specify the number of samples (1-94) to run on this protocol. Note: samples will be picked by row in the tube racks, in order of slots 7, 8, 10, and 11.\n* P20 Mount: Specify which side to mount your P20 Multi Channel Pipette.\n",
+    "description": "This protocol preps a 96 well plate by transferring 6ul from a source plate deepwell plate to a destination deepwell plate.\nExplanation of complex parameters below:\n Number of Samples: Specify the number of samples (1-94) to run on this protocol. Note: samples will be picked by row in the tube racks, in order of slots 7, 8, 10, and 11.\n P20 Mount: Specify which side to mount your P20 Multi Channel Pipette.\n",
     "internal": "2df9f8-pt2",
     "labware": "\nOpentrons 20ul tips\nNEST 2 mL 96-Well Deep Well Plate, V Bottom\n",
     "markdown": {

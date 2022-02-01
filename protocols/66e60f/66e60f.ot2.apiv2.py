@@ -2,7 +2,7 @@ from opentrons import protocol_api
 import re
 
 metadata = {
-    'protocolName': '66e60f - Normalization protocol',
+    'protocolName': 'Normalization protocol',
     'author': 'Eskil Andersen <eskil.andersen@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
@@ -12,12 +12,12 @@ metadata = {
 
 def run(ctx: protocol_api.ProtocolContext):
 
-    [input_csv, source_type, dest_type] = get_values(  # noqa: F821
-        'input_csv', 'source_type', 'dest_type')
+    [input_csv, source_type, dest_type, p300_type] = get_values(  # noqa: F821
+        'input_csv', 'source_type', 'dest_type', 'p300_type')
 
     # define all custom variables above here with descriptions:
     left_pipette_loadname = 'p20_single_gen2'
-    right_pipette_loadname = 'p300_single_gen2'
+    right_pipette_loadname = p300_type
 
     target_plate_loader = (dest_type, '1',
                            'target plate')
@@ -210,7 +210,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     '''
     water_well = reservoir.wells_by_name()['A1']
-    liquid_waste = reservoir.wells_by_name()['A2']
+    liquid_waste = reservoir.wells_by_name()['A2'].top(-2)
 
     # plate, tube rack maps
 
@@ -250,7 +250,9 @@ def run(ctx: protocol_api.ProtocolContext):
 
     ctx.comment("\nTransferring water to target plate\n")
     p300.pick_up_tip()
-    for well in target_plate.wells():
+    wells = target_plate.rows()[0] if 'multi' in p300_type else \
+        target_plate.wells()
+    for well in wells:
         if p300.current_volume < initial_water_volume:
             p300.aspirate(200-p300.current_volume, water_well)
         p300.dispense(initial_water_volume, well)
@@ -268,8 +270,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
         ctx.comment("Normalizing sample {} with concentration {}"
                     .format(description, concentration))
-        pip = None
-        pip = p20 if volume <= 20 else p300
+        pip = p20 if volume <= 20 or 'multi' in p300_type else p300
         pip.pick_up_tip()
         pip.transfer(volume,
                      target_plate.wells_by_name()[well],
