@@ -166,12 +166,12 @@ def run(ctx):
             pip.flow_rate.aspirate = 10
         else:
             pip.flow_rate.aspirate = 20
-        while vol > 200:
+        while vol > 190:
             pip.aspirate(
-                200, src.bottom().move(types.Point(x=side, y=0, z=0.5)))
+                190, src.bottom().move(types.Point(x=side, y=0, z=0.5)))
             pip.dispense(200, dest)
             pip.aspirate(10, dest)
-            vol -= 200
+            vol -= 190
         pip.aspirate(vol, src.bottom().move(types.Point(x=side, y=0, z=0.5)))
         pip.dispense(vol, dest)
         if dest == trash:
