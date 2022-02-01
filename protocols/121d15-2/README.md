@@ -13,21 +13,33 @@ Links:
 * [Manual Cleave](./121d15)
 * [HPLC Picking](./121d15-2)
 
-This protocol performs a custom plate filling for up to 4x 96-well plates from a single reagent reservoir. The user can input the number of rows and columns to be filled for each plate. Liquid handling parameters are automatically determined from the user's selection of which reagent will be added during the run.
+This protocol performs a custom HPLC Picking protocol from a worklist. The worklist should be specified as follows:
+
+```
+Number of Redo
+8
+pos TB_RCK_1,pos MTP_1,vol
+1,1,200
+2,135,200
+3,2,150
+4,100
+5,84
+6,262
+7,242
+8,218
+...
+```
 
 ---
 
 ### Labware
-* Custom 96-tuberack
-* [NEST 1 Reservoir 195ml](https://shop.opentrons.com/nest-1-well-reservoirs-195-ml/)
+* Custom 48-tuberack
+* [Greiner MASTERBLOCK 384 Well Plate 225 µL](https://shop.gbo.com/en/row/products/bioscience/microplates/polypropylene-storage-plates/384-deep-well-masterblock/781270.html)
+* [Greiner MASTERBLOCK 96 Well Plate 500 µL](https://shop.gbo.com/en/row/products/bioscience/microplates/polypropylene-storage-plates/96-well-masterblock-0-5ml/786201.html)
 * [Opentrons 300µL Tips](https://shop.opentrons.com/opentrons-300ul-tips-1000-refills/)
 
 ### Pipettes
-* [P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)
-
-### Reagents
-* EDA
-* ACN
+* [P300 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 
 ---
 
