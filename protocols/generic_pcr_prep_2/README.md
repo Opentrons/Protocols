@@ -31,7 +31,9 @@ Explanation of parameters below:
 * `Temperature module for the template sample well plate`: (Optional) You can load a temperature module for your template plate if you want to control the temperature.
 * `Temperature module for the destination well plate`: (Optional) You can load a temperature module for your destination plate if you want to control the temperature.
 
+
 ---
+</br>
 
 ### Modules
 * [12-channel reservoir](https://labware.opentrons.com/?category=reservoir)
@@ -50,6 +52,8 @@ Explanation of parameters below:
 ### Deck Setup
 * Example setup
 ![Deck](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/generic_pcr_prep_2/example_deck.jpg)
+
+![Mastermix Reservoir](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/generic_pcr_prep_2/mastermix_reservoir.jpg)
 
 
 * Slot 1: Empty
