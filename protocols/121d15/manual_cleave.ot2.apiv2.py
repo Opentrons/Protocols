@@ -107,11 +107,11 @@ def run(ctx):
             pip.pick_up_tip(scan_result)
 
     def check_rows(rows):
-        if not 1 <= rows <= 8:
+        if not 0 <= rows <= 8:
             raise Exception(f'Invalid number of rows: {rows}')
 
     def check_cols(cols):
-        if not 1 <= cols <= 12:
+        if not 0 <= cols <= 12:
             raise Exception(f'Invalid number of columns: {cols}')
 
     m300.flow_rate.aspirate = reagent_map[reagent_type]['flow-rate-asp']
@@ -121,9 +121,12 @@ def run(ctx):
             [plate_1_rows, plate_2_rows, plate_3_rows, plate_1_rows],
             [plate_1_cols, plate_2_cols, plate_3_cols, plate_4_cols],
             racks):
+        if num_cols == 0 or num_rows == 0:
+            continue
         check_rows(num_rows)
         check_cols(num_cols)
         pick_up(num_rows)
+
         for col in plate.rows()[0][:num_cols]:
             m300.transfer(
                 reagent_map[reagent_type]['volume'], reagent, col.top(),
