@@ -55,13 +55,13 @@ The protocol is based on Promega's MagneHis™ system, but should work for any o
 
 ### Labware
 * [12-well Reservoirs](https://labware.opentrons.com/?category=reservoir)
-  * [NEST 12 well reservoir, 15 mL](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/)
+	* [NEST 12 well reservoir, 15 mL](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/)
 * [Well plates](https://labware.opentrons.com/?category=wellPlate)
-  * [NEST 2 mL 96-Well Deep Well Plate](https://shop.opentrons.com/nest-2-ml-96-well-deep-well-plate-v-bottom/)
+	* [NEST 2 mL 96-Well Deep Well Plate](https://shop.opentrons.com/nest-2-ml-96-well-deep-well-plate-v-bottom/)
 * [Target plate](https://labware.opentrons.com/?category=wellPlate)
-  * [NEST 96 Well Plate Flat](https://shop.opentrons.com/nest-96-well-plate-flat/)
+	* [NEST 96 Well Plate Flat](https://shop.opentrons.com/nest-96-well-plate-flat/)
 * [Tube racks](https://labware.opentrons.com/?category=tubeRack)
-  * [4-in-1 Tube Rack Set](https://shop.opentrons.com/4-in-1-tube-rack-set/)
+	* [4-in-1 Tube Rack Set](https://shop.opentrons.com/4-in-1-tube-rack-set/)
 
 ### Pipettes
 * [Opentrons Pipettes](https://opentrons.com/pipettes/)
