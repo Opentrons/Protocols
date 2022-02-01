@@ -11,7 +11,6 @@ metadata = {
 
 
 def run(ctx: protocol_api.ProtocolContext):
-
     [
         mag_engage_time,
         n_samples,
