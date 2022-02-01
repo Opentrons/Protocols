@@ -69,7 +69,6 @@ def run(ctx):
         "DNA_supernat_vol")
 
     n_cols = math.ceil(n_samples/8)
-
     # Deck placement: slots
     mag_slot = 3
     m20_tip_slots = [10, 11]

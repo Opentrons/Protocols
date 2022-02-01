@@ -22,8 +22,8 @@
         "label": "Temperature module in slot 1",
         "name": "temp_mod_s1_lname",
         "options": [
-          { "label": "None", "value": null },
           { "label": "Temperature module Gen2", "value": "temperature module gen2" },
+          { "label": "None", "value": null },
           { "label": "Temperature module Gen1", "value": "temperature module" }
         ]
       },
@@ -32,8 +32,8 @@
         "label": "Temperature module in slot 4",
         "name": "temp_mod_s4_lname",
         "options": [
-          { "label": "None", "value": null },
           { "label": "Temperature module Gen2", "value": "temperature module gen2" },
+          { "label": "None", "value": null },
           { "label": "Temperature module Gen1", "value": "temperature module" }
         ]
       },
@@ -42,8 +42,8 @@
         "label": "Temperature module in slot 7",
         "name": "temp_mod_s7_lname",
         "options": [
-          { "label": "None", "value": null },
           { "label": "Temperature module Gen2", "value": "temperature module gen2" },
+          { "label": "None", "value": null },
           { "label": "Temperature module Gen1", "value": "temperature module" }
         ]
       },
