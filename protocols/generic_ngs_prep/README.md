@@ -72,6 +72,10 @@ Explanation of parameters below:
 ### Deck Setup
 **Note: The deck setup changes throughout the course of the protocol. The initial calibration layout may differ from the final setup. Please follow the initial calibration setup and any instructions during the pauses.**
 
+Initial deck state:
+
+![Initial deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/generic_ngs_prep/starting_deck.jpg)
+
 **Step 1**
 * Slot 1: Temperature Module slot 1 + Sample Plate
 * Slot 2: Reagent reservoir (SPRI, Buffer I, Mastermix)
@@ -95,6 +99,7 @@ Explanation of parameters below:
 * Slot 9: Opentrons 200 uL Filter Tips
 * Slot 10: Opentrons 20 uL Filter Tips
 * Slot 11: Opentrons 20 uL Filter Tips
+
 ---
 
 ### Protocol Steps
