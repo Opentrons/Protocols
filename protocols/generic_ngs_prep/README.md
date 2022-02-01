@@ -5,7 +5,7 @@
 
 ## Categories
 * NGS Library Prep
-  * Generic
+	* Generic
 
 ## Description
 This protocol performs a generic NGS Library Prep. It utilizes up to three temperature modules in Slot 1, 4 and 7 for the cooling of reagents. It also utilizes the magnetic module for bead based purification of samples.
