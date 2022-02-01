@@ -29,6 +29,7 @@ For the pipette choices it is important that the pipettes selected will cover th
 * `Reagent labware 1` Choose the appropriate labware (such as tube racks or well plates) for your reagents, you may choose aluminum blocks if you intend to use a temperature module. This is referred to as "slot 1" in the .csv
 * `Reagent labware 2` (Optional) Choose a secondary unit of labware for your reagents, you may choose aluminum blocks if you intend to use a temperature module. This is referred to as "slot 2" in the .csv
 * `Twelve well Reservoir and mastermix destination` Select the type of 12 well reservoir to use. The mastermix will be created in well A1. You may use the other wells as sources for reagents (slot 3 in the .csv)
+</br>
 
 ---
 
