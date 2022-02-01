@@ -1,0 +1,443 @@
+{
+    "content": "from opentrons import types, protocol_api\nimport math\n\nmetadata = {\n    'protocolName': 'Generic NGS Library Prep',\n    'author': 'Opentrons',\n    'description': 'Generic NGS library prep with optional temp mods',\n    'apiLevel': '2.10'\n}\n\n\ndef run(ctx):\n    [m20_mount,\n     m300_mount,\n     n_samples,\n     temp_mod_s1_lname,\n     temp_mod_s4_lname,\n     temp_mod_s7_lname,\n     temp_s1_part1,\n     temp_s4_part1,\n     temp_s7_part1,\n     temp_s1_part2,\n     temp_s4_part2,\n     temp_s7_part2,\n     samples_loadname,\n     reagent1_loadname,\n     reagent2_loadname,\n     indexing_plate_loadname,\n     reservoir_loadname,\n     ethanol_res_loadname,\n     primer_loadname,\n     reag1_vol,\n     reag2_vol,\n     ethanol_wash_vol,\n     mastermix_vol,\n     primer_mix_vol,\n     bead_vol,\n     sample_vol,\n     elution_buffer_vol,\n     DNA_supernat_vol] = \\\n        get_values(  # noqa: F821\n        \"m20_mount\",\n        \"m300_mount\",\n        \"n_samples\",\n        \"temp_mod_s1_lname\",\n        \"temp_mod_s4_lname\",\n        \"temp_mod_s7_lname\",\n        \"temp_s1_part1\",\n        \"temp_s4_part1\",\n        \"temp_s7_part1\",\n        \"temp_s1_part2\",\n        \"temp_s4_part2\",\n        \"temp_s7_part2\",\n        \"samples_loadname\",\n        \"reagent1_loadname\",\n        \"reagent2_loadname\",\n        \"indexing_plate_loadname\",\n        \"reservoir_loadname\",\n        \"ethanol_res_loadname\",\n        \"primer_loadname\",\n        \"reag1_vol\",\n        \"reag2_vol\",\n        \"ethanol_wash_vol\",\n        \"mastermix_vol\",\n        \"primer_mix_vol\",\n        \"bead_vol\",\n        \"sample_vol\",\n        \"elution_buffer_vol\",\n        \"DNA_supernat_vol\")\n\n    n_cols = math.ceil(n_samples/8)\n    # Deck placement: slots\n    mag_slot = 3\n    m20_tip_slots = [10, 11]\n    m300_tip_slots = [8, 9]\n    ethanol_slot = 6\n\n    # Load Modules\n    temp_mod_list = []\n\n    for temp_mod, slot in \\\n            zip([temp_mod_s1_lname, temp_mod_s4_lname, temp_mod_s7_lname],\n                ['1', '4', '7']):\n        if temp_mod:\n            temp_mod_list.append((ctx.load_module(temp_mod, slot)))\n        else:\n            temp_mod_list.append(None)\n\n    [temperature_mod_slot1,\n     temperature_mod_slot4,\n     temperature_module_slot7] = \\\n        [temp_mod_list[0],\n         temp_mod_list[1],\n         temp_mod_list[2]]\n\n    mag_mod = ctx.load_module('magnetic module gen2', mag_slot)\n    mag_plate = mag_mod.load_labware(samples_loadname)\n\n    # Load Labware\n    labware_list = []\n    for temp_mod, load_name, slot in \\\n            (zip([temperature_mod_slot1, temperature_mod_slot4,\n                  temperature_module_slot7, None],\n                 [samples_loadname, reagent1_loadname,\n                  reagent2_loadname, reservoir_loadname],\n                 ['1', '4', '7', '2'])):\n        if temp_mod:\n            labware_list.append(temp_mod.load_labware(load_name))\n        else:\n            labware_list.append(ctx.load_labware(load_name, slot))\n    temp_plate_a_samples = labware_list[0]\n    temp_plate_b_reagent1 = labware_list[1]\n    reagent2_plate = labware_list[2]\n    reservoir = labware_list[3]\n\n    [temp_plate_a_samples, temp_plate_b_reagent1, reagent2_plate] = \\\n        [labware_list[0], labware_list[1], labware_list[2]]\n\n    tipracks200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)\n                   for slot in [m300_tip_slots[0], m300_tip_slots[1]]]\n    tipracks20 = [ctx.load_labware('opentrons_96_tiprack_20ul', slot)\n                  for slot in [m20_tip_slots[0], m20_tip_slots[1]]]\n    trash = ctx.deck['12']['A1']\n\n    # Load Pipettes\n    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount,\n                              tip_racks=tipracks20)\n    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,\n                               tip_racks=tipracks200)\n\n    # Helper Functions\n    def replace_labware(slot_number, new_labware):\n        del ctx.deck[str(slot_number)]\n        return ctx.load_labware(new_labware, str(slot_number))\n\n    def aspirate_with_delay(pipette, volume, source, delay_seconds):\n        pipette.aspirate(volume, source)\n        if delay_seconds > 0:\n            ctx.delay(seconds=delay_seconds)\n\n    def dispense_with_delay(pipette, volume, dest, delay_seconds):\n        pipette.dispense(volume, dest)\n        if delay_seconds > 0:\n            ctx.delay(seconds=delay_seconds)\n\n    def pick_up(pip):\n        try:\n            pip.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            pip.home()\n            ctx.pause(\"Replace the empty tips!\")\n            pip.reset_tipracks()\n            pip.pick_up_tip()\n\n    def reset_pipette_speed(pipette):\n        if pipette.name == 'p300_multi_gen2':\n            pipette.flow_rate.aspirate = 94\n            pipette.flow_rate.dispense = 94\n        elif pipette.name == 'p20_multi_gen2':\n            pipette.flow_rate.aspirate = 7.6\n            pipette.flow_rate.dispense = 7.6\n\n    def remove_supernatant(pip, vol, src, dest, side, mode=None):\n        if mode == 'elution':\n            pip.flow_rate.aspirate = 10\n        else:\n            pip.flow_rate.aspirate = 20\n        while vol > 190:\n            pip.aspirate(\n                190, src.bottom().move(types.Point(x=side, y=0, z=0.5)))\n            pip.dispense(200, dest)\n            pip.aspirate(10, dest)\n            vol -= 190\n        pip.aspirate(vol, src.bottom().move(types.Point(x=side, y=0, z=0.5)))\n        pip.dispense(vol, dest)\n        if dest == trash:\n            pip.blow_out()\n        pip.flow_rate.aspirate = 50\n\n    # Volume Tracking\n    class VolTracker:\n        def __init__(self, labware, well_vol, pip_type='single',\n                     mode='reagent', start=0, end=12, msg='Reset Labware'):\n            try:\n                self.labware_wells = dict.fromkeys(\n                    labware.wells()[start:end], 0)\n            except Exception:\n                self.labware_wells = dict.fromkeys(\n                    labware, 0)\n            self.labware_wells_backup = self.labware_wells.copy()\n            self.well_vol = well_vol\n            self.pip_type = pip_type\n            self.mode = mode\n            self.start = start\n            self.end = end\n            self.msg = msg\n\n        def tracker(self, vol):\n            '''tracker() will track how much liquid\n            was used up per well. If the volume of\n            a given well is greater than self.well_vol\n            it will remove it from the dictionary and iterate\n            to the next well which will act as the reservoir.'''\n            well = next(iter(self.labware_wells))\n            if self.labware_wells[well] + vol >= self.well_vol:\n                del self.labware_wells[well]\n                if len(self.labware_wells) < 1:\n                    ctx.pause(self.msg)\n                    self.labware_wells = self.labware_wells_backup.copy()\n                well = next(iter(self.labware_wells))\n            if self.pip_type == 'multi':\n                self.labware_wells[well] = self.labware_wells[well] + vol*8\n            elif self.pip_type == 'single':\n                self.labware_wells[well] = self.labware_wells[well] + vol\n            if self.mode == 'waste':\n                ctx.comment(f'''{well}: {int(self.labware_wells[well])} uL of\n                            total waste''')\n            else:\n                ctx.comment(f'''{int(self.labware_wells[well])} uL of liquid\n                            used from {well}''')\n            return well\n\n    # Wells\n    sample_wells = temp_plate_a_samples.rows()[0][:n_cols]\n    reagent1 = temp_plate_b_reagent1['A1']\n    reagent2 = reagent2_plate['A1']\n\n    # Protocol Steps\n    # Set both Temp Mods to 4C\n    for tmod, temp in zip([temperature_mod_slot1, temperature_mod_slot4,\n                           temperature_module_slot7],\n                          [temp_s1_part1, temp_s4_part1, temp_s7_part1]):\n        if tmod is not None:\n            tmod.set_temperature(temp)\n\n    # Step 1: Enzymatic reaction e.g. end repair or barcoding\n    # Step 1.1: Transfer Reagent 1 to Samples\n    pip = m300 if reag1_vol > 20 else m20\n    for col in sample_wells:\n        pick_up(pip)\n        pip.flow_rate.aspirate = 5\n        pip.flow_rate.dispense = 5\n        aspirate_with_delay(pip, reag1_vol, reagent1, 1)\n        dispense_with_delay(pip, reag1_vol, col, 1)\n        pip.drop_tip()\n    reset_pipette_speed(pip)\n\n    # Step 1.2: Transfer Reagent 2 to Samples\n    pip = m300 if reag2_vol > 20 else m20\n    for col in sample_wells:\n        pick_up(pip)\n        pip.flow_rate.aspirate = 4\n        pip.flow_rate.dispense = 4\n        aspirate_with_delay(pip, reag2_vol, reagent2, 2)\n        dispense_with_delay(pip, reag2_vol, col, 2)\n        pip.drop_tip()\n    reset_pipette_speed(pip)\n\n    ctx.pause('''Seal the sample plate. Mix, Spin down and place in a thermocycler.\n              Return sample plate to the magnetic module once completed.\n              Remove plates/strips containing Reagents 1 and 2.  Place the\n              12-channel reservoir on the temperature module in Slot 1. Place\n              the Primer Plate on the temperature module in Slot 3. Place empty\n              indexing plate in Slot 7. Click Resume when ready to proceed.''')\n\n    # Swapping Labware at Pause\n    labware_list = []\n    temp_mod_list = []\n\n    for slot, temp_mod_loadname, load_name in zip(['4', '7',\n                                                  ethanol_slot],\n                                                  [temp_mod_s4_lname,\n                                                  temp_mod_s7_lname,\n                                                  None],\n                                                  [primer_loadname,\n                                                  indexing_plate_loadname,\n                                                  ethanol_res_loadname]):\n        del(ctx.deck[slot])\n        if temp_mod_loadname:\n            temp_mod = ctx.load_module(temp_mod_loadname, slot)\n            temp_mod_list.append(temp_mod)\n            labware = temp_mod.load_labware(load_name)\n            labware_list.append(labware)\n        else:\n            labware_list.append(ctx.load_labware(load_name, slot))\n\n    primer = labware_list[0]\n    indexing_plate = labware_list[1]\n    ethanol_reservoir = labware_list[2]\n    ethanol = ethanol_reservoir.wells_by_name()['A1']\n\n    # Wells\n    mag_plate_wells = mag_plate.rows()[0][:n_cols]\n    buffer1Track = VolTracker(reservoir, 1008, 'multi', start=8, end=10,\n                              msg='Replenish Buffer 1')\n    spriTrack = VolTracker(reservoir, 1140, 'multi', start=0, end=8,\n                           msg='Replenish SPRI')\n    mmTrack = VolTracker(reservoir, 1200, 'multi', start=10, end=12,\n                         msg='Master Mix Track')\n    indexing_plate_wells = indexing_plate.rows()[0][:n_cols]\n    primer_plate_wells = primer.rows()[0][:n_cols]\n    side_x = 1\n    sides = [-side_x, side_x] * (n_cols // 2)\n\n    # Continue Protocol with DNA purification using SPRI\n    # Set temperatures for part 2\n    for tmod, temp in zip([temperature_mod_slot1, temperature_mod_slot4,\n                           temperature_module_slot7],\n                          [temp_s1_part2, temp_s4_part2, temp_s7_part2]):\n        if tmod is not None:\n            tmod.set_temperature(temp)\n    # Step 3: Add SPRI solution to Samples\n    pip = m300 if bead_vol > 20 else m20\n    for col in mag_plate_wells:\n        pick_up(pip)\n        pip.transfer(bead_vol, spriTrack.tracker(bead_vol), col,\n                     new_tip='never',\n                     mix_after=(5, (2*bead_vol)/3))\n        pip.drop_tip()\n\n    # Step 4: Incubate SPRI at RT\n    ctx.delay(minutes=10, msg='''Allowing the mixed SPRI reaction to incubate\n                                 for 10 minutes at Room Temperature.''')\n\n    # Step 5: Engage Magnet\n    mag_mod.engage()\n    ctx.delay(minutes=3, msg=\"Concentrating the beads for 3 minutes.\")\n\n    # Step 6: Remove Supernatant from samples\n    supernatant_volume = sample_vol + reag1_vol + reag2_vol + bead_vol\n    pip = m300 if supernatant_volume > 20 else m20\n\n    for col, side in zip(mag_plate_wells, sides):\n        pick_up(pip)\n        remove_supernatant(pip, supernatant_volume, col, trash, side)\n        pip.drop_tip()\n\n    # Step 10: Repeat Ethanol Wash\n    for _ in range(2):\n        # Step 7: Add Ethanol to sammples\n        pip = m300 if ethanol_wash_vol > 20 else m20\n        for col in mag_plate_wells:\n            pick_up(pip)\n            pip.transfer(ethanol_wash_vol, ethanol, col, new_tip='never')\n            pip.drop_tip()\n\n        # Step 8: Allow ethanol to sit\n        ctx.delay(minutes=1, msg=\"Allowing Ethanol to sit for 1 minute.\")\n\n        # Step 9: Remove Supernatant from samples\n        pip = m300 if ethanol_wash_vol+10 > 20 else m20\n        for col, side in zip(mag_plate_wells, sides):\n            pick_up(pip)\n            remove_supernatant(pip, ethanol_wash_vol+10, col, trash, side)\n            pip.drop_tip()\n\n    # Step 11: Remove any remaining supernatant from samples\n    for col, side in zip(mag_plate_wells, sides):\n        pick_up(m300)\n        remove_supernatant(m300, 130, col, trash, side)\n        m300.drop_tip()\n\n    # Step 12: Allow beads to dry\n    ctx.delay(minutes=5, msg='Allowing beads to dry...')\n\n    # Step 13: Transfer elution buffer to samples\n    pip = m300 if elution_buffer_vol > 20 else m20\n    for col in mag_plate_wells:\n        pick_up(pip)\n        pip.transfer(elution_buffer_vol,\n                     buffer1Track.tracker(elution_buffer_vol),\n                     col, new_tip='never',\n                     mix_after=(5, (2*elution_buffer_vol)/3))\n        pip.drop_tip()\n\n    # Step 14: Allow beads to incubate\n    ctx.delay(minutes=5, msg='''Allow beads to incubate for\n                             5 minutes at Room Temperature''')\n\n    # Step 15: Add PCR Master Mix to indexing plate\n    pip = m300 if mastermix_vol > 20 else m20\n    pick_up(pip)\n    for col in indexing_plate_wells:\n        pip.transfer(mastermix_vol, mmTrack.tracker(25), col, new_tip='never')\n    pip.drop_tip()\n\n    # Step 16: Transfer Primer Mix to Indexing Plate\n    pip = m300 if primer_mix_vol > 20 else m20\n    for src, dest in zip(primer_plate_wells, indexing_plate_wells):\n        pick_up(pip)\n        pip.transfer(primer_mix_vol, src, dest, new_tip='never')\n        pip.drop_tip()\n\n    # Step 17: Concentrate sample plate beads\n    ctx.delay(minutes=3, msg='''Concentrate beads for 3 minutes''')\n\n    # Step 18: Transfer supernatant from samples to indexing plate\n    pip = m300 if DNA_supernat_vol > 20 else m20\n    for src, dest, side in zip(mag_plate_wells, indexing_plate_wells, sides):\n        pick_up(pip)\n        remove_supernatant(pip, DNA_supernat_vol, src, dest, side)\n        pip.drop_tip()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "label": "P20 Multichannel GEN2 Mount Position",
+            "name": "m20_mount",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P300 Multichannel GEN2 Mount Position",
+            "name": "m300_mount",
+            "options": [
+                {
+                    "label": "Right",
+                    "value": "right"
+                },
+                {
+                    "label": "Left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Temperature module in slot 1",
+            "name": "temp_mod_s1_lname",
+            "options": [
+                {
+                    "label": "Temperature module Gen2",
+                    "value": "temperature module gen2"
+                },
+                {
+                    "label": "None",
+                    "value": null
+                },
+                {
+                    "label": "Temperature module Gen1",
+                    "value": "temperature module"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Temperature module in slot 4",
+            "name": "temp_mod_s4_lname",
+            "options": [
+                {
+                    "label": "Temperature module Gen2",
+                    "value": "temperature module gen2"
+                },
+                {
+                    "label": "None",
+                    "value": null
+                },
+                {
+                    "label": "Temperature module Gen1",
+                    "value": "temperature module"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Temperature module in slot 7",
+            "name": "temp_mod_s7_lname",
+            "options": [
+                {
+                    "label": "Temperature module Gen2",
+                    "value": "temperature module gen2"
+                },
+                {
+                    "label": "None",
+                    "value": null
+                },
+                {
+                    "label": "Temperature module Gen1",
+                    "value": "temperature module"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Sample plate",
+            "name": "samples_loadname",
+            "options": [
+                {
+                    "label": "Bio-Rad 96 Well Plate 200 \u00b5L PCR",
+                    "value": "biorad_96_wellplate_200ul_pcr"
+                },
+                {
+                    "label": "Opentrons 96 Well Aluminum Block with Bio-Rad Well Plate 200 \u00b5L",
+                    "value": "opentrons_96_aluminumblock_biorad_wellplate_200ul"
+                },
+                {
+                    "label": "Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 \u00b5L",
+                    "value": "opentrons_96_aluminumblock_generic_pcr_strip_200ul"
+                },
+                {
+                    "label": "Opentrons 96 Well Aluminum Block with NEST Well Plate 100 \u00b5L",
+                    "value": "opentrons_96_aluminumblock_nest_wellplate_100ul"
+                },
+                {
+                    "label": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt",
+                    "value": "nest_96_wellplate_100ul_pcr_full_skirt"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Reagent 1 plate",
+            "name": "reagent1_loadname",
+            "options": [
+                {
+                    "label": "Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 \u00b5L",
+                    "value": "opentrons_96_aluminumblock_generic_pcr_strip_200ul"
+                },
+                {
+                    "label": "Opentrons 96 Well Aluminum Block with Bio-Rad Well Plate 200 \u00b5L",
+                    "value": "opentrons_96_aluminumblock_biorad_wellplate_200ul"
+                },
+                {
+                    "label": "Opentrons 96 Well Aluminum Block with NEST Well Plate 100 \u00b5L",
+                    "value": "opentrons_96_aluminumblock_nest_wellplate_100ul"
+                },
+                {
+                    "label": "Bio-Rad 96 Well Plate 200 \u00b5L PCR",
+                    "value": "biorad_96_wellplate_200ul_pcr"
+                },
+                {
+                    "label": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt",
+                    "value": "nest_96_wellplate_100ul_pcr_full_skirt"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Reagent 2 plate",
+            "name": "reagent2_loadname",
+            "options": [
+                {
+                    "label": "Bio-Rad 96 Well Plate 200 \u00b5L PCR",
+                    "value": "biorad_96_wellplate_200ul_pcr"
+                },
+                {
+                    "label": "Opentrons 96 Well Aluminum Block with Bio-Rad Well Plate 200 \u00b5L",
+                    "value": "opentrons_96_aluminumblock_biorad_wellplate_200ul"
+                },
+                {
+                    "label": "Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 \u00b5L",
+                    "value": "opentrons_96_aluminumblock_generic_pcr_strip_200ul"
+                },
+                {
+                    "label": "Opentrons 96 Well Aluminum Block with NEST Well Plate 100 \u00b5L",
+                    "value": "opentrons_96_aluminumblock_nest_wellplate_100ul"
+                },
+                {
+                    "label": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt",
+                    "value": "nest_96_wellplate_100ul_pcr_full_skirt"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Indexing plate",
+            "name": "indexing_plate_loadname",
+            "options": [
+                {
+                    "label": "Bio-Rad 96 Well Plate 200 \u00b5L PCR",
+                    "value": "biorad_96_wellplate_200ul_pcr"
+                },
+                {
+                    "label": "Opentrons 96 Well Aluminum Block with Bio-Rad Well Plate 200 \u00b5L",
+                    "value": "opentrons_96_aluminumblock_biorad_wellplate_200ul"
+                },
+                {
+                    "label": "Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 \u00b5L",
+                    "value": "opentrons_96_aluminumblock_generic_pcr_strip_200ul"
+                },
+                {
+                    "label": "Opentrons 96 Well Aluminum Block with NEST Well Plate 100 \u00b5L",
+                    "value": "opentrons_96_aluminumblock_nest_wellplate_100ul"
+                },
+                {
+                    "label": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt",
+                    "value": "nest_96_wellplate_100ul_pcr_full_skirt"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Primer plate",
+            "name": "primer_loadname",
+            "options": [
+                {
+                    "label": "Bio-Rad 96 Well Plate 200 \u00b5L PCR",
+                    "value": "biorad_96_wellplate_200ul_pcr"
+                },
+                {
+                    "label": "Opentrons 96 Well Aluminum Block with Bio-Rad Well Plate 200 \u00b5L",
+                    "value": "opentrons_96_aluminumblock_biorad_wellplate_200ul"
+                },
+                {
+                    "label": "Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 \u00b5L",
+                    "value": "opentrons_96_aluminumblock_generic_pcr_strip_200ul"
+                },
+                {
+                    "label": "Opentrons 96 Well Aluminum Block with NEST Well Plate 100 \u00b5L",
+                    "value": "opentrons_96_aluminumblock_nest_wellplate_100ul"
+                },
+                {
+                    "label": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt",
+                    "value": "nest_96_wellplate_100ul_pcr_full_skirt"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Reagent reservoir",
+            "name": "reservoir_loadname",
+            "options": [
+                {
+                    "label": "NEST 12 Well Reservoir 15 mL",
+                    "value": "nest_12_reservoir_15ml"
+                },
+                {
+                    "label": "USA Scientific 12 Well Reservoir 22 mL",
+                    "value": "usascientific_12_reservoir_22ml"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Ethanol reservoir",
+            "name": "ethanol_res_loadname",
+            "options": [
+                {
+                    "label": "Agilent 1 Well Reservoir 290 mL",
+                    "value": "agilent_1_reservoir_290ml"
+                },
+                {
+                    "label": "Axygen 1 Well Reservoir 90 mL",
+                    "value": "axygen_1_reservoir_90ml"
+                },
+                {
+                    "label": "NEST 1 Well Reservoir 195 mL",
+                    "value": "nest_1_reservoir_195ml"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 96,
+            "label": "Number of Samples",
+            "name": "n_samples",
+            "type": "int"
+        },
+        {
+            "default": 4.0,
+            "label": "Temperature (deg C) for temperature module on slot 1 in part 1",
+            "name": "temp_s1_part1",
+            "type": "float"
+        },
+        {
+            "default": 4.0,
+            "label": "Temperature (deg C) for temperature module on slot 4 in part 1",
+            "name": "temp_s4_part1",
+            "type": "float"
+        },
+        {
+            "default": 4.0,
+            "label": "Temperature (deg C) for temperature module on slot 7 in part 1",
+            "name": "temp_s7_part1",
+            "type": "float"
+        },
+        {
+            "default": 4.0,
+            "label": "Temperature (deg C) for temperature module on slot 1 in part 2",
+            "name": "temp_s1_part2",
+            "type": "float"
+        },
+        {
+            "default": 4.0,
+            "label": "Temperature (deg C) for temperature module on slot 4 in part 2",
+            "name": "temp_s4_part2",
+            "type": "float"
+        },
+        {
+            "default": 4.0,
+            "label": "Temperature (deg C) for temperature module on slot 7 in part 2",
+            "name": "temp_s7_part2",
+            "type": "float"
+        },
+        {
+            "default": 2.0,
+            "label": "Volume of reagent 1 to add",
+            "name": "reag1_vol",
+            "type": "float"
+        },
+        {
+            "default": 12.0,
+            "label": "Volume of reagent 2 to add",
+            "name": "reag2_vol",
+            "type": "float"
+        },
+        {
+            "default": 180.0,
+            "label": "Ethanol wash volume",
+            "name": "ethanol_wash_vol",
+            "type": "float"
+        },
+        {
+            "default": 25.0,
+            "label": "Mastermix volume",
+            "name": "mastermix_vol",
+            "type": "float"
+        },
+        {
+            "default": 5.0,
+            "label": "Primer mix volume",
+            "name": "primer_mix_vol",
+            "type": "float"
+        },
+        {
+            "default": 95.0,
+            "label": "Bead volume",
+            "name": "bead_vol",
+            "type": "float"
+        },
+        {
+            "default": 21.0,
+            "label": "Elution buffer volume",
+            "name": "elution_buffer_vol",
+            "type": "float"
+        },
+        {
+            "default": 19.0,
+            "label": "Sample volume",
+            "name": "sample_vol",
+            "type": "float"
+        },
+        {
+            "default": 20.0,
+            "label": "DNA supernatant volume",
+            "name": "DNA_supernat_vol",
+            "type": "float"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p20_multi_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p300_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on Temperature Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on 2",
+            "share": false,
+            "slot": "2",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on Magnetic Module GEN2 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on Temperature Module GEN2 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Agilent 1 Well Reservoir 290 mL on 6",
+            "share": false,
+            "slot": "6",
+            "type": "agilent_1_reservoir_290ml"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on Temperature Module GEN2 on 7",
+            "share": false,
+            "slot": "7",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 10",
+            "share": false,
+            "slot": "10",
+            "type": "opentrons_96_tiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 20 \u00b5L on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_96_tiprack_20ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.10",
+        "author": "Opentrons",
+        "description": "Generic NGS library prep with optional temp mods",
+        "protocolName": "Generic NGS Library Prep"
+    },
+    "modules": []
+}
