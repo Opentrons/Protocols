@@ -28,6 +28,7 @@ This protocol performs a custom plate filling for up to 4x 96-well plates from a
 ### Reagents
 * EDA
 * ACN
+* Amino
 
 ---
 
