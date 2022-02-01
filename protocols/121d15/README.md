@@ -1,0 +1,48 @@
+# Manual Cleave
+
+### Author
+[Opentrons](https://opentrons.com/)
+
+## Categories
+* Sample Prep
+	* Plate Filling
+
+## Description
+
+This protocol performs a custom plate filling for up to 4x 96-well plates from a single reagent reservoir. The user can input the number of rows and columns to be filled for each plate. Liquid handling parameters are automatically determined from the user's selection of which reagent will be added during the run.
+
+---
+
+### Labware
+* Custom 96-tuberack
+* [NEST 1 Reservoir 195ml](https://shop.opentrons.com/nest-1-well-reservoirs-195-ml/)
+* [Opentrons 300µL Tips](https://shop.opentrons.com/opentrons-300ul-tips-1000-refills/)
+
+### Pipettes
+* [P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)
+
+### Reagents
+* EDA
+* ACN
+
+---
+
+### Deck Setup
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/121d15/deck.png)
+
+---
+
+### Process
+1. Input your protocol parameters above.
+2. Download your protocol and unzip if needed.
+3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.
+4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.
+5. Set up your deck according to the deck map.
+6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).
+7. Hit 'Run'.
+
+### Additional Notes
+If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
+
+###### Internal
+121d15
