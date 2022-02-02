@@ -176,3 +176,7 @@ def run(ctx):
             os.mkdir(folder_path)
         with open(tip_file_path, 'w') as outfile:
             json.dump(tip_data, outfile)
+
+    ctx._implementation._hw_manager.hardware._attached_instruments[
+        m300._implementation.get_mount()].update_config_item(
+            'pick_up_current', 1.0)
