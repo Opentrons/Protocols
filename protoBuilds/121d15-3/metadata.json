@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "redoreplacementpicking.ot2.apiv2.py"
+            "hplcpicking.ot2.apiv2.py"
         ],
         "description": [
             "README.md"
