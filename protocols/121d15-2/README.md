@@ -1,4 +1,4 @@
-# Manual Cleave
+# HPLC Picking
 
 ### Author
 [Opentrons](https://opentrons.com/)

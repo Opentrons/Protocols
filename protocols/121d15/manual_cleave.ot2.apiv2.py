@@ -104,10 +104,20 @@ def run(ctx):
                 return pick_up_loc
         return False
 
+    per_tip_pickup_current = .1
+
     def pick_up(num_tips, reagent_type):
         if not 1 <= num_tips <= 8:
             raise Exception(f'INVALID NUMBER OF TIPS: {num_tips}.')
-        pip = m300 if num_tips > 1 else p300
+        if num_tips > 1:
+            pip = m300
+            pick_up_current = num_tips*per_tip_pickup_current
+            ctx._implementation._hw_manager.hardware._attached_instruments[
+                pip._implementation.get_mount()].update_config_item(
+                    'pick_up_current', pick_up_current)
+        else:
+            pip = p300
+
         scan_result = scan_racks(num_tips, reagent_type)
         if scan_result:
             pip.pick_up_tip(scan_result)
@@ -166,3 +176,7 @@ def run(ctx):
             os.mkdir(folder_path)
         with open(tip_file_path, 'w') as outfile:
             json.dump(tip_data, outfile)
+
+    ctx._implementation._hw_manager.hardware._attached_instruments[
+        m300._implementation.get_mount()].update_config_item(
+            'pick_up_current', 1.0)
