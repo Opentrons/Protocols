@@ -117,7 +117,6 @@ def run(ctx):
                     'pick_up_current', pick_up_current)
         else:
             pip = p300
-
         scan_result = scan_racks(num_tips, reagent_type)
         if scan_result:
             pip.pick_up_tip(scan_result)
@@ -126,6 +125,15 @@ def run(ctx):
             [rack.reset() for rack in tips300]
             scan_result = scan_racks(num_tips, reagent_type)
             pip.pick_up_tip(scan_result)
+        return scan_result, pip
+
+    def return_tip(pip, tip_loc, chunk_len, reagent_type):
+        pip.drop_tip(tip_loc)
+        all_tips = [
+            well for col in reagent_map[reagent_type]['tips'] for well in col]
+        tip_ind = all_tips.index(tip_loc)
+        for tip in all_tips[tip_ind:tip_ind+chunk_len]:
+            tip.has_tip = True
 
     # parse wells into chunks
     for csv, rack in zip(
@@ -155,14 +163,16 @@ def run(ctx):
 
         for num_tips, dests in chunk_map.items():
             if len(dests) > 0:
-                pick_up(num_tips, reagent_type)
+                pick_up_loc, pip = pick_up(num_tips, reagent_type)
                 for dest in dests:
-                    m300.aspirate(reagent_map[reagent_type]['volume'], reagent)
-                    m300.dispense(reagent_map[reagent_type]['volume'],
-                                  dest.top(-1))
+                    pip.aspirate(reagent_map[reagent_type]['volume'], reagent)
+                    pip.dispense(reagent_map[reagent_type]['volume'],
+                                 dest.top(-1))
                 if reagent_map[reagent_type]['blow-out']:
-                    m300.blow_out(dest.top(-1))
-                m300.return_tip()
+                    pip.blow_out(dest.top(-1))
+
+                # return tip and reset has_tip attribute
+                return_tip(pip, pick_up_loc, num_tips, reagent_type)
 
     # track final used tip
     tip_data = {
