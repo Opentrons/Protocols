@@ -5,15 +5,16 @@
 
 ## Categories
 * Sample Prep
-	* Plate Filling
+	* Cherrypicking
 
 ## Description
 
 Links:
 * [Manual Cleave](./121d15)
-* [HPLC Picking](./121d15-2)
+* [Redo Replacement Picking](./121d15-2)
+* [HPLC Picking](./121d15-3)
 
-This protocol performs a custom HPLC Picking protocol from a worklist. The worklist should be specified as follows:
+This protocol performs a custom Redo Replacement Picking protocol from a worklist. The worklist should be specified as follows:
 
 ```
 Number of Redo
