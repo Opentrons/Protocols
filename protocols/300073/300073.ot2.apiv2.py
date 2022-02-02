@@ -9,6 +9,15 @@ metadata = {
 }
 
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{ "variable1":80,
+                                  "variable2":50,
+                                 }
+                                  """)
+    return [_all_values[n] for n in names]
+
+
 def run(ctx: protocol_api.ProtocolContext):
 
     [
