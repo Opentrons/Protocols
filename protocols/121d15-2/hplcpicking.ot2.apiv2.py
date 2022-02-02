@@ -46,7 +46,12 @@ def run(ctx):
 
         # remove contents of well
         p300.pick_up_tip()
+        ctx.max_speeds['A'] = 100  # slow descent
+        ctx.max_speeds['Z'] = 100  # slow descent
+
         p300.aspirate(vol, well.bottom())
+        del ctx.max_speeds['A']  # reset to default
+        del ctx.max_speeds['Z']  # reset to default
         p300.drop_tip()
 
         # transfer tube to well

@@ -33,7 +33,7 @@ This protocol performs a custom plate filling for up to 4x 96-well plates from a
 ---
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/121d15/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/121d15/deckv2.png)
 
 ---
 
