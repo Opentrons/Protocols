@@ -1,5 +1,5 @@
 {
-    "content": "from opentrons import protocol_api\n\nmetadata = {\n    'protocolName': 'RNA Normalization I & II',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx: protocol_api.ProtocolContext):\n\n    [\n     _num_col,\n     _csv,\n     _p20_mount,\n     _m20_mount\n    ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)\n        \"_num_col\",\n        \"_csv\",\n        \"_p20_mount\",\n        \"_m20_mount\")\n\n    # VARIABLES\n\n    # number of columsn in tc plate\n    num_col = int(_num_col)\n\n    # should be formatted as so:\n    # SlotSource | Source | SourceVolH20 | SourceVolRNA | SlotDest | Dest\n    csv = _csv\n\n    # change pipette mounts here to \"left\" or \"right\", respectively\n    p20_mount = _p20_mount\n    m20_mount = _m20_mount\n\n    # MODULES\n    thermocyc = ctx.load_module('thermocycler')\n\n    # LABWARE\n    tuberacks = [ctx.load_labware(\n                 'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap',\n                 slot, label='Sample Tuberack')\n                 for slot in ['1', '2', '4', '5']]\n    tc_plate = thermocyc.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')\n    water_plate = ctx.load_labware('abgene_96_wellplate_330ul', '3',\n                                   label='Abgene Plate')\n\n    # TIPRACK\n    tipracks = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)\n                for slot in ['6', '9']]\n\n    # INSTRUMENTS\n    p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tip_racks=tipracks)\n    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tipracks)\n\n    def pick_up(pip):\n        try:\n            pip.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            ctx.pause(\"Replace tip racks on Slots 6 and 9\")\n            pip.reset_tipracks()\n            pick_up()\n\n    def pre_wet(vol, well):\n        ctx.comment('PRE-WET')\n        p20.aspirate(vol, well, rate=0.5)\n        p20.dispense(vol, well, rate=0.5)\n        ctx.comment('DONE PRE-WET')\n\n    # MAPPING\n    slot_source = 0\n    source_well = 1\n    transfer_vol_water = 2\n    transfer_vol_rna = 3\n    slot_dest = 4\n    dest_well = 5\n\n    all_rows = [[val.strip() for val in line.split(',')]\n                for line in csv.splitlines()\n                if line.split(',')[0].strip()][1:]\n\n    print(tuberacks)\n\n    # protocol\n    ctx.comment('\\n\\nPRE-COOL THERMOCYC\\n')\n    if thermocyc.lid_position != 'open':\n        thermocyc.open_lid()\n    thermocyc.set_block_temperature(4)\n    thermocyc.set_lid_temperature(105)\n\n    ctx.comment('\\n\\nMOVING WATER TO PLATE\\n')\n    pick_up(p20)\n    for water_well, the in zip(water_plate.wells(), all_rows):\n        if the[transfer_vol_water].lower() == 'x':\n            continue\n        vol = int(the[transfer_vol_water])\n        dest = ctx.loaded_labwares[int(the[slot_dest])].wells_by_name()[\n                                    the[dest_well]]\n        pre_wet(vol, water_well)\n        p20.aspirate(vol, water_well)\n        p20.dispense(vol, dest)\n    p20.drop_tip()\n\n    ctx.comment('\\n\\nMOVING RNA TO PLATE\\n')\n    for the in all_rows:\n        if the[transfer_vol_rna].lower() == 'x':\n            continue\n        vol = int(the[transfer_vol_rna])\n        source = ctx.loaded_labwares[int(the[slot_source])].wells_by_name()[\n                                        the[source_well]]\n        dest = ctx.loaded_labwares[int(the[slot_dest])].wells_by_name()[\n                                    the[dest_well]]\n\n        pick_up(p20)\n        pre_wet(vol, source)\n        p20.aspirate(vol, source)\n        p20.dispense(vol, dest)\n        p20.drop_tip()\n        ctx.comment('\\n')\n\n    ctx.pause('''\n                 RNA and water on Thermocycler Plate.\n\n                 Replace the 96 well plate containing water on Slot 3 with\n                 the exact same 96 well plate with cold mastermix in Column 1.\n\n                 Select \"Resume\" on the Opentron App to continue.\n\n              ''')\n\n    ctx.comment('\\n\\nMOVING MASTERMIX TO PLATE\\n')\n    mmx_plate = water_plate\n    mmx = mmx_plate.rows()[0][0]\n    for col in tc_plate.rows()[0][:num_col]:\n        pick_up(m20)\n        m20.aspirate(4, mmx, rate=0.5)\n        m20.dispense(4, col, rate=0.5)\n        m20.mix(4, 12, col, rate=0.5)\n        m20.drop_tip()\n\n    ctx.comment('\\n\\nRUN THERMOCYCLER PROFILE\\n')\n\n    profile = [\n                {'temperature': 25, 'hold_time_seconds': 10},\n                {'temperature': 50, 'hold_time_seconds': 10},\n                {'temperature': 85, 'hold_time_seconds': 5}\n                ]\n\n    thermocyc.close_lid()\n    thermocyc.execute_profile(steps=profile,\n                              repetitions=1,\n                              block_max_volume=20)\n    thermocyc.open_lid()\n",
+    "content": "from opentrons import protocol_api\n\nmetadata = {\n    'protocolName': 'RNA Normalization I & II',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx: protocol_api.ProtocolContext):\n\n    [\n     _num_col,\n     _csv,\n     _source_type,\n     _p20_mount,\n     _m20_mount\n    ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)\n        \"_num_col\",\n        \"_csv\",\n        \"_source_type\",\n        \"_p20_mount\",\n        \"_m20_mount\")\n\n    # VARIABLES\n\n    # number of columsn in tc plate\n    num_col = int(_num_col)\n\n    # should be formatted as so:\n    # SlotSource | Source | SourceVolH20 | SourceVolRNA | SlotDest | Dest\n    csv = _csv\n    source_type = _source_type\n    slots = ['1'] if source_type == \"kingfisher_96_wellplate_600ul\" else ['1', '2', '4', '5']  # noqa: E501\n\n    # change pipette mounts here to \"left\" or \"right\", respectively\n    p20_mount = _p20_mount\n    m20_mount = _m20_mount\n\n    # MODULES\n    thermocyc = ctx.load_module('thermocycler')\n\n    # LABWARE\n    tuberacks = [ctx.load_labware(\n                 source_type,\n                 slot, label='Sample Source')\n                 for slot in slots]\n    tc_plate = thermocyc.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')\n    water_plate = ctx.load_labware('abgene_96_wellplate_330ul', '3',\n                                   label='Abgene Plate')\n\n    # TIPRACK\n    tipracks = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)\n                for slot in ['6', '9']]\n\n    # INSTRUMENTS\n    p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tip_racks=tipracks)\n    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tipracks)\n\n    def pick_up(pip):\n        try:\n            pip.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            ctx.pause(\"Replace tip racks on Slots 6 and 9\")\n            pip.reset_tipracks()\n            pick_up()\n\n    def pre_wet(vol, well):\n        ctx.comment('PRE-WET')\n        p20.aspirate(vol, well, rate=0.5)\n        p20.dispense(vol, well, rate=0.5)\n        ctx.comment('DONE PRE-WET')\n\n    # MAPPING\n    slot_source = 0\n    source_well = 1\n    transfer_vol_water = 2\n    transfer_vol_rna = 3\n    slot_dest = 4\n    dest_well = 5\n\n    all_rows = [[val.strip() for val in line.split(',')]\n                for line in csv.splitlines()\n                if line.split(',')[0].strip()][1:]\n\n    print(tuberacks)\n\n    # protocol\n    ctx.comment('\\n\\nPRE-COOL THERMOCYC\\n')\n    if thermocyc.lid_position != 'open':\n        thermocyc.open_lid()\n    thermocyc.set_block_temperature(4)\n    thermocyc.set_lid_temperature(105)\n\n    ctx.comment('\\n\\nMOVING WATER TO PLATE\\n')\n    pick_up(p20)\n    for water_well, the in zip(water_plate.wells(), all_rows):\n        if the[transfer_vol_water].lower() == 'x':\n            continue\n        vol = int(the[transfer_vol_water])\n        dest = ctx.loaded_labwares[int(the[slot_dest])].wells_by_name()[\n                                    the[dest_well]]\n        pre_wet(vol, water_well)\n        p20.aspirate(vol, water_well)\n        p20.dispense(vol, dest)\n    p20.drop_tip()\n\n    ctx.comment('\\n\\nMOVING RNA TO PLATE\\n')\n    for the in all_rows:\n        if the[transfer_vol_rna].lower() == 'x':\n            continue\n        vol = int(the[transfer_vol_rna])\n        source = ctx.loaded_labwares[int(the[slot_source])].wells_by_name()[\n                                        the[source_well]]\n        dest = ctx.loaded_labwares[int(the[slot_dest])].wells_by_name()[\n                                    the[dest_well]]\n\n        pick_up(p20)\n        pre_wet(vol, source)\n        p20.aspirate(vol, source)\n        p20.dispense(vol, dest)\n        p20.drop_tip()\n        ctx.comment('\\n')\n\n    ctx.pause('''\n                 RNA and water on Thermocycler Plate.\n\n                 Replace the 96 well plate containing water on Slot 3 with\n                 the exact same 96 well plate with cold mastermix in Column 1.\n\n                 Select \"Resume\" on the Opentron App to continue.\n\n              ''')\n\n    ctx.comment('\\n\\nMOVING MASTERMIX TO PLATE\\n')\n    mmx_plate = water_plate\n    mmx = mmx_plate.rows()[0][0]\n    for col in tc_plate.rows()[0][:num_col]:\n        pick_up(m20)\n        m20.aspirate(4, mmx, rate=0.5)\n        m20.dispense(4, col, rate=0.5)\n        m20.mix(4, 12, col, rate=0.5)\n        m20.drop_tip()\n\n    ctx.comment('\\n\\nRUN THERMOCYCLER PROFILE\\n')\n\n    profile = [\n                {'temperature': 25, 'hold_time_seconds': 10},\n                {'temperature': 50, 'hold_time_seconds': 10},\n                {'temperature': 85, 'hold_time_seconds': 5}\n                ]\n\n    thermocyc.close_lid()\n    thermocyc.execute_profile(steps=profile,\n                              repetitions=1,\n                              block_max_volume=20)\n    thermocyc.open_lid()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -1143,6 +1143,21 @@
             "type": "textFile"
         },
         {
+            "label": "Sample Source Type",
+            "name": "_source_type",
+            "options": [
+                {
+                    "label": "Tube racks (slots 1, 2, 4, 5)",
+                    "value": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
+                },
+                {
+                    "label": "Kingfisher 96 well plate (slot 1)",
+                    "value": "kingfisher_96_wellplate_600ul"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
             "label": "P20 Single-Channel Mount",
             "name": "_p20_mount",
             "options": [
@@ -1185,13 +1200,13 @@
     ],
     "labware": [
         {
-            "name": "Sample Tuberack on 1",
+            "name": "Sample Source on 1",
             "share": false,
             "slot": "1",
             "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
         },
         {
-            "name": "Sample Tuberack on 2",
+            "name": "Sample Source on 2",
             "share": false,
             "slot": "2",
             "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
@@ -1203,13 +1218,13 @@
             "type": "abgene_96_wellplate_330ul"
         },
         {
-            "name": "Sample Tuberack on 4",
+            "name": "Sample Source on 4",
             "share": false,
             "slot": "4",
             "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
         },
         {
-            "name": "Sample Tuberack on 5",
+            "name": "Sample Source on 5",
             "share": false,
             "slot": "5",
             "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
