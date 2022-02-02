@@ -11,8 +11,15 @@ metadata = {
 
 def get_values(*names):
     import json
-    _all_values = json.loads("""{ "variable1":80,
-                                  "variable2":50,
+    _all_values = json.loads("""{ "n_samples_set1":48,
+                                  "has_second_tube_set":true,
+                                  "n_samples_set2":45,
+                                  "aspiration_velocity":100,
+                                  "dispension_velocity":100,
+                                  "sample_aspiration_vol_ul":50,
+                                  "aspiration_height_mm":3,
+                                  "temp_mod_lname":null,
+                                  "temperature":4
                                  }
                                   """)
     return [_all_values[n] for n in names]
@@ -21,23 +28,54 @@ def get_values(*names):
 def run(ctx: protocol_api.ProtocolContext):
 
     [
-     _custom_variable1,
-     _custom_variable2
+     n_samples_set1,
+     has_second_tube_set,
+     n_samples_set2,
+     aspiration_velocity,
+     dispension_velocity,
+     sample_aspiration_vol_ul,
+     aspiration_height_mm,
+     temp_mod_lname,
+     temperature
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
-        "_custom_variable1",
-        "_custom_variable2")
+        "n_samples_set1",
+        "has_second_tube_set",
+        "n_samples_set2",
+        "aspiration_velocity",
+        "dispension_velocity",
+        "sample_aspiration_vol_ul",
+        "aspiration_height_mm",
+        "temp_mod_lname",
+        "temperature"
+        )
 
-    if not 1 <= _custom_variable1 <= 12:
-        raise Exception("Enter a value between 1-12")
+    if not 1 <= n_samples_set1 <= 48:
+        raise Exception(
+            "Enter a number of samples for tube set 1 between 1-48")
 
-    # define all custom variables above here with descriptions:
+    if (not 1 <= n_samples_set2 <= 45) and has_second_tube_set:
+        raise Exception(
+            "Enter a number of samples for tube set 2 between 1-45")
 
-    # number of samples
-    custom_variable1 = _custom_variable1
+    if not 4 <= temperature <= 95:
+        raise Exception(
+            "Temperature module must be set to a temperature between " +
+            "4 and 95 degrees Celsius")
 
-    # "True" for park tips, "False" for discard tips
-    custom_variable2 = _custom_variable2
+    p20_lname = 'p20_single_gen2'
+    p300_lname = 'p300_single_gen2'
+    left_pipette_lname = (p20_lname if sample_aspiration_vol_ul < 20
+                          else p300_lname)
 
+    filtered_20_lname = "opentrons_96_filtertiprack_20ul"
+    filtered_200_lname = "opentrons_96_filtertiprack_200ul"
+    tiprack_lname = (filtered_20_lname if left_pipette_lname == p20_lname
+                     else filtered_200_lname)
+
+    tuberack_lname = "opentrons_6_tuberack_falcon_50ml_conical"
+    well_plate_on_alum_lname = \
+        "opentrons_96_aluminumblock_nest_wellplate_100ul"
+    well_plate_lname = "nest_96_wellplate_100ul_pcr_full_skirt"
     # load modules
 
     '''
@@ -52,6 +90,9 @@ def run(ctx: protocol_api.ProtocolContext):
     For all other modules, you can load them on slots 1, 3, 4, 6, 7, 9, 10.
 
     '''
+    temp_mod = None
+    if temp_mod_lname:
+        temp_mod = ctx.load_module("temperature module gen2", '3')
 
     # load labware
 
@@ -67,6 +108,18 @@ def run(ctx: protocol_api.ProtocolContext):
     where module_name is defined above.
 
     '''
+    tuberacks = [ctx.load_labware(tuberack_lname, slot)
+                 for slot in ['1', '2',
+                              '4', '5',
+                              '7', '8',
+                              '10', '11']]
+
+    plate = None
+    if temp_mod:
+        plate = temp_mod.load_labware(well_plate_on_alum_lname,
+                                      label="target plate")
+    else:
+        plate = ctx.load_labware(well_plate_lname, '3', label="target plate")
 
     # load tipracks
 
@@ -88,6 +141,7 @@ def run(ctx: protocol_api.ProtocolContext):
     e.g. tiprack10, tiprack20, tiprack200, tiprack300, tiprack1000
 
     '''
+    tiprack = ctx.load_labware(tiprack_lname, '9')
 
     # load instrument
 
@@ -108,6 +162,11 @@ def run(ctx: protocol_api.ProtocolContext):
                         tip_racks=tiprack
                         )
     '''
+    pipette = ctx.load_instrument(
+                        left_pipette_lname,
+                        "left",
+                        tip_racks=[tiprack]
+                        )
 
     # pipette functions   # INCLUDE ANY BINDING TO CLASS
 
@@ -190,6 +249,42 @@ def run(ctx: protocol_api.ProtocolContext):
 
     '''
 
+    # Map the target quadrants of the destination plate
+    targ_cols = plate.columns()
+    # Top left quadrant minus first 3 wells:
+    # The rectangle of A1-D1 to A6-D6 minus well A1 to A3
+    target_quadrant_1 = []
+    target_quadrant_1.append(targ_cols[0][3:4])
+    for col in targ_cols[1:6]:
+        target_quadrant_1.append(col[0:4])
+
+    # Top right quadrant: A7-D7 to A12-D12 rectangle
+    target_quadrant_2 = []
+    for col in targ_cols[6:12]:
+        target_quadrant_2.append(col[0:4])
+
+    # Bottom left quadrant: E1-H1 to E6-H6 rectangle
+    target_quadrant_3 = []
+    for col in targ_cols[0:6]:
+        target_quadrant_3.append(col[4:8])
+
+    # Bottom right quadrant: E7-H7 to E12-H12 rectangle
+    target_quadrant_4 = []
+    for col in targ_cols[6:12]:
+        target_quadrant_4.append(col[4:8])
+
+    target_well_map = []
+    for quadrant in [target_quadrant_1, target_quadrant_2, target_quadrant_3,
+                     target_quadrant_4]:
+        for well in quadrant:
+            target_well_map.append(well)
+
+    general_tube_map = []
+    for tuberack in tuberacks:
+        general_tube_map.append(tuberack.wells())
+
+    tube_map_set1 = general_tube_map[0:n_samples_set1]
+    tube_maps_set2 = general_tube_map[0:n_samples_set2]
     # protocol
 
     '''
@@ -214,3 +309,12 @@ def run(ctx: protocol_api.ProtocolContext):
 
 
     '''
+    if temp_mod:
+        ctx.comment("\n\nSetting temperature module to {} degrees C".
+                    format(temperature))
+        temp_mod.set_temperature(temperature)
+
+    ctx.comment("\n\nTransferring samples from set 1 to destination plate")
+    import pdb; pdb.set_trace()
+    pipette.transfer(sample_aspiration_vol_ul, tube_map_set1,
+                     target_well_map[0:n_samples_set1])
