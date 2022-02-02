@@ -13,11 +13,13 @@ def run(ctx: protocol_api.ProtocolContext):
     [
      _num_col,
      _csv,
+     _source_type,
      _p20_mount,
      _m20_mount
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
         "_num_col",
         "_csv",
+        "_source_type",
         "_p20_mount",
         "_m20_mount")
 
@@ -29,6 +31,7 @@ def run(ctx: protocol_api.ProtocolContext):
     # should be formatted as so:
     # SlotSource | Source | SourceVolH20 | SourceVolRNA | SlotDest | Dest
     csv = _csv
+    source_type = _source_type
 
     # change pipette mounts here to "left" or "right", respectively
     p20_mount = _p20_mount
@@ -39,7 +42,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # LABWARE
     tuberacks = [ctx.load_labware(
-                 'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap',
+                 source_type,
                  slot, label='Sample Tuberack')
                  for slot in ['1', '2', '4', '5']]
     tc_plate = thermocyc.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
