@@ -31,10 +31,11 @@ def run(ctx: protocol_api.ProtocolContext):
     thermocyc = ctx.load_module('thermocycler')
 
     # LABWARE
+    slots = ['1'] if source_type == "kingfisher_96_wellplate_600ul" else ['1', '2', '4', '5']  # noqa: E501
     tuberacks = [ctx.load_labware(
                  source_type,
                  slot, label='Sample Tuberack')
-                 for slot in ['1', '2', '4', '5']]
+                 for slot in slots]
     tc_plate = thermocyc.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
     dest_plate = ctx.load_labware('optiplate_96_wellplate_400ul',
                                   '3', label='Optiplate')

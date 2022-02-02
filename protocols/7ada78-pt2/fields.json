@@ -14,7 +14,7 @@
   {
   "type": "dropDown",
   "label": "Sample Source Type",
-  "name": "source_type",
+  "name": "_source_type",
   "options": [
     {"label": "Tube racks (slots 1, 2, 4, 5)", "value": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"},
     {"label": "Kingfisher 96 well plate (slot 1)", "value": "kingfisher_96_wellplate_600ul"}

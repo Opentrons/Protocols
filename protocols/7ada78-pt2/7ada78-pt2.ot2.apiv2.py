@@ -32,6 +32,7 @@ def run(ctx: protocol_api.ProtocolContext):
     # SlotSource | Source | SourceVolH20 | SourceVolRNA | SlotDest | Dest
     csv = _csv
     source_type = _source_type
+    slots = ['1'] if source_type == "kingfisher_96_wellplate_600ul" else ['1', '2', '4', '5']  # noqa: E501
 
     # change pipette mounts here to "left" or "right", respectively
     p20_mount = _p20_mount
@@ -43,8 +44,8 @@ def run(ctx: protocol_api.ProtocolContext):
     # LABWARE
     tuberacks = [ctx.load_labware(
                  source_type,
-                 slot, label='Sample Tuberack')
-                 for slot in ['1', '2', '4', '5']]
+                 slot, label='Sample Source')
+                 for slot in slots]
     tc_plate = thermocyc.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
     water_plate = ctx.load_labware('abgene_96_wellplate_330ul', '3',
                                    label='Abgene Plate')
