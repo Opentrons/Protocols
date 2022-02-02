@@ -33,6 +33,7 @@ def run(ctx: protocol_api.ProtocolContext):
     total_rxn_vol = mastermix_vol_per_sample + DNA_sample_transfer_vol
 
     n_standard_mixes = 10  # Standard number of times to mix a sample (10)
+    well_plate_loadname = 'azenta_96_wellplate_200ul'
     # load modules
 
     '''
@@ -70,18 +71,18 @@ def run(ctx: protocol_api.ProtocolContext):
     # Reservoir for 80 % ethanol, e.g. a tube rack with a falcon tube
 
     yourgene_reagent_plate_I \
-        = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '7',
+        = ctx.load_labware(well_plate_loadname, '7',
                            'Yourgene Reagent plate - 1')
 
     # DNA sample plate
     sample_plate = \
-        ctx.load_labware('biorad_96_wellplate_200ul_pcr',
+        ctx.load_labware(well_plate_loadname,
                          '4', "DNA Sample plate")
 
     # Destination plate - will be physically changed by the operator through-
     # out
     destination_plate = \
-        ctx.load_labware('biorad_96_wellplate_200ul_pcr',
+        ctx.load_labware(well_plate_loadname,
                          '1', "Destination plate 1")
 
     # load tipracks
