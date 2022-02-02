@@ -24,31 +24,31 @@ def run(ctx):
     tips300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot,
                          '300ul tiprack')
-        for slot in ['10', '11']]
+        for slot in ['10']]
 
     reagent_map = {
         'EDA': {
             'slot': '7',
-            'tips': [col for rack in tips300 for col in rack.columns()][:8],
+            'tips': [col for rack in tips300 for col in rack.columns()][:4],
             'volume': 200,
-            'flow-rate-asp': 50,
-            'flow-rate-disp': 50,
+            'flow-rate-asp': 100,
+            'flow-rate-disp': 100,
             'blow-out': False
         },
         'ACN': {
             'slot': '8',
-            'tips': [col for rack in tips300 for col in rack.columns()][8:16],
+            'tips': [col for rack in tips300 for col in rack.columns()][4:8],
             'volume': 200,
-            'flow-rate-asp': 50,
-            'flow-rate-disp': 50,
+            'flow-rate-asp': 100,
+            'flow-rate-disp': 100,
             'blow-out': False
         },
         'amino': {
             'slot': '9',
-            'tips': [col for rack in tips300 for col in rack.columns()][16:],
-            'volume': 200,
-            'flow-rate-asp': 50,
-            'flow-rate-disp': 50,
+            'tips': [col for rack in tips300 for col in rack.columns()][8:],
+            'volume': 300,
+            'flow-rate-asp': 100,
+            'flow-rate-disp': 100,
             'blow-out': False
         }
     }
