@@ -1,11 +1,11 @@
-# Manual Cleave
+# HPLC Picking
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
 ## Categories
 * Sample Prep
-	* Plate Filling
+	* Cherrypicking
 
 ## Description
 
@@ -14,27 +14,32 @@ Links:
 * [Redo Replacement Picking](./121d15-2)
 * [HPLC Picking](./121d15-3)
 
-This protocol performs a custom plate filling for up to 4x 96-well plates from a single reagent reservoir. The user can input the number of rows and columns to be filled for each plate. Liquid handling parameters are automatically determined from the user's selection of which reagent will be added during the run.
+This protocol performs a custom HPLC Picking protocol from a worklist. The worklist should be specified as follows:
+
+```
+well1,well2,well3,well4,tube,vol
+1,100,200,300,A1,200
+2,101,201,301,B1,200
+3,102,202,302,C1,200
+4,103,203,303,D1
+5,104,204,304,E1,100
+6,105,205,305,F1
+...
+```
 
 ---
 
 ### Labware
-* Custom 96-tuberack
-* [NEST 1 Reservoir 195ml](https://shop.opentrons.com/nest-1-well-reservoirs-195-ml/)
+* [Irish Life Sciences 2.2mL Deep Well Plate, V-Bottom #2.2S96-008V](https://irishlifesciences.com/product/2-2ml-96well-square-well-pyramid-bottoms)
 * [Opentrons 300µL Tips](https://shop.opentrons.com/opentrons-300ul-tips-1000-refills/)
 
 ### Pipettes
-* [P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)
-
-### Reagents
-* EDA
-* ACN
-* Amino
+* [P300 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 
 ---
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/121d15/deckv2.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/121d15/deck3.png)
 
 ---
 
