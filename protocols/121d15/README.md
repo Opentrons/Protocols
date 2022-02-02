@@ -11,7 +11,8 @@
 
 Links:
 * [Manual Cleave](./121d15)
-* [HPLC Picking](./121d15-2)
+* [Redo Replacement Picking](./121d15-2)
+* [HPLC Picking](./121d15-3)
 
 This protocol performs a custom plate filling for up to 4x 96-well plates from a single reagent reservoir. The user can input the number of rows and columns to be filled for each plate. Liquid handling parameters are automatically determined from the user's selection of which reagent will be added during the run.
 
@@ -28,11 +29,12 @@ This protocol performs a custom plate filling for up to 4x 96-well plates from a
 ### Reagents
 * EDA
 * ACN
+* Amino
 
 ---
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/121d15/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/121d15/deckv2.png)
 
 ---
 

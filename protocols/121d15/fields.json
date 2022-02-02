@@ -1,51 +1,21 @@
 [
   {
-    "type": "int",
-    "label": "plate 1 rows",
-    "name": "plate_1_rows",
-    "default": 8
+    "type": "textFile",
+    "label": "rack 1 occupied wells",
+    "name": "occupied_well_csv1",
+    "default": "A1\nB1\nC1\nE1\nF1\nG1"
   },
   {
-    "type": "int",
-    "label": "plate 1 columns",
-    "name": "plate_1_cols",
-    "default": 12
+    "type": "textFile",
+    "label": "rack 2 occupied wells",
+    "name": "occupied_well_csv2",
+    "default": ""
   },
   {
-    "type": "int",
-    "label": "plate 2 rows",
-    "name": "plate_2_rows",
-    "default": 8
-  },
-  {
-    "type": "int",
-    "label": "plate 2 columns",
-    "name": "plate_2_cols",
-    "default": 12
-  },
-  {
-    "type": "int",
-    "label": "plate 3 rows",
-    "name": "plate_3_rows",
-    "default": 8
-  },
-  {
-    "type": "int",
-    "label": "plate 3 columns",
-    "name": "plate_3_cols",
-    "default": 12
-  },
-  {
-    "type": "int",
-    "label": "plate 4 rows",
-    "name": "plate_4_rows",
-    "default": 8
-  },
-  {
-    "type": "int",
-    "label": "plate 4 columns",
-    "name": "plate_4_cols",
-    "default": 12
+    "type": "textFile",
+    "label": "rack 3 occupied wells",
+    "name": "occupied_well_csv3",
+    "default": ""
   },
   {
     "type": "dropDown",
@@ -53,7 +23,8 @@
     "name": "reagent_type",
     "options": [
       { "label": "EDA", "value": "EDA" },
-      { "label": "ACN", "value": "ACN" }
+      { "label": "ACN", "value": "ACN" },
+      { "label": "amino", "value": "amino" }
     ]
   },
   {
@@ -62,7 +33,16 @@
     "name": "m300_mount",
     "options": [
       { "label": "right", "value": "right" },
-      { "label": "left", "value": "right" }
+      { "label": "left", "value": "left" }
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "P300 single-channel GEN2 pipette mount",
+    "name": "p300_mount",
+    "options": [
+      { "label": "left", "value": "left" },
+      { "label": "right", "value": "right" }
     ]
   },
   {
@@ -70,8 +50,8 @@
     "label": "track tips across protocol runs",
     "name": "tip_track",
     "options": [
-      { "label": "yes", "value": true },
-      { "label": "no", "value": false }
+      { "label": "no", "value": false },
+      { "label": "yes", "value": true }
     ]
   }
 ]
