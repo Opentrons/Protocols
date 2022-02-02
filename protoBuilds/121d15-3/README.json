@@ -6,23 +6,23 @@
         ]
     },
     "deck-setup": "\n",
-    "description": "Links:\n* Manual Cleave\n* HPLC Picking\nThis protocol performs a custom Redo Replacement Picking protocol from a worklist. The worklist should be specified as follows:\nNumber of Redo\n8\npos TB_RCK_1,pos MTP_1,disposal_vol,transfer_vol\n1,1,200,200\n2,135,200,200\n3,2,150,200\n4,90,100,100\n5,84\n6,262\n7,242\n8,218\n...\n",
+    "description": "Links:\n* Manual Cleave\n* HPLC Picking\nThis protocol performs a custom HPLC Picking protocol from a worklist. The worklist should be specified as follows:\nwell1,well2,well3,well4,tube,vol\n1,100,200,300,A1,200\n2,101,201,301,B1,200\n3,102,202,302,C1,200\n4,103,203,303,D1\n5,104,204,304,E1,100\n6,105,205,305,F1\n...\n",
     "internal": "121d15",
-    "labware": "\nCustom 48-tuberack\nGreiner MASTERBLOCK 384 Well Plate 225 \u00b5L\nGreiner MASTERBLOCK 96 Well Plate 500 \u00b5L\nOpentrons 300\u00b5L Tips\n",
+    "labware": "\nIrish Life Sciences 2.2mL Deep Well Plate, V-Bottom #2.2S96-008V\nOpentrons 300\u00b5L Tips\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
         "categories": "* Sample Prep\n\t* Cherrypicking\n\n",
         "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/121d15/deck2-v2.png)\n\n---\n\n",
-        "description": "\nLinks:\n* [Manual Cleave](./121d15)\n* [HPLC Picking](./121d15-2)\n\nThis protocol performs a custom Redo Replacement Picking protocol from a worklist. The worklist should be specified as follows:\n\n```\nNumber of Redo\n8\npos TB_RCK_1,pos MTP_1,disposal_vol,transfer_vol\n1,1,200,200\n2,135,200,200\n3,2,150,200\n4,90,100,100\n5,84\n6,262\n7,242\n8,218\n...\n```\n\n---\n\n",
+        "description": "\nLinks:\n* [Manual Cleave](./121d15)\n* [HPLC Picking](./121d15-2)\n\nThis protocol performs a custom HPLC Picking protocol from a worklist. The worklist should be specified as follows:\n\n```\nwell1,well2,well3,well4,tube,vol\n1,100,200,300,A1,200\n2,101,201,301,B1,200\n3,102,202,302,C1,200\n4,103,203,303,D1\n5,104,204,304,E1,100\n6,105,205,305,F1\n...\n```\n\n---\n\n",
         "internal": "121d15\n",
-        "labware": "* Custom 48-tuberack\n* [Greiner MASTERBLOCK 384 Well Plate 225 \u00b5L](https://shop.gbo.com/en/row/products/bioscience/microplates/polypropylene-storage-plates/384-deep-well-masterblock/781270.html)\n* [Greiner MASTERBLOCK 96 Well Plate 500 \u00b5L](https://shop.gbo.com/en/row/products/bioscience/microplates/polypropylene-storage-plates/96-well-masterblock-0-5ml/786201.html)\n* [Opentrons 300\u00b5L Tips](https://shop.opentrons.com/opentrons-300ul-tips-1000-refills/)\n\n",
+        "labware": "* [Irish Life Sciences 2.2mL Deep Well Plate, V-Bottom #2.2S96-008V](https://irishlifesciences.com/product/2-2ml-96well-square-well-pyramid-bottoms)\n* [Opentrons 300\u00b5L Tips](https://shop.opentrons.com/opentrons-300ul-tips-1000-refills/)\n\n",
         "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
         "pipettes": "* [P300 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n\n---\n\n",
         "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
-        "title": "Redo Replacement Picking"
+        "title": "HPLC Picking"
     },
     "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
     "pipettes": "\nP300 Single Channel Electronic Pipette (GEN2)\n\n",
     "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
-    "title": "Redo Replacement Picking"
+    "title": "HPLC Picking"
 }
