@@ -1,4 +1,4 @@
-# HPLC Picking
+# Redo Replacement Picking
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -18,11 +18,11 @@ This protocol performs a custom HPLC Picking protocol from a worklist. The workl
 ```
 Number of Redo
 8
-pos TB_RCK_1,pos MTP_1,vol
-1,1,200
-2,135,200
-3,2,150
-4,100
+pos TB_RCK_1,pos MTP_1,disposal_vol,transfer_vol
+1,1,200,200
+2,135,200,200
+3,2,150,200
+4,90,100,100
 5,84
 6,262
 7,242
@@ -44,7 +44,7 @@ pos TB_RCK_1,pos MTP_1,vol
 ---
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/121d15/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/121d15/deck2-v2.png)
 
 ---
 
