@@ -45,6 +45,8 @@ def run(ctx: protocol_api.ProtocolContext):
     # Standard number of times to mix mag soln. (25)
     n_bead_solution_mixes = 25
 
+    well_plate_loadname = 'azenta_96_wellplate_200ul'
+
     # load modules
     mag_mod = ctx.load_module('magnetic module gen2', '3')
 
@@ -63,19 +65,19 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # load labware
     yourgene_reagent_plate_I \
-        = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '7',
+        = ctx.load_labware(well_plate_loadname, '7',
                            'Yourgene Reagent plate - 1')
     barcoded_sample_mag_plate \
-        = mag_mod.load_labware('biorad_96_wellplate_200ul_pcr',
+        = mag_mod.load_labware(well_plate_loadname,
                                'Magnetic module sample plate (DP-2)')
     SPRI_bead_plate \
-        = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '9',
+        = ctx.load_labware(well_plate_loadname, '9',
                            'Magnetic bead plate')
     reservoir \
         = ctx.load_labware('nest_12_reservoir_15ml', '6',
                            'Reagent reservoir')
     PCR_destination_plate \
-        = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '2',
+        = ctx.load_labware(well_plate_loadname, '2',
                            'Destination plate 3 (DP-3) - PCR')
 
     '''

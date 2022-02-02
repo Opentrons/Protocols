@@ -52,6 +52,8 @@ def run(ctx: protocol_api.ProtocolContext):
 
     qubit_assay_dna_vol = 2  # volume of DNA to mix w/ QWS
 
+    well_plate_loadname = 'azenta_96_wellplate_200ul'
+
     # load modules
     mag_mod = ctx.load_module('magnetic module gen2', '3')
 
@@ -70,19 +72,19 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # load labware
     mag_bead_cleanup_plate \
-        = mag_mod.load_labware('biorad_96_wellplate_200ul_pcr',
+        = mag_mod.load_labware(well_plate_loadname,
                                'Magnetic module sample plate (DP-4)')
     SPRI_bead_plate \
-        = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '9',
+        = ctx.load_labware(well_plate_loadname, '9',
                            'Magnetic bead well plate')
     reservoir \
         = ctx.load_labware('nest_12_reservoir_15ml', '6',
                            'Reagent reservoir')
     quantification_destination_plate \
-        = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '1',
+        = ctx.load_labware(well_plate_loadname, '1',
                            'quantification plate (DP-5)')
     PCR_amplified_sample_plate \
-        = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '2',
+        = ctx.load_labware(well_plate_loadname, '2',
                            'sample plate (DP-3)')
 
     '''

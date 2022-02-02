@@ -24,6 +24,8 @@ def run(ctx: protocol_api.ProtocolContext):
     if not 7 <= num_samples <= 36:
         raise Exception("The number of samples should be between 7 and 36")
 
+    well_plate_loadname = 'azenta_96_wellplate_200ul'
+
     # load modules
 
     '''
@@ -57,10 +59,10 @@ def run(ctx: protocol_api.ProtocolContext):
         = ctx.load_labware('nest_12_reservoir_15ml', '6',
                            'Reagent reservoir')
     qubit_sample_plate \
-        = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '1',
+        = ctx.load_labware(well_plate_loadname, '1',
                            'quantification plate')
     normalization_plate \
-        = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '4',
+        = ctx.load_labware(well_plate_loadname, '4',
                            'Normalization plate')
 
     # load tipracks

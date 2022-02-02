@@ -44,6 +44,8 @@ def run(ctx: protocol_api.ProtocolContext):
 
     csv_rows = barcode_csv.split("\n")
 
+    well_plate_loadname = 'azenta_96_wellplate_200ul'
+
     # Error checking
     if not len(csv_rows) == num_samples + 1:
         raise ValueError(("Number of samples must match the number of " +
@@ -113,20 +115,20 @@ def run(ctx: protocol_api.ProtocolContext):
 
     '''
     yourgene_reagent_plate_I \
-        = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '7',
+        = ctx.load_labware(well_plate_loadname, '7',
                            'Yourgene Reagent plate - 1')
 
     yourgene_reagent_plate_III \
-        = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '2',
+        = ctx.load_labware(well_plate_loadname, '2',
                            'Yourgene Reagent plate 3 - Barcodes')
     end_repaired_sample_plate \
-        = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '1',
+        = ctx.load_labware(well_plate_loadname, '1',
                            'End repaired sample plate (DP-1)')
     reservoir \
         = ctx.load_labware('nest_12_reservoir_15ml', '6',
                            'Reagent reservoir')
     destination_plate \
-        = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '4',
+        = ctx.load_labware(well_plate_loadname, '4',
                            'Destination plate 2 (DP-2)')
 
     # load tipracks
