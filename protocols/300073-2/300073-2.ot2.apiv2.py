@@ -60,8 +60,8 @@ def run(ctx: protocol_api.ProtocolContext):
     filtered_20_lname = "opentrons_96_filtertiprack_20ul"
 
     well_plate_on_alum_lname = \
-        "opentrons_96_aluminumblock_nest_wellplate_100ul"
-    well_plate_lname = "nest_96_wellplate_100ul_pcr_full_skirt"
+        "stellarscientific_96_aluminumblock_100ul"
+    well_plate_lname = "stellarscientific_96_wellplate_100ul"
 
     sample_volume = 5  # 5 uL sample volume to transfer betw. plates
     # load modules
