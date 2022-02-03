@@ -13,6 +13,20 @@ metadata = {
 }
 
 
+def get_values(*names):
+    import json
+    _all_values = json.loads(
+        """{ "pipette_l":"p20_single_gen2",
+        "pipette_r":"p300_single_gen2",
+        "plate_type":"azenta_96_wellplate_200ul",
+        "reservoir_type":"nest_12_reservoir_15ml",
+        "temperature_module":"temperature module gen2",
+        "num_samples": 36,
+        "magnetic_module":"magnetic module gen2"}
+        """)
+    return [_all_values[n] for n in names]
+
+
 def run(ctx: protocol_api.ProtocolContext):
     """End-repair reaction preparation protocol entry point."""
     [

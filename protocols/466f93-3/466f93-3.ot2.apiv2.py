@@ -12,6 +12,17 @@ metadata = {
 }
 
 
+def get_values(*names):
+    import json
+    _all_values = json.loads(
+        """{
+           "num_samples": 36,
+           "mag_engage_time": 5
+           }
+        """)
+    return [_all_values[n] for n in names]
+
+
 def run(ctx: protocol_api.ProtocolContext):
     """DNA cleanup and PCR amplification protocol entry point."""
     [
@@ -49,6 +60,8 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # load modules
     mag_mod = ctx.load_module('magnetic module gen2', '3')
+
+    mag_engage_height = 13.5
 
     '''
 
@@ -256,6 +269,10 @@ def run(ctx: protocol_api.ProtocolContext):
                 ctx.comment(f'''{int(self.labware_wells[well])} uL of liquid
                             used from {well}''')
             return well, new_well
+
+    def engage_magnets():
+        nonlocal mag_mod, mag_engage_height
+        mag_mod.engage(height_from_base=mag_engage_height)
     # reagents
 
     '''
@@ -374,7 +391,7 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.delay(0, 5, "Incubating samples with beads")
     ctx.pause("\n\nPulse spin plate for 5 seconds")
     ctx.comment("\n\nEngaging magnets")
-    mag_mod.engage()
+    engage_magnets()
     ctx.delay(0, mag_engage_time, "binding samples to beads")
 
     ctx.comment("\n\nDiscarding supernatant")
@@ -409,7 +426,7 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.pause("\n\nPulse spin the plate for 5 seconds and replace\n")
 
     # Remove spun-down supernatant
-    mag_mod.engage()
+    engage_magnets()
     ctx.delay(0, mag_engage_time, "Attracting beads to magnets")
     for source_well in mag_plate_sample_wells:
         try:
@@ -443,7 +460,7 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.pause("Pulse spin the sample/bead plate for 5 seconds, then place " +
               "it back on the magnetic module")
     ctx.comment("Attracting beads")
-    mag_mod.engage()
+    engage_magnets()
     ctx.delay(0, mag_engage_time)
 
     # Transfer the bead supernatant to the PCR destination plate

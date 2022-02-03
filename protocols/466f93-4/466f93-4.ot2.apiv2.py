@@ -12,6 +12,17 @@ metadata = {
 }
 
 
+def get_values(*names):
+    import json
+    _all_values = json.loads(
+        """{
+           "num_samples": 36,
+           "mag_engage_time": 5
+           }
+        """)
+    return [_all_values[n] for n in names]
+
+
 def run(ctx: protocol_api.ProtocolContext):
     """Protocol entry point."""
     [
@@ -56,6 +67,8 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # load modules
     mag_mod = ctx.load_module('magnetic module gen2', '3')
+
+    mag_engage_height = 13.5
 
     '''
 
@@ -262,6 +275,10 @@ def run(ctx: protocol_api.ProtocolContext):
                             used from {well}''')
             return well, new_well
 
+    def engage_magnets():
+        nonlocal mag_mod, mag_engage_height
+        mag_mod.engage(height_from_base=mag_engage_height)
+
     # reagents
 
     '''
@@ -373,7 +390,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     ctx.comment("\n\nEngaging magnets for {} minutes".
                 format(mag_engage_time))
-    mag_mod.engage()
+    engage_magnets()
     ctx.delay(0, mag_engage_time)
 
     ctx.comment("\n\nRemoving supernatant\n")
@@ -407,7 +424,7 @@ def run(ctx: protocol_api.ProtocolContext):
     mag_mod.disengage()
     ctx.pause("\n\nPulse spin the sample plate on the magnetic module for " +
               "5 seconds, then place it back on the magnetic module")
-    mag_mod.engage()
+    engage_magnets()
     ctx.delay(0, mag_engage_time, "Binding the beads to the magnets")
     ctx.comment("\n\nRemoving remaining wash supernatant from the wells\n")
     for dest_well in mag_plate_sample_wells:
