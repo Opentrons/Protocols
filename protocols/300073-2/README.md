@@ -1,5 +1,4 @@
-# Protocol Title (should match metadata of .py file)
-
+# Saliva sample transfer from source to target well plate
 ### Author
 [Opentrons](https://opentrons.com/)
 
