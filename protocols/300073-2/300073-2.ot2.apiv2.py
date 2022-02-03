@@ -1,4 +1,5 @@
 from opentrons import protocol_api
+import math
 
 metadata = {
     'protocolName': 'Saliva sample transfer from tuberacks to 96 well plate',
@@ -11,15 +12,12 @@ metadata = {
 
 def get_values(*names):
     import json
-    _all_values = json.loads("""{ "n_samples_set1":48,
-                                  "has_second_tube_set":true,
-                                  "n_samples_set2":45,
-                                  "sample_aspiration_vol_ul":50,
+    _all_values = json.loads("""{ "n_samples":96,
                                   "aspirate_flow_rate":5,
                                   "dispense_flow_rate":5,
-                                  "aspiration_height_mm":3,
+                                  "aspiration_height_mm":1,
                                   "dispension_height_mm":1,
-                                  "temp_mod":null,
+                                  "temp_mod":false,
                                   "temperature":4,
                                   "post_aspiration_wait":5
                                  }
@@ -30,10 +28,7 @@ def get_values(*names):
 def run(ctx: protocol_api.ProtocolContext):
 
     [
-      n_samples_set1,
-      has_second_tube_set,
-      n_samples_set2,
-      sample_aspiration_vol_ul,
+      n_samples,
       aspirate_flow_rate,
       dispense_flow_rate,
       aspiration_height_mm,
@@ -42,10 +37,7 @@ def run(ctx: protocol_api.ProtocolContext):
       temperature,
       post_aspiration_wait
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
-                  "n_samples_set1",
-                  "has_second_tube_set",
-                  "n_samples_set2",
-                  "sample_aspiration_vol_ul",
+                  "n_samples",
                   "aspirate_flow_rate",
                   "dispense_flow_rate",
                   "aspiration_height_mm",
@@ -55,35 +47,24 @@ def run(ctx: protocol_api.ProtocolContext):
                   "post_aspiration_wait"
         )
 
-    if not 1 <= n_samples_set1 <= 48:
+    if not 1 <= n_samples <= 96:
         raise Exception(
-            "Enter a number of samples for tube set 1 between 1-48")
-
-    if (not 1 <= n_samples_set2 <= 45) and has_second_tube_set:
-        raise Exception(
-            "Enter a number of samples for tube set 2 between 1-45")
+            "Enter a number of samples between 1-96")
 
     if not 4 <= temperature <= 95:
         raise Exception(
             "Temperature module must be set to a temperature between " +
             "4 and 95 degrees Celsius")
 
-    p20_lname = 'p20_single_gen2'
-    p300_lname = 'p300_single_gen2'
-    left_pipette_lname = (p20_lname if sample_aspiration_vol_ul < 20
-                          else p300_lname)
-
+    right_pipette_lname = 'p20_multi_gen2'
     filtered_20_lname = "opentrons_96_filtertiprack_20ul"
-    filtered_200_lname = "opentrons_96_filtertiprack_200ul"
-    tiprack_lname = (filtered_20_lname if left_pipette_lname == p20_lname
-                     else filtered_200_lname)
 
-    tuberack_lname = "opentrons_6_tuberack_falcon_50ml_conical"
     well_plate_on_alum_lname = \
         "opentrons_96_aluminumblock_nest_wellplate_100ul"
     well_plate_lname = "nest_96_wellplate_100ul_pcr_full_skirt"
-    # load modules
 
+    sample_volume = 5  # 5 uL sample volume to transfer betw. plates
+    # load modules
     '''
 
     Add your modules here with:
@@ -114,19 +95,17 @@ def run(ctx: protocol_api.ProtocolContext):
     where module_name is defined above.
 
     '''
-    tuberacks = [ctx.load_labware(tuberack_lname, slot)
-                 for slot in ['1', '2',
-                              '4', '5',
-                              '7', '8',
-                              '10', '11']]
-
-    plate = None
+    source_plate = None
+    source_plate_label = "source plate"
     if temp_mod:
-        plate = temp_mod.load_labware(well_plate_on_alum_lname,
-                                      label="target plate")
+        source_plate = temp_mod.load_labware(well_plate_on_alum_lname,
+                                             label=source_plate_label)
     else:
-        plate = ctx.load_labware(well_plate_lname, '3', label="target plate")
+        source_plate = ctx.load_labware(well_plate_lname,
+                                        '3', label=source_plate_label)
 
+    dest_plate = ctx.load_labware(well_plate_lname,
+                                  '6', label="destination plate")
     # load tipracks
 
     '''
@@ -147,7 +126,7 @@ def run(ctx: protocol_api.ProtocolContext):
     e.g. tiprack10, tiprack20, tiprack200, tiprack300, tiprack1000
 
     '''
-    tiprack = ctx.load_labware(tiprack_lname, '9')
+    tiprack = ctx.load_labware(filtered_20_lname, '9')
 
     # load instrument
 
@@ -169,8 +148,8 @@ def run(ctx: protocol_api.ProtocolContext):
                         )
     '''
     pipette = ctx.load_instrument(
-                        left_pipette_lname,
-                        "left",
+                        right_pipette_lname,
+                        "right",
                         tip_racks=[tiprack]
                         )
 
@@ -227,19 +206,6 @@ def run(ctx: protocol_api.ProtocolContext):
 
 
     '''
-    def transfer_tube_samples(volume, source_tubes, dest_wells):
-        nonlocal pipette, aspiration_height_mm, dispension_height_mm
-        nonlocal post_aspiration_wait
-
-        for s_well, d_well in zip(source_tubes, dest_wells):
-            pick_up(pipette)
-            pipette.aspirate(sample_aspiration_vol_ul,
-                             s_well.bottom(-aspiration_height_mm))
-            ctx.delay(post_aspiration_wait)
-            pipette.dispense(sample_aspiration_vol_ul,
-                             d_well.bottom(-dispension_height_mm))
-            pipette.drop_tip()
-
     # reagents
 
     '''
@@ -264,75 +230,7 @@ def run(ctx: protocol_api.ProtocolContext):
     plate_wells_by_row = [well for row in plate.rows() for well in row]
 
     '''
-    def add_quadrant_wells(list, columns, row_start_index, row_end_index):
-        """
-        Adds the wells in the given quadrant(rectangle) defined
-        by the columns and the start and end indices of the rows
-        col 1/row 1 ... col n/row 1
-        .  .            .
-        .       .       .
-        .            .  .
-        col 1/row n ... col n/row n
-        :param list: The list to append the wells in the quadrant to
-        :param colums: The columns that define the "x" interval of the quadrant
-        :param row_start_index: defines the start "y" interval
-        :param row_end_index: defines the end "y" interval
-        """
-        for col in columns:
-            for well in col[row_start_index:row_end_index]:
-                list.append(well)
 
-    # Map the target quadrants of the destination plate
-    targ_cols = plate.columns()
-    # Top left quadrant minus first 3 wells:
-    # The rectangle of A1-D1 to A6-D6 minus well A1 to A3
-    target_quadrant_1 = []
-    target_quadrant_1.append(targ_cols[0][3])  # Well D4
-    add_quadrant_wells(target_quadrant_1,
-                       targ_cols[1:6], 0, 4)
-
-    # Top right quadrant: A7-D7 to A12-D12 rectangle
-    target_quadrant_2 = []
-    add_quadrant_wells(target_quadrant_2,
-                       targ_cols[6:12], 0, 4)
-
-    # Bottom left quadrant: E1-H1 to E6-H6 rectangle
-    target_quadrant_3 = []
-    add_quadrant_wells(target_quadrant_3,
-                       targ_cols[0:6], 4, 8)
-
-    # Bottom right quadrant: E7-H7 to E12-H12 rectangle
-    target_quadrant_4 = []
-    add_quadrant_wells(target_quadrant_4,
-                       targ_cols[6:12], 4, 8)
-
-    target_well_map = []
-    for quadrant in [target_quadrant_1, target_quadrant_2, target_quadrant_3,
-                     target_quadrant_4]:
-        for well in quadrant:
-            target_well_map.append(well)
-
-    all_tube_racks = []
-    for tuberack in tuberacks:
-        all_tube_racks.append(tuberack.wells())
-
-    tube_map_set1 = []
-    i = 0
-    for tube_rack in all_tube_racks:
-        for well in tube_rack:
-            i = i + 1
-            tube_map_set1.append(well)
-            if i >= n_samples_set1:
-                break
-
-    tube_map_set2 = []
-    i = 0
-    for tube_rack in all_tube_racks:
-        for well in tube_rack:
-            i = i + 1
-            tube_map_set2.append(well)
-            if i >= n_samples_set2:
-                break
     # protocol
 
     '''
@@ -369,18 +267,16 @@ def run(ctx: protocol_api.ProtocolContext):
         temp_mod.set_temperature(temperature)
 
     # Transfer the first set of tube samples
-    ctx.comment("\n\nTransferring samples from set 1 to destination plate\n")
-    transfer_tube_samples(sample_aspiration_vol_ul, tube_map_set1,
-                          target_well_map[0:n_samples_set1])
+    ctx.comment("\n\nTransferring samples from source plate " +
+                "to destination plate\n")
+    n_columns = math.ceil(n_samples/8)
+    for s_col, d_col in zip(source_plate.columns()[0:n_columns],
+                            dest_plate.columns()[0:n_columns]):
+        pick_up(pipette)
+        pipette.aspirate(sample_volume, s_col[0].bottom(aspiration_height_mm))
+        ctx.delay(post_aspiration_wait)
+        pipette.dispense(sample_volume,
+                         d_col[0].bottom(dispension_height_mm))
+        pipette.drop_tip()
 
-    # Transfer the second set of tube samples
-    if has_second_tube_set:
-        ctx.pause(
-            "\n\nRemove the 1st set of tuberacks and insert the 2nd set\n")
-        ctx.comment(
-            "\n\nTransferring samples from set 2 to destination plate\n")
-        transfer_tube_samples(sample_aspiration_vol_ul, tube_map_set2,
-                              target_well_map[n_samples_set1:
-                                              (n_samples_set1+n_samples_set2)])
     ctx.comment("\n\n~~~~ Protocol finished ~~~~")
-    import pdb; pdb.set_trace()
