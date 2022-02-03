@@ -3,75 +3,69 @@
 ### Author
 [Opentrons](https://opentrons.com/)
 
-### Partner
-[Partner Name](partner website link)
-
 ## Categories
-* Broader Category
-	* Subcategory (can be the name of a kit when applicable)
+* Sample Prep
+	* PCR prep
 
 ## Description
-This section of the README (especially the first paragraph) should grip a prospective user with the overarching purpose/flow of the protocol, but should not include fine details of the protocol steps themselves.
+This protocol transfers saliva samples from 25 mL tubes to a 96 well plate. The samples are located in 6 4-in-4 tube racks on the left side of the deck. Optionally 2 second set of tube racks can replace the first one if more than 48 samples need to be distributed. Optionally the target plate can be placed on a temperature module with an aluminum block.
 
-Example: This is a flexible protocol accommodating a wide range of commercial RNA extraction workflows for COVID-19 sample processing. The protocol is broken down into 5 main parts:
-* binding buffer addition to samples
-* bead wash 3x using magnetic module
-* final elution to chilled PCR plate
+The destination plate is divided into four quadrants and the samples are distributed in a zig zag pattern from top left - top right - bottom left - bottom right. The samples are not transferred to the three first wells because they contain control samples.
 
-Subsequent paragraphs can give some more insight into the details of the protocol, but a step-by-step description should be included in the 'Protocol Steps' section below.
-
-Example: For sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 4) to the elution PCR plate (temperature module, slot 1). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.
-
-Results of the Opentrons Science team's internal testing of this protocol on the OT-2 are shown below:  
-![results](link_to_results.png)
-
-Explanation of complex parameters below:
-* `park tips`: If set to `yes` (recommended), the protocol will conserve tips between reagent addition and removal. Tips will be stored in the wells of an empty rack corresponding to the well of the sample that they access (tip parked in A1 of the empty rack will only be used for sample A1, tip parked in B1 only used for sample B1, etc.). If set to `no`, tips will always be used only once, and the user will be prompted to manually refill tipracks mid-protocol for high throughput runs.
-* `input .csv file`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:
 ```
-source,dest,vol
-A1,B1,4
+Quadrant 1 (top left)
+A1-D1 to A6-D6
+
+Quadrant 2 (top right)
+A7-D7 to A12-D12
+
+Quadrant 3 (bottom left)
+E1-H1 to E6-H6
+
+Quadrant 4 (bottom right)
+E7-H7 to E12-H12
 ```
+
+Explanation of parameters below:
+* `Number of tubes/samples in the first set of tubes`: How many tubes there are in the first set of tube racks.
+* `Is there a second set of tubes?`: Whether to pause the protocol so that a second set of tube racks can be loaded onto the deck
+* `Number of tubes/samples in the second set of tubes`: How many samples there are in the second set of tuberacks (Only needs to be set if a second set of tube racks is loaded)
+* `Sample volume (µL) to aspirate`: Volume of sample to transfer (5 or 50 µL)
+* `Aspiration flow rate (µL/s)`: rate of aspiration in microliters per second
+* `Dispension flow rate (µL/s)`: rate of dispension in microliters per second
+* `Aspiration height from the bottom of the tubes (mm)`: Height from the bottom of the tubes to aspirate from in mm
+* `Dispension height from the bottom of the tubes (mm)`: Height from the bottom of the plate wells to dispense from in mm
+* `(Optional) Temperature module with aluminum block`: Parameter to indicate whether you are using a temperature module with an aluminum block to put your target plate on
+* `Set temperature of the temperature module`: Temperature to set on the temperature module in degrees C
+* `Amount of time to keep the pipette in the tube after aspiration (s)`: How many seconds to wait before withdrawing the pipette from the tube after aspiration
 
 ---
 
 ### Modules
 * [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
-* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
-* [Thermocycler Module](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module)
-* [HEPA Module](https://shop.opentrons.com/collections/hardware-modules/products/hepa-module)
 
 ### Labware
-* [Labware name](link to labware on shop.opentrons.com when applicable)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [4-in-1 tube racks](https://shop.opentrons.com/4-in-1-tube-rack-set/)
+* [Stellar Scientific 96 well plate](https://www.stellarscientific.com/96-well-low-profile-fast-type-pcr-plate-with-raised-rim-edge-0-1ml-rnase-and-dnase-free-clear-100-cs/)
 
 ### Pipettes
-* [Pipette name](link to pipette on shop.opentrons.com)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
-
-### Reagents
-* [kit name when applicable](link to kit)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [20 µL single-channel pipette gen2](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
+* [300 µL single-channel pipette gen2](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
+* [20 µL filter tips](https://shop.opentrons.com/opentrons-20ul-filter-tips/)
+* [200 µL filter tips](https://shop.opentrons.com/opentrons-200ul-filter-tips/)
 
 ---
 
 ### Deck Setup
-* If the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)
-
-### Reagent Setup
-* This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:
-* Reservoir 1: slot 5
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res1_v2.png)
-* Reservoir 2: slot 2  
-![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res2.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/300073/deck.jpg)
 
 ---
 
 ### Protocol Steps
-1. This section should consist of a numerical outline of the protocol steps, somewhat analogous to the steps outlined by the user in their custom protocol submission.
-2. example step: Samples are transferred from the source tuberacks on slots 1-2 to the PCR plate on slot 3, down columns and then across rows.
-3. example step: Waste is removed from each sample on the magnetic module, ensuring the bead pellets are not contacted by the pipette tips.
+1. If a temperature module is on the deck the first step is to set the temperature according to the parameter.
+2. Samples are transferred from the first set of tubes to the destination plate
+3. If a second set of tuberacks are designated the protocol pauses and allows the user to switch out the tube racks before continuing.
+4. The second set of samples is transferred from the tubes to the destination plate
 
 ### Process
 1. Input your protocol parameters above.
@@ -86,4 +80,4 @@ A1,B1,4
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-protocol-hex-code
+300073

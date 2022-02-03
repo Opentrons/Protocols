@@ -383,4 +383,3 @@ def run(ctx: protocol_api.ProtocolContext):
                               target_well_map[n_samples_set1:
                                               (n_samples_set1+n_samples_set2)])
     ctx.comment("\n\n~~~~ Protocol finished ~~~~")
-    import pdb; pdb.set_trace()
