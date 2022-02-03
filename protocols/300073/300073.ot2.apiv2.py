@@ -234,10 +234,10 @@ def run(ctx: protocol_api.ProtocolContext):
         for s_well, d_well in zip(source_tubes, dest_wells):
             pick_up(pipette)
             pipette.aspirate(sample_aspiration_vol_ul,
-                             s_well.bottom(-aspiration_height_mm))
+                             s_well.bottom(aspiration_height_mm))
             ctx.delay(post_aspiration_wait)
             pipette.dispense(sample_aspiration_vol_ul,
-                             d_well.bottom(-dispension_height_mm))
+                             d_well.bottom(dispension_height_mm))
             pipette.drop_tip()
 
     # reagents

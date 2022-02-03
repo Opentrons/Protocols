@@ -1,33 +1,9 @@
 [
   {
     "type": "int",
-    "label": "Number of tubes/samples in the first set of tubes",
-    "name": "n_samples_set1",
-    "default": 48
-  },
-  {
-    "type": "dropDown",
-    "label": "Is there a second set of tubes?",
-    "name": "has_second_tube_set",
-    "options": [
-      {"label": "Yes", "value": true},
-      {"label": "No", "value": false}
-    ]
-  },
-  {
-    "type": "int",
-    "label": "Number of tubes/samples in the second set of tubes",
-    "name": "n_samples_set2",
-    "default": 48
-  },
-  {
-    "type": "dropDown",
-    "label": "Sample volume (µL) to aspirate",
-    "name": "sample_aspiration_vol_ul",
-    "options": [
-      {"label": "50 µL", "value": 50},
-      {"label": "5 µL", "value": 5}
-    ]
+    "label": "Number of samples to transfer",
+    "name": "n_samples",
+    "default":96
   },
   {
     "type": "float",
