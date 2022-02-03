@@ -36,7 +36,7 @@ Explanation of parameters below:
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/300073-2/deck.jpg)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/300073/deck2.jpg)
 
 ---
 
