@@ -1,8 +1,8 @@
 from opentrons import protocol_api
 
 metadata = {
-    'protocolName': 'Protocol Title',
-    'author': 'AUTHOR NAME <authoremail@company.com>',
+    'protocolName': 'Saliva sample transfer from tuberacks to 96 well plate',
+    'author': 'Eskil <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
                          # IN SECTION 5.2 OF THE APIV2 "VERSIONING"
@@ -14,12 +14,14 @@ def get_values(*names):
     _all_values = json.loads("""{ "n_samples_set1":48,
                                   "has_second_tube_set":true,
                                   "n_samples_set2":45,
-                                  "aspiration_velocity":100,
-                                  "dispension_velocity":100,
                                   "sample_aspiration_vol_ul":50,
+                                  "aspirate_flow_rate":5,
+                                  "dispense_flow_rate":5,
                                   "aspiration_height_mm":3,
-                                  "temp_mod_lname":null,
-                                  "temperature":4
+                                  "dispension_height_mm":1,
+                                  "temp_mod":null,
+                                  "temperature":4,
+                                  "post_aspiration_wait":5
                                  }
                                   """)
     return [_all_values[n] for n in names]
@@ -28,25 +30,29 @@ def get_values(*names):
 def run(ctx: protocol_api.ProtocolContext):
 
     [
-     n_samples_set1,
-     has_second_tube_set,
-     n_samples_set2,
-     aspiration_velocity,
-     dispension_velocity,
-     sample_aspiration_vol_ul,
-     aspiration_height_mm,
-     temp_mod_lname,
-     temperature
+      n_samples_set1,
+      has_second_tube_set,
+      n_samples_set2,
+      sample_aspiration_vol_ul,
+      aspirate_flow_rate,
+      dispense_flow_rate,
+      aspiration_height_mm,
+      dispension_height_mm,
+      temp_mod,
+      temperature,
+      post_aspiration_wait
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
-        "n_samples_set1",
-        "has_second_tube_set",
-        "n_samples_set2",
-        "aspiration_velocity",
-        "dispension_velocity",
-        "sample_aspiration_vol_ul",
-        "aspiration_height_mm",
-        "temp_mod_lname",
-        "temperature"
+                  "n_samples_set1",
+                  "has_second_tube_set",
+                  "n_samples_set2",
+                  "sample_aspiration_vol_ul",
+                  "aspirate_flow_rate",
+                  "dispense_flow_rate",
+                  "aspiration_height_mm",
+                  "dispension_height_mm",
+                  "temp_mod",
+                  "temperature",
+                  "post_aspiration_wait"
         )
 
     if not 1 <= n_samples_set1 <= 48:
@@ -91,7 +97,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     '''
     temp_mod = None
-    if temp_mod_lname:
+    if temp_mod:
         temp_mod = ctx.load_module("temperature module gen2", '3')
 
     # load labware
@@ -184,7 +190,7 @@ def run(ctx: protocol_api.ProtocolContext):
     For any functions in your protocol, describe the function as well as
     describe the parameters which are to be passed in as a docstring below
     the function (see below).
-
+    '''
     def pick_up(pipette):
         """`pick_up()` will pause the protocol when all tip boxes are out of
         tips, prompting the user to replace all tip racks. Once tipracks are
@@ -202,8 +208,6 @@ def run(ctx: protocol_api.ProtocolContext):
             ctx.pause("Replace empty tip racks")
             pipette.reset_tipracks()
             pipette.pick_up_tip()
-
-    '''
 
     # helper functions
     '''
@@ -223,6 +227,18 @@ def run(ctx: protocol_api.ProtocolContext):
 
 
     '''
+    def transfer_tube_samples(volume, source_tubes, dest_wells):
+        nonlocal pipette, aspiration_height_mm, dispension_height_mm
+        nonlocal post_aspiration_wait
+
+        for s_well, d_well in zip(source_tubes, dest_wells):
+            pick_up(pipette)
+            pipette.aspirate(sample_aspiration_vol_ul,
+                             s_well.bottom(-aspiration_height_mm))
+            ctx.delay(post_aspiration_wait)
+            pipette.dispense(sample_aspiration_vol_ul,
+                             d_well.bottom(-dispension_height_mm))
+            pipette.drop_tip()
 
     # reagents
 
@@ -248,30 +264,47 @@ def run(ctx: protocol_api.ProtocolContext):
     plate_wells_by_row = [well for row in plate.rows() for well in row]
 
     '''
+    def add_quadrant_wells(list, columns, row_start_index, row_end_index):
+        """
+        Adds the wells in the given quadrant(rectangle) defined
+        by the columns and the start and end indices of the rows
+        col 1/row 1 ... col n/row 1
+        .  .            .
+        .       .       .
+        .            .  .
+        col 1/row n ... col n/row n
+        :param list: The list to append the wells in the quadrant to
+        :param colums: The columns that define the "x" interval of the quadrant
+        :param row_start_index: defines the start "y" interval
+        :param row_end_index: defines the end "y" interval
+        """
+        for col in columns:
+            for well in col[row_start_index:row_end_index]:
+                list.append(well)
 
     # Map the target quadrants of the destination plate
     targ_cols = plate.columns()
     # Top left quadrant minus first 3 wells:
     # The rectangle of A1-D1 to A6-D6 minus well A1 to A3
     target_quadrant_1 = []
-    target_quadrant_1.append(targ_cols[0][3:4])
-    for col in targ_cols[1:6]:
-        target_quadrant_1.append(col[0:4])
+    target_quadrant_1.append(targ_cols[0][3])  # Well D4
+    add_quadrant_wells(target_quadrant_1,
+                       targ_cols[1:6], 0, 4)
 
     # Top right quadrant: A7-D7 to A12-D12 rectangle
     target_quadrant_2 = []
-    for col in targ_cols[6:12]:
-        target_quadrant_2.append(col[0:4])
+    add_quadrant_wells(target_quadrant_2,
+                       targ_cols[6:12], 0, 4)
 
     # Bottom left quadrant: E1-H1 to E6-H6 rectangle
     target_quadrant_3 = []
-    for col in targ_cols[0:6]:
-        target_quadrant_3.append(col[4:8])
+    add_quadrant_wells(target_quadrant_3,
+                       targ_cols[0:6], 4, 8)
 
     # Bottom right quadrant: E7-H7 to E12-H12 rectangle
     target_quadrant_4 = []
-    for col in targ_cols[6:12]:
-        target_quadrant_4.append(col[4:8])
+    add_quadrant_wells(target_quadrant_4,
+                       targ_cols[6:12], 4, 8)
 
     target_well_map = []
     for quadrant in [target_quadrant_1, target_quadrant_2, target_quadrant_3,
@@ -279,12 +312,27 @@ def run(ctx: protocol_api.ProtocolContext):
         for well in quadrant:
             target_well_map.append(well)
 
-    general_tube_map = []
+    all_tube_racks = []
     for tuberack in tuberacks:
-        general_tube_map.append(tuberack.wells())
+        all_tube_racks.append(tuberack.wells())
 
-    tube_map_set1 = general_tube_map[0:n_samples_set1]
-    tube_maps_set2 = general_tube_map[0:n_samples_set2]
+    tube_map_set1 = []
+    i = 0
+    for tube_rack in all_tube_racks:
+        for well in tube_rack:
+            i = i + 1
+            tube_map_set1.append(well)
+            if i >= n_samples_set1:
+                break
+
+    tube_map_set2 = []
+    i = 0
+    for tube_rack in all_tube_racks:
+        for well in tube_rack:
+            i = i + 1
+            tube_map_set2.append(well)
+            if i >= n_samples_set2:
+                break
     # protocol
 
     '''
@@ -309,12 +357,30 @@ def run(ctx: protocol_api.ProtocolContext):
 
 
     '''
+
+    # Set the pipette aspirate/dispense flow rate
+    pipette.flow_rate.aspirate = aspirate_flow_rate
+    pipette.flow_rate.dispense = dispense_flow_rate
+
+    # Set temperature module temperature
     if temp_mod:
-        ctx.comment("\n\nSetting temperature module to {} degrees C".
+        ctx.comment("\n\nSetting temperature module to {} degrees C\n".
                     format(temperature))
         temp_mod.set_temperature(temperature)
 
-    ctx.comment("\n\nTransferring samples from set 1 to destination plate")
+    # Transfer the first set of tube samples
+    ctx.comment("\n\nTransferring samples from set 1 to destination plate\n")
+    transfer_tube_samples(sample_aspiration_vol_ul, tube_map_set1,
+                          target_well_map[0:n_samples_set1])
+
+    # Transfer the second set of tube samples
+    if has_second_tube_set:
+        ctx.pause(
+            "\n\nRemove the 1st set of tuberacks and insert the 2nd set\n")
+        ctx.comment(
+            "\n\nTransferring samples from set 2 to destination plate\n")
+        transfer_tube_samples(sample_aspiration_vol_ul, tube_map_set2,
+                              target_well_map[n_samples_set1:
+                                              (n_samples_set1+n_samples_set2)])
+    ctx.comment("\n\n~~~~ Protocol finished ~~~~")
     import pdb; pdb.set_trace()
-    pipette.transfer(sample_aspiration_vol_ul, tube_map_set1,
-                     target_well_map[0:n_samples_set1])
