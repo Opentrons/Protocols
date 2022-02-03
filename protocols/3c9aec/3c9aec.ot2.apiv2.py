@@ -13,11 +13,12 @@ metadata = {
 
 def run(ctx: protocol_api.ProtocolContext):
 
-    [csv, m300_mount, p300_mount, temp_mod_temp, pbs_dispense_rate,
+    [csv, m300_mount, p300_mount, temp_mod_temp, asp_rate_step1,
+     pbs_dispense_rate,
      incubation_time, first_media_x, second_media_y, track_tips
      ] = get_values(  # noqa: F821
         "csv", "m300_mount", "p300_mount", "temp_mod_temp",
-        "pbs_dispense_rate",
+        "asp_rate_step1", "pbs_dispense_rate",
         "incubation_time", "first_media_x", "second_media_y", "track_tips")
 
     # LABWARE
@@ -195,6 +196,8 @@ def run(ctx: protocol_api.ProtocolContext):
     trypsin = reagents.wells()[1]
     media = reagents.wells()[-1]
 
+    airgap = 20
+
     ctx.comment("MOVING INCLUDED WELLS TO WASTE")
     for i, well in enumerate(dict_tips_per_well):
         num_tips = dict_tips_per_well[well]
@@ -205,9 +208,11 @@ def run(ctx: protocol_api.ProtocolContext):
             pip = p300
 
         pick_up(num_tips)
-        pip.aspirate(200, plate_well)
+        pip.aspirate(200, plate_well.bottom(z=1).move(
+                Point(x=(plate_well.diameter/2-2))), rate=asp_rate_step1)
         pip.dispense(200, waste)
         check_waste_vol(200)
+        pip.air_gap(airgap)
         pip.drop_tip()
         ctx.comment('\n')
 
@@ -224,6 +229,7 @@ def run(ctx: protocol_api.ProtocolContext):
         pip.aspirate(150, pbs, rate=pbs_dispense_rate)
         pip.dispense(150, plate_well.bottom(z=1).move(
                 Point(x=(plate_well.diameter/2-2))))
+        pip.air_gap(airgap)
         pip.drop_tip()
         ctx.comment('\n')
 
@@ -237,8 +243,10 @@ def run(ctx: protocol_api.ProtocolContext):
             pip = p300
 
         pick_up(num_tips)
-        pip.aspirate(175, plate_well)
+        pip.aspirate(175, plate_well.bottom(z=1).move(
+                Point(x=(plate_well.diameter/2-2))))
         pip.dispense(175, waste)
+        pip.air_gap(airgap)
         pip.drop_tip()
         ctx.comment('\n')
 
@@ -257,6 +265,7 @@ def run(ctx: protocol_api.ProtocolContext):
         pip.dispense(25, plate_well)
         pip.blow_out()
         pip.touch_tip()
+        pip.air_gap(airgap)
         pip.drop_tip()
         ctx.comment('\n')
 
@@ -277,6 +286,7 @@ def run(ctx: protocol_api.ProtocolContext):
         pip.dispense(140, plate_well)
         pip.blow_out()
         pip.touch_tip()
+        pip.air_gap(airgap)
         pip.drop_tip()
         ctx.comment('\n')
 
@@ -291,8 +301,10 @@ def run(ctx: protocol_api.ProtocolContext):
             pip = p300
 
         pick_up(num_tips)
-        pip.aspirate(first_media_x, plate_well)
+        pip.aspirate(first_media_x, plate_well.bottom(z=1).move(
+                Point(x=(plate_well.diameter/2-2))))
         pip.dispense(first_media_x, waste)
+        pip.air_gap(airgap)
         pip.drop_tip()
         ctx.comment('\n')
 
@@ -309,6 +321,7 @@ def run(ctx: protocol_api.ProtocolContext):
         pick_up(num_tips)
         pip.aspirate(second_media_y, media)
         pip.dispense(second_media_y, plate_well)
+        pip.air_gap(airgap)
         pip.drop_tip()
         ctx.comment('\n')
     #
