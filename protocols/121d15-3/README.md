@@ -17,13 +17,9 @@ Links:
 This protocol performs a custom HPLC Picking protocol from a worklist. The worklist should be specified as follows:
 
 ```
-well1,well2,well3,well4,tube,vol
-1,100,200,300,A1,200
-2,101,201,301,B1,200
-3,102,202,302,C1,200
-4,103,203,303,D1
-5,104,204,304,E1,100
-6,105,205,305,F1
+range F#(Start-Stop)
+F1(1-14)
+F2(15-27)
 ...
 ```
 
