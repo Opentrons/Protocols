@@ -14,6 +14,7 @@ This protocol extracts DNA using the ReliaPrep™ Viral TNA Miniprep System extr
 
 Explanation of complex parameters below:
 * `Number of samples`: Specify the number of samples for this run. Samples should always be placed by column (A1, B1, C1,..,etc.).
+* `P20/P1000 Dispense Flow Rate`: Global control of P20 and P1000 dispense flow rate. A value of 1.0 is default, 0.5 is 50% of the default flow rate, 1.2 is 20% faster the default flow rate, etc. 
 * `P20 Mount`: Specify which side (left or right) to mount the P20 single channel pipette.
 * `P1000 Mount`: Specify which side (left or right) to mount the P1000 single channel pipette.
 
