@@ -13,11 +13,12 @@ metadata = {
 
 def run(ctx: protocol_api.ProtocolContext):
 
-    [csv, m300_mount, p300_mount, temp_mod_temp, pbs_dispense_rate,
+    [csv, m300_mount, p300_mount, temp_mod_temp, asp_rate_step1,
+     pbs_dispense_rate,
      incubation_time, first_media_x, second_media_y, track_tips
      ] = get_values(  # noqa: F821
         "csv", "m300_mount", "p300_mount", "temp_mod_temp",
-        "pbs_dispense_rate",
+        "asp_rate_step1", "pbs_dispense_rate",
         "incubation_time", "first_media_x", "second_media_y", "track_tips")
 
     # LABWARE
@@ -195,6 +196,8 @@ def run(ctx: protocol_api.ProtocolContext):
     trypsin = reagents.wells()[1]
     media = reagents.wells()[-1]
 
+    airgap = 20
+
     ctx.comment("MOVING INCLUDED WELLS TO WASTE")
     for i, well in enumerate(dict_tips_per_well):
         num_tips = dict_tips_per_well[well]
@@ -205,10 +208,12 @@ def run(ctx: protocol_api.ProtocolContext):
             pip = p300
 
         pick_up(num_tips)
-        pip.aspirate(200, plate_well)
+        pip.aspirate(200, plate_well.bottom(z=1).move(
+                Point(x=(plate_well.diameter/2-2))), rate=asp_rate_step1)
         pip.dispense(200, waste)
         check_waste_vol(200)
         pip.drop_tip()
+        pip.air_gap(airgap)
         ctx.comment('\n')
 
     ctx.comment("\n\n\nMOVING PBS TO PLATE")
@@ -225,6 +230,7 @@ def run(ctx: protocol_api.ProtocolContext):
         pip.dispense(150, plate_well.bottom(z=1).move(
                 Point(x=(plate_well.diameter/2-2))))
         pip.drop_tip()
+        pip.air_gap(airgap)
         ctx.comment('\n')
 
     ctx.comment("\n\n\nREMOVING PBS FROM PLATE")
@@ -237,9 +243,11 @@ def run(ctx: protocol_api.ProtocolContext):
             pip = p300
 
         pick_up(num_tips)
-        pip.aspirate(175, plate_well)
+        pip.aspirate(175, plate_well.bottom(z=1).move(
+                Point(x=(plate_well.diameter/2-2))))
         pip.dispense(175, waste)
         pip.drop_tip()
+        pip.air_gap(airgap)
         ctx.comment('\n')
 
     ctx.comment("\n\n\nMOVING TRYPSIN TO PLATE")
@@ -258,6 +266,7 @@ def run(ctx: protocol_api.ProtocolContext):
         pip.blow_out()
         pip.touch_tip()
         pip.drop_tip()
+        pip.air_gap(airgap)
         ctx.comment('\n')
 
     ctx.delay(minutes=incubation_time)
@@ -278,6 +287,7 @@ def run(ctx: protocol_api.ProtocolContext):
         pip.blow_out()
         pip.touch_tip()
         pip.drop_tip()
+        pip.air_gap(airgap)
         ctx.comment('\n')
 
     ctx.comment("\n\n\nASPIRATE FIRST MEDIA FROM PLATE")
@@ -291,9 +301,11 @@ def run(ctx: protocol_api.ProtocolContext):
             pip = p300
 
         pick_up(num_tips)
-        pip.aspirate(first_media_x, plate_well)
+        pip.aspirate(first_media_x, plate_well.bottom(z=1).move(
+                Point(x=(plate_well.diameter/2-2))))
         pip.dispense(first_media_x, waste)
         pip.drop_tip()
+        pip.air_gap(airgap)
         ctx.comment('\n')
 
     ctx.comment("\n\n\nDISPENSE SECOND MEDIA TO PLATE")
@@ -310,6 +322,7 @@ def run(ctx: protocol_api.ProtocolContext):
         pip.aspirate(second_media_y, media)
         pip.dispense(second_media_y, plate_well)
         pip.drop_tip()
+        pip.air_gap(airgap)
         ctx.comment('\n')
     #
     # # write updated tipcount to CSV

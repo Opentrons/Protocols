@@ -14,6 +14,12 @@
   },
   {
     "type": "float",
+    "label": "First step aspiration rate (moving to waste)",
+    "name": "asp_rate_step1",
+    "default": 1.0
+  },
+  {
+    "type": "float",
     "label": "PBS Dispense Flow Rate",
     "name": "pbs_dispense_rate",
     "default": 1.0
