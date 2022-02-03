@@ -57,6 +57,7 @@ def run(ctx):
         if tip_count == 12:
             ctx.pause('\n\n\n\n\nPlease refill 20ul filter tiprack on slot 6 \
 before resuming.\n\n\n\n\n')
+            tip_count = 0
         m20.pick_up_tip(stationary_rack.rows()[0][tip_count])
         tip_count += 1
 
