@@ -96,7 +96,6 @@ def run(ctx: protocol_api.ProtocolContext):
     ethanol = res2.wells()[:eth_wells]*num_col
     mbl5 = res2.wells()[-1]
     sample_cols = mag_plate.rows()[0][:num_col]
-    print(mbl3)
 
     ctx.comment('\n\n\nDISPENSING PRO-K\n')
     for col in sample_cols:
