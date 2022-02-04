@@ -22,16 +22,14 @@
     "label": "reagent type",
     "name": "reagent_type",
     "options": [
-      { "label": "EDA", "value": "EDA" },
-      { "label": "ACN", "value": "ACN" },
-      { "label": "amino", "value": "amino" }
+      { "label": "water", "value": "water" }
     ]
   },
   {
     "type": "float",
     "label": "transfer volume (µl)",
     "name": "transfer_vol",
-    "default": 200.0
+    "default": 250.0
   },
   {
     "type": "dropDown",

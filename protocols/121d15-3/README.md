@@ -11,16 +11,22 @@
 
 Links:
 * [Manual Cleave](./121d15)
+* [Manual Cleave Elution](./121d15-4)
 * [Redo Replacement Picking](./121d15-2)
 * [HPLC Picking](./121d15-3)
 
 This protocol performs a custom HPLC Picking protocol from a worklist. The worklist should be specified as follows:
 
 ```
-range F#(Start-Stop)
-F1(1-14)
-F2(15-27)
-...
+source,dest,volume
+1,A1,300
+2,A1,300
+3,A1,300
+4,A1,300
+10,B1,300
+12,B1,300
+13,B1,300
+14,B1,
 ```
 
 ---
