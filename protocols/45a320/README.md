@@ -14,7 +14,7 @@ This protocol extracts DNA using the ReliaPrep™ Viral TNA Miniprep System extr
 
 Explanation of complex parameters below:
 * `Number of samples`: Specify the number of samples for this run. Samples should always be placed by column (A1, B1, C1,..,etc.).
-* `P20/P1000 Dispense Flow Rate`: Global control of P20 and P1000 dispense flow rate. A value of 1.0 is default, 0.5 is 50% of the default flow rate, 1.2 is 20% faster the default flow rate, etc. 
+* `P20/P1000 Dispense Flow Rate`: Global control of P20 and P1000 dispense flow rate. A value of 1.0 is default, 0.5 is 50% of the default flow rate, 1.2 is 20% faster the default flow rate, etc.
 * `P20 Mount`: Specify which side (left or right) to mount the P20 single channel pipette.
 * `P1000 Mount`: Specify which side (left or right) to mount the P1000 single channel pipette.
 
@@ -41,7 +41,7 @@ Explanation of complex parameters below:
 
 ### Deck Setup
 
-* On slot 2, empty tubes should be placed in the first 3 columns of the labware, which the protocol refers to as the "left side" when it pauses and prompts the user for instruction. Columns 4, 5, and 6 are known as the "right side" of the tube rack. Please see protocol steps below.
+* On slot 2, empty tubes should be placed in every other column starting from column 1 (e.g. columns 1, 3, 5), which the protocol refers to as the "left side" when it pauses and prompts the user for instruction. Columns 2, 4, and 6 are known as the "right side" of the tube rack. Please see protocol steps below.
 ![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/45a320/Screen+Shot+2021-07-29+at+6.37.40+PM.png)
 
 ### Reagent Setup

@@ -38,9 +38,9 @@ def run(ctx):
     p1000.flow_rate.dispense = p1000_rate*p1000.flow_rate.dispense
 
     # PROTOCOL
-    final_tubes_pt1 = [tube for column in final_tuberack.columns()[:3]
+    final_tubes_pt1 = [tube for column in final_tuberack.columns()[::2]
                        for tube in column][:num_samp]
-    final_tubes_pt2 = [tube for column in final_tuberack.columns()[3:]
+    final_tubes_pt2 = [tube for column in final_tuberack.columns()[1::2]
                        for tube in column][:num_samp]
 
     # reagents
