@@ -26,32 +26,26 @@ def run(ctx):
 
     # parse
     data = [
-        line for line in input_file.splitlines()[1:]
+        line.split(',') for line in input_file.splitlines()[1:]
         if line and line.split(',')[0].strip()]
 
     # order
     wells_ordered = [
         well for plate in plates for row in plate.rows() for well in row]
-    dests = [well for col in rack.columns() for well in col[:8]]
 
-    def parse_range(content):
-        fraction_num = content[:content.index('(')][1:]
-        range = [
-            int(val) - 1
-            for val in content[
-                content.index('(')+1:content.index(')')].split('-')]
-        num_samples = range[1] - range[0] + 1
-        if num_samples < 6:
-            raise Exception(
-                f'Invalid number of samples for Fraction {fraction_num} \
-                ({num_samples})')
-        return wells_ordered[range[0]+2:range[0]+6]
-
+    prev_dest = None
     for i, line in enumerate(data):
-        sources = parse_range(line)
-        dest = dests[i]
-        p300.pick_up_tip()
-        for s in sources:
-            p300.transfer(default_transfer_vol, s.bottom(0.5), dest.top(-1),
-                          new_tip='never')
-        p300.drop_tip()
+        source = wells_ordered[0]
+        dest = rack.wells_by_name()[line[1].upper()]
+        if len(line) > 2 and line[2]:
+            vol = float(line[2])
+        else:
+            vol = default_transfer_vol
+
+        if dest != prev_dest:
+            if p300.has_tip:
+                p300.drop_tip()
+            p300.pick_up_tip()
+        p300.transfer(vol, source.bottom(0.5), dest.top(-1), new_tip='never')
+        prev_dest = dest
+    p300.drop_tip()

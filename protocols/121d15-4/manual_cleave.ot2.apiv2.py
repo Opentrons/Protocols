@@ -26,35 +26,12 @@ def run(ctx):
     tips300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot,
                          '300ul tiprack')
-        for slot in ['10']]
+        for slot in ['11']]
 
     reagent_map = {
-        'EDA': {
+        'water': {
             'slot': '7',
-            'tips': [col for rack in tips300 for col in rack.columns()][:10],
-            'volume': 200,
-            'flow-rate-asp': 65,
-            'flow-rate-disp': 65,
-            'flow-rate-blow-out': 4,
-            'blow-out': True,
-            'dispense-delay': 8,
-            'drop-tip': True
-        },
-        'ACN': {
-            'slot': '8',
-            'tips': [col for rack in tips300 for col in rack.columns()][10:11],
-            'volume': 200,
-            'flow-rate-asp': 100,
-            'flow-rate-disp': 100,
-            'flow-rate-blow-out': 100,
-            'blow-out': True,
-            'dispense-delay': 0,
-            'drop-tip': False
-        },
-        'amino': {
-            'slot': '9',
-            'tips': [col for rack in tips300 for col in rack.columns()][11:],
-            'volume': 300,
+            'tips': [col for rack in tips300 for col in rack.columns()],
             'flow-rate-asp': 100,
             'flow-rate-disp': 100,
             'flow-rate-blow-out': 100,
@@ -169,34 +146,42 @@ def run(ctx):
             if running:
                 chunk_map[chunk_length].append(running)
 
-        m300.flow_rate.aspirate = reagent_map[reagent_type]['flow-rate-asp']
-        m300.flow_rate.dispense = reagent_map[reagent_type]['flow-rate-disp']
-        m300.flow_rate.blow_out = reagent_map[
-            reagent_type]['flow-rate-blow-out']
+    for elution in range(3):
+        for csv, rack in zip(
+                [occupied_well_csv1, occupied_well_csv2, occupied_well_csv3],
+                racks):
 
-        num_chunks = len(
-            [key for key, vals in chunk_map.items()
-             if len(vals) > 0])
-        accessed = 0
-        for num_tips, dests in chunk_map.items():
-            if len(dests) > 0:
-                accessed += 1
-                pick_up_loc, pip = pick_up(num_tips, reagent_type)
-                for dest in dests:
-                    pip.aspirate(reagent_map[reagent_type]['volume'], reagent)
-                    pip.dispense(reagent_map[reagent_type]['volume'],
-                                 dest.top(-1))
-                    ctx.delay(
-                        seconds=reagent_map[reagent_type]['dispense-delay'])
-                    if reagent_map[reagent_type]['blow-out']:
-                        pip.blow_out(dest.top(-1))
+            m300.flow_rate.aspirate = reagent_map[
+                reagent_type]['flow-rate-asp']
+            m300.flow_rate.dispense = reagent_map[
+                reagent_type]['flow-rate-disp']
+            m300.flow_rate.blow_out = reagent_map[
+                reagent_type]['flow-rate-blow-out']
 
-                if reagent_map[reagent_type]['drop-tip'] and \
-                        accessed == num_chunks:
-                    pip.drop_tip()
-                else:
-                    # return tip and reset has_tip attribute
-                    return_tip(pip, pick_up_loc, num_tips, reagent_type)
+            num_chunks = len(
+                [key for key, vals in chunk_map.items()
+                 if len(vals) > 0])
+            accessed = 0
+            for num_tips, dests in chunk_map.items():
+                if len(dests) > 0:
+                    accessed += 1
+                    pick_up_loc, pip = pick_up(num_tips, reagent_type)
+                    for dest in dests:
+                        pip.aspirate(transfer_vol, reagent)
+                        pip.dispense(transfer_vol, dest.top(-1))
+                        ctx.delay(seconds=reagent_map[
+                            reagent_type]['dispense-delay'])
+                        if reagent_map[reagent_type]['blow-out']:
+                            pip.blow_out(dest.top(-1))
+
+                    if reagent_map[reagent_type]['drop-tip'] and \
+                            accessed == num_chunks:
+                        pip.drop_tip()
+                    else:
+                        # return tip and reset has_tip attribute
+                        return_tip(pip, pick_up_loc, num_tips, reagent_type)
+        func = ctx.pause if elution < 2 else ctx.comment
+        func('Centrifuge all plates. Replace and resume when finished.')
 
     # track final used tip
     tip_data = {
