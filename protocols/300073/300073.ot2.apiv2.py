@@ -78,7 +78,7 @@ def run(ctx: protocol_api.ProtocolContext):
     tiprack_lname = (filtered_20_lname if left_pipette_lname == p20_lname
                      else filtered_200_lname)
 
-    tuberack_lname = "opentrons_6_tuberack_falcon_50ml_conical"
+    tuberack_lname = 'opentrons_6_tuberack_stellarsci_25ml_conical'
     well_plate_on_alum_lname = \
         "stellarscientific_96_aluminumblock_100ul"
     well_plate_lname = "stellarscientific_96_wellplate_100ul"
