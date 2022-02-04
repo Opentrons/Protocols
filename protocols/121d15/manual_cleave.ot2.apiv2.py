@@ -3,7 +3,7 @@ import os
 
 # metadata
 metadata = {
-    'protocolName': 'Manual Cleave',
+    'protocolName': 'Manual Cleave Elution',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'
@@ -13,9 +13,11 @@ metadata = {
 def run(ctx):
 
     [occupied_well_csv1, occupied_well_csv2, occupied_well_csv3, reagent_type,
-     m300_mount, p300_mount, tip_track] = get_values(  # noqa: F821
+     transfer_vol, m300_mount, p300_mount,
+     tip_track] = get_values(  # noqa: F821
         'occupied_well_csv1', 'occupied_well_csv2', 'occupied_well_csv3',
-        'reagent_type', 'm300_mount', 'p300_mount', 'tip_track')
+        'reagent_type', 'transfer_vol', 'm300_mount', 'p300_mount',
+        'tip_track')
 
     # load labware
     racks = [
@@ -29,27 +31,36 @@ def run(ctx):
     reagent_map = {
         'EDA': {
             'slot': '7',
-            'tips': [col for rack in tips300 for col in rack.columns()][:4],
+            'tips': [col for rack in tips300 for col in rack.columns()][:10],
             'volume': 200,
-            'flow-rate-asp': 100,
-            'flow-rate-disp': 100,
-            'blow-out': False
+            'flow-rate-asp': 65,
+            'flow-rate-disp': 65,
+            'flow-rate-blow-out': 4,
+            'blow-out': True,
+            'dispense-delay': 8,
+            'drop-tip': True
         },
         'ACN': {
             'slot': '8',
-            'tips': [col for rack in tips300 for col in rack.columns()][4:8],
+            'tips': [col for rack in tips300 for col in rack.columns()][10:11],
             'volume': 200,
             'flow-rate-asp': 100,
             'flow-rate-disp': 100,
-            'blow-out': False
+            'flow-rate-blow-out': 100,
+            'blow-out': True,
+            'dispense-delay': 0,
+            'drop-tip': False
         },
         'amino': {
             'slot': '9',
-            'tips': [col for rack in tips300 for col in rack.columns()][8:],
+            'tips': [col for rack in tips300 for col in rack.columns()][11:],
             'volume': 300,
             'flow-rate-asp': 100,
             'flow-rate-disp': 100,
-            'blow-out': False
+            'flow-rate-blow-out': 100,
+            'blow-out': True,
+            'dispense-delay': 0,
+            'drop-tip': False
         }
     }
     reagent = ctx.load_labware(
@@ -160,19 +171,32 @@ def run(ctx):
 
         m300.flow_rate.aspirate = reagent_map[reagent_type]['flow-rate-asp']
         m300.flow_rate.dispense = reagent_map[reagent_type]['flow-rate-disp']
+        m300.flow_rate.blow_out = reagent_map[
+            reagent_type]['flow-rate-blow-out']
 
+        num_chunks = len(
+            [key for key, vals in chunk_map.items()
+             if len(vals) > 0])
+        accessed = 0
         for num_tips, dests in chunk_map.items():
             if len(dests) > 0:
+                accessed += 1
                 pick_up_loc, pip = pick_up(num_tips, reagent_type)
                 for dest in dests:
                     pip.aspirate(reagent_map[reagent_type]['volume'], reagent)
                     pip.dispense(reagent_map[reagent_type]['volume'],
                                  dest.top(-1))
-                if reagent_map[reagent_type]['blow-out']:
-                    pip.blow_out(dest.top(-1))
+                    ctx.delay(
+                        seconds=reagent_map[reagent_type]['dispense-delay'])
+                    if reagent_map[reagent_type]['blow-out']:
+                        pip.blow_out(dest.top(-1))
 
-                # return tip and reset has_tip attribute
-                return_tip(pip, pick_up_loc, num_tips, reagent_type)
+                if reagent_map[reagent_type]['drop-tip'] and \
+                        accessed == num_chunks:
+                    pip.drop_tip()
+                else:
+                    # return tip and reset has_tip attribute
+                    return_tip(pip, pick_up_loc, num_tips, reagent_type)
 
     # track final used tip
     tip_data = {

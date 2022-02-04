@@ -26,23 +26,26 @@ def run(ctx):
 
     # parse
     data = [
-        [val.strip() for val in line.split(',')]
-        for line in input_file.splitlines()[1:]
+        line.split(',') for line in input_file.splitlines()[1:]
         if line and line.split(',')[0].strip()]
 
     # order
     wells_ordered = [
         well for plate in plates for row in plate.rows() for well in row]
 
-    for line in data:
-        sources = [wells_ordered[int(val)-1] for val in line[:4]]
-        dest = rack.wells_by_name()[line[4].upper()]
-        if len(line) >= 6 and line[5]:
-            vol = float(line[5])
+    prev_dest = None
+    for i, line in enumerate(data):
+        source = wells_ordered[0]
+        dest = rack.wells_by_name()[line[1].upper()]
+        if len(line) > 2 and line[2]:
+            vol = float(line[2])
         else:
             vol = default_transfer_vol
 
-        p300.pick_up_tip()
-        for s in sources:
-            p300.transfer(vol, s.bottom(0.5), dest.top(-1), new_tip='never')
-        p300.drop_tip()
+        if dest != prev_dest:
+            if p300.has_tip:
+                p300.drop_tip()
+            p300.pick_up_tip()
+        p300.transfer(vol, source.bottom(0.5), dest.top(-1), new_tip='never')
+        prev_dest = dest
+    p300.drop_tip()
