@@ -9,24 +9,6 @@ metadata = {
 }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{ "n_samples_set1":48,
-                                  "has_second_tube_set":true,
-                                  "n_samples_set2":45,
-                                  "sample_aspiration_vol_ul":50,
-                                  "aspirate_flow_rate":5,
-                                  "dispense_flow_rate":5,
-                                  "aspiration_height_mm":3,
-                                  "dispension_height_mm":1,
-                                  "temp_mod":null,
-                                  "temperature":4,
-                                  "post_aspiration_wait":5
-                                 }
-                                  """)
-    return [_all_values[n] for n in names]
-
-
 def run(ctx: protocol_api.ProtocolContext):
 
     [
@@ -38,7 +20,7 @@ def run(ctx: protocol_api.ProtocolContext):
       dispense_flow_rate,
       aspiration_height_mm,
       dispension_height_mm,
-      temp_mod,
+      temp_mod_lname,
       temperature,
       post_aspiration_wait
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
@@ -50,7 +32,7 @@ def run(ctx: protocol_api.ProtocolContext):
                   "dispense_flow_rate",
                   "aspiration_height_mm",
                   "dispension_height_mm",
-                  "temp_mod",
+                  "temp_mod_lname",
                   "temperature",
                   "post_aspiration_wait"
         )
@@ -97,7 +79,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     '''
     temp_mod = None
-    if temp_mod:
+    if temp_mod_lname:
         temp_mod = ctx.load_module("temperature module gen2", '3')
 
     # load labware
