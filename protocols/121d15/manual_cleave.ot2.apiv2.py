@@ -3,7 +3,7 @@ import os
 
 # metadata
 metadata = {
-    'protocolName': 'Manual Cleave',
+    'protocolName': 'Manual Cleave Elution',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'
@@ -13,9 +13,11 @@ metadata = {
 def run(ctx):
 
     [occupied_well_csv1, occupied_well_csv2, occupied_well_csv3, reagent_type,
-     m300_mount, p300_mount, tip_track] = get_values(  # noqa: F821
+     transfer_vol, m300_mount, p300_mount,
+     tip_track] = get_values(  # noqa: F821
         'occupied_well_csv1', 'occupied_well_csv2', 'occupied_well_csv3',
-        'reagent_type', 'm300_mount', 'p300_mount', 'tip_track')
+        'reagent_type', 'transfer_vol', 'm300_mount', 'p300_mount',
+        'tip_track')
 
     # load labware
     racks = [
@@ -29,7 +31,7 @@ def run(ctx):
     reagent_map = {
         'EDA': {
             'slot': '7',
-            'tips': [col for rack in tips300 for col in rack.columns()][:4],
+            'tips': [col for rack in tips300 for col in rack.columns()][:10],
             'volume': 200,
             'flow-rate-asp': 65,
             'flow-rate-disp': 65,
@@ -40,7 +42,7 @@ def run(ctx):
         },
         'ACN': {
             'slot': '8',
-            'tips': [col for rack in tips300 for col in rack.columns()][4:8],
+            'tips': [col for rack in tips300 for col in rack.columns()][10:11],
             'volume': 200,
             'flow-rate-asp': 100,
             'flow-rate-disp': 100,
@@ -51,10 +53,11 @@ def run(ctx):
         },
         'amino': {
             'slot': '9',
-            'tips': [col for rack in tips300 for col in rack.columns()][8:],
+            'tips': [col for rack in tips300 for col in rack.columns()][11:],
             'volume': 300,
             'flow-rate-asp': 100,
             'flow-rate-disp': 100,
+            'flow-rate-blow-out': 100,
             'blow-out': True,
             'dispense-delay': 0,
             'drop-tip': False
