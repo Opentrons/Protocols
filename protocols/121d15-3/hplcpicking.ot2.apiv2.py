@@ -43,7 +43,7 @@ def run(ctx):
             vol = default_transfer_vol
 
         # check for volumes slightly over 300ul from HPLC input files
-        vol = 300 if vol > 300 else vol
+        vol = 300 if 300 < vol < 305 else vol
 
         if dest != prev_dest:
             if p300.has_tip:
