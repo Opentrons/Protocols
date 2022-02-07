@@ -166,7 +166,14 @@ def run(ctx):
                 if running:
                     chunk_map[chunk_length].append(running)
 
-        print(chunk_map)
+        max_tips = max(
+            [key for key, vals in chunk_map.items() if len(vals) > 0])
+        ctx.home()
+        rows_occupied = 'ABCDEFGH'[8-max_tips:]
+        col = reagent_map[
+            reagent_type]['tips'][0][0].display_name.split(' ')[0][1:]
+        ctx.pause(f'Ensure tips are in column {col}, rows {rows_occupied}')
+
         m300.flow_rate.aspirate = reagent_map[
             reagent_type]['flow-rate-asp']
         m300.flow_rate.dispense = reagent_map[
