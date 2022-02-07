@@ -167,13 +167,13 @@ def run(ctx):
                 tip.has_tip = True
 
         # parse wells into chunks
+        chunk_map = {num: [] for num in range(1, 9)}
         for csv, rack in zip(
                 [occupied_well_csv1, occupied_well_csv2, occupied_well_csv3],
                 racks):
             occupied_wells = [
                 rack.wells_by_name()[line.upper()]
                 for line in csv.splitlines() if line]
-            chunk_map = {num: [] for num in range(1, 9)}
             for col in rack.columns():
                 running = None
                 chunk_length = 0
@@ -189,38 +189,38 @@ def run(ctx):
                 if running:
                     chunk_map[chunk_length].append(running)
 
-            m300.flow_rate.aspirate = reagent_map[
-                reagent_type]['flow-rate-asp']
-            m300.flow_rate.dispense = reagent_map[
-                reagent_type]['flow-rate-disp']
-            m300.flow_rate.blow_out = reagent_map[
-                reagent_type]['flow-rate-blow-out']
+        m300.flow_rate.aspirate = reagent_map[
+            reagent_type]['flow-rate-asp']
+        m300.flow_rate.dispense = reagent_map[
+            reagent_type]['flow-rate-disp']
+        m300.flow_rate.blow_out = reagent_map[
+            reagent_type]['flow-rate-blow-out']
 
-            num_chunks = len(
-                [key for key, vals in chunk_map.items()
-                 if len(vals) > 0])
-            accessed = 0
-            for num_tips, dests in chunk_map.items():
-                if len(dests) > 0:
-                    accessed += 1
-                    pick_up_loc, pip = pick_up(num_tips, reagent_type)
-                    for dest in dests:
-                        pip.aspirate(reagent_map[reagent_type]['volume'],
-                                     reagent.bottom(2))
-                        pip.dispense(reagent_map[reagent_type]['volume'],
-                                     dest.top(-1))
-                        ctx.delay(
-                            seconds=reagent_map[
-                                reagent_type]['dispense-delay'])
-                        if reagent_map[reagent_type]['blow-out']:
-                            pip.blow_out(dest.top(-1))
+        num_chunks = len(
+            [key for key, vals in chunk_map.items()
+             if len(vals) > 0])
+        accessed = 0
+        for num_tips, dests in chunk_map.items():
+            if len(dests) > 0:
+                accessed += 1
+                pick_up_loc, pip = pick_up(num_tips, reagent_type)
+                for dest in dests:
+                    pip.aspirate(reagent_map[reagent_type]['volume'],
+                                 reagent.bottom(2))
+                    pip.dispense(reagent_map[reagent_type]['volume'],
+                                 dest.top(-1))
+                    ctx.delay(
+                        seconds=reagent_map[
+                            reagent_type]['dispense-delay'])
+                    if reagent_map[reagent_type]['blow-out']:
+                        pip.blow_out(dest.top(-1))
 
-                    if reagent_map[reagent_type]['drop-tip'] and \
-                            accessed == num_chunks:
-                        pip.drop_tip()
-                    else:
-                        # return tip and reset has_tip attribute
-                        return_tip(pip, pick_up_loc, num_tips, reagent_type)
+                if reagent_map[reagent_type]['drop-tip'] and \
+                        accessed == num_chunks:
+                    pip.drop_tip()
+                else:
+                    # return tip and reset has_tip attribute
+                    return_tip(pip, pick_up_loc, num_tips, reagent_type)
 
         # track final used tip
         tip_data = {
