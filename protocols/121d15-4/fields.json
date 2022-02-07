@@ -18,12 +18,16 @@
     "default": ""
   },
   {
-    "type": "dropDown",
-    "label": "reagent type",
-    "name": "reagent_type",
-    "options": [
-      { "label": "water", "value": "water" }
-    ]
+    "type": "str",
+    "label": "reagent reservoir scan",
+    "name": "reagent_scan",
+    "default": ""
+  },
+  {
+    "type": "str",
+    "label": "reagent slot scan",
+    "name": "slot_scan",
+    "default": ""
   },
   {
     "type": "float",
