@@ -56,7 +56,7 @@ def run(ctx):
 
     reagent_type = slot_scan_type
     reagent = ctx.load_labware(
-        'nest_1_reservoir_195ml', reagent_map[reagent_type]['slot'],
+        'test_1_reservoir_300000ul', reagent_map[reagent_type]['slot'],
         reagent_type).wells()[0]
 
     def all_tips_full():
@@ -185,7 +185,7 @@ def run(ctx):
                     accessed += 1
                     pick_up_loc, pip = pick_up(num_tips, reagent_type)
                     for dest in dests:
-                        pip.aspirate(transfer_vol, reagent)
+                        pip.aspirate(transfer_vol, reagent.bottom(2))
                         pip.dispense(transfer_vol, dest.top(-1))
                         ctx.delay(seconds=reagent_map[
                             reagent_type]['dispense-delay'])
