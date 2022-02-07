@@ -21,13 +21,13 @@
     "type": "str",
     "label": "reagent reservoir scan",
     "name": "reagent_scan",
-    "default": ""
+    "default": "REPLACE WITH SCAN"
   },
   {
     "type": "str",
     "label": "reagent slot scan",
     "name": "slot_scan",
-    "default": ""
+    "default": "REPLACE WITH SCAN"
   },
   {
     "type": "float",
