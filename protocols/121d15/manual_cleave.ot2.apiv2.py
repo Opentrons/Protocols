@@ -51,7 +51,7 @@ def run(ctx):
             'dispense-delay': 0,
             'drop-tip': False
         },
-        'AMI': {
+        'AMINO': {
             'slot': '9',
             'tips': [col for rack in tips300 for col in rack.columns()][11:],
             'volume': 300,
@@ -65,23 +65,22 @@ def run(ctx):
     }
 
     # check for barcode scan
-    reagent_type = reagent_scan.upper().strip()
-    slot_type = slot_scan.split('_')[-1].upper().strip()
-    if not reagent_type:
+    reagent_scan_type = reagent_scan.split('_')[-1].upper().strip()
+    slot_scan_type = slot_scan.upper().strip()
+    if not reagent_scan_type:
         raise Exception('Rescan reagent (empty reagent_scan)')
-    if not slot_type:
+    if not slot_scan_type:
         raise Exception('Rescan slot (empty slot scan)')
-    if not reagent_type == slot_type:
-        raise Exception(f'Reagent mismatch: {reagent_type} in slot \
-{slot_type}')
-    if reagent_type not in reagent_map.keys():
-        raise Exception('Invalid reagent scan: {reagent_type}')
-    if slot_type not in reagent_map.keys():
-        raise Exception('Invalid slot scan: {reagent_type}')
+    if not reagent_scan_type == slot_scan_type[:3]:
+        raise Exception(f'Reagent mismatch: {reagent_scan_type} in slot \
+{slot_scan_type}')
+    if slot_scan_type not in reagent_map.keys():
+        raise Exception(f'Invalid slot scan: {slot_scan_type}')
 
+    reagent_type = slot_scan_type
     reagent = ctx.load_labware(
         'nest_1_reservoir_195ml', reagent_map[reagent_type]['slot'],
-        reagent_type).wells()[0]
+        reagent_scan_type).wells()[0]
 
     def all_tips_full():
         for rack in tips300:
