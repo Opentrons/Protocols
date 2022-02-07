@@ -331,10 +331,12 @@ def run(ctx: ctx_api.ctxContext):
     dnase = tuberack.wells_by_name()['A4']
 
     '''
-    lysis_lbb_well = lysis_bbb_resv.wells_by_name()['A1']
-    wash_bbb_well = wash_bbb_resv.wells_by_name()['A1']
+    # Well 1 and 2 of the twelve well resv
+    lysis_lbb_well = [twelve_well_resv.wells_by_name()['A1'],
+                      twelve_well_resv.wells_by_name()['A2']]
+    wash_wbb_well = wash_wbb_resv.wells_by_name()['A1']
     wash_wbc_well = wash_wbc_resv.wells_by_name()['A1']
-    prot_k_well = twelve_well_resv.wells_by_name()['A1']
+    prot_k_well = twelve_well_resv.wells_by_name()['A3']
     bind_bbb_wells = [twelve_well_resv.wells_by_name()['A2'],
                       twelve_well_resv.wells_by_name()['A3']]
     elutn_bfr_wells = [twelve_well_resv.wells_by_name()['A4'],
@@ -344,18 +346,20 @@ def run(ctx: ctx_api.ctxContext):
     trash = m300.trash_container.wells()[0].top()  # trash container
 
     lysis_lbb_total_vol = lysis_buf_lbb_vol*n_samples
-    lysis_resv_volume = 195 if lysis_lbb_total_vol > 195 \
+    lysis_resv_volume = 30 if lysis_lbb_total_vol > 30 \
         else lysis_lbb_total_vol
     lysis_lbb_tracker = VolTracker(lysis_bbb_resv, lysis_resv_volume,
                                    'multi', start=1, end=1,
-                                   msg="Replenish lysis lbb buffer")
+                                   msg="Replenish Lysis LBB buffer in \
+                                   reservoir on 1")
 
     wash_bbb_total_vol = wash_wbb_vol*n_samples
-    lysis_resv_volume = 195 if lysis_lbb_total_vol > 195 \
-        else lysis_lbb_total_vol
-    lysis_lbb_tracker = VolTracker(lysis_bbb_resv, lysis_resv_volume,
-                                   'multi', start=1, end=1,
-                                   msg="Replenish lysis lbb buffer")
+    wash_bbb_resv_volume = 195*10**3 if wash_bbb_total_vol > 195*10**3 \
+        else wash_bbb_total_vol
+    wash_bbb_tracker = VolTracker(lysis_bbb_resv, lysis_resv_volume,
+                                  'multi', start=1, end=1,
+                                  msg="Replenish Wash BBB buffer in \
+                                  reservoir on 2")
 
     # plate, tube rack maps
 
