@@ -36,7 +36,7 @@ def run(ctx):
     dest_vols = {}
     prev_dest = None
     for i, line in enumerate(data):
-        source = wells_ordered[0]
+        source = wells_ordered[int(line[0]) - 1]
         dest = rack.wells_by_name()[line[1].upper()]
         if len(line) > 2 and line[2]:
             vol = round(float(line[2]))
