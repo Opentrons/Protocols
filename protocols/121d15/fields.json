@@ -8,13 +8,13 @@
   {
     "type": "textFile",
     "label": "rack 2 occupied wells",
-    "name": "occupied_well_csv2",
+    "name": "",
     "default": ""
   },
   {
     "type": "textFile",
     "label": "rack 3 occupied wells",
-    "name": "occupied_well_csv3",
+    "name": "",
     "default": ""
   },
   {

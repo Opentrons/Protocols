@@ -26,7 +26,7 @@ def run(ctx):
 
     # parse
     data = [
-        line.split(',') for line in input_file.splitlines()[1:]
+        line.split(',') for line in input_file.splitlines()
         if line and line.split(',')[0].strip()]
 
     # order

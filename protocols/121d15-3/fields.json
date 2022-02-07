@@ -3,7 +3,7 @@
     "type": "textFile",
     "label": "input file",
     "name": "input_file",
-    "default": "source,dest,volume\n1,A1,300\n2,A1,300\n3,A1,300\n4,A1,300\n10,B1,300\n12,B1,300\n13,B1,300\n14,B1,\n"
+    "default": "1,A1,300\n2,A1,300\n3,A1,300\n4,A1,300\n10,B1,300\n12,B1,300\n13,B1,300\n14,B1,\n"
   },
   {
     "type": "float",
