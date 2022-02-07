@@ -33,12 +33,13 @@ def run(ctx):
     wells_ordered = [
         well for plate in plates for row in plate.rows() for well in row]
 
+    dest_vols = {}
     prev_dest = None
     for i, line in enumerate(data):
         source = wells_ordered[0]
         dest = rack.wells_by_name()[line[1].upper()]
         if len(line) > 2 and line[2]:
-            vol = float(line[2])
+            vol = round(float(line[2]))
         else:
             vol = default_transfer_vol
 
@@ -51,4 +52,21 @@ def run(ctx):
             p300.pick_up_tip()
         p300.transfer(vol, source.bottom(0.5), dest.top(-1), new_tip='never')
         prev_dest = dest
+
+        # track volumes for final adjustment
+        if dest not in dest_vols:
+            dest_vols[dest] = vol
+        else:
+            dest_vols[dest] += vol
+    p300.drop_tip()
+
+    # final adjustment with water up to 1500ul
+    ctx.pause('Replace plate 4 in slot 1 with water reservoir. Resume once \
+finished.')
+    water = plates[-1].wells_by_name()['D4'].bottom(1)
+    p300.pick_up_tip()
+    for tube, vol in dest_vols.items():
+        adjustment = 1500 - vol
+        if adjustment > 0:
+            p300.transfer(adjustment, water, tube.top(-1), new_tip='never')
     p300.drop_tip()

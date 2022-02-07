@@ -12,12 +12,12 @@ metadata = {
 
 def run(ctx):
 
-    [occupied_well_csv1, occupied_well_csv2, occupied_well_csv3, reagent_type,
-     transfer_vol, m300_mount, p300_mount,
+    [occupied_well_csv1, occupied_well_csv2, occupied_well_csv3, reagent_scan,
+     slot_scan, transfer_vol, m300_mount, p300_mount,
      tip_track] = get_values(  # noqa: F821
         'occupied_well_csv1', 'occupied_well_csv2', 'occupied_well_csv3',
-        'reagent_type', 'transfer_vol', 'm300_mount', 'p300_mount',
-        'tip_track')
+        'reagent_scan', 'slot_scan', 'transfer_vol', 'm300_mount',
+        'p300_mount', 'tip_track')
 
     # load labware
     racks = [
@@ -29,8 +29,8 @@ def run(ctx):
         for slot in ['11']]
 
     reagent_map = {
-        'water': {
-            'slot': '7',
+        'WATER': {
+            'slot': '9',
             'tips': [col for rack in tips300 for col in rack.columns()],
             'flow-rate-asp': 100,
             'flow-rate-disp': 100,
@@ -40,6 +40,21 @@ def run(ctx):
             'drop-tip': False
         }
     }
+
+    # check for barcode scan
+    reagent_scan_type = reagent_scan.split('_')[-1].upper().strip()
+    slot_scan_type = slot_scan.upper().strip()
+    if not reagent_scan_type:
+        raise Exception('Rescan reagent (empty reagent_scan)')
+    if not slot_scan_type:
+        raise Exception('Rescan slot (empty slot scan)')
+    if not reagent_scan_type == slot_scan_type[:3]:
+        raise Exception(f'Reagent mismatch: {reagent_scan_type} in slot \
+{slot_scan_type}')
+    if slot_scan_type not in reagent_map.keys():
+        raise Exception(f'Invalid slot scan: {slot_scan_type}')
+
+    reagent_type = slot_scan_type
     reagent = ctx.load_labware(
         'nest_1_reservoir_195ml', reagent_map[reagent_type]['slot'],
         reagent_type).wells()[0]
@@ -124,6 +139,7 @@ def run(ctx):
             tip.has_tip = True
 
     # parse wells into chunks
+    chunk_map_list = []
     for csv, rack in zip(
             [occupied_well_csv1, occupied_well_csv2, occupied_well_csv3],
             racks):
@@ -145,11 +161,13 @@ def run(ctx):
                     chunk_length = 0
             if running:
                 chunk_map[chunk_length].append(running)
+        chunk_map_list.append(chunk_map)
 
-    for elution in range(3):
-        for csv, rack in zip(
+    num_centrifugations = 4
+    for elution in range(num_centrifugations):
+        for csv, rack, chunk_map in zip(
                 [occupied_well_csv1, occupied_well_csv2, occupied_well_csv3],
-                racks):
+                racks, chunk_map_list):
 
             m300.flow_rate.aspirate = reagent_map[
                 reagent_type]['flow-rate-asp']
@@ -180,7 +198,7 @@ def run(ctx):
                     else:
                         # return tip and reset has_tip attribute
                         return_tip(pip, pick_up_loc, num_tips, reagent_type)
-        func = ctx.pause if elution < 2 else ctx.comment
+        func = ctx.pause if elution < num_centrifugations - 1 else ctx.comment
         func('Centrifuge all plates. Replace and resume when finished.')
 
     # track final used tip
