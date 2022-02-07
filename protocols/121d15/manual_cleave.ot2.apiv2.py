@@ -3,7 +3,7 @@ import os
 
 # metadata
 metadata = {
-    'protocolName': 'Manual Cleave Elution',
+    'protocolName': 'Manual Cleave',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'
@@ -12,12 +12,12 @@ metadata = {
 
 def run(ctx):
 
-    [occupied_well_csv1, occupied_well_csv2, occupied_well_csv3, reagent_type,
-     transfer_vol, m300_mount, p300_mount,
+    [occupied_well_csv1, occupied_well_csv2, occupied_well_csv3, reagent_scan,
+     slot_scan, transfer_vol, m300_mount, p300_mount,
      tip_track] = get_values(  # noqa: F821
         'occupied_well_csv1', 'occupied_well_csv2', 'occupied_well_csv3',
-        'reagent_type', 'transfer_vol', 'm300_mount', 'p300_mount',
-        'tip_track')
+        'reagent_scan', 'slot_scan', 'transfer_vol', 'm300_mount',
+        'p300_mount', 'tip_track')
 
     # load labware
     racks = [
@@ -51,7 +51,7 @@ def run(ctx):
             'dispense-delay': 0,
             'drop-tip': False
         },
-        'amino': {
+        'AMINO': {
             'slot': '9',
             'tips': [col for rack in tips300 for col in rack.columns()][11:],
             'volume': 300,
@@ -60,12 +60,27 @@ def run(ctx):
             'flow-rate-blow-out': 100,
             'blow-out': True,
             'dispense-delay': 0,
-            'drop-tip': False
+            'drop-tip': True
         }
     }
+
+    # check for barcode scan
+    reagent_scan_type = reagent_scan.split('_')[-1].upper().strip()
+    slot_scan_type = slot_scan.upper().strip()
+    if not reagent_scan_type:
+        raise Exception('Rescan reagent (empty reagent_scan)')
+    if not slot_scan_type:
+        raise Exception('Rescan slot (empty slot scan)')
+    if not reagent_scan_type == slot_scan_type[:3]:
+        raise Exception(f'Reagent mismatch: {reagent_scan_type} in slot \
+{slot_scan_type}')
+    if slot_scan_type not in reagent_map.keys():
+        raise Exception(f'Invalid slot scan: {slot_scan_type}')
+
+    reagent_type = slot_scan_type
     reagent = ctx.load_labware(
         'nest_1_reservoir_195ml', reagent_map[reagent_type]['slot'],
-        reagent_type).wells()[0]
+        reagent_scan_type).wells()[0]
 
     def all_tips_full():
         for rack in tips300:
