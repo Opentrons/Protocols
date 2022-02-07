@@ -8,26 +8,26 @@
   {
     "type": "textFile",
     "label": "rack 2 occupied wells",
-    "name": "",
+    "name": "occupied_well_csv2",
     "default": ""
   },
   {
     "type": "textFile",
     "label": "rack 3 occupied wells",
-    "name": "",
+    "name": "occupied_well_csv3",
     "default": ""
   },
   {
     "type": "str",
     "label": "reagent reservoir scan",
     "name": "reagent_scan",
-    "default": ""
+    "default": "REPLACE WITH SCAN"
   },
   {
     "type": "str",
     "label": "reagent slot scan",
     "name": "slot_scan",
-    "default": ""
+    "default": "REPLACE WITH SCAN"
   },
   {
     "type": "float",
