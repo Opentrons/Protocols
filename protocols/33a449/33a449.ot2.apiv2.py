@@ -106,12 +106,15 @@ def run(ctx: protocol_api.ProtocolContext):
         m300.drop_tip()
 
     ctx.comment('\n\n\nDISPENSING BEAD BUFFER\n')
+    airgap = 20
     for reagent_col, col in zip(bead_buffer, sample_cols):
         pick_up()
-        m300.mix(5, 5, reagent_col, rate=2.0)
+        m300.mix(5, 200 if filter_tips else 300, reagent_col, rate=2.0)
         m300.aspirate(162.5, reagent_col)
-        m300.dispense(162.5, col)
+        m300.air_gap(airgap)
+        m300.dispense(162.5+airgap, col)
         m300.mix(5, 150, col)
+        m300.air_gap(airgap)
         m300.drop_tip()
 
     mag_mod.engage(height_from_base=mag_height)
