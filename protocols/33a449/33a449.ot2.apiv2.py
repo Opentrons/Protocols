@@ -2,11 +2,6 @@ from opentrons.types import Point
 from opentrons import protocol_api
 import math
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"_num_col":12,"_filter_tips":true,"_mbl5_vol":50,"_mag_height":6.8,"_m300_mount":"left"}""")
-    return [_all_values[n] for n in names]
-
 metadata = {
     'protocolName': 'NucleoMag Blood for DNA purification from blood',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
