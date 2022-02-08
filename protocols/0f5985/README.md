@@ -1,57 +1,49 @@
-# Protocol Title (should match metadata of .py file)
+# Automated GenFind V3 Blood/serum DNA extraction
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
-### Partner
-[Partner Name](partner website link)
-
 ## Categories
-* Broader Category
-	* Subcategory (can be the name of a kit when applicable)
+* Nucleic Acid Extraction & Purification
+	* Blood Sample
 
 ## Description
-This section of the README (especially the first paragraph) should grip a prospective user with the overarching purpose/flow of the protocol, but should not include fine details of the protocol steps themselves.
+This protocol automates the GenFind V3 protocol from Beckman Coulter for [DNA isolation from whole blood or serum with magnetic particles](https://s3.amazonaws.com/pf-upload-01/u-4256/0/2022-01-24/kz234fm/C36038AB.pdf). This protocol utilizes a P300-Multi Channel pipette and gives the user the option to select a variable number of samples (Should be a multiple of 8) and whether to dispense liquid waste in a reservoir in slot 6 or in the fixed trash container. This protocol is designed for holding the samples on the [USA Scientific PlateOne® Deep 96-Well 2 mL Polypropylene Plate (P/N 1896-2800)](https://www.usascientific.com/plateone-96-deep-well-2ml/p/PlateOne-96-Deep-Well-2mL) on a 2nd generation magnetic module. The purified samples are transferred to a [Abgene™ 96 Well 0.8mL Polypropylene Deepwell Storage Plate (Thermo AB-0859)](https://www.thermofisher.com/order/catalog/product/AB0859) in the final step. The protocol uses the [NEST 12 Well Reservoir 15 mL](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/) and the [NEST 1 Well Reservoir 195 mL](https://shop.opentrons.com/nest-1-well-reservoirs-195-ml/) as sources of reagents
 
-Example: This is a flexible protocol accommodating a wide range of commercial RNA extraction workflows for COVID-19 sample processing. The protocol is broken down into 5 main parts:
-* binding buffer addition to samples
-* bead wash 3x using magnetic module
-* final elution to chilled PCR plate
 
-Subsequent paragraphs can give some more insight into the details of the protocol, but a step-by-step description should be included in the 'Protocol Steps' section below.
+The protocol is broken down into 5 main parts:
+* Lysis buffer is added to the samples and proteinase K is added to the samples. The samples are incubated until the lysis reaction has completed
+* Binding buffer containing paramagnetic particles are added and the samples are incubated in order to bind DNA
+* The supernatant is discarded and the beads are washed two times with Wash WBB and two times with Wash WBC buffers.
+* Elution buffer is added to the samples which are incubated.
+* Finally the eluted purified samples are transferred to the target plate
 
-Example: For sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 4) to the elution PCR plate (temperature module, slot 1). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.
-
-Results of the Opentrons Science team's internal testing of this protocol on the OT-2 are shown below:  
-![results](link_to_results.png)
-
-Explanation of complex parameters below:
-* `park tips`: If set to `yes` (recommended), the protocol will conserve tips between reagent addition and removal. Tips will be stored in the wells of an empty rack corresponding to the well of the sample that they access (tip parked in A1 of the empty rack will only be used for sample A1, tip parked in B1 only used for sample B1, etc.). If set to `no`, tips will always be used only once, and the user will be prompted to manually refill tipracks mid-protocol for high throughput runs.
-* `input .csv file`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:
-```
-source,dest,vol
-A1,B1,4
-```
+Explanation of parameters below:
+* `Number of samples`:  How many samples to run, it should ideally be a multiple of 8 for efficient use of resources.
+* `Blood cells or serum?`: Choose what kind of samples to use for the protocol. This parameter will set the sample volume to 200 uL for blood cells, and 400 for serum samples. It will also set the elution volume to 200 uL for blood cell samples, and 40 uL for serum samples.
+This setting will affect the volume requirements for all other reagents
+* `Liquid waste reservoir?`: If set to `yes` the protocol will use a NEST 1 well 195 mL reservoir as a target of liquid waste, otherwise it will empty liquid waste into the regular trash bin.  
+* `X offset for bead aspiration`: How many millimeters away from the center of the sample wells to aspirate bead supernatant from, the default is 1 mm.
 
 ---
 
 ### Modules
-* [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
 * [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
-* [Thermocycler Module](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module)
-* [HEPA Module](https://shop.opentrons.com/collections/hardware-modules/products/hepa-module)
 
 ### Labware
-* [Labware name](link to labware on shop.opentrons.com when applicable)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [NEST 1 Well Reservoir 195 mL](https://labware.opentrons.com/nest_1_reservoir_195ml)
+* [NEST 12 Well Reservoir 15 mL](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/)
+* [USA Scientific PlateOne® Deep 96-Well 2 mL Polypropylene Plate (P/N 1896-2800)](https://www.usascientific.com/plateone-96-deep-well-2ml/p/PlateOne-96-Deep-Well-2mL)
+* [Abgene™ 96 Well 0.8mL Polypropylene Deepwell Storage Plate (Thermo AB-0859)](https://www.thermofisher.com/order/catalog/product/AB0859)
 
 ### Pipettes
-* [Pipette name](link to pipette on shop.opentrons.com)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [P300 Multichannel GEN2 Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/8-channel-electronic-pipette?variant=5984202489885)
+
+**Tips**
+* [Opentrons 96 Filter Tip Rack 200 µL](https://labware.opentrons.com/opentrons_96_filtertiprack_200ul/)
 
 ### Reagents
-* [kit name when applicable](link to kit)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [GenFind V3 Reagent Kit](https://www.beckman.com/reagents/genomic/dna-isolation/from-blood)
 
 ---
 
@@ -69,9 +61,18 @@ A1,B1,4
 ---
 
 ### Protocol Steps
-1. This section should consist of a numerical outline of the protocol steps, somewhat analogous to the steps outlined by the user in their custom protocol submission.
-2. example step: Samples are transferred from the source tuberacks on slots 1-2 to the PCR plate on slot 3, down columns and then across rows.
-3. example step: Waste is removed from each sample on the magnetic module, ensuring the bead pellets are not contacted by the pipette tips.
+1. Add Lysis LBB to samples
+2. Add Proteinase K to samples and mix 20 times
+3. Incubate the samples with buffer and enzyme, 10 minutes at 37 degrees C, or 30 minutes at room temperature
+4. Add Bind BBB and mix the samples gently
+5. Incubate the samples for 5 minutes
+6. Engage the magnets for 15 minutes
+7. Aspirate the supernatant and dump it in the chosen waste receptacle
+8. Wash the beads 2 times with Wash WBB and dump the supernatant
+9. Wash the beads 2 times with Wash WBC and dump the supernatant
+10. Add elution buffer and mix
+11. Incubate the samples for 2 minutes and mix again
+12. Engage the magnets for 5 minutes and transfer the supernatant containing purified DNA to the target plate
 
 ### Process
 1. Input your protocol parameters above.
@@ -86,4 +87,4 @@ A1,B1,4
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-protocol-hex-code
+0f5985
