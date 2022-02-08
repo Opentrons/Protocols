@@ -247,7 +247,7 @@ def run(ctx):
                     # return tip and reset has_tip attribute
                     return_tip(pip, pick_up_loc, num_tips, reagent_type)
 
-        ctx.delay(minutes=60, msg='Delaying 1hr after ACN addition')
+        ctx.delay(minutes=60, msg='Delaying 1 hour after ACN addition')
         ctx.pause('Vaccum ACN before replacing plates and resuming.')
 
         for elution_ind in range(num_centrifugations):
