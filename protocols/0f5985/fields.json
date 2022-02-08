@@ -1,0 +1,29 @@
+[
+  {
+    "type": "textFile",
+    "label": ".CSV File",
+    "name": "csv",
+    "default": "Slot No,Position,Sample ID,Volume,Slot No,Tube number,Sample ID\n3,A1,Blank Matrix,200,2,A1,Blk"
+  },
+  {
+    "type": "int",
+    "label": "Transfer Volume Effector Cell",
+    "name": "vol_effector_cell",
+    "default": 40
+  },
+  {
+    "type": "float",
+    "label": "Pre-mix Rate",
+    "name": "mix_rate",
+    "default": 1
+  },
+  {
+    "type": "dropDown",
+    "label": "P300 Multi-Channel Mount",
+    "name": "m300_mount",
+    "options": [
+      {"label": "Left", "value": "left"},
+      {"label": "Right", "value": "right"}
+    ]
+  }
+]
