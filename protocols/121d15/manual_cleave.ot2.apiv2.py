@@ -189,12 +189,18 @@ def run(ctx):
                 if running:
                     chunk_map[chunk_length].append(running)
 
+        max_tips = max(
+            [key for key, vals in chunk_map.items() if len(vals) > 0])
+        ctx.home()
+        rows_occupied = 'ABCDEFGH'[8-max_tips:]
+        col = reagent_map[
+            reagent_type]['tips'][0][0].display_name.split(' ')[0][1:]
+        ctx.pause(f'Ensure tips are in column {col}, rows {rows_occupied}')
+
         m300.flow_rate.aspirate = reagent_map[
             reagent_type]['flow-rate-asp']
         m300.flow_rate.dispense = reagent_map[
             reagent_type]['flow-rate-disp']
-        m300.flow_rate.blow_out = reagent_map[
-            reagent_type]['flow-rate-blow-out']
 
         num_chunks = len(
             [key for key, vals in chunk_map.items()
@@ -213,8 +219,10 @@ def run(ctx):
                         seconds=reagent_map[
                             reagent_type]['dispense-delay'])
                     if reagent_map[reagent_type]['blow-out']:
+                        m300.flow_rate.blow_out = reagent_map[
+                            reagent_type]['flow-rate-blow-out']
                         pip.blow_out(dest.top(-1))
-
+                        m300.flow_rate.blow_out = 100
                 if reagent_map[reagent_type]['drop-tip'] and \
                         accessed == num_chunks:
                     pip.drop_tip()
