@@ -35,7 +35,7 @@ def run(ctx):
             'volume': 200,
             'flow-rate-asp': 65,
             'flow-rate-disp': 65,
-            'flow-rate-blow-out': 4,
+            'flow-rate-blow-out': 20,
             'blow-out': True,
             'dispense-delay': 2,
             'drop-tip': True
