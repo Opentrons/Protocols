@@ -33,7 +33,7 @@ This protocol performs a custom plate filling elution for up to 4x 96-well plate
 ---
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/121d15/deck4.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/121d15/deck4-v2.png)
 
 ---
 
