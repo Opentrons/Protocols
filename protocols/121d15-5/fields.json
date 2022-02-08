@@ -21,25 +21,25 @@
     "type": "str",
     "label": "ACN reagent reservoir scan",
     "name": "reagent_scan",
-    "default": "_ACN"
+    "default": "REPLACE WITH SCAN"
   },
   {
     "type": "str",
     "label": "ACN reagent slot scan",
     "name": "reagent_slot_scan",
-    "default": "ACN"
+    "default": "REPLACE WITH SCAN"
   },
   {
     "type": "str",
     "label": "water reservoir scan",
     "name": "elution_scan",
-    "default": "_wat"
+    "default": "REPLACE WITH SCAN"
   },
   {
     "type": "str",
     "label": "water slot scan",
     "name": "elution_slot_scan",
-    "default": "water"
+    "default": "REPLACE WITH SCAN"
   },
   {
     "type": "float",
