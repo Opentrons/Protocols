@@ -9,8 +9,8 @@ metadata = {
 
 def run(ctx):
 
-    num_samples, transfer_volume = get_values(  # noqa: F821
-        'num_samples', 'transfer_volume')
+    num_samples, transfer_volume, m20_mount = get_values(  # noqa: F821
+        'num_samples', 'transfer_volume', 'm20_mount')
 
     source_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
                                     '1', 'source plate (NEST)')
@@ -18,7 +18,8 @@ def run(ctx):
                                   'destination plate (QIAcuity)')
     tipracks20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '4')]
 
-    m20 = ctx.load_instrument('p20_multi_gen2', 'left', tip_racks=tipracks20)
+    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount,
+                              tip_racks=tipracks20)
 
     num_cols = math.ceil(num_samples/8)
 
