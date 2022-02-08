@@ -26,12 +26,12 @@ def run(ctx):
     tips300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot,
                          '300ul tiprack')
-        for slot in ['11']]
+        for slot in ['10', '11']]
 
     reagent_map = {
         'WATER': {
             'slot': '9',
-            'tips': [col for rack in tips300 for col in rack.columns()],
+            'tips': tips300[1].columns()[5:6],
             'flow-rate-asp': 100,
             'flow-rate-disp': 100,
             'flow-rate-blow-out': 100,
@@ -166,20 +166,15 @@ def run(ctx):
                 if running:
                     chunk_map[chunk_length].append(running)
 
-        max_tips = max(
-            [key for key, vals in chunk_map.items() if len(vals) > 0])
         ctx.home()
-        rows_occupied = 'ABCDEFGH'[8-max_tips:]
+        first_col = 0
+        for i, col in enumerate(reagent_map[reagent_type]['tips']):
+            if col[0].has_tip:
+                first_col = i
+                break
         col = reagent_map[
-            reagent_type]['tips'][0][0].display_name.split(' ')[0][1:]
-        ctx.pause(f'Ensure tips are in column {col}, rows {rows_occupied}')
-
-        m300.flow_rate.aspirate = reagent_map[
-            reagent_type]['flow-rate-asp']
-        m300.flow_rate.dispense = reagent_map[
-            reagent_type]['flow-rate-disp']
-        m300.flow_rate.blow_out = reagent_map[
-            reagent_type]['flow-rate-blow-out']
+            reagent_type]['tips'][first_col][0].display_name.split(' ')[0][1:]
+        ctx.pause(f'Ensure tips are in column {col}')
 
         num_chunks = len(
             [key for key, vals in chunk_map.items()
@@ -211,6 +206,14 @@ def run(ctx):
             func('Centrifuge all plates. Replace and resume when finished.')
 
         # track final used tip
+        # void partially full tip column
+        for tiprack in tips300:
+            for col in tiprack.columns():
+                for well in col:
+                    if not well.has_tip:
+                        for well in col:
+                            well.has_tip = False
+                        break
         tip_data = {
             str(rack.parent):
                 {well.display_name.split(' ')[0]: well.has_tip

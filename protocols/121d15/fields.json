@@ -58,8 +58,8 @@
     "label": "track tips across protocol runs",
     "name": "tip_track",
     "options": [
-      { "label": "no", "value": false },
-      { "label": "yes", "value": true }
+      { "label": "yes", "value": true },
+      { "label": "no", "value": false }
     ]
   }
 ]
