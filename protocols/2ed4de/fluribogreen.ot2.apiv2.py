@@ -124,7 +124,7 @@ def run(ctx):
             pickup_p300('single')
             p300.aspirate(sample_vol, s.bottom(2))
             p300.dispense(sample_vol, dil_set[0][i].bottom(3))
-            p300.mix(1, 20, well.bottom(3))
+            p300.mix(1, 20, dil_set[0][i].bottom(3))
             drop(p300)
         p300.flow_rate.aspirate = 94
 
