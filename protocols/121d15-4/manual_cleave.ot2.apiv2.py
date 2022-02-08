@@ -181,6 +181,7 @@ def run(ctx):
              if len(vals) > 0])
         accessed = 0
         num_centrifugations = 4
+
         for elution in range(num_centrifugations):
             for num_tips, dests in chunk_map.items():
                 if len(dests) > 0:
@@ -220,7 +221,7 @@ def run(ctx):
                  for well in rack.wells()}
             for rack in tips300
         }
-        if tip_track and not ctx.is_simulating():
+        if not ctx.is_simulating():
             if not os.path.isdir(folder_path):
                 os.mkdir(folder_path)
             with open(tip_file_path, 'w') as outfile:
