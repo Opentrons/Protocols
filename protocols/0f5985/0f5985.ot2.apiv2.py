@@ -61,6 +61,8 @@ def run(ctx: protocol_api.ProtocolContext):
     # Offsets to pipette away from the magnetic beads
     sides = [-x_offset, x_offset] * (n_sample_columns // 2)
 
+    mag_height = 5
+
     # load modules
 
     '''
@@ -249,7 +251,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     def wash(wash_vol, wash_vol_tracker, mag_engage_time,
              n_mixes, buffer_name='wash buffer', reuse_tips=True):
-        nonlocal lwaste, m300, sides, sample_columns, mag_mod, ctx
+        nonlocal lwaste, m300, sides, sample_columns, mag_mod, ctx, mag_height
         '''
         This function repeats a washing procedure two times.
         Washing procedure:
@@ -281,7 +283,7 @@ def run(ctx: protocol_api.ProtocolContext):
                 m300.mix(20, mix_vol)
                 m300.drop_tip()
 
-            mag_mod.engage()
+            mag_mod.engage(height_from_base=mag_height)
             ctx.delay(minutes=mag_engage_time)
             ctx.comment("\n\nRemoving {} supernatant from sample wells\n"
                         .format(buffer_name))
@@ -513,7 +515,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # Step 6 - Engage magnets for 15 minutes
     ctx.comment("\n\nStep 6: Engaging magnets for 15 minutes\n")
-    mag_mod.engage()
+    mag_mod.engage(height_from_base=mag_height)
     ctx.delay(minutes=15)
 
     # step 7 - Aspirate off the supernatant and dump it in the waste
@@ -556,7 +558,7 @@ def run(ctx: protocol_api.ProtocolContext):
     # the eluted material from the sample plate to the destination plate
     ctx.comment('\n\nStep 18: Engaging magnets and transferring eluted ' +
                 'samples to the destination plate\n')
-    mag_mod.engage()
+    mag_mod.engage(height_from_base=mag_height)
     ctx.delay(minutes=5)
     for s_col, d_col, side in zip(sample_columns, destination_columns, sides):
         pass
