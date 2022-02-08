@@ -24,7 +24,7 @@
     "type": "float",
     "label": "Magnetic Engage Height (mm)",
     "name": "_mag_height",
-    "default": 6.8
+    "default": 4.8
   },
   {
     "type": "dropDown",
