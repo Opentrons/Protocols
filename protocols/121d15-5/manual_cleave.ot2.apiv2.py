@@ -3,7 +3,7 @@ import os
 
 # metadata
 metadata = {
-    'protocolName': 'Manual Cleave Elution',
+    'protocolName': 'Manual Cleave (ACN + Elution)',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'
@@ -13,11 +13,13 @@ metadata = {
 def run(ctx):
 
     [occupied_well_csv1, occupied_well_csv2, occupied_well_csv3, reagent_scan,
-     slot_scan, transfer_vol, m300_mount, p300_mount,
+     reagent_slot_scan, elution_scan, elution_slot_scan, reagent_transfer_vol,
+     elution_transfer_vol, m300_mount, p300_mount,
      tip_track] = get_values(  # noqa: F821
         'occupied_well_csv1', 'occupied_well_csv2', 'occupied_well_csv3',
-        'reagent_scan', 'slot_scan', 'transfer_vol', 'm300_mount',
-        'p300_mount', 'tip_track')
+        'reagent_scan', 'reagent_slot_scan', 'elution_scan',
+        'elution_slot_scan', 'reagent_transfer_vol', 'elution_transfer_vol',
+        'm300_mount', 'p300_mount', 'tip_track')
 
     # load labware
     racks = [
@@ -38,30 +40,61 @@ def run(ctx):
             'blow-out': True,
             'dispense-delay': 0,
             'drop-tip': False
+        },
+        'ACN': {
+            'slot': '8',
+            'tips': tips300[1].columns()[:1],
+            'volume': 200,
+            'flow-rate-asp': 100,
+            'flow-rate-disp': 100,
+            'flow-rate-blow-out': 100,
+            'blow-out': True,
+            'dispense-delay': 0,
+            'drop-tip': False
         }
     }
 
     # check for barcode scan
     reagent_scan_type = reagent_scan.split('_')[-1].upper().strip()
-    slot_scan_type = slot_scan.upper().strip()
+    reagent_slot_scan_type = reagent_slot_scan.upper().strip()
+    elution_scan_type = elution_scan.split('_')[-1].upper().strip()
+    elution_slot_scan_type = elution_slot_scan.upper().strip()
     if reagent_scan_type == 'REPLACE WITH SCAN' \
-            or slot_scan_type == 'REPLACE WITH SCAN':
+            or reagent_slot_scan_type == 'REPLACE WITH SCAN':
+        pass
+    elif elution_scan_type == 'REPLACE WITH SCAN' \
+            or elution_slot_scan_type == 'REPLACE WITH SCAN':
         pass
     else:
         if not reagent_scan_type:
-            raise Exception('Rescan reagent (empty reagent_scan)')
-        if not slot_scan_type:
-            raise Exception('Rescan slot (empty slot scan)')
-        if not reagent_scan_type == slot_scan_type[:3]:
+            raise Exception('Rescan reagent (empty reagent scan)')
+        if not reagent_slot_scan_type:
+            raise Exception('Rescan reagent slot (empty slot scan)')
+        if not reagent_scan_type == reagent_slot_scan_type[:3]:
             raise Exception(f'Reagent mismatch: {reagent_scan_type} in slot \
-    {slot_scan_type}')
-        if slot_scan_type not in reagent_map.keys():
-            raise Exception(f'Invalid slot scan: {slot_scan_type}')
+    {reagent_slot_scan_type}')
+        if reagent_slot_scan_type not in reagent_map.keys():
+            raise Exception(f'Invalid reagent slot scan: \
+{reagent_slot_scan_type}')
 
-        reagent_type = slot_scan_type
+        if not elution_scan:
+            raise Exception('Rescan elution (empty elution scan)')
+        if not elution_slot_scan_type:
+            raise Exception('Rescan elution slot (empty elution slot scan)')
+        if not reagent_scan_type == reagent_slot_scan_type[:3]:
+            raise Exception(f'Elution mismatch: {elution_scan_type} in slot \
+{elution_slot_scan_type}')
+        if reagent_slot_scan_type not in reagent_map.keys():
+            raise Exception(f'Invalid slot scan: {elution_slot_scan_type}')
+
+        reagent_type = reagent_slot_scan_type
         reagent = ctx.load_labware(
             'test_1_reservoir_300000ul', reagent_map[reagent_type]['slot'],
             reagent_type).wells()[0]
+        elution_type = elution_slot_scan_type
+        elution = ctx.load_labware(
+            'test_1_reservoir_300000ul', reagent_map[elution_type]['slot'],
+            elution_type).wells()[0]
 
         def all_tips_full():
             for rack in tips300:
@@ -167,14 +200,26 @@ def run(ctx):
                     chunk_map[chunk_length].append(running)
 
         ctx.home()
-        first_col = 0
+        first_col_r = 0
         for i, col in enumerate(reagent_map[reagent_type]['tips']):
             if col[0].has_tip:
-                first_col = i
+                first_col_r = i
                 break
-        col = reagent_map[
-            reagent_type]['tips'][first_col][0].display_name.split(' ')[0][1:]
-        ctx.pause(f'Ensure tips are in column {col}')
+        first_col_e = 0
+        for i, col in enumerate(reagent_map[elution_type]['tips']):
+            if col[0].has_tip:
+                first_col_e = i
+                break
+        tip_slot_r = reagent_map[reagent_type]['tips'][
+            first_col_r][0].parent.parent
+        tip_slot_e = reagent_map[elution_type]['tips'][
+            first_col_e][0].parent.parent
+        col_r = reagent_map[reagent_type][
+            'tips'][first_col_r][0].display_name.split(' ')[0][1:]
+        col_e = reagent_map[elution_type][
+            'tips'][first_col_e][0].display_name.split(' ')[0][1:]
+        ctx.pause(f'Ensure tips are in column {col_r} of tiprack on slot \
+{tip_slot_r} and column {col_e} of tiprack on slot {tip_slot_e}')
 
         num_chunks = len(
             [key for key, vals in chunk_map.items()
@@ -182,29 +227,52 @@ def run(ctx):
         accessed = 0
         num_centrifugations = 4
 
-        for elution in range(num_centrifugations):
+        for num_tips, dests in chunk_map.items():
+            if len(dests) > 0:
+                accessed += 1
+                pick_up_loc, pip = pick_up(num_tips, reagent_type)
+                for dest in dests:
+                    pip.aspirate(reagent_transfer_vol, reagent.bottom(1))
+                    pip.dispense(reagent_transfer_vol, dest.top(-1))
+                    ctx.delay(seconds=reagent_map[
+                        reagent_type]['dispense-delay'])
+                    if reagent_map[reagent_type]['blow-out']:
+                        pip.blow_out(dest.top(-1))
+
+                if elution == num_centrifugations - 1 and \
+                        reagent_map[reagent_type]['drop-tip'] and \
+                        accessed == num_chunks:
+                    pip.drop_tip()
+                else:
+                    # return tip and reset has_tip attribute
+                    return_tip(pip, pick_up_loc, num_tips, reagent_type)
+
+        ctx.pause('Vaccum ACN before replacing plates and resuming.')
+
+        for elution_ind in range(num_centrifugations):
             for num_tips, dests in chunk_map.items():
                 if len(dests) > 0:
                     accessed += 1
-                    pick_up_loc, pip = pick_up(num_tips, reagent_type)
+                    pick_up_loc, pip = pick_up(num_tips, elution_type)
                     for dest in dests:
-                        pip.aspirate(transfer_vol, reagent.bottom(2))
-                        pip.dispense(transfer_vol, dest.top(-1))
+                        pip.aspirate(elution_transfer_vol, elution.bottom(1))
+                        pip.dispense(elution_transfer_vol, dest.top(-1))
                         ctx.delay(seconds=reagent_map[
-                            reagent_type]['dispense-delay'])
-                        if reagent_map[reagent_type]['blow-out']:
+                            elution_type]['dispense-delay'])
+                        if reagent_map[elution_type]['blow-out']:
                             pip.blow_out(dest.top(-1))
 
-                    if elution == num_centrifugations - 1 and \
-                            reagent_map[reagent_type]['drop-tip'] and \
+                    if elution_ind == num_centrifugations - 1 and \
+                            reagent_map[elution_type]['drop-tip'] and \
                             accessed == num_chunks:
                         pip.drop_tip()
                     else:
                         # return tip and reset has_tip attribute
-                        return_tip(pip, pick_up_loc, num_tips, reagent_type)
-            func = ctx.pause if elution < num_centrifugations - 1 \
+                        return_tip(pip, pick_up_loc, num_tips, elution_type)
+            func = ctx.pause if elution_ind < num_centrifugations - 1 \
                 else ctx.comment
-            func('Centrifuge all plates. Replace and resume when finished.')
+            func(msg='Centrifuge all plates. Replace and resume when \
+finished.')
 
         # track final used tip
         # void partially full tip column
@@ -230,3 +298,6 @@ def run(ctx):
         ctx._implementation._hw_manager.hardware._attached_instruments[
             m300._implementation.get_mount()].update_config_item(
                 'pick_up_current', 1.0)
+
+    for c in ctx.commands():
+        print(c)

@@ -26,23 +26,23 @@ def run(ctx):
     tips300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot,
                          '300ul tiprack')
-        for slot in ['10']]
+        for slot in ['10', '11']]
 
     reagent_map = {
         'EDA': {
             'slot': '7',
-            'tips': [col for rack in tips300 for col in rack.columns()][:10],
+            'tips': tips300[0].columns(),
             'volume': 200,
             'flow-rate-asp': 65,
             'flow-rate-disp': 65,
-            'flow-rate-blow-out': 4,
+            'flow-rate-blow-out': 20,
             'blow-out': True,
             'dispense-delay': 2,
             'drop-tip': True
         },
         'ACN': {
             'slot': '8',
-            'tips': [col for rack in tips300 for col in rack.columns()][10:11],
+            'tips': tips300[1].columns()[:1],
             'volume': 200,
             'flow-rate-asp': 100,
             'flow-rate-disp': 100,
@@ -53,7 +53,7 @@ def run(ctx):
         },
         'AMINO': {
             'slot': '9',
-            'tips': [col for rack in tips300 for col in rack.columns()][11:],
+            'tips': tips300[1].columns()[11:],
             'volume': 300,
             'flow-rate-asp': 100,
             'flow-rate-disp': 100,
@@ -189,13 +189,15 @@ def run(ctx):
                 if running:
                     chunk_map[chunk_length].append(running)
 
-        max_tips = max(
-            [key for key, vals in chunk_map.items() if len(vals) > 0])
         ctx.home()
-        rows_occupied = 'ABCDEFGH'[8-max_tips:]
+        first_col = 0
+        for i, col in enumerate(reagent_map[reagent_type]['tips']):
+            if col[0].has_tip:
+                first_col = i
+                break
         col = reagent_map[
-            reagent_type]['tips'][0][0].display_name.split(' ')[0][1:]
-        ctx.pause(f'Ensure tips are in column {col}, rows {rows_occupied}')
+            reagent_type]['tips'][first_col][0].display_name.split(' ')[0][1:]
+        ctx.pause(f'Ensure tips are in column {col}')
 
         m300.flow_rate.aspirate = reagent_map[
             reagent_type]['flow-rate-asp']
@@ -231,13 +233,21 @@ def run(ctx):
                     return_tip(pip, pick_up_loc, num_tips, reagent_type)
 
         # track final used tip
+        # void partially full tip column
+        for tiprack in tips300:
+            for col in tiprack.columns():
+                for well in col:
+                    if not well.has_tip:
+                        for well in col:
+                            well.has_tip = False
+                        break
         tip_data = {
             str(rack.parent):
                 {well.display_name.split(' ')[0]: well.has_tip
                  for well in rack.wells()}
             for rack in tips300
         }
-        if tip_track and not ctx.is_simulating():
+        if not ctx.is_simulating():
             if not os.path.isdir(folder_path):
                 os.mkdir(folder_path)
             with open(tip_file_path, 'w') as outfile:

@@ -1,4 +1,4 @@
-# Manual Cleave Elution
+# Manual Cleave (ACN + Elution)
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -15,7 +15,7 @@ Links:
 * [Redo Replacement Picking](./121d15-2)
 * [HPLC Picking](./121d15-3)
 
-This protocol performs a custom plate filling elution for up to 4x 96-well plates from a single reagent reservoir. The user can input the number of rows and columns to be filled for each plate. Liquid handling parameters are automatically determined from the user's selection of which reagent will be added during the run.
+This protocol performs a custom plate filling and elution for up to 4x 96-well plates from a single reagent reservoir. The user can input the number of rows and columns to be filled for each plate. Liquid handling parameters are automatically determined from the user's selection of which reagent will be added during the run.
 
 ---
 
@@ -33,7 +33,7 @@ This protocol performs a custom plate filling elution for up to 4x 96-well plate
 ---
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/121d15/deck4-v2.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/121d15/deck5.png)
 
 ---
 

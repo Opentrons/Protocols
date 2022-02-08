@@ -19,20 +19,38 @@
   },
   {
     "type": "str",
-    "label": "reagent reservoir scan",
+    "label": "ACN reagent reservoir scan",
     "name": "reagent_scan",
-    "default": "_WAT"
+    "default": "REPLACE WITH SCAN"
   },
   {
     "type": "str",
-    "label": "reagent slot scan",
-    "name": "slot_scan",
-    "default": "WATER"
+    "label": "ACN reagent slot scan",
+    "name": "reagent_slot_scan",
+    "default": "REPLACE WITH SCAN"
+  },
+  {
+    "type": "str",
+    "label": "water reservoir scan",
+    "name": "elution_scan",
+    "default": "REPLACE WITH SCAN"
+  },
+  {
+    "type": "str",
+    "label": "water slot scan",
+    "name": "elution_slot_scan",
+    "default": "REPLACE WITH SCAN"
   },
   {
     "type": "float",
-    "label": "transfer volume (µl)",
-    "name": "transfer_vol",
+    "label": "ACN reagent transfer volume (µl)",
+    "name": "reagent_transfer_vol",
+    "default": 200.0
+  },
+  {
+    "type": "float",
+    "label": "water elution transfer volume (µl)",
+    "name": "elution_transfer_vol",
     "default": 250.0
   },
   {
