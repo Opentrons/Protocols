@@ -11,8 +11,20 @@
 
 Links:
 * [Manual Cleave](./121d15)
-* [Manual Cleave Elution](./121d15-4)
+<br />
+<br />
+* [Manual Cleave Elution (Off-deck Vacuum)](./121d15-4)
+<br />
+<br />
+* [Manual Cleave, ACN + Elution (Off-deck Vacuum)](./121d15-5)
+<br />
+<br />
+* [Manual Cleave, ACN + Elution (On-deck Vacuum)](./121d15-6)
+<br />
+<br />
 * [Redo Replacement Picking](./121d15-2)
+<br />
+<br />
 * [HPLC Picking](./121d15-3)
 
 This protocol performs a custom plate filling elution for up to 4x 96-well plates from a single reagent reservoir. The user can input the number of rows and columns to be filled for each plate. Liquid handling parameters are automatically determined from the user's selection of which reagent will be added during the run.
