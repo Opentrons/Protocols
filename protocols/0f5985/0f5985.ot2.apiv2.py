@@ -63,7 +63,7 @@ def run(ctx: protocol_api.ProtocolContext):
     liq_trash_resv_slot = 6
     dest_plate_slot = 9
     tuberack_slot = 7
-    tiprack_slots = [5, 8, 11]
+    tiprack_slots = [5, 8, 10, 11]
 
     elution_buffer_vol = sample_vol if is_blood_cells else 40
 
@@ -515,10 +515,8 @@ def run(ctx: protocol_api.ProtocolContext):
     '''
     sample_columns = sample_plate.columns()[0:n_sample_columns]
     destination_columns = destination_plate.columns()[0:n_sample_columns]
-
     sample_wells = sample_plate.wells()[0:n_samples]
-    destination_wells = destination_plate.wells()[0:n_samples]
-    # ctx
+    # Protocol
 
     '''
 
