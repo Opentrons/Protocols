@@ -6,14 +6,14 @@
         ]
     },
     "deck-setup": "\n",
-    "description": "Links:\n* Manual Cleave\n* Manual Cleave Elution\n* Redo Replacement Picking\n* HPLC Picking\nThis protocol performs a custom plate filling elution for up to 4x 96-well plates from a single reagent reservoir. The user can input the number of rows and columns to be filled for each plate. Liquid handling parameters are automatically determined from the user's selection of which reagent will be added during the run.\n",
+    "description": "Links:\n* Manual Cleave\n\n\n* Manual Cleave Elution (Off-deck Vacuum)\n\n\n* Manual Cleave, ACN + Elution (Off-deck Vacuum)\n\n\n* Manual Cleave, ACN + Elution (On-deck Vacuum)\n\n\n* Redo Replacement Picking\n\n\n* HPLC Picking\nThis protocol performs a custom plate filling elution for up to 4x 96-well plates from a single reagent reservoir. The user can input the number of rows and columns to be filled for each plate. Liquid handling parameters are automatically determined from the user's selection of which reagent will be added during the run.\n",
     "internal": "121d15",
     "labware": "\nCustom 96-tuberack\nNEST 1 Reservoir 195ml\nOpentrons 300\u00b5L Tips\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
         "categories": "* Sample Prep\n\t* Plate Filling\n\n",
         "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/121d15/deck4-v2.png)\n\n---\n\n",
-        "description": "\nLinks:\n* [Manual Cleave](./121d15)\n* [Manual Cleave Elution](./121d15-4)\n* [Redo Replacement Picking](./121d15-2)\n* [HPLC Picking](./121d15-3)\n\nThis protocol performs a custom plate filling elution for up to 4x 96-well plates from a single reagent reservoir. The user can input the number of rows and columns to be filled for each plate. Liquid handling parameters are automatically determined from the user's selection of which reagent will be added during the run.\n\n---\n\n",
+        "description": "\nLinks:\n* [Manual Cleave](./121d15)\n<br />\n<br />\n* [Manual Cleave Elution (Off-deck Vacuum)](./121d15-4)\n<br />\n<br />\n* [Manual Cleave, ACN + Elution (Off-deck Vacuum)](./121d15-5)\n<br />\n<br />\n* [Manual Cleave, ACN + Elution (On-deck Vacuum)](./121d15-6)\n<br />\n<br />\n* [Redo Replacement Picking](./121d15-2)\n<br />\n<br />\n* [HPLC Picking](./121d15-3)\n\nThis protocol performs a custom plate filling elution for up to 4x 96-well plates from a single reagent reservoir. The user can input the number of rows and columns to be filled for each plate. Liquid handling parameters are automatically determined from the user's selection of which reagent will be added during the run.\n\n---\n\n",
         "internal": "121d15\n",
         "labware": "* Custom 96-tuberack\n* [NEST 1 Reservoir 195ml](https://shop.opentrons.com/nest-1-well-reservoirs-195-ml/)\n* [Opentrons 300\u00b5L Tips](https://shop.opentrons.com/opentrons-300ul-tips-1000-refills/)\n\n",
         "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
