@@ -80,7 +80,7 @@ def run(ctx):
             raise Exception('Rescan elution (empty elution scan)')
         if not elution_slot_scan_type:
             raise Exception('Rescan elution slot (empty elution slot scan)')
-        if not elution_scan == elution_scan_type[:3]:
+        if not elution_scan_type == elution_slot_scan_type[:3]:
             raise Exception(f'Elution mismatch: {elution_scan_type} in slot \
 {elution_slot_scan_type}')
         if elution_slot_scan_type not in reagent_map.keys():
