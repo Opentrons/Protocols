@@ -24,7 +24,7 @@ Explanation of parameters below:
 This setting will affect the volume requirements for all other reagents
 * `X offset for bead aspiration`: How many millimeters away from the center of the sample wells to aspirate bead supernatant from, the default is 1 mm.
 * `Magnet extension (mm)`: How far from the base of the sample plate to extend the magnets of the magnet deck (default is 4.7 mm)
-* `Proteinase K location`:  Choose whether the proteinase K is located in tube A1 of the tube rack, or well A1 of the 12 well reservoir
+* `Proteinase K location`:  Choose whether the proteinase K is located in tube 1 of the tube rack, or well 1 of the 12 well reservoir
 * `Elution buffer location`:  Choose whether the elution buffer is located in tube 2 to 8 of the tube rack, or well 6 and 7 of the 12 well reservoir
 * `Liquid waste reservoir?`: If set to `yes` the protocol will use a NEST 1 well 195 mL reservoir as a target of liquid waste, otherwise it will empty liquid waste into the regular trash bin.  
 
@@ -51,21 +51,19 @@ This setting will affect the volume requirements for all other reagents
 ---
 
 ### Deck Setup
-* If the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0f5985/deck.jpg)
 
 ### Reagent Setup
-* This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:
-* Reservoir 1: slot 5
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res1_v2.png)
-* Reservoir 2: slot 2  
-![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res2.png)
+* 12-well reservoir: slot 4
+![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0f5985/12_well_resv.jpg)
+* Reagent tuberack: slot 7  
+![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0f5985/tuberack.jpg)
 
 ---
 
 ### Protocol Steps
 1. Add Lysis LBB to samples
-2. Add Proteinase K to samples and mix 20 times
+2. Add Proteinase K to samples and mix
 3. Incubate the samples with buffer and enzyme, 10 minutes at 37 degrees C, or 30 minutes at room temperature
 4. Add Bind BBB and mix the samples gently
 5. Incubate the samples for 5 minutes
