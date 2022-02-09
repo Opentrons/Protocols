@@ -20,7 +20,7 @@
         "pipettes": "* [P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n",
         "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
         "reagents": "* water\n\n---\n\n",
-        "title": "Manual Cleave, ACN + Elution (Off-Deck Vacuum)"
+        "title": "Manual Cleave, ACN + Elution (On-Deck Vacuum)"
     },
     "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
     "pipettes": "\nP300 8 Channel Electronic Pipette (GEN2)\n",
@@ -28,5 +28,5 @@
     "reagents": [
         "water"
     ],
-    "title": "Manual Cleave, ACN + Elution (Off-Deck Vacuum)"
+    "title": "Manual Cleave, ACN + Elution (On-Deck Vacuum)"
 }

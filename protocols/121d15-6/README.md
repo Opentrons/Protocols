@@ -1,4 +1,4 @@
-# Manual Cleave, ACN + Elution (Off-Deck Vacuum)
+# Manual Cleave, ACN + Elution (On-Deck Vacuum)
 
 ### Author
 [Opentrons](https://opentrons.com/)
