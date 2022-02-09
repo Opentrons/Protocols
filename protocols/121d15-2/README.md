@@ -11,8 +11,20 @@
 
 Links:
 * [Manual Cleave](./121d15)
-* [Manual Cleave Elution](./121d15-4)
+<br />
+<br />
+* [Manual Cleave Elution (Off-deck Vacuum)](./121d15-4)
+<br />
+<br />
+* [Manual Cleave, ACN + Elution (Off-deck Vacuum)](./121d15-5)
+<br />
+<br />
+* [Manual Cleave, ACN + Elution (On-deck Vacuum)](./121d15-6)
+<br />
+<br />
 * [Redo Replacement Picking](./121d15-2)
+<br />
+<br />
 * [HPLC Picking](./121d15-3)
 
 This protocol performs a custom Redo Replacement Picking protocol from a worklist. The worklist should be specified as follows:

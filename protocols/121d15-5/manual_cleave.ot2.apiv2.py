@@ -3,7 +3,7 @@ import os
 
 # metadata
 metadata = {
-    'protocolName': 'Manual Cleave (ACN + Elution)',
+    'protocolName': 'Manual Cleave, ACN + Elution',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'
@@ -31,7 +31,7 @@ def run(ctx):
         for slot in ['10', '11']]
 
     reagent_map = {
-        'WATER': {
+        'WAT': {
             'slot': '9',
             'tips': tips300[1].columns()[5:6],
             'flow-rate-asp': 100,
@@ -81,10 +81,10 @@ def run(ctx):
             raise Exception('Rescan elution (empty elution scan)')
         if not elution_slot_scan_type:
             raise Exception('Rescan elution slot (empty elution slot scan)')
-        if not reagent_scan_type == reagent_slot_scan_type[:3]:
+        if not elution_scan == elution_scan_type[:3]:
             raise Exception(f'Elution mismatch: {elution_scan_type} in slot \
 {elution_slot_scan_type}')
-        if reagent_slot_scan_type not in reagent_map.keys():
+        if elution_slot_scan_type not in reagent_map.keys():
             raise Exception(f'Invalid slot scan: {elution_slot_scan_type}')
 
         reagent_type = reagent_slot_scan_type
@@ -198,28 +198,6 @@ def run(ctx):
                         chunk_length = 0
                 if running:
                     chunk_map[chunk_length].append(running)
-
-        ctx.home()
-        first_col_r = 0
-        for i, col in enumerate(reagent_map[reagent_type]['tips']):
-            if col[0].has_tip:
-                first_col_r = i
-                break
-        first_col_e = 0
-        for i, col in enumerate(reagent_map[elution_type]['tips']):
-            if col[0].has_tip:
-                first_col_e = i
-                break
-        tip_slot_r = reagent_map[reagent_type]['tips'][
-            first_col_r][0].parent.parent
-        tip_slot_e = reagent_map[elution_type]['tips'][
-            first_col_e][0].parent.parent
-        col_r = reagent_map[reagent_type][
-            'tips'][first_col_r][0].display_name.split(' ')[0][1:]
-        col_e = reagent_map[elution_type][
-            'tips'][first_col_e][0].display_name.split(' ')[0][1:]
-        ctx.pause(f'Ensure tips are in column {col_r} of tiprack on slot \
-{tip_slot_r} and column {col_e} of tiprack on slot {tip_slot_e}')
 
         num_chunks = len(
             [key for key, vals in chunk_map.items()
