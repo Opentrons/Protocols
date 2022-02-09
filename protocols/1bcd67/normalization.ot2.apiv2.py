@@ -143,4 +143,5 @@ def run(ctx):
         well for plate in final_dilution_plates for well in plate.rows()[0]]
 
     for source, dest in zip(final_locations, final_targets):
-        p1000.transfer(final_vol, source, dest)
+        if source:
+            p1000.transfer(final_vol, source, dest)
