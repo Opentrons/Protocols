@@ -31,7 +31,7 @@ def run(ctx):
         for slot in ['10', '11']]
 
     reagent_map = {
-        'WATER': {
+        'WAT': {
             'slot': '9',
             'tips': tips300[1].columns()[5:6],
             'flow-rate-asp': 100,
