@@ -12,12 +12,36 @@
     "default": 1
   },
   {
+    "type": "int",
+    "label": "Length of magnet extension (mm)",
+    "name": "mag_height",
+    "default": 4.7
+  },
+  {
     "type": "dropDown",
     "label": "Blood cells or serum?",
     "name": "is_blood_cells",
     "options": [
       {"label": "Blood cells", "value": true},
       {"label": "Serum", "value": false}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Proteinase K location",
+    "name": "is_protk_tube",
+    "options": [
+      {"label": "PK in tuberack", "value": true},
+      {"label": "EB in reservoir", "value": false}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Elution buffer location",
+    "name": "is_eb_tube",
+    "options": [
+      {"label": "EB in tuberack", "value": true},
+      {"label": "EB in reservoir", "value": false}
     ]
   },
   {

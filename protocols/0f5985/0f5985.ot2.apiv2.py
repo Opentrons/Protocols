@@ -17,28 +17,36 @@ def run(ctx: protocol_api.ProtocolContext):
      n_samples,
      is_blood_cells,
      lwaste,
-     x_offset
+     x_offset,
+     mag_height,
+     is_protk_tube,
+     is_eb_tube
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
         "n_samples",
         "is_blood_cells",
         "lwaste",
-        "x_offset"
+        "x_offset",
+        "mag_height",
+        "is_protk_tube",
+        "is_eb_tube"
         )
 
     sample_vol = 200 if is_blood_cells else 400
     twelve_well_max_vol = 14*10**3
     one_well_max_vol = 194*10**3
+    two_ml_tube_max_vol = 1990
     trash_max_vol = 195*10**3
 
     pip_left_lname = 'p300_multi_gen2'
     # Saving this variable, might want it later
-    # pip_right_lname = 'p300_single_gen2'
+    pip_right_lname = 'p300_single_gen2'
     tips_lname = 'opentrons_96_filtertiprack_200ul'
     one_well_resv_lname = 'nest_1_reservoir_195ml'
     twelve_well_resv_lname = 'nest_12_reservoir_15ml'
     mag_mod_lname = 'magnetic module gen2'
-    mag_plate_lname = 'nest_96_wellplate_2ml_deep'
-    dest_plate_lname = 'nest_96_wellplate_2ml_deep'
+    mag_plate_lname = 'usascientific_96_wellplate_2ml_deep'
+    dest_plate_lname = 'abgene_96_wellplate_800ul'
+    tuberack_lname = 'opentrons_24_tuberack_generic_2ml_screwcap'
 
     n_sample_columns = math.floor(n_samples/8)
 
@@ -54,14 +62,13 @@ def run(ctx: protocol_api.ProtocolContext):
     mag_mod_slot = 3
     liq_trash_resv_slot = 6
     dest_plate_slot = 9
+    tuberack_slot = 7
     tiprack_slots = [5, 8, 11]
 
     elution_buffer_vol = sample_vol if is_blood_cells else 40
 
     # Offsets to pipette away from the magnetic beads
     sides = [-x_offset, x_offset] * (n_sample_columns // 2)
-
-    mag_height = 5
 
     # load modules
 
@@ -98,14 +105,18 @@ def run(ctx: protocol_api.ProtocolContext):
     wash_wbc_resv = ctx.load_labware(one_well_resv_lname, wash_wbc_resv_slot,
                                      label="Wash WBC reservoir")
     sample_plate = mag_mod.load_labware(mag_plate_lname,
-                                        label="sample plate")
+                                        label="sample plate",
+                                        namespace='custom_beta')
     twelve_well_resv = ctx.load_labware(twelve_well_resv_lname,
                                         twelve_well_resv_slot,
                                         label="multi-reagent reservoir")
     trash_resv_1 = ctx.load_labware(one_well_resv_lname, liq_trash_resv_slot,
                                     label="liquid waste reservoir")
     destination_plate = ctx.load_labware(dest_plate_lname, dest_plate_slot,
-                                         label="destination plate")
+                                         label="destination plate",
+                                         namespace='custom_beta')
+    tuberack = ctx.load_labware(tuberack_lname, tuberack_slot,
+                                label="Reagent tuberack")
 
     # load tipracks
 
@@ -152,6 +163,12 @@ def run(ctx: protocol_api.ProtocolContext):
     m300 = ctx.load_instrument(
                               pip_left_lname,
                               'left',
+                              tip_racks=tipracks
+                              )
+
+    p300 = ctx.load_instrument(
+                              pip_right_lname,
+                              'right',
                               tip_racks=tipracks
                               )
 
@@ -280,7 +297,7 @@ def run(ctx: protocol_api.ProtocolContext):
                     m300.dispense(vol, col[0])
                     remainining_volume -= vol
                 mix_vol = 200 if wash_vol - 20 > 200 else wash_vol - 20
-                m300.mix(20, mix_vol)
+                m300.mix(10, mix_vol)
                 m300.drop_tip()
 
             mag_mod.engage(height_from_base=mag_height)
@@ -289,13 +306,26 @@ def run(ctx: protocol_api.ProtocolContext):
                         .format(buffer_name))
             remove_supernatant(wash_vol)
 
-    def get_tip_wells(n_columns):
+    def get_well_index_by_name(well_name):
+        letter_to_row_num_dict = \
+            {"A": 0, "B": 1, "C": 2, "D": 3,
+             "E": 4, "F": 5, "G": 6, "H": 7}
+        well_row_letter = well_name[0:1]
+        row_num = letter_to_row_num_dict[well_row_letter]
+        col_num = int(well_name[1:])
+        # import pdb; pdb.set_trace()
+        index = (col_num-1)*8 + row_num
+        return index
+
+    def get_tip_columns(n_columns):
         '''
         Returns a list of wells to pick up from and to park tips to
         for multi-channel pipettes (i.e. the function returns tip wells
-        from the 1st row (A row))
+        from the 1st row (A row)). The function returns a list of wells in
+        the top row that contains 8 tips. The purpose of this function is to
+        facilitate tip parking.
 
-        :param n_columns: How many tip columns are neccesary
+        :param n_columns: How many tip columns to use for tip parking
         '''
         nonlocal tipracks, ctx, m300
         columns_left = n_columns
@@ -310,12 +340,45 @@ def run(ctx: protocol_api.ProtocolContext):
                         # Not enough tips left?:
                         # Refill tipracks and call the function recursively
                         # and return tips from the start of the racks
-                        ctx.pause("Please refill empty tipracks")
+                        ctx.pause("Please refill all tipracks")
                         m300.reset_tipracks()
-                        return get_tip_wells(n_columns)
+                        return get_tip_columns(n_columns)
                     tip_list.append(col[0])
                 columns_left -= 12-col_num
         return tip_list
+
+    def get_tip_wells(n_tips):
+        '''
+        Returns a list of wells to pick up from and to park tips to
+        for single-channel pipettes. The function returns a list of well
+        locations that have tips.
+        The purpose of this function is to facilitate tip parking
+
+        :param n_tips: How many tips to use for tip parking
+        '''
+
+        nonlocal tipracks, ctx, p300
+        wells_left = n_tips
+        tip_list = []
+        for rack in tipracks:
+            next_tip = rack.next_tip(1)
+            if next_tip is not None:
+                well_index = get_well_index_by_name(next_tip.well_name)
+                tips = rack.wells()[well_index:]
+                for tip in tips:
+                    if tip.has_tip:
+                        tip_list.append(next_tip)
+                        wells_left -= 1
+                        if wells_left < 1:
+                            break
+                if wells_left < 1:
+                    break
+        if wells_left < 1:
+            return tip_list
+        else:
+            ctx.pause("Please refill all tipracks")
+            p300.reset_tipracks()
+            return get_tip_wells(n_tips)
 
     # Volume Tracking
     class VolTracker:
@@ -389,13 +452,19 @@ def run(ctx: protocol_api.ProtocolContext):
     dnase = tuberack.wells_by_name()['A4']
 
     '''
-    # Well 1 and 2 of the twelve well resv
     trash = m300.trash_container.wells()[0].top()  # trash container
 
-    prot_k_tracker = VolTracker(twelve_well_resv, twelve_well_max_vol,
-                                pip_type='multi', start=1, end=1,
-                                msg='Replenish proteinase K buffer in \
-                                12 well reservoir on deck slot 2, well 1')
+    # 32 samples at 400 uL requires almost one full 2 mL tube
+    if is_protk_tube:
+        prot_k_tracker = VolTracker(tuberack, two_ml_tube_max_vol,
+                                    pip_type='single', start=1, end=1,
+                                    msg='Replenish proteinase K buffer in ' +
+                                    'the tuberack on deck slot 7, tube 1')
+    else:
+        prot_k_tracker = VolTracker(twelve_well_resv, twelve_well_max_vol,
+                                    pip_type='multi', start=1, end=1,
+                                    msg='Replenish proteinase K buffer in '
+                                    '12 well reservoir on deck slot 2, well 1')
 
     lysis_lbb_tracker = VolTracker(twelve_well_resv, twelve_well_max_vol,
                                    pip_type='multi', start=2, end=3,
@@ -408,12 +477,18 @@ def run(ctx: protocol_api.ProtocolContext):
                                   msg='Replenish Bind BBB buffer in \
                                   12 well reservoir on deck slot 4 \
                                   in well 4 and 5')
-
-    elution_buf_tracker = VolTracker(twelve_well_resv, twelve_well_max_vol,
-                                     pip_type='multi', start=6, end=7,
-                                     msg='Replenish elution buffer in \
-                                     12 well reservoir on deck slot 4 \
-                                     in well 6 and 7')
+    if is_eb_tube:
+        elution_buf_tracker = VolTracker(twelve_well_resv, twelve_well_max_vol,
+                                         pip_type='single', start=2, end=8,
+                                         msg='Replenish elution buffer in' +
+                                         'the tuberack on deck slot 7 ' +
+                                         'in well 2 to 8')
+    else:
+        elution_buf_tracker = VolTracker(twelve_well_resv, twelve_well_max_vol,
+                                         pip_type='multi', start=6, end=7,
+                                         msg='Replenish elution buffer in \
+                                         12 well reservoir on deck slot 4 \
+                                         in well 6 and 7')
 
     wash_wbb_tracker = VolTracker(wash_wbb_resv, one_well_max_vol,
                                   pip_type='multi', start=1, end=1,
@@ -441,6 +516,8 @@ def run(ctx: protocol_api.ProtocolContext):
     sample_columns = sample_plate.columns()[0:n_sample_columns]
     destination_columns = destination_plate.columns()[0:n_sample_columns]
 
+    sample_wells = sample_plate.wells()[0:n_samples]
+    destination_wells = destination_plate.wells()[0:n_samples]
     # ctx
 
     '''
@@ -476,14 +553,22 @@ def run(ctx: protocol_api.ProtocolContext):
     # prevent bubble formation
     ctx.comment("\n\nStep 2: Adding Proteinase K and mixing\n")
     total_well_vol = sample_vol + lysis_buf_lbb_vol + prot_k_vol
-    mix_vol = 200 if total_well_vol - 20 > 200 else total_well_vol - 20
-    for col in sample_columns:
-        pick_up(m300)
-        m300.transfer(prot_k_vol, prot_k_tracker.track(prot_k_vol),
-                      col[0], new_tip='never')
-        # Mix slowly to prevent bubble formation
-        m300.mix(20, mix_vol, col[0], 1/3)
-        m300.drop_tip()
+    mix_vol = 200 if total_well_vol - 10 > 200 else total_well_vol - 10
+    if is_protk_tube:
+        for well in sample_wells:
+            pick_up(p300)
+            p300.transfer(prot_k_vol, prot_k_tracker.track(prot_k_vol),
+                          well, new_tip='never')
+            p300.mix(10, mix_vol, col[0], 1/2)
+            p300.drop_tip()
+    else:
+        for col in sample_columns:
+            pick_up(m300)
+            m300.transfer(prot_k_vol, prot_k_tracker.track(prot_k_vol),
+                          col[0], new_tip='never')
+            # Mix slowly to prevent bubble formation
+            m300.mix(10, mix_vol, col[0], 1/2)
+            m300.drop_tip()
 
     # Step 3 - Incubate the samples with the buffer and enzyme
     ctx.comment("\n\nStep 3: Incubating samples\n")
@@ -505,7 +590,7 @@ def run(ctx: protocol_api.ProtocolContext):
         m300.transfer(bind_bbb_vol, bind_bbb_tracker.track(bind_bbb_vol),
                       col[0], new_tip='never')
         bbb_vol_used += bind_bbb_vol
-        m300.mix(20, mix_vol, col[0], 1/3)
+        m300.mix(10, mix_vol, col[0], 1/3)
         m300.drop_tip()
 
     # Step 5 - Incubate samples for 5 minutes
@@ -535,24 +620,45 @@ def run(ctx: protocol_api.ProtocolContext):
     # Step 16 - Add elution buffer and mix
     ctx.comment("\n\nStep 16: Adding elution buffer to samples and mixing\n")
     total_well_vol = elution_buffer_vol
-    tips = get_tip_wells(len(sample_columns))
-    for col, tip_well in zip(sample_columns, tips):
-        m300.pick_up_tip(tip_well)
-        m300.transfer(elution_buffer_vol,
-                      elution_buf_tracker.track(elution_buffer_vol), col[0],
-                      new_tip='never')
-        mix_vol = 200 if total_well_vol - 10 > 200 else total_well_vol - 10
-        m300.mix(20, mix_vol)
-        m300.drop_tip(tip_well)
+    if is_eb_tube:
+        tips = get_tip_wells(len(sample_wells))
+        for well, tip_well in zip(sample_wells, tips):
+            p300.pick_up_tip(tip_well)
+            p300.transfer(elution_buffer_vol,
+                          elution_buf_tracker.track(elution_buffer_vol), well,
+                          new_tip='never')
+            mix_vol = 200 if total_well_vol - 10 > 200 else total_well_vol - 10
+            p300.mix(10, mix_vol)
+            p300.drop_tip(tip_well)
 
-    # Step 17 - Incubate samples for two minutes and mix with parked tips
-    ctx.comment("\n\nStep 17: Incubating samples and mixing 2nd time\n")
-    ctx.delay(minutes=2)
-    for col, tip_well in zip(sample_columns, tips):
-        m300.pick_up_tip(tip_well)
-        mix_vol = 200 if total_well_vol - 10 > 200 else total_well_vol - 10
-        m300.mix(20, mix_vol, col[0])
-        m300.drop_tip()
+        # Step 17 - Incubate samples for two minutes and mix with parked tips
+        ctx.comment("\n\nStep 17: Incubating samples and mixing 2nd time\n")
+        ctx.delay(minutes=2)
+        for well, tip_well in zip(sample_wells, tips):
+            p300.pick_up_tip(tip_well)
+            mix_vol = 200 if total_well_vol - 10 > 200 else total_well_vol - 10
+            p300.mix(10, mix_vol, well)
+            p300.drop_tip()
+    else:
+        tips = get_tip_columns(len(sample_columns))
+        for col, tip_well in zip(sample_columns, tips):
+            m300.pick_up_tip(tip_well)
+            m300.transfer(elution_buffer_vol,
+                          elution_buf_tracker.
+                          track(elution_buffer_vol), col[0],
+                          new_tip='never')
+            mix_vol = 200 if total_well_vol - 10 > 200 else total_well_vol - 10
+            m300.mix(10, mix_vol)
+            m300.drop_tip(tip_well)
+
+        # Step 17 - Incubate samples for two minutes and mix with parked tips
+        ctx.comment("\n\nStep 17: Incubating samples and mixing 2nd time\n")
+        ctx.delay(minutes=2)
+        for col, tip_well in zip(sample_columns, tips):
+            m300.pick_up_tip(tip_well)
+            mix_vol = 200 if total_well_vol - 10 > 200 else total_well_vol - 10
+            m300.mix(10, mix_vol, col[0])
+            m300.drop_tip()
 
     # Step 18 - Engage magnets (5 min) and transfer
     # the eluted material from the sample plate to the destination plate
@@ -561,7 +667,6 @@ def run(ctx: protocol_api.ProtocolContext):
     mag_mod.engage(height_from_base=mag_height)
     ctx.delay(minutes=5)
     for s_col, d_col, side in zip(sample_columns, destination_columns, sides):
-        pass
         remainining_volume = elution_buffer_vol
         pick_up(m300)
         while remainining_volume > 0:
@@ -574,4 +679,4 @@ def run(ctx: protocol_api.ProtocolContext):
             m300.dispense(vol, d_col[0])
             remainining_volume -= vol
         m300.drop_tip()
-    ctx.comment("\n\n ~~~~ End of protocol ~~~~")
+    ctx.comment("\n\n ~~~~ End of protocol ~~~~\n")

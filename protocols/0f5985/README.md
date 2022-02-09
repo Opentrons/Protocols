@@ -22,8 +22,11 @@ Explanation of parameters below:
 * `Number of samples`:  How many samples to run, it should ideally be a multiple of 8 for efficient use of resources.
 * `Blood cells or serum?`: Choose what kind of samples to use for the protocol. This parameter will set the sample volume to 200 uL for blood cells, and 400 for serum samples. It will also set the elution volume to 200 uL for blood cell samples, and 40 uL for serum samples.
 This setting will affect the volume requirements for all other reagents
-* `Liquid waste reservoir?`: If set to `yes` the protocol will use a NEST 1 well 195 mL reservoir as a target of liquid waste, otherwise it will empty liquid waste into the regular trash bin.  
 * `X offset for bead aspiration`: How many millimeters away from the center of the sample wells to aspirate bead supernatant from, the default is 1 mm.
+* `Magnet extension (mm)`: How far from the base of the sample plate to extend the magnets of the magnet deck (default is 4.7 mm)
+* `Proteinase K location`:  Choose whether the proteinase K is located in tube A1 of the tube rack, or well A1 of the 12 well reservoir
+* `Elution buffer location`:  Choose whether the elution buffer is located in tube 2 to 8 of the tube rack, or well 6 and 7 of the 12 well reservoir
+* `Liquid waste reservoir?`: If set to `yes` the protocol will use a NEST 1 well 195 mL reservoir as a target of liquid waste, otherwise it will empty liquid waste into the regular trash bin.  
 
 ---
 
