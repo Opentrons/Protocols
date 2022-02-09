@@ -19,7 +19,7 @@ This protocol performs a custom Redo Replacement Picking protocol from a worklis
 
 ```
 Number of Redo
-8
+9
 pos TB_RCK_1,pos MTP_1,disposal_vol,transfer_vol
 1,1,200,200
 2,135,200,200
@@ -29,6 +29,7 @@ pos TB_RCK_1,pos MTP_1,disposal_vol,transfer_vol
 6,262
 7,242
 8,218
+9,219
 ...
 ```
 

@@ -52,7 +52,7 @@ def run(ctx):
         ctx.max_speeds['A'] = 100  # slow descent
         ctx.max_speeds['Z'] = 100  # slow descent
 
-        p300.aspirate(disposal_vol, well.bottom())
+        p300.aspirate(disposal_vol, well.bottom(0.2))
         del ctx.max_speeds['A']  # reset to default
         del ctx.max_speeds['Z']  # reset to default
         p300.drop_tip()
