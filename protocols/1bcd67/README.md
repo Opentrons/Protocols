@@ -8,7 +8,7 @@
 	* Normalization
 
 ## Description
-With this flexible and robust protocol, you can normalize the concentrations of up to 32 samples. Just upload your properly formatted .json files (keep scrolling for an example), customize your parameters, and download your ready-to-run protocol.
+With this flexible protocol, you can normalize the concentrations of up to 32 samples. Just upload your properly formatted .json files (keep scrolling for an example), customize your parameters, and download your ready-to-run protocol.
 
 ---
 
