@@ -3,7 +3,7 @@ import os
 
 # metadata
 metadata = {
-    'protocolName': 'Manual Cleave (ACN + Elution)',
+    'protocolName': 'Manual Cleave, ACN + Elution',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'
