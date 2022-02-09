@@ -3,7 +3,7 @@ import os
 
 # metadata
 metadata = {
-    'protocolName': 'Manual Cleave, ACN + Elution (Off-Deck Vacuum)',
+    'protocolName': 'Manual Cleave, ACN + Elution (On-Deck Vacuum)',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'
@@ -12,19 +12,18 @@ metadata = {
 
 def run(ctx):
 
-    [occupied_well_csv1, occupied_well_csv2, occupied_well_csv3, reagent_scan,
-     reagent_slot_scan, elution_scan, elution_slot_scan, reagent_transfer_vol,
-     elution_transfer_vol, m300_mount, p300_mount,
-     tip_track] = get_values(  # noqa: F821
-        'occupied_well_csv1', 'occupied_well_csv2', 'occupied_well_csv3',
-        'reagent_scan', 'reagent_slot_scan', 'elution_scan',
-        'elution_slot_scan', 'reagent_transfer_vol', 'elution_transfer_vol',
-        'm300_mount', 'p300_mount', 'tip_track')
+    [occupied_well_csv1, reagent_scan, reagent_slot_scan, elution_scan,
+     elution_slot_scan, reagent_transfer_vol, elution_transfer_vol, m300_mount,
+     p300_mount, tip_track] = get_values(  # noqa: F821
+        'occupied_well_csv1', 'reagent_scan', 'reagent_slot_scan',
+        'elution_scan', 'elution_slot_scan', 'reagent_transfer_vol',
+        'elution_transfer_vol', 'm300_mount', 'p300_mount', 'tip_track')
 
     # load labware
     racks = [
-        ctx.load_labware('custom_96_tuberack_500ul', f'{slot}', f'plate {i+1}')
-        for i, slot in enumerate(['4', '5', '6'])]
+        ctx.load_labware('custom_96_tuberack_500ul_vacuum', f'{slot}',
+                         f'plate {i+1}')
+        for i, slot in enumerate(['1'])]
     tips300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot,
                          '300ul tiprack')
@@ -179,7 +178,7 @@ def run(ctx):
         # parse wells into chunks
         chunk_map = {num: [] for num in range(1, 9)}
         for csv, rack in zip(
-                [occupied_well_csv1, occupied_well_csv2, occupied_well_csv3],
+                [occupied_well_csv1],
                 racks):
             occupied_wells = [
                 rack.wells_by_name()[line.upper()]
@@ -247,10 +246,6 @@ def run(ctx):
                     else:
                         # return tip and reset has_tip attribute
                         return_tip(pip, pick_up_loc, num_tips, elution_type)
-            func = ctx.pause if elution_ind < num_centrifugations - 1 \
-                else ctx.comment
-            func(msg='Centrifuge all plates. Replace and resume when \
-finished.')
 
         # track final used tip
         # void partially full tip column
