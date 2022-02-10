@@ -1,6 +1,7 @@
 from opentrons import protocol_api
 from opentrons.types import Point
-
+import os
+import json
 
 metadata = {
     'protocolName': 'Cell Culture Prep with CSV Input',
@@ -39,28 +40,48 @@ def run(ctx: protocol_api.ProtocolContext):
                                m300_mount,
                                tip_racks=tipracks)
 
-    # """ TIP-TRACKING BETWEEN RUNS """
-    # # Tip tracking between runs
-    # if not ctx.is_simulating():
-    #     file_path = '/data/csv/tiptracking.csv'
-    #     file_dir = os.path.dirname(file_path)
-    #     # check for file directory
-    #     if not os.path.exists(file_dir):
-    #         os.makedirs(file_dir)
-    #
-    # if ctx.is_simulating():
-    #     tips_by_col = [tip for rack in tipracks
-    #                    for col in rack.columns() for tip in col[::-1]]
-    #     tip_chunks = [tips_by_col[i:i+8]
-    # else:
-    #     if track_tips:
-    #         with open(file_path) as csv_file:
-    #             tip_chunks = list(new_tip_list)
-    #     else:
-    #         tip_chunks = []
+    tips_by_col = [tip for rack in tipracks
+                   for col in rack.columns() for tip in col[::-1]]
+    tip_cols = [tips_by_col[i:i+8] for i in range(0, len(tips_by_col), 8)]
 
+    """ TIP-TRACKING BETWEEN RUNS """
+    total_tip_cols = 36
+
+    file_path = '/Users/work/Desktop/THURSDAY.json'
+    file_dir = os.path.dirname(file_path)
+
+    tips_by_col = [tip for rack in tipracks
+                   for col in rack.columns() for tip in col[::-1]]
+    tip_cols = [tips_by_col[i:i+8] for i in range(0, len(tips_by_col), 8)]
+
+    if ctx.is_simulating():
+        if track_tips:
+            # check for file directory
+            if not os.path.exists(file_dir):
+                os.makedirs(file_dir)
+            if not os.path.isfile(file_path):
+                with open(file_path, 'w') as outfile:
+                    outfile.write("")
+                print(os.stat("file").st_size == 0)
+
+            source = open(file_path, 'rb').read()
+            tip_bool_chunks = json.loads(source)
+
+            tip_chunks = [[] for _ in range(total_tip_cols)]
+            for i, (bool_chunk, tip_chunk) in enumerate(zip(tip_bool_chunks,
+                                                            tip_cols)):
+                if len(bool_chunk) == 0:
+                    continue
+                for true_tip, tip_loc in zip(bool_chunk, tip_chunk):
+                    if true_tip:
+                        tip_chunks[i].append(tip_loc)
+                    else:
+                        continue
+
+    else:
+        tip_chunks = [tips_by_col[i:i+8] for i in range(0,
+                      len(tips_by_col), 8)]
     """PROTOCOL BEGINS """
-
     csv_rows = [[val.strip() for val in line.split(',')]
                 for line in csv.splitlines()
                 if line.split(',')[0].strip()][1:]
@@ -83,7 +104,6 @@ def run(ctx: protocol_api.ProtocolContext):
     start_point = 0
     tip_count = 0
     for i, chunk in enumerate(value_chunk_cols):
-        print(chunk)
         start_point = 0
 
         for j, value in enumerate(chunk[start_point:]):
@@ -113,16 +133,10 @@ def run(ctx: protocol_api.ProtocolContext):
             tip_ctr = num_tips - 1
             dict_tips_per_well[well] = num_tips
 
-    print('\n\n', dict_tips_per_well, '\n\n')
-
-    """CREATE NESTED LIST OF TIPS WHICH IS MANIPULATED TO MAKE MAP"""
-    # if not track_tips:
-    tips_by_col = [tip for rack in tipracks
-                   for col in rack.columns() for tip in col[::-1]]
-    tip_chunks = [tips_by_col[i:i+8] for i in range(0, len(tips_by_col), 8)]
+    # print('\n\n', dict_tips_per_well, '\n\n')
 
     """PICKUP FUNCTION"""
-    total_tip_cols = 36
+    num_tips_left_in_each_column = [8 for _ in range(36)]
 
     def pick_up(num_channels_per_pickup):
         nonlocal tip_chunks
@@ -131,36 +145,25 @@ def run(ctx: protocol_api.ProtocolContext):
         else:
             pip = p300
         try:
-            # if num channels needed greater than number of tips in that col,
-            # go to the next column. Running sublist of number of tips in each
-            # column that gets updated (see below) on each pickup.
             col = 0
-            for _ in range(total_tip_cols):
+            for _ in range(36):
                 if num_channels_per_pickup <= len(tip_chunks[col]):
                     break
                 else:
                     col += 1
-
-            # first col with adequate number of tips is found,
-            # we can now pick up
             pip.pick_up_tip(tip_chunks[col][num_channels_per_pickup-1])
 
-            # remove as many tips as we took from the sublist col
             for _ in range(num_channels_per_pickup):
                 tip_chunks[col].pop(0)
+                num_tips_left_in_each_column[col] -= 1
 
-                # remove empty sublist if we take a whole column
-                if len(tip_chunks[col]) == 0:
-                    tip_chunks.remove(tip_chunks[col])
-
-        # handle out of tips error
         except IndexError:
             ctx.pause("Replace empty tip racks on slots 4, 5, and 6")
             pip.reset_tipracks()
             tip_chunks = [tips_by_col[i:i+8] for i in range(0,
                           len(tips_by_col), 8)]
             col = 0
-            for _ in range(total_tip_cols):
+            for _ in range(36):
                 if num_channels_per_pickup <= len(tip_chunks[col]):
                     break
                 else:
@@ -217,7 +220,6 @@ def run(ctx: protocol_api.ProtocolContext):
         pip.air_gap(airgap)
         pip.drop_tip()
         ctx.comment('\n')
-
     ctx.comment("\n\n\nMOVING PBS TO PLATE")
     for i, well in enumerate(dict_tips_per_well):
         num_tips = dict_tips_per_well[well]
@@ -327,10 +329,17 @@ def run(ctx: protocol_api.ProtocolContext):
         pip.drop_tip()
         ctx.comment('\n')
 
-    # # write updated tipcount to CSV
-    # tip_data = {well: well.has_tip for well in tipracks[0].wells()}
-    #
-    # new_tip_list = tip_chunks
-    # if not ctx.is_simulating():
-    #     with open(file_path, 'w') as outfile:
-    #         outfile.write(new_tip_list)
+    tip_data = []
+    for i, chunk in enumerate(tip_chunks):
+        tip_data.append([])
+        if len(chunk) > 0:
+            for value in chunk:
+                tip_data[i].append(True)
+        else:
+            continue
+
+    # write to the ot-2 no matter what in case the user would like to start
+    # tracking tips for the next run
+    if ctx.is_simulating():
+        with open(file_path, 'w') as outfile:
+            outfile.write(json.dumps(tip_data))
