@@ -69,7 +69,7 @@ TUBE BAR,PLATE BAR
 ---
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/121d15/deck2-96.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/121d15/deck-irish.png)
 
 ---
 
