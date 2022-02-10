@@ -199,8 +199,11 @@ def run(ctx):
         col = reagent_map[
             reagent_type]['tips'][first_col][0].display_name.split(
             ' ')[0][1:]
+
+        indx = first_col + 1 if first_col < 11 else 0
+
         col2 = reagent_map[
-            reagent_type]['tips'][first_col+1][0].display_name.split(
+            reagent_type]['tips'][indx][0].display_name.split(
             ' ')[0][1:]
 
         ctx.pause(f'Ensure tips are in columns {col} and {col2}')
