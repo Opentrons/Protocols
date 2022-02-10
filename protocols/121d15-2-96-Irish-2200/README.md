@@ -1,4 +1,4 @@
-# Redo Replacement Picking (96)
+# Redo Replacement Picking (Irish Life Sciences 96 Well Plate 2200 µL)
 
 ### Author
 [Opentrons](https://opentrons.com/)
