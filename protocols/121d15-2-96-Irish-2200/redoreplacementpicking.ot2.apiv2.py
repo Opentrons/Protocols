@@ -10,10 +10,10 @@ Plate 2200 µL)',
 
 def run(ctx):
 
-    [input_file, default_disposal_vol, default_transfer_vol,
-     p300_mount] = get_values(  # noqa: F821
-        'input_file', 'default_disposal_vol', 'default_transfer_vol',
-        'p300_mount')
+    [input_file, tuberack_scan, plate_scan, default_disposal_vol,
+     default_transfer_vol, p300_mount] = get_values(  # noqa: F821
+        'input_file', 'tuberack_scan', 'plate_scan', 'default_disposal_vol',
+        'default_transfer_vol', 'p300_mount')
 
     # load labware
     rack = ctx.load_labware('eurofins_96x2ml_tuberack', '2', 'tuberack')
@@ -26,10 +26,19 @@ def run(ctx):
     p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
                                tip_racks=tips300)
 
+    # check barcode scans (tube, plate)
+    tuberack_bar, plate_bar = input_file.splitlines()[3].split(',')[:2]
+    if not tuberack_scan[:len(tuberack_scan)-4] == tuberack_bar.strip():
+        print(tuberack_scan[:len(tuberack_scan)-4])
+        raise Exception(f'Tuberack scans do not match ({tuberack_bar}, \
+{tuberack_scan})')
+    if not plate_scan[:len(plate_scan)-4] == plate_bar.strip():
+        raise Exception(f'Plate scans do not match ({plate_bar}, {plate_bar})')
+
     # parse
     data = [
         [val.strip() for val in line.split(',')]
-        for line in input_file.splitlines()[3:]
+        for line in input_file.splitlines()[4:]
         if line and line.split(',')[0].strip()]
 
     tubes_ordered = [
