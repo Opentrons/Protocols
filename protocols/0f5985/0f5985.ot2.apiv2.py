@@ -32,13 +32,14 @@ def run(ctx: protocol_api.ProtocolContext):
         )
 
     sample_vol = 200 if is_blood_cells else 400
+
+    # Defining the max volume of each reservoir either for reagents or trash
     twelve_well_max_vol = 14*10**3
     one_well_max_vol = 194*10**3
     two_ml_tube_max_vol = 1990
     trash_max_vol = 195*10**3
 
     pip_left_lname = 'p300_multi_gen2'
-    # Saving this variable, might want it later
     pip_right_lname = 'p300_single_gen2'
     tips_lname = 'opentrons_96_filtertiprack_200ul'
     one_well_resv_lname = 'nest_1_reservoir_195ml'
@@ -50,12 +51,15 @@ def run(ctx: protocol_api.ProtocolContext):
 
     n_sample_columns = math.floor(n_samples/8)
 
+    # Volumes of each buffer to use per sample
     lysis_buf_lbb_vol = 2*sample_vol+100
     prot_k_vol = 0.15*sample_vol
     bind_bbb_vol = 1.5*sample_vol
     wash_wbb_vol = 4*sample_vol
     wash_wbc_vol = 1600
+    elution_buffer_vol = sample_vol if is_blood_cells else 40
 
+    # Labware and tiprack slots
     twelve_well_resv_slot = 4
     wash_wbb_resv_slot = 1
     wash_wbc_resv_slot = 2
@@ -65,9 +69,7 @@ def run(ctx: protocol_api.ProtocolContext):
     tuberack_slot = 7
     tiprack_slots = [5, 8, 10, 11]
 
-    elution_buffer_vol = sample_vol if is_blood_cells else 40
-
-    # Offsets to pipette away from the magnetic beads
+    # Offsets to pipette away from the magnetic beads in the x direction
     sides = [-x_offset, x_offset] * (n_sample_columns // 2)
 
     # load modules
@@ -240,10 +242,10 @@ def run(ctx: protocol_api.ProtocolContext):
         (the user may remove the waste to liquid waste reservoir if they so
         choose)
 
-        :param source_columns: The columns to remove supernatant from
-        :param volume: The volume of supernatant to remove
+        :param volume: The volume of supernatant to remove to the trash
         '''
-        nonlocal is_lwaste, trash, m300, sides, sample_columns, liq_trash_tracker
+        nonlocal is_lwaste, trash, m300, sides, sample_columns, \
+            liq_trash_tracker
 
         # Determine where the liquid trash goes: general trash or
         # liq. trash reservoir
@@ -268,7 +270,8 @@ def run(ctx: protocol_api.ProtocolContext):
 
     def wash(wash_vol, wash_vol_tracker, mag_engage_time,
              n_mixes, buffer_name='wash buffer', reuse_tips=True):
-        nonlocal is_lwaste, m300, sides, sample_columns, mag_mod, ctx, mag_height
+        nonlocal is_lwaste, m300, sides, sample_columns, mag_mod, \
+                 ctx, mag_height
         '''
         This function repeats a washing procedure two times.
         Washing procedure:
@@ -281,7 +284,12 @@ def run(ctx: protocol_api.ProtocolContext):
 
         :param wash_vol: The volume of wash buffer to use in microliters
         :param wash_vol_tracker: VolumeTracker for the wash buffer wells
-        :param mag_engage_time:
+        :param mag_engage_time: Amount of time in minutes to delay after
+        engaging the magnets
+        :param n_mixes: How many times to mix the samples after adding wash
+        :param buffer_name: Name of the buffer to display to the user in
+        messaging
+        :param reuse_tips: Intended as a variable for tip parking, not used.
         '''
         for i in range(0, 2):
             mag_mod.disengage()
@@ -298,6 +306,7 @@ def run(ctx: protocol_api.ProtocolContext):
                     remainining_volume -= vol
                 mix_vol = 200 if wash_vol - 20 > 200 else wash_vol - 20
                 m300.mix(10, mix_vol)
+                m300.touch_tip()
                 m300.drop_tip()
 
             mag_mod.engage(height_from_base=mag_height)
@@ -626,6 +635,7 @@ def run(ctx: protocol_api.ProtocolContext):
                           new_tip='never')
             mix_vol = 200 if total_well_vol - 10 > 200 else total_well_vol - 10
             p300.mix(10, mix_vol)
+            p300.touch_tip()
             p300.drop_tip(tip_well)
 
         # Step 17 - Incubate samples for two minutes and mix with parked tips
@@ -635,6 +645,7 @@ def run(ctx: protocol_api.ProtocolContext):
             p300.pick_up_tip(tip_well)
             mix_vol = 200 if total_well_vol - 10 > 200 else total_well_vol - 10
             p300.mix(10, mix_vol, well)
+            p300.touch_tip()
             p300.drop_tip()
     else:
         tips = get_tip_columns(len(sample_columns))
@@ -646,6 +657,7 @@ def run(ctx: protocol_api.ProtocolContext):
                           new_tip='never')
             mix_vol = 200 if total_well_vol - 10 > 200 else total_well_vol - 10
             m300.mix(10, mix_vol)
+            m300.touch_tip()
             m300.drop_tip(tip_well)
 
         # Step 17 - Incubate samples for two minutes and mix with parked tips
@@ -655,6 +667,7 @@ def run(ctx: protocol_api.ProtocolContext):
             m300.pick_up_tip(tip_well)
             mix_vol = 200 if total_well_vol - 10 > 200 else total_well_vol - 10
             m300.mix(10, mix_vol, col[0])
+            m300.touch_tip()
             m300.drop_tip()
 
     # Step 18 - Engage magnets (5 min) and transfer
@@ -675,5 +688,6 @@ def run(ctx: protocol_api.ProtocolContext):
 
             m300.dispense(vol, d_col[0])
             remainining_volume -= vol
+        m300.touch_tip()
         m300.drop_tip()
     ctx.comment("\n\n ~~~~ End of protocol ~~~~\n")
