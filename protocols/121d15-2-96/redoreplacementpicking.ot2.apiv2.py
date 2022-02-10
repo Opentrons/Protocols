@@ -1,6 +1,6 @@
 # metadata
 metadata = {
-    'protocolName': 'Redo Replacement Picking',
+    'protocolName': 'Redo Replacement Picking (96)',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'
@@ -9,14 +9,14 @@ metadata = {
 
 def run(ctx):
 
-    [input_file, default_disposal_vol, default_transfer_vol, plate_type,
+    [input_file, default_disposal_vol, default_transfer_vol,
      p300_mount] = get_values(  # noqa: F821
         'input_file', 'default_disposal_vol', 'default_transfer_vol',
-        'plate_type', 'p300_mount')
+        'p300_mount')
 
     # load labware
     rack = ctx.load_labware('eurofins_96x2ml_tuberack', '2', 'tuberack')
-    plate = ctx.load_labware(plate_type, '1')
+    plate = ctx.load_labware('greinermasterblock_96_wellplate_500ul', '1')
     tips300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
         for slot in ['4', '7']]
