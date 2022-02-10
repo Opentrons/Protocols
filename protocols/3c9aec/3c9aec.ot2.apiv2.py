@@ -1,5 +1,3 @@
-import csv  # noqa: E902
-import os
 from opentrons import protocol_api
 from opentrons.types import Point
 
@@ -41,25 +39,25 @@ def run(ctx: protocol_api.ProtocolContext):
                                m300_mount,
                                tip_racks=tipracks)
 
-    """ TIP-TRACKING BETWEEN RUNS """
-    # Tip tracking between runs
-    if not ctx.is_simulating():
-        file_path = '/data/csv/tiptracking.csv'
-        file_dir = os.path.dirname(file_path)
-        # check for file directory
-        if not os.path.exists(file_dir):
-            os.makedirs(file_dir)
-
-    if ctx.is_simulating():
-        tips_by_col = [tip for rack in tipracks
-                       for col in rack.columns() for tip in col[::-1]]
-        tip_chunks = [tips_by_col[i:i+8]
-    else:
-        if track_tips:
-            with open(file_path) as csv_file:
-                tip_chunks = list(new_tip_list)
-        else:
-            tip_chunks = []
+    # """ TIP-TRACKING BETWEEN RUNS """
+    # # Tip tracking between runs
+    # if not ctx.is_simulating():
+    #     file_path = '/data/csv/tiptracking.csv'
+    #     file_dir = os.path.dirname(file_path)
+    #     # check for file directory
+    #     if not os.path.exists(file_dir):
+    #         os.makedirs(file_dir)
+    #
+    # if ctx.is_simulating():
+    #     tips_by_col = [tip for rack in tipracks
+    #                    for col in rack.columns() for tip in col[::-1]]
+    #     tip_chunks = [tips_by_col[i:i+8]
+    # else:
+    #     if track_tips:
+    #         with open(file_path) as csv_file:
+    #             tip_chunks = list(new_tip_list)
+    #     else:
+    #         tip_chunks = []
 
     """PROTOCOL BEGINS """
 
@@ -125,6 +123,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     """PICKUP FUNCTION"""
     total_tip_cols = 36
+
     def pick_up(num_channels_per_pickup):
         nonlocal tip_chunks
         if num_channels_per_pickup > 1:
@@ -328,10 +327,10 @@ def run(ctx: protocol_api.ProtocolContext):
         pip.drop_tip()
         ctx.comment('\n')
 
-    # write updated tipcount to CSV
-    tip_data = {well: well.has_tip for well in tipracks[0].wells()}
-
-    new_tip_list = tip_chunks
-    if not ctx.is_simulating():
-        with open(file_path, 'w') as outfile:
-            outfile.write(new_tip_list)
+    # # write updated tipcount to CSV
+    # tip_data = {well: well.has_tip for well in tipracks[0].wells()}
+    #
+    # new_tip_list = tip_chunks
+    # if not ctx.is_simulating():
+    #     with open(file_path, 'w') as outfile:
+    #         outfile.write(new_tip_list)
