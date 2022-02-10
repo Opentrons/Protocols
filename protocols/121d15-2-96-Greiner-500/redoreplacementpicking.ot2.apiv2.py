@@ -1,6 +1,7 @@
 # metadata
 metadata = {
-    'protocolName': 'Redo Replacement Picking (Greiner MASTERBLOCK 96 Well Plate 500 µL)',
+    'protocolName': 'Redo Replacement Picking (Greiner MASTERBLOCK 96 Well \
+Plate 500 µL)',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'

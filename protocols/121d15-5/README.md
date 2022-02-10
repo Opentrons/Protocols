@@ -34,7 +34,7 @@ Links:
 * [Redo Replacement Picking (Irish Life Sciences 96 Well Plate 2200 µL)](./121d15-2-96-Irish-2200)
 <br />
 <br />
-* [Redo Replacement Picking (384)](./121d15-2-384)
+* [Redo Replacement Picking (Greiner Masterblock 384 Well Plate 225 µL)](./121d15-2-384)
 <br />
 <br />
 
