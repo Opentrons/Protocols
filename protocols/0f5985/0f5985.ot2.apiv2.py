@@ -16,7 +16,7 @@ def run(ctx: protocol_api.ProtocolContext):
     [
      n_samples,
      is_blood_cells,
-     lwaste,
+     is_lwaste,
      x_offset,
      mag_height,
      is_protk_tube,
@@ -24,7 +24,7 @@ def run(ctx: protocol_api.ProtocolContext):
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
         "n_samples",
         "is_blood_cells",
-        "lwaste",
+        "is_lwaste",
         "x_offset",
         "mag_height",
         "is_protk_tube",
@@ -243,12 +243,12 @@ def run(ctx: protocol_api.ProtocolContext):
         :param source_columns: The columns to remove supernatant from
         :param volume: The volume of supernatant to remove
         '''
-        nonlocal lwaste, trash, m300, sides, sample_columns, liq_trash_tracker
+        nonlocal is_lwaste, trash, m300, sides, sample_columns, liq_trash_tracker
 
         # Determine where the liquid trash goes: general trash or
         # liq. trash reservoir
         trash_target = trash
-        if lwaste:
+        if is_lwaste:
             trash_target = liq_trash_tracker.track(volume)
 
         for col, side in zip(sample_columns, sides):
@@ -268,7 +268,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     def wash(wash_vol, wash_vol_tracker, mag_engage_time,
              n_mixes, buffer_name='wash buffer', reuse_tips=True):
-        nonlocal lwaste, m300, sides, sample_columns, mag_mod, ctx, mag_height
+        nonlocal is_lwaste, m300, sides, sample_columns, mag_mod, ctx, mag_height
         '''
         This function repeats a washing procedure two times.
         Washing procedure:
@@ -313,7 +313,6 @@ def run(ctx: protocol_api.ProtocolContext):
         well_row_letter = well_name[0:1]
         row_num = letter_to_row_num_dict[well_row_letter]
         col_num = int(well_name[1:])
-        # import pdb; pdb.set_trace()
         index = (col_num-1)*8 + row_num
         return index
 

@@ -13,7 +13,7 @@
   },
   {
     "type": "int",
-    "label": "Length of magnet extension (mm)",
+    "label": "Magnet extension (mm)",
     "name": "mag_height",
     "default": 4.7
   },
@@ -47,7 +47,7 @@
   {
     "type": "dropDown",
     "label": "Liquid waste reservoir",
-    "name": "lwaste",
+    "name": "is_lwaste",
     "options": [
       {"label": "Use a liquid waste reservoir (slot 6)", "value": true},
       {"label": "Use regular trash for liquid waste", "value": false}
