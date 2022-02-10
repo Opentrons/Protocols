@@ -20,7 +20,7 @@ def run(ctx):
     plate = ctx.load_labware('greinermasterblock_384_wellplate_225ul', '1')
     tips300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
-        for slot in ['4', '7']]
+        for slot in ['11']]
 
     # pipette
     p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
