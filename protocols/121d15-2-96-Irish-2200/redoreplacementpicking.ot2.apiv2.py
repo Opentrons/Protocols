@@ -1,6 +1,7 @@
 # metadata
 metadata = {
-    'protocolName': 'Redo Replacement Picking (Irish Life Sciences 96 Well Plate 2200 µL)',
+    'protocolName': 'Redo Replacement Picking (Irish Life Sciences 96 Well \
+Plate 2200 µL)',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'

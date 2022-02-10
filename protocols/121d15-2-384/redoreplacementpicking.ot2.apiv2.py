@@ -1,6 +1,7 @@
 # metadata
 metadata = {
-    'protocolName': 'Redo Replacement Picking (384)',
+    'protocolName': 'Redo Replacement Picking (Greiner Masterblock 384 Well \
+Plate 225 µL)',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'
