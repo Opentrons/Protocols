@@ -40,7 +40,7 @@ def run(ctx):
     # mastermix
     m20.pick_up_tip()
     for i, d in enumerate(dests1):
-        m20.transfer(8.5, mm[i//16].bottom().move(Point(x=0.8, y=0.4, z=-2.5)),
+        m20.transfer(8.5, mm[i//16].bottom().move(Point(x=0.8, y=0.4, z=-4.5)),
                      d, new_tip='never')
     m20.drop_tip()
 
@@ -53,7 +53,7 @@ def run(ctx):
     for i, d in enumerate(dests2):
         m20.pick_up_tip()
         m20.transfer(
-            1, samples[i//22].bottom().move(Point(x=0.8, y=0.4, z=-2.5)),
+            1, samples[i//22].bottom().move(Point(x=0.8, y=0.4, z=-4.5)),
             d.bottom().move(Point(x=1.0, y=-0.1, z=1)),
             mix_after=(5, 5), new_tip='never')
         m20.touch_tip(d, speed=20, radius=0.9)
@@ -62,8 +62,8 @@ def run(ctx):
     # control
     for s, d_col in zip([pos_control, water], plate384.columns()[-2:]):
         for d in d_col:
-            p20.transfer(1, s.bottom().move(Point(x=0.8, y=0.4, z=-2.5)),
-                         d.bottom().move(Point(x=1.0, y=-0.1, z=1)),
+            p20.transfer(1, s.bottom().move(Point(x=0.8, y=0.4, z=-4.5)),
+                         d.bottom().move(Point(x=0.5, y=-0.1, z=1)),
                          mix_after=(5, 5))
 
     ctx.comment('Remove plate, seal, and place in QuantStudio 5 cycler.')

@@ -1,4 +1,4 @@
-# Manual Cleave, ACN + Elution (Off-Deck Vacuum)
+# Manual Cleave, ACN + Elution (On-Deck Vacuum)
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -45,7 +45,7 @@ This protocol performs a custom plate filling and elution for up to 4x 96-well p
 ---
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/121d15/deck5.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/121d15/deck6.png)
 
 ---
 

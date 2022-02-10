@@ -273,6 +273,7 @@ def run(ctx):
                         p300s.dispense(vol, d.bottom(clearance_pcr), rate=0.3)
                         p300s.delay(1)
                         p300s.slow_tip_withdrawal(10, d)
+                    p300s.dispense(15, mm_source.height_inc(15), rate=0.3)
 
         else:
             dest = (dest for dest in current_transfers['dest'])
@@ -292,6 +293,7 @@ def run(ctx):
                     p300s.delay(1)
                     p300s.slow_tip_withdrawal(10, d)
             try:
+                p300s.dispense(15, mm_source.height_inc(15), rate=0.3)
                 mm_source = next(mm)
                 p300s.drop_tip()
             except StopIteration:
@@ -336,4 +338,5 @@ def run(ctx):
          vol, pcr_plate.wells_by_name()[
           tfer['dest well']].bottom(clearance_pcr))
         pip20.mix(6, 10)
+        pip20.blow_out()
         pip20.drop_tip()
