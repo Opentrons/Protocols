@@ -1,4 +1,4 @@
-# Redo Replacement Picking
+# Redo Replacement Picking (384)
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -22,10 +22,15 @@ Links:
 * [Manual Cleave, ACN + Elution (On-deck Vacuum)](./121d15-6)
 <br />
 <br />
-* [Redo Replacement Picking](./121d15-2)
-<br />
-<br />
 * [HPLC Picking](./121d15-3)
+<br />
+<br />
+* [Redo Replacement Picking (96)](./121d15-2-96)
+<br />
+<br />
+* [Redo Replacement Picking (384)](./121d15-2-384)
+<br />
+<br />
 
 This protocol performs a custom Redo Replacement Picking protocol from a worklist. The worklist should be specified as follows:
 
@@ -50,7 +55,6 @@ pos TB_RCK_1,pos MTP_1,disposal_vol,transfer_vol
 ### Labware
 * Custom 48-tuberack
 * [Greiner MASTERBLOCK 384 Well Plate 225 µL](https://shop.gbo.com/en/row/products/bioscience/microplates/polypropylene-storage-plates/384-deep-well-masterblock/781270.html)
-* [Greiner MASTERBLOCK 96 Well Plate 500 µL](https://shop.gbo.com/en/row/products/bioscience/microplates/polypropylene-storage-plates/96-well-masterblock-0-5ml/786201.html)
 * [Opentrons 300µL Tips](https://shop.opentrons.com/opentrons-300ul-tips-1000-refills/)
 
 ### Pipettes
