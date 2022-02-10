@@ -1,6 +1,6 @@
 # metadata
 metadata = {
-    'protocolName': 'Redo Replacement Picking (96)',
+    'protocolName': 'Redo Replacement Picking (Greiner MASTERBLOCK 96 Well Plate 500 µL)',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'
@@ -58,4 +58,4 @@ def run(ctx):
         p300.drop_tip()
 
         # transfer tube to well
-        p300.transfer(transfer_vol, tube, well.top(-1))
+        p300.transfer(transfer_vol, tube.bottom(0.5), well.top(-1))
