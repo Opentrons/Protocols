@@ -1,11 +1,11 @@
-# Manual Cleave, ACN + Elution (On-Deck Vacuum)
+# Redo Replacement Picking (Greiner MASTERBLOCK 96 Well Plate 500 µL)
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
 ## Categories
 * Sample Prep
-	* Plate Filling
+	* Cherrypicking
 
 ## Description
 
@@ -38,25 +38,38 @@ Links:
 <br />
 <br />
 
-This protocol performs a custom plate filling and elution for up to 4x 96-well plates from a single reagent reservoir. The user can input the number of rows and columns to be filled for each plate. Liquid handling parameters are automatically determined from the user's selection of which reagent will be added during the run.
+This protocol performs a custom Redo Replacement Picking protocol from a worklist. The worklist should be specified as follows:
+
+```
+Number of Redo
+8
+pos TB_RCK_1,pos MTP_1,disposal_vol,transfer_vol
+TUBE BAR,PLATE BAR
+1,1,200,200
+2,35,200,200
+3,2,150,200
+4,90,100,100
+5,84
+6,62
+7,42
+8,18
+...
+```
 
 ---
 
 ### Labware
-* Custom 96-tuberack
-* [NEST 1 Reservoir 195ml](https://shop.opentrons.com/nest-1-well-reservoirs-195-ml/)
+* Custom 48-tuberack
+* [Greiner MASTERBLOCK 96 Well Plate 500 µL](https://shop.gbo.com/en/row/products/bioscience/microplates/polypropylene-storage-plates/96-well-masterblock-0-5ml/786201.html)
 * [Opentrons 300µL Tips](https://shop.opentrons.com/opentrons-300ul-tips-1000-refills/)
 
 ### Pipettes
-* [P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)
-
-### Reagents
-* water
+* [P300 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 
 ---
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/121d15/deck6.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/121d15/deck2-96.png)
 
 ---
 

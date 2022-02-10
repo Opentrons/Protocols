@@ -1,5 +1,5 @@
 {
-    "content": "# metadata\nmetadata = {\n    'protocolName': 'HPLC Picking',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx):\n\n    [input_file, default_transfer_vol, p300_mount] = get_values(  # noqa: F821\n        'input_file', 'default_transfer_vol', 'p300_mount')\n\n    # load labware\n    rack = ctx.load_labware('eurofins_96x2ml_tuberack', '2', 'tuberack')\n    plates = [\n        ctx.load_labware('irishlifesciences_96_wellplate_2200ul', slot,\n                         f'plate {i+1}')\n        for i, slot in enumerate(['10', '7', '4', '1'])]\n    tips300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '11')]\n\n    # pipette\n    p300 = ctx.load_instrument('p300_single_gen2', p300_mount,\n                               tip_racks=tips300)\n\n    # parse\n    data = [\n        line.split(',') for line in input_file.splitlines()\n        if line and line.split(',')[0].strip()]\n\n    # order\n    wells_ordered = [\n        well for plate in plates for row in plate.rows() for well in row]\n\n    dest_vols = {}\n    prev_dest = None\n    for i, line in enumerate(data):\n        source = wells_ordered[int(line[0]) - 1]\n        dest = rack.wells_by_name()[line[1].upper()]\n        if len(line) > 2 and line[2]:\n            vol = round(float(line[2]))\n        else:\n            vol = default_transfer_vol\n\n        # check for volumes slightly over 300ul from HPLC input files\n        vol = 300 if 300 < vol < 305 else vol\n\n        if dest != prev_dest:\n            if p300.has_tip:\n                p300.drop_tip()\n            p300.pick_up_tip()\n        p300.transfer(vol, source.bottom(0.5), dest.top(-1), new_tip='never')\n        prev_dest = dest\n\n        # track volumes for final adjustment\n        if dest not in dest_vols:\n            dest_vols[dest] = vol\n        else:\n            dest_vols[dest] += vol\n    p300.drop_tip()\n\n    # final adjustment with water up to 1500ul\n    ctx.pause('Replace plate 4 in slot 1 with water reservoir. Resume once \\\nfinished.')\n    water = plates[-1].wells_by_name()['D4'].bottom(1)\n    p300.pick_up_tip()\n    for tube, vol in dest_vols.items():\n        adjustment = 1500 - vol\n        if adjustment > 0:\n            p300.transfer(adjustment, water, tube.top(-1), new_tip='never')\n    p300.drop_tip()\n",
+    "content": "# metadata\nmetadata = {\n    'protocolName': 'Redo Replacement Picking (Greiner MASTERBLOCK 96 Well \\\nPlate 500 \u00b5L)',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx):\n\n    [input_file, tuberack_scan, plate_scan, default_disposal_vol,\n     default_transfer_vol, p300_mount] = get_values(  # noqa: F821\n        'input_file', 'tuberack_scan', 'plate_scan', 'default_disposal_vol',\n        'default_transfer_vol', 'p300_mount')\n\n    # load labware\n    rack = ctx.load_labware('eurofins_96x2ml_tuberack', '2', 'tuberack')\n    plate = ctx.load_labware('greinermasterblock_96_wellplate_500ul', '1')\n    tips300 = [\n        ctx.load_labware('opentrons_96_tiprack_300ul', slot)\n        for slot in ['4', '7']]\n\n    # pipette\n    p300 = ctx.load_instrument('p300_single_gen2', p300_mount,\n                               tip_racks=tips300)\n\n    # check barcode scans (tube, plate)\n    tuberack_bar, plate_bar = input_file.splitlines()[3].split(',')[:2]\n    if not tuberack_scan[:len(tuberack_scan)-4] == tuberack_bar.strip():\n        print(tuberack_scan[:len(tuberack_scan)-4])\n        raise Exception(f'Tuberack scans do not match ({tuberack_bar}, \\\n{tuberack_scan})')\n    if not plate_scan[:len(plate_scan)-4] == plate_bar.strip():\n        raise Exception(f'Plate scans do not match ({plate_bar}, {plate_bar})')\n\n    # parse\n    data = [\n        [val.strip() for val in line.split(',')]\n        for line in input_file.splitlines()[4:]\n        if line and line.split(',')[0].strip()]\n\n    tubes_ordered = [\n        well for i in range(2) for col in rack.columns()\n        for well in col[i*8:(i+1)*8]]\n\n    for line in data:\n        tube = tubes_ordered[int(line[0])-1]\n        well = plate.wells()[int(line[1])-1]\n        if len(line) >= 3 and line[2]:\n            disposal_vol = float(line[2])\n        else:\n            disposal_vol = default_disposal_vol\n        if len(line) >= 4 and line[3]:\n            transfer_vol = float(line[3])\n        else:\n            transfer_vol = default_transfer_vol\n\n        # remove contents of well\n        p300.pick_up_tip()\n        ctx.max_speeds['A'] = 100  # slow descent\n        ctx.max_speeds['Z'] = 100  # slow descent\n\n        p300.aspirate(disposal_vol, well.bottom(0.2))\n        del ctx.max_speeds['A']  # reset to default\n        del ctx.max_speeds['Z']  # reset to default\n        p300.drop_tip()\n\n        # transfer tube to well\n        p300.transfer(transfer_vol, tube.bottom(0.5), well.top(-1))\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -16823,14 +16823,32 @@
     ],
     "fields": [
         {
-            "default": "1,A1,300\n2,A1,300\n3,A1,300\n4,A1,300\n10,B1,300\n12,B1,300\n13,B1,300\n14,B1,\n",
+            "default": "Number of Redo\n8\npos TB_RCK_1,pos MTP_1,disposal_vol,transfer_vol\nREPLACE WITH SCAN,REPLACE WITH SCAN\n1,1,200,200\n2,35,200,200\n3,2,150,200\n4,90,100,100\n5,84\n6,62\n7,42\n8,18\n",
             "label": "input file",
             "name": "input_file",
             "type": "textFile"
         },
         {
-            "default": 300.0,
-            "label": "default transfer volume (\u00b5l)",
+            "default": "REPLACE WITH SCAN_XXX",
+            "label": "tuberack scan",
+            "name": "tuberack_scan",
+            "type": "str"
+        },
+        {
+            "default": "REPLACE WITH SCAN_XXX",
+            "label": "plate scan",
+            "name": "plate_scan",
+            "type": "str"
+        },
+        {
+            "default": 200.0,
+            "label": "default initial disposal volume (\u00b5l)",
+            "name": "default_disposal_vol",
+            "type": "float"
+        },
+        {
+            "default": 200.0,
+            "label": "default new transfer volume (\u00b5l)",
             "name": "default_transfer_vol",
             "type": "float"
         },
@@ -16858,10 +16876,10 @@
     ],
     "labware": [
         {
-            "name": "plate 4 on 1",
+            "name": "Greiner MASTERBLOCK 96 Well Plate 500 \u00b5L on 1",
             "share": false,
             "slot": "1",
-            "type": "irishlifesciences_96_wellplate_2200ul"
+            "type": "greinermasterblock_96_wellplate_500ul"
         },
         {
             "name": "tuberack on 2",
@@ -16870,27 +16888,15 @@
             "type": "eurofins_96x2ml_tuberack"
         },
         {
-            "name": "plate 3 on 4",
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 4",
             "share": false,
             "slot": "4",
-            "type": "irishlifesciences_96_wellplate_2200ul"
+            "type": "opentrons_96_tiprack_300ul"
         },
         {
-            "name": "plate 2 on 7",
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 7",
             "share": false,
             "slot": "7",
-            "type": "irishlifesciences_96_wellplate_2200ul"
-        },
-        {
-            "name": "plate 1 on 10",
-            "share": false,
-            "slot": "10",
-            "type": "irishlifesciences_96_wellplate_2200ul"
-        },
-        {
-            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 11",
-            "share": false,
-            "slot": "11",
             "type": "opentrons_96_tiprack_300ul"
         },
         {
@@ -16903,7 +16909,7 @@
     "metadata": {
         "apiLevel": "2.11",
         "author": "Nick <protocols@opentrons.com>",
-        "protocolName": "HPLC Picking",
+        "protocolName": "Redo Replacement Picking (Greiner MASTERBLOCK 96 Well Plate 500 \u00b5L)",
         "source": "Custom Protocol Request"
     },
     "modules": []

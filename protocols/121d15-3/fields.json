@@ -9,7 +9,7 @@
     "type": "float",
     "label": "default transfer volume (µl)",
     "name": "default_transfer_vol",
-    "default": 200.0
+    "default": 300.0
   },
   {
     "type": "dropDown",

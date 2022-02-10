@@ -1,7 +1,7 @@
 # metadata
 metadata = {
-    'protocolName': 'Redo Replacement Picking (Greiner Masterblock 384 Well \
-Plate 225 µL)',
+    'protocolName': 'Redo Replacement Picking (Irish Life Sciences 96 Well \
+Plate 2200 µL)',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'
@@ -17,7 +17,7 @@ def run(ctx):
 
     # load labware
     rack = ctx.load_labware('eurofins_96x2ml_tuberack', '2', 'tuberack')
-    plate = ctx.load_labware('greinermasterblock_384_wellplate_225ul', '1')
+    plate = ctx.load_labware('irishlifesciences_96_wellplate_2200ul', '1')
     tips300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
         for slot in ['4', '7']]
