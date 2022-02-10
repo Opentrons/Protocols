@@ -47,26 +47,34 @@ def run(ctx: protocol_api.ProtocolContext):
     """ TIP-TRACKING BETWEEN RUNS """
     total_tip_cols = 36
 
-    file_path = '/Users/work/Desktop/THURSDAY.json'
+    file_path = '/Users/work/Desktop/Tasdfasddsd.json'
     file_dir = os.path.dirname(file_path)
 
     tips_by_col = [tip for rack in tipracks
                    for col in rack.columns() for tip in col[::-1]]
     tip_cols = [tips_by_col[i:i+8] for i in range(0, len(tips_by_col), 8)]
 
-    if ctx.is_simulating():
-        if track_tips:
-            # check for file directory
-            if not os.path.exists(file_dir):
-                os.makedirs(file_dir)
-            if not os.path.isfile(file_path):
-                with open(file_path, 'w') as outfile:
-                    outfile.write("")
-                print(os.stat("file").st_size == 0)
-
+    if track_tips and not ctx.is_simulating():
+        # check for file directory
+        if not os.path.exists(file_dir):
+            os.makedirs(file_dir)
+        # if no file, then use standard tip_chunks definition, and the
+        # end of the code will write to updated tip_chunks list to
+        # the file created. This if statement handles the case in which
+        # tip tracking is selected for the first time.
+        if not os.path.isfile(file_path):
+            tip_chunks = [tips_by_col[i:i+8] for i in range(0,
+                          len(tips_by_col), 8)]
+        else:
+            # grab nested list tip_chunks from file.
             source = open(file_path, 'rb').read()
+            # see below for conversion of tip_chunks nested list to bools.
+            # in order to dump the well objects in tip_chunks to a json file,
+            # they had to be serializable (int, string, bool). The end of the
+            # protocol does this conversion.
             tip_bool_chunks = json.loads(source)
 
+            # convert bools back to well objects to use.
             tip_chunks = [[] for _ in range(total_tip_cols)]
             for i, (bool_chunk, tip_chunk) in enumerate(zip(tip_bool_chunks,
                                                             tip_cols)):
@@ -79,6 +87,7 @@ def run(ctx: protocol_api.ProtocolContext):
                         continue
 
     else:
+        # standard definition of tip_chunks if not tracking tips.
         tip_chunks = [tips_by_col[i:i+8] for i in range(0,
                       len(tips_by_col), 8)]
     """PROTOCOL BEGINS """
@@ -95,9 +104,9 @@ def run(ctx: protocol_api.ProtocolContext):
         values_from_csv.append(value)
         wells_from_csv.append(well)
 
+    # create nested list of all values in csv (by column).
     value_chunk_cols = [values_from_csv[i:i+8]
                         for i in range(0, len(values_from_csv), 8)]
-
     list_well_tips = []
 
     """CREATE A LIST OF # TIPS FOR EACH WELL"""
@@ -106,6 +115,11 @@ def run(ctx: protocol_api.ProtocolContext):
     for i, chunk in enumerate(value_chunk_cols):
         start_point = 0
 
+        # check for the values in each column.
+        # if we find a well with a value of 85 or greater,
+        # use that index (j) as the starting point and see how many values
+        # after that are also greater than 85. Once we don't find one,
+        # break.
         for j, value in enumerate(chunk[start_point:]):
             if value >= 85:
                 for check_values in chunk[j:]:
@@ -121,6 +135,10 @@ def run(ctx: protocol_api.ProtocolContext):
             else:
                 list_well_tips.append(0)
 
+    # create a dictionary which says how many tips go to each well.
+    # For example, if the entire first column has values higher than 85,
+    # the first value in the dictionary will be "A1: 8". If first four wells
+    # in column 2 are greater than 85, "B1:4".
     dict_tips_per_well = {}
     tip_ctr = 0
     for j, (well, num_tips) in enumerate(zip(wells_from_csv,
@@ -136,8 +154,6 @@ def run(ctx: protocol_api.ProtocolContext):
     # print('\n\n', dict_tips_per_well, '\n\n')
 
     """PICKUP FUNCTION"""
-    num_tips_left_in_each_column = [8 for _ in range(36)]
-
     def pick_up(num_channels_per_pickup):
         nonlocal tip_chunks
         if num_channels_per_pickup > 1:
@@ -146,6 +162,13 @@ def run(ctx: protocol_api.ProtocolContext):
             pip = p300
         try:
             col = 0
+            # based on the demand of the next well (1-8 tips), this for loop
+            # will find the first available column having adequate number
+            # of tips starting from the first. If the tip pick up order is:
+            # 6, 8, 2 for the first 3 pick ups, then 6 tips will be taken from
+            # column 1, 8 tips from column 2, and 2 tips back from column 1.
+            # efficient tip pick up instead of "throwing away" a whole column
+            # after pick up.
             for _ in range(36):
                 if num_channels_per_pickup <= len(tip_chunks[col]):
                     break
@@ -153,10 +176,12 @@ def run(ctx: protocol_api.ProtocolContext):
                     col += 1
             pip.pick_up_tip(tip_chunks[col][num_channels_per_pickup-1])
 
+            # remove as many tips as we picked up in that column
+            # from the 0 index.
             for _ in range(num_channels_per_pickup):
                 tip_chunks[col].pop(0)
-                num_tips_left_in_each_column[col] -= 1
 
+        # replace tip exception
         except IndexError:
             ctx.pause("Replace empty tip racks on slots 4, 5, and 6")
             pip.reset_tipracks()
@@ -181,6 +206,7 @@ def run(ctx: protocol_api.ProtocolContext):
     vol_ctr = 0
     waste_well = 0
 
+    # move to next well in reservoir once we fill one.
     def check_waste_vol(vol):
         nonlocal vol_ctr
         nonlocal waste_well
@@ -213,6 +239,7 @@ def run(ctx: protocol_api.ProtocolContext):
             pip = p300
 
         pick_up(num_tips)
+        # aspirate from side so as to not disturb cell culture.
         pip.aspirate(200, plate_well.bottom(z=1).move(
                 Point(x=(plate_well.diameter/2-2))), rate=asp_rate_step1)
         pip.dispense(200, waste)
@@ -340,6 +367,6 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # write to the ot-2 no matter what in case the user would like to start
     # tracking tips for the next run
-    if ctx.is_simulating():
+    if not ctx.is_simulating():
         with open(file_path, 'w') as outfile:
             outfile.write(json.dumps(tip_data))
