@@ -1,4 +1,4 @@
-# Redo Replacement Picking (96)
+# Redo Replacement Picking (Greiner MASTERBLOCK 96 Well Plate 1000 µL)
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -9,7 +9,7 @@
 
 ## Description
 
-Links:
+Links:Links:
 * [Manual Cleave](./121d15)
 <br />
 <br />
@@ -25,10 +25,16 @@ Links:
 * [HPLC Picking](./121d15-3)
 <br />
 <br />
-* [Redo Replacement Picking (96)](./121d15-2-96)
+* [Redo Replacement Picking (Greiner MASTERBLOCK 96 Well Plate 500 µL)](./121d15-2-96-Greiner-500)
 <br />
 <br />
-* [Redo Replacement Picking (384)](./121d15-2-384)
+* [Redo Replacement Picking (Greiner MASTERBLOCK 96 Well Plate 1000 µL)](./121d15-2-96-Greiner-1000)
+<br />
+<br />
+* [Redo Replacement Picking (Irish Life Sciences 96 Well Plate 2200 µL)](./121d15-2-96-Irish-2200)
+<br />
+<br />
+* [Redo Replacement Picking (Greiner Masterblock 384 Well Plate 225 µL)](./121d15-2-384)
 <br />
 <br />
 
@@ -38,6 +44,7 @@ This protocol performs a custom Redo Replacement Picking protocol from a worklis
 Number of Redo
 8
 pos TB_RCK_1,pos MTP_1,disposal_vol,transfer_vol
+TUBE BAR,PLATE BAR
 1,1,200,200
 2,35,200,200
 3,2,150,200
@@ -62,7 +69,7 @@ pos TB_RCK_1,pos MTP_1,disposal_vol,transfer_vol
 ---
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/121d15/deck2-96.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/121d15/deck-greiner-1000.png)
 
 ---
 
