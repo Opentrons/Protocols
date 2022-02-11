@@ -9,26 +9,6 @@ metadata = {
 }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{
-                                  "has_first_tube_set":true,
-                                  "n_samples_set1":45,
-                                  "has_second_tube_set":true,
-                                  "n_samples_set2":48,
-                                  "sample_aspiration_vol_ul":50,
-                                  "aspirate_flow_rate":10,
-                                  "dispense_flow_rate":10,
-                                  "aspiration_height_mm":3,
-                                  "dispension_height_mm":1,
-                                  "temp_mod_lname":false,
-                                  "temperature":10,
-                                  "post_aspiration_wait":5
-                                  }
-                                  """)
-    return [_all_values[n] for n in names]
-
-
 def run(ctx: protocol_api.ProtocolContext):
 
     [has_first_tube_set,
@@ -56,7 +36,7 @@ def run(ctx: protocol_api.ProtocolContext):
      "temperature",
      "post_aspiration_wait")
 
-    if not 1 <= n_samples_set1 <= 45:
+    if (not 1 <= n_samples_set1 <= 45) and has_first_tube_set:
         raise Exception(
             "Enter a number of samples for tube set 1 between 1-45")
 
@@ -362,31 +342,37 @@ def run(ctx: protocol_api.ProtocolContext):
                     format(temperature))
         temp_mod.set_temperature(temperature)
 
-    # Transfer the first set of tube samples to quadrant 1 of the
-    # 96 well plate, skipping the 3 first wells/tubes for controls
-    ctx.comment("\n\nTransferring samples from sample set 1, sample quad 1 " +
-                "to destination quad 1\n")
-    n_wells = len(target_quadrant_1) - 3
-    n_quad_transfers = n_wells if n_wells < n_samples_set1 else n_samples_set1
-    transfer_tube_samples(sample_aspiration_vol_ul,
-                          tuberack_quad_1_map[3:n_quad_transfers],
-                          target_quadrant_1[3:n_quad_transfers])
+    if has_first_tube_set:
+        # Transfer the first set of tube samples to quadrant 1 of the
+        # 96 well plate, skipping the 3 first wells/tubes for controls
+        ctx.comment("\n\nTransferring samples from Sample set 1:Tuberack "
+                    "quad 1 to Destination quad 1\n")
+        n_wells = len(target_quadrant_1) - 3
+        n_quad_transfers = n_wells if n_wells < n_samples_set1 \
+            else n_samples_set1
+        transfer_tube_samples(sample_aspiration_vol_ul,
+                              tuberack_quad_1_map[3:n_quad_transfers],
+                              target_quadrant_1[3:n_quad_transfers])
 
-    ctx.comment("\n\nTransferring samples from set 1, sample quad 2 " +
-                "to destination quad 2\n")
-    n_wells = len(target_quadrant_2)
+        ctx.comment("\n\nTransferring samples from Sample set 1:Tuberack "
+                    "quad 2 to Destination quad 2\n")
+        n_wells = len(target_quadrant_2)
 
-    n_quad_transfers = n_samples_set1 - n_quad_transfers
-    transfer_tube_samples(sample_aspiration_vol_ul,
-                          tuberack_quad_2_map[:n_quad_transfers],
-                          target_quadrant_2[:n_quad_transfers])
+        n_quad_transfers = n_samples_set1 - n_quad_transfers
+        transfer_tube_samples(sample_aspiration_vol_ul,
+                              tuberack_quad_2_map[:n_quad_transfers],
+                              target_quadrant_2[:n_quad_transfers])
+
+    # If the first set of tuberacks has to be removed and the 2nd set inserted
+    # then pause here
+    if has_second_tube_set and has_first_tube_set:
+        ctx.pause(
+            "\n\nRemove the 1st set of tuberacks and insert the 2nd set\n")
+        ctx.comment("\n\nTransferring samples from Sample set 2:Tuberack "
+                    "quad 1 to Destination quad 3\n")
 
     # Transfer the second set of tube samples
     if has_second_tube_set:
-        ctx.pause(
-            "\n\nRemove the 1st set of tuberacks and insert the 2nd set\n")
-        ctx.comment("\n\nTransferring samples from set 2, sample quad 1 " +
-                    "to destination quad 3\n")
         n_wells = len(target_quadrant_3)
         n_quad_transfers = n_wells if n_wells < n_samples_set2\
             else n_samples_set2
@@ -394,8 +380,8 @@ def run(ctx: protocol_api.ProtocolContext):
                               tuberack_quad_1_map[:n_quad_transfers],
                               target_quadrant_3[:n_quad_transfers])
 
-        ctx.comment("\n\nTransferring samples from set 2, sample quad 2 " +
-                    "to destination Quad 2\n")
+        ctx.comment("\n\nTransferring samples from Sample set 2:Tuberack "
+                    "quad 2 to Destination quad 4\n")
         n_quad_transfers = n_samples_set2 - n_quad_transfers
         transfer_tube_samples(sample_aspiration_vol_ul,
                               tuberack_quad_2_map[:n_quad_transfers],
