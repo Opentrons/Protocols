@@ -1,5 +1,14 @@
 [
   {
+    "type": "dropDown",
+    "label": "Is there a first set of tubes?",
+    "name": "has_first_tube_set",
+    "options": [
+      {"label": "Yes", "value": true},
+      {"label": "No", "value": false}
+    ]
+  },
+  {
     "type": "int",
     "label": "Number of tubes/samples in the first set of tubes",
     "name": "n_samples_set1",
