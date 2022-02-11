@@ -115,7 +115,8 @@ def run(ctx):
     pickup_p300('multi')
     for col in dw_plate.rows()[0]:
         if determine_dil(col):
-            p300.transfer(800, diluent, col, new_tip='never')
+            for _ in range(4):  # 4x 200ul = 800ul
+                p300.transfer(200, diluent, col, new_tip='never')
     p300.drop_tip()
 
     # prompt user to transfer neat sample
