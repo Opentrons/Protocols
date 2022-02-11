@@ -16829,7 +16829,7 @@
             "type": "textFile"
         },
         {
-            "default": 200.0,
+            "default": 300.0,
             "label": "default transfer volume (\u00b5l)",
             "name": "default_transfer_vol",
             "type": "float"

@@ -22,10 +22,21 @@ Links:
 * [Manual Cleave, ACN + Elution (On-deck Vacuum)](./121d15-6)
 <br />
 <br />
-* [Redo Replacement Picking](./121d15-2)
-<br />
-<br />
 * [HPLC Picking](./121d15-3)
+<br />
+<br />
+* [Redo Replacement Picking (Greiner MASTERBLOCK 96 Well Plate 500 µL)](./121d15-2-96-Greiner-500)
+<br />
+<br />
+* [Redo Replacement Picking (Greiner MASTERBLOCK 96 Well Plate 1000 µL)](./121d15-2-96-Greiner-1000)
+<br />
+<br />
+* [Redo Replacement Picking (Irish Life Sciences 96 Well Plate 2200 µL)](./121d15-2-96-Irish-2200)
+<br />
+<br />
+* [Redo Replacement Picking (Greiner Masterblock 384 Well Plate 225 µL)](./121d15-2-384)
+<br />
+<br />
 
 This protocol performs a custom plate filling and elution for up to 4x 96-well plates from a single reagent reservoir. The user can input the number of rows and columns to be filled for each plate. Liquid handling parameters are automatically determined from the user's selection of which reagent will be added during the run.
 
