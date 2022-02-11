@@ -147,4 +147,7 @@ plate on slot 8.'
 
     for source, dest in zip(final_locations, final_targets):
         if source:
+            col = int(source.display_name.split(' ')[0][1:])
+            if col % 3 == 1:
+                pip.mix(5, 200, source)
             p1000.transfer(final_vol, source, dest)
