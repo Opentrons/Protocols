@@ -37,16 +37,16 @@ Links:
 * [Redo Replacement Picking (Greiner Masterblock 384 Well Plate 225 µL)](./121d15-2-384)
 <br />
 <br />
-* [Aliquoting - 2ml Tuberack to 2ml Tuberack](.121d15-7-2ml-2ml-aliquot)
+* [Aliquoting - 2ml Tuberack to 2ml Tuberack](./121d15-7-2ml-2ml-aliquot)
 <br />
 <br />
-* [Aliquoting - 15ml Tuberack to 2ml Tuberack](.121d15-7-2ml-15ml-aliquot)
+* [Aliquoting - 15ml Tuberack to 2ml Tuberack](./121d15-7-2ml-15ml-aliquot)
 <br />
 <br />
-* [Pooling - 2ml Tuberack to 2ml Tuberack](.121d15-7-2ml-2ml-aliquot)
+* [Pooling - 2ml Tuberack to 2ml Tuberack](./121d15-7-2ml-2ml-aliquot)
 <br />
 <br />
-* [Pooling - 2ml Tuberack to 15ml Tuberack](.121d15-7-2ml-15ml-aliquot)
+* [Pooling - 2ml Tuberack to 15ml Tuberack](./121d15-7-2ml-15ml-aliquot)
 <br />
 <br />
 
