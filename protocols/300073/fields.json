@@ -12,7 +12,7 @@
     "type": "int",
     "label": "Number of tubes/samples in the first set of tubes",
     "name": "n_samples_set1",
-    "default": 48
+    "default": 45
   },
   {
     "type": "dropDown",
@@ -27,7 +27,7 @@
     "type": "int",
     "label": "Number of tubes/samples in the second set of tubes",
     "name": "n_samples_set2",
-    "default": 45
+    "default": 48
   },
   {
     "type": "dropDown",
