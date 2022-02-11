@@ -8,26 +8,32 @@
 	* PCR prep
 
 ## Description
-This protocol transfers saliva samples from 25 mL tubes to a 96 well plate. The samples are located in 6 4-in-4 tube racks on the left side of the deck. Optionally 2 second set of tube racks can replace the first one if more than 48 samples need to be distributed. Optionally the target plate can be placed on a temperature module with an aluminum block.
+This protocol transfers saliva samples from 25 mL tubes to a 96 well plate. The samples are located in 6 4-in-4 tube racks on the left side of the deck. Optionally a second set of tube racks can replace the first one if more than 45 samples need to be distributed. Optionally the target plate can be placed on a temperature module with an aluminum block.
 
-The destination plate is divided into four quadrants and the samples are distributed in a zig zag pattern from top left - top right - bottom left - bottom right. The samples are not transferred to the three first wells because they contain control samples.
+The destination plate is divided into four quadrants and the samples are distributed in a zig zag pattern from top left - top right - bottom left - bottom right (see below). Samples are not transferred to the three first wells of the target plate because they contain control samples, symmetrically the first 3 tube slots in Sample set 1:Tuberack quadrant 1 contain no sample tubes.
 
+The tubes in the tuberacks in slot 10, 11, 7 and 8 constitute the 1st tuberack quadrant, and should be regarded as a single unit (Tuberack quadrant 1) consisting of 4 rows of tubes with 12 columns. Samples are transferred in row order to quadrant 1 of the target plate for Sample set 1, and to quadrant 3 for Sample set 2.
+
+Similarly the tuberacks in slot 4, 5, 1 and 2 constitute Tuberack quadrant 2. Samples from Sample set 1 in Tuberack quadrant 2 are transferred to Target quadrant 2, and samples from Sample set 2 are transferred to Target quadrant 4.
+
+**96 well-plate layout**
 ```
-Quadrant 1 (top left)
-A1-D1 to A6-D6
+Target quadrant 1 (top left)
+A1-D1 to A6-D6 (A1-A3 are unused)
 
-Quadrant 2 (top right)
+Target quadrant 2 (top right)
 A7-D7 to A12-D12
 
-Quadrant 3 (bottom left)
+Target quadrant 3 (bottom left)
 E1-H1 to E6-H6
 
-Quadrant 4 (bottom right)
+Target quadrant 4 (bottom right)
 E7-H7 to E12-H12
 ```
 
 Explanation of parameters below:
-* `Number of tubes/samples in the first set of tubes`: How many tubes there are in the first set of tube racks.
+* `Is there a first set of tubes?`: Is there a first set of tubes? (Sometimes the user may have already transferred the first set of tubes and wants the protocol to run from the second set of tuberack samples)
+* `Number of tubes/samples in the first set of tubes`: How many tubes there are in the first set of tube racks. These samples will be transferred to quadrant 1 (and 2) of the destination plate
 * `Is there a second set of tubes?`: Whether to pause the protocol so that a second set of tube racks can be loaded onto the deck
 * `Number of tubes/samples in the second set of tubes`: How many samples there are in the second set of tuberacks (Only needs to be set if a second set of tube racks is loaded)
 * `Sample volume (µL) to aspirate`: Volume of sample to transfer (5 or 50 µL)
