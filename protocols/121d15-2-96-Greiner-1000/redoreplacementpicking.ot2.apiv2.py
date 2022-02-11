@@ -104,7 +104,7 @@ resuming.')
             transfer_vol = default_transfer_vol
 
         # remove contents of well
-        p300.pick_up_tip()
+        _pick_up(p300)
         ctx.max_speeds['A'] = 100  # slow descent
         ctx.max_speeds['Z'] = 100  # slow descent
 
@@ -114,7 +114,10 @@ resuming.')
         p300.drop_tip()
 
         # transfer tube to well
-        p300.transfer(transfer_vol, tube.bottom(0.5), well.top(-1))
+        _pick_up(p300)
+        p300.transfer(transfer_vol, tube.bottom(0.5), well.top(-1),
+                      new_tip='never')
+        p300.drop_tip()
 
     # track final used tip
     if not ctx.is_simulating():
