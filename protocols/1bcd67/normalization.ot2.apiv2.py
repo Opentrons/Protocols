@@ -120,8 +120,10 @@ def run(ctx):
     p300.drop_tip()
 
     # prompt user to transfer neat sample
+    well_name = well.display_name.split(' ')[0]
     sample_str = '\n'.join([
-        f'Transfer {vol}uL to well {well} of deepwell plate on slot 8.'
+        f'Transfer {round(vol, 2)}uL to well {well_name} of deepwell \
+plate on slot 8.'
         for well, vol in dict1.items()])
     ctx.pause(msg=sample_str)
 
