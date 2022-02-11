@@ -138,7 +138,7 @@ plate on slot 8.'
                     pip = p1000
                     p1000.pick_up_tip()
                 custom_transfer(vol, list(set.keys())[i-1], well, pip)
-                pip.mix(5, 100, well)
+                pip.mix(5, 200, well)
                 pip.drop_tip()
 
     # final transfer
