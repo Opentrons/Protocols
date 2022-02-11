@@ -1,0 +1,28 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Sample Prep": [
+            "Pooling"
+        ]
+    },
+    "deck-setup": "\n",
+    "description": "Links:\n* Manual Cleave\n\n\n* Manual Cleave Elution (Off-deck Vacuum)\n\n\n* Manual Cleave, ACN + Elution (Off-deck Vacuum)\n\n\n* Manual Cleave, ACN + Elution (On-deck Vacuum)\n\n\n* HPLC Picking\n\n\n* Redo Replacement Picking (Greiner MASTERBLOCK 96 Well Plate 500 \u00b5L)\n\n\n* Redo Replacement Picking (Greiner MASTERBLOCK 96 Well Plate 1000 \u00b5L)\n\n\n* Redo Replacement Picking (Irish Life Sciences 96 Well Plate 2200 \u00b5L)\n\n\n* Redo Replacement Picking (Greiner Masterblock 384 Well Plate 225 \u00b5L)\n\n\n* Aliquoting - 2ml Tuberack to 2ml Tuberack\n\n\n* Aliquoting - 15ml Tuberack to 2ml Tuberack\n\n\n* Pooling - 2ml Tuberack to 2ml Tuberack\n\n\n* Pooling - 2ml Tuberack to 15ml Tuberack\n\n\nThis protocol performs a custom pooling protocol from a worklist. The worklist should be specified as follows:\nNumber\n8\npos TB_RCK_1,pos MTP_1,transfer_vol\nTUBE BAR 1,TUBE BAR 1\n1,1,200\n2,35,200\n3,2,150\n4,90,100\n5,84\n6,62\n7,42\n8,18\n...\n",
+    "internal": "121d15",
+    "labware": "\nCustom 96-tuberacks\nOpentrons 4-in-1 Tube Rack Set with 3x5 15ml Tube Insert\nOpentrons 300\u00b5L Tips\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* Sample Prep\n\t* Pooling\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/121d15/deck2ml15ml.png)\n\n---\n\n",
+        "description": "\nLinks:\n* [Manual Cleave](./121d15)\n<br />\n<br />\n* [Manual Cleave Elution (Off-deck Vacuum)](./121d15-4)\n<br />\n<br />\n* [Manual Cleave, ACN + Elution (Off-deck Vacuum)](./121d15-5)\n<br />\n<br />\n* [Manual Cleave, ACN + Elution (On-deck Vacuum)](./121d15-6)\n<br />\n<br />\n* [HPLC Picking](./121d15-3)\n<br />\n<br />\n* [Redo Replacement Picking (Greiner MASTERBLOCK 96 Well Plate 500 \u00b5L)](./121d15-2-96-Greiner-500)\n<br />\n<br />\n* [Redo Replacement Picking (Greiner MASTERBLOCK 96 Well Plate 1000 \u00b5L)](./121d15-2-96-Greiner-1000)\n<br />\n<br />\n* [Redo Replacement Picking (Irish Life Sciences 96 Well Plate 2200 \u00b5L)](./121d15-2-96-Irish-2200)\n<br />\n<br />\n* [Redo Replacement Picking (Greiner Masterblock 384 Well Plate 225 \u00b5L)](./121d15-2-384)\n<br />\n<br />\n* [Aliquoting - 2ml Tuberack to 2ml Tuberack](.121d15-7-2ml-2ml-aliquot)\n<br />\n<br />\n* [Aliquoting - 15ml Tuberack to 2ml Tuberack](.121d15-7-2ml-15ml-aliquot)\n<br />\n<br />\n* [Pooling - 2ml Tuberack to 2ml Tuberack](.121d15-7-2ml-2ml-aliquot)\n<br />\n<br />\n* [Pooling - 2ml Tuberack to 15ml Tuberack](.121d15-7-2ml-15ml-aliquot)\n<br />\n<br />\n\nThis protocol performs a custom pooling protocol from a worklist. The worklist should be specified as follows:\n\n```\nNumber\n8\npos TB_RCK_1,pos MTP_1,transfer_vol\nTUBE BAR 1,TUBE BAR 1\n1,1,200\n2,35,200\n3,2,150\n4,90,100\n5,84\n6,62\n7,42\n8,18\n...\n```\n\n---\n\n",
+        "internal": "121d15\n",
+        "labware": "* Custom 96-tuberacks\n* [Opentrons 4-in-1 Tube Rack Set](https://shop.opentrons.com/4-in-1-tube-rack-set/) with 3x5 15ml Tube Insert\n* [Opentrons 300\u00b5L Tips](https://shop.opentrons.com/opentrons-300ul-tips-1000-refills/)\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [P300 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n\n---\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "title": "Pooling - 2ml Tuberack to 15ml Tuberack"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nP300 Single Channel Electronic Pipette (GEN2)\n\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "title": "Pooling - 2ml Tuberack to 15ml Tuberack"
+}
