@@ -43,10 +43,10 @@ Links:
 * [Aliquoting - 15ml Tuberack to 2ml Tuberack](./121d15-7-2ml-15ml-aliquot)
 <br />
 <br />
-* [Pooling - 2ml Tuberack to 2ml Tuberack](./121d15-7-2ml-2ml-aliquot)
+* [Pooling - 2ml Tuberack to 2ml Tuberack](./121d15-7-2ml-2ml-pool)
 <br />
 <br />
-* [Pooling - 2ml Tuberack to 15ml Tuberack](./121d15-7-2ml-15ml-aliquot)
+* [Pooling - 2ml Tuberack to 15ml Tuberack](./121d15-7-2ml-15ml-pool)
 <br />
 <br />
 
