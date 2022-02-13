@@ -232,7 +232,7 @@ def run(ctx):
                     # return tip and reset has_tip attribute
                     return_tip(pip, pick_up_loc, num_tips, reagent_type)
 
-        # track final used tip
+        # track final tip used
         # void partially full tip column
         for tiprack in tips300:
             for col in tiprack.columns():
