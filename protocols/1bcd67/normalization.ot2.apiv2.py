@@ -124,7 +124,7 @@ def run(ctx):
     sample_str = '\n'.join([
         f'Transfer {round(vol, 2)}uL to well {well_name} of deepwell \
 plate on slot 8.'
-        for well, vol in dict1.items()])
+        for well, vol in dict1.items() if vol])
     ctx.pause(msg=sample_str)
 
     # perform dilutions
