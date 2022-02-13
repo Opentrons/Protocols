@@ -120,11 +120,14 @@ def run(ctx):
     p300.drop_tip()
 
     # prompt user to transfer neat sample
-    well_name = well.display_name.split(' ')[0]
+    display_wells = [
+        well for well, vol in dict1.items() if vol]
+    display_vols = [
+        round(vol, 2) for vol in dict1.values() if vol]
     sample_str = '\n'.join([
-        f'Transfer {round(vol, 2)}uL to well {well_name} of deepwell \
+        f'Transfer {display_vol}uL to well {display_well} of deepwell \
 plate on slot 8.'
-        for well, vol in dict1.items() if vol])
+        for display_well, display_vol in zip(display_wells, display_vols)])
     ctx.pause(msg=sample_str)
 
     # perform dilutions
