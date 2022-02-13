@@ -13,9 +13,6 @@ Links:
 * [Manual Cleave](./121d15)
 <br />
 <br />
-* [Manual Cleave with Repeat for 2nd EDA](./121d15-repeat)
-<br />
-<br />
 * [Manual Cleave Elution (Off-deck Vacuum)](./121d15-4)
 <br />
 <br />
@@ -28,10 +25,28 @@ Links:
 * [HPLC Picking](./121d15-3)
 <br />
 <br />
-* [Redo Replacement Picking (96)](./121d15-2-96)
+* [Redo Replacement Picking (Greiner MASTERBLOCK 96 Well Plate 500 µL)](./121d15-2-96-Greiner-500)
 <br />
 <br />
-* [Redo Replacement Picking (384)](./121d15-2-384)
+* [Redo Replacement Picking (Greiner MASTERBLOCK 96 Well Plate 1000 µL)](./121d15-2-96-Greiner-1000)
+<br />
+<br />
+* [Redo Replacement Picking (Irish Life Sciences 96 Well Plate 2200 µL)](./121d15-2-96-Irish-2200)
+<br />
+<br />
+* [Redo Replacement Picking (Greiner Masterblock 384 Well Plate 225 µL)](./121d15-2-384)
+<br />
+<br />
+* [Aliquoting - 2ml Tuberack to 2ml Tuberack](./121d15-7-2ml-2ml-aliquot)
+<br />
+<br />
+* [Aliquoting - 15ml Tuberack to 2ml Tuberack](./121d15-7-2ml-15ml-aliquot)
+<br />
+<br />
+* [Pooling - 2ml Tuberack to 2ml Tuberack](./121d15-7-2ml-2ml-pool)
+<br />
+<br />
+* [Pooling - 2ml Tuberack to 15ml Tuberack](./121d15-7-2ml-15ml-pool)
 <br />
 <br />
 
