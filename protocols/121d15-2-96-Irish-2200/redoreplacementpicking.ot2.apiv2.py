@@ -115,8 +115,10 @@ resuming.')
 
         # transfer tube to well
         _pick_up(p300)
-        p300.transfer(transfer_vol, tube.bottom(0.5), well.top(-1),
-                      new_tip='never')
+        p300.aspirate(transfer_vol, tube.bottom(0.2))
+        p300.dispense(transfer_vol, well.top(-1))
+        p300.blow_out()
+        ctx.delay(seconds=2)
         p300.drop_tip()
 
     # track final used tip
