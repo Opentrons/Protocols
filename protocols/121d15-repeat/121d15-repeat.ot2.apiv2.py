@@ -252,7 +252,7 @@ def run(ctx):
                  pick_up_loc.well_name[1:]]:
                     tip.has_tip = False
 
-        # track final used tip
+        # track final tip used
         # void partially full tip column
         for tiprack in tips300:
             for col in tiprack.columns():
