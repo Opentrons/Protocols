@@ -166,7 +166,7 @@ def run(ctx):
             for tip in all_tips[tip_ind:tip_ind+chunk_len]:
                 tip.has_tip = True
 
-        # parse wells into chunks
+        # parse wells to chunks
         chunk_map = {num: [] for num in range(1, 9)}
         for csv, rack in zip(
                 [occupied_well_csv1, occupied_well_csv2, occupied_well_csv3],
