@@ -13,7 +13,7 @@ Links:
 * [Manual Cleave](./121d15)
 <br />
 <br />
-* [Manual Cleave](./121d15-repeat)
+* [Manual Cleave with Repeat for 2nd EDA](./121d15-repeat)
 <br />
 <br />
 * [Manual Cleave Elution (Off-deck Vacuum)](./121d15-4)
