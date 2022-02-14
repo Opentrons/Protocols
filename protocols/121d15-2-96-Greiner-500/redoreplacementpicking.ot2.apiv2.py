@@ -1,5 +1,6 @@
 import os
 import json
+import math
 
 # metadata
 metadata = {
@@ -105,18 +106,39 @@ resuming.')
 
         # remove contents of well
         _pick_up(p300)
+
         ctx.max_speeds['A'] = 100  # slow descent
         ctx.max_speeds['Z'] = 100  # slow descent
 
-        p300.aspirate(disposal_vol, well.bottom(0.2))
+        # effective tip capacity 280 with 20 uL air gap
+        reps = math.ceil(disposal_vol / 280)
+
+        vol = disposal_vol / reps
+
+        for rep in range(reps):
+            p300.air_gap(20)
+            p300.aspirate(vol, well.bottom(0.2))
+            if not rep:
+                p300.dispense(vol+20, ctx.fixed_trash.wells()[0].top(-5))
+
         del ctx.max_speeds['A']  # reset to default
         del ctx.max_speeds['Z']  # reset to default
+
         p300.drop_tip()
 
         # transfer tube to well
         _pick_up(p300)
-        p300.transfer(transfer_vol, tube.bottom(0.5), well.top(-1),
-                      new_tip='never')
+
+        # effective tip capacity 280 with 20 uL air gap
+        reps = math.ceil(transfer_vol / 280)
+
+        vol = transfer_vol / reps
+
+        for rep in range(reps):
+            p300.air_gap(20)
+            p300.aspirate(vol, tube.bottom(0.2))
+            p300.dispense(vol+20, well.top(-1), rate=1.5)
+
         p300.drop_tip()
 
     # track final used tip

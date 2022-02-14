@@ -166,7 +166,7 @@ def run(ctx):
             for tip in all_tips[tip_ind:tip_ind+chunk_len]:
                 tip.has_tip = True
 
-        # parse wells into chunks
+        # parse wells to chunks
         chunk_map = {num: [] for num in range(1, 9)}
         for csv, rack in zip(
                 [occupied_well_csv1, occupied_well_csv2, occupied_well_csv3],
@@ -232,7 +232,7 @@ def run(ctx):
                     # return tip and reset has_tip attribute
                     return_tip(pip, pick_up_loc, num_tips, reagent_type)
 
-        # track final used tip
+        # track final tip used
         # void partially full tip column
         for tiprack in tips300:
             for col in tiprack.columns():
