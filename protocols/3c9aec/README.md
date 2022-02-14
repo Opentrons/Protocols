@@ -18,6 +18,7 @@ A1, 90
 B1, 83
 ```
 * `Temperature module temperature (C)`: Specify temperature module temperatre in celsius
+* `First step aspiration rate (moving to waste)`: Specify the aspiration rate in step 1 of the protocol when included wells are moved to waste, where 1.0 is default, 1.5 is 50% faster, and 0.2 is 20% default speed, for example.
 * `PBS Dispense Flow Rate`: The PBS will be dispesed into the plate 2mm from the side of the well to avoid separation of culture. Specify the flow rate, where 1.0 is default, 1.5 is 50% faster, and 0.2 is 20% default speed, for example.
 * `Incubation Time (minutes)`: Specify the incubation time i nminutes after trypsin is added to the plate.
 * `Media Aspirate X (ul)`: Specify volume of media to move from column 12 of the reservoir to the plate.
