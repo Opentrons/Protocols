@@ -36,7 +36,7 @@ Explanation of parameters below:
 * `Number of tubes/samples in the first set of tubes`: How many tubes there are in the first set of tube racks. These samples will be transferred to quadrant 1 (and 2) of the destination plate
 * `Is there a second set of tubes?`: Whether to pause the protocol so that a second set of tube racks can be loaded onto the deck
 * `Number of tubes/samples in the second set of tubes`: How many samples there are in the second set of tuberacks (Only needs to be set if a second set of tube racks is loaded)
-* `Sample volume (µL) to aspirate`: Volume of sample to transfer (5 or 50 µL)
+* `Sample volume (µL) to aspirate`: Volume of sample to transfer (5 or 50 µL). This parameter controls which pipette and tiprack is used: 5 uL means that the 20 uL pipette will be used in in the right mount, and that the pipette tips should be filtered 20 uL tips. 50 uL means that the 300 uL pipette will be used in the left mount along with 200 uL filter tips.
 * `Aspiration flow rate (µL/s)`: rate of aspiration in microliters per second
 * `Dispension flow rate (µL/s)`: rate of dispension in microliters per second
 * `Aspiration height from the bottom of the tubes (mm)`: Height from the bottom of the tubes to aspirate from in mm
@@ -55,10 +55,12 @@ Explanation of parameters below:
 * [Stellar Scientific 96 well plate](https://www.stellarscientific.com/96-well-low-profile-fast-type-pcr-plate-with-raised-rim-edge-0-1ml-rnase-and-dnase-free-clear-100-cs/)
 
 ### Pipettes
-* [20 µL single-channel pipette gen2](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
-* [300 µL single-channel pipette gen2](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
-* [20 µL filter tips](https://shop.opentrons.com/opentrons-20ul-filter-tips/)
-* [200 µL filter tips](https://shop.opentrons.com/opentrons-200ul-filter-tips/)
+* [20 µL single-channel pipette gen2](https://shop.opentrons.com/single-channel-electronic-pipette-p20/) - Load in the right mount
+* [300 µL single-channel pipette gen2](https://shop.opentrons.com/single-channel-electronic-pipette-p20/) - Load in the left mount
+* [20 µL filter tips](https://shop.opentrons.com/opentrons-20ul-filter-tips/) - When the sample volume is 5 uL
+* [200 µL filter tips](https://shop.opentrons.com/opentrons-200ul-filter-tips/) - When the sample volume is 50 uL
+
+Note that there is only one tiprack that goes into slot 9 per run which is determined by the sample volume.
 
 ---
 
