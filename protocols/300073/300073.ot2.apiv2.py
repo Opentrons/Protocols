@@ -51,12 +51,10 @@ def run(ctx: protocol_api.ProtocolContext):
 
     p20_lname = 'p20_single_gen2'
     p300_lname = 'p300_single_gen2'
-    left_pipette_lname = (p20_lname if sample_aspiration_vol_ul < 20
-                          else p300_lname)
 
     filtered_20_lname = "opentrons_96_filtertiprack_20ul"
     filtered_200_lname = "opentrons_96_filtertiprack_200ul"
-    tiprack_lname = (filtered_20_lname if left_pipette_lname == p20_lname
+    tiprack_lname = (filtered_20_lname if sample_aspiration_vol_ul <= 20
                      else filtered_200_lname)
 
     tuberack_lname = 'opentrons_6_tuberack_stellarsci_25ml_conical'
@@ -150,12 +148,12 @@ def run(ctx: protocol_api.ProtocolContext):
                         tip_racks=tiprack
                         )
     '''
+    pipette_condition = sample_aspiration_vol_ul <= 20
     pipette = ctx.load_instrument(
-                        left_pipette_lname,
-                        "left",
-                        tip_racks=[tiprack]
-                        )
-
+                    p20_lname if pipette_condition else p300_lname,
+                    "right" if pipette_condition else "left",
+                    tip_racks=[tiprack]
+                    )
     # pipette functions   # INCLUDE ANY BINDING TO CLASS
 
     '''
