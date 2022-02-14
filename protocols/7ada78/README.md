@@ -12,10 +12,11 @@ This protocol reformats RNA into a 96-well plate per a .csv input. Up to 96 tube
 
 
 Explanation of complex parameters below:
-* `.CSV File`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line
-(use slot 7 for the thermocycler slot, and input an "x" for values that are not needed in that row):
+* `.CSV File`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line (use slot 7 for the thermocycler slot, and input an "x" for values that are not needed in that row):
 ![csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/7ada78/pt1/Screen+Shot+2022-01-25+at+11.16.36+AM.png)
-* `Pipette Mount`: Specify which mount (left or right) to host the P20 single-channel pipettes, respectively.
+
+If using a kingfisher plate, the multi-channel pipette will be used. For destination well, include only wells in the first row (A1, A2, A3,.., A12). The protocol will then proceed to perform full column transfers of the volume specified, for all columns specified (feel free to skip columns).
+* `Pipette Mount`: Specify which mount (left or right) to host the P20 single and multi-channel pipettes, respectively.
 
 ---
 
@@ -28,9 +29,11 @@ Explanation of complex parameters below:
 * [Opentrons 4-in-1 tube rack with 1.5mL Eppendorf snap cap tubes](https://shop.opentrons.com/4-in-1-tube-rack-set/)
 * [Opentrons 20ul Filter tips](https://shop.opentrons.com/universal-filter-tips/)
 * 96-W OptiPlate
+* 96-W Kingfisher plate
 
 ### Pipettes
 * [P20 Single-Channel Pipette](https://opentrons.com/pipettes/)
+* [P20 Multi-Channel Pipette](https://opentrons.com/pipettes/)
 
 ---
 
@@ -56,4 +59,4 @@ Explanation of complex parameters below:
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-7ada78
+7ada78-pt2

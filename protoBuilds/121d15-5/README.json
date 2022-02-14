@@ -1,0 +1,32 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Sample Prep": [
+            "Plate Filling"
+        ]
+    },
+    "deck-setup": "\n",
+    "description": "Links:\n* Manual Cleave\n\n\n* Manual Cleave Elution (Off-deck Vacuum)\n\n\n* Manual Cleave, ACN + Elution (Off-deck Vacuum)\n\n\n* Manual Cleave, ACN + Elution (On-deck Vacuum)\n\n\n* HPLC Picking\n\n\n* Redo Replacement Picking (Greiner MASTERBLOCK 96 Well Plate 500 \u00b5L)\n\n\n* Redo Replacement Picking (Greiner MASTERBLOCK 96 Well Plate 1000 \u00b5L)\n\n\n* Redo Replacement Picking (Irish Life Sciences 96 Well Plate 2200 \u00b5L)\n\n\n* Redo Replacement Picking (Greiner Masterblock 384 Well Plate 225 \u00b5L)\n\n\n* Aliquoting - 2ml Tuberack to 2ml Tuberack\n\n\n* Aliquoting - 15ml Tuberack to 2ml Tuberack\n\n\n* Pooling - 2ml Tuberack to 2ml Tuberack\n\n\n* Pooling - 2ml Tuberack to 15ml Tuberack\n\n\nThis protocol performs a custom plate filling and elution for up to 4x 96-well plates from a single reagent reservoir. The user can input the number of rows and columns to be filled for each plate. Liquid handling parameters are automatically determined from the user's selection of which reagent will be added during the run.\n",
+    "internal": "121d15",
+    "labware": "\nCustom 96-tuberack\nNEST 1 Reservoir 195ml\nOpentrons 300\u00b5L Tips\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* Sample Prep\n\t* Plate Filling\n\n",
+        "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/121d15/deck5.png)\n\n---\n\n",
+        "description": "\nLinks:\n* [Manual Cleave](./121d15)\n<br />\n<br />\n* [Manual Cleave Elution (Off-deck Vacuum)](./121d15-4)\n<br />\n<br />\n* [Manual Cleave, ACN + Elution (Off-deck Vacuum)](./121d15-5)\n<br />\n<br />\n* [Manual Cleave, ACN + Elution (On-deck Vacuum)](./121d15-6)\n<br />\n<br />\n* [HPLC Picking](./121d15-3)\n<br />\n<br />\n* [Redo Replacement Picking (Greiner MASTERBLOCK 96 Well Plate 500 \u00b5L)](./121d15-2-96-Greiner-500)\n<br />\n<br />\n* [Redo Replacement Picking (Greiner MASTERBLOCK 96 Well Plate 1000 \u00b5L)](./121d15-2-96-Greiner-1000)\n<br />\n<br />\n* [Redo Replacement Picking (Irish Life Sciences 96 Well Plate 2200 \u00b5L)](./121d15-2-96-Irish-2200)\n<br />\n<br />\n* [Redo Replacement Picking (Greiner Masterblock 384 Well Plate 225 \u00b5L)](./121d15-2-384)\n<br />\n<br />\n* [Aliquoting - 2ml Tuberack to 2ml Tuberack](./121d15-7-2ml-2ml-aliquot)\n<br />\n<br />\n* [Aliquoting - 15ml Tuberack to 2ml Tuberack](./121d15-7-2ml-15ml-aliquot)\n<br />\n<br />\n* [Pooling - 2ml Tuberack to 2ml Tuberack](./121d15-7-2ml-2ml-pool)\n<br />\n<br />\n* [Pooling - 2ml Tuberack to 15ml Tuberack](./121d15-7-2ml-15ml-pool)\n<br />\n<br />\n\nThis protocol performs a custom plate filling and elution for up to 4x 96-well plates from a single reagent reservoir. The user can input the number of rows and columns to be filled for each plate. Liquid handling parameters are automatically determined from the user's selection of which reagent will be added during the run.\n\n---\n\n",
+        "internal": "121d15\n",
+        "labware": "* Custom 96-tuberack\n* [NEST 1 Reservoir 195ml](https://shop.opentrons.com/nest-1-well-reservoirs-195-ml/)\n* [Opentrons 300\u00b5L Tips](https://shop.opentrons.com/opentrons-300ul-tips-1000-refills/)\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "reagents": "* water\n\n---\n\n",
+        "title": "Manual Cleave, ACN + Elution (Off-Deck Vacuum)"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nP300 8 Channel Electronic Pipette (GEN2)\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "reagents": [
+        "water"
+    ],
+    "title": "Manual Cleave, ACN + Elution (Off-Deck Vacuum)"
+}
