@@ -16,14 +16,19 @@ def run(ctx):
 
     tip_track = True
 
-    [input_file, tuberack_scan, plate_scan, default_disposal_vol,
-     default_transfer_vol, p300_mount] = get_values(  # noqa: F821
-        'input_file', 'tuberack_scan', 'plate_scan', 'default_disposal_vol',
+    [input_file, input_file2, tuberack_scan, tuberack_scan2, plate_scan,
+     plate_scan2, default_disposal_vol, default_transfer_vol,
+     p300_mount] = get_values(  # noqa: F821
+        'input_file', 'input_file2', 'tuberack_scan', 'tuberack_scan2',
+        'plate_scan', 'plate_scan2', 'default_disposal_vol',
         'default_transfer_vol', 'p300_mount')
 
     # load labware
     rack = ctx.load_labware('eurofins_96x2ml_tuberack', '2', 'tuberack')
-    plate = ctx.load_labware('greinermasterblock_96_wellplate_500ul', '1')
+
+    plate1 = ctx.load_labware('greinermasterblock_96_wellplate_500ul', '1')
+    plate2 = ctx.load_labware('greinermasterblock_96_wellplate_500ul', '4')
+
     tips300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
         for slot in ['11']]
@@ -82,64 +87,84 @@ resuming.')
     if not plate_scan[:len(plate_scan)-4] == plate_bar.strip():
         raise Exception(f'Plate scans do not match ({plate_bar}, {plate_bar})')
 
+    tuberack_bar2, plate_bar2 = input_file2.splitlines()[3].split(',')[:2]
+    if not tuberack_scan2[:len(tuberack_scan2)-4] == tuberack_bar2.strip():
+        print(tuberack_scan2[:len(tuberack_scan2)-4])
+        raise Exception(f'Tuberack2 scans do not match ({tuberack_bar2}, \
+{tuberack_scan2})')
+    if not plate_scan2[:len(plate_scan2)-4] == plate_bar2.strip():
+        raise Exception(
+         f'Plate2 scans do not match ({plate_bar2}, {plate_bar2})')
+
     # parse
-    data = [
+    data1 = [
         [val.strip() for val in line.split(',')]
         for line in input_file.splitlines()[4:]
         if line and line.split(',')[0].strip()]
 
-    tubes_ordered = [
-        well for i in range(2) for col in rack.columns()
-        for well in col[i*8:(i+1)*8]]
+    data2 = [
+        [val.strip() for val in line.split(',')]
+        for line in input_file2.splitlines()[4:]
+        if line and line.split(',')[0].strip()]
 
-    for line in data:
-        tube = tubes_ordered[int(line[0])-1]
-        well = plate.wells()[int(line[1])-1]
-        if len(line) >= 3 and line[2]:
-            disposal_vol = float(line[2])
-        else:
-            disposal_vol = default_disposal_vol
-        if len(line) >= 4 and line[3]:
-            transfer_vol = float(line[3])
-        else:
-            transfer_vol = default_transfer_vol
+    tubes1_ordered = [
+        well for col in rack.columns()
+        for well in col[:8]]
 
-        # remove contents of well
-        _pick_up(p300)
+    tubes2_ordered = [
+        well for col in rack.columns()
+        for well in col[8:]]
 
-        ctx.max_speeds['A'] = 100  # slow descent
-        ctx.max_speeds['Z'] = 100  # slow descent
+    for data, plate, tubes_ordered in zip(
+     [data1, data2], [plate1, plate2], [tubes1_ordered, tubes2_ordered]):
+        for line in data:
+            tube = tubes_ordered[int(line[0])-1]
+            well = plate.wells()[int(line[1])-1]
+            if len(line) >= 3 and line[2]:
+                disposal_vol = float(line[2])
+            else:
+                disposal_vol = default_disposal_vol
+            if len(line) >= 4 and line[3]:
+                transfer_vol = float(line[3])
+            else:
+                transfer_vol = default_transfer_vol
 
-        # effective tip capacity 280 with 20 uL air gap
-        reps = math.ceil(disposal_vol / 280)
+            # remove contents of well
+            _pick_up(p300)
 
-        vol = disposal_vol / reps
+            ctx.max_speeds['A'] = 100  # slow descent
+            ctx.max_speeds['Z'] = 100  # slow descent
 
-        for rep in range(reps):
-            p300.air_gap(20)
-            p300.aspirate(vol, well.bottom(0.2))
-            if not rep:
-                p300.dispense(vol+20, ctx.fixed_trash.wells()[0].top(-5))
+            # effective tip capacity 280 with 20 uL air gap
+            reps = math.ceil(disposal_vol / 280)
 
-        del ctx.max_speeds['A']  # reset to default
-        del ctx.max_speeds['Z']  # reset to default
+            vol = disposal_vol / reps
 
-        p300.drop_tip()
+            for rep in range(reps):
+                p300.air_gap(20)
+                p300.aspirate(vol, well.bottom(0.2))
+                if not rep:
+                    p300.dispense(vol+20, ctx.fixed_trash.wells()[0].top(-5))
 
-        # transfer tube to well
-        _pick_up(p300)
+            del ctx.max_speeds['A']  # reset to default
+            del ctx.max_speeds['Z']  # reset to default
 
-        # effective tip capacity 280 with 20 uL air gap
-        reps = math.ceil(transfer_vol / 280)
+            p300.drop_tip()
 
-        vol = transfer_vol / reps
+            # transfer tube to well
+            _pick_up(p300)
 
-        for rep in range(reps):
-            p300.air_gap(20)
-            p300.aspirate(vol, tube.bottom(0.2))
-            p300.dispense(vol+20, well.top(-1), rate=1.5)
+            # effective tip capacity 280 with 20 uL air gap
+            reps = math.ceil(transfer_vol / 280)
 
-        p300.drop_tip()
+            vol = transfer_vol / reps
+
+            for rep in range(reps):
+                p300.air_gap(20)
+                p300.aspirate(vol, tube.bottom(0.2))
+                p300.dispense(vol+20, well.top(-1), rate=1.5)
+
+            p300.drop_tip()
 
     # track final used tip
     if not ctx.is_simulating():
