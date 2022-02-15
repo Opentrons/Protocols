@@ -97,7 +97,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     '''
     small_tipracks = [ctx.load_labware(small_tips_loadname, slot)
-                      for slot in ['10', '11']]
+                      for slot in ['7', '10']]
 
     large_tipracks = [ctx.load_labware(large_tips_loadname, slot)
                       for slot in ['5', '8']]
