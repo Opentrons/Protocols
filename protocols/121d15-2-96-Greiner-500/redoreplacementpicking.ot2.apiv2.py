@@ -16,18 +16,21 @@ def run(ctx):
 
     tip_track = True
 
-    [input_file, input_file2, tuberack_scan, tuberack_scan2, plate_scan,
-     plate_scan2, default_disposal_vol, default_transfer_vol,
+    [include_2nd_plate, input_file, input_file2, tuberack_scan, tuberack_scan2,
+     plate_scan, plate_scan2, default_disposal_vol, default_transfer_vol,
      p300_mount] = get_values(  # noqa: F821
-        'input_file', 'input_file2', 'tuberack_scan', 'tuberack_scan2',
-        'plate_scan', 'plate_scan2', 'default_disposal_vol',
+        'include_2nd_plate', 'input_file', 'input_file2', 'tuberack_scan',
+        'tuberack_scan2', 'plate_scan', 'plate_scan2', 'default_disposal_vol',
         'default_transfer_vol', 'p300_mount')
 
     # load labware
     rack = ctx.load_labware('eurofins_96x2ml_tuberack', '2', 'tuberack')
 
-    plate1 = ctx.load_labware('greinermasterblock_96_wellplate_500ul', '1')
-    plate2 = ctx.load_labware('greinermasterblock_96_wellplate_500ul', '4')
+    plates = [ctx.load_labware('greinermasterblock_96_wellplate_500ul', '1')]
+
+    if include_2nd_plate:
+        plates.append(
+         ctx.load_labware('greinermasterblock_96_wellplate_500ul', '4'))
 
     tips300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
@@ -97,26 +100,27 @@ resuming.')
          f'Plate2 scans do not match ({plate_bar2}, {plate_bar2})')
 
     # parse
-    data1 = [
+    inputdata = [[
         [val.strip() for val in line.split(',')]
         for line in input_file.splitlines()[4:]
-        if line and line.split(',')[0].strip()]
+        if line and line.split(',')[0].strip()]]
 
-    data2 = [
-        [val.strip() for val in line.split(',')]
-        for line in input_file2.splitlines()[4:]
-        if line and line.split(',')[0].strip()]
-
-    tubes1_ordered = [
+    tubelist = [[
         well for col in rack.columns()
-        for well in col[:8]]
+        for well in col[:8]]]
 
-    tubes2_ordered = [
-        well for col in rack.columns()
-        for well in col[8:]]
+    if include_2nd_plate:
 
-    for data, plate, tubes_ordered in zip(
-     [data1, data2], [plate1, plate2], [tubes1_ordered, tubes2_ordered]):
+        inputdata.append([
+            [val.strip() for val in line.split(',')]
+            for line in input_file2.splitlines()[4:]
+            if line and line.split(',')[0].strip()])
+
+        tubelist.append([
+            well for col in rack.columns()
+            for well in col[8:]])
+
+    for data, plate, tubes_ordered in zip(inputdata, plates, tubelist):
         for line in data:
             tube = tubes_ordered[int(line[0])-1]
             well = plate.wells()[int(line[1])-1]
@@ -143,7 +147,7 @@ resuming.')
             for rep in range(reps):
                 p300.air_gap(20)
                 p300.aspirate(vol, well.bottom(0.2))
-                if not rep:
+                if rep < reps - 1:
                     p300.dispense(vol+20, ctx.fixed_trash.wells()[0].top(-5))
 
             del ctx.max_speeds['A']  # reset to default
