@@ -45,7 +45,7 @@ A1,B1,4
 
 ### Reagents
 This protocol may be used with the following kit, but it can be used with any samples and diluents
-* [M-PER™ Mammalian Protein Extraction Reagent](https://www.thermofisher.com/order/catalog/product/78501
+* [M-PER™ Mammalian Protein Extraction Reagent](https://www.thermofisher.com/order/catalog/product/78501)
 
 ---
 
