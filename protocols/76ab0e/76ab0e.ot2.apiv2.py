@@ -261,7 +261,8 @@ def run(ctx: protocol_api.ProtocolContext):
 
     '''
     diluent = VolTracker(reservoir_12, 14*10**3,  start=1, end=4,
-                         mode='reagent', pip_type='single', msg='diluent')
+                         mode='reagent', pip_type='single',
+                         msg='Refill diluent wells')
 
     # plate, tube rack maps
 
@@ -337,8 +338,7 @@ def run(ctx: protocol_api.ProtocolContext):
     # perform normalization - Transfer all the diluent first before
     # transferring any sample: use the same pipette tip
     # Steps 1-4
-    # s - source well, d - dest well, vol_s - sample vol
-    # vol_d - diluent volume
+    # d - dest well,  vol_d - diluent volume
     ctx.comment("\n\nTransferring diluent to the target plate\n")
     for _, d, _, vol_d in data:
         vol_d = float(vol_d)
@@ -350,11 +350,13 @@ def run(ctx: protocol_api.ProtocolContext):
         pip.transfer(vol_d, diluent.track(vol_d), d_well, new_tip='never')
         pip.blow_out(d_well.top(-2))
 
+    # Step 5: drop tips
     ctx.comment("\n\nDiluent transfer complete: Droppping tips")
     for pip in [p20, p300]:
         if pip.has_tip:
             pip.drop_tip()
 
+    # Step 7-10: Transfer samples
     ctx.comment("\n\nTransferring samples to the target plate\n")
     for s, d, vol_s, _ in data:
         vol_s = float(vol_s)
