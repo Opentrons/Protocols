@@ -8,14 +8,14 @@
 	* Normalization
 
 ## Description
-This protocol is based on the [ML_normalization protocol](https://protocols.opentrons.com/protocol/ML-normalization) and it performs a custom sample normalization from a source PCR plate to a second PCR plate, diluting with water from a reservoir. Sample and diluent volumes are specified via .csv file in the following format, including the header line (empty lines ignored):
+This protocol is based on the [ML_normalization protocol](https://protocols.opentrons.com/protocol/ML-normalization) and it performs a custom sample normalization from a source PCR plate to a second PCR plate, diluting with diluent (e.g. buffer or water) from a reservoir. Sample and diluent volumes are specified via .csv file in the following format, including the header line (empty lines ignored):
 
 ```
 source plate well,destination plate well,volume sample (µl),volume diluent (µl)
 A1, A1, 2, 28
 ```
 
-Diluent is transferred first from the 12 well reservoir to the target plate wells as specified in the csv using the same pipette tip. After finishing, the pipette(s) drop their tip(s) and transfer samples to the target wells.
+Diluent is transferred first from the 12 well reservoir to the target plate wells as specified in the csv using the same pipette tip. After finishing, the pipette(s) drop their/its tip(s) and transfer samples to the target wells.
 
 This protocol loads the sample and destination plate on 2nd generation temperature modules
 
