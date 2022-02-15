@@ -366,7 +366,5 @@ def run(ctx: protocol_api.ProtocolContext):
         pip.aspirate(vol_s, s_well.bottom(aspiration_height),
                      flow_rate_multiplier)
         pip.dispense(vol_s, d_well)
-        # pip.transfer(vol_s, s_well.bottom(aspiration_height), d_well,
-        #             new_tip='never')
         pip.blow_out(d_well.top(-2))
         pip.drop_tip()
