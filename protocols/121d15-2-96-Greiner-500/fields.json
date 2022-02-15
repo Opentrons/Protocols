@@ -1,5 +1,14 @@
 [
   {
+    "type": "dropDown",
+    "label": "include 2nd plate?",
+    "name": "include_2nd_plate",
+    "options": [
+      { "label": "NO", "value": false },
+      { "label": "YES", "value": true }
+    ]
+  },
+  {
     "type": "textFile",
     "label": "input file",
     "name": "input_file",
