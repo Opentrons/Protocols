@@ -16,11 +16,11 @@ def run(ctx):
 
     tip_track = True
 
-    [include_2nd_plate, input_file, input_file2, tuberack_scan, tuberack_scan2,
-     plate_scan, plate_scan2, default_disposal_vol, default_transfer_vol,
+    [input_file, input_file2, tuberack_scan, plate_scan, tuberack_scan2,
+     plate_scan2, default_disposal_vol, default_transfer_vol,
      p300_mount] = get_values(  # noqa: F821
-        'include_2nd_plate', 'input_file', 'input_file2', 'tuberack_scan',
-        'tuberack_scan2', 'plate_scan', 'plate_scan2', 'default_disposal_vol',
+        'input_file', 'input_file2', 'tuberack_scan', 'plate_scan',
+        'tuberack_scan2',  'plate_scan2', 'default_disposal_vol',
         'default_transfer_vol', 'p300_mount')
 
     # load labware
@@ -28,7 +28,7 @@ def run(ctx):
 
     plates = [ctx.load_labware('greinermasterblock_96_wellplate_500ul', '1')]
 
-    if include_2nd_plate:
+    if input_file2:
         plates.append(
          ctx.load_labware('greinermasterblock_96_wellplate_500ul', '4'))
 
@@ -90,14 +90,15 @@ resuming.')
     if not plate_scan[:len(plate_scan)-4] == plate_bar.strip():
         raise Exception(f'Plate scans do not match ({plate_bar}, {plate_bar})')
 
-    tuberack_bar2, plate_bar2 = input_file2.splitlines()[3].split(',')[:2]
-    if not tuberack_scan2[:len(tuberack_scan2)-4] == tuberack_bar2.strip():
-        print(tuberack_scan2[:len(tuberack_scan2)-4])
-        raise Exception(f'Tuberack2 scans do not match ({tuberack_bar2}, \
-{tuberack_scan2})')
-    if not plate_scan2[:len(plate_scan2)-4] == plate_bar2.strip():
-        raise Exception(
-         f'Plate2 scans do not match ({plate_bar2}, {plate_bar2})')
+    if input_file2:
+        tuberack_bar2, plate_bar2 = input_file2.splitlines()[3].split(',')[:2]
+        if not tuberack_scan2[:len(tuberack_scan2)-4] == tuberack_bar2.strip():
+            print(tuberack_scan2[:len(tuberack_scan2)-4])
+            raise Exception(f'Tuberack2 scans do not match ({tuberack_bar2}, \
+    {tuberack_scan2})')
+        if not plate_scan2[:len(plate_scan2)-4] == plate_bar2.strip():
+            raise Exception(
+             f'Plate2 scans do not match ({plate_bar2}, {plate_bar2})')
 
     # parse
     inputdata = [[
@@ -109,7 +110,7 @@ resuming.')
         well for col in rack.columns()
         for well in col[:8]]]
 
-    if include_2nd_plate:
+    if input_file2:
 
         inputdata.append([
             [val.strip() for val in line.split(',')]
@@ -145,6 +146,7 @@ resuming.')
             vol = disposal_vol / reps
 
             for rep in range(reps):
+                p300.move_to(well.top())
                 p300.air_gap(20)
                 p300.aspirate(vol, well.bottom(0.2))
                 if rep < reps - 1:
@@ -164,9 +166,11 @@ resuming.')
             vol = transfer_vol / reps
 
             for rep in range(reps):
+                p300.move_to(tube.top())
                 p300.air_gap(20)
                 p300.aspirate(vol, tube.bottom(0.2))
                 p300.dispense(vol+20, well.top(-1), rate=1.5)
+                ctx.delay(seconds=1)
 
             p300.drop_tip()
 
