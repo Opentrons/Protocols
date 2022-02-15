@@ -55,8 +55,7 @@ This protocol may be used with the following kit, but it can be used with any sa
 
 ### Reagent Setup
 ![reservoir](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/76ab0e/reservoir.jpg)
-
-12 well reservoir on slot 2: Add 15 mL of diluent per well to be used (well 1 up to 4)
+* 12 well reservoir on slot 2: Add 15 mL of diluent per well to be used (well 1 up to 4)
 
 
 ---
