@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "\n\nOpentrons p1000 tips (Deck Slot 11)\n15 or 40-well custom rack or empty slot as specified in pulldown lists (Deck Slots 8-9)\nopentrons_24_tuberack_nest_1.5ml_snapcap or opentrons_24_tuberack_nest_2ml_snapcap as specified with pulldown list (up to 8 racks as displayed in OT app with deck slot fill order 10, 7, 4, 5, 6, 1, 2, 3)\n",
-    "description": "This protocol uses a p1000 single channel pipette to divide up to forty eight 3 mL clinical samples each into four aliquots with aliquot volumes of 1 mL, 0.5 mL, 0.5 mL and 1 mL.\nLinks:\n* Custom Aliquoting\n* Custom Pooling",
+    "description": "This protocol uses a p1000 single channel pipette to divide up to forty eight 3 mL clinical samples each into four aliquots with aliquot volumes of 1 mL, 0.5 mL, 0.5 mL and 1 mL.\nLinks:\n Custom Aliquoting\n Custom Pooling",
     "internal": "7363e4",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
