@@ -36,7 +36,7 @@ A1,B1,4
 
 ### Labware
 * [Aluminum Block Set](https://shop.opentrons.com/aluminum-block-set/)
-* [Labware name](https://labware.opentrons.com/biorad_96_wellplate_200ul_pcr?category=wellPlate)
+* [Bio-Rad 96 Well Plate 200 µL PCR](https://labware.opentrons.com/biorad_96_wellplate_200ul_pcr?category=wellPlate)
 * [NEST 12 well 15 mL reservoir](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/)
 * Nick is working on auto-filling these sections from the protocol (3/28/2021)
 
