@@ -1,5 +1,6 @@
 import os
 import json
+import math
 
 # metadata
 metadata = {
@@ -15,14 +16,22 @@ def run(ctx):
 
     tip_track = True
 
-    [input_file, tuberack_scan, plate_scan, default_disposal_vol,
-     default_transfer_vol, p300_mount] = get_values(  # noqa: F821
-        'input_file', 'tuberack_scan', 'plate_scan', 'default_disposal_vol',
+    [input_file, input_file2, tuberack_scan, plate_scan, tuberack_scan2,
+     plate_scan2, default_disposal_vol, default_transfer_vol,
+     p300_mount] = get_values(  # noqa: F821
+        'input_file', 'input_file2', 'tuberack_scan', 'plate_scan',
+        'tuberack_scan2',  'plate_scan2', 'default_disposal_vol',
         'default_transfer_vol', 'p300_mount')
 
     # load labware
     rack = ctx.load_labware('eurofins_96x2ml_tuberack', '2', 'tuberack')
-    plate = ctx.load_labware('irishlifesciences_96_wellplate_2200ul', '1')
+
+    plates = [ctx.load_labware('irishlifesciences_96_wellplate_2200ul', '1')]
+
+    if input_file2:
+        plates.append(
+         ctx.load_labware('irishlifesciences_96_wellplate_2200ul', '4'))
+
     tips300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
         for slot in ['11']]
@@ -81,45 +90,89 @@ resuming.')
     if not plate_scan[:len(plate_scan)-4] == plate_bar.strip():
         raise Exception(f'Plate scans do not match ({plate_bar}, {plate_bar})')
 
+    if input_file2:
+        tuberack_bar2, plate_bar2 = input_file2.splitlines()[3].split(',')[:2]
+        if not tuberack_scan2[:len(tuberack_scan2)-4] == tuberack_bar2.strip():
+            print(tuberack_scan2[:len(tuberack_scan2)-4])
+            raise Exception(f'Tuberack2 scans do not match ({tuberack_bar2}, \
+    {tuberack_scan2})')
+        if not plate_scan2[:len(plate_scan2)-4] == plate_bar2.strip():
+            raise Exception(
+             f'Plate2 scans do not match ({plate_bar2}, {plate_bar2})')
+
     # parse
-    data = [
+    inputdata = [[
         [val.strip() for val in line.split(',')]
         for line in input_file.splitlines()[4:]
-        if line and line.split(',')[0].strip()]
+        if line and line.split(',')[0].strip()]]
 
-    tubes_ordered = [
-        well for i in range(2) for col in rack.columns()
-        for well in col[i*8:(i+1)*8]]
+    tubelist = [[
+        well for col in rack.columns()
+        for well in col[:8]]]
 
-    for line in data:
-        tube = tubes_ordered[int(line[0])-1]
-        well = plate.wells()[int(line[1])-1]
-        if len(line) >= 3 and line[2]:
-            disposal_vol = float(line[2])
-        else:
-            disposal_vol = default_disposal_vol
-        if len(line) >= 4 and line[3]:
-            transfer_vol = float(line[3])
-        else:
-            transfer_vol = default_transfer_vol
+    if input_file2:
 
-        # remove contents of well
-        _pick_up(p300)
-        ctx.max_speeds['A'] = 100  # slow descent
-        ctx.max_speeds['Z'] = 100  # slow descent
+        inputdata.append([
+            [val.strip() for val in line.split(',')]
+            for line in input_file2.splitlines()[4:]
+            if line and line.split(',')[0].strip()])
 
-        p300.aspirate(disposal_vol, well.bottom(0.2))
-        del ctx.max_speeds['A']  # reset to default
-        del ctx.max_speeds['Z']  # reset to default
-        p300.drop_tip()
+        tubelist.append([
+            well for col in rack.columns()
+            for well in col[8:]])
 
-        # transfer tube to well
-        _pick_up(p300)
-        p300.aspirate(transfer_vol, tube.bottom(0.2))
-        p300.dispense(transfer_vol, well.top(-1))
-        p300.blow_out()
-        ctx.delay(seconds=2)
-        p300.drop_tip()
+    for data, plate, tubes_ordered in zip(inputdata, plates, tubelist):
+        for line in data:
+            tube = tubes_ordered[int(line[0])-1]
+            well = plate.wells()[int(line[1])-1]
+            if len(line) >= 3 and line[2]:
+                disposal_vol = float(line[2])
+            else:
+                disposal_vol = default_disposal_vol
+            if len(line) >= 4 and line[3]:
+                transfer_vol = float(line[3])
+            else:
+                transfer_vol = default_transfer_vol
+
+            # remove contents of well
+            _pick_up(p300)
+
+            ctx.max_speeds['A'] = 100  # slow descent
+            ctx.max_speeds['Z'] = 100  # slow descent
+
+            # effective tip capacity 280 with 20 uL air gap
+            reps = math.ceil(disposal_vol / 280)
+
+            vol = disposal_vol / reps
+
+            for rep in range(reps):
+                p300.move_to(well.top())
+                p300.air_gap(20)
+                p300.aspirate(vol, well.bottom(0.2))
+                if rep < reps - 1:
+                    p300.dispense(vol+20, ctx.fixed_trash.wells()[0].top(-5))
+
+            del ctx.max_speeds['A']  # reset to default
+            del ctx.max_speeds['Z']  # reset to default
+
+            p300.drop_tip()
+
+            # transfer tube to well
+            _pick_up(p300)
+
+            # effective tip capacity 280 with 20 uL air gap
+            reps = math.ceil(transfer_vol / 280)
+
+            vol = transfer_vol / reps
+
+            for rep in range(reps):
+                p300.move_to(tube.top())
+                p300.air_gap(20)
+                p300.aspirate(vol, tube.bottom(0.2))
+                p300.dispense(vol+20, well.top(-1), rate=1.5)
+                ctx.delay(seconds=1)
+
+            p300.drop_tip()
 
     # track final used tip
     if not ctx.is_simulating():
