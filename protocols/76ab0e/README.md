@@ -38,7 +38,6 @@ A1,B1,4
 * [Aluminum Block Set](https://shop.opentrons.com/aluminum-block-set/)
 * [Bio-Rad 96 Well Plate 200 µL PCR](https://labware.opentrons.com/biorad_96_wellplate_200ul_pcr?category=wellPlate)
 * [NEST 12 well 15 mL reservoir](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
 
 ### Pipettes
 * [Single channel 20 uL pipette](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
