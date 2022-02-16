@@ -7,13 +7,13 @@
   },
   {
     "type": "str",
-    "label": "tuberack 1 scan",
+    "label": "parent tuberack scan",
     "name": "tuberack1_scan",
     "default": "REPLACE WITH SCAN_XXX"
   },
   {
     "type": "str",
-    "label": "tuberack 2 scan",
+    "label": "copy tuberack scan",
     "name": "tuberack2_scan",
     "default": "REPLACE WITH SCAN_XXX"
   },
