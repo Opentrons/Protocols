@@ -1,0 +1,23 @@
+[
+  {
+    "type": "int",
+    "label": "Number of wells",
+    "name": "n_wells",
+    "default": 384
+  },
+  {
+    "type": "float",
+    "label": "Volume of mastermix",
+    "name": "mastermix_volume",
+    "default": 15
+  },
+  {
+    "type": "dropDown",
+    "label": "Reuse tips?",
+    "name": "is_reusing_tips",
+    "options": [
+      {"label": "Yes", "value": true},
+      {"label": "No", "value": false}
+    ]
+  }
+]
