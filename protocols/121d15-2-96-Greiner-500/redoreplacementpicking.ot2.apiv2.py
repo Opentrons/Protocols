@@ -148,7 +148,7 @@ resuming.')
             for rep in range(reps):
                 p300.move_to(well.top())
                 p300.air_gap(20)
-                p300.aspirate(vol, well.bottom(0.2))
+                p300.aspirate(vol, well.bottom(1))
                 # if rep < reps - 1:
                 p300.dispense(vol+20, ctx.fixed_trash.wells()[0].top(-5))
 
