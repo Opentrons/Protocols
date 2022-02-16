@@ -86,18 +86,19 @@ resuming.')
         if line and line.split(',')[0].strip()]
 
     tubes1_ordered = [
-        well for i in range(2) for col in rack.columns()
-        for well in col[i*8:(i+1)*8]]
+        well for col in rack.columns()
+        for well in col[:8]]
+
     tubes2_ordered = [
-        well for i in range(2) for col in rack.columns()
-        for well in col[i*8+8:(i+1)*8+8]]
+        well for col in rack.columns()
+        for well in col[8:]]
 
     prev_dest = None
     for line in data:
         tube1 = tubes1_ordered[int(line[0])-1]
-        tube2 = tubes2_ordered[int(line[0])-1]
+        tube2 = tubes2_ordered[int(line[1])-1]
         if len(line) >= 3 and line[2]:
-            transfer_vol = float(line[3])
+            transfer_vol = float(line[2])
         else:
             transfer_vol = default_transfer_vol
 
@@ -106,11 +107,11 @@ resuming.')
             if p300.has_tip:
                 p300.drop_tip()
             _pick_up(p300)
-        p300.transfer(transfer_vol, tube1.bottom(0.5), tube2.top(-1),
-                      new_tip='never')
-        p300.blow_out(tube2)
-        p300.touch_tip(tube2)
-
+        p300.move_to(tube1.top())
+        p300.air_gap(20)
+        p300.aspirate(transfer_vol, tube1.bottom(0.5))
+        p300.dispense(transfer_vol+20, tube2.top(-1), rate=1.5)
+        ctx.delay(seconds=1)
         prev_dest = tube2
     p300.drop_tip()
 
