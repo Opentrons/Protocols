@@ -27,11 +27,11 @@ def run(ctx):
     # load labware
     rack = ctx.load_labware('eurofins_96x2ml_tuberack', '2', 'tuberack')
 
-    plates = [ctx.load_labware('greinermasterblock_96_wellplate_1000ul', '1')]
+    plates = [ctx.load_labware('greinermasterblock_96_wellplate_1000ul', '4')]
 
     if input_file2:
         plates.append(
-         ctx.load_labware('greinermasterblock_96_wellplate_1000ul', '4'))
+         ctx.load_labware('greinermasterblock_96_wellplate_1000ul', '1'))
 
     tips300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
