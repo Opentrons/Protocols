@@ -20,11 +20,7 @@ Diluent is transferred first from the 12 well reservoir to the target plate well
 This protocol loads the sample and destination plate on 2nd generation temperature modules
 
 Explanation of parameters below:
-* `input .csv file`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:
-```
-source,dest,vol
-A1,B1,4
-```
+* `input .csv file`: Here, you should upload a .csv file formatted as described above.
 * `P20 GEN2 mount`: Choose whether to load the p20 in the right or left mount
 * `P300 GEN2 mount`: Choose whether to load the p300 in the right or left mount
 * `Aspiration height from bottom of the well [mm]`: Offset to aspirate from the bottom of the source wells (in units of mm)
