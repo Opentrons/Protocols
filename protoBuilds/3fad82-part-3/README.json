@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "\nOpentrons p20 tips (Deck Slots 2,3)\nOpentrons p300 tips (Deck Slots 5,6)\nOpentrons Thermocycler Module-deactivated (Deck Slots 7,8,10,11)\nOpentrons Magnetic Module with Sample Plate (Deck Slot 4)\nReagent Reservoir (Deck Slot 1)\n",
-    "description": "Part 3 of 3: Final Clean Up.\nLinks:\n* Part 1: End Prep and Adapter Ligation\n* Part 2: Clean Up and PCR Enrichment\n* Part 3: Final Clean Up\nWith this protocol, your robot can perform a modified Quarter Volume NEBNext Ultra II FS DNA Library Prep Kit for Illumina protocol described by the Experimental Protocol. NEB Instruction Manual for NEBNext.\nThis is part 3 of the protocol: Final Clean Up.\nThis protocol assumes up to 96 input samples and follows the attached experimental protocol.",
+    "description": "Part 3 of 3: Final Clean Up.\nLinks:\n Part 1: End Prep and Adapter Ligation\n Part 2: Clean Up and PCR Enrichment\n* Part 3: Final Clean Up\nWith this protocol, your robot can perform a modified Quarter Volume NEBNext Ultra II FS DNA Library Prep Kit for Illumina protocol described by the Experimental Protocol. NEB Instruction Manual for NEBNext.\nThis is part 3 of the protocol: Final Clean Up.\nThis protocol assumes up to 96 input samples and follows the attached experimental protocol.",
     "internal": "3fad82-part-3",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
