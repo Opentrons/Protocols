@@ -1,17 +1,14 @@
-# Protocol Title (should match metadata of .py file)
+# Distribution of PCR mastermix to MicroAmp 384 optical well plate
 
 ### Author
 [Opentrons](https://opentrons.com/)
-
-### Partner
-[Partner Name](partner website link)
 
 ## Categories
 * PCR
 	* PCR Prep
 
 ## Description
-This protocol distributes PCR mastermix from a source 96 deep well plate to a target Applied Biosystems Microamp optical 384 well 30 µL plate. The user can choose how many wells to transfer to (rounding up to the nearest number of columns) as well as how much volume to add to each well.
+This protocol distributes PCR mastermix from a source 96 deep well plate to a target Applied Biosystems Microamp optical 384 well 30 µL plate. The user can choose how many wells to transfer to (rounding up to the nearest number of columns) as well as how much volume to add to each well. The user can also choose whether they want to reuse tips, or pick up new tips for each transfer
 
 Explanation of parameters below:
 * `Number of wells`: How many wells to transfer mastermix to on the target plate. This will be rounded up to the nearest number of full columns.
@@ -24,9 +21,8 @@ Explanation of parameters below:
 * No modules
 
 ### Labware
-* [Some 96 Deep well plate?](link to labware on shop.opentrons.com when applicable)
-* [MicroAmp Optical 384-Well Reaction Plate](link to labware on shop.opentrons.com when applicable)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [Some 96 Deep well plate]()
+* [MicroAmp Optical 384-Well Reaction Plate]()
 
 ### Pipettes
 * [20 µL multi-channel pipette](https://shop.opentrons.com/8-channel-electronic-pipette/)
@@ -41,16 +37,12 @@ Explanation of parameters below:
 ![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/772041/deck.jpg)
 
 ### Reagent Setup
-* Source plate: slot 5
+* Source plate: slot 1
 ![Source plate](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/772041/source_plate.jpg)
 
 ---
 
 ### Protocol Steps
-1. This section should consist of a numerical outline of the protocol steps, somewhat analogous to the steps outlined by the user in their custom protocol submission.
-2. example step: Samples are transferred from the source tuberacks on slots 1-2 to the PCR plate on slot 3, down columns and then across rows.
-3. example step: Waste is removed from each sample on the magnetic module, ensuring the bead pellets are not contacted by the pipette tips.
-
 1. Pick up tips with the 20 µL multi-channel pipette
 2. Aspirate the chosen volume of mastermix from the source plate
 3. Distribute mastermix to the target plate
@@ -70,4 +62,4 @@ Explanation of parameters below:
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-protocol-hex-code
+772041

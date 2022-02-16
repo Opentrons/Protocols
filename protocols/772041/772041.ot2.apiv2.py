@@ -2,7 +2,7 @@ from opentrons import protocol_api
 import math
 
 metadata = {
-    'protocolName': '76ab0e: Temperature controlled normalization from .csv',
+    'protocolName': 'Distribution of PCR mastermix to MicroAmp 384 optical well plate',  # noqa: E501
     'author': 'Eskil Andersen <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
