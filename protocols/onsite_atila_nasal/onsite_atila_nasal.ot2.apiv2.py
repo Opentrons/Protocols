@@ -69,7 +69,6 @@ def run(ctx: protocol_api.ProtocolContext):
             m20.aspirate(12, sbm)
             m20.dispense(12, col.bottom(z=2))
             m20.blow_out(col.top(z=-3))
-            m20.touch_tip()
         m20.drop_tip()
         ctx.comment('\n')
 
@@ -103,7 +102,6 @@ def run(ctx: protocol_api.ProtocolContext):
         m20.aspirate(10, mmx)
         m20.dispense(10, col.bottom(z=2))
         m20.blow_out(col.top(z=-3))
-        m20.touch_tip()
         m20.drop_tip()
     ctx.comment('\n')
 
