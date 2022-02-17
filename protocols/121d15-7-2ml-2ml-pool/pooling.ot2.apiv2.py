@@ -118,8 +118,9 @@ resuming.')
             p300.move_to(tube1.top())
             p300.air_gap(20)
             p300.aspirate(vol, tube1.bottom(0.5))
-            p300.dispense(vol+20, tube2.top(-1), rate=1.5)
+            p300.dispense(vol+20, tube2.top(-5), rate=2)
             ctx.delay(seconds=1)
+            p300.blow_out()
 
         prev_dest = tube2
     p300.drop_tip()
