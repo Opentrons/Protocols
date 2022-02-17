@@ -57,20 +57,23 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.comment('\n\n~~~~~~~~MOVING MMX TO PLATE~~~~~~~~~\n')
     mmx_vol = 22
     mmx_ctr = 0
-    p300.pick_up_tip()
-    for i, col in enumerate(pcr_plate.rows()[0][:num_full_col if num_samp != 94 else 12]):  # noqa: E501
-        p300.aspirate(mmx_vol, mmx[mmx_ctr])
-        p300.dispense(mmx_vol, col)
-        p300.blow_out(col.top(z=-3))
-        p300.touch_tip()
-        if i == 5:
-            mmx_ctr += 1
-    p300.drop_tip()
-    ctx.comment('\n')
+    if num_full_col > 0:
+        p300.pick_up_tip()
+        for i, col in enumerate(pcr_plate.rows()[0][:num_full_col if num_samp != 94 else 12]):  # noqa: E501
+            p300.aspirate(mmx_vol, mmx[mmx_ctr])
+            p300.dispense(mmx_vol, col)
+            p300.blow_out(col.top(z=-3))
+            p300.touch_tip()
+            if i == 5:
+                mmx_ctr += 1
+
+        p300.drop_tip()
+        ctx.comment('\n')
 
     if spill > 0 and not num_samp == 94:
         ctx.comment('TRANSFERRING MMX TO UNFILLED COLUMN')
-        p20.pick_up_tip()
+        if not p20.has_tip:
+            p20.pick_up_tip()
         for source, well in zip(mmx_plate.columns()[mmx_ctr],
                                 pcr_plate.columns()[num_full_col][:spill]):
             p20.transfer(22, source,
@@ -80,6 +83,7 @@ def run(ctx: protocol_api.ProtocolContext):
                          blow_out=True,
                          blowout_location='destination well')
         p20.drop_tip()
+        ctx.comment('\n')
 
     if not num_samp == 94:
         ctx.comment('TRANSFERRING MMX TO CONTROLS')
@@ -109,4 +113,6 @@ def run(ctx: protocol_api.ProtocolContext):
         p20.pick_up_tip()
         p20.aspirate(3, source)
         p20.dispense(3, dest)
+        p20.blow_out(col.top(z=-3))
+        p20.touch_tip()
         p20.drop_tip()
