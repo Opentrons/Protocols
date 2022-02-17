@@ -149,11 +149,10 @@ resuming.')
                 p300.move_to(well.top())
                 p300.air_gap(20)
                 p300.aspirate(vol, well.bottom(1))
-                # if rep < reps - 1:
                 p300.dispense(vol+20, ctx.fixed_trash.wells()[0].top(-5))
 
             # to improve completeness of removal
-            for clearance in [0.5, 0.3, 0.1, 0]:
+            for clearance in [0.7, 0.4, 0.2, 0]:
                 p300.aspirate(20, well.bottom(clearance))
 
             del ctx.max_speeds['A']  # reset to default
