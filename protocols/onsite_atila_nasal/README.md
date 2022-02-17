@@ -43,7 +43,7 @@ Explanation of complex parameters below:
 
 ### Protocol Steps
 1. SBM is added to the reaction plate up to the number of samples specified.
-2. Samples are added to the plate and mixed 3 times with SVM.
+2. Samples are added to the plate and mixed 3 times with SBM.
 3. 15 minute incubation period.
 2. Mastermix is added to the reaction plate up to the number of samples specified.
 3. Controls are added to G12 and H12 of the reaction plate.

@@ -63,7 +63,6 @@ def run(ctx: protocol_api.ProtocolContext):
             p300.aspirate(mmx_vol, mmx[mmx_ctr])
             p300.dispense(mmx_vol, col)
             p300.blow_out(col.top(z=-3))
-            p300.touch_tip()
             if i == 5:
                 mmx_ctr += 1
 
