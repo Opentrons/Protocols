@@ -1,3 +1,4 @@
+import math
 import os
 import json
 
@@ -102,16 +103,25 @@ resuming.')
         else:
             transfer_vol = default_transfer_vol
 
+        # effective tip capacity 280 with 20 uL air gap
+        reps = math.ceil(transfer_vol / 280)
+
+        vol = transfer_vol / reps
+
         # transfer
         if tube2 != prev_dest:
             if p300.has_tip:
                 p300.drop_tip()
             _pick_up(p300)
-        p300.move_to(tube1.top())
-        p300.air_gap(20)
-        p300.aspirate(transfer_vol, tube1.bottom(0.5))
-        p300.dispense(transfer_vol+20, tube2.top(-1), rate=1.5)
-        ctx.delay(seconds=1)
+
+        for rep in range(reps):
+            p300.move_to(tube1.top())
+            p300.air_gap(20)
+            p300.aspirate(vol, tube1.bottom(0.5))
+            p300.dispense(vol+20, tube2.top(-5), rate=2)
+            ctx.delay(seconds=1)
+            p300.blow_out()
+
         prev_dest = tube2
     p300.drop_tip()
 
