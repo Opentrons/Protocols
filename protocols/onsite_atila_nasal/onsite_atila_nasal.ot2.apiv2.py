@@ -63,14 +63,15 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # protocol
     ctx.comment('\n\n~~~~~~~~MOVING SBM TO PLATE~~~~~~~~~\n')
-    pick_up(m20)
-    for col in pcr_plate.rows()[0][:num_full_col]:
-        m20.aspirate(12, sbm)
-        m20.dispense(12, col.bottom(z=2))
-        m20.blow_out(col.top(z=-3))
-        m20.touch_tip()
-    m20.drop_tip()
-    ctx.comment('\n')
+    if num_full_col > 0:
+        pick_up(m20)
+        for col in pcr_plate.rows()[0][:num_full_col]:
+            m20.aspirate(12, sbm)
+            m20.dispense(12, col.bottom(z=2))
+            m20.blow_out(col.top(z=-3))
+            m20.touch_tip()
+        m20.drop_tip()
+        ctx.comment('\n')
 
     if spill > 0:
         pick_up(p20)
@@ -97,6 +98,7 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.comment('\n\n~~~~~~~~MOVING MMX TO PLATE~~~~~~~~~\n')
     num_full_col = 12 if num_samp == 94 else num_full_col
     for col in pcr_plate.rows()[0][:num_full_col]:
+        ctx.comment("Using P20-Multi")
         pick_up(m20)
         m20.aspirate(10, mmx)
         m20.dispense(10, col.bottom(z=2))
@@ -106,25 +108,34 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.comment('\n')
 
     if spill > 0 and not num_samp == 94:
+
         ctx.comment('TRANSFERRING MMX TO UNFILLED COLUMN')
         for source, well in zip(mmx_plate.columns()[1],
                                 pcr_plate.columns()[num_full_col][:spill]):
             pick_up(p20)
             p20.aspirate(10, source)
             p20.dispense(10, well.bottom(z=2))
+            p20.blow_out(col.top(z=-3))
+            p20.touch_tip()
             p20.drop_tip()
 
+    if not num_samp == 94:
         ctx.comment('TRANSFERRING MMX TO CONTROLS')
+        ctx.comment("Using P20-Single")
+        pick_up(p20)
         for i, source in enumerate(
                         mmx_plate.columns()[1][spill:spill+2]):
-            pick_up(p20)
             p20.aspirate(10, source)
             p20.dispense(10, controls_dest[i].bottom(z=2))
-            p20.drop_tip()
+            p20.blow_out(col.top(z=-3))
+            p20.touch_tip()
+        p20.drop_tip()
 
     ctx.comment('\n\n~~~~~~~~MOVING CONTROLS TO PLATE~~~~~~~~~\n')
     for source, dest in zip(controls_source, controls_dest):
         pick_up(p20)
         p20.aspirate(15, source)
         p20.dispense(15, dest.bottom(z=2))
+        p20.blow_out(col.top(z=-3))
+        p20.touch_tip()
         p20.drop_tip()
