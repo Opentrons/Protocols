@@ -89,6 +89,22 @@ resuming.')
         if line and line.split(',')[0].strip()]
 
     tubes1_ordered = rack15.wells()
+
+    # to take vol and return estimated liq height
+    def liq_height(well):
+        if well.diameter is not None:
+            radius = well.diameter / 2
+            cse = math.pi*(radius**2)
+        elif well.length is not None:
+            cse = well.length*well.width
+        else:
+            cse = None
+        if cse:
+            return well.liq_vol / cse
+        else:
+            raise Exception("""Labware definition must
+                supply well radius or well length and width.""")
+
     tubes2_ordered = [
         well for col in rack2.columns()
         for well in col[:8]]
@@ -96,6 +112,10 @@ resuming.')
     prev_source = None
     for line in data:
         tube1 = tubes1_ordered[int(line[0])-1]
+
+        # current volume - 15 mL source tube
+        tube1.liq_vol = int(line[3])
+
         tube2 = tubes2_ordered[int(line[1])-1]
         if len(line) >= 3 and line[2]:
             transfer_vol = float(line[2])
@@ -116,7 +136,13 @@ resuming.')
         for rep in range(reps):
             p300.move_to(tube1.top())
             p300.air_gap(20)
-            p300.aspirate(vol, tube1.bottom(0.5))
+
+            # aspirate with tip 3 mm below anticipated liquid level
+            tube1.liq_vol -= vol
+            tipheight = liq_height(
+             tube1) - 3 if liq_height(tube1) - 3 > 1 else 1
+
+            p300.aspirate(vol, tube1.bottom(tipheight))
             p300.dispense(vol+20, tube2.top(-5), rate=2)
             ctx.delay(seconds=1)
             p300.blow_out()
