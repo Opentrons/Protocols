@@ -37,6 +37,7 @@ Explanation of parameters below:
 * [NEST 2 mL 96-Well Deep Well Plate](https://shop.opentrons.com/nest-2-ml-96-well-deep-well-plate-v-bottom/)
 * [NEST 12-Well Reservoirs, 15 mL](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/)
 * Optional: [Eppendorf 96 well plate full skirt](https://online-shop.eppendorf.us/US-en/Laboratory-Consumables-44512/Plates-44516/Eppendorf-twin.tec-PCR-Plates-PF-8180.html?_gl=1*1gk1ehp*#Accessory)
+* [Opentrons aluminum block set](https://shop.opentrons.com/aluminum-block-set/)
 
 ### Pipettes
 * [P300 single-Channel (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
