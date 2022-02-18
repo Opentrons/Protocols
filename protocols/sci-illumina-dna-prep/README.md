@@ -1,17 +1,18 @@
-# Protocol Title (should match metadata of .py file)
-
+# Illumina DNA Prep
 ### Author
 [Opentrons](https://opentrons.com/)
 
 ### Partner
-[Partner Name](partner website link)
+[Illumina](https://www.illumina.com/)
 
 ## Categories
-* Broader Category
-	* Subcategory (can be the name of a kit when applicable)
+* NGS Library Prep
+  * Illumina DNA Prep
 
 ## Description
-This section of the README (especially the first paragraph) should grip a prospective user with the overarching purpose/flow of the protocol, but should not include fine details of the protocol steps themselves.
+This protocol automates the [Illumina DNA prep protocol](https://support.illumina.com/content/dam/illumina-support/documents/documentation/chemistry_documentation/illumina_prep/illumina-dna-prep-reference-guide-1000000025416-09.pdf). Illumina DNA prep offers a fast, integrated workflow for a wide range of applications, from human whole-genome sequencing to amplicons, plasmids, and microbial species
+
+In the protocol there is a setting definition for the number of samples (SAMPLES = 8x, 16x, or 24x).  Samples are prepared as below, with 30ul of 100ng of sample DNA.  See the Illumina DNA Prep protocol for more information about sample input requirements.
 
 Example: This is a flexible protocol accommodating a wide range of commercial RNA extraction workflows for COVID-19 sample processing. The protocol is broken down into 5 main parts:
 * binding buffer addition to samples
@@ -25,13 +26,8 @@ Example: For sample traceability and consistency, samples are mapped directly fr
 Results of the Opentrons Science team's internal testing of this protocol on the OT-2 are shown below:  
 ![results](link_to_results.png)
 
-Explanation of complex parameters below:
-* `park tips`: If set to `yes` (recommended), the protocol will conserve tips between reagent addition and removal. Tips will be stored in the wells of an empty rack corresponding to the well of the sample that they access (tip parked in A1 of the empty rack will only be used for sample A1, tip parked in B1 only used for sample B1, etc.). If set to `no`, tips will always be used only once, and the user will be prompted to manually refill tipracks mid-protocol for high throughput runs.
-* `input .csv file`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:
-```
-source,dest,vol
-A1,B1,4
-```
+Explanation of parameters below:
+* `Number of samples`: 8 (column 1), 16 (column 1, 3), or 24 (column 1, 3, 5) samples
 
 ---
 
