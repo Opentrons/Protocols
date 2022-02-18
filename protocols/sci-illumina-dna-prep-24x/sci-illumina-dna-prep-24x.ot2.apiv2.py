@@ -562,7 +562,7 @@ def run(protocol: protocol_api.ProtocolContext):
             p300.default_speed = 400
             p300.move_to(bypass)
             p300.return_tip()
-        if samplecolumns >= 3:  # -------------------------------------------------
+        if samplecolumns >= 3:  # ---------------------------------------------
             X = 'A5'
             p300.pick_up_tip(TWB_washtip_3)
             p300.aspirate(100, TWB_3.bottom(z=p300_offset_Res))
@@ -715,40 +715,40 @@ def run(protocol: protocol_api.ProtocolContext):
         p300.pick_up_tip()
         p300.aspirate(PCRVol, Master_Tube_PCR_1.bottom(p300_offset_Temp))
         if X == 'A1':
-                p300.move_to(A1_p300_loc1)
+            p300.move_to(A1_p300_loc1)
         if X == 'A3':
-                p300.move_to(A3_p300_loc1)
+            p300.move_to(A3_p300_loc1)
         if X == 'A5':
-                p300.move_to(A5_p300_loc1)
+            p300.move_to(A5_p300_loc1)
         p300.dispense(PCRVol/5, rate=0.75)
         p300.default_speed = 5
         if X == 'A1':
-                p300.move_to(A1_p300_loc2)
+            p300.move_to(A1_p300_loc2)
         if X == 'A3':
-                p300.move_to(A3_p300_loc2)
+            p300.move_to(A3_p300_loc2)
         if X == 'A5':
-                p300.move_to(A5_p300_loc2)
+            p300.move_to(A5_p300_loc2)
         p300.dispense(PCRVol/5, rate=0.75)
         if X == 'A1':
-                p300.move_to(A1_p300_loc3)
+            p300.move_to(A1_p300_loc3)
         if X == 'A3':
-                p300.move_to(A3_p300_loc3)
+            p300.move_to(A3_p300_loc3)
         if X == 'A5':
-                p300.move_to(A5_p300_loc3)
+            p300.move_to(A5_p300_loc3)
         p300.dispense(PCRVol/5, rate=0.75)
         if X == 'A1':
-                p300.move_to(A1_p300_loc2)
+            p300.move_to(A1_p300_loc2)
         if X == 'A3':
-                p300.move_to(A3_p300_loc2)
+            p300.move_to(A3_p300_loc2)
         if X == 'A5':
-                p300.move_to(A5_p300_loc2)
+            p300.move_to(A5_p300_loc2)
         p300.dispense(PCRVol/5, rate=0.75)
         if X == 'A1':
-                p300.move_to(A1_p300_loc1)
+            p300.move_to(A1_p300_loc1)
         if X == 'A3':
-                p300.move_to(A3_p300_loc1)
+            p300.move_to(A3_p300_loc1)
         if X == 'A5':
-                p300.move_to(A5_p300_loc1)
+            p300.move_to(A5_p300_loc1)
         p300.dispense(PCRVol/5, rate=0.75)
         reps = 5
         for x in range(reps):
@@ -803,40 +803,40 @@ def run(protocol: protocol_api.ProtocolContext):
         p300.pick_up_tip()
         p300.aspirate(PCRVol, Master_Tube_PCR_1.bottom(p300_offset_Temp))
         if X == 'A1':
-                p300.move_to(A1_p300_loc1)
+            p300.move_to(A1_p300_loc1)
         if X == 'A3':
-                p300.move_to(A3_p300_loc1)
+            p300.move_to(A3_p300_loc1)
         if X == 'A5':
-                p300.move_to(A5_p300_loc1)
+            p300.move_to(A5_p300_loc1)
         p300.dispense(PCRVol/5, rate=0.75)
         p300.default_speed = 5
         if X == 'A1':
-                p300.move_to(A1_p300_loc2)
+            p300.move_to(A1_p300_loc2)
         if X == 'A3':
-                p300.move_to(A3_p300_loc2)
+            p300.move_to(A3_p300_loc2)
         if X == 'A5':
-                p300.move_to(A5_p300_loc2)
+            p300.move_to(A5_p300_loc2)
         p300.dispense(PCRVol/5, rate=0.75)
         if X == 'A1':
-                p300.move_to(A1_p300_loc3)
+            p300.move_to(A1_p300_loc3)
         if X == 'A3':
-                p300.move_to(A3_p300_loc3)
+            p300.move_to(A3_p300_loc3)
         if X == 'A5':
-                p300.move_to(A5_p300_loc3)
+            p300.move_to(A5_p300_loc3)
         p300.dispense(PCRVol/5, rate=0.75)
         if X == 'A1':
-                p300.move_to(A1_p300_loc2)
+            p300.move_to(A1_p300_loc2)
         if X == 'A3':
-                p300.move_to(A3_p300_loc2)
+            p300.move_to(A3_p300_loc2)
         if X == 'A5':
-                p300.move_to(A5_p300_loc2)
+            p300.move_to(A5_p300_loc2)
         p300.dispense(PCRVol/5, rate=0.75)
         if X == 'A1':
-                p300.move_to(A1_p300_loc1)
+            p300.move_to(A1_p300_loc1)
         if X == 'A3':
-                p300.move_to(A3_p300_loc1)
+            p300.move_to(A3_p300_loc1)
         if X == 'A5':
-                p300.move_to(A5_p300_loc1)
+            p300.move_to(A5_p300_loc1)
         p300.dispense(PCRVol/5, rate=0.75)
         reps = 5
         for x in range(reps):
@@ -891,40 +891,40 @@ def run(protocol: protocol_api.ProtocolContext):
         p300.pick_up_tip()
         p300.aspirate(PCRVol, Master_Tube_PCR_1.bottom(p300_offset_Temp))
         if X == 'A1':
-                p300.move_to(A1_p300_loc1)
+            p300.move_to(A1_p300_loc1)
         if X == 'A3':
-                p300.move_to(A3_p300_loc1)
+            p300.move_to(A3_p300_loc1)
         if X == 'A5':
-                p300.move_to(A5_p300_loc1)
+            p300.move_to(A5_p300_loc1)
         p300.dispense(PCRVol/5, rate=0.75)
         p300.default_speed = 5
         if X == 'A1':
-                p300.move_to(A1_p300_loc2)
+            p300.move_to(A1_p300_loc2)
         if X == 'A3':
-                p300.move_to(A3_p300_loc2)
+            p300.move_to(A3_p300_loc2)
         if X == 'A5':
-                p300.move_to(A5_p300_loc2)
+            p300.move_to(A5_p300_loc2)
         p300.dispense(PCRVol/5, rate=0.75)
         if X == 'A1':
-                p300.move_to(A1_p300_loc3)
+            p300.move_to(A1_p300_loc3)
         if X == 'A3':
-                p300.move_to(A3_p300_loc3)
+            p300.move_to(A3_p300_loc3)
         if X == 'A5':
-                p300.move_to(A5_p300_loc3)
+            p300.move_to(A5_p300_loc3)
         p300.dispense(PCRVol/5, rate=0.75)
         if X == 'A1':
-                p300.move_to(A1_p300_loc2)
+            p300.move_to(A1_p300_loc2)
         if X == 'A3':
-                p300.move_to(A3_p300_loc2)
+            p300.move_to(A3_p300_loc2)
         if X == 'A5':
-                p300.move_to(A5_p300_loc2)
+            p300.move_to(A5_p300_loc2)
         p300.dispense(PCRVol/5, rate=0.75)
         if X == 'A1':
-                p300.move_to(A1_p300_loc1)
+            p300.move_to(A1_p300_loc1)
         if X == 'A3':
-                p300.move_to(A3_p300_loc1)
+            p300.move_to(A3_p300_loc1)
         if X == 'A5':
-                p300.move_to(A5_p300_loc1)
+            p300.move_to(A5_p300_loc1)
         p300.dispense(PCRVol/5, rate=0.75)
         reps = 5
         for x in range(reps):
@@ -976,7 +976,7 @@ def run(protocol: protocol_api.ProtocolContext):
         p300.drop_tip()
 
     protocol.comment('--> Adding Barcodes')
-    BarcodeVol    = 10
+    BarcodeVol = 10
     BarcodeMixRep = 10
     BarcodeMixVol = 10
     if samplecolumns >= 1:  # -------------------------------------------------
@@ -1003,24 +1003,28 @@ def run(protocol: protocol_api.ProtocolContext):
 
     protocol.pause("PLACE sample_plate on THERMO")
 
-    ###########################################################################    protocol.pause('Seal, Run PCR (25min)')
+    ###########################################################################
+    protocol.pause('Seal, Run PCR (25min)')
 
     thermocycler.close_lid()
     profile_PCR_1 = [
         {'temperature': 68, 'hold_time_minutes': 3},
         {'temperature': 98, 'hold_time_minutes': 3}
         ]
-    thermocycler.execute_profile(steps=profile_PCR_1, repetitions=1, block_max_volume=50)
+    thermocycler.execute_profile(
+        steps=profile_PCR_1, repetitions=1, block_max_volume=50)
     profile_PCR_2 = [
         {'temperature': 98, 'hold_time_seconds': 45},
         {'temperature': 62, 'hold_time_seconds': 30},
         {'temperature': 68, 'hold_time_minutes': 2}
         ]
-    thermocycler.execute_profile(steps=profile_PCR_2, repetitions=5, block_max_volume=50)
+    thermocycler.execute_profile(
+        steps=profile_PCR_2, repetitions=5, block_max_volume=50)
     profile_PCR_3 = [
         {'temperature': 68, 'hold_time_minutes': 1}
         ]
-    thermocycler.execute_profile(steps=profile_PCR_3, repetitions=1, block_max_volume=50)
+    thermocycler.execute_profile(
+        steps=profile_PCR_3, repetitions=1, block_max_volume=50)
     thermocycler.set_block_temperature(4)
     ###########################################################################
     thermocycler.open_lid()
@@ -1048,7 +1052,8 @@ def run(protocol: protocol_api.ProtocolContext):
         p300.pick_up_tip()
         p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag+4))
         p300.aspirate(TransferSup, rate=0.25)
-        p300.dispense(TransferSup+5, sample_plate_mag[Y].bottom(z=p300_offset_Mag))
+        p300.dispense(
+            TransferSup+5, sample_plate_mag[Y].bottom(z=p300_offset_Mag))
         p300.move_to(bypass)
         p300.drop_tip()
     if samplecolumns >= 2:  # -------------------------------------------------
@@ -1057,7 +1062,8 @@ def run(protocol: protocol_api.ProtocolContext):
         p300.pick_up_tip()
         p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag+4))
         p300.aspirate(TransferSup, rate=0.25)
-        p300.dispense(TransferSup+5, sample_plate_mag[Y].bottom(z=p300_offset_Mag))
+        p300.dispense(
+            TransferSup+5, sample_plate_mag[Y].bottom(z=p300_offset_Mag))
         p300.move_to(bypass)
         p300.drop_tip()
     if samplecolumns >= 3:  # -------------------------------------------------
@@ -1066,7 +1072,8 @@ def run(protocol: protocol_api.ProtocolContext):
         p300.pick_up_tip()
         p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag+4))
         p300.aspirate(TransferSup, rate=0.25)
-        p300.dispense(TransferSup+5, sample_plate_mag[Y].bottom(z=p300_offset_Mag))
+        p300.dispense(
+            TransferSup+5, sample_plate_mag[Y].bottom(z=p300_offset_Mag))
         p300.move_to(bypass)
         p300.drop_tip()
 
@@ -1082,7 +1089,8 @@ def run(protocol: protocol_api.ProtocolContext):
         p300.pick_up_tip()
         p300.mix(10, AMPureVol+10, AMPure)
         p300.aspirate(81, AMPure, rate=0.25)
-        p300.dispense(81, sample_plate_mag[X].bottom(z=p300_offset_Mag), rate=0.25)
+        p300.dispense(
+            81, sample_plate_mag[X].bottom(z=p300_offset_Mag), rate=0.25)
         p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))
         p300.mix(AMPureMixRep, AMPureMixVol)
         p300.blow_out(sample_plate_mag[X].top(z=-5))
@@ -1093,7 +1101,8 @@ def run(protocol: protocol_api.ProtocolContext):
         p300.pick_up_tip()
         p300.mix(3, AMPureVol+10, AMPure)
         p300.aspirate(81, AMPure, rate=0.25)
-        p300.dispense(81, sample_plate_mag[X].bottom(z=p300_offset_Mag), rate=0.25)
+        p300.dispense(
+            81, sample_plate_mag[X].bottom(z=p300_offset_Mag), rate=0.25)
         p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))
         p300.mix(AMPureMixRep, AMPureMixVol)
         p300.blow_out(sample_plate_mag[X].top(z=-5))
@@ -1104,7 +1113,8 @@ def run(protocol: protocol_api.ProtocolContext):
         p300.pick_up_tip()
         p300.mix(3, AMPureVol+10, AMPure)
         p300.aspirate(81, AMPure, rate=0.25)
-        p300.dispense(81, sample_plate_mag[X].bottom(z=p300_offset_Mag), rate=0.25)
+        p300.dispense(
+            81, sample_plate_mag[X].bottom(z=p300_offset_Mag), rate=0.25)
         p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))
         p300.mix(AMPureMixRep, AMPureMixVol)
         p300.blow_out(sample_plate_mag[X].top(z=-5))
@@ -1134,11 +1144,11 @@ def run(protocol: protocol_api.ProtocolContext):
         p300.aspirate(RemoveSup-20, rate=0.25)
         p300.default_speed = 5
         if X == 'A7':
-                p300.move_to(A7_p300_bead_side)
+            p300.move_to(A7_p300_bead_side)
         if X == 'A9':
-                p300.move_to(A9_p300_bead_side)
+            p300.move_to(A9_p300_bead_side)
         if X == 'A11':
-                p300.move_to(A11_p300_bead_side)
+            p300.move_to(A11_p300_bead_side)
         protocol.delay(minutes=0.1)
         p300.aspirate(20, rate=0.2)
         p300.move_to(sample_plate_mag[X].top(z=2))
@@ -1153,11 +1163,11 @@ def run(protocol: protocol_api.ProtocolContext):
         p300.aspirate(RemoveSup-20, rate=0.25)
         p300.default_speed = 5
         if X == 'A7':
-                p300.move_to(A7_p300_bead_side)
+            p300.move_to(A7_p300_bead_side)
         if X == 'A9':
-                p300.move_to(A9_p300_bead_side)
+            p300.move_to(A9_p300_bead_side)
         if X == 'A11':
-                p300.move_to(A11_p300_bead_side)
+            p300.move_to(A11_p300_bead_side)
         protocol.delay(minutes=0.1)
         p300.aspirate(20, rate=0.2)
         p300.move_to(sample_plate_mag[X].top(z=2))
@@ -1172,11 +1182,11 @@ def run(protocol: protocol_api.ProtocolContext):
         p300.aspirate(RemoveSup-20, rate=0.25)
         p300.default_speed = 5
         if X == 'A7':
-                p300.move_to(A7_p300_bead_side)
+            p300.move_to(A7_p300_bead_side)
         if X == 'A9':
-                p300.move_to(A9_p300_bead_side)
+            p300.move_to(A9_p300_bead_side)
         if X == 'A11':
-                p300.move_to(A11_p300_bead_side)
+            p300.move_to(A11_p300_bead_side)
         protocol.delay(minutes=0.1)
         p300.aspirate(20, rate=0.2)
         p300.move_to(sample_plate_mag[X].top(z=2))
@@ -1190,7 +1200,7 @@ def run(protocol: protocol_api.ProtocolContext):
     for wash in range(washreps):
         protocol.comment('--> ETOH Wash #'+str(wash+1))
         ETOHMaxVol = 150
-        if samplecolumns >= 1:  # -------------------------------------------------
+        if samplecolumns >= 1:  # --------------------------------------------
             X = 'A1'
             p300.pick_up_tip(ETOH_washtip_1)
             p300.aspirate(ETOHMaxVol, EtOH_1)
@@ -1210,7 +1220,7 @@ def run(protocol: protocol_api.ProtocolContext):
             p300.move_to(bypass)
             protocol.pause("TIP CHECK - once per wash")
             p300.return_tip()
-        if samplecolumns >= 2:  # -------------------------------------------------
+        if samplecolumns >= 2:  # --------------------------------------------
             X = 'A9'
             p300.pick_up_tip(ETOH_washtip_2)
             p300.aspirate(ETOHMaxVol, EtOH_2)
@@ -1229,7 +1239,7 @@ def run(protocol: protocol_api.ProtocolContext):
             p300.default_speed = 400
             p300.move_to(bypass)
             p300.return_tip()
-        if samplecolumns >= 3:  # -------------------------------------------------
+        if samplecolumns >= 3:  # ---------------------------------------------
             X = 'A11'
             p300.pick_up_tip(ETOH_washtip_3)
             p300.aspirate(ETOHMaxVol, EtOH_3)
@@ -1252,7 +1262,7 @@ def run(protocol: protocol_api.ProtocolContext):
         protocol.delay(minutes=0.5)
 
         protocol.comment('--> Remove ETOH Wash #'+str(wash+1))
-        if samplecolumns >= 1:  # -------------------------------------------------
+        if samplecolumns >= 1:  # ---------------------------------------------
             X = 'A7'
             p300.pick_up_tip(ETOH_removetip_1)
             p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))
@@ -1261,7 +1271,7 @@ def run(protocol: protocol_api.ProtocolContext):
             protocol.pause("TIP CHECK - once per wash")
             p300.move_to(bypass)
             p300.return_tip()
-        if samplecolumns >= 2:  # -------------------------------------------------
+        if samplecolumns >= 2:  # ---------------------------------------------
             X = 'A9'
             p300.pick_up_tip(ETOH_removetip_2)
             p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))
@@ -1269,7 +1279,7 @@ def run(protocol: protocol_api.ProtocolContext):
             p300.dispense(ETOHMaxVol, Liquid_trash_1)
             p300.move_to(bypass)
             p300.return_tip()
-        if samplecolumns >= 3:  # -------------------------------------------------
+        if samplecolumns >= 3:  # ---------------------------------------------
             X = 'A11'
             p300.pick_up_tip(ETOH_removetip_3)
             p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))
@@ -1318,40 +1328,40 @@ def run(protocol: protocol_api.ProtocolContext):
         p300.pick_up_tip()
         p300.aspirate(PCRVol, Master_Tube_PCR_1.bottom(p300_offset_Temp))
         if X == 'A1':
-                p300.move_to(A1_p300_loc1)
+            p300.move_to(A1_p300_loc1)
         if X == 'A3':
-                p300.move_to(A3_p300_loc1)
+            p300.move_to(A3_p300_loc1)
         if X == 'A5':
-                p300.move_to(A5_p300_loc1)
+            p300.move_to(A5_p300_loc1)
         p300.dispense(PCRVol/5, rate=0.75)
         p300.default_speed = 5
         if X == 'A1':
-                p300.move_to(A1_p300_loc2)
+            p300.move_to(A1_p300_loc2)
         if X == 'A3':
-                p300.move_to(A3_p300_loc2)
+            p300.move_to(A3_p300_loc2)
         if X == 'A5':
-                p300.move_to(A5_p300_loc2)
+            p300.move_to(A5_p300_loc2)
         p300.dispense(PCRVol/5, rate=0.75)
         if X == 'A1':
-                p300.move_to(A1_p300_loc3)
+            p300.move_to(A1_p300_loc3)
         if X == 'A3':
-                p300.move_to(A3_p300_loc3)
+            p300.move_to(A3_p300_loc3)
         if X == 'A5':
-                p300.move_to(A5_p300_loc3)
+            p300.move_to(A5_p300_loc3)
         p300.dispense(PCRVol/5, rate=0.75)
         if X == 'A1':
-                p300.move_to(A1_p300_loc2)
+            p300.move_to(A1_p300_loc2)
         if X == 'A3':
-                p300.move_to(A3_p300_loc2)
+            p300.move_to(A3_p300_loc2)
         if X == 'A5':
-                p300.move_to(A5_p300_loc2)
+            p300.move_to(A5_p300_loc2)
         p300.dispense(PCRVol/5, rate=0.75)
         if X == 'A1':
-                p300.move_to(A1_p300_loc1)
+            p300.move_to(A1_p300_loc1)
         if X == 'A3':
-                p300.move_to(A3_p300_loc1)
+            p300.move_to(A3_p300_loc1)
         if X == 'A5':
-                p300.move_to(A5_p300_loc1)
+            p300.move_to(A5_p300_loc1)
         p300.dispense(PCRVol/5, rate=0.75)
         reps = 5
         for x in range(reps):
@@ -1394,7 +1404,8 @@ def run(protocol: protocol_api.ProtocolContext):
             if X == 'A5':
                 p300.move_to(A5_p300_loc3)
             p300.mix(PCRMixRep, PCRMixVol)
-        p300.move_to(sample_plate_mag.wells_by_name()[X].bottom(z=p300_offset_Mag))
+        p300.move_to(
+            sample_plate_mag.wells_by_name()[X].bottom(z=p300_offset_Mag))
         p300.mix(PCRMixRep, PCRMixVol)
         p300.move_to(sample_plate_mag.wells_by_name()[X].top())
         protocol.delay(seconds=0.5)
@@ -1406,40 +1417,40 @@ def run(protocol: protocol_api.ProtocolContext):
         p300.pick_up_tip()
         p300.aspirate(PCRVol, Master_Tube_PCR_1.bottom(p300_offset_Temp))
         if X == 'A1':
-                p300.move_to(A1_p300_loc1)
+            p300.move_to(A1_p300_loc1)
         if X == 'A3':
-                p300.move_to(A3_p300_loc1)
+            p300.move_to(A3_p300_loc1)
         if X == 'A5':
-                p300.move_to(A5_p300_loc1)
+            p300.move_to(A5_p300_loc1)
         p300.dispense(PCRVol/5, rate=0.75)
         p300.default_speed = 5
         if X == 'A1':
-                p300.move_to(A1_p300_loc2)
+            p300.move_to(A1_p300_loc2)
         if X == 'A3':
-                p300.move_to(A3_p300_loc2)
+            p300.move_to(A3_p300_loc2)
         if X == 'A5':
-                p300.move_to(A5_p300_loc2)
+            p300.move_to(A5_p300_loc2)
         p300.dispense(PCRVol/5, rate=0.75)
         if X == 'A1':
-                p300.move_to(A1_p300_loc3)
+            p300.move_to(A1_p300_loc3)
         if X == 'A3':
-                p300.move_to(A3_p300_loc3)
+            p300.move_to(A3_p300_loc3)
         if X == 'A5':
-                p300.move_to(A5_p300_loc3)
+            p300.move_to(A5_p300_loc3)
         p300.dispense(PCRVol/5, rate=0.75)
         if X == 'A1':
-                p300.move_to(A1_p300_loc2)
+            p300.move_to(A1_p300_loc2)
         if X == 'A3':
-                p300.move_to(A3_p300_loc2)
+            p300.move_to(A3_p300_loc2)
         if X == 'A5':
-                p300.move_to(A5_p300_loc2)
+            p300.move_to(A5_p300_loc2)
         p300.dispense(PCRVol/5, rate=0.75)
         if X == 'A1':
-                p300.move_to(A1_p300_loc1)
+            p300.move_to(A1_p300_loc1)
         if X == 'A3':
-                p300.move_to(A3_p300_loc1)
+            p300.move_to(A3_p300_loc1)
         if X == 'A5':
-                p300.move_to(A5_p300_loc1)
+            p300.move_to(A5_p300_loc1)
         p300.dispense(PCRVol/5, rate=0.75)
         reps = 5
         for x in range(reps):
@@ -1482,7 +1493,8 @@ def run(protocol: protocol_api.ProtocolContext):
             if X == 'A5':
                 p300.move_to(A5_p300_loc3)
             p300.mix(PCRMixRep, PCRMixVol)
-        p300.move_to(sample_plate_mag.wells_by_name()[X].bottom(z=p300_offset_Mag))
+        p300.move_to(
+            sample_plate_mag.wells_by_name()[X].bottom(z=p300_offset_Mag))
         p300.mix(PCRMixRep, PCRMixVol)
         p300.move_to(sample_plate_mag.wells_by_name()[X].top())
         protocol.delay(seconds=0.5)
@@ -1494,40 +1506,40 @@ def run(protocol: protocol_api.ProtocolContext):
         p300.pick_up_tip()
         p300.aspirate(PCRVol, Master_Tube_PCR_1.bottom(p300_offset_Temp))
         if X == 'A1':
-                p300.move_to(A1_p300_loc1)
+            p300.move_to(A1_p300_loc1)
         if X == 'A3':
-                p300.move_to(A3_p300_loc1)
+            p300.move_to(A3_p300_loc1)
         if X == 'A5':
-                p300.move_to(A5_p300_loc1)
+            p300.move_to(A5_p300_loc1)
         p300.dispense(PCRVol/5, rate=0.75)
         p300.default_speed = 5
         if X == 'A1':
-                p300.move_to(A1_p300_loc2)
+            p300.move_to(A1_p300_loc2)
         if X == 'A3':
-                p300.move_to(A3_p300_loc2)
+            p300.move_to(A3_p300_loc2)
         if X == 'A5':
-                p300.move_to(A5_p300_loc2)
+            p300.move_to(A5_p300_loc2)
         p300.dispense(PCRVol/5, rate=0.75)
         if X == 'A1':
-                p300.move_to(A1_p300_loc3)
+            p300.move_to(A1_p300_loc3)
         if X == 'A3':
-                p300.move_to(A3_p300_loc3)
+            p300.move_to(A3_p300_loc3)
         if X == 'A5':
-                p300.move_to(A5_p300_loc3)
+            p300.move_to(A5_p300_loc3)
         p300.dispense(PCRVol/5, rate=0.75)
         if X == 'A1':
-                p300.move_to(A1_p300_loc2)
+            p300.move_to(A1_p300_loc2)
         if X == 'A3':
-                p300.move_to(A3_p300_loc2)
+            p300.move_to(A3_p300_loc2)
         if X == 'A5':
-                p300.move_to(A5_p300_loc2)
+            p300.move_to(A5_p300_loc2)
         p300.dispense(PCRVol/5, rate=0.75)
         if X == 'A1':
-                p300.move_to(A1_p300_loc1)
+            p300.move_to(A1_p300_loc1)
         if X == 'A3':
-                p300.move_to(A3_p300_loc1)
+            p300.move_to(A3_p300_loc1)
         if X == 'A5':
-                p300.move_to(A5_p300_loc1)
+            p300.move_to(A5_p300_loc1)
         p300.dispense(PCRVol/5, rate=0.75)
         reps = 5
         for x in range(reps):
@@ -1570,7 +1582,8 @@ def run(protocol: protocol_api.ProtocolContext):
             if X == 'A5':
                 p300.move_to(A5_p300_loc3)
             p300.mix(PCRMixRep, PCRMixVol)
-        p300.move_to(sample_plate_mag.wells_by_name()[X].bottom(z=p300_offset_Mag))
+        p300.move_to(
+            sample_plate_mag.wells_by_name()[X].bottom(z=p300_offset_Mag))
         p300.mix(PCRMixRep, PCRMixVol)
         p300.move_to(sample_plate_mag.wells_by_name()[X].top())
         protocol.delay(seconds=0.5)
@@ -1593,7 +1606,8 @@ def run(protocol: protocol_api.ProtocolContext):
         p300.pick_up_tip()
         p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag+4))
         p300.aspirate(TransferSup, rate=0.25)
-        p300.dispense(TransferSup+5, sample_plate_mag[Y].bottom(z=p300_offset_Mag))
+        p300.dispense(
+            TransferSup+5, sample_plate_mag[Y].bottom(z=p300_offset_Mag))
         p300.move_to(bypass)
         p300.drop_tip()
     if samplecolumns >= 2:  # -------------------------------------------------
@@ -1602,7 +1616,8 @@ def run(protocol: protocol_api.ProtocolContext):
         p300.pick_up_tip()
         p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag+4))
         p300.aspirate(TransferSup, rate=0.25)
-        p300.dispense(TransferSup+5, sample_plate_mag[Y].bottom(z=p300_offset_Mag))
+        p300.dispense(
+            TransferSup+5, sample_plate_mag[Y].bottom(z=p300_offset_Mag))
         p300.move_to(bypass)
         p300.drop_tip()
     if samplecolumns >= 3:  # -------------------------------------------------
@@ -1611,7 +1626,8 @@ def run(protocol: protocol_api.ProtocolContext):
         p300.pick_up_tip()
         p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag+4))
         p300.aspirate(TransferSup, rate=0.25)
-        p300.dispense(TransferSup+5, sample_plate_mag[Y].bottom(z=p300_offset_Mag))
+        p300.dispense(
+            TransferSup+5, sample_plate_mag[Y].bottom(z=p300_offset_Mag))
         p300.move_to(bypass)
         p300.drop_tip()
 
