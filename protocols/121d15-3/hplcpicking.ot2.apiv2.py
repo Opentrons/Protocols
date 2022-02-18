@@ -1,3 +1,5 @@
+import math
+
 # metadata
 metadata = {
     'protocolName': 'HPLC Picking',
@@ -43,14 +45,25 @@ def run(ctx):
         else:
             vol = default_transfer_vol
 
-        # check for volumes slightly over 300ul from HPLC input files
-        vol = 300 if 300 < vol < 305 else vol
-
         if dest != prev_dest:
             if p300.has_tip:
                 p300.drop_tip()
             p300.pick_up_tip()
-        p300.transfer(vol, source.bottom(0.5), dest.top(-1), new_tip='never')
+
+        # effective tip capacity 280 with 20 uL air gap
+        reps = math.ceil(vol / 280)
+
+        v = vol / reps
+
+        for rep in range(reps):
+            p300.move_to(source.top())
+            p300.air_gap(20)
+            p300.aspirate(v, source.bottom(0.5))
+            p300.dispense(
+             v+20, dest.top(-1), rate=2)
+            ctx.delay(seconds=1)
+            p300.blow_out()
+
         prev_dest = dest
 
         # track volumes for final adjustment
@@ -63,10 +76,23 @@ def run(ctx):
     # final adjustment with water up to 1500ul
     ctx.pause('Replace plate 4 in slot 1 with water reservoir. Resume once \
 finished.')
-    water = plates[-1].wells_by_name()['D4'].bottom(1)
+    water = plates[-1].wells_by_name()['D4']
     p300.pick_up_tip()
     for tube, vol in dest_vols.items():
         adjustment = 1500 - vol
         if adjustment > 0:
-            p300.transfer(adjustment, water, tube.top(-1), new_tip='never')
+            # effective tip capacity 280 uL with 20 uL air gap
+            reps = math.ceil(adjustment / 280)
+
+            v = adjustment / reps
+
+            for rep in range(reps):
+                p300.move_to(water.top())
+                p300.air_gap(20)
+                p300.aspirate(v, water.bottom(1))
+                p300.dispense(
+                 v+20, tube.top(-1), rate=2)
+                ctx.delay(seconds=1)
+                p300.blow_out()
+
     p300.drop_tip()
