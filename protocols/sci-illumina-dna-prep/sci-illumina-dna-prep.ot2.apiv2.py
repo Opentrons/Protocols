@@ -52,7 +52,7 @@ def run(protocol: protocol_api.ProtocolContext):
     Barcodes2 = reagent_plate.wells_by_name()['A8']
     Barcodes3 = reagent_plate.wells_by_name()['A9']
 
-    # reagent - eepwell
+    # reagent - Deepwell
     AMPure = deepwell['A1']
     EtOH_1 = deepwell['A2']
     EtOH_2 = deepwell['A3']

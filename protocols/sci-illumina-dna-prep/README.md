@@ -33,28 +33,45 @@ Explanation of parameters below:
 * [Thermocycler Module](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module)
 
 ### Labware
-* [Labware name](link to labware on shop.opentrons.com when applicable)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [Nest 96 well plate full skirt 100 µL](https://shop.opentrons.com/nest-0-1-ml-96-well-pcr-plate-full-skirt/)
+* [NEST 2 mL 96-Well Deep Well Plate](https://shop.opentrons.com/nest-2-ml-96-well-deep-well-plate-v-bottom/)
+* [NEST 12-Well Reservoirs, 15 mL](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/)
+* Optional: [Eppendorf 96 well plate full skirt](https://online-shop.eppendorf.us/US-en/Laboratory-Consumables-44512/Plates-44516/Eppendorf-twin.tec-PCR-Plates-PF-8180.html?_gl=1*1gk1ehp*#Accessory)
 
 ### Pipettes
-* [Pipette name](link to pipette on shop.opentrons.com)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [P300 single-Channel (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
+* [P20 single-Channel (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
+
+**Tips**
+* [Opentrons 20 µL filter tiprack](https://shop.opentrons.com/opentrons-20ul-filter-tips/)
+* [Opentrons 200 µL filter tiprack](https://shop.opentrons.com/opentrons-200ul-filter-tips/)
 
 ### Reagents
-* [kit name when applicable](link to kit)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [Illumina DNA Prep](https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/nextera-dna-flex.html)
 
 ---
 
 ### Deck Setup
 ![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-illumina-dna-prep/v3/deck.jpg)
 
+Slots:
+1. Sample plate: Magnetic module with  Nest 96 well plate full skirt (or Eppendorf 96 well plate full skirt) 100 µL wells
+2. Reagent plate 1: NEST 12 well 15 mL reservoir (or NEST 96 deep-well plate 2 mL when reusing tips). See Reagent Setup section for information about the location of the reagents
+3. Reagent plate 2: Temperature module with Bio-rad 200 µL plate on aluminum block. See Reagent Setup section for information about the location of the reagents
+4. 20 µL filter tiprack
+5. 200 µL filter tiprack
+6. 200 µL filter tiprack
+7. Sample plate: Thermocycler module with NEST 96 well plate full skirt 100 µL
+8. Empty
+9. 200 µL filter tiprack
+10. Sample plate: Thermocycler module with NEST 96 well plate full skirt (or Eppendorf 96 well plate full skirt) 100 µL
+11. Empty
+
 ### Reagent Setup
-* This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:
-* Reservoir 1: slot 5
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res1_v2.png)
-* Reservoir 2: slot 2  
-![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res2.png)
+* Reagent plate 1, slot 2:
+![Reagent plate 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-illumina-dna-prep/v3/reagent_plate1.jpg)
+* Reservoir 2, slot 3:
+![Reagent plate 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-illumina-dna-prep/v3/reagent_plate2.jpg)
 
 ---
 
@@ -76,4 +93,4 @@ Explanation of parameters below:
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-protocol-hex-code
+illumina-dna-prep
