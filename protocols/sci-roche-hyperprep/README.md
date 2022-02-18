@@ -41,19 +41,22 @@ itself to 'NO' in order to keep tip order correct.
 * [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
 * [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
 * [Thermocycler Module](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module)
-* [HEPA Module](https://shop.opentrons.com/collections/hardware-modules/products/hepa-module)
+
 
 ### Labware
-* [Labware name](link to labware on shop.opentrons.com when applicable)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
-
-### Pipettes
 * NEST 12 Well Reservoir 195mL
 * Eppendorf 96 well plate full skirt
 * Nest 96 well plate full skirt
 * Opentrons 20ul Filter Tips
 * Opentrons 200ul Filter Tips
-* ![tips](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-roche-hyperprep/Screen+Shot+2022-02-18+at+4.22.15+PM.png)
+
+### Pipettes
+* Opentrons P300 Multi-Channel Pipette GEN2
+* Opentrons P20 Multi-Channel Pipette GEN2
+* Opentrons P300 Multi-Channel Pipette GEN1
+* Opentrons P10 Multi-Channel Pipette GEN1
+
+
 ### Reagents
 * [kit name when applicable](link to kit)
 * Nick is working on auto-filling these sections from the protocol (3/28/2021)
