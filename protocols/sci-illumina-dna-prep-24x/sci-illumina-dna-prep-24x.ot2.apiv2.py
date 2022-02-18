@@ -467,9 +467,12 @@ def run(protocol: protocol_api.ProtocolContext):
         p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag+4))
         p300.aspirate(RemoveSup-20, rate=0.25)
         p300.default_speed = 5
-        if X == 'A1': p300.move_to(A1_p300_bead_side)
-        if X == 'A3': p300.move_to(A3_p300_bead_side)
-        if X == 'A5': p300.move_to(A5_p300_bead_side)
+        if X == 'A1':
+            p300.move_to(A1_p300_bead_side)
+        if X == 'A3':
+            p300.move_to(A3_p300_bead_side)
+        if X == 'A5':
+            p300.move_to(A5_p300_bead_side)
         protocol.delay(minutes=0.1)
         p300.aspirate(20, rate=0.2)
         p300.move_to(sample_plate_mag[X].top(z=2))
@@ -487,26 +490,35 @@ def run(protocol: protocol_api.ProtocolContext):
         protocol.comment('--> TWB Wash #'+str(wash+1))
         TWBMixRep = 15
         TWBMixVol = 70
-        if samplecolumns >= 1:  # -------------------------------------------------
+        if samplecolumns >= 1:  # -----------------------------------------
             X = 'A1'
             p300.pick_up_tip(TWB_washtip_1)
             p300.aspirate(100, TWB_1.bottom(z=p300_offset_Res))
-            if X == 'A1': p300.move_to(A1_p300_bead_top)
-            if X == 'A3': p300.move_to(A3_p300_bead_top)
-            if X == 'A5': p300.move_to(A5_p300_bead_top)
+            if X == 'A1':
+                p300.move_to(A1_p300_bead_top)
+            if X == 'A3':
+                p300.move_to(A3_p300_bead_top)
+            if X == 'A5':
+                p300.move_to(A5_p300_bead_top)
             p300.dispense(100, rate=0.75)
             p300.default_speed = 5
             reps = 4
             for x in range(reps):
                 p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))
                 p300.aspirate(100)
-                if X == 'A1': p300.move_to(A1_p300_bead_top)
-                if X == 'A3': p300.move_to(A3_p300_bead_top)
-                if X == 'A5': p300.move_to(A5_p300_bead_top)
+                if X == 'A1':
+                    p300.move_to(A1_p300_bead_top)
+                if X == 'A3':
+                    p300.move_to(A3_p300_bead_top)
+                if X == 'A5':
+                    p300.move_to(A5_p300_bead_top)
                 p300.dispense(100, rate=0.75)
-            if X == 'A1': p300.move_to(A1_p300_bead_mid)
-            if X == 'A3': p300.move_to(A3_p300_bead_mid)
-            if X == 'A5': p300.move_to(A5_p300_bead_mid)
+            if X == 'A1':
+                p300.move_to(A1_p300_bead_mid)
+            if X == 'A3':
+                p300.move_to(A3_p300_bead_mid)
+            if X == 'A5':
+                p300.move_to(A5_p300_bead_mid)
             p300.mix(TWBMixRep, TWBMixVol)
             p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))
             p300.mix(TWBMixRep, TWBMixVol)
@@ -514,7 +526,7 @@ def run(protocol: protocol_api.ProtocolContext):
             p300.move_to(bypass)
             protocol.pause("TIP CHECK - once per wash")
             p300.return_tip()
-        if samplecolumns >= 2:  # -------------------------------------------------
+        if samplecolumns >= 2:  # --------------------------------------------
             X = 'A3'
             p300.pick_up_tip(TWB_washtip_2)
             p300.aspirate(100, TWB_2.bottom(z=p300_offset_Res))
