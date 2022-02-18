@@ -58,11 +58,11 @@ def run(protocol: protocol_api.ProtocolContext):
     EtOH_1 = deepwell['A2']
     EtOH_2 = deepwell['A3']
     EtOH_3 = deepwell['A4']
-    RSB = deepwell['A6']
+    # RSB = deepwell['A6'] - unused
     TWB_1 = deepwell['A8']
     TWB_2 = deepwell['A9']
     TWB_3 = deepwell['A10']
-    Liquid_trash_2 = deepwell['A11']
+    # Liquid_trash_2 = deepwell['A11'] - unused
     Liquid_trash_1 = deepwell['A12']
 
     # pipette
@@ -79,10 +79,10 @@ def run(protocol: protocol_api.ProtocolContext):
         protocol.comment("There are 8 Samples")
         samplecolumns = 1
         TWB_washtip_1 = tiprack_200_1['A3']
-        TWB_removetip_1= tiprack_200_1['A4']
+        TWB_removetip_1 = tiprack_200_1['A4']
         ETOH_washtip_1 = tiprack_200_1['A9']
         ETOH_removetip_1 = tiprack_200_1['A10']
-    elif right(src_file_path,6) == '16x.py':
+    elif right(src_file_path, 6) == '16x.py':
         protocol.comment("There are 16 Samples")
         samplecolumns = 2
         TWB_washtip_1 = tiprack_200_1['A5']
@@ -115,16 +115,11 @@ def run(protocol: protocol_api.ProtocolContext):
     p300_offset_Res = 2
     p300_offset_Thermo = 1
     p300_offset_Mag = 0.70
-    p300_offset_Deck = 0.3
     p300_offset_Temp = 0.65
-    p300_offset_Tube = 0
 
-    p20_offset_Res = 2
     p20_offset_Thermo = 1
     p20_offset_Mag = 0.75
-    p20_offset_Deck = 0.3
     p20_offset_Temp = 0.85
-    p20_offset_Tube = 0
 
     # positions
     ###########################################################################
@@ -201,62 +196,71 @@ def run(protocol: protocol_api.ProtocolContext):
     protocol.comment('==============================================')
 
     protocol.comment('--> Adding Tagmentation Mix ')
-    TagVol    = 20
+    TagVol = 20
     TagMixRep = 10
     TagMixVol = 40
     if samplecolumns >= 1:  # -------------------------------------------------
         X = 'A1'
         p300.pick_up_tip()
-        p300.aspirate(TagVol, Master_Tube_Tag.bottom(z=p300_offset_Temp), rate=0.25)
-        p300.dispense(TagVol, sample_plate_thermo[X].bottom(z=p300_offset_Thermo), rate=0.25)
+        p300.aspirate(TagVol, Master_Tube_Tag.bottom(
+            z=p300_offset_Temp), rate=0.25)
+        p300.dispense(TagVol, sample_plate_thermo[X].bottom(
+            z=p300_offset_Thermo), rate=0.25)
         p300.move_to(sample_plate_thermo[X].bottom(z=p300_offset_Thermo))
-        p300.mix(TagMixRep,TagMixVol)
+        p300.mix(TagMixRep, TagMixVol)
         p300.blow_out(sample_plate_thermo[X].top(z=-5))
         p300.move_to(bypass)
         p300.drop_tip()
     if samplecolumns >= 2:  # -------------------------------------------------
         X = 'A3'
         p300.pick_up_tip()
-        p300.aspirate(TagVol, Master_Tube_Tag.bottom(z=p300_offset_Temp), rate=0.25)
-        p300.dispense(TagVol, sample_plate_thermo[X].bottom(z=p300_offset_Thermo), rate=0.25)
+        p300.aspirate(TagVol, Master_Tube_Tag.bottom(
+            z=p300_offset_Temp), rate=0.25)
+        p300.dispense(TagVol, sample_plate_thermo[X].bottom(
+            z=p300_offset_Thermo), rate=0.25)
         p300.move_to(sample_plate_thermo[X].bottom(z=p300_offset_Thermo))
-        p300.mix(TagMixRep,TagMixVol)
+        p300.mix(TagMixRep, TagMixVol)
         p300.blow_out(sample_plate_thermo[X].top(z=-5))
         p300.move_to(bypass)
         p300.drop_tip()
     if samplecolumns >= 3:  # -------------------------------------------------
         X = 'A5'
         p300.pick_up_tip()
-        p300.aspirate(TagVol, Master_Tube_Tag.bottom(z=p300_offset_Temp), rate=0.25)
-        p300.dispense(TagVol, sample_plate_thermo[X].bottom(z=p300_offset_Thermo), rate=0.25)
+        p300.aspirate(TagVol, Master_Tube_Tag.bottom(
+            z=p300_offset_Temp), rate=0.25)
+        p300.dispense(TagVol, sample_plate_thermo[X].bottom(
+            z=p300_offset_Thermo), rate=0.25)
         p300.move_to(sample_plate_thermo[X].bottom(z=p300_offset_Thermo))
-        p300.mix(TagMixRep,TagMixVol)
+        p300.mix(TagMixRep, TagMixVol)
         p300.blow_out(sample_plate_thermo[X].top(z=-5))
         p300.move_to(bypass)
         p300.drop_tip()
 
-    ###########################################################################    protocol.pause('Seal, Run TAG (15min)')
+    ###########################################################################
+    protocol.pause('Seal, Run TAG (15min)')
 
     thermocycler.close_lid()
     profile_TAG = [
         {'temperature': 55, 'hold_time_minutes': 15}
         ]
-    thermocycler.execute_profile(steps=profile_TAG, repetitions=1, block_max_volume=50)
+    thermocycler.execute_profile(
+        steps=profile_TAG, repetitions=1, block_max_volume=50)
     thermocycler.set_block_temperature(10)
     ###########################################################################
     thermocycler.open_lid()
     protocol.pause("Remove Seal")
 
     protocol.comment('--> Adding Tagmentation Stop Buffer')
-    TSBVol    = 20
+    TSBVol = 20
     TSBMixRep = 10
     TSBMixVol = 20
     if samplecolumns >= 1:  # -------------------------------------------------
         X = 'A1'
         p20.pick_up_tip()
         p20.aspirate(TSBVol, TSB.bottom(z=p20_offset_Temp))
-        p20.dispense(TSBVol, sample_plate_thermo[X].bottom(z=p20_offset_Thermo))
-        p20.mix(TSBMixRep,TSBMixVol)
+        p20.dispense(TSBVol, sample_plate_thermo[X].bottom(
+            z=p20_offset_Thermo))
+        p20.mix(TSBMixRep, TSBMixVol)
         p20.drop_tip()
     if samplecolumns >= 2:  # -------------------------------------------------
         X = 'A3'
