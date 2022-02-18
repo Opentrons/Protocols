@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "",
-    "description": "This protocol automates the DNA Repair and End Prep portion for preparing sequencing libraries in the Oxford Nanopore Ligation Sequencing Kit. There is a second part of this protocol for the Adapter Ligation and Clean-up which will be published soon.\nExplanation of parameters below:\n Number of Samples: Specify the number of samples in multiples of 8 (Max: 96).\n P300 Multichannel GEN2 Mount Position: Specify the mount position of the P300 Multichannel.\n P300 Single GEN2 Mount Position: Specify the mount position of the P300 Multichannel.\n Magnetic Module Engage Height from Well Bottom (mm): Specify the height of the magnets from the bottom of the well.\n",
+    "description": "This protocol automates the DNA Repair and End Prep portion for preparing sequencing libraries in the Oxford Nanopore Ligation Sequencing Kit. There is a second part of this protocol for the Adapter Ligation and Clean-up which will be published soon.\nExplanation of parameters below:\n* Number of Samples: Specify the number of samples in multiples of 8 (Max: 96).\n* P300 Multichannel GEN2 Mount Position: Specify the mount position of the P300 Multichannel.\n* P300 Single GEN2 Mount Position: Specify the mount position of the P300 Multichannel.\n* Magnetic Module Engage Height from Well Bottom (mm): Specify the height of the magnets from the bottom of the well.\n",
     "internal": "516336",
     "labware": "\nThermoFisher 96 Well 0.8mL Polypropylene Deepwell Storage Plate\nBio-Rad 96 Well Plate 200 \u00b5L PCR\nNEST 12-Well Reservoirs, 15 mL\nOpentrons 300uL Tips\n",
     "markdown": {
