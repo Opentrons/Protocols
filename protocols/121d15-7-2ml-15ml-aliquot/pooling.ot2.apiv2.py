@@ -150,7 +150,7 @@ resuming.')
         prev_source = tube1
     p300.drop_tip()
 
-    # track final used tip
+    # track final tip used
     if not ctx.is_simulating():
         if not os.path.isdir(folder_path):
             os.mkdir(folder_path)

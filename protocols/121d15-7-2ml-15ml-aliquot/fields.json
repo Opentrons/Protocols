@@ -13,7 +13,7 @@
   },
   {
     "type": "str",
-    "label": "copy tuberack scan",
+    "label": "aliquot tuberack scan",
     "name": "tuberack2_scan",
     "default": "REPLACE WITH SCAN_XXX"
   },
