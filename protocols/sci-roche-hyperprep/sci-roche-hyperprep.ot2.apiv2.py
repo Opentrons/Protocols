@@ -138,7 +138,7 @@ def run(protocol: protocol_api.ProtocolContext):
             'p300_multi', p300_mount_1, tip_racks=[
                 tiprack_200_1, tiprack_200_2, tiprack_200_3])
         p20 = protocol.load_instrument(
-            'p10_multi', p10_mount_1, tip_racks=[tiprack_20])
+            'p10_multi', p10_mount, tip_racks=[tiprack_20])
 
     # samples
     src_file_path = inspect.getfile(lambda: None)
