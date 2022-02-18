@@ -12,14 +12,14 @@
 
 ## Description
 In the script there is a setting definition for the number of samples (SAMPLES = 8x, 16x, or 24x).  Samples are prepared as below, with 50ul of 100ng of fragmented sample DNA.  See the Roche/KAPA HyperPrep protocol for more information about sample input requirements.
-![results](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-roche-hyperprep/1.png)
+* ![results](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-roche-hyperprep/1.png)
 
 * Plate Moving
 The Protocol requires manually transferring the sample plate between the Thermocycler and Magnet 3 times.  It starts on the Thermocycler and needs to be moved to the Magnet for the post-ligation cleanup, and then moved to the Thermocycler for PCR and then back to the Magnet for the post-PCR cleanup.  In the script the two positions are handled as sample_plate_mag and sample_plate_thermo; during calibration use an empty plate of the same labware as the sample plate on the magnet position to allow calibration.
 
 * Tip Tracking
 Tip Tracking is an option meant to reuse tips for repeated washes.  Instead of discarding tips the OT2 will replace them in their original location for repeated use, this reduces the number of tips needed and allows a 24 sample run to require no tiprack replacements.  To prevent cross contamination when reusing Tips, when running the protocol with tip reuse, the reservoir is a 96x 2ml deepwell plate instead of a 12x well 15ml plate.  See Reservoir for more details.
-![tips](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-roche-hyperprep/tips.png)
+* ![tips](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-roche-hyperprep/tips.png)
 
 
 Explanation of complex parameters below:
@@ -53,7 +53,7 @@ itself to 'NO' in order to keep tip order correct.
 * Nest 96 well plate full skirt
 * Opentrons 20ul Filter Tips
 * Opentrons 200ul Filter Tips
-![tips](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-roche-hyperprep/Screen+Shot+2022-02-18+at+4.22.15+PM.png)
+* ![tips](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-roche-hyperprep/Screen+Shot+2022-02-18+at+4.22.15+PM.png)
 ### Reagents
 * [kit name when applicable](link to kit)
 * Nick is working on auto-filling these sections from the protocol (3/28/2021)
@@ -61,7 +61,7 @@ itself to 'NO' in order to keep tip order correct.
 ---
 
 ### Deck Setup
-![decksetup](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-roche-hyperprep/Screen+Shot+2022-02-18+at+4.26.51+PM.png)
+* ![decksetup](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-roche-hyperprep/Screen+Shot+2022-02-18+at+4.26.51+PM.png)
 * Position 1	Magnetic Module
 * Position 2	Reservoir
 * Position 3	Temperature Module w/ Reagent Plate
@@ -72,18 +72,18 @@ itself to 'NO' in order to keep tip order correct.
 * Position 9	p300
 
 * Reservoir w/o Tip Reusing
-![reuse](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-roche-hyperprep/with+reuse.png)
+* ![reuse](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-roche-hyperprep/with+reuse.png)
 * Reservoir w/ Tip Reusing
-![reuse](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-roche-hyperprep/without+reuse.png)
+* ![reuse](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-roche-hyperprep/without+reuse.png)
 
 ### Reagent Setup
 * Reagent Plate
 Prepare the reagents in the Reagent Plate according to the table below.  If available, prepare extra volume according to the HyperPrep kit being used (24x or 96x).  
 * Reservoir 1: slot 5
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-roche-hyperprep/Screen+Shot+2022-02-18+at+4.20.57+PM.png)
+* ![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-roche-hyperprep/Screen+Shot+2022-02-18+at+4.20.57+PM.png)
 * Barcodes
 Based on a quantified input of 100ng of fragged DNA, we suggest the KAPA Unique Dual-Indexed Adapter Kit (15 μM) with an adapter ratio 7.5uM.  Using the KAPA Adapter Diluent, add 3ul to column 7, 8, and 9 depending on how many samples are being run.  Add 3ul of the appropriate adapter to column 7, 8, and 9 according to the experiment design.  See KAPA HyperPrepKit instructions for further details.  
-![barcodes](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-roche-hyperprep/Screen+Shot+2022-02-18+at+4.18.52+PM.png)
+* ![barcodes](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-roche-hyperprep/Screen+Shot+2022-02-18+at+4.18.52+PM.png)
 
 ---
 
