@@ -29,13 +29,14 @@ sample_plate,H1,20,3.41,2
 ---
 
 ### Labware
+* [NEST 0.1 mL 96-Well PCR Plate, Full Skirt](https://shop.opentrons.com/nest-0-1-ml-96-well-pcr-plate-full-skirt/)
 * [Opentrons 4-in-1 Tube Rack Set](https://shop.opentrons.com/4-in-1-tube-rack-set/) with 15+50ml Falcon tube insert
+* [Opentrons 200µL Filter Tips](https://shop.opentrons.com/opentrons-200ul-filter-tips/)
+* [Opentrons 20µL Filter Tips](https://shop.opentrons.com/opentrons-20ul-filter-tips/)
 
 ### Pipettes
 * [P300 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 * [P20 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
-* [Opentrons 200µL Filter Tips](https://shop.opentrons.com/opentrons-200ul-filter-tips/)
-* [Opentrons 20µL Filter Tips](https://shop.opentrons.com/opentrons-20ul-filter-tips/)
 
 ### Reagents
 * [Illumina RNA Prep with Enrichment](https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/rna-prep-enrichment.html)
