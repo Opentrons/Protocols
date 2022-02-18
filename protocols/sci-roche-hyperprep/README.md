@@ -79,7 +79,7 @@ itself to 'NO' in order to keep tip order correct.
 ### Reagent Setup
 * Reagent Plate
 Prepare the reagents in the Reagent Plate according to the table below.  If available, prepare extra volume according to the HyperPrep kit being used (24x or 96x).  
-* Reservoir 1: slot 5
+
 * ![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-roche-hyperprep/Screen+Shot+2022-02-18+at+4.20.57+PM.png)
 * Barcodes
 Based on a quantified input of 100ng of fragged DNA, we suggest the KAPA Unique Dual-Indexed Adapter Kit (15 μM) with an adapter ratio 7.5uM.  Using the KAPA Adapter Diluent, add 3ul to column 7, 8, and 9 depending on how many samples are being run.  Add 3ul of the appropriate adapter to column 7, 8, and 9 according to the experiment design.  See KAPA HyperPrepKit instructions for further details.  
