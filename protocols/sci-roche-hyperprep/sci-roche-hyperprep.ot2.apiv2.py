@@ -34,7 +34,7 @@ def run(protocol: protocol_api.ProtocolContext):
         "SAMPLES", "DRYRUN", "NOMODULES", "TIPREUSE", "OFFSET", "STEP_ERAT", "STEP_ERATDECK", "STEP_LIG", "STEP_LIGDECK", "STEP_POSTLIG", "STEP_PCR", "STEP_PCRDECK", "STEP_POSTPCR", "p300_mount", "p20_mount", "p300_mount_1", "p10_mount")
     STEPS = {STEP_ERAT, STEP_LIG, STEP_POSTLIG, STEP_PCR, STEP_POSTPCR}
 
-    global TIPREUSE
+    # global TIPREUSE
 
     if DRYRUN == 'YES':
         protocol.comment("THIS IS A DRY RUN")
