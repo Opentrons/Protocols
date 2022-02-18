@@ -129,35 +129,63 @@ def run(protocol: protocol_api.ProtocolContext):
     # positions
     ###########################################################################
     #  sample_plate_thermo on the Thermocycler
-    A1_p20_bead_side = sample_plate_thermo['A1'].center().move(types.Point(x=-1.8*0.50,y=0, z=p20_offset_Thermo-5))                #Beads to the Right
-    A1_p20_bead_top = sample_plate_thermo['A1'].center().move(types.Point(x=1.5,y=0, z=p20_offset_Thermo+2))                #Beads to the Right
-    A1_p20_bead_mid = sample_plate_thermo['A1'].center().move(types.Point(x=1,y=0, z=p20_offset_Thermo-2))                #Beads to the Right
-    A1_p300_bead_side = sample_plate_thermo['A1'].center().move(types.Point(x=-0.50,y=0, z=p300_offset_Thermo-7.2))             #Beads to the Right
-    A1_p300_bead_top = sample_plate_thermo['A1'].center().move(types.Point(x=1.30,y=0, z=p300_offset_Thermo-1))               #Beads to the Right
-    A1_p300_bead_mid = sample_plate_thermo['A1'].center().move(types.Point(x=0.80,y=0, z=p300_offset_Thermo-4))               #Beads to the Right
-    A1_p300_loc1 = sample_plate_thermo['A1'].center().move(types.Point(x=1.3*0.8,y=1.3*0.8, z=p300_offset_Thermo-4))               #Beads to the Right
-    A1_p300_loc2 = sample_plate_thermo['A1'].center().move(types.Point(x=1.3,y=0, z=p300_offset_Thermo-4))               #Beads to the Right
-    A1_p300_loc3 = sample_plate_thermo['A1'].center().move(types.Point(x=1.3*0.8,y=-1.3*0.8, z=p300_offset_Thermo-4))               #Beads to the Right
-    A3_p20_bead_side = sample_plate_thermo['A3'].center().move(types.Point(x=-1.8*0.50,y=0, z=p20_offset_Thermo-5))                #Beads to the Right
-    A3_p20_bead_top = sample_plate_thermo['A3'].center().move(types.Point(x=1.5,y=0, z=p20_offset_Thermo+2))                #Beads to the Right
-    A3_p20_bead_mid = sample_plate_thermo['A3'].center().move(types.Point(x=1,y=0, z=p20_offset_Thermo-2))                #Beads to the Right
-    A3_p300_bead_side = sample_plate_thermo['A3'].center().move(types.Point(x=-0.50,y=0, z=p300_offset_Thermo-7.2))             #Beads to the Right
-    A3_p300_bead_top = sample_plate_thermo['A3'].center().move(types.Point(x=1.30,y=0, z=p300_offset_Thermo-1))               #Beads to the Right
-    A3_p300_bead_mid = sample_plate_thermo['A3'].center().move(types.Point(x=0.80,y=0, z=p300_offset_Thermo-4))               #Beads to the Right
-    A3_p300_loc1 = sample_plate_thermo['A3'].center().move(types.Point(x=1.3*0.8,y=1.3*0.8, z=p300_offset_Thermo-4))               #Beads to the Right
-    A3_p300_loc2 = sample_plate_thermo['A3'].center().move(types.Point(x=1.3,y=0, z=p300_offset_Thermo-4))               #Beads to the Right
-    A3_p300_loc3 = sample_plate_thermo['A3'].center().move(types.Point(x=1.3*0.8,y=-1.3*0.8, z=p300_offset_Thermo-4))               #Beads to the Right
-    A5_p20_bead_side = sample_plate_thermo['A5'].center().move(types.Point(x=-1.8*0.50,y=0, z=p20_offset_Thermo-5))                #Beads to the Right
-    A5_p20_bead_top = sample_plate_thermo['A5'].center().move(types.Point(x=1.5,y=0, z=p20_offset_Thermo+2))                #Beads to the Right
-    A5_p20_bead_mid = sample_plate_thermo['A5'].center().move(types.Point(x=1,y=0, z=p20_offset_Thermo-2))                #Beads to the Right
-    A5_p300_bead_side = sample_plate_thermo['A5'].center().move(types.Point(x=-0.50,y=0, z=p300_offset_Thermo-7.2))             #Beads to the Right
-    A5_p300_bead_top = sample_plate_thermo['A5'].center().move(types.Point(x=1.30,y=0, z=p300_offset_Thermo-1))               #Beads to the Right
-    A5_p300_bead_mid = sample_plate_thermo['A5'].center().move(types.Point(x=0.80,y=0, z=p300_offset_Thermo-4))               #Beads to the Right
-    A5_p300_loc1 = sample_plate_thermo['A5'].center().move(types.Point(x=1.3*0.8,y=1.3*0.8, z=p300_offset_Thermo-4))               #Beads to the Right
-    A5_p300_loc2 = sample_plate_thermo['A5'].center().move(types.Point(x=1.3,y=0, z=p300_offset_Thermo-4))               #Beads to the Right
-    A5_p300_loc3 = sample_plate_thermo['A5'].center().move(types.Point(x=1.3*0.8,y=-1.3*0.8, z=p300_offset_Thermo-4))               #Beads to the Right
+    A1_p20_bead_side = sample_plate_thermo['A1'].center().move(types.Point(
+        x=-1.8*0.50, y=0, z=p20_offset_Thermo-5))  # Beads to the Right
+    A1_p20_bead_top = sample_plate_thermo['A1'].center().move(types.Point(
+        x=1.5, y=0, z=p20_offset_Thermo+2))  # Beads to the Right
+    A1_p20_bead_mid = sample_plate_thermo['A1'].center().move(types.Point(
+        x=1, y=0, z=p20_offset_Thermo-2))  # Beads to the Right
+    A1_p300_bead_side = sample_plate_thermo['A1'].center().move(types.Point(
+        x=-0.50, y=0, z=p300_offset_Thermo-7.2))  # Beads to the Right
+    A1_p300_bead_top = sample_plate_thermo['A1'].center().move(types.Point(
+        x=1.30, y=0, z=p300_offset_Thermo-1))  # Beads to the Right
+    A1_p300_bead_mid = sample_plate_thermo['A1'].center().move(types.Point(
+        x=0.80, y=0, z=p300_offset_Thermo-4))  # Beads to the Right
+    A1_p300_loc1 = sample_plate_thermo['A1'].center().move(types.Point(
+        x=1.3*0.8, y=1.3*0.8, z=p300_offset_Thermo-4))  # Beads to the Right
+    A1_p300_loc2 = sample_plate_thermo['A1'].center().move(types.Point(
+        x=1.3, y=0, z=p300_offset_Thermo-4))  # Beads to the Right
+    A1_p300_loc3 = sample_plate_thermo['A1'].center().move(types.Point(
+        x=1.3*0.8, y=-1.3*0.8, z=p300_offset_Thermo-4))  # Beads to the Right
+    A3_p20_bead_side = sample_plate_thermo['A3'].center().move(types.Point(
+        x=-1.8*0.50, y=0, z=p20_offset_Thermo-5))  # Beads to the Right
+    A3_p20_bead_top = sample_plate_thermo['A3'].center().move(types.Point(
+        x=1.5, y=0, z=p20_offset_Thermo+2))  # Beads to the Right
+    A3_p20_bead_mid = sample_plate_thermo['A3'].center().move(types.Point(
+        x=1, y=0, z=p20_offset_Thermo-2))  # Beads to the Right
+    A3_p300_bead_side = sample_plate_thermo['A3'].center().move(types.Point(
+        x=-0.50, y=0, z=p300_offset_Thermo-7.2))  # Beads to the Right
+    A3_p300_bead_top = sample_plate_thermo['A3'].center().move(types.Point(
+        x=1.30, y=0, z=p300_offset_Thermo-1))  # Beads to the Right
+    A3_p300_bead_mid = sample_plate_thermo['A3'].center().move(types.Point(
+        x=0.80, y=0, z=p300_offset_Thermo-4))  # Beads to the Right
+    A3_p300_loc1 = sample_plate_thermo['A3'].center().move(types.Point(
+        x=1.3*0.8, y=1.3*0.8, z=p300_offset_Thermo-4))  # Beads to the Right
+    A3_p300_loc2 = sample_plate_thermo['A3'].center().move(types.Point(
+        x=1.3, y=0, z=p300_offset_Thermo-4))  # Beads to the Right
+    A3_p300_loc3 = sample_plate_thermo['A3'].center().move(types.Point(
+        x=1.3*0.8, y=-1.3*0.8, z=p300_offset_Thermo-4))  # Beads to the Right
+    A5_p20_bead_side = sample_plate_thermo['A5'].center().move(types.Point(
+        x=-1.8*0.50, y=0, z=p20_offset_Thermo-5))  # Beads to the Right
+    A5_p20_bead_top = sample_plate_thermo['A5'].center().move(types.Point(
+        x=1.5, y=0, z=p20_offset_Thermo+2))  # Beads to the Right
+    A5_p20_bead_mid = sample_plate_thermo['A5'].center().move(types.Point(
+        x=1, y=0, z=p20_offset_Thermo-2))  # Beads to the Right
+    A5_p300_bead_side = sample_plate_thermo['A5'].center().move(types.Point(
+        x=-0.50, y=0, z=p300_offset_Thermo-7.2))  # Beads to the Right
+    A5_p300_bead_top = sample_plate_thermo['A5'].center().move(types.Point(
+        x=1.30, y=0, z=p300_offset_Thermo-1))  # Beads to the Right
+    A5_p300_bead_mid = sample_plate_thermo['A5'].center().move(types.Point(
+        x=0.80, y=0, z=p300_offset_Thermo-4))  # Beads to the Right
+    A5_p300_loc1 = sample_plate_thermo['A5'].center().move(types.Point(
+        x=1.3*0.8, y=1.3*0.8, z=p300_offset_Thermo-4))  # Beads to the Right
+    A5_p300_loc2 = sample_plate_thermo['A5'].center().move(types.Point(
+        x=1.3, y=0, z=p300_offset_Thermo-4))  # Beads to the Right
+    A5_p300_loc3 = sample_plate_thermo['A5'].center().move(types.Point(
+        x=1.3*0.8, y=-1.3*0.8, z=p300_offset_Thermo-4))  # Beads to the Right
     ###########################################################################
-    bypass = protocol.deck.position_for('11').move(types.Point(x=70,y=80,z=130))
+    bypass = protocol.deck.position_for('11').move(
+        types.Point(x=70, y=80, z=130))
 
     # commands
     protocol.comment("SETTING THERMO and TEMP BLOCK Temperature")
@@ -265,60 +293,60 @@ def run(protocol: protocol_api.ProtocolContext):
 
     # positions
     ###########################################################################    #  sample_plate_mag on the Mag Block
-    A1_p20_bead_side  = sample_plate_mag['A1'].center().move(types.Point(x=-1.8*0.50,y=0,         z=p20_offset_Mag-5))                #Beads to the Right
-    A1_p20_bead_top   = sample_plate_mag['A1'].center().move(types.Point(x=1.5,y=0,               z=p20_offset_Mag+2))                #Beads to the Right
-    A1_p20_bead_mid   = sample_plate_mag['A1'].center().move(types.Point(x=1,y=0,                 z=p20_offset_Mag-2))                #Beads to the Right
-    A1_p300_bead_side = sample_plate_mag['A1'].center().move(types.Point(x=-0.50,y=0,             z=p300_offset_Mag-7.2))             #Beads to the Right
-    A1_p300_bead_top  = sample_plate_mag['A1'].center().move(types.Point(x=1.30,y=0,              z=p300_offset_Mag-1))               #Beads to the Right
-    A1_p300_bead_mid  = sample_plate_mag['A1'].center().move(types.Point(x=0.80,y=0,              z=p300_offset_Mag-4))               #Beads to the Right
-    A1_p300_loc1      = sample_plate_mag['A1'].center().move(types.Point(x=1.3*0.8,y=1.3*0.8,     z=p300_offset_Mag-4))               #Beads to the Right
-    A1_p300_loc2      = sample_plate_mag['A1'].center().move(types.Point(x=1.3,y=0,               z=p300_offset_Mag-4))               #Beads to the Right
-    A1_p300_loc3      = sample_plate_mag['A1'].center().move(types.Point(x=1.3*0.8,y=-1.3*0.8,    z=p300_offset_Mag-4))               #Beads to the Right
-    A3_p20_bead_side  = sample_plate_mag['A3'].center().move(types.Point(x=-1.8*0.50,y=0,         z=p20_offset_Mag-5))                #Beads to the Right
-    A3_p20_bead_top   = sample_plate_mag['A3'].center().move(types.Point(x=1.5,y=0,               z=p20_offset_Mag+2))                #Beads to the Right
-    A3_p20_bead_mid   = sample_plate_mag['A3'].center().move(types.Point(x=1,y=0,                 z=p20_offset_Mag-2))                #Beads to the Right
-    A3_p300_bead_side = sample_plate_mag['A3'].center().move(types.Point(x=-0.50,y=0,             z=p300_offset_Mag-7.2))             #Beads to the Right
-    A3_p300_bead_top  = sample_plate_mag['A3'].center().move(types.Point(x=1.30,y=0,              z=p300_offset_Mag-1))               #Beads to the Right
-    A3_p300_bead_mid  = sample_plate_mag['A3'].center().move(types.Point(x=0.80,y=0,              z=p300_offset_Mag-4))               #Beads to the Right
-    A3_p300_loc1      = sample_plate_mag['A3'].center().move(types.Point(x=1.3*0.8,y=1.3*0.8,     z=p300_offset_Mag-4))               #Beads to the Right
-    A3_p300_loc2      = sample_plate_mag['A3'].center().move(types.Point(x=1.3,y=0,               z=p300_offset_Mag-4))               #Beads to the Right
-    A3_p300_loc3      = sample_plate_mag['A3'].center().move(types.Point(x=1.3*0.8,y=-1.3*0.8,    z=p300_offset_Mag-4))               #Beads to the Right
-    A5_p20_bead_side  = sample_plate_mag['A5'].center().move(types.Point(x=-1.8*0.50,y=0,         z=p20_offset_Mag-5))                #Beads to the Right
-    A5_p20_bead_top   = sample_plate_mag['A5'].center().move(types.Point(x=1.5,y=0,               z=p20_offset_Mag+2))                #Beads to the Right
-    A5_p20_bead_mid   = sample_plate_mag['A5'].center().move(types.Point(x=1,y=0,                 z=p20_offset_Mag-2))                #Beads to the Right
-    A5_p300_bead_side = sample_plate_mag['A5'].center().move(types.Point(x=-0.50,y=0,             z=p300_offset_Mag-7.2))             #Beads to the Right
-    A5_p300_bead_top  = sample_plate_mag['A5'].center().move(types.Point(x=1.30,y=0,              z=p300_offset_Mag-1))               #Beads to the Right
-    A5_p300_bead_mid  = sample_plate_mag['A5'].center().move(types.Point(x=0.80,y=0,              z=p300_offset_Mag-4))               #Beads to the Right
-    A5_p300_loc1      = sample_plate_mag['A5'].center().move(types.Point(x=1.3*0.8,y=1.3*0.8,     z=p300_offset_Mag-4))               #Beads to the Right
-    A5_p300_loc2      = sample_plate_mag['A5'].center().move(types.Point(x=1.3,y=0,               z=p300_offset_Mag-4))               #Beads to the Right
-    A5_p300_loc3      = sample_plate_mag['A5'].center().move(types.Point(x=1.3*0.8,y=-1.3*0.8,    z=p300_offset_Mag-4))               #Beads to the Right
-    A7_p20_bead_side  = sample_plate_mag['A7'].center().move(types.Point(x=-1.8*0.50,y=0,         z=p20_offset_Mag-5))                #Beads to the Right
-    A7_p20_bead_top   = sample_plate_mag['A7'].center().move(types.Point(x=1.5,y=0,               z=p20_offset_Mag+2))                #Beads to the Right
-    A7_p20_bead_mid   = sample_plate_mag['A7'].center().move(types.Point(x=1,y=0,                 z=p20_offset_Mag-2))                #Beads to the Right
-    A7_p300_bead_side = sample_plate_mag['A7'].center().move(types.Point(x=-0.50,y=0,             z=p300_offset_Mag-7.2))             #Beads to the Right
-    A7_p300_bead_top  = sample_plate_mag['A7'].center().move(types.Point(x=1.30,y=0,              z=p300_offset_Mag-1))               #Beads to the Right
-    A7_p300_bead_mid  = sample_plate_mag['A7'].center().move(types.Point(x=0.80,y=0,              z=p300_offset_Mag-4))               #Beads to the Right
-    A7_p300_loc1      = sample_plate_mag['A7'].center().move(types.Point(x=1.3*0.8,y=1.3*0.8,     z=p300_offset_Mag-4))               #Beads to the Right
-    A7_p300_loc2      = sample_plate_mag['A7'].center().move(types.Point(x=1.3,y=0,               z=p300_offset_Mag-4))               #Beads to the Right
-    A7_p300_loc3      = sample_plate_mag['A7'].center().move(types.Point(x=1.3*0.8,y=-1.3*0.8,    z=p300_offset_Mag-4))               #Beads to the Right
-    A9_p20_bead_side  = sample_plate_mag['A9'].center().move(types.Point(x=-1.8*0.50,y=0,         z=p20_offset_Mag-5))                #Beads to the Right
-    A9_p20_bead_top   = sample_plate_mag['A9'].center().move(types.Point(x=1.5,y=0,               z=p20_offset_Mag+2))                #Beads to the Right
-    A9_p20_bead_mid   = sample_plate_mag['A9'].center().move(types.Point(x=1,y=0,                 z=p20_offset_Mag-2))                #Beads to the Right
-    A9_p300_bead_side = sample_plate_mag['A9'].center().move(types.Point(x=-0.50,y=0,             z=p300_offset_Mag-7.2))             #Beads to the Right
-    A9_p300_bead_top  = sample_plate_mag['A9'].center().move(types.Point(x=1.30,y=0,              z=p300_offset_Mag-1))               #Beads to the Right
-    A9_p300_bead_mid  = sample_plate_mag['A9'].center().move(types.Point(x=0.80,y=0,              z=p300_offset_Mag-4))               #Beads to the Right
-    A9_p300_loc1      = sample_plate_mag['A9'].center().move(types.Point(x=1.3*0.8,y=1.3*0.8,     z=p300_offset_Mag-4))               #Beads to the Right
-    A9_p300_loc2      = sample_plate_mag['A9'].center().move(types.Point(x=1.3,y=0,               z=p300_offset_Mag-4))               #Beads to the Right
-    A9_p300_loc3      = sample_plate_mag['A9'].center().move(types.Point(x=1.3*0.8,y=-1.3*0.8,    z=p300_offset_Mag-4))               #Beads to the Right
-    A11_p20_bead_side  = sample_plate_mag['A11'].center().move(types.Point(x=-1.8*0.50,y=0,       z=p20_offset_Mag-5))                #Beads to the Right
-    A11_p20_bead_top   = sample_plate_mag['A11'].center().move(types.Point(x=1.5,y=0,             z=p20_offset_Mag+2))                #Beads to the Right
-    A11_p20_bead_mid   = sample_plate_mag['A11'].center().move(types.Point(x=1,y=0,               z=p20_offset_Mag-2))                #Beads to the Right
-    A11_p300_bead_side = sample_plate_mag['A11'].center().move(types.Point(x=-0.50,y=0,           z=p300_offset_Mag-7.2))             #Beads to the Right
-    A11_p300_bead_top  = sample_plate_mag['A11'].center().move(types.Point(x=1.30,y=0,            z=p300_offset_Mag-1))               #Beads to the Right
-    A11_p300_bead_mid  = sample_plate_mag['A11'].center().move(types.Point(x=0.80,y=0,            z=p300_offset_Mag-4))               #Beads to the Right
-    A11_p300_loc1      = sample_plate_mag['A11'].center().move(types.Point(x=1.3*0.8,y=1.3*0.8,   z=p300_offset_Mag-4))               #Beads to the Right
-    A11_p300_loc2      = sample_plate_mag['A11'].center().move(types.Point(x=1.3,y=0,             z=p300_offset_Mag-4))               #Beads to the Right
-    A11_p300_loc3      = sample_plate_mag['A11'].center().move(types.Point(x=1.3*0.8,y=-1.3*0.8,  z=p300_offset_Mag-4))               #Beads to the Right
+    A1_p20_bead_side  = sample_plate_mag['A1'].center().move(types.Point(x=-1.8*0.50, y=0,         z=p20_offset_Mag-5))                #Beads to the Right
+    A1_p20_bead_top   = sample_plate_mag['A1'].center().move(types.Point(x=1.5, y=0,               z=p20_offset_Mag+2))                #Beads to the Right
+    A1_p20_bead_mid   = sample_plate_mag['A1'].center().move(types.Point(x=1, y=0,                 z=p20_offset_Mag-2))                #Beads to the Right
+    A1_p300_bead_side = sample_plate_mag['A1'].center().move(types.Point(x=-0.50, y=0,             z=p300_offset_Mag-7.2))             #Beads to the Right
+    A1_p300_bead_top  = sample_plate_mag['A1'].center().move(types.Point(x=1.30, y=0,              z=p300_offset_Mag-1))               #Beads to the Right
+    A1_p300_bead_mid  = sample_plate_mag['A1'].center().move(types.Point(x=0.80, y=0,              z=p300_offset_Mag-4))               #Beads to the Right
+    A1_p300_loc1      = sample_plate_mag['A1'].center().move(types.Point(x=1.3*0.8, y=1.3*0.8,     z=p300_offset_Mag-4))               #Beads to the Right
+    A1_p300_loc2      = sample_plate_mag['A1'].center().move(types.Point(x=1.3, y=0,               z=p300_offset_Mag-4))               #Beads to the Right
+    A1_p300_loc3      = sample_plate_mag['A1'].center().move(types.Point(x=1.3*0.8, y=-1.3*0.8,    z=p300_offset_Mag-4))               #Beads to the Right
+    A3_p20_bead_side  = sample_plate_mag['A3'].center().move(types.Point(x=-1.8*0.50, y=0,         z=p20_offset_Mag-5))                #Beads to the Right
+    A3_p20_bead_top   = sample_plate_mag['A3'].center().move(types.Point(x=1.5, y=0,               z=p20_offset_Mag+2))                #Beads to the Right
+    A3_p20_bead_mid   = sample_plate_mag['A3'].center().move(types.Point(x=1, y=0,                 z=p20_offset_Mag-2))                #Beads to the Right
+    A3_p300_bead_side = sample_plate_mag['A3'].center().move(types.Point(x=-0.50, y=0,             z=p300_offset_Mag-7.2))             #Beads to the Right
+    A3_p300_bead_top  = sample_plate_mag['A3'].center().move(types.Point(x=1.30, y=0,              z=p300_offset_Mag-1))               #Beads to the Right
+    A3_p300_bead_mid  = sample_plate_mag['A3'].center().move(types.Point(x=0.80, y=0,              z=p300_offset_Mag-4))               #Beads to the Right
+    A3_p300_loc1      = sample_plate_mag['A3'].center().move(types.Point(x=1.3*0.8, y=1.3*0.8,     z=p300_offset_Mag-4))               #Beads to the Right
+    A3_p300_loc2      = sample_plate_mag['A3'].center().move(types.Point(x=1.3, y=0,               z=p300_offset_Mag-4))               #Beads to the Right
+    A3_p300_loc3      = sample_plate_mag['A3'].center().move(types.Point(x=1.3*0.8, y=-1.3*0.8,    z=p300_offset_Mag-4))               #Beads to the Right
+    A5_p20_bead_side  = sample_plate_mag['A5'].center().move(types.Point(x=-1.8*0.50, y=0,         z=p20_offset_Mag-5))                #Beads to the Right
+    A5_p20_bead_top   = sample_plate_mag['A5'].center().move(types.Point(x=1.5, y=0,               z=p20_offset_Mag+2))                #Beads to the Right
+    A5_p20_bead_mid   = sample_plate_mag['A5'].center().move(types.Point(x=1, y=0,                 z=p20_offset_Mag-2))                #Beads to the Right
+    A5_p300_bead_side = sample_plate_mag['A5'].center().move(types.Point(x=-0.50, y=0,             z=p300_offset_Mag-7.2))             #Beads to the Right
+    A5_p300_bead_top  = sample_plate_mag['A5'].center().move(types.Point(x=1.30, y=0,              z=p300_offset_Mag-1))               #Beads to the Right
+    A5_p300_bead_mid  = sample_plate_mag['A5'].center().move(types.Point(x=0.80, y=0,              z=p300_offset_Mag-4))               #Beads to the Right
+    A5_p300_loc1      = sample_plate_mag['A5'].center().move(types.Point(x=1.3*0.8, y=1.3*0.8,     z=p300_offset_Mag-4))               #Beads to the Right
+    A5_p300_loc2      = sample_plate_mag['A5'].center().move(types.Point(x=1.3, y=0,               z=p300_offset_Mag-4))               #Beads to the Right
+    A5_p300_loc3      = sample_plate_mag['A5'].center().move(types.Point(x=1.3*0.8, y=-1.3*0.8,    z=p300_offset_Mag-4))               #Beads to the Right
+    A7_p20_bead_side  = sample_plate_mag['A7'].center().move(types.Point(x=-1.8*0.50, y=0,         z=p20_offset_Mag-5))                #Beads to the Right
+    A7_p20_bead_top   = sample_plate_mag['A7'].center().move(types.Point(x=1.5, y=0,               z=p20_offset_Mag+2))                #Beads to the Right
+    A7_p20_bead_mid   = sample_plate_mag['A7'].center().move(types.Point(x=1, y=0,                 z=p20_offset_Mag-2))                #Beads to the Right
+    A7_p300_bead_side = sample_plate_mag['A7'].center().move(types.Point(x=-0.50, y=0,             z=p300_offset_Mag-7.2))             #Beads to the Right
+    A7_p300_bead_top  = sample_plate_mag['A7'].center().move(types.Point(x=1.30, y=0,              z=p300_offset_Mag-1))               #Beads to the Right
+    A7_p300_bead_mid  = sample_plate_mag['A7'].center().move(types.Point(x=0.80, y=0,              z=p300_offset_Mag-4))               #Beads to the Right
+    A7_p300_loc1      = sample_plate_mag['A7'].center().move(types.Point(x=1.3*0.8, y=1.3*0.8,     z=p300_offset_Mag-4))               #Beads to the Right
+    A7_p300_loc2      = sample_plate_mag['A7'].center().move(types.Point(x=1.3, y=0,               z=p300_offset_Mag-4))               #Beads to the Right
+    A7_p300_loc3      = sample_plate_mag['A7'].center().move(types.Point(x=1.3*0.8, y=-1.3*0.8,    z=p300_offset_Mag-4))               #Beads to the Right
+    A9_p20_bead_side  = sample_plate_mag['A9'].center().move(types.Point(x=-1.8*0.50, y=0,         z=p20_offset_Mag-5))                #Beads to the Right
+    A9_p20_bead_top   = sample_plate_mag['A9'].center().move(types.Point(x=1.5, y=0,               z=p20_offset_Mag+2))                #Beads to the Right
+    A9_p20_bead_mid   = sample_plate_mag['A9'].center().move(types.Point(x=1, y=0,                 z=p20_offset_Mag-2))                #Beads to the Right
+    A9_p300_bead_side = sample_plate_mag['A9'].center().move(types.Point(x=-0.50, y=0,             z=p300_offset_Mag-7.2))             #Beads to the Right
+    A9_p300_bead_top  = sample_plate_mag['A9'].center().move(types.Point(x=1.30, y=0,              z=p300_offset_Mag-1))               #Beads to the Right
+    A9_p300_bead_mid  = sample_plate_mag['A9'].center().move(types.Point(x=0.80, y=0,              z=p300_offset_Mag-4))               #Beads to the Right
+    A9_p300_loc1      = sample_plate_mag['A9'].center().move(types.Point(x=1.3*0.8, y=1.3*0.8,     z=p300_offset_Mag-4))               #Beads to the Right
+    A9_p300_loc2      = sample_plate_mag['A9'].center().move(types.Point(x=1.3, y=0,               z=p300_offset_Mag-4))               #Beads to the Right
+    A9_p300_loc3      = sample_plate_mag['A9'].center().move(types.Point(x=1.3*0.8, y=-1.3*0.8,    z=p300_offset_Mag-4))               #Beads to the Right
+    A11_p20_bead_side  = sample_plate_mag['A11'].center().move(types.Point(x=-1.8*0.50, y=0,       z=p20_offset_Mag-5))                #Beads to the Right
+    A11_p20_bead_top   = sample_plate_mag['A11'].center().move(types.Point(x=1.5, y=0,             z=p20_offset_Mag+2))                #Beads to the Right
+    A11_p20_bead_mid   = sample_plate_mag['A11'].center().move(types.Point(x=1, y=0,               z=p20_offset_Mag-2))                #Beads to the Right
+    A11_p300_bead_side = sample_plate_mag['A11'].center().move(types.Point(x=-0.50, y=0,           z=p300_offset_Mag-7.2))             #Beads to the Right
+    A11_p300_bead_top  = sample_plate_mag['A11'].center().move(types.Point(x=1.30, y=0,            z=p300_offset_Mag-1))               #Beads to the Right
+    A11_p300_bead_mid  = sample_plate_mag['A11'].center().move(types.Point(x=0.80, y=0,            z=p300_offset_Mag-4))               #Beads to the Right
+    A11_p300_loc1      = sample_plate_mag['A11'].center().move(types.Point(x=1.3*0.8, y=1.3*0.8,   z=p300_offset_Mag-4))               #Beads to the Right
+    A11_p300_loc2      = sample_plate_mag['A11'].center().move(types.Point(x=1.3, y=0,             z=p300_offset_Mag-4))               #Beads to the Right
+    A11_p300_loc3      = sample_plate_mag['A11'].center().move(types.Point(x=1.3*0.8, y=-1.3*0.8,  z=p300_offset_Mag-4))               #Beads to the Right
     ###########################################################################
     protocol.comment('MAGNET ENGAGE')
     mag_block.engage(height_from_base=17)
