@@ -64,7 +64,7 @@ def run(protocol: protocol_api.ProtocolContext):
         reagent_plate = protocol.load_labware(
             'opentrons_96_aluminumblock_biorad_wellplate_200ul', '3')
         tiprack_20 = protocol.load_labware(
-            'opentrons_96_filtertiprack_', '4')
+            'opentrons_96_filtertiprack_20ul', '4')
         tiprack_200_1 = protocol.load_labware(
             'opentrons_96_filtertiprack_200ul', '5')
         tiprack_200_2 = protocol.load_labware(
