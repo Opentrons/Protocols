@@ -122,6 +122,7 @@ def run(protocol: protocol_api.ProtocolContext):
     p20_offset_Temp = 0.85
 
     # positions
+    # UNUSED VARIABLES COMMENTED OUT
     ###########################################################################
     #  sample_plate_thermo on the Thermocycler
     A1_p20_bead_side = sample_plate_thermo['A1'].center().move(types.Point(
@@ -530,22 +531,31 @@ def run(protocol: protocol_api.ProtocolContext):
             X = 'A3'
             p300.pick_up_tip(TWB_washtip_2)
             p300.aspirate(100, TWB_2.bottom(z=p300_offset_Res))
-            if X == 'A1': p300.move_to(A1_p300_bead_top)
-            if X == 'A3': p300.move_to(A3_p300_bead_top)
-            if X == 'A5': p300.move_to(A5_p300_bead_top)
+            if X == 'A1':
+                p300.move_to(A1_p300_bead_top)
+            if X == 'A3':
+                p300.move_to(A3_p300_bead_top)
+            if X == 'A5':
+                p300.move_to(A5_p300_bead_top)
             p300.dispense(100, rate=0.75)
             p300.default_speed = 5
             reps = 4
             for x in range(reps):
                 p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))
                 p300.aspirate(100)
-                if X == 'A1': p300.move_to(A1_p300_bead_top)
-                if X == 'A3': p300.move_to(A3_p300_bead_top)
-                if X == 'A5': p300.move_to(A5_p300_bead_top)
+                if X == 'A1':
+                    p300.move_to(A1_p300_bead_top)
+                if X == 'A3':
+                    p300.move_to(A3_p300_bead_top)
+                if X == 'A5':
+                    p300.move_to(A5_p300_bead_top)
                 p300.dispense(100, rate=0.75)
-            if X == 'A1': p300.move_to(A1_p300_bead_mid)
-            if X == 'A3': p300.move_to(A3_p300_bead_mid)
-            if X == 'A5': p300.move_to(A5_p300_bead_mid)
+            if X == 'A1':
+                p300.move_to(A1_p300_bead_mid)
+            if X == 'A3':
+                p300.move_to(A3_p300_bead_mid)
+            if X == 'A5':
+                p300.move_to(A5_p300_bead_mid)
             p300.mix(TWBMixRep, TWBMixVol)
             p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))
             p300.mix(TWBMixRep, TWBMixVol)
@@ -556,22 +566,31 @@ def run(protocol: protocol_api.ProtocolContext):
             X = 'A5'
             p300.pick_up_tip(TWB_washtip_3)
             p300.aspirate(100, TWB_3.bottom(z=p300_offset_Res))
-            if X == 'A1': p300.move_to(A1_p300_bead_top)
-            if X == 'A3': p300.move_to(A3_p300_bead_top)
-            if X == 'A5': p300.move_to(A5_p300_bead_top)
+            if X == 'A1':
+                p300.move_to(A1_p300_bead_top)
+            if X == 'A3':
+                p300.move_to(A3_p300_bead_top)
+            if X == 'A5':
+                p300.move_to(A5_p300_bead_top)
             p300.dispense(100, rate=0.75)
             p300.default_speed = 5
             reps = 4
             for x in range(reps):
                 p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))
                 p300.aspirate(100)
-                if X == 'A1': p300.move_to(A1_p300_bead_top)
-                if X == 'A3': p300.move_to(A3_p300_bead_top)
-                if X == 'A5': p300.move_to(A5_p300_bead_top)
+                if X == 'A1':
+                    p300.move_to(A1_p300_bead_top)
+                if X == 'A3':
+                    p300.move_to(A3_p300_bead_top)
+                if X == 'A5':
+                    p300.move_to(A5_p300_bead_top)
                 p300.dispense(100, rate=0.75)
-            if X == 'A1': p300.move_to(A1_p300_bead_mid)
-            if X == 'A3': p300.move_to(A3_p300_bead_mid)
-            if X == 'A5': p300.move_to(A5_p300_bead_mid)
+            if X == 'A1':
+                p300.move_to(A1_p300_bead_mid)
+            if X == 'A3':
+                p300.move_to(A3_p300_bead_mid)
+            if X == 'A5':
+                p300.move_to(A5_p300_bead_mid)
             p300.mix(TWBMixRep, TWBMixVol)
             p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))
             p300.mix(TWBMixRep, TWBMixVol)
@@ -594,9 +613,12 @@ def run(protocol: protocol_api.ProtocolContext):
             p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag+4))
             p300.aspirate(75, rate=0.25)
             p300.default_speed = 5
-            if X == 'A1': p300.move_to(A1_p300_bead_side)
-            if X == 'A3': p300.move_to(A3_p300_bead_side)
-            if X == 'A5': p300.move_to(A5_p300_bead_side)
+            if X == 'A1':
+                p300.move_to(A1_p300_bead_side)
+            if X == 'A3':
+                p300.move_to(A3_p300_bead_side)
+            if X == 'A5':
+                p300.move_to(A5_p300_bead_side)
             protocol.delay(minutes=0.1)
             p300.aspirate(20, rate=0.2)
             p300.move_to(sample_plate_mag[X].top(z=2))
@@ -630,9 +652,12 @@ def run(protocol: protocol_api.ProtocolContext):
             p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag+4))
             p300.aspirate(75, rate=0.25)
             p300.default_speed = 5
-            if X == 'A1': p300.move_to(A1_p300_bead_side)
-            if X == 'A3': p300.move_to(A3_p300_bead_side)
-            if X == 'A5': p300.move_to(A5_p300_bead_side)
+            if X == 'A1':
+                p300.move_to(A1_p300_bead_side)
+            if X == 'A3':
+                p300.move_to(A3_p300_bead_side)
+            if X == 'A5':
+                p300.move_to(A5_p300_bead_side)
             protocol.delay(minutes=0.1)
             p300.aspirate(20, rate=0.2)
             p300.move_to(sample_plate_mag[X].top(z=2))
@@ -689,52 +714,82 @@ def run(protocol: protocol_api.ProtocolContext):
         X = 'A1'
         p300.pick_up_tip()
         p300.aspirate(PCRVol, Master_Tube_PCR_1.bottom(p300_offset_Temp))
-        if X == 'A1': p300.move_to(A1_p300_loc1)
-        if X == 'A3': p300.move_to(A3_p300_loc1)
-        if X == 'A5': p300.move_to(A5_p300_loc1)
+        if X == 'A1':
+                p300.move_to(A1_p300_loc1)
+        if X == 'A3':
+                p300.move_to(A3_p300_loc1)
+        if X == 'A5':
+                p300.move_to(A5_p300_loc1)
         p300.dispense(PCRVol/5, rate=0.75)
         p300.default_speed = 5
-        if X == 'A1': p300.move_to(A1_p300_loc2)
-        if X == 'A3': p300.move_to(A3_p300_loc2)
-        if X == 'A5': p300.move_to(A5_p300_loc2)
+        if X == 'A1':
+                p300.move_to(A1_p300_loc2)
+        if X == 'A3':
+                p300.move_to(A3_p300_loc2)
+        if X == 'A5':
+                p300.move_to(A5_p300_loc2)
         p300.dispense(PCRVol/5, rate=0.75)
-        if X == 'A1': p300.move_to(A1_p300_loc3)
-        if X == 'A3': p300.move_to(A3_p300_loc3)
-        if X == 'A5': p300.move_to(A5_p300_loc3)
+        if X == 'A1':
+                p300.move_to(A1_p300_loc3)
+        if X == 'A3':
+                p300.move_to(A3_p300_loc3)
+        if X == 'A5':
+                p300.move_to(A5_p300_loc3)
         p300.dispense(PCRVol/5, rate=0.75)
-        if X == 'A1': p300.move_to(A1_p300_loc2)
-        if X == 'A3': p300.move_to(A3_p300_loc2)
-        if X == 'A5': p300.move_to(A5_p300_loc2)
+        if X == 'A1':
+                p300.move_to(A1_p300_loc2)
+        if X == 'A3':
+                p300.move_to(A3_p300_loc2)
+        if X == 'A5':
+                p300.move_to(A5_p300_loc2)
         p300.dispense(PCRVol/5, rate=0.75)
-        if X == 'A1': p300.move_to(A1_p300_loc1)
-        if X == 'A3': p300.move_to(A3_p300_loc1)
-        if X == 'A5': p300.move_to(A5_p300_loc1)
+        if X == 'A1':
+                p300.move_to(A1_p300_loc1)
+        if X == 'A3':
+                p300.move_to(A3_p300_loc1)
+        if X == 'A5':
+                p300.move_to(A5_p300_loc1)
         p300.dispense(PCRVol/5, rate=0.75)
         reps = 5
         for x in range(reps):
             p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))
             p300.aspirate(PCRVol, rate=0.5)
-            if X == 'A1': p300.move_to(A1_p300_bead_top)
-            if X == 'A3': p300.move_to(A3_p300_bead_top)
-            if X == 'A5': p300.move_to(A5_p300_bead_top)
+            if X == 'A1':
+                p300.move_to(A1_p300_bead_top)
+            if X == 'A3':
+                p300.move_to(A3_p300_bead_top)
+            if X == 'A5':
+                p300.move_to(A5_p300_bead_top)
             p300.dispense(PCRVol, rate=1)
         reps = 3
         for x in range(reps):
-            if X == 'A1': p300.move_to(A1_p300_loc2)
-            if X == 'A3': p300.move_to(A3_p300_loc2)
-            if X == 'A5': p300.move_to(A5_p300_loc2)
+            if X == 'A1':
+                p300.move_to(A1_p300_loc2)
+            if X == 'A3':
+                p300.move_to(A3_p300_loc2)
+            if X == 'A5':
+                p300.move_to(A5_p300_loc2)
             p300.mix(PCRMixRep, PCRMixVol)
-            if X == 'A1': p300.move_to(A1_p300_loc1)
-            if X == 'A3': p300.move_to(A3_p300_loc1)
-            if X == 'A5': p300.move_to(A5_p300_loc1)
+            if X == 'A1':
+                p300.move_to(A1_p300_loc1)
+            if X == 'A3':
+                p300.move_to(A3_p300_loc1)
+            if X == 'A5':
+                p300.move_to(A5_p300_loc1)
             p300.mix(PCRMixRep, PCRMixVol)
-            if X == 'A1': p300.move_to(A1_p300_loc2)
-            if X == 'A3': p300.move_to(A3_p300_loc2)
-            if X == 'A5': p300.move_to(A5_p300_loc2)
+            if X == 'A1':
+                p300.move_to(A1_p300_loc2)
+            if X == 'A3':
+                p300.move_to(A3_p300_loc2)
+            if X == 'A5':
+                p300.move_to(A5_p300_loc2)
             p300.mix(PCRMixRep, PCRMixVol)
-            if X == 'A1': p300.move_to(A1_p300_loc3)
-            if X == 'A3': p300.move_to(A3_p300_loc3)
-            if X == 'A5': p300.move_to(A5_p300_loc3)
+            if X == 'A1':
+                p300.move_to(A1_p300_loc3)
+            if X == 'A3':
+                p300.move_to(A3_p300_loc3)
+            if X == 'A5':
+                p300.move_to(A5_p300_loc3)
             p300.mix(PCRMixRep, PCRMixVol)
         p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))
         p300.mix(PCRMixRep, PCRMixVol)
@@ -747,52 +802,82 @@ def run(protocol: protocol_api.ProtocolContext):
         X = 'A3'
         p300.pick_up_tip()
         p300.aspirate(PCRVol, Master_Tube_PCR_1.bottom(p300_offset_Temp))
-        if X == 'A1': p300.move_to(A1_p300_loc1)
-        if X == 'A3': p300.move_to(A3_p300_loc1)
-        if X == 'A5': p300.move_to(A5_p300_loc1)
+        if X == 'A1':
+                p300.move_to(A1_p300_loc1)
+        if X == 'A3':
+                p300.move_to(A3_p300_loc1)
+        if X == 'A5':
+                p300.move_to(A5_p300_loc1)
         p300.dispense(PCRVol/5, rate=0.75)
         p300.default_speed = 5
-        if X == 'A1': p300.move_to(A1_p300_loc2)
-        if X == 'A3': p300.move_to(A3_p300_loc2)
-        if X == 'A5': p300.move_to(A5_p300_loc2)
+        if X == 'A1':
+                p300.move_to(A1_p300_loc2)
+        if X == 'A3':
+                p300.move_to(A3_p300_loc2)
+        if X == 'A5':
+                p300.move_to(A5_p300_loc2)
         p300.dispense(PCRVol/5, rate=0.75)
-        if X == 'A1': p300.move_to(A1_p300_loc3)
-        if X == 'A3': p300.move_to(A3_p300_loc3)
-        if X == 'A5': p300.move_to(A5_p300_loc3)
+        if X == 'A1':
+                p300.move_to(A1_p300_loc3)
+        if X == 'A3':
+                p300.move_to(A3_p300_loc3)
+        if X == 'A5':
+                p300.move_to(A5_p300_loc3)
         p300.dispense(PCRVol/5, rate=0.75)
-        if X == 'A1': p300.move_to(A1_p300_loc2)
-        if X == 'A3': p300.move_to(A3_p300_loc2)
-        if X == 'A5': p300.move_to(A5_p300_loc2)
+        if X == 'A1':
+                p300.move_to(A1_p300_loc2)
+        if X == 'A3':
+                p300.move_to(A3_p300_loc2)
+        if X == 'A5':
+                p300.move_to(A5_p300_loc2)
         p300.dispense(PCRVol/5, rate=0.75)
-        if X == 'A1': p300.move_to(A1_p300_loc1)
-        if X == 'A3': p300.move_to(A3_p300_loc1)
-        if X == 'A5': p300.move_to(A5_p300_loc1)
+        if X == 'A1':
+                p300.move_to(A1_p300_loc1)
+        if X == 'A3':
+                p300.move_to(A3_p300_loc1)
+        if X == 'A5':
+                p300.move_to(A5_p300_loc1)
         p300.dispense(PCRVol/5, rate=0.75)
         reps = 5
         for x in range(reps):
             p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))
             p300.aspirate(PCRVol, rate=0.5)
-            if X == 'A1': p300.move_to(A1_p300_bead_top)
-            if X == 'A3': p300.move_to(A3_p300_bead_top)
-            if X == 'A5': p300.move_to(A5_p300_bead_top)
+            if X == 'A1':
+                p300.move_to(A1_p300_bead_top)
+            if X == 'A3':
+                p300.move_to(A3_p300_bead_top)
+            if X == 'A5':
+                p300.move_to(A5_p300_bead_top)
             p300.dispense(PCRVol, rate=1)
         reps = 3
         for x in range(reps):
-            if X == 'A1': p300.move_to(A1_p300_loc2)
-            if X == 'A3': p300.move_to(A3_p300_loc2)
-            if X == 'A5': p300.move_to(A5_p300_loc2)
+            if X == 'A1':
+                p300.move_to(A1_p300_loc2)
+            if X == 'A3':
+                p300.move_to(A3_p300_loc2)
+            if X == 'A5':
+                p300.move_to(A5_p300_loc2)
             p300.mix(PCRMixRep, PCRMixVol)
-            if X == 'A1': p300.move_to(A1_p300_loc1)
-            if X == 'A3': p300.move_to(A3_p300_loc1)
-            if X == 'A5': p300.move_to(A5_p300_loc1)
+            if X == 'A1':
+                p300.move_to(A1_p300_loc1)
+            if X == 'A3':
+                p300.move_to(A3_p300_loc1)
+            if X == 'A5':
+                p300.move_to(A5_p300_loc1)
             p300.mix(PCRMixRep, PCRMixVol)
-            if X == 'A1': p300.move_to(A1_p300_loc2)
-            if X == 'A3': p300.move_to(A3_p300_loc2)
-            if X == 'A5': p300.move_to(A5_p300_loc2)
+            if X == 'A1':
+                p300.move_to(A1_p300_loc2)
+            if X == 'A3':
+                p300.move_to(A3_p300_loc2)
+            if X == 'A5':
+                p300.move_to(A5_p300_loc2)
             p300.mix(PCRMixRep, PCRMixVol)
-            if X == 'A1': p300.move_to(A1_p300_loc3)
-            if X == 'A3': p300.move_to(A3_p300_loc3)
-            if X == 'A5': p300.move_to(A5_p300_loc3)
+            if X == 'A1':
+                p300.move_to(A1_p300_loc3)
+            if X == 'A3':
+                p300.move_to(A3_p300_loc3)
+            if X == 'A5':
+                p300.move_to(A5_p300_loc3)
             p300.mix(PCRMixRep, PCRMixVol)
         p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))
         p300.mix(PCRMixRep, PCRMixVol)
@@ -805,52 +890,82 @@ def run(protocol: protocol_api.ProtocolContext):
         X = 'A5'
         p300.pick_up_tip()
         p300.aspirate(PCRVol, Master_Tube_PCR_1.bottom(p300_offset_Temp))
-        if X == 'A1': p300.move_to(A1_p300_loc1)
-        if X == 'A3': p300.move_to(A3_p300_loc1)
-        if X == 'A5': p300.move_to(A5_p300_loc1)
+        if X == 'A1':
+                p300.move_to(A1_p300_loc1)
+        if X == 'A3':
+                p300.move_to(A3_p300_loc1)
+        if X == 'A5':
+                p300.move_to(A5_p300_loc1)
         p300.dispense(PCRVol/5, rate=0.75)
         p300.default_speed = 5
-        if X == 'A1': p300.move_to(A1_p300_loc2)
-        if X == 'A3': p300.move_to(A3_p300_loc2)
-        if X == 'A5': p300.move_to(A5_p300_loc2)
+        if X == 'A1':
+                p300.move_to(A1_p300_loc2)
+        if X == 'A3':
+                p300.move_to(A3_p300_loc2)
+        if X == 'A5':
+                p300.move_to(A5_p300_loc2)
         p300.dispense(PCRVol/5, rate=0.75)
-        if X == 'A1': p300.move_to(A1_p300_loc3)
-        if X == 'A3': p300.move_to(A3_p300_loc3)
-        if X == 'A5': p300.move_to(A5_p300_loc3)
+        if X == 'A1':
+                p300.move_to(A1_p300_loc3)
+        if X == 'A3':
+                p300.move_to(A3_p300_loc3)
+        if X == 'A5':
+                p300.move_to(A5_p300_loc3)
         p300.dispense(PCRVol/5, rate=0.75)
-        if X == 'A1': p300.move_to(A1_p300_loc2)
-        if X == 'A3': p300.move_to(A3_p300_loc2)
-        if X == 'A5': p300.move_to(A5_p300_loc2)
+        if X == 'A1':
+                p300.move_to(A1_p300_loc2)
+        if X == 'A3':
+                p300.move_to(A3_p300_loc2)
+        if X == 'A5':
+                p300.move_to(A5_p300_loc2)
         p300.dispense(PCRVol/5, rate=0.75)
-        if X == 'A1': p300.move_to(A1_p300_loc1)
-        if X == 'A3': p300.move_to(A3_p300_loc1)
-        if X == 'A5': p300.move_to(A5_p300_loc1)
+        if X == 'A1':
+                p300.move_to(A1_p300_loc1)
+        if X == 'A3':
+                p300.move_to(A3_p300_loc1)
+        if X == 'A5':
+                p300.move_to(A5_p300_loc1)
         p300.dispense(PCRVol/5, rate=0.75)
         reps = 5
         for x in range(reps):
             p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))
             p300.aspirate(PCRVol, rate=0.5)
-            if X == 'A1': p300.move_to(A1_p300_bead_top)
-            if X == 'A3': p300.move_to(A3_p300_bead_top)
-            if X == 'A5': p300.move_to(A5_p300_bead_top)
+            if X == 'A1':
+                p300.move_to(A1_p300_bead_top)
+            if X == 'A3':
+                p300.move_to(A3_p300_bead_top)
+            if X == 'A5':
+                p300.move_to(A5_p300_bead_top)
             p300.dispense(PCRVol, rate=1)
         reps = 3
         for x in range(reps):
-            if X == 'A1': p300.move_to(A1_p300_loc2)
-            if X == 'A3': p300.move_to(A3_p300_loc2)
-            if X == 'A5': p300.move_to(A5_p300_loc2)
+            if X == 'A1':
+                p300.move_to(A1_p300_loc2)
+            if X == 'A3':
+                p300.move_to(A3_p300_loc2)
+            if X == 'A5':
+                p300.move_to(A5_p300_loc2)
             p300.mix(PCRMixRep, PCRMixVol)
-            if X == 'A1': p300.move_to(A1_p300_loc1)
-            if X == 'A3': p300.move_to(A3_p300_loc1)
-            if X == 'A5': p300.move_to(A5_p300_loc1)
+            if X == 'A1':
+                p300.move_to(A1_p300_loc1)
+            if X == 'A3':
+                p300.move_to(A3_p300_loc1)
+            if X == 'A5':
+                p300.move_to(A5_p300_loc1)
             p300.mix(PCRMixRep, PCRMixVol)
-            if X == 'A1': p300.move_to(A1_p300_loc2)
-            if X == 'A3': p300.move_to(A3_p300_loc2)
-            if X == 'A5': p300.move_to(A5_p300_loc2)
+            if X == 'A1':
+                p300.move_to(A1_p300_loc2)
+            if X == 'A3':
+                p300.move_to(A3_p300_loc2)
+            if X == 'A5':
+                p300.move_to(A5_p300_loc2)
             p300.mix(PCRMixRep, PCRMixVol)
-            if X == 'A1': p300.move_to(A1_p300_loc3)
-            if X == 'A3': p300.move_to(A3_p300_loc3)
-            if X == 'A5': p300.move_to(A5_p300_loc3)
+            if X == 'A1':
+                p300.move_to(A1_p300_loc3)
+            if X == 'A3':
+                p300.move_to(A3_p300_loc3)
+            if X == 'A5':
+                p300.move_to(A5_p300_loc3)
             p300.mix(PCRMixRep, PCRMixVol)
         p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))
         p300.mix(PCRMixRep, PCRMixVol)
@@ -1018,9 +1133,12 @@ def run(protocol: protocol_api.ProtocolContext):
         p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag+4))
         p300.aspirate(RemoveSup-20, rate=0.25)
         p300.default_speed = 5
-        if X == 'A7': p300.move_to(A7_p300_bead_side)
-        if X == 'A9': p300.move_to(A9_p300_bead_side)
-        if X == 'A11': p300.move_to(A11_p300_bead_side)
+        if X == 'A7':
+                p300.move_to(A7_p300_bead_side)
+        if X == 'A9':
+                p300.move_to(A9_p300_bead_side)
+        if X == 'A11':
+                p300.move_to(A11_p300_bead_side)
         protocol.delay(minutes=0.1)
         p300.aspirate(20, rate=0.2)
         p300.move_to(sample_plate_mag[X].top(z=2))
@@ -1034,9 +1152,12 @@ def run(protocol: protocol_api.ProtocolContext):
         p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag+4))
         p300.aspirate(RemoveSup-20, rate=0.25)
         p300.default_speed = 5
-        if X == 'A7': p300.move_to(A7_p300_bead_side)
-        if X == 'A9': p300.move_to(A9_p300_bead_side)
-        if X == 'A11': p300.move_to(A11_p300_bead_side)
+        if X == 'A7':
+                p300.move_to(A7_p300_bead_side)
+        if X == 'A9':
+                p300.move_to(A9_p300_bead_side)
+        if X == 'A11':
+                p300.move_to(A11_p300_bead_side)
         protocol.delay(minutes=0.1)
         p300.aspirate(20, rate=0.2)
         p300.move_to(sample_plate_mag[X].top(z=2))
@@ -1050,9 +1171,12 @@ def run(protocol: protocol_api.ProtocolContext):
         p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag+4))
         p300.aspirate(RemoveSup-20, rate=0.25)
         p300.default_speed = 5
-        if X == 'A7': p300.move_to(A7_p300_bead_side)
-        if X == 'A9': p300.move_to(A9_p300_bead_side)
-        if X == 'A11': p300.move_to(A11_p300_bead_side)
+        if X == 'A7':
+                p300.move_to(A7_p300_bead_side)
+        if X == 'A9':
+                p300.move_to(A9_p300_bead_side)
+        if X == 'A11':
+                p300.move_to(A11_p300_bead_side)
         protocol.delay(minutes=0.1)
         p300.aspirate(20, rate=0.2)
         p300.move_to(sample_plate_mag[X].top(z=2))
@@ -1070,9 +1194,12 @@ def run(protocol: protocol_api.ProtocolContext):
             X = 'A1'
             p300.pick_up_tip(ETOH_washtip_1)
             p300.aspirate(ETOHMaxVol, EtOH_1)
-            if X == 'A7': p300.move_to(A7_p300_bead_side)
-            if X == 'A9': p300.move_to(A9_p300_bead_side)
-            if X == 'A11': p300.move_to(A11_p300_bead_side)
+            if X == 'A7':
+                p300.move_to(A7_p300_bead_side)
+            if X == 'A9':
+                p300.move_to(A9_p300_bead_side)
+            if X == 'A11':
+                p300.move_to(A11_p300_bead_side)
             p300.dispense(ETOHMaxVol-50, rate=0.5)
             p300.move_to(sample_plate_mag[X].center())
             p300.dispense(50, rate=0.5)
@@ -1087,9 +1214,12 @@ def run(protocol: protocol_api.ProtocolContext):
             X = 'A9'
             p300.pick_up_tip(ETOH_washtip_2)
             p300.aspirate(ETOHMaxVol, EtOH_2)
-            if X == 'A7': p300.move_to(A7_p300_bead_side)
-            if X == 'A9': p300.move_to(A9_p300_bead_side)
-            if X == 'A11': p300.move_to(A11_p300_bead_side)
+            if X == 'A7':
+                p300.move_to(A7_p300_bead_side)
+            if X == 'A9':
+                p300.move_to(A9_p300_bead_side)
+            if X == 'A11':
+                p300.move_to(A11_p300_bead_side)
             p300.dispense(ETOHMaxVol-50, rate=0.5)
             p300.move_to(sample_plate_mag[X].center())
             p300.dispense(50, rate=0.5)
@@ -1103,9 +1233,12 @@ def run(protocol: protocol_api.ProtocolContext):
             X = 'A11'
             p300.pick_up_tip(ETOH_washtip_3)
             p300.aspirate(ETOHMaxVol, EtOH_3)
-            if X == 'A7': p300.move_to(A7_p300_bead_side)
-            if X == 'A9': p300.move_to(A9_p300_bead_side)
-            if X == 'A11': p300.move_to(A11_p300_bead_side)
+            if X == 'A7':
+                p300.move_to(A7_p300_bead_side)
+            if X == 'A9':
+                p300.move_to(A9_p300_bead_side)
+            if X == 'A11':
+                p300.move_to(A11_p300_bead_side)
             p300.dispense(ETOHMaxVol-50, rate=0.5)
             p300.move_to(sample_plate_mag[X].center())
             p300.dispense(50, rate=0.5)
@@ -1184,52 +1317,82 @@ def run(protocol: protocol_api.ProtocolContext):
         X = 'A1'
         p300.pick_up_tip()
         p300.aspirate(PCRVol, Master_Tube_PCR_1.bottom(p300_offset_Temp))
-        if X == 'A1': p300.move_to(A1_p300_loc1)
-        if X == 'A3': p300.move_to(A3_p300_loc1)
-        if X == 'A5': p300.move_to(A5_p300_loc1)
+        if X == 'A1':
+                p300.move_to(A1_p300_loc1)
+        if X == 'A3':
+                p300.move_to(A3_p300_loc1)
+        if X == 'A5':
+                p300.move_to(A5_p300_loc1)
         p300.dispense(PCRVol/5, rate=0.75)
         p300.default_speed = 5
-        if X == 'A1': p300.move_to(A1_p300_loc2)
-        if X == 'A3': p300.move_to(A3_p300_loc2)
-        if X == 'A5': p300.move_to(A5_p300_loc2)
+        if X == 'A1':
+                p300.move_to(A1_p300_loc2)
+        if X == 'A3':
+                p300.move_to(A3_p300_loc2)
+        if X == 'A5':
+                p300.move_to(A5_p300_loc2)
         p300.dispense(PCRVol/5, rate=0.75)
-        if X == 'A1': p300.move_to(A1_p300_loc3)
-        if X == 'A3': p300.move_to(A3_p300_loc3)
-        if X == 'A5': p300.move_to(A5_p300_loc3)
+        if X == 'A1':
+                p300.move_to(A1_p300_loc3)
+        if X == 'A3':
+                p300.move_to(A3_p300_loc3)
+        if X == 'A5':
+                p300.move_to(A5_p300_loc3)
         p300.dispense(PCRVol/5, rate=0.75)
-        if X == 'A1': p300.move_to(A1_p300_loc2)
-        if X == 'A3': p300.move_to(A3_p300_loc2)
-        if X == 'A5': p300.move_to(A5_p300_loc2)
+        if X == 'A1':
+                p300.move_to(A1_p300_loc2)
+        if X == 'A3':
+                p300.move_to(A3_p300_loc2)
+        if X == 'A5':
+                p300.move_to(A5_p300_loc2)
         p300.dispense(PCRVol/5, rate=0.75)
-        if X == 'A1': p300.move_to(A1_p300_loc1)
-        if X == 'A3': p300.move_to(A3_p300_loc1)
-        if X == 'A5': p300.move_to(A5_p300_loc1)
+        if X == 'A1':
+                p300.move_to(A1_p300_loc1)
+        if X == 'A3':
+                p300.move_to(A3_p300_loc1)
+        if X == 'A5':
+                p300.move_to(A5_p300_loc1)
         p300.dispense(PCRVol/5, rate=0.75)
         reps = 5
         for x in range(reps):
             p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))
             p300.aspirate(PCRVol, rate=0.5)
-            if X == 'A1': p300.move_to(A1_p300_bead_top)
-            if X == 'A3': p300.move_to(A3_p300_bead_top)
-            if X == 'A5': p300.move_to(A5_p300_bead_top)
+            if X == 'A1':
+                p300.move_to(A1_p300_bead_top)
+            if X == 'A3':
+                p300.move_to(A3_p300_bead_top)
+            if X == 'A5':
+                p300.move_to(A5_p300_bead_top)
             p300.dispense(PCRVol, rate=1)
         reps = 3
         for x in range(reps):
-            if X == 'A1': p300.move_to(A1_p300_loc2)
-            if X == 'A3': p300.move_to(A3_p300_loc2)
-            if X == 'A5': p300.move_to(A5_p300_loc2)
+            if X == 'A1':
+                p300.move_to(A1_p300_loc2)
+            if X == 'A3':
+                p300.move_to(A3_p300_loc2)
+            if X == 'A5':
+                p300.move_to(A5_p300_loc2)
             p300.mix(PCRMixRep, PCRMixVol)
-            if X == 'A1': p300.move_to(A1_p300_loc1)
-            if X == 'A3': p300.move_to(A3_p300_loc1)
-            if X == 'A5': p300.move_to(A5_p300_loc1)
+            if X == 'A1':
+                p300.move_to(A1_p300_loc1)
+            if X == 'A3':
+                p300.move_to(A3_p300_loc1)
+            if X == 'A5':
+                p300.move_to(A5_p300_loc1)
             p300.mix(PCRMixRep, PCRMixVol)
-            if X == 'A1': p300.move_to(A1_p300_loc2)
-            if X == 'A3': p300.move_to(A3_p300_loc2)
-            if X == 'A5': p300.move_to(A5_p300_loc2)
+            if X == 'A1':
+                p300.move_to(A1_p300_loc2)
+            if X == 'A3':
+                p300.move_to(A3_p300_loc2)
+            if X == 'A5':
+                p300.move_to(A5_p300_loc2)
             p300.mix(PCRMixRep, PCRMixVol)
-            if X == 'A1': p300.move_to(A1_p300_loc3)
-            if X == 'A3': p300.move_to(A3_p300_loc3)
-            if X == 'A5': p300.move_to(A5_p300_loc3)
+            if X == 'A1':
+                p300.move_to(A1_p300_loc3)
+            if X == 'A3':
+                p300.move_to(A3_p300_loc3)
+            if X == 'A5':
+                p300.move_to(A5_p300_loc3)
             p300.mix(PCRMixRep, PCRMixVol)
         p300.move_to(sample_plate_mag.wells_by_name()[X].bottom(z=p300_offset_Mag))
         p300.mix(PCRMixRep, PCRMixVol)
@@ -1242,52 +1405,82 @@ def run(protocol: protocol_api.ProtocolContext):
         X = 'A3'
         p300.pick_up_tip()
         p300.aspirate(PCRVol, Master_Tube_PCR_1.bottom(p300_offset_Temp))
-        if X == 'A1': p300.move_to(A1_p300_loc1)
-        if X == 'A3': p300.move_to(A3_p300_loc1)
-        if X == 'A5': p300.move_to(A5_p300_loc1)
+        if X == 'A1':
+                p300.move_to(A1_p300_loc1)
+        if X == 'A3':
+                p300.move_to(A3_p300_loc1)
+        if X == 'A5':
+                p300.move_to(A5_p300_loc1)
         p300.dispense(PCRVol/5, rate=0.75)
         p300.default_speed = 5
-        if X == 'A1': p300.move_to(A1_p300_loc2)
-        if X == 'A3': p300.move_to(A3_p300_loc2)
-        if X == 'A5': p300.move_to(A5_p300_loc2)
+        if X == 'A1':
+                p300.move_to(A1_p300_loc2)
+        if X == 'A3':
+                p300.move_to(A3_p300_loc2)
+        if X == 'A5':
+                p300.move_to(A5_p300_loc2)
         p300.dispense(PCRVol/5, rate=0.75)
-        if X == 'A1': p300.move_to(A1_p300_loc3)
-        if X == 'A3': p300.move_to(A3_p300_loc3)
-        if X == 'A5': p300.move_to(A5_p300_loc3)
+        if X == 'A1':
+                p300.move_to(A1_p300_loc3)
+        if X == 'A3':
+                p300.move_to(A3_p300_loc3)
+        if X == 'A5':
+                p300.move_to(A5_p300_loc3)
         p300.dispense(PCRVol/5, rate=0.75)
-        if X == 'A1': p300.move_to(A1_p300_loc2)
-        if X == 'A3': p300.move_to(A3_p300_loc2)
-        if X == 'A5': p300.move_to(A5_p300_loc2)
+        if X == 'A1':
+                p300.move_to(A1_p300_loc2)
+        if X == 'A3':
+                p300.move_to(A3_p300_loc2)
+        if X == 'A5':
+                p300.move_to(A5_p300_loc2)
         p300.dispense(PCRVol/5, rate=0.75)
-        if X == 'A1': p300.move_to(A1_p300_loc1)
-        if X == 'A3': p300.move_to(A3_p300_loc1)
-        if X == 'A5': p300.move_to(A5_p300_loc1)
+        if X == 'A1':
+                p300.move_to(A1_p300_loc1)
+        if X == 'A3':
+                p300.move_to(A3_p300_loc1)
+        if X == 'A5':
+                p300.move_to(A5_p300_loc1)
         p300.dispense(PCRVol/5, rate=0.75)
         reps = 5
         for x in range(reps):
             p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))
             p300.aspirate(PCRVol, rate=0.5)
-            if X == 'A1': p300.move_to(A1_p300_bead_top)
-            if X == 'A3': p300.move_to(A3_p300_bead_top)
-            if X == 'A5': p300.move_to(A5_p300_bead_top)
+            if X == 'A1':
+                p300.move_to(A1_p300_bead_top)
+            if X == 'A3':
+                p300.move_to(A3_p300_bead_top)
+            if X == 'A5':
+                p300.move_to(A5_p300_bead_top)
             p300.dispense(PCRVol, rate=1)
         reps = 3
         for x in range(reps):
-            if X == 'A1': p300.move_to(A1_p300_loc2)
-            if X == 'A3': p300.move_to(A3_p300_loc2)
-            if X == 'A5': p300.move_to(A5_p300_loc2)
+            if X == 'A1':
+                p300.move_to(A1_p300_loc2)
+            if X == 'A3':
+                p300.move_to(A3_p300_loc2)
+            if X == 'A5':
+                p300.move_to(A5_p300_loc2)
             p300.mix(PCRMixRep, PCRMixVol)
-            if X == 'A1': p300.move_to(A1_p300_loc1)
-            if X == 'A3': p300.move_to(A3_p300_loc1)
-            if X == 'A5': p300.move_to(A5_p300_loc1)
+            if X == 'A1':
+                p300.move_to(A1_p300_loc1)
+            if X == 'A3':
+                p300.move_to(A3_p300_loc1)
+            if X == 'A5':
+                p300.move_to(A5_p300_loc1)
             p300.mix(PCRMixRep, PCRMixVol)
-            if X == 'A1': p300.move_to(A1_p300_loc2)
-            if X == 'A3': p300.move_to(A3_p300_loc2)
-            if X == 'A5': p300.move_to(A5_p300_loc2)
+            if X == 'A1':
+                p300.move_to(A1_p300_loc2)
+            if X == 'A3':
+                p300.move_to(A3_p300_loc2)
+            if X == 'A5':
+                p300.move_to(A5_p300_loc2)
             p300.mix(PCRMixRep, PCRMixVol)
-            if X == 'A1': p300.move_to(A1_p300_loc3)
-            if X == 'A3': p300.move_to(A3_p300_loc3)
-            if X == 'A5': p300.move_to(A5_p300_loc3)
+            if X == 'A1':
+                p300.move_to(A1_p300_loc3)
+            if X == 'A3':
+                p300.move_to(A3_p300_loc3)
+            if X == 'A5':
+                p300.move_to(A5_p300_loc3)
             p300.mix(PCRMixRep, PCRMixVol)
         p300.move_to(sample_plate_mag.wells_by_name()[X].bottom(z=p300_offset_Mag))
         p300.mix(PCRMixRep, PCRMixVol)
@@ -1300,52 +1493,82 @@ def run(protocol: protocol_api.ProtocolContext):
         X = 'A5'
         p300.pick_up_tip()
         p300.aspirate(PCRVol, Master_Tube_PCR_1.bottom(p300_offset_Temp))
-        if X == 'A1': p300.move_to(A1_p300_loc1)
-        if X == 'A3': p300.move_to(A3_p300_loc1)
-        if X == 'A5': p300.move_to(A5_p300_loc1)
+        if X == 'A1':
+                p300.move_to(A1_p300_loc1)
+        if X == 'A3':
+                p300.move_to(A3_p300_loc1)
+        if X == 'A5':
+                p300.move_to(A5_p300_loc1)
         p300.dispense(PCRVol/5, rate=0.75)
         p300.default_speed = 5
-        if X == 'A1': p300.move_to(A1_p300_loc2)
-        if X == 'A3': p300.move_to(A3_p300_loc2)
-        if X == 'A5': p300.move_to(A5_p300_loc2)
+        if X == 'A1':
+                p300.move_to(A1_p300_loc2)
+        if X == 'A3':
+                p300.move_to(A3_p300_loc2)
+        if X == 'A5':
+                p300.move_to(A5_p300_loc2)
         p300.dispense(PCRVol/5, rate=0.75)
-        if X == 'A1': p300.move_to(A1_p300_loc3)
-        if X == 'A3': p300.move_to(A3_p300_loc3)
-        if X == 'A5': p300.move_to(A5_p300_loc3)
+        if X == 'A1':
+                p300.move_to(A1_p300_loc3)
+        if X == 'A3':
+                p300.move_to(A3_p300_loc3)
+        if X == 'A5':
+                p300.move_to(A5_p300_loc3)
         p300.dispense(PCRVol/5, rate=0.75)
-        if X == 'A1': p300.move_to(A1_p300_loc2)
-        if X == 'A3': p300.move_to(A3_p300_loc2)
-        if X == 'A5': p300.move_to(A5_p300_loc2)
+        if X == 'A1':
+                p300.move_to(A1_p300_loc2)
+        if X == 'A3':
+                p300.move_to(A3_p300_loc2)
+        if X == 'A5':
+                p300.move_to(A5_p300_loc2)
         p300.dispense(PCRVol/5, rate=0.75)
-        if X == 'A1': p300.move_to(A1_p300_loc1)
-        if X == 'A3': p300.move_to(A3_p300_loc1)
-        if X == 'A5': p300.move_to(A5_p300_loc1)
+        if X == 'A1':
+                p300.move_to(A1_p300_loc1)
+        if X == 'A3':
+                p300.move_to(A3_p300_loc1)
+        if X == 'A5':
+                p300.move_to(A5_p300_loc1)
         p300.dispense(PCRVol/5, rate=0.75)
         reps = 5
         for x in range(reps):
             p300.move_to(sample_plate_mag[X].bottom(z=p300_offset_Mag))
             p300.aspirate(PCRVol, rate=0.5)
-            if X == 'A1': p300.move_to(A1_p300_bead_top)
-            if X == 'A3': p300.move_to(A3_p300_bead_top)
-            if X == 'A5': p300.move_to(A5_p300_bead_top)
+            if X == 'A1':
+                p300.move_to(A1_p300_bead_top)
+            if X == 'A3':
+                p300.move_to(A3_p300_bead_top)
+            if X == 'A5':
+                p300.move_to(A5_p300_bead_top)
             p300.dispense(PCRVol, rate=1)
         reps = 3
         for x in range(reps):
-            if X == 'A1': p300.move_to(A1_p300_loc2)
-            if X == 'A3': p300.move_to(A3_p300_loc2)
-            if X == 'A5': p300.move_to(A5_p300_loc2)
+            if X == 'A1':
+                p300.move_to(A1_p300_loc2)
+            if X == 'A3':
+                p300.move_to(A3_p300_loc2)
+            if X == 'A5':
+                p300.move_to(A5_p300_loc2)
             p300.mix(PCRMixRep, PCRMixVol)
-            if X == 'A1': p300.move_to(A1_p300_loc1)
-            if X == 'A3': p300.move_to(A3_p300_loc1)
-            if X == 'A5': p300.move_to(A5_p300_loc1)
+            if X == 'A1':
+                p300.move_to(A1_p300_loc1)
+            if X == 'A3':
+                p300.move_to(A3_p300_loc1)
+            if X == 'A5':
+                p300.move_to(A5_p300_loc1)
             p300.mix(PCRMixRep, PCRMixVol)
-            if X == 'A1': p300.move_to(A1_p300_loc2)
-            if X == 'A3': p300.move_to(A3_p300_loc2)
-            if X == 'A5': p300.move_to(A5_p300_loc2)
+            if X == 'A1':
+                p300.move_to(A1_p300_loc2)
+            if X == 'A3':
+                p300.move_to(A3_p300_loc2)
+            if X == 'A5':
+                p300.move_to(A5_p300_loc2)
             p300.mix(PCRMixRep, PCRMixVol)
-            if X == 'A1': p300.move_to(A1_p300_loc3)
-            if X == 'A3': p300.move_to(A3_p300_loc3)
-            if X == 'A5': p300.move_to(A5_p300_loc3)
+            if X == 'A1':
+                p300.move_to(A1_p300_loc3)
+            if X == 'A3':
+                p300.move_to(A3_p300_loc3)
+            if X == 'A5':
+                p300.move_to(A5_p300_loc3)
             p300.mix(PCRMixRep, PCRMixVol)
         p300.move_to(sample_plate_mag.wells_by_name()[X].bottom(z=p300_offset_Mag))
         p300.mix(PCRMixRep, PCRMixVol)
