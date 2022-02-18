@@ -10,21 +10,20 @@ metadata = {
     }
 
 
-def right(s, amount):
-    if s is None:
-        return None
-    elif amount is None:
-        return None  # Or throw a missing argument error
-    s = str(s)
-    if amount > len(s):
-        return s
-    elif amount == 0:
-        return ""
-    else:
-        return s[-amount:]
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{
+                                  "n_samples":24
+                                  }
+                                  """)
+    return [_all_values[n] for n in names]
 
 
 def run(protocol: protocol_api.ProtocolContext):
+
+    [n_samples] = get_values(  # noqa: F821
+     "n_samples")
+
     # labware
     mag_block = protocol.load_module('magnetic module gen2', '1')
     # Actually an Eppendorf 96 well, same dimensions
@@ -75,14 +74,14 @@ def run(protocol: protocol_api.ProtocolContext):
     # samples
     src_file_path = inspect.getfile(lambda: None)
     protocol.comment(src_file_path)
-    if right(src_file_path, 5) == '8x.py':
+    if n_samples == 8:
         protocol.comment("There are 8 Samples")
         samplecolumns = 1
         TWB_washtip_1 = tiprack_200_1['A3']
         TWB_removetip_1 = tiprack_200_1['A4']
         ETOH_washtip_1 = tiprack_200_1['A9']
         ETOH_removetip_1 = tiprack_200_1['A10']
-    elif right(src_file_path, 6) == '16x.py':
+    elif n_samples == 16:
         protocol.comment("There are 16 Samples")
         samplecolumns = 2
         TWB_washtip_1 = tiprack_200_1['A5']
@@ -93,7 +92,7 @@ def run(protocol: protocol_api.ProtocolContext):
         ETOH_washtip_2 = tiprack_200_2['A6']
         ETOH_removetip_1 = tiprack_200_2['A7']
         ETOH_removetip_2 = tiprack_200_2['A8']
-    elif right(src_file_path, 6) == '24x.py':
+    elif n_samples == 24:
         protocol.comment("There are 24 Samples")
         samplecolumns = 3
         TWB_washtip_1 = tiprack_200_1['A7']
