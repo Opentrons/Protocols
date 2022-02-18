@@ -125,12 +125,12 @@ def run(protocol: protocol_api.ProtocolContext):
     # UNUSED VARIABLES COMMENTED OUT
     ###########################################################################
     #  sample_plate_thermo on the Thermocycler
-    A1_p20_bead_side = sample_plate_thermo['A1'].center().move(types.Point(
-        x=-1.8*0.50, y=0, z=p20_offset_Thermo-5))  # Beads to the Right
-    A1_p20_bead_top = sample_plate_thermo['A1'].center().move(types.Point(
-        x=1.5, y=0, z=p20_offset_Thermo+2))  # Beads to the Right
-    A1_p20_bead_mid = sample_plate_thermo['A1'].center().move(types.Point(
-        x=1, y=0, z=p20_offset_Thermo-2))  # Beads to the Right
+    # A1_p20_bead_side = sample_plate_thermo['A1'].center().move(types.Point(
+    #    x=-1.8*0.50, y=0, z=p20_offset_Thermo-5))  # Beads to the Right
+    # A1_p20_bead_top = sample_plate_thermo['A1'].center().move(types.Point(
+    #    x=1.5, y=0, z=p20_offset_Thermo+2))  # Beads to the Right
+    # A1_p20_bead_mid = sample_plate_thermo['A1'].center().move(types.Point(
+    #    x=1, y=0, z=p20_offset_Thermo-2))  # Beads to the Right
     A1_p300_bead_side = sample_plate_thermo['A1'].center().move(types.Point(
         x=-0.50, y=0, z=p300_offset_Thermo-7.2))  # Beads to the Right
     A1_p300_bead_top = sample_plate_thermo['A1'].center().move(types.Point(
@@ -143,12 +143,12 @@ def run(protocol: protocol_api.ProtocolContext):
         x=1.3, y=0, z=p300_offset_Thermo-4))  # Beads to the Right
     A1_p300_loc3 = sample_plate_thermo['A1'].center().move(types.Point(
         x=1.3*0.8, y=-1.3*0.8, z=p300_offset_Thermo-4))  # Beads to the Right
-    A3_p20_bead_side = sample_plate_thermo['A3'].center().move(types.Point(
-        x=-1.8*0.50, y=0, z=p20_offset_Thermo-5))  # Beads to the Right
-    A3_p20_bead_top = sample_plate_thermo['A3'].center().move(types.Point(
-        x=1.5, y=0, z=p20_offset_Thermo+2))  # Beads to the Right
-    A3_p20_bead_mid = sample_plate_thermo['A3'].center().move(types.Point(
-        x=1, y=0, z=p20_offset_Thermo-2))  # Beads to the Right
+    # A3_p20_bead_side = sample_plate_thermo['A3'].center().move(types.Point(
+    #    x=-1.8*0.50, y=0, z=p20_offset_Thermo-5))  # Beads to the Right
+    # A3_p20_bead_top = sample_plate_thermo['A3'].center().move(types.Point(
+    #    x=1.5, y=0, z=p20_offset_Thermo+2))  # Beads to the Right
+    # A3_p20_bead_mid = sample_plate_thermo['A3'].center().move(types.Point(
+    #    x=1, y=0, z=p20_offset_Thermo-2))  # Beads to the Right
     A3_p300_bead_side = sample_plate_thermo['A3'].center().move(types.Point(
         x=-0.50, y=0, z=p300_offset_Thermo-7.2))  # Beads to the Right
     A3_p300_bead_top = sample_plate_thermo['A3'].center().move(types.Point(
@@ -161,12 +161,12 @@ def run(protocol: protocol_api.ProtocolContext):
         x=1.3, y=0, z=p300_offset_Thermo-4))  # Beads to the Right
     A3_p300_loc3 = sample_plate_thermo['A3'].center().move(types.Point(
         x=1.3*0.8, y=-1.3*0.8, z=p300_offset_Thermo-4))  # Beads to the Right
-    A5_p20_bead_side = sample_plate_thermo['A5'].center().move(types.Point(
-        x=-1.8*0.50, y=0, z=p20_offset_Thermo-5))  # Beads to the Right
-    A5_p20_bead_top = sample_plate_thermo['A5'].center().move(types.Point(
-        x=1.5, y=0, z=p20_offset_Thermo+2))  # Beads to the Right
-    A5_p20_bead_mid = sample_plate_thermo['A5'].center().move(types.Point(
-        x=1, y=0, z=p20_offset_Thermo-2))  # Beads to the Right
+    # A5_p20_bead_side = sample_plate_thermo['A5'].center().move(types.Point(
+    #    x=-1.8*0.50, y=0, z=p20_offset_Thermo-5))  # Beads to the Right
+    # A5_p20_bead_top = sample_plate_thermo['A5'].center().move(types.Point(
+    #    x=1.5, y=0, z=p20_offset_Thermo+2))  # Beads to the Right
+    # A5_p20_bead_mid = sample_plate_thermo['A5'].center().move(types.Point(
+    #    x=1, y=0, z=p20_offset_Thermo-2))  # Beads to the Right
     A5_p300_bead_side = sample_plate_thermo['A5'].center().move(types.Point(
         x=-0.50, y=0, z=p300_offset_Thermo-7.2))  # Beads to the Right
     A5_p300_bead_top = sample_plate_thermo['A5'].center().move(types.Point(
