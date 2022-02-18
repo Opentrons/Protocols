@@ -75,6 +75,15 @@
   },
   {
     "type": "dropDown",
+    "label": "Include Ligation Deck Steps?",
+    "name": "STEP_LIGDECK",
+    "options": [
+      {"label": "Yes", "value": 1},
+      {"label": "Skip", "value": 0}
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "Include Post-Ligation?",
     "name": "STEP_POSTLIG",
     "options": [
@@ -124,8 +133,8 @@
     "name": "p20_mount",
     "options": [
 
-      {"label": "Right", "value": "right"}
-      {"label": "Left", "value": "left"},
+      {"label": "Right", "value": "right"},
+      {"label": "Left", "value": "left"}
     ]
   },
   {
@@ -142,8 +151,8 @@
     "label": "P10 Multi-Channel Mount (GEN 1)",
     "name": "p10_mount",
     "options": [
-      {"label": "Right", "value": "right"}
-      {"label": "Left", "value": "left"},
+      {"label": "Right", "value": "right"},
+      {"label": "Left", "value": "left"}
     ]
-  },
+  }
 ]
