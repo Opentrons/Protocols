@@ -103,7 +103,7 @@ resuming.')
         else:
             transfer_vol = default_transfer_vol
 
-        # effective tip capacity 280 with 20 uL air gap
+        # tip capacity 280 with 20 uL air gap
         reps = math.ceil(transfer_vol / 280)
 
         vol = transfer_vol / reps
