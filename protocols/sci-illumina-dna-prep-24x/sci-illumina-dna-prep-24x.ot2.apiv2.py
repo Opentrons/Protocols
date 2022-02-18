@@ -266,8 +266,7 @@ def run(protocol: protocol_api.ProtocolContext):
         X = 'A3'
         p20.pick_up_tip()
         p20.aspirate(TSBVol, TSB.bottom(z=p20_offset_Temp))
-        p20.dispense(TSBVol, sample_plate_thermo[X].bottom(
-            z=p20_offset_Thermo))
+        p20.dispense(TSBVol, sample_plate_thermo[X].bottom(z=p20_offset_Thermo))
         p20.mix(TSBMixRep, TSBMixVol)
         p20.drop_tip()
     if samplecolumns >= 3:  # -------------------------------------------------
@@ -278,7 +277,8 @@ def run(protocol: protocol_api.ProtocolContext):
         p20.mix(TSBMixRep, TSBMixVol)
         p20.drop_tip()
 
-    ###########################################################################    protocol.pause('Seal, Run PTC (15min)')
+    ###########################################################################
+    protocol.pause('Seal, Run PTC (15min)')
 
     thermocycler.close_lid()
     profile_PTC = [
