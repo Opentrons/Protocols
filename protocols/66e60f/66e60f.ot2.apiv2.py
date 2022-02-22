@@ -459,3 +459,4 @@ def run(ctx: protocol_api.ProtocolContext):
         pip.aspirate(5, well)
         pip.dispense(vol, dna_pool_tube)
         pip.drop_tip()
+    ctx.comment("\n\n~~~~ Protocol Finished! ~~~~\n")
