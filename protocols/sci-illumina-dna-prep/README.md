@@ -56,8 +56,8 @@ Explanation of parameters below:
 ![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-illumina-dna-prep/v3/deck.jpg)
 
 Slots:
-1. Sample plate: Magnetic module with  Nest 96 well plate full skirt (or Eppendorf 96 well plate full skirt) 100 µL wells
-2. Reagent plate 1: NEST 12 well 15 mL reservoir (or NEST 96 deep-well plate 2 mL when reusing tips). See Reagent Setup section for information about the location of the reagents
+1. Sample plate: Magnetic module with  Nest 96 well plate full skirt (or Eppendorf 96 well plate full skirt).
+2. Reagent plate 1: NEST 96 deep-well plate 2 mL. See Reagent Setup section for information about the location of the reagents
 3. Reagent plate 2: Temperature module with Bio-rad 200 µL plate on aluminum block. See Reagent Setup section for information about the location of the reagents
 4. 20 µL filter tiprack
 5. 200 µL filter tiprack
@@ -65,7 +65,7 @@ Slots:
 7. Sample plate: Thermocycler module with NEST 96 well plate full skirt 100 µL
 8. Empty
 9. 200 µL filter tiprack
-10. Sample plate: Thermocycler module with NEST 96 well plate full skirt (or Eppendorf 96 well plate full skirt) 100 µL
+10. Sample plate: Thermocycler module with NEST 96 well plate full skirt (or Eppendorf 96 well plate full skirt) 150 µL
 11. Empty
 
 ### Reagent Setup
@@ -77,9 +77,18 @@ Slots:
 ---
 
 ### Protocol Steps
-1. This section should consist of a numerical outline of the protocol steps, somewhat analogous to the steps outlined by the user in their custom protocol submission.
-2. example step: Samples are transferred from the source tuberacks on slots 1-2 to the PCR plate on slot 3, down columns and then across rows.
-3. example step: Waste is removed from each sample on the magnetic module, ensuring the bead pellets are not contacted by the pipette tips.
+1. Prepares the thermocycler by setting the block temperature to 4 degrees, and the lid to 100 degrees.
+2. Add tagmentation mix to the samples
+3. User seals the plate and the protocol incubates the samples with the mix in the thermocycler, 55 degrees for 15 minutes.
+4. The thermocycler opens, and the user removes the seal.
+5. Add Tagmentation Stop Buffer to the samples.
+6. Seal and incubate the mix at 37 degrees for 15 minutes.
+7. User removes seal; and remove the supernatant and wash the beads three times with Tagmentation Wash Buffer.
+8. Amplification of DNA: Addition of PCR mix and addition of barcodes.
+9. The protocol runs PCR protocol for 5 cycles. This takes 25 minutes to complete. The supernatant is transferred to columns 7, 9 and 11 depending on how many sample columns there are.
+10. Post-PCR cleanup using AMPure beads.
+11. The protocol performs two ethanol washes.
+12. RSB (resuspension buffer) is added to the bead wells and the supernatant is transferred to the output columns (8, 10, and 12).
 
 ### Process
 1. Input your protocol parameters above.
