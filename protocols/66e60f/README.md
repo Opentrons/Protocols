@@ -8,32 +8,31 @@
 	* Normalization
 
 ## Description
-This protocol performs a custom sample normalization from a source plate to a second plate, diluting with water from a reservoir. Sample and diluent volumes are specified via .csv file in the following format, including the header line (empty lines ignored):
+This protocol performs a custom sample normalization from one or two source plate(s) to one or two final plate(s), diluting with water from a 12 well reservoir on slot 11 based on an input csv file. After normalization the protocol samples 5 µL from each well from the final plate(s) and dispenses it into a DNA pool tube on the tuberack on slot 5 (the tube in position A2). Sample and diluent volumes are specified via the .csv file in the following format, including the header line (empty lines ignored, also note that this is just an example and that any number of lines less than and up to 2x96 may be specified):
 
 ```
 Plate, Well, SampleID, Concentration, VolumeToDispense
-A, A1, Sample1, 3.28, 12.52
+A, A1, Sample1, 3.28, 12.52,
+...
+A, H12, Sample96, 5.30, 9.70,
+B, A1,  Sample97, 6.34, 8.60,
+...
+B, H12,  Sample192, 7.34, 5.60,
 ```
-The plate is either A or B
-
-The protocol accomplishes the following
-1. Transfers 40 µL of water to each well of the destination plate using the p300
-2. Removes x µL of water from the well and adds x µL of DNA sample according to the line in the CSV.
-3. Pools diluted DNA samples into a tube on the tube-rack.
-For more details see Protocol Steps below
+The plate is either A (to Final plate slot 6 from DNA plate slot 9) or B (to Final plate slot 4 from DNA plate slot 7)
 
 **Update (Jan 28, 2022)**: This protocol has been updated. The user can now select between the [Opentrons P300 GEN2 Single-Channel pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette) or the [Opentrons P300 GEN2 8-Channel pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette).
 
-![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
-
-* [An Opentrons compatible 96-well sample source plate](https://labware.opentrons.com/?category=wellPlate)
-* [An Opentrons compatible 96-well target plate](https://labware.opentrons.com/?category=wellPlate)
-* [NEST 12-channel reservoir 15ml](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
-* [Opentrons 20µl and 300µl filter tipracks](https://shop.opentrons.com/collections/opentrons-tips)
-* [Opentrons P20 GEN2 Single-Channel pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette)
-* [Opentrons P300 GEN2 Single-Channel pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette) or the [Opentrons P300 GEN2 8-Channel pipette](https://shop.opentrons.com/collections/ot-2-pipettes/products/8-channel-electronic-pipette).
+Parameters:
+* `.csv input file`: Input file (see above)
+* `Source plate type`: Opentrons compatible 96 well plate containing DNA samples
+* `Destination plate type`: Opentrons compatible 96 well plates where DNA samples are diluted with water
+* `Tuberack/tubes`: Tuberack/tube combination for DNA and water bins and DNA pool.
+* `P300 type`: Single or multichannel: Only used for the initial water distribution
+* `Air gap volume`: Volume of air for all air gaps, default is 10 µL
 
 ---
+
 ![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
 ### Labware
@@ -51,23 +50,36 @@ For more details see Protocol Steps below
 * [Opentrons 200 µL filter tiprack](https://shop.opentrons.com/opentrons-200ul-filter-tips/)
 * [Opentrons 20 µL filter tiprack](https://shop.opentrons.com/opentrons-20ul-filter-tips/)
 
-
 ### Reagents
 NEST 12-channel reservoir (slot 11)
 * channel 1: Water for dilution
-* channel 2: Water waste for initial distribution
+* channel 2: Water waste destination for initial water distribution
+Tuberack with 1.5 mL tubes  
+* Tubes in position A1, B1: Water waste tubes for removing water before DNA addition
+* Tubes in position C1, D1: DNA waste tubes after DNA distribution
 
 ---
 
 ### Deck Setup
-* If the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)
+Slots:
+1. 20 µL filter tip-rack (B)
+2. Empty
+3. 20 µL filter tip-rack (A)
+4. Final Plate B
+5. Tuberack
+6. Final Plate A
+7. DNA Plate B
+8. Empty
+9. DNA Plate A
+10. 200 µL filter tip-rack
+11. Water reservoir
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/66e60f/deck.jpg)
 
 ### Reagent Setup
 * Water Reservoir: slot 11
 ![Water reservoir on 11](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/66e60f/water_res.jpg)
 * Tuberack: slot 5  
-![Tuberack](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/66e60/tuberack.jpg)
+![Tuberack](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/66e60f/tuberack.jpg)
 
 ### Protocol Steps
 1. The protocol distributes water to each column that has a well in the inout csv file using the 300 µL multi-channel pipette to the final plate (A and B). These tips blow out into the water reservoir well 2 and are then discarded.
@@ -81,12 +93,14 @@ NEST 12-channel reservoir (slot 11)
 
 ## Process
 1. Input the normalization .csv file
-2. Select your source plate containing DNA samples (located on slot 7)
-3. Select your destination plate where samples will be mixed with water (located on slot 1)
-4. Download your protocol.
-5. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
-6. Set up your deck according to the deck map.
-7. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).
+2. Select your source plate containing DNA samples (A: located on 9, B: located on slot 7)
+3. Select your destination plate where samples will be mixed with water (located on A: slot 6, B: slot 4)
+4. Select your tuberack/tube type on slot 5
+5. Decide on any other parameter
+6. Download your protocol.
+7. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
+8. Set up your deck according to the deck map.
+9. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).
 8. Hit "Run".
 
 ### Additional Notes
