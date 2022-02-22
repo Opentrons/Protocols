@@ -207,12 +207,6 @@ def run(ctx: protocol_api.ProtocolContext):
             pipette.pick_up_tip()
 
     '''
-    def reset_tips_from(starting_well='A1'):
-        pass
-
-    def find_current_tip(pip):
-        pass
-
     # helper functions
     '''
     Define any custom helper functions outside of the pipette scope here, using
