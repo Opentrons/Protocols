@@ -3,7 +3,7 @@
     "type": "textFile",
     "label": ".csv input file",
     "name": "input_csv",
-    "default": "Plate,Well,SampleID,Concentration,VolumeToDispense\\nB,A3,SAMPLE17,10.5,13.2\\nA,A1,SAMPLE1,10.5,13.2\\nA,A2,SAMPLE9,10.5,13.2\\nA,H12,SAMPLE96,16.7,7.5\\nB,A1,SAMPLE97,18.2,5.6\\nB,H12,SAMPLE192,16.0,8.1"
+    "default": "Plate,Well,SampleID,Concentration,VolumeToDispense\\nB,A3,SAMPLE113,10.5,13.2\\nA,A1,SAMPLE1,10.5,13.2\\nA,A2,SAMPLE9,10.5,13.2\\nA,H12,SAMPLE96,16.7,7.5\\nB,A1,SAMPLE97,18.2,5.6\\nB,H12,SAMPLE192,16.0,8.1"
   },
   {
     "type": "dropDown",
