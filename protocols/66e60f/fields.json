@@ -3,7 +3,7 @@
     "type": "textFile",
     "label": ".csv input file",
     "name": "input_csv",
-    "default": "Plate,Well,SampleID,Concentration,VolumeToDispense\\nA,A1,SAMPLE1,10.5,13.2\\nA,H12,SAMPLE96,16.7,7.5\\nB,A1,SAMPLE97,18.2,5.6\\nB,H12,SAMPLE192,16.0,8.1"
+    "default": "Plate,Well,SampleID,Concentration,VolumeToDispense\\nA,A1,SAMPLE1,10.5,13.2\\nA,A2,SAMPLE9,10.5,13.2\\nA,H12,SAMPLE96,16.7,7.5\\nB,A1,SAMPLE97,18.2,5.6\\nB,H12,SAMPLE192,16.0,8.1"
   },
   {
     "type": "dropDown",
@@ -34,7 +34,7 @@
   {
     "type": "dropDown",
     "label": "Tuberack/tubes for binning",
-    "name": "bin_tuberack_type",
+    "name": "tuberack_type",
     "options": [
       { "label": "Opentrons 24 Tube Rack with NEST 1.5 mL Snapcap", "value": "opentrons_24_tuberack_nest_1.5ml_snapcap" },
       { "label": "Opentrons 24 Tube Rack with Eppendorf 1.5 mL Safe-Lock Snapcap", "value": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap" },
@@ -53,5 +53,11 @@
       { "label": "P300 8-Channel (GEN2)", "value": "p300_multi_gen2" },
       { "label": "P300 Single-Channel (GEN2)", "value": "p300_single_gen2" }
     ]
+  },
+  {
+    "type": "float",
+      "label": "Air gap volume",
+      "name": "air_gap_vol",
+      "default": 10
   }
 ]
