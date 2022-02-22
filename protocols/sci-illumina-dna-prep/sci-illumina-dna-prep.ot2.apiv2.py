@@ -57,6 +57,7 @@ def run(protocol: protocol_api.ProtocolContext):
     EtOH_1 = deepwell['A2']
     EtOH_2 = deepwell['A3']
     EtOH_3 = deepwell['A4']
+    # I think this is a bug, and that RSB is being asp. from the wrong place
     # RSB = deepwell['A6'] - unused
     TWB_1 = deepwell['A8']
     TWB_2 = deepwell['A9']

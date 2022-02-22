@@ -56,7 +56,7 @@ Explanation of parameters below:
 ![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-illumina-dna-prep/v3/deck.jpg)
 
 Slots:
-1. Sample plate: Magnetic module with  Nest 96 well plate full skirt (or Eppendorf 96 well plate full skirt).
+1. Sample plate: Magnetic module with  Nest 96 well plate full skirt.
 2. Reagent plate 1: NEST 96 deep-well plate 2 mL. See Reagent Setup section for information about the location of the reagents
 3. Reagent plate 2: Temperature module with Bio-rad 200 µL plate on aluminum block. See Reagent Setup section for information about the location of the reagents
 4. 20 µL filter tiprack
@@ -65,7 +65,7 @@ Slots:
 7. Sample plate: Thermocycler module with NEST 96 well plate full skirt 100 µL
 8. Empty
 9. 200 µL filter tiprack
-10. Sample plate: Thermocycler module with NEST 96 well plate full skirt (or Eppendorf 96 well plate full skirt) 150 µL
+10. Sample plate: Thermocycler module with NEST 96 well plate full skirt.
 11. Empty
 
 ### Reagent Setup
@@ -83,7 +83,7 @@ Slots:
 4. The thermocycler opens, and the user removes the seal.
 5. Add Tagmentation Stop Buffer to the samples.
 6. Seal and incubate the mix at 37 degrees for 15 minutes.
-7. User removes seal; and remove the supernatant and wash the beads three times with Tagmentation Wash Buffer.
+7. User removes seal; remove the supernatant and wash the beads three times with Tagmentation Wash Buffer.
 8. Amplification of DNA: Addition of PCR mix and addition of barcodes.
 9. The protocol runs PCR protocol for 5 cycles. This takes 25 minutes to complete. The supernatant is transferred to columns 7, 9 and 11 depending on how many sample columns there are.
 10. Post-PCR cleanup using AMPure beads.
