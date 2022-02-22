@@ -2,7 +2,7 @@ from opentrons import protocol_api
 import re
 
 metadata = {
-    'protocolName': 'Normalization protocol',
+    'protocolName': '66e60f: Normalization protocol from CSV',
     'author': 'Eskil Andersen <eskil.andersen@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
@@ -13,12 +13,12 @@ metadata = {
 def get_values(*names):
     import json
     _all_values = json.loads("""{
-                                  "input_csv":"Plate,Well,SampleID,Concentration,VolumeToDispense\\nA,A1,SAMPLE1,10.5,13.2\\nA,H12,SAMPLE96,16.7,7.5\\nB,A1,SAMPLE97,18.2,5.6\\nB,H12,SAMPLE192,16.0,8.1",
+                                  "input_csv":"Plate,Well,SampleID,Concentration,VolumeToDispense\\nA,A1,SAMPLE1,10.5,13.2\\nA,A2,SAMPLE9,10.5,13.2\\nA,H12,SAMPLE96,16.7,7.5\\nB,A1,SAMPLE97,18.2,5.6\\nB,H12,SAMPLE192,16.0,8.1",
                                   "source_type":"biorad_96_wellplate_200ul_pcr",
                                   "dest_type":"biorad_96_wellplate_200ul_pcr",
-                                  "tuberack_type":"opentrons_24_tuberack_nest_0.5ml_screwcap",
+                                  "tuberack_type":"opentrons_24_tuberack_nest_1.5ml_snapcap",
                                   "p300_type":"p300_multi_gen2",
-                                  "air_gap_vol": 10
+                                  "air_gap_vol":10
                                   }
                                   """)
     return [_all_values[n] for n in names]
@@ -52,7 +52,7 @@ def run(ctx: protocol_api.ProtocolContext):
     DNA_sample_plate_loader_B = (source_type, '7',
                                  'DNA plate B')
     tuberack_loader = (tuberack_type, '5',
-                       'binning tuberack')
+                       'tuberack')
     tiprack_300uL_loader = ('opentrons_96_filtertiprack_200ul', '10')
     tiprack_20uL_loader = ('opentrons_96_filtertiprack_20ul', ['1', '3'])
 
@@ -62,8 +62,8 @@ def run(ctx: protocol_api.ProtocolContext):
     initial_water_volume = 40
 
     # Read CSV and format the inputs
-    # csv format: Well | Description | Concentration | volume to transfer
-    #              [0]       [1]           [2]                [3]
+    # csv format: Plate | Well | Sample ID | Concentration | Transfer volume
+    #              [0]     [1]       [2]          [3]              [4]
     data = [
         [val.strip().upper() for val in line.split(',')
             if val != '']
@@ -426,8 +426,8 @@ def run(ctx: protocol_api.ProtocolContext):
             if plate == 'A' else dna_sample_plate_B[well]
         dna_dest = final_plate_A[well] if plate == 'A' else final_plate_B[well]
 
-        ctx.comment("Normalizing sample {} on plate {} with concentration {}"
-                    .format(sampleID, plate, conc))
+        ctx.comment(("Normalizing sample \"{}\" on plate {} with " +
+                    "concentration {}").format(sampleID, plate, conc))
         pip = p20
         pip.pick_up_tip()
         # Remove water from the final plates and dispense into waste tubes
@@ -451,12 +451,20 @@ def run(ctx: protocol_api.ProtocolContext):
 
     pip = p20
     pip.reset_tipracks()
-    ctx.comment("\n\nTransferring 5 uL diluted DNA samples to bin tube\n")
+    ctx.pause(
+        "[Off deck] Seal the plates, vortex the plates, brief spin, " +
+        "remove seal, replace the plates back to the deck\n")
+    ctx.comment("Transferring 5 uL diluted DNA samples to bin tube\n\n")
     for plate, well, _, _, _ in data:
         well = final_plate_A.wells_by_name()[well] if plate == 'A' \
             else final_plate_B.wells_by_name()[well]
         pip.pick_up_tip()
         pip.aspirate(5, well)
+        air_gap_vol = air_gap_vol \
+            if air_gap_vol < remaining_vol else remaining_vol
+        pip.air_gap(air_gap_vol)
         pip.dispense(vol, dna_pool_tube)
+        pip.blow_out()
+        pip.touch_tip()
         pip.drop_tip()
     ctx.comment("\n\n~~~~ Protocol Finished! ~~~~\n")
