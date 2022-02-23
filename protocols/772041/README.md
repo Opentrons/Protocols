@@ -21,8 +21,8 @@ Explanation of parameters below:
 * No modules
 
 ### Labware
-* [Some 96 Deep well plate]()
-* [MicroAmp Optical 384-Well Reaction Plate]()
+* [NEST 12-Well Reservoirs, 15 mL](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/)
+* [MicroAmp Optical 384-Well Reaction Plate with barcode](https://www.thermofisher.com/order/catalog/product/4309849)
 
 ### Pipettes
 * [20 µL multi-channel pipette](https://shop.opentrons.com/8-channel-electronic-pipette/)
