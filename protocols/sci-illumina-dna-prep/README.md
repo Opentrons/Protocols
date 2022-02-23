@@ -21,10 +21,20 @@ In the protocol there is a setting for the number of samples which may be 8, 16 
 **Plate Moving**
 The Protocol requires manually transferring the sample plate between the Thermocycler and Magnet 3 times.  It starts on the Thermocycler and needs to be moved to the Magnet for the post-Tagmentation washes, and then moved to the Thermocycler for PCR and then back to the Magnet for the post-PCR cleanup.  In the script the two positions are handled as sample_plate_mag and sample_plate_thermo; during calibration use an empty plate of the same labware as the sample plate on the magnet position to allow calibration.
 
-
 Explanation of parameters below:
 * `Number of samples`: 8 (column 1), 16 (column 1, 3), or 24 (column 1, 3, 5) samples (see above).
-
+* `Do a dry run?`: Sets the `Use modules?` parameter to `No` (see below). Tips will be returned, incubation steps skipped, and mixes shortened. This parameter is for testing purposes.
+* `Use modules?`: Runs the protocol without module steps (e.g. thermocycle steps such as incubation and PCR cycles, or the steps using the magbetic module). Will be automatically set to `Yes` if the `Do a dry run?` parameter is set to `Yes`
+* `Tip reuse?`: Reuses tips for washing steps so that no tip refill is neccesary during the run. Recommended only for a 24x samples run.
+* `Use tip offsets?`: Whether to use specific offsets for each tip type
+* `Include tagmentation step in protocol run?`: Whether to run the tagmentation step or skip it.
+* `Run tagmentation incubation on the deck thermocycler?`: Whether to run the tagmentation incubation step on the deck thermocycler or off-deck.
+* `Run TSB step?`: Whether to include the TSB/adapter ligation step or not
+* `Run TSB incubation step on the deck thermocycler`: Whether to do the incubation on the on-deck thermocycler or off-deck on an external thermocycler
+* `Run tagmentation wash with TWB step`: Run the bead washing steps with TWB
+* `Run PCR cycle step`: Whether to run the PCR amplification step
+* `Run PCR step on deck thermocycler?`: Run the PCR amplification on-deck or on an external thermocycler
+* `Run post PCR cleanup step`: Run or skip the post-PCR bead cleanup using AMPure beads
 ---
 
 ### Modules
