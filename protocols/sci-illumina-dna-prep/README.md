@@ -7,7 +7,7 @@
 
 ## Categories
 * NGS Library Prep
-  * Illumina DNA Prep
+	* Illumina DNA Prep
 
 ## Description
 This protocol automates the [Illumina DNA prep protocol](https://support.illumina.com/content/dam/illumina-support/documents/documentation/chemistry_documentation/illumina_prep/illumina-dna-prep-reference-guide-1000000025416-09.pdf). Illumina DNA prep offers a fast, integrated workflow for a wide range of applications, from human whole-genome sequencing to amplicons, plasmids, and microbial species
