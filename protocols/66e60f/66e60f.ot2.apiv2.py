@@ -2,7 +2,7 @@ from opentrons import protocol_api
 import re
 
 metadata = {
-    'protocolName': 'Normalization protocol',
+    'protocolName': '66e60f: Normalization protocol from CSV',
     'author': 'Eskil Andersen <eskil.andersen@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
@@ -12,28 +12,45 @@ metadata = {
 
 def run(ctx: protocol_api.ProtocolContext):
 
-    [input_csv, source_type, dest_type, p300_type] = get_values(  # noqa: F821
-        'input_csv', 'source_type', 'dest_type', 'p300_type')
+    [input_csv,
+     source_type,
+     dest_type,
+     tuberack_type,
+     p300_type,
+     air_gap_vol] = get_values(  # noqa: F821
+     "input_csv",
+     "source_type",
+     "dest_type",
+     "tuberack_type",
+     "p300_type",
+     "air_gap_vol")
 
     # define all custom variables above here with descriptions:
     left_pipette_loadname = 'p20_single_gen2'
     right_pipette_loadname = p300_type
 
-    target_plate_loader = (dest_type, '1',
-                           'target plate')
-    DNA_sample_plate_loader = (dest_type, '7',
-                               'DNA sample plate')
-    tiprack_300uL_loader = ('opentrons_96_filtertiprack_200ul', '2')
-    tiprack_20uL_loader = ('opentrons_96_filtertiprack_20ul', '5')
+    final_plate_loader_A = (dest_type, '6',
+                            'Final plate A')
+    final_plate_loader_B = (dest_type, '4',
+                            'Final plate B')
+    DNA_sample_plate_loader_A = (source_type, '9',
+                                 'DNA plate A')
+    DNA_sample_plate_loader_B = (source_type, '7',
+                                 'DNA plate B')
+    tuberack_loader = (tuberack_type, '5',
+                       'tuberack')
+    tiprack_300uL_loader = ('opentrons_96_filtertiprack_200ul', '10')
+    tiprack_20uL_A_loader = ('opentrons_96_filtertiprack_20ul', '3')
+    tiprack_20uL_B_loader = ('opentrons_96_filtertiprack_20ul', '1')
 
-    reservoir_loader = ('nest_12_reservoir_15ml', '4', 'water reservoir')
+    reservoir_loader = ('nest_12_reservoir_15ml', '11', 'water reservoir')
 
     # Initial 40 uL water for each well of the target
     initial_water_volume = 40
 
     # Read CSV and format the inputs
-    # csv format: Well | Description | Concentration | volume to transfer
-    #              [0]       [1]           [2]                [3]
+    # csv format: Plate | Well | Sample ID | Concentration | Transfer volume
+    #              [0]     [1]       [2]          [3]              [4]
     data = [
         [val.strip().upper() for val in line.split(',')
             if val != '']
@@ -77,12 +94,22 @@ def run(ctx: protocol_api.ProtocolContext):
     '''
     reservoir = ctx.load_labware(reservoir_loader[0], reservoir_loader[1],
                                  reservoir_loader[2])
-    dna_sample_plate = ctx.load_labware(DNA_sample_plate_loader[0],
-                                        DNA_sample_plate_loader[1],
-                                        DNA_sample_plate_loader[2])
-    target_plate = ctx.load_labware(target_plate_loader[0],
-                                    target_plate_loader[1],
-                                    target_plate_loader[2])
+    dna_sample_plate_A = ctx.load_labware(DNA_sample_plate_loader_A[0],
+                                          DNA_sample_plate_loader_A[1],
+                                          DNA_sample_plate_loader_A[2])
+    dna_sample_plate_B = ctx.load_labware(DNA_sample_plate_loader_B[0],
+                                          DNA_sample_plate_loader_B[1],
+                                          DNA_sample_plate_loader_B[2])
+
+    final_plate_A = ctx.load_labware(final_plate_loader_A[0],
+                                     final_plate_loader_A[1],
+                                     final_plate_loader_A[2])
+    final_plate_B = ctx.load_labware(final_plate_loader_B[0],
+                                     final_plate_loader_B[1],
+                                     final_plate_loader_B[2])
+    tuberack = ctx.load_labware(tuberack_loader[0],
+                                tuberack_loader[1],
+                                tuberack_loader[2])
 
     # load tipracks
 
@@ -104,10 +131,14 @@ def run(ctx: protocol_api.ProtocolContext):
     e.g. tiprack10, tiprack20, tiprack200, tiprack300, tiprack1000
 
     '''
-    tiprack_20_filter = [ctx.load_labware(tiprack_20uL_loader[0],
-                                          tiprack_20uL_loader[1])]
-    tiprack_300_filter = [ctx.load_labware(tiprack_300uL_loader[0],
-                                           tiprack_300uL_loader[1])]
+    # tipracks_20_filter = [ctx.load_labware(tiprack_20uL_loader[0], slot)
+    #                      for slot in tiprack_20uL_loader[1]]
+    tiprack_20_A = [ctx.load_labware(
+        tiprack_20uL_A_loader[0], tiprack_20uL_A_loader[1])]
+    tiprack_20_B = [ctx.load_labware(
+        tiprack_20uL_B_loader[0], tiprack_20uL_B_loader[1])]
+    tiprack_300 = [ctx.load_labware(tiprack_300uL_loader[0],
+                                    tiprack_300uL_loader[1])]
 
     # load instrument
 
@@ -132,12 +163,12 @@ def run(ctx: protocol_api.ProtocolContext):
     p20 = ctx.load_instrument(
                         left_pipette_loadname,
                         "left",
-                        tip_racks=tiprack_20_filter
+                        tip_racks=None
                         )
     p300 = ctx.load_instrument(
                         right_pipette_loadname,
                         "right",
-                        tip_racks=tiprack_300_filter
+                        tip_racks=tiprack_300
                         )
 
     # pipette functions   # INCLUDE ANY BINDING TO CLASS
@@ -176,7 +207,6 @@ def run(ctx: protocol_api.ProtocolContext):
             pipette.pick_up_tip()
 
     '''
-
     # helper functions
     '''
     Define any custom helper functions outside of the pipette scope here, using
@@ -195,6 +225,65 @@ def run(ctx: protocol_api.ProtocolContext):
 
 
     '''
+    class VolTracker:
+        def __init__(self, labware, well_vol,
+                     start=1, end=8,
+                     mode='reagent',
+                     pip_type='single',
+                     msg='Reset labware volumes'):
+            """
+            Voltracker tracks the volume(s) used in a piece of labware
+
+            :param labware: The labware to track
+            :param well_vol: The volume of the liquid in the wells
+            :param pip_type: The pipette type used 'single' or 'multi'
+            :param mode: 'reagent' or 'waste'
+            :param start: The starting well
+            :param end: The ending well
+            :param msg: Message to send to the user when all wells are empty
+            (or full when in waste mode)
+
+            """
+            self.labware_wells = dict.fromkeys(
+                labware.wells()[start-1:end], 0)
+            self.labware_wells_backup = self.labware_wells.copy()
+            self.well_vol = well_vol
+            self.pip_type = pip_type
+            self.mode = mode
+            self.start = start
+            self.end = end
+            self.msg = msg
+
+            # Parameter error checking
+            if not (pip_type == 'single' or pip_type == 'multi'):
+                raise Exception('Pipette type must be single or multi')
+
+            if not (mode == 'reagent' or mode == 'waste'):
+                raise Exception('mode must be reagent or waste')
+
+        def track(self, vol):
+            '''track() will track how much liquid
+            was used up per well. If the volume of
+            a given well is greater than self.well_vol
+            it will remove it from the dictionary and iterate
+            to the next well which will act as the reservoir.'''
+            well = next(iter(self.labware_wells))
+            vol = vol * 8 if self.pip_type == 'multi' else vol
+            if self.labware_wells[well] + vol >= self.well_vol:
+                del self.labware_wells[well]
+                if len(self.labware_wells) < 1:
+                    ctx.pause(self.msg)
+                    self.labware_wells = self.labware_wells_backup.copy()
+                well = next(iter(self.labware_wells))
+            self.labware_wells[well] += vol
+
+            if self.mode == 'waste':
+                ctx.comment('{}: {} ul of total waste'
+                            .format(well, int(self.labware_wells[well])))
+            else:
+                ctx.comment('{} uL of liquid used from {}'
+                            .format(int(self.labware_wells[well]), well))
+            return well
 
     # reagents
 
@@ -211,6 +300,15 @@ def run(ctx: protocol_api.ProtocolContext):
     '''
     water_well = reservoir.wells_by_name()['A1']
     liquid_waste = reservoir.wells_by_name()['A2'].top(-2)
+
+    water_waste_tube_tracker = VolTracker(
+        tuberack, 1500, 1, 2, 'waste',
+        'single', "\n\nWater waste tube full, please replace\n")
+    dna_waste_tube_tracker = VolTracker(
+        tuberack, 1500, 3, 4, 'waste',
+        'single',
+        "\n\nDNA waste tubes may be full, please replace even if not full\n")
+    dna_pool_tube = tuberack.wells_by_name()['A2']
 
     # plate, tube rack maps
 
@@ -247,37 +345,129 @@ def run(ctx: protocol_api.ProtocolContext):
 
 
     '''
+    # Find all wells and columns in the csv so that water dispension can
+    # be limited to  those columns or wells
 
-    ctx.comment("\nTransferring water to target plate\n")
+    # Lists of well names
+    well_list_A = []
+    well_list_B = []
+    # Lists of well locations on the final plates for initial water transfer
+    wells_A = []
+    wells_B = []
+    i = 2
+    for plate, well, _, _, _ in data:
+        if plate == 'A':
+            well_list_A.append(well)
+        elif plate == 'B':
+            well_list_B.append(well)
+        else:
+            raise Exception(("The plate name on line {} in the csv " +
+                             "seems malformed: {}").
+                            format(i, plate))
+        i += 1
+
+    # If the set and the list are not the same length there must be duplicates
+    if len(well_list_A) != len(list(set(well_list_A))):
+        raise Exception('Duplicate wells found for plate A, check your csv')
+    if len(well_list_B) != len(list(set(well_list_B))):
+        raise Exception('Duplicate wells found for plate B, check your csv')
+
+    if 'single' in p300_type:
+        wells_A = [final_plate_A.wells_by_name()[well] for well in well_list_A]
+        wells_B = [final_plate_B.wells_by_name()[well] for well in well_list_B]
+
+    col_set_A = []
+    col_set_B = []
+    if 'multi' in p300_type:
+        col_list_A = [well[1:] for well in well_list_A]
+        col_list_B = [well[1:] for well in well_list_B]
+        # Create a a list of the set of all unique column values
+        # and sort from lowest to highest column
+        col_set_A = list(set(col_list_A))
+        col_set_B = list(set(col_list_B))
+        # Chaining sort() doesn't work
+        col_set_A.sort()
+        col_set_B.sort()
+        wells_A = [final_plate_A.columns()[int(col)-1][0] for col in col_set_A]
+        wells_B = [final_plate_B.columns()[int(col)-1][0] for col in col_set_B]
+
     p300.pick_up_tip()
-    wells = target_plate.rows()[0] if 'multi' in p300_type else \
-        target_plate.wells()
-    for well in wells:
-        if p300.current_volume < initial_water_volume:
-            p300.aspirate(200-p300.current_volume, water_well)
-        p300.dispense(initial_water_volume, well)
-    p300.blow_out(water_well)
-    p300.return_tip()
-    p300.reset_tipracks()
+    for wells, plate_name in zip([wells_A, wells_B], ['A', 'B']):
+        if len(wells) > 0:
+            ctx.comment("\nTransferring water to final plate {}\n".
+                        format(plate_name))
+            for well in wells:
+                if p300.current_volume < initial_water_volume:
+                    p300.aspirate(200-p300.current_volume, water_well)
+                p300.dispense(initial_water_volume, well)
+            p300.blow_out(liquid_waste)
+    p300.drop_tip()
+
+    # Make sure the lines in data are ordered by plate so that we can
+    # distribute as efficiently as possible
+    sorted_data = sorted(data, key=lambda line: line[0])
 
     # Transfering DNA samples to target
     ctx.comment("\nTransferring DNA sample to target plate\n")
-    for line in data:
-        well = line[0]
-        description = line[1]
-        concentration = line[2]
-        volume = float(line[3])
+    for plate, well, sampleID, conc, vol in sorted_data:
+        vol = float(vol)
+        dna_source = dna_sample_plate_A[well] \
+            if plate == 'A' else dna_sample_plate_B[well]
+        dna_dest = final_plate_A[well] if plate == 'A' else final_plate_B[well]
 
-        ctx.comment("Normalizing sample {} with concentration {}"
-                    .format(description, concentration))
-        pip = p20 if volume <= 20 or 'multi' in p300_type else p300
-        pip.pick_up_tip()
-        pip.transfer(volume,
-                     target_plate.wells_by_name()[well],
-                     liquid_waste, new_tip="never")
-        pip.transfer(volume,
-                     dna_sample_plate.wells_by_name()[well],
-                     target_plate.wells_by_name()[well], new_tip="never")
-        pip.mix(3, 20)
-        pip.blow_out(liquid_waste)
+        ctx.comment(("Normalizing sample \"{}\" on plate {} with " +
+                    "concentration {}").format(sampleID, plate, conc))
+        pip = p20
+
+        if plate == 'A':
+            pip.pick_up_tip(tiprack_20_A[0].next_tip())
+        elif plate == 'B':
+            pip.pick_up_tip(tiprack_20_B[0].next_tip())
+        else:
+            raise Exception("Invalid plate specified: {}".format(plate))
+        # Remove water from the final plates and dispense into waste tubes
+        pip.aspirate(vol, dna_dest)
+        pip.dispense(vol, water_waste_tube_tracker.track(vol))
+        pip.blow_out()
+        pip.touch_tip()
+        # Aspirate DNA sample
+        pip.aspirate(vol, dna_source)
+        remaining_vol = pip.max_volume - vol
+        air_gap_vol = air_gap_vol \
+            if air_gap_vol < remaining_vol else remaining_vol
+        pip.air_gap(air_gap_vol)
+        # Dispense into final well
+        pip.dispense(vol, dna_dest)
+        # Touch tip in the destination well
+        pip.touch_tip()
+        # Blow out DNA waste
+        pip.blow_out(dna_waste_tube_tracker.track(5))
+        pip.return_tip()
+
+    pip = p20
+    # Reset the tipracks so we can reuse the tips
+    for rack in [tiprack_20_A[0], tiprack_20_B[0]]:
+        rack.reset()
+
+    ctx.pause(
+        "[Off deck] Seal the plates, vortex the plates, brief spin, " +
+        "remove seal, replace the plates back to the deck\n")
+    ctx.comment("Transferring 5 uL diluted DNA samples to DNA pool tube\n\n")
+    for plate, well, _, _, _ in sorted_data:
+        well = final_plate_A.wells_by_name()[well] if plate == 'A' \
+            else final_plate_B.wells_by_name()[well]
+        if plate == 'A':
+            pip.pick_up_tip(tiprack_20_A[0].next_tip())
+        elif plate == 'B':
+            pip.pick_up_tip(tiprack_20_B[0].next_tip())
+        else:
+            raise Exception("Invalid plate specified: {}".format(plate))
+        pip.aspirate(5, well)
+        air_gap_vol = air_gap_vol \
+            if air_gap_vol < remaining_vol else remaining_vol
+        pip.air_gap(air_gap_vol)
+        pip.dispense(vol, dna_pool_tube)
+        pip.blow_out()
+        pip.touch_tip()
         pip.drop_tip()
+    ctx.comment("\n\n~~~~ Protocol Finished! ~~~~\n")
