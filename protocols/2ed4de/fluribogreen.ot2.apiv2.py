@@ -102,7 +102,7 @@ def run(ctx):
         p1000.mix(mix_reps, 800, dilution_col[5])
         drop(p1000)
 
-    def dilute(final_conc, dil_set, buffer, increase=1):
+    def dilute(final_conc, dil_set, buffer):
         dil_factor = starting_conc/final_conc
         # find necessary dilution factor(s)
         if dil_factor > max_factor_1_dil:
@@ -112,10 +112,11 @@ def run(ctx):
 
         # pre add diluent
         for i, factor in enumerate(factors):
-            dil_vol = (factor-1)*sample_vol*(i+1)
-            if i == 0:
-                dil_vol *= increase
-
+            if i == 1:
+                adjusted_sample_vol = sample_vol*(3*i+1)
+                dil_vol = (factor-1)*adjusted_sample_vol
+            else:
+                dil_vol = (factor-1)*sample_vol
             for j, well in enumerate(dil_set[i][:num_samples]):
                 p1000.pick_up_tip()
                 p1000.transfer(dil_vol, buffer[j//5], well, new_tip='never')
@@ -125,8 +126,8 @@ def run(ctx):
         # transfer sample
         for i, s in enumerate(starting_samples):
             pickup_p300('single')
-            p300.aspirate(sample_vol*increase, s.bottom(2))
-            p300.dispense(sample_vol*increase, dil_set[0][i].bottom(3))
+            p300.aspirate(sample_vol, s.bottom(2))
+            p300.dispense(sample_vol, dil_set[0][i].bottom(3))
             p300.mix(1, 20, dil_set[0][i].bottom(3))
             drop(p300)
         p300.flow_rate.aspirate = 94
@@ -134,15 +135,13 @@ def run(ctx):
         # perform dilution
         for i, factor in enumerate(factors):
             pickup_p300('multi')
-            if i == 0:
-                total_vol = sample_vol*increase*(i+1)*factor
-            else:
-                total_vol = sample_vol*(i+1)*factor
+            adjusted_sample_vol = sample_vol*(3*i+1)
+            total_vol = adjusted_sample_vol*factor
             mix_vol = total_vol*0.8 if total_vol*0.8 <= 175 else 175
             if i == 0:
                 p300.mix(mix_reps, mix_vol, dil_set[i][0])
             else:
-                p300.transfer(sample_vol*(i+1), dil_set[i-1][0].bottom(3),
+                p300.transfer(adjusted_sample_vol, dil_set[i-1][0].bottom(3),
                               dil_set[i][0].bottom(3),
                               mix_after=(5, mix_vol),
                               new_tip='never')
@@ -167,7 +166,7 @@ def run(ctx):
     sample_1_final_loc = dilute(2.5, samples_1, assay_buffer_1)
 
     # sample normalization (TR)
-    sample_2_final_loc = dilute(0.5, samples_2, assay_buffer_2, increase=2)
+    sample_2_final_loc = dilute(0.5, samples_2, assay_buffer_2)
 
     """ PART 3 """
 
