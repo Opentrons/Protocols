@@ -12,11 +12,13 @@
 ## Description
 This protocol automates the [Illumina DNA prep protocol](https://support.illumina.com/content/dam/illumina-support/documents/documentation/chemistry_documentation/illumina_prep/illumina-dna-prep-reference-guide-1000000025416-09.pdf). Illumina DNA prep offers a fast, integrated workflow for a wide range of applications, from human whole-genome sequencing to amplicons, plasmids, and microbial species
 
-In the protocol there is a setting for the number of samples which may be 8, 16 or 24 (i.e. 8 samples per column, up to 3 columns).  Samples are prepared as below, with 30ul of 100ng of sample DNA.  See the Illumina DNA Prep protocol for more information about sample input requirements.
+The protocol allows you to set the number of samples to 8, 16 or 24 (i.e. 8 samples per column, up to 3 columns). Samples are prepared in the wells as shown in the table and figure below, with 30 µL of 100 ng:s of sample DNA in each well. See the [Illumina DNA Prep protocol](https://support.illumina.com/content/dam/illumina-support/documents/documentation/chemistry_documentation/illumina_prep/illumina-dna-prep-reference-guide-1000000025416-09.pdf) for more information about sample input requirements.
 
 ![Sample input and output columns](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-illumina-dna-prep/v3/samples_output.jpg)
 
 ![Sample columns](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-illumina-dna-prep/v3/sample_setup.jpg)
+
+The user can choose which steps of the protocol they want to run, or skip - see explanation of parameters below.
 
 **Plate Moving**
 The Protocol requires manually transferring the sample plate between the Thermocycler and Magnet 3 times.  It starts on the Thermocycler and needs to be moved to the Magnet for the post-Tagmentation washes, and then moved to the Thermocycler for PCR and then back to the Magnet for the post-PCR cleanup.  In the script the two positions are handled as sample_plate_mag and sample_plate_thermo; during calibration use an empty plate of the same labware as the sample plate on the magnet position to allow calibration.
@@ -27,13 +29,13 @@ Explanation of parameters below:
 * `Use modules?`: Runs the protocol without module steps (e.g. thermocycle steps such as incubation and PCR cycles, or the steps using the magbetic module). Will be automatically set to `Yes` if the `Do a dry run?` parameter is set to `Yes`
 * `Tip reuse?`: Reuses tips for washing steps so that no tip refill is neccesary during the run. Recommended only for a 24x samples run.
 * `Use tip offsets?`: Whether to use specific offsets for each tip type
-* `Include tagmentation step in protocol run?`: Whether to run the tagmentation step or skip it.
-* `Run tagmentation incubation on the deck thermocycler?`: Whether to run the tagmentation incubation step on the deck thermocycler or off-deck.
-* `Run TSB step?`: Whether to include the TSB/adapter ligation step or not
+* `Include tagmentation step in protocol run?`: Run the tagmentation step or skip it.
+* `Run tagmentation incubation on the deck thermocycler?`: Run the tagmentation incubation step on the deck thermocycler or on an off-deck external thermocycler.
+* `Run TSB step?`: Run the TSB/adapter ligation step or not
 * `Run TSB incubation step on the deck thermocycler`: Whether to do the incubation on the on-deck thermocycler or off-deck on an external thermocycler
 * `Run tagmentation wash with TWB step`: Run the bead washing steps with TWB
 * `Run PCR cycle step`: Whether to run the PCR amplification step
-* `Run PCR step on deck thermocycler?`: Run the PCR amplification on-deck or on an external thermocycler
+* `Run PCR step on deck thermocycler?`: Run the PCR amplification on the on-deck thermocycler or on an external thermocycler
 * `Run post PCR cleanup step`: Run or skip the post-PCR bead cleanup using AMPure beads
 ---
 
@@ -46,13 +48,12 @@ Explanation of parameters below:
 * [Nest 96 well plate full skirt 100 µL](https://shop.opentrons.com/nest-0-1-ml-96-well-pcr-plate-full-skirt/)
 * [NEST 2 mL 96-Well Deep Well Plate](https://shop.opentrons.com/nest-2-ml-96-well-deep-well-plate-v-bottom/)
 * [NEST 12-Well Reservoirs, 15 mL](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/)
-* Optional: [Eppendorf 96 well plate full skirt](https://online-shop.eppendorf.us/US-en/Laboratory-Consumables-44512/Plates-44516/Eppendorf-twin.tec-PCR-Plates-PF-8180.html?_gl=1*1gk1ehp*#Accessory)
 * [Opentrons aluminum block set](https://shop.opentrons.com/aluminum-block-set/)
 
 ### Pipettes
-* [P300 single-Channel (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
-* [P20 single-Channel (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
-
+* [P300 multi-Channel (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)
+* [P20 multi-Channel (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)
+* [P10 multi-Channel](https://shop.opentrons.com/8-channel-electronic-pipette/)
 **Tips**
 * [Opentrons 20 µL filter tiprack](https://shop.opentrons.com/opentrons-20ul-filter-tips/)
 * [Opentrons 200 µL filter tiprack](https://shop.opentrons.com/opentrons-200ul-filter-tips/)
@@ -65,29 +66,29 @@ Explanation of parameters below:
 ### Deck Setup
 ![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-illumina-dna-prep/v3/deck.jpg)
 
-Slots:
-1. Sample plate: Magnetic module with  Nest 96 well plate full skirt.
-2. Reagent plate 1: NEST 96 deep-well plate 2 mL. See Reagent Setup section for information about the location of the reagents
+Inital slot layout:
+1. Magnetic module for the sample plate (Nest 96 well plate full skirt).
+2. Reservoir: NEST 12-well reservoir 15 mL. This is substituted for a NEST 2 mL deep well plate if tip-reuse is on in order to minimize cross-contamination. See Reagent Setup section for information about the location of the reagents
 3. Reagent plate 2: Temperature module with Bio-rad 200 µL plate on aluminum block. See Reagent Setup section for information about the location of the reagents
 4. 20 µL filter tiprack
 5. 200 µL filter tiprack
 6. 200 µL filter tiprack
-7. Sample plate: Thermocycler module with NEST 96 well plate full skirt 100 µL
+7. Sample plate on Thermocycler module with NEST 96 well plate full skirt 100 µL
 8. Empty
 9. 200 µL filter tiprack
-10. Sample plate: Thermocycler module with NEST 96 well plate full skirt.
+10. Sample plate on Thermocycler module with NEST 96 well plate full (thermocycler uses two slots)
 11. Empty
 
 ### Reagent Setup
-* Reagent plate 1, slot 2:
+* Reservoir, slot 2:
 ![Reagent plate 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-illumina-dna-prep/v3/reagent_plate1.jpg)
-* Reservoir 2, slot 3:
+* Reagent plate on temperature module, slot 3:
 ![Reagent plate 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-illumina-dna-prep/v3/reagent_plate2.jpg)
 
 ---
 
 ### Protocol Steps
-1. Prepares the thermocycler by setting the block temperature to 4 degrees, and the lid to 100 degrees.
+1. Prepare the thermocycler by setting the block temperature to 4 degrees, and the lid to 100 degrees.
 2. Add tagmentation mix to the samples
 3. User seals the plate and the protocol incubates the samples with the mix in the thermocycler, 55 degrees for 15 minutes.
 4. The thermocycler opens, and the user removes the seal.
