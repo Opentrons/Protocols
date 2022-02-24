@@ -50,11 +50,14 @@ def run(ctx: protocol_api.ProtocolContext):
                 for line in csv.splitlines()
                 if line.split(',')[0].strip()][1:]
     print(tuberacks, reagent_rack)
+    p20.flow_rate.aspirate = 0.75*p20.flow_rate.aspirate
+    p20.flow_rate.dispense = 0.75*p20.flow_rate.dispense
+    p1000.flow_rate.aspirate = 0.75*p1000.flow_rate.aspirate
+    p1000.flow_rate.dispense = 0.75*p1000.flow_rate.dispense
 
     # protocol
-
     for row in csv_rows:
-        source_slot, source_well, transfer_vol, dest_slot, dest_well = row[2:7]
+        tube_type, source_slot, source_well, transfer_vol, dest_slot, dest_well = row[1:7]  # noqa: E501
         if int(transfer_vol) > 100:
             pip = p1000
         else:
@@ -64,8 +67,24 @@ def run(ctx: protocol_api.ProtocolContext):
         dest = ctx.loaded_labwares[int(dest_slot)].wells_by_name()[
                                         dest_well]
 
+        if "falcon" and "50" in tube_type.lower():
+            asp_height = 48
+
+        elif pip == p20 and "15" in tube_type.lower():
+            asp_height = 30
+        else:
+            asp_height = 1
+
+        print(asp_height)
+
         pip.pick_up_tip()
-        pip.transfer(int(transfer_vol), source, dest.top(), new_tip='never')
+        pip.transfer(int(transfer_vol),
+                     source.bottom(z=asp_height),
+                     dest.top(),
+                     blowout_location='destination well',
+                     air_gap=5,
+                     touch_tip=True,
+                     new_tip='never')
         pip.blow_out()
         pip.drop_tip()
         ctx.comment('\n')
