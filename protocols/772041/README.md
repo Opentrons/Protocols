@@ -13,7 +13,7 @@ This protocol distributes PCR mastermix from a source NEST 12 well reservoir to 
 Explanation of parameters below:
 * `Number of wells to distribute mastermix to`: How many wells to transfer mastermix to on the target plate. This will be rounded up to the nearest number of full columns.
 * `Volume of mastermix`: Volume of mastermix to add to each well (µL)
-* `Reuse tips?`: Yes: Reuse tips when distributing the mastermix. No: Drop the tips after each distribution, and pick up new tips before each aspiration.ß
+* `Reuse tips?`: Yes: Reuse tips when distributing the mastermix. No: Drop the tips after each distribution, and pick up new tips before each aspiration.
 * `Destination plate`: What type of plate to distribute mastermix to
 
 ---
@@ -21,10 +21,10 @@ Explanation of parameters below:
 ### Labware
 * [NEST 12-Well Reservoirs, 15 mL](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/)
 * [MicroAmp Optical 384-Well Reaction Plate with barcode](https://www.thermofisher.com/order/catalog/product/4309849)
+* [20 µL filter tips](https://shop.opentrons.com/opentrons-20ul-filter-tips/)
 
 ### Pipettes
 * [20 µL multi-channel pipette](https://shop.opentrons.com/8-channel-electronic-pipette/)
-* [20 µL filter tips](https://shop.opentrons.com/opentrons-20ul-filter-tips/)
 
 ### Reagents
 * PCR master-mix in the first well of the source reservoir on slot 1.
