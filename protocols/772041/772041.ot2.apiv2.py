@@ -10,18 +10,6 @@ metadata = {
 }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{
-                                  "n_wells":384,
-                                  "mastermix_volume":15,
-                                  "is_reusing_tips":true,
-                                  "dest_plate_lname":"appliedbiosystems_microamp_optical_384_wellplate_30ul"
-                                  }
-                                  """)
-    return [_all_values[n] for n in names]
-
-
 def run(ctx: protocol_api.ProtocolContext):
     [n_wells,
      mastermix_volume,
