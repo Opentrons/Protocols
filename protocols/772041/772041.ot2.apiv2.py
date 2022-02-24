@@ -15,7 +15,8 @@ def get_values(*names):
     _all_values = json.loads("""{
                                   "n_wells":384,
                                   "mastermix_volume":15,
-                                  "is_reusing_tips":true
+                                  "is_reusing_tips":true,
+                                  "dest_plate_lname":"appliedbiosystems_microamp_optical_384_wellplate_30ul"
                                   }
                                   """)
     return [_all_values[n] for n in names]
@@ -24,14 +25,14 @@ def get_values(*names):
 def run(ctx: protocol_api.ProtocolContext):
     [n_wells,
      mastermix_volume,
-     is_reusing_tips] = get_values(  # noqa: F821
+     is_reusing_tips,
+     dest_plate_lname] = get_values(  # noqa: F821
      "n_wells",
      "mastermix_volume",
-     "is_reusing_tips")
-
+     "is_reusing_tips",
+     "dest_plate_lname")
     # define all custom variables above here with descriptions:
-    source_plate_lname = 'nest_96_wellplate_2ml_deep'
-    dest_plate_lname = 'appliedbiosystems_microamp_optical_384_wellplate_30ul'
+    source_resv_lname = 'nest_12_reservoir_15ml'
     tips_loadname = 'opentrons_96_filtertiprack_20ul'
 
     # load modules
@@ -63,7 +64,7 @@ def run(ctx: protocol_api.ProtocolContext):
     where module_name is defined above.
 
     '''
-    source_plate = ctx.load_labware(source_plate_lname, '1')
+    source_reservoir = ctx.load_labware(source_resv_lname, '1')
     destination_plate = ctx.load_labware(dest_plate_lname, '4')
 
     # load tipracks
@@ -181,7 +182,7 @@ def run(ctx: protocol_api.ProtocolContext):
     dnase = tuberack.wells_by_name()['A4']
 
     '''
-    mastermix = source_plate.wells()[0]
+    mastermix = source_reservoir.wells()[0]
     # plate, tube rack maps
 
     '''
