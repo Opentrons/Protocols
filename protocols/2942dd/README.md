@@ -55,7 +55,7 @@ To purchase tips, reagents, or pipettes, please visit our [online store](https:/
 * [OT-2](https://opentrons.com/ot-2)
 
 ## Process
-1. Use the protocol parameter settings on this page to indicate starting volume and location for the RNase and Tween and upload the input csv file (containing info about plate locations, well locations and volumes for the transfers to be performed-see example for data and file format).
+1. Use the protocol parameter settings on this page to indicate starting volume and location for the RNase and Tween, indicate the number of mix repeats to use, and upload the input csv file (containing info about plate locations, well locations and volumes for the transfers to be performed-see example for data and file format).
 2. Download your protocol.
 3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).
 4. Set up your deck according to the deck map.
