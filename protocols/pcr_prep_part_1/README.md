@@ -16,6 +16,15 @@ Links:
 
 This protocol allows your robot to create a master mix solution using any reagents stored in one or two different types of tube racks, or reservoir well A2 to A12. The master mix will be created in well A1 of the trough. The ingredient information will be provided as a CSV file. See Additional Notes for more details.
 
+Parameters:
+* `right pipette type`: Which single channel pipette to use in the right mount
+* `left pipette type`: Which single channel pipette to use in the left mount
+* `Filter or regular tips`: Use filter tips or non-filtered.
+* `Tuberack 1`: Tuberack 1 for reagents (optional)
+* `Tuberack 2`: Tuberack 2 for reagents (optional)
+* `12-well reservoir`: 12 well reservoir for mastermix target and optionally reagents in well A2-A12
+* `master mix .csv file`: Input csv file (see format below)
+
 ---
 
 ### Labware
