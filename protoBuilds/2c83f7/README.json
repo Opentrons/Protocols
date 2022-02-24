@@ -5,7 +5,7 @@
             "Zymo Kit"
         ]
     },
-    "description": "This protocol performs capsule nucleic acid purification according to the Zymo Research Direct-zol-96 RNA MagPrep kit. This protocol has been updated from this protocol (written with APIv1) to APIv2.\n\n\n\nOpentrons magnetic module\nP300 Multi-channel electronic pipette\nOpentrons 300ul tiprack\nBio-Rad Hardshell 96-Well PCR Plate 200ul #HSP9601\nAxygen 96-Deepwell Plate 2.0ml #P-DW-20-C-S\nAgilent 1 Well Reservoir 290mL #201252-100\nUSA Scientific 12-channel Reservoir 22ml #1061-8150\n\n\n\n12-channel reservoir (deck slot 5)\n* channel 1: magbeads vortexed and added to the reservoir immediately before beginning the protocol run\n* channel 2: DNAse\n* channels 3-5: RNA buffer\n* channels 6-8: magbead wash 1\n* channels 9-11: magbead wash 2\n* channel 12: DNAse/RNAse-free water",
+    "description": "This protocol performs capsule nucleic acid purification according to the Zymo Research Direct-zol-96 RNA MagPrep kit. This protocol has been updated from this protocol (written with APIv1) to APIv2.\n\n\n\nOpentrons magnetic module\nP300 Multi-channel electronic pipette\nOpentrons 300ul tiprack\nBio-Rad Hardshell 96-Well PCR Plate 200ul #HSP9601\nAxygen 96-Deepwell Plate 2.0ml #P-DW-20-C-S\nAgilent 1 Well Reservoir 290mL #201252-100\nUSA Scientific 12-channel Reservoir 22ml #1061-8150\n\n\n\n12-channel reservoir (deck slot 5)\n channel 1: magbeads vortexed and added to the reservoir immediately before beginning the protocol run\n channel 2: DNAse\n channels 3-5: RNA buffer\n channels 6-8: magbead wash 1\n channels 9-11: magbead wash 2\n channel 12: DNAse/RNAse-free water",
     "internal": "2c83f7",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
