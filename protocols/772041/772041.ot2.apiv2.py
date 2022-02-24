@@ -2,7 +2,7 @@ from opentrons import protocol_api
 import math
 
 metadata = {
-    'protocolName': 'Distribution of PCR mastermix to MicroAmp 384 optical well plate',  # noqa: E501
+    'protocolName': 'Distribution of PCR mastermix to MicroAmp 384 optical well plate or other plate',  # noqa: E501
     'author': 'Eskil Andersen <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
@@ -35,6 +35,14 @@ def run(ctx: protocol_api.ProtocolContext):
     source_resv_lname = 'nest_12_reservoir_15ml'
     tips_loadname = 'opentrons_96_filtertiprack_20ul'
 
+    if n_wells < 0 or n_wells > 384:
+        raise Exception("Number of wells parameter is invalid: {}".
+                        format(n_wells))
+    if mastermix_volume < 1:
+        raise Exception("Mastermix volume is too small to pipette")
+    if dest_plate_lname == "x":
+        raise Exception("Mic tube plate is not yet implemented")
+
     # load modules
 
     '''
@@ -66,6 +74,11 @@ def run(ctx: protocol_api.ProtocolContext):
     '''
     source_reservoir = ctx.load_labware(source_resv_lname, '1')
     destination_plate = ctx.load_labware(dest_plate_lname, '4')
+    plate_max_vol = destination_plate.wells()[0].max_volume
+    if plate_max_vol < mastermix_volume:
+        raise Exception(("Mastermix volume {} uL is too large for "
+                        + "the destination plate wells with max volume of "
+                        + "{} uL").format(mastermix_volume, plate_max_vol))
 
     # load tipracks
 
@@ -183,6 +196,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     '''
     mastermix = source_reservoir.wells()[0]
+    waste = source_reservoir.wells()[1]
     # plate, tube rack maps
 
     '''
@@ -229,8 +243,11 @@ def run(ctx: protocol_api.ProtocolContext):
         for well in col[:2]:
             if not is_reusing_tips:
                 m20.pick_up_tip()
+            else:
+                m20.blow_out(waste)
             m20.aspirate(mastermix_volume, mastermix)
             m20.dispense(mastermix_volume, well)
+            m20.touch_tip()
             if not is_reusing_tips:
                 m20.drop_tip()
 

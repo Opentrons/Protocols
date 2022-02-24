@@ -1,4 +1,4 @@
-# Distribution of PCR mastermix to MicroAmp 384 optical well plate
+# Distribution of PCR mastermix to MicroAmp 384 optical well plate or other plate
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -11,7 +11,7 @@
 This protocol distributes PCR mastermix from a source NEST 12 well reservoir to a target Applied Biosystems Microamp optical 384 well 30 µL plate (or other PCR plate) with an 20 µL 8-channel pipette loaded in the left mount. The user can choose how many wells to transfer to (rounding up to the nearest number of columns) as well as how much volume to add to each well. The user can also choose whether they want to reuse tips, or pick up new tips for each transfer.
 
 Explanation of parameters below:
-* `Number of wells`: How many wells to transfer mastermix to on the target plate. This will be rounded up to the nearest number of full columns.
+* `Number of wells to distribute mastermix to`: How many wells to transfer mastermix to on the target plate. This will be rounded up to the nearest number of full columns.
 * `Volume of mastermix`: Volume of mastermix to add to each well (µL)
 * `Reuse tips?`: Yes: Reuse tips when distributing the mastermix. No: Drop the tips after each distribution, and pick up new tips before each aspiration.ß
 * `Destination plate`: What type of plate to distribute mastermix to
@@ -27,22 +27,22 @@ Explanation of parameters below:
 * [20 µL filter tips](https://shop.opentrons.com/opentrons-20ul-filter-tips/)
 
 ### Reagents
-* PCR master-mix in the first well of the source reservoir.
+* PCR master-mix in the first well of the source reservoir on slot 1.
 
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/772041/deck.jpg)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/772041/deck2.jpg)
 
 ### Reagent Setup
 * Source plate: slot 1
-![Source plate](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/772041/source_plate.jpg)
+![Reservoir](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/772041/resv.jpg)
 
 ---
 
 ### Protocol Steps
-1. Pick up tips (or re-use) with the 20 µL multi-channel pipette
-2. Aspirate the chosen volume of mastermix from the source plate
+1. Pick up tips (or re-use tips if a set of tips is already picked up, and the `reuse tips` setting is on) with the 20 µL multi-channel pipette
+2. Aspirate the chosen volume of mastermix from the source reservoir
 3. Distribute mastermix to the target plate
 4. Drop the tips (optional)
 4. Repeat steps 1 to 4 until the mastermix has been distributed to all wells  
