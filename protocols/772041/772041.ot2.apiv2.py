@@ -68,6 +68,12 @@ def run(ctx: protocol_api.ProtocolContext):
                         + "the destination plate wells with max volume of "
                         + "{} uL").format(mastermix_volume, plate_max_vol))
 
+    if n_wells < 0 or n_wells > len(destination_plate.wells()):
+        raise Exception(("Number of wells parameter is invalid: {}, the "
+                         + "maximal number of wells is {} for {}").
+                        format(n_wells, len(destination_plate.wells()),
+                               destination_plate))
+
     # load tipracks
 
     '''
@@ -195,7 +201,8 @@ def run(ctx: protocol_api.ProtocolContext):
     plate_wells_by_row = [well for row in plate.rows() for well in row]
 
     '''
-    n_columns = math.ceil(n_wells/16)
+    n_columns = math.ceil(n_wells/len(destination_plate.columns()[0]))
+    dispenses_per_column = len(destination_plate.columns()[0])//8
     dest_cols = destination_plate.columns()[:n_columns]
 
     # protocol
@@ -226,9 +233,8 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.comment('\n\nDistributing mastermix to the target plate\n')
     if is_reusing_tips:
         m20.pick_up_tip()
-
     for col in dest_cols:
-        for well in col[:2]:
+        for well in col[:dispenses_per_column]:
             if not is_reusing_tips:
                 m20.pick_up_tip()
             else:
