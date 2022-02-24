@@ -1,6 +1,1134 @@
 {
-    "content": "from opentrons import protocol_api\n\nmetadata = {\n    'protocolName': 'Saliva sample transfer from tuberacks to 96 well plate',\n    'author': 'Eskil <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE\n                         # IN SECTION 5.2 OF THE APIV2 \"VERSIONING\"\n}\n\n\ndef run(ctx: protocol_api.ProtocolContext):\n\n    [\n      n_samples_set1,\n      has_second_tube_set,\n      n_samples_set2,\n      sample_aspiration_vol_ul,\n      aspirate_flow_rate,\n      dispense_flow_rate,\n      aspiration_height_mm,\n      dispension_height_mm,\n      temp_mod_lname,\n      temperature,\n      post_aspiration_wait\n    ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)\n                  \"n_samples_set1\",\n                  \"has_second_tube_set\",\n                  \"n_samples_set2\",\n                  \"sample_aspiration_vol_ul\",\n                  \"aspirate_flow_rate\",\n                  \"dispense_flow_rate\",\n                  \"aspiration_height_mm\",\n                  \"dispension_height_mm\",\n                  \"temp_mod_lname\",\n                  \"temperature\",\n                  \"post_aspiration_wait\"\n        )\n\n    if not 1 <= n_samples_set1 <= 48:\n        raise Exception(\n            \"Enter a number of samples for tube set 1 between 1-48\")\n\n    if (not 1 <= n_samples_set2 <= 45) and has_second_tube_set:\n        raise Exception(\n            \"Enter a number of samples for tube set 2 between 1-45\")\n\n    if not 4 <= temperature <= 95:\n        raise Exception(\n            \"Temperature module must be set to a temperature between \" +\n            \"4 and 95 degrees Celsius\")\n\n    p20_lname = 'p20_single_gen2'\n    p300_lname = 'p300_single_gen2'\n    left_pipette_lname = (p20_lname if sample_aspiration_vol_ul < 20\n                          else p300_lname)\n\n    filtered_20_lname = \"opentrons_96_filtertiprack_20ul\"\n    filtered_200_lname = \"opentrons_96_filtertiprack_200ul\"\n    tiprack_lname = (filtered_20_lname if left_pipette_lname == p20_lname\n                     else filtered_200_lname)\n\n    tuberack_lname = 'opentrons_6_tuberack_stellarsci_25ml_conical'\n    well_plate_on_alum_lname = \\\n        \"stellarscientific_96_aluminumblock_100ul\"\n    well_plate_lname = \"stellarscientific_96_wellplate_100ul\"\n    # load modules\n\n    '''\n\n    Add your modules here with:\n\n    module_name = ctx.load_module('{module_loadname}', '{slot number}')\n\n    Note: if you are loading a thermocycler, you do not need to specify\n    a slot number - thermocyclers will always occupy slots 7, 8, 10, and 11.\n\n    For all other modules, you can load them on slots 1, 3, 4, 6, 7, 9, 10.\n\n    '''\n    temp_mod = None\n    if temp_mod_lname:\n        temp_mod = ctx.load_module(\"temperature module gen2\", '3')\n\n    # load labware\n\n    '''\n\n    Add your labware here with:\n\n    labware_name = ctx.load_labware('{loadname}', '{slot number}')\n\n    If loading labware on a module, you can load with:\n\n    labware_name = module_name.load_labware('{loadname}')\n    where module_name is defined above.\n\n    '''\n    tuberacks = [ctx.load_labware(tuberack_lname, slot)\n                 for slot in ['1', '2',\n                              '4', '5',\n                              '7', '8',\n                              '10', '11']]\n\n    plate = None\n    if temp_mod:\n        plate = temp_mod.load_labware(well_plate_on_alum_lname,\n                                      label=\"target plate\")\n    else:\n        plate = ctx.load_labware(well_plate_lname, '3', label=\"target plate\")\n\n    # load tipracks\n\n    '''\n\n    Add your tipracks here as a list:\n\n    For a single tip rack:\n\n    tiprack_name = [ctx.load_labware('{loadname}', '{slot number}')]\n\n    For multiple tip racks of the same type:\n\n    tiprack_name = [ctx.load_labware('{loadname}', 'slot')\n                     for slot in ['1', '2', '3']]\n\n    If two different tipracks are on the deck, use convention:\n    tiprack[number of microliters]\n    e.g. tiprack10, tiprack20, tiprack200, tiprack300, tiprack1000\n\n    '''\n    tiprack = ctx.load_labware(tiprack_lname, '9')\n\n    # load instrument\n\n    '''\n    Nomenclature for pipette:\n\n    use 'p'  for single-channel, 'm' for multi-channel,\n    followed by number of microliters.\n\n    p20, p300, p1000 (single channel pipettes)\n    m20, m300 (multi-channel pipettes)\n\n    If loading pipette, load with:\n\n    ctx.load_instrument(\n                        '{pipette api load name}',\n                        pipette_mount (\"left\", or \"right\"),\n                        tip_racks=tiprack\n                        )\n    '''\n    pipette = ctx.load_instrument(\n                        left_pipette_lname,\n                        \"left\",\n                        tip_racks=[tiprack]\n                        )\n\n    # pipette functions   # INCLUDE ANY BINDING TO CLASS\n\n    '''\n\n    Define all pipette functions, and class extensions here.\n    These may include but are not limited to:\n\n    - Custom pickup functions\n    - Custom drop tip functions\n    - Custom Tip tracking functions\n    - Custom Trash tracking functions\n    - Slow tip withdrawal\n\n    For any functions in your protocol, describe the function as well as\n    describe the parameters which are to be passed in as a docstring below\n    the function (see below).\n    '''\n    def pick_up(pipette):\n        \"\"\"`pick_up()` will pause the protocol when all tip boxes are out of\n        tips, prompting the user to replace all tip racks. Once tipracks are\n        reset, the protocol will start picking up tips from the first tip\n        box as defined in the slot order when assigning the labware definition\n        for that tip box. `pick_up()` will track tips for both pipettes if\n        applicable.\n\n        :param pipette: The pipette desired to pick up tip\n        as definited earlier in the protocol (e.g. p300, m20).\n        \"\"\"\n        try:\n            pipette.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            ctx.pause(\"Replace empty tip racks\")\n            pipette.reset_tipracks()\n            pipette.pick_up_tip()\n\n    # helper functions\n    '''\n    Define any custom helper functions outside of the pipette scope here, using\n    the convention seen above.\n\n    e.g.\n\n    def remove_supernatant(vol, index):\n        \"\"\"\n        function description\n\n        :param vol:\n\n        :param index:\n        \"\"\"\n\n\n    '''\n    def transfer_tube_samples(volume, source_tubes, dest_wells):\n        nonlocal pipette, aspiration_height_mm, dispension_height_mm\n        nonlocal post_aspiration_wait\n\n        for s_well, d_well in zip(source_tubes, dest_wells):\n            pick_up(pipette)\n            pipette.aspirate(sample_aspiration_vol_ul,\n                             s_well.bottom(aspiration_height_mm))\n            ctx.delay(post_aspiration_wait)\n            pipette.dispense(sample_aspiration_vol_ul,\n                             d_well.bottom(dispension_height_mm))\n            pipette.drop_tip()\n\n    # reagents\n\n    '''\n    Define where all reagents are on the deck using the labware defined above.\n\n    e.g.\n\n    water = reservoir12.wells()[-1]\n    waste = reservoir.wells()[0]\n    samples = plate.rows()[0][0]\n    dnase = tuberack.wells_by_name()['A4']\n\n    '''\n\n    # plate, tube rack maps\n\n    '''\n    Define any plate or tube maps here.\n\n    e.g.\n\n    plate_wells_by_row = [well for row in plate.rows() for well in row]\n\n    '''\n    def add_quadrant_wells(list, columns, row_start_index, row_end_index):\n        \"\"\"\n        Adds the wells in the given quadrant(rectangle) defined\n        by the columns and the start and end indices of the rows\n        col 1/row 1 ... col n/row 1\n        .  .            .\n        .       .       .\n        .            .  .\n        col 1/row n ... col n/row n\n        :param list: The list to append the wells in the quadrant to\n        :param colums: The columns that define the \"x\" interval of the quadrant\n        :param row_start_index: defines the start \"y\" interval\n        :param row_end_index: defines the end \"y\" interval\n        \"\"\"\n        for col in columns:\n            for well in col[row_start_index:row_end_index]:\n                list.append(well)\n\n    # Map the target quadrants of the destination plate\n    targ_cols = plate.columns()\n    # Top left quadrant minus first 3 wells:\n    # The rectangle of A1-D1 to A6-D6 minus well A1 to A3\n    target_quadrant_1 = []\n    target_quadrant_1.append(targ_cols[0][3])  # Well D4\n    add_quadrant_wells(target_quadrant_1,\n                       targ_cols[1:6], 0, 4)\n\n    # Top right quadrant: A7-D7 to A12-D12 rectangle\n    target_quadrant_2 = []\n    add_quadrant_wells(target_quadrant_2,\n                       targ_cols[6:12], 0, 4)\n\n    # Bottom left quadrant: E1-H1 to E6-H6 rectangle\n    target_quadrant_3 = []\n    add_quadrant_wells(target_quadrant_3,\n                       targ_cols[0:6], 4, 8)\n\n    # Bottom right quadrant: E7-H7 to E12-H12 rectangle\n    target_quadrant_4 = []\n    add_quadrant_wells(target_quadrant_4,\n                       targ_cols[6:12], 4, 8)\n\n    target_well_map = []\n    for quadrant in [target_quadrant_1, target_quadrant_2, target_quadrant_3,\n                     target_quadrant_4]:\n        for well in quadrant:\n            target_well_map.append(well)\n\n    all_tube_racks = []\n    for tuberack in tuberacks:\n        all_tube_racks.append(tuberack.wells())\n\n    tube_map_set1 = []\n    i = 0\n    for tube_rack in all_tube_racks:\n        for well in tube_rack:\n            i = i + 1\n            tube_map_set1.append(well)\n            if i >= n_samples_set1:\n                break\n\n    tube_map_set2 = []\n    i = 0\n    for tube_rack in all_tube_racks:\n        for well in tube_rack:\n            i = i + 1\n            tube_map_set2.append(well)\n            if i >= n_samples_set2:\n                break\n    # protocol\n\n    '''\n\n    Include header sections as follows for each \"section\" of your protocol.\n\n    Section can be defined as a step in a bench protocol.\n\n    e.g.\n\n    ctx.comment('\\n\\nMOVING MASTERMIX TO SAMPLES IN COLUMNS 1-6\\n')\n\n    for .... in ...:\n        ...\n        ...\n\n    ctx.comment('\\n\\nRUNNING THERMOCYCLER PROFILE\\n')\n\n    ...\n    ...\n    ...\n\n\n    '''\n\n    # Set the pipette aspirate/dispense flow rate\n    pipette.flow_rate.aspirate = aspirate_flow_rate\n    pipette.flow_rate.dispense = dispense_flow_rate\n\n    # Set temperature module temperature\n    if temp_mod:\n        ctx.comment(\"\\n\\nSetting temperature module to {} degrees C\\n\".\n                    format(temperature))\n        temp_mod.set_temperature(temperature)\n\n    # Transfer the first set of tube samples\n    ctx.comment(\"\\n\\nTransferring samples from set 1 to destination plate\\n\")\n    transfer_tube_samples(sample_aspiration_vol_ul, tube_map_set1,\n                          target_well_map[0:n_samples_set1])\n\n    # Transfer the second set of tube samples\n    if has_second_tube_set:\n        ctx.pause(\n            \"\\n\\nRemove the 1st set of tuberacks and insert the 2nd set\\n\")\n        ctx.comment(\n            \"\\n\\nTransferring samples from set 2 to destination plate\\n\")\n        transfer_tube_samples(sample_aspiration_vol_ul, tube_map_set2,\n                              target_well_map[n_samples_set1:\n                                              (n_samples_set1+n_samples_set2)])\n    ctx.comment(\"\\n\\n~~~~ Protocol finished ~~~~\")\n",
+    "content": "from opentrons import protocol_api\n\nmetadata = {\n    'protocolName': 'Saliva sample transfer from tuberacks to 96 well plate',\n    'author': 'Eskil <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE\n                         # IN SECTION 5.2 OF THE APIV2 \"VERSIONING\"\n}\n\n\ndef run(ctx: protocol_api.ProtocolContext):\n\n    [has_first_tube_set,\n     n_samples_set1,\n     has_second_tube_set,\n     n_samples_set2,\n     sample_aspiration_vol_ul,\n     aspirate_flow_rate,\n     dispense_flow_rate,\n     aspiration_height_mm,\n     dispension_height_mm,\n     temp_mod_lname,\n     temperature,\n     post_aspiration_wait] = get_values(  # noqa: F821\n     \"has_first_tube_set\",\n     \"n_samples_set1\",\n     \"has_second_tube_set\",\n     \"n_samples_set2\",\n     \"sample_aspiration_vol_ul\",\n     \"aspirate_flow_rate\",\n     \"dispense_flow_rate\",\n     \"aspiration_height_mm\",\n     \"dispension_height_mm\",\n     \"temp_mod_lname\",\n     \"temperature\",\n     \"post_aspiration_wait\")\n\n    if (not 1 <= n_samples_set1 <= 45) and has_first_tube_set:\n        raise Exception(\n            \"Enter a number of samples for tube set 1 between 1-45\")\n\n    if (not 1 <= n_samples_set2 <= 48) and has_second_tube_set:\n        raise Exception(\n            \"Enter a number of samples for tube set 2 between 1-48\")\n\n    if not 4 <= temperature <= 95:\n        raise Exception(\n            \"Temperature module must be set to a temperature between \" +\n            \"4 and 95 degrees Celsius\")\n\n    p20_lname = 'p20_single_gen2'\n    p300_lname = 'p300_single_gen2'\n\n    filtered_20_lname = \"opentrons_96_filtertiprack_20ul\"\n    filtered_200_lname = \"opentrons_96_filtertiprack_200ul\"\n    tiprack_lname = (filtered_20_lname if sample_aspiration_vol_ul <= 20\n                     else filtered_200_lname)\n\n    tuberack_lname = 'opentrons_6_tuberack_stellarsci_25ml_conical'\n    well_plate_on_alum_lname = \\\n        \"stellarscientific_96_aluminumblock_100ul\"\n    well_plate_lname = \"stellarscientific_96_wellplate_100ul\"\n    # load modules\n\n    '''\n\n    Add your modules here with:\n\n    module_name = ctx.load_module('{module_loadname}', '{slot number}')\n\n    Note: if you are loading a thermocycler, you do not need to specify\n    a slot number - thermocyclers will always occupy slots 7, 8, 10, and 11.\n\n    For all other modules, you can load them on slots 1, 3, 4, 6, 7, 9, 10.\n\n    '''\n    temp_mod = None\n    if temp_mod_lname:\n        temp_mod = ctx.load_module(\"temperature module gen2\", '3')\n\n    # load labware\n\n    '''\n\n    Add your labware here with:\n\n    labware_name = ctx.load_labware('{loadname}', '{slot number}')\n\n    If loading labware on a module, you can load with:\n\n    labware_name = module_name.load_labware('{loadname}')\n    where module_name is defined above.\n\n    '''\n    tuberack_set_1 = [ctx.load_labware(tuberack_lname, slot)\n                      for slot in ['10', '11',\n                                   '7', '8']]\n    tuberack_set_2 = [ctx.load_labware(tuberack_lname, slot)\n                      for slot in ['4', '5',\n                                   '1', '2']]\n\n    plate = None\n    if temp_mod:\n        plate = temp_mod.load_labware(well_plate_on_alum_lname,\n                                      label=\"target plate\")\n    else:\n        plate = ctx.load_labware(well_plate_lname, '3', label=\"target plate\")\n\n    # load tipracks\n\n    '''\n\n    Add your tipracks here as a list:\n\n    For a single tip rack:\n\n    tiprack_name = [ctx.load_labware('{loadname}', '{slot number}')]\n\n    For multiple tip racks of the same type:\n\n    tiprack_name = [ctx.load_labware('{loadname}', 'slot')\n                     for slot in ['1', '2', '3']]\n\n    If two different tipracks are on the deck, use convention:\n    tiprack[number of microliters]\n    e.g. tiprack10, tiprack20, tiprack200, tiprack300, tiprack1000\n\n    '''\n    tiprack = ctx.load_labware(tiprack_lname, '9')\n\n    # load instrument\n\n    '''\n    Nomenclature for pipette:\n\n    use 'p'  for single-channel, 'm' for multi-channel,\n    followed by number of microliters.\n\n    p20, p300, p1000 (single channel pipettes)\n    m20, m300 (multi-channel pipettes)\n\n    If loading pipette, load with:\n\n    ctx.load_instrument(\n                        '{pipette api load name}',\n                        pipette_mount (\"left\", or \"right\"),\n                        tip_racks=tiprack\n                        )\n    '''\n    pipette_condition = sample_aspiration_vol_ul <= 20\n    pipette = ctx.load_instrument(\n                    p20_lname if pipette_condition else p300_lname,\n                    \"right\" if pipette_condition else \"left\",\n                    tip_racks=[tiprack]\n                    )\n    # pipette functions   # INCLUDE ANY BINDING TO CLASS\n\n    '''\n\n    Define all pipette functions, and class extensions here.\n    These may include but are not limited to:\n\n    - Custom pickup functions\n    - Custom drop tip functions\n    - Custom Tip tracking functions\n    - Custom Trash tracking functions\n    - Slow tip withdrawal\n\n    For any functions in your protocol, describe the function as well as\n    describe the parameters which are to be passed in as a docstring below\n    the function (see below).\n    '''\n    def pick_up(pipette):\n        \"\"\"`pick_up()` will pause the protocol when all tip boxes are out of\n        tips, prompting the user to replace all tip racks. Once tipracks are\n        reset, the protocol will start picking up tips from the first tip\n        box as defined in the slot order when assigning the labware definition\n        for that tip box. `pick_up()` will track tips for both pipettes if\n        applicable.\n\n        :param pipette: The pipette desired to pick up tip\n        as definited earlier in the protocol (e.g. p300, m20).\n        \"\"\"\n        try:\n            pipette.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            ctx.pause(\"Replace empty tip racks\")\n            pipette.reset_tipracks()\n            pipette.pick_up_tip()\n\n    # helper functions\n    '''\n    Define any custom helper functions outside of the pipette scope here, using\n    the convention seen above.\n\n    e.g.\n\n    def remove_supernatant(vol, index):\n        \"\"\"\n        function description\n\n        :param vol:\n\n        :param index:\n        \"\"\"\n\n\n    '''\n    def transfer_tube_samples(volume, source_tubes, dest_wells):\n        nonlocal pipette, aspiration_height_mm, dispension_height_mm\n        nonlocal post_aspiration_wait\n\n        for s_well, d_well in zip(source_tubes, dest_wells):\n            pick_up(pipette)\n            pipette.aspirate(sample_aspiration_vol_ul,\n                             s_well.bottom(aspiration_height_mm))\n            ctx.delay(post_aspiration_wait)\n            pipette.dispense(sample_aspiration_vol_ul,\n                             d_well.bottom(dispension_height_mm))\n            pipette.drop_tip()\n\n    # reagents\n\n    '''\n    Define where all reagents are on the deck using the labware defined above.\n\n    e.g.\n\n    water = reservoir12.wells()[-1]\n    waste = reservoir.wells()[0]\n    samples = plate.rows()[0][0]\n    dnase = tuberack.wells_by_name()['A4']\n\n    '''\n\n    # plate, tube rack maps\n\n    '''\n    Define any plate or tube maps here.\n\n    e.g.\n\n    plate_wells_by_row = [well for row in plate.rows() for well in row]\n\n    '''\n    def add_quadrant_wells(rows, col_start_index, col_end_index):\n        \"\"\"\n        Adds the wells in the given quadrant(rectangle) defined\n        by the columns and the start and end indices of the rows\n        col 1/row 1 ... col n/row 1\n        .  .            .\n        .       .       .\n        .            .  .\n        col 1/row n ... col n/row n\n        :param list: The list to append the wells in the quadrant to\n        :param colums: The columns that define the \"x\" interval of the quadrant\n        :param row_start_index: defines the start \"y\" interval\n        :param row_end_index: defines the end \"y\" interval\n        \"\"\"\n        list = []\n        for row in rows:\n            for well in row[col_start_index:col_end_index]:\n                list.append(well)\n        return list\n\n    # Map the target quadrants of the destination plate\n    targ_well_rows = plate.rows()\n    # Top left quadrant\n    # The rectangle of A1-D1 to A6-D6\n    target_quadrant_1 = add_quadrant_wells(targ_well_rows[0:4], 0, 6)\n\n    # Top right quadrant: A7-D7 to A12-D12 rectangle\n    target_quadrant_2 = add_quadrant_wells(targ_well_rows[0:4], 6, 12)\n\n    # Bottom left quadrant: E1-H1 to E6-H6 rectangle\n    target_quadrant_3 = add_quadrant_wells(targ_well_rows[4:8], 0, 6)\n\n    # Bottom right quadrant: E7-H7 to E12-H12 rectangle\n    target_quadrant_4 = add_quadrant_wells(targ_well_rows[4:8], 6, 12)\n\n    def create_tube_list(tuberack_quadrant):\n        \"\"\"\n        Take a quadrant of 4 tuberacks and return a list that goes in\n        row order from the top left rack, top left well to bottom right\n        rack, bottom right well.\n\n        :param tuberack_quadrant: 4 tube-racks laid out in a quadrant on\n        the deck, rack 1: top left, rack 2: top right, rack 3: bottom left,\n        rack 4: bottom right.\n        \"\"\"\n        well_list = []\n        for top_left_row, top_right_row in zip(tuberack_quadrant[0].rows(),\n                                               tuberack_quadrant[1].rows()):\n            for well in top_left_row:\n                well_list.append(well)\n            for well in top_right_row:\n                well_list.append(well)\n        for bot_left_row, bot_right_row in zip(tuberack_quadrant[2].rows(),\n                                               tuberack_quadrant[3].rows()):\n            for well in bot_left_row:\n                well_list.append(well)\n            for well in bot_right_row:\n                well_list.append(well)\n        return well_list\n\n    tuberack_quad_1_map = create_tube_list(tuberack_set_1)\n    tuberack_quad_2_map = create_tube_list(tuberack_set_2)\n    # protocol\n    '''\n\n    Include header sections as follows for each \"section\" of your protocol.\n\n    Section can be defined as a step in a bench protocol.\n\n    e.g.\n\n    ctx.comment('\\n\\nMOVING MASTERMIX TO SAMPLES IN COLUMNS 1-6\\n')\n\n    for .... in ...:\n        ...\n        ...\n\n    ctx.comment('\\n\\nRUNNING THERMOCYCLER PROFILE\\n')\n\n    ...\n    ...\n    ...\n\n\n    '''\n\n    # Set the pipette aspirate/dispense flow rate\n    pipette.flow_rate.aspirate = aspirate_flow_rate\n    pipette.flow_rate.dispense = dispense_flow_rate\n\n    # Set temperature module temperature\n    if temp_mod:\n        ctx.comment(\"\\n\\nSetting temperature module to {} degrees C\\n\".\n                    format(temperature))\n        temp_mod.set_temperature(temperature)\n\n    if has_first_tube_set:\n        # Transfer the first set of tube samples to quadrant 1 of the\n        # 96 well plate, skipping the 3 first wells/tubes for controls\n        ctx.comment(\"\\n\\nTransferring samples from Sample set 1:Tuberack \"\n                    \"quad 1 to Destination quad 1\\n\")\n        n_wells = len(target_quadrant_1) - 3\n        n_quad_transfers = n_wells if n_wells < n_samples_set1 \\\n            else n_samples_set1\n        transfer_tube_samples(sample_aspiration_vol_ul,\n                              tuberack_quad_1_map[3:n_quad_transfers],\n                              target_quadrant_1[3:n_quad_transfers])\n\n        ctx.comment(\"\\n\\nTransferring samples from Sample set 1:Tuberack \"\n                    \"quad 2 to Destination quad 2\\n\")\n        n_wells = len(target_quadrant_2)\n\n        n_quad_transfers = n_samples_set1 - n_quad_transfers\n        transfer_tube_samples(sample_aspiration_vol_ul,\n                              tuberack_quad_2_map[:n_quad_transfers],\n                              target_quadrant_2[:n_quad_transfers])\n\n    # If the first set of tuberacks has to be removed and the 2nd set inserted\n    # then pause here\n    if has_second_tube_set and has_first_tube_set:\n        ctx.pause(\n            \"\\n\\nRemove the 1st set of tuberacks and insert the 2nd set\\n\")\n        ctx.comment(\"\\n\\nTransferring samples from Sample set 2:Tuberack \"\n                    \"quad 1 to Destination quad 3\\n\")\n\n    # Transfer the second set of tube samples\n    if has_second_tube_set:\n        n_wells = len(target_quadrant_3)\n        n_quad_transfers = n_wells if n_wells < n_samples_set2\\\n            else n_samples_set2\n        transfer_tube_samples(sample_aspiration_vol_ul,\n                              tuberack_quad_1_map[:n_quad_transfers],\n                              target_quadrant_3[:n_quad_transfers])\n\n        ctx.comment(\"\\n\\nTransferring samples from Sample set 2:Tuberack \"\n                    \"quad 2 to Destination quad 4\\n\")\n        n_quad_transfers = n_samples_set2 - n_quad_transfers\n        transfer_tube_samples(sample_aspiration_vol_ul,\n                              tuberack_quad_2_map[:n_quad_transfers],\n                              target_quadrant_4[:n_quad_transfers])\n    ctx.comment(\"\\n\\n~~~~ Protocol finished ~~~~\")\n",
     "custom_labware_defs": [
+        {
+            "brand": {
+                "brand": "Stellar Scientific",
+                "brandId": [
+                    "SKU:P96-104"
+                ]
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 127.75,
+                "yDimension": 85.5,
+                "zDimension": 21
+            },
+            "groups": [
+                {
+                    "metadata": {
+                        "displayCategory": "wellPlate",
+                        "wellBottomShape": "v"
+                    },
+                    "wells": [
+                        "A1",
+                        "B1",
+                        "C1",
+                        "D1",
+                        "E1",
+                        "F1",
+                        "G1",
+                        "H1",
+                        "A2",
+                        "B2",
+                        "C2",
+                        "D2",
+                        "E2",
+                        "F2",
+                        "G2",
+                        "H2",
+                        "A3",
+                        "B3",
+                        "C3",
+                        "D3",
+                        "E3",
+                        "F3",
+                        "G3",
+                        "H3",
+                        "A4",
+                        "B4",
+                        "C4",
+                        "D4",
+                        "E4",
+                        "F4",
+                        "G4",
+                        "H4",
+                        "A5",
+                        "B5",
+                        "C5",
+                        "D5",
+                        "E5",
+                        "F5",
+                        "G5",
+                        "H5",
+                        "A6",
+                        "B6",
+                        "C6",
+                        "D6",
+                        "E6",
+                        "F6",
+                        "G6",
+                        "H6",
+                        "A7",
+                        "B7",
+                        "C7",
+                        "D7",
+                        "E7",
+                        "F7",
+                        "G7",
+                        "H7",
+                        "A8",
+                        "B8",
+                        "C8",
+                        "D8",
+                        "E8",
+                        "F8",
+                        "G8",
+                        "H8",
+                        "A9",
+                        "B9",
+                        "C9",
+                        "D9",
+                        "E9",
+                        "F9",
+                        "G9",
+                        "H9",
+                        "A10",
+                        "B10",
+                        "C10",
+                        "D10",
+                        "E10",
+                        "F10",
+                        "G10",
+                        "H10",
+                        "A11",
+                        "B11",
+                        "C11",
+                        "D11",
+                        "E11",
+                        "F11",
+                        "G11",
+                        "H11",
+                        "A12",
+                        "B12",
+                        "C12",
+                        "D12",
+                        "E12",
+                        "F12",
+                        "G12",
+                        "H12"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "aluminumBlock",
+                "displayName": "Stellar Scientific 96 Aluminum Block 100 \u00b5L",
+                "displayVolumeUnits": "\u00b5L",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1",
+                    "B1",
+                    "C1",
+                    "D1",
+                    "E1",
+                    "F1",
+                    "G1",
+                    "H1"
+                ],
+                [
+                    "A2",
+                    "B2",
+                    "C2",
+                    "D2",
+                    "E2",
+                    "F2",
+                    "G2",
+                    "H2"
+                ],
+                [
+                    "A3",
+                    "B3",
+                    "C3",
+                    "D3",
+                    "E3",
+                    "F3",
+                    "G3",
+                    "H3"
+                ],
+                [
+                    "A4",
+                    "B4",
+                    "C4",
+                    "D4",
+                    "E4",
+                    "F4",
+                    "G4",
+                    "H4"
+                ],
+                [
+                    "A5",
+                    "B5",
+                    "C5",
+                    "D5",
+                    "E5",
+                    "F5",
+                    "G5",
+                    "H5"
+                ],
+                [
+                    "A6",
+                    "B6",
+                    "C6",
+                    "D6",
+                    "E6",
+                    "F6",
+                    "G6",
+                    "H6"
+                ],
+                [
+                    "A7",
+                    "B7",
+                    "C7",
+                    "D7",
+                    "E7",
+                    "F7",
+                    "G7",
+                    "H7"
+                ],
+                [
+                    "A8",
+                    "B8",
+                    "C8",
+                    "D8",
+                    "E8",
+                    "F8",
+                    "G8",
+                    "H8"
+                ],
+                [
+                    "A9",
+                    "B9",
+                    "C9",
+                    "D9",
+                    "E9",
+                    "F9",
+                    "G9",
+                    "H9"
+                ],
+                [
+                    "A10",
+                    "B10",
+                    "C10",
+                    "D10",
+                    "E10",
+                    "F10",
+                    "G10",
+                    "H10"
+                ],
+                [
+                    "A11",
+                    "B11",
+                    "C11",
+                    "D11",
+                    "E11",
+                    "F11",
+                    "G11",
+                    "H11"
+                ],
+                [
+                    "A12",
+                    "B12",
+                    "C12",
+                    "D12",
+                    "E12",
+                    "F12",
+                    "G12",
+                    "H12"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "stellarscientific_96_aluminumblock_100ul",
+                "quirks": []
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 14.38,
+                    "y": 74.25,
+                    "z": 5.8
+                },
+                "A10": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 95.38,
+                    "y": 74.25,
+                    "z": 5.8
+                },
+                "A11": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 104.38,
+                    "y": 74.25,
+                    "z": 5.8
+                },
+                "A12": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 113.38,
+                    "y": 74.25,
+                    "z": 5.8
+                },
+                "A2": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 23.38,
+                    "y": 74.25,
+                    "z": 5.8
+                },
+                "A3": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 32.38,
+                    "y": 74.25,
+                    "z": 5.8
+                },
+                "A4": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 41.38,
+                    "y": 74.25,
+                    "z": 5.8
+                },
+                "A5": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 50.38,
+                    "y": 74.25,
+                    "z": 5.8
+                },
+                "A6": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 59.38,
+                    "y": 74.25,
+                    "z": 5.8
+                },
+                "A7": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 68.38,
+                    "y": 74.25,
+                    "z": 5.8
+                },
+                "A8": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 77.38,
+                    "y": 74.25,
+                    "z": 5.8
+                },
+                "A9": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 86.38,
+                    "y": 74.25,
+                    "z": 5.8
+                },
+                "B1": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 14.38,
+                    "y": 65.25,
+                    "z": 5.8
+                },
+                "B10": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 95.38,
+                    "y": 65.25,
+                    "z": 5.8
+                },
+                "B11": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 104.38,
+                    "y": 65.25,
+                    "z": 5.8
+                },
+                "B12": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 113.38,
+                    "y": 65.25,
+                    "z": 5.8
+                },
+                "B2": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 23.38,
+                    "y": 65.25,
+                    "z": 5.8
+                },
+                "B3": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 32.38,
+                    "y": 65.25,
+                    "z": 5.8
+                },
+                "B4": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 41.38,
+                    "y": 65.25,
+                    "z": 5.8
+                },
+                "B5": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 50.38,
+                    "y": 65.25,
+                    "z": 5.8
+                },
+                "B6": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 59.38,
+                    "y": 65.25,
+                    "z": 5.8
+                },
+                "B7": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 68.38,
+                    "y": 65.25,
+                    "z": 5.8
+                },
+                "B8": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 77.38,
+                    "y": 65.25,
+                    "z": 5.8
+                },
+                "B9": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 86.38,
+                    "y": 65.25,
+                    "z": 5.8
+                },
+                "C1": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 14.38,
+                    "y": 56.25,
+                    "z": 5.8
+                },
+                "C10": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 95.38,
+                    "y": 56.25,
+                    "z": 5.8
+                },
+                "C11": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 104.38,
+                    "y": 56.25,
+                    "z": 5.8
+                },
+                "C12": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 113.38,
+                    "y": 56.25,
+                    "z": 5.8
+                },
+                "C2": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 23.38,
+                    "y": 56.25,
+                    "z": 5.8
+                },
+                "C3": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 32.38,
+                    "y": 56.25,
+                    "z": 5.8
+                },
+                "C4": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 41.38,
+                    "y": 56.25,
+                    "z": 5.8
+                },
+                "C5": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 50.38,
+                    "y": 56.25,
+                    "z": 5.8
+                },
+                "C6": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 59.38,
+                    "y": 56.25,
+                    "z": 5.8
+                },
+                "C7": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 68.38,
+                    "y": 56.25,
+                    "z": 5.8
+                },
+                "C8": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 77.38,
+                    "y": 56.25,
+                    "z": 5.8
+                },
+                "C9": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 86.38,
+                    "y": 56.25,
+                    "z": 5.8
+                },
+                "D1": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 14.38,
+                    "y": 47.25,
+                    "z": 5.8
+                },
+                "D10": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 95.38,
+                    "y": 47.25,
+                    "z": 5.8
+                },
+                "D11": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 104.38,
+                    "y": 47.25,
+                    "z": 5.8
+                },
+                "D12": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 113.38,
+                    "y": 47.25,
+                    "z": 5.8
+                },
+                "D2": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 23.38,
+                    "y": 47.25,
+                    "z": 5.8
+                },
+                "D3": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 32.38,
+                    "y": 47.25,
+                    "z": 5.8
+                },
+                "D4": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 41.38,
+                    "y": 47.25,
+                    "z": 5.8
+                },
+                "D5": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 50.38,
+                    "y": 47.25,
+                    "z": 5.8
+                },
+                "D6": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 59.38,
+                    "y": 47.25,
+                    "z": 5.8
+                },
+                "D7": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 68.38,
+                    "y": 47.25,
+                    "z": 5.8
+                },
+                "D8": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 77.38,
+                    "y": 47.25,
+                    "z": 5.8
+                },
+                "D9": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 86.38,
+                    "y": 47.25,
+                    "z": 5.8
+                },
+                "E1": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 14.38,
+                    "y": 38.25,
+                    "z": 5.8
+                },
+                "E10": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 95.38,
+                    "y": 38.25,
+                    "z": 5.8
+                },
+                "E11": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 104.38,
+                    "y": 38.25,
+                    "z": 5.8
+                },
+                "E12": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 113.38,
+                    "y": 38.25,
+                    "z": 5.8
+                },
+                "E2": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 23.38,
+                    "y": 38.25,
+                    "z": 5.8
+                },
+                "E3": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 32.38,
+                    "y": 38.25,
+                    "z": 5.8
+                },
+                "E4": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 41.38,
+                    "y": 38.25,
+                    "z": 5.8
+                },
+                "E5": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 50.38,
+                    "y": 38.25,
+                    "z": 5.8
+                },
+                "E6": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 59.38,
+                    "y": 38.25,
+                    "z": 5.8
+                },
+                "E7": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 68.38,
+                    "y": 38.25,
+                    "z": 5.8
+                },
+                "E8": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 77.38,
+                    "y": 38.25,
+                    "z": 5.8
+                },
+                "E9": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 86.38,
+                    "y": 38.25,
+                    "z": 5.8
+                },
+                "F1": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 14.38,
+                    "y": 29.25,
+                    "z": 5.8
+                },
+                "F10": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 95.38,
+                    "y": 29.25,
+                    "z": 5.8
+                },
+                "F11": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 104.38,
+                    "y": 29.25,
+                    "z": 5.8
+                },
+                "F12": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 113.38,
+                    "y": 29.25,
+                    "z": 5.8
+                },
+                "F2": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 23.38,
+                    "y": 29.25,
+                    "z": 5.8
+                },
+                "F3": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 32.38,
+                    "y": 29.25,
+                    "z": 5.8
+                },
+                "F4": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 41.38,
+                    "y": 29.25,
+                    "z": 5.8
+                },
+                "F5": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 50.38,
+                    "y": 29.25,
+                    "z": 5.8
+                },
+                "F6": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 59.38,
+                    "y": 29.25,
+                    "z": 5.8
+                },
+                "F7": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 68.38,
+                    "y": 29.25,
+                    "z": 5.8
+                },
+                "F8": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 77.38,
+                    "y": 29.25,
+                    "z": 5.8
+                },
+                "F9": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 86.38,
+                    "y": 29.25,
+                    "z": 5.8
+                },
+                "G1": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 14.38,
+                    "y": 20.25,
+                    "z": 5.8
+                },
+                "G10": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 95.38,
+                    "y": 20.25,
+                    "z": 5.8
+                },
+                "G11": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 104.38,
+                    "y": 20.25,
+                    "z": 5.8
+                },
+                "G12": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 113.38,
+                    "y": 20.25,
+                    "z": 5.8
+                },
+                "G2": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 23.38,
+                    "y": 20.25,
+                    "z": 5.8
+                },
+                "G3": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 32.38,
+                    "y": 20.25,
+                    "z": 5.8
+                },
+                "G4": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 41.38,
+                    "y": 20.25,
+                    "z": 5.8
+                },
+                "G5": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 50.38,
+                    "y": 20.25,
+                    "z": 5.8
+                },
+                "G6": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 59.38,
+                    "y": 20.25,
+                    "z": 5.8
+                },
+                "G7": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 68.38,
+                    "y": 20.25,
+                    "z": 5.8
+                },
+                "G8": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 77.38,
+                    "y": 20.25,
+                    "z": 5.8
+                },
+                "G9": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 86.38,
+                    "y": 20.25,
+                    "z": 5.8
+                },
+                "H1": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 14.38,
+                    "y": 11.25,
+                    "z": 5.8
+                },
+                "H10": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 95.38,
+                    "y": 11.25,
+                    "z": 5.8
+                },
+                "H11": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 104.38,
+                    "y": 11.25,
+                    "z": 5.8
+                },
+                "H12": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 113.38,
+                    "y": 11.25,
+                    "z": 5.8
+                },
+                "H2": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 23.38,
+                    "y": 11.25,
+                    "z": 5.8
+                },
+                "H3": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 32.38,
+                    "y": 11.25,
+                    "z": 5.8
+                },
+                "H4": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 41.38,
+                    "y": 11.25,
+                    "z": 5.8
+                },
+                "H5": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 50.38,
+                    "y": 11.25,
+                    "z": 5.8
+                },
+                "H6": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 59.38,
+                    "y": 11.25,
+                    "z": 5.8
+                },
+                "H7": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 68.38,
+                    "y": 11.25,
+                    "z": 5.8
+                },
+                "H8": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 77.38,
+                    "y": 11.25,
+                    "z": 5.8
+                },
+                "H9": {
+                    "depth": 15.2,
+                    "diameter": 6.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 100,
+                    "x": 86.38,
+                    "y": 11.25,
+                    "z": 5.8
+                }
+            }
+        },
         {
             "brand": {
                 "brand": "Stellar Scientific",
@@ -1250,7 +2378,22 @@
     ],
     "fields": [
         {
-            "default": 48,
+            "label": "Is there a first set of tubes?",
+            "name": "has_first_tube_set",
+            "options": [
+                {
+                    "label": "Yes",
+                    "value": true
+                },
+                {
+                    "label": "No",
+                    "value": false
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 45,
             "label": "Number of tubes/samples in the first set of tubes",
             "name": "n_samples_set1",
             "type": "int"
@@ -1271,7 +2414,7 @@
             "type": "dropDown"
         },
         {
-            "default": 45,
+            "default": 48,
             "label": "Number of tubes/samples in the second set of tubes",
             "name": "n_samples_set2",
             "type": "int"

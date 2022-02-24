@@ -32,10 +32,10 @@
   {
     "type": "dropDown",
     "label": "(Optional) Temperature module with aluminum block",
-    "name": "temp_mod_lname",
+    "name": "temp_mod",
     "options": [
       {"label": "No temperature module", "value": false},
-      {"label": "Temperature module + aluminum block ", "value": true}
+      {"label": "Temperature module + plate on aluminum block ", "value": true}
     ]
   },
   {
