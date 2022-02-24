@@ -8,17 +8,15 @@
 	* PCR Prep
 
 ## Description
-This protocol distributes PCR mastermix from a source 96 deep well plate to a target Applied Biosystems Microamp optical 384 well 30 µL plate. The user can choose how many wells to transfer to (rounding up to the nearest number of columns) as well as how much volume to add to each well. The user can also choose whether they want to reuse tips, or pick up new tips for each transfer
+This protocol distributes PCR mastermix from a source NEST 12 well reservoir to a target Applied Biosystems Microamp optical 384 well 30 µL plate (or other PCR plate) with an 20 µL 8-channel pipette loaded in the left mount. The user can choose how many wells to transfer to (rounding up to the nearest number of columns) as well as how much volume to add to each well. The user can also choose whether they want to reuse tips, or pick up new tips for each transfer.
 
 Explanation of parameters below:
 * `Number of wells`: How many wells to transfer mastermix to on the target plate. This will be rounded up to the nearest number of full columns.
 * `Volume of mastermix`: Volume of mastermix to add to each well (µL)
-* `Reuse tips?`: Yes: Reuse tips when distributing the mastermix. No: Drop the tips after each distribution, and pick up new tips before each aspiration.
+* `Reuse tips?`: Yes: Reuse tips when distributing the mastermix. No: Drop the tips after each distribution, and pick up new tips before each aspiration.ß
+* `Destination plate`: What type of plate to distribute mastermix to
 
 ---
-
-### Modules
-* No modules
 
 ### Labware
 * [NEST 12-Well Reservoirs, 15 mL](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/)
@@ -29,7 +27,7 @@ Explanation of parameters below:
 * [20 µL filter tips](https://shop.opentrons.com/opentrons-20ul-filter-tips/)
 
 ### Reagents
-* PCR mastermix in the first column of the source plate (well A1 to H1)
+* PCR master-mix in the first well of the source reservoir.
 
 ---
 
@@ -43,10 +41,10 @@ Explanation of parameters below:
 ---
 
 ### Protocol Steps
-1. Pick up tips with the 20 µL multi-channel pipette
+1. Pick up tips (or re-use) with the 20 µL multi-channel pipette
 2. Aspirate the chosen volume of mastermix from the source plate
 3. Distribute mastermix to the target plate
-4. Drop the tips
+4. Drop the tips (optional)
 4. Repeat steps 1 to 4 until the mastermix has been distributed to all wells  
 
 ### Process
