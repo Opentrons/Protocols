@@ -1,0 +1,141 @@
+{
+    "ordering": [
+        [
+            "A1",
+            "B1"
+        ],
+        [
+            "A2",
+            "B2"
+        ],
+        [
+            "A3",
+            "B3"
+        ],
+        [
+            "A4",
+            "B4"
+        ]
+    ],
+    "brand": {
+        "brand": "custom slide holder",
+        "brandId": []
+    },
+    "metadata": {
+        "displayName": "Custom Slide Holder 8 Well Plate 15000 µL",
+        "displayCategory": "wellPlate",
+        "displayVolumeUnits": "µL",
+        "tags": []
+    },
+    "dimensions": {
+        "xDimension": 127.5,
+        "yDimension": 85.2,
+        "zDimension": 122
+    },
+    "wells": {
+        "A1": {
+            "depth": 20,
+            "totalLiquidVolume": 15000,
+            "shape": "circular",
+            "diameter": 10,
+            "x": 15,
+            "y": 60.2,
+            "z": 102
+        },
+        "B1": {
+            "depth": 20,
+            "totalLiquidVolume": 15000,
+            "shape": "circular",
+            "diameter": 10,
+            "x": 15,
+            "y": 25.2,
+            "z": 102
+        },
+        "A2": {
+            "depth": 20,
+            "totalLiquidVolume": 15000,
+            "shape": "circular",
+            "diameter": 10,
+            "x": 40,
+            "y": 60.2,
+            "z": 102
+        },
+        "B2": {
+            "depth": 20,
+            "totalLiquidVolume": 15000,
+            "shape": "circular",
+            "diameter": 10,
+            "x": 40,
+            "y": 25.2,
+            "z": 102
+        },
+        "A3": {
+            "depth": 20,
+            "totalLiquidVolume": 15000,
+            "shape": "circular",
+            "diameter": 10,
+            "x": 65,
+            "y": 60.2,
+            "z": 102
+        },
+        "B3": {
+            "depth": 20,
+            "totalLiquidVolume": 15000,
+            "shape": "circular",
+            "diameter": 10,
+            "x": 65,
+            "y": 25.2,
+            "z": 102
+        },
+        "A4": {
+            "depth": 20,
+            "totalLiquidVolume": 15000,
+            "shape": "circular",
+            "diameter": 10,
+            "x": 90,
+            "y": 60.2,
+            "z": 102
+        },
+        "B4": {
+            "depth": 20,
+            "totalLiquidVolume": 15000,
+            "shape": "circular",
+            "diameter": 10,
+            "x": 90,
+            "y": 25.2,
+            "z": 102
+        }
+    },
+    "groups": [
+        {
+            "metadata": {
+                "wellBottomShape": "flat"
+            },
+            "wells": [
+                "A1",
+                "B1",
+                "A2",
+                "B2",
+                "A3",
+                "B3",
+                "A4",
+                "B4"
+            ]
+        }
+    ],
+    "parameters": {
+        "format": "irregular",
+        "quirks": [],
+        "isTiprack": false,
+        "isMagneticModuleCompatible": false,
+        "loadName": "customslideholder_8_wellplate_15000ul"
+    },
+    "namespace": "custom_beta",
+    "version": 1,
+    "schemaVersion": 2,
+    "cornerOffsetFromSlot": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+    }
+}
