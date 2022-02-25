@@ -11,9 +11,9 @@ metadata = {
 def run(ctx):
 
     [vol_start_rnase, loc_rnase, vol_start_tween, loc_tween,
-     uploaded_csv] = get_values(  # noqa: F821
+     count_mix, uploaded_csv] = get_values(  # noqa: F821
         "vol_start_rnase", "loc_rnase", "vol_start_tween", "loc_tween",
-        "uploaded_csv")
+        "count_mix", "uploaded_csv")
 
     ctx.set_rail_lights(True)
     ctx.delay(seconds=10)
@@ -67,6 +67,7 @@ def run(ctx):
     # workflow step 1: serum reagent to fluidx tube
     for tfer in tfers:
         if tfer['Quantity of Serum']:
+
             p300s.transfer(
              int(tfer['Quantity of Serum']),
              ctx.loaded_labwares[int(tfer['Deck Position'])].wells_by_name()[
@@ -77,22 +78,32 @@ def run(ctx):
     # workflow step 2: RNaseA to fluidx tube
     for tfer in tfers:
         if tfer['Quantity of Serum']:
+
             v = float(tfer['Quantity of EACH Sterilization Reagent'])
+
             rnase.liq_vol -= v
+            tipheight = liq_height(
+             rnase) - 3 if liq_height(rnase) - 3 > 1 else 1
+
             p20s.transfer(
-             v, rnase.bottom(liq_height(rnase)-3),
+             v, rnase.bottom(tipheight),
              fluidxrack.wells_by_name()[tfer['TubePosition Final']].bottom(1),
              new_tip='always')
 
     # workflow step 3: Tween 20 to fluidx tube
     for tfer in tfers:
         if tfer['Quantity of Serum']:
+
             v = float(tfer['Quantity of EACH Sterilization Reagent'])
+
             tween.liq_vol -= v
+            tipheight = liq_height(
+             tween) - 3 if liq_height(tween) - 3 > 1 else 1
+
             p20s.transfer(
-             v, tween.bottom(liq_height(tween)-3),
+             v, tween.bottom(tipheight),
              fluidxrack.wells_by_name()[tfer['TubePosition Final']].bottom(1),
-             mix_after=(5, 20), new_tip='always')
+             mix_after=(count_mix, 20), new_tip='always')
 
     # workflow step 4: count 30 minutes
     ctx.delay(minutes=30)

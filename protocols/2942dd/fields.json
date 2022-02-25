@@ -24,6 +24,12 @@
     "default": "H11"
   },
   {
+    "type": "int",
+    "label": "Number of Mix Repeats",
+    "name": "count_mix",
+    "default": 5
+  },
+  {
     "type": "textFile",
     "label": "Upload CSV Input File (Upload CSV-formatted Excel File-with formatting of data values and file identical to example)",
     "name": "uploaded_csv",
