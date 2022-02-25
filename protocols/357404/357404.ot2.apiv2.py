@@ -167,6 +167,12 @@ def run(ctx: protocol_api.ProtocolContext):
             pipette.pick_up_tip()
 
     '''
+    def dispense_while_moving(pip, well, vol, steps):
+        """
+        This function dispenses a partial volume = vol/steps and then moves
+        a distance/steps and repeats
+        """
+        pass
 
     # helper functions
     '''
@@ -237,6 +243,8 @@ def run(ctx: protocol_api.ProtocolContext):
     dnase = tuberack.wells_by_name()['A4']
 
     '''
+    # Each slide holder has 8 "wells", each well uses up 100 uL of each
+    # reagent: Block, antibody1, antibody2, nuclear counterstain
     total_reagent_vol = 100 * n_slots * 8
     n_tubes = math.ceil(total_reagent_vol / vol_reagent)
     block = VolTracker(tuberack, 1500, start=1, end=n_tubes)
