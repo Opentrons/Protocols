@@ -1,9 +1,18 @@
 [
   {
     "type": "int",
-    "label": "Number of samples",
+    "label": "Number of samples (1-32)",
     "name": "_num_samp",
-    "default": 64
+    "default": 32
+  },
+  {
+    "type": "dropDown",
+    "label": "Use temperature module?",
+    "name": "_use_temp_mod",
+    "options": [
+      {"label": "Yes, use temperature module", "value": true},
+      {"label": "No, do not use", "value": false}
+    ]
   },
   {
     "type": "dropDown",
