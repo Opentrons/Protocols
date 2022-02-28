@@ -13,10 +13,12 @@ metadata = {
 def run(ctx):
 
     # get parameter values from json above
-    [count_samples, clearance_reservoir, height_engage, time_engage, offset_x,
+    [clearance_bead_resuspension, offset_x_resuspension, count_samples,
+     clearance_reservoir, height_engage, time_engage, offset_x,
      time_dry] = get_values(  # noqa: F821
-      'count_samples', 'clearance_reservoir', 'height_engage', 'time_engage',
-      'offset_x', 'time_dry')
+      'clearance_bead_resuspension', 'offset_x_resuspension', 'count_samples',
+      'clearance_reservoir', 'height_engage', 'time_engage', 'offset_x',
+      'time_dry')
 
     ctx.set_rail_lights(True)
 
@@ -213,8 +215,8 @@ def run(ctx):
         p20m.pick_up_tip()
         p20m.aspirate(13, tris.bottom(clearance_reservoir))
         p20m.dispense(
-         13, column[0].bottom(1).move(types.Point(
-          x={True: -1}.get(not index % 2, 1)*offset_x, y=0, z=0)))
+         13, column[0].bottom(clearance_bead_resuspension).move(types.Point(
+          x={True: -1}.get(not index % 2, 1)*offset_x_resuspension, y=0, z=0)))
         p20m.mix(10, 13)
         p20m.drop_tip()
 
