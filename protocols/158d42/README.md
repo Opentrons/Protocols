@@ -13,7 +13,7 @@ This protocol preps a 96 well PCR plate with up to 64 samples. The order of oper
 
 Explanation of complex parameters below:
 * `Number of tubes (1-32)`: Specify the number of tubes placed in the custom 32-tube tube racks. Tubes should be placed by row, and up down (from slot 7 to slot 4).
-* `Use Temperature Module`: Specify the number of tubes placed in the custom 32-tube tube racks. Tubes should be placed by row, and up down (from slot 7 to slot 4).
+* `Use Temperature Module`: Specify whether or not to use the temperature module at 4C this run. If not, you can place the plate directly on slot 1. 
 * `P300 Mount`: Specify which mount (left or right) to host the P300 single-channel pipette.
 
 ---
