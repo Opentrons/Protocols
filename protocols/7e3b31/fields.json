@@ -44,7 +44,7 @@
   {
     "type": "int",
     "label": "Inaccessible Volume in Bottom of Tube (uL)",
-    "name": "vol_deadtube"
+    "name": "vol_deadtube",
     "default": 10
   },
   {
