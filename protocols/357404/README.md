@@ -7,51 +7,39 @@
 [Partner Name](partner website link)
 
 ## Categories
-* Broader Category
-	* Subcategory (can be the name of a kit when applicable)
+* Sample prep
+	* Microscopy slide antibody staining
 
 ## Description
-This section of the README (especially the first paragraph) should grip a prospective user with the overarching purpose/flow of the protocol, but should not include fine details of the protocol steps themselves.
+This protocol performs immunostaining of slides in a custom 3D printed slide holder with Shandon coverplates.
+Up to 7 slide holders, each with 8 wells can be placed on the deck resulting in the ability to stain up to 56 slides simultaneously.
 
-Example: This is a flexible protocol accommodating a wide range of commercial RNA extraction workflows for COVID-19 sample processing. The protocol is broken down into 5 main parts:
-* binding buffer addition to samples
-* bead wash 3x using magnetic module
-* final elution to chilled PCR plate
-
-Subsequent paragraphs can give some more insight into the details of the protocol, but a step-by-step description should be included in the 'Protocol Steps' section below.
-
-Example: For sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 4) to the elution PCR plate (temperature module, slot 1). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.
-
-Results of the Opentrons Science team's internal testing of this protocol on the OT-2 are shown below:  
-![results](link_to_results.png)
-
-Explanation of complex parameters below:
-* `park tips`: If set to `yes` (recommended), the protocol will conserve tips between reagent addition and removal. Tips will be stored in the wells of an empty rack corresponding to the well of the sample that they access (tip parked in A1 of the empty rack will only be used for sample A1, tip parked in B1 only used for sample B1, etc.). If set to `no`, tips will always be used only once, and the user will be prompted to manually refill tipracks mid-protocol for high throughput runs.
-* `input .csv file`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:
-```
-source,dest,vol
-A1,B1,4
-```
+Explanation of parameters below:
+* `Number of slide blocks`: How many slide holding blocks there are on the deck  
+* `Volume in reagents containers`: How much volume there is in each reagent container (meaning block, antibody 1, antibody 2, and nuclear counterstain)
+* `Do step x`:
+* `Reagent tuberack`: What type of tuberack you wish to use
+* `Pipette offset`: Pipetting offset in mm when dispensing, increasing this parameter will mean that the pipette will dispense at a lower height in the wells
+* `Do a dry run?`: Skip pauses and return tips to their racks after use
 
 ---
 
 ### Modules
 * [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
-* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
-* [Thermocycler Module](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module)
-* [HEPA Module](https://shop.opentrons.com/collections/hardware-modules/products/hepa-module)
 
 ### Labware
-* [Labware name](link to labware on shop.opentrons.com when applicable)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [Opentrons tuberacks](https://shop.opentrons.com/4-in-1-tube-rack-set/)
+* [Agilent 1-Well Reservoir 290 mL](https://labware.opentrons.com/agilent_1_reservoir_290ml)'
 
 ### Pipettes
-* [Pipette name](link to pipette on shop.opentrons.com)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [P300 single-Channel (GEN2)}](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
+* [P1000 single-Channel (GEN2)}](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 
 ### Reagents
-* [kit name when applicable](link to kit)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* Block
+* Antibody 1
+* Antibody 2
+* Nuclear counterstain
 
 ---
 
