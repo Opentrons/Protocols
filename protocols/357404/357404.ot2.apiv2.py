@@ -1,5 +1,7 @@
 from opentrons import protocol_api
-import math
+from opentrons.protocol_api.contexts import InstrumentContext
+from opentrons.protocol_api.labware import Well
+from opentrons.types import Point
 
 metadata = {
     'protocolName': '357404: Slide antibody assay',
@@ -14,10 +16,12 @@ def get_values(*names):
     import json
     _all_values = json.loads("""{
                                   "n_slots":6,
+                                  "n_last_samples":8,
                                   "vol_reagent":1500,
-                                  "n_ab_containers":3,
                                   "do_step_x":true,
-                                  "tuberack_lname":"opentrons_24_aluminumblock_nest_2ml_screwcap"
+                                  "tuberack_lname":"opentrons_24_aluminumblock_nest_2ml_screwcap",
+                                  "pipette_offset":0,
+                                  "is_dry_run":false
                                   }
                                   """)
     return [_all_values[n] for n in names]
@@ -26,21 +30,34 @@ def get_values(*names):
 def run(ctx: protocol_api.ProtocolContext):
 
     [n_slots,
+     n_last_samples,
      vol_reagent,
-     n_ab_containers,
      do_step_x,
-     tuberack_lname] = get_values(  # noqa: F821
+     tuberack_lname,
+     pipette_offset,
+     is_dry_run] = get_values(  # noqa: F821
      "n_slots",
+     "n_last_samples",
      "vol_reagent",
-     "n_ab_containers",
      "do_step_x",
-     "tuberack_lname")
+     "tuberack_lname",
+     "pipette_offset",
+     "is_dry_run")
 
-    slide_holder_lname = 'customslideholder_8_wellplate_15000ul'
+    slide_block_lname = 'customslideblock_8_wellplate'
     slide_slots = [1, 4, 5, 7, 8, 10, 11]
 
     # load modules
     temp_mod = ctx.load_module('temperature module gen2', '3')
+    # verbose = True
+    verbose = False
+
+    if not 0 < n_last_samples < 8:
+        raise Exception("The number of blocks have to be between 1 and 7")
+
+    if not 0 < n_last_samples < 9:
+        raise Exception("The number of samples on the last block have to be"
+                        + "between 1 and 8")
 
     '''
 
@@ -56,13 +73,13 @@ def run(ctx: protocol_api.ProtocolContext):
     '''
 
     # load labware
-    # Labware: 290 mL reservoir, Tuberack for reagents, slide holders
+    # Labware: 290 mL reservoir, Tuberack for reagents, slide blocks
     reservoir = ctx.load_labware('agilent_1_reservoir_290ml', '2')
     tuberack = temp_mod.load_labware(tuberack_lname)
-    slide_holders = []
+    slide_blocks = []
     for slot in slide_slots[:n_slots]:
-        slide_holder = ctx.load_labware(slide_holder_lname, slot)
-        slide_holders.append(slide_holder)
+        slide_block = ctx.load_labware(slide_block_lname, slot)
+        slide_blocks.append(slide_block)
 
     '''
 
@@ -127,7 +144,7 @@ def run(ctx: protocol_api.ProtocolContext):
                               )
     p1000 = ctx.load_instrument(
                               'p1000_single_gen2',
-                              'left',
+                              'right',
                               tip_racks=tiprack_1000
                               )
 
@@ -167,13 +184,23 @@ def run(ctx: protocol_api.ProtocolContext):
             pipette.pick_up_tip()
 
     '''
-    def dispense_while_moving(pip, well, vol, steps):
-        """
-        This function dispenses a partial volume = vol/steps and then moves
-        a distance/steps and repeats
-        """
-        pass
+    def pick_up(pipette):
+        """`pick_up()` will pause the protocol when all tip boxes are out of
+        tips, prompting the user to replace all tip racks. Once tipracks are
+        reset, the protocol will start picking up tips from the first tip
+        box as defined in the slot order when assigning the labware definition
+        for that tip box. `pick_up()` will track tips for both pipettes if
+        applicable.
 
+        :param pipette: The pipette desired to pick up tip
+        as definited earlier in the protocol (e.g. p300, m20).
+        """
+        try:
+            pipette.pick_up_tip()
+        except protocol_api.labware.OutOfTipsError:
+            ctx.pause("Replace empty tip racks")
+            pipette.reset_tipracks()
+            pipette.pick_up_tip()
     # helper functions
     '''
     Define any custom helper functions outside of the pipette scope here, using
@@ -230,8 +257,78 @@ def run(ctx: protocol_api.ProtocolContext):
             if not (mode == 'reagent' or mode == 'waste'):
                 raise Exception('mode must be reagent or waste')
 
-    # reagents
+        def track(self, vol):
+            '''track() will track how much liquid
+            was used up per well. If the volume of
+            a given well is greater than self.well_vol
+            it will remove it from the dictionary and iterate
+            to the next well which will act as the reservoir.'''
+            well = next(iter(self.labware_wells))
+            # Treat plates like reservoirs and add 8 well volumes together
+            vol = vol * 8 if self.pip_type == 'multi' else vol
+            if self.labware_wells[well] + vol >= self.well_vol:
+                del self.labware_wells[well]
+                if len(self.labware_wells) < 1:
+                    ctx.pause(self.msg)
+                    self.labware_wells = self.labware_wells_backup.copy()
+                well = next(iter(self.labware_wells))
+            self.labware_wells[well] += vol
 
+            if self.mode == 'waste':
+                ctx.comment('{}: {} ul of total waste'
+                            .format(well, int(self.labware_wells[well])))
+            else:
+                ctx.comment('{} uL of liquid used from {}'
+                            .format(int(self.labware_wells[well]), well))
+            return well
+
+    def transfer_reagent(pip: InstrumentContext,
+                         vol: float, source: VolTracker, dest: list,
+                         is_dry_run: bool = False, pip_offset: float = 0):
+        max_vol = pip.max_volume
+        vol_backup = vol
+        for well in dest:
+            pick_up(pip)
+            while vol > 0:
+                aspiration_vol = vol if vol < max_vol else max_vol
+                pip.aspirate(aspiration_vol, source.track(aspiration_vol))
+                dispense_while_moving(pip, well, aspiration_vol, 5, verbose,
+                                      pip_offset)
+                vol -= aspiration_vol
+            if is_dry_run:
+                pip.return_tip()
+            else:
+                pip.drop_tip()
+            vol = vol_backup
+
+    def pause(msg: str, pause_period_minutes: int = 60,
+              is_dry_run: bool = False):
+        msg_template = "Incubating slides with {}"
+        dry_run_msg = "(Dry run): "
+        if not is_dry_run:
+            ctx.delay(minutes=pause_period_minutes,
+                      msg=msg_template.format(msg))
+        else:
+            ctx.comment(dry_run_msg + msg.format(msg))
+
+    def dispense_while_moving(pip: InstrumentContext,
+                              well: Well, vol: float, steps: int,
+                              is_verbose: bool = False, pip_offset: float = 0):
+        """
+        This function dispenses a partial volume = vol/steps and then moves
+        a distance/steps and repeats
+        """
+        dy = 18.6/steps
+        dv = vol/steps
+        start_location = well.top().move(Point(0, -8.8, -pip_offset))
+        pip.move_to(start_location)
+        for i in range(steps):
+            loc = start_location.move(Point(0, i*dy, 0))
+            if is_verbose:
+                ctx.comment("Dispensing at: {}".format(loc))
+            pip.dispense(dv, loc)
+
+    # reagents
     '''
     Define where all reagents are on the deck using the labware defined above.
 
@@ -243,24 +340,25 @@ def run(ctx: protocol_api.ProtocolContext):
     dnase = tuberack.wells_by_name()['A4']
 
     '''
-    # Each slide holder has 8 "wells", each well uses up 100 uL of each
+    # Each slide block has 8 "wells", each well uses up 100 uL of each
     # reagent: Block, antibody1, antibody2, nuclear counterstain
-    total_reagent_vol = 100 * n_slots * 8
-    n_tubes = math.ceil(total_reagent_vol / vol_reagent)
-    block = VolTracker(tuberack, 1500, start=1, end=n_tubes)
-    antibody1 = VolTracker(tuberack, 1500, start=n_tubes+1, end=n_tubes*2+1)
-    antibody2 = VolTracker(tuberack, 1500, start=n_tubes*2+1, end=n_tubes*3+1)
+    block = VolTracker(tuberack, vol_reagent, start=1, end=4)
+    antibody1 = VolTracker(tuberack, vol_reagent, start=5, end=8)
+    antibody2 = VolTracker(tuberack, vol_reagent, start=9, end=13)
     # Nuclear counterstain
-    nuc_cstn = VolTracker(tuberack, 1500, start=n_tubes*3+1, end=n_tubes*4+1)
+    nuc_cstn = VolTracker(tuberack, vol_reagent, start=14, end=17)
     pbs = VolTracker(
-        reservoir, 290*10**3, start=1, end=2, mode='reagent',
+        reservoir, 290*10**3, start=1, end=1, mode='reagent',
         pip_type='single', msg="Refill PBS reservoir")
 
     # plate, tube rack maps
     target_wells = []
-    for slide_holder in slide_holders:
-        for well in slide_holder.wells():
+    for slide_block in slide_blocks[:-1]:
+        for well in slide_block.wells():
             target_wells.append(well)
+
+    for i in range(n_last_samples):
+        target_wells.append(slide_blocks[-1].wells()[i])
 
     '''
     Define any plate or tube maps here.
@@ -299,15 +397,28 @@ def run(ctx: protocol_api.ProtocolContext):
     temp_mod.set_temperature(4)
     # Transfer 100 µL of block from the tuberack to each destination well
     # (slide) (could be done as a multi-dispense with the P1000)
+    transfer_reagent(p300, 100, block, target_wells,
+                     is_dry_run, pipette_offset)
     # Pause/Incubate for 1 hour
+    pause("block", is_dry_run=is_dry_run)
     # Transfer 100 µL of primary antibody to dest. wells (slide)
+    transfer_reagent(p300, 100, antibody1, target_wells, pipette_offset)
     # Pause 1 hour
+    pause("Antibody 1", is_dry_run=is_dry_run)
     # Transfer 4 mL of PBS to each slide target well (i.e. 4 round trips)
     # with the P1000
+    transfer_reagent(p1000, 4000, pbs, target_wells, pipette_offset)
     # Transfer 100 µL of the second antibody
+    transfer_reagent(p300, 100, antibody2, target_wells, pipette_offset)
     # Pause 1 hour
-    # Transfer 4 mL of PBS to slide target wells
+    pause("Antibody 2", is_dry_run=is_dry_run)
+    # Wash slides with 4 mL of PBS
+    transfer_reagent(p1000, 4000, pbs, target_wells, pipette_offset)
     # Transfer 100 µL nuclear counterstain to each well
+    transfer_reagent(p300, 100, nuc_cstn, target_wells, pipette_offset)
     # Incubate 5 minutes
-    # Transfer 4 mL PBS
-    # Pause until resume (stop the protocol)
+    pause("Nuclear counterstain", pause_period_minutes=5,
+          is_dry_run=is_dry_run)
+    # Wash slides with 4 mL of PBS
+    transfer_reagent(p1000, 4000, pbs, target_wells, pipette_offset)
+    ctx.comment("\n\n~~~~ End of protocol ~~~~\n")
