@@ -5,8 +5,10 @@ import tkinter as tk
 from tkinter import filedialog as fd
 from tkinter import *
 
-template_directory = '\\\\us17filp002\\production_data\\DNA\\Application_Data\\Lab\\RedoReplacement'
-output_directory = '\\\\us17filp002\\production_data\\DNA\\Application_Data\\Lab\\RedoReplacement\\RunFiles'
+# template_directory = '\\\\us17filp002\\production_data\\DNA\\Application_Data\\Lab\\RedoReplacement'
+# output_directory = '\\\\us17filp002\\production_data\\DNA\\Application_Data\\Lab\\RedoReplacement\\RunFiles'
+template_directory = '/Users/nickdiehl/protocols/protocol-supplements/121d15-2'
+output_directory = '/Users/nickdiehl/protocols/protocol-supplements/121d15-2'
 
 enter_loop = True
 root = tk.Tk()
@@ -14,19 +16,19 @@ root.geometry("800x400")
 plate1_file_prompt = tk.Label(root, text='plate 1 file')
 plate1_scan_prompt = tk.Label(root, text='plate 1 scan')
 plate1_scan = tk.Entry(root)
-plate1_scan.insert(0, 'REPLACE WITH SCAN_XXX')
+plate1_scan.insert(0, '')
 plate1_status = tk.Label(root, text='')
 tuberack1_scan_prompt = tk.Label(root, text='tuberack 1 scan')
 tuberack1_scan = tk.Entry(root)
-tuberack1_scan.insert(0, 'REPLACE WITH SCAN_XXX')
+tuberack1_scan.insert(0, '')
 plate2_file_prompt = tk.Label(root, text='plate 2 file')
 plate2_scan_prompt = tk.Label(root, text='plate 2 scan')
-plate2_scan = tk.Entry(root, text='REPLACE WITH SCAN_XXX')
-plate2_scan.insert(0, 'REPLACE WITH SCAN_XXX')
+plate2_scan = tk.Entry(root, text='')
+plate2_scan.insert(0, '')
 plate2_status = tk.Label(root, text='')
 tuberack2_scan_prompt = tk.Label(root, text='tuberack 2 scan')
 tuberack2_scan = tk.Entry(root)
-tuberack2_scan.insert(0, 'REPLACE WITH SCAN_XXX')
+tuberack2_scan.insert(0, '')
 volume_prompt = tk.Label(root, text='volume (in ul)')
 volume = tk.Entry(root)
 volume.insert(0, '200')
@@ -121,7 +123,7 @@ def end():
     if plate1_status['text'] != '':
         if plate2_status['text'] != '':
             name_part_1 = plate1_status['text'].split('.txt')[0].split('\\')[-1]
-            name_part_2 = plate2_status.split('.txt')[0].split('\\')[-1]
+            name_part_2 = plate2_status['text'].split('.txt')[0].split('\\')[-1]
             outfile_name = f"{name_part_1}-{name_part_2}.py"
             content1 = extract_csv_contents(plate1_status['text'], 'input_file')
             content2 = extract_csv_contents(plate2_status['text'], 'input_file2')
@@ -135,9 +137,9 @@ def end():
             content1 = extract_csv_contents(plate1_status['text'], 'input_file')
             content2 = ['input_file2 = ""']
             plate1_info = [f"plate_scan = '{plate1_scan.get()}'"]
-            plate2_info = ["plate_scan2 = 'REPLACE WITH SCAN_XXX'"]
+            plate2_info = ["plate_scan2 = ''"]
             tuberack1_info = [f"tuberack_scan1 = '{tuberack1_scan.get()}'"]
-            tuberack2_info = ["tuberack_scan2 = 'REPLACE WITH SCAN_XXX'"]
+            tuberack2_info = ["tuberack_scan2 = ''"]
 
         if dropdown_value.get() == 'Select plate type':
             status['text'] = 'Please select plate type'
