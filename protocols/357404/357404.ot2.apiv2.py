@@ -1,9 +1,10 @@
 from opentrons import protocol_api
 from opentrons.protocol_api.contexts import InstrumentContext
-from opentrons.protocol_api.labware import Well
+from opentrons.protocol_api.labware import Well, Labware
 from opentrons.types import Point
 import math
 import time
+
 
 metadata = {
     'protocolName': '357404: Slide sample antibody staining',
@@ -12,6 +13,23 @@ metadata = {
     'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
                          # IN SECTION 5.2 OF THE APIV2 "VERSIONING"
 }
+
+
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{
+                                  "n_slots":7,
+                                  "n_last_samples":8,
+                                  "vol_reagent":1500,
+                                  "dispense_steps":5,
+                                  "is_start_after_1st_incbn":false,
+                                  "is_stop_after_1st_incbn":false,
+                                  "tuberack_lname":"opentrons_24_aluminumblock_nest_2ml_screwcap",
+                                  "pipette_offset":0,
+                                  "is_dry_run":false
+                                  }
+                                  """)
+    return [_all_values[n] for n in names]
 
 
 def run(ctx: protocol_api.ProtocolContext):
@@ -229,11 +247,12 @@ def run(ctx: protocol_api.ProtocolContext):
 
     '''
     class VolTracker:
-        def __init__(self, labware, well_vol,
-                     start=1, end=8,
-                     mode='reagent',
-                     pip_type='single',
-                     msg='Reset labware volumes'):
+        def __init__(self, labware: Labware,
+                     well_vol: float = 0,
+                     start: int = 1, end: int = 8,
+                     mode: str = 'reagent',
+                     pip_type: str = 'single',
+                     msg: str = 'Refill labware volumes'):
             """
             Voltracker tracks the volume(s) used in a piece of labware
 
@@ -274,11 +293,11 @@ def run(ctx: protocol_api.ProtocolContext):
             opposite_state = not initial_light_state
             for _ in range(5):
                 ctx.set_rail_lights(opposite_state)
-                time.sleep(0.5)
+                ctx.delay(seconds=0.5)
                 ctx.set_rail_lights(initial_light_state)
-                time.sleep(0.5)
+                ctx.delay(seconds=0.5)
 
-        def track(self, vol):
+        def track(self, vol: float) -> Well:
             '''track() will track how much liquid
             was used up per well. If the volume of
             a given well is greater than self.well_vol
@@ -332,9 +351,9 @@ def run(ctx: protocol_api.ProtocolContext):
         opposite_state = not initial_light_state
         for _ in range(5):
             ctx.set_rail_lights(opposite_state)
-            time.sleep(0.5)
+            ctx.delay(seconds=0.5)
             ctx.set_rail_lights(initial_light_state)
-            time.sleep(0.5)
+            ctx.delay(seconds=0.5)
 
     def pause(msg: str, time_elapsed_sec: float = 0,
               pause_period_minutes: int = 60, is_dry_run: bool = False):
