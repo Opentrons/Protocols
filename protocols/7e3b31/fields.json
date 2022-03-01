@@ -1,11 +1,5 @@
 [
   {
-    "type": "float",
-    "label": "Aspirate Volume for Initial RNA Sample (uL)",
-    "name": "vol_samples",
-    "default": 10
-  },
-  {
     "type": "int",
     "label": "Number of Samples (8-48)",
     "name": "count_samples",
@@ -19,7 +13,7 @@
   },
   {
     "type": "float",
-    "label": "Well Bottom Clearance for Strip Tubes (mm)",
+    "label": "Well Bottom Clearance for Deep Well Plate (mm)",
     "name": "clearance_striptubes",
     "default": 1
   },
@@ -43,9 +37,9 @@
   },
   {
     "type": "int",
-    "label": "Inaccessible Volume in Bottom of Tube (uL)",
-    "name": "vol_deadtube",
-    "default": 10
+    "label": "Inaccessible Volume in Bottom of Deep Well (uL)",
+    "name": "vol_deaddeepwell",
+    "default": 25
   },
   {
     "type": "float",
