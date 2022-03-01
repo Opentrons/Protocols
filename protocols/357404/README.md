@@ -8,16 +8,16 @@
 	* Microscopy slide antibody staining
 
 ## Description
-This protocol performs immunostaining of slides in a custom 3D printed slide holder with Shandon coverplates.
-Up to 7 slide holders, each with 8 wells can be placed on the deck resulting in the ability to stain up to 56 slides simultaneously.
+This protocol performs immunostaining of slides in a custom 3D printed slide block with Shandon coverplates.
+Up to 7 slide blocks, each with 8 wells can be placed on the deck resulting in the ability to stain up to 56 slides simultaneously.
 
 Pipette racks and reagents may have to be replaced during the run depending on the number of samples. If that happens the lights of the OT-2 will flash to indicate that the protocol requires the users attention.
 
 Explanation of parameters below:
 * `Number of slide blocks`: How many slide holding blocks there are on the deck. The maximum number that will fit on the deck are 7
 * `Number of samples in the last block`: All slide blocks except the last one are expected to be full, however the last block may have a number of samples between 1 and 8
-* `Volume in reagents containers`: How much volume (µL) there is in each reagent container (meaning block, antibody 1, antibody 2, and nuclear counterstain
-* `Sweep dispense steps`: How many discrete step motions + dispenses to do when dispensing reagents and PBS, this is designed to replicate a sweeping motion with a manual pipette while dispensing.
+* `Volume in reagents containers`: How much volume (µL) there is in each reagent container (meaning block, antibody 1, antibody 2, and nuclear counterstain).
+* `Sweep dispense steps`: How many discrete step motions + dispenses to do when dispensing reagents and PBS, this is designed to replicate a sweeping motion with a manual pipette while dispensing. For example if the parameter is set to 5 the pipette will cover the length of the Shandon coverplate mouth in 5 steps and dispense a 5th of the total dispense volume each time.
 * `Reagent tuberack`: What type of tuberack you wish to use for the reagents (block, the antibodies and the nuclear counterstain)
 * `Pipette offset`: Pipetting offset in `millimeter` when dispensing, increasing this parameter will mean that the pipette will dispense at a lower height in the wells. **This parameter must be adjusted carefully so that there are no collisions between the pipette tip and the Shandon coverplates!**
 * `Start protocol after 1st incubation step`: Starts the protocol at the step after the samples have already been incubated with `block`
@@ -31,7 +31,7 @@ Explanation of parameters below:
 
 ### Labware
 * [Opentrons tuberacks](https://shop.opentrons.com/4-in-1-tube-rack-set/)
-* [Agilent 1-Well Reservoir 290 mL](https://labware.opentrons.com/agilent_1_reservoir_290ml)'
+* [Agilent 1-Well Reservoir 290 mL](https://labware.opentrons.com/agilent_1_reservoir_290ml)
 * [1000 uL tipracks](https://shop.opentrons.com/opentrons-1000-l-tips/)
 * [300 uL tipracks](https://shop.opentrons.com/opentrons-300ul-tips-1000-refills/)
 
@@ -40,6 +40,10 @@ Explanation of parameters below:
 * [P1000 single-Channel (GEN2)}](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 
 ### Reagents
+290 mL reservoir on slot 2:
+* PBS
+
+Reagent tuberack on slot 3:
 * Block
 * Antibody 1
 * Antibody 2
@@ -48,15 +52,11 @@ Explanation of parameters below:
 ---
 
 ### Deck Setup
-* If the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/357404/deck.jpg)
 
 ### Reagent Setup
-* This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:
-* Reservoir 1: slot 2
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res1_v2.png)
-* Reservoir 2: slot 2  
-![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res2.png)
+* Reservoir 2: slot 3
+![Reagent reservoir](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/357404/reagent_tuberack.jpg)
 
 ---
 
