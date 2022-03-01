@@ -13,7 +13,6 @@ metadata = {
                          # IN SECTION 5.2 OF THE APIV2 "VERSIONING"
 }
 
-
 def run(ctx: protocol_api.ProtocolContext):
 
     [n_slots,
@@ -301,7 +300,8 @@ def run(ctx: protocol_api.ProtocolContext):
 
     def transfer_reagent(pip: InstrumentContext,
                          vol: float, source: VolTracker, dest: list,
-                         is_dry_run: bool = False, pip_offset: float = 0):
+                         is_dry_run: bool = False, pip_offset: float = 0,
+                         steps: int = 5):
         max_vol = pip.max_volume
         vol_backup = vol
         for well in dest:
@@ -309,8 +309,8 @@ def run(ctx: protocol_api.ProtocolContext):
             while vol > 0:
                 aspiration_vol = vol if vol < max_vol else max_vol
                 pip.aspirate(aspiration_vol, source.track(aspiration_vol))
-                dispense_while_moving(pip, well, aspiration_vol, 5, verbose,
-                                      pip_offset)
+                dispense_while_moving(pip, well, aspiration_vol, steps,
+                                      verbose, pip_offset)
                 vol -= aspiration_vol
             if is_dry_run:
                 pip.return_tip()
@@ -448,7 +448,8 @@ def run(ctx: protocol_api.ProtocolContext):
         ctx.comment("\n\nAdding block reagent\n")
         t = time.time()
         transfer_reagent(p300, 100, block, target_wells,
-                         is_dry_run, pipette_offset)
+                         is_dry_run, pipette_offset,
+                         steps=dispense_steps)
         # Pause/Incubate for 1 hour
         if is_stop_after_1st_incbn:
             ctx.comment("\n\nStopping protocol after 1st incubation")
@@ -467,7 +468,8 @@ def run(ctx: protocol_api.ProtocolContext):
     # Transfer 100 µL of primary antibody to dest. wells (slide)
     t = time.time()
     ctx.comment("\n\nAdding Antibody 1 reagent\n")
-    transfer_reagent(p300, 100, antibody1, target_wells, pipette_offset)
+    transfer_reagent(p300, 100, antibody1, target_wells, pipette_offset,
+                     steps=dispense_steps)
     # Pause 1 hour
     dt = time.time() - t
     if verbose:
@@ -476,11 +478,13 @@ def run(ctx: protocol_api.ProtocolContext):
     # Transfer 4 mL of PBS to each slide target well (i.e. 4 round trips)
     # with the P1000 (Slide wash)
     ctx.comment("\n\nWashing slides with PBS\n")
-    transfer_reagent(p1000, 4000, pbs, target_wells, pipette_offset)
+    transfer_reagent(p1000, 4000, pbs, target_wells, pipette_offset,
+                     steps=dispense_steps)
     # Transfer 100 µL of the second antibody
     t = time.time()
     ctx.comment("\n\nAdding Antibody 2 reagent\n")
-    transfer_reagent(p300, 100, antibody2, target_wells, pipette_offset)
+    transfer_reagent(p300, 100, antibody2, target_wells, pipette_offset,
+                     steps=dispense_steps)
     # Pause 1 hour
     dt = time.time() - t
     if verbose:
@@ -488,11 +492,13 @@ def run(ctx: protocol_api.ProtocolContext):
     pause("Antibody 2", time_elapsed_sec=dt, is_dry_run=is_dry_run)
     # Wash slides with 4 mL of PBS
     ctx.comment("\n\nWashing slides with PBS\n")
-    transfer_reagent(p1000, 4000, pbs, target_wells, pipette_offset)
+    transfer_reagent(p1000, 4000, pbs, target_wells, pipette_offset,
+                     steps=dispense_steps)
     # Transfer 100 µL nuclear counterstain to each well
     t = time.time()
     ctx.comment("\n\nAdding Nuclear counterstain reagent\n")
-    transfer_reagent(p300, 100, nuc_cstn, target_wells, pipette_offset)
+    transfer_reagent(p300, 100, nuc_cstn, target_wells, pipette_offset,
+                     steps=dispense_steps)
     # Incubate 5 minutes
     dt = time.time() - t
     if verbose:
@@ -501,5 +507,6 @@ def run(ctx: protocol_api.ProtocolContext):
           is_dry_run=is_dry_run, time_elapsed_sec=dt)
     # Wash slides with 4 mL of PBS
     ctx.comment("\n\nWashing slides with PBS\n")
-    transfer_reagent(p1000, 4000, pbs, target_wells, pipette_offset)
+    transfer_reagent(p1000, 4000, pbs, target_wells, pipette_offset,
+                     steps=dispense_steps)
     ctx.comment("\n\n~~~~ End of protocol ~~~~\n")
