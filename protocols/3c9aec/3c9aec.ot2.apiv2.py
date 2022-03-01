@@ -47,7 +47,7 @@ def run(ctx: protocol_api.ProtocolContext):
     """ TIP-TRACKING BETWEEN RUNS """
     total_tip_cols = 36
 
-    file_path = '/Users/work/Desktop/Tasdfasddsd.json'
+    file_path = '/data/csv/tiptracking.json'
     file_dir = os.path.dirname(file_path)
 
     tips_by_col = [tip for rack in tipracks
