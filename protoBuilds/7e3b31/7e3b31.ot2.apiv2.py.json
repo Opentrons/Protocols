@@ -1,0 +1,132 @@
+{
+    "content": "import string\nimport math\nfrom opentrons.protocol_api.labware import OutOfTipsError, Well\n# import from python types module\nfrom types import MethodType\n# import opentrons.types\nfrom opentrons import types\n\nmetadata = {\n    'protocolName': '''Illumina TruSeq stranded mRNA Sample Prep,\n    LT LS Protocol: part 1 -\n    polyA mRNA Isolation and cDNA synthesis''',\n    'author': 'Steve Plonk <protocols@opentrons.com>',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx):\n\n    # get parameter values from json above\n    [count_samples, clearance_reservoir, clearance_striptubes,\n     time_engage, time_dry, vol_deadreservoir, vol_deaddeepwell, tip_immersion,\n     x_offset_bead_pellet] = get_values(  # noqa: F821\n      'count_samples', 'clearance_reservoir',\n      'clearance_striptubes', 'time_engage', 'time_dry', 'vol_deadreservoir',\n      'vol_deaddeepwell', 'tip_immersion', 'x_offset_bead_pellet')\n\n    ctx.set_rail_lights(True)\n    ctx.delay(seconds=10)\n\n    if not 8 <= count_samples <= 48:\n        raise Exception('Invalid number of samples (must be 8-48).')\n\n    if not 0.05 <= tip_immersion <= 0.15:\n        raise Exception(\n         'Degree of tip immersion out of range (must be 0.05-0.15).')\n\n    num_cols = math.ceil(count_samples / 8)\n\n    # tips, p20 multi gen2, p300 multi gen2\n    tips20 = [ctx.load_labware(\n     \"opentrons_96_filtertiprack_20ul\", str(slot)) for slot in [3]]\n    p20m = ctx.load_instrument(\n        \"p20_multi_gen2\", 'left', tip_racks=tips20)\n    tips300 = [\n     ctx.load_labware(\n      \"opentrons_96_filtertiprack_200ul\", str(slot)) for slot in [6, 9]]\n    p300m = ctx.load_instrument(\n        \"p300_multi_gen2\", 'right', tip_racks=tips300)\n\n    # labware, thermocycler module, magnetic module\n    reservoir = ctx.load_labware(\n     'usascientific_12_reservoir_22ml', '2', 'Reservoir')\n    reagents = ctx.load_labware(\n     'nest_96_wellplate_2ml_deep', '5', 'Reagents')\n    samples = ctx.load_labware(\n     'biorad_96_wellplate_200ul_pcr', '4', 'RNA Samples')\n\n    cycler = ctx.load_module('thermocycler')\n    cycler.open_lid()\n    cycler_plate = cycler.load_labware(\n     'biorad_96_wellplate_200ul_pcr')\n    cycler.set_block_temperature(4)\n\n    mag = ctx.load_module('magnetic module gen2', '1')\n    mag.disengage()\n    mag_plate = mag.load_labware(\n     'biorad_96_wellplate_200ul_pcr', 'Mag Plate')\n\n    \"\"\"\n    module - extension of pipettes, labware and wells *************************\n    \"\"\"\n\n    # extended well class for liquid volume and height tracking\n    class WellH(Well):\n        def __init__(self, well, min_height=5, comp_coeff=1.15,\n                     current_volume=0):\n            super().__init__(well._impl)\n            self.well = well\n            # specified minimum well bottom clearance\n            self.min_height = min_height\n            self.comp_coeff = comp_coeff\n            # specified starting volume in ul\n            self.current_volume = current_volume\n            # cross sectional area\n            if self.diameter is not None:\n                self.radius = self.diameter/2\n                cse = math.pi*(self.radius**2)\n            elif self.length is not None:\n                cse = self.length*self.width\n            else:\n                cse = None\n            self.cse = cse\n            # initial liquid level in mm from start vol\n            if cse:\n                self.height = (current_volume/cse)\n            else:\n                raise Exception(\"\"\"Labware definition must\n                supply well radius or well length and width.\"\"\")\n            if self.height < min_height:\n                self.height = min_height\n            elif self.height > well.parent.highest_z:\n                raise Exception(\"\"\"Specified liquid volume\n                can not exceed the height of the labware.\"\"\")\n\n        def height_dec(self, vol, ppt, bottom=False):\n            # decrement height (mm)\n            dh = (vol/self.cse)*self.comp_coeff\n            # tip immersion (mm) as fraction of tip length\n            mm_immersed = tip_immersion*ppt._tip_racks[0].wells()[0].depth\n            # decrement til target reaches specified min clearance\n            self.height = self.height - dh if (\n             (self.height - dh - mm_immersed) > self.min_height\n             ) else self.min_height\n            self.current_volume = self.current_volume - vol if (\n             self.current_volume - vol > 0) else 0\n            tip_ht = self.height if bottom is False else bottom\n            return(self.well.bottom(tip_ht))\n\n        def height_inc(self, vol, top=False):\n            # increment height (mm)\n            ih = (vol/self.cse)*self.comp_coeff\n            # keep calculated liquid ht between min clearance and well depth\n            self.height = self.min_height if (\n             self.height < self.min_height\n             ) else (self.height + ih) if (\n             (self.height + ih) < self.depth\n             ) else self.depth\n            # increment\n            self.current_volume += vol\n            if top is False:\n                tip_ht = self.height\n                return(self.well.bottom(tip_ht))\n            else:\n                return(self.well.top())\n\n    # additional methods for labware\n\n    def instantiate_wells_h(self, clearance):\n        self.wells_h_list = []\n        for well in self.wells():\n            vol = starting_volume.get(well, 0)\n            new = WellH(well, min_height=clearance, current_volume=vol)\n            self.wells_h_list.append(new)\n\n    def wells_h(self):\n        return self.wells_h_list\n\n    def wells_by_name_h(self):\n        return {well.well_name: well for well in self.wells_h_list}\n\n    def rows_by_name_h(self):\n        return {\n         row: [well for well in self.wells_h_list if well.well_name[0] == row\n               ] for row in [*string.ascii_uppercase][:len(self.rows())]}\n\n    def columns_by_name_h(self):\n        return {\n         column: [well for well in self.wells_h_list if well.well_name[\n          1:] == column] for column in [str(num+1) for num in range(\n           len(self.columns()))]}\n\n    def columns_h(self):\n        return [\n         [well for well in self.wells_h_list if well.well_name[1:] == column\n          ] for column in [str(num+1) for num in range(len(self.columns()))]]\n\n    def rows_h(self):\n        return [\n         [well for well in self.wells_h_list if well.well_name[0] == row\n          ] for row in [*string.ascii_uppercase][:len(self.rows())]]\n\n    # additional methods for pipettes\n\n    def aspirate_h(self, vol, source, rate=1, bottom=False):\n        self.aspirate(\n         vol, source.height_dec(vol, self, bottom=bottom), rate=rate)\n\n    def dispense_h(self, vol, dest, rate=1, top=False):\n        self.dispense(vol, dest.height_inc(vol, top=top), rate=rate)\n\n    def pick_up_or_refill(self):\n        try:\n            self.pick_up_tip()\n        except OutOfTipsError:\n            self.move_to(ctx.loaded_labwares[4].wells()[0].top().move(\n             types.Point(x=0, y=0, z=100)))\n            ctx.pause(\n             \"\"\"Please Refill the {} Tip Boxes\n                and Empty the Tip Waste.\"\"\".format(self))\n            self.reset_tipracks()\n            self.pick_up_tip()\n\n    def slow_tip_withdrawal(\n     self, speed_limit, well_location, to_surface=False):\n        if self.mount == 'right':\n            axis = 'A'\n        else:\n            axis = 'Z'\n        previous_limit = None\n        if axis in ctx.max_speeds.keys():\n            for key, value in ctx.max_speeds.items():\n                if key == axis:\n                    previous_limit = value\n        ctx.max_speeds[axis] = speed_limit\n        if to_surface is False:\n            self.move_to(well_location.top())\n        else:\n            if isinstance(well_location, WellH):\n                self.move_to(well_location.bottom().move(types.Point(\n                 x=0, y=0, z=well_location.height+(20*(self._tip_racks[\n                  0].wells()[0].depth / 88)))))\n            else:\n                self.move_to(well_location.center())\n        ctx.max_speeds[axis] = previous_limit\n\n    def delay(self, delay_time):\n        ctx.delay(seconds=delay_time)\n\n    def blow_out_solvent(self, well_location, reps=1, touch=False):\n        for rep in range(reps):\n            if rep > 0:\n                self.aspirate(self.max_volume, well_location.top())\n            self.delay(0.5)\n            self.blow_out(well_location.top())\n        if touch is True:\n            self.touch_tip(radius=0.75, v_offset=-2, speed=20)\n\n    \"\"\"\n    end module - extended pipettes, labware, wells ***********************\n    \"\"\"\n\n    for labware_object in [reservoir, reagents, cycler_plate, mag_plate]:\n        for method in [instantiate_wells_h, wells_h, columns_h, rows_h,\n                       wells_by_name_h, columns_by_name_h, rows_by_name_h]:\n            setattr(\n             labware_object, method.__name__,\n             MethodType(method, labware_object))\n\n    for pipette_object in [p20m, p300m]:\n        for method in [aspirate_h, dispense_h, pick_up_or_refill, delay,\n                       slow_tip_withdrawal, blow_out_solvent]:\n            setattr(\n              pipette_object, method.__name__,\n              MethodType(method, pipette_object))\n\n    # reagents\n    starting_volume = {\n        reservoir.wells()[0]: vol_deadreservoir + count_samples*50,\n        reservoir.wells()[1]: vol_deadreservoir + count_samples*400,\n        reservoir.wells()[-1]: vol_deadreservoir + count_samples*400,\n        reagents.wells()[0]: vol_deaddeepwell + 1.1*num_cols*50,\n        reagents.wells()[8]: vol_deaddeepwell + 1.1*num_cols*50,\n        reagents.wells()[16]: vol_deaddeepwell + 1.1*num_cols*50,\n        reagents.wells()[24]: vol_deaddeepwell + 1.1*num_cols*20,\n        reagents.wells()[32]: vol_deaddeepwell + 1.1*num_cols*8,\n        reagents.wells()[40]: vol_deaddeepwell + 1.1*num_cols*5,\n        reagents.wells()[48]: vol_deaddeepwell + 1.1*num_cols*20,\n        reagents.wells()[56]: vol_deaddeepwell + 1.1*num_cols*45,\n        reagents.wells()[64]: vol_deaddeepwell + 1.1*num_cols*45,\n        reagents.wells()[72]: vol_deaddeepwell + 1.1*num_cols*18\n        }\n\n    for column in cycler_plate.columns()[:num_cols]:\n        starting_volume[column[0]] = 50\n\n    for labware, clearance in zip(\n     [reservoir, reagents, cycler_plate, mag_plate],\n     [clearance_reservoir, clearance_striptubes, 1, 1]):\n        labware.instantiate_wells_h(clearance)\n\n    water = reservoir.wells_h()[0]\n    beadwash = reservoir.wells_h()[1]\n    etoh = reservoir.wells_h()[-1]\n    beads_dt = reagents.wells_h()[0]\n    elutionbf = reagents.wells_h()[8]\n    beadbindingbf = reagents.wells_h()[16]\n    fragmentprimefinish = reagents.wells_h()[24]\n    firststrand = reagents.wells_h()[32]\n    endrepairctrl = reagents.wells_h()[40]\n    secondstrandmark = reagents.wells_h()[48]\n    beads_xp1 = reagents.wells_h()[56]\n    beads_xp2 = reagents.wells_h()[64]\n    resuspensionbf = reagents.wells_h()[72]\n\n    for reagent, name in zip(\n     [water, beadwash, etoh],\n     ['water', 'beadwash', 'etoh']):\n        ctx.pause(\"\"\" Fill {} with {} mL of {} \"\"\".format(\n         reagent, str(reagent.current_volume / 1000), name))\n\n    for reagent, name in zip(\n     [beads_dt, elutionbf, beadbindingbf, fragmentprimefinish, firststrand,\n      endrepairctrl, secondstrandmark, beads_xp1, beads_xp2, resuspensionbf],\n     ['beads_dt', 'elutionbf', 'beadbindingbf', 'fragmentprimefinish',\n      'firststrand', 'endrepairctrl', 'secondstrandmark', 'beads_xp1',\n      'beads_xp2', 'resuspensionbf']):\n        ctx.pause(\n         \"\"\" Fill all wells of column {} with {} uL of {} \"\"\".format(\n          reagent, str(round(reagent.current_volume, 1)), name))\n\n    # cycler profiles\n    mrna_denaturation = [{\n     'temperature': temp, 'hold_time_seconds': sec\n     } for temp, sec in zip([65, 4, 22], [300, 30, 300])]\n\n    mrna_elution_1 = [{\n     'temperature': temp, 'hold_time_seconds': sec\n     } for temp, sec in zip([80, 25], [120, 30])]\n\n    elution_2_frag_prime = [{\n     'temperature': temp, 'hold_time_seconds': sec\n     } for temp, sec in zip([94, 4], [480, 30])]\n\n    synthesize_1st_strand = [{\n     'temperature': temp, 'hold_time_seconds': sec\n     } for temp, sec in zip([25, 42, 70, 4], [600, 900, 900, 30])]\n\n    synthesize_2nd_strand = [{\n     'temperature': temp, 'hold_time_minutes': minutes\n     } for temp, minutes in zip([16], [60])]\n\n    ctx.comment(\"STEP - Make RBP\")\n\n    # 50 uL RNA samples\n    cycler_plate_cols = cycler_plate.columns_h()[:num_cols]\n\n    # add oligo dT beads\n    for reagent, name in zip([beads_dt], ['beads_dt']):\n        ctx.pause(\n         \"\"\" Fill all wells of column {} with {} uL of {} \"\"\".format(\n          reagent, str(round(reagent.current_volume, 1)), name))\n\n    for column in cycler_plate_cols:\n        p300m.pick_up_tip()\n        p300m.aspirate_h(50, beads_dt, rate=0.6)\n        p300m.delay(1)\n        p300m.slow_tip_withdrawal(10, beads_dt)\n        p300m.dispense_h(50, column[0], rate=0.6)\n        for mix in range(6):\n            p300m.aspirate_h(100, column[0], rate=0.6)\n            p300m.dispense_h(100, column[0], rate=0.6)\n        p300m.delay(1)\n        p300m.slow_tip_withdrawal(10, column[0])\n        p300m.drop_tip()\n\n    ctx.comment(\"STEP - Incubate 1 RBP\")\n\n    ctx.pause(\"Seal the cycler plate for step - Incubate 1 RBP\")\n\n    cycler.set_lid_temperature(65)\n    cycler.close_lid()\n    cycler.execute_profile(\n     steps=mrna_denaturation, repetitions=1, block_max_volume=100)\n    cycler.open_lid()\n    cycler.deactivate_lid()\n    cycler.set_block_temperature(4)\n\n    ctx.pause(\n     \"Unseal the cycler plate and place it on the magnetic module.\")\n\n    ctx.comment(\"STEP - Wash RBP\")\n\n    # remove sup\n    def remove_sup(pip, vol_sup):\n        pip.pick_up_or_refill()\n        # offset to left to avoid beads (odd col numbers)\n        if index % 2 != 1:\n            f = -1\n        # offset to right to avoid beads (even col numbers)\n        else:\n            f = 1\n        pip.aspirate(vol_sup, column[0].bottom(4), rate=0.3)\n        pip.aspirate(vol_sup, column[0].bottom(1).move(\n         types.Point(x=f*x_offset_bead_pellet, y=0, z=0)), rate=0.3)\n        column[0].current_volume = 0\n        column[0].height = column[0].min_height\n\n    mag_plate_cols = mag_plate.columns_h()[:num_cols]\n    mag.engage()\n    ctx.delay(minutes=time_engage)\n    for index, column in enumerate(mag_plate_cols):\n        remove_sup(p300m, 90)\n        p300m.air_gap(20)\n        p300m.drop_tip()\n\n    # add bead wash\n    def add_reagent(pip, vol_reagent, name_reagent, count_mix):\n        pip.pick_up_or_refill()\n        pip.aspirate_h(vol_reagent, name_reagent)\n        pip.dispense_h(vol_reagent, column[0])\n        vol_total = column[0].current_volume\n        vol_tipmax = pip._tip_racks[0].wells()[0].max_volume\n        vol_mix = vol_total if vol_total <= vol_tipmax else vol_tipmax\n        for mix in range(count_mix):\n            pip.aspirate_h(vol_mix, column[0], rate=0.6)\n            pip.dispense_h(vol_mix, column[0], rate=0.6)\n        pip.drop_tip()\n\n    mag.disengage()\n    for column in mag_plate_cols:\n        add_reagent(p300m, 200, beadwash, 6)\n\n    # remove sup\n    mag.engage()\n    ctx.delay(minutes=time_engage)\n    waste = reservoir.wells()[-2]\n    for index, column in enumerate(mag_plate_cols):\n        remove_sup(p300m, 100)\n        p300m.dispense(200, waste.top(-3))\n        p300m.blow_out()\n        p300m.air_gap(20)\n        p300m.drop_tip()\n\n    # add elution buffer\n    mag.disengage()\n    for column in mag_plate_cols:\n        add_reagent(p300m, 50, elutionbf, 6)\n\n    ctx.comment(\"STEP - Incubate 2 RBP\")\n\n    # mRNA elution 1\n    ctx.pause(\n     \"\"\"Seal the mag plate for step - Incubate 2 RBP.\n    Place it on the cycler. Resume.\"\"\")\n\n    cycler.set_lid_temperature(80)\n    cycler.close_lid()\n    cycler.execute_profile(\n     steps=mrna_elution_1, repetitions=1, block_max_volume=50)\n    cycler.open_lid()\n    cycler.deactivate_lid()\n    cycler.set_block_temperature(4)\n\n    ctx.pause(\n     \"Unseal the cycler plate and place it on the magnetic module. Resume.\")\n\n    ctx.comment(\"STEP - Make RFP\")\n\n    # add bead binding buffer\n    for column in mag_plate_cols:\n        add_reagent(p300m, 50, beadbindingbf, 6)\n\n    # bind mRNA\n    ctx.delay(minutes=5)\n\n    # remove sup\n    mag.engage()\n    ctx.delay(minutes=time_engage)\n    for index, column in enumerate(mag_plate_cols):\n        remove_sup(p300m, 75)\n        p300m.air_gap(20)\n        p300m.drop_tip()\n\n    # add beadwash\n    mag.disengage()\n    for column in mag_plate_cols:\n        add_reagent(p300m, 200, beadwash, 6)\n\n    # remove sup\n    mag.engage()\n    ctx.delay(minutes=time_engage)\n    for index, column in enumerate(mag_plate_cols):\n        remove_sup(p300m, 100)\n        p300m.dispense(200, waste.top(-3))\n        p300m.blow_out()\n        p300m.air_gap(20)\n        p300m.drop_tip()\n\n    # add fragment prime finish\n    mag.disengage()\n    for column in mag_plate_cols:\n        add_reagent(p20m, 19.4, fragmentprimefinish, 6)\n\n    ctx.comment(\"STEP - Incubate RFP\")\n\n    # elution 2, fragmentation, random priming\n    ctx.pause(\n     \"\"\"Seal the mag plate for step - Incubate RFP.\n    Place it on the cycler. Resume.\"\"\")\n\n    cycler.set_lid_temperature(94)\n    cycler.close_lid()\n    cycler.execute_profile(\n     steps=elution_2_frag_prime, repetitions=1, block_max_volume=10)\n    cycler.open_lid()\n    cycler.deactivate_lid()\n    cycler.set_block_temperature(4)\n    ctx.pause(\n     \"\"\"Unseal the cycler plate and place it on the magnetic module.\n    Place a fresh PCR plate on the cycler block.\"\"\")\n    cycler.set_block_temperature(20)\n\n    def reset(cols, vol, height):\n        for column in cols:\n            for well in column:\n                well.current_volume = vol\n                well.height = height\n\n    reset(cycler_plate_cols, 0, cycler_plate.wells_h()[0].min_height)\n\n    ctx.comment(\"STEP - First Strand cDNA Synthesis\")\n\n    # transfer sup to new plate on cycler\n    mag.engage()\n    ctx.delay(minutes=time_engage)\n    for index, column in enumerate(mag_plate_cols):\n        remove_sup(p20m, 10)\n        p20m.dispense_h(20, cycler_plate.columns_h()[index][0])\n        p20m.drop_tip()\n\n    # add first strand synthesis Act D mix + superscript\n    for column in cycler_plate_cols:\n        add_reagent(p20m, 8, firststrand, 2)\n\n    # first strand synthesis\n    ctx.pause(\n     \"Seal the cycler plate for step - First Strand Synthesis. Resume.\")\n\n    cycler.set_lid_temperature(100)\n    cycler.close_lid()\n    cycler.execute_profile(\n     steps=synthesize_1st_strand, repetitions=1, block_max_volume=25)\n    cycler.open_lid()\n    cycler.deactivate_lid()\n    cycler.set_block_temperature(4)\n    ctx.pause(\"Unseal the cycler plate. Resume.\")\n\n    ctx.comment(\"STEP - Second Strand cDNA Synthesis\")\n\n    # add end repair control and second strand marking master mix\n    for column in cycler_plate_cols:\n        add_reagent(p20m, 5, endrepairctrl, 0)\n\n    for column in cycler_plate_cols:\n        add_reagent(p20m, 20, secondstrandmark, 6)\n\n    ctx.comment(\"STEP - Incubate 2 CDP\")\n\n    # second strand synthesis\n    ctx.pause(\"Seal the cycler plate for step - Incubate 2 CDP. Resume.\")\n\n    cycler.set_lid_temperature(37)\n    cycler.close_lid()\n    cycler.execute_profile(\n     steps=synthesize_2nd_strand, repetitions=1, block_max_volume=50)\n    cycler.open_lid()\n    cycler.deactivate_lid()\n\n    ctx.pause(\n     \"Unseal the cycler plate and move it to the magnetic module. Resume.\")\n    cycler.set_block_temperature(4)\n\n    ctx.comment(\"STEP - Purify CDP\")\n\n    reset(mag_plate_cols, 25, 1.8)\n\n    # add AMPure XP beads\n    for column in mag_plate_cols[:3]:\n        add_reagent(p300m, 90, beads_xp1, 10)\n\n    if len(mag_plate_cols) > 3:\n        for column in mag_plate_cols[3:]:\n            add_reagent(p300m, 90, beads_xp2, 10)\n\n    ctx.delay(minutes=15)\n    mag.engage()\n    ctx.delay(minutes=time_engage)\n\n    # remove sup\n    for index, column in enumerate(mag_plate_cols):\n        remove_sup(p300m, 90)\n        p300m.air_gap(20)\n        p300m.dispense(200, waste.top(-3))\n        p300m.air_gap(20)\n        p300m.drop_tip()\n\n    # wash with 80% etoh\n    for rep in range(2):\n        p300m.pick_up_or_refill()\n        for column in mag_plate_cols:\n            p300m.aspirate_h(180, etoh)\n            p300m.air_gap(20)\n            p300m.dispense(200, column[0].top())\n            p300m.blow_out_solvent(column[0])\n        p300m.drop_tip()\n\n        for index, column in enumerate(mag_plate_cols):\n            remove_sup(p300m, 90)\n            p300m.air_gap(20)\n            p300m.dispense(200, waste.top(-3))\n            p300m.blow_out_solvent(waste)\n            p300m.air_gap(20)\n            p300m.drop_tip()\n\n    # dry beads\n    ctx.delay(minutes=time_dry)\n\n    mag.disengage()\n\n    # add resuspension buffer\n    for column in mag_plate_cols:\n        add_reagent(p20m, 17.5, resuspensionbf, 10)\n\n    ctx.delay(minutes=2)\n    mag.engage()\n    ctx.delay(minutes=time_engage)\n\n    ctx.pause(\n     \"Place a fresh PCR plate (for output ds cDNA) in deck slot 4. Resume.\")\n\n    # transfer ds cDNA to new PCR plate\n    for index, column in enumerate(mag_plate_cols):\n        remove_sup(p20m, 10)\n        p20m.dispense(20, samples.columns()[index][0])\n        p20m.drop_tip()\n\n    ctx.pause(\n     \"\"\"part 1 protocol steps are complete. Seal and store\n     output double-stranded cDNA plate (deck slot 4) at -20 C up to 7 days.\"\"\")\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 48,
+            "label": "Number of Samples (8-48)",
+            "name": "count_samples",
+            "type": "int"
+        },
+        {
+            "default": 1,
+            "label": "Well Bottom Clearance for Reservoir (mm)",
+            "name": "clearance_reservoir",
+            "type": "float"
+        },
+        {
+            "default": 1,
+            "label": "Well Bottom Clearance for Deep Well Plate (mm)",
+            "name": "clearance_striptubes",
+            "type": "float"
+        },
+        {
+            "default": 5,
+            "label": "Engage Time for Magnetic Module (minutes)",
+            "name": "time_engage",
+            "type": "int"
+        },
+        {
+            "default": 15,
+            "label": "Dry Time for Bead Pellet (minutes)",
+            "name": "time_dry",
+            "type": "int"
+        },
+        {
+            "default": 2000,
+            "label": "Inaccessible Volume in Bottom of the Reservoir (uL)",
+            "name": "vol_deadreservoir",
+            "type": "int"
+        },
+        {
+            "default": 25,
+            "label": "Inaccessible Volume in Bottom of Deep Well (uL)",
+            "name": "vol_deaddeepwell",
+            "type": "int"
+        },
+        {
+            "default": 0.1,
+            "label": "Fraction of Tip Length Immersed (when aspirating or dispensing at liquid surface)",
+            "name": "tip_immersion",
+            "type": "float"
+        },
+        {
+            "default": 1.5,
+            "label": "Magnitude of Move to Target or Avoid Bead Pellet (mm)",
+            "name": "x_offset_bead_pellet",
+            "type": "float"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p20_multi_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p300_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Mag Plate on Magnetic Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Reservoir on 2",
+            "share": false,
+            "slot": "2",
+            "type": "usascientific_12_reservoir_22ml"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "RNA Samples on 4",
+            "share": false,
+            "slot": "4",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Reagents on 5",
+            "share": false,
+            "slot": "5",
+            "type": "nest_96_wellplate_2ml_deep"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on Thermocycler Module on 7",
+            "share": false,
+            "slot": "7",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.11",
+        "author": "Steve Plonk <protocols@opentrons.com>",
+        "protocolName": "Illumina TruSeq stranded mRNA Sample Prep,\n    LT LS Protocol: part 1 -\n    polyA mRNA Isolation and cDNA synthesis"
+    },
+    "modules": []
+}
