@@ -11,8 +11,8 @@
 Part 2 of 2: Master Mix Distribution and DNA Transfer
 
 Links:
-* [Part 1: Master Mix Assembly](./pcr_prep_part_1_gen2)
-* [Part 2: Master Mix Distribution and DNA Transfer](./pcr_prep_part_2_gen2)
+* [Part 1: Master Mix Assembly](./generic_pcr_prep_1)
+* [Part 2: Master Mix Distribution and DNA Transfer](./generic_pcr_prep_2)
 
 
 This protocol allows your robot to distribute a master mix solution from well A1 of a reservoir to a target (a plate or PCR strips). The robot will then transfer DNA samples to the master mix solution. The protocol works with both single- and multi-channel pipettes, just be sure that the minimum end of their combined volume range covers the smallest volume. There is also an option to place the DNA template labware, and the target labware on temperature modules to keep them cool.
