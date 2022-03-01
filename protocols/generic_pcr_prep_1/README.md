@@ -13,8 +13,8 @@ Part 1 of 2: Master Mix Assembly
 This protocol allows your robot to create a master mix solution using any reagents stored in one to three different pieces of labware such as a tube racks, well plates, and 12 well reservoirs. The master mix will be created in well A1 of the trough of the chosen reservoir. The ingredient information will be provided as a CSV file. See Additional Notes for more details.
 
 Links:
-* [Part 1: Master Mix Assembly](./pcr_prep_part_1_gen2)
-* [Part 2: Master Mix Distribution and DNA Transfer](./pcr_prep_part_2_gen2)
+* [Part 1: Master Mix Assembly](./generic_pcr_prep_1)
+* [Part 2: Master Mix Distribution and DNA Transfer](./generic_pcr_prep_2)
 
 
 Explanation of parameters below:
