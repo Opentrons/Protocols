@@ -15,23 +15,6 @@ metadata = {
 }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{
-                                  "n_slots":7,
-                                  "n_last_samples":8,
-                                  "vol_reagent":1500,
-                                  "dispense_steps":5,
-                                  "is_start_after_1st_incbn":false,
-                                  "is_stop_after_1st_incbn":false,
-                                  "tuberack_lname":"opentrons_24_aluminumblock_nest_2ml_screwcap",
-                                  "pipette_offset":0,
-                                  "is_dry_run":false
-                                  }
-                                  """)
-    return [_all_values[n] for n in names]
-
-
 def run(ctx: protocol_api.ProtocolContext):
 
     [n_slots,
