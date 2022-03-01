@@ -2,9 +2,11 @@ from opentrons import protocol_api
 from opentrons.protocol_api.contexts import InstrumentContext
 from opentrons.protocol_api.labware import Well
 from opentrons.types import Point
+import math
+import time
 
 metadata = {
-    'protocolName': '357404: Slide antibody assay',
+    'protocolName': '357404: Slide sample antibody staining',
     'author': 'Eskil Andersen <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
@@ -18,7 +20,9 @@ def get_values(*names):
                                   "n_slots":6,
                                   "n_last_samples":8,
                                   "vol_reagent":1500,
-                                  "do_step_x":true,
+                                  "dispense_steps":5,
+                                  "is_start_after_1st_incbn":false,
+                                  "is_stop_after_1st_incbn":false,
                                   "tuberack_lname":"opentrons_24_aluminumblock_nest_2ml_screwcap",
                                   "pipette_offset":0,
                                   "is_dry_run":false
@@ -32,27 +36,37 @@ def run(ctx: protocol_api.ProtocolContext):
     [n_slots,
      n_last_samples,
      vol_reagent,
-     do_step_x,
+     dispense_steps,
+     is_start_after_1st_incbn,
+     is_stop_after_1st_incbn,
      tuberack_lname,
      pipette_offset,
      is_dry_run] = get_values(  # noqa: F821
      "n_slots",
      "n_last_samples",
      "vol_reagent",
-     "do_step_x",
+     "dispense_steps",
+     "is_start_after_1st_incbn",
+     "is_stop_after_1st_incbn",
      "tuberack_lname",
      "pipette_offset",
      "is_dry_run")
 
-    slide_block_lname = 'customslideblock_8_wellplate'
-    slide_slots = [1, 4, 5, 7, 8, 10, 11]
+    slide_blocks_loader = {'lname': 'customslideblock_8_wellplate',
+                           'slots': [1, 4, 5, 7, 8, 10, 11]}
+    temp_mod_loader = {'lname': 'temperature module gen2', 'slot': '3'}
+    reservoir_loader = {'lname': 'agilent_1_reservoir_290ml', 'slot': '2'}
+    # The tuberack is loaded on temperature module
+    tuberack_loader = {'lname': tuberack_lname}
+    tiprack_300_loader = {'lname': 'opentrons_96_tiprack_300ul', 'slot': '6'}
+    tiprack_1000_loader = {'lname': 'opentrons_96_tiprack_1000ul', 'slot': '9'}
+    p300_loader = {'lname': 'p300_single_gen2', 'mount': 'left'}
+    p1000_loader = {'lname': 'p1000_single_gen2', 'mount': 'right'}
 
-    # load modules
-    temp_mod = ctx.load_module('temperature module gen2', '3')
-    # verbose = True
-    verbose = False
+    verbose = True
+    # verbose = False
 
-    if not 0 < n_last_samples < 8:
+    if not 0 < n_slots < 8:
         raise Exception("The number of blocks have to be between 1 and 7")
 
     if not 0 < n_last_samples < 9:
@@ -71,14 +85,18 @@ def run(ctx: protocol_api.ProtocolContext):
     For all other modules, you can load them on slots 1, 3, 4, 6, 7, 9, 10.
 
     '''
+    # load modules
+    temp_mod = ctx.load_module(temp_mod_loader['lname'],
+                               temp_mod_loader['slot'])
 
     # load labware
     # Labware: 290 mL reservoir, Tuberack for reagents, slide blocks
-    reservoir = ctx.load_labware('agilent_1_reservoir_290ml', '2')
-    tuberack = temp_mod.load_labware(tuberack_lname)
+    reservoir = ctx.load_labware(reservoir_loader['lname'],
+                                 reservoir_loader['slot'])
+    tuberack = temp_mod.load_labware(tuberack_loader['lname'])
     slide_blocks = []
-    for slot in slide_slots[:n_slots]:
-        slide_block = ctx.load_labware(slide_block_lname, slot)
+    for slot in slide_blocks_loader['slots'][:n_slots]:
+        slide_block = ctx.load_labware(slide_blocks_loader['lname'], slot)
         slide_blocks.append(slide_block)
 
     '''
@@ -114,8 +132,10 @@ def run(ctx: protocol_api.ProtocolContext):
 
     '''
     # Load 1000 uL tips on 9, 300 uL on 6
-    tiprack_300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '6')]
-    tiprack_1000 = [ctx.load_labware('opentrons_96_tiprack_1000ul', '9')]
+    tiprack_300 = [ctx.load_labware(tiprack_300_loader['lname'],
+                                    tiprack_300_loader['slot'])]
+    tiprack_1000 = [ctx.load_labware(tiprack_1000_loader['lname'],
+                                     tiprack_1000_loader['slot'])]
 
     # load instrument
 
@@ -138,13 +158,13 @@ def run(ctx: protocol_api.ProtocolContext):
     '''
     # Load p300, p1000 gen2
     p300 = ctx.load_instrument(
-                              'p300_single_gen2',
-                              'left',
+                              p300_loader['lname'],
+                              p300_loader['mount'],
                               tip_racks=tiprack_300
                               )
     p1000 = ctx.load_instrument(
-                              'p1000_single_gen2',
-                              'right',
+                              p1000_loader['lname'],
+                              p1000_loader['mount'],
                               tip_racks=tiprack_1000
                               )
 
@@ -198,6 +218,7 @@ def run(ctx: protocol_api.ProtocolContext):
         try:
             pipette.pick_up_tip()
         except protocol_api.labware.OutOfTipsError:
+            flash_lights()
             ctx.pause("Replace empty tip racks")
             pipette.reset_tipracks()
             pipette.pick_up_tip()
@@ -257,6 +278,18 @@ def run(ctx: protocol_api.ProtocolContext):
             if not (mode == 'reagent' or mode == 'waste'):
                 raise Exception('mode must be reagent or waste')
 
+        def flash_lights(self):
+            """
+            Flash the lights of the robot to grab the users attention
+            """
+            initial_light_state = ctx.rail_lights_on
+            opposite_state = not initial_light_state
+            for _ in range(5):
+                ctx.set_rail_lights(opposite_state)
+                time.sleep(0.5)
+                ctx.set_rail_lights(initial_light_state)
+                time.sleep(0.5)
+
         def track(self, vol):
             '''track() will track how much liquid
             was used up per well. If the volume of
@@ -269,6 +302,7 @@ def run(ctx: protocol_api.ProtocolContext):
             if self.labware_wells[well] + vol >= self.well_vol:
                 del self.labware_wells[well]
                 if len(self.labware_wells) < 1:
+                    flash_lights()
                     ctx.pause(self.msg)
                     self.labware_wells = self.labware_wells_backup.copy()
                 well = next(iter(self.labware_wells))
@@ -301,12 +335,32 @@ def run(ctx: protocol_api.ProtocolContext):
                 pip.drop_tip()
             vol = vol_backup
 
-    def pause(msg: str, pause_period_minutes: int = 60,
-              is_dry_run: bool = False):
+    def flash_lights():
+        """
+        Flash the lights of the robot to grab the users attention
+        """
+        initial_light_state = ctx.rail_lights_on
+        opposite_state = not initial_light_state
+        for _ in range(5):
+            ctx.set_rail_lights(opposite_state)
+            time.sleep(0.5)
+            ctx.set_rail_lights(initial_light_state)
+            time.sleep(0.5)
+
+    def pause(msg: str, time_elapsed_sec: float = 0,
+              pause_period_minutes: int = 60, is_dry_run: bool = False):
         msg_template = "Incubating slides with {}"
         dry_run_msg = "(Dry run): "
+        if time_elapsed_sec > pause_period_minutes*60:
+            ctx.comment(
+                "Skipping pause for incubation, the pause period has already "
+                + "elapsed during the reagent transfer of {}".format(msg))
+            return
+        min_elapsed = math.ceil(time_elapsed_sec/60)
+        pause_period_secs = 60 - time_elapsed_sec % 60
+        pause_period_minutes -= min_elapsed
         if not is_dry_run:
-            ctx.delay(minutes=pause_period_minutes,
+            ctx.delay(minutes=pause_period_minutes, seconds=pause_period_secs,
                       msg=msg_template.format(msg))
         else:
             ctx.comment(dry_run_msg + msg.format(msg))
@@ -342,11 +396,15 @@ def run(ctx: protocol_api.ProtocolContext):
     '''
     # Each slide block has 8 "wells", each well uses up 100 uL of each
     # reagent: Block, antibody1, antibody2, nuclear counterstain
-    block = VolTracker(tuberack, vol_reagent, start=1, end=4)
-    antibody1 = VolTracker(tuberack, vol_reagent, start=5, end=8)
-    antibody2 = VolTracker(tuberack, vol_reagent, start=9, end=13)
+    block = VolTracker(tuberack, vol_reagent, start=1, end=4,
+                       msg="Refill block reagent tubes")
+    antibody1 = VolTracker(tuberack, vol_reagent, start=5, end=8,
+                           msg="Refill antibody 1 reagent tubes")
+    antibody2 = VolTracker(tuberack, vol_reagent, start=9, end=13,
+                           msg="Refill antibody 2 reagent tubes")
     # Nuclear counterstain
-    nuc_cstn = VolTracker(tuberack, vol_reagent, start=14, end=17)
+    nuc_cstn = VolTracker(tuberack, vol_reagent, start=14, end=17,
+                          msg="Refill nuclear counterstain reagent tubes")
     pbs = VolTracker(
         reservoir, 290*10**3, start=1, end=1, mode='reagent',
         pip_type='single', msg="Refill PBS reservoir")
@@ -397,28 +455,58 @@ def run(ctx: protocol_api.ProtocolContext):
     temp_mod.set_temperature(4)
     # Transfer 100 µL of block from the tuberack to each destination well
     # (slide) (could be done as a multi-dispense with the P1000)
-    transfer_reagent(p300, 100, block, target_wells,
-                     is_dry_run, pipette_offset)
-    # Pause/Incubate for 1 hour
-    pause("block", is_dry_run=is_dry_run)
+    # Measure time from the start of pipetting and subtract from 1 hr pause
+    # so that the next pipetting step starts after 1 hour and not 1 hour +
+    # the time it takes to finish the reagent transfer
+    if not is_start_after_1st_incbn:  # Skip 1st incubation?
+        t = time.time()
+        transfer_reagent(p300, 100, block, target_wells,
+                         is_dry_run, pipette_offset)
+        # Pause/Incubate for 1 hour
+        if is_stop_after_1st_incbn:
+            ctx.comment("\n\nStopping protocol after 1st incubation")
+            ctx.comment("Remove the slides, store them at 4C ON, "
+                        + "then replace the slides in the morning and restart "
+                        + "the protocol. (Remember to set the option to start "
+                        + "the protocol after the 1st incubation step)")
+            return
+        dt = time.time() - t
+        if verbose:
+            ctx.comment("1st dt = {}".format(dt))
+        pause("block", time_elapsed_sec=dt, is_dry_run=is_dry_run)
+    else:
+        ctx.comment(
+            "Starting the protocol from the 2nd reagent step (antibody1)")
     # Transfer 100 µL of primary antibody to dest. wells (slide)
+    t = time.time()
     transfer_reagent(p300, 100, antibody1, target_wells, pipette_offset)
     # Pause 1 hour
-    pause("Antibody 1", is_dry_run=is_dry_run)
+    dt = time.time() - t
+    if verbose:
+        ctx.comment("2nd dt = {}".format(dt))
+    pause("Antibody 1", time_elapsed_sec=dt, is_dry_run=is_dry_run)
     # Transfer 4 mL of PBS to each slide target well (i.e. 4 round trips)
-    # with the P1000
+    # with the P1000 (Slide wash)
     transfer_reagent(p1000, 4000, pbs, target_wells, pipette_offset)
     # Transfer 100 µL of the second antibody
+    t = time.time()
     transfer_reagent(p300, 100, antibody2, target_wells, pipette_offset)
     # Pause 1 hour
-    pause("Antibody 2", is_dry_run=is_dry_run)
+    dt = time.time() - t
+    if verbose:
+        ctx.comment("3rd dt = {}".format(dt))
+    pause("Antibody 2", time_elapsed_sec=dt, is_dry_run=is_dry_run)
     # Wash slides with 4 mL of PBS
     transfer_reagent(p1000, 4000, pbs, target_wells, pipette_offset)
     # Transfer 100 µL nuclear counterstain to each well
+    t = time.time()
     transfer_reagent(p300, 100, nuc_cstn, target_wells, pipette_offset)
     # Incubate 5 minutes
+    dt = time.time() - t
+    if verbose:
+        ctx.comment("4th dt = {}".format(dt))
     pause("Nuclear counterstain", pause_period_minutes=5,
-          is_dry_run=is_dry_run)
+          is_dry_run=is_dry_run, time_elapsed_sec=dt)
     # Wash slides with 4 mL of PBS
     transfer_reagent(p1000, 4000, pbs, target_wells, pipette_offset)
     ctx.comment("\n\n~~~~ End of protocol ~~~~\n")
