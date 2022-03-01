@@ -355,9 +355,9 @@ def run(ctx: protocol_api.ProtocolContext):
         This function dispenses a partial volume = vol/steps and then moves
         a distance/steps and repeats
         """
-        dy = 18.6/steps
+        dy = 9/steps
         dv = vol/steps
-        start_location = well.top().move(Point(0, -8.8, -pip_offset))
+        start_location = well.top().move(Point(0, -4.5, -pip_offset))
         pip.move_to(start_location)
         for i in range(steps):
             loc = start_location.move(Point(0, i*dy, 0))
