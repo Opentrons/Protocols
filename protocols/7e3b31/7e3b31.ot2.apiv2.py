@@ -52,7 +52,7 @@ def run(ctx):
     reservoir = ctx.load_labware(
      'usascientific_12_reservoir_22ml', '2', 'Reservoir')
     reagents = ctx.load_labware(
-     'nest_96_wellplate_2ml_deep', '5', 'Reagents')
+     'nest500ul_96_reservoir_500ul', '5', 'Reagents')
     samples = ctx.load_labware(
      'biorad_96_wellplate_200ul_pcr', '4', 'RNA Samples')
 
@@ -248,7 +248,7 @@ def run(ctx):
     starting_volume = {
         reservoir.wells()[0]: vol_deadreservoir + count_samples*50,
         reservoir.wells()[1]: vol_deadreservoir + count_samples*400,
-        reservoir.wells()[-1]: vol_deadreservoir + count_samples*400,
+        reservoir.wells()[4]: vol_deadreservoir + count_samples*400,
         reagents.wells()[0]: vol_deaddeepwell + 1.1*num_cols*50,
         reagents.wells()[8]: vol_deaddeepwell + 1.1*num_cols*50,
         reagents.wells()[16]: vol_deaddeepwell + 1.1*num_cols*50,
@@ -271,7 +271,7 @@ def run(ctx):
 
     water = reservoir.wells_h()[0]
     beadwash = reservoir.wells_h()[1]
-    etoh = reservoir.wells_h()[-1]
+    etoh = reservoir.wells_h()[4]
     beads_dt = reagents.wells_h()[0]
     elutionbf = reagents.wells_h()[8]
     beadbindingbf = reagents.wells_h()[16]
