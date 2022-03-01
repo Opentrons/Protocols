@@ -5,14 +5,17 @@ import tkinter as tk
 from tkinter import filedialog as fd
 from tkinter import *
 
-# template_directory = '\\\\us17filp002\\production_data\\DNA\\Application_Data\\Lab\\RedoReplacement'
-# output_directory = '\\\\us17filp002\\production_data\\DNA\\Application_Data\\Lab\\RedoReplacement\\RunFiles'
-template_directory = '/Users/nickdiehl/protocols/protocol-supplements/121d15-2'
-output_directory = '/Users/nickdiehl/protocols/protocol-supplements/121d15-2'
+template_directory = '\\\\us17filp002\\production_data\\DNA\\Application_Data\\Lab\\RedoReplacement'
+output_directory = '\\\\us17filp002\\production_data\\DNA\\Application_Data\\Lab\\RedoReplacement\\RunFiles'
+# template_directory = '/Users/nickdiehl/protocols/protocol-supplements/121d15-2'
+# output_directory = '/Users/nickdiehl/protocols/protocol-supplements/121d15-2'
+# template_directory = '/home/runner/121d15-2-gui/templates'
+# output_directory = '/home/runner/121d15-2-gui/scripts'
 
 enter_loop = True
 root = tk.Tk()
 root.geometry("800x400")
+
 plate1_file_prompt = tk.Label(root, text='plate 1 file')
 plate1_scan_prompt = tk.Label(root, text='plate 1 scan')
 plate1_scan = tk.Entry(root)
@@ -38,10 +41,14 @@ first_sample = None
 last_sample = None
 
 file_map = {
-    '96 0.5ml plate': 'greiner_500_redoreplacementpicking.ot2.apiv2.py',
-    '96 1.2ml plate': 'greiner_1000_redoreplacementpicking.ot2.apiv2.py',
-    '96 2.2ml plate': 'irish_2200_redoreplacementpicking.ot2.apiv2.py',
-    '384 0.24ml plate': 'greiner_384_redoreplacementpicking.ot2.apiv2.py'
+    'Redo Replacement 96 0.5ml plate': 'greiner_500_redoreplacementpicking.ot2.apiv2.py',
+    'Redo Replacement 96 1.2ml plate': 'greiner_1000_redoreplacementpicking.ot2.apiv2.py',
+    'Redo Replacement 96 2.2ml plate': 'irish_2200_redoreplacementpicking.ot2.apiv2.py',
+    'Redo Replacement 384 0.24ml plate': 'greiner_384_redoreplacementpicking.ot2.apiv2.py',
+    'Pooling 2ml tubes to 15ml tubes': '',
+    'Pooling 2ml tubes to 2ml tubes': '',
+    'Aliquoting 15ml tubes to 2ml tubes': '',
+    'Aliquoting 2ml tubes to 2ml tubes': '',
 }
 options = file_map.keys()
 dropdown_value = tk.StringVar(root)
@@ -92,6 +99,15 @@ plate2_file_button = tk.Button(
 )
 
 
+def parse_file_name(file_name):
+    if '.txt' in file_name:
+        return file_name.split('.txt')[0].split('/')[-1]
+    elif '.csv' in file_name:
+        return file_name.split('.csv')[0].split('/')[-1]
+    else:
+        return file_name.split('/')[-1]
+
+
 def extract_csv_contents(file_path, var_name):
     content = []
     with open(file_path, 'r') as csv_file:
@@ -122,8 +138,8 @@ def end():
 
     if plate1_status['text'] != '':
         if plate2_status['text'] != '':
-            name_part_1 = plate1_status['text'].split('.txt')[0].split('\\')[-1]
-            name_part_2 = plate2_status['text'].split('.txt')[0].split('\\')[-1]
+            name_part_1 = parse_file_name(plate1_status['text'])
+            name_part_2 = parse_file_name(plate2_status['text'])
             outfile_name = f"{name_part_1}-{name_part_2}.py"
             content1 = extract_csv_contents(plate1_status['text'], 'input_file')
             content2 = extract_csv_contents(plate2_status['text'], 'input_file2')
@@ -132,7 +148,7 @@ def end():
             tuberack1_info = [f"tuberack_scan1 = '{tuberack1_scan.get()}'"]
             tuberack2_info = [f"tuberack_scan2 = '{tuberack2_scan.get()}'"]
         else:
-            name_part_1 = plate1_status['text'].split('.txt')[0].split('\\')[-1]
+            name_part_1 = parse_file_name(plate1_status['text'])
             outfile_name = f"{name_part_1}.py"
             content1 = extract_csv_contents(plate1_status['text'], 'input_file')
             content2 = ['input_file2 = ""']
