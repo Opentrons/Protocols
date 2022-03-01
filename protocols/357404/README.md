@@ -39,8 +39,8 @@ Explanation of parameters below:
 * [300 uL tipracks](https://shop.opentrons.com/opentrons-300ul-tips-1000-refills/)
 
 ### Pipettes
-* [P300 single-Channel (GEN2)}](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
-* [P1000 single-Channel (GEN2)}](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
+* [P300 single-Channel (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
+* [P1000 single-Channel (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 
 ### Reagents
 290 mL reservoir on slot 2:
