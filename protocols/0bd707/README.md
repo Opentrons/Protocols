@@ -10,7 +10,7 @@
 ## Description
 This protocol is a modified version of this [sample aliquoting protocol](https://develop.protocols.opentrons.com/protocol/53134e).</br>
 </br>
-With this version of the protocol, the user can specify the number of plates they would like to fill (up to 6). When run, the robot will transfer the specified volume two times (2x) to each tube, in each tube rack, and change tip after each liquid transfer.</br>
+With this version of this protocol, the user can specify the number of plates they would like to fill (up to 6). When run, the robot will transfer the specified volume two times (2x) to each tube, in each tube rack, and change tip after each liquid transfer.</br>
 </br>
 Please note that this protocol uses a custom labware definition for the tube rack (definition included with download). For more information regarding custom labware definition usage on the OT-2, please see this article: [Using labware in your protocols](https://support.opentrons.com/en/articles/3136506-using-labware-in-your-protocols).
 
