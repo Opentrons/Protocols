@@ -68,5 +68,11 @@
       { "label": "No", "value": false},
       { "label": "Yes", "value": true}
     ]
+  },
+    {
+      "type": "float",
+      "label": "Time per block (s)",
+      "name": "t_per_block",
+      "default": 205
   }
 ]

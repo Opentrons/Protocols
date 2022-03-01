@@ -25,6 +25,7 @@ Explanation of parameters below:
 * `Start protocol after 1st incubation step`: Starts the protocol at the step after the samples have already been incubated with `block` overnight.
 * `Stop protocol after 1st incubation step`: The protocol stops after adding the block reagent and the user is asked to incubate the samples at 4 degrees C overnight.
 * `Do a dry run?`: Skip all incubation pauses and return tips to their racks after use.
+* `Time per block (s)`: The amount of time it takes to transfer reagent per block. The user must measure the time it takes for the reagent dispensation steps to finish for each block using a stopwatch, for example by putting the maximum of of seven blocks on the deck, running the protocol and then calculating the average block time by dividing by seven. This time is used to subtract from the total incubation time such that each sample will have an hour of incubation instead of 1 hour plus the time it takes to transfer reagent or PBS.
 
 ---
 
