@@ -13,15 +13,31 @@
   },
   {
     "type": "float",
-    "label": "Volume in antibody containers",
+    "label": "Volume in reagent containers",
     "name": "vol_reagent",
     "default": 1500
   },
+    {
+      "type": "int",
+      "label": "Sweep dispense steps",
+      "name": "dispense_steps",
+      "default": 5
+  },
   {
     "type": "dropDown",
-    "label": "Do step x",
-    "name": "do_step_x",
+    "label": "Start protocol after 1st incubation step",
+    "name": "is_start_after_1st_incbn",
     "options": [
+      { "label": "No", "value": false},
+      { "label": "Yes", "value": true}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Stop protocol after 1st incubation step",
+    "name": "is_stop_after_1st_incbn",
+    "options": [
+      { "label": "No", "value": false},
       { "label": "Yes", "value": true}
     ]
   },

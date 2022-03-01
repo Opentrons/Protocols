@@ -1,10 +1,7 @@
-# Protocol Title (should match metadata of .py file)
+# 357404: Slide sample antibody staining
 
 ### Author
 [Opentrons](https://opentrons.com/)
-
-### Partner
-[Partner Name](partner website link)
 
 ## Categories
 * Sample prep
@@ -14,13 +11,18 @@
 This protocol performs immunostaining of slides in a custom 3D printed slide holder with Shandon coverplates.
 Up to 7 slide holders, each with 8 wells can be placed on the deck resulting in the ability to stain up to 56 slides simultaneously.
 
+Pipette racks and reagents may have to be replaced during the run depending on the number of samples. If that happens the lights of the OT-2 will flash to indicate that the protocol requires the users attention.
+
 Explanation of parameters below:
-* `Number of slide blocks`: How many slide holding blocks there are on the deck  
-* `Volume in reagents containers`: How much volume there is in each reagent container (meaning block, antibody 1, antibody 2, and nuclear counterstain)
-* `Do step x`:
-* `Reagent tuberack`: What type of tuberack you wish to use
-* `Pipette offset`: Pipetting offset in mm when dispensing, increasing this parameter will mean that the pipette will dispense at a lower height in the wells
-* `Do a dry run?`: Skip pauses and return tips to their racks after use
+* `Number of slide blocks`: How many slide holding blocks there are on the deck. The maximum number that will fit on the deck are 7
+* `Number of samples in the last block`: All slide blocks except the last one are expected to be full, however the last block may have a number of samples between 1 and 8
+* `Volume in reagents containers`: How much volume (µL) there is in each reagent container (meaning block, antibody 1, antibody 2, and nuclear counterstain
+* `Sweep dispense steps`: How many discrete step motions + dispenses to do when dispensing reagents and PBS, this is designed to replicate a sweeping motion with a manual pipette while dispensing.
+* `Reagent tuberack`: What type of tuberack you wish to use for the reagents (block, the antibodies and the nuclear counterstain)
+* `Pipette offset`: Pipetting offset in `millimeter` when dispensing, increasing this parameter will mean that the pipette will dispense at a lower height in the wells. **This parameter must be adjusted carefully so that there are no collisions between the pipette tip and the Shandon coverplates!**
+* `Start protocol after 1st incubation step`: Starts the protocol at the step after the samples have already been incubated with `block`
+* `Stop protocol after 1st incubation step`: The protocol stops after adding the block reagent and the user is asked to incubate the samples at 4 degrees C over night.
+* `Do a dry run?`: Skip all incubation pauses and return tips to their racks after use.
 
 ---
 
@@ -30,6 +32,8 @@ Explanation of parameters below:
 ### Labware
 * [Opentrons tuberacks](https://shop.opentrons.com/4-in-1-tube-rack-set/)
 * [Agilent 1-Well Reservoir 290 mL](https://labware.opentrons.com/agilent_1_reservoir_290ml)'
+* [1000 uL tipracks](https://shop.opentrons.com/opentrons-1000-l-tips/)
+* [300 uL tipracks](https://shop.opentrons.com/opentrons-300ul-tips-1000-refills/)
 
 ### Pipettes
 * [P300 single-Channel (GEN2)}](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
@@ -49,7 +53,7 @@ Explanation of parameters below:
 
 ### Reagent Setup
 * This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:
-* Reservoir 1: slot 5
+* Reservoir 1: slot 2
 ![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res1_v2.png)
 * Reservoir 2: slot 2  
 ![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res2.png)
@@ -57,9 +61,18 @@ Explanation of parameters below:
 ---
 
 ### Protocol Steps
-1. This section should consist of a numerical outline of the protocol steps, somewhat analogous to the steps outlined by the user in their custom protocol submission.
-2. example step: Samples are transferred from the source tuberacks on slots 1-2 to the PCR plate on slot 3, down columns and then across rows.
-3. example step: Waste is removed from each sample on the magnetic module, ensuring the bead pellets are not contacted by the pipette tips.
+1. The temperature module is set to 4 degrees C.
+2. 100 µL of Block is added to the samples wells, unless the protocol is set to skip the 1st reagent addition step.
+3. The protocol incubates for 1 hour (with the time it takes to add the Block reagent subtracted)
+4. 100 µL Antibody 1 is added (This may be the 1st reagent added in the protocol if the user chooses to start with samples that have been incubated overnight with Block)
+5. The protocol incubates for 1 hour
+6. The slides are washed with 4 mL Phosphate buffered saline (PBS) each
+7. 100 µL of Antibody 2 is added to each slide
+8. The protocol incubates for 1 hour
+9.  The slides are washed with 4 mL PBS each
+10. 100 µL of nuclear counterstain is added to each slide
+11. The protocol pauses for 5 minutes
+12. The slides are washed with 4 mL PBS each
 
 ### Process
 1. Input your protocol parameters above.
@@ -74,4 +87,4 @@ Explanation of parameters below:
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-protocol-hex-code
+357404
