@@ -13,6 +13,7 @@ metadata = {
                          # IN SECTION 5.2 OF THE APIV2 "VERSIONING"
 }
 
+
 def run(ctx: protocol_api.ProtocolContext):
 
     [n_slots,
@@ -54,6 +55,11 @@ def run(ctx: protocol_api.ProtocolContext):
     if not 0 < n_last_samples < 9:
         raise Exception("The number of samples on the last block have to be"
                         + "between 1 and 8")
+
+    if is_start_after_1st_incbn and is_stop_after_1st_incbn:
+        raise Exception("Incompatible parameters: Protocol cannot both stop "
+                        + "after the first incubation and skip the first "
+                        + "incubation")
 
     '''
 
