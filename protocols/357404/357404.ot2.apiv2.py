@@ -3,8 +3,6 @@ from opentrons.protocol_api.contexts import InstrumentContext
 from opentrons.protocol_api.labware import Well, Labware
 from opentrons.types import Point
 import math
-import time
-
 
 metadata = {
     'protocolName': '357404: Slide sample antibody staining',
@@ -25,7 +23,8 @@ def run(ctx: protocol_api.ProtocolContext):
      is_stop_after_1st_incbn,
      tuberack_lname,
      pipette_offset,
-     is_dry_run] = get_values(  # noqa: F821
+     is_dry_run,
+     t_per_block] = get_values(  # noqa: F821
      "n_slots",
      "n_last_samples",
      "vol_reagent",
@@ -34,7 +33,8 @@ def run(ctx: protocol_api.ProtocolContext):
      "is_stop_after_1st_incbn",
      "tuberack_lname",
      "pipette_offset",
-     "is_dry_run")
+     "is_dry_run",
+     "t_per_block")
 
     # Definitions for loading labware, tipracks and pipettes.
     slide_blocks_loader = {'lname': 'customslideblock_8_wellplate',
@@ -397,7 +397,7 @@ def run(ctx: protocol_api.ProtocolContext):
     nuc_cstn = VolTracker(tuberack, vol_reagent, start=14, end=17,
                           msg="Refill Nuclear counterstain reagent tubes")
     pbs = VolTracker(
-        reservoir, 290*10**3, start=1, end=1, mode='reagent',
+        reservoir, 288*10**3, start=1, end=1, mode='reagent',
         pip_type='single', msg="Refill PBS reservoir")
 
     # plate, tube rack maps
@@ -447,6 +447,7 @@ def run(ctx: protocol_api.ProtocolContext):
     '''
     # Set the temperature to 4 degrees on the temperature module.
     temp_mod.set_temperature(4)
+    dt = t_per_block * n_slots
     # Transfer 100 µL of block from the tuberack to each destination well
     # (slide) (could be done as a multi-dispense with the P1000)
     # Measure time from the start of pipetting and subtract from 1 hr pause
@@ -454,7 +455,9 @@ def run(ctx: protocol_api.ProtocolContext):
     # the time it takes to finish the reagent transfer
     if not is_start_after_1st_incbn:  # Skip 1st incubation?
         ctx.comment("\n\nAdding block reagent\n")
-        t = time.time()
+        # t = time.time() -- This won't work based on how the protocol is
+        # loaded on the OT-2, user has to manually time how long each block
+        # takes
         transfer_reagent(p300, 100, block, target_wells,
                          is_dry_run, pipette_offset,
                          steps=dispense_steps)
@@ -466,22 +469,15 @@ def run(ctx: protocol_api.ProtocolContext):
                         + "the protocol. (Remember to set the option to start "
                         + "the protocol after the 1st incubation step)")
             return
-        dt = time.time() - t
-        if verbose:
-            ctx.comment("1st dt = {}".format(dt))
         pause("block", time_elapsed_sec=dt, is_dry_run=is_dry_run)
     else:
         ctx.comment(
             "Starting the protocol from the 2nd reagent step (antibody1)")
     # Transfer 100 µL of primary antibody to dest. wells (slide)
-    t = time.time()
     ctx.comment("\n\nAdding Antibody 1 reagent\n")
     transfer_reagent(p300, 100, antibody1, target_wells, pipette_offset,
                      steps=dispense_steps)
     # Pause 1 hour
-    dt = time.time() - t
-    if verbose:
-        ctx.comment("2nd dt = {}".format(dt))
     pause("Antibody 1", time_elapsed_sec=dt, is_dry_run=is_dry_run)
     # Transfer 4 mL of PBS to each slide target well (i.e. 4 round trips)
     # with the P1000 (Slide wash)
@@ -489,33 +485,24 @@ def run(ctx: protocol_api.ProtocolContext):
     transfer_reagent(p1000, 4000, pbs, target_wells, pipette_offset,
                      steps=dispense_steps)
     # Transfer 100 µL of the second antibody
-    t = time.time()
     ctx.comment("\n\nAdding Antibody 2 reagent\n")
     transfer_reagent(p300, 100, antibody2, target_wells, pipette_offset,
                      steps=dispense_steps)
     # Pause 1 hour
-    dt = time.time() - t
-    if verbose:
-        ctx.comment("3rd dt = {}".format(dt))
     pause("Antibody 2", time_elapsed_sec=dt, is_dry_run=is_dry_run)
     # Wash slides with 4 mL of PBS
     ctx.comment("\n\nWashing slides with PBS\n")
     transfer_reagent(p1000, 4000, pbs, target_wells, pipette_offset,
                      steps=dispense_steps)
     # Transfer 100 µL nuclear counterstain to each well
-    t = time.time()
     ctx.comment("\n\nAdding Nuclear counterstain reagent\n")
     transfer_reagent(p300, 100, nuc_cstn, target_wells, pipette_offset,
                      steps=dispense_steps)
     # Incubate 5 minutes
-    dt = time.time() - t
-    if verbose:
-        ctx.comment("4th dt = {}".format(dt))
     pause("Nuclear counterstain", pause_period_minutes=5,
           is_dry_run=is_dry_run, time_elapsed_sec=dt)
     # Wash slides with 4 mL of PBS
     ctx.comment("\n\nWashing slides with PBS\n")
     transfer_reagent(p1000, 4000, pbs, target_wells, pipette_offset,
                      steps=dispense_steps)
-    ctx.comment("\n\n~~~~ End of protocol ~~~~\n")
     ctx.comment("\n\n~~~~ End of protocol ~~~~\n")
