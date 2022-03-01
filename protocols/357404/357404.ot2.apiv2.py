@@ -518,3 +518,4 @@ def run(ctx: protocol_api.ProtocolContext):
     transfer_reagent(p1000, 4000, pbs, target_wells, pipette_offset,
                      steps=dispense_steps)
     ctx.comment("\n\n~~~~ End of protocol ~~~~\n")
+    ctx.comment("\n\n~~~~ End of protocol ~~~~\n")
