@@ -18,21 +18,18 @@ metadata = {
 def run(ctx):
 
     # get parameter values from json above
-    [vol_samples, count_samples, clearance_reservoir, clearance_striptubes,
-     time_engage, time_dry, vol_deadreservoir, vol_deadtube, tip_immersion,
+    [count_samples, clearance_reservoir, clearance_striptubes,
+     time_engage, time_dry, vol_deadreservoir, vol_deaddeepwell, tip_immersion,
      x_offset_bead_pellet] = get_values(  # noqa: F821
-      'vol_samples', 'count_samples', 'clearance_reservoir',
+      'count_samples', 'clearance_reservoir',
       'clearance_striptubes', 'time_engage', 'time_dry', 'vol_deadreservoir',
-      'vol_deadtube', 'tip_immersion', 'x_offset_bead_pellet')
+      'vol_deaddeepwell', 'tip_immersion', 'x_offset_bead_pellet')
 
     ctx.set_rail_lights(True)
     ctx.delay(seconds=10)
 
     if not 8 <= count_samples <= 48:
         raise Exception('Invalid number of samples (must be 8-48).')
-
-    if not 1 <= vol_samples <= 10:
-        raise Exception('Invalid sample volume (must be 1-10 uL).')
 
     if not 0.05 <= tip_immersion <= 0.15:
         raise Exception(
@@ -52,21 +49,23 @@ def run(ctx):
         "p300_multi_gen2", 'right', tip_racks=tips300)
 
     # labware, thermocycler module, magnetic module
-    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '2', 'Reservoir')
+    reservoir = ctx.load_labware(
+     'usascientific_12_reservoir_22ml', '2', 'Reservoir')
     reagents = ctx.load_labware(
-     'nest_96_wellplate_100ul_pcr_full_skirt', '5', 'Reagents')
+     'nest_96_wellplate_2ml_deep', '5', 'Reagents')
     samples = ctx.load_labware(
-     'nest_96_wellplate_100ul_pcr_full_skirt', '4', 'RNA Samples')
+     'biorad_96_wellplate_200ul_pcr', '4', 'RNA Samples')
 
     cycler = ctx.load_module('thermocycler')
     cycler.open_lid()
     cycler_plate = cycler.load_labware(
-     'nest_96_wellplate_100ul_pcr_full_skirt')
+     'biorad_96_wellplate_200ul_pcr')
+    cycler.set_block_temperature(4)
 
     mag = ctx.load_module('magnetic module gen2', '1')
     mag.disengage()
     mag_plate = mag.load_labware(
-     'nest_96_wellplate_100ul_pcr_full_skirt', 'Mag Plate')
+     'biorad_96_wellplate_200ul_pcr', 'Mag Plate')
 
     """
     module - extension of pipettes, labware and wells *************************
@@ -184,6 +183,8 @@ def run(ctx):
         try:
             self.pick_up_tip()
         except OutOfTipsError:
+            self.move_to(ctx.loaded_labwares[4].wells()[0].top().move(
+             types.Point(x=0, y=0, z=100)))
             ctx.pause(
              """Please Refill the {} Tip Boxes
                 and Empty the Tip Waste.""".format(self))
@@ -245,20 +246,23 @@ def run(ctx):
 
     # reagents
     starting_volume = {
-        reservoir.wells()[0]: vol_deadreservoir + count_samples*25,
-        reservoir.wells()[1]: vol_deadreservoir + count_samples*200,
-        reservoir.wells()[-1]: vol_deadreservoir + count_samples*200,
-        reagents.wells()[0]: vol_deadtube + 1.1*num_cols*25,
-        reagents.wells()[8]: vol_deadtube + 1.1*num_cols*25,
-        reagents.wells()[16]: vol_deadtube + 1.1*num_cols*25,
-        reagents.wells()[24]: vol_deadtube + 1.1*num_cols*10,
-        reagents.wells()[32]: vol_deadtube + 1.1*num_cols*4,
-        reagents.wells()[40]: vol_deadtube + 1.1*num_cols*2.5,
-        reagents.wells()[48]: vol_deadtube + 1.1*num_cols*10,
-        reagents.wells()[56]: vol_deadtube + 1.1*num_cols*22.5,
-        reagents.wells()[64]: vol_deadtube + 1.1*num_cols*22.5,
-        reagents.wells()[72]: vol_deadtube + 1.1*num_cols*9
+        reservoir.wells()[0]: vol_deadreservoir + count_samples*50,
+        reservoir.wells()[1]: vol_deadreservoir + count_samples*400,
+        reservoir.wells()[-1]: vol_deadreservoir + count_samples*400,
+        reagents.wells()[0]: vol_deaddeepwell + 1.1*num_cols*50,
+        reagents.wells()[8]: vol_deaddeepwell + 1.1*num_cols*50,
+        reagents.wells()[16]: vol_deaddeepwell + 1.1*num_cols*50,
+        reagents.wells()[24]: vol_deaddeepwell + 1.1*num_cols*20,
+        reagents.wells()[32]: vol_deaddeepwell + 1.1*num_cols*8,
+        reagents.wells()[40]: vol_deaddeepwell + 1.1*num_cols*5,
+        reagents.wells()[48]: vol_deaddeepwell + 1.1*num_cols*20,
+        reagents.wells()[56]: vol_deaddeepwell + 1.1*num_cols*45,
+        reagents.wells()[64]: vol_deaddeepwell + 1.1*num_cols*45,
+        reagents.wells()[72]: vol_deaddeepwell + 1.1*num_cols*18
         }
+
+    for column in cycler_plate.columns()[:num_cols]:
+        starting_volume[column[0]] = 50
 
     for labware, clearance in zip(
      [reservoir, reagents, cycler_plate, mag_plate],
@@ -318,23 +322,8 @@ def run(ctx):
 
     ctx.comment("STEP - Make RBP")
 
-    # add water to 25 uL
-    vol_h2o = 25 - vol_samples
+    # 50 uL RNA samples
     cycler_plate_cols = cycler_plate.columns_h()[:num_cols]
-
-    p300m.pick_up_tip()
-    for column in cycler_plate_cols:
-        p300m.aspirate_h(vol_h2o, water)
-        p300m.dispense_h(vol_h2o, column[0])
-    p300m.return_tip()
-    p300m.reset_tipracks()
-
-    # add RNA
-    for col_s, col_d in zip(samples.columns()[:num_cols], cycler_plate_cols):
-        p20m.pick_up_tip()
-        p20m.aspirate(vol_samples, col_s[0])
-        p20m.dispense_h(vol_samples, col_d[0])
-        p20m.drop_tip()
 
     # add oligo dT beads
     for reagent, name in zip([beads_dt], ['beads_dt']):
@@ -344,13 +333,13 @@ def run(ctx):
 
     for column in cycler_plate_cols:
         p300m.pick_up_tip()
-        p300m.aspirate_h(25, beads_dt, rate=0.6)
+        p300m.aspirate_h(50, beads_dt, rate=0.6)
         p300m.delay(1)
         p300m.slow_tip_withdrawal(10, beads_dt)
-        p300m.dispense_h(25, column[0], rate=0.6)
+        p300m.dispense_h(50, column[0], rate=0.6)
         for mix in range(6):
-            p300m.aspirate_h(50, column[0], rate=0.6)
-            p300m.dispense_h(50, column[0], rate=0.6)
+            p300m.aspirate_h(100, column[0], rate=0.6)
+            p300m.dispense_h(100, column[0], rate=0.6)
         p300m.delay(1)
         p300m.slow_tip_withdrawal(10, column[0])
         p300m.drop_tip()
@@ -359,12 +348,13 @@ def run(ctx):
 
     ctx.pause("Seal the cycler plate for step - Incubate 1 RBP")
 
-    cycler.set_lid_temperature(100)
+    cycler.set_lid_temperature(65)
     cycler.close_lid()
     cycler.execute_profile(
-     steps=mrna_denaturation, repetitions=1, block_max_volume=50)
+     steps=mrna_denaturation, repetitions=1, block_max_volume=100)
     cycler.open_lid()
     cycler.deactivate_lid()
+    cycler.set_block_temperature(4)
 
     ctx.pause(
      "Unseal the cycler plate and place it on the magnetic module.")
@@ -390,7 +380,7 @@ def run(ctx):
     mag.engage()
     ctx.delay(minutes=time_engage)
     for index, column in enumerate(mag_plate_cols):
-        remove_sup(p300m, 50)
+        remove_sup(p300m, 90)
         p300m.air_gap(20)
         p300m.drop_tip()
 
@@ -409,15 +399,14 @@ def run(ctx):
 
     mag.disengage()
     for column in mag_plate_cols:
-        add_reagent(p300m, 100, beadwash, 6)
+        add_reagent(p300m, 200, beadwash, 6)
 
     # remove sup
     mag.engage()
     ctx.delay(minutes=time_engage)
     waste = reservoir.wells()[-2]
     for index, column in enumerate(mag_plate_cols):
-        remove_sup(p300m, 75)
-        p300m.air_gap(20)
+        remove_sup(p300m, 100)
         p300m.dispense(200, waste.top(-3))
         p300m.blow_out()
         p300m.air_gap(20)
@@ -426,7 +415,7 @@ def run(ctx):
     # add elution buffer
     mag.disengage()
     for column in mag_plate_cols:
-        add_reagent(p300m, 25, elutionbf, 6)
+        add_reagent(p300m, 50, elutionbf, 6)
 
     ctx.comment("STEP - Incubate 2 RBP")
 
@@ -435,12 +424,13 @@ def run(ctx):
      """Seal the mag plate for step - Incubate 2 RBP.
     Place it on the cycler. Resume.""")
 
-    cycler.set_lid_temperature(100)
+    cycler.set_lid_temperature(80)
     cycler.close_lid()
     cycler.execute_profile(
-     steps=mrna_elution_1, repetitions=1, block_max_volume=25)
+     steps=mrna_elution_1, repetitions=1, block_max_volume=50)
     cycler.open_lid()
     cycler.deactivate_lid()
+    cycler.set_block_temperature(4)
 
     ctx.pause(
      "Unseal the cycler plate and place it on the magnetic module. Resume.")
@@ -449,7 +439,7 @@ def run(ctx):
 
     # add bead binding buffer
     for column in mag_plate_cols:
-        add_reagent(p300m, 25, beadbindingbf, 6)
+        add_reagent(p300m, 50, beadbindingbf, 6)
 
     # bind mRNA
     ctx.delay(minutes=5)
@@ -458,21 +448,20 @@ def run(ctx):
     mag.engage()
     ctx.delay(minutes=time_engage)
     for index, column in enumerate(mag_plate_cols):
-        remove_sup(p300m, 50)
+        remove_sup(p300m, 75)
         p300m.air_gap(20)
         p300m.drop_tip()
 
     # add beadwash
     mag.disengage()
     for column in mag_plate_cols:
-        add_reagent(p300m, 100, beadwash, 6)
+        add_reagent(p300m, 200, beadwash, 6)
 
     # remove sup
     mag.engage()
     ctx.delay(minutes=time_engage)
     for index, column in enumerate(mag_plate_cols):
-        remove_sup(p300m, 75)
-        p300m.air_gap(20)
+        remove_sup(p300m, 100)
         p300m.dispense(200, waste.top(-3))
         p300m.blow_out()
         p300m.air_gap(20)
@@ -481,7 +470,7 @@ def run(ctx):
     # add fragment prime finish
     mag.disengage()
     for column in mag_plate_cols:
-        add_reagent(p20m, 9.7, fragmentprimefinish, 6)
+        add_reagent(p20m, 19.4, fragmentprimefinish, 6)
 
     ctx.comment("STEP - Incubate RFP")
 
@@ -490,7 +479,7 @@ def run(ctx):
      """Seal the mag plate for step - Incubate RFP.
     Place it on the cycler. Resume.""")
 
-    cycler.set_lid_temperature(100)
+    cycler.set_lid_temperature(94)
     cycler.close_lid()
     cycler.execute_profile(
      steps=elution_2_frag_prime, repetitions=1, block_max_volume=10)
@@ -516,13 +505,13 @@ def run(ctx):
     mag.engage()
     ctx.delay(minutes=time_engage)
     for index, column in enumerate(mag_plate_cols):
-        remove_sup(p20m, 8.5)
-        p20m.dispense_h(8.5, cycler_plate.columns_h()[index][0])
+        remove_sup(p20m, 10)
+        p20m.dispense_h(20, cycler_plate.columns_h()[index][0])
         p20m.drop_tip()
 
     # add first strand synthesis Act D mix + superscript
     for column in cycler_plate_cols:
-        add_reagent(p20m, 4, firststrand, 2)
+        add_reagent(p20m, 8, firststrand, 2)
 
     # first strand synthesis
     ctx.pause(
@@ -531,7 +520,7 @@ def run(ctx):
     cycler.set_lid_temperature(100)
     cycler.close_lid()
     cycler.execute_profile(
-     steps=synthesize_1st_strand, repetitions=1, block_max_volume=12.5)
+     steps=synthesize_1st_strand, repetitions=1, block_max_volume=25)
     cycler.open_lid()
     cycler.deactivate_lid()
     cycler.set_block_temperature(4)
@@ -541,10 +530,10 @@ def run(ctx):
 
     # add end repair control and second strand marking master mix
     for column in cycler_plate_cols:
-        add_reagent(p20m, 2.5, endrepairctrl, 0)
+        add_reagent(p20m, 5, endrepairctrl, 0)
 
     for column in cycler_plate_cols:
-        add_reagent(p20m, 10, secondstrandmark, 6)
+        add_reagent(p20m, 20, secondstrandmark, 6)
 
     ctx.comment("STEP - Incubate 2 CDP")
 
@@ -554,13 +543,13 @@ def run(ctx):
     cycler.set_lid_temperature(37)
     cycler.close_lid()
     cycler.execute_profile(
-     steps=synthesize_2nd_strand, repetitions=1, block_max_volume=25)
+     steps=synthesize_2nd_strand, repetitions=1, block_max_volume=50)
     cycler.open_lid()
     cycler.deactivate_lid()
 
     ctx.pause(
      "Unseal the cycler plate and move it to the magnetic module. Resume.")
-    cycler.deactivate_block()
+    cycler.set_block_temperature(4)
 
     ctx.comment("STEP - Purify CDP")
 
@@ -568,11 +557,11 @@ def run(ctx):
 
     # add AMPure XP beads
     for column in mag_plate_cols[:3]:
-        add_reagent(p300m, 45, beads_xp1, 10)
+        add_reagent(p300m, 90, beads_xp1, 10)
 
     if len(mag_plate_cols) > 3:
         for column in mag_plate_cols[3:]:
-            add_reagent(p300m, 45, beads_xp2, 10)
+            add_reagent(p300m, 90, beads_xp2, 10)
 
     ctx.delay(minutes=15)
     mag.engage()
@@ -580,9 +569,9 @@ def run(ctx):
 
     # remove sup
     for index, column in enumerate(mag_plate_cols):
-        remove_sup(p300m, 68.5)
+        remove_sup(p300m, 90)
         p300m.air_gap(20)
-        p300m.dispense(160, waste.top(-3))
+        p300m.dispense(200, waste.top(-3))
         p300m.air_gap(20)
         p300m.drop_tip()
 
@@ -590,17 +579,16 @@ def run(ctx):
     for rep in range(2):
         p300m.pick_up_or_refill()
         for column in mag_plate_cols:
-            p300m.aspirate_h(100, etoh)
+            p300m.aspirate_h(180, etoh)
             p300m.air_gap(20)
-            p300m.dispense(120, column[0].top())
+            p300m.dispense(200, column[0].top())
             p300m.blow_out_solvent(column[0])
-            p300m.air_gap(20)
         p300m.drop_tip()
 
         for index, column in enumerate(mag_plate_cols):
-            remove_sup(p300m, 75)
+            remove_sup(p300m, 90)
             p300m.air_gap(20)
-            p300m.dispense(170, waste.top(-3))
+            p300m.dispense(200, waste.top(-3))
             p300m.blow_out_solvent(waste)
             p300m.air_gap(20)
             p300m.drop_tip()
@@ -612,7 +600,7 @@ def run(ctx):
 
     # add resuspension buffer
     for column in mag_plate_cols:
-        add_reagent(p20m, 8.75, resuspensionbf, 10)
+        add_reagent(p20m, 17.5, resuspensionbf, 10)
 
     ctx.delay(minutes=2)
     mag.engage()
@@ -623,8 +611,8 @@ def run(ctx):
 
     # transfer ds cDNA to new PCR plate
     for index, column in enumerate(mag_plate_cols):
-        remove_sup(p20m, 7.5)
-        p20m.dispense(7.5, samples.columns()[index][0])
+        remove_sup(p20m, 10)
+        p20m.dispense(20, samples.columns()[index][0])
         p20m.drop_tip()
 
     ctx.pause(
