@@ -165,7 +165,7 @@ def run(ctx):
         ''' Remove plate from magnetic module. Incubate 4 degree C at least
         15 minutes. Return the plate to the magnetic module and resume.''')
 
-    mag.engage(height_from_base=height_engage)
+    mag.engage(height=height_engage)
     ctx.delay(minutes=time_engage)
 
     # remove supernatant
@@ -222,7 +222,7 @@ def run(ctx):
 
     ctx.delay(minutes=5)
 
-    mag.engage(height_from_base=height_engage)
+    mag.engage(height=height_engage)
     ctx.delay(minutes=time_engage)
 
     pause_attention(
