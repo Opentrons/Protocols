@@ -1,13 +1,7 @@
 [
   {
     "type": "int",
-    "label": "number of acetonitrile (1-5)",
-    "name": "num_acetonitrile",
-    "default": 5
-  },
-  {
-    "type": "int",
-    "label": "number of TMT (1-18)",
+    "label": "number of TMT reagents (1-18)",
     "name": "num_tmt",
     "default": 18
   },

@@ -30,7 +30,7 @@ This protocol carries out mass spec sample prep for the ThermoFisher Scientific 
 
 ### Deck Setup
 
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/714f71/deck2.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/714f71/deck3.png)
 
 ---
 
