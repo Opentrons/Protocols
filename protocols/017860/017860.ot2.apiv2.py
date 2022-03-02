@@ -5,85 +5,93 @@ import math
 metadata = {
     'protocolName': 'CSV Plate Filling',
     'author': 'Nick <protocols@opentrons.com>',
-    'source': 'Custom Protocol Request'
+    'source': 'Custom Protocol Request',
+    'apiLevel': '2.11'
 }
 
 
 def get_values(*names):
     import json
     _all_values = json.loads("""{
-                                  "20_ul_tiprack_lname":"opentrons_96_tiprack_20ul",
-                                  "300_ul_tiprack_lname":"opentrons_96_tiprack_300ul"
+                                  "input_csv":",M9,AMP_128,AMP_16,AMP_2,AZT_0.5,AZT_0.0625,AZT_0.0078125,CAZ_2,CAZ_0.25,CAZ_0.03125,CHL_128,CHL_16,CHL_2,CIP_0.25,CIP_0.03125,CIP_0.00390625,GEN_8,GEN_1,GEN_0.125,RIF_256,RIF_32,RIF_4,SXT_4,SXT_0.5,SXT_0.0625,TMP_8,TMP_1,TMP_0.125,TOB_8,TOB_1,TOB_0.125,color\\n99999,50,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,50\\n100,90,0,0,0,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\\n265,97.5,0,0,0,0,0,0,0,0,0,0,0,0,0,2.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\\n 300,97.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\\n305,90,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0\\n380,90,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,0,0,0,0,0,0,0,0,0",
+                                  "tiprack_lname_20_ul":"opentrons_96_tiprack_20ul",
+                                  "tiprack_lname_300ul":"opentrons_96_tiprack_300ul",
+                                  "n_plates":6,
+                                  "n_tubes":36
                                   }
                                   """)
     return [_all_values[n] for n in names]
 
 
 def run(ctx: protocol_api.ProtocolContext):
-    # update the path to your transfer CSV on the robot
-    transfer_info_csv_path = "data/csv/rr027-M9_singlesCheck.csv"
 
-    # create custom labware
-    # plate_name = 'NUNC-96-flat'
+    [input_csv,
+     tiprack_lname_20_ul,
+     tiprack_lname_300ul,
+     n_plates
+     ] = get_values(  # noqa: F821
+     "input_csv",
+     "tiprack_lname_20_ul",
+     "tiprack_lname_300ul",
+     "n_plates"
+     )
+
+    if not 0 < n_plates < 7:
+        raise Exception(("The number of plates are {}, but should be between "
+                         "one to six").format(n_plates))
+
+    # update the path to your transfer CSV on the robot
+    # REVIEW: I think the user used to have to manually edit this to get the
+    # desired input file. I modernized it so that it's loaded through
+    # fields.json, but that changes their workflow. Keep or not?
+    # transfer_info_csv_path = "data/csv/rr027-M9_singlesCheck.csv"
+
     plate_name = 'nunc_96_wellplate_400ul'
-    # database.delete_container(plate_name)
-    # if plate_name not in labware.list():
-    #   labware.create(
-    #   plate_name,
-    #   grid=(12, 8),
-    #   spacing=(9, 9),
-    #   diameter=7,
-    #   depth=10.8,
-    #   volume=400
-    #   )
 
     # labware
-    plates = [ctx.load_labware(plate_name, str(slot+1)) for slot in range(6)]
-    tuberack_15_50 = ctx.load_labware('opentrons-tuberack-15_50ml', '8')
-    tuberacks_15 = [ctx.load_labware('opentrons-tuberack-15ml', slot)
-                    for slot in ['9', '7']]
-    tips_300 = ctx.load_labware('opentrons-tiprack-300ul', '11')
-    tips_20 = ctx.load_labware('opentrons-tiprack-10ul', '10')
+    plates = [ctx.load_labware(plate_name, str(slot+1))
+              for slot in range(n_plates)]
+    tuberack_15_50 = ctx.load_labware(
+        'opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical', '8')
+    tuberacks_15 = \
+        [ctx.load_labware('opentrons_15_tuberack_falcon_15ml_conical', slot)
+         for slot in ['9', '7']]
     tips_20 = [ctx.load_labware('opentrons_96_tiprack_20ul', '10')]
     tips_300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '11')]
 
-    # pipettes
-    # p10 = (
-    #   mount='left',
-    #   tip_racks=[tips_10]
-    #   )
-    # p300 = instruments.P300_Single(
-    #   mount='right',
-    #   tip_racks=[tips_300]
-    #   )
     p20 = ctx.load_instrument(
                               'p20_single_gen2',
                               'left',
-                              tip_racks=[tips_20]
+                              tip_racks=tips_20
                               )
     p300 = ctx.load_instrument(
                               'p300_single_gen2',
                               'right',
-                              tip_racks=[tips_300]
+                              tip_racks=tips_300
                               )
 
-    p20.set_flow_rate(aspirate=100, dispense=1000)
-    p300.set_flow_rate(aspirate=100, dispense=250)
+    p20.flow_rate.aspirate = 100
+    p20.flow_rate.dispense = 1000
+    p300.flow_rate.aspirate = 100
+    p300.flow_rate.dispense = 1000
 
-    # set up list of all wells
-    all_wells = [well for plate in plates for well in plate.wells()]
-
-    # set up list of all source tubes
-    # check volume of water necessary and change length of waters accordingly
-    NUM_DRUGS = 31
-    waters = [tube for tube in tuberack_15_50.wells('A3', length=3)]
-    drugs1 = [tube for tube in [
-        tuberack_15_50.wells('A1', length=NUM_DRUGS-15*2)]]
-    drugs2 = [tube for rack in tuberacks_15 for tube in rack.wells()]
-    # run through all of the full 15mL racks before going back
-    # to tuberack_15_50
-    # barcode dye is the last tube (C1) of the 15/50 rack
-    drugs = drugs2 + drugs1
+    # New csv parsing functions for csv input as string from protocol web
+    # interface
+    def csv_string_to_list(csv_string):
+        new_list = []
+        rows = csv_string.split()
+        new = csv.reader(rows)
+        for row in new:
+            new_list.append(row)
+        new_list = new_list[1:]
+        reordered = []
+        # Transform rows -> columns
+        for col in range(len(new_list[0])):
+            temp = []
+            for row in new_list:
+                temp.append(row[col])
+            reordered.append(temp)
+        return reordered
 
     # CSV parsing function
 
@@ -95,12 +103,43 @@ def run(ctx: protocol_api.ProtocolContext):
                 new_list.append(row)
         new_list = new_list[1:]
         reordered = []
+        # Transform rows -> columns
         for col in range(len(new_list[0])):
             temp = []
             for row in new_list:
                 temp.append(row[col])
             reordered.append(temp)
         return reordered
+
+    # parses through CSV for transfer data
+    csv_info = csv_string_to_list(input_csv)
+    csv_info.pop(0)  # First csv column is identifiers I think.
+
+    # set up list of all wells
+    all_wells = [well for plate in plates for well in plate.wells()]
+
+    # set up list of all source tubes
+    # check volume of media necessary and change length of medias accordingly
+    # The number of drug tubes is the length of the CSV rows minus the entry
+    # for media once the identifier column has been popped off.
+    NUM_DRUGS = len(csv_info) - 1
+    if not 0 < NUM_DRUGS < 37:
+        raise Exception(("The number of antibiotic tubes are {}, as defined "
+                         "by the csv but should be between 1 to 36, please "
+                         "check your input file").format(NUM_DRUGS))
+    media_tubes = tuberack_15_50.wells_by_name()
+    medias = [media_tubes['A3'], media_tubes['B3'], media_tubes['A4']]
+    # For a maximum number of 3 antibiotic tubes on the 15/50 mL tuberack
+    # 15*2 refers to the number of drug tubes that fit on the two 15 ml
+    # tuberacks (i.e. 15 each)
+    drugs1 = None
+    if NUM_DRUGS > 15*2:
+        drugs1 = tuberack_15_50.wells()[0:NUM_DRUGS-15*2]
+    drugs2 = [tube for rack in tuberacks_15 for tube in rack.wells()]
+    # run through all of the full 15mL racks before going back
+    # to tuberack_15_50
+    # barcode dye is the last tube (C1) of the 15/50 rack
+    drugs = drugs2 + drugs1 if drugs1 is not None else drugs2
 
     # well height and volume tracking function
     well_V_track = [0 for _ in range(len(plates)*96)]
@@ -109,44 +148,49 @@ def run(ctx: protocol_api.ProtocolContext):
     pi = math.pi
 
     def well_height_track(well_ind, vol):
-        global well_V_track
-        global well_h_track
-        global well_r
+        nonlocal well_V_track
+        nonlocal well_h_track
+        nonlocal well_r
 
         dh = vol/(pi*(well_r**2))
         well_h_track[well_ind] += dh
 
-    # water height and volume tracking function
-    water = waters[0]
-    num_waters = 3
-    start_waters = 0
-    water_V_track = 70000
-    water_h_track = -16
-    water_r_cyl = 13.5
+    # media height and volume tracking function
+    media = medias[0]
+    num_medias = 3
+    start_medias = 0
+    media_V_track = 70000
+    media_h_track = -16
+    media_r_cyl = 13.5
 
-    def water_height_track(vol):
-        global water_V_track
-        global water_h_track
-        global water
-        global num_waters
-        global start_waters
+    def media_height_track(vol):
+        """
+        Keeps track of the three media tubes volume height, and when to switch
+        tubes when the current tube runs too low
+        """
 
-        water_V_track -= vol
-        # change and reset water tube if necessary
-        if water_V_track < 500:
-            num_waters -= 1
-            if num_waters == 0:
-                ctx.pause("Please replace two 50ml water tubes filled to "
+        nonlocal media_V_track
+        nonlocal media_h_track
+        nonlocal media
+        nonlocal num_medias
+        nonlocal start_medias
+
+        media_V_track -= vol
+        # change and reset media tube if necessary
+        if media_V_track < 500:
+            num_medias -= 1
+            if num_medias == 0:
+                ctx.pause("Please replace two 50ml media tubes filled to "
                           "50ml line before resuming.")
-                water = waters[0]
+                media = medias[0]
             else:
-                start_waters += 1
-                water = waters[start_waters]
-            water_V_track = 70000
-            water_h_track = -16
+                start_medias += 1
+                media = medias[start_medias]
+            media_V_track = 70000
+            media_h_track = -16
 
-        dh = (0.70*vol)/(pi*(water_r_cyl**2))
-        water_h_track -= dh
+        dh = (0.70*vol)/(pi*(media_r_cyl**2))
+        media_h_track -= dh
 
     # initialize volume and height trackers, assuming that reagents are filled
     # to 14ml line in standard 15ml tube
@@ -160,9 +204,9 @@ def run(ctx: protocol_api.ProtocolContext):
     cone_vol = pi*(drug_r_cyl**2)*drug_h_cone/3
 
     def drug_height_track(drug_ind, vol):
-        global drug_V_track
-        global drug_h_track
-        global drug_r_cone
+        nonlocal drug_V_track
+        nonlocal drug_h_track
+        nonlocal drug_r_cone
 
         # check that there is sufficient drug left in the tube
         if drug_V_track[drug_ind] - vol < 100:
@@ -185,10 +229,6 @@ def run(ctx: protocol_api.ProtocolContext):
             drug_V_track[drug_ind] -= vol
             drug_r_cone[drug_ind] = new_h*tan
 
-    # parses through CSV for transfer data
-    csv_info = csv_to_list(transfer_info_csv_path)
-    csv_info.pop(0)
-
     # calculate number of deck fills and initialize counter
     num_wells = len(plates)*96
     num_deck_fills = math.ceil(len(csv_info[0])/num_wells)
@@ -200,43 +240,44 @@ def run(ctx: protocol_api.ProtocolContext):
         # define CSV indices that will receive transfer on this deck set
         block_ind = range(fill*num_wells, (fill+1)*num_wells)
 
-        p300.pick_up_tip(tips_300.wells(0))
-        p20.pick_up_tip(tips_20.wells(0))
+        p300.pick_up_tip()
+        p20.pick_up_tip()
 
         # set proper tube and height to aspirate from, and initialize volumes
         # and aspirate for distribution
-        water_height_track(300)
-        p300.aspirate(300, water.top(water_h_track))
+        media_height_track(300)
+        p300.aspirate(300, media.top(media_h_track))
         pip_300_v_track = 300
 
-        water_height_track(10)
-        p20.aspirate(10, water.top(water_h_track))
-        pip_50_v_track = 10
+        media_height_track(20)
+        p20.aspirate(20, media.top(media_h_track))
+        pip_50_v_track = 20
 
+        # Transfer media to wells
         for i, (ind, well) in enumerate(zip(block_ind, all_wells)):
             if ind == num_total_transfers:
                 break
             v = float(csv_info[0][ind])
 
             # choose pipette
-            if v <= 10 and v > 0:
+            if v <= 20 and v > 0:
                 # check volume in pipette
                 if v > pip_50_v_track - 5:
-                    p20.blow_out(water.top())
-                    water_height_track(10)
-                    p20.aspirate(10, water.top(water_h_track))
-                    pip_50_v_track = 10
+                    p20.blow_out(media.top())
+                    media_height_track(20)
+                    p20.aspirate(20, media.top(media_h_track))
+                    pip_50_v_track = 20
 
                 # perform transfer
                 well_height_track(i, v)
                 p20.dispense(v, well.bottom(-0.4))
                 pip_50_v_track -= v
 
-            elif v > 10:
+            elif v > 20:
                 if v > pip_300_v_track - 5:
-                    p300.blow_out(water.top())
-                    water_height_track(300)
-                    p300.aspirate(300, water.top(water_h_track))
+                    p300.blow_out(media.top())
+                    media_height_track(300)
+                    p300.aspirate(300, media.top(media_h_track))
                     pip_300_v_track = 300
 
                 # perform transfer
@@ -249,18 +290,15 @@ def run(ctx: protocol_api.ProtocolContext):
         p300.drop_tip()
         p20.drop_tip()
 
-        # start P20 at correct tip position
-        p20.start_at_tip(tips_20.wells(1))
-
         # perform drugs transfer
         for drug_ind, drug in enumerate(drugs):
             # range of drug transfers always between 5 and 50ul
             p20.pick_up_tip()
 
             # initialize volumes and aspirate for distribution
-            drug_height_track(drug_ind, 10)
-            p20.aspirate(10, drug.top(drug_h_track[drug_ind]))
-            pip_v_track = 10
+            drug_height_track(drug_ind, 20)
+            p20.aspirate(20, drug.top(drug_h_track[drug_ind]))
+            pip_v_track = 20
 
             # loop and distribute drug in proper amounts
             for i, (ind, well) in enumerate(zip(block_ind, all_wells)):
@@ -274,16 +312,19 @@ def run(ctx: protocol_api.ProtocolContext):
                     # check if volume in pipette tip can accommodate transfer
                     if v > pip_v_track - 5:
                         p20.blow_out(drug.top())
-                        drug_height_track(drug_ind, 10)
-                        p20.aspirate(10, drug.top(drug_h_track[drug_ind]))
-                        pip_v_track = 10
+                        drug_height_track(drug_ind, 20)
+                        p20.aspirate(20, drug.top(drug_h_track[drug_ind]))
+                        pip_v_track = 20
 
                     # perform transfer
-                    print(well_h_track[i])
+                    # REVIEW: I think this was left here for debugging in the
+                    # original protocol
+                    # print(str(well_h_track[i]))
                     well_height_track(i, v)
                     p20.dispense(v, well.bottom(well_h_track[i]))
                     pip_v_track -= v
 
+                    # REVIEW: Commented out in the original protocol
                     # touch tip if necessary
                     # drop1 = well.from_center(h=-0.2, theta=0, r=0)
                     # drop2 = well.from_center(h=1.5, theta=0, r=0)
@@ -293,11 +334,11 @@ def run(ctx: protocol_api.ProtocolContext):
                     # p10.move_to(down)
 
             # return tip to corresponding well for future deck refills
-            p20.drop_tip()
+            p20.return_tip()
 
         if fill < num_deck_fills-1:
-            ctx.pause("Please remove all sample plates from the deck and "
-                      "replace tips in the first 33 wells of the tiprack "
-                      "before resuming.")
-            p300.reset()
-            p20.reset()
+            ctx.pause(("Please remove all sample plates from the deck and "
+                      "replace tips in the first {} wells of the tiprack "
+                       "before resuming.").format(NUM_DRUGS))
+            p20.reset_tipracks()
+            p300.reset_tipracks()
