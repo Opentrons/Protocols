@@ -1,0 +1,20 @@
+[
+  {
+    "type": "dropDown",
+    "label": "20 uL pipette tips",
+    "name": "20_ul_tiprack_lname",
+    "options": [
+      {"label": "Opentrons 20 uL 96 tiprack", "value": "opentrons_96_tiprack_20ul"},
+      {"label": "BrandTech 20 uL 96 tiprack", "value": "brandtech_96_tiprack_20ul"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "300 uL pipette tips",
+    "name": "300_ul_tiprack_lname",
+    "options": [
+      {"label": "Opentrons 300 uL 96 tiprack", "value": "opentrons_96_tiprack_300ul"},
+      {"label": "BrandTech 300 uL 96 tiprack", "value": "brandtech_96_tiprack_300ul"}
+    ]
+  }
+]
