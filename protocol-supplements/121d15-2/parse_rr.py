@@ -16,20 +16,20 @@ enter_loop = True
 root = tk.Tk()
 root.geometry("800x400")
 
-plate1_file_prompt = tk.Label(root, text='plate 1 file')
-plate1_scan_prompt = tk.Label(root, text='plate 1 scan')
+plate1_file_prompt = tk.Label(root, text='source labware 1 file')
+plate1_scan_prompt = tk.Label(root, text='source labware 1 scan')
 plate1_scan = tk.Entry(root)
 plate1_scan.insert(0, '')
 plate1_status = tk.Label(root, text='')
-tuberack1_scan_prompt = tk.Label(root, text='tuberack 1 scan')
+tuberack1_scan_prompt = tk.Label(root, text='destination labware 1 scan')
 tuberack1_scan = tk.Entry(root)
 tuberack1_scan.insert(0, '')
-plate2_file_prompt = tk.Label(root, text='plate 2 file')
-plate2_scan_prompt = tk.Label(root, text='plate 2 scan')
+plate2_file_prompt = tk.Label(root, text='source labware 2 file')
+plate2_scan_prompt = tk.Label(root, text='source labware 2 scan')
 plate2_scan = tk.Entry(root, text='')
 plate2_scan.insert(0, '')
 plate2_status = tk.Label(root, text='')
-tuberack2_scan_prompt = tk.Label(root, text='tuberack 2 scan')
+tuberack2_scan_prompt = tk.Label(root, text='destination labware 2 scan')
 tuberack2_scan = tk.Entry(root)
 tuberack2_scan.insert(0, '')
 volume_prompt = tk.Label(root, text='volume (in ul)')
@@ -45,14 +45,14 @@ file_map = {
     'Redo Replacement 96 1.2ml plate': 'greiner_1000_redoreplacementpicking.ot2.apiv2.py',
     'Redo Replacement 96 2.2ml plate': 'irish_2200_redoreplacementpicking.ot2.apiv2.py',
     'Redo Replacement 384 0.24ml plate': 'greiner_384_redoreplacementpicking.ot2.apiv2.py',
-    'Pooling 2ml tubes to 15ml tubes': '',
-    'Pooling 2ml tubes to 2ml tubes': '',
-    'Aliquoting 15ml tubes to 2ml tubes': '',
-    'Aliquoting 2ml tubes to 2ml tubes': '',
+    'Pooling 2ml tubes to 15ml tubes': 'pooling_2ml_15ml.ot2.apiv2.py',
+    'Pooling 2ml tubes to 2ml tubes': 'pooling_2ml_2ml.ot2.apiv2.py',
+    'Aliquoting 15ml tubes to 2ml tubes': 'aliquoting_15ml_2ml.ot2.apiv2.py',
+    'Aliquoting 2ml tubes to 2ml tubes': 'aliquoting_2ml_2ml.ot2.apiv2.py',
 }
 options = file_map.keys()
 dropdown_value = tk.StringVar(root)
-dropdown_value.set('Select plate type')
+dropdown_value.set('select protocol type')
 
 # initial menu text
 dropdown = tk.OptionMenu(root, dropdown_value, *options)
@@ -145,7 +145,7 @@ def end():
             content2 = extract_csv_contents(plate2_status['text'], 'input_file2')
             plate1_info = [f"plate_scan = '{plate1_scan.get()}'"]
             plate2_info = [f"plate_scan2 = '{plate2_scan.get()}'"]
-            tuberack1_info = [f"tuberack_scan1 = '{tuberack1_scan.get()}'"]
+            tuberack1_info = [f"tuberack_scan = '{tuberack1_scan.get()}'"]
             tuberack2_info = [f"tuberack_scan2 = '{tuberack2_scan.get()}'"]
         else:
             name_part_1 = parse_file_name(plate1_status['text'])
@@ -154,11 +154,11 @@ def end():
             content2 = ['input_file2 = ""']
             plate1_info = [f"plate_scan = '{plate1_scan.get()}'"]
             plate2_info = ["plate_scan2 = ''"]
-            tuberack1_info = [f"tuberack_scan1 = '{tuberack1_scan.get()}'"]
+            tuberack1_info = [f"tuberack_scan = '{tuberack1_scan.get()}'"]
             tuberack2_info = ["tuberack_scan2 = ''"]
 
-        if dropdown_value.get() == 'Select plate type':
-            status['text'] = 'Please select plate type'
+        if dropdown_value.get() == 'select protocol type':
+            status['text'] = 'Please select protocol type'
         template = file_map[dropdown_value.get()]
         template_path = f'{template_directory}\\{template}'
         out_file_path = f"{output_directory}\\{outfile_name}"
