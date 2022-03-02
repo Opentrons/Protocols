@@ -1,0 +1,9 @@
+Number of Redo
+5
+pos TB_RCK_1,pos MTP_1,VolumeInPlate,VolumeFromTube
+RPL220225NU,9094076_6_AAD_1_4_1
+1,120,90,120
+2,183,90,120
+3,265,90,120
+4,330,90,120
+5,332,90,120

@@ -99,9 +99,9 @@ def run(ctx):
                 supply well radius or well length and width.""")
             if self.height < min_height:
                 self.height = min_height
-            elif self.height > well.parent.highest_z:
-                raise Exception("""Specified liquid volume
-                can not exceed the height of the labware.""")
+            # elif self.height > well.parent.highest_z:
+            #    raise Exception("""Specified liquid volume
+            #    can not exceed the height of the labware.""")
 
         def height_dec(self, vol, ppt, bottom=False):
             # decrement height (mm)

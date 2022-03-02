@@ -2,10 +2,11 @@ import os
 import json
 import math
 
+
 # metadata
 metadata = {
-    'protocolName': 'Redo Replacement Picking (Irish Life Sciences 96 Well \
-Plate 2200 µL)',
+    'protocolName': 'Redo Replacement Picking (Greiner MASTERBLOCK 96 Well \
+Plate 1000 µL)',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'
@@ -15,22 +16,16 @@ Plate 2200 µL)',
 def run(ctx):
 
     tip_track = True
-
-    [input_file, input_file2, tuberack_scan, plate_scan, tuberack_scan2,
-     plate_scan2, default_disposal_vol, default_transfer_vol,
-     p300_mount] = get_values(  # noqa: F821
-        'input_file', 'input_file2', 'tuberack_scan', 'plate_scan',
-        'tuberack_scan2',  'plate_scan2', 'default_disposal_vol',
-        'default_transfer_vol', 'p300_mount')
+    p300_mount = 'left'
 
     # load labware
     rack = ctx.load_labware('eurofins_96x2ml_tuberack', '2', 'tuberack')
 
-    plates = [ctx.load_labware('irishlifesciences_96_wellplate_2200ul', '4')]
+    plates = [ctx.load_labware('greinermasterblock_96_wellplate_1000ul', '4')]
 
     if input_file2:
         plates.append(
-         ctx.load_labware('irishlifesciences_96_wellplate_2200ul', '1'))
+         ctx.load_labware('greinermasterblock_96_wellplate_1000ul', '1'))
 
     tips300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
@@ -84,7 +79,6 @@ resuming.')
     # check barcode scans (tube, plate)
     tuberack_bar, plate_bar = input_file.splitlines()[3].split(',')[:2]
     if not tuberack_scan[:len(tuberack_scan)-4] == tuberack_bar.strip():
-        print(tuberack_scan[:len(tuberack_scan)-4])
         raise Exception(f'Tuberack scans do not match ({tuberack_bar}, \
 {tuberack_scan})')
     if not plate_scan[:len(plate_scan)-4] == plate_bar.strip():
@@ -93,7 +87,6 @@ resuming.')
     if input_file2:
         tuberack_bar2, plate_bar2 = input_file2.splitlines()[3].split(',')[:2]
         if not tuberack_scan2[:len(tuberack_scan2)-4] == tuberack_bar2.strip():
-            print(tuberack_scan2[:len(tuberack_scan2)-4])
             raise Exception(f'Tuberack2 scans do not match ({tuberack_bar2}, \
     {tuberack_scan2})')
         if not plate_scan2[:len(plate_scan2)-4] == plate_bar2.strip():

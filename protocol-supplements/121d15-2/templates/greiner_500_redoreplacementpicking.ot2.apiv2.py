@@ -4,8 +4,8 @@ import math
 
 # metadata
 metadata = {
-    'protocolName': 'Redo Replacement Picking (Greiner Masterblock 384 Well \
-Plate 225 µL)',
+    'protocolName': 'Redo Replacement Picking (Greiner MASTERBLOCK 96 Well \
+Plate 500 µL)',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'
@@ -15,22 +15,16 @@ Plate 225 µL)',
 def run(ctx):
 
     tip_track = True
-
-    [input_file, input_file2, tuberack_scan, plate_scan, tuberack_scan2,
-     plate_scan2, default_disposal_vol, default_transfer_vol,
-     p300_mount] = get_values(  # noqa: F821
-        'input_file', 'input_file2', 'tuberack_scan', 'plate_scan',
-        'tuberack_scan2',  'plate_scan2', 'default_disposal_vol',
-        'default_transfer_vol', 'p300_mount')
+    p300_mount = 'left'
 
     # load labware
     rack = ctx.load_labware('eurofins_96x2ml_tuberack', '2', 'tuberack')
 
-    plates = [ctx.load_labware('greinermasterblock_384_wellplate_225ul', '4')]
+    plates = [ctx.load_labware('greinermasterblock_96_wellplate_500ul', '4')]
 
     if input_file2:
         plates.append(
-         ctx.load_labware('greinermasterblock_384_wellplate_225ul', '1'))
+         ctx.load_labware('greinermasterblock_96_wellplate_500ul', '1'))
 
     tips300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
@@ -174,7 +168,7 @@ resuming.')
                 p300.move_to(tube.top())
                 p300.air_gap(20)
                 p300.aspirate(vol, tube.bottom(0.2))
-                p300.dispense(vol+20, well.top(-2), rate=1.5)
+                p300.dispense(vol+20, well.top(-1), rate=1.5)
                 ctx.delay(seconds=1)
 
             p300.drop_tip()
