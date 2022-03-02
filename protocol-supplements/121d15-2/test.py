@@ -7,25 +7,24 @@ RPL220225NP,9094104_6_AAE_1_4_1
 
 input_file2 = ""
 
-plate_scan = '9094104_6_AAE_1_4_1____'
+plate_scan = ''
 
 plate_scan2 = ''
 
-tuberack_scan = 'RPL220225NP____'
+tuberack_scan1 = ''
 
 tuberack_scan2 = ''
 
 default_disposal_vol = 200
 default_transfer_vol = 200
 
+import math
 import os
 import json
-import math
 
 # metadata
 metadata = {
-    'protocolName': 'Redo Replacement Picking (Greiner Masterblock 384 Well \
-Plate 225 µL)',
+    'protocolName': 'Aliquoting - 15ml Tuberack to 2ml Tuberack',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'
@@ -38,14 +37,9 @@ def run(ctx):
     p300_mount = 'left'
 
     # load labware
-    rack = ctx.load_labware('eurofins_96x2ml_tuberack', '2', 'tuberack')
-
-    plates = [ctx.load_labware('greinermasterblock_384_wellplate_225ul', '4')]
-
-    if input_file2:
-        plates.append(
-         ctx.load_labware('greinermasterblock_384_wellplate_225ul', '1'))
-
+    rack2 = ctx.load_labware('eurofins_96x2ml_tuberack', '2', 'tuberack')
+    rack15 = ctx.load_labware('opentrons_15_tuberack_falcon_15ml_conical',
+                              '1')
     tips300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
         for slot in ['11']]
@@ -96,104 +90,83 @@ resuming.')
             tip_log[pip]['count'] += 1
 
     # check barcode scans (tube, plate)
-    tuberack_bar, plate_bar = input_file.splitlines()[3].split(',')[:2]
-    if not tuberack_scan[:len(tuberack_scan)-4] == tuberack_bar.strip():
-        print(tuberack_scan[:len(tuberack_scan)-4])
-        raise Exception(f'Tuberack scans do not match ({tuberack_bar}, \
-{tuberack_scan})')
-    if not plate_scan[:len(plate_scan)-4] == plate_bar.strip():
-        raise Exception(f'Plate scans do not match ({plate_bar}, {plate_bar})')
-
-    if input_file2:
-        tuberack_bar2, plate_bar2 = input_file2.splitlines()[3].split(',')[:2]
-        if not tuberack_scan2[:len(tuberack_scan2)-4] == tuberack_bar2.strip():
-            print(tuberack_scan2[:len(tuberack_scan2)-4])
-            raise Exception(f'Tuberack2 scans do not match ({tuberack_bar2}, \
-    {tuberack_scan2})')
-        if not plate_scan2[:len(plate_scan2)-4] == plate_bar2.strip():
-            raise Exception(
-             f'Plate2 scans do not match ({plate_bar2}, {plate_bar2})')
+    tuberack1_bar, tuberack2_bar = input_file.splitlines()[3].split(',')[:2]
+    if not tuberack1_scan[:len(tuberack1_scan)-4] == tuberack1_bar.strip():
+        raise Exception(f'Tuberack 1 scans do not match ({tuberack1_bar}, \
+{tuberack1_scan})')
+    if not tuberack2_scan[:len(tuberack2_scan)-4] == tuberack2_bar.strip():
+        raise Exception(f'Tuberack 2 scans do not match ({tuberack2_bar}, \
+{tuberack2_bar})')
 
     # parse
-    inputdata = [[
+    data = [
         [val.strip() for val in line.split(',')]
         for line in input_file.splitlines()[4:]
-        if line and line.split(',')[0].strip()]]
+        if line and line.split(',')[0].strip()]
 
-    tubelist = [[
-        well for col in rack.columns()
-        for well in col[:8]]]
+    tubes1_ordered = rack15.wells()
 
-    if input_file2:
+    # to take vol and return estimated liq height
+    def liq_height(well):
+        if well.diameter is not None:
+            radius = well.diameter / 2
+            cse = math.pi*(radius**2)
+        elif well.length is not None:
+            cse = well.length*well.width
+        else:
+            cse = None
+        if cse:
+            return well.liq_vol / cse
+        else:
+            raise Exception("""Labware definition must
+                supply well radius or well length and width.""")
 
-        inputdata.append([
-            [val.strip() for val in line.split(',')]
-            for line in input_file2.splitlines()[4:]
-            if line and line.split(',')[0].strip()])
+    tubes2_ordered = [
+        well for col in rack2.columns()
+        for well in col[:8]]
 
-        tubelist.append([
-            well for col in rack.columns()
-            for well in col[8:]])
+    prev_source = None
+    for line in data:
+        tube1 = tubes1_ordered[int(line[0])-1]
 
-    for data, plate, tubes_ordered in zip(inputdata, plates, tubelist):
-        for line in data:
-            tube = tubes_ordered[int(line[0])-1]
-            well = plate.wells()[int(line[1])-1]
-            if len(line) >= 3 and line[2]:
-                disposal_vol = float(line[2])
-            else:
-                disposal_vol = default_disposal_vol
-            if len(line) >= 4 and line[3]:
-                transfer_vol = float(line[3])
-            else:
-                transfer_vol = default_transfer_vol
+        # current volume - 15 mL source tube
+        tube1.liq_vol = int(line[3])
 
-            # remove contents of well
+        tube2 = tubes2_ordered[int(line[1])-1]
+        if len(line) >= 3 and line[2]:
+            transfer_vol = float(line[2])
+        else:
+            transfer_vol = default_transfer_vol
+
+        # effective tip capacity 280 with 20 uL air gap
+        reps = math.ceil(transfer_vol / 280)
+
+        vol = transfer_vol / reps
+
+        # transfer
+        if tube1 != prev_source:
+            if p300.has_tip:
+                p300.drop_tip()
             _pick_up(p300)
 
-            ctx.max_speeds['A'] = 100  # slow descent
-            ctx.max_speeds['Z'] = 100  # slow descent
+        for rep in range(reps):
+            p300.move_to(tube1.top())
+            p300.air_gap(20)
 
-            # effective tip capacity 280 with 20 uL air gap
-            reps = math.ceil(disposal_vol / 280)
+            # aspirate with tip 3 mm below anticipated liquid level
+            tube1.liq_vol -= vol
+            tipheight = liq_height(
+             tube1) - 3 if liq_height(tube1) - 3 > 1 else 1
 
-            vol = disposal_vol / reps
+            p300.aspirate(vol, tube1.bottom(tipheight))
+            p300.dispense(vol+20, tube2.top(-5), rate=2)
+            ctx.delay(seconds=1)
+            p300.blow_out()
 
-            for rep in range(reps):
-                p300.move_to(well.top())
-                p300.air_gap(20)
-                p300.aspirate(vol, well.bottom(1))
-                p300.dispense(
-                 vol+20, ctx.fixed_trash.wells()[0].top(-5), rate=1.5)
-                ctx.delay(seconds=1)
+        prev_source = tube1
+    p300.drop_tip()
 
-            # to improve completeness of removal
-            for clearance in [0.7, 0.4, 0.2, 0]:
-                p300.aspirate(20, well.bottom(clearance))
-
-            del ctx.max_speeds['A']  # reset to default
-            del ctx.max_speeds['Z']  # reset to default
-
-            p300.drop_tip()
-
-            # transfer tube to well
-            _pick_up(p300)
-
-            # effective tip capacity 280 with 20 uL air gap
-            reps = math.ceil(transfer_vol / 280)
-
-            vol = transfer_vol / reps
-
-            for rep in range(reps):
-                p300.move_to(tube.top())
-                p300.air_gap(20)
-                p300.aspirate(vol, tube.bottom(0.2))
-                p300.dispense(vol+20, well.top(-2), rate=1.5)
-                ctx.delay(seconds=1)
-
-            p300.drop_tip()
-
-    # track final used tip
+    # track final tip used
     if not ctx.is_simulating():
         if not os.path.isdir(folder_path):
             os.mkdir(folder_path)

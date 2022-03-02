@@ -16,7 +16,6 @@ def run(ctx):
     tip_track = True
     p300_mount = 'left'
 
-
     # load labware
     rack = ctx.load_labware('eurofins_96x2ml_tuberack', '2', 'tuberack')
     tips300 = [
