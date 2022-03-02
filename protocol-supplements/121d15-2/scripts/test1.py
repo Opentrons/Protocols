@@ -1,11 +1,58 @@
+input_file = """Number of Redo
+28
+pos TB_RCK_1,pos MTP_1,VolumeInPlate,VolumeFromTube
+RPL220225NR,9094087_6_AAB_4_4_1
+1,6,93,120
+2,55,93,120
+3,78,93,120
+4,108,93,120
+5,121,93,120
+6,178,93,120
+7,217,93,120
+8,227,93,120
+9,228,93,120
+10,237,93,120
+11,245,93,120
+12,248,93,120
+13,255,93,120
+14,257,93,120
+15,261,93,120
+16,265,93,120
+17,266,93,120
+18,267,93,120
+19,271,93,120
+20,283,93,120
+21,284,93,120
+22,301,93,120
+23,316,93,120
+24,330,93,120
+25,331,93,120
+26,332,93,120
+27,338,93,120
+28,348,93,120
+"""
+
+input_file2 = ""
+
+plate_scan = '9094087_6_AAB_4_4_1____'
+
+plate_scan2 = ''
+
+tuberack_scan = 'RPL220225NR____'
+
+tuberack_scan2 = ''
+
+default_disposal_vol = 200
+default_transfer_vol = 200
+
 import os
 import json
 import math
 
 # metadata
 metadata = {
-    'protocolName': 'Redo Replacement Picking (Greiner MASTERBLOCK 96 Well \
-Plate 500 µL)',
+    'protocolName': 'Redo Replacement Picking (Greiner Masterblock 384 Well \
+Plate 225 µL)',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'
@@ -15,22 +62,16 @@ Plate 500 µL)',
 def run(ctx):
 
     tip_track = True
-
-    [input_file, input_file2, tuberack_scan, plate_scan, tuberack_scan2,
-     plate_scan2, default_disposal_vol, default_transfer_vol,
-     p300_mount] = get_values(  # noqa: F821
-        'input_file', 'input_file2', 'tuberack_scan', 'plate_scan',
-        'tuberack_scan2',  'plate_scan2', 'default_disposal_vol',
-        'default_transfer_vol', 'p300_mount')
+    p300_mount = 'left'
 
     # load labware
     rack = ctx.load_labware('eurofins_96x2ml_tuberack', '2', 'tuberack')
 
-    plates = [ctx.load_labware('greinermasterblock_96_wellplate_500ul', '4')]
+    plates = [ctx.load_labware('greinermasterblock_384_wellplate_225ul', '4')]
 
     if input_file2:
         plates.append(
-         ctx.load_labware('greinermasterblock_96_wellplate_500ul', '1'))
+         ctx.load_labware('greinermasterblock_384_wellplate_225ul', '1'))
 
     tips300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
@@ -174,7 +215,7 @@ resuming.')
                 p300.move_to(tube.top())
                 p300.air_gap(20)
                 p300.aspirate(vol, tube.bottom(0.2))
-                p300.dispense(vol+20, well.top(-1), rate=1.5)
+                p300.dispense(vol+20, well.top(-2), rate=1.5)
                 ctx.delay(seconds=1)
 
             p300.drop_tip()
