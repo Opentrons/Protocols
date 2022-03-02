@@ -8,8 +8,12 @@ metadata = {
 
 def run(ctx):
 
-    [num_acetonitrile, num_tmt, p300_mount] = get_values(  # noqa: F821
-        'num_acetonitrile', 'num_tmt', 'p300_mount')
+    [num_tmt, p300_mount] = get_values(  # noqa: F821
+        'num_tmt', 'p300_mount')
+
+    if not 1 <= num_tmt <= 18:
+        raise Exception(f'Invalid number of reagents ({num_tmt}). Must be \
+1-18.')
 
     plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '2',
                              'plate')
@@ -20,7 +24,6 @@ def run(ctx):
     p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
                                tip_racks=tiprack)
 
-    acetonitrile = rack.rows()[0][:num_acetonitrile]
     tmt = [well for row in rack.rows()[1:] for well in row][:num_tmt]
 
     dest_sets = [
@@ -28,14 +31,9 @@ def run(ctx):
         for i in range(4)] + [
         [well for col in plate.columns()[9:] for well in col][:18]]
 
-    # transfer each acetonitrile
-    for a, set in zip(acetonitrile, dest_sets[:num_acetonitrile]):
-        p300.pick_up_tip()
-        for d in set[:num_tmt]:
-            p300.transfer(20, a, d, new_tip='never')
-        p300.drop_tip()
-
     # transfer each tmt
     for i, t in enumerate(tmt):
-        for set in dest_sets[:num_acetonitrile]:
-            p300.transfer(20, t, set[i])
+        p300.pick_up_tip()
+        for set in dest_sets:
+            p300.transfer(20, t, set[i], new_tip='never')
+        p300.drop_tip()
