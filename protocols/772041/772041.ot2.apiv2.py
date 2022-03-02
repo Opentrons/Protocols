@@ -118,7 +118,7 @@ def run(ctx: protocol_api.ProtocolContext):
     '''
     m20 = ctx.load_instrument(
                         'p20_multi_gen2',
-                        'left',
+                        'right',
                         tip_racks=tipracks
                         )
     # pipette functions   # INCLUDE ANY BINDING TO CLASS
