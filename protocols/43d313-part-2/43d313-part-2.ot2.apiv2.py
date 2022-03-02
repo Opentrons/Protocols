@@ -214,10 +214,12 @@ def run(ctx):
     for index, column in enumerate(mag_plate.columns()[:num_cols]):
         p20m.pick_up_tip()
         p20m.aspirate(13, tris.bottom(clearance_reservoir))
-        p20m.dispense(
-         13, column[0].bottom(clearance_bead_resuspension).move(types.Point(
-          x={True: -1}.get(not index % 2, 1)*offset_x_resuspension, y=0, z=0)))
-        p20m.mix(10, 13)
+        loc = column[0].bottom(clearance_bead_resuspension).move(types.Point(
+          x={True: -1}.get(not index % 2, 1)*offset_x_resuspension, y=0, z=0))
+        p20m.dispense(13, loc, rate=3)
+        for rep in range(10):
+            p20m.aspirate(13, column[0].bottom(1))
+            p20m.dispense(13, loc, rate=3)
         p20m.drop_tip()
 
     ctx.delay(minutes=5)
