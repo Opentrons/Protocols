@@ -31,6 +31,9 @@ This protocol carries out mass spec sample prep for the ThermoFisher Scientific 
 ### Deck Setup
 
 ![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/714f71/deck3.png)
+* tuberack row A: TMT 1-6
+* tuberack row B: TMT 7-12
+* tuberack row C: TMT 13-18
 
 ---
 
