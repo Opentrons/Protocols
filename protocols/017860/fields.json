@@ -7,6 +7,24 @@
   },
   {
     "type": "dropDown",
+    "label": "15 mL tuberacks",
+    "name": "tuberacks_15_lname",
+    "options": [
+      { "label": "Tuberacks with 15 mL NEST tubes", "value": "opentrons_15_tuberack_nest_15ml_conical"},
+      { "label": "Tuberacks with 15 mL Falcon tubes", "value": "opentrons_15_tuberack_falcon_15ml_conical"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "6x15/4x50 mL tuberacks",
+    "name": "tuberack_mixed_lname",
+    "options": [
+      { "label": "Opentrons 10 Tube Rack with NEST 4x50 mL, 6x15 mL Conical", "value": "opentrons_10_tuberack_nest_4x50ml_6x15ml_conical"},
+      { "label": "Opentrons 10 Tube Rack with Falcon 4x50 mL, 6x15 mL Conical", "value": "opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical"}
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "20 uL pipette tips",
     "name": "tiprack_lname_20_ul",
     "options": [
