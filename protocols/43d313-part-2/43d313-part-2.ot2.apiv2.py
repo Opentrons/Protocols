@@ -29,15 +29,6 @@ def run(ctx):
 
     # helper functions
 
-    # pause, flash lights, notify user
-    def pause_attention(message):
-        ctx.set_rail_lights(False)
-        ctx.delay(seconds=5)
-        ctx.set_rail_lights(True)
-        ctx.delay(seconds=5)
-        ctx.set_rail_lights(False)
-        ctx.pause(message)
-
     # notify user to replenish tips
     def pick_up_or_refill(pip, vol=200):
         nonlocal tipCtr
@@ -50,13 +41,13 @@ def run(ctx):
                     tipCtr += 1
                 else:
                     tipCtr = 0
-                    pause_attention(
+                    ctx.pause(
                      """Please Refill the 300 uL Tip Box
                      and Empty the Tip Waste""")
                     pip.pick_up_tip(tips300.rows()[0][tipCtr])
                     tipCtr += 1
         except OutOfTipsError:
-            pause_attention(
+            ctx.pause(
              """Please Refill the {} Tip Boxes
              and Empty the Tip Waste""".format(pip))
             pip.reset_tipracks()
@@ -169,7 +160,7 @@ def run(ctx):
                 p300m.mix(10, 200)
             p300m.drop_tip()
 
-    pause_attention(
+    ctx.pause(
         ''' Remove plate from magnetic module. Incubate 4 degree C at least
         15 minutes. Return the plate to the magnetic module and resume.''')
 
@@ -243,7 +234,7 @@ def run(ctx):
     mag.engage(height=height_engage)
     ctx.delay(minutes=time_engage)
 
-    pause_attention(
+    ctx.pause(
      '''Place a fresh 200 uL PCR plate on the temperature module. Resume.''')
 
     # combine RT master mix 1 and eluted sample
@@ -261,7 +252,7 @@ def run(ctx):
          mix_after=(10, 15), new_tip='never')
         p20m.drop_tip()
 
-    pause_attention(
+    ctx.pause(
      '''Remove the 200 uL PCR plate for off-deck cycler steps.
      Return plate and resume.''')
 
@@ -273,6 +264,6 @@ def run(ctx):
         p20m.transfer(6, rt_mm2, column[0], new_tip='never')
         p20m.drop_tip()
 
-    pause_attention(
+    ctx.pause(
      '''cDNA Synthesis protocol complete. Proceed to off deck cycler steps
      and cDNA Library Prep protocol''')
