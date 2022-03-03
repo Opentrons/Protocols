@@ -455,7 +455,7 @@ def run(ctx):
     # add beadwash
     mag.disengage()
     for column in mag_plate_cols:
-        add_reagent(p300m, 200, beadwash, 6)
+        add_reagent(p300m, 200, beadwash, 2)
 
     # remove sup
     mag.engage()
@@ -517,7 +517,7 @@ def run(ctx):
     ctx.pause(
      "Seal the cycler plate for step - First Strand Synthesis. Resume.")
 
-    cycler.set_lid_temperature(100)
+    cycler.set_lid_temperature(70)
     cycler.close_lid()
     cycler.execute_profile(
      steps=synthesize_1st_strand, repetitions=1, block_max_volume=25)
