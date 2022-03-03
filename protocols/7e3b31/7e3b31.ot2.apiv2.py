@@ -399,7 +399,7 @@ def run(ctx):
 
     mag.disengage()
     for column in mag_plate_cols:
-        add_reagent(p300m, 200, beadwash, 6)
+        add_reagent(p300m, 200, beadwash, 2)
 
     # remove sup
     mag.engage()
