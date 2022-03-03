@@ -135,9 +135,16 @@ def run(ctx):
      mix_after=(1, 10), new_tip='always')
 
     ctx.comment("STEP - Transfer to larger plate")
-    p300m.transfer(
-     80.8, [column[0] for column in sampleplate200.columns()[:num_cols]],
-     [column[0] for column in mag_plate.columns()[:num_cols]])
+
+    for index, column in enumerate(sampleplate200.columns()[:num_cols]):
+        p300m.pick_up_tip()
+        p300m.aspirate(80.8, column[0])
+        p300m.dispense(80.8, mag_plate.columns()[index][0])
+        ctx.delay(seconds=0.5)
+        p300m.blow_out()
+        p300m.touch_tip(radius=0.75, v_offset=-2, speed=10)
+        p300m.air_gap(20)
+        p300m.drop_tip()
 
     ctx.comment("STEP - RNA Concentration and RT setp 1")
 
@@ -153,7 +160,8 @@ def run(ctx):
             source = next(beadwell)
         for rep in range(reps):
             pick_up_or_refill(p300m, 300)
-            p300m.aspirate(240 / reps, source, rate=0.5)
+            p300m.aspirate(
+             240 / reps, source.bottom(clearance_reservoir), rate=0.5)
             ctx.delay(seconds=1)
             source.liq_vol -= (1920 / reps)
             p300m.dispense(240 / reps, column[0])
@@ -173,9 +181,14 @@ def run(ctx):
         pick_up_or_refill(p300m)
         p300m.aspirate(200, column[0].bottom(4), rate=0.33)
         p300m.dispense(200, waste.top())
+        p300m.move_to(column[0].top())
+        p300m.air_gap(20)
         p300m.aspirate(
          50, column[0].bottom(1).move(types.Point(
           x={True: 1}.get(not index % 2, -1)*offset_x, y=0, z=0)), rate=0.33)
+        p300m.dispense(70, waste.top(), rate=2)
+        ctx.delay(seconds=1)
+        p300m.blow_out()
         p300m.drop_tip()
 
     for repeat in range(2):
@@ -183,10 +196,11 @@ def run(ctx):
         pick_up_or_refill(p300m, 300)
         for column in mag_plate.columns()[:num_cols]:
             for rep in range(3):
-                etoh.liq_vol -= 1520
-                p300m.aspirate(190, etoh.bottom(liq_height(etoh)-3))
-                p300m.air_gap(10)
-                p300m.dispense(200, column[0].top())
+                etoh.liq_vol -= 1333
+                ht = liq_height(etoh) - 3 if liq_height(etoh) - 3 > 1 else 1
+                p300m.aspirate(166.7, etoh.bottom(ht))
+                p300m.air_gap(20)
+                p300m.dispense(186.7, column[0].top())
                 ctx.delay(seconds=0.5)
                 p300m.blow_out()
         p300m.drop_tip()
@@ -194,12 +208,14 @@ def run(ctx):
         ctx.delay(seconds=30)
 
         # remove sup
-        for column in mag_plate.columns()[:num_cols]:
+        for index, column in enumerate(mag_plate.columns()[:num_cols]):
             pick_up_or_refill(p300m)
             for rep in range(3):
-                clearance = 5 if not rep == 2 else 2
-                p300m.aspirate(190, column[0].bottom(clearance))
-                p300m.air_gap(10)
+                loc = column[0].bottom(5) if not rep == 2 else column[
+                 0].bottom(1).move(types.Point(x={True: 1}.get(
+                  not index % 2, -1)*offset_x, y=0, z=0))
+                p300m.aspirate(180, loc, rate=0.33)
+                p300m.air_gap(20)
                 p300m.dispense(200, waste.top())
                 ctx.delay(seconds=0.5)
                 p300m.blow_out()

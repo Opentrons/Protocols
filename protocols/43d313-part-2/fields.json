@@ -21,7 +21,7 @@
     "type": "float",
     "label": "Well Bottom Clearance for Reservoir (mm)",
     "name": "clearance_reservoir",
-    "default": 1
+    "default": 2
   },
   {
     "type": "float",
