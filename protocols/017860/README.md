@@ -12,9 +12,12 @@ This is an OT-2 compatible protocol that first transfers media and up to 35 diff
 
 The protocol takes its input
 * `input .csv file`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:
+
+The first column is an identifier and is discarded by the protocol, the 2nd column is the M9 media stored in 3 50 mL tubes on slot 8. The remaining columns up to n-1 are antibiotics stored on 15 mL tuberack 1 and 2 (see below). The nth tube is barcoding dye.
 ```
-source,dest,vol
-A1,B1,4
+,M9,antibiotic 1, antibiotic 2, ... , antibiotic n, barcoding dye
+99999,50,0,0,...,0,50
+100,90,10,0,...,0,0
 ```
 * `20 uL pipette tips`: Brand of pipette tips either Opentrons or BrandTech 20 uL tips
 * `300 uL pipette tips`:  Brand of pipette tips either Opentrons or BrandTech 300 uL tips
@@ -28,20 +31,35 @@ A1,B1,4
 * [BrandTech 20 uL tipracks](https://brandtech.com/product/standard-tips/)
 * [BrandTech 300 uL tipracks](https://brandtech.com/product/standard-tips/)
 * [Nunc 400 µL 96 well plate](https://www.thermofisher.com/us/en/home/life-science/cell-culture/cell-culture-plastics/nunc-plate-selection-guide.html#!/n_format:96)
+* [Opentrons tuberacks](https://shop.opentrons.com/4-in-1-tube-rack-set/)
+* [Opentrons tubes](https://shop.opentrons.com/consumables/)
+* [Falcon tubes](https://ecatalog.corning.com/life-sciences/b2c/US/en/Liquid-Handling/Tubes%2C-Liquid-Handling/Centrifuge-Tubes/Falcon%C2%AE-Conical-Centrifuge-Tubes/p/falconConicalTubes)
 
 ### Pipettes
 * [P20 single-Channel (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 * [P300 single-Channel (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 
 ### Reagents
-* M9 media
-* Antibiotics
+* M9 media in 50 mL tubes on slot 8
+* Antibiotics in 15 mL tuberack on slot 9 and 7 and the 15 mL tubes on slot 8.
 
 ---
 
 ### Deck Setup
-* If the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/017860/deck.jpg)
+Slots:
+1. Nunc 96 well plate 1
+2. Nunc 96 well plate 2 (optional)
+3. Nunc 96 well plate 3 (optional)
+4. Nunc 96 well plate 4 (optional)
+5. Nunc 96 well plate 5 (optional)
+6. Nunc 96 well plate 6 (optional)
+7. Tuberack with 15 mL tubes antibiotic tuberack #2
+8. Tuberack 4x50 mL/6x15 mL tubes - Media and antibiotics #3
+9. Tuberack with 15 mL tubes antibiotic tuberack #1
+10. 20 µl tiprack
+11. 300 µL tiprack
+
 
 ### Reagent Setup
 * This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:

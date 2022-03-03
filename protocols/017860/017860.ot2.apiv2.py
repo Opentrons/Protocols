@@ -10,18 +10,34 @@ metadata = {
 }
 
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{
+                                  "input_csv":",M9,AMP_128,AMP_16,AMP_2,AZT_0.5,AZT_0.0625,AZT_0.0078125,CAZ_2,CAZ_0.25,CAZ_0.03125,CHL_128,CHL_16,CHL_2,CIP_0.25,CIP_0.03125,CIP_0.00390625,GEN_8,GEN_1,GEN_0.125,RIF_256,RIF_32,RIF_4,SXT_4,SXT_0.5,SXT_0.0625,TMP_8,TMP_1,TMP_0.125,TOB_8,TOB_1,TOB_0.125,color\\n99999,50,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,50\\n100,90,0,0,0,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\\n265,97.5,0,0,0,0,0,0,0,0,0,0,0,0,0,2.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\\n 300,97.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\\n305,90,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0\\n380,90,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,0,0,0,0,0,0,0,0,0",
+                                  "tuberacks_15_lname":"opentrons_15_tuberack_nest_15ml_conical",
+                                  "tuberack_mixed_lname":"opentrons_10_tuberack_nest_4x50ml_6x15ml_conical",
+                                  "tiprack_lname_20_ul":"opentrons_96_tiprack_20ul",
+                                  "tiprack_lname_300ul":"opentrons_96_tiprack_300ul",
+                                  "n_plates":6
+                                  }
+                                  """)
+    return [_all_values[n] for n in names]
+
+
 def run(ctx: protocol_api.ProtocolContext):
 
     [input_csv,
+     tuberacks_15_lname,
+     tuberack_mixed_lname,
      tiprack_lname_20_ul,
      tiprack_lname_300ul,
-     n_plates
-     ] = get_values(  # noqa: F821
+     n_plates] = get_values(  # noqa: F821
      "input_csv",
+     "tuberacks_15_lname",
+     "tuberack_mixed_lname",
      "tiprack_lname_20_ul",
      "tiprack_lname_300ul",
-     "n_plates"
-     )
+     "n_plates")
 
     if not 0 < n_plates < 7:
         raise Exception(("The number of plates are {}, but should be between "
@@ -39,12 +55,12 @@ def run(ctx: protocol_api.ProtocolContext):
     plates = [ctx.load_labware(plate_name, str(slot+1))
               for slot in range(n_plates)]
     tuberack_15_50 = ctx.load_labware(
-        'opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical', '8')
+        tuberack_mixed_lname, '8')
     tuberacks_15 = \
-        [ctx.load_labware('opentrons_15_tuberack_falcon_15ml_conical', slot)
+        [ctx.load_labware(tuberacks_15_lname, slot)
          for slot in ['9', '7']]
-    tips_20 = [ctx.load_labware('opentrons_96_tiprack_20ul', '10')]
-    tips_300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '11')]
+    tips_20 = [ctx.load_labware(tiprack_lname_20_ul, '10')]
+    tips_300 = [ctx.load_labware(tiprack_lname_300ul, '11')]
 
     p20 = ctx.load_instrument(
                               'p20_single_gen2',
