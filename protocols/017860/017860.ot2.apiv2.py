@@ -10,19 +10,6 @@ metadata = {
 }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{
-                                  "input_csv":",M9,AMP_128,AMP_16,AMP_2,AZT_0.5,AZT_0.0625,AZT_0.0078125,CAZ_2,CAZ_0.25,CAZ_0.03125,CHL_128,CHL_16,CHL_2,CIP_0.25,CIP_0.03125,CIP_0.00390625,GEN_8,GEN_1,GEN_0.125,RIF_256,RIF_32,RIF_4,SXT_4,SXT_0.5,SXT_0.0625,TMP_8,TMP_1,TMP_0.125,TOB_8,TOB_1,TOB_0.125,color\\n99999,50,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,50\\n100,90,0,0,0,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\\n265,97.5,0,0,0,0,0,0,0,0,0,0,0,0,0,2.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\\n 300,97.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\\n305,90,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0\\n380,90,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,0,0,0,0,0,0,0,0,0",
-                                  "tiprack_lname_20_ul":"opentrons_96_tiprack_20ul",
-                                  "tiprack_lname_300ul":"opentrons_96_tiprack_300ul",
-                                  "n_plates":6,
-                                  "n_tubes":36
-                                  }
-                                  """)
-    return [_all_values[n] for n in names]
-
-
 def run(ctx: protocol_api.ProtocolContext):
 
     [input_csv,
@@ -76,7 +63,7 @@ def run(ctx: protocol_api.ProtocolContext):
     p300.flow_rate.dispense = 1000
 
     # New csv parsing functions for csv input as string from protocol web
-    # interface
+    # interface/fields.json
     def csv_string_to_list(csv_string):
         new_list = []
         rows = csv_string.split()
@@ -94,7 +81,7 @@ def run(ctx: protocol_api.ProtocolContext):
         return reordered
 
     # CSV parsing function
-
+    # Old function for reading csv from a file
     def csv_to_list(file_path):
         new_list = []
         with open(file_path, 'r') as csvfile:
@@ -124,9 +111,11 @@ def run(ctx: protocol_api.ProtocolContext):
     # for media once the identifier column has been popped off.
     NUM_DRUGS = len(csv_info) - 1
     if not 0 < NUM_DRUGS < 37:
-        raise Exception(("The number of antibiotic tubes are {}, as defined "
-                         "by the csv but should be between 1 to 36, please "
-                         "check your input file").format(NUM_DRUGS))
+        raise Exception(("The number of antibiotic tubes + barcoding dye tube "
+                         "are {}, as defined by the csv, but should be "
+                         "between 1 to 36, please check the number of columns "
+                         "in your input csv file").
+                        format(NUM_DRUGS))
     media_tubes = tuberack_15_50.wells_by_name()
     medias = [media_tubes['A3'], media_tubes['B3'], media_tubes['A4']]
     # For a maximum number of 3 antibiotic tubes on the 15/50 mL tuberack
