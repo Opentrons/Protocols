@@ -98,23 +98,28 @@ resuming.')
             tip_log[pip]['count'] += 1
 
     # check barcode scans (tube, plate)
-    tuberack15_1_bar, tuberack2_1_bar = input_file.splitlines()[3].split(',')[:2]
-    if not tuberack15_1_scan[:len(tuberack15_1_scan)-4] == tuberack15_1_bar.strip():
-        raise Exception(f'15ml uberack 1 scans do not match ({tuberack15_1_bar}, \
-{tuberack15_1_scan})')
-    if not tuberack2_1_scan[:len(tuberack2_1_scan)-4] == tuberack2_1_bar.strip():
-        raise Exception(f'2ml tuberack 2 scans do not match ({tuberack2_1_bar}, \
-{tuberack2_1_bar})')
+    tuberack15_1_bar, tuberack2_1_bar = \
+        input_file.splitlines()[3].split(',')[:2]
+    if not tuberack15_1_scan[:len(tuberack15_1_scan)-4] == \
+            tuberack15_1_bar.strip():
+        raise Exception(f'15ml tuberack 1 scans do not match \
+({tuberack15_1_bar}, {tuberack15_1_scan})')
+    if not tuberack2_1_scan[:len(tuberack2_1_scan)-4] == \
+            tuberack2_1_bar.strip():
+        raise Exception(f'2ml tuberack 2 scans do not match \
+({tuberack2_1_bar}, {tuberack2_1_bar})')
 
     if input_file2:
-        tuberack15_2_bar, tuberack2_2_bar = input_file2.splitlines()[3].split(',')[:2]
+        tuberack15_2_bar, tuberack2_2_bar = \
+            input_file2.splitlines()[3].split(',')[:2]
         if not tuberack15_1_scan[:len(tuberack15_1_scan)-4] == \
                 tuberack15_1_bar.strip():
-            raise Exception(f'15ml tuberack 2 scans do not match ({tuberack15_2_bar}, \
-    {tuberack15_2_scan})')
-        if not tuberack2_2_scan[:len(tuberack2_2_scan)-4] == tuberack2_2_bar.strip():
-            raise Exception(f'2ml tuberack 2 scans do not match ({tuberack2_2_bar}, \
-    {tuberack2_2_bar})')
+            raise Exception(f'15ml tuberack 2 scans do not match \
+({tuberack15_2_bar}, {tuberack15_2_scan})')
+        if not tuberack2_2_scan[:len(tuberack2_2_scan)-4] == \
+                tuberack2_2_bar.strip():
+            raise Exception(f'2ml tuberack 2 scans do not match \
+({tuberack2_2_bar}, {tuberack2_2_bar})')
 
     # to take vol and return estimated liq height
     def liq_height(well):

@@ -3,18 +3,36 @@
     "type": "textFile",
     "label": "input file",
     "name": "input_file",
-    "default": "Number of Redo\n8\npos TB_RCK_1,pos MTP_1,disposal_vol,transfer_vol\nREPLACE WITH SCAN,REPLACE WITH SCAN\n1,1,200,200\n2,35,200,200\n3,2,150,200\n4,90,100,100\n5,84\n6,62\n7,42\n8,18\n"
+    "default": "Number of Redo\n8\npos TB_RCK_1,pos MTP_1,disposal_vol,transfer_vol\nREPLACE WITH SCAN,REPLACE WITH SCAN\n1,1,200\n2,1,200\n3,1,200\n4,2,200\n5,2,200\n6,2,200\n7,3,200\n8,3,200\n"
+  },
+  {
+    "type": "textFile",
+    "label": "input file 2",
+    "name": "input_file2",
+    "default": "Number of Redo\n8\npos TB_RCK_1,pos MTP_1,disposal_vol,transfer_vol\nREPLACE WITH SCAN,REPLACE WITH SCAN\n1,1,200\n2,1,200\n3,1,200\n4,2,200\n5,2,200\n6,2,200\n7,3,200\n8,3,200\n"
   },
   {
     "type": "str",
-    "label": "copy tuberack scan",
-    "name": "tuberack1_scan",
+    "label": "copy tuberack 1 scan",
+    "name": "tuberack2_1_scan",
     "default": "REPLACE WITH SCAN_XXX"
   },
   {
     "type": "str",
-    "label": "parent tuberack scan",
-    "name": "tuberack2_scan",
+    "label": "parent tuberack 1 scan",
+    "name": "tuberack15_1_scan",
+    "default": "REPLACE WITH SCAN_XXX"
+  },
+  {
+    "type": "str",
+    "label": "copy tuberack 2 scan",
+    "name": "tuberack2_2_scan",
+    "default": "REPLACE WITH SCAN_XXX"
+  },
+  {
+    "type": "str",
+    "label": "parent tuberack 2 scan",
+    "name": "tuberack15_2_scan",
     "default": "REPLACE WITH SCAN_XXX"
   },
   {
