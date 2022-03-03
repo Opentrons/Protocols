@@ -111,7 +111,7 @@
     "label": "Use temperature module?",
     "name": "temp_mod_lname",
     "options": [
-      { "label": "Use Temperature module GEN2", "value": false},
+      { "label": "No temperature module", "value": false},
       { "label": "Use Temperature module GEN2", "value": "temperature module gen2"}
     ]
   },
