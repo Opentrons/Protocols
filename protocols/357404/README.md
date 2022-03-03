@@ -32,6 +32,7 @@ Explanation of parameters below:
 * `Use temperature module?`: Whether to use a temperature module to chill the reagents in the tuberack, or put the tuberack directly on the slot.
 * `P1000 slot`: Which mount to use for the P1000 single GEN2 pipette
 * `Tuberack`: Which reagent tuberack you want to use in the protocol
+
 ---
 
 ### Modules
