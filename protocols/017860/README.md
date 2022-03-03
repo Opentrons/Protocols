@@ -1,4 +1,4 @@
-# Protocol Title (should match metadata of .py file)
+# CSV Plate Filling - Upgrade for OT2
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -8,20 +8,20 @@
 	* CSV Transfer
 
 ## Description
-This is an OT-2 compatible protocol that first transfers media and up to 35 different antibiotics plus barcoding dye to the wells of up to six 96 well plates based on an input CSV file. If there are more entries once the plate(s) have been filled the user is asked to replace the plates with fresh ones and the process continues until all rows of the input file have been processed.
+This is an OT-2 compatible protocol that first transfers media and then up to 35 different antibiotics plus a barcoding dye to the wells of one to six 96 well plates based on an input CSV file. If there are more entries once the plate(s) have been filled the user is asked to replace the plates with fresh ones, as well as used tips, and the process continues until all rows of the input file have been processed.
 
-The protocol takes its input
-* `input .csv file`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:
+Each line in the csv corresponds to the transfers to a well on the plates. The plates are ordered sequentially from slot 1 to slot 6 meaning that the first 96 rows of the csv (excluding the header) correspond to the 96 wells on plate 1, and so on.
 
-The first column is an identifier and is discarded by the protocol, the 2nd column is the M9 media stored in 3 50 mL tubes on slot 8. The remaining columns up to n-1 are antibiotics stored on 15 mL tuberack 1 and 2 (see below). The nth tube is barcoding dye.
+Explanation of protocol parameters:
+* `input .csv file`: Here you should upload a .csv file formatted in the following way, being sure to include the header line: The first column is an identifier and is discarded by the protocol (but must be included in order for the file to be processed correctly), the 2nd column is the transfer volume of M9 media that is stored in 3 50 mL tubes on the tuberack on slot 8. The remaining columns up to n-1 are antibiotics stored on 15 mL tuberack 1 and 2 (see below). The nth column is the volume of barcoding dye.
 ```
 ,M9,antibiotic 1, antibiotic 2, ... , antibiotic n, barcoding dye
 99999,50,0,0,...,0,50
 100,90,10,0,...,0,0
 ```
-* `20 uL pipette tips`: Brand of pipette tips either Opentrons or BrandTech 20 uL tips
-* `300 uL pipette tips`:  Brand of pipette tips either Opentrons or BrandTech 300 uL tips
-* `Number of plates`: Number of 96 well plates on the deck per run, may range from one to six
+* `20 uL pipette tips`: Brand of pipette tips, either Opentrons or BrandTech 20 uL tips
+* `300 uL pipette tips`:  Brand of pipette tips, either Opentrons or BrandTech 300 uL tips
+* `Number of plates`: The number of Nunc 96 well plates on the deck per run, may range from one to six
 
 ---
 
@@ -42,6 +42,7 @@ The first column is an identifier and is discarded by the protocol, the 2nd colu
 ### Reagents
 * M9 media in 50 mL tubes on slot 8
 * Antibiotics in 15 mL tuberack on slot 9 and 7 and the 15 mL tubes on slot 8.
+* Barcoding dye in the last 15 mL tube, e.g. the 6th 15 mL tube on the tuberack on slot 8 if the maximum number of antibiotics slots are filled.
 
 ---
 
@@ -54,26 +55,26 @@ Slots:
 4. Nunc 96 well plate 4 (optional)
 5. Nunc 96 well plate 5 (optional)
 6. Nunc 96 well plate 6 (optional)
-7. Tuberack with 15 mL tubes antibiotic tuberack #2
-8. Tuberack 4x50 mL/6x15 mL tubes - Media and antibiotics #3
-9. Tuberack with 15 mL tubes antibiotic tuberack #1
+7. Tuberack with 15 mL tubes antibiotic tuberack (#2)
+8. Tuberack 4x50 mL/6x15 mL tubes - Media and antibiotics (#3)
+9. Tuberack with 15 mL tubes antibiotic tuberack (#1)
 10. 20 µl tiprack
 11. 300 µL tiprack
 
 
 ### Reagent Setup
-* This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:
-* Reservoir 1: slot 5
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res1_v2.png)
-* Reservoir 2: slot 2  
-![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res2.png)
+* 15 ml tuberack antibiotics #1 on slot 9: Antibiotics 1 to 15
+* 15 ml tuberack antibiotics #2 on slot 7: Antibiotics 15 to 30
+* Mixed tuberack antibiotics #3 on slot 8: Tube 1-6: Antibiotics and barcoding dye, Tube A3-A4: M9 media
+![Mixed tuberack](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/017860/mixed_rack_slot8.jpg)
 
 ---
 
 ### Protocol Steps
-1. This section should consist of a numerical outline of the protocol steps, somewhat analogous to the steps outlined by the user in their custom protocol submission.
-2. example step: Samples are transferred from the source tuberacks on slots 1-2 to the PCR plate on slot 3, down columns and then across rows.
-3. example step: Waste is removed from each sample on the magnetic module, ensuring the bead pellets are not contacted by the pipette tips.
+1. The protocol transfers M9 to the plate wells according to the csv specification
+2. The protocol transfers mixes of different antibiotics to the plate wells according to the CSV specification.
+3. The protocol transfers the barcoding dye to the specified well(s)
+4. If there are more rows in the csv than there are plate wells the user is asked to replace the plates and the spent tips and the process restarts from step 1.
 
 ### Process
 1. Input your protocol parameters above.
@@ -88,4 +89,4 @@ Slots:
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-protocol-hex-code
+017860

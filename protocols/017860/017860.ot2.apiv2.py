@@ -3,8 +3,8 @@ import csv
 import math
 
 metadata = {
-    'protocolName': 'CSV Plate Filling',
-    'author': 'Nick <protocols@opentrons.com>',
+    'protocolName': 'CSV Plate Filling - Upgrade for OT2',
+    'author': 'Nick & Eskil (update) <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'
 }
