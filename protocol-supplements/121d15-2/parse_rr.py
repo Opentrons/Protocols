@@ -191,10 +191,12 @@ def end():
 def reset():
     source1_status['text'] = ''
     source2_status['text'] = ''
-    source1_scan['text'] = ''
-    destination1_scan['text'] = ''
-    source2_scan['text'] = ''
-    destination2_scan['text'] = ''
+    source1_scan.delete(0, END)
+    destination1_scan.delete(0, END)
+    source2_scan.delete(0, END)
+    destination2_scan.delete(0, END)
+    volume.delete(0, END)
+    volume.insert(0, '200')
 
 
 end_button = tk.Button(root, text='create protocol file', highlightbackground='blue', command=end)
