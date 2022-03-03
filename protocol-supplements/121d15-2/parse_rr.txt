@@ -151,9 +151,9 @@ def end():
                 source2_info = [f"tuberack_scan2 = '{source2_scan.get()}'"]
             else:
                 source1_info = [f"tuberack1_scan = '{source1_scan.get()}'"]
-                source2_info = []
+                source2_info = [f"tuberack1_2_scan = '{source2_scan.get()}'"]
                 destination1_info = [f"tuberack2_scan = '{destination1_scan.get()}'"]
-                destination2_info = []
+                destination2_info = [f"tuberack2_2_scan = '{destination2_scan.get()}'"]
         else:
             name_part_1 = parse_file_name(source1_status['text'])
             outfile_name = f"{name_part_1}.py"
@@ -166,9 +166,9 @@ def end():
                 source2_info = ["tuberack_scan2 = ''"]
             else:
                 source1_info = [f"tuberack1_scan = '{source1_scan.get()}'"]
-                source2_info = []
+                source2_info = ["tuberack1_2_scan = ''"]
                 destination1_info = [f"tuberack2_scan = '{destination1_scan.get()}'"]
-                destination2_info = []
+                destination2_info = ["tuberack2_2_scan = ''"]
 
         if dropdown_value.get() == 'select protocol type':
             status['text'] = 'Please select protocol type'
