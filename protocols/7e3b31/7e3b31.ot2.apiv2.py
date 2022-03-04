@@ -28,7 +28,8 @@ def run(ctx):
     ctx.set_rail_lights(True)
     ctx.delay(seconds=10)
 
-    if not 8 <= count_samples <= 48:
+    # temporarily changed for testing with smaller reservoir
+    if not 8 <= count_samples <= 16:
         raise Exception('Invalid number of samples (must be 8-48).')
 
     if not 0.05 <= tip_immersion <= 0.15:
@@ -50,7 +51,7 @@ def run(ctx):
 
     # labware, thermocycler module, magnetic module
     reservoir = ctx.load_labware(
-     'usascientific_12_reservoir_22ml', '2', 'Reservoir')
+     'nest_12_reservoir_15ml', '2', 'Reservoir')
     reagents = ctx.load_labware(
      'nest500ul_96_reservoir_500ul', '5', 'Reagents')
     samples = ctx.load_labware(
@@ -246,8 +247,7 @@ def run(ctx):
 
     # reagents
     starting_volume = {
-        reservoir.wells()[0]: vol_deadreservoir + count_samples*50,
-        reservoir.wells()[1]: vol_deadreservoir + count_samples*400,
+        reservoir.wells()[0]: vol_deadreservoir + count_samples*400,
         reservoir.wells()[4]: vol_deadreservoir + count_samples*400,
         reagents.wells()[0]: vol_deaddeepwell + 1.1*num_cols*50,
         reagents.wells()[8]: vol_deaddeepwell + 1.1*num_cols*50,
@@ -269,8 +269,7 @@ def run(ctx):
      [clearance_reservoir, clearance_striptubes, 1, 1]):
         labware.instantiate_wells_h(clearance)
 
-    water = reservoir.wells_h()[0]
-    beadwash = reservoir.wells_h()[1]
+    beadwash = reservoir.wells_h()[0]
     etoh = reservoir.wells_h()[4]
     beads_dt = reagents.wells_h()[0]
     elutionbf = reagents.wells_h()[8]
@@ -284,8 +283,8 @@ def run(ctx):
     resuspensionbf = reagents.wells_h()[72]
 
     for reagent, name in zip(
-     [water, beadwash, etoh],
-     ['water', 'beadwash', 'etoh']):
+     [beadwash, etoh],
+     ['beadwash', 'etoh']):
         ctx.pause(""" Fill {} with {} mL of {} """.format(
          reagent, str(reagent.current_volume / 1000), name))
 
