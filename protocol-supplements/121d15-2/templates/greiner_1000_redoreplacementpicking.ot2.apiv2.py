@@ -42,10 +42,10 @@ def run(ctx):
     if tip_track and not ctx.is_simulating():
         if os.path.isfile(tip_file_path):
             with open(tip_file_path) as json_file:
-                data = json.load(json_file)
+                tip_data = json.load(json_file)
                 for pip in tip_log:
-                    if pip.name in data:
-                        tip_log[pip]['count'] = data[pip.name]
+                    if pip.name in tip_data:
+                        tip_log[pip]['count'] = tip_data[pip.name]
                     else:
                         tip_log[pip]['count'] = 0
         else:
@@ -176,6 +176,6 @@ resuming.')
     if not ctx.is_simulating():
         if not os.path.isdir(folder_path):
             os.mkdir(folder_path)
-        data = {pip.name: tip_log[pip]['count'] for pip in tip_log}
+        tip_data = {pip.name: tip_log[pip]['count'] for pip in tip_log}
         with open(tip_file_path, 'w') as outfile:
-            json.dump(data, outfile)
+            json.dump(tip_data, outfile)
