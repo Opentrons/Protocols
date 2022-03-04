@@ -134,7 +134,7 @@ resuming.')
     for data_set, source_tubes, destination_tubes in zip(
             data_sets, source_tubes, destination_tubes):
         prev_dest = None
-        for line in data:
+        for line in data_set:
             tube1 = source_tubes[int(line[0])-1]
             tube2 = destination_tubes[int(line[1])-1]
             if len(line) >= 3 and line[2]:
