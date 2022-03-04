@@ -1,13 +1,13 @@
 [
   {
     "type": "float",
-    "label": "Well Bottom Clearance for Bead Resuspension (millimeters)",
+    "label": "Well Bottom Clearance for Bead Resuspension (mm)",
     "name": "clearance_bead_resuspension",
     "default": 1
   },
   {
     "type": "float",
-    "label": "Sideways Move to Target Pellet for Bead Resuspension (millimeters)",
+    "label": "Magnitude of Sideways Move to Target Bead Pellet for Resuspension (mm)",
     "name": "offset_x_resuspension",
     "default": 1
   },
@@ -25,7 +25,7 @@
   },
   {
     "type": "float",
-    "label": "Engage Height for Magnetic Module (mm)",
+    "label": "Engage Height for Magnetic Module (mm from base of labware)",
     "name": "height_engage",
     "default": 11.5
   },

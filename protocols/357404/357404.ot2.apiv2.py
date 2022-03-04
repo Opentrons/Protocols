@@ -13,6 +13,29 @@ metadata = {
 }
 
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{
+                                  "n_slots":7,
+                                  "n_last_samples":8,
+                                  "vol_reagent":1500,
+                                  "dispense_steps":5,
+                                  "is_start_after_1st_incbn":false,
+                                  "is_stop_after_1st_incbn":false,
+                                  "tuberack_lname":"opentrons_24_tuberack_nest_1.5ml_screwcap",
+                                  "pipette_offset":0,
+                                  "is_dry_run":false,
+                                  "t_per_block":205,
+                                  "is_multi_disp_reags":true,
+                                  "is_reuse_reag_tips":true,
+                                  "is_reuse_wash_tips":true,
+                                  "temp_mod_lname":false,
+                                  "p1000_slot":"left"
+                                  }
+                                  """)
+    return [_all_values[n] for n in names]
+
+
 def run(ctx: protocol_api.ProtocolContext):
 
     [n_slots,
@@ -24,7 +47,12 @@ def run(ctx: protocol_api.ProtocolContext):
      tuberack_lname,
      pipette_offset,
      is_dry_run,
-     t_per_block] = get_values(  # noqa: F821
+     t_per_block,
+     is_multi_disp_reags,
+     is_reuse_reag_tips,
+     is_reuse_wash_tips,
+     temp_mod_lname,
+     p1000_slot] = get_values(  # noqa: F821
      "n_slots",
      "n_last_samples",
      "vol_reagent",
@@ -34,21 +62,32 @@ def run(ctx: protocol_api.ProtocolContext):
      "tuberack_lname",
      "pipette_offset",
      "is_dry_run",
-     "t_per_block")
+     "t_per_block",
+     "is_multi_disp_reags",
+     "is_reuse_reag_tips",
+     "is_reuse_wash_tips",
+     "temp_mod_lname",
+     "p1000_slot")
 
     # Definitions for loading labware, tipracks and pipettes.
     slide_blocks_loader = {'lname': 'customslideblock_8_wellplate',
                            'slots': [1, 4, 5, 7, 8, 10, 11]}
-    temp_mod_loader = {'lname': 'temperature module gen2', 'slot': '3'}
+    tuberack_slot = '3'
+    temp_mod_loader = {'lname': temp_mod_lname, 'slot': tuberack_slot}
     reservoir_loader = {'lname': 'agilent_1_reservoir_290ml', 'slot': '2'}
     # The tuberack is loaded on temperature module
-    tuberack_loader = {'lname': tuberack_lname}
-    tiprack_300_loader = {'lname': 'opentrons_96_tiprack_300ul', 'slot': '6'}
-    tiprack_1000_loader = {'lname': 'opentrons_96_tiprack_1000ul', 'slot': '9'}
-    p300_loader = {'lname': 'p300_single_gen2', 'mount': 'left'}
-    p1000_loader = {'lname': 'p1000_single_gen2', 'mount': 'right'}
+    tuberack_loader = {'lname': tuberack_lname, 'slot': tuberack_slot}
+
+    tiprack_1000_loader = {'lname': 'opentrons_96_tiprack_1000ul',
+                           'slots': ['6', '9']}
+    p1000_loader = {'lname': 'p1000_single_gen2', 'mount': p1000_slot}
 
     verbose = False
+
+    if temp_mod_lname and 'Aluminum' not in tuberack_lname:
+        raise Exception("You must select an aluminum block tuberack when "
+                        "using the temperature module, you selected {}"
+                        .format(tuberack_lname))
 
     if not 0 < n_slots < 8:
         raise Exception("The number of blocks have to be between 1 and 7")
@@ -75,14 +114,21 @@ def run(ctx: protocol_api.ProtocolContext):
 
     '''
     # load modules
-    temp_mod = ctx.load_module(temp_mod_loader['lname'],
-                               temp_mod_loader['slot'])
+    temp_mod = None
+    if temp_mod_loader['lname']:
+        temp_mod = ctx.load_module(temp_mod_loader['lname'],
+                                   temp_mod_loader['slot'])
 
     # load labware
     # Labware: 290 mL reservoir, Tuberack for reagents, slide blocks
     reservoir = ctx.load_labware(reservoir_loader['lname'],
                                  reservoir_loader['slot'])
-    tuberack = temp_mod.load_labware(tuberack_loader['lname'])
+    tuberack = None
+    if temp_mod is not None:
+        tuberack = temp_mod.load_labware(tuberack_loader['lname'])
+    else:
+        tuberack = ctx.load_labware(tuberack_loader['lname'],
+                                    tuberack_loader['slot'])
     slide_blocks = []
     for slot in slide_blocks_loader['slots'][:n_slots]:
         slide_block = ctx.load_labware(slide_blocks_loader['lname'], slot)
@@ -120,11 +166,10 @@ def run(ctx: protocol_api.ProtocolContext):
     e.g. tiprack10, tiprack20, tiprack200, tiprack300, tiprack1000
 
     '''
-    # Load 1000 uL tips on 9, 300 uL on 6
-    tiprack_300 = [ctx.load_labware(tiprack_300_loader['lname'],
-                                    tiprack_300_loader['slot'])]
-    tiprack_1000 = [ctx.load_labware(tiprack_1000_loader['lname'],
-                                     tiprack_1000_loader['slot'])]
+    # Load 1000 uL tips on 6 and 9
+    tiprack_1000s = \
+        [ctx.load_labware(tiprack_1000_loader['lname'], slot)
+         for slot in tiprack_1000_loader['slots']]
 
     # load instrument
 
@@ -145,16 +190,11 @@ def run(ctx: protocol_api.ProtocolContext):
                         tip_racks=tiprack
                         )
     '''
-    # Load p300, p1000 gen2
-    p300 = ctx.load_instrument(
-                              p300_loader['lname'],
-                              p300_loader['mount'],
-                              tip_racks=tiprack_300
-                              )
+    # Load p1000 gen2
     p1000 = ctx.load_instrument(
                               p1000_loader['lname'],
                               p1000_loader['mount'],
-                              tip_racks=tiprack_1000
+                              tip_racks=tiprack_1000s
                               )
 
     # pipette functions   # INCLUDE ANY BINDING TO CLASS
@@ -280,6 +320,14 @@ def run(ctx: protocol_api.ProtocolContext):
                 ctx.set_rail_lights(initial_light_state)
                 ctx.delay(seconds=0.5)
 
+        def get_current_vol(self):
+            """
+            Return the current well's volume in uL
+            """
+            well = next(iter(self.labware_wells))
+            remaining_vol = self.well_vol - self.labware_wells[well]
+            return remaining_vol
+
         def track(self, vol: float) -> Well:
             '''track() will track how much liquid
             was used up per well. If the volume of
@@ -306,25 +354,89 @@ def run(ctx: protocol_api.ProtocolContext):
                             .format(int(self.labware_wells[well]), well))
             return well
 
-    def transfer_reagent(pip: InstrumentContext,
-                         vol: float, source: VolTracker, dest: list,
-                         is_dry_run: bool = False, pip_offset: float = 0,
-                         steps: int = 5):
+    def wash(pip: InstrumentContext,
+             vol: float, source: VolTracker, dest: list,
+             do_dry_run: bool = False, pip_offset: float = 0,
+             steps: int = 5, do_reuse_tip: bool = False):
         max_vol = pip.max_volume
         vol_backup = vol
         for well in dest:
-            pick_up(pip)
+            if not pip.has_tip:
+                pick_up(pip)
             while vol > 0:
                 aspiration_vol = vol if vol < max_vol else max_vol
                 pip.aspirate(aspiration_vol, source.track(aspiration_vol))
                 dispense_while_moving(pip, well, aspiration_vol, steps,
                                       verbose, pip_offset)
                 vol -= aspiration_vol
-            if is_dry_run:
+            if do_dry_run:
                 pip.return_tip()
-            else:
+            elif not do_reuse_tip:
                 pip.drop_tip()
             vol = vol_backup
+        if do_reuse_tip:
+            pip.drop_tip()
+
+    def single_dispense_reagent_p1000(source: VolTracker, dest: list,
+                                      do_dry_run: bool = False,
+                                      pip_offset: float = 0,
+                                      steps: int = 5,
+                                      do_reuse_tip: bool = False):
+        nonlocal p1000
+        for well in dest:
+            aspiration_vol = 100
+            if not p1000.has_tip:
+                pick_up(p1000)
+            p1000.aspirate(aspiration_vol, source.track(aspiration_vol))
+            dispense_while_moving(p1000, well, aspiration_vol, steps)
+            if do_dry_run:
+                p1000.return_tip()
+            elif not do_reuse_tip:
+                p1000.drop_tip()
+        # Drop the tip after all wells have been dispensed to if the tip is
+        # being reused for this reagent dispense
+        if do_reuse_tip:
+            p1000.drop_tip()
+
+    def multi_dispense_reagent_p1000(source: VolTracker, dest: list,
+                                     do_dry_run: bool = False,
+                                     pip_offset: float = 0,
+                                     steps: int = 5,
+                                     do_reuse_tip: bool = False):
+        nonlocal p1000
+        n_wells = len(dest)
+        track_vol = 0
+        for i, d_well in enumerate(dest):
+            remaining_wells = n_wells - i
+            aspiration_vol = 0
+            if track_vol < 100:
+                aspiration_vol = 905 if remaining_wells > 9 else \
+                    remaining_wells * 100 + 5
+                if do_reuse_tip and p1000.has_tip:
+                    p1000.blow_out(ctx.fixed_trash['A1'])
+                else:
+                    if p1000.has_tip:
+                        p1000.drop_tip()
+                    pick_up(p1000)
+                # There's a chance that the remaining volume in the reagent
+                # tube is less than the volume we want to aspirate. We don't
+                # want the remaining volume to go to waste since it could be
+                # a lot, so we aspirate it here and subtract it from the total
+                tube_vol_asp = source.get_current_vol() - 5
+                if aspiration_vol > tube_vol_asp:
+                    p1000.aspirate(
+                        tube_vol_asp, source.track(tube_vol_asp))
+                    remaining_asp_vol = aspiration_vol - tube_vol_asp
+                    p1000.aspirate(remaining_asp_vol,
+                                   source.track(remaining_asp_vol))
+                else:
+                    p1000.aspirate(
+                        aspiration_vol, source.track(aspiration_vol))
+                track_vol = aspiration_vol
+            dispense_while_moving(p1000, d_well, 100, steps)
+            track_vol -= 100
+        # Drop the tip after we're done
+        p1000.drop_tip()
 
     def flash_lights():
         """
@@ -339,7 +451,7 @@ def run(ctx: protocol_api.ProtocolContext):
             ctx.delay(seconds=0.5)
 
     def pause(msg: str, time_elapsed_sec: float = 0,
-              pause_period_minutes: int = 60, is_dry_run: bool = False):
+              pause_period_minutes: int = 60, do_dry_run: bool = False):
         msg_template = "Incubating slides with {}"
         dry_run_msg = "(Dry run): "
         if time_elapsed_sec > pause_period_minutes*60:
@@ -350,7 +462,7 @@ def run(ctx: protocol_api.ProtocolContext):
         min_elapsed = math.ceil(time_elapsed_sec/60)
         pause_period_secs = 60 - time_elapsed_sec % 60
         pause_period_minutes -= min_elapsed
-        if not is_dry_run:
+        if not do_dry_run:
             ctx.delay(minutes=pause_period_minutes, seconds=pause_period_secs,
                       msg=msg_template.format(msg))
         else:
@@ -363,7 +475,7 @@ def run(ctx: protocol_api.ProtocolContext):
         This function dispenses a partial volume = vol/steps and then moves
         a distance/steps and repeats
         """
-        dy = 9/steps
+        dy = 9/steps  # Move a fraction (=steps) of 9 mm
         dv = vol/steps
         start_location = well.top().move(Point(0, -4.5, -pip_offset))
         pip.move_to(start_location)
@@ -446,8 +558,12 @@ def run(ctx: protocol_api.ProtocolContext):
 
     '''
     # Set the temperature to 4 degrees on the temperature module.
-    temp_mod.set_temperature(4)
+    if temp_mod:
+        temp_mod.set_temperature(4)
     dt = t_per_block * n_slots
+    reag_transfer_fn = multi_dispense_reagent_p1000 if is_multi_disp_reags \
+        else single_dispense_reagent_p1000
+
     # Transfer 100 µL of block from the tuberack to each destination well
     # (slide) (could be done as a multi-dispense with the P1000)
     # Measure time from the start of pipetting and subtract from 1 hr pause
@@ -455,12 +571,9 @@ def run(ctx: protocol_api.ProtocolContext):
     # the time it takes to finish the reagent transfer
     if not is_start_after_1st_incbn:  # Skip 1st incubation?
         ctx.comment("\n\nAdding block reagent\n")
-        # t = time.time() -- This won't work based on how the protocol is
-        # loaded on the OT-2, user has to manually time how long each block
-        # takes
-        transfer_reagent(p300, 100, block, target_wells,
-                         is_dry_run, pipette_offset,
-                         steps=dispense_steps)
+        reag_transfer_fn(block, target_wells, do_dry_run=is_dry_run,
+                         pip_offset=pipette_offset,
+                         steps=dispense_steps, do_reuse_tip=is_reuse_reag_tips)
         # Pause/Incubate for 1 hour
         if is_stop_after_1st_incbn:
             ctx.comment("\n\nStopping protocol after 1st incubation")
@@ -469,40 +582,46 @@ def run(ctx: protocol_api.ProtocolContext):
                         + "the protocol. (Remember to set the option to start "
                         + "the protocol after the 1st incubation step)")
             return
-        pause("block", time_elapsed_sec=dt, is_dry_run=is_dry_run)
+        pause("block", time_elapsed_sec=dt, do_dry_run=is_dry_run)
     else:
         ctx.comment(
             "Starting the protocol from the 2nd reagent step (antibody1)")
     # Transfer 100 µL of primary antibody to dest. wells (slide)
     ctx.comment("\n\nAdding Antibody 1 reagent\n")
-    transfer_reagent(p300, 100, antibody1, target_wells, pipette_offset,
-                     steps=dispense_steps)
+    reag_transfer_fn(antibody1, target_wells, do_dry_run=is_dry_run,
+                     pip_offset=pipette_offset,
+                     steps=dispense_steps, do_reuse_tip=is_reuse_reag_tips)
     # Pause 1 hour
-    pause("Antibody 1", time_elapsed_sec=dt, is_dry_run=is_dry_run)
+    pause("Antibody 1", time_elapsed_sec=dt, do_dry_run=is_dry_run)
     # Transfer 4 mL of PBS to each slide target well (i.e. 4 round trips)
     # with the P1000 (Slide wash)
     ctx.comment("\n\nWashing slides with PBS\n")
-    transfer_reagent(p1000, 4000, pbs, target_wells, pipette_offset,
-                     steps=dispense_steps)
+    wash(p1000, 4000, pbs, target_wells, do_dry_run=is_dry_run,
+         pip_offset=pipette_offset, steps=dispense_steps,
+         do_reuse_tip=is_reuse_wash_tips)
     # Transfer 100 µL of the second antibody
     ctx.comment("\n\nAdding Antibody 2 reagent\n")
-    transfer_reagent(p300, 100, antibody2, target_wells, pipette_offset,
-                     steps=dispense_steps)
+    reag_transfer_fn(antibody2, target_wells, do_dry_run=is_dry_run,
+                     pip_offset=pipette_offset,
+                     steps=dispense_steps, do_reuse_tip=is_reuse_reag_tips)
     # Pause 1 hour
-    pause("Antibody 2", time_elapsed_sec=dt, is_dry_run=is_dry_run)
+    pause("Antibody 2", time_elapsed_sec=dt, do_dry_run=is_dry_run)
     # Wash slides with 4 mL of PBS
     ctx.comment("\n\nWashing slides with PBS\n")
-    transfer_reagent(p1000, 4000, pbs, target_wells, pipette_offset,
-                     steps=dispense_steps)
+    wash(p1000, 4000, pbs, target_wells, do_dry_run=is_dry_run,
+         pip_offset=pipette_offset, steps=dispense_steps,
+         do_reuse_tip=is_reuse_wash_tips)
     # Transfer 100 µL nuclear counterstain to each well
     ctx.comment("\n\nAdding Nuclear counterstain reagent\n")
-    transfer_reagent(p300, 100, nuc_cstn, target_wells, pipette_offset,
-                     steps=dispense_steps)
+    reag_transfer_fn(nuc_cstn, target_wells, do_dry_run=is_dry_run,
+                     pip_offset=pipette_offset,
+                     steps=dispense_steps, do_reuse_tip=is_reuse_reag_tips)
     # Incubate 5 minutes
     pause("Nuclear counterstain", pause_period_minutes=5,
-          is_dry_run=is_dry_run, time_elapsed_sec=dt)
+          do_dry_run=is_dry_run, time_elapsed_sec=dt)
     # Wash slides with 4 mL of PBS
     ctx.comment("\n\nWashing slides with PBS\n")
-    transfer_reagent(p1000, 4000, pbs, target_wells, pipette_offset,
-                     steps=dispense_steps)
+    wash(p1000, 4000, pbs, target_wells, do_dry_run=is_dry_run,
+         pip_offset=pipette_offset, steps=dispense_steps,
+         do_reuse_tip=is_reuse_wash_tips)
     ctx.comment("\n\n~~~~ End of protocol ~~~~\n")
