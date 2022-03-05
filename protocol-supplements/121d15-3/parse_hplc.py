@@ -21,6 +21,7 @@ sample_barcode_entry = tk.Entry(root)
 first_sample = None
 last_sample = None
 current_sample_barcode = ''
+current_batch_barcode = ''
 
 
 def retrieve_files(batch, file_name):
@@ -30,11 +31,12 @@ def retrieve_files(batch, file_name):
         if batch not in os.listdir(path):
             status['fg'] = 'red'
             status['text'] = f'invalid batch [{batch}]'
+            return None
         else:
-            search_path = f'{path}\{batch}'
+            search_path = f'{path}\\{batch}'
     all_files = [file.lower() for file in os.listdir(search_path)]
     if file_name in all_files:
-        return f'{search_path}\{file_name}'
+        return f'{search_path}\\{file_name}'
     else:
         return None
 
@@ -107,6 +109,7 @@ all_wells = []
 def get_barcode(event):
     global current_sample_barcode
     global first_sample
+    global current_batch_barcode
     current_batch_barcode = batch_barcode_entry.get()
     current_sample_barcode = sample_barcode_entry.get()
     check_file = f'{current_sample_barcode}_fraction report.txt'
@@ -132,6 +135,7 @@ def get_barcode(event):
 
 def get_barcode_click():
     global current_sample_barcode
+    global current_batch_barcode
     global first_sample
     current_batch_barcode = batch_barcode_entry.get()
     current_sample_barcode = sample_barcode_entry.get()
@@ -169,10 +173,10 @@ def end():
     well_names = [f'{let}{num}' for num in range(1, 13) for let in 'ABCDEFGH']
     last_sample = current_sample_barcode
     if batch_barcode_entry.get():
-        folder = f'{path}\{batch_barcode_entry.get()}'
+        folder = f'{path}\\{batch_barcode_entry.get()}'
     else:
         folder = f'{path}'
-    out_file_path = f'{folder}\{first_sample}-{last_sample}.csv'
+    out_file_path = f'{folder}\\{first_sample}-{last_sample}.csv'
     with open(out_file_path, 'w') as out_file:
         writer = csv.writer(out_file)
         for well_data, well_name in zip(all_wells, well_names[:len(all_wells)]):
@@ -183,7 +187,7 @@ def end():
     with open(python_template_path, 'r') as py_file:
         content = py_file.readlines()
 
-    with open(f'{folder}\{first_sample}-{last_sample}.py', 'w') as py_out_file:
+    with open(f'{folder}\\{first_sample}-{last_sample}.py', 'w') as py_out_file:
         py_out_file.writelines('INPUT_FILE = """')
 
         for i, (well_data, well_name) in enumerate(zip(all_wells, well_names[:len(all_wells)])):
@@ -208,6 +212,7 @@ def reset():
     global status
     global end_label
     global current_sample_barcode
+    global current_batch_barcode
     status = tk.Label(root, text='')
     end_label = tk.Label(root, text='')
     batch_barcode_entry.delete(0, END)
@@ -217,6 +222,7 @@ def reset():
     first_sample = None
     last_sample = None
     current_sample_barcode = ''
+    current_batch_barcode = ''
 
 
 submit_button = tk.Button(root, text='submit barcode', highlightbackground='blue', command=get_barcode_click)
