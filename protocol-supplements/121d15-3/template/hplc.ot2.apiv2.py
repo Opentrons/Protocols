@@ -1,4 +1,6 @@
-port os
+from opentrons import protocol_api
+import threading
+import os
 import json
 
 # metadata
