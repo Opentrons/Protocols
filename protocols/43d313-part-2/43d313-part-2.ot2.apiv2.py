@@ -186,12 +186,12 @@ def run(ctx):
         # add ethanol
         pick_up_or_refill(p300m, 300)
         for column in mag_plate.columns()[:num_cols]:
-            for rep in range(3):
-                etoh.liq_vol -= 1333
+            for rep in range(2):
+                etoh.liq_vol -= 2000
                 ht = liq_height(etoh) - 3 if liq_height(etoh) - 3 > 1 else 1
-                p300m.aspirate(166.7, etoh.bottom(ht))
+                p300m.aspirate(250, etoh.bottom(ht))
                 p300m.air_gap(20)
-                p300m.dispense(186.7, column[0].top())
+                p300m.dispense(270, column[0].top())
                 ctx.delay(seconds=0.5)
                 p300m.blow_out()
         p300m.drop_tip()
@@ -200,16 +200,17 @@ def run(ctx):
 
         # remove sup
         for index, column in enumerate(mag_plate.columns()[:num_cols]):
-            pick_up_or_refill(p300m)
-            for rep in range(3):
-                loc = column[0].bottom(5) if not rep == 2 else column[
+            pick_up_or_refill(p300m, 300)
+            for rep in range(2):
+                loc = column[0].bottom(4) if not rep == 1 else column[
                  0].bottom(1).move(types.Point(x={True: 1}.get(
                   not index % 2, -1)*offset_x, y=0, z=0))
-                p300m.aspirate(180, loc, rate=0.33)
+                p300m.aspirate(250, loc, rate=0.33)
                 p300m.air_gap(20)
-                p300m.dispense(200, waste.top())
+                p300m.dispense(270, waste.top())
                 ctx.delay(seconds=0.5)
                 p300m.blow_out()
+                p300m.air_gap(20)
             p300m.drop_tip()
 
     mag.disengage()
