@@ -9,34 +9,58 @@ metadata = {
     }
 
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{
+                                  "n_samples":96,
+                                  "n_mixes":3,
+                                  "n_sample_plate":1,
+                                  "left_pipette_lname":"p20_multi_gen2",
+                                  "right_pipette_lname":"p300_multi_gen2",
+                                  "use_filter_tips_left":true,
+                                  "use_filter_tips_right":true,
+                                  "mastermix_volume":18,
+                                  "DNA_volume":2,
+                                  "mastermix_reservoir_lname":"nest_12_reservoir_15ml",
+                                  "DNA_well_plate_lname":"nest_96_wellplate_100ul_pcr_full_skirt",
+                                  "destination_well_plate_lname":"nest_96_wellplate_100ul_pcr_full_skirt",
+                                  "DNA_well_plate_tmod":false,
+                                  "dest_well_plate_tmod":false
+                                  }
+                                  """)
+    return [_all_values[n] for n in names]
+
+
 def run(ctx: protocol_api.ProtocolContext):
-    [
-      n_samples,
-      left_pipette_lname,
-      right_pipette_lname,
-      use_filter_tips_left,
-      use_filter_tips_right,
-      mastermix_volume,
-      DNA_volume,
-      mastermix_reservoir_lname,
-      DNA_well_plate_lname,
-      destination_well_plate_lname,
-      DNA_well_plate_tmod,
-      dest_well_plate_tmod
-     ] = get_values(  # noqa: F821
-      "n_samples",
-      "left_pipette_lname",
-      "right_pipette_lname",
-      "use_filter_tips_left",
-      "use_filter_tips_right",
-      "mastermix_volume",
-      "DNA_volume",
-      "mastermix_reservoir_lname",
-      "DNA_well_plate_lname",
-      "destination_well_plate_lname",
-      "DNA_well_plate_tmod",
-      "dest_well_plate_tmod"
-     )
+
+    [n_samples,
+     n_mixes,
+     n_sample_plate,
+     left_pipette_lname,
+     right_pipette_lname,
+     use_filter_tips_left,
+     use_filter_tips_right,
+     mastermix_volume,
+     DNA_volume,
+     mastermix_reservoir_lname,
+     DNA_well_plate_lname,
+     destination_well_plate_lname,
+     DNA_well_plate_tmod,
+     dest_well_plate_tmod] = get_values(  # noqa: F821
+     "n_samples",
+     "n_mixes",
+     "n_sample_plate",
+     "left_pipette_lname",
+     "right_pipette_lname",
+     "use_filter_tips_left",
+     "use_filter_tips_right",
+     "mastermix_volume",
+     "DNA_volume",
+     "mastermix_reservoir_lname",
+     "DNA_well_plate_lname",
+     "destination_well_plate_lname",
+     "DNA_well_plate_tmod",
+     "dest_well_plate_tmod")
 
     # Error checking
     if not left_pipette_lname and not right_pipette_lname:
@@ -313,45 +337,136 @@ def run(ctx: protocol_api.ProtocolContext):
             if not drop_tips:
                 pipette.drop_tip()
 
-    def plate_to_plate_transfer(pipette, vol, source_plate, dest_plate,
-                                drop_tips=True):
+    def plate96_to_plate96_transfer(pipette, vol, source_plate, dest_plate,
+                                    n_mixes, mix_vol, n_samples):
         """
-        Transfer from a well plate to a well plate.
+        Transfer from a 96 well plate to a 96 well plate.
         If the pipette is multi channel the transfers will be column to column.
 
         :param pipette: Pipette for the pipetting actions
         :param vol: The volume per tip to transfer
         :param source_plate: The well plate to transfer from
         :param dest_plate: The well plate to transfer to
-        :param drop_tips: Whether to drop tips after each transfer or use the
-        same tips throughout. Unlike resv_to_plate_transfer it
-        defaults to True.
+        :param n_mixes: How many times to mix after dispensing
+        :param mix_vol: Mixing volume
         """
         # Multi-channel pip: column by column transfer
         if is_multi_channel(pipette):
             n_columns = math.ceil(n_samples/8)
             source_columns = source_plate.columns()[0:n_columns-1]
             target_columns = dest_plate.columns()[0:n_columns-1]
-            if not drop_tips:
-                pick_up_tip(pipette)
             for s_col, d_col in zip(source_columns, target_columns):
-                if drop_tips:
-                    pick_up_tip(pipette)
+                pick_up_tip(pipette)
                 pipette.aspirate(vol, s_col[0])
                 pipette.dispense(vol, d_col[0])
-                if drop_tips:
-                    pipette.drop_tip()
+                pipette.mix(n_mixes, mix_vol, d_col[0])
+                pipette.drop_tip()
         # SCP: well by well transfer
         else:
-            if not drop_tips:
+            for s_well, d_well in zip(source_plate.wells()[:n_samples],
+                                      dest_plate.wells()[:n_samples]):
                 pick_up_tip(pipette)
-            for s_well, d_well in zip(source_plate, dest_plate):
-                if drop_tips:
-                    pick_up_tip(pipette)
                 pipette.aspirate(vol, s_well)
                 pipette.dispense(vol, d_well)
-                if drop_tips:
-                    pipette.drop_tip()
+                pipette.mix(n_mixes, mix_vol, d_well)
+                pipette.drop_tip()
+
+    def plate96_to_plate384_transfer(pipette, vol, source_plate, dest_plate,
+                                     n_mixes, mix_vol, n_samples, offset):
+        """
+        Transfer from a well plate to a well plate.
+        If the pipette is multi channel the transfers will be column to column.
+
+        :param pipette: Pipette for the pipetting actions
+        :param vol: The volume per tip to transfer
+        :param source_plate: The 96 well plate to transfer from
+        :param dest_plate: The 384 well plate to transfer to
+        :param n_mixes: How many times to mix after dispensing
+        :param mix_vol: Mixing volume
+        """
+        # Error check
+        s_len = len(source_plate.wells())
+        d_len = len(dest_plate.wells())
+        if not s_len == 96 and d_len == 384:
+            raise Exception(("Source plate should have 96 wells, and the "
+                             "destination plate should have 384, but they "
+                             "have {} and {} wells").format(s_len, d_len))
+        # Multi-channel pip: column by column transfer
+        if is_multi_channel(pipette):
+            n_columns = math.ceil(n_samples/8)
+            n_offset_columns = math.ceil(offset/8)
+            source_wells = [column[0] for column
+                            in source_plate.columns()[:n_columns]]
+            target_wells = []
+            for i in range(n_offset_columns, n_columns + n_offset_columns):
+                if i % 2 == 0:
+                    target_wells.append(dest_plate.columns[i][0])
+                else:
+                    target_wells.append(dest_plate.columns[i][1])
+            for s_well, d_well in zip(source_wells, target_wells):
+                pick_up_tip(pipette)
+                pipette.aspirate(vol, s_well)
+                pipette.dispense(vol, d_well)
+                pipette.mix(n_mixes, mix_vol, d_well)
+                pipette.drop_tip()
+        # SCP: well by well transfer
+        else:
+            for s_well, d_well in zip(source_plate.wells()[:n_samples],
+                                      dest_plate.wells()
+                                      [n_offset_columns:n_samples]):
+                pick_up_tip(pipette)
+                pipette.aspirate(vol, s_well)
+                pipette.dispense(vol, d_well)
+                pipette.drop_tip()
+
+    def plate384_to_plate384_transfer(pipette, vol, source_plate, dest_plate,
+                                      n_mixes, mix_vol, n_samples, offset):
+        """
+        Transfer from a well plate to a well plate.
+        If the pipette is multi channel the transfers will be column to column.
+
+        :param pipette: Pipette for the pipetting actions
+        :param vol: The volume per tip to transfer
+        :param source_plate: The 96 well plate to transfer from
+        :param dest_plate: The 384 well plate to transfer to
+        :param n_mixes: How many times to mix after dispensing
+        :param mix_vol: Mixing volume
+        """
+        # Error check
+        s_len = len(source_plate.wells())
+        d_len = len(dest_plate.wells())
+        if not s_len == 384 and d_len == 384:
+            raise Exception(("The source and destination plate should have "
+                             "384 wells, but they have {} and {} wells").
+                            format(s_len, d_len))
+        # Multi-channel pip: column by column transfer
+        if is_multi_channel(pipette):
+            n_columns = math.ceil(n_samples/8)
+            n_offset_columns = math.ceil(offset/8)
+            source_wells = []
+            target_wells = []
+            for i in range(n_offset_columns, n_columns + n_offset_columns):
+                if i % 2 == 0:
+                    source_wells.append(source_plate.columns[i][0])
+                    target_wells.append(dest_plate.columns[i][0])
+                else:
+                    source_wells.append(source_plate.columns[i][1])
+                    target_wells.append(dest_plate.columns[i][1])
+            for s_well, d_well in zip(source_wells, target_wells):
+                pick_up_tip(pipette)
+                pipette.aspirate(vol, s_well)
+                pipette.dispense(vol, d_well)
+                pipette.mix(n_mixes, mix_vol, d_well)
+                pipette.drop_tip()
+        # SCP: well by well transfer
+        else:
+            for s_well, d_well in zip(source_plate.wells()[:n_samples],
+                                      dest_plate.wells()
+                                      [n_offset_columns:n_samples]):
+                pick_up_tip(pipette)
+                pipette.aspirate(vol, s_well)
+                pipette.dispense(vol, d_well)
+                pipette.drop_tip()
     # reagents
     '''
     Define where all reagents are on the deck using the labware defined above.
@@ -383,6 +498,13 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.comment('\n\nRUNNING THERMOCYCLER PROFILE\n')
     '''
 
+    n_wells_source = len(DNA_well_plate.wells())
+    n_wells_dest = len(destination_well_plate.wells())
+    if n_wells_dest < n_samples:
+        raise Exception("The destination plate does not have enough wells ({})"
+                        "for all the samples ({})".
+                        format(n_wells_dest, n_samples))
+
     # determine which pipette has the smaller volume range
     pip_s, pip_l = rank_pipettes(pipette_l, pipette_r)
     # Make sure we have a pipette that can handle the volume of mastermix
@@ -395,6 +517,25 @@ def run(ctx: protocol_api.ProtocolContext):
     # Transfer DNA to the destination plate
     pipette = pipette_selector(pip_s, pip_l, DNA_volume)
     ctx.comment("\n\nTransferring DNA to target plate\n")
-    plate_to_plate_transfer(pipette, DNA_volume, DNA_well_plate,
-                            destination_well_plate)
+    if n_wells_source == 96:
+        mixing_volume = DNA_volume + mastermix_volume - 1
+        if n_wells_dest == 96:
+            plate96_to_plate96_transfer(pipette, DNA_volume, DNA_well_plate,
+                                        n_mixes, mixing_volume,
+                                        destination_well_plate, n_samples)
+        elif n_wells_dest == 384:
+            remaining_samples = n_samples
+            while remaining_samples > 0:
+                plate96_to_plate384_transfer()
+                remaining_samples -= 96
+        else:
+            raise Exception(
+                "The destination plate has an unexpected number of wells: {}".
+                format(n_wells_dest))
+    elif n_wells_source == 384 and n_wells_dest == 384:
+        plate384_to_plate384_transfer()
+    else:
+        raise Exception(
+            "The protocol cannot transfer from a {} to a {} well plate".
+            format(n_wells_source, n_wells_dest))
     ctx.comment("\n\n~~~~ Protocol complete ~~~~\n")
