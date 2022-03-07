@@ -10,8 +10,6 @@ metadata = {
 }
 
 
-
-
 def run(ctx: protocol_api.ProtocolContext):
     [input_csv,
      p20_mount,
