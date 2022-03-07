@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "onsite_atila_saliva384_pt2.ot2.apiv2.py"
+            "onsite_atila_saliva384_pt1.ot2.apiv2.py"
         ],
         "description": [
             "README.md"
@@ -14,7 +14,7 @@
         "hide-from-search": false,
         "skip-tests": false
     },
-    "path": "protocols/onsite_atila_saliva384_pt2",
-    "slug": "onsite_atila_saliva384_pt2",
+    "path": "protocols/onsite_atila_saliva384_pt1",
+    "slug": "onsite_atila_saliva384_pt1",
     "status": "ok"
 }
