@@ -23,7 +23,8 @@ Explanation of parameters below:
 * `input .csv file`: Here, you should upload a .csv file formatted as described above.
 * `P20 GEN2 mount`: Choose whether to load the p20 in the right or left mount
 * `P300 GEN2 mount`: Choose whether to load the p300 in the right or left mount
-* `Aspiration height from bottom of the well [mm]`: Offset to aspirate from the bottom of the source wells (in units of mm)
+* `Aspiration height from bottom of the plate wells [mm]`: Offset to aspirate from the bottom of the source wells (in units of mm)
+* `Aspiration height from bottom of the reservoir wells [mm]`: Offset to aspirate from the bottom of the reservoir wells (in units of mm)
 * `Flow rate multiplier`: By setting this multiplier to a value 0 < x < 1 the rate of sample aspiration will be slowed down. The default value is 0.5 resulting in aspiration at half of the regular speed.
 
 ---
@@ -53,20 +54,19 @@ This protocol may be used with the following kit, but it can be used with any sa
 ![reservoir](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/76ab0e/reservoir.jpg)
 * 12 well reservoir on slot 2: Add 15 mL of diluent per well to be used (well 1 up to 4)
 
-
 ---
 
 ### Protocol Steps
-1. Pick up tips
-2. Aspirate diluent from from one of well 1-4 in the Nest 12 channel 15 ml reservoir in slot 2
-3. Transfer diluent to all the specified wells of the destination 96-well plate according to the csv file.
+1. Pick up tips.
+2. Aspirate diluent from from one of well 1-4 in the Nest 12 channel 15 ml reservoir in slot 2.
+3. Transfer diluent to all the specified wells of the destination 96-well plate according to the csv file. The height to aspirate from the bottom of the well is controlled by a parameter.
 4. Repeat step 2 and 3 using the same tip until diluent transfer is completed for all specified destination wells.
-5. Dispense the tip in the Trash
-6. Pick up tips (using 20 ul pipette for 1-20 ul range, and 300 pipette for 1-200 ul range)
+5. Dispense the tip in the Trash.
+6. Pick up tips (using 20 ul pipette for 1-20 ul range, and 300 pipette for 1-200 ul range).
 7. Aspirate sample from the csv specified well of the source 96-well plate (the rate of aspiration is controlled by the `Flow rate multiplier` parameter and is set to 0.5 by default i.e. half of the regular rate).
-8. Transfer samples from the specified well of the source 96-well plate to the specified well of the destination 96-well plate
-9. Dispense the tip in the Trash
-10.  Repeat step 7, 8 and 9 until the sample transfer is finished for all the specified wells.
+8. Transfer samples from the specified well of the source 96-well plate to the specified well of the destination 96-well plate.
+9. Dispense the tip in the Trash.
+10. Repeat step 7, 8 and 9 until the sample transfer is finished for all the specified wells.
 
 
 ### Process
