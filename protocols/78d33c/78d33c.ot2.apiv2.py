@@ -145,7 +145,7 @@ def run(ctx):
     mag = ctx.load_module('magnetic module gen2', '1')
     mag.disengage()
     mag_plate = mag.load_labware(
-     'corning_96_wellplate_600ul', 'Mag Plate')
+     'eppendorf_96_wellplate_200ul', 'Mag Plate')
 
     ctx.comment("STEP - KAPA Pure Beads")
 
