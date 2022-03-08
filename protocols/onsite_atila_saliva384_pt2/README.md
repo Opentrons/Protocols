@@ -31,7 +31,7 @@ Explanation of complex parameters below:
 ### Deck Setup
 Plate 4 (slot 2) should only have 94 samples to allow room for controls. Please refer to the following diagram for how samples are loaded from each of the four quadrants onto the 284 plate with the multi-channel. Any unfilled columns will switch to the single channel. SRM is added to control wells O24 and P24.
 ![plate layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/atila/Screen+Shot+2022-03-07+at+10.03.34+AM.png)
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/atila/Screen+Shot+2022-03-07+at+9.50.48+AM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1fcf02/Screen+Shot+2022-03-08+at+2.41.54+PM.png)
 
 ### Reagent Setup
 * SRM should be placed only in column 1 of the deepwell plate.
