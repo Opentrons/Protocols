@@ -8,13 +8,14 @@
 	* Plate Filling
 
 ## Description
-This protocol preps 1.5mL and 2mL tubes from stock solutions including but not limited to acetonitrile, water, and methanol. Sources and destinations are determined via a csv uploaded by the user, as well as transfer volumes. 
+This protocol preps 1.5mL and 2mL tubes from stock solutions including but not limited to acetonitrile, water, and methanol. Sources and destinations are determined via a csv uploaded by the user, as well as transfer volumes.
 
 
 Explanation of complex parameters below:
 * `csv file`: The csv file should be formatted like so:
 
-![csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/528c16/Screen+Shot+2022-01-18+at+11.48.24+AM.png)
+![csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/atila/Screen+Shot+2022-03-07+at+11.24.53+AM.png)
+* Note: for aspiration height percent (column J), a value of 10 means that we will be aspirating from 10% of the tube depth, 50 will be 50% of the tube depth, etc. 
 * `P20/P1000 Mount`: Specify which mount (left or right) for each single channel pipette.
 
 ---

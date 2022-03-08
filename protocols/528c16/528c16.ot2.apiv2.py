@@ -58,6 +58,7 @@ def run(ctx: protocol_api.ProtocolContext):
     # protocol
     for row in csv_rows:
         tube_type, source_slot, source_well, transfer_vol, dest_slot, dest_well = row[1:7]  # noqa: E501
+        asp_percent = row[9]
         if int(transfer_vol) > 100:
             pip = p1000
         else:
@@ -66,16 +67,7 @@ def run(ctx: protocol_api.ProtocolContext):
                                         source_well]
         dest = ctx.loaded_labwares[int(dest_slot)].wells_by_name()[
                                         dest_well]
-
-        if "falcon" and "50" in tube_type.lower():
-            asp_height = 48
-
-        elif pip == p20 and "15" in tube_type.lower():
-            asp_height = 30
-        else:
-            asp_height = 1
-
-        print(asp_height)
+        asp_height = source.depth*int(asp_percent)/100
 
         pip.pick_up_tip()
         pip.transfer(int(transfer_vol),

@@ -25,8 +25,14 @@
   },
   {
     "type": "float",
-    "label": "Aspiration height from bottom of the well [mm]",
-    "name": "aspiration_height",
+    "label": "Aspiration height from bottom of the plate wells [mm]",
+    "name": "aspiration_height_plate",
+    "default": 1
+  },
+  {
+    "type": "float",
+    "label": "Aspiration height from bottom of the reservoir wells [mm]",
+    "name": "aspiration_height_resv",
     "default": 1
   },
   {
