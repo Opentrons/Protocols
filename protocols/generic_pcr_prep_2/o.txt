@@ -1,0 +1,4 @@
+> /Users/eskilandersen/opprot3/Protocols/protocols/generic_pcr_prep_2/generic_pcr_prep_2.ot2.apiv2.py(215)run()
+-> tiprack_l, tiprack_r = tiprack_list
+(Pdb) --KeyboardInterrupt--
+(Pdb) 
