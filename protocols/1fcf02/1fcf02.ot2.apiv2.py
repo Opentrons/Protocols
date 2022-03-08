@@ -36,7 +36,6 @@ def run(ctx):
              "start_urea_vol",
              "start_buff_vol",
              "p20_mount",
-             "p20_mount",
              "p300_mount")
 
     # load labware
