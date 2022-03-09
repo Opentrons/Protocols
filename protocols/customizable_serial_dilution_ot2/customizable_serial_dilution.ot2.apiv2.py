@@ -1,9 +1,3 @@
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"pipette_type":"p300_multi_gen2","dilution_factor":3,"num_of_dilutions":3,"total_mixing_volume":150,"tip_use_strategy":"never"}""")
-    return [_all_values[n] for n in names]
-
-
 metadata = {
     'protocolName': 'Customizable Serial Dilution',
     'author': 'Opentrons <protocols@opentrons.com>',
