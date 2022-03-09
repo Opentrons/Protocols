@@ -76,7 +76,6 @@ def run(ctx):
                         if line.split(',')[0].strip()][1:]
             all_csv_rows.append(csv_rows)
 
-
         elif ';' in csv:
             csv_rows = [[val.strip() for val in line.split(';')[1:]]
                         for line in csv.splitlines()
