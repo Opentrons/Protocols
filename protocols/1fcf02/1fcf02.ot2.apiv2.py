@@ -70,10 +70,18 @@ def run(ctx):
 
     all_csv_rows = []
     for csv in all_csvs:
-        csv_rows = [[val.strip() for val in line.split(',')[1:]]
-                    for line in csv.splitlines()
-                    if line.split(',')[0].strip()][1:]
-        all_csv_rows.append(csv_rows)
+        if ',' in csv:
+            csv_rows = [[val.strip() for val in line.split(',')[1:]]
+                        for line in csv.splitlines()
+                        if line.split(',')[0].strip()][1:]
+            all_csv_rows.append(csv_rows)
+
+        elif ';' in csv:
+            csv_rows = [[val.strip() for val in line.split(';')[1:]]
+                        for line in csv.splitlines()
+                        if line.split(';')[0].strip()][1:]
+
+            all_csv_rows.append(csv_rows)
 
     urea_csvs = all_csv_rows[:3]
     buffer_csvs = all_csv_rows[3:6]
@@ -113,9 +121,9 @@ def run(ctx):
     for csv, plate in zip(urea_csvs, plates):
         for i, row in enumerate(csv):
             for vol, well in zip(row, plate.rows()[i]):
-                vol = int(vol)
-                if vol == 0:
+                if vol == 'x':
                     continue
+                vol = int(vol)
                 pip = p300 if vol > 20 else p20
                 if not pip.has_tip:
                     pip.pick_up_tip()
@@ -134,9 +142,9 @@ def run(ctx):
     for csv, plate in zip(buffer_csvs, plates):
         for i, row in enumerate(csv):
             for vol, well in zip(row, plate.rows()[i]):
-                vol = int(vol)
-                if vol == 0:
+                if vol == 'x':
                     continue
+                vol = int(vol)
                 pip = p300 if vol > 20 else p20
                 if not pip.has_tip:
                     pip.pick_up_tip()
@@ -155,6 +163,8 @@ def run(ctx):
     for csv, plate in zip(sample_csvs, plates):
         for i, row in enumerate(csv):
             for vol_well, well in zip(row, plate.rows()[i]):
+                if vol_well.lower() == 'x':
+                    continue
                 left_and_right = vol_well.split('/')
                 left = left_and_right[0]
                 right = left_and_right[1]

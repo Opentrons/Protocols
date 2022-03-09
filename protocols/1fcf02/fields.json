@@ -61,7 +61,7 @@
   },
   {
     "type": "int",
-    "label": "Initial Urea Volume (mL)",
+    "label": "Initial Buffer Volume (mL)",
     "name": "start_buff_vol",
     "default": 30
   },
