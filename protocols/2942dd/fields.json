@@ -13,13 +13,13 @@
   },
   {
     "type": "int",
-    "label": "Starting Volume for Tween 20 (uL)",
+    "label": "Starting Volume for Detergent (uL)",
     "name": "vol_start_tween",
     "default": 1000
   },
   {
     "type": "str",
-    "label": "Location for Tween 20 in Fluidx rack (H11 or H12)",
+    "label": "Location for Detergent in Fluidx rack (H11 or H12)",
     "name": "loc_tween",
     "default": "H11"
   },
