@@ -17,6 +17,8 @@ Links:
 
 This protocol allows your robot to distribute a master mix solution from well A1 of a reservoir or deep well plate to a target (a plate or a set of PCR strips on an aluminum block). The robot will then transfer DNA samples to the destination. At this point the samples can be mixed if so desired. The protocol works with both single- and multi-channel pipettes, just be sure that the minimum end of their combined volume range covers the smallest volume. There is also an option to place the DNA template plate, and the target plate on temperature modules. The protocol allows a user to 1) transfer the DNA samples of a 96 well plate to the target 96 well plate or 2) transfer up to four 96 well plates containing template DNA to a 384 well plate.
 
+If only one pipette is selected it can use all four tipracks located on slots 4, 5, 7 and 8.
+
 Explanation of parameters below:
 * `Number of samples` : The number of DNA template samples to mix with PCR mastermix on the target well plate. This parameter controls how many plate columns the mastermix is transferred to as well as how many columns of samples are transferred to the destination plate.
 * `Number of mixes`: How many times to mix the DNA template samples with the mastermix after adding them together
@@ -49,7 +51,8 @@ for P50 and P300s the filtered tips are 200 µL Opentrons filtered tips, and the
 * [Alternatively: Well plate/PCR strips on aluminum blocks](https://labware.opentrons.com/?category=aluminumBlock)
 
 ### Pipettes
-* [Single channel pipettes](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
+* [Single channel pipettes (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
+* [Multi-channel Pipettes (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)
 * [Pipette tips](https://shop.opentrons.com/universal-filter-tips/)
 
 ### Robot
