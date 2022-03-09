@@ -247,7 +247,7 @@ def run(ctx):
         pip.dispense(vol, dest.height_inc(vol))
         rt = mix_rate if pip == p20s else 1
         if pip == p20s:
-            for rep in range(6):
+            for rep in range(3):
                 pip.aspirate(20, dest.height_dec(20).move(
                  types.Point(x=0, y=0, z=-(
                   dest.height-dest.min_height)+clearance_mix_aspirate
@@ -258,7 +258,7 @@ def run(ctx):
             maxv = pip._tip_racks[0].wells()[0].max_volume
             calcv = 0.8*dest.current_volume
             v = calcv if calcv < maxv else maxv
-            for rep in range(4):
+            for rep in range(3):
                 pip.aspirate(v, dest.height_dec(v))
                 pip.dispense(v, dest.height_inc(v))
         pip.blow_out()
@@ -274,7 +274,7 @@ def run(ctx):
             maxv = pip._tip_racks[0].wells()[0].max_volume
             calcv = 0.8*dest.current_volume
             v = calcv if calcv < maxv else maxv
-            for rep in range(4):
+            for rep in range(3):
                 pip.aspirate(v, dest.height_dec(v))
                 pip.dispense(v, dest.height_inc(v))
             pip.blow_out()
