@@ -17,8 +17,8 @@ def get_values(*names):
                                   "n_mixes":0,
                                   "aspiration_rate_multiplier":1,
                                   "dispensation_rate_multiplier":1,
-                                  "left_pipette_lname":"p20_multi_gen2",
-                                  "right_pipette_lname":"p300_multi_gen2",
+                                  "left_pipette_lname":false,
+                                  "right_pipette_lname":"p20_multi_gen2",
                                   "use_filter_tips_left":true,
                                   "use_filter_tips_right":true,
                                   "mastermix_volume":18,
@@ -110,7 +110,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     mastermix_resv_slot = '3'
     dest_plate_slot = '6'
-    tiprack_l_slots = ['4', '7']
+    tiprack_l_slots = ['4', '7', '10']
     tiprack_r_slots = ['5', '8']
     DNA_plate_slots = ['9', '1', '2', '11']
     n_plates = math.ceil(n_samples/96)
@@ -244,11 +244,12 @@ def run(ctx: protocol_api.ProtocolContext):
             in zip([left_pipette_lname, right_pipette_lname],
                    [use_filter_tips_left, use_filter_tips_right],
                    [tiprack_l_slots, tiprack_r_slots]):
-            for i in range(2):
+            for i in range(len(slots)):
                 process_tipracks(pip_lname, is_filtered,
                                  slots[i], tiprack_list)
-        tipracks_l = [tiprack_list[0], tiprack_list[1]]
-        tipracks_r = [tiprack_list[2], tiprack_list[3]]
+        tipracks_l = tiprack_list[0:len(tiprack_l_slots)]
+        tipracks_r = tiprack_list[len(tiprack_l_slots):len(tiprack_l_slots)
+                                  + len(tiprack_r_slots)]
     # load instrument
     '''
     Nomenclature for pipette:
