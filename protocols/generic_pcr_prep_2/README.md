@@ -19,6 +19,10 @@ This protocol allows your robot to distribute a master mix solution from well A1
 
 If only one pipette is selected it can use all 5 tipracks located on slots 4, 5, 7, 8, and 10. If two pipettes are loaded 4,7, and 10 are used by the left pipette and 5, and 8 by the right pipette.
 
+When 96 well plates are transferred with a multi-channel pipette to 384 well plates their columns are intercalated on the 384 well plate, e.g. column 1 and 2 of the 96 well plate go into odd the and even rows of the 1st column of the 384 well plate respectively. Then column 3, and 4 of the 96 well plate go into the next column of the 384 well plate etc.
+
+If a single channel pipette is used the DNA will be transferred sequentially from 96 well plates to the 384 well plate
+
 Explanation of parameters below:
 * `Number of samples` : The number of DNA template samples to mix with PCR mastermix on the target well plate. This parameter controls how many plate columns the mastermix is transferred to as well as how many columns of samples are transferred to the destination plate.
 * `Number of mixes`: How many times to mix the DNA template samples with the mastermix after adding them together
