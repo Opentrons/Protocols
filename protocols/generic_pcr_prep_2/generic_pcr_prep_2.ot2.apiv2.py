@@ -17,8 +17,8 @@ def get_values(*names):
                                   "n_mixes":0,
                                   "aspiration_rate_multiplier":1,
                                   "dispensation_rate_multiplier":1,
-                                  "left_pipette_lname":false,
-                                  "right_pipette_lname":"p20_multi_gen2",
+                                  "left_pipette_lname":"p20_multi_gen2",
+                                  "right_pipette_lname":"p300_multi_gen2",
                                   "use_filter_tips_left":true,
                                   "use_filter_tips_right":true,
                                   "mastermix_volume":18,
@@ -205,17 +205,10 @@ def run(ctx: protocol_api.ProtocolContext):
     def load_tipracks(tiprack_list, filtered_tips, non_filtered_tips,
                       is_filtered, slot):
         tip_type = filtered_tips if is_filtered else non_filtered_tips
-        tiprack_list.append([ctx.load_labware(tip_type, s) for s in slot])
+        tiprack_list.append(ctx.load_labware(tip_type, slot))
 
-    tiprack_list = []
-
-    for pip_lname, is_filtered, slot \
-        in zip([left_pipette_lname, right_pipette_lname],
-               [use_filter_tips_left, use_filter_tips_right],
-               [tiprack_l_slots, tiprack_r_slots]):
-        if not pip_lname:
-            tiprack_list.append(None)
-        elif "20_" in pip_lname or "10_" in pip_lname:
+    def process_tipracks(pip_lname, is_filtered, slot, tiprack_list):
+        if "20_" in pip_lname or "10_" in pip_lname:
             load_tipracks(tiprack_list, tiprack_lnames["p20s_filtered"],
                           tiprack_lnames["p20s_nonfiltered"], is_filtered,
                           slot)
@@ -230,6 +223,32 @@ def run(ctx: protocol_api.ProtocolContext):
         else:
             raise Exception("The pipette loadname does not match any tipracks "
                             "the loadname was {}".format(pip_lname))
+
+    tiprack_list = []
+    tipracks_l, tipracks_r = None, None
+
+    if left_pipette_lname and not right_pipette_lname:
+        tiprack_slots = tiprack_l_slots + tiprack_r_slots
+        for slot in tiprack_slots:
+            process_tipracks(left_pipette_lname, use_filter_tips_left,
+                             slot, tiprack_list)
+            tipracks_l = tiprack_list
+    elif not left_pipette_lname and right_pipette_lname:
+        tiprack_slots = tiprack_l_slots + tiprack_r_slots
+        for slot in tiprack_slots:
+            process_tipracks(right_pipette_lname, use_filter_tips_left,
+                             slot, tiprack_list)
+            tipracks_r = tiprack_list
+    else:
+        for pip_lname, is_filtered, slots \
+            in zip([left_pipette_lname, right_pipette_lname],
+                   [use_filter_tips_left, use_filter_tips_right],
+                   [tiprack_l_slots, tiprack_r_slots]):
+            for i in range(2):
+                process_tipracks(pip_lname, is_filtered,
+                                 slots[i], tiprack_list)
+        tipracks_l = [tiprack_list[0], tiprack_list[1]]
+        tipracks_r = [tiprack_list[2], tiprack_list[3]]
     # load instrument
     '''
     Nomenclature for pipette:
@@ -247,11 +266,13 @@ def run(ctx: protocol_api.ProtocolContext):
     '''
 
     pipettes = []
-    for pip, mount, tiprack in zip([left_pipette_lname, right_pipette_lname],
+    for pip, mount, tiprack in zip([left_pipette_lname,
+                                    right_pipette_lname],
                                    ["left", "right"],
-                                   tiprack_list):
+                                   [tipracks_l, tipracks_r]):
         if pip:
-            pipettes.append(ctx.load_instrument(pip, mount, tip_racks=tiprack))
+            pipettes.append(ctx.load_instrument(
+                pip, mount, tip_racks=tiprack))
         else:
             pipettes.append(None)
 
@@ -470,6 +491,7 @@ def run(ctx: protocol_api.ProtocolContext):
         # If the pip is multi-channel transfer to the a row well of each col
         if is_multi_channel(pipette):
             n_columns = math.ceil(n_samples/8)
+            print(n_columns, n_samples)
             target_columns = dest_plate.columns()[:n_columns]
             if not drop_tips:
                 pick_up_tip(pipette)
@@ -504,8 +526,8 @@ def run(ctx: protocol_api.ProtocolContext):
         # Multi-channel pip: column by column transfer
         if is_multi_channel(pipette):
             n_columns = math.ceil(n_samples/8)
-            source_columns = source_plate.columns()[0:n_columns-1]
-            target_columns = dest_plate.columns()[0:n_columns-1]
+            source_columns = source_plate.columns()[:n_columns]
+            target_columns = dest_plate.columns()[:n_columns]
             for s_col, d_col in zip(source_columns, target_columns):
                 pick_up_tip(pipette)
                 pipette.aspirate(vol, s_col[0])
