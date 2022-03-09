@@ -1,12 +1,36 @@
 import math
 from opentrons import protocol_api
 from opentrons.protocol_api.contexts import InstrumentContext
+
 metadata = {
     'protocolName': 'Generic PCR Prep Part 2 - Mastermix and DNA Distribution',
     'author': 'Opentrons <protocols@opentrons.com>',
     'source': 'Protocol Library',
     'apiLevel': '2.11'
     }
+
+
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{
+                                  "n_samples":96,
+                                  "n_mixes":0,
+                                  "aspiration_rate_multiplier":1,
+                                  "dispensation_rate_multiplier":1,
+                                  "left_pipette_lname":false,
+                                  "right_pipette_lname":"p20_multi_gen2",
+                                  "use_filter_tips_left":true,
+                                  "use_filter_tips_right":true,
+                                  "mastermix_volume":18,
+                                  "DNA_volume":2,
+                                  "mastermix_reservoir_lname":"nest_12_reservoir_15ml",
+                                  "DNA_well_plate_lname":"opentrons_96_aluminumblock_nest_wellplate_100ul",
+                                  "destination_well_plate_lname":"opentrons_96_aluminumblock_nest_wellplate_100ul",
+                                  "DNA_well_plate_tmod":"temperature module gen2",
+                                  "dest_well_plate_tmod":"temperature module gen2"
+                                  }
+                                  """)
+    return [_all_values[n] for n in names]
 
 
 def run(ctx: protocol_api.ProtocolContext):
@@ -56,13 +80,21 @@ def run(ctx: protocol_api.ProtocolContext):
                         "temperature module")
 
     if "aluminum" not in DNA_well_plate_lname and DNA_well_plate_tmod:
-        raise Exception("The destination plate must be loaded on an "
+        raise Exception("The DNA template plate must be loaded on an "
                         "aluminum block in order to be used with a "
                         "temperature module")
 
+    assert aspiration_rate_multiplier > 0, \
+        "The aspiration flow-rate multiplier must be greater than zero"
+
+    assert dispensation_rate_multiplier > 0, \
+        "The dispensation flow-rate multiplier must be greater than zero"
+
+    assert n_samples > 0, "There must be at least one sample"
     # Error checking on n_samples <= number of wells on destination plate
-    # is at the beginning of the protocol code
-    # Copied code for reference:
+    # is at the beginning of the protocol code because it requires loading
+    # the plates.
+    # The code is copied here for reference:
     """
     if n_wells_dest < n_samples:
         raise Exception("The destination plate does not have enough wells ({})"
@@ -102,7 +134,7 @@ def run(ctx: protocol_api.ProtocolContext):
                                 [DNA_plate_slots[0], dest_plate_slot]):
         if tmod_lname:
             tmod = ctx.load_module(tmod_lname, slot)
-            tmod_list. append(tmod)
+            tmod_list.append(tmod)
         else:
             tmod_list.append(None)
     tmod_dna_plate, tmod_dest_plate = tmod_list
@@ -181,8 +213,9 @@ def run(ctx: protocol_api.ProtocolContext):
         in zip([left_pipette_lname, right_pipette_lname],
                [use_filter_tips_left, use_filter_tips_right],
                [tiprack_l_slots, tiprack_r_slots]):
-
-        if "20_" in pip_lname or "10_" in pip_lname:
+        if not pip_lname:
+            tiprack_list.append(None)
+        elif "20_" in pip_lname or "10_" in pip_lname:
             load_tipracks(tiprack_list, tiprack_lnames["p20s_filtered"],
                           tiprack_lnames["p20s_nonfiltered"], is_filtered,
                           slot)
@@ -197,7 +230,6 @@ def run(ctx: protocol_api.ProtocolContext):
         else:
             raise Exception("The pipette loadname does not match any tipracks "
                             "the loadname was {}".format(pip_lname))
-    tiprack_l, tiprack_r = tiprack_list
     # load instrument
     '''
     Nomenclature for pipette:
@@ -214,22 +246,19 @@ def run(ctx: protocol_api.ProtocolContext):
                         tip_racks= tiprack )
     '''
 
-    pipette_l = None
-    pipette_r = None
     pipettes = []
     for pip, mount, tiprack in zip([left_pipette_lname, right_pipette_lname],
                                    ["left", "right"],
-                                   [tiprack_l, tiprack_r]):
+                                   tiprack_list):
         if pip:
             pipettes.append(ctx.load_instrument(pip, mount, tip_racks=tiprack))
         else:
             pipettes.append(None)
 
-    pipette_l, pipette_r = pipettes
-
-    for pip in [pipette_l, pipette_r]:
-        pip.flow_rate.aspirate *= aspiration_rate_multiplier
-        pip.flow_rate.dispense *= dispensation_rate_multiplier
+    for pip in pipettes:
+        if pip is not None:
+            pip.flow_rate.aspirate *= aspiration_rate_multiplier
+            pip.flow_rate.dispense *= dispensation_rate_multiplier
     '''
 
     Define all pipette functions, and class extensions here.
@@ -268,21 +297,24 @@ def run(ctx: protocol_api.ProtocolContext):
             pipette.reset_tipracks()
             pipette.pick_up_tip()
 
-    def rank_pipettes(pipette_l, pipette_r):
+    def rank_pipettes(pipettes):
         """
-        Given two pipettes this fn will return them in the order of smallest
-        to largest. This function assumes that error checking for cases where
-        no pipettes were loaded was already done.
+        Given a list of 1 to 2 pipettes this fn will return them in the order
+        of smallest to largest. This function assumes that error checking for
+        cases where no pipettes were loaded was already done.
         """
-        if not pipette_l:
-            return [pipette_r, pipette_r]
-        elif not pipette_r:
-            return [pipette_l, pipette_l]
-        else:
-            if pipette_l.max_volume <= pipette_r.max_volume:
-                return [pipette_l, pipette_r]
+        if pipettes[1] is None:
+            return [pipettes[0], pipettes[0]]
+        elif pipettes[0] is None:
+            return [pipettes[1], pipettes[1]]
+        elif len(pipettes) == 2:
+            if pipettes[0].max_volume <= pipettes[1].max_volume:
+                return [pipettes[0], pipettes[1]]
             else:
-                return [pipette_r, pipette_l]
+                return [pipettes[1], pipettes[0]]
+        else:
+            raise Exception("Unexpected number of pipettes loaded: {}".
+                            format(len(pipettes)))
 
     def pipette_selector(small_pipette, large_pipette, volume):
         """
@@ -290,7 +322,9 @@ def run(ctx: protocol_api.ProtocolContext):
         can handle the given volume, and failing that a single channel pip.
         """
         assert small_pipette.max_volume \
-            < large_pipette.max_volume, "Pipette argument error"
+            <= large_pipette.max_volume, ("Pipette argument error, small pip's"
+                                          " max volume should be less than or "
+                                          "equal to the large pip's")
         if small_pipette.min_volume <= volume <= small_pipette.max_volume \
                 and is_multi_channel(small_pipette):
             return small_pipette
@@ -321,13 +355,22 @@ def run(ctx: protocol_api.ProtocolContext):
 
     def single_channel_resv_transfer(pipette, vol, source_well, dest_plate,
                                      n_samples, drop_tips=False):
-        """ This function transfers a volume of liquid from a source well
-        to a destination plate using a single channel pipette
+        """
+        This function transfers a volume of liquid from a single source well
+        (e.g. a reservoir) to a destination plate using a single channel
+        pipette
+        :param pipette: The pipette to use for transferring liquid
+        :param vol: The volume for each liquid transfer
+        :param source_well: The source well to aspirate from, i.e. the
+        reservoir well containing mastermix
+        :param dest_plate: well plate to transfer to
+        :param n_samples: How many transfers to perform
+        :param drop_tips: Whether to drop tips after each transfer and pick
+        up new ones, or reuse the same tips
         """
         if not drop_tips:
             pick_up_tip(pipette)
         for well in dest_plate.wells()[:n_samples]:
-            # pipette.pick_up_tip()
             if drop_tips:
                 pick_up_tip(pipette)
             pipette.aspirate(vol, source_well)
@@ -346,6 +389,19 @@ def run(ctx: protocol_api.ProtocolContext):
             to a destination plate using a single channel pipette
             :param offset: Dispense in the well on the target plate starting
             at the offset from the 1st well.
+            :param pipette: The (single channel) pipette to use for
+            transferring liquid
+            :param vol: The volume for each liquid transfer
+            :param source_plate: well plate to transfer from
+            :param dest_plate: well plate to transfer to
+            :param n_mixes: how many times to mix the solution after the
+            transfer
+            :param mix_vol: The mixing volume for the mixing actions
+            :param n_transfers: How many samples to transfer to the target
+            plate from the source plate
+            :param offset: Offset defines how many wells to skip on the target
+            plate before transferring e.g. if the offset is 96, the transfers
+            begin in well 97 on the target plate
             """
             pick_up_tip(pipette)
             pipette.aspirate(vol, s_well)
@@ -359,7 +415,7 @@ def run(ctx: protocol_api.ProtocolContext):
         Transfer from a reservoir to a plate. If the pipette is multi channel
         the transfers will be column to column.
 
-        :param pipette: Pipette for the pipetting actions
+        :param pipette: Pipette for the pipetting actions (aspirate/dispense)
         :param vol: The volume per tip to transfer
         :param source_well: The reservoir well to transfer from
         :param dest_plate: The plate to transfer to
@@ -370,16 +426,17 @@ def run(ctx: protocol_api.ProtocolContext):
             raise Exception("The 384(?) well destination plate should have 16 "
                             "wells in in each row but it has {} wells instead".
                             format(len(dest_plate.columns())))
-        # If the pip is multi-channel transfer to the a row well of each col
+        # If the pip is multi-channel transfer from the resv well to the A
+        # row well of the column and then the B row well, filling all 16
+        # wells of the 384 well plate
         if is_multi_channel(pipette):
             n_columns = math.ceil(n_samples/16)
             target_columns = dest_plate.columns()[:n_columns]
             if not drop_tips:
                 pick_up_tip(pipette)
             for col in target_columns:
-                # Transfer to a 16 row column with an 8chl pipette
-                # first to A<N> then to B<N>
                 for i in range(2):
+                    # col[0] = A row, col[1] = B row of the column
                     d_well = col[i]
                     if drop_tips:
                         pick_up_tip(pipette)
@@ -397,15 +454,18 @@ def run(ctx: protocol_api.ProtocolContext):
     def resv_to_plate96_transfer(pipette, vol, source_well, dest_plate,
                                  n_samples, drop_tips=False):
         """
-        Transfer from a reservoir to a plate. If the pipette is multi channel
-        the transfers will be column to column.
+        Transfer from a reservoir to a 96 well plate. If the pipette is multi
+        channel the transfers will be reservoir to column (well A of each col).
+        This function can also use a single channel pipette to transfer to
+        each well
 
         :param pipette: Pipette for the pipetting actions
         :param vol: The volume per tip to transfer
         :param source_well: The reservoir well to transfer from
         :param dest_plate: The plate to transfer to
+        :param n_samples: How many (mastermix) samples to transfer
         :param drop_tips: Whether to drop tips after each transfer or use the
-        same tips throughout. Defaults to false
+        same tips throughout. Defaults to False
         """
         # If the pip is multi-channel transfer to the a row well of each col
         if is_multi_channel(pipette):
@@ -431,7 +491,8 @@ def run(ctx: protocol_api.ProtocolContext):
                                     n_samples, n_mixes, mix_vol):
         """
         Transfer from a 96 well plate to a 96 well plate.
-        If the pipette is multi channel the transfers will be column to column.
+        This function can use either a multi-channel pipette or a single
+        channel pipette.
 
         :param pipette: Pipette for the pipetting actions
         :param vol: The volume per tip to transfer
@@ -449,7 +510,7 @@ def run(ctx: protocol_api.ProtocolContext):
                 pick_up_tip(pipette)
                 pipette.aspirate(vol, s_col[0])
                 pipette.dispense(vol, d_col[0])
-                pipette.mix(n_mixes, mix_vol, d_col[0])
+                mix(pipette, n_mixes, mix_vol, d_col[0])
                 pipette.drop_tip()
         # SCP: well by well transfer
         else:
@@ -596,7 +657,7 @@ def run(ctx: protocol_api.ProtocolContext):
                         format(n_wells_dest, n_samples))
 
     # determine which pipette has the smaller volume range
-    pip_s, pip_l = rank_pipettes(pipette_l, pipette_r)
+    pip_s, pip_l = rank_pipettes(pipettes)
     # Make sure we have a pipette that can handle the volume of mastermix
     # Ideally the smaller one
     pipette = pipette_selector(pip_s, pip_l, mastermix_volume)
@@ -604,9 +665,12 @@ def run(ctx: protocol_api.ProtocolContext):
     if n_wells_dest == 96:
         resv_to_plate96_transfer(pipette, mastermix_volume, mastermix,
                                  destination_well_plate, n_samples)
-    else:
+    elif n_wells_dest == 384:
         resv_to_plate384_transfer(pipette, mastermix_volume, mastermix,
                                   destination_well_plate, n_samples)
+    else:
+        raise Exception("Transferring to a {} well plate is unsupported".
+                        format(n_wells_dest))
 
     # Transfer DNA to the destination plate
     pipette = pipette_selector(pip_s, pip_l, DNA_volume)

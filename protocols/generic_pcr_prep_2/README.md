@@ -15,23 +15,23 @@ Links:
 * [Part 2: Master Mix Distribution and DNA Transfer](./generic_pcr_prep_2)
 
 
-This protocol allows your robot to distribute a master mix solution from well A1 of a reservoir to a target (a plate or PCR strips). The robot will then transfer DNA samples to the master mix solution. The protocol works with both single- and multi-channel pipettes, just be sure that the minimum end of their combined volume range covers the smallest volume. There is also an option to place the DNA template labware, and the target labware on temperature modules to keep them cool. The protocol allows a user to transfer the samples of up to four 96 well plates to a 384 well plate if desired. The user can also control whether they want their DNA samples mixes, as well as the aspiration and dispensation flow rates of the pipettes.
+This protocol allows your robot to distribute a master mix solution from well A1 of a reservoir or deep well plate to a target (a plate or a set of PCR strips on an aluminum block). The robot will then transfer DNA samples to the destination. At this point the samples can be mixed if so desired. The protocol works with both single- and multi-channel pipettes, just be sure that the minimum end of their combined volume range covers the smallest volume. There is also an option to place the DNA template plate, and the target plate on temperature modules. The protocol allows a user to 1) transfer the DNA samples of a 96 well plate to the target 96 well plate or 2) transfer up to four 96 well plates containing template DNA to a 384 well plate.
 
 Explanation of parameters below:
 * `Number of samples` : The number of DNA template samples to mix with PCR mastermix on the target well plate. This parameter controls how many plate columns the mastermix is transferred to as well as how many columns of samples are transferred to the destination plate.
-* `Number of mixes`: How many times to mix the samples with the mastermix after adding them together
-* `Aspiration rate multiplier`: A multiplier for controlling the flow rate of aspiration, less than 1 to slow down, or greater than one to speed up.
-* `Dispensation rate multiplier`: A multiplier for controlling the flow rate of dispensation, less than 1 to slow down, or greater than one to speed up.
-* `Right pipette type`: Pipette in the right mount, can be either a single channel or a multi-channel pipette
-* `Left pipette type`: Pipette in the left mount, can be either a single channel or a multi-channel pipette.
+* `Number of mixes`: How many times to mix the DNA template samples with the mastermix after adding them together
+* `Aspiration rate multiplier`: A multiplier for controlling the flow rate of aspiration: Less than 1 to slow down, or greater than one to speed up aspiration.
+* `Dispensation rate multiplier`: A multiplier for controlling the flow rate of dispensation, less than 1 to slow down, or greater than one to speed up dispensation.
+* `Right pipette type`: Pipette in the right mount, it can be either a single channel or a multi-channel pipette
+* `Left pipette type`: Pipette in the left mount, it can be either a single channel or a multi-channel pipette.
 * `Filtered or unfiltered tips for the left pipette?`: Whether the left pipette is using filter or regular tips. for P20s and P10s the options are Opentrons 20 µL filtered tips, or 20 µL unfiltered.
 for P50 and P300s the filtered tips are 200 µL Opentrons filtered tips, and the non-filtered are 300 µL Opentrons regular tips. For the P1000 the options is either Opentrons 1000 µL filtered or non-filtered tips.
-* `Filtered or unfiltered tips for the right pipette?`: Whether the right pipette is using filter or regular tips
-* `Mastermix volume (in µl)`: The volume of mastermix for each well on the destination labware (in µL)
-* `DNA volume (in µl)`: The amount of DNA template to transfer to each destination well from each DNA template well (in µL)
-* `Mastermix reservoir`: 1, or 12 well reservoir, or a deep well plate containing your PCR mastermix in well `A1` (or `A1` to `H1`)
+* `Filtered or unfiltered tips for the right pipette?`: Whether the right pipette is using filter or regular Opentrons tips
+* `Mastermix volume (in µl)`: The volume of mastermix to transfer to each well on the destination plate (in µL)
+* `DNA volume (in µl)`: The amount of DNA template to transfer to each destination plate from the DNA template plate (in µL)
+* `Mastermix reservoir`: A 1 well, or 12 well reservoir, or a deep well plate containing your PCR mastermix in well `A1` (or the column spanning `A1` to `H1`)
 * `PCR well plate (or PCR strips) containing template DNA`: Your source of template DNA, such as a 96 well plate (up to 4 when the destination plate is a 384 well plate)
-* `Destination PCR well plate or PCR strips`: This is the well plate where the PCR mastermix and the  DNA template is transferred to and mixed.
+* `Destination PCR well plate or PCR strips`: This is the well plate where the PCR mastermix and the  DNA template is transferred to and mixed. This can be a 96 well plate, PCR strips on an aluminum block, or a 384 well plate.
 * `Temperature module for the 1st DNA template well plate`: (Optional) You can load a temperature module for your (1st) DNA template well plate if you want to control its temperature.
 * `Temperature module for the destination well plate`: (Optional) You can load a temperature module for your destination well plate if you want to control its temperature.
 
