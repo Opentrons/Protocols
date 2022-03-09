@@ -61,10 +61,10 @@ for P50 and P300s the filtered tips are 200 µL Opentrons filtered tips, and the
 ---
 
 ### Deck Setup
-* Example setup
+* Example setup with a 384 well destination plate and four 96 well plates
 ![Deck](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/generic_pcr_prep_2/example_deck.jpg)
 
-![Mastermix Reservoir](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/generic_pcr_prep_2/mastermix_reservoir.jpg)
+![Mastermix Reservoir](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/generic_pcr_prep_2/mastermix.jpg)
 
 
 * Slot 1: Template DNA plate 2 (optional: for transferring to a 384 well plate)
