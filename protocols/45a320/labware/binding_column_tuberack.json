@@ -254,14 +254,14 @@
     },
     {
       "metadata": {
-        "displayName": "Falcon 4x50 mL Conical",
+        "displayName": "Custom 24",
         "displayCategory": "tubeRack",
         "wellBottomShape": "v"
       },
       "brand": {
         "brand": "FalconsI",
         "brandId": [
-          "352070",
+          "352370",
           "352098"
         ],
         "links": [
