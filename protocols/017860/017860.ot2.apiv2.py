@@ -10,6 +10,12 @@ metadata = {
 }
 
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"input_csv":",M9,AMP_128,AMP_16,AMP_2\\n1,97.5,2.5,0,0\\n2,97.5,2.5,0,0\\n3,97.5,2.5,0,0\\n4,97.5,2.5,0,0\\n5,97.5,2.5,0,0\\n6,97.5,2.5,0,0\\n7,97.5,2.5,0,0\\n8,97.5,2.5,0,0\\n9,95,5,0,0\\n10,95,5,0,0\\n11,95,5,0,0\\n12,95,5,0,0\\n13,95,5,0,0\\n14,95,5,0,0\\n15,95,5,0,0\\n16,95,5,0,0\\n17,90,10,0,0\\n18,90,10,0,0\\n19,90,10,0,0\\n20,90,10,0,0\\n21,90,10,0,0\\n22,90,10,0,0\\n23,90,10,0,0\\n24,90,10,0,0\\n25,97.5,0,2.5,0\\n26,97.5,0,2.5,0\\n27,97.5,0,2.5,0\\n28,97.5,0,2.5,0\\n29,97.5,0,2.5,0\\n30,97.5,0,2.5,0\\n31,97.5,0,2.5,0\\n32,97.5,0,2.5,0\\n33,95,0,5,0\\n34,95,0,5,0\\n35,95,0,5,0\\n36,95,0,5,0\\n37,95,0,5,0\\n38,95,0,5,0\\n39,95,0,5,0\\n40,95,0,5,0\\n41,90,0,10,0\\n42,90,0,10,0\\n43,90,0,10,0\\n44,90,0,10,0\\n45,90,0,10,0\\n46,90,0,10,0\\n47,90,0,10,0\\n48,90,0,10,0\\n49,97.5,0,0,2.5\\n50,97.5,0,0,2.5\\n51,97.5,0,0,2.5\\n52,97.5,0,0,2.5\\n53,97.5,0,0,2.5\\n54,97.5,0,0,2.5\\n55,97.5,0,0,2.5\\n56,97.5,0,0,2.5\\n57,95,0,0,5\\n58,95,0,0,5\\n59,95,0,0,5\\n60,95,0,0,5\\n61,95,0,0,5\\n62,95,0,0,5\\n63,95,0,0,5\\n64,95,0,0,5\\n65,90,0,0,10\\n66,90,0,0,10\\n67,90,0,0,10\\n68,90,0,0,10\\n69,90,0,0,10\\n70,90,0,0,10\\n71,90,0,0,10\\n72,90,0,0,10","tuberacks_15_lname":"opentrons_15_tuberack_nest_15ml_conical","tuberack_mixed_lname":"opentrons_10_tuberack_nest_4x50ml_6x15ml_conical","tiprack_lname_20_ul":"opentrons_96_tiprack_20ul","tiprack_lname_300ul":"opentrons_96_tiprack_300ul","n_plates":1}""")
+    return [_all_values[n] for n in names]
+
+
 def run(ctx: protocol_api.ProtocolContext):
 
     [input_csv,
@@ -120,17 +126,19 @@ def run(ctx: protocol_api.ProtocolContext):
                         format(NUM_DRUGS))
     media_tubes = tuberack_15_50.wells_by_name()
     medias = [media_tubes['A3'], media_tubes['B3'], media_tubes['A4']]
-    # For a maximum number of 3 antibiotic tubes on the 15/50 mL tuberack
+    # The 15/50 mL tuberack can hold a maximum of 5 antibiotic tubes +
+    # the barcoding dye
     # 15*2 refers to the number of drug tubes that fit on the two 15 ml
     # tuberacks (i.e. 15 each)
-    drugs1 = None
-    if NUM_DRUGS > 15*2:
-        drugs1 = tuberack_15_50.wells()[0:NUM_DRUGS-15*2]
+    # Create a well map of all the drug tubes (drug rack 1, 2 and 3`)
+    # Rack 1 is a 15x15 mL tuberack on 9
+    # Rack 2 is a 15x15 mL tuberack on 7
+    # Rack 3 is up to 6 15 mL tubes on the 15/50 mL tuberack
+    drugs1 = tuberack_15_50.wells()[:6]
     drugs2 = [tube for rack in tuberacks_15 for tube in rack.wells()]
-    # run through all of the full 15mL racks before going back
-    # to tuberack_15_50
-    # barcode dye is the last tube (C1) of the 15/50 rack
-    drugs = drugs2 + drugs1 if drugs1 is not None else drugs2
+    drugmap = drugs2 + drugs1
+    # Set the list of drugs to just those drugs that are in the CSV
+    drugs = drugmap[:NUM_DRUGS]
 
     # well height and volume tracking function
     well_V_track = [0 for _ in range(len(plates)*96)]
