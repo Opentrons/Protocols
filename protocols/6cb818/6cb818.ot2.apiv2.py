@@ -1,3 +1,9 @@
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"adjust_final_vol":false,"vol_cd154":500,"vol_peptide1":100,"vol_peptide2":100,"vol_peptide3":100,"vol_pma_ca":100,"vol_culture_medium":1000,"labware_cultureplate":"nest_96_wellplate_320ul","labware_tips":"opentrons_96_tiprack_20ul","slot_cultureplate":1,"slot_tipbox":2,"slot_snapcaps":3,"slot_screwcaps":4,"clearance_snapcap":1,"clearance_screwcap":1,"clearance_plate":1,"clearance_mix":1}""")
+    return [_all_values[n] for n in names]
+
+
 from opentrons.protocol_api.labware import Well
 from opentrons import types
 import math
@@ -128,26 +134,24 @@ def run(ctx):
         p20s.dispense(5, column[0].height_inc(5))
         for rep in range(5):
             p20s.aspirate(
-             20, column[0].height_dec(20).move(types.Point(x=0, y=0, z=-(
-              column[0].height-column[0].min_height)+clearance_mix)))
-            p20s.dispense(20, column[0].height_inc(20))
+             20, column[0].bottom(1), rate=2)
+            p20s.dispense(20, column[0].bottom(12), rate=2)
         p20s.drop_tip()
 
     # transfer cell suspension to B1-E1 and B2-E2
     for column in plate_wells:
         p20s.pick_up_tip()
         for rep in range(5):
-            p20s.aspirate(
-             20, column[0].height_dec(20).move(types.Point(x=0, y=0, z=-(
-              column[0].height-column[0].min_height)+clearance_mix)))
-            p20s.dispense(20, column[0].height_inc(20))
+            p20s.aspirate(20, column[0].bottom(1), rate=2)
+            ht = 10 if rep < 4 else 1
+            p20s.dispense(20, column[0].bottom(ht), rate=2)
         for well in column[1:]:
             reps = math.ceil(
              float(40) / p20s._tip_racks[0].wells()[0].max_volume)
             vol = 40 / reps
             for rep in range(reps):
-                p20s.aspirate(vol, column[0].height_dec(vol))
-                p20s.dispense(vol, well.height_inc(vol))
+                p20s.aspirate(vol, column[0].bottom(1))
+                p20s.dispense(vol, well.bottom(1))
                 p20s.touch_tip(radius=0.75, v_offset=-4, speed=20)
         p20s.drop_tip()
 
