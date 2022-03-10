@@ -1,5 +1,4 @@
 from opentrons.protocol_api.labware import Well
-from opentrons import types
 import math
 
 
@@ -128,26 +127,24 @@ def run(ctx):
         p20s.dispense(5, column[0].height_inc(5))
         for rep in range(5):
             p20s.aspirate(
-             20, column[0].height_dec(20).move(types.Point(x=0, y=0, z=-(
-              column[0].height-column[0].min_height)+clearance_mix)))
-            p20s.dispense(20, column[0].height_inc(20))
+             20, column[0].bottom(1), rate=2)
+            p20s.dispense(20, column[0].bottom(12), rate=2)
         p20s.drop_tip()
 
     # transfer cell suspension to B1-E1 and B2-E2
     for column in plate_wells:
         p20s.pick_up_tip()
         for rep in range(5):
-            p20s.aspirate(
-             20, column[0].height_dec(20).move(types.Point(x=0, y=0, z=-(
-              column[0].height-column[0].min_height)+clearance_mix)))
-            p20s.dispense(20, column[0].height_inc(20))
+            p20s.aspirate(20, column[0].bottom(1), rate=2)
+            ht = 10 if rep < 4 else 1
+            p20s.dispense(20, column[0].bottom(ht), rate=2)
         for well in column[1:]:
             reps = math.ceil(
              float(40) / p20s._tip_racks[0].wells()[0].max_volume)
             vol = 40 / reps
             for rep in range(reps):
-                p20s.aspirate(vol, column[0].height_dec(vol))
-                p20s.dispense(vol, well.height_inc(vol))
+                p20s.aspirate(vol, column[0].bottom(1))
+                p20s.dispense(vol, well.bottom(1))
                 p20s.touch_tip(radius=0.75, v_offset=-4, speed=20)
         p20s.drop_tip()
 
