@@ -120,17 +120,19 @@ def run(ctx: protocol_api.ProtocolContext):
                         format(NUM_DRUGS))
     media_tubes = tuberack_15_50.wells_by_name()
     medias = [media_tubes['A3'], media_tubes['B3'], media_tubes['A4']]
-    # For a maximum number of 3 antibiotic tubes on the 15/50 mL tuberack
+    # The 15/50 mL tuberack can hold a maximum of 5 antibiotic tubes +
+    # the barcoding dye
     # 15*2 refers to the number of drug tubes that fit on the two 15 ml
     # tuberacks (i.e. 15 each)
-    drugs1 = None
-    if NUM_DRUGS > 15*2:
-        drugs1 = tuberack_15_50.wells()[0:NUM_DRUGS-15*2]
+    # Create a well map of all the drug tubes (drug rack 1, 2 and 3`)
+    # Rack 1 is a 15x15 mL tuberack on 9
+    # Rack 2 is a 15x15 mL tuberack on 7
+    # Rack 3 is up to 6 15 mL tubes on the 15/50 mL tuberack
+    drugs1 = tuberack_15_50.wells()[:6]
     drugs2 = [tube for rack in tuberacks_15 for tube in rack.wells()]
-    # run through all of the full 15mL racks before going back
-    # to tuberack_15_50
-    # barcode dye is the last tube (C1) of the 15/50 rack
-    drugs = drugs2 + drugs1 if drugs1 is not None else drugs2
+    drugmap = drugs2 + drugs1
+    # Set the list of drugs to just those drugs that are in the CSV
+    drugs = drugmap[:NUM_DRUGS]
 
     # well height and volume tracking function
     well_V_track = [0 for _ in range(len(plates)*96)]
