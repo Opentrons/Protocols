@@ -225,7 +225,7 @@
         "wellBottomShape": "v"
       },
       "brand": {
-        "brand": "Falcon",
+        "brand": "FalconsI",
         "brandId": [
           "352095",
           "352096",
@@ -259,7 +259,7 @@
         "wellBottomShape": "v"
       },
       "brand": {
-        "brand": "Falcon",
+        "brand": "FalconsI",
         "brandId": [
           "352070",
           "352098"
@@ -285,8 +285,8 @@
     }
   ],
   "brand": {
-    "brand": "Opentrons",
-    "brandId": [],
+    "brand": "Opentrons Custom",
+    "brandId": ["Custom"],
     "links": [
       "https://shop.opentrons.com/collections/opentrons-tips/products/tube-rack-set-1"
     ]
