@@ -42,8 +42,8 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # LABWARE
     prl_tuberacks = [ctx.load_labware(
-                 'nest_32_tuberack_8x15ml_8x15ml_8x15ml_8x15ml',
-                 slot, label='Sample Tuberack')
+                 'nest_32_tuberack_8x5ml_8x5ml_8x5ml_8x5ml',
+                 slot, label='sample tuberack')
                  for slot in ['4', '7']]
 
     reagent_tuberacks = [ctx.load_labware(
