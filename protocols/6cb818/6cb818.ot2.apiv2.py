@@ -1,11 +1,4 @@
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"adjust_final_vol":false,"vol_cd154":500,"vol_peptide1":100,"vol_peptide2":100,"vol_peptide3":100,"vol_pma_ca":100,"vol_culture_medium":1000,"labware_cultureplate":"nest_96_wellplate_320ul","labware_tips":"opentrons_96_tiprack_20ul","slot_cultureplate":1,"slot_tipbox":2,"slot_snapcaps":3,"slot_screwcaps":4,"clearance_snapcap":1,"clearance_screwcap":1,"clearance_plate":1,"clearance_mix":1}""")
-    return [_all_values[n] for n in names]
-
-
 from opentrons.protocol_api.labware import Well
-from opentrons import types
 import math
 
 
