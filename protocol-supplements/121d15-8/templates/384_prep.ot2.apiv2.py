@@ -19,7 +19,7 @@ import math
 # 96-2,12
 # 96-3,3
 # 96-4,12"""
-
+#
 
 # metadata
 metadata = {
@@ -194,7 +194,7 @@ tipracks before resuming.')
         if not p20 == last_accessed_primer:
             if p20.has_tip:
                 p20.drop_tip()
-            p20.pick_up_tip()
+            _pick_up(p20)
         p20.aspirate(5, primer.top())
         p20.aspirate(primer_vol, primer)
         p20.dispense(p20.current_volume, dest.bottom(0.5))
