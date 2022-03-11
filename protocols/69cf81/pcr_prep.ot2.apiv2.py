@@ -16,11 +16,12 @@ def run(ctx):
      'p20_multi_mount', 'p20_single_mount')
 
     # labware
-    pcr_plate = ctx.load_labware('thermofishermicroamp_96_wellplate_200ul',
+    pcr_plate = ctx.load_labware('thermofishermicroamp_96_aluminumblock_200ul',
                                  '1', 'destination PCR plate')
     primer_rack = ctx.load_labware(tube_type, '2', 'primer rack')
-    sample_plate = ctx.load_labware('thermofishermicroamp_96_wellplate_200ul',
-                                    '4', 'source sample plate')
+    sample_plate = ctx.load_labware(
+        'thermofishermicroamp_96_aluminumblock_200ul', '4',
+        'source sample plate')
     tipracks20s = [ctx.load_labware('opentrons_96_tiprack_20ul', '3')]
     res = ctx.load_labware(res_type, '5', 'reagent reservoir')
     tipracks20m = [
