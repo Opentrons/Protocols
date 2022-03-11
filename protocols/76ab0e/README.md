@@ -25,7 +25,7 @@ Explanation of parameters below:
 * `P300 GEN2 mount`: Choose whether to load the p300 in the right or left mount
 * `Aspiration height from bottom of the plate wells [mm]`: Offset to aspirate from the bottom of the source wells (in units of mm)
 * `Aspiration height from bottom of the reservoir wells [mm]`: Offset to aspirate from the bottom of the reservoir wells (in units of mm)
-* `Flow rate multiplier`: By setting this multiplier to a value 0 < x < 1 the rate of sample aspiration will be slowed down. The default value is 0.5 resulting in aspiration at half of the regular speed.
+* `Flow rate multiplier`: By setting this multiplier to a value 0 < x < 1 the rate of sample aspiration and dispensing will be slowed down. The default value is 0.5 resulting in aspiration at half of the regular speed.
 
 ---
 

@@ -15,12 +15,14 @@ def run(ctx: protocol_api.ProtocolContext):
      p20_mount,
      p300_mount,
      aspiration_height_plate,
+     dispensing_height_plate,
      aspiration_height_resv,
      flow_rate_multiplier] = get_values(  # noqa: F821
      "input_csv",
      "p20_mount",
      "p300_mount",
      "aspiration_height_plate",
+     "dispensing_height_plate",
      "aspiration_height_resv",
      "flow_rate_multiplier")
 
@@ -354,8 +356,11 @@ def run(ctx: protocol_api.ProtocolContext):
             pip.pick_up_tip()
         pip.transfer(vol_d,
                      diluent.track(vol_d).bottom(aspiration_height_resv),
-                     d_well, new_tip='never')
+                     d_well.bottom(dispensing_height_plate), new_tip='never')
         pip.blow_out(d_well.top(-2))
+        # Debugging info
+        print("diluent reservoir position {}".
+              format(diluent.track(0).bottom(aspiration_height_resv)))
 
     # Step 5: drop tips
     ctx.comment("\n\nDiluent transfer complete: Droppping tips")
@@ -367,13 +372,16 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.comment("\n\nTransferring samples to the target plate\n")
     for s, d, vol_s, _ in data:
         vol_s = float(vol_s)
-        s_well = sample_wells[s]
-        d_well = dest_wells[d]
+        s_well = sample_wells[s].bottom(aspiration_height_plate)
+        d_well = dest_wells[d].bottom(dispensing_height_plate)
+        blow_out_loc = dest_wells[d].top(-2)
+        # Debugging info
+        print("Aspiration height s_well: {}".format(s_well))
+        print("Dispensing height d_well: {}".format(d_well))
         # transfer sample
         pip = p300 if vol_s > 20 else p20
         pip.pick_up_tip()
-        pip.aspirate(vol_s, s_well.bottom(aspiration_height_plate),
-                     flow_rate_multiplier)
-        pip.dispense(vol_s, d_well)
-        pip.blow_out(d_well.top(-2))
+        pip.aspirate(vol_s, s_well, flow_rate_multiplier)
+        pip.dispense(vol_s, d_well, flow_rate_multiplier)
+        pip.blow_out(blow_out_loc)
         pip.drop_tip()
