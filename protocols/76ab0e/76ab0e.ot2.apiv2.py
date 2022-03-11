@@ -359,8 +359,8 @@ def run(ctx: protocol_api.ProtocolContext):
                      d_well.bottom(dispensing_height_plate), new_tip='never')
         pip.blow_out(d_well.top(-2))
         # Debugging info
-        print("diluent reservoir position {}".
-              format(diluent.track(0).bottom(aspiration_height_resv)))
+        # print("diluent reservoir position {}".
+        #       format(diluent.track(0).bottom(aspiration_height_resv)))
 
     # Step 5: drop tips
     ctx.comment("\n\nDiluent transfer complete: Droppping tips")
@@ -376,9 +376,10 @@ def run(ctx: protocol_api.ProtocolContext):
         d_well = dest_wells[d].bottom(dispensing_height_plate)
         blow_out_loc = dest_wells[d].top(-2)
         # Debugging info
-        print("Aspiration height s_well: {}".format(s_well))
-        print("Dispensing height d_well: {}".format(d_well))
-        # transfer sample
+        # print("Aspiration height s_well: {}".format(s_well))
+        # print("Dispensing height d_well: {}".format(d_well))
+
+        # Transfer sample
         pip = p300 if vol_s > 20 else p20
         pip.pick_up_tip()
         pip.aspirate(vol_s, s_well, flow_rate_multiplier)
