@@ -2,7 +2,7 @@ metadata = {
     'protocolName': 'Customizable Serial Dilution',
     'author': 'Opentrons <protocols@opentrons.com>',
     'source': 'Protocol Library',
-    'apiLevel': '2.5'
+    'apiLevel': '2.11'
     }
 
 
@@ -22,88 +22,112 @@ def run(protocol_context):
     plate = protocol_context.load_labware(
         plate_type, '3')
     if 'p20' in pipette_type:
-        tip_name = 'opentrons_96_filtertiprack_20ul' if tip_type \
+        tip_name = 'opentrons_96_filtertiprack_20ul' if tip_type == 1\
             else 'opentrons_96_tiprack_20ul'
     else:
-        tip_name = 'opentrons_96_filtertiprack_200ul' if tip_type \
+        tip_name = 'opentrons_96_filtertiprack_200ul' if tip_type == 1\
             else 'opentrons_96_tiprack_300ul'
     tiprack = [
-        protocol_context.load_labware(tip_name, slot)
-        for slot in ['1', '4']
+        protocol_context.load_labware(tip_type, slot)
+        for slot in ['1', '4','5']
     ]
 
+    pip_name = pipette_type.split('_')[1]
+
     pipette = protocol_context.load_instrument(
-        pipette_type, mount='left', tip_racks=tiprack)
+        pipette_type, mount='right', tip_racks=tiprack)
 
     transfer_volume = total_mixing_volume/dilution_factor
     diluent_volume = total_mixing_volume - transfer_volume
 
-    if 'multi' in pipette_type:
+    if pip_name == 'multi':
 
-        # Distribute diluent across the plate to the the number of samples
-        # And add diluent to one column after the number of samples for a blank
-        pipette.transfer(
-            diluent_volume,
-            trough.wells()[0],
-            plate.rows()[0][1:1+num_of_dilutions]
-        )
-
-        # Dilution of samples across the 96-well flat bottom plate
-        if tip_use_strategy == 'never':
-            pipette.pick_up_tip()
-
-        for s, d in zip(
-                plate.rows()[0][:num_of_dilutions],
-                plate.rows()[0][1:1+num_of_dilutions]
-        ):
-            pipette.transfer(
-                transfer_volume,
-                s,
-                d,
-                mix_after=(3, total_mixing_volume/2),
-                new_tip=tip_use_strategy
-            )
-
-        # Remove transfer volume from the last column of the dilution
-        pipette.transfer(
-            transfer_volume,
-            plate.rows()[0][num_of_dilutions],
-            liquid_trash,
-            new_tip=tip_use_strategy,
-            blow_out=True
-        )
-
-        if tip_use_strategy == 'never':
-            pipette.drop_tip()
-
-    else:
-        # Distribute diluent across the plate to the the number of samples
-        # And add diluent to one column after the number of samples for a blank
-        for col in plate.columns()[1:1+num_of_dilutions]:
-            pipette.distribute(
-                diluent_volume, trough.wells()[0], [well for well in col])
-
-        for row in plate.rows():
+            # Distribute diluent across the plate to the the number of samples
+            # And add diluent to one column after the number of samples for a blank Test
             if tip_use_strategy == 'never':
                 pipette.pick_up_tip()
+            for i in range(num_of_dilutions):
+                if tip_use_strategy == 'always':
+                    pipette.pick_up_tip()
+                pipette.aspirate(diluent_volume,trough.wells()[0])
+                pipette.dispense(diluent_volume,plate.wells()[8+i*8])
+                if tip_use_strategy == 'always':
+                    pipette.drop_tip()
 
-            for s, d in zip(row[:num_of_dilutions], row[1:1+num_of_dilutions]):
+            # Dilution of samples across the 96-well flat bottom plate
 
-                pipette.transfer(
-                    transfer_volume,
-                    s,
-                    d,
-                    mix_after=(3, total_mixing_volume/2),
-                    new_tip=tip_use_strategy
-                )
+            for s, d in zip(
+                    plate.rows()[0][:num_of_dilutions],
+                    plate.rows()[0][1:1+num_of_dilutions]
+            ):
+                if tip_use_strategy == 'always':
+                    pipette.pick_up_tip()
 
-                pipette.transfer(
-                    transfer_volume,
-                    row[num_of_dilutions],
-                    liquid_trash,
-                    new_tip=tip_use_strategy,
-                    blow_out=True
-                )
+                #Transfer
+                pipette.aspirate(transfer_volume,s)
+                pipette.dispense(transfer_volume,d)
+
+                #Mix 3x
+                for mix in range(3):
+                    pipette.aspirate(total_mixing_volume/2,d)
+                    pipette.dispense(total_mixing_volume/2,d)
+
+                if tip_use_strategy == 'always':
+                    if d != plate.rows()[0][num_of_dilutions]:
+                        pipette.blow_out(d)
+                        pipette.drop_tip()
+
+                    else:
+                        # Remove transfer volume from the last column of the dilution
+                        pipette.aspirate(transfer_volume,plate.rows()[0][num_of_dilutions])
+                        pipette.dispense(transfer_volume,liquid_trash)
+                        pipette.drop_tip()
+
+            if tip_use_strategy == 'never':
+                pipette.aspirate(transfer_volume,plate.rows()[0][num_of_dilutions])
+                pipette.dispense(transfer_volume,liquid_trash)
+                pipette.drop_tip()
+    else:
+            # Distribute diluent across the plate to the the number of samples
+            # And add diluent to one column after the number of samples for a blank
+            x = 1
+            if tip_use_strategy == 'never':
+                pipette.pick_up_tip()
+            for col in plate.columns()[1:1+num_of_dilutions]:
+                c = len(col)
+                for well in range(c):
+                    if tip_use_strategy == 'always':
+                        pipette.pick_up_tip()
+                    pipette.aspirate(diluent_volume, trough.wells()[0])
+                    pipette.dispense(diluent_volume, plate.columns()[x][well])
+                    if tip_use_strategy == 'always':
+                        pipette.drop_tip()
+                x = x+1
+
+            for row in plate.rows():
+                for s, d in zip(row[:num_of_dilutions], row[1:1+num_of_dilutions]):
+
+                    if tip_use_strategy == 'always':
+                        pipette.pick_up_tip()
+
+                    #Transfer
+                    pipette.aspirate(transfer_volume,s)
+                    pipette.dispense(transfer_volume,d)
+
+                    #Mix 3x
+                    for mix in range(3):
+                        pipette.aspirate((total_mixing_volume*0.5),d)
+                        pipette.dispense((total_mixing_volume*0.5),d)
+
+                    if tip_use_strategy == 'always':
+                        if d != row[num_of_dilutions]:
+                            pipette.blow_out(d)
+                            pipette.drop_tip()
+                        else:
+                            pipette.aspirate(transfer_volume,row[num_of_dilutions])
+                            pipette.dispense(transfer_volume,liquid_trash)
+                            pipette.blow_out(liquid_trash)
+                            pipette.drop_tip()
 
             if tip_use_strategy == 'never':
                 pipette.drop_tip()
