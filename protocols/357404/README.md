@@ -21,7 +21,7 @@ Explanation of parameters below:
 * `Volume in reagents containers`: How much volume (µL) there is in each reagent tube (meaning block, antibody 1, antibody 2, and nuclear counterstain tubes). It is a good idea to have some amount of excess in each tube, about 50-100 uL to account for pipetting variance.
 * `Sweep dispense steps`: How many discrete step motions + dispenses to do when dispensing reagents and PBS, this is designed to replicate a sweeping motion with a manual pipette while dispensing. For example if the parameter is set to 5 the pipette will cover the length of the Shandon coverplate's mouth in 5 steps and dispense a 5th of the total dispensation volume each time.
 * `Reagent tuberack`: What type of tuberack you wish to use for the reagents (block, the antibodies and the nuclear counterstain). The maximal number of tubes for any reagents is 4 (a full column, so dimension the tubes accordingly). The maximal required volume for each reagent is 4.9 mL for a full deck (7 blocks*8 samples each). This volume would fit for example in 4 1.5 mL tubes.
-* `Pipette offset`: Pipetting offset in `millimeter` when dispensing, increasing this parameter will mean that the pipette will dispense at a lower height in the wells. **This parameter must be adjusted carefully so that there are no collisions between the pipette tip and the Shandon coverplates!**
+* `Pipette offset`: Pipetting offset in `millimeter` when dispensing, increasing this parameter will mean that the pipette will dispense at a higher height in the wells, while making it negative will lower the height of dispenses. **This parameter must be adjusted carefully so that there are no collisions between the pipette tip and the Shandon coverplates!**
 * `Start protocol after 1st incubation step`: Starts the protocol at the step after the samples have already been incubated with `block` overnight.
 * `Stop protocol after 1st incubation step`: The protocol stops after adding the block reagent and the user is asked to incubate the samples at 4 degrees C overnight.
 * `Do a dry run?`: Skip all incubation pauses and return tips to their racks after use.
@@ -45,6 +45,7 @@ Explanation of parameters below:
 * [1000 uL tipracks](https://shop.opentrons.com/opentrons-1000-l-tips/)
 * [Opentrons aluminum block set](https://shop.opentrons.com/aluminum-block-set/) (optional)
 * [Agilent 1-Well Reservoir 290 mL](https://labware.opentrons.com/agilent_1_reservoir_290ml)
+* Custom 3D printed block for holding Shandon coverplates + slides.
 
 ### Pipettes
 * [P1000 single-Channel (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
