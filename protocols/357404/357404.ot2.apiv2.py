@@ -13,6 +13,29 @@ metadata = {
 }
 
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{
+                                  "n_slots":7,
+                                  "n_last_samples":8,
+                                  "vol_reagent":1500,
+                                  "dispense_steps":5,
+                                  "is_start_after_1st_incbn":false,
+                                  "is_stop_after_1st_incbn":false,
+                                  "tuberack_lname":"opentrons_24_tuberack_nest_1.5ml_screwcap",
+                                  "pipette_offset":0.1,
+                                  "is_dry_run":true,
+                                  "t_per_block":205,
+                                  "is_multi_disp_reags":true,
+                                  "is_reuse_reag_tips":false,
+                                  "is_reuse_wash_tips":false,
+                                  "temp_mod_lname":false,
+                                  "p1000_slot":"left"
+                                  }
+                                  """)
+    return [_all_values[n] for n in names]
+
+
 def run(ctx: protocol_api.ProtocolContext):
 
     [n_slots,
@@ -368,7 +391,7 @@ def run(ctx: protocol_api.ProtocolContext):
             vol = vol_backup
         if do_reuse_tip and not do_dry_run:
             pip.drop_tip()
-        else:
+        elif do_dry_run and pip.has_tip:
             pip.return_tip()
 
     def single_dispense_reagent_p1000(source: VolTracker, dest: list,
