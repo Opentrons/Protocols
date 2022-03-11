@@ -59,7 +59,7 @@ def run(ctx):
             raise Exception("""Labware definition must
                 supply well radius or well length and width.""")
 
-    # apply 10 mm/sec limit when tip leaves liquid
+    # apply 10 mm/sec speed limit when tip leaves liquid
     def slow_tip_withdrawal(current_pipette, well_location):
         if current_pipette.mount == 'right':
             axis = 'A'
