@@ -361,15 +361,18 @@ def run(ctx: protocol_api.ProtocolContext):
                 dispense_while_moving(pip, well, aspiration_vol, steps,
                                       verbose, pip_offset)
                 vol -= aspiration_vol
-            if do_dry_run and not do_reuse_tip:
-                pip.return_tip()
-            elif not do_reuse_tip:
-                pip.drop_tip()
+            if not do_reuse_tip:
+                if do_dry_run:
+                    pip.return_tip()
+                else:
+                    pip.drop_tip()
             vol = vol_backup
-        if do_reuse_tip and not do_dry_run:
-            pip.drop_tip()
-        elif do_dry_run and pip.has_tip:
-            pip.return_tip()
+        # If we have been reusing a tip, drop it here
+        if do_reuse_tip:
+            if do_dry_run:
+                pip.return_tip()
+            else:
+                pip.drop_tip()
 
     def single_dispense_reagent_p1000(source: VolTracker, dest: list,
                                       do_dry_run: bool = False,
@@ -398,16 +401,18 @@ def run(ctx: protocol_api.ProtocolContext):
                 pick_up(p1000)
             p1000.aspirate(aspiration_vol, source.track(aspiration_vol))
             dispense_while_moving(p1000, well, aspiration_vol, steps)
-            if do_dry_run and not do_reuse_tip:
-                p1000.return_tip()
-            elif not do_reuse_tip:
-                p1000.drop_tip()
+            if not do_reuse_tip:
+                if do_dry_run:
+                    p1000.return_tip()
+                else:
+                    p1000.drop_tip()
         # Drop the tip after all wells have been dispensed to if the tip is
         # being reused for this reagent dispense
-        if do_reuse_tip and not do_dry_run:
-            p1000.drop_tip()
-        elif do_dry_run and p1000.has_tip:
-            p1000.return_tip()
+        if do_reuse_tip:
+            if do_dry_run:
+                p1000.return_tip()
+            else:
+                p1000.drop_tip()
 
     def multi_dispense_reagent_p1000(source: VolTracker, dest: list,
                                      do_dry_run: bool = False,
@@ -465,7 +470,7 @@ def run(ctx: protocol_api.ProtocolContext):
                 track_vol = aspiration_vol
             dispense_while_moving(p1000, d_well, 100, steps)
             track_vol -= 100
-        # Drop the tip after we're done
+        # If we habe been reusing the same tip: Drop the tip after we're done
         if p1000.has_tip:
             if do_dry_run:
                 p1000.return_tip()
