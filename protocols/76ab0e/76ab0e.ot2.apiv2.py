@@ -26,10 +26,13 @@ def run(ctx: protocol_api.ProtocolContext):
      "aspiration_height_resv",
      "flow_rate_multiplier")
 
-    if 0.1 >= aspiration_height_plate:
-        raise Exception("Enter a higher plate aspiration height")
+    if 0.1 > aspiration_height_plate:
+        raise Exception("Enter a higher source plate aspiration height")
 
-    if 0.1 >= aspiration_height_resv:
+    if 0.1 > dispensing_height_plate:
+        raise Exception("Enter a higher destination plate dispensing height")
+
+    if 0.1 > aspiration_height_resv:
         raise Exception("Enter a higher reservoir aspiration height")
 
     if p20_mount == p300_mount:
