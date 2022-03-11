@@ -28,7 +28,7 @@ def run(ctx):
 
     # helper functions
 
-    # notify user to replenish tips
+    # notify user when to replenish tips
     def pick_up_or_refill(pip):
         try:
             pip.pick_up_tip()
