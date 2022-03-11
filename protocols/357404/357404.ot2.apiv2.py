@@ -13,29 +13,6 @@ metadata = {
 }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{
-                                  "n_slots":7,
-                                  "n_last_samples":8,
-                                  "vol_reagent":1500,
-                                  "dispense_steps":5,
-                                  "is_start_after_1st_incbn":false,
-                                  "is_stop_after_1st_incbn":false,
-                                  "tuberack_lname":"opentrons_24_tuberack_nest_1.5ml_screwcap",
-                                  "pipette_offset":0,
-                                  "is_dry_run":false,
-                                  "t_per_block":205,
-                                  "is_multi_disp_reags":true,
-                                  "is_reuse_reag_tips":true,
-                                  "is_reuse_wash_tips":true,
-                                  "temp_mod_lname":false,
-                                  "p1000_slot":"left"
-                                  }
-                                  """)
-    return [_all_values[n] for n in names]
-
-
 def run(ctx: protocol_api.ProtocolContext):
 
     [n_slots,
@@ -358,6 +335,21 @@ def run(ctx: protocol_api.ProtocolContext):
              vol: float, source: VolTracker, dest: list,
              do_dry_run: bool = False, pip_offset: float = 0,
              steps: int = 5, do_reuse_tip: bool = False):
+        """ This function is used to aspirate a washing buffer and then
+        dispense it over a well using a moving dispense
+
+        :param pip: The pipette to use for washing aspirations/dispenses
+        :param vol: The volume to wash with, e.g. 4000 uL
+        :param source: VolTracker tracking a labware source of wash buffer,
+        e.g. a reservoir
+        :param dest: A list of wells to dispense to
+        :param do_dry_run: If this argument is true then pipette tips will be
+        returned to the rack they come from.
+        :param pip_offset: Millimeter offset from the bottom of the well
+        (i.e. the Shandon coverplate mouth)
+        :param do_reuse_tip: Use only one tip for aspirating PBS / Washing
+        each slide well?
+        """
         max_vol = pip.max_volume
         vol_backup = vol
         for well in dest:
@@ -369,19 +361,36 @@ def run(ctx: protocol_api.ProtocolContext):
                 dispense_while_moving(pip, well, aspiration_vol, steps,
                                       verbose, pip_offset)
                 vol -= aspiration_vol
-            if do_dry_run:
+            if do_dry_run and not do_reuse_tip:
                 pip.return_tip()
             elif not do_reuse_tip:
                 pip.drop_tip()
             vol = vol_backup
-        if do_reuse_tip:
+        if do_reuse_tip and not do_dry_run:
             pip.drop_tip()
+        else:
+            pip.return_tip()
 
     def single_dispense_reagent_p1000(source: VolTracker, dest: list,
                                       do_dry_run: bool = False,
                                       pip_offset: float = 0,
                                       steps: int = 5,
                                       do_reuse_tip: bool = False):
+        """ This function aspirates a single dose of a reagent and transfers
+        it to a single well with each transfer. (As opposed to the multi
+        version of this function which can pick up to 9 doses of reagents
+        and then dispenses them to 9 wells in one go.)
+
+        :param source: VolTracker object for the reagent's source.
+        :param dest: A list of wells to dispense to
+        :param do_dry_run: If this argument is true then pipette tips will be
+        returned to the rack they come from.
+        :param pip_offset: Millimeter offset from the bottom of the well
+        (i.e. the Shandon coverplate mouth). positive numbers to raise,
+        negative to lower the pipette.
+        :param do_reuse_tip: Use only one tip for aspirating PBS / Washing
+        each slide well?
+        """
         nonlocal p1000
         for well in dest:
             aspiration_vol = 100
@@ -403,6 +412,20 @@ def run(ctx: protocol_api.ProtocolContext):
                                      pip_offset: float = 0,
                                      steps: int = 5,
                                      do_reuse_tip: bool = False):
+        """ The multi version of the reagent transfer function which can
+        pick up to 9 doses of reagents and then dispenses them to 9 wells in
+        one go.
+
+        :param source: VolTracker object for the reagent's source.
+        :param dest: A list of wells to dispense to
+        :param do_dry_run: If this argument is true then pipette tips will be
+        returned to the rack they come from.
+        :param pip_offset: Millimeter offset from the bottom of the well
+        (i.e. the Shandon coverplate mouth). positive numbers to raise,
+        negative to lower the pipette.
+        :param do_reuse_tip: Use only one tip for aspirating PBS / Washing
+        each slide well?
+        """
         nonlocal p1000
         n_wells = len(dest)
         track_vol = 0
