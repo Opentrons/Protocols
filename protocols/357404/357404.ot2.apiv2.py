@@ -26,7 +26,7 @@ def get_values(*names):
                                   "pipette_offset":0.1,
                                   "is_dry_run":true,
                                   "t_per_block":205,
-                                  "is_multi_disp_reags":true,
+                                  "is_multi_disp_reags":false,
                                   "is_reuse_reag_tips":false,
                                   "is_reuse_wash_tips":false,
                                   "temp_mod_lname":false,
@@ -421,14 +421,16 @@ def run(ctx: protocol_api.ProtocolContext):
                 pick_up(p1000)
             p1000.aspirate(aspiration_vol, source.track(aspiration_vol))
             dispense_while_moving(p1000, well, aspiration_vol, steps)
-            if do_dry_run:
+            if do_dry_run and not do_reuse_tip:
                 p1000.return_tip()
             elif not do_reuse_tip:
                 p1000.drop_tip()
         # Drop the tip after all wells have been dispensed to if the tip is
         # being reused for this reagent dispense
-        if do_reuse_tip:
+        if do_reuse_tip and not do_dry_run:
             p1000.drop_tip()
+        elif do_dry_run and p1000.has_tip:
+            p1000.return_tip()
 
     def multi_dispense_reagent_p1000(source: VolTracker, dest: list,
                                      do_dry_run: bool = False,
@@ -458,11 +460,16 @@ def run(ctx: protocol_api.ProtocolContext):
             if track_vol < 100:
                 aspiration_vol = 905 if remaining_wells > 9 else \
                     remaining_wells * 100 + 5
-                if do_reuse_tip and p1000.has_tip:
-                    p1000.blow_out(ctx.fixed_trash['A1'])
+                if p1000.has_tip:
+                    if do_reuse_tip:
+                        p1000.blow_out(ctx.fixed_trash['A1'])
+                    else:
+                        if do_dry_run:
+                            p1000.return_tip()
+                        else:
+                            p1000.drop_tip()
+                        pick_up(p1000)
                 else:
-                    if p1000.has_tip:
-                        p1000.drop_tip()
                     pick_up(p1000)
                 # There's a chance that the remaining volume in the reagent
                 # tube is less than the volume we want to aspirate. We don't
@@ -482,7 +489,11 @@ def run(ctx: protocol_api.ProtocolContext):
             dispense_while_moving(p1000, d_well, 100, steps)
             track_vol -= 100
         # Drop the tip after we're done
-        p1000.drop_tip()
+        if p1000.has_tip:
+            if do_dry_run:
+                p1000.return_tip()
+            else:
+                p1000.drop_tip()
 
     def flash_lights():
         """
