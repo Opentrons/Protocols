@@ -80,16 +80,20 @@ def run(ctx: protocol_api.ProtocolContext):
     quadrant_by_col_4 = [well for col in pcr_plate.columns()[1::2] for well in col[1::2]]  # noqa: E501
     quadrants_by_col = [quadrant_by_col_1, quadrant_by_col_2, quadrant_by_col_3, quadrant_by_col_4]  # noqa: E501
 
+    airgap = 2
     ctx.comment('\n\n~~~~~~~~MOVING SRM TO PLATE FULL COLS~~~~~~~~~\n')
     srm = reagent_plate.rows()[0][0]
-
     m20.pick_up_tip()
     for i, (quadrant, full_col) in enumerate(zip(quadrants, num_full_plate_cols)):  # noqa: E501
         if num_samp_plate4 == 94 and i == 3:
             full_col = 16
         for col in quadrant[:full_col]:
             m20.aspirate(13, srm)
-            m20.dispense(13, col)
+            m20.air_gap(airgap)
+            m20.dispense(13+airgap, col)
+            m20.blow_out()
+            m20.touch_tip(radius=0.75)
+
         ctx.comment('\n')
     m20.drop_tip()
 
@@ -109,7 +113,10 @@ def run(ctx: protocol_api.ProtocolContext):
             for source_well, dest in zip(reagent_plate.columns()[0],
                                          wells_to_dispense):
                 p20.aspirate(13, source_well)
-                p20.dispense(13, dest)
+                p20.air_gap(airgap)
+                p20.dispense(13+airgap, dest)
+                p20.blow_out()
+                p20.touch_tip(radius=0.75)
             ctx.comment('\n')
         p20.drop_tip()
 
@@ -117,8 +124,10 @@ def run(ctx: protocol_api.ProtocolContext):
         ctx.comment('\n\n~~~~~~~~MOVING SRM TO CONTROL WELL O24~~~~~~~~~\n')
         p20.pick_up_tip()
         p20.aspirate(13, srm)
-        p20.dispense(13, pcr_plate.wells_by_name()["O24"])
+        p20.air_gap(airgap)
+        p20.dispense(13+airgap, pcr_plate.wells_by_name()["O24"])
         p20.blow_out()
+        p20.touch_tip(radius=0.75)
         if num_samp_plate4 != 94:
             p20.drop_tip()
 
@@ -127,9 +136,10 @@ def run(ctx: protocol_api.ProtocolContext):
         if not p20.has_tip:
             p20.pick_up_tip()
         p20.aspirate(13, srm)
-        p20.dispense(13, pcr_plate.wells_by_name()["P24"])
+        p20.air_gap(airgap)
+        p20.dispense(13+airgap, pcr_plate.wells_by_name()["P24"])
         p20.blow_out()
-
+        p20.touch_tip(radius=0.75)
     if p20.has_tip:
         p20.drop_tip()
 
