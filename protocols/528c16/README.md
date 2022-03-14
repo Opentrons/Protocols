@@ -15,7 +15,7 @@ Explanation of complex parameters below:
 * `csv file`: The csv file should be formatted like so:
 
 ![csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/atila/Screen+Shot+2022-03-07+at+11.24.53+AM.png)
-* Note: for aspiration height percent (column J), a value of 10 means that we will be aspirating from 10% of the tube depth, 50 will be 50% of the tube depth, etc. 
+* Note: for aspiration height percent (column J), a value of 10 means that we will be aspirating from 10% of the tube depth, 50 will be 50% of the tube depth, etc.
 * `P20/P1000 Mount`: Specify which mount (left or right) for each single channel pipette.
 
 ---
@@ -33,7 +33,18 @@ Explanation of complex parameters below:
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/528c16/Screen+Shot+2022-01-18+at+10.59.17+AM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/528c16/Screen+Shot+2022-03-11+at+3.25.12+PM.png)
+
+Saliva: add 200uL of saliva
+
+Bacteria culture: spin down 200uL of culture, wash once in PBS, resuspend in 200uL of chilled PBS
+
+200uL of sample + 200uL of lysis buffer. Mix thoroughly, add to deep well plate
+
+Dnase 1 treatment: 49uL of buffer + 1uL of DNAse 1 per sample.
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/528c16/Screen+Shot+2022-03-11+at+3.25.34+PM.png)
+
+![reagent volumes](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/528c16/Screen+Shot+2022-03-11+at+3.26.29+PM.png)
 
 ---
 
