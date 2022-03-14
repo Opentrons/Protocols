@@ -1,0 +1,3 @@
+Sample,Wells,OD_Values,R,Concentration,MeanConc,SD,CV,Dilution,AdjConc
+sample1,A1,0.601,,505.75,515.368,13.602,2.6,20,10307.355
+sample2,A2,1.09,,944.29,955.007,15.155,1.6,10,9550.066
