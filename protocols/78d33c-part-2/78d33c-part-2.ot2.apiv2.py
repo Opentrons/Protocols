@@ -154,6 +154,8 @@ def run(ctx):
             ctx.delay(seconds=1)
             if rep == 9:
                 slow_tip_withdrawal(p300m, column[0])
+                p300m.blow_out()
+                p300m.touch_tip(radius=0.75, v_offset=-2, speed=20)
         p300m.drop_tip()
 
     ctx.pause(

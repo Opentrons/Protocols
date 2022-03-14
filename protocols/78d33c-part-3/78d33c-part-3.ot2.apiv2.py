@@ -68,16 +68,16 @@ def run(ctx):
         used = tferspercol*channels*transfer_vol
         remaining = total
         for column in columns:
+            last = remaining
             for well in column:
                 if remaining > used:
                     well.liq_vol = welldead + tferspercol*transfer_vol*(
                      channels / wellspercol)
                     remaining -= used / wellspercol
-                    last = remaining
                 else:
                     if remaining > 0:
                         well.liq_vol = welldead + (last / wellspercol)
-                        remaining -= used / wellspercol
+                        remaining -= remaining / wellspercol
                     else:
                         well.liq_vol = 0
         for column in columns:
