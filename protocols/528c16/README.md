@@ -33,7 +33,7 @@ Explanation of complex parameters below:
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/528c16/Screen+Shot+2022-01-18+at+10.59.17+AM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/528c16/Screen+Shot+2022-03-14+at+9.46.44+AM.png)
 
 ---
 

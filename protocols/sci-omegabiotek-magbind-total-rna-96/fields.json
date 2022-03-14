@@ -31,9 +31,49 @@
       },
       {
         "type": "int",
-        "label": "Elution Volume",
+        "label": "Binding Buffer Volume",
+        "name": "binding_buffer_vol",
+        "default": 320
+      },
+      {
+        "type": "int",
+        "label": "Wash 1 Volume",
+        "name": "wash1_vol",
+        "default": 400
+      },
+      {
+        "type": "int",
+        "label": "Wash 2 Volume",
+        "name": "wash2_vol",
+        "default": 400
+      },
+      {
+        "type": "int",
+        "label": "Wash 3 Volume",
+        "name": "wash3_vol",
+        "default": 300
+      },
+
+      {
+        "type": "int",
+        "label": "Wash Mix Repetitions",
         "name": "elution_vol",
         "default": 50
+      },
+      {
+        "type": "int",
+        "label": "Settling Time (minutes)",
+        "name": "settling_time",
+        "default": 7
+      },
+      {
+        "type": "dropDown",
+        "label": "Mag Deck Generation",
+        "name": "mag_gen",
+        "options": [
+          { "label": "GEN1", "value": "magdeck" },
+          { "label": "GEN2", "value": "magnetic module gen2" }
+        ]
       },
       {
         "type": "dropDown",
@@ -46,11 +86,20 @@
       },
       {
         "type": "dropDown",
-        "label": "Mag Deck Generation",
-        "name": "mag_gen",
+        "label": "Track Tips?",
+        "name": "tip_track",
         "options": [
-          { "label": "GEN1", "value": "magdeck" },
-          { "label": "GEN2", "value": "magnetic module gen2" }
+          { "label": "Yes, track tips", "value": true },
+          { "label": "No, do not track tips", "value": false }
+        ]
+      },
+      {
+        "type": "dropDown",
+        "label": "Flash",
+        "name": "flash",
+        "options": [
+          { "label": "Yes, flash lights", "value": true },
+          { "label": "No, do not flash lights", "value": false }
         ]
       },
       {
