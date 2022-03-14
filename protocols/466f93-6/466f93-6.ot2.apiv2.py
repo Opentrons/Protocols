@@ -1,11 +1,10 @@
-"""End-repair reaction preparation."""
 from opentrons import protocol_api
 import math
 
 # The first part of this protocol mixes the DNA samples with end repair
 # buffer and enzyme and ends when the samples are ready for thermal incubation
 metadata = {
-    'protocolName': '466f93 - Automated LifeCell_NIPT_35Plex_HV',
+    'protocolName': '466f93-6 - Mastermix creation protocol',
     'author': 'Eskil Andersen <eskil.andersen@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
@@ -15,15 +14,20 @@ metadata = {
 
 def get_values(*names):
     import json
-    _all_values = json.loads(
-        """{ "pipette_l":"p20_single_gen2",
-        "pipette_r":"p300_single_gen2",
-        "plate_type":"azenta_96_wellplate_200ul",
-        "reservoir_type":"nest_12_reservoir_15ml",
-        "temperature_module":"temperature module gen2",
-        "num_samples": 36,
-        "magnetic_module":"magnetic module gen2"}
-        """)
+    _all_values = json.loads("""{
+                                  "num_samples":36,
+                                  "aspiration_rate_multiplier":1,
+                                  "dispensing_rate_multiplier":1,
+                                  "mixing_rate_multiplier":1,
+                                  "n_mixes":3,
+                                  "pip_left_lname":"p1000_single_gen2",
+                                  "pip_right_lname":"p1000_single_gen2",
+                                  "is_create_end_repair_mm":true,
+                                  "is_create_adaptor_ligation_mm":true,
+                                  "is_create_adaptor_ligation_mm":true,
+                                  "is_create_adaptor_ligation_mm":true
+                                  }
+                                  """)
     return [_all_values[n] for n in names]
 
 
@@ -34,20 +38,87 @@ def run(ctx: protocol_api.ProtocolContext):
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
         "num_samples")
 
-    if not 7 <= num_samples <= 36:
-        raise Exception("The number of samples should be between 7 and 36")
-
     # define all custom variables above here with descriptions:
-    ER_buffer_I_vol_per_well = 27
-    ER_enz_vol_per_well = 126
-    ER_buffer_per_sample = 1.5
-    ER_enz_vol_per_sample = 0.75
-    mastermix_vol_per_sample = ER_buffer_per_sample + ER_enz_vol_per_sample
-    DNA_sample_transfer_vol = 12.75  # vol of DNA sample for rxn
-    total_rxn_vol = mastermix_vol_per_sample + DNA_sample_transfer_vol
+    # Source volumes of reagents, and number of wells containing the reagent
+    # 1st mastermix: End repair
+    ERB_vol_per_well = 27
+    ERE_vol_per_well = 126
 
-    n_standard_mixes = 10  # Standard number of times to mix a sample (10)
-    well_plate_loadname = 'azenta_96_wellplate_200ul'
+    n_ERB_wells = 8
+    n_ERE_wells = 1
+
+    total_ERB_vol = n_ERB_wells * ERB_vol_per_well
+    total_ERE_vol = ERE_vol_per_well * n_ERE_wells
+    # How much volume of reagents are used per sample
+    ERB_vol_per_sample = 1.5
+    ERE_vol_per_sample = 0.75
+    ER_mm_vol_per_sample = ERB_vol_per_sample + ERE_vol_per_sample
+    # Well numbers
+    ERB_well_indices = [well_num for well_num in range(0, 8)]
+    ERE_indices = [8]
+
+    # 2nd mastermix: Adaptor ligation
+    ALB_vol_per_well = 45
+    ALE_I_vol_per_well = 27
+    ALE_II_vol_per_well = 39
+
+    n_ALB_wells = 8
+    n_ALE_I_wells = 8
+    n_ALE_II_wells = 1
+
+    AL_buffer_start_index = 8*2
+    AL_enz_I_start_index = 8*3
+    AL_enz_II_start_index = 8*4
+
+    total_ALB_vol = ALB_vol_per_well * n_ALB_wells
+    total_ALE_I_vol = ALE_I_vol_per_well * n_ALE_I_wells
+
+    ALB_vol_per_sample = 2.50
+    ALE_I_vol_per_sample = 1.50
+    ALE_II_vol_per_sample = 0.25
+    AL_mm_vol_per_sample = (ALB_vol_per_sample + ALE_I_vol_per_sample
+                            + ALE_II_vol_per_sample)
+
+    ALB_well_indices = [
+        well_num for well_num in
+        range(AL_buffer_start_index, AL_buffer_start_index+n_ALB_wells)]
+    ALE_I_well_indices = [
+        well_num for well_num in
+        range(AL_enz_I_start_index, AL_enz_I_start_index+n_ALE_I_wells)]
+    ALE_II_well_indices = [
+        well_num for well_num in
+        range(AL_enz_II_start_index, AL_enz_II_start_index+n_ALE_II_wells)]
+
+    # 3rd mastermix: PCR mix + primers
+    PCR_mix_vol_per_well = 117
+    primer_vol_per_well = 27
+
+    n_PCR_mix_wells = 16
+    n_primer_wells = 2
+
+    PCR_mix_start_index = 8*10
+    primer_start_index = 8*9
+
+    total_PCR_mix_vol = PCR_mix_vol_per_well * n_PCR_mix_wells
+    total_primer_vol = primer_vol_per_well * n_primer_wells
+
+    ALB_vol_per_sample = 2.50
+    ALE_I_vol_per_sample = 1.50
+    ALE_II_vol_per_sample = 0.25
+    AL_mm_vol_per_sample = (ALB_vol_per_sample + ALE_I_vol_per_sample
+                            + ALE_II_vol_per_sample)
+
+    ALB_well_indices = [
+        well_num for well_num in
+        range(AL_buffer_start_index, AL_buffer_start_index+n_ALB_wells)]
+    ALE_I_well_indices = [
+        well_num for well_num in
+        range(AL_enz_I_start_index, AL_enz_I_start_index+n_ALE_I_wells)]
+    ALE_II_well_indices = [
+        well_num for well_num in
+        range(AL_enz_II_start_index, AL_enz_II_start_index+n_ALE_II_wells)]
+
+    source_well_plate_lname = 'azenta_96_wellplate_200ul'
     # load modules
 
     '''
@@ -84,14 +155,13 @@ def run(ctx: protocol_api.ProtocolContext):
     # 3? target plates
     # Reservoir for 80 % ethanol, e.g. a tube rack with a falcon tube
 
-    yourgene_reagent_plate_I \
+    yourgene_reagent_plate_I\
         = ctx.load_labware(well_plate_loadname, '7',
                            'Yourgene Reagent plate - 1')
 
     # DNA sample plate
-    sample_plate = \
-        ctx.load_labware(well_plate_loadname,
-                         '4', "DNA Sample plate")
+    sample_plate = ctx.load_labware(well_plate_loadname,
+                                    '4', "DNA Sample plate")
 
     # Destination plate - will be physically changed by the operator through-
     # out
@@ -207,6 +277,82 @@ def run(ctx: protocol_api.ProtocolContext):
 
 
     '''
+    class VolTracker:
+        def __init__(self, labware: Labware,
+                     well_vol: float = 0,
+                     start: int = 1, end: int = 8,
+                     mode: str = 'reagent',
+                     pip_type: str = 'single',
+                     msg: str = 'Refill labware volumes'):
+            """
+            Voltracker tracks the volume(s) used in a piece of labware
+
+            :param labware: The labware to track
+            :param well_vol: The volume of the liquid in the wells, if using a
+            multi-pipette with a well plate, treat the plate like a reservoir,
+            i.e. start=1, end=1, well_vol = 8 * vol of each individual well.
+            :param pip_type: The pipette type used 'single' or 'multi'
+            :param mode: 'reagent' or 'waste'
+            :param start: The starting well
+            :param end: The ending well
+            :param msg: Message to send to the user when all wells are empty
+            (or full when in waste mode)
+
+            """
+            self.labware_wells = dict.fromkeys(
+                labware.wells()[start-1:end], 0)
+            self.labware_wells_backup = self.labware_wells.copy()
+            self.well_vol = well_vol
+            self.pip_type = pip_type
+            self.mode = mode
+            self.start = start
+            self.end = end
+            self.msg = msg
+
+            # Parameter error checking
+            if not (pip_type == 'single' or pip_type == 'multi'):
+                raise Exception('Pipette type must be single or multi')
+
+            if not (mode == 'reagent' or mode == 'waste'):
+                raise Exception('mode must be reagent or waste')
+
+        def flash_lights(self):
+            """
+            Flash the lights of the robot to grab the users attention
+            """
+            initial_light_state = ctx.rail_lights_on
+            opposite_state = not initial_light_state
+            for _ in range(5):
+                ctx.set_rail_lights(opposite_state)
+                ctx.delay(seconds=0.5)
+                ctx.set_rail_lights(initial_light_state)
+                ctx.delay(seconds=0.5)
+
+        def track(self, vol: float) -> Well:
+            '''track() will track how much liquid
+            was used up per well. If the volume of
+            a given well is greater than self.well_vol
+            it will remove it from the dictionary and iterate
+            to the next well which will act as the reservoir.'''
+            well = next(iter(self.labware_wells))
+            # Treat plates like reservoirs and add 8 well volumes together
+            vol = vol * 8 if self.pip_type == 'multi' else vol
+            if self.labware_wells[well] + vol >= self.well_vol:
+                del self.labware_wells[well]
+                if len(self.labware_wells) < 1:
+                    self.flash_lights()
+                    ctx.pause(self.msg)
+                    self.labware_wells = self.labware_wells_backup.copy()
+                well = next(iter(self.labware_wells))
+            self.labware_wells[well] += vol
+
+            if self.mode == 'waste':
+                ctx.comment('{}: {} ul of total waste'
+                            .format(well, int(self.labware_wells[well])))
+            else:
+                ctx.comment('{} uL of liquid used from {}'
+                            .format(int(self.labware_wells[well]), well))
+            return well
 
     # reagents
 
@@ -272,11 +418,11 @@ def run(ctx: protocol_api.ProtocolContext):
     er_buffer_volume = ER_buffer_per_sample * (num_samples+1)
     er_enzyme_volume = ER_enz_vol_per_sample * (num_samples+1)
 
-    for i in range(0, math.ceil(er_buffer_volume/ER_buffer_I_vol_per_well)):
+    for i in range(0, math.ceil(er_buffer_volume/ERB_vol_per_well)):
         well = ER_buffer_I_column[i]
         # Mix the buffer 10x
         vol = (er_buffer_volume if er_buffer_volume
-               < ER_buffer_I_vol_per_well else ER_buffer_I_vol_per_well)
+               < ERB_vol_per_well else ERB_vol_per_well)
         pip = p20 if vol < 20 else p300
         if not pip.has_tip:
             try:
@@ -299,7 +445,7 @@ def run(ctx: protocol_api.ProtocolContext):
         ctx.pause("Replace empty tip racks")
         p300.reset_tipracks()
         p300.pick_up_tip()
-    p300.mix(n_standard_mixes, ER_enz_vol_per_well/2, ER_enzyme_well)
+    p300.mix(n_standard_mixes, ERE_vol_per_well/2, ER_enzyme_well)
     p300.drop_tip()
 
     pip = p20 if er_enzyme_volume <= 20 else p300
@@ -344,6 +490,6 @@ def run(ctx: protocol_api.ProtocolContext):
 
     ctx.comment("\nPulse spin the destination plate for 5 seconds")
     ctx.comment("Perform the end repair reaction in the thermocycler")
-    ctx.comment("Remember to thaw (30 minutes) and pulse spin Reagent plate " +
-                "3 before inserting it for protocol part 2")
+    ctx.comment("Remember to thaw (30 minutes) and pulse spin Reagent plate "
+                + "3 before inserting it for protocol part 2")
     ctx.comment("~~~ End of protocol part 1 ~~~~\n")
