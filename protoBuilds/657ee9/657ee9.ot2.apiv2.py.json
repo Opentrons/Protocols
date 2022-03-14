@@ -1,0 +1,133 @@
+{
+    "content": "from opentrons import protocol_api\nimport math\n\nmetadata = {\n    'protocolName': 'Oncomine Focus Assay - Pt 1: Target Amplification',\n    'author': 'Chaz <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx: protocol_api.ProtocolContext):\n    [\n     _num_samps,  # Number of samples\n     _mm_transfer_vol,  # amount of MM based on selection (8, 9, or 10uL)\n     _dest_module,  # module used for destination plate containing samples\n     _tc_cycles,  # number of cycles (if using Thermocycler)\n     _src_module,  # module used for mastermix\n     _m20_mount  # mount for p20-Multi\n    ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)\n        '_num_samps',\n        '_mm_transfer_vol',\n        '_dest_module',\n        '_tc_cycles',\n        '_src_module',\n        '_m20_mount')\n\n    # custom variables\n    num_samps = _num_samps\n    num_cols = math.ceil(num_samps/8)\n    mm_transfer_vol = _mm_transfer_vol\n    dest_module = _dest_module\n    tc_cycles = _tc_cycles\n    src_module = _src_module\n    m20_mount = _m20_mount\n\n    # load modules\n    d_mod = None\n    s_mod = None\n\n    if dest_module is not None:\n        d_mod = ctx.load_module(dest_module, '7')\n\n    if src_module is not None:\n        s_mod = ctx.load_module(src_module, '4')\n        src_plate = s_mod.load_labware(\n            'opentrons_96_aluminumblock_nest_wellplate_100ul',\n            'Reagent Plate on Temp Deck')\n        s_mod.set_temperature(4)\n\n    # load labware\n    if dest_module is None:\n        dest_plate = ctx.load_labware(\n            'nest_96_wellplate_100ul_pcr_full_skirt', '7', 'Sample Plate')\n    elif 'thermocycler' in dest_module:\n        dest_plate = d_mod.load_labware(\n            'nest_96_wellplate_100ul_pcr_full_skirt',\n            'Sample Plate on Thermocycler')\n        d_mod.open_lid()\n        d_mod.set_block_temperature(4)\n    else:\n        dest_plate = d_mod.load_labware(\n            'opentrons_96_aluminumblock_nest_wellplate_100ul',\n            'Sample Plate on Temp Deck')\n        d_mod.set_temperature(4)\n\n    if src_module is None:\n        src_plate = ctx.load_labware(\n            'nest_96_wellplate_100ul_pcr_full_skirt', '4', 'Reagent Plate')\n\n    # load tipracks\n    tips = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '3')]\n\n    # load instrument\n    p20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tips)\n    p20.flow_rate.aspirate = 4\n    p20.flow_rate.dispense = 4\n\n    # helper functions\n    # to take vol and return estimated liq height\n    def liq_height(well):\n        if well.diameter is not None:\n            radius = well.diameter / 2\n            cse = math.pi*(radius**2)\n        elif well.length is not None:\n            cse = well.length*well.width\n        else:\n            cse = None\n        if cse:\n            return well.liq_vol / cse\n        else:\n            raise Exception(\"\"\"Labware definition must\n                supply well radius or well length and width.\"\"\")\n\n    # reagents\n    mm = src_plate['A1']\n    mm.liq_vol = mm_transfer_vol * num_samps * 1.05\n\n    # plate maps\n    samples = dest_plate.rows()[0][:num_cols]\n\n    # protocol\n    # mastermix transfer\n    ctx.comment(f'\\nTransferring {mm_transfer_vol}uL Master Mix to samples\\n')\n    for sample in samples:\n        p20.pick_up_tip()\n        mm.liq_vol -= mm_transfer_vol\n        mm_height = liq_height(mm) - 2 if liq_height(mm) - 2 > 1 else 1\n        p20.aspirate(mm_transfer_vol, mm.bottom(mm_height))\n        p20.dispense(mm_transfer_vol, sample)\n        p20.mix(5, 12, sample)\n        ctx.delay(seconds=1)\n        p20.drop_tip()\n\n    # optional - thermocycler\n    if 'thermocycler' in dest_module:\n        d_mod.set_lid_temperature(100)\n        enz_temp = 98 if mm_transfer_vol == 10 else 99\n        profile = [\n            {'temperature': enz_temp, 'hold_time_seconds': 15},\n            {'temperature': 60, 'hold_time_seconds': 240}\n        ]\n        d_mod.close_lid()\n        d_mod.set_block_temperature(enz_temp, hold_time_seconds=120)\n        d_mod.execute_profile(\n            steps=profile, repetitions=tc_cycles, block_max_volume=20)\n        d_mod.set_block_temperature(10)\n        d_mod.deactivate_lid()\n        d_mod.open_lid()\n\n        ctx.comment('\\nProtocol complete!')\n    else:\n        ctx.comment('\\nLiquid handling complete; \\\n        please move plate to Thermal Cycler.\\n')\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 8,
+            "label": "Number of Samples",
+            "name": "_num_samps",
+            "type": "int"
+        },
+        {
+            "label": "Master Mix Transfer Volume",
+            "name": "_mm_transfer_vol",
+            "options": [
+                {
+                    "label": "10\u00b5L (cDNA Synthesis)",
+                    "value": 10
+                },
+                {
+                    "label": "9\u00b5L (DNA)",
+                    "value": 9
+                },
+                {
+                    "label": "8\u00b5L (DNA)",
+                    "value": 8
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Module for Destination Plate",
+            "name": "_dest_module",
+            "options": [
+                {
+                    "label": "Thermocycler",
+                    "value": "thermocycler"
+                },
+                {
+                    "label": "GEN2 Temp Module",
+                    "value": "temperature module gen2"
+                },
+                {
+                    "label": "GEN1 Temp Module",
+                    "value": "temperature module"
+                },
+                {
+                    "label": "No Module",
+                    "value": null
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 20,
+            "label": "[If using Thermocycler] Number of Cycles",
+            "name": "_tc_cycles",
+            "type": "int"
+        },
+        {
+            "label": "Module for Reagent Plate",
+            "name": "_src_module",
+            "options": [
+                {
+                    "label": "No Module",
+                    "value": null
+                },
+                {
+                    "label": "GEN2 Temp Module",
+                    "value": "temperature module gen2"
+                },
+                {
+                    "label": "GEN1 Temp Module",
+                    "value": "temperature module"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P20 Multi Mount",
+            "name": "_m20_mount",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p20_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Reagent Plate on 4",
+            "share": false,
+            "slot": "4",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Sample Plate on Thermocycler on Thermocycler Module on 7",
+            "share": false,
+            "slot": "7",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.11",
+        "author": "Chaz <protocols@opentrons.com>",
+        "protocolName": "Oncomine Focus Assay - Pt 1: Target Amplification",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}
