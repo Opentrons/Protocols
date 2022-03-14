@@ -1,0 +1,88 @@
+[
+    {
+      "type": "int",
+      "label": "Number of samples",
+      "name": "num_samples",
+      "default": 36
+    },
+    {
+        "type": "float",
+        "label": "Aspiration rate multiplier",
+        "name": "aspiration_rate_multiplier",
+        "default": 1
+    },
+    {
+        "type": "float",
+        "label": "Dispensing rate multiplier",
+        "name": "dispensing_rate_multiplier",
+        "default": 1
+    },
+    {
+        "type": "float",
+        "label": "Mixing rate multiplier",
+        "name": "mixing_rate_multiplier",
+        "default": 1
+    },
+    {
+      "type": "int",
+      "label": "Number of mixes",
+      "name": "n_mixes",
+      "default": 3
+    },
+    {
+      "type": "dropDown",
+      "label": "Left pipette mount",
+      "name": "pip_left_lname",
+      "options": [
+        { "label": "P1000 Single GEN2", "value": "p1000_single_gen2"},
+        { "label": "P300 Single GEN2", "value": "p300_single_gen2"},
+        { "label": "P20 Single GEN2", "value": "p20_single_gen2"}
+      ]
+    },
+    {
+      "type": "dropDown",
+      "label": "Right pipette mount",
+      "name": "pip_right_lname",
+      "options": [
+        { "label": "P1000 Single GEN2", "value": "p1000_single_gen2"},
+        { "label": "P300 Single GEN2", "value": "p300_single_gen2"},
+        { "label": "P20 Single GEN2", "value": "p20_single_gen2"}
+      ]
+    },
+    {
+      "type": "dropDown",
+      "label": "Create end-repair mastermix?",
+      "name": "is_create_end_repair_mm",
+      "options": [
+        { "label": "Yes", "value": true},
+        { "label": "No", "value": false}
+      ]
+    },
+    {
+      "type": "dropDown",
+      "label": "Create adaptor ligation mastermix?",
+      "name": "is_create_adaptor_ligation_mm",
+      "options": [
+        { "label": "Yes", "value": true},
+        { "label": "No", "value": false}
+      ]
+    },
+    {
+      "type": "dropDown",
+      "label": "Create PCR reaction mastermix?",
+      "name": "is_create_adaptor_ligation_mm",
+      "options": [
+        { "label": "Yes", "value": true},
+        { "label": "No", "value": false}
+      ]
+    },
+    {
+      "type": "dropDown",
+      "label": "Create Qubit reaction solution mastermix?",
+      "name": "is_create_adaptor_ligation_mm",
+      "options": [
+        { "label": "Yes", "value": true},
+        { "label": "No", "value": false}
+      ]
+    }
+]
