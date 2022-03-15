@@ -6,23 +6,15 @@ metadata = {
 }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{ "csv":"",
-                        "p300_mount":"left",
-                                  "p20_mount":"right"}""")
-    return [_all_values[n] for n in names]
-
-
 def run(ctx):
 
-    [csv, p20_mount, p300_mount] = get_values(  # noqa: F821
-        "csv", "p20_mount", "p300_mount")
+    [csv, dna_plate, p20_mount, p300_mount] = get_values(  # noqa: F821
+        "csv", "dna_plate", "p20_mount", "p300_mount")
 
     # labware
     reservoir = ctx.load_labware('nest_1_reservoir_195ml', '1')
-    final_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '2')  # noqa: E501
-    dna_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '3')  # noqa: E501
+    final_plate = ctx.load_labware('final_96_wellplate_1000ul', '2')  # noqa: E501
+    dna_plate = ctx.load_labware(dna_plate, '3')  # noqa: E501
     tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
                  for slot in ['4', '5']]
     tiprack300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '6')]
