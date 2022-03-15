@@ -15,16 +15,6 @@ def run(ctx):
      total_mixing_volume,
      blank_on,
      tip_use_strategy
-<<<<<<< HEAD
-    ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
-        "plate_type",
-        "temp_mod_on",
-        "dilution_factor",
-        "num_of_dilutions",
-        "total_mixing_volume",
-        "blank_on",
-        "tip_use_strategy")
-=======
      ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
         'plate_type',
         'temp_mod_on',
@@ -33,28 +23,17 @@ def run(ctx):
         'total_mixing_volume',
         'blank_on',
         'tip_use_strategy')
->>>>>>> 748827f82161a55cd3a73515dccb89c79631d9b4
 
     # Check for bad setup here
     if not 1 <= num_of_dilutions <= 11:
         raise Exception('Enter a number of dilutions between 1 and 11')
     if temp_mod_on == 1 and 'aluminum' not in plate_type:
-<<<<<<< HEAD
-        raise Exception(
-                        "Please select compatible plate/\
-                        temperature module setting")
-    if temp_mod_on == 0 and 'aluminum' in plate_type:
-        raise Exception(
-                        "Please select compatible plate/\
-                        temperature module setting")
-=======
         raise Exception('Please select compatible plate and\
-    temperature module settiing')
+    temperature module setting')
     if temp_mod_on == 0 and 'aluminum' in plate_type:
         raise Exception(
                         'Please select compatible plate and\
-    temperature module settiing')
->>>>>>> 748827f82161a55cd3a73515dccb89c79631d9b4
+    temperature module setting')
     if num_of_dilutions == 11 and blank_on == 1:
         raise Exception(
                         'No room for blank with 11 dilutions'
@@ -124,7 +103,7 @@ def run(ctx):
         pipette.transfer(
             diluent_volume,
             trough.wells()[0],
-            dilute_plate.rows()[-1],
+            dilute_plate.rows()[0][-1],
             air_gap=10,
             new_tip=tip_use_strategy
         )
