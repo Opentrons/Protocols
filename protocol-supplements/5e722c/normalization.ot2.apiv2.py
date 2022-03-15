@@ -1,4 +1,5 @@
-CSV_PATH = 'path/to/your.csv'
+CSV_FILE = """
+"""
 DESIRED_CONCENTRATION = 1000  # µg/ml
 TOTAL_VOLUME = 100  # µl
 
@@ -34,10 +35,9 @@ def run(ctx):
                                tip_racks=tipracks300)
 
     # data
-    with open(CSV_PATH, 'r') as csv_file:
-        data = [
-            [val.strip().upper() for val in line.split(',')]
-            for line in csv_file.readlines()][1:]
+    data = [
+        [val.strip().upper() for val in line.split(',')]
+        for line in CSV_FILE.readlines()][1:]
 
     def get_sample_volume(initial_concentration):
         factor = initial_concentration/DESIRED_CONCENTRATION
