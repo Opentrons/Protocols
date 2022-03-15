@@ -67,7 +67,6 @@ def run(ctx):
     # helper functions
 
     # reagents
-    liquid_trash = trough.wells()[-1]
 
     # protocol
     # step 2
