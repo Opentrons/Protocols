@@ -1,4 +1,4 @@
-CSV_FILE = """
+INPUT_CSV = """
 """
 DESIRED_CONCENTRATION = 1000  # µg/ml
 TOTAL_VOLUME = 100  # µl
@@ -46,7 +46,6 @@ def run(ctx):
     # pre-load volume data
     well_data = {}
     for line in data:
-        print(line)
         well_name = line[1]
         conc = float(line[9])
         sample_vol = get_sample_volume(conc)
