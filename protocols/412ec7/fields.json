@@ -42,13 +42,8 @@
     "label": "Blank in Well Plate",
     "name": "blank_on",
     "options": [
-<<<<<<< HEAD
-       { "label": "NO", "value": 0 },
-       { "label": "Yes", "value": 1 }
-=======
        { "label": "Yes", "value": 1 },
        { "label": "No", "value": 0 }
->>>>>>> 748827f82161a55cd3a73515dccb89c79631d9b4
      ]
   },
   {
@@ -56,8 +51,8 @@
     "label": "tip use strategy",
     "name": "tip_use_strategy",
     "options": [
-      { "label": "use one tip", "value": "never" },
-      { "label": "change tips", "value": "always" }
+      { "label": "change tips", "value": "always" },
+      { "label": "use one tip", "value": "never" }
     ]
   }
 ]
