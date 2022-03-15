@@ -1,5 +1,6 @@
 from opentrons import protocol_api
-import math
+from opentrons.protocol_api.labware import Labware
+from opentrons.protocol_api.labware import Well
 
 # The first part of this protocol mixes the DNA samples with end repair
 # buffer and enzyme and ends when the samples are ready for thermal incubation
@@ -15,28 +16,45 @@ metadata = {
 def get_values(*names):
     import json
     _all_values = json.loads("""{
-                                  "num_samples":36,
+                                  "n_samples":36,
                                   "aspiration_rate_multiplier":1,
                                   "dispensing_rate_multiplier":1,
                                   "mixing_rate_multiplier":1,
                                   "n_mixes":3,
-                                  "pip_left_lname":"p1000_single_gen2",
-                                  "pip_right_lname":"p1000_single_gen2",
+                                  "pip_left_lname":"p300_single_gen2",
+                                  "pip_right_lname":"p20_single_gen2",
                                   "is_create_end_repair_mm":true,
                                   "is_create_adaptor_ligation_mm":true,
-                                  "is_create_adaptor_ligation_mm":true,
-                                  "is_create_adaptor_ligation_mm":true
+                                  "is_create_pcr_mm":true,
+                                  "mastermix_target_lname":"opentrons_24_tuberack_nest_0.5ml_screwcap"
                                   }
                                   """)
     return [_all_values[n] for n in names]
 
 
 def run(ctx: protocol_api.ProtocolContext):
-    """End-repair reaction preparation protocol entry point."""
-    [
-     num_samples
-    ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
-        "num_samples")
+    [n_samples,
+     aspiration_rate_multiplier,
+     dispensing_rate_multiplier,
+     mixing_rate_multiplier,
+     n_mixes,
+     pip_left_lname,
+     pip_right_lname,
+     is_create_end_repair_mm,
+     is_create_adaptor_ligation_mm,
+     is_create_pcr_mm,
+     mastermix_target_lname] = get_values(  # noqa: F821
+     "n_samples",
+     "aspiration_rate_multiplier",
+     "dispensing_rate_multiplier",
+     "mixing_rate_multiplier",
+     "n_mixes",
+     "pip_left_lname",
+     "pip_right_lname",
+     "is_create_end_repair_mm",
+     "is_create_adaptor_ligation_mm",
+     "is_create_pcr_mm",
+     "mastermix_target_lname")
 
     # define all custom variables above here with descriptions:
     # Source volumes of reagents, and number of wells containing the reagent
@@ -52,10 +70,25 @@ def run(ctx: protocol_api.ProtocolContext):
     # How much volume of reagents are used per sample
     ERB_vol_per_sample = 1.5
     ERE_vol_per_sample = 0.75
+    max_ERB_samples = total_ERB_vol // ERB_vol_per_sample
+    max_ERE_samples = total_ERE_vol // ERE_vol_per_sample
     ER_mm_vol_per_sample = ERB_vol_per_sample + ERE_vol_per_sample
+    max_ER_mm_samples = min(max_ERB_samples, max_ERE_samples)
+    max_ER_mm_volume = max_ER_mm_samples * \
+        (ERB_vol_per_sample * ERE_vol_per_sample)
     # Well numbers
-    ERB_well_indices = [well_num for well_num in range(0, 8)]
-    ERE_indices = [8]
+    ERB_start_index = 1
+    ERB_end_index = ERB_start_index + n_ERB_wells - 1
+    ERE_start_index = 9
+    ERE_end_index = ERE_start_index + n_ERE_wells - 1
+
+    # Error checking
+    if is_create_end_repair_mm and n_samples > max_ER_mm_samples:
+        raise Exception(
+            "You are trying to create {} aliquots of end-repair "
+            "mastermix, but there is only enough reagent on the Yourgene"
+            "reagent plate 1 for {} mastermix aliquots"
+            .format(n_samples, max_ER_mm_samples))
 
     # 2nd mastermix: Adaptor ligation
     ALB_vol_per_well = 45
@@ -66,28 +99,38 @@ def run(ctx: protocol_api.ProtocolContext):
     n_ALE_I_wells = 8
     n_ALE_II_wells = 1
 
-    AL_buffer_start_index = 8*2
-    AL_enz_I_start_index = 8*3
-    AL_enz_II_start_index = 8*4
+    ALB_start_index = 8*2+1
+    ALB_end_index = ALB_start_index + n_ALB_wells - 1
+    ALE_I_start_index = 8*3+1
+    ALE_I_end_index = ALE_I_start_index + n_ALE_I_wells - 1
+    ALE_II_start_index = 8*4+1
+    ALE_II_end_index = ALE_II_start_index + n_ALE_II_wells - 1
 
     total_ALB_vol = ALB_vol_per_well * n_ALB_wells
     total_ALE_I_vol = ALE_I_vol_per_well * n_ALE_I_wells
+    total_ALE_II_vol = ALE_II_vol_per_well * n_ALE_II_wells
 
     ALB_vol_per_sample = 2.50
     ALE_I_vol_per_sample = 1.50
     ALE_II_vol_per_sample = 0.25
+
+    max_ALB_samples = total_ALB_vol // ALB_vol_per_sample
+    max_ALE_I_samples = total_ALE_I_vol // ALE_I_vol_per_sample
+    max_ALE_II_samples = total_ALE_II_vol // ALE_II_vol_per_sample
+    max_AL_mm_samples = min(
+        max_ALB_samples, max_ALE_I_samples, max_ALE_II_samples)
+
+    # Error checking
+    if is_create_adaptor_ligation_mm and n_samples > max_AL_mm_samples:
+        raise Exception(
+            "You are trying to create {} aliquots of adaptor-ligation "
+            "mastermix, but there is only enough reagent on the Yourgene"
+            "reagent plate 1 for {} mastermix aliquots"
+            .format(n_samples, max_AL_mm_samples))
+
     AL_mm_vol_per_sample = (ALB_vol_per_sample + ALE_I_vol_per_sample
                             + ALE_II_vol_per_sample)
-
-    ALB_well_indices = [
-        well_num for well_num in
-        range(AL_buffer_start_index, AL_buffer_start_index+n_ALB_wells)]
-    ALE_I_well_indices = [
-        well_num for well_num in
-        range(AL_enz_I_start_index, AL_enz_I_start_index+n_ALE_I_wells)]
-    ALE_II_well_indices = [
-        well_num for well_num in
-        range(AL_enz_II_start_index, AL_enz_II_start_index+n_ALE_II_wells)]
+    max_AL_mm_vol = AL_mm_vol_per_sample * max_AL_mm_samples
 
     # 3rd mastermix: PCR mix + primers
     PCR_mix_vol_per_well = 117
@@ -96,29 +139,33 @@ def run(ctx: protocol_api.ProtocolContext):
     n_PCR_mix_wells = 16
     n_primer_wells = 2
 
-    PCR_mix_start_index = 8*10
-    primer_start_index = 8*9
+    PCR_mix_start_index = 8*10+1
+    PCR_mix_end_index = PCR_mix_start_index + n_PCR_mix_wells - 1
+    primer_start_index = 8*9+1
+    primer_end_index = primer_start_index + n_primer_wells-1
 
     total_PCR_mix_vol = PCR_mix_vol_per_well * n_PCR_mix_wells
     total_primer_vol = primer_vol_per_well * n_primer_wells
 
-    ALB_vol_per_sample = 2.50
-    ALE_I_vol_per_sample = 1.50
-    ALE_II_vol_per_sample = 0.25
-    AL_mm_vol_per_sample = (ALB_vol_per_sample + ALE_I_vol_per_sample
-                            + ALE_II_vol_per_sample)
+    PCR_mix_vol_per_sample = 2.50
+    primer_vol_per_sample = 1.50
+    PCR_mm_vol_per_sample = PCR_mix_vol_per_sample + primer_vol_per_sample
 
-    ALB_well_indices = [
-        well_num for well_num in
-        range(AL_buffer_start_index, AL_buffer_start_index+n_ALB_wells)]
-    ALE_I_well_indices = [
-        well_num for well_num in
-        range(AL_enz_I_start_index, AL_enz_I_start_index+n_ALE_I_wells)]
-    ALE_II_well_indices = [
-        well_num for well_num in
-        range(AL_enz_II_start_index, AL_enz_II_start_index+n_ALE_II_wells)]
+    max_PCR_mix_samples = total_PCR_mix_vol // PCR_mix_vol_per_sample
+    max_primer_samples = total_primer_vol // primer_vol_per_sample
+    max_PCR_mm_samples = min(max_PCR_mix_samples, max_primer_samples)
+    max_PCR_mm_vol = max_PCR_mm_samples * PCR_mm_vol_per_sample
+
+    # Error checking
+    if is_create_pcr_mm and n_samples > max_PCR_mm_samples:
+        raise Exception(
+            "You are trying to create {} aliquots of PCR "
+            "mastermix, but there is only enough reagent on the Yourgene"
+            "reagent plate 1 for {} mastermix aliquots"
+            .format(n_samples, max_PCR_mm_samples))
 
     source_well_plate_lname = 'azenta_96_wellplate_200ul'
+
     # load modules
 
     '''
@@ -156,18 +203,10 @@ def run(ctx: protocol_api.ProtocolContext):
     # Reservoir for 80 % ethanol, e.g. a tube rack with a falcon tube
 
     yourgene_reagent_plate_I\
-        = ctx.load_labware(well_plate_loadname, '7',
+        = ctx.load_labware(source_well_plate_lname, '7',
                            'Yourgene Reagent plate - 1')
-
-    # DNA sample plate
-    sample_plate = ctx.load_labware(well_plate_loadname,
-                                    '4', "DNA Sample plate")
-
-    # Destination plate - will be physically changed by the operator through-
-    # out
-    destination_plate = \
-        ctx.load_labware(well_plate_loadname,
-                         '1', "Destination plate 1")
+    tuberack = ctx.load_labware(mastermix_target_lname, '4',
+                                'Mastermix target tuberack')
 
     # load tipracks
 
@@ -221,7 +260,6 @@ def run(ctx: protocol_api.ProtocolContext):
     # pipette functions   # INCLUDE ANY BINDING TO CLASS
 
     '''
-
     Define all pipette functions, and class extensions here.
     These may include but are not limited to:
 
@@ -284,7 +322,7 @@ def run(ctx: protocol_api.ProtocolContext):
                      mode: str = 'reagent',
                      pip_type: str = 'single',
                      msg: str = 'Refill labware volumes'):
-            """
+            '''
             Voltracker tracks the volume(s) used in a piece of labware
 
             :param labware: The labware to track
@@ -293,12 +331,12 @@ def run(ctx: protocol_api.ProtocolContext):
             i.e. start=1, end=1, well_vol = 8 * vol of each individual well.
             :param pip_type: The pipette type used 'single' or 'multi'
             :param mode: 'reagent' or 'waste'
-            :param start: The starting well
-            :param end: The ending well
+            :param start: The starting well number e.g. A1 = 1
+            :param end: The ending well, e.g. H1 = 8
             :param msg: Message to send to the user when all wells are empty
             (or full when in waste mode)
+            '''
 
-            """
             self.labware_wells = dict.fromkeys(
                 labware.wells()[start-1:end], 0)
             self.labware_wells_backup = self.labware_wells.copy()
@@ -317,9 +355,9 @@ def run(ctx: protocol_api.ProtocolContext):
                 raise Exception('mode must be reagent or waste')
 
         def flash_lights(self):
-            """
+            '''
             Flash the lights of the robot to grab the users attention
-            """
+            '''
             initial_light_state = ctx.rail_lights_on
             opposite_state = not initial_light_state
             for _ in range(5):
@@ -327,6 +365,13 @@ def run(ctx: protocol_api.ProtocolContext):
                 ctx.delay(seconds=0.5)
                 ctx.set_rail_lights(initial_light_state)
                 ctx.delay(seconds=0.5)
+
+        def get_remaining_well_vol(self):
+            '''
+            Return the volume remaining in the current well
+            '''
+            well = next(iter(self.labware_wells))
+            return self.well_vol - self.labware_wells[well]
 
         def track(self, vol: float) -> Well:
             '''track() will track how much liquid
@@ -354,6 +399,25 @@ def run(ctx: protocol_api.ProtocolContext):
                             .format(int(self.labware_wells[well]), well))
             return well
 
+    def rank_pipettes(pipettes):
+        '''
+        Given a list of 2 pipettes (Where either may be None) this fn will
+        return them in the order of smallest to largest. This function assumes
+        that error checking for
+        cases where no pipettes were loaded was already done.
+        '''
+        if pipettes[1] is None:
+            return [pipettes[0], pipettes[0]]
+        elif pipettes[0] is None:
+            return [pipettes[1], pipettes[1]]
+        elif len(pipettes) == 2:
+            if pipettes[0].max_volume <= pipettes[1].max_volume:
+                return [pipettes[0], pipettes[1]]
+            else:
+                return [pipettes[1], pipettes[0]]
+        else:
+            raise Exception("Unexpected number of pipettes loaded: {}".
+                            format(len(pipettes)))
     # reagents
 
     '''
@@ -368,11 +432,43 @@ def run(ctx: protocol_api.ProtocolContext):
 
     '''
 
-    # End repair buffer - I is in column one of yourgene_reagent_plate_I
-    # End repair enzyme is in well A2 of the sample plate
-    ER_buffer_I_column = yourgene_reagent_plate_I.columns()[0]
-    ER_enzyme_well = yourgene_reagent_plate_I.wells_by_name()['A2']
-    ER_mastermix_destination = yourgene_reagent_plate_I.wells_by_name()['B2']
+    # Reagent wells for mastermix 1: End-repair
+    ERB_wells = VolTracker(yourgene_reagent_plate_I, ERB_vol_per_well,
+                           ERB_start_index, ERB_end_index,
+                           msg=("Out of End-repair buffer, please replace "
+                                "reagent plate"))
+    ERE_wells = VolTracker(yourgene_reagent_plate_I, ERE_vol_per_well,
+                           ERE_start_index, ERE_end_index,
+                           msg=("Out of End-repair enzyme, please replace "
+                                "reagent plate"))
+
+    ALB_wells = VolTracker(yourgene_reagent_plate_I, ALB_vol_per_well,
+                           ALB_start_index, ALB_end_index,
+                           msg=("Out of End-repair enzyme, please replace "
+                                "replace reagent plate"))
+    ALE_I_wells = VolTracker(yourgene_reagent_plate_I, ALE_I_vol_per_well,
+                             ALE_I_start_index, ALE_I_end_index,
+                             msg=("Out of Adaptor ligation enzyme I, please "
+                                  "replace reagent plate"))
+    ALE_II_wells = VolTracker(yourgene_reagent_plate_I, ALE_II_vol_per_well,
+                              ALE_II_start_index, ALE_II_end_index,
+                              msg=("Out of Adaptor ligation enzyme II, please "
+                                   "replace reagent plate"))
+
+    # Reagent wells for mastermix 3: PCR
+    PCR_mix_wells = [yourgene_reagent_plate_I.wells()[i]
+                     for i in PCR_mix_well_indices]
+    PCR_mix_wells = VolTracker(yourgene_reagent_plate_I, PCR_mix_vol_per_well,
+                               PCR_mix_start_index, PCR_mix_end_index,
+                               msg=("Out of PCR mix, please "
+                                    "replace reagent plate"))
+    primer_wells = [yourgene_reagent_plate_I.wells()[i]
+                    for i in primer_well_indices]
+    primer_wells = VolTracker(yourgene_reagent_plate_I, primer_vol_per_well,
+                              primer_start_index, primer_end_index,
+                              msg=("Out of primers, please "
+                                   "replace reagent plate"))
+
     # plate, tube rack maps
 
     '''
@@ -383,6 +479,10 @@ def run(ctx: protocol_api.ProtocolContext):
     plate_wells_by_row = [well for row in plate.rows() for well in row]
 
     '''
+    # Mastermix destination tubes
+    ER_mm_dest_tube = tuberack.wells()[0]
+    AL_mm_dest_tube = tuberack.wells()[1]
+    PCR_mm_dest_tube = tuberack.wells()[2]
 
     # protocol
 
@@ -409,87 +509,5 @@ def run(ctx: protocol_api.ProtocolContext):
 
     '''
     # PROTOCOL BEGINS HERE
-
-    # Prepare End Repair Mastermix
-    # 1.2.7 - Mix end repair buffer I (column 1, prep plate 1) and End repair
-    # enzyme I (in well pos. A2, prep plate 1) - mix by pipetting 10 times
-    # Create a mastermix of the two
-    # The mastermix will be placed in the unused well B2 of reagent plate I
-    er_buffer_volume = ER_buffer_per_sample * (num_samples+1)
-    er_enzyme_volume = ER_enz_vol_per_sample * (num_samples+1)
-
-    for i in range(0, math.ceil(er_buffer_volume/ERB_vol_per_well)):
-        well = ER_buffer_I_column[i]
-        # Mix the buffer 10x
-        vol = (er_buffer_volume if er_buffer_volume
-               < ERB_vol_per_well else ERB_vol_per_well)
-        pip = p20 if vol < 20 else p300
-        if not pip.has_tip:
-            try:
-                pip.pick_up_tip()
-            except protocol_api.labware.OutOfTipsError:
-                ctx.pause("Replace empty tip racks")
-                pip.reset_tipracks()
-                pip.pick_up_tip()
-        pip.mix(n_standard_mixes, 20, well)
-        pip.transfer(vol, well, ER_mastermix_destination, new_tip='never')
-        er_buffer_volume = er_buffer_volume - vol
-
-    drop_all_tips()
-
-    # Mix the ER enzyme, total volume of enz. 126 µL,
-    # max volume for mastermix is 0.75 µL*36=27 µL
-    try:
-        p300.pick_up_tip()
-    except protocol_api.labware.OutOfTipsError:
-        ctx.pause("Replace empty tip racks")
-        p300.reset_tipracks()
-        p300.pick_up_tip()
-    p300.mix(n_standard_mixes, ERE_vol_per_well/2, ER_enzyme_well)
-    p300.drop_tip()
-
-    pip = p20 if er_enzyme_volume <= 20 else p300
-    try:
-        pip.transfer(er_enzyme_volume, ER_enzyme_well,
-                     ER_mastermix_destination)
-    except protocol_api.labware.OutOfTipsError:
-        ctx.pause("Replace empty tip racks")
-        pip.reset_tipracks()
-        pip.transfer(er_enzyme_volume, ER_enzyme_well,
-                     ER_mastermix_destination)
-
-    # 1.2.7 to 1.2.9, page 2
-    # Move 12.75 uL of sample to the destination plate
-    # Add required volume of buffer and enzyme to the sample wells
-    # See Table "End repair reaction" on page 2 of the protocol
-    # This will use up one 20 uL tiprack
-    ctx.comment("\nTransferring DNA")
-    for s, d in zip(sample_plate.wells()[0:num_samples],
-                    destination_plate.wells()[0:num_samples]):
-        try:
-            p20.transfer(DNA_sample_transfer_vol, s, d)
-        except protocol_api.labware.OutOfTipsError:
-            ctx.pause("Replace empty tip racks")
-            p20.reset_tipracks()
-            p20.transfer(DNA_sample_transfer_vol, s, d)
-
-    # Transfer mastermix to each well and mix each sample ten times
-    ctx.comment("\nTransferring End repair mastermix")
-    for well in destination_plate.wells()[0:num_samples]:
-        try:
-            p20.pick_up_tip()
-        except protocol_api.labware.OutOfTipsError:
-            ctx.pause("Replace empty tip racks")
-            p20.reset_tipracks()
-            p20.pick_up_tip()
-        p20.aspirate(mastermix_vol_per_sample, ER_mastermix_destination)
-        p20.dispense(mastermix_vol_per_sample, well)
-        # Mix each sample ten (n_standard_mixes) times
-        p20.mix(n_standard_mixes, total_rxn_vol/2)
-        p20.drop_tip()
-
-    ctx.comment("\nPulse spin the destination plate for 5 seconds")
-    ctx.comment("Perform the end repair reaction in the thermocycler")
-    ctx.comment("Remember to thaw (30 minutes) and pulse spin Reagent plate "
-                + "3 before inserting it for protocol part 2")
-    ctx.comment("~~~ End of protocol part 1 ~~~~\n")
+    pip_s, pip_l = rank_pipettes()
+    # 1st mastermix: End-repair
