@@ -29,7 +29,7 @@
     "type": "int",
     "label": "number of dilutions",
     "name": "num_of_dilutions",
-    "default": 11
+    "default": 10
   },
   {
     "type": "float",
@@ -42,8 +42,13 @@
     "label": "Blank in Well Plate",
     "name": "blank_on",
     "options": [
+<<<<<<< HEAD
        { "label": "NO", "value": 0 },
        { "label": "Yes", "value": 1 }
+=======
+       { "label": "Yes", "value": 1 },
+       { "label": "No", "value": 0 }
+>>>>>>> 748827f82161a55cd3a73515dccb89c79631d9b4
      ]
   },
   {
