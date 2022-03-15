@@ -7,6 +7,16 @@
   },
   {
     "type": "dropDown",
+    "label": "DNA Plate",
+    "name": "dna_plate",
+    "options": [
+      {"label": "DNA Plate 1, 50ul (light blue base, tall strip tubes)", "value": "dnaplate1_96_wellplate_50ul"},
+      {"label": "DNA Plate 2, 10ul (96 skirted well plate, v-bottom), ", "value": "dnaplate2_96_wellplate_10ul"},
+      {"label": "DNA Plate 3, 50ul (Qiagen dark blue base, short strip tubes)", "value": "dnaplate3_96_wellplate_50ul"}
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "P20 Single-Channel Mount",
     "name": "p20_mount",
     "options": [
