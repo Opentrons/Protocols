@@ -3,43 +3,40 @@ metadata = {
     'author': 'John C. Lynch',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
-                         # IN SECTION 5.2 OF THE APIV2 "VERSIONING"
-}
+    }
 
 
 def run(ctx):
 
-    [
-     plate_type,
+    [plate_type,
      temp_mod_on,
      dilution_factor,
      num_of_dilutions,
      total_mixing_volume,
      blank_on,
      tip_use_strategy
-    ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
-        "plate_type",
-        "temp_mod_on",
-        "dilution_factor",
-        "num_of_dilutions",
-        "total_mixing_volume"
-        "blank_on",
-        "tip_use_strategy")
+     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
+        'plate_type',
+        'temp_mod_on',
+        'dilution_factor',
+        'num_of_dilutions',
+        'total_mixing_volume',
+        'blank_on',
+        'tip_use_strategy')
 
     # Check for bad setup here
     if not 1 <= num_of_dilutions <= 11:
-        raise Exception("Enter a number of dilutions between 1 and 11")
+        raise Exception('Enter a number of dilutions between 1 and 11')
     if temp_mod_on == 1 and 'aluminum' not in plate_type:
-        raise Exception(
-                        "Please select compatible plate/\
-                        temperature module settiing")
+        raise Exception('Please select compatible plate and\
+    temperature module settiing')
     if temp_mod_on == 0 and 'aluminum' in plate_type:
         raise Exception(
-                        "Please select compatible plate/\
-                        temperature module settiing")
+                        'Please select compatible plate and\
+    temperature module settiing')
     if num_of_dilutions == 11 and blank_on == 1:
         raise Exception(
-                        "No room for blank with 11 dilutions"
+                        'No room for blank with 11 dilutions'
         )
 
     # define all custom variables above here with descriptions:
@@ -60,7 +57,7 @@ def run(ctx):
     # load tipracks
     tiprack = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
-        for slot in ['5', '6']
+        for slot in ['2', '3', '5']
         ]
     # load instrument
     pipette = ctx.load_instrument(
@@ -79,7 +76,8 @@ def run(ctx):
         diluent_volume,
         trough.wells()[0],
         dilute_plate.rows()[0][1:num_of_dilutions],
-        air_gap=10
+        air_gap=10,
+        new_tip=tip_use_strategy
     )
 
     # step 3, 4
@@ -101,5 +99,6 @@ def run(ctx):
             diluent_volume,
             trough.wells()[0],
             dilute_plate.rows()[-1],
-            air_gap=10
+            air_gap=10,
+            new_tip=tip_use_strategy
         )
