@@ -55,15 +55,7 @@ def run(ctx):
                for slot in ['4', '9', '11']]
     tips20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '5',
                                '20ul tiprack')]
-    if park_tips:
-        rack = ctx.load_labware(
-            'opentrons_96_filtertiprack_200ul', '1', '200ul tiprack')
-        parking_spots = rack.rows()[0][:num_cols]
-    else:
-        rack = ctx.load_labware(
-            'opentrons_96_filtertiprack_200ul', '1', '200ul tiprack')
-        parking_spots = [None for none in range(12)]
-    tips300.insert(0, rack)
+    parking_spots = [None for none in range(12)]
 
     # load pipettes
     m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tips20)

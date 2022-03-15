@@ -21,7 +21,7 @@ def run(ctx):
     # pcr2_buffer_vol = 27.0
 
     # load labware
-    pcr2_buffer = ctx.load_labware('abgenemidi_96_wellplate_800ul', '1',
+    pcr2_buffer = ctx.load_labware('sarstedt_24_tuberack_2000ul', '1',
                                    'PCR2 buffer tube').wells()[0]
     pcr_plate = ctx.load_labware('eppendorfmetaladapter_96_wellplate_200ul',
                                  '5', 'PCR Plate')
