@@ -61,17 +61,17 @@ A1,B1,4
 
 ### Reagent Setup
 * This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:
-* Reservoir 1: slot 5
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res1_v2.png)
-* Reservoir 2: slot 2  
-![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res2.png)
+* Reservoir 1: slot 1
 
 ---
 
 ### Protocol Steps
-1. This section should consist of a numerical outline of the protocol steps, somewhat analogous to the steps outlined by the user in their custom protocol submission.
-2. example step: Samples are transferred from the source tuberacks on slots 1-2 to the PCR plate on slot 3, down columns and then across rows.
-3. example step: Waste is removed from each sample on the magnetic module, ensuring the bead pellets are not contacted by the pipette tips.
+1. Load labware as specified in protocol
+2. Load original, undiluted samples in column 1 in slot 4
+3. Diluent is added to specified number of columns starting at 2, continuing on until specified number of wells are prepped
+4. Specified amount of undiluted sample is transfered from column 1 to column 2. Specified amount in column 2 is transfered from column 2 to 3. This repeats as needed
+5. If requested, a blank is added to column 12 consisting of only diluent
+
 
 ### Process
 1. Input your protocol parameters above.
@@ -86,4 +86,4 @@ A1,B1,4
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-protocol-hex-code
+412ec7
