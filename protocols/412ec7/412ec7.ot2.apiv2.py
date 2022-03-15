@@ -22,7 +22,7 @@ def run(ctx):
         "temp_mod_on",
         "dilution_factor",
         "num_of_dilutions",
-        "total_mixing_volume"
+        "total_mixing_volume",
         "blank_on",
         "tip_use_strategy")
 
@@ -32,11 +32,11 @@ def run(ctx):
     if temp_mod_on == 1 and 'aluminum' not in plate_type:
         raise Exception(
                         "Please select compatible plate/\
-                        temperature module settiing")
+                        temperature module setting")
     if temp_mod_on == 0 and 'aluminum' in plate_type:
         raise Exception(
                         "Please select compatible plate/\
-                        temperature module settiing")
+                        temperature module setting")
     if num_of_dilutions == 11 and blank_on == 1:
         raise Exception(
                         "No room for blank with 11 dilutions"
@@ -84,6 +84,8 @@ def run(ctx):
 
     # step 3, 4
     # Dilution of samples across the 96-well flat bottom plate
+    if tip_use_strategy == 'never':
+        pipette.pick_up_tip()
     for s, d in zip(
             dilute_plate.rows()[0][:num_of_dilutions-1],
             dilute_plate.rows()[0][1:num_of_dilutions]
@@ -96,6 +98,9 @@ def run(ctx):
             mix_after=(5, total_mixing_volume-5),
             new_tip=tip_use_strategy
         )
+    if tip_use_strategy == 'never':
+        pipette.drop_tip()
+
     if blank_on == 1:
         pipette.transfer(
             diluent_volume,
