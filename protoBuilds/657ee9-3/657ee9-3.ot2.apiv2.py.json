@@ -1,0 +1,108 @@
+{
+    "content": "from opentrons import protocol_api\nimport math\n\nmetadata = {\n    'protocolName': 'Oncomine Focus Assay - Pt 3: Ligate Adapters',\n    'author': 'Chaz <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx: protocol_api.ProtocolContext):\n    [\n     _samp_cols,  # column numbers for digestion\n     _dest_module,  # module used for destination plate containing samples\n     _src_module,  # module used for mastermix\n     _m20_mount  # mount for p20-Multi\n    ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)\n        '_samp_cols',\n        '_dest_module',\n        '_src_module',\n        '_m20_mount')\n\n    # custom variables\n    samp_cols = _samp_cols.split(\",\")\n    dest_module = _dest_module\n    src_module = _src_module\n    m20_mount = _m20_mount\n\n    # load modules\n    d_mod = None\n    s_mod = None\n\n    if dest_module is not None:\n        d_mod = ctx.load_module(dest_module, '7')\n\n    if src_module is not None:\n        s_mod = ctx.load_module(src_module, '4')\n        src_plate = s_mod.load_labware(\n            'opentrons_96_aluminumblock_nest_wellplate_100ul',\n            'Reagent Plate on Temp Deck')\n        s_mod.set_temperature(4)\n\n    # load labware\n    if dest_module is None:\n        dest_plate = ctx.load_labware(\n            'nest_96_wellplate_100ul_pcr_full_skirt', '7', 'Sample Plate')\n    elif 'thermocycler' in dest_module:\n        dest_plate = d_mod.load_labware(\n            'nest_96_wellplate_100ul_pcr_full_skirt',\n            'Sample Plate on Thermocycler')\n        d_mod.open_lid()\n        d_mod.set_block_temperature(4)\n    else:\n        dest_plate = d_mod.load_labware(\n            'opentrons_96_aluminumblock_nest_wellplate_100ul',\n            'Sample Plate on Temp Deck')\n        d_mod.set_temperature(4)\n\n    if src_module is None:\n        src_plate = ctx.load_labware(\n            'nest_96_wellplate_100ul_pcr_full_skirt', '4', 'Reagent Plate')\n\n    # load tipracks\n    tips = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '3')]\n\n    # load instrument\n    p20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tips)\n    p20.flow_rate.aspirate = 4\n    p20.flow_rate.dispense = 4\n\n    # helper functions\n    # to take vol and return estimated liq height\n    def liq_height(well):\n        if well.diameter is not None:\n            radius = well.diameter / 2\n            cse = math.pi*(radius**2)\n        elif well.length is not None:\n            cse = well.length*well.width\n        else:\n            cse = None\n        if cse:\n            return well.liq_vol / cse\n        else:\n            raise Exception(\"\"\"Labware definition must\n                supply well radius or well length and width.\"\"\")\n\n    # reagents\n    switch = src_plate['A3']\n    switch.liq_vol = 4 * len(samp_cols) * 1.05\n    ligase = src_plate['A4']\n    ligase.liq_vol = 2 * len(samp_cols) * 1.05\n    adapter_mix = src_plate.rows()[0][4:4+len(samp_cols)]\n\n    # protocol\n    # Switch Solution Transfer\n    ctx.comment(f'\\nTransferring 4uL Switch Solution \\\n    to samples in columns {samp_cols}\\n')\n    for col in samp_cols:\n        p20.pick_up_tip()\n        switch.liq_vol -= 4\n        s_height = liq_height(switch) - 2 if liq_height(switch) - 2 > 1 else 1\n        p20.aspirate(4, switch.bottom(s_height))\n        p20.dispense(4, dest_plate['A'+col.strip()])\n        ctx.delay(seconds=1)\n        p20.drop_tip()\n\n    # Barcode Adapter Mix Transfer\n    ctx.comment(f'\\nTransferring 2uL Barcode Adapter Mix \\\n    to samples in columns {samp_cols}\\n')\n    for col, re in zip(samp_cols, adapter_mix):\n        p20.pick_up_tip()\n        p20.aspirate(2, re)\n        p20.dispense(2, dest_plate['A'+col.strip()])\n        ctx.delay(seconds=1)\n        p20.drop_tip()\n\n    # Switch Solution Transwer\n    ctx.comment(f'\\nTransferring 2uL DNA Ligase \\\n    to samples in columns {samp_cols}\\n')\n    for col in samp_cols:\n        p20.pick_up_tip()\n        ligase.liq_vol -= 2\n        l_height = liq_height(ligase) - 2 if liq_height(ligase) - 2 > 1 else 1\n        p20.aspirate(2, ligase.bottom(l_height))\n        p20.dispense(2, dest_plate['A'+col.strip()])\n        p20.mix(5, 15)\n        ctx.delay(seconds=1)\n        p20.drop_tip()\n\n    # optional - thermocycler\n    if 'thermocycler' in dest_module:\n        d_mod.set_lid_temperature(100)\n        d_mod.close_lid()\n        for temp, time in zip([22, 68, 72], [30, 5, 5]):\n            d_mod.set_block_temperature(temp, hold_time_minutes=time)\n        d_mod.set_block_temperature(10)\n        d_mod.deactivate_lid()\n        d_mod.open_lid()\n        ctx.comment('\\nProtocol complete!')\n    else:\n        ctx.comment('\\nLiquid handling complete; \\\n        please move plate to Thermal Cycler.\\n')\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": "3,10",
+            "label": "Columns with Samples",
+            "name": "_samp_cols",
+            "type": "int"
+        },
+        {
+            "label": "Module for Destination Plate",
+            "name": "_dest_module",
+            "options": [
+                {
+                    "label": "Thermocycler",
+                    "value": "thermocycler"
+                },
+                {
+                    "label": "GEN2 Temp Module",
+                    "value": "temperature module gen2"
+                },
+                {
+                    "label": "GEN1 Temp Module",
+                    "value": "temperature module"
+                },
+                {
+                    "label": "No Module",
+                    "value": null
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Module for Reagent Plate",
+            "name": "_src_module",
+            "options": [
+                {
+                    "label": "No Module",
+                    "value": null
+                },
+                {
+                    "label": "GEN2 Temp Module",
+                    "value": "temperature module gen2"
+                },
+                {
+                    "label": "GEN1 Temp Module",
+                    "value": "temperature module"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P20 Multi Mount",
+            "name": "_m20_mount",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p20_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Reagent Plate on 4",
+            "share": false,
+            "slot": "4",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Sample Plate on Thermocycler on Thermocycler Module on 7",
+            "share": false,
+            "slot": "7",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.11",
+        "author": "Chaz <protocols@opentrons.com>",
+        "protocolName": "Oncomine Focus Assay - Pt 3: Ligate Adapters",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}
