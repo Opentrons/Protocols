@@ -10,6 +10,17 @@
 ## Description
 
 Links:  
+* [PCR2 Setup](./3607d5)
+<br />
+<br />
+* [SPRI 1 & 2](./3607d5-2)
+<br />
+<br />
+* [SPRI 3](./3607d5-3)
+<br />
+<br />
+* [Normalization and Pooling](./3607d5-4)
+
 
 This is a custom normalization pooling protocol from up to 12 sources to a pooling tube. The input .csv for RSB volume specification should be specified as follows:
 
@@ -35,9 +46,9 @@ B1,15
 ---
 
 ### Deck Setup
-* blue: pooling strip  
-* green: samples  
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/17d210/deck5.png)
+* green: RSB  
+* blue: samples    
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/3607d5/deck4.png)
 
 ---
 
@@ -54,4 +65,4 @@ B1,15
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-17d210
+3607d5
