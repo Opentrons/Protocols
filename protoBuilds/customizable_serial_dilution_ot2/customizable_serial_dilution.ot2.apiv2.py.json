@@ -1,5 +1,5 @@
 {
-    "content": "metadata = {\n    'protocolName': 'Customizable Serial Dilution',\n    'author': 'Opentrons <protocols@opentrons.com>',\n    'source': 'Protocol Library',\n    'apiLevel': '2.5'\n    }\n\n\ndef run(protocol_context):\n    [pipette_type, tip_type, trough_type, plate_type,\n     dilution_factor, num_of_dilutions, total_mixing_volume,\n        tip_use_strategy] = get_values(  # noqa: F821\n            'pipette_type', 'tip_type', 'trough_type', 'plate_type',\n            'dilution_factor', 'num_of_dilutions',\n            'total_mixing_volume', 'tip_use_strategy'\n        )\n\n    # labware\n    trough = protocol_context.load_labware(\n        trough_type, '2')\n    liquid_trash = trough.wells()[-1]\n    plate = protocol_context.load_labware(\n        plate_type, '3')\n    if 'p20' in pipette_type:\n        tip_name = 'opentrons_96_filtertiprack_20ul' if tip_type \\\n            else 'opentrons_96_tiprack_20ul'\n    else:\n        tip_name = 'opentrons_96_filtertiprack_200ul' if tip_type \\\n            else 'opentrons_96_tiprack_300ul'\n    tiprack = [\n        protocol_context.load_labware(tip_name, slot)\n        for slot in ['1', '4']\n    ]\n\n    pipette = protocol_context.load_instrument(\n        pipette_type, mount='left', tip_racks=tiprack)\n\n    transfer_volume = total_mixing_volume/dilution_factor\n    diluent_volume = total_mixing_volume - transfer_volume\n\n    if 'multi' in pipette_type:\n\n        # Distribute diluent across the plate to the the number of samples\n        # And add diluent to one column after the number of samples for a blank\n        pipette.transfer(\n            diluent_volume,\n            trough.wells()[0],\n            plate.rows()[0][1:1+num_of_dilutions]\n        )\n\n        # Dilution of samples across the 96-well flat bottom plate\n        if tip_use_strategy == 'never':\n            pipette.pick_up_tip()\n\n        for s, d in zip(\n                plate.rows()[0][:num_of_dilutions],\n                plate.rows()[0][1:1+num_of_dilutions]\n        ):\n            pipette.transfer(\n                transfer_volume,\n                s,\n                d,\n                mix_after=(3, total_mixing_volume/2),\n                new_tip=tip_use_strategy\n            )\n\n        # Remove transfer volume from the last column of the dilution\n        pipette.transfer(\n            transfer_volume,\n            plate.rows()[0][num_of_dilutions],\n            liquid_trash,\n            new_tip=tip_use_strategy,\n            blow_out=True\n        )\n\n        if tip_use_strategy == 'never':\n            pipette.drop_tip()\n\n    else:\n        # Distribute diluent across the plate to the the number of samples\n        # And add diluent to one column after the number of samples for a blank\n        for col in plate.columns()[1:1+num_of_dilutions]:\n            pipette.distribute(\n                diluent_volume, trough.wells()[0], [well for well in col])\n\n        for row in plate.rows():\n            if tip_use_strategy == 'never':\n                pipette.pick_up_tip()\n\n            for s, d in zip(row[:num_of_dilutions], row[1:1+num_of_dilutions]):\n\n                pipette.transfer(\n                    transfer_volume,\n                    s,\n                    d,\n                    mix_after=(3, total_mixing_volume/2),\n                    new_tip=tip_use_strategy\n                )\n\n                pipette.transfer(\n                    transfer_volume,\n                    row[num_of_dilutions],\n                    liquid_trash,\n                    new_tip=tip_use_strategy,\n                    blow_out=True\n                )\n\n            if tip_use_strategy == 'never':\n                pipette.drop_tip()\n",
+    "content": "metadata = {\n    'protocolName': 'Customizable Serial Dilution',\n    'author': 'Opentrons <protocols@opentrons.com>',\n    'source': 'Protocol Library',\n    'apiLevel': '2.11'\n    }\n\n\ndef run(protocol_context):\n    [pipette_type, dilution_factor, num_of_dilutions, total_mixing_volume,\n        tip_use_strategy] = get_values(  # noqa: F821\n            'pipette_type', 'dilution_factor', 'num_of_dilutions',\n            'total_mixing_volume', 'tip_use_strategy'\n        )\n    # check for bad setup here\n    if not 1 <= num_of_dilutions <= 11:\n        raise Exception('Enter a number of dilutions between 1 and 11')\n\n    # labware\n    trough = protocol_context.load_labware(\n        'nest_12_reservoir_15ml', '2')\n    liquid_trash = trough.wells()[0]\n    plate = protocol_context.load_labware(\n        'corning_96_wellplate_360ul_flat', '3')\n    tiprack = [\n        protocol_context.load_labware('opentrons_96_tiprack_300ul', slot)\n        for slot in ['1', '4', '5']\n    ]\n\n    pip_name = pipette_type.split('_')[1]\n\n    pipette = protocol_context.load_instrument(\n        pipette_type, mount='right', tip_racks=tiprack)\n\n    transfer_volume = total_mixing_volume/dilution_factor\n    diluent_volume = total_mixing_volume - transfer_volume\n\n    if pip_name == 'multi':\n\n        # Di stribute diluent across the plate to the the number of samples\n        # And add diluent to one column after the number of samples for a blank\n        if tip_use_strategy == 'never':\n            pipette.pick_up_tip()\n        for i in range(num_of_dilutions):\n            if tip_use_strategy == 'always':\n                pipette.pick_up_tip()\n            pipette.aspirate(diluent_volume, trough.wells()[0])\n            pipette.dispense(diluent_volume, plate.wells()[8+i*8])\n            if tip_use_strategy == 'always':\n                pipette.drop_tip()\n\n        # Di lution of samples across the 96-well flat bottom plate\n\n        for s, d in zip(\n                plate.rows()[0][:num_of_dilutions],\n                plate.rows()[0][1:1+num_of_dilutions]\n        ):\n            if tip_use_strategy == 'always':\n                pipette.pick_up_tip()\n\n            # Transfer\n            pipette.aspirate(transfer_volume, s)\n            pipette.dispense(transfer_volume, d)\n\n            # Mix 3x\n            for mix in range(3):\n                pipette.aspirate(total_mixing_volume/2, d)\n                pipette.dispense(total_mixing_volume/2, d)\n\n            if tip_use_strategy == 'always':\n                if d != plate.rows()[0][num_of_dilutions]:\n                    pipette.blow_out(d)\n                    pipette.drop_tip()\n\n                else:\n                    # Remove transfer volume from the\n                    # last column of the dilution\n                    pipette.aspirate(\n                                    transfer_volume,\n                                    plate.rows()[0][num_of_dilutions])\n                    pipette.dispense(transfer_volume, liquid_trash)\n                    pipette.drop_tip()\n\n        if tip_use_strategy == 'never':\n            pipette.aspirate(\n                            transfer_volume,\n                            plate.rows()[0][num_of_dilutions])\n            pipette.dispense(transfer_volume, liquid_trash)\n            pipette.drop_tip()\n    else:\n        # Distribute diluent across the plate to the the number of samples\n        # And add diluent to one column after the number of samples for a blank\n        x = 1\n        if tip_use_strategy == 'never':\n            pipette.pick_up_tip()\n        for col in plate.columns()[1:1+num_of_dilutions]:\n            c = len(col)\n            for well in range(c):\n                if tip_use_strategy == 'always':\n                    pipette.pick_up_tip()\n                pipette.aspirate(diluent_volume, trough.wells()[0])\n                pipette.dispense(diluent_volume, plate.columns()[x][well])\n                if tip_use_strategy == 'always':\n                    pipette.drop_tip()\n            x = x+1\n\n        for row in plate.rows():\n            for s, d in zip(row[:num_of_dilutions], row[1:1+num_of_dilutions]):\n\n                if tip_use_strategy == 'always':\n                    pipette.pick_up_tip()\n\n                # Transfer\n                pipette.aspirate(transfer_volume, s)\n                pipette.dispense(transfer_volume, d)\n\n                # Mix 3x\n                for mix in range(3):\n                    pipette.aspirate((total_mixing_volume*0.5), d)\n                    pipette.dispense((total_mixing_volume*0.5), d)\n\n                if tip_use_strategy == 'always':\n                    if d != row[num_of_dilutions]:\n                        pipette.blow_out(d)\n                        pipette.drop_tip()\n                    else:\n                        pipette.aspirate(\n                                        transfer_volume,\n                                        row[num_of_dilutions])\n                        pipette.dispense(transfer_volume, liquid_trash)\n                        pipette.blow_out(liquid_trash)\n                        pipette.drop_tip()\n\n        if tip_use_strategy == 'never':\n            pipette.drop_tip()\n",
     "custom_labware_defs": [],
     "fields": [
         {
@@ -19,10 +19,6 @@
                     "value": "p300_single"
                 },
                 {
-                    "label": "P50 Single (GEN1)",
-                    "value": "p50_single"
-                },
-                {
                     "label": "P300 Multi (GEN2)",
                     "value": "p300_multi_gen2"
                 },
@@ -33,10 +29,6 @@
                 {
                     "label": "P300 Multi (GEN1)",
                     "value": "p300_multi"
-                },
-                {
-                    "label": "P50 Multi (GEN1)",
-                    "value": "p50_multi"
                 }
             ],
             "type": "dropDown"
@@ -130,7 +122,7 @@
     ],
     "instruments": [
         {
-            "mount": "left",
+            "mount": "right",
             "name": "p300_single_gen2"
         }
     ],
@@ -148,15 +140,21 @@
             "type": "nest_12_reservoir_15ml"
         },
         {
-            "name": "NEST 96 Well Plate 200 \u00b5L Flat on 3",
+            "name": "Corning 96 Well Plate 360 \u00b5L Flat on 3",
             "share": false,
             "slot": "3",
-            "type": "nest_96_wellplate_200ul_flat"
+            "type": "corning_96_wellplate_360ul_flat"
         },
         {
             "name": "Opentrons 96 Tip Rack 300 \u00b5L on 4",
             "share": false,
             "slot": "4",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
             "type": "opentrons_96_tiprack_300ul"
         },
         {
@@ -167,7 +165,7 @@
         }
     ],
     "metadata": {
-        "apiLevel": "2.5",
+        "apiLevel": "2.11",
         "author": "Opentrons <protocols@opentrons.com>",
         "protocolName": "Customizable Serial Dilution",
         "source": "Protocol Library"
