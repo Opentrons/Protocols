@@ -5,20 +5,20 @@ import os
 import json
 import math
 
-INPUT_FILE = """Number of Transfers
-23
-TB_RCK pos,pos in TB_RCK,pos in 384Plate,VolumeFromTube
-384Platebarcode,RunId
-1,1,4
-3,150,4
-4,96,2
-48,204,2
-"""
-
-COLUMN_MAP = """96-1,12
-96-2,12
-96-3,3
-96-4,12"""
+# INPUT_FILE = """Number of Transfers
+# 23
+# TB_RCK pos,pos in TB_RCK,pos in 384Plate,VolumeFromTube
+# 384Platebarcode,RunId
+# 1,1,4
+# 3,150,4
+# 4,96,2
+# 48,204,2
+# """
+#
+# COLUMN_MAP = """96-1,12
+# 96-2,12
+# 96-3,3
+# 96-4,12"""
 
 
 # metadata
