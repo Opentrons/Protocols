@@ -203,7 +203,10 @@ tipracks before resuming.')
     for src_set, dest_quadrant in zip(src_sets, pcr_dests_quadrants):
         for s, d in zip(src_set, dest_quadrant[:len(src_set)]):
             _pick_up(m20)
-            m20.transfer(sample_volume, s, d.bottom(1), new_tip='never')
+            m20.aspirate(5, s.top())
+            m20.aspirate(sample_volume, s)
+            m20.dispense(m20.current_volume, d.bottom(1))
+            m20.blow_out()
             m20.drop_tip()
 
     # track final used tip
