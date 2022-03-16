@@ -101,29 +101,29 @@ def run(ctx):
     sample_column_numbers = [
         int(line.split(',')[1]) for line in COLUMN_MAP.splitlines()]
     total_columns_sample = sum(sample_column_numbers)
-    intervention = total_columns_sample > 36
 
     # load labware and pipettes
-    tipracks = [
+    tipracks_m = [
         ctx.load_labware('opentrons_96_tiprack_20ul', slot)
-        for slot in ['6', '9', '8', '11']]
+        for slot in ['6', '9', '8']]
+    tipracks_s = [
+        ctx.load_labware('opentrons_96_tiprack_20ul', slot)
+        for slot in ['11']]
     src_plates = [
         ctx.load_labware('biorad_96_wellplate_200ul_pcr', slot,
                          f'src plate {i+1}')
         for i, slot in enumerate(['1', '4', '7', '10'])]
-    dest_plate = ctx.load_labware('corning_384_wellplate_112ul_flat', '3')
+    dest_plate = ctx.load_labware('greinerbioone_384_wellplate_100ul', '3')
     primer_racks = [
         ctx.load_labware('opentrons_24_tuberack_generic_2ml_screwcap', slot,
                          f'primer rack {i+1}')
         for i, slot in enumerate(['2', '5'])]
 
     # pipette
-    m20 = ctx.load_instrument('p20_multi_gen2', 'right',
-                              tip_racks=tipracks)
-    p20 = ctx.load_instrument('p20_single_gen2', 'left',
-                              tip_racks=[ctx.loaded_labwares[11]])
+    m20 = ctx.load_instrument('p20_multi_gen2', 'right', tip_racks=tipracks_m)
+    p20 = ctx.load_instrument('p20_single_gen2', 'left', tip_racks=tipracks_s)
 
-    tip_log = {p20: {}}
+    tip_log = {val: {} for val in ctx.loaded_instruments.values()}
 
     folder_path = '/data/tip_track'
     tip_file_path = folder_path + '/tip_log.json'
@@ -200,10 +200,6 @@ tipracks before resuming.')
         p20.dispense(p20.current_volume, dest.bottom(0.5))
         p20.blow_out()
     p20.drop_tip()
-
-    if intervention:
-        ctx.pause('Replace full 20ul tiprack in slot 11')
-        ctx.loaded_labwares[11].reset()
 
     # add samples
     sample_volume = 2
