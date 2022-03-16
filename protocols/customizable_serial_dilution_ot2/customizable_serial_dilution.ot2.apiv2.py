@@ -65,7 +65,7 @@ def run(protocol_context):
                             s,
                             d,
                             air_gap=air_gap_volume,
-                            mix_after=(5, total_mixing_volume-5),
+                            mix_after=(5, total_mixing_volume/2),
                             new_tip=tip_use_strategy
                             )
         if tip_use_strategy == 'never':
@@ -75,7 +75,7 @@ def run(protocol_context):
             pipette.transfer(
                 diluent_volume,
                 trough.wells()[0],
-                plate.rows()[0][-1],
+                plate.rows()[0][num_of_dilutions+1],
                 air_gap=air_gap_volume,
                 new_tip=tip_use_strategy
             )
