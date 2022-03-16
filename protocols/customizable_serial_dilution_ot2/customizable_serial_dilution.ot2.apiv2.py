@@ -102,10 +102,7 @@ def run(protocol_context):
                     new_tip=tip_use_strategy
                     )
 
-        if tip_use_strategy == 'never':
-            pipette.pick_up_tip()
-
-            # Transfer
+        # Transfer
         total_transfer_wells = (num_of_dilutions*8)
         for x in range(total_transfer_wells):
             pipette.transfer(
@@ -117,14 +114,12 @@ def run(protocol_context):
                         mix_after=(3, total_mixing_volume/2)
                         )
 
-        if tip_use_strategy == 'never':
-            pipette.drop_tip()
-
         if blank_on == 1:
-            pipette.transfer(
-                    diluent_volume,
-                    trough.wells()[0],
-                    plate.rows()[0][num_of_dilutions+1],
-                    air_gap=air_gap_volume,
-                    new_tip=tip_use_strategy
-                )
+            for x in range(total_transfer_wells+8, total_transfer_wells+16):
+                pipette.transfer(
+                        diluent_volume,
+                        trough.wells()[0],
+                        plate.wells()[x],
+                        air_gap=air_gap_volume,
+                        new_tip=tip_use_strategy
+                    )
