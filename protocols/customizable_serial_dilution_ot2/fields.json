@@ -67,13 +67,5 @@
       { "label": "use one tip", "value": "never" },
       { "label": "change tips", "value": "always" }
     ]
-  },
-  {
-    "type": "dropDown",
-    "label": "Blank in Well Plate",
-    "name": "blank_on",
-    "options": [
-       { "label": "Yes", "value": 1 },
-       { "label": "No", "value": 0 }
-     ]
   }
+]
