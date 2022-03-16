@@ -19,7 +19,7 @@ import math
 # 96-2,12
 # 96-3,3
 # 96-4,12"""
-#
+
 
 # metadata
 metadata = {
@@ -100,30 +100,29 @@ def run(ctx):
     flash = True
     sample_column_numbers = [
         int(line.split(',')[1]) for line in COLUMN_MAP.splitlines()]
-    total_columns_sample = sum(sample_column_numbers)
-    intervention = total_columns_sample > 36
 
     # load labware and pipettes
-    tipracks = [
+    tipracks_m = [
         ctx.load_labware('opentrons_96_tiprack_20ul', slot)
-        for slot in ['6', '9', '8', '11']]
+        for slot in ['6', '9', '8']]
+    tipracks_s = [
+        ctx.load_labware('opentrons_96_tiprack_20ul', slot)
+        for slot in ['11']]
     src_plates = [
         ctx.load_labware('biorad_96_wellplate_200ul_pcr', slot,
                          f'src plate {i+1}')
         for i, slot in enumerate(['1', '4', '7', '10'])]
-    dest_plate = ctx.load_labware('corning_384_wellplate_112ul_flat', '3')
+    dest_plate = ctx.load_labware('greinerbioone_384_wellplate_100ul', '3')
     primer_racks = [
         ctx.load_labware('opentrons_24_tuberack_generic_2ml_screwcap', slot,
                          f'primer rack {i+1}')
         for i, slot in enumerate(['2', '5'])]
 
     # pipette
-    m20 = ctx.load_instrument('p20_multi_gen2', 'right',
-                              tip_racks=tipracks)
-    p20 = ctx.load_instrument('p20_single_gen2', 'left',
-                              tip_racks=[ctx.loaded_labwares[11]])
+    m20 = ctx.load_instrument('p20_multi_gen2', 'right', tip_racks=tipracks_m)
+    p20 = ctx.load_instrument('p20_single_gen2', 'left', tip_racks=tipracks_s)
 
-    tip_log = {p20: {}}
+    tip_log = {val: {} for val in ctx.loaded_instruments.values()}
 
     folder_path = '/data/tip_track'
     tip_file_path = folder_path + '/tip_log.json'
@@ -167,14 +166,12 @@ tipracks before resuming.')
             pip.pick_up_tip(tip_log[pip]['tips'][tip_log[pip]['count']])
             tip_log[pip]['count'] += 1
 
-    src_wells = [
-        well
+    src_sets = [
+        plate.rows()[0][:num_cols]
         for num_cols, plate in zip(sample_column_numbers,
-                                   src_plates[:len(sample_column_numbers)])
-        for well in plate.rows()[0][:num_cols]]
-    pcr_dests = [
-        well for row in dest_plate.rows()[:2]
-        for well in row][:total_columns_sample]
+                                   src_plates[:len(sample_column_numbers)])]
+    pcr_dests_quadrants = [
+        row[i::2] for row in dest_plate.rows()[:2] for i in range(2)]
 
     # pre-add primers
     data = [
@@ -201,16 +198,16 @@ tipracks before resuming.')
         p20.blow_out()
     p20.drop_tip()
 
-    if intervention:
-        ctx.pause('Replace full 20ul tiprack in slot 11')
-        ctx.loaded_labwares[11].reset()
-
     # add samples
     sample_volume = 2
-    for s, d in zip(src_wells, pcr_dests):
-        m20.pick_up_tip()
-        m20.transfer(sample_volume, s, d.bottom(1), new_tip='never')
-        m20.drop_tip()
+    for src_set, dest_quadrant in zip(src_sets, pcr_dests_quadrants):
+        for s, d in zip(src_set, dest_quadrant[:len(src_set)]):
+            _pick_up(m20)
+            m20.aspirate(5, s.top())
+            m20.aspirate(sample_volume, s)
+            m20.dispense(m20.current_volume, d.bottom(1))
+            m20.blow_out()
+            m20.drop_tip()
 
     # track final used tip
     if not ctx.is_simulating():
