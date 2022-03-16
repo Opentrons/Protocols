@@ -48,7 +48,7 @@ def run(protocol_context):
                         diluent_volume,
                         trough.wells()[0],
                         plate.rows()[0][1:num_of_dilutions],
-                        air_gap=10,
+                        air_gap=air_gap_volume,
                         new_tip=tip_use_strategy
                         )
 
@@ -76,7 +76,7 @@ def run(protocol_context):
                 diluent_volume,
                 trough.wells()[0],
                 plate.rows()[0][-1],
-                air_gap=10,
+                air_gap=air_gap_volume,
                 new_tip=tip_use_strategy
             )
         # Single Pipette
