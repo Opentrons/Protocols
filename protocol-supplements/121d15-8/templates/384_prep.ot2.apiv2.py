@@ -5,21 +5,21 @@ import os
 import json
 import math
 
-# INPUT_FILE = """Number of Transfers
-# 23
-# TB_RCK pos,pos in TB_RCK,pos in 384Plate,VolumeFromTube
-# 384Platebarcode,RunId
-# 1,1,4
-# 3,150,4
-# 4,96,2
-# 48,204,2
-# """
-#
-# COLUMN_MAP = """96-1,12
-# 96-2,12
-# 96-3,3
-# 96-4,12"""
-#
+INPUT_FILE = """Number of Transfers
+23
+TB_RCK pos,pos in TB_RCK,pos in 384Plate,VolumeFromTube
+384Platebarcode,RunId
+1,1,4
+3,150,4
+4,96,2
+48,204,2
+"""
+
+COLUMN_MAP = """96-1,12
+96-2,12
+96-3,3
+96-4,12"""
+
 
 # metadata
 metadata = {
@@ -100,7 +100,6 @@ def run(ctx):
     flash = True
     sample_column_numbers = [
         int(line.split(',')[1]) for line in COLUMN_MAP.splitlines()]
-    total_columns_sample = sum(sample_column_numbers)
 
     # load labware and pipettes
     tipracks_m = [
@@ -167,14 +166,12 @@ tipracks before resuming.')
             pip.pick_up_tip(tip_log[pip]['tips'][tip_log[pip]['count']])
             tip_log[pip]['count'] += 1
 
-    src_wells = [
-        well
+    src_sets = [
+        plate.rows()[0][:num_cols]
         for num_cols, plate in zip(sample_column_numbers,
-                                   src_plates[:len(sample_column_numbers)])
-        for well in plate.rows()[0][:num_cols]]
-    pcr_dests = [
-        well for row in dest_plate.rows()[:2]
-        for well in row][:total_columns_sample]
+                                   src_plates[:len(sample_column_numbers)])]
+    pcr_dests_quadrants = [
+        row[i::2] for row in dest_plate.rows()[:2] for i in range(2)]
 
     # pre-add primers
     data = [
@@ -203,10 +200,11 @@ tipracks before resuming.')
 
     # add samples
     sample_volume = 2
-    for s, d in zip(src_wells, pcr_dests):
-        m20.pick_up_tip()
-        m20.transfer(sample_volume, s, d.bottom(1), new_tip='never')
-        m20.drop_tip()
+    for src_set, dest_quadrant in zip(src_sets, pcr_dests_quadrants):
+        for s, d in zip(src_set, dest_quadrant[:len(src_set)]):
+            m20.pick_up_tip()
+            m20.transfer(sample_volume, s, d.bottom(1), new_tip='never')
+            m20.drop_tip()
 
     # track final used tip
     if not ctx.is_simulating():
