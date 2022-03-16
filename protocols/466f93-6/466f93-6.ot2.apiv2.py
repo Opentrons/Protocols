@@ -16,17 +16,19 @@ metadata = {
 def get_values(*names):
     import json
     _all_values = json.loads("""{
-                                  "n_samples":36,
+                                  "n_samples":20,
                                   "aspiration_rate_multiplier":1,
                                   "dispensing_rate_multiplier":1,
                                   "mixing_rate_multiplier":1,
                                   "n_mixes":3,
-                                  "pip_left_lname":"p300_single_gen2",
-                                  "pip_right_lname":"p20_single_gen2",
+                                  "pip_left_lname":"p20_single_gen2",
+                                  "is_filtered_left":false,
+                                  "pip_right_lname":"p300_single_gen2",
+                                  "is_filtered_right":false,
                                   "is_create_end_repair_mm":true,
-                                  "is_create_adaptor_ligation_mm":true,
-                                  "is_create_pcr_mm":true,
-                                  "mastermix_target_lname":"opentrons_24_tuberack_nest_0.5ml_screwcap"
+                                  "is_create_adaptor_ligation_mm":false,
+                                  "is_create_pcr_mm":false,
+                                  "mastermix_target_lname":"opentrons_24_tuberack_nest_1.5ml_snapcap"
                                   }
                                   """)
     return [_all_values[n] for n in names]
@@ -39,7 +41,9 @@ def run(ctx: protocol_api.ProtocolContext):
      mixing_rate_multiplier,
      n_mixes,
      pip_left_lname,
+     is_filtered_left,
      pip_right_lname,
+     is_filtered_right,
      is_create_end_repair_mm,
      is_create_adaptor_ligation_mm,
      is_create_pcr_mm,
@@ -50,11 +54,27 @@ def run(ctx: protocol_api.ProtocolContext):
      "mixing_rate_multiplier",
      "n_mixes",
      "pip_left_lname",
+     "is_filtered_left",
      "pip_right_lname",
+     "is_filtered_right",
      "is_create_end_repair_mm",
      "is_create_adaptor_ligation_mm",
      "is_create_pcr_mm",
      "mastermix_target_lname")
+
+    # General error checking
+    if not pip_left_lname and not pip_right_lname:
+        raise Exception("You must load at least one pipette")
+
+    is_any_mm = False
+    for is_mm in [is_create_end_repair_mm, is_create_adaptor_ligation_mm,
+                  is_create_pcr_mm]:
+        if is_mm:
+            is_any_mm = True
+            break
+
+    if not is_any_mm:
+        raise Exception("You have to create at least one mastermix")
 
     # define all custom variables above here with descriptions:
     # Source volumes of reagents, and number of wells containing the reagent
@@ -81,6 +101,10 @@ def run(ctx: protocol_api.ProtocolContext):
     ERB_end_index = ERB_start_index + n_ERB_wells - 1
     ERE_start_index = 9
     ERE_end_index = ERE_start_index + n_ERE_wells - 1
+
+    # Required volumes for creating the mastermix
+    total_ERE_mm_vol = n_samples * ERE_vol_per_sample
+    total_ERB_mm_vol = n_samples * ERB_vol_per_sample
 
     # Error checking
     if is_create_end_repair_mm and n_samples > max_ER_mm_samples:
@@ -228,10 +252,57 @@ def run(ctx: protocol_api.ProtocolContext):
     e.g. tiprack10, tiprack20, tiprack200, tiprack300, tiprack1000
 
     '''
-    tiprack20s = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-                  for slot in ['10', '11']]
-    tiprack200s = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-                   for slot in ['5', '8']]
+
+    def load_tipracks(filtered_tips_lname: str, non_filtered_tips_lname: str,
+                      is_filtered: bool, slots: list) -> list:
+        tiprack_list = []
+        for slot in slots:
+            tip_type = filtered_tips_lname if is_filtered \
+                else non_filtered_tips_lname
+            tiprack_list.append(ctx.load_labware(tip_type, slot))
+        return tiprack_list
+
+    def process_tipracks(pip_lname, is_filtered, slots) -> list:
+        tiprack_lnames = {
+            "p20s_filtered": "opentrons_96_filtertiprack_20ul",
+            "p20s_nonfiltered": "opentrons_96_tiprack_20ul",
+            "p300s_filtered": "opentrons_96_filtertiprack_200ul",
+            "p300s_nonfiltered": "opentrons_96_tiprack_300ul",
+            "p1000s_filtered": "opentrons_96_filtertiprack_1000ul",
+            "p1000s_nonfiltered": "opentrons_96_tiprack_1000ul"
+        }
+
+        tiprack_list = []
+        if "20_" in pip_lname or "10_" in pip_lname:
+            tiprack_list = load_tipracks(tiprack_lnames["p20s_filtered"],
+                                         tiprack_lnames["p20s_nonfiltered"],
+                                         is_filtered,
+                                         slots)
+        elif "300_" in pip_lname or "50_" in pip_lname:
+            tiprack_list = load_tipracks(tiprack_lnames["p300s_filtered"],
+                                         tiprack_lnames["p300s_nonfiltered"],
+                                         is_filtered,
+                                         slots)
+        elif "1000_" in pip_lname:
+            tiprack_list = load_tipracks(tiprack_lnames["p1000s_filtered"],
+                                         tiprack_lnames["p1000s_nonfiltered"],
+                                         is_filtered,
+                                         slots)
+        else:
+            raise Exception("The pipette loadname does not match any tipracks "
+                            "the loadname was {}".format(pip_lname))
+        return tiprack_list
+
+    tipracks_left_pip = None
+    tipracks_right_pip = None
+    if pip_left_lname:
+        tipracks_left_pip = process_tipracks(pip_left_lname, is_filtered_left,
+                                             ['5'])
+    if pip_right_lname:
+        tipracks_right_pip = process_tipracks(pip_right_lname,
+                                              is_filtered_right, ['8'])
+    print("left tiprack {}, right tiprack {}".format(tipracks_left_pip,
+                                                     tipracks_right_pip))
 
     # load instrument
 
@@ -253,10 +324,14 @@ def run(ctx: protocol_api.ProtocolContext):
                         )
     '''
     # Load left and right pipettes
-    p20 = ctx.load_instrument("p20_single_gen2", "left", tip_racks=tiprack20s)
-    p300 = ctx.load_instrument("p300_single_gen2", "right",
-                               tip_racks=tiprack200s)
-
+    pip_left = None
+    pip_right = None
+    if pip_left_lname:
+        pip_left = ctx.load_instrument(pip_left_lname, "left",
+                                       tip_racks=tipracks_left_pip)
+    if pip_right_lname:
+        pip_right = ctx.load_instrument(pip_right_lname, "right",
+                                        tip_racks=tipracks_right_pip)
     # pipette functions   # INCLUDE ANY BINDING TO CLASS
 
     '''
@@ -292,8 +367,13 @@ def run(ctx: protocol_api.ProtocolContext):
             pipette.pick_up_tip()
 
     '''
-    def drop_all_tips():
-        for pip in [p20, p300]:
+    def drop_all_tips(pipettes: list):
+        '''
+        Drops the pipette tips of all the tips in pipettes if the are
+        currently carrying them
+        :param pipettes: list of pipettes
+        '''
+        for pip in pipettes:
             if pip.has_tip:
                 pip.drop_tip()
 
@@ -382,7 +462,7 @@ def run(ctx: protocol_api.ProtocolContext):
             well = next(iter(self.labware_wells))
             # Treat plates like reservoirs and add 8 well volumes together
             vol = vol * 8 if self.pip_type == 'multi' else vol
-            if self.labware_wells[well] + vol >= self.well_vol:
+            if self.labware_wells[well] + vol > self.well_vol:
                 del self.labware_wells[well]
                 if len(self.labware_wells) < 1:
                     self.flash_lights()
@@ -399,7 +479,7 @@ def run(ctx: protocol_api.ProtocolContext):
                             .format(int(self.labware_wells[well]), well))
             return well
 
-    def rank_pipettes(pipettes):
+    def rank_pipettes(pipettes: list):
         '''
         Given a list of 2 pipettes (Where either may be None) this fn will
         return them in the order of smallest to largest. This function assumes
@@ -442,6 +522,7 @@ def run(ctx: protocol_api.ProtocolContext):
                            msg=("Out of End-repair enzyme, please replace "
                                 "reagent plate"))
 
+    # Reagent wells for mastermix 2: Adaptor ligation
     ALB_wells = VolTracker(yourgene_reagent_plate_I, ALB_vol_per_well,
                            ALB_start_index, ALB_end_index,
                            msg=("Out of End-repair enzyme, please replace "
@@ -456,14 +537,10 @@ def run(ctx: protocol_api.ProtocolContext):
                                    "replace reagent plate"))
 
     # Reagent wells for mastermix 3: PCR
-    PCR_mix_wells = [yourgene_reagent_plate_I.wells()[i]
-                     for i in PCR_mix_well_indices]
     PCR_mix_wells = VolTracker(yourgene_reagent_plate_I, PCR_mix_vol_per_well,
                                PCR_mix_start_index, PCR_mix_end_index,
                                msg=("Out of PCR mix, please "
                                     "replace reagent plate"))
-    primer_wells = [yourgene_reagent_plate_I.wells()[i]
-                    for i in primer_well_indices]
     primer_wells = VolTracker(yourgene_reagent_plate_I, primer_vol_per_well,
                               primer_start_index, primer_end_index,
                               msg=("Out of primers, please "
@@ -508,6 +585,46 @@ def run(ctx: protocol_api.ProtocolContext):
 
 
     '''
+    def create_mastermix(sources: list[VolTracker],
+                         reagent_volumes: list[float], messages: list[str]):
+        nonlocal pip_s, pip_l
+        for source, vol, msg in zip(sources,
+                                    reagent_volumes,
+                                    messages):
+            ctx.comment("Transferring End Repair {}".format(msg))
+            source_well_volume = source.get_remaining_well_vol()
+            while vol > 0:
+                pip_vol = (source_well_volume if
+                           source_well_volume < vol else vol)
+                pip = pip_s if pip_vol < pip_s.max_volume else pip_l
+                print("pip vol {}".format(pip_vol))
+                print(vol)
+                if not pip.has_tip:
+                    pip.pick_up_tip()
+                s_well = source.track(pip_vol)
+                pip.transfer(pip_vol, s_well, ER_mm_dest_tube, new_tip='never')
+                vol -= pip_vol
+            drop_all_tips([pip_s, pip_l])
+
     # PROTOCOL BEGINS HERE
-    pip_s, pip_l = rank_pipettes()
+    pip_s, pip_l = rank_pipettes([pip_left, pip_right])
     # 1st mastermix: End-repair
+    if is_create_end_repair_mm:
+        create_mastermix([ERB_wells, ERE_wells], reagent_volumes, messages)
+        for source, vol, msg in zip([ERB_wells, ERE_wells],
+                                    [total_ERB_mm_vol, total_ERE_mm_vol],
+                                    ["buffer", "enzyme"]):
+            ctx.comment("Transferring End Repair {}".format(msg))
+            source_well_volume = source.get_remaining_well_vol()
+            while vol > 0:
+                pip_vol = (source_well_volume if
+                           source_well_volume < vol else vol)
+                pip = pip_s if pip_vol < pip_s.max_volume else pip_l
+                print("pip vol {}".format(pip_vol))
+                print(vol)
+                if not pip.has_tip:
+                    pip.pick_up_tip()
+                s_well = source.track(pip_vol)
+                pip.transfer(pip_vol, s_well, ER_mm_dest_tube, new_tip='never')
+                vol -= pip_vol
+            drop_all_tips([pip_s, pip_l])
