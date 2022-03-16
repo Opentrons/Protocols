@@ -202,7 +202,7 @@ tipracks before resuming.')
     sample_volume = 2
     for src_set, dest_quadrant in zip(src_sets, pcr_dests_quadrants):
         for s, d in zip(src_set, dest_quadrant[:len(src_set)]):
-            m20.pick_up_tip()
+            _pick_up(m20)
             m20.transfer(sample_volume, s, d.bottom(1), new_tip='never')
             m20.drop_tip()
 
