@@ -14,6 +14,15 @@
   },
   {
     "type": "dropDown",
+    "label": "Mount Side",
+    "name": "mount_side",
+    "options": [
+      { "label": "Left", "value": "right" },
+      { "label": "Right", "value": "left" }
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "Tip Type",
     "name": "tip_type",
     "options": [
