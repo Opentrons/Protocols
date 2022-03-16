@@ -60,6 +60,15 @@
     "default": 150
   },
   {
+  "type": "dropDown",
+  "label": "Blank in Well Plate",
+  "name": "blank_on",
+  "options": [
+     { "label": "Yes", "value": 1 },
+     { "label": "No", "value": 0 }
+   ]
+  },
+  {
     "type": "dropDown",
     "label": "tip use strategy",
     "name": "tip_use_strategy",
@@ -67,5 +76,11 @@
       { "label": "use one tip", "value": "never" },
       { "label": "change tips", "value": "always" }
     ]
-  }
+  },
+  {
+    "type": "int",
+    "label": "volume of air gap",
+    "name": "air_gap_volume",
+    "default": 10
+  },
 ]
