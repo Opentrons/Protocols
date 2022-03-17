@@ -315,8 +315,8 @@ def run(ctx: protocol_api.ProtocolContext):
                     # perform transfer
                     # REVIEW: I think this was left here for debugging in the
                     # original protocol
-                    print("Well: ", well)
-                    print(str(well_h_track[i]))
+                    # print("Well: ", well)
+                    # print(str(well_h_track[i]))
                     well_height_track(i, v)
                     dispense_pos_wo_offset = well.bottom(well_h_track[i])
                     dispense_pos_w_offset = \
