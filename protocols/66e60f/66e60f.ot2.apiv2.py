@@ -437,7 +437,7 @@ def run(ctx: protocol_api.ProtocolContext):
             if air_gap_vol < remaining_vol else remaining_vol
         pip.air_gap(air_gap_vol)
         # Dispense into final well
-        pip.dispense(vol, dna_dest)
+        pip.dispense(vol + air_gap_vol, dna_dest)
         # Touch tip in the destination well
         pip.touch_tip()
         # Blow out DNA waste
