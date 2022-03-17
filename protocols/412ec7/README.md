@@ -1,76 +1,64 @@
-# Protocol Title (should match metadata of .py file)
+# Serial Dilution for Eskil
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
-### Partner
-[Partner Name](partner website link)
-
 ## Categories
-* Broader Category
-	* Subcategory (can be the name of a kit when applicable)
+* Serial Dilution
+	* Optional Temperature Module Serial Dilution
 
 ## Description
-This section of the README (especially the first paragraph) should grip a prospective user with the overarching purpose/flow of the protocol, but should not include fine details of the protocol steps themselves.
+With this protocol, you can do the requested serial dilution with or without a temperature module under the 96-well plate using an 8-channel P300 pipette. The dilution factor and choice of plate are also modifiable.
 
-Example: This is a flexible protocol accommodating a wide range of commercial RNA extraction workflows for COVID-19 sample processing. The protocol is broken down into 5 main parts:
-* binding buffer addition to samples
-* bead wash 3x using magnetic module
-* final elution to chilled PCR plate
+![serial dilution](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/customizable-serial-dilution/Customizable+Serial+Dilution+Illustration+LATEST+VERSION.jpg)
 
-Subsequent paragraphs can give some more insight into the details of the protocol, but a step-by-step description should be included in the 'Protocol Steps' section below.
+***Example Setup***
 
-Example: For sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 4) to the elution PCR plate (temperature module, slot 1). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.
+This protocol uses the inputs you define for "***Dilution Factor***" and "***Total Mixing Volume***" to automatically infer the necessary transfer volume for each dilution across your plate. For a 1 in 3 dilution series across an entire plate, as seen above:
 
-Results of the Opentrons Science team's internal testing of this protocol on the OT-2 are shown below:  
-![results](link_to_results.png)
+-- Start with your samples/reagents in Column 1 of your plate. In this example, you would pre-add 150 uL of concentrated sample to the first column of your 96-well plate.
 
-Explanation of complex parameters below:
-* `park tips`: If set to `yes` (recommended), the protocol will conserve tips between reagent addition and removal. Tips will be stored in the wells of an empty rack corresponding to the well of the sample that they access (tip parked in A1 of the empty rack will only be used for sample A1, tip parked in B1 only used for sample B1, etc.). If set to `no`, tips will always be used only once, and the user will be prompted to manually refill tipracks mid-protocol for high throughput runs.
-* `input .csv file`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:
-```
-source,dest,vol
-A1,B1,4
-```
+-- Define a ***Total Mixing Volume*** of 150uL, a ***Dilution Factor*** of 3, and set ***Number of Dilutions*** = 11.
 
----
+-- Your OT-2 will add 100uL of diluent to each empty well in your plate. Then it will transfer 50uL from Column 1 between each well/column in the plate.
 
-### Modules
-* [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
-* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
-* [Thermocycler Module](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module)
-* [HEPA Module](https://shop.opentrons.com/collections/hardware-modules/products/hepa-module)
+-- "***Total mixing volume***" = transfer volume + diluent volume.
 
-### Labware
-* [Labware name](link to labware on shop.opentrons.com when applicable)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+-- "Tip Use Strategy" will set whether a new tip will be used for every transfer or the same tip reused
 
-### Pipettes
-* [Pipette name](link to pipette on shop.opentrons.com)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+-- "Blank in Well Plate" will set whether a blank will be added to column 12
 
-### Reagents
-* [kit name when applicable](link to kit)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/customizable-serial-dilution/materials.png)
 
----
+-- [Opentrons OT-2](http://opentrons.com/ot-2)
+
+-- [Opentrons OT-2 Run App (Version 4.7 or later)](http://opentrons.com/ot-app)
+
+-- [Opentrons Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips-racks-9-600-tips) for selected Opentrons Pipette
+
+-- [12-Row, Automation-Friendly Trough](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/)
+
+-- [96-Well Plate](https://shop.opentrons.com/nest-96-well-plate-flat/) (found in our [Labware Library](https://labware.opentrons.com/?category=wellPlate))
+
+-- Diluent (Pre-loaded in row 1 of trough)
+
+-- Samples/Standards (Pre-loaded in Column 1 of a standard 96-well plate)
 
 ### Deck Setup
-* If the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)
 
-### Reagent Setup
-* This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:
-* Reservoir 1: slot 1
+DECK SETUP IMAGE HERE
 
----
+Slot 1: Nest 12 Well 15ml Reservoir
+Slot 2, 3: Opentrons 300ul Tiprack
+Slot 4: 96 Well Plate, with or without temperature module (specified in parameters)
 
 ### Protocol Steps
 1. Load labware as specified in protocol
 2. Load original, undiluted samples in column 1 in slot 4
 3. Diluent is added to specified number of columns starting at 2, continuing on until specified number of wells are prepped
-4. Specified amount of undiluted sample is transfered from column 1 to column 2. Specified amount in column 2 is transfered from column 2 to 3. This repeats as needed
-5. If requested, a blank is added to column 12 consisting of only diluent
+4. Specified amount of undiluted sample is transfered from column 1 to column 2. Column 2 is then mixed 5 times using all but 5ul of the resultant volume.
+5. 3 and 4 are repeated for number of dilutions e.g. column 2 is then added to 3 and mixed, 3 added to 4 and mixed, etc.
+6. If requested, a blank is added to column 12 consisting of only diluent (max number of dilutions with blank is 10)
 
 
 ### Process
