@@ -1,3 +1,4 @@
+"""DETAILS."""
 metadata = {
     'protocolName': 'Customizable Serial Dilution',
     'author': 'Opentrons <protocols@opentrons.com>',
@@ -7,6 +8,7 @@ metadata = {
 
 
 def run(protocol_context):
+    """PROTOCOL BODY."""
     [pipette_type, mount_side, tip_type, trough_type, plate_type,
         dilution_factor, num_of_dilutions, total_mixing_volume,
         blank_on, tip_use_strategy, air_gap_volume] = get_values(  # noqa: F821
@@ -26,7 +28,6 @@ def run(protocol_context):
     # labware
     trough = protocol_context.load_labware(
         trough_type, '2')
-    liquid_trash = trough.wells()[-1]
     plate = protocol_context.load_labware(
         plate_type, '3')
     if 'p20' in pipette_type:
