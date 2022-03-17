@@ -58,7 +58,7 @@ def run(protocol_context):
     tip_name = tiprack_map[pip_range][tip_type]
     tipracks = [
         protocol_context.load_labware(tip_name, slot)
-        for slot in ['1', '4', '5']
+        for slot in ['1', '4']
     ]
 
     # pipette
