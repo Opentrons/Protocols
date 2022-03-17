@@ -1,5 +1,6 @@
+"""ESKILS PROTOCOL."""
 metadata = {
-    'protocolName': 'Protocol Title',
+    'protocolName': 'Serial Dilution for Eskil',
     'author': 'John C. Lynch',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
@@ -7,7 +8,7 @@ metadata = {
 
 
 def run(ctx):
-
+    """LINTER."""
     [plate_type,
      temp_mod_on,
      dilution_factor,
@@ -57,7 +58,7 @@ def run(ctx):
     # load tipracks
     tiprack = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
-        for slot in ['2', '3', '5']
+        for slot in ['2', '3']
         ]
     # load instrument
     pipette = ctx.load_instrument(
