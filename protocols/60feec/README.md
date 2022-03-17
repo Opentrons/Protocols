@@ -17,6 +17,8 @@ This protocol preps a 96 well plate with DNA and water to normalize concentratio
 Explanation of complex parameters below:
 * `.CSV File`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:
 ![csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/60feec/Screen+Shot+2022-02-17+at+2.14.42+PM.png)
+* `DNA Plate`: Specify which of the three DNA plates you will be using for this run.
+![csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/60feec/Screen+Shot+2022-02-17+at+2.14.42+PM.png)
 * `P20/P300 Mount`: Specify which mount (left or right) to host your P20 and P300 pipettes, respectively.
 
 ---
@@ -27,6 +29,7 @@ Explanation of complex parameters below:
 * [NEST 0.1 mL 96-Well PCR Plate, Full Skirt](https://shop.opentrons.com/nest-0-1-ml-96-well-pcr-plate-full-skirt/)
 * [Opentrons 20ul Filter tips](https://shop.opentrons.com/universal-filter-tips/)
 * [Opentrons 200ul Filter tips](https://shop.opentrons.com/universal-filter-tips/)
+* Custom 96 well plates, plates with strip tubes
 
 ### Pipettes
 * [Opentrons P20 Single-Channel Pipette](https://shop.opentrons.com/pipettes/)

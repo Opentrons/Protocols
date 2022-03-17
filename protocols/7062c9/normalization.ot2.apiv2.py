@@ -32,6 +32,8 @@ def run(ctx):
         p300._implementation.get_mount()].update_config_item(
             'pick_up_current', 0.1)
 
+    p300.flow_rate.dispense /= 5
+
     # reagents
     water = tuberack.wells()[0]
     buffer = tuberack.wells()[1]

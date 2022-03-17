@@ -339,6 +339,7 @@ minutes')
             loc = m.bottom().move(Point(x=side*radius*radial_offset,
                                         z=z_offset+2))
             m300.move_to(m.center())
+            m300.flow_rate.dispense /= 5
             m300.transfer(0.8*vol, loc, e, air_gap=air_gap_vol,
                           new_tip='never')
             m300.drop_tip()
