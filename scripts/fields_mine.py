@@ -20,7 +20,7 @@ def mine_fields():
                         else:
                             all_fields[name] += 1
 
-    out_path = 'data/fields.csv'
+    out_path = 'data/data/fields.csv'
     with open(out_path, 'w') as out_file:
         field_writer = csv.writer(out_file)
         field_writer.writerows(
