@@ -204,7 +204,10 @@ def run(ctx):
                         v = float(d[0])
                         pip.dispense(v, d[1].height_inc(v))
                     disp = []
-                    pip.dispense(disposal, water.height_inc(disposal))
+                    water.liq_vol += disposal
+                    ht = liq_height(
+                     water) - 3 if liq_height(water) - 3 > 1 else 1
+                    pip.dispense(disposal, water.bottom(ht))
                     in_tip = 0
                     water.liq_vol -= disposal
                     ht = liq_height(
