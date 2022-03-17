@@ -50,7 +50,7 @@ DECK SETUP IMAGE HERE
 
 Slot 1: Nest 12 Well 15ml Reservoir
 
-Slot 2: 3: Opentrons 300ul Tiprack
+Slot 2 and 3: Opentrons 300ul Tiprack
 
 Slot 4: 96 Well Plate, with or without temperature module (specified in parameters)
 
