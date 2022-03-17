@@ -25,8 +25,14 @@
   },
   {
     "type": "float",
-    "label": "Aspiration height from bottom of the plate wells [mm]",
+    "label": "Aspiration height from bottom of the source plate wells [mm]",
     "name": "aspiration_height_plate",
+    "default": 1
+  },
+  {
+    "type": "float",
+    "label": "Dispensing height from bottom of the target plate wells [mm]",
+    "name": "dispensing_height_plate",
     "default": 1
   },
   {

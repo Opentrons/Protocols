@@ -62,7 +62,7 @@
       "type": "float",
       "label": "Pipette offset",
       "name": "pipette_offset",
-      "default": 0
+      "default": 0.1
   },
   {
     "type": "dropDown",
@@ -111,7 +111,7 @@
     "label": "Use temperature module?",
     "name": "temp_mod_lname",
     "options": [
-      { "label": "No temperature module", "value": false},
+      { "label": "Don't use the module", "value": false},
       { "label": "Use Temperature module GEN2", "value": "temperature module gen2"}
     ]
   },

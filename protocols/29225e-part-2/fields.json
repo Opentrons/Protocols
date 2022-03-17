@@ -1,5 +1,11 @@
 [
   {
+    "type": "float",
+    "label": "Sideways Move to Blow Out at Side of Well (mm)",
+    "name": "move_side",
+    "default": 2
+  },
+  {
     "type": "dropDown",
     "label": "Cherry Pick Samples? (yes or no)",
     "name": "sample_cherrypicking",
