@@ -19,6 +19,9 @@ def run(ctx: protocol_api.ProtocolContext):
         "_p1000_mount",
         "_p20_mount")
 
+    p20_mount = 'left'
+    p1000_mount = 'right'
+
     # VARIABLES
     csv = _csv
     p20_mount = _p20_mount
@@ -34,9 +37,9 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # TIPRACKS
     tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-                 for slot in ['8', '11']]
+                 for slot in ['5', '6', '8', '9']]
     tiprack1000 = [ctx.load_labware('opentrons_96_tiprack_1000ul', slot)
-                   for slot in ['10']]
+                   for slot in ['7', '10', '11']]
 
     # INSTRUMENTS
     p20 = ctx.load_instrument('p20_single_gen2',
@@ -55,28 +58,77 @@ def run(ctx: protocol_api.ProtocolContext):
     p1000.flow_rate.aspirate = 0.75*p1000.flow_rate.aspirate
     p1000.flow_rate.dispense = 0.75*p1000.flow_rate.dispense
 
+    def mix(pipette, mix_reps, mix_vol, tube, s_or_d):
+        pipette.pick_up_tip()
+        pipette.mix(mix_reps, mix_vol, tube)
+        if s_or_d == 'd':
+            pipette.blow_out()
+            pipette.touch_tip()
+            pipette.aspirate(4, tube.top())
+
+        if p1000.has_tip:
+            p1000.drop_tip()
+        if p20.has_tip:
+            p20.drop_tip()
+
     # protocol
     for row in csv_rows:
-        tube_type, source_slot, source_well, transfer_vol, dest_slot, dest_well = row[1:7]  # noqa: E501
-        asp_percent = row[9]
-        if int(transfer_vol) > 100:
+        tube_type, source_slot, source_well, transfer_vol, dest_slot, \
+            dest_well = row[1:7]  # noqa: E501
+
+        mix_reps, mix_vol, mix_or_not, asp_percent, disp_percent = row[9:14]
+        if int(transfer_vol) >= 100:
             pip = p1000
         else:
             pip = p20
+
         source = ctx.loaded_labwares[int(source_slot)].wells_by_name()[
                                         source_well]
         dest = ctx.loaded_labwares[int(dest_slot)].wells_by_name()[
                                         dest_well]
         asp_height = source.depth*int(asp_percent)/100
+        disp_height = source.depth*int(disp_percent)/100
+        mix_reps = int(mix_reps)
+        mix_vol = int(mix_vol)
 
-        pip.pick_up_tip()
-        pip.transfer(int(transfer_vol),
-                     source.bottom(z=asp_height),
-                     dest.top(),
-                     blowout_location='destination well',
-                     air_gap=5,
-                     touch_tip=True,
-                     new_tip='never')
-        pip.blow_out()
-        pip.drop_tip()
+        if mix_or_not.lower() == 's' and mix_reps > 0:
+            if int(mix_vol) >= 20:
+                mix(p1000, mix_reps, mix_vol, source, mix_or_not.lower())
+            else:
+                mix(p20, mix_reps, mix_vol, source, mix_or_not.lower())
+
+        try:
+            pip.transfer(int(transfer_vol),
+                         source.bottom(z=asp_height),
+                         dest.bottom(z=disp_height),
+                         blow_out=True,
+                         blowout_location='destination well',
+                         air_gap=5,
+                         touch_tip=True,
+                         new_tip='always')
+
+            if mix_or_not.lower() == 'd' and mix_reps > 0:
+                if int(mix_vol) >= 20:
+                    mix(p1000, mix_reps, mix_vol, source, mix_or_not.lower())
+                else:
+                    mix(p20, mix_reps, mix_vol, source, mix_or_not.lower())
+
+        except protocol_api.labware.OutOfTipsError:
+            ctx.pause("Replace empty tip racks")
+            pip.reset_tipracks()
+            pip.transfer(int(transfer_vol),
+                         source.bottom(z=asp_height),
+                         dest.bottom(z=disp_height),
+                         blow_out=True,
+                         blowout_location='destination well',
+                         air_gap=5,
+                         touch_tip=True,
+                         new_tip='always')
+
+            if mix_or_not.lower() == 'd' and mix_reps > 0:
+                if int(mix_vol) >= 20:
+                    mix(p1000, mix_reps, mix_vol, source, mix_or_not.lower())
+                else:
+                    mix(p20, mix_reps, mix_vol, source, mix_or_not.lower())
+
         ctx.comment('\n')

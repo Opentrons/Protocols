@@ -1,6 +1,7 @@
 import glob
 # import logging
 import os
+import shutil
 import json
 from pathlib import Path
 from traversals import PROTOCOLS_BUILD_DIR, PROTOCOL_DIR
@@ -89,6 +90,45 @@ def get_status(file_data):
     return 'error' if errors else 'ok'
 
 
+def check_py(files):
+    for file in files:
+        if 'ot2.apiv2.py' in file:
+            return True
+    return False
+
+
+def check_README(files):
+    for file in files:
+        if file == 'README.md':
+            return True
+    return False
+
+
+def check_fields(files):
+    for file in files:
+        if file == 'fields.json':
+            return True
+    return False
+
+
+def check_empty(folder):
+    files = os.listdir(folder)
+    return not (check_py(files) or check_README(files) or check_fields(files))
+
+
+def delete_empty_folder(folder):
+    protocols_folder = f'{PROTOCOL_DIR}/{folder}'
+    protobuilds_folder = f'{PROTOCOLS_BUILD_DIR}/{folder}'
+    if check_empty(protocols_folder):
+        shutil.rmtree(protocols_folder)
+        if os.path.isdir(protobuilds_folder):
+            shutil.rmtree(protobuilds_folder)
+        print(f'Deleting {protocols_folder}, {protobuilds_folder} \
+(no relevant files)')
+        return True
+    return False
+
+
 def write_metadata_to_file(protocol_path):
     """
     Function to write metadata to the relative path
@@ -102,18 +142,20 @@ def write_metadata_to_file(protocol_path):
             root = proto_dir.name
             file_names = [f.name for f in proto_dir.iterdir()]
             build_path = Path(PROTOCOLS_BUILD_DIR) / root
-            metadata_output_path = build_path / 'metadata.json'
+            empty = delete_empty_folder(root)
+            if not empty:
+                metadata_output_path = build_path / 'metadata.json'
 
-            if not build_path.is_dir():
-                os.mkdir(build_path)
+                if not build_path.is_dir():
+                    os.mkdir(build_path)
 
-            metadata = generate_metadata(root, protocol_path, file_names)
+                metadata = generate_metadata(root, protocol_path, file_names)
 
-            with open(metadata_output_path, 'w') as metadata_file:
-                json.dump(
-                    {**metadata,
-                     'status': get_status(metadata)},
-                    metadata_file, indent=4, sort_keys=True)
+                with open(metadata_output_path, 'w') as metadata_file:
+                    json.dump(
+                        {**metadata,
+                         'status': get_status(metadata)},
+                        metadata_file, indent=4, sort_keys=True)
 
 
 if __name__ == '__main__':
