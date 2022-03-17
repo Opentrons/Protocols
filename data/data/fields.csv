@@ -1,11 +1,11 @@
 _csv,3
-_dest_module,2
+_dest_module,3
 _dp_type,1
 _dye_type,1
 _elution_vol,1
 _filter_tips,1
-_m20_mount,5
-_m300_mount,2
+_m20_mount,6
+_m300_mount,3
 _mag_height,1
 _mbl5_vol,1
 _mm_transfer_vol,1
@@ -17,10 +17,10 @@ _p20_mount,3
 _p300_mount,1
 _pip_model,1
 _pip_mount,1
-_samp_cols,1
+_samp_cols,3
 _samp_labware,1
 _source_type,2
-_src_module,2
+_src_module,3
 _tc_cycles,1
 _use_temp_mod,1
 a1_init_vol,1
