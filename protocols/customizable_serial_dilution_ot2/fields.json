@@ -28,8 +28,8 @@
     "label": "Tip Type",
     "name": "tip_type",
     "options": [
-      { "label": "Non-Filtered", "value": 0 },
-      { "label": "Filter", "value": 1 }
+      { "label": "Non-Filtered", "value": "standard" },
+      { "label": "Filter", "value": "filter" }
     ]
   },
   {
@@ -75,8 +75,8 @@
   "label": "Blank in Well Plate",
   "name": "blank_on",
   "options": [
-     { "label": "Yes", "value": 1 },
-     { "label": "No", "value": 0 }
+     { "label": "Yes", "value": true },
+     { "label": "No", "value": false }
    ]
   },
   {

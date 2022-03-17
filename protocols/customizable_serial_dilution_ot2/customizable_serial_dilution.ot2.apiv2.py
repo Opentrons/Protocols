@@ -25,100 +25,102 @@ def run(protocol_context):
         raise Exception(
                         'No room for blank with 11 dilutions')
 
+    pip_range = pipette_type.split('_')[0].lower()
+
+    tiprack_map = {
+        'p10': {
+            'standard': 'opentrons_96_tiprack_10ul',
+            'filter': 'opentrons_96_filtertiprack_20ul'
+        },
+        'p20': {
+            'standard': 'opentrons_96_tiprack_20ul',
+            'filter': 'opentrons_96_filtertiprack_20ul'
+        },
+        'p50': {
+            'standard': 'opentrons_96_tiprack_300ul',
+            'filter': 'opentrons_96_filtertiprack_200ul'
+        },
+        'p300': {
+            'standard': 'opentrons_96_tiprack_300ul',
+            'filter': 'opentrons_96_filtertiprack_200ul'
+        },
+        'p1000': {
+            'standard': 'opentrons_96_tiprack_1000ul',
+            'filter': 'opentrons_96_filtertiprack_1000ul'
+        }
+    }
+
     # labware
     trough = protocol_context.load_labware(
         trough_type, '2')
     plate = protocol_context.load_labware(
         plate_type, '3')
-    if 'p20' in pipette_type:
-        tip_name = 'opentrons_96_filtertiprack_20ul' if tip_type \
-            else 'opentrons_96_tiprack_20ul'
-    else:
-        tip_name = 'opentrons_96_filtertiprack_200ul' if tip_type \
-            else 'opentrons_96_tiprack_300ul'
-    tiprack = [
+    tip_name = tiprack_map[pip_range][tip_type]
+    tipracks = [
         protocol_context.load_labware(tip_name, slot)
         for slot in ['1', '4', '5']
     ]
 
+    # pipette
     pipette = protocol_context.load_instrument(
-        pipette_type, mount=mount_side, tip_racks=tiprack)
+        pipette_type, mount=mount_side, tip_racks=tipracks)
+
+    # reagents
+    diluent = trough.wells()[0]
 
     transfer_volume = total_mixing_volume/dilution_factor
     diluent_volume = total_mixing_volume - transfer_volume
 
     if 'multi' in pipette_type:
+        dilution_destination_sets = [
+            [row] for row in plate.rows()[0][1:num_of_dilutions]]
+        dilution_source_sets = [
+            [row] for row in plate.rows()[0][:num_of_dilutions-1]]
+        blank_set = [plate.rows()[0][num_of_dilutions+1]]
 
+    else:
+        dilution_destination_sets = plate.columns()[1:num_of_dilutions]
+        dilution_source_sets = plate.columns()[:num_of_dilutions-1]
+        blank_set = plate.columns()[num_of_dilutions]
+
+    all_diluent_destinations = [
+        well for set in dilution_destination_sets for well in set]
+
+    pipette.pick_up_tip()
+    for dest in all_diluent_destinations:
         # Distribute diluent across the plate to the the number of samples
         # And add diluent to one column after the number of samples for a blank
         pipette.transfer(
                 diluent_volume,
-                trough.wells()[0],
-                plate.rows()[0][1:num_of_dilutions],
+                diluent,
+                dest,
                 air_gap=air_gap_volume,
-                new_tip=tip_use_strategy
-                )
+                new_tip='never')
+    pipette.drop_tip()
 
-        # Di lution of samples across the 96-well flat bottom plate
-
-        if tip_use_strategy == 'never':
-            pipette.pick_up_tip()
-        for s, d in zip(
-                    plate.rows()[0][:num_of_dilutions-1],
-                    plate.rows()[0][1:num_of_dilutions]
-        ):
+    # Dilution of samples across the 96-well flat bottom plate
+    if tip_use_strategy == 'never':
+        pipette.pick_up_tip()
+    for source_set, dest_set in zip(dilution_source_sets,
+                                    dilution_destination_sets):
+        for s, d in zip(source_set, dest_set):
             pipette.transfer(
                     transfer_volume,
                     s,
                     d,
                     air_gap=air_gap_volume,
                     mix_after=(5, total_mixing_volume/2),
-                    new_tip=tip_use_strategy
-                    )
-        if tip_use_strategy == 'never':
-            pipette.drop_tip()
+                    new_tip=tip_use_strategy)
+    if tip_use_strategy == 'never':
+        pipette.drop_tip()
 
-        if blank_on == 1:
+    if blank_on:
+        pipette.pick_up_tip()
+        for blank_well in blank_set:
             pipette.transfer(
                     diluent_volume,
-                    trough.wells()[0],
-                    plate.rows()[0][num_of_dilutions+1],
+                    diluent,
+                    blank_well,
                     air_gap=air_gap_volume,
-                    new_tip=tip_use_strategy
-                )
-        # Single Pipette
-    else:
-        # Distribute diluent across the plate to the the number of samples
-        # And add diluent to one column after the number of samples for a blank
-        if tip_use_strategy == 'never':
-            pipette.pick_up_tip()
-
-        pipette.transfer(
-                    diluent_volume,
-                    trough.wells()[0],
-                    plate.rows()[0:7][1:num_of_dilutions],
-                    air_gap=air_gap_volume,
-                    new_tip=tip_use_strategy
-                    )
-
-        # Transfer
-        total_transfer_wells = (num_of_dilutions*8)
-        for x in range(total_transfer_wells):
-            pipette.transfer(
-                        transfer_volume,
-                        plate.wells()[x],
-                        plate.wells()[x+8],
-                        air_gap=air_gap_volume,
-                        new_tip=tip_use_strategy,
-                        mix_after=(3, total_mixing_volume/2)
-                        )
-
-        if blank_on == 1:
-            for x in range(total_transfer_wells+8, total_transfer_wells+16):
-                pipette.transfer(
-                        diluent_volume,
-                        trough.wells()[0],
-                        plate.wells()[x],
-                        air_gap=air_gap_volume,
-                        new_tip=tip_use_strategy
-                    )
+                    new_tip='never')
+        pipette.drop_tip()
