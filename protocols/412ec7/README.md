@@ -38,7 +38,7 @@ This protocol uses the inputs you define for "***Dilution Factor***" and "***Tot
 
 -- [12-Row, Automation-Friendly Trough](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/)
 
--- [96-Well Plate](https://shop.opentrons.com/nest-96-well-plate-flat/) (found in our [Labware Library](https://labware.opentrons.com/?category=wellPlate))
+-- 96-Well Plate, Bio-Rad or NEST full skirted plates or equivalent aluminum block plates
 
 -- Diluent (Pre-loaded in row 1 of trough)
 
@@ -49,7 +49,9 @@ This protocol uses the inputs you define for "***Dilution Factor***" and "***Tot
 DECK SETUP IMAGE HERE
 
 Slot 1: Nest 12 Well 15ml Reservoir
-Slot 2, 3: Opentrons 300ul Tiprack
+
+Slot 2: 3: Opentrons 300ul Tiprack
+
 Slot 4: 96 Well Plate, with or without temperature module (specified in parameters)
 
 ### Protocol Steps
