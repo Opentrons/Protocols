@@ -68,16 +68,16 @@ def run(ctx):
         used = tferspercol*channels*transfer_vol
         remaining = total
         for column in columns:
+            last = remaining
             for well in column:
                 if remaining > used:
                     well.liq_vol = welldead + tferspercol*transfer_vol*(
                      channels / wellspercol)
                     remaining -= used / wellspercol
-                    last = remaining
                 else:
                     if remaining > 0:
                         well.liq_vol = welldead + (last / wellspercol)
-                        remaining -= used / wellspercol
+                        remaining -= remaining / wellspercol
                     else:
                         well.liq_vol = 0
         for column in columns:
@@ -181,7 +181,7 @@ def run(ctx):
         p300m.air_gap(20)
         p300m.aspirate(
          50, column[0].bottom(1).move(types.Point(
-          x={True: 1}.get(not index % 2, -1)*offset_x, y=0, z=0)), rate=0.33)
+          x={True: -1}.get(not index % 2, 1)*offset_x, y=0, z=0)), rate=0.33)
         p300m.dispense(70, waste.top(), rate=2)
         ctx.delay(seconds=1)
         p300m.blow_out()
@@ -206,8 +206,8 @@ def run(ctx):
         # remove sup
         for index, column in enumerate(mag_plate.columns()[:num_cols]):
             pick_up_or_refill(p300m, 300)
-            loc = column[0].bottom(1).move(types.Point(x={True: 1}.get(
-              not index % 2, -1)*offset_x, y=0, z=0))
+            loc = column[0].bottom(1).move(types.Point(x={True: -1}.get(
+              not index % 2, 1)*offset_x, y=0, z=0))
             p300m.aspirate(180, column[0].bottom(4), rate=0.33)
             p300m.aspirate(50, loc, rate=0.33)
             p300m.air_gap(20)
@@ -227,7 +227,7 @@ def run(ctx):
         p20m.pick_up_tip()
         p20m.aspirate(16, tris.bottom(clearance_reservoir))
         loc = column[0].bottom(clearance_bead_resuspension).move(types.Point(
-          x={True: -1}.get(not index % 2, 1)*offset_x_resuspension, y=0, z=0))
+          x={True: 1}.get(not index % 2, -1)*offset_x_resuspension, y=0, z=0))
         p20m.dispense(16, loc, rate=3)
         for rep in range(10):
             p20m.aspirate(16, column[0].bottom(1))
@@ -252,7 +252,7 @@ def run(ctx):
         pick_up_or_refill(p20m)
         p20m.transfer(
          14, column[0].bottom().move(types.Point(
-          x={True: 1}.get(not index % 2, -1)*offset_x, y=0, z=0)),
+          x={True: -1}.get(not index % 2, 1)*offset_x, y=0, z=0)),
          plate2.columns()[index][0],
          mix_after=(5, 11), new_tip='never')
         p20m.drop_tip()

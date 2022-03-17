@@ -16,15 +16,19 @@ metadata = {
 
 def run(ctx):
 
-    [sample_cherrypicking, vol_h2o, labware_mm, labware_samp,
+    [move_side, sample_cherrypicking, vol_h2o, labware_mm, labware_samp,
      labware_pcr, clearance_mm, clearance_samp, clearance_pcr,
      uploaded_csv_mastermix, uploaded_csv] = get_values(  # noqa: F821
-        "sample_cherrypicking", "vol_h2o", "labware_mm",
+        "move_side", "sample_cherrypicking", "vol_h2o", "labware_mm",
         "labware_samp", "labware_pcr", "clearance_mm", "clearance_samp",
         "clearance_pcr", "uploaded_csv_mastermix", "uploaded_csv")
 
     ctx.set_rail_lights(True)
     ctx.delay(seconds=10)
+
+    if not -4 <= move_side <= 4:
+        raise Exception(
+         'Sideways move must be between 0 and 4 mm.')
 
     if not 100 <= vol_h2o <= 1000:
         raise Exception(
@@ -334,9 +338,10 @@ def run(ctx):
         pip20.aspirate(
          vol, samps[int(tfer['source plate or rack'])-1].wells_by_name()[
           tfer['source well']].bottom(clearance_samp))
-        pip20.dispense(
-         vol, pcr_plate.wells_by_name()[
-          tfer['dest well']].bottom(clearance_pcr))
-        pip20.mix(6, 10)
-        pip20.blow_out()
+        loc = pcr_plate.wells_by_name()[tfer['dest well']]
+        pip20.dispense(vol, loc.bottom(clearance_pcr))
+        for rep in range(3):
+            pip20.aspirate(10, loc.bottom(1), rate=0.5)
+            pip20.dispense(10, loc.bottom(4), rate=0.5)
+        pip20.blow_out(loc.bottom(6).move(types.Point(x=move_side, y=0, z=0)))
         pip20.drop_tip()

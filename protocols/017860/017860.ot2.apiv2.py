@@ -1,6 +1,7 @@
 from opentrons import protocol_api
 import csv
 import math
+from opentrons.types import Point
 
 metadata = {
     'protocolName': 'CSV Plate Filling - Upgrade for OT2',
@@ -17,13 +18,15 @@ def run(ctx: protocol_api.ProtocolContext):
      tuberack_mixed_lname,
      tiprack_lname_20_ul,
      tiprack_lname_300ul,
-     n_plates] = get_values(  # noqa: F821
+     n_plates,
+     dispense_offset] = get_values(  # noqa: F821
      "input_csv",
      "tuberacks_15_lname",
      "tuberack_mixed_lname",
      "tiprack_lname_20_ul",
      "tiprack_lname_300ul",
-     "n_plates")
+     "n_plates",
+     "dispense_offset")
 
     if not 0 < n_plates < 7:
         raise Exception(("The number of plates are {}, but should be between "
@@ -312,9 +315,14 @@ def run(ctx: protocol_api.ProtocolContext):
                     # perform transfer
                     # REVIEW: I think this was left here for debugging in the
                     # original protocol
+                    # print("Well: ", well)
                     # print(str(well_h_track[i]))
                     well_height_track(i, v)
-                    p20.dispense(v, well.bottom(well_h_track[i]))
+                    dispense_pos_wo_offset = well.bottom(well_h_track[i])
+                    dispense_pos_w_offset = \
+                        dispense_pos_wo_offset.move(
+                            Point(0, 0, dispense_offset))
+                    p20.dispense(v, dispense_pos_w_offset)
                     pip_v_track -= v
 
                     # REVIEW: Commented out in the original protocol

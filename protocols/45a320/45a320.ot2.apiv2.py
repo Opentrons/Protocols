@@ -85,6 +85,7 @@ def run(ctx):
     # incubate for 10 minutes
     ctx.comment('\n\nIncubating and Adding Isopropanol\n')
     ctx.delay(minutes=10)
+    p1000.home()
     ctx.pause('''
               Incubation complete. Please ensure empty tubes have binding
               columns prepped. Select "Resume" on the Opentrons App to continue
@@ -102,6 +103,7 @@ def run(ctx):
         p1000.blow_out()
         p1000.drop_tip()
 
+    p1000.home()
     ctx.pause('''
             Centrifuge samples with binding columns for 1 minute at 15000 RPM.
             Remove the binding column/collection tube from the centrifuge.
@@ -118,6 +120,7 @@ def run(ctx):
         for tube in final_tubes_pt2:
             p1000.aspirate(500, wash_solution)
             p1000.dispense(500, tube.top())
+            p1000.home()
         ctx.pause('''
                 Recap samples, centrifuge for approximately 1 minute at
                 approximately 15000 RPM. Discard the collection tube
@@ -126,6 +129,7 @@ def run(ctx):
                 and select "Resume".
                 ''')
     p1000.drop_tip()
+    p1000.home()
     ctx.pause('''
             Please ensure that empty tubes are on the even columns of the final
             tube rack on Slot 2. Select "Resume" on the Opentrons App for
@@ -142,6 +146,7 @@ def run(ctx):
         p1000.blow_out()
         p1000.touch_tip()
     p1000.drop_tip()
+    p1000.home()
 
     ctx.pause('''
             Place binding column in tubes populated with nuclease free water.
@@ -159,6 +164,7 @@ def run(ctx):
         p1000.blow_out()
         p1000.touch_tip()
     p1000.drop_tip()
+    p1000.home()
     ctx.pause('''
             Centrifuge tubes for approximately 1 minute at 1500 RPM.
             Be careful with the 1.5 ml tube caps.
@@ -178,7 +184,7 @@ def run(ctx):
     airgap = 4
     col_counter = 0
     for i, elute in enumerate(final_tubes_pt2[:num_samp]):
-
+        ctx.comment('hello')
         if i % 2 == 0:
             chunks = chunks_A
 
@@ -189,7 +195,7 @@ def run(ctx):
 
         p20.pick_up_tip()
         for chunk in chunks[col_counter*8:col_counter*8+8]:
-            p20.aspirate(20, elute)
+            p20.aspirate(20, elute.bottom(z=-13.91))
             p20.touch_tip()
             for well in chunk:
                 if well == final_plate_384.wells_by_name()["O23"]:
@@ -198,7 +204,7 @@ def run(ctx):
                     continue
                 p20.dispense(4, well)
             p20.air_gap(airgap)
-            p20.dispense(4+airgap, elute)
+            p20.dispense(4+airgap, elute.bottom(z=-13.91))
             p20.blow_out()
         p20.drop_tip()
         ctx.comment('\n\n')

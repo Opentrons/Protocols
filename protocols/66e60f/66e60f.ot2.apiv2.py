@@ -10,6 +10,20 @@ metadata = {
 }
 
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{
+                                  "input_csv":"Plate,Well,SampleID,Concentration,VolumeToDispense\\nB,A3,SAMPLE113,10.5,13.2\\nA,A1,SAMPLE1,10.5,13.2\\nA,A2,SAMPLE9,10.5,13.2\\nA,A3,SAMPLE2,3,30.2\\nA,H12,SAMPLE96,16.7,7.5\\nB,A1,SAMPLE97,18.2,5.6\\nB,H12,SAMPLE192,16.0,8.1",
+                                  "source_type":"biorad_96_wellplate_200ul_pcr",
+                                  "dest_type":"biorad_96_wellplate_200ul_pcr",
+                                  "tuberack_type":"opentrons_24_tuberack_nest_1.5ml_snapcap",
+                                  "p300_type":"p300_multi_gen2",
+                                  "air_gap_vol":5
+                                  }
+                                  """)
+    return [_all_values[n] for n in names]
+
+
 def run(ctx: protocol_api.ProtocolContext):
 
     [input_csv,
@@ -361,8 +375,8 @@ def run(ctx: protocol_api.ProtocolContext):
         elif plate == 'B':
             well_list_B.append(well)
         else:
-            raise Exception(("The plate name on line {} in the csv " +
-                             "seems malformed: {}").
+            raise Exception(("The plate name on line {} in the csv "
+                             + "seems malformed: {}").
                             format(i, plate))
         i += 1
 
@@ -415,8 +429,8 @@ def run(ctx: protocol_api.ProtocolContext):
             if plate == 'A' else dna_sample_plate_B[well]
         dna_dest = final_plate_A[well] if plate == 'A' else final_plate_B[well]
 
-        ctx.comment(("Normalizing sample \"{}\" on plate {} with " +
-                    "concentration {}").format(sampleID, plate, conc))
+        ctx.comment(("Normalizing sample \"{}\" on plate {} with "
+                    + "concentration {}").format(sampleID, plate, conc))
         pip = p20
 
         if plate == 'A':
@@ -426,18 +440,26 @@ def run(ctx: protocol_api.ProtocolContext):
         else:
             raise Exception("Invalid plate specified: {}".format(plate))
         # Remove water from the final plates and dispense into waste tubes
-        pip.aspirate(vol, dna_dest)
-        pip.dispense(vol, water_waste_tube_tracker.track(vol))
+        remaining_water_vol = vol
+        while remaining_water_vol > 0:
+            aspiration_vol = remaining_water_vol \
+                if remaining_water_vol < pip.max_volume else pip.max_volume
+            pip.aspirate(aspiration_vol, dna_dest)
+            pip.dispense(aspiration_vol, water_waste_tube_tracker.track(vol))
+            remaining_water_vol -= aspiration_vol
         pip.blow_out()
         pip.touch_tip()
-        # Aspirate DNA sample
-        pip.aspirate(vol, dna_source)
-        remaining_vol = pip.max_volume - vol
-        air_gap_vol = air_gap_vol \
-            if air_gap_vol < remaining_vol else remaining_vol
-        pip.air_gap(air_gap_vol)
-        # Dispense into final well
-        pip.dispense(vol, dna_dest)
+        # Aspirate DNA sample using the same tip
+        remaining_dna_vol = vol
+        max_asp_vol = pip.max_volume - air_gap_vol
+        while remaining_dna_vol > 0:
+            aspiration_vol = remaining_dna_vol \
+                if remaining_dna_vol < max_asp_vol else max_asp_vol
+            pip.aspirate(aspiration_vol, dna_source)
+            pip.air_gap(air_gap_vol)
+            # Dispense into final well
+            pip.dispense(aspiration_vol + air_gap_vol, dna_dest)
+            remaining_dna_vol -= aspiration_vol
         # Touch tip in the destination well
         pip.touch_tip()
         # Blow out DNA waste
@@ -450,8 +472,8 @@ def run(ctx: protocol_api.ProtocolContext):
         rack.reset()
 
     ctx.pause(
-        "[Off deck] Seal the plates, vortex the plates, brief spin, " +
-        "remove seal, replace the plates back to the deck\n")
+        "[Off deck] Seal the plates, vortex the plates, brief spin, "
+        + "remove seal, replace the plates back to the deck\n")
     ctx.comment("Transferring 5 uL diluted DNA samples to DNA pool tube\n\n")
     for plate, well, _, _, _ in sorted_data:
         well = final_plate_A.wells_by_name()[well] if plate == 'A' \
@@ -463,10 +485,8 @@ def run(ctx: protocol_api.ProtocolContext):
         else:
             raise Exception("Invalid plate specified: {}".format(plate))
         pip.aspirate(5, well)
-        air_gap_vol = air_gap_vol \
-            if air_gap_vol < remaining_vol else remaining_vol
         pip.air_gap(air_gap_vol)
-        pip.dispense(vol, dna_pool_tube)
+        pip.dispense(vol+air_gap_vol, dna_pool_tube)
         pip.blow_out()
         pip.touch_tip()
         pip.drop_tip()

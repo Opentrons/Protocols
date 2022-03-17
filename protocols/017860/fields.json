@@ -46,5 +46,11 @@
       "label": "Number of plates",
       "name": "n_plates",
       "default": 6
+  },
+  {
+    "type": "float",
+    "label": "Height offset for dispensing antibiotics into target wells [mm]",
+    "name": "dispense_offset",
+    "default": 1.5
   }
 ]
