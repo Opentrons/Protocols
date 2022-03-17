@@ -40,15 +40,13 @@ def run(protocol_context):
         for slot in ['1', '4', '5']
     ]
 
-    pip_name = pipette_type.split('_')[1]
-
     pipette = protocol_context.load_instrument(
         pipette_type, mount=mount_side, tip_racks=tiprack)
 
     transfer_volume = total_mixing_volume/dilution_factor
     diluent_volume = total_mixing_volume - transfer_volume
 
-    if pip_name == 'multi':
+    if 'multi' in pipette_type:
 
         # Distribute diluent across the plate to the the number of samples
         # And add diluent to one column after the number of samples for a blank
