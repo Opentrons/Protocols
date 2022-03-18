@@ -1,1271 +1,1271 @@
-_csv,3
-_dest_module,2
-_dp_type,1
-_dye_type,1
-_elution_vol,1
-_filter_tips,1
-_m20_mount,5
-_m300_mount,2
-_mag_height,1
-_mbl5_vol,1
-_mm_transfer_vol,1
-_num_col,3
-_num_samp,1
-_num_samps,2
-_p1000_mount,1
-_p20_mount,3
-_p300_mount,1
-_pip_model,1
-_pip_mount,1
-_samp_cols,1
-_samp_labware,1
-_source_type,2
-_src_module,2
-_tc_cycles,1
-_use_temp_mod,1
-a1_init_vol,1
-a3_init_vol,1
-a4_init_vol,1
-a_i,1
-a_index,2
-a_temp,2
-a_time,2
-acid_demin_yn,1
-acid_volume,1
-adapter_ligation,1
-add_ic,1
-adjust_final_vol,1
-air_dry_time,1
-air_gap,1
-air_gap_bool,1
-air_gap_vol,3
-airgap,1
-am_bic_volume,1
-antibody_csv,1
-arrange_tips,1
-array_pattern,1
-asp_bottom_clearance,1
-asp_delay,2
-asp_delay_time,1
-asp_flow_rate,2
-asp_flowrate_p10,1
-asp_flowrate_p50,1
-asp_height,24
-asp_height_1,1
-asp_height_m20,1
-asp_height_recipient,1
-asp_rate,6
-asp_rate_global20,1
-asp_rate_global300,1
-asp_rate_m20,1
-asp_rate_multi,1
-asp_rate_step1,1
-asp_speed,10
-aspirate_delay_time,1
-aspirate_flow_rate,2
-aspiration_height,1
-aspiration_height_mm,2
-aspiration_height_plate,1
-aspiration_height_resv,1
-aspiration_rate_multiplier,1
-assay,2
-assembly_csv,1
-assembly_transfer_vol,1
-b3_init_vol,1
-bead_add,1
-bead_clean_up,2
-bead_dry_time,5
-bead_dry_time_nuc_water,1
-bead_incubation_time_in_minutes,2
-bead_loc,1
-bead_mix_reps,1
-bead_mix_speed,1
-bead_mix_vol,1
-bead_pellet_clearance,2
-bead_ratio,3
-bead_separation_time_in_minutes,2
-bead_settling_time_on_magnet_in_minutes,1
-bead_vol,3
-bead_vol1,1
-bead_vol2,1
-bead_volume,1
-beads_vol,1
-beads_vol_1,1
-beads_vol_2,1
-big_pip,1
-binding_buffer_vol,19
-blot_dwell_time,1
-blow_out,1
-blowout_height,1
-blowout_rate,1
-blowout_vertical_offset,1
-box_count,1
-cap_count,1
-cd4_dil,1
-cd8_dil,1
-cdna_col_num1,1
-cdna_col_num2,1
-cdna_down_column,1
-cellht,1
-cellsmedia,1
-change_tips,2
-cherrypicking_csv,1
-choose_tip_rack,3
-cleanup_stage,1
-clearance,2
-clearance_aliquots,1
-clearance_aspirate,8
-clearance_bead_pellet,6
-clearance_bead_resuspension,10
-clearance_clinical_samples,1
-clearance_ddpcr_plate,1
-clearance_deep_well,1
-clearance_dest,2
-clearance_dil_dispense,1
-clearance_dispense,8
-clearance_distribute,1
-clearance_eluate,1
-clearance_elution,1
-clearance_magplate,1
-clearance_mecn,1
-clearance_meoh_water,1
-clearance_mix,1
-clearance_mix_aspirate,1
-clearance_mm,1
-clearance_mm_plate,1
-clearance_mmplate,1
-clearance_pcr,1
-clearance_pcr_plate,1
-clearance_plate,2
-clearance_reagent_prep,1
-clearance_reservoir,24
-clearance_rna,1
-clearance_rxnplate,1
-clearance_samp,1
-clearance_samp_plate,3
-clearance_sample_plate,4
-clearance_sample_prep,1
-clearance_sample_tube,1
-clearance_samples,1
-clearance_screwcap,1
-clearance_snapcap,1
-clearance_source,1
-clearance_strip_tubes,4
-clearance_striptubes,1
-clearance_tfa,1
-clearance_twintec,1
-clearance_water,2
-clearance_water_tube,1
-cold,3
-cols,1
-column_count,2
-comp10_vol,1
-comp11_vol,1
-comp12_vol,1
-comp1_vol,1
-comp2_vol,1
-comp3_vol,1
-comp4_vol,1
-comp5_vol,1
-comp6_vol,1
-comp7_vol,1
-comp8_vol,1
-comp9_vol,1
-comp_asp_speed,1
-comp_disp_speed,1
-component_1_height,1
-component_1_volume,2
-component_2_height,1
-component_2_volume,1
-component_3_volume,1
-control_plate,1
-count_mix,1
-count_samples,16
-csv,4
-csv1_buff,1
-csv1_samp,1
-csv1_urea,1
-csv2_buff,1
-csv2_samp,1
-csv2_urea,1
-csv3_buff,1
-csv3_samp,1
-csv3_urea,1
-csv_file,2
-csv_file_1,1
-csv_file_2,1
-csv_input,3
-csv_samp,6
-csv_sample,2
-ctrl_csv,1
-ctrl_transfer_vol,1
-cycles,2
-d_csv1,1
-d_temp,2
-d_time,2
-deactivate_mod,1
-dead_vol,2
-debug,1
-deep_name,1
-deep_plate,2
-deepwell_plate_type,1
-deepwell_type,10
-default_disposal_vol,4
-default_transfer_vol,9
-delay,4
-delay_after_asp,2
-delay_after_disp,1
-delay_beads,6
-delay_distribute,1
-delay_lig_mm,1
-delay_reagent_prep,1
-delay_time,2
-denat_anneal_cycles,1
-desired_conc,2
-dest_flow_rate_mmx,1
-dest_flow_rate_sample,1
-dest_labware,1
-dest_lw,1
-dest_lw_def,1
-dest_plate1,1
-dest_plate2,1
-dest_plate3,1
-dest_plate_lname,1
-dest_plate_type,1
-dest_slot,1
-dest_start_col,1
-dest_temp_mod_lname,1
-dest_type,3
-dest_well_plate_tmod,1
-destdilvol,1
-destination_plate_lname,1
-destination_well_plate_lname,1
-digest_duration,1
-dil_csv_1,2
-dil_json_1,1
-dil_json_2,1
-dil_json_3,1
-dil_plate_type,1
-diluent_csv,1
-diluent_scheme,1
-diluent_vol,1
-dilution_factor,1
-dilvol,1
-disp_bottom_clearance,1
-disp_delay,1
-disp_delay_time,1
-disp_flow_rate,2
-disp_flowrate_p10,1
-disp_flowrate_p50,1
-disp_height,12
-disp_height_dest,1
-disp_rate,7
-disp_rate_global20,1
-disp_rate_global300,1
-disp_rate_m20,1
-disp_rate_multi,1
-disp_speed,5
-disp_vol,2
-dispensation_rate_multiplier,1
-dispense_flow_rate,2
-dispense_height,2
-dispense_plan,1
-dispense_rate,1
-dispense_speed,1
-dispense_steps,1
-dispense_volume,1
-dispensing_height_plate,1
-dispension_height_mm,2
-dispmode,1
-disposal_vol,2
-disposal_volume,1
-dmsovol,1
-dna,1
-dna_aspirate_clearance,1
-dna_csv,1
-dna_plate,1
-dna_supernat_vol,1
-dna_vol,1
-dna_volume,5
-dna_well_plate_lname,1
-dna_well_plate_tmod,1
-do_dnase_step,1
-do_sds_step,1
-do_vortex_pause,1
-donor_384_type,1
-dp_type,2
-dplate,1
-drop_threshold,1
-dry_on_temperature_module,1
-dry_time,11
-drying_time,2
-drying_time_in_minutes,2
-dryrun,3
-ds_520,1
-ds_540,1
-ds_570,1
-ds_620,1
-ds_650,1
-ds_690,1
-e_temp,2
-e_time,2
-eluate_volume,1
-elute_on_robot,1
-eluteplate,1
-elution,1
-elution_buf_vol,1
-elution_buff_vol,2
-elution_buffer_vol,2
-elution_buffer_volume,2
-elution_inc,1
-elution_scan,2
-elution_slot_scan,2
-elution_transfer_vol,2
-elution_type,1
-elution_vol,28
-em,1
-empty_vial_well,2
-end_col,1
-end_column,1
-end_repair,1
-engage_height,12
-engage_offset,4
-engage_time,13
-enz_asp_rate,1
-enz_disp_rate,1
-enz_mx_volume,1
-enz_mx_well,1
-enzyme_vol,1
-ethanol_res_loadname,1
-ethanol_wash_vol,1
-etoh_inc,1
-etoh_volume,2
-etoh_well,2
-ex_opti,1
-example_dropdown,1
-example_file,1
-example_string,1
-extraction_type,1
-extrplate,1
-f_time,2
-fe_temp,2
-fe_time,2
-fill_plate_blank,2
-fill_second_plate,1
-fill_volume,1
-filter_tip,3
-final_air_gap,1
-final_asp_speed,1
-final_conc,1
-final_extension_cycles,1
-final_plate_slot4,1
-final_temp,3
-final_tubes,1
-final_vol,3
-first_media_x,1
-flash,15
-flow_rate_asp,1
-flow_rate_beads,6
-flow_rate_disp,1
-flow_rate_elution,1
-flow_rate_factor,1
-flow_rate_ligation_mx,1
-flow_rate_mm,1
-flow_rate_multiplier,1
-flowrate,1
-fluomix_volume,1
-formic_acid_vol,1
-formulation_csv,1
-fox_dil,1
-fragmentation_minutes,1
-full_volume,1
-gantryspeed,1
-grid,1
-has_first_tube_set,1
-has_second_tube_set,1
-heat_kill_duration,1
-heat_kill_temperature,1
-heating_module_temp,1
-height_above_cartridge,1
-height_after_disp,1
-height_engage,12
-htp_csv,1
-i5_volume,1
-i5_well,1
-i7_volume,1
-i7_well,1
-inc_time,1
-include_bind,1
-include_dnase,1
-include_dry,1
-include_elute,1
-include_mastermix_step,1
-include_multi,1
-include_ntc,2
-include_pause,1
-include_sample_step,1
-include_standards_only,1
-include_wash1,1
-include_wash2,1
-include_wash3,1
-include_wash4,1
-incubate_bind_time,1
-incubation_temperature,1
-incubation_time,5
-index_start_col,1
-index_start_column,1
-index_vol,2
-indexing_plate_loadname,1
-init_temp,2
-init_time,2
-init_vol,2
-initial_denaturation_cycles,1
-initial_vol,1
-input_csv,14
-input_file,10
-input_file2,6
-input_labware,1
-integer_example,1
-irt_vol,1
-is_blood_cells,1
-is_dry_run,1
-is_eb_tube,1
-is_filtered,1
-is_lwaste,1
-is_multi_disp_reags,1
-is_protk_tube,1
-is_reuse_reag_tips,1
-is_reuse_wash_tips,1
-is_reusing_tips,1
-is_start_after_1st_incbn,1
-is_stop_after_1st_incbn,1
-ki_dil,1
-label,1
-labware1,1
-labware2,1
-labware3,1
-labware4,1
-labware5,1
-labware6,1
-labware7,1
-labware8,1
-labware_1_lname,1
-labware_200ul_tips,1
-labware_24,1
-labware_2_lname,1
-labware_384,1
-labware_384_well_plate,2
-labware_384rxnplate,1
-labware_96,1
-labware_96rxnplate,1
-labware_aliquots,1
-labware_clinical_samples_1,1
-labware_clinical_samples_2,1
-labware_collect_plate,1
-labware_cultureplate,1
-labware_deep_well,1
-labware_dest,1
-labware_dna_sample_plate,1
-labware_elisa_plate,1
-labware_mm,1
-labware_mmplate,1
-labware_p300_tips,1
-labware_patient_samples,1
-labware_pcr,1
-labware_pcr_plate,10
-labware_plate,2
-labware_pool,1
-labware_pre_pcr_plate,2
-labware_rack,1
-labware_reservoir,9
-labware_rna,1
-labware_samp,1
-labware_sample_plate,1
-labware_sampleplates,1
-labware_tips,1
-labware_tips20,3
-labware_tips300,2
-labware_tube_rack,1
-labware_tube_strip,4
-labware_tube_strip_or_plate,2
-labware_tuberack,1
-labware_water_tube,1
-labwaretype,1
-left_pip,1
-left_pip_slot,1
-left_pip_tip,1
-left_pipette,2
-left_pipette_lname,3
-left_pipette_tipracks_lname,1
-left_pipette_type,2
-length_from_side,7
-libvol,1
-lid_temp,4
-liquid_a_vol,1
-liquid_b_vol,1
-liquid_c_vol,1
-liquid_d_vol,1
-load_csv,1
-loc_csv,1
-loc_rnase,1
-loc_tween,1
-lwaste,1
-lysis,1
-lysis_vol,1
-m10_mount,2
-m1k,1
-m20_mount,56
-m300_mount,60
-m300_type,2
-m_mount,1
-mag_bead_mix_resuspend_reps,1
-mag_bead_mix_resuspend_vol,1
-mag_engage_height,3
-mag_engage_time,2
-mag_gen,11
-mag_height,13
-mag_height_1,1
-mag_mod,2
-mag_mod_lname,1
-mag_plate,2
-mag_time,1
-magdeck_gen,1
-magmod,2
-magplate_offset,1
-master_mix_csv,3
-master_mix_volume,1
-mastermix_reservoir_lname,1
-mastermix_start_col,1
-mastermix_vol,2
-mastermix_volume,4
-max_reaction_volume,1
-mecn_dil_loc,1
-mecn_transfer,1
-mecn_volume,1
-mecn_wash1_vol,1
-mecn_wash2_vol,1
-mecn_wash3_vol,1
-media_trans_vol,1
-mix,1
-mix_after,1
-mix_clearance,1
-mix_count,1
-mix_csv,1
-mix_etoh,1
-mix_rate,2
-mix_repetitions,2
-mix_reps,25
-mix_reps1,1
-mix_reps2,1
-mix_reps_elution1,1
-mix_reps_elution2,1
-mix_reps_wash1,1
-mix_reps_wash2,1
-mix_sources,1
-mix_vol,5
-mix_volume,1
-mixln,1
-mixp300,1
-mm,3
-mm1_col,1
-mm2_col,1
-mm2_vol,1
-mm_asp_height,1
-mm_col,2
-mm_csv,1
-mm_disp_height,1
-mm_height,1
-mm_lw,1
-mm_res_vol,1
-mm_slot,1
-mm_source_vol,1
-mm_transfer_vol,1
-mm_vol,8
-mm_volume,1
-mmx_vol,1
-mnt,3
-mnt10,2
-mnt1000,2
-mnt20,7
-mnt300,12
-mnt50,1
-mntmulti,2
-mntsingle,2
-mother_plate_type,1
-mount,2
-mount_p20,1
-move_side,2
-move_vol,1
-multi_pip_info,1
-n1_col,1
-n1_primer_well,1
-n2_col,1
-n2_primer_well,1
-n7_row,1
-n_bead_mixes,1
-n_cor,1
-n_elution_mixes,1
-n_last_samples,1
-n_mixes,1
-n_plates,1
-n_samples,5
-n_samples_set1,1
-n_samples_set2,1
-n_slots,1
-n_wash_mixes,1
-n_washes,1
-n_wells,1
-na_oh_volume,1
-na_oh_wash_yn,1
-nc,1
-new_tip,1
-no_cycles,2
-no_of_samps,2
-no_plates,2
-no_samps,2
-noblank,1
-noce,1
-nomodules,3
-norep,1
-norm_data,1
-np,1
-ntc_col,1
-ntc_primer_well,1
-nuc_free_water_vol_well,1
-num,3
-num_antibodies,1
-num_col,5
-num_cols,2
-num_columns,1
-num_daughter_plates,1
-num_gene,1
-num_mag_beads_tubes,1
-num_mastermix,1
-num_mm,2
-num_of_dilutions,1
-num_pl,2
-num_plates,22
-num_pool_sources,1
-num_pools,1
-num_primers,1
-num_reps,1
-num_row,1
-num_rows_a,1
-num_rows_b,1
-num_samp,45
-num_samp_plate1,1
-num_samp_plate2,1
-num_samp_plate3,1
-num_samp_plate4,1
-num_samples,89
-num_samples_1,1
-num_samples_2,1
-num_samples_3,1
-num_samples_4,1
-num_samples_per_plate,1
-num_samps,5
-num_slides,2
-num_tipracks,1
-num_tubes,2
-num_wells,2
-number_of_dna_samples,1
-number_of_oligo_standards,1
-number_of_plates,4
-number_of_samples,18
-number_of_samples_to_process,5
-number_of_slides_to_process,1
-numinc,1
-numplates,6
-numpools,1
-numracks,1
-numsamps,8
-numvisbys,1
-occupied_well_csv1,5
-occupied_well_csv2,4
-occupied_well_csv3,4
-offset,3
-offset_x,12
-offset_x_resuspension,10
-ondeck,1
-one_rack_yn,1
-onlysamps,1
-open_lid,1
-output_labware,1
-overage_percent,6
-p1000_flow_rate_asp,2
-p1000_flow_rate_disp,2
-p1000_mount,28
-p1000_rate,1
-p1000_sample_height,1
-p1000_single_mount,1
-p1000_slot,1
-p1000_tiprack_slot,1
-p1000_tips,1
-p1000_type,1
-p1000mnt,1
-p10_mnt,4
-p10_mount,12
-p10_multi_mount,2
-p10_type,1
-p10mnt,5
-p1k_mnt,2
-p1kmnt,1
-p1n,1
-p1num,1
-p20_blowout_height,1
-p20_mount,96
-p20_multi_mount,2
-p20_rate,2
-p20_reservoir_height,1
-p20_side,1
-p20_single_mount,4
-p20_tube_height,1
-p20_type,4
-p20mnt,6
-p20type,3
-p2n,1
-p2num,1
-p300_gen,1
-p300_mixing_height,1
-p300_mnt,3
-p300_mount,112
-p300_mount_1,1
-p300_multi_mount,7
-p300_rate,1
-p300_single_mount,5
-p300_tip_start_col,1
-p300_tiprack_slot,1
-p300_tips,1
-p300_transfer_height,1
-p300_type,8
-p300gen,2
-p300m,2
-p300m_mount,1
-p300m_side,1
-p300mnt,11
-p300s_mount,1
-p300tips,4
-p300type,3
-p384,2
-p3n,1
-p3num,1
-p4n,1
-p4num,1
-p50_mnt,4
-p50_mount,7
-p50_single_mount,3
-p50_type,1
-p50mnt,3
-p5_mix_vol,1
-p_csv,1
-pan_dil,1
-park,2
-park_tips,25
-patient_sample_count,1
-patient_sample_vol,1
-pbs_dispense_rate,1
-pbsvol,1
-pcr,1
-pcr2_buffer_vol,2
-pcr_cycles,1
-pcr_labware,4
-pcr_mix_vol,2
-pcr_plate_height,1
-pcr_tube_height,1
-pcr_tubes,1
-pcr_type,1
-pcr_volume,1
-pdl1_dil,1
-peptide_supernat_vol,1
-pip,1
-pip_l,1
-pip_mnt,5
-pip_model,4
-pip_mount,8
-pip_r,1
-pip_tip,4
-pip_type,8
-pipette,1
-pipette_2_mount,1
-pipette_2_type,1
-pipette_homing,1
-pipette_mount,15
-pipette_offset,1
-pipette_type,14
-pipette_types,1
-pipettes,1
-pipinfo,1
-pipmnt,8
-piptype,3
-pl_blowout_height,1
-plate,1
-plate1_samples,1
-plate2_samples,1
-plate3_samples,1
-plate4_samples,1
-plate_1_cols,6
-plate_2_cols,4
-plate_a_start_col,1
-plate_b_start_col,1
-plate_c_start_col,1
-plate_cols,1
-plate_count,6
-plate_def,1
-plate_height,2
-plate_map_1_csv,1
-plate_map_2_csv,1
-plate_map_3_csv,1
-plate_map_4_csv,1
-plate_name,1
-plate_scan,4
-plate_scan2,4
-plate_type,8
-plates,1
-pool_columns,1
-pool_location,1
-pool_rows,1
-pool_size,3
-pool_slots,1
-pool_vol,1
-pooling_volume,1
-pools,1
-poolvol,1
-post_aspiration_wait,2
-post_size_selection_volume,1
-post_user_sample_volume,1
-prefill,1
-prepare_mastermix,2
-prepare_standard,2
-primer_col_volume,1
-primer_loadname,1
-primer_lw,1
-primer_mix_vol,1
-primer_vol,1
-primer_volume,2
-process,1
-prototype,1
-puncture_agar,1
-puncture_depth,1
-purify,1
-pw,1
-q5_volume,1
-q5_well,1
-qc_height,1
-quad1_exclude_cols,1
-quad2_exclude_cols,1
-quad3_exclude_cols,1
-quad4_exclude_cols,1
-quench_volume,1
-rack_count,1
-radial_offset,9
-raise_mix_dispense,1
-reaction_plate,3
-reag1_vol,1
-reag2_vol,1
-reagent,1
-reagent1_loadname,1
-reagent2_loadname,1
-reagent_labware,3
-reagent_scan,5
-reagent_slot_scan,2
-reagent_transfer_vol,2
-reagents_csv,1
-reduced_speed_limit,1
-relative_height,1
-remove_empty_racks,1
-res,2
-res12_type,1
-res1_type,1
-res_dead_vol,1
-res_type,13
-reservoir12_lname,1
-reservoir_fill_volume,1
-reservoir_height,3
-reservoir_lname,1
-reservoir_loadname,1
-reservoir_loc,1
-reservoir_slot,1
-reservoir_type,3
-reset_counter,1
-reset_tipracks,7
-resettips,1
-return_tips,1
-right_pip,1
-right_pip_slot,1
-right_pip_tip,1
-right_pipette,2
-right_pipette_lname,3
-right_pipette_tipracks_lname,1
-right_pipette_type,2
-rm_num,1
-rna_input,2
-rna_plate_type,1
-rna_starting_format,1
-row_count,1
-rp_col,1
-rp_primer_well,1
-rr1,1
-rr2,1
-rr3,1
-rsadd,1
-rsb_vol,1
-run_number,1
-rxn_bf_volume,1
-rxn_bf_well,1
-rxn_mix_vol_p3,1
-rxn_vol,1
-s_csv,1
-s_mount,1
-s_pip,1
-s_vol,2
-same_tip,1
-samp_and_lys_rep,1
-samp_asp_height,1
-samp_col_counts,2
-samp_no,3
-samp_num,1
-samp_vol,2
-samplabware,1
-sample_addition,1
-sample_air_gap,2
-sample_asp_height,2
-sample_asp_speed,1
-sample_aspiration_vol_ul,1
-sample_cherrypicking,1
-sample_cols,1
-sample_columns,1
-sample_container,1
-sample_count,29
-sample_count_1,1
-sample_count_2,1
-sample_csv,1
-sample_deck_slots,1
-sample_disp_height,1
-sample_height,1
-sample_num,1
-sample_number,5
-sample_plate_height,2
-sample_plate_lname,1
-sample_quant_csv,1
-sample_rows,1
-sample_size,1
-sample_slots,1
-sample_trans_vol,1
-sample_type,1
-sample_vol,22
-sample_volume,3
-samples,39
-samples_csv,1
-samples_labware,2
-samples_loadname,1
-sampnum,1
-sampplate,1
-samps,7
-sampvol,1
-sds_buffer_vol,1
-sec_ex,1
-sec_plate,1
-second_media_y,1
-serial_csv,1
-set_tip_max,2
-settling_1,1
-settling_2,1
-settling_3,1
-settling_drying,1
-settling_elution1,1
-settling_elution2,1
-settling_time,22
-settling_wash,1
-shake_well,1
-side_x_radius,1
-single_channel_mount,1
-single_channel_type,1
-single_pip_info,1
-skip_mix_step,1
-slide_dwell_time,1
-slot_cultureplate,1
-slot_scan,3
-slot_screwcaps,1
-slot_snapcaps,1
-slot_tipbox,1
-slow_asp_rate,1
-slow_speed_down,1
-slow_speed_up,1
-small_pip,1
-source,1
-source_asp_flow_rate_mmx,1
-source_asp_flow_rate_plate,1
-source_asp_height_plate,1
-source_asp_height_plate_mmx,1
-source_lw,1
-source_plate,2
-source_start_col,1
-source_type,4
-sp,2
-sp_type,2
-spike_in,1
-spot_labware,1
-spot_volume,1
-spri_beads_left_volume,1
-spri_beads_right_volume,1
-spri_beads_volume,1
-spri_beads_well,2
-src_labware,1
-srctype,1
-srcvol,1
-stage1_dispense_height,1
-stage2_asp_speed,1
-stage2_disp_speed,1
-stage2_dispense_height,1
-stage2_height_after_disp,1
-standard_type,1
-start,1
-start_buff_vol,1
-start_col,1
-start_column,1
-start_tip,1
-start_urea_vol,1
-starting_conc,2
-starting_tip_col,1
-starting_tip_position,1
-starting_vol,22
-starting_volume,1
-starting_well,1
-starttip,1
-std_height,1
-step,2
-step1,1
-step1_mix_vol,1
-step2,1
-step_erat,2
-step_eratdeck,1
-step_lig,2
-step_ligdeck,1
-step_pcr,3
-step_pcrdeck,2
-step_postlig,2
-step_postpcr,3
-step_tag,1
-step_tagdeck,1
-step_tsb,1
-step_tsbdeck,1
-step_wash,1
-strip_type,2
-super_asp_rate,1
-super_disp_rate,1
-supernat_1_vol,1
-supernat_2_vol,1
-supernat_3_vol,1
-t_csv,1
-t_per_block,1
-tc_num_reps,1
-tc_temp,1
-te_volume,2
-te_well,2
-temp,2
-temp_gen,1
-temp_mod,2
-temp_mod_lname,2
-temp_mod_on,1
-temp_mod_s1_lname,1
-temp_mod_s4_lname,1
-temp_mod_s7_lname,1
-temp_mod_temp,1
-temp_mod_temperature,1
-temp_s1_part1,1
-temp_s1_part2,1
-temp_s4_part1,1
-temp_s4_part2,1
-temp_s7_part1,1
-temp_s7_part2,1
-tempblock,1
-tempdeck_name,1
-tempdeck_slot,1
-temperature,12
-tempgen,1
-template_vol,1
-test_method,1
-test_plates,1
-time_dry,13
-time_engage,13
-tip_immersion,1
-tip_max,1
-tip_no,1
-tip_park_start_col,2
-tip_rack,1
-tip_rack_10,1
-tip_rack_300,1
-tip_reuse,8
-tip_start,4
-tip_start_1000,2
-tip_start_20,2
-tip_start_column,4
-tip_strategy,3
-tip_threshold,1
-tip_touch,1
-tip_track,35
-tip_type,23
-tip_use_strategy,1
-tip_withdrawal_speed,1
-tiprack_lname_20_ul,1
-tiprack_lname_300ul,1
-tiprack_slot,1
-tipreuse,3
-tips,1
-tiptrash,2
-tiptype,3
-tmod_1_lname,1
-tmod_2_lname,1
-total_mixing_volume,1
-total_samples,5
-touch_radius,1
-touch_tip,2
-touch_v_offset,1
-touchtip,1
-touchtip_radius,2
-touchtip_speed,2
-touchtip_z,2
-tr1,1
-tr10,1
-tr2,1
-tr3,1
-tr4,1
-tr5,1
-tr6,1
-tr7,1
-tr8,1
-tr9,1
-track_start,1
-track_tips,2
-tracking_reset,2
-trans_vol1,1
-transfer2,1
-transfer_csv,18
-transfer_scheme,2
-transfer_vol,9
-transfer_volume,3
-transfercsv,2
-transfervol,1
-trough_type,2
-trypsin_volume,1
-tt_asp,2
-tt_disp,2
-tube1_vol,1
-tube_asp_height,1
-tube_dead_vol,1
-tube_height,1
-tube_rack,1
-tube_rack_lname,1
-tube_rack_slot,1
-tube_type,4
-tuberack15_1_scan,2
-tuberack15_2_scan,2
-tuberack1_scan,2
-tuberack2_1_scan,2
-tuberack2_2_scan,2
-tuberack2_scan,2
-tuberack_1,1
-tuberack_1_lname,1
-tuberack_2,1
-tuberack_2_lname,1
-tuberack_3,1
-tuberack_4,1
-tuberack_5,1
-tuberack_6,1
-tuberack_7,1
-tuberack_lname,1
-tuberack_mixed_lname,1
-tuberack_scan,4
-tuberack_scan2,4
-tuberack_type,2
-tuberacka_tube,1
-tuberackb_tube,1
-tuberacks,1
-tuberacks_15_lname,1
-tubetype,1
-tvol,1
-twb_rate,1
-twelve_well_resv_lname,1
-uploaded_csv,12
-uploaded_csv_mastermix,1
-use_384,1
-use_csv,1
-use_filter_tips_left,2
-use_filter_tips_right,2
-use_nacl,1
-use_tuberack_a,1
-use_tuberack_b,1
-using_magdeck,1
-v_0_tube,1
-v_0_tube1,2
-v_0_tube2,1
-v_csv,2
-vhb_vol,1
-vial_map,1
-vol,2
-vol_a_to_b,1
-vol_aliqout,1
-vol_c_to_d,1
-vol_cd154,1
-vol_culture_medium,1
-vol_d_to_e,1
-vol_dead,2
-vol_deaddeepwell,1
-vol_deadreservoir,1
-vol_dil_to_d,1
-vol_dil_to_e,1
-vol_dispense,1
-vol_dispensed,1
-vol_dna_buff,1
-vol_elution_buffer,1
-vol_etoh,1
-vol_h2o,2
-vol_ic,1
-vol_lys_buffer,1
-vol_mm,1
-vol_mobile_phase,1
-vol_peptide1,1
-vol_peptide2,1
-vol_peptide3,1
-vol_pma_ca,1
-vol_reagent,1
-vol_sample,2
-vol_start_rnase,1
-vol_start_tween,1
-vol_tests,1
-vol_tube1,1
-vol_tube2,1
-vol_tube3,1
-vol_water,1
-volume,4
-volume_csv,1
-volume_eb_in_ul,2
-volume_final_elution_in_ul,2
-volume_of_beads,2
-volume_of_beads_in_ul,2
-volume_to_cherrypick_in_ul,1
-volume_transfers,1
-volumes_csv,5
-wash1_vol,21
-wash2_vol,20
-wash3_vol,10
-wash_buf_vol,1
-wash_scheme,1
-waste,2
-waste_water_mode,1
-water_res_vol,1
-water_vol,2
-water_volume,2
-water_well,1
-wb_col,1
-well_disp_height,1
-well_plate,1
-well_vol,2
-wells_skipped,1
-wells_to_be_pooled,1
-wet_tip,1
-x_offset,1
-x_offset_bead_pellet,6
-x_offset_elution,1
-y_offset,1
-z_offset,8
+_csv,"{'count': 3, 'protocols': ['528c16', '7ada78-pt2', '7ada78']}"
+_dest_module,"{'count': 3, 'protocols': ['657ee9-2', '657ee9-3', '657ee9']}"
+_dp_type,"{'count': 1, 'protocols': ['Opentrons_Logo']}"
+_dye_type,"{'count': 1, 'protocols': ['Opentrons_Logo']}"
+_elution_vol,"{'count': 1, 'protocols': ['3e0bef']}"
+_filter_tips,"{'count': 1, 'protocols': ['33a449']}"
+_m20_mount,"{'count': 6, 'protocols': ['7ada78-pt2', '657ee9-2', '657ee9-3', '657ee9', '7ada78', '1f62ba']}"
+_m300_mount,"{'count': 3, 'protocols': ['657ee9-4', '3e0bef', '33a449']}"
+_mag_height,"{'count': 1, 'protocols': ['33a449']}"
+_mbl5_vol,"{'count': 1, 'protocols': ['33a449']}"
+_mm_transfer_vol,"{'count': 1, 'protocols': ['657ee9']}"
+_num_col,"{'count': 3, 'protocols': ['7ada78-pt2', '1f62ba', '33a449']}"
+_num_samp,"{'count': 1, 'protocols': ['158d42']}"
+_num_samps,"{'count': 2, 'protocols': ['657ee9', '3e0bef']}"
+_p1000_mount,"{'count': 1, 'protocols': ['528c16']}"
+_p20_mount,"{'count': 3, 'protocols': ['528c16', '7ada78-pt2', '7ada78']}"
+_p300_mount,"{'count': 1, 'protocols': ['158d42']}"
+_pip_model,"{'count': 1, 'protocols': ['Opentrons_Logo']}"
+_pip_mount,"{'count': 1, 'protocols': ['Opentrons_Logo']}"
+_samp_cols,"{'count': 3, 'protocols': ['657ee9-2', '657ee9-4', '657ee9-3']}"
+_samp_labware,"{'count': 1, 'protocols': ['3e0bef']}"
+_source_type,"{'count': 2, 'protocols': ['7ada78-pt2', '7ada78']}"
+_src_module,"{'count': 3, 'protocols': ['657ee9-2', '657ee9-3', '657ee9']}"
+_tc_cycles,"{'count': 1, 'protocols': ['657ee9']}"
+_use_temp_mod,"{'count': 1, 'protocols': ['158d42']}"
+a1_init_vol,"{'count': 1, 'protocols': ['7e4c3e-4']}"
+a3_init_vol,"{'count': 1, 'protocols': ['7e4c3e-4']}"
+a4_init_vol,"{'count': 1, 'protocols': ['7e4c3e-4']}"
+a_i,"{'count': 1, 'protocols': ['swift-2s-turbo-pt2']}"
+a_index,"{'count': 2, 'protocols': ['swift-fully-automated', 'swift-fully-automated-custom']}"
+a_temp,"{'count': 2, 'protocols': ['thermocycler', 'complete-pcr']}"
+a_time,"{'count': 2, 'protocols': ['thermocycler', 'complete-pcr']}"
+acid_demin_yn,"{'count': 1, 'protocols': ['user-upload_ZooMS_Protocol']}"
+acid_volume,"{'count': 1, 'protocols': ['user-upload_ZooMS_Protocol']}"
+adapter_ligation,"{'count': 1, 'protocols': ['796af8']}"
+add_ic,"{'count': 1, 'protocols': ['747d99-assay-1']}"
+adjust_final_vol,"{'count': 1, 'protocols': ['6cb818']}"
+air_dry_time,"{'count': 1, 'protocols': ['4fc750']}"
+air_gap,"{'count': 1, 'protocols': ['8nhsa0']}"
+air_gap_bool,"{'count': 1, 'protocols': ['3b3f1c']}"
+air_gap_vol,"{'count': 3, 'protocols': ['543bf9', '66e60f', '0556be-bmda']}"
+airgap,"{'count': 1, 'protocols': ['459cc2']}"
+am_bic_volume,"{'count': 1, 'protocols': ['user-upload_ZooMS_Protocol']}"
+antibody_csv,"{'count': 1, 'protocols': ['53e6bc_mastermix_creation']}"
+arrange_tips,"{'count': 1, 'protocols': ['063611']}"
+array_pattern,"{'count': 1, 'protocols': ['1d6d1b']}"
+asp_bottom_clearance,"{'count': 1, 'protocols': ['11beaa']}"
+asp_delay,"{'count': 2, 'protocols': ['3b0db0', '0556be-bmda']}"
+asp_delay_time,"{'count': 1, 'protocols': ['7f0f89']}"
+asp_flow_rate,"{'count': 2, 'protocols': ['5f7d18', '69db93']}"
+asp_flowrate_p10,"{'count': 1, 'protocols': ['11beaa']}"
+asp_flowrate_p50,"{'count': 1, 'protocols': ['11beaa']}"
+asp_height,"{'count': 24, 'protocols': ['1ccd23-station-A', '00a6e5', '5f7d18', '6151af', '00a214-protocol-1', '199721', '5191b6', '313086', '0bf4f4-pt3', '3b0db0', '19313a', '0bf4f4-pt2', '5b8174', '00a214-protocol-3', '00a214-protocol-4', '384b23-plate-transfer', '00a214-protocol-5', '00a214-protocol-2', '5520f0', '384b23-pooling', '68ce98', '0556be-covid-ntc', '69db93', '04f4e7']}"
+asp_height_1,"{'count': 1, 'protocols': ['04f4e7']}"
+asp_height_m20,"{'count': 1, 'protocols': ['3b0db0']}"
+asp_height_recipient,"{'count': 1, 'protocols': ['384b23-tube-transfer']}"
+asp_rate,"{'count': 6, 'protocols': ['7f9595', '0045f1', '3b0db0', '00bbd7', '459cc2', '7f0f89']}"
+asp_rate_global20,"{'count': 1, 'protocols': ['25a03d']}"
+asp_rate_global300,"{'count': 1, 'protocols': ['25a03d']}"
+asp_rate_m20,"{'count': 1, 'protocols': ['3b0db0']}"
+asp_rate_multi,"{'count': 1, 'protocols': ['459cc2']}"
+asp_rate_step1,"{'count': 1, 'protocols': ['3c9aec']}"
+asp_speed,"{'count': 10, 'protocols': ['00a214-protocol-1', '543bf9', '199721', '701319', '3d02be', '00a214-protocol-3', '00a214-protocol-4', '00a214-protocol-5', '00a214-protocol-2', '68ce98']}"
+aspirate_delay_time,"{'count': 1, 'protocols': ['698b9e-part2']}"
+aspirate_flow_rate,"{'count': 2, 'protocols': ['300073-2', '300073']}"
+aspiration_height,"{'count': 1, 'protocols': ['39b4c7']}"
+aspiration_height_mm,"{'count': 2, 'protocols': ['300073-2', '300073']}"
+aspiration_height_plate,"{'count': 1, 'protocols': ['76ab0e']}"
+aspiration_height_resv,"{'count': 1, 'protocols': ['76ab0e']}"
+aspiration_rate_multiplier,"{'count': 1, 'protocols': ['generic_pcr_prep_2']}"
+assay,"{'count': 2, 'protocols': ['1ccd23-station-C', '280ea4']}"
+assembly_csv,"{'count': 1, 'protocols': ['5b8174']}"
+assembly_transfer_vol,"{'count': 1, 'protocols': ['5b8174']}"
+b3_init_vol,"{'count': 1, 'protocols': ['7e4c3e-4']}"
+bead_add,"{'count': 1, 'protocols': ['49de51-pt2']}"
+bead_clean_up,"{'count': 2, 'protocols': ['52d238', '796af8']}"
+bead_dry_time,"{'count': 5, 'protocols': ['5f7d18', '6a93a2', '6a93a2-part5', '6a93a2-part4', '6a93a2-part3']}"
+bead_dry_time_nuc_water,"{'count': 1, 'protocols': ['5f7d18']}"
+bead_incubation_time_in_minutes,"{'count': 2, 'protocols': ['70567f', '0944e4']}"
+bead_loc,"{'count': 1, 'protocols': ['49de51-pt2']}"
+bead_mix_reps,"{'count': 1, 'protocols': ['7aa3fd-size-selection']}"
+bead_mix_speed,"{'count': 1, 'protocols': ['7aa3fd-size-selection']}"
+bead_mix_vol,"{'count': 1, 'protocols': ['7aa3fd-size-selection']}"
+bead_pellet_clearance,"{'count': 2, 'protocols': ['1f96ca', '1f96ca-part-2']}"
+bead_ratio,"{'count': 3, 'protocols': ['illumina-nextera-XT-library-prep-part2', 'nucleic_acid_purification_with_magnetic_beads', 'omega_biotek_magbind_totalpure_NGS']}"
+bead_separation_time_in_minutes,"{'count': 2, 'protocols': ['7a1ae8', '2c83f7']}"
+bead_settling_time_on_magnet_in_minutes,"{'count': 1, 'protocols': ['0944e4']}"
+bead_vol,"{'count': 3, 'protocols': ['701319', 'generic_ngs_prep', '6ff9e9']}"
+bead_vol1,"{'count': 1, 'protocols': ['44b1ac']}"
+bead_vol2,"{'count': 1, 'protocols': ['44b1ac']}"
+bead_volume,"{'count': 1, 'protocols': ['generic_protein_purification']}"
+beads_vol,"{'count': 1, 'protocols': ['53fec2']}"
+beads_vol_1,"{'count': 1, 'protocols': ['2b3642']}"
+beads_vol_2,"{'count': 1, 'protocols': ['2b3642']}"
+big_pip,"{'count': 1, 'protocols': ['11beaa']}"
+binding_buffer_vol,"{'count': 19, 'protocols': ['3607d5-2', 'sci-thermofisher-magmax', 'covid19-rna-extraction', '3607d5-3', 'sci-promega-magnesil-total-rna-mini-isolation-system', 'sci-macherey-nagel-nucleomag', '19313a', 'sci-mag-bind-blood-tissue-kit', '1ccd23-station-B', '74841a', 'sci-mgi-mgieasy-nucleic-acid-extraction-kit', '10bf60-station-B', '6ff9e9', 'sci-zymo-quick-dna-rna-magbead', 'sci-promega-magazorb-dna-mini-prep-kit', '4fc750', '17d210-part-3', '17d210-part-4', 'sci-omegabiotek-magbind-total-rna-96']}"
+blot_dwell_time,"{'count': 1, 'protocols': ['1d6d1b']}"
+blow_out,"{'count': 1, 'protocols': ['7663a6']}"
+blowout_height,"{'count': 1, 'protocols': ['7f9595']}"
+blowout_rate,"{'count': 1, 'protocols': ['6af807']}"
+blowout_vertical_offset,"{'count': 1, 'protocols': ['6bc986-part-4']}"
+box_count,"{'count': 1, 'protocols': ['063611-part-2']}"
+cap_count,"{'count': 1, 'protocols': ['063611']}"
+cd4_dil,"{'count': 1, 'protocols': ['1ef67e']}"
+cd8_dil,"{'count': 1, 'protocols': ['1ef67e']}"
+cdna_col_num1,"{'count': 1, 'protocols': ['11beaa']}"
+cdna_col_num2,"{'count': 1, 'protocols': ['11beaa']}"
+cdna_down_column,"{'count': 1, 'protocols': ['6af807']}"
+cellht,"{'count': 1, 'protocols': ['1adec6-5']}"
+cellsmedia,"{'count': 1, 'protocols': ['41ece2']}"
+change_tips,"{'count': 2, 'protocols': ['063611', '2c81c0']}"
+cherrypicking_csv,"{'count': 1, 'protocols': ['nextera-flex-library-prep-cherrypick-samples']}"
+choose_tip_rack,"{'count': 3, 'protocols': ['76ba23', '76ba23-pcr2', '76ba23-pcr1']}"
+cleanup_stage,"{'count': 1, 'protocols': ['zymo-ribofree-cleanup']}"
+clearance,"{'count': 2, 'protocols': ['26c304', '6be1f8']}"
+clearance_aliquots,"{'count': 1, 'protocols': ['7363e4']}"
+clearance_aspirate,"{'count': 8, 'protocols': ['315118', '6bc986-part-6', '6bc986', '6b51bd', '6bc986-part-5', '6bc986-part-2', '6bc986-part-3', '6bc986-part-4']}"
+clearance_bead_pellet,"{'count': 6, 'protocols': ['7805de-part-2', '7805de-part-4', '7805de-part-3', '6d2e65', '4b7268', '7805de']}"
+clearance_bead_resuspension,"{'count': 10, 'protocols': ['78d33c-part-3', '78d33c-part-4', '78d33c-part-5', '78d33c-part-2', '78d33c', '43d313-part-6', '43d313-part-7', '78d33c-part-6', '43d313-part-2', '43d313-part-5']}"
+clearance_clinical_samples,"{'count': 1, 'protocols': ['7363e4']}"
+clearance_ddpcr_plate,"{'count': 1, 'protocols': ['3b3d2f']}"
+clearance_deep_well,"{'count': 1, 'protocols': ['76ba23-bisulfite_conversion']}"
+clearance_dest,"{'count': 2, 'protocols': ['154ec5', '29225e']}"
+clearance_dil_dispense,"{'count': 1, 'protocols': ['234495']}"
+clearance_dispense,"{'count': 8, 'protocols': ['315118', '6bc986-part-6', '6bc986', '6b51bd', '6bc986-part-5', '6bc986-part-2', '6bc986-part-3', '6bc986-part-4']}"
+clearance_distribute,"{'count': 1, 'protocols': ['441cc8']}"
+clearance_eluate,"{'count': 1, 'protocols': ['76ba23-bisulfite_conversion']}"
+clearance_elution,"{'count': 1, 'protocols': ['6d2e65']}"
+clearance_magplate,"{'count': 1, 'protocols': ['4b7268']}"
+clearance_mecn,"{'count': 1, 'protocols': ['234495']}"
+clearance_meoh_water,"{'count': 1, 'protocols': ['234495']}"
+clearance_mix,"{'count': 1, 'protocols': ['6cb818']}"
+clearance_mix_aspirate,"{'count': 1, 'protocols': ['29225e']}"
+clearance_mm,"{'count': 1, 'protocols': ['29225e-part-2']}"
+clearance_mm_plate,"{'count': 1, 'protocols': ['3fad82']}"
+clearance_mmplate,"{'count': 1, 'protocols': ['1e744e']}"
+clearance_pcr,"{'count': 1, 'protocols': ['29225e-part-2']}"
+clearance_pcr_plate,"{'count': 1, 'protocols': ['76ba23-bisulfite_conversion']}"
+clearance_plate,"{'count': 2, 'protocols': ['6b51bd', '6cb818']}"
+clearance_reagent_prep,"{'count': 1, 'protocols': ['441cc8']}"
+clearance_reservoir,"{'count': 24, 'protocols': ['3fad82-part-2', '78d33c-part-3', '78d33c-part-4', '063611', '78d33c-part-5', '78d33c-part-2', '3fad82-part-3', '78d33c', '7805de-part-2', '76ba23', '7805de-part-4', '7805de-part-3', '43d313-part-6', '43d313-part-7', '6b51bd', '7e3b31', '78d33c-part-6', '76ba23-bisulfite_conversion', '4b7268', '43d313-part-2', '43d313-part-5', '7805de', '43d313-part-4', '43d313-part-3']}"
+clearance_rna,"{'count': 1, 'protocols': ['29225e']}"
+clearance_rxnplate,"{'count': 1, 'protocols': ['1e744e']}"
+clearance_samp,"{'count': 1, 'protocols': ['29225e-part-2']}"
+clearance_samp_plate,"{'count': 3, 'protocols': ['3fad82-part-2', '3fad82-part-3', '3fad82']}"
+clearance_sample_plate,"{'count': 4, 'protocols': ['7805de-part-2', '7805de-part-4', '7805de-part-3', '7805de']}"
+clearance_sample_prep,"{'count': 1, 'protocols': ['39bbbb']}"
+clearance_sample_tube,"{'count': 1, 'protocols': ['39bbbb']}"
+clearance_samples,"{'count': 1, 'protocols': ['1e744e']}"
+clearance_screwcap,"{'count': 1, 'protocols': ['6cb818']}"
+clearance_snapcap,"{'count': 1, 'protocols': ['6cb818']}"
+clearance_source,"{'count': 1, 'protocols': ['154ec5']}"
+clearance_strip_tubes,"{'count': 4, 'protocols': ['7805de-part-2', '7805de-part-4', '7805de-part-3', '7805de']}"
+clearance_striptubes,"{'count': 1, 'protocols': ['7e3b31']}"
+clearance_tfa,"{'count': 1, 'protocols': ['234495']}"
+clearance_twintec,"{'count': 1, 'protocols': ['43d313']}"
+clearance_water,"{'count': 2, 'protocols': ['3a49b6', '3b3d2f']}"
+clearance_water_tube,"{'count': 1, 'protocols': ['29225e']}"
+cold,"{'count': 3, 'protocols': ['21e4d8-pt2', '21e4d8-pt3', '21e4d8-pt1']}"
+cols,"{'count': 1, 'protocols': ['4471ba']}"
+column_count,"{'count': 2, 'protocols': ['74b303', '002af3']}"
+comp10_vol,"{'count': 1, 'protocols': ['0556be-bmda']}"
+comp11_vol,"{'count': 1, 'protocols': ['0556be-bmda']}"
+comp12_vol,"{'count': 1, 'protocols': ['0556be-bmda']}"
+comp1_vol,"{'count': 1, 'protocols': ['0556be-bmda']}"
+comp2_vol,"{'count': 1, 'protocols': ['0556be-bmda']}"
+comp3_vol,"{'count': 1, 'protocols': ['0556be-bmda']}"
+comp4_vol,"{'count': 1, 'protocols': ['0556be-bmda']}"
+comp5_vol,"{'count': 1, 'protocols': ['0556be-bmda']}"
+comp6_vol,"{'count': 1, 'protocols': ['0556be-bmda']}"
+comp7_vol,"{'count': 1, 'protocols': ['0556be-bmda']}"
+comp8_vol,"{'count': 1, 'protocols': ['0556be-bmda']}"
+comp9_vol,"{'count': 1, 'protocols': ['0556be-bmda']}"
+comp_asp_speed,"{'count': 1, 'protocols': ['0556be-bmda']}"
+comp_disp_speed,"{'count': 1, 'protocols': ['0556be-bmda']}"
+component_1_height,"{'count': 1, 'protocols': ['0556be-covid-mm-qc']}"
+component_1_volume,"{'count': 2, 'protocols': ['0556be-covid-mm-qc', '0556be-covid-ntc']}"
+component_2_height,"{'count': 1, 'protocols': ['0556be-covid-mm-qc']}"
+component_2_volume,"{'count': 1, 'protocols': ['0556be-covid-mm-qc']}"
+component_3_volume,"{'count': 1, 'protocols': ['0556be-covid-mm-qc']}"
+control_plate,"{'count': 1, 'protocols': ['25a03d']}"
+count_mix,"{'count': 1, 'protocols': ['2942dd']}"
+count_samples,"{'count': 16, 'protocols': ['78d33c-part-3', '78d33c-part-4', '78d33c-part-5', '78d33c-part-2', '78d33c', '43d313-part-6', '43d313-part-7', '7e3b31', '1e744e', '78d33c-part-6', '43d313-part-2', '234495', '43d313-part-5', '43d313', '43d313-part-4', '43d313-part-3']}"
+csv,"{'count': 4, 'protocols': ['37de37', '60feec', '7aad4e', '3c9aec']}"
+csv1_buff,"{'count': 1, 'protocols': ['1fcf02']}"
+csv1_samp,"{'count': 1, 'protocols': ['1fcf02']}"
+csv1_urea,"{'count': 1, 'protocols': ['1fcf02']}"
+csv2_buff,"{'count': 1, 'protocols': ['1fcf02']}"
+csv2_samp,"{'count': 1, 'protocols': ['1fcf02']}"
+csv2_urea,"{'count': 1, 'protocols': ['1fcf02']}"
+csv3_buff,"{'count': 1, 'protocols': ['1fcf02']}"
+csv3_samp,"{'count': 1, 'protocols': ['1fcf02']}"
+csv3_urea,"{'count': 1, 'protocols': ['1fcf02']}"
+csv_file,"{'count': 2, 'protocols': ['2082dd', '459cc2']}"
+csv_file_1,"{'count': 1, 'protocols': ['543bf9']}"
+csv_file_2,"{'count': 1, 'protocols': ['543bf9']}"
+csv_input,"{'count': 3, 'protocols': ['30174a', '3fb582', '2c81c0']}"
+csv_samp,"{'count': 6, 'protocols': ['581011', '581011-pt2', '5fa647', '4d9b8b', '4c8861', '1dfebe']}"
+csv_sample,"{'count': 2, 'protocols': ['3d02be', '1c8468']}"
+ctrl_csv,"{'count': 1, 'protocols': ['5b8174']}"
+ctrl_transfer_vol,"{'count': 1, 'protocols': ['5b8174']}"
+cycles,"{'count': 2, 'protocols': ['swift-fully-automated', 'swift-fully-automated-custom']}"
+d_csv1,"{'count': 1, 'protocols': ['76c562']}"
+d_temp,"{'count': 2, 'protocols': ['thermocycler', 'complete-pcr']}"
+d_time,"{'count': 2, 'protocols': ['thermocycler', 'complete-pcr']}"
+deactivate_mod,"{'count': 1, 'protocols': ['thermocycler-csv']}"
+dead_vol,"{'count': 2, 'protocols': ['6b51bd', '38efd4']}"
+debug,"{'count': 1, 'protocols': ['2c62b7']}"
+deep_name,"{'count': 1, 'protocols': ['563624']}"
+deep_plate,"{'count': 2, 'protocols': ['49de51-pt1', '49de51-pt2']}"
+deepwell_plate_type,"{'count': 1, 'protocols': ['6fe477-workflow-1']}"
+deepwell_type,"{'count': 10, 'protocols': ['sci-zymo-directzol-magbead', 'covid19-rna-extraction', 'sci-promega-magnesil-total-rna-mini-isolation-system', 'sci-macherey-nagel-nucleomag', 'sci-mag-bind-blood-tissue-kit', 'sci-zymo-quick-dna-rna-magbead', 'sci-promega-magazorb-dna-mini-prep-kit', 'sci-omegabiotek-extraction', '4fc750', 'sci-omegabiotek-magbind-total-rna-96']}"
+default_disposal_vol,"{'count': 4, 'protocols': ['121d15-2-384', '121d15-2-96-Irish-2200', '121d15-2-96-Greiner-1000', '121d15-2-96-Greiner-500']}"
+default_transfer_vol,"{'count': 9, 'protocols': ['121d15-7-2ml-15ml-pool', '121d15-2-384', '121d15-2-96-Irish-2200', '121d15-7-2ml-2ml-pool', '121d15-2-96-Greiner-1000', '121d15-2-96-Greiner-500', '121d15-3', '121d15-7-2ml-15ml-aliquot', '121d15-7-2ml-2ml-aliquot']}"
+delay,"{'count': 4, 'protocols': ['384b23-tube-transfer', '7663a6', '384b23-plate-transfer', '384b23-pooling']}"
+delay_after_asp,"{'count': 2, 'protocols': ['00bbd7', '2bdff3']}"
+delay_after_disp,"{'count': 1, 'protocols': ['2bdff3']}"
+delay_beads,"{'count': 6, 'protocols': ['3fad82-part-2', '3fad82-part-3', '7805de-part-2', '7805de-part-4', '7805de-part-3', '7805de']}"
+delay_distribute,"{'count': 1, 'protocols': ['441cc8']}"
+delay_lig_mm,"{'count': 1, 'protocols': ['3fad82']}"
+delay_reagent_prep,"{'count': 1, 'protocols': ['441cc8']}"
+delay_time,"{'count': 2, 'protocols': ['543bf9', '4d9b8b']}"
+denat_anneal_cycles,"{'count': 1, 'protocols': ['2b3642']}"
+desired_conc,"{'count': 2, 'protocols': ['4568fa', '4568fa-2']}"
+dest_flow_rate_mmx,"{'count': 1, 'protocols': ['7663a6']}"
+dest_flow_rate_sample,"{'count': 1, 'protocols': ['7663a6']}"
+dest_labware,"{'count': 1, 'protocols': ['44981c']}"
+dest_lw,"{'count': 1, 'protocols': ['demo']}"
+dest_lw_def,"{'count': 1, 'protocols': ['6d7eb7']}"
+dest_plate1,"{'count': 1, 'protocols': ['3d02be']}"
+dest_plate2,"{'count': 1, 'protocols': ['3d02be']}"
+dest_plate3,"{'count': 1, 'protocols': ['3d02be']}"
+dest_plate_lname,"{'count': 1, 'protocols': ['772041']}"
+dest_plate_type,"{'count': 1, 'protocols': ['5a5767']}"
+dest_slot,"{'count': 1, 'protocols': ['6d7eb7']}"
+dest_start_col,"{'count': 1, 'protocols': ['7663a6']}"
+dest_temp_mod_lname,"{'count': 1, 'protocols': ['generic_protein_purification']}"
+dest_type,"{'count': 3, 'protocols': ['ML-normalization', '66e60f', '8nhsa0-norm']}"
+dest_well_plate_tmod,"{'count': 1, 'protocols': ['generic_pcr_prep_2']}"
+destdilvol,"{'count': 1, 'protocols': ['1adec6']}"
+destination_plate_lname,"{'count': 1, 'protocols': ['generic_protein_purification']}"
+destination_well_plate_lname,"{'count': 1, 'protocols': ['generic_pcr_prep_2']}"
+digest_duration,"{'count': 1, 'protocols': ['010526']}"
+dil_csv_1,"{'count': 2, 'protocols': ['4568fa', '4568fa-2']}"
+dil_json_1,"{'count': 1, 'protocols': ['1bcd67']}"
+dil_json_2,"{'count': 1, 'protocols': ['1bcd67']}"
+dil_json_3,"{'count': 1, 'protocols': ['1bcd67']}"
+dil_plate_type,"{'count': 1, 'protocols': ['4568fa']}"
+diluent_csv,"{'count': 1, 'protocols': ['211a24']}"
+diluent_scheme,"{'count': 1, 'protocols': ['76c562']}"
+diluent_vol,"{'count': 1, 'protocols': ['543bf9']}"
+dilution_factor,"{'count': 1, 'protocols': ['customizable_serial_dilution_ot2']}"
+dilvol,"{'count': 1, 'protocols': ['1adec6']}"
+disp_bottom_clearance,"{'count': 1, 'protocols': ['11beaa']}"
+disp_delay,"{'count': 1, 'protocols': ['0556be-bmda']}"
+disp_delay_time,"{'count': 1, 'protocols': ['7f0f89']}"
+disp_flow_rate,"{'count': 2, 'protocols': ['5f7d18', '69db93']}"
+disp_flowrate_p10,"{'count': 1, 'protocols': ['11beaa']}"
+disp_flowrate_p50,"{'count': 1, 'protocols': ['11beaa']}"
+disp_height,"{'count': 12, 'protocols': ['00a214-protocol-1', '4d9b8b', '5191b6', '3d02be', '459cc2', '00a214-protocol-3', '00a214-protocol-4', '00a214-protocol-5', '00a214-protocol-2', '68ce98', '69db93', '1dfebe']}"
+disp_height_dest,"{'count': 1, 'protocols': ['384b23-tube-transfer']}"
+disp_rate,"{'count': 7, 'protocols': ['7f9595', '0045f1', '4d9b8b', '3b0db0', '00bbd7', '459cc2', '7f0f89']}"
+disp_rate_global20,"{'count': 1, 'protocols': ['25a03d']}"
+disp_rate_global300,"{'count': 1, 'protocols': ['25a03d']}"
+disp_rate_m20,"{'count': 1, 'protocols': ['3b0db0']}"
+disp_rate_multi,"{'count': 1, 'protocols': ['459cc2']}"
+disp_speed,"{'count': 5, 'protocols': ['543bf9', '3d02be', '5520f0', '2bdff3', '68ce98']}"
+disp_vol,"{'count': 2, 'protocols': ['4ee4d6', '7f0f89']}"
+dispensation_rate_multiplier,"{'count': 1, 'protocols': ['generic_pcr_prep_2']}"
+dispense_flow_rate,"{'count': 2, 'protocols': ['300073-2', '300073']}"
+dispense_height,"{'count': 2, 'protocols': ['199721', '7663a6']}"
+dispense_plan,"{'count': 1, 'protocols': ['18050b']}"
+dispense_rate,"{'count': 1, 'protocols': ['6af807']}"
+dispense_speed,"{'count': 1, 'protocols': ['199721']}"
+dispense_steps,"{'count': 1, 'protocols': ['357404']}"
+dispense_volume,"{'count': 1, 'protocols': ['118e8c']}"
+dispensing_height_plate,"{'count': 1, 'protocols': ['76ab0e']}"
+dispension_height_mm,"{'count': 2, 'protocols': ['300073-2', '300073']}"
+dispmode,"{'count': 1, 'protocols': ['4a0be6']}"
+disposal_vol,"{'count': 2, 'protocols': ['165a77', '559aa0']}"
+disposal_volume,"{'count': 1, 'protocols': ['118e8c']}"
+dmsovol,"{'count': 1, 'protocols': ['1adec6']}"
+dna,"{'count': 1, 'protocols': ['21e4d8-pt1']}"
+dna_aspirate_clearance,"{'count': 1, 'protocols': ['1f96ca']}"
+dna_csv,"{'count': 1, 'protocols': ['5654c0']}"
+dna_plate,"{'count': 1, 'protocols': ['60feec']}"
+dna_supernat_vol,"{'count': 1, 'protocols': ['generic_ngs_prep']}"
+dna_vol,"{'count': 1, 'protocols': ['7fc7b1']}"
+dna_volume,"{'count': 5, 'protocols': ['pcr_prep_part_2', 'pcr_test_plan', '118e8c', 'complete-pcr', 'generic_pcr_prep_2']}"
+dna_well_plate_lname,"{'count': 1, 'protocols': ['generic_pcr_prep_2']}"
+dna_well_plate_tmod,"{'count': 1, 'protocols': ['generic_pcr_prep_2']}"
+do_dnase_step,"{'count': 1, 'protocols': ['generic_protein_purification']}"
+do_sds_step,"{'count': 1, 'protocols': ['generic_protein_purification']}"
+do_vortex_pause,"{'count': 1, 'protocols': ['generic_protein_purification']}"
+donor_384_type,"{'count': 1, 'protocols': ['2bdff3']}"
+dp_type,"{'count': 2, 'protocols': ['7a3e4b', 'cherrypicking_simple']}"
+dplate,"{'count': 1, 'protocols': ['21e4d8-pt1']}"
+drop_threshold,"{'count': 1, 'protocols': ['70567f']}"
+dry_on_temperature_module,"{'count': 1, 'protocols': ['7a1ae8']}"
+dry_time,"{'count': 11, 'protocols': ['3fad82-part-2', '76ba23-pooling', '3fad82-part-3', '7805de-part-2', '76ba23', '7805de-part-4', '7805de-part-3', '1f96ca', 'illumina-nextera-XT-library-prep-part2', '7805de', '1f96ca-part-2']}"
+drying_time,"{'count': 2, 'protocols': ['nucleic_acid_purification_with_magnetic_beads', 'omega_biotek_magbind_totalpure_NGS']}"
+drying_time_in_minutes,"{'count': 2, 'protocols': ['70567f', '0944e4']}"
+dryrun,"{'count': 3, 'protocols': ['sci-neb-next-ultra', 'sci-illumina-dna-prep', 'sci-roche-hyperprep']}"
+ds_520,"{'count': 1, 'protocols': ['1ef67e']}"
+ds_540,"{'count': 1, 'protocols': ['1ef67e']}"
+ds_570,"{'count': 1, 'protocols': ['1ef67e']}"
+ds_620,"{'count': 1, 'protocols': ['1ef67e']}"
+ds_650,"{'count': 1, 'protocols': ['1ef67e']}"
+ds_690,"{'count': 1, 'protocols': ['1ef67e']}"
+e_temp,"{'count': 2, 'protocols': ['thermocycler', 'complete-pcr']}"
+e_time,"{'count': 2, 'protocols': ['thermocycler', 'complete-pcr']}"
+eluate_volume,"{'count': 1, 'protocols': ['4b4a80-size_selection']}"
+elute_on_robot,"{'count': 1, 'protocols': ['4fc750']}"
+eluteplate,"{'count': 1, 'protocols': ['18d6a1']}"
+elution,"{'count': 1, 'protocols': ['52d238']}"
+elution_buf_vol,"{'count': 1, 'protocols': ['generic_protein_purification']}"
+elution_buff_vol,"{'count': 2, 'protocols': ['701319', '2b3642']}"
+elution_buffer_vol,"{'count': 2, 'protocols': ['2c62b7', 'generic_ngs_prep']}"
+elution_buffer_volume,"{'count': 2, 'protocols': ['nucleic_acid_purification_with_magnetic_beads', 'omega_biotek_magbind_totalpure_NGS']}"
+elution_inc,"{'count': 1, 'protocols': ['70567f']}"
+elution_scan,"{'count': 2, 'protocols': ['121d15-6', '121d15-5']}"
+elution_slot_scan,"{'count': 2, 'protocols': ['121d15-6', '121d15-5']}"
+elution_transfer_vol,"{'count': 2, 'protocols': ['121d15-6', '121d15-5']}"
+elution_type,"{'count': 1, 'protocols': ['4fc750']}"
+elution_vol,"{'count': 28, 'protocols': ['sci-zymo-directzol-magbead', '3607d5-2', '74841a-2', 'sci-thermofisher-magmax', 'covid19-rna-extraction', '3607d5-3', 'sci-promega-magnesil-total-rna-mini-isolation-system', 'sci-macherey-nagel-nucleomag', 'sci-omegabiotek-magbind', 'bc-rnadvance-viral-feat', 'bc-rnadvance-viral', '19313a', 'omega-biotek-xpress', 'sci-mag-bind-blood-tissue-kit', '53fec2', '1ccd23-station-B', '74841a', 'sci-mgi-mgieasy-nucleic-acid-extraction-kit', '10bf60-station-B', 'promega-maxwell', '6ff9e9', 'sci-zymo-quick-dna-rna-magbead', 'sci-promega-magazorb-dna-mini-prep-kit', 'sci-omegabiotek-extraction', '4fc750', '17d210-part-3', '17d210-part-4', 'sci-omegabiotek-magbind-total-rna-96']}"
+em,"{'count': 1, 'protocols': ['243973']}"
+empty_vial_well,"{'count': 2, 'protocols': ['4b4a80-fragmentation', '4b4a80-pcr_enrichment']}"
+end_col,"{'count': 1, 'protocols': ['18050b']}"
+end_column,"{'count': 1, 'protocols': ['563624']}"
+end_repair,"{'count': 1, 'protocols': ['796af8']}"
+engage_height,"{'count': 12, 'protocols': ['3fad82-part-2', '111210-part-8', '111210-part-6', '4a5f32', '3fad82-part-3', '6d7fc3-part-3', '6d7fc3-part-5', '44b1ac', '111210-part-10', '2a370c', '6d7fc3-part-7', '2905a4']}"
+engage_offset,"{'count': 4, 'protocols': ['7805de-part-2', '7805de-part-4', '7805de-part-3', '7805de']}"
+engage_time,"{'count': 13, 'protocols': ['3fad82-part-2', '3fad82-part-3', '7805de-part-2', '4ee4d6', '76ba23', '7805de-part-4', '7805de-part-3', '1f96ca', '76ba23-bisulfite_conversion', '4b7268', '4ee4d6-part2', '7805de', '1f96ca-part-2']}"
+enz_asp_rate,"{'count': 1, 'protocols': ['010526']}"
+enz_disp_rate,"{'count': 1, 'protocols': ['010526']}"
+enz_mx_volume,"{'count': 1, 'protocols': ['4b4a80-fragmentation']}"
+enz_mx_well,"{'count': 1, 'protocols': ['4b4a80-fragmentation']}"
+enzyme_vol,"{'count': 1, 'protocols': ['010526']}"
+ethanol_res_loadname,"{'count': 1, 'protocols': ['generic_ngs_prep']}"
+ethanol_wash_vol,"{'count': 1, 'protocols': ['generic_ngs_prep']}"
+etoh_inc,"{'count': 1, 'protocols': ['70567f']}"
+etoh_volume,"{'count': 2, 'protocols': ['4b4a80-pcr_enrichment', '4b4a80-size_selection']}"
+etoh_well,"{'count': 2, 'protocols': ['4b4a80-pcr_enrichment', '4b4a80-size_selection']}"
+ex_opti,"{'count': 1, 'protocols': ['6b9ee3']}"
+example_dropdown,"{'count': 1, 'protocols': ['pcr_test_plan']}"
+example_file,"{'count': 1, 'protocols': ['pcr_test_plan']}"
+example_string,"{'count': 1, 'protocols': ['pcr_test_plan']}"
+extraction_type,"{'count': 1, 'protocols': ['6f2d9b']}"
+extrplate,"{'count': 1, 'protocols': ['18d6a1']}"
+f_time,"{'count': 2, 'protocols': ['swift-fully-automated', 'swift-fully-automated-custom']}"
+fe_temp,"{'count': 2, 'protocols': ['thermocycler', 'complete-pcr']}"
+fe_time,"{'count': 2, 'protocols': ['thermocycler', 'complete-pcr']}"
+fill_plate_blank,"{'count': 2, 'protocols': ['4568fa', '4568fa-2']}"
+fill_second_plate,"{'count': 1, 'protocols': ['4568fa']}"
+fill_volume,"{'count': 1, 'protocols': ['063611']}"
+filter_tip,"{'count': 3, 'protocols': ['797dee-normalization', 'normalization', 'cherrypicking_simple']}"
+final_air_gap,"{'count': 1, 'protocols': ['5a3797-protocol-3']}"
+final_asp_speed,"{'count': 1, 'protocols': ['5a3797-protocol-3']}"
+final_conc,"{'count': 1, 'protocols': ['08aeaa']}"
+final_extension_cycles,"{'count': 1, 'protocols': ['2b3642']}"
+final_plate_slot4,"{'count': 1, 'protocols': ['25a03d']}"
+final_temp,"{'count': 3, 'protocols': ['thermocycler', 'thermocycler-csv', 'complete-pcr']}"
+final_tubes,"{'count': 1, 'protocols': ['0556be-bmda']}"
+final_vol,"{'count': 3, 'protocols': ['1bcd67', '19313a', 'illumina-nextera-XT-library-prep-part2']}"
+first_media_x,"{'count': 1, 'protocols': ['3c9aec']}"
+flash,"{'count': 15, 'protocols': ['74841a-2', 'sci-thermofisher-magmax', 'covid19-rna-extraction', 'sci-promega-magnesil-total-rna-mini-isolation-system', 'sci-macherey-nagel-nucleomag', 'sci-mag-bind-blood-tissue-kit', '1ccd23-station-B', '74841a', 'sci-mgi-mgieasy-nucleic-acid-extraction-kit', '10bf60-station-B', '6ff9e9', 'sci-zymo-quick-dna-rna-magbead', 'sci-promega-magazorb-dna-mini-prep-kit', '4fc750', 'sci-omegabiotek-magbind-total-rna-96']}"
+flow_rate_asp,"{'count': 1, 'protocols': ['5829d7']}"
+flow_rate_beads,"{'count': 6, 'protocols': ['3fad82-part-2', '3fad82-part-3', '7805de-part-2', '7805de-part-4', '7805de-part-3', '7805de']}"
+flow_rate_disp,"{'count': 1, 'protocols': ['5829d7']}"
+flow_rate_elution,"{'count': 1, 'protocols': ['6d2e65']}"
+flow_rate_factor,"{'count': 1, 'protocols': ['3a49b6']}"
+flow_rate_ligation_mx,"{'count': 1, 'protocols': ['3fad82']}"
+flow_rate_mm,"{'count': 1, 'protocols': ['441cc8']}"
+flow_rate_multiplier,"{'count': 1, 'protocols': ['76ab0e']}"
+flowrate,"{'count': 1, 'protocols': ['5a2a35']}"
+fluomix_volume,"{'count': 1, 'protocols': ['118e8c']}"
+formic_acid_vol,"{'count': 1, 'protocols': ['701319']}"
+formulation_csv,"{'count': 1, 'protocols': ['38efd4']}"
+fox_dil,"{'count': 1, 'protocols': ['1ef67e']}"
+fragmentation_minutes,"{'count': 1, 'protocols': ['4b4a80-fragmentation']}"
+full_volume,"{'count': 1, 'protocols': ['234495']}"
+gantryspeed,"{'count': 1, 'protocols': ['5a2a35']}"
+grid,"{'count': 1, 'protocols': ['4d9b8b']}"
+has_first_tube_set,"{'count': 1, 'protocols': ['300073']}"
+has_second_tube_set,"{'count': 1, 'protocols': ['300073']}"
+heat_kill_duration,"{'count': 1, 'protocols': ['010526']}"
+heat_kill_temperature,"{'count': 1, 'protocols': ['010526']}"
+heating_module_temp,"{'count': 1, 'protocols': ['19313a']}"
+height_above_cartridge,"{'count': 1, 'protocols': ['7f0f89']}"
+height_after_disp,"{'count': 1, 'protocols': ['2bdff3']}"
+height_engage,"{'count': 12, 'protocols': ['78d33c-part-3', '78d33c-part-4', '78d33c-part-5', '78d33c-part-2', '78d33c', '43d313-part-6', '43d313-part-7', '78d33c-part-6', '43d313-part-2', '43d313-part-5', '43d313-part-4', '43d313-part-3']}"
+htp_csv,"{'count': 1, 'protocols': ['5191b6']}"
+i5_volume,"{'count': 1, 'protocols': ['4b4a80-pcr_enrichment']}"
+i5_well,"{'count': 1, 'protocols': ['4b4a80-pcr_enrichment']}"
+i7_volume,"{'count': 1, 'protocols': ['4b4a80-pcr_enrichment']}"
+i7_well,"{'count': 1, 'protocols': ['4b4a80-pcr_enrichment']}"
+inc_time,"{'count': 1, 'protocols': ['08878b']}"
+include_bind,"{'count': 1, 'protocols': ['sci-zymo-quick-dna-rna-magbead']}"
+include_dnase,"{'count': 1, 'protocols': ['sci-zymo-quick-dna-rna-magbead']}"
+include_dry,"{'count': 1, 'protocols': ['sci-zymo-quick-dna-rna-magbead']}"
+include_elute,"{'count': 1, 'protocols': ['sci-zymo-quick-dna-rna-magbead']}"
+include_mastermix_step,"{'count': 1, 'protocols': ['1e744e']}"
+include_multi,"{'count': 1, 'protocols': ['559aa0']}"
+include_ntc,"{'count': 2, 'protocols': ['165a77', '559aa0']}"
+include_pause,"{'count': 1, 'protocols': ['4c8861']}"
+include_sample_step,"{'count': 1, 'protocols': ['1e744e']}"
+include_standards_only,"{'count': 1, 'protocols': ['234495']}"
+include_wash1,"{'count': 1, 'protocols': ['sci-zymo-quick-dna-rna-magbead']}"
+include_wash2,"{'count': 1, 'protocols': ['sci-zymo-quick-dna-rna-magbead']}"
+include_wash3,"{'count': 1, 'protocols': ['sci-zymo-quick-dna-rna-magbead']}"
+include_wash4,"{'count': 1, 'protocols': ['sci-zymo-quick-dna-rna-magbead']}"
+incubate_bind_time,"{'count': 1, 'protocols': ['5f7d18']}"
+incubation_temperature,"{'count': 1, 'protocols': ['211fe1']}"
+incubation_time,"{'count': 5, 'protocols': ['generic_protein_purification', 'nucleic_acid_purification_with_magnetic_beads', 'omega_biotek_magbind_totalpure_NGS', '3c9aec', '04f4e7']}"
+index_start_col,"{'count': 1, 'protocols': ['0bf4f4-pt2']}"
+index_start_column,"{'count': 1, 'protocols': ['6a93a2-part5']}"
+index_vol,"{'count': 2, 'protocols': ['3607d5', '17d210-part-2']}"
+indexing_plate_loadname,"{'count': 1, 'protocols': ['generic_ngs_prep']}"
+init_temp,"{'count': 2, 'protocols': ['thermocycler', 'complete-pcr']}"
+init_time,"{'count': 2, 'protocols': ['thermocycler', 'complete-pcr']}"
+init_vol,"{'count': 2, 'protocols': ['illumina-nextera-XT-library-prep-part2', '6aee6e']}"
+initial_denaturation_cycles,"{'count': 1, 'protocols': ['2b3642']}"
+initial_vol,"{'count': 1, 'protocols': ['797dee-normalization']}"
+input_csv,"{'count': 14, 'protocols': ['85b0dc', '7aa3fd-library-pooling', '76ab0e', '3b3f1c', '7062c9', '017860', '8nhsa0', 'ML-normalization', 'thermocycler-csv', '010526', '66e60f', '8nhsa0-norm', '272c63', '4883fc']}"
+input_file,"{'count': 10, 'protocols': ['121d15-7-2ml-15ml-pool', '121d15-2-384', '0ef96f', '121d15-2-96-Irish-2200', '121d15-7-2ml-2ml-pool', '121d15-2-96-Greiner-1000', '121d15-2-96-Greiner-500', '121d15-3', '121d15-7-2ml-15ml-aliquot', '121d15-7-2ml-2ml-aliquot']}"
+input_file2,"{'count': 6, 'protocols': ['121d15-2-384', '121d15-2-96-Irish-2200', '121d15-7-2ml-2ml-pool', '121d15-2-96-Greiner-1000', '121d15-2-96-Greiner-500', '121d15-7-2ml-15ml-aliquot']}"
+input_labware,"{'count': 1, 'protocols': ['6d3eda']}"
+integer_example,"{'count': 1, 'protocols': ['pcr_test_plan']}"
+irt_vol,"{'count': 1, 'protocols': ['701319']}"
+is_blood_cells,"{'count': 1, 'protocols': ['0f5985']}"
+is_dry_run,"{'count': 1, 'protocols': ['357404']}"
+is_eb_tube,"{'count': 1, 'protocols': ['0f5985']}"
+is_filtered,"{'count': 1, 'protocols': ['pcr_prep_part_1']}"
+is_lwaste,"{'count': 1, 'protocols': ['0f5985']}"
+is_multi_disp_reags,"{'count': 1, 'protocols': ['357404']}"
+is_protk_tube,"{'count': 1, 'protocols': ['0f5985']}"
+is_reuse_reag_tips,"{'count': 1, 'protocols': ['357404']}"
+is_reuse_wash_tips,"{'count': 1, 'protocols': ['357404']}"
+is_reusing_tips,"{'count': 1, 'protocols': ['772041']}"
+is_start_after_1st_incbn,"{'count': 1, 'protocols': ['357404']}"
+is_stop_after_1st_incbn,"{'count': 1, 'protocols': ['357404']}"
+ki_dil,"{'count': 1, 'protocols': ['1ef67e']}"
+label,"{'count': 1, 'protocols': ['71381b']}"
+labware1,"{'count': 1, 'protocols': ['38efd4']}"
+labware2,"{'count': 1, 'protocols': ['38efd4']}"
+labware3,"{'count': 1, 'protocols': ['38efd4']}"
+labware4,"{'count': 1, 'protocols': ['38efd4']}"
+labware5,"{'count': 1, 'protocols': ['38efd4']}"
+labware6,"{'count': 1, 'protocols': ['38efd4']}"
+labware7,"{'count': 1, 'protocols': ['38efd4']}"
+labware8,"{'count': 1, 'protocols': ['38efd4']}"
+labware_1_lname,"{'count': 1, 'protocols': ['generic_pcr_prep_1']}"
+labware_200ul_tips,"{'count': 1, 'protocols': ['441cc8']}"
+labware_24,"{'count': 1, 'protocols': ['154ec5']}"
+labware_2_lname,"{'count': 1, 'protocols': ['generic_pcr_prep_1']}"
+labware_384,"{'count': 1, 'protocols': ['154ec5']}"
+labware_384_well_plate,"{'count': 2, 'protocols': ['165a77', '559aa0']}"
+labware_384rxnplate,"{'count': 1, 'protocols': ['1e744e']}"
+labware_96,"{'count': 1, 'protocols': ['154ec5']}"
+labware_96rxnplate,"{'count': 1, 'protocols': ['1e744e']}"
+labware_aliquots,"{'count': 1, 'protocols': ['7363e4']}"
+labware_clinical_samples_1,"{'count': 1, 'protocols': ['7363e4']}"
+labware_clinical_samples_2,"{'count': 1, 'protocols': ['7363e4']}"
+labware_collect_plate,"{'count': 1, 'protocols': ['76ba23-bisulfite_conversion']}"
+labware_cultureplate,"{'count': 1, 'protocols': ['6cb818']}"
+labware_deep_well,"{'count': 1, 'protocols': ['4b7268']}"
+labware_dest,"{'count': 1, 'protocols': ['29225e']}"
+labware_dna_sample_plate,"{'count': 1, 'protocols': ['1f96ca']}"
+labware_elisa_plate,"{'count': 1, 'protocols': ['39bbbb']}"
+labware_mm,"{'count': 1, 'protocols': ['29225e-part-2']}"
+labware_mmplate,"{'count': 1, 'protocols': ['1e744e']}"
+labware_p300_tips,"{'count': 1, 'protocols': ['76ba23-bisulfite_conversion']}"
+labware_patient_samples,"{'count': 1, 'protocols': ['165a77']}"
+labware_pcr,"{'count': 1, 'protocols': ['29225e-part-2']}"
+labware_pcr_plate,"{'count': 10, 'protocols': ['3fad82-part-2', '3fad82-part-3', '7805de-part-2', '7805de-part-4', '7805de-part-3', '441cc8', '76ba23-bisulfite_conversion', '3fad82', '4b7268', '7805de']}"
+labware_plate,"{'count': 2, 'protocols': ['6b51bd', '5a2a35']}"
+labware_pool,"{'count': 1, 'protocols': ['1f96ca-part-2']}"
+labware_pre_pcr_plate,"{'count': 2, 'protocols': ['1f96ca', '1f96ca-part-2']}"
+labware_rack,"{'count': 1, 'protocols': ['063611']}"
+labware_reservoir,"{'count': 9, 'protocols': ['7805de-part-2', '76ba23', '7805de-part-4', '7805de-part-3', '441cc8', '6b51bd', '76ba23-bisulfite_conversion', '4b7268', '7805de']}"
+labware_rna,"{'count': 1, 'protocols': ['29225e']}"
+labware_samp,"{'count': 1, 'protocols': ['29225e-part-2']}"
+labware_sample_plate,"{'count': 1, 'protocols': ['39bbbb']}"
+labware_sampleplates,"{'count': 1, 'protocols': ['1e744e']}"
+labware_tips,"{'count': 1, 'protocols': ['6cb818']}"
+labware_tips20,"{'count': 3, 'protocols': ['3fad82-part-2', '3fad82-part-3', '3fad82']}"
+labware_tips300,"{'count': 2, 'protocols': ['3fad82-part-2', '3fad82-part-3']}"
+labware_tube_rack,"{'count': 1, 'protocols': ['39bbbb']}"
+labware_tube_strip,"{'count': 4, 'protocols': ['7805de-part-2', '7805de-part-4', '7805de-part-3', '7805de']}"
+labware_tube_strip_or_plate,"{'count': 2, 'protocols': ['1f96ca', '1f96ca-part-2']}"
+labware_tuberack,"{'count': 1, 'protocols': ['234495']}"
+labware_water_tube,"{'count': 1, 'protocols': ['29225e']}"
+labwaretype,"{'count': 1, 'protocols': ['05f673']}"
+left_pip,"{'count': 1, 'protocols': ['demo']}"
+left_pip_slot,"{'count': 1, 'protocols': ['76c562']}"
+left_pip_tip,"{'count': 1, 'protocols': ['76c562']}"
+left_pipette,"{'count': 2, 'protocols': ['pcr_prep_part_2', 'pcr_prep_part_1']}"
+left_pipette_lname,"{'count': 3, 'protocols': ['generic_pcr_prep_1', 'generic_protein_purification', 'generic_pcr_prep_2']}"
+left_pipette_tipracks_lname,"{'count': 1, 'protocols': ['generic_protein_purification']}"
+left_pipette_type,"{'count': 2, 'protocols': ['76c562', '6d7eb7']}"
+length_from_side,"{'count': 7, 'protocols': ['5f7d18', '65ed01', '0bf4f4-pt3', '19313a', '0bf4f4-pt2', '69db93', '04f4e7']}"
+libvol,"{'count': 1, 'protocols': ['1adec6']}"
+lid_temp,"{'count': 4, 'protocols': ['thermocycler', 'thermocycler-csv', 'complete-pcr', '2d9a0c']}"
+liquid_a_vol,"{'count': 1, 'protocols': ['58d57d']}"
+liquid_b_vol,"{'count': 1, 'protocols': ['58d57d']}"
+liquid_c_vol,"{'count': 1, 'protocols': ['58d57d']}"
+liquid_d_vol,"{'count': 1, 'protocols': ['58d57d']}"
+load_csv,"{'count': 1, 'protocols': ['211a24']}"
+loc_csv,"{'count': 1, 'protocols': ['6a77d9']}"
+loc_rnase,"{'count': 1, 'protocols': ['2942dd']}"
+loc_tween,"{'count': 1, 'protocols': ['2942dd']}"
+lwaste,"{'count': 1, 'protocols': ['6f4e2c']}"
+lysis,"{'count': 1, 'protocols': ['5c14ad']}"
+lysis_vol,"{'count': 1, 'protocols': ['19313a']}"
+m10_mount,"{'count': 2, 'protocols': ['313086-logixsmart-station-B', '75cfa6']}"
+m1k,"{'count': 1, 'protocols': ['bpg-rna-extraction']}"
+m20_mount,"{'count': 56, 'protocols': ['zymo-ribofree-p5-adapter-ligation', '2b9486', '3607d5', '04eeb1-part-7', '2aee74-48-3', 'illumina-nextera-XT-library-prep-part1', '5a3797-protocol-2', '3607d5-2', '2c62b7', '3607d5-3', '3607d5-4', '2df9f8-pt2', '17d210', '2aee74-48', '470d8c', '7663a6', 'zymo-ribofree-first-strand-cdna-synth-universal-depletion', 'onsite_atila_saliva384_pt2', '2aee74-96', '13ac78', '701319', '52d238', '0bf4f4', '0bf4f4-pt3', '3b0db0', '796af8', 'zymo-ribofree-library-index-pcr', '0bf4f4-pt2', '7855ef-part3', '04eeb1-part-2', '7855ef-part2', '04eeb1', '925d07-q', '7855ef', '10bf60-station-C', '7855ef-plate-part2', '7855ef-plate-part3', '2aee74-96-3', '6faa1e', 'onsite_atila_nasal', '44b43c', '7855ef-plate', 'generic_ngs_prep', '5dcd88', '60d861-2', '6cd9d6', '6e160e', '2bdff3', '6ec4dd', '60d861-3', '17d210-part-5', '17d210-part-2', '17d210-part-3', '925d07-v3', '17d210-part-4', '6e2509']}"
+m300_mount,"{'count': 60, 'protocols': ['2aee74-48-2', '04eeb1-part-6', '60d861', '5a3797-protocol-3', '3607d5', '2c19aa', '4a5f32', '1bcd67', '04eeb1-part-7', 'sci-zymo-directzol-magbead', '1d6d1b', '563624', '3607d5-2', '7f9595', '2c62b7', '3607d5-3', '3607d5-4', '2df9f8', '470d8c', '701319', '516336-part-2', '52d238', 'sci-omegabiotek-magbind', '0bf4f4', '0bf4f4-pt3', '121d15-repeat', '121d15-6', '796af8', 'omega-biotek-xpress', '0bf4f4-pt2', '007992', '04eeb1-part-5', '5a3797-protocol-1', '459cc2', '516336', '04eeb1-part-3', '04eeb1-part-4', '2d7126', '4bdd14', '2aee74-96-2', '35269b', '5520f0', '44b43c', 'generic_ngs_prep', '5dcd88', '6cd9d6', '2b3642', '1649b1', '69db93', '17d210-part-2', '0b98cc', '121d15', 'sci-omegabiotek-extraction', '121d15-4', '17d210-part-3', '17d210-part-4', '121d15-5', 'sci-omegabiotek-magbind-total-rna-96', '3c9aec', '04f4e7']}"
+m300_type,"{'count': 2, 'protocols': ['2d7126', '0b98cc']}"
+m_mount,"{'count': 1, 'protocols': ['zymo-quick-custom']}"
+mag_bead_mix_resuspend_reps,"{'count': 1, 'protocols': ['1440ad']}"
+mag_bead_mix_resuspend_vol,"{'count': 1, 'protocols': ['1440ad']}"
+mag_engage_height,"{'count': 3, 'protocols': ['701319', '516336-part-2', '516336']}"
+mag_engage_time,"{'count': 2, 'protocols': ['5f7d18', 'generic_protein_purification']}"
+mag_gen,"{'count': 11, 'protocols': ['21e4d8-pt2', '21e4d8-pt3', 'sci-zymo-directzol-magbead', 'sci-omegabiotek-magbind', 'swift-2s-turbo-pt2', 'swift-2s-turbo-pt3', 'illumina-nextera-XT-library-prep-part2', 'zymo-quick', 'sci-omegabiotek-extraction', 'zymo-quick-96', 'sci-omegabiotek-magbind-total-rna-96']}"
+mag_height,"{'count': 13, 'protocols': ['3607d5-2', '74841a-2', 'covid19-rna-extraction', '3607d5-3', 'sci-macherey-nagel-nucleomag', '53fec2', '1ccd23-station-B', '74841a', '0f5985', '35269b', '4fc750', '17d210-part-3', '17d210-part-4']}"
+mag_height_1,"{'count': 1, 'protocols': ['19313a']}"
+mag_mod,"{'count': 2, 'protocols': ['14b685', 'nucleic_acid_purification_with_magnetic_beads']}"
+mag_mod_lname,"{'count': 1, 'protocols': ['generic_protein_purification']}"
+mag_plate,"{'count': 2, 'protocols': ['21e4d8-pt2', '21e4d8-pt3']}"
+mag_time,"{'count': 1, 'protocols': ['343001']}"
+magdeck_gen,"{'count': 1, 'protocols': ['4fc750']}"
+magmod,"{'count': 2, 'protocols': ['swift-fully-automated', 'swift-fully-automated-custom']}"
+magplate_offset,"{'count': 1, 'protocols': ['1ccd23-station-B']}"
+master_mix_csv,"{'count': 3, 'protocols': ['generic_pcr_prep_1', 'pcr_prep_part_1', 'complete-pcr']}"
+master_mix_volume,"{'count': 1, 'protocols': ['pcr_test_plan']}"
+mastermix_reservoir_lname,"{'count': 1, 'protocols': ['generic_pcr_prep_2']}"
+mastermix_start_col,"{'count': 1, 'protocols': ['7fc7b1']}"
+mastermix_vol,"{'count': 2, 'protocols': ['4175de', 'generic_ngs_prep']}"
+mastermix_volume,"{'count': 4, 'protocols': ['pcr_prep_part_2', '772041', 'complete-pcr', 'generic_pcr_prep_2']}"
+max_reaction_volume,"{'count': 1, 'protocols': ['1479']}"
+mecn_dil_loc,"{'count': 1, 'protocols': ['459cc2']}"
+mecn_transfer,"{'count': 1, 'protocols': ['459cc2']}"
+mecn_volume,"{'count': 1, 'protocols': ['459cc2']}"
+mecn_wash1_vol,"{'count': 1, 'protocols': ['701319']}"
+mecn_wash2_vol,"{'count': 1, 'protocols': ['701319']}"
+mecn_wash3_vol,"{'count': 1, 'protocols': ['701319']}"
+media_trans_vol,"{'count': 1, 'protocols': ['0b98cc']}"
+mix,"{'count': 1, 'protocols': ['76c562']}"
+mix_after,"{'count': 1, 'protocols': ['17d210']}"
+mix_clearance,"{'count': 1, 'protocols': ['26c304']}"
+mix_count,"{'count': 1, 'protocols': ['3a49b6']}"
+mix_csv,"{'count': 1, 'protocols': ['453b5a']}"
+mix_etoh,"{'count': 1, 'protocols': ['70567f']}"
+mix_rate,"{'count': 2, 'protocols': ['74b303', '29225e']}"
+mix_repetitions,"{'count': 2, 'protocols': ['74b303', '2c83f7']}"
+mix_reps,"{'count': 25, 'protocols': ['74841a-2', 'sci-thermofisher-magmax', 'covid19-rna-extraction', 'sci-promega-magnesil-total-rna-mini-isolation-system', '199721', '7663a6', 'sci-macherey-nagel-nucleomag', '4d9b8b', '13ea1e-part2', '3b0db0', 'sci-mag-bind-blood-tissue-kit', '6b51bd', '1ccd23-station-B', '74841a', '26c304', '6be1f8', 'sci-mgi-mgieasy-nucleic-acid-extraction-kit', '10bf60-station-B', '6ff9e9', 'sci-zymo-quick-dna-rna-magbead', 'sci-promega-magazorb-dna-mini-prep-kit', '13ea1e', '0556be-bmda', '234495', '4fc750']}"
+mix_reps1,"{'count': 1, 'protocols': ['19313a']}"
+mix_reps2,"{'count': 1, 'protocols': ['19313a']}"
+mix_reps_elution1,"{'count': 1, 'protocols': ['19313a']}"
+mix_reps_elution2,"{'count': 1, 'protocols': ['19313a']}"
+mix_reps_wash1,"{'count': 1, 'protocols': ['19313a']}"
+mix_reps_wash2,"{'count': 1, 'protocols': ['19313a']}"
+mix_sources,"{'count': 1, 'protocols': ['51b9a5']}"
+mix_vol,"{'count': 5, 'protocols': ['199721', '7663a6', '4d9b8b', '26c304', '0556be-bmda']}"
+mix_volume,"{'count': 1, 'protocols': ['74b303']}"
+mixln,"{'count': 1, 'protocols': ['illumina-nextera-XT-library-prep-part3']}"
+mixp300,"{'count': 1, 'protocols': ['1adec6-3']}"
+mm,"{'count': 3, 'protocols': ['21e4d8-pt2', '21e4d8-pt3', '21e4d8-pt1']}"
+mm1_col,"{'count': 1, 'protocols': ['04eeb1-part-3']}"
+mm2_col,"{'count': 1, 'protocols': ['04eeb1-part-3']}"
+mm2_vol,"{'count': 1, 'protocols': ['2c62b7']}"
+mm_asp_height,"{'count': 1, 'protocols': ['6e2509']}"
+mm_col,"{'count': 2, 'protocols': ['04eeb1-part-6', '04eeb1-part-4']}"
+mm_csv,"{'count': 1, 'protocols': ['141a1a']}"
+mm_disp_height,"{'count': 1, 'protocols': ['6e2509']}"
+mm_height,"{'count': 1, 'protocols': ['0556be-covid-mm-qc-v3']}"
+mm_lw,"{'count': 1, 'protocols': ['7fc7b1']}"
+mm_res_vol,"{'count': 1, 'protocols': ['39b4c7']}"
+mm_slot,"{'count': 1, 'protocols': ['7fc7b1']}"
+mm_source_vol,"{'count': 1, 'protocols': ['7fc7b1']}"
+mm_transfer_vol,"{'count': 1, 'protocols': ['7fc7b1']}"
+mm_vol,"{'count': 8, 'protocols': ['85b0dc', 'generic_station_C', '17d210', '17cb2d', '39b4c7', '10bf60-station-C', '0556be-bmda', '925d07-v3']}"
+mm_volume,"{'count': 1, 'protocols': ['295c73']}"
+mmx_vol,"{'count': 1, 'protocols': ['7663a6']}"
+mnt,"{'count': 3, 'protocols': ['cepheid', '4471ba', '0961d2-part4']}"
+mnt10,"{'count': 2, 'protocols': ['41ece2', '3662e6']}"
+mnt1000,"{'count': 2, 'protocols': ['3955db', '115d98']}"
+mnt20,"{'count': 7, 'protocols': ['243973', 'bpg-rna-extraction', '1adec6', '50c11b', '1adec6-4', '1adec6-3', '71381b']}"
+mnt300,"{'count': 12, 'protocols': ['243973', '1adec6-7', '6b8c90', '1adec6-6', '41ece2', '7cfbde', '6b8c90-2', '3662e6', '1adec6-4', '1adec6-2', '1adec6-5', '71381b']}"
+mnt50,"{'count': 1, 'protocols': ['6b8c90-3']}"
+mntmulti,"{'count': 2, 'protocols': ['gna_octea_v2', 'gna_octea']}"
+mntsingle,"{'count': 2, 'protocols': ['gna_octea_v2', 'gna_octea']}"
+mother_plate_type,"{'count': 1, 'protocols': ['18050b']}"
+mount,"{'count': 2, 'protocols': ['3d02be', '6f4e2c']}"
+mount_p20,"{'count': 1, 'protocols': ['1e744e']}"
+move_side,"{'count': 2, 'protocols': ['29225e-part-2', '29225e']}"
+move_vol,"{'count': 1, 'protocols': ['19313a']}"
+multi_pip_info,"{'count': 1, 'protocols': ['generic_station_C']}"
+n1_col,"{'count': 1, 'protocols': ['559aa0']}"
+n1_primer_well,"{'count': 1, 'protocols': ['559aa0']}"
+n2_col,"{'count': 1, 'protocols': ['559aa0']}"
+n2_primer_well,"{'count': 1, 'protocols': ['559aa0']}"
+n7_row,"{'count': 1, 'protocols': ['44b1ac']}"
+n_bead_mixes,"{'count': 1, 'protocols': ['generic_protein_purification']}"
+n_cor,"{'count': 1, 'protocols': ['1ef67e']}"
+n_elution_mixes,"{'count': 1, 'protocols': ['generic_protein_purification']}"
+n_last_samples,"{'count': 1, 'protocols': ['357404']}"
+n_mixes,"{'count': 1, 'protocols': ['generic_pcr_prep_2']}"
+n_plates,"{'count': 1, 'protocols': ['017860']}"
+n_samples,"{'count': 5, 'protocols': ['300073-2', '0f5985', 'generic_protein_purification', 'generic_ngs_prep', 'generic_pcr_prep_2']}"
+n_samples_set1,"{'count': 1, 'protocols': ['300073']}"
+n_samples_set2,"{'count': 1, 'protocols': ['300073']}"
+n_slots,"{'count': 1, 'protocols': ['357404']}"
+n_wash_mixes,"{'count': 1, 'protocols': ['generic_protein_purification']}"
+n_washes,"{'count': 1, 'protocols': ['generic_protein_purification']}"
+n_wells,"{'count': 1, 'protocols': ['772041']}"
+na_oh_volume,"{'count': 1, 'protocols': ['user-upload_ZooMS_Protocol']}"
+na_oh_wash_yn,"{'count': 1, 'protocols': ['user-upload_ZooMS_Protocol']}"
+nc,"{'count': 1, 'protocols': ['3662e6']}"
+new_tip,"{'count': 1, 'protocols': ['5520f0']}"
+no_cycles,"{'count': 2, 'protocols': ['thermocycler', 'complete-pcr']}"
+no_of_samps,"{'count': 2, 'protocols': ['illumina-nextera-XT-library-prep-part3', 'illumina-nextera-XT-library-prep-part2']}"
+no_plates,"{'count': 2, 'protocols': ['rem-pcr-plate', '5c14ad']}"
+no_samps,"{'count': 2, 'protocols': ['swift-fully-automated', 'swift-fully-automated-custom']}"
+noblank,"{'count': 1, 'protocols': ['141a1a']}"
+noce,"{'count': 1, 'protocols': ['141a1a']}"
+nomodules,"{'count': 3, 'protocols': ['sci-neb-next-ultra', 'sci-illumina-dna-prep', 'sci-roche-hyperprep']}"
+norep,"{'count': 1, 'protocols': ['141a1a']}"
+norm_data,"{'count': 1, 'protocols': ['08aeaa']}"
+np,"{'count': 1, 'protocols': ['41ece2']}"
+ntc_col,"{'count': 1, 'protocols': ['559aa0']}"
+ntc_primer_well,"{'count': 1, 'protocols': ['559aa0']}"
+nuc_free_water_vol_well,"{'count': 1, 'protocols': ['5f7d18']}"
+num,"{'count': 3, 'protocols': ['21e4d8-pt2', '21e4d8-pt3', '21e4d8-pt1']}"
+num_antibodies,"{'count': 1, 'protocols': ['51df08']}"
+num_col,"{'count': 5, 'protocols': ['659888', '5f7d18', '2df9f8-pt4', '7663a6', '5dcd88']}"
+num_cols,"{'count': 2, 'protocols': ['2d7126', '44b43c']}"
+num_columns,"{'count': 1, 'protocols': ['74750e']}"
+num_daughter_plates,"{'count': 1, 'protocols': ['18050b']}"
+num_gene,"{'count': 1, 'protocols': ['6af807']}"
+num_mag_beads_tubes,"{'count': 1, 'protocols': ['1440ad']}"
+num_mastermix,"{'count': 1, 'protocols': ['6af807']}"
+num_mm,"{'count': 2, 'protocols': ['269b21', '131de0']}"
+num_of_dilutions,"{'count': 1, 'protocols': ['customizable_serial_dilution_ot2']}"
+num_pl,"{'count': 2, 'protocols': ['0961d2-part2', '0961d2-part3']}"
+num_plates,"{'count': 22, 'protocols': ['659888', '2c19aa', '1d6d1b', '0fa015', '2df9f8-pt3', '2df9f8-pt4', '49de51-pt1', '00a214-protocol-1', '0bd707', '74750e', '17cb2d', '37de37', '698b9e', '00a214-protocol-3', '00a214-protocol-4', '4bdd14', '00a214-protocol-5', '00a214-protocol-2', '44b43c', '51b9a5', '17d210-part-5', '1d37e5']}"
+num_pool_sources,"{'count': 1, 'protocols': ['199721']}"
+num_pools,"{'count': 1, 'protocols': ['199721']}"
+num_primers,"{'count': 1, 'protocols': ['69cf81']}"
+num_reps,"{'count': 1, 'protocols': ['131de0']}"
+num_row,"{'count': 1, 'protocols': ['659888']}"
+num_rows_a,"{'count': 1, 'protocols': ['384b23-pooling']}"
+num_rows_b,"{'count': 1, 'protocols': ['384b23-pooling']}"
+num_samp,"{'count': 45, 'protocols': ['1440ad', '25a03d', '00a6e5', '384b23-tube-transfer', '5fa647', 'onsite_atila_saliva', '2df9f8-pt2', '2df9f8', '4d9b8b', '13ea1e-part2', '0bf4f4', '0bf4f4-pt3', '3b0db0', '19313a', '45a320', '11beaa', '0bf4f4-pt2', '7855ef-part4', '7855ef-part3', '00bbd7', '7855ef-part2', '7f0f89', '6a93a2', '7855ef', '5c50d9', '7855ef-plate-part2', '384b23-plate-transfer', '7855ef-plate-part3', '7855ef-plate-part4', '1dec68', '0d2950', 'onsite_atila_nasal', '7855ef-plate', '6e160e', 'onsite_atila_saliva384_pt1', '13ea1e', '6a93a2-part2', '69db93', '6a93a2-part5', '5829d7', '1dfebe', '6a93a2-part4', '698b9e-part2', '6a93a2-part3', '04f4e7']}"
+num_samp_plate1,"{'count': 1, 'protocols': ['onsite_atila_saliva384_pt2']}"
+num_samp_plate2,"{'count': 1, 'protocols': ['onsite_atila_saliva384_pt2']}"
+num_samp_plate3,"{'count': 1, 'protocols': ['onsite_atila_saliva384_pt2']}"
+num_samp_plate4,"{'count': 1, 'protocols': ['onsite_atila_saliva384_pt2']}"
+num_samples,"{'count': 89, 'protocols': ['demo', '7e4c3e-5', '1ccd23-station-A', '7e4c3e-2', '313086-logixsmart-station-B', '60d861', '2b9486', '3607d5', '7e4c3e-3', '747d99-assay-1', 'zymo-quick-custom', 'sci-zymo-directzol-magbead', '1d6d1b', '3607d5-2', '245eb2', '6030b7', '74841a-2', 'sci-thermofisher-magmax', 'covid19-rna-extraction', '1577-v2', '6151af', '3607d5-3', 'generic_station_C', 'sci-promega-magnesil-total-rna-mini-isolation-system', 'sci-macherey-nagel-nucleomag', '51df08', '6b9ee3', '0a25f2', '7cfbde', '2aee74-96', '459a55', '13ac78', '313086', 'sci-omegabiotek-magbind', 'bc-rnadvance-viral-feat', '69cf81', 'bc-rnadvance-viral', '75cfa6', '7062c9-2', '14b685', '49de51', 'omega-biotek-xpress', '0e8e3', 'sci-mag-bind-blood-tissue-kit', '007992', '53fec2', '2ed4de-2', '1ccd23-station-B', '7e4c3e-1', '7e4c3e-6', '74841a', '53134e', '1ccd23-station-C', '747d99-assay-2', 'zymo-quick', '925d07-q', 'sci-mgi-mgieasy-nucleic-acid-extraction-kit', '10bf60-station-C', 'generic_station_A', '2ed4de', '2aee74-96-2', '269b21', '2d9a0c', '35269b', '10bf60-station-B', '2aee74-96-3', '49de51-pt2', 'promega-maxwell', '7aa3fd-size-selection', '6ff9e9', '60d861-2', '51b9a5', 'sci-zymo-quick-dna-rna-magbead', 'sci-promega-magazorb-dna-mini-prep-kit', '6ec4dd', '60d861-3', '5a5767', '453b5a', '131de0', '17d210-part-2', '226d24', '272c63', 'sci-omegabiotek-extraction', '4fc750', '17d210-part-3', '5c7384', '17d210-part-4', '280ea4', 'sci-omegabiotek-magbind-total-rna-96']}"
+num_samples_1,"{'count': 1, 'protocols': ['925d07-v3']}"
+num_samples_2,"{'count': 1, 'protocols': ['925d07-v3']}"
+num_samples_3,"{'count': 1, 'protocols': ['925d07-v3']}"
+num_samples_4,"{'count': 1, 'protocols': ['925d07-v3']}"
+num_samples_per_plate,"{'count': 1, 'protocols': ['17d210-part-5']}"
+num_samps,"{'count': 5, 'protocols': ['6b8c90', '6b8c90-3', '6b8c90-2', '1ef67e', 'zymo-rna-extraction']}"
+num_slides,"{'count': 2, 'protocols': ['1d6d1b', '0045f1']}"
+num_tipracks,"{'count': 1, 'protocols': ['2d9a0c']}"
+num_tubes,"{'count': 2, 'protocols': ['0045f1', '0961d2-part4']}"
+num_wells,"{'count': 2, 'protocols': ['29effa-buffer', '29effa-mastermix']}"
+number_of_dna_samples,"{'count': 1, 'protocols': ['4fa62e']}"
+number_of_oligo_standards,"{'count': 1, 'protocols': ['4fa62e']}"
+number_of_plates,"{'count': 4, 'protocols': ['50486f-v2-part2', '50486f-v2-part3', '50486f-v2-part4', '50486f-v2-part1']}"
+number_of_samples,"{'count': 18, 'protocols': ['3e3c9d-protocol-master-rbc-transfer', 'zymo-ribofree-p5-adapter-ligation', '558d02', 'pcr_prep_part_2', 'illumina-nextera-XT-library-prep-part1', '70567f', 'zymo-ribofree-cleanup', 'zymo-ribofree-first-strand-cdna-synth-universal-depletion', '3e3c9d-protocol-Adding-BTM', '3e3c9d-protocol-Adding-Water-RBC', '640a85', 'zymo-ribofree-library-index-pcr', '7a1ae8', '3e3c9d-protocols-adding-wistd-water', 'zymo-ribofree-p7-adapter-ligation', 'complete-pcr', '0944e4', '53e6bc_mastermix_creation']}"
+number_of_samples_to_process,"{'count': 5, 'protocols': ['nextera-flex-library-prep-amplify-tagmented-dna', 'nextera-flex-library-prep-tagment-dna', 'nextera-flex-library-prep-cleanup-libraries', 'nextera-flex-library-prep-post-tag-cleanup', '2c83f7']}"
+number_of_slides_to_process,"{'count': 1, 'protocols': ['56a6a1']}"
+numinc,"{'count': 1, 'protocols': ['407d5e']}"
+numplates,"{'count': 6, 'protocols': ['243973', '1adec6-7', '1adec6-6', '1adec6', '1adec6-3', '1adec6-2']}"
+numpools,"{'count': 1, 'protocols': ['3955db']}"
+numracks,"{'count': 1, 'protocols': ['4a0be6']}"
+numsamps,"{'count': 8, 'protocols': ['cepheid', '18d6a1', '115d98', '642c73', '743f54', '407d5e', 'gna_octea', 'zymo-quick-96']}"
+numvisbys,"{'count': 1, 'protocols': ['3955db']}"
+occupied_well_csv1,"{'count': 5, 'protocols': ['121d15-repeat', '121d15-6', '121d15', '121d15-4', '121d15-5']}"
+occupied_well_csv2,"{'count': 4, 'protocols': ['121d15-repeat', '121d15', '121d15-4', '121d15-5']}"
+occupied_well_csv3,"{'count': 4, 'protocols': ['121d15-repeat', '121d15', '121d15-4', '121d15-5']}"
+offset,"{'count': 3, 'protocols': ['sci-neb-next-ultra', 'sci-illumina-dna-prep', 'sci-roche-hyperprep']}"
+offset_x,"{'count': 12, 'protocols': ['78d33c-part-3', '78d33c-part-4', '78d33c-part-5', '78d33c-part-2', '78d33c', '43d313-part-6', '43d313-part-7', '78d33c-part-6', '43d313-part-2', '43d313-part-5', '43d313-part-4', '43d313-part-3']}"
+offset_x_resuspension,"{'count': 10, 'protocols': ['78d33c-part-3', '78d33c-part-4', '78d33c-part-5', '78d33c-part-2', '78d33c', '43d313-part-6', '43d313-part-7', '78d33c-part-6', '43d313-part-2', '43d313-part-5']}"
+ondeck,"{'count': 1, 'protocols': ['sci-neb-next-ultra']}"
+one_rack_yn,"{'count': 1, 'protocols': ['user-upload_ZooMS_Protocol']}"
+onlysamps,"{'count': 1, 'protocols': ['18e62e']}"
+open_lid,"{'count': 1, 'protocols': ['thermocycler-csv']}"
+output_labware,"{'count': 1, 'protocols': ['6d3eda']}"
+overage_percent,"{'count': 6, 'protocols': ['13ea1e-part2', '6a93a2', '6a93a2-part2', '6a93a2-part5', '6a93a2-part4', '6a93a2-part3']}"
+p1000_flow_rate_asp,"{'count': 2, 'protocols': ['26c304', '6be1f8']}"
+p1000_flow_rate_disp,"{'count': 2, 'protocols': ['26c304', '6be1f8']}"
+p1000_mount,"{'count': 28, 'protocols': ['5a3797-protocol-3', '1bcd67', '00a6e5', '0556be-covid-mm-qc-v3', '384b23-tube-transfer', '0bd707', '199721', '3db190-manual', '0a25f2', '6fe477-workflow-2', '5191b6', '313086', '2a370c', '45a320', '2ed4de-2', '00bbd7', '26c304', '53134e', '6be1f8', '6f2d9b', '2ed4de', '384b23-plate-transfer', '298069', '0d2950', '13ea1e', '0556be-covid-ntc', '5829d7', '272c63']}"
+p1000_rate,"{'count': 1, 'protocols': ['45a320']}"
+p1000_sample_height,"{'count': 1, 'protocols': ['0d2950']}"
+p1000_single_mount,"{'count': 1, 'protocols': ['558d02']}"
+p1000_slot,"{'count': 1, 'protocols': ['357404']}"
+p1000_tiprack_slot,"{'count': 1, 'protocols': ['5191b6']}"
+p1000_tips,"{'count': 1, 'protocols': ['5191b6']}"
+p1000_type,"{'count': 1, 'protocols': ['313086']}"
+p1000mnt,"{'count': 1, 'protocols': ['05f673']}"
+p10_mnt,"{'count': 4, 'protocols': ['0961d2-part1', '0961d2-part2', '0961d2-part3', '26a414']}"
+p10_mount,"{'count': 12, 'protocols': ['7aa3fd-library-pooling', '313086-logixsmart-station-B', '0add76', '1577-v2', '75cfa6', '11beaa', '7aa3fd-library-quantification', 'sci-roche-hyperprep', '7aa3fd-size-selection', '8nhsa0-norm', '139815', '2c81c0']}"
+p10_multi_mount,"{'count': 2, 'protocols': ['18050b', '131de0']}"
+p10_type,"{'count': 1, 'protocols': ['8nhsa0-norm']}"
+p10mnt,"{'count': 5, 'protocols': ['6c7447', '1601a9', '42d27b', '4b76c0', '06ab09']}"
+p1k_mnt,"{'count': 2, 'protocols': ['08878b', '56b4ec']}"
+p1kmnt,"{'count': 1, 'protocols': ['343001']}"
+p1n,"{'count': 1, 'protocols': ['18e62e']}"
+p1num,"{'count': 1, 'protocols': ['50c11b']}"
+p20_blowout_height,"{'count': 1, 'protocols': ['118e8c']}"
+p20_mount,"{'count': 96, 'protocols': ['1440ad', '85b0dc', 'zymo-ribofree-p5-adapter-ligation', '659888', '111210-part-8', '111210-part-6', '4568fa', '111210-part-7', 'illumina-nextera-XT-library-prep-part1', '111210-part-9', '25a03d', '76ab0e', '0045f1', '776039', '5f7d18', '5fa647', 'zymo-ribofree-cleanup', 'onsite_atila_saliva', '4175de', '7663a6', 'zymo-ribofree-first-strand-cdna-synth-universal-depletion', 'onsite_atila_saliva384_pt2', '51df08', '3db190-manual', '50486f-v2-part5', '50486f-v2-part2', '6d7fc3-part-4', '6d7fc3-part-3', '4d9b8b', '0ef96f', '459a55', '7062c9', '6d7fc3-part-2', '13ac78', '6d7fc3-part-5', '50486f-v2-part3', '44b1ac', '50486f-v2-part4', '13ea1e-part2', '111210-part-10', '08aeaa', '3b0db0', 'ML-normalization', '6af807', '45a320', 'zymo-ribofree-library-index-pcr', '39b4c7', '37de37', '0e8e3', '698b9e', '007992', '111210-part-5', '7855ef-part4', '111210-part-2', '4c8861', '26c304', '111210-part-3', '111210-part-4', '6be1f8', '010526', 'zymo-ribofree-p7-adapter-ligation', '5b8174', '6a93a2', '5c50d9', '0556be-covid-mm-qc', '10bf60-station-C', '1fcf02', '74312c', '269b21', '2d9a0c', '7855ef-plate-part4', '7fc7b1', '1c8468', 'sci-roche-hyperprep', 'onsite_atila_nasal', '50486f-v2-part1', '111210', '6d7fc3-part-7', '6a77d9', '2ee5be', '5654c0', '6e160e', 'onsite_atila_saliva384_pt1', '1a2343', '6d7fc3-part-6', '2b3642', '453b5a', '6a93a2-part2', '6a93a2-part5', '09cdbe', '6d7fc3', '4568fa-2', '60feec', '5c7384', '698b9e-part2', '6a93a2-part3']}"
+p20_multi_mount,"{'count': 2, 'protocols': ['69cf81', '0944e4']}"
+p20_rate,"{'count': 2, 'protocols': ['45a320', '5c50d9']}"
+p20_reservoir_height,"{'count': 1, 'protocols': ['118e8c']}"
+p20_side,"{'count': 1, 'protocols': ['3a49b6']}"
+p20_single_mount,"{'count': 4, 'protocols': ['6030b7', '2082dd', '640a85', '69cf81']}"
+p20_tube_height,"{'count': 1, 'protocols': ['118e8c']}"
+p20_type,"{'count': 4, 'protocols': ['1ccd23-station-A', 'ML-normalization', '0e8e3', '6a77d9']}"
+p20mnt,"{'count': 6, 'protocols': ['3633ca', '12213d', '14b685', '141a1a', '29effa-mastermix', '226d24']}"
+p20type,"{'count': 3, 'protocols': ['21e4d8-pt2', '21e4d8-pt3', '21e4d8-pt1']}"
+p2n,"{'count': 1, 'protocols': ['18e62e']}"
+p2num,"{'count': 1, 'protocols': ['50c11b']}"
+p300_gen,"{'count': 1, 'protocols': ['4fc750']}"
+p300_mixing_height,"{'count': 1, 'protocols': ['118e8c']}"
+p300_mnt,"{'count': 3, 'protocols': ['arcis-single-test', '08878b', 'arcis-multi-test']}"
+p300_mount,"{'count': 112, 'protocols': ['1440ad', '7aa3fd-library-pooling', 'nextera-flex-library-prep-amplify-tagmented-dna', '111210-part-8', '111210-part-6', '4568fa', '2aee74-48-3', '111210-part-9', '25a03d', '76ab0e', '00a6e5', '0add76', '5f7d18', '2df9f8-pt4', '65ed01', 'nextera-flex-library-prep-cleanup-libraries', '6151af', '5fa647', '121d15-7-2ml-15ml-pool', 'zymo-ribofree-cleanup', 'onsite_atila_saliva', '2aee74-48', '121d15-2-384', 'sci-macherey-nagel-nucleomag', '51df08', '6d7fc3-part-4', '6d7fc3-part-3', '2aee74-96', '0ef96f', '459a55', '7062c9', '6fe477-workflow-2', '6d7fc3-part-2', '121d15-2-96-Irish-2200', '516336-part-2', '5191b6', '6d7fc3-part-5', '313086', '44b1ac', '56a6a1', 'dinosaur', '111210-part-10', '08aeaa', '33900b', '19313a', '121d15-7-2ml-2ml-pool', '2a370c', '121d15-repeat', 'ML-normalization', '121d15-6', '7aa3fd-library-quantification', '0e8e3', '698b9e', 'sci-mag-bind-blood-tissue-kit', '111210-part-5', '7855ef-part4', '2ed4de-2', '4c8861', '121d15-2-96-Greiner-1000', '111210-part-4', '459cc2', '7f0f89', '010526', '516336', '6a93a2', 'nextera-flex-library-prep-post-tag-cleanup', '5c50d9', '0556be-covid-mm-qc', '2ed4de', '384b23-plate-transfer', '1fcf02', '2d9a0c', '7855ef-plate-part4', '1dec68', '2aee74-96-3', '121d15-2-96-Greiner-500', 'sci-roche-hyperprep', '7aa3fd-size-selection', '6d7fc3-part-7', '8nhsa0-norm', '5654c0', '2905a4', '384b23-pooling', 'onsite_atila_saliva384_pt1', '1a2343', '2bdff3', '6d7fc3-part-6', 'sci-promega-magazorb-dna-mini-prep-kit', '13ea1e', '139815', '0556be-bmda', '453b5a', '2c81c0', '6a93a2-part2', '121d15', '6a93a2-part5', '3cf31f', '6d7fc3', '121d15-4', '4568fa-2', '1dfebe', '60feec', '121d15-3', '7aad4e', '5c7384', '6a93a2-part4', '698b9e-part2', '6a93a2-part3', '121d15-7-2ml-15ml-aliquot', '121d15-5', '121d15-7-2ml-2ml-aliquot', '3c9aec']}"
+p300_mount_1,"{'count': 1, 'protocols': ['sci-roche-hyperprep']}"
+p300_multi_mount,"{'count': 7, 'protocols': ['70567f', '6030b7', '640a85', '7a1ae8', '0944e4', '2c83f7', '280ea4']}"
+p300_rate,"{'count': 1, 'protocols': ['5c50d9']}"
+p300_single_mount,"{'count': 5, 'protocols': ['558d02', '2082dd', '7a1ae8', '53e6bc_mastermix_creation', '280ea4']}"
+p300_tip_start_col,"{'count': 1, 'protocols': ['0bf4f4']}"
+p300_tiprack_slot,"{'count': 1, 'protocols': ['5191b6']}"
+p300_tips,"{'count': 1, 'protocols': ['5191b6']}"
+p300_transfer_height,"{'count': 1, 'protocols': ['118e8c']}"
+p300_type,"{'count': 8, 'protocols': ['nextera-flex-library-prep-amplify-tagmented-dna', 'nextera-flex-library-prep-cleanup-libraries', '313086', 'ML-normalization', '0e8e3', '66e60f', 'nextera-flex-library-prep-post-tag-cleanup', '8nhsa0-norm']}"
+p300gen,"{'count': 2, 'protocols': ['swift-fully-automated', 'swift-fully-automated-custom']}"
+p300m,"{'count': 2, 'protocols': ['zymo-quick', 'zymo-quick-96']}"
+p300m_mount,"{'count': 1, 'protocols': ['6fe477-workflow-1']}"
+p300m_side,"{'count': 1, 'protocols': ['441cc8']}"
+p300mnt,"{'count': 11, 'protocols': ['18d6a1', '3633ca', '12213d', '245eb2', '6c7447', '203136', '14b685', '141a1a', '29effa-buffer', '42d27b', '226d24']}"
+p300s_mount,"{'count': 1, 'protocols': ['6fe477-workflow-1']}"
+p300tips,"{'count': 4, 'protocols': ['swift-fully-automated', 'swift-2s-turbo-pt2', 'swift-fully-automated-custom', 'swift-2s-turbo-pt3']}"
+p300type,"{'count': 3, 'protocols': ['21e4d8-pt2', '21e4d8-pt3', '21e4d8-pt1']}"
+p384,"{'count': 2, 'protocols': ['5c24e2', '17cb2d']}"
+p3n,"{'count': 1, 'protocols': ['18e62e']}"
+p3num,"{'count': 1, 'protocols': ['50c11b']}"
+p4n,"{'count': 1, 'protocols': ['18e62e']}"
+p4num,"{'count': 1, 'protocols': ['50c11b']}"
+p50_mnt,"{'count': 4, 'protocols': ['arcis-single-test', '56b4ec', 'arcis-multi-test', '26a414']}"
+p50_mount,"{'count': 7, 'protocols': ['nextera-flex-library-prep-cleanup-libraries', '1577-v2', '543bf9', '8nhsa0', '11beaa', '211fe1', '5a5767']}"
+p50_single_mount,"{'count': 3, 'protocols': ['nextera-flex-library-prep-amplify-tagmented-dna', 'nextera-flex-library-prep-tagment-dna', '53e6bc_mastermix_creation']}"
+p50_type,"{'count': 1, 'protocols': ['nextera-flex-library-prep-cleanup-libraries']}"
+p50mnt,"{'count': 3, 'protocols': ['203136', '19fc32', '343001']}"
+p5_mix_vol,"{'count': 1, 'protocols': ['2b3642']}"
+p_csv,"{'count': 1, 'protocols': ['6b9ee3']}"
+pan_dil,"{'count': 1, 'protocols': ['1ef67e']}"
+park,"{'count': 2, 'protocols': ['omega-biotek-xpress', '5dcd88']}"
+park_tips,"{'count': 25, 'protocols': ['sci-zymo-directzol-magbead', '70567f', '74841a-2', 'sci-thermofisher-magmax', 'covid19-rna-extraction', 'sci-promega-magnesil-total-rna-mini-isolation-system', 'sci-macherey-nagel-nucleomag', '1477ea', 'sci-omegabiotek-magbind', 'sci-mag-bind-blood-tissue-kit', '53fec2', '1ccd23-station-B', '74841a', 'sci-mgi-mgieasy-nucleic-acid-extraction-kit', '10bf60-station-B', '49de51-pt2', 'promega-maxwell', '6ff9e9', 'sci-zymo-quick-dna-rna-magbead', 'sci-promega-magazorb-dna-mini-prep-kit', '4b7268', 'sci-omegabiotek-extraction', '4fc750', '17d210-part-4', 'sci-omegabiotek-magbind-total-rna-96']}"
+patient_sample_count,"{'count': 1, 'protocols': ['165a77']}"
+patient_sample_vol,"{'count': 1, 'protocols': ['165a77']}"
+pbs_dispense_rate,"{'count': 1, 'protocols': ['3c9aec']}"
+pbsvol,"{'count': 1, 'protocols': ['1adec6']}"
+pcr,"{'count': 1, 'protocols': ['52d238']}"
+pcr2_buffer_vol,"{'count': 2, 'protocols': ['3607d5', '17d210-part-2']}"
+pcr_cycles,"{'count': 1, 'protocols': ['4b4a80-pcr_enrichment']}"
+pcr_labware,"{'count': 4, 'protocols': ['4b4a80-fragmentation', '4175de', '4b4a80-pcr_enrichment', '4b4a80-size_selection']}"
+pcr_mix_vol,"{'count': 2, 'protocols': ['0e8e3', '6e2509']}"
+pcr_plate_height,"{'count': 1, 'protocols': ['5a3797-protocol-2']}"
+pcr_tube_height,"{'count': 1, 'protocols': ['0556be-covid-mm-qc']}"
+pcr_tubes,"{'count': 1, 'protocols': ['0556be-covid-mm-qc']}"
+pcr_type,"{'count': 1, 'protocols': ['640a85']}"
+pcr_volume,"{'count': 1, 'protocols': ['omega_biotek_magbind_totalpure_NGS']}"
+pdl1_dil,"{'count': 1, 'protocols': ['1ef67e']}"
+peptide_supernat_vol,"{'count': 1, 'protocols': ['701319']}"
+pip,"{'count': 1, 'protocols': ['1adec6-4']}"
+pip_l,"{'count': 1, 'protocols': ['3db190']}"
+pip_mnt,"{'count': 5, 'protocols': ['29414b-ot', '29414b', '5c14ad', '35b1a9', '1ce6aa']}"
+pip_model,"{'count': 4, 'protocols': ['797dee-normalization', '7a3e4b', 'normalization', 'cherrypicking_simple']}"
+pip_mount,"{'count': 8, 'protocols': ['797dee-normalization', '7a3e4b', 'normalization', '060c4f', 'illumina-nextera-XT-library-prep-part4', 'illumina-nextera-XT-library-prep-part3', 'illumina-nextera-XT-library-prep-part2', 'cherrypicking_simple']}"
+pip_r,"{'count': 1, 'protocols': ['3db190']}"
+pip_tip,"{'count': 4, 'protocols': ['swift-fully-automated', 'swift-2s-turbo-pt2', 'swift-fully-automated-custom', 'swift-2s-turbo-pt1']}"
+pip_type,"{'count': 8, 'protocols': ['5c24e2', '29414b-ot', '29414b', 'illumina-nextera-XT-library-prep-part4', 'illumina-nextera-XT-library-prep-part3', 'illumina-nextera-XT-library-prep-part2', 'generic_station_A', '5c14ad']}"
+pipette,"{'count': 1, 'protocols': ['testdrive']}"
+pipette_2_mount,"{'count': 1, 'protocols': ['complete-pcr']}"
+pipette_2_type,"{'count': 1, 'protocols': ['complete-pcr']}"
+pipette_homing,"{'count': 1, 'protocols': ['5b8174']}"
+pipette_mount,"{'count': 15, 'protocols': ['74b303', 'cherrypicking', '0e696e', 'testdrive', '3359a5', '274d2a', 'csv_transfer', 'nucleic_acid_purification_with_magnetic_beads', '51b9a5', 'omega_biotek_magbind_totalpure_NGS', '211a24', 'nextera-flex-library-prep-cherrypick-samples', '400b8e', '4883fc', '1211']}"
+pipette_offset,"{'count': 1, 'protocols': ['357404']}"
+pipette_type,"{'count': 14, 'protocols': ['74b303', 'cherrypicking', '0e696e', 'customizable_serial_dilution_ot2', '3359a5', '274d2a', 'csv_transfer', 'nucleic_acid_purification_with_magnetic_beads', '51b9a5', 'omega_biotek_magbind_totalpure_NGS', 'nextera-flex-library-prep-cherrypick-samples', '400b8e', '4883fc', '1211']}"
+pipette_types,"{'count': 1, 'protocols': ['3db190']}"
+pipettes,"{'count': 1, 'protocols': ['44981c']}"
+pipinfo,"{'count': 1, 'protocols': ['1eeb01']}"
+pipmnt,"{'count': 8, 'protocols': ['0fa015', '5c24e2', '17cb2d', '18e62e', '3d942d', '743f54', 'zymo-quick-96', '4a0be6']}"
+piptype,"{'count': 3, 'protocols': ['0fa015', '17cb2d', '4a0be6']}"
+pl_blowout_height,"{'count': 1, 'protocols': ['459cc2']}"
+plate,"{'count': 1, 'protocols': ['2df9f8']}"
+plate1_samples,"{'count': 1, 'protocols': ['39b4c7']}"
+plate2_samples,"{'count': 1, 'protocols': ['39b4c7']}"
+plate3_samples,"{'count': 1, 'protocols': ['39b4c7']}"
+plate4_samples,"{'count': 1, 'protocols': ['39b4c7']}"
+plate_1_cols,"{'count': 6, 'protocols': ['04eeb1-part-6', '04eeb1-part-5', '04eeb1-part-2', '04eeb1', '04eeb1-part-3', '04eeb1-part-4']}"
+plate_2_cols,"{'count': 4, 'protocols': ['04eeb1-part-2', '04eeb1', '04eeb1-part-3', '04eeb1-part-4']}"
+plate_a_start_col,"{'count': 1, 'protocols': ['0bf4f4-pt3']}"
+plate_b_start_col,"{'count': 1, 'protocols': ['0bf4f4-pt3']}"
+plate_c_start_col,"{'count': 1, 'protocols': ['0bf4f4-pt3']}"
+plate_cols,"{'count': 1, 'protocols': ['060c4f']}"
+plate_count,"{'count': 6, 'protocols': ['76ba23-pooling', '165a77', '3b3d2f', '559aa0', '76ba23-pcr2', '5a2a35']}"
+plate_def,"{'count': 1, 'protocols': ['5c7384']}"
+plate_height,"{'count': 2, 'protocols': ['5a3797-protocol-1', '0d2950']}"
+plate_map_1_csv,"{'count': 1, 'protocols': ['3b3d2f']}"
+plate_map_2_csv,"{'count': 1, 'protocols': ['3b3d2f']}"
+plate_map_3_csv,"{'count': 1, 'protocols': ['3b3d2f']}"
+plate_map_4_csv,"{'count': 1, 'protocols': ['3b3d2f']}"
+plate_name,"{'count': 1, 'protocols': ['563624']}"
+plate_scan,"{'count': 4, 'protocols': ['121d15-2-384', '121d15-2-96-Irish-2200', '121d15-2-96-Greiner-1000', '121d15-2-96-Greiner-500']}"
+plate_scan2,"{'count': 4, 'protocols': ['121d15-2-384', '121d15-2-96-Irish-2200', '121d15-2-96-Greiner-1000', '121d15-2-96-Greiner-500']}"
+plate_type,"{'count': 8, 'protocols': ['2aee74-48-2', '797dee-normalization', 'normalization', 'dinosaur', 'customizable_serial_dilution_ot2', 'generic_station_A', '2aee74-96-2', '09cdbe']}"
+plates,"{'count': 1, 'protocols': ['5520f0']}"
+pool_columns,"{'count': 1, 'protocols': ['0175a4']}"
+pool_location,"{'count': 1, 'protocols': ['315118']}"
+pool_rows,"{'count': 1, 'protocols': ['0175a4']}"
+pool_size,"{'count': 3, 'protocols': ['0175a4', '6fe477-workflow-2', '6fe477-workflow-1']}"
+pool_slots,"{'count': 1, 'protocols': ['0175a4']}"
+pool_vol,"{'count': 1, 'protocols': ['illumina-nextera-XT-library-prep-part4']}"
+pooling_volume,"{'count': 1, 'protocols': ['74b303']}"
+pools,"{'count': 1, 'protocols': ['illumina-nextera-XT-library-prep-part4']}"
+poolvol,"{'count': 1, 'protocols': ['3955db']}"
+post_aspiration_wait,"{'count': 2, 'protocols': ['300073-2', '300073']}"
+post_size_selection_volume,"{'count': 1, 'protocols': ['4b4a80-pcr_enrichment']}"
+post_user_sample_volume,"{'count': 1, 'protocols': ['4b4a80-size_selection']}"
+prefill,"{'count': 1, 'protocols': ['05f673']}"
+prepare_mastermix,"{'count': 2, 'protocols': ['1ccd23-station-C', '280ea4']}"
+prepare_standard,"{'count': 2, 'protocols': ['2ed4de-2', '2ed4de']}"
+primer_col_volume,"{'count': 1, 'protocols': ['559aa0']}"
+primer_loadname,"{'count': 1, 'protocols': ['generic_ngs_prep']}"
+primer_lw,"{'count': 1, 'protocols': ['0e696e']}"
+primer_mix_vol,"{'count': 1, 'protocols': ['generic_ngs_prep']}"
+primer_vol,"{'count': 1, 'protocols': ['0e696e']}"
+primer_volume,"{'count': 2, 'protocols': ['559aa0', 'pcr_test_plan']}"
+process,"{'count': 1, 'protocols': ['51df08']}"
+prototype,"{'count': 1, 'protocols': ['50c11b']}"
+puncture_agar,"{'count': 1, 'protocols': ['51b9a5']}"
+puncture_depth,"{'count': 1, 'protocols': ['51b9a5']}"
+purify,"{'count': 1, 'protocols': ['71381b']}"
+pw,"{'count': 1, 'protocols': ['243973']}"
+q5_volume,"{'count': 1, 'protocols': ['4b4a80-pcr_enrichment']}"
+q5_well,"{'count': 1, 'protocols': ['4b4a80-pcr_enrichment']}"
+qc_height,"{'count': 1, 'protocols': ['3b3f1c']}"
+quad1_exclude_cols,"{'count': 1, 'protocols': ['2bdff3']}"
+quad2_exclude_cols,"{'count': 1, 'protocols': ['2bdff3']}"
+quad3_exclude_cols,"{'count': 1, 'protocols': ['2bdff3']}"
+quad4_exclude_cols,"{'count': 1, 'protocols': ['2bdff3']}"
+quench_volume,"{'count': 1, 'protocols': ['user-upload_ZooMS_Protocol']}"
+rack_count,"{'count': 1, 'protocols': ['063611']}"
+radial_offset,"{'count': 9, 'protocols': ['3607d5-2', '74841a-2', 'sci-thermofisher-magmax', 'covid19-rna-extraction', '3607d5-3', 'sci-macherey-nagel-nucleomag', '1ccd23-station-B', '74841a', '17d210-part-3']}"
+raise_mix_dispense,"{'count': 1, 'protocols': ['29225e']}"
+reaction_plate,"{'count': 3, 'protocols': ['onsite_atila_saliva', 'onsite_atila_nasal', 'onsite_atila_saliva384_pt1']}"
+reag1_vol,"{'count': 1, 'protocols': ['generic_ngs_prep']}"
+reag2_vol,"{'count': 1, 'protocols': ['generic_ngs_prep']}"
+reagent,"{'count': 1, 'protocols': ['698b9e']}"
+reagent1_loadname,"{'count': 1, 'protocols': ['generic_ngs_prep']}"
+reagent2_loadname,"{'count': 1, 'protocols': ['generic_ngs_prep']}"
+reagent_labware,"{'count': 3, 'protocols': ['bpg-rna-extraction', '2ed4de-2', '2ed4de']}"
+reagent_scan,"{'count': 5, 'protocols': ['121d15-repeat', '121d15-6', '121d15', '121d15-4', '121d15-5']}"
+reagent_slot_scan,"{'count': 2, 'protocols': ['121d15-6', '121d15-5']}"
+reagent_transfer_vol,"{'count': 2, 'protocols': ['121d15-6', '121d15-5']}"
+reagents_csv,"{'count': 1, 'protocols': ['38efd4']}"
+reduced_speed_limit,"{'count': 1, 'protocols': ['1477ea']}"
+relative_height,"{'count': 1, 'protocols': ['118e8c']}"
+remove_empty_racks,"{'count': 1, 'protocols': ['063611']}"
+res,"{'count': 2, 'protocols': ['21e4d8-pt2', '21e4d8-pt3']}"
+res12_type,"{'count': 1, 'protocols': ['4fc750']}"
+res1_type,"{'count': 1, 'protocols': ['4fc750']}"
+res_dead_vol,"{'count': 1, 'protocols': ['4b7268']}"
+res_type,"{'count': 13, 'protocols': ['sci-zymo-directzol-magbead', 'sci-thermofisher-magmax', 'covid19-rna-extraction', 'normalization', 'sci-promega-magnesil-total-rna-mini-isolation-system', 'sci-macherey-nagel-nucleomag', '69cf81', 'sci-mag-bind-blood-tissue-kit', '10bf60-station-B', 'sci-zymo-quick-dna-rna-magbead', 'sci-promega-magazorb-dna-mini-prep-kit', 'sci-omegabiotek-extraction', 'sci-omegabiotek-magbind-total-rna-96']}"
+reservoir12_lname,"{'count': 1, 'protocols': ['pcr_prep_part_1']}"
+reservoir_fill_volume,"{'count': 1, 'protocols': ['118e8c']}"
+reservoir_height,"{'count': 3, 'protocols': ['5a3797-protocol-3', '5a3797-protocol-2', '5a3797-protocol-1']}"
+reservoir_lname,"{'count': 1, 'protocols': ['generic_protein_purification']}"
+reservoir_loadname,"{'count': 1, 'protocols': ['generic_ngs_prep']}"
+reservoir_loc,"{'count': 1, 'protocols': ['459cc2']}"
+reservoir_slot,"{'count': 1, 'protocols': ['74b303']}"
+reservoir_type,"{'count': 3, 'protocols': ['7f9595', '04eeb1-part-2', '04eeb1']}"
+reset_counter,"{'count': 1, 'protocols': ['1c8468']}"
+reset_tipracks,"{'count': 7, 'protocols': ['19313a', '6af807', '7855ef-part4', '4c8861', '7855ef-plate-part2', '7855ef-plate-part3', '7855ef-plate-part4']}"
+resettips,"{'count': 1, 'protocols': ['407d5e']}"
+return_tips,"{'count': 1, 'protocols': ['zymo-rna-extraction']}"
+right_pip,"{'count': 1, 'protocols': ['demo']}"
+right_pip_slot,"{'count': 1, 'protocols': ['76c562']}"
+right_pip_tip,"{'count': 1, 'protocols': ['76c562']}"
+right_pipette,"{'count': 2, 'protocols': ['pcr_prep_part_2', 'pcr_prep_part_1']}"
+right_pipette_lname,"{'count': 3, 'protocols': ['generic_pcr_prep_1', 'generic_protein_purification', 'generic_pcr_prep_2']}"
+right_pipette_tipracks_lname,"{'count': 1, 'protocols': ['generic_protein_purification']}"
+right_pipette_type,"{'count': 2, 'protocols': ['76c562', '6d7eb7']}"
+rm_num,"{'count': 1, 'protocols': ['generic_station_C']}"
+rna_input,"{'count': 2, 'protocols': ['zymo-ribofree-first-strand-cdna-synth-universal-depletion', 'zymo-ribofree-library-index-pcr']}"
+rna_plate_type,"{'count': 1, 'protocols': ['925d07-v3']}"
+rna_starting_format,"{'count': 1, 'protocols': ['4568fa']}"
+row_count,"{'count': 1, 'protocols': ['74b303']}"
+rp_col,"{'count': 1, 'protocols': ['559aa0']}"
+rp_primer_well,"{'count': 1, 'protocols': ['559aa0']}"
+rr1,"{'count': 1, 'protocols': ['1440ad']}"
+rr2,"{'count': 1, 'protocols': ['1440ad']}"
+rr3,"{'count': 1, 'protocols': ['1440ad']}"
+rsadd,"{'count': 1, 'protocols': ['gna_octea_v2']}"
+rsb_vol,"{'count': 1, 'protocols': ['illumina-nextera-XT-library-prep-part2']}"
+run_number,"{'count': 1, 'protocols': ['08e3eb']}"
+rxn_bf_volume,"{'count': 1, 'protocols': ['4b4a80-fragmentation']}"
+rxn_bf_well,"{'count': 1, 'protocols': ['4b4a80-fragmentation']}"
+rxn_mix_vol_p3,"{'count': 1, 'protocols': ['2b3642']}"
+rxn_vol,"{'count': 1, 'protocols': ['010526']}"
+s_csv,"{'count': 1, 'protocols': ['76c562']}"
+s_mount,"{'count': 1, 'protocols': ['zymo-quick-custom']}"
+s_pip,"{'count': 1, 'protocols': ['zymo-quick']}"
+s_vol,"{'count': 2, 'protocols': ['5c24e2', '14b685']}"
+same_tip,"{'count': 1, 'protocols': ['315118']}"
+samp_and_lys_rep,"{'count': 1, 'protocols': ['5f7d18']}"
+samp_asp_height,"{'count': 1, 'protocols': ['1dfebe']}"
+samp_col_counts,"{'count': 2, 'protocols': ['165a77', '559aa0']}"
+samp_no,"{'count': 3, 'protocols': ['203136', '35b1a9', '1ce6aa']}"
+samp_num,"{'count': 1, 'protocols': ['343001']}"
+samp_vol,"{'count': 2, 'protocols': ['generic_station_C', 'generic_station_A']}"
+samplabware,"{'count': 1, 'protocols': ['407d5e']}"
+sample_addition,"{'count': 1, 'protocols': ['56a6a1']}"
+sample_air_gap,"{'count': 2, 'protocols': ['39b4c7', '6f2d9b']}"
+sample_asp_height,"{'count': 2, 'protocols': ['010526', '6e2509']}"
+sample_asp_speed,"{'count': 1, 'protocols': ['5a3797-protocol-3']}"
+sample_aspiration_vol_ul,"{'count': 1, 'protocols': ['300073']}"
+sample_cherrypicking,"{'count': 1, 'protocols': ['29225e-part-2']}"
+sample_cols,"{'count': 1, 'protocols': ['0b98cc']}"
+sample_columns,"{'count': 1, 'protocols': ['0175a4']}"
+sample_container,"{'count': 1, 'protocols': ['010526']}"
+sample_count,"{'count': 29, 'protocols': ['3fad82-part-2', '295c73', '3fad82-part-3', '4b4a80-fragmentation', '4b4a80-pcr_enrichment', '7805de-part-2', '6d3eda', '4ee4d6', '7805de-part-4', '7805de-part-3', '6bc986-part-6', '1f96ca', '4b4a80-size_selection', '6bc986', '2e84cc', '39bbbb', '48648f', '6d2e65', '0a23c6', '3fad82', '4b7268', '3bc25d', '6bc986-part-5', '6bc986-part-2', '4ee4d6-part2', '6bc986-part-3', '7805de', '6bc986-part-4', '1f96ca-part-2']}"
+sample_count_1,"{'count': 1, 'protocols': ['7363e4']}"
+sample_count_2,"{'count': 1, 'protocols': ['7363e4']}"
+sample_csv,"{'count': 1, 'protocols': ['211a24']}"
+sample_deck_slots,"{'count': 1, 'protocols': ['48648f']}"
+sample_disp_height,"{'count': 1, 'protocols': ['6e2509']}"
+sample_height,"{'count': 1, 'protocols': ['1d6d1b']}"
+sample_num,"{'count': 1, 'protocols': ['33900b']}"
+sample_number,"{'count': 5, 'protocols': ['0175a4', '52d238', '796af8', 'nucleic_acid_purification_with_magnetic_beads', 'omega_biotek_magbind_totalpure_NGS']}"
+sample_plate_height,"{'count': 2, 'protocols': ['5a3797-protocol-3', '5a3797-protocol-2']}"
+sample_plate_lname,"{'count': 1, 'protocols': ['generic_protein_purification']}"
+sample_quant_csv,"{'count': 1, 'protocols': ['sci-illumina-rna-enrichment-normalization']}"
+sample_rows,"{'count': 1, 'protocols': ['0175a4']}"
+sample_size,"{'count': 1, 'protocols': ['user-upload_ZooMS_Protocol']}"
+sample_slots,"{'count': 1, 'protocols': ['0175a4']}"
+sample_trans_vol,"{'count': 1, 'protocols': ['0b98cc']}"
+sample_type,"{'count': 1, 'protocols': ['313086-logixsmart-station-B']}"
+sample_vol,"{'count': 22, 'protocols': ['demo', '85b0dc', '5a3797-protocol-3', '3607d5-2', '0e696e', '6151af', '3607d5-3', '3607d5-4', '199721', '7663a6', '39b4c7', '53fec2', '6f2d9b', '459cc2', '10bf60-station-C', 'generic_ngs_prep', '17d210-part-5', '3bc25d', '17d210-part-3', '925d07-v3', '17d210-part-4', '6e2509']}"
+sample_volume,"{'count': 3, 'protocols': ['4b4a80-fragmentation', 'nucleic_acid_purification_with_magnetic_beads', '48648f']}"
+samples,"{'count': 39, 'protocols': ['58d57d', '111210-part-8', '5a3797-protocol-3', '111210-part-6', '4a5f32', '111210-part-7', '5a3797-protocol-2', '111210-part-9', '2c62b7', '6d7fc3-part-4', '6d7fc3-part-3', '6d7fc3-part-2', '701319', '516336-part-2', '6d7fc3-part-5', '44b1ac', '111210-part-10', '2a370c', 'sci-neb-next-ultra', '111210-part-5', '111210-part-2', 'sci-illumina-dna-prep', '111210-part-3', '5a3797-protocol-1', '111210-part-4', '6f2d9b', '516336', '74312c', 'sci-roche-hyperprep', '111210', '6d7fc3-part-7', '6cd9d6', '2ee5be', '2905a4', '6d7fc3-part-6', '2b3642', '6e2509-v2', '6d7fc3', '6e2509']}"
+samples_csv,"{'count': 1, 'protocols': ['211fe1']}"
+samples_labware,"{'count': 2, 'protocols': ['44b1ac', '111210']}"
+samples_loadname,"{'count': 1, 'protocols': ['generic_ngs_prep']}"
+sampnum,"{'count': 1, 'protocols': ['1eeb01']}"
+sampplate,"{'count': 1, 'protocols': ['18d6a1']}"
+samps,"{'count': 7, 'protocols': ['bpg-rna-extraction', 'swift-2s-turbo-pt2', 'swift-2s-turbo-pt3', '6f4e2c', 'illumina-nextera-XT-library-prep-part4', 'arcis-multi-test', 'swift-2s-turbo-pt1']}"
+sampvol,"{'count': 1, 'protocols': ['115d98']}"
+sds_buffer_vol,"{'count': 1, 'protocols': ['generic_protein_purification']}"
+sec_ex,"{'count': 1, 'protocols': ['00a214-protocol-4']}"
+sec_plate,"{'count': 1, 'protocols': ['5c24e2']}"
+second_media_y,"{'count': 1, 'protocols': ['3c9aec']}"
+serial_csv,"{'count': 1, 'protocols': ['211a24']}"
+set_tip_max,"{'count': 2, 'protocols': ['76ba23', '76ba23-bisulfite_conversion']}"
+settling_1,"{'count': 1, 'protocols': ['19313a']}"
+settling_2,"{'count': 1, 'protocols': ['19313a']}"
+settling_3,"{'count': 1, 'protocols': ['19313a']}"
+settling_drying,"{'count': 1, 'protocols': ['19313a']}"
+settling_elution1,"{'count': 1, 'protocols': ['19313a']}"
+settling_elution2,"{'count': 1, 'protocols': ['19313a']}"
+settling_time,"{'count': 22, 'protocols': ['3607d5-2', '2c62b7', '74841a-2', 'sci-thermofisher-magmax', 'covid19-rna-extraction', '3607d5-3', 'sci-promega-magnesil-total-rna-mini-isolation-system', 'sci-macherey-nagel-nucleomag', 'sci-mag-bind-blood-tissue-kit', '1ccd23-station-B', '74841a', 'sci-mgi-mgieasy-nucleic-acid-extraction-kit', '10bf60-station-B', 'nucleic_acid_purification_with_magnetic_beads', '6ff9e9', 'omega_biotek_magbind_totalpure_NGS', 'sci-zymo-quick-dna-rna-magbead', 'sci-promega-magazorb-dna-mini-prep-kit', '4fc750', '17d210-part-3', '17d210-part-4', 'sci-omegabiotek-magbind-total-rna-96']}"
+settling_wash,"{'count': 1, 'protocols': ['19313a']}"
+shake_well,"{'count': 1, 'protocols': ['5f7d18']}"
+side_x_radius,"{'count': 1, 'protocols': ['2905a4']}"
+single_channel_mount,"{'count': 1, 'protocols': ['complete-pcr']}"
+single_channel_type,"{'count': 1, 'protocols': ['complete-pcr']}"
+single_pip_info,"{'count': 1, 'protocols': ['generic_station_C']}"
+skip_mix_step,"{'count': 1, 'protocols': ['38efd4']}"
+slide_dwell_time,"{'count': 1, 'protocols': ['1d6d1b']}"
+slot_cultureplate,"{'count': 1, 'protocols': ['6cb818']}"
+slot_scan,"{'count': 3, 'protocols': ['121d15-repeat', '121d15', '121d15-4']}"
+slot_screwcaps,"{'count': 1, 'protocols': ['6cb818']}"
+slot_snapcaps,"{'count': 1, 'protocols': ['6cb818']}"
+slot_tipbox,"{'count': 1, 'protocols': ['6cb818']}"
+slow_asp_rate,"{'count': 1, 'protocols': ['04f4e7']}"
+slow_speed_down,"{'count': 1, 'protocols': ['1d6d1b']}"
+slow_speed_up,"{'count': 1, 'protocols': ['1d6d1b']}"
+small_pip,"{'count': 1, 'protocols': ['11beaa']}"
+source,"{'count': 1, 'protocols': ['rem-pcr-plate']}"
+source_asp_flow_rate_mmx,"{'count': 1, 'protocols': ['7663a6']}"
+source_asp_flow_rate_plate,"{'count': 1, 'protocols': ['7663a6']}"
+source_asp_height_plate,"{'count': 1, 'protocols': ['7663a6']}"
+source_asp_height_plate_mmx,"{'count': 1, 'protocols': ['7663a6']}"
+source_lw,"{'count': 1, 'protocols': ['demo']}"
+source_plate,"{'count': 2, 'protocols': ['3d02be', '51b9a5']}"
+source_start_col,"{'count': 1, 'protocols': ['7663a6']}"
+source_type,"{'count': 4, 'protocols': ['ML-normalization', '66e60f', '8nhsa0-norm', '4883fc']}"
+sp,"{'count': 2, 'protocols': ['21e4d8-pt2', '21e4d8-pt3']}"
+sp_type,"{'count': 2, 'protocols': ['7a3e4b', 'cherrypicking_simple']}"
+spike_in,"{'count': 1, 'protocols': ['zymo-rna-extraction']}"
+spot_labware,"{'count': 1, 'protocols': ['0045f1']}"
+spot_volume,"{'count': 1, 'protocols': ['0045f1']}"
+spri_beads_left_volume,"{'count': 1, 'protocols': ['4b4a80-size_selection']}"
+spri_beads_right_volume,"{'count': 1, 'protocols': ['4b4a80-size_selection']}"
+spri_beads_volume,"{'count': 1, 'protocols': ['4b4a80-pcr_enrichment']}"
+spri_beads_well,"{'count': 2, 'protocols': ['4b4a80-pcr_enrichment', '4b4a80-size_selection']}"
+src_labware,"{'count': 1, 'protocols': ['44981c']}"
+srctype,"{'count': 1, 'protocols': ['4a0be6']}"
+srcvol,"{'count': 1, 'protocols': ['4a0be6']}"
+stage1_dispense_height,"{'count': 1, 'protocols': ['2bdff3']}"
+stage2_asp_speed,"{'count': 1, 'protocols': ['2bdff3']}"
+stage2_disp_speed,"{'count': 1, 'protocols': ['2bdff3']}"
+stage2_dispense_height,"{'count': 1, 'protocols': ['2bdff3']}"
+stage2_height_after_disp,"{'count': 1, 'protocols': ['2bdff3']}"
+standard_type,"{'count': 1, 'protocols': ['2ed4de-2']}"
+start,"{'count': 1, 'protocols': ['rem-pcr-plate']}"
+start_buff_vol,"{'count': 1, 'protocols': ['1fcf02']}"
+start_col,"{'count': 1, 'protocols': ['18050b']}"
+start_column,"{'count': 1, 'protocols': ['563624']}"
+start_tip,"{'count': 1, 'protocols': ['08e3eb']}"
+start_urea_vol,"{'count': 1, 'protocols': ['1fcf02']}"
+starting_conc,"{'count': 2, 'protocols': ['2ed4de-2', '2ed4de']}"
+starting_tip_col,"{'count': 1, 'protocols': ['459cc2']}"
+starting_tip_position,"{'count': 1, 'protocols': ['nextera-flex-library-prep-cherrypick-samples']}"
+starting_vol,"{'count': 22, 'protocols': ['sci-zymo-directzol-magbead', '74841a-2', 'sci-thermofisher-magmax', 'covid19-rna-extraction', 'sci-promega-magnesil-total-rna-mini-isolation-system', 'zymo-ribofree-first-strand-cdna-synth-universal-depletion', 'sci-macherey-nagel-nucleomag', 'sci-omegabiotek-magbind', 'bc-rnadvance-viral-feat', 'bc-rnadvance-viral', 'sci-mag-bind-blood-tissue-kit', '1ccd23-station-B', '74841a', 'sci-mgi-mgieasy-nucleic-acid-extraction-kit', '10bf60-station-B', 'promega-maxwell', '6ff9e9', 'sci-zymo-quick-dna-rna-magbead', 'sci-promega-magazorb-dna-mini-prep-kit', 'sci-omegabiotek-extraction', '4fc750', 'sci-omegabiotek-magbind-total-rna-96']}"
+starting_volume,"{'count': 1, 'protocols': ['generic_protein_purification']}"
+starting_well,"{'count': 1, 'protocols': ['2905a4']}"
+starttip,"{'count': 1, 'protocols': ['4a0be6']}"
+std_height,"{'count': 1, 'protocols': ['3b3f1c']}"
+step,"{'count': 2, 'protocols': ['43163c', '1980cd']}"
+step1,"{'count': 1, 'protocols': ['2bdff3']}"
+step1_mix_vol,"{'count': 1, 'protocols': ['2bdff3']}"
+step2,"{'count': 1, 'protocols': ['2bdff3']}"
+step_erat,"{'count': 2, 'protocols': ['sci-neb-next-ultra', 'sci-roche-hyperprep']}"
+step_eratdeck,"{'count': 1, 'protocols': ['sci-roche-hyperprep']}"
+step_lig,"{'count': 2, 'protocols': ['sci-neb-next-ultra', 'sci-roche-hyperprep']}"
+step_ligdeck,"{'count': 1, 'protocols': ['sci-roche-hyperprep']}"
+step_pcr,"{'count': 3, 'protocols': ['sci-neb-next-ultra', 'sci-illumina-dna-prep', 'sci-roche-hyperprep']}"
+step_pcrdeck,"{'count': 2, 'protocols': ['sci-illumina-dna-prep', 'sci-roche-hyperprep']}"
+step_postlig,"{'count': 2, 'protocols': ['sci-neb-next-ultra', 'sci-roche-hyperprep']}"
+step_postpcr,"{'count': 3, 'protocols': ['sci-neb-next-ultra', 'sci-illumina-dna-prep', 'sci-roche-hyperprep']}"
+step_tag,"{'count': 1, 'protocols': ['sci-illumina-dna-prep']}"
+step_tagdeck,"{'count': 1, 'protocols': ['sci-illumina-dna-prep']}"
+step_tsb,"{'count': 1, 'protocols': ['sci-illumina-dna-prep']}"
+step_tsbdeck,"{'count': 1, 'protocols': ['sci-illumina-dna-prep']}"
+step_wash,"{'count': 1, 'protocols': ['sci-illumina-dna-prep']}"
+strip_type,"{'count': 2, 'protocols': ['1ccd23-station-A', '1ccd23-station-C']}"
+super_asp_rate,"{'count': 1, 'protocols': ['2905a4']}"
+super_disp_rate,"{'count': 1, 'protocols': ['2905a4']}"
+supernat_1_vol,"{'count': 1, 'protocols': ['701319']}"
+supernat_2_vol,"{'count': 1, 'protocols': ['701319']}"
+supernat_3_vol,"{'count': 1, 'protocols': ['701319']}"
+t_csv,"{'count': 1, 'protocols': ['243973']}"
+t_per_block,"{'count': 1, 'protocols': ['357404']}"
+tc_num_reps,"{'count': 1, 'protocols': ['6a93a2-part5']}"
+tc_temp,"{'count': 1, 'protocols': ['2905a4']}"
+te_volume,"{'count': 2, 'protocols': ['4b4a80-pcr_enrichment', '4b4a80-size_selection']}"
+te_well,"{'count': 2, 'protocols': ['4b4a80-pcr_enrichment', '4b4a80-size_selection']}"
+temp,"{'count': 2, 'protocols': ['11beaa', '400b8e']}"
+temp_gen,"{'count': 1, 'protocols': ['swift-fully-automated-custom']}"
+temp_mod,"{'count': 2, 'protocols': ['459cc2', '300073-2']}"
+temp_mod_lname,"{'count': 2, 'protocols': ['357404', '300073']}"
+temp_mod_on,"{'count': 1, 'protocols': ['11beaa']}"
+temp_mod_s1_lname,"{'count': 1, 'protocols': ['generic_ngs_prep']}"
+temp_mod_s4_lname,"{'count': 1, 'protocols': ['generic_ngs_prep']}"
+temp_mod_s7_lname,"{'count': 1, 'protocols': ['generic_ngs_prep']}"
+temp_mod_temp,"{'count': 1, 'protocols': ['3c9aec']}"
+temp_mod_temperature,"{'count': 1, 'protocols': ['010526']}"
+temp_s1_part1,"{'count': 1, 'protocols': ['generic_ngs_prep']}"
+temp_s1_part2,"{'count': 1, 'protocols': ['generic_ngs_prep']}"
+temp_s4_part1,"{'count': 1, 'protocols': ['generic_ngs_prep']}"
+temp_s4_part2,"{'count': 1, 'protocols': ['generic_ngs_prep']}"
+temp_s7_part1,"{'count': 1, 'protocols': ['generic_ngs_prep']}"
+temp_s7_part2,"{'count': 1, 'protocols': ['generic_ngs_prep']}"
+tempblock,"{'count': 1, 'protocols': ['gna_octea_v2']}"
+tempdeck_name,"{'count': 1, 'protocols': ['400b8e']}"
+tempdeck_slot,"{'count': 1, 'protocols': ['400b8e']}"
+temperature,"{'count': 12, 'protocols': ['04eeb1-part-6', '0556be-covid-mm-qc-v3', '39b4c7', '04eeb1-part-5', '04eeb1-part-2', '04eeb1', '04eeb1-part-3', '04eeb1-part-4', '300073-2', '0556be-covid-mm-qc', '300073', '0556be-bmda']}"
+tempgen,"{'count': 1, 'protocols': ['407d5e']}"
+template_vol,"{'count': 1, 'protocols': ['0e8e3']}"
+test_method,"{'count': 1, 'protocols': ['3b3f1c']}"
+test_plates,"{'count': 1, 'protocols': ['1980cd']}"
+time_dry,"{'count': 13, 'protocols': ['78d33c-part-3', '78d33c-part-4', '78d33c-part-5', '78d33c-part-2', '78d33c', '43d313-part-6', '43d313-part-7', '7e3b31', '78d33c-part-6', '43d313-part-2', '43d313-part-5', '43d313-part-4', '43d313-part-3']}"
+time_engage,"{'count': 13, 'protocols': ['78d33c-part-3', '78d33c-part-4', '78d33c-part-5', '78d33c-part-2', '78d33c', '43d313-part-6', '43d313-part-7', '7e3b31', '78d33c-part-6', '43d313-part-2', '43d313-part-5', '43d313-part-4', '43d313-part-3']}"
+tip_immersion,"{'count': 1, 'protocols': ['7e3b31']}"
+tip_max,"{'count': 1, 'protocols': ['118e8c']}"
+tip_no,"{'count': 1, 'protocols': ['5c14ad']}"
+tip_park_start_col,"{'count': 2, 'protocols': ['0bf4f4-pt3', '0bf4f4-pt2']}"
+tip_rack,"{'count': 1, 'protocols': ['315118']}"
+tip_rack_10,"{'count': 1, 'protocols': ['76ba23-pooling']}"
+tip_rack_300,"{'count': 1, 'protocols': ['76ba23-pooling']}"
+tip_reuse,"{'count': 8, 'protocols': ['797dee-normalization', 'cherrypicking', '7a3e4b', '0e696e', 'normalization', 'cherrypicking_simple', 'csv_transfer', '400b8e']}"
+tip_start,"{'count': 4, 'protocols': ['7e4c3e-2', '7e4c3e-3', '7e4c3e-4', '7e4c3e-1']}"
+tip_start_1000,"{'count': 2, 'protocols': ['7e4c3e-5', '7e4c3e-6']}"
+tip_start_20,"{'count': 2, 'protocols': ['7e4c3e-5', '7e4c3e-6']}"
+tip_start_column,"{'count': 4, 'protocols': ['3e3c9d-protocol-master-rbc-transfer', '3e3c9d-protocol-Adding-BTM', '3e3c9d-protocol-Adding-Water-RBC', '3e3c9d-protocols-adding-wistd-water']}"
+tip_strategy,"{'count': 3, 'protocols': ['199721', '50486f-v2-part5', '0b98cc']}"
+tip_threshold,"{'count': 1, 'protocols': ['2c62b7']}"
+tip_touch,"{'count': 1, 'protocols': ['5a2a35']}"
+tip_track,"{'count': 35, 'protocols': ['1ccd23-station-A', '313086-logixsmart-station-B', '747d99-assay-1', '70567f', '74841a-2', 'sci-thermofisher-magmax', 'covid19-rna-extraction', 'sci-promega-magnesil-total-rna-mini-isolation-system', '199721', 'sci-macherey-nagel-nucleomag', '313086', '7062c9-2', '121d15-repeat', '121d15-6', 'sci-mag-bind-blood-tissue-kit', '53fec2', '1ccd23-station-B', '74841a', '1ccd23-station-C', '747d99-assay-2', 'sci-mgi-mgieasy-nucleic-acid-extraction-kit', '10bf60-station-B', 'promega-maxwell', '6ff9e9', 'sci-zymo-quick-dna-rna-magbead', 'sci-promega-magazorb-dna-mini-prep-kit', '6ec4dd', '121d15', '272c63', '121d15-4', '4fc750', '17d210-part-4', '280ea4', '121d15-5', 'sci-omegabiotek-magbind-total-rna-96']}"
+tip_type,"{'count': 23, 'protocols': ['5a3797-protocol-3', 'cherrypicking', '1d6d1b', '0e696e', '2c62b7', '6151af', '69cf81', 'dinosaur', 'customizable_serial_dilution_ot2', '39b4c7', '274d2a', '6a93a2', '3db190', 'csv_transfer', '51b9a5', '6d7eb7', '6a93a2-part2', '6a93a2-part2', '6a93a2-part5', '400b8e', '6a93a2-part4', '6a93a2-part4', '6a93a2-part3']}"
+tip_use_strategy,"{'count': 1, 'protocols': ['customizable_serial_dilution_ot2']}"
+tip_withdrawal_speed,"{'count': 1, 'protocols': ['1dfebe']}"
+tiprack_lname_20_ul,"{'count': 1, 'protocols': ['017860']}"
+tiprack_lname_300ul,"{'count': 1, 'protocols': ['017860']}"
+tiprack_slot,"{'count': 1, 'protocols': ['74b303']}"
+tipreuse,"{'count': 3, 'protocols': ['sci-neb-next-ultra', 'sci-illumina-dna-prep', 'sci-roche-hyperprep']}"
+tips,"{'count': 1, 'protocols': ['testdrive']}"
+tiptrash,"{'count': 2, 'protocols': ['18d6a1', '18e62e']}"
+tiptype,"{'count': 3, 'protocols': ['18d6a1', '44981c', '6f4e2c']}"
+tmod_1_lname,"{'count': 1, 'protocols': ['generic_pcr_prep_1']}"
+tmod_2_lname,"{'count': 1, 'protocols': ['generic_pcr_prep_1']}"
+total_mixing_volume,"{'count': 1, 'protocols': ['customizable_serial_dilution_ot2']}"
+total_samples,"{'count': 5, 'protocols': ['4175de', '3db190-manual', '6fe477-workflow-2', '3db190', '6fe477-workflow-1']}"
+touch_radius,"{'count': 1, 'protocols': ['234495']}"
+touch_tip,"{'count': 2, 'protocols': ['rem-pcr-plate', '7663a6']}"
+touch_v_offset,"{'count': 1, 'protocols': ['234495']}"
+touchtip,"{'count': 1, 'protocols': ['4a0be6']}"
+touchtip_radius,"{'count': 2, 'protocols': ['26c304', '6be1f8']}"
+touchtip_speed,"{'count': 2, 'protocols': ['26c304', '6be1f8']}"
+touchtip_z,"{'count': 2, 'protocols': ['26c304', '6be1f8']}"
+tr1,"{'count': 1, 'protocols': ['1440ad']}"
+tr10,"{'count': 1, 'protocols': ['1440ad']}"
+tr2,"{'count': 1, 'protocols': ['1440ad']}"
+tr3,"{'count': 1, 'protocols': ['1440ad']}"
+tr4,"{'count': 1, 'protocols': ['1440ad']}"
+tr5,"{'count': 1, 'protocols': ['1440ad']}"
+tr6,"{'count': 1, 'protocols': ['1440ad']}"
+tr7,"{'count': 1, 'protocols': ['1440ad']}"
+tr8,"{'count': 1, 'protocols': ['1440ad']}"
+tr9,"{'count': 1, 'protocols': ['1440ad']}"
+track_start,"{'count': 1, 'protocols': ['234495']}"
+track_tips,"{'count': 2, 'protocols': ['063611', '3c9aec']}"
+tracking_reset,"{'count': 2, 'protocols': ['063611', '118e8c']}"
+trans_vol1,"{'count': 1, 'protocols': ['2bdff3']}"
+transfer2,"{'count': 1, 'protocols': ['1adec6-5']}"
+transfer_csv,"{'count': 18, 'protocols': ['cherrypicking', '0e696e', '776039', '3607d5-4', '4175de', '17d210', '44981c', '3359a5', '274d2a', '6c27ee', 'csv_transfer', '7fc7b1', '05f673', '6d7eb7', '400b8e', '09cdbe', '751127', '1211']}"
+transfer_scheme,"{'count': 2, 'protocols': ['7fc7b1', '17d210-part-5']}"
+transfer_vol,"{'count': 9, 'protocols': ['0bd707', '0a25f2', '121d15-repeat', '53134e', '1c8468', '51b9a5', '5a5767', '121d15', '121d15-4']}"
+transfer_volume,"{'count': 3, 'protocols': ['18050b', 'user-upload_ZooMS_Protocol', '925d07-q']}"
+transfercsv,"{'count': 2, 'protocols': ['3d942d', '1adec6-4']}"
+transfervol,"{'count': 1, 'protocols': ['4a0be6']}"
+trough_type,"{'count': 2, 'protocols': ['customizable_serial_dilution_ot2', '74312c']}"
+trypsin_volume,"{'count': 1, 'protocols': ['user-upload_ZooMS_Protocol']}"
+tt_asp,"{'count': 2, 'protocols': ['29414b-ot', '29414b']}"
+tt_disp,"{'count': 2, 'protocols': ['29414b-ot', '29414b']}"
+tube1_vol,"{'count': 1, 'protocols': ['0556be-covid-mm-qc']}"
+tube_asp_height,"{'count': 1, 'protocols': ['5829d7']}"
+tube_dead_vol,"{'count': 1, 'protocols': ['4b7268']}"
+tube_height,"{'count': 1, 'protocols': ['5a3797-protocol-3']}"
+tube_rack,"{'count': 1, 'protocols': ['2d9a0c']}"
+tube_rack_lname,"{'count': 1, 'protocols': ['generic_protein_purification']}"
+tube_rack_slot,"{'count': 1, 'protocols': ['74b303']}"
+tube_type,"{'count': 4, 'protocols': ['4568fa', '69cf81', '010526', 'generic_station_A']}"
+tuberack15_1_scan,"{'count': 2, 'protocols': ['121d15-7-2ml-2ml-pool', '121d15-7-2ml-15ml-aliquot']}"
+tuberack15_2_scan,"{'count': 2, 'protocols': ['121d15-7-2ml-2ml-pool', '121d15-7-2ml-15ml-aliquot']}"
+tuberack1_scan,"{'count': 2, 'protocols': ['121d15-7-2ml-15ml-pool', '121d15-7-2ml-2ml-aliquot']}"
+tuberack2_1_scan,"{'count': 2, 'protocols': ['121d15-7-2ml-2ml-pool', '121d15-7-2ml-15ml-aliquot']}"
+tuberack2_2_scan,"{'count': 2, 'protocols': ['121d15-7-2ml-2ml-pool', '121d15-7-2ml-15ml-aliquot']}"
+tuberack2_scan,"{'count': 2, 'protocols': ['121d15-7-2ml-15ml-pool', '121d15-7-2ml-2ml-aliquot']}"
+tuberack_1,"{'count': 1, 'protocols': ['5a3797-protocol-3']}"
+tuberack_1_lname,"{'count': 1, 'protocols': ['pcr_prep_part_1']}"
+tuberack_2,"{'count': 1, 'protocols': ['5a3797-protocol-3']}"
+tuberack_2_lname,"{'count': 1, 'protocols': ['pcr_prep_part_1']}"
+tuberack_3,"{'count': 1, 'protocols': ['5a3797-protocol-3']}"
+tuberack_4,"{'count': 1, 'protocols': ['5a3797-protocol-3']}"
+tuberack_5,"{'count': 1, 'protocols': ['5a3797-protocol-3']}"
+tuberack_6,"{'count': 1, 'protocols': ['5a3797-protocol-3']}"
+tuberack_7,"{'count': 1, 'protocols': ['5a3797-protocol-3']}"
+tuberack_lname,"{'count': 1, 'protocols': ['357404']}"
+tuberack_mixed_lname,"{'count': 1, 'protocols': ['017860']}"
+tuberack_scan,"{'count': 4, 'protocols': ['121d15-2-384', '121d15-2-96-Irish-2200', '121d15-2-96-Greiner-1000', '121d15-2-96-Greiner-500']}"
+tuberack_scan2,"{'count': 4, 'protocols': ['121d15-2-384', '121d15-2-96-Irish-2200', '121d15-2-96-Greiner-1000', '121d15-2-96-Greiner-500']}"
+tuberack_type,"{'count': 2, 'protocols': ['complete-pcr', '66e60f']}"
+tuberacka_tube,"{'count': 1, 'protocols': ['384b23-pooling']}"
+tuberackb_tube,"{'count': 1, 'protocols': ['384b23-pooling']}"
+tuberacks,"{'count': 1, 'protocols': ['4a0be6']}"
+tuberacks_15_lname,"{'count': 1, 'protocols': ['017860']}"
+tubetype,"{'count': 1, 'protocols': ['4a0be6']}"
+tvol,"{'count': 1, 'protocols': ['1adec6-3']}"
+twb_rate,"{'count': 1, 'protocols': ['4ee4d6']}"
+twelve_well_resv_lname,"{'count': 1, 'protocols': ['generic_pcr_prep_1']}"
+uploaded_csv,"{'count': 12, 'protocols': ['74b303', '29225e-part-2', '2942dd', '154ec5', '3a49b6', '76ba23', '6401f1', '1477ea', '76ba23-pcr2', '6b51bd', '29225e', '76ba23-pcr1']}"
+uploaded_csv_mastermix,"{'count': 1, 'protocols': ['29225e-part-2']}"
+use_384,"{'count': 1, 'protocols': ['118e8c']}"
+use_csv,"{'count': 1, 'protocols': ['1dfebe']}"
+use_filter_tips_left,"{'count': 2, 'protocols': ['generic_pcr_prep_1', 'generic_pcr_prep_2']}"
+use_filter_tips_right,"{'count': 2, 'protocols': ['generic_pcr_prep_1', 'generic_pcr_prep_2']}"
+use_nacl,"{'count': 1, 'protocols': ['generic_protein_purification']}"
+use_tuberack_a,"{'count': 1, 'protocols': ['384b23-pooling']}"
+use_tuberack_b,"{'count': 1, 'protocols': ['384b23-pooling']}"
+using_magdeck,"{'count': 1, 'protocols': ['demo']}"
+v_0_tube,"{'count': 1, 'protocols': ['6be1f8']}"
+v_0_tube1,"{'count': 2, 'protocols': ['4c8861', '26c304']}"
+v_0_tube2,"{'count': 1, 'protocols': ['26c304']}"
+v_csv,"{'count': 2, 'protocols': ['0add76', '26a414']}"
+vhb_vol,"{'count': 1, 'protocols': ['2c62b7']}"
+vial_map,"{'count': 1, 'protocols': ['5191b6']}"
+vol,"{'count': 2, 'protocols': ['659888', '4471ba']}"
+vol_a_to_b,"{'count': 1, 'protocols': ['0e8e3']}"
+vol_aliqout,"{'count': 1, 'protocols': ['3b3f1c']}"
+vol_c_to_d,"{'count': 1, 'protocols': ['0e8e3']}"
+vol_cd154,"{'count': 1, 'protocols': ['6cb818']}"
+vol_culture_medium,"{'count': 1, 'protocols': ['6cb818']}"
+vol_d_to_e,"{'count': 1, 'protocols': ['0e8e3']}"
+vol_dead,"{'count': 2, 'protocols': ['234495', '29225e']}"
+vol_deaddeepwell,"{'count': 1, 'protocols': ['7e3b31']}"
+vol_deadreservoir,"{'count': 1, 'protocols': ['7e3b31']}"
+vol_dil_to_d,"{'count': 1, 'protocols': ['0e8e3']}"
+vol_dil_to_e,"{'count': 1, 'protocols': ['0e8e3']}"
+vol_dispense,"{'count': 1, 'protocols': ['rem-pcr-plate']}"
+vol_dispensed,"{'count': 1, 'protocols': ['384b23-plate-transfer']}"
+vol_dna_buff,"{'count': 1, 'protocols': ['0e8e3']}"
+vol_elution_buffer,"{'count': 1, 'protocols': ['313086']}"
+vol_etoh,"{'count': 1, 'protocols': ['70567f']}"
+vol_h2o,"{'count': 2, 'protocols': ['29225e-part-2', '29225e']}"
+vol_ic,"{'count': 1, 'protocols': ['747d99-assay-1']}"
+vol_lys_buffer,"{'count': 1, 'protocols': ['313086']}"
+vol_mm,"{'count': 1, 'protocols': ['1e744e']}"
+vol_mobile_phase,"{'count': 1, 'protocols': ['3b3f1c']}"
+vol_peptide1,"{'count': 1, 'protocols': ['6cb818']}"
+vol_peptide2,"{'count': 1, 'protocols': ['6cb818']}"
+vol_peptide3,"{'count': 1, 'protocols': ['6cb818']}"
+vol_pma_ca,"{'count': 1, 'protocols': ['6cb818']}"
+vol_reagent,"{'count': 1, 'protocols': ['357404']}"
+vol_sample,"{'count': 2, 'protocols': ['1ccd23-station-A', '313086']}"
+vol_start_rnase,"{'count': 1, 'protocols': ['2942dd']}"
+vol_start_tween,"{'count': 1, 'protocols': ['2942dd']}"
+vol_tests,"{'count': 1, 'protocols': ['3b3f1c']}"
+vol_tube1,"{'count': 1, 'protocols': ['4d9b8b']}"
+vol_tube2,"{'count': 1, 'protocols': ['4d9b8b']}"
+vol_tube3,"{'count': 1, 'protocols': ['4d9b8b']}"
+vol_water,"{'count': 1, 'protocols': ['7aa3fd-library-pooling']}"
+volume,"{'count': 4, 'protocols': ['0556be-covid-mm-qc-v3', '6d3eda', '74312c', '6a77d9']}"
+volume_csv,"{'count': 1, 'protocols': ['1479']}"
+volume_eb_in_ul,"{'count': 2, 'protocols': ['70567f', '0944e4']}"
+volume_final_elution_in_ul,"{'count': 2, 'protocols': ['70567f', '0944e4']}"
+volume_of_beads,"{'count': 2, 'protocols': ['70567f', '0944e4']}"
+volume_of_beads_in_ul,"{'count': 2, 'protocols': ['7a1ae8', '2c83f7']}"
+volume_to_cherrypick_in_ul,"{'count': 1, 'protocols': ['nextera-flex-library-prep-cherrypick-samples']}"
+volume_transfers,"{'count': 1, 'protocols': ['primer_hydration']}"
+volumes_csv,"{'count': 5, 'protocols': ['797dee-normalization', '7a3e4b', 'normalization', 'cherrypicking_simple', '4b76c0']}"
+wash1_vol,"{'count': 21, 'protocols': ['3607d5-2', '74841a-2', 'sci-thermofisher-magmax', 'covid19-rna-extraction', '3607d5-3', 'sci-promega-magnesil-total-rna-mini-isolation-system', 'sci-macherey-nagel-nucleomag', '19313a', 'sci-mag-bind-blood-tissue-kit', '53fec2', '1ccd23-station-B', '74841a', 'sci-mgi-mgieasy-nucleic-acid-extraction-kit', '10bf60-station-B', '6ff9e9', 'sci-zymo-quick-dna-rna-magbead', 'sci-promega-magazorb-dna-mini-prep-kit', '4fc750', '17d210-part-3', '17d210-part-4', 'sci-omegabiotek-magbind-total-rna-96']}"
+wash2_vol,"{'count': 20, 'protocols': ['3607d5-2', '74841a-2', 'sci-thermofisher-magmax', 'covid19-rna-extraction', '3607d5-3', 'sci-promega-magnesil-total-rna-mini-isolation-system', 'sci-macherey-nagel-nucleomag', '19313a', 'sci-mag-bind-blood-tissue-kit', '53fec2', '1ccd23-station-B', 'sci-mgi-mgieasy-nucleic-acid-extraction-kit', '10bf60-station-B', '6ff9e9', 'sci-zymo-quick-dna-rna-magbead', 'sci-promega-magazorb-dna-mini-prep-kit', '4fc750', '17d210-part-3', '17d210-part-4', 'sci-omegabiotek-magbind-total-rna-96']}"
+wash3_vol,"{'count': 10, 'protocols': ['sci-thermofisher-magmax', 'covid19-rna-extraction', 'sci-promega-magnesil-total-rna-mini-isolation-system', 'sci-macherey-nagel-nucleomag', 'sci-mag-bind-blood-tissue-kit', '1ccd23-station-B', 'sci-mgi-mgieasy-nucleic-acid-extraction-kit', 'sci-zymo-quick-dna-rna-magbead', 'sci-promega-magazorb-dna-mini-prep-kit', 'sci-omegabiotek-magbind-total-rna-96']}"
+wash_buf_vol,"{'count': 1, 'protocols': ['generic_protein_purification']}"
+wash_scheme,"{'count': 1, 'protocols': ['1d6d1b']}"
+waste,"{'count': 2, 'protocols': ['21e4d8-pt2', '21e4d8-pt3']}"
+waste_water_mode,"{'count': 1, 'protocols': ['19313a']}"
+water_res_vol,"{'count': 1, 'protocols': ['08aeaa']}"
+water_vol,"{'count': 2, 'protocols': ['08aeaa', '343001']}"
+water_volume,"{'count': 2, 'protocols': ['4b4a80-size_selection', '118e8c']}"
+water_well,"{'count': 1, 'protocols': ['4b4a80-size_selection']}"
+wb_col,"{'count': 1, 'protocols': ['04eeb1-part-5']}"
+well_disp_height,"{'count': 1, 'protocols': ['5829d7']}"
+well_plate,"{'count': 1, 'protocols': ['testdrive']}"
+well_vol,"{'count': 2, 'protocols': ['thermocycler', 'thermocycler-csv']}"
+wells_skipped,"{'count': 1, 'protocols': ['48648f']}"
+wells_to_be_pooled,"{'count': 1, 'protocols': ['315118']}"
+wet_tip,"{'count': 1, 'protocols': ['6c7447']}"
+x_offset,"{'count': 1, 'protocols': ['0f5985']}"
+x_offset_bead_pellet,"{'count': 6, 'protocols': ['7805de-part-2', '7805de-part-4', '7805de-part-3', '7e3b31', '6d2e65', '4b7268']}"
+x_offset_elution,"{'count': 1, 'protocols': ['6d2e65']}"
+y_offset,"{'count': 1, 'protocols': ['51df08']}"
+z_offset,"{'count': 8, 'protocols': ['3607d5-2', '74841a-2', 'sci-thermofisher-magmax', 'covid19-rna-extraction', '3607d5-3', 'sci-macherey-nagel-nucleomag', '74841a', '17d210-part-3']}"
