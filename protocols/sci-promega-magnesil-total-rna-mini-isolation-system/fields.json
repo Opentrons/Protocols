@@ -25,13 +25,13 @@
     "type": "int",
     "label": "Volume of Input Sample (ul)",
     "name": "starting_vol",
-    "default": 200
+    "default": 120
   },
   {
     "type": "int",
     "label": "Volume of Binding Buffer (ul)",
     "name": "binding_buffer_vol",
-    "default": 100
+    "default": 200
   },
   {
     "type": "int",
@@ -65,7 +65,7 @@
   },
   {
     "type": "int",
-    "label": "Magnetic Module Engage Time (min)",
+    "label": "Magnetic Module Settling Time (min)",
     "name": "settling_time",
     "default": 5
   },
