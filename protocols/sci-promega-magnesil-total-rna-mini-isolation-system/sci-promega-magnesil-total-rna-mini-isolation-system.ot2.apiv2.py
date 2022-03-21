@@ -470,7 +470,7 @@ resuming.')
     remove_supernatant(starting_vol)
     magdeck.disengage()
     wash(wash1_vol, wash1, park=park_tips)
-    # rnase 1 treatment
+    # dnase 1 treatment
     dnase(50, dnase1, park=park_tips)
     stop_reaction(100, stopreaction, park=park_tips)
     # resume washes
