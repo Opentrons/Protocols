@@ -343,5 +343,6 @@ def run(ctx):
         for rep in range(3):
             pip20.aspirate(10, loc.bottom(1), rate=0.5)
             pip20.dispense(10, loc.bottom(4), rate=0.5)
+        ctx.delay(seconds=1)
         pip20.blow_out(loc.bottom(6).move(types.Point(x=move_side, y=0, z=0)))
         pip20.drop_tip()
