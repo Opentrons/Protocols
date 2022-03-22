@@ -30,7 +30,7 @@ def run(ctx):
     m20 = ctx.load_instrument('p20_multi_gen2', p20_multi_mount,
                               tip_racks=tipracks20m)
 
-    # sample and primer
+    # check
     num_cols = math.ceil(num_samples/8)
     if num_cols*num_primers > 12:
         raise Exception(f'Can only accommodate up to {math.floor(12/num_cols)} \
