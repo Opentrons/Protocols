@@ -1,16 +1,15 @@
-from opentrons import protocol_api
-
+"""PROTOCOL."""
 metadata = {
-    'protocolName': 'Protocol Title',
-    'author': 'AUTHOR NAME <authoremail@company.com>',
+    'protocolName': 'Nucleic Acid Purification/Cloning',
+    'author': 'Opentrons',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
                          # IN SECTION 5.2 OF THE APIV2 "VERSIONING"
 }
 
 
-def run(ctx: protocol_api.ProtocolContext):
-
+def run(ctx):
+    """PROTOCOL BODY."""
     [
      _custom_variable1,
      _custom_variable2
