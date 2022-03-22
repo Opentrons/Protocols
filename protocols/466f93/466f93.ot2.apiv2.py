@@ -1,6 +1,5 @@
 """End-repair reaction preparation."""
 from opentrons import protocol_api
-import math
 
 # The first part of this protocol mixes the DNA samples with end repair
 # buffer and enzyme and ends when the samples are ready for thermal incubation
@@ -15,31 +14,35 @@ metadata = {
 
 def get_values(*names):
     import json
-    _all_values = json.loads(
-        """{ "pipette_l":"p20_single_gen2",
-        "pipette_r":"p300_single_gen2",
-        "plate_type":"azenta_96_wellplate_200ul",
-        "reservoir_type":"nest_12_reservoir_15ml",
-        "temperature_module":"temperature module gen2",
-        "num_samples": 36,
-        "magnetic_module":"magnetic module gen2"}
-        """)
+    _all_values = json.loads("""{
+                                  "n_samples":36,
+                                  "ER_mm_disp_flowrate_mult":0.5,
+                                  "ER_mm_asp_flowrate_mult":0.5,
+                                  "reaction_mix_rate_mult":0.5,
+                                  "mm_tuberack_lname":"opentrons_24_tuberack_nest_1.5ml_snapcap"
+                                  }
+                                  """)
     return [_all_values[n] for n in names]
 
 
 def run(ctx: protocol_api.ProtocolContext):
-    """End-repair reaction preparation protocol entry point."""
-    [
-     num_samples
-    ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
-        "num_samples")
+    [n_samples,
+     ER_mm_disp_flowrate_mult,
+     ER_mm_asp_flowrate_mult,
+     reaction_mix_rate_mult,
+     mm_tuberack_lname] = get_values(  # noqa: F821
+     "n_samples",
+     "ER_mm_disp_flowrate_mult",
+     "ER_mm_asp_flowrate_mult",
+     "reaction_mix_rate_mult",
+     "mm_tuberack_lname")
 
-    if not 7 <= num_samples <= 36:
-        raise Exception("The number of samples should be between 7 and 36")
+    if not 0 <= n_samples <= 36:
+        raise Exception("The number of samples should be between 1 and 36")
 
     # define all custom variables above here with descriptions:
-    ER_buffer_I_vol_per_well = 27
-    ER_enz_vol_per_well = 126
+    # ER_buffer_I_vol_per_well = 27
+    # ER_enz_vol_per_well = 126
     ER_buffer_per_sample = 1.5
     ER_enz_vol_per_sample = 0.75
     mastermix_vol_per_sample = ER_buffer_per_sample + ER_enz_vol_per_sample
@@ -84,10 +87,6 @@ def run(ctx: protocol_api.ProtocolContext):
     # 3? target plates
     # Reservoir for 80 % ethanol, e.g. a tube rack with a falcon tube
 
-    yourgene_reagent_plate_I \
-        = ctx.load_labware(well_plate_loadname, '7',
-                           'Yourgene Reagent plate - 1')
-
     # DNA sample plate
     sample_plate = \
         ctx.load_labware(well_plate_loadname,
@@ -98,6 +97,9 @@ def run(ctx: protocol_api.ProtocolContext):
     destination_plate = \
         ctx.load_labware(well_plate_loadname,
                          '1', "Destination plate 1")
+
+    mastermix_tuberack = \
+        ctx.load_labware(mm_tuberack_lname, '2')
 
     # load tipracks
 
@@ -207,9 +209,16 @@ def run(ctx: protocol_api.ProtocolContext):
 
 
     '''
+    def out_of_tips_decorator(pipette, tip_pickup_function, *args, **kwargs):
+        nonlocal ctx
+        try:
+            tip_pickup_function(*args, **kwargs)
+        except protocol_api.labware.OutOfTipsError:
+            ctx.pause("Replace empty tip racks")
+            pipette.reset_tipracks()
+            pipette.pick_up_tip()
 
-    # reagents
-
+            # reagents
     '''
     Define where all reagents are on the deck using the labware defined above.
 
@@ -221,12 +230,13 @@ def run(ctx: protocol_api.ProtocolContext):
     dnase = tuberack.wells_by_name()['A4']
 
     '''
+    ER_mastermix_tube = mastermix_tuberack.wells()[0]
 
     # End repair buffer - I is in column one of yourgene_reagent_plate_I
     # End repair enzyme is in well A2 of the sample plate
-    ER_buffer_I_column = yourgene_reagent_plate_I.columns()[0]
-    ER_enzyme_well = yourgene_reagent_plate_I.wells_by_name()['A2']
-    ER_mastermix_destination = yourgene_reagent_plate_I.wells_by_name()['B2']
+    # ER_buffer_I_column = yourgene_reagent_plate_I.columns()[0]
+    # ER_enzyme_well = yourgene_reagent_plate_I.wells_by_name()['A2']
+    # ER_mastermix_destination = yourgene_reagent_plate_I.wells_by_name()['B2']
     # plate, tube rack maps
 
     '''
@@ -264,86 +274,35 @@ def run(ctx: protocol_api.ProtocolContext):
     '''
     # PROTOCOL BEGINS HERE
 
-    # Prepare End Repair Mastermix
-    # 1.2.7 - Mix end repair buffer I (column 1, prep plate 1) and End repair
-    # enzyme I (in well pos. A2, prep plate 1) - mix by pipetting 10 times
-    # Create a mastermix of the two
-    # The mastermix will be placed in the unused well B2 of reagent plate I
-    er_buffer_volume = ER_buffer_per_sample * (num_samples+1)
-    er_enzyme_volume = ER_enz_vol_per_sample * (num_samples+1)
-
-    for i in range(0, math.ceil(er_buffer_volume/ER_buffer_I_vol_per_well)):
-        well = ER_buffer_I_column[i]
-        # Mix the buffer 10x
-        vol = (er_buffer_volume if er_buffer_volume
-               < ER_buffer_I_vol_per_well else ER_buffer_I_vol_per_well)
-        pip = p20 if vol < 20 else p300
-        if not pip.has_tip:
-            try:
-                pip.pick_up_tip()
-            except protocol_api.labware.OutOfTipsError:
-                ctx.pause("Replace empty tip racks")
-                pip.reset_tipracks()
-                pip.pick_up_tip()
-        pip.mix(n_standard_mixes, 20, well)
-        pip.transfer(vol, well, ER_mastermix_destination, new_tip='never')
-        er_buffer_volume = er_buffer_volume - vol
-
-    drop_all_tips()
-
-    # Mix the ER enzyme, total volume of enz. 126 µL,
-    # max volume for mastermix is 0.75 µL*36=27 µL
-    try:
-        p300.pick_up_tip()
-    except protocol_api.labware.OutOfTipsError:
-        ctx.pause("Replace empty tip racks")
-        p300.reset_tipracks()
-        p300.pick_up_tip()
-    p300.mix(n_standard_mixes, ER_enz_vol_per_well/2, ER_enzyme_well)
-    p300.drop_tip()
-
-    pip = p20 if er_enzyme_volume <= 20 else p300
-    try:
-        pip.transfer(er_enzyme_volume, ER_enzyme_well,
-                     ER_mastermix_destination)
-    except protocol_api.labware.OutOfTipsError:
-        ctx.pause("Replace empty tip racks")
-        pip.reset_tipracks()
-        pip.transfer(er_enzyme_volume, ER_enzyme_well,
-                     ER_mastermix_destination)
+    # Transfer mastermix to each well
+    ctx.comment("\nTransferring End repair mastermix")
+    # Set flow rates for handling the mastermix transfer
+    p20.flow_rate.aspirate *= ER_mm_asp_flowrate_mult
+    p20.flow_rate.dispense *= ER_mm_disp_flowrate_mult
+    for well in destination_plate.wells()[0:n_samples]:
+        out_of_tips_decorator(p20, p20.pick_up_tip)
+        p20.aspirate(mastermix_vol_per_sample, ER_mastermix_tube)
+        p20.dispense(mastermix_vol_per_sample, well)
+        # Mix each sample ten (n_standard_mixes) times
+        p20.drop_tip()
 
     # 1.2.7 to 1.2.9, page 2
     # Move 12.75 uL of sample to the destination plate
     # Add required volume of buffer and enzyme to the sample wells
     # See Table "End repair reaction" on page 2 of the protocol
-    # This will use up one 20 uL tiprack
+    # Reset flow rates for DNA transfer
+    p20.flow_rate.aspirate /= ER_mm_asp_flowrate_mult
+    p20.flow_rate.dispense /= ER_mm_disp_flowrate_mult
     ctx.comment("\nTransferring DNA")
-    for s, d in zip(sample_plate.wells()[0:num_samples],
-                    destination_plate.wells()[0:num_samples]):
-        try:
-            p20.transfer(DNA_sample_transfer_vol, s, d)
-        except protocol_api.labware.OutOfTipsError:
-            ctx.pause("Replace empty tip racks")
-            p20.reset_tipracks()
-            p20.transfer(DNA_sample_transfer_vol, s, d)
-
-    # Transfer mastermix to each well and mix each sample ten times
-    ctx.comment("\nTransferring End repair mastermix")
-    for well in destination_plate.wells()[0:num_samples]:
-        try:
-            p20.pick_up_tip()
-        except protocol_api.labware.OutOfTipsError:
-            ctx.pause("Replace empty tip racks")
-            p20.reset_tipracks()
-            p20.pick_up_tip()
-        p20.aspirate(mastermix_vol_per_sample, ER_mastermix_destination)
-        p20.dispense(mastermix_vol_per_sample, well)
-        # Mix each sample ten (n_standard_mixes) times
-        p20.mix(n_standard_mixes, total_rxn_vol/2)
+    for s, d in zip(sample_plate.wells()[0:n_samples],
+                    destination_plate.wells()[0:n_samples]):
+        out_of_tips_decorator(p20, p20.pick_up_tip)
+        p20.transfer(DNA_sample_transfer_vol, s, d, new_tip="never")
+        p20.mix(n_standard_mixes, total_rxn_vol - 2, d, reaction_mix_rate_mult)
         p20.drop_tip()
 
     ctx.comment("\nPulse spin the destination plate for 5 seconds")
     ctx.comment("Perform the end repair reaction in the thermocycler")
-    ctx.comment("Remember to thaw (30 minutes) and pulse spin Reagent plate " +
-                "3 before inserting it for protocol part 2")
+    ctx.comment("Remember to thaw (30 minutes) and pulse spin Reagent plate "
+                + "3 before inserting it for protocol part 2")
     ctx.comment("~~~ End of protocol part 1 ~~~~\n")
