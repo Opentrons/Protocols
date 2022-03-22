@@ -64,7 +64,7 @@ def run(ctx: protocol_api.ProtocolContext):
         if s_or_d == 'd':
             pipette.blow_out()
             pipette.touch_tip()
-            pipette.aspirate(4, tube.top())
+            pipette.aspirate(4, tube.top(z=2))
 
         if p1000.has_tip:
             p1000.drop_tip()
@@ -101,34 +101,34 @@ def run(ctx: protocol_api.ProtocolContext):
             pip.transfer(int(transfer_vol),
                          source.bottom(z=asp_height),
                          dest.bottom(z=disp_height),
-                         blow_out=True,
-                         blowout_location='destination well',
-                         air_gap=5,
                          touch_tip=True,
+                         air_gap=5,
                          new_tip='always')
 
             if mix_or_not.lower() == 'd' and mix_reps > 0:
                 if int(mix_vol) >= 20:
-                    mix(p1000, mix_reps, mix_vol, source, mix_or_not.lower())
+                    mix(p1000, mix_reps, mix_vol, dest, mix_or_not.lower())
                 else:
-                    mix(p20, mix_reps, mix_vol, source, mix_or_not.lower())
+                    mix(p20, mix_reps, mix_vol, dest, mix_or_not.lower())
+
+            ctx.comment('\n')
 
         except protocol_api.labware.OutOfTipsError:
+            pass
             ctx.pause("Replace empty tip racks")
             pip.reset_tipracks()
             pip.transfer(int(transfer_vol),
                          source.bottom(z=asp_height),
                          dest.bottom(z=disp_height),
-                         blow_out=True,
-                         blowout_location='destination well',
-                         air_gap=5,
                          touch_tip=True,
+                         air_gap=5,
                          new_tip='always')
 
             if mix_or_not.lower() == 'd' and mix_reps > 0:
+                print('hello')
                 if int(mix_vol) >= 20:
-                    mix(p1000, mix_reps, mix_vol, source, mix_or_not.lower())
+                    mix(p1000, mix_reps, mix_vol, dest, mix_or_not.lower())
                 else:
-                    mix(p20, mix_reps, mix_vol, source, mix_or_not.lower())
+                    mix(p20, mix_reps, mix_vol, dest, mix_or_not.lower())
 
         ctx.comment('\n')
