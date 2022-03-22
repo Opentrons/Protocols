@@ -41,6 +41,6 @@
        "type": "float",
        "label": "dispense height above well bottom (in mm)",
        "name": "height_dispense",
-       "default": 0.5
+       "default": 2.0
    }
 ]
