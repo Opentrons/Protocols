@@ -283,6 +283,7 @@ def run(ctx):
                  )), rate=rt)
                 pip.dispense(20, dest.height_inc(20).move(types.Point(
                  x=0, y=0, z=raise_mix_dispense)), rate=rt)
+            ctx.delay(seconds=1)
             pip.blow_out(
              dest.bottom(8).move(types.Point(x=move_side, y=0, z=0)))
         else:

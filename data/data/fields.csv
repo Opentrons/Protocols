@@ -94,6 +94,7 @@ beads_vol_1,1
 beads_vol_2,1
 big_pip,1
 binding_buffer_vol,19
+blank_on,1
 blot_dwell_time,1
 blow_out,1
 blowout_height,1
@@ -249,7 +250,7 @@ dil_plate_type,1
 diluent_csv,1
 diluent_scheme,1
 diluent_vol,1
-dilution_factor,1
+dilution_factor,2
 dilvol,1
 disp_bottom_clearance,1
 disp_delay,1
@@ -269,6 +270,7 @@ disp_vol,2
 dispensation_rate_multiplier,1
 dispense_flow_rate,2
 dispense_height,2
+dispense_offset,1
 dispense_plan,1
 dispense_rate,1
 dispense_speed,1
@@ -388,6 +390,7 @@ heat_kill_temperature,1
 heating_module_temp,1
 height_above_cartridge,1
 height_after_disp,1
+height_dispense,1
 height_engage,12
 htp_csv,1
 i5_volume,1
@@ -514,7 +517,7 @@ lysis,1
 lysis_vol,1
 m10_mount,2
 m1k,1
-m20_mount,56
+m20_mount,57
 m300_mount,60
 m300_type,2
 m_mount,1
@@ -642,22 +645,22 @@ num_gene,1
 num_mag_beads_tubes,1
 num_mastermix,1
 num_mm,2
-num_of_dilutions,1
+num_of_dilutions,2
 num_pl,2
 num_plates,22
 num_pool_sources,1
 num_pools,1
-num_primers,1
+num_primers,2
 num_reps,1
 num_row,1
 num_rows_a,1
 num_rows_b,1
-num_samp,45
+num_samp,46
 num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,89
+num_samples,90
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -714,7 +717,7 @@ p1n,1
 p1num,1
 p20_blowout_height,1
 p20_mount,96
-p20_multi_mount,2
+p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
 p20_side,1
@@ -819,7 +822,7 @@ plate_map_4_csv,1
 plate_name,1
 plate_scan,4
 plate_scan2,4
-plate_type,8
+plate_type,9
 plates,1
 pool_columns,1
 pool_location,1
@@ -877,7 +880,7 @@ res,2
 res12_type,1
 res1_type,1
 res_dead_vol,1
-res_type,13
+res_type,14
 reservoir12_lname,1
 reservoir_fill_volume,1
 reservoir_height,3
@@ -1066,7 +1069,7 @@ temp,2
 temp_gen,1
 temp_mod,2
 temp_mod_lname,2
-temp_mod_on,1
+temp_mod_on,2
 temp_mod_s1_lname,1
 temp_mod_s4_lname,1
 temp_mod_s7_lname,1
@@ -1104,8 +1107,8 @@ tip_strategy,3
 tip_threshold,1
 tip_touch,1
 tip_track,35
-tip_type,23
-tip_use_strategy,1
+tip_type,24
+tip_use_strategy,2
 tip_withdrawal_speed,1
 tiprack_lname_20_ul,1
 tiprack_lname_300ul,1
@@ -1116,7 +1119,7 @@ tiptrash,2
 tiptype,3
 tmod_1_lname,1
 tmod_2_lname,1
-total_mixing_volume,1
+total_mixing_volume,2
 total_samples,5
 touch_radius,1
 touch_tip,2
