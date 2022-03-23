@@ -1,0 +1,71 @@
+[
+  {
+    "type": "int",
+    "label": "Number of tuberacks",
+    "name": "n_tuberacks",
+    "default": 3
+  },
+  {
+    "type": "int",
+    "label": "Number of samples in tuberack 1 slot(2-3)",
+    "name": "n_samples_rack_1",
+    "default": 32
+  },
+  {
+    "type": "int",
+    "label": "Number of samples in tuberack 2 (slot 4-5)",
+    "name": "n_samples_rack_2",
+    "default": 32
+  },
+  {
+    "type": "int",
+    "label": "Number of samples in tuberack 3 (7-8)",
+    "name": "n_samples_rack_3",
+    "default": 32
+  },
+  {
+    "type": "dropDown",
+    "label": "Create mastermix?",
+    "name": "is_create_mastermix",
+    "options": [
+      {"label": "Yes", "value": true},
+      {"label": "No", "value": false}
+    ]
+  },
+  {
+    "type": "textFile",
+    "label": "Mastermix component locations (comma separated values file)",
+    "name": "mastermix_csv",
+    "default": "source well,component name,volume,,,,\nA1,component 1,100,,,,"
+  },
+  {
+    "type": "int",
+    "label": "Binding buffer location (pre-made, or location for creating mastermix)",
+    "name": "bindbuf_target_well_no",
+    "default": 11
+  },
+  {
+    "type": "int",
+    "label": "Master bead mix location (pre-made or location for creating mastermix",
+    "name": "master_bead_mix_well_no",
+    "default": 12
+  },
+  {
+    "type": "dropDown",
+    "label": "Mastermix tuberack (Optional)",
+    "name": "mastermix_tuberack_lname",
+    "options": [
+      { "label": "None", "value": false},
+      { "label": "Opentrons 10 Tube Rack with Falcon 4x50 mL, 6x15 mL Conical", "value": "opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical" },
+      { "label": "Opentrons 10 Tube Rack with NEST 4x50 mL, 6x15 mL Conical", "value": "opentrons_10_tuberack_nest_4x50ml_6x15ml_conical" },
+      { "label": "Opentrons 15 Tube Rack with Falcon 15 mL Conical", "value": "opentrons_15_tuberack_falcon_15ml_conical" },
+      { "label": "Opentrons 15 Tube Rack with NEST 15 mL Conical", "value": "opentrons_15_tuberack_nest_15ml_conical" }
+    ]
+  },
+  {
+    "type": "float",
+    "label": "Mastermix mixing rate multiplier",
+    "name": "mastermix_mix_rate_multiplier",
+    "default": 0.3
+  }
+]
