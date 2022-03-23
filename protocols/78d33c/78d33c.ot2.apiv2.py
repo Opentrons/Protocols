@@ -13,12 +13,12 @@ metadata = {
 def run(ctx):
 
     # get parameter values from json above
-    [clearance_bead_resuspension, offset_x_resuspension, count_samples,
-     clearance_reservoir, height_engage, time_engage, offset_x,
-     time_dry] = get_values(  # noqa: F821
-      'clearance_bead_resuspension', 'offset_x_resuspension', 'count_samples',
-      'clearance_reservoir', 'height_engage', 'time_engage', 'offset_x',
-      'time_dry')
+    [manual_bead_resuspension, clearance_bead_resuspension,
+     offset_x_resuspension, count_samples, clearance_reservoir, height_engage,
+     time_engage, offset_x, time_dry] = get_values(  # noqa: F821
+      'manual_bead_resuspension', 'clearance_bead_resuspension',
+      'offset_x_resuspension', 'count_samples', 'clearance_reservoir',
+      'height_engage', 'time_engage', 'offset_x', 'time_dry')
 
     ctx.set_rail_lights(True)
 
@@ -101,6 +101,16 @@ def run(ctx):
             raise Exception("""Labware definition must
                 supply well radius or well length and width.""")
 
+    # apply 10 mm/sec limit when tip leaves liquid
+    def slow_tip_withdrawal(current_pipette, well_location):
+        if current_pipette.mount == 'right':
+            axis = 'A'
+        else:
+            axis = 'Z'
+        ctx.max_speeds[axis] = 10
+        current_pipette.move_to(well_location.top())
+        ctx.max_speeds[axis] = None
+
     # tips, p20 multi, p300 multi
     tips20 = [ctx.load_labware(
      "opentrons_96_filtertiprack_20ul", str(slot)) for slot in [10, 11]]
@@ -155,14 +165,24 @@ def run(ctx):
     beadwell = beadwells()
     source = next(beadwell)
 
-    for column in mag_plate.columns()[:num_cols]:
+    for index, column in enumerate(mag_plate.columns()[:num_cols]):
         if source.liq_vol <= 1512:
             source = next(beadwell)
         pick_up_or_refill(p300m)
-        p300m.aspirate(
-         126, source.bottom(clearance_reservoir), rate=0.5)
-        ctx.delay(seconds=1)
         source.liq_vol -= 1008
+        ht = liq_height(source) - 3 if liq_height(source) - 3 > 1 else 1
+        if index == 0:
+            for rep in range(5):
+                p300m.aspirate(
+                 200, source.bottom(clearance_reservoir), rate=0.5)
+                p300m.dispense(200, source.bottom(ht), rate=0.5)
+        p300m.aspirate(
+         126, source.bottom(ht), rate=0.5)
+        ctx.delay(seconds=1)
+        slow_tip_withdrawal(p300m, source)
+        p300m.move_to(
+         source.top(-2).move(types.Point(x=source.length / 2, y=0, z=0)))
+        p300m.move_to(source.top())
         p300m.dispense(126, column[0])
         p300m.mix(10, 149)
         p300m.drop_tip()
@@ -229,12 +249,17 @@ def run(ctx):
         loc = column[0].bottom(clearance_bead_resuspension).move(types.Point(
           x={True: 1}.get(not index % 2, -1)*offset_x_resuspension, y=0, z=0))
         p20m.dispense(16, loc, rate=3)
-        for rep in range(10):
-            p20m.aspirate(16, column[0].bottom(1))
-            p20m.dispense(16, loc, rate=3)
+        if not manual_bead_resuspension:
+            for rep in range(10):
+                p20m.aspirate(16, column[0].bottom(1))
+                p20m.dispense(16, loc, rate=3)
         p20m.drop_tip()
 
-    ctx.delay(minutes=2)
+    if manual_bead_resuspension:
+        ctx.pause("""Cover, vortex, spin, incubate,
+        uncover and return the plate. Resume""")
+    else:
+        ctx.delay(minutes=2)
 
     mag.engage(height=height_engage)
     ctx.delay(minutes=time_engage)
