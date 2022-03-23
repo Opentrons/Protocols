@@ -22,6 +22,7 @@ Explanation of protocol parameters:
 * `20 uL pipette tips`: Brand of pipette tips, either Opentrons or BrandTech 20 uL tips
 * `300 uL pipette tips`:  Brand of pipette tips, either Opentrons or BrandTech 300 uL tips
 * `Number of plates`: The number of Nunc 96 well plates on the deck per run, may range from one to six
+* `Height offset for dispensing antibiotics into target wells [mm]`: Offset for dispensing antibiotics into wells in mm (above the original level which was the calculated liquid level in the well minus 0.4 mm).
 
 ---
 
