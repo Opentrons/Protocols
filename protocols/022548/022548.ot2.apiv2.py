@@ -1,33 +1,83 @@
 from opentrons import protocol_api
+import csv
+from typing import List
 
 metadata = {
-    'protocolName': 'Protocol Title',
-    'author': 'AUTHOR NAME <authoremail@company.com>',
+    'protocolName': '022548',
+    'author': 'Eskil Andersen <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
                          # IN SECTION 5.2 OF THE APIV2 "VERSIONING"
 }
 
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{
+                                  "n_tuberacks":3,
+                                  "n_samples_rack_1":32,
+                                  "n_samples_rack_2":32,
+                                  "n_samples_rack_3":32,
+                                  "is_create_mastermix":true,
+                                  "mastermix_csv":"source well,component name,volume,,,,\\\\nA1,component 1,100,,,,",
+                                  "bindbuf_target_well_no":11,
+                                  "master_bead_mix_well_no":12
+                                  }
+                                  """)
+    return [_all_values[n] for n in names]
+
+
 def run(ctx: protocol_api.ProtocolContext):
 
-    [
-     _custom_variable1,
-     _custom_variable2
-    ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
-        "_custom_variable1",
-        "_custom_variable2")
+    [n_tuberacks,
+     n_samples_rack_1,
+     n_samples_rack_2,
+     n_samples_rack_3,
+     is_create_mastermix,
+     mastermix_csv,
+     bindbuf_target_well_no,
+     master_bead_mix_well_no] = get_values(  # noqa: F821
+     "n_tuberacks",
+     "n_samples_rack_1",
+     "n_samples_rack_2",
+     "n_samples_rack_3",
+     "is_create_mastermix",
+     "mastermix_csv",
+     "bindbuf_target_well_no",
+     "master_bead_mix_well_no")
 
-    if not 1 <= _custom_variable1 <= 12:
-        raise Exception("Enter a value between 1-12")
+    def parse_csv(csv_string) -> List:
+        csv_string = csv_string.strip()
+        lines = str(csv_string).splitlines()
+        csv_reader = csv.reader(lines, delimiter=',')
+        mastermix_list = []
+        for row in csv_reader:
+            mastermix_list.append(row)
+        return mastermix_list
+
+    tuberack_upper_bound = 2 if is_create_mastermix else 3
+    if n_tuberacks > tuberack_upper_bound or n_tuberacks < 1:
+        raise Exception(("Sample tube racks should be between 1 to {}"
+                         "Are you creating a mastermix? If so 2 tuberacks "
+                         "is max").format(tuberack_upper_bound))
+
+    for i, n in enumerate([n_samples_rack_1,
+                           n_samples_rack_2,
+                           n_samples_rack_3]):
+        if n < 0 or n > 32:
+            raise Exception(
+                "Invalid number of samples (n={}) on tuberack #{}".format(
+                    n, i+1)
+                )
+    n_total_samples = (n_samples_rack_1 + n_samples_rack_2
+                       if is_create_mastermix else n_samples_rack_1
+                       + n_samples_rack_2 + n_samples_rack_3)
+
+    mastermix_list = parse_csv(mastermix_csv)
+    sample_tuberack_lname = "nest_32_tuberack_8x15ml_8x15ml_8x15ml_8x15ml"
+    plate_lname = "thermofisherkingfisherdeepwell_96_wellplate_2000ul"
 
     # define all custom variables above here with descriptions:
-
-    # number of samples
-    custom_variable1 = _custom_variable1
-
-    # "True" for park tips, "False" for discard tips
-    custom_variable2 = _custom_variable2
 
     # load modules
 
@@ -79,6 +129,8 @@ def run(ctx: protocol_api.ProtocolContext):
     e.g. tiprack10, tiprack20, tiprack200, tiprack300, tiprack1000
 
     '''
+    tiprack_200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '6')]
+    tiprack_300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '9')]
 
     # load instrument
 
