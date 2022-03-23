@@ -29,7 +29,8 @@ def run(ctx: protocol_api.ProtocolContext):
      is_reuse_reag_tips,
      is_reuse_wash_tips,
      temp_mod_lname,
-     p1000_slot] = get_values(  # noqa: F821
+     p1000_slot,
+     well_edge_slot] = get_values(  # noqa: F821
      "n_slots",
      "n_last_samples",
      "vol_reagent",
@@ -44,7 +45,8 @@ def run(ctx: protocol_api.ProtocolContext):
      "is_reuse_reag_tips",
      "is_reuse_wash_tips",
      "temp_mod_lname",
-     "p1000_slot")
+     "p1000_slot",
+     "well_edge_slot")
 
     # Definitions for loading labware, tipracks and pipettes.
     slide_blocks_loader = {'lname': 'customslideblockv2_8_wellplate',

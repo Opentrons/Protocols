@@ -123,5 +123,11 @@
       { "label": "Left", "value": "left"},
       { "label": "Right", "value": "right"}
     ]
+  },
+  {
+    "type": "float",
+    "label": "Well edge offset (mm)",
+    "name": "well_edge_offset",
+    "default": 1
   }
 ]
