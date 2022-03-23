@@ -104,7 +104,8 @@
       { "label": "USA Scientific 12 Well Reservoir 22 mL", "value": "usascientific_12_reservoir_22ml" },
       { "label": "Agilent 1 Well Reservoir 290 mL", "value": "agilent_1_reservoir_290ml" },
       { "label": "Axygen 1 Well Reservoir 90 mL", "value": "axygen_1_reservoir_90ml" },
-      { "label": "USA Scientific 96 Deep well Plate 2.4 mL", "value": "usascientific_96_wellplate_2.4ml_deep" }
+      { "label": "USA Scientific 96 Deep well Plate 2.4 mL", "value": "usascientific_96_wellplate_2.4ml_deep" },
+      { "label": "Stellar Scientific 96 Deep well Plate 1.1 mL", "value": "stellarscientific_96_wellplate_1100ul"}
     ]
   },
   {
