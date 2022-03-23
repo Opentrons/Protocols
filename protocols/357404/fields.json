@@ -3,7 +3,7 @@
     "type": "int",
     "label": "Number of slide blocks",
     "name": "n_slots",
-    "default": 7
+    "default": 8
   },
   {
     "type": "int",
@@ -123,5 +123,26 @@
       { "label": "Left", "value": "left"},
       { "label": "Right", "value": "right"}
     ]
+  },
+  {
+    "type": "float",
+    "label": "Well edge offset (mm)",
+    "name": "well_edge_offset",
+    "default": 1
+  },
+  {
+    "type": "dropDown",
+    "label": "Use a custom slide block?",
+    "name": "is_use_custom_block",
+    "options": [
+      { "label": "No", "value": false},
+      { "label": "Yes", "value": true}
+    ]
+  },
+  {
+    "type": "str",
+    "label": "Custom labware loadName",
+    "name": "custom_labware_lname",
+    "default": "loadName goes here"
   }
 ]
