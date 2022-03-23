@@ -1,8 +1,4 @@
 from opentrons import protocol_api
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"_num_samp":48,"_use_temp_mod":true,"_p300_mount":"left"}""")
-    return [_all_values[n] for n in names]
 
 
 metadata = {
