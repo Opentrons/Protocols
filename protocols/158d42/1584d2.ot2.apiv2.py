@@ -35,7 +35,7 @@ def run(ctx: protocol_api.ProtocolContext):
     # MODULES
     if use_temp_mod:
         temp_mod = ctx.load_module('temperature module gen2', '1')
-        temp_mod.set_temperature(4)
+        temp_mod.set_temperature(12)
         plate = temp_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
     else:
         plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '1')
@@ -44,7 +44,7 @@ def run(ctx: protocol_api.ProtocolContext):
     prl_tuberacks = [ctx.load_labware(
                  'nest_32_tuberack_8x5ml_8x5ml_8x5ml_8x5ml',
                  slot, label='sample tuberack')
-                 for slot in ['4', '7']]
+                 for slot in ['7', '4']]
 
     reagent_tuberacks = [ctx.load_labware(
                     'opentrons_24_tuberack_nest_1.5ml_screwcap',
@@ -60,18 +60,18 @@ def run(ctx: protocol_api.ProtocolContext):
     # MAPPING
     prl_rows = [tube
                 for rack in prl_tuberacks
-                for row in rack.rows()[::2]
+                for row in rack.rows()
                 for tube in row][:num_samp]
     reagent_tubes = [tube
                      for rack in reagent_tuberacks
                      for row in rack.rows()
-                     for tube in row][6:]
+                     for tube in row][2:]
     negative_ctrl = plate.wells()[0]
     neg_ctrl_tube = reagent_tuberacks[0].wells()[0]
     positive_ctrl_1 = plate.wells()[95]
     pos_ctrl_tube = reagent_tuberacks[0].rows()[0][1]
     positive_ctrl_final = plate.wells()[1]
-    plate_wells = plate.wells()[2::2]
+    plate_wells = [well for col in plate.columns()[::2] for well in col][2:]
 
     # protocol
     ctx.comment('\n\nMOVING NEGATIVE CONTROL TO PLATE\n')
@@ -82,7 +82,7 @@ def run(ctx: protocol_api.ProtocolContext):
     p300.mix(5, 40, negative_ctrl)
     p300.drop_tip()
 
-    ctx.comment('\n\nMOVING SAMPLEs TO PLATE\n')
+    ctx.comment('\n\nMOVING SAMPLES TO PLATE\n')
     for prl_source, dest1, final_dest in zip(prl_rows,
                                              reagent_tubes,
                                              plate_wells):
