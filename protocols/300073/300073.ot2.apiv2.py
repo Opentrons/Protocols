@@ -46,8 +46,8 @@ def run(ctx: protocol_api.ProtocolContext):
 
     if not 4 <= temperature <= 95:
         raise Exception(
-            "Temperature module must be set to a temperature between " +
-            "4 and 95 degrees Celsius")
+            "Temperature module must be set to a temperature between "
+            + "4 and 95 degrees Celsius")
 
     p20_lname = 'p20_single_gen2'
     p300_lname = 'p300_single_gen2'
@@ -349,8 +349,8 @@ def run(ctx: protocol_api.ProtocolContext):
         n_quad_transfers = n_wells if n_wells < n_samples_set1 \
             else n_samples_set1
         transfer_tube_samples(sample_aspiration_vol_ul,
-                              tuberack_quad_1_map[3:n_quad_transfers],
-                              target_quadrant_1[3:n_quad_transfers])
+                              tuberack_quad_1_map[3:n_quad_transfers+3],
+                              target_quadrant_1[3:n_quad_transfers+3])
 
         ctx.comment("\n\nTransferring samples from Sample set 1:Tuberack "
                     "quad 2 to Destination quad 2\n")

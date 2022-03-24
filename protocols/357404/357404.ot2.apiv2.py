@@ -29,7 +29,10 @@ def run(ctx: protocol_api.ProtocolContext):
      is_reuse_reag_tips,
      is_reuse_wash_tips,
      temp_mod_lname,
-     p1000_slot] = get_values(  # noqa: F821
+     p1000_slot,
+     well_edge_offset,
+     is_use_custom_block,
+     custom_labware_lname] = get_values(  # noqa: F821
      "n_slots",
      "n_last_samples",
      "vol_reagent",
@@ -44,11 +47,16 @@ def run(ctx: protocol_api.ProtocolContext):
      "is_reuse_reag_tips",
      "is_reuse_wash_tips",
      "temp_mod_lname",
-     "p1000_slot")
+     "p1000_slot",
+     "well_edge_offset",
+     "is_use_custom_block",
+     "custom_labware_lname")
 
     # Definitions for loading labware, tipracks and pipettes.
-    slide_blocks_loader = {'lname': 'customslideblockv2_8_wellplate',
-                           'slots': [1, 4, 5, 7, 8, 10, 11]}
+    slide_block_lname = (custom_labware_lname if is_use_custom_block
+                         else 'customslideblockv2_8_wellplate')
+    slide_blocks_loader = {'lname': slide_block_lname,
+                           'slots': [1, 4, 5, 7, 8, 9, 10, 11]}
     tuberack_slot = '3'
     temp_mod_loader = {'lname': temp_mod_lname, 'slot': tuberack_slot}
     reservoir_loader = {'lname': 'agilent_1_reservoir_290ml', 'slot': '2'}
@@ -56,7 +64,7 @@ def run(ctx: protocol_api.ProtocolContext):
     tuberack_loader = {'lname': tuberack_lname, 'slot': tuberack_slot}
 
     tiprack_1000_loader = {'lname': 'opentrons_96_tiprack_1000ul',
-                           'slots': ['6', '9']}
+                           'slots': ['6']}
     p1000_loader = {'lname': 'p1000_single_gen2', 'mount': p1000_slot}
 
     verbose = False
@@ -66,8 +74,8 @@ def run(ctx: protocol_api.ProtocolContext):
                         "using the temperature module, you selected {}"
                         .format(tuberack_lname))
 
-    if not 0 < n_slots < 8:
-        raise Exception("The number of blocks have to be between 1 and 7")
+    if not 0 < n_slots < 9:
+        raise Exception("The number of blocks have to be between 1 and 8")
 
     if not 0 < n_last_samples < 9:
         raise Exception("The number of samples on the last block have to be"
@@ -486,6 +494,10 @@ def run(ctx: protocol_api.ProtocolContext):
 
     def pause(msg: str, time_elapsed_sec: float = 0,
               pause_period_minutes: int = 60, do_dry_run: bool = False):
+        """ Pauses the protocol for an incubation period, but subtracts the
+        time elapsed for some preparative process from the total pause period.
+        Also tells the user what the slides are being incubated with.
+        """
         msg_template = "Incubating slides with {}"
         dry_run_msg = "(Dry run): "
         if time_elapsed_sec > pause_period_minutes*60:
@@ -509,9 +521,12 @@ def run(ctx: protocol_api.ProtocolContext):
         This function dispenses a partial volume = vol/steps and then moves
         a distance/steps and repeats
         """
-        dy = 9/steps  # Move a fraction (=steps) of 9 mm
+        well_diameter = float(well.diameter)
+        dispense_distance = well_diameter - well_edge_offset
+        dy = dispense_distance/steps  # Move a fraction (=steps) of well diatr.
         dv = vol/steps
-        start_location = well.top().move(Point(0, -4.5, pip_offset))
+        start_location = well.bottom().move(
+            Point(0, well_diameter/2 - well_edge_offset, pip_offset))
         pip.move_to(start_location)
         for i in range(steps):
             loc = start_location.move(Point(0, i*dy, 0))
