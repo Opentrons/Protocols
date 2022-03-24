@@ -28,8 +28,7 @@ def run(ctx):
     ctx.set_rail_lights(True)
     ctx.delay(seconds=10)
 
-    # temporarily changed for testing with smaller reservoir
-    if not 8 <= count_samples <= 16:
+    if not 8 <= count_samples <= 48:
         raise Exception('Invalid number of samples (must be 8-48).')
 
     if not 0.05 <= tip_immersion <= 0.15:
@@ -51,7 +50,7 @@ def run(ctx):
 
     # labware, thermocycler module, magnetic module
     reservoir = ctx.load_labware(
-     'nest_12_reservoir_15ml', '2', 'Reservoir')
+     'usascientific_12_reservoir_22ml', '2', 'Reservoir')
     reagents = ctx.load_labware(
      'nest500ul_96_reservoir_500ul', '5', 'Reagents')
     samples = ctx.load_labware(
