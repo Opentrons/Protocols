@@ -1,7 +1,7 @@
 {
   "wells": {
     "A1": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -10,7 +10,7 @@
       "z": 3.55
     },
     "C1": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -19,7 +19,7 @@
       "z": 3.55
     },
     "A3": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -28,7 +28,7 @@
       "z": 3.55
     },
     "C3": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -37,7 +37,7 @@
       "z": 3.55
     },
     "A5": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -46,7 +46,7 @@
       "z": 3.55
     },
     "C5": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -55,7 +55,7 @@
       "z": 3.55
     },
     "A7": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -64,7 +64,7 @@
       "z": 3.55
     },
     "C7": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -73,7 +73,7 @@
       "z": 3.55
     },
     "A2": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -82,7 +82,7 @@
       "z": 3.55
     },
     "C2": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -91,7 +91,7 @@
       "z": 3.55
     },
     "A4": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -100,7 +100,7 @@
       "z": 3.55
     },
     "C4": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -109,7 +109,7 @@
       "z": 3.55
     },
     "A6": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -118,7 +118,7 @@
       "z": 3.55
     },
     "C6": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -127,7 +127,7 @@
       "z": 3.55
     },
     "A8": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -136,7 +136,7 @@
       "z": 3.55
     },
     "C8": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -145,7 +145,7 @@
       "z": 3.55
     },
     "B1": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -154,7 +154,7 @@
       "z": 3.55
     },
     "D1": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -163,7 +163,7 @@
       "z": 3.55
     },
     "B3": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -172,7 +172,7 @@
       "z": 3.55
     },
     "D3": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -181,7 +181,7 @@
       "z": 3.55
     },
     "B5": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -190,7 +190,7 @@
       "z": 3.55
     },
     "D5": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -199,7 +199,7 @@
       "z": 3.55
     },
     "B7": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -208,7 +208,7 @@
       "z": 3.55
     },
     "D7": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -217,7 +217,7 @@
       "z": 3.55
     },
     "B2": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -226,7 +226,7 @@
       "z": 3.55
     },
     "D2": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -235,7 +235,7 @@
       "z": 3.55
     },
     "B4": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -244,7 +244,7 @@
       "z": 3.55
     },
     "D4": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -253,7 +253,7 @@
       "z": 3.55
     },
     "B6": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -262,7 +262,7 @@
       "z": 3.55
     },
     "D6": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -271,7 +271,7 @@
       "z": 3.55
     },
     "B8": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -280,7 +280,7 @@
       "z": 3.55
     },
     "D8": {
-      "totalLiquidVolume": 15000,
+      "totalLiquidVolume": 5000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
@@ -358,7 +358,7 @@
     },
     {
       "metadata": {
-        "displayName": "NEST 15 mL Conical",
+        "displayName": "NEST 5mL Conical",
         "displayCategory": "tubeRack",
         "wellBottomShape": "v"
       },
@@ -385,7 +385,7 @@
     "links": []
   },
   "metadata": {
-    "displayName": "NEST 32 Tuberack 15ml (2 Slot)",
+    "displayName": "NEST 32 Tuberack 5mL (2 Slot)",
     "displayCategory": "tubeRack",
     "displayVolumeUnits": "mL",
     "tags": []

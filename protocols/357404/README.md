@@ -31,7 +31,22 @@ Explanation of parameters below:
 * `Reuse PBS wash tips?`: Use one tip to do one wash with PBS
 * `Use temperature module?`: Whether to use a temperature module to chill the reagents in the tuberack, or put the tuberack directly on the slot.
 * `P1000 slot`: Which mount to use for the P1000 single GEN2 pipette
-* `Tuberack`: Which reagent tuberack you want to use in the protocol
+* `Reagent tuberack`: Which reagent tuberack you want to use in the protocol
+* `Well edge offset (mm)`: The offset from the well's edge when performing the dispensing while moving action. The pipette will start dispensing on one side of the well minus the offset and will travel to the other side of the well minus the same offset.
+* `Use a custom slide block`: Setting this parameter to Yes means that the protocol will try to load an alternative definition for the slide block. See `Custom labware loadName` parameter below.
+* `Custom labware loadName`: Put the labware load name of the alternative slide block labware definition you wish to use. To find the loadName: Open your labware_definition.json file, look for the section "parameters"
+e.g.
+```
+"parameters": {
+		"format": "irregular",
+		"quirks": [],
+		"isTiprack": false,
+		"isMagneticModuleCompatible": false,
+		"loadName": "customslideblockv2_8_wellplate"
+```
+and copy the value of loadName (without the quotation marks). paste that value into this parameter field, i.e. in this case that would be: `customslideblockv2_8_wellplate`
+
+Remember to load the labware into the Opentrons app before running your protocol
 
 ---
 
