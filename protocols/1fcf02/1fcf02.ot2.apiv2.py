@@ -91,7 +91,7 @@ def run(ctx):
 
     # liquid height tracking
     v_naught_urea, v_naught_buffer = start_urea_vol*1000, start_buff_vol*1000
-    radius = reagent_rack.wells()[0].diameter/2
+    radius = reagent_rack.rows()[0][2].diameter/2
     h_naught_urea, h_naught_buffer = 0.8*v_naught_urea/(math.pi*radius**2), 0.8*v_naught_buffer/(math.pi*radius**2)  # noqa: E501
     h1, h2 = h_naught_urea, h_naught_buffer
 
