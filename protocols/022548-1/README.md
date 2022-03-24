@@ -8,7 +8,7 @@
 
 ## Categories
 * Nucleic Acid Extraction & Purification
-	* DNA Extraction
+	* DNA Extraction 
 
 ## Description
 This section of the README (especially the first paragraph) should grip a prospective user with the overarching purpose/flow of the protocol, but should not include fine details of the protocol steps themselves.
