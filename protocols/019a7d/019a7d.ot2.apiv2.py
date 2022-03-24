@@ -29,7 +29,8 @@ def run(ctx):
     custom_variable2 = _custom_variable2
 
     # load modules
-
+    temp_1 = ctx.load_module('tempdeck', '1')
+    temp_3 = ctx.load_module('tempdeck', '3')
     '''
 
     Add your modules here with:
@@ -44,7 +45,13 @@ def run(ctx):
     '''
 
     # load labware
-
+    gibson_tubes = temp_1.load_labware('opentrons_24_aluminumblock_generic'
+                                       '_2ml_screwcap')
+    pcr_plate = ctx.load_labware('azentalifesciences_96wellplate_200ul', '2')
+    assembly_plate = temp_3.load_labware('azentalifesciences_96wellplate_200ul'
+                                         )
+    backbone_reservoir = ctx.load_labware('azentalifesciences_12reservoir'
+                                          '_21000ul', '4')
     '''
 
     Add your labware here with:
@@ -59,7 +66,8 @@ def run(ctx):
     '''
 
     # load tipracks
-
+    tiprack = [ctx.load_labware('opentrons_96_filtertiprack_20ul', 'slot')
+               for slot in ['10', '11']]
     '''
 
     Add your tipracks here as a list:
@@ -80,7 +88,16 @@ def run(ctx):
     '''
 
     # load instrument
-
+    ctx.load_instrument(
+                        'p20_single_gen2',
+                        mount='left',
+                        tip_racks=tiprack
+    )
+    ctx.load_instrument(
+                        'p20_multi_gen2',
+                        mount='right',
+                        tip_racks=tiprack
+    )
     '''
     Nomenclature for pipette:
 
