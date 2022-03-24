@@ -39,6 +39,7 @@ air_dry_time,1
 air_gap,1
 air_gap_bool,1
 air_gap_vol,3
+air_gap_volume,1
 airgap,1
 am_bic_volume,1
 antibody_csv,1
@@ -94,7 +95,7 @@ beads_vol_1,1
 beads_vol_2,1
 big_pip,1
 binding_buffer_vol,19
-blank_on,1
+blank_on,2
 blot_dwell_time,1
 blow_out,1
 blowout_height,1
@@ -390,7 +391,7 @@ heat_kill_temperature,1
 heating_module_temp,1
 height_above_cartridge,1
 height_after_disp,1
-height_dispense,1
+height_dispense,2
 height_engage,12
 htp_csv,1
 i5_volume,1
@@ -597,6 +598,7 @@ mntsingle,2
 mother_plate_type,1
 mount,2
 mount_p20,1
+mount_side,1
 move_side,2
 move_vol,1
 multi_pip_info,1

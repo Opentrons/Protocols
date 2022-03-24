@@ -1,5 +1,5 @@
 {
-    "content": "from opentrons import protocol_api\n\n\nmetadata = {\n    'protocolName': 'RNA Normalization I & II',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx: protocol_api.ProtocolContext):\n\n    [\n     _num_samp,\n     _use_temp_mod,\n     _p300_mount,\n\n    ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)\n        \"_num_samp\",\n        \"_use_temp_mod\",\n        \"_p300_mount\")\n\n    # VARIABLES\n\n    # number of samples running (not including controls)\n    num_samp = _num_samp\n\n    # use temperature module or not\n    use_temp_mod = _use_temp_mod\n\n    # change pipette mounts here to \"left\" or \"right\", respectively\n    p300_mount = _p300_mount\n\n    # MODULES\n    if use_temp_mod:\n        temp_mod = ctx.load_module('temperature module gen2', '1')\n        temp_mod.set_temperature(4)\n        plate = temp_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')\n    else:\n        plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '1')\n\n    # LABWARE\n    prl_tuberacks = [ctx.load_labware(\n                 'nest_32_tuberack_8x5ml_8x5ml_8x5ml_8x5ml',\n                 slot, label='sample tuberack')\n                 for slot in ['4', '7']]\n\n    reagent_tuberacks = [ctx.load_labware(\n                    'opentrons_24_tuberack_nest_1.5ml_screwcap',\n                    slot, label='rack') for slot in ['9', '6']]\n\n    # TIPRACKS\n    tipracks = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '10')]\n\n    # INSTRUMENTS\n    p300 = ctx.load_instrument('p300_single_gen2', p300_mount,\n                               tip_racks=tipracks)\n\n    # MAPPING\n    prl_rows = [tube\n                for rack in prl_tuberacks\n                for row in rack.rows()[::2]\n                for tube in row][:num_samp]\n    reagent_tubes = [tube\n                     for rack in reagent_tuberacks\n                     for row in rack.rows()\n                     for tube in row][6:]\n    negative_ctrl = plate.wells()[0]\n    neg_ctrl_tube = reagent_tuberacks[0].wells()[0]\n    positive_ctrl_1 = plate.wells()[95]\n    pos_ctrl_tube = reagent_tuberacks[0].rows()[0][1]\n    positive_ctrl_final = plate.wells()[1]\n    plate_wells = plate.wells()[2::2]\n\n    # protocol\n    ctx.comment('\\n\\nMOVING NEGATIVE CONTROL TO PLATE\\n')\n    p300.pick_up_tip()\n    p300.aspirate(50, neg_ctrl_tube.bottom(2))\n    p300.dispense(30, negative_ctrl.bottom(negative_ctrl.depth/2))\n    p300.dispense(20, negative_ctrl)\n    p300.mix(5, 40, negative_ctrl)\n    p300.drop_tip()\n\n    ctx.comment('\\n\\nMOVING SAMPLEs TO PLATE\\n')\n    for prl_source, dest1, final_dest in zip(prl_rows,\n                                             reagent_tubes,\n                                             plate_wells):\n        p300.pick_up_tip()\n        p300.aspirate(50, prl_source)\n        p300.dispense(50, dest1.bottom(2))\n        p300.mix(3, 200, dest1.bottom(2))\n        p300.aspirate(50, dest1.bottom(2))\n        p300.dispense(30, final_dest.bottom(final_dest.depth/2))\n        p300.dispense(20, final_dest)\n        p300.mix(3, 40, final_dest)\n        p300.drop_tip()\n        ctx.comment('\\n')\n\n    ctx.comment('\\n\\nMOVING POSITIVE CONTROL TO PLATE\\n')\n    p300.pick_up_tip()\n    p300.aspirate(50, pos_ctrl_tube.bottom(2))\n    p300.dispense(30, positive_ctrl_1.bottom(positive_ctrl_1.depth/2))\n    p300.dispense(20, positive_ctrl_1)\n    p300.mix(5, 40, positive_ctrl_1)\n\n    p300.aspirate(50, positive_ctrl_1)\n    p300.dispense(30, positive_ctrl_final.bottom(positive_ctrl_1.depth/2))\n    p300.dispense(20, positive_ctrl_final)\n    p300.mix(5, 40, positive_ctrl_final)\n    p300.drop_tip()\n",
+    "content": "from opentrons import protocol_api\n\n\nmetadata = {\n    'protocolName': 'RNA Normalization I & II',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx: protocol_api.ProtocolContext):\n\n    [\n     _num_samp,\n     _use_temp_mod,\n     _p300_mount,\n\n    ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)\n        \"_num_samp\",\n        \"_use_temp_mod\",\n        \"_p300_mount\")\n\n    # VARIABLES\n\n    # number of samples running (not including controls)\n    num_samp = _num_samp\n\n    # use temperature module or not\n    use_temp_mod = _use_temp_mod\n\n    # change pipette mounts here to \"left\" or \"right\", respectively\n    p300_mount = _p300_mount\n\n    # MODULES\n    if use_temp_mod:\n        temp_mod = ctx.load_module('temperature module gen2', '1')\n        temp_mod.set_temperature(12)\n        plate = temp_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')\n    else:\n        plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '1')\n\n    # LABWARE\n    prl_tuberacks = [ctx.load_labware(\n                 'nest_32_tuberack_8x5ml_8x5ml_8x5ml_8x5ml',\n                 slot, label='sample tuberack')\n                 for slot in ['7', '4']]\n\n    reagent_tuberacks = [ctx.load_labware(\n                    'opentrons_24_tuberack_nest_1.5ml_screwcap',\n                    slot, label='rack') for slot in ['9', '6']]\n\n    # TIPRACKS\n    tipracks = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '10')]\n\n    # INSTRUMENTS\n    p300 = ctx.load_instrument('p300_single_gen2', p300_mount,\n                               tip_racks=tipracks)\n\n    # MAPPING\n    prl_rows = [tube\n                for rack in prl_tuberacks\n                for row in rack.rows()\n                for tube in row][:num_samp]\n    reagent_tubes = [tube\n                     for rack in reagent_tuberacks\n                     for row in rack.rows()\n                     for tube in row][2:]\n    negative_ctrl = plate.wells()[0]\n    neg_ctrl_tube = reagent_tuberacks[0].wells()[0]\n    positive_ctrl_1 = plate.wells()[95]\n    pos_ctrl_tube = reagent_tuberacks[0].rows()[0][1]\n    positive_ctrl_final = plate.wells()[1]\n    plate_wells = [well for col in plate.columns()[::2] for well in col][2:]\n\n    # protocol\n    ctx.comment('\\n\\nMOVING NEGATIVE CONTROL TO PLATE\\n')\n    p300.pick_up_tip()\n    p300.aspirate(50, neg_ctrl_tube.bottom(2))\n    p300.dispense(30, negative_ctrl.bottom(negative_ctrl.depth/2))\n    p300.dispense(20, negative_ctrl)\n    p300.mix(5, 40, negative_ctrl)\n    p300.drop_tip()\n\n    ctx.comment('\\n\\nMOVING SAMPLES TO PLATE\\n')\n    for prl_source, dest1, final_dest in zip(prl_rows,\n                                             reagent_tubes,\n                                             plate_wells):\n        p300.pick_up_tip()\n        p300.aspirate(50, prl_source)\n        p300.dispense(50, dest1.bottom(2))\n        p300.mix(3, 200, dest1.bottom(2))\n        p300.aspirate(50, dest1.bottom(2))\n        p300.dispense(30, final_dest.bottom(final_dest.depth/2))\n        p300.dispense(20, final_dest)\n        p300.mix(3, 40, final_dest)\n        p300.drop_tip()\n        ctx.comment('\\n')\n\n    ctx.comment('\\n\\nMOVING POSITIVE CONTROL TO PLATE\\n')\n    p300.pick_up_tip()\n    p300.aspirate(50, pos_ctrl_tube.bottom(2))\n    p300.dispense(30, positive_ctrl_1.bottom(positive_ctrl_1.depth/2))\n    p300.dispense(20, positive_ctrl_1)\n    p300.mix(5, 40, positive_ctrl_1)\n\n    p300.aspirate(50, positive_ctrl_1)\n    p300.dispense(30, positive_ctrl_final.bottom(positive_ctrl_1.depth/2))\n    p300.dispense(20, positive_ctrl_final)\n    p300.mix(5, 40, positive_ctrl_final)\n    p300.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -92,7 +92,7 @@
                     },
                     "metadata": {
                         "displayCategory": "tubeRack",
-                        "displayName": "NEST 15 mL Conical",
+                        "displayName": "NEST 5mL Conical",
                         "wellBottomShape": "v"
                     },
                     "wells": [
@@ -109,7 +109,7 @@
             ],
             "metadata": {
                 "displayCategory": "tubeRack",
-                "displayName": "NEST 32 Tuberack 15ml (2 Slot)",
+                "displayName": "NEST 32 Tuberack 5mL (2 Slot)",
                 "displayVolumeUnits": "mL",
                 "tags": []
             },
@@ -177,7 +177,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 24.87,
                     "y": 72.76,
                     "z": 3.55
@@ -186,7 +186,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 60.87,
                     "y": 72.76,
                     "z": 3.55
@@ -195,7 +195,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 87.37,
                     "y": 72.76,
                     "z": 3.55
@@ -204,7 +204,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 123.37,
                     "y": 72.76,
                     "z": 3.55
@@ -213,7 +213,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 149.87,
                     "y": 72.76,
                     "z": 3.55
@@ -222,7 +222,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 185.87,
                     "y": 72.76,
                     "z": 3.55
@@ -231,7 +231,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 212.37,
                     "y": 72.76,
                     "z": 3.55
@@ -240,7 +240,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 248.37,
                     "y": 72.76,
                     "z": 3.55
@@ -249,7 +249,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 11.62,
                     "y": 52.75,
                     "z": 3.55
@@ -258,7 +258,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 47.62,
                     "y": 52.75,
                     "z": 3.55
@@ -267,7 +267,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 74.12,
                     "y": 52.75,
                     "z": 3.55
@@ -276,7 +276,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 110.12,
                     "y": 52.75,
                     "z": 3.55
@@ -285,7 +285,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 136.62,
                     "y": 52.75,
                     "z": 3.55
@@ -294,7 +294,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 172.62,
                     "y": 52.75,
                     "z": 3.55
@@ -303,7 +303,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 199.12,
                     "y": 52.75,
                     "z": 3.55
@@ -312,7 +312,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 235.12,
                     "y": 52.75,
                     "z": 3.55
@@ -321,7 +321,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 24.87,
                     "y": 32.74,
                     "z": 3.55
@@ -330,7 +330,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 60.87,
                     "y": 32.74,
                     "z": 3.55
@@ -339,7 +339,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 87.37,
                     "y": 32.74,
                     "z": 3.55
@@ -348,7 +348,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 123.37,
                     "y": 32.74,
                     "z": 3.55
@@ -357,7 +357,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 149.87,
                     "y": 32.74,
                     "z": 3.55
@@ -366,7 +366,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 185.87,
                     "y": 32.74,
                     "z": 3.55
@@ -375,7 +375,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 212.37,
                     "y": 32.74,
                     "z": 3.55
@@ -384,7 +384,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 248.37,
                     "y": 32.74,
                     "z": 3.55
@@ -393,7 +393,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 11.62,
                     "y": 12.73,
                     "z": 3.55
@@ -402,7 +402,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 47.62,
                     "y": 12.73,
                     "z": 3.55
@@ -411,7 +411,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 74.12,
                     "y": 12.73,
                     "z": 3.55
@@ -420,7 +420,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 110.12,
                     "y": 12.73,
                     "z": 3.55
@@ -429,7 +429,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 136.62,
                     "y": 12.73,
                     "z": 3.55
@@ -438,7 +438,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 172.62,
                     "y": 12.73,
                     "z": 3.55
@@ -447,7 +447,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 199.12,
                     "y": 12.73,
                     "z": 3.55
@@ -456,7 +456,7 @@
                     "depth": 56.9,
                     "diameter": 15,
                     "shape": "circular",
-                    "totalLiquidVolume": 15000,
+                    "totalLiquidVolume": 5000,
                     "x": 235.12,
                     "y": 12.73,
                     "z": 3.55
@@ -466,8 +466,8 @@
     ],
     "fields": [
         {
-            "default": 32,
-            "label": "Number of samples (1-32)",
+            "default": 46,
+            "label": "Number of samples (1-46)",
             "name": "_num_samp",
             "type": "int"
         },

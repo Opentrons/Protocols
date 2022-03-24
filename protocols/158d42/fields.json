@@ -1,9 +1,9 @@
 [
   {
     "type": "int",
-    "label": "Number of samples (1-32)",
+    "label": "Number of samples (1-46)",
     "name": "_num_samp",
-    "default": 32
+    "default": 46
   },
   {
     "type": "dropDown",
