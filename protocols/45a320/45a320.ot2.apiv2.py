@@ -1,9 +1,3 @@
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"num_samp":12,"p20_rate":1,"p1000_rate":1,"p20_mount":"left","p1000_mount":"right"}""")
-    return [_all_values[n] for n in names]
-
-
 """Protocol."""
 metadata = {
     'protocolName': 'ReliaPrep™ Viral TNA Miniprep System, Custom',
