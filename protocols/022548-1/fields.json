@@ -8,13 +8,13 @@
   {
     "type": "str",
     "label": "Binding buffer wells",
-    "name": "bindbuf_source_wells",
+    "name": "bindbuf_source_well_indices",
     "default": "1-4"
   },
   {
     "type": "str",
     "label": "Master bead mix well(s)",
-    "name": "bead_mix_source_wells",
+    "name": "bead_mix_source_well_indices",
     "default": "5"
   },
   {
