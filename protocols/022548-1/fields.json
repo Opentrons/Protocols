@@ -1,58 +1,55 @@
 [
   {
     "type": "int",
-    "label": "Number of tuberacks",
-    "name": "n_tuberacks",
-    "default": 3
+    "label": "Create mastermix for how many numbers of samples",
+    "name": "n_samples",
+    "default": 96
   },
   {
-    "type": "int",
-    "label": "Number of samples in tuberack 1 slot(2-3)",
-    "name": "n_samples_rack_1",
-    "default": 32
+    "type": "str",
+    "label": "Binding buffer wells",
+    "name": "bindbuf_source_wells",
+    "default": "1-4"
   },
   {
-    "type": "int",
-    "label": "Number of samples in tuberack 2 (slot 4-5)",
-    "name": "n_samples_rack_2",
-    "default": 32
+    "type": "str",
+    "label": "Master bead mix well(s)",
+    "name": "bead_mix_source_wells",
+    "default": "5"
   },
   {
-    "type": "int",
-    "label": "Number of samples in tuberack 3 (7-8)",
-    "name": "n_samples_rack_3",
-    "default": 32
+    "type": "float",
+    "label": "Volume of binding buffer per source well (mL)",
+    "name": "vol_source_bb_per_well",
+    "default": 15.0
+  },
+  {
+    "type": "float",
+    "label": "Volume of bead mix per source well (mL)",
+    "name": "vol_source_bead_mix_per_well",
+    "default": 2.5
   },
   {
     "type": "dropDown",
-    "label": "Create mastermix?",
-    "name": "is_create_mastermix",
+    "label": "P300 single channel pipette mount",
+    "name": "p300_mount",
     "options": [
-      {"label": "Yes", "value": true},
-      {"label": "No", "value": false}
+      { "label": "Left", "value": "left"},
+      { "label": "Right", "value": "right"}
     ]
   },
   {
-    "type": "textFile",
-    "label": "Mastermix component locations (comma separated values file)",
-    "name": "mastermix_csv",
-    "default": "source well,component name,volume,,,,\nA1,component 1,100,,,,"
-  },
-  {
-    "type": "int",
-    "label": "Binding buffer location (pre-made, or location for creating mastermix)",
-    "name": "bindbuf_target_well_no",
-    "default": 11
-  },
-  {
-    "type": "int",
-    "label": "Master bead mix location (pre-made or location for creating mastermix",
-    "name": "master_bead_mix_well_no",
-    "default": 12
+    "type": "dropDown",
+    "label": "P300 multi channel pipette mount",
+    "name": "m300_mount",
+    "options": [
+      { "label": "Right", "value": "right"},
+      { "label": "Left", "value": "left"}
+    ]
   },
   {
     "type": "dropDown",
-    "label": "Mastermix tuberack (Optional)",
+    "label": "Mastermix tuberack (Optional, only when the mastermix volume is small)",
     "name": "mastermix_tuberack_lname",
     "options": [
       { "label": "None", "value": false},
@@ -66,6 +63,36 @@
     "type": "float",
     "label": "Mastermix mixing rate multiplier",
     "name": "mastermix_mix_rate_multiplier",
+    "default": 0.5
+  },
+  {
+    "type": "float",
+    "label": "Binding buffer aspiration flow rate multiplier",
+    "name": "bb_asp_rate_mult",
     "default": 0.3
+  },
+  {
+    "type": "float",
+    "label": "Binding buffer dispensing flow rate multiplier",
+    "name": "bb_disp_rate_multipler",
+    "default": 0.3
+  },
+  {
+    "type": "float",
+    "label": "Bead solution aspiration flow rate multiplier",
+    "name": "bead_asp_rate_mult",
+    "default": 1.0
+  },
+  {
+    "type": "float",
+    "label": "Bead solution dispensing flow rate multiplier",
+    "name": "bead_disp_rate_multipler",
+    "default": 1.0
+  },
+  {
+    "type": "int",
+    "label": "How many times do you want to mix the mastermix?",
+    "name": "n_mm_mixes",
+    "default": 10
   }
 ]
