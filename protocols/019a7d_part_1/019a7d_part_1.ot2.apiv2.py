@@ -1,4 +1,5 @@
 """PROTOCOL."""
+import math
 metadata = {
     'protocolName': 'Nucleic Acid Purification/Cloning',
     'author': 'Opentrons',
@@ -10,23 +11,14 @@ metadata = {
 
 def run(ctx):
     """PROTOCOL BODY."""
-    [
-     _custom_variable1,
-     _custom_variable2
-    ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
-        "_custom_variable1",
-        "_custom_variable2")
-
-    if not 1 <= _custom_variable1 <= 12:
-        raise Exception("Enter a value between 1-12")
+    [num_samples
+     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
+        "num_samples")
 
     # define all custom variables above here with descriptions:
 
     # number of samples
-    custom_variable1 = _custom_variable1
-
-    # "True" for park tips, "False" for discard tips
-    custom_variable2 = _custom_variable2
+    num_cols = math.ceil(num_samples/8)
 
     # load modules
     temp_1 = ctx.load_module('tempdeck', '1')
@@ -47,7 +39,8 @@ def run(ctx):
     # load labware
     gibson_tubes = temp_1.load_labware('opentrons_24_aluminumblock_generic'
                                        '_2ml_screwcap')
-    pcr_plate = ctx.load_labware('azentalifesciences_96wellplate_200ul', '2')
+    fragment_plate = ctx.load_labware('azentalifesciences_96wellplate_200ul',
+                                      '2')
     assembly_plate = temp_3.load_labware('azentalifesciences_96wellplate_200ul'
                                          )
     backbone_reservoir = ctx.load_labware('azentalifesciences_12reservoir'
@@ -68,112 +61,25 @@ def run(ctx):
     # load tipracks
     tiprack = [ctx.load_labware('opentrons_96_filtertiprack_20ul', 'slot')
                for slot in ['10', '11']]
-    '''
-
-    Add your tipracks here as a list:
-
-    For a single tip rack:
-
-    tiprack_name = [ctx.load_labware('{loadname}', '{slot number}')]
-
-    For multiple tip racks of the same type:
-
-    tiprack_name = [ctx.load_labware('{loadname}', 'slot')
-                     for slot in ['1', '2', '3']]
-
-    If two different tipracks are on the deck, use convention:
-    tiprack[number of microliters]
-    e.g. tiprack10, tiprack20, tiprack200, tiprack300, tiprack1000
-
-    '''
 
     # load instrument
-    ctx.load_instrument(
+    p20 = ctx.load_instrument(
                         'p20_single_gen2',
                         mount='left',
                         tip_racks=tiprack
     )
-    ctx.load_instrument(
+    m20 = ctx.load_instrument(
                         'p20_multi_gen2',
                         mount='right',
                         tip_racks=tiprack
     )
-    '''
-    Nomenclature for pipette:
-
-    use 'p'  for single-channel, 'm' for multi-channel,
-    followed by number of microliters.
-
-    p20, p300, p1000 (single channel pipettes)
-    m20, m300 (multi-channel pipettes)
-
-    If loading pipette, load with:
-
-    ctx.load_instrument(
-                        '{pipette api load name}',
-                        pipette_mount ("left", or "right"),
-                        tip_racks=tiprack
-                        )
-    '''
-
-    # pipette functions   # INCLUDE ANY BINDING TO CLASS
-
-    '''
-
-    Define all pipette functions, and class extensions here.
-    These may include but are not limited to:
-
-    - Custom pickup functions
-    - Custom drop tip functions
-    - Custom Tip tracking functions
-    - Custom Trash tracking functions
-    - Slow tip withdrawal
-
-    For any functions in your protocol, describe the function as well as
-    describe the parameters which are to be passed in as a docstring below
-    the function (see below).
-
-    def pick_up(pipette):
-        """`pick_up()` will pause the protocol when all tip boxes are out of
-        tips, prompting the user to replace all tip racks. Once tipracks are
-        reset, the protocol will start picking up tips from the first tip
-        box as defined in the slot order when assigning the labware definition
-        for that tip box. `pick_up()` will track tips for both pipettes if
-        applicable.
-
-        :param pipette: The pipette desired to pick up tip
-        as definited earlier in the protocol (e.g. p300, m20).
-        """
-        try:
-            pipette.pick_up_tip()
-        except protocol_api.labware.OutOfTipsError:
-            ctx.pause("Replace empty tip racks")
-            pipette.reset_tipracks()
-            pipette.pick_up_tip()
-
-    '''
-
-    # helper functions
-    '''
-    Define any custom helper functions outside of the pipette scope here, using
-    the convention seen above.
-
-    e.g.
-
-    def remove_supernatant(vol, index):
-        """
-        function description
-
-        :param vol:
-
-        :param index:
-        """
-
-
-    '''
 
     # reagents
-
+    gibson = gibson_tubes.wells()[0]
+    fragments = fragment_plate.rows()[0][:num_cols]
+    backbone = backbone_reservoir.wells()[0]
+    sample_dests_s = assembly_plate.wells()[:num_samples]
+    sample_dests_m = assembly_plate.rows()[0][:num_cols]
     '''
     Define where all reagents are on the deck using the labware defined above.
 
@@ -198,26 +104,38 @@ def run(ctx):
     '''
 
     # protocol
+    # Step 0, set temperature
+    temp_1.set_temperature(4)
+    temp_3.set_temperature(4)
 
-    '''
-
-    Include header sections as follows for each "section" of your protocol.
-
-    Section can be defined as a step in a bench protocol.
-
-    e.g.
-
-    ctx.comment('\n\nMOVING MASTERMIX TO SAMPLES IN COLUMNS 1-6\n')
-
-    for .... in ...:
-        ...
-        ...
-
-    ctx.comment('\n\nRUNNING THERMOCYCLER PROFILE\n')
-
-    ...
-    ...
-    ...
-
-
-    '''
+    # Step 1 Add 9ul backbone to assembly_plate
+    m20.pick_up_tip()
+    for dest in sample_dests_m:
+        m20.transfer(9,
+                     backbone,
+                     dest,
+                     new_tip='never',
+                     blow_out=True,
+                     blowout_location='destination well',
+                     )
+    # Step 2 Add 1ul fragments to assembly_plate
+    for source, dest in zip(fragments, sample_dests_m):
+        m20.pick_up_tip()
+        m20.transfer(1,
+                     source,
+                     dest,
+                     new_tip='never'
+                     )
+        m20.blow_out(dest.top(-1))
+        m20.drop_tip()
+    # Step 3 Add 10ul gibson to assembly_plate
+    for dest in sample_dests_s:
+        p20.pick_up_tip()
+        p20.transfer(10,
+                     gibson,
+                     dest,
+                     mix_after=(3, 10),
+                     new_tip='never'
+                     )
+        p20.blow_out(dest.top(-1))
+        p20.drop_tip()
