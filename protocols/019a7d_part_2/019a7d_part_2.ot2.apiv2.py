@@ -1,3 +1,4 @@
+import math
 """PROTOCOL."""
 metadata = {
     'protocolName': 'Nucleic Acid Purification/Cloning',
@@ -10,23 +11,16 @@ metadata = {
 
 def run(ctx):
     """PROTOCOL BODY."""
-    [
-     _custom_variable1,
-     _custom_variable2
-    ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
-        "_custom_variable1",
-        "_custom_variable2")
-
-    if not 1 <= _custom_variable1 <= 12:
-        raise Exception("Enter a value between 1-12")
+    [num_samples, omni_tray, heat_shock
+     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
+        "num_samples", "omni_tray", "heat_shock")
 
     # define all custom variables above here with descriptions:
 
     # number of samples
-    custom_variable1 = _custom_variable1
+    num_cols = math.ceil(num_samples/8)
 
     # "True" for park tips, "False" for discard tips
-    custom_variable2 = _custom_variable2
 
     # load modules
     temp_1 = ctx.load_module('tempdeck', '1')
@@ -45,55 +39,33 @@ def run(ctx):
     '''
 
     # load labware
-    gibson_tubes = temp_1.load_labware('opentrons_24_aluminumblock_generic'
-                                       '_2ml_screwcap')
-    pcr_plate = ctx.load_labware('azentalifesciences_96wellplate_200ul', '2')
+    mix_n_go = temp_1.load_labware('azentalifesciences_96wellplate_200ul')
     assembly_plate = temp_3.load_labware('azentalifesciences_96wellplate_200ul'
                                          )
-    backbone_reservoir = ctx.load_labware('azentalifesciences_12reservoir'
-                                          '_21000ul', '4')
-    '''
-
-    Add your labware here with:
-
-    labware_name = ctx.load_labware('{loadname}', '{slot number}')
-
-    If loading labware on a module, you can load with:
-
-    labware_name = module_name.load_labware('{loadname}')
-    where module_name is defined above.
-
-    '''
-
+    """To load agar plates 5-9, loop based on inputs from fields
+        How many samples will dictate how many agar plates and if 24s or 96
+        """
+    if omni_tray == '24':
+        agar_plates = [ctx.load_labware('24_agar', slot) for slot in ['5', '6',
+                                                                      '7', '8']
+                       ]
+    else:
+        # create a list of length 1
+        agar_plates = [ctx.load_labware('96_agar', slot) for slot in ['9']]
+    agar_locations_s = [well for plate in agar_plates for well in plate.wells()
+                        ]
+    agar_locations_m = [well for plate in agar_plates
+                        for row in plate.rows()[0] for well in row]
     # load tipracks
-    tiprack = [ctx.load_labware('opentrons_96_filtertiprack_20ul', 'slot')
-               for slot in ['10', '11']]
-    '''
-
-    Add your tipracks here as a list:
-
-    For a single tip rack:
-
-    tiprack_name = [ctx.load_labware('{loadname}', '{slot number}')]
-
-    For multiple tip racks of the same type:
-
-    tiprack_name = [ctx.load_labware('{loadname}', 'slot')
-                     for slot in ['1', '2', '3']]
-
-    If two different tipracks are on the deck, use convention:
-    tiprack[number of microliters]
-    e.g. tiprack10, tiprack20, tiprack200, tiprack300, tiprack1000
-
-    '''
+    tiprack = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '4')]
 
     # load instrument
-    ctx.load_instrument(
+    p20 = ctx.load_instrument(
                         'p20_single_gen2',
                         mount='left',
                         tip_racks=tiprack
     )
-    ctx.load_instrument(
+    m20 = ctx.load_instrument(
                         'p20_multi_gen2',
                         mount='right',
                         tip_racks=tiprack
