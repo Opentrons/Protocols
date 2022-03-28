@@ -1,5 +1,4 @@
-from opentrons import protocol_api
-
+"""PROTOCOL."""
 metadata = {
     'protocolName': 'Protocol Title',
     'author': 'AUTHOR NAME <authoremail@company.com>',
@@ -9,12 +8,11 @@ metadata = {
 }
 
 
-def run(ctx: protocol_api.ProtocolContext):
+def run(ctx):
 
-    [
-     tip_use_strategy
-    ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
-        "tip_use_strategy")
+    [mount_side
+     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
+        "mount_side")
 
     # define all custom variables above here with descriptions:
 
@@ -44,8 +42,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # load tipracks
     tiprack = [
-        ctx.load_labware('opentrons_96_tiprack_300ul', slot)
-        for slot in ['1', '2', '3']
+        ctx.load_labware('opentrons_96_tiprack_300ul', '1')
         ]
     '''
 
@@ -68,106 +65,28 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # load instrument
     m300 = ctx.load_instrument(
-        'p300_multi_gen2', mount='left', tip_racks=tiprack)
-
-    # pipette functions   # INCLUDE ANY BINDING TO CLASS
-
-    '''
-
-    Define all pipette functions, and class extensions here.
-    These may include but are not limited to:
-
-    - Custom pickup functions
-    - Custom drop tip functions
-    - Custom Tip tracking functions
-    - Custom Trash tracking functions
-    - Slow tip withdrawal
-
-    For any functions in your protocol, describe the function as well as
-    describe the parameters which are to be passed in as a docstring below
-    the function (see below).
-
-    def pick_up(pipette):
-        """`pick_up()` will pause the protocol when all tip boxes are out of
-        tips, prompting the user to replace all tip racks. Once tipracks are
-        reset, the protocol will start picking up tips from the first tip
-        box as defined in the slot order when assigning the labware definition
-        for that tip box. `pick_up()` will track tips for both pipettes if
-        applicable.
-
-        :param pipette: The pipette desired to pick up tip
-        as definited earlier in the protocol (e.g. p300, m20).
-        """
-        try:
-            pipette.pick_up_tip()
-        except protocol_api.labware.OutOfTipsError:
-            ctx.pause("Replace empty tip racks")
-            pipette.reset_tipracks()
-            pipette.pick_up_tip()
-
-    '''
-
-    # helper functions
-    '''
-    Define any custom helper functions outside of the pipette scope here, using
-    the convention seen above.
-
-    e.g.
-
-    def remove_supernatant(vol, index):
-        """
-        function description
-
-        :param vol:
-
-        :param index:
-        """
-
-
-    '''
+        'p300_multi_gen2', mount=mount_side, tip_racks=tiprack)
 
     # reagents
     spr = spr_well.wells()[0]
     vhb = vhb_well.wells()[0]
     water = water_well.wells()[0]
 
-    # plate, tube rack maps
-
-    '''
-    Define any plate or tube maps here.
-
-    e.g.
-
-    plate_wells_by_row = [well for row in plate.rows() for well in row]
-
-    '''
+    # lists
+    volume_list = [350, 350, 50]
+    source_list = [spr, vhb, water]
+    dest_list = [spr_plate.rows()[0], vhb_plate.rows()[0],
+                 water_plate.rows()[0]]
 
     # protocol
-    for dest in spr_well.rows():
-        m300.transfer(350,
-                      spr,
+    for volume, source, dest in zip(volume_list, source_list, dest_list):
+        m300.pick_up_tip()
+        m300.transfer(volume,
+                      source,
                       dest,
-
+                      new_tip='never'
                       )
-    '''
+        m300.drop_tip()
 
-    Include header sections as follows for each "section" of your protocol.
-
-    Section can be defined as a step in a bench protocol.
-
-    e.g.
-
-    ctx.comment('\n\nMOVING MASTERMIX TO SAMPLES IN COLUMNS 1-6\n')
-
-    for .... in ...:
-        ...
-        ...
-
-    ctx.comment('\n\nRUNNING THERMOCYCLER PROFILE\n')
-
-    ...
-    ...
-    ...
-
-
-    '''
+    for c in ctx.commands():
+        print(c)
