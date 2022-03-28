@@ -5,14 +5,14 @@
             "Subcategory (can be the name of a kit when applicable)"
         ]
     },
-    "deck-setup": "\nIf the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:\n\n",
+    "deck-setup": "",
     "description": "This section of the README (especially the first paragraph) should grip a prospective user with the overarching purpose/flow of the protocol, but should not include fine details of the protocol steps themselves.\nThis is a specific protocol for aliquoting liquid from three reagent plates to three 96 deep well plates using a multi-channel p300 pipette. Tips are changed between reagents. Either pipette mount can be specified in setup.\n 350ul SPR Wash Buffer is added to a 96 deep well plate\n 350ul VHB Buffer is added to a second 96 deep well plate\n* 50ul nuclease free water is added to a third 96 deep well plate\n\n'P300-Multi Mount Side': Left or right refers to the pipette mount side\n",
     "internal": "3308b4",
     "labware": "\n3x NEST 1 Well Reservoir 195ml\n3x NEST 96 Deepwell Plate 2ml\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
         "categories": "* Broader Category\n\t* Subcategory (can be the name of a kit when applicable)\n\n",
-        "deck-setup": "* If the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:\n![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)\n\n",
+        "deck-setup": "![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/3308b4/Screen+Shot+2022-03-27+at+8.43.58+PM.png)\n\n",
         "description": "This section of the README (especially the first paragraph) should grip a prospective user with the overarching purpose/flow of the protocol, but should not include fine details of the protocol steps themselves.\n\nThis is a specific protocol for aliquoting liquid from three reagent plates to three 96 deep well plates using a multi-channel p300 pipette. Tips are changed between reagents. Either pipette mount can be specified in setup.\n* 350ul SPR Wash Buffer is added to a 96 deep well plate\n* 350ul VHB Buffer is added to a second 96 deep well plate\n* 50ul nuclease free water is added to a third 96 deep well plate\n\n* 'P300-Multi Mount Side': Left or right refers to the pipette mount side\n\n",
         "internal": "3308b4\n",
         "labware": "* [3x NEST 1 Well Reservoir 195ml](https://shop.opentrons.com/nest-1-well-reservoirs-195-ml/)\n* [3x NEST 96 Deepwell Plate 2ml](https://shop.opentrons.com/nest-2-ml-96-well-deep-well-plate-v-bottom/)\n\n",
