@@ -12,23 +12,27 @@ metadata = {
 def run(ctx):
 
     [adjust_final_vol, vol_cd154, vol_peptide1, vol_peptide2, vol_peptide3,
-     vol_pma_ca, vol_culture_medium, labware_cultureplate, labware_tips,
-     slot_cultureplate, slot_tipbox, slot_snapcaps, slot_screwcaps,
+     vol_pma_ca, vol_culture_medium, labware_cultureplate,
+     slot_cultureplate, slot_snapcaps, slot_screwcaps,
      clearance_snapcap, clearance_screwcap, clearance_plate,
      clearance_mix] = get_values(  # noqa: F821
         "adjust_final_vol", "vol_cd154", "vol_peptide1", "vol_peptide2",
         "vol_peptide3", "vol_pma_ca", "vol_culture_medium",
-        "labware_cultureplate", "labware_tips", "slot_cultureplate",
-        "slot_tipbox", "slot_snapcaps", "slot_screwcaps", "clearance_snapcap",
+        "labware_cultureplate", "slot_cultureplate",
+        "slot_snapcaps", "slot_screwcaps", "clearance_snapcap",
         "clearance_screwcap", "clearance_plate", "clearance_mix")
 
     ctx.set_rail_lights(True)
     ctx.delay(seconds=10)
 
-    # p20 single and tips
+    # p20s, p300s and tips
     tips20 = [ctx.load_labware(
-     labware_tips, str(slot)) for slot in [slot_tipbox]]
-    p20s = ctx.load_instrument("p20_single_gen2", 'left', tip_racks=tips20)
+     'opentrons_96_tiprack_20ul', str(slot)) for slot in [2]]
+    p20s = ctx.load_instrument('p20_single_gen2', 'left', tip_racks=tips20)
+
+    tips300 = [ctx.load_labware(
+     'opentrons_96_tiprack_300ul', str(slot)) for slot in [5]]
+    p300s = ctx.load_instrument('p300_single_gen2', 'right', tip_racks=tips300)
 
     # load labware
     culture_plate = ctx.load_labware(
@@ -123,30 +127,31 @@ def run(ctx):
     # add anti-CD154 to cell suspension in A1 and A2 and mix
     for column in plate_wells:
         p20s.pick_up_tip()
+        p300s.pick_up_tip()
         p20s.aspirate(5, cd154.height_dec(5))
         p20s.dispense(5, column[0].height_inc(5))
         for rep in range(5):
-            p20s.aspirate(
-             20, column[0].bottom(1), rate=2)
-            p20s.dispense(20, column[0].bottom(12), rate=2)
+            p300s.aspirate(160, column[0].bottom(1), rate=2)
+            p300s.dispense(160, column[0].bottom(12), rate=2)
+        p300s.drop_tip()
         p20s.drop_tip()
 
     # transfer cell suspension to B1-E1 and B2-E2
     for column in plate_wells:
-        p20s.pick_up_tip()
+        p300s.pick_up_tip()
         for rep in range(5):
-            p20s.aspirate(20, column[0].bottom(1), rate=2)
+            p300s.aspirate(160, column[0].bottom(1), rate=2)
             ht = 10 if rep < 4 else 1
-            p20s.dispense(20, column[0].bottom(ht), rate=2)
+            p300s.dispense(160, column[0].bottom(ht), rate=2)
         for well in column[1:]:
             reps = math.ceil(
-             float(40) / p20s._tip_racks[0].wells()[0].max_volume)
+             float(40) / p300s._tip_racks[0].wells()[0].max_volume)
             vol = 40 / reps
             for rep in range(reps):
-                p20s.aspirate(vol, column[0].bottom(1))
-                p20s.dispense(vol, well.bottom(1))
-                p20s.touch_tip(radius=0.75, v_offset=-4, speed=20)
-        p20s.drop_tip()
+                p300s.aspirate(vol, column[0].bottom(1))
+                p300s.dispense(vol, well.bottom(1))
+                p300s.touch_tip(radius=0.75, v_offset=-4, speed=20)
+        p300s.drop_tip()
 
     # add reagent (peptides 1, 2 and 3 and PMA) to B1-B2, C1-C2, D1-D2, E1-E2
     for reagent, vol, index in zip(
@@ -165,11 +170,11 @@ def run(ctx):
         for column in plate_wells:
             for well in column:
                 reps = math.ceil(
-                 float(60) / p20s._tip_racks[0].wells()[0].max_volume)
+                 float(60) / p300s._tip_racks[0].wells()[0].max_volume)
                 vol = 60 / reps
                 for rep in range(reps):
-                    p20s.pick_up_tip()
-                    p20s.aspirate(vol, culture_medium.height_dec(vol))
-                    p20s.dispense(vol, well.height_inc(vol))
-                    p20s.touch_tip(radius=0.75, v_offset=-4, speed=20)
-                    p20s.drop_tip()
+                    p300s.pick_up_tip()
+                    p300s.aspirate(vol, culture_medium.height_dec(vol))
+                    p300s.dispense(vol, well.height_inc(vol))
+                    p300s.touch_tip(radius=0.75, v_offset=-4, speed=20)
+                    p300s.drop_tip()
