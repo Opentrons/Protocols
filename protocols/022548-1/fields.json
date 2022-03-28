@@ -94,5 +94,26 @@
     "label": "How many times do you want to mix the mastermix?",
     "name": "n_mm_mixes",
     "default": 10
+  },
+  {
+    "type": "float",
+    "label": "Offsets from the tube edges for bead mix dispenses (mm)",
+    "name": "tube_edge_offset",
+    "default": 4.3
+  },
+  {
+    "type": "float",
+    "label": "Offsets from the edges of the reservoir wells for bead mix dispenses (mm)",
+    "name": "resv_well_edge_offset",
+    "default": 40
+  },
+  {
+    "type": "dropDown",
+    "label": "Verbose protocol output?",
+    "name": "is_verbose",
+    "options": [
+      { "label": "Yes", "value": true},
+      { "label": "No", "value": false}
+    ]
   }
 ]
