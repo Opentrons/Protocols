@@ -44,7 +44,7 @@ Before running the protocol with samples, use the button on top of the Thermocyc
 
 
 **How to setup your Thermocycler profiles**
-1. Download the template file [here](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/thermocycler/Thermocycler+Template.csv)
+1. Download the template file [here](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/thermocycler/ex.csv)
 2. Open the `.csv` file in a your spreadsheet editor of choice (Google Sheets, Excel, Numbers, etc.)
 3. Export the edited file as `.csv`
 4. Upload the new file in the field "profile .csv file" below.
