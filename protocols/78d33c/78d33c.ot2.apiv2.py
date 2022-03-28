@@ -147,7 +147,7 @@ def run(ctx):
     # input samples
     temp = ctx.load_module('temperature module gen2', '3')
     plate2 = temp.load_labware(
-     'eppendorftwin.tec96_96_aluminumblock_200ul',
+     'eppendorf_twintec_on_opentrons_metal_block',
      "Plate 2 at 4 Degrees C")
     temp.set_temperature(4)
 
