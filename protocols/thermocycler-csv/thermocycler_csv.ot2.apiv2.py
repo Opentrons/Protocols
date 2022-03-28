@@ -44,18 +44,17 @@ def run(protocol):
 
     # parse profile input
     profiles_parsed = [
-        [set for set in
-            [
-                [val.strip() for val in quoted.split(',') if val]
-                for quoted in line.split("\"") if line
-            ] if set]
-        for line in input_csv.splitlines()[1:]
+        line.split(',')
+        for line in input_csv.splitlines()[1:] if line
+        and line.split(',')[0].strip()
     ]
 
     profiles = [
-        {'cycles': int(prof[0][1]), 'temps': prof[1:]}
+        {'cycles': int(prof[1]), 'temps': [set for set in prof[2:] if set]}
         for prof in profiles_parsed if len(prof) > 1
     ]
+    for p in profiles:
+        print(p)
 
     # Close lid
     if tc_mod.lid_position != 'closed':
@@ -68,8 +67,8 @@ def run(protocol):
     for profile in profiles:
         set = [
             {
-                'temperature': float(temp[0]),
-                'hold_time_minutes': float(temp[1])
+                'temperature': float(temp.split(';')[0]),
+                'hold_time_minutes': float(temp.split(';')[1])
             }
             for temp in profile['temps']
         ]
