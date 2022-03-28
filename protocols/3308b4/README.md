@@ -3,16 +3,7 @@
 ### Author
 [Opentrons](https://opentrons.com/)
 
-### Partner
-[Partner Name](partner website link)
-
-## Categories
-* Broader Category
-	* Subcategory (can be the name of a kit when applicable)
-
 ## Description
-This section of the README (especially the first paragraph) should grip a prospective user with the overarching purpose/flow of the protocol, but should not include fine details of the protocol steps themselves.
-
 This is a specific protocol for aliquoting liquid from three reagent plates to three 96 deep well plates using a multi-channel p300 pipette. Tips are changed between reagents. Either pipette mount can be specified in setup.
 * 350ul SPR Wash Buffer is added to a 96 deep well plate
 * 350ul VHB Buffer is added to a second 96 deep well plate
@@ -39,10 +30,13 @@ This is a specific protocol for aliquoting liquid from three reagent plates to t
 
 ### Reagent Setup
 * SPR Wash Buffer in NEST 1 Well Reservoir 195ml: slot 4
+	
 	Minimum fill: 34ml
 * VHB Buffer in NEST 1 Well Reservoir 195ml: slot 5
+	
 	Minimum fill: 34ml
 * Nuclease Free Water in NEST 1 Well Reservoir 195ml: slot 6
+	
 	Minimum fill: 5ml
 
 ---
