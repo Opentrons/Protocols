@@ -35,8 +35,7 @@ This is a specific protocol for aliquoting liquid from three reagent plates to t
 ---
 
 ### Deck Setup
-* If the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/3308b4/Screen+Shot+2022-03-27+at+8.43.58+PM.png)
 
 ### Reagent Setup
 * SPR Wash Buffer in NEST 1 Well Reservoir 195ml: slot 4
