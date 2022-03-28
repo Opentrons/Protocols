@@ -67,7 +67,7 @@ def run(ctx: protocol_api.ProtocolContext):
     '''
 
     # load instrument
-    pipette = ctx.load_instrument(
+    m300 = ctx.load_instrument(
         'p300_multi_gen2', mount='left', tip_racks=tiprack)
 
     # pipette functions   # INCLUDE ANY BINDING TO CLASS
@@ -143,7 +143,12 @@ def run(ctx: protocol_api.ProtocolContext):
     '''
 
     # protocol
+    for dest in spr_well.rows():
+        m300.transfer(350,
+                      spr,
+                      dest,
 
+                      )
     '''
 
     Include header sections as follows for each "section" of your protocol.
