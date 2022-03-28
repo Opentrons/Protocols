@@ -13,45 +13,24 @@
 ## Description
 This section of the README (especially the first paragraph) should grip a prospective user with the overarching purpose/flow of the protocol, but should not include fine details of the protocol steps themselves.
 
-Example: This is a flexible protocol accommodating a wide range of commercial RNA extraction workflows for COVID-19 sample processing. The protocol is broken down into 5 main parts:
-* binding buffer addition to samples
-* bead wash 3x using magnetic module
-* final elution to chilled PCR plate
+This is a specific protocol for aliquoting liquid from three reagent plates to three 96 deep well plates using a multi-channel p300 pipette. Tips are changed between reagents. Either pipette mount can be specified in setup.
+* 350ul SPR Wash Buffer is added to a 96 deep well plate
+* 350ul VHB Buffer is added to a second 96 deep well plate
+* 50ul nuclease free water is added to a third 96 deep well plate
 
-Subsequent paragraphs can give some more insight into the details of the protocol, but a step-by-step description should be included in the 'Protocol Steps' section below.
-
-Example: For sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 4) to the elution PCR plate (temperature module, slot 1). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.
-
-Results of the Opentrons Science team's internal testing of this protocol on the OT-2 are shown below:  
-![results](link_to_results.png)
-
-Explanation of complex parameters below:
-* `park tips`: If set to `yes` (recommended), the protocol will conserve tips between reagent addition and removal. Tips will be stored in the wells of an empty rack corresponding to the well of the sample that they access (tip parked in A1 of the empty rack will only be used for sample A1, tip parked in B1 only used for sample B1, etc.). If set to `no`, tips will always be used only once, and the user will be prompted to manually refill tipracks mid-protocol for high throughput runs.
-* `input .csv file`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:
-```
-source,dest,vol
-A1,B1,4
-```
-
----
-
-### Modules
-* [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
-* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
-* [Thermocycler Module](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module)
-* [HEPA Module](https://shop.opentrons.com/collections/hardware-modules/products/hepa-module)
+* 'P300-Multi Mount Side': Left or right refers to the pipette mount side
 
 ### Labware
-* [Labware name](link to labware on shop.opentrons.com when applicable)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [3x NEST 1 Well Reservoir 195ml](https://shop.opentrons.com/nest-1-well-reservoirs-195-ml/)
+* [3x NEST 96 Deepwell Plate 2ml](https://shop.opentrons.com/nest-2-ml-96-well-deep-well-plate-v-bottom/)
 
 ### Pipettes
-* [Pipette name](link to pipette on shop.opentrons.com)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [P300 Multi-Channel Gen2](https://shop.opentrons.com/8-channel-electronic-pipette/)
 
 ### Reagents
-* [kit name when applicable](link to kit)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* SPR Wash Buffer
+* VHB Buffer
+* Nuclease Free Water
 
 ---
 
@@ -60,18 +39,25 @@ A1,B1,4
 ![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)
 
 ### Reagent Setup
-* This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:
-* Reservoir 1: slot 5
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res1_v2.png)
-* Reservoir 2: slot 2  
-![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res2.png)
+* SPR Wash Buffer in NEST 1 Well Reservoir 195ml: slot 4
+	Minimum fill: 34ml
+* VHB Buffer in NEST 1 Well Reservoir 195ml: slot 5
+	Minimum fill: 34ml
+* Nuclease Free Water in NEST 1 Well Reservoir 195ml: slot 6
+	Minimum fill: 5ml
 
 ---
 
 ### Protocol Steps
-1. This section should consist of a numerical outline of the protocol steps, somewhat analogous to the steps outlined by the user in their custom protocol submission.
-2. example step: Samples are transferred from the source tuberacks on slots 1-2 to the PCR plate on slot 3, down columns and then across rows.
-3. example step: Waste is removed from each sample on the magnetic module, ensuring the bead pellets are not contacted by the pipette tips.
+1. A fresh tip is picked up.
+2. 350ul of SPR Wash Buffer is transferred from slot 4 to individual wells on the 96 deepwell plate in slot 7 in two movements of 175ul. Using the 8-channel pipette, the transfer occurs from column 1 to column 11
+3. Tips are deposited in the trash (slot 12)
+4. A fresh tip is picked up.
+5. 350ul of VHB Buffer is transferred from slot 5 to individual wells on the 96 deepwell plate in slot 8 in two movements of 175ul. Using the 8-channel pipette, the transfer occurs from column 1 to column 11
+6. Tips are deposited in the trash (slot 12)
+7. A fresh tip is picked up.
+8. 50ul of Nuclease Free Water is transferred from slot 6 to individual wells on the 96 deepwell plate in slot 9 in a single movement. Using the 8-channel pipette, the transfer occurs from column 1 to column 11
+9. Tips are deposited in the trash (slot 12)
 
 ### Process
 1. Input your protocol parameters above.
@@ -86,4 +72,4 @@ A1,B1,4
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-protocol-hex-code
+3308b4

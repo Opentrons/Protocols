@@ -1,0 +1,40 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Broader Category": [
+            "Subcategory (can be the name of a kit when applicable)"
+        ]
+    },
+    "deck-setup": "\nIf the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:\n\n",
+    "description": "This section of the README (especially the first paragraph) should grip a prospective user with the overarching purpose/flow of the protocol, but should not include fine details of the protocol steps themselves.\nThis is a specific protocol for aliquoting liquid from three reagent plates to three 96 deep well plates using a multi-channel p300 pipette. Tips are changed between reagents. Either pipette mount can be specified in setup.\n 350ul SPR Wash Buffer is added to a 96 deep well plate\n 350ul VHB Buffer is added to a second 96 deep well plate\n* 50ul nuclease free water is added to a third 96 deep well plate\n\n'P300-Multi Mount Side': Left or right refers to the pipette mount side\n",
+    "internal": "3308b4",
+    "labware": "\n3x NEST 1 Well Reservoir 195ml\n3x NEST 96 Deepwell Plate 2ml\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* Broader Category\n\t* Subcategory (can be the name of a kit when applicable)\n\n",
+        "deck-setup": "* If the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:\n![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)\n\n",
+        "description": "This section of the README (especially the first paragraph) should grip a prospective user with the overarching purpose/flow of the protocol, but should not include fine details of the protocol steps themselves.\n\nThis is a specific protocol for aliquoting liquid from three reagent plates to three 96 deep well plates using a multi-channel p300 pipette. Tips are changed between reagents. Either pipette mount can be specified in setup.\n* 350ul SPR Wash Buffer is added to a 96 deep well plate\n* 350ul VHB Buffer is added to a second 96 deep well plate\n* 50ul nuclease free water is added to a third 96 deep well plate\n\n* 'P300-Multi Mount Side': Left or right refers to the pipette mount side\n\n",
+        "internal": "3308b4\n",
+        "labware": "* [3x NEST 1 Well Reservoir 195ml](https://shop.opentrons.com/nest-1-well-reservoirs-195-ml/)\n* [3x NEST 96 Deepwell Plate 2ml](https://shop.opentrons.com/nest-2-ml-96-well-deep-well-plate-v-bottom/)\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "partner": "[Partner Name](partner website link)\n\n",
+        "pipettes": "* [P300 Multi-Channel Gen2](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "protocol-steps": "1. A fresh tip is picked up.\n2. 350ul of SPR Wash Buffer is transferred from slot 4 to individual wells on the 96 deepwell plate in slot 7 in two movements of 175ul. Using the 8-channel pipette, the transfer occurs from column 1 to column 11\n3. Tips are deposited in the trash (slot 12)\n4. A fresh tip is picked up.\n5. 350ul of VHB Buffer is transferred from slot 5 to individual wells on the 96 deepwell plate in slot 8 in two movements of 175ul. Using the 8-channel pipette, the transfer occurs from column 1 to column 11\n6. Tips are deposited in the trash (slot 12)\n7. A fresh tip is picked up.\n8. 50ul of Nuclease Free Water is transferred from slot 6 to individual wells on the 96 deepwell plate in slot 9 in a single movement. Using the 8-channel pipette, the transfer occurs from column 1 to column 11\n9. Tips are deposited in the trash (slot 12)\n\n",
+        "reagent-setup": "* SPR Wash Buffer in NEST 1 Well Reservoir 195ml: slot 4\n\tMinimum fill: 34ml\n* VHB Buffer in NEST 1 Well Reservoir 195ml: slot 5\n\tMinimum fill: 34ml\n* Nuclease Free Water in NEST 1 Well Reservoir 195ml: slot 6\n\tMinimum fill: 5ml\n\n---\n\n",
+        "reagents": "* SPR Wash Buffer\n* VHB Buffer\n* Nuclease Free Water\n\n---\n\n",
+        "title": "Protocol Title (should match metadata of .py file)"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "partner": "Partner Name",
+    "pipettes": "\nP300 Multi-Channel Gen2\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "protocol-steps": "\nA fresh tip is picked up.\n350ul of SPR Wash Buffer is transferred from slot 4 to individual wells on the 96 deepwell plate in slot 7 in two movements of 175ul. Using the 8-channel pipette, the transfer occurs from column 1 to column 11\nTips are deposited in the trash (slot 12)\nA fresh tip is picked up.\n350ul of VHB Buffer is transferred from slot 5 to individual wells on the 96 deepwell plate in slot 8 in two movements of 175ul. Using the 8-channel pipette, the transfer occurs from column 1 to column 11\nTips are deposited in the trash (slot 12)\nA fresh tip is picked up.\n50ul of Nuclease Free Water is transferred from slot 6 to individual wells on the 96 deepwell plate in slot 9 in a single movement. Using the 8-channel pipette, the transfer occurs from column 1 to column 11\nTips are deposited in the trash (slot 12)\n",
+    "reagent-setup": "\nSPR Wash Buffer in NEST 1 Well Reservoir 195ml: slot 4\n    Minimum fill: 34ml\nVHB Buffer in NEST 1 Well Reservoir 195ml: slot 5\n    Minimum fill: 34ml\nNuclease Free Water in NEST 1 Well Reservoir 195ml: slot 6\n    Minimum fill: 5ml\n\n",
+    "reagents": [
+        "SPR Wash Buffer",
+        "VHB Buffer",
+        "Nuclease Free Water"
+    ],
+    "title": "Protocol Title (should match metadata of .py file)"
+}

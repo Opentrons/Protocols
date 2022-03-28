@@ -1,7 +1,7 @@
 """PROTOCOL."""
 metadata = {
-    'protocolName': 'Protocol Title',
-    'author': 'AUTHOR NAME <authoremail@company.com>',
+    'protocolName': 'PCR/qPCR Prep',
+    'author': 'Opentrons',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
                          # IN SECTION 5.2 OF THE APIV2 "VERSIONING"
@@ -87,6 +87,3 @@ def run(ctx):
                       new_tip='never'
                       )
         m300.drop_tip()
-
-    for c in ctx.commands():
-        print(c)
