@@ -140,7 +140,7 @@ clearance_pcr,1
 clearance_pcr_plate,1
 clearance_plate,2
 clearance_reagent_prep,1
-clearance_reservoir,24
+clearance_reservoir,26
 clearance_rna,1
 clearance_rxnplate,1
 clearance_samp,1
@@ -182,7 +182,7 @@ component_2_volume,1
 component_3_volume,1
 control_plate,1
 count_mix,1
-count_samples,16
+count_samples,18
 csv,4
 csv1_buff,1
 csv1_samp,1
@@ -201,6 +201,7 @@ csv_samp,6
 csv_sample,2
 ctrl_csv,1
 ctrl_transfer_vol,1
+custom_labware_lname,1
 cycles,2
 d_csv1,1
 d_temp,2
@@ -327,7 +328,7 @@ elution_transfer_vol,2
 elution_type,1
 elution_vol,28
 em,1
-empty_vial_well,2
+empty_vial_well,3
 end_col,1
 end_column,1
 end_repair,1
@@ -381,6 +382,7 @@ formic_acid_vol,1
 formulation_csv,1
 fox_dil,1
 fragmentation_minutes,1
+fragmented_sample_volume,1
 full_volume,1
 gantryspeed,1
 grid,1
@@ -392,7 +394,7 @@ heating_module_temp,1
 height_above_cartridge,1
 height_after_disp,1
 height_dispense,2
-height_engage,12
+height_engage,14
 htp_csv,1
 i5_volume,1
 i5_well,1
@@ -443,6 +445,7 @@ is_reuse_wash_tips,1
 is_reusing_tips,1
 is_start_after_1st_incbn,1
 is_stop_after_1st_incbn,1
+is_use_custom_block,1
 ki_dil,1
 label,1
 labware1,1
@@ -505,6 +508,12 @@ left_pipette_type,2
 length_from_side,7
 libvol,1
 lid_temp,4
+ligation_adapter_volume,1
+ligation_adapter_well,1
+ligation_enhancer_volume,1
+ligation_enhancer_well,1
+ligation_mastermix_volume,1
+ligation_mastermix_well,1
 liquid_a_vol,1
 liquid_b_vol,1
 liquid_c_vol,1
@@ -536,6 +545,7 @@ mag_time,1
 magdeck_gen,1
 magmod,2
 magplate_offset,1
+manual_bead_resuspension,1
 master_mix_csv,3
 master_mix_volume,1
 mastermix_reservoir_lname,1
@@ -689,7 +699,7 @@ occupied_well_csv1,5
 occupied_well_csv2,4
 occupied_well_csv3,4
 offset,3
-offset_x,12
+offset_x,14
 offset_x_resuspension,10
 ondeck,1
 one_rack_yn,1
@@ -773,7 +783,7 @@ pbsvol,1
 pcr,1
 pcr2_buffer_vol,2
 pcr_cycles,1
-pcr_labware,4
+pcr_labware,5
 pcr_mix_vol,2
 pcr_plate_height,1
 pcr_tube_height,1
@@ -940,7 +950,7 @@ sample_cherrypicking,1
 sample_cols,1
 sample_columns,1
 sample_container,1
-sample_count,29
+sample_count,30
 sample_count_1,1
 sample_count_2,1
 sample_csv,1
@@ -1091,8 +1101,8 @@ tempgen,1
 template_vol,1
 test_method,1
 test_plates,1
-time_dry,13
-time_engage,13
+time_dry,15
+time_engage,15
 tip_immersion,1
 tip_max,1
 tip_no,1
@@ -1191,7 +1201,7 @@ tubetype,1
 tvol,1
 twb_rate,1
 twelve_well_resv_lname,1
-uploaded_csv,12
+uploaded_csv,13
 uploaded_csv_mastermix,1
 use_384,1
 use_csv,1
@@ -1200,6 +1210,8 @@ use_filter_tips_right,2
 use_nacl,1
 use_tuberack_a,1
 use_tuberack_b,1
+user_enzyme_volume,1
+user_enzyme_well,1
 using_magdeck,1
 v_0_tube,1
 v_0_tube1,2
@@ -1264,6 +1276,7 @@ water_volume,2
 water_well,1
 wb_col,1
 well_disp_height,1
+well_edge_offset,1
 well_plate,1
 well_vol,2
 wells_skipped,1
