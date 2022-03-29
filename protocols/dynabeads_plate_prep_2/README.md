@@ -4,9 +4,6 @@ DYNABEADS FOR IP - 96 well
 ### Author
 Opentrons(https://opentrons.com/)
 
-### Partner
-[Partner Name](partner website link)
-
 ## Categories
 Protein Purification
 Thermo Fisher Dynabeads™ Protein A
@@ -18,8 +15,6 @@ from 15 mL conical tubes to a 96 well deepwell plate (the reagent plate) on
 the OT2. This reagent plate is used for Dynabeads for IP Reagent-In-Plate
 protocol Part 2.
 The user can determine the number of samples to be processed.
-
-### Modules
 
 ### Labware
 NEST 2 mL 96-Well Deep Well Plate, V Bottom
@@ -57,7 +52,7 @@ Elution buffer: 30 uL 2x Laemmli Sample Buffer with 2.5% BME per sample
 ### Protocol Steps
 1. Elution buffer (reagent stock in 15 mL tubes, slot 5) is transferred to the reagent plate (96 well deepwell plate A12-H12, slot 4) by the single channel pipet.
 
-![well buffer table](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/dynabeads_plate_prep_2/3.png)
+![well distributions](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/dynabeads_plate_prep_2/3.png)
 
 ### Process
 
