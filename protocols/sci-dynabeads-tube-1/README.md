@@ -6,7 +6,7 @@ Opentrons(https://opentrons.com/)
 
 ## Categories
 * Protein Purification
-  * Thermo Fisher Dynabeads™ Protein A/G
+	* Thermo Fisher Dynabeads™ Protein A/G
 
 ## Description
 This protocol (Plate Prep 1) performs pipetting to transfer reagents (Dynabeads and antibody dilution) from 15 mL conical tubes to a 96 well deepwell plate (the reagent plate) on the OT2. This reagent plate is used for Dynabeads for IP Reagent-In-Plate protocol Part 1.
