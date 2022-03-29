@@ -1,5 +1,4 @@
 from opentrons.types import Point
-import math
 
 metadata = {
     'protocolName': 'Zymo Quick-DNA Fecal/Soil Microbe 96 Magbead Kit',
