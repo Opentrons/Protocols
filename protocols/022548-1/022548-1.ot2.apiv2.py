@@ -508,7 +508,7 @@ def run(ctx: protocol_api.ProtocolContext):
                                         well))
             return well
 
-    def is_tube(well: Well):
+    def is_15ml_tube(well: Well):
         name = str(well).lower()
         if "tube" not in name or "15" not in name:
             return False
@@ -548,7 +548,7 @@ def run(ctx: protocol_api.ProtocolContext):
         :return value: Approximate height of the tube cone
         """
 
-        if not is_tube(tube):
+        if not is_15ml_tube(tube):
             msg = ("The input well parameter: {}, does not appear to "
                    "be a 15 mL tube")
             msg.format(tube)
@@ -568,7 +568,7 @@ def run(ctx: protocol_api.ProtocolContext):
         the bottom in mm
         """
 
-        if not is_tube(tube):
+        if not is_15ml_tube(tube):
             msg = ("The input well parameter: {}, does not appear to "
                    "be a 15 mL tube")
             msg.format(tube)
