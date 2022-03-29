@@ -44,7 +44,7 @@ def parse_range_string(range_string: str) -> Tuple[int, int]:
 def get_values(*names):
     import json
     _all_values = json.loads("""{
-                                  "n_samples":5,
+                                  "n_samples":96,
                                   "bindbuf_source_well_indices":"1-4",
                                   "bead_mix_source_well_indices":"5",
                                   "vol_source_bb_per_well":15.0,
@@ -101,7 +101,7 @@ def run(ctx: protocol_api.ProtocolContext):
      "well_edge_offset",
      "is_verbose")
 
-    is_debug_mode = False
+    is_debug_mode = True
     # 1 mL of dead volume is required when using the reservoir,
     # 100 uL for tubes, the dead volume should have the same composition
     # as the rest of the mix
