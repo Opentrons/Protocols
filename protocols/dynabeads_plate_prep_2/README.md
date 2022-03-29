@@ -47,6 +47,18 @@ a. Purple – elution buffer
 
 Slot 7 - Tiprack1
 
+![deck layout](https://opentrons-protocol-library-website.s3.us-east-1.amazonaws.com/custom-README-images/dynabeads_plate_prep_2/1.png)
+
+### Reagent Setup
+Elution buffer: 30 uL 2x Laemmli Sample Buffer with 2.5% BME per sample
+
+![reagent setup](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/dynabeads_plate_prep_2/2.png)
+
+### Protocol Steps
+1. Elution buffer (reagent stock in 15 mL tubes, slot 5) is transferred to the reagent plate (96 well deepwell plate A12-H12, slot 4) by the single channel pipet.
+
+![well buffer table](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/dynabeads_plate_prep_2/3.png)
+
 ### Process
 
 * Input your protocol parameters (the number of samples to be processed).
