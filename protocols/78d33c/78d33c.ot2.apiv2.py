@@ -147,7 +147,7 @@ def run(ctx):
     # input samples
     temp = ctx.load_module('temperature module gen2', '3')
     plate2 = temp.load_labware(
-     'eppendorftwin.tec96_96_aluminumblock_200ul',
+     'eppendorf_twintec_on_opentrons_metal_block_033822',
      "Plate 2 at 4 Degrees C")
     temp.set_temperature(4)
 
@@ -155,7 +155,7 @@ def run(ctx):
     mag = ctx.load_module('magnetic module gen2', '1')
     mag.disengage()
     mag_plate = mag.load_labware(
-     'eppendorf_96_wellplate_200ul', 'Mag Plate')
+     'eppendorf_twintex_clickbio_adapter', 'Mag Plate')
 
     ctx.comment("STEP - KAPA Pure Beads")
 

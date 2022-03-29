@@ -158,7 +158,7 @@ def run(ctx):
     ctx.comment('\n\nAdding Water to Tube Rack\n')
     p1000.flow_rate.dispense = 0.75*p1000.flow_rate.dispense
     p1000.pick_up_tip()
-    for tube in final_tubes_pt1:
+    for tube in final_tubes_pt2:
         p1000.aspirate(100, water)
         p1000.dispense(100, tube.top())
         p1000.blow_out()
@@ -195,7 +195,7 @@ def run(ctx):
 
         p20.pick_up_tip()
         for chunk in chunks[col_counter*8:col_counter*8+8]:
-            p20.aspirate(20, elute.bottom(z=-13.91))
+            p20.aspirate(20, elute.bottom(z=-20))
             p20.touch_tip()
             for well in chunk:
                 if well == final_plate_384.wells_by_name()["O23"]:
@@ -204,7 +204,7 @@ def run(ctx):
                     continue
                 p20.dispense(4, well)
             p20.air_gap(airgap)
-            p20.dispense(4+airgap, elute.bottom(z=-13.91))
+            p20.dispense(4+airgap, elute.bottom(z=-20))
             p20.blow_out()
         p20.drop_tip()
         ctx.comment('\n\n')

@@ -54,25 +54,10 @@
     ]
   },
   {
-    "type": "dropDown",
-    "label": "Labware for p20 Tips",
-    "name": "labware_tips",
-    "options": [
-      { "label": "Opentrons 20 uL Tips", "value": "opentrons_96_tiprack_20ul" },
-      { "label": "Opentrons 20 uL Filter Tips", "value": "opentrons_96_filtertiprack_20ul" }
-    ]
-  },
-  {
     "type": "int",
     "label": "Deck Slot Location for Culture Plate  (1-11)",
     "name": "slot_cultureplate",
     "default": 1
-  },
-  {
-    "type": "int",
-    "label": "Deck Slot Location for 20 uL Tip Box  (1-11)",
-    "name": "slot_tipbox",
-    "default": 2
   },
   {
     "type": "int",
