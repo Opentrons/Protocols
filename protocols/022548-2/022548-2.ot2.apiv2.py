@@ -1,6 +1,6 @@
 from opentrons import protocol_api
-import csv
-from typing import List
+from opentrons.protocol_api.labware import Well
+from math import pi
 
 metadata = {
     'protocolName': '022548-2 - DNA extraction',
@@ -11,6 +11,69 @@ metadata = {
 }
 
 
+def is_15ml_tube(well: Well):
+    name = str(well).lower()
+    if "tube" not in name or "15" not in name:
+        return False
+    return True
+
+
+def tube_15ml_cone_height(tube: Well):
+    """
+    :return value: Approximate height of the tube cone
+    """
+
+    if not is_15ml_tube(tube):
+        msg = ("The input well parameter: {}, does not appear to "
+               "be a 15 mL tube")
+        msg.format(tube)
+        raise Exception(msg)
+    return 0.171 * tube.depth
+
+
+def tube_liq_height(vol, tube: Well, is_min_cone_height: bool = True):
+    """
+    Calculates the height of the liquid level in a conical tube
+    given its liquid volume.The function tries to account for the conical
+    part of the tube
+    :param vol: The volume in uL
+    :param tuberack: The tuberack with the tubes
+    :param is_min_cone_height: Always return the height of the cone at
+    minimum
+    :return value: The height of the liquid level measured from
+    the bottom in mm
+    """
+
+    if not is_15ml_tube(tube):
+        msg = ("The input well parameter: {}, does not appear to "
+               "be a 15 mL tube")
+        msg.format(tube)
+        raise Exception(msg)
+
+    r = tube.diameter/2
+    # Fudge factor - height seems too low given a volume, so bump it up
+    # a little bit by "decreasing" the radius
+    r *= 0.94
+
+    # Cone height approximation
+    h_cone_max = tube_15ml_cone_height(tube)
+    vol_cone_max = (h_cone_max*pi*r**2)/3
+
+    if vol < vol_cone_max:
+        h_cone = (3*vol)/(pi*r**2)
+        # print("h_cone", h_cone)
+        if is_min_cone_height:
+            return h_cone_max
+        return h_cone
+    else:
+        cylinder_partial_vol = vol - vol_cone_max
+        # print('cylinder v', cylinder_partial_vol,
+        # 'cone max vol', vol_cone_max)
+        h_partial_tube = cylinder_partial_vol/(pi*r**2)
+        # print('h cone max', h_cone_max, 'h partial tube', h_partial_tube)
+        return h_cone_max + h_partial_tube
+
+
 def get_values(*names):
     import json
     _all_values = json.loads("""{
@@ -18,10 +81,12 @@ def get_values(*names):
                                   "n_samples_rack_1":32,
                                   "n_samples_rack_2":32,
                                   "n_samples_rack_3":32,
-                                  "is_create_mastermix":true,
-                                  "mastermix_csv":"source well,component name,volume,,,,\\\\nA1,component 1,100,,,,",
-                                  "bindbuf_target_well_no":11,
-                                  "master_bead_mix_well_no":12
+                                  "master_mix_range":"1-3",
+                                  "mastermix_max_vol":9.45,
+                                  "mastermix_tuberack_lname":false,
+                                  "mastermix_mix_rate_multiplier":0.3,
+                                  "p300_mount":"left",
+                                  "m300_mount":"right"
                                   }
                                   """)
     return [_all_values[n] for n in names]
@@ -33,34 +98,30 @@ def run(ctx: protocol_api.ProtocolContext):
      n_samples_rack_1,
      n_samples_rack_2,
      n_samples_rack_3,
-     is_create_mastermix,
-     mastermix_csv,
-     bindbuf_target_well_no,
-     master_bead_mix_well_no] = get_values(  # noqa: F821
+     master_mix_range,
+     mastermix_max_vol,
+     mastermix_tuberack_lname,
+     mastermix_mix_rate_multiplier,
+     p300_mount,
+     m300_mount] = get_values(  # noqa: F821
      "n_tuberacks",
      "n_samples_rack_1",
      "n_samples_rack_2",
      "n_samples_rack_3",
-     "is_create_mastermix",
-     "mastermix_csv",
-     "bindbuf_target_well_no",
-     "master_bead_mix_well_no")
+     "master_mix_range",
+     "mastermix_max_vol",
+     "mastermix_tuberack_lname",
+     "mastermix_mix_rate_multiplier",
+     "p300_mount",
+     "m300_mount")
 
-    def parse_csv(csv_string) -> List:
-        csv_string = csv_string.strip()
-        lines = str(csv_string).splitlines()
-        csv_reader = csv.reader(lines, delimiter=',')
-        mastermix_list = []
-        for row in csv_reader:
-            mastermix_list.append(row)
-        return mastermix_list
+    if n_tuberacks > 3 or n_tuberacks < 1:
+        raise Exception(
+            "The number of sample tube racks should be between 1 to 3 max")
 
-    tuberack_upper_bound = 2 if is_create_mastermix else 3
-    if n_tuberacks > tuberack_upper_bound or n_tuberacks < 1:
-        raise Exception(("Sample tube racks should be between 1 to {}"
-                         "Are you creating a mastermix? If so 2 tuberacks "
-                         "is max").format(tuberack_upper_bound))
+    if
 
+    n_total_samples = 0
     for i, n in enumerate([n_samples_rack_1,
                            n_samples_rack_2,
                            n_samples_rack_3]):
@@ -69,20 +130,21 @@ def run(ctx: protocol_api.ProtocolContext):
                 "Invalid number of samples (n={}) on tuberack #{}".format(
                     n, i+1)
                 )
-    n_total_samples = (n_samples_rack_1 + n_samples_rack_2
-                       if is_create_mastermix else n_samples_rack_1
-                       + n_samples_rack_2 + n_samples_rack_3)
-    total_bind_buf_vol = n_total_samples*1.5*265
-    total_bead_vol = (10/265) * total_bind_buf_vol
-    total_mm_vol = total_bind_buf_vol + total_bead_vol
-    # The volume of mastermix in each reservoir well should be 9.65 mL max
-    # and also accounting for 1 mL dead volume in the resevoir
-    vol_per_reservoir_well = 9.65 - 1
-    n_resevoir_wells = ceil(total_mm_vol/vol_per_reservoir_well)
+        n_total_samples += n
 
-    mastermix_list = parse_csv(mastermix_csv)
-    sample_tuberack_lname = "nest_32_tuberack_8x15ml_8x15ml_8x15ml_8x15ml"
-    plate_lname = "thermofisherkingfisherdeepwell_96_wellplate_2000ul"
+    # Define labware and slots
+    sample_tuberack_loader = \
+        ("nest_32_tuberack_8x15ml_8x15ml_8x15ml_8x15ml", ['2', '4', '7'])
+    target_plate_loader = \
+        ("thermofisherkingfisherdeepwell_96_wellplate_2000ul", '1')
+    mastermix_source_lname = \
+        ('nest_12_reservoir_15ml'
+         if mastermix_tuberack_lname is False
+         else mastermix_tuberack_lname)
+    mastermix_labware_loader = (mastermix_source_lname, '10')
+    sample_200ul_filtertiprack_loader = \
+        ('opentrons_96_filtertiprack_200ul', '6')
+    mastermix_300uL_tiprack_loader = ('opentrons_96_tiprack_300ul', '11')
 
     # define all custom variables above here with descriptions:
 
@@ -136,8 +198,10 @@ def run(ctx: protocol_api.ProtocolContext):
     e.g. tiprack10, tiprack20, tiprack200, tiprack300, tiprack1000
 
     '''
-    tiprack_200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '6')]
-    tiprack_300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '9')]
+    tiprack_200 = [ctx.load_labware(sample_200ul_filtertiprack_loader[0],
+                                    sample_200ul_filtertiprack_loader[1])]
+    tiprack_300 = [ctx.load_labware(mastermix_300uL_tiprack_loader[0],
+                                    mastermix_300uL_tiprack_loader[1])]
 
     # load instrument
 
