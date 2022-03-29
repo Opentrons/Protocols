@@ -1,4 +1,4 @@
-# Protocol Title (should match metadata of .py file)
+# PCR/qPCR Prep
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -30,13 +30,13 @@ This is a specific protocol for aliquoting liquid from three reagent plates to t
 
 ### Reagent Setup
 * SPR Wash Buffer in NEST 1 Well Reservoir 195ml: slot 4
-	
+
 	Minimum fill: 34ml
 * VHB Buffer in NEST 1 Well Reservoir 195ml: slot 5
-	
+
 	Minimum fill: 34ml
 * Nuclease Free Water in NEST 1 Well Reservoir 195ml: slot 6
-	
+
 	Minimum fill: 5ml
 
 ---
