@@ -385,6 +385,7 @@ fragmentation_minutes,1
 fragmented_sample_volume,1
 full_volume,1
 gantryspeed,1
+gdna_buff_vol,1
 grid,1
 has_first_tube_set,1
 has_second_tube_set,1
@@ -489,7 +490,6 @@ labware_rna,1
 labware_samp,1
 labware_sample_plate,1
 labware_sampleplates,1
-labware_tips,1
 labware_tips20,3
 labware_tips300,2
 labware_tube_rack,1
@@ -528,7 +528,7 @@ lysis_vol,1
 m10_mount,2
 m1k,1
 m20_mount,57
-m300_mount,60
+m300_mount,61
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
@@ -649,7 +649,7 @@ ntc_primer_well,1
 nuc_free_water_vol_well,1
 num,3
 num_antibodies,1
-num_col,5
+num_col,6
 num_cols,2
 num_columns,1
 num_daughter_plates,1
@@ -851,6 +851,7 @@ post_user_sample_volume,1
 prefill,1
 prepare_mastermix,2
 prepare_standard,2
+prewash_buff_vol,1
 primer_col_volume,1
 primer_loadname,1
 primer_lw,1
@@ -1002,7 +1003,6 @@ slot_cultureplate,1
 slot_scan,3
 slot_screwcaps,1
 slot_snapcaps,1
-slot_tipbox,1
 slow_asp_rate,1
 slow_speed_down,1
 slow_speed_up,1
