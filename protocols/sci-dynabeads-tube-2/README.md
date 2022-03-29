@@ -6,7 +6,7 @@ Opentrons(https://opentrons.com/)
 
 ## Categories
 * Protein Purification
-  * Thermo Fisher Dynabeads™ Protein A/G
+	* Thermo Fisher Dynabeads™ Protein A/G
 
 ## Description
 This protocol (Part 2) performs washing and elution on the OT2 as the second part of automated immunoprecipitation using Thermo Fisher Dynabeads Protein A or Protein G.
