@@ -1,8 +1,9 @@
 {
     "author": "Opentrons(https://opentrons.com/)",
     "categories": {
-        "Protein Purification": [],
-        "Thermo Fisher Dynabeads\u2122 Protein A/G": []
+        "Protein Purification": [
+            "Thermo Fisher Dynabeads\u2122 Protein A/G"
+        ]
     },
     "deck-setup": "\n* Green \u2013 beads\n* Blue \u2013 antibody",
     "description": "This protocol (Plate Prep 1) performs pipetting to transfer reagents (Dynabeads and antibody dilution) from 15 mL conical tubes to a 96 well deepwell plate (the reagent plate) on the OT2. This reagent plate is used for Dynabeads for IP Reagent-In-Plate protocol Part 1.\nThe user can determine the number of samples to be processed.",
@@ -10,7 +11,7 @@
     "labware": "\nNEST 2 mL 96-Well Deep Well Plate, V Bottom\n4-in-1 Tube Rack Set\nNEST 15 mL Centrifuge Tube\nOpentrons 300\u00b5L Tips\n",
     "markdown": {
         "author": "Opentrons(https://opentrons.com/)\n\n",
-        "categories": "* Protein Purification\n  * Thermo Fisher Dynabeads\u2122 Protein A/G\n\n",
+        "categories": "* Protein Purification\n\t* Thermo Fisher Dynabeads\u2122 Protein A/G\n\n",
         "deck-setup": "![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-dynabeads-tube-1/Screen+Shot+2022-03-29+at+4.30.28+PM.png)\n* Green \u2013 beads\n* Blue \u2013 antibody\n\n",
         "description": "This protocol (Plate Prep 1) performs pipetting to transfer reagents (Dynabeads and antibody dilution) from 15 mL conical tubes to a 96 well deepwell plate (the reagent plate) on the OT2. This reagent plate is used for Dynabeads for IP Reagent-In-Plate protocol Part 1.\n\nThe user can determine the number of samples to be processed.\n\n",
         "internal": "sci-dynabeads-tube-1\n",
