@@ -2,7 +2,9 @@
 
 ### Author
 [Opentrons](https://opentrons.com/)
-
+## Categories
+* PCR
+* PCR Prep
 ## Description
 This is a specific protocol for aliquoting liquid from three reagent plates to three 96 deep well plates using a multi-channel p300 pipette. Tips are changed between reagents. Either pipette mount can be specified in setup.
 * 350ul SPR Wash Buffer is added to a 96 deep well plate
