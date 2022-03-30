@@ -1,3 +1,4 @@
+# flake8: noqa
 from opentrons.types import Point
 metadata = {
     'protocolName': 'DYNABEADS FOR IP - 96 well',
