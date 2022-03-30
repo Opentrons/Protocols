@@ -67,9 +67,9 @@ def run(ctx):
             self.height = round(current_volume/cse)
             if self.height < min_height:
                 self.height = min_height
-            elif self.height > well.parent.highest_z:
-                raise Exception("""Specified liquid volume
-                can not exceed the height of the labware.""")
+            # elif self.height > well.parent.highest_z:
+            #    raise Exception("""Specified liquid volume
+            #    can not exceed the height of the labware.""")
 
         def height_dec(self, vol):
             if self.diameter is not None:
