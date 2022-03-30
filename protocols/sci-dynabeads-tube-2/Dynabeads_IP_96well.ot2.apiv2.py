@@ -8,20 +8,18 @@ metadata = {
     'apiLevel': '2.11'
 }
 
-########################
-
-ASP_COUNT = num_samples//5
-LEFTOVER = num_samples%5
-
 
 def run(ctx):
 
     [asp_height, length_from_side, p300_mount] = [0.5, 2.5, 'left']
-    num_samples = get_values(  # noqa: F821
+    [num_samples] = get_values(  # noqa: F821
         'num_samples')
 
     wash_volume = 200
     wash_times = 3
+
+    ASP_COUNT = num_samples//5
+    LEFTOVER = num_samples%5
 
     total_cols = int(num_samples//8)
     r1 = int(num_samples%8)

@@ -1,26 +1,24 @@
 """PROTOCOL."""
 metadata = {
-    'protocolName': 'DYNABEADS FOR IP - 96 well',
+    'protocolName': 'Dynabeads for IP Reagent-In-Plate Plate Prep 2',
     'author': '',
     'source': '',
     'apiLevel': '2.11'
 }
 
-########################
-
-NUM_SAMPLES = 48
-wash_volume = 200
-wash_times = 3
-
-total_cols = int(NUM_SAMPLES//8)
-r1 = int(NUM_SAMPLES % 8)
-if r1 != 0:
-    total_cols = total_cols + 1
-
-#########################
-
 
 def run(ctx):
+
+    [num_samples] = get_values(  # noqa: F821
+        'num_samples')
+
+    total_cols = int(num_samples//8)
+    r1 = int(num_samples % 8)
+    if r1 != 0:
+        total_cols = total_cols + 1
+
+    #########################
+
     """PROTOCOL."""
     # load labware
     reagent_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '4',

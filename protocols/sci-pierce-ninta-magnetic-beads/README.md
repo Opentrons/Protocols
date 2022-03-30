@@ -1,4 +1,4 @@
-# Pierce NiNTA Magnetic Beads
+# Pierce NiNTA Magnetic Beads Part 1
 
 ### Author
 [Opentrons](https://opentrons.com/)

@@ -1,7 +1,14 @@
 {
-    "content": "\"\"\"PROTOCOL.\"\"\"\nmetadata = {\n    'protocolName': 'DYNABEADS FOR IP - 96 well',\n    'author': '',\n    'source': '',\n    'apiLevel': '2.11'\n            }\n\nNUM_SAMPLES = 96\nwash_volume = 200\nwash_times = 3\n\ntotal_cols = int(NUM_SAMPLES//8)\nr1 = int(NUM_SAMPLES % 8)\nif r1 != 0:\n    total_cols = total_cols + 1\n\n\ndef run(ctx):\n    \"\"\"PROTOCOL.\"\"\"\n    # load labware\n    reagent_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '4',\n                                     'reagents')\n    reagent_tube = ctx.load_labware('opentrons_15_tuberack_nest_15ml_conical',\n                                    '5', 'reagents - stock')\n    tiprack = ctx.load_labware('opentrons_96_tiprack_300ul', '7')\n\n    # load pipette\n    pip_single = ctx.load_instrument('p300_single_gen2', 'right',\n                                     tip_racks=[tiprack])\n\n    # liquids\n    beads = reagent_plate.columns()[0]\n    ab = reagent_plate.columns()[1]\n    beads_stock = reagent_tube.rows()[0][0]\n    ab_stock = reagent_tube.rows()[0][1]\n\n    # protocol\n\n    ctx.comment('\\n\\n\\n~~~~~~~~MIXING AND TRANSFER BEADS ~~~~~~~~\\n')\n    pip_single.pick_up_tip()\n    for i in range(total_cols):\n        h = 5 + i * 3\n        pip_single.mix(5, 250, beads_stock.bottom(z=h), rate=5)\n    for i in range(8):\n        pip_single.transfer(total_cols*50,\n                            beads_stock,\n                            beads[i],\n                            blow_out=True,\n                            blowout_location='destination well',\n                            new_tip='never',\n                            mix_before=(5, 100),\n                            )\n    pip_single.drop_tip()\n    ctx.comment('\\n\\n\\n~~~~~~~~TRANSFER AB ~~~~~~~~\\n')\n    pip_single.pick_up_tip()\n    for i in range(8):\n        pip_single.transfer(total_cols*50,\n                            ab_stock,\n                            ab[i],\n                            blow_out=True,\n                            blowout_location='destination well',\n                            new_tip='never',\n                            )\n    pip_single.drop_tip()\n",
+    "content": "\"\"\"PROTOCOL.\"\"\"\nmetadata = {\n    'protocolName': 'Dynabeads for IP Reagent-In-Plate Plate Prep 1',\n    'author': '',\n    'source': '',\n    'apiLevel': '2.11'\n            }\n\n\ndef run(ctx):\n    \"\"\"PROTOCOL.\"\"\"\n\n    [num_samples] = get_values(  # noqa: F821\n        'num_samples')\n\n    total_cols = int(num_samples//8)\n    r1 = int(num_samples % 8)\n    if r1 != 0:\n        total_cols = total_cols + 1\n\n    # load labware\n    reagent_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '4',\n                                     'reagents')\n    reagent_tube = ctx.load_labware('opentrons_15_tuberack_nest_15ml_conical',\n                                    '5', 'reagents - stock')\n    tiprack = ctx.load_labware('opentrons_96_tiprack_300ul', '7')\n\n    # load pipette\n    pip_single = ctx.load_instrument('p300_single_gen2', 'right',\n                                     tip_racks=[tiprack])\n\n    # liquids\n    beads = reagent_plate.columns()[0]\n    ab = reagent_plate.columns()[1]\n    beads_stock = reagent_tube.rows()[0][0]\n    ab_stock = reagent_tube.rows()[0][1]\n\n    # protocol\n\n    ctx.comment('\\n\\n\\n~~~~~~~~MIXING AND TRANSFER BEADS ~~~~~~~~\\n')\n    pip_single.pick_up_tip()\n    for i in range(total_cols):\n        h = 5 + i * 3\n        pip_single.mix(5, 250, beads_stock.bottom(z=h), rate=5)\n    for i in range(8):\n        pip_single.transfer(total_cols*50,\n                            beads_stock,\n                            beads[i],\n                            blow_out=True,\n                            blowout_location='destination well',\n                            new_tip='never',\n                            mix_before=(5, 100),\n                            )\n    pip_single.drop_tip()\n    ctx.comment('\\n\\n\\n~~~~~~~~TRANSFER AB ~~~~~~~~\\n')\n    pip_single.pick_up_tip()\n    for i in range(8):\n        pip_single.transfer(total_cols*50,\n                            ab_stock,\n                            ab[i],\n                            blow_out=True,\n                            blowout_location='destination well',\n                            new_tip='never',\n                            )\n    pip_single.drop_tip()\n",
     "custom_labware_defs": [],
-    "fields": [],
+    "fields": [
+        {
+            "default": 96,
+            "label": "number of samples",
+            "name": "num_samples",
+            "type": "int"
+        }
+    ],
     "instruments": [
         {
             "mount": "right",
@@ -37,7 +44,7 @@
     "metadata": {
         "apiLevel": "2.11",
         "author": "",
-        "protocolName": "DYNABEADS FOR IP - 96 well",
+        "protocolName": "Dynabeads for IP Reagent-In-Plate Plate Prep 1",
         "source": ""
     },
     "modules": []

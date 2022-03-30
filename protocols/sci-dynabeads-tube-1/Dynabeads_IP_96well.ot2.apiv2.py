@@ -11,7 +11,7 @@ metadata = {
 
 def run(ctx):
 
-    num_samples = get_values(  # noqa: F821
+    [num_samples] = get_values(  # noqa: F821
         'num_samples')
 
     wash_volume = 200
