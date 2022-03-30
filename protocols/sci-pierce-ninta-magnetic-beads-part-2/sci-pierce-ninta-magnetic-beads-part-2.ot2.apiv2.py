@@ -1,40 +1,22 @@
 from opentrons.types import Point
 metadata = {
-    'protocolName': 'Pierce NiNTA Magnetic Beads: part-2',
+    'protocolName': 'Pierce NiNTA Magnetic Beads Part 2',
     'author': 'Boren Lin <boren.lin@opentrons.com>',
     'apiLevel': '2.11'
 }
 
-########################
-
-NUM_SAMPLES = 96
-ELUTE_TIMES = 2
-
-total_cols = int(NUM_SAMPLES//8)
-r1 = int(NUM_SAMPLES % 8)
-if r1 != 0:
-    total_cols = total_cols + 1
-
-ASP_COUNT = NUM_SAMPLES//5
-LEFTOVER = NUM_SAMPLES % 5
-
-#########################
-
-
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{ "asp_height": 0.5,
-                                  "length_from_side": 2.5,
-                                  "p300_mount":"left"}""")
-    return [_all_values[n] for n in names]
-
 
 def run(ctx):
 
-    [asp_height,
-        length_from_side, p300_mount] = get_values(  # noqa: F821
-        "asp_height",
-            "length_from_side", "p300_mount")
+    [num_samples] = get_values(  # noqa: F821
+        'num_samples')
+    [asp_height, length_from_side, p300_mount] = [0.5, 2.5, 'left']
+    ELUTE_TIMES = 2
+
+    total_cols = int(num_samples//8)
+    r1 = int(num_samples % 8)
+    if r1 != 0:
+        total_cols = total_cols + 1
 
     # load labware
 

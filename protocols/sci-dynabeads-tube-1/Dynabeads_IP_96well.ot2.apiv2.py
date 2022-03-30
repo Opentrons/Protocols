@@ -1,7 +1,7 @@
 # flake8: noqa
 
 metadata = {
-    'protocolName': 'DYNABEADS FOR IP - 96 well: Part 1/2',
+    'protocolName': 'Dynabeads for IP Reagent-In-Plate: Part 1/2',
     'author': 'Boren Lin <boren.lin@opentrons.com>',
     'source': '',
     'apiLevel': '2.11'
@@ -9,17 +9,17 @@ metadata = {
 
 ########################
 
-NUM_SAMPLES = 96
-wash_volume = 200
-wash_times = 3
-
-total_cols = int(NUM_SAMPLES//8)
-r1 = int(NUM_SAMPLES%8)
-if r1 != 0: total_cols = total_cols + 1
-
-#########################
-
 def run(ctx):
+
+    [num_samples] = get_values(  # noqa: F821
+        'num_samples')
+
+    wash_volume = 200
+    wash_times = 3
+
+    total_cols = int(num_samples//8)
+    r1 = int(num_samples%8)
+    if r1 != 0: total_cols = total_cols + 1
 
     # load labware
     reagent_plate = ctx.load_labware('nest_96_wellplate_2ml_deep', '4', 'reagents')

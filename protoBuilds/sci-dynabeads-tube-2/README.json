@@ -23,7 +23,7 @@
         "protocol-steps": "1. The mixture of sample, antibody and beads after incubation (working plate) is moved back to the magnetic module (slot 1), and Part 2 starts.\n2. Supernatant in the working plate is removed (slot 4) by the 8-channel pipet with magnetic module on.\n2. Wash buffer is transferred (slot 2) to the working plate (slot 1), and precipitated beads resuspended (magnetic module off), re-precipitated and supernatant removed (magnetic module on).\n3. Step 2 repeat 2 more times. All wash steps are handled by the 8-channel pipet, and the tips reused.\n4. Elution buffer (in a 15 mL tube, slot 4) is transferred to the working plate (slot 1) by the single-channel pipet.\n5. Beads and elution buffer is mixed and transferred by the 8-channel pipet to the final plate (slot 3).\n6. The final plate is sealed, and temperature module activated and set to heat the final plate for 10 minutes at 70 degree C.\n\n",
         "reagent-setup": "* Elution buffer: 30 uL 2x Laemmli Sample Buffer with 2.5% BME per sample\n* Wash buffer (PBS-T): 200 uL per sample per wash, i.e. 600 uL for 3 washes per sample (Note: Each well of the 12 well reservoir should contain enough wash buffer for 3 washing runs of 8 samples (1 column in working plate). It is recommended to fill each well with 5,000 uL wash buffer)\n\n---\n\n",
         "reagents": "* [2x Laemmli Sample Buffer](https://www.bio-rad.com/en-us/sku/1610737-2x-laemmli-sample-buffer?ID=1610737) with reducing agent \u03b2-mercaptoethanol (BME)\n* [Pierce\u2122 20X PBS Tween\u2122 20 Buffer](PBS-T, https://www.thermofisher.com/order/catalog/product/28352)\n\n",
-        "title": "Protocol Title"
+        "title": "Dynabeads for IP Reagent-In-Tube Part 2"
     },
     "modules": [
         "Temperature Module (GEN2)",
@@ -38,5 +38,5 @@
         "2x Laemmli Sample Buffer with reducing agent \u03b2-mercaptoethanol (BME)",
         "Pierce\u2122 20X PBS Tween\u2122 20 Buffer"
     ],
-    "title": "Protocol Title"
+    "title": "Dynabeads for IP Reagent-In-Tube Part 2"
 }
