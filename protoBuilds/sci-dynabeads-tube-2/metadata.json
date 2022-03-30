@@ -1,0 +1,20 @@
+{
+    "files": {
+        "OT 1 protocol": [],
+        "OT 2 protocol": [
+            "Dynabeads_IP_96well.ot2.apiv2.py"
+        ],
+        "description": [
+            "README.md"
+        ]
+    },
+    "flags": {
+        "embedded-app": false,
+        "feature": false,
+        "hide-from-search": false,
+        "skip-tests": false
+    },
+    "path": "protocols/sci-dynabeads-tube-2",
+    "slug": "sci-dynabeads-tube-2",
+    "status": "ok"
+}

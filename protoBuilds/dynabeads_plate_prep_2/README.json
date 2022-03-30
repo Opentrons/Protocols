@@ -1,0 +1,32 @@
+{
+    "author": "Opentrons(https://opentrons.com/)",
+    "categories": {},
+    "deck-setup": "Slot 4 \u2013 96 well deepwell plate (reagent plate)\nSlot 5 - Tube rack/reagent in 15 mL conical tube (reagent stock)\na. Purple \u2013 elution buffer\nSlot 7 - Tiprack1\n",
+    "description": "This protocol (Plate Prep 2) performs pipetting to transfer elution buffer\nfrom 15 mL conical tubes to a 96 well deepwell plate (the reagent plate) on\nthe OT2. This reagent plate is used for Dynabeads for IP Reagent-In-Plate\nprotocol Part 2.\nThe user can determine the number of samples to be processed.",
+    "internal": "protocol-hex-code",
+    "labware": "NEST 2 mL 96-Well Deep Well Plate, V Bottom\n(https://shop.opentrons.com/nest-2-ml-96-well-deep-well-plate-v-bottom/)\n4-in-1 Tube Rack Set\n(https://shop.opentrons.com/4-in-1-tube-rack-set/)\nNEST 15 mL Centrifuge Tube\n(https://shop.opentrons.com/nest-15-ml-centrifuge-tube/)\nOpentrons 300\u00b5L Tips (https://shop.opentrons.com/opentrons-300ul-tips-1000-\nrefills/)",
+    "markdown": {
+        "author": "Opentrons(https://opentrons.com/)\n\n",
+        "categories": "Protein Purification\nThermo Fisher Dynabeads\u2122 Protein A\nThermo Fisher Dynabeads\u2122 Protein G\n\n",
+        "deck-setup": "Slot 4 \u2013 96 well deepwell plate (reagent plate)\nSlot 5 - Tube rack/reagent in 15 mL conical tube (reagent stock)\n\na. Purple \u2013 elution buffer\n\nSlot 7 - Tiprack1\n\n![deck layout](https://opentrons-protocol-library-website.s3.us-east-1.amazonaws.com/custom-README-images/dynabeads_plate_prep_2/1.png)\n\n",
+        "description": "This protocol (Plate Prep 2) performs pipetting to transfer elution buffer\nfrom 15 mL conical tubes to a 96 well deepwell plate (the reagent plate) on\nthe OT2. This reagent plate is used for Dynabeads for IP Reagent-In-Plate\nprotocol Part 2.\nThe user can determine the number of samples to be processed.\n\n",
+        "internal": "protocol-hex-code\n",
+        "labware": "NEST 2 mL 96-Well Deep Well Plate, V Bottom\n(https://shop.opentrons.com/nest-2-ml-96-well-deep-well-plate-v-bottom/)\n4-in-1 Tube Rack Set\n(https://shop.opentrons.com/4-in-1-tube-rack-set/)\nNEST 15 mL Centrifuge Tube\n(https://shop.opentrons.com/nest-15-ml-centrifuge-tube/)\nOpentrons 300\u00b5L Tips (https://shop.opentrons.com/opentrons-300ul-tips-1000-\nrefills/)\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "P300 Single-Channel GEN2 (https://opentrons.com/pipettes/)\n\n",
+        "process": "\n* Input your protocol parameters (the number of samples to be processed).\n* Download your protocol.\n* Upload your protocol into the OT App.\n* Set up your deck according to the deck map.\n* Calibrate your labware, tipracks, and pipette using the OT App. For calibration tips, check out our support articles.\n* Hit \"Run\".\n\n",
+        "protocol-steps": "1. Elution buffer (reagent stock in 15 mL tubes, slot 5) is transferred to the reagent plate (96 well deepwell plate A12-H12, slot 4) by the single channel pipet.\n\n![well distributions](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/dynabeads_plate_prep_2/3.png)\n\n",
+        "reagent-setup": "Elution buffer: 30 uL 2x Laemmli Sample Buffer with 2.5% BME per sample\n\n![reagent setup](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/dynabeads_plate_prep_2/2.png)\n\n",
+        "reagents": "* [kit name when applicable](link to kit)\n2x Laemmli Sample Buffer (https://www.bio-rad.com/en-us/sku/1610737-2x-\nlaemmli-sample-buffer?ID=1610737) with reducing agent \u03b2-mercaptoethanol (BME)\n\n",
+        "title": "DYNABEADS FOR IP - 96 well"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "P300 Single-Channel GEN2 (https://opentrons.com/pipettes/)",
+    "process": "\nInput your protocol parameters (the number of samples to be processed).\nDownload your protocol.\nUpload your protocol into the OT App.\nSet up your deck according to the deck map.\nCalibrate your labware, tipracks, and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "protocol-steps": "\nElution buffer (reagent stock in 15 mL tubes, slot 5) is transferred to the reagent plate (96 well deepwell plate A12-H12, slot 4) by the single channel pipet.\n\n",
+    "reagent-setup": "Elution buffer: 30 uL 2x Laemmli Sample Buffer with 2.5% BME per sample\n",
+    "reagents": [
+        "kit name when applicable\n2x Laemmli Sample Buffer (https://www.bio-rad.com/en-us/sku/1610737-2x-\nlaemmli-sample-buffer?ID=1610737) with reducing agent \u03b2-mercaptoethanol (BME)"
+    ],
+    "title": "DYNABEADS FOR IP - 96 well"
+}
