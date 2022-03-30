@@ -1,4 +1,4 @@
-# Dynabeads for IP Reagent-In-Plate Plate: Part 1/2
+# Dynabeads for IP Reagent-In-Tube Part 1
 
 ### Author
 [Opentrons](https://opentrons.com/)

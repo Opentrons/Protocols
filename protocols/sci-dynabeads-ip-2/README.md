@@ -1,4 +1,4 @@
-# DYNABEADS FOR IP - 96 well
+# Dynabeads for IP Reagent-In-Plate Part 2
 
 ### Author
 [Opentrons](https://opentrons.com/)
