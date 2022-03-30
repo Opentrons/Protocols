@@ -1,8 +1,7 @@
-# Protocol Title
-DYNABEADS FOR IP - 96 well: Part 1/2
+# Dynabeads for IP Reagent-In-Tube Part 1
 
 ### Author
-Opentrons(https://opentrons.com/)
+[Opentrons](https://opentrons.com/)
 
 ## Categories
 * Protein Purification
@@ -29,12 +28,12 @@ The user can determine the number of samples to be processed.
 * [GAPDH Polyclonal antibody](https://www.ptglab.com/products/GAPDH-Antibody-10494-1-AP.htm) or comparable products from other vendors
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-dynabeads-tube-1/Screen+Shot+2022-03-29+at+4.30.28+PM.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-dynabeads-tube-1/Screen+Shot+2022-03-29+at+4.30.28+PM.png)  
 * Green – beads
 * Blue – antibody
 
 ### Reagent Setup
-* Beads: 50 uL per sample
+* Beads: 50 uL per sample  
 * Antibody: diluted in phosphate-buffered saline with 0.1% Tween 20 (PBS-T), 50 uL per sample
 
 ### Protocol Steps

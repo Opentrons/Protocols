@@ -1,7 +1,7 @@
 # flake8: noqa
 from opentrons.types import Point
 metadata = {
-    'protocolName': 'DYNABEADS FOR IP - 96 well',
+    'protocolName': 'Dynabeads for IP Reagent-In-Plate Part 2',
     'author': '',
     'source': '',
     'apiLevel': '2.11'
@@ -9,30 +9,20 @@ metadata = {
 
 ########################
 
-NUM_SAMPLES = 96
-wash_volume = 200
-wash_times = 3
-
-total_cols = int(NUM_SAMPLES//8)
-r1 = int(NUM_SAMPLES%8)
-if r1 != 0: total_cols = total_cols + 1
-
-#########################
-
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"asp_height": 0.5,
-                                 "length_from_side": 2.5,
-                                 "p300_mount":"left"}""")
-    return [_all_values[n] for n in names]
-
-
 def run(ctx):
 
-    [asp_height,
-        length_from_side, p300_mount] = get_values(  # noqa: F821
-        "asp_height",
-            "length_from_side", "p300_mount")
+    [num_samples] = get_values(  # noqa: F821
+        'num_samples')
+
+    [asp_height, length_from_side, p300_mount] = [0.5, 2.5, 'left']
+    wash_volume = 200
+    wash_times = 3
+
+    total_cols = int(num_samples//8)
+    r1 = int(num_samples%8)
+    if r1 != 0: total_cols = total_cols + 1
+
+    #########################
 
     # load labware
     wash_res = ctx.load_labware('nest_12_reservoir_15ml', '2', 'wash')

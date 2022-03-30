@@ -1,5 +1,4 @@
-# Protocol Title
-DYNABEADS FOR IP - 96 well: Part 2/2
+# Dynabeads for IP Reagent-In-Tube Part 2
 
 ### Author
 Opentrons(https://opentrons.com/)
