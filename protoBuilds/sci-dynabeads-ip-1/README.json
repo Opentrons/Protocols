@@ -23,7 +23,7 @@
         "protocol-steps": "1. Bead slurry (in reagent plate, slot 4) is transferred to the working plate (slot 1) by the 8-channel pipet, and supernatant removed with magnetic module on.\n2. Antibody solution (in reagent plate, slot 4) is transferred to the working plate (slot 1) by the 8-channel pipet.\n3. Samples (in 96 deepwell plate, slot 5) are transferred to the working plate (slot 1) by the 8-channel pipet and mixed by pipetting up and down (10 times)\n4. The working plate is sealed and moved to a shaker.\n\n\n",
         "reagent-setup": "**Beads**: 50 uL per sample</br>\n**Antibody**: diluted in phosphate-buffered saline with 0.1% Tween 20 (PBS-T), 50 uL per sample\n\n\n---\n\n",
         "reagents": "* [Thermo Fisher Dynabeads\u2122 Protein A](https://www.thermofisher.com/order/catalog/product/10002D), **or**\n* [Thermo Fisher Dynabeads\u2122 Protein G](https://www.thermofisher.com/order/catalog/product/10004D)\n* [GAPDH Polyclonal antibody](https://www.ptglab.com/products/GAPDH-Antibody-10494-1-AP.htm) or comparable products from other vendors\n\n---\n\n",
-        "title": "DYNABEADS FOR IP - 96 well"
+        "title": "Dynabeads for IP Reagent-In-Plate Part 1"
     },
     "modules": [],
     "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
@@ -36,5 +36,5 @@
         "Thermo Fisher Dynabeads\u2122 Protein G",
         "GAPDH Polyclonal antibody or comparable products from other vendors"
     ],
-    "title": "DYNABEADS FOR IP - 96 well"
+    "title": "Dynabeads for IP Reagent-In-Plate Part 1"
 }

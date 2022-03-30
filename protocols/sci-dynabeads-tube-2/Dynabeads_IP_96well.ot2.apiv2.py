@@ -2,43 +2,30 @@
 from opentrons.types import Point
 
 metadata = {
-    'protocolName': 'DYNABEADS FOR IP - 96 well: Part 2/2',
+    'protocolName': 'Dynabeads for IP Reagent-In-Plate Plate: Part 2/2',
     'author': 'Boren Lin <boren.lin@opentrons.com>',
     'source': '',
     'apiLevel': '2.11'
 }
 
-########################
-
-NUM_SAMPLES = 96
-wash_volume = 200
-wash_times = 3
-
-total_cols = int(NUM_SAMPLES//8)
-r1 = int(NUM_SAMPLES%8)
-if r1 != 0: total_cols = total_cols + 1
-
-ASP_COUNT = NUM_SAMPLES//5
-LEFTOVER = NUM_SAMPLES%5
-
-#########################
-
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"asp_height": 0.5,
-                                 "length_from_side": 2.5,
-                                 "p300_mount":"left"}""")
-    return [_all_values[n] for n in names]
 
 def run(ctx):
 
-    [asp_height,
-        length_from_side, p300_mount] = get_values(  # noqa: F821
-        "asp_height",
-            "length_from_side", "p300_mount")
+    [asp_height, length_from_side, p300_mount] = [0.5, 2.5, 'left']
+    [num_samples] = get_values(  # noqa: F821
+        'num_samples')
+
+    wash_volume = 200
+    wash_times = 3
+
+    ASP_COUNT = num_samples//5
+    LEFTOVER = num_samples%5
+
+    total_cols = int(num_samples//8)
+    r1 = int(num_samples%8)
+    if r1 != 0: total_cols = total_cols + 1
 
     # load labware
-
     wash_res = ctx.load_labware('nest_12_reservoir_15ml', '2', 'wash')
 
     mag_mod = ctx.load_module('magnetic module gen2', '1')
