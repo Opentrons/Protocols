@@ -13,12 +13,13 @@ metadata = {
 def run(ctx):
 
     # get parameter values from json above
-    [manual_bead_resuspension, clearance_bead_resuspension,
+    [temp_mod_setting, manual_bead_resuspension, clearance_bead_resuspension,
      offset_x_resuspension, count_samples, clearance_reservoir, height_engage,
      time_engage, offset_x, time_dry] = get_values(  # noqa: F821
-      'manual_bead_resuspension', 'clearance_bead_resuspension',
-      'offset_x_resuspension', 'count_samples', 'clearance_reservoir',
-      'height_engage', 'time_engage', 'offset_x', 'time_dry')
+      'temp_mod_setting', 'manual_bead_resuspension',
+      'clearance_bead_resuspension', 'offset_x_resuspension', 'count_samples',
+      'clearance_reservoir', 'height_engage', 'time_engage', 'offset_x',
+      'time_dry')
 
     ctx.set_rail_lights(True)
 
@@ -84,7 +85,7 @@ def run(ctx):
             if column[0].liq_vol:
                 ctx.comment("Fill column {0} with {1} ul {2}".format(
                  column[0], column[0].liq_vol, reagentname))
-        ctx.pause()
+        # ctx.pause()
 
     # return liquid height in a well
     def liq_height(well):
@@ -110,6 +111,11 @@ def run(ctx):
         ctx.max_speeds[axis] = 10
         current_pipette.move_to(well_location.top())
         ctx.max_speeds[axis] = None
+
+    # yield list chunks of length n
+    def create_chunks(list_name, n):
+        for i in range(0, len(list_name), n):
+            yield list_name[i:i+n]
 
     # tips, p20 multi, p300 multi
     tips20 = [ctx.load_labware(
@@ -149,7 +155,8 @@ def run(ctx):
     plate2 = temp.load_labware(
      'eppendorf_twintec_on_opentrons_metal_block_033822',
      "Plate 2 at 4 Degrees C")
-    temp.set_temperature(4)
+    if temp_mod_setting:
+        temp.set_temperature(temp_mod_setting)
 
     # magnetic module with deep well plate
     mag = ctx.load_module('magnetic module gen2', '1')
@@ -166,16 +173,27 @@ def run(ctx):
     source = next(beadwell)
 
     for index, column in enumerate(mag_plate.columns()[:num_cols]):
+
+        pick_up_or_refill(p300m)
+
         if source.liq_vol <= 1512:
             source = next(beadwell)
-        pick_up_or_refill(p300m)
-        source.liq_vol -= 1008
-        ht = liq_height(source) - 3 if liq_height(source) - 3 > 1 else 1
-        if index == 0:
+            ht_premix = liq_height(source) + 3
             for rep in range(5):
                 p300m.aspirate(
                  200, source.bottom(clearance_reservoir), rate=0.5)
-                p300m.dispense(200, source.bottom(ht), rate=0.5)
+                p300m.dispense(200, source.bottom(ht_premix), rate=0.5)
+
+        source.liq_vol -= 1008
+        ht = liq_height(source) - 3 if liq_height(source) - 3 > 1 else 1
+
+        if index == 0:
+            ht_premix = liq_height(source) + 3
+            for rep in range(5):
+                p300m.aspirate(
+                 200, source.bottom(clearance_reservoir), rate=0.5)
+                p300m.dispense(200, source.bottom(ht_premix), rate=0.5)
+
         p300m.aspirate(
          126, source.bottom(ht), rate=0.5)
         ctx.delay(seconds=1)
@@ -183,8 +201,10 @@ def run(ctx):
         p300m.move_to(
          source.top(-2).move(types.Point(x=source.length / 2, y=0, z=0)))
         p300m.move_to(source.top())
+
         p300m.dispense(126, column[0])
         p300m.mix(10, 149)
+
         p300m.drop_tip()
 
     ctx.delay(minutes=10)
@@ -228,8 +248,8 @@ def run(ctx):
             pick_up_or_refill(p300m, 300)
             loc = column[0].bottom(1).move(types.Point(x={True: -1}.get(
               not index % 2, 1)*offset_x, y=0, z=0))
-            p300m.aspirate(180, column[0].bottom(4), rate=0.33)
-            p300m.aspirate(50, loc, rate=0.33)
+            p300m.aspirate(180, column[0].bottom(4), rate=0.2)
+            p300m.aspirate(50, loc, rate=0.2)
             p300m.air_gap(20)
             p300m.dispense(250, waste.top())
             ctx.delay(seconds=0.5)
@@ -264,14 +284,16 @@ def run(ctx):
     mag.engage(height=height_engage)
     ctx.delay(minutes=time_engage)
 
-    ctx.pause(
-     '''Place a fresh 200 uL PCR plate on the temperature module. Resume.''')
-
     # combine Fragmentation Master Mix and eluted sample
-    for column in plate2.columns()[:num_cols]:
-        pick_up_or_refill(p20m)
-        p20m.transfer(4, fragmentation_mm, column[0], new_tip='never')
-        p20m.drop_tip()
+    pick_up_or_refill(p20m)
+    for chunk in create_chunks(plate2.columns()[:num_cols], 4):
+        p20m.aspirate(4*len(chunk)+4, fragmentation_mm[0])
+        for column in chunk:
+            p20m.dispense(4, column[0])
+        p20m.dispense(4, fragmentation_mm[0])
+    p20m.drop_tip()
+
+    p20m.flow_rate.aspirate = 3.5
 
     for index, column in enumerate(mag_plate.columns()[:num_cols]):
         pick_up_or_refill(p20m)
@@ -279,9 +301,14 @@ def run(ctx):
          14, column[0].bottom().move(types.Point(
           x={True: -1}.get(not index % 2, 1)*offset_x, y=0, z=0)),
          plate2.columns()[index][0],
-         mix_after=(5, 11), new_tip='never')
+         mix_after=(5, 11), touch_tip=True, blow_out=True,
+         blowout_location='destination well', new_tip='never')
         p20m.drop_tip()
 
-    ctx.pause(
+    p20m.flow_rate.aspirate = 7.6
+
+    mag.disengage()
+
+    ctx.comment(
      '''Remove Plate2 on the Temperature Module for off-deck cycler steps.
      Then continue to DNA-PRE-PCR-2 Adapter Ligation protocol.''')
