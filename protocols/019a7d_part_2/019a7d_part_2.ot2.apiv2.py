@@ -40,18 +40,21 @@ def run(ctx):
 
     # load labware
     mix_n_go = temp_1.load_labware('azentalifesciences_96wellplate_200ul')
-    assembly_plate = temp_3.load_labware('azentalifesciences_96wellplate_200ul'
-                                         )
+    assemb_plate = temp_3.load_labware('azentalifesciences_96wellplate_200ul')
+    liquid_culture = [ctx.load_labware('greiner_96_wellplate_2000ul', slot)
+                      for slot in ['11']]
+
     """To load agar plates 5-9, loop based on inputs from fields
         How many samples will dictate how many agar plates and if 24s or 96
         """
+
     if omni_tray == '24':
-        agar_plates = [ctx.load_labware('24_agar', slot) for slot in ['5', '6',
-                                                                      '7', '8']
-                       ]
+        agar_plates = [ctx.load_labware('customagar_24_wellplate_200ul', slot)
+                       for slot in ['5', '6', '7', '8']]
     else:
         # create a list of length 1
-        agar_plates = [ctx.load_labware('96_agar', slot) for slot in ['9']]
+        agar_plates = [ctx.load_labware('customagar_96_wellplate_200ul', slot)
+                       for slot in ['9']]
     agar_locations_s = [well for plate in agar_plates for well in plate.wells()
                         ]
     agar_locations_m = [well for plate in agar_plates
