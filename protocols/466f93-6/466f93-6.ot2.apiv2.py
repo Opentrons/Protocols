@@ -63,7 +63,7 @@ def run(ctx: protocol_api.ProtocolContext):
      "is_create_pcr_mm",
      "mastermix_target_lname")
 
-    is_debug_mode = True
+    is_test_mode = True
 
     # General error checking
     if not pip_left_lname and not pip_right_lname:
@@ -660,4 +660,4 @@ def run(ctx: protocol_api.ProtocolContext):
                          "Transferring {}",
                          ["PCR mix", "primers"])
 
-    if is_debug_mode is True:
+    if is_test_mode is True:
