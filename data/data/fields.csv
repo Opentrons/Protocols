@@ -661,7 +661,7 @@ num_mastermix,1
 num_mm,2
 num_of_dilutions,2
 num_pl,2
-num_plates,22
+num_plates,23
 num_pool_sources,1
 num_pools,1
 num_primers,2
@@ -858,6 +858,7 @@ primer_col_volume,1
 primer_loadname,1
 primer_lw,1
 primer_mix_vol,1
+primer_start,1
 primer_vol,1
 primer_volume,2
 process,1
@@ -1087,6 +1088,7 @@ temp_mod_on,2
 temp_mod_s1_lname,1
 temp_mod_s4_lname,1
 temp_mod_s7_lname,1
+temp_mod_setting,1
 temp_mod_temp,1
 temp_mod_temperature,1
 temp_s1_part1,1

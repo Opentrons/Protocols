@@ -1,5 +1,5 @@
 {
-    "content": "import math\n\nmetadata = {\n    'protocolName': 'PCR Prep',\n    'author': 'Nick <ndiehl@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.10'\n}\n\n\ndef run(ctx):\n\n    [num_samples, num_primers, res_type, tip_type,\n     p20_multi_mount, height_dispense] = get_values(  # noqa: F821\n     'num_samples', 'num_primers', 'res_type', 'tip_type', 'p20_multi_mount',\n     'height_dispense')\n\n    # labware\n    pcr_plate = ctx.load_labware('thermofishermicroamp_96_aluminumblock_200ul',\n                                 '1', 'destination PCR plate')\n    sample_plate = ctx.load_labware(\n        'thermofishermicroamp_96_aluminumblock_200ul', '4',\n        'source sample plate')\n    res = ctx.load_labware(res_type, '5', 'reagent reservoir')\n    tipracks20m = [\n        ctx.load_labware('opentrons_96_tiprack_20ul', slot)\n        for slot in ['6', '8', '9']]\n\n    # pipettes\n    m20 = ctx.load_instrument('p20_multi_gen2', p20_multi_mount,\n                              tip_racks=tipracks20m)\n\n    # check\n    num_cols = math.ceil(num_samples/8)\n    if num_cols*num_primers > 12:\n        raise Exception(f'Can only accommodate up to {math.floor(12/num_cols)} \\\nprimers with {num_samples} samples or {math.floor(12/num_primers)} samples \\\nwith {num_primers} primers.')\n\n    # reagents\n    sample_sources = sample_plate.rows()[0][:num_cols]\n    sample_dests_sets_m = [\n        [pcr_plate.rows()[0][p*num_cols+s] for p in range(num_primers)]\n        for s in range(num_cols)]\n    primer_sources = res.wells()[:num_primers]\n    primer_dest_sets = [\n        pcr_plate.rows()[0][p*num_cols:(p+1)*num_cols]\n        for p in range(num_primers)]\n\n    # transfer primers, BigDye + water mix\n    for primer, dest_set in zip(primer_sources, primer_dest_sets):\n        m20.pick_up_tip()\n        for d in dest_set:\n            m20.transfer(17, primer, d.bottom(height_dispense),\n                         new_tip='never')\n        m20.drop_tip()\n\n    # transfer samples\n    for s, d_set in zip(sample_sources, sample_dests_sets_m):\n        for d in d_set:\n            m20.pick_up_tip()\n            m20.transfer(3, s, d.bottom(height_dispense), new_tip='never')\n            m20.drop_tip()\n",
+    "content": "import math\n\nmetadata = {\n    'protocolName': 'PCR Prep',\n    'author': 'Nick <ndiehl@opentrons.com>',\n    'description': 'Custom Protocol Request',\n    'apiLevel': '2.10'\n}\n\n\ndef run(ctx):\n\n    [num_samples, num_plates, num_primers, primer_start, res_type, tip_type,\n     p20_multi_mount, height_dispense] = get_values(  # noqa: F821\n     'num_samples', 'num_plates', 'num_primers', 'primer_start', 'res_type',\n     'tip_type', 'p20_multi_mount', 'height_dispense')\n\n    # labware\n    pcr_plate = ctx.load_labware('thermofishermicroamp_96_aluminumblock_200ul',\n                                 '1', 'destination PCR plate')\n    sample_plate = ctx.load_labware(\n        'thermofishermicroamp_96_aluminumblock_200ul', '4',\n        'source sample plate')\n    res = ctx.load_labware(res_type, '5', 'reagent reservoir')\n    tipracks20m = [\n        ctx.load_labware('opentrons_96_tiprack_20ul', slot)\n        for slot in ['6', '8', '9']]\n\n    # pipettes\n    m20 = ctx.load_instrument('p20_multi_gen2', p20_multi_mount,\n                              tip_racks=tipracks20m)\n\n    # check\n    if num_plates == 1:\n        num_cols = math.ceil(num_samples/8)\n    else:\n        num_cols = 12\n    if num_cols*num_primers > 12:\n        raise Exception(f'Can only accommodate up to {math.floor(12/num_cols)} \\\nprimers with {num_samples} samples or {math.floor(12/num_primers)} samples \\\nwith {num_primers} primers')\n    if num_primers + primer_start > 13:\n        raise Exception(f'Can not accommodate primer starting colum \\\n({primer_start}) and number of primers ({num_primers})')\n    if not 1 <= num_plates <= 12:\n        raise Exception(f'Invalid plate number ({num_plates})')\n    if not 1 <= num_samples <= 96:\n        raise Exception(f'Invalid sample number ({num_samples})')\n\n    # reagents\n    sample_sources = sample_plate.rows()[0][:num_cols]\n    sample_dests_sets_m = [\n        [pcr_plate.rows()[0][p*num_cols+s] for p in range(num_primers)]\n        for s in range(num_cols)]\n    primer_sources = res.rows()[0][primer_start-1:primer_start+num_primers-1]\n    primer_dest_sets = [\n        pcr_plate.rows()[0][p*num_cols:(p+1)*num_cols]\n        for p in range(num_primers)]\n\n    for i in range(num_plates):\n        # transfer primers, BigDye + water mix\n        for primer, dest_set in zip(primer_sources, primer_dest_sets):\n            m20.pick_up_tip()\n            for d in dest_set:\n                m20.transfer(17, primer, d.bottom(height_dispense),\n                             new_tip='never')\n            m20.drop_tip()\n\n        # transfer samples\n        for s, d_set in zip(sample_sources, sample_dests_sets_m):\n            for d in d_set:\n                m20.pick_up_tip()\n                m20.transfer(3, s, d.bottom(height_dispense), new_tip='never')\n                m20.drop_tip()\n        if i < num_plates - 1:\n            ctx.pause(f'Prep {i+1} complete. Replace plates and tipracks on \\\nthe deck with labware set {i+2}')\n            m20.reset_tipracks()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -3386,14 +3386,26 @@
     "fields": [
         {
             "default": 16,
-            "label": "number of samples",
+            "label": "number of samples (if 1 plate)",
             "name": "num_samples",
             "type": "int"
         },
         {
-            "default": 6,
+            "default": 12,
+            "label": "number of plates",
+            "name": "num_plates",
+            "type": "int"
+        },
+        {
+            "default": 1,
             "label": "number of primers",
             "name": "num_primers",
+            "type": "int"
+        },
+        {
+            "default": 1,
+            "label": "primer starting column (1-12)",
+            "name": "primer_start",
             "type": "int"
         },
         {
