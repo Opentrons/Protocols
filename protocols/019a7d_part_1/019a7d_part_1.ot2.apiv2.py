@@ -39,11 +39,12 @@ def run(ctx):
     # load labware
     gibson_tubes = temp_1.load_labware('opentrons_24_aluminumblock_generic'
                                        '_2ml_screwcap')
-    fragment_plate = ctx.load_labware('azentalifesciences_96wellplate_200ul',
+    fragment_plate = ctx.load_labware('azentalifesciences_96_wellplate_200ul',
                                       '2')
-    assembly_plate = temp_3.load_labware('azentalifesciences_96wellplate_200ul'
+    assembly_plate = temp_3.load_labware(
+                                        'azentalifesciences_96_wellplate_200ul'
                                          )
-    backbone_reservoir = ctx.load_labware('azentalifesciences_12reservoir'
+    backbone_reservoir = ctx.load_labware('azentalifesciences_12_reservoir'
                                           '_21000ul', '4')
     '''
 
@@ -59,7 +60,7 @@ def run(ctx):
     '''
 
     # load tipracks
-    tiprack = [ctx.load_labware('opentrons_96_filtertiprack_20ul', 'slot')
+    tiprack = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
                for slot in ['10', '11']]
 
     # load instrument
@@ -114,10 +115,9 @@ def run(ctx):
         m20.transfer(9,
                      backbone,
                      dest,
-                     new_tip='never',
-                     blow_out=True,
-                     blowout_location='destination well',
+                     new_tip='never'
                      )
+    m20.drop_tip()
     # Step 2 Add 1ul fragments to assembly_plate
     for source, dest in zip(fragments, sample_dests_m):
         m20.pick_up_tip()
@@ -126,7 +126,6 @@ def run(ctx):
                      dest,
                      new_tip='never'
                      )
-        m20.blow_out(dest.top(-1))
         m20.drop_tip()
     # Step 3 Add 10ul gibson to assembly_plate
     for dest in sample_dests_s:
@@ -137,5 +136,4 @@ def run(ctx):
                      mix_after=(3, 10),
                      new_tip='never'
                      )
-        p20.blow_out(dest.top(-1))
         p20.drop_tip()
