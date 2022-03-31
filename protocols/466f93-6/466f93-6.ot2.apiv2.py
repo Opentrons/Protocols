@@ -1,7 +1,7 @@
 from opentrons import protocol_api
 from opentrons.protocol_api.labware import Labware
 from opentrons.protocol_api.labware import Well
-from typing import List
+from typing import List, Sequence
 
 # The first part of this protocol mixes the DNA samples with end repair
 # buffer and enzyme and ends when the samples are ready for thermal incubation
@@ -17,26 +17,30 @@ metadata = {
 def get_values(*names):
     import json
     _all_values = json.loads("""{
-                                  "n_samples":200,
+                                  "n_samples":36,
+                                  "n_over_reactions":1,
                                   "aspiration_rate_multiplier":1,
                                   "dispensing_rate_multiplier":1,
                                   "mixing_rate_multiplier":1,
-                                  "n_mixes":3,
-                                  "pip_left_lname":"p20_single_gen2",
+                                  "n_mixes":10,
+                                  "pip_left_lname":"p1000_single_gen2",
                                   "is_filtered_left":true,
-                                  "pip_right_lname":"p300_single_gen2",
-                                  "is_filtered_right":false,
-                                  "is_create_end_repair_mm":false,
-                                  "is_create_adaptor_ligation_mm":false,
+                                  "pip_right_lname":"p1000_single_gen2",
+                                  "is_filtered_right":true,
+                                  "is_create_end_repair_mm":true,
+                                  "is_create_adaptor_ligation_mm":true,
                                   "is_create_pcr_mm":true,
-                                  "mastermix_target_lname":"opentrons_24_tuberack_nest_1.5ml_snapcap"
+                                  "mastermix_target_lname":"opentrons_24_tuberack_nest_1.5ml_snapcap",
+                                  "is_verbose_mode":true
                                   }
                                   """)
     return [_all_values[n] for n in names]
 
 
 def run(ctx: protocol_api.ProtocolContext):
+
     [n_samples,
+     n_over_reactions,
      aspiration_rate_multiplier,
      dispensing_rate_multiplier,
      mixing_rate_multiplier,
@@ -48,8 +52,10 @@ def run(ctx: protocol_api.ProtocolContext):
      is_create_end_repair_mm,
      is_create_adaptor_ligation_mm,
      is_create_pcr_mm,
-     mastermix_target_lname] = get_values(  # noqa: F821
+     mastermix_target_lname,
+     is_verbose_mode] = get_values(  # noqa: F821
      "n_samples",
+     "n_over_reactions",
      "aspiration_rate_multiplier",
      "dispensing_rate_multiplier",
      "mixing_rate_multiplier",
@@ -61,9 +67,8 @@ def run(ctx: protocol_api.ProtocolContext):
      "is_create_end_repair_mm",
      "is_create_adaptor_ligation_mm",
      "is_create_pcr_mm",
-     "mastermix_target_lname")
-
-    is_test_mode = True
+     "mastermix_target_lname",
+     "is_verbose_mode")
 
     # General error checking
     if not pip_left_lname and not pip_right_lname:
@@ -420,30 +425,53 @@ def run(ctx: protocol_api.ProtocolContext):
 
 
     '''
+
     class VolTracker:
         def __init__(self, labware: Labware,
                      well_vol: float = 0,
-                     start: int = 1, end: int = 8,
+                     start: int = 1,
+                     end: int = 8,
                      mode: str = 'reagent',
                      pip_type: str = 'single',
-                     msg: str = 'Refill labware volumes'):
-            '''
-            Voltracker tracks the volume(s) used in a piece of labware
+                     msg: str = 'Refill labware volumes',
+                     reagent_name: str = 'nameless reagent',
+                     is_verbose: bool = True,
+                     is_strict_mode: bool = False):
+            """
+            Voltracker tracks the volume(s) used in a piece of labware.
+            It's conceptually important to understand that in reagent
+            mode the volumes tracked are how much volume has been removed from
+            the VolTracker, but waste and target is how much has been added
+            to it, and how much was there/have been taken out to begin with.
+            This will have implications for how the class is initialized.
 
             :param labware: The labware to track
             :param well_vol: The volume of the liquid in the wells, if using a
             multi-pipette with a well plate, treat the plate like a reservoir,
             i.e. start=1, end=1, well_vol = 8 * vol of each individual well.
-            :param pip_type: The pipette type used 'single' or 'multi'
-            :param mode: 'reagent' or 'waste'
-            :param start: The starting well number e.g. A1 = 1
-            :param end: The ending well, e.g. H1 = 8
+            :param pip_type: The pipette type used: 'single' or 'multi',
+            when the type is 'multi' volumes are multiplied by 8 to reflect
+            the true volumes used by the pipette.
+            :param mode: 'reagent', 'target' or 'waste'
+            :param start: The starting well
+            :param end: The ending well
             :param msg: Message to send to the user when all wells are empty
             (or full when in waste mode)
-            '''
-
-            self.labware_wells = dict.fromkeys(
-                labware.wells()[start-1:end], 0)
+            :param reagent_name: Name of the reagent tracked by the object
+            :param is_verbose: Whether to have VolTracker send ProtocolContext
+            messages about its actions or not.
+            :param is_strict_mode: If set to True VolTracker will pause
+            execution when its tracked wells are depleted (or filled), ask the
+            user to replace the labware and reset the volumes. If it's False
+            VolTracker will raise an exception if trying to use more volume
+            than the VolTracker is set up for. strict_mode also forces the
+            user to check if there's enough volume in the active well and
+            to manually advance to the next well by calling advance_well()
+            """
+            # Boolean value: True if the well is full or has been depleted
+            self.labware_wells = {}
+            for well in labware.wells()[start-1:end]:
+                self.labware_wells[well] = [0, False]
             self.labware_wells_backup = self.labware_wells.copy()
             self.well_vol = well_vol
             self.pip_type = pip_type
@@ -451,18 +479,37 @@ def run(ctx: protocol_api.ProtocolContext):
             self.start = start
             self.end = end
             self.msg = msg
+            self.is_verbose = is_verbose
+            # Total vol changed - how much volume has been withdrawn or added
+            # to this Voltracker
+            self.total_vol_changed = 0
+            # If true, then labware should raise an exception when full
+            # rather than reset
+            self.is_strict_mode = is_strict_mode
+            self.reagent_name = reagent_name
+
+            valid_modes = ['reagent', 'waste', 'target']
 
             # Parameter error checking
             if not (pip_type == 'single' or pip_type == 'multi'):
                 raise Exception('Pipette type must be single or multi')
 
-            if not (mode == 'reagent' or mode == 'waste'):
-                raise Exception('mode must be reagent or waste')
+            if mode not in valid_modes:
+                msg = "Invalid mode, valid modes are {}"
+                msg = msg.format(valid_modes)
+                raise Exception(msg)
 
-        def flash_lights(self):
-            '''
+        def __str__(self):
+            return (self.reagent_name + " " + self.mode
+                    + " " + str(self.labware_wells)
+                    + "volume change: " + str(self.total_vol_changed))
+
+        @staticmethod
+        def flash_lights():
+            """
             Flash the lights of the robot to grab the users attention
-            '''
+            """
+            nonlocal ctx
             initial_light_state = ctx.rail_lights_on
             opposite_state = not initial_light_state
             for _ in range(5):
@@ -471,37 +518,143 @@ def run(ctx: protocol_api.ProtocolContext):
                 ctx.set_rail_lights(initial_light_state)
                 ctx.delay(seconds=0.5)
 
-        def get_remaining_well_vol(self):
-            '''
-            Return the volume remaining in the current well
-            '''
-            well = next(iter(self.labware_wells))
-            return self.well_vol - self.labware_wells[well]
+        def get_wells(self) -> Sequence:
+            return list(self.labware_wells.keys())
+
+        def get_total_initial_vol(self):
+            # Return the total initial vol = n_wells * well_vol
+            if self.mode == 'reagent':
+                return len(self.labware_wells) * self.well_vol
+            else:
+                # Always considered 0 initially for targets and waste trackers
+                return 0
+
+        def get_total_remaining_vol(self):
+            # TODO: Return the total initial volume minus used/added volume
+            return self.get_total_initial_vol() + self.total_vol_changed
+
+        def get_active_well_vol_change(self):
+            """
+            Return the volume either used up (reagents) or added
+            (target or trash) in the currently active well
+            """
+            well = self.get_active_well()
+            return self.labware_wells[well][0]
+
+        def get_active_well_remaining_vol(self):
+            """
+            Returns how much volume is remaing to be used (reagents) or the
+            space left to fill the well (waste and targets)
+            """
+            vol_change = self.get_active_well_vol_change()
+            return self.well_vol - vol_change
+
+        def get_active_well(self):
+            for key in self.labware_wells:
+                # Return the first well that is not full
+                if self.labware_wells[key][1] is False:
+                    return key
+
+        def advance_well(self):
+            curr_well = self.get_active_well()
+            # Mark the current well as 'used up'
+            self.labware_wells[curr_well][1] = True
+            pass
+
+        def reset_labware(self):
+            VolTracker.flash_lights()
+            ctx.pause(self.msg)
+            self.labware_wells = self.labware_wells_backup.copy()
+
+        def get_active_well_vol(self):
+            well = self.get_active_well()
+            return self.labware_wells[well][0]
+
+        def get_current_vol_by_key(self, well_key):
+            vol_diff = self.labware_wells[well_key][0]
+            if self.mode == 'reagent':
+                # Subtractive volumes (reagents) starts aat well_vol and
+                # decreases by vol_diff
+                return self.well_vol - vol_diff
+            else:
+                # Additive volumes i.e. targets and waste that start at 0
+                return vol_diff
 
         def track(self, vol: float) -> Well:
-            '''track() will track how much liquid
+            """track() will track how much liquid
             was used up per well. If the volume of
             a given well is greater than self.well_vol
             it will remove it from the dictionary and iterate
-            to the next well which will act as the reservoir.'''
-            well = next(iter(self.labware_wells))
-            # Treat plates like reservoirs and add 8 well volumes together
-            vol = vol * 8 if self.pip_type == 'multi' else vol
-            if self.labware_wells[well] + vol > self.well_vol:
-                del self.labware_wells[well]
-                if len(self.labware_wells) < 1:
-                    self.flash_lights()
-                    ctx.pause(self.msg)
-                    self.labware_wells = self.labware_wells_backup.copy()
-                well = next(iter(self.labware_wells))
-            self.labware_wells[well] += vol
+            to the next well which will act as the active source well.
+            :param vol: How much volume to track (per tip), i.e. if it's one
+            tip track vol, but if it's multi-pipette, track 8 * vol.
 
-            if self.mode == 'waste':
-                ctx.comment('{}: {} ul of total waste'
-                            .format(well, int(self.labware_wells[well])))
+            This implies that VolTracker will treat a column like a well,
+            whether it's a plate or a reservoir.
+            """
+            well = self.get_active_well()
+            # Treat plates like reservoirs and add 8 well volumes together
+            # Total vol changed keeps track across labware resets, i.e.
+            # when the user replaces filled/emptied wells
+            vol = vol * 8 if self.pip_type == 'multi' else vol
+            if self.mode == 'reagent':
+                self.total_vol_changed -= vol
             else:
-                ctx.comment('{} uL of liquid used from {}'
-                            .format(int(self.labware_wells[well]), well))
+                self.total_vol_changed += vol
+
+            if self.labware_wells[well][0] + vol > self.well_vol:
+                if self.is_strict_mode:
+                    msg = ("Tracking a volume of {} uL would {} the "
+                           "current well: {} on the {} {} tracker. "
+                           "The max well volume is {}, and "
+                           "the current vol is {}")
+                    mode_msg = ("over-deplete`" if self.mode == "reagent"
+                                else "over-fill")
+                    msg = msg.format(
+                        vol, mode_msg, well, self.reagent_name, self.mode,
+                        self.well_vol, self.get_active_well_vol())
+                    raise Exception(msg)
+                self.labware_wells[well][1] = True
+                is_all_used = True
+
+                # Check if wells are completely full (or depleted)
+                for w in self.labware_wells:
+                    if self.labware_wells[w][1] is False:
+                        is_all_used = False
+
+                if is_all_used is True:
+                    if self.is_strict_mode is False:
+                        self.reset_labware()
+                    else:
+                        e_msg = "{}: {} {} wells would be {} by this action"
+                        fill_status = \
+                            ("over-depleted" if self.mode == "reagent" else
+                             "over-filled")
+                        e_msg = e_msg.format(str(self),
+                                             self.reagent,
+                                             self.mode, fill_status)
+                        raise Exception(e_msg)
+
+                well = self.get_active_well()
+                if self.is_verbose:
+                    ctx.comment(
+                        "\n{} {} tracker switching to well {}\n".format(
+                            self.reagent_name, self.mode, well))
+            self.labware_wells[well][0] += vol
+
+            if self.is_verbose:
+                if self.mode == 'waste':
+                    ctx.comment('{}: {} ul of total waste'
+                                .format(well,
+                                        int(self.labware_wells[well][0])))
+                elif self.mode == 'target':
+                    ctx.comment('{}: {} ul of reagent added to target well'
+                                .format(well,
+                                        int(self.labware_wells[well][0])))
+                else:
+                    ctx.comment('{} uL of liquid used from {}'
+                                .format(int(self.labware_wells[well][0]),
+                                        well))
             return well
 
     def rank_pipettes(pipettes: list):
@@ -538,38 +691,73 @@ def run(ctx: protocol_api.ProtocolContext):
     '''
 
     # Reagent wells for mastermix 1: End-repair
-    ERB_wells = VolTracker(yourgene_reagent_plate_I, ERB_vol_per_well,
-                           ERB_start_index, ERB_end_index,
+    ERB_wells = VolTracker(labware=yourgene_reagent_plate_I,
+                           well_vol=ERB_vol_per_well,
+                           start=ERB_start_index,
+                           end=ERB_end_index,
                            msg=("Out of End-repair buffer, please replace "
-                                "reagent plate"))
-    ERE_wells = VolTracker(yourgene_reagent_plate_I, ERE_vol_per_well,
-                           ERE_start_index, ERE_end_index,
+                                "reagent plate"),
+                           reagent_name="End repair buffer",
+                           is_verbose=is_verbose_mode,
+                           is_strict_mode=True)
+    ERE_wells = VolTracker(labware=yourgene_reagent_plate_I,
+                           well_vol=ERE_vol_per_well,
+                           start=ERE_start_index,
+                           end=ERE_end_index,
                            msg=("Out of End-repair enzyme, please replace "
-                                "reagent plate"))
+                                "reagent plate"),
+                           reagent_name="End Repair Enzyme",
+                           is_verbose=is_verbose_mode,
+                           is_strict_mode=True)
 
     # Reagent wells for mastermix 2: Adaptor ligation
-    ALB_wells = VolTracker(yourgene_reagent_plate_I, ALB_vol_per_well,
-                           ALB_start_index, ALB_end_index,
+    ALB_wells = VolTracker(labware=yourgene_reagent_plate_I,
+                           well_vol=ALB_vol_per_well,
+                           start=ALB_start_index,
+                           end=ALB_end_index,
                            msg=("Out of End-repair enzyme, please replace "
-                                "replace reagent plate"))
-    ALE_I_wells = VolTracker(yourgene_reagent_plate_I, ALE_I_vol_per_well,
-                             ALE_I_start_index, ALE_I_end_index,
+                                "replace reagent plate"),
+                           reagent_name="Adaptor Ligation Buffer",
+                           is_verbose=is_verbose_mode,
+                           is_strict_mode=True)
+    ALE_I_wells = VolTracker(labware=yourgene_reagent_plate_I,
+                             well_vol=ALE_I_vol_per_well,
+                             start=ALE_I_start_index,
+                             end=ALE_I_end_index,
                              msg=("Out of Adaptor ligation enzyme I, please "
-                                  "replace reagent plate"))
-    ALE_II_wells = VolTracker(yourgene_reagent_plate_I, ALE_II_vol_per_well,
-                              ALE_II_start_index, ALE_II_end_index,
+                                  "replace reagent plate"),
+                             reagent_name="Adaptor Ligation Enzyme I",
+                             is_verbose=is_verbose_mode,
+                             is_strict_mode=True)
+    ALE_II_wells = VolTracker(labware=yourgene_reagent_plate_I,
+                              well_vol=ALE_II_vol_per_well,
+                              start=ALE_II_start_index,
+                              end=ALE_II_end_index,
                               msg=("Out of Adaptor ligation enzyme II, please "
-                                   "replace reagent plate"))
+                                   "replace reagent plate"),
+                              reagent_name="Adaptor Ligation enzyme II",
+                              is_verbose=is_verbose_mode,
+                              is_strict_mode=True)
 
     # Reagent wells for mastermix 3: PCR
-    PCR_mix_wells = VolTracker(yourgene_reagent_plate_I, PCR_mix_vol_per_well,
-                               PCR_mix_start_index, PCR_mix_end_index,
+    PCR_mix_wells = VolTracker(labware=yourgene_reagent_plate_I,
+                               well_vol=PCR_mix_vol_per_well,
+                               start=PCR_mix_start_index,
+                               end=PCR_mix_end_index,
                                msg=("Out of PCR mix, please "
-                                    "replace reagent plate"))
-    primer_wells = VolTracker(yourgene_reagent_plate_I, primer_vol_per_well,
-                              primer_start_index, primer_end_index,
+                                    "replace reagent plate"),
+                               reagent_name="PCR mix",
+                               is_verbose=is_verbose_mode,
+                               is_strict_mode=True)
+    primer_wells = VolTracker(labware=yourgene_reagent_plate_I,
+                              well_vol=primer_vol_per_well,
+                              start=primer_start_index,
+                              end=primer_end_index,
                               msg=("Out of primers, please "
-                                   "replace reagent plate"))
+                                   "replace reagent plate"),
+                              reagent_name="Primers",
+                              is_verbose=is_verbose_mode,
+                              is_strict_mode=True)
 
     # plate, tube rack maps
 
@@ -614,22 +802,32 @@ def run(ctx: protocol_api.ProtocolContext):
                          reagent_volumes: List[float],
                          template_message: str,
                          messages: List[str]) -> None:
+        """
+        Create a mastermix from a list of reagents drawing from the sources
+        wells.
+        :param sources: VolTrackers keeping track of the reagent wells
+        :param reagent_volumes: The volume of reagent to transfer from
+        the 'sources'
+        :param template_message: A template comment to tell the user something
+        about the reagents currently being transferred
+        :param messages: Can be a string describing each reagent
+        """
         nonlocal pip_s, pip_l
         for source, vol, msg in zip(sources,
                                     reagent_volumes,
                                     messages):
             ctx.comment(template_message.format(msg))
-            source_well_volume = source.get_remaining_well_vol()
+            source_well_volume = source.get_active_well_remaining_vol()
             while vol > 0:
                 pip_vol = min(source_well_volume, vol)
                 pip = pip_s if pip_vol < pip_s.max_volume else pip_l
-                # print("pip vol {}".format(pip_vol))
-                # print(vol)
                 if not pip.has_tip:
                     pip.pick_up_tip()
                 s_well = source.track(pip_vol)
                 pip.transfer(pip_vol, s_well, ER_mm_dest_tube, new_tip='never')
                 vol -= pip_vol
+                if source.get_active_well_remaining_vol() <= 1:
+                    source.advance_well()
             drop_all_tips([pip_s, pip_l])
 
     # PROTOCOL BEGINS HERE
@@ -660,4 +858,27 @@ def run(ctx: protocol_api.ProtocolContext):
                          "Transferring {}",
                          ["PCR mix", "primers"])
 
-    if is_test_mode is True:
+    if is_verbose_mode is True:
+
+        # Check End repair reaction mastermix
+        ctx.comment("\nTotal ERB vol to transfer: ", total_ERB_mm_vol, "\n")
+        ctx.comment("ERB vol tracker: ", ERB_wells, "\n")
+        ctx.comment("Total ERE vol to transfer: ", total_ERE_mm_vol, "\n")
+        ctx.comment("ERE vol tracker: ", ERE_wells, "\n")
+
+        # Check adaptor ligation reaction mastermix
+        ctx.comment("\nTotal ALB vol to transfer: ", total_ALB_mm_vol, "\n")
+        ctx.comment("ALB vol tracker: ", ALB_wells, "\n")
+        ctx.comment("Total ALE I vol to transfer: ", total_ALE_I_mm_vol, "\n")
+        ctx.comment("ALE I vol tracker: ", ALE_I_wells, "\n")
+        ctx.comment("Total ALE II vol to transfer: ",
+                    total_ALE_II_mm_vol, "\n")
+        ctx.comment("ALE II vol tracker: ", ALE_II_wells, "\n")
+
+        # Check PCR reaction mastermix
+        ctx.comment("\nTotal PCR mix vol to transfer: ",
+                    totaL_PCR_mix_mm_vol, "\n")
+        ctx.comment("PCR mix vol tracker: ", PCR_mix_wells, "\n")
+        ctx.comment("Total primer vol to transfer: ",
+                    total_primer_mm_vol, "\n")
+        ctx.comment("Primer vol tracker: ", primer_wells, "\n")
