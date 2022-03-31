@@ -7,8 +7,8 @@
 [Partner Name](partner website link)
 
 ## Categories
-* Broader Category
-	* Subcategory (can be the name of a kit when applicable)
+* NGS Library Prep
+	* Mastermix creation
 
 ## Description
 This section of the README (especially the first paragraph) should grip a prospective user with the overarching purpose/flow of the protocol, but should not include fine details of the protocol steps themselves.
@@ -25,21 +25,25 @@ Example: For sample traceability and consistency, samples are mapped directly fr
 Results of the Opentrons Science team's internal testing of this protocol on the OT-2 are shown below:  
 ![results](link_to_results.png)
 
-Explanation of complex parameters below:
-* `park tips`: If set to `yes` (recommended), the protocol will conserve tips between reagent addition and removal. Tips will be stored in the wells of an empty rack corresponding to the well of the sample that they access (tip parked in A1 of the empty rack will only be used for sample A1, tip parked in B1 only used for sample B1, etc.). If set to `no`, tips will always be used only once, and the user will be prompted to manually refill tipracks mid-protocol for high throughput runs.
-* `input .csv file`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:
-```
-source,dest,vol
-A1,B1,4
-```
+Explanation of parameters below:
+* `Number of samples`: The number of samples that you wish to create mastermix for
+* `Aspiration rate multiplier`: 1.0 is regular aspiration flow rate, anything less would slow it down, and increasing it beyond 1.0 would speed it up.
+* `Dispensing rate multiplier`: 1.0 is regular dispensing flow rate, anything less would slow it down, and increasing it beyond 1.0 would speed it up.
+* `Mixing rate multiplier`: Rate multiplier for mixing, affects both aspiration and dispensing flow rate for mixes.
+* `Number of mixes`: How many times you would like mastermixes to be mixed after creation.
+* `Left pipette mount`: Which pipette (if any) to mount in the left mount.
+* `Use filter tips with the left pipette?`: Choose whether to use regular or filter tips with the left pipette.
+* `Right pipette mount`: Which pipette (if any) to mount in the right mount.
+* `Use filter tips with the right pipette?`: Choose whether to use regular or filter tips with the right pipette.
+* `Create end-repair mastermix?`: Choose whether to create end repair buffer/enzyme mastermix.
+* `Create adaptor ligation mastermix?`: Choose whether to create adaptor ligation buffer/enzyme mastermix.
+* `Create PCR reaction mastermix?`: Choose whether to create PCR reaction mastermix. This function mixes the PCR mastermix with primers.
+* `Mastermix target labware`: What kind of labware you would like to mix the mastermix in.
 
 ---
 
 ### Modules
 * [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
-* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
-* [Thermocycler Module](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module)
-* [HEPA Module](https://shop.opentrons.com/collections/hardware-modules/products/hepa-module)
 
 ### Labware
 * [Labware name](link to labware on shop.opentrons.com when applicable)

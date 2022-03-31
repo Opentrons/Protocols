@@ -63,6 +63,8 @@ def run(ctx: protocol_api.ProtocolContext):
      "is_create_pcr_mm",
      "mastermix_target_lname")
 
+    is_debug_mode = True
+
     # General error checking
     if not pip_left_lname and not pip_right_lname:
         raise Exception("You must load at least one pipette")
@@ -91,6 +93,7 @@ def run(ctx: protocol_api.ProtocolContext):
     # How much volume of reagents are used per sample
     ERB_vol_per_sample = 1.5
     ERE_vol_per_sample = 0.75
+    # 225 uL per 100 samples
     max_ERB_samples = total_ERB_vol // ERB_vol_per_sample
     max_ERE_samples = total_ERE_vol // ERE_vol_per_sample
     ER_mm_vol_per_sample = ERB_vol_per_sample + ERE_vol_per_sample
@@ -618,8 +621,7 @@ def run(ctx: protocol_api.ProtocolContext):
             ctx.comment(template_message.format(msg))
             source_well_volume = source.get_remaining_well_vol()
             while vol > 0:
-                pip_vol = (source_well_volume if
-                           source_well_volume < vol else vol)
+                pip_vol = min(source_well_volume, vol)
                 pip = pip_s if pip_vol < pip_s.max_volume else pip_l
                 # print("pip vol {}".format(pip_vol))
                 # print(vol)
@@ -657,3 +659,5 @@ def run(ctx: protocol_api.ProtocolContext):
                          [totaL_PCR_mix_mm_vol, total_primer_mm_vol],
                          "Transferring {}",
                          ["PCR mix", "primers"])
+
+    if is_debug_mode is True:
