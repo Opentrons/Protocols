@@ -14,29 +14,6 @@ metadata = {
 }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{
-                                  "n_samples":36,
-                                  "n_over_reactions":1,
-                                  "aspiration_rate_multiplier":1,
-                                  "dispensing_rate_multiplier":1,
-                                  "mixing_rate_multiplier":1,
-                                  "n_mixes":10,
-                                  "pip_left_lname":"p1000_single_gen2",
-                                  "is_filtered_left":true,
-                                  "pip_right_lname":"p1000_single_gen2",
-                                  "is_filtered_right":true,
-                                  "is_create_end_repair_mm":true,
-                                  "is_create_adaptor_ligation_mm":true,
-                                  "is_create_pcr_mm":true,
-                                  "mastermix_target_lname":"opentrons_24_tuberack_nest_1.5ml_snapcap",
-                                  "is_verbose_mode":true
-                                  }
-                                  """)
-    return [_all_values[n] for n in names]
-
-
 def run(ctx: protocol_api.ProtocolContext):
 
     [n_samples,
