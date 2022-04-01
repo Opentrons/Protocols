@@ -285,7 +285,7 @@ def run(ctx):
                  x=0, y=0, z=raise_mix_dispense)), rate=rt)
             ctx.delay(seconds=1)
             pip.blow_out(
-             dest.bottom(8).move(types.Point(x=move_side, y=0, z=0)))
+             dest.bottom(10).move(types.Point(x=move_side, y=0, z=0)))
         else:
             maxv = pip._tip_racks[0].wells()[0].max_volume
             calcv = 0.8*dest.current_volume
