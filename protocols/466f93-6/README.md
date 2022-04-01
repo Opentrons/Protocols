@@ -11,19 +11,7 @@
 	* Mastermix creation
 
 ## Description
-This section of the README (especially the first paragraph) should grip a prospective user with the overarching purpose/flow of the protocol, but should not include fine details of the protocol steps themselves.
-
-Example: This is a flexible protocol accommodating a wide range of commercial RNA extraction workflows for COVID-19 sample processing. The protocol is broken down into 5 main parts:
-* binding buffer addition to samples
-* bead wash 3x using magnetic module
-* final elution to chilled PCR plate
-
-Subsequent paragraphs can give some more insight into the details of the protocol, but a step-by-step description should be included in the 'Protocol Steps' section below.
-
-Example: For sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 4) to the elution PCR plate (temperature module, slot 1). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.
-
-Results of the Opentrons Science team's internal testing of this protocol on the OT-2 are shown below:  
-![results](link_to_results.png)
+This protocol lets you create mastermixes for end repair, adaptor ligation and PCR mastermix (PCR mix + primers) transferring reagents from the yourgene_reagent_plate_I plate to a tuberack of your choice.
 
 Explanation of parameters below:
 * `Number of samples`: The number of samples that you wish to create mastermix for
@@ -39,23 +27,17 @@ Explanation of parameters below:
 * `Create adaptor ligation mastermix?`: Choose whether to create adaptor ligation buffer/enzyme mastermix.
 * `Create PCR reaction mastermix?`: Choose whether to create PCR reaction mastermix. This function mixes the PCR mastermix with primers.
 * `Mastermix target labware`: What kind of labware you would like to mix the mastermix in.
-
+* `Do you want verbose output from the protocol?`: If set to 'Yes' the protocol will report additional information about what it is doing.
 ---
 
 ### Modules
 * [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
 
 ### Labware
-* [Labware name](link to labware on shop.opentrons.com when applicable)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [Opentrons tuberacks](https://shop.opentrons.com/4-in-1-tube-rack-set/)
 
 ### Pipettes
-* [Pipette name](link to pipette on shop.opentrons.com)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
-
-### Reagents
-* [kit name when applicable](link to kit)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [Single-Channel pipette(s) (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 
 ---
 

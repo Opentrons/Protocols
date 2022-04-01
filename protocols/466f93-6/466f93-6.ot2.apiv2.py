@@ -1,6 +1,6 @@
 from opentrons import protocol_api
-from opentrons.protocol_api.labware import Labware
-from opentrons.protocol_api.labware import Well
+from opentrons.protocol_api.labware import Labware, Well
+from opentrons.protocol_api.contexts import TemperatureModuleContext
 from typing import List, Sequence
 
 # The first part of this protocol mixes the DNA samples with end repair
@@ -30,7 +30,10 @@ def run(ctx: protocol_api.ProtocolContext):
      is_create_adaptor_ligation_mm,
      is_create_pcr_mm,
      mastermix_target_lname,
-     is_verbose_mode] = get_values(  # noqa: F821
+     is_verbose_mode,
+     temp_mod_reag_plate,
+     temp_mod_tuberack,
+     tmod_temperature] = get_values(  # noqa: F821
      "n_samples",
      "n_over_reactions",
      "aspiration_rate_multiplier",
@@ -45,7 +48,10 @@ def run(ctx: protocol_api.ProtocolContext):
      "is_create_adaptor_ligation_mm",
      "is_create_pcr_mm",
      "mastermix_target_lname",
-     "is_verbose_mode")
+     "is_verbose_mode",
+     "temp_mod_reag_plate",
+     "temp_mod_tuberack",
+     "tmod_temperature")
 
     # General error checking
     if not pip_left_lname and not pip_right_lname:
@@ -202,8 +208,14 @@ def run(ctx: protocol_api.ProtocolContext):
     For all other modules, you can load them on slots 1, 3, 4, 6, 7, 9, 10.
 
     '''
+    temp_mod_reag: TemperatureModuleContext = None
+    temp_mod_rack: TemperatureModuleContext = None
+    if temp_mod_reag_plate is True:
+        temp_mod_reag = ctx.load_module('temperature module gen2', '7')
+    if temp_mod_tuberack is True:
+        temp_mod_rack = ctx.load_module('temperature module gen2', '4')
 
-    # load labware
+        # load labware
 
     '''
 
@@ -223,12 +235,23 @@ def run(ctx: protocol_api.ProtocolContext):
     # 1 DNA sample plate
     # 3? target plates
     # Reservoir for 80 % ethanol, e.g. a tube rack with a falcon tube
+    yourgene_reagent_plate_I = None
+    tuberack = None
 
-    yourgene_reagent_plate_I\
-        = ctx.load_labware(source_well_plate_lname, '7',
-                           'Yourgene Reagent plate - 1')
-    tuberack = ctx.load_labware(mastermix_target_lname, '4',
-                                'Mastermix target tuberack')
+    if temp_mod_reag is not None:
+        yourgene_reagent_plate_I = temp_mod_reag.load_labware(
+            source_well_plate_lname, 'Yourgene Reagent plate - 1')
+    else:
+        yourgene_reagent_plate_I \
+            = ctx.load_labware(source_well_plate_lname, '7',
+                               'Yourgene Reagent plate - 1')
+
+    if temp_mod_rack is not None:
+        tuberack = temp_mod_rack.load_labware(mastermix_target_lname,
+                                              'Mastermix target tuberack')
+    else:
+        tuberack = ctx.load_labware(mastermix_target_lname, '4',
+                                    'Mastermix target tuberack')
 
     # Error check that the tubes are large enough to hold mastermix volumes
     largest_mm_vol = max(total_ER_mm_vol, total_AL_mm_vol, total_PCR_mm_vol)
@@ -483,9 +506,13 @@ def run(ctx: protocol_api.ProtocolContext):
                 raise Exception(msg)
 
         def __str__(self):
-            return (self.reagent_name + " " + self.mode
-                    + " " + str(self.labware_wells)
-                    + "volume change: " + str(self.total_vol_changed))
+            msg = (self.reagent_name + " " + self.mode
+                   + " volume change: " + str(self.total_vol_changed))
+            msg += "\nChanges in each well:\n"
+            for i, well_tracker in enumerate(self.labware_wells.values()):
+                msg += "well {}: Volume change: {}\n".format(
+                    i+1, well_tracker[0])
+            return msg
 
         @staticmethod
         def flash_lights():
@@ -808,6 +835,10 @@ def run(ctx: protocol_api.ProtocolContext):
             drop_all_tips([pip_s, pip_l])
 
     # PROTOCOL BEGINS HERE
+    # set tmod temperatures
+    for tmod in [temp_mod_reag, temp_mod_rack]:
+        tmod.set_temperature(tmod_temperature)
+
     pip_s, pip_l = rank_pipettes([pip_left, pip_right])
     # 1st mastermix: End-repair
     if is_create_end_repair_mm:
@@ -838,24 +869,28 @@ def run(ctx: protocol_api.ProtocolContext):
     if is_verbose_mode is True:
 
         # Check End repair reaction mastermix
-        ctx.comment("\nTotal ERB vol to transfer: ", total_ERB_mm_vol, "\n")
-        ctx.comment("ERB vol tracker: ", ERB_wells, "\n")
-        ctx.comment("Total ERE vol to transfer: ", total_ERE_mm_vol, "\n")
-        ctx.comment("ERE vol tracker: ", ERE_wells, "\n")
+        ctx.comment("\nTotal ERB vol to transfer: "
+                    + str(total_ERB_mm_vol) + "\n")
+        ctx.comment("ERB vol tracker: " + str(ERB_wells) + "\n")
+        ctx.comment("Total ERE vol to transfer: "
+                    + str(total_ERE_mm_vol) + "\n")
+        ctx.comment("ERE vol tracker: " + str(ERE_wells) + "\n")
 
         # Check adaptor ligation reaction mastermix
-        ctx.comment("\nTotal ALB vol to transfer: ", total_ALB_mm_vol, "\n")
-        ctx.comment("ALB vol tracker: ", ALB_wells, "\n")
-        ctx.comment("Total ALE I vol to transfer: ", total_ALE_I_mm_vol, "\n")
-        ctx.comment("ALE I vol tracker: ", ALE_I_wells, "\n")
-        ctx.comment("Total ALE II vol to transfer: ",
-                    total_ALE_II_mm_vol, "\n")
-        ctx.comment("ALE II vol tracker: ", ALE_II_wells, "\n")
+        ctx.comment("\nTotal ALB vol to transfer: "
+                    + str(total_ALB_mm_vol) + "\n")
+        ctx.comment("ALB vol tracker: " + str(ALB_wells) + "\n")
+        ctx.comment("Total ALE I vol to transfer: "
+                    + str(total_ALE_I_mm_vol) + "\n")
+        ctx.comment("ALE I vol tracker: " + str(ALE_I_wells) + "\n")
+        ctx.comment("Total ALE II vol to transfer: "
+                    + str(total_ALE_II_mm_vol) + "\n")
+        ctx.comment("ALE II vol tracker: " + str(ALE_II_wells) + "\n")
 
         # Check PCR reaction mastermix
-        ctx.comment("\nTotal PCR mix vol to transfer: ",
-                    totaL_PCR_mix_mm_vol, "\n")
-        ctx.comment("PCR mix vol tracker: ", PCR_mix_wells, "\n")
-        ctx.comment("Total primer vol to transfer: ",
-                    total_primer_mm_vol, "\n")
-        ctx.comment("Primer vol tracker: ", primer_wells, "\n")
+        ctx.comment("\nTotal PCR mix vol to transfer: "
+                    + str(totaL_PCR_mix_mm_vol) + "\n")
+        ctx.comment("PCR mix vol tracker: " + str(PCR_mix_wells) + "\n")
+        ctx.comment("Total primer vol to transfer: "
+                    + str(total_primer_mm_vol) + "\n")
+        ctx.comment("Primer vol tracker: " + str(primer_wells) + "\n")

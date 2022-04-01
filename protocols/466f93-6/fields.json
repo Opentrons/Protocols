@@ -130,5 +130,29 @@
         { "label": "No", "value": false},
         { "label": "Yes", "value": true}
       ]
+    },
+    {
+      "type": "dropDown",
+      "label": "Temperature module for the reagent plate?",
+      "name": "temp_mod_reag_plate",
+      "options": [
+        { "label": "None", "value": false},
+        { "label": "Temperature module GEN2", "value": true}
+      ]
+    },
+    {
+      "type": "dropDown",
+      "label": "Temperature module for the mastermix target tuberack?",
+      "name": "temp_mod_tuberack",
+      "options": [
+        { "label": "None", "value": false},
+        { "label": "Temperature module GEN2", "value": true}
+      ]
+    },
+    {
+      "type": "float",
+      "label": "Set temperature for temp. modules",
+      "name": "tmod_temperature",
+      "default": 4
     }
 ]
