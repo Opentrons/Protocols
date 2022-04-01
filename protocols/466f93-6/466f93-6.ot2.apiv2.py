@@ -14,32 +14,6 @@ metadata = {
 }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{
-                                  "n_samples":36,
-                                  "n_over_reactions":1,
-                                  "aspiration_rate_multiplier":1,
-                                  "dispensing_rate_multiplier":1,
-                                  "mixing_rate_multiplier":0.5,
-                                  "n_mixes":10,
-                                  "pip_left_lname":"p1000_single_gen2",
-                                  "is_filtered_left":true,
-                                  "pip_right_lname":"p1000_single_gen2",
-                                  "is_filtered_right":true,
-                                  "is_create_end_repair_mm":true,
-                                  "is_create_adaptor_ligation_mm":true,
-                                  "is_create_pcr_mm":true,
-                                  "mastermix_target_lname":"opentrons_24_tuberack_nest_1.5ml_snapcap",
-                                  "is_verbose_mode":false,
-                                  "temp_mod_reag_plate":false,
-                                  "temp_mod_tuberack":false,
-                                  "tmod_temperature":4
-                                  }
-                                  """)
-    return [_all_values[n] for n in names]
-
-
 def run(ctx: protocol_api.ProtocolContext):
 
     [n_samples,
@@ -234,12 +208,16 @@ def run(ctx: protocol_api.ProtocolContext):
     For all other modules, you can load them on slots 1, 3, 4, 6, 7, 9, 10.
 
     '''
+    reagent_plate_slot = '4'
+    mm_tuberack_slot = '7'
     temp_mod_reag: TemperatureModuleContext = None
     temp_mod_rack: TemperatureModuleContext = None
     if temp_mod_reag_plate is True:
-        temp_mod_reag = ctx.load_module('temperature module gen2', '7')
+        temp_mod_reag = ctx.load_module(
+            'temperature module gen2', reagent_plate_slot)
     if temp_mod_tuberack is True:
-        temp_mod_rack = ctx.load_module('temperature module gen2', '4')
+        temp_mod_rack = ctx.load_module(
+            'temperature module gen2', mm_tuberack_slot)
 
         # load labware
 
@@ -269,14 +247,14 @@ def run(ctx: protocol_api.ProtocolContext):
             source_well_plate_lname, 'Yourgene Reagent plate - 1')
     else:
         yourgene_reagent_plate_I \
-            = ctx.load_labware(source_well_plate_lname, '7',
+            = ctx.load_labware(source_well_plate_lname, reagent_plate_slot,
                                'Yourgene Reagent plate - 1')
 
     if temp_mod_rack is not None:
         tuberack = temp_mod_rack.load_labware(mastermix_target_lname,
                                               'Mastermix target tuberack')
     else:
-        tuberack = ctx.load_labware(mastermix_target_lname, '4',
+        tuberack = ctx.load_labware(mastermix_target_lname, mm_tuberack_slot,
                                     'Mastermix target tuberack')
 
     # Error check that the tubes are large enough to hold mastermix volumes

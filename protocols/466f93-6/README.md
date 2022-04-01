@@ -10,8 +10,11 @@
 ## Description
 This protocol lets you create mastermixes for end repair, adaptor ligation and PCR mastermix (PCR mix + primers) transferring reagents from the yourgene_reagent_plate_I plate to a tuberack of your choice.
 
+End repair mastermix will be created in well A1, adaptor ligation: A2, PCR mastermix: A3 (i.e. down the column of the tuberack)
+
 Explanation of parameters below:
 * `Number of samples`: The number of samples that you wish to create mastermix for
+* `Number of over-reactions`: How many extra reaction volumes to create in each mastermix tube in order to have an excess volume to account for pipetting errors and low well volumes that may be difficult for the pipette to aspirate.
 * `Aspiration rate multiplier`: 1.0 is regular aspiration flow rate, anything less would slow it down, and increasing it beyond 1.0 would speed it up.
 * `Dispensing rate multiplier`: 1.0 is regular dispensing flow rate, anything less would slow it down, and increasing it beyond 1.0 would speed it up.
 * `Mixing rate multiplier`: Rate multiplier for mixing, affects both aspiration and dispensing flow rate for mixes.
@@ -25,6 +28,10 @@ Explanation of parameters below:
 * `Create PCR reaction mastermix?`: Choose whether to create PCR reaction mastermix. This function mixes the PCR mastermix with primers.
 * `Mastermix target labware`: What kind of labware you would like to mix the mastermix in.
 * `Do you want verbose output from the protocol?`: If set to 'Yes' the protocol will report additional information about what it is doing.
+* `Temperature module for the reagent plate?`: Use a temperature module for the reagent plate
+* `Temperature module for the mastermix target tuberack?`: Use a temperature module for the tuberack where mastermixes are created
+* `Set temperature for temp. modules`: The temperature to hold the temperature modules at (in degrees Celcius)
+
 ---
 
 ### Modules
@@ -40,6 +47,19 @@ Explanation of parameters below:
 
 ### Deck Setup
 ![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/466f93-6/deck.jpg)
+
+1. Empty
+2. Empty
+3. Empty
+4. Mastermix destination - Tuberack on optional temperature module
+5. Tiprack for the left pipette
+6. Empty
+7. Yourgene Reagent Plate I on optional temperature module
+8. Tiprack for the right pipette
+9. Empty
+10. Empty
+11. Empty
+12. Empty
 
 
 ---
