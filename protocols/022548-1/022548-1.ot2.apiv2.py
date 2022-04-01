@@ -670,7 +670,8 @@ def run(ctx: protocol_api.ProtocolContext):
             # Calculate aspiration and dispensing offsets for/if tubes.
             # = 0.1 for reservoirs, and not recalculated.
             source_liq_height = 0.1
-            target_liq_height = 0.1
+            target_liq_height = \
+                (10 if fractional_dispense_y_offsets is not None else 0.1)
             # and dispense a fractional volume
             # Fractionate the volume transfer into discrete pipette
             # aspirate/dispense steps
@@ -700,7 +701,7 @@ def run(ctx: protocol_api.ProtocolContext):
                 target_liq_height = max(target_liq_height, 0.1)
                 source_liq_height = tube_liq_height(
                     source_volume, source.get_active_well(),
-                    is_cone_min_offset)
+                    False)
                 # Make sure we're dipping below the surface for aspirations
                 # without hitting the bottom
                 source_liq_height = max(source_liq_height-10, 0.1)
