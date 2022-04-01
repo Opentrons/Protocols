@@ -65,9 +65,8 @@ def run(ctx):
 
         agar_pipette = m20
         agar_locations = [well for plate in agar_plates
-                          for row in plate.rows()[0][:num_cols]
-                          for well in row]
-        tip_recycle = tiprack[0].rows()[0:num_cols]
+                          for well in plate.rows()[0][:num_cols]]
+        tip_recycle = tiprack[0].rows()[0][0:num_cols]
 
     # protocol
     temp_1.set_temperature(4)
@@ -103,11 +102,18 @@ def run(ctx):
                               )"""
     # DWP/LC Addition If Needed
     if dwp:
-        for source, dest in zip(samples_source_m, dwp_dest_list):
-            m20.transfer(dwp_volume,
+        for tips, source, dest in zip(tip_recycle, samples_source_m,
+                                      dwp_dest_list):
+            m20.pick_up_tip(tips)
+            m20.aspirate(dwp_volume, source)
+            m20.dispense(dwp_volume, dest)
+            m20.mix(10, 20, dest)
+            m20.blow_out(dest.top(-1))
+            m20.drop_tip()
+            """m20.transfer(dwp_volume,
                          source,
                          dest,
                          new_tip='always'
-                         )
+                         )"""
     for c in ctx.commands():
         print(c)
