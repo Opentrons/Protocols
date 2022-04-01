@@ -105,7 +105,7 @@
     "type": "float",
     "label": "Offsets from the edges of the reservoir wells for bead mix dispenses (mm)",
     "name": "resv_well_edge_offset",
-    "default": 40
+    "default": 10
   },
   {
     "type": "dropDown",

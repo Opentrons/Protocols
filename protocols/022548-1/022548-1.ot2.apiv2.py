@@ -59,7 +59,7 @@ def get_values(*names):
                                   "bead_disp_rate_multiplier":1.0,
                                   "n_mm_mixes":10,
                                   "tube_edge_offset":4.3,
-                                  "resv_well_edge_offset":40,
+                                  "resv_well_edge_offset":10,
                                   "is_verbose":true
                                   }
                                   """)
@@ -562,10 +562,13 @@ def run(ctx: protocol_api.ProtocolContext):
         to do fractional dispenses at
         :param dest_location: The location to dispense at
         """
+        nonlocal is_verbose, ctx
         fractional_vol = vol/len(y_offsets)
         for offset in y_offsets:
             offset_point = Point(0, offset, 0)
             disp_loc = dest_location.move(offset_point)
+            if is_verbose:
+                ctx.comment("Dispensing at {}".format(str(disp_loc)))
             pip.dispense(fractional_vol, disp_loc)
 
     def tube_15ml_cone_height(tube: Well):
@@ -774,7 +777,7 @@ def run(ctx: protocol_api.ProtocolContext):
     # Reservoir target
     elif target_well_type.width is not None:
         resv_well_width = target_well_type.width/8
-        pos_offset = resv_well_width/2 - tube_edge_offset
+        pos_offset = resv_well_width/2 - resv_well_edge_offset
         neg_offset = -pos_offset
         y_offsets.append(pos_offset)
         y_offsets.append(neg_offset)
@@ -945,12 +948,13 @@ def run(ctx: protocol_api.ProtocolContext):
         ctx.comment("\nMixing the mastermix\n")
         n_tips = 1 if is_target_tube else 8
         for bb, bead in zip(bb_target_tracker_list, bead_target_tracker_list):
-            assert bb[0] == bead[0], "The wells should be the same"
+            msg = "The target wells should be the same for both reagents"
+            assert bb[0] == bead[0], msg
             mixing_well = bb[0]
             if bb[1][0] + bead[1][0] < 1:
                 break
             mix_vol = min(bb[1][0] + bead[1][0], pip.max_volume*n_tips)
-            mix_vol = mix_vol if is_target_tube else mix_vol/8
+            mix_vol = mix_vol/n_tips
             pip.mix(n_mm_mixes, mix_vol, mixing_well,
                     mastermix_mix_rate_multiplier)
 
@@ -999,8 +1003,4 @@ def run(ctx: protocol_api.ProtocolContext):
             ctx.comment(str(vt))
             ctx.comment("Volume change:" + str(vt.total_vol_changed))
 
-    ctx.comment("\n\n - Protocol finished! - \n")
-    ctx.comment("\n\n - Protocol finished! - \n")
-    ctx.comment("\n\n - Protocol finished! - \n")
-    ctx.comment("\n\n - Protocol finished! - \n")
     ctx.comment("\n\n - Protocol finished! - \n")
