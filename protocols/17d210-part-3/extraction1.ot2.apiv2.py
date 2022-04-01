@@ -20,16 +20,16 @@ def run(ctx):
         'binding_buffer_vol', 'wash1_vol', 'wash2_vol', 'elution_vol',
         'settling_time')
 
-    # num_samples = 96
+    # num_samples = 48
     # m20_mount = 'left'
     # m300_mount = 'right'
-    # mag_height = 6.8
+    # mag_height = 10.5
     # sample_vol = 45.0
     # binding_buffer_vol = 45.0
     # wash1_vol = 200.0
     # wash2_vol = 200.0
     # elution_vol = 50.0
-    # settling_time = 2.0
+    # settling_time = 5.0
     park_tips = False
     tip_track = False
     radial_offset = 0.3
@@ -40,20 +40,21 @@ def run(ctx):
     Here is where you can change the locations of your labware and modules
     (note that this is the recommended configuration)
     """
-    pcr_plate = ctx.load_labware('amplifyt_96_wellplate_200ul', '9',
-                                 'sample plate')
-    magdeck = ctx.load_module('magnetic module gen2', '11')
+    pcr_plate = ctx.load_labware('eppendorfmetaladapter_96_wellplate_200ul',
+                                 '7', 'sample plate')
+    magdeck = ctx.load_module('magnetic module gen2', '10')
     magdeck.disengage()
     magplate = magdeck.load_labware('abgenemidi_96_wellplate_800ul',
                                     'deepwell wash plate')
-    elutionplate = ctx.load_labware('amplifyt_96_wellplate_200ul', '3',
-                                    'elution plate')
+    elutionplate = ctx.load_labware('eppendorfmetaladapter_96_wellplate_200ul',
+                                    '3', 'elution plate')
     waste = ctx.loaded_labwares[12].wells()[0].top()
-    res1 = ctx.load_labware('nest_12_reservoir_15ml', '8', 'reagent reservoir')
+    res1 = ctx.load_labware('striptubes_96_wellplate_1000ul', '4',
+                            'reagent strip tubes')
     num_cols = math.ceil(num_samples/8)
     tips300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot,
                                 '200ul tiprack')
-               for slot in ['4', '7', '2', '5']]
+               for slot in ['2', '5', '8', '9', '11']]
     tips20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '6',
                                '20ul tiprack')]
     if park_tips:
@@ -71,18 +72,18 @@ def run(ctx):
     m300 = ctx.load_instrument(
         'p300_multi_gen2', m300_mount, tip_racks=tips300)
 
-    m300.default_speed = 200
-    m20.default_speed = 200
+    m300.default_speed = 400
+    m20.default_speed = 400
 
     tip_log = {val: {} for val in ctx.loaded_instruments.values()}
 
     """
     Here is where you can define the locations of your reagents.
     """
-    binding_buffer = res1.wells()[:1]
-    wash1 = res1.wells()[1:4]
-    wash2 = res1.wells()[4:7]
-    elution_solution = res1.wells()[-1]
+    binding_buffer = res1.rows()[0][:1]
+    wash1 = res1.rows()[0][5:6]
+    wash2 = res1.rows()[0][7:8]
+    elution_solution = res1.rows()[0][-1]
 
     starting_samples = pcr_plate.rows()[0][:num_cols]
     mag_samples_m = magplate.rows()[0][:num_cols]
@@ -91,9 +92,9 @@ def run(ctx):
 
     magdeck.disengage()  # just in case
 
-    m300.flow_rate.aspirate = 50
-    m300.flow_rate.dispense = 150
-    m300.flow_rate.blow_out = 300
+    m300.flow_rate.aspirate = 20
+    m300.flow_rate.dispense = 50
+    m300.flow_rate.blow_out = 150
 
     folder_path = '/data/B'
     tip_file_path = folder_path + '/tip_log.json'
@@ -137,7 +138,7 @@ resuming.')
     switch = True
     drop_count = 0
     # number of tips trash will accommodate before prompting user to empty
-    drop_threshold = 120
+    drop_threshold = 600
 
     def _drop(pip):
         nonlocal switch
@@ -168,7 +169,6 @@ resuming.')
         :param park (boolean): Whether to pick up sample-corresponding tips
                                in the 'parking rack' or to pick up new tips.
         """
-
         def _waste_track(vol):
             nonlocal waste_vol
             if waste_vol + vol >= waste_threshold:
@@ -192,7 +192,7 @@ resuming.')
             # else:
             #     air_gap_vol = pip.max_volume - vol
             pip.transfer(vol, loc, waste, new_tip='never',
-                         air_gap=air_gap_vol)
+                         air_gap=(air_gap_vol))
             pip.blow_out(waste)
             _drop(pip)
 
@@ -211,33 +211,20 @@ resuming.')
                                supernatant to the final clean elutions PCR
                                plate.
         """
-        m300.flow_rate.aspirate = 30
-        latest_chan = -1
-        _pick_up(m300)
-        for i, (well, spot) in enumerate(zip(mag_samples_m, parking_spots)):
-            num_trans = math.ceil(vol/280)
-            vol_per_trans = vol/num_trans
-            asp_per_chan = (0.95*res1.wells()[0].max_volume)//(vol_per_trans*8)
-            for t in range(num_trans):
-                chan_ind = int((i*num_trans + t)//asp_per_chan)
-                source = binding_buffer[chan_ind]
-                if m300.current_volume > 0:
-                    # void air gap if necessary
-                    m300.dispense(m300.current_volume, source.top())
-                if chan_ind > latest_chan:  # mix if accessing new channel
-                    for _ in range(5):
-                        m300.aspirate(180, source.bottom(0.5))
-                        m300.dispense(180, source.bottom(5))
-                    latest_chan = chan_ind
-                m300.transfer(vol_per_trans, source, well.top(-2),
-                              air_gap=air_gap_vol, new_tip='never')
-                if t < num_trans - 1:
-                    m300.air_gap(air_gap_vol)
+        for source, dest, spot in zip(starting_samples, mag_samples_m,
+                                      parking_spots):
+            m300.flow_rate.aspirate = 30
+            _pick_up(m300)
+            source = binding_buffer
+            m300.transfer(binding_buffer_vol, source, dest, air_gap=20,
+                          new_tip='never')
+            m300.blow_out(dest)
+            m300.air_gap(20)
             # m300.mix(10, 200, well)
             # m300.blow_out(well.top(-2))
-            m300.air_gap(air_gap_vol)
+            _drop(m300)
 
-        m300.flow_rate.aspirate = 92.86
+            m300.flow_rate.aspirate = 80
 
         # transfer samples
         for source, dest, spot in zip(starting_samples, mag_samples_m,
@@ -247,11 +234,11 @@ resuming.')
                     _pick_up(m300, spot)
                 else:
                     _pick_up(m300)
-            m300.dispense(m300.current_volume, source.top())
-            m300.transfer(sample_vol, source, dest, mix_after=(10, sample_vol),
+            # _drop(m300)
+            # _pick_up(m300)
+            m300.transfer(sample_vol, source.bottom(0.1), dest,
+                          mix_after=(10, sample_vol),
                           air_gap=air_gap_vol, new_tip='never')
-            m300.mix(10, 200, dest)
-            m300.blow_out(well.top(-2))
             m300.air_gap(air_gap_vol)
             if park:
                 m300.drop_tip(spot)
@@ -264,7 +251,7 @@ resuming.')
 {settling_time} minutes.')
 
         # remove initial supernatant
-        remove_supernatant(vol+sample_vol, park=park)
+        remove_supernatant(150, park=park)
 
     def wash(vol, source, mix_reps=15, park=True, blow_out=False,
              resuspend=False):
