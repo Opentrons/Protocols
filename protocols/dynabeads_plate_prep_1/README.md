@@ -31,13 +31,13 @@ P300 Single-Channel GEN2 (https://opentrons.com/pipettes/)
 * Green – beads
 * Blue – antibody
 
-![deck setup](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/dynabeads_plate_prep_1/1.png)
+![deck setup](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/dynabeads_plate_prep_1/deck.png)
 
 ### Reagent Setup
 * Beads: 50 uL per sample
 * Antibody: diluted in phosphate-buffered saline with 0.1% Tween 20 (PBS-T), 50uL per sample
 
-![reagent table](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/dynabeads_plate_prep_1/2.png)
+![reagent table](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/dynabeads_plate_prep_1/reagents2.png)
 
 ### Protocol Steps
 1. Bead slurry (reagent stock in 15 mL tubes, slot 5) is transferred to
@@ -47,7 +47,7 @@ channel pipette.
 transferred to the reagent plate (96 well deepwell plate A2-H2, slot 4)
 by the single channel pipette.
 
-![well distributions](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/dynabeads_plate_prep_1/3.png)
+![well distributions](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/dynabeads_plate_prep_1/reagents.png)
 
 ### Process
 1. Input your protocol parameters (the number of samples to be processed).
