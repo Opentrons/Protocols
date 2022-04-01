@@ -227,9 +227,9 @@ def run(ctx: protocol_api.ProtocolContext):
                 m300.aspirate_h(180, src)
                 m300.slow_tip_withdrawal(10, src, to_surface=True)
                 m300.dispense(180, col.top(-2))
-            m300.aspirate_h(165, src)
+            m300.aspirate_h(140, src)
             m300.slow_tip_withdrawal(10, src, to_surface=True)
-            m300.dispense(165, col.top(-2))
+            m300.dispense(140, col.top(-2))
             m300.mix(10, 100, col)
             m300.slow_tip_withdrawal(10, col, to_surface=True)
             m300.drop_tip()
@@ -244,7 +244,7 @@ def run(ctx: protocol_api.ProtocolContext):
         t_end += num_cols
         for src, t_d in zip(mag_samps_h, all_tips[t_start:t_end]):
             m300.custom_pick_up()
-            remove_supernatant(1025, src)
+            remove_supernatant(500, src)
             m300.drop_tip(t_d)
 
     # plate, tube rack maps
@@ -330,7 +330,7 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.comment('\nRemoving supernatant\n')
     for src, t_d in zip(mag_samps_h, all_tips[t_start:t_end]):
         m300.custom_pick_up()
-        remove_supernatant(1025, src)
+        remove_supernatant(1080, src)
         m300.drop_tip(t_d)
 
     # Wash with 500uL CSPW1 Buffer
@@ -350,16 +350,20 @@ def run(ctx: protocol_api.ProtocolContext):
     Please add elution buffer at 65C to 12-well reservoir.\n'
     ctx.delay(minutes=10, msg=air_dry_msg)
 
+    mag_deck.engage()
+
     # Add Elution Buffer
     ctx.comment(f'\nAdding {elution_vol}uL Elution Buffer to samples\n')
 
-    m300.custom_pick_up()
-    for idx, col in enumerate(mag_samps):
+    for idx, col in enumerate(mag_samps_h):
         src = elution_buffer[idx//6]
+        m300.custom_pick_up()
         m300.aspirate_h(elution_vol, src)
         m300.slow_tip_withdrawal(10, src, to_surface=True)
-        m300.dispense(elution_vol, col.top(-2))
-    m300.drop_tip()
+        m300.dispense_h(elution_vol, col)
+        m300.mix(10, 100, col)
+        m300.slow_tip_withdrawal(10, col, to_surface=True)
+        m300.drop_tip()
 
     flash_lights()
     ctx.pause('Please remove samples and incubate at 65C for 5 minutes.\
