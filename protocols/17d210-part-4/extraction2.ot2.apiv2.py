@@ -386,11 +386,11 @@ resuming.')
     Here is where you can call the methods defined above to fit your specific
     protocol. The normal sequence is:
     """
-    bind(binding_buffer_vol, park=park_tips)
-    wash(wash1_vol, wash1, park=park_tips)
-    wash(wash2_vol, wash2, park=park_tips)
-    remove_supernatant(18, pip=m20)
-    elute(elution_vol, park=park_tips)
+    # bind(binding_buffer_vol, park=park_tips)
+    # wash(wash1_vol, wash1, park=park_tips)
+    # wash(wash2_vol, wash2, park=park_tips)
+    # remove_supernatant(18, pip=m20)
+    # elute(elution_vol, park=park_tips)
 
     # track final used tip
     if tip_track and not ctx.is_simulating():
