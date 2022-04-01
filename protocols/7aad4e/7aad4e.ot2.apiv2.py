@@ -6,14 +6,6 @@ metadata = {
 }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{ "csv":"",
-                        "p300_mount":"left",
-                                  "p20_mount":"right"}""")
-    return [_all_values[n] for n in names]
-
-
 def run(ctx):
 
     [csv, p300_mount] = get_values(  # noqa: F821
