@@ -1,4 +1,4 @@
-# Dynabeads for IP - 96 Well
+# Dynabeads for IP Reagent-In-Tube Part 1
 
 ### Author
 [Opentrons](https://opentrons.com/)
