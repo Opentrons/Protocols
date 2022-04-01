@@ -186,7 +186,7 @@ def run(ctx: protocol_api.ProtocolContext):
             "reagent plate 1 for {} mastermix aliquots"
             .format(n_samples, int(max_PCR_mm_samples)))
 
-    source_well_plate_lname = 'azenta_96_wellplate_200ul'
+    source_well_plate_lname = "azenta_96_wellplate_semiskirted_adapter_300ul"
 
     # load modules
 
@@ -413,7 +413,8 @@ def run(ctx: protocol_api.ProtocolContext):
                      msg: str = 'Refill labware volumes',
                      reagent_name: str = 'nameless reagent',
                      is_verbose: bool = True,
-                     is_strict_mode: bool = False):
+                     is_strict_mode: bool = False,
+                     threshhold_advancement_vol: float = 1):
             """
             Voltracker tracks the volume(s) used in a piece of labware.
             It's conceptually important to understand that in reagent
@@ -444,8 +445,13 @@ def run(ctx: protocol_api.ProtocolContext):
             than the VolTracker is set up for. strict_mode also forces the
             user to check if there's enough volume in the active well and
             to manually advance to the next well by calling advance_well()
+            :param threshhold_advancement_vol: If using strict mode VolTr.
+            will throw an exception if the user advances the well while there
+            is more than the threshhold_advancement_vol of volume left in
+            the well.
             """
-            # Boolean value: True if the well is full or has been depleted
+            # Boolean value: True if the well has been filled
+            # or has been depleted
             self.labware_wells = {}
             for well in labware.wells()[start-1:end]:
                 self.labware_wells[well] = [0, False]
@@ -500,15 +506,10 @@ def run(ctx: protocol_api.ProtocolContext):
 
         def get_total_initial_vol(self):
             # Return the total initial vol = n_wells * well_vol
-            if self.mode == 'reagent':
-                return len(self.labware_wells) * self.well_vol
-            else:
-                # Always considered 0 initially for targets and waste trackers
-                return 0
+            return len(self.labware_wells) * self.well_vol
 
         def get_total_remaining_vol(self):
-            # TODO: Return the total initial volume minus used/added volume
-            return self.get_total_initial_vol() + self.total_vol_changed
+            return self.get_total_initial_vol() - self.total_vol_changed
 
         def get_active_well_vol_change(self):
             """
@@ -574,10 +575,9 @@ def run(ctx: protocol_api.ProtocolContext):
             # Total vol changed keeps track across labware resets, i.e.
             # when the user replaces filled/emptied wells
             vol = vol * 8 if self.pip_type == 'multi' else vol
-            if self.mode == 'reagent':
-                self.total_vol_changed -= vol
-            else:
-                self.total_vol_changed += vol
+
+            # Track the total change in volume of this volume tracker
+            self.total_vol_changed += vol
 
             if self.labware_wells[well][0] + vol > self.well_vol:
                 if self.is_strict_mode:
