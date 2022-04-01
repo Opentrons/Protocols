@@ -183,7 +183,7 @@ component_3_volume,1
 control_plate,1
 count_mix,1
 count_samples,18
-csv,4
+csv,5
 csv1_buff,1
 csv1_samp,1
 csv1_urea,1
@@ -285,6 +285,7 @@ disposal_vol,2
 disposal_volume,1
 dmsovol,1
 dna,1
+dna_asp_rate,1
 dna_aspirate_clearance,1
 dna_csv,1
 dna_plate,1
@@ -562,9 +563,11 @@ mecn_wash3_vol,1
 media_trans_vol,1
 mix,1
 mix_after,1
+mix_asp_rate,1
 mix_clearance,1
 mix_count,1
 mix_csv,1
+mix_disp_rate,1
 mix_etoh,1
 mix_rate,2
 mix_repetitions,2
@@ -745,7 +748,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,112
+p300_mount,113
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
