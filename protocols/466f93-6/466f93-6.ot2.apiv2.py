@@ -837,7 +837,8 @@ def run(ctx: protocol_api.ProtocolContext):
     # PROTOCOL BEGINS HERE
     # set tmod temperatures
     for tmod in [temp_mod_reag, temp_mod_rack]:
-        tmod.set_temperature(tmod_temperature)
+        if tmod is not None:
+            tmod.set_temperature(tmod_temperature)
 
     pip_s, pip_l = rank_pipettes([pip_left, pip_right])
     # 1st mastermix: End-repair
