@@ -68,7 +68,7 @@
   {
     "type": "float",
     "label": "Binding buffer aspiration flow rate multiplier",
-    "name": "bb_asp_rate_mult",
+    "name": "bb_asp_rate_multiplier",
     "default": 0.3
   },
   {
@@ -80,13 +80,13 @@
   {
     "type": "float",
     "label": "Bead solution aspiration flow rate multiplier",
-    "name": "bead_asp_rate_mult",
+    "name": "bead_asp_rate_multiplier",
     "default": 1.0
   },
   {
     "type": "float",
     "label": "Bead solution dispensing flow rate multiplier",
-    "name": "bead_disp_rate_multipler",
+    "name": "bead_disp_rate_multiplier",
     "default": 1.0
   },
   {
