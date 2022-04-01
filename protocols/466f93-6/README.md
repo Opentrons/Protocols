@@ -1,10 +1,7 @@
-# Protocol Title (should match metadata of .py file)
+# 466f93-6 - Mastermix creation protocol
 
 ### Author
 [Opentrons](https://opentrons.com/)
-
-### Partner
-[Partner Name](partner website link)
 
 ## Categories
 * NGS Library Prep
@@ -42,22 +39,15 @@ Explanation of parameters below:
 ---
 
 ### Deck Setup
-* If the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/466f93-6/deck.jpg)
 
-### Reagent Setup
-* This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:
-* Reservoir 1: slot 5
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res1_v2.png)
-* Reservoir 2: slot 2  
-![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res2.png)
 
 ---
 
 ### Protocol Steps
-1. This section should consist of a numerical outline of the protocol steps, somewhat analogous to the steps outlined by the user in their custom protocol submission.
-2. example step: Samples are transferred from the source tuberacks on slots 1-2 to the PCR plate on slot 3, down columns and then across rows.
-3. example step: Waste is removed from each sample on the magnetic module, ensuring the bead pellets are not contacted by the pipette tips.
+1. For each mastermix creation routine that is selected the protocol will:
+2. Transfer the reagents to the tuberack
+3. Mix the newly created mastermix as many times as specified by the `Number of mixes` parameter
 
 ### Process
 1. Input your protocol parameters above.
@@ -72,4 +62,4 @@ Explanation of parameters below:
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-protocol-hex-code
+466f93-6
