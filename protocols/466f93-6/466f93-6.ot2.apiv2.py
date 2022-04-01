@@ -192,7 +192,10 @@ def run(ctx: protocol_api.ProtocolContext):
             "reagent plate 1 for {} mastermix aliquots"
             .format(n_samples, int(max_PCR_mm_samples)))
 
-    source_well_plate_lname = "azenta_96_wellplate_semiskirted_adapter_300ul"
+    source_well_plate_lname = (
+    "azenta_96_wellplate_semiskirted_adapter_300ul"
+    if temp_mod_reag_plate is False else
+    "azenta_96_aluminumblock_300ul")
 
     # load modules
 

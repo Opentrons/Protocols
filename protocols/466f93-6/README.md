@@ -26,10 +26,10 @@ Explanation of parameters below:
 * `Create end-repair mastermix?`: Choose whether to create end repair buffer/enzyme mastermix.
 * `Create adaptor ligation mastermix?`: Choose whether to create adaptor ligation buffer/enzyme mastermix.
 * `Create PCR reaction mastermix?`: Choose whether to create PCR reaction mastermix. This function mixes the PCR mastermix with primers.
-* `Mastermix target labware`: What kind of labware you would like to mix the mastermix in.
+* `Mastermix target labware`: What kind of labware you would like to create the mastermix in? Make sure to select the aluminum option if you are using a temperature module.
 * `Do you want verbose output from the protocol?`: If set to 'Yes' the protocol will report additional information about what it is doing.
-* `Temperature module for the reagent plate?`: Use a temperature module for the reagent plate
-* `Temperature module for the mastermix target tuberack?`: Use a temperature module for the tuberack where mastermixes are created
+* `Temperature module for the reagent plate?`: Use a temperature module for the reagent plate. The reagent plate must be loaded onto the aluminum block.
+* `Temperature module for the mastermix target tuberack?`: Use a temperature module for the tuberack where mastermixes are created. The tuberack must be loaded onto the temperature module with an aluminum block.
 * `Set temperature for temp. modules`: The temperature to hold the temperature modules at (in degrees Celcius)
 
 ---
