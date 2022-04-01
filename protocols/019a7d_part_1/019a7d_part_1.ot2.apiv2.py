@@ -23,18 +23,6 @@ def run(ctx):
     # load modules
     temp_1 = ctx.load_module('tempdeck', '1')
     temp_3 = ctx.load_module('tempdeck', '3')
-    '''
-
-    Add your modules here with:
-
-    module_name = ctx.load_module('{module_loadname}', '{slot number}')
-
-    Note: if you are loading a thermocycler, you do not need to specify
-    a slot number - thermocyclers will always occupy slots 7, 8, 10, and 11.
-
-    For all other modules, you can load them on slots 1, 3, 4, 6, 7, 9, 10.
-
-    '''
 
     # load labware
     gibson_tubes = temp_1.load_labware('opentrons_24_aluminumblock_generic'
@@ -46,18 +34,6 @@ def run(ctx):
                                          )
     backbone_reservoir = ctx.load_labware('azentalifesciences_12_reservoir'
                                           '_21000ul', '4')
-    '''
-
-    Add your labware here with:
-
-    labware_name = ctx.load_labware('{loadname}', '{slot number}')
-
-    If loading labware on a module, you can load with:
-
-    labware_name = module_name.load_labware('{loadname}')
-    where module_name is defined above.
-
-    '''
 
     # load tipracks
     tiprack = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
@@ -81,28 +57,8 @@ def run(ctx):
     backbone = backbone_reservoir.wells()[0]
     sample_dests_s = assembly_plate.wells()[:num_samples]
     sample_dests_m = assembly_plate.rows()[0][:num_cols]
-    '''
-    Define where all reagents are on the deck using the labware defined above.
-
-    e.g.
-
-    water = reservoir12.wells()[-1]
-    waste = reservoir.wells()[0]
-    samples = plate.rows()[0][0]
-    dnase = tuberack.wells_by_name()['A4']
-
-    '''
 
     # plate, tube rack maps
-
-    '''
-    Define any plate or tube maps here.
-
-    e.g.
-
-    plate_wells_by_row = [well for row in plate.rows() for well in row]
-
-    '''
 
     # protocol
     # Step 0, set temperature
