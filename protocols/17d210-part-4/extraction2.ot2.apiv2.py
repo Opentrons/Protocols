@@ -1,3 +1,5 @@
+# noqa: flake8
+
 from opentrons.types import Point
 import json
 import os
