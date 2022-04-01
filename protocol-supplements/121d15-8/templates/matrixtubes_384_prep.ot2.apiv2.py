@@ -5,20 +5,20 @@ import os
 import json
 import math
 
-# INPUT_FILE = """Number of Transfers
-# 23
-# TB_RCK pos,pos in TB_RCK,pos in 384Plate,VolumeFromTube
-# 384Platebarcode,RunId
-# 1,1,4
-# 3,150,4
-# 4,96,2
-# 48,204,2
-# """
-#
-# COLUMN_MAP = """96-1,12
-# 96-2,12
-# 96-3,3
-# 96-4,12"""
+INPUT_FILE = """Number of Transfers
+23
+TB_RCK pos,pos in TB_RCK,pos in 384Plate,VolumeFromTube
+384Platebarcode,RunId
+1,1,4
+3,150,4
+4,96,2
+48,204,2
+"""
+
+COLUMN_MAP = """96-1,12
+96-2,12
+96-3,3
+96-4,12"""
 
 
 # metadata
@@ -109,10 +109,10 @@ def run(ctx):
         ctx.load_labware('opentrons_96_tiprack_20ul', slot)
         for slot in ['11']]
     src_plates = [
-        ctx.load_labware('biorad_96_wellplate_200ul_pcr', slot,
+        ctx.load_labware('weldessmatrix_96_tuberack_500ul', slot,
                          f'src plate {i+1}')
         for i, slot in enumerate(['1', '4', '7', '10'])]
-    dest_plate = ctx.load_labware('greinerbioone_384_wellplate_100ul', '3')
+    dest_plate = ctx.load_labware('appliedbiosystemsmicroampcustom_384_wellplate_40ul', '3')
     primer_racks = [
         ctx.load_labware('opentrons_24_tuberack_generic_2ml_screwcap', slot,
                          f'primer rack {i+1}')

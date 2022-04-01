@@ -1,15 +1,27 @@
 [
   {
       "type": "int",
-      "label": "number of samples",
+      "label": "number of samples (if 1 plate)",
       "name": "num_samples",
       "default": 16
   },
   {
       "type": "int",
+      "label": "number of plates",
+      "name": "num_plates",
+      "default": 12
+  },
+  {
+      "type": "int",
       "label": "number of primers",
       "name": "num_primers",
-      "default": 6
+      "default": 1
+  },
+  {
+      "type": "int",
+      "label": "primer starting column (1-12)",
+      "name": "primer_start",
+      "default": 1
   },
   {
      "type": "dropDown",
