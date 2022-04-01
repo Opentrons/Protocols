@@ -14,6 +14,32 @@ metadata = {
 }
 
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{
+                                  "n_samples":36,
+                                  "n_over_reactions":1,
+                                  "aspiration_rate_multiplier":1,
+                                  "dispensing_rate_multiplier":1,
+                                  "mixing_rate_multiplier":0.5,
+                                  "n_mixes":10,
+                                  "pip_left_lname":"p1000_single_gen2",
+                                  "is_filtered_left":true,
+                                  "pip_right_lname":"p1000_single_gen2",
+                                  "is_filtered_right":true,
+                                  "is_create_end_repair_mm":true,
+                                  "is_create_adaptor_ligation_mm":true,
+                                  "is_create_pcr_mm":true,
+                                  "mastermix_target_lname":"opentrons_24_tuberack_nest_1.5ml_snapcap",
+                                  "is_verbose_mode":false,
+                                  "temp_mod_reag_plate":false,
+                                  "temp_mod_tuberack":false,
+                                  "tmod_temperature":4
+                                  }
+                                  """)
+    return [_all_values[n] for n in names]
+
+
 def run(ctx: protocol_api.ProtocolContext):
 
     [n_samples,
@@ -802,10 +828,13 @@ def run(ctx: protocol_api.ProtocolContext):
 
 
     '''
-    def create_mastermix(sources: List[VolTracker],
+    def create_mastermix(sources: Sequence[VolTracker],
+                         dest_tube,
                          reagent_volumes: List[float],
                          template_message: str,
-                         messages: List[str]) -> None:
+                         reagent_names: List[str],
+                         n_mixes: int = 0,
+                         mixing_rate: float = 1) -> None:
         """
         Create a mastermix from a list of reagents drawing from the sources
         wells.
@@ -817,9 +846,15 @@ def run(ctx: protocol_api.ProtocolContext):
         :param messages: Can be a string describing each reagent
         """
         nonlocal pip_s, pip_l
+        nonlocal aspiration_rate_multiplier, dispensing_rate_multiplier
+        for pip in pip_s, pip_l:
+            pip.flow_rate.aspirate *= aspiration_rate_multiplier
+            pip.flow_rate.dispense *= dispensing_rate_multiplier
+
+        total_vol = sum(reagent_volumes)
         for source, vol, msg in zip(sources,
                                     reagent_volumes,
-                                    messages):
+                                    reagent_names):
             ctx.comment(template_message.format(msg))
             source_well_volume = source.get_active_well_remaining_vol()
             while vol > 0:
@@ -828,11 +863,22 @@ def run(ctx: protocol_api.ProtocolContext):
                 if not pip.has_tip:
                     pip.pick_up_tip()
                 s_well = source.track(pip_vol)
-                pip.transfer(pip_vol, s_well, ER_mm_dest_tube, new_tip='never')
+                pip.transfer(pip_vol, s_well, dest_tube, new_tip='never')
                 vol -= pip_vol
                 if source.get_active_well_remaining_vol() <= 1:
                     source.advance_well()
             drop_all_tips([pip_s, pip_l])
+        # Mixing steps, 1: Reset the flow rates
+        for pip in pip_s, pip_l:
+            pip.flow_rate.aspirate /= aspiration_rate_multiplier
+            pip.flow_rate.dispense /= dispensing_rate_multiplier
+
+        # step 2: mix
+        pip = (pip_l if total_vol > pip_s.max_volume else pip_s)
+        pip.pick_up_tip()
+        mix_vol = min(pip.max_volume, total_vol-2)
+        pip.mix(n_mixes, mix_vol, dest_tube, mixing_rate)
+        pip.drop_tip()
 
     # PROTOCOL BEGINS HERE
     # set tmod temperatures
@@ -845,27 +891,39 @@ def run(ctx: protocol_api.ProtocolContext):
     if is_create_end_repair_mm:
         ctx.comment("\n\nCreating End repair mastermix in {}\n"
                     .format(ER_mm_dest_tube))
-        create_mastermix([ERB_wells, ERE_wells],
-                         [total_ERB_mm_vol, total_ERE_mm_vol],
-                         "Transferring End Repair {}",
-                         ["Buffer", "Enzyme"])
+        # import pdb
+        # pdb.set_trace()
+        create_mastermix(sources=[ERB_wells, ERE_wells],
+                         dest_tube=ER_mm_dest_tube,
+                         reagent_volumes=[total_ERB_mm_vol, total_ERE_mm_vol],
+                         template_message="Transferring End Repair {}",
+                         reagent_names=["Buffer", "Enzyme"],
+                         n_mixes=n_mixes,
+                         mixing_rate=mixing_rate_multiplier)
 
     if is_create_adaptor_ligation_mm:
         ctx.comment("\n\nCreating Adaptor Ligation mastermix in {}\n"
                     .format(AL_mm_dest_tube))
-        create_mastermix([ALB_wells, ALE_I_wells, ALE_II_wells],
-                         [total_ALB_mm_vol, total_ALE_I_mm_vol,
+        create_mastermix(sources=[ALB_wells, ALE_I_wells, ALE_II_wells],
+                         dest_tube=AL_mm_dest_tube,
+                         reagent_volumes=[total_ALB_mm_vol, total_ALE_I_mm_vol,
                          total_ALE_II_mm_vol],
-                         "Transferring adaptor ligation {}",
-                         ["Buffer", "Enzyme I", "Enzyme II"])
+                         template_message="Transferring adaptor ligation {}",
+                         reagent_names=["Buffer", "Enzyme I", "Enzyme II"],
+                         n_mixes=n_mixes,
+                         mixing_rate=mixing_rate_multiplier)
 
     if is_create_pcr_mm:
         ctx.comment("\n\nCreating PCR mastermix in {}\n"
                     .format(PCR_mm_dest_tube))
-        create_mastermix([PCR_mix_wells, primer_wells],
-                         [totaL_PCR_mix_mm_vol, total_primer_mm_vol],
-                         "Transferring {}",
-                         ["PCR mix", "primers"])
+        create_mastermix(sources=[PCR_mix_wells, primer_wells],
+                         dest_tube=PCR_mm_dest_tube,
+                         reagent_volumes=[
+                             totaL_PCR_mix_mm_vol, total_primer_mm_vol],
+                         template_message="Transferring {}",
+                         reagent_names=["PCR mix", "primers"],
+                         n_mixes=n_mixes,
+                         mixing_rate=mixing_rate_multiplier)
 
     if is_verbose_mode is True:
 
