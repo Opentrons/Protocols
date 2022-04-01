@@ -1,5 +1,5 @@
-import math
 """PROTOCOL."""
+import math
 metadata = {
     'protocolName': 'Nucleic Acid Purification/Cloning',
     'author': 'Opentrons',
@@ -11,54 +11,31 @@ metadata = {
 
 def run(ctx):
     """PROTOCOL BODY."""
-    [num_samples, omni_tray, heat_shock
+    [num_samples, omni_tray, heat_shock, agar_volume, dwp, dwp_volume
      ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
-        "num_samples", "omni_tray", "heat_shock")
+        "num_samples", "omni_tray", "heat_shock", "agar_volume",
+        "dwp", "dwp_volume")
 
     # define all custom variables above here with descriptions:
 
     # number of samples
     num_cols = math.ceil(num_samples/8)
-
     # "True" for park tips, "False" for discard tips
 
     # load modules
     temp_1 = ctx.load_module('tempdeck', '1')
     temp_3 = ctx.load_module('tempdeck', '3')
-    '''
-
-    Add your modules here with:
-
-    module_name = ctx.load_module('{module_loadname}', '{slot number}')
-
-    Note: if you are loading a thermocycler, you do not need to specify
-    a slot number - thermocyclers will always occupy slots 7, 8, 10, and 11.
-
-    For all other modules, you can load them on slots 1, 3, 4, 6, 7, 9, 10.
-
-    '''
 
     # load labware
-    mix_n_go = temp_1.load_labware('azentalifesciences_96wellplate_200ul')
-    assemb_plate = temp_3.load_labware('azentalifesciences_96wellplate_200ul')
-    liquid_culture = [ctx.load_labware('greiner_96_wellplate_2000ul', slot)
-                      for slot in ['11']]
+    mix_n_go = temp_1.load_labware('azentalifesciences_96_wellplate_200ul')
+    assemb_plate = temp_3.load_labware('azentalifesciences_96_wellplate_200ul')
+    dwp_plate = ctx.load_labware('greiner_96_wellplate_2000ul', "11")
 
-    """To load agar plates 5-9, loop based on inputs from fields
-        How many samples will dictate how many agar plates and if 24s or 96
-        """
+    dwp_dest_list = dwp_plate.rows()[0][:num_cols]
+    samples_source_s = mix_n_go.wells()[:num_samples]
+    samples_source_m = mix_n_go.rows()[0][:num_cols]
+    assemb_liquid_m = assemb_plate.rows()[0][:num_cols]
 
-    if omni_tray == '24':
-        agar_plates = [ctx.load_labware('customagar_24_wellplate_200ul', slot)
-                       for slot in ['5', '6', '7', '8']]
-    else:
-        # create a list of length 1
-        agar_plates = [ctx.load_labware('customagar_96_wellplate_200ul', slot)
-                       for slot in ['9']]
-    agar_locations_s = [well for plate in agar_plates for well in plate.wells()
-                        ]
-    agar_locations_m = [well for plate in agar_plates
-                        for row in plate.rows()[0] for well in row]
     # load tipracks
     tiprack = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '4')]
 
@@ -73,126 +50,63 @@ def run(ctx):
                         mount='right',
                         tip_racks=tiprack
     )
-    '''
-    Nomenclature for pipette:
-
-    use 'p'  for single-channel, 'm' for multi-channel,
-    followed by number of microliters.
-
-    p20, p300, p1000 (single channel pipettes)
-    m20, m300 (multi-channel pipettes)
-
-    If loading pipette, load with:
-
-    ctx.load_instrument(
-                        '{pipette api load name}',
-                        pipette_mount ("left", or "right"),
-                        tip_racks=tiprack
-                        )
-    '''
-
-    # pipette functions   # INCLUDE ANY BINDING TO CLASS
-
-    '''
-
-    Define all pipette functions, and class extensions here.
-    These may include but are not limited to:
-
-    - Custom pickup functions
-    - Custom drop tip functions
-    - Custom Tip tracking functions
-    - Custom Trash tracking functions
-    - Slow tip withdrawal
-
-    For any functions in your protocol, describe the function as well as
-    describe the parameters which are to be passed in as a docstring below
-    the function (see below).
-
-    def pick_up(pipette):
-        """`pick_up()` will pause the protocol when all tip boxes are out of
-        tips, prompting the user to replace all tip racks. Once tipracks are
-        reset, the protocol will start picking up tips from the first tip
-        box as defined in the slot order when assigning the labware definition
-        for that tip box. `pick_up()` will track tips for both pipettes if
-        applicable.
-
-        :param pipette: The pipette desired to pick up tip
-        as definited earlier in the protocol (e.g. p300, m20).
-        """
-        try:
-            pipette.pick_up_tip()
-        except protocol_api.labware.OutOfTipsError:
-            ctx.pause("Replace empty tip racks")
-            pipette.reset_tipracks()
-            pipette.pick_up_tip()
-
-    '''
-
-    # helper functions
-    '''
-    Define any custom helper functions outside of the pipette scope here, using
-    the convention seen above.
-
-    e.g.
-
-    def remove_supernatant(vol, index):
-        """
-        function description
-
-        :param vol:
-
-        :param index:
-        """
-
-
-    '''
-
-    # reagents
-
-    '''
-    Define where all reagents are on the deck using the labware defined above.
-
-    e.g.
-
-    water = reservoir12.wells()[-1]
-    waste = reservoir.wells()[0]
-    samples = plate.rows()[0][0]
-    dnase = tuberack.wells_by_name()['A4']
-
-    '''
-
-    # plate, tube rack maps
-
-    '''
-    Define any plate or tube maps here.
-
-    e.g.
-
-    plate_wells_by_row = [well for row in plate.rows() for well in row]
-
-    '''
+    if omni_tray == '24':
+        distro_source = samples_source_s
+        agar_plates = [ctx.load_labware('customagar_24_wellplate_200ul', slot)
+                       for slot in ['5', '6', '7', '8']]
+        agar_pipette = p20
+        agar_locations = [well for plate in agar_plates
+                          for well in plate.wells()[:num_samples]]
+        tip_recycle = tiprack.wells()[:num_samples]
+    else:
+        distro_source = samples_source_m
+        agar_plates = [ctx.load_labware('customagar_96_wellplate_200ul', slot)
+                       for slot in ['9']]
+        agar_pipette = m20
+        agar_locations = [well for plate in agar_plates
+                          for row in plate.rows()[0][:num_cols]
+                          for well in row]
+        tip_recycle = tiprack.rows()[:num_cols]
 
     # protocol
+    temp_1.set_temperature(4)
+    for source, dests in zip(assemb_liquid_m, samples_source_m):
+        m20.transfer(5,
+                     source,
+                     dests,
+                     new_tip='always',
+                     mix_after=(3, 5),
+                     blow_out=True,
+                     blowout_location='destination well',
+                     trash=False)
 
-    '''
+    # temp module to 42 celsius for 40s then back to 4 celsisus
+    if heat_shock:
+        temp_1.set_temperature(42)
+        ctx.delay(seconds=40)
+        temp_1.set_temperature(4)
 
-    Include header sections as follows for each "section" of your protocol.
+    ctx.delay(minutes=30)
 
-    Section can be defined as a step in a bench protocol.
-
-    e.g.
-
-    ctx.comment('\n\nMOVING MASTERMIX TO SAMPLES IN COLUMNS 1-6\n')
-
-    for .... in ...:
-        ...
-        ...
-
-    ctx.comment('\n\nRUNNING THERMOCYCLER PROFILE\n')
-
-    ...
-    ...
-    ...
-
-
-    '''
+    # Agar Plate transfer
+    """NEED 5MM ABOVE AGAR STILL!"""
+    for source, dests in zip(distro_source, agar_locations):
+        """agar_pipette.pick_up_tip()
+        agar_pipette.aspirate(agar_volume, source)
+        agar_pipette.dispense(agar_volume, dests.top(5))
+        agar_pipette.return_tip()"""
+        agar_pipette.transfer(agar_volume,
+                              source,
+                              dests,
+                              trash=False
+                              )
+    # DWP/LC Addition If Needed
+    if dwp:
+        for source, dests in zip(samples_source_m, dwp_dest_list):
+            m20.transfer(dwp_volume,
+                         source,
+                         dests,
+                         new_tip='always'
+                         )
+    for c in ctx.commands():
+        print(c)
