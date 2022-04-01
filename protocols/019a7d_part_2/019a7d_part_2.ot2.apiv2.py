@@ -10,7 +10,7 @@ metadata = {
 
 
 def run(ctx):
-    """PROTOCOL BODY."""
+    """PROTOCOL BODY. """
     [num_samples, omni_tray, heat_shock, agar_volume, dwp, dwp_volume
      ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
         "num_samples", "omni_tray", "heat_shock", "agar_volume",
@@ -57,16 +57,17 @@ def run(ctx):
         agar_pipette = p20
         agar_locations = [well for plate in agar_plates
                           for well in plate.wells()[:num_samples]]
-        tip_recycle = tiprack.wells()[:num_samples]
+        tip_recycle = tiprack[0].wells()[0:num_samples]
     else:
         distro_source = samples_source_m
         agar_plates = [ctx.load_labware('customagar_96_wellplate_200ul', slot)
                        for slot in ['9']]
+
         agar_pipette = m20
         agar_locations = [well for plate in agar_plates
                           for row in plate.rows()[0][:num_cols]
                           for well in row]
-        tip_recycle = tiprack.rows()[:num_cols]
+        tip_recycle = tiprack[0].rows()[0:num_cols]
 
     # protocol
     temp_1.set_temperature(4)
@@ -89,23 +90,23 @@ def run(ctx):
     ctx.delay(minutes=30)
 
     # Agar Plate transfer
-    """NEED 5MM ABOVE AGAR STILL!"""
-    for source, dests in zip(distro_source, agar_locations):
-        """agar_pipette.pick_up_tip()
+    """NEED 5MM ABOVE AGAR STILL! """
+    for tips, source, dest in zip(tip_recycle, distro_source, agar_locations):
+        agar_pipette.pick_up_tip(tips)
         agar_pipette.aspirate(agar_volume, source)
-        agar_pipette.dispense(agar_volume, dests.top(5))
-        agar_pipette.return_tip()"""
-        agar_pipette.transfer(agar_volume,
+        agar_pipette.dispense(agar_volume, dest.top(5))
+        agar_pipette.return_tip()
+        """agar_pipette.transfer(agar_volume,
                               source,
                               dests,
                               trash=False
-                              )
+                              )"""
     # DWP/LC Addition If Needed
     if dwp:
-        for source, dests in zip(samples_source_m, dwp_dest_list):
+        for source, dest in zip(samples_source_m, dwp_dest_list):
             m20.transfer(dwp_volume,
                          source,
-                         dests,
+                         dest,
                          new_tip='always'
                          )
     for c in ctx.commands():
