@@ -1,0 +1,1783 @@
+{
+    "content": "from opentrons import protocol_api\nfrom opentrons.protocol_api.labware import Labware, Well\nimport re\nfrom typing import Tuple, Optional, Sequence\nfrom math import ceil, pi\nfrom opentrons.types import Point, Location\nimport copy\n\nmetadata = {\n    'protocolName': '022548-1 - DNA extraction: Mastermix creation',\n    'author': 'Eskil Andersen <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE\n                         # IN SECTION 5.2 OF THE APIV2 \"VERSIONING\"\n}\n\n\ndef run(ctx: protocol_api.ProtocolContext):\n\n    [n_samples,\n     bindbuf_source_well_indices,\n     bead_mix_source_well_indices,\n     vol_source_bb_per_well,\n     vol_source_bead_mix_per_well,\n     p300_mount,\n     m300_mount,\n     mastermix_tuberack_lname,\n     mastermix_mix_rate_multiplier,\n     bb_asp_rate_multiplier,\n     bb_disp_rate_multipler,\n     bead_asp_rate_multiplier,\n     bead_disp_rate_multiplier,\n     n_mm_mixes,\n     tube_edge_offset,\n     resv_well_edge_offset,\n     is_verbose] = get_values(  # noqa: F821\n     \"n_samples\",\n     \"bindbuf_source_well_indices\",\n     \"bead_mix_source_well_indices\",\n     \"vol_source_bb_per_well\",\n     \"vol_source_bead_mix_per_well\",\n     \"p300_mount\",\n     \"m300_mount\",\n     \"mastermix_tuberack_lname\",\n     \"mastermix_mix_rate_multiplier\",\n     \"bb_asp_rate_multiplier\",\n     \"bb_disp_rate_multipler\",\n     \"bead_asp_rate_multiplier\",\n     \"bead_disp_rate_multiplier\",\n     \"n_mm_mixes\",\n     \"tube_edge_offset\",\n     \"resv_well_edge_offset\",\n     \"is_verbose\")\n\n    def parse_range_string(range_string: str) -> Tuple[int, int]:\n        \"\"\" Parses a range or a single number from the input string.\n        the format for a number is n-m, where n and m are any positive\n        integers.\n        :param range_string: range string to decode\n        :return value: A tuple of the start and end index of the range\n        \"\"\"\n        single_num_pattern = re.compile('[0-9]+')\n        range_pattern = re.compile('[0-9]+-[0-9]+')\n        # Case when there's only one index (e.g. the string decodes to a single\n        # well\n        if single_num_pattern.fullmatch(range_string) is not None:\n            index = int(range_string)\n            return index, index\n        if range_pattern.fullmatch(range_string):\n            # Return both substrings that match numbers (i.e. the start and\n            # end indices\n            start, end = range_string.split('-')\n            return int(start), int(end)\n        # If neither regular expression matched then we assume that the string\n        # is incorrectly formatted\n        raise Exception((\"Invalid range string: it was \\\"{}\\\" but should be a \"\n                         \"natural number or a range in the format of \"\n                         \"n-m where n and m are natural numbers, \"\n                         \"e.g: 1-4\").format(range_string))\n\n    is_debug_mode = False\n    # 1 mL of dead volume is required when using the reservoir,\n    # 100 uL for tubes, the dead volume should have the same composition\n    # as the rest of the mix\n    dead_vol = 100 if mastermix_tuberack_lname is not None else 1000\n\n    # Reagent volume not including added dead volume\n    bind_buf_vol = n_samples*1.5*265\n    bead_vol = (10/265) * bind_buf_vol\n    mm_vol = bind_buf_vol + bead_vol\n\n    # The volume of mastermix in each reservoir well should be 9.65 mL max\n    # and also accounting for 1 mL dead volume in the resevoir\n    # TODO: The reagent source may also be 15 mL tubes, in which case\n    # the dead volume should be 100 uL per tube\n    max_vol_mm_per_well = 9.65*10**3\n    useful_vol_mm_per_well = max_vol_mm_per_well - 1_000\n    n_mm_target_wells = ceil(mm_vol/useful_vol_mm_per_well)\n    total_mm_vol = n_mm_target_wells * dead_vol + mm_vol\n\n    total_bead_vol = total_mm_vol * (10/265)\n    total_bb_vol = total_mm_vol - total_bead_vol\n\n    max_bead_vol_per_well = max_vol_mm_per_well * 10/265\n    max_bb_vol_per_well = max_vol_mm_per_well - max_bead_vol_per_well\n\n    # If the tuberack isn't set we're going to create the mastermix in the\n    # reservoir\n    tuberack_slot = '6'\n    reservoir_loader = ('nest_12_reservoir_15ml', '10')\n\n    bb_start_index, bb_end_index = parse_range_string(\n        bindbuf_source_well_indices)\n    bead_start_index, bead_end_index = parse_range_string(\n        bead_mix_source_well_indices)\n\n    well_index_after_reagent_wells = max(bb_end_index, bead_end_index) + 1\n\n    starting_mm_well_index = \\\n        (well_index_after_reagent_wells if mastermix_tuberack_lname is None\n         else 1)\n\n    is_single_pip = True if mastermix_tuberack_lname else False\n    # Synonymous conditions\n    is_target_tube = is_single_pip\n\n    # define all custom variables above here with descriptions:\n\n    # load modules\n\n    '''\n\n    Add your modules here with:\n\n    module_name = ctx.load_module('{module_loadname}', '{slot number}')\n\n    Note: if you are loading a thermocycler, you do not need to specify\n    a slot number - thermocyclers will always occupy slots 7, 8, 10, and 11.\n\n    For all other modules, you can load them on slots 1, 3, 4, 6, 7, 9, 10.\n\n    '''\n\n    # load labware\n\n    '''\n\n    Add your labware here with:\n\n    labware_name = ctx.load_labware('{loadname}', '{slot number}')\n\n    If loading labware on a module, you can load with:\n\n    labware_name = module_name.load_labware('{loadname}')\n    where module_name is defined above.\n\n    '''\n    tuberack_mm_target = (\n        ctx.load_labware(mastermix_tuberack_lname, tuberack_slot)\n        if mastermix_tuberack_lname else None)\n\n    res12 = ctx.load_labware(reservoir_loader[0], reservoir_loader[1])\n\n    # load tipracks\n\n    '''\n\n    Add your tipracks here as a list:\n\n    For a single tip rack:\n\n    tiprack_name = [ctx.load_labware('{loadname}', '{slot number}')]\n\n    For multiple tip racks of the same type:\n\n    tiprack_name = [ctx.load_labware('{loadname}', 'slot')\n                     for slot in ['1', '2', '3']]\n\n    If two different tipracks are on the deck, use convention:\n    tiprack[number of microliters]\n    e.g. tiprack10, tiprack20, tiprack200, tiprack300, tiprack1000\n\n    '''\n    tiprack_300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '9')]\n\n    # load instrument\n\n    '''\n    Nomenclature for pipette:\n\n    use 'p'  for single-channel, 'm' for multi-channel,\n    followed by number of microliters.\n\n    p20, p300, p1000 (single channel pipettes)\n    m20, m300 (multi-channel pipettes)\n\n    If loading pipette, load with:\n\n    ctx.load_instrument(\n                        '{pipette api load name}',\n                        pipette_mount (\"left\", or \"right\"),\n                        tip_racks=tiprack\n                        )\n    '''\n    p300 = ctx.load_instrument(\n                              'p300_single_gen2',\n                              p300_mount,\n                              tip_racks=tiprack_300\n                              )\n\n    m300 = ctx.load_instrument(\n                              'p300_multi_gen2',\n                              m300_mount,\n                              tip_racks=tiprack_300\n                              )\n\n    # pipette functions   # INCLUDE ANY BINDING TO CLASS\n\n    '''\n\n    Define all pipette functions, and class extensions here.\n    These may include but are not limited to:\n\n    - Custom pickup functions\n    - Custom drop tip functions\n    - Custom Tip tracking functions\n    - Custom Trash tracking functions\n    - Slow tip withdrawal\n\n    For any functions in your protocol, describe the function as well as\n    describe the parameters which are to be passed in as a docstring below\n    the function (see below).\n\n    def pick_up(pipette):\n        \"\"\"`pick_up()` will pause the protocol when all tip boxes are out of\n        tips, prompting the user to replace all tip racks. Once tipracks are\n        reset, the protocol will start picking up tips from the first tip\n        box as defined in the slot order when assigning the labware definition\n        for that tip box. `pick_up()` will track tips for both pipettes if\n        applicable.\n\n        :param pipette: The pipette desired to pick up tip\n        as definited earlier in the protocol (e.g. p300, m20).\n        \"\"\"\n        try:\n            pipette.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            ctx.pause(\"Replace empty tip racks\")\n            pipette.reset_tipracks()\n            pipette.pick_up_tip()\n\n    '''\n\n    # helper functions\n    '''\n    Define any custom helper functions outside of the pipette scope here, using\n    the convention seen above.\n\n    e.g.\n\n    def remove_supernatant(vol, index):\n        \"\"\"\n        function description\n\n        :param vol:\n\n        :param index:\n        \"\"\"\n\n\n    '''\n\n    class VolTracker:\n        def __init__(self, labware: Labware,\n                     well_vol: float = 0,\n                     start: int = 1,\n                     end: int = 8,\n                     mode: str = 'reagent',\n                     pip_type: str = 'single',\n                     msg: str = 'Refill labware volumes',\n                     reagent_name: str = 'nameless reagent',\n                     is_verbose: bool = True,\n                     is_strict_mode: bool = False,\n                     threshhold_advancement_vol: float = 1):\n            \"\"\"\n            Voltracker tracks the volume(s) used in a piece of labware.\n            It's conceptually important to understand that in reagent\n            mode the volumes tracked are how much volume has been removed from\n            the VolTracker, but waste and target is how much has been added\n            to it, and how much was there/have been taken out to begin with.\n            This will have implications for how the class is initialized.\n\n            :param labware: The labware to track\n            :param well_vol: The volume of the liquid in the wells, if using a\n            multi-pipette with a well plate, treat the plate like a reservoir,\n            i.e. start=1, end=1, well_vol = 8 * vol of each individual well.\n            :param pip_type: The pipette type used: 'single' or 'multi',\n            when the type is 'multi' volumes are multiplied by 8 to reflect\n            the true volumes used by the pipette.\n            :param mode: 'reagent', 'target' or 'waste'\n            :param start: The starting well\n            :param end: The ending well\n            :param msg: Message to send to the user when all wells are empty\n            (or full when in waste mode)\n            :param reagent_name: Name of the reagent tracked by the object\n            :param is_verbose: Whether to have VolTracker send ProtocolContext\n            messages about its actions or not.\n            :param is_strict_mode: If set to True VolTracker will pause\n            execution when its tracked wells are depleted (or filled), ask the\n            user to replace the labware and reset the volumes. If it's False\n            VolTracker will raise an exception if trying to use more volume\n            than the VolTracker is set up for. strict_mode also forces the\n            user to check if there's enough volume in the active well and\n            to manually advance to the next well by calling advance_well()\n            :param threshhold_advancement_vol: If using strict mode VolTr.\n            will throw an exception if the user advances the well while there\n            is more than the threshhold_advancement_vol of volume left in\n            the well.\n            \"\"\"\n            # Boolean value: True if the well has been filled\n            # or has been depleted\n            self.labware_wells = {}\n            for well in labware.wells()[start-1:end]:\n                self.labware_wells[well] = [0, False]\n            self.labware_wells_backup = self.labware_wells.copy()\n            self.well_vol = well_vol\n            self.pip_type = pip_type\n            self.mode = mode\n            self.start = start\n            self.end = end\n            self.msg = msg\n            self.is_verbose = is_verbose\n            # Total vol changed - how much volume has been withdrawn or added\n            # to this Voltracker\n            self.total_vol_changed = 0\n            # If true, then labware should raise an exception when full\n            # rather than reset\n            self.is_strict_mode = is_strict_mode\n            self.reagent_name = reagent_name\n\n            valid_modes = ['reagent', 'waste', 'target']\n\n            # Parameter error checking\n            if not (pip_type == 'single' or pip_type == 'multi'):\n                raise Exception('Pipette type must be single or multi')\n\n            if mode not in valid_modes:\n                msg = \"Invalid mode, valid modes are {}\"\n                msg = msg.format(valid_modes)\n                raise Exception(msg)\n\n        def __str__(self):\n            msg = (self.reagent_name + \" \" + self.mode\n                   + \" volume change: \" + str(self.total_vol_changed))\n            msg += \"\\nChanges in each well:\\n\"\n            for i, well_tracker in enumerate(self.labware_wells.values()):\n                msg += \"well {}: Volume change: {}\\n\".format(\n                    i+1, well_tracker[0])\n            return msg\n\n        @staticmethod\n        def flash_lights():\n            \"\"\"\n            Flash the lights of the robot to grab the users attention\n            \"\"\"\n            nonlocal ctx\n            initial_light_state = ctx.rail_lights_on\n            opposite_state = not initial_light_state\n            for _ in range(5):\n                ctx.set_rail_lights(opposite_state)\n                ctx.delay(seconds=0.5)\n                ctx.set_rail_lights(initial_light_state)\n                ctx.delay(seconds=0.5)\n\n        def get_wells(self) -> Sequence:\n            return list(self.labware_wells.keys())\n\n        def to_list(self):\n            return list(self.labware_wells.items())\n\n        def get_total_initial_vol(self):\n            # Return the total initial vol = n_wells * well_vol\n            return len(self.labware_wells) * self.well_vol\n\n        def get_total_remaining_vol(self):\n            return self.get_total_initial_vol() - self.total_vol_changed\n\n        def get_active_well_vol_change(self):\n            \"\"\"\n            Return the volume either used up (reagents) or added\n            (target or trash) in the currently active well\n            \"\"\"\n            well = self.get_active_well()\n            return self.labware_wells[well][0]\n\n        def get_active_well_remaining_vol(self):\n            \"\"\"\n            Returns how much volume is remaing to be used (reagents) or the\n            space left to fill the well (waste and targets)\n            \"\"\"\n            vol_change = self.get_active_well_vol_change()\n            return self.well_vol - vol_change\n\n        def get_active_well(self):\n            for key in self.labware_wells:\n                # Return the first well that is not full\n                if self.labware_wells[key][1] is False:\n                    return key\n\n        def advance_well(self):\n            curr_well = self.get_active_well()\n            # Mark the current well as 'used up'\n            self.labware_wells[curr_well][1] = True\n            pass\n\n        def reset_labware(self):\n            VolTracker.flash_lights()\n            ctx.pause(self.msg)\n            self.labware_wells = self.labware_wells_backup.copy()\n\n        def get_active_well_vol(self):\n            well = self.get_active_well()\n            return self.labware_wells[well][0]\n\n        def get_current_vol_by_key(self, well_key):\n            vol_diff = self.labware_wells[well_key][0]\n            if self.mode == 'reagent':\n                # Subtractive volumes (reagents) starts aat well_vol and\n                # decreases by vol_diff\n                return self.well_vol - vol_diff\n            else:\n                # Additive volumes i.e. targets and waste that start at 0\n                return vol_diff\n\n        def track(self, vol: float) -> Well:\n            \"\"\"track() will track how much liquid\n            was used up per well. If the volume of\n            a given well is greater than self.well_vol\n            it will remove it from the dictionary and iterate\n            to the next well which will act as the active source well.\n            :param vol: How much volume to track (per tip), i.e. if it's one\n            tip track vol, but if it's multi-pipette, track 8 * vol.\n\n            This implies that VolTracker will treat a column like a well,\n            whether it's a plate or a reservoir.\n            \"\"\"\n            well = self.get_active_well()\n            # Treat plates like reservoirs and add 8 well volumes together\n            # Total vol changed keeps track across labware resets, i.e.\n            # when the user replaces filled/emptied wells\n            vol = vol * 8 if self.pip_type == 'multi' else vol\n\n            # Track the total change in volume of this volume tracker\n            self.total_vol_changed += vol\n\n            if self.labware_wells[well][0] + vol > self.well_vol:\n                if self.is_strict_mode:\n                    msg = (\"Tracking a volume of {} uL would {} the \"\n                           \"current well: {} on the {} {} tracker. \"\n                           \"The max well volume is {}, and \"\n                           \"the current vol is {}\")\n                    mode_msg = (\"over-deplete`\" if self.mode == \"reagent\"\n                                else \"over-fill\")\n                    msg = msg.format(\n                        vol, mode_msg, well, self.reagent_name, self.mode,\n                        self.well_vol, self.get_active_well_vol())\n                    raise Exception(msg)\n                self.labware_wells[well][1] = True\n                is_all_used = True\n\n                # Check if wells are completely full (or depleted)\n                for w in self.labware_wells:\n                    if self.labware_wells[w][1] is False:\n                        is_all_used = False\n\n                if is_all_used is True:\n                    if self.is_strict_mode is False:\n                        self.reset_labware()\n                    else:\n                        e_msg = \"{}: {} {} wells would be {} by this action\"\n                        fill_status = \\\n                            (\"over-depleted\" if self.mode == \"reagent\" else\n                             \"over-filled\")\n                        e_msg = e_msg.format(str(self),\n                                             self.reagent,\n                                             self.mode, fill_status)\n                        raise Exception(e_msg)\n\n                well = self.get_active_well()\n                if self.is_verbose:\n                    ctx.comment(\n                        \"\\n{} {} tracker switching to well {}\\n\".format(\n                            self.reagent_name, self.mode, well))\n            self.labware_wells[well][0] += vol\n\n            if self.is_verbose:\n                if self.mode == 'waste':\n                    ctx.comment('{}: {} ul of total waste'\n                                .format(well,\n                                        int(self.labware_wells[well][0])))\n                elif self.mode == 'target':\n                    ctx.comment('{}: {} ul of reagent added to target well'\n                                .format(well,\n                                        int(self.labware_wells[well][0])))\n                else:\n                    ctx.comment('{} uL of liquid used from {}'\n                                .format(int(self.labware_wells[well][0]),\n                                        well))\n            return well\n\n    def is_15ml_tube(well: Well):\n        name = str(well).lower()\n        if \"tube\" not in name or \"15\" not in name:\n            return False\n        return True\n\n    def pick_up_tip_decorator(tip_pickup_fn, pip, *args, **kwargs):\n        try:\n            tip_pickup_fn(*args, **kwargs)\n        except protocol_api.labware.OutOfTipsError:\n            ctx.pause(\"Replace empty tip racks\")\n            pip.reset_tipracks()\n            pip.pick_up_tip()\n\n    def moving_fractional_dispense(pip,\n                                   vol: float,\n                                   liq_height: float,\n                                   y_offsets: Sequence[float],\n                                   dest_location: Location):\n        \"\"\"\n        This function moves to the offsets from the center of the well in the\n        y-direction and dispenses a fractional amount based on the length of\n        the offset sequence.\n        :param pip: Pipette to dispense with\n        :param vol: The volume to dispense\n        :param offsets: A tuple of offsets from the center of the dest_well\n        to do fractional dispenses at\n        :param dest_location: The location to dispense at\n        \"\"\"\n        nonlocal is_verbose, ctx\n        fractional_vol = vol/len(y_offsets)\n        for offset in y_offsets:\n            offset_point = Point(0, offset, 0)\n            disp_loc = dest_location.move(offset_point)\n            if is_verbose:\n                ctx.comment(\"Dispensing at {}\".format(str(disp_loc)))\n            pip.dispense(fractional_vol, disp_loc)\n\n    def tube_15ml_cone_height(tube: Well):\n        \"\"\"\n        :return value: Approximate height of the tube cone\n        \"\"\"\n\n        if not is_15ml_tube(tube):\n            msg = (\"The input well parameter: {}, does not appear to \"\n                   \"be a 15 mL tube\")\n            msg.format(tube)\n            raise Exception(msg)\n        return 0.171 * tube.depth\n\n    def tube_liq_height(vol, tube: Well, is_min_cone_height: bool = True):\n        \"\"\"\n        Calculates the height of the liquid level in a conical tube\n        given its liquid volume.The function tries to account for the conical\n        part of the tube\n        :param vol: The volume in uL\n        :param tuberack: The tuberack with the tubes\n        :param is_min_cone_height: Always return the height of the cone at\n        minimum\n        :return value: The height of the liquid level measured from\n        the bottom in mm\n        \"\"\"\n\n        if not is_15ml_tube(tube):\n            msg = (\"The input well parameter: {}, does not appear to \"\n                   \"be a 15 mL tube\")\n            msg.format(tube)\n            raise Exception(msg)\n\n        r = tube.diameter/2\n        # Fudge factor - height seems too low given a volume, so bump it up\n        # a little bit by \"decreasing\" the radius\n        r *= 0.94\n\n        # Cone height approximation\n        h_cone_max = tube_15ml_cone_height(tube)\n        vol_cone_max = (h_cone_max*pi*r**2)/3\n\n        if vol < vol_cone_max:\n            h_cone = (3*vol)/(pi*r**2)\n            # print(\"h_cone\", h_cone)\n            if is_min_cone_height:\n                return h_cone_max\n            return h_cone\n        else:\n            cylinder_partial_vol = vol - vol_cone_max\n            # print('cylinder v', cylinder_partial_vol,\n            # 'cone max vol', vol_cone_max)\n            h_partial_tube = cylinder_partial_vol/(pi*r**2)\n            # print('h cone max', h_cone_max, 'h partial tube', h_partial_tube)\n            return h_cone_max + h_partial_tube\n\n    def transfer_reagent(\n            source: VolTracker,\n            vol: float,\n            reagent_name: str,\n            target: VolTracker,\n            starting_well_index: int,\n            is_pip_single: bool,\n            aspiration_rate_multiplier: float,\n            dispense_rate_multiplier: float,\n            fractional_dispense_y_offsets: Optional[Sequence[float]] = None,\n            new_tip: bool = True,\n            is_verbose: bool = True,\n            ):\n\n        nonlocal ctx\n        msg = \"Transferring {} to mastermix {}\"\n        target_string = \"15 mL tubes\" if is_pip_single else \"reservoir wells\"\n        msg = msg.format(reagent_name, target_string)\n        ctx.comment(msg)\n\n        vol_remaining = vol\n        pip = p300 if is_pip_single else m300\n\n        # flow rates are floats, so they will copy by value\n        fr_copy = (pip.flow_rate.aspirate, pip.flow_rate.dispense)\n        pip.flow_rate.aspirate *= aspiration_rate_multiplier\n        pip.flow_rate.dispense *= dispense_rate_multiplier\n        if new_tip:\n            if pip.has_tip:\n                pip.drop_tip()\n            pick_up_tip_decorator(pip.pick_up_tip, pip)\n        # Loop over each target well filling it up to its maximal volume\n        # or less\n        while vol_remaining > 0:\n            # Either fill up a target well completely and move on to the next\n            # target well\n            # or fill it up to some volume less than it's maximal volume\n            # and end the transfer (i.e. that well would be the final target\n            # by virtue of being able to contain the entire remaining volume)\n            # Subtract the transfer_vol at the end of the while loop\n            # from vol_remaining\n\n            # Calculate aspiration and dispensing offsets for/if tubes.\n            # = 0.1 for reservoirs, and not recalculated.\n            source_liq_height = 0.1\n            target_liq_height = \\\n                (10 if fractional_dispense_y_offsets is not None else 0.1)\n            # and dispense a fractional volume\n            # Fractionate the volume transfer into discrete pipette\n            # aspirate/dispense steps\n            aspiration_vol = 0\n            source_volume = source.get_active_well_vol_change()\n            target_volume = target.get_active_well_vol_change()\n\n            # Advance to the next well on source and tracker if they\n            # are full/depleted.\n            for tracker in [source, target]:\n                if tracker.get_active_well_remaining_vol() <= 1:\n                    tracker.advance_well()\n            if is_pip_single:\n                aspiration_vol = min(\n                    vol_remaining, pip.max_volume,\n                    source.get_active_well_remaining_vol()-1,\n                    target.get_active_well_remaining_vol()-1)\n                # If we're doing dispenses with offsets we should be\n                # above the cone height so we don't bump the tube with\n                # the tip\n                is_cone_min_offset = (True if fractional_dispense_y_offsets\n                                      is not None else False)\n                target_liq_height = tube_liq_height(\n                    target_volume, target.get_active_well(),\n                    is_cone_min_offset)\n                # Make sure we don't bang into the bottom of the tube\n                target_liq_height = max(target_liq_height, 0.1)\n                source_liq_height = tube_liq_height(\n                    source_volume, source.get_active_well(),\n                    False)\n                # Make sure we're dipping below the surface for aspirations\n                # without hitting the bottom\n                source_liq_height = max(source_liq_height-10, 0.1)\n                if is_verbose:\n                    msg = (\"Aspirating from the source tube with a {} \"\n                           \"mm offset from the bottom\")\n                    msg = msg.format(source_liq_height)\n                    ctx.comment(msg)\n\n                    msg = (\"Dispensing into the target tube with a {} \"\n                           \"mm offset from the bottom\")\n                    msg = msg.format(target_liq_height)\n                    ctx.comment(msg)\n            else:\n                # If we are using a reservoir/multi-channel:\n                # Aspiration volume should be either\n                # the max volume of the pipette, or any other\n                # volume (remaining volume, source well volume,\n                # remaining target well volume) divided by 8\n                # Aspiration/dispensing z-offsets kept constant at 0.1 mm\n                aspiration_vol = min(\n                    vol_remaining/8, pip.max_volume,\n                    (source.get_active_well_remaining_vol()-1)/8,\n                    (target.get_active_well_remaining_vol()-1)/8)\n\n            d_loc = target.track(\n                aspiration_vol).bottom(target_liq_height)\n            s_loc = source.track(\n                aspiration_vol).bottom(source_liq_height)\n\n            pip.aspirate(aspiration_vol,\n                         s_loc)\n\n            if fractional_dispense_y_offsets is not None:\n                moving_fractional_dispense(\n                    pip, aspiration_vol, target_liq_height,\n                    fractional_dispense_y_offsets,\n                    d_loc)\n            else:\n                pip.dispense(aspiration_vol, d_loc)\n\n            subtraction_vol = (aspiration_vol if is_single_pip is True else\n                               aspiration_vol * 8)\n            vol_remaining -= subtraction_vol\n        pip.drop_tip()\n        # Reset flow rates\n        pip.flow_rate.aspirate, pip.flow_rate.dispense = fr_copy\n    # reagents\n\n    '''\n    Define where all reagents are on the deck using the labware defined above.\n\n    e.g.\n\n    water = reservoir12.wells()[-1]\n    waste = reservoir.wells()[0]\n    samples = plate.rows()[0][0]\n    dnase = tuberack.wells_by_name()['A4']\n\n    '''\n    mastermix_target = (tuberack_mm_target if is_target_tube else res12)\n\n    y_offsets = []\n    target_well_type = mastermix_target.wells()[0]\n    # If the mastermix target is a tuberack, the reagent sources are also tubes\n    # for tube targets\n    y_offsets.append(0)  # Always start in the center of the well\n    if target_well_type.diameter is not None:\n        pos_offset = target_well_type.diameter/2-tube_edge_offset\n        pos_offset = pos_offset if pos_offset > 0 else 0\n        neg_offset = -pos_offset\n        y_offsets.append(pos_offset)\n        y_offsets.append(neg_offset)\n    # Reservoir target\n    elif target_well_type.width is not None:\n        resv_well_width = target_well_type.width/8\n        pos_offset = resv_well_width/2 - resv_well_edge_offset\n        neg_offset = -pos_offset\n        y_offsets.append(pos_offset)\n        y_offsets.append(neg_offset)\n    # Error?\n    else:\n        msg = \"The well {} does not have a diameter or width/length\"\n        msg.format(target_well_type)\n        raise Exception(msg)\n\n    ml_multiplier = 10**3\n    # Source wells of binding buffer\n    source_labware = tuberack_mm_target if is_target_tube else res12\n    bb_source = VolTracker(\n        labware=source_labware,\n        well_vol=vol_source_bb_per_well*ml_multiplier,\n        start=bb_start_index,\n        end=bb_end_index,\n        mode='reagent',\n        msg=\"Refill binding buffer wells\",\n        reagent_name='Binding buffer',\n        pip_type='single' if is_single_pip else 'multi',\n        is_verbose=is_verbose,\n        is_strict_mode=True)\n\n    bb_source_init = copy.deepcopy(bb_source)\n\n    # Source wells of bead mix\n    bead_mix_source = VolTracker(\n        labware=source_labware,\n        well_vol=vol_source_bead_mix_per_well*ml_multiplier,\n        start=bead_start_index,\n        end=bead_end_index,\n        mode='reagent',\n        msg=\"Refill binding buffer wells\",\n        reagent_name='Bead mix',\n        pip_type='single' if is_single_pip else 'multi',\n        is_verbose=is_verbose,\n        is_strict_mode=True)\n\n    bead_mix_source_init = copy.deepcopy(bead_mix_source)\n\n    bb_target = VolTracker(\n        labware=mastermix_target,\n        # Add one uL for margin of error in any float rounding\n        well_vol=max_bb_vol_per_well+1,\n        start=well_index_after_reagent_wells,\n        end=well_index_after_reagent_wells + n_mm_target_wells,\n        mode='target',\n        # Should not happen, but:\n        msg=\"All mastermix target wells/tubes are full, please replace them\",\n        reagent_name='Binding buffer',\n        pip_type='single' if is_single_pip else 'multi',\n        is_verbose=is_verbose,\n        is_strict_mode=True\n        )\n\n    bb_target_init = copy.deepcopy(bb_target)\n\n    bead_mix_target = VolTracker(\n        labware=mastermix_target,\n        well_vol=max_bead_vol_per_well,\n        # Same target wells as for the binding buffer\n        start=well_index_after_reagent_wells,\n        end=well_index_after_reagent_wells + n_mm_target_wells,\n        mode='target',\n        # Should not happen, but:\n        msg=\"All mastermix target wells/tubes are full, please replace them\",\n        reagent_name='Bead mix',\n        pip_type='single' if is_single_pip else 'multi',\n        is_verbose=is_verbose,\n        is_strict_mode=True\n    )\n    bead_mix_target_init = copy.deepcopy(bead_mix_target)\n\n    # plate, tube rack maps\n\n    '''\n    Define any plate or tube maps here.\n\n    e.g.\n\n    plate_wells_by_row = [well for row in plate.rows() for well in row]\n\n    '''\n\n    # protocol\n\n    '''\n\n    Include header sections as follows for each \"section\" of your protocol.\n\n    Section can be defined as a step in a bench protocol.\n\n    e.g.\n\n    ctx.comment('\\n\\nMOVING MASTERMIX TO SAMPLES IN COLUMNS 1-6\\n')\n\n    for .... in ...:\n        ...\n        ...\n\n    ctx.comment('\\n\\nRUNNING THERMOCYCLER PROFILE\\n')\n\n    ...\n    ...\n    ...\n\n\n    '''\n\n    # Mastermix creation\n    # Step 7-8: Transfer binding buffer\n    transfer_reagent(\n        source=bb_source,\n        vol=total_bb_vol,\n        reagent_name=\"Binding Buffer\",\n        target=bb_target,\n        starting_well_index=starting_mm_well_index,\n        is_pip_single=is_single_pip,\n        aspiration_rate_multiplier=bb_asp_rate_multiplier,\n        dispense_rate_multiplier=bb_disp_rate_multipler)\n    # # Step 9: Mix the bead solutions in the reservoir\n    pip = p300 if is_target_tube else m300\n    bead_wells = bead_mix_source.get_wells()\n\n    # Bead mix mixing.\n    pick_up_tip_decorator(pip.pick_up_tip, pip)\n    for well in bead_wells:\n        z_offset = 0.1\n        if is_target_tube:\n            well_vol = bead_mix_source.get_current_vol_by_key(well)\n            height = tube_liq_height(well_vol, well, False)\n            z_offset = max(0.1, height-10)\n            pass\n        pip.mix(10, pip.max_volume, well.bottom(z_offset))\n        if is_verbose:\n            msg = \"Mixing bead mix source at a z-offset of {}\"\n            msg = msg.format(z_offset)\n            ctx.comment(msg)\n        pip.blow_out(well)\n        pip.touch_tip(well)\n\n    # # Step 10: Transfer bead solution to target wells\n    # Dispense 1/3rd in the center of the well, 1/3rd at the top\n    # and 1/3rd at the bottom.\n\n    transfer_reagent(\n        source=bead_mix_source,\n        vol=total_bead_vol,\n        reagent_name=\"Bead Mix\",\n        target=bead_mix_target,\n        starting_well_index=starting_mm_well_index,\n        is_pip_single=is_single_pip,\n        aspiration_rate_multiplier=bead_asp_rate_multiplier,\n        dispense_rate_multiplier=bead_disp_rate_multiplier,\n        fractional_dispense_y_offsets=y_offsets,\n        new_tip=False)\n\n    # Mix the mastermix\n    pip = p300 if is_target_tube else m300\n    if pip.has_tip:\n        pip.drop_tip()\n    pip.pick_up_tip()\n\n    bb_target_tracker_list = bb_target.to_list()\n    bead_target_tracker_list = bead_mix_target.to_list()\n\n    if n_mm_mixes > 0:\n        ctx.comment(\"\\nMixing the mastermix\\n\")\n        n_tips = 1 if is_target_tube else 8\n        for bb, bead in zip(bb_target_tracker_list, bead_target_tracker_list):\n            msg = \"The target wells should be the same for both reagents\"\n            assert bb[0] == bead[0], msg\n            mixing_well = bb[0]\n            if bb[1][0] + bead[1][0] < 1:\n                break\n            mix_vol = min(bb[1][0] + bead[1][0], pip.max_volume*n_tips)\n            mix_vol = mix_vol/n_tips\n            pip.mix(n_mm_mixes, mix_vol, mixing_well,\n                    mastermix_mix_rate_multiplier)\n\n    if is_debug_mode:\n        # Error check our results - accept a mean of 1 uL error per well\n        bb_target_diff = abs(\n            total_bb_vol - bb_target.total_vol_changed)\n        bead_mix_target_diff = abs(\n            total_bead_vol - bead_mix_target.total_vol_changed)\n        # Add volumes here since they should be negative (i.e. consumed)\n        bb_source_diff = abs(\n            total_bb_vol - bb_source.total_vol_changed)\n        bead_mix_source_diff = abs(\n            total_bead_vol - bead_mix_source.total_vol_changed)\n        vol_err_template = (\"The difference between stated and transferred {} \"\n                            \"vol was too great: {}\")\n\n        for diff, name in zip([bb_target_diff,\n                               bead_mix_target_diff,\n                               bb_source_diff,\n                               bead_mix_source_diff],\n                              [\"binding buffer target\",\n                               \"bead mix target\",\n                               \"binding buffer source\",\n                               ]):\n            msg = vol_err_template.format(name, diff)\n            # Accept 1 uL abs mean difference per well\n            try:\n                assert diff < n_mm_target_wells, msg\n            except AssertionError as e:\n                ctx.comment(\n                    (\"Assertion error comparing volumes transferred to stated \"\n                     \"volumes transferred \"))\n                ctx.comment(str(e))\n                ctx.comment(\"\\n\" + str(bb_source) + str(bead_mix_source)\n                            + str(bb_target) + str(bead_mix_target) + \"\\n\")\n\n        # Print info about the volume trackers\n        ctx.comment(\"\\n\\nVolTrackers before transfer\")\n        for vt in [bb_source_init, bead_mix_source_init,\n                   bb_target_init, bead_mix_target_init]:\n            ctx.comment(str(vt))\n        ctx.comment(\"\\n\\nVolTrackers after transfer\")\n        for vt in [bb_source, bead_mix_source,\n                   bb_target, bead_mix_target]:\n            ctx.comment(str(vt))\n            ctx.comment(\"Volume change:\" + str(vt.total_vol_changed))\n\n    ctx.comment(\"\\n\\n - Protocol finished! - \\n\")\n",
+    "custom_labware_defs": [
+        {
+            "brand": {
+                "brand": "Opentrons",
+                "brandId": [],
+                "links": []
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 260,
+                "yDimension": 85.5,
+                "zDimension": 121.3
+            },
+            "groups": [
+                {
+                    "brand": {
+                        "brand": "NEST",
+                        "brandId": [],
+                        "links": []
+                    },
+                    "metadata": {
+                        "displayCategory": "tubeRack",
+                        "displayName": "NEST 15 mL Conical",
+                        "wellBottomShape": "v"
+                    },
+                    "wells": [
+                        "A1",
+                        "C1",
+                        "A3",
+                        "C3",
+                        "A5",
+                        "C5",
+                        "A7",
+                        "C7"
+                    ]
+                },
+                {
+                    "brand": {
+                        "brand": "NEST",
+                        "brandId": [],
+                        "links": []
+                    },
+                    "metadata": {
+                        "displayCategory": "tubeRack",
+                        "displayName": "NEST 15 mL Conical",
+                        "wellBottomShape": "v"
+                    },
+                    "wells": [
+                        "A2",
+                        "C2",
+                        "A4",
+                        "C4",
+                        "A6",
+                        "C6",
+                        "A8",
+                        "C8"
+                    ]
+                },
+                {
+                    "brand": {
+                        "brand": "NEST",
+                        "brandId": [],
+                        "links": []
+                    },
+                    "metadata": {
+                        "displayCategory": "tubeRack",
+                        "displayName": "NEST 15 mL Conical",
+                        "wellBottomShape": "v"
+                    },
+                    "wells": [
+                        "B1",
+                        "D1",
+                        "B3",
+                        "D3",
+                        "B5",
+                        "D5",
+                        "B7",
+                        "D7"
+                    ]
+                },
+                {
+                    "brand": {
+                        "brand": "NEST",
+                        "brandId": [],
+                        "links": []
+                    },
+                    "metadata": {
+                        "displayCategory": "tubeRack",
+                        "displayName": "NEST 15 mL Conical",
+                        "wellBottomShape": "v"
+                    },
+                    "wells": [
+                        "B2",
+                        "D2",
+                        "B4",
+                        "D4",
+                        "B6",
+                        "D6",
+                        "B8",
+                        "D8"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "tubeRack",
+                "displayName": "NEST 32 Tuberack 15ml (2 Slot)",
+                "displayVolumeUnits": "mL",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1",
+                    "B1",
+                    "C1",
+                    "D1"
+                ],
+                [
+                    "A2",
+                    "B2",
+                    "C2",
+                    "D2"
+                ],
+                [
+                    "A3",
+                    "B3",
+                    "C3",
+                    "D3"
+                ],
+                [
+                    "A4",
+                    "B4",
+                    "C4",
+                    "D4"
+                ],
+                [
+                    "A5",
+                    "B5",
+                    "C5",
+                    "D5"
+                ],
+                [
+                    "A6",
+                    "B6",
+                    "C6",
+                    "D6"
+                ],
+                [
+                    "A7",
+                    "B7",
+                    "C7",
+                    "D7"
+                ],
+                [
+                    "A8",
+                    "B8",
+                    "C8",
+                    "D8"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "nest_32_tuberack_8x15ml_8x15ml_8x15ml_8x15ml"
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 24.87,
+                    "y": 72.76,
+                    "z": 3.55
+                },
+                "A2": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 60.87,
+                    "y": 72.76,
+                    "z": 3.55
+                },
+                "A3": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 87.37,
+                    "y": 72.76,
+                    "z": 3.55
+                },
+                "A4": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 123.37,
+                    "y": 72.76,
+                    "z": 3.55
+                },
+                "A5": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 149.87,
+                    "y": 72.76,
+                    "z": 3.55
+                },
+                "A6": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 185.87,
+                    "y": 72.76,
+                    "z": 3.55
+                },
+                "A7": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 212.37,
+                    "y": 72.76,
+                    "z": 3.55
+                },
+                "A8": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 248.37,
+                    "y": 72.76,
+                    "z": 3.55
+                },
+                "B1": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 11.62,
+                    "y": 52.75,
+                    "z": 3.55
+                },
+                "B2": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 47.62,
+                    "y": 52.75,
+                    "z": 3.55
+                },
+                "B3": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 74.12,
+                    "y": 52.75,
+                    "z": 3.55
+                },
+                "B4": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 110.12,
+                    "y": 52.75,
+                    "z": 3.55
+                },
+                "B5": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 136.62,
+                    "y": 52.75,
+                    "z": 3.55
+                },
+                "B6": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 172.62,
+                    "y": 52.75,
+                    "z": 3.55
+                },
+                "B7": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 199.12,
+                    "y": 52.75,
+                    "z": 3.55
+                },
+                "B8": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 235.12,
+                    "y": 52.75,
+                    "z": 3.55
+                },
+                "C1": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 24.87,
+                    "y": 32.74,
+                    "z": 3.55
+                },
+                "C2": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 60.87,
+                    "y": 32.74,
+                    "z": 3.55
+                },
+                "C3": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 87.37,
+                    "y": 32.74,
+                    "z": 3.55
+                },
+                "C4": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 123.37,
+                    "y": 32.74,
+                    "z": 3.55
+                },
+                "C5": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 149.87,
+                    "y": 32.74,
+                    "z": 3.55
+                },
+                "C6": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 185.87,
+                    "y": 32.74,
+                    "z": 3.55
+                },
+                "C7": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 212.37,
+                    "y": 32.74,
+                    "z": 3.55
+                },
+                "C8": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 248.37,
+                    "y": 32.74,
+                    "z": 3.55
+                },
+                "D1": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 11.62,
+                    "y": 12.73,
+                    "z": 3.55
+                },
+                "D2": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 47.62,
+                    "y": 12.73,
+                    "z": 3.55
+                },
+                "D3": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 74.12,
+                    "y": 12.73,
+                    "z": 3.55
+                },
+                "D4": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 110.12,
+                    "y": 12.73,
+                    "z": 3.55
+                },
+                "D5": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 136.62,
+                    "y": 12.73,
+                    "z": 3.55
+                },
+                "D6": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 172.62,
+                    "y": 12.73,
+                    "z": 3.55
+                },
+                "D7": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 199.12,
+                    "y": 12.73,
+                    "z": 3.55
+                },
+                "D8": {
+                    "depth": 117.75,
+                    "diameter": 15,
+                    "shape": "circular",
+                    "totalLiquidVolume": 15000,
+                    "x": 235.12,
+                    "y": 12.73,
+                    "z": 3.55
+                }
+            }
+        },
+        {
+            "brand": {
+                "brand": "Thermo-Fisher Kingfisher deep well",
+                "brandId": [
+                    "A48305"
+                ]
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 127.8,
+                "yDimension": 85.5,
+                "zDimension": 44
+            },
+            "groups": [
+                {
+                    "metadata": {
+                        "wellBottomShape": "v"
+                    },
+                    "wells": [
+                        "A1",
+                        "B1",
+                        "C1",
+                        "D1",
+                        "E1",
+                        "F1",
+                        "G1",
+                        "H1",
+                        "A2",
+                        "B2",
+                        "C2",
+                        "D2",
+                        "E2",
+                        "F2",
+                        "G2",
+                        "H2",
+                        "A3",
+                        "B3",
+                        "C3",
+                        "D3",
+                        "E3",
+                        "F3",
+                        "G3",
+                        "H3",
+                        "A4",
+                        "B4",
+                        "C4",
+                        "D4",
+                        "E4",
+                        "F4",
+                        "G4",
+                        "H4",
+                        "A5",
+                        "B5",
+                        "C5",
+                        "D5",
+                        "E5",
+                        "F5",
+                        "G5",
+                        "H5",
+                        "A6",
+                        "B6",
+                        "C6",
+                        "D6",
+                        "E6",
+                        "F6",
+                        "G6",
+                        "H6",
+                        "A7",
+                        "B7",
+                        "C7",
+                        "D7",
+                        "E7",
+                        "F7",
+                        "G7",
+                        "H7",
+                        "A8",
+                        "B8",
+                        "C8",
+                        "D8",
+                        "E8",
+                        "F8",
+                        "G8",
+                        "H8",
+                        "A9",
+                        "B9",
+                        "C9",
+                        "D9",
+                        "E9",
+                        "F9",
+                        "G9",
+                        "H9",
+                        "A10",
+                        "B10",
+                        "C10",
+                        "D10",
+                        "E10",
+                        "F10",
+                        "G10",
+                        "H10",
+                        "A11",
+                        "B11",
+                        "C11",
+                        "D11",
+                        "E11",
+                        "F11",
+                        "G11",
+                        "H11",
+                        "A12",
+                        "B12",
+                        "C12",
+                        "D12",
+                        "E12",
+                        "F12",
+                        "G12",
+                        "H12"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "wellPlate",
+                "displayName": "Thermo-Fisher Kingfisher Deep Well 96 Well Plate 2000 \u00b5L",
+                "displayVolumeUnits": "\u00b5L",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1",
+                    "B1",
+                    "C1",
+                    "D1",
+                    "E1",
+                    "F1",
+                    "G1",
+                    "H1"
+                ],
+                [
+                    "A2",
+                    "B2",
+                    "C2",
+                    "D2",
+                    "E2",
+                    "F2",
+                    "G2",
+                    "H2"
+                ],
+                [
+                    "A3",
+                    "B3",
+                    "C3",
+                    "D3",
+                    "E3",
+                    "F3",
+                    "G3",
+                    "H3"
+                ],
+                [
+                    "A4",
+                    "B4",
+                    "C4",
+                    "D4",
+                    "E4",
+                    "F4",
+                    "G4",
+                    "H4"
+                ],
+                [
+                    "A5",
+                    "B5",
+                    "C5",
+                    "D5",
+                    "E5",
+                    "F5",
+                    "G5",
+                    "H5"
+                ],
+                [
+                    "A6",
+                    "B6",
+                    "C6",
+                    "D6",
+                    "E6",
+                    "F6",
+                    "G6",
+                    "H6"
+                ],
+                [
+                    "A7",
+                    "B7",
+                    "C7",
+                    "D7",
+                    "E7",
+                    "F7",
+                    "G7",
+                    "H7"
+                ],
+                [
+                    "A8",
+                    "B8",
+                    "C8",
+                    "D8",
+                    "E8",
+                    "F8",
+                    "G8",
+                    "H8"
+                ],
+                [
+                    "A9",
+                    "B9",
+                    "C9",
+                    "D9",
+                    "E9",
+                    "F9",
+                    "G9",
+                    "H9"
+                ],
+                [
+                    "A10",
+                    "B10",
+                    "C10",
+                    "D10",
+                    "E10",
+                    "F10",
+                    "G10",
+                    "H10"
+                ],
+                [
+                    "A11",
+                    "B11",
+                    "C11",
+                    "D11",
+                    "E11",
+                    "F11",
+                    "G11",
+                    "H11"
+                ],
+                [
+                    "A12",
+                    "B12",
+                    "C12",
+                    "D12",
+                    "E12",
+                    "F12",
+                    "G12",
+                    "H12"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "thermofisherkingfisherdeepwell_96_wellplate_2000ul",
+                "quirks": []
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 14.4,
+                    "y": 74.2,
+                    "z": 1.7
+                },
+                "A10": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 95.4,
+                    "y": 74.2,
+                    "z": 1.7
+                },
+                "A11": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 104.4,
+                    "y": 74.2,
+                    "z": 1.7
+                },
+                "A12": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 113.4,
+                    "y": 74.2,
+                    "z": 1.7
+                },
+                "A2": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 23.4,
+                    "y": 74.2,
+                    "z": 1.7
+                },
+                "A3": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 32.4,
+                    "y": 74.2,
+                    "z": 1.7
+                },
+                "A4": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 41.4,
+                    "y": 74.2,
+                    "z": 1.7
+                },
+                "A5": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 50.4,
+                    "y": 74.2,
+                    "z": 1.7
+                },
+                "A6": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 59.4,
+                    "y": 74.2,
+                    "z": 1.7
+                },
+                "A7": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 68.4,
+                    "y": 74.2,
+                    "z": 1.7
+                },
+                "A8": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 77.4,
+                    "y": 74.2,
+                    "z": 1.7
+                },
+                "A9": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 86.4,
+                    "y": 74.2,
+                    "z": 1.7
+                },
+                "B1": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 14.4,
+                    "y": 65.2,
+                    "z": 1.7
+                },
+                "B10": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 95.4,
+                    "y": 65.2,
+                    "z": 1.7
+                },
+                "B11": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 104.4,
+                    "y": 65.2,
+                    "z": 1.7
+                },
+                "B12": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 113.4,
+                    "y": 65.2,
+                    "z": 1.7
+                },
+                "B2": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 23.4,
+                    "y": 65.2,
+                    "z": 1.7
+                },
+                "B3": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 32.4,
+                    "y": 65.2,
+                    "z": 1.7
+                },
+                "B4": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 41.4,
+                    "y": 65.2,
+                    "z": 1.7
+                },
+                "B5": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 50.4,
+                    "y": 65.2,
+                    "z": 1.7
+                },
+                "B6": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 59.4,
+                    "y": 65.2,
+                    "z": 1.7
+                },
+                "B7": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 68.4,
+                    "y": 65.2,
+                    "z": 1.7
+                },
+                "B8": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 77.4,
+                    "y": 65.2,
+                    "z": 1.7
+                },
+                "B9": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 86.4,
+                    "y": 65.2,
+                    "z": 1.7
+                },
+                "C1": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 14.4,
+                    "y": 56.2,
+                    "z": 1.7
+                },
+                "C10": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 95.4,
+                    "y": 56.2,
+                    "z": 1.7
+                },
+                "C11": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 104.4,
+                    "y": 56.2,
+                    "z": 1.7
+                },
+                "C12": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 113.4,
+                    "y": 56.2,
+                    "z": 1.7
+                },
+                "C2": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 23.4,
+                    "y": 56.2,
+                    "z": 1.7
+                },
+                "C3": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 32.4,
+                    "y": 56.2,
+                    "z": 1.7
+                },
+                "C4": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 41.4,
+                    "y": 56.2,
+                    "z": 1.7
+                },
+                "C5": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 50.4,
+                    "y": 56.2,
+                    "z": 1.7
+                },
+                "C6": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 59.4,
+                    "y": 56.2,
+                    "z": 1.7
+                },
+                "C7": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 68.4,
+                    "y": 56.2,
+                    "z": 1.7
+                },
+                "C8": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 77.4,
+                    "y": 56.2,
+                    "z": 1.7
+                },
+                "C9": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 86.4,
+                    "y": 56.2,
+                    "z": 1.7
+                },
+                "D1": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 14.4,
+                    "y": 47.2,
+                    "z": 1.7
+                },
+                "D10": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 95.4,
+                    "y": 47.2,
+                    "z": 1.7
+                },
+                "D11": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 104.4,
+                    "y": 47.2,
+                    "z": 1.7
+                },
+                "D12": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 113.4,
+                    "y": 47.2,
+                    "z": 1.7
+                },
+                "D2": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 23.4,
+                    "y": 47.2,
+                    "z": 1.7
+                },
+                "D3": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 32.4,
+                    "y": 47.2,
+                    "z": 1.7
+                },
+                "D4": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 41.4,
+                    "y": 47.2,
+                    "z": 1.7
+                },
+                "D5": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 50.4,
+                    "y": 47.2,
+                    "z": 1.7
+                },
+                "D6": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 59.4,
+                    "y": 47.2,
+                    "z": 1.7
+                },
+                "D7": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 68.4,
+                    "y": 47.2,
+                    "z": 1.7
+                },
+                "D8": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 77.4,
+                    "y": 47.2,
+                    "z": 1.7
+                },
+                "D9": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 86.4,
+                    "y": 47.2,
+                    "z": 1.7
+                },
+                "E1": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 14.4,
+                    "y": 38.2,
+                    "z": 1.7
+                },
+                "E10": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 95.4,
+                    "y": 38.2,
+                    "z": 1.7
+                },
+                "E11": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 104.4,
+                    "y": 38.2,
+                    "z": 1.7
+                },
+                "E12": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 113.4,
+                    "y": 38.2,
+                    "z": 1.7
+                },
+                "E2": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 23.4,
+                    "y": 38.2,
+                    "z": 1.7
+                },
+                "E3": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 32.4,
+                    "y": 38.2,
+                    "z": 1.7
+                },
+                "E4": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 41.4,
+                    "y": 38.2,
+                    "z": 1.7
+                },
+                "E5": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 50.4,
+                    "y": 38.2,
+                    "z": 1.7
+                },
+                "E6": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 59.4,
+                    "y": 38.2,
+                    "z": 1.7
+                },
+                "E7": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 68.4,
+                    "y": 38.2,
+                    "z": 1.7
+                },
+                "E8": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 77.4,
+                    "y": 38.2,
+                    "z": 1.7
+                },
+                "E9": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 86.4,
+                    "y": 38.2,
+                    "z": 1.7
+                },
+                "F1": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 14.4,
+                    "y": 29.2,
+                    "z": 1.7
+                },
+                "F10": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 95.4,
+                    "y": 29.2,
+                    "z": 1.7
+                },
+                "F11": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 104.4,
+                    "y": 29.2,
+                    "z": 1.7
+                },
+                "F12": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 113.4,
+                    "y": 29.2,
+                    "z": 1.7
+                },
+                "F2": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 23.4,
+                    "y": 29.2,
+                    "z": 1.7
+                },
+                "F3": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 32.4,
+                    "y": 29.2,
+                    "z": 1.7
+                },
+                "F4": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 41.4,
+                    "y": 29.2,
+                    "z": 1.7
+                },
+                "F5": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 50.4,
+                    "y": 29.2,
+                    "z": 1.7
+                },
+                "F6": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 59.4,
+                    "y": 29.2,
+                    "z": 1.7
+                },
+                "F7": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 68.4,
+                    "y": 29.2,
+                    "z": 1.7
+                },
+                "F8": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 77.4,
+                    "y": 29.2,
+                    "z": 1.7
+                },
+                "F9": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 86.4,
+                    "y": 29.2,
+                    "z": 1.7
+                },
+                "G1": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 14.4,
+                    "y": 20.2,
+                    "z": 1.7
+                },
+                "G10": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 95.4,
+                    "y": 20.2,
+                    "z": 1.7
+                },
+                "G11": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 104.4,
+                    "y": 20.2,
+                    "z": 1.7
+                },
+                "G12": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 113.4,
+                    "y": 20.2,
+                    "z": 1.7
+                },
+                "G2": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 23.4,
+                    "y": 20.2,
+                    "z": 1.7
+                },
+                "G3": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 32.4,
+                    "y": 20.2,
+                    "z": 1.7
+                },
+                "G4": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 41.4,
+                    "y": 20.2,
+                    "z": 1.7
+                },
+                "G5": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 50.4,
+                    "y": 20.2,
+                    "z": 1.7
+                },
+                "G6": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 59.4,
+                    "y": 20.2,
+                    "z": 1.7
+                },
+                "G7": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 68.4,
+                    "y": 20.2,
+                    "z": 1.7
+                },
+                "G8": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 77.4,
+                    "y": 20.2,
+                    "z": 1.7
+                },
+                "G9": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 86.4,
+                    "y": 20.2,
+                    "z": 1.7
+                },
+                "H1": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 14.4,
+                    "y": 11.2,
+                    "z": 1.7
+                },
+                "H10": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 95.4,
+                    "y": 11.2,
+                    "z": 1.7
+                },
+                "H11": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 104.4,
+                    "y": 11.2,
+                    "z": 1.7
+                },
+                "H12": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 113.4,
+                    "y": 11.2,
+                    "z": 1.7
+                },
+                "H2": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 23.4,
+                    "y": 11.2,
+                    "z": 1.7
+                },
+                "H3": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 32.4,
+                    "y": 11.2,
+                    "z": 1.7
+                },
+                "H4": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 41.4,
+                    "y": 11.2,
+                    "z": 1.7
+                },
+                "H5": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 50.4,
+                    "y": 11.2,
+                    "z": 1.7
+                },
+                "H6": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 59.4,
+                    "y": 11.2,
+                    "z": 1.7
+                },
+                "H7": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 68.4,
+                    "y": 11.2,
+                    "z": 1.7
+                },
+                "H8": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 77.4,
+                    "y": 11.2,
+                    "z": 1.7
+                },
+                "H9": {
+                    "depth": 42.3,
+                    "diameter": 8.3,
+                    "shape": "circular",
+                    "totalLiquidVolume": 2000,
+                    "x": 86.4,
+                    "y": 11.2,
+                    "z": 1.7
+                }
+            }
+        }
+    ],
+    "fields": [
+        {
+            "default": 96,
+            "label": "Create mastermix for how many numbers of samples",
+            "name": "n_samples",
+            "type": "int"
+        },
+        {
+            "default": "1-4",
+            "label": "Binding buffer wells",
+            "name": "bindbuf_source_well_indices",
+            "type": "str"
+        },
+        {
+            "default": "5",
+            "label": "Bead mix well(s)",
+            "name": "bead_mix_source_well_indices",
+            "type": "str"
+        },
+        {
+            "default": 15.0,
+            "label": "Volume of binding buffer per source well (mL)",
+            "name": "vol_source_bb_per_well",
+            "type": "float"
+        },
+        {
+            "default": 2.5,
+            "label": "Volume of bead mix per source well (mL)",
+            "name": "vol_source_bead_mix_per_well",
+            "type": "float"
+        },
+        {
+            "label": "P300 single channel pipette mount",
+            "name": "p300_mount",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P300 multi channel pipette mount",
+            "name": "m300_mount",
+            "options": [
+                {
+                    "label": "Right",
+                    "value": "right"
+                },
+                {
+                    "label": "Left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Mastermix tuberack (Optional, only for small volumes of mastermix)",
+            "name": "mastermix_tuberack_lname",
+            "options": [
+                {
+                    "label": "None",
+                    "value": false
+                },
+                {
+                    "label": "Opentrons 10 Tube Rack with Falcon 4x50 mL, 6x15 mL Conical",
+                    "value": "opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical"
+                },
+                {
+                    "label": "Opentrons 10 Tube Rack with NEST 4x50 mL, 6x15 mL Conical",
+                    "value": "opentrons_10_tuberack_nest_4x50ml_6x15ml_conical"
+                },
+                {
+                    "label": "Opentrons 15 Tube Rack with Falcon 15 mL Conical",
+                    "value": "opentrons_15_tuberack_falcon_15ml_conical"
+                },
+                {
+                    "label": "Opentrons 15 Tube Rack with NEST 15 mL Conical",
+                    "value": "opentrons_15_tuberack_nest_15ml_conical"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "default": 0.3,
+            "label": "Binding buffer aspiration flow rate multiplier",
+            "name": "bb_asp_rate_multiplier",
+            "type": "float"
+        },
+        {
+            "default": 0.3,
+            "label": "Binding buffer dispensing flow rate multiplier",
+            "name": "bb_disp_rate_multipler",
+            "type": "float"
+        },
+        {
+            "default": 1.0,
+            "label": "Bead solution aspiration flow rate multiplier",
+            "name": "bead_asp_rate_multiplier",
+            "type": "float"
+        },
+        {
+            "default": 1.0,
+            "label": "Bead solution dispensing flow rate multiplier",
+            "name": "bead_disp_rate_multiplier",
+            "type": "float"
+        },
+        {
+            "default": 10,
+            "label": "How many times do you want to mix the mastermix?",
+            "name": "n_mm_mixes",
+            "type": "int"
+        },
+        {
+            "default": 0.5,
+            "label": "Mastermix mixing rate multiplier",
+            "name": "mastermix_mix_rate_multiplier",
+            "type": "float"
+        },
+        {
+            "default": 4.3,
+            "label": "Offsets from the tube edges for bead mix dispenses (mm)",
+            "name": "tube_edge_offset",
+            "type": "float"
+        },
+        {
+            "default": 10,
+            "label": "Offsets from the edges of the reservoir wells for bead mix dispenses (mm)",
+            "name": "resv_well_edge_offset",
+            "type": "float"
+        },
+        {
+            "label": "Verbose protocol output?",
+            "name": "is_verbose",
+            "options": [
+                {
+                    "label": "Yes",
+                    "value": true
+                },
+                {
+                    "label": "No",
+                    "value": false
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_single_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p300_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on 10",
+            "share": false,
+            "slot": "10",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.11",
+        "author": "Eskil Andersen <protocols@opentrons.com>",
+        "protocolName": "022548-1 - DNA extraction: Mastermix creation",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}
