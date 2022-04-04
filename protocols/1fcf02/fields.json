@@ -1,5 +1,11 @@
 [
   {
+    "type": "int",
+    "label": "Number of 384 well plates (1-3)",
+    "name": "num_plates",
+    "default": 3
+  },
+  {
   "type": "textFile",
   "label": "CSV Plate 1 (Slot 1) Urea Volumes",
   "name": "csv1_urea",
