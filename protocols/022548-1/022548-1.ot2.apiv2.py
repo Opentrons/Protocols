@@ -15,32 +15,6 @@ metadata = {
 }
 
 
-def parse_range_string(range_string: str) -> Tuple[int, int]:
-    """ Parses a range or a single number from the input string.
-    the format for a number is n-m, where n and m are any positive integers.
-    :param range_string: range string to decode
-    :return value: A tuple of the start and end index of the range
-    """
-    single_num_pattern = re.compile('[0-9]+')
-    range_pattern = re.compile('[0-9]+-[0-9]+')
-    # Case when there's only one index (e.g. the string decodes to a single
-    # well
-    if single_num_pattern.fullmatch(range_string) is not None:
-        index = int(range_string)
-        return index, index
-    if range_pattern.fullmatch(range_string):
-        # Return both substrings that match numbers (i.e. the start and
-        # end indices
-        start, end = range_string.split('-')
-        return int(start), int(end)
-    # If neither regular expression matched then we assume that the string
-    # is incorrectly formatted
-    raise Exception(("Invalid range string: it was \"{}\" but should be a "
-                     "natural number or a range in the format of n-m where n "
-                     "and m are natural numbers, "
-                     "e.g: 1-4").format(range_string))
-
-
 def run(ctx: protocol_api.ProtocolContext):
 
     [n_samples,
@@ -77,6 +51,32 @@ def run(ctx: protocol_api.ProtocolContext):
      "tube_edge_offset",
      "resv_well_edge_offset",
      "is_verbose")
+
+    def parse_range_string(range_string: str) -> Tuple[int, int]:
+        """ Parses a range or a single number from the input string.
+        the format for a number is n-m, where n and m are any positive
+        integers.
+        :param range_string: range string to decode
+        :return value: A tuple of the start and end index of the range
+        """
+        single_num_pattern = re.compile('[0-9]+')
+        range_pattern = re.compile('[0-9]+-[0-9]+')
+        # Case when there's only one index (e.g. the string decodes to a single
+        # well
+        if single_num_pattern.fullmatch(range_string) is not None:
+            index = int(range_string)
+            return index, index
+        if range_pattern.fullmatch(range_string):
+            # Return both substrings that match numbers (i.e. the start and
+            # end indices
+            start, end = range_string.split('-')
+            return int(start), int(end)
+        # If neither regular expression matched then we assume that the string
+        # is incorrectly formatted
+        raise Exception(("Invalid range string: it was \"{}\" but should be a "
+                         "natural number or a range in the format of "
+                         "n-m where n and m are natural numbers, "
+                         "e.g: 1-4").format(range_string))
 
     is_debug_mode = False
     # 1 mL of dead volume is required when using the reservoir,

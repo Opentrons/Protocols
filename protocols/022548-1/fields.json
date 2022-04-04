@@ -13,7 +13,7 @@
   },
   {
     "type": "str",
-    "label": "Master bead mix well(s)",
+    "label": "Bead mix well(s)",
     "name": "bead_mix_source_well_indices",
     "default": "5"
   },
@@ -61,12 +61,6 @@
   },
   {
     "type": "float",
-    "label": "Mastermix mixing rate multiplier",
-    "name": "mastermix_mix_rate_multiplier",
-    "default": 0.5
-  },
-  {
-    "type": "float",
     "label": "Binding buffer aspiration flow rate multiplier",
     "name": "bb_asp_rate_multiplier",
     "default": 0.3
@@ -94,6 +88,12 @@
     "label": "How many times do you want to mix the mastermix?",
     "name": "n_mm_mixes",
     "default": 10
+  },
+  {
+    "type": "float",
+    "label": "Mastermix mixing rate multiplier",
+    "name": "mastermix_mix_rate_multiplier",
+    "default": 0.5
   },
   {
     "type": "float",
