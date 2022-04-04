@@ -119,8 +119,6 @@ def run(ctx: protocol_api.ProtocolContext):
         raise Exception(
             "The number of sample tube racks should be between 1 to 3 max")
 
-    if
-
     n_total_samples = 0
     for i, n in enumerate([n_samples_rack_1,
                            n_samples_rack_2,
