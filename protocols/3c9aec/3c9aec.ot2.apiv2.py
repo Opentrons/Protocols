@@ -44,7 +44,7 @@ def run(ctx: protocol_api.ProtocolContext):
                    for col in rack.columns() for tip in col[::-1]]
     tip_cols = [tips_by_col[i:i+8] for i in range(0, len(tips_by_col), 8)]
 
-    """ TIP-TRACKING BETWEEN RUNS """
+    """ TIP-TRACKING BETWEEN RUNS. """
     total_tip_cols = 36
 
     file_path = '/data/csv/tiptracking.json'
