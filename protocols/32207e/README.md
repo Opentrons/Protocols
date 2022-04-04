@@ -14,7 +14,7 @@ Explanation of complex parameters below:
 * `.csv file`: Please upload your csv file in the following format, header included (no commas in header!).
 ![csv file](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/32207e/Screen+Shot+2022-03-30+at+3.16.09+PM.png)
 * `DNA Aspiration Rate`: Specify the rate at which to aspirate DNA. A value of 1 is default, 0.5 being 50% of the default value, 1.2 being 20% faster than the default value, etc.
-* `P300_mount`: Specify which mount (left or right) to host the P300 single channel pipette.
+* `P20/P300 Mount`: Specify which mount (left or right) to host the P20 and P300 single channel pipette.
 
 ---
 
@@ -24,12 +24,13 @@ Explanation of complex parameters below:
 * [Sarstedt PCR plate full skirt, 96 well, transparent, Low Profile, 100 µl](https://www.sarstedt.com/en/products/laboratory/pcr-molecular-biology/pcr-plates/product/72.1980/)
 
 ### Pipettes
+* [Opentrons P20 Single Channel Pipette](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 * [Opentrons P300 Single Channel Pipette](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 
 ---
 
 ### Deck Setup
-![deck layout]()
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/32207e/Screen+Shot+2022-04-04+at+4.30.03+PM.png)
 
 ---
 
