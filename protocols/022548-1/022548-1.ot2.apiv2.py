@@ -7,7 +7,7 @@ from opentrons.types import Point, Location
 import copy
 
 metadata = {
-    'protocolName': '022548-2 - DNA extraction: Mastermix creation',
+    'protocolName': '022548-1 - DNA extraction: Mastermix creation',
     'author': 'Eskil Andersen <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
