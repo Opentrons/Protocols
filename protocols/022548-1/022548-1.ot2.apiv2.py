@@ -41,31 +41,6 @@ def parse_range_string(range_string: str) -> Tuple[int, int]:
                      "e.g: 1-4").format(range_string))
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{
-                                  "n_samples":96,
-                                  "bindbuf_source_well_indices":"1-4",
-                                  "bead_mix_source_well_indices":"5",
-                                  "vol_source_bb_per_well":15.0,
-                                  "vol_source_bead_mix_per_well":2.5,
-                                  "p300_mount":"left",
-                                  "m300_mount":"right",
-                                  "mastermix_tuberack_lname":false,
-                                  "mastermix_mix_rate_multiplier":0.5,
-                                  "bb_asp_rate_multiplier":0.3,
-                                  "bb_disp_rate_multipler":0.3,
-                                  "bead_asp_rate_multiplier":1.0,
-                                  "bead_disp_rate_multiplier":1.0,
-                                  "n_mm_mixes":10,
-                                  "tube_edge_offset":4.3,
-                                  "resv_well_edge_offset":10,
-                                  "is_verbose":true
-                                  }
-                                  """)
-    return [_all_values[n] for n in names]
-
-
 def run(ctx: protocol_api.ProtocolContext):
 
     [n_samples,
@@ -103,7 +78,7 @@ def run(ctx: protocol_api.ProtocolContext):
      "resv_well_edge_offset",
      "is_verbose")
 
-    is_debug_mode = True
+    is_debug_mode = False
     # 1 mL of dead volume is required when using the reservoir,
     # 100 uL for tubes, the dead volume should have the same composition
     # as the rest of the mix
@@ -904,6 +879,7 @@ def run(ctx: protocol_api.ProtocolContext):
     pip = p300 if is_target_tube else m300
     bead_wells = bead_mix_source.get_wells()
 
+    # Bead mix mixing.
     pick_up_tip_decorator(pip.pick_up_tip, pip)
     for well in bead_wells:
         z_offset = 0.1
