@@ -37,12 +37,11 @@ Explanation of parameters below:
 ---
 
 ### Modules
-None
+None required
 
 ### Labware
 * [NEST 12-Well Reservoirs, 15 mL](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/)
 * [Opentrons tuberacks](https://shop.opentrons.com/4-in-1-tube-rack-set/)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
 
 ### Pipettes
 * [P300 multi-Channel (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)
@@ -51,14 +50,15 @@ None
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/022548/1/deck.jpg)
 
 ### Reagent Setup
-* This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:
-* Reservoir 1: slot 5
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res1_v2.png)
-* Reservoir 2: slot 2  
-![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res2.png)
+* This is an example of what a reagent/target reservoir or tuberack setup may look like - binding buffer in the first four wells/tubes, bead mix in the fifth and then the next four wells are used to mix mastermix.
+
+* Reservoir: slot 10
+![reservoir](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/022548/1/resv.jpg)
+* Tuberack: slot 10 alternative  
+![tuberack](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/022548/1/tuberack.jpg)
 
 ---
 
