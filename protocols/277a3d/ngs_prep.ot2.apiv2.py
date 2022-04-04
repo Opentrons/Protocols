@@ -26,8 +26,7 @@ def run(ctx):
         'opentrons_24_aluminumblock_nest_2ml_snapcap', 'reagent tubes')
     tempdeck.set_temperature(4)
     barcode_rack = ctx.load_labware(
-        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '5',
-        'barcode rack')
+        'opentrons_24_tuberack_500ul', '5', 'barcode rack')
     etoh_res = ctx.load_labware('nest_1_reservoir_195ml', '6',
                                 'EtOH reservoir')
     tipracks_20 = [
