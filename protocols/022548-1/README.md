@@ -1,62 +1,56 @@
-# Protocol Title (should match metadata of .py file)
+# 022548-2 - DNA extraction: Mastermix creation
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
-### Partner
-[Partner Name](partner website link)
-
 ## Categories
 * Nucleic Acid Extraction & Purification
-	* DNA Extraction 
+	* DNA Extraction
 
 ## Description
-This section of the README (especially the first paragraph) should grip a prospective user with the overarching purpose/flow of the protocol, but should not include fine details of the protocol steps themselves.
+This protocol create a mastermix of binding buffer and bead mix. For large volumes the deck should use a NEST 12 well reservoir, and for smaller volumes a tuberack may be used as source and target for mastermix creation.
 
-Example: This is a flexible protocol accommodating a wide range of commercial RNA extraction workflows for COVID-19 sample processing. The protocol is broken down into 5 main parts:
-* binding buffer addition to samples
-* bead wash 3x using magnetic module
-* final elution to chilled PCR plate
+Designate the wells used for binding buffer and bead mix and the mastermix is created starting in the well or tube immediately after, and uses as many wells as required for creating mastermix for the indicated number of samples. The protocol creates a dead volume in addition to the 'active' volume of mastermix (100 uL for tubes, 1 mL for reservoirs) - this is to avoid the pipette aspirating air during mastermix dispension in part 2 of the protocol.
 
-Subsequent paragraphs can give some more insight into the details of the protocol, but a step-by-step description should be included in the 'Protocol Steps' section below.
+The protocol will create a maximum volume of 9.65 mL per tube or well, of which part is the dead volume.
 
-Example: For sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 4) to the elution PCR plate (temperature module, slot 1). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.
+The protocol is written to account for the changing liquid level of both source and target tubes so that the pipette will not plunge too far into tube solutions.
 
-Results of the Opentrons Science team's internal testing of this protocol on the OT-2 are shown below:  
-![results](link_to_results.png)
-
-Explanation of complex parameters below:
-* `park tips`: If set to `yes` (recommended), the protocol will conserve tips between reagent addition and removal. Tips will be stored in the wells of an empty rack corresponding to the well of the sample that they access (tip parked in A1 of the empty rack will only be used for sample A1, tip parked in B1 only used for sample B1, etc.). If set to `no`, tips will always be used only once, and the user will be prompted to manually refill tipracks mid-protocol for high throughput runs.
-* `input .csv file`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:
-```
-source,dest,vol
-A1,B1,4
-```
-
+Explanation of parameters below:
+* `Create mastermix for how many numbers of samples`: How many samples to create mastermix for.
+* `Binding buffer wells`: Designates which wells or tubes contain binding buffer, you may specify a range such as 1-4, or a single number if it is a single tube/well. Numbering starts from Well/tube A1 and goes down the
+* `Bead mix well(s)`: Which well(s) contain bead  mix. Just like the previous parameter it can be a number or a range, e.g. 5, or 5-6
+* `Volume of binding buffer per source well (mL)`: How many milliliters of binding buffer is contained in each source tube/reservoir well.
+* `Volume of bead mix per source well (mL)`: How many milliliters of bead mix is contained in each source tube/reservoir well
+* `P300 single channel pipette mount`: Left or right mount
+* `P300 multi channel pipette mount`: Left or right mount
+* `Mastermix tuberack (Optional, only for small volumes of mastermix)`: Specify what kind of tuberack contains your source and destination tubes. If this parameter is set to none the mastermix source/target will be a NEST 12 well reservoir instead (default)
+* `Mastermix mixing rate multiplier`: The multiplier scales the flow rate of mixing aspirations and dispenses, e.g. 1.0 is the standard mixing rate, 0.5 would be half etc.
+* `Binding buffer aspiration flow rate multiplier`: Controls the flow rate of aspiration when aspirating binding buffer from a source well
+* `Binding buffer dispensing flow rate multiplier`: Controls the flow rate of dispension when dispensing binding buffer in a mastermix target well
+* `Bead solution aspiration flow rate multiplier`: Controls the flow rate of aspiration when aspirating from a bread mix source well
+* `Bead solution dispensing flow rate multiplier`: Controls the flow rate of dispension when dispensing bead mix in a mastermix target well
+* `How many times do you want to mix the mastermix?`: Indicates the number of times you want to mix the mastermix solution after the binding buffer and bead mix have been added.
+* `Offsets from the tube edges for bead mix dispenses (mm)`: Offset defining how close the pipette may get to the edge of the tube when dispensing bead mix (which is dispensed in three different locations inside of the tube)
+* `Offsets from the edges of the reservoir wells for bead mix dispenses (mm)`: Offset defining how close the pipette may get to the edge of the reservoir well when dispensing bead mix (which is dispensed in three different locations inside of the well)
+* `Verbose protocol output?`: Indicates to the protocol whether it should output extra information about what it is doing.
 ---
 
 ### Modules
-* [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
-* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
-* [Thermocycler Module](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module)
-* [HEPA Module](https://shop.opentrons.com/collections/hardware-modules/products/hepa-module)
+None
 
 ### Labware
-* [Labware name](link to labware on shop.opentrons.com when applicable)
+* [NEST 12-Well Reservoirs, 15 mL](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/)
+* [Opentrons tuberacks](https://shop.opentrons.com/4-in-1-tube-rack-set/)
 * Nick is working on auto-filling these sections from the protocol (3/28/2021)
 
 ### Pipettes
-* [Pipette name](link to pipette on shop.opentrons.com)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
-
-### Reagents
-* [kit name when applicable](link to kit)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [P300 multi-Channel (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)
+* [P300 single-Channel (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 
 ---
 
 ### Deck Setup
-* If the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:
 ![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)
 
 ### Reagent Setup
@@ -69,9 +63,10 @@ A1,B1,4
 ---
 
 ### Protocol Steps
-1. This section should consist of a numerical outline of the protocol steps, somewhat analogous to the steps outlined by the user in their custom protocol submission.
-2. example step: Samples are transferred from the source tuberacks on slots 1-2 to the PCR plate on slot 3, down columns and then across rows.
-3. example step: Waste is removed from each sample on the magnetic module, ensuring the bead pellets are not contacted by the pipette tips.
+1. The binding buffer is distributed from the source wells to the target wells.
+2. The bead mix is mixed ten times.
+3. The bead mix is distributed from its source wells to its target wells.
+4. The mastermix is mixed a number of times according to the parameter.
 
 ### Process
 1. Input your protocol parameters above.
@@ -86,4 +81,4 @@ A1,B1,4
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-protocol-hex-code
+022548-1
