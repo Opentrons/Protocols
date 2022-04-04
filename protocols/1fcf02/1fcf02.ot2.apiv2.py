@@ -11,7 +11,8 @@ metadata = {
 
 def run(ctx):
 
-    [csv1_urea,
+    [num_plates,
+     csv1_urea,
      csv2_urea,
      csv3_urea,
      csv1_buff,
@@ -24,6 +25,7 @@ def run(ctx):
      start_buff_vol,
      p20_mount,
      p300_mount] = get_values(  # noqa: F821
+             "num_plates",
              "csv1_urea",
              "csv2_urea",
              "csv3_urea",
@@ -55,6 +57,7 @@ def run(ctx):
                                p300_mount, tip_racks=tiprack300)
 
     # declare any variables, plate mapping, any pre-transfer step functions
+    num_plates = int(num_plates)
 
     all_csvs = [
                 csv1_urea,
@@ -83,16 +86,16 @@ def run(ctx):
 
             all_csv_rows.append(csv_rows)
 
-    urea_csvs = all_csv_rows[:3]
-    buffer_csvs = all_csv_rows[3:6]
-    sample_csvs = all_csv_rows[6:9]
+    urea_csvs = all_csv_rows[:3][:num_plates]
+    buffer_csvs = all_csv_rows[3:6][:num_plates]
+    sample_csvs = all_csv_rows[6:9][:num_plates]
     urea = reagent_rack.wells_by_name()['A3']
     buffer = reagent_rack.wells_by_name()['B3']
 
     # liquid height tracking
     v_naught_urea, v_naught_buffer = start_urea_vol*1000, start_buff_vol*1000
     radius = reagent_rack.rows()[0][2].diameter/2
-    h_naught_urea, h_naught_buffer = 0.8*v_naught_urea/(math.pi*radius**2), 0.8*v_naught_buffer/(math.pi*radius**2)  # noqa: E501
+    h_naught_urea, h_naught_buffer = 0.9*v_naught_urea/(math.pi*radius**2), 0.9*v_naught_buffer/(math.pi*radius**2)  # noqa: E501
     h1, h2 = h_naught_urea, h_naught_buffer
 
     def adjust_height(tube, vol):
@@ -103,9 +106,9 @@ def run(ctx):
             h1 -= dh
         else:
             h2 -= dh
-        if h1 < 20:
+        if h1 < 12:
             h1 = 1
-        if h2 < 20:
+        if h2 < 12:
             h2 = 1
 
     def pick_up(pip):
@@ -130,6 +133,8 @@ def run(ctx):
                 pip.aspirate(vol, urea.bottom(h1))
                 pip.dispense(vol, well)
                 pip.blow_out()
+                pip.touch_tip(v_offset=-20)
+                pip.touch_tip(v_offset=-10)
                 pip.touch_tip()
                 adjust_height(1, vol)
             ctx.comment('\n')
@@ -151,6 +156,8 @@ def run(ctx):
                 pip.aspirate(vol, buffer.bottom(h2))
                 pip.dispense(vol, well.bottom(z=5))
                 pip.blow_out()
+                pip.touch_tip(v_offset=-20)
+                pip.touch_tip(v_offset=-10)
                 pip.touch_tip()
                 adjust_height(2, vol)
             ctx.comment('\n')
