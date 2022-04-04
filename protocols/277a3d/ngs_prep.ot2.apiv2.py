@@ -21,8 +21,10 @@ def run(ctx):
                                     '2', 'sample plate')
     mag_rack = ctx.load_labware('permagen_24_tuberack_1500ul', '3',
                                 'magnetic rack')
-    reagent_rack = ctx.load_labware(
-        'opentrons_24_aluminumblock_nest_2ml_snapcap', '4', 'reagent tubes')
+    tempdeck = ctx.load_labware('temperature module gen2', '4')
+    reagent_rack = tempdeck.load_labware(
+        'opentrons_24_aluminumblock_nest_2ml_snapcap', 'reagent tubes')
+    tempdeck.set_temperature(4)
     barcode_rack = ctx.load_labware(
         'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '5',
         'barcode rack')
