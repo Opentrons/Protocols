@@ -128,7 +128,6 @@ def run(ctx):
                     continue
                 vol = int(vol)
                 pip = p300 if vol > 20 else p20
-                print(h1)
                 if not pip.has_tip:
                     pip.pick_up_tip()
                 pip.aspirate(vol, urea.bottom(h1))
