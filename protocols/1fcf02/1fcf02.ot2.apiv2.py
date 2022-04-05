@@ -95,7 +95,7 @@ def run(ctx):
     # liquid height tracking
     v_naught_urea, v_naught_buffer = start_urea_vol*1000, start_buff_vol*1000
     radius = reagent_rack.rows()[0][2].diameter/2
-    h_naught_urea, h_naught_buffer = 0.9*v_naught_urea/(math.pi*radius**2), 0.9*v_naught_buffer/(math.pi*radius**2)  # noqa: E501
+    h_naught_urea, h_naught_buffer = 1.15*v_naught_urea/(math.pi*radius**2), v_naught_buffer/(math.pi*radius**2)  # noqa: E501
     h1, h2 = h_naught_urea, h_naught_buffer
 
     def adjust_height(tube, vol):
@@ -131,10 +131,10 @@ def run(ctx):
                 if not pip.has_tip:
                     pip.pick_up_tip()
                 pip.aspirate(vol, urea.bottom(h1))
+                pip.touch_tip(v_offset=-15)
+                pip.touch_tip(v_offset=-10)
                 pip.dispense(vol, well)
                 pip.blow_out()
-                pip.touch_tip(v_offset=-20)
-                pip.touch_tip(v_offset=-10)
                 pip.touch_tip()
                 adjust_height(1, vol)
             ctx.comment('\n')
@@ -154,10 +154,9 @@ def run(ctx):
                 if not pip.has_tip:
                     pip.pick_up_tip()
                 pip.aspirate(vol, buffer.bottom(h2))
+                pip.touch_tip(v_offset=-15)
                 pip.dispense(vol, well.bottom(z=5))
                 pip.blow_out()
-                pip.touch_tip(v_offset=-20)
-                pip.touch_tip(v_offset=-10)
                 pip.touch_tip()
                 adjust_height(2, vol)
             ctx.comment('\n')
