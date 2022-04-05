@@ -920,7 +920,8 @@ def run(ctx: protocol_api.ProtocolContext):
         aspiration_rate_multiplier=bead_asp_rate_multiplier,
         dispense_rate_multiplier=bead_disp_rate_multiplier,
         fractional_dispense_y_offsets=y_offsets,
-        new_tip=False)
+        new_tip=False,
+    air_gap_vol = 10)
 
     # Mix the mastermix
     pip = p300 if is_target_tube else m300
