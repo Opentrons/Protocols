@@ -175,7 +175,16 @@ def run(ctx: protocol_api.ProtocolContext):
     where module_name is defined above.
 
     '''
-
+    sample_rack_1 = ctx.load_labware(
+        sample_tuberack_loader[0], sample_tuberack_loader[1][0])
+    sample_rack_2 = ctx.load_labware(
+        sample_tuberack_loader[0], sample_tuberack_loader[1][1])
+    sample_rack_3 = ctx.load_labware(
+        sample_tuberack_loader[0], sample_tuberack_loader[1][2])
+    target_plate = ctx.load_labware(
+        target_plate_loader[0], target_plate_loader[1])
+    mm_source = ctx.load_labware(
+        mastermix_labware_loader[0], mastermix_labware_loader[1])
     # load tipracks
 
     '''
@@ -220,6 +229,16 @@ def run(ctx: protocol_api.ProtocolContext):
                         tip_racks=tiprack
                         )
     '''
+    p300 = ctx.load_instrument(
+                              'p300_single_gen2',
+                              p300_mount,
+                              tip_racks=tiprack_200
+                              )
+    m300 = ctx.load_instrument(
+                              'p300_multi_gen2',
+                              p300_mount,
+                              tip_racks=tiprack_300
+                              )
 
     # pipette functions   # INCLUDE ANY BINDING TO CLASS
 
@@ -257,6 +276,23 @@ def run(ctx: protocol_api.ProtocolContext):
             pipette.pick_up_tip()
 
     '''
+    def pick_up(pipette):
+        """`pick_up()` will pause the protocol when all tip boxes are out of
+        tips, prompting the user to replace all tip racks. Once tipracks are
+        reset, the protocol will start picking up tips from the first tip
+        box as defined in the slot order when assigning the labware definition
+        for that tip box. `pick_up()` will track tips for both pipettes if
+        applicable.
+
+        :param pipette: The pipette desired to pick up tip
+        as definited earlier in the protocol (e.g. p300, m20).
+        """
+        try:
+            pipette.pick_up_tip()
+        except protocol_api.labware.OutOfTipsError:
+            ctx.pause("Replace empty tip racks")
+            pipette.reset_tipracks()
+            pipette.pick_up_tip()
 
     # helper functions
     '''
@@ -302,6 +338,24 @@ def run(ctx: protocol_api.ProtocolContext):
 
     '''
 
+    total_samples = n_samples_rack_1 + n_samples_rack_2 + n_samples_rack_3
+    sample_wells = []
+    for num_s, rack in zip(
+        [n_samples_rack_1, n_samples_rack_2, n_samples_rack_3],
+            [sample_rack_1, sample_rack_2, sample_rack_3]):
+        sample_wells.append(rack.wells()[:num_s])
+
+    dest_rows = target_plate.rows()
+
+    i = 0
+    dest_wells = []
+    for row in dest_rows:
+        for well in row:
+            dest_wells.append(well)
+            i += 1
+            if i == total_samples:
+                break
+
     # protocol
 
     '''
@@ -326,3 +380,12 @@ def run(ctx: protocol_api.ProtocolContext):
 
 
     '''
+    # Step 1 to 4 - Distribute samples from tubes to target plate
+    for s, d in zip(sample_wells, dest_wells):
+        if not p300.has_tip:
+            pick_up(p300)
+        p300.aspirate(200, s)
+        p300.dispense(200, d)
+        p300.drop_tip()
+
+    # Step x to y - Distribute binding buffer/bead mastermix
