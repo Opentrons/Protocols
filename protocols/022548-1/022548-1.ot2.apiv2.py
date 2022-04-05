@@ -526,7 +526,8 @@ def run(ctx: protocol_api.ProtocolContext):
                                    vol: float,
                                    liq_height: float,
                                    y_offsets: Sequence[float],
-                                   dest_location: Location):
+                                   dest_location: Location,
+                                   do_blowouts: bool = True):
         """
         This function moves to the offsets from the center of the well in the
         y-direction and dispenses a fractional amount based on the length of
@@ -612,6 +613,8 @@ def run(ctx: protocol_api.ProtocolContext):
             fractional_dispense_y_offsets: Optional[Sequence[float]] = None,
             new_tip: bool = True,
             is_verbose: bool = True,
+            do_blowouts: bool = True,
+            air_gap_vol: float = 0
             ):
 
         nonlocal ctx
@@ -698,7 +701,7 @@ def run(ctx: protocol_api.ProtocolContext):
                 # remaining target well volume) divided by 8
                 # Aspiration/dispensing z-offsets kept constant at 0.1 mm
                 aspiration_vol = min(
-                    vol_remaining/8, pip.max_volume,
+                    vol_remaining/8, pip.max_volume-air_gap_vol,
                     (source.get_active_well_remaining_vol()-1)/8,
                     (target.get_active_well_remaining_vol()-1)/8)
 
@@ -709,14 +712,21 @@ def run(ctx: protocol_api.ProtocolContext):
 
             pip.aspirate(aspiration_vol,
                          s_loc)
+            if air_gap_vol > 0.1:
+                pip.air_gap(air_gap_vol, 50)
 
             if fractional_dispense_y_offsets is not None:
                 moving_fractional_dispense(
-                    pip, aspiration_vol, target_liq_height,
-                    fractional_dispense_y_offsets,
-                    d_loc)
+                    pip=pip,
+                    vol=aspiration_vol+air_gap_vol,
+                    liq_height=target_liq_height,
+                    y_offsets=fractional_dispense_y_offsets,
+                    dest_location=d_loc,
+                    do_blowouts=do_blowouts)
             else:
-                pip.dispense(aspiration_vol, d_loc)
+                pip.dispense(aspiration_vol+air_gap_vol, d_loc)
+            if do_blowouts:
+                pip.blow_out(target.track(0).top())
 
             subtraction_vol = (aspiration_vol if is_single_pip is True else
                                aspiration_vol * 8)
