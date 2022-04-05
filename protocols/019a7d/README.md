@@ -1,77 +1,54 @@
-# Protocol Title (should match metadata of .py file)
+# Nucleic Acid Purification/Cloning
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
-### Partner
-[Partner Name](partner website link)
-
 ## Categories
-* Broader Category
-	* Subcategory (can be the name of a kit when applicable)
+* Nucleic Acid Purification
 
 ## Description
-This section of the README (especially the first paragraph) should grip a prospective user with the overarching purpose/flow of the protocol, but should not include fine details of the protocol steps themselves.
+This is part 1 of a 2 part protocol for prepping then loading nucleic acid onto agar plates. It requires both a multichannel and single channel 20ul pipette.
+Part two can be found [here](https://protocols.opentrons.com/protocol/019a7d_part_2)
 
-Example: This is a flexible protocol accommodating a wide range of commercial RNA extraction workflows for COVID-19 sample processing. The protocol is broken down into 5 main parts:
-* binding buffer addition to samples
-* bead wash 3x using magnetic module
-* final elution to chilled PCR plate
-
-Subsequent paragraphs can give some more insight into the details of the protocol, but a step-by-step description should be included in the 'Protocol Steps' section below.
-
-Example: For sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 4) to the elution PCR plate (temperature module, slot 1). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.
-
-Results of the Opentrons Science team's internal testing of this protocol on the OT-2 are shown below:  
-![results](link_to_results.png)
 
 Explanation of complex parameters below:
-* `park tips`: If set to `yes` (recommended), the protocol will conserve tips between reagent addition and removal. Tips will be stored in the wells of an empty rack corresponding to the well of the sample that they access (tip parked in A1 of the empty rack will only be used for sample A1, tip parked in B1 only used for sample B1, etc.). If set to `no`, tips will always be used only once, and the user will be prompted to manually refill tipracks mid-protocol for high throughput runs.
-* `input .csv file`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:
-```
-source,dest,vol
-A1,B1,4
-```
+* `Number of Samples`: Specify a number of samples. Can be any number from 1 to 96
 
 ---
 
 ### Modules
 * [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
-* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
-* [Thermocycler Module](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module)
-* [HEPA Module](https://shop.opentrons.com/collections/hardware-modules/products/hepa-module)
+
 
 ### Labware
-* [Labware name](link to labware on shop.opentrons.com when applicable)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* 1x Azenta Life Sciences 12 Well Reservoir, 21 ml
+* 2x Azenta Life Sciences 96 Well Plate, 200 ul
+* Aluminum Block for Generic Screw Cap Tubes, 1.5 ml
+* [2x Opentrons 20ul Filter Tip Racks](https://shop.opentrons.com/opentrons-20ul-filter-tips/)
 
 ### Pipettes
-* [Pipette name](link to pipette on shop.opentrons.com)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [Gen2 m20 Multi-Channel Pipette, Right Side](https://shop.opentrons.com/8-channel-electronic-pipette/)
+* [Gen2 p20 Single-Channel Pipette, Left Side](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 
 ### Reagents
-* [kit name when applicable](link to kit)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* Gibson Mix, Slot 1
+* Fragments, Slot 2
+* Backbone Mix, Slot 4
 
 ---
 
 ### Deck Setup
-* If the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)
-
-### Reagent Setup
-* This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:
-* Reservoir 1: slot 5
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res1_v2.png)
-* Reservoir 2: slot 2  
-![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res2.png)
+* Deck Layout, temp modules should initially be set to 4 C in both slot 1 and 4
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/019a7d/Screen+Shot+2022-04-05+at+4.25.21+PM.png)
 
 ---
 
 ### Protocol Steps
-1. This section should consist of a numerical outline of the protocol steps, somewhat analogous to the steps outlined by the user in their custom protocol submission.
-2. example step: Samples are transferred from the source tuberacks on slots 1-2 to the PCR plate on slot 3, down columns and then across rows.
-3. example step: Waste is removed from each sample on the magnetic module, ensuring the bead pellets are not contacted by the pipette tips.
+1. 9 ul of backbone mix in slot 4 is added across the Assembly plate in slot 3. Tips are reused then disposed of after this step
+2. 1 ul of fragment mix in slot 2 is added across the Assembly plate in slot 3. Tips are not reused and disposed of after each dispense
+3. 10 ul of Gibson mix in slot 1 is added across the Assembly plate in slot 3. The resultant mixture is mixed 3x with 10 ul aspirations. Tips are not reused and disposed of after each mix
+4. Assembly plate is manually transferred from OT-2 deck to an external PCR thermocycler for a 1 hour incubation
+5. Part 2 of this protocol is now setup and run. It can be found [here](https://protocols.opentrons.com/protocol/019a7d_part_2)
 
 ### Process
 1. Input your protocol parameters above.
@@ -86,4 +63,4 @@ A1,B1,4
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-protocol-hex-code
+019a7d

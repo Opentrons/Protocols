@@ -1,77 +1,73 @@
-# Protocol Title (should match metadata of .py file)
+# Nucleic Acid Purification/Cloning
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
-### Partner
-[Partner Name](partner website link)
-
 ## Categories
-* Broader Category
-	* Subcategory (can be the name of a kit when applicable)
+* Nucleic Acid Purification
 
 ## Description
-This section of the README (especially the first paragraph) should grip a prospective user with the overarching purpose/flow of the protocol, but should not include fine details of the protocol steps themselves.
+This is part 2 of a 2 part protocol for prepping then loading nucleic acid onto agar plates. It requires both a multichannel and single channel 20ul pipette.
+Part one can be found [here](https://protocols.opentrons.com/protocol/019a7d)
 
-Example: This is a flexible protocol accommodating a wide range of commercial RNA extraction workflows for COVID-19 sample processing. The protocol is broken down into 5 main parts:
-* binding buffer addition to samples
-* bead wash 3x using magnetic module
-* final elution to chilled PCR plate
+The basic outline follows:
+The assembly plate liquid is added to a Mix and Go plate. A heat shock can be performed, bringing the Mix and Go plate to 42 C for 40 seconds then back to the holding temperature of 4 C. After 30 minutes, agar plates are loaded with the resultant mixture as specified in the parameters. If desired, this Mix and Go plate's liquid can be added to a deep well plate and mixed with liquid culture.
 
-Subsequent paragraphs can give some more insight into the details of the protocol, but a step-by-step description should be included in the 'Protocol Steps' section below.
+Tips are reused for the same sample repeatedly, i.e. sample A1 on the Mix and Go will use A1 in the tip rack.
 
-Example: For sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 4) to the elution PCR plate (temperature module, slot 1). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.
-
-Results of the Opentrons Science team's internal testing of this protocol on the OT-2 are shown below:  
-![results](link_to_results.png)
 
 Explanation of complex parameters below:
-* `park tips`: If set to `yes` (recommended), the protocol will conserve tips between reagent addition and removal. Tips will be stored in the wells of an empty rack corresponding to the well of the sample that they access (tip parked in A1 of the empty rack will only be used for sample A1, tip parked in B1 only used for sample B1, etc.). If set to `no`, tips will always be used only once, and the user will be prompted to manually refill tipracks mid-protocol for high throughput runs.
-* `input .csv file`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:
-```
-source,dest,vol
-A1,B1,4
-```
+* `Number of Samples`: Number of samples in Mix and Go plate. Can be any number between 1 and 96
+* `24 or 96 Distributions per Plate`: Choose to use up to four agar plates with 24 samples each or one agar plate with up to 96 samples. Distribution of samples follows a common layout for either 24 well plates or 96 well plates on the agar
+* `Heat Shock`: Choose yes or no to determine whether a heat shock will occur during the protocol. This heat shock takes place after adding to the Mix and Go plate. It raises the temperature to 42 C for 40 seconds before returning to 4 C
+* `Volume to Distribute on Agar`: Choose a liquid volume to add to the agar plate(s). This can theoretically be many volumes above 1 ul but caution should be exercised so as not to co-mingle samples on the agar by overloading
+* `Add to Deep Well Plate`: Choose yes or no to add to deep well plate. Yes results in a specified amount of liquid being added to the deep well plate and mixed
+* `Volume to Add to Deep Well Plate`: Specifies volume to add to the deep well plate if yes is chosen under "Add to Deep Well Plate"
 
 ---
 
 ### Modules
-* [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
-* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
-* [Thermocycler Module](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module)
-* [HEPA Module](https://shop.opentrons.com/collections/hardware-modules/products/hepa-module)
+* [2x Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
 
 ### Labware
-* [Labware name](link to labware on shop.opentrons.com when applicable)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* 2x Azenta Life Sciences 96 Well Plate, 200 ul
+* 1x Greiner 96 Deep Well Plate, 2 ml
+* 5x Thermo Fisher Omni Nunc Tray
+* [1x Opentrons 20ul Filter Tip Racks](https://shop.opentrons.com/opentrons-20ul-filter-tips/)
 
 ### Pipettes
-* [Pipette name](link to pipette on shop.opentrons.com)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [Gen2 m20 Multi-Channel Pipette, Right Side](https://shop.opentrons.com/8-channel-electronic-pipette/)
+* [Gen2 p20 Single-Channel Pipette, Left Side](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 
 ### Reagents
-* [kit name when applicable](link to kit)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* Assembly Plate liquid
+* Liquid Culture, if used
+* Agar (set in plate)
 
 ---
 
 ### Deck Setup
-* If the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)
+* Deck Layout, temp modules should initially be set to 4 C in both slot 1 and 4
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/019a7d_part_2/Screen+Shot+2022-04-05+at+3.40.32+PM.png)
 
 ### Reagent Setup
-* This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:
-* Reservoir 1: slot 5
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res1_v2.png)
-* Reservoir 2: slot 2  
-![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res2.png)
+* Mix and Go 96 Well Plate: slot 1 in temperature module
+* Assembly Plate 96 Well Plate: slot 3 in temperature module
+* Agar Plates: slots 5, 6, 7, 8, 9
+* Deep Well Plate: slot 11
 
 ---
 
 ### Protocol Steps
-1. This section should consist of a numerical outline of the protocol steps, somewhat analogous to the steps outlined by the user in their custom protocol submission.
-2. example step: Samples are transferred from the source tuberacks on slots 1-2 to the PCR plate on slot 3, down columns and then across rows.
-3. example step: Waste is removed from each sample on the magnetic module, ensuring the bead pellets are not contacted by the pipette tips.
+1. 5 ul of Assembly Plate liquid (slot 3) is added to the Mix and Go Plate (slot 1) for each sample
+2. After each addition, a gentle mixing occurs 3x before the tip is blown out and returned to the tip rack (slot 4)
+3. If heat shock is selected, it occurs here. Slot 1's temperature module is raised to 42 C for 40 seconds then returned to 4 C
+4. Pause for 30 minutes
+5. A specified amount of Mix and Go plate mixture is added to the agar plates as specified. Up to 96 samples can be distributed across 4 agar plates as if they were 24 plate wells in slots 5, 6, 7, and 8 or a single agar plate in slot 9 as if it were a 96 well plate. All additions occur ~5 mm above the agar. Tips are reused with the same samples they were previously used with in steps 1 and 2. If 24 well plates are selected, the single channel pipette is used. If the 96 well plate is selected, the multi channel pipette is used
+6. Tips are returned to slot 4
+7. If deep well plate addition is selected, it occurs here. A specified amount is added to the deep well plates for each sample using the same tip for each as used in steps 1, 2, and 5.
+8. 20 ul mixing occurs after each addition 10x for each sample in the deep well plate
+9. Tips are disposed of
 
 ### Process
 1. Input your protocol parameters above.
@@ -86,4 +82,4 @@ A1,B1,4
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-protocol-hex-code
+019a7d

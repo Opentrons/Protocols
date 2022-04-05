@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "019a7d_part_1.ot2.apiv2.py"
+            "019a7d.ot2.apiv2.py"
         ],
         "description": [
             "README.md"

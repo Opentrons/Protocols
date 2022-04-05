@@ -10,17 +10,14 @@ metadata = {
 
 
 def run(ctx):
-    """PROTOCOL BODY. """
+    """PROTOCOL BODY."""
     [num_samples, omni_tray, heat_shock, agar_volume, dwp, dwp_volume
      ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
         "num_samples", "omni_tray", "heat_shock", "agar_volume",
         "dwp", "dwp_volume")
 
-    # define all custom variables above here with descriptions:
-
     # number of samples
     num_cols = math.ceil(num_samples/8)
-    # "True" for park tips, "False" for discard tips
 
     # load modules
     temp_1 = ctx.load_module('tempdeck', '1')
@@ -89,17 +86,12 @@ def run(ctx):
     ctx.delay(minutes=30)
 
     # Agar Plate transfer
-    """NEED 5MM ABOVE AGAR STILL! """
     for tips, source, dest in zip(tip_recycle, distro_source, agar_locations):
         agar_pipette.pick_up_tip(tips)
         agar_pipette.aspirate(agar_volume, source)
         agar_pipette.dispense(agar_volume, dest.top(5))
         agar_pipette.return_tip()
-        """agar_pipette.transfer(agar_volume,
-                              source,
-                              dests,
-                              trash=False
-                              )"""
+
     # DWP/LC Addition If Needed
     if dwp:
         for tips, source, dest in zip(tip_recycle, samples_source_m,
@@ -110,10 +102,3 @@ def run(ctx):
             m20.mix(10, 20, dest)
             m20.blow_out(dest.top(-1))
             m20.drop_tip()
-            """m20.transfer(dwp_volume,
-                         source,
-                         dest,
-                         new_tip='always'
-                         )"""
-    for c in ctx.commands():
-        print(c)
