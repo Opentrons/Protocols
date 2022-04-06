@@ -11,6 +11,7 @@
 This protocol preps (3) 384 plates with urea, buffer and sample. One tip is used for each the urea and buffer reagents, with changing tips for the sample. Pipettes are selected dependent on the volume passed to the csv. If the protocol runs out of tips, it will pause and prompt the user to refill tip racks and resume. After sample is added, the well is mixed at 20ul for 3 repetitions.
 
 Explanation of complex parameters below:
+* `Number of 384 plates`: Specify how many 384 well plates there are for this run. Note that for plates less than 3, plates should be placed in order of slot number (1, 2, then 3), and csvs should also be uploaded in that order (from the top down below).
 * `.CSV`: Find below the format for the urea/buffer, and sample csvs. NOTE: Always put an "x" in the top left well of the csv, and include the header line. All csvs should be seperate. For wells which receive no volume, input an "x" instead. Please see the csvs below for reference.
 
 * Urea/buffer map:
