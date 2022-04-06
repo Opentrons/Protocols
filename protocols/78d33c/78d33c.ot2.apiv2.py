@@ -292,7 +292,16 @@ def run(ctx):
         if not manual_bead_resuspension:
             for rep in range(10):
                 p20m.aspirate(16, column[0].bottom(1))
-                p20m.dispense(16, loc, rate=3)
+                rt = 3 if rep < 9 else 0.5
+                p20m.dispense(16, loc, rate=rt)
+                if rep == 9:
+                    ctx.pause(seconds=1)
+                    slow_tip_withdrawal(p20m, column[0])
+                    p20m.move_to(
+                     column[0].top(-2).move(types.Point(
+                      x=column[0].diameter / 2, y=0, z=0)))
+                    p20m.blow_out()
+                    p20m.move_to(column[0].top())
         p20m.drop_tip()
 
     if manual_bead_resuspension:
@@ -317,11 +326,22 @@ def run(ctx):
 
     for index, column in enumerate(mag_plate.columns()[:num_cols]):
         pick_up_or_refill(p20m)
-        p20m.transfer(
-         14, column[0].bottom().move(types.Point(
-          x={True: -1}.get(not index % 2, 1)*offset_x, y=0, z=0)),
-         plate2.columns()[index][0], mix_after=(5, 11), blow_out=True,
-         blowout_location='destination well', new_tip='never')
+
+        loc_asp = column[0].bottom(1).move(types.Point(
+          x={True: -1}.get(not index % 2, 1)*offset_x, y=0, z=0))
+
+        p20m.aspirate(14, loc_asp)
+
+        p20m.move_to(loc_asp.move(types.Point(x=0, y=0, z=1)))
+        ctx.delay(seconds=1)
+
+        p20m.dispense(14, plate2.columns()[index][0].bottom(1))
+
+        for rep in range(5):
+            p20m.aspirate(11, plate2.columns()[index][0].bottom(1))
+            p20m.dispense(11, plate2.columns()[index][0].bottom(1))
+
+        p20m.blow_out()
         p20m.drop_tip()
 
     p20m.flow_rate.aspirate = 7.6
