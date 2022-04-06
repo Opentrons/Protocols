@@ -257,10 +257,19 @@ def run(ctx):
             p300m.air_gap(20)
             p300m.drop_tip()
 
-    mag.disengage()
+        # to improve completeness of removal
+        for index, column in enumerate(mag_plate.columns()[:num_cols]):
+            pick_up_or_refill(p300m)
+            for clearance in [0.7, 0.4, 0.2, 0]:
+                loc = column[0].bottom(clearance).move(types.Point(
+                 x={True: -1}.get(not index % 2, 1)*offset_x, y=0, z=0))
+                p300m.aspirate(25, loc)
+            p300m.drop_tip()
 
     # air dry bead pellets
     ctx.delay(minutes=time_dry)
+
+    mag.disengage()
 
     # resuspend bead pellet in Tris
     for index, column in enumerate(mag_plate.columns()[:num_cols]):
@@ -300,8 +309,7 @@ def run(ctx):
         p20m.transfer(
          14, column[0].bottom().move(types.Point(
           x={True: -1}.get(not index % 2, 1)*offset_x, y=0, z=0)),
-         plate2.columns()[index][0],
-         mix_after=(5, 11), touch_tip=True, blow_out=True,
+         plate2.columns()[index][0], mix_after=(5, 11), blow_out=True,
          blowout_location='destination well', new_tip='never')
         p20m.drop_tip()
 
