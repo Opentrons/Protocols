@@ -78,25 +78,28 @@ def run(ctx: protocol_api.ProtocolContext):
                          "n-m where n and m are natural numbers, "
                          "e.g: 1-4").format(range_string))
 
-    is_debug_mode = False
+    is_debug_mode = True
     # 1 mL of dead volume is required when using the reservoir,
-    # 100 uL for tubes, the dead volume should have the same composition
-    # as the rest of the mix
-    dead_vol = 100 if mastermix_tuberack_lname is not None else 1000
+    # dead volume should have the same composition as the rest of the mix
+    dead_vol_min = 1000
 
     # Reagent volume not including added dead volume
-    bind_buf_vol = n_samples*1.5*265
-    bead_vol = (10/265) * bind_buf_vol
-    mm_vol = bind_buf_vol + bead_vol
+    # meaning 1/3rd is extra or dead vol.
+    total_bb_vol = n_samples*1.5*265
+    total_bead_vol = (10/265) * total_bb_vol
+    total_mm_vol = total_bb_vol + total_bead_vol
+    bb_partial_vol_factor = (1/(1+10/265))
+    bead_mix_partial_vol_factor = (1/(1+265/10))
 
     # The volume of mastermix in each reservoir well should be 9.65 mL max
     # and also accounting for 1 mL dead volume in the resevoir
-    # TODO: The reagent source may also be 15 mL tubes, in which case
-    # the dead volume should be 100 uL per tube
-    max_vol_mm_per_well = 9.65*10**3
-    useful_vol_mm_per_well = max_vol_mm_per_well - 1_000
-    n_mm_target_wells = ceil(mm_vol/useful_vol_mm_per_well)
-    total_mm_vol = n_mm_target_wells * dead_vol + mm_vol
+    max_vol_mm_per_well = 9.54*10**3
+    useful_vol_mm_per_well = (2/3) * max_vol_mm_per_well
+    n_full_wells = total_mm_vol // max_vol_mm_per_well
+    mm_vol_last_well = min(
+        dead_vol_min*3, total_mm_vol - n_full_wells*max_vol_mm_per_well)
+
+    n_mm_target_wells = ceil(total_mm_vol/useful_vol_mm_per_well)
 
     total_bead_vol = total_mm_vol * (10/265)
     total_bb_vol = total_mm_vol - total_bead_vol
@@ -104,9 +107,9 @@ def run(ctx: protocol_api.ProtocolContext):
     max_bead_vol_per_well = max_vol_mm_per_well * 10/265
     max_bb_vol_per_well = max_vol_mm_per_well - max_bead_vol_per_well
 
-    # If the tuberack isn't set we're going to create the mastermix in the
-    # reservoir
-    tuberack_slot = '6'
+    # If the tuberack isn't set we're going to use the
+    # reservoir as the bead mix source
+    tuberack_loader = (mastermix_tuberack_lname, '6')
     reservoir_loader = ('nest_12_reservoir_15ml', '10')
 
     bb_start_index, bb_end_index = parse_range_string(
@@ -114,15 +117,11 @@ def run(ctx: protocol_api.ProtocolContext):
     bead_start_index, bead_end_index = parse_range_string(
         bead_mix_source_well_indices)
 
-    well_index_after_reagent_wells = max(bb_end_index, bead_end_index) + 1
-
     starting_mm_well_index = \
-        (well_index_after_reagent_wells if mastermix_tuberack_lname is None
-         else 1)
+        (bb_end_index + 1 if mastermix_tuberack_lname is False
+         else bead_end_index + 1)
 
-    is_single_pip = True if mastermix_tuberack_lname else False
-    # Synonymous conditions
-    is_target_tube = is_single_pip
+    is_bead_mix_source_tube = True if mastermix_tuberack_lname else False
 
     # define all custom variables above here with descriptions:
 
@@ -156,7 +155,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     '''
     tuberack_mm_target = (
-        ctx.load_labware(mastermix_tuberack_lname, tuberack_slot)
+        ctx.load_labware(tuberack_loader[0], tuberack_loader[1])
         if mastermix_tuberack_lname else None)
 
     res12 = ctx.load_labware(reservoir_loader[0], reservoir_loader[1])
@@ -281,7 +280,8 @@ def run(ctx: protocol_api.ProtocolContext):
                      reagent_name: str = 'nameless reagent',
                      is_verbose: bool = True,
                      is_strict_mode: bool = False,
-                     threshhold_advancement_vol: float = 1):
+                     threshhold_advancement_vol: float = 1,
+                     dead_volume: float = 0):
             """
             Voltracker tracks the volume(s) used in a piece of labware.
             It's conceptually important to understand that in reagent
@@ -337,6 +337,7 @@ def run(ctx: protocol_api.ProtocolContext):
             # rather than reset
             self.is_strict_mode = is_strict_mode
             self.reagent_name = reagent_name
+            self.dead_volume = dead_volume
 
             valid_modes = ['reagent', 'waste', 'target']
 
@@ -349,9 +350,15 @@ def run(ctx: protocol_api.ProtocolContext):
                 msg = msg.format(valid_modes)
                 raise Exception(msg)
 
+            if mode != 'reagent' and dead_volume > 0:
+                raise Exception(("Setting a dead/min volume only makes sense "
+                                 "for reagents"))
+
         def __str__(self):
             msg = (self.reagent_name + " " + self.mode
-                   + " volume change: " + str(self.total_vol_changed))
+                   + " volume change: " + str(self.total_vol_changed),
+                   + " well vol: " + str(self.well_vol) + " dead vol: "
+                   + str(self.dead_volume))
             msg += "\nChanges in each well:\n"
             for i, well_tracker in enumerate(self.labware_wells.values()):
                 msg += "well {}: Volume change: {}\n".format(
@@ -379,11 +386,25 @@ def run(ctx: protocol_api.ProtocolContext):
             return list(self.labware_wells.items())
 
         def get_total_initial_vol(self):
-            # Return the total initial vol = n_wells * well_vol
+            """
+            Return the total initial volume of the
+            tracker = n_wells * well_vol
+            """
             return len(self.labware_wells) * self.well_vol
 
+        def get_total_dead_volume(self):
+            """
+            Returns the total dead volume of the tracker
+            """
+            return len(self.labware_wells) * self.dead_volume
+
         def get_total_remaining_vol(self):
-            return self.get_total_initial_vol() - self.total_vol_changed
+            """
+            Returns the total volume remaining in the tracker
+            including the dead volume
+            """
+            return (self.get_total_initial_vol()
+                    - self.total_vol_changed)
 
         def get_active_well_vol_change(self):
             """
@@ -399,7 +420,7 @@ def run(ctx: protocol_api.ProtocolContext):
             space left to fill the well (waste and targets)
             """
             vol_change = self.get_active_well_vol_change()
-            return self.well_vol - vol_change
+            return self.well_vol - vol_change - self.dead_volume
 
         def get_active_well(self):
             for key in self.labware_wells:
@@ -423,14 +444,7 @@ def run(ctx: protocol_api.ProtocolContext):
             return self.labware_wells[well][0]
 
         def get_current_vol_by_key(self, well_key):
-            vol_diff = self.labware_wells[well_key][0]
-            if self.mode == 'reagent':
-                # Subtractive volumes (reagents) starts aat well_vol and
-                # decreases by vol_diff
-                return self.well_vol - vol_diff
-            else:
-                # Additive volumes i.e. targets and waste that start at 0
-                return vol_diff
+            return self.labware_wells[well_key][0]
 
         def track(self, vol: float) -> Well:
             """track() will track how much liquid
@@ -453,17 +467,19 @@ def run(ctx: protocol_api.ProtocolContext):
             # Track the total change in volume of this volume tracker
             self.total_vol_changed += vol
 
-            if self.labware_wells[well][0] + vol > self.well_vol:
+            if (self.labware_wells[well][0] + vol
+                    > self.well_vol - self.dead_volume):
                 if self.is_strict_mode:
                     msg = ("Tracking a volume of {} uL would {} the "
                            "current well: {} on the {} {} tracker. "
                            "The max well volume is {}, and "
-                           "the current vol is {}")
+                           "the current vol is {}. The dead volume is {}")
                     mode_msg = ("over-deplete`" if self.mode == "reagent"
                                 else "over-fill")
                     msg = msg.format(
                         vol, mode_msg, well, self.reagent_name, self.mode,
-                        self.well_vol, self.get_active_well_vol())
+                        self.well_vol, self.get_active_well_vol(),
+                        self.dead_volume)
                     raise Exception(msg)
                 self.labware_wells[well][1] = True
                 is_all_used = True
@@ -477,7 +493,10 @@ def run(ctx: protocol_api.ProtocolContext):
                     if self.is_strict_mode is False:
                         self.reset_labware()
                     else:
-                        e_msg = "{}: {} {} wells would be {} by this action"
+                        e_msg = ("{}: {} {} wells would be {} by this action "
+                                 "this VolTracker is in strict mode, check why"
+                                 "manual reset was not performed")
+
                         fill_status = \
                             ("over-depleted" if self.mode == "reagent" else
                              "over-filled")
@@ -491,7 +510,7 @@ def run(ctx: protocol_api.ProtocolContext):
                     ctx.comment(
                         "\n{} {} tracker switching to well {}\n".format(
                             self.reagent_name, self.mode, well))
-            self.labware_wells[well][0] += vol
+                self.labware_wells[well][0] += vol
 
             if self.is_verbose:
                 if self.mode == 'waste':
@@ -606,8 +625,7 @@ def run(ctx: protocol_api.ProtocolContext):
             vol: float,
             reagent_name: str,
             target: VolTracker,
-            starting_well_index: int,
-            is_pip_single: bool,
+            is_tube_source: bool,
             aspiration_rate_multiplier: float,
             dispense_rate_multiplier: float,
             fractional_dispense_y_offsets: Optional[Sequence[float]] = None,
@@ -618,13 +636,12 @@ def run(ctx: protocol_api.ProtocolContext):
             ):
 
         nonlocal ctx
-        msg = "Transferring {} to mastermix {}"
-        target_string = "15 mL tubes" if is_pip_single else "reservoir wells"
-        msg = msg.format(reagent_name, target_string)
+        msg = "Transferring {} to mastermix wells"
+        msg = msg.format(reagent_name)
         ctx.comment(msg)
 
         vol_remaining = vol
-        pip = p300 if is_pip_single else m300
+        pip = p300 if is_tube_source else m300
 
         # flow rates are floats, so they will copy by value
         fr_copy = (pip.flow_rate.aspirate, pip.flow_rate.dispense)
@@ -646,10 +663,11 @@ def run(ctx: protocol_api.ProtocolContext):
             # from vol_remaining
 
             # Calculate aspiration and dispensing offsets for/if tubes.
-            # = 0.1 for reservoirs, and not recalculated.
-            source_liq_height = 0.1
+            clearance = pip.well_bottom_clearance
+            source_liq_height = clearance
             target_liq_height = \
-                (10 if fractional_dispense_y_offsets is not None else 0.1)
+                (10 if fractional_dispense_y_offsets is not None
+                 else clearance)
             # and dispense a fractional volume
             # Fractionate the volume transfer into discrete pipette
             # aspirate/dispense steps
@@ -662,7 +680,7 @@ def run(ctx: protocol_api.ProtocolContext):
             for tracker in [source, target]:
                 if tracker.get_active_well_remaining_vol() <= 1:
                     tracker.advance_well()
-            if is_pip_single:
+            if is_tube_source:
                 aspiration_vol = min(
                     vol_remaining, pip.max_volume,
                     source.get_active_well_remaining_vol()-1,
@@ -672,26 +690,16 @@ def run(ctx: protocol_api.ProtocolContext):
                 # the tip
                 is_cone_min_offset = (True if fractional_dispense_y_offsets
                                       is not None else False)
-                target_liq_height = tube_liq_height(
-                    target_volume, target.get_active_well(),
-                    is_cone_min_offset)
-                # Make sure we don't bang into the bottom of the tube
-                target_liq_height = max(target_liq_height, 0.1)
                 source_liq_height = tube_liq_height(
                     source_volume, source.get_active_well(),
                     False)
                 # Make sure we're dipping below the surface for aspirations
                 # without hitting the bottom
-                source_liq_height = max(source_liq_height-10, 0.1)
+                source_liq_height = max(source_liq_height-10, clearance)
                 if is_verbose:
                     msg = ("Aspirating from the source tube with a {} "
                            "mm offset from the bottom")
                     msg = msg.format(source_liq_height)
-                    ctx.comment(msg)
-
-                    msg = ("Dispensing into the target tube with a {} "
-                           "mm offset from the bottom")
-                    msg = msg.format(target_liq_height)
                     ctx.comment(msg)
             else:
                 # If we are using a reservoir/multi-channel:
@@ -713,7 +721,7 @@ def run(ctx: protocol_api.ProtocolContext):
             pip.aspirate(aspiration_vol,
                          s_loc)
             if air_gap_vol > 0.1:
-                pip.air_gap(air_gap_vol, 50)
+                pip.air_gap(air_gap_vol, 25)
 
             if fractional_dispense_y_offsets is not None:
                 moving_fractional_dispense(
@@ -728,7 +736,7 @@ def run(ctx: protocol_api.ProtocolContext):
             if do_blowouts:
                 pip.blow_out(target.track(0).top())
 
-            subtraction_vol = (aspiration_vol if is_single_pip is True else
+            subtraction_vol = (aspiration_vol if is_tube_source is True else
                                aspiration_vol * 8)
             vol_remaining -= subtraction_vol
         pip.drop_tip()
@@ -747,101 +755,122 @@ def run(ctx: protocol_api.ProtocolContext):
     dnase = tuberack.wells_by_name()['A4']
 
     '''
-    mastermix_target = (tuberack_mm_target if is_target_tube else res12)
-
     y_offsets = []
-    target_well_type = mastermix_target.wells()[0]
-    # If the mastermix target is a tuberack, the reagent sources are also tubes
-    # for tube targets
+    target_well_type = res12.wells()[0]
     y_offsets.append(0)  # Always start in the center of the well
-    if target_well_type.diameter is not None:
-        pos_offset = target_well_type.diameter/2-tube_edge_offset
-        pos_offset = pos_offset if pos_offset > 0 else 0
-        neg_offset = -pos_offset
-        y_offsets.append(pos_offset)
-        y_offsets.append(neg_offset)
-    # Reservoir target
-    elif target_well_type.width is not None:
-        resv_well_width = target_well_type.width/8
-        pos_offset = resv_well_width/2 - resv_well_edge_offset
-        neg_offset = -pos_offset
-        y_offsets.append(pos_offset)
-        y_offsets.append(neg_offset)
-    # Error?
-    else:
-        msg = "The well {} does not have a diameter or width/length"
-        msg.format(target_well_type)
-        raise Exception(msg)
+    resv_well_width = target_well_type.width/8
+    pos_offset = resv_well_width/2 - resv_well_edge_offset
+    neg_offset = -pos_offset
+    y_offsets.append(pos_offset)
+    y_offsets.append(neg_offset)
 
     ml_multiplier = 10**3
     # Source wells of binding buffer
-    source_labware = tuberack_mm_target if is_target_tube else res12
-    bb_source = VolTracker(
-        labware=source_labware,
+    bb_source_tracker = VolTracker(
+        labware=res12,
         well_vol=vol_source_bb_per_well*ml_multiplier,
         start=bb_start_index,
         end=bb_end_index,
         mode='reagent',
         msg="Refill binding buffer wells",
         reagent_name='Binding buffer',
-        pip_type='single' if is_single_pip else 'multi',
+        pip_type='multi',
         is_verbose=is_verbose,
         is_strict_mode=True)
 
-    bb_source_init = copy.deepcopy(bb_source)
+    bb_source_init = copy.deepcopy(bb_source_tracker)
 
     # Source wells of bead mix
+    bead_mix_source_labware = \
+        (tuberack_mm_target if is_bead_mix_source_tube else res12)
     bead_mix_source = VolTracker(
-        labware=source_labware,
+        labware=bead_mix_source_labware,
         well_vol=vol_source_bead_mix_per_well*ml_multiplier,
         start=bead_start_index,
         end=bead_end_index,
         mode='reagent',
         msg="Refill binding buffer wells",
         reagent_name='Bead mix',
-        pip_type='single' if is_single_pip else 'multi',
+        pip_type='single' if is_bead_mix_source_tube else 'multi',
         is_verbose=is_verbose,
         is_strict_mode=True)
 
     bead_mix_source_init = copy.deepcopy(bead_mix_source)
 
-    bb_target = VolTracker(
-        labware=mastermix_target,
-        # Add one uL for margin of error in any float rounding
-        well_vol=max_bb_vol_per_well+1,
-        start=well_index_after_reagent_wells,
-        end=well_index_after_reagent_wells + n_mm_target_wells,
+    bb_first_wells_target_tracker = None
+    if n_mm_target_wells > 1:
+        bb_first_wells_target_tracker = VolTracker(
+            labware=res12,
+            # add one ul for margin of error in any float rounding
+            well_vol=max_bb_vol_per_well+1,
+            start=starting_mm_well_index,
+            end=starting_mm_well_index + n_mm_target_wells - 1,
+            mode='target',
+            # should not happen, but:
+            msg=("all mastermix target wells/tubes are full, "
+                 " please replace them"),
+            reagent_name='binding buffer',
+            pip_type='multi',
+            is_verbose=is_verbose,
+            is_strict_mode=True
+            )
+
+    bb_last_well_target_tracker = VolTracker(
+        labware=res12,
+        # add one ul for margin of error in any float rounding
+        well_vol=bb_partial_vol_factor*mm_vol_last_well+1,
+        start=starting_mm_well_index + n_mm_target_wells,
+        end=starting_mm_well_index + n_mm_target_wells,
         mode='target',
-        # Should not happen, but:
-        msg="All mastermix target wells/tubes are full, please replace them",
-        reagent_name='Binding buffer',
-        pip_type='single' if is_single_pip else 'multi',
+        # should not happen, but:
+        msg="all mastermix target wells/tubes are full, please replace them",
+        reagent_name='binding buffer',
+        pip_type='multi',
         is_verbose=is_verbose,
         is_strict_mode=True
         )
 
-    bb_target_init = copy.deepcopy(bb_target)
+    bb_target_init = copy.deepcopy(bb_first_wells_target_tracker)
 
-    bead_mix_target = VolTracker(
-        labware=mastermix_target,
-        well_vol=max_bead_vol_per_well,
-        # Same target wells as for the binding buffer
-        start=well_index_after_reagent_wells,
-        end=well_index_after_reagent_wells + n_mm_target_wells,
+    bead_mix_first_wells_tracker = None
+    if n_mm_target_wells > 1:
+        bead_mix_first_wells_tracker = VolTracker(
+            labware=res12,
+            well_vol=max_bead_vol_per_well,
+            # same target wells as for the binding buffer
+            start=starting_mm_well_index,
+            end=starting_mm_well_index + n_mm_target_wells,
+            mode='target',
+            # should not happen, but:
+            msg=("all mastermix target wells/tubes are full, "
+                 "please replace them"),
+            reagent_name='bead mix',
+            pip_type='multi',
+            is_verbose=is_verbose,
+            is_strict_mode=True
+        )
+
+    bead_mix_last_well_tracker = VolTracker(
+        labware=res12,
+        well_vol=mm_vol_last_well*bead_mix_partial_vol_factor + 1,
+        # same target wells as for the binding buffer
+        start=starting_mm_well_index + n_mm_target_wells,
+        end=starting_mm_well_index + n_mm_target_wells,
         mode='target',
-        # Should not happen, but:
-        msg="All mastermix target wells/tubes are full, please replace them",
-        reagent_name='Bead mix',
-        pip_type='single' if is_single_pip else 'multi',
+        # should not happen, but:
+        msg="all mastermix target wells/tubes are full, please replace them",
+        reagent_name='bead mix',
+        pip_type='multi',
         is_verbose=is_verbose,
         is_strict_mode=True
     )
-    bead_mix_target_init = copy.deepcopy(bead_mix_target)
+
+    bead_mix_target_init = copy.deepcopy(bead_mix_first_wells_tracker)
 
     # plate, tube rack maps
 
     '''
-    Define any plate or tube maps here.
+    define any plate or tube maps here.
 
     e.g.
 
@@ -853,19 +882,19 @@ def run(ctx: protocol_api.ProtocolContext):
 
     '''
 
-    Include header sections as follows for each "section" of your protocol.
+    include header sections as follows for each "section" of your protocol.
 
-    Section can be defined as a step in a bench protocol.
+    section can be defined as a step in a bench protocol.
 
     e.g.
 
-    ctx.comment('\n\nMOVING MASTERMIX TO SAMPLES IN COLUMNS 1-6\n')
+    ctx.comment('\n\nmoving mastermix to samples in columns 1-6\n')
 
     for .... in ...:
         ...
         ...
 
-    ctx.comment('\n\nRUNNING THERMOCYCLER PROFILE\n')
+    ctx.comment('\n\nrunning thermocycler profile\n')
 
     ...
     ...
@@ -873,70 +902,159 @@ def run(ctx: protocol_api.ProtocolContext):
 
 
     '''
+    """
+    step 6: if the bead solution needed to be mixed with the binding buffer
+    is too small for the multi-channel pipettor, then prompt user to replace
+    the 200 ul tip rack with the 4-in-1 tube rack with a 15 ml centrifuge tube
+    in a designated slot and proceed with step 7a; if else, skip to step 7b
+    (either or both of these could be made as nested sub-routines if necessary)
+    -------------------------------------------------------------------------
+    -------------------------------------------------------------------------
+    --- for tuberack bead source mastermix creation ---
+    step 7a: with the 8-channel pipette, 8x300 ul non-filtered pipette tips
+    are acquired which are then used to slowly aspirate the recquisite amount
+    of binding buffer, in the previously specifiied "binding buffer reagent
+    well(s)," and then transfers a calculated amount (binding buffer volume
+    = [# of samples * 1.5]*265 ul; max of 9.54 ml per "mixing well") to the
+    designated "mixing wells" (# of required user-specified mixing wells =
+    [# of samples]/36] ) by slowly dispensing the binding buffer [same tips;
+    with blowout; variable aspirate/dispense speed]
+    step 8a: repeat steps 7a-8a for all subsequent "binding buffer reagent
+    wells" [same tips; with blowout; variable aspirate/dispense speed]
 
-    # Mastermix creation
-    # Step 7-8: Transfer binding buffer
+    step 9a: with single-channel pipette, a 300 ul non-filtered pipette tip
+    is acquired and the bead solution, in a specified is pipette-mixed rapidly
+    10 times in the 15 ml centrifuge tube in a previously user-specified slot
+    in the 4-in-1 rack [with blowout]
+
+    step 10a: with the same tip, the single-channel pipette aspirates and
+    transfers bead solution to the designated "mixing wells" containing the
+    binding buffer in the 12-well 15 ml reservoir (total volume of bead
+    solution added per mixing well = (10/265)*[vol of binding buffer in
+    "mixing well"]) by dispensing equal amounts at 3 points in each well:
+    the nearest edge; the middle; and the far edge [same tip; with air-gap;
+    variable dispense location; with blow out]
+    step 11a: repeat steps 7a - 10a for all of the specified "mixing wells"
+    and pause to allow user to replace 300 ul pipette tips in rack before
+    telling ot-2 to proceed
+    -----------------------------------------------------------------------
+    --- for reservoir bead source mastermix creation ---
+    step 7b: with the 8-channel pipette, 8x300 ul non-filtered pipette tips
+    are acquired which are then used to slowly aspirate the recquisite amount
+    of binding buffer, in the previously specifiied "binding buffer reagent
+    well(s)," and then transfers a calculated amount (binding buffer volume
+    = [# of samples * 1.5]*265 ul; max of 9.54 ml "per mixing well") to the
+    designated "mixing wells" (# of required user-specified mixing wells =
+    [# of samples]/36] ) by slowly dispensing the binding buffer [same tips;
+    with blowout; variable aspirate/dispense speed]
+    step 8b: repeat steps 7b-8b for all subsequent "binding buffer reagent
+    wells" [same tips; with blowout; variable aspirate/dispense speed]
+
+    step 9b: with the 8-channel pipette, 8x300 ul non-filtered pipette tips
+    are acquired and the bead solution, in the specified " bead solution
+    reagent well" of the 12-well 15 ml reservoir, is pipette-mixed rapidly 10
+    times [with blowout]
+
+    step 10b: with the same tips, the 8-channel pipette transfers the
+    corresponding amount of bead solution to the wells containing the binding
+    buffer maintaining the proportion 10:265 of bead solution to binding
+    buffer [same tip; with air gap; with blow out]
+    11b: repeat steps 7b - 10b for all of the specified "mixing wells" and
+    pause to allow user to replace 300 ul pipette tips in rack before telling
+    ot-2 to proceed
+    """
+
+    # mastermix creation
+    # step 7-8a/b: transfer binding buffer from source to targets
+    if bb_source_tracker is not None:
+        transfer_reagent(
+                source=bb_source_tracker,
+                vol=max_vol_mm_per_well*bb_partial_vol_factor*n_full_wells,
+                reagent_name="binding buffer",
+                target=bb_first_wells_target_tracker,
+                is_pip_single=False,
+                aspiration_rate_multiplier=bb_asp_rate_multiplier,
+                dispense_rate_multiplier=bb_disp_rate_multipler,
+                do_blowouts=True)
+
     transfer_reagent(
-        source=bb_source,
-        vol=total_bb_vol,
-        reagent_name="Binding Buffer",
-        target=bb_target,
-        starting_well_index=starting_mm_well_index,
-        is_pip_single=is_single_pip,
-        aspiration_rate_multiplier=bb_asp_rate_multiplier,
-        dispense_rate_multiplier=bb_disp_rate_multipler)
-    # # Step 9: Mix the bead solutions in the reservoir
-    pip = p300 if is_target_tube else m300
+            source=bb_source_tracker,
+            vol=mm_vol_last_well*bb_partial_vol_factor,
+            reagent_name="binding buffer",
+            target=bb_first_wells_target_tracker,
+            is_pip_single=False,
+            aspiration_rate_multiplier=bb_asp_rate_multiplier,
+            dispense_rate_multiplier=bb_disp_rate_multipler,
+            do_blowouts=True)
+
+    # step 9: mix the bead solutions in the reservoir
+    pip = p300 if is_bead_mix_source_tube else m300
     bead_wells = bead_mix_source.get_wells()
 
-    # Bead mix mixing.
+    # bead mix mixing.
+    # bead mix is either located in a 15 ml tube or the reservoir
+    # based on user parameter choice
     pick_up_tip_decorator(pip.pick_up_tip, pip)
+    n_tips = 1 if is_bead_mix_source_tube else 8
     for well in bead_wells:
-        z_offset = 0.1
-        if is_target_tube:
+        z_offset = pip.well_bottom_clearance
+        mix_vol = 0
+        if is_bead_mix_source_tube:
             well_vol = bead_mix_source.get_current_vol_by_key(well)
-            height = tube_liq_height(well_vol, well, False)
-            z_offset = max(0.1, height-10)
-            pass
-        pip.mix(10, pip.max_volume, well.bottom(z_offset))
+            liq_height = tube_liq_height(well_vol, well, False)
+            z_offset = max(z_offset, liq_height-10)
+        mix_vol = min(pip.max_volume*n_tips, well_vol)/n_tips
+        pip.mix(10, mix_vol, well.bottom(z_offset))
         if is_verbose:
-            msg = "Mixing bead mix source at a z-offset of {}"
+            msg = "mixing bead mix source at a z-offset of {}"
             msg = msg.format(z_offset)
             ctx.comment(msg)
         pip.blow_out(well)
         pip.touch_tip(well)
 
-    # # Step 10: Transfer bead solution to target wells
-    # Dispense 1/3rd in the center of the well, 1/3rd at the top
+    # # step 10: transfer bead solution to target wells
+    # dispense 1/3rd in the center of the well, 1/3rd at the top
     # and 1/3rd at the bottom.
+    if bead_mix_first_wells_tracker is not None:
+        transfer_reagent(
+            source=bead_mix_source,
+            vol=max_vol_mm_per_well*bead_mix_partial_vol_factor*n_full_wells,
+            reagent_name="bead mix",
+            target=bead_mix_first_wells_tracker,
+            is_pip_single=is_bead_mix_source_tube,
+            aspiration_rate_multiplier=bead_asp_rate_multiplier,
+            dispense_rate_multiplier=bead_disp_rate_multiplier,
+            fractional_dispense_y_offsets=y_offsets,
+            new_tip=False,
+            air_gap_vol=10)
 
+    # transfer bead mix to the last target well
     transfer_reagent(
         source=bead_mix_source,
-        vol=total_bead_vol,
-        reagent_name="Bead Mix",
-        target=bead_mix_target,
-        starting_well_index=starting_mm_well_index,
-        is_pip_single=is_single_pip,
+        vol=mm_vol_last_well*bead_mix_partial_vol_factor,
+        reagent_name="bead mix",
+        target=bead_mix_last_well_tracker,
+        is_pip_single=is_bead_mix_source_tube,
         aspiration_rate_multiplier=bead_asp_rate_multiplier,
         dispense_rate_multiplier=bead_disp_rate_multiplier,
         fractional_dispense_y_offsets=y_offsets,
         new_tip=False,
-    air_gap_vol = 10)
+        air_gap_vol=10)
 
-    # Mix the mastermix
-    pip = p300 if is_target_tube else m300
+    # mix the mastermix
+    pip = m300
     if pip.has_tip:
         pip.drop_tip()
     pip.pick_up_tip()
 
-    bb_target_tracker_list = bb_target.to_list()
-    bead_target_tracker_list = bead_mix_target.to_list()
+    bb_target_first_wells = bb_first_wells_target_tracker.to_list()
+    bead_target_first_wells = bead_mix_first_wells_tracker.to_list()
 
     if n_mm_mixes > 0:
-        ctx.comment("\nMixing the mastermix\n")
-        n_tips = 1 if is_target_tube else 8
-        for bb, bead in zip(bb_target_tracker_list, bead_target_tracker_list):
-            msg = "The target wells should be the same for both reagents"
+        ctx.comment("\nmixing the mastermix\n")
+        n_tips = 1 if is_bead_mix_source_tube else 8
+        for bb, bead in zip(bb_target_first_wells, bead_target_first_wells):
+            msg = "the target wells should be the same for both reagents"
             assert bb[0] == bead[0], msg
             mixing_well = bb[0]
             if bb[1][0] + bead[1][0] < 1:
@@ -946,49 +1064,81 @@ def run(ctx: protocol_api.ProtocolContext):
             pip.mix(n_mm_mixes, mix_vol, mixing_well,
                     mastermix_mix_rate_multiplier)
 
+    last_bb_well = bb_last_well_target_tracker.to_list()
+    bead_target_last_well = bead_mix_last_well_tracker.to_list()
+
+    # Validates volumes
     if is_debug_mode:
-        # Error check our results - accept a mean of 1 uL error per well
-        bb_target_diff = abs(
-            total_bb_vol - bb_target.total_vol_changed)
-        bead_mix_target_diff = abs(
-            total_bead_vol - bead_mix_target.total_vol_changed)
-        # Add volumes here since they should be negative (i.e. consumed)
+        # error check our results - accept a mean of 1 ul error per well
+        # Error check first target wells (full wells)
+        bb_target_diff_first_wells = 0
+        bead_mix_target_diff_first_wells = 0
+        max_vol_discrepancy = 1  # allow a max discrepancy of 1 uL
+
+        if bb_first_wells_target_tracker is not None:
+            bb_target_diff_first_wells = abs(
+                n_mm_target_wells*max_bb_vol_per_well
+                - bb_first_wells_target_tracker.total_vol_changed)
+            # bead mix first well are not None if bb target first wells exists
+            bead_mix_target_diff_first_wells = abs(
+                n_mm_target_wells*max_bead_vol_per_well
+                - bead_mix_first_wells_tracker.total_vol_changed)
+
+        # Calculate diffs between total volumes and how much was taken out
+        # of the source wells
         bb_source_diff = abs(
-            total_bb_vol - bb_source.total_vol_changed)
+            total_bb_vol - bb_source_tracker.total_vol_changed)
         bead_mix_source_diff = abs(
             total_bead_vol - bead_mix_source.total_vol_changed)
-        vol_err_template = ("The difference between stated and transferred {} "
+        vol_err_template = ("the difference between stated and transferred {} "
                             "vol was too great: {}")
 
-        for diff, name in zip([bb_target_diff,
-                               bead_mix_target_diff,
+        # Calculate diffs between how much volume was transferred to the last
+        # well targets and how much was supposed to be transferred there
+        bb_last_well_diff = abs(
+            mm_vol_last_well*bb_partial_vol_factor
+            - bb_source_tracker.total_vol_changed)
+        bead_mix_last_well_diff = abs(
+           mm_vol_last_well*bead_mix_partial_vol_factor
+           - bead_mix_source.total_vol_changed)
+
+        for diff, name in zip([bb_target_diff_first_wells,
+                               bead_mix_target_diff_first_wells,
+                               bb_last_well_diff,
+                               bead_mix_last_well_diff
                                bb_source_diff,
                                bead_mix_source_diff],
-                              ["binding buffer target",
-                               "bead mix target",
+                              ["binding buffer target first wells",
+                               "bead mix target first wells",
+                               "binding buffer target last well",
+                               "bead mix target last well",
                                "binding buffer source",
+                               "Bead mix source",
                                ]):
             msg = vol_err_template.format(name, diff)
-            # Accept 1 uL abs mean difference per well
+            # accept 1 ul abs mean difference per well
             try:
-                assert diff < n_mm_target_wells, msg
+                assert diff < n_mm_target_wells*max_vol_discrepancy, msg
             except AssertionError as e:
                 ctx.comment(
-                    ("Assertion error comparing volumes transferred to stated "
+                    ("assertion error comparing volumes transferred to stated "
                      "volumes transferred "))
                 ctx.comment(str(e))
-                ctx.comment("\n" + str(bb_source) + str(bead_mix_source)
-                            + str(bb_target) + str(bead_mix_target) + "\n")
+                ctx.comment(
+                    "\n" + str(bb_source_tracker) + str(bead_mix_source)
+                    + str(bb_first_wells_target_tracker)
+                    + str(bead_mix_first_wells_tracker) + "\n")
 
-        # Print info about the volume trackers
+        # print info about the volume trackers
         ctx.comment("\n\nVolTrackers before transfer")
         for vt in [bb_source_init, bead_mix_source_init,
                    bb_target_init, bead_mix_target_init]:
             ctx.comment(str(vt))
         ctx.comment("\n\nVolTrackers after transfer")
-        for vt in [bb_source, bead_mix_source,
-                   bb_target, bead_mix_target]:
+        for vt in [bb_source_tracker, bead_mix_source,
+                   bb_first_wells_target_tracker,
+                   bead_mix_first_wells_tracker]:
             ctx.comment(str(vt))
-            ctx.comment("Volume change:" + str(vt.total_vol_changed))
+            ctx.comment("volume change:" + str(vt.total_vol_changed))
 
     ctx.comment("\n\n - Protocol finished! - \n")
