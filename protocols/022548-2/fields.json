@@ -2,7 +2,7 @@
   {
     "type": "int",
     "label": "Number of tuberacks",
-    "name": "n_tuberacks",
+    "name": "n_sample_tuberacks",
     "default": 3
   },
   {
@@ -54,6 +54,18 @@
     "default": 0.3
   },
   {
+    "type": "float",
+    "label": "mastermix aspiration flow rate multiplier",
+    "name": "mm_aspiration_flowrate_multiplier",
+    "default": 0.1
+  },
+  {
+    "type": "float",
+    "label": "mastermix dispension flow rate multiplier",
+    "name": "mm_dispense_flowrate_multiplier",
+    "default": 0.1
+  },
+  {
     "type": "dropDown",
     "label": "Mount for 300 uL single channel pipette",
     "name": "p300_mount",
@@ -69,6 +81,15 @@
     "options": [
       { "label": "Right", "value": "right"},
       { "label": "Left", "value": "left"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Pause after mixing the mastermix for vortex/resuspension?",
+    "name": "",
+    "options": [
+      { "label": "Yes", "value": true},
+      { "label": "No", "value": false}
     ]
   }
 ]
