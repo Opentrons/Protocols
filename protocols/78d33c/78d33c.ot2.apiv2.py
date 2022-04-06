@@ -203,7 +203,7 @@ def run(ctx):
          source.top(-2).move(types.Point(x=source.length / 2, y=0, z=0)))
         p300m.move_to(source.top())
 
-        p300m.dispense(126, column[0])
+        p300m.dispense(126, column[0].bottom(4))
 
         for rep in range(10):
             p300m.aspirate(149, column[0].bottom(4))
@@ -213,7 +213,7 @@ def run(ctx):
          column[0].top(-2).move(types.Point(
           x=column[0].diameter / 2, y=0, z=0)))
         p300m.blow_out()
-        p300m.move_to(source.top())
+        p300m.move_to(column[0].top())
 
         p300m.drop_tip()
 
