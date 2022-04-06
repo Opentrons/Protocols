@@ -56,7 +56,7 @@ def run(ctx):
     num_cols = math.ceil(num_samples/8)
     tips300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot,
                                 '200ul tiprack')
-               for slot in ['4', '7', '10']]
+               for slot in ['2', '4', '7', '10', '11']]
     tips20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '5',
                                '20ul tiprack')]
     if park_tips:
