@@ -237,8 +237,8 @@ resuming.')
             # _drop(m300)
             # _pick_up(m300)
             m300.transfer(sample_vol, source.bottom(0.1), dest,
-                          mix_after=(10, sample_vol),
-                          air_gap=air_gap_vol, new_tip='never')
+                          mix_after=(10, sample_vol), air_gap=air_gap_vol,
+                          new_tip='never')
             m300.air_gap(air_gap_vol)
             if park:
                 m300.drop_tip(spot)
