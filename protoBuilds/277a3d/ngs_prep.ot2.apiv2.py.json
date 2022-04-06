@@ -1,6 +1,328 @@
 {
-    "content": "metadata = {\n    'protocolName': 'Oxford Nanopore Technologies 16S Barcoding NGS Prep',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx):\n\n    num_samples, mount_p20, mount_p300 = get_values(  # noqa: F821\n        'num_samples', 'mount_p20', 'mount_p300')\n\n    if not 1 <= num_samples <= 24:\n        raise Exception(f'Invalid sample number: {num_samples}')\n    if mount_p20 == mount_p300:\n        raise Exception(f'Pipette mounts cannot match: both {mount_p20}')\n\n    # labware\n    sample_plate = ctx.load_labware('thermofishermicroamp_96_wellplate_200ul',\n                                    '2', 'sample plate')\n    mag_rack = ctx.load_labware('permagen_24_tuberack_1500ul', '3',\n                                'magnetic rack')\n    reagent_rack = ctx.load_labware(\n        'opentrons_24_aluminumblock_nest_2ml_snapcap', '4', 'reagent tubes')\n    barcode_rack = ctx.load_labware(\n        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '5',\n        'barcode rack')\n    etoh_res = ctx.load_labware('nest_1_reservoir_195ml', '6',\n                                'EtOH reservoir')\n    tipracks_20 = [\n        ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)\n        for slot in ['7', '10']]\n    tipracks_300 = [\n        ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)\n        for slot in ['8', '11']]\n\n    # pipettes\n    p20 = ctx.load_instrument('p20_single_gen2', mount_p20,\n                              tip_racks=tipracks_20)\n    p300 = ctx.load_instrument('p300_single_gen2', mount_p300,\n                               tip_racks=tipracks_300)\n\n    # reagents\n    water = reagent_rack.wells()[0]\n    longamp_taq = reagent_rack.wells()[1]\n    etoh = etoh_res.wells()[0]\n    samples_plate = sample_plate.wells()[:num_samples]\n    samples_tubes = mag_rack.wells()[:num_samples]\n    barcodes = barcode_rack.wells()[:num_samples]\n\n    p20.pick_up_tip()\n    for s in samples_plate:\n        p20.transfer(14, water, s.top(-1), new_tip='never')\n        p20.blow_out(s.top(-1))\n    p20.drop_tip()\n\n    p300.pick_up_tip()\n    for s in samples_plate:\n        p300.transfer(25, longamp_taq, s.top(-1), new_tip='never')\n        p300.blow_out(s.top(-1))\n    p300.drop_tip()\n\n    for barcode, s in zip(barcodes, samples_plate):\n        p20.pick_up_tip()\n        p20.aspirate(1, barcode)\n        p20.touch_tip(barcode)\n        p20.dispense(1, s.bottom(2))\n        p20.touch_tip(s)\n        p20.drop_tip()\n\n    msg = \"\"\"Step 4) Thermocycle\\n\n    Step 5) Take off thermocycler and transfer all samples to 1.5ml tubes\\n\n    Step 6) Add Ampure Beads\\n\n    Step 7) Incubate on a Hula mixer (rotator mixer) for 5 minutes at RT.\\n\n    Step 8) Place tube on Magnetics tube holder in OT-2\\n\"\"\"\n\n    ctx.pause(msg)\n\n    for _ in range(2):\n        for tube in samples_tubes:\n            p300.pick_up_tip()\n            p300.transfer(200, etoh, tube, new_tip='never')\n            p300.drop_tip()\n\n    ctx.comment('Remove tubes for final elution')\n",
+    "content": "metadata = {\n    'protocolName': 'Oxford Nanopore Technologies 16S Barcoding NGS Prep',\n    'author': 'Nick <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx):\n\n    num_samples, mount_p20, mount_p300 = get_values(  # noqa: F821\n        'num_samples', 'mount_p20', 'mount_p300')\n\n    if not 1 <= num_samples <= 24:\n        raise Exception(f'Invalid sample number: {num_samples}')\n    if mount_p20 == mount_p300:\n        raise Exception(f'Pipette mounts cannot match: both {mount_p20}')\n\n    # labware\n    sample_plate = ctx.load_labware('thermofishermicroamp_96_wellplate_200ul',\n                                    '2', 'sample plate')\n    mag_rack = ctx.load_labware('permagen_24_tuberack_1500ul', '3',\n                                'magnetic rack')\n    tempdeck = ctx.load_module('temperature module gen2', '4')\n    reagent_rack = tempdeck.load_labware(\n        'opentrons_24_aluminumblock_nest_2ml_snapcap', 'reagent tubes')\n    tempdeck.set_temperature(4)\n    barcode_rack = ctx.load_labware(\n        'opentrons_24_tuberack_500ul', '5', 'barcode rack')\n    etoh_res = ctx.load_labware('nest_1_reservoir_195ml', '6',\n                                'EtOH reservoir')\n    tipracks_20 = [\n        ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)\n        for slot in ['7', '10']]\n    tipracks_300 = [\n        ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)\n        for slot in ['8', '11']]\n\n    # pipettes\n    p20 = ctx.load_instrument('p20_single_gen2', mount_p20,\n                              tip_racks=tipracks_20)\n    p300 = ctx.load_instrument('p300_single_gen2', mount_p300,\n                               tip_racks=tipracks_300)\n\n    # reagents\n    water = reagent_rack.wells()[0]\n    longamp_taq = reagent_rack.wells()[1]\n    etoh = etoh_res.wells()[0]\n    samples_plate = sample_plate.wells()[:num_samples]\n    samples_tubes = mag_rack.wells()[:num_samples]\n    barcodes = barcode_rack.wells()[:num_samples]\n\n    p20.pick_up_tip()\n    for s in samples_plate:\n        p20.transfer(14, water, s.top(-1), new_tip='never')\n        p20.blow_out(s.top(-1))\n    p20.drop_tip()\n\n    p300.pick_up_tip()\n    for s in samples_plate:\n        p300.transfer(25, longamp_taq, s.top(-1), new_tip='never')\n        p300.blow_out(s.top(-1))\n    p300.drop_tip()\n\n    for barcode, s in zip(barcodes, samples_plate):\n        p20.pick_up_tip()\n        p20.move_to(barcode.top())\n        # slow pipette head for accessing barcodes\n        ctx.max_speeds['A'] = 100\n        ctx.max_speeds['Z'] = 100\n        p20.aspirate(1, barcode)\n        p20.touch_tip(barcode)\n        del ctx.max_speeds['A']\n        del ctx.max_speeds['Z']\n        p20.dispense(1, s.bottom(2))\n        p20.touch_tip(s)\n        p20.drop_tip()\n\n    msg = \"\"\"Step 4) Thermocycle\\n\n    Step 5) Take off thermocycler and transfer all samples to 1.5ml tubes\\n\n    Step 6) Add Ampure Beads\\n\n    Step 7) Incubate on a Hula mixer (rotator mixer) for 5 minutes at RT.\\n\n    Step 8) Place tube on Magnetics tube holder in OT-2\\n\"\"\"\n\n    ctx.pause(msg)\n\n    for _ in range(2):\n        for tube in samples_tubes:\n            p300.pick_up_tip()\n            p300.transfer(200, etoh, tube, new_tip='never')\n            p300.drop_tip()\n\n    ctx.comment('Remove tubes for final elution')\n",
     "custom_labware_defs": [
+        {
+            "brand": {
+                "brand": "Opentrons",
+                "brandId": []
+            },
+            "cornerOffsetFromSlot": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "dimensions": {
+                "xDimension": 127.75,
+                "yDimension": 85.5,
+                "zDimension": 86
+            },
+            "groups": [
+                {
+                    "metadata": {
+                        "displayCategory": "tubeRack",
+                        "wellBottomShape": "v"
+                    },
+                    "wells": [
+                        "A1",
+                        "B1",
+                        "C1",
+                        "D1",
+                        "A2",
+                        "B2",
+                        "C2",
+                        "D2",
+                        "A3",
+                        "B3",
+                        "C3",
+                        "D3",
+                        "A4",
+                        "B4",
+                        "C4",
+                        "D4",
+                        "A5",
+                        "B5",
+                        "C5",
+                        "D5",
+                        "A6",
+                        "B6",
+                        "C6",
+                        "D6"
+                    ]
+                }
+            ],
+            "metadata": {
+                "displayCategory": "tubeRack",
+                "displayName": "Opentrons 24 Tube Rack with Watson Biolab 0.5 mL",
+                "displayVolumeUnits": "\u00b5L",
+                "tags": []
+            },
+            "namespace": "custom_beta",
+            "ordering": [
+                [
+                    "A1",
+                    "B1",
+                    "C1",
+                    "D1"
+                ],
+                [
+                    "A2",
+                    "B2",
+                    "C2",
+                    "D2"
+                ],
+                [
+                    "A3",
+                    "B3",
+                    "C3",
+                    "D3"
+                ],
+                [
+                    "A4",
+                    "B4",
+                    "C4",
+                    "D4"
+                ],
+                [
+                    "A5",
+                    "B5",
+                    "C5",
+                    "D5"
+                ],
+                [
+                    "A6",
+                    "B6",
+                    "C6",
+                    "D6"
+                ]
+            ],
+            "parameters": {
+                "format": "irregular",
+                "isMagneticModuleCompatible": false,
+                "isTiprack": false,
+                "loadName": "opentrons_24_tuberack_500ul",
+                "quirks": []
+            },
+            "schemaVersion": 2,
+            "version": 1,
+            "wells": {
+                "A1": {
+                    "depth": 26,
+                    "diameter": 10.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 500,
+                    "x": 18.21,
+                    "y": 75.43,
+                    "z": 60
+                },
+                "A2": {
+                    "depth": 26,
+                    "diameter": 10.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 500,
+                    "x": 38.1,
+                    "y": 75.43,
+                    "z": 60
+                },
+                "A3": {
+                    "depth": 26,
+                    "diameter": 10.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 500,
+                    "x": 57.99,
+                    "y": 75.43,
+                    "z": 60
+                },
+                "A4": {
+                    "depth": 26,
+                    "diameter": 10.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 500,
+                    "x": 77.88,
+                    "y": 75.43,
+                    "z": 60
+                },
+                "A5": {
+                    "depth": 26,
+                    "diameter": 10.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 500,
+                    "x": 97.77,
+                    "y": 75.43,
+                    "z": 60
+                },
+                "A6": {
+                    "depth": 26,
+                    "diameter": 10.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 500,
+                    "x": 117.66,
+                    "y": 75.43,
+                    "z": 60
+                },
+                "B1": {
+                    "depth": 26,
+                    "diameter": 10.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 500,
+                    "x": 18.21,
+                    "y": 56.15,
+                    "z": 60
+                },
+                "B2": {
+                    "depth": 26,
+                    "diameter": 10.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 500,
+                    "x": 38.1,
+                    "y": 56.15,
+                    "z": 60
+                },
+                "B3": {
+                    "depth": 26,
+                    "diameter": 10.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 500,
+                    "x": 57.99,
+                    "y": 56.15,
+                    "z": 60
+                },
+                "B4": {
+                    "depth": 26,
+                    "diameter": 10.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 500,
+                    "x": 77.88,
+                    "y": 56.15,
+                    "z": 60
+                },
+                "B5": {
+                    "depth": 26,
+                    "diameter": 10.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 500,
+                    "x": 97.77,
+                    "y": 56.15,
+                    "z": 60
+                },
+                "B6": {
+                    "depth": 26,
+                    "diameter": 10.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 500,
+                    "x": 117.66,
+                    "y": 56.15,
+                    "z": 60
+                },
+                "C1": {
+                    "depth": 26,
+                    "diameter": 10.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 500,
+                    "x": 18.21,
+                    "y": 36.87,
+                    "z": 60
+                },
+                "C2": {
+                    "depth": 26,
+                    "diameter": 10.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 500,
+                    "x": 38.1,
+                    "y": 36.87,
+                    "z": 60
+                },
+                "C3": {
+                    "depth": 26,
+                    "diameter": 10.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 500,
+                    "x": 57.99,
+                    "y": 36.87,
+                    "z": 60
+                },
+                "C4": {
+                    "depth": 26,
+                    "diameter": 10.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 500,
+                    "x": 77.88,
+                    "y": 36.87,
+                    "z": 60
+                },
+                "C5": {
+                    "depth": 26,
+                    "diameter": 10.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 500,
+                    "x": 97.77,
+                    "y": 36.87,
+                    "z": 60
+                },
+                "C6": {
+                    "depth": 26,
+                    "diameter": 10.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 500,
+                    "x": 117.66,
+                    "y": 36.87,
+                    "z": 60
+                },
+                "D1": {
+                    "depth": 26,
+                    "diameter": 10.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 500,
+                    "x": 18.21,
+                    "y": 17.59,
+                    "z": 60
+                },
+                "D2": {
+                    "depth": 26,
+                    "diameter": 10.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 500,
+                    "x": 38.1,
+                    "y": 17.59,
+                    "z": 60
+                },
+                "D3": {
+                    "depth": 26,
+                    "diameter": 10.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 500,
+                    "x": 57.99,
+                    "y": 17.59,
+                    "z": 60
+                },
+                "D4": {
+                    "depth": 26,
+                    "diameter": 10.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 500,
+                    "x": 77.88,
+                    "y": 17.59,
+                    "z": 60
+                },
+                "D5": {
+                    "depth": 26,
+                    "diameter": 10.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 500,
+                    "x": 97.77,
+                    "y": 17.59,
+                    "z": 60
+                },
+                "D6": {
+                    "depth": 26,
+                    "diameter": 10.6,
+                    "shape": "circular",
+                    "totalLiquidVolume": 500,
+                    "x": 117.66,
+                    "y": 17.59,
+                    "z": 60
+                }
+            }
+        },
         {
             "brand": {
                 "brand": "Permagen",
@@ -1521,7 +1843,7 @@
             "type": "permagen_24_tuberack_1500ul"
         },
         {
-            "name": "reagent tubes on 4",
+            "name": "reagent tubes on Temperature Module GEN2 on 4",
             "share": false,
             "slot": "4",
             "type": "opentrons_24_aluminumblock_nest_2ml_snapcap"
@@ -1530,7 +1852,7 @@
             "name": "barcode rack on 5",
             "share": false,
             "slot": "5",
-            "type": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap"
+            "type": "opentrons_24_tuberack_500ul"
         },
         {
             "name": "EtOH reservoir on 6",

@@ -21,11 +21,12 @@ def run(ctx):
                                     '2', 'sample plate')
     mag_rack = ctx.load_labware('permagen_24_tuberack_1500ul', '3',
                                 'magnetic rack')
-    reagent_rack = ctx.load_labware(
-        'opentrons_24_aluminumblock_nest_2ml_snapcap', '4', 'reagent tubes')
+    tempdeck = ctx.load_module('temperature module gen2', '4')
+    reagent_rack = tempdeck.load_labware(
+        'opentrons_24_aluminumblock_nest_2ml_snapcap', 'reagent tubes')
+    tempdeck.set_temperature(4)
     barcode_rack = ctx.load_labware(
-        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '5',
-        'barcode rack')
+        'opentrons_24_tuberack_500ul', '5', 'barcode rack')
     etoh_res = ctx.load_labware('nest_1_reservoir_195ml', '6',
                                 'EtOH reservoir')
     tipracks_20 = [
@@ -63,8 +64,14 @@ def run(ctx):
 
     for barcode, s in zip(barcodes, samples_plate):
         p20.pick_up_tip()
+        p20.move_to(barcode.top())
+        # slow pipette head for accessing barcodes
+        ctx.max_speeds['A'] = 100
+        ctx.max_speeds['Z'] = 100
         p20.aspirate(1, barcode)
         p20.touch_tip(barcode)
+        del ctx.max_speeds['A']
+        del ctx.max_speeds['Z']
         p20.dispense(1, s.bottom(2))
         p20.touch_tip(s)
         p20.drop_tip()

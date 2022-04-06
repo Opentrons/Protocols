@@ -183,7 +183,7 @@ component_3_volume,1
 control_plate,1
 count_mix,1
 count_samples,18
-csv,4
+csv,5
 csv1_buff,1
 csv1_samp,1
 csv1_urea,1
@@ -285,6 +285,7 @@ disposal_vol,2
 disposal_volume,1
 dmsovol,1
 dna,1
+dna_asp_rate,1
 dna_aspirate_clearance,1
 dna_csv,1
 dna_plate,1
@@ -562,9 +563,11 @@ mecn_wash3_vol,1
 media_trans_vol,1
 mix,1
 mix_after,1
+mix_asp_rate,1
 mix_clearance,1
 mix_count,1
 mix_csv,1
+mix_disp_rate,1
 mix_etoh,1
 mix_rate,2
 mix_repetitions,2
@@ -661,7 +664,7 @@ num_mastermix,1
 num_mm,2
 num_of_dilutions,2
 num_pl,2
-num_plates,22
+num_plates,23
 num_pool_sources,1
 num_pools,1
 num_primers,2
@@ -674,7 +677,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,91
+num_samples,99
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -745,7 +748,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,112
+p300_mount,113
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -858,6 +861,7 @@ primer_col_volume,1
 primer_loadname,1
 primer_lw,1
 primer_mix_vol,1
+primer_start,1
 primer_vol,1
 primer_volume,2
 process,1
@@ -1087,6 +1091,7 @@ temp_mod_on,2
 temp_mod_s1_lname,1
 temp_mod_s4_lname,1
 temp_mod_s7_lname,1
+temp_mod_setting,1
 temp_mod_temp,1
 temp_mod_temperature,1
 temp_s1_part1,1
