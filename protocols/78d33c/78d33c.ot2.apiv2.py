@@ -13,13 +13,14 @@ metadata = {
 def run(ctx):
 
     # get parameter values from json above
-    [temp_mod_setting, manual_bead_resuspension, clearance_bead_resuspension,
-     offset_x_resuspension, count_samples, clearance_reservoir, height_engage,
-     time_engage, offset_x, time_dry] = get_values(  # noqa: F821
-      'temp_mod_setting', 'manual_bead_resuspension',
-      'clearance_bead_resuspension', 'offset_x_resuspension', 'count_samples',
-      'clearance_reservoir', 'height_engage', 'time_engage', 'offset_x',
-      'time_dry')
+    [incubate_samples_with_beads, temp_mod_setting, manual_bead_resuspension,
+     clearance_bead_resuspension, offset_x_resuspension, count_samples,
+     clearance_reservoir, height_engage, time_engage, offset_x,
+     time_dry] = get_values(  # noqa: F821
+      'incubate_samples_with_beads', 'temp_mod_setting',
+      'manual_bead_resuspension', 'clearance_bead_resuspension',
+      'offset_x_resuspension', 'count_samples', 'clearance_reservoir',
+      'height_engage', 'time_engage', 'offset_x', 'time_dry')
 
     ctx.set_rail_lights(True)
 
@@ -203,11 +204,21 @@ def run(ctx):
         p300m.move_to(source.top())
 
         p300m.dispense(126, column[0])
-        p300m.mix(10, 149)
+
+        for rep in range(10):
+            p300m.aspirate(149, column[0].bottom(4))
+            p300m.dispense(149, column[0].bottom(4))
+
+        p300m.move_to(
+         column[0].top(-2).move(types.Point(
+          x=column[0].diameter / 2, y=0, z=0)))
+        p300m.blow_out()
+        p300m.move_to(source.top())
 
         p300m.drop_tip()
 
-    ctx.delay(minutes=10)
+    if incubate_samples_with_beads:
+        ctx.delay(minutes=10)
 
     mag.engage(height=height_engage)
     ctx.delay(minutes=time_engage)
