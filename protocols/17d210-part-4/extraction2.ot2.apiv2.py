@@ -83,9 +83,9 @@ def run(ctx):
     Here is where you can define the locations of your reagents.
     """
     binding_buffer = res1.rows()[0][:1]
-    wash1 = res1.rows()[0][:5]
-    wash2 = res1.rows()[0][:6]
-    elution_solution = res1.rows()[0][9]
+    wash1 = res1.rows()[0][4:6]
+    wash2 = res1.rows()[0][6:8]
+    elution_solution = res1.rows()[0][-1]
     lns2 = res1.rows()[0][10]
 
     starting_samples = pcr_plate.rows()[0][:num_cols]
@@ -223,7 +223,7 @@ resuming.')
             vol_per_trans = vol/num_trans
             asp_per_chan = (0.95*res1.wells()[0].max_volume)//(vol_per_trans*8)
             for t in range(num_trans):
-                chan_ind = int((i*num_trans + t)//asp_per_chan)
+                chan_ind = 0
                 source = binding_buffer[chan_ind]
                 if m300.current_volume > 0:
                     # void air gap if necessary
@@ -388,11 +388,11 @@ resuming.')
     Here is where you can call the methods defined above to fit your specific
     protocol. The normal sequence is:
     """
-    # bind(binding_buffer_vol, park=park_tips)
-    # wash(wash1_vol, wash1, park=park_tips)
-    # wash(wash2_vol, wash2, park=park_tips)
-    # remove_supernatant(18, pip=m20)
-    # elute(elution_vol, park=park_tips)
+    bind(binding_buffer_vol, park=park_tips)
+    wash(wash1_vol, wash1, park=park_tips)
+    wash(wash2_vol, wash2, park=park_tips)
+    remove_supernatant(18, pip=m20)
+    elute(elution_vol, park=park_tips)
 
     # track final used tip
     if tip_track and not ctx.is_simulating():
