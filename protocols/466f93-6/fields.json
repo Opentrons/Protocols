@@ -15,7 +15,13 @@
       "type": "textFile",
       "label": "Reagent .csv input file",
       "name": "input_csv",
-      "default": "Reagent name,Starting well, Starting volume, Flow rate multiplier\nEnd repair buffer,2,12,0.7"
+      "default": "Reagent name,Starting well,Starting volume,Flow rate multiplier\nEnd repair buffer,2,12,0.7\nEnd repair enzyme,1,100,0.2\nAdaptor ligation buffer,1,45,0.7\nAdaptor ligation enzyme I,2,27,0.2\nAdaptor ligation enzyme II,1,39,0.2\nPCR mix,1,117,0.2\nPrimer,1,45,1"
+    },
+    {
+      "type": "float",
+      "label": "Mixing rate multiplier",
+      "name": "mixing_rate_multiplier",
+      "default": 0.5
     },
     {
       "type": "int",

@@ -2,6 +2,7 @@ from opentrons import protocol_api
 from opentrons.protocol_api.labware import Labware, Well
 from opentrons.protocol_api.contexts import TemperatureModuleContext
 from typing import List, Sequence
+import csv
 
 # The first part of this protocol mixes the DNA samples with end repair
 # buffer and enzyme and ends when the samples are ready for thermal incubation
@@ -14,21 +15,61 @@ metadata = {
 }
 
 
+def parse_csv(csv_string) -> List:
+    csv_string = csv_string.strip()
+    lines = str(csv_string).splitlines()
+    csv_reader = csv.reader(lines, delimiter=',')
+    data_matrix = []
+    for row in csv_reader:
+        data_matrix.append(row)
+    return data_matrix
+
+
+def get_line_by_reagent_name(name: str, reagent_data: List[List]) -> List:
+    for line in reagent_data:
+        if name == line[0]:
+            return line
+    msg = ("the \"{}\" reagent name was not found in the reagent lists. "
+           "The reagents list contains the following entries: {}")
+    msg = msg.format(name, reagent_data)
+    raise Exception(msg)
+
+
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{
+                                  "n_samples":36,
+                                  "n_over_reactions":1,
+                                  "input_csv":"Reagent name,Starting well,Starting volume,Flow rate multiplier\\nEnd repair buffer,2,12,0.7\\nEnd repair enzyme,1,100,0.2\\nAdaptor ligation buffer,1,45,0.7\\nAdaptor ligation enzyme I,2,27,0.2\\nAdaptor ligation enzyme II,1,39,0.2\\nPCR mix,1,117,0.2\\nPrimer,1,45,1",
+                                  "mixing_rate_multiplier":0.5,
+                                  "n_mixes":10,
+                                  "pip_left_lname":"p1000_single_gen2",
+                                  "is_filtered_left":true,
+                                  "pip_right_lname":"p1000_single_gen2",
+                                  "is_filtered_right":true,
+                                  "mm_type":"create_ER_mix",
+                                  "mastermix_target_lname":"opentrons_24_tuberack_nest_1.5ml_snapcap",
+                                  "is_verbose_mode":false,
+                                  "temp_mod_reag_plate":false,
+                                  "temp_mod_tuberack":false,
+                                  "tmod_temperature":4
+                                  }
+                                  """)  # noqa
+    return [_all_values[n] for n in names]
+
+
 def run(ctx: protocol_api.ProtocolContext):
 
     [n_samples,
      n_over_reactions,
-     aspiration_rate_multiplier,
-     dispensing_rate_multiplier,
+     input_csv,
      mixing_rate_multiplier,
      n_mixes,
      pip_left_lname,
      is_filtered_left,
      pip_right_lname,
      is_filtered_right,
-     is_create_end_repair_mm,
-     is_create_adaptor_ligation_mm,
-     is_create_pcr_mm,
+     mm_type,
      mastermix_target_lname,
      is_verbose_mode,
      temp_mod_reag_plate,
@@ -36,94 +77,98 @@ def run(ctx: protocol_api.ProtocolContext):
      tmod_temperature] = get_values(  # noqa: F821
      "n_samples",
      "n_over_reactions",
-     "aspiration_rate_multiplier",
-     "dispensing_rate_multiplier",
+     "input_csv",
      "mixing_rate_multiplier",
      "n_mixes",
      "pip_left_lname",
      "is_filtered_left",
      "pip_right_lname",
      "is_filtered_right",
-     "is_create_end_repair_mm",
-     "is_create_adaptor_ligation_mm",
-     "is_create_pcr_mm",
+     "mm_type",
      "mastermix_target_lname",
      "is_verbose_mode",
      "temp_mod_reag_plate",
      "temp_mod_tuberack",
      "tmod_temperature")
 
-    # General error checking
+    # Parse reagent definition csv input
+    reagent_data = parse_csv(input_csv)
+
+    # Input error checking:---------------------------------------------------
+
+    # Check that the reagent names are recognized (not case sensitive)
+    # Set of recognized reagent names:
+    recognized_reagents = \
+        {"end repair buffer", "end repair enzyme",
+         "adaptor ligation buffer", "adaptor ligation enzyme i",
+         "adaptor ligation enzyme ii", "pcr mix", "primer"}
+
+    # String surrounding whitespace/lowercase reagent names and:
+    # Check that the data is properly formatted, skip header
+    for line in reagent_data[1:]:
+        line[0] = line[0].strip().lower()
+        if not line[0] in recognized_reagents:
+            msg = ("{} is not a valid reagent name, allowed names are {}. "
+                   + "The names are not case sensitive")
+            msg = msg.format(line[0], str(recognized_reagents))
+            raise Exception(msg)
+
     if not pip_left_lname and not pip_right_lname:
         raise Exception("You must load at least one pipette")
-
-    is_any_mm = False
-    for is_mm in [is_create_end_repair_mm, is_create_adaptor_ligation_mm,
-                  is_create_pcr_mm]:
-        if is_mm:
-            is_any_mm = True
-            break
-
-    if not is_any_mm:
-        raise Exception("You have to create at least one mastermix")
 
     # define all custom variables above here with descriptions:
     # Source volumes of reagents, and number of wells containing the reagent
     # 1st mastermix: End repair
+    ERB_reagent_data = get_line_by_reagent_name(
+        "end repair buffer", reagent_data)
+
+    ERB_start_index = int(ERB_reagent_data[1])
     ERB_vol_per_well = 27
-    ERE_vol_per_well = 126
-
+    ERB_vol_first_well = float(ERB_reagent_data[2])
+    ERB_initial_well_vol_used = ERB_vol_per_well - ERB_vol_first_well
     n_ERB_wells = 8
-    n_ERE_wells = 1
-
-    total_ERB_vol = n_ERB_wells * ERB_vol_per_well
-    total_ERE_vol = ERE_vol_per_well * n_ERE_wells
-    # How much volume of reagents are used per sample
     ERB_vol_per_sample = 1.5
+    ERB_end_index = n_ERB_wells
+
+    ERE_reagent_data = get_line_by_reagent_name(
+        "end repair enzyme", reagent_data)
+    ERE_vol_per_well = 126
+    ERE_vol_first_well = float(ERE_reagent_data[2])
+    ERE_initial_well_vol_used = ERE_vol_per_well - ERE_vol_first_well
+    n_ERE_wells = 1
     ERE_vol_per_sample = 0.75
+
     # 225 uL per 100 samples
-    max_ERB_samples = total_ERB_vol // ERB_vol_per_sample
-    max_ERE_samples = total_ERE_vol // ERE_vol_per_sample
     ER_mm_vol_per_sample = ERB_vol_per_sample + ERE_vol_per_sample
-    max_ER_mm_samples = min(max_ERB_samples, max_ERE_samples)
     # Well numbers
-    ERB_start_index = 1
-    ERB_end_index = ERB_start_index + n_ERB_wells - 1
     ERE_start_index = 9
     ERE_end_index = ERE_start_index + n_ERE_wells - 1
 
     # Required volumes for creating the mastermix
     total_ERE_mm_vol = n_samples * ERE_vol_per_sample
     total_ERB_mm_vol = n_samples * ERB_vol_per_sample
-    total_ER_mm_vol = ER_mm_vol_per_sample * \
-        n_samples if is_create_end_repair_mm else 0
-
-    # Error checking
-    if is_create_end_repair_mm and n_samples > max_ER_mm_samples:
-        raise Exception(
-            "You are trying to create {} aliquots of end-repair "
-            "mastermix, but there is only enough reagent on the Yourgene "
-            "reagent plate 1 for {} mastermix aliquots"
-            .format(n_samples, int(max_ER_mm_samples)))
+    total_ER_mm_vol = ER_mm_vol_per_sample * n_samples
 
     # 2nd mastermix: Adaptor ligation
+    # ALB_reagent_data = get_line_by_reagent_name(
+    #     "adaptor ligation buffer", reagent_data)
     ALB_vol_per_well = 45
-    ALE_I_vol_per_well = 27
-    ALE_II_vol_per_well = 39
-
-    n_ALB_wells = 8
-    n_ALE_I_wells = 8
-    n_ALE_II_wells = 1
-
     ALB_start_index = 8*2+1
+    n_ALB_wells = 8
     ALB_end_index = ALB_start_index + n_ALB_wells - 1
+    total_ALB_vol = ALB_vol_per_well * n_ALB_wells
+
+    ALE_I_vol_per_well = 27
+    n_ALE_I_wells = 8
     ALE_I_start_index = 8*3+1
     ALE_I_end_index = ALE_I_start_index + n_ALE_I_wells - 1
+    total_ALE_I_vol = ALE_I_vol_per_well * n_ALE_I_wells
+
+    ALE_II_vol_per_well = 39
+    n_ALE_II_wells = 1
     ALE_II_start_index = 8*4+1
     ALE_II_end_index = ALE_II_start_index + n_ALE_II_wells - 1
 
-    total_ALB_vol = ALB_vol_per_well * n_ALB_wells
-    total_ALE_I_vol = ALE_I_vol_per_well * n_ALE_I_wells
     total_ALE_II_vol = ALE_II_vol_per_well * n_ALE_II_wells
 
     ALB_vol_per_sample = 2.50
@@ -141,7 +186,7 @@ def run(ctx: protocol_api.ProtocolContext):
         max_ALB_samples, max_ALE_I_samples, max_ALE_II_samples)
 
     # Error checking
-    if is_create_adaptor_ligation_mm and n_samples > max_AL_mm_samples:
+    if mm_type == "create_AL_mix" and n_samples > max_AL_mm_samples:
         raise Exception(
             ("You are trying to create {} aliquots of Adaptor-Ligation "
              "mastermix, but there is only enough reagent on the Yourgene "
@@ -153,7 +198,7 @@ def run(ctx: protocol_api.ProtocolContext):
     total_AL_mm_vol_per_sample = (ALB_vol_per_sample + ALE_I_vol_per_sample
                                   + ALE_II_vol_per_sample)
     total_AL_mm_vol = total_AL_mm_vol_per_sample * \
-        n_samples if is_create_adaptor_ligation_mm else 0
+        n_samples if mm_type == "create_AL_mix" else 0
 
     # 3rd mastermix: PCR mix + primers
     PCR_mix_vol_per_well = 117
@@ -178,14 +223,15 @@ def run(ctx: protocol_api.ProtocolContext):
     max_PCR_mix_samples = total_PCR_mix_vol // PCR_mix_vol_per_sample
     max_primer_samples = total_primer_vol // primer_vol_per_sample
     max_PCR_mm_samples = min(max_PCR_mix_samples, max_primer_samples)
-    total_PCR_mm_vol = (PCR_mm_vol_per_sample * n_samples if is_create_pcr_mm
+    total_PCR_mm_vol = (PCR_mm_vol_per_sample * n_samples
+                        if mm_type == "create_PCR_mix"
                         else 0)
     # Total volumes to transfer to make mastermix
     totaL_PCR_mix_mm_vol = PCR_mix_vol_per_sample * n_samples
     total_primer_mm_vol = primer_vol_per_sample * n_samples
 
     # Error checking
-    if is_create_pcr_mm and n_samples > max_PCR_mm_samples:
+    if mm_type == "create_PCR_mix" and n_samples > max_PCR_mm_samples:
         raise Exception(
             "You are trying to create {} aliquots of PCR "
             "mastermix, but there is only enough reagent on the Yourgene "
@@ -711,6 +757,10 @@ def run(ctx: protocol_api.ProtocolContext):
                            reagent_name="End repair buffer",
                            is_verbose=is_verbose_mode,
                            is_strict_mode=True)
+    # Track previously used volume:
+    ERB_wells.track(ERB_initial_well_vol_used)
+
+    # Only one well so it always starts and ends on the 1st well of col 2.
     ERE_wells = VolTracker(labware=yourgene_reagent_plate_I,
                            well_vol=ERE_vol_per_well,
                            start=ERE_start_index,
@@ -720,6 +770,7 @@ def run(ctx: protocol_api.ProtocolContext):
                            reagent_name="End Repair Enzyme",
                            is_verbose=is_verbose_mode,
                            is_strict_mode=True)
+    ERE_wells.track(ERE_initial_well_vol_used)
 
     # Reagent wells for mastermix 2: Adaptor ligation
     ALB_wells = VolTracker(labware=yourgene_reagent_plate_I,
@@ -815,6 +866,7 @@ def run(ctx: protocol_api.ProtocolContext):
                          template_message: str,
                          reagent_names: List[str],
                          n_mixes: int = 0,
+                         flow_rate_multipliers: Sequence[float] = None,
                          mixing_rate: float = 1) -> None:
         """
         Create a mastermix from a list of reagents drawing from the sources
@@ -827,15 +879,15 @@ def run(ctx: protocol_api.ProtocolContext):
         :param messages: Can be a string describing each reagent
         """
         nonlocal pip_s, pip_l
-        nonlocal aspiration_rate_multiplier, dispensing_rate_multiplier
-        for pip in pip_s, pip_l:
-            pip.flow_rate.aspirate *= aspiration_rate_multiplier
-            pip.flow_rate.dispense *= dispensing_rate_multiplier
 
         total_vol = sum(reagent_volumes)
+        i = 0
         for source, vol, msg in zip(sources,
                                     reagent_volumes,
                                     reagent_names):
+            for pip in pip_s, pip_l:
+                pip.flow_rate.aspirate *= flow_rate_multipliers[i]
+                pip.flow_rate.dispense *= flow_rate_multipliers[i]
             ctx.comment(template_message.format(msg))
             source_well_volume = source.get_active_well_remaining_vol()
             while vol > 0:
@@ -849,10 +901,10 @@ def run(ctx: protocol_api.ProtocolContext):
                 if source.get_active_well_remaining_vol() <= 1:
                     source.advance_well()
             drop_all_tips([pip_s, pip_l])
-        # Mixing steps, 1: Reset the flow rates
-        for pip in pip_s, pip_l:
-            pip.flow_rate.aspirate /= aspiration_rate_multiplier
-            pip.flow_rate.dispense /= dispensing_rate_multiplier
+            for pip in pip_s, pip_l:
+                pip.flow_rate.aspirate /= flow_rate_multipliers[i]
+                pip.flow_rate.dispense /= flow_rate_multipliers[i]
+            i += 1
 
         # step 2: mix
         pip = (pip_l if total_vol > pip_s.max_volume else pip_s)
@@ -869,20 +921,22 @@ def run(ctx: protocol_api.ProtocolContext):
 
     pip_s, pip_l = rank_pipettes([pip_left, pip_right])
     # 1st mastermix: End-repair
-    if is_create_end_repair_mm:
+    if "create_ER_mix" == mm_type:
         ctx.comment("\n\nCreating End repair mastermix in {}\n"
                     .format(ER_mm_dest_tube))
         # import pdb
         # pdb.set_trace()
+        flow_rates = [float(ERB_reagent_data[3]), float(ERE_reagent_data[3])]
         create_mastermix(sources=[ERB_wells, ERE_wells],
                          dest_tube=ER_mm_dest_tube,
                          reagent_volumes=[total_ERB_mm_vol, total_ERE_mm_vol],
                          template_message="Transferring End Repair {}",
                          reagent_names=["Buffer", "Enzyme"],
                          n_mixes=n_mixes,
+                         flow_rate_multipliers=flow_rates,
                          mixing_rate=mixing_rate_multiplier)
 
-    if is_create_adaptor_ligation_mm:
+    elif "create_AL_mix" == mm_type:
         ctx.comment("\n\nCreating Adaptor Ligation mastermix in {}\n"
                     .format(AL_mm_dest_tube))
         create_mastermix(sources=[ALB_wells, ALE_I_wells, ALE_II_wells],
@@ -894,7 +948,7 @@ def run(ctx: protocol_api.ProtocolContext):
                          n_mixes=n_mixes,
                          mixing_rate=mixing_rate_multiplier)
 
-    if is_create_pcr_mm:
+    elif "create_PCR_mix" == mm_type:
         ctx.comment("\n\nCreating PCR mastermix in {}\n"
                     .format(PCR_mm_dest_tube))
         create_mastermix(sources=[PCR_mix_wells, primer_wells],
@@ -905,6 +959,11 @@ def run(ctx: protocol_api.ProtocolContext):
                          reagent_names=["PCR mix", "primers"],
                          n_mixes=n_mixes,
                          mixing_rate=mixing_rate_multiplier)
+    else:
+        msg = ("Unrecognized mastermix option {}, valid choices are: "
+               + "create_ER_mix, create_AL_mix or create_PCR_mix")
+        msg = msg.format(mm_type)
+        raise Exception(msg)
 
     if is_verbose_mode is True:
 
