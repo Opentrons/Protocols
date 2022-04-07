@@ -81,8 +81,8 @@ def run(ctx):
     Here is where you can define the locations of your reagents.
     """
     binding_buffer = res1.rows()[0][:1]
-    wash1 = res1.rows()[0][5:6]
-    wash2 = res1.rows()[0][7:8]
+    wash1 = res1.rows()[0][4:6]
+    wash2 = res1.rows()[0][6:8]
     elution_solution = res1.rows()[0][-1]
 
     starting_samples = pcr_plate.rows()[0][:num_cols]
