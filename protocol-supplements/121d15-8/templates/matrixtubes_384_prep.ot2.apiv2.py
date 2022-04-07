@@ -106,7 +106,7 @@ def run(ctx):
         ctx.load_labware('opentrons_96_tiprack_20ul', slot)
         for slot in ['6', '9', '8']]
     tipracks_s = [
-        ctx.load_labware('opentrons_96_tiprack_20ul', slot)
+        ctx.load_labware('custom_96_tiprack_20ul', slot)
         for slot in ['11']]
     src_plates = [
         ctx.load_labware('weldessmatrix_96_tuberack_500ul', slot,
