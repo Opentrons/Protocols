@@ -13,6 +13,19 @@ metadata = {
     'apiLevel': '2.11'
     }
 
+def right(s, amount):
+    if s == None:
+        return None
+    elif amount == None:
+        return None
+    s = str(s)
+    if amount > len(s):
+        return s
+    elif amount == 0:
+        return ""
+    else:
+        return s[-amount:]
+
 
 
 def run(protocol: protocol_api.ProtocolContext):
@@ -26,18 +39,7 @@ def run(protocol: protocol_api.ProtocolContext):
         "STEP_POSTLIG", "STEP_PCR", "STEP_PCRDECK", "STEP_POSTPCR1",
         "STEP_POSTPCR2", "p20_mount", "p300_mount")
 
-    def right(s, amount):
-        if s == None:
-            return None
-        elif amount == None:
-            return None
-        s = str(s)
-        if amount > len(s):
-            return s
-        elif amount == 0:
-            return ""
-        else:
-            return s[-amount:]
+
 
     STEPS = {int(STEP_FRERAT),
              int(STEP_LIG),
