@@ -30,6 +30,7 @@ def right(s, amount):
 
 def run(protocol: protocol_api.ProtocolContext):
 
+
     [SAMPLES, FRAGTIME, PCRCYCLES, DRYRUN, NOMODULES, TIPREUSE, OFFSET,
      STEP_FRERAT, STEP_FRERATDECK, STEP_LIG, STEP_LIGDECK, STEP_POSTLIG,
      STEP_PCR, STEP_PCRDECK, STEP_POSTPCR1, STEP_POSTPCR2, p20_mount,
@@ -38,6 +39,7 @@ def run(protocol: protocol_api.ProtocolContext):
         "OFFSET", "STEP_FRERAT", "STEP_FRERATDECK", "STEP_LIG", "STEP_LIGDECK",
         "STEP_POSTLIG", "STEP_PCR", "STEP_PCRDECK", "STEP_POSTPCR1",
         "STEP_POSTPCR2", "p20_mount", "p300_mount")
+    global TIPREUSE
 
 
 
@@ -50,7 +52,7 @@ def run(protocol: protocol_api.ProtocolContext):
     STEP_FRERATDECK = int(STEP_FRERATDECK)
     STEP_LIGDECK = int(STEP_LIGDECK)
     STEP_PCRDECK = int(STEP_PCRDECK)
-    global TIPREUSE
+
 
     if DRYRUN == 'YES':
         protocol.comment("THIS IS A DRY RUN")
