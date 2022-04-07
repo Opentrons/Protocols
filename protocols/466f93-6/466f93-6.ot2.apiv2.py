@@ -493,7 +493,276 @@ def run(ctx: protocol_api.ProtocolContext):
 
 
     '''
+    class VolTracker:
+        def __init__(self, labware: Labware,
+                     well_vol: float = 0,
+                     start: int = 1,
+                     end: int = 8,
+                     mode: str = 'reagent',
+                     pip_type: str = 'single',
+                     msg: str = 'Refill labware volumes',
+                     reagent_name: str = 'nameless reagent',
+                     is_verbose: bool = True,
+                     is_strict_mode: bool = False,
+                     threshhold_advancement_vol: float = 1,
+                     dead_volume: float = 0):
+            """
+            Voltracker tracks the volume(s) used in a piece of labware.
+            It's conceptually important to understand that in reagent
+            mode the volumes tracked are how much volume has been removed from
+            the VolTracker, but waste and target is how much has been added
+            to it, and how much was there/have been taken out to begin with.
+            This will have implications for how the class is initialized.
 
+            :param labware: The labware to track
+            :param well_vol: The volume of the liquid in the wells, if using a
+            multi-pipette with a well plate, treat the plate like a reservoir,
+            i.e. start=1, end=1, well_vol = 8 * vol of each individual well.
+            :param pip_type: The pipette type used: 'single' or 'multi',
+            when the type is 'multi' volumes are multiplied by 8 to reflect
+            the true volumes used by the pipette.
+            :param mode: 'reagent', 'target' or 'waste'
+            :param start: The starting well
+            :param end: The ending well
+            :param msg: Message to send to the user when all wells are empty
+            (or full when in waste mode)
+            :param reagent_name: Name of the reagent tracked by the object
+            :param is_verbose: Whether to have VolTracker send ProtocolContext
+            messages about its actions or not.
+            :param is_strict_mode: If set to True VolTracker will pause
+            execution when its tracked wells are depleted (or filled), ask the
+            user to replace the labware and reset the volumes. If it's False
+            VolTracker will raise an exception if trying to use more volume
+            than the VolTracker is set up for. strict_mode also forces the
+            user to check if there's enough volume in the active well and
+            to manually advance to the next well by calling advance_well()
+            :param threshhold_advancement_vol: If using strict mode VolTr.
+            will throw an exception if the user advances the well while there
+            is more than the threshhold_advancement_vol of volume left in
+            the well.
+            """
+            # Boolean value: True if the well has been filled
+            # or has been depleted
+            self.labware_wells = {}
+            for well in labware.wells()[start-1:end]:
+                self.labware_wells[well] = [0, False]
+            self.labware_wells_backup = self.labware_wells.copy()
+            self.well_vol = well_vol
+            self.pip_type = pip_type
+            self.mode = mode
+            self.start = start
+            self.end = end
+            self.msg = msg
+            self.is_verbose = is_verbose
+            # Total vol changed - how much volume has been withdrawn or added
+            # to this Voltracker
+            self.total_vol_changed = 0
+            # If true, then labware should raise an exception when full
+            # rather than reset
+            self.is_strict_mode = is_strict_mode
+            self.reagent_name = reagent_name
+            self.dead_volume = dead_volume
+
+            valid_modes = ['reagent', 'waste', 'target']
+
+            # Parameter error checking
+            if not (pip_type == 'single' or pip_type == 'multi'):
+                raise Exception('Pipette type must be single or multi')
+
+            if mode not in valid_modes:
+                msg = "Invalid mode, valid modes are {}"
+                msg = msg.format(valid_modes)
+                raise Exception(msg)
+
+            if mode != 'reagent' and dead_volume > 0:
+                raise Exception(("Setting a dead/min volume only makes sense "
+                                 "for reagents"))
+
+        def __str__(self):
+            msg = (self.reagent_name + " " + self.mode
+                   + " volume change: " + str(self.total_vol_changed)
+                   + " well vol: " + str(self.well_vol) + " dead vol: "
+                   + str(self.dead_volume))
+            msg += "\nChanges in each well:\n"
+            for i, well_tracker in enumerate(self.labware_wells.values()):
+                msg += "well {}: Volume change: {}\n".format(
+                    i+1, well_tracker[0])
+            return msg
+
+        @staticmethod
+        def flash_lights():
+            """
+            Flash the lights of the robot to grab the users attention
+            """
+            nonlocal ctx
+            initial_light_state = ctx.rail_lights_on
+            opposite_state = not initial_light_state
+            for _ in range(5):
+                ctx.set_rail_lights(opposite_state)
+                ctx.delay(seconds=0.5)
+                ctx.set_rail_lights(initial_light_state)
+                ctx.delay(seconds=0.5)
+
+        def get_wells(self) -> Sequence:
+            return list(self.labware_wells.keys())
+
+        def to_list(self):
+            return list(self.labware_wells.items())
+
+        def get_total_initial_vol(self):
+            """
+            Return the total initial volume of the
+            tracker = n_wells * well_vol
+            """
+            return len(self.labware_wells) * self.well_vol
+
+        def get_total_dead_volume(self):
+            """
+            Returns the total dead volume of the tracker
+            """
+            return len(self.labware_wells) * self.dead_volume
+
+        def get_total_remaining_vol(self):
+            """
+            Returns the total volume remaining in the tracker
+            including the dead volume
+            """
+            return (self.get_total_initial_vol()
+                    - self.total_vol_changed)
+
+        def get_active_well_vol_change(self):
+            """
+            Return the volume either used up (reagents) or added
+            (target or trash) in the currently active well
+            """
+            try:
+                well = self.get_active_well()
+                return self.labware_wells[well][0]
+            except KeyError as ke:
+                msg = "Well {} not found in this VolTracker: {}"
+                msg.format(well, str(self))
+                print(msg)
+                print("Exception: ", ke)
+
+        def get_active_well_remaining_vol(self):
+            """
+            Returns how much volume is remaing to be used (reagents) or the
+            space left to fill the well (waste and targets)
+            """
+            vol_change = self.get_active_well_vol_change()
+            return self.well_vol - vol_change - self.dead_volume
+
+        def get_active_well(self):
+            active_well = None
+            for key in self.labware_wells:
+                # Return the first well that is not full
+                if self.labware_wells[key][1] is False:
+                    active_well = key
+            if active_well is None:
+                msg = "All wells on this Voltracker are full: {}"
+                msg = msg.format(str(self))
+                raise Exception(msg)
+            else:
+                return active_well
+
+        def advance_well(self):
+            curr_well = self.get_active_well()
+            # Mark the current well as 'used up'
+            self.labware_wells[curr_well][1] = True
+            pass
+
+        def reset_labware(self):
+            VolTracker.flash_lights()
+            ctx.pause(self.msg)
+            self.labware_wells = self.labware_wells_backup.copy()
+
+        def get_active_well_vol(self):
+            well = self.get_active_well()
+            return self.labware_wells[well][0]
+
+        def get_current_vol_by_key(self, well_key):
+            return self.labware_wells[well_key][0]
+
+        def track(self, vol: float) -> Well:
+            """track() will track how much liquid
+            was used up per well. If the volume of
+            a given well is greater than self.well_vol
+            it will remove it from the dictionary and iterate
+            to the next well which will act as the active source well.
+            :param vol: How much volume to track (per tip), i.e. if it's one
+            tip track vol, but if it's multi-pipette, track 8 * vol.
+
+            This implies that VolTracker will treat a column like a well,
+            whether it's a plate or a reservoir.
+            """
+            well = self.get_active_well()
+            # Treat plates like reservoirs and add 8 well volumes together
+            # Total vol changed keeps track across labware resets, i.e.
+            # when the user replaces filled/emptied wells
+            vol = vol * 8 if self.pip_type == 'multi' else vol
+
+            # Track the total change in volume of this volume tracker
+            self.total_vol_changed += vol
+
+            if (self.labware_wells[well][0] + vol
+                    > self.well_vol - self.dead_volume):
+                if self.is_strict_mode:
+                    msg = ("Tracking a volume of {} uL would {} the "
+                           "current well: {} on the {} {} tracker. "
+                           "The max well volume is {}, and "
+                           "the current vol is {}. The dead volume is {}")
+                    mode_msg = ("over-deplete`" if self.mode == "reagent"
+                                else "over-fill")
+                    msg = msg.format(
+                        vol, mode_msg, well, self.reagent_name, self.mode,
+                        self.well_vol, self.get_active_well_vol(),
+                        self.dead_volume)
+                    raise Exception(msg)
+                self.labware_wells[well][1] = True
+                is_all_used = True
+
+                # Check if wells are completely full (or depleted)
+                for w in self.labware_wells:
+                    if self.labware_wells[w][1] is False:
+                        is_all_used = False
+
+                if is_all_used is True:
+                    if self.is_strict_mode is False:
+                        self.reset_labware()
+                    else:
+                        e_msg = ("{}: {} {} wells would be {} by this action "
+                                 "this VolTracker is in strict mode, check why"
+                                 "manual reset was not performed")
+
+                        fill_status = \
+                            ("over-depleted" if self.mode == "reagent" else
+                             "over-filled")
+                        e_msg = e_msg.format(str(self),
+                                             self.reagent,
+                                             self.mode, fill_status)
+                        raise Exception(e_msg)
+
+                well = self.get_active_well()
+                if self.is_verbose:
+                    ctx.comment(
+                        "\n{} {} tracker switching to well {}\n".format(
+                            self.reagent_name, self.mode, well))
+            self.labware_wells[well][0] += vol
+
+            if self.is_verbose:
+                if self.mode == 'waste':
+                    ctx.comment('{}: {} ul of total waste'
+                                .format(well,
+                                        int(self.labware_wells[well][0])))
+                elif self.mode == 'target':
+                    ctx.comment('{}: {} ul of reagent added to target well'
+                                .format(well,
+                                        int(self.labware_wells[well][0])))
+                else:
+                    ctx.comment('{} uL of liquid used from {}'
+                                .format(int(self.labware_wells[well][0]),
+                                        well))
+            return well
 
     def rank_pipettes(pipettes: list):
         '''
