@@ -12,22 +12,10 @@
       "default": 1
     },
     {
-        "type": "float",
-        "label": "Aspiration rate multiplier",
-        "name": "aspiration_rate_multiplier",
-        "default": 1
-    },
-    {
-        "type": "float",
-        "label": "Dispensing rate multiplier",
-        "name": "dispensing_rate_multiplier",
-        "default": 1
-    },
-    {
-        "type": "float",
-        "label": "Mixing rate multiplier",
-        "name": "mixing_rate_multiplier",
-        "default": 1
+      "type": "textFile",
+      "label": "Reagent .csv input file",
+      "name": "input_csv",
+      "default": "Reagent name,Starting well, Starting volume, Flow rate multiplier\nEnd repair buffer,2,12,0.7"
     },
     {
       "type": "int",
@@ -78,28 +66,11 @@
     {
       "type": "dropDown",
       "label": "Create end-repair mastermix?",
-      "name": "is_create_end_repair_mm",
+      "name": "mm_type",
       "options": [
-        { "label": "Yes", "value": true},
-        { "label": "No", "value": false}
-      ]
-    },
-    {
-      "type": "dropDown",
-      "label": "Create adaptor ligation mastermix?",
-      "name": "is_create_adaptor_ligation_mm",
-      "options": [
-        { "label": "Yes", "value": true},
-        { "label": "No", "value": false}
-      ]
-    },
-    {
-      "type": "dropDown",
-      "label": "Create PCR reaction mastermix?",
-      "name": "is_create_pcr_mm",
-      "options": [
-        { "label": "Yes", "value": true},
-        { "label": "No", "value": false}
+        { "label": "Create end repair mastermix", "value": "create_ER_mix"},
+        { "label": "Create adaptor ligation mastermix", "value": "create_AL_mix"},
+        { "label": "Create PCR mastermix", "value": "create_PCR_mix"}
       ]
     },
     {
