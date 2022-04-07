@@ -160,7 +160,7 @@ resuming.')
     waste_vol = 0
     waste_threshold = 185000
 
-    def remove_supernatant(vol, pip=m300, park=False):
+    def remove_supernatant(vol, pip=m300, park=False, direct=True):
         """
         `remove_supernatant` will transfer supernatant from the deepwell
         extraction plate to the liquid waste reservoir.
@@ -191,10 +191,15 @@ resuming.')
             #     air_gap_vol = 20
             # else:
             #     air_gap_vol = pip.max_volume - vol
-            pip.transfer(vol, loc, waste, new_tip='never',
-                         air_gap=(air_gap_vol))
-            pip.blow_out(waste)
-            _drop(pip)
+            if direct and vol + \
+                    air_gap_vol <= pip.tip_racks[0].wells()[0].max_volume:
+                pip.aspirate(vol, loc)
+                _drop(pip)
+            else:
+                pip.transfer(vol, loc, waste, new_tip='never',
+                             air_gap=air_gap_vol)
+                pip.blow_out(waste)
+                _drop(pip)
 
     def bind(vol, park=True):
         """
