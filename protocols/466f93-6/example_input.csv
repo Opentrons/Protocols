@@ -1,0 +1,8 @@
+Reagent name,Starting well,Starting volume,Flow rate multiplier
+End repair buffer,2,12,0.7
+End repair enzyme,1,100,0.2
+Adaptor ligation buffer,1,45,0.7
+Adaptor ligation enzyme I,2,27,0.2
+Adaptor ligation enzyme II,1,39,0.2
+PCR mix,1,117,0.2
+Primer,1,45,1
