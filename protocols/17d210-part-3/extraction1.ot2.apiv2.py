@@ -81,8 +81,8 @@ def run(ctx):
     Here is where you can define the locations of your reagents.
     """
     binding_buffer = res1.rows()[0][:1]
-    wash1 = res1.rows()[0][5:6]
-    wash2 = res1.rows()[0][7:8]
+    wash1 = res1.rows()[0][4:6]
+    wash2 = res1.rows()[0][6:8]
     elution_solution = res1.rows()[0][-1]
 
     starting_samples = pcr_plate.rows()[0][:num_cols]
@@ -160,7 +160,7 @@ resuming.')
     waste_vol = 0
     waste_threshold = 185000
 
-    def remove_supernatant(vol, pip=m300, park=False):
+    def remove_supernatant(vol, pip=m300, park=False, direct=True):
         """
         `remove_supernatant` will transfer supernatant from the deepwell
         extraction plate to the liquid waste reservoir.
@@ -191,10 +191,15 @@ resuming.')
             #     air_gap_vol = 20
             # else:
             #     air_gap_vol = pip.max_volume - vol
-            pip.transfer(vol, loc, waste, new_tip='never',
-                         air_gap=(air_gap_vol))
-            pip.blow_out(waste)
-            _drop(pip)
+            if direct and vol + \
+                    air_gap_vol <= pip.tip_racks[0].wells()[0].max_volume:
+                pip.aspirate(vol, loc)
+                _drop(pip)
+            else:
+                pip.transfer(vol, loc, waste, new_tip='never',
+                             air_gap=air_gap_vol)
+                pip.blow_out(waste)
+                _drop(pip)
 
     def bind(vol, park=True):
         """
@@ -237,8 +242,8 @@ resuming.')
             # _drop(m300)
             # _pick_up(m300)
             m300.transfer(sample_vol, source.bottom(0.1), dest,
-                          mix_after=(10, sample_vol),
-                          air_gap=air_gap_vol, new_tip='never')
+                          mix_after=(10, sample_vol), air_gap=air_gap_vol,
+                          new_tip='never')
             m300.air_gap(air_gap_vol)
             if park:
                 m300.drop_tip(spot)

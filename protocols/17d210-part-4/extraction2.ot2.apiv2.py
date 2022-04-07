@@ -56,7 +56,7 @@ def run(ctx):
     num_cols = math.ceil(num_samples/8)
     tips300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot,
                                 '200ul tiprack')
-               for slot in ['4', '7', '10']]
+               for slot in ['2', '4', '7', '10', '11']]
     tips20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '5',
                                '20ul tiprack')]
     if park_tips:
@@ -83,9 +83,9 @@ def run(ctx):
     Here is where you can define the locations of your reagents.
     """
     binding_buffer = res1.rows()[0][:1]
-    wash1 = res1.rows()[0][:5]
-    wash2 = res1.rows()[0][:6]
-    elution_solution = res1.rows()[0][9]
+    wash1 = res1.rows()[0][4:6]
+    wash2 = res1.rows()[0][6:8]
+    elution_solution = res1.rows()[0][-1]
     lns2 = res1.rows()[0][10]
 
     starting_samples = pcr_plate.rows()[0][:num_cols]
@@ -163,7 +163,7 @@ resuming.')
     waste_vol = 0
     waste_threshold = 185000
 
-    def remove_supernatant(vol, pip=m300, park=False):
+    def remove_supernatant(vol, pip=m300, park=False, direct=True):
         """
         `remove_supernatant` will transfer supernatant from the deepwell
         extraction plate to the liquid waste reservoir.
@@ -172,7 +172,6 @@ resuming.')
         :param park (boolean): Whether to pick up sample-corresponding tips
                                in the 'parking rack' or to pick up new tips.
         """
-
         def _waste_track(vol):
             nonlocal waste_vol
             if waste_vol + vol >= waste_threshold:
@@ -191,14 +190,19 @@ resuming.')
                                          z=z_offset))
             _waste_track(vol)
             pip.move_to(m.center())
-            if pip == m300:
-                air_gap_vol = 20
+            # if pip == m300:
+            #     air_gap_vol = 20
+            # else:
+            #     air_gap_vol = pip.max_volume - vol
+            if direct and vol + \
+                    air_gap_vol <= pip.tip_racks[0].wells()[0].max_volume:
+                pip.aspirate(vol, loc)
+                _drop(pip)
             else:
-                air_gap_vol = pip.max_volume - vol
-            pip.transfer(vol, loc, waste, new_tip='never',
-                         air_gap=air_gap_vol)
-            pip.blow_out(waste)
-            _drop(pip)
+                pip.transfer(vol, loc, waste, new_tip='never',
+                             air_gap=air_gap_vol)
+                pip.blow_out(waste)
+                _drop(pip)
 
     def bind(vol, park=True):
         """
@@ -223,7 +227,7 @@ resuming.')
             vol_per_trans = vol/num_trans
             asp_per_chan = (0.95*res1.wells()[0].max_volume)//(vol_per_trans*8)
             for t in range(num_trans):
-                chan_ind = int((i*num_trans + t)//asp_per_chan)
+                chan_ind = 0
                 source = binding_buffer[chan_ind]
                 if m300.current_volume > 0:
                     # void air gap if necessary
@@ -388,11 +392,11 @@ resuming.')
     Here is where you can call the methods defined above to fit your specific
     protocol. The normal sequence is:
     """
-    # bind(binding_buffer_vol, park=park_tips)
-    # wash(wash1_vol, wash1, park=park_tips)
-    # wash(wash2_vol, wash2, park=park_tips)
-    # remove_supernatant(18, pip=m20)
-    # elute(elution_vol, park=park_tips)
+    bind(binding_buffer_vol, park=park_tips)
+    wash(wash1_vol, wash1, park=park_tips)
+    wash(wash2_vol, wash2, park=park_tips)
+    remove_supernatant(18, pip=m20)
+    elute(elution_vol, park=park_tips)
 
     # track final used tip
     if tip_track and not ctx.is_simulating():

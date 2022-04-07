@@ -34,5 +34,11 @@
     "label": "PCR2 buffer volume (in µl)",
     "name": "pcr2_buffer_vol",
     "default": 27.0
+  },
+  {
+    "type": "int",
+    "label": "UDI starting column (1-12)",
+    "name": "udi_start_col",
+    "default": 1
   }
 ]
