@@ -1217,7 +1217,8 @@ def run(ctx: protocol_api.ProtocolContext):
             ctx.comment(msg)
 
             msg = "Difference: {}"
-            msg = msg.format(exp_vol-transf_vol)
+            diff = round(exp_vol - transf_vol, 6)
+            msg = msg.format(diff)
             ctx.comment(msg)
 
     ctx.comment("\n\n - Protocol finished! - \n")
