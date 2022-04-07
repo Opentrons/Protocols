@@ -12,9 +12,9 @@ PCR2 Setup',
 def run(ctx):
 
     [num_samples, m20_mount, m300_mount, index_vol,
-     pcr2_buffer_vol] = get_values(  # noqa: F821
+     pcr2_buffer_vol, udi_start_col] = get_values(  # noqa: F821
         'num_samples', 'm20_mount', 'm300_mount', 'index_vol',
-        'pcr2_buffer_vol')
+        'pcr2_buffer_vol', 'udi_start_col')
     # num_samples = 48
     # m20_mount = 'left'
     # m300_mount = 'right'
@@ -43,7 +43,7 @@ def run(ctx):
     m20.default_speed = 400
 
     num_cols = math.ceil(num_samples/8)
-    indices = index_plate.rows()[0][:num_cols]
+    indices = index_plate.rows()[0][udi_start_col-1:udi_start_col-1+num_cols]
     samples = pcr_plate.rows()[0][:num_cols]
 
     # transfer indices

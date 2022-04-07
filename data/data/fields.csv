@@ -664,7 +664,7 @@ num_mastermix,1
 num_mm,2
 num_of_dilutions,2
 num_pl,2
-num_plates,23
+num_plates,24
 num_pool_sources,1
 num_pools,1
 num_primers,2
@@ -1208,6 +1208,7 @@ tubetype,1
 tvol,1
 twb_rate,1
 twelve_well_resv_lname,1
+udi_start_col,1
 uploaded_csv,13
 uploaded_csv_mastermix,1
 use_384,1

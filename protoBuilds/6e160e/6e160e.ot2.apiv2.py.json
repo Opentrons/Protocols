@@ -4329,7 +4329,7 @@
             "type": "int"
         },
         {
-            "label": "P20 Multi-Channel Mount",
+            "label": "P20 Single-Channel Mount",
             "name": "p20_mount",
             "options": [
                 {
