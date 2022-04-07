@@ -13,53 +13,41 @@ metadata = {
     'apiLevel': '2.11'
     }
 
-def right(s, amount):
-    if s == None:
-        return None
-    elif amount == None:
-        return None
-    s = str(s)
-    if amount > len(s):
-        return s
-    elif amount == 0:
-        return ""
-    else:
-        return s[-amount:]
-
-# SCRIPT SETTINGS
-DRYRUN      = 'NO'          # YES or NO, DRYRUN = 'YES' will return tips, skip incubation times, shorten mix, for testing purposes
-NOMODULES   = 'NO'          # YES or NO, NOMODULES = 'YES' will not require modules on the deck and will skip module steps, for testing purposes, if DRYRUN = 'YES', then NOMODULES will automatically set itself to 'NO'
-TIPREUSE    = 'NO'          # NO, NYI format for reusing tips
-OFFSET      = 'YES'         # YES or NO, Sets whether to use protocol specific z offsets for each tip and labware or no offsets aside from defaults
-
-# PROTOCOL SETTINGS
-SAMPLES     = '8x'         # 8x, 16x, or 24x
-FRAGTIME    = 30            # Minutes, Duration of the Fragmentation Step
-PCRCYCLES   = 4             # Amount of Cycles
-
-# PROTOCOL BLOCKS
-STEP_FRERAT         = 0
-STEP_FRERATDECK     = 1
-STEP_LIG            = 0
-STEP_LIGDECK        = 0
-STEP_POSTLIG        = 0
-STEP_PCR            = 0
-STEP_PCRDECK        = 0
-STEP_POSTPCR1       = 0
-STEP_POSTPCR2       = 0
-
-STEPS = {int(STEP_FRERAT),
-         int(STEP_LIG),
-         int(STEP_POSTLIG),
-         int(STEP_PCR),
-         int(STEP_POSTPCR1),
-         int(STEP_POSTPCR2)}
-STEP_FRERATDECK = int(STEP_FRERATDECK)
-STEP_LIGDECK = int(STEP_LIGDECK)
-STEP_PCRDECK = int(STEP_PCRDECK)
 
 
 def run(protocol: protocol_api.ProtocolContext):
+
+    [SAMPLES, FRAGTIME, PCRCYCLES, DRYRUN, NOMODULES, TIPREUSE, OFFSET,
+     STEP_FRERAT, STEP_FRERATDECK, STEP_LIG, STEP_LIGDECK, STEP_POSTLIG,
+     STEP_PCR, STEP_PCRDECK, STEP_POSTPCR1, STEP_POSTPCR2, p20_mount,
+     p300_mount] = get_values(  # noqa: F821
+        "SAMPLES", "FRAGTIME", "PCRCYCLES", "DRYRUN", "NOMODULES", "TIPREUSE",
+        "OFFSET", "STEP_FRERAT", "STEP_FRERATDECK", "STEP_LIG", "STEP_LIGDECK",
+        "STEP_POSTLIG", "STEP_PCR", "STEP_PCRDECK", "STEP_POSTPCR1",
+        "STEP_POSTPCR2", "p20_mount", "p300_mount")
+
+    def right(s, amount):
+        if s == None:
+            return None
+        elif amount == None:
+            return None
+        s = str(s)
+        if amount > len(s):
+            return s
+        elif amount == 0:
+            return ""
+        else:
+            return s[-amount:]
+
+    STEPS = {int(STEP_FRERAT),
+             int(STEP_LIG),
+             int(STEP_POSTLIG),
+             int(STEP_PCR),
+             int(STEP_POSTPCR1),
+             int(STEP_POSTPCR2)}
+    STEP_FRERATDECK = int(STEP_FRERATDECK)
+    STEP_LIGDECK = int(STEP_LIGDECK)
+    STEP_PCRDECK = int(STEP_PCRDECK)
     global TIPREUSE
 
     if DRYRUN == 'YES':
@@ -136,11 +124,11 @@ def run(protocol: protocol_api.ProtocolContext):
 
     # pipette
     if NOMODULES == 'NO':
-        p300    = protocol.load_instrument('p300_multi_gen2', 'left', tip_racks=[tiprack_200_1,tiprack_200_2,tiprack_200_3])
-        p20     = protocol.load_instrument('p20_multi_gen2', 'right', tip_racks=[tiprack_20])
+        p300    = protocol.load_instrument('p300_multi_gen2', p300_mount, tip_racks=[tiprack_200_1,tiprack_200_2,tiprack_200_3])
+        p20     = protocol.load_instrument('p20_multi_gen2', p20_mount, tip_racks=[tiprack_20])
     else:
-        p300    = protocol.load_instrument('p300_multi', 'left', tip_racks=[tiprack_200_1,tiprack_200_2,tiprack_200_3])
-        p20     = protocol.load_instrument('p10_multi', 'right', tip_racks=[tiprack_20])
+        p300    = protocol.load_instrument('p300_multi', p300_mount, tip_racks=[tiprack_200_1,tiprack_200_2,tiprack_200_3])
+        p20     = protocol.load_instrument('p10_multi', p20_mount, tip_racks=[tiprack_20])
 
     #samples
     src_file_path = inspect.getfile(lambda: None)
