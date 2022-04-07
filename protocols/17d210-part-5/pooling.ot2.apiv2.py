@@ -32,14 +32,15 @@ def run(ctx):
     num_cols = math.ceil(num_samples_per_plate/8)
     sample_sets = [plate.rows()[0][:num_cols] for plate in pcr_plates]
 
-    # transfer indices
+    # transfer
     for strip, set in zip(pool_strips, sample_sets):
         if transfer_scheme == 'same':
             m20.pick_up_tip()
         for sample in set:
             if not m20.has_tip:
                 m20.pick_up_tip()
-            m20.transfer(sample_vol, sample, strip, new_tip='never')
+            m20.transfer(sample_vol, sample, strip, mix_before=(5, sample_vol),
+                         new_tip='never')
             if transfer_scheme == 'change':
                 m20.drop_tip()
         if m20.has_tip:
