@@ -13,13 +13,14 @@ metadata = {
 def run(ctx):
 
     # get parameter values from json above
-    [temp_mod_setting, manual_bead_resuspension, clearance_bead_resuspension,
-     offset_x_resuspension, count_samples, clearance_reservoir, height_engage,
-     time_engage, offset_x, time_dry] = get_values(  # noqa: F821
-      'temp_mod_setting', 'manual_bead_resuspension',
-      'clearance_bead_resuspension', 'offset_x_resuspension', 'count_samples',
-      'clearance_reservoir', 'height_engage', 'time_engage', 'offset_x',
-      'time_dry')
+    [incubate_samples_with_beads, temp_mod_setting, manual_bead_resuspension,
+     clearance_bead_resuspension, offset_x_resuspension, count_samples,
+     clearance_reservoir, height_engage, time_engage, offset_x,
+     time_dry] = get_values(  # noqa: F821
+      'incubate_samples_with_beads', 'temp_mod_setting',
+      'manual_bead_resuspension', 'clearance_bead_resuspension',
+      'offset_x_resuspension', 'count_samples', 'clearance_reservoir',
+      'height_engage', 'time_engage', 'offset_x', 'time_dry')
 
     ctx.set_rail_lights(True)
 
@@ -202,12 +203,22 @@ def run(ctx):
          source.top(-2).move(types.Point(x=source.length / 2, y=0, z=0)))
         p300m.move_to(source.top())
 
-        p300m.dispense(126, column[0])
-        p300m.mix(10, 149)
+        p300m.dispense(126, column[0].bottom(4))
+
+        for rep in range(10):
+            p300m.aspirate(149, column[0].bottom(4))
+            p300m.dispense(149, column[0].bottom(4))
+
+        p300m.move_to(
+         column[0].top(-2).move(types.Point(
+          x=column[0].diameter / 2, y=0, z=0)))
+        p300m.blow_out()
+        p300m.move_to(column[0].top())
 
         p300m.drop_tip()
 
-    ctx.delay(minutes=10)
+    if incubate_samples_with_beads:
+        ctx.delay(minutes=10)
 
     mag.engage(height=height_engage)
     ctx.delay(minutes=time_engage)
@@ -257,10 +268,19 @@ def run(ctx):
             p300m.air_gap(20)
             p300m.drop_tip()
 
-    mag.disengage()
+        # to improve completeness of removal
+        for index, column in enumerate(mag_plate.columns()[:num_cols]):
+            pick_up_or_refill(p300m)
+            for clearance in [0.7, 0.4, 0.2, 0]:
+                loc = column[0].bottom(clearance).move(types.Point(
+                 x={True: -1}.get(not index % 2, 1)*offset_x, y=0, z=0))
+                p300m.aspirate(25, loc)
+            p300m.drop_tip()
 
     # air dry bead pellets
     ctx.delay(minutes=time_dry)
+
+    mag.disengage()
 
     # resuspend bead pellet in Tris
     for index, column in enumerate(mag_plate.columns()[:num_cols]):
@@ -272,7 +292,16 @@ def run(ctx):
         if not manual_bead_resuspension:
             for rep in range(10):
                 p20m.aspirate(16, column[0].bottom(1))
-                p20m.dispense(16, loc, rate=3)
+                rt = 3 if rep < 9 else 0.5
+                p20m.dispense(16, loc, rate=rt)
+                if rep == 9:
+                    ctx.pause(seconds=1)
+                    slow_tip_withdrawal(p20m, column[0])
+                    p20m.move_to(
+                     column[0].top(-2).move(types.Point(
+                      x=column[0].diameter / 2, y=0, z=0)))
+                    p20m.blow_out()
+                    p20m.move_to(column[0].top())
         p20m.drop_tip()
 
     if manual_bead_resuspension:
@@ -297,12 +326,22 @@ def run(ctx):
 
     for index, column in enumerate(mag_plate.columns()[:num_cols]):
         pick_up_or_refill(p20m)
-        p20m.transfer(
-         14, column[0].bottom().move(types.Point(
-          x={True: -1}.get(not index % 2, 1)*offset_x, y=0, z=0)),
-         plate2.columns()[index][0],
-         mix_after=(5, 11), touch_tip=True, blow_out=True,
-         blowout_location='destination well', new_tip='never')
+
+        loc_asp = column[0].bottom(1).move(types.Point(
+          x={True: -1}.get(not index % 2, 1)*offset_x, y=0, z=0))
+
+        p20m.aspirate(14, loc_asp)
+
+        p20m.move_to(loc_asp.move(types.Point(x=0, y=0, z=1)))
+        ctx.delay(seconds=1)
+
+        p20m.dispense(14, plate2.columns()[index][0].bottom(1))
+
+        for rep in range(5):
+            p20m.aspirate(11, plate2.columns()[index][0].bottom(1))
+            p20m.dispense(11, plate2.columns()[index][0].bottom(1))
+
+        p20m.blow_out()
         p20m.drop_tip()
 
     p20m.flow_rate.aspirate = 7.6
