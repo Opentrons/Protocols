@@ -94,6 +94,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # Parse reagent definition csv input
     reagent_data = parse_csv(input_csv)
+    do_validation = True
 
     # Input error checking:---------------------------------------------------
 
@@ -128,17 +129,22 @@ def run(ctx: protocol_api.ProtocolContext):
     ERB_start_index = int(ERB_reagent_data[1])
     ERB_vol_per_well = 27
     ERB_vol_first_well = float(ERB_reagent_data[2])
-    ERB_initial_well_vol_used = ERB_vol_per_well - ERB_vol_first_well
+    ERB_first_well_vol_used = ERB_vol_per_well - ERB_vol_first_well
     n_ERB_wells = 8
     ERB_vol_per_sample = 1.5
     ERB_end_index = n_ERB_wells
     total_ERB_mm_vol = n_total_samples * ERB_vol_per_sample
+    max_ERB_source_vol = n_ERB_wells * ERB_vol_per_well
+    remaining_ERB_source_vol = \
+        (max_ERB_source_vol - (ERB_start_index-1)*ERB_vol_per_well
+         - ERB_first_well_vol_used)
+    max_ERB_samples = math.floor(remaining_ERB_source_vol/ERB_vol_per_sample)
 
     ERE_reagent_data = get_line_by_reagent_name(
         "end repair enzyme", reagent_data)
     ERE_vol_per_well = 126
     ERE_vol_first_well = float(ERE_reagent_data[2])
-    ERE_initial_well_vol_used = ERE_vol_per_well - ERE_vol_first_well
+    ERE_first_well_vol_used = ERE_vol_per_well - ERE_vol_first_well
     n_ERE_wells = 1
     ERE_vol_per_sample = 0.75
     total_ERE_mm_vol = n_total_samples * ERE_vol_per_sample
@@ -146,54 +152,74 @@ def run(ctx: protocol_api.ProtocolContext):
     ER_mm_vol_per_sample = ERB_vol_per_sample + ERE_vol_per_sample
     # Well numbers
     ERE_start_index = 9
-    ERE_end_index = ERE_start_index + n_ERE_wells - 1
+    ERE_end_index = ERE_start_index  # a single well
     # Required volumes for creating the mastermix
     total_ER_mm_vol = n_total_samples * ER_mm_vol_per_sample
     # Calculate the maximum number of samples for which ER mm can
     # be created based on the remaining volume
-    max_ERB_source_vol = n_ERB_wells * ERB_vol_per_well
-    remaining_ERB_source_vol = \
-        (max_ERB_source_vol - (ERB_start_index-1)*ERB_vol_per_well
-         - ERB_initial_well_vol_used)
-    max_ERB_samples = math.floor(remaining_ERB_source_vol/ERB_vol_per_sample)
     max_ERE_source_vol = n_ERE_wells * ERE_vol_per_well
-    remaining_ERE_source_vol = max_ERE_source_vol - ERE_initial_well_vol_used
+    remaining_ERE_source_vol = max_ERE_source_vol - ERE_first_well_vol_used
     max_ERE_samples = math.floor(remaining_ERE_source_vol/ERE_vol_per_sample)
     max_ER_mm_samples_left = min(max_ERB_samples, max_ERE_samples)
 
     # 2nd mastermix: Adaptor ligation
     # ALB_reagent_data = get_line_by_reagent_name(
     #     "adaptor ligation buffer", reagent_data)
+
+    ALB_reagent_data = get_line_by_reagent_name(
+        "adaptor ligation buffer", reagent_data)
+    ALB_well_offset = int(ALB_reagent_data[1])-1
+    ALB_first_well_vol = float(ALB_reagent_data[2])
     ALB_vol_per_well = 45
     ALB_start_index = 8*2+1
     n_ALB_wells = 8
+    ALB_vol_per_sample = 2.50
     ALB_end_index = ALB_start_index + n_ALB_wells - 1
-    total_ALB_vol = ALB_vol_per_well * n_ALB_wells
+    max_ALB_vol = ALB_vol_per_well * n_ALB_wells
+    ALB_first_well_vol_used = ALB_vol_per_well-ALB_first_well_vol
+    ALB_vol_used = (ALB_well_offset * ALB_vol_per_well
+                    + ALB_first_well_vol_used)
+    remaining_ALB_source_vol = max_ALB_vol - ALB_vol_used
+    total_ALB_mm_vol = n_total_samples * ALB_vol_per_sample
+    max_ALB_samples = math.floor(remaining_ALB_source_vol/ALB_vol_per_sample)
 
+    ALE_I_reagent_data = get_line_by_reagent_name(
+        "adaptor ligation enzyme i", reagent_data)
+    ALE_I_well_offset = int(ALE_I_reagent_data[1])-1
+    ALE_I_first_well_vol = float(ALE_I_reagent_data[2])
     ALE_I_vol_per_well = 27
     n_ALE_I_wells = 8
+    ALE_I_vol_per_sample = 1.50
     ALE_I_start_index = 8*3+1
     ALE_I_end_index = ALE_I_start_index + n_ALE_I_wells - 1
-    total_ALE_I_vol = ALE_I_vol_per_well * n_ALE_I_wells
+    max_ALE_I_vol = ALE_I_vol_per_well * n_ALE_I_wells
+    ALE_I_first_well_vol_used = ALE_I_vol_per_well-ALE_I_first_well_vol
+    ALE_I_vol_used = (ALE_I_well_offset * ALE_I_vol_per_well
+                      + ALE_I_first_well_vol_used)
+    remaining_ALE_I_source_vol = max_ALB_vol - ALB_vol_used
+    total_ALE_I_mm_vol = n_total_samples * ALE_I_vol_per_sample
+    remaining_ALE_I_source_vol = max_ALE_I_vol - ALE_I_vol_used
+    max_ALE_I_samples = math.floor(
+        remaining_ALE_I_source_vol/ALE_I_vol_per_sample)
 
+    ALE_II_reagent_data = get_line_by_reagent_name(
+        "adaptor ligation enzyme ii", reagent_data)
+    ALE_II_first_well_vol = float(ALE_II_reagent_data[2])
     ALE_II_vol_per_well = 39
     n_ALE_II_wells = 1
-    ALE_II_start_index = 8*4+1
-    ALE_II_end_index = ALE_II_start_index + n_ALE_II_wells - 1
-
-    total_ALE_II_vol = ALE_II_vol_per_well * n_ALE_II_wells
-
-    ALB_vol_per_sample = 2.50
-    ALE_I_vol_per_sample = 1.50
     ALE_II_vol_per_sample = 0.25
-
-    total_ALB_mm_vol = n_total_samples * ALB_vol_per_sample
-    total_ALE_I_mm_vol = n_total_samples * ALE_I_vol_per_sample
+    ALE_II_start_index = 8*4+1
+    ALE_II_end_index = ALE_II_start_index  # Only a single well
+    max_ALE_II_vol = ALE_II_vol_per_well * n_ALE_II_wells
+    ALE_II_vol_used = ALE_II_vol_per_well-ALE_II_first_well_vol
+    ALE_II_first_well_vol_used = ALE_II_vol_used
+    remaining_ALE_II_source_vol = max_ALE_II_vol - ALE_II_vol_used
     total_ALE_II_mm_vol = n_total_samples * ALE_II_vol_per_sample
+    max_ALE_II_samples = \
+        math.floor(remaining_ALE_II_source_vol/ALE_II_vol_per_sample)
 
-    max_ALB_samples = math.floor(total_ALB_vol/ALB_vol_per_sample)
-    max_ALE_I_samples = math.floor(total_ALE_I_vol/ALE_I_vol_per_sample)
-    max_ALE_II_samples = math.floor(total_ALE_II_vol/ALE_II_vol_per_sample)
+    # Calculate the maximal number of adaptor ligation mm aliquots that can
+    # be created based on the remaining volume
     max_AL_mm_samples = min(
         max_ALB_samples, max_ALE_I_samples, max_ALE_II_samples)
 
@@ -204,32 +230,50 @@ def run(ctx: protocol_api.ProtocolContext):
     total_AL_mm_vol = n_total_samples * total_AL_mm_vol_per_sample
 
     # 3rd mastermix: PCR mix + primers
+    PCR_mix_reagent_data = get_line_by_reagent_name(
+        "pcr mix", reagent_data)
+    PCR_mix_well_offset = int(PCR_mix_reagent_data[1])-1
+    PCR_mix_first_well_vol = float(PCR_mix_reagent_data[2])
     PCR_mix_vol_per_well = 117
-    primer_vol_per_well = 45
-
     n_PCR_mix_wells = 16
     n_primer_wells = 2
-
+    PCR_mix_vol_per_sample = 2.50
     PCR_mix_start_index = 8*10+1
     PCR_mix_end_index = PCR_mix_start_index + n_PCR_mix_wells - 1
+    PCR_mix_first_well_vol_used = PCR_mix_vol_per_well - PCR_mix_first_well_vol
+    PCR_mix_vol_used = (
+        PCR_mix_well_offset * PCR_mix_vol_per_well
+        + PCR_mix_first_well_vol_used)
+    max_PCR_mix_vol = PCR_mix_vol_per_well * n_PCR_mix_wells
+    total_PCR_mix_mm_vol = n_total_samples * PCR_mix_vol_per_sample
+    remaining_PCR_mix_source_vol = max_PCR_mix_vol - PCR_mix_vol_used
+    max_PCR_mix_samples = \
+        math.floor(remaining_PCR_mix_source_vol/PCR_mix_vol_per_sample)
+
+    primer_reagent_data = get_line_by_reagent_name(
+        "primer", reagent_data)
+    primer_well_offset = int(primer_reagent_data[1])-1
+    primer_first_well_vol = float(primer_reagent_data[2])
+    primer_vol_per_well = 45
+    primer_vol_per_sample = 1.50
     primer_start_index = 8*9+1
     primer_end_index = primer_start_index + n_primer_wells-1
+    primer_start_index += primer_well_offset
+    primer_first_well_vol_used = primer_vol_per_well - primer_first_well_vol
+    primer_vol_used = (primer_well_offset*primer_vol_per_well
+                       + primer_first_well_vol_used)
+    max_primer_vol = primer_vol_per_well * n_primer_wells
+    remaining_primer_source_vol = max_primer_vol - primer_vol_used
+    total_primer_mm_vol = primer_vol_per_sample * n_total_samples
+    max_primer_samples = math.floor(
+        remaining_primer_source_vol/primer_vol_per_sample)
 
-    # Total volume of reagents in all reagent wells
-    total_PCR_mix_vol = PCR_mix_vol_per_well * n_PCR_mix_wells
-    total_primer_vol = primer_vol_per_well * n_primer_wells
-
-    PCR_mix_vol_per_sample = 2.50
-    primer_vol_per_sample = 1.50
     PCR_mm_vol_per_sample = PCR_mix_vol_per_sample + primer_vol_per_sample
 
-    max_PCR_mix_samples = math.floor(total_PCR_mix_vol/PCR_mix_vol_per_sample)
-    max_primer_samples = math.floor(total_primer_vol/primer_vol_per_sample)
     max_PCR_mm_samples = min(max_PCR_mix_samples, max_primer_samples)
     total_PCR_mm_vol = n_total_samples * PCR_mm_vol_per_sample
     # Total volumes to transfer to make mastermix
     totaL_PCR_mix_mm_vol = PCR_mix_vol_per_sample * n_total_samples
-    total_primer_mm_vol = primer_vol_per_sample * n_total_samples
 
     # Error check that we can make the required amount of mastermix
     if mm_type == "create_ER_mix" and n_total_samples > max_ER_mm_samples_left:
@@ -808,7 +852,7 @@ def run(ctx: protocol_api.ProtocolContext):
                            is_verbose=is_verbose_mode,
                            is_strict_mode=True)
     # Track previously used volume:
-    ERB_wells.track(ERB_initial_well_vol_used)
+    ERB_wells.track(ERB_first_well_vol_used)
 
     # Only one well so it always starts and ends on the 1st well of col 2.
     ERE_wells = VolTracker(labware=yourgene_reagent_plate_I,
@@ -820,7 +864,7 @@ def run(ctx: protocol_api.ProtocolContext):
                            reagent_name="End Repair Enzyme",
                            is_verbose=is_verbose_mode,
                            is_strict_mode=True)
-    ERE_wells.track(ERE_initial_well_vol_used)
+    ERE_wells.track(ERE_first_well_vol_used)
 
     # Reagent wells for mastermix 2: Adaptor ligation
     ALB_wells = VolTracker(labware=yourgene_reagent_plate_I,
@@ -832,6 +876,8 @@ def run(ctx: protocol_api.ProtocolContext):
                            reagent_name="Adaptor Ligation Buffer",
                            is_verbose=is_verbose_mode,
                            is_strict_mode=True)
+    ALB_wells.track(ALB_first_well_vol_used)
+
     ALE_I_wells = VolTracker(labware=yourgene_reagent_plate_I,
                              well_vol=ALE_I_vol_per_well,
                              start=ALE_I_start_index,
@@ -841,6 +887,8 @@ def run(ctx: protocol_api.ProtocolContext):
                              reagent_name="Adaptor Ligation Enzyme I",
                              is_verbose=is_verbose_mode,
                              is_strict_mode=True)
+    ALE_I_wells.track(ALE_I_first_well_vol_used)
+
     ALE_II_wells = VolTracker(labware=yourgene_reagent_plate_I,
                               well_vol=ALE_II_vol_per_well,
                               start=ALE_II_start_index,
@@ -850,6 +898,7 @@ def run(ctx: protocol_api.ProtocolContext):
                               reagent_name="Adaptor Ligation enzyme II",
                               is_verbose=is_verbose_mode,
                               is_strict_mode=True)
+    ALE_II_wells.track(ALE_II_first_well_vol_used)
 
     # Reagent wells for mastermix 3: PCR
     PCR_mix_wells = VolTracker(labware=yourgene_reagent_plate_I,
@@ -861,6 +910,8 @@ def run(ctx: protocol_api.ProtocolContext):
                                reagent_name="PCR mix",
                                is_verbose=is_verbose_mode,
                                is_strict_mode=True)
+    PCR_mix_wells.track(PCR_mix_first_well_vol_used)
+
     primer_wells = VolTracker(labware=yourgene_reagent_plate_I,
                               well_vol=primer_vol_per_well,
                               start=primer_start_index,
@@ -870,6 +921,7 @@ def run(ctx: protocol_api.ProtocolContext):
                               reagent_name="Primers",
                               is_verbose=is_verbose_mode,
                               is_strict_mode=True)
+    primer_wells.track(primer_first_well_vol_used)
 
     # plate, tube rack maps
 
@@ -939,8 +991,8 @@ def run(ctx: protocol_api.ProtocolContext):
                 pip.flow_rate.aspirate *= flow_rate_multipliers[i]
                 pip.flow_rate.dispense *= flow_rate_multipliers[i]
             ctx.comment(template_message.format(msg))
-            source_well_volume = source.get_active_well_remaining_vol()
             while vol > 0:
+                source_well_volume = source.get_active_well_remaining_vol()
                 pip_vol = min(source_well_volume, vol)
                 pip = pip_s if pip_vol < pip_s.max_volume else pip_l
                 if not pip.has_tip:
@@ -1015,32 +1067,33 @@ def run(ctx: protocol_api.ProtocolContext):
         msg = msg.format(mm_type)
         raise Exception(msg)
 
-    if is_verbose_mode is True:
+    if do_validation is True:
 
         # Check End repair reaction mastermix
-        ctx.comment("\nTotal ERB vol to transfer: "
-                    + str(total_ERB_mm_vol) + "\n")
-        ctx.comment("ERB vol tracker: " + str(ERB_wells) + "\n")
-        ctx.comment("Total ERE vol to transfer: "
-                    + str(total_ERE_mm_vol) + "\n")
-        ctx.comment("ERE vol tracker: " + str(ERE_wells) + "\n")
-
-        # Check adaptor ligation reaction mastermix
-        ctx.comment("\nTotal ALB vol to transfer: "
-                    + str(total_ALB_mm_vol) + "\n")
-        ctx.comment("ALB vol tracker: " + str(ALB_wells) + "\n")
-        ctx.comment("Total ALE I vol to transfer: "
-                    + str(total_ALE_I_mm_vol) + "\n")
-        ctx.comment("ALE I vol tracker: " + str(ALE_I_wells) + "\n")
-        ctx.comment("Total ALE II vol to transfer: "
-                    + str(total_ALE_II_mm_vol) + "\n")
-        ctx.comment("ALE II vol tracker: " + str(ALE_II_wells) + "\n")
-
-        # Check PCR reaction mastermix
-        ctx.comment("\nTotal PCR mix vol to transfer: "
-                    + str(totaL_PCR_mix_mm_vol) + "\n")
-        ctx.comment("PCR mix vol tracker: " + str(PCR_mix_wells) + "\n")
-        ctx.comment("Total primer vol to transfer: "
-                    + str(total_primer_mm_vol) + "\n")
-        ctx.comment("Primer vol tracker: " + str(primer_wells) + "\n")
-        ctx.comment("Primer vol tracker: " + str(primer_wells) + "\n")
+        if mm_type == "create_ER_mix":
+            ctx.comment("\nTotal ERB vol to transfer: "
+                        + str(total_ERB_mm_vol) + "\n")
+            ctx.comment("ERB vol tracker: " + str(ERB_wells) + "\n")
+            ctx.comment("Total ERE vol to transfer: "
+                        + str(total_ERE_mm_vol) + "\n")
+            ctx.comment("ERE vol tracker: " + str(ERE_wells) + "\n")
+        elif mm_type == "create_AL_mix":
+            # Check adaptor ligation reaction mastermix
+            ctx.comment("\nTotal ALB vol to transfer: "
+                        + str(total_ALB_mm_vol) + "\n")
+            ctx.comment("ALB vol tracker: " + str(ALB_wells) + "\n")
+            ctx.comment("Total ALE I vol to transfer: "
+                        + str(total_ALE_I_mm_vol) + "\n")
+            ctx.comment("ALE I vol tracker: " + str(ALE_I_wells) + "\n")
+            ctx.comment("Total ALE II vol to transfer: "
+                        + str(total_ALE_II_mm_vol) + "\n")
+            ctx.comment("ALE II vol tracker: " + str(ALE_II_wells) + "\n")
+        elif mm_type == "create_PCR_mix":
+            # Check PCR reaction mastermix
+            ctx.comment("\nTotal PCR mix vol to transfer: "
+                        + str(totaL_PCR_mix_mm_vol) + "\n")
+            ctx.comment("PCR mix vol tracker: " + str(PCR_mix_wells) + "\n")
+            ctx.comment("Total primer vol to transfer: "
+                        + str(total_primer_mm_vol) + "\n")
+            ctx.comment("Primer vol tracker: " + str(primer_wells) + "\n")
+            ctx.comment("Primer vol tracker: " + str(primer_wells) + "\n")
