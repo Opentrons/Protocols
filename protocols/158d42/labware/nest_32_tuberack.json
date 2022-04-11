@@ -1,292 +1,292 @@
 {
   "wells": {
     "A1": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 24.87,
       "y": 72.76,
-      "z": 3.55
+      "z": 41
     },
     "C1": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 24.87,
       "y": 32.74,
-      "z": 3.55
+      "z": 41
     },
     "A3": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 87.37,
       "y": 72.76,
-      "z": 3.55
+      "z": 41
     },
     "C3": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 87.37,
       "y": 32.74,
-      "z": 3.55
+      "z": 41
     },
     "A5": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 149.87,
       "y": 72.76,
-      "z": 3.55
+      "z": 41
     },
     "C5": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 149.87,
       "y": 32.74,
-      "z": 3.55
+      "z": 41
     },
     "A7": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 212.37,
       "y": 72.76,
-      "z": 3.55
+      "z": 41
     },
     "C7": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 212.37,
       "y": 32.74,
-      "z": 3.55
+      "z": 41
     },
     "A2": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 60.87,
       "y": 72.76,
-      "z": 3.55
+      "z": 41
     },
     "C2": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 60.87,
       "y": 32.74,
-      "z": 3.55
+      "z": 41
     },
     "A4": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 123.37,
       "y": 72.76,
-      "z": 3.55
+      "z": 41
     },
     "C4": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 123.37,
       "y": 32.74,
-      "z": 3.55
+      "z": 41
     },
     "A6": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 185.87,
       "y": 72.76,
-      "z": 3.55
+      "z": 41
     },
     "C6": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 185.87,
       "y": 32.74,
-      "z": 3.55
+      "z": 41
     },
     "A8": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 248.37,
       "y": 72.76,
-      "z": 3.55
+      "z": 41
     },
     "C8": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 248.37,
       "y": 32.74,
-      "z": 3.55
+      "z": 41
     },
     "B1": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 11.62,
       "y": 52.75,
-      "z": 3.55
+      "z": 41
     },
     "D1": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 11.62,
       "y": 12.73,
-      "z": 3.55
+      "z": 41
     },
     "B3": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 74.12,
       "y": 52.75,
-      "z": 3.55
+      "z": 41
     },
     "D3": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 74.12,
       "y": 12.73,
-      "z": 3.55
+      "z": 41
     },
     "B5": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 136.62,
       "y": 52.75,
-      "z": 3.55
+      "z": 41
     },
     "D5": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 136.62,
       "y": 12.73,
-      "z": 3.55
+      "z": 41
     },
     "B7": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 199.12,
       "y": 52.75,
-      "z": 3.55
+      "z": 41
     },
     "D7": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 199.12,
       "y": 12.73,
-      "z": 3.55
+      "z": 41
     },
     "B2": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 47.62,
       "y": 52.75,
-      "z": 3.55
+      "z": 41
     },
     "D2": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 47.62,
       "y": 12.73,
-      "z": 3.55
+      "z": 41
     },
     "B4": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 110.12,
       "y": 52.75,
-      "z": 3.55
+      "z": 41
     },
     "D4": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 110.12,
       "y": 12.73,
-      "z": 3.55
+      "z": 41
     },
     "B6": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 172.62,
       "y": 52.75,
-      "z": 3.55
+      "z": 41
     },
     "D6": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 172.62,
       "y": 12.73,
-      "z": 3.55
+      "z": 41
     },
     "B8": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 235.12,
       "y": 52.75,
-      "z": 3.55
+      "z": 41
     },
     "D8": {
-      "totalLiquidVolume": 5000,
+      "totalLiquidVolume": 15000,
       "diameter": 15,
       "shape": "circular",
       "depth": 56.9,
       "x": 235.12,
       "y": 12.73,
-      "z": 3.55
+      "z": 41
     }
   },
   "groups": [
@@ -358,7 +358,7 @@
     },
     {
       "metadata": {
-        "displayName": "NEST 5mL Conical",
+        "displayName": "NEST 15 mL Conical",
         "displayCategory": "tubeRack",
         "wellBottomShape": "v"
       },
@@ -385,7 +385,7 @@
     "links": []
   },
   "metadata": {
-    "displayName": "NEST 32 Tuberack 5mL (2 Slot)",
+    "displayName": "NEST 32 Tuberack 15ml (2 Slot)",
     "displayCategory": "tubeRack",
     "displayVolumeUnits": "mL",
     "tags": []
@@ -393,7 +393,7 @@
   "dimensions": {
     "xDimension": 260,
     "yDimension": 85.5,
-    "zDimension": 121.3
+    "zDimension": 97.9
   },
   "parameters": {
     "format": "irregular",
