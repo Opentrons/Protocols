@@ -27,7 +27,7 @@
     "type": "float",
     "label": "Mastermix max volume per well (mL)",
     "name": "mastermix_max_vol",
-    "default": 9.45
+    "default": 9.54
   },
   {
     "type": "float",
