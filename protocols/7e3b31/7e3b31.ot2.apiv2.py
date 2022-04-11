@@ -28,7 +28,8 @@ def run(ctx):
     ctx.set_rail_lights(True)
     ctx.delay(seconds=10)
 
-    if not 8 <= count_samples <= 48:
+    # temporarily changed for testing with smaller reservoir
+    if not 8 <= count_samples <= 16:
         raise Exception('Invalid number of samples (must be 8-48).')
 
     if not 0.05 <= tip_immersion <= 0.15:
@@ -50,7 +51,7 @@ def run(ctx):
 
     # labware, thermocycler module, magnetic module
     reservoir = ctx.load_labware(
-     'usascientific_12_reservoir_22ml', '2', 'Reservoir')
+     'nest_12_reservoir_15ml', '2', 'Reservoir')
     reagents = ctx.load_labware(
      'nest500ul_96_reservoir_500ul', '5', 'Reagents')
     samples = ctx.load_labware(
@@ -103,17 +104,17 @@ def run(ctx):
             #    raise Exception("""Specified liquid volume
             #    can not exceed the height of the labware.""")
 
-        def height_dec(self, vol, ppt, bottom=False):
+        def height_dec(self, vol, ppt, channels=1, bottom=False):
             # decrement height (mm)
-            dh = (vol/self.cse)*self.comp_coeff
+            dh = channels*(vol/self.cse)*self.comp_coeff
             # tip immersion (mm) as fraction of tip length
             mm_immersed = tip_immersion*ppt._tip_racks[0].wells()[0].depth
             # decrement til target reaches specified min clearance
             self.height = self.height - dh if (
              (self.height - dh - mm_immersed) > self.min_height
              ) else self.min_height
-            self.current_volume = self.current_volume - vol if (
-             self.current_volume - vol > 0) else 0
+            self.current_volume = self.current_volume - channels*vol if (
+             self.current_volume - channels*vol > 0) else 0
             tip_ht = self.height if bottom is False else bottom
             return(self.well.bottom(tip_ht))
 
@@ -172,9 +173,10 @@ def run(ctx):
 
     # additional methods for pipettes
 
-    def aspirate_h(self, vol, source, rate=1, bottom=False):
+    def aspirate_h(self, vol, source, rate=1, channels=1, bottom=False):
         self.aspirate(
-         vol, source.height_dec(vol, self, bottom=bottom), rate=rate)
+         vol, source.height_dec(
+          vol, self, channels=channels, bottom=bottom), rate=rate)
 
     def dispense_h(self, vol, dest, rate=1, top=False):
         self.dispense(vol, dest.height_inc(vol, top=top), rate=rate)
@@ -397,7 +399,16 @@ def run(ctx):
 
     mag.disengage()
     for column in mag_plate_cols:
-        add_reagent(p300m, 200, beadwash, 2)
+        p300m.pick_up_or_refill()
+        p300m.aspirate_h(200, beadwash, channels=8)
+        p300m.dispense_h(200, column[0])
+        vol_total = column[0].current_volume
+        vol_tipmax = p300m._tip_racks[0].wells()[0].max_volume
+        vol_mix = vol_total if vol_total <= vol_tipmax else vol_tipmax
+        for mix in range(2):
+            p300m.aspirate_h(vol_mix, column[0], rate=0.6)
+            p300m.dispense_h(vol_mix, column[0], rate=0.6)
+        p300m.drop_tip()
 
     # remove sup
     mag.engage()
@@ -453,7 +464,16 @@ def run(ctx):
     # add beadwash
     mag.disengage()
     for column in mag_plate_cols:
-        add_reagent(p300m, 200, beadwash, 2)
+        p300m.pick_up_or_refill()
+        p300m.aspirate_h(200, beadwash, channels=8)
+        p300m.dispense_h(200, column[0])
+        vol_total = column[0].current_volume
+        vol_tipmax = p300m._tip_racks[0].wells()[0].max_volume
+        vol_mix = vol_total if vol_total <= vol_tipmax else vol_tipmax
+        for mix in range(2):
+            p300m.aspirate_h(vol_mix, column[0], rate=0.6)
+            p300m.dispense_h(vol_mix, column[0], rate=0.6)
+        p300m.drop_tip()
 
     # remove sup
     mag.engage()
@@ -577,7 +597,7 @@ def run(ctx):
     for rep in range(2):
         p300m.pick_up_or_refill()
         for column in mag_plate_cols:
-            p300m.aspirate_h(180, etoh)
+            p300m.aspirate_h(180, etoh, channels=8)
             p300m.air_gap(20)
             p300m.dispense(200, column[0].top())
             p300m.blow_out_solvent(column[0])
