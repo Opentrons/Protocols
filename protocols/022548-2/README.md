@@ -14,7 +14,7 @@ Explanation of parameters below:
 * `Number of samples in tuberack 1 slot(2-3)`: How many samples to transfer from rack 1: 1 to 32
 * `Number of samples in tuberack 2 (slot 4-5)`: 0 to 32
 * `Number of samples in tuberack 3 (7-8)`: 0 to 32
-* `Master mix wells/tubes`: Informs the protocol which wells of the reservoir contain mastermix
+* `Master mix wells location`: Informs the protocol which wells of the reservoir contain mastermix, for example 5-10 to specify wells A5 to A10. This parameter may also be a single number instead of a range
 * `Mastermix max volume per well (mL)`: Informs the protocol what the maximal volume of mastermix is in each reservoir well, default is 9.54 mL
 * `Mastermix mixing rate multiplier`: Controls the flow rate of mixing, 1.0 means standard flow rate, less is slower and more is faster.
 * `mastermix aspiration flow rate multiplier`: Controls the rate of aspiration of mastermix from the reservoir wells
@@ -46,15 +46,11 @@ Slot 4-5: PRL 32 15 mL tuberack
 Slot 6: 200 uL Opentrons filter tiprack
 Slot 7-8: PRL 32 15 mL tuberack
 Slot 9: 300 uL Opentrons tiprack
-
-
+Slot 10: Mastermix reservoir
+![Deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/022548/2/deck.jpg)
 
 ### Reagent Setup
-* This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:
-* Reservoir 1: slot 5
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res1_v2.png)
-* Reservoir 2: slot 2  
-![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res2.png)
+* Mastermix Reservoir: Specify what wells contain mastermix in the parameter section - See parameter section above.
 
 ---
 
