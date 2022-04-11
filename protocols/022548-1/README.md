@@ -31,6 +31,7 @@ Explanation of parameters below:
 * `Bead solution aspiration flow rate multiplier`: Controls the flow rate of aspiration when aspirating from a bread mix source well
 * `Bead solution dispensing flow rate multiplier`: Controls the flow rate of dispension when dispensing bead mix in a mastermix target well
 * `How many times do you want to mix the mastermix?`: Indicates the number of times you want to mix the mastermix solution after the binding buffer and bead mix have been added.
+* `Mastermix mixing rate multiplier`: flow-rate modifier affecting the rate of aspiration and dispensing for mixing the mastermix after the addition of both components.
 * `Offsets from the tube edges for bead mix dispenses (mm)`: Offset defining how close the pipette may get to the edge of the tube when dispensing bead mix (which is dispensed in three different locations inside of the tube)
 * `Offsets from the edges of the reservoir wells for bead mix dispenses (mm)`: Offset defining how close the pipette may get to the edge of the reservoir well when dispensing bead mix (which is dispensed in three different locations inside of the well)
 * `Verbose protocol output?`: Indicates to the protocol whether it should output extra information about what it is doing.
