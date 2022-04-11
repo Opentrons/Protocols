@@ -1093,7 +1093,7 @@ def run(ctx: protocol_api.ProtocolContext):
     bead_target_wells.append(bead_mix_last_well_target_tracker.to_list()[0])
 
     if n_mm_mixes > 0:
-        ctx.comment("\nmixing the mastermix\n")
+        ctx.comment("\nMixing the mastermix\n")
         n_tips = 1 if is_bead_mix_source_tube else 8
         for bb, bead in zip(bb_target_wells, bead_target_wells):
             msg = "the target wells should be the same for both reagents"
