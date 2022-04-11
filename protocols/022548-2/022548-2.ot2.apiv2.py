@@ -1,12 +1,12 @@
 from opentrons import protocol_api
 from opentrons.protocol_api.labware import Well, Labware
-from math import pi, ceil
+from math import ceil
 from typing import Sequence, Tuple
 import re
 
 
 metadata = {
-    'protocolName': '022548-2 - DNA extraction',
+    'protocolName': '022548-2 - Sample transfer and bead mastermix addition',
     'author': 'Eskil Andersen <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
@@ -41,84 +41,20 @@ def parse_range_string(range_string: str) -> Tuple[int, int]:
                      "e.g: 1-4").format(range_string))
 
 
-def is_15ml_tube(well: Well):
-    name = str(well).lower()
-    if "tube" not in name or "15" not in name:
-        return False
-    return True
-
-
-def tube_15ml_cone_height(tube: Well):
-    """
-    :return value: Approximate height of the tube cone
-    """
-
-    if not is_15ml_tube(tube):
-        msg = ("The input well parameter: {}, does not appear to "
-               "be a 15 mL tube")
-        msg.format(tube)
-        raise Exception(msg)
-    return 0.171 * tube.depth
-
-
-def tube_liq_height(vol, tube: Well, is_min_cone_height: bool = True):
-    """
-    Calculates the height of the liquid level in a conical tube
-    given its liquid volume.The function tries to account for the conical
-    part of the tube
-    :param vol: The volume in uL
-    :param tuberack: The tuberack with the tubes
-    :param is_min_cone_height: Always return the height of the cone at
-    minimum
-    :return value: The height of the liquid level measured from
-    the bottom in mm
-    """
-
-    if not is_15ml_tube(tube):
-        msg = ("The input well parameter: {}, does not appear to "
-               "be a 15 mL tube")
-        msg.format(tube)
-        raise Exception(msg)
-
-    r = tube.diameter/2
-    # Fudge factor - height seems too low given a volume, so bump it up
-    # a little bit by "decreasing" the radius
-    r *= 0.94
-
-    # Cone height approximation
-    h_cone_max = tube_15ml_cone_height(tube)
-    vol_cone_max = (h_cone_max*pi*r**2)/3
-
-    if vol < vol_cone_max:
-        h_cone = (3*vol)/(pi*r**2)
-        # print("h_cone", h_cone)
-        if is_min_cone_height:
-            return h_cone_max
-        return h_cone
-    else:
-        cylinder_partial_vol = vol - vol_cone_max
-        # print('cylinder v', cylinder_partial_vol,
-        # 'cone max vol', vol_cone_max)
-        h_partial_tube = cylinder_partial_vol/(pi*r**2)
-        # print('h cone max', h_cone_max, 'h partial tube', h_partial_tube)
-        return h_cone_max + h_partial_tube
-
-
 def get_values(*names):
     import json
     _all_values = json.loads("""{
-                                  "n_sample_tuberacks":3,
                                   "n_samples_rack_1":32,
-                                  "n_samples_rack_2":15,
-                                  "n_samples_rack_3":0,
-                                  "master_mix_range":"7-12",
+                                  "n_samples_rack_2":32,
+                                  "n_samples_rack_3":32,
+                                  "master_mix_range":"1-5",
                                   "mastermix_max_vol":9.54,
-                                  "mastermix_tuberack_lname":false,
                                   "mastermix_mix_rate_multiplier":0.3,
                                   "mm_aspiration_flowrate_multiplier":0.1,
                                   "mm_dispense_flowrate_multiplier":0.1,
                                   "p300_mount":"left",
-                                  "m300_mount":"right"
+                                  "m300_mount":"right",
+                                  "do_mm_resusp_pause":true
                                   }
                                   """)
     return [_all_values[n] for n in names]
@@ -126,36 +62,31 @@ def get_values(*names):
 
 def run(ctx: protocol_api.ProtocolContext):
 
-    [n_sample_tuberacks,
+    [
      n_samples_rack_1,
      n_samples_rack_2,
      n_samples_rack_3,
      master_mix_range,
      mastermix_max_vol,
-     mastermix_tuberack_lname,
      mastermix_mix_rate_multiplier,
      mm_aspiration_flowrate_multiplier,
      mm_dispense_flowrate_multiplier,
      p300_mount,
-     m300_mount] = get_values(  # noqa: F821
-     "n_sample_tuberacks",
+     m300_mount,
+     do_mm_resusp_pause] = get_values(  # noqa: F821
      "n_samples_rack_1",
      "n_samples_rack_2",
      "n_samples_rack_3",
      "master_mix_range",
      "mastermix_max_vol",
-     "mastermix_tuberack_lname",
      "mastermix_mix_rate_multiplier",
      "mm_aspiration_flowrate_multiplier",
      "mm_dispense_flowrate_multiplier",
      "p300_mount",
-     "m300_mount")
+     "m300_mount",
+     "do_mm_resusp_pause")
 
-    is_verbose_mode = True
-
-    if n_sample_tuberacks > 3 or n_sample_tuberacks < 1:
-        raise Exception(
-            "The number of sample tube racks should be between 1 to 3 max")
+    is_debug_mode = False
 
     n_total_samples = 0
     for i, n in enumerate([n_samples_rack_1,
@@ -177,11 +108,7 @@ def run(ctx: protocol_api.ProtocolContext):
         ("nest_32_tuberack_8x15ml_8x15ml_8x15ml_8x15ml", ['2', '4', '7'])
     target_plate_loader = \
         ("thermofisherkingfisherdeepwell_96_wellplate_2000ul", '1')
-    mastermix_source_lname = \
-        ('nest_12_reservoir_15ml'
-         if mastermix_tuberack_lname is False
-         else mastermix_tuberack_lname)
-    mastermix_labware_loader = (mastermix_source_lname, '10')
+    mastermix_labware_loader = ('nest_12_reservoir_15ml', '10')
     sample_200ul_filtertiprack_loader = \
         ('opentrons_96_filtertiprack_200ul', '6')
     mastermix_300uL_tiprack_loader = ('opentrons_96_tiprack_300ul', '11')
@@ -190,24 +117,11 @@ def run(ctx: protocol_api.ProtocolContext):
     # TODO: Remove dead volumes from the protocols - the dead-volume is
     # already defined by the 1.5 multiplier (1/3rd of the total vol)
     dead_vol = 1/3 * mm_well_vol_ul
-    mm_pip = 'single' if mastermix_tuberack_lname is not False else 'multi'
-
-    is_mm_pip_single = True if mm_pip == 'single' else False
-    is_mm_source_tuberack = is_mm_pip_single
 
     mm_start_index, mm_end_index = parse_range_string(master_mix_range)
     n_mm_wells = mm_end_index - mm_start_index + 1
     mm_vol_per_sample = 275
-    total_mm_vol = mm_vol_per_sample * n_total_samples * 1.5
-    last_mm_well_vol = total_mm_vol % mm_well_vol_ul
-    if is_mm_source_tuberack:
-        last_dead_vol = min(last_mm_well_vol * 1/3, 100)
-    else:
-        last_dead_vol = min(last_mm_well_vol * 1/3, 1000)
-    # update last_mm_well_vol because it should be twice as much as the dead
-    # volume which might have changed because of these operations
-    last_mm_well_vol = last_dead_vol * 2
-    total_last_mm_vol = last_mm_well_vol + last_dead_vol
+    total_mm_vol = mm_vol_per_sample * n_total_samples
 
     # No more than 5 wells should be required for the mastermix
     # maximum number of samples: 31*3=93, mm volume per sample = 275
@@ -215,6 +129,10 @@ def run(ctx: protocol_api.ProtocolContext):
     # 93*275*1.5=38,362.5 uL, max volume per mm well is 9540 uL
     # n_wells = 38262.5/9540 = 4.02 wells
     n_required_mm_wells = ceil(total_mm_vol/(mm_well_vol_ul-dead_vol))
+    if is_debug_mode:
+        msg = "\n\nNumber of required wells: {}\n"
+        msg = msg.format(n_required_mm_wells)
+        ctx.comment(msg)
     if n_required_mm_wells > n_mm_wells:
         msg = ("This protocol run requires {} wells of mastermix, but "
                "there are only {} wells available, please ensure that there "
@@ -553,7 +471,15 @@ def run(ctx: protocol_api.ProtocolContext):
             curr_well = self.get_active_well()
             # Mark the current well as 'used up'
             self.labware_wells[curr_well][1] = True
-            pass
+            wells = self.to_list()
+            all_depleted = True
+            for tracked_well in wells:
+                status = tracked_well[1][1]
+                if status is False:
+                    all_depleted = False
+                    break
+            if all_depleted:
+                raise Exception("All tracker wells have been depleted")
 
         def reset_labware(self):
             VolTracker.flash_lights()
@@ -567,7 +493,7 @@ def run(ctx: protocol_api.ProtocolContext):
         def get_current_vol_by_key(self, well_key):
             return self.labware_wells[well_key][0]
 
-        def track(self, vol: float) -> Well:
+        def track(self, vol: float, **kwargs) -> Well:
             """track() will track how much liquid
             was used up per well. If the volume of
             a given well is greater than self.well_vol
@@ -583,7 +509,10 @@ def run(ctx: protocol_api.ProtocolContext):
             # Treat plates like reservoirs and add 8 well volumes together
             # Total vol changed keeps track across labware resets, i.e.
             # when the user replaces filled/emptied wells
-            vol = vol * 8 if self.pip_type == 'multi' else vol
+            if 'custom_num_tips' in kwargs.keys():
+                vol = vol * kwargs['custom_num_tips']
+            else:
+                vol = vol * 8 if self.pip_type == 'multi' else vol
 
             # Track the total change in volume of this volume tracker
             self.total_vol_changed += vol
@@ -631,7 +560,7 @@ def run(ctx: protocol_api.ProtocolContext):
                     ctx.comment(
                         "\n{} {} tracker switching to well {}\n".format(
                             self.reagent_name, self.mode, well))
-                self.labware_wells[well][0] += vol
+            self.labware_wells[well][0] += vol
 
             if self.is_verbose:
                 if self.mode == 'waste':
@@ -661,28 +590,17 @@ def run(ctx: protocol_api.ProtocolContext):
     dnase = tuberack.wells_by_name()['A4']
 
     '''
-    mm_tracker_first_wells = VolTracker(
+    mm_tracker = VolTracker(
         labware=mm_source,
         well_vol=mm_well_vol_ul,
         start=mm_start_index,
-        end=mm_end_index-1,
-        pip_type=mm_pip,
-        reagent_name='Bead/binding buffer mastermix (full wells)',
-        dead_volume=dead_vol,
-        is_verbose=is_verbose_mode
-        )
-
-    mm_tracker_last_well = VolTracker(
-        labware=mm_source,
-        well_vol=total_last_mm_vol,
-        start=mm_end_index,
         end=mm_end_index,
-        pip_type=mm_pip,
-        reagent_name='Bead/binding buffer mastermix (last well)',
-        dead_volume=last_dead_vol,
-        is_verbose=is_verbose_mode
+        pip_type='multi',
+        reagent_name='Bead/binding buffer mastermix',
+        dead_volume=dead_vol,
+        is_verbose=is_debug_mode,
+        is_strict_mode=True
         )
-
     # plate, tube rack maps
 
     '''
@@ -774,46 +692,20 @@ def run(ctx: protocol_api.ProtocolContext):
     reservoir]
     Step 14: Discard Tips
     """
-    pip = p300 if is_mm_pip_single else m300
-    n_tips = 8 if is_mm_pip_single else 1
-
-    if pip.has_tip:
-        pip.drop_tip()
-
-    pip.pick_up_tip(tiprack_300.wells()[0])
-
-    def calculate_offset(pip, well_vol, is_tube):
-        clearance = pip.well_bottom_clearance
-        liq_height = (tube_liq_height(
-            well_vol, mm_wells.get_active_well_vol)
-            if is_tube else 0)
-        offset = max(clearance, liq_height - 10)
-        return offset
+    n_tips = 8
+    m300.pick_up_tip(tiprack_300.wells()[0])
 
     ctx.comment("\n\nMixing the mastermix\n")
-    mm_wells = mm_tracker_first_wells.get_wells()
+    mm_wells = mm_tracker.get_wells()
     # TODO: Have to set a height offset for mixing tubes
-    max_mix_vol = min(pip.max_volume*n_tips, mm_wells.well_vol)
+    max_mix_vol = min(m300.max_volume*n_tips, mm_tracker.well_vol)
     per_tip_mix_vol = max_mix_vol/n_tips
-    offset = calculate_offset(pip, mm_wells.well_vol, is_mm_pip_single)
     for i, well in enumerate(mm_wells):
-        pip.mix(7, per_tip_mix_vol, well.bottom(offset),
-                mastermix_mix_rate_multiplier)
-        pip.blow_out(well)
-        pip.touch_tip()
-
-    ctx.comment("\n\nMixing the last mastermix well\n")
-    last_well_vol = mm_tracker_last_well.well_vol
-    offset = calculate_offset(pip, last_well_vol, is_mm_pip_single)
-    well = mm_tracker_last_well.get_active_well()
-    max_mix_vol = min(pip.max_volume*n_tips, last_well_vol)
-    per_tip_mix_vol = max_mix_vol/n_tips
-    pip.mix(7, per_tip_mix_vol, well.bottom(offset),
-            mastermix_mix_rate_multiplier)
-    pip.blow_out(well)
-    pip.touch_tip()
-
-    pip.drop_tip()
+        m300.mix(7, per_tip_mix_vol, well,
+                 mastermix_mix_rate_multiplier)
+        m300.blow_out(well)
+        m300.touch_tip()
+    m300.drop_tip()
 
     """
     Step 15: 8-channel pipette acquires [variable 1-8]x300uL non-filtered
@@ -843,79 +735,86 @@ def run(ctx: protocol_api.ProtocolContext):
         used_sample_wells_per_column.append(wells)
 
     # Multi-channel pipette mastermix distribution
-    if not is_mm_pip_single:
-        if p300.has_tip:
-            p300.drop_tip()
+    # 1st step: Remove tips from wells that do not correspond to sample
+    # wells using the p300
+    if p300.has_tip:
+        p300.drop_tip()
 
-        # Check if there's enough tips to refill the first col with as many
-        # tips as neccesary, otherwise ask user to replace tiprack
-        do_refill_first_column = True
-        if total_samples > 96-used_sample_wells_per_column[0]:
-            ctx.pause(
-                "\n\nPlease replace the 300 uL tiprack on deck slot 11\n")
-            do_refill_first_column = False
+    # Check if there's enough tips to refill the first col with as many
+    # tips as neccesary, otherwise ask user to replace tiprack so that
+    # there will be enough tips for all of the samples
+    do_refill_first_column = True
+    if total_samples > 96-used_sample_wells_per_column[0]:
+        ctx.pause(
+            "\nPlease replace the 300 uL tiprack on deck slot 11\n")
+        do_refill_first_column = False
 
-        # Use the single channel pip to remove tips from the 300 uL
-        # tiprack from rows not matching any sample wells
-        # then when m300 is used to aspirate it doesn't waste mastermix
-        # on unused sample wells
+    # Use the single channel pip to remove tips from the 300 uL
+    # tiprack from rows not matching any sample wells
+    # then when m300 is used to aspirate it doesn't waste mastermix
+    # on unused sample wells
 
-        ctx.comment("\n\nRemoving unused tips from tiprack 300\n")
-        tiprack_300_columns = tiprack_300.columns()
-        offset = 1 if do_refill_first_column else 0
-        first_tiprack_col = tiprack_300_columns[0]
-        n_tips_first_col_left = used_sample_wells_per_column[0]
-        for n_used_wells, col in zip(
-                used_sample_wells_per_column, tiprack_300_columns[offset:]):
-            wells = col[n_used_wells:]
-            for well in wells:
-                p300.pick_up_tip(well)
-                if do_refill_first_column and n_tips_first_col_left >= 0:
-                    p300.drop_tip(first_tiprack_col[n_tips_first_col_left])
-                    n_tips_first_col_left -= 1
-                else:
-                    p300.drop_tip()
+    ctx.comment("\nRemoving unused tips from tiprack 300\n")
+    tiprack_300_columns = tiprack_300.columns()
+    offset = 1 if do_refill_first_column else 0
+    first_tiprack_col = tiprack_300_columns[0]
+    n_tips_first_col_left = used_sample_wells_per_column[0]
+    for n_used_wells, col in zip(
+            used_sample_wells_per_column, tiprack_300_columns[offset:]):
+        wells = col[n_used_wells:]
+        for well in wells:
+            p300.pick_up_tip(well)
+            if do_refill_first_column and n_tips_first_col_left >= 0:
+                p300.drop_tip(first_tiprack_col[n_tips_first_col_left])
+                n_tips_first_col_left -= 1
+            else:
+                p300.drop_tip()
 
-        # Transfer mastermix to samples
-        m300.reset_tipracks()
-        ctx.comment("\n\nDistributing mastermix to samples on target plate\n")
-        for well, n_used_wells in zip(
-                target_plate.rows()[0], used_sample_wells_per_column):
-            m300.pick_up_tip()
-            m300.aspirate(
-                mm_vol_per_sample, mm_tracker_first_wells.track(
-                    mm_vol_per_sample),
-                mm_aspiration_flowrate_multiplier)
-            m300.air_gap(10)
-            m300.dispense(
-                mm_vol_per_sample+10, well, mm_dispense_flowrate_multiplier)
-            m300.blow_out()
-            m300.touch_tip()
-            m300.drop_tip()
-
-    else:
-        # Distribute mastermix with single channel pipette from master mix
-        # tube(s)
-        ctx.comment("\n\nDistributing mastermix to samples on target plate\n")
-        if p300.has_tip:
-            p300.drop_tip()
-        for well in dest_wells:
-            mm_source_tube = mm_tracker_first_wells.track(0)
-            tube_vol = \
-                mm_tracker_first_wells.well_vol - \
-                mm_tracker_first_wells.get_active_well_vol_change()
-            liq_height = tube_liq_height(tube_vol, mm_source_tube)
-            asp_loc = max(mm_source_tube.bottom(liq_height-10), 0.1)
-            pick_up(p300)
-            p300.aspirate(mm_vol_per_sample, asp_loc,
+    # Transfer mastermix to samples
+    air_gap_vol = 10
+    m300.reset_tipracks()
+    mm_tracker = mm_tracker
+    ctx.comment("\n\nDistributing mastermix to samples on target plate\n")
+    for well, n_used_wells in zip(
+            target_plate.rows()[0], used_sample_wells_per_column):
+        m300.pick_up_tip()
+        aspiration_vol = n_used_wells * mm_vol_per_sample
+        remaining_well_vol = mm_tracker.get_active_well_remaining_vol()
+        if remaining_well_vol < aspiration_vol:
+            per_tip_vol = remaining_well_vol/n_used_wells
+            m300.aspirate(per_tip_vol,
+                          mm_tracker.track(per_tip_vol,
+                                           custom_num_tips=n_used_wells),
                           mm_aspiration_flowrate_multiplier)
-            air_gap_vol = 10
-            p300.air_gap(air_gap_vol)
-            mm_tracker_first_wells.track(mm_vol_per_sample)
-            p300.dispense(mm_vol_per_sample+air_gap_vol, well,
-                          mm_dispense_flowrate_multiplier)
-            p300.blow_out()
-            p300.touch_tip()
-            p300.drop_tip()
+            try:
+                mm_tracker.advance_well()
+            except Exception:
+                ctx.comment("\n\nMastermix wells depleted\n")
+            remaining_tip_vol = mm_vol_per_sample - per_tip_vol
+            m300.aspirate(remaining_tip_vol,
+                          mm_tracker.track(remaining_tip_vol,
+                                           custom_num_tips=n_used_wells),
+                          mm_aspiration_flowrate_multiplier)
+
+        else:
+            m300.aspirate(
+                mm_vol_per_sample, mm_tracker.track(
+                    mm_vol_per_sample, custom_num_tips=n_used_wells),
+                mm_aspiration_flowrate_multiplier)
+        m300.air_gap(air_gap_vol)
+        m300.dispense(
+            mm_vol_per_sample+air_gap_vol, well,
+            mm_dispense_flowrate_multiplier)
+        m300.blow_out()
+        m300.touch_tip()
+        m300.drop_tip()
 
     ctx.comment("\n\n - Protocol finished! - \n")
+
+    if is_debug_mode:
+        msg = "\nExpected mastermix transfer volume: {}\n"
+        msg = msg.format(total_mm_vol)
+        ctx.comment(msg)
+        msg = "\nActually transferred volume of mastermix: {}\n"
+        msg = msg.format(mm_tracker.total_vol_changed)
+        ctx.comment(msg)
