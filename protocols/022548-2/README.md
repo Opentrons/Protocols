@@ -1,63 +1,53 @@
-# Protocol Title (should match metadata of .py file)
+# 022548-2 - Sample transfer and bead mastermix addition
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
-### Partner
-[Partner Name](partner website link)
-
 ## Categories
 * Nucleic Acid Extraction & Purification
-	* DNA Extraction 
+	* DNA Extraction
 
 ## Description
-This section of the README (especially the first paragraph) should grip a prospective user with the overarching purpose/flow of the protocol, but should not include fine details of the protocol steps themselves.
+This protocol transfers samples from tubes in up to 3 PRL tuberacks to a destination plate followed by resuspending a bead/binding buffer mastermix before transfering it to the samples on the plate.
 
-Example: This is a flexible protocol accommodating a wide range of commercial RNA extraction workflows for COVID-19 sample processing. The protocol is broken down into 5 main parts:
-* binding buffer addition to samples
-* bead wash 3x using magnetic module
-* final elution to chilled PCR plate
-
-Subsequent paragraphs can give some more insight into the details of the protocol, but a step-by-step description should be included in the 'Protocol Steps' section below.
-
-Example: For sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 4) to the elution PCR plate (temperature module, slot 1). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.
-
-Results of the Opentrons Science team's internal testing of this protocol on the OT-2 are shown below:  
-![results](link_to_results.png)
-
-Explanation of complex parameters below:
-* `park tips`: If set to `yes` (recommended), the protocol will conserve tips between reagent addition and removal. Tips will be stored in the wells of an empty rack corresponding to the well of the sample that they access (tip parked in A1 of the empty rack will only be used for sample A1, tip parked in B1 only used for sample B1, etc.). If set to `no`, tips will always be used only once, and the user will be prompted to manually refill tipracks mid-protocol for high throughput runs.
-* `input .csv file`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:
-```
-source,dest,vol
-A1,B1,4
-```
+Explanation of parameters below:
+* `Number of samples in tuberack 1 slot(2-3)`: How many samples to transfer from rack 1: 1 to 32
+* `Number of samples in tuberack 2 (slot 4-5)`: 0 to 32
+* `Number of samples in tuberack 3 (7-8)`: 0 to 32
+* `Master mix wells/tubes`: Informs the protocol which wells of the reservoir contain mastermix
+* `Mastermix max volume per well (mL)`: Informs the protocol what the maximal volume of mastermix is in each reservoir well, default is 9.54 mL
+* `Mastermix mixing rate multiplier`: Controls the flow rate of mixing, 1.0 means standard flow rate, less is slower and more is faster.
+* `mastermix aspiration flow rate multiplier`: Controls the rate of aspiration of mastermix from the reservoir wells
+* `mastermix dispension flow rate multiplier`: Controls the rate of dispension of mastermix into wells on the target plate
+* `Mount for 300 uL single channel pipette`: Left or right
+* `Mount for 300 uL multi channel pipette`: Left or right
+* `Pause after mixing the mastermix for vortex/resuspension?`: Optional pause after (re-)mixing the mastermix where the reservoir may be taken out for manual resuspension such as vortexing, nutation or shaking if resuspension by pipetting is deemed insufficient.
 
 ---
 
-### Modules
-* [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
-* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
-* [Thermocycler Module](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module)
-* [HEPA Module](https://shop.opentrons.com/collections/hardware-modules/products/hepa-module)
-
 ### Labware
-* [Labware name](link to labware on shop.opentrons.com when applicable)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [NEST 12-Well Reservoirs, 15 mL](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/)
+* PRL tuberack for 32 15 mL tubes
+* [Thermo Fisher Kingfisher 96 deepwell plate 2 mL](https://www.thermofisher.com/order/catalog/product/A43075)
+
 
 ### Pipettes
-* [Pipette name](link to pipette on shop.opentrons.com)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
-
-### Reagents
-* [kit name when applicable](link to kit)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [P300 multi-Channel (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)
+* [P300 single-Channel (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
+* [300 uL tipracks](https://shop.opentrons.com/opentrons-300ul-tips-1000-refills/)
+* [Opentrons 200 µL filter tiprack](https://shop.opentrons.com/opentrons-200ul-filter-tips/)
 
 ---
 
 ### Deck Setup
-* If the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)
+Slot 1: Target - Kingfisher 96 well plate
+Slot 2-3: PRL 32 15 mL tuberack
+Slot 4-5: PRL 32 15 mL tuberack
+Slot 6: 200 uL Opentrons filter tiprack
+Slot 7-8: PRL 32 15 mL tuberack
+Slot 9: 300 uL Opentrons tiprack
+
+
 
 ### Reagent Setup
 * This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:
@@ -69,9 +59,10 @@ A1,B1,4
 ---
 
 ### Protocol Steps
-1. This section should consist of a numerical outline of the protocol steps, somewhat analogous to the steps outlined by the user in their custom protocol submission.
-2. example step: Samples are transferred from the source tuberacks on slots 1-2 to the PCR plate on slot 3, down columns and then across rows.
-3. example step: Waste is removed from each sample on the magnetic module, ensuring the bead pellets are not contacted by the pipette tips.
+1. Transfer samples from the tubracks to the target plate in row order using the single channel 300 uL pipette using 200 uL filter tips.
+2. Mix the bead/binding buffer mastermix 7 times.
+3. Remove tips from the 300 uL tiprack that do not correspond to sample wells on the target plate.
+3. Transfer mastermix to samples using the multi-channel 300 uL pipette with regular 300 uL tips.
 
 ### Process
 1. Input your protocol parameters above.
@@ -86,4 +77,4 @@ A1,B1,4
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-protocol-hex-code
+022548-2
