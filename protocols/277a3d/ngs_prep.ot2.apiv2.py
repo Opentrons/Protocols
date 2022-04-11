@@ -88,6 +88,7 @@ def run(ctx):
         for tube in samples_tubes:
             p300.pick_up_tip()
             p300.transfer(200, etoh, tube, new_tip='never')
+            p300.aspirate(200, tube)
             p300.drop_tip()
 
     ctx.comment('Remove tubes for final elution')
