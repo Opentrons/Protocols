@@ -19,7 +19,7 @@
   },
   {
     "type": "str",
-    "label": "Master mix wells/tubes",
+    "label": "Master mix wells location",
     "name": "master_mix_range",
     "default": "1-3"
   },
