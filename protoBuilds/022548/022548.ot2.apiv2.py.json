@@ -1716,12 +1716,6 @@
             "type": "float"
         },
         {
-            "default": 4.3,
-            "label": "Offsets from the tube edges for bead mix dispenses (mm)",
-            "name": "tube_edge_offset",
-            "type": "float"
-        },
-        {
             "default": 10,
             "label": "Offsets from the edges of the reservoir wells for bead mix dispenses (mm)",
             "name": "resv_well_edge_offset",
