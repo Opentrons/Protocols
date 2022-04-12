@@ -16,6 +16,10 @@ The protocol will create a maximum volume of 9.54 mL per well, of which 1/3rd is
 
 The protocol is written to account for the changing liquid level of bead source tubes so that the pipette will not plunge too far into tube solutions.
 
+Links:
+* [Part 1: Master Mix Assembly](./022548)
+* [Part 2: Master Mix Distribution and Sample Transfer](./0225482-2)
+
 Explanation of parameters below:
 * `Create mastermix for how many numbers of samples`: How many samples to create mastermix for.
 * `Binding buffer wells`: Designates which wells contain binding buffer, you may specify a range such as 1-4, or a single number if it is a single well. These number corresponds to the wells of the reservoir starting at the leftmost well.
