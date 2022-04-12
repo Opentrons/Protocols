@@ -1,4 +1,4 @@
-# 022548-2 - Sample transfer and bead mastermix addition
+# Sample transfer and bead mastermix addition
 
 ### Author
 [Opentrons](https://opentrons.com/)
