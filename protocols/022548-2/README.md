@@ -12,7 +12,7 @@ This protocol transfers samples from tubes in up to 3 PRL tuberacks to a destina
 
 Links:
 * [Part 1: Master Mix Assembly](./022548)
-* [Part 2: Master Mix Distribution and Sample Transfer](./0225482-2)
+* [Part 2: Master Mix Distribution and Sample Transfer](./022548-2)
 
 
 Explanation of parameters below:
