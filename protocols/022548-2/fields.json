@@ -73,5 +73,14 @@
       { "label": "Yes", "value": true},
       { "label": "No", "value": false}
     ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Debug mode? (Shows extra output from the protocl)",
+    "name": "is_debug_mode",
+    "options": [
+      { "label": "Yes", "value": true},
+      { "label": "No", "value": false}
+    ]
   }
 ]

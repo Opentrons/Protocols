@@ -6,7 +6,7 @@ import re
 
 
 metadata = {
-    'protocolName': '022548-2 - Sample transfer and bead mastermix addition',
+    'protocolName': 'Sample transfer and bead mastermix addition',
     'author': 'Eskil Andersen <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
@@ -41,29 +41,9 @@ def parse_range_string(range_string: str) -> Tuple[int, int]:
                      "e.g: 1-4").format(range_string))
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{
-                                  "n_samples_rack_1":32,
-                                  "n_samples_rack_2":32,
-                                  "n_samples_rack_3":32,
-                                  "master_mix_range":"1-5",
-                                  "mastermix_max_vol":9.54,
-                                  "mastermix_mix_rate_multiplier":0.3,
-                                  "mm_aspiration_flowrate_multiplier":0.1,
-                                  "mm_dispense_flowrate_multiplier":0.1,
-                                  "p300_mount":"left",
-                                  "m300_mount":"right",
-                                  "do_mm_resusp_pause":true
-                                  }
-                                  """)
-    return [_all_values[n] for n in names]
-
-
 def run(ctx: protocol_api.ProtocolContext):
 
-    [
-     n_samples_rack_1,
+    [n_samples_rack_1,
      n_samples_rack_2,
      n_samples_rack_3,
      master_mix_range,
@@ -73,7 +53,8 @@ def run(ctx: protocol_api.ProtocolContext):
      mm_dispense_flowrate_multiplier,
      p300_mount,
      m300_mount,
-     do_mm_resusp_pause] = get_values(  # noqa: F821
+     do_mm_resusp_pause,
+     is_debug_mode] = get_values(  # noqa: F821
      "n_samples_rack_1",
      "n_samples_rack_2",
      "n_samples_rack_3",
@@ -84,9 +65,8 @@ def run(ctx: protocol_api.ProtocolContext):
      "mm_dispense_flowrate_multiplier",
      "p300_mount",
      "m300_mount",
-     "do_mm_resusp_pause")
-
-    is_debug_mode = False
+     "do_mm_resusp_pause",
+     "is_debug_mode")
 
     n_total_samples = 0
     for i, n in enumerate([n_samples_rack_1,
@@ -171,16 +151,14 @@ def run(ctx: protocol_api.ProtocolContext):
     where module_name is defined above.
 
     '''
-    sample_rack_1 = ctx.load_labware(
-        sample_tuberack_loader[0], sample_tuberack_loader[1][0])
-    sample_rack_2 = ctx.load_labware(
-        sample_tuberack_loader[0], sample_tuberack_loader[1][1])
-    sample_rack_3 = ctx.load_labware(
-        sample_tuberack_loader[0], sample_tuberack_loader[1][2])
-    target_plate = ctx.load_labware(
-        target_plate_loader[0], target_plate_loader[1])
+    sample_tuberacks = [
+        ctx.load_labware(sample_tuberack_loader[0], s)
+        for s in sample_tuberack_loader[1]]
     mm_source = ctx.load_labware(
         mastermix_labware_loader[0], mastermix_labware_loader[1])
+    target_plate = ctx.load_labware(
+        target_plate_loader[0],
+        target_plate_loader[1])
     # load tipracks
 
     '''
@@ -616,7 +594,7 @@ def run(ctx: protocol_api.ProtocolContext):
     sample_wells = []
     for num_s, rack in zip(
         [n_samples_rack_1, n_samples_rack_2, n_samples_rack_3],
-            [sample_rack_1, sample_rack_2, sample_rack_3]):
+            sample_tuberacks):
         for well in rack.wells()[0:num_s]:
             sample_wells.append(well)
 
