@@ -1,4 +1,4 @@
-# 022548-1 - DNA extraction: Mastermix creation
+# DNA extraction: Mastermix creation
 
 ### Author
 [Opentrons](https://opentrons.com/)
