@@ -10,6 +10,11 @@
 ## Description
 This protocol transfers samples from tubes in up to 3 PRL tuberacks to a destination plate followed by resuspending a bead/binding buffer mastermix before transfering it to the samples on the plate.
 
+Links:
+* [Part 1: Master Mix Assembly](./022548)
+* [Part 2: Master Mix Distribution and Sample Transfer](./0225482-2)
+
+
 Explanation of parameters below:
 * `Number of samples in tuberack 1 slot(2-3)`: How many samples to transfer from rack 1: 1 to 32
 * `Number of samples in tuberack 2 (slot 4-5)`: 0 to 32
