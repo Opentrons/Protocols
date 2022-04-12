@@ -14,7 +14,7 @@ Explanation of complex parameters below:
 * `csv`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line (note sample number should always be in multiples of 8 e.g. 8, 16, 24, 32, etc.):
 ```
 N.º PROTEIN,VOLUME_EXCHANGE (ul) | VOLUME_RESERVOIR (ml) | TEMPERATURE_MODULE 1 (ºC) | TEMPERATURE_MODULE 2 (ºC) | TIME_PROTOCOL (min) | TIME_INCUBATE (min)
-96,300,195,4,4,840,30\n48,200,195,4,4,840,20
+96,300,195,4,4,840,30
 ```
 * `Initial volume of buffer reservoir`: Specify the volume inside each of the reservoirs in mL.
 * `P300 Multi-Channel Mount`: Specify which mount (left or right) to host the P300 Multi-Channel pipette.
