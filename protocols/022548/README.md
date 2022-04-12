@@ -18,7 +18,7 @@ The protocol is written to account for the changing liquid level of bead source 
 
 Links:
 * [Part 1: Master Mix Assembly](./022548)
-* [Part 2: Master Mix Distribution and Sample Transfer](./0225482-2)
+* [Part 2: Master Mix Distribution and Sample Transfer](./022548-2)
 
 Explanation of parameters below:
 * `Create mastermix for how many numbers of samples`: How many samples to create mastermix for.
