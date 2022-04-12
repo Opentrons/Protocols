@@ -38,6 +38,7 @@ Explanation of parameters below:
 * `Mastermix mixing rate multiplier`: flow-rate modifier affecting the rate of aspiration and dispensing for mixing the mastermix after the addition of both components.
 * `Offsets from the edges of the reservoir wells for bead mix dispenses (mm)`: Offset defining how close the pipette may get to the edge of the reservoir well when dispensing bead mix into the mastermix wells (which is dispensed in three different locations inside of the well)
 * `Verbose protocol output?`: Indicates to the protocol whether it should output extra information about what it is doing.
+
 ---
 
 ### Labware
