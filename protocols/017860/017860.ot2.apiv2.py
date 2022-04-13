@@ -11,24 +11,6 @@ metadata = {
 }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{
-                                  "input_csv":",M9,AMP_128,AMP_16,AMP_2,AZT_0.5,AZT_0.0625,AZT_0.0078125,CAZ_2,CAZ_0.25,CAZ_0.03125,CHL_128,CHL_16,CHL_2,CIP_0.25,CIP_0.03125,CIP_0.00390625,GEN_8,GEN_1,GEN_0.125,RIF_256,RIF_32,RIF_4,SXT_4,SXT_0.5,SXT_0.0625,TMP_8,TMP_1,TMP_0.125,TOB_8,TOB_1,TOB_0.125,color\\n99999,50,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,50\\n100,90,0,0,0,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\\n265,97.5,0,0,0,0,0,0,0,0,0,0,0,0,0,2.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\\n 300,97.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0\\n305,90,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0\\n380,90,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,0,0,0,0,0,0,0,0,0,0",
-                                  "tuberacks_15_lname":"opentrons_15_tuberack_nest_15ml_conical",
-                                  "tuberack_mixed_lname":"opentrons_10_tuberack_nest_4x50ml_6x15ml_conical",
-                                  "tiprack_lname_20_ul":"opentrons_96_tiprack_20ul",
-                                  "tiprack_lname_300ul":"opentrons_96_tiprack_300ul",
-                                  "n_plates":6,
-                                  "dispense_offset":1.5,
-                                  "media_vol_initial":50,
-                                  "is_drop_tips":true,
-                                  "debug_mode":true
-                                  }
-                                  """)
-    return [_all_values[n] for n in names]
-
-
 def run(ctx: protocol_api.ProtocolContext):
 
     [input_csv,
@@ -352,7 +334,7 @@ def run(ctx: protocol_api.ProtocolContext):
         p300.drop_tip()
         p20.drop_tip()
 
-        ctx.comment("\n\nBeginning drug transfer\n")
+        ctx.comment("\n\nBeginning antibiotic transfers\n")
         # perform drugs transfer
         for drug_ind, drug in enumerate(drugs):
             # Check that there are any transfers of the drug, else continue
@@ -379,7 +361,7 @@ def run(ctx: protocol_api.ProtocolContext):
                 drug_transfers = csv_info[drug_ind+1]
                 v = float(drug_transfers[ind])
                 if debug_mode and v > 0:
-                    msg = "Dispensing {} uL of drug"
+                    msg = "Dispensing a total of {} uL of drug"
                     msg = msg.format(v)
                     ctx.comment(msg)
 
