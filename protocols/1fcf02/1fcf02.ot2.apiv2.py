@@ -120,50 +120,94 @@ def run(ctx):
             pip.pick_up_tip()
 
     # protocol
-    ctx.comment('\n\n\nADDING UREA\n')
+    ctx.comment('\n\n\nADDING URINE\n')
+    p20.pick_up_tip()
     for csv, plate in zip(urea_csvs, plates):
         for i, row in enumerate(csv):
             for vol, well in zip(row, plate.rows()[i]):
                 if vol == 'x':
                     continue
                 vol = int(vol)
-                pip = p300 if vol > 20 else p20
-                if not pip.has_tip:
-                    pip.pick_up_tip()
-                pip.aspirate(vol, urea.bottom(h1))
-                pip.touch_tip(v_offset=-15)
-                pip.touch_tip(v_offset=-10)
-                pip.dispense(vol, well)
-                pip.blow_out()
-                pip.touch_tip()
-                adjust_height(1, vol)
+                if vol > 20:
+                    continue
+                if p20.current_volume*0.9 <= vol:
+                    if p20.current_volume > 0:
+                        p20.dispense(p20.current_volume, urea.bottom(h1))
+                    p20.aspirate(p20.max_volume, urea.bottom(h1))
+                p20.touch_tip(v_offset=-15)
+                p20.touch_tip(v_offset=-10)
+                p20.dispense(vol, well)
+                p20.blow_out()
+                p20.touch_tip()
+                adjust_height(p20.max_volume, vol)
             ctx.comment('\n')
-    if p300.has_tip:
-        p300.drop_tip()
-    if p20.has_tip:
-        p20.drop_tip()
+    p20.drop_tip()
+
+    ctx.comment('\n\n\nADDING UREA\n')
+    p300.pick_up_tip()
+    for csv, plate in zip(urea_csvs, plates):
+        for i, row in enumerate(csv):
+            for vol, well in zip(row, plate.rows()[i]):
+                if vol == 'x':
+                    continue
+                vol = int(vol)
+                if vol <= 20:
+                    continue
+                if p300.current_volume*0.9 <= vol:
+                    if p300.current_volume > 0:
+                        p300.dispense(p300.current_volume, urea.bottom(h1))
+                    p300.aspirate(p300.max_volume, urea.bottom(h1))
+                p300.touch_tip(v_offset=-15)
+                p300.touch_tip(v_offset=-10)
+                p300.dispense(vol, well)
+                p300.blow_out()
+                p300.touch_tip()
+                adjust_height(p300.max_volume, vol)
+            ctx.comment('\n')
+    p300.drop_tip()
 
     ctx.comment('\n\n\nADDING BUFFER\n')
+    p20.pick_up_tip()
     for csv, plate in zip(buffer_csvs, plates):
         for i, row in enumerate(csv):
             for vol, well in zip(row, plate.rows()[i]):
                 if vol == 'x':
                     continue
                 vol = int(vol)
-                pip = p300 if vol > 20 else p20
-                if not pip.has_tip:
-                    pip.pick_up_tip()
-                pip.aspirate(vol, buffer.bottom(h2))
-                pip.touch_tip(v_offset=-15)
-                pip.dispense(vol, well.bottom(z=5))
-                pip.blow_out()
-                pip.touch_tip()
-                adjust_height(2, vol)
+                if vol > 20:
+                    continue
+                if p20.current_volume*0.9 <= vol:
+                    if p20.current_volume > 0:
+                        p20.dispense(p20.current_volume, buffer.bottom(h2))
+                    p20.aspirate(p20.max_volume, buffer.bottom(h2))
+                p20.touch_tip(v_offset=-15)
+                p20.dispense(vol, well.bottom(z=5))
+                p20.blow_out()
+                p20.touch_tip()
+                adjust_height(p20.max_volume, vol)
             ctx.comment('\n')
-    if p300.has_tip:
-        p300.drop_tip()
-    if p20.has_tip:
-        p20.drop_tip()
+    p20.drop_tip()
+
+    p300.pick_up_tip()
+    for csv, plate in zip(buffer_csvs, plates):
+        for i, row in enumerate(csv):
+            for vol, well in zip(row, plate.rows()[i]):
+                if vol == 'x':
+                    continue
+                vol = int(vol)
+                if vol <= 20:
+                    continue
+                if p300.current_volume*0.9 <= vol:
+                    if p300.current_volume > 0:
+                        p300.dispense(p300.current_volume, buffer.bottom(h2))
+                    p300.aspirate(p300.max_volume, buffer.bottom(h2))
+                p300.touch_tip(v_offset=-15)
+                p300.dispense(vol, well.bottom(z=5))
+                p300.blow_out()
+                p300.touch_tip()
+                adjust_height(p300.max_volume, vol)
+            ctx.comment('\n')
+    p300.drop_tip()
 
     ctx.comment('\n\n\nADDING SAMPLE\n')
     for csv, plate in zip(sample_csvs, plates):
