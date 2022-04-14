@@ -1,0 +1,38 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "NGS Library Prep": [
+            "Subcategory (can be the name of a kit when applicable)"
+        ]
+    },
+    "deck-setup": "\n",
+    "description": "This protocol is a semi-automated workflow which performs 8.1-8.4.6 of the SARS-CoV-2 Using Illumina Nextera Flex & MiSeqNEB kit. For detailed information on protocol steps, please see below. You can find part 2 of the protocol here:\n\nSARS-CoV-2 Using Illumina Nextera Flex & MiSeqNEB - Part 2\n\nExplanation of complex parameters below:\n Number of Sample Columns (1-6): Specify how many sample columns (1-6) this run will process. Samples will be placed in every other column, starting from column 1 (i.e. 1, 3, 5, 7, 9, 11 for 6 columns).\n P20 Multi-Channel Mount: Specify which mount (left or right) to host the P20 pipette.\n",
+    "internal": "5b16ef",
+    "labware": "\nBio-Rad 96 Well Plate 200 \u00b5L PCR\nOpentrons 20ul Tips\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n",
+        "categories": "* NGS Library Prep\n\t* Subcategory (can be the name of a kit when applicable)\n\n",
+        "deck-setup": "![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/5b16ef/pt1/Screen+Shot+2022-04-14+at+2.39.58+PM.png)\n\n\n---\n\n",
+        "description": "This protocol is a semi-automated workflow which performs 8.1-8.4.6 of the SARS-CoV-2 Using Illumina Nextera Flex & MiSeqNEB kit. For detailed information on protocol steps, please see below. You can find part 2 of the protocol here:\n\n* [SARS-CoV-2 Using Illumina Nextera Flex & MiSeqNEB - Part 2](https://protocols.opentrons.com/protocol/5b16ef)\n\nExplanation of complex parameters below:\n* `Number of Sample Columns (1-6)`: Specify how many sample columns (1-6) this run will process. Samples will be placed in every other column, starting from column 1 (i.e. 1, 3, 5, 7, 9, 11 for 6 columns).\n* `P20 Multi-Channel Mount`: Specify which mount (left or right) to host the P20 pipette.\n\n\n---\n\n",
+        "internal": "5b16ef\n",
+        "labware": "* Bio-Rad 96 Well Plate 200 \u00b5L PCR\n* [Opentrons 20ul Tips](https://shop.opentrons.com/universal-filter-tips/)\n\n",
+        "modules": "* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [Opentrons P20 Multi-Channel Pipette](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "protocol-steps": "1. 2ul of mastermix is added to samples and mixed.\n2. User incubates and runs plate on thermal cycler.\n3. Pool reagent is added to final plate cols (split columns).\n4. 4.5ul of sample are split from sample plate into final plate.\n5. User incubates and runs plate on thermal cycler.\n6. Split columns are recombined to the left. \n\n",
+        "reagents": "* [Illumina DNA Prep](https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/nextera-dna-flex.html)\n\n---\n\n",
+        "title": "SARS-CoV-2 Using Illumina Nextera Flex & MiSeqNEB - Part 1"
+    },
+    "modules": [
+        "Magnetic Module (GEN2)"
+    ],
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons P20 Multi-Channel Pipette\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "protocol-steps": "\n2ul of mastermix is added to samples and mixed.\nUser incubates and runs plate on thermal cycler.\nPool reagent is added to final plate cols (split columns).\n4.5ul of sample are split from sample plate into final plate.\nUser incubates and runs plate on thermal cycler.\nSplit columns are recombined to the left. \n",
+    "reagents": [
+        "Illumina DNA Prep"
+    ],
+    "title": "SARS-CoV-2 Using Illumina Nextera Flex & MiSeqNEB - Part 1"
+}
