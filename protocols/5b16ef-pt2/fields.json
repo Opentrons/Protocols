@@ -14,7 +14,7 @@
   {
     "type": "int",
     "label": "Index Start Column (1-12)",
-    "name": "num_col",
+    "name": "index_start_col",
     "default": 1
   },
   {
