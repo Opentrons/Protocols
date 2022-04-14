@@ -52,5 +52,29 @@
     "label": "Height offset for dispensing antibiotics into target wells [mm]",
     "name": "dispense_offset",
     "default": 1.5
+  },
+  {
+    "type": "float",
+    "label": "Initial media volume in mL",
+    "name": "media_vol_initial",
+    "default": 50
+  },
+  {
+    "type": "dropDown",
+    "label": "Drop tips?",
+    "name": "is_drop_tips",
+    "options": [
+      { "label": "No", "value": false},
+      { "label": "Yes", "value": true}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Use debug mode (more verbose output)? ",
+    "name": "debug_mode",
+    "options": [
+      { "label": "No", "value": false},
+      { "label": "Yes", "value": true}
+    ]
   }
 ]
