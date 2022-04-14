@@ -57,7 +57,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # extend well objects for improved liquid handling
     class WellH(Well):
-        def __init__(self, well, min_height=2, comp_coeff=1.15,
+        def __init__(self, well, min_height=0.5, comp_coeff=1.1,
                      current_volume=0):
             super().__init__(well._impl)
             self.well = well
@@ -207,10 +207,12 @@ def run(ctx: protocol_api.ProtocolContext):
     def remove_supernatant(vol, src):
         while vol > 180:
             m300.aspirate_h(180, src)
-            m300.dispense(180, liquid_waste)
+            m300.dispense(200, liquid_waste)
+            m300.aspirate(20, liquid_waste)
             vol -= 180
         m300.aspirate_h(vol, src)
-        m300.dispense(vol, liquid_waste)
+        m300.dispense(vol+20, liquid_waste)
+        m300.aspirate(10, liquid_waste)
 
     def wash(srcs, msg):
         nonlocal t_start
@@ -224,14 +226,17 @@ def run(ctx: protocol_api.ProtocolContext):
             m300.custom_pick_up()
             src = srcs[idx//3]
             for _ in range(2):
+                m300.aspirate(20, src.top())
                 m300.aspirate_h(180, src)
                 m300.slow_tip_withdrawal(10, src, to_surface=True)
-                m300.dispense(180, col.top(-2))
+                m300.dispense(200, col.top(-2))
+            m300.aspirate(20, src.top())
             m300.aspirate_h(140, src)
             m300.slow_tip_withdrawal(10, src, to_surface=True)
-            m300.dispense(140, col.top(-2))
+            m300.dispense(160, col.top(-2))
             m300.mix(10, 100, col)
             m300.slow_tip_withdrawal(10, col, to_surface=True)
+            m300.aspirate(10, col.top())
             m300.drop_tip()
 
         mag_deck.engage()
@@ -244,7 +249,7 @@ def run(ctx: protocol_api.ProtocolContext):
         t_end += num_cols
         for src, t_d in zip(mag_samps_h, all_tips[t_start:t_end]):
             m300.custom_pick_up()
-            remove_supernatant(500, src)
+            remove_supernatant(540, src)
             m300.drop_tip(t_d)
 
     # plate, tube rack maps
@@ -255,24 +260,24 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # protocol
     ctx.set_rail_lights(True)
-    # Transfer 700µL CSPL Buffer + 20µL Prot K
-    ctx.comment('\nTransferring 720uL of CSPL Buffer + Proteinase K\n')
-
-    m300.custom_pick_up()
-    for idx, col in enumerate(init_samps):
-        src = cspl[idx//2]
-        for _ in range(4):
-            m300.aspirate_h(180, src)
-            m300.slow_tip_withdrawal(10, src, to_surface=True)
-            m300.dispense(180, col.top(-2))
-    m300.drop_tip()
-
-    flash_lights()
-    ctx.pause('Please remove samples and incubate at 56C for 30 minutes, \
-    then centrifuge at 4000g for 10 minutes. Once complete, please replace \
-    samples on the deck and place ensure 12-well reservoirs are filled with \
-    necessary reagents in deck slots 2 and 3. When ready, click RESUME.')
-    ctx.set_rail_lights(True)
+    # # Transfer 700µL CSPL Buffer + 20µL Prot K
+    # ctx.comment('\nTransferring 720uL of CSPL Buffer + Proteinase K\n')
+    #
+    # m300.custom_pick_up()
+    # for idx, col in enumerate(init_samps):
+    #     src = cspl[idx//2]
+    #     for _ in range(4):
+    #         m300.aspirate_h(180, src)
+    #         m300.slow_tip_withdrawal(10, src, to_surface=True)
+    #         m300.dispense(180, col.top(-2))
+    # m300.drop_tip()
+    #
+    # flash_lights()
+    # ctx.pause('Please remove samples and incubate at 56C for 30 minutes, \
+    # then centrifuge at 4000g for 10 minutes. Once complete, please replace \
+    # samples on the deck and place ensure 12-well reservoirs are filled with \
+    # necessary reagents in deck slots 2 and 3. When ready, click RESUME.')
+    # ctx.set_rail_lights(True)
     # Creating reagent variables for second part of protocol
     rbb = [WellH(well, current_volume=0) for well in rsvr_12[0].wells()[:6]]
     cspw1 = [WellH(well) for well in rsvr_12[0].wells()[6:10]]
@@ -295,11 +300,17 @@ def run(ctx: protocol_api.ProtocolContext):
     for src, dest in zip(init_samps, mag_samps_h):
         m300.custom_pick_up()
         for i in range(2):
-            m300.aspirate(180, src.bottom(7-i))
+            m300.aspirate(20, src.top())
+            m300.aspirate(180, src)
             m300.slow_tip_withdrawal(10, src)
             m300.dispense_h(180, dest)
-        m300.aspirate(140, src.bottom(4))
+            m300.slow_tip_withdrawal(10, dest, to_surface=True)
+            m300.dispense(20, dest.bottom(5))
+        m300.aspirate(20, src.top())
+        m300.aspirate(140, src)
         m300.dispense_h(140, dest)
+        m300.slow_tip_withdrawal(10, dest, to_surface=True)
+        m300.dispense(20, dest.bottom(5))
         m300.drop_tip()
     flow_rate()
 
@@ -311,17 +322,39 @@ def run(ctx: protocol_api.ProtocolContext):
     for idx, col in enumerate(mag_samps):
         src = rbb[idx//2]
         for _ in range(2):
+            m300.aspirate(20, src.top())
             m300.aspirate_h(180, src)
             m300.slow_tip_withdrawal(10, src, to_surface=True)
-            m300.dispense(180, col.top(-2))
+            m300.dispense(200, col.top(-2))
+        m300.aspirate(20, src.top())
         m300.aspirate_h(165, src)
         m300.slow_tip_withdrawal(10, src, to_surface=True)
-        m300.dispense(165, col.top(-2))
+        m300.dispense(185, col.top(-2))
     m300.drop_tip()
 
-    incubate_msg = '\nIncubating at room temperature for 10 minutes\n'
-    ctx.delay(minutes=10, msg=incubate_msg)
+    incubate_msg = '\nIncubating at room temperature for 10 minutes\
+     plus mixing\n'
+    ctx.comment(incubate_msg)
 
+    for col, t_d in zip(mag_samps, all_tips[t_start:t_end]):
+        m300.custom_pick_up()
+        m300.aspirate(20, col.top())
+        m300.mix(8, 150, col)
+        m300.dispense(20, col.top(-2))
+        m300.drop_tip(t_d)
+
+    for _ in range(2):
+        if num_cols < 3:
+            ctx.delay(minutes=2)
+        for col, t_d in zip(mag_samps, all_tips[t_start:t_end]):
+            m300.custom_pick_up(t_d)
+            m300.aspirate(20, col.top())
+            m300.mix(8, 150, col)
+            m300.dispense(20, col.top(-2))
+            m300.drop_tip(t_d)
+
+    t_start += num_cols
+    t_end += num_cols
     mag_deck.engage()
     mag_msg = '\nIncubating on Mag Deck for 3 minutes\n'
     ctx.delay(minutes=3, msg=mag_msg)
@@ -346,12 +379,13 @@ def run(ctx: protocol_api.ProtocolContext):
     wash(spm2, 'SPM (second wash)')
 
     # Air dry for 10 minutes
+    mag_deck.engage()
+
     air_dry_msg = '\nAir drying the beads for 10 minutes. \
     Please add elution buffer at 65C to 12-well reservoir.\n'
     ctx.delay(minutes=10, msg=air_dry_msg)
 
-    mag_deck.engage()
-
+    mag_deck.disengage()
     # Add Elution Buffer
     ctx.comment(f'\nAdding {elution_vol}uL Elution Buffer to samples\n')
 

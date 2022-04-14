@@ -19,14 +19,20 @@ def run(ctx: protocol_api.ProtocolContext):
      tiprack_lname_20_ul,
      tiprack_lname_300ul,
      n_plates,
-     dispense_offset] = get_values(  # noqa: F821
+     dispense_offset,
+     media_vol_initial,
+     is_drop_tips,
+     debug_mode] = get_values(  # noqa: F821
      "input_csv",
      "tuberacks_15_lname",
      "tuberack_mixed_lname",
      "tiprack_lname_20_ul",
      "tiprack_lname_300ul",
      "n_plates",
-     "dispense_offset")
+     "dispense_offset",
+     "media_vol_initial",
+     "is_drop_tips",
+     "debug_mode")
 
     if not 0 < n_plates < 7:
         raise Exception(("The number of plates are {}, but should be between "
@@ -155,9 +161,27 @@ def run(ctx: protocol_api.ProtocolContext):
     media = medias[0]
     num_medias = 3
     start_medias = 0
-    media_V_track = 70000
-    media_h_track = -16
-    media_r_cyl = 13.5
+    media_V_track = media_vol_initial * 1_000
+    # Subtract 1.65 mm for every mL in the starting media tubes less than 50
+    media_h_track = -20 - 1.65*(50 - media_vol_initial)
+    media_r_cyl = 13.9
+    # the height of the whole tube as defined by the API
+    # (tube well.top().point.z - bottom().point.z)
+    tube_height = 113.05
+
+    def touch_tip_15mL_tube(pip):
+        tube_diameter = 15.5
+        speed_arg = 3.14*tube_diameter
+        r = tube_diameter / 2
+        radius_arg = (r - 0.5) / r
+        pip.touch_tip(radius=radius_arg, v_offset=-2, speed=speed_arg)
+
+    def touch_tip_50mL_tube(pip):
+        tube_diameter = 27.95
+        speed_arg = 3.14*tube_diameter
+        r = tube_diameter / 2
+        radius_arg = (r - 0.5) / r
+        pip.touch_tip(radius=radius_arg, v_offset=-2, speed=speed_arg)
 
     def media_height_track(vol):
         """
@@ -170,6 +194,7 @@ def run(ctx: protocol_api.ProtocolContext):
         nonlocal media
         nonlocal num_medias
         nonlocal start_medias
+        nonlocal media_vol_initial
 
         media_V_track -= vol
         # change and reset media tube if necessary
@@ -182,11 +207,22 @@ def run(ctx: protocol_api.ProtocolContext):
             else:
                 start_medias += 1
                 media = medias[start_medias]
-            media_V_track = 70000
-            media_h_track = -16
+            media_V_track = media_vol_initial * 1_000
+            media_h_track = -20 - 1.65*(50 - media_vol_initial)
 
-        dh = (0.70*vol)/(pi*(media_r_cyl**2))
+        if media_V_track > 5000:
+            dh = (1.05*vol)/(pi*(media_r_cyl**2))
+        # In a cone the dh increases 3 times as fast as the cylinder
+        else:
+            dh = (3*1.05*vol)/(pi*(media_r_cyl**2))
+
+        # Make sure we never set media_h_track
+        # greater than the length of the tube
+        # minus 1 mm aspiration from the bottom offset
         media_h_track -= dh
+        media_h_track = max(-(tube_height+1), media_h_track)
+        if debug_mode:
+            print(media_h_track)
 
     # initialize volume and height trackers, assuming that reagents are filled
     # to 14ml line in standard 15ml tube
@@ -230,8 +266,17 @@ def run(ctx: protocol_api.ProtocolContext):
     num_deck_fills = math.ceil(len(csv_info[0])/num_wells)
     num_total_transfers = len(csv_info[0])
 
+    def check_empty_drug_transfer_list(drug_list):
+        is_list_empty = True
+        for vol in drug_list:
+            if float(vol) > 0.01:
+                is_list_empty = False
+                break
+        return is_list_empty
+
     # perform full deck transfer
     for fill in range(num_deck_fills):
+        ctx.comment("\n\nBeginning media transfer\n")
 
         # define CSV indices that will receive transfer on this deck set
         block_ind = range(fill*num_wells, (fill+1)*num_wells)
@@ -243,10 +288,12 @@ def run(ctx: protocol_api.ProtocolContext):
         # and aspirate for distribution
         media_height_track(300)
         p300.aspirate(300, media.top(media_h_track))
+        touch_tip_50mL_tube(p300)
         pip_300_v_track = 300
 
         media_height_track(20)
         p20.aspirate(20, media.top(media_h_track))
+        touch_tip_50mL_tube(p20)
         pip_50_v_track = 20
 
         # Transfer media to wells
@@ -254,7 +301,6 @@ def run(ctx: protocol_api.ProtocolContext):
             if ind == num_total_transfers:
                 break
             v = float(csv_info[0][ind])
-
             # choose pipette
             if v <= 20 and v > 0:
                 # check volume in pipette
@@ -262,6 +308,7 @@ def run(ctx: protocol_api.ProtocolContext):
                     p20.blow_out(media.top())
                     media_height_track(20)
                     p20.aspirate(20, media.top(media_h_track))
+                    touch_tip_50mL_tube(p20)
                     pip_50_v_track = 20
 
                 # perform transfer
@@ -274,6 +321,7 @@ def run(ctx: protocol_api.ProtocolContext):
                     p300.blow_out(media.top())
                     media_height_track(300)
                     p300.aspirate(300, media.top(media_h_track))
+                    touch_tip_50mL_tube(p300)
                     pip_300_v_track = 300
 
                 # perform transfer
@@ -286,14 +334,24 @@ def run(ctx: protocol_api.ProtocolContext):
         p300.drop_tip()
         p20.drop_tip()
 
+        ctx.comment("\n\nBeginning antibiotic transfers\n")
         # perform drugs transfer
         for drug_ind, drug in enumerate(drugs):
+            # Check that there are any transfers of the drug, else continue
+            # on next loop.
+            if check_empty_drug_transfer_list(csv_info[drug_ind+1]):
+                if debug_mode:
+                    msg = "Drug with all 0 volume at csv column {}"
+                    msg = msg.format(drug_ind+1)
+                    ctx.comment(msg)
+                continue
+
             # range of drug transfers always between 5 and 50ul
             p20.pick_up_tip()
-
             # initialize volumes and aspirate for distribution
             drug_height_track(drug_ind, 20)
             p20.aspirate(20, drug.top(drug_h_track[drug_ind]))
+            touch_tip_15mL_tube(p20)
             pip_v_track = 20
 
             # loop and distribute drug in proper amounts
@@ -302,15 +360,21 @@ def run(ctx: protocol_api.ProtocolContext):
                     break
                 drug_transfers = csv_info[drug_ind+1]
                 v = float(drug_transfers[ind])
+                if debug_mode and v > 0:
+                    msg = "Dispensing a total of {} uL of drug"
+                    msg = msg.format(v)
+                    ctx.comment(msg)
 
                 # only begin transfer process if volume is more than 0ul
-                if v > 0:
+                while v > 0:
                     # check if volume in pipette tip can accommodate transfer
-                    if v > pip_v_track - 5:
+                    if v > pip_v_track - 5 and pip_v_track < 15:
                         p20.blow_out(drug.top())
                         drug_height_track(drug_ind, 20)
                         p20.aspirate(20, drug.top(drug_h_track[drug_ind]))
+                        touch_tip_15mL_tube(p20)
                         pip_v_track = 20
+                    disp_vol = min(v, pip_v_track)
 
                     # perform transfer
                     # REVIEW: I think this was left here for debugging in the
@@ -322,8 +386,9 @@ def run(ctx: protocol_api.ProtocolContext):
                     dispense_pos_w_offset = \
                         dispense_pos_wo_offset.move(
                             Point(0, 0, dispense_offset))
-                    p20.dispense(v, dispense_pos_w_offset)
-                    pip_v_track -= v
+                    p20.dispense(disp_vol, dispense_pos_w_offset)
+                    pip_v_track -= disp_vol
+                    v -= disp_vol
 
                     # REVIEW: Commented out in the original protocol
                     # touch tip if necessary
@@ -335,7 +400,10 @@ def run(ctx: protocol_api.ProtocolContext):
                     # p10.move_to(down)
 
             # return tip to corresponding well for future deck refills
-            p20.return_tip()
+            if is_drop_tips:
+                p20.drop_tip()
+            else:
+                p20.return_tip()
 
         if fill < num_deck_fills-1:
             ctx.pause(("Please remove all sample plates from the deck and "
