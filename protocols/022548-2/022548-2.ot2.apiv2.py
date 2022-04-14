@@ -41,26 +41,6 @@ def parse_range_string(range_string: str) -> Tuple[int, int]:
                      "e.g: 1-4").format(range_string))
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{
-                                "n_samples_rack_1":32,
-                                "n_samples_rack_2":32,
-                                "n_samples_rack_3":32,
-                                "master_mix_range":"1-5",
-                                "mastermix_max_vol":9.54,
-                                "mastermix_mix_rate_multiplier":0.3,
-                                "mm_aspiration_flowrate_multiplier":0.1,
-                                "mm_dispense_flowrate_multiplier":0.1,
-                                "p300_mount":"left",
-                                "m300_mount":"right",
-                                "do_mm_resusp_pause":true,
-                                "is_debug_mode":true
-                                }
-                                """)
-    return [_all_values[n] for n in names]
-
-
 def run(ctx: protocol_api.ProtocolContext):
 
     [n_samples_rack_1,
