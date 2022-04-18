@@ -1,5 +1,11 @@
 [
   {
+    "type": "int",
+    "label": "Number of Tests (1-12)",
+    "name": "num_tests",
+    "default": 2
+  },
+  {
     "type": "dropDown",
     "label": "Optionally Adjust Final Volume? (yes or no)",
     "name": "adjust_final_vol",
