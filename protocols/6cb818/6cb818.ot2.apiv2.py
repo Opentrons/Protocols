@@ -10,13 +10,13 @@ metadata = {
 
 def run(ctx):
 
-    [adjust_final_vol, vol_cd154, vol_peptide1, vol_peptide2, vol_peptide3,
-     vol_pma_ca, vol_culture_medium, labware_cultureplate,
+    [num_tests, adjust_final_vol, vol_cd154, vol_peptide1, vol_peptide2,
+     vol_peptide3, vol_pma_ca, vol_culture_medium, labware_cultureplate,
      slot_cultureplate, slot_snapcaps, slot_screwcaps,
      clearance_snapcap, clearance_screwcap, clearance_plate,
      clearance_mix] = get_values(  # noqa: F821
-        "adjust_final_vol", "vol_cd154", "vol_peptide1", "vol_peptide2",
-        "vol_peptide3", "vol_pma_ca", "vol_culture_medium",
+        "num_tests", "adjust_final_vol", "vol_cd154", "vol_peptide1",
+        "vol_peptide2", "vol_peptide3", "vol_pma_ca", "vol_culture_medium",
         "labware_cultureplate", "slot_cultureplate",
         "slot_snapcaps", "slot_screwcaps", "clearance_snapcap",
         "clearance_screwcap", "clearance_plate", "clearance_mix")
@@ -36,6 +36,10 @@ def run(ctx):
     # load labware
     culture_plate = ctx.load_labware(
      labware_cultureplate, slot_cultureplate, "Culture Plate")
+
+    if not 1 <= num_tests <= len(culture_plate.columns()):
+        raise Exception('Invalid number of tests.')
+
     rack_snapcaps = ctx.load_labware(
      "opentrons_24_tuberack_nest_1.5ml_snapcap", slot_snapcaps,
      "Rack with Snap Cap Tubes")
@@ -73,31 +77,29 @@ def run(ctx):
     culture_medium.liq_vol = vol_culture_medium
 
     # culture plate wells with vol and liquid height tracking
-    plate_wells = [column[:5] for column in culture_plate.columns()[:2]]
+    plate_wells = [
+     column[:5] for column in culture_plate.columns()[:num_tests]]
 
     for column in plate_wells:
         for index, well in enumerate(column):
             well.liq_vol = 200 if index == 0 else 0
 
-    # add anti-CD154 to cell suspension in A1 and A2 and mix
+    # add anti-CD154 to cells in 1st well of each filled column and rinse tip
     for column in plate_wells:
-
         p20s.pick_up_tip()
-        p300s.pick_up_tip()
-
         ht_cd154 = liq_height(cd154) - 3 if liq_height(cd154) - 3 > 1 else 1
         ht_cells = liq_height(
          column[0]) - 3 if liq_height(column[0]) - 3 > 1 else 1
         p20s.aspirate(5, cd154.bottom(ht_cd154))
         p20s.dispense(5, column[0].bottom(ht_cells))
-        for rep in range(5):
-            p300s.aspirate(160, column[0].bottom(1), rate=2)
-            p300s.dispense(160, column[0].bottom(ht_cells), rate=2)
-
-        p300s.drop_tip()
+        for rep in range(1):
+            p20s.aspirate(20, column[0].bottom(1), rate=2)
+            p20s.dispense(20, column[0].bottom(ht_cells), rate=2)
+        p20s.blow_out()
+        p20s.touch_tip(radius=0.75, v_offset=-2, speed=10)
         p20s.drop_tip()
 
-    # transfer cell suspension to B1-E1 and B2-E2
+    # transfer cell suspension to rows B-E
     for column in plate_wells:
         p300s.pick_up_tip()
         for rep in range(5):
@@ -110,7 +112,7 @@ def run(ctx):
             p300s.touch_tip(radius=0.75, v_offset=-4, speed=20)
         p300s.drop_tip()
 
-    # add reagent (peptides 1, 2 and 3 and PMA) to B1-B2, C1-C2, D1-D2, E1-E2
+    # add reagent (peptides 1, 2 and 3 and PMA) to rows B, C, D, E
     for reagent, vol, index in zip(
      [peptide1, peptide2, peptide3, pma_ca], [5, 5, 10, 12], [1, 2, 3, 4]):
         for column in plate_wells:
@@ -124,7 +126,7 @@ def run(ctx):
                 p20s.dispense(20, column[index].bottom(2))
             p20s.drop_tip()
 
-    # optionally add 60 uL culture medium to each well
+    # optionally add 60 uL culture medium to each filled well
     if adjust_final_vol:
         for column in plate_wells:
             for well in column:
