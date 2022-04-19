@@ -10,20 +10,6 @@ metadata = {
 }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{
-                                  "input_csv":"Plate,Well,SampleID,Concentration,VolumeToDispense\\nB,A3,SAMPLE113,10.5,13.2\\nA,A1,SAMPLE1,10.5,13.2\\nA,A2,SAMPLE9,10.5,13.2\\nA,A3,SAMPLE2,3,30.2\\nA,H12,SAMPLE96,16.7,7.5\\nB,A1,SAMPLE97,18.2,5.6\\nB,H12,SAMPLE192,16.0,8.1",
-                                  "source_type":"biorad_96_wellplate_200ul_pcr",
-                                  "dest_type":"biorad_96_wellplate_200ul_pcr",
-                                  "tuberack_type":"opentrons_24_tuberack_nest_1.5ml_snapcap",
-                                  "p300_type":"p300_multi_gen2",
-                                  "air_gap_vol":5
-                                  }
-                                  """)
-    return [_all_values[n] for n in names]
-
-
 def run(ctx: protocol_api.ProtocolContext):
 
     [input_csv,
