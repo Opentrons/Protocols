@@ -11,7 +11,7 @@ metadata = {
 def run(ctx):
 
     [csv, init_vol_dil, p20_mount, p1000_mount] = get_values(  # noqa: F821
-        "num_samp", "init_vol_dil", "p20_mount", "p1000_mount")
+        "csv", "init_vol_dil", "p20_mount", "p1000_mount")
 
     # load Labware and modules
     temp_mod = ctx.load_module('temperature module gen2', 1)
