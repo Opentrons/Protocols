@@ -345,7 +345,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     for _ in range(2):
         if num_cols < 3:
-            ctx.delay(minutes=2)
+            ctx.delay(minutes=3, seconds=30)
         for col, t_d in zip(mag_samps, all_tips[t_start:t_end]):
             m300.custom_pick_up(t_d)
             m300.aspirate(20, col.top())
