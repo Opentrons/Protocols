@@ -115,7 +115,6 @@ def run(ctx):
         p1000.drop_tip()
         adjust_height(dil_vol)
         ctx.comment('\n')
-        print(h)
 
     ctx.comment('\n~~~~ADDING SAMPLE~~~~\n\n')
     for row in csv_rows:
