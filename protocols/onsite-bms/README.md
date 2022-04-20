@@ -17,6 +17,7 @@ Explanation of complex parameters below:
 Diluent Transfer Volume (ul), Dispense Tube (rack), Source Well, Sample Transfer Volume
 1000, A1, A1, 20
 ```
+* `Track tips?`: Specify whether to start at A1 of both tip racks, or to start picking up from where the last protocol left off. 
 * `Initial Volume Diluent (mL)`: Specify the initial volume of diluent in A1 of the 6 tube rack.
 * `P20/P1000 Mounts`: Specify which mount (left or right) to host the P20 and P1000 pipettes.
 
