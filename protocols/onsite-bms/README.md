@@ -14,11 +14,10 @@ This protocol transfers sample and diluent to a custom 40 tube rack on the tempe
 Explanation of complex parameters below:
 * `input .csv file`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:
 ```
-Source Well,Sample Transfer Vol, Source Tube,Diluent Transfer Volume
-A1, 2, A1, 100
-B1, 3, A2, 200
+Diluent Transfer Volume (ul), Dispense Tube (rack), Source Well, Sample Transfer Volume
+1000, A1, A1, 20
 ```
-* `Initial Volume Diluent`: Specify the initial volume of diluent in A1 of the 6 tube rack.
+* `Initial Volume Diluent (mL)`: Specify the initial volume of diluent in A1 of the 6 tube rack.
 * `P20/P1000 Mounts`: Specify which mount (left or right) to host the P20 and P1000 pipettes.
 
 ---

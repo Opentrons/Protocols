@@ -35,7 +35,7 @@ def run(ctx):
     # liquid height tracking
     v_naught_dil = init_vol_dil*1000
     radius = diluent_rack.wells()[0].diameter/2
-    h_naught_dil = 1.15*v_naught_dil/(math.pi*radius**2)
+    h_naught_dil = 0.85*v_naught_dil/(math.pi*radius**2)
     h = h_naught_dil
 
     def adjust_height(vol):
@@ -48,22 +48,25 @@ def run(ctx):
     # protocol
     ctx.comment('\n~~~~ADDING DILUENT~~~~\n\n')
     for row in csv_rows:
-        dil_vol = int(row[3])
-        airgap = (p1000.max_volume-dil_vol)*0.05
-        disp_tube = row[2]
+        dil_vol = int(row[0])
+        disp_tube = row[1]
 
         p1000.pick_up_tip()
         p1000.aspirate(dil_vol, diluent_rack.wells()[0].bottom(z=h))
-        p1000.air_gap(airgap)
-        p1000.dispense(dil_vol+airgap, final_rack.wells_by_name()[disp_tube])
+        p1000.dispense(dil_vol,
+                       final_rack.wells_by_name()[disp_tube].top(z=-1))
+        ctx.delay(seconds=2)
+        p1000.blow_out()
+        p1000.air_gap(100)
         p1000.drop_tip()
         adjust_height(dil_vol)
         ctx.comment('\n')
+        print(h)
 
     ctx.comment('\n~~~~ADDING SAMPLE~~~~\n\n')
     for row in csv_rows:
-        sample_vol = int(row[1])
-        samp_well = sample_plate.wells_by_name()[row[0]]
+        sample_vol = int(row[3])
+        samp_well = sample_plate.wells_by_name()[row[2]]
         disp_tube = final_rack.wells_by_name()[row[2]]
 
         p20.pick_up_tip()
