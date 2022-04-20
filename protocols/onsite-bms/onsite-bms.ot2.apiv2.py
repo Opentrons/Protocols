@@ -21,7 +21,7 @@ def run(ctx):
     sample_plate = ctx.load_labware('nest_96_wellplate_200ul_flat', 2)
     diluent_rack = ctx.load_labware('opentrons_6_tuberack_falcon_50ml_conical', 4)  # noqa: E501
     tips = [ctx.load_labware('opentrons_96_tiprack_20ul', 5)]
-    tips1000 = [ctx.load_labware('opentrons_96_filtertiprack_1000ul', 6)]
+    tips1000 = [ctx.load_labware('geb_96_tiprack_1000ul', 6)]
 
     # load instrument
     p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tip_racks=tips)
