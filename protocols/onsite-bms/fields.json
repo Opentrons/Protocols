@@ -7,23 +7,22 @@
   },
   {
     "type": "int",
-    "label": "Initial Volume of Diluent",
+    "label": "Initial Volume of Diluent (mL)",
     "name": "init_vol_dil",
     "default": 40
   },
   {
     "type": "dropDown",
-    "label": "P300 Multi-Channel Mount",
+    "label": "P20 Single-Channel Mount",
     "name": "p20_mount",
     "options": [
-
       {"label": "Right", "value": "right"},
       {"label": "Left", "value": "left"}
     ]
   },
   {
     "type": "dropDown",
-    "label": "P300 Multi-Channel Mount",
+    "label": "P1000 Single-Channel Mount",
     "name": "p1000_mount",
     "options": [
       {"label": "Left", "value": "left"},
