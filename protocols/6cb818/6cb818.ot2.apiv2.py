@@ -10,14 +10,14 @@ metadata = {
 
 def run(ctx):
 
-    [num_tests, adjust_final_vol, vol_cd154, vol_peptide1, vol_peptide2,
-     vol_peptide3, vol_pma_ca, vol_culture_medium, labware_cultureplate,
-     slot_cultureplate, slot_snapcaps, slot_screwcaps,
+    [starting_position, num_tests, adjust_final_vol, vol_cd154, vol_peptide1,
+     vol_peptide2, vol_peptide3, vol_pma_ca, vol_culture_medium,
+     labware_cultureplate, slot_cultureplate, slot_snapcaps, slot_screwcaps,
      clearance_snapcap, clearance_screwcap, clearance_plate,
      clearance_mix] = get_values(  # noqa: F821
-        "num_tests", "adjust_final_vol", "vol_cd154", "vol_peptide1",
-        "vol_peptide2", "vol_peptide3", "vol_pma_ca", "vol_culture_medium",
-        "labware_cultureplate", "slot_cultureplate",
+        "starting_position", "num_tests", "adjust_final_vol", "vol_cd154",
+        "vol_peptide1", "vol_peptide2", "vol_peptide3", "vol_pma_ca",
+        "vol_culture_medium", "labware_cultureplate", "slot_cultureplate",
         "slot_snapcaps", "slot_screwcaps", "clearance_snapcap",
         "clearance_screwcap", "clearance_plate", "clearance_mix")
 
@@ -39,6 +39,10 @@ def run(ctx):
 
     if not 1 <= num_tests <= len(culture_plate.columns()):
         raise Exception('Invalid number of tests.')
+
+    if not num_tests + starting_position <= len(culture_plate.columns()):
+        raise Exception('Invalid starting position for {} tests.'.format(
+         num_tests))
 
     rack_snapcaps = ctx.load_labware(
      "opentrons_24_tuberack_nest_1.5ml_snapcap", slot_snapcaps,
@@ -78,7 +82,8 @@ def run(ctx):
 
     # culture plate wells with vol and liquid height tracking
     plate_wells = [
-     column[:5] for column in culture_plate.columns()[:num_tests]]
+     column[:5] for column in culture_plate.columns()[
+      starting_position:num_tests+starting_position]]
 
     for column in plate_wells:
         for index, well in enumerate(column):
