@@ -45,14 +45,14 @@ def run(ctx):
     csv_rows = csv_rows[:num_samp]
 
     for row in csv_rows:
-        if int(row[4]) >= 200:
+        if float(row[4]) >= 200:
             raise Exception("Volume greater than 200ul TE in csv file")
     num_samp = len(csv_rows)
 
     # transferring TE
     ctx.comment('\n\n TRANSFERRING TE TO PLATE\n')
     for well, row in zip(final_plate.wells()[:num_samp], csv_rows):
-        te_vol = int(row[4])
+        te_vol = float(row[4])
         pip = p20 if te_vol < 20 else p300
         if not pip.has_tip:
             pip.pick_up_tip()
@@ -71,8 +71,8 @@ def run(ctx):
     for source_well, dest_well, row in zip(final_plate.wells()[:num_samp],
                                            dna_plate.wells(),
                                            csv_rows):
-        dna_vol = int(row[2])
-        te_vol = int(row[4])
+        dna_vol = float(row[2])
+        te_vol = float(row[4])
         total_vol = te_vol + dna_vol
         pip = p20 if dna_vol < 20 else p300
         pip.pick_up_tip()
