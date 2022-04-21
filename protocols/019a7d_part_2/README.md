@@ -18,10 +18,10 @@ Tips are reused for the same sample repeatedly, i.e. sample A1 on the Mix and Go
 
 Explanation of complex parameters below:
 * `Number of Samples`: Number of samples in Mix and Go plate. Can be any number between 1 and 96
-* `24 or 96 Distributions per Plate`: Choose to use up to four agar plates with 24 samples each or one agar plate with up to 96 samples. Distribution of samples follows a common layout for either 24 well plates or 96 well plates on the agar
+* `24 or 96 Distributions per Plate`: Choose to use up to four agar plates with 24 samples each and/or one agar plate with up to 96 samples. Distribution of samples follows a common layout for either 24 well plates or 96 well plates on the agar
 * `Heat Shock`: Choose yes or no to determine whether a heat shock will occur during the protocol. This heat shock takes place after adding to the Mix and Go plate. It raises the temperature to 42 C for 40 seconds before returning to 4 C
 * `Volume to Distribute on Agar`: Choose a liquid volume to add to the agar plate(s). This can theoretically be many volumes above 1 ul but caution should be exercised so as not to co-mingle samples on the agar by overloading
-* `Add to Deep Well Plate`: Choose yes or no to add to deep well plate. Yes results in a specified amount of liquid being added to the deep well plate and mixed
+* `Add to Deep Well Plate`: Choose yes or no to add to deep well plate. Yes results in a specified amount of liquid being added to the deep well plate 1 cm above the well bottom and mixed
 * `Volume to Add to Deep Well Plate`: Specifies volume to add to the deep well plate if yes is chosen under "Add to Deep Well Plate"
 
 ---
@@ -53,7 +53,8 @@ Explanation of complex parameters below:
 ### Reagent Setup
 * Mix and Go 96 Well Plate: slot 1 in temperature module
 * Assembly Plate 96 Well Plate: slot 3 in temperature module
-* Agar Plates: slots 5, 6, 7, 8, 9
+* Agar Plates: slots 5, 6, 7, 8, 9 (5-8 hold 24 samples each, 9 holds 96)
+  NOTE: Plates will be accessed in the above order. I.e. if 48 samples are selected for 24 well agar, plates in 5 and 6 will be filled
 * Deep Well Plate: slot 11
 
 ---
