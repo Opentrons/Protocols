@@ -158,11 +158,11 @@ def run(ctx):
         mag_mod.engage(height_from_base=6.7)
         ctx.delay(minutes=2)
 
-        ctx.comment('\n\nREMOVING SUPERNATANT\n')
+        ctx.comment('\n\nREMOVING SUPERNATANT FROM WELLS\n')
         for index, s_col in enumerate(samples):
             side = -1 if index % 2 == 0 else 1
             if not m300.has_tip:
-                pick_up_on_slot(8)
+                m300.pick_up_tip(ctx.loaded_labwares[8].rows()[0][index])
             aspirate_loc = s_col.bottom(z=1).move(
                     Point(x=(s_col.diameter/2-2)*side))
 
