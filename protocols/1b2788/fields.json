@@ -13,6 +13,12 @@
   },
   {
     "type": "int",
+    "label": "Elute Buffer Volume (ul)",
+    "name": "elute_buff_vol",
+    "default": 50
+  },
+  {
+    "type": "int",
     "label": "gDNA buffer volume (ul)",
     "name": "gdna_buff_vol",
     "default": 300

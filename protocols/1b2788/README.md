@@ -15,6 +15,7 @@ The Quick-DNA Fecal/Soil Microbe 96 Magbead Kits are designed for the simple and
 Explanation of complex parameters below:
 * `Number of Columns`: Specify the number of sample columns in this run (1-12).
 * `Pre-Wash buffer volume (ul)`: Specify wash volumes for both the pre-wash buffer, and gDNA wash buffer in microliters. Volumes can be greater than 200ul, and will be split if need be over multiple transfers.
+* `Elute Buffer Volume`: Specify the elute buffer volume in microliters.
 * `P300 Multi-Channel Pipette Mount`: Specify which mount (left or right) to host the P300 multi-channel pipette.
 
 ---
@@ -40,18 +41,22 @@ Explanation of complex parameters below:
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1b2788/Screen+Shot+2022-03-28+at+4.11.58+PM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1b2788/Screen+Shot+2022-04-21+at+5.12.11+PM.png)
 
 ### Reagent Setup
 
+NOTE: For the binding buffer (A1-A4) and gDNA wash (A8-A11), if running 3 columns of samples or less, you only need fill the first trough. If running 4 columns, then the total volume should be split between troughs 1 and 2 respectively. In other words, subsequent troughs of the same reagent should always have identical volumes at the start of the run, and a new trough is added for every 3rd column of samples. If running 7 columns of samples, then equal volumes are to be delivered to the first three troughs for binding buffer and gDNA wash. If running 12 columns, equal volumes should be placed in all 4 troughs for binding buffer and gDNA wash.
+
+If running 6 columns or less of the prewash, only A6 needs to be filled. If running more than 6 columns, the total volume should be split between A6 and A7.
+
 * Reservoir: Slot 1
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1b2788/Screen+Shot+2022-03-28+at+4.12.22+PM.png)
+![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1b2788/Screen+Shot+2022-04-21+at+5.10.43+PM.png)
 
 
 ---
 
 ### Protocol Steps
-1: Pick-up tips from slot 4 and aspirate 200ul MagBinding Buffer from troughs 1/2/3 of NEST 12 reservoir plate in slot 1 (airgap after aspiration).
+1. Pick-up tips from slot 4 and aspirate 200ul MagBinding Buffer from troughs 1/2/3 of NEST 12 reservoir plate in slot 1 (airgap after aspiration).
 2. Dispense 200 ul MagBinding Buffer into 96 well plate with pipette tip above height of wells. Do not touch plate or samples. Blowout after dispensing.
 3. Using the same tips, repeat steps 1 and 2 twice more to add 600 ul MagBinding Buffer to each well in total. Repeat across entire plate using same tips.
 4. Using the same tips, premix the MagBinding Beads in trough 4 of NEST 12 reservoir plate in slot 1. Mix 50 ul for 10 cycles.

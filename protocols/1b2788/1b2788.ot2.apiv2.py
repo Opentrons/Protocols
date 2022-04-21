@@ -1,4 +1,5 @@
 from opentrons.types import Point
+import math
 
 metadata = {
     'protocolName': 'Zymo Quick-DNA Fecal/Soil Microbe 96 Magbead Kit',
@@ -10,9 +11,9 @@ metadata = {
 
 def run(ctx):
 
-    [num_col, prewash_buff_vol,
+    [num_col, prewash_buff_vol, elute_buff_vol,
         gdna_buff_vol, m300_mount] = get_values(  # noqa: F821
-        "num_col", "prewash_buff_vol",
+        "num_col", "prewash_buff_vol", "elute_buff_vol",
             "gdna_buff_vol", "m300_mount")
 
     if not 1 <= num_col <= 12:
@@ -39,11 +40,15 @@ def run(ctx):
 
     # mapping
     waste = waste_res.wells()[0]
-    bind_buff = reag_res.wells()[:3]
-    bind_beads = reag_res.wells()[3]
-    prewash_buff = reag_res.wells()[4:6]
-    gdna_wash_buff = reag_res.wells()[6:10]
+    num_bind_buff_wells = math.ceil(num_col/3)
+    bind_buff = reag_res.wells()[:4][:num_bind_buff_wells]
+    bind_beads = reag_res.wells()[4]
+    num_prewash_wells = math.ceil(num_col/6)
+    prewash_buff = reag_res.wells()[5:7][:num_prewash_wells]
+    num_gdna_wells = math.ceil(num_col/3)
+    gdna_wash_buff = reag_res.wells()[7:11][:num_gdna_wells]
     samples = mag_plate.rows()[0][:num_col]
+    airgap = 10
 
     def pick_up_on_slot(slot):
         m300.starting_tip = ctx.loaded_labwares[slot].well('A1')
@@ -51,19 +56,24 @@ def run(ctx):
 
     ctx.comment('\n\nDISPENSING 600ul BINDING BUFFER TO SAMPLES\n')
     pick_up_on_slot(4)
-    for source_trough, col in zip(bind_buff*num_col, samples*3):
+    for i, (source_trough, col) in enumerate(zip(
+                                                bind_buff*num_col*3,
+                                                samples*3)):
+        if i > 0:
+            m300.dispense(airgap, source_trough.top())
         m300.aspirate(200, source_trough)
-        m300.dispense(200, col.top())
-        m300.blow_out()
+        m300.dispense(200, col.top(z=5), rate=0.4)
+        m300.air_gap(airgap)
 
     ctx.comment('\n\nADDING BEADS TO SAMPLES\n')
-    airgap = 10
     m300.mix(10, 50, bind_beads)
-    for col in samples:
+    for i, col in enumerate(samples):
+        if i > 0:
+            m300.dispense(airgap, bind_beads.top())
         m300.aspirate(25, bind_beads)
         m300.air_gap(airgap)
-        m300.dispense(25+airgap, col.top())
-        m300.blow_out()
+        m300.dispense(25+airgap, col.top(z=5), rate=0.4)
+        m300.air_gap(airgap)
     m300.drop_tip()
 
     ctx.pause('''
@@ -72,6 +82,7 @@ def run(ctx):
     Select "Resume" in the Opentrons app to continue.
     ''')
 
+    m300.home()
     mag_mod.engage(height_from_base=6.7)
     ctx.delay(minutes=2)
 
@@ -83,26 +94,32 @@ def run(ctx):
                 Point(x=(s_col.diameter/2-2)*side))
 
         for _ in range(5):
+            if _ > 0:
+                m300.dispense(airgap, s_col.top().move(
+                        Point(x=(s_col.diameter/2-2)*side)))
             m300.aspirate(166, aspirate_loc, rate=0.33)
-            m300.touch_tip()
-            m300.dispense(166, waste)
-            m300.blow_out()
-            m300.touch_tip()
+            m300.touch_tip(speed=40, radius=0.9)
+            m300.dispense(166, waste, rate=0.4)
+            m300.air_gap(airgap)
+            m300.touch_tip(speed=40, radius=0.9)
         m300.drop_tip()
 
     mag_mod.disengage()
 
     ctx.comment('\n\nDISPENSING PRE-WASH BUFFER TO SAMPLES\n')
+    m300.flow_rate.dispense = 0.4*m300.flow_rate.dispense
     pick_up_on_slot(5)
-    for source_trough, col in zip(prewash_buff*num_col, samples):
+    for source_trough, col in zip(prewash_buff*num_col*6, samples):
         m300.transfer(prewash_buff_vol,
                       source_trough,
-                      col.top(),
-                      blow_out=True,
-                      blowout_location='destination well',
-                      new_tip='never')
+                      col.top(z=5),
+                      new_tip='never',
+                      air_gap=10,
+                      rate=0.4)
+    m300.home()
     mag_mod.engage(height_from_base=6.7)
     ctx.delay(minutes=2)
+    m300.flow_rate.dispense = 2.5*m300.flow_rate.dispense
 
     ctx.comment('\n\nREMOVING SUPERNATANT\n')
     for index, s_col in enumerate(samples):
@@ -113,26 +130,32 @@ def run(ctx):
                 Point(x=(s_col.diameter/2-2)*side))
 
         for _ in range(2):
+            if _ > 0:
+                m300.dispense(airgap, s_col.top().move(
+                        Point(x=(s_col.diameter/2-2)*side)))
             m300.aspirate(150, aspirate_loc, rate=0.33)
-            m300.touch_tip()
-            m300.dispense(150, waste)
-            m300.blow_out()
-            m300.touch_tip()
+            m300.touch_tip(speed=40, radius=0.9)
+            m300.dispense(150, waste, rate=0.4)
+            m300.air_gap(airgap)
+            m300.touch_tip(speed=40, radius=0.9)
         m300.drop_tip(ctx.loaded_labwares[8].rows()[0][index])
 
     mag_mod.disengage()
 
+    m300.flow_rate.dispense = 0.4*m300.flow_rate.dispense
+    ctx.comment('\n\nBIG LOOP\n')
     for i in range(2):
         ctx.comment('\n\nDISPENSING gDNA BUFFER TO SAMPLES\n')
         pick_up_on_slot(4)
         for source_trough, col in zip(gdna_wash_buff*num_col, samples):
             m300.transfer(gdna_buff_vol,
                           source_trough,
-                          col.top(),
-                          blow_out=True,
-                          blowout_location='destination well',
-                          new_tip='never')
-
+                          col.top(z=5),
+                          air_gap=10,
+                          new_tip='never',
+                          rate=0.4)
+        m300.drop_tip()
+        m300.home()
         mag_mod.engage(height_from_base=6.7)
         ctx.delay(minutes=2)
 
@@ -145,17 +168,22 @@ def run(ctx):
                     Point(x=(s_col.diameter/2-2)*side))
 
             for _ in range(2):
+                if _ > 0:
+                    m300.dispense(airgap, s_col.bottom(z=1).move(
+                            Point(x=(s_col.diameter/2-2)*side)))
                 m300.aspirate(150, aspirate_loc, rate=0.33)
-                m300.touch_tip()
+                m300.touch_tip(speed=40, radius=0.9)
                 m300.dispense(150, waste)
-                m300.blow_out()
-                m300.touch_tip()
+                m300.air_gap(airgap)
+                m300.touch_tip(speed=40, radius=0.9)
             if i == 0:
                 m300.drop_tip(ctx.loaded_labwares[8].rows()[0][index])
             else:
                 m300.drop_tip()
         if i == 0:
             mag_mod.disengage()
+    m300.flow_rate.dispense = 2.5*m300.flow_rate.dispense
+    ctx.comment('\n\nBIG LOOP\n')
 
     tips = []
     for tiprack in tipracks:
@@ -167,17 +195,20 @@ def run(ctx):
     ctx.pause("""Drying for 30 minutes complete.
                  Select Resume on the Opentrons app to continue""")
 
-    ctx.comment('\n\nADDING ELUTION BUFER AND MIXING\n')
+    ctx.comment('\n\nADDING ELUTION BUFFER AND MIXING\n')
     for i, col in enumerate(samples):
         pick_up_on_slot(2)
-        m300.aspirate(50, elute_buff.wells()[0])
+        if i > 0:
+            m300.dispense(airgap, elute_buff.wells()[0].top())
+        m300.aspirate(elute_buff_vol, elute_buff.wells()[0])
         m300.air_gap(airgap)
-        m300.dispense(50+airgap, col.bottom(z=2))
+        m300.dispense(elute_buff_vol+airgap, col.bottom(z=2), rate=0.4)
         m300.mix(25, 40, col)
-        m300.blow_out()
-        m300.touch_tip()
+        m300.air_gap(airgap)
+        m300.touch_tip(speed=40, radius=0.9)
         m300.drop_tip(ctx.loaded_labwares[2].rows()[0][i])
 
+    m300.home()
     mag_mod.engage(height_from_base=6.7)
     ctx.delay(minutes=2)
 
@@ -186,12 +217,15 @@ def run(ctx):
     for index, (s_col, d_col) in enumerate(zip(samples,
                                                elute_plate.rows()[0])):
         side = -1 if index % 2 == 0 else 1
-        m300.pick_up_tip(ctx.loaded_labwares[2].rows()[0][index])
+        pick_up_on_slot(9)
         aspirate_loc = s_col.bottom(z=1).move(
                 Point(x=(s_col.diameter/2-2)*side))
-        m300.aspirate(50, aspirate_loc)
-        m300.touch_tip()
-        m300.dispense(50, d_col)
-        m300.blow_out()
-        m300.touch_tip()
+        if index > 0:
+            m300.dispense(airgap, s_col.top().move(
+                    Point(x=(s_col.diameter/2-2)*side)))
+        m300.aspirate(elute_buff_vol, aspirate_loc, rate=0.4)
+        m300.touch_tip(speed=40, radius=0.9)
+        m300.dispense(elute_buff_vol, d_col, rate=0.4)
+        m300.air_gap(airgap)
+        m300.touch_tip(speed=40, radius=0.9)
         m300.drop_tip()
