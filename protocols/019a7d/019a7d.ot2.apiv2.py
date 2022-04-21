@@ -30,7 +30,8 @@ def run(ctx):
     fragment_plate = ctx.load_labware('azentalifesciences_96_wellplate_200ul',
                                       '2')
     assembly_plate = temp_3.load_labware(
-                                        'azentalifesciences_96_wellplate_200ul'
+                                        'azentalifesciences_96_aluminumblock'
+                                        '_200ul'
                                          )
     backbone_reservoir = ctx.load_labware('azentalifesciences_12_reservoir'
                                           '_21000ul', '4')
@@ -42,12 +43,12 @@ def run(ctx):
     # load instrument
     p20 = ctx.load_instrument(
                         'p20_single_gen2',
-                        mount='left',
+                        mount='right',
                         tip_racks=tiprack
     )
     m20 = ctx.load_instrument(
                         'p20_multi_gen2',
-                        mount='right',
+                        mount='left',
                         tip_racks=tiprack
     )
 
@@ -93,3 +94,6 @@ def run(ctx):
                      new_tip='never'
                      )
         p20.drop_tip()
+
+    for c in ctx.commands():
+        print(c)
