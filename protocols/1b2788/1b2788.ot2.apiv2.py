@@ -143,7 +143,6 @@ def run(ctx):
     mag_mod.disengage()
 
     m300.flow_rate.dispense = 0.4*m300.flow_rate.dispense
-    ctx.comment('\n\nBIG LOOP\n')
     for i in range(2):
         ctx.comment('\n\nDISPENSING gDNA BUFFER TO SAMPLES\n')
         pick_up_on_slot(4)
@@ -183,7 +182,6 @@ def run(ctx):
         if i == 0:
             mag_mod.disengage()
     m300.flow_rate.dispense = 2.5*m300.flow_rate.dispense
-    ctx.comment('\n\nBIG LOOP\n')
 
     tips = []
     for tiprack in tipracks:
