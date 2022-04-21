@@ -1,5 +1,24 @@
 [
   {
+    "type": "dropDown",
+    "label": "Well Location for 1st Cell Suspension",
+    "name": "starting_position",
+    "options": [
+      { "label": "A1", "value": 0 },
+      { "label": "A2", "value": 1 },
+      { "label": "A3", "value": 2 },
+      { "label": "A4", "value": 3 },
+      { "label": "A5", "value": 4 },
+      { "label": "A6", "value": 5 },
+      { "label": "A7", "value": 6 },
+      { "label": "A8", "value": 7 },
+      { "label": "A9", "value": 8 },
+      { "label": "A10", "value": 9 },
+      { "label": "A11", "value": 10 },
+      { "label": "A12", "value": 11 }
+    ]
+  },
+  {
     "type": "int",
     "label": "Number of Tests (1-12)",
     "name": "num_tests",

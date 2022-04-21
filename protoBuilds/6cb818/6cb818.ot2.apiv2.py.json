@@ -1,5 +1,5 @@
 {
-    "content": "import math\n\n\nmetadata = {\n    'title': 'Anti-CD154 Labeling of Peptide- and PMA-Stimulated Cells',\n    'author': 'Steve Plonk',\n    'apiLevel': '2.10'\n}\n\n\ndef run(ctx):\n\n    [num_tests, adjust_final_vol, vol_cd154, vol_peptide1, vol_peptide2,\n     vol_peptide3, vol_pma_ca, vol_culture_medium, labware_cultureplate,\n     slot_cultureplate, slot_snapcaps, slot_screwcaps,\n     clearance_snapcap, clearance_screwcap, clearance_plate,\n     clearance_mix] = get_values(  # noqa: F821\n        \"num_tests\", \"adjust_final_vol\", \"vol_cd154\", \"vol_peptide1\",\n        \"vol_peptide2\", \"vol_peptide3\", \"vol_pma_ca\", \"vol_culture_medium\",\n        \"labware_cultureplate\", \"slot_cultureplate\",\n        \"slot_snapcaps\", \"slot_screwcaps\", \"clearance_snapcap\",\n        \"clearance_screwcap\", \"clearance_plate\", \"clearance_mix\")\n\n    ctx.set_rail_lights(True)\n    ctx.delay(seconds=10)\n\n    # p20s, p300s and tips\n    tips20 = [ctx.load_labware(\n     'opentrons_96_tiprack_20ul', str(slot)) for slot in [2]]\n    p20s = ctx.load_instrument('p20_single_gen2', 'left', tip_racks=tips20)\n\n    tips300 = [ctx.load_labware(\n     'opentrons_96_tiprack_300ul', str(slot)) for slot in [5]]\n    p300s = ctx.load_instrument('p300_single_gen2', 'right', tip_racks=tips300)\n\n    # load labware\n    culture_plate = ctx.load_labware(\n     labware_cultureplate, slot_cultureplate, \"Culture Plate\")\n\n    if not 1 <= num_tests <= len(culture_plate.columns()):\n        raise Exception('Invalid number of tests.')\n\n    rack_snapcaps = ctx.load_labware(\n     \"opentrons_24_tuberack_nest_1.5ml_snapcap\", slot_snapcaps,\n     \"Rack with Snap Cap Tubes\")\n    rack_screwcaps = ctx.load_labware(\n     \"opentrons_24_tuberack_nest_1.5ml_screwcap\", slot_screwcaps,\n     \"Rack with Screw Cap Tubes\")\n\n    # return liquid height in a well\n    def liq_height(well):\n        if well.diameter is not None:\n            radius = well.diameter / 2\n            cse = math.pi*(radius**2)\n        elif well.length is not None:\n            cse = well.length*well.width\n        else:\n            cse = None\n        if cse:\n            return well.liq_vol / cse\n        else:\n            raise Exception(\"\"\"Labware definition must\n                supply well radius or well length and width.\"\"\")\n\n    # reagents in snapcaps with vol and liquid height tracking\n    [peptide1, peptide2, peptide3, pma_ca] = rack_snapcaps.rows()[0][:4]\n\n    peptide1.liq_vol = vol_peptide1\n    peptide2.liq_vol = vol_peptide2\n    peptide3.liq_vol = vol_peptide3\n    pma_ca.liq_vol = vol_pma_ca\n\n    # reagents in screwcaps with vol and liquid height tracking\n    [cd154, culture_medium] = rack_screwcaps.rows()[0][:2]\n\n    cd154.liq_vol = vol_cd154\n    culture_medium.liq_vol = vol_culture_medium\n\n    # culture plate wells with vol and liquid height tracking\n    plate_wells = [\n     column[:5] for column in culture_plate.columns()[:num_tests]]\n\n    for column in plate_wells:\n        for index, well in enumerate(column):\n            well.liq_vol = 200 if index == 0 else 0\n\n    # add anti-CD154 to cells in 1st well of each filled column and rinse tip\n    for column in plate_wells:\n        p20s.pick_up_tip()\n        ht_cd154 = liq_height(cd154) - 3 if liq_height(cd154) - 3 > 1 else 1\n        ht_cells = liq_height(\n         column[0]) - 3 if liq_height(column[0]) - 3 > 1 else 1\n        p20s.aspirate(5, cd154.bottom(ht_cd154))\n        p20s.dispense(5, column[0].bottom(ht_cells))\n        for rep in range(1):\n            p20s.aspirate(20, column[0].bottom(1), rate=2)\n            p20s.dispense(20, column[0].bottom(ht_cells), rate=2)\n        p20s.blow_out()\n        p20s.touch_tip(radius=0.75, v_offset=-2, speed=10)\n        p20s.drop_tip()\n\n    # transfer cell suspension to rows B-E\n    for column in plate_wells:\n        p300s.pick_up_tip()\n        for rep in range(5):\n            p300s.aspirate(160, column[0].bottom(1), rate=2)\n            ht = 7 if rep < 4 else 1\n            p300s.dispense(160, column[0].bottom(ht), rate=2)\n        for well in column[1:]:\n            p300s.aspirate(40, column[0].bottom(1))\n            p300s.dispense(40, well.bottom(1))\n            p300s.touch_tip(radius=0.75, v_offset=-4, speed=20)\n        p300s.drop_tip()\n\n    # add reagent (peptides 1, 2 and 3 and PMA) to rows B, C, D, E\n    for reagent, vol, index in zip(\n     [peptide1, peptide2, peptide3, pma_ca], [5, 5, 10, 12], [1, 2, 3, 4]):\n        for column in plate_wells:\n            p20s.pick_up_tip()\n            reagent.liq_vol -= vol\n            ht = liq_height(reagent) - 3 if liq_height(reagent) - 3 > 1 else 1\n            p20s.aspirate(vol, reagent.bottom(ht))\n            p20s.dispense(vol, column[index].bottom(2))\n            for rep in range(1):\n                p20s.aspirate(20, column[index].bottom(2))\n                p20s.dispense(20, column[index].bottom(2))\n            p20s.drop_tip()\n\n    # optionally add 60 uL culture medium to each filled well\n    if adjust_final_vol:\n        for column in plate_wells:\n            for well in column:\n                p300s.pick_up_tip()\n                culture_medium.liq_vol -= 60\n                ht = liq_height(\n                 culture_medium) - 3 if liq_height(culture_medium) > 1 else 1\n                p300s.aspirate(60, culture_medium.bottom(ht))\n                p300s.dispense(60, well.bottom(4))\n                p300s.touch_tip(radius=0.75, v_offset=-4, speed=20)\n                p300s.drop_tip()\n",
+    "content": "import math\n\n\nmetadata = {\n    'title': 'Anti-CD154 Labeling of Peptide- and PMA-Stimulated Cells',\n    'author': 'Steve Plonk',\n    'apiLevel': '2.10'\n}\n\n\ndef run(ctx):\n\n    [starting_position, num_tests, adjust_final_vol, vol_cd154, vol_peptide1,\n     vol_peptide2, vol_peptide3, vol_pma_ca, vol_culture_medium,\n     labware_cultureplate, slot_cultureplate, slot_snapcaps, slot_screwcaps,\n     clearance_snapcap, clearance_screwcap, clearance_plate,\n     clearance_mix] = get_values(  # noqa: F821\n        \"starting_position\", \"num_tests\", \"adjust_final_vol\", \"vol_cd154\",\n        \"vol_peptide1\", \"vol_peptide2\", \"vol_peptide3\", \"vol_pma_ca\",\n        \"vol_culture_medium\", \"labware_cultureplate\", \"slot_cultureplate\",\n        \"slot_snapcaps\", \"slot_screwcaps\", \"clearance_snapcap\",\n        \"clearance_screwcap\", \"clearance_plate\", \"clearance_mix\")\n\n    ctx.set_rail_lights(True)\n    ctx.delay(seconds=10)\n\n    # p20s, p300s and tips\n    tips20 = [ctx.load_labware(\n     'opentrons_96_tiprack_20ul', str(slot)) for slot in [2]]\n    p20s = ctx.load_instrument('p20_single_gen2', 'left', tip_racks=tips20)\n\n    tips300 = [ctx.load_labware(\n     'opentrons_96_tiprack_300ul', str(slot)) for slot in [5]]\n    p300s = ctx.load_instrument('p300_single_gen2', 'right', tip_racks=tips300)\n\n    # load labware\n    culture_plate = ctx.load_labware(\n     labware_cultureplate, slot_cultureplate, \"Culture Plate\")\n\n    if not 1 <= num_tests <= len(culture_plate.columns()):\n        raise Exception('Invalid number of tests.')\n\n    if not num_tests + starting_position <= len(culture_plate.columns()):\n        raise Exception('Invalid starting position for {} tests.'.format(\n         num_tests))\n\n    rack_snapcaps = ctx.load_labware(\n     \"opentrons_24_tuberack_nest_1.5ml_snapcap\", slot_snapcaps,\n     \"Rack with Snap Cap Tubes\")\n    rack_screwcaps = ctx.load_labware(\n     \"opentrons_24_tuberack_nest_1.5ml_screwcap\", slot_screwcaps,\n     \"Rack with Screw Cap Tubes\")\n\n    # return liquid height in a well\n    def liq_height(well):\n        if well.diameter is not None:\n            radius = well.diameter / 2\n            cse = math.pi*(radius**2)\n        elif well.length is not None:\n            cse = well.length*well.width\n        else:\n            cse = None\n        if cse:\n            return well.liq_vol / cse\n        else:\n            raise Exception(\"\"\"Labware definition must\n                supply well radius or well length and width.\"\"\")\n\n    # reagents in snapcaps with vol and liquid height tracking\n    [peptide1, peptide2, peptide3, pma_ca] = rack_snapcaps.rows()[0][:4]\n\n    peptide1.liq_vol = vol_peptide1\n    peptide2.liq_vol = vol_peptide2\n    peptide3.liq_vol = vol_peptide3\n    pma_ca.liq_vol = vol_pma_ca\n\n    # reagents in screwcaps with vol and liquid height tracking\n    [cd154, culture_medium] = rack_screwcaps.rows()[0][:2]\n\n    cd154.liq_vol = vol_cd154\n    culture_medium.liq_vol = vol_culture_medium\n\n    # culture plate wells with vol and liquid height tracking\n    plate_wells = [\n     column[:5] for column in culture_plate.columns()[\n      starting_position:num_tests+starting_position]]\n\n    for column in plate_wells:\n        for index, well in enumerate(column):\n            well.liq_vol = 200 if index == 0 else 0\n\n    # add anti-CD154 to cells in 1st well of each filled column and rinse tip\n    for column in plate_wells:\n        p20s.pick_up_tip()\n        ht_cd154 = liq_height(cd154) - 3 if liq_height(cd154) - 3 > 1 else 1\n        ht_cells = liq_height(\n         column[0]) - 3 if liq_height(column[0]) - 3 > 1 else 1\n        p20s.aspirate(5, cd154.bottom(ht_cd154))\n        p20s.dispense(5, column[0].bottom(ht_cells))\n        for rep in range(1):\n            p20s.aspirate(20, column[0].bottom(1), rate=2)\n            p20s.dispense(20, column[0].bottom(ht_cells), rate=2)\n        p20s.blow_out()\n        p20s.touch_tip(radius=0.75, v_offset=-2, speed=10)\n        p20s.drop_tip()\n\n    # transfer cell suspension to rows B-E\n    for column in plate_wells:\n        p300s.pick_up_tip()\n        for rep in range(5):\n            p300s.aspirate(160, column[0].bottom(1), rate=2)\n            ht = 7 if rep < 4 else 1\n            p300s.dispense(160, column[0].bottom(ht), rate=2)\n        for well in column[1:]:\n            p300s.aspirate(40, column[0].bottom(1))\n            p300s.dispense(40, well.bottom(1))\n            p300s.touch_tip(radius=0.75, v_offset=-4, speed=20)\n        p300s.drop_tip()\n\n    # add reagent (peptides 1, 2 and 3 and PMA) to rows B, C, D, E\n    for reagent, vol, index in zip(\n     [peptide1, peptide2, peptide3, pma_ca], [5, 5, 10, 12], [1, 2, 3, 4]):\n        for column in plate_wells:\n            p20s.pick_up_tip()\n            reagent.liq_vol -= vol\n            ht = liq_height(reagent) - 3 if liq_height(reagent) - 3 > 1 else 1\n            p20s.aspirate(vol, reagent.bottom(ht))\n            p20s.dispense(vol, column[index].bottom(2))\n            for rep in range(1):\n                p20s.aspirate(20, column[index].bottom(2))\n                p20s.dispense(20, column[index].bottom(2))\n            p20s.drop_tip()\n\n    # optionally add 60 uL culture medium to each filled well\n    if adjust_final_vol:\n        for column in plate_wells:\n            for well in column:\n                p300s.pick_up_tip()\n                culture_medium.liq_vol -= 60\n                ht = liq_height(\n                 culture_medium) - 3 if liq_height(culture_medium) > 1 else 1\n                p300s.aspirate(60, culture_medium.bottom(ht))\n                p300s.dispense(60, well.bottom(4))\n                p300s.touch_tip(radius=0.75, v_offset=-4, speed=20)\n                p300s.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -2255,6 +2255,61 @@
         }
     ],
     "fields": [
+        {
+            "label": "Well Location for 1st Cell Suspension",
+            "name": "starting_position",
+            "options": [
+                {
+                    "label": "A1",
+                    "value": 0
+                },
+                {
+                    "label": "A2",
+                    "value": 1
+                },
+                {
+                    "label": "A3",
+                    "value": 2
+                },
+                {
+                    "label": "A4",
+                    "value": 3
+                },
+                {
+                    "label": "A5",
+                    "value": 4
+                },
+                {
+                    "label": "A6",
+                    "value": 5
+                },
+                {
+                    "label": "A7",
+                    "value": 6
+                },
+                {
+                    "label": "A8",
+                    "value": 7
+                },
+                {
+                    "label": "A9",
+                    "value": 8
+                },
+                {
+                    "label": "A10",
+                    "value": 9
+                },
+                {
+                    "label": "A11",
+                    "value": 10
+                },
+                {
+                    "label": "A12",
+                    "value": 11
+                }
+            ],
+            "type": "dropDown"
+        },
         {
             "default": 2,
             "label": "Number of Tests (1-12)",
