@@ -1,0 +1,8 @@
+[ 
+  {
+    "type": "int",
+    "label": "Well de inicio",
+    "name": "_well",
+    "default": 1
+  }
+]
