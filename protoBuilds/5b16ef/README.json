@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "\n",
-    "description": "This protocol is a semi-automated workflow which performs 8.1-8.4.6 of the SARS-CoV-2 Using Illumina Nextera Flex & MiSeqNEB kit. For detailed information on protocol steps, please see below. You can find part 2 of the protocol here:\n\nSARS-CoV-2 Using Illumina Nextera Flex & MiSeqNEB - Part 2\n\nExplanation of complex parameters below:\n Number of Sample Columns (1-6): Specify how many sample columns (1-6) this run will process. Samples will be placed in every other column, starting from column 1 (i.e. 1, 3, 5, 7, 9, 11 for 6 columns).\n P20 Multi-Channel Mount: Specify which mount (left or right) to host the P20 pipette.\n",
+    "description": "This protocol is a semi-automated workflow which performs 8.1-8.4.6 of the SARS-CoV-2 Using Illumina Nextera Flex & MiSeqNEB kit. For detailed information on protocol steps, please see below. You can find part 2 of the protocol here:\n\nSARS-CoV-2 Using Illumina Nextera Flex & MiSeqNEB - Part 2\n\nExplanation of complex parameters below:\n* Number of Sample Columns (1-6): Specify how many sample columns (1-6) this run will process. Samples will be placed in every other column, starting from column 1 (i.e. 1, 3, 5, 7, 9, 11 for 6 columns).\n* P20 Multi-Channel Mount: Specify which mount (left or right) to host the P20 pipette.\n",
     "internal": "5b16ef",
     "labware": "\nBio-Rad 96 Well Plate 200 \u00b5L PCR\nOpentrons 20ul Tips\n",
     "markdown": {
