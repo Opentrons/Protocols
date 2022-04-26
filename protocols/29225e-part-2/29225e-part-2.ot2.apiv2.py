@@ -272,6 +272,8 @@ def run(ctx):
                      asp_vol, mm_source.height_dec(asp_vol), rate=0.3)
                     p300s.delay(1)
                     p300s.slow_tip_withdrawal(10, mm_source)
+                    p300s.touch_tip(
+                     mm_source, radius=0.75, v_offset=-2, speed=10)
                     for vol in chunk:
                         d = pcr_plate.wells_by_name()[next(dest)]
                         p300s.dispense(vol, d.bottom(clearance_pcr), rate=0.3)
@@ -291,6 +293,7 @@ def run(ctx):
                  asp_vol, mm_source.height_dec(asp_vol), rate=0.3)
                 p300s.delay(1)
                 p300s.slow_tip_withdrawal(10, mm_source)
+                p300s.touch_tip(mm_source, radius=0.75, v_offset=-2, speed=10)
                 for vol in chunk:
                     d = pcr_plate.wells_by_name()[next(dest)]
                     p300s.dispense(vol, d.bottom(clearance_pcr), rate=0.3)
@@ -318,6 +321,8 @@ def run(ctx):
                      asp_vol, mm_source.height_dec(asp_vol), rate=0.3)
                     p300s.delay(1)
                     p300s.slow_tip_withdrawal(10, mm_source)
+                    p300s.touch_tip(
+                     mm_source, radius=0.75, v_offset=-2, speed=10)
                     for vol in chunk:
                         d = pcr_plate.wells_by_name()[next(dest)]
                         p300s.dispense(vol, d.bottom(clearance_pcr), rate=0.3)
