@@ -1,6 +1,24 @@
 [
   {
     "type": "dropDown",
+    "label": "Incubate Samples with Beads? (yes or no)",
+    "name": "incubate_samples_with_beads",
+    "options": [
+      { "label": "YES - perform the incubation", "value": true },
+      { "label": "NO - skip the incubation for testing reasons", "value": false }
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Temperature Module Setting (degrees C)",
+    "name": "temp_mod_setting",
+    "options": [
+      { "label": "4 Degrees C", "value": 4 },
+      { "label": "Off", "value": null }
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "Manual Bead Pellet Resuspension? (yes or no)",
     "name": "manual_bead_resuspension",
     "options": [

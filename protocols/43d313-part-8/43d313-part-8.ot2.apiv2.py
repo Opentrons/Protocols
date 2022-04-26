@@ -83,17 +83,26 @@ def run(ctx):
     p300m = ctx.load_instrument(
         "p300_multi_gen2", 'right', tip_racks=tips200)
 
-    # qubit flex tubes
+    # Tapestation reagent in 8-tube strip
     reagents = ctx.load_labware(
      'opentrons_96_aluminumblock_generic_pcr_strip_200ul',
-     '2', 'Qubit Flex Tubes')
+     '2', 'Tapestation Reagent')
 
     [tapestation_reagent] = [reagents.columns()[index] for index in [0]]
 
-    qubit_flextubes = [reagents.columns()[index] for index in [*range(12)]]
+    # Qubit flextubes
+    flextubeblocks = [ctx.load_labware(
+     "opentrons_96_aluminumblock_generic_pcr_strip_200ul", str(
+      slot)) for slot in [5, 6]]
+
+    # skip even numbered columns to make room for tube lids
+    qubit_flextubes = []
+    for block in flextubeblocks:
+        new = [block.columns()[index] for index in [*range(0, 12, 2)]]
+        qubit_flextubes.extend(new)
 
     # reservoir for Qubit solution
-    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '5', 'Reservoir')
+    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '4', 'Reservoir')
 
     qubit_solution = reservoir.wells()[0]
 

@@ -1,0 +1,78 @@
+{
+    "content": "from opentrons.types import Point\nmetadata = {\n    'protocolName': 'Pierce NiNTA Magnetic Beads Part 1',\n    'author': 'Boren Lin <boren.lin@opentrons.com>',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx):\n\n    [num_samples] = get_values(  # noqa: F821\n        'num_samples')\n    [asp_height, length_from_side, p300_mount] = [0.5, 2.5, 'left']\n\n    total_cols = int(num_samples//8)\n    r1 = int(num_samples % 8)\n    if r1 != 0:\n        total_cols = total_cols + 1\n\n    ASP_COUNT = num_samples//5\n    LEFTOVER = num_samples % 5\n\n    #########################\n\n    # load labware\n\n    eql_res = ctx.load_labware(\n     'nest_12_reservoir_15ml', '4', 'equilibration buffer')\n    # wash_res = ctx.load_labware('nest_12_reservoir_15ml', '6', 'wash buffer')\n    # eln_res= ctx.load_labware(\n    # 'nest_12_reservoir_15ml', '2', 'elution buffer')\n\n    bead_tube = ctx.load_labware(\n     'opentrons_15_tuberack_nest_15ml_conical', '5', 'beads')\n\n    mag_mod = ctx.load_module('magnetic module gen2', '1')\n    mag_rack = mag_mod.load_labware('nest_96_wellplate_2ml_deep')\n\n    sample_plate = ctx.load_labware(\n     'nest_96_wellplate_2ml_deep', '7', 'samples')\n    # elution_plate = ctx.load_labware(\n    # 'nest_96_wellplate_2ml_deep', '3', 'eluates')\n\n    tiprack = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)\n               for slot in ['9', '10']]\n    waste_res = ctx.load_labware('nest_1_reservoir_195ml', '8', 'waste')\n\n    # load pipette\n    pip300 = ctx.load_instrument(\n     'p300_multi_gen2', p300_mount, tip_racks=[*tiprack])\n    pip300_single = ctx.load_instrument(\n     'p300_single_gen2', 'right', tip_racks=[*tiprack])\n\n    # liquids\n    eql = eql_res.wells()[:total_cols]\n    # wash = wash_res.wells()[:total_cols]\n    # eln = eln_res.wells()[:total_cols]\n\n    beads = bead_tube.rows()[0][0]\n\n    waste = waste_res.wells()[0]\n    samples = sample_plate.rows()[0][:total_cols]\n    working_cols = mag_rack.rows()[0][:total_cols]\n    # final_cols = elution_plate.rows()[0][:total_cols]\n\n    def add_equilibration(vol1):\n        ctx.comment('\\n\\n\\n~~~~~~~~ADDING EQUILIBRATION BUFFER~~~~~~~~\\n')\n        pip300.pick_up_tip()\n\n        if vol1 > 250:\n            vol1 = vol1/2\n            for eql_wells, working_wells in zip(eql, working_cols):\n                for _ in range(2):\n                    pip300.aspirate(vol1, eql_wells)\n                    pip300.dispense(vol1, working_wells.bottom(7.5))\n            pip300.drop_tip()\n        else:\n            for eql_wells, working_wells in zip(eql, working_cols):\n                pip300.aspirate(vol1, eql_wells)\n                pip300.dispense(vol1, working_wells.bottom(7.5))\n            pip300.drop_tip()\n\n    def remove_supernatant(vol3):\n        ctx.comment('\\n\\n\\n~~~~~~~~REMOVING SUPERNATANT~~~~~~~~\\n')\n        pip300.pick_up_tip()\n        pip300.flow_rate.aspirate = 45\n\n        if vol3 > 250:\n            vol3 = vol3/2\n            for i, col in enumerate(working_cols):\n                side = -1 if i % 2 == 0 else 1\n                aspirate_loc = col.bottom(z=asp_height).move(\n                            Point(x=(col.length/2-length_from_side)*side))\n                for _ in range(2):\n                    pip300.transfer(vol3,\n                                    aspirate_loc,\n                                    waste.bottom(z=25),\n                                    new_tip='never',\n                                    blow_out=True,\n                                    blowout_location='destination well')\n        else:\n            for i, col in enumerate(working_cols):\n                side = -1 if i % 2 == 0 else 1\n                aspirate_loc = col.bottom(z=asp_height).move(\n                            Point(x=(col.length/2-length_from_side)*side))\n                pip300.transfer(vol3,\n                                aspirate_loc,\n                                waste.bottom(z=25),\n                                new_tip='never',\n                                blow_out=True,\n                                blowout_location='destination well')\n\n        pip300.flow_rate.aspirate = 92\n        pip300.drop_tip()\n\n    # protocol\n    mag_mod.disengage()\n\n    ctx.comment('\\n\\n\\n~~~~~~~~MIXING BEADS~~~~~~~~\\n')\n    pip300_single.pick_up_tip()\n    for i in range(total_cols):\n        h = 5 + i * 3\n        pip300_single.mix(5, 250, beads.bottom(z=h), rate=5)\n\n    ctx.comment(\n     '\\n\\n\\n~~~~~~~~TRANSFERRING BEADS AND EQUILIBRATION BUFFER~~~~~~~~\\n')\n    for i in range(0, ASP_COUNT):\n        pip300_single.mix(5, 250, beads.bottom(z=2), rate=5)\n        pip300_single.aspirate(250, beads.bottom(z=1))\n        for j in range(0, 5):\n            beads_well = mag_rack.wells()[j+i*5]\n            pip300_single.dispense(50, beads_well.bottom(z=10))\n        pip300_single.touch_tip()\n    if LEFTOVER != 0:\n        pip300_single.mix(5, LEFTOVER*50, beads.bottom(z=2), rate=5)\n        pip300_single.aspirate(LEFTOVER*50, beads.bottom(z=1))\n        for j in range(0, LEFTOVER):\n            beads_well = mag_rack.wells()[j+ASP_COUNT*5]\n            pip300_single.dispense(50, beads_well.bottom(z=10))\n        pip300_single.touch_tip()\n    pip300_single.drop_tip()\n\n    add_equilibration(450)\n\n    ctx.comment('\\n\\n\\n~~~~~~~~REMOVING ACCESS~~~~~~~~\\n')\n    mag_mod.engage(height_from_base=4.2)\n    ctx.delay(minutes=2)\n    remove_supernatant(520)\n    mag_mod.disengage()\n\n    ctx.comment('\\n\\n\\n~~~~~~~~EQUILIBRATING BEADS~~~~~~~~\\n')\n\n    add_equilibration(500)\n    pip300.pick_up_tip()\n    for wells in working_cols:\n        pip300.mix(10, 200, wells.bottom(z=2), rate=3)\n    pip300.drop_tip()\n    mag_mod.engage(height_from_base=4.2)\n    ctx.delay(minutes=2)\n    remove_supernatant(520)\n    mag_mod.disengage()\n\n    ctx.comment('\\n\\n\\n~~~~~~~~TRANSFERRING SAMPLES~~~~~~~~\\n')\n\n    vol4 = 500\n    for source, dest in zip(samples, working_cols):\n        pip300.pick_up_tip()\n        for _ in range(2):\n            pip300.transfer(vol4/2,\n                            source,\n                            dest.bottom(z=15),\n                            new_tip='never',\n                            blow_out=True,\n                            blowout_location='destination well')\n        pip300.mix(10, 200, dest.bottom(z=2), rate=3)\n        pip300.drop_tip()\n\n    ctx.pause('30 min gentle shaking, room temp')\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 96,
+            "label": "number of samples",
+            "name": "num_samples",
+            "type": "int"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_multi_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p300_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "NEST 96 Deepwell Plate 2mL on Magnetic Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "nest_96_wellplate_2ml_deep"
+        },
+        {
+            "name": "equilibration buffer on 4",
+            "share": false,
+            "slot": "4",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "beads on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_15_tuberack_nest_15ml_conical"
+        },
+        {
+            "name": "samples on 7",
+            "share": false,
+            "slot": "7",
+            "type": "nest_96_wellplate_2ml_deep"
+        },
+        {
+            "name": "waste on 8",
+            "share": false,
+            "slot": "8",
+            "type": "nest_1_reservoir_195ml"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 10",
+            "share": false,
+            "slot": "10",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.11",
+        "author": "Boren Lin <boren.lin@opentrons.com>",
+        "protocolName": "Pierce NiNTA Magnetic Beads Part 1"
+    },
+    "modules": []
+}

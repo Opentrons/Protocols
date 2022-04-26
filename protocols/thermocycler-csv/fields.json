@@ -15,7 +15,7 @@
     "type": "textFile",
     "label": "profile .csv file",
     "name": "input_csv",
-    "default": "cycle,repetitions,\"steps (temperature, time in minutes)\",,\n1,1,\"96, 30\",,\n2,30,\"96, 15\",\"60, 30\",\"74, 30\"\n3,1,\"74, 30\",,"
+    "default": "cycle,repetitions,steps (temperature;time in minutes),,\n1,1,96;30,,\n2,30,96;15,60;30,74;30\n3,1,74;30,,\n"
   },
   {
     "type": "float",
