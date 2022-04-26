@@ -6,7 +6,7 @@ metadata = {
     'protocolName': 'Lexogen QuantSeq 3`mRNA FWD NGS Library Prep',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.0'
+    'apiLevel': '2.12'
 }
 
 
@@ -48,7 +48,7 @@ def run(ctx):
     indexplate = ctx.load_labware(
         'nest_96_wellplate_100ul_pcr_full_skirt', '8', 'index plate')
     tips300 = [
-        ctx.load_labware('opentrons_96_tiprack_20ul', slot)
+        ctx.load_labware('opentrons_96_tiprack_300ul', slot)
         for slot in ['10', '11']
     ]
 
