@@ -3,7 +3,7 @@
     "type": "int",
     "label": "number of extracts",
     "name": "num_extracts",
-    "default": 48
+    "default": 49
   },
   {
     "type": "dropDown",
