@@ -87,7 +87,7 @@ def run(ctx: protocol_api.ProtocolContext):
                                              reagent_tubes,
                                              plate_wells):
         p300.pick_up_tip()
-        p300.aspirate(50, prl_source)
+        p300.aspirate(50, prl_source.bottom(prl_source.depth/2))
         p300.dispense(50, dest1.bottom(2))
         p300.mix(3, 200, dest1.bottom(2))
         p300.aspirate(50, dest1.bottom(2))

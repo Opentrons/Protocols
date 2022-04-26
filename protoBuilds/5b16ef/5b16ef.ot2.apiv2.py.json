@@ -1,0 +1,84 @@
+{
+    "content": "metadata = {\n    'protocolName': 'SuperScript III: qRT-PCR Prep with CSV File',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx):\n\n    [num_col, m20_mount] = get_values(  # noqa: F821\n        \"num_col\", \"m20_mount\")\n\n    if not 1 <= num_col <= 6:\n        raise Exception(\"Enter a column number between 1-6\")\n\n    # load labware\n    sample_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', 1)\n    mmx_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', 2)\n    pool_mmx_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', 3)\n    final_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', 4)\n\n    # load tipracks\n    tipracks = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)\n                for slot in [10, 11]]\n\n    # load pipettes\n    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tipracks)\n\n    # mapping\n    mmx = mmx_plate.wells()[0]\n    pool_reagents = [pool_mmx_plate.rows()[0][0], pool_mmx_plate.rows()[0][1]]\n\n    ctx.comment('\\n\\nMOVING MASTERMIX TO PLATE\\n')\n    for col in sample_plate.rows()[0][:num_col]:\n        m20.pick_up_tip()\n        m20.aspirate(2, mmx)\n        m20.dispense(2, col)\n        m20.mix(3, 7, col)\n        m20.blow_out()\n        m20.touch_tip()\n        m20.drop_tip()\n\n    ctx.pause('''\n    2ul of mastermix added to each sample. Incubate as described in Table 3 in\n    section 8.1.4 of the protocol. Program NEB cDNA Synthesis on thermal\n    cycler. After completed, return the sample plate to slot 1 of the deck and\n    select \"Resume\" on the Opentrons app for Target enrichment.\n    ''')\n\n    ctx.comment('\\n\\nADDING POOL REAGENT TO SPLIT COLUMNS\\n')\n    for start_col in range(2):\n        m20.pick_up_tip()\n        for col in final_plate.rows()[0][start_col:num_col*2:2]:\n            m20.aspirate(8, pool_reagents[start_col])\n            m20.dispense(8, col)\n            m20.blow_out()\n            m20.touch_tip()\n        m20.drop_tip()\n\n    ctx.comment('\\n\\nSPLITTING 4.5ul OF SAMPLE FOR POOLING\\n')\n    split_ctr = 0\n    for col in sample_plate.rows()[0][:num_col]:\n        m20.pick_up_tip()\n        for _ in range(2):\n            m20.aspirate(4.5, col)\n            m20.dispense(4.5, final_plate.rows()[0][split_ctr])\n            m20.blow_out()\n            m20.touch_tip()\n            split_ctr += 1\n        m20.drop_tip()\n\n    ctx.pause('''\n    4.5ul of samples are split into the final plate on slot 4.\n    Incubate as described in Table 5 in section 8.2.3 of the protocol.\n    Program NEB Targeted Synthesis on thermal cycler.\n    After completed, return the plate to slot 4 of the deck and\n    select \"Resume\" on the Opentrons app. Split columns will be combined to\n    the left.\n    ''')\n\n    ctx.comment('\\n\\nRECOMBINING SPLIT COLUMNS TO THE LEFT\\n')\n    left_split_ctr = 0\n    for col in final_plate.rows()[0][1:num_col*2:2]:\n        m20.pick_up_tip()\n        m20.aspirate(12.5, col)\n        m20.dispense(12.5, final_plate.rows()[0][left_split_ctr])\n        m20.mix(10, 20, final_plate.rows()[0][left_split_ctr])\n        m20.blow_out()\n        m20.touch_tip()\n        m20.drop_tip()\n        left_split_ctr += 2\n\n    ctx.pause('''\n    Protocol complete. Target Enrichment Quantification and Normalization to be\n    done off deck. Part 2 on the OT-2 begins at section 8.4: Library Prep.\n    ''')\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 6,
+            "label": "Number of Sample Columns (1-6)",
+            "name": "num_col",
+            "type": "int"
+        },
+        {
+            "label": "P300 Multi-Channel Mount",
+            "name": "m20_mount",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p20_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 1",
+            "share": false,
+            "slot": "1",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 2",
+            "share": false,
+            "slot": "2",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 3",
+            "share": false,
+            "slot": "3",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 4",
+            "share": false,
+            "slot": "4",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 10",
+            "share": false,
+            "slot": "10",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.11",
+        "author": "Rami Farawi <rami.farawi@opentrons.com>",
+        "protocolName": "SuperScript III: qRT-PCR Prep with CSV File",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}

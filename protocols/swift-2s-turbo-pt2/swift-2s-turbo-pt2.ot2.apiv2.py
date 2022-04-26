@@ -206,7 +206,7 @@ def run(protocol):
         for mag_samp in mag_300:
             if not p300.hw_pipette['has_tip']:
                 big_pick_up()
-            p300.air_gap(10)
+            p300.aspirate(10, ethanol.top())
             p300.aspirate(180, ethanol)
             p300.air_gap(5)
             p300.dispense(210, mag_samp.top(-2))
@@ -215,7 +215,7 @@ def run(protocol):
         for mag_samp in mag_300:
             if not p300.hw_pipette['has_tip']:
                 big_pick_up()
-            p300.air_gap(5)
+            p300.aspirate(5, mag_samp.top())
             p300.aspirate(190, mag_samp)
             p300.air_gap(5)
             p300.dispense(210, waste.top(-1))

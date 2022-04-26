@@ -83,8 +83,9 @@ def run(ctx: protocol_api.ProtocolContext):
     for row_start, col_start in zip([0, 0, 1, 1][:num_full_plates],
                                     [0, 1, 0, 1]):
         col_ctr = 0
-        m20.aspirate(20, reagent)
+
         for _ in range(4):
+            m20.aspirate(20, reagent)
             for _ in range(3):
                 m20.dispense(6, plate_384.rows()[row_start][col_start+col_ctr])
                 m20.blow_out(plate_384.rows()[row_start][col_start+col_ctr].top())  # noqa: E501

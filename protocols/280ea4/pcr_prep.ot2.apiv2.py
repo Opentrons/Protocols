@@ -154,7 +154,7 @@ resuming.')
 
     def p300_transfer(vol, source, dest):
         if vol < 20:
-            p300.air_gap(20-vol)
+            p300.aspirate(20-vol, source.top())
             p300.aspirate(vol, source)
             p300.dispense(vol, dest)
             p300.dispense(p300.current_volume, dest.top())
@@ -162,7 +162,7 @@ resuming.')
             num_trans = math.ceil(vol/160)
             vol_per_trans = vol/num_trans
             for _ in range(num_trans):
-                p300.air_gap(20)
+                p300.aspirate(20, source.top())
                 p300.aspirate(vol_per_trans, source)
                 ctx.delay(seconds=2)
                 p300.touch_tip(source)

@@ -41,7 +41,7 @@ Explanation of complex parameters below:
 ---
 
 ### Protocol Steps
-1. Preparation of negative control: Transfer 50 μl of sterile Control Buffer (1.5 ml tube) to the first PCR tube in an 8-well strip containing lyophilized PCR mix. Resuspend.
+1. Preparation of negative control: Transfer 50 μl of sterile Control Buffer (1.5 ml tube) to the first PCR tube in an 8-well strip containing lyophilized PCR mix, resuspend.
 2. Preparation of unknown samples: Transfer 50 μl of the unknown sample in SAVD buffer (5 ml tube) to 250 μl sterile Normalization buffer (1.5 ml tube). Resuspend.
 3. Transfer 50 μl of the normalized unknown sample to the next PCR tube in the 8-well strip containing lyophilized PCR mix. Resuspend. Repeat for each unknown sample.
 4. Preparation of positive control: Transfer 50 μl of sterile Normalization Buffer (1.5 ml tube) to the Positive Control Tube (lyophilized in PCR tube). Resuspend.

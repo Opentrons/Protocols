@@ -12,12 +12,12 @@ metadata = {
 
 def run(ctx):
 
-    [dead_vol, labware_plate, labware_reservoir, clearance_plate,
-     clearance_reservoir, clearance_aspirate, clearance_dispense,
-     mix_reps, uploaded_csv] = get_values(  # noqa: F821
-        "dead_vol", "labware_plate", "labware_reservoir", "clearance_plate",
-        "clearance_reservoir", "clearance_aspirate", "clearance_dispense",
-        "mix_reps", "uploaded_csv")
+    [mix_asp_rate, mix_disp_rate, dead_vol, labware_plate, labware_reservoir,
+     clearance_plate, clearance_reservoir, clearance_aspirate,
+     clearance_dispense, mix_reps, uploaded_csv] = get_values(  # noqa: F821
+        "mix_asp_rate", "mix_disp_rate", "dead_vol", "labware_plate",
+        "labware_reservoir", "clearance_plate", "clearance_reservoir",
+        "clearance_aspirate", "clearance_dispense", "mix_reps", "uploaded_csv")
 
     ctx.set_rail_lights(True)
     ctx.delay(seconds=10)
@@ -39,6 +39,14 @@ def run(ctx):
     if not 1 <= len(plates_parent) <= 3:
         raise Exception(
          'Invalid number of parent plates specified in csv (must be 1-3).')
+
+    if not 0.3 <= mix_asp_rate <= 3:
+        raise Exception(
+         'Invalid value for mix aspiration rate (must be 0.3-3).')
+
+    if not 0.3 <= mix_disp_rate <= 3:
+        raise Exception(
+         'Invalid value for mix dispense rate (must be 0.3-3).')
 
     # tips
     tips20 = [ctx.load_labware(
@@ -203,5 +211,9 @@ def run(ctx):
             pip.aspirate(vol, source.bottom(clearance_aspirate))
             pip.dispense(vol, dest.bottom(clearance_dispense))
         if mix_reps:
-            pip.mix(mix_reps, 20, dest.bottom(clearance_dispense))
+            for rep in range(mix_reps):
+                pip.aspirate(
+                 20, dest.bottom(clearance_dispense), rate=mix_asp_rate)
+                pip.dispense(
+                 20, dest.bottom(clearance_dispense), rate=mix_disp_rate)
         pip.drop_tip()

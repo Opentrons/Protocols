@@ -1,6 +1,31 @@
 [
   {
     "type": "dropDown",
+    "label": "Well Location for 1st Cell Suspension",
+    "name": "starting_position",
+    "options": [
+      { "label": "A1", "value": 0 },
+      { "label": "A2", "value": 1 },
+      { "label": "A3", "value": 2 },
+      { "label": "A4", "value": 3 },
+      { "label": "A5", "value": 4 },
+      { "label": "A6", "value": 5 },
+      { "label": "A7", "value": 6 },
+      { "label": "A8", "value": 7 },
+      { "label": "A9", "value": 8 },
+      { "label": "A10", "value": 9 },
+      { "label": "A11", "value": 10 },
+      { "label": "A12", "value": 11 }
+    ]
+  },
+  {
+    "type": "int",
+    "label": "Number of Tests (1-12)",
+    "name": "num_tests",
+    "default": 2
+  },
+  {
+    "type": "dropDown",
     "label": "Optionally Adjust Final Volume? (yes or no)",
     "name": "adjust_final_vol",
     "options": [
@@ -54,25 +79,10 @@
     ]
   },
   {
-    "type": "dropDown",
-    "label": "Labware for p20 Tips",
-    "name": "labware_tips",
-    "options": [
-      { "label": "Opentrons 20 uL Tips", "value": "opentrons_96_tiprack_20ul" },
-      { "label": "Opentrons 20 uL Filter Tips", "value": "opentrons_96_filtertiprack_20ul" }
-    ]
-  },
-  {
     "type": "int",
     "label": "Deck Slot Location for Culture Plate  (1-11)",
     "name": "slot_cultureplate",
     "default": 1
-  },
-  {
-    "type": "int",
-    "label": "Deck Slot Location for 20 uL Tip Box  (1-11)",
-    "name": "slot_tipbox",
-    "default": 2
   },
   {
     "type": "int",
