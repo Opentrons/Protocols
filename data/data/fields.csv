@@ -546,6 +546,7 @@ load_csv,1
 loc_csv,1
 loc_rnase,1
 loc_tween,1
+lw_hplc,1
 lwaste,1
 lysis,1
 lysis_vol,1
@@ -694,6 +695,7 @@ num_col,8
 num_cols,2
 num_columns,1
 num_daughter_plates,1
+num_extracts,1
 num_gene,1
 num_mag_beads_tubes,1
 num_mastermix,1
