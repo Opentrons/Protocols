@@ -1,0 +1,17 @@
+[
+  {
+    "type": "int",
+    "label": "number of extracts",
+    "name": "num_extracts",
+    "default": 48
+  },
+  {
+    "type": "dropDown",
+    "label": "HPLC rack type",
+    "name": "lw_hplc",
+    "options": [
+      {"label": "black", "value": "bd_54_tuberack_5ml_black"},
+      {"label": "blue", "value": "bd_48_tuberack_5ml_blue"}
+    ]
+  }
+]
