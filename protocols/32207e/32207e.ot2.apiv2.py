@@ -68,8 +68,8 @@ def run(ctx):
         p300.drop_tip()
 
     ctx.comment('\n\n TRANSFERRING DNA TO PLATE\n')
-    for source_well, dest_well, row in zip(final_plate.wells()[:num_samp],
-                                           dna_plate.wells(),
+    for source_well, dest_well, row in zip(dna_plate.wells(),
+                                           final_plate.wells()[:num_samp],
                                            csv_rows):
         dna_vol = float(row[2])
         te_vol = float(row[4])
