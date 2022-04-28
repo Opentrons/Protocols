@@ -42,9 +42,6 @@ def run(protocol: protocol_api.ProtocolContext):
     STEP_LIGDECK = int(STEP_LIGDECK)
     STEP_PCRDECK = int(STEP_PCRDECK)
 
-
-    global TIPREUSE
-
     if DRYRUN == 'YES':
         protocol.comment("THIS IS A DRY RUN")
     else:
