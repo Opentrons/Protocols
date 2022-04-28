@@ -1,27 +1,36 @@
-# IDT xGEN EZ
+# IDT xGEN MC
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
 ## Categories
 * NGS Library Prep
-	* IDT xGEN EZ
+	* IDT xGEN MC
 
 ## Description
-This protocol performs the [IDT xGEN EZ kit](https://sfvideo.blob.core.windows.net/sitefinity/docs/default-source/protocol/xgen-dna-library-prep-ez-kit-and-xgen-dna-library-prep-ez-uni-kits-protocol.pdf?sfvrsn=57b1e007_8). This protocol uses the stubby adapter (Reagent W5) that is included in the xGEN EZ kit during ligation and the barcoding of samples is performed during PCR by using either xGEN UDIs or CDIs.  The alternate protocol version is IDT xGEN EZ UNI that does the barcoding of samples at ligation instead.  The Protocol steps and reagents are different between the two versions.  See IDT’s xGEN DNA Library Prep EZ Kit protocol for more information about sample barcode kit requirements.
+This protocol performs the [IDT xGEN MC kit](https://sfvideo.blob.core.windows.net/sitefinity/docs/default-source/protocol/xgen-dna-library-prep-ez-kit-and-xgen-dna-library-prep-ez-uni-kits-protocol.pdf?sfvrsn=57b1e007_8). This protocol uses the stubby adapter (Reagent L3) that is included in the xGEN MC kit during ligation and the barcoding
+of samples is performed during PCR by using either xGEN UDIs or CDIs. The alternate protocol version is IDT xGEN MC
+UNI that does the barcoding of samples at ligation instead. The Protocol steps and reagents are different between the
+two versions. See IDT’s xGEN DNA Library Prep MC Kit protocol for more information about sample barcode kit
+requirements.
+
+The script requires manually transferring the sample plate between the Thermocycler and Magnet 3 times. It starts on the
+Thermocycler and needs to be moved to the Magnet for the post-ligation cleanup, and then moved to the Thermocycler
+for PCR and then back to the Magnet for the post-PCR cleanup.
+NOTE: In the script the two positions are handled as magnetic sample plate and thermocycler sample plate; during calibration,
+use an empty plate of the same labware as the sample plate on the magnet position to calibrate that position.
 
 Explanation of complex parameters below:
 * `Number of Samples`: Samples are prepared as pictured below; with 100ng of input DNA in 50ul of Low EDTA. See IDT’s xGEN DNA Library Prep EZ Kit protocol for more information about sample input requirements.
 ![samples1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-idt-xgen-ez/Screen+Shot+2022-04-07+at+11.19.24+AM.png)
 ![samples2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-idt-xgen-ez/Screen+Shot+2022-04-07+at+11.19.16+AM.png)
-* `Fragmentation Time (minutes)`: Minutes, Duration of the Fragmentation Step
 * `PCR Cycles`: Specify number of PCR cycles if performing PCR on deck.
 * `Dry Run`: Yes will return tips, skip incubation times, shorten mix, for testing purposes.
 * `Use Modules?`: Yes will not require modules on the deck and will skip module steps, for testing purposes, if `Dry Run` is set to `Yes`, then this variable will automatically set itself to `No`.
 * `Reuse Tips?`: No, NYI format for reusing tips
 * `Use protocol specific z-offsets?`: Sets whether to use protocol specific z offsets for each tip and labware or no offsets aside from defaults
-* `Include Fragmentation / End-Repair / A-Tailing Step?`: Specify whether to include this step below. This and all steps below allow you to customize where to start the protocol, run the protocol in parts over multiple days, choose whether to use Opentrons modules or off deck modules, etc.
-* `If yes, Fragmentation / End-Repair / A-Tailing on deck or off deck?`: Use this step on or off the deck.
+* `Include End-Repair / A-Tailing Step?`: Specify whether to include this step below. This and all steps below allow you to customize where to start the protocol, run the protocol in parts over multiple days, choose whether to use Opentrons modules or off deck modules, etc.
+* `If yes, End-Repair / A-Tailing on deck or off deck?`: Use this step on or off the deck.
 * `Include Ligation Step?`: Specify whether to include this step in this run.
 * `If yes, ligation Step on or off deck?`: Use this step on or off the deck.
 * `Include Post Ligation Step?`: Specify whether to include this step in this run.
@@ -46,6 +55,7 @@ Explanation of complex parameters below:
 * [Opentrons Aluminum Block Set](https://shop.opentrons.com/aluminum-block-set/)
 * [Opentrons 20µL Filter Tips](https://shop.opentrons.com/opentrons-20ul-filter-tips/)
 * [Opentrons 200µL Filter Tips](https://shop.opentrons.com/opentrons-200ul-filter-tips/)
+* ![tips](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-xgen-mc/Screen+Shot+2022-04-28+at+11.27.31+AM.png)
 
 ### Pipettes
 * [P20 Multi-Channel Pipette](https://shop.opentrons.com/8-channel-electronic-pipette/)
@@ -59,8 +69,9 @@ Explanation of complex parameters below:
 
 ### Reagent Setup
 * Prepare the reagents in the Reagent Plate according to the table below.  If available, prepare extra volume to  account for overage.  
-![reagent plate](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-idt-xgen-ez/Screen+Shot+2022-04-07+at+11.20.05+AM.png)
-![reagent volumes](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-idt-xgen-ez/Screen+Shot+2022-04-07+at+11.20.18+AM.png)
+
+![reagent plate](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-xgen-mc/Screen+Shot+2022-04-28+at+11.17.44+AM.png)
+![reagent volumes](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-xgen-mc/Screen+Shot+2022-04-28+at+11.19.55+AM.png)
 * This protocol is designed to be used with xGen UDI Barcode Primers.  Add 5ul of the appropriate Barcode adapter to column 7, 8, and 9 according to the experiment design.  See IDT xGEN EZ instructions for further details.  
 ![barcode table](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-idt-xgen-ez/Screen+Shot+2022-04-07+at+11.20.39+AM.png)
 * Fill the reservoir wells with the indicated volumes below.
@@ -84,4 +95,4 @@ Explanation of complex parameters below:
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-sci-idt-xgen-ez
+sci-idt-xgen-mc
