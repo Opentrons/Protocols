@@ -51,14 +51,15 @@ def run(ctx):
 
     # transferring TE
     ctx.comment('\n\n TRANSFERRING TE TO PLATE\n')
-    for well, row in zip(final_plate.wells()[:num_samp], csv_rows):
+    for row in csv_rows:
+        well = row[0]
         te_vol = float(row[4])
         pip = p20 if te_vol < 20 else p300
         if not pip.has_tip:
             pip.pick_up_tip()
         if te_vol > 0:
             pip.aspirate(te_vol, te)
-            pip.dispense(te_vol, well)
+            pip.dispense(te_vol, final_plate.wells_by_name()[well])
         else:
             continue
     if p20.has_tip:
@@ -68,21 +69,22 @@ def run(ctx):
         p300.drop_tip()
 
     ctx.comment('\n\n TRANSFERRING DNA TO PLATE\n')
-    for source_well, dest_well, row in zip(final_plate.wells()[:num_samp],
-                                           dna_plate.wells(),
-                                           csv_rows):
+    for row in csv_rows:
         dna_vol = float(row[2])
+        well = row[0]
         te_vol = float(row[4])
         total_vol = te_vol + dna_vol
         pip = p20 if dna_vol < 20 else p300
         pip.pick_up_tip()
-        pip.aspirate(dna_vol, source_well.bottom(z=3), rate=dna_asp_rate)
-        pip.dispense(dna_vol, dest_well)
+        pip.aspirate(dna_vol, dna_plate.wells_by_name()[well].bottom(z=3), rate=dna_asp_rate)  # noqa: E501
+        pip.dispense(dna_vol, final_plate.wells_by_name()[well])
         if total_vol*0.8 > 20:
             if not p300.has_tip:
                 p300.pick_up_tip()
-                p300.mix(3, total_vol*0.8, dest_well)
+                p300.mix(3, total_vol*0.8, final_plate.wells_by_name()[well])
                 p300.drop_tip()
+            else:
+                p300.mix(3, total_vol*0.8, final_plate.wells_by_name()[well])
         else:
-            pip.mix(3, total_vol*0.8, dest_well)
+            pip.mix(3, total_vol*0.8, final_plate.wells_by_name()[well])
         pip.drop_tip()
