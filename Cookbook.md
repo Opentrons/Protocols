@@ -6,7 +6,8 @@ We are sharing the code that the Opentrons team has developed to run these proce
 
 Table of Contents:
 * [Basic Skeleton Protocol](#basic-skeleton-protocol)
-* [Liquid Level Tracking](#liquid-level-tracking)
+* [Liquid Level Tracking - Simple](#liquid-level-tracking---simple)
+* [Liquid Level Tracking - Complex](#liquid-level-tracking---complex)
 * [Refill Tips Mid-Protocol](#refill-tips-mid-protocol)
 * [Wash Steps](#wash-steps)
 * [Remove Supernatant](#remove-supernatant)
@@ -55,7 +56,7 @@ def run(protocol: protocol_api.ProtocolContext):
 ```
 
 
-## Liquid Level Tracking
+## Liquid Level Tracking - Simple
 
 ```
 import math
@@ -87,6 +88,78 @@ def run(protocol):
 
     h = h_track(200, tuberack.wells()[0])
     p300.transfer(200, tuberack.wells()[0].bottom(h), plate.wells()[0])
+```
+
+## Liquid Level Tracking - Complex
+
+This liquid level tracking employs extension of the Opentrons `Well` class to add custom attributes for current liquid height, current liquid volume, minimum allowable height for aspiration, and a compensation coefficient. The compensation coefficient denotes a multiple that tells the how much "extra" to calculate incrementing or decrementing the liquid level height calculation based on a volume dispensed or aspirated, to account for real-world liquid behavior. This coefficient will likely be higher for viscous liquids, and lower (close to 1.0) for non-viscous liquids.
+
+```
+from opentrons.protocol_api.labware import Well
+import math
+
+metadata = {
+    'title': 'inheritance',
+    'author': 'Nick Diehl',
+    'apiLevel': '2.10'
+}
+
+
+def run(ctx):
+
+    class WellH(Well):
+        def __init__(self, well, height=0, min_height=5, comp_coeff=1.15,
+                     current_volume=0):
+            super().__init__(well._impl)
+            self.well = well
+            self.height = height
+            self.min_height = min_height
+            self.comp_coeff = comp_coeff
+            self.radius = self.diameter/2
+            self.current_volume = current_volume
+
+        def height_dec(self, vol):
+            dh = (vol/(math.pi*(self.radius**2)))*self.comp_coeff
+            if self.height - dh > self.min_height:
+                self.height = self.height - dh
+            else:
+                self.height = self.min_height
+            if self.current_volume - vol > 0:
+                self.current_volume = self.current_volume - vol
+            else:
+                self.current_volume = 0
+            return(self.well.bottom(self.height))
+
+        def height_inc(self, vol):
+            dh = (vol/(math.pi*(self.radius**2)))*self.comp_coeff
+            if self.height + dh < self.depth:
+                self.height = self.height + dh
+            else:
+                self.height = self.depth
+            self.current_volume += vol
+            return(self.well.bottom(self.height + 20))
+
+    wellrack = ctx.load_labware(
+        'opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical', '1')
+    tiprack = ctx.load_labware('opentrons_96_tiprack_300ul', '2')
+    p300 = ctx.load_instrument('p300_single_gen2', 'right',
+                               tip_racks=[tiprack])
+
+    source = WellH(wellrack.wells()[0], height=50, current_volume=7000)
+    dest = WellH(wellrack.wells()[-1], comp_coeff=1.2)
+
+    def transfer(vol, s: WellH, d: WellH, new_tip='never', pip=p300):
+        if new_tip == 'never' and not pip.has_tip:
+            pip.pick_up_tip()
+        pip.transfer(vol, s.height_dec(vol), d.height_inc(vol),
+                     new_tip=new_tip)
+        ctx.comment(f'Source height: {round(s.height, 2)}mm')
+        ctx.comment(f'Destination height: {round(d.height, 2)}mm')
+
+    p300.pick_up_tip()
+    for _ in range(20):
+        transfer(250, source, dest)
+    p300.drop_tip()
 ```
 
 ## Refill Tips Mid-Protocol
