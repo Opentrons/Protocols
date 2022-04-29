@@ -69,7 +69,9 @@ def run(ctx):
         p300.drop_tip()
 
     ctx.comment('\n\n TRANSFERRING DNA TO PLATE\n')
+
     for row in csv_rows:
+
         dna_vol = float(row[2])
         well = row[0]
         te_vol = float(row[4])
