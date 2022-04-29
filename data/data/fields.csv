@@ -643,8 +643,8 @@ mntsingle,2
 mother_plate_type,1
 mount,2
 mount_m300,1
-mount_p20,2
-mount_p300,1
+mount_p20,3
+mount_p300,2
 mount_side,1
 move_side,2
 move_vol,1
@@ -1304,6 +1304,7 @@ vol_peptide3,1
 vol_pma_ca,1
 vol_reagent,1
 vol_sample,2
+vol_sirna,1
 vol_source_bb_per_well,1
 vol_source_bead_mix_per_well,1
 vol_start_rnase,1
