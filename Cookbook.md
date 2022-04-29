@@ -6,7 +6,7 @@ We are sharing the code that the Opentrons team has developed to run these proce
 
 Table of Contents:
 * [Basic Skeleton Protocol](#basic-skeleton-protocol)
-* [Liquid Level Tracking - Simple](#liquid-level-tracking)
+* [Liquid Level Tracking - Simple](#liquid-level-tracking---simple)
 * [Liquid Level Tracking - Complex](#liquid-level-tracking---complex)
 * [Refill Tips Mid-Protocol](#refill-tips-mid-protocol)
 * [Wash Steps](#wash-steps)
