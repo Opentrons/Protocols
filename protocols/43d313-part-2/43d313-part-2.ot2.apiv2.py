@@ -114,7 +114,7 @@ def run(ctx):
      "Sample Plate at 4 Degrees")
     temp.set_temperature(4)
 
-    # magnetic module with deep well plate
+    # magnetic module with 200 uL twin tec and adapter
     mag = ctx.load_module('magnetic module gen2', '1')
     mag.disengage()
     mag_plate = mag.load_labware(
@@ -133,13 +133,17 @@ def run(ctx):
 
     for index, column in enumerate(sampleplate200.columns()[:num_cols]):
         p300m.pick_up_tip()
+        p300m.mix(10, 65, column[0])
+        p300m.aspirate(40.4, column[0])
         # blockplate clearance 3 mm due to coded labware def (block+tubestrip)
-        p300m.transfer(
-         40.4, column[0], blockplate.columns()[index][0].bottom(3),
-         mix_before=(10, 65), new_tip='never')
+        d = blockplate.columns()[index][0]
+        p300m.dispense(40.4, d.bottom(3))
+        # blockplate 2mm below top use -0.5 mm due to coded labware
+        p300m.move_to(
+         d.top(-0.5).move(types.Point(x=d.diameter / 2, y=0, z=0)))
         ctx.delay(seconds=0.5)
         p300m.blow_out()
-        p300m.touch_tip(radius=0.75, v_offset=-2, speed=10)
+        p300m.move_to(d.top())
         p300m.air_gap(20)
         p300m.drop_tip()
 
@@ -153,17 +157,42 @@ def run(ctx):
     reps = math.ceil(120 / tips300.wells()[0].max_volume)
 
     # add beads to plate 1
-    for column in sampleplate200.columns()[:num_cols]:
-        if source.liq_vol <= 1920:
-            source = next(beadwell)
+    for index, column in enumerate(sampleplate200.columns()[:num_cols]):
+
+        # repeat when volume exceeds tip capacity
         for rep in range(reps):
+
             pick_up_or_refill(p300m, 300)
+
+            # switch wells and premix if volume depleted
+            if source.liq_vol <= 1920:
+                source = next(beadwell)
+                ht_premix = liq_height(source) + 3
+                for mix in range(5):
+                    p300m.aspirate(
+                     200, source.bottom(clearance_reservoir), rate=0.5)
+                    p300m.dispense(200, source.bottom(ht_premix), rate=0.5)
+
+            # premix beads before 1st aspiration
+            if index == 0:
+                ht_premix = liq_height(source) + 3
+                for mix in range(5):
+                    p300m.aspirate(
+                     200, source.bottom(clearance_reservoir), rate=0.5)
+                    p300m.dispense(200, source.bottom(ht_premix), rate=0.5)
+
             p300m.aspirate(
              120 / reps, source.bottom(clearance_reservoir), rate=0.5)
             ctx.delay(seconds=1)
             source.liq_vol -= (960 / reps)
             p300m.dispense(120 / reps, column[0])
-            p300m.mix(10, 128)
+            p300m.mix(10, 128, column[0].bottom(2))
+            p300m.move_to(
+             column[0].top(-2).move(types.Point(
+              x=column[0].diameter / 2, y=0, z=0)))
+            ctx.delay(seconds=0.5)
+            p300m.blow_out()
+            p300m.move_to(column[0].top())
             p300m.drop_tip()
 
     ctx.delay(minutes=15)
@@ -176,17 +205,42 @@ def run(ctx):
               msg='Move plate2 from slot 2 to the temperature module')
 
     # add beads to plate 2
-    for column in sampleplate200.columns()[:num_cols]:
-        if source.liq_vol <= 1920:
-            source = next(beadwell)
+    for index, column in enumerate(sampleplate200.columns()[:num_cols]):
+
+        # repeat when volume exceeds tip capacity
         for rep in range(reps):
+
             pick_up_or_refill(p300m, 300)
+
+            # switch wells and premix if volume depleted
+            if source.liq_vol <= 1920:
+                source = next(beadwell)
+                ht_premix = liq_height(source) + 3
+                for mix in range(5):
+                    p300m.aspirate(
+                     200, source.bottom(clearance_reservoir), rate=0.5)
+                    p300m.dispense(200, source.bottom(ht_premix), rate=0.5)
+
+            # premix beads before 1st aspiration
+            if index == 0:
+                ht_premix = liq_height(source) + 3
+                for mix in range(5):
+                    p300m.aspirate(
+                     200, source.bottom(clearance_reservoir), rate=0.5)
+                    p300m.dispense(200, source.bottom(ht_premix), rate=0.5)
+
             p300m.aspirate(
              120 / reps, source.bottom(clearance_reservoir), rate=0.5)
             ctx.delay(seconds=1)
             source.liq_vol -= (960 / reps)
             p300m.dispense(120 / reps, column[0])
-            p300m.mix(10, 128)
+            p300m.mix(10, 128, column[0].bottom(2))
+            p300m.move_to(
+             column[0].top(-2).move(types.Point(
+              x=column[0].diameter / 2, y=0, z=0)))
+            ctx.delay(seconds=0.5)
+            p300m.blow_out()
+            p300m.move_to(column[0].top())
             p300m.drop_tip()
 
     ctx.delay(minutes=15)  # this delay can probably be reduced or removed
