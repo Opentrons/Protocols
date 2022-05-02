@@ -412,6 +412,9 @@ height_above_cartridge,1
 height_after_disp,1
 height_dispense,2
 height_engage,14
+height_final,1
+height_intermediate,1
+height_source,1
 htp_csv,1
 i5_volume,1
 i5_well,1
@@ -613,6 +616,7 @@ mix_vol,5
 mix_volume,1
 mixln,1
 mixp300,1
+mixreps_dilution,1
 mm,3
 mm1_col,1
 mm2_col,1
