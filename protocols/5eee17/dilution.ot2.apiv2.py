@@ -10,8 +10,8 @@ metadata = {
 
 def run(ctx):
 
-    num_extracts, lw_hplc = get_values(  # noqa: F821
-        'num_extracts', 'lw_hplc')
+    num_extracts, lw_hplc, mixreps_dilution = get_values(  # noqa: F821
+        'num_extracts', 'lw_hplc', 'mixreps_dilution')
 
     tuberacks_50 = [
         ctx.load_labware('bd_24_tuberack_50ml_green', slot)
@@ -72,7 +72,7 @@ def run(ctx):
                                            final_sets[set_ind]):
                 pip.dispense(100, i_tube.top())
                 pip.dispense(pip.current_volume, i_tube.bottom(5))
-                mix(pip, 5, 1000, i_tube)
+                mix(pip, mixreps_dilution, 1000, i_tube)
                 pip.transfer(800, i_tube.bottom(5), f_tube.bottom(5),
                              new_tip='never')
             [pip.drop_tip() for pip in [p1000l, p1000r] if pip.has_tip]

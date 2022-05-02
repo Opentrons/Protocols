@@ -13,5 +13,11 @@
       {"label": "black", "value": "bd_54_tuberack_5ml_black"},
       {"label": "blue", "value": "bd_48_tuberack_5ml_blue"}
     ]
+  },
+  {
+    "type": "int",
+    "label": "mix repetitions of dilution",
+    "name": "mixreps_dilution",
+    "default": 5
   }
 ]
