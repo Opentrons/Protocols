@@ -13,12 +13,14 @@ metadata = {
 def run(ctx):
 
     # get parameter values from json above
-    [clearance_bead_resuspension, offset_x_resuspension, count_samples,
+    [incubate_samples_with_beads, temp_mod_setting, manual_bead_resuspension,
+     clearance_bead_resuspension, offset_x_resuspension, count_samples,
      clearance_reservoir, height_engage, time_engage, offset_x,
      time_dry] = get_values(  # noqa: F821
-      'clearance_bead_resuspension', 'offset_x_resuspension', 'count_samples',
-      'clearance_reservoir', 'height_engage', 'time_engage', 'offset_x',
-      'time_dry')
+      'incubate_samples_with_beads', 'temp_mod_setting',
+      'manual_bead_resuspension', 'clearance_bead_resuspension',
+      'offset_x_resuspension', 'count_samples', 'clearance_reservoir',
+      'height_engage', 'time_engage', 'offset_x', 'time_dry')
 
     ctx.set_rail_lights(True)
 
@@ -149,15 +151,16 @@ def run(ctx):
     # plate at 4 degrees on the temperature module
     temp = ctx.load_module('temperature module gen2', '3')
     plate4deg = temp.load_labware(
-     'eppendorftwin.tec96_96_aluminumblock_200ul',
+     'eppendorf_twintec_on_opentrons_metal_block_033822',
      "Plate at 4 Degrees C")
-    temp.set_temperature(4)
+    if temp_mod_setting:
+        temp.set_temperature(temp_mod_setting)
 
     # magnetic module with sample plate
     mag = ctx.load_module('magnetic module gen2', '1')
     mag.disengage()
     mag_plate = mag.load_labware(
-     'eppendorf_96_wellplate_200ul', 'Mag Plate')
+     'eppendorf_twintex_clickbio_adapter', 'Mag Plate')
 
     ctx.comment("STEP - Tris")
 
@@ -170,16 +173,44 @@ def run(ctx):
 
     ctx.comment("STEP - KAPA Pure Beads")
 
-    for column in mag_plate.columns()[:num_cols]:
+    for index, column in enumerate(mag_plate.columns()[:num_cols]):
+
         pick_up_or_refill(p300m)
+
+        beads.liq_vol -= 520
+        ht = liq_height(beads) - 3 if liq_height(beads) - 3 > 1 else 1
+
+        if index == 0:
+            ht_premix = liq_height(beads) + 3
+            for rep in range(5):
+                p300m.aspirate(
+                 200, beads.bottom(clearance_reservoir), rate=0.5)
+                p300m.dispense(200, beads.bottom(ht_premix), rate=0.5)
+
         p300m.aspirate(
-         65, beads.bottom(clearance_reservoir), rate=0.5)
+         65, beads.bottom(ht), rate=0.5)
         ctx.delay(seconds=1)
-        p300m.dispense(65, column[0])
-        p300m.mix(10, 140)
+        slow_tip_withdrawal(p300m, beads)
+        p300m.move_to(
+         beads.top(-2).move(types.Point(x=beads.length / 2, y=0, z=0)))
+        p300m.move_to(beads.top())
+
+        p300m.dispense(65, column[0].bottom(4))
+
+        for rep in range(10):
+            p300m.aspirate(140, column[0].bottom(2))
+            p300m.dispense(140, column[0].bottom(4))
+
+        p300m.move_to(
+         column[0].top(-2).move(types.Point(
+          x=column[0].diameter / 2, y=0, z=0)))
+        p300m.blow_out()
+        p300m.move_to(column[0].top())
+
         p300m.drop_tip()
 
-    ctx.delay(minutes=10)
+    if incubate_samples_with_beads:
+        ctx.delay(minutes=10)
 
     mag.engage(height=height_engage)
     ctx.delay(minutes=time_engage)
@@ -199,7 +230,7 @@ def run(ctx):
         p300m.air_gap(20)
         p300m.aspirate(
          50, column[0].bottom(1).move(types.Point(
-          x={True: 1}.get(not index % 2, -1)*offset_x, y=0, z=0)), rate=0.33)
+          x={True: -1}.get(not index % 2, 1)*offset_x, y=0, z=0)), rate=0.33)
         p300m.dispense(70, waste.top(), rate=2)
         ctx.delay(seconds=1)
         p300m.blow_out()
@@ -226,10 +257,10 @@ def run(ctx):
         # remove sup
         for index, column in enumerate(mag_plate.columns()[:num_cols]):
             pick_up_or_refill(p300m, 300)
-            loc = column[0].bottom(1).move(types.Point(x={True: 1}.get(
-              not index % 2, -1)*offset_x, y=0, z=0))
-            p300m.aspirate(180, column[0].bottom(4), rate=0.33)
-            p300m.aspirate(50, loc, rate=0.33)
+            loc = column[0].bottom(1).move(types.Point(x={True: -1}.get(
+              not index % 2, 1)*offset_x, y=0, z=0))
+            p300m.aspirate(180, column[0].bottom(4), rate=0.2)
+            p300m.aspirate(50, loc, rate=0.2)
             p300m.air_gap(20)
             p300m.dispense(250, waste.top())
             ctx.delay(seconds=0.5)
@@ -247,30 +278,48 @@ def run(ctx):
     # resuspend bead pellet in Tris
     for index, column in enumerate(mag_plate.columns()[:num_cols]):
         p20m.pick_up_tip()
-        p20m.aspirate(17, tris.bottom(clearance_reservoir))
+        p20m.aspirate(16, tris.bottom(clearance_reservoir))
         loc = column[0].bottom(clearance_bead_resuspension).move(types.Point(
-          x={True: -1}.get(not index % 2, 1)*offset_x_resuspension, y=0, z=0))
+          x={True: 1}.get(not index % 2, -1)*offset_x_resuspension, y=0, z=0))
         p20m.dispense(16, loc, rate=3)
-        for rep in range(10):
-            p20m.aspirate(17, column[0].bottom(1))
-            p20m.dispense(17, loc, rate=3)
+        if not manual_bead_resuspension:
+            for rep in range(10):
+                p20m.aspirate(16, column[0].bottom(1))
+                rt = 3 if rep < 9 else 0.5
+                p20m.dispense(16, loc, rate=rt)
+                if rep == 9:
+                    ctx.pause(seconds=1)
+                    slow_tip_withdrawal(p20m, column[0])
+                    p20m.move_to(
+                     column[0].top(-2).move(types.Point(
+                      x=column[0].diameter / 2, y=0, z=0)))
+                    p20m.blow_out()
+                    p20m.move_to(column[0].top())
         p20m.drop_tip()
 
-    ctx.delay(minutes=2)
+    if manual_bead_resuspension:
+        ctx.pause("""Cover, vortex, spin, incubate,
+        uncover and return the plate. Resume""")
+    else:
+        ctx.delay(minutes=2)
 
     mag.engage(height=height_engage)
     ctx.delay(minutes=time_engage)
 
     ctx.pause(
      '''Place a fresh 200 uL PCR plate on the temperature module.
-     Place index plate on the reagents block. Remove foil. Resume.''')
+     Place index plate on the reagents block. Resume.''')
 
     ctx.comment("STEP - Sequencing Indexes")
 
-    # combine 10 uL index pair and eluted sample
+    # pierce foil, combine 10 uL index pair and eluted sample
     for index, column in enumerate(plate4deg.columns()[:num_cols]):
         pick_up_or_refill(p20m)
         source = indexes[index][0]
+        p20m.move_to(source.top(2))
+        p20m.move_to(source.top(-1))
+        p20m.drop_tip()
+        pick_up_or_refill(p20m)
         p20m.move_to(source.top(2))
         p20m.transfer(10, source.bottom(7.2), column[0], new_tip='never')
         p20m.drop_tip()
@@ -279,7 +328,7 @@ def run(ctx):
         pick_up_or_refill(p20m)
         p20m.transfer(
          15, column[0].bottom().move(types.Point(
-          x={True: 1}.get(not index % 2, -1)*offset_x, y=0, z=0)),
+          x={True: -1}.get(not index % 2, 1)*offset_x, y=0, z=0)),
          plate4deg.columns()[index][0],
          mix_after=(2, 15), new_tip='never')
         p20m.drop_tip()
