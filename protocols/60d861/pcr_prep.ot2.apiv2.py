@@ -16,7 +16,7 @@ def run(ctx):
     tipracks300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot)
         for slot in ['1', '2', '3', '4', '6']]
-    plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
+    plate = ctx.load_labware('thermofishermicroamp_96_wellplate_200ul',
                              '5', 'catcher plate')
     wash_buff = ctx.load_labware('nest_1_reservoir_195ml', '7',
                                  'wash').wells()[0]
