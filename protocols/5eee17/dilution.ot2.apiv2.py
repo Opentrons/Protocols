@@ -16,7 +16,7 @@ def run(ctx):
         'height_intermediate', 'height_final')
 
     tuberacks_50 = [
-        ctx.load_labware('bd_24_tuberack_50ml_green', slot)
+        ctx.load_labware('bd_24_tuberack_50ml_green', slot, '50ml tubes')
         for slot in ['1', '2']]
     tuberack_15 = ctx.load_labware('bd_72_tuberack_15ml_orange', '3')
     tuberack_hplc = ctx.load_labware(lw_hplc, '11', 'HPLC tuberack')
