@@ -53,7 +53,7 @@ def run(ctx):
             if i < num_sets - 1 else intermediates[i*2:]
             for i in range(num_sets)]
         finals = [
-            well for row in tuberack_hplc.rows()[::-1]
+            well for row in tuberack_hplc.rows()
             for well in row][:num_extracts_refill]
         final_sets = [
             finals[i*2:(i+1)*2] if i < num_sets - 1 else finals[i*2:]
