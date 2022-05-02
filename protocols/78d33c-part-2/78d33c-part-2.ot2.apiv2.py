@@ -91,7 +91,7 @@ def run(ctx):
     # sample plate at 4 degrees
     temp = ctx.load_module('temperature module gen2', '3')
     sampleplate = temp.load_labware(
-     'eppendorftwin.tec96_96_aluminumblock_200ul',
+     'eppendorf_twintec_on_opentrons_metal_block_033822',
      "Sample Plate at 4 Degrees")
     temp.set_temperature(4)
 
@@ -141,7 +141,8 @@ def run(ctx):
         p300m.pick_up_tip()
         if source.liq_vol <= 39:
             source = next(enztube)
-        ht = liq_height(source) - 3 if liq_height(source) - 3 > 1 else 1
+        ht = liq_height(source) + 1 if liq_height(source) + 1 > 1 else 1
+        source.liq_vol -= 26
         p300m.aspirate(26, source.bottom(ht), rate=0.33)
         ctx.delay(seconds=1)
         slow_tip_withdrawal(p300m, source)
