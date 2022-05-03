@@ -1,6 +1,11 @@
 from opentrons import protocol_api
 
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"_num_samp":46,"_use_temp_mod":true,"_p300_mount":"right"}""")
+    return [_all_values[n] for n in names]
+
 metadata = {
     'protocolName': 'RNA Normalization I & II',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
@@ -68,7 +73,7 @@ def run(ctx: protocol_api.ProtocolContext):
                      for tube in row][2:]
     negative_ctrl = plate.wells()[0]
     neg_ctrl_tube = reagent_tuberacks[0].wells()[0]
-    positive_ctrl_1 = plate.wells()[95]
+    positive_ctrl_1 = plate.rows()[0][11]
     pos_ctrl_tube = reagent_tuberacks[0].rows()[0][1]
     positive_ctrl_final = plate.wells()[1]
     plate_wells = [well for col in plate.columns()[::2] for well in col][2:]
@@ -89,11 +94,11 @@ def run(ctx: protocol_api.ProtocolContext):
         p300.pick_up_tip()
         p300.aspirate(50, prl_source.bottom(prl_source.depth/2))
         p300.dispense(50, dest1.bottom(2))
-        p300.mix(3, 200, dest1.bottom(2))
+        p300.mix(5, 200, dest1.bottom(2))
         p300.aspirate(50, dest1.bottom(2))
         p300.dispense(30, final_dest.bottom(final_dest.depth/2))
         p300.dispense(20, final_dest)
-        p300.mix(3, 40, final_dest)
+        p300.mix(5, 40, final_dest)
         p300.drop_tip()
         ctx.comment('\n')
 
@@ -103,6 +108,7 @@ def run(ctx: protocol_api.ProtocolContext):
     p300.dispense(30, positive_ctrl_1.bottom(positive_ctrl_1.depth/2))
     p300.dispense(20, positive_ctrl_1)
     p300.mix(5, 40, positive_ctrl_1)
+    p300.home()
 
     p300.aspirate(50, positive_ctrl_1)
     p300.dispense(30, positive_ctrl_final.bottom(positive_ctrl_1.depth/2))
