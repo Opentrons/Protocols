@@ -1,6 +1,7 @@
 """OPENTRONS."""
 import math
 from opentrons.types import Point
+from opentrons.protocol_api.labware import Well
 
 
 metadata = {
@@ -9,6 +10,47 @@ metadata = {
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'
 }
+
+
+class WellH(Well):
+    def __init__(self, well, volume=0, min_height=1, comp_coeff=1.15,
+                 current_volume=0):
+        super().__init__(well._impl)
+        self.well = well
+        self.min_height = min_height
+        self.comp_coeff = comp_coeff
+        self.radius = self.well.diameter/2
+        self.current_volume = current_volume
+        self.theta = math.atan(self.radius/well.depth)
+        self.height = (
+            math.pi*((math.tan(self.theta))**2)*self.current_volume/3)**(1/3)
+
+    def height_dec(self, vol):
+        v2 = self.current_volume - vol*self.comp_coeff
+        if v2 > 0:
+            self.current_volume = v2
+        else:
+            self.current_volume = 0
+        # calculate
+        h2 = (
+            self.current_volume*3/(math.pi*((math.tan(self.theta))**2)))**(
+            1/3)
+        if h2 > self.min_height:
+            self.height = h2
+        else:
+            self.height = self.min_height
+        return(self.well.bottom(self.height))
+
+    def height_inc(self, vol):
+        v2 = self.current_volume + vol*self.comp_coeff
+        # calculate
+        h2 = (math.pi*((math.tan(self.theta))**2)*v2/3)**(1/3)
+        if h2 < self.depth:
+            self.height = h2
+        else:
+            self.height = self.depth
+        self.current_volume += vol
+        return(self.well.bottom(self.height))
 
 
 def run(protocol):
@@ -63,7 +105,9 @@ def run(protocol):
         pip.move_to(knock_loc2)
 
     # load reagents
-    barcode_rxn_mix = mmx_plate.rows()[0][2]
+    # 10% overage
+    barcode_rxn_mix = WellH(mmx_plate.rows()[0][2],
+                            current_volume=num_col*3*1.1)
     reaction_plate_cols = [col for plate in reaction_plates
                            for col in plate.rows()[0]][:num_col]
     barcode_plate_cols = [col for plate in barcode_plate
@@ -89,7 +133,7 @@ def run(protocol):
         m20.flow_rate.dispense = 3
         m20.flow_rate.blow_out = 3
         pick_up()
-        m20.aspirate(3, barcode_rxn_mix)
+        m20.aspirate(3, barcode_rxn_mix.height_dec(3))
         m20.air_gap(airgap)
         protocol.delay(seconds=2)
         m20.touch_tip(v_offset=-2, speed=20)
