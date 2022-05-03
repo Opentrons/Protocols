@@ -1,3 +1,4 @@
+"""OPENTRONS."""
 import math
 from opentrons.types import Point
 
@@ -11,7 +12,7 @@ metadata = {
 
 
 def run(protocol):
-
+    """PROTOCOL."""
     [num_samp, m20_mount] = get_values(  # noqa: F821
         "num_samp", "m20_mount")
 
@@ -33,7 +34,7 @@ def run(protocol):
                                       label='MMX Plate')
     tiprack20 = [protocol.load_labware('opentrons_96_filtertiprack_20ul',
                  str(slot))
-                 for slot in [9, 10, 11]]
+                 for slot in [8, 9, 10, 11]]
 
     # load instruments
     m20 = protocol.load_instrument('p20_multi_gen2', m20_mount,
@@ -67,13 +68,16 @@ def run(protocol):
                            for col in plate.rows()[0]][:num_col]
     barcode_plate_cols = [col for plate in barcode_plate
                           for col in plate.rows()[0]]
-
+    m20.flow_rate.aspirate = 3
+    m20.flow_rate.dispense = 3
+    m20.flow_rate.blow_out = 3
     # add barcode adapter
     airgap = 2
     for s, d in zip(barcode_plate_cols, reaction_plate_cols):
         pick_up()
-        m20.aspirate(1, s)
-        touchtip(m20, s)
+        m20.aspirate(1, s, rate=0.5)
+        protocol.delay(seconds=2)
+        m20.touch_tip(s, v_offset=-2, speed=20)
         m20.air_gap(airgap)
         m20.dispense(airgap, d.top())
         m20.dispense(1, d)
@@ -85,9 +89,10 @@ def run(protocol):
     # add barcode reaction mix
     for col in reaction_plate_cols:
         pick_up()
-        m20.aspirate(3, barcode_rxn_mix)
-        touchtip(m20, barcode_rxn_mix)
+        m20.aspirate(3, barcode_rxn_mix, rate=0.5)
+        m20.touch_tip(v_offset=-2, speed=20)
         m20.air_gap(airgap)
+        protocol.delay(seconds=2)
         m20.dispense(airgap, col.top())
         m20.dispense(1, col)
         m20.mix(2, 8, col)
