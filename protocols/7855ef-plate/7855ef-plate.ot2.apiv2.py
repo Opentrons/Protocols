@@ -31,7 +31,7 @@ def run(protocol):
                                       label='MMX Plate')
     tiprack20 = [protocol.load_labware('opentrons_96_filtertiprack_20ul',
                                        str(slot))
-                 for slot in [9, 10, 11]]
+                 for slot in [8, 9, 10, 11]]
 
     # load instruments
     m20 = protocol.load_instrument('p20_multi_gen2', m20_mount,
