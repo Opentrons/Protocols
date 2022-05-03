@@ -68,9 +68,6 @@ def run(protocol):
                            for col in plate.rows()[0]][:num_col]
     barcode_plate_cols = [col for plate in barcode_plate
                           for col in plate.rows()[0]]
-    m20.flow_rate.aspirate = 3
-    m20.flow_rate.dispense = 3
-    m20.flow_rate.blow_out = 3
     # add barcode adapter
     airgap = 2
     for s, d in zip(barcode_plate_cols, reaction_plate_cols):
@@ -88,16 +85,20 @@ def run(protocol):
 
     # add barcode reaction mix
     for col in reaction_plate_cols:
+        m20.flow_rate.aspirate = 3
+        m20.flow_rate.dispense = 3
+        m20.flow_rate.blow_out = 3
         pick_up()
-        m20.aspirate(3, barcode_rxn_mix, rate=0.5)
-        m20.touch_tip(v_offset=-2, speed=20)
+        m20.aspirate(3, barcode_rxn_mix)
         m20.air_gap(airgap)
         protocol.delay(seconds=2)
+        m20.touch_tip(v_offset=-2, speed=20)
         m20.dispense(airgap, col.top())
         m20.dispense(1, col)
         m20.mix(2, 8, col)
+        protocol.delay(seconds=2)
         m20.blow_out()
-        touchtip(m20, col)
+        m20.touch_tip(v_offset=-2, speed=20)
         m20.return_tip()
 
     protocol.comment('''Barcoding sample libraries complete. Store at -20C after
