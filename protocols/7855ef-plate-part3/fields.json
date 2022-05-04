@@ -22,5 +22,11 @@
        { "label": "No", "value": false },
        { "label": "Yes", "value": true }
      ]
+  },
+  {
+    "type": "int",
+    "label": "Starting Volume, ",
+    "name": "start_vol",
+    "default": 100
   }
 ]
