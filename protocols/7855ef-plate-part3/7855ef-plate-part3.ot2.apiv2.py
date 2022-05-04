@@ -105,9 +105,9 @@ def run(protocol):
         pip.move_to(knock_loc2)
 
     # load reagents
-    # 10% overage
+    # 30% overage
     barcode_rxn_mix = WellH(mmx_plate.rows()[0][2],
-                            current_volume=num_col*3*1.1)
+                            current_volume=num_col*3*1.3)
     reaction_plate_cols = [col for plate in reaction_plates
                            for col in plate.rows()[0]][:num_col]
     barcode_plate_cols = [col for plate in barcode_plate
@@ -133,7 +133,8 @@ def run(protocol):
         m20.flow_rate.dispense = 3
         m20.flow_rate.blow_out = 3
         pick_up()
-        m20.aspirate(3, barcode_rxn_mix.height_dec(start_vol))
+        # height_dec wants vol we will aspirate in (), this case 3 uL
+        m20.aspirate(3, barcode_rxn_mix.height_dec(3))
         m20.air_gap(airgap)
         protocol.delay(seconds=3)
         m20.touch_tip(v_offset=-2, speed=20)
