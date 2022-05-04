@@ -436,7 +436,7 @@ include_wash2,1
 include_wash3,1
 include_wash4,1
 incubate_bind_time,1
-incubate_samples_with_beads,1
+incubate_samples_with_beads,2
 incubation_temperature,1
 incubation_time,5
 index_start_col,2
@@ -574,7 +574,7 @@ mag_time,1
 magdeck_gen,2
 magmod,2
 magplate_offset,1
-manual_bead_resuspension,1
+manual_bead_resuspension,2
 master_mix_csv,3
 master_mix_range,1
 master_mix_volume,1
@@ -1143,7 +1143,7 @@ temp_mod_on,2
 temp_mod_s1_lname,1
 temp_mod_s4_lname,1
 temp_mod_s7_lname,1
-temp_mod_setting,1
+temp_mod_setting,2
 temp_mod_temp,1
 temp_mod_temperature,1
 temp_s1_part1,1
