@@ -1,19 +1,24 @@
 from opentrons.types import Point
 import math
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"num_col":12,"prewash_buff_vol":300,"elute_buff_vol":50,"gdna_buff_vol":300,"m300_mount":"left"}""")
+    return [_all_values[n] for n in names]
+
 metadata = {
     'protocolName': 'Zymo Quick-DNA Fecal/Soil Microbe 96 Magbead Kit',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.11'
+    'apiLevel': '2.12'
 }
 
 
 def run(ctx):
 
-    [num_col, prewash_buff_vol, elute_buff_vol,
+    [num_col, prewash_buff_vol, elute_buff_vol, engage_height,
         gdna_buff_vol, m300_mount] = get_values(  # noqa: F821
-        "num_col", "prewash_buff_vol", "elute_buff_vol",
+        "num_col", "prewash_buff_vol", "elute_buff_vol", "engage_height",
             "gdna_buff_vol", "m300_mount")
 
     if not 1 <= num_col <= 12:
@@ -24,7 +29,7 @@ def run(ctx):
 
     # load module
     mag_mod = ctx.load_module('magnetic module gen2', 10)
-    mag_plate = mag_mod.load_labware('zymo_96_wellplate_1200ul')
+    mag_plate = mag_mod.load_labware('vwr_96_wellplate_1000ul')
 
     # load labware
     reag_res = ctx.load_labware('nest_12_reservoir_15ml', 1)
@@ -62,7 +67,7 @@ def run(ctx):
         if i > 0:
             m300.dispense(airgap, source_trough.top())
         m300.aspirate(200, source_trough)
-        m300.dispense(200, col.top(z=5), rate=0.4)
+        m300.dispense(200, col.top(z=3), rate=0.4)
         m300.air_gap(airgap)
 
     ctx.comment('\n\nADDING BEADS TO SAMPLES\n')
@@ -72,7 +77,7 @@ def run(ctx):
             m300.dispense(airgap, bind_beads.top())
         m300.aspirate(25, bind_beads)
         m300.air_gap(airgap)
-        m300.dispense(25+airgap, col.top(z=5), rate=0.4)
+        m300.dispense(25+airgap, col.top(z=3), rate=0.4)
         m300.air_gap(airgap)
     m300.drop_tip()
 
@@ -82,8 +87,8 @@ def run(ctx):
     Select "Resume" in the Opentrons app to continue.
     ''')
 
-    m300.home()
-    mag_mod.engage(height_from_base=6.7)
+    ctx.home()
+    mag_mod.engage(height_from_base=engage_height)
     ctx.delay(minutes=2)
 
     ctx.comment('\n\nREMOVING SUPERNATANT\n')
@@ -112,12 +117,12 @@ def run(ctx):
     for source_trough, col in zip(prewash_buff*num_col*6, samples):
         m300.transfer(prewash_buff_vol,
                       source_trough,
-                      col.top(z=5),
+                      col.top(z=3),
                       new_tip='never',
                       air_gap=10,
                       rate=0.4)
-    m300.home()
-    mag_mod.engage(height_from_base=6.7)
+    ctx.home()
+    mag_mod.engage(height_from_base=engage_height)
     ctx.delay(minutes=2)
     m300.flow_rate.dispense = 2.5*m300.flow_rate.dispense
 
@@ -133,9 +138,9 @@ def run(ctx):
             if _ > 0:
                 m300.dispense(airgap, s_col.top().move(
                         Point(x=(s_col.diameter/2-2)*side)))
-            m300.aspirate(150, aspirate_loc, rate=0.33)
+            m300.aspirate(prewash_buff_vol/2, aspirate_loc, rate=0.33)
             m300.touch_tip(speed=40, radius=0.9)
-            m300.dispense(150, waste, rate=0.4)
+            m300.dispense(prewash_buff_vol/2, waste, rate=0.4)
             m300.air_gap(airgap)
             m300.touch_tip(speed=40, radius=0.9)
         m300.drop_tip(ctx.loaded_labwares[8].rows()[0][index])
@@ -149,13 +154,13 @@ def run(ctx):
         for source_trough, col in zip(gdna_wash_buff*num_col, samples):
             m300.transfer(gdna_buff_vol,
                           source_trough,
-                          col.top(z=5),
+                          col.top(z=3),
                           air_gap=10,
                           new_tip='never',
                           rate=0.4)
         m300.drop_tip()
-        m300.home()
-        mag_mod.engage(height_from_base=6.7)
+        ctx.home()
+        mag_mod.engage(height_from_base=engage_height)
         ctx.delay(minutes=2)
 
         ctx.comment('\n\nREMOVING SUPERNATANT FROM WELLS\n')
@@ -170,9 +175,9 @@ def run(ctx):
                 if _ > 0:
                     m300.dispense(airgap, s_col.bottom(z=1).move(
                             Point(x=(s_col.diameter/2-2)*side)))
-                m300.aspirate(150, aspirate_loc, rate=0.33)
+                m300.aspirate(gdna_buff_vol/2, aspirate_loc, rate=0.33)
                 m300.touch_tip(speed=40, radius=0.9)
-                m300.dispense(150, waste)
+                m300.dispense(gdna_buff_vol/2, waste)
                 m300.air_gap(airgap)
                 m300.touch_tip(speed=40, radius=0.9)
             if i == 0:
@@ -190,6 +195,7 @@ def run(ctx):
                 tips.append(col)
 
     ctx.delay(minutes=30)
+    mag_mod.disengage()
     ctx.pause("""Drying for 30 minutes complete.
                  Select Resume on the Opentrons app to continue""")
 
@@ -204,10 +210,10 @@ def run(ctx):
         m300.mix(25, 40, col)
         m300.air_gap(airgap)
         m300.touch_tip(speed=40, radius=0.9)
-        m300.drop_tip(ctx.loaded_labwares[2].rows()[0][i])
+        m300.drop_tip()
 
-    m300.home()
-    mag_mod.engage(height_from_base=6.7)
+    ctx.home()
+    mag_mod.engage(height_from_base=engage_height)
     ctx.delay(minutes=2)
 
     ctx.comment('\n\nCOLLECTING ELUTE\n')
