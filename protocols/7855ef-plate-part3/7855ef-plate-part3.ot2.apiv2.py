@@ -55,8 +55,8 @@ class WellH(Well):
 
 def run(protocol):
     """PROTOCOL."""
-    [num_samp, m20_mount] = get_values(  # noqa: F821
-        "num_samp", "m20_mount")
+    [num_samp, m20_mount, start_vol] = get_values(  # noqa: F821
+        "num_samp", "m20_mount", "start_vol")
 
     if not 1 <= num_samp <= 288:
         raise Exception("Enter a sample number between 1-288")
@@ -116,8 +116,8 @@ def run(protocol):
     airgap = 2
     for s, d in zip(barcode_plate_cols, reaction_plate_cols):
         pick_up()
-        m20.aspirate(1, s, rate=0.5)
-        protocol.delay(seconds=2)
+        m20.aspirate(1, s)
+        protocol.delay(seconds=3)
         m20.touch_tip(s, v_offset=-2, speed=20)
         m20.air_gap(airgap)
         m20.dispense(airgap, d.top())
@@ -133,17 +133,20 @@ def run(protocol):
         m20.flow_rate.dispense = 3
         m20.flow_rate.blow_out = 3
         pick_up()
-        m20.aspirate(3, barcode_rxn_mix.height_dec(3))
+        m20.aspirate(3, barcode_rxn_mix.height_dec(start_vol))
         m20.air_gap(airgap)
-        protocol.delay(seconds=2)
+        protocol.delay(seconds=3)
         m20.touch_tip(v_offset=-2, speed=20)
         m20.dispense(airgap, col.top())
         m20.dispense(1, col)
         m20.mix(2, 8, col)
-        protocol.delay(seconds=2)
-        m20.blow_out()
+        m20.move_to(col.top(-2))
+        protocol.delay(seconds=3)
+        m20.blow_out(col.top(z=-2))
         m20.touch_tip(v_offset=-2, speed=20)
         m20.return_tip()
 
+    for c in protocol.commands():
+        print(c)
     protocol.comment('''Barcoding sample libraries complete. Store at -20C after
                    centrifuge and PCR steps if needed as a break point''')
