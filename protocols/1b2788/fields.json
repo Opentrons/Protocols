@@ -19,7 +19,7 @@
   },
   {
     "type": "int",
-    "label": "Magnetic Engage Height",
+    "label": "Magnetic Module Engage Height",
     "name": "engage_height",
     "default": 6.7
   },
