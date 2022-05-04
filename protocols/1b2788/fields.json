@@ -19,6 +19,12 @@
   },
   {
     "type": "int",
+    "label": "Magnetic Module Engage Height",
+    "name": "engage_height",
+    "default": 6.7
+  },
+  {
+    "type": "int",
     "label": "gDNA buffer volume (ul)",
     "name": "gdna_buff_vol",
     "default": 300
