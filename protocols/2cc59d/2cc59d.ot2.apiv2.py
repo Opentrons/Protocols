@@ -139,10 +139,9 @@ def run(ctx):
     pick_up()
     p300.aspirate(120, rbd)
     p300.dispense(120, greiner_plate.rows()[0][1])
-    p300.drop_tip()
 
     ctx.comment('\n\nTRANSFERRING RBD TO EVEN COLUMNS\n')
-    pick_up()
+
     for col in even_columns:
         p300.aspirate(120, rbd)
         p300.dispense(120, col)
@@ -158,8 +157,8 @@ def run(ctx):
 
     for i, col in enumerate(greiner_plate.rows()[0][2:2+num_cols*2:2]):
         pick_up()
-        p300.aspirate(150, col)
-        p300.dispense(150, greiner_plate.rows()[0][i*2+3])
+        p300.aspirate(120, col)
+        p300.dispense(120, greiner_plate.rows()[0][i*2+3])
         p300.mix(2, 300, greiner_plate.rows()[0][i*2+3])
         p300.drop_tip()
 
