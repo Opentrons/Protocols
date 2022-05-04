@@ -288,7 +288,7 @@ def run(ctx):
                 rt = 3 if rep < 9 else 0.5
                 p20m.dispense(16, loc, rate=rt)
                 if rep == 9:
-                    ctx.pause(seconds=1)
+                    ctx.delay(seconds=1)
                     slow_tip_withdrawal(p20m, column[0])
                     p20m.move_to(
                      column[0].top(-2).move(types.Point(

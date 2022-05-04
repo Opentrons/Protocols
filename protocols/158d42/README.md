@@ -9,7 +9,7 @@
 
 ## Description
 
-This protocol preps a 96 well PCR plate with up to 46 samples. The order of operations is: transfer negative control to A1 of the well plate, transfer samples down plate columns starting from C1, transfer positive control to H12 of well plate, then B1. Resuspension steps are included after most transfers. For wells with powdered reagent, roughly half of the necessary volume is dispensed into the well from half of the well depth, then the pipette tip proceeds to travel to the bottom of the well to dispense the rest of the required volume and mix. Sample in buffer is transferred from the 32-tube rack to the 24 tube rack which contains sterile normalization buffer, and the resulting mixture is then added to the plate.
+This protocol preps a 96 well PCR plate with up to 46 samples. The order of operations is: transfer negative control to A1 of the well plate, transfer samples down plate columns starting from C1, transfer positive control to A12 of well plate, then B1. Resuspension steps are included after most transfers. For wells with powdered reagent, roughly half of the necessary volume is dispensed into the well from half of the well depth, then the pipette tip proceeds to travel to the bottom of the well to dispense the rest of the required volume and mix. Sample in buffer is transferred from the 32-tube rack to the 24 tube rack which contains sterile normalization buffer, and the resulting mixture is then added to the plate.
 
 Explanation of complex parameters below:
 * `Number of tubes (1-46)`: Specify the number of tubes placed in the custom 32-tube tube racks. Tubes should be placed by row, and up down (from slot 7 to slot 4).
