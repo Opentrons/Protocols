@@ -412,6 +412,9 @@ height_above_cartridge,1
 height_after_disp,1
 height_dispense,2
 height_engage,14
+height_final,1
+height_intermediate,1
+height_source,1
 htp_csv,1
 i5_volume,1
 i5_well,1
@@ -433,7 +436,9 @@ include_wash2,1
 include_wash3,1
 include_wash4,1
 incubate_bind_time,1
-incubate_samples_with_beads,2
+
+incubate_samples_with_beads,3
+
 incubation_temperature,1
 incubation_time,5
 index_start_col,2
@@ -571,7 +576,7 @@ mag_time,1
 magdeck_gen,2
 magmod,2
 magplate_offset,1
-manual_bead_resuspension,2
+manual_bead_resuspension,3
 master_mix_csv,3
 master_mix_range,1
 master_mix_volume,1
@@ -613,6 +618,7 @@ mix_vol,5
 mix_volume,1
 mixln,1
 mixp300,1
+mixreps_dilution,1
 mm,3
 mm1_col,1
 mm2_col,1
@@ -1089,6 +1095,7 @@ start_col,1
 start_column,1
 start_tip,1
 start_urea_vol,1
+start_vol,1
 starting_conc,2
 starting_position,1
 starting_tip_col,1
@@ -1139,7 +1146,7 @@ temp_mod_on,2
 temp_mod_s1_lname,1
 temp_mod_s4_lname,1
 temp_mod_s7_lname,1
-temp_mod_setting,2
+temp_mod_setting,3
 temp_mod_temp,1
 temp_mod_temperature,1
 temp_s1_part1,1

@@ -33,10 +33,6 @@ def run(ctx):
 
     # load instrument
     m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tipracks)
-    pick_up_current = 0.7
-    ctx._implementation._hw_manager.hardware._attached_instruments[
-        m20._implementation.get_mount()].update_config_item(
-            'pick_up_current', pick_up_current)
 
     num_cols_all = [
         math.ceil(num_samples/8)

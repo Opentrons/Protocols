@@ -13,5 +13,29 @@
       {"label": "black", "value": "bd_54_tuberack_5ml_black"},
       {"label": "blue", "value": "bd_48_tuberack_5ml_blue"}
     ]
+  },
+  {
+    "type": "int",
+    "label": "mix repetitions of dilution",
+    "name": "mixreps_dilution",
+    "default": 5
+  },
+  {
+    "type": "int",
+    "label": "source 50ml tube aspiration height (in mm above bottom)",
+    "name": "height_source",
+    "default": 5.0
+  },
+  {
+    "type": "int",
+    "label": "dilution 15ml tube mix height (in mm above bottom)",
+    "name": "height_intermediate",
+    "default": 5.0
+  },
+  {
+    "type": "int",
+    "label": "final HPLC tube dispense height (in mm above bottom)",
+    "name": "height_final",
+    "default": 5.0
   }
 ]
