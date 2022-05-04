@@ -1,11 +1,6 @@
 from opentrons.types import Point
 import math
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"num_col":12,"prewash_buff_vol":300,"elute_buff_vol":50,"gdna_buff_vol":300,"m300_mount":"left"}""")
-    return [_all_values[n] for n in names]
-
 metadata = {
     'protocolName': 'Zymo Quick-DNA Fecal/Soil Microbe 96 Magbead Kit',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
