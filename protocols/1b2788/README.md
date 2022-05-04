@@ -15,6 +15,7 @@ The Quick-DNA Fecal/Soil Microbe 96 Magbead Kits are designed for the simple and
 Explanation of complex parameters below:
 * `Number of Columns`: Specify the number of sample columns in this run (1-12).
 * `Pre-Wash buffer volume (ul)`: Specify wash volumes for both the pre-wash buffer, and gDNA wash buffer in microliters. Volumes can be greater than 200ul, and will be split if need be over multiple transfers.
+* `Magnetic Module Engage Height`: Specify the magnetic module engage height in mm. 
 * `Elute Buffer Volume`: Specify the elute buffer volume in microliters.
 * `P300 Multi-Channel Pipette Mount`: Specify which mount (left or right) to host the P300 multi-channel pipette.
 
