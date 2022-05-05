@@ -27,7 +27,7 @@ def run(ctx: protocol_api.ProtocolContext):
     if not 1 <= _num_samps <= 96:
         raise Exception("The 'Number of Samples' should be between 1 and 96")
 
-    # define all custom variables above here with descriptions:
+    # define all custom variables above here with descriptions
     m300_mount = _m300_mount  # mount for 8-channel p300 pipette
     num_cols = math.ceil(_num_samps/8)  # number of sample columns
     samp_labware = _samp_labware  # labware containing sample
@@ -190,7 +190,7 @@ def run(ctx: protocol_api.ProtocolContext):
     def flash_lights():
         for _ in range(19):
             ctx.set_rail_lights(not ctx.rail_lights_on)
-            ctx.delay(seconds=0.5)
+            ctx.delay(seconds=0.25)
 
     def flow_rate(asp=92.86, disp=92.86):
         """
@@ -206,11 +206,11 @@ def run(ctx: protocol_api.ProtocolContext):
 
     def remove_supernatant(vol, src):
         while vol > 180:
-            m300.aspirate_h(180, src)
+            m300.aspirate(180, src)
             m300.dispense(200, liquid_waste)
             m300.aspirate(20, liquid_waste)
             vol -= 180
-        m300.aspirate_h(vol, src)
+        m300.aspirate(vol, src)
         m300.dispense(vol+20, liquid_waste)
         m300.aspirate(10, liquid_waste)
 
@@ -227,11 +227,11 @@ def run(ctx: protocol_api.ProtocolContext):
             src = srcs[idx//3]
             for _ in range(2):
                 m300.aspirate(20, src.top())
-                m300.aspirate_h(180, src)
+                m300.aspirate(180, src)
                 m300.slow_tip_withdrawal(10, src, to_surface=True)
                 m300.dispense(200, col.top(-2))
             m300.aspirate(20, src.top())
-            m300.aspirate_h(140, src)
+            m300.aspirate(140, src)
             m300.slow_tip_withdrawal(10, src, to_surface=True)
             m300.dispense(160, col.top(-2))
             m300.mix(10, 100, col)
@@ -323,11 +323,11 @@ def run(ctx: protocol_api.ProtocolContext):
         src = rbb[idx//2]
         for _ in range(2):
             m300.aspirate(20, src.top())
-            m300.aspirate_h(180, src)
+            m300.aspirate(180, src)
             m300.slow_tip_withdrawal(10, src, to_surface=True)
             m300.dispense(200, col.top(-2))
         m300.aspirate(20, src.top())
-        m300.aspirate_h(165, src)
+        m300.aspirate(165, src)
         m300.slow_tip_withdrawal(10, src, to_surface=True)
         m300.dispense(185, col.top(-2))
     m300.drop_tip()
@@ -392,7 +392,7 @@ def run(ctx: protocol_api.ProtocolContext):
     for idx, col in enumerate(mag_samps_h):
         src = elution_buffer[idx//6]
         m300.custom_pick_up()
-        m300.aspirate_h(elution_vol, src)
+        m300.aspirate(elution_vol, src)
         m300.slow_tip_withdrawal(10, src, to_surface=True)
         m300.dispense_h(elution_vol, col)
         m300.mix(10, 100, col)
