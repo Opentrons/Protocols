@@ -14,7 +14,7 @@ def run(ctx):
     # Load Labware
     tiprack = ctx.load_labware(tip_type, 6)
     plate = ctx.load_labware(plate_type, 3)
-    reservoir = ctx.load_labware('nest_12_reservoir_15ml', 8)
+    reservoir = ctx.load_labware('nest_12_reservoir_15ml', 5)
 
     # Load Pipette
     p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
