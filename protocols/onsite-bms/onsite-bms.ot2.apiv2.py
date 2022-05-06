@@ -66,7 +66,8 @@ def run(ctx):
         if tipcount20 == 95:
             ctx.pause("Replace 20ul tip rack")
             tipcount20 = 0
-            p20.pick_up_tip(tips20[0])
+            p20.pick_up_tip(tips20[tipcount20])
+            tipcount20 += 1
         else:
             p20.pick_up_tip(tips20[tipcount20])
             tipcount20 += 1
@@ -77,7 +78,8 @@ def run(ctx):
         if tipcount1000 == 95:
             ctx.pause("Replace 1000ul tip rack")
             tipcount1000 = 0
-            p1000.pick_up_tip(tips20[0])
+            p1000.pick_up_tip(tips1000[tipcount1000])
+            tipcount1000 += 1
         else:
             p1000.pick_up_tip(tips1000[tipcount1000])
             tipcount1000 += 1
