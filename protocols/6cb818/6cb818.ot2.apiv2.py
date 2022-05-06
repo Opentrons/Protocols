@@ -89,6 +89,19 @@ def run(ctx):
         for index, well in enumerate(column):
             well.liq_vol = 200 if index == 0 else 0
 
+    # add medium to 2nd-5th wells in each filled column
+    if adjust_final_vol:
+        for column in plate_wells:
+            for well in column[1:]:
+                p300s.pick_up_tip()
+                culture_medium.liq_vol -= 60
+                ht = liq_height(
+                 culture_medium) - 3 if liq_height(culture_medium) > 1 else 1
+                p300s.aspirate(60, culture_medium.bottom(ht))
+                p300s.dispense(60, well.bottom(4))
+                p300s.touch_tip(radius=0.75, v_offset=-4, speed=20)
+                p300s.drop_tip()
+
     # add anti-CD154 to cells in 1st well of each filled column and rinse tip
     for column in plate_wells:
         p20s.pick_up_tip()
@@ -130,16 +143,3 @@ def run(ctx):
                 p20s.aspirate(20, column[index].bottom(2))
                 p20s.dispense(20, column[index].bottom(2))
             p20s.drop_tip()
-
-    # optionally add 60 uL culture medium to each filled well
-    if adjust_final_vol:
-        for column in plate_wells:
-            for well in column:
-                p300s.pick_up_tip()
-                culture_medium.liq_vol -= 60
-                ht = liq_height(
-                 culture_medium) - 3 if liq_height(culture_medium) > 1 else 1
-                p300s.aspirate(60, culture_medium.bottom(ht))
-                p300s.dispense(60, well.bottom(4))
-                p300s.touch_tip(radius=0.75, v_offset=-4, speed=20)
-                p300s.drop_tip()
