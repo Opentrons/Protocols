@@ -30,7 +30,14 @@ def run(ctx: protocol_api.ProtocolContext):
     custom_variable2 = _custom_variable2
 
     # load modules
+    temp_1 = ctx.load_module('tempdeck', '1')
+    ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '2')
+    temp_4 = ctx.load_module('tempdeck', '4')
+    ctx.load_labware('nest_12_reservoir_15ml', '5')
+    ctx.load_labware('nest_1_reservoir_195ml', '9')
 
+    if thermocycler:
+        ctx.load_module('thermocycler')
     '''
 
     Add your modules here with:
@@ -60,45 +67,12 @@ def run(ctx: protocol_api.ProtocolContext):
     '''
 
     # load tipracks
-
-    '''
-
-    Add your tipracks here as a list:
-
-    For a single tip rack:
-
-    tiprack_name = [ctx.load_labware('{loadname}', '{slot number}')]
-
-    For multiple tip racks of the same type:
-
-    tiprack_name = [ctx.load_labware('{loadname}', 'slot')
-                     for slot in ['1', '2', '3']]
-
-    If two different tipracks are on the deck, use convention:
-    tiprack[number of microliters]
-    e.g. tiprack10, tiprack20, tiprack200, tiprack300, tiprack1000
-
-    '''
+    tiprack20 = ctx.load_labware('opentrons_96_filtertiprack_20ul', '3')
+    tiprack200 = ctx.load_labware('opentrons_96_filtertiprack_200ul', '6')
 
     # load instrument
-
-    '''
-    Nomenclature for pipette:
-
-    use 'p'  for single-channel, 'm' for multi-channel,
-    followed by number of microliters.
-
-    p20, p300, p1000 (single channel pipettes)
-    m20, m300 (multi-channel pipettes)
-
-    If loading pipette, load with:
-
-    ctx.load_instrument(
-                        '{pipette api load name}',
-                        pipette_mount ("left", or "right"),
-                        tip_racks=tiprack
-                        )
-    '''
+    ctx.load_instrument('m20', 'right', tip_racks=tiprack20)
+    ctx.load_instrument('m300', 'left', tip_racks=tiprack200)
 
     # pipette functions   # INCLUDE ANY BINDING TO CLASS
 
