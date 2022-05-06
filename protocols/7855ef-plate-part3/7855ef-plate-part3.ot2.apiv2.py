@@ -13,17 +13,28 @@ metadata = {
 
 
 class WellH(Well):
-    def __init__(self, well, volume=0, min_height=1, comp_coeff=1.15,
-                 current_volume=0):
+
+    def __init__(self, well, min_height=1, comp_coeff=1.15,
+                 current_volume=0, theta_degrees=8.75):
         super().__init__(well._impl)
         self.well = well
         self.min_height = min_height
         self.comp_coeff = comp_coeff
-        self.radius = self.well.diameter/2
         self.current_volume = current_volume
-        self.theta = math.atan(self.radius/well.depth)
-        self.height = (
-            math.pi*((math.tan(self.theta))**2)*self.current_volume/3)**(1/3)
+        self.radius = self.diameter/2
+        self.theta_degrees = theta_degrees
+        self.theta_radians = self.theta_degrees*math.pi/180
+        self.model_depth = self.radius/math.tan(self.theta_radians)
+        self.delta_height = self.model_depth - self.depth
+        self.delta_radius = self.delta_height*math.tan(self.theta_radians)
+        self.delta_volume = (1/3)*math.pi*(
+            self.delta_radius**2)*self.delta_height
+        self.model_volume = self.delta_volume + self.current_volume
+        self.model_height = (
+            3*self.model_volume/(math.pi*((math.tan(self.theta_radians))**2))
+            )**(1/3)
+        self.height = self.model_height - self.delta_height
+        self.model_height = self.delta_height + self.height
 
     def height_dec(self, vol):
         v2 = self.current_volume - vol*self.comp_coeff
@@ -135,6 +146,7 @@ def run(protocol):
         pick_up()
         # height_dec wants vol we will aspirate in (), this case 3 uL
         m20.aspirate(3, barcode_rxn_mix.height_dec(3))
+        print(barcode_rxn_mix.current_volume, barcode_rxn_mix.height)
         m20.air_gap(airgap)
         protocol.delay(seconds=3)
         m20.touch_tip(v_offset=-2, speed=20)
