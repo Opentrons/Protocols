@@ -18,7 +18,7 @@ Explanation of complex parameters below:
 * **Labware for Input Samples**: Type the [API load name](https://support.opentrons.com/en/articles/3136506-using-labware-in-your-protocols) of the labware containing samples.
 * **Elution Volume (in µL)**: The volume of Elution Buffer added to each well. Please note ~ [the written protocol](https://s3.amazonaws.com/pf-upload-01/u-4256/0/2021-12-14/kf03tt7/Omega%20BioTek%20Mag-Bind%20Plant%20DNA%20extraction%20automation%20protocol.pdf) states 100-200µL and this protocol has been designed accordingly.
 
-*Note*: This protocol was updated on May 4th, 2022
+*Note*: This protocol was updated on May 7th, 2022
 
 ---
 
