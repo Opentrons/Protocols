@@ -2,7 +2,7 @@
   {
     "type": "textFile",
     "label": ".CSV File",
-    "name": "csv",
+    "name": "csv_samp",
     "default": "Well,initial conc (ng/μL),initial volume (μL),final conc (ng/μL),volume to add (μL),Name,Pipette\nA1,1385,10,100,129,R1125 LBCC 1035 mix,P200"
   },
   {
@@ -10,6 +10,16 @@
     "label": "DNA Aspiration Flow Rate",
     "name": "dna_asp_rate",
     "default": 0.5
+  },
+  {
+    "type": "dropDown",
+    "label": "Track tips?",
+    "name": "tip_track",
+    "options": [
+      {"label": "No, start at A1", "value": false},
+      {"label": "Yes, start from where the last protocol left off", "value": true}
+
+    ]
   },
   {
     "type": "dropDown",
