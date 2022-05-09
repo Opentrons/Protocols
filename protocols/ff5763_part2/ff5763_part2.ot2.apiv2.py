@@ -31,8 +31,7 @@ def run(ctx):
                                        '_strip_200ul')
     mag_module = ctx.load_module('magnetic module gen2', '4')
     sample_plate = mag_module.load_labware('nest_96_wellplate_100ul_pcr'
-                                           '_full_skirt',
-                                           '2')
+                                           '_full_skirt')
     reagent_resv = ctx.load_labware('nest_12_reservoir_15ml', '5')
     liquid_trash = ctx.load_labware('nest_1_reservoir_195ml', '9')
 
@@ -51,7 +50,9 @@ def run(ctx):
     master_mix = thermo_tubes.rows()[0][0]
     nf_water = thermo_tubes.rows()[0][1]
     tsb = thermo_tubes.rows()[0][2]
+    twb = reagent_resv.wells()[0]
     sample_dest = sample_plate.rows()[0][:num_cols]
+    pcr_mix = reagent_resv.wells()[1]
 
     # protocol
 
@@ -62,6 +63,8 @@ def run(ctx):
         m20.flow_rate_dispense = 3
         m20.dispense(10, dest)
         m20.drop_tip()
+
+    for dest in sample_dest:
         m300.pick_up_tip()
         m300.flow_rate_aspirate = 30
         m300.flow_rate_dispense = 30

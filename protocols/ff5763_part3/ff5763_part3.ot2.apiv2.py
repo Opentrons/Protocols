@@ -28,9 +28,11 @@ def run(ctx):
     temp_1 = ctx.load_module('tempdeck', '1')
     thermo_tubes = temp_1.load_labware('opentrons_96_aluminumblock_generic_pcr'
                                        '_strip_200ul')
-    sample_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
-                                    '2')
+    # NB, NEST 96 for index plate is a placeholder
+    index_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full', '2')
     mag_module = ctx.load_module('magnetic module gen2', '4')
+    sample_plate = mag_module.load_labware('nest_96_wellplate_100ul_pcr_full'
+                                           '_skirt')
     reagent_resv = ctx.load_labware('nest_12_reservoir_15ml', '5')
     liquid_trash = ctx.load_labware('nest_1_reservoir_195ml', '9')
 
@@ -49,15 +51,31 @@ def run(ctx):
     master_mix = thermo_tubes.rows()[0][0]
     nf_water = thermo_tubes.rows()[0][1]
     tsb = thermo_tubes.rows()[0][2]
+    twb = reagent_resv.wells()[0]
     sample_dest = sample_plate.rows()[0][:num_cols]
-
+    pcr_mix = reagent_resv.wells()[1]
+    index_source = index_plate.rows()[0][:num_cols]
     # protocol
-    """DNA samples MUST be 30ul"""
+    # Remove supernatant from sample plate
 
-    # Add 20ul master mix slot 1 to slot 2 samples
+    # Add 40uL PCR Mix directly on Beads, mix roughly
     for dest in sample_dest:
-        m300.transfer(20,
-                      master_mix,
-                      dest,
-                      mix_after=(10, 45),
-                      new_tip='always')
+        m300.pick_up_tip()
+        m300.aspirate(40, pcr_mix)
+        m300.dispense(40, dest)
+        m300.flow_rate_aspirate = 200
+        m300.flow_rate_dispense = 200
+        m300.mix(10, 35, dest)
+        m300.drop_tip()
+    # centrifuge off deck
+    # add 10ul adapters
+    for source, dest, in zip(index_source, sample_dest):
+        m20.pick_up_tip()
+        m20.aspirate(10, source)
+        m20.dispense(10, sample_dest)
+        m20.drop_tip()
+    # Mix Adapter/samples
+    for dest in sample_dest:
+        m300.pick_up_tip()
+        m300.mix(10, 40, dest)
+        m300.drop_tip()
