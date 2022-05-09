@@ -25,12 +25,14 @@ def run(ctx):
     # "True" for park tips, "False" for discard tips
 
     # load modules/labware
+    """Step 2 has the sample plate on the mag module in slot 4!"""
     temp_1 = ctx.load_module('tempdeck', '1')
     thermo_tubes = temp_1.load_labware('opentrons_96_aluminumblock_generic_pcr'
                                        '_strip_200ul')
-    sample_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
-                                    '2')
     mag_module = ctx.load_module('magnetic module gen2', '4')
+    sample_plate = mag_module.load_labware('nest_96_wellplate_100ul_pcr'
+                                           '_full_skirt',
+                                           '2')
     reagent_resv = ctx.load_labware('nest_12_reservoir_15ml', '5')
     liquid_trash = ctx.load_labware('nest_1_reservoir_195ml', '9')
 
@@ -52,12 +54,23 @@ def run(ctx):
     sample_dest = sample_plate.rows()[0][:num_cols]
 
     # protocol
-    """DNA samples MUST be 30ul"""
 
-    # Add 20ul master mix slot 1 to slot 2 samples
+    # Slowly add 10ul TSB (beads) then slowly mix to suspend
     for dest in sample_dest:
-        m300.transfer(20,
-                      master_mix,
-                      dest,
-                      mix_after=(10, 45),
-                      new_tip='always')
+        m20.pick_up_tip()
+        m20.aspirate(10, tsb)
+        m20.flow_rate_dispense = 3
+        m20.dispense(10, dest)
+        m20.drop_tip()
+        m300.pick_up_tip()
+        m300.flow_rate_aspirate = 30
+        m300.flow_rate_dispense = 30
+        m300.mix(10, 55, dest)
+        m300.drop_tip()
+    ctx.comment("""Please move sample plate from slot 4"""
+                """to off-deck thermocycler then return to magnetic module"""
+                """in slot 4 for purification. Click 'Resume' when set""")
+    """insert pause until resumed command here"""
+    """"insert mag module purification base code here"""
+    for c in ctx.commands():
+        print(c)
