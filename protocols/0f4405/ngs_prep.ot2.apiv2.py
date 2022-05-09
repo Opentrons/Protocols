@@ -24,10 +24,6 @@ def run(ctx):
     z_offset_beads = 2.0
     z_offset_supernatant = 1.0
 
-    """
-    Here is where you can change the locations of your labware and modules
-    (note that this is the recommended configuration)
-    """
     magdeck = ctx.load_module('magnetic module gen2', '1')
     magdeck.disengage()
     mag_plate = magdeck.load_labware('eppendorftwin.tec_96_wellplate_150ul')
