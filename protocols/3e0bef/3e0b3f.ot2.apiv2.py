@@ -3,6 +3,7 @@ from opentrons import types
 from opentrons.protocol_api.labware import Well
 import math
 from types import MethodType
+import subprocess
 
 metadata = {
     'protocolName': 'Omega Bio-Tek Mag-Bind Plant DNA DS Kit',
@@ -10,6 +11,22 @@ metadata = {
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'
 }
+
+AUDIO_FILE_PATH = '/etc/audio/speaker-test.mp3'
+
+
+def run_quiet_process(command):
+    subprocess.check_output('{} &> /dev/null'.format(command), shell=True)
+
+
+def test_speaker():
+    print('Speaker')
+    print('Next\t--> CTRL-C')
+    try:
+        run_quiet_process('mpg123 {}'.format(AUDIO_FILE_PATH))
+    except KeyboardInterrupt:
+        pass
+        print()
 
 
 def run(ctx: protocol_api.ProtocolContext):
@@ -205,13 +222,20 @@ def run(ctx: protocol_api.ProtocolContext):
         m300.flow_rate.dispense = disp
 
     def remove_supernatant(vol, src):
+        w = int(str(src).split(' ')[0][1:])
+        radi = float(src.width)/4 if src.width is not None else \
+            float(src.diameter)/4
+        x0 = radi if w % 2 == 0 else -radi
+        print(x0)
         while vol > 180:
-            m300.aspirate(180, src)
+            m300.aspirate(180, src.bottom().move(types.Point(x=x0, y=0, z=1)))
             m300.dispense(200, liquid_waste)
+            m300.blow_out()
             m300.aspirate(20, liquid_waste)
             vol -= 180
-        m300.aspirate(vol, src)
+        m300.aspirate(vol, src.bottom().move(types.Point(x=x0, y=0, z=0.7)))
         m300.dispense(vol+20, liquid_waste)
+        m300.blow_out()
         m300.aspirate(10, liquid_waste)
 
     def wash(srcs, msg):
@@ -230,6 +254,8 @@ def run(ctx: protocol_api.ProtocolContext):
                 m300.aspirate(180, src)
                 m300.slow_tip_withdrawal(10, src, to_surface=True)
                 m300.dispense(200, col.top(-2))
+                ctx.delay(seconds=2)
+                m300.blow_out()
             m300.aspirate(20, src.top())
             m300.aspirate(140, src)
             m300.slow_tip_withdrawal(10, src, to_surface=True)
@@ -326,6 +352,7 @@ def run(ctx: protocol_api.ProtocolContext):
             m300.aspirate(180, src)
             m300.slow_tip_withdrawal(10, src, to_surface=True)
             m300.dispense(200, col.top(-2))
+            m300.blow_out()
         m300.aspirate(20, src.top())
         m300.aspirate(165, src)
         m300.slow_tip_withdrawal(10, src, to_surface=True)
@@ -400,6 +427,8 @@ def run(ctx: protocol_api.ProtocolContext):
         m300.drop_tip()
 
     flash_lights()
+    if not ctx.is_simulating():
+        test_speaker()
     ctx.pause('Please remove samples and incubate at 65C for 5 minutes.\
     When complete, replace samples and click RESUME\n')
     ctx.set_rail_lights(True)
