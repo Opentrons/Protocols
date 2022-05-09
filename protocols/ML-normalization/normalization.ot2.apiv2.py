@@ -26,7 +26,7 @@ def run(ctx):
         for slot in ['3', '6']
     ]
     water = ctx.load_labware(
-        'usascientific_12_reservoir_22ml', '5',
+        'nest_12_reservoir_15ml', '5',
         'reservoir for water (channel 1)').wells()[0].bottom(5)
     tiprack300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot, '300ul tiprack')
