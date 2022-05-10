@@ -29,7 +29,8 @@ def run(ctx):
     thermo_tubes = temp_1.load_labware('opentrons_96_aluminumblock_generic_pcr'
                                        '_strip_200ul')
     # NB, NEST 96 for index plate is a placeholder
-    index_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full', '2')
+    index_plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt',
+                                   '2')
     mag_module = ctx.load_module('magnetic module gen2', '4')
     sample_plate = mag_module.load_labware('nest_96_wellplate_100ul_pcr_full'
                                            '_skirt')
@@ -46,7 +47,7 @@ def run(ctx):
     m20 = ctx.load_instrument('p20_multi_gen2', 'right', tip_racks=tiprack20)
     m300 = ctx.load_instrument('p300_multi_gen2', 'left', tip_racks=tiprack200)
 
-    # reagents
+    # r eagents
     '''includes reagents used in other steps for housekeeping purposes'''
     master_mix = thermo_tubes.rows()[0][0]
     nf_water = thermo_tubes.rows()[0][1]
@@ -68,11 +69,14 @@ def run(ctx):
         m300.mix(10, 35, dest)
         m300.drop_tip()
     # centrifuge off deck
+    ctx.pause("""Please centrifuge sample plate for 3 seconds at 280 x g"""
+              """Press Resume after returning plate to magnetic module on"""
+              """slot 4""")
     # add 10ul adapters
     for source, dest, in zip(index_source, sample_dest):
         m20.pick_up_tip()
         m20.aspirate(10, source)
-        m20.dispense(10, sample_dest)
+        m20.dispense(10, dest)
         m20.drop_tip()
     # Mix Adapter/samples
     for dest in sample_dest:
