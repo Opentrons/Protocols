@@ -14,9 +14,9 @@ metadata = {
 def run(ctx):
 
     [num_samples, _ratio_beads_dna, time_mag_incubation,
-     mount_m300, mount_m20] = get_values(  # noqa: F821
+     mount_m300, mount_m20, _dry_run] = get_values(  # noqa: F821
         'num_samples', '_ratio_beads_dna', 'time_mag_incubation', 'mount_m300',
-        'mount_m20')
+        'mount_m20', '_dry_run')
     park_tips = True
     tip_track = False
     mag_height = 11
@@ -222,11 +222,13 @@ resuming.')
             m300.transfer(dna_vol_wash, t, m, mix_after=(10, 50),
                           new_tip='never')
             _drop(m300, p)
-        ctx.delay(minutes=time_mag_incubation, msg=f'Incubating off magnet for \
-{time_mag_incubation} minutes.')
+        if not _dry_run:
+            ctx.delay(minutes=time_mag_incubation, msg=f'Incubating off magnet \
+for {time_mag_incubation} minutes.')
         magdeck.engage(height=mag_height)
-        ctx.delay(minutes=time_mag_incubation, msg=f'Incubating on magnet for \
-{time_mag_incubation} minutes.')
+        if not _dry_run:
+            ctx.delay(minutes=time_mag_incubation, msg=f'Incubating on magnet \
+for {time_mag_incubation} minutes.')
         remove_supernatant(200, pip=m300, park=True)
 
         # wash 2x
@@ -235,7 +237,9 @@ resuming.')
             for i, m in enumerate(mag_samples_m):
                 m300.aspirate(200, etoh)
                 m300.dispense(200, m.top())
-            ctx.delay(seconds=30, msg='Incubating on magnet for 30 seconds.')
+            if not _dry_run:
+                ctx.delay(seconds=30, msg='Incubating on magnet for 30 \
+seconds.')
             m300.drop_tip()
             remove_supernatant(200, pip=m300, park=True)
 
@@ -243,7 +247,8 @@ resuming.')
         remove_supernatant(20, pip=m20, park=False)
 
         # air dry
-        ctx.delay(minutes=5, msg='Air drying for 5 minutes.')
+        if not _dry_run:
+            ctx.delay(minutes=5, msg='Air drying for 5 minutes.')
         magdeck.disengage()
 
         # elute
@@ -259,11 +264,13 @@ resuming.')
                 m20.dispense(20, loc)
             _drop(m20)
 
-        ctx.delay(minutes=time_mag_incubation, msg=f'Incubating off magnet for \
-{time_mag_incubation} minutes.')
+        if not _dry_run:
+            ctx.delay(minutes=time_mag_incubation, msg=f'Incubating off magnet \
+for {time_mag_incubation} minutes.')
         magdeck.engage(height=mag_height)
-        ctx.delay(minutes=time_mag_incubation, msg=f'Incubating on magnet for \
-{time_mag_incubation} minutes.')
+        if not _dry_run:
+            ctx.delay(minutes=time_mag_incubation, msg=f'Incubating on magnet \
+for {time_mag_incubation} minutes.')
 
         # elute
         for m, e in zip(mag_samples_m, elution_samples_m):
