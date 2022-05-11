@@ -41,5 +41,14 @@
       {"label": "right", "value": "right"},
       {"label": "left", "value": "left"}
     ]
+  },
+  {
+    "type": "dropDown",
+    "label": "dry run mode",
+    "name": "_dry_run",
+    "options": [
+      {"label": "no", "value": false},
+      {"label": "yes", "value": true}
+    ]
   }
 ]
