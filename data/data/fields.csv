@@ -369,6 +369,7 @@ extrplate,1
 f_time,2
 fe_temp,2
 fe_time,2
+file_dilution,1
 fill_plate_blank,2
 fill_second_plate,1
 fill_volume,1
@@ -649,8 +650,8 @@ mother_plate_type,1
 mount,2
 mount_m20,1
 mount_m300,2
-mount_p20,3
-mount_p300,2
+mount_p20,4
+mount_p300,3
 mount_side,1
 move_side,2
 move_vol,1
@@ -955,7 +956,7 @@ reservoir_lname,1
 reservoir_loadname,1
 reservoir_loc,1
 reservoir_slot,1
-reservoir_type,3
+reservoir_type,4
 reset_counter,1
 reset_tipracks,7
 resettips,1
