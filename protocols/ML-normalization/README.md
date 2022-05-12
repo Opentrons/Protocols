@@ -21,7 +21,7 @@ You can download an example .csv to edit directly [here](https://opentrons-proto
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
 * [Eppendorf™ 96-Well twin.tec™ PCR Plate 250µl](https://www.fishersci.com/shop/products/eppendorf-96-well-twin-tec-pcr-plates-21/e951020389)
-* [NEST 12-channel reservoir 15ml](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml)
+* [NEST 12-channel reservoir 15ml](https://shop.opentrons.com/collections/verified-labware/products/nest-12-well-reservoir-15-ml) or [USA Scientific 12 Well Reservoir 22 mL](https://www.usascientific.com/12-channel-automation-reservoir/p/1061-8150)
 * [Opentrons 20µl and 300µl tipracks](https://shop.opentrons.com/collections/opentrons-tips)
 * [Opentrons P20 and P300 GEN2 single-channel pipettes](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette)
 
