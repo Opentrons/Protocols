@@ -9,10 +9,10 @@ metadata = {
 
 def run(ctx):
 
-    [input_csv, p20_type, p20_mount, p300_type,
-     p300_mount, source_type, dest_type] = get_values(  # noqa: F821
+    [input_csv, p20_type, p20_mount, p300_type, p300_mount, source_type,
+     dest_type, reservoir_type] = get_values(  # noqa: F821
         'input_csv', 'p20_type', 'p20_mount', 'p300_type', 'p300_mount',
-        'source_type', 'dest_type')
+        'source_type', 'dest_type', 'reservoir_type')
     # [input_csv, p20_mount, p300_mount] = [
     #     "source plate well, destination plate well, volume sample (µl),\
     #     volume diluent (µl)\nA1, A1, 2, 28", 'right', 'left'
@@ -26,7 +26,7 @@ def run(ctx):
         for slot in ['3', '6']
     ]
     water = ctx.load_labware(
-        'nest_12_reservoir_15ml', '5',
+        reservoir_type, '5',
         'reservoir for water (channel 1)').wells()[0].bottom(5)
     tiprack300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot, '300ul tiprack')

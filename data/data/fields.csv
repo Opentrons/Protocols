@@ -956,7 +956,7 @@ reservoir_lname,1
 reservoir_loadname,1
 reservoir_loc,1
 reservoir_slot,1
-reservoir_type,3
+reservoir_type,4
 reset_counter,1
 reset_tipracks,7
 resettips,1
