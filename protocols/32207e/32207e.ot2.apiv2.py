@@ -33,8 +33,9 @@ def run(ctx):
                                tip_racks=tipracks300)
 
     # Tip tracking between runs
+    file_path = '/data/csv/tiptracking.csv'
+
     if not ctx.is_simulating():
-        file_path = '/data/csv/tiptracking.csv'
         file_dir = os.path.dirname(file_path)
         # check for file directory
         if not os.path.exists(file_dir):
@@ -51,6 +52,7 @@ def run(ctx):
         with open(file_path) as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=',')
             tip_count_list = next(csv_reader)
+    print(tip_count_list)
 
     num_one = int(tip_count_list[0]) if tip_track else 0
     num_two = int(tip_count_list[1]) if tip_track else 0
