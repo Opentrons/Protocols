@@ -22,6 +22,12 @@
     ]
   },
   {
+    "type": "float",
+    "label": "Starstedt Access Height (from bottom of the well in mm)",
+    "name": "star_height",
+    "default": 5
+  },
+  {
     "type": "dropDown",
     "label": "P20 Single-Channel Mount",
     "name": "p20_mount",

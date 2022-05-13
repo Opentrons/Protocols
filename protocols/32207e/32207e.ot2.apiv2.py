@@ -11,9 +11,9 @@ metadata = {
 
 def run(ctx):
 
-    [csv_samp, dna_asp_rate, tip_track,
+    [csv_samp, dna_asp_rate, tip_track, star_height,
         p20_mount, p300_mount] = get_values(  # noqa: F821
-        "csv_samp", "dna_asp_rate", "tip_track",
+        "csv_samp", "dna_asp_rate", "tip_track", "star_height",
             "p20_mount", "p300_mount")
 
     # load Labware
@@ -67,7 +67,7 @@ def run(ctx):
         if tipcount20 == 191:
             ctx.pause("Replace 20ul tip racks")
             tipcount20 = 0
-            p20.pick_up_tip(tips20[0])
+            p20.pick_up_tip(tips20[tipcount20])
             tipcount20 += 1
         else:
             p20.pick_up_tip(tips20[tipcount20])
@@ -117,7 +117,7 @@ def run(ctx):
             pick_up300()
         if te_vol > 0:
             pip.aspirate(te_vol, te.bottom(z=3))
-            pip.dispense(te_vol, final_plate.wells_by_name()[well].bottom(z=3))
+            pip.dispense(te_vol, final_plate.wells_by_name()[well].bottom(z=star_height))  # noqa: E501
         else:
             continue
     if p20.has_tip:
@@ -140,16 +140,16 @@ def run(ctx):
         elif not pip.has_tip and pip == p300:
             pick_up300()
         pip.aspirate(dna_vol, dna_plate.wells_by_name()[well].bottom(z=3), rate=dna_asp_rate)  # noqa: E501
-        pip.dispense(dna_vol, final_plate.wells_by_name()[well].bottom(z=3))
+        pip.dispense(dna_vol, final_plate.wells_by_name()[well].bottom(z=star_height))  # noqa: E501
         if total_vol*0.8 > 20:
             if not p300.has_tip:
-                p300.pick_up_tip()
-                p300.mix(3, total_vol*0.8, final_plate.wells_by_name()[well].bottom(z=3))  # noqa: E501
+                pick_up300()
+                p300.mix(3, total_vol*0.8, final_plate.wells_by_name()[well].bottom(z=star_height))  # noqa: E501
                 p300.drop_tip()
             else:
-                p300.mix(3, total_vol*0.8, final_plate.wells_by_name()[well].bottom(z=3))  # noqa: E501
+                p300.mix(3, total_vol*0.8, final_plate.wells_by_name()[well].bottom(z=star_height))  # noqa: E501
         else:
-            pip.mix(3, total_vol*0.8, final_plate.wells_by_name()[well].bottom(z=3))  # noqa: E501
+            pip.mix(3, total_vol*0.8, final_plate.wells_by_name()[well].bottom(z=star_height))  # noqa: E501
         pip.drop_tip()
 
     num_one = tipcount20
