@@ -3,7 +3,7 @@
     "type": "int",
     "label": "Number of Samples (max 288)",
     "name": "num_samp",
-    "default": 288
+    "default": 96
   },
   {
     "type": "dropDown",
@@ -25,8 +25,8 @@
   },
   {
     "type": "int",
-    "label": "Starting Volume, ",
-    "name": "start_vol",
-    "default": 100
+    "label": "Overage Percent, ",
+    "name": "overage_percent",
+    "default": 30
   }
 ]
