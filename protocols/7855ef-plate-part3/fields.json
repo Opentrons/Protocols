@@ -27,6 +27,6 @@
     "type": "int",
     "label": "Overage Percent, ",
     "name": "overage_percent",
-    "default": 30
+    "default": 10
   }
 ]

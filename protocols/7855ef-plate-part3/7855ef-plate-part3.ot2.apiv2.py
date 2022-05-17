@@ -20,6 +20,7 @@ def run(protocol):
         raise Exception("Enter a sample number between 1-288")
 
     num_col = math.ceil(num_samp/8)
+    rxn_plate_num = math.ceil(num_col/12)
     tip_counter = 0
 
     # load labware
@@ -28,8 +29,8 @@ def run(protocol):
                                            label='Ion Barcode Plate')
                      for slot in [1, 2, 3]]
     reaction_plates = [protocol.load_labware('customendura_96_wellplate_200ul',
-                       str(slot), label='Reaction Plate')
-                       for slot in [4, 5, 6]]
+                                             slot, label='Reaction Plate')
+                       for slot in ['4', '5', '6'][:rxn_plate_num]]
     mmx_plate = protocol.load_labware('customendura_96_wellplate_200ul', '7',
                                       label='MMX Plate')
     tiprack20 = [protocol.load_labware('opentrons_96_filtertiprack_20ul',
@@ -42,14 +43,20 @@ def run(protocol):
 
     # liquid height tracking
     overage_percent = (overage_percent/100)+1
-    v_naught = 3*num_samp*overage_percent/8
-    h_naught = 3.77*(v_naught)**(1/3)
+    v_naught = 3*num_col*overage_percent
+    # starting height minus 2mm, using % isn't enough
+    h_naught = (1.92*(v_naught)**(1/3))-2.5
     h = h_naught
 
     def adjust_height(vol):
+        nonlocal v_naught
         nonlocal h
-        dh = 3.77*(vol)**(1/3)
-        h -= dh
+        # below if/else needed to avoid complex number error
+        if v_naught - vol > 0:
+            v_naught = v_naught - vol
+        else:
+            v_naught = 0
+        h = (1.92*(v_naught)**(1/3))-2.5
         if h < 3:
             h = 1
 
