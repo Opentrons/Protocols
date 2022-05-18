@@ -31,7 +31,7 @@ def run(ctx):
         ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
         for slot in ['2', '4', '5']]
     tempdeck = ctx.load_module('Temperature Module Gen2', '3')
-    tempdeck.set_temperature(4)
+    tempdeck.set_temperature(12)
     elution_plate = tempdeck.load_labware(
         'eppendorftwin.tec_96_aluminumblock_150ul')
     tc = ctx.load_module('thermocycler')
@@ -77,7 +77,6 @@ def run(ctx):
     tc_samples_m = tc_plate.rows()[0][:num_cols]
 
     magdeck.disengage()  # just in case
-    tempdeck.set_temperature(4)
 
     m300.flow_rate.aspirate = 50
     m300.flow_rate.dispense = 150
@@ -176,7 +175,7 @@ resuming.')
       {'temperature': 65, 'hold_time_minutes': 30}]
     tc.close_lid()
     tc.execute_profile(steps=profile, repetitions=1, block_max_volume=60)
-    tc.set_block_temperature(4)
+    tc.set_block_temperature(12)
     tc.open_lid()
 
     """ 2. Adapter Ligation """
@@ -201,7 +200,7 @@ resuming.')
 
     tc.close_lid()
     tc.set_block_temperature(37, hold_time_minutes=15)
-    tc.set_block_temperature(4)
+    tc.set_block_temperature(12)
     tc.open_lid()
 
     """ 3. Clean Up """
