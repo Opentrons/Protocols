@@ -32,11 +32,11 @@ def run(ctx):
     def pick_up(pipettes):
         nonlocal tip_count
         for pip in pipettes:
-            tip_count += 1
             if tip_count == tip_max:
                 ctx.pause('Refill tiprack before resuming.')
                 [rack.reset() for rack in tiprack]
                 tip_count = 0
+            tip_count += 1
             pip.pick_up_tip()
 
     def mix(pip, reps, vol, loc):
