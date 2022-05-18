@@ -191,6 +191,7 @@ component_2_volume,1
 component_3_volume,1
 control_plate,1
 count_mix,1
+count_plates,1
 count_samples,18
 csv,5
 csv1_buff,1
@@ -1090,6 +1091,7 @@ stage2_disp_speed,1
 stage2_dispense_height,1
 stage2_height_after_disp,1
 standard_type,1
+star_height,1
 start,1
 start_buff_vol,1
 start_col,1
