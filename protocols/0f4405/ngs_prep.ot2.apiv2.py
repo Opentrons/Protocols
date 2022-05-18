@@ -32,7 +32,7 @@ def run(ctx):
         for slot in ['2', '4', '5']]
     tempdeck = ctx.load_module('Temperature Module Gen2', '3')
     tempdeck.set_temperature(12)
-    elution_plate = tempdeck.load_labware(
+    tempdeck_plate = tempdeck.load_labware(
         'eppendorftwin.tec_96_aluminumblock_150ul')
     tc = ctx.load_module('thermocycler')
     tc.open_lid()
@@ -64,16 +64,16 @@ def run(ctx):
     """
     Here is where you can define the locations of your reagents.
     """
-    mastermix = reservoir.rows()[0][0]
-    adaptor = reservoir.rows()[0][1]
-    mastermix2 = reservoir.rows()[0][2]
-    user = reservoir.rows()[0][3]
-    etoh = reservoir.rows()[0][4]
-    elution_buffer = reservoir.rows()[0][5]
+    mastermix = tempdeck_plate.rows()[0][0]
+    adaptor = tempdeck_plate.rows()[0][1]
+    mastermix2 = tempdeck_plate.rows()[0][2]
+    user = tempdeck_plate.rows()[0][3]
+    etoh = reservoir.rows()[0][0]
+    elution_buffer = reservoir.rows()[0][1]
     waste = reservoir.rows()[0][-1]
 
     mag_samples_m = mag_plate.rows()[0][:num_cols]
-    elution_samples_m = elution_plate.rows()[0][:num_cols]
+    elution_samples_m = tempdeck_plate.rows()[0][4:4+num_cols]
     tc_samples_m = tc_plate.rows()[0][:num_cols]
 
     magdeck.disengage()  # just in case
