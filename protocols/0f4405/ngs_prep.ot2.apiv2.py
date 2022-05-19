@@ -72,7 +72,9 @@ def run(ctx):
     elution_buffer = reservoir.rows()[0][1]
     waste = reservoir.rows()[0][-1]
 
-    mag_samples_m = mag_plate.rows()[0][:num_cols]
+    mag_sets = [
+        mag_plate.rows()[0][i*num_cols:(i+1)*num_cols]
+        for i in range(2)]
     elution_samples_m = tempdeck_plate.rows()[0][4:4+num_cols]
     tc_samples_m = tc_plate.rows()[0][:num_cols]
 
@@ -149,18 +151,19 @@ resuming.')
     def remove_supernatant(vol, pip=m300, park=False):
         pip.flow_rate.aspirate /= 5
         parking_spots = parking_spots300 if pip == m300 else parking_spots20
-        for i, (m, p) in enumerate(zip(mag_samples_m, parking_spots)):
+        for i, p in enumerate(parking_spots):
             if park:
                 _pick_up(pip, p)
             else:
                 _pick_up(pip)
-            side = -1 if i % 2 == 0 else 1
-            loc = m.bottom(0).move(Point(x=side, z=z_offset_supernatant))
-            pip.move_to(m.center())
-            pip.transfer(vol, loc, waste, new_tip='never',
-                         air_gap=pip.min_volume)
-            pip.blow_out(waste)
-            pip.air_gap(pip.min_volume)
+            for set in mag_sets:
+                m = set[i]
+                side = -1 if mag_plate.rows()[0].index(m) % 2 == 0 else 1
+                loc = m.bottom(0).move(Point(x=side, z=z_offset_supernatant))
+                pip.move_to(m.center())
+                pip.transfer(vol, loc, waste, new_tip='never',
+                             air_gap=pip.min_volume)
+                pip.blow_out(waste)
             _drop(pip)
         pip.flow_rate.aspirate *= 5
 
@@ -215,53 +218,54 @@ resuming.')
     dna_vol_total = 96.5
     elution_vol_total = 17
     num_washes = math.ceil(_ratio_beads_dna/0.9)
+    mag_sets = mag_sets[:num_washes]
     dna_vol_wash = dna_vol_total/num_washes
     elution_vol_wash = elution_vol_total/num_washes
     elution_vol_final = 15/num_washes
 
-    for wash_ind in range(num_washes):
-        # add sample
-        for t, m, p in zip(tc_samples_m, mag_samples_m, parking_spots300):
-            if wash_ind == 0:
-                _pick_up(m300)
-            else:
-                _pick_up(m300, p)
-            m300.transfer(dna_vol_wash, t, m, mix_after=(10, 50),
+    # add sample
+    for i, (t, p) in enumerate(zip(tc_samples_m, parking_spots300)):
+        _pick_up(m300)
+        for set in mag_sets:
+            m300.transfer(dna_vol_wash, t, set[i], mix_after=(10, 50),
                           new_tip='never')
-            _drop(m300, p)
-        if not _dry_run:
-            ctx.delay(minutes=time_mag_incubation, msg=f'Incubating off magnet \
+        _drop(m300, p)
+
+    if not _dry_run:
+        ctx.delay(minutes=time_mag_incubation, msg=f'Incubating off magnet \
 for {time_mag_incubation} minutes.')
-        magdeck.engage(height=mag_height)
+    magdeck.engage(height=mag_height)
+    if not _dry_run:
+        ctx.delay(minutes=time_mag_incubation, msg=f'Incubating on magnet for \
+{time_mag_incubation} minutes.')
+
+    remove_supernatant(200, pip=m300, park=True)
+
+    # wash 2x
+    for _ in range(2):
+        _pick_up(m300)
+        for i in range(num_cols):
+            for set in mag_sets:
+                m300.transfer(200, etoh, set[i].top(), new_tip='never')
         if not _dry_run:
-            ctx.delay(minutes=time_mag_incubation, msg=f'Incubating on magnet \
-for {time_mag_incubation} minutes.')
+            ctx.delay(seconds=30, msg='Incubating on magnet for 30 seconds.')
+        m300.drop_tip()
         remove_supernatant(200, pip=m300, park=True)
 
-        # wash 2x
-        for _ in range(2):
-            _pick_up(m300)
-            for i, m in enumerate(mag_samples_m):
-                m300.aspirate(200, etoh)
-                m300.dispense(200, m.top())
-            if not _dry_run:
-                ctx.delay(seconds=30, msg='Incubating on magnet for 30 \
-seconds.')
-            m300.drop_tip()
-            remove_supernatant(200, pip=m300, park=True)
+    # remove residual
+    remove_supernatant(20, pip=m20, park=False)
 
-        # remove residual
-        remove_supernatant(20, pip=m20, park=False)
+    # air dry
+    if not _dry_run:
+        ctx.delay(minutes=5, msg='Air drying for 5 minutes.')
+    magdeck.disengage()
 
-        # air dry
-        if not _dry_run:
-            ctx.delay(minutes=5, msg='Air drying for 5 minutes.')
-        magdeck.disengage()
-
-        # elute
-        for i, m in enumerate(mag_samples_m):
+    # elute
+    for i in range(num_cols):
+        for set in mag_sets:
             _pick_up(m20)
-            side = 1 if i % 2 == 0 else -1
+            m = set[i]
+            side = 1 if mag_plate.rows()[0].index(m) % 2 == 0 else -1
             loc = m.bottom().move(Point(x=x_offset*side, z=z_offset_beads))
             m20.aspirate(elution_vol_wash, elution_buffer)
             m20.move_to(m.center())
@@ -271,22 +275,24 @@ seconds.')
                 m20.dispense(20, loc)
             _drop(m20)
 
-        if not _dry_run:
-            ctx.delay(minutes=time_mag_incubation, msg=f'Incubating off magnet \
+    if not _dry_run:
+        ctx.delay(minutes=time_mag_incubation, msg=f'Incubating off magnet \
 for {time_mag_incubation} minutes.')
-        magdeck.engage(height=mag_height)
-        if not _dry_run:
-            ctx.delay(minutes=time_mag_incubation, msg=f'Incubating on magnet \
+    magdeck.engage(height=mag_height)
+    if not _dry_run:
+        ctx.delay(minutes=time_mag_incubation, msg=f'Incubating on magnet \
 for {time_mag_incubation} minutes.')
 
-        # elute
-        for m, e in zip(mag_samples_m, elution_samples_m):
-            _pick_up(m20)
+    # elute
+    for i, e in enumerate(elution_samples_m):
+        _pick_up(m20)
+        for set in mag_sets:
             m20.flow_rate.aspirate /= 5
-            m20.transfer(elution_vol_final, m.bottom(0.5), e, new_tip='never')
+            m20.transfer(elution_vol_final, set[i].bottom(0.5), e,
+                         new_tip='never')
             m20.flow_rate.aspirate *= 5
             m20.mix(10, 20, e)
-            _drop(m20)
+        _drop(m20)
 
     magdeck.disengage()
     tc.deactivate_lid()
