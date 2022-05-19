@@ -13,10 +13,10 @@ metadata = {
 # Start protocol
 def run(ctx):
 
-    [num_samples, _ratio_beads_dna, time_mag_incubation,
+    [num_samples, _ratio_beads_dna, _profile_type, time_mag_incubation,
      mount_m300, mount_m20, _dry_run] = get_values(  # noqa: F821
-        'num_samples', '_ratio_beads_dna', 'time_mag_incubation', 'mount_m300',
-        'mount_m20', '_dry_run')
+        'num_samples', '_ratio_beads_dna', '_profile_type',
+        'time_mag_incubation', 'mount_m300', 'mount_m20', '_dry_run')
     park_tips = True
     tip_track = False
     mag_height = 11
@@ -37,7 +37,7 @@ def run(ctx):
     tc = ctx.load_module('thermocycler')
     tc.open_lid()
     tc.set_block_temperature(20)
-    tc.set_lid_temperature(105)
+    tc.set_lid_temperature(80)
     tc_plate = tc.load_labware('eppendorftwin.tec_96_wellplate_150ul',
                                'DNA plate')
     tips300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
@@ -170,15 +170,23 @@ resuming.')
         m20.transfer(10, mastermix, t, mix_after=(10, 20), new_tip='never')
         _drop(m20)
 
-    profile = [
-      {'temperature': 20, 'hold_time_minutes': 30},
-      {'temperature': 65, 'hold_time_minutes': 30}]
+    if _profile_type == 'default':
+        profile = [
+          {'temperature': 20, 'hold_time_minutes': 30},
+          {'temperature': 65, 'hold_time_minutes': 30}]
+    else:
+        profile = [
+          {'temperature': 20, 'hold_time_minutes': 30},
+          {'temperature': 55, 'hold_time_minutes': 45}]
+
     tc.close_lid()
     tc.execute_profile(steps=profile, repetitions=1, block_max_volume=60)
     tc.set_block_temperature(12)
     tc.open_lid()
 
     """ 2. Adapter Ligation """
+    tc.set_lid_temperature(42)
+
     for t in tc_samples_m:
         _pick_up(m20)
         m20.transfer(2.5, adaptor, t, mix_after=(10, 20), new_tip='never')
