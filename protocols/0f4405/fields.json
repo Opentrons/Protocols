@@ -19,6 +19,15 @@
     ]
   },
   {
+    "type": "dropDown",
+    "label": "thermocycling profile",
+    "name": "_profile_type",
+    "options": [
+      {"label": "20°C, 30 min / 65°C, 30 min (default)", "value": "default"},
+      {"label": "20°C, 30 min. / 55°C, 45 min (degraded)", "value": "degraded"}
+    ]
+  },
+  {
     "type": "float",
     "label": "magnetic incubation time (in minutes)",
     "name": "time_mag_incubation",
