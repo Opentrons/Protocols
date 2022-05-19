@@ -29,30 +29,30 @@ This protocol performs the [NEBNext® Ultra™ II DNA Library Prep Kit for Illum
 * [Opentrons P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)
 
 ### Reagents
-* [[NEBNext® Ultra™ II DNA Library Prep Kit for Illumina®](https://www.neb.com/products/e7645-nebnext-ultra-ii-dna-library-prep-kit-for-illumina#Protocols,%20Manuals%20&%20Usage)
+* [NEBNext® Ultra™ II DNA Library Prep Kit for Illumina®](https://www.neb.com/products/e7645-nebnext-ultra-ii-dna-library-prep-kit-for-illumina#Protocols,%20Manuals%20&%20Usage)
 
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0f4405/deck.png)  
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/0f4405/deckv2.png)  
 
 reservoir (slot 9):  
-* column 1: mastermix 1
-* column 2: adaptor
-* column 3: mastermix 2
-* column 4: USER
-* column 5: EtOH
-* column 6: elution buffer
+* column 1: EtOH
+* column 2: elution buffer
 * column 12: waste (loaded empty)
 
 Thermocycler plate (slot 7, 8, 10, 11):  
 * columns 1-3: DNA samples
 
 Magnetic Module plate (slot 1):  
-* columns 1-3: beads
+* columns 1-6: beads
 
 Temperature Module plate (slot 3):
-* columns 1-3: final PCR reagents
+* column 1: mastermix 1
+* column 2: adaptor
+* column 3: mastermix 2
+* column 4: USER
+* columns 5-7: final PCR reagents
 
 ---
 
