@@ -118,6 +118,8 @@ resuming.')
             pip.reset_tipracks()
             tip_log[pip]['count'] = 0
         if loc:
+            if not loc.has_tip:
+                raise Exception(f'No tip in {loc}')
             pip.pick_up_tip(loc)
         else:
             pip.pick_up_tip(tip_log[pip]['tips'][tip_log[pip]['count']])
@@ -126,13 +128,15 @@ resuming.')
     switch = True
     drop_count = 0
     # number of tips trash will accommodate before prompting user to empty
-    drop_threshold = 120
+    drop_threshold = 200
 
     def _drop(pip, loc=None):
         nonlocal switch
         nonlocal drop_count
         if loc:
             pip.drop_tip(loc)
+            for well in loc.parent.columns()[loc.parent.rows()[0].index(loc)]:
+                well.has_tip = True
         else:
             side = 30 if switch else -18
             drop_loc = ctx.loaded_labwares[12].wells()[0].top().move(
@@ -145,29 +149,30 @@ resuming.')
                 drop_count += 1
             if drop_count == drop_threshold:
                 ctx.pause('Please empty tips from waste before \
-    resuming.')
+resuming.')
                 drop_count = 0
 
     def remove_supernatant(vol, pip=m300, park=False):
         pip.flow_rate.aspirate /= 5
         parking_spots = parking_spots300 if pip == m300 else parking_spots20
         for i, p in enumerate(parking_spots):
-            if park:
-                _pick_up(pip, p)
-            else:
-                _pick_up(pip)
+            if not pip.has_tip:
+                if park:
+                    _pick_up(pip, p)
+                else:
+                    _pick_up(pip)
             for set in mag_sets:
                 m = set[i]
                 side = -1 if mag_plate.rows()[0].index(m) % 2 == 0 else 1
                 loc = m.bottom(0).move(Point(x=side, z=z_offset_supernatant))
                 pip.move_to(m.center())
-                pip.transfer(vol, loc, waste, new_tip='never',
-                             air_gap=pip.min_volume)
+                pip.transfer(vol, loc, waste, new_tip='never')
                 pip.blow_out(waste)
             _drop(pip)
         pip.flow_rate.aspirate *= 5
 
     """ 1. NEBNext End Prep """
+    ctx.comment('   END PREP   ')
     for t in tc_samples_m:
         _pick_up(m20)
         m20.transfer(10, mastermix, t, mix_after=(10, 20), new_tip='never')
@@ -188,6 +193,7 @@ resuming.')
     tc.open_lid()
 
     """ 2. Adapter Ligation """
+    ctx.comment('   ADAPTER LIGATION   ')
     tc.set_lid_temperature(42)
 
     for t in tc_samples_m:
@@ -223,6 +229,7 @@ resuming.')
     elution_vol_wash = elution_vol_total/num_washes
     elution_vol_final = 15/num_washes
 
+    ctx.comment('   CLEAN UP   ')
     # add sample
     for i, (t, p) in enumerate(zip(tc_samples_m, parking_spots300)):
         _pick_up(m300)
@@ -249,8 +256,7 @@ for {time_mag_incubation} minutes.')
                 m300.transfer(200, etoh, set[i].top(), new_tip='never')
         if not _dry_run:
             ctx.delay(seconds=30, msg='Incubating on magnet for 30 seconds.')
-        m300.drop_tip()
-        remove_supernatant(200, pip=m300, park=True)
+        remove_supernatant(200, pip=m300, park=False)
 
     # remove residual
     remove_supernatant(20, pip=m20, park=False)
@@ -274,6 +280,8 @@ for {time_mag_incubation} minutes.')
                 m20.aspirate(20, m.bottom(1))
                 m20.dispense(20, loc)
             _drop(m20)
+
+    ctx.comment('   ELUTE   ')
 
     if not _dry_run:
         ctx.delay(minutes=time_mag_incubation, msg=f'Incubating off magnet \
