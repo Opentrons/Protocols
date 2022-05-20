@@ -1,4 +1,4 @@
-from opentrons import protocol_api
+"""OPENTRONS"""
 import math
 
 metadata = {
@@ -11,7 +11,7 @@ metadata = {
 
 
 def run(ctx):
-
+    """PROTOCOL."""
     [
      num_samples
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
@@ -51,13 +51,29 @@ def run(ctx):
     tsb = thermo_tubes.rows()[0][2]
     sample_dest = sample_plate.rows()[0][:num_cols]
 
+    # hard code variables
+    airgap = 5
     # protocol
     """DNA samples MUST be 30ul"""
 
     # Add 20ul master mix slot 1 to slot 2 samples
     for dest in sample_dest:
-        m300.transfer(20,
-                      master_mix,
-                      dest,
-                      mix_after=(10, 45),
-                      new_tip='always')
+        m300.pick_up_tip()
+        m300.aspirate(20, master_mix)
+        m300.move_to(master_mix.top(-2))
+        ctx.delay(seconds=2)
+        m300.touch_tip(v_offset=-2)
+        m300.aspirate(airgap, master_mix.top())
+        m300.dispense(airgap, dest.top())
+        m300.dispense(20, dest)
+        m300.mix(10, 45)
+        m300.drop_tip()
+        # m300.transfer(20,
+        #               master_mix,
+        #               dest,
+        #               mix_after=(10, 45),
+        #               new_tip='always')
+    for c in ctx.commands():
+        print(c)
+    ctx.comment('''Tagmentation Prep Complete. Please transfer samples to
+    thermocycler to complete tagmentation''')
