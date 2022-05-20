@@ -38,7 +38,8 @@ The ThermoFisher 96 well plate (model 4483352) is to be mounted on top of the Bi
 
 Using the customization fields below, set up your protocol.
 * Number of Samples: Specify the number of samples to be processed in this run (max 288).
-* P20 single GEN2 mount: Specify which mount to load the P20 single GEN2 pipette.
+* P20 Multi GEN2 mount: Specify which mount to load the P20 Multi GEN2 pipette.
+* Overage percent for Barcode Reaction Mix in Slot 7, Column 3
 
 
 **Labware Setup**
@@ -49,7 +50,7 @@ Slot 4, 5, 6: Custom 96 Well Endura Plate with reaction
 
 Slot 7: MMX Plate with Barcode Reaction Mix in Column 3
 
-Slot 9, 10, 11: Opentrons 20ul Tip Rack
+Slot 8, 9, 10: Opentrons 20ul Tip Rack
 
 
 
