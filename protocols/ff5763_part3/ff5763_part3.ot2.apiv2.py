@@ -1,4 +1,4 @@
-"""OPENTRONS"""
+"""OPENTRONS."""
 import math
 
 metadata = {
@@ -52,5 +52,18 @@ def run(ctx):
     sample_dest = sample_plate.rows()[0][:num_cols]
 
     # hard code variables
+
     # protocol
-    
+
+    # Discard supernatant
+
+    # Disengage mag
+
+    # Add 40ul Master mix (made off-deck w/10% overage)
+
+    # centrifuge off deck, 280 x g for 3 seconds
+
+    # Add 10ul index adapters (made offdeck or supplied in 96 well plate)
+    # mix 10x at 40ul
+
+    # Move to off-deck thermo cycler
