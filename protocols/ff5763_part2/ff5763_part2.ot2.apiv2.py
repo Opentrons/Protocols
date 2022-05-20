@@ -1,6 +1,6 @@
-"""OPENTRONS"""
+"""OPENTRONS."""
 import math
-
+from opentrons.types import Point
 metadata = {
     'protocolName': 'Protocol Title',
     'author': 'AUTHOR NAME <authoremail@company.com>',
@@ -78,7 +78,12 @@ def run(ctx):
     # Incubate on mag stand, 3 minutes
 
     # Remove supernatant
-
+    for s in sample_dest:
+        m300.pick_up_tip()
+        # going to break transfer func up for better control
+        m300.transfer(65, s.bottom(1), liquid_trash[0], new_tip='never')
+        m300.blow_out()
+        m300.drop_tip()
     # Wash twice like this:
     # disengage mag
     # add 100ul TWB slowly onto beads
@@ -86,10 +91,45 @@ def run(ctx):
     # engage mag
     # incubate 3 min on mag stand until clear
     # remove supernatant
-
+    # TWB washes 2x
     # Disengage mag
     # Slowly add 100ul TWB onto beads
     # slowly mix to resuspend
+    count = 0
+    total_twb = 100
+    for wash in range(3):
+        mag_module.disengage()
+
+        # resuspend beads in TWB
+        for i, s in sample_dest:
+            ind = (count*len(twb))//total_twb
+            count += 1
+
+            side = i % 2
+            angle = 1 if side == 0 else -1
+            disp_loc = s.bottom().move(
+                Point(x=0.85*(s.diameter/2)*angle, y=0, z=3))
+            m300.pick_up_tip()
+            m300.aspirate(100, twb[ind])
+            m300.move_to(s.center())
+            # add pipette rate slow here (half speed)
+            m300.dispense(100, disp_loc)
+            m300.mix(10, 80, disp_loc)
+            m300.drop_tip()
+
+        mag_module.engage(height=18)
+
+        if wash < 2:
+            ctx.delay(
+                minutes=3, msg='Incubating beads on magnet for 3 minutes')
+            # remove and discard supernatant
+            for s in sample_dest:
+                m300.pick_up_tip()
+                # going to break transfer func up for better control options
+                m300.transfer(
+                    120, s.bottom(1), liquid_trash[wash], new_tip='never')
+                m300.blow_out()
+                m300.drop_tip()
 
     # End part 2
     for c in ctx.commands():
