@@ -24,9 +24,9 @@
      ]
   },
   {
-    "type": "int",
-    "label": "Starting Volume, ",
-    "name": "start_vol",
-    "default": 100
+    "type": "float",
+    "label": "Overage Percent",
+    "name": "overage_percent",
+    "default": 15
   }
 ]
