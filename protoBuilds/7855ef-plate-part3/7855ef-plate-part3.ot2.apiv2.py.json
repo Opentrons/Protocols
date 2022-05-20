@@ -2265,11 +2265,11 @@
             "options": [
                 {
                     "label": "right",
-                    "value": "right"
+                    "value": "left"
                 },
                 {
                     "label": "left",
-                    "value": "left"
+                    "value": "right"
                 }
             ],
             "type": "dropDown"
@@ -2298,7 +2298,7 @@
     ],
     "instruments": [
         {
-            "mount": "right",
+            "mount": "left",
             "name": "p20_multi_gen2"
         }
     ],
