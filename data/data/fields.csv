@@ -436,9 +436,7 @@ include_wash2,1
 include_wash3,1
 include_wash4,1
 incubate_bind_time,1
-
 incubate_samples_with_beads,3
-
 incubation_temperature,1
 incubation_time,5
 index_start_col,2

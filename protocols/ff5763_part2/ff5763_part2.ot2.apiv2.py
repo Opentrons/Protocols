@@ -9,6 +9,8 @@ metadata = {
                          # IN SECTION 5.2 OF THE APIV2 "VERSIONING"
 }
 
+TEST_MODE = False
+
 
 def run(ctx):
     """PROTOCOL."""
@@ -50,9 +52,16 @@ def run(ctx):
     master_mix = thermo_tubes.rows()[0][0]
     nf_water = thermo_tubes.rows()[0][1]
     tsb = thermo_tubes.rows()[0][2]
-    twb = reagent_resv.wells()[0]
+    twb = reagent_resv.rows()[0][0]
+    pcr_mix = reagent_resv.rows()[0][1]
+
     sample_dest = sample_plate.rows()[0][:num_cols]
-    pcr_mix = reagent_resv.wells()[1]
+
+    radius = sample_dest[0].diameter/2
+    x_offset_beads = 0.85*radius
+    z_offset_beads = 3
+    supernatant_headspeed_modulator = 5
+    supernatant_flowrate_modulator = 5
 
     # protocol
 
@@ -78,12 +87,19 @@ def run(ctx):
     # Incubate on mag stand, 3 minutes
 
     # Remove supernatant
+    m300.flow_rate.aspirate /= supernatant_flowrate_modulator
+    ctx.max_speeds['A'] /= supernatant_headspeed_modulator
+    ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
     for s in sample_dest:
         m300.pick_up_tip()
         # going to break transfer func up for better control
-        m300.transfer(65, s.bottom(1), liquid_trash[0], new_tip='never')
+        m300.transfer(65, s.bottom(1), liquid_trash[0], air_gap=20,
+                      new_tip='never')
         m300.blow_out()
         m300.drop_tip()
+    m300.flow_rate.aspirate *= supernatant_flowrate_modulator
+    ctx.max_speeds['A'] *= supernatant_headspeed_modulator
+    ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
     # Wash twice like this:
     # disengage mag
     # add 100ul TWB slowly onto beads
@@ -95,6 +111,14 @@ def run(ctx):
     # Disengage mag
     # Slowly add 100ul TWB onto beads
     # slowly mix to resuspend
+
+    def bead_mix(reps, vol, well, angle, pip=m300):
+        dispense_loc = well.bottom().move(
+            Point(x=x_offset_beads*angle, y=0, z=z_offset_beads))
+        for _ in range(reps):
+            pip.aspirate(vol, well.bottom(1))
+            pip.dispense(vol, dispense_loc)
+
     count = 0
     total_twb = 100
     for wash in range(3):
@@ -108,28 +132,39 @@ def run(ctx):
             side = i % 2
             angle = 1 if side == 0 else -1
             disp_loc = s.bottom().move(
-                Point(x=0.85*(s.diameter/2)*angle, y=0, z=3))
+                Point(x=x_offset_beads*angle, y=0, z=z_offset_beads))
             m300.pick_up_tip()
             m300.aspirate(100, twb[ind])
             m300.move_to(s.center())
             # add pipette rate slow here (half speed)
             m300.dispense(100, disp_loc)
-            m300.mix(10, 80, disp_loc)
+            # m300.mix(10, 80, disp_loc)
+            bead_mix(10, 80, s, angle)
             m300.drop_tip()
 
         mag_module.engage(height=18)
 
         if wash < 2:
-            ctx.delay(
-                minutes=3, msg='Incubating beads on magnet for 3 minutes')
+            if TEST_MODE:
+                ctx.comment('Incubating beads on magnet for 3 minutes')
+            else:
+                ctx.delay(
+                    minutes=3, msg='Incubating beads on magnet for 3 minutes')
             # remove and discard supernatant
+            m300.flow_rate.aspirate /= supernatant_flowrate_modulator
+            ctx.max_speeds['A'] /= supernatant_headspeed_modulator
+            ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
             for s in sample_dest:
                 m300.pick_up_tip()
                 # going to break transfer func up for better control options
                 m300.transfer(
-                    120, s.bottom(1), liquid_trash[wash], new_tip='never')
+                    120, s.bottom(1), liquid_trash[wash], air_gap=20,
+                    new_tip='never')
                 m300.blow_out()
                 m300.drop_tip()
+            m300.flow_rate.aspirate *= supernatant_flowrate_modulator
+            ctx.max_speeds['A'] *= supernatant_headspeed_modulator
+            ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
 
     # End part 2
     for c in ctx.commands():
