@@ -2,7 +2,7 @@
 import math
 from opentrons.types import Point
 metadata = {
-    'protocolName': 'Protocol Title',
+    'protocolName': 'Illumina DNA Prep Part 2, Post-Tagmentation Clean-up',
     'author': 'AUTHOR NAME <authoremail@company.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
@@ -65,6 +65,7 @@ def run(ctx):
 
     # protocol
 
+    # Steps 1-2
     # Slowly add 10ul TSB (beads) then slowly mix to suspend
     for dest in sample_dest:
         m20.pick_up_tip()
@@ -84,6 +85,7 @@ def run(ctx):
               """in slot 4 for purification. Click 'Resume' when set""")
 
     """"insert mag module purification base code here"""
+    # Step 4-5
     # Incubate on mag stand, 3 minutes
 
     # Remove supernatant
@@ -100,14 +102,17 @@ def run(ctx):
     m300.flow_rate.aspirate *= supernatant_flowrate_modulator
     ctx.max_speeds['A'] *= supernatant_headspeed_modulator
     ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
+
+    # Step 6
+
     # Wash twice like this:
     # disengage mag
     # add 100ul TWB slowly onto beads
     # slowly mix to resuspend
-    # engage mag
-    # incubate 3 min on mag stand until clear
+    # engage mag, incubate 3 min on mag stand until clear
     # remove supernatant
-    # TWB washes 2x
+
+    # Step 7
     # Disengage mag
     # Slowly add 100ul TWB onto beads
     # slowly mix to resuspend
@@ -126,6 +131,7 @@ def run(ctx):
 
         # resuspend beads in TWB
         for i, s in sample_dest:
+            # I don't know what ind is and at this point I'm afraid to ask
             ind = (count*len(twb))//total_twb
             count += 1
 
@@ -133,17 +139,22 @@ def run(ctx):
             angle = 1 if side == 0 else -1
             disp_loc = s.bottom().move(
                 Point(x=x_offset_beads*angle, y=0, z=z_offset_beads))
-            m300.pick_up_tip()
-            m300.aspirate(100, twb[ind])
-            m300.move_to(s.center())
-            # add pipette rate slow here (half speed)
-            m300.dispense(100, disp_loc)
+            m20.pick_up_tip()
+            m20.aspirate(10, twb[ind])
+            m20.move_to(s.center())
+            m20.flow_rate.aspirate /= supernatant_flowrate_modulator
+            m20.flow_rate.dispense /= supernatant_flowrate_modulator
+            m20.dispense(10, disp_loc)
+            m20.drop_tip()
             # m300.mix(10, 80, disp_loc)
+            m300.pick_up_tip()
             bead_mix(10, 80, s, angle)
             m300.drop_tip()
+            m20.flow_rate.aspirate *= supernatant_flowrate_modulator
+            m20.flow_rate.dispense *= supernatant_flowrate_modulator
 
         mag_module.engage(height=18)
-
+        # steps 4-
         if wash < 2:
             if TEST_MODE:
                 ctx.comment('Incubating beads on magnet for 3 minutes')
@@ -156,10 +167,15 @@ def run(ctx):
             ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
             for s in sample_dest:
                 m300.pick_up_tip()
-                # going to break transfer func up for better control options
-                m300.transfer(
-                    120, s.bottom(1), liquid_trash[wash], air_gap=20,
-                    new_tip='never')
+                # What is the volume we need to aspirate here, removing super?
+                m300.aspirate(120, s.bottom(1))
+                m300.move_to(s.top())
+                m300.aspirate(20, s.top())  # air gap
+                m300.dispense(20, liquid_trash.top())
+                m300.dispense(120, liquid_trash[wash])
+                # m300.transfer(
+                #     120, s.bottom(1), liquid_trash[wash], air_gap=20,
+                #     new_tip='never')
                 m300.blow_out()
                 m300.drop_tip()
             m300.flow_rate.aspirate *= supernatant_flowrate_modulator
