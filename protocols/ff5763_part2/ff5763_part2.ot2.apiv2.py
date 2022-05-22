@@ -14,9 +14,8 @@ TEST_MODE = False
 
 def run(ctx):
     """PROTOCOL."""
-    [
-     num_samples
-    ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
+    [num_samples
+     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
         "num_samples")
 
     # define all custom variables above here with descriptions:
@@ -89,19 +88,19 @@ def run(ctx):
     # Incubate on mag stand, 3 minutes
 
     # Remove supernatant
-    m300.flow_rate.aspirate /= supernatant_flowrate_modulator
-    ctx.max_speeds['A'] /= supernatant_headspeed_modulator
-    ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
-    for s in sample_dest:
-        m300.pick_up_tip()
-        # going to break transfer func up for better control
-        m300.transfer(65, s.bottom(1), liquid_trash[0], air_gap=20,
-                      new_tip='never')
-        m300.blow_out()
-        m300.drop_tip()
-    m300.flow_rate.aspirate *= supernatant_flowrate_modulator
-    ctx.max_speeds['A'] *= supernatant_headspeed_modulator
-    ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
+    # m300.flow_rate.aspirate /= supernatant_flowrate_modulator
+    # ctx.max_speeds['A'] /= supernatant_headspeed_modulator
+    # ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
+    # for s in sample_dest:
+    #     m300.pick_up_tip()
+    #     # going to break transfer func up for better control
+    #     m300.transfer(65, s.bottom(1), liquid_trash[0], air_gap=20,
+    #                   new_tip='never')
+    #     m300.blow_out()
+    #     m300.drop_tip()
+    # m300.flow_rate.aspirate *= supernatant_flowrate_modulator
+    # ctx.max_speeds['A'] *= supernatant_headspeed_modulator
+    # ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
 
     # Step 6
 
@@ -130,7 +129,7 @@ def run(ctx):
         mag_module.disengage()
 
         # resuspend beads in TWB
-        for i, s in sample_dest:
+        for i, s in enumerate(sample_dest):
             # I don't know what ind is and at this point I'm afraid to ask
             ind = (count*len(twb))//total_twb
             count += 1
