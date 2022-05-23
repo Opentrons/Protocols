@@ -2,8 +2,8 @@
 import math
 
 metadata = {
-    'protocolName': 'Protocol Title',
-    'author': 'AUTHOR NAME <authoremail@company.com>',
+    'protocolName': 'Illumina DNA Prep, Part 1 Tagmentation',
+    'author': 'John C. Lynch <john.lynch@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
                          # IN SECTION 5.2 OF THE APIV2 "VERSIONING"
@@ -46,7 +46,7 @@ def run(ctx):
 
     # reagents
     '''includes reagents used in other steps for housekeeping purposes'''
-    master_mix = thermo_tubes.rows()[0][0]
+    master_mix_tag = thermo_tubes.rows()[0][0]
     nf_water = thermo_tubes.rows()[0][1]
     tsb = thermo_tubes.rows()[0][2]
     sample_dest = sample_plate.rows()[0][:num_cols]
@@ -54,22 +54,22 @@ def run(ctx):
     # hard code variables
     airgap = 5
     # protocol
-    """DNA samples MUST be 30ul"""
+    """DNA samples  MUST be 30ul"""
 
     # Add 20ul master mix slot 1 to slot 2 samples
     for dest in sample_dest:
         m300.pick_up_tip()
-        m300.aspirate(20, master_mix)
-        m300.move_to(master_mix.top(-2))
+        m300.aspirate(20, master_mix_tag)
+        m300.move_to(master_mix_tag.top(-2))
         ctx.delay(seconds=2)
         m300.touch_tip(v_offset=-2)
-        m300.aspirate(airgap, master_mix.top())
+        m300.aspirate(airgap, master_mix_tag.top())
         m300.dispense(airgap, dest.top())
         m300.dispense(20, dest)
         m300.mix(10, 45)
         m300.drop_tip()
         # m300.transfer(20,
-        #               master_mix,
+        #               master_mix_tag,
         #               dest,
         #               mix_after=(10, 45),
         #               new_tip='always')
