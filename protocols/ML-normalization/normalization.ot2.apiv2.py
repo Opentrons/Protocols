@@ -76,7 +76,7 @@ def run(ctx):
             pip.drop_tip()
 
         # transfer sample
-        pip = p300 if vol2 > 10 else p20
+        pip = p300 if vol2 > 20 else p20
         if vol2 != 0:
             if not pip.hw_pipette['has_tip']:
                 pip.pick_up_tip()
