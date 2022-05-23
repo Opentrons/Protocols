@@ -18,7 +18,7 @@ def run(ctx):
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
         "num_samples")
 
-    # define all custom variables above here with descriptions:
+    # define allcustom variables above here with descriptions:
 
     # number of samples
     num_cols = math.ceil(num_samples/8)
@@ -27,7 +27,8 @@ def run(ctx):
 
     # load modules/labware
     temp_1 = ctx.load_module('tempdeck', '1')
-    midi_plate_1 = ctx.load_labware('custom_from_maurice', '2')
+    # will be custom_from_maurice
+    midi_plate_1 = ctx.load_labware('nest_96_wellplate_2ml_deep', '2')
     thermo_tubes = temp_1.load_labware('opentrons_96_aluminumblock_generic_pcr'
                                        '_strip_200ul')
     mag_module = ctx.load_module('magnetic module gen2', '4')
@@ -51,6 +52,7 @@ def run(ctx):
     master_mix = thermo_tubes.rows()[0][0]
     nf_water = thermo_tubes.rows()[0][1]
     tsb = thermo_tubes.rows()[0][2]
+    ipb = thermo_tubes.rows()[0][3]
     sample_dest_nest = sample_plate.rows()[0][:num_cols]
     sample_dest_MIDI_1 = midi_plate_1.rows()[0][:num_cols]
 
@@ -63,6 +65,7 @@ def run(ctx):
     # move supernatant to MIDI plate
 
     mag_module.engage(height_from_base=10)
+    # is this delay needed here? Probs on part 3
     ctx.delay(minutes=5)
     ctx.max_speeds['Z'] = 50
     ctx.max_speeds['A'] = 50
@@ -86,9 +89,24 @@ def run(ctx):
     mag_module.disengage()
 
     # add 40ul NFW to MIDI plate 1
-    # add 45ul IPB to MIDI plate 1
-    # Mix 10x
+    for dest in sample_dest_MIDI_1:
+        m300.pick_up_tip()
+        m300.aspirate(40, nf_water)
+        m300.dispense(40, dest)
+        m300.drop_tip()
+    # add 45ul IPB to MIDI plate 1 and mix 10x
+    for dest in sample_dest_MIDI_1:
+        m300.pick_up_tip()
+        m300.aspirate(45, ipb)
+        m300.dispense(45, dest)
+        m300.mix(10, 100)
+        m300.drop_tip()
     # Incubate 5 minutes
+    ctx.delay(minutes=5)
+
+    ctx.comment('''First half of library cleanup completed. Please move MIDI'''
+                ''' plate in slot 2 to magnetic module and replace with fresh'''
+                ''' final MIDI sample plate''')
     # transfer 15ul IPB to each well in MIDI plate 2
     # Transfer 125ul supernatant from MIDI plate 1 to midi plate 2
     # Mix MIDI 2 10x
