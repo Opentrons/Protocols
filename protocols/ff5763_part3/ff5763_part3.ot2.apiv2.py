@@ -88,7 +88,7 @@ def run(ctx):
         m300.pick_up_tip()
         m300.aspirate(40, pcr_mix)
         m300.dispense(40, dest)
-        m300.mix(5, 40)
+        m300.mix(10, 40)
         m300.drop_tip()
 
     # centrifuge off deck, 280 x g for 3 seconds
