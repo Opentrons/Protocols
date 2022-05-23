@@ -105,23 +105,8 @@ def run(ctx):
     ctx.delay(minutes=5)
 
     ctx.comment('''First half of library cleanup completed. Please move MIDI'''
-                ''' plate in slot 2 to magnetic module and replace with fresh'''
-                ''' final MIDI sample plate''')
-    # transfer 15ul IPB to each well in MIDI plate 2
-    # Transfer 125ul supernatant from MIDI plate 1 to midi plate 2
-    # Mix MIDI 2 10x
-    # Incubate 5 minutes
-    # Move MIDI 2 to mag stand, toss MIDI plate 1
-    # Mag stand engage for 5 minutes
-    # discard supernatant
-    # wash twice: Add 200ul EtOH, wait 30 secs, discard supernatant
-    # remove remaining EtOH w/20ul pipette
-    # Air dry 5 minutes
-    # disengage mag stand
-    # add 32ul RSB
-    # Mix to resuspend
-    # Wait 2 minutes
-    # engage mag stand 2 minutes
-    # transfer 30 ul from MIDI plate 2 to new 96 well pcr plate
+                ''' plate in slot 2 to magnetic module and replace with'''
+                ''' fresh, final MIDI sample plate in slot 2''')
+
     for c in ctx.commands():
         print(c)
