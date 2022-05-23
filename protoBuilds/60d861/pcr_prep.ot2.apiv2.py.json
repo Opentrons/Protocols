@@ -1,5 +1,5 @@
 {
-    "content": "import math\n\nmetadata = {\n    'protocolName': 'CYP Induction, Part 1/3: Wash ',\n    'author': 'Nick <ndiehl@opentrons.com',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.12'\n}\n\n\ndef run(ctx):\n\n    num_samples, m300_mount = get_values(  # noqa: F821\n        'num_samples', 'm300_mount')\n\n    tipracks300 = [\n        ctx.load_labware('opentrons_96_tiprack_300ul', slot)\n        for slot in ['1', '2', '3', '4', '6']]\n    plate = ctx.load_labware('thermofishermicroamp_96_wellplate_200ul',\n                             '5', 'catcher plate')\n    wash_buff = ctx.load_labware('nest_1_reservoir_195ml', '7',\n                                 'wash').wells()[0]\n    waste = ctx.load_labware(\n        'nest_1_reservoir_195ml', '8', 'waste').wells()[0].top()\n    elution = ctx.load_labware(\n        'nest_1_reservoir_195ml', '9', 'elution').wells()[0]\n\n    num_cols = math.ceil(num_samples/8)\n    samples = plate.rows()[0][:num_cols]\n\n    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,\n                               tip_racks=tipracks300)\n\n    def remove_supernatant():\n        # discard initial volume\n        for s in samples:\n            if not m300.has_tip:\n                m300.pick_up_tip()\n            m300.transfer(100, s, waste, new_tip='never')\n            m300.drop_tip()\n\n    def wash():\n        # transfer 100ul (reverse pipetting)\n        m300.pick_up_tip()\n        m300.aspirate(20, wash_buff)\n        for s in samples:\n            m300.aspirate(100, wash_buff)\n            m300.dispense(100, s.top())\n        m300.move_to(wash_buff.top())\n\n        # incubate\n        ctx.delay(minutes=1, msg='Incubating the plate for 1 minute at room \\\n    temperature')\n\n        remove_supernatant()\n\n    remove_supernatant()\n    for _ in range(3):\n        wash()\n\n    ctx.pause('Manually completely aspirate any remaining Wash Buffer.')\n\n    # elute\n    m300.pick_up_tip()\n    m300.aspirate(20, elution)\n    for s in samples:\n        m300.aspirate(80, elution)\n        m300.dispense(80, s.top())\n    m300.drop_tip()\n",
+    "content": "import math\n\nmetadata = {\n    'protocolName': 'CYP Induction, Part 1/3: Wash ',\n    'author': 'Nick <ndiehl@opentrons.com',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.12'\n}\n\n\ndef run(ctx):\n\n    num_samples, m300_mount = get_values(  # noqa: F821\n        'num_samples', 'm300_mount')\n\n    wash_rack = ctx.load_labware('opentrons_96_tiprack_300ul', '2')\n    solution_rack = ctx.load_labware('opentrons_96_tiprack_300ul', '3')\n    plate = ctx.load_labware('thermofishermicroamp_96_wellplate_200ul',\n                             '5', 'catcher plate')\n    wash_buff = ctx.load_labware('nest_1_reservoir_195ml', '7',\n                                 'wash').wells()[0]\n    waste = ctx.load_labware(\n        'nest_1_reservoir_195ml', '8', 'waste').wells()[0].top()\n    elution = ctx.load_labware(\n        'nest_1_reservoir_195ml', '9', 'elution').wells()[0]\n\n    num_cols = math.ceil(num_samples/8)\n    samples = plate.rows()[0][:num_cols]\n    wash_tips = wash_rack.rows()[0][:num_cols]\n    wash_buffer_tip = solution_rack.rows()[0][0]\n    elution_buffer_tip = solution_rack.rows()[0][1]\n\n    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,\n                               tip_racks=[solution_rack])\n\n    def remove_supernatant():\n        # discard initial volume\n        for s, tip in zip(samples, wash_tips):\n            m300.pick_up_tip(tip)\n            m300.transfer(100, s, waste, air_gap=20, new_tip='never')\n            m300.drop_tip(tip)\n\n    def wash():\n        # transfer 100ul (reverse pipetting)\n        m300.pick_up_tip(wash_buffer_tip)\n        m300.aspirate(20, wash_buff)\n        for s in samples:\n            m300.aspirate(100, wash_buff)\n            m300.dispense(100, s.top())\n        m300.dispense(20, wash_buff.top())\n        m300.drop_tip(wash_buffer_tip)\n\n        # incubate\n        ctx.delay(minutes=1, msg='Incubating the plate for 1 minute at room \\\n    temperature')\n\n        remove_supernatant()\n\n    remove_supernatant()\n    for _ in range(3):\n        wash()\n\n    ctx.pause('Manually completely aspirate any remaining Wash Buffer.')\n\n    # elute\n    m300.pick_up_tip(elution_buffer_tip)\n    m300.aspirate(20, elution)\n    for s in samples:\n        m300.aspirate(80, elution)\n        m300.dispense(80, s.top())\n    m300.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -1160,12 +1160,6 @@
     ],
     "labware": [
         {
-            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 1",
-            "share": false,
-            "slot": "1",
-            "type": "opentrons_96_tiprack_300ul"
-        },
-        {
             "name": "Opentrons 96 Tip Rack 300 \u00b5L on 2",
             "share": false,
             "slot": "2",
@@ -1178,22 +1172,10 @@
             "type": "opentrons_96_tiprack_300ul"
         },
         {
-            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 4",
-            "share": false,
-            "slot": "4",
-            "type": "opentrons_96_tiprack_300ul"
-        },
-        {
             "name": "catcher plate on 5",
             "share": false,
             "slot": "5",
             "type": "thermofishermicroamp_96_wellplate_200ul"
-        },
-        {
-            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 6",
-            "share": false,
-            "slot": "6",
-            "type": "opentrons_96_tiprack_300ul"
         },
         {
             "name": "wash on 7",
