@@ -27,6 +27,7 @@ def run(ctx):
 
     # load modules/labware
     temp_1 = ctx.load_module('tempdeck', '1')
+    midi_plate_1 = ctx.load_labware('custom_from_maurice', '2')
     thermo_tubes = temp_1.load_labware('opentrons_96_aluminumblock_generic_pcr'
                                        '_strip_200ul')
     mag_module = ctx.load_module('magnetic module gen2', '4')
@@ -37,9 +38,9 @@ def run(ctx):
 
     # load tipracks
     tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-                 for slot in ['3']]
+                 for slot in ['3', '8']]
     tiprack200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-                  for slot in ['6']]
+                  for slot in ['6', '7']]
 
     # load instrument
     m20 = ctx.load_instrument('p20_multi_gen2', 'right', tip_racks=tiprack20)
@@ -50,7 +51,8 @@ def run(ctx):
     master_mix = thermo_tubes.rows()[0][0]
     nf_water = thermo_tubes.rows()[0][1]
     tsb = thermo_tubes.rows()[0][2]
-    sample_dest = sample_plate.rows()[0][:num_cols]
+    sample_dest_nest = sample_plate.rows()[0][:num_cols]
+    sample_dest_MIDI_1 = midi_plate_1.rows()[0][:num_cols]
 
     # hard code variables
     vol_supernatant = 45
@@ -65,7 +67,7 @@ def run(ctx):
     ctx.max_speeds['Z'] = 50
     ctx.max_speeds['A'] = 50
     num_times = 1
-    for source, dest in zip(sample_dest, midi_plate):
+    for source, dest in zip(sample_dest_nest, sample_dest_MIDI_1):
         side = 1 if num_times % 2 == 0 else -1
         m300.flow_rate.aspirate /= 5
         ctx.max_speeds['Z'] /= z_mod_value
@@ -74,7 +76,7 @@ def run(ctx):
         m300.aspirate(
             vol_supernatant, source.bottom().move(types.Point(x=side,
                                                               y=0, z=0.5)))
-        m300.dispense(vol_supernatant, liquid_trash.wells()[0])
+        m300.dispense(vol_supernatant, dest)
         m300.drop_tip()
         m300.flow_rate.aspirate *= 5
         ctx.max_speeds['Z'] *= z_mod_value
