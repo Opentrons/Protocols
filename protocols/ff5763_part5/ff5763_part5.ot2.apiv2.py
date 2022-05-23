@@ -62,6 +62,7 @@ def run(ctx):
     vol_supernatant = 45
     z_mod_value = 5
     a_mod_value = 5
+    MIDI_plate_mag_height = 10
     # protocol
 
 
@@ -71,15 +72,62 @@ def run(ctx):
         m20.aspirate(15, ipb)
         m20.dispense(15, dest)
     m20.drop_tip()
-# Transfer 125ul supernatant from MIDI plate 1 to midi plate 2
+# Transfer 125ul supernatant from MIDI plate 1 to midi plate 2 with a 10x mix
+
+    mag_module.engage(height_from_base=10)
+    ctx.max_speeds['Z'] = 50
+    ctx.max_speeds['A'] = 50
+    num_times = 1
     for source, dest in zip(sample_dest_MIDI_1_pos_1,
                             sample_dest_MIDI_2_pos_1):
-
-# Mix MIDI 2 10x
-# Incubate 5 minutes
+        side = 1 if num_times % 2 == 0 else -1
+        m300.flow_rate.aspirate /= 5
+        ctx.max_speeds['Z'] /= z_mod_value
+        ctx.max_speeds['A'] /= a_mod_value
+        m300.pick_up_tip()
+        m300.aspirate(
+            125, source.bottom().move(types.Point(x=side,
+                                                  y=0, z=0.5)))
+        m300.dispense(125, dest)
+        m300.flow_rate.aspirate *= 5
+        m300.mix(10, 120)
+        m300.drop_tip()
+        ctx.max_speeds['Z'] *= z_mod_value
+        ctx.max_speeds['A'] *= a_mod_value
+        num_times += 1
+        print(side)
+    mag_module.disengage()
+    # Incubate 5 minutes
+    ctx.delay(minutes=5)
 # Move MIDI 2 to mag stand, toss MIDI plate 1
-# Mag stand engage for 5 minutes
-# discard supernatant
+    ctx.pause('''Please remove MIDI plate on the magnetic module from the'''
+              ''' robot and discard. Move the MIDI plate in slot 2, now full'''
+              ''' of liquid, to the magnetic module. Click resume'''
+              ''' when complete''')
+    # Mag stand engage for 5 minutes
+    # discard supernatant
+    mag_module.engage(height_from_base=MIDI_plate_mag_height)
+    ctx.delay(minutes=5)
+    ctx.max_speeds['Z'] = 50
+    ctx.max_speeds['A'] = 50
+    num_times = 1
+    for source in sample_dest_MIDI_2_pos_2:
+        side = 1 if num_times % 2 == 0 else -1
+        m300.flow_rate.aspirate /= 5
+        ctx.max_speeds['Z'] /= z_mod_value
+        ctx.max_speeds['A'] /= a_mod_value
+        m300.pick_up_tip()
+        m300.aspirate(
+            45, source.bottom().move(types.Point(x=side,
+                                                 y=0, z=0.5)))
+        m300.dispense(45, liquid_trash.wells()[0])
+        m300.drop_tip()
+        m300.flow_rate.aspirate *= 5
+        ctx.max_speeds['Z'] *= z_mod_value
+        ctx.max_speeds['A'] *= a_mod_value
+        num_times += 1
+        print(side)
+    mag_module.disengage()
 # wash twice: Add 200ul EtOH, wait 30 secs, discard supernatant
 # remove remaining EtOH w/20ul pipette
 # Air dry 5 minutes
