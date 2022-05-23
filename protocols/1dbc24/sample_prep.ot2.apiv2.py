@@ -1,5 +1,3 @@
-import math
-
 metadata = {
     'protocolName': 'Reagent Addition',
     'author': 'Nick <ndiehl@opentrons.com>',
