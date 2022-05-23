@@ -25,6 +25,7 @@ _samp_labware,1
 _source_type,2
 _src_module,3
 _tc_cycles,1
+_tip_start_column,1
 _use_temp_mod,1
 a1_init_vol,1
 a3_init_vol,1
@@ -724,7 +725,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,102
+num_samples,103
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -761,7 +762,7 @@ one_rack_yn,1
 onlysamps,1
 open_lid,1
 output_labware,1
-overage_percent,6
+overage_percent,7
 p1000_flow_rate_asp,2
 p1000_flow_rate_disp,2
 p1000_mount,29
@@ -1099,7 +1100,6 @@ start_col,1
 start_column,1
 start_tip,1
 start_urea_vol,1
-start_vol,1
 starting_conc,2
 starting_position,1
 starting_tip_col,1
