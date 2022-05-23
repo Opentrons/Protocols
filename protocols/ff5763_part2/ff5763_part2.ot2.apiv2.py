@@ -48,7 +48,7 @@ def run(ctx):
 
     # reagents
     '''includes reagents used in other steps for housekeeping purposes'''
-    master_mix = thermo_tubes.rows()[0][0]
+    master_mix_tag = thermo_tubes.rows()[0][0]
     nf_water = thermo_tubes.rows()[0][1]
     tsb = thermo_tubes.rows()[0][2]
     twb = reagent_resv.rows()[0][0]
@@ -86,7 +86,8 @@ def run(ctx):
     """"insert mag module purification base code here"""
     # Step 4-5
     # Incubate on mag stand, 3 minutes
-
+    mag_module.engage()
+    ctx.delay(minutes=3)
     # Remove supernatant
     # m300.flow_rate.aspirate /= supernatant_flowrate_modulator
     # ctx.max_speeds['A'] /= supernatant_headspeed_modulator
