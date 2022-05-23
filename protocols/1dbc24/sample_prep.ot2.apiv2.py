@@ -25,8 +25,10 @@ def run(ctx):
     m300 = ctx.load_instrument('p300_multi_gen2', 'left',
                                tip_racks=[tiprack300])
 
-    num_cols = math.ceil(num_samples/8)
-    samples = plate.rows()[0][:num_cols]
+    if num_samples >= 12:
+        samples = plate.rows()[0]
+    else:
+        samples = plate.rows()[0][:num_samples]
 
     # start at proper tip
     start_index = _tip_start_column - 1
