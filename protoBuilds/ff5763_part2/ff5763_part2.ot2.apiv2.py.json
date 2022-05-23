@@ -1,0 +1,85 @@
+{
+    "content": "\"\"\"OPENTRONS.\"\"\"\nimport math\nfrom opentrons import types\nmetadata = {\n    'protocolName': 'Illumina DNA Prep Part 2, Post-Tagmentation Clean-up',\n    'author': 'AUTHOR NAME <authoremail@company.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE\n                         # IN SECTION 5.2 OF THE APIV2 \"VERSIONING\"\n}\n\nTEST_MODE = False\n\n\ndef run(ctx):\n    \"\"\"PROTOCOL.\"\"\"\n    [num_samples\n     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)\n        \"num_samples\")\n\n    # define all custom variables above here with descriptions:\n\n    # number of samples\n    num_cols = math.ceil(num_samples/8)\n\n    # \"True\" for park tips, \"False\" for discard tips\n\n    # load modules/labware\n    \"\"\"Step 2 has the sample plate on the mag module in slot 4!\"\"\"\n    temp_1 = ctx.load_module('tempdeck', '1')\n    thermo_tubes = temp_1.load_labware('opentrons_96_aluminumblock_generic_pcr'\n                                       '_strip_200ul')\n    mag_module = ctx.load_module('magnetic module gen2', '4')\n    sample_plate = mag_module.load_labware('nest_96_wellplate_100ul_pcr'\n                                           '_full_skirt')\n    reagent_resv = ctx.load_labware('nest_12_reservoir_15ml', '5')\n    liquid_trash = ctx.load_labware('nest_1_reservoir_195ml', '9')\n\n    # load tipracks\n    tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)\n                 for slot in ['3']]\n    tiprack200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)\n                  for slot in ['6', '7', '8']]\n\n    # load instrument\n    m20 = ctx.load_instrument('p20_multi_gen2', 'right', tip_racks=tiprack20)\n    m300 = ctx.load_instrument('p300_multi_gen2', 'left', tip_racks=tiprack200)\n\n    # reagents\n    '''includes reagents used in other steps for housekeeping purposes'''\n    master_mix_tag = thermo_tubes.rows()[0][0]\n    nf_water = thermo_tubes.rows()[0][1]\n    tsb = thermo_tubes.rows()[0][2]\n    twb = reagent_resv.rows()[0][0]\n    pcr_mix = reagent_resv.rows()[0][1]\n\n    sample_dest = sample_plate.rows()[0][:num_cols]\n\n    radius = sample_dest[0].diameter/2\n    x_offset_beads = 0.85*radius\n    z_offset_beads = 3\n    supernatant_headspeed_modulator = 5\n    supernatant_flowrate_modulator = 5\n    vol_supernatant = 40\n    nest_96_mag_engage_height = 10\n    # protocol\n\n    # Steps 1-2\n    # Slowly add 10ul TSB (beads) then slowly mix to suspend\n    ctx.comment(\"\"\"adding beads\"\"\")\n    for dest in sample_dest:\n        m20.pick_up_tip()\n        m20.flow_rate.aspirate = 3\n        m20.flow_rate.dispense = 3\n        m20.aspirate(10, tsb)\n        m20.dispense(10, dest)\n        m20.drop_tip()\n    ctx.comment('''mixing beads''')\n    for dest in sample_dest:\n        m300.pick_up_tip()\n        m300.flow_rate.aspirate /= 4\n        m300.flow_rate.dispense /= 4\n        m300.mix(10, 55, dest)\n        m300.flow_rate.aspirate *= 4\n        m300.flow_rate.dispense *= 4\n        m300.drop_tip()\n    ctx.pause(\"\"\"Please move sample plate from slot 4\"\"\"\n              \"\"\" to off-deck thermocycler then return to magnetic module\"\"\"\n              \"\"\" in slot 4 for purification. Click 'Resume' when set\"\"\")\n\n    \"\"\"\"insert mag module purification base code here\"\"\"\n    # Step 4\n    # Incubate on mag stand, 3 minutes\n    ctx.comment('''incubate 3 minutes''')\n    mag_module.engage(height_from_base=nest_96_mag_engage_height)\n    ctx.delay(minutes=3)\n    # Step 5\n    # Discard supernatant\n    ctx.comment('''discarding supernatant''')\n    ctx.max_speeds['Z'] = 50\n    ctx.max_speeds['A'] = 50\n    num_times = 1\n    for source in sample_dest:\n        side = 1 if num_times % 2 == 0 else -1\n        m300.flow_rate.aspirate\n        m300.flow_rate.aspirate /= 5\n        ctx.max_speeds['Z'] /= supernatant_headspeed_modulator\n        ctx.max_speeds['A'] /= supernatant_headspeed_modulator\n        m300.pick_up_tip()\n        m300.aspirate(\n            vol_supernatant, source.bottom().move(types.Point(x=side,\n                                                              y=0, z=0.5)))\n        m300.dispense(vol_supernatant, liquid_trash.wells()[0])\n        m300.drop_tip()\n        m300.flow_rate.aspirate *= 5\n        ctx.max_speeds['Z'] *= supernatant_headspeed_modulator\n        ctx.max_speeds['A'] *= supernatant_headspeed_modulator\n        num_times += 1\n        print(side)\n    mag_module.disengage()\n\n    # m300.flow_rate.aspirate /= supernatant_flowrate_modulator\n    # ctx.max_speeds['A'] /= supernatant_headspeed_modulator\n    # ctx.max_speeds['Z'] /= supernatant_headspeed_modulator\n    # for s in sample_dest:\n    #     m300.pick_up_tip()\n    #     # going to break transfer func up for better control\n    #     m300.transfer(65, s.bottom(1), liquid_trash[0], air_gap=20,\n    #                   new_tip='never')\n    #     m300.blow_out()\n    #     m300.drop_tip()\n    # m300.flow_rate.aspirate *= supernatant_flowrate_modulator\n    # ctx.max_speeds['A'] *= supernatant_headspeed_modulator\n    # ctx.max_speeds['Z'] *= supernatant_headspeed_modulator\n\n    # Step 6, TWB wash twice removing super each time\n    ctx.comment('''twb wash twice, removing supernatant each time''')\n    for _ in range(2):\n        m300.flow_rate.aspirate /= 5\n        m300.flow_rate.dispense /= 5\n        for dest in sample_dest:\n            m300.pick_up_tip()\n            m300.aspirate(100, twb)\n            m300.dispense(100, dest)\n            m300.mix(3, 120)\n            m300.drop_tip()\n        m300.flow_rate.aspirate *= 5\n        m300.flow_rate.dispense *= 5\n\n        mag_module.engage(height_from_base=nest_96_mag_engage_height)\n\n        ctx.delay(minutes=3)\n        # remove super\n        ctx.max_speeds['Z'] = 50\n        ctx.max_speeds['A'] = 50\n        num_times = 1\n        m300.flow_rate.aspirate /= 5\n        for source in sample_dest:\n            side = 1 if num_times % 2 == 0 else -1\n            ctx.max_speeds['Z'] /= supernatant_headspeed_modulator\n            ctx.max_speeds['A'] /= supernatant_headspeed_modulator\n            m300.pick_up_tip()\n            m300.aspirate(\n                vol_supernatant, source.bottom().move(types.Point(x=side,\n                                                                  y=0, z=0.5)))\n            m300.dispense(vol_supernatant, liquid_trash.wells()[0])\n            m300.drop_tip()\n            ctx.max_speeds['Z'] *= supernatant_headspeed_modulator\n            ctx.max_speeds['A'] *= supernatant_headspeed_modulator\n            num_times += 1\n            print(side)\n        m300.flow_rate.aspirate *= 5\n        mag_module.disengage()\n    # Step 7, add twb and mix, leave TWB and incubate on mag stand until step 3\n    m300.flow_rate.aspirate /= 5\n    m300.flow_rate.dispense /= 5\n    for dest in sample_dest:\n        m300.pick_up_tip()\n        m300.aspirate(100, twb)\n        m300.dispense(100, dest)\n        m300.mix(3, 120)\n        m300.drop_tip()\n    m300.flow_rate.aspirate *= 5\n    m300.flow_rate.dispense *= 5\n\n    mag_module.engage(nest_96_mag_engage_height)\n    ctx.comment('''Clean up complete, please move on to part 3 of the'''\n                ''' protocol, leaving the plate engaged on the'''\n                ''' magnetic module''')\n\n    # Wash twice like this:\n    # disengage mag\n    # add 100ul TWB slowly onto beads\n    # slowly mix to resuspend\n    # engage mag, incubate 3 min on mag stand until clear\n    # remove supernatant\n\n    # Step 7\n    # Disengage mag\n    # Slowly add 100ul TWB onto beads\n    # slowly mix to resuspend\n\n    # Func approach to purification below. Probs too hard right now\n    \"\"\"def bead_mix(reps, vol, well, angle, pip=m300):\n        dispense_loc = well.bottom().move(\n            Point(x=x_offset_beads*angle, y=0, z=z_offset_beads))\n        for _ in range(reps):\n            pip.aspirate(vol, well.bottom(1))\n            pip.dispense(vol, dispense_loc)\n\n    count = 0\n    total_twb = 100\n    for wash in range(3):\n        mag_module.disengage()\n\n        # resuspend beads in TWB\n        for i, s in enumerate(sample_dest):\n            # I don't know what ind is and at this point I'm afraid to ask\n            ind = (count*len(twb))//total_twb\n            count += 1\n\n            side = i % 2\n            angle = 1 if side == 0 else -1\n            disp_loc = s.bottom().move(\n                Point(x=x_offset_beads*angle, y=0, z=z_offset_beads))\n            m20.pick_up_tip()\n            m20.aspirate(10, twb[ind])\n            m20.move_to(s.center())\n            m20.flow_rate.aspirate /= supernatant_flowrate_modulator\n            m20.flow_rate.dispense /= supernatant_flowrate_modulator\n            m20.dispense(10, disp_loc)\n            m20.drop_tip()\n            # m300.mix(10, 80, disp_loc)\n            m300.pick_up_tip()\n            bead_mix(10, 80, s, angle)\n            m300.drop_tip()\n            m20.flow_rate.aspirate *= supernatant_flowrate_modulator\n            m20.flow_rate.dispense *= supernatant_flowrate_modulator\n\n        mag_module.engage(height=18)\n        # steps 4-\n        if wash < 2:\n            if TEST_MODE:\n                ctx.comment('Incubating beads on magnet for 3 minutes')\n            else:\n                ctx.delay(\n                    minutes=3, msg='Incubating beads on magnet for 3 minutes')\n            # remove and discard supernatant\n            m300.flow_rate.aspirate /= supernatant_flowrate_modulator\n            ctx.max_speeds['A'] /= supernatant_headspeed_modulator\n            ctx.max_speeds['Z'] /= supernatant_headspeed_modulator\n            for s in sample_dest:\n                m300.pick_up_tip()\n                # What is the volume we need to aspirate here, removing super?\n                m300.aspirate(120, s.bottom(1))\n                m300.move_to(s.top())\n                m300.aspirate(20, s.top())  # air gap\n                m300.dispense(20, liquid_trash.top())\n                m300.dispense(120, liquid_trash[wash])\n                # m300.transfer(\n                #     120, s.bottom(1), liquid_trash[wash], air_gap=20,\n                #     new_tip='never')\n                m300.blow_out()\n                m300.drop_tip()\n            m300.flow_rate.aspirate *= supernatant_flowrate_modulator\n            ctx.max_speeds['A'] *= supernatant_headspeed_modulator\n            ctx.max_speeds['Z'] *= supernatant_headspeed_modulator\"\"\"\n\n    # End part 2\n    for c in ctx.commands():\n        print(c)\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 16,
+            "label": "Number of Samples",
+            "name": "num_samples",
+            "type": "int"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p300_multi_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p20_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 \u00b5L on Temperature Module GEN1 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "opentrons_96_aluminumblock_generic_pcr_strip_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Magnetic Module GEN2 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on 5",
+            "share": false,
+            "slot": "5",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 6",
+            "share": false,
+            "slot": "6",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_filtertiprack_200ul"
+        },
+        {
+            "name": "NEST 1 Well Reservoir 195 mL on 9",
+            "share": false,
+            "slot": "9",
+            "type": "nest_1_reservoir_195ml"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.11",
+        "author": "AUTHOR NAME <authoremail@company.com>",
+        "protocolName": "Illumina DNA Prep Part 2, Post-Tagmentation Clean-up",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}
