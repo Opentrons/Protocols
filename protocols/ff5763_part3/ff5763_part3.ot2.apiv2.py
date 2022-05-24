@@ -104,7 +104,7 @@ def run(ctx):
     # mix 10x at 40ul
     for dest in sample_dest:
         m300.pick_up_tip()
-        m300.mix(10, 40)
+        m300.mix(10, 40, dest)
         m300.drop_tip()
 
     # Move to off-deck thermo cycler
