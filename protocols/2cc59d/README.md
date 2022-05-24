@@ -12,7 +12,7 @@
 This protocol performs an ELISA assay between two 96 well plates. For detailed instruction, please see protocol steps below. Stop solution and TMB should only be added when prompted by the protocol upon a pause step. The protocol will automatically pause if it runs out of tips, prompting the user to replace. Tip boxes should always be placed in order of slot 7, 8, and 9 on the deck, even if running low sample numbers. Tip box on slot 9 is always used for 4 wash steps.
 
 Explanation of complex parameters below:
-* `Number of samples (1-38)`: Specify the number of samples for this run. The protocol will run as many columns rounding up on the number of samples provided.
+* `Number of samples (1 to 38)`: Specify the number of samples for this run. The protocol will run as many columns rounding up on the number of samples provided.
 * `P20/P300 Pipette Mounts`: Specify which mount (left or right) to host the P20 and P300 pipettes.
 
 ---
