@@ -83,7 +83,7 @@ def run(ctx):
     ''')
 
     ctx.home()
-    mag_mod.engage(height_from_base=engage_height)
+    mag_mod.engage(height_from_base=engage_height-2.5)
     ctx.delay(minutes=2)
 
     ctx.comment('\n\nREMOVING SUPERNATANT\n')
@@ -117,7 +117,7 @@ def run(ctx):
                       air_gap=10,
                       rate=0.4)
     ctx.home()
-    mag_mod.engage(height_from_base=engage_height)
+    mag_mod.engage(height_from_base=engage_height-2.5)
     ctx.delay(minutes=2)
     m300.flow_rate.dispense = 2.5*m300.flow_rate.dispense
 
@@ -155,7 +155,7 @@ def run(ctx):
                           rate=0.4)
         m300.drop_tip()
         ctx.home()
-        mag_mod.engage(height_from_base=engage_height)
+        mag_mod.engage(height_from_base=engage_height-2.5)
         ctx.delay(minutes=2)
 
         ctx.comment('\n\nREMOVING SUPERNATANT FROM WELLS\n')
@@ -208,7 +208,7 @@ def run(ctx):
         m300.drop_tip()
 
     ctx.home()
-    mag_mod.engage(height_from_base=engage_height)
+    mag_mod.engage(height_from_base=engage_height-2.5)
     ctx.delay(minutes=2)
 
     ctx.comment('\n\nCOLLECTING ELUTE\n')

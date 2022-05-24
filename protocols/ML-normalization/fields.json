@@ -60,5 +60,14 @@
       { "label": "Bio-Rad (on aluminum block)", "value": "opentrons_96_aluminumblock_biorad_wellplate_200ul" },
       { "label": "Bio-Rad (off aluminum block)", "value": "biorad_96_wellplate_200ul_pcr" }
     ]
+  },
+  {
+    "type": "dropDown",
+    "label": "reservoir type",
+    "name": "reservoir_type",
+    "options": [
+      { "label": "NEST 12 Well Reservoir 15 mL", "value": "nest_12_reservoir_15ml" },
+      { "label": "USA Scientific 12 Well Reservoir 22 mL", "value": "usascientific_12_reservoir_22ml" }
+    ]
   }
 ]
