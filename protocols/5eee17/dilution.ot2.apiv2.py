@@ -26,63 +26,88 @@ def run(ctx):
         for mount in ['left', 'right']]
     pips = [p1000l, p1000r]
 
+    tip_max = len([well for rack in tiprack for well in rack.wells()])
+    tip_count = 0
+
+    def pick_up(pipettes):
+        nonlocal tip_count
+        for pip in pipettes:
+            if tip_count == tip_max:
+                ctx.pause('Refill tiprack before resuming.')
+                [rack.reset() for rack in tiprack]
+                tip_count = 0
+            tip_count += 1
+            pip.pick_up_tip()
+
     def mix(pip, reps, vol, loc):
         for _ in range(reps):
             pip.aspirate(vol, loc.bottom(height_intermediate))
             pip.dispense(vol, loc.center())
 
-    # create proper order
-    max_extracts_per_refill = sum([len(rack.wells()) for rack in tuberacks_50])
-    num_refills = math.ceil(num_extracts/max_extracts_per_refill)
-    for refill_ind in range(num_refills):
-        if refill_ind < num_refills - 1:
-            num_extracts_refill = max_extracts_per_refill
-        else:
-            num_extracts_refill = num_extracts % 48 if num_extracts % 48 != 0 \
-                else 48
-        num_sets = math.ceil(num_extracts_refill/2)
-        sources = [
-            well for rack in tuberacks_50
-            for well in rack.wells()][:num_extracts_refill]
-        source_sets = [
-            sources[i*2:(i+1)*2] if i < num_sets - 1 else sources[i*2:]
-            for i in range(num_sets)]
-        intermediates = [
-            well for col in tuberack_15.columns()
-            for well in col[:8]][:num_extracts_refill]
-        intermediate_sets = [
-            intermediates[i*2:(i+1)*2]
-            if i < num_sets - 1 else intermediates[i*2:]
-            for i in range(num_sets)]
-        finals = [
-            well for row in tuberack_hplc.rows()
-            for well in row][:num_extracts_refill]
-        final_sets = [
-            finals[i*2:(i+1)*2] if i < num_sets - 1 else finals[i*2:]
-            for i in range(num_sets)]
+    refill_map = {
+        'source': len(
+            [well for rack in tuberacks_50 for well in rack.wells()]),
+        'intermediate': len(tuberack_15.wells()),
+        'final': len(tuberack_hplc.wells())
+    }
 
-        # dilute
-        for set_ind in range(num_sets):
-            [pip.pick_up_tip()
-             for pip in [p1000l, p1000r][:len(source_sets[set_ind])]]
+    def check_refill(index):
+        refill_items = []
+        for key, val in refill_map.items():
+            if index % val == 0 and index > 0:
+                refill_items.append(key)
+        if len(refill_items) > 0:
+            ctx.pause(f'Please refill {", ".join(refill_items)} tubes before \
+resuming.')
 
-            for pip, tube in zip(pips, source_sets[set_ind]):
-                pip.aspirate(700, tube.bottom(height_source))
-                pip.air_gap(100)
+    def get_set_index(set_index, tubes_set_type):
+        set_index_transform = set_index % \
+            math.floor(refill_map[tubes_set_type]/2)
+        return set_index_transform
 
-            for pip, i_tube, f_tube in zip(pips, intermediate_sets[set_ind],
-                                           final_sets[set_ind]):
-                pip.dispense(100, i_tube.top())
-                pip.dispense(pip.current_volume,
-                             i_tube.bottom(height_intermediate))
-                mix(pip, mixreps_dilution, 1000, i_tube)
-                pip.transfer(800, i_tube.bottom(height_intermediate),
-                             f_tube.bottom(height_final),
-                             new_tip='never')
-            [pip.drop_tip() for pip in [p1000l, p1000r] if pip.has_tip]
+    sources = [
+        well for rack in tuberacks_50
+        for well in rack.wells()]
+    source_sets = [
+        sources[i*2:(i+1)*2] if i < math.ceil(len(sources)/2)
+        else sources[i*2:]
+        for i in range(math.ceil(len(sources)/2))]
+    intermediates = [
+        well for col in tuberack_15.columns()
+        for well in col]
+    intermediate_sets = [
+        intermediates[i*2:(i+1)*2]
+        if i < math.ceil(len(intermediates)/2) - 1
+        else intermediates[i*2:]
+        for i in range(math.ceil(len(intermediates)/2))]
+    finals = [
+        well for row in tuberack_hplc.rows()
+        for well in row]
+    final_sets = [
+        finals[i*2:(i+1)*2] if i < math.ceil(len(finals)/2) - 1
+        else finals[i*2:]
+        for i in range(math.ceil(len(finals)/2))]
 
-        ctx.comment(f'Extract set {refill_ind+1} out of {num_refills} \
-complete.')
-        if refill_ind < num_refills - 1:
-            ctx.pause(f'Please refill all tubes on the deck for the next \
-extract set ({refill_ind+2} out of {num_refills}).')
+    # dilute
+    num_sets = math.ceil(num_extracts/2)
+    for set_ind in range(num_sets):
+        check_refill(set_ind*2)
+        source_set = source_sets[get_set_index(set_ind, 'source')]
+        intermediate_set = intermediate_sets[
+            get_set_index(set_ind, 'intermediate')]
+        final_set = final_sets[get_set_index(set_ind, 'final')]
+        pick_up([p1000l, p1000r][:len(source_set)])
+
+        for pip, tube in zip(pips, source_set):
+            pip.aspirate(700, tube.bottom(height_source))
+            pip.air_gap(100)
+
+        for pip, i_tube, f_tube in zip(pips, intermediate_set, final_set):
+            pip.dispense(100, i_tube.top())
+            pip.dispense(pip.current_volume,
+                         i_tube.bottom(height_intermediate))
+            mix(pip, mixreps_dilution, 1000, i_tube)
+            pip.transfer(800, i_tube.bottom(height_intermediate),
+                         f_tube.bottom(height_final),
+                         new_tip='never')
+        [pip.drop_tip() for pip in [p1000l, p1000r] if pip.has_tip]

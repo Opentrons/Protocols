@@ -8,12 +8,14 @@
 	* Plate Filling
 
 ## Description
-This protocol preps a 96 well plate with up to 96 samples of DNA, normalizing all DNA samples to the same concentration with TE. TE should not be filled more than 20mL in the 50mL falcon tube to prevent pipette plunging. One tip is used to load TE onto the plate, whereas one tip per sample is used for loading DNA samples to plate. After DNA is loaded, DNA and TE are mixed at 80% of the total well volume for 3 repetitions. If a volume greater than 200ul is passed in to the TE volume (greater than well volume), an error is thrown and the protocol will stop.  
+This protocol preps a 96 well plate with up to 96 samples of DNA, normalizing all DNA samples to the same concentration with TE. TE should not be filled more than 20mL in the 50mL falcon tube to prevent pipette plunging. One tip is used to load TE onto the plate, whereas one tip per sample is used for loading DNA samples to plate. After DNA is loaded, DNA and TE are mixed at 80% of the total well volume for 3 repetitions. If a volume greater than 180ul is passed in to the TE volume (greater than well volume), an error is thrown and the protocol will stop.  
 
 Explanation of complex parameters below:
 * `.csv file`: Please upload your csv file in the following format, header included (no commas in header!). "Name" column blocked out for proprietary reasons.
 ![csv file](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/32207e/Screen+Shot+2022-04-07+at+9.46.56+AM.png)
 * `DNA Aspiration Rate`: Specify the rate at which to aspirate DNA. A value of 1 is default, 0.5 being 50% of the default value, 1.2 being 20% faster than the default value, etc.
+* `Track tips?`: Specify whether to start at A1 of both tip racks, or to start picking up from where the last protocol left off.
+* `Starstedt Access Height (from bottom of the well in mm)`: Specify the access height in the Starstedt plate from the bottom of the well in the plate in mm. 
 * `P20/P300 Mount`: Specify which mount (left or right) to host the P20 and P300 single channel pipette.
 
 ---

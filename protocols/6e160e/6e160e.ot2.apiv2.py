@@ -77,23 +77,22 @@ def run(ctx: protocol_api.ProtocolContext):
                             for row in plate_384.rows()[unfilled_row_start::2]
                             for well in row[unfilled_col_start::2]][:leftover_samp]  # noqa: E501
 
-    ctx.comment('\n\nMOVING REACTION MIX TO PLATE\n')
-    col_ctr = 0
-    m20.pick_up_tip()
-    for row_start, col_start in zip([0, 0, 1, 1][:num_full_plates],
-                                    [0, 1, 0, 1]):
+    if num_full_plates > 0:
+        ctx.comment('\n\nMOVING REACTION MIX TO PLATE\n')
         col_ctr = 0
+        m20.pick_up_tip()
+        for row_start, col_start in zip([0, 0, 1, 1][:num_full_plates],
+                                        [0, 1, 0, 1]):
+            col_ctr = 0
 
-        for _ in range(4):
-            m20.aspirate(20, reagent)
-            for _ in range(3):
-                m20.dispense(6, plate_384.rows()[row_start][col_start+col_ctr])
-                m20.blow_out(plate_384.rows()[row_start][col_start+col_ctr].top())  # noqa: E501
-                m20.touch_tip(radius=0.9)
-                col_ctr += 2
-            m20.dispense(2, reagent)
-        ctx.comment('\n\n')
-    m20.drop_tip()
+            for _ in range(4):
+                m20.aspirate(20, reagent)
+                for _ in range(3):
+                    m20.dispense(6, plate_384.rows()[row_start][col_start+col_ctr])  # noqa: E501
+                    col_ctr += 2
+                m20.dispense(2, reagent)
+            ctx.comment('\n\n')
+        m20.drop_tip()
 
     if leftover_samp > 0:
         ctx.comment('\n\nMOVING REACTION MIX TO PLATE WITH SINGLE CHANNEL\n')
@@ -102,8 +101,6 @@ def run(ctx: protocol_api.ProtocolContext):
             p20.aspirate(20, reagent)
             for well in chunk:
                 p20.dispense(6, well)
-                p20.blow_out(well.top())
-                p20.touch_tip(radius=0.9)
             p20.dispense(p20.current_volume, reagent)
             ctx.comment('\n\n')
     if p20.has_tip:
@@ -121,8 +118,6 @@ def run(ctx: protocol_api.ProtocolContext):
             m20.air_gap(airgap)
             m20.dispense(airgap, dest.top())
             m20.dispense(4, dest)
-            m20.blow_out(dest.top())  # noqa: E501
-            m20.touch_tip(radius=0.9)
             m20.drop_tip()
         ctx.comment('\n\n')
 
@@ -134,7 +129,5 @@ def run(ctx: protocol_api.ProtocolContext):
             p20.air_gap(airgap)
             p20.dispense(airgap, dest.top())
             p20.dispense(4, dest)
-            p20.blow_out(dest.top())
-            p20.touch_tip(radius=0.9)
             p20.drop_tip()
             ctx.comment('\n\n')

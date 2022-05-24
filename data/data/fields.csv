@@ -1,6 +1,7 @@
 _csv,3
 _dest_module,3
 _dp_type,1
+_dry_run,1
 _dye_type,1
 _elution_vol,1
 _filter_tips,1
@@ -17,11 +18,14 @@ _p20_mount,3
 _p300_mount,1
 _pip_model,1
 _pip_mount,1
+_profile_type,1
+_ratio_beads_dna,1
 _samp_cols,3
 _samp_labware,1
 _source_type,2
 _src_module,3
 _tc_cycles,1
+_tip_start_column,1
 _use_temp_mod,1
 a1_init_vol,1
 a3_init_vol,1
@@ -189,8 +193,9 @@ component_2_volume,1
 component_3_volume,1
 control_plate,1
 count_mix,1
+count_plates,1
 count_samples,18
-csv,7
+csv,5
 csv1_buff,1
 csv1_samp,1
 csv1_urea,1
@@ -204,7 +209,7 @@ csv_file,2
 csv_file_1,1
 csv_file_2,1
 csv_input,3
-csv_samp,7
+csv_samp,8
 csv_sample,2
 ctrl_csv,1
 ctrl_transfer_vol,1
@@ -296,7 +301,6 @@ dna,1
 dna_asp_rate,1
 dna_aspirate_clearance,1
 dna_csv,1
-dna_plate,1
 dna_supernat_vol,1
 dna_vol,1
 dna_volume,5
@@ -368,6 +372,7 @@ extrplate,1
 f_time,2
 fe_temp,2
 fe_time,2
+file_dilution,1
 fill_plate_blank,2
 fill_second_plate,1
 fill_volume,1
@@ -436,9 +441,7 @@ include_wash2,1
 include_wash3,1
 include_wash4,1
 incubate_bind_time,1
-
 incubate_samples_with_beads,3
-
 incubation_temperature,1
 incubation_time,5
 index_start_col,2
@@ -648,9 +651,10 @@ mntmulti,2
 mntsingle,2
 mother_plate_type,1
 mount,2
-mount_m300,1
-mount_p20,3
-mount_p300,2
+mount_m20,1
+mount_m300,2
+mount_p20,4
+mount_p300,3
 mount_side,1
 move_side,2
 move_vol,1
@@ -721,7 +725,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,101
+num_samples,103
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -758,7 +762,7 @@ one_rack_yn,1
 onlysamps,1
 open_lid,1
 output_labware,1
-overage_percent,6
+overage_percent,7
 p1000_flow_rate_asp,2
 p1000_flow_rate_disp,2
 p1000_mount,29
@@ -780,7 +784,7 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,100
+p20_mount,99
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
@@ -795,7 +799,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,117
+p300_mount,116
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -955,7 +959,7 @@ reservoir_lname,1
 reservoir_loadname,1
 reservoir_loc,1
 reservoir_slot,1
-reservoir_type,3
+reservoir_type,4
 reset_counter,1
 reset_tipracks,7
 resettips,1
@@ -1089,13 +1093,13 @@ stage2_disp_speed,1
 stage2_dispense_height,1
 stage2_height_after_disp,1
 standard_type,1
+star_height,1
 start,1
 start_buff_vol,1
 start_col,1
 start_column,1
 start_tip,1
 start_urea_vol,1
-start_vol,1
 starting_conc,2
 starting_position,1
 starting_tip_col,1
@@ -1166,6 +1170,7 @@ test_method,1
 test_plates,1
 time_dry,15
 time_engage,15
+time_mag_incubation,1
 tip_immersion,1
 tip_max,1
 tip_no,1
@@ -1181,7 +1186,7 @@ tip_start_column,4
 tip_strategy,3
 tip_threshold,1
 tip_touch,1
-tip_track,36
+tip_track,37
 tip_type,24
 tip_use_strategy,2
 tip_withdrawal_speed,1

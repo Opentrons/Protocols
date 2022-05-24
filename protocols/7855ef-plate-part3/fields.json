@@ -10,8 +10,8 @@
     "label": "P20 Multi GEN2 mount",
     "name": "m20_mount",
     "options": [
-       { "label": "right", "value": "right" },
-       { "label": "left", "value": "left" }
+       { "label": "right", "value": "left" },
+       { "label": "left", "value": "right" }
      ]
   },
   {
@@ -24,9 +24,9 @@
      ]
   },
   {
-    "type": "int",
-    "label": "Starting Volume, ",
-    "name": "start_vol",
-    "default": 100
+    "type": "float",
+    "label": "Overage Percent",
+    "name": "overage_percent",
+    "default": 15
   }
 ]
