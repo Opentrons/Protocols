@@ -4,7 +4,7 @@ metadata = {
     'protocolName': 'Generic qPCR Setup Protocol (Station C)',
     'author': 'Chaz <protocols@opentrons.com>',
     'source': 'Protocol Library',
-    'apiLevel': '2.5'
+    'apiLevel': '2.12'
 }
 
 
