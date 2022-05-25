@@ -4,7 +4,7 @@ metadata = {
     'protocolName': 'Generic qPCR Setup Protocol (Station C)',
     'author': 'Chaz <protocols@opentrons.com>',
     'source': 'Protocol Library',
-    'apiLevel': '2.5'
+    'apiLevel': '2.12'
 }
 
 
@@ -20,11 +20,13 @@ def run(protocol):
     sp_name, sp_tip_name = single_pip_info.split()
     mp_name, mp_tip_name = multi_pip_info.split()
 
-    total_tip = num_samples*rm_num+8
-    if total_tip > 96 and sp_tip_name == mp_tip_name:
-        sp_tips = [protocol.load_labware(sp_tip_name, s) for s in ['6', '3']]
-    else:
-        sp_tips = [protocol.load_labware(sp_tip_name, '6')]
+    # check sample number + reaction mix number combination
+    if num_samples * rm_num > 96:
+        raise Exception(f'Invalid combination of number of samples \
+({num_samples}) and number of reaction mixes ({rm_num}). Multiple of these \
+inputs cannot exceed 96 (currently {num_samples*rm_num}).')
+
+    sp_tips = [protocol.load_labware(sp_tip_name, s) for s in ['6', '3']]
 
     if mp_tip_name != "none":
         if mp_tip_name == sp_tip_name:
