@@ -76,7 +76,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     if num_samp == 382:
         ctx.comment('\n')
-        pick_up_less(7)
+        pick_up_less(8)
         m20.aspirate(15, reagent)
         m20.dispense(15, pcr_plate.wells_by_name()['A24'])
         m20.aspirate(15, reagent)
