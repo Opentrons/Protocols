@@ -35,7 +35,7 @@ Explanation of complex parameters below:
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2cc59d/Screen+Shot+2022-04-29+at+2.47.25+PM.png)
+![OT-2 deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2cc59d/Screen+Shot+2022-04-29+at+2.47.25+PM.png)
 
 ### Reagent Setup
 ![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2cc59d/Screen+Shot+2022-04-29+at+2.46.57+PM.png)
