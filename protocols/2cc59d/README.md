@@ -12,7 +12,7 @@
 This protocol performs an ELISA assay between two 96 well plates. For detailed instruction, please see protocol steps below. Stop solution and TMB should only be added when prompted by the protocol upon a pause step. The protocol will automatically pause if it runs out of tips, prompting the user to replace. Tip boxes should always be placed in order of slot 7, 8, and 9 on the deck, even if running low sample numbers. Tip box on slot 9 is always used for 4 wash steps.
 
 Explanation of complex parameters below:
-* `Number of samples (1-38)`: Specify the number of samples for this run. The protocol will run as many columns rounding up on the number of samples provided. 
+* `Number of samples (1 to 38)`: Specify the number of samples for this run. The protocol will run as many columns rounding up on the number of samples provided.
 * `P20/P300 Pipette Mounts`: Specify which mount (left or right) to host the P20 and P300 pipettes.
 
 ---
@@ -35,7 +35,7 @@ Explanation of complex parameters below:
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2cc59d/Screen+Shot+2022-04-29+at+2.47.25+PM.png)
+![OT-2 deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2cc59d/Screen+Shot+2022-04-29+at+2.47.25+PM.png)
 
 ### Reagent Setup
 ![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2cc59d/Screen+Shot+2022-04-29+at+2.46.57+PM.png)
@@ -57,13 +57,13 @@ Explanation of complex parameters below:
 11. Transfer 14 µL of positive control from A2 on tube rack 1 to well G3 on the Greiner 96 well plate with the p20 single channel pipette, mix 3-5 times
 12. Transfer 14 µL of negative control from A3 on tube rack 1 to well H3 on the Greiner 96 well plate with the p20 single channel pipette, mix 3-5 times
 13. Transfer 120 µL RBD-HRP solution from column 2 on the 12 well reagent reservoir to all wells in column 2
-14. Transfer 60 µL RBD-HRP solution from column 2 on the 12 well reagent reservoir to all wells in columns 4, 6, 8, 10, and 12 of the Greiner 96 well plate (can be same tips as the above step and for all columns in this step)
+14. Transfer 120 µL RBD-HRP solution from column 2 on the 12 well reagent reservoir to all wells in columns 4, 6, 8, 10, and 12 of the Greiner 96 well plate (can be same tips as the above step and for all columns in this step)
 15. (NOTE: Steps 15-20 should take less than 2 minutes) Using the p300 multichannel pipette, transfer 120 µL of each well of column 1 on the Greiner plate into the corresponding well on column 2 of the same plate (i.e., A1 goes to A2, B1 to B2, etc.), mix 2 times
-16. Using the p300 multichannel pipette, transfer 60 µL of each well of column 3 on the Greiner plate into the corresponding well in column 4 of the same plate (i.e., A3 goes into A4, B3 to B4, etc.), mix 2 times
-17. Using the p300 multichannel pipette, transfer 60 µL of each well of column 5 on the Greiner plate into the corresponding well in column 6 of the same plate (i.e., A5 goes into A6, B5 to B6, etc.), mix 2 times
-18. Using the p300 multichannel pipette, transfer 60 µL of each well of column 7 on the Greiner plate into the corresponding well in column 8 of the same plate (i.e., A7 goes into A8, B7 to B8, etc.), mix 2 times
-19. Using the p300 multichannel pipette, transfer 60 µL of each well of column 9 on the Greiner plate into the corresponding well in column 10 of the same plate (i.e., A9 goes into A10, B9 to B10, etc.), mix 2 times
-20. Using the p300 multichannel pipette, transfer 60 µL of each well of column 11 on the Greiner plate into the corresponding well in column 12 of the same plate (i.e., A11 goes into A12, B11 to B12, etc.), mix 2 times
+16. Using the p300 multichannel pipette, transfer 120 µL of each well of column 3 on the Greiner plate into the corresponding well in column 4 of the same plate (i.e., A3 goes into A4, B3 to B4, etc.), mix 2 times
+17. Using the p300 multichannel pipette, transfer 120 µL of each well of column 5 on the Greiner plate into the corresponding well in column 6 of the same plate (i.e., A5 goes into A6, B5 to B6, etc.), mix 2 times
+18. Using the p300 multichannel pipette, transfer 120 µL of each well of column 7 on the Greiner plate into the corresponding well in column 8 of the same plate (i.e., A7 goes into A8, B7 to B8, etc.), mix 2 times
+19. Using the p300 multichannel pipette, transfer 120 µL of each well of column 9 on the Greiner plate into the corresponding well in column 10 of the same plate (i.e., A9 goes into A10, B9 to B10, etc.), mix 2 times
+20. Using the p300 multichannel pipette, transfer 120 µL of each well of column 11 on the Greiner plate into the corresponding well in column 12 of the same plate (i.e., A11 goes into A12, B11 to B12, etc.), mix 2 times
 21. Immediately after step 20, move the Greiner 96 well plate to the temperature module (slot 9) at 37°C for 30 minutes
 22. (Note: Steps 22-27 should be completed in less than 2 minutes) (Note: Increase amount aspirated if needed) Using the p300 multichannel pipette, aspirate 200 µL of all wells in column 2 on the Greiner plate and transfer 100 µL into the corresponding wells in columns 1 and 2 on the costar plate (i.e., A2 on the Greiner plate is transferred in duplicate into A1 and A2 on the Costar plate)
 23. Using the p300 multichannel pipette, aspirate 200 µL of all wells in column 4 on the Greiner plate and transfer 100 µL into the corresponding wells in columns 3 and 4 on the costar plate (i.e., A4 on the Greiner plate is transferred in duplicate into A3 and A4 on the Costar plate, A3 and A4 on Costar will contain 100 µL)
