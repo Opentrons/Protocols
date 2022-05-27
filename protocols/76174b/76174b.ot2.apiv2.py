@@ -1,3 +1,4 @@
+from opentrons import types
 from opentrons.protocol_api.labware import OutOfTipsError
 
 metadata = {
@@ -21,15 +22,17 @@ def run(ctx):
     # helper functions
 
     # notify user to replenish tips
-    def pick_up_or_refill(pip):
+    def pick_up_or_refill(self):
         try:
-            pip.pick_up_tip()
+            self.pick_up_tip()
         except OutOfTipsError:
+            self.move_to(ctx.loaded_labwares[4].wells()[0].top().move(
+             types.Point(x=0, y=0, z=100)))
             ctx.pause(
              """Please Refill the {} Tip Boxes
-             and Empty the Tip Waste""".format(pip))
-            pip.reset_tipracks()
-            pip.pick_up_tip()
+                and Empty the Tip Waste.""".format(self))
+            self.reset_tipracks()
+            self.pick_up_tip()
 
     # yield list chunks of length n
     def create_chunks(list_name, n):
