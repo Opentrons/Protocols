@@ -1,30 +1,50 @@
+from protocol_api import ProtocolContext
+
 metadata = {
-    'protocolName': 'Cherrypicking',
-    'author': 'Nick <protocols@opentrons.com>',
+    'protocolName': 'Cherrypicking with multiple pipettes and modules',
+    'author': 'Eskil Andersen <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.3'
+    'apiLevel': '2.12'
 }
 
 
 def get_values(*names):
     import json
     _all_values = json.loads("""{
-                                  "transfer_csv":"Source Labware,Source Slot,Source Well,Source Aspiration Height Above Bottom (in mm),Dest Labware,Dest Slot,Dest Well,Volume (in ul)\\nagilent_1_reservoir_290ml,1,A1,1,nest_96_wellplate_100ul_pcr_full_skirt,4,A11,1\\nnest_12_reservoir_15ml,2,A1,1,nest_96_wellplate_2ml_deep,5,A5,3\\nnest_1_reservoir_195ml,3,A1,1,nest_96_wellplate_2ml_deep,5,H12,7",
-                                  "pipette_type":"p10_single",
-                                  "pipette_mount":"right",
-                                  "tip_type":"standard",
-                                  "tip_reuse":"always"
+                                  "transfer_csv":"",
+                                  "deck_setup_csv":"",
+                                  "left_mount_pipette_type":"p20_single_gen2",
+                                  "right_mount_pipette_type":"p300_single_gen2",
+                                  "left_tip_type":"standard",
+                                  "right_tip_type":"standard",
+                                  "tip_reuse":"always",
+                                  "left_pip_tiprack_slots":"10,11",
+                                  "right_pip_tiprack_slots":"5,8"
                                   }
                                   """)  # noqa: E501 Do not report 'line too long' warnings
     return [_all_values[n] for n in names]
 
 
-def run(ctx):
+def run(ctx: ProtocolContext):
 
-    [pipette_type, pipette_mount, tip_type,
-     tip_reuse, transfer_csv] = get_values(  # noqa: F821
-        "pipette_type", "pipette_mount", "tip_type", "tip_reuse",
-        "transfer_csv")
+    [transfer_csv,
+     deck_setup_csv,
+     left_mount_pipette_type,
+     right_mount_pipette_type,
+     left_tip_type,
+     right_tip_type,
+     tip_reuse,
+     left_pip_tiprack_slots,
+     right_pip_tiprack_slots] = get_values(  # noqa: F821
+     "transfer_csv",
+     "deck_setup_csv",
+     "left_mount_pipette_type",
+     "right_mount_pipette_type",
+     "left_tip_type",
+     "right_tip_type",
+     "tip_reuse",
+     "left_pip_tiprack_slots",
+     "right_pip_tiprack_slots")
 
     tiprack_map = {
         'p10_single': {
@@ -67,14 +87,14 @@ def run(ctx):
             if not int(slot) in ctx.loaded_labwares:
                 ctx.load_labware(lw.lower(), slot)
 
-    # load tipracks in remaining slots
+    # load tipracks in defined slots
     tiprack_type = tiprack_map[pipette_type][tip_type]
     tipracks = []
     for slot in range(1, 13):
         if slot not in ctx.loaded_labwares:
             tipracks.append(ctx.load_labware(tiprack_type, str(slot)))
 
-    # load pipette
+    # load pipette(s)
     pip = ctx.load_instrument(pipette_type, pipette_mount, tip_racks=tipracks)
 
     tip_count = 0

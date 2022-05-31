@@ -1,11 +1,11 @@
-# Cherrypicking
+# Cherrypicking with multiple pipettes and modules
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Featured
-	* Cherrypicking
+* Sample Prep
+	* Cherrypicking with multiple pipettes and modules
 
 ## Description
 
@@ -15,16 +15,15 @@ Our most robust cherrypicking protocol. Specify aspiration height, labware, pipe
 
 Explanation of complex parameters below:
 
-* `input .csv file`: Here, you should upload a .csv file formatted in the [following way](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1211/example.csv), making sure to include headers in your csv file. Refer to our [Labware Library](https://labware.opentrons.com/?category=wellPlate) to copy API names for labware to include in the `Source Labware` and `Dest Labware` columns of the .csv.
-* `Pipette Model`: Select which pipette you will use for this protocol.
-* `Pipette Mount`: Specify which mount your single-channel pipette is on (left or right)
-* `Tip Type`: Specify whether you want to use filter tips.
+* `Transfer .csv File`: Here, you should upload a .csv file formatted in the [following way](), making sure to include headers in your csv file.
+* `Deck setup .csv File`:  Here, you should upload a .csv file formatted in the [following way](), making sure to include headers in your csv file. Refer to our [Labware Library](https://labware.opentrons.com/?category=wellPlate) to copy API names for labware to include in the `Source Labware` and `Dest Labware` columns of the .csv.
+* `Pipette Model in the left mount`: Select which pipette you will use in the left mount for this protocol.
+* `Pipette Model in the right mount`: Select which pipette you will use in the right mount for this protocol.
+* `Tip type for the left pipette`: Specify whether you want to use filter tips.
+* `Tip type for the right pipette`: Specify whether you want to use filter tips.
 * `Tip Usage Strategy`: Specify whether you'd like to use a new tip for each transfer, or keep the same tip throughout the protocol.
 
-
-
 ---
-
 
 ### Labware
 * Any verified labware found in our [Labware Library](https://labware.opentrons.com/?category=wellPlate)
@@ -33,16 +32,11 @@ Explanation of complex parameters below:
 * [P20 Single GEN2 Pipette](https://opentrons.com/pipettes/)
 * [P300 Single GEN2 Pipette](https://opentrons.com/pipettes/)
 * [P1000 Single GEN2 Pipette](https://opentrons.com/pipettes/)
-* P10 Single GEN1 Pipette
-* P50 Single GEN1 Pipette
-* P300 Single GEN1 Pipette
-* P1000 Single GEN1 Pipette
-
 
 ---
 
 ### Deck Setup
-* Example deck setup - tip racks loaded onto remining slots.
+* Example deck setup
 ![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/cherrypicking/Screen+Shot+2021-04-29+at+3.10.02+PM.png)
 
 ---
@@ -65,4 +59,4 @@ Explanation of complex parameters below:
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-cherrypicking
+649b67
