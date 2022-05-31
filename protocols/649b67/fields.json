@@ -59,5 +59,17 @@
       {"label": "Use a new tip for each transfer", "value": "always"},
       {"label": "Reuse tip for each transfer", "value": "never"}
     ]
+  },
+  {
+    "type": "str",
+    "label": "Left pipette tiprack slots",
+    "name": "left_pip_tiprack_slots",
+    "default": "10,11"
+  },
+  {
+    "type": "str",
+    "label": "Right pipette tiprack slots",
+    "name": "right_pip_tiprack_slots",
+    "default": "5,8"
   }
 ]
