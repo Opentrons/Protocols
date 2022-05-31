@@ -26,6 +26,7 @@ def run(ctx):
     # load modules/labware
     """SAMPLE PLATE ON MAG MODULE"""
     temp_1 = ctx.load_module('tempdeck', '1')
+    cycler_plate = ctx.load_labware('customabnest_96_wellplate_200ul', '2')
     thermo_tubes = temp_1.load_labware('opentrons_96_aluminumblock_generic_pcr'
                                        '_strip_200ul')
     mag_module = ctx.load_module('magnetic module gen2', '4')
@@ -52,33 +53,37 @@ def run(ctx):
     sample_dest = sample_plate.rows()[0][:num_cols]
     pcr_mix = reagent_resv.wells()[0]
     index_adapters = reagent_resv.wells()[0]
+    cycler_dest = cycler_plate.rows()[0][:num_cols]
     # Constants
 
     # hard code variables
     vol_supernatant = 50
     z_mod_value = 5
     a_mod_value = 5
+    supernatant_headspeed_modulator = 5
     # Functions
 
     # Discard supernatant
-    mag_module.engage(height_from_base=10)
+    ctx.comment('''discarding supernatant''')
     ctx.max_speeds['Z'] = 50
     ctx.max_speeds['A'] = 50
     num_times = 1
     for source in sample_dest:
         side = 1 if num_times % 2 == 0 else -1
-        m300.flow_rate.aspirate /= 5
-        ctx.max_speeds['Z'] /= z_mod_value
-        ctx.max_speeds['A'] /= a_mod_value
         m300.pick_up_tip()
+        m300.flow_rate.aspirate /= 5
+        m300.move_to(source.top())
+        ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
+        ctx.max_speeds['A'] /= supernatant_headspeed_modulator
         m300.aspirate(
             vol_supernatant, source.bottom().move(types.Point(x=side,
                                                               y=0, z=0.5)))
-        m300.dispense(vol_supernatant, liquid_trash.wells()[0])
-        m300.drop_tip()
+        m300.move_to(source.top())
         m300.flow_rate.aspirate *= 5
-        ctx.max_speeds['Z'] *= z_mod_value
-        ctx.max_speeds['A'] *= a_mod_value
+        ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
+        ctx.max_speeds['A'] *= supernatant_headspeed_modulator
+        m300.dispense(vol_supernatant, liquid_trash.wells()[0])
+        m300.return_tip()
         num_times += 1
         print(side)
     mag_module.disengage()
@@ -107,6 +112,20 @@ def run(ctx):
         m300.mix(10, 40, dest)
         m300.drop_tip()
 
+    # Move samples to thermocycler plate
+    for source, dest in zip(sample_dest, cycler_dest):
+        m300.pick_up_tip()
+        m300.flow_rate.aspirate /= 5
+        m300.flow_rate.dispense /= 5
+        m300.aspirate(60, source)
+        m300.move_to(source.top())
+        m300.aspirate(10, source.top())
+        m300.move_to(dest.top())
+        m300.dispense(10, dest.top())
+        m300.dispense(60, dest)
+        m300.flow_rate.aspirate *= 5
+        m300.flow_rate.dispense *= 5
+        m300.drop_tip()
     # Move to off-deck thermo cycler
     ctx.pause('Run complete, please move sample plate to off-deck thermocycler'
               )
