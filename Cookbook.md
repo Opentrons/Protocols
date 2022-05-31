@@ -16,6 +16,7 @@ Table of Contents:
 * [Track Data Across Protocol Runs](#track-data-across-protocol-runs)
 * [Tip Tracking with Refills](#tip-tracking-with-refills)
 * [Picking Up Fewer Than 8 Tips with a Multi-Channel Pipette](#picking-up-fewer-than-8-tips-with-a-multi-channel-pipette)
+* [Flash Robot Lights](#flash-robot-lights)
 
 ## Basic Skeleton Protocol
 
@@ -470,4 +471,84 @@ def run(ctx):
         pick_up(m300)
         # perform some step
         m300.drop_tip()
+```
+
+## Flash Robot Lights
+
+```
+import contextlib
+import threading
+from opentrons import protocol_api
+
+metadata = {
+    'apiLevel': '2.11'
+}
+
+
+# Definitions for deck light flashing
+@contextlib.contextmanager
+def flashing_rail_lights(
+    protocol: protocol_api.ProtocolContext, seconds_per_flash_cycle=1.0
+):
+    """Flash the rail lights on and off in the background.
+    Source: https://github.com/Opentrons/opentrons/issues/7742
+    Example usage:
+        # While the robot is doing nothing for 2 minutes, flash lights quickly.
+        with flashing_rail_lights(protocol, seconds_per_flash_cycle=0.25):
+            protocol.delay(minutes=2)
+    When the ``with`` block exits, the rail lights are restored to their
+    original state.
+    Exclusive control of the rail lights is assumed. For example, within the
+    ``with`` block, you must not call `ProtocolContext.set_rail_lights`
+    yourself, inspect `ProtocolContext.rail_lights_on`, or nest additional
+    calls to `flashing_rail_lights`.
+    """
+    original_light_status = protocol.rail_lights_on
+
+    stop_flashing_event = threading.Event()
+
+    def background_loop():
+        while True:
+            protocol.set_rail_lights(not protocol.rail_lights_on)
+            # Wait until it's time to toggle the lights for the next flash or
+            # we're told to stop flashing entirely, whichever comes first.
+            got_stop_flashing_event = stop_flashing_event.wait(
+                timeout=seconds_per_flash_cycle/2
+            )
+            if got_stop_flashing_event:
+                break
+
+    background_thread = threading.Thread(
+        target=background_loop, name="Background thread for flashing rail \
+lights"
+    )
+
+    try:
+        if not protocol.is_simulating():
+            background_thread.start()
+        yield
+
+    finally:
+        # The ``with`` block might be exiting normally, or it might be exiting
+        # because something inside it raised an exception.
+        #
+        # This accounts for user-issued cancelations because currently
+        # (2021-05-04), the Python Protocol API happens to implement user-
+        # issued cancellations by raising an exception from internal API code.
+        if not protocol.is_simulating():
+            stop_flashing_event.set()
+            background_thread.join()
+
+        # This is questionable: it may issue a command to the API while the API
+        # is in an inconsistent state after raising an exception.
+        protocol.set_rail_lights(original_light_status)
+
+def run(ctx):
+
+    # example code
+    for i in range(10):
+        if i == 5:
+            if not ctx._hw_manager.hardware.is_simulator:
+                with flashing_rail_lights(ctx, seconds_per_flash_cycle=1):
+                    ctx.pause('Condition met (i=5)')
 ```
