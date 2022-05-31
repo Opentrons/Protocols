@@ -3,35 +3,49 @@
     "type": "textFile",
     "label": "Transfer .csv File",
     "name": "transfer_csv",
-    "default": "Source Labware,Source Slot,Source Well,Source Aspiration Height Above Bottom (in mm),Dest Labware,Dest Slot,Dest Well,Volume (in ul)\nagilent_1_reservoir_290ml,1,A1,1,nest_96_wellplate_100ul_pcr_full_skirt,4,A11,1\nnest_12_reservoir_15ml,2,A1,1,nest_96_wellplate_2ml_deep,5,A5,3\nnest_1_reservoir_195ml,3,A1,1,nest_96_wellplate_2ml_deep,5,H12,7"
+    "default": ""
+  },
+  {
+    "type": "textFile",
+    "label": "Deck setup .csv File",
+    "name": "deck_setup_csv",
+    "default": ""
   },
   {
     "type": "dropDown",
-    "label": "Pipette Model",
-    "name": "pipette_type",
+    "label": "Pipette Model in the left mount",
+    "name": "left_mount_pipette_type",
     "options": [
-      {"label": "P10 Single (GEN 1)", "value": "p10_single"},
-      {"label": "P50 Single (GEN 1)", "value": "p50_single"},
-      {"label": "P300 Single (GEN 1)", "value": "p300_single"},
-      {"label": "P1000 Single (GEN 1)", "value": "p1000_single"},
       {"label": "P20 Single (GEN 2)", "value": "p20_single_gen2"},
       {"label": "P300 Single (GEN 2)", "value": "p300_single_gen2"},
-      {"label": "P1000 Single (GEN 2)", "value": "p1000_single_gen2"}
+      {"label": "P1000 Single (GEN 2)", "value": "p1000_single_gen2"},
+      {"label": "None", "value": false}
     ]
   },
   {
     "type": "dropDown",
-    "label": "Pipette Mount",
-    "name": "pipette_mount",
+    "label": "Pipette Model in the right mount",
+    "name": "right_mount_pipette_type",
     "options": [
-      {"label": "right", "value": "right"},
-      {"label": "left", "value": "left"}
+      {"label": "P300 Single (GEN 2)", "value": "p300_single_gen2"},
+      {"label": "P20 Single (GEN 2)", "value": "p20_single_gen2"},
+      {"label": "P1000 Single (GEN 2)", "value": "p1000_single_gen2"},
+      {"label": "None", "value": false}
     ]
   },
   {
     "type": "dropDown",
-    "label": "Tip Type",
-    "name": "tip_type",
+    "label": "Tip type for the left pipette",
+    "name": "left_tip_type",
+    "options": [
+      {"label": "standard", "value": "standard"},
+      {"label": "filter", "value": "filter"}
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Tip type for the right pipette",
+    "name": "right_tip_type",
     "options": [
       {"label": "standard", "value": "standard"},
       {"label": "filter", "value": "filter"}
