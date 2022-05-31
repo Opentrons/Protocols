@@ -30,8 +30,7 @@ def run(ctx):
     thermo_tubes = temp_1.load_labware('opentrons_96_aluminumblock_generic_pcr'
                                        '_strip_200ul')
     mag_module = ctx.load_module('magnetic module gen2', '4')
-    sample_plate = mag_module.load_labware('nest_96_wellplate_'
-                                           '100ul_pcr_full_skirt')
+    sample_plate = mag_module.load_labware('nest_96_wellplate_2ml_deep')
     reagent_resv = ctx.load_labware('nest_12_reservoir_15ml', '5')
     liquid_trash = ctx.load_labware('nest_1_reservoir_195ml', '9')
 
