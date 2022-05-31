@@ -25,7 +25,7 @@ def run(ctx):
     # "True" for park tips, "False" for discard tips
 
     # load modules/labware
-    """DWP from Part 4 is on magnetic module to start, moves to trash at"""
+    """DWP from Part4 is on magnetic module to start, moves to trash at"""
     """ specified step then replaced with DWP plate in slot 2"""
     temp_1 = ctx.load_module('tempdeck', '1')
     thermo_tubes = temp_1.load_labware('opentrons_96_aluminumblock_generic_pcr'
@@ -218,3 +218,6 @@ def run(ctx):
         m300.flow_rate.aspirate *= 5
         num_times += 1
         print(side)
+
+    for c in ctx.commands():
+        print(c)
