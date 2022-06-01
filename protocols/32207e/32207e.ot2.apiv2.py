@@ -2,7 +2,7 @@ import os
 import csv
 
 metadata = {
-    'protocolName': 'Diluting DNA with TE, Using .csv File',
+    'protocolName': 'Diluting DNA with TE, using .csv File',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'
