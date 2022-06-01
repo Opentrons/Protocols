@@ -28,6 +28,12 @@
     "default": 5
   },
   {
+    "type": "float",
+    "label": "Kingfisher Plate Access Height (from bottom of the well in mm)",
+    "name": "king_height",
+    "default": 3
+  },
+  {
     "type": "dropDown",
     "label": "P20 Single-Channel Mount",
     "name": "p20_mount",
