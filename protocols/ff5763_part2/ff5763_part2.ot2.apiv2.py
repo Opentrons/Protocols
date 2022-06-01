@@ -13,7 +13,7 @@ TEST_MODE = False
 
 
 def run(ctx):
-    """PROTOCOL."""
+    """PROTO COL."""
     [num_samples
      ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
         "num_samples")
@@ -40,7 +40,7 @@ def run(ctx):
     tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
                  for slot in ['3']]
     tiprack200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-                  for slot in ['6', '7', '8']]
+                  for slot in ['6', '7', '8', '10']]
 
     # load instrument
     m20 = ctx.load_instrument('p20_multi_gen2', 'right', tip_racks=tiprack20)
