@@ -11,9 +11,9 @@ metadata = {
 
 def run(ctx):
 
-    [csv_samp, dna_asp_rate, tip_track, star_height,
+    [csv_samp, dna_asp_rate, tip_track, star_height, king_height,
         p20_mount, p300_mount] = get_values(  # noqa: F821
-        "csv_samp", "dna_asp_rate", "tip_track", "star_height",
+        "csv_samp", "dna_asp_rate", "tip_track", "star_height", "king_height",
             "p20_mount", "p300_mount")
 
     # load Labware
@@ -141,7 +141,7 @@ def run(ctx):
             pick_up20()
         elif not pip.has_tip and pip == p300:
             pick_up300()
-        pip.aspirate(dna_vol, dna_plate.wells_by_name()[well].bottom(z=3), rate=dna_asp_rate)  # noqa: E501
+        pip.aspirate(dna_vol, dna_plate.wells_by_name()[well].bottom(z=king_height), rate=dna_asp_rate)  # noqa: E501
         pip.dispense(dna_vol, final_plate.wells_by_name()[well].bottom(z=star_height))  # noqa: E501
         if total_vol*0.8 > 20:
             if not p300.has_tip:
