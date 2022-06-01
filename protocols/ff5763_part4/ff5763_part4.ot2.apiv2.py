@@ -104,8 +104,7 @@ def run(ctx):
     # Incubate 5 minutes
         ctx.delay(minutes=5)
     ctx.comment('''First half of library cleanup completed. Please move deep'''
-                ''' well plate in slot 2 to magnetic module and replace with'''
-                ''' fresh, final deep well sample plate in slot 2''')
+                ''' well plate in slot 2 to magnetic module''')
 
     for c in ctx.commands():
         print(c)
