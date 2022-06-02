@@ -63,13 +63,19 @@ def run(ctx):
     # protocol
 
     # Steps 1-2
-    # Slowly add 10ul TSB (beads) then slowly mix to suspend
+    # Slowly add 10ul TSB (stop buffer) then slowly mix to suspend
     ctx.comment("""adding beads""")
     for dest in starting_dest:
         m20.pick_up_tip()
         m20.flow_rate.aspirate = 3
         m20.flow_rate.dispense = 3
         m20.aspirate(10, tsb)
+        m20.move_to(tsb.top(-2))
+        ctx.delay(seconds=2)
+        m20.touch_tip(v_offset=-2)
+        m20.move_to(tsb.top(-2))
+        m20.aspirate(5, tsb.top())
+        m20.dispense(5, dest.top())
         m20.dispense(10, dest)
         m20.drop_tip()
     ctx.comment('''mixing beads''')
