@@ -30,9 +30,9 @@ def run(ctx):
                                        '_strip_200ul')
     sample_plate = ctx.load_labware('customabnest_96_wellplate_200ul',
                                     '2')
-    mag_module = ctx.load_module('magnetic module gen2', '4')
-    reagent_resv = ctx.load_labware('nest_12_reservoir_15ml', '5')
-    liquid_trash = ctx.load_labware('nest_1_reservoir_195ml', '6')
+    # mag_module = ctx.load_module('magnetic module gen2', '4')
+    # reagent_resv = ctx.load_labware('nest_12_reservoir_15ml', '5')
+    # liquid_trash = ctx.load_labware('nest_1_reservoir_195ml', '6')
 
     # load tipracks
     tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
@@ -41,18 +41,18 @@ def run(ctx):
                   for slot in ['8']]
 
     # load instrument
-    m20 = ctx.load_instrument('p20_multi_gen2', 'right', tip_racks=tiprack20)
+    # m20 = ctx.load_instrument('p20_multi_gen2', 'right', tip_racks=tiprack20)
     m300 = ctx.load_instrument('p300_multi_gen2', 'left', tip_racks=tiprack200)
 
     # reagents
     '''includes reagents used in other steps for housekeeping purposes'''
     master_mix_tag = thermo_tubes.rows()[0][0]
-    nf_water = thermo_tubes.rows()[0][1]
-    tsb = thermo_tubes.rows()[0][2]
+    # nf_water = thermo_tubes.rows()[0][1]
+    # tsb = thermo_tubes.rows()[0][2]
     sample_dest = sample_plate.rows()[0][:num_cols]
 
     # hard code variables
-    airgap = 5
+    airgap = 20
     # protocol
     """DNA samples  MUST be 30ul"""
 
@@ -74,11 +74,6 @@ def run(ctx):
         m300.flow_rate.aspirate *= 2
         m300.flow_rate.dispense *= 2
         m300.drop_tip()
-        # m300.transfer(20,
-        #               master_mix_tag,
-        #               dest,
-        #               mix_after=(10, 45),
-        #               new_tip='always')
     for c in ctx.commands():
         print(c)
     ctx.comment('''Tagmentation Prep Complete. Please transfer samples to
