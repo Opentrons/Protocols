@@ -32,13 +32,13 @@ def run(ctx):
                                     '2')
     mag_module = ctx.load_module('magnetic module gen2', '4')
     reagent_resv = ctx.load_labware('nest_12_reservoir_15ml', '5')
-    liquid_trash = ctx.load_labware('nest_1_reservoir_195ml', '9')
+    liquid_trash = ctx.load_labware('nest_1_reservoir_195ml', '6')
 
     # load tipracks
     tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-                 for slot in ['3']]
+                 for slot in ['7']]
     tiprack200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-                  for slot in ['6']]
+                  for slot in ['8']]
 
     # load instrument
     m20 = ctx.load_instrument('p20_multi_gen2', 'right', tip_racks=tiprack20)
