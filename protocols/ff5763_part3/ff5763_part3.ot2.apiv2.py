@@ -52,11 +52,12 @@ def run(ctx):
     sample_dest = sample_plate.rows()[0][:num_cols]
     pcr_mix = reagent_resv.wells()[0]
     index_adapters = reagent_resv.wells()[0]
-    cycler_dest = cycler_plate.rows()[0][:num_cols]
+    # can reuse other half of plate from previous step!
+    cycler_dest = cycler_plate.rows()[0][6:6+num_cols]
     # Constants
 
     # hard code variables
-    vol_supernatant = 50
+    vol_supernatant = 110
     z_mod_value = 5
     a_mod_value = 5
     supernatant_headspeed_modulator = 5
@@ -95,23 +96,7 @@ def run(ctx):
         m300.mix(10, 40)
         m300.drop_tip()
 
-    # centrifuge off deck, 280 x g for 3 seconds
-    ctx.pause('Please centrifuge plate at 280 x g for 3 seconds, return to'
-              'magnetic module when done')
-
-    # Add 10ul index adapters (made offdeck or supplied in 96 well plate)
-    for dest in sample_dest:
-        m20.pick_up_tip()
-        m20.aspirate(10, index_adapters)
-        m20.dispense(10, dest)
-        m20.drop_tip()
-    # mix 10x at 40ul
-    for dest in sample_dest:
-        m300.pick_up_tip()
-        m300.mix(10, 40, dest)
-        m300.drop_tip()
-
-    # Move samples to thermocycler plate
+    # Move samples to thermocycler plate for centrifuge
     for source, dest in zip(sample_dest, cycler_dest):
         m300.pick_up_tip()
         m300.flow_rate.aspirate /= 5
@@ -125,6 +110,23 @@ def run(ctx):
         m300.flow_rate.aspirate *= 5
         m300.flow_rate.dispense *= 5
         m300.drop_tip()
+
+    # centrifuge off deck, 280 x g for 3 seconds
+    ctx.pause('Please centrifuge plate in slot 2 at 280 x g for 3 seconds,'
+              ' return to slot 2 when done')
+
+    # Add 10ul index adapters (made offdeck or supplied in 96 well plate)
+    for dest in cycler_dest:
+        m20.pick_up_tip()
+        m20.aspirate(10, index_adapters)
+        m20.dispense(10, dest)
+        m20.drop_tip()
+    # mix 10x at 40ul
+    for dest in cycler_dest:
+        m300.pick_up_tip()
+        m300.mix(10, 40, dest)
+        m300.drop_tip()
+
     # Move to off-deck thermo cycler
     ctx.pause('Run complete, please move sample plate to off-deck thermocycler'
               )
