@@ -59,6 +59,8 @@ def run(ctx):
     # Add 20ul master mix slot 1 to slot 2 samples
     for dest in sample_dest:
         m300.pick_up_tip()
+        m300.flow_rate.aspirate /= 4
+        m300.flow_rate.dispense /= 4
         m300.aspirate(20, master_mix_tag)
         m300.move_to(master_mix_tag.top(-2))
         ctx.delay(seconds=2)
@@ -66,7 +68,11 @@ def run(ctx):
         m300.aspirate(airgap, master_mix_tag.top())
         m300.dispense(airgap, dest.top())
         m300.dispense(20, dest)
+        m300.flow_rate.aspirate *= 2
+        m300.flow_rate.dispense *= 2
         m300.mix(10, 45)
+        m300.flow_rate.aspirate *= 2
+        m300.flow_rate.dispense *= 2
         m300.drop_tip()
         # m300.transfer(20,
         #               master_mix_tag,
