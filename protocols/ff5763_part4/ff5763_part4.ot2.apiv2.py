@@ -83,7 +83,7 @@ def run(ctx):
         ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
         ctx.max_speeds['A'] *= supernatant_headspeed_modulator
         m300.dispense(vol_supernatant, dest)
-        m300.return_tip()
+        m300.drop_tip()
         num_times += 1
         print(side)
     mag_module.disengage()
@@ -93,14 +93,14 @@ def run(ctx):
         m300.pick_up_tip()
         m300.aspirate(40, nf_water)
         m300.dispense(40, dest)
-        m300.return_tip()
+        m300.drop_tip()
     # add 45ul IPB to MIDI plate 1 and mix 10x
     for dest in sample_dest_MIDI_1:
         m300.pick_up_tip()
         m300.aspirate(45, ipb)
         m300.dispense(45, dest)
         m300.mix(10, 100)
-        m300.return_tip()
+        m300.drop_tip()
     # Incubate 5 minutes
         ctx.delay(minutes=5)
     ctx.comment('''First half of library cleanup completed. Please move deep'''
