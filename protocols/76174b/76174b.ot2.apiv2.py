@@ -41,37 +41,31 @@ def run(ctx):
 
     # tips, p20 multi
     tips20 = [ctx.load_labware(
-     "opentrons_96_tiprack_20ul", str(slot)) for slot in [4, 7, 8, 9]]
+     "opentrons_96_tiprack_20ul", str(slot)) for slot in [1, 4, 5, 7, 8, 9]]
     p20m = ctx.load_instrument(
         "p20_multi_gen2", 'left', tip_racks=tips20)
 
-    optiplates = [
-     ctx.load_labware(
-      'perkinelmer_384_wellplate_105ul', str(
-       slot), name) for slot, name in zip([1, 2][:count_plates],
-                                          ['OptiPlate 1', 'OptiPlate 2']
-                                          [:count_plates])]
+    optiplate = ctx.load_labware(
+     'perkinelmer_384_wellplate_105ul', '2', 'OptiPlate')
 
     serialdilutions = ctx.load_labware(
      'corning_96_wellplate_320ul', '3', 'Sample Serial Dilutions')
 
-    ligandplate = ctx.load_labware(
-     'corning_96_wellplate_320ul', '5', 'Ligands')
-    ligands = ligandplate.columns()[:count_plates]
-
     reagents = ctx.load_labware(
-     'corning_96_wellplate_320ul', '6', 'Anti-Ligand, Acceptor, Donor')
+     'corning_96_wellplate_320ul', '6',
+     'Anti-Ligand, Acceptor, Donor, Ligands')
     [antiligand, acceptor, donor] = [
      chunk for chunk in [*create_chunks(reagents.columns(), count_plates)][:3]]
+    ligands = list(reversed(reagents.columns()))[:count_plates][::-1]
 
     for item, location in zip(
      ['receptors', 'samples', 'ligands', 'anti-ligand', 'acceptor', 'donor'],
-     [optiplates, serialdilutions, ligands, antiligand, acceptor, donor]):
+     [optiplate, serialdilutions, ligands, antiligand, acceptor, donor]):
         ctx.comment("\nPlace {0} in {1}\n".format(item, location))
 
     ctx.comment("Transferring 8 uL Sample Serial Dilution to OptiPlate 1")
     for chunk_index in [0, 1]:
-        for row in optiplates[0].rows()[:2]:
+        for row in optiplate.rows()[:2]:
 
             for source, dest in zip(serialdilutions.rows()[0],
                                     [*create_chunks(row, 12)][chunk_index]):
@@ -81,43 +75,44 @@ def run(ctx):
                 p20m.dispense(8, dest.bottom(1))
                 p20m.drop_tip()
 
-    ctx.comment("Transferring 4 uL Ligand to OptiPlates")
-    for index, plate in enumerate(optiplates):
-        for row in plate.rows()[:2]:
+    for rep in range(count_plates):
+
+        if rep:
+            ctx.pause("Place OptiPlate 2 in deck slot 2. Resume")
+
+        ctx.comment("Transferring 4 uL Ligand to OptiPlate")
+        for row in optiplate.rows()[:2]:
             for well in row:
                 pick_up_or_refill(p20m)
-                p20m.aspirate(4, ligands[index][0].bottom(1))
+                p20m.aspirate(4, ligands[rep][0].bottom(1))
                 p20m.dispense(4, well.bottom(1))
                 p20m.drop_tip()
 
-    ctx.pause("Robot paused. Resume when ready.")
+        ctx.pause("Robot paused. Resume when ready.")
 
-    ctx.comment("Transferring 4 uL anti-Ligand to OptiPlates")
-    for index, plate in enumerate(optiplates):
-        for row in plate.rows()[:2]:
+        ctx.comment("Transferring 4 uL anti-Ligand to OptiPlate")
+        for row in optiplate.rows()[:2]:
             for well in row:
                 pick_up_or_refill(p20m)
-                p20m.aspirate(4, antiligand[index][0].bottom(1))
+                p20m.aspirate(4, antiligand[rep][0].bottom(1))
                 p20m.dispense(4, well.bottom(1))
                 p20m.drop_tip()
 
-    ctx.comment("Transferring 4 uL acceptor to OptiPlates")
-    for index, plate in enumerate(optiplates):
-        for row in plate.rows()[:2]:
+        ctx.comment("Transferring 4 uL acceptor to OptiPlate")
+        for row in optiplate.rows()[:2]:
             for well in row:
                 pick_up_or_refill(p20m)
-                p20m.aspirate(4, acceptor[index][0].bottom(1))
+                p20m.aspirate(4, acceptor[rep][0].bottom(1))
                 p20m.dispense(4, well.bottom(1))
                 p20m.drop_tip()
 
-    ctx.pause("Robot paused. Resume when ready.")
+        ctx.pause("Robot paused. Resume when ready.")
 
-    ctx.comment("Transferring 4 uL donor to OptiPlates")
-    for index, plate in enumerate(optiplates):
-        for row in plate.rows()[:2]:
+        ctx.comment("Transferring 4 uL donor to OptiPlate")
+        for row in optiplate.rows()[:2]:
             for well in row:
                 pick_up_or_refill(p20m)
-                p20m.aspirate(4, donor[index][0].bottom(1))
+                p20m.aspirate(4, donor[rep][0].bottom(1))
                 p20m.dispense(4, well.bottom(1))
                 p20m.drop_tip()
 
