@@ -48,23 +48,26 @@ def run(ctx):
 
     # reagents
     '''includes reagents used in other steps for housekeeping purposes'''
-    master_mix_tag = thermo_tubes.rows()[0][0]
-    nf_water = thermo_tubes.rows()[0][1]
+    # master_mix_tag = thermo_tubes.rows()[0][0]
+    # nf_water = thermo_tubes.rows()[0][1]
     tsb = thermo_tubes.rows()[0][2]
     twb = reagent_resv.rows()[0][0]
-    pcr_mix = reagent_resv.rows()[0][1]
+    # pcr_mix = reagent_resv.rows()[0][1]
 
     starting_dest = starting_tray.rows()[0][:num_cols]
     sample_dest = sample_plate.rows()[0][:num_cols]
 
     supernatant_headspeed_modulator = 5
-    vol_supernatant = 40
+    step5_vol_supernatant = 65
+    step6_vol_supernatant = 105
     nest_96_mag_engage_height = 10
+    airgap_300 = 20
+    airgap_20 = 5
     # protocol
 
     # Steps 1-2
     # Slowly add 10ul TSB (stop buffer) then slowly mix to suspend
-    ctx.comment("""adding beads""")
+    ctx.comment("""adding TSB""")
     for dest in starting_dest:
         m20.pick_up_tip()
         m20.flow_rate.aspirate = 3
@@ -74,11 +77,11 @@ def run(ctx):
         ctx.delay(seconds=2)
         m20.touch_tip(v_offset=-2)
         m20.move_to(tsb.top(-2))
-        m20.aspirate(5, tsb.top())
-        m20.dispense(5, dest.top())
+        m20.aspirate(airgap_20, tsb.top())
+        m20.dispense(airgap_20, dest.top())
         m20.dispense(10, dest)
         m20.drop_tip()
-    ctx.comment('''mixing beads''')
+    ctx.comment('''mixing''')
     for dest in starting_dest:
         m300.pick_up_tip()
         m300.flow_rate.aspirate /= 4
@@ -100,20 +103,20 @@ def run(ctx):
         m300.aspirate(50, source)
         m300.move_to(source.top(-2))
         ctx.delay(seconds=2)
-        m300.aspirate(10, source.top(-2))
+        m300.aspirate(airgap_300, source.top(-2))
         m300.move_to(dest.top(10))
         m300.move_to(dest.top(-2))
-        m300.dispense(10, dest.top(-2))
+        m300.dispense(airgap_300, dest.top(-2))
         m300.dispense(50, dest)
         m300.blow_out(dest.top())
         m300.drop_tip()
 
-    """"insert mag module purification base code here"""
     # Step 4
     # Incubate on mag stand, 3 minutes
     ctx.comment('''incubate 3 minutes''')
     mag_module.engage(height_from_base=nest_96_mag_engage_height)
     ctx.delay(minutes=3)
+
     # Step 5
     # Discard supernatant
     ctx.comment('''discarding supernatant''')
@@ -125,18 +128,21 @@ def run(ctx):
         m300.flow_rate.aspirate /= 5
         m300.flow_rate.dispense /= 5
         m300.pick_up_tip()
-        m300.move_to(source.top())
+        m300.move_to(source.top(10))
         ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
         ctx.max_speeds['A'] /= supernatant_headspeed_modulator
         m300.aspirate(
-            vol_supernatant, source.bottom().move(types.Point(x=side,
-                                                              y=0, z=0.5)))
+            step5_vol_supernatant,
+            source.bottom().move(types.Point(x=side,
+                                             y=0, z=0.5)))
         m300.move_to(source.top())
+        m300.aspirate(airgap_300, source.top())
         ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
         ctx.max_speeds['A'] *= supernatant_headspeed_modulator
         m300.flow_rate.aspirate *= 5
         m300.flow_rate.dispense *= 5
-        m300.dispense(vol_supernatant, liquid_trash.wells()[0])
+        m300.dispense(step5_vol_supernatant+airgap_300,
+                      liquid_trash.wells()[0])
         m300.drop_tip()
         num_times += 1
     mag_module.disengage()
@@ -149,6 +155,10 @@ def run(ctx):
         for dest in sample_dest:
             m300.pick_up_tip()
             m300.aspirate(100, twb)
+            m300.move_to(twb.top())
+            m300.aspirate(airgap_300, twb.top())
+            ctx.delay(seconds=2)
+            m300.dispense(airgap_300, dest.top())
             m300.dispense(100, dest)
             m300.mix(3, 120)
             m300.drop_tip()
@@ -166,17 +176,21 @@ def run(ctx):
         for source in sample_dest:
             side = 1 if num_times % 2 == 0 else -1
             m300.pick_up_tip()
+            m300.move_to(source.top(10))
             m300.flow_rate.aspirate /= 5
             ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
             ctx.max_speeds['A'] /= supernatant_headspeed_modulator
             m300.aspirate(
-                vol_supernatant, source.bottom().move(types.Point(x=side,
-                                                                  y=0, z=0.5)))
+                step6_vol_supernatant,
+                source.bottom().move(types.Point(x=side,
+                                                 y=0, z=0.5)))
             m300.move_to(source.top())
+            m300.aspirate(airgap_300, source.top())
             m300.flow_rate.aspirate *= 5
             ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
             ctx.max_speeds['A'] *= supernatant_headspeed_modulator
-            m300.dispense(vol_supernatant, liquid_trash.wells()[0])
+            m300.dispense(step6_vol_supernatant+airgap_300,
+                          liquid_trash.wells()[0])
             m300.return_tip()
             num_times += 1
             print(side)
@@ -187,6 +201,10 @@ def run(ctx):
     for dest in sample_dest:
         m300.pick_up_tip()
         m300.aspirate(100, twb)
+        m300.move_to(twb.top())
+        m300.aspirate(airgap_300, twb.top())
+        ctx.delay(seconds=2)
+        m300.dispense(airgap_300, dest.top())
         m300.dispense(100, dest)
         m300.mix(3, 120)
         m300.drop_tip()
