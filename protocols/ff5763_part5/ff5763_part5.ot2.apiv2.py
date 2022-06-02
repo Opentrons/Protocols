@@ -58,7 +58,6 @@ def run(ctx):
     etoh = reagent_resv.wells()[11]
     source_midi_plate_mag = midi_plate_1.rows()[0][6:6+num_cols]
     final_plate_dest = final_plate.rows()[0][:num_cols]
-    supernatant_pcr_plate_dest = supernatant_pcr_plate.rows()[0][:num_cols]
     # hard code variables
     vol_supernatant = 45
     z_mod_value = 5
@@ -213,25 +212,25 @@ def run(ctx):
     mag_module.engage(height=MIDI_plate_mag_height)
 # transfer 30 ul from MIDI plate 2 to new 96 well pcr plate
     """IS THIS NEEDED?"""
-    ctx.max_speeds['Z'] = 50
-    ctx.max_speeds['A'] = 50
-    num_times = 1
-    for source, dest in zip(final_plate_dest, supernatant_pcr_plate_dest):
-        side = 1 if num_times % 2 == 0 else -1
-        m300.flow_rate.aspirate /= 5
-        m300.pick_up_tip()
-        ctx.max_speeds['Z'] /= z_mod_value
-        ctx.max_speeds['A'] /= a_mod_value
-        m300.aspirate(
-            30, source.bottom().move(types.Point(x=side,
-                                                 y=0, z=0.5)))
-        ctx.max_speeds['Z'] *= z_mod_value
-        ctx.max_speeds['A'] *= a_mod_value
-        m300.dispense(30, dest)
-        m300.drop_tip()
-        m300.flow_rate.aspirate *= 5
-        num_times += 1
-        print(side)
+    # ctx.max_speeds['Z'] = 50
+    # ctx.max_speeds['A'] = 50
+    # num_times = 1
+    # for source, dest in zip(final_plate_dest, supernatant_pcr_plate_dest):
+    #     side = 1 if num_times % 2 == 0 else -1
+    #     m300.flow_rate.aspirate /= 5
+    #     m300.pick_up_tip()
+    #     ctx.max_speeds['Z'] /= z_mod_value
+    #     ctx.max_speeds['A'] /= a_mod_value
+    #     m300.aspirate(
+    #         30, source.bottom().move(types.Point(x=side,
+    #                                              y=0, z=0.5)))
+    #     ctx.max_speeds['Z'] *= z_mod_value
+    #     ctx.max_speeds['A'] *= a_mod_value
+    #     m300.dispense(30, dest)
+    #     m300.drop_tip()
+    #     m300.flow_rate.aspirate *= 5
+    #     num_times += 1
+    #     print(side)
 
     for c in ctx.commands():
         print(c)
