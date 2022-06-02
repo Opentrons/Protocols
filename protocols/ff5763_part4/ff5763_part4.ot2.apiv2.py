@@ -34,13 +34,13 @@ def run(ctx):
     midi_plate_1 = mag_module.load_labware('customabnest_96_wellplate_200ul')
     sample_plate = ctx.load_labware('customabnest_96_wellplate_200ul', '2')
     reagent_resv = ctx.load_labware('nest_12_reservoir_15ml', '5')
-    liquid_trash = ctx.load_labware('nest_1_reservoir_195ml', '9')
+    liquid_trash = ctx.load_labware('nest_1_reservoir_195ml', '6')
 
     # load tipracks
     tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-                 for slot in ['3', '8']]
+                 for slot in ['7', '8']]
     tiprack200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-                  for slot in ['6', '7']]
+                  for slot in ['9', '10']]
 
     # load instrument
     m20 = ctx.load_instrument('p20_multi_gen2', 'right', tip_racks=tiprack20)
