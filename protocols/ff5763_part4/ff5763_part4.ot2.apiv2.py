@@ -28,11 +28,11 @@ def run(ctx):
     # load modules/labware
     temp_1 = ctx.load_module('tempdeck', '1')
     # will be custom_from_maurice
-    midi_plate_1 = ctx.load_labware('customabnest_96_wellplate_200ul', '2')
     thermo_tubes = temp_1.load_labware('opentrons_96_aluminumblock_generic_pcr'
                                        '_strip_200ul')
     mag_module = ctx.load_module('magnetic module gen2', '4')
-    sample_plate = mag_module.load_labware('customabnest_96_wellplate_200ul')
+    midi_plate_1 = mag_module.load_labware('customabnest_96_wellplate_200ul')
+    sample_plate = ctx.load_labware('customabnest_96_wellplate_200ul', '2')
     reagent_resv = ctx.load_labware('nest_12_reservoir_15ml', '5')
     liquid_trash = ctx.load_labware('nest_1_reservoir_195ml', '9')
 
@@ -52,8 +52,8 @@ def run(ctx):
     nf_water = thermo_tubes.rows()[0][1]
     tsb = thermo_tubes.rows()[0][2]
     ipb = thermo_tubes.rows()[0][3]
-    sample_dest_nest = sample_plate.rows()[0][:num_cols]
-    sample_dest_MIDI_1 = midi_plate_1.rows()[0][:num_cols]
+    sample_dest_nest = sample_plate.rows()[0][6:6+num_cols]
+    sample_dest_MIDI_1 = midi_plate_1.rows()[0][6:6+num_cols]
 
     # hard code variables
     vol_supernatant = 50
@@ -62,7 +62,7 @@ def run(ctx):
     supernatant_headspeed_modulator = 5
     # protocol
 
-    # move supernatant to MIDI plate
+    # move supernatant to MIDI plate, toss customab at this point, used up
 
     mag_module.engage(height=10)
     ctx.delay(minutes=5)
