@@ -33,35 +33,33 @@ def run(ctx):
     mag_module = ctx.load_module('magnetic module gen2', '4')
     midi_plate_1 = mag_module.load_labware('customabnest_96_wellplate_200ul')
     sample_plate = ctx.load_labware('customabnest_96_wellplate_200ul', '2')
-    reagent_resv = ctx.load_labware('nest_12_reservoir_15ml', '5')
-    liquid_trash = ctx.load_labware('nest_1_reservoir_195ml', '6')
+    # reagent_resv = ctx.load_labware('nest_12_reservoir_15ml', '5')
+    # liquid_trash = ctx.load_labware('nest_1_reservoir_195ml', '6')
 
     # load tipracks
-    tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-                 for slot in ['7', '8']]
+    # tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
+    #              for slot in ['7', '8']]
     tiprack200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
                   for slot in ['9', '10']]
 
     # load instrument
-    m20 = ctx.load_instrument('p20_multi_gen2', 'right', tip_racks=tiprack20)
+    # m20 = ctx.load_instrument('p20_multi_gen2', 'right', tip_racks=tiprack20)
     m300 = ctx.load_instrument('p300_multi_gen2', 'left', tip_racks=tiprack200)
 
     # reagents
     '''includes reagents used in other steps for housekeeping purposes'''
-    master_mix = thermo_tubes.rows()[0][0]
-    nf_water = thermo_tubes.rows()[0][1]
-    tsb = thermo_tubes.rows()[0][2]
-    ipb = thermo_tubes.rows()[0][3]
+    # master_mix = thermo_tubes.rows()[0][0]
+    nf_water = thermo_tubes.rows()[0][2]
+    # tsb = thermo_tubes.rows()[0][4]
+    ipb = thermo_tubes.rows()[0][6]
     sample_dest_nest = sample_plate.rows()[0][6:6+num_cols]
     sample_dest_MIDI_1 = midi_plate_1.rows()[0][6:6+num_cols]
 
     # hard code variables
     vol_supernatant = 50
-    z_mod_value = 5
-    a_mod_value = 5
     supernatant_headspeed_modulator = 5
+    airgap_nfwater = 10
     # protocol
-
     # move supernatant to MIDI plate, toss customab at this point, used up
 
     mag_module.engage(height=10)
@@ -91,20 +89,33 @@ def run(ctx):
     # add 40ul NFW to MIDI plate 1
     for dest in sample_dest_MIDI_1:
         m300.pick_up_tip()
+        m300.flow_rate.aspirate /= 4
+        m300.flow_rate.dispense /= 4
         m300.aspirate(40, nf_water)
+        m300.move_to(nf_water.top())
+        m300.aspirate(airgap_nfwater, nf_water.top(2))
+        m300.dispense(airgap_nfwater, dest.top())
         m300.dispense(40, dest)
+        m300.flow_rate.aspirate *= 4
+        m300.flow_rate.dispense *= 4
         m300.drop_tip()
     # add 45ul IPB to MIDI plate 1 and mix 10x
     for dest in sample_dest_MIDI_1:
+        m300.flow_rate.aspirate /= 4
+        m300.flow_rate.dispense /= 4
         m300.pick_up_tip()
         m300.aspirate(45, ipb)
         m300.dispense(45, dest)
+        m300.flow_rate.aspirate *= 2
+        m300.flow_rate.dispense *= 2
         m300.mix(10, 100)
+        m300.flow_rate.aspirate *= 2
+        m300.flow_rate.dispense *= 2
         m300.drop_tip()
     # Incubate 5 minutes
         ctx.delay(minutes=5)
-    ctx.comment('''First half of library cleanup completed. Please move deep'''
-                ''' well plate in slot 2 to magnetic module''')
+    ctx.comment('''First half of library cleanup completed. Please dispose'''
+                ''' of plate in slot 2''')
 
     for c in ctx.commands():
         print(c)
