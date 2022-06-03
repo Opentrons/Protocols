@@ -10,8 +10,11 @@
 This is part two of a five part protocol for the [Illumina DNA Prep kit](https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/nextera-dna-flex.html)
 
 [Part 1](https://develop.protocols.opentrons.com/protocol/ff5763)
+
 [Part 3](https://develop.protocols.opentrons.com/protocol/ff5763_part3)
+
 [Part 4](https://develop.protocols.opentrons.com/protocol/ff5763_part4)
+
 [Part 5](https://develop.protocols.opentrons.com/protocol/ff5763_part5)
 
 Part 2: Post-Tagmentation Clean-Up
