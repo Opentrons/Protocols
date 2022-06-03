@@ -60,7 +60,6 @@ def run(ctx):
     final_plate_dest = final_plate.rows()[0][:num_cols]
     supernatant_pcr_plate_dest = supernate_final.rows()[0][:num_cols]
     # hard code variables
-    vol_supernatant = 45
     z_mod_value = 5
     a_mod_value = 5
     MIDI_plate_mag_height = 9
