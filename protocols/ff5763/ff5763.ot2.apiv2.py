@@ -1,4 +1,4 @@
-"""OPENTRONS"""
+"""OPENTRONS."""
 import math
 
 metadata = {
@@ -35,8 +35,8 @@ def run(ctx):
     # liquid_trash = ctx.load_labware('nest_1_reservoir_195ml', '6')
 
     # load tipracks
-    tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-                 for slot in ['7']]
+    # tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
+    #              for slot in ['7']]
     tiprack200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
                   for slot in ['8']]
 
