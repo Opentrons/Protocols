@@ -40,7 +40,7 @@ def run(ctx):
     # tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
     #              for slot in ['7', '8']]
     tiprack200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-                  for slot in ['9', '10']]
+                  for slot in ['7', '8']]
 
     # load instrument
     # m20 = ctx.load_instrument('p20_multi_gen2', 'right', tip_racks=tiprack20)
@@ -115,7 +115,7 @@ def run(ctx):
     # Incubate 5 minutes
         ctx.delay(minutes=5)
     ctx.comment('''First half of library cleanup completed. Please dispose'''
-                ''' of plate in slot 2''')
+                ''' of AB Gene plate in slot 2''')
 
     for c in ctx.commands():
         print(c)
