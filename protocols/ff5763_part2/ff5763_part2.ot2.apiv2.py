@@ -49,8 +49,8 @@ def run(ctx):
     # reagents
     '''includes reagents used in other steps for housekeeping purposes'''
     # master_mix_tag = thermo_tubes.rows()[0][0]
-    # nf_water = thermo_tubes.rows()[0][1]
-    tsb = thermo_tubes.rows()[0][2]
+    # nf_water = thermo_tubes.rows()[0][2]
+    tsb = thermo_tubes.rows()[0][4]
     twb = reagent_resv.rows()[0][0]
     # pcr_mix = reagent_resv.rows()[0][1]
 

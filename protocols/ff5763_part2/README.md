@@ -11,67 +11,61 @@
 	* Subcategory (can be the name of a kit when applicable)
 
 ## Description
-This section of the README (especially the first paragraph) should grip a prospective user with the overarching purpose/flow of the protocol, but should not include fine details of the protocol steps themselves.
+This is part two of a five part protocol for the [Illumina DNA Prep kit](https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/nextera-dna-flex.html)
 
-Example: This is a flexible protocol accommodating a wide range of commercial RNA extraction workflows for COVID-19 sample processing. The protocol is broken down into 5 main parts:
-* binding buffer addition to samples
-* bead wash 3x using magnetic module
-* final elution to chilled PCR plate
+[Part 1](https://develop.protocols.opentrons.com/protocol/ff5763)
+[Part 3](https://develop.protocols.opentrons.com/protocol/ff5763_part3)
+[Part 4](https://develop.protocols.opentrons.com/protocol/ff5763_part4)
+[Part 5](https://develop.protocols.opentrons.com/protocol/ff5763_part5)
 
-Subsequent paragraphs can give some more insight into the details of the protocol, but a step-by-step description should be included in the 'Protocol Steps' section below.
+Part 2: Post-Tagmentation Clean-Up
+Tagmentation Stop Buffer (TSB) is added to each sample with a multi-channel 20ul pipette, using a fresh tip each time. The multi-channel 300ul pipette is then used to mix the samples before the plate is tranferred to an off-deck thermocycler. Once the post-tagmentation thermocycler program has completed, the plate is returned to slot 2 and 'Resume' is clicked on the OT-2 application
 
-Example: For sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 4) to the elution PCR plate (temperature module, slot 1). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.
+Samples are subsequently moved to a deep well plate locked onto the magnetic module in slot 4. The magnetic module is engaged and left for 3 minutes. After the 3 minutes the supernatant is discarded into the liquid trash in slot 6.
 
-Results of the Opentrons Science team's internal testing of this protocol on the OT-2 are shown below:  
-![results](link_to_results.png)
+Tagmentation Wash Buffer (TWB) is utilized to wash the samples in the magnetic module twice as follows:
+100ul TWB is added to the samples, the magnetic module is engaged for 3 minutes, then supernatant is removed to liquid trash in slot 6.
+
+After the two TWB washes a third TWB wash is partially done. 100ul TWB is added to the samples and the magnetic module is engaged. Part 3 should be initiated as soon as possible after this step.
 
 Explanation of complex parameters below:
-* `park tips`: If set to `yes` (recommended), the protocol will conserve tips between reagent addition and removal. Tips will be stored in the wells of an empty rack corresponding to the well of the sample that they access (tip parked in A1 of the empty rack will only be used for sample A1, tip parked in B1 only used for sample B1, etc.). If set to `no`, tips will always be used only once, and the user will be prompted to manually refill tipracks mid-protocol for high throughput runs.
-* `input .csv file`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:
-```
-source,dest,vol
-A1,B1,4
-```
+* `Number of Samples`: Total number of samples from 1 to 48
 
 ---
 
 ### Modules
 * [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
 * [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
-* [Thermocycler Module](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module)
-* [HEPA Module](https://shop.opentrons.com/collections/hardware-modules/products/hepa-module)
 
 ### Labware
-* [Labware name](link to labware on shop.opentrons.com when applicable)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* PCR Strip Tubes for Tagmentation Stop Buffer (TSB) in slot 1, row 5
+* Custom 96 Well Plate with AB Gene and NEST 96 well plate with samples, slot 2
+* [NEST 2ml Deep Well Plate](https://shop.opentrons.com/nest-2-ml-96-well-deep-well-plate-v-bottom/) on Magnetic Module in slot 4
+* [NEST 12-Well 15ml Reservoir](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/) in slot 5
+* [NEST 195ml Reservoir](https://shop.opentrons.com/nest-1-well-reservoirs-195-ml/) in slot 6
+
 
 ### Pipettes
-* [Pipette name](link to pipette on shop.opentrons.com)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [P300 Multi Channel](https://shop.opentrons.com/8-channel-electronic-pipette/)
+* [P20 Multi Channel](https://shop.opentrons.com/8-channel-electronic-pipette/)
 
 ### Reagents
-* [kit name when applicable](link to kit)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
-
----
-
-### Deck Setup
-* If the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)
-
-### Reagent Setup
-* This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:
-* Reservoir 1: slot 5
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res1_v2.png)
-* Reservoir 2: slot 2  
-![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res2.png)
+* Tagmentation Stop Buffer (TSB) in PCR tubes, slot 1 row 5, 10ul per sample
+* Tagmentation Wash Buffer (TWB) in slot 5 well 1, 300ul per sample
 
 ---
 
 ### Protocol Steps
-1. This section should consist of a numerical outline of the protocol steps, somewhat analogous to the steps outlined by the user in their custom protocol submission.
-2. example step: Samples are transferred from the source tuberacks on slots 1-2 to the PCR plate on slot 3, down columns and then across rows.
-3. example step: Waste is removed from each sample on the magnetic module, ensuring the bead pellets are not contacted by the pipette tips.
+1. 10ul TSB from slot 1 row 5 is added to samples in slot 2
+2. Sample plate is moved to pre-prepared thermocycler
+3. Post-thermocycler, sample in slot 2 are transferred to NEST 2ml deep well plate in slot 4 ontop of the magnetic module
+4. Magnetic module is engaged for 3 minutes
+5. Supernatant is discarded from slot 4 samples to liquid trash in slot 6
+6. 100ul TWB is added from slot 5 well 1 to sample plate on magnetic module
+7. Magnetic module is engaged for 3 minutes
+8. Supernatant is removed from sample plate on magnetic module
+9. Steps 6, 7, and 8 are repeated
+10. 100ul TWB is added from slot 5 well 1 one final time and left on an engaged magnetic module into part 3
 
 ### Process
 1. Input your protocol parameters above.
@@ -86,4 +80,4 @@ A1,B1,4
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-protocol-hex-code
+ff5763
