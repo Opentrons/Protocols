@@ -27,8 +27,8 @@ def run(ctx):
     """SAMPLE PLATE ON MAG MODULE"""
     temp_1 = ctx.load_module('tempdeck', '1')
     cycler_plate = ctx.load_labware('customabnest_96_wellplate_200ul', '2')
-    thermo_tubes = temp_1.load_labware('opentrons_96_aluminumblock_generic_pcr'
-                                       '_strip_200ul')
+    thermo_tubes = temp_1.load_labware('opentrons_96_aluminumblock_generic_'
+                                       'pcr_strip_200ul')
     mag_module = ctx.load_module('magnetic module gen2', '4')
     sample_plate = mag_module.load_labware('nest_96_wellplate_2ml_deep')
     reagent_resv = ctx.load_labware('nest_12_reservoir_15ml', '5')
@@ -46,8 +46,8 @@ def run(ctx):
 
     # reagents
     '''includes reagents used in other steps for housekeeping purposes'''
-    master_mix = thermo_tubes.rows()[0][0]
-    nf_water = thermo_tubes.rows()[0][1]
+    # master_mix = thermo_tubes.rows()[0][0]
+    # nf_water = thermo_tubes.rows()[0][1]
     tsb = thermo_tubes.rows()[0][2]
     sample_dest = sample_plate.rows()[0][:num_cols]
     pcr_mix = reagent_resv.wells()[0]
@@ -58,10 +58,13 @@ def run(ctx):
 
     # hard code variables
     vol_supernatant = 110
-    z_mod_value = 5
-    a_mod_value = 5
     supernatant_headspeed_modulator = 5
-    # Functions
+    airgap_index = 5
+    airgap_mastermix = 10
+    airgap_plate = 10
+
+    # keeps temp module loaded
+    m300.move_to(tsb.top(3))
 
     # Discard supernatant
     ctx.comment('''discarding supernatant''')
@@ -83,7 +86,7 @@ def run(ctx):
         ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
         ctx.max_speeds['A'] *= supernatant_headspeed_modulator
         m300.dispense(vol_supernatant, liquid_trash.wells()[0])
-        m300.return_tip()
+        m300.drop_tip()
         num_times += 1
         print(side)
     mag_module.disengage()
@@ -91,8 +94,15 @@ def run(ctx):
     # Add 40ul Master mix (EFW and NFW made off-deck w/10% overage), mix 10x
     for dest in sample_dest:
         m300.pick_up_tip()
+        m300.flow_rate.aspirate /= 5
+        m300.flow_rate.dispense /= 5
         m300.aspirate(40, pcr_mix)
+        m300.move_to(pcr_mix.top())
+        m300.aspirate(airgap_mastermix, pcr_mix.top())
+        m300.dispense(airgap_mastermix, dest.top())
         m300.dispense(40, dest)
+        m300.flow_rate.aspirate *= 5
+        m300.flow_rate.dispense *= 5
         m300.mix(10, 40)
         m300.drop_tip()
 
@@ -103,9 +113,9 @@ def run(ctx):
         m300.flow_rate.dispense /= 5
         m300.aspirate(60, source)
         m300.move_to(source.top())
-        m300.aspirate(10, source.top())
+        m300.aspirate(airgap_plate, source.top())
         m300.move_to(dest.top())
-        m300.dispense(10, dest.top())
+        m300.dispense(airgap_plate, dest.top())
         m300.dispense(60, dest)
         m300.flow_rate.aspirate *= 5
         m300.flow_rate.dispense *= 5
@@ -118,13 +128,25 @@ def run(ctx):
     # Add 10ul index adapters (made offdeck or supplied in 96 well plate)
     for dest in cycler_dest:
         m20.pick_up_tip()
+        m20.flow_rate.aspirate /= 4
+        m20.flow_rate.dispense /= 4
         m20.aspirate(10, index_adapters)
+        m20.move_to(index_adapters.top(-2))
+        m20.aspirate(airgap_index, index_adapters.top(-2))
+        m20.move_to(index_adapters.top(-2))
+        m20.dispense(airgap_index, dest.top())
         m20.dispense(10, dest)
+        m20.flow_rate.aspirate *= 4
+        m20.flow_rate.dispense *= 4
         m20.drop_tip()
     # mix 10x at 40ul
     for dest in cycler_dest:
         m300.pick_up_tip()
+        m300.flow_rate.aspirate /= 3
+        m300.flow_rate.dispense /= 3
         m300.mix(10, 40, dest)
+        m300.flow_rate.aspirate *= 3
+        m300.flow_rate.dispense *= 3
         m300.drop_tip()
 
     # Move to off-deck thermo cycler
