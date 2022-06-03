@@ -3,13 +3,7 @@
     "type": "textFile",
     "label": "Transfer .csv File",
     "name": "transfer_csv",
-    "default": ""
-  },
-  {
-    "type": "textFile",
-    "label": "Deck setup .csv File",
-    "name": "deck_setup_csv",
-    "default": ""
+    "default": " step_id,instruction,instruction_parameters,source_labware,source_magnetic_module,source_temperature_module,source_slot,source_well,Source_well_starting_volume,transfer_volume,air_gap_volume,dest_labware,dest_magnetic_module,dest_temperature_module,dest_slot,dest_well,dest_well_starting_volume,touch_tip,blow_out\n1,transfer,,nest_96_wellplate_2ml_deep,yes,no,1,A1,2000,1000,50,corning_6_wellplate_16.8ml_flat,no,no,3,A6,0,no,no\n2,transfer,,corning_384_wellplate_112ul_flat,no,no,2,B1,100,90,10,nest_12_reservoir_15ml,no,no,4,B2,10,yes,yes\n3,aspirate_and_park_tip,,corning_384_wellplate_112ul_flat,no,no,2,C1,100,50,10,,no,no,,,,,\n4,pause,5m30s,,,,,,,,,,,,,,,,\n5,dispense_parked_tip,step_id=3,,,,,,,60,,,,,,,,yes,yes\n6,transfer,,corning_384_wellplate_112ul_flat,no,no,2,D1,100,20,0,corning_6_wellplate_16.8ml_flat,no,no,3,B6,10,yes,yes"
   },
   {
     "type": "dropDown",
@@ -49,15 +43,6 @@
     "options": [
       {"label": "standard", "value": "standard"},
       {"label": "filter", "value": "filter"}
-    ]
-  },
-  {
-    "type": "dropDown",
-    "label": "Tip Usage Strategy",
-    "name": "tip_reuse",
-    "options": [
-      {"label": "Use a new tip for each transfer", "value": "always"},
-      {"label": "Reuse tip for each transfer", "value": "never"}
     ]
   },
   {
