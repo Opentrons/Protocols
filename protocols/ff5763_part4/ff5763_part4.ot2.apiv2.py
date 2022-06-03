@@ -3,8 +3,8 @@ import math
 from opentrons import types
 
 metadata = {
-    'protocolName': 'Protocol Title',
-    'author': 'AUTHOR NAME <authoremail@company.com>',
+    'protocolName': 'Illumina DNA Prep Part 4, Clean Up Libraries First Half',
+    'author': 'Opentrons <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
                          # IN SECTION 5.2 OF THE APIV2 "VERSIONING"
