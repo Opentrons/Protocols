@@ -1,14 +1,10 @@
-# Protocol Title (should match metadata of .py file)
+# Illumina DNA Prep Part 2, Post-Tagmentation Clean Up
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
-### Partner
-[Partner Name](partner website link)
-
 ## Categories
-* Broader Category
-	* Subcategory (can be the name of a kit when applicable)
+* NGS Prep
 
 ## Description
 This is part two of a five part protocol for the [Illumina DNA Prep kit](https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/nextera-dna-flex.html)
