@@ -36,13 +36,13 @@ def run(ctx):
     midi_plate_1 = mag_module.load_labware('nest_96_wellplate_2ml_deep')
     reagent_resv = ctx.load_labware('nest_12_reservoir_15ml', '5')
     supernate_final = ctx.load_labware('customabnest_96_wellplate_200ul', '3')
-    liquid_trash = ctx.load_labware('nest_1_reservoir_195ml', '9')
+    liquid_trash = ctx.load_labware('nest_1_reservoir_195ml', '6')
 
     # load tipracks
     tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-                 for slot in ['6']]
+                 for slot in ['7']]
     tiprack200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-                  for slot in ['7', '8', '10', '11']]
+                  for slot in ['8', '9', '10', '11']]
 
     # load instrument
     m20 = ctx.load_instrument('p20_multi_gen2', 'right', tip_racks=tiprack20)
@@ -216,7 +216,7 @@ def run(ctx):
     ctx.delay(minutes=2)
 # engage mag stand 2 minutes
     mag_module.engage(height=MIDI_plate_mag_height)
-# transfer 30 ul from MIDI plate 2 to new 96 well pcr plate
+# transfer 30 ul supernatant from MIDI plate 2 to new 96 well pcr plate
     """IS THIS NEEDED?"""
     ctx.max_speeds['Z'] = 50
     ctx.max_speeds['A'] = 50
