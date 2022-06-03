@@ -3,7 +3,7 @@ import math
 from opentrons import types
 
 metadata = {
-    'protocolName': 'Illumina DNA Prep, Amplify Tagmented DNA',
+    'protocolName': 'Illumina DNA Prep Part 3, Amplify Tagmented DNA',
     'author': 'John C. Lynch <john.lynch@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
@@ -50,8 +50,8 @@ def run(ctx):
     # nf_water = thermo_tubes.rows()[0][1]
     tsb = thermo_tubes.rows()[0][2]
     sample_dest = sample_plate.rows()[0][:num_cols]
-    pcr_mix = reagent_resv.wells()[0]
-    index_adapters = reagent_resv.wells()[0]
+    pcr_mix = reagent_resv.wells()[1]
+    index_adapters = reagent_resv.wells()[2]
     # can reuse other half of plate from previous step!
     cycler_dest = cycler_plate.rows()[0][6:6+num_cols]
     # Constants
