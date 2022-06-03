@@ -35,14 +35,14 @@ def run(ctx):
     # may be custom labware from Maurice
     midi_plate_1 = mag_module.load_labware('nest_96_wellplate_2ml_deep')
     reagent_resv = ctx.load_labware('nest_12_reservoir_15ml', '5')
-    supernate_final = ctx.load_labware('customabnest_96_wellplate_200ul', '8')
+    supernate_final = ctx.load_labware('customabnest_96_wellplate_200ul', '3')
     liquid_trash = ctx.load_labware('nest_1_reservoir_195ml', '9')
 
     # load tipracks
     tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-                 for slot in ['3']]
+                 for slot in ['6']]
     tiprack200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-                  for slot in ['6', '7', '10', '11']]
+                  for slot in ['7', '8', '10', '11']]
 
     # load instrument
     m20 = ctx.load_instrument('p20_multi_gen2', 'right', tip_racks=tiprack20)
@@ -50,9 +50,9 @@ def run(ctx):
 
     # reagents
     '''includes reagents used in other steps for housekeeping purposes'''
-    master_mix = thermo_tubes.rows()[0][0]
-    nf_water = thermo_tubes.rows()[0][2]
-    tsb = thermo_tubes.rows()[0][4]
+    # master_mix = thermo_tubes.rows()[0][0]
+    # nf_water = thermo_tubes.rows()[0][2]
+    # tsb = thermo_tubes.rows()[0][4]
     ipb = thermo_tubes.rows()[0][6]
     rsb = thermo_tubes.rows()[0][8]
     etoh = reagent_resv.wells()[11]
@@ -67,7 +67,7 @@ def run(ctx):
     # protocol
 
 
-# transfer 15ul IPB to each empty well second half of MIDI plate
+# transfer 15ul IPB to each empty well second MIDI plate in slot 2
     m20.pick_up_tip()
     for dest in final_plate_dest:
         m20.flow_rate.aspirate /= 4
@@ -99,8 +99,8 @@ def run(ctx):
         ctx.max_speeds['Z'] /= z_mod_value
         ctx.max_speeds['A'] /= a_mod_value
         m300.aspirate(
-            125, source.bottom().move(types.Point(x=side,
-                                                  y=0, z=0.5)))
+                      125, source.bottom().move(types.Point(x=side,
+                                                            y=0, z=0.5)))
         m300.move_to(source.top(-2))
         ctx.max_speeds['Z'] *= z_mod_value
         ctx.max_speeds['A'] *= a_mod_value
@@ -120,8 +120,8 @@ def run(ctx):
     ctx.delay(minutes=5)
     # Mag stand engage for 5 minutes
     ctx.pause('Please dispose of deep well plate in magnetic module and move'
-              ' plate in slot 2 onto magnetic module. Press "Resume" when'
-              ' finished')
+              ' deep well plate in slot 2 onto magnetic module. Press "Resume"'
+              ' when finished')
     # discard supernatant
     mag_module.engage(height=MIDI_plate_mag_height)
     ctx.delay(minutes=5)
@@ -150,6 +150,8 @@ def run(ctx):
         for dest in final_plate_dest:
             m300.pick_up_tip()
             m300.aspirate(100, etoh)
+            m300.aspirate(10, etoh.top())
+            m300.dispense(10, dest.top())
             m300.dispense(100, dest)
             m300.drop_tip()
         ctx.delay(seconds=30)
@@ -184,11 +186,14 @@ def run(ctx):
         side = 1 if num_times % 2 == 0 else -1
         m20.flow_rate.aspirate /= 5
         m20.pick_up_tip()
+        m20.move_to(source.top())
         ctx.max_speeds['Z'] /= z_mod_value
         ctx.max_speeds['A'] /= a_mod_value
         m20.aspirate(
             15, source.bottom().move(types.Point(x=side,
                                                  y=0, z=0.5)))
+        m20.move_to(source.top())
+        m20.aspirate(3, source.top())
         ctx.max_speeds['Z'] *= z_mod_value
         ctx.max_speeds['A'] *= a_mod_value
         m20.dispense(15, liquid_trash.wells()[0])
