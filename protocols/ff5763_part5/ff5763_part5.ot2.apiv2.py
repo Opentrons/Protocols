@@ -29,13 +29,10 @@ def run(ctx):
     thermo_tubes = temp_1.load_labware('opentrons_96_aluminumblock_generic_pcr'
                                        '_strip_200ul')
     # can change to whatever plate works better for next off-deck step
-    final_plate = ctx.load_labware('nest_96_wellplate_2ml_deep',
-                                   '2')
+    supernate_final = ctx.load_labware('customabnest_96_wellplate_200ul', '2')
     mag_module = ctx.load_module('magnetic module gen2', '4')
-    # may be custom labware from Maurice
-    midi_plate_1 = mag_module.load_labware('nest_96_wellplate_2ml_deep')
+    midi_plate_2 = mag_module.load_labware('nest_96_wellplate_2ml_deep')
     reagent_resv = ctx.load_labware('nest_12_reservoir_15ml', '5')
-    supernate_final = ctx.load_labware('customabnest_96_wellplate_200ul', '3')
     liquid_trash = ctx.load_labware('nest_1_reservoir_195ml', '6')
 
     # load tipracks
@@ -56,9 +53,9 @@ def run(ctx):
     ipb = thermo_tubes.rows()[0][6]
     rsb = thermo_tubes.rows()[0][8]
     etoh = reagent_resv.wells()[11]
-    source_midi_plate_mag = midi_plate_1.rows()[0][6:6+num_cols]
-    final_plate_dest = final_plate.rows()[0][:num_cols]
-    supernatant_pcr_plate_dest = supernate_final.rows()[0][:num_cols]
+    source_midi_plate_2 = midi_plate_2.rows()[0][:num_cols]
+    final_plate_dest = midi_plate_2.rows()[0][6:6+num_cols]
+    supernate_final_dest = supernate_final.rows()[0][:num_cols]
     # hard code variables
     z_mod_value = 5
     a_mod_value = 5
@@ -90,7 +87,7 @@ def run(ctx):
     ctx.max_speeds['Z'] = 50
     ctx.max_speeds['A'] = 50
     num_times = 1
-    for source, dest in zip(source_midi_plate_mag, final_plate_dest):
+    for source, dest in zip(source_midi_plate_2, final_plate_dest):
         side = 1 if num_times % 2 == 0 else -1
         m300.flow_rate.aspirate /= 5
         m300.pick_up_tip()
@@ -215,12 +212,11 @@ def run(ctx):
     ctx.delay(minutes=2)
 # engage mag stand 2 minutes
     mag_module.engage(height=MIDI_plate_mag_height)
-# transfer 30 ul supernatant from MIDI plate 2 to new 96 well pcr plate
-    """IS THIS NEEDED?"""
+# transfer 30 ul supern atant from MIDI plate 2 to new 96 well pcr plate
     ctx.max_speeds['Z'] = 50
     ctx.max_speeds['A'] = 50
     num_times = 1
-    for source, dest in zip(final_plate_dest, supernatant_pcr_plate_dest):
+    for source, dest in zip(final_plate_dest, supernate_final_dest):
         side = 1 if num_times % 2 == 0 else -1
         m300.flow_rate.aspirate /= 5
         m300.pick_up_tip()
@@ -237,5 +233,5 @@ def run(ctx):
         num_times += 1
         print(side)
 
-    for c in ctx.commands():
-        print(c)
+    # for c in ctx.commands():
+    #     print(c)
