@@ -71,6 +71,8 @@ def run(ctx):
     ctx.max_speeds['Z'] = 50
     ctx.max_speeds['A'] = 50
     num_times = 1
+    mag_module.engage()
+    ctx.delay(minutes=3)
     for source in sample_dest:
         side = 1 if num_times % 2 == 0 else -1
         m300.pick_up_tip()

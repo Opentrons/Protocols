@@ -59,11 +59,12 @@ def run(ctx):
     # hard code variables
     z_mod_value = 5
     a_mod_value = 5
-    MIDI_plate_mag_height = 9
+    # MIDI_plate_mag_height = 9
     # protocol
 
-
-# transfer 15ul IPB to each empty well second MIDI plate in slot 2
+    mag_module.engage()
+    ctx.delay(minutes=5)
+# transfer 15ul IPB to each empty well in mag module plate
     m20.pick_up_tip()
     for dest in final_plate_dest:
         m20.flow_rate.aspirate /= 4
@@ -81,9 +82,10 @@ def run(ctx):
         m20.flow_rate.dispense *= 4
         m20.flow_rate.blow_out *= 4
     m20.drop_tip()
-# Transfer 125ul supernatant from mag plate to final plate with a 10x mix
 
-    mag_module.engage(height=MIDI_plate_mag_height)
+# Transfer 125ul supernatant from mag plate left to mag plate right w/10x mix
+
+    mag_module.engage()
     ctx.max_speeds['Z'] = 50
     ctx.max_speeds['A'] = 50
     num_times = 1
@@ -107,7 +109,11 @@ def run(ctx):
         m300.dispense(10, dest.top(-2))
         m300.dispense(125, dest)
         m300.flow_rate.aspirate *= 5
+        m300.flow_rate.dispense /= 2
+        m300.flow_rate.aspirate /= 2
         m300.mix(10, 120)
+        m300.flow_rate.dispense *= 2
+        m300.flow_rate.aspirate *= 2
         m300.drop_tip()
         num_times += 1
         print(side)
@@ -115,11 +121,8 @@ def run(ctx):
     # Incubate 5 minutes
     ctx.delay(minutes=5)
     # Mag stand engage for 5 minutes
-    ctx.pause('Please dispose of deep well plate in magnetic module and move'
-              ' deep well plate in slot 2 onto magnetic module. Press "Resume"'
-              ' when finished')
     # discard supernatant
-    mag_module.engage(height=MIDI_plate_mag_height)
+    mag_module.engage()
     ctx.delay(minutes=5)
     ctx.max_speeds['Z'] = 50
     ctx.max_speeds['A'] = 50
@@ -152,7 +155,7 @@ def run(ctx):
             m300.drop_tip()
         ctx.delay(seconds=30)
         # discard supernatant
-        mag_module.engage(height=MIDI_plate_mag_height)
+        mag_module.engage()
         ctx.delay(minutes=5)
         ctx.max_speeds['Z'] = 50
         ctx.max_speeds['A'] = 50
@@ -211,8 +214,9 @@ def run(ctx):
 # Wait 2 minutes
     ctx.delay(minutes=2)
 # engage mag stand 2 minutes
-    mag_module.engage(height=MIDI_plate_mag_height)
-# transfer 30 ul supern atant from MIDI plate 2 to new 96 well pcr plate
+    mag_module.engage()
+    ctx.delay(minutes=2)
+# transfer 30 ul supernatant from MIDI plate 2 to new 96 well pcr plate
     ctx.max_speeds['Z'] = 50
     ctx.max_speeds['A'] = 50
     num_times = 1
@@ -233,5 +237,5 @@ def run(ctx):
         num_times += 1
         print(side)
 
-    # for c in ctx.commands():
-    #     print(c)
+    for c in ctx.commands():
+        print(c)
