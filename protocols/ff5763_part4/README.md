@@ -1,4 +1,4 @@
-# Illumina DNA Prep Part 4, Clean
+# Illumina DNA Prep Part 4, Clean Up Libraries 1
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -18,7 +18,7 @@ This is part four of a five part protocol for the [Illumina DNA Prep kit](https:
 [Part 5](https://develop.protocols.opentrons.com/protocol/ff5763_part5)
 
 Part 4: Cleanup Libraries First Half
-
+Samples are centrifuged down before adding the sample tray to slot 2 on the OT-2's deck. Tray contents are transferred to the available wells in the deep well plate on the magnetic module and left until clear (~5 minutes). 45ul of the resulting supernatant is moved to the second deep well plate in slot 3. 40ul of NFW is added to this supernatant for each sample. 45ul of IPB mix is then added to the now diluted samples and mixed 10x at 100ul each time. The deep well plate is left to incubate for 5 minutes. This ends part 4.
 Explanation of complex parameters below:
 * `Number of Samples`: Total number of samples from 1 to 48
 
@@ -30,9 +30,10 @@ Explanation of complex parameters below:
 
 ### Labware
 * Custom 96 Well Plate with AB Gene and NEST 96 well plate with samples, slot 2
-* [NEST 2ml Deep Well Plate](https://shop.opentrons.com/nest-2-ml-96-well-deep-well-plate-v-bottom/) on Magnetic Module in slot 4
-* [NEST 12-Well 15ml Reservoir](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/) in slot 5
-* [NEST 195ml Reservoir](https://shop.opentrons.com/nest-1-well-reservoirs-195-ml/) in slot 6
+* New [NEST 2ml Deep Well Plate](https://shop.opentrons.com/nest-2-ml-96-well-deep-well-plate-v-bottom/) in slot 3
+* [NEST 2ml Deep Well Plate](https://shop.opentrons.com/nest-2-ml-96-well-deep-well-plate-v-bottom/) containing samples from previous steps on Magnetic Module in slot 4
+* [NEST 12-Well 15ml Reservoir](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/) in slot 5 (reagent reservoirs)
+* [NEST 195ml Reservoir](https://shop.opentrons.com/nest-1-well-reservoirs-195-ml/) in slot 6 (liquid trash)
 
 
 ### Pipettes
@@ -43,6 +44,17 @@ Explanation of complex parameters below:
 * NFW, PCR Tubes in slot 1 column 3
 * IPB, PCR Tubes in slot 1 column 7
 
+### Protocol Steps
+1. Centrifuge the sample plate at 280 x g for 1 minute to collect contents at the bottom of the wells
+2. The liquid portion (70ul) is transferred to the available wells (columns 7-12) on the magnetic module's deep well plate
+3. The magnetic module is engaged at 10mm for 5 minutes
+4. The resulting supernatant in columns 7-12 (if 48 samples) has 45ul moved to columns 1-6 in slot 3's deep well plate.
+5. 40ul of NFW is added to columns 1-6 in slot 3
+6. 45ul of IPB is added to columns 1-6 in slot 3 then mixed 10x at 100ul each time.
+7. The samples are left to incubate for 5 minutes
+8. Slot 2's plate can be disposed of
+9. Slot 4's plate (magnetic module plate) can be disposed of
+10. Slot 3's plate should be moved to the magnetic module in slot 4 for part 5
 ---
 
 ### Process

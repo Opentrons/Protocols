@@ -72,7 +72,7 @@ def run(ctx):
 
     # move supernatant to Deep Well Plate, toss customab at this point, used up
 
-    mag_module.engage(height=10)
+    mag_module.engage()
     ctx.delay(minutes=5)
     ctx.max_speeds['Z'] = 50
     ctx.max_speeds['A'] = 50
