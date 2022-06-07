@@ -116,7 +116,7 @@ def run(protocol):
         m20.flow_rate.aspirate = 3
         m20.flow_rate.dispense = 3
         m20.mix(2, 8, col)
-        # m20.blow_out(col.top(z=-2))
+        m20.blow_out(col.top(z=-2))
         m20.touch_tip(v_offset=-2)
         m20.move_to(col.top(-2))
         m20.return_tip()
