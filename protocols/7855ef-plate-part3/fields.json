@@ -10,8 +10,8 @@
     "label": "P20 Multi GEN2 mount",
     "name": "m20_mount",
     "options": [
-       { "label": "right", "value": "left" },
-       { "label": "left", "value": "right" }
+       { "label": "right", "value": "right" },
+       { "label": "left", "value": "left" }
      ]
   },
   {
