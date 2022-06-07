@@ -13,9 +13,11 @@ def run(ctx: protocol_api.ProtocolContext):
 
     [
      num_samp,
+     plate_384,
      m20_mount
      ] = get_values(  # noqa: F821
          "num_samp",
+         "plate_384",
          "m20_mount"
          )
 
@@ -26,7 +28,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # LABWARE
     pcr_plate = ctx.load_labware(
-                  "lifetechnologies_384_wellplate_50ul", '3',
+                  plate_384, '3',
                   label='the 384 PCR PLATE')
     sample_plates = [ctx.load_labware(
                       "thermofisherscientific_96_wellplate_50ul",
