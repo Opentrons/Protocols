@@ -14,10 +14,12 @@ def run(ctx: protocol_api.ProtocolContext):
     [
      num_samp,
      plate_384,
+     use_temp,
      m20_mount
      ] = get_values(  # noqa: F821
          "num_samp",
          "plate_384",
+         "use_temp",
          "m20_mount"
          )
 
@@ -27,9 +29,14 @@ def run(ctx: protocol_api.ProtocolContext):
         raise Exception("This sample number does not work with controls")
 
     # LABWARE
-    pcr_plate = ctx.load_labware(
-                  plate_384, '3',
-                  label='the 384 PCR PLATE')
+    if use_temp:
+        temp_mod = ctx.load_module('temperature module gen2', '3')
+        pcr_plate = temp_mod.load_labware(plate_384)
+        temp_mod.set_temperature(4)
+    else:
+        pcr_plate = ctx.load_labware(
+                      "lifetechnologies_384_wellplate_50ul", '3',
+                      label='the 384 PCR PLATE')
     sample_plates = [ctx.load_labware(
                       "thermofisherscientific_96_wellplate_50ul",
                       slot, label="the SAMPLE PLATE")

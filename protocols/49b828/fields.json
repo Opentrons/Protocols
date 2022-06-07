@@ -16,6 +16,15 @@
   },
   {
     "type": "dropDown",
+    "label": "Use Temperature Module?",
+    "name": "use_temp",
+    "options": [
+      {"label": "Yes, use temperature module at 4C in slot 3", "value": true},
+      {"label": "No do not use", "value": false}
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "P20 Multi-Channel Mount",
     "name": "m20_mount",
     "options": [
