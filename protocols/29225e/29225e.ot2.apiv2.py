@@ -152,7 +152,7 @@ def run(ctx):
 
     water_tubes = []
     num_tubes = math.ceil(sum([float(
-     tfer['water vol']) for tfer in tfers]) / vol_h2o)
+     tfer['water vol']) for tfer in tfers]) / vol_h2o) + 1
     pip = p20s
 
     for index, tube in enumerate(rack.wells()[:num_tubes]):
