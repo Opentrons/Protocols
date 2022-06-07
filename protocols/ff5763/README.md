@@ -5,7 +5,7 @@
 
 ## Categories
 * NGS Library Prep
-  * Illumina DNA Prep
+    * Illumina DNA Prep
 
 ## Description
 This is part one of a five part protocol for the [Illumina DNA Prep kit](https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/nextera-dna-flex.html)

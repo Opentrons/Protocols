@@ -1,15 +1,16 @@
 {
     "author": "Opentrons",
     "categories": {
-        "Illumina DNA Prep": [],
-        "NGS Library Prep": []
+        "NGS Library Prep": [
+            "Illumina DNA Prep"
+        ]
     },
     "description": "This is part five of a five part protocol for the Illumina DNA Prep kit\nPart 1\nPart 2\nPart 3\nPart 4\nPart 5: Cleanup Libraries 2\nMagnetic module is engaged for 5 minutes. IPB is added to the right side of the magnetic module. 125ul of supernatant is transferred from the left side of the magnetic module to the right side containing the bead mixture and mixed 10x. 5 minute incubation occurs followed by discarding of supernatant. Beads are then washed with 80% ethyl alcohol twice and allowed to airdry for 5 minutes. RSB is added to the samples and a 2 minute delay occurs. The magnetic module is now engaged for 2 minutes followed by a final transfer of resulting supernatant to an awaiting 96 well plate in slot 2.\nExplanation of complex parameters below:\n* Number of Samples: Total number of samples from 1 to 48\n",
     "internal": "ff5763",
     "labware": "\nNew Custom 96 Well Plate with AB Gene and NEST 96 well plate with samples, slot 2\nNEST 2ml Deep Well Plate containing samples from previous step on Magnetic Module in slot 4\nNEST 12-Well 15ml Reservoir in slot 5 (reagent reservoirs)\nNEST 195ml Reservoir in slot 6 (liquid trash)\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
-        "categories": "* NGS Library Prep\n  * Illumina DNA Prep\n\n",
+        "categories": "* NGS Library Prep\n    * Illumina DNA Prep\n\n",
         "description": "This is part five of a five part protocol for the [Illumina DNA Prep kit](https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/nextera-dna-flex.html)\n\n[Part 1](https://develop.protocols.opentrons.com/protocol/ff5763)\n\n[Part 2](https://develop.protocols.opentrons.com/protocol/ff5763_part2)\n\n[Part 3](https://develop.protocols.opentrons.com/protocol/ff5763_part3)\n\n[Part 4](https://develop.protocols.opentrons.com/protocol/ff5763_part4)\n\nPart 5: Cleanup Libraries 2\nMagnetic module is engaged for 5 minutes. IPB is added to the right side of the magnetic module. 125ul of supernatant is transferred from the left side of the magnetic module to the right side containing the bead mixture and mixed 10x. 5 minute incubation occurs followed by discarding of supernatant. Beads are then washed with 80% ethyl alcohol twice and allowed to airdry for 5 minutes. RSB is added to the samples and a 2 minute delay occurs. The magnetic module is now engaged for 2 minutes followed by a final transfer of resulting supernatant to an awaiting 96 well plate in slot 2.\n\nExplanation of complex parameters below:\n* `Number of Samples`: Total number of samples from 1 to 48\n\n---\n\n",
         "internal": "ff5763\n",
         "labware": "* New Custom 96 Well Plate with AB Gene and NEST 96 well plate with samples, slot 2\n* [NEST 2ml Deep Well Plate](https://shop.opentrons.com/nest-2-ml-96-well-deep-well-plate-v-bottom/) containing samples from previous step on Magnetic Module in slot 4\n* [NEST 12-Well 15ml Reservoir](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/) in slot 5 (reagent reservoirs)\n* [NEST 195ml Reservoir](https://shop.opentrons.com/nest-1-well-reservoirs-195-ml/) in slot 6 (liquid trash)\n\n\n",
