@@ -1,23 +1,79 @@
 from opentrons import protocol_api
 from opentrons.protocol_api.labware import Well
+from opentrons.protocol_api.contexts import InstrumentContext
 import re
 from collections import Counter
-from typing import Union
+from typing import Union, Sequence
+from math import pi
 
 metadata = {
-    'protocolName': 'Cherrypicking with multiple pipettes and modules',
+    'protocolName': 'Advanced cherrypicking',
     'author': 'Eskil Andersen <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'
 }
 
 
-def get_instruction_param_val(params_string: str, param_name: str, type: str):
-    # Split the comma separated parameters string into individual parameters
-    # Parameters are not case or leading/trailing ws sensitive
+def get_tube_liquid_level(
+        tube: Well,
+        volume: float) -> float:
+    radius = (tube.diameter/2) * 0.94
+    # 0.95 is a fudge factor because height seems too low
+    # for the actual tube volume marks given a volume
+    cone_height = 0.171 * tube.depth
+    liquid_height = 0
+
+    # Calculate the liquid height in the tube given its volume in mL
+    cone_max_vol = (pi*radius**2*cone_height)/3
+    # Case where the liquid height extends beyond the tube cone
+    if volume > cone_max_vol:
+        liquid_height = cone_height
+        # Calculate the height of the volume in the cylinder and add it up
+        volume -= cone_max_vol
+        cylinder_height = volume/(pi*radius**2)
+        liquid_height += cylinder_height
+        return liquid_height
+    else:  # Volume is only inside the cone
+        h_cone_calc = 3*volume/(pi*radius**2)
+        return h_cone_calc
+
+
+def aspirate_liq_level(
+        pip: InstrumentContext,
+        initial_tube_volume: float,
+        aspiration_volume: float,
+        tube: Well,
+        tip_length: float) -> float:
+
+    liq_height = get_tube_liquid_level(tube, initial_tube_volume)
+    # Never aspirate below 1 mm offset
+    aspiration_height = round(max(1, liq_height-3/(4*tip_length)), 2)
+    aspiration_locn = tube.bottom(aspiration_height)
+    pip.aspirate(aspiration_volume, aspiration_locn)
+    return aspiration_height
+
+
+def dispense_liq_level(
+        pip: InstrumentContext,
+        initial_tube_volume: float,
+        dispensing_volume: float,
+        tube: Well) -> float:
+    dispensing_height = get_tube_liquid_level(tube, initial_tube_volume)
+    dispensing_height += 10
+    dispensing_locn = tube.bottom(dispensing_height)
+    pip.dispense(dispensing_volume, dispensing_locn)
+    return dispensing_height
+
+
+def get_instruction_param_val(
+        params_string: str, param_name: str, type: str) -> Union[
+        int, float, str]:
+    # Split the comma separated parameters string into individual parameters.
+    # Parameters are not case or leading/trailing whitespace sensitive
     params_string = params_string.strip().lower()
     params = params_string.split(',')
     param = ''
+    # Look up the parameter/value pair e.g. pause=5m10s
     for p in params:
         if param_name in p:
             param = p
@@ -42,7 +98,7 @@ def get_instruction_param_val(params_string: str, param_name: str, type: str):
         raise Exception(err_msg)
 
 
-def reply_to_bool(reply_string: str) -> Union[bool, None]:
+def reply_to_bool(reply_string: str) -> bool:
     """ Takes a yes/no reply to a question in the form of a string and
     returns a True/False boolean value or None for blank entries. None should
     be treated as an implicit no generally, but it sometimes has special
@@ -64,7 +120,7 @@ def reply_to_bool(reply_string: str) -> Union[bool, None]:
         "Blank responses are interpreted as 'no'")
 
 
-def read_var(input: str, var_type: str):
+def read_var(input: str, var_type: str) -> Union[str, int, float]:
     """
     Takes an input and checks if it is a blank string.
     If the string is blank it is returned as is, otherwise
@@ -79,7 +135,7 @@ def read_var(input: str, var_type: str):
         try:
             return int(input)
         except ValueError:
-            err_msg = "Error converting the input '{}' to an integer"
+            err_msg = "Error converting the input '{}' to an integer value"
             err_msg = err_msg.format(input)
             raise ValueError(err_msg)
 
@@ -87,7 +143,7 @@ def read_var(input: str, var_type: str):
         try:
             return float(input)
         except ValueError:
-            err_msg = "Error converting the input '{}' to a float"
+            err_msg = "Error converting the input '{}' to a floating value"
             err_msg = err_msg.format(input)
             raise ValueError(err_msg)
 
@@ -98,14 +154,14 @@ def read_var(input: str, var_type: str):
 def get_values(*names):
     import json
     _all_values = json.loads("""{
-                                  "transfer_csv":" step_id,instruction,instruction_parameters,source_labware,source_magnetic_module,source_temperature_module,source_slot,source_well,Source_well_starting_volume,transfer_volume,air_gap_volume,dest_labware,dest_magnetic_module,dest_temperature_module,dest_slot,dest_well,dest_well_starting_volume,touch_tip,blow_out\\n1,transfer,,nest_96_wellplate_2ml_deep,yes,no,1,A1,2000,500,50,corning_6_wellplate_16.8ml_flat,no,no,3,A1,0,no,no\\n2,transfer,,corning_384_wellplate_112ul_flat,no,no,2,B1,100,90,10,nest_12_reservoir_15ml,no,no,4,A2,10,yes,yes\\n3,aspirate_and_park_tip,,corning_384_wellplate_112ul_flat,no,no,2,C1,100,50,10,,,,,,,,\\n4,pause,time=5m30s,,,,,,,,,,,,,,,,\\n5,transfer,,corning_384_wellplate_112ul_flat,no,no,2,B1,100,90,10,nest_12_reservoir_15ml,no,no,4,A2,10,yes,yes\\n6,dispense_parked_tip,step_id=3,,,,,,,60,,corning_6_wellplate_16.8ml_flat,,,3,A2,,yes,yes\\n7,transfer,,corning_384_wellplate_112ul_flat,no,no,2,D1,100,30,0,corning_6_wellplate_16.8ml_flat,no,no,3,B2,10,yes,yes\\n8,transfer,,opentrons_24_aluminumblock_nest_2ml_screwcap,no,yes,6,A1,100,400,0,corning_6_wellplate_16.8ml_flat,no,no,3,B3,0,yes,Yes",
+                                  "transfer_csv":" step_id,instruction,instruction_parameters,source_labware,source_magnetic_module,source_temperature_module,source_slot,source_well,Source_well_starting_volume,transfer_volume,air_gap_volume,dest_labware,dest_magnetic_module,dest_temperature_module,dest_slot,dest_well,dest_well_starting_volume,touch_tip,blow_out\\n1,transfer,,nest_96_wellplate_2ml_deep,yes,no,1,A1,2000,1000,50,corning_6_wellplate_16.8ml_flat,no,no,3,A1,0,no,no\\n2,transfer,,corning_384_wellplate_112ul_flat,no,no,2,B1,100,90,10,nest_12_reservoir_15ml,no,no,4,A2,10,yes,yes\\n3,aspirate_and_park_tip,,corning_384_wellplate_112ul_flat,no,no,2,C1,100,50,10,,,,,,,,\\n4,pause,time=5m30s,,,,,,,,,,,,,,,,\\n5,transfer,,corning_384_wellplate_112ul_flat,no,no,2,D1,100,60,0,corning_6_wellplate_16.8ml_flat,no,no,3,B2,10,yes,yes\\n6,dispense_parked_tip,step_id=3,,,,,,,60,,corning_6_wellplate_16.8ml_flat,,,3,A2,,yes,yes\\n7,transfer,,opentrons_24_aluminumblock_nest_2ml_screwcap,no,yes,6,A1,100,400,0,corning_6_wellplate_16.8ml_flat,no,no,3,B3,0,yes,Yes\\n8,transfer,,opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical,no,no,7,A1,10000,500,0,opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical,no,no,7,A3,20000,Yes,yes\\n9,transfer,,opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical,no,no,7,A4,20000,500,,opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical,no,no,7,A3,,,",
                                   "left_mount_pipette_type":"p300_single_gen2",
-                                  "right_mount_pipette_type":"p20_single_gen2",
+                                  "right_mount_pipette_type":"p1000_single_gen2",
                                   "left_tip_type":"standard",
                                   "right_tip_type":"standard",
                                   "left_pip_tiprack_slots":"10,11",
                                   "right_pip_tiprack_slots":"5,8",
-                                  "tip_reusage_strategy":true
+                                  "tip_reusage_strategy":false
                                   }
                                   """)  # noqa: E501 Do not report 'line too long' warnings
     return [_all_values[n] for n in names]
@@ -145,7 +201,8 @@ def run(ctx: protocol_api.ProtocolContext):
         }
     }
 
-    # Parameter validation
+    # Tiprack parameter validation e.g. "1, 5, 8, 11"
+    # Any whitespace in the string is removed before the comparison
     valid_tiprack_string_regex = re.compile(
         r"^(10|11|[1-9])(,(10|11|[1-9]))*$")
     # regex for matching all kinds of whitespace
@@ -156,7 +213,7 @@ def run(ctx: protocol_api.ProtocolContext):
             ["left", "right"],
             [left_pip_tiprack_slots, right_pip_tiprack_slots],
             [left_tiprack_slot_list, right_tiprack_slot_list]):
-        # Remove all whitespaces in the string
+        # Remove all whitespaces in the tiprack parameter string
         tiprack_string_no_ws = re.sub(whitespace_re, '', tiprack_string)
         # Check format validity
         if valid_tiprack_string_regex.match(tiprack_string_no_ws) is None:
@@ -187,13 +244,13 @@ def run(ctx: protocol_api.ProtocolContext):
     # ENUMERATED HEADERS:
     # 0. step_id, 1. instruction, 2. instruction_parameters, 3. source_labware,
     # 4. magnetic_module,5. temperature_module, 6. source_slot, 7. source_well,
-    # 8. Source_well_starting_volume, 9. transfer_volume, 10. air_gap_volume,
+    # 8. source_well_starting_volume, 9. transfer_volume, 10. air_gap_volume,
     # 11. dest_labware, 12. dest_magnetic_module, 13. dest_temperature_module,
     # 14. dest_slot, 15. dest_well, 16. dest_well_starting_volume,
     # 17. touch_tip, 18. blow_out
     csv_rows = transfer_csv.split("\n")
     csv_list = []
-    # Remove any empty lines
+    # Remove any empty lines in the CSV.
     for i, row in enumerate(csv_rows):
         if row == '':
             del(csv_rows[i])
@@ -206,20 +263,25 @@ def run(ctx: protocol_api.ProtocolContext):
 
     instruction_rows = []
     # A well formed well index consists of a letter (A-P) and a number 1-24
-    # Because the largest standard labware is the 384 well plate whose indices
-    # go from A1 to P24
-    well_formed_well_regex = re.compile(r"^[A-P][1-2]?[0-9]$")
+    # (because the largest standard labware is the 384 well plate whose indices
+    # go from A1 to P24)
+    # Regex: Match from the start of the string, then a letter from A to P
+    # followed by 0 or 1 instances of [1-2] followed by a number between 0-9,
+    # followed by the end of the string.
+    correct_well_index_regex = re.compile(r"^[A-P][1-2]?[0-9]$")
     for row in csv_list[1:]:
         step_id = read_var(row[0], "int")
         instruction = row[1].strip().lower()
         instruction_parameters = row[2].strip().lower()
         source_lw = row[3].strip().lower()
-        # column 4 and 5 are read below in the try sections
+        # column 4 and 5 are read below in the `try:` sections
         # 4: is_source_magmod
         # 5: is_source_tempmod
         source_slot = read_var(row[6], "int")
         source_well = row[7].strip().upper()
         source_well_starting_volume = read_var(row[8], "float")
+        if source_well_starting_volume == '':
+            source_well_starting_volume = 0
         transfer_volume = read_var(row[9], "float")
         air_gap_volume = read_var(row[10], "float")
         if air_gap_volume == '':
@@ -237,7 +299,7 @@ def run(ctx: protocol_api.ProtocolContext):
         for well_index, designation in zip(
                 [source_well, dest_well],
                 ["source", "destination"]):
-            match = well_formed_well_regex.match(well_index)
+            match = correct_well_index_regex.match(well_index)
             if not match and well_index != '':
                 err_msg = ("The {} well {} index for step_id {} is "
                            "invalid. It should start with a letter from A to "
@@ -263,7 +325,8 @@ def run(ctx: protocol_api.ProtocolContext):
             is_source_tempmod = reply_to_bool(row[5])
         except Exception:
             err_msg = ("Step id {}: Unrecognized option for the source "
-                       "labware modules. Valid options are 'yes' or 'no'")
+                       "labware modules. Valid options are 'yes' or 'no' "
+                       "or a blank entry")
             err_msg = err_msg.format(step_id)
             raise Exception(err_msg)
         try:
@@ -295,7 +358,8 @@ def run(ctx: protocol_api.ProtocolContext):
             err_msg = err_msg.format(step_id)
             raise Exception(err_msg)
 
-        # Check for error where both modules are loaded for the same labware
+        # Check for error where both temperature and magnetic modules are
+        # loaded for the same labware/slot.
         for is_magmod, is_tempmod, type_string in zip(
                 [is_source_magmod, is_dest_magmod],
                 [is_source_tempmod, is_dest_tempmod],
@@ -304,7 +368,7 @@ def run(ctx: protocol_api.ProtocolContext):
                 err_msg = ("Error in {} labware module options with "
                            "step_id {}: " "You cannot use both a magnetic "
                            "module and a temperature module with the same "
-                           "labware, please correct your CSV file.")
+                           "labware/slot, please inspect your CSV file.")
                 err_msg = err_msg.format(type_string, step_id)
                 raise Exception(err_msg)
 
@@ -753,6 +817,13 @@ def run(ctx: protocol_api.ProtocolContext):
         pip_right = ctx.load_instrument(
           right_mount_pipette_type, "right", tip_racks=right_tipracks)
 
+    # Save the tip lengths for liquid height tracking/offset aspiration:
+    tip_length_dict = {}
+    if pip_left:
+        tip_length_dict[pip_left] = left_tipracks[0].tip_length
+    if pip_right:
+        tip_length_dict[pip_right] = right_tipracks[0].tip_length
+
     def pick_up(pipette, is_reuse_tip):
         """`pick_up()` will pause the protocol when all tip boxes are out of
         tips, prompting the user to replace all tip racks. Once tipracks are
@@ -787,11 +858,13 @@ def run(ctx: protocol_api.ProtocolContext):
         :param volume: The (total) volume to use the pipette with
         :param is_single_action: True if the aspiration/dispense should be
         completed with a single aspiration or dispense (i.e. no splitting up
-        of the operations into smaller volumes is allowed).
+        of the operations into smaller volumes is allowed). Used for aspirate
+        and park operations.
         """
         nonlocal pip_left, pip_right, left_mount_pipette_type
         nonlocal right_mount_pipette_type, left_tip_type, right_tip_type
 
+        # Aspirate and park tip pipette selection
         if is_single_action:
             if volume < 20.01:
                 if pip_left and "20" in left_mount_pipette_type:
@@ -811,8 +884,8 @@ def run(ctx: protocol_api.ProtocolContext):
                     return pip_right, max_vol
                 else:
                     raise Exception(
-                        ("There is no 300 uL pipette loaded for aspirating and "
-                         f"parking a volume of {volume} uL"))
+                        ("There is no 300 uL pipette loaded for aspirating "
+                         f"and parking a volume of {volume} uL"))
             elif volume < 300.01:
                 if pip_left and "300" in left_mount_pipette_type \
                         and left_tip_type == "standard":
@@ -868,9 +941,52 @@ def run(ctx: protocol_api.ProtocolContext):
                     ("There is no 1000 uL pipette loaded for handling a "
                      f"transfer volume of {volume} uL"))
 
+    tube_volume_track_dict = {}
+    tube_regex = re.compile(r"(15|50)ml_conical")
+
+    def track_tubes_liq_lvl(
+            lnames: Sequence[str],
+            wells: Sequence[Well],
+            initial_volumes: Sequence[float],
+            transfer_vol: float):
+        # Liquid level tracking for 15/15mL conicals
+        nonlocal tube_regex, tube_volume_track_dict
+        is_source_tube = False
+        is_dest_tube = False
+        for lname, well, init_vol, is_source in zip(
+                lnames, wells, initial_volumes, [True, False]):
+            # Not all instructions will have both a source and a destination lw
+            if not lname or lname == '':
+                continue
+            if tube_regex.search(lname):  # Match for 15/50 mL conicals
+                # Store the well (key) and volume value pair
+                # If the entry doesn't exist yet set the volume to
+                # the initial volume +/- the transfer volume, that is
+                # subtract if the well is a source, and add if it's a
+                # destination.
+                if is_source:
+                    is_source_tube = True
+                else:
+                    is_dest_tube = True
+                volume_change = -transfer_vol if is_source else \
+                    transfer_vol
+                if tube_volume_track_dict.get(well):
+                    tube_volume_track_dict[well] += volume_change
+                else:
+                    # The dictionary entry doesn't exist because this is
+                    # the first time we encountered this tube during
+                    # execution.
+                    tube_volume_track_dict[well] \
+                        = init_vol + volume_change
+        return is_source_tube, is_dest_tube
+
     # --- PROTOCOL EXECUTION STARTS HERE ---
     # Loop through the instructions and execute them
     parked_tip_dict = {}
+    # Add slot, well tuples as keys and the well volume as the value when
+    # carrying out operations involving tubes. Use the value for liquid height
+    # tracking
+    #
     for instruction in instruction_rows:
         step_id = instruction[0]
         instr = instruction[1]
@@ -887,17 +1003,30 @@ def run(ctx: protocol_api.ProtocolContext):
             source_slot = instruction[6]
             source_well = instruction[7]
             transfer_vol = instruction[9]
+            source_initial_well_vol = instruction[8]
             air_gap_volume = instruction[10]
             dest_slot = instruction[14]
             dest_well = instruction[15]
+            dest_initial_well_vol = instruction[16]
             is_touch_tip = instruction[17]
             is_blowout = instruction[18]
 
-            # Retrieve wells:
+            # Retrieve the source and destn. labware and their wells:
             source_lw = labware_dict["labware"][source_slot]
             source_well = source_lw.wells_by_name()[source_well]
             dest_lw = labware_dict["labware"][dest_slot]
             dest_well = dest_lw.wells_by_name()[dest_well]
+            source_lw_lname = source_lw.load_name
+            dest_lw_lname = dest_lw.load_name
+            is_source_tube = False
+            is_dest_tube = False
+
+            is_source_tube, is_dest_tube = track_tubes_liq_lvl(
+                lnames=[source_lw_lname, dest_lw_lname],
+                wells=[source_well, dest_well],
+                initial_volumes=[
+                    source_initial_well_vol, dest_initial_well_vol],
+                transfer_vol=transfer_vol)
 
             ctx.comment(
                 f"\n\nExecuting transfer instruction with step_id {step_id}\n")
@@ -913,10 +1042,33 @@ def run(ctx: protocol_api.ProtocolContext):
             pick_up(pip, tip_reusage_strategy)
             while transfer_vol > 0:
                 aspiration_vol = min(transfer_vol, max_asp_vol)
-                pip.aspirate(aspiration_vol, source_well)
+                if is_source_tube:
+                    height = aspirate_liq_level(
+                        pip=pip,
+                        initial_tube_volume=tube_volume_track_dict[
+                            source_well],
+                        aspiration_volume=aspiration_vol,
+                        tube=source_well,
+                        tip_length=tip_length_dict[pip])
+                    ctx.comment(
+                        f"Aspirated from tube {source_well} "
+                        f"at a height offset of {height} mm")
+                else:
+                    pip.aspirate(aspiration_vol, source_well)
                 if air_gap_volume > 0:
                     pip.air_gap(air_gap_volume)
-                pip.dispense(aspiration_vol+air_gap_volume, dest_well)
+                if is_dest_tube:
+                    disp_height = dispense_liq_level(
+                        pip=pip,
+                        initial_tube_volume=tube_volume_track_dict[
+                            dest_well],
+                        dispensing_volume=aspiration_vol+air_gap_volume,
+                        tube=dest_well)
+                    ctx.comment(
+                        f"Dispensed {aspiration_vol} uL to tube {dest_well} "
+                        f"at a height offset of {disp_height} mm")
+                else:
+                    pip.dispense(aspiration_vol+air_gap_volume, dest_well)
                 if is_touch_tip:
                     pip.touch_tip()
                 if is_blowout:
@@ -930,24 +1082,48 @@ def run(ctx: protocol_api.ProtocolContext):
                 f"step_id {step_id}\n")
             source_slot = instruction[6]
             source_well = instruction[7]
+            source_initial_well_vol = instruction[8]
             transfer_vol = instruction[9]
             air_gap_volume = instruction[10]
             is_touch_tip = instruction[17]
             is_blowout = instruction[18]
+            source_lw_lname = source_lw.load_name
+            is_source_tube = False
 
             # Retrieve wells:
             source_lw = labware_dict["labware"][source_slot]
             source_well = source_lw.wells_by_name()[source_well]
 
+            # Check if tubes are involved and track liquid levels:
+            track_tubes_liq_lvl(
+                lnames=[source_lw_lname, None],
+                wells=[source_well, None],
+                initial_volumes=[source_initial_well_vol, 0],
+                transfer_vol=[transfer_vol])
+
             pip, _ = select_pip(
-                transfer_vol+air_gap_volume, is_single_action=True)
+                transfer_vol+air_gap_volume,
+                is_single_action=True)
             ctx.comment(f"Selected the {pip} for the aspiration")
             pick_up(pip, tip_reusage_strategy)
             tip_parking_well = pip._last_tip_picked_up_from
             # Save the well where the tip was parked as well as the tip used
             # so that the protocol knows how to dispense it later.
             parked_tip_dict[step_id] = tip_parking_well, pip
-            pip.aspirate(transfer_vol, source_well)
+            if is_source_tube:
+                asp_height = aspirate_liq_level(
+                    pip=pip,
+                    initial_tube_volume=tube_volume_track_dict[
+                        source_well],
+                    aspiration_volume=transfer_vol,
+                    tube=source_well,
+                    tip_length=tip_length_dict[pip])
+                tube_volume_track_dict[source_well] -= aspiration_vol
+                ctx.comment(
+                    f"Aspirated {transfer_vol} uL from tube {source_well} "
+                    f"at a height offset of {asp_height} mm")
+            else:
+                pip.aspirate(transfer_vol, source_well)
             if air_gap_volume > 0:
                 pip.air_gap(air_gap_volume)
             pip.return_tip()
@@ -966,30 +1142,54 @@ def run(ctx: protocol_api.ProtocolContext):
             air_gap_volume = instruction[10]
             dest_slot = instruction[14]
             dest_well = instruction[15]
+            dest_initial_well_vol = instruction[16]
             is_touch_tip = instruction[17]
             is_blowout = instruction[18]
 
             # Retrieve target well:
             dest_lw = labware_dict["labware"][dest_slot]
             dest_well = dest_lw.wells_by_name()[dest_well]
+            dest_lw_lname = dest_lw.load_name
+            is_dest_tube = False
+
+            # Check if the target well is a tube and track liquid height if so
+            _, is_dest_tube = track_tubes_liq_lvl(
+                lnames=[None, dest_lw_lname],
+                wells=[None, dest_well],
+                initial_volumes=[0, dest_initial_well_vol],
+                transfer_vol=transfer_vol)
 
             if pip.has_tip:
                 pip.drop_tip()
             pip.pick_up_tip(parked_tip_well)
-            pip.dispense(transfer_vol+air_gap_volume, dest_well)
+            if is_dest_tube:
+                disp_height = dispense_liq_level(
+                    pip=pip,
+                    initial_tube_volume=tube_volume_track_dict[
+                        dest_well],
+                    dispensing_volume=transfer_vol+air_gap_volume,
+                    tube=dest_well)
+                ctx.comment(
+                    f"Dispensed {transfer_vol} uL to tube {dest_well} "
+                    f"at a height offset of {disp_height} mm")
+            else:
+                pip.dispense(transfer_vol+air_gap_volume, dest_well)
             drop_tip(pip, tip_reusage_strategy)
         elif instr == "pause":
             ctx.comment(
                 f"\n\nExecuting pause instruction with step_id {step_id}")
             time_param = get_instruction_param_val(
-                instruction[2], "time", "str")
+                instruction[2],
+                "time",
+                "str")
             hour_match = hour_match_regex.search(time_param)
             minute_match = minute_match_regex.search(time_param)
             second_match = second_match_regex.search(time_param)
             hours = 0
             minutes = 0
             seconds = 0
-            # Decompose the time parameter into hours, minutes and seconds
+            # Decompose the time parameter into hours,
+            minutes and seconds
             if hour_match:
                 hours = float(time_param[
                     hour_match.start():hour_match.end()-1])
@@ -1003,4 +1203,5 @@ def run(ctx: protocol_api.ProtocolContext):
         else:
             raise Exception(
                 f"Unrecognized instruction '{instr}' with step_id {step_id}")
+    # import pdb; pdb.set_trace()
     ctx.comment("\n\n~~~ Protocol finished ~~~\n")
