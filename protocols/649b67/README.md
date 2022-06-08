@@ -17,8 +17,8 @@ Explanation of complex parameters below:
 
 * `Transfer .csv File`: Here, you should upload a .csv file formatted in the [following way](), making sure to include headers in your csv file.
 * `Deck setup .csv File`:  Here, you should upload a .csv file formatted in the [following way](), making sure to include headers in your csv file. Refer to our [Labware Library](https://labware.opentrons.com/?category=wellPlate) to copy API names for labware to include in the `Source Labware` and `Dest Labware` columns of the .csv.
-* `Pipette Model in the left mount`: Select which pipette you will use in the left mount for this protocol.
-* `Pipette Model in the right mount`: Select which pipette you will use in the right mount for this protocol.
+* `Pipette type in the left mount`: Select which pipette you will use in the left mount for this protocol.
+* `Pipette type in the right mount`: Select which pipette you will use in the right mount for this protocol.
 * `Tip type for the left pipette`: Specify whether you want to use filter tips.
 * `Tip type for the right pipette`: Specify whether you want to use filter tips.
 * `Tip Usage Strategy`: Specify whether you'd like to use a new tip for each transfer, or keep the same tip throughout the protocol.

@@ -98,13 +98,14 @@ def read_var(input: str, var_type: str):
 def get_values(*names):
     import json
     _all_values = json.loads("""{
-                                  "transfer_csv":" step_id,instruction,instruction_parameters,source_labware,source_magnetic_module,source_temperature_module,source_slot,source_well,Source_well_starting_volume,transfer_volume,air_gap_volume,dest_labware,dest_magnetic_module,dest_temperature_module,dest_slot,dest_well,dest_well_starting_volume,touch_tip,blow_out\\n1,transfer,,nest_96_wellplate_2ml_deep,yes,no,1,A1,2000,1000,50,corning_6_wellplate_16.8ml_flat,no,no,3,A1,0,no,no\\n2,transfer,,corning_384_wellplate_112ul_flat,no,no,2,B1,100,90,10,nest_12_reservoir_15ml,no,no,4,A2,10,yes,yes\\n3,aspirate_and_park_tip,,corning_384_wellplate_112ul_flat,no,no,2,C1,100,50,10,,,,,,,,\\n4,pause,time=5m30s,,,,,,,,,,,,,,,,\\n5,dispense_parked_tip,step_id=3,,,,,,,60,,corning_6_wellplate_16.8ml_flat,,,3,A2,,yes,yes\\n6,transfer,,corning_384_wellplate_112ul_flat,no,no,2,D1,100,30,0,corning_6_wellplate_16.8ml_flat,no,no,3,B2,10,yes,yes\\n7,transfer,,opentrons_24_aluminumblock_nest_2ml_screwcap,no,yes,6,A1,100,400,0,corning_6_wellplate_16.8ml_flat,no,no,3,B3,0,yes,Yes",
+                                  "transfer_csv":" step_id,instruction,instruction_parameters,source_labware,source_magnetic_module,source_temperature_module,source_slot,source_well,Source_well_starting_volume,transfer_volume,air_gap_volume,dest_labware,dest_magnetic_module,dest_temperature_module,dest_slot,dest_well,dest_well_starting_volume,touch_tip,blow_out\\n1,transfer,,nest_96_wellplate_2ml_deep,yes,no,1,A1,2000,500,50,corning_6_wellplate_16.8ml_flat,no,no,3,A1,0,no,no\\n2,transfer,,corning_384_wellplate_112ul_flat,no,no,2,B1,100,90,10,nest_12_reservoir_15ml,no,no,4,A2,10,yes,yes\\n3,aspirate_and_park_tip,,corning_384_wellplate_112ul_flat,no,no,2,C1,100,50,10,,,,,,,,\\n4,pause,time=5m30s,,,,,,,,,,,,,,,,\\n5,transfer,,corning_384_wellplate_112ul_flat,no,no,2,B1,100,90,10,nest_12_reservoir_15ml,no,no,4,A2,10,yes,yes\\n6,dispense_parked_tip,step_id=3,,,,,,,60,,corning_6_wellplate_16.8ml_flat,,,3,A2,,yes,yes\\n7,transfer,,corning_384_wellplate_112ul_flat,no,no,2,D1,100,30,0,corning_6_wellplate_16.8ml_flat,no,no,3,B2,10,yes,yes\\n8,transfer,,opentrons_24_aluminumblock_nest_2ml_screwcap,no,yes,6,A1,100,400,0,corning_6_wellplate_16.8ml_flat,no,no,3,B3,0,yes,Yes",
                                   "left_mount_pipette_type":"p300_single_gen2",
-                                  "right_mount_pipette_type":"p1000_single_gen2",
+                                  "right_mount_pipette_type":"p20_single_gen2",
                                   "left_tip_type":"standard",
                                   "right_tip_type":"standard",
                                   "left_pip_tiprack_slots":"10,11",
-                                  "right_pip_tiprack_slots":"5,8"
+                                  "right_pip_tiprack_slots":"5,8",
+                                  "tip_reusage_strategy":true
                                   }
                                   """)  # noqa: E501 Do not report 'line too long' warnings
     return [_all_values[n] for n in names]
@@ -118,14 +119,16 @@ def run(ctx: protocol_api.ProtocolContext):
      left_tip_type,
      right_tip_type,
      left_pip_tiprack_slots,
-     right_pip_tiprack_slots] = get_values(  # noqa: F821
+     right_pip_tiprack_slots,
+     tip_reusage_strategy] = get_values(  # noqa: F821
      "transfer_csv",
      "left_mount_pipette_type",
      "right_mount_pipette_type",
      "left_tip_type",
      "right_tip_type",
      "left_pip_tiprack_slots",
-     "right_pip_tiprack_slots")
+     "right_pip_tiprack_slots",
+     "tip_reusage_strategy")
 
     tiprack_map = {
         'p20_single_gen2': {
@@ -389,12 +392,19 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # Implementation
     # 1.1 Add the  pipette tipracks to their respective slot lists
-    left_tips_lname = tiprack_map[left_mount_pipette_type][left_tip_type]
-    for slot in left_tiprack_slot_list:
-        slot_dict[slot].append((-1, left_tips_lname, "left_mount"))
-    right_tips_lname = tiprack_map[right_mount_pipette_type][right_tip_type]
-    for slot in right_tiprack_slot_list:
-        slot_dict[slot].append((-1, right_tips_lname, "right_mount"))
+    left_tips_lname = False
+    if left_mount_pipette_type:
+        left_tips_lname = tiprack_map[
+            left_mount_pipette_type][left_tip_type]
+        for slot in left_tiprack_slot_list:
+            slot_dict[slot].append((-1, left_tips_lname, "left_mount"))
+
+    right_tips_lname = False
+    if right_mount_pipette_type:
+        right_tips_lname = tiprack_map[
+            right_mount_pipette_type][right_tip_type]
+        for slot in right_tiprack_slot_list:
+            slot_dict[slot].append((-1, right_tips_lname, "right_mount"))
 
     # 2. Iterate over the dictionary entries
     for slot in slot_dict.keys():
@@ -734,12 +744,16 @@ def run(ctx: protocol_api.ProtocolContext):
     right_tipracks_dict_vals = labware_dict["right_mount"].values()
     left_tipracks = [rack for rack in left_tipracks_dict_vals]
     right_tipracks = [rack for rack in right_tipracks_dict_vals]
-    pip_left = ctx.load_instrument(
-      left_mount_pipette_type, "left", tip_racks=left_tipracks)
-    pip_right = ctx.load_instrument(
-      right_mount_pipette_type, "right", tip_racks=right_tipracks)
+    pip_left = False
+    pip_right = False
+    if left_mount_pipette_type:
+        pip_left = ctx.load_instrument(
+          left_mount_pipette_type, "left", tip_racks=left_tipracks)
+    if right_mount_pipette_type:
+        pip_right = ctx.load_instrument(
+          right_mount_pipette_type, "right", tip_racks=right_tipracks)
 
-    def pick_up(pipette):
+    def pick_up(pipette, is_reuse_tip):
         """`pick_up()` will pause the protocol when all tip boxes are out of
         tips, prompting the user to replace all tip racks. Once tipracks are
         reset, the protocol will start picking up tips from the first tip
@@ -750,12 +764,23 @@ def run(ctx: protocol_api.ProtocolContext):
         :param pipette: The pipette desired to pick up tip
         as definited earlier in the protocol (e.g. p300, m20).
         """
+        if is_reuse_tip and pipette.has_tip:
+            return
         try:
             pipette.pick_up_tip()
         except protocol_api.labware.OutOfTipsError:
             ctx.pause("Replace empty tip racks")
             pipette.reset_tipracks()
             pipette.pick_up_tip()
+
+    def drop_tip(pip, is_reuse_tip):
+        """
+        Drops the tip unless the strategy is to reuse the same tip.
+        """
+        if is_reuse_tip is True:
+            return
+        else:
+            pip.drop_tip()
 
     def select_pip(volume, is_single_action=False):
         """ Returns the correct pipette for the transfer and its max volume
@@ -767,44 +792,76 @@ def run(ctx: protocol_api.ProtocolContext):
         nonlocal pip_left, pip_right, left_mount_pipette_type
         nonlocal right_mount_pipette_type, left_tip_type, right_tip_type
 
-        if volume < 20.1:
-            if "20" in left_mount_pipette_type:
+        if is_single_action:
+            if volume < 20.01:
+                if pip_left and "20" in left_mount_pipette_type:
+                    return pip_left, 20
+                elif pip_right and "20" in right_mount_pipette_type:
+                    return pip_right, 20
+                else:
+                    raise Exception(
+                        ("There is no 20 uL pipette loaded for aspirating and "
+                         f"parking a volume of {volume} uL"))
+            elif volume < 200.01:
+                if pip_left and "300" in left_mount_pipette_type:
+                    max_vol = 200 if left_tip_type == "filter" else 300
+                    return pip_left, max_vol
+                elif pip_right and "300" in right_mount_pipette_type:
+                    max_vol = 200 if right_tip_type == "filter" else 300
+                    return pip_right, max_vol
+                else:
+                    raise Exception(
+                        ("There is no 300 uL pipette loaded for aspirating and "
+                         f"parking a volume of {volume} uL"))
+            elif volume < 300.01:
+                if pip_left and "300" in left_mount_pipette_type \
+                        and left_tip_type == "standard":
+                    return pip_left, 300
+                elif pip_right and "300" in right_mount_pipette_type \
+                        and right_tip_type == "standard":
+                    return pip_right, 300
+                else:
+                    raise Exception(
+                        ("There is no 300 uL pipette loaded for aspirating "
+                         f"and parking a volume of {volume} uL"))
+            elif volume < 1000.01:
+                if pip_left and "1000" in left_mount_pipette_type:
+                    return pip_left, 1000
+                elif pip_right and "1000" in right_mount_pipette_type:
+                    return pip_right, 1000
+                else:
+                    raise Exception(
+                        ("There is no 1000 uL pipette loaded for handling a "
+                         f"transfer volume of {volume} uL"))
+            else:
+                raise Exception(
+                    "Cannot aspirate and park a tip for an aspiration "
+                    f"volume of {volume}")
+
+        if volume < 50.01:
+            if pip_left and "20" in left_mount_pipette_type:
                 return pip_left, 20
-            elif "20" in right_mount_pipette_type:
+            elif pip_right and "20" in right_mount_pipette_type:
                 return pip_right, 20
             else:
                 raise Exception(
                     ("There is no 20 uL pipette loaded for handling a "
                      f"transfer volume of {volume} uL"))
-        elif volume < 1000:
-            if "300" in left_mount_pipette_type:
+        elif volume < 1000.01:
+            if pip_left and "300" in left_mount_pipette_type:
                 max_vol = 200 if left_tip_type == "filter" else 300
-                if is_single_action and volume > max_vol:
-                    raise Exception(
-                        f"Cannot aspirate a volume of {volume} in a p300 "
-                        f"with a {left_tip_type} tip, the max possible "
-                        f"aspiration volume is {max_vol} uL")
                 return pip_left, max_vol
-            elif "300" in right_mount_pipette_type:
+            elif pip_right and "300" in right_mount_pipette_type:
                 max_vol = 200 if right_tip_type == "filter" else 300
-                if is_single_action and volume > max_vol:
-                    raise Exception(
-                        f"Cannot aspirate a volume of {volume} in a p300 "
-                        f"with a {right_tip_type} tip, the max possible "
-                        f"aspiration volume is {max_vol} uL")
                 return pip_right, max_vol
             else:
                 raise Exception(
                     ("There is no 300 uL pipette loaded for handling a "
                      f"transfer volume of {volume} uL"))
         else:
-            if is_single_action and volume > 1000:
-                raise Exception(
-                    f"Cannot aspirate a volume of {volume} in a p1000 "
-                    f"The max possible aspiration volume is {max_vol} uL")
-            if "1000" in left_mount_pipette_type:
+            if pip_left and "1000" in left_mount_pipette_type:
                 return pip_left, 1000
-            elif "1000" in right_mount_pipette_type:
+            elif pip_right and "1000" in right_mount_pipette_type:
                 return pip_right, 1000
             else:
                 raise Exception(
@@ -850,21 +907,22 @@ def run(ctx: protocol_api.ProtocolContext):
             except Exception:
                 raise Exception(
                     f"Error in executing instruction at step_id {step_id}")
+            ctx.comment(f"Selected the {pip} for the transfer")
             max_asp_vol = max_pip_vol - air_gap_volume
 
-            pick_up(pip)
+            pick_up(pip, tip_reusage_strategy)
             while transfer_vol > 0:
                 aspiration_vol = min(transfer_vol, max_asp_vol)
                 pip.aspirate(aspiration_vol, source_well)
                 if air_gap_volume > 0:
                     pip.air_gap(air_gap_volume)
-                pip.dispense(aspiration_vol, dest_well)
+                pip.dispense(aspiration_vol+air_gap_volume, dest_well)
                 if is_touch_tip:
                     pip.touch_tip()
                 if is_blowout:
                     pip.blow_out()
                 transfer_vol -= aspiration_vol
-            pip.drop_tip()
+            drop_tip(pip, tip_reusage_strategy)
 
         elif instr == "aspirate_and_park_tip":
             ctx.comment(
@@ -883,9 +941,12 @@ def run(ctx: protocol_api.ProtocolContext):
 
             pip, _ = select_pip(
                 transfer_vol+air_gap_volume, is_single_action=True)
-            pick_up(pip)
+            ctx.comment(f"Selected the {pip} for the aspiration")
+            pick_up(pip, tip_reusage_strategy)
             tip_parking_well = pip._last_tip_picked_up_from
-            parked_tip_dict[step_id] = tip_parking_well
+            # Save the well where the tip was parked as well as the tip used
+            # so that the protocol knows how to dispense it later.
+            parked_tip_dict[step_id] = tip_parking_well, pip
             pip.aspirate(transfer_vol, source_well)
             if air_gap_volume > 0:
                 pip.air_gap(air_gap_volume)
@@ -898,7 +959,9 @@ def run(ctx: protocol_api.ProtocolContext):
             # Retrieve the step id for the action where the tip was parked
             aspiration_and_park_step_id = get_instruction_param_val(
                 instruction[2], "step_id", "int")
-            parked_tip_well = parked_tip_dict[aspiration_and_park_step_id]
+            parked_tip_well, pip = parked_tip_dict[aspiration_and_park_step_id]
+            ctx.comment(
+                f"Selected the {pip} for the pick up parked tip and dispense")
             transfer_vol = instruction[9]
             air_gap_volume = instruction[10]
             dest_slot = instruction[14]
@@ -910,10 +973,11 @@ def run(ctx: protocol_api.ProtocolContext):
             dest_lw = labware_dict["labware"][dest_slot]
             dest_well = dest_lw.wells_by_name()[dest_well]
 
-            pip, _ = select_pip(transfer_vol, is_single_action=True)
+            if pip.has_tip:
+                pip.drop_tip()
             pip.pick_up_tip(parked_tip_well)
             pip.dispense(transfer_vol+air_gap_volume, dest_well)
-            pip.drop_tip()
+            drop_tip(pip, tip_reusage_strategy)
         elif instr == "pause":
             ctx.comment(
                 f"\n\nExecuting pause instruction with step_id {step_id}")
