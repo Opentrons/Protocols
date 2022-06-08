@@ -13,6 +13,12 @@ def run(ctx):
     [num_samp, m300_mount] = get_values(  # noqa: F821
         "num_samp", "m300_mount")
 
+    VOL_EQL = 200
+    VOL_SAMPLE = 200
+    VOL_WASH1 = 200
+    VOL_WASH2 = 200
+    VOL_ELN = 80
+
     total_cols = int(num_samp//8)
     r1 = int(num_samp%8)
     if r1 != 0: total_cols = total_cols + 1
