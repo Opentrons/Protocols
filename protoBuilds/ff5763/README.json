@@ -1,15 +1,17 @@
 {
     "author": "Opentrons",
     "categories": {
-        "NGS Prep": []
+        "NGS Library Prep": [
+            "Illumina DNA Prep"
+        ]
     },
     "description": "This is part one of a five part protocol for the Illumina DNA Prep kit\nPart 2\nPart 3\nPart 4\nPart 5\nPart 1: Tagmentation\nMaster mix is prepared offdeck and added to DNA samples. DNA samples are 30 uL in total volume. After master mix addition, the sample plate is put in a thermocycler pre-programmed as outlined in the reference manual.\nOnce the thermocycler is complete, part 2 can be run.\nVariables:\n* Number of Samples: Total number of samples from 1 to 48\n",
     "internal": "ff5763",
     "labware": "\nCustom 96 Well Plate with AB Gene and NEST 96 well plate\nPCR Strip Tubes for Master Mix\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
-        "categories": "* NGS Prep\n\n",
-        "description": "This is part one of a five part protocol for the [Illumina DNA Prep kit](https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/nextera-dna-flex.html)\n\n[Part 2](https://develop.protocols.opentrons.com/protocol/ff5763_part2)\n[Part 3](https://develop.protocols.opentrons.com/protocol/ff5763_part3)\n[Part 4](https://develop.protocols.opentrons.com/protocol/ff5763_part4)\n[Part 5](https://develop.protocols.opentrons.com/protocol/ff5763_part5)\n\nPart 1: Tagmentation\nMaster mix is prepared offdeck and added to DNA samples. DNA samples are 30 uL in total volume. After master mix addition, the sample plate is put in a thermocycler pre-programmed as outlined in the reference manual.\n\nOnce the thermocycler is complete, part 2 can be run.\n\nVariables:\n* `Number of Samples`: Total number of samples from 1 to 48\n\n\n---\n\n",
+        "categories": "* NGS Library Prep\n    * Illumina DNA Prep\n\n",
+        "description": "This is part one of a five part protocol for the [Illumina DNA Prep kit](https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/nextera-dna-flex.html)\n\n[Part 2](https://develop.protocols.opentrons.com/protocol/ff5763_part2)\n\n[Part 3](https://develop.protocols.opentrons.com/protocol/ff5763_part3)\n\n[Part 4](https://develop.protocols.opentrons.com/protocol/ff5763_part4)\n\n[Part 5](https://develop.protocols.opentrons.com/protocol/ff5763_part5)\n\nPart 1: Tagmentation\nMaster mix is prepared offdeck and added to DNA samples. DNA samples are 30 uL in total volume. After master mix addition, the sample plate is put in a thermocycler pre-programmed as outlined in the reference manual.\n\nOnce the thermocycler is complete, part 2 can be run.\n\nVariables:\n* `Number of Samples`: Total number of samples from 1 to 48\n\n\n---\n\n",
         "internal": "ff5763\n",
         "labware": "* Custom 96 Well Plate with AB Gene and NEST 96 well plate\n* PCR Strip Tubes for Master Mix\n\n\n",
         "modules": "* [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)\n* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)\n\n",
