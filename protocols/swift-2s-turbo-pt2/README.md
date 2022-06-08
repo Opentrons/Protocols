@@ -84,7 +84,7 @@ Slot 2: [NEST 12-Well Reservoir](https://shop.opentrons.com/collections/reservoi
 * A4: 80% Ethanol Solution, Freshly Prepared
 * A6: Low EDTA TE Buffer
 
-Slot 3: [Opentrons Temperature Module with 24-Well Aluminum Block](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck) and [NEST 2mL Tubes](https://shop.opentrons.com/collections/tubes/products/nest-2-0-ml-sample-vial) with master mixes (for more information on master mixes, [click here](https://docs.google.com/spreadsheets/d/1_XIL31tTYOFV9ehGmeAc1eorLgv8yxpEu_27qpg3Ei4/edit?usp=sharing)) and indices (if automating index addition)
+Slot 3: [Opentrons Temperature Module with 24-Well Aluminum Block](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck) and [NEST 2mL Tubes](https://shop.opentrons.com/collections/tubes/products/nest-2-0-ml-sample-vial) with master mixes (for more information on master mixes, [click here](https://opentrons-protocol-library-website.s3.amazonaws.com/Technical+Notes/swift-2s-turbo-pt1/Swift+2S+Turbo+Master+Mix+Volumes.xlsx)) and indices (if automating index addition)
 * A1: (**used in Part 1**) Enzymatic Prep Master Mix
 * A2: (**used in Part 1**) Ligation Master Mix
 * A3: PCR Master Mix
@@ -107,7 +107,7 @@ Slot 9: [Opentrons Tips for P300 8-Channel Pipette](https://shop.opentrons.com/c
 * **Pipette and Tip Type**: Select which pipette (P50 Single-Channel or P20 Single-Channel) and corresponding tips to be used for this protocol. **The pipette should be attached to the left mount.**
 * **P300 8-Channel Pipette Tip Type**: Select which tips (filter/non-filter) to be used for this protocol.
 * **Number of Samples**: Specify the number of samples (8, 16, or 24) you'd like to run.
-* **Magdeck Generation**: Specify whether using Generation 1 or Generation 2 magdeck. 
+* **Magdeck Generation**: Specify whether using Generation 1 or Generation 2 magdeck.
 * **Automate Indexing**: Specify whether the indices should be added to the samples with the OT-2, or manually.
 
 
