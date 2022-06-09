@@ -5,7 +5,7 @@
 
 ## Categories
 * Thermocycler
-	* Thermocycler Example
+	* Thermocycler with CSV
 
 
 ## Description
