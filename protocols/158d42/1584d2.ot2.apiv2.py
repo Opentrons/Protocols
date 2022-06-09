@@ -7,6 +7,11 @@ metadata = {
     'apiLevel': '2.11'
 }
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"_num_samp":46,"_use_temp_mod":true,"_p300_mount":"left"}""")
+    return [_all_values[n] for n in names]
+
 
 def run(ctx: protocol_api.ProtocolContext):
 
@@ -47,7 +52,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     reagent_tuberacks = [ctx.load_labware(
                     'opentrons_24_tuberack_nest_1.5ml_screwcap',
-                    slot, label='rack') for slot in ['9', '6']]
+                    slot, label='rack') for slot in ['6', '3']]
 
     # TIPRACKS
     tipracks = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '10')]
@@ -79,7 +84,7 @@ def run(ctx: protocol_api.ProtocolContext):
     p300.dispense(30, negative_ctrl.bottom(negative_ctrl.depth/2))
     p300.dispense(20, negative_ctrl)
     p300.mix(5, 40, negative_ctrl)
-    p300.drop_tip()
+    p300.drop_tip(ctx.loaded_labwares[12].wells()[0].top(z=5))
 
     ctx.comment('\n\nMOVING SAMPLES TO PLATE\n')
     for prl_source, dest1, final_dest in zip(prl_rows,
@@ -93,7 +98,7 @@ def run(ctx: protocol_api.ProtocolContext):
         p300.dispense(30, final_dest.bottom(final_dest.depth/2))
         p300.dispense(20, final_dest)
         p300.mix(5, 40, final_dest)
-        p300.drop_tip()
+        p300.drop_tip(ctx.loaded_labwares[12].wells()[0].top(z=5))
         ctx.comment('\n')
 
     ctx.comment('\n\nMOVING POSITIVE CONTROL TO PLATE\n')
@@ -102,10 +107,10 @@ def run(ctx: protocol_api.ProtocolContext):
     p300.dispense(30, positive_ctrl_1.bottom(positive_ctrl_1.depth/2))
     p300.dispense(20, positive_ctrl_1)
     p300.mix(5, 40, positive_ctrl_1)
-    p300.home()
 
-    p300.aspirate(50, positive_ctrl_1)
+    p300.aspirate(50, positive_ctrl_1.bottom(2), rate=0.5)
+    p300.home()
     p300.dispense(30, positive_ctrl_final.bottom(positive_ctrl_1.depth/2))
     p300.dispense(20, positive_ctrl_final)
     p300.mix(5, 40, positive_ctrl_final)
-    p300.drop_tip()
+    p300.drop_tip(ctx.loaded_labwares[12].wells()[0].top(z=5))
