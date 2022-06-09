@@ -7,7 +7,7 @@
 ## Categories
 
 * Sample Prep
-  * Staining
+    * Staining
 
 ## Description
 
