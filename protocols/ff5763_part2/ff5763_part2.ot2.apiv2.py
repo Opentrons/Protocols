@@ -60,7 +60,7 @@ def run(ctx):
     supernatant_headspeed_modulator = 5
     step5_vol_supernatant = 65
     step6_vol_supernatant = 105
-    nest_96_mag_engage_height = 10
+    # nest_96_mag_engage_height = 10
     airgap_300 = 20
     airgap_20 = 5
     # protocol
@@ -114,7 +114,7 @@ def run(ctx):
     # Step 4
     # Incubate on mag stand, 3 minutes
     ctx.comment('''incubate 3 minutes''')
-    mag_module.engage(height_from_base=nest_96_mag_engage_height)
+    mag_module.engage()
     ctx.delay(minutes=3)
 
     # Step 5
@@ -165,7 +165,7 @@ def run(ctx):
         m300.flow_rate.aspirate *= 5
         m300.flow_rate.dispense *= 5
 
-        mag_module.engage(height_from_base=nest_96_mag_engage_height)
+        mag_module.engage()
 
         ctx.delay(minutes=3)
         # remove super
@@ -211,7 +211,7 @@ def run(ctx):
     m300.flow_rate.aspirate *= 5
     m300.flow_rate.dispense *= 5
 
-    mag_module.engage(nest_96_mag_engage_height)
+    mag_module.engage()
     ctx.comment('''Clean up complete, please move on to part 3 of the'''
                 ''' protocol, leaving the plate engaged on the'''
                 ''' magnetic module''')
