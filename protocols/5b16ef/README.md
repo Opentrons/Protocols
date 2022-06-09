@@ -6,7 +6,7 @@
 
 ## Categories
 * NGS Library Prep
-	* Subcategory (can be the name of a kit when applicable)
+	* Illumina Nextera Flex
 
 ## Description
 This protocol is a semi-automated workflow which performs 8.1-8.4.6 of the SARS-CoV-2 Using Illumina Nextera Flex & MiSeqNEB kit. For detailed information on protocol steps, please see below. You can find part 2 of the protocol here:
@@ -47,7 +47,7 @@ Explanation of complex parameters below:
 3. Pool reagent is added to final plate cols (split columns).
 4. 4.5ul of sample are split from sample plate into final plate.
 5. User incubates and runs plate on thermal cycler.
-6. Split columns are recombined to the left. 
+6. Split columns are recombined to the left.
 
 ### Process
 1. Input your protocol parameters above.

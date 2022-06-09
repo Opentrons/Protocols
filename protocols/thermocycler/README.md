@@ -4,7 +4,7 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Thermocycler
+* Getting Started
 	* Thermocycler Example
 
 
