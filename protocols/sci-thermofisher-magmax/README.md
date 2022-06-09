@@ -4,7 +4,7 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Nucleic Acid and Purification
+* Nucleic Acid Extraction & Purification
     * Thermofisher MagMAX
 
 ## Description

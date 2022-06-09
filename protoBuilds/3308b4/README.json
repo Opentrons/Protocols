@@ -1,7 +1,9 @@
 {
     "author": "Opentrons",
     "categories": {
-        "PCR\n        * PCR Prep": []
+        "PCR": [
+            "PCR Prep"
+        ]
     },
     "deck-setup": "",
     "description": "This is a specific protocol for aliquoting liquid from three reagent plates to three 96 deep well plates using a multi-channel p300 pipette. Tips are changed between reagents. Either pipette mount can be specified in setup.\n 350ul SPR Wash Buffer is added to a 96 deep well plate\n 350ul VHB Buffer is added to a second 96 deep well plate\n* 50ul nuclease free water is added to a third 96 deep well plate\n\n'P300-Multi Mount Side': Left or right refers to the pipette mount side\n",
@@ -9,7 +11,7 @@
     "labware": "\n3x NEST 1 Well Reservoir 195ml\n3x NEST 96 Deepwell Plate 2ml\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n",
-        "categories": "* PCR\n\t\t* PCR Prep\n",
+        "categories": "* PCR\n\t* PCR Prep\n",
         "deck-setup": "![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/3308b4/Screen+Shot+2022-03-27+at+8.43.58+PM.png)\n\n",
         "description": "This is a specific protocol for aliquoting liquid from three reagent plates to three 96 deep well plates using a multi-channel p300 pipette. Tips are changed between reagents. Either pipette mount can be specified in setup.\n* 350ul SPR Wash Buffer is added to a 96 deep well plate\n* 350ul VHB Buffer is added to a second 96 deep well plate\n* 50ul nuclease free water is added to a third 96 deep well plate\n\n* 'P300-Multi Mount Side': Left or right refers to the pipette mount side\n\n",
         "internal": "3308b4\n",

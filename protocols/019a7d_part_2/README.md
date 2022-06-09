@@ -4,7 +4,7 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Nucleic Acid Extraction & Purifications
+* Nucleic Acid Extraction & Purification
     * Gibson Prep
 
 ## Description
