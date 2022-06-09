@@ -50,7 +50,7 @@ def run(ctx):
         m20.move_to(dest.bottom().move(Point(x=-1, z=5)))
     m20.drop_tip()
 
-    # dilute and transfer to 384-well plate
+    # dilute and transfer to 384 wellplate
     water_vol = dilution_total_volume*(dilution_factor-1)/dilution_factor
     vol_dna_dilution = dilution_total_volume/dilution_factor
     m300.pick_up_tip()
