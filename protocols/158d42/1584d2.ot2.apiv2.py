@@ -7,11 +7,6 @@ metadata = {
     'apiLevel': '2.11'
 }
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"_num_samp":46,"_use_temp_mod":true,"_p300_mount":"left"}""")
-    return [_all_values[n] for n in names]
-
 
 def run(ctx: protocol_api.ProtocolContext):
 
