@@ -7,7 +7,7 @@
 ## Categories
 
 * Nucleic Acid Extraction & Purification
-  * RNA Purification
+    * RNA Purification
 
 ## Description
 
