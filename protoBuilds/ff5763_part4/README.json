@@ -1,10 +1,14 @@
 {
     "author": "Opentrons",
+    "categories": {
+        "NGS Prep": []
+    },
     "description": "This is part four of a five part protocol for the Illumina DNA Prep kit\nPart 1\nPart 2\nPart 3\nPart 5\nPart 4: Cleanup Libraries First Half\nExplanation of complex parameters below:\n* Number of Samples: Total number of samples from 1 to 48\n",
     "internal": "ff5763",
     "labware": "\nCustom 96 Well Plate with AB Gene and NEST 96 well plate with samples, slot 2\nNEST 2ml Deep Well Plate on Magnetic Module in slot 4\nNEST 12-Well 15ml Reservoir in slot 5\nNEST 195ml Reservoir in slot 6\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* NGS Prep\n\n",
         "description": "This is part four of a five part protocol for the [Illumina DNA Prep kit](https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/nextera-dna-flex.html)\n\n[Part 1](https://develop.protocols.opentrons.com/protocol/ff5763)\n\n[Part 2](https://develop.protocols.opentrons.com/protocol/ff5763_part2)\n\n[Part 3](https://develop.protocols.opentrons.com/protocol/ff5763_part3)\n\n[Part 5](https://develop.protocols.opentrons.com/protocol/ff5763_part5)\n\nPart 4: Cleanup Libraries First Half\n\nExplanation of complex parameters below:\n* `Number of Samples`: Total number of samples from 1 to 48\n\n---\n\n",
         "internal": "ff5763\n",
         "labware": "* Custom 96 Well Plate with AB Gene and NEST 96 well plate with samples, slot 2\n* [NEST 2ml Deep Well Plate](https://shop.opentrons.com/nest-2-ml-96-well-deep-well-plate-v-bottom/) on Magnetic Module in slot 4\n* [NEST 12-Well 15ml Reservoir](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/) in slot 5\n* [NEST 195ml Reservoir](https://shop.opentrons.com/nest-1-well-reservoirs-195-ml/) in slot 6\n\n\n",
