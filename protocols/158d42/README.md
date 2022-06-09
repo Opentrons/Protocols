@@ -36,7 +36,7 @@ Explanation of complex parameters below:
 ### Deck Setup
 * 24 tube racks should be placed in order of slots 9, 6. Tubes by row.
 * 32 tube racks should be placed in order of slots 7 and 4. Tubes by row.
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/581011/Screen+Shot+2022-03-23+at+7.52.34+AM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1584d2/Screen+Shot+2022-06-09+at+10.34.00+AM.png)
 
 ---
 
