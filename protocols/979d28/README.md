@@ -1,11 +1,11 @@
-# Omega Mag-Bind® Total RNA 96 Kit
+# Omega Mag-Bind® Total RNA Isolation
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
 ## Categories
 * Nucleic Acid Extraction & Purification
-    * Omega Mag-Bind® Total RNA 96 Kit
+    * Omega Mag-Bind® Total RNA Isolation
 
 ## Description
 
@@ -53,16 +53,7 @@ There are several user-intervention steps to move the deepwell isolation plate t
 
 All volumes for 48-sample throughput
 
-| reagent | location | volume per channel |
-| :----: | :----: | :----: |
-| beads in EtOH | reservoir 1, channels 1-2 | 8.8ml |
-| VHB | reservoir 1, channels 4-5 | 11ml |
-| DNase | reservoir 1, channel 7 | 2.86ml |
-| PHM | reservoir 1, channel 9 | 8.25ml |
-| elution buffer | reservoir 1, channel 12 | 8.25ml |
-| RNA wash 1 | reservoir 2, channels 1-2 | 11ml |
-| RNA wash 2 | reservoir 2, channels 3-4 | 8.25ml |
-| RNA wash 3 | reservoir 2, channels 5-6 | 11ml |
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/979d28/reagents.png)
 
 ---
 

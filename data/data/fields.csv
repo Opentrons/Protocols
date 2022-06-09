@@ -226,7 +226,7 @@ debug_mode,1
 deep_name,1
 deep_plate,2
 deepwell_plate_type,1
-deepwell_type,10
+deepwell_type,11
 default_disposal_vol,4
 default_transfer_vol,9
 delay,4
@@ -344,7 +344,7 @@ elution_scan,2
 elution_slot_scan,2
 elution_transfer_vol,2
 elution_type,1
-elution_vol,28
+elution_vol,29
 em,1
 empty_vial_well,3
 end_col,1
@@ -564,15 +564,15 @@ lysis,1
 lysis_vol,1
 m10_mount,2
 m1k,1
-m20_mount,60
-m300_mount,66
+m20_mount,61
+m300_mount,68
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
 mag_bead_mix_resuspend_vol,1
 mag_engage_height,3
 mag_engage_time,2
-mag_gen,11
+mag_gen,12
 mag_height,13
 mag_height_1,1
 mag_mod,2
@@ -725,12 +725,12 @@ num_reps,1
 num_row,1
 num_rows_a,1
 num_rows_b,1
-num_samp,47
+num_samp,49
 num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,110
+num_samples,111
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -836,7 +836,7 @@ p5_mix_vol,1
 p_csv,1
 pan_dil,1
 park,2
-park_tips,25
+park_tips,26
 patient_sample_count,1
 patient_sample_vol,1
 pbs_dispense_rate,1
@@ -882,6 +882,7 @@ plate3_samples,1
 plate4_samples,1
 plate_1_cols,6
 plate_2_cols,4
+plate_384,1
 plate_a_start_col,1
 plate_b_start_col,1
 plate_c_start_col,1
@@ -956,7 +957,7 @@ res,2
 res12_type,1
 res1_type,1
 res_dead_vol,1
-res_type,15
+res_type,16
 reservoir12_lname,1
 reservoir_fill_volume,1
 reservoir_height,3
@@ -1109,7 +1110,7 @@ starting_conc,2
 starting_position,1
 starting_tip_col,1
 starting_tip_position,1
-starting_vol,22
+starting_vol,23
 starting_volume,1
 starting_well,1
 starttip,1
@@ -1282,6 +1283,7 @@ use_csv,1
 use_filter_tips_left,2
 use_filter_tips_right,2
 use_nacl,1
+use_temp,1
 use_tuberack_a,1
 use_tuberack_b,1
 user_enzyme_volume,1

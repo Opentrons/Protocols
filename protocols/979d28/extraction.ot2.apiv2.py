@@ -5,7 +5,7 @@ from opentrons.types import Point
 import math
 
 metadata = {
-    'protocolName': 'Omega Mag-Bind® Total RNA 96 Kit',
+    'protocolName': 'Omega Mag-Bind® Total RNA Isolation',
     'author': 'Opentrons <protocols@opentrons.com>',
     'apiLevel': '2.12'
 }
