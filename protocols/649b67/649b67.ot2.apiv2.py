@@ -151,22 +151,6 @@ def read_var(input: str, var_type: str) -> Union[str, int, float]:
     raise Exception(err_msg)
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{
-                                  "transfer_csv":" step_id,instruction,instruction_parameters,source_labware,source_magnetic_module,source_temperature_module,source_slot,source_well,Source_well_starting_volume,transfer_volume,air_gap_volume,dest_labware,dest_magnetic_module,dest_temperature_module,dest_slot,dest_well,dest_well_starting_volume,touch_tip,blow_out\\n1,transfer,,nest_96_wellplate_2ml_deep,yes,no,1,A1,2000,1000,50,corning_6_wellplate_16.8ml_flat,no,no,3,A1,0,no,no\\n2,transfer,,corning_384_wellplate_112ul_flat,no,no,2,B1,100,90,10,nest_12_reservoir_15ml,no,no,4,A2,10,yes,yes\\n3,aspirate_and_park_tip,,corning_384_wellplate_112ul_flat,no,no,2,C1,100,50,10,,,,,,,,\\n4,pause,time=5m30s,,,,,,,,,,,,,,,,\\n5,transfer,,corning_384_wellplate_112ul_flat,no,no,2,D1,100,60,0,corning_6_wellplate_16.8ml_flat,no,no,3,B2,10,yes,yes\\n6,dispense_parked_tip,step_id=3,,,,,,,60,,corning_6_wellplate_16.8ml_flat,,,3,A2,,yes,yes\\n7,transfer,,opentrons_24_aluminumblock_nest_2ml_screwcap,no,yes,6,A1,100,400,0,corning_6_wellplate_16.8ml_flat,no,no,3,B3,0,yes,Yes\\n8,transfer,,opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical,no,no,7,A1,10000,500,0,opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical,no,no,7,A3,20000,Yes,yes\\n9,transfer,,opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical,no,no,7,A4,20000,500,,opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical,no,no,7,A3,,,",
-                                  "left_mount_pipette_type":"p300_single_gen2",
-                                  "right_mount_pipette_type":"p1000_single_gen2",
-                                  "left_tip_type":"standard",
-                                  "right_tip_type":"standard",
-                                  "left_pip_tiprack_slots":"10,11",
-                                  "right_pip_tiprack_slots":"5,8",
-                                  "tip_reusage_strategy":false
-                                  }
-                                  """)  # noqa: E501 Do not report 'line too long' warnings
-    return [_all_values[n] for n in names]
-
-
 def run(ctx: protocol_api.ProtocolContext):
 
     [transfer_csv,
@@ -753,6 +737,7 @@ def run(ctx: protocol_api.ProtocolContext):
     well_dict = {}
     overflow_list = []
     for instruction in instruction_rows:
+        step_id = instruction[0]
         instr = instruction[1]
         if instr == "transfer" or instruction == "dispense_parked_tip":
             step_id = instruction[0]
@@ -791,17 +776,19 @@ def run(ctx: protocol_api.ProtocolContext):
                     dest_well,  # 1
                     dest_slot,  # 2
                     entry.current_vol,  # 3
-                    entry.well_max_volume))  # 4
+                    entry.well_max_vol))  # 4
 
     # Loop through the overflow entries and report errors
     if len(overflow_list) > 0:
+        msg = "\n"
         for entry in overflow_list:
-            ctx.comment(
-                f"Step ID {entry[0]}: Overflow in well {entry[1]} on slot "
-                f"{entry[2]}, executing this step would cause the total "
-                f"volume to be {entry[3]} uL, while the well's 80 % of max "
-                f"volume is {0.8*entry[4]} uL")
-        raise Exception("Overflowing wells detected, inspect your CSV file.")
+            msg = (msg +
+                   f"Step ID {entry[0]}: Overflow in well {entry[1]} on slot "
+                   f"{entry[2]}, executing this step would cause the total "
+                   f"volume to be {entry[3]} uL, while the well's 80 % of max "
+                   f"volume is {0.8*entry[4]} uL\n")
+        raise Exception(
+            "Overflowing wells detected, inspect your CSV file.\n" + msg)
 
     # load pipette(s)
     left_tipracks_dict_vals = labware_dict["left_mount"].values()
