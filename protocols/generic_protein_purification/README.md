@@ -1,11 +1,11 @@
-# Generic protein purification protocol
+# Generic Protein Purification Protocol
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Protein purification
-    * Generic
+* Protein Purification
+    * Generic Protein Purification
 
 ## Description
 
