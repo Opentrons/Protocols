@@ -6,7 +6,7 @@
 
 ## Categories
 * NGS Library Prep
-	* Subcategory (can be the name of a kit when applicable)
+	* Illumina Nextera Flex
 
 ## Description
 This protocol is a semi-automated workflow which performs 8.1-8.4.6 of the SARS-CoV-2 Using Illumina Nextera Flex & MiSeqNEB kit. For detailed information on protocol steps, please see below. You can find part 1 of the protocol here:

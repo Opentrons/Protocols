@@ -4,8 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* PCR Prep
-	* Syber Green
+* PCR
+	* Syber Green Prep
 
 ## Description
 
