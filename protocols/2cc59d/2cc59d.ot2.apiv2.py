@@ -14,13 +14,16 @@ def run(ctx):
         "num_samp", "p20_mount", "p300_mount")
 
     # load labware
-    res12 = ctx.load_labware('nest_12_reservoir_15ml', 11)
-    res = ctx.load_labware('nest_1_reservoir_195ml', 4)
-    greiner_plate = ctx.load_labware('greiner_96_wellplate_200ul', 5)
+    temp_mod = ctx.load_module('temperature module gen2', 9)
+    temp_plate = temp_mod.load_labware('opentrons_96_aluminumblock_generic_pcr_strip_200ul', "Starting")  # noqa: E501
+    print(temp_plate)
+    res12 = ctx.load_labware('nest_12_reservoir_15ml', 3)
+    res = ctx.load_labware('nest_1_reservoir_195ml', 11)
+    greiner_plate = ctx.load_labware('greiner_96_wellplate_200ul', 2)
     costar_plate = ctx.load_labware('costar_96_wellplate_200ul', 1)
-    tuberacks = [ctx.load_labware('opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', slot) for slot in [3, 6]]  # noqa: E501
+    tuberacks = [ctx.load_labware('opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', slot) for slot in [7, 8]]  # noqa: E501
     tiprack300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
-                  for slot in [7, 8, 9]]
+                  for slot in [4, 5, 6]]
     tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', 10)]
 
     # load pipette
@@ -30,6 +33,7 @@ def run(ctx):
                                tip_racks=tiprack300)
 
     # load reagents
+
     sample_dilution_buff = res12.wells()[0]
     rbd = res12.wells()[1]
     pos_ctrl = tuberacks[0].rows()[0][1]
@@ -125,7 +129,7 @@ def run(ctx):
     ctx.comment('\n\nTRANSFERRING PATIENT SAMPLES\n')
     sample_wells = [well for col in greiner_plate.columns()[2::2] for well in col]  # noqa: E501S
     ctr = 0
-    for dest in sample_wells:
+    for dest in sample_wells[:num_samp+2]:
         if dest == greiner_plate.wells_by_name()['G3'] or dest == greiner_plate.wells_by_name()['H3']:  # noqa: E501S
             continue
         p20.pick_up_tip()
@@ -134,6 +138,7 @@ def run(ctx):
         p20.blow_out()
         p20.drop_tip()
         ctr += 1
+        ctx.comment('\n')
 
     ctx.comment('\n\nTRANSFERRING RBD\n')
     pick_up()
