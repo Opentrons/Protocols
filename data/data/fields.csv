@@ -105,7 +105,7 @@ beads_vol_1,1
 beads_vol_2,1
 big_pip,1
 bindbuf_source_well_indices,1
-binding_buffer_vol,20
+binding_buffer_vol,19
 blank_on,2
 blot_dwell_time,1
 blow_out,1
@@ -225,7 +225,7 @@ debug_mode,1
 deep_name,1
 deep_plate,2
 deepwell_plate_type,1
-deepwell_type,11
+deepwell_type,10
 default_disposal_vol,4
 default_transfer_vol,9
 delay,4
@@ -343,7 +343,7 @@ elution_scan,2
 elution_slot_scan,2
 elution_transfer_vol,2
 elution_type,1
-elution_vol,29
+elution_vol,28
 em,1
 empty_vial_well,3
 end_col,1
@@ -386,7 +386,7 @@ final_temp,3
 final_tubes,1
 final_vol,3
 first_media_x,1
-flash,16
+flash,15
 flow_rate_asp,1
 flow_rate_beads,6
 flow_rate_disp,1
@@ -480,6 +480,7 @@ is_stop_after_1st_incbn,1
 is_use_custom_block,1
 is_verbose,1
 ki_dil,1
+king_height,1
 label,1
 labware1,1
 labware2,1
@@ -569,7 +570,7 @@ mag_bead_mix_resuspend_vol,1
 mag_engage_height,3
 mag_engage_time,2
 mag_gen,11
-mag_height,14
+mag_height,13
 mag_height_1,1
 mag_mod,2
 mag_mod_lname,1
@@ -609,7 +610,7 @@ mix_disp_rate,1
 mix_etoh,1
 mix_rate,2
 mix_repetitions,2
-mix_reps,26
+mix_reps,25
 mix_reps1,1
 mix_reps2,1
 mix_reps_elution1,1
@@ -621,6 +622,7 @@ mix_vol,5
 mix_volume,1
 mixln,1
 mixp300,1
+mixreps,1
 mixreps_dilution,1
 mm,3
 mm1_col,1
@@ -725,7 +727,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,104
+num_samples,109
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -831,7 +833,7 @@ p5_mix_vol,1
 p_csv,1
 pan_dil,1
 park,2
-park_tips,26
+park_tips,25
 patient_sample_count,1
 patient_sample_vol,1
 pbs_dispense_rate,1
@@ -931,7 +933,7 @@ quad3_exclude_cols,1
 quad4_exclude_cols,1
 quench_volume,1
 rack_count,1
-radial_offset,10
+radial_offset,9
 raise_mix_dispense,1
 reaction_plate,3
 reag1_vol,1
@@ -951,7 +953,7 @@ res,2
 res12_type,1
 res1_type,1
 res_dead_vol,1
-res_type,16
+res_type,15
 reservoir12_lname,1
 reservoir_fill_volume,1
 reservoir_height,3
@@ -1049,7 +1051,7 @@ settling_3,1
 settling_drying,1
 settling_elution1,1
 settling_elution2,1
-settling_time,23
+settling_time,22
 settling_wash,1
 shake_well,1
 side_x_radius,1
@@ -1104,7 +1106,7 @@ starting_conc,2
 starting_position,1
 starting_tip_col,1
 starting_tip_position,1
-starting_vol,23
+starting_vol,22
 starting_volume,1
 starting_well,1
 starttip,1
@@ -1186,7 +1188,7 @@ tip_start_column,4
 tip_strategy,3
 tip_threshold,1
 tip_touch,1
-tip_track,38
+tip_track,37
 tip_type,24
 tip_use_strategy,2
 tip_withdrawal_speed,1
@@ -1304,6 +1306,7 @@ vol_dispense,1
 vol_dispensed,1
 vol_dna_buff,1
 vol_elution_buffer,1
+vol_elution_final,1
 vol_etoh,1
 vol_h2o,2
 vol_ic,1
@@ -1335,9 +1338,9 @@ volume_of_beads_in_ul,2
 volume_to_cherrypick_in_ul,1
 volume_transfers,1
 volumes_csv,5
-wash1_vol,22
-wash2_vol,21
-wash3_vol,11
+wash1_vol,21
+wash2_vol,20
+wash3_vol,10
 wash_buf_vol,1
 wash_scheme,1
 waste,2
@@ -1358,4 +1361,4 @@ x_offset,1
 x_offset_bead_pellet,6
 x_offset_elution,1
 y_offset,1
-z_offset,9
+z_offset,8
