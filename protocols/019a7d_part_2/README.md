@@ -4,7 +4,8 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Nucleic Acid Purification
+* Nucleic Acid Extraction & Purifications
+    * Gibson Prep
 
 ## Description
 This is part 2 of a 2 part protocol for prepping then loading nucleic acid onto agar plates. It requires both a multichannel and single channel 20ul pipette.
