@@ -13,8 +13,8 @@ dilution_total_volume = 50.0
 
 def run(ctx):
 
-    num_samples, vol_mm, vol_dna, lw_384 = get_values(  # noqa: F821
-        'num_samples', 'vol_mm', 'vol_dna', 'lw_384')
+    num_samples, vol_mm, vol_dna, = get_values(  # noqa: F821
+        'num_samples', 'vol_mm', 'vol_dna')
 
     source_plate = ctx.load_labware('vwr_96_aluminumblock_200ul', '11',
                                     'source cDNA plate')
@@ -25,7 +25,8 @@ def run(ctx):
               for slot in ['7']]
     tips200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
                for slot in ['10']]
-    plate384 = ctx.load_labware(lw_384, '5', '384-wellplate')
+    plate384 = ctx.load_labware('axygen_384_wellplate_50ul', '5',
+                                '384-wellplate')
 
     water = res.wells()[0]
     mm = res.wells()[1]
