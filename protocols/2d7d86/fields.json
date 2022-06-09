@@ -6,6 +6,12 @@
     "default": 14
   },
   {
+    "type": "int",
+    "label": "Tip pickup starting column (1-12)",
+    "name": "tip_start",
+    "default": 1
+  },
+  {
     "type": "dropDown",
     "label": "P20 Multi-Channel Mount",
     "name": "m20_mount",

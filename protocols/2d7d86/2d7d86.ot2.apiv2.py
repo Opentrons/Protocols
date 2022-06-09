@@ -8,8 +8,8 @@ metadata = {
 
 def run(ctx):
 
-    [num_samp, m20_mount] = get_values(  # noqa: F821
-        "num_samp", "m20_mount")
+    [num_samp, tip_start, m20_mount] = get_values(  # noqa: F821
+        "num_samp", "tip_start", "m20_mount")
 
     if not 1 <= num_samp <= 14:
         raise Exception("Enter a column number between 1-12")
@@ -22,7 +22,7 @@ def run(ctx):
     # load instrument
     m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=[tips])
 
-    tip_count = 0
+    tip_count = int(tip_start) - 1
 
     def pick_up(num_tips):
         num_channels_per_pickup = num_tips
