@@ -1,0 +1,20 @@
+[
+  {
+    "type": "int",
+    "label": "number of samples (1-48)",
+    "name": "num_samples",
+    "default": 48
+  },
+  {
+    "type": "int",
+    "label": "mix repetitions",
+    "name": "mixreps",
+    "default": 30
+  },
+  {
+    "type": "float",
+    "label": "final elution volume (in ul)",
+    "name": "vol_elution_final",
+    "default": 50.0
+  }
+]

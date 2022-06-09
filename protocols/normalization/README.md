@@ -39,7 +39,7 @@ Your file must be saved as a comma separated value (.csv) file type. Your CSV mu
 
 In this example, 40μL will be added to A1, 41μL will be added to well B1, and so on.
 
-If you’d like to follow our template, you can make a copy of [this spreadsheet](https://docs.google.com/spreadsheets/d/1nc67E0BWlqYDlzXLwGrBSsW1ewX0qPxRYelybErs_Fk/edit?usp=sharing), fill out your values, and export as CSV from there.
+If you’d like to follow our template, you can make a copy of [this spreadsheet](https://opentrons-protocol-library-website.s3.amazonaws.com/Technical+Notes/normalization/Opentrons+Normalization+Template.xlsx), fill out your values, and export as CSV from there.
 
 *Note about CSV*: All values corresponding to wells in the CSV must have a value (zero (0) is a valid value and nothing will be transferred to the corresponding well(s)). Additionally, the CSV can be formatted in "portrait" orientation. In portrait orientation, the bottom left corner is treated as A1 and the top right corner would correspond to the furthest well from A1 (H12 in a 96-well plate).
 
