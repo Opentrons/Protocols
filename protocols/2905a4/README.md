@@ -6,8 +6,8 @@
 
 ## Categories
 
-- Nucleic Acid Extraction & Purification
-  - RNA Purification
+* Nucleic Acid Extraction & Purification
+  * RNA Purification
 
 ## Description
 

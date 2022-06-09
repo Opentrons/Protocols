@@ -6,8 +6,8 @@
 
 ## Categories
 
-- Sample Prep
-  - Staining
+* Sample Prep
+  * Staining
 
 ## Description
 
