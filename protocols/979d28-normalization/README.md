@@ -40,13 +40,7 @@ This protocol performs a custom sample normalization and mastermix addition. You
 
 ### Reagent Setup
 
-All volumes for 48-sample throughput
-
-| reagent | location |
-| :----: | :----: |
-| source RNA samples | plate on temperature module on slot 9 |
-| water | reservoir on slot 2, channel 1 |
-| mastermix | tuberack on slot 5, tube A1 |
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/979d28-normalization/reagents.png)
 
 ---
 

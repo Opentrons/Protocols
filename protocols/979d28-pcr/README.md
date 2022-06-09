@@ -39,13 +39,7 @@ This protocol performs a custom cDNA dilution and 384-well PCR prep in triplicat
 
 ### Reagent Setup
 
-All volumes for 48-sample throughput
-
-| reagent | location |
-| :----: | :----: |
-| source cDNA samples | plate on slot 11 |
-| water | reservoir on slot 2, channel 1 |
-| mastermix | reservoir on slot 2, channel 2 |
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/979d28-pcr/Screen+Shot+2022-06-08+at+11.33.22+PM.png)
 
 ---
 

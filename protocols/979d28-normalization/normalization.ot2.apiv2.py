@@ -69,7 +69,7 @@ def run(ctx):
             p20.dispense(vol_water, dest.bottom(1))
             p20.move_to(dest.bottom().move(Point(x=-1.5, z=5)))
 
-    # transfer sample to normalize
+    # transfer RNA sample to normalize
     for i, vol in enumerate(transfer_vols):
         if vol:
             if not p20.has_tip:
