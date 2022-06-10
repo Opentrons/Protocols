@@ -16,14 +16,5 @@
     "label": "volume of diluted cDNA (in ul)",
     "name": "vol_dna",
     "default": 2.0
-  },
-  {
-    "type": "dropDown",
-    "label": "384-wellplate type",
-    "name": "lw_384",
-    "options": [
-      {"label": "Applied Biosystems MicroAmp 384 Well Plate 40 µL", "value": "corning_384_wellplate_112ul_flat"},
-      {"label": "Axygen 384 Well Plate", "value": "axygen_384_wellplate_50ul"}
-    ]
   }
 ]

@@ -1,7 +1,9 @@
 {
     "author": "Opentrons",
     "categories": {
-        "Nucleic Acid Purification": []
+        "Nucleic Acid Extraction & Purification": [
+            "Gibson Prep"
+        ]
     },
     "deck-setup": "\nDeck Layout, temp modules should initially be set to 4 C in both slot 1 and 4\n\n\n",
     "description": "This is part 1 of a 2 part protocol for prepping then loading nucleic acid onto agar plates. It requires both a multichannel and single channel 20ul pipette.\nPart two can be found here\nExplanation of complex parameters below:\n* Number of Samples: Specify a number of samples. Can be any number from 1 to 96\n",
@@ -9,7 +11,7 @@
     "labware": "\n1x Azenta Life Sciences 12 Well Reservoir, 21 ml\n2x Azenta Life Sciences 96 Well Plate, 200 ul\nAluminum Block for Generic Screw Cap Tubes, 1.5 ml\n2x Opentrons 20ul Filter Tip Racks\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
-        "categories": "* Nucleic Acid Purification\n\n",
+        "categories": "* Nucleic Acid Extraction & Purification\n    * Gibson Prep\n\n",
         "deck-setup": "* Deck Layout, temp modules should initially be set to 4 C in both slot 1 and 4\n![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/019a7d/Screen+Shot+2022-04-05+at+4.25.21+PM.png)\n\n---\n\n",
         "description": "This is part 1 of a 2 part protocol for prepping then loading nucleic acid onto agar plates. It requires both a multichannel and single channel 20ul pipette.\nPart two can be found [here](https://protocols.opentrons.com/protocol/019a7d_part_2)\n\n\nExplanation of complex parameters below:\n* `Number of Samples`: Specify a number of samples. Can be any number from 1 to 96\n\n---\n\n",
         "internal": "019a7d\n",

@@ -79,8 +79,8 @@ def run(ctx):
     dnase = res1.wells()[6:7]
     phm = res1.wells()[8:9]
 
-    mag_samples_m = magplate.rows()[0][3:num_cols]
-    shake_samples_m = bioshake_plate.rows()[0][3:num_cols]
+    mag_samples_m = magplate.rows()[0][3:3+num_cols]
+    shake_samples_m = bioshake_plate.rows()[0][3:3+num_cols]
     elution_samples_m = elutionplate.rows()[0][:num_cols]
     all_tips = [well for rack in tips300 for well in rack.rows()[0]]
     parking_sets = [all_tips[i*num_cols:(i+1)*num_cols] for i in range(8)]
@@ -233,11 +233,12 @@ shaking is complete.')
         for i, (well, spot) in enumerate(zip(samples, parking_spots)):
             m300.pick_up_tip(spot)
             src = source[i//cols_per_source_chan]
-            for _ in range(num_trans):
+            for n in range(num_trans):
+                m300.dispense(m300.current_volume, src.top())
                 m300.aspirate(vol_per_trans, src)
                 if source == vhb:
-                    ctx.max_speeds['Z'] = 40
-                    ctx.max_speeds['A'] = 40
+                    ctx.max_speeds['Z'] = 20
+                    ctx.max_speeds['A'] = 20
                 m300.move_to(src.top())
                 if source == vhb:
                     ctx.delay(seconds=2)
@@ -246,6 +247,8 @@ shaking is complete.')
                 if air_gap_vol:
                     m300.aspirate(air_gap_vol, src.top())
                 m300.dispense(m300.current_volume, well.top())
+                if n < num_trans - 1:
+                    m300.aspirate(10, well.top())
             resus_vol = resuspend_vol if resuspend_vol else vol_mix
             resuspend(well, mixreps, resus_vol, method=resuspend_method, samples=samples)
             m300.blow_out(well.top())

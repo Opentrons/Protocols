@@ -1,11 +1,11 @@
-# 357404: Slide sample antibody staining
+# Slide Sample Antibody Staining
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Sample prep
-	* Microscopy slide antibody staining
+* Sample Prep
+	* Microscopy Slide Antibody Staining
 
 ## Description
 This protocol performs immunostaining of slides in a custom 3D printed slide block with Shandon coverplates.
