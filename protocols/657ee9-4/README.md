@@ -12,6 +12,8 @@ This is the fourth (and last) part in a multi-part protocol designed to automate
 
 In this protocol, the OT-2 automates the 'Purify The Library' and the 'Elute The Library' portions of the protocol. Using the complex parameters described below, the user can specify which, if any, modules they are using and select from different options pertaining to RNA/cDNA and DNA (**Columns with Samples**).
 
+**Update**: Protocol was updated to accommodate single column input.
+
 Explanation of complex parameters below:
 * **Columns with Samples**: Specify which columns should we receive the FuPa reagent. Column numbers should be separated by a comma (,).
 * **P300-Multi Mount**: Select which mount the [P300 Multi-Channel Pipette](https://shop.opentrons.com/8-channel-electronic-pipette/) is attached to.  
