@@ -57,7 +57,7 @@ def run(ctx):
                 'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '3')
     cDNA = ctx.load_labware(
                 'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '2')
-    tiprack = ctx.load_labware('thermofisherart_96_tiprack_10ul', '4')
+    tiprack = ctx.load_labware('opentrons_96_tiprack_20ul', '4')
 
     # load instrument
     p20 = ctx.load_instrument('p20_single_gen2',
@@ -138,15 +138,9 @@ def run(ctx):
             pick_up()
             for small_chunk in chunk:
                 for well in small_chunk:
-                    p20.aspirate(10, tube, rate=0.5)
+                    p20.aspirate(16, tube, rate=0.5)
                     ctx.delay(seconds=1)
-                    p20.dispense(10, well.top(), rate=dispense_rate)
-                    ctx.delay(seconds=3)
-                    p20.blow_out()
-                    p20.touch_tip(radius=0.33)
-                    p20.aspirate(6, tube, rate=0.5)
-                    ctx.delay(seconds=1)
-                    p20.dispense(6, well.top(), rate=dispense_rate)
+                    p20.dispense(16, well.top(), rate=dispense_rate)
                     ctx.delay(seconds=3)
                     p20.blow_out()
                     p20.touch_tip(radius=0.33)
@@ -187,18 +181,10 @@ def run(ctx):
                                                     num_rows_in_each_column[
                                                         j::num_mastermix])):
                 for well in column[:num_rows]:
-                    p20.aspirate(10, tube, rate=0.5)
+                    p20.aspirate(16, tube, rate=0.5)
                     ctx.delay(seconds=4)
                     p20.touch_tip(radius=0.7)
-                    p20.dispense(10, well.top(), rate=dispense_rate)
-                    ctx.delay(seconds=1)
-                    p20.blow_out()
-                    p20.touch_tip(radius=0.7)
-
-                    p20.aspirate(6, tube, rate=0.5)
-                    ctx.delay(seconds=4)
-                    p20.touch_tip(radius=0.7)
-                    p20.dispense(6, well.top(), rate=dispense_rate)
+                    p20.dispense(16, well.top(), rate=dispense_rate)
                     ctx.delay(seconds=1)
                     p20.blow_out()
                     p20.touch_tip(radius=0.7)
