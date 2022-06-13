@@ -18,7 +18,10 @@ def run(ctx: protocol_api.ProtocolContext):
         '_m300_mount')
 
     # custom variables
-    samp_cols = _samp_cols.split(",")
+    if type(_samp_cols) is int:
+        samp_cols = [_samp_cols]
+    else:
+        samp_cols = _samp_cols.split(",")
     m300_mount = _m300_mount
 
     # load modules
@@ -68,7 +71,7 @@ def run(ctx: protocol_api.ProtocolContext):
         m300.flow_rate.aspirate = 15
         for col in samp_cols:
             m300.pick_up_tip()
-            m300.aspirate(vol, mag_plate['A'+col.strip()])
+            m300.aspirate(vol, mag_plate['A'+str(col).strip()])
             m300.dispense(vol, waste)
             m300.drop_tip()
         m300.flow_rate.aspirate = 94
@@ -92,8 +95,8 @@ def run(ctx: protocol_api.ProtocolContext):
         bead_ht = liq_height(beads) - 2 if liq_height(beads) - 2 > 1 else 1
         m300.mix(3, 40, beads.bottom(bead_ht))
         m300.aspirate(45, beads.bottom(bead_ht))
-        m300.dispense(45, mag_plate['A'+col.strip()])
-        m300.mix(5, 60, mag_plate['A'+col.strip()])
+        m300.dispense(45, mag_plate['A'+str(col).strip()])
+        m300.mix(5, 60, mag_plate['A'+str(col).strip()])
         ctx.delay(seconds=1)
         m300.drop_tip()
 
@@ -114,8 +117,8 @@ def run(ctx: protocol_api.ProtocolContext):
             etoh.liq_vol -= 150
             et_ht = liq_height(etoh) - 2 if liq_height(etoh) - 2 > 1 else 1
             m300.aspirate(150, etoh.bottom(et_ht))
-            m300.dispense(150, mag_plate['A'+col.strip()])
-            m300.mix(5, 100, mag_plate['A'+col.strip()])
+            m300.dispense(150, mag_plate['A'+str(col).strip()])
+            m300.mix(5, 100, mag_plate['A'+str(col).strip()])
             ctx.delay(seconds=1)
             m300.blow_out()
             m300.drop_tip()
@@ -136,8 +139,8 @@ def run(ctx: protocol_api.ProtocolContext):
         te.liq_vol -= 50
         te_ht = liq_height(te) - 2 if liq_height(te) - 2 > 1 else 1
         m300.aspirate(50, te.bottom(te_ht))
-        m300.dispense(50, mag_plate['A'+col.strip()])
-        m300.mix(5, 25, mag_plate['A'+col.strip()])
+        m300.dispense(50, mag_plate['A'+str(col).strip()])
+        m300.mix(5, 25, mag_plate['A'+str(col).strip()])
         ctx.delay(seconds=1)
         m300.drop_tip()
 
@@ -149,7 +152,7 @@ def run(ctx: protocol_api.ProtocolContext):
     m300.flow_rate.aspirate = 30
     for col, dest in zip(samp_cols, elution_plate.rows()[0]):
         m300.pick_up_tip()
-        m300.aspirate(50, mag_plate['A'+col.strip()])
+        m300.aspirate(50, mag_plate['A'+str(col).strip()])
         m300.dispense(50, dest)
         m300.drop_tip()
 
