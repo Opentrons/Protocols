@@ -432,7 +432,7 @@ resuming.')
     """ All of your protocol steps go here. Be sure to use _pick_up(pip) to keep track of your tips rather than the standard in pip.pick_up_tip() function. """
 
     # track final used tip
-    if tip_track and not ctx.is_simulating():
+    if not ctx.is_simulating():
         if not os.path.isdir(folder_path):
             os.mkdir(folder_path)
         data = {pip.name: tip_log[pip]['count'] for pip in tip_log}
