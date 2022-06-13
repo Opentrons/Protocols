@@ -17,16 +17,10 @@ The protocol is developed to prepare sufficient reagents to process up to 96 sam
 
 Explanation of complex parameters below:
 * `Number of Samples`: Specify number of samples (1-96) for this run.
-* `P300 Multi-Channel Mount`: Specify which mount (left or right) to host the P300 Multi-Channel pipette. 
+* `P300 Multi-Channel Mount`: Specify which mount (left or right) to host the P300 Multi-Channel pipette.
 
 
 ---
-
-### Modules
-* [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
-* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
-* [Thermocycler Module](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module)
-* [HEPA Module](https://shop.opentrons.com/collections/hardware-modules/products/hepa-module)
 
 ### Labware
 * [Thermo Fisher Nunc™ 96-Well Polypropylene Storage Microplates](https://www.thermofisher.com/order/catalog/product/249946?SID=srch-hj-249946)
