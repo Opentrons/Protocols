@@ -40,7 +40,7 @@ def run(ctx):
 
 
     # load labware and pipette
-    phytiprack = ctx.load_labware('opentrons_96_tiprack_300ul', '3', '300ul resin tiprack')
+    phytiprack = ctx.load_labware('phytips_in_opentrons_box_96_300ul', '3', '300ul resin tiprack')
 
     sample_plate = ctx.load_labware('thermoscientific_96_wellplate_v_450', '2', 'samples plate')
     equilibration_plate = ctx.load_labware('thermoscientific_96_wellplate_v_450', '9', 'equilibration plate')
