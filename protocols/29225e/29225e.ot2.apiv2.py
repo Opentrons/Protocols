@@ -1,4 +1,4 @@
-# import from the python types module
+# import from python types module
 from types import MethodType
 # import from opentrons.types
 from opentrons import types
