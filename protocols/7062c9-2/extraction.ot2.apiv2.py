@@ -293,6 +293,9 @@ resuming.')
         ctx.delay(minutes=temp_time, msg=f'Incubating at 85C for {temp_time} \
 minutes')
         # resuspend beads in elution
+        m300.flow_rate.aspirate /= 5
+        m300.flow_rate.dispense /= 5
+        m300.flow_rate.blow_out /= 5
         for i, (m, h, spot) in enumerate(zip(mag_samples_m, heating_samples_m,
                                              parking_spots)):
             if not m300.has_tip:
@@ -339,7 +342,6 @@ minutes')
             loc = m.bottom().move(Point(x=side*radius*radial_offset,
                                         z=z_offset+2))
             m300.move_to(m.center())
-            m300.flow_rate.dispense /= 5
             m300.transfer(0.8*vol, loc, e, air_gap=air_gap_vol,
                           new_tip='never')
             m300.drop_tip()
