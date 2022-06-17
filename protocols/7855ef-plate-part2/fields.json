@@ -22,5 +22,11 @@
        { "label": "No", "value": false },
        { "label": "Yes", "value": true }
      ]
+  },
+  {
+    "type": "float",
+    "label": "Overage Percent",
+    "name": "overage_percent",
+    "default": 15
   }
 ]

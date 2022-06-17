@@ -66,7 +66,7 @@ Slot 4, 5, 6: Custom 96 Well Endura Plate (empty)
 
 Slot 7: MMX Plate with Amplification Mix in Column 1
 
-Slot 9, 10, 11: Opentrons 20ul Tip Rack
+Slot 8, 9, 10, 11: Opentrons 20ul Tip Rack
 
 
 
