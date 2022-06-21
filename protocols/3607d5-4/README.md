@@ -10,16 +10,19 @@
 ## Description
 
 Links:  
-* [PCR2 Setup](./3607d5)
-<br />
-<br />
 * [SPRI 1 & 2](./3607d5-2)
+<br />
+<br />
+* [PCR2 Setup](./3607d5)
 <br />
 <br />
 * [SPRI 3](./3607d5-3)
 <br />
 <br />
 * [Normalization and Pooling](./3607d5-4)
+<br />
+<br />
+* [Rerack](./3607d5-5)
 
 
 This is a custom normalization pooling protocol from up to 12 sources to a pooling tube. The input .csv for RSB volume specification should be specified as follows:

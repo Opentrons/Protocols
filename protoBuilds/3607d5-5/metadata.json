@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "extraction2.ot2.apiv2.py"
+            "rerack.ot2.apiv2.py"
         ],
         "description": [
             "README.md"
@@ -14,7 +14,7 @@
         "hide-from-search": true,
         "skip-tests": false
     },
-    "path": "protocols/3607d5-3",
-    "slug": "3607d5-3",
+    "path": "protocols/3607d5-5",
+    "slug": "3607d5-5",
     "status": "ok"
 }

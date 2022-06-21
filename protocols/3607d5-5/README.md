@@ -1,11 +1,11 @@
-# PCR2 Setup
+# Rerack
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* PCR
-	* PCR Prep
+* Sample Prep
+	* Normalization
 
 ## Description
 
@@ -24,26 +24,16 @@ Links:
 <br />
 * [Rerack](./3607d5-5)
 
-In this protocol, indexes are transferred to their corresponding wells in a PCR plate containing samples. Then, PCR2 buffer is added to each sample and mixed using fresh tips for each transfer.
+
+This protocol performs a tip reracking consolidation from 4x 200ul filter tipracks with **only rows A and B occupied** to one of the racks. A P300 multi-channel pipette is used with offset tip pickups to perform the consolidation.
 
 ---
 
 ### Labware
-* Abgene Midi 96 Well Plate 800 µL
-* Amplifyt 96 Well Plate 200 µL
-* [Opentrons 20µl and 300µl Tipracks](https://shop.opentrons.com/collections/opentrons-tips)
+* [Opentrons 200ul Filtertipracks](https://shop.opentrons.com/collections/opentrons-tips)
 
 ### Pipettes
-* [P20 Multi GEN2 Pipette](https://opentrons.com/pipettes/)
 * [P300 Multi GEN2 Pipette](https://opentrons.com/pipettes/)
-
----
-
-### Deck Setup
-* green: PCR2 buffer  
-* blue: samples  
-* pink: UDI
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/3607d5/deck1.png)
 
 ---
 
