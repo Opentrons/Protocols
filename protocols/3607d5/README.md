@@ -10,10 +10,10 @@
 ## Description
 
 Links:  
-* [PCR2 Setup](./3607d5)
-<br />
-<br />
 * [SPRI 1 & 2](./3607d5-2)
+<br />
+<br />
+* [PCR2 Setup](./3607d5)
 <br />
 <br />
 * [SPRI 3](./3607d5-3)
