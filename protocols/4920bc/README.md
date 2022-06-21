@@ -38,10 +38,10 @@ For sample traceability and consistency, samples are mapped directly from the ma
 ---
 
 ### Deck Setup
-![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/4920bc/deck.png)
+![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/4920bc/deck2.png)
 
 ### Reagent Setup
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/4920bc/reagents.png)
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/4920bc/reagents2.png)
 
 ---
 
