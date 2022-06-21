@@ -20,6 +20,9 @@ Links:
 <br />
 <br />
 * [Normalization and Pooling](./3607d5-4)
+<br />
+<br />
+* [Rerack](./3607d5-5)
 
 In this protocol, indexes are transferred to their corresponding wells in a PCR plate containing samples. Then, PCR2 buffer is added to each sample and mixed using fresh tips for each transfer.
 

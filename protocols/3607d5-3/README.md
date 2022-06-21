@@ -20,6 +20,9 @@ Links:
 <br />
 <br />
 * [Normalization and Pooling](./3607d5-4)
+<br />
+<br />
+* [Rerack](./3607d5-5)
 
 The protocol is broken down into 4 main parts:
 * binding buffer addition to samples
