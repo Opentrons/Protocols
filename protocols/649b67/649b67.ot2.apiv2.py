@@ -574,7 +574,9 @@ def run(ctx: protocol_api.ProtocolContext):
     # For point 1: Count the occurences of each step_id, make sure there
     # are only singular references so no double dispenses are tried.
     step_id_occurences = Counter(dispense_parked_tip_step_id_list)
-    if max(step_id_occurences.values()) > 1:
+    # Check the length of the list first, there might not be any entries
+    if len(dispense_parked_tip_step_id_list) > 0 \
+            and max(step_id_occurences.values()) > 1:
         err_msg = ("There are multiples references to the same step_id for "
                    "dispensing a parked tip. Can't dispense an already "
                    "dispensed tip. Please inspect your input CSV file.")
@@ -662,7 +664,7 @@ def run(ctx: protocol_api.ProtocolContext):
                      "source well"]):
                 if val == '':
                     err_msg = ("The {} value is blank for the "
-                               "aspirate_and_park_tip instruction "
+                               "transfer instruction "
                                "with step_id {}.")
                     err_msg = err_msg.format(designation, asp_step_id)
                     raise Exception(err_msg)
