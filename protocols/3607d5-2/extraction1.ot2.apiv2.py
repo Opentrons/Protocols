@@ -70,10 +70,10 @@ def run(ctx):
     """
     Here is where you can define the locations of your reagents.
     """
-    binding_buffer = res1.wells()[:1]
-    wash1 = res1.wells()[5:6]
+    binding_buffer = res1.rows()[0][:1]
+    wash1 = res1.rows()[0][5:6]
     wash2 = wash1
-    elution_solution = res1.wells()[-1]
+    elution_solution = res1.rows()[0][-1]
 
     starting_samples = pcr_plate.rows()[0][:num_cols]
     mag_samples_m = magplate.rows()[0][:num_cols]
@@ -183,7 +183,7 @@ resuming.')
             #     air_gap_vol = pip.max_volume - vol
             pip.transfer(vol, loc, waste, new_tip='never',
                          air_gap=(air_gap_vol))
-            pip.blow_out(waste)
+            # pip.blow_out(waste)
             _drop(pip)
 
     def bind(vol, park=True):

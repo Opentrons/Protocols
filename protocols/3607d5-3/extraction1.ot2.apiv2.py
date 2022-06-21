@@ -78,10 +78,10 @@ def run(ctx):
     """
     Here is where you can define the locations of your reagents.
     """
-    binding_buffer = res1.wells()[:1]
-    wash1 = res1.wells()[1:4]
-    wash2 = res1.wells()[4:7]
-    elution_solution = res1.wells()[-1]
+    binding_buffer = res1.rows()[0][:1]
+    wash1 = res1.rows()[0][1:4]
+    wash2 = res1.rows()[0][4:7]
+    elution_solution = res1.rows()[0][-1]
 
     starting_samples = pcr_plate.rows()[0][:num_cols]
     mag_samples_m = magplate.rows()[0][:num_cols]
@@ -191,7 +191,7 @@ resuming.')
             #     air_gap_vol = pip.max_volume - vol
             pip.transfer(vol, loc, waste, new_tip='never',
                          air_gap=(air_gap_vol))
-            pip.blow_out(waste)
+            # pip.blow_out(waste)
             _drop(pip)
 
     def bind(vol, park=True):
@@ -215,7 +215,8 @@ resuming.')
         for i, (well, spot) in enumerate(zip(mag_samples_m, parking_spots)):
             num_trans = math.ceil(vol/200)
             vol_per_trans = vol/num_trans
-            asp_per_chan = (0.95*res1.wells()[0].max_volume)//(vol_per_trans*8)
+            asp_per_chan = (
+                0.95*res1.rows()[0][0].max_volume)//(vol_per_trans*8)
             for t in range(num_trans):
                 chan_ind = int((i*num_trans + t)//asp_per_chan)
                 source = binding_buffer[chan_ind]
