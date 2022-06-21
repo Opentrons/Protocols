@@ -15,12 +15,13 @@ metadata = {
 def run(ctx):
     """Protocol."""
     [cDNA_down_column, num_gene, num_mastermix, dispense_rate, blowout_rate,
+        cdna_vol, mmx_vol,
         reset_tipracks, p20_mount] = get_values(  # noqa: F821
         "cDNA_down_column", "num_gene", "num_mastermix", "dispense_rate",
-        "blowout_rate", "reset_tipracks", "p20_mount")
+        "blowout_rate", "cdna_vol",
+            "mmx_vol", "reset_tipracks", "p20_mount")
 
     if cDNA_down_column:
-
         if not 1 <= num_mastermix <= 5:
             raise Exception("Enter a number of mastermixes between 1-5")
         if not 1 <= num_gene <= 24:
@@ -124,9 +125,9 @@ def run(ctx):
         for tube, chunk in zip(cDNA_tubes, cDNA_chunks):
             pick_up()
             for well in chunk:
-                p20.aspirate(4, tube)
+                p20.aspirate(cdna_vol, tube)
                 p20.air_gap(airgap)
-                p20.dispense(4+airgap, well)
+                p20.dispense(cdna_vol+airgap, well)
                 p20.blow_out()
             p20.drop_tip()
             ctx.comment('\n')
@@ -138,9 +139,9 @@ def run(ctx):
             pick_up()
             for small_chunk in chunk:
                 for well in small_chunk:
-                    p20.aspirate(16, tube, rate=0.5)
+                    p20.aspirate(mmx_vol, tube, rate=0.5)
                     ctx.delay(seconds=1)
-                    p20.dispense(16, well.top(), rate=dispense_rate)
+                    p20.dispense(mmx_vol, well.top(), rate=dispense_rate)
                     ctx.delay(seconds=3)
                     p20.blow_out()
                     p20.touch_tip(radius=0.33)
@@ -152,9 +153,9 @@ def run(ctx):
             pick_up()
             for small_chunk in chunk:
                 for well in small_chunk:
-                    p20.aspirate(4, tube)
+                    p20.aspirate(cdna_vol, tube)
                     p20.air_gap(airgap)
-                    p20.dispense(4+airgap, well)
+                    p20.dispense(cdna_vol+airgap, well)
                     p20.blow_out()
             p20.drop_tip()
             ctx.comment('\n')
@@ -181,10 +182,10 @@ def run(ctx):
                                                     num_rows_in_each_column[
                                                         j::num_mastermix])):
                 for well in column[:num_rows]:
-                    p20.aspirate(16, tube, rate=0.5)
+                    p20.aspirate(mmx_vol, tube, rate=0.5)
                     ctx.delay(seconds=4)
                     p20.touch_tip(radius=0.7)
-                    p20.dispense(16, well.top(), rate=dispense_rate)
+                    p20.dispense(mmx_vol, well.top(), rate=dispense_rate)
                     ctx.delay(seconds=1)
                     p20.blow_out()
                     p20.touch_tip(radius=0.7)
