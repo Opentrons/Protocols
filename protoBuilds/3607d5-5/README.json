@@ -1,28 +1,26 @@
 {
     "author": "Opentrons",
     "categories": {
-        "PCR": [
-            "PCR Prep"
+        "Sample Prep": [
+            "Normalization"
         ]
     },
-    "deck-setup": "\ngreen: PCR2 buffer  \nblue: samples  \npink: UDI\n\n\n",
-    "description": "Links:\n* SPRI 1 & 2\n\n\n* PCR2 Setup\n\n\n* SPRI 3\n\n\n* Normalization and Pooling\n\n\n* Rerack\nIn this protocol, indexes are transferred to their corresponding wells in a PCR plate containing samples. Then, PCR2 buffer is added to each sample and mixed using fresh tips for each transfer.\n",
+    "description": "Links:\n* SPRI 1 & 2\n\n\n* PCR2 Setup\n\n\n* SPRI 3\n\n\n* Normalization and Pooling\n\n\n* Rerack\nThis protocol performs a tip reracking consolidation from 4x 200ul filter tipracks with only rows A and B occupied to one of the racks. A P300 multi-channel pipette is used with offset tip pickups to perform the consolidation.\n",
     "internal": "3607d5",
-    "labware": "\nAbgene Midi 96 Well Plate 800 \u00b5L\nAmplifyt 96 Well Plate 200 \u00b5L\nOpentrons 20\u00b5l and 300\u00b5l Tipracks\n",
+    "labware": "\nOpentrons 200ul Filtertipracks\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
-        "categories": "* PCR\n\t* PCR Prep\n\n",
-        "deck-setup": "* green: PCR2 buffer  \n* blue: samples  \n* pink: UDI\n![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/3607d5/deck1.png)\n\n---\n\n",
-        "description": "\nLinks:  \n* [SPRI 1 & 2](./3607d5-2)\n<br />\n<br />\n* [PCR2 Setup](./3607d5)\n<br />\n<br />\n* [SPRI 3](./3607d5-3)\n<br />\n<br />\n* [Normalization and Pooling](./3607d5-4)\n<br />\n<br />\n* [Rerack](./3607d5-5)\n\nIn this protocol, indexes are transferred to their corresponding wells in a PCR plate containing samples. Then, PCR2 buffer is added to each sample and mixed using fresh tips for each transfer.\n\n---\n\n",
+        "categories": "* Sample Prep\n\t* Normalization\n\n",
+        "description": "\nLinks:  \n* [SPRI 1 & 2](./3607d5-2)\n<br />\n<br />\n* [PCR2 Setup](./3607d5)\n<br />\n<br />\n* [SPRI 3](./3607d5-3)\n<br />\n<br />\n* [Normalization and Pooling](./3607d5-4)\n<br />\n<br />\n* [Rerack](./3607d5-5)\n\n\nThis protocol performs a tip reracking consolidation from 4x 200ul filter tipracks with **only rows A and B occupied** to one of the racks. A P300 multi-channel pipette is used with offset tip pickups to perform the consolidation.\n\n---\n\n",
         "internal": "3607d5\n",
-        "labware": "* Abgene Midi 96 Well Plate 800 \u00b5L\n* Amplifyt 96 Well Plate 200 \u00b5L\n* [Opentrons 20\u00b5l and 300\u00b5l Tipracks](https://shop.opentrons.com/collections/opentrons-tips)\n\n",
+        "labware": "* [Opentrons 200ul Filtertipracks](https://shop.opentrons.com/collections/opentrons-tips)\n\n",
         "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
-        "pipettes": "* [P20 Multi GEN2 Pipette](https://opentrons.com/pipettes/)\n* [P300 Multi GEN2 Pipette](https://opentrons.com/pipettes/)\n\n---\n\n",
+        "pipettes": "* [P300 Multi GEN2 Pipette](https://opentrons.com/pipettes/)\n\n---\n\n",
         "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
-        "title": "PCR2 Setup"
+        "title": "Rerack"
     },
     "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
-    "pipettes": "\nP20 Multi GEN2 Pipette\nP300 Multi GEN2 Pipette\n\n",
+    "pipettes": "\nP300 Multi GEN2 Pipette\n\n",
     "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
-    "title": "PCR2 Setup"
+    "title": "Rerack"
 }
