@@ -8,7 +8,7 @@
 	* Serial Dilution
 
 ## Description
-This protocol performs a compound plating and subsequent serial dilution for up to 36 stock compounds. Each compound's dilution will occupy a column of a 96-well plate, requiring up to 3x 96-well plates for a full 36-compound dilution protocol. Stock compound will be transferred to row A of the dilution plates, and a 6-step dilution will be carried down the plate through rows B-G. Well H of that column will contain pure DMSO. A P300 or P20 pipette is automatically selected for each compound's dilution, depending on the dilution factor, and thus, the transfer volume.
+This protocol performs a compound plating and subsequent serial dilution for up to 36 stock compounds. Each compound's dilution will occupy a column of a 96-well plate, requiring up to 4x 96-well plates for a full 48-compound dilution protocol. Stock compound will be transferred to row A of the dilution plates, and a 6-step dilution will be carried down the plate through rows B-G. Well H of that column will contain pure DMSO. A P300 or P20 pipette is automatically selected for each compound's dilution, depending on the dilution factor, and thus, the transfer volume.
 
 The input file for the workflow should be specified in a format similar to [this template](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/62679a/ex.csv).
 
@@ -17,7 +17,7 @@ The input file for the workflow should be specified in a format similar to [this
 ### Labware
 * [Greiner Bio-One 96-Wellplate V-Bottom 340µL, #651201](https://shop.gbo.com/en/usa/products/bioscience/microplates/96-well-microplates/96-well-polypropylene-microplates/651201.html)
 * [PerkinElmer 96-Well StorPlate, U-Bottom 450µL, #6008190](https://www.perkinelmer.com/product/storplate-96-u-50-6008190)
-* [Beckman Coulter 8-Channel Reservoir 19mL](https://www.beckman.com/supplies/reservoirs#product-table-wrapper)
+* [Beckman Coulter 8-Channel Reservoir 19mL](https://www.beckman.com/supplies/reservoirs#product-table-wrapper) or [NEST 12-Well Reservoirs 15 mL #999-00076](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/)
 * [Opentrons 200µL Filter Tips](https://shop.opentrons.com/opentrons-200ul-filter-tips/)
 * [Opentrons 20µL Filter Tips](https://shop.opentrons.com/opentrons-20ul-filter-tips/)
 
@@ -28,7 +28,7 @@ The input file for the workflow should be specified in a format similar to [this
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/62679a/deck.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/62679a/deck2.png)
 
 ---
 
