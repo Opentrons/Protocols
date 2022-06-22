@@ -8,8 +8,8 @@ metadata = {
 
 def run(ctx):
 
-    file_dilution, mount_p300, mount_p20 = get_values(  # noqa: F821
-     'file_dilution', 'mount_p300', 'mount_p20')
+    file_dilution, lw_dmso, mount_p300, mount_p20 = get_values(  # noqa: F821
+     'file_dilution', 'lw_dmso', 'mount_p300', 'mount_p20')
 
     mix_reps = 5
 
@@ -25,8 +25,7 @@ def run(ctx):
         str(i+1): ctx.load_labware('perkinelmer_96_wellplate_450ul', slot,
                                    f'compound plate {i+1}')
         for i, slot in enumerate(['4', '5', '6', '3'])}
-    dmso = ctx.load_labware('beckman_8_reservoir_19000ul', '10',
-                            'DMSO (column 1)').wells()[0]
+    dmso = ctx.load_labware(lw_dmso, '10', 'DMSO (column 1)').wells()[0]
 
     p300 = ctx.load_instrument('p300_single_gen2', mount_p300,
                                tip_racks=tipracks200)
