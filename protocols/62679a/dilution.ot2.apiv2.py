@@ -24,7 +24,7 @@ def run(ctx):
     compound_dilution_plates = {
         str(i+1): ctx.load_labware('perkinelmer_96_wellplate_450ul', slot,
                                    f'compound plate {i+1}')
-        for i, slot in enumerate(['4', '5', '6'])}
+        for i, slot in enumerate(['4', '5', '6', '3'])}
     dmso = ctx.load_labware('beckman_8_reservoir_19000ul', '10',
                             'DMSO (column 1)').wells()[0]
 
