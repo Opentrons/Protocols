@@ -67,7 +67,7 @@ def run(ctx):
     for s, d in zip(sample_plate.rows()[0][:num_cols],
                     normalization_plate.rows()[0][:num_cols]):
         _pick_up(pip, 'multi')
-        pip.transfer(sample_vol, s, d, new_tip='never')
+        pip.transfer(sample_vol, s, d, mix_after=(5, 10), new_tip='never')
         pip.drop_tip()
 
     # pool

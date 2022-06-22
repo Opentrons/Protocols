@@ -33,6 +33,25 @@
     "default": 1.0
   },
   {
+    "type": "int",
+    "label": "cDNA Volume (ul)",
+    "name": "cdna_vol",
+    "default": 4
+  },
+  {
+    "type": "int",
+    "label": "Mastermix Volume (ul)",
+    "name": "mmx_vol",
+    "default": 16
+  },
+  {
+    "type": "int",
+    "label": "Number of mastermix tubes (1-24)",
+    "name": "num_mastermix",
+    "default": 5
+  },
+
+  {
   "type": "dropDown",
   "label": "Reset Tipracks?",
   "name": "reset_tipracks",

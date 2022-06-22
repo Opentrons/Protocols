@@ -4,14 +4,16 @@ import math
 metadata = {
     'protocolName': 'Omega Mag-Bind® Total RNA 96 Kit',
     'author': 'Opentrons <protocols@opentrons.com>',
-    'apiLevel': '2.12'
+    'apiLevel': '2.11'
 }
+
+TEST_MODE = False
 
 
 # Start protocol
 def run(ctx):
 
-    num_samples = 96
+    num_samples = 64
     mixreps = 20
     vol_mix = 220
     z_offset = 3.0
@@ -26,6 +28,9 @@ def run(ctx):
     phm_vol = 150
     elution2_vol = 70
     settling_time = 3  # minutes
+
+    ctx.max_speeds['X'] = 200
+    ctx.max_speeds['Y'] = 200
 
     magdeck = ctx.load_module('magnetic module gen2', '6')
     magdeck.disengage()
@@ -52,18 +57,18 @@ def run(ctx):
     """
     Here is where you can define the locations of your reagents.
     """
-    binding_buffer = res1.wells()[:3]
+    binding_buffer = res1.wells()[:2]
     elution_solution = res1.wells()[11:]
-    vhb = res1.wells()[3:7]
-    rna_wash = res1.wells()[7:11]
-    dnase = res2.wells()[:1]
-    phm = res2.wells()[1:3]
+    vhb = res1.wells()[3:5]
+    rna_wash = [res2.wells()[s:f] for s, f in [[0, 2], [2, 4], [4, 6]]]
+    dnase = res1.wells()[6:7]
+    phm = res1.wells()[8:9]
 
     num_cols = math.ceil(num_samples/8)
     mag_samples_m = magplate.rows()[0][:num_cols]
     elution_samples_m = elutionplate.rows()[0][:num_cols]
     all_tips = [well for rack in tips300 for well in rack.rows()[0]]
-    parking_sets = [all_tips[i*num_cols:(i+1)*num_cols] for i in range(6)]
+    parking_sets = [all_tips[i*num_cols:(i+1)*num_cols] for i in range(9)]
     radius = mag_samples_m[0].width
 
     magdeck.disengage()  # just in case
@@ -95,25 +100,37 @@ def run(ctx):
                 waste_vol = 0
             waste_vol += vol
 
-        m300.flow_rate.aspirate = 30
+        m300.flow_rate.aspirate /= 5
         for m, spot in zip(mag_samples_m, parking_spots):
             m300.pick_up_tip(spot)
             _waste_track(vol)
-            m300.transfer(vol, m.bottom(z_offset), waste, new_tip='never',
-                          air_gap=20)
-            m300.blow_out(waste)
-            m300.air_gap(20)
+            num_trans = math.ceil(vol/200)
+            vol_per_trans = vol/num_trans
+            for _ in range(num_trans):
+                m300.transfer(vol_per_trans, m.bottom(0.8), waste,
+                              new_tip='never')
+                m300.blow_out(waste)
+            m300.air_gap(5)
             m300.drop_tip(spot)
-        m300.flow_rate.aspirate = 150
+        m300.flow_rate.aspirate *= 5
 
-    def resuspend(location, reps=mixreps, vol=vol_mix):
-        side = 1 if mag_samples_m.index(location) % 2 == 0 else -1
-        bead_loc = location.bottom().move(
-            Point(x=side*radius*radial_offset_fraction, z=z_offset))
-        m300.move_to(location.center())
-        for _ in range(reps):
-            m300.aspirate(vol, location.bottom(0.8))
-            m300.dispense(vol, bead_loc)
+    def resuspend(location, reps=mixreps, vol=vol_mix, method='mix',
+                  samples=mag_samples_m):
+
+        if method == 'shake':
+            pass
+        elif 'mix' in method:
+            m300.flow_rate.aspirate *= 4
+            m300.flow_rate.dispense *= 4
+            side = 1 if samples.index(location) % 2 == 0 else -1
+            bead_loc = location.bottom().move(
+                Point(x=side*radius*radial_offset_fraction, z=z_offset))
+            m300.move_to(location.center())
+            for _ in range(reps):
+                m300.aspirate(vol, bead_loc)
+                m300.dispense(vol, bead_loc)
+            m300.flow_rate.aspirate /= 4
+            m300.flow_rate.dispense /= 4
 
     def bind(vol, parking_spots):
         """
@@ -158,7 +175,9 @@ def run(ctx):
         # remove initial supernatant
         remove_supernatant(vol+starting_vol, parking_spots)
 
-    def wash(vol, source, parking_spots, remove=True):
+    def wash(vol, source, parking_spots, remove=True,
+             resuspend_method='mix', supernatant_volume=None,
+             samples=mag_samples_m, shake_time=5, resuspend_vol=None):
         """
         `wash` will perform bead washing for the extraction protocol.
         :param vol (float): The amount of volume to aspirate from each
@@ -177,23 +196,41 @@ def run(ctx):
         :param resuspend (boolean): Whether to resuspend beads in wash buffer.
         """
 
-        if resuspend and magdeck.status == 'engaged':
+        if magdeck.status == 'engaged':
             magdeck.disengage()
 
-        chan_ind = 0
-        vol_track = 0
-        max_vol_per_chan = 0.95*res1.wells()[0].max_volume
-        for i, (well, spot) in enumerate(zip(mag_samples_m, parking_spots)):
+        cols_per_source_chan = math.ceil(8/len(source))
+        if source == vhb:
+            num_trans = math.ceil(vol/180)
+            air_gap_vol = 20
+        else:
+            num_trans = math.ceil(vol/200)
+            air_gap_vol = None
+        vol_per_trans = vol/num_trans
+        for i, (well, spot) in enumerate(zip(samples, parking_spots)):
             m300.pick_up_tip(spot)
-            if vol_track + 8*vol > max_vol_per_chan:
-                chan_ind += 1
-                vol_track = 0
-            vol_track += 8*vol
-            src = source[chan_ind]
-            m300.transfer(vol, src, well.top(), new_tip='never')
-            resuspend(well, mixreps, vol_mix)
+            src = source[i//cols_per_source_chan]
+            for n in range(num_trans):
+                m300.dispense(m300.current_volume, src.top())
+                m300.aspirate(vol_per_trans, src)
+                if source == vhb:
+                    ctx.max_speeds['Z'] = 20
+                    ctx.max_speeds['A'] = 20
+                m300.move_to(src.top())
+                if source == vhb:
+                    ctx.delay(seconds=2)
+                    ctx.max_speeds['Z'] = None
+                    ctx.max_speeds['A'] = None
+                if air_gap_vol:
+                    m300.aspirate(air_gap_vol, src.top())
+                m300.dispense(m300.current_volume, well.top())
+                if n < num_trans - 1:
+                    m300.aspirate(10, well.top())
+            resus_vol = resuspend_vol if resuspend_vol else vol_mix
+            resuspend(well, mixreps, resus_vol, method=resuspend_method,
+                      samples=samples)
             m300.blow_out(well.top())
-            m300.air_gap(20)
+            m300.air_gap(5)
             m300.drop_tip(spot)
 
         if remove:
@@ -201,9 +238,10 @@ def run(ctx):
                 magdeck.engage()
 
             ctx.delay(minutes=settling_time, msg=f'Incubating on MagDeck for \
-f{settling_time} minutes.')
+{settling_time} minutes.')
 
-            remove_supernatant(vol, parking_spots)
+            removal_vol = supernatant_volume if supernatant_volume else vol
+            remove_supernatant(removal_vol, parking_spots)
 
     def elute(vol, parking_spots):
         """
@@ -227,7 +265,7 @@ f{settling_time} minutes.')
             m300.move_to(m.center())
             resuspend(m, 10, 40)
             m300.blow_out(m.bottom(5))
-            m300.air_gap(20)
+            m300.air_gap(5)
             m300.drop_tip(spot)
 
         ctx.delay(minutes=2, msg='Incubating off MagDeck for 2 minutes.')
@@ -236,14 +274,14 @@ f{settling_time} minutes.')
         ctx.delay(minutes=settling_time, msg=f'Incubating on MagDeck for \
 {settling_time} minutes.')
 
-        m300.flow_rate.aspirate = 30
+        m300.flow_rate.aspirate /= 5
         for i, (m, e, spot) in enumerate(
                 zip(mag_samples_m, elution_samples_m, parking_spots)):
             m300.pick_up_tip(spot)
-            m300.transfer(vol-5, m.bottom(0.8), e.bottom(5), air_gap=20,
+            m300.transfer(vol-5, m.bottom(1.2), e.bottom(5), air_gap=20,
                           new_tip='never')
             m300.blow_out(e.top(-2))
-            m300.air_gap(20)
+            m300.air_gap(5)
             m300.drop_tip(spot)
 
     """
@@ -252,12 +290,20 @@ f{settling_time} minutes.')
     """
     bind(binding_buffer_vol, parking_spots=parking_sets[0])
     wash(vhb_vol, vhb, parking_spots=parking_sets[1])
-    wash(rna_wash1_vol, rna_wash, parking_spots=parking_sets[2])
-    wash(elution1_vol, elution_solution, parking_spots=parking_sets[3])
-    wash(dnase_vol, dnase, parking_spots=parking_sets[4])
-    ctx.delay(minutes=10)
-    wash(phm_vol, phm, parking_spots=parking_sets[5])
-    ctx.delay(minutes=1)
-    wash(rna_wash1_vol, rna_wash, parking_spots=parking_sets[2])
-    wash(rna_wash2_vol, rna_wash, parking_spots=parking_sets[2])
-    elute(elution2_vol, parking_spots=parking_sets[3])
+    wash(rna_wash1_vol, rna_wash[0], parking_spots=parking_sets[2])
+    if not TEST_MODE:
+        ctx.delay(minutes=5)
+    wash(elution1_vol, elution_solution, parking_spots=parking_sets[3],
+         remove=False)
+    wash(dnase_vol, dnase, parking_spots=parking_sets[4], remove=False)
+    if not TEST_MODE:
+        ctx.delay(minutes=10)
+    wash(phm_vol, phm, parking_spots=parking_sets[5], remove=False)
+    if not TEST_MODE:
+        ctx.delay(minutes=1)
+    wash(rna_wash2_vol, rna_wash[1], parking_spots=parking_sets[6])
+    ctx.delay(minutes=settling_time, msg=f'Incubating on MagDeck for \
+{settling_time} minutes.')
+    remove_supernatant(parking_spots=parking_sets[6], vol=600)
+    wash(rna_wash1_vol, rna_wash[2], parking_spots=parking_sets[7])
+    elute(elution2_vol, parking_spots=parking_sets[8])

@@ -119,6 +119,7 @@ cd8_dil,1
 cdna_col_num1,1
 cdna_col_num2,1
 cdna_down_column,1
+cdna_vol,1
 cellht,1
 cellsmedia,1
 change_tips,2
@@ -567,7 +568,7 @@ lysis_vol,1
 m10_mount,2
 m1k,1
 m20_mount,61
-m300_mount,69
+m300_mount,70
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
@@ -647,7 +648,7 @@ mm_source_vol,1
 mm_transfer_vol,1
 mm_vol,8
 mm_volume,1
-mmx_vol,1
+mmx_vol,2
 mnt,3
 mnt10,2
 mnt1000,2
@@ -715,7 +716,7 @@ num_daughter_plates,1
 num_extracts,1
 num_gene,1
 num_mag_beads_tubes,1
-num_mastermix,1
+num_mastermix,2
 num_mm,2
 num_of_dilutions,2
 num_pl,2
@@ -769,7 +770,7 @@ one_rack_yn,1
 onlysamps,1
 open_lid,1
 output_labware,1
-overage_percent,7
+overage_percent,9
 p1000_flow_rate_asp,2
 p1000_flow_rate_disp,2
 p1000_mount,29

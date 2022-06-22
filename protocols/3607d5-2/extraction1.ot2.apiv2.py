@@ -70,10 +70,10 @@ def run(ctx):
     """
     Here is where you can define the locations of your reagents.
     """
-    binding_buffer = res1.wells()[:1]
-    wash1 = res1.wells()[5:6]
+    binding_buffer = res1.rows()[0][:1]
+    wash1 = res1.rows()[0][5:6]
     wash2 = wash1
-    elution_solution = res1.wells()[-1]
+    elution_solution = res1.rows()[0][-1]
 
     starting_samples = pcr_plate.rows()[0][:num_cols]
     mag_samples_m = magplate.rows()[0][:num_cols]
@@ -168,10 +168,11 @@ resuming.')
             waste_vol += vol
 
         for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
-            if park:
-                _pick_up(pip, spot)
-            else:
-                _pick_up(pip)
+            if not m300.has_tip:
+                if park:
+                    _pick_up(pip, spot)
+                else:
+                    _pick_up(pip)
             side = -1 if i % 2 == 0 else 1
             loc = m.bottom(0).move(Point(x=side*radius*radial_offset,
                                          z=z_offset))
@@ -183,7 +184,7 @@ resuming.')
             #     air_gap_vol = pip.max_volume - vol
             pip.transfer(vol, loc, waste, new_tip='never',
                          air_gap=(air_gap_vol))
-            pip.blow_out(waste)
+            # pip.blow_out(waste)
             _drop(pip)
 
     def bind(vol, park=True):
@@ -281,11 +282,8 @@ resuming.')
 
         num_trans = math.ceil(vol/200)
         vol_per_trans = vol/num_trans
+        _pick_up(m300)
         for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
-            _pick_up(m300)
-            side = 1 if i % 2 == 0 else -1
-            loc = m.bottom().move(Point(x=side*radius*radial_offset,
-                                        z=z_offset))
             src = source[int(i//(12/len(source)))]
             for n in range(num_trans):
                 if m300.current_volume > 0:
@@ -296,14 +294,21 @@ resuming.')
                     m300.blow_out(m.top(-1))
                 if n < num_trans - 1:  # only air_gap if going back to source
                     m300.air_gap(air_gap_vol)
-            if resuspend:
-                m300.mix(mix_reps, 150, loc)
-            m300.blow_out(m.top())
-            m300.air_gap(air_gap_vol)
-            if park:
-                m300.drop_tip(spot)
-            else:
-                _drop(m300)
+
+        if resuspend:
+            for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
+                if not m300.has_tip:
+                    _pick_up(m300)
+                    side = 1 if i % 2 == 0 else -1
+                    loc = m.bottom().move(Point(x=side*radius*radial_offset,
+                                                z=z_offset))
+                    m300.mix(mix_reps, 150, loc)
+                    m300.blow_out(m.top())
+                    m300.air_gap(air_gap_vol)
+                if park:
+                    m300.drop_tip(spot)
+                else:
+                    _drop(m300)
 
         if magdeck.status == 'disengaged':
             magdeck.engage(height=mag_height)

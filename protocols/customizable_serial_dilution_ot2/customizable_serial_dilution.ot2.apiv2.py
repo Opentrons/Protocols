@@ -60,10 +60,10 @@ def run(protocol_context):
         protocol_context.load_labware(tip_name, slot)
         for slot in ['1', '4']
     ]
-
+    print(mount_side)
     # pipette
     pipette = protocol_context.load_instrument(
-        pipette_type, mount=mount_side, tip_racks=tipracks)
+        pipette_type, mount_side, tipracks)
 
     # reagents
     diluent = trough.wells()[0]
