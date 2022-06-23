@@ -7,6 +7,15 @@
   },
   {
     "type": "dropDown",
+    "label": "DMSO reservoir type",
+    "name": "lw_dmso",
+    "options": [
+      { "label": "Beckman 8 Reservoir 19ml", "value": "beckman_8_reservoir_19000ul" },
+      { "label": "NEST 12 Reservoir 15ml", "value": "nest_12_reservoir_15ml" }
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "P300 single-channel (GEN2) pipette mount",
     "name": "mount_p300",
     "options": [
