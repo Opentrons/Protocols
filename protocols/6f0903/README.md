@@ -208,8 +208,7 @@ Step 7: APOBEC Deamination (uses 24 P20 tips)
 144.	Incubate at 4C for 3 minutes.
 145.	Open lid.
 
-
-Step 8: AMPure cleanup #3 (uses 32 P300 tips)
+Step 8: AMPure cleanup \#3 (uses 32 P300 tips)
 
 146.	Use 8-channel P300 to mix Reservoir Well 1 (Ampure Beads - High Viscosity).
 147. 	Transfer 100 uL of Reservoir Well 1 to Magnet Wells Column 5 A-H.
@@ -285,8 +284,7 @@ Step 9: PCR Master Mix Prep (uses 16 P20 tips)
 214. 	Incubate at 4C for 3 minutes.
 215. 	Open lid.
 
-
-Step 10: AMPure cleanup #4 (uses 32 P300 tips)
+Step 10: AMPure cleanup \#4 (uses 32 P300 tips)
 
 216.	Use 8-channel P300 to mix Reservoir Well 1 (Ampure Beads - High Viscosity).
 217. 	Transfer 100 uL of Reservoir Well 1 to Magnet Wells Column 7 A-H.
