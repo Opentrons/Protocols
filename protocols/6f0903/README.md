@@ -16,6 +16,10 @@ TODO: Fill out this section
 
 Explanation of parameters below:
 * `p20 mount`: Choose whether the P20 single channel pipette should be mounted in the right or left pipette mount. The P300 8-channel pipette will then automatically be assigned to the other mount.
+* `Barcode tubes initial volume (µL)`: The initial volume of the tubes containing barcodes, the volumes are presumed to be the same for all of the barcode tubes, and is used to determine the mixing volume.
+* `Magnet engagement height (mm)`: The distance to raise the magnets on the magnetic module when engaging the magnets.
+* `Number of mixing repetitions`: How many mixing repetitions to perform for every mixing step.
+* `Flash the OT-2 lights when the protocol finishes?`: If this parameter is set to `Yes` the OT-2 will flash its lights five times when the protocol finishes to alert the user.
 
 ---
 
@@ -145,178 +149,178 @@ Step 5: TET2 Oxidation (uses 24 P20 tips)
 
 Step 6: AMPure cleanup \#2 (uses 32 P300 tips)
 
-1	Use 8-channel P300 to mix Reservoir Well 1 (Ampure Beads - High Viscosity).
-2 	Transfer 100 uL of Reservoir Well 1 to Magnet Wells Column 3 A-H.
-3 	Transfer 51 uL of Thermocycler Column 3 A-H to Magnet Wells Column 3 A-H.
-4 	Mix Magnet Wells Column 3 A-H at 1 minute intervals for 10 minutes.
-5	Engage magnet.
-6	Hold for 5 minutes (magnet still engaged).
-7 	Remove 151 uL from Magnet Wells Column 3 A-H.
-8	Discard tips.
-9 	Use 8-channel P300 to mix Reservoir Well 5 (80% EtOH -low viscosity)
-10 	Transfer 200 uL of Reservoir Well 5 to Magnet Wells Column 3 A-H.
-11	Slowly mix Magnet Wells Column 3 A-H 10 times. (Magnet still engaged, washing bead pellet).
-12	Remove 200 uL from Magnet Wells Column 3 A-H.
-13	Discard tips.
-14 	Use 8-channel P300 to mix Reservoir Well 5 (80% EtOH -low viscosity)
-15	Transfer 200 uL of Reservoir Well 5 to Magnet Wells Column 3 A-H.
-16	Slowly mix Magnet Wells Column 3 A-H 10 times. (Magnet still engaged, washing bead pellet).
-17	Remove 200 uL from Magnet Wells Column 3 A-H.
-18	Discard tips.
-19	Hold for 10 minutes (magnet still engaged) to let residual ethanol evaporate.
-20 	Close thermocycler lid.
-21	Heat thermocycler to 37C for 2 minutes.
-22	Open thermocycler lid.
-23	Disengage magnet.
-24	Use 8-channel P300 to transfer 17 uL of water from Thermocycler Column 10 Rows A-H to Magnet Wells Column 3 A-H. Dispense liquid over the side of the tube with the magnetic contact.
-25	Mix Magnet Wells Column 3 A-H at 1 minute intervals for 10 minutes (eluting DNA from beads).
-26	Engage magnet.
-27	Hold for 3 minutes (magnet still engaged).
-28	Transfer 16uL from Magnet Wells Column 3 A-H to Thermocycler Column 5 Rows A-H.
-29	Discard tips.
-30	Disengage magnet.
+81.	Use 8-channel P300 to mix Reservoir Well 1 (Ampure Beads - High Viscosity).
+82. 	Transfer 100 uL of Reservoir Well 1 to Magnet Wells Column 3 A-H.
+83. 	Transfer 51 uL of Thermocycler Column 3 A-H to Magnet Wells Column 3 A-H.
+84. 	Mix Magnet Wells Column 3 A-H at 1 minute intervals for 10 minutes.
+85.	Engage magnet.
+86.	Hold for 5 minutes (magnet still engaged).
+87. 	Remove 151 uL from Magnet Wells Column 3 A-H.
+88.	Discard tips.
+89. 	Use 8-channel P300 to mix Reservoir Well 5 (80% EtOH -low viscosity)
+90. 	Transfer 200 uL of Reservoir Well 5 to Magnet.. Wells Column 3 A-H.
+91.	Slowly mix Magnet Wells Column 3 A-H 10 times. (Magnet still engaged, washing bead pellet).
+92.	Remove 200 uL from Magnet Wells Column 3 A-H.
+93.	Discard tips.
+94. 	Use 8-channel P300 to mix Reservoir Well 5 (80% EtOH -low viscosity)
+95.	Transfer 200 uL of Reservoir Well 5 to Magnet Wells Column 3 A-H.
+96.	Slowly mix Magnet Wells Column 3 A-H 10 times. (Magnet still engaged, washing bead pellet).
+97.	Remove 200 uL from Magnet Wells Column 3 A-H.
+98.	Discard tips.
+99.	Hold for 10 minutes (magnet still engaged) to let residual ethanol evaporate.
+100. 	Close thermocycler lid.
+101.	Heat thermocycler to 37C for 2 minutes.
+102.	Open thermocycler lid.
+103.	Disengage magnet.
+104.	Use 8-channel P300 to transfer 17 uL of water from Thermocycler Column 10 Rows A-H to Magnet Wells Column 3 A-H. Dispense liquid over the side of the tube with the magnetic contact.
+105.	Mix Magnet Wells Column 3 A-H at 1 minute intervals for 10 minutes (eluting DNA from beads).
+106.	Engage magnet.
+107.	Hold for 3 minutes (magnet still engaged).
+108.	Transfer 16uL from Magnet Wells Column 3 A-H to Thermocycler Column 5 Rows A-H.
+109.	Discard tips.
+110.	Disengage magnet.
 
 Step 7: APOBEC Deamination (uses 24 P20 tips)
 
-7.1	Close thermocycler.
-7.2 	Incubate thermocycler at 50C for 3 minutes.
-7.3	Use P20 to mix Temperature Tube 7 (NaOH).
-7.4	Open thermocycler.
-7.5 	Transfer 4 uL of Temperature Tube 7 to Thermocycler Tube 5A.
-7.6 	Mix Thermocycler Tube 5A.
-7.7 	Discard Tip.
-7.8 	Repeat steps 7.5 -7.7 for transfers from Temperature Tube 7 to Thermocycler Tubes 5B,5C,5D,5E,5F,5G, 5H.
-7.9	Close thermocycler.
-7.10	Incubate at 50C for 10 minutes.
-7.11	Incubate at 4C for 5 minutes.
-7.12	Open thermocycler.
-7.13 	Use P20 to transfer 10 uL of Temperature Tube 8 (water) to Thermocycler Tube 5A.
-7.14 	Mix Thermocycler Tube 5A.
-7.15	Discard Tip.
-7.16 	Repeat steps 7.13 -7.15 for transfers from Temperature Tube 8 to Thermocycler Tubes 5B,5C,5D,5E,5F,5G, 5H.
-7.17 	Use P20 to mix Temperature Tube 9 (APOBEC Master Mix).
-7.18	Use P20 to transfer 20 uL of Temperature Tube 9 to Thermocycler Tube 5A.
-7.19 	Mix Thermocycler Tube 5A.
-7.20	Discard Tip.
-7.21 	Repeat steps 7.17 -7.20 for transfers from Temperature Tube 9 to Thermocycler Tubes 5B,5C,5D,5E,5F,5G, 5H.
-7.22 	Close lid.
-7.23	Incubate at 37C for 3 hours.
-7.24	Incubate at 4C for 3 minutes.
-7.25	Open lid.
+111.	Close thermocycler.
+122. 	Incubate thermocycler at 50C for 3 minutes.
+123.	Use P20 to mix Temperature Tube 7 (NaOH).
+124.	Open thermocycler.
+125. 	Transfer 4 uL of Temperature Tube 7 to Thermocycler Tube 5A.
+126. 	Mix Thermocycler Tube 5A.
+127. 	Discard Tip.
+128. 	Repeat steps 7.5 -7.7 for transfers from Temperature Tube 7 to Thermocycler Tubes 5B,5C,5D,5E,5F,5G, 5H.
+129.	Close thermocycler.
+130.	Incubate at 50C for 10 minutes.
+131.	Incubate at 4C for 5 minutes.
+132.	Open thermocycler.
+133. 	Use P20 to transfer 10 uL of Temperature Tube 8 (water) to Thermocycler Tube 5A.
+134. 	Mix Thermocycler Tube 5A.
+135.	Discard Tip.
+136. 	Repeat steps 7.13 -7.15 for transfers from Temperature Tube 8 to Thermocycler Tubes 5B,5C,5D,5E,5F,5G, 5H.
+137. 	Use P20 to mix Temperature Tube 9 (APOBEC Master Mix).
+138.	Use P20 to transfer 20 uL of Temperature Tube 9 to Thermocycler Tube 5A.
+139. 	Mix Thermocycler Tube 5A.
+140.	Discard Tip.
+141. 	Repeat steps 7.17 -7.20 for transfers from Temperature Tube 9 to Thermocycler Tubes 5B,5C,5D,5E,5F,5G, 5H.
+142. 	Close lid.
+143.	Incubate at 37C for 3 hours.
+144.	Incubate at 4C for 3 minutes.
+145.	Open lid.
 
 
 Step 8: AMPure cleanup #3 (uses 32 P300 tips)
 
-8.1	Use 8-channel P300 to mix Reservoir Well 1 (Ampure Beads - High Viscosity).
-8.2 	Transfer 100 uL of Reservoir Well 1 to Magnet Wells Column 5 A-H.
-8.3 	Transfer 50 uL of Thermocycler Column 5 A-H to Magnet Wells Column 5 A-H.
-8.4 	Mix Magnet Wells Column 5 A-H at 1 minute intervals for 10 minutes.
-8.5	Engage magnet.
-8.6	Hold for 5 minutes (magnet still engaged).
-8.7 	Remove 150 uL from Magnet Wells Column 5 A-H.
-8.8	Discard tips.
-8.9 	Use 8-channel P300 to mix Reservoir Well 5 (80% EtOH -low viscosity)
-8.10 	Transfer 200 uL of Reservoir Well 5 to Magnet Wells Column 5 A-H.
-8.11	Slowly mix Magnet Wells Column 5 A-H 10 times. (Magnet still engaged, washing bead pellet).
-8.12	Remove 200 uL from Magnet Wells Column 5 A-H.
-8.13	Discard tips.
-8.14 	Use 8-channel P300 to mix Reservoir Well 5 (80% EtOH -low viscosity)
-8.15	Transfer 200 uL of Reservoir Well 5 to Magnet Wells Column 5 A-H.
-8.16	Slowly mix Magnet Wells Column 5 A-H 10 times. (Magnet still engaged, washing bead pellet).
-8.17	Remove 200 uL from Magnet Wells Column 5 A-H.
-8.18	Discard tips.
-8.19	Hold for 10 minutes (magnet still engaged) to let residual ethanol evaporate.
-8.20 	Close thermocycler lid.
-8.21	Heat thermocycler to 37C for 2 minutes.
-8.22	Open thermocycler lid.
-8.23	Disengage magnet.
-8.24	Use 8-channel P300 to transfer 30 uL of water from Thermocycler Column 11 Rows A-H to Magnet Wells Column 5 A-H. Dispense liquid over the side of the tube with the magnetic contact.
-8.25	Mix Magnet Wells Column 5 A-H at 1 minute intervals for 10 minutes (eluting DNA from beads).
-8.26	Engage magnet.
-8.27	Hold for 3 minutes (magnet still engaged).
-8.28	Transfer 29 uL from Magnet Wells Column 5 A-H to Thermocycler Column 7 Rows A-H.
-8.29	Discard tips.
-8.30	Disengage magnet.
+146.	Use 8-channel P300 to mix Reservoir Well 1 (Ampure Beads - High Viscosity).
+147. 	Transfer 100 uL of Reservoir Well 1 to Magnet Wells Column 5 A-H.
+148. 	Transfer 50 uL of Thermocycler Column 5 A-H to Magnet Wells Column 5 A-H.
+149. 	Mix Magnet Wells Column 5 A-H at 1 minute intervals for 10 minutes.
+150.	Engage magnet.
+151.	Hold for 5 minutes (magnet still engaged).
+152. 	Remove 150 uL from Magnet Wells Column 5 A-H.
+153.	Discard tips.
+154. 	Use 8-channel P300 to mix Reservoir Well 5 (80% EtOH -low viscosity)
+155. 	Transfer 200 uL of Reservoir Well 5 to Magnet Wells Column 5 A-H.
+156.	Slowly mix Magnet Wells Column 5 A-H 10 times. (Magnet still engaged, washing bead pellet).
+157.	Remove 200 uL from Magnet Wells Column 5 A-H.
+158.	Discard tips.
+159. 	Use 8-channel P300 to mix Reservoir Well 5 (80% EtOH -low viscosity)
+160.	Transfer 200 uL of Reservoir Well 5 to Magnet Wells Column 5 A-H.
+161.	Slowly mix Magnet Wells Column 5 A-H 10 times. (Magnet still engaged, washing bead pellet).
+162.	Remove 200 uL from Magnet Wells Column 5 A-H.
+163.	Discard tips.
+164.	Hold for 10 minutes (magnet still engaged) to let residual ethanol evaporate.
+165. 	Close thermocycler lid.
+166.	Heat thermocycler to 37C for 2 minutes.
+167.	Open thermocycler lid.
+168.	Disengage magnet.
+169.	Use 8-channel P300 to transfer 30 uL of water from Thermocycler Column 11 Rows A-H to Magnet Wells Column 5 A-H. Dispense liquid over the side of the tube with the magnetic contact.
+170.	Mix Magnet Wells Column 5 A-H at 1 minute intervals for 10 minutes (eluting DNA from beads).
+171.	Engage magnet.
+172.	Hold for 3 minutes (magnet still engaged).
+173.	Transfer 29 uL from Magnet Wells Column 5 A-H to Thermocycler Column 7 Rows A-H.
+174.	Discard tips.
+175.	Disengage magnet.
 
 Step 9: PCR Master Mix Prep (uses 16 P20 tips)
 
-9.1 	Use P20 to mix Temperature Tube 10 (PCR Master Mix).
-9.2 	Transfer 20 uL of Temperature Tube 10 to Thermocycler Tube 7A.
-9.3 	Mix Thermocycler Tube 7A.
-9.4 	Discard Tip.
-9.5 	Repeat steps 9.1 -9.4 for transfers from Temperature Tube 10 to Thermocycler Tubes 7B,7C,7D,7E,7F,7G, 7H.
-9.6 	Use P20 to mix Temperature Tube 11 (Barcode Primer 1).
-9.7	Transfer 1 uL of Temperature Tube 11 to Thermocycler Tube 7A.
-9.8 	Mix Thermocycler Tube 7A.
-9.9	Discard Tip.
-9.10 	Use P20 to mix Temperature Tube 12 (Barcode Primer 2).
-9.11	Transfer 1 uL of Temperature Tube 12 to Thermocycler Tube 7B.
-9.12 	Mix Thermocycler Tube 7B.
-9.13	Discard Tip.
-9.14 	Use P20 to mix Temperature Tube 13 (Barcode Primer 3).
-9.15	Transfer 1 uL of Temperature Tube 13 to Thermocycler Tube 7C.
-9.16 	Mix Thermocycler Tube 7C.
-9.17	Discard Tip.
-9.18 	Use P20 to mix Temperature Tube 14 (Barcode Primer 4).
-9.19	Transfer 1 uL of Temperature Tube 14 to Thermocycler Tube 7D.
-9.20 	Mix Thermocycler Tube 7D.
-9.21 	Use P20 to mix Temperature Tube 15 (Barcode Primer 5).
-9.22	Transfer 1 uL of Temperature Tube 15 to Thermocycler Tube 7E.
-9.23 	Mix Thermocycler Tube 7E.
-9.24	Discard Tip.
-9.25 	Use P20 to mix Temperature Tube 16 (Barcode Primer 6).
-9.26	Transfer 1 uL of Temperature Tube 16 to Thermocycler Tube 7F.
-9.27 	Mix Thermocycler Tube 7F.
-9.28 	Use P20 to mix Temperature Tube 17 (Barcode Primer 7).
-9.29	Transfer 1 uL of Temperature Tube 17 to Thermocycler Tube 7G.
-9.30 	Mix Thermocycler Tube 7G.
-9.31	Discard Tip.
-9.32 	Use P20 to mix Temperature Tube 18 (Barcode Primer 8).
-9.33	Transfer 1 uL of Temperature Tube 18 to Thermocycler Tube 7H.
-9.34 	Mix Thermocycler Tube 7H.
-9.35	Discard Tip.
-9.36 	Close lid.
-9.37	Incubate at 95C for 30 sec.
-9.38	Cycle temperature: 94C for 30 seconds and 60 degrees for 3 minutes for 25 cycles.
-9.39 	Incubate at 4C for 3 minutes.
-9.40 	Open lid.
+176. 	Use P20 to mix Temperature Tube 10 (PCR Master Mix).
+177. 	Transfer 20 uL of Temperature Tube 10 to Thermocycler Tube 7A.
+178. 	Mix Thermocycler Tube 7A.
+179. 	Discard Tip.
+180. 	Repeat steps 9.1 -9.4 for transfers from Temperature Tube 10 to Thermocycler Tubes 7B,7C,7D,7E,7F,7G, 7H.
+181. 	Use P20 to mix Temperature Tube 11 (Barcode Primer 1).
+182.	Transfer 1 uL of Temperature Tube 11 to Thermocycler Tube 7A.
+183. 	Mix Thermocycler Tube 7A.
+184.	Discard Tip.
+185. 	Use P20 to mix Temperature Tube 12 (Barcode Primer 2).
+186.	Transfer 1 uL of Temperature Tube 12 to Thermocycler Tube 7B.
+187. 	Mix Thermocycler Tube 7B.
+188.	Discard Tip.
+189. 	Use P20 to mix Temperature Tube 13 (Barcode Primer 3).
+190.	Transfer 1 uL of Temperature Tube 13 to Thermocycler Tube 7C.
+191. 	Mix Thermocycler Tube 7C.
+192.	Discard Tip.
+193. 	Use P20 to mix Temperature Tube 14 (Barcode Primer 4).
+194.	Transfer 1 uL of Temperature Tube 14 to Thermocycler Tube 7D.
+195. 	Mix Thermocycler Tube 7D.
+196. 	Use P20 to mix Temperature Tube 15 (Barcode Primer 5).
+197.	Transfer 1 uL of Temperature Tube 15 to Thermocycler Tube 7E.
+198. 	Mix Thermocycler Tube 7E.
+199.	Discard Tip.
+200. 	Use P20 to mix Temperature Tube 16 (Barcode Primer 6).
+201.	Transfer 1 uL of Temperature Tube 16 to Thermocycler Tube 7F.
+202. 	Mix Thermocycler Tube 7F.
+203. 	Use P20 to mix Temperature Tube 17 (Barcode Primer 7).
+204.	Transfer 1 uL of Temperature Tube 17 to Thermocycler Tube 7G.
+205. 	Mix Thermocycler Tube 7G.
+206.	Discard Tip.
+207. 	Use P20 to mix Temperature Tube 18 (Barcode Primer 8).
+208.	Transfer 1 uL of Temperature Tube 18 to Thermocycler Tube 7H.
+209. 	Mix Thermocycler Tube 7H.
+210.	Discard Tip.
+211. 	Close lid.
+212.	Incubate at 95C for 30 sec.
+213.	Cycle temperature: 94C for 30 seconds and 60 degrees for 3 minutes for 25 cycles.
+214. 	Incubate at 4C for 3 minutes.
+215. 	Open lid.
 
 
 Step 10: AMPure cleanup #4 (uses 32 P300 tips)
 
-10.1	Use 8-channel P300 to mix Reservoir Well 1 (Ampure Beads - High Viscosity).
-10.2 	Transfer 100 uL of Reservoir Well 1 to Magnet Wells Column 7 A-H.
-10.3 	Transfer 50 uL of Thermocycler Column 7 A-H to Magnet Wells Column 7 A-H.
-10.4 	Mix Magnet Wells Column 7 A-H at 1 minute intervals for 10 minutes.
-10.5	Engage magnet.
-10.6	Hold for 5 minutes (magnet still engaged).
-10.7 	Remove 150 uL from Magnet Wells Column 7 A-H.
-10.8	Discard tips.
-10.9 	Use 8-channel P300 to mix Reservoir Well 5 (80% EtOH -low viscosity)
-10.10 	Transfer 200 uL of Reservoir Well 5 to Magnet Wells Column 7 A-H.
-10.11	Slowly mix Magnet Wells Column 7 A-H 10 times. (Magnet still engaged, washing bead pellet).
-10.12	Remove 200 uL from Magnet Wells Column 7 A-H.
-10.13	Discard tips.
-10.14 	Use 8-channel P300 to mix Reservoir Well 5 (80% EtOH -low viscosity)
-10.15	Transfer 200 uL of Reservoir Well 5 to Magnet Wells Column 7 A-H.
-10.16	Slowly mix Magnet Wells Column 7 A-H 10 times. (Magnet still engaged, washing bead pellet).
-10.17	Remove 200 uL from Magnet Wells Column 7 A-H.
-10.18	Discard tips.
-10.19	Hold for 10 minutes (magnet still engaged) to let residual ethanol evaporate.
-10.20 	Close thermocycler lid.
-10.21	Heat thermocycler to 37C for 2 minutes.
-10.22	Open thermocycler lid.
-10.23	Disengage magnet.
-10.24	Use 8-channel P300 to transfer 42 uL of water from Thermocycler Column 12 Rows A-H to Magnet Wells Column 7 A-H. Dispense liquid over the side of the tube with the magnetic contact.
-10.25	Mix Magnet Wells Column 7 A-H at 1 minute intervals for 10 minutes (eluting DNA from beads).
-10.26	Engage magnet.
-10.27	Hold for 3 minutes (magnet still engaged).
-10.28	Transfer 40 uL from Magnet Wells Column 7 A-H to Thermocycler Column 9 Rows A-H.
-10.29	Discard tips.
-10.30	Disengage magnet.
-10.31	Close thermocycler lid.
-10.32  Hold thermocycler at 4C.
-10.33	Alert user that the protocol has finished.
+216.	Use 8-channel P300 to mix Reservoir Well 1 (Ampure Beads - High Viscosity).
+217. 	Transfer 100 uL of Reservoir Well 1 to Magnet Wells Column 7 A-H.
+218. 	Transfer 50 uL of Thermocycler Column 7 A-H to Magnet Wells Column 7 A-H.
+219. 	Mix Magnet Wells Column 7 A-H at 1 minute intervals for 10 minutes.
+220.	Engage magnet.
+221.	Hold for 5 minutes (magnet still engaged).
+222. 	Remove 150 uL from Magnet Wells Column 7 A-H.
+223.	Discard tips.
+224. 	Use 8-channel P300 to mix Reservoir Well 5 (80% EtOH -low viscosity)
+225. 	Transfer 200 uL of Reservoir Well 5 to Magnet Wells Column 7 A-H.
+226.	Slowly mix Magnet Wells Column 7 A-H 10 times. (Magnet still engaged, washing bead pellet).
+227.	Remove 200 uL from Magnet Wells Column 7 A-H.
+228.	Discard tips.
+229. 	Use 8-channel P300 to mix Reservoir Well 5 (80% EtOH -low viscosity)
+230.	Transfer 200 uL of Reservoir Well 5 to Magnet Wells Column 7 A-H.
+231.	Slowly mix Magnet Wells Column 7 A-H 10 times. (Magnet still engaged, washing bead pellet).
+232.	Remove 200 uL from Magnet Wells Column 7 A-H.
+233.	Discard tips.
+234.	Hold for 10 minutes (magnet still engaged) to let residual ethanol evaporate.
+235. 	Close thermocycler lid.
+236.	Heat thermocycler to 37C for 2 minutes.
+237.	Open thermocycler lid.
+238.	Disengage magnet.
+239.	Use 8-channel P300 to transfer 42 uL of water from Thermocycler Column 12 Rows A-H to Magnet Wells Column 7 A-H. Dispense liquid over the side of the tube with the magnetic contact.
+240.	Mix Magnet Wells Column 7 A-H at 1 minute intervals for 10 minutes (eluting DNA from beads).
+241.	Engage magnet.
+242.	Hold for 3 minutes (magnet still engaged).
+243.	Transfer 40 uL from Magnet Wells Column 7 A-H to Thermocycler Column 9 Rows A-H.
+244.	Discard tips.
+245.	Disengage magnet.
+246.	Close thermocycler lid.
+247.  Hold thermocycler at 4C.
+248.	Alert user that the protocol has finished.
 
 ### Process
 1. Input your protocol parameters above.
