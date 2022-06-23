@@ -7,8 +7,7 @@ metadata = {
     'protocolName': 'MethylPatch Protocol for Opentrons OT-2',
     'author': 'Eskil Andersen <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
-                         # IN SECTION 5.2 OF THE APIV2 "VERSIONING"
+    'apiLevel': '2.11'
 }
 
 
@@ -124,6 +123,33 @@ def run(ctx: protocol_api.ProtocolContext):
             water_column: List[Well],
             purified_DNA_vol: float,
             purified_dna_target_col: List[Well]):
+        """
+        This function transfers samples from a given DNA sample source column
+        (on the thermocycler plate) to the magnetic module plate and performs
+        an AMPure bead cleanup of the DNA. After the DNA has been cleaned it
+        is transferred to a new column on the thermocycler plate. Reservoir
+        well 1 contains beads and reservoir well 5 contains 80 % ethanol.
+
+        :param mix_vol: The mixing volume for each tip of the 8-channel p300
+        for mixing the bead well on the reservoir
+        :param bead_vol: The volume of beads to use for the cleanup.
+        :param dna_vol: The volume of DNA sample to transfer from the TC plate
+        to the mag mod plate.
+        :param mag_target_col: The magnetic plate column to dispense the
+        DNA samples in for cleanup.
+        :param dna_air_gap_vol: Air gap volume in µL for the DNA sample transfr
+        :param supernatant_vol: The volume of supernatant to remove from the
+        well after the beads have bound the DNA. The supernatant is transferred
+        to either the last or penultimate well of the reservoir as trash.
+        :param resusp_water_vol: The volume of water to resuspend the cleaned
+        DNA in.
+        :param water_column: The column on the thermocycler from which to
+        aspirate water from for the resuspension.
+        :param purified_DNA_vol: The volume of purified DNA to transfer back
+        to the TC plate.
+        :param purified_dna_target_col: The column (on the TC plate) to
+        transfer the purified DNA to.
+        """
 
         nonlocal p300, ctx, mag_beads, mag_mod, waste_wells
         nonlocal ethanol_well, waste_vol
@@ -138,7 +164,7 @@ def run(ctx: protocol_api.ProtocolContext):
         # 1. Use 8-channel P300 to mix Reservoir Well 1
         # (Ampure Beads - High Viscosity).
         pick_up(p300)
-        p300.mix(num_mix_repns, mix_vol, mag_beads)
+        p300.mix(num_mix_repns, mix_vol, mag_beads, rate=0.3)
         # 2. Transfer <bead_vol> uL of Reservoir Well 1 to
         # Magnet Wells Column <n> A-H.
         p300.aspirate(bead_vol, mag_beads, rate=0.3)
@@ -236,7 +262,7 @@ def run(ctx: protocol_api.ProtocolContext):
         # 20 Close thermocycler lid.
         tc_mod.close_lid()
         # 21 Heat thermocycler to 37C for 2 minutes
-        tc_mod.set_lid_temperature(98)
+        # tc_mod.set_lid_temperature(98) - assume lid temperature has been set
         tc_mod.set_block_temperature(37, hold_time_minutes=2)
         # 22 Open thermocycler lid.
         tc_mod.open_lid()
@@ -277,18 +303,38 @@ def run(ctx: protocol_api.ProtocolContext):
             reag_vol: float,
             well_mixing_vol: float,
             reagent_mix: bool = True):
+        """
+        This function is used to transfer a reagent from a tube on the
+        temperature module to wells on the plate in the thermocycler.
+        :param dna_sample_column: The column containing the target wells
+        :param reagent: The reagent tube
+        :param reag_vol: How much reagent volume to dispense into each
+        target well.
+        :param well_mixing_vol: Mixing volume for mixing the target well
+        after the reagent has been added.
+        :param reagent_mix: Whether to mix the reagent or not before dispensing
+        it in the target well.
+        """
         nonlocal p20
         num_wells = len(dna_sample_column)
+        # Repeat for the entire column
         for i, well in enumerate(dna_sample_column):
+            # 1. Use the p20 to mix the reagent tube
             pick_up(p20)
+            # All reagents get mixed in this protocol except for water
+            # The flag allows us to skip mixing in that case
             if reagent_mix:
                 remaining_reagent_vol = (num_wells - i) * reag_vol
                 mix_vol = remaining_reagent_vol if remaining_reagent_vol < 20 \
                     else 20
                 p20.mix(num_mix_repns, mix_vol, reagent)
+            # 2. Transfer x uL of the reagent tube to the target well
             p20.aspirate(10, reagent, rate=0.5)
             p20.dispense(10, well, rate=0.5)
+            p20.touch_tip()
+            # 3. Mix the target well
             p20.mix(num_mix_repns, well_mixing_vol, well)
+            # 4. Drop the tip
             p20.drop_tip()
 
     # reagents & samples
@@ -306,31 +352,33 @@ def run(ctx: protocol_api.ProtocolContext):
     mag_target_col_3 = mag_plate.columns()[4]  # 3rd sample cleanup column = 5
     mag_target_col_4 = mag_plate.columns()[6]  # 4th sample cleanup column = 7
 
-    water_col_1_30ul = tc_plate.columns()[7]
-    water_col_2_17ul = tc_plate.columns()[8]
-    water_col_3_30ul = tc_plate.columns()[9]
-    water_col_4_42ul = tc_plate.columns()[10]
+    water_col_1_30ul = tc_plate.columns()[8]
+    water_col_2_17ul = tc_plate.columns()[9]
+    water_col_3_30ul = tc_plate.columns()[10]
+    water_col_4_42ul = tc_plate.columns()[11]
 
     mag_beads = resv.wells_by_name()['A1']
     ethanol_well = resv.wells_by_name()['A5']
     waste_wells = resv.wells()[-2:]
 
-    digest_mix = tmod_tubes.wells()[0]  # Temperature tube 1
-    patch_mix = tmod_tubes.wells()[1]  # Temperature tube 2
-    exo_mix = tmod_tubes.wells()[2]  # Temperature tube 3
-    TET2_mix = tmod_tubes.wells()[3]  # Temperature tube 4
-    Fe_sol = tmod_tubes.wells()[4]  # Temperature tube 5
-    stop_reagt = tmod_tubes.wells()[5]  # Temperature tube 6
-    NaOH = tmod_tubes.wells()[6]  # Temperature tube 7
-    dH2O = tmod_tubes.wells()[7]  # Temperature tube 8
-    APOBEC_mix = tmod_tubes.wells()[8]  # Temperature tube 9
-    pcr_mix = tmod_tubes.wells()[9]  # Temperature tube 10
+    digest_mix = tmod_tubes.wells()[0]  # Temperature Tube 1
+    patch_mix = tmod_tubes.wells()[1]  # Temperature Tube 2
+    exo_mix = tmod_tubes.wells()[2]  # Temperature Tube 3
+    TET2_mix = tmod_tubes.wells()[3]  # Temperature Tube 4
+    Fe_sol = tmod_tubes.wells()[4]  # Temperature Tube 5
+    stop_reagt = tmod_tubes.wells()[5]  # Temperature TUbe 6
+    NaOH = tmod_tubes.wells()[6]  # Temperature Tube 7
+    dH2O = tmod_tubes.wells()[7]  # Temperature Tube 8
+    APOBEC_mix = tmod_tubes.wells()[8]  # Temperature Tube 9
+    pcr_mix = tmod_tubes.wells()[9]  # Temperature Tube 10
     barcodes = tmod_tubes.wells()[10:18]
 
     # plate, tube rack maps
 
     # protocol
-    ctx.comment("Step 1: Restriction enzyme digestion of DNA\n")
+    temp_mod.set_temperature(4)
+
+    ctx.comment("\n\nStep 1: Restriction enzyme digestion of DNA\n")
     # 1.1       Use P20 to mix Temperature Tube 1 (Digest Master Mix).
     # 1.2       Transfer 10 uL of Temperature Tube 1 to Thermocycler Tube 1A.
     # 1.3       Mix Thermocycler Tube A1.
@@ -344,6 +392,7 @@ def run(ctx: protocol_api.ProtocolContext):
         well_mixing_vol=18)
     # 1.6       Close lid.
     tc_mod.close_lid()
+    # Set the lid temperature here and keep it throughout the protocol
     tc_mod.set_lid_temperature(98)
     # 1.7       Incubate at 37C for 60 minutes.
     tc_mod.set_block_temperature(37, hold_time_minutes=60)
@@ -649,7 +698,7 @@ def run(ctx: protocol_api.ProtocolContext):
     # 9.4      Discard Tip.
     # 9.5      Repeat steps 9.1 -9.4 for transfers from Temperature Tube 10 to
     #          Thermocycler Tubes 7B,7C,7D,7E,7F,7G, 7H.
-    # Well volume: 29 + 20 = 49 uL
+    # Well volume: 29 uL initial vol + 20 uL PCR mix = 49 uL
     transfer_reagent(
         dna_sample_column=DNA_target_col_3,
         reagent=pcr_mix,
@@ -701,11 +750,12 @@ def run(ctx: protocol_api.ProtocolContext):
     tc_mod.set_block_temperature(95, hold_time_seconds=30)
     # 9.38     Cycle temperature: 94C for 30 seconds and 60 degrees for 3
     #          minutes for 25 cycles.
+    # The well volume is 49 + 1 = 50 uL
     pcr_cycle_profile = [
         {'temperature': 94, 'hold_time_seconds': 30},
         {'temperature': 60, 'hold_time_minutes': 3}]
     tc_mod.execute_profile(
-        steps=pcr_cycle_profile, repetitions=25, block_max_volume=35)
+        steps=pcr_cycle_profile, repetitions=25, block_max_volume=50)
     # 9.39     Incubate at 4C for 3 minutes.
     tc_mod.set_block_temperature(4, hold_time_minutes=3)
     # 9.40     Open lid.
