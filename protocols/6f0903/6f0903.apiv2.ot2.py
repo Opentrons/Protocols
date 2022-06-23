@@ -161,6 +161,7 @@ def run(ctx: protocol_api.ProtocolContext):
             Point(-well_radius-1, 0, 0))
         mag_well_right_locn = mag_well.bottom(1).move(
             Point(well_radius-1, 0, 0))
+        ctx.comment("\nMixing and transferring AMPure beads\n")
         # 1. Use 8-channel P300 to mix Reservoir Well 1
         # (Ampure Beads - High Viscosity).
         pick_up(p300)
@@ -174,6 +175,9 @@ def run(ctx: protocol_api.ProtocolContext):
         p300.blow_out()
         # 3. Transfer <dna_vol> uL of Thermocycler Column <n> A-H to
         # Magnet Wells Column <n> A-H.
+        ctx.comment(
+            "\nTransferring DNA samples from the thermocycler to the magnetic "
+            "module\n")
         p300.aspirate(dna_vol, DNA_source_col[0])
         p300.air_gap(dna_air_gap_vol)
         p300.dispense(dna_vol+dna_air_gap_vol, mag_well)
@@ -199,6 +203,7 @@ def run(ctx: protocol_api.ProtocolContext):
         # 7. remove <supernatant_vol> from Magnet Wells Column 1 A-H.
         # The magnetic pellet is on the right, so aspirate supernatant
         # from the left so the pellet is not disturbed
+        ctx.comment("\nRemoving supernatant from beads\n")
         p300.aspirate(supernatant_vol, mag_well_left_locn, rate=0.2)
         supernatant_air_gap_vol = 10 if supernatant_vol < 190 \
             else 200 - supernatant_vol
@@ -219,6 +224,7 @@ def run(ctx: protocol_api.ProtocolContext):
         # 9. Use 8-channel P300 to mix Reservoir Well 5
         # (80% EtOH -low viscosity)
         pick_up(p300)
+        ctx.comment("\nPerforming first 80 % ethanol wash\n")
         p300.mix(num_mix_repns, 200, ethanol_well)
         # 10. Transfer 200 uL of Reservoir Well 5 to Magnet Wells Column 1 A-H.
         p300.aspirate(200, ethanol_well)
@@ -238,6 +244,7 @@ def run(ctx: protocol_api.ProtocolContext):
         p300.drop_tip()
         # 14. Use 8-channel P300 to mix Reservoir Well 5
         # (80% EtOH -low viscosity)
+        ctx.comment("\nPerforming second 80 % ethanol wash\n")
         pick_up(p300)
         p300.mix(num_mix_repns, 200, ethanol_well)
         # 15. Transfer 200 uL of Reservoir Well 5 to Magnet Wells Column 1 A-H.
@@ -262,7 +269,9 @@ def run(ctx: protocol_api.ProtocolContext):
         # 20 Close thermocycler lid.
         tc_mod.close_lid()
         # 21 Heat thermocycler to 37C for 2 minutes
-        # tc_mod.set_lid_temperature(98) - assume lid temperature has been set
+        # tc_mod.set_lid_temperature(98) - assume that the lid temperature
+        # has been set already.
+        ctx.comment("\nIncubating and resuspending cleaned DNA\n")
         tc_mod.set_block_temperature(37, hold_time_minutes=2)
         # 22 Open thermocycler lid.
         tc_mod.open_lid()
@@ -290,6 +299,8 @@ def run(ctx: protocol_api.ProtocolContext):
         # 28 Transfer <x> uL from Magnet Wells Column 1 A-H to Thermocycler
         #    Column <n> Rows A-H. Aspirate away from the bead pellet
         #    i.e. aspirate from the left side of the well.
+        ctx.comment(
+            "\nTransferring cleaned DNA back to the thermocycler plate\n")
         p300.aspirate(purified_DNA_vol, mag_well_left_locn)
         p300.dispense(purified_DNA_vol, purified_dna_target_col[0])
         # 29 Discard tips. 32 tips used
