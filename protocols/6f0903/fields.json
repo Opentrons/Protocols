@@ -7,5 +7,32 @@
       { "label": "Left", "value": "left"},
       { "label": "Right", "value": "right"}
     ]
+  },
+  {
+    "type": "float",
+    "label": "Barcode tubes initial volume (µL)",
+    "name": "barcode_tube_init_vol",
+    "default": 10
+  },
+  {
+    "type": "float",
+    "label": "Magnet engagement height (mm)",
+    "name": "mag_engage_height",
+    "default": 3.45
+  },
+  {
+    "type": "int",
+    "label": "Number of mixing repetitions",
+    "name": "num_mix_repns",
+    "default": 10
+  },
+  {
+    "type": "dropDown",
+    "label": "Flash the OT-2 lights when the protocol finishes?",
+    "name": "is_flash_lights",
+    "options": [
+      { "label": "Yes", "value": true},
+      { "label": "No", "value": false}
+    ]
   }
 ]
