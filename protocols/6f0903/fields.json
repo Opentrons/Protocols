@@ -1,0 +1,11 @@
+[
+  {
+    "type": "dropDown",
+    "label": "p20 single channel pipette mount",
+    "name": "p20_mount",
+    "options": [
+      { "label": "Left", "value": "left"},
+      { "label": "Right", "value": "right"}
+    ]
+  }
+]
