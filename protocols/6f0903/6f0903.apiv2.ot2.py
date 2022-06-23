@@ -197,7 +197,7 @@ def run(ctx: protocol_api.ProtocolContext):
         p300.touch_tip()
         p300.blow_out()
         # 5. Engage magnet.
-        mag_mod.engage(mag_engage_height)
+        mag_mod.engage(height_from_base=mag_engage_height)
         # 6. Hold for 5 minutes
         ctx.delay(minutes=5)
         # 7. remove <supernatant_vol> from Magnet Wells Column 1 A-H.
@@ -293,7 +293,7 @@ def run(ctx: protocol_api.ProtocolContext):
         p300.touch_tip()
         p300.blow_out(mag_well.top())
         # 26 Engage magnet.
-        mag_mod.engage(mag_engage_height)
+        mag_mod.engage(height_from_base=mag_engage_height)
         # 27 Hold for 3 minutes (magnet still engaged).
         ctx.delay(minutes=3)
         # 28 Transfer <x> uL from Magnet Wells Column 1 A-H to Thermocycler
