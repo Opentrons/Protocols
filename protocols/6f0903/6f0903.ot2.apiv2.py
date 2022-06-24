@@ -11,21 +11,6 @@ metadata = {
 }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{
-                                  "p20_mount":"left",
-                                  "plate_lname":"nest_96_wellplate_200ul_flat",
-                                  "alum_block_tubes_lname":"opentrons_24_aluminumblock_nest_1.5ml_snapcap",
-                                  "barcode_tube_init_vol":10,
-                                  "mag_engage_height":3.45,
-                                  "num_mix_repns":10,
-                                  "is_flash_lights":true
-                                  }
-                                  """)  # noqa: E501 Do not report 'line too long' warnings
-    return [_all_values[n] for n in names]
-
-
 def run(ctx: protocol_api.ProtocolContext):
 
     [p20_mount,
