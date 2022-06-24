@@ -41,13 +41,13 @@ Explanation of parameters below:
 ---
 
 ### Deck Setup
-![deck layout](/Users/eskilandersen/readme_images/6f0903/deck_layout.jpg)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/6f0903/deck_layout.jpg)
 
 ### Reagent Setup
-* Reagent tubes on the temperature module on slot 1
-![Reagent tubes](/Users/eskilandersen/readme_images/6f0903/reagent_tube_layout2.jpg)
+* Reagent tube layout on the aluminum block on the temperature module: slot 1
+![Reagent tubes](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/6f0903/reagent_tube_layout2.jpg)
 * Reagent reservoir: slot 9
-![reservoir](/Users/eskilandersen/readme_images/6f0903/reservoir_layout.jpg)
+![reservoir](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/6f0903/reservoir_layout.jpg)
 
 ---
 
