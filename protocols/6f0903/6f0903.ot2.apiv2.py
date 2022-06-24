@@ -11,14 +11,33 @@ metadata = {
 }
 
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{
+                                  "p20_mount":"left",
+                                  "plate_lname":"nest_96_wellplate_200ul_flat",
+                                  "alum_block_tubes_lname":"opentrons_24_aluminumblock_nest_1.5ml_snapcap",
+                                  "barcode_tube_init_vol":10,
+                                  "mag_engage_height":3.45,
+                                  "num_mix_repns":10,
+                                  "is_flash_lights":true
+                                  }
+                                  """)  # noqa: E501 Do not report 'line too long' warnings
+    return [_all_values[n] for n in names]
+
+
 def run(ctx: protocol_api.ProtocolContext):
 
     [p20_mount,
+     plate_lname,
+     alum_block_tubes_lname,
      barcode_tube_init_vol,
      mag_engage_height,
      num_mix_repns,
      is_flash_lights] = get_values(  # noqa: F821
      "p20_mount",
+     "plate_lname",
+     "alum_block_tubes_lname",
      "barcode_tube_init_vol",
      "mag_engage_height",
      "num_mix_repns",
@@ -49,10 +68,9 @@ def run(ctx: protocol_api.ProtocolContext):
     # load labware
 
     resv = ctx.load_labware('nest_12_reservoir_15ml', '9')
-    tc_plate = tc_mod.load_labware('nest_96_wellplate_200ul_flat')
-    mag_plate = mag_mod.load_labware('nest_96_wellplate_200ul_flat')
-    tmod_tubes = temp_mod.load_labware(
-        'opentrons_24_aluminumblock_nest_1.5ml_snapcap')
+    tc_plate = tc_mod.load_labware(plate_lname)
+    mag_plate = mag_mod.load_labware(plate_lname)
+    tmod_tubes = temp_mod.load_labware(alum_block_tubes_lname)
 
     # load tipracks
 
