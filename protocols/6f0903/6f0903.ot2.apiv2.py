@@ -303,6 +303,7 @@ def run(ctx: protocol_api.ProtocolContext):
             reagent: Well,
             reag_vol: float,
             well_mixing_vol: float,
+            reagent_name: str = '',
             reagent_mix: bool = True):
         """
         This function is used to transfer a reagent from a tube on the
@@ -316,7 +317,11 @@ def run(ctx: protocol_api.ProtocolContext):
         :param reagent_mix: Whether to mix the reagent or not before dispensing
         it in the target well.
         """
-        nonlocal p20
+        nonlocal p20, ctx
+        if reagent_name != '':
+            ctx.comment(
+                f"\n\nTransferring {reagent_name} to the sample wells on "
+                "the thermocycler\n")
         num_wells = len(dna_sample_column)
         # Repeat for the entire column
         for i, well in enumerate(dna_sample_column):
@@ -390,7 +395,8 @@ def run(ctx: protocol_api.ProtocolContext):
         dna_sample_column=DNA_initial_col,
         reagent=digest_mix,
         reag_vol=10,
-        well_mixing_vol=18)
+        well_mixing_vol=18,
+        reagent_name='Digest Master Mix')
     # 1.6       Close lid.
     tc_mod.close_lid()
     # Set the lid temperature here and keep it throughout the protocol
@@ -415,7 +421,8 @@ def run(ctx: protocol_api.ProtocolContext):
         dna_sample_column=DNA_initial_col,
         reagent=patch_mix,
         reag_vol=15,
-        well_mixing_vol=20)
+        well_mixing_vol=20,
+        reagent_name='Patch Master Mix')
     # 2.6       Close lid.
     tc_mod.close_lid()
     # 2.7       Cycle temperature: 94C for 30 seconds and 65 degrees for 4
@@ -443,7 +450,8 @@ def run(ctx: protocol_api.ProtocolContext):
         dna_sample_column=DNA_initial_col,
         reagent=exo_mix,
         reag_vol=2,
-        well_mixing_vol=20)
+        well_mixing_vol=20,
+        reagent_name='Exo Master Mix')
     # 3.6       Close lid.
     tc_mod.close_lid()
     # 3.7       Incubate at 37C for 60 minutes.
@@ -481,7 +489,8 @@ def run(ctx: protocol_api.ProtocolContext):
         dna_sample_column=DNA_target_col_1,
         reagent=TET2_mix,
         reag_vol=17,
-        well_mixing_vol=20)
+        well_mixing_vol=20,
+        reagent_name='TET2 Master Mix')
     # 5.6      Use P20 to mix Temperature Tube 5 (Fe solution).
     # 5.7      Transfer 5 uL of Temperature Tube 5 to Thermocycler Tube A3.
     # 5.8      Mix Thermocycler Tube 3A.
@@ -493,7 +502,8 @@ def run(ctx: protocol_api.ProtocolContext):
         dna_sample_column=DNA_target_col_1,
         reagent=Fe_sol,
         reag_vol=5,
-        well_mixing_vol=20)
+        well_mixing_vol=20,
+        reagent_name='Fe solution')
     # 5.11     Close lid.
     tc_mod.close_lid()
     # 5.12     Incubate at 37C for 60 minutes.
@@ -512,7 +522,8 @@ def run(ctx: protocol_api.ProtocolContext):
         dna_sample_column=DNA_target_col_1,
         reagent=stop_reagt,
         reag_vol=1,
-        well_mixing_vol=20)
+        well_mixing_vol=20,
+        reagent_name='Stop reagent')
     # 5.20     Close lid.
     tc_mod.close_lid()
     # 5.21     Incubate at 37C for 30 minutes.
@@ -594,7 +605,8 @@ def run(ctx: protocol_api.ProtocolContext):
         dna_sample_column=DNA_target_col_2,
         reagent=NaOH,
         reag_vol=4,
-        well_mixing_vol=18)
+        well_mixing_vol=18,
+        reagent_name='NaOH solution')
     # 7.9      Close thermocycler.
     tc_mod.close_lid()
     # 7.10     Incubate at 50C for 10 minutes.
@@ -615,6 +627,7 @@ def run(ctx: protocol_api.ProtocolContext):
         reagent=dH2O,
         reag_vol=10,
         well_mixing_vol=20,
+        reagent_name='dH2O',
         reagent_mix=False)
     # 7.17     Use P20 to mix Temperature Tube 9 (APOBEC Master Mix).
     # 7.18     Use P20 to transfer 20 uL of Temperature Tube 9 to Thermocycler
@@ -627,7 +640,8 @@ def run(ctx: protocol_api.ProtocolContext):
         dna_sample_column=DNA_target_col_2,
         reagent=APOBEC_mix,
         reag_vol=20,
-        well_mixing_vol=20)
+        well_mixing_vol=20,
+        reagent_name='APOBEC Master Mix')
     # 7.22     Close lid.
     tc_mod.close_lid()
     # 7.23     Incubate at 37C for 3 hours.
@@ -704,7 +718,8 @@ def run(ctx: protocol_api.ProtocolContext):
         dna_sample_column=DNA_target_col_3,
         reagent=pcr_mix,
         reag_vol=20,
-        well_mixing_vol=20)
+        well_mixing_vol=20,
+        reagent_name='PCR Master Mix')
     # 9.6      Use P20 to mix Temperature Tube 11 (Barcode Primer 1).
     # 9.7      Transfer 1 uL of Temperature Tube 11 to Thermocycler Tube 7A.
     # 9.8      Mix Thermocycler Tube 7A.
@@ -735,7 +750,10 @@ def run(ctx: protocol_api.ProtocolContext):
     # 9.33     Transfer 1 uL of Temperature Tube 18 to Thermocycler Tube 7H.
     # 9.34     Mix Thermocycler Tube 7H.
     # 9.35     Discard Tip.
+    i = 1
     for barcode_tube, d_well in zip(barcodes, DNA_target_col_3):
+        ctx.comment(f"\n\nAdding barcode {i}\n")
+        i += 1
         pick_up(p20)
         mix_vol = barcode_tube_init_vol - 2
         mix_vol = barcode_tube_init_vol if barcode_tube_init_vol < 20 else 20
