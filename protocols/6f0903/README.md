@@ -4,10 +4,10 @@
 [Opentrons](https://opentrons.com/)
 
 ### Partner
-[University of Utah Huntsman Cancer Institute](https://healthcare.utah.edu/huntsmancancerinstitute/)
+[Varley Lab, University of Utah Huntsman Cancer Institute](https://uofuhealth.utah.edu/huntsman/labs/varley/)
 
 ## Categories
-* NGS Prep
+* NGS Library Prep
 	*  MethylPatch Protocol
 
 ## Description
@@ -16,7 +16,7 @@ TODO: Fill out this section
 
 Explanation of parameters below:
 * `p20 mount`: Choose whether the P20 single channel pipette should be mounted in the right or left pipette mount. The P300 8-channel pipette will then automatically be assigned to the other mount.
-* `Barcode tubes initial volume (µL)`: The initial volume of the tubes containing barcodes, the volumes are presumed to be the same for all of the barcode tubes, and is used to determine the mixing volume.
+* `Barcode tubes initial volume (µL)`: The initial volume of the tubes containing barcodes, the volumes are presumed to be the same for all of the barcode tubes, and is used to determine the volume for mixing the barcodes prior to transferring them to the sample tubes.
 * `Magnet engagement height (mm)`: The distance from the base of the plate to raise the magnets on the magnetic module when engaging the magnets.
 * `Number of mixing repetitions`: How many mixing repetitions to perform for every mixing step.
 * `Flash the OT-2 lights when the protocol finishes?`: If this parameter is set to `Yes` the OT-2 will flash its lights five times when the protocol finishes to alert the user.
