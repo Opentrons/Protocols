@@ -1,4 +1,4 @@
-# QIAcuity Plate Transfer
+# Plasmid Luciferase Assay
 
 ### Author
 [Opentrons](https://opentrons.com/)
@@ -23,14 +23,16 @@ Links:
 <br></br>
 <br></br>
 
-This protocol performs a custom QIAcuity PCR prep.
+
+This protocol performs a custom Plasmid Luciferase Assay to a 384-wellplate.
 
 ---
 
 ### Labware
+* Corning 96 Well Plate 360 ul Flat
+* Custom 384 Well Plate 100 ul
+* [NEST 12-Well Reservoirs, 15 mL #999-00076](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/)
 * [Opentrons 20ul tips](https://shop.opentrons.com/collections/opentrons-tips)
-* [NEST 0.1 mL 96-Well PCR Plate, Full Skirt](https://shop.opentrons.com/nest-0-1-ml-96-well-pcr-plate-full-skirt/)
-* [QIAcuity 96-well Nanoplate](https://www.qiagen.com/us/products/instruments-and-automation/accessories/qiacuity-nanoplates-and-accessories/)
 
 ### Pipettes
 * [P20 Multi Channel Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/8-channel-electronic-pipette)
@@ -38,7 +40,10 @@ This protocol performs a custom QIAcuity PCR prep.
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/9250d7/deck2.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/925d07/deck_pla.png)
+* reservoir channel 1: lipofectamine 2000
+* reservoir channel 2: V141 plasmid
+* 96-wellplate: siRNA
 
 ---
 
