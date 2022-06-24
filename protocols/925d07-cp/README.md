@@ -9,6 +9,20 @@
 
 ## Description
 
+Links:
+* [Random Aliquoting](./925d07-cp)
+<br></br>
+<br></br>
+* [Plasmind Luciferase Assay](./925d07-pla)
+<br></br>
+<br></br>
+* [QIAcuity Plate Transfer](./925d07-q)
+<br></br>
+<br></br>
+* [PCR Prep](./925d07-v3)
+<br></br>
+<br></br>
+
 This protocol performs a custom aliquoting procedure based on a randomly-generated 1-4 plate map. Enough volume to accommodate all 4 destination wells, including overage volume, is aspirated from the source well and distributed to all 4 destination wells. A new tip is obtained for each source-destination set. The layout is shown below:  
 
 ![map](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/925d07/map.png)
