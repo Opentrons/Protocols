@@ -14,6 +14,8 @@
 This is an NGS prep protocol...
 TODO: Fill out this section
 
+**WARNING: This OT-2 protocol has not been validated yet and there is no guarantee that it works as intended.**
+
 Explanation of parameters below:
 * `p20 mount`: Choose whether the P20 single channel pipette should be mounted in the right or left pipette mount. The P300 8-channel pipette will then automatically be assigned to the other mount.
 * `Barcode tubes initial volume (µL)`: The initial volume of the tubes containing barcodes, the volumes are presumed to be the same for all of the barcode tubes, and is used to determine the volume for mixing the barcodes prior to transferring them to the sample tubes.

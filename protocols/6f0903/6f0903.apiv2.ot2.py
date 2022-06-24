@@ -5,7 +5,7 @@ from opentrons.types import Point
 
 metadata = {
     'protocolName': 'MethylPatch Protocol for Opentrons OT-2',
-    'author': 'Eskil Andersen <protocols@opentrons.com>',
+    'author': 'Eskil Andersen <eskil.andersen@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'
 }
