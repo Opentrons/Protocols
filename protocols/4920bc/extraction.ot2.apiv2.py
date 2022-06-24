@@ -13,7 +13,7 @@ TEST_MODE = False
 # Start protocol
 def run(ctx):
 
-    num_samples = 64
+    num_samples = 96
     mixreps = 20
     vol_mix = 220
     z_offset = 3.0
@@ -57,10 +57,10 @@ def run(ctx):
     """
     Here is where you can define the locations of your reagents.
     """
-    binding_buffer = res1.wells()[:2]
+    binding_buffer = res1.wells()[:3]
     elution_solution = res1.wells()[11:]
-    vhb = res1.wells()[3:5]
-    rna_wash = [res2.wells()[s:f] for s, f in [[0, 2], [2, 4], [4, 6]]]
+    vhb = res1.wells()[3:6]
+    rna_wash = [res2.wells()[s:f] for s, f in [[0, 3], [3, 6], [6, 9]]]
     dnase = res1.wells()[6:7]
     phm = res1.wells()[8:9]
 
@@ -68,7 +68,14 @@ def run(ctx):
     mag_samples_m = magplate.rows()[0][:num_cols]
     elution_samples_m = elutionplate.rows()[0][:num_cols]
     all_tips = [well for rack in tips300 for well in rack.rows()[0]]
-    parking_sets = [all_tips[i*num_cols:(i+1)*num_cols] for i in range(9)]
+    parking_sets = []
+    for i in range(9):
+        if (i+1)*num_cols <= len(all_tips):
+            set = all_tips[i*num_cols:(i+1)*num_cols]
+        else:
+            set = all_tips[
+                (i*num_cols) % len(all_tips):(i+1)*num_cols % len(all_tips)]
+        parking_sets.append(set)
     radius = mag_samples_m[0].width
 
     magdeck.disengage()  # just in case
@@ -77,6 +84,15 @@ def run(ctx):
     m300.flow_rate.aspirate = 50
     m300.flow_rate.dispense = 150
     m300.flow_rate.blow_out = 300
+
+    last_index = 0
+
+    def check_set(set):
+        nonlocal last_index
+        new_index = all_tips.index(set[0])
+        if new_index < last_index:
+            ctx.pause('Please refill tipracks before resuming.')
+        last_index = new_index
 
     waste_vol = 0
     waste_threshold = 185000
@@ -99,6 +115,8 @@ def run(ctx):
                 ctx.pause('Please empty liquid waste before resuming.')
                 waste_vol = 0
             waste_vol += vol
+
+        check_set(parking_spots)
 
         m300.flow_rate.aspirate /= 5
         for m, spot in zip(mag_samples_m, parking_spots):
@@ -147,6 +165,9 @@ def run(ctx):
                                supernatant to the final clean elutions PCR
                                plate.
         """
+
+        check_set(parking_spots)
+
         latest_chan = -1
         chan_ind = 0
         vol_track = 0
@@ -196,10 +217,12 @@ def run(ctx):
         :param resuspend (boolean): Whether to resuspend beads in wash buffer.
         """
 
+        check_set(parking_spots)
+
         if magdeck.status == 'engaged':
             magdeck.disengage()
 
-        cols_per_source_chan = math.ceil(8/len(source))
+        cols_per_source_chan = math.ceil(12/len(source))
         if source == vhb:
             num_trans = math.ceil(vol/180)
             air_gap_vol = 20
@@ -255,6 +278,8 @@ def run(ctx):
                                supernatant to the final clean elutions PCR
                                plate.
         """
+
+        check_set(parking_spots)
 
         # resuspend beads in elution
         if magdeck.status == 'enagaged':
