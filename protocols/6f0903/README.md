@@ -45,11 +45,14 @@ Explanation of parameters below:
 ![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)
 
 ### Reagent Setup
-* This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:
-* Reservoir 1: slot 5
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res1_v2.png)
+* Reagent tubes on the temperature module on slot 1
+![Reagent tubes](/Users/eskilandersen/readme_images/6f0903/reagent_tubes.jpg)
+![Reagent tube legend](/Users/eskilandersen/readme_images/6f0903/reagent_tube_legend.jpg)
 * Reservoir 2: slot 2  
 ![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res2.png)
+
+reagent_tube_legend.jpg
+reagent_tubes.jpg
 
 ---
 
