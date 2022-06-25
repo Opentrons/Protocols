@@ -3,7 +3,7 @@
     "type": "int",
     "label": "Number of Samples (max 288)",
     "name": "num_samp",
-    "default": 288
+    "default": 96
   },
   {
     "type": "dropDown",
