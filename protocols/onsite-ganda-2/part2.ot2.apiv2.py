@@ -23,6 +23,7 @@ def run(ctx):
     else:
         m300_mount = 'right'
     num_cols = math.ceil(num_samples/8)
+    num_etoh_wells = math.ceil((0.4*num_samples)/15)
     m20_speed_mod = 4
     airgap_library = 5
     # load modules
