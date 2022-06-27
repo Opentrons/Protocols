@@ -1,0 +1,17 @@
+[
+  {
+    "type": "textFile",
+    "label": ".CSV File",
+    "name": "csv",
+    "default": "3,4.3,0.0043,508.59,0.01,1845.47\n4,4.1,0.0041,462.57,0.01,886.35"
+  },
+  {
+    "type": "dropDown",
+    "label": "P1000 Single-Channel Mount",
+    "name": "p1000_mount",
+    "options": [
+      {"label": "Left", "value": "left"},
+      {"label": "Right", "value": "right"}
+    ]
+  }
+]
