@@ -1,89 +1,75 @@
-# Protocol Title (should match metadata of .py file)
+# Normalization with a multi-channel pipette substituting for a single-channel pipette
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
 ### Partner
-[Partner Name](partner website link)
+[AstraZeneca](https://www.astrazeneca.com/)
 
 ## Categories
-* Broader Category
-	* Subcategory (can be the name of a kit when applicable)
+* Normalization
+	* Normalization with a multi-channel pipette substituting for a single-channel pipette
+
 
 ## Description
-This section of the README (especially the first paragraph) should grip a prospective user with the overarching purpose/flow of the protocol, but should not include fine details of the protocol steps themselves.
+![Normalization Example](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/normalization/normalization_example.png)
 
-Example: This is a flexible protocol accommodating a wide range of commercial RNA extraction workflows for COVID-19 sample processing. The protocol is broken down into 5 main parts:
-* binding buffer addition to samples
-* bead wash 3x using magnetic module
-* final elution to chilled PCR plate
+Concentration normalization is a key component of many genomic and proteomic applications, such as NGS library prep. With this protocol, you can easily normalize the concentrations of samples in a 96 or 384 microwell plate without worrying about missing a well or adding the wrong volume. Just upload your properly formatted CSV file (keep scrolling for an example), customize your parameters, and download your ready-to-run protocol.
 
-Subsequent paragraphs can give some more insight into the details of the protocol, but a step-by-step description should be included in the 'Protocol Steps' section below.
-
-Example: For sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 4) to the elution PCR plate (temperature module, slot 1). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.
-
-Results of the Opentrons Science team's internal testing of this protocol on the OT-2 are shown below:  
-![results](link_to_results.png)
-
-Explanation of complex parameters below:
-* `park tips`: If set to `yes` (recommended), the protocol will conserve tips between reagent addition and removal. Tips will be stored in the wells of an empty rack corresponding to the well of the sample that they access (tip parked in A1 of the empty rack will only be used for sample A1, tip parked in B1 only used for sample B1, etc.). If set to `no`, tips will always be used only once, and the user will be prompted to manually refill tipracks mid-protocol for high throughput runs.
-* `input .csv file`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:
-```
-source,dest,vol
-A1,B1,4
-```
 
 ---
+![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
-### Modules
-* [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
-* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
-* [Thermocycler Module](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module)
-* [HEPA Module](https://shop.opentrons.com/collections/hardware-modules/products/hepa-module)
+To purchase tips, reagents, or pipettes, please visit our [online store](https://shop.opentrons.com/) or contact our sales team at [info@opentrons.com](mailto:info@opentrons.com)
 
-### Labware
-* [Labware name](link to labware on shop.opentrons.com when applicable)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [Opentrons OT-2](https://shop.opentrons.com/collections/ot-2-robot/products/ot-2)
+* [Opentrons OT-2 Run App (Version 3.15.0 or later)](https://opentrons.com/ot-app/)
+* [Opentrons Single-Channel Pipette](https://shop.opentrons.com/collections/ot-2-pipettes) and corresponding [Tips](https://shop.opentrons.com/collections/opentrons-tips)
+* [Samples in a compatible plate (96-well or 384-well)](https://labware.opentrons.com/?category=wellPlate)
+* [Automation-friendly reservoir](https://labware.opentrons.com/?category=reservoir)
+* Diluent
 
-### Pipettes
-* [Pipette name](link to pipette on shop.opentrons.com)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+For more detailed information on compatible labware, please visit our [Labware Library](https://labware.opentrons.com/).
 
-### Reagents
-* [kit name when applicable](link to kit)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
 
 ---
+![Setup](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/Setup.png)
 
-### Deck Setup
-* If the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)
+**CSV Format**
 
-### Reagent Setup
-* This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:
-* Reservoir 1: slot 5
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res1_v2.png)
-* Reservoir 2: slot 2  
-![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res2.png)
+Your file must be saved as a comma separated value (.csv) file type. Your CSV must contain values corresponding to volumes in microliters (μL). It should be formatted in “landscape” orientation, with the value corresponding to well A1 in the upper left-hand corner of the value list.
 
----
+![Normalization CSV](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/normalization/normalization_csv.png)
 
-### Protocol Steps
-1. This section should consist of a numerical outline of the protocol steps, somewhat analogous to the steps outlined by the user in their custom protocol submission.
-2. example step: Samples are transferred from the source tuberacks on slots 1-2 to the PCR plate on slot 3, down columns and then across rows.
-3. example step: Waste is removed from each sample on the magnetic module, ensuring the bead pellets are not contacted by the pipette tips.
+In this example, 40μL will be added to A1, 41μL will be added to well B1, and so on.
 
-### Process
-1. Input your protocol parameters above.
-2. Download your protocol and unzip if needed.
-3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.
-4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.
-5. Set up your deck according to the deck map.
-6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).
-7. Hit 'Run'.
+If you’d like to follow our template, you can make a copy of [this spreadsheet](https://opentrons-protocol-library-website.s3.amazonaws.com/Technical+Notes/normalization/Opentrons+Normalization+Template.xlsx), fill out your values, and export as CSV from there.
+
+*Note about CSV*: All values corresponding to wells in the CSV must have a value (zero (0) is a valid value and nothing will be transferred to the corresponding well(s)). Additionally, the CSV can be formatted in "portrait" orientation. In portrait orientation, the bottom left corner is treated as A1 and the top right corner would correspond to the furthest well from A1 (H12 in a 96-well plate).
+
+Using the customization fields below, set up your protocol.
+* Volumes CSV: Upload the CSV (.csv) containing your diluent volumes.
+* Pipette Model: Select which pipette you will use for this protocol.
+* Pipette Mount: Specify which mount your single-channel pipette is on (left or right)
+* Plate Type: Select which (destination) plate you will use for this protocol.
+* Reservoir Type: Select which (source) reservoir you will use for this protocol.
+* Filter Tips: Specify whether you want to use filter tips.
+* Tip Usage Strategy: Specify whether you'd like to use a new tip for each transfer, or keep the same tip throughout the protocol.
+
+### Robot
+* [OT-2](https://opentrons.com/ot-2)
+
+## Process
+
+1. Create your CSV file according to our instructions.
+2. Upload your CSV and select all desired settings according to the “Setup” section above to customize your protocol run.
+3. Download your customized OT-2 protocol using the blue “Download” button, located above the deckmap.
+4. Upload your protocol into the Opentrons App and follow the instructions there to set up your deck, calibrate your labware, and proceed to run.
+5. Make sure to add reagents to your labware before placing it on the deck! Your diluent should be in your reservoir, and the samples you’re normalizing should be in your plate.
 
 ### Additional Notes
-If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
+
+If you’d like to request a protocol supporting multiple plates or require other changes to this script, please fill out our [Protocol Request Form](https://opentrons-protocol-dev.paperform.co/). You can also modify the Python file directly by following our [API Documentation](https://docs.opentrons.com/v2/). If you’d like to chat with an applications engineer about changes, please contact us at [protocols@opentrons.com](mailto:protocols@opentrons.com).
 
 ###### Internal
-protocol-hex-code
+6d901d
