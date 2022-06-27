@@ -28,32 +28,27 @@ from opentrons import protocol_api
 # metadata
 metadata = {
     'protocolName': 'My Protocol',
-    'author': 'Name <email@address.com>',
-    'description': 'Simple protocol to get started using OT2',
-    'apiLevel': '2.4'
+    'author': 'Name <opentrons@example.com>',
+    'description': 'Simple protocol to get started using the OT-2',
+    'apiLevel': '2.12'
 }
 
-# protocol run function. the part after the colon lets your editor know
-# where to look for autocomplete suggestions
+# protocol run function
 def run(protocol: protocol_api.ProtocolContext):
 
-    """ load labware """
-    # my_plate = protocol.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '1')
-    # my_tiprack = protocol.load_tiprack('opentrons_96_wellplate_300ul', '2')
+    # labware
+    plate = protocol.load_labware('corning_96_wellplate_360ul_flat', location='1')
+    tiprack = protocol.load_labware('opentrons_96_tiprack_300ul', location='2')
 
-    """ Variables"""
-    # numSamps is the number of samples and should be 1-96 (int)
-    numSamps = _numSamps
+    # pipettes
+    left_pipette = protocol.load_instrument(
+         'p300_single', mount='left', tip_racks=[tiprack])
 
-    """ load pipettes """
-    # p300 = protocol.load_instrument('p300_single_gen2', 'right', tip_racks=[my_tiprack])
-
-    """ helper functions """
-    # def my_helper_fxn():
-    #     protocol.comment('I am helping!')
-
-    """ liquid transfer commands """
-    # p300.transfer(100, my_plate.wells()[0], my_plate.wells()[1])
+    # commands
+    left_pipette.pick_up_tip()
+    left_pipette.aspirate(100, plate['A1'])
+    left_pipette.dispense(100, plate['B2'])
+    left_pipette.drop_tip()
 ```
 
 
