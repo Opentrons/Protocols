@@ -1,0 +1,30 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Sample Prep": [
+            "Plate Filling"
+        ]
+    },
+    "deck-setup": "\n",
+    "internal": "onsite-dmso",
+    "labware": "\nCustom Opentrons 4-in-1 tube rack\nAltemis lab 48 plate\nMicronic 96 well plate\nNest 1-well Reservoir\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* Sample Prep\n\t* Plate Filling\n\nExplanation of complex parameters below:\n* `csv`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line, with volume in the 6th column:\n![csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite-dmso/Screen+Shot+2022-06-27+at+4.46.37+PM.png)\n* `P1000 Mount`: Specify which mount (left or right) to host the P1000 single channel pipette\n\n---\n\n\n",
+        "deck-setup": "![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite-dmso/Screen+Shot+2022-06-27+at+4.51.24+PM.png)\n\n---\n\n",
+        "internal": "onsite-dmso\n",
+        "labware": "* Custom Opentrons 4-in-1 tube rack\n* Altemis lab 48 plate\n* Micronic 96 well plate\n* Nest 1-well Reservoir\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [P1000 Single-Channel pipette]()\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "reagents": "* DMSO\n\n---\n\n",
+        "title": "Diluting Samples with DMSO"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nP1000 Single-Channel pipette\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "reagents": [
+        "DMSO"
+    ],
+    "title": "Diluting Samples with DMSO"
+}
