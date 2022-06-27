@@ -46,6 +46,7 @@ air_gap_bool,1
 air_gap_vol,3
 air_gap_volume,1
 airgap,1
+alum_block_tubes_lname,1
 am_bic_volume,1
 antibody_csv,1
 arrange_tips,1
@@ -78,6 +79,7 @@ assay,2
 assembly_csv,1
 assembly_transfer_vol,1
 b3_init_vol,1
+barcode_tube_init_vol,1
 bb_asp_rate_multiplier,1
 bb_disp_rate_multipler,1
 bead_add,1
@@ -197,7 +199,7 @@ control_plate,1
 count_mix,1
 count_plates,1
 count_samples,18
-csv,5
+csv,6
 csv1_buff,1
 csv1_samp,1
 csv1_urea,1
@@ -380,6 +382,7 @@ fill_plate_blank,2
 fill_second_plate,1
 fill_volume,1
 filter_tip,4
+filter_tips,1
 final_air_gap,1
 final_asp_speed,1
 final_conc,1
@@ -472,6 +475,7 @@ is_drop_tips,1
 is_dry_run,1
 is_eb_tube,1
 is_filtered,1
+is_flash_lights,1
 is_lwaste,1
 is_multi_disp_reags,1
 is_protk_tube,1
@@ -493,13 +497,20 @@ labware5,1
 labware6,1
 labware7,1
 labware8,1
+labware_1,1
+labware_11,1
 labware_1_lname,1
+labware_2,1
 labware_200ul_tips,1
 labware_24,1
 labware_2_lname,1
+labware_3,1
 labware_384,1
 labware_384_well_plate,2
 labware_384rxnplate,1
+labware_4,1
+labware_5,1
+labware_6,1
 labware_96,1
 labware_96rxnplate,1
 labware_aliquots,1
@@ -521,6 +532,7 @@ labware_plate,3
 labware_pool,1
 labware_pre_pcr_plate,2
 labware_rack,1
+labware_res,1
 labware_reservoir,10
 labware_rna,1
 labware_samp,1
@@ -574,7 +586,7 @@ m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
 mag_bead_mix_resuspend_vol,1
-mag_engage_height,3
+mag_engage_height,4
 mag_engage_time,2
 mag_gen,12
 mag_height,13
@@ -669,6 +681,7 @@ move_side,2
 move_vol,1
 mp_type,1
 multi_pip_info,1
+multitasking,1
 n1_col,1
 n1_primer_well,1
 n2_col,1
@@ -718,6 +731,7 @@ num_extracts,1
 num_gene,1
 num_mag_beads_tubes,1
 num_mastermix,2
+num_mix_repns,1
 num_mm,2
 num_of_dilutions,2
 num_pl,2
@@ -774,7 +788,7 @@ output_labware,1
 overage_percent,9
 p1000_flow_rate_asp,2
 p1000_flow_rate_disp,2
-p1000_mount,29
+p1000_mount,30
 p1000_rate,1
 p1000_sample_height,1
 p1000_single_mount,1
@@ -793,7 +807,7 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,99
+p20_mount,100
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
@@ -859,11 +873,11 @@ pcrcycles,2
 pdl1_dil,1
 peptide_supernat_vol,1
 pip,1
-pip_l,1
+pip_l,2
 pip_mnt,5
 pip_model,5
 pip_mount,9
-pip_r,1
+pip_r,2
 pip_tip,4
 pip_type,8
 pipette,1
@@ -894,6 +908,7 @@ plate_cols,1
 plate_count,6
 plate_def,1
 plate_height,2
+plate_lname,1
 plate_map_1_csv,1
 plate_map_2_csv,1
 plate_map_3_csv,1
@@ -943,6 +958,10 @@ quench_volume,1
 rack_count,1
 radial_offset,9
 raise_mix_dispense,1
+rate_asp_l,1
+rate_asp_r,1
+rate_disp_l,1
+rate_disp_r,1
 reaction_plate,3
 reag1_vol,1
 reag2_vol,1
@@ -1209,6 +1228,7 @@ tiprack_lname_300ul,1
 tiprack_slot,1
 tipreuse,5
 tips,1
+tipstrategy_dilution,1
 tiptrash,2
 tiptype,3
 tmod_1_lname,1
@@ -1284,7 +1304,7 @@ tvol,1
 twb_rate,1
 twelve_well_resv_lname,1
 udi_start_col,1
-uploaded_csv,14
+uploaded_csv,15
 uploaded_csv_mastermix,1
 use_384,1
 use_csv,1
