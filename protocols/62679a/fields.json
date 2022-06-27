@@ -11,7 +11,8 @@
     "name": "lw_dmso",
     "options": [
       { "label": "Beckman 8 Reservoir 19ml", "value": "beckman_8_reservoir_19000ul" },
-      { "label": "NEST 12 Reservoir 15ml", "value": "nest_12_reservoir_15ml" }
+      { "label": "NEST 12 Reservoir 15ml", "value": "nest_12_reservoir_15ml" },
+      { "label": "Opentrons 15 Tube Rack with Falcon 15 mL Conical", "value": "opentrons_15_tuberack_falcon_15ml_conical" }
     ]
   },
   {
@@ -30,6 +31,15 @@
     "options": [
       { "label": "left", "value": "left" },
       { "label": "right", "value": "right" }
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "tip strategy for dilution",
+    "name": "tipstrategy_dilution",
+    "options": [
+      { "label": "one tip per entire compound dilution", "value": "once" },
+      { "label": "new tip for each compound dilution step", "value": "always" }
     ]
   }
 ]

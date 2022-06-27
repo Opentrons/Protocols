@@ -1,44 +1,36 @@
-# QIAcuity Plate Transfer
+# Diluting Samples with DMSO
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* PCR
-	* PCR Prep
+* Sample Prep
+	* Plate Filling
 
-## Description
-
-Links:
-* [Random Aliquoting](./925d07-cp)
-<br></br>
-<br></br>
-* [Plasmind Luciferase Assay](./925d07-pla)
-<br></br>
-<br></br>
-* [QIAcuity Plate Transfer](./925d07-q)
-<br></br>
-<br></br>
-* [PCR Prep](./925d07-v3)
-<br></br>
-<br></br>
-
-This protocol performs a custom QIAcuity PCR prep.
+Explanation of complex parameters below:
+* `csv`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line, with volume in the 6th column:
+![csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite-dmso/Screen+Shot+2022-06-27+at+4.46.37+PM.png)
+* `P1000 Mount`: Specify which mount (left or right) to host the P1000 single channel pipette
 
 ---
 
+
 ### Labware
-* [Opentrons 20ul tips](https://shop.opentrons.com/collections/opentrons-tips)
-* [NEST 0.1 mL 96-Well PCR Plate, Full Skirt](https://shop.opentrons.com/nest-0-1-ml-96-well-pcr-plate-full-skirt/)
-* [QIAcuity 96-well Nanoplate](https://www.qiagen.com/us/products/instruments-and-automation/accessories/qiacuity-nanoplates-and-accessories/)
+* Custom Opentrons 4-in-1 tube rack
+* Altemis lab 48 plate
+* Micronic 96 well plate
+* Nest 1-well Reservoir
 
 ### Pipettes
-* [P20 Multi Channel Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/8-channel-electronic-pipette)
+* [P1000 Single-Channel pipette]()
+
+### Reagents
+* DMSO
 
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/9250d7/deck2.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite-dmso/Screen+Shot+2022-06-27+at+4.51.24+PM.png)
 
 ---
 
@@ -55,4 +47,4 @@ This protocol performs a custom QIAcuity PCR prep.
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-9250d7
+onsite-dmso

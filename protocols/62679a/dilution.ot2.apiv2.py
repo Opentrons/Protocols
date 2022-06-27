@@ -8,8 +8,10 @@ metadata = {
 
 def run(ctx):
 
-    file_dilution, lw_dmso, mount_p300, mount_p20 = get_values(  # noqa: F821
-     'file_dilution', 'lw_dmso', 'mount_p300', 'mount_p20')
+    [file_dilution, lw_dmso, mount_p300, mount_p20,
+     tipstrategy_dilution] = get_values(  # noqa: F821
+     'file_dilution', 'lw_dmso', 'mount_p300', 'mount_p20',
+     'tipstrategy_dilution')
 
     mix_reps = 5
 
@@ -17,7 +19,7 @@ def run(ctx):
         'greinerbioone_96_wellplate_340ul', '1', 'compound management plate')
     tipracks200 = [
         ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-        for slot in ['7', '8']]
+        for slot in ['7', '8', '11']]
     tipracks20 = [
         ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
         for slot in ['9']]
@@ -25,7 +27,7 @@ def run(ctx):
         str(i+1): ctx.load_labware('perkinelmer_96_wellplate_450ul', slot,
                                    f'compound plate {i+1}')
         for i, slot in enumerate(['4', '5', '6', '3'])}
-    dmso = ctx.load_labware(lw_dmso, '10', 'DMSO (column 1)').wells()[0]
+    dmso = ctx.load_labware(lw_dmso, '10', 'DMSO (position 1)').wells()[0]
 
     p300 = ctx.load_instrument('p300_single_gen2', mount_p300,
                                tip_racks=tipracks200)
@@ -74,9 +76,19 @@ def run(ctx):
         column = compound_dilution_plates[
             line[8]].columns_by_name()[parse_column(line[9])]
         [pip, mix_vol] = [p300, 50] if vol >= 20 else [p20, 20]
+        sources = column[:6]
+        destinations = column[1:7]
         pip.pick_up_tip()
         pip.mix(mix_reps, mix_vol, column[0])
-        pip.transfer(vol, column[:6], column[1:7],
-                     mix_after=(mix_reps, mix_vol), new_tip='never')
-        pip.air_gap(pip.min_volume)
-        pip.drop_tip()
+        for s, d in zip(sources, destinations):
+            if not pip.has_tip:
+                pip.pick_up_tip()
+            pip.transfer(vol, s, d, mix_after=(mix_reps, mix_vol),
+                         new_tip='never')
+            if tipstrategy_dilution == 'always':
+                pip.air_gap(pip.min_volume)
+                pip.drop_tip()
+
+        if tipstrategy_dilution == 'once':
+            pip.air_gap(pip.min_volume)
+            pip.drop_tip()
