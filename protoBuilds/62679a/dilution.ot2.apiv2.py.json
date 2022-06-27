@@ -1,5 +1,5 @@
 {
-    "content": "metadata = {\n    'protocolName': 'Compound Dilution',\n    'author': 'Nick <ndiehl@opentrons.com',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.12'\n}\n\n\ndef run(ctx):\n\n    file_dilution, lw_dmso, mount_p300, mount_p20 = get_values(  # noqa: F821\n     'file_dilution', 'lw_dmso', 'mount_p300', 'mount_p20')\n\n    mix_reps = 5\n\n    compound_management_plate = ctx.load_labware(\n        'greinerbioone_96_wellplate_340ul', '1', 'compound management plate')\n    tipracks200 = [\n        ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)\n        for slot in ['7', '8']]\n    tipracks20 = [\n        ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)\n        for slot in ['9']]\n    compound_dilution_plates = {\n        str(i+1): ctx.load_labware('perkinelmer_96_wellplate_450ul', slot,\n                                   f'compound plate {i+1}')\n        for i, slot in enumerate(['4', '5', '6', '3'])}\n    dmso = ctx.load_labware(lw_dmso, '10', 'DMSO (column 1)').wells()[0]\n\n    p300 = ctx.load_instrument('p300_single_gen2', mount_p300,\n                               tip_racks=tipracks200)\n    p20 = ctx.load_instrument('p20_single_gen2', mount_p20,\n                              tip_racks=tipracks20)\n\n    # parse\n    data = [\n        [val.strip().lower() for val in line.split(',')]\n        for line in file_dilution.splitlines()[3:]\n        if line and line.split(',')[0].strip()]\n\n    def parse_well_name(name):\n        return f'{name[0].upper()}{int(name[1:])}'\n\n    def parse_column(name):\n        return str(int(name[1:]))\n\n    substance_map = {\n        line[3]: compound_management_plate.wells_by_name()[\n            parse_well_name(line[1])]\n        for line in data\n    }\n\n    # transfer stock to compound dilution plates\n    for line in data:\n        p300.transfer(float(line[12]), substance_map[line[10]],\n                      compound_dilution_plates[line[8]].wells_by_name()[\n                        parse_well_name(line[9])],\n                      mix_before=(mix_reps, 50))\n\n    ctx.pause('Check plate/spin down to ensure there are no air bubbles.')\n\n    # pre-transfer DMSO before dilution\n    p300.pick_up_tip()\n    for line in data:\n        p300.distribute(float(line[13]), dmso,\n                        compound_dilution_plates[line[8]].columns_by_name()[\n                            parse_column(line[9])][1:],\n                        disposal_volume=5, air_gap=10, new_tip='never')\n    p300.drop_tip()\n\n    # dilute down each column\n    for line in data:\n        vol = float(line[14])\n        column = compound_dilution_plates[\n            line[8]].columns_by_name()[parse_column(line[9])]\n        [pip, mix_vol] = [p300, 50] if vol >= 20 else [p20, 20]\n        pip.pick_up_tip()\n        pip.mix(mix_reps, mix_vol, column[0])\n        pip.transfer(vol, column[:6], column[1:7],\n                     mix_after=(mix_reps, mix_vol), new_tip='never')\n        pip.air_gap(pip.min_volume)\n        pip.drop_tip()\n",
+    "content": "metadata = {\n    'protocolName': 'Compound Dilution',\n    'author': 'Nick <ndiehl@opentrons.com',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.12'\n}\n\n\ndef run(ctx):\n\n    [file_dilution, lw_dmso, mount_p300, mount_p20,\n     tipstrategy_dilution] = get_values(  # noqa: F821\n     'file_dilution', 'lw_dmso', 'mount_p300', 'mount_p20',\n     'tipstrategy_dilution')\n\n    mix_reps = 5\n\n    compound_management_plate = ctx.load_labware(\n        'greinerbioone_96_wellplate_340ul', '1', 'compound management plate')\n    tipracks200 = [\n        ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)\n        for slot in ['7', '8', '11']]\n    tipracks20 = [\n        ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)\n        for slot in ['9']]\n    compound_dilution_plates = {\n        str(i+1): ctx.load_labware('perkinelmer_96_wellplate_450ul', slot,\n                                   f'compound plate {i+1}')\n        for i, slot in enumerate(['4', '5', '6', '3'])}\n    dmso = ctx.load_labware(lw_dmso, '10', 'DMSO (position 1)').wells()[0]\n\n    p300 = ctx.load_instrument('p300_single_gen2', mount_p300,\n                               tip_racks=tipracks200)\n    p20 = ctx.load_instrument('p20_single_gen2', mount_p20,\n                              tip_racks=tipracks20)\n\n    # parse\n    data = [\n        [val.strip().lower() for val in line.split(',')]\n        for line in file_dilution.splitlines()[3:]\n        if line and line.split(',')[0].strip()]\n\n    def parse_well_name(name):\n        return f'{name[0].upper()}{int(name[1:])}'\n\n    def parse_column(name):\n        return str(int(name[1:]))\n\n    substance_map = {\n        line[3]: compound_management_plate.wells_by_name()[\n            parse_well_name(line[1])]\n        for line in data\n    }\n\n    # transfer stock to compound dilution plates\n    for line in data:\n        p300.transfer(float(line[12]), substance_map[line[10]],\n                      compound_dilution_plates[line[8]].wells_by_name()[\n                        parse_well_name(line[9])],\n                      mix_before=(mix_reps, 50))\n\n    ctx.pause('Check plate/spin down to ensure there are no air bubbles.')\n\n    # pre-transfer DMSO before dilution\n    p300.pick_up_tip()\n    for line in data:\n        p300.distribute(float(line[13]), dmso,\n                        compound_dilution_plates[line[8]].columns_by_name()[\n                            parse_column(line[9])][1:],\n                        disposal_volume=5, air_gap=10, new_tip='never')\n    p300.drop_tip()\n\n    # dilute down each column\n    for line in data:\n        vol = float(line[14])\n        column = compound_dilution_plates[\n            line[8]].columns_by_name()[parse_column(line[9])]\n        [pip, mix_vol] = [p300, 50] if vol >= 20 else [p20, 20]\n        sources = column[:6]\n        destinations = column[1:7]\n        pip.pick_up_tip()\n        pip.mix(mix_reps, mix_vol, column[0])\n        for s, d in zip(sources, destinations):\n            if not pip.has_tip:\n                pip.pick_up_tip()\n            pip.transfer(vol, s, d, mix_after=(mix_reps, mix_vol),\n                         new_tip='never')\n            if tipstrategy_dilution == 'always':\n                pip.air_gap(pip.min_volume)\n                pip.drop_tip()\n\n        if tipstrategy_dilution == 'once':\n            pip.air_gap(pip.min_volume)\n            pip.drop_tip()\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -2434,6 +2434,10 @@
                 {
                     "label": "NEST 12 Reservoir 15ml",
                     "value": "nest_12_reservoir_15ml"
+                },
+                {
+                    "label": "Opentrons 15 Tube Rack with Falcon 15 mL Conical",
+                    "value": "opentrons_15_tuberack_falcon_15ml_conical"
                 }
             ],
             "type": "dropDown"
@@ -2464,6 +2468,21 @@
                 {
                     "label": "right",
                     "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "tip strategy for dilution",
+            "name": "tipstrategy_dilution",
+            "options": [
+                {
+                    "label": "one tip per entire compound dilution",
+                    "value": "once"
+                },
+                {
+                    "label": "new tip for each compound dilution step",
+                    "value": "always"
                 }
             ],
             "type": "dropDown"
@@ -2529,10 +2548,16 @@
             "type": "opentrons_96_filtertiprack_20ul"
         },
         {
-            "name": "DMSO (column 1) on 10",
+            "name": "DMSO (position 1) on 10",
             "share": false,
             "slot": "10",
             "type": "beckman_8_reservoir_19000ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 200 \u00b5L on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_96_filtertiprack_200ul"
         },
         {
             "name": "Opentrons Fixed Trash on 12",
