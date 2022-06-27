@@ -210,6 +210,6 @@
     "type": "textFile",
     "label": "Upload CSV Input File (Upload CSV-formatted Excel File-with formatting of data values and file identical to example)",
     "name": "uploaded_csv",
-    "default": "Sample_Group,Sample_Volume,Sample_Position,Sample_Slot,Final_Position,Final_Slot\n1,70,E2,1,A1,5\n1,17,G2,2,B1,5\n1,70,E2,3,C1,5\n1,17,H2,4,D1,5\n1,105,E2,1,E1,5\n1,37,F2,2,F1,5\n1,17,G2,3,G1,5\n1,37,F2,4,H1,5\n1,17,H2,1,A2,5\n1,55,F2,2,B2,5\n2,15,A1,3,A1,5\n2,72,B1,4,B1,5\n2,17,C1,1,C1,5\n2,17,D1,2,D1,5\n2,25,E1,3,E1,5\n2,17,F1,4,F1,6\n2,17,H1,1,G1,6\n2,17,A2,2,H1,6\n2,77,B2,3,A2,6\n2,45,C2,4,B2,6\n3,17,A3,1,A1,6\n3,18,F1,2,B1,6\n3,17,B3,3,C1,6\n3,18,F1,4,D1,6\n3,17,A3,1,E1,6\n3,18,D2,2,F1,6\n3,17,B3,3,G1,6\n3,18,D2,4,H1,6\n"
+    "default": "Sample_Group,Sample_Volume,Sample_Position,Sample_Slot,Final_Position,Final_Slot\n1,70,B2,1,A1,5\n1,17,A2,2,B1,5\n1,70,B2,3,A1,5\n1,17,A2,4,B1,5\n1,105,A2,1,B1,5\n1,37,B2,2,A1,5\n1,17,A2,3,B1,5\n1,37,A2,4,B1,5\n1,17,A2,1,B2,5\n1,55,B2,2,A2,5\n2,15,A1,3,A1,5\n2,72,B1,4,B1,5\n2,17,A1,1,B1,5\n2,17,A1,2,B1,5\n2,25,A1,3,B1,5\n2,17,A1,4,B1,6\n2,17,B1,1,A1,6\n2,17,A2,2,B1,6\n2,77,B2,3,A2,6\n2,45,A2,4,B2,6\n3,17,A2,1,A1,6\n3,18,B1,2,B1,6\n3,17,A3,3,A1,6\n3,18,B1,4,A1,6\n3,17,A1,1,B1,6\n3,18,A2,2,B1,6\n3,17,B1,3,A1,6\n3,18,A2,4,B1,6\n"
   }
 ]
