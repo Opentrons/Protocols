@@ -32,5 +32,14 @@
       { "label": "left", "value": "left" },
       { "label": "right", "value": "right" }
     ]
+  },
+  {
+    "type": "dropDown",
+    "label": "tip strategy for dilution",
+    "name": "tipstrategy_dilution",
+    "options": [
+      { "label": "one tip per entire compound dilution", "value": "once" },
+      { "label": "new tip for each compound dilution step", "value": "always" }
+    ]
   }
 ]
