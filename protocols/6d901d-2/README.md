@@ -1,10 +1,10 @@
-# Cherrypicking
+# Cherrypicking with multi-channel pipette substituting for a single channel pipette
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Featured
+* Sample Prep
 	* Cherrypicking
 
 ## Description
@@ -21,10 +21,7 @@ Explanation of complex parameters below:
 * `Tip Type`: Specify whether you want to use filter tips.
 * `Tip Usage Strategy`: Specify whether you'd like to use a new tip for each transfer, or keep the same tip throughout the protocol.
 
-
-
 ---
-
 
 ### Labware
 * Any verified labware found in our [Labware Library](https://labware.opentrons.com/?category=wellPlate)
@@ -37,7 +34,6 @@ Explanation of complex parameters below:
 * P50 Single GEN1 Pipette
 * P300 Single GEN1 Pipette
 * P1000 Single GEN1 Pipette
-
 
 ---
 
@@ -65,4 +61,4 @@ Explanation of complex parameters below:
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-cherrypicking
+6d901d-2
