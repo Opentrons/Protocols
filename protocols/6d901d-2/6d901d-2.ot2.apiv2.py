@@ -59,7 +59,8 @@ def run(ctx: protocol_api.ProtocolContext):
     source_plate = ctx.load_labware(source_plate_type, '7')
     dest_plate = ctx.load_labware(destination_plate_type, '8')
     # This reservoir is unused, but present
-    ctx.load_labware(res_type, '9')
+    if res_type != "none":
+        ctx.load_labware(res_type, '9')
 
     # Load tipracks
     tip_name = tiprack_map[pipette_type][tip_type]
