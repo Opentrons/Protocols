@@ -40,21 +40,6 @@ def well_csv_to_list(csv_string):
     return flatten_matrix(data)
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{
-                                  "volumes_csv":"20,0,12,20,18,20,17,14,20,12,20,18\\n20,20,20,20,20,20,20,20,20,16,20,20\\n20,12,12,20,12,20,12,20,18,18,12,20\\n20,0,20,20,0,20,0,20,20,20,20,20\\n12,0,0,20,20,20,20,13,12,20,20,13\\n20,20,20,20,12,17,20,20,20,0,14,20\\n20,20,20,0,13,20,12,20,13,19,20,19\\n20,20,20,17,20,20,20,0,15,20,19,13",
-                                  "pip_model":"p20_multi_gen2",
-                                  "pip_mount":"right",
-                                  "plate_type":"nest_96_wellplate_200ul_flat",
-                                  "res_type":"usascientific_12_reservoir_22ml",
-                                  "filter_tip":"no",
-                                  "tip_reuse":"never"
-                                  }
-                                  """)  # noqa: E501 Do not report 'line too long' warnings
-    return [_all_values[n] for n in names]
-
-
 def run(ctx: protocol_api.ProtocolContext):
 
     [volumes_csv,
