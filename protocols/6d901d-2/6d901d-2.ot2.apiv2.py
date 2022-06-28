@@ -4,7 +4,9 @@ from opentrons.protocol_api.labware import OutOfTipsError
 
 
 metadata = {
-    'protocolName': 'Cherrypicking',
+    'protocolName':
+        ('Cherrypicking with multi-channel pipette substituting for a single '
+         'channel pipette'),
     'author': 'Nick & Eskil <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'
