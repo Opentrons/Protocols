@@ -46,7 +46,8 @@
       {"label": "NEST 1-Well, 195mL", "value": "nest_1_reservoir_195ml"},
       {"label": "NEST 12-Well, 15mL", "value": "nest_12_reservoir_15ml"},
       {"label": "Agilent 1-Well, 290mL", "value": "agilent_1_reservoir_290ml"},
-      {"label": "Axygen 1-Well, 90mL", "value": "axygen_1_reservoir_90ml"}
+      {"label": "Axygen 1-Well, 90mL", "value": "axygen_1_reservoir_90ml"},
+      {"label": "None", "value": "none"}
     ]
   },
   {
