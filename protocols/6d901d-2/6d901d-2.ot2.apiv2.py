@@ -13,24 +13,6 @@ metadata = {
 }
 
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{
-                                  "transfer_csv":"Source Well,Source Aspiration Height Above Bottom (in mm),Dest Well,Volume (in ul)\\nA1,1,A11,1\\nA1,1,A5,3\\nA1,1,H12,7",
-                                  "source_plate_type":"nest_96_wellplate_200ul_flat",
-                                  "destination_plate_type":"nest_96_wellplate_200ul_flat",
-                                  "res_type":"nest_1_reservoir_195ml",
-                                  "pipette_type":"p20_multi_gen2",
-                                  "pipette_mount":"right",
-                                  "tip_type":"standard",
-                                  "tip_reuse":"never",
-                                  "starting_tiprack_slot":"11",
-                                  "starting_tip_well":"B12"
-                                  }
-                                  """)  # noqa: E501 Do not report 'line too long' warnings
-    return [_all_values[n] for n in names]
-
-
 def run(ctx: protocol_api.ProtocolContext):
 
     [transfer_csv,
