@@ -35,7 +35,7 @@ def run(ctx):
     for i, row in enumerate(all_rows):
         vol = float(row[5])
         p1000.pick_up_tip()
-        p1000.transfer(vol, res.wells()[0], sample_tubes[i].bottom(z=2), new_tip='never', air_gap=30, blow_out=True, blowout_location='destination well')
+        p1000.transfer(vol, res.wells()[0], sample_tubes[i].top(z=-1), new_tip='always', air_gap=30, blow_out=True, blowout_location='destination well')
         p1000.mix(10, vol if vol < 1000 else 1000, sample_tubes[i].bottom(z=2))
         p1000.blow_out(sample_tubes[i].top(z=-1))
         p1000.drop_tip()
@@ -50,7 +50,7 @@ def run(ctx):
                        sample_tubes[i].bottom(z=2),
                        middle_48_plate.wells()[i],
                        new_tip='never',
-                       air_gap=10)
+                       air_gap=30)
         p1000.transfer(200,
                        middle_48_plate.wells()[i],
                        final_96_plate.wells()[i].top(z=-5),
