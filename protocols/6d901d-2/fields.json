@@ -89,7 +89,7 @@
     "type": "str",
     "label": "Starting Tiprack Slot",
     "name": "starting_tiprack_slot",
-    "default": "1"
+    "default": "4"
   },
   {
     "type": "str",
