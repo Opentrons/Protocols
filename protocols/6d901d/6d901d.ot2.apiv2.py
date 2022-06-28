@@ -10,7 +10,7 @@ metadata = {
     'apiLevel': '2.11'
     }
 
-tiprack_slots = ['1', '2', '10', '11']
+tiprack_slots = ['4', '5', '10', '11']
 
 
 def transpose_matrix(m):
@@ -73,9 +73,11 @@ def run(ctx: protocol_api.ProtocolContext):
      "tip_reuse")
 
     # create labware
-    plate = ctx.load_labware(plate_type, '4')
-
-    reservoir = ctx.load_labware(res_type, '6')
+    source_plate = ctx.load_labware(plate_type, '7')
+    # There could be a destination plate in slot 8 for cherry picking
+    # Load something tall so the pipette doesn't hit it
+    ctx.load_labware('usascientific_96_wellplate_2.4ml_deep', '8')
+    reservoir = ctx.load_labware(res_type, '9')
     source = reservoir.wells()[0]
 
     pip_size = pip_model.split('_')[0][1:]
@@ -92,15 +94,14 @@ def run(ctx: protocol_api.ProtocolContext):
         pip_model, pip_mount, tip_racks=tipracks)
 
     if 'p20' in pip_model:
-        # REVIEW: Recommended pick up current for m300 per tip, but is it
-        # suitable for a p20?
-        pick_up_current = 0.1
+        pick_up_current = 0.15  # 150 mA for single tip
         ctx._implementation._hw_manager.hardware._attached_instruments[
           pipette._implementation.get_mount()].update_config_item(
           'pick_up_current', pick_up_current)
 
-    # Created a tip_map with the columns reversed pipette always picks up the
-    # bottom-most tip in a given column.
+    # Tip_map has the columns reversed, pipette always picks up the
+    # bottom-most tip in a given column until the column is depleted, and then
+    # moves to the next column (from left to right).
     tip_map = []
     for rack in tipracks:
         tip_map.append(
@@ -157,6 +158,6 @@ def run(ctx: protocol_api.ProtocolContext):
         if tip_reuse == 'never':
             pick_up(pipette)
         pipette.aspirate(vol, source)
-        pipette.dispense(vol, plate.wells()[i])
+        pipette.dispense(vol, source_plate.wells()[i])
         if tip_reuse == 'never':
             pipette.drop_tip()
