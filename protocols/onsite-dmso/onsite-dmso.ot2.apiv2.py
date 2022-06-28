@@ -7,6 +7,11 @@ metadata = {
     'apiLevel': '2.11'
 }
 
+def get_values(*names):
+    import json
+    _all_values = json.loads("""{"csv":"vial #,amount (mg),amount,formula weight,desired conc. ,dmso needed\\n1,4.3,0.0043,448.53,0.01,500\\n2,4.6,0.0046,462.55,0.01,700\\n3,4.3,0.0043,801,0.01,900\\n4,4.1,0.0041,462.57,0.01,1000\\n5,4.4,0.0044,333.65,0.01,1100\\n6,4.3,0.0043,483.51,0.01,1200\\n7,4.5,0.0045,466.48,0.01,1300\\n8,4.2,0.0042,480.5,0.01,1500\\n9,4.5,0.0045,476.53,0.01,1700\\n10,4.1,0.0041,494,0.01,678","p1000_mount":"left"}""")
+    return [_all_values[n] for n in names]
+
 
 def run(ctx):
 
@@ -34,8 +39,8 @@ def run(ctx):
     sample_tubes = [tube for tube in sample_racks.wells()]
     for i, row in enumerate(all_rows):
         vol = float(row[5])
-        p1000.pick_up_tip()
         p1000.transfer(vol, res.wells()[0], sample_tubes[i].top(z=-1), new_tip='always', air_gap=30, blow_out=True, blowout_location='destination well')
+        p1000.pick_up_tip()
         p1000.mix(10, vol if vol < 1000 else 1000, sample_tubes[i].bottom(z=2))
         p1000.blow_out(sample_tubes[i].top(z=-1))
         p1000.drop_tip()
