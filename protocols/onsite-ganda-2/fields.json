@@ -2,7 +2,7 @@
   {
     "type": "int",
     "label": "Number of Samples (max 288)",
-    "name": "num_samp",
+    "name": "num_samples",
     "default": 96
   },
   {
