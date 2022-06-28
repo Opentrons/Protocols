@@ -34,7 +34,7 @@ def run(ctx):
     sample_tubes = [tube for tube in sample_racks.wells()]
     for i, row in enumerate(all_rows):
         vol = float(row[5])
-        p1000.transfer(vol, res.wells()[0], sample_tubes[i].top(z=-1), new_tip='always', air_gap=30, blow_out=True, blowout_location='destination well')
+        p1000.transfer(vol, res.wells()[0], sample_tubes[i].bottom(z=2), new_tip='always', air_gap=30, blow_out=True, blowout_location='destination well')
         p1000.pick_up_tip()
         p1000.mix(10, vol if vol < 1000 else 1000, sample_tubes[i].bottom(z=2))
         p1000.blow_out(sample_tubes[i].top(z=-1))
