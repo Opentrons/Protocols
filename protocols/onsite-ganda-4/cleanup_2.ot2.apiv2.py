@@ -14,7 +14,6 @@ TEST_MODE = True
 
 
 def run(ctx):
-
     """PROTOCOL."""
     # [
     #  num_samples, m20_mount
@@ -28,9 +27,9 @@ def run(ctx):
     else:
         m300_mount = 'right'
     num_cols = math.ceil(num_samples/8)
-    num_etoh_wells = math.ceil((0.4*num_samples)/15)
-    m20_speed_mod = 4
-    airgap_library = 5
+    # num_etoh_wells = math.ceil((0.4*num_samples)/15)
+    # m20_speed_mod = 4
+    # airgap_library = 5
     etoh_res_vol = 15000
     # load modules
     mag_module = ctx.load_module('magnetic module gen2', '1')
@@ -57,9 +56,9 @@ def run(ctx):
     # reagents
     sample_plate_dest = sample_plate.rows()[0][:num_cols]
     elution_dest = elution_plate.rows()[0][:num_cols]
-    library_mix = reagent_plate.rows()[0][0]
-    pcr_forward = reagent_plate.rows()[0][1]
-    pcr_reverse = reagent_plate.rows()[0][2]
+    # library_mix = reagent_plate.rows()[0][0]
+    # pcr_forward = reagent_plate.rows()[0][1]
+    # pcr_reverse = reagent_plate.rows()[0][2]
     beads = reagent_plate.rows()[0][3:5]
     idte = reagent_plate.rows()[0][5:7]
     # well volume tracking is better solution for this
@@ -76,10 +75,11 @@ def run(ctx):
     trash_total = [liquid_trash_1, liquid_trash_2, liquid_trash_3,
                    liquid_trash_4]
     etoh_volumes = dict.fromkeys(reagent_resv.wells()[:4], 0)
-    etoh_wash_vol = 200
+    # etoh_wash_vol = 200
     supernatant_headspeed_modulator = 5
 
     def liquid_tracker(vol):
+        """liquid_tracker."""
         '''liquid_tracker() will track how much liquid
         was used up per well. If the volume of
         a given well is greater than 'liquid'_res_vol
@@ -94,26 +94,26 @@ def run(ctx):
         return well
 
     def bead_mixing(well, pip, mvol, reps=8):
+        """bead_mix."""
+        """
+        'bead_mixing' will mix liquid that contains beads. This will be done by
+        aspirating from the bottom of the well and dispensing from the top to
+        mix the beads with the other liquids as much as possible. Aspiration &
+        dispensing will also be reversed to ensure proper mixing.
+        param well: The current well that the mixing will occur in.
+        param pip: The pipet that is currently attached/ being used.
+        param mvol: The volume that is transferred before the mixing steps.
+        param reps: The number of mix repetitions that should occur. Note~
+        During each mix rep, there are 2 cycles of aspirating from bottom,
+        dispensing at the top and 2 cycles of aspirating from middle,
+        dispensing at the bottom
+        """
+        vol = mvol * .9
 
-            """
-            'bead_mixing' will mix liquid that contains beads. This will be done by
-            aspirating from the bottom of the well and dispensing from the top as to
-            mix the beads with the other liquids as much as possible. Aspiration and
-            dispensing will also be reversed for a short to to ensure maximal mixing.
-            param well: The current well that the mixing will occur in.
-            param pip: The pipet that is currently attached/ being used.
-            param mvol: The volume that is transferred before the mixing steps.
-            param reps: The number of mix repetitions that should occur. Note~
-            During each mix rep, there are 2 cycles of aspirating from bottom,
-            dispensing at the top and 2 cycles of aspirating from middle,
-            dispensing at the bottom
-            """
-            vol = mvol * .9
-
-            pip.move_to(well.center())
-            for _ in range(reps):
-                pip.aspirate(vol, well.bottom(1))
-                pip.dispense(vol, well.bottom(5))
+        pip.move_to(well.center())
+        for _ in range(reps):
+            pip.aspirate(vol, well.bottom(1))
+            pip.dispense(vol, well.bottom(5))
 
     # PROTOCOL
     for i, dest in enumerate(sample_plate_dest):
