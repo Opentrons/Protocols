@@ -198,13 +198,13 @@ def run(ctx):
     for i, dest in enumerate(sample_plate_dest):
         side = 1 if i % 2 == 0 else -1
         bead_loc = dest.bottom().move(types.Point(x=side*2, z=5))
-        m20.pick_up_tip()
-        m20.aspirate(22, idte[i//6])
-        m20.move_to(dest.center())
-        m20.dispense(22, bead_loc)
-        m20.mix(10, 10, dest.bottom(1))
-        m20.move_to(dest.bottom().move(types.Point(x=-2, z=3)))
-        m20.drop_tip()
+        m300.pick_up_tip()
+        m300.aspirate(22, idte[i//6])
+        m300.move_to(dest.center())
+        m300.dispense(22, bead_loc)
+        m300.mix(10, 10, dest.bottom(1))
+        m300.move_to(dest.bottom().move(types.Point(x=-2, z=3)))
+        m300.drop_tip()
 
     # ctx.pause("Please vortex and centrifuge sample plate, return to slot 1")
 
