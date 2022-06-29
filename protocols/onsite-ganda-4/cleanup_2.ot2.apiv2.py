@@ -12,7 +12,7 @@ metadata = {
                          # IN SECTION 5.2 OF THE APIV2 "VERSIONING"
 }
 
-TEST_MODE = True
+TEST_MODE = False
 
 # Definitions for deck light flashing
 
@@ -52,15 +52,15 @@ def create_thread(ctx, cancel_token):
 
 def run(ctx):
     """PROTOCOL."""
-    # [
-    #  num_samples, m20_mount
-    # ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
-    #     "num_samples", "m20_mount")
+    [
+     num_samples, m20_mount, flash
+    ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
+        "num_samples", "m20_mount", "flash")
 
     # define all custom variables above here with descriptions:
     cancellationToken = CancellationToken()
-    flash = True
-    num_samples, m20_mount = 8, 'right'
+    # flash = True
+    # num_samples, m20_mount = 8, 'right'
     if m20_mount == 'right':
         m300_mount = 'left'
     else:
