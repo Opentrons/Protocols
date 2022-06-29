@@ -2,7 +2,7 @@
 import math
 
 metadata = {
-    'protocolName': 'rhAmpSeq Library Prep Part 3 - PCR Prep 2',
+    'protocolName': 'rhAmpSeq Library Prep Part 1 - PCR Prep 1',
     'author': 'Opentrons <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
@@ -12,18 +12,16 @@ metadata = {
 
 def run(ctx):
     """PROTOCOL."""
-    # [
-    #  num_samples, m20_mount
-    # ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
-    #     "num_samples", "m20_mount")
-    num_samples, m20_mount = 8, 'right'
-
+    [
+     num_samples, m20_mount
+    ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
+        "num_samples", "m20_mount")
 
     # define all custom variables above here with descriptions:
 
     num_cols = math.ceil(num_samples/8)
     m20_speed_mod = 4
-    airgap_library = 5
+    # airgap_library = 5
     # load modules
     mag_module = ctx.load_module('magnetic module gen2', '1')
 
@@ -61,7 +59,7 @@ def run(ctx):
         m20.move_to(library_mix.top(-2))
         ctx.delay(seconds=2)
         # m20.touch_tip(v_offset=-2)
-        m20.move_to(library_mix.top(-2))
+        # m20.move_to(library_mix.top(-2))
         # m20.aspirate(airgap_library, library_mix.top())
         # m20.dispense(airgap_library, dest.top())
         m20.dispense(5, dest)
@@ -83,10 +81,10 @@ def run(ctx):
             m20.move_to(reagent_source.top(-2))
             ctx.delay(seconds=2)
             # m20.touch_tip(v_offset=-2)
-            m20.move_to(reagent_source.top(-2))
+            # m20.move_to(reagent_source.top(-2))
             # m20.aspirate(airgap_library, reagent_source.top())
             # m20.dispense(airgap_library, dest.top())
-            m20.dispense(5, dest)
+            m20.dispense(2, dest)
             m20.mix(1, 5, dest)
             ctx.max_speeds['A'] = 100
             ctx.max_speeds['Z'] = 100
