@@ -1,5 +1,7 @@
 """OPENTRONS."""
 import math
+import threading
+from time import sleep
 
 metadata = {
     'protocolName': 'rhAmpSeq Library Prep Part 1 - PCR Prep 1',
@@ -10,20 +12,53 @@ metadata = {
 }
 
 
+class CancellationToken:
+    """flash_setup."""
+
+    def __init__(self):
+        """init."""
+        self.is_continued = False
+
+    def set_true(self):
+        """set_true."""
+        self.is_continued = True
+
+    def set_false(self):
+        """set_false."""
+        self.is_continued = False
+
+
+def turn_on_blinking_notification(hardware, pause):
+    """Turn on blinking."""
+    while pause.is_continued:
+        hardware.set_lights(rails=True)
+        sleep(1)
+        hardware.set_lights(rails=False)
+        sleep(1)
+
+
+def create_thread(ctx, cancel_token):
+    """Create thread."""
+    t1 = threading.Thread(target=turn_on_blinking_notification,
+                          args=(ctx._hw_manager.hardware, cancel_token))
+    t1.start()
+    return t1
+
+
 def run(ctx):
     """PROTOCOL."""
-    # [
-    #  num_samples, m20_mount
-    # ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
-    #     "num_samples", "m20_mount")
-    num_samples, m20_mount = 8, 'right'
-
+    [
+     num_samples, m20_mount, flash
+    ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
+        "num_samples", "m20_mount", "flash")
+    # num_samples, m20_mount = 8, 'right'
 
     # define all custom variables above here with descriptions:
-
+    cancellationToken = CancellationToken()
     num_cols = math.ceil(num_samples/8)
     m20_speed_mod = 4
-    airgap_library = 5
+    # airgap_library = 5
+
     # load modules
     mag_module = ctx.load_module('magnetic module gen2', '1')
 
@@ -95,3 +130,15 @@ def run(ctx):
             del ctx.max_speeds['Z']
             m20.flow_rate.aspirate *= m20_speed_mod
             m20.flow_rate.dispense *= m20_speed_mod
+
+    if flash:
+        if not ctx._hw_manager.hardware.is_simulator:
+            cancellationToken.set_true()
+        thread = create_thread(ctx, cancellationToken)
+    m20.home()
+    ctx.pause('Protocol Complete.')
+    ctx.home()  # home before continuing with protocol
+    if flash:
+        cancellationToken.set_false()  # stop light flashing after home
+        thread.join()
+    ctx.pause()
