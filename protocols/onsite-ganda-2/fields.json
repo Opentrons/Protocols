@@ -15,9 +15,12 @@
      ]
   },
   {
-    "type": "float",
-    "label": "Overage Percent",
-    "name": "overage_percent",
-    "default": 15
+    "type": "dropDown",
+    "label": "Flash on Protocol Completion?",
+    "name": "flash",
+    "options": [
+       { "label": "Yes", "value": "True" },
+       { "label": "No", "value": "False" }
+     ]
   }
 ]
