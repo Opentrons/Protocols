@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "part1.ot2.apiv2.py"
+            "pcr_prep1.ot2.apiv2.py"
         ],
         "description": [
             "README.md"
