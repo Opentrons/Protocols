@@ -110,6 +110,9 @@ def run(protocol):
         adjust_height(7)
     m20.return_tip()
 
+    m20.flow_rate.aspirate = 7.6
+    m20.flow_rate.dispense = 7.6
+    m20.flow_rate.blow_out = 7.6
     # add DNA
     for s, d in zip(sample_plate_cols, reaction_plate_cols):
         pick_up()
