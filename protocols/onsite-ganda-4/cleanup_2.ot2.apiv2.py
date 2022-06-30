@@ -57,7 +57,7 @@ def run(ctx):
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
         "num_samples", "m20_mount", "flash")
 
-    # define all custom variables above here with descriptions:
+    # define all custo m variables above here with descriptions:
     cancellationToken = CancellationToken()
     # flash = True
     # num_samples, m20_mount = 8, 'right'
@@ -197,6 +197,7 @@ def run(ctx):
 
     # etoh wash needs the multi-source well function to work!
     ctx.comment("Ethanol Wash")
+    num_times = 0
     for _ in range(2):
         m300.pick_up_tip()
         for i, dest in enumerate(sample_plate_dest):
@@ -229,6 +230,19 @@ def run(ctx):
             ctx.max_speeds['A'] *= supernatant_headspeed_modulator
             m300.dispense(m300.current_volume, trash_total[i//3])
             m300.drop_tip()
+        if num_times == 0:
+            if flash:
+                if not ctx._hw_manager.hardware.is_simulator:
+                    cancellationToken.set_true()
+                thread = create_thread(ctx, cancellationToken)
+            m300.home()
+            ctx.pause('Please Empty Trash')
+            ctx.home()  # home before continuing with protocol
+            if flash:
+                cancellationToken.set_false()  # stop light flashing after home
+                thread.join()
+            ctx.pause()
+        num_times += 1
 
     if not TEST_MODE:
         ctx.delay(minutes=3, msg='Air drying.')
