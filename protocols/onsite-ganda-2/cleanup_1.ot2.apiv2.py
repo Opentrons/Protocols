@@ -57,7 +57,6 @@ def run(ctx):
 
     # define all custom variables above here with descriptions:
     cancellationToken = CancellationToken()
-    num_samples, m20_mount = 8, 'right'
     if m20_mount == 'right':
         m300_mount = 'left'
     else:
@@ -175,6 +174,7 @@ def run(ctx):
     ctx.max_speeds['Z'] = 50
     ctx.max_speeds['A'] = 50
     for i, source in enumerate(sample_plate_dest):
+        trash_dest = trash_total[i//4]
         side = -1 if i % 2 == 0 else 1
         m300.pick_up_tip()
         m300.flow_rate.aspirate /= 5
@@ -189,7 +189,7 @@ def run(ctx):
         m300.flow_rate.aspirate *= 5
         ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
         ctx.max_speeds['A'] *= supernatant_headspeed_modulator
-        m300.dispense(m300.current_volume, trash_total[0])
+        m300.dispense(m300.current_volume, trash_dest)
         m300.drop_tip()
 
     # etoh wash needs the multi-source well function to work!
@@ -209,6 +209,18 @@ def run(ctx):
         m300.move_to(etoh_1.top())
         if not TEST_MODE:
             ctx.delay(minutes=1)
+        if num_times == 0:
+            if flash:
+                if not ctx._hw_manager.hardware.is_simulator:
+                    cancellationToken.set_true()
+                thread = create_thread(ctx, cancellationToken)
+            m300.home()
+            ctx.pause('Please Empty Trash')
+            ctx.home()  # home before continuing with protocol
+            if flash:
+                cancellationToken.set_false()  # stop light flashing after home
+                thread.join()
+            ctx.pause()
         for i, source in enumerate(sample_plate_dest):
             side = -1 if i % 2 == 0 else 1
             if not m300.has_tip:
@@ -269,8 +281,8 @@ def run(ctx):
         m20.move_to(s.top())
         ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
         ctx.max_speeds['A'] /= supernatant_headspeed_modulator
-        m20.aspirate(11, source.bottom(0.2))
-        m20.move_to(source.top())
+        m20.aspirate(11, s.bottom(0.2))
+        m20.move_to(s.top())
         ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
         ctx.max_speeds['A'] *= supernatant_headspeed_modulator
         m20.dispense(m20.current_volume, d.bottom(0.5))
@@ -290,3 +302,6 @@ def run(ctx):
         cancellationToken.set_false()  # stop light flashing after home
         thread.join()
     ctx.pause()
+
+    for c in ctx.commands():
+        print(c)
