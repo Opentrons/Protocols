@@ -1,3 +1,4 @@
+"""OPENTRONS."""
 from opentrons import protocol_api
 from typing import List
 from opentrons.protocol_api.labware import Well
@@ -12,7 +13,7 @@ metadata = {
 
 
 def run(ctx: protocol_api.ProtocolContext):
-
+    """PROTOCOL."""
     [p20_mount,
      plate_lname,
      alum_block_tubes_lname,
@@ -30,20 +31,6 @@ def run(ctx: protocol_api.ProtocolContext):
 
     p300_mount = 'right' if p20_mount == 'left' else 'left'
 
-    # load modules
-
-    '''
-
-    Add your modules here with:
-
-    module_name = ctx.load_module('{module_loadname}', '{slot number}')
-
-    Note: if you are loading a thermocycler, you do not need to specify
-    a slot number - thermocyclers will always occupy slots 7, 8, 10, and 11.
-
-    For all other modules, you can load them on slots 1, 3, 4, 6, 7, 9, 10.
-
-    '''
     # The Thermocycler has a default position that
     # covers Slots 7, 8, 10, and 11.
     tc_mod = ctx.load_module('thermocycler module')
