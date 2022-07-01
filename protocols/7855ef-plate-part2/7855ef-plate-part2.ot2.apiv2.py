@@ -42,7 +42,7 @@ def run(protocol):
         nonlocal tip_counter
         if tip_counter == 36:
             protocol.home()
-            protocol.pause('Replace 20 ul tip racks on Slots 9, 10, and 11')
+            protocol.pause('Replace 20 ul tip racks on Slots 8, 9, 10, and 11')
             m20.reset_tipracks()
             tip_counter = 0
             pick_up()
