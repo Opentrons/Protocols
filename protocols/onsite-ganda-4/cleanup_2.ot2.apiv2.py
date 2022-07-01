@@ -212,6 +212,18 @@ def run(ctx):
         m300.move_to(etoh_1.top())
         if not TEST_MODE:
             ctx.delay(minutes=1)
+        if num_times == 0:
+            if flash:
+                if not ctx._hw_manager.hardware.is_simulator:
+                    cancellationToken.set_true()
+                thread = create_thread(ctx, cancellationToken)
+            m300.home()
+            ctx.pause('Please Empty Trash')
+            ctx.home()  # home before continuing with protocol
+            if flash:
+                cancellationToken.set_false()  # stop light flashing after home
+                thread.join()
+            ctx.pause()
         for i, source in enumerate(sample_plate_dest):
             side = -1 if i % 2 == 0 else 1
             if not m300.has_tip:
@@ -273,8 +285,8 @@ def run(ctx):
         m20.move_to(s.top())
         ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
         ctx.max_speeds['A'] /= supernatant_headspeed_modulator
-        m20.aspirate(20, source.bottom(0.2))
-        m20.move_to(source.top())
+        m20.aspirate(20, s.bottom(0.2))
+        m20.move_to(s.top())
         ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
         ctx.max_speeds['A'] *= supernatant_headspeed_modulator
         m20.dispense(m20.current_volume, d.bottom(0.5))
