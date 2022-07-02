@@ -94,8 +94,8 @@ def run(ctx):
     # library_mix = reagent_plate.rows()[0][0]
     # pcr_forward = reagent_plate.rows()[0][1]
     # pcr_reverse = reagent_plate.rows()[0][2]
-    beads = reagent_plate.rows()[0][3:5]
-    idte = reagent_plate.rows()[0][5]
+    beads = reagent_plate.rows()[0][3:6]
+    idte = reagent_plate.rows()[0][6]
     # well volume tracking is better solution for this
     etoh_1 = reagent_resv.wells()[0]
     etoh_2 = reagent_resv.wells()[1]
@@ -174,7 +174,7 @@ def run(ctx):
     ctx.max_speeds['Z'] = 50
     ctx.max_speeds['A'] = 50
     for i, source in enumerate(sample_plate_dest):
-        trash_dest = trash_total[i//4]
+        trash_dest = trash_total[i//3]
         side = -1 if i % 2 == 0 else 1
         m300.pick_up_tip()
         m300.flow_rate.aspirate /= 5
