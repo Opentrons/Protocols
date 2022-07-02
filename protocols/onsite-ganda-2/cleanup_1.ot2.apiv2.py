@@ -96,7 +96,6 @@ def run(ctx):
     # pcr_reverse = reagent_plate.rows()[0][2]
     beads = reagent_plate.rows()[0][3:6]
     idte = reagent_plate.rows()[0][6]
-    # well volume tracking is better solution for this
     etoh_1 = reagent_resv.wells()[0]
     etoh_2 = reagent_resv.wells()[1]
     etoh_3 = reagent_resv.wells()[2]
@@ -155,7 +154,7 @@ def run(ctx):
         m300.flow_rate.aspirate /= 4
         m300.flow_rate.dispense /= 4
         m300.pick_up_tip()
-        m300.aspirate(30, beads[i//6])
+        m300.aspirate(30, beads[i//4])
         m300.dispense(30, dest)
         m300.flow_rate.aspirate *= 2
         m300.flow_rate.dispense *= 2
