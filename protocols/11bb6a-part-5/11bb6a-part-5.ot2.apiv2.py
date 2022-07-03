@@ -49,7 +49,7 @@ def run(ctx):
 
     num_cols = math.ceil(sample_count / 8)
 
-    # temperature module
+    # temperature module empty
     ctx.load_module('Temperature Module', '1')
 
     mag = ctx.load_module('magnetic module gen2', '9')

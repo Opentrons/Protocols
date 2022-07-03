@@ -1,6 +1,16 @@
 [
   {
     "type": "dropDown",
+    "label": "Fragment Size (bp)",
+    "name": "size",
+    "options": [
+      { "label": "270 bp", "value": 270 },
+      { "label": "500 bp", "value": 500 },
+      { "label": "700 bp", "value": 700 }
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "Number of Input Samples (in multiples of 8, 48-96)",
     "name": "sample_count",
     "options": [
