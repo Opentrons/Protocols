@@ -27,7 +27,7 @@ def run(ctx):
     if size not in [270, 500, 700]:
         raise Exception('Size must be 270, 500 or 700 bp')
 
-    # water and bead volumes determined by fragment size
+    # water and bead volumes are determined by fragment size
     vol_dict = {270: [0, 12.5, 6.25],
                 500: [24, 22, 7],
                 700: [0, 3.75, 2.5]}
