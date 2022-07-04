@@ -220,9 +220,8 @@ def run(ctx):
              vol / (int(tipmap[p.name].split('_')[-1].replace(
               'ul', '')) - air_gap_vol))
 
-            ctx.comment(" reps {}".format(reps))
-
-            v = vol / reps
+            if reps:
+                v = vol / reps
 
             for rep in range(reps):
 
@@ -238,6 +237,13 @@ def run(ctx):
                  "{0} performing {1} transfer".format(p, tfer.items()))
 
                 p.aspirate(v, loc_asp)
+
+                # tip touch
+                speed_arg = 3.14*loc_asp.diameter
+                r = loc_asp.diameter / 2
+                radius_arg = (r - 0.5) / r
+                p.touch_tip(radius=radius_arg, v_offset=-10, speed=speed_arg)
+
                 p.air_gap(air_gap_vol)
 
                 p.dispense(v+air_gap_vol, loc_disp)
@@ -268,7 +274,8 @@ def run(ctx):
                     reps = math.ceil(vol / (int(tipmap[p.name].split(
                      '_')[-1].replace('ul', '')) - air_gap_vol))
 
-                    v = vol / reps
+                    if reps:
+                        v = vol / reps
 
                     ctx.comment(
                      "{0} performing {1} transfer".format(p, tferhigh.items()))
@@ -281,10 +288,13 @@ def run(ctx):
 
                     air_gap_vol2 = 0.05*p2.max_volume
 
-                    reps2 = math.ceil(vol2 / int(tipmap[p2.name].split(
-                     '_')[-1].replace('ul', '')) - air_gap_vol2)
+                    reps2 = math.ceil(vol2 / (int(tipmap[p2.name].split(
+                     '_')[-1].replace('ul', '')) - air_gap_vol2))
 
-                    v2 = vol2 / reps2
+                    ctx.comment(" reps2 {}".format(reps2))
+
+                    if reps2:
+                        v2 = vol2 / reps2
 
                     ctx.comment(
                      "{0} performing {1} transfer".format(p2, tferlow.items()))
@@ -321,11 +331,27 @@ def run(ctx):
                     if (tferhigh and rep < reps):
 
                         p.aspirate(v, loc_asp)
+
+                        # tip touch
+                        speed_arg = 3.14*loc_asp.diameter
+                        r = loc_asp.diameter / 2
+                        radius_arg = (r - 0.5) / r
+                        p.touch_tip(
+                         radius=radius_arg, v_offset=-10, speed=speed_arg)
+
                         p.air_gap(air_gap_vol)
 
                     if (tferlow and rep < reps2):
 
                         p2.aspirate(v2, loc_asp2)
+
+                        # tip touch
+                        speed_arg = 3.14*loc_asp2.diameter
+                        r = loc_asp2.diameter / 2
+                        radius_arg = (r - 0.5) / r
+                        p2.touch_tip(
+                         radius=radius_arg, v_offset=-10, speed=speed_arg)
+
                         p2.air_gap(air_gap_vol2)
 
                     if (tferhigh and rep < reps):
@@ -374,7 +400,8 @@ def run(ctx):
                      vol / (int(tipmap[p.name].split(
                       '_')[-1].replace('ul', '')) - air_gap_vol))
 
-                    v = vol / reps
+                    if reps:
+                        v = vol / reps
 
                     ctx.comment(
                      "{0} performing {1} transfer".format(p, tfer1.items()))
@@ -393,7 +420,8 @@ def run(ctx):
                      vol2 / (int(tipmap[p2.name].split(
                       '_')[-1].replace('ul', '')) - air_gap_vol2))
 
-                    v2 = vol2 / reps2
+                    if reps2:
+                        v2 = vol2 / reps2
 
                     ctx.comment(
                      "{0} performing {1} transfer".format(p2, tfer2.items()))
@@ -429,11 +457,27 @@ def run(ctx):
                     if (tfer1 and rep < reps):
 
                         p.aspirate(v, loc_asp)
+
+                        # tip touch
+                        speed_arg = 3.14*loc_asp.diameter
+                        r = loc_asp.diameter / 2
+                        radius_arg = (r - 0.5) / r
+                        p.touch_tip(
+                         radius=radius_arg, v_offset=-10, speed=speed_arg)
+
                         p.air_gap(air_gap_vol)
 
                     if (tfer2 and rep < reps2):
 
                         p2.aspirate(v2, loc_asp2)
+
+                        # tip touch
+                        speed_arg = 3.14*loc_asp2.diameter
+                        r = loc_asp2.diameter / 2
+                        radius_arg = (r - 0.5) / r
+                        p2.touch_tip(
+                         radius=radius_arg, v_offset=-10, speed=speed_arg)
+
                         p2.air_gap(air_gap_vol2)
 
                     if (tfer1 and (rep < reps)):
