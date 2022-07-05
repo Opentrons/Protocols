@@ -108,6 +108,14 @@ def create_pd_json(folder):
             protobuilds_file = protobuilds_folder + '/' + file
             with open(protobuilds_file) as pb_file:
                 protobuilds_data = json.load(pb_file)
+            break
+    protocols_folder = 'protocols/' + folder
+    for file in os.listdir(protobuilds_folder):
+        if '.py' in file:
+            protocols_file = protocols_folder + '/' + file
+            with open(protocols_file) as pb_file:
+                protocols_data = pb_file.readlines()
+            break
 
     # labware
     custom_labware = protobuilds_data['custom_labware_defs']
