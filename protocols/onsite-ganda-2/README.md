@@ -35,7 +35,8 @@ Explanation of complex parameters below:
 
 ---
 
-### Deck Setup for 96 Samples
+### Deck Setup
+* For 96 Samples
 ![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite-ganda/part_2/Screen+Shot+2022-07-05+at+6.11.23+PM.png)
 
 ### Reagent Setup
