@@ -122,8 +122,8 @@ def run(protocol):
     for s, d in zip(sample_plate_cols, reaction_plate_cols):
         pick_up()
         m20.aspirate(3, s)
-        m20.air_gap(airgap)
-        m20.touchtip()
+        m20.aspirate(airgap, s.top(-1))
+        touchtip(m20, s)
         m20.dispense(airgap, d.top())
         m20.dispense(3, d)
         m20.mix(2, 5, d)
