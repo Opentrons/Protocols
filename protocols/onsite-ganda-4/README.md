@@ -8,7 +8,13 @@
 	* rhAmpSeq Library Prep
 
 ## Description
-This is part 4 of a 4 part protocol for the rhAmpSeq kit. This portion performs a cleanup on the PCR amplification product. A reagent list is below:
+This is part 4 of a 4 part protocol for the rhAmpSeq kit.
+* [Part 1](https://develop.protocols.opentrons.com/protocol/onsite-ganda-1)
+
+* [Part 2](https://develop.protocols.opentrons.com/protocol/onsite-ganda-2)
+* [Part 3](https://develop.protocols.opentrons.com/protocol/onsite-ganda-3)
+
+This portion performs a cleanup on the PCR amplification product. A reagent list is below:
 * 80% Freshly Prepared Ethanol
 * IDTE Buffer
 * Agencourt AMPure XP Beads
