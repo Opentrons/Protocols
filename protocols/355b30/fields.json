@@ -102,6 +102,12 @@
     ]
   },
   {
+    "type": "float",
+    "label": "Well Bottom Clearance for Slot 1 Labware (mm above bottom of well)",
+    "name": "clearance_1",
+    "default": 1
+  },
+  {
     "type": "dropDown",
     "label": "Labware in Slot 2",
     "name": "labware_2",
@@ -116,6 +122,12 @@
       { "label": "EMPTY - NO LABWARE IN SLOT 2", "value": null }
 
     ]
+  },
+  {
+    "type": "float",
+    "label": "Well Bottom Clearance for Slot 2 Labware (mm above bottom of well)",
+    "name": "clearance_2",
+    "default": 1
   },
   {
     "type": "dropDown",
@@ -133,6 +145,12 @@
     ]
   },
   {
+    "type": "float",
+    "label": "Well Bottom Clearance for Slot 3 Labware (mm above bottom of well)",
+    "name": "clearance_3",
+    "default": 1
+  },
+  {
     "type": "dropDown",
     "label": "Labware on the Slot 4 Temperature Module",
     "name": "labware_4",
@@ -145,6 +163,12 @@
       { "label": "opentrons_24_aluminumblock_nest_2ml_snapcap", "value": "opentrons_24_aluminumblock_nest_2ml_snapcap" },
       { "label": "EMPTY - NO LABWARE ON SLOT 4 TEMPERATURE MODULE", "value": null }
     ]
+  },
+  {
+    "type": "float",
+    "label": "Well Bottom Clearance for Slot 4 Labware (mm above bottom of well)",
+    "name": "clearance_4",
+    "default": 1
   },
   {
     "type": "dropDown",
@@ -162,6 +186,12 @@
     ]
   },
   {
+    "type": "float",
+    "label": "Well Bottom Clearance for Slot 5 Labware (mm above bottom of well)",
+    "name": "clearance_5",
+    "default": 1
+  },
+  {
     "type": "dropDown",
     "label": "Labware in Slot 6",
     "name": "labware_6",
@@ -175,6 +205,12 @@
       { "label": "opentrons_6_tuberack_falcon_50ml_conical", "value": "opentrons_6_tuberack_falcon_50ml_conical" },
       { "label": "EMPTY - NO LABWARE IN SLOT 6", "value": null }
     ]
+  },
+  {
+    "type": "float",
+    "label": "Well Bottom Clearance for Slot 6 Labware (mm above bottom of well)",
+    "name": "clearance_6",
+    "default": 1
   },
   {
     "type": "dropDown",
@@ -205,6 +241,12 @@
       { "label": "opentrons_6_tuberack_falcon_50ml_conical", "value": "opentrons_6_tuberack_falcon_50ml_conical" },
       { "label": "EMPTY - NO LABWARE IN SLOT 11", "value": null }
     ]
+  },
+  {
+    "type": "float",
+    "label": "Well Bottom Clearance for Slot 11 Labware (mm above bottom of well)",
+    "name": "clearance_11",
+    "default": 1
   },
   {
     "type": "textFile",
