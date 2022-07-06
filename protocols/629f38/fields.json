@@ -4,5 +4,14 @@
     "label": "number of samples (1-96)",
     "name": "num_samples",
     "default": 96
+  },
+  {
+    "type": "dropDown",
+    "label": "deepwell plate type",
+    "name": "lw_deepwell_plate",
+    "options": [
+      { "label": "Eppendorf 1ml #951032603", "value": "eppendorf_96_wellplate_1000ul" },
+      { "label": "NEST 2ml #999-00103", "value": "nest_96_wellplate_2ml_deep" }
+    ]
   }
 ]

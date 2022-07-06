@@ -10,11 +10,10 @@ metadata = {
 TEST_MODE = False
 
 
-# Start protocol
 def run(ctx):
 
-    [num_samples] = get_values(  # noqa: F821
-        'num_samples')
+    [num_samples, lw_deepwell_plate] = get_values(  # noqa: F821
+        'num_samples', 'lw_deepwell_plate')
 
     mixreps = 20
     vol_mix = 200
@@ -27,14 +26,14 @@ def run(ctx):
     vol_g_dna_wash_buffer = 900
     vol_elution = 50
     settling_time = 3  # minutes
+    engage_height = 6.8
 
     ctx.max_speeds['X'] = 200
     ctx.max_speeds['Y'] = 200
 
     magdeck = ctx.load_module('magnetic module gen2', '4')
     magdeck.disengage()
-    magplate = magdeck.load_labware('nest_96_wellplate_2ml_deep',
-                                    'deepwell plate')
+    magplate = magdeck.load_labware(lw_deepwell_plate, 'deepwell plate')
     tempdeck = ctx.load_module('Temperature Module Gen2', '1')
     elutionplate = tempdeck.load_labware(
                 'opentrons_96_aluminumblock_nest_wellplate_100ul',
@@ -74,7 +73,10 @@ def run(ctx):
             set = all_tips[
                 (i*num_cols) % len(all_tips):(i+1)*num_cols % len(all_tips)]
         parking_sets.append(set)
-    radius = mag_samples_m[0].width
+    if mag_samples_m[0].width:
+        radius = mag_samples_m[0].width/2
+    else:
+        radius = mag_samples_m[0].diameter/2
 
     magdeck.disengage()  # just in case
     tempdeck.set_temperature(4)
@@ -187,7 +189,7 @@ def run(ctx):
             m300.air_gap(20)
             m300.drop_tip(spot)
 
-        magdeck.engage()
+        magdeck.engage(engage_height)
         ctx.delay(minutes=settling_time, msg=f'Incubating on MagDeck for \
 {settling_time} minutes.')
 
@@ -245,7 +247,7 @@ def run(ctx):
 
         if remove:
             if magdeck.status == 'disengaged':
-                magdeck.engage()
+                magdeck.engage(engage_height)
 
             ctx.delay(minutes=settling_time, msg=f'Incubating on MagDeck for \
 {settling_time} minutes.')
@@ -282,7 +284,7 @@ def run(ctx):
 
         ctx.delay(minutes=5, msg='Incubating off MagDeck for 2 minutes.')
 
-        magdeck.engage()
+        magdeck.engage(engage_height)
         ctx.delay(minutes=settling_time, msg=f'Incubating on MagDeck for \
 {settling_time} minutes.')
 
