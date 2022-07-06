@@ -223,6 +223,9 @@ def run(ctx):
             if reps:
                 v = vol / reps
 
+            ctx.comment(
+             "{0} performing {1} transfer".format(p, tfer.items()))
+
             for rep in range(reps):
 
                 pick_up_or_refill(p)
@@ -232,9 +235,6 @@ def run(ctx):
 
                 loc_disp = ctx.loaded_labwares[int(
                  tfer['Final_Slot'])].wells_by_name()[tfer['Final_Position']]
-
-                ctx.comment(
-                 "{0} performing {1} transfer".format(p, tfer.items()))
 
                 p.aspirate(v, loc_asp)
 
