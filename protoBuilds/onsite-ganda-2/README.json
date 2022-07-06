@@ -1,0 +1,40 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "NGS Library Prep": [
+            "rhAmpSeq Library Prep"
+        ]
+    },
+    "deck-setup": "\nFor 96 Samples\n\n",
+    "description": "This is part 2 of a 4 part protocol for the rhAmpSeq kit.\n* Part 1\n\nPart 3\nPart 4\n\nThis portion performs a cleanup on the PCR amplification product. A reagent list is below:\n 80% Freshly Prepared Ethanol\n IDTE Buffer\n* Agencourt AMPure XP Beads\nExplanation of complex parameters below:\n Number of Samples: How many samples are to be run, from 1 to 96\n P20 Multi GEN2 mount: Which side the P20 Multi pipette is attached to\n* Flash on Protocol Completion?: Will the OT-2 lights flash on and off when the protocol is complete?\n",
+    "internal": "onsite-ganda-lab",
+    "labware": "\nNEST 96 Well Plate\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* NGS Library Prep\n\t* rhAmpSeq Library Prep\n\n",
+        "deck-setup": "* For 96 Samples\n![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite-ganda/part_2/Screen+Shot+2022-07-05+at+6.11.23+PM.png)\n\n",
+        "description": "This is part 2 of a 4 part protocol for the rhAmpSeq kit.\n* [Part 1](https://develop.protocols.opentrons.com/protocol/onsite-ganda-1)\n\n* [Part 3](https://develop.protocols.opentrons.com/protocol/onsite-ganda-3)\n* [Part 4](https://develop.protocols.opentrons.com/protocol/onsite-ganda-4)\n\nThis portion performs a cleanup on the PCR amplification product. A reagent list is below:\n* 80% Freshly Prepared Ethanol\n* IDTE Buffer\n* Agencourt AMPure XP Beads\n\nExplanation of complex parameters below:\n* `Number of Samples`: How many samples are to be run, from 1 to 96\n* `P20 Multi GEN2 mount`: Which side the P20 Multi pipette is attached to\n* `Flash on Protocol Completion?`: Will the OT-2 lights flash on and off when the protocol is complete?\n\n---\n\n",
+        "internal": "onsite-ganda-lab\n",
+        "labware": "* [NEST 96 Well Plate](https://shop.opentrons.com/nest-0-1-ml-96-well-pcr-plate-full-skirt/)\n\n",
+        "modules": "* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [P20 Multi Gen2](https://shop.opentrons.com/8-channel-electronic-pipette/)\n* [P300 Multi Gen2](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "protocol-steps": "1. 30 uL of Agencourt AMPure XP Beads is added to all samples on the magnetic module in slot 1 and mixed to homogenization\n2. Samples with beads are incubated for 10 minutes\n3. The magnetic module is engaged for 5 minutes\n4. An ethanol wash is performed twice as outlined below:\n\t* Supernatant is discarded\n\t* 200 uL of 80% ethyl alcohol is added to samples\n\t* Samples are incubated for 1 minute\n\t* Supernatant is discarded\n5. Remainder of ethyl alcohol is removed\n6. Samples are air dried for 3 minutes\n7. Magnetic module is disengaged\n8. 15 uL of IDTE, ph 8.0 is added to each sample\n9. Samples are incubated for 3 minutes\n10. Magnetic module is engaged for 3 minutes\n11. 11 uL of the resulting supernatant is removed to the elution plate in slot 5\n12. Robot lights flash on and off to signal protocol has completed\n\n",
+        "reagent-setup": "* Color Code:\n\n![color code](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite-ganda/part_2/Screen+Shot+2022-07-05+at+6.13.57+PM.png)\n* Reagent Reservoir, Slot 2:\n![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite-ganda/part_2/Screen+Shot+2022-07-05+at+6.01.52+PM.png)\n* Reagent Reservoir, Slot 4:\n![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite-ganda/part_2/Screen+Shot+2022-07-05+at+6.16.46+PM.png)\n\n---\n\n",
+        "reagents": "* [rhAmpSeq Library Preparation](https://www.idtdna.com/pages/products/crispr-genome-editing/rhampseq-crispr-analysis-system?gclid=Cj0KCQjwyMiTBhDKARIsAAJ-9VtBLGaCcK1fUfyRoAHuj2WOK08tv23xHuL-QpeEnTI2TxbhLf9kO-MaAgFAEALw_wcB)\n\n---\n\n",
+        "title": "rhAmpSeq Library Prep Part 2 - Cleanup 1"
+    },
+    "modules": [
+        "Magnetic Module (GEN2)"
+    ],
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nP20 Multi Gen2\nP300 Multi Gen2\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "protocol-steps": "\n30 uL of Agencourt AMPure XP Beads is added to all samples on the magnetic module in slot 1 and mixed to homogenization\nSamples with beads are incubated for 10 minutes\nThe magnetic module is engaged for 5 minutes\nAn ethanol wash is performed twice as outlined below:\nSupernatant is discarded\n200 uL of 80% ethyl alcohol is added to samples\nSamples are incubated for 1 minute\nSupernatant is discarded\n\n\nRemainder of ethyl alcohol is removed\nSamples are air dried for 3 minutes\nMagnetic module is disengaged\n15 uL of IDTE, ph 8.0 is added to each sample\nSamples are incubated for 3 minutes\nMagnetic module is engaged for 3 minutes\n11 uL of the resulting supernatant is removed to the elution plate in slot 5\nRobot lights flash on and off to signal protocol has completed\n",
+    "reagent-setup": "\nColor Code:\n\n\n Reagent Reservoir, Slot 2:\n\n Reagent Reservoir, Slot 4:\n\n",
+    "reagents": [
+        "rhAmpSeq Library Preparation"
+    ],
+    "title": "rhAmpSeq Library Prep Part 2 - Cleanup 1"
+}
