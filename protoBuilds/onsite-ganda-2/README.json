@@ -6,14 +6,14 @@
         ]
     },
     "deck-setup": "\nFor 96 Samples\n\n",
-    "description": "This is part 2 of a 4 part protocol for the rhAmpSeq kit. This portion performs a cleanup on the PCR amplification product. A reagent list is below:\n 80% Freshly Prepared Ethanol\n IDTE Buffer\n* Agencourt AMPure XP Beads\nExplanation of complex parameters below:\n Number of Samples: How many samples are to be run, from 1 to 96\n P20 Multi GEN2 mount: Which side the P20 Multi pipette is attached to\n* Flash on Protocol Completion?: Will the OT-2 lights flash on and off when the protocol is complete?\n",
+    "description": "This is part 2 of a 4 part protocol for the rhAmpSeq kit.\n* Part 1\n\nPart 3\nPart 4\n\nThis portion performs a cleanup on the PCR amplification product. A reagent list is below:\n 80% Freshly Prepared Ethanol\n IDTE Buffer\n* Agencourt AMPure XP Beads\nExplanation of complex parameters below:\n Number of Samples: How many samples are to be run, from 1 to 96\n P20 Multi GEN2 mount: Which side the P20 Multi pipette is attached to\n* Flash on Protocol Completion?: Will the OT-2 lights flash on and off when the protocol is complete?\n",
     "internal": "onsite-ganda-lab",
     "labware": "\nNEST 96 Well Plate\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
         "categories": "* NGS Library Prep\n\t* rhAmpSeq Library Prep\n\n",
         "deck-setup": "* For 96 Samples\n![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite-ganda/part_2/Screen+Shot+2022-07-05+at+6.11.23+PM.png)\n\n",
-        "description": "This is part 2 of a 4 part protocol for the rhAmpSeq kit. This portion performs a cleanup on the PCR amplification product. A reagent list is below:\n* 80% Freshly Prepared Ethanol\n* IDTE Buffer\n* Agencourt AMPure XP Beads\n\nExplanation of complex parameters below:\n* `Number of Samples`: How many samples are to be run, from 1 to 96\n* `P20 Multi GEN2 mount`: Which side the P20 Multi pipette is attached to\n* `Flash on Protocol Completion?`: Will the OT-2 lights flash on and off when the protocol is complete?\n\n---\n\n",
+        "description": "This is part 2 of a 4 part protocol for the rhAmpSeq kit.\n* [Part 1](https://develop.protocols.opentrons.com/protocol/onsite-ganda-1)\n\n* [Part 3](https://develop.protocols.opentrons.com/protocol/onsite-ganda-3)\n* [Part 4](https://develop.protocols.opentrons.com/protocol/onsite-ganda-4)\n\nThis portion performs a cleanup on the PCR amplification product. A reagent list is below:\n* 80% Freshly Prepared Ethanol\n* IDTE Buffer\n* Agencourt AMPure XP Beads\n\nExplanation of complex parameters below:\n* `Number of Samples`: How many samples are to be run, from 1 to 96\n* `P20 Multi GEN2 mount`: Which side the P20 Multi pipette is attached to\n* `Flash on Protocol Completion?`: Will the OT-2 lights flash on and off when the protocol is complete?\n\n---\n\n",
         "internal": "onsite-ganda-lab\n",
         "labware": "* [NEST 96 Well Plate](https://shop.opentrons.com/nest-0-1-ml-96-well-pcr-plate-full-skirt/)\n\n",
         "modules": "* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)\n\n",
