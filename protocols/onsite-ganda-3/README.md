@@ -15,9 +15,9 @@ This is part 3 of a 4 part protocol for the rhAmpSeq kit.
 * [Part 4](https://develop.protocols.opentrons.com/protocol/onsite-ganda-4)
 
 This portion adds three components to 30 uL samples as outlined in the rhAmpSeq manual.
-* 10X rhAmp PCR Panel - Forward Pool
-* 10X rhAmp PCR Panel - Reverse Pool
-* 4X rhAmpSeq Library Mix 1
+* Indexing PCR Primer i5, prepared in 96 well plate with i7 primer
+* Indexing PCR Primer i7 prepared in 96 well plate with i5 primer
+* 4X rhAmpSeq Library Mix 2
 
 Explanation of complex parameters below:
 * `Number of Samples`: How many samples are to be run, from 1 to 96
@@ -42,23 +42,21 @@ Explanation of complex parameters below:
 ---
 
 ### Deck Setup
-* If the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite-ganda/Screen+Shot+2022-07-05+at+5.03.11+PM.png)
+
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite-ganda/part_3/Screen+Shot+2022-07-06+at+11.25.57+AM.png)
 
 ### Reagent Setup
 * Color Code:
 
-![color code](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite-ganda/Screen+Shot+2022-07-05+at+5.05.51+PM.png)
-* Reagent Reservoir, Slot 2:
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite-ganda/Screen+Shot+2022-07-05+at+5.20.46+PM.png)
+![color code](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite-ganda/part_3/Screen+Shot+2022-07-06+at+11.26.46+AM.png)
+
 
 ---
 
 ### Protocol Steps
 1. 5 uL of library mix from slot 2, column 1 is added to all samples in slot 1 on the magnetic module
-2. 2 uL of forward primer from slot 2, column 2 is added to all samples in slot 1 on the magnetic module
-3. 2 uL of reverse primer from slot 2, column 2 is added to all samples in slot 1 on the magnetic module
-4. Robot lights flash on and off to signal protocol has completed
+2. 4 uL of primer mixes from slot 4 is added to all samples in slot 1 on the magnetic module. Each sample receives a unique combination
+3. Robot lights flash on and off to signal protocol has completed
 
 ### Process
 1. Input your protocol parameters above.
