@@ -1,0 +1,40 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "NGS Library Prep": [
+            "rhAmpSeq Library Prep"
+        ]
+    },
+    "deck-setup": "\nIf the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:\n\n",
+    "description": "This is part 1 of a 4 part protocol for the rhAmpSeq kit. This portion adds three components to 30 uL samples as outlined in the rhAmpSeq manual.\n 10X rhAmp PCR Panel - Forward Pool\n 10X rhAmp PCR Panel - Reverse Pool\n* 4X rhAmpSeq Library Mix 1\nExplanation of complex parameters below:\n Number of Samples: How many samples are to be run, from 1 to 96\n P20 Multi GEN2 mount: Which side the P20 Multi pipette is attached to\n* Flash on Protocol Completion?: Will the OT-2 lights flash on and off when the protocol is complete?\n",
+    "internal": "onsite-ganda-lab",
+    "labware": "\nNEST 96 Well Plate\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* NGS Library Prep\n\t* rhAmpSeq Library Prep\n\n",
+        "deck-setup": "* If the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:\n![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite-ganda/Screen+Shot+2022-07-05+at+5.03.11+PM.png)\n\n",
+        "description": "This is part 1 of a 4 part protocol for the rhAmpSeq kit. This portion adds three components to 30 uL samples as outlined in the rhAmpSeq manual.\n* 10X rhAmp PCR Panel - Forward Pool\n* 10X rhAmp PCR Panel - Reverse Pool\n* 4X rhAmpSeq Library Mix 1\n\nExplanation of complex parameters below:\n* `Number of Samples`: How many samples are to be run, from 1 to 96\n* `P20 Multi GEN2 mount`: Which side the P20 Multi pipette is attached to\n* `Flash on Protocol Completion?`: Will the OT-2 lights flash on and off when the protocol is complete?\n\n---\n\n",
+        "internal": "onsite-ganda-lab\n",
+        "labware": "* [NEST 96 Well Plate](https://shop.opentrons.com/nest-0-1-ml-96-well-pcr-plate-full-skirt/)\n\n",
+        "modules": "* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [P20 Multi Gen2](https://shop.opentrons.com/8-channel-electronic-pipette/)\n* [P300 Multi Gen2](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "protocol-steps": "1. 5 uL of library mix from slot 2, column 1 is added to all samples in slot 1 on the magnetic module\n2. 2 uL of forward primer from slot 2, column 2 is added to all samples in slot 1 on the magnetic module\n3. 2 uL of reverse primer from slot 2, column 2 is added to all samples in slot 1 on the magnetic module\n4. Robot lights flash on and off to signal protocol has completed\n\n",
+        "reagent-setup": "* Color Code:\n\n![color code](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite-ganda/Screen+Shot+2022-07-05+at+5.05.51+PM.png)\n* Reagent Reservoir, Slot 2:\n![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite-ganda/Screen+Shot+2022-07-05+at+5.20.46+PM.png)\n\n---\n\n",
+        "reagents": "* [rhAmpSeq Library Preparation](https://www.idtdna.com/pages/products/crispr-genome-editing/rhampseq-crispr-analysis-system?gclid=Cj0KCQjwyMiTBhDKARIsAAJ-9VtBLGaCcK1fUfyRoAHuj2WOK08tv23xHuL-QpeEnTI2TxbhLf9kO-MaAgFAEALw_wcB)\n\n---\n\n",
+        "title": "rhAmpSeq Library Prep Part 1 - PCR 1"
+    },
+    "modules": [
+        "Magnetic Module (GEN2)"
+    ],
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nP20 Multi Gen2\nP300 Multi Gen2\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "protocol-steps": "\n5 uL of library mix from slot 2, column 1 is added to all samples in slot 1 on the magnetic module\n2 uL of forward primer from slot 2, column 2 is added to all samples in slot 1 on the magnetic module\n2 uL of reverse primer from slot 2, column 2 is added to all samples in slot 1 on the magnetic module\nRobot lights flash on and off to signal protocol has completed\n",
+    "reagent-setup": "\nColor Code:\n\n\n* Reagent Reservoir, Slot 2:\n\n",
+    "reagents": [
+        "rhAmpSeq Library Preparation"
+    ],
+    "title": "rhAmpSeq Library Prep Part 1 - PCR 1"
+}
