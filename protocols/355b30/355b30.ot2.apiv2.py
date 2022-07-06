@@ -263,7 +263,8 @@ def run(ctx):
 
                 p.air_gap(air_gap_vol)
 
-                p.dispense(v+air_gap_vol, loc_disp.bottom(tipheight_disp))
+                p.dispense(air_gap_vol, loc_disp.top())
+                p.dispense(v, loc_disp.bottom(tipheight_disp))
                 p.blow_out()
 
                 # tip touch
@@ -382,7 +383,9 @@ def run(ctx):
                     if (tferhigh and rep < reps):
 
                         p.dispense(
-                         v+air_gap_vol, loc_disp.bottom(tipheight_disp))
+                         air_gap_vol, loc_disp.top())
+                        p.dispense(
+                         v, loc_disp.bottom(tipheight_disp))
                         p.blow_out()
 
                         # tip touch
@@ -395,7 +398,9 @@ def run(ctx):
                     if (tferlow and rep < reps2):
 
                         p2.dispense(
-                         v2+air_gap_vol2, loc_disp2.bottom(tipheight_disp2))
+                         air_gap_vol2, loc_disp2.top())
+                        p2.dispense(
+                         v2, loc_disp2.bottom(tipheight_disp2))
                         p2.blow_out()
 
                         # tip touch
@@ -518,7 +523,9 @@ def run(ctx):
                     if (tfer1 and (rep < reps)):
 
                         p.dispense(
-                         v+air_gap_vol, loc_disp.bottom(tipheight_disp))
+                         air_gap_vol, loc_disp.top())
+                        p.dispense(
+                         v, loc_disp.bottom(tipheight_disp))
                         p.blow_out()
 
                         # tip touch
@@ -531,7 +538,9 @@ def run(ctx):
                     if (tfer2 and (rep < reps2)):
 
                         p2.dispense(
-                         v2+air_gap_vol2, loc_disp2.bottom(tipheight_disp2))
+                         air_gap_vol2, loc_disp2.top())
+                        p2.dispense(
+                         v2, loc_disp2.bottom(tipheight_disp2))
                         p2.blow_out()
 
                         # tip touch
