@@ -8,7 +8,7 @@
 	* rhAmpSeq Library Prep
 
 ## Description
-This is part 1 of a 4 part protocol for the rhAmpSeq kit. This portion adds three components to 30 uL samples as outlined in the rhAmpSeq manual.
+This is part 3 of a 4 part protocol for the rhAmpSeq kit. This portion adds three components to 30 uL samples as outlined in the rhAmpSeq manual.
 * 10X rhAmp PCR Panel - Forward Pool
 * 10X rhAmp PCR Panel - Reverse Pool
 * 4X rhAmpSeq Library Mix 1
