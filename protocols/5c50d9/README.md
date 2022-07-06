@@ -12,6 +12,7 @@ This protocol first preps one 384 well plate with lysis buffer and sample to und
 
 Explanation of complex parameters below:
 * `Number of Samples`: Select the number of samples (1-384) for this run. If larger than 90 samples are selected, the protocol will pause after the last sample is transferred on the deck and will prompt the user to refill samples up to the number specified. Samples should always be placed in the tuberack down by column, and in the order of the deck slots (i.e. 4, 5, 6 ..., etc.)
+* `P20/P300 Dispense Flow Rate`: Global control of P20 and P300 dispense flow rate. A value of 1.0 is default, 0.5 is 50% of the default flow rate, 1.2 is 20% faster the default flow rate, etc. 
 * `P20 Single Mount`: Specify whether the P20 single channel pipette will be mounted on the left or right.
 * `P300 Single Mount`: Specify whether the P300 single channel pipette will be mounted on the left or right.
 

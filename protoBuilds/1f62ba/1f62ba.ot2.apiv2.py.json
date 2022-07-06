@@ -1,0 +1,108 @@
+{
+    "content": "from opentrons import protocol_api\n\nmetadata = {\n    'protocolName': 'PCR Prep with Strip Tubes',\n    'author': 'Rami Farawi <rami.farawi@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx: protocol_api.ProtocolContext):\n\n    [\n     _num_col,\n     _m20_mount\n    ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)\n        \"_num_col\",\n        \"_m20_mount\")\n\n    # VARIABLES\n    num_col = _num_col\n    m20_mount = _m20_mount\n\n    if not 1 <= num_col <= 12:\n        raise Exception(\"Enter a column number 1-12\")\n\n    # LABWARE\n    water = ctx.load_labware('nest_12_reservoir_15ml', '3')\n    kappa_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '1')\n    dna_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '2')\n    primer_num_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '4')\n    primer_let_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '5')\n    final_plate = ctx.load_labware('biorad_96_wellplate_200ul_pcr', '6')\n\n    # TIPRACKS\n    tipracks = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)\n                for slot in ['7', '8', '9', '10']]\n\n    # INSTRUMENTS\n    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tipracks)\n\n    # protocol\n    cols = final_plate.rows()[0][:num_col]\n    ctx.comment('\\n\\nMOVING WATER TO PLATE\\n')\n    m20.pick_up_tip()\n    m20.distribute(3, water.wells()[0], [col for col in cols], new_tip='never')\n    m20.drop_tip()\n\n    ctx.comment('\\n\\nMOVING KAPPA ENZYME TO PLATE\\n')\n    m20.pick_up_tip()\n    for kappa, col in zip(kappa_plate.rows()[0], cols):\n        m20.aspirate(10, kappa)\n        m20.dispense(10, col)\n        m20.blow_out()\n    m20.drop_tip()\n\n    ctx.comment('\\n\\nMOVING PRIMER NUMBER TO PLATE\\n')\n    for primer_num, col in zip(primer_num_plate.rows()[0], cols):\n        m20.pick_up_tip()\n        m20.aspirate(1, primer_num)\n        m20.dispense(1, col)\n        m20.drop_tip()\n\n    ctx.comment('\\n\\nMOVING PRIMER LETTER TO PLATE\\n')\n    for primer_let, col in zip(primer_let_plate.rows()[0], cols):\n        m20.pick_up_tip()\n        m20.aspirate(1, primer_let)\n        m20.dispense(1, col)\n        m20.drop_tip()\n\n    ctx.comment('\\n\\nMOVING DNA TO PLATE\\n')\n    for dna, col in zip(dna_plate.rows()[0], cols):\n        m20.pick_up_tip()\n        m20.aspirate(5, dna)\n        m20.dispense(5, col)\n        m20.drop_tip()\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 12,
+            "label": "Number of Columns",
+            "name": "_num_col",
+            "type": "int"
+        },
+        {
+            "label": "P20 Multi-Channel Mount",
+            "name": "_m20_mount",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p20_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 1",
+            "share": false,
+            "slot": "1",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 2",
+            "share": false,
+            "slot": "2",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "NEST 12 Well Reservoir 15 mL on 3",
+            "share": false,
+            "slot": "3",
+            "type": "nest_12_reservoir_15ml"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 4",
+            "share": false,
+            "slot": "4",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 5",
+            "share": false,
+            "slot": "5",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Bio-Rad 96 Well Plate 200 \u00b5L PCR on 6",
+            "share": false,
+            "slot": "6",
+            "type": "biorad_96_wellplate_200ul_pcr"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 7",
+            "share": false,
+            "slot": "7",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 8",
+            "share": false,
+            "slot": "8",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 9",
+            "share": false,
+            "slot": "9",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 10",
+            "share": false,
+            "slot": "10",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.11",
+        "author": "Rami Farawi <rami.farawi@opentrons.com>",
+        "protocolName": "PCR Prep with Strip Tubes",
+        "source": "Custom Protocol Request"
+    },
+    "modules": []
+}

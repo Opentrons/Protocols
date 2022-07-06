@@ -36,7 +36,7 @@ def run(ctx):
 
     # perform transfers
     for cap in capsules_reordered[:num_samples]:
-        p1000.air_gap(100)
+        p1000.aspirate(100, source.move(Point(z=20)))
         p1000.aspirate(transfer_vol, source)
         p1000.dispense(transfer_vol, cap.top(-1))
         p1000.dispense(p1000.current_volume, cap.top())

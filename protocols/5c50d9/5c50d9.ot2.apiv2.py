@@ -11,8 +11,9 @@ metadata = {
 
 def run(ctx):
     """Protocol."""
-    [num_samp, p20_mount, p300_mount] = get_values(  # noqa: F821
-        "num_samp", "p20_mount", "p300_mount")
+    [num_samp, p20_rate, p300_rate,
+        p20_mount, p300_mount] = get_values(  # noqa: F821
+        "num_samp", "p20_rate", "p300_rate", "p20_mount", "p300_mount")
 
     # load labware
     final_plate = ctx.load_labware('corning_384_wellplate_112ul_flat', '1')
@@ -28,6 +29,9 @@ def run(ctx):
                               tip_racks=[tiprack20])
     p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
                                tip_racks=[tiprack300])
+
+    p20.flow_rate.dispense = p20_rate*p20.flow_rate.dispense
+    p300.flow_rate.dispense = p300_rate*p300.flow_rate.dispense
 
     def pickup(pip):
         try:

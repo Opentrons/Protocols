@@ -18,6 +18,24 @@
     ]
   },
   {
+    "type": "dropDown",
+    "label": "magnetic module generation",
+    "name": "magdeck_gen",
+    "options": [
+      { "label": "GEN1", "value": "magdeck" },
+      { "label": "GEN2", "value": "magnetic module gen2" }
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "temperature module generation",
+    "name": "tempdeck_gen",
+    "options": [
+      { "label": "GEN1", "value": "tempdeck" },
+      { "label": "GEN2", "value": "temperature module gen2" }
+    ]
+  },
+  {
     "type": "int",
     "label": "number of samples",
     "name": "num_samples",

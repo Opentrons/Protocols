@@ -1,0 +1,38 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "NGS Library Prep": [
+            "Illumina DNA Prep"
+        ]
+    },
+    "description": "This is part three of a five part protocol for the Illumina DNA Prep kit\nPart 1\nPart 2\nPart 4\nPart 5\nPart 3: Amplify Tagmented DNA\nSupernatant is discarded from the sample plate on the magnetic module into the liquid trash in slot 6\n40ul of PCR Master Mix is added to the samples from slot 5 well 2\nSamples are moved from magnetic module deep well plate to thermocycler plate in slot 2 before being centrifuged. Index adapters are added to the samples and mixed. The sample plate in slot 2 is moved to an off-deck thermocycler for a pre-programed PCR cycle as outlined in the Illumina DNA Prep reference material.\nExplanation of complex parameters below:\n* Number of Samples: Total number of samples from 1 to 48\n",
+    "internal": "ff5763",
+    "labware": "\nCustom 96 Well Plate with AB Gene and NEST 96 well plate with samples, slot 2\nNEST 2ml Deep Well Plate on Magnetic Module in slot 4\nNEST 12-Well 15ml Reservoir in slot 5\nNEST 195ml Reservoir in slot 6\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* NGS Library Prep\n    * Illumina DNA Prep\n\n",
+        "description": "This is part three of a five part protocol for the [Illumina DNA Prep kit](https://www.illumina.com/products/by-type/sequencing-kits/library-prep-kits/nextera-dna-flex.html)\n\n[Part 1](https://develop.protocols.opentrons.com/protocol/ff5763)\n\n[Part 2](https://develop.protocols.opentrons.com/protocol/ff5763_part2)\n\n[Part 4](https://develop.protocols.opentrons.com/protocol/ff5763_part4)\n\n[Part 5](https://develop.protocols.opentrons.com/protocol/ff5763_part5)\n\nPart 3: Amplify Tagmented DNA\nSupernatant is discarded from the sample plate on the magnetic module into the liquid trash in slot 6\n\n40ul of PCR Master Mix is added to the samples from slot 5 well 2\n\nSamples are moved from magnetic module deep well plate to thermocycler plate in slot 2 before being centrifuged. Index adapters are added to the samples and mixed. The sample plate in slot 2 is moved to an off-deck thermocycler for a pre-programed PCR cycle as outlined in the Illumina DNA Prep reference material.\n\nExplanation of complex parameters below:\n* `Number of Samples`: Total number of samples from 1 to 48\n\n---\n\n",
+        "internal": "ff5763\n",
+        "labware": "* Custom 96 Well Plate with AB Gene and NEST 96 well plate with samples, slot 2\n* [NEST 2ml Deep Well Plate](https://shop.opentrons.com/nest-2-ml-96-well-deep-well-plate-v-bottom/) on Magnetic Module in slot 4\n* [NEST 12-Well 15ml Reservoir](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/) in slot 5\n* [NEST 195ml Reservoir](https://shop.opentrons.com/nest-1-well-reservoirs-195-ml/) in slot 6\n\n\n",
+        "modules": "* [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)\n* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [P300 Multi Channel](https://shop.opentrons.com/8-channel-electronic-pipette/)\n* [P20 Multi Channel](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "protocol-steps": "1. Supernatant is removed from samples on magnetic module and disposed off in liquid trash in slot 6\n2. 40ul PCR Master Mix from slot 5 well 2 is added to samples on magnetic module\n3. Samples are moved to thermocycler compatible plate in slot 2\n4. Samples are centrifuged for 3 seconds at 280 x g\n5. 10ul index adapters from slot 5 well 3 is added to sample plate in slot 2 and mixed (10x with 40ul)\n\n\n",
+        "reagents": "* PCR Master Mix in slot 5 well 2, 40ul per sample\n* Index Adapters in slot 5 well 3, 10ul per sample\n\n---\n\n",
+        "title": "Illumina DNA Prep Part 3, Amplify Tagmented DNA"
+    },
+    "modules": [
+        "Temperature Module (GEN2)",
+        "Magnetic Module (GEN2)"
+    ],
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nP300 Multi Channel\nP20 Multi Channel\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "protocol-steps": "\nSupernatant is removed from samples on magnetic module and disposed off in liquid trash in slot 6\n40ul PCR Master Mix from slot 5 well 2 is added to samples on magnetic module\nSamples are moved to thermocycler compatible plate in slot 2\nSamples are centrifuged for 3 seconds at 280 x g\n10ul index adapters from slot 5 well 3 is added to sample plate in slot 2 and mixed (10x with 40ul)\n",
+    "reagents": [
+        "PCR Master Mix in slot 5 well 2, 40ul per sample",
+        "Index Adapters in slot 5 well 3, 10ul per sample"
+    ],
+    "title": "Illumina DNA Prep Part 3, Amplify Tagmented DNA"
+}

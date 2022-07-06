@@ -16,15 +16,19 @@ metadata = {
 
 def run(ctx):
 
-    [sample_cherrypicking, vol_h2o, labware_mm, labware_samp,
+    [move_side, sample_cherrypicking, vol_h2o, labware_mm, labware_samp,
      labware_pcr, clearance_mm, clearance_samp, clearance_pcr,
      uploaded_csv_mastermix, uploaded_csv] = get_values(  # noqa: F821
-        "sample_cherrypicking", "vol_h2o", "labware_mm",
+        "move_side", "sample_cherrypicking", "vol_h2o", "labware_mm",
         "labware_samp", "labware_pcr", "clearance_mm", "clearance_samp",
         "clearance_pcr", "uploaded_csv_mastermix", "uploaded_csv")
 
     ctx.set_rail_lights(True)
     ctx.delay(seconds=10)
+
+    if not -4 <= move_side <= 4:
+        raise Exception(
+         'Sideways move must be between 0 and 4 mm.')
 
     if not 100 <= vol_h2o <= 1000:
         raise Exception(
@@ -268,11 +272,14 @@ def run(ctx):
                      asp_vol, mm_source.height_dec(asp_vol), rate=0.3)
                     p300s.delay(1)
                     p300s.slow_tip_withdrawal(10, mm_source)
+                    p300s.touch_tip(
+                     mm_source, radius=0.75, v_offset=-2, speed=10)
                     for vol in chunk:
                         d = pcr_plate.wells_by_name()[next(dest)]
                         p300s.dispense(vol, d.bottom(clearance_pcr), rate=0.3)
                         p300s.delay(1)
                         p300s.slow_tip_withdrawal(10, d)
+                    p300s.dispense(15, mm_source.height_inc(15), rate=0.3)
 
         else:
             dest = (dest for dest in current_transfers['dest'])
@@ -286,12 +293,14 @@ def run(ctx):
                  asp_vol, mm_source.height_dec(asp_vol), rate=0.3)
                 p300s.delay(1)
                 p300s.slow_tip_withdrawal(10, mm_source)
+                p300s.touch_tip(mm_source, radius=0.75, v_offset=-2, speed=10)
                 for vol in chunk:
                     d = pcr_plate.wells_by_name()[next(dest)]
                     p300s.dispense(vol, d.bottom(clearance_pcr), rate=0.3)
                     p300s.delay(1)
                     p300s.slow_tip_withdrawal(10, d)
             try:
+                p300s.dispense(15, mm_source.height_inc(15), rate=0.3)
                 mm_source = next(mm)
                 p300s.drop_tip()
             except StopIteration:
@@ -312,6 +321,8 @@ def run(ctx):
                      asp_vol, mm_source.height_dec(asp_vol), rate=0.3)
                     p300s.delay(1)
                     p300s.slow_tip_withdrawal(10, mm_source)
+                    p300s.touch_tip(
+                     mm_source, radius=0.75, v_offset=-2, speed=10)
                     for vol in chunk:
                         d = pcr_plate.wells_by_name()[next(dest)]
                         p300s.dispense(vol, d.bottom(clearance_pcr), rate=0.3)
@@ -332,8 +343,11 @@ def run(ctx):
         pip20.aspirate(
          vol, samps[int(tfer['source plate or rack'])-1].wells_by_name()[
           tfer['source well']].bottom(clearance_samp))
-        pip20.dispense(
-         vol, pcr_plate.wells_by_name()[
-          tfer['dest well']].bottom(clearance_pcr))
-        pip20.mix(6, 10)
+        loc = pcr_plate.wells_by_name()[tfer['dest well']]
+        pip20.dispense(vol, loc.bottom(clearance_pcr))
+        for rep in range(3):
+            pip20.aspirate(10, loc.bottom(1), rate=0.5)
+            pip20.dispense(10, loc.bottom(4), rate=0.5)
+        ctx.delay(seconds=1)
+        pip20.blow_out(loc.bottom(6).move(types.Point(x=move_side, y=0, z=0)))
         pip20.drop_tip()

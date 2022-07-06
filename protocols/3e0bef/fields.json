@@ -1,0 +1,29 @@
+[
+  {
+    "type": "dropDown",
+    "label": "Pipette Mount",
+    "name": "_m300_mount",
+    "options": [
+      { "label": "Left", "value": "left" },
+      { "label": "Right", "value": "right" }
+    ]
+  },
+  {
+    "type": "int",
+    "label": "Number of Samples",
+    "name": "_num_samps",
+    "default": 8
+  },
+  {
+    "type": "str",
+    "label": "Labware for Input Samples",
+    "name": "_samp_labware",
+    "default": "nest_96_wellplate_2ml_deep"
+  },
+  {
+    "type": "int",
+    "label": "Elution Volume (in µL)",
+    "name": "_elution_vol",
+    "default": 100
+  }
+]

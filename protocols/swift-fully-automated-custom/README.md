@@ -14,7 +14,7 @@
 ## Description
 ![Swift Biosciences](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/swift-2s-protocol/swift_logo.jpg)
 
-This protocol is a custom modification to the [Swift 2S Turbo DNA Library Kit Protocol: Fully Automated](https://protocols.opentrons.com/protocol/swift-fully-automated) already found in the Opentrons Protocol Library. This version of the protocol features lowers aspiration flow rates to avoid bead pick-up, longer incubation times, and less volume of supernatant removed. This version also features both generations of the magnetic module. If running 24 samples with this protocol, the protocol will stop when it runs out of tips, prompting the user to replace tip racks. 
+This protocol is a custom modification to the [Swift 2S Turbo DNA Library Kit Protocol: Fully Automated](https://protocols.opentrons.com/protocol/swift-fully-automated) already found in the Opentrons Protocol Library. This version of the protocol features lowers aspiration flow rates to avoid bead pick-up, longer incubation times, and less volume of supernatant removed. This version also features both generations of the magnetic module. If running 24 samples with this protocol, the protocol will stop when it runs out of tips, prompting the user to replace tip racks.
 
 With this protocol, your [OT-2](https://shop.opentrons.com/collections/ot-2-robot/products/ot-2) can **fully automate** the entire [Swift 2S Turbo DNA Library Kit](https://swiftbiosci.com/swift-2s-turbo-dna-library-kits/). Simply press start and your OT-2 can automate this entire workflow without any hands-on requirement - from enzymatic prep to sequence ready libraries! Up to 16 libraries can be prepared in under 3 hours.
 
@@ -75,7 +75,7 @@ Slot 2: [NEST 12-Well Reservoir](https://shop.opentrons.com/collections/reservoi
 * A6: Low EDTA TE Buffer; recommended volume: ~3mL
 
 
-Slot 3: [Opentrons Temperature Module with 24-Well Aluminum Block](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck) and [NEST 2mL Tubes](https://shop.opentrons.com/collections/tubes/products/nest-2-0-ml-sample-vial) with master mixes (for more information on master mixes, [click here](https://docs.google.com/spreadsheets/d/1zK-6d6UDam4nW0FYZ3eG5yBFRs51Kggchh3NE77kR5g/edit?usp=sharing)) and indices (if automating index addition)
+Slot 3: [Opentrons Temperature Module with 24-Well Aluminum Block](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck) and [NEST 2mL Tubes](https://shop.opentrons.com/collections/tubes/products/nest-2-0-ml-sample-vial) with master mixes (for more information on master mixes, [click here](https://opentrons-protocol-library-website.s3.amazonaws.com/Technical+Notes/swift-fully-automated-custom/Swift+2s+Turbo+Fully+Automated+MasterMix+Volumes+(1).xlsx)) and indices (if automating index addition)
 * A1: Enzymatic Prep Master Mix
 * A2: Ligation Master Mix
 * A3: PCR Master Mix
@@ -106,7 +106,7 @@ __Using the customizations fields, below set up your protocol.__
 * **Pipette and Tip Type**: Select which pipette (P50 Single-Channel or P20 Single-Channel) and corresponding tips to be used for this protocol. **The pipette should be attached to the left mount.**
 * **P300 8-Channel Pipette Tip Type**: Select which tips (Filter/Non-Filter) for P300 8-Channel Pipette
 * **Automate Indexing**: Specify whether the indices should be added to the samples with the OT-2, or manually.
-* **Number of PCR Cycles**: See suggested cycles [here](https://docs.google.com/spreadsheets/d/1uSJjvYjxcpHjleom6PTDldCKUYiHMLG2ngEs6Cugx5Q/edit?usp=sharing). See Swift 2S Turbo manual for more detailed information.
+* **Number of PCR Cycles**: See suggested cycles [here](https://opentrons-protocol-library-website.s3.amazonaws.com/Technical+Notes/swift-fully-automated-custom/Swift+Fully+Automated+-+PCR+Cycles+Recommendation.xlsx). See Swift 2S Turbo manual for more detailed information.
 * **Fragmentation Time**: Fragmentation time varies depending on *1)* Lot number of the kit and *2)* whether the desired insert size is 200bp or 350bp. Please refer to the manual and Lot number on your kit for more information.
 
 

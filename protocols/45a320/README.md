@@ -14,6 +14,7 @@ This protocol extracts DNA using the ReliaPrep™ Viral TNA Miniprep System extr
 
 Explanation of complex parameters below:
 * `Number of samples`: Specify the number of samples for this run. Samples should always be placed by column (A1, B1, C1,..,etc.).
+* `P20/P1000 Dispense Flow Rate`: Global control of P20 and P1000 dispense flow rate. A value of 1.0 is default, 0.5 is 50% of the default flow rate, 1.2 is 20% faster the default flow rate, etc.
 * `P20 Mount`: Specify which side (left or right) to mount the P20 single channel pipette.
 * `P1000 Mount`: Specify which side (left or right) to mount the P1000 single channel pipette.
 
@@ -40,7 +41,7 @@ Explanation of complex parameters below:
 
 ### Deck Setup
 
-* On slot 2, empty tubes should be placed in the first 3 columns of the labware, which the protocol refers to as the "left side" when it pauses and prompts the user for instruction. Columns 4, 5, and 6 are known as the "right side" of the tube rack. Please see protocol steps below.
+* On slot 2, empty tubes should be placed in every other column starting from column 1 (e.g. columns 1, 3, 5), which the protocol refers to when it pauses and prompts the user for instruction. Columns 2, 4, and 6 will be the binding column columns of the tube rack. Please see protocol steps below.
 ![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/45a320/Screen+Shot+2021-07-29+at+6.37.40+PM.png)
 
 ### Reagent Setup
@@ -52,16 +53,16 @@ Explanation of complex parameters below:
 ---
 
 ### Protocol Steps
-1. Pro-K added to all tubes up to the number of samples on the "left side" of slot 2.
-2. Samples are added to "left side" on slot 2.
-3. Cell lysis buffer is added to the "left side" on slot 2.
+1. Pro-K added to all tubes up to the number of samples on the odd columns of slot 2.
+2. Samples are added to odd columns on slot 2.
+3. Cell lysis buffer is added to the odd columns on slot 2.
 4. Incubate for 10 minutes with a pause at the end of incubation. User selects "Resume" when they have populated tubes with binding column up to the number of samples on the "right side" of the tube rack on slot 2.
-5. Isopropanol is added, mixed, and contents are transferred from "left side" to "right" side on slot 2.
+5. Isopropanol is added, mixed, and contents are transferred from odd columns to "right" side on slot 2.
 6. User is prompted to centrifuge
-7. 3 wash steps with pauses which prompt the user to centrifuge. User puts empty tubes on the "left side" of the tube rack on slot 2.
-8. Water is added to "left side" of the tube rack.
+7. 3 wash steps with pauses which prompt the user to centrifuge. User puts empty tubes on the odd columns of the tube rack on slot 2.
+8. Water is added to odd columns of the tube rack.
 9. User places binding column in water
-10. Water is added to binding column + water on "left side"
+10. Water is added to binding column + water on odd columns
 
 ### Process
 1. Input your protocol parameters above.

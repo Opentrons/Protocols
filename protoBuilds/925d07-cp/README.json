@@ -1,0 +1,26 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Sample Prep": [
+            "Aliquoting"
+        ]
+    },
+    "description": "Links:\n* Random Aliquoting\n\n\n* Plasmind Luciferase Assay\n\n\n* QIAcuity Plate Transfer\n\n\n* PCR Prep\n\n\nThis protocol performs a custom aliquoting procedure based on a randomly-generated 1-4 plate map. Enough volume to accommodate all 4 destination wells, including overage volume, is aspirated from the source well and distributed to all 4 destination wells. A new tip is obtained for each source-destination set. The layout is shown below:  \n\nThe proper pipette (P20 or P300) is selected automatically based on the input siRNA volume.\n",
+    "internal": "925d07",
+    "labware": "\nEppendorf V-bottom, Lo-Bind 96-well plates #0030603303\nOpentrons 300\u00b5L Tips\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* Sample Prep\n\t* Aliquoting\n\n",
+        "description": "\nLinks:\n* [Random Aliquoting](./925d07-cp)\n<br></br>\n<br></br>\n* [Plasmind Luciferase Assay](./925d07-pla)\n<br></br>\n<br></br>\n* [QIAcuity Plate Transfer](./925d07-q)\n<br></br>\n<br></br>\n* [PCR Prep](./925d07-v3)\n<br></br>\n<br></br>\n\nThis protocol performs a custom aliquoting procedure based on a randomly-generated 1-4 plate map. Enough volume to accommodate all 4 destination wells, including overage volume, is aspirated from the source well and distributed to all 4 destination wells. A new tip is obtained for each source-destination set. The layout is shown below:  \n\n![map](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/925d07/map.png)\n\nThe proper pipette (P20 or P300) is selected automatically based on the input siRNA volume.\n\n---\n\n",
+        "internal": "925d07\n",
+        "labware": "\n* [Eppendorf V-bottom, Lo-Bind 96-well plates #0030603303](https://online-shop.eppendorf.us/US-en/Laboratory-Consumables-44512/Plates-44516/DNA-LoBind-Plates-PF-16858.html)\n* [Opentrons 300\u00b5L Tips](https://shop.opentrons.com/opentrons-300ul-tips-1000-refills/)\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [P300 Single GEN2 Pipette](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n* [P20 Single GEN2 Pipette](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n\n---\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "title": "Aliquoting"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nP300 Single GEN2 Pipette\nP20 Single GEN2 Pipette\n\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "title": "Aliquoting"
+}

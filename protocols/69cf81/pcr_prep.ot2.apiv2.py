@@ -10,18 +10,18 @@ metadata = {
 
 def run(ctx):
 
-    [num_samples, num_primers, res_type, tip_type, p20_multi_mount,
-     p20_single_mount] = get_values(  # noqa: F821
-     'num_samples', 'num_primers', 'res_type', 'tip_type', 'p20_multi_mount',
-     'p20_single_mount')
+    [num_samples, num_primers, res_type, tube_type, tip_type, p20_multi_mount,
+     p20_single_mount, height_dispense] = get_values(  # noqa: F821
+     'num_samples', 'num_primers', 'res_type', 'tube_type', 'tip_type',
+     'p20_multi_mount', 'p20_single_mount', 'height_dispense')
 
     # labware
-    pcr_plate = ctx.load_labware('thermofishermicroamp_96_wellplate_200ul',
+    pcr_plate = ctx.load_labware('thermofishermicroamp_96_aluminumblock_200ul',
                                  '1', 'destination PCR plate')
-    primer_rack = ctx.load_labware(
-        'opentrons_24_aluminumblock_nest_1.5ml_snapcap', '2', 'primer rack')
-    sample_plate = ctx.load_labware('thermofishermicroamp_96_wellplate_200ul',
-                                    '4', 'source sample plate')
+    primer_rack = ctx.load_labware(tube_type, '2', 'primer rack')
+    sample_plate = ctx.load_labware(
+        'thermofishermicroamp_96_aluminumblock_200ul', '4',
+        'source sample plate')
     tipracks20s = [ctx.load_labware('opentrons_96_tiprack_20ul', '3')]
     res = ctx.load_labware(res_type, '5', 'reagent reservoir')
     tipracks20m = [
@@ -61,19 +61,19 @@ with {num_primers} primers.')
     reagent_dests_multi = pcr_plate.rows()[0][:num_cols*num_primers]
     m20.pick_up_tip()
     for d in reagent_dests_multi:
-        m20.transfer(16, mm, d.bottom(0.5), new_tip='never')
+        m20.transfer(16, mm, d.bottom(height_dispense), new_tip='never')
     m20.drop_tip()
 
     # transfer samples
     for s, d_set in zip(sample_sources, sample_dests_sets_m):
         for d in d_set:
             m20.pick_up_tip()
-            m20.transfer(3, s, d.bottom(0.5), new_tip='never')
+            m20.transfer(3, s, d.bottom(height_dispense), new_tip='never')
             m20.drop_tip()
 
     # transfer primers
     for primer, dest_set in zip(primer_sources, primer_dest_sets):
         for d in dest_set:
             p20.pick_up_tip()
-            p20.transfer(1, primer, d.bottom(0.5), new_tip='never')
+            p20.transfer(1, primer, d.bottom(height_dispense), new_tip='never')
             p20.drop_tip()

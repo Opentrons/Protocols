@@ -6,15 +6,16 @@ metadata = {
     'protocolName': 'Lexogen QuantSeq 3`mRNA FWD NGS Library Prep',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.0'
+    'apiLevel': '2.12'
 }
 
 
 def run(ctx):
 
-    [p20_single_mount, p300_multi_mount,
+    [p20_single_mount, p300_multi_mount, magdeck_gen, tempdeck_gen,
      num_samples] = get_values(  # noqa: F821
-        'p20_single_mount', 'p300_multi_mount', 'num_samples')
+        'p20_single_mount', 'p300_multi_mount', 'magdeck_gen', 'tempdeck_gen',
+        'num_samples')
 
     # checks
     if num_samples > 96 or num_samples < 1:
@@ -33,7 +34,7 @@ def run(ctx):
     )
     reservoir = ctx.load_labware(
         'nest_12_reservoir_15ml', '3', 'reagent reservoir')
-    magdeck = ctx.load_module('magdeck', '4')
+    magdeck = ctx.load_module(magdeck_gen, '4')
     magplate = magdeck.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
     sp2 = ctx.load_labware(
         'nest_96_wellplate_100ul_pcr_full_skirt', '5', 'SP2 (load empty)')
@@ -41,13 +42,13 @@ def run(ctx):
         ctx.load_labware('opentrons_96_tiprack_20ul', slot)
         for slot in ['6', '9']
     ]
-    tempdeck = ctx.load_module('tempdeck', '7')
+    tempdeck = ctx.load_module(tempdeck_gen, '7')
     tubeblock = tempdeck.load_labware(
         'opentrons_24_aluminumblock_nest_1.5ml_snapcap')
     indexplate = ctx.load_labware(
         'nest_96_wellplate_100ul_pcr_full_skirt', '8', 'index plate')
     tips300 = [
-        ctx.load_labware('opentrons_96_tiprack_20ul', slot)
+        ctx.load_labware('opentrons_96_tiprack_300ul', slot)
         for slot in ['10', '11']
     ]
 
@@ -68,7 +69,7 @@ def run(ctx):
     p20 = ctx.load_instrument(
         'p20_single_gen2', p20_single_mount, tip_racks=tips20)
     m300 = ctx.load_instrument(
-        'p300_multi', p300_multi_mount, tip_racks=tips300)
+        'p300_multi_gen2', p300_multi_mount, tip_racks=tips300)
 
     # tip track
     tipcount20 = 0

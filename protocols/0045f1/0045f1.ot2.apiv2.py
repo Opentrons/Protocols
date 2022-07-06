@@ -1,3 +1,5 @@
+from types import MethodType
+
 metadata = {
     'protocolName': 'Variable Slide Dispensing',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
@@ -35,6 +37,28 @@ def run(ctx):
     p20.flow_rate.aspirate = p20.flow_rate.aspirate*asp_rate
     p20.flow_rate.dispense = p20.flow_rate.dispense*disp_rate
 
+    def slow_tip_withdrawal(
+     self, speed_limit, well_location):
+        if self.mount == 'right':
+            axis = 'A'
+        else:
+            axis = 'Z'
+        previous_limit = None
+        if axis in ctx.max_speeds.keys():
+            for key, value in ctx.max_speeds.items():
+                if key == axis:
+                    previous_limit = value
+        ctx.max_speeds[axis] = speed_limit
+        self.move_to(well_location.top(z=10))
+        ctx.max_speeds[axis] = previous_limit
+
+    # bind additional methods to pipettes
+    for pipette_object in [p20]:
+        for method in [slow_tip_withdrawal]:
+            setattr(
+             pipette_object, method.__name__,
+             MethodType(method, pipette_object))
+
     all_wells = []
 
     for z in [2, 4]:
@@ -53,6 +77,29 @@ def run(ctx):
 
     for tube, chunk in zip(tuberack.wells()[:num_tubes], all_wells_chunks):
         p20.pick_up_tip()
-        p20.distribute(spot_volume, tube,
-                       [well.top() for well in chunk], new_tip='never')
+        dispense_ctr = 0
+        tot_vol = len(chunk)*spot_volume
+        for well in chunk:
+
+            # ASPIRATE
+            if p20.current_volume <= spot_volume:
+                if p20.current_volume > 0:
+                    p20.dispense(p20.current_volume, ctx.fixed_trash['A1'])
+                p20.aspirate(tot_vol+1 if tot_vol+1 < 10 else 10,
+                             tube)
+                p20.touch_tip(radius=0.9)
+
+            # MOVE TO
+            p20.move_to(well.top(z=10))
+            ctx.delay(seconds=1.5)
+            p20.dispense(spot_volume, well.top())
+
+            # SLOW WITHDRAWAL
+            ctx.delay(seconds=1.5)
+            p20.slow_tip_withdrawal(10, well)
+            dispense_ctr += 1
+            tot_vol -= spot_volume
+        if p20.current_volume > 0:
+            p20.dispense(p20.current_volume, ctx.fixed_trash['A1'])
         p20.drop_tip()
+        ctx.comment('\n')

@@ -53,7 +53,7 @@ def run(ctx):
         for d_set in mm_dest_sets:
             m10.pick_up_tip()
             for d in d_set:
-                m10.air_gap(2)
+                m10.aspirate(2, mm_source.top())
                 m10.aspirate(8, mm_source)
                 m10.dispense(10, d)
                 m10.blow_out(d.bottom(3))
@@ -72,7 +72,7 @@ def run(ctx):
         for s, d_set in zip(dna_source_sets, dna_dest_sets):
             for d in d_set:
                 m10.pick_up_tip()
-                m10.air_gap(3)
+                m10.aspirate(3, s.top())
                 m10.aspirate(2, s)
                 m10.air_gap(2)
                 m10.dispense(2, d.top(-2))
@@ -97,7 +97,7 @@ def run(ctx):
         for s, d_set in zip(mm_sources, mm_dest_sets):
             m10.pick_up_tip()
             for d in d_set:
-                m10.air_gap(2)
+                m10.aspirate(2, s.top())
                 m10.aspirate(8, s)
                 m10.dispense(10, d)
                 m10.blow_out(d.bottom(3))
@@ -115,7 +115,7 @@ def run(ctx):
             for dupe in d_sets:
                 m10.pick_up_tip()
                 for d in dupe:
-                    m10.air_gap(3)
+                    m10.aspirate(3, s.top())
                     m10.aspirate(2, s)
                     m10.air_gap(2)
                     m10.dispense(2, d.top(-2))

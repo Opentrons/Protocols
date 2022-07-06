@@ -1,6 +1,12 @@
 [
   {
     "type": "float",
+    "label": "Sideways Move to Blow Out at Side of Well (mm)",
+    "name": "move_side",
+    "default": 3
+  },
+  {
+    "type": "float",
     "label": "Remaining Volume at Which to Move on to Next Water Tube (uL)",
     "name": "vol_dead",
     "default": 50
@@ -59,6 +65,9 @@
     "label": "Labware Containing Input RNA Samples",
     "name": "labware_rna",
     "options": [
+      { "label": "thermo_ab_0600_96_aluminumblock_300ul", "value": "thermo_ab_0600_96_aluminumblock_300ul" },
+      { "label": "thermo_ab_0900_96_aluminumblock_300ul", "value": "thermo_ab_0900_96_aluminumblock_300ul" },
+      { "label": "greiner_96_deep_780261_1000ul", "value": "greiner_96_deep_780261_1000ul" },
       { "label": "nest_96_wellplate_2000ul", "value": "nest_96_wellplate_2000ul" },
       { "label": "nest_96_wellplate_500ul", "value": "nest_96_wellplate_500ul" },
       { "label": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap", "value": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap" },

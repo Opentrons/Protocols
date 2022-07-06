@@ -293,6 +293,9 @@ resuming.')
         ctx.delay(minutes=temp_time, msg=f'Incubating at 85C for {temp_time} \
 minutes')
         # resuspend beads in elution
+        m300.flow_rate.aspirate /= 5
+        m300.flow_rate.dispense /= 5
+        m300.flow_rate.blow_out /= 5
         for i, (m, h, spot) in enumerate(zip(mag_samples_m, heating_samples_m,
                                              parking_spots)):
             if not m300.has_tip:

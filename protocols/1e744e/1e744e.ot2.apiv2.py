@@ -16,29 +16,24 @@ metadata = {
 def run(ctx):
 
     [include_mastermix_step, include_sample_step, count_samples, mount_p20,
-     labware_mmplate, labware_96rxnplate, labware_384rxnplate, vol_mm,
-     clearance_mmplate, clearance_samples,
+     labware_sampleplates, labware_mmplate, labware_96rxnplate,
+     labware_384rxnplate, vol_mm, clearance_mmplate, clearance_samples,
      clearance_rxnplate] = get_values(  # noqa: F821
         "include_mastermix_step", "include_sample_step", "count_samples",
-        "mount_p20", "labware_mmplate", "labware_96rxnplate",
-        "labware_384rxnplate", "vol_mm", "clearance_mmplate",
-        "clearance_samples", "clearance_rxnplate")
+        "mount_p20", "labware_sampleplates", "labware_mmplate",
+        "labware_96rxnplate", "labware_384rxnplate", "vol_mm",
+        "clearance_mmplate", "clearance_samples", "clearance_rxnplate")
 
     ctx.set_rail_lights(True)
     ctx.delay(seconds=10)
 
-    # removed temporarily til labware def for 384 plate plus block available
-    # if not 1 <= count_samples <= 384:
-    #     raise Exception('Invalid number of samples (must be 1-384).')
-
-    # temporarily restrict to 96 samples
-    if not 1 <= count_samples <= 96:
-        raise Exception('Invalid number of samples (must be 1-96).')
+    if not 1 <= count_samples <= 384:
+        raise Exception('Invalid number of samples (must be 1-384).')
 
     # load sample plates (1-4 elution plates from extraction step)
     num_plates = math.ceil(count_samples / 96)
     sample_plates = [ctx.load_labware(
-     'intermediate_96_wellplate_1250ul', slot, "Samples")
+     labware_sampleplates, slot, "Samples")
            for slot in [2, 4, 5, 6][:num_plates]]
 
     # tips

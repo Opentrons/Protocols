@@ -1,0 +1,38 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Protein Purification": [
+            "Thermo Fisher Dynabeads\u2122 Protein A"
+        ]
+    },
+    "deck-setup": "\nSlot 4 \u2013 96 well deepwell plate (reagent plate)\n\nSlot 5 - Tube rack/reagent in 15 mL conical tube (reagent stock)\n\n\nGreen \u2013 beads\n\nBlue \u2013 antibody\n\n",
+    "description": "This protocol (Plate Prep 1) performs pipetting to transfer reagents (Dynabeads and antibody dilution) from 15 mL conical tubes to a 96 well deepwell plate (the reagent plate) on the OT2. This reagent plate is used for Dynabeads for IP Reagent-In-Plate protocol Part 1. The user can determine the number of samples to be processed.",
+    "internal": "dynabeads_plate_prep_1",
+    "labware": "\nNEST 2 mL 96-Well Deep Well Plate, V Bottom\n4-in-1 Tube Rack Set\nNEST 15 mL Centrifuge Tube\nOpentrons 300\u00b5L Tips\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* Protein Purification\n\t* Thermo Fisher Dynabeads\u2122 Protein A\n\n",
+        "deck-setup": "* Slot 4 \u2013 96 well deepwell plate (reagent plate)\n* Slot 5 - Tube rack/reagent in 15 mL conical tube (reagent stock)\n\n* Green \u2013 beads\n* Blue \u2013 antibody\n\n![deck setup](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/dynabeads_plate_prep_1/deck.png)\n\n",
+        "description": "This protocol (Plate Prep 1) performs pipetting to transfer reagents (Dynabeads and antibody dilution) from 15 mL conical tubes to a 96 well deepwell plate (the reagent plate) on the OT2. This reagent plate is used for Dynabeads for IP Reagent-In-Plate protocol Part 1. The user can determine the number of samples to be processed.\n\n",
+        "internal": "dynabeads_plate_prep_1\n",
+        "labware": "* [NEST 2 mL 96-Well Deep Well Plate, V Bottom](https://shop.opentrons.com/nest-2-ml-96-well-deep-well-plate-v-bottom/)\n* [4-in-1 Tube Rack Set](https://shop.opentrons.com/4-in-1-tube-rack-set/)\n* [NEST 15 mL Centrifuge Tube](https://shop.opentrons.com/nest-15-ml-centrifuge-tube/)\n* [Opentrons 300\u00b5L Tips](https://shop.opentrons.com/opentrons-300ul-tips-1000-refills/)\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol\nDevelopment Team by filling out the [Troubleshooting\nSurvey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "P300 Single-Channel GEN2 (https://opentrons.com/pipettes/)\n\n",
+        "process": "1. Input your protocol parameters (the number of samples to be processed).\n2. Download your protocol.\n3. Upload your protocol into the OT App.\n4. Set up your deck according to the deck map.\n5. Calibrate your labware, tipracks, and pipette using the OT App. For\ncalibration tips, check out our support articles.\n6. Hit \"Run\".\n\n",
+        "protocol-steps": "1. Bead slurry (reagent stock in 15 mL tubes, slot 5) is transferred to\nthe reagent plate (96 well deepwell plate A1-H1, slot 4) by the single\nchannel pipette.\n2. Antibody solutions (reagent stock in 15 mL tubes, slot 5) is\ntransferred to the reagent plate (96 well deepwell plate A2-H2, slot 4)\nby the single channel pipette.\n\n![well distributions](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/dynabeads_plate_prep_1/Screen+Shot+2022-04-14+at+5.35.37+PM.png)\n\n",
+        "reagent-setup": "* Beads: 50 uL per sample\n* Antibody: diluted in phosphate-buffered saline with 0.1% Tween 20 (PBS-T), 50uL per sample\n\n![reagent table](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/dynabeads_plate_prep_1/Screen+Shot+2022-04-14+at+5.35.27+PM.png)\n\n",
+        "reagents": "* [Thermo Fisher Dynabeads\u2122 Protein A](https://www.thermofisher.com/order/catalog/product/10002D)\n* [Thermo Fisher Dynabeads\u2122 Protein G](https://www.thermofisher.com/order/catalog/product/10004D)\n* [GAPDH Polyclonal antibody](https://www.ptglab.com/products/GAPDH-Antibody-10494-1-AP.htm) or comparable products from other vendors\n\n",
+        "title": "Dynabeads for IP Reagent-In-Plate Plate Prep 1"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol\nDevelopment Team by filling out the Troubleshooting\nSurvey.",
+    "pipettes": "P300 Single-Channel GEN2 (https://opentrons.com/pipettes/)",
+    "process": "\nInput your protocol parameters (the number of samples to be processed).\nDownload your protocol.\nUpload your protocol into the OT App.\nSet up your deck according to the deck map.\nCalibrate your labware, tipracks, and pipette using the OT App. For\ncalibration tips, check out our support articles.\nHit \"Run\".\n",
+    "protocol-steps": "\nBead slurry (reagent stock in 15 mL tubes, slot 5) is transferred to\nthe reagent plate (96 well deepwell plate A1-H1, slot 4) by the single\nchannel pipette.\nAntibody solutions (reagent stock in 15 mL tubes, slot 5) is\ntransferred to the reagent plate (96 well deepwell plate A2-H2, slot 4)\nby the single channel pipette.\n\n",
+    "reagent-setup": "\nBeads: 50 uL per sample\nAntibody: diluted in phosphate-buffered saline with 0.1% Tween 20 (PBS-T), 50uL per sample\n\n",
+    "reagents": [
+        "Thermo Fisher Dynabeads\u2122 Protein A",
+        "Thermo Fisher Dynabeads\u2122 Protein G",
+        "GAPDH Polyclonal antibody or comparable products from other vendors"
+    ],
+    "title": "Dynabeads for IP Reagent-In-Plate Plate Prep 1"
+}

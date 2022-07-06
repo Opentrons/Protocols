@@ -9,13 +9,10 @@
       ]
     },
     {
-      "type": "dropDown",
-      "label": "deepwell plate type",
+      "type": "str",
+      "label": "deepwell plate loadname",
       "name": "deep_name",
-      "options": [
-        { "label": "NEST 96 Deepwell Plate 2mL", "value": "nest_96_wellplate_2ml_deep" },
-        { "label": "VWR 96 Well Plate 500 µL", "value": "vwr_96_wellplate_500ul" }
-      ]
+      "default": "nest_96_wellplate_2ml_deep"
     },
     {
       "type": "dropDown",

@@ -1,7 +1,7 @@
 {
     "author": "Opentrons",
     "categories": {
-        "Proteins & Proteiomics": [
+        "Proteins & Proteomics": [
             "Olink Target 96"
         ]
     },
@@ -11,7 +11,7 @@
     "labware": "\nNEST 0.1 mL 96-Well PCR Plate, Full Skirt\nOpentrons 4-in-1 Tube Rack Set with NEST 1.5 mL Screwcap Tubes or equivalent\nOpentrons Filter Tips\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
-        "categories": "* Proteins & Proteiomics\n\t* Olink Target 96\n\n",
+        "categories": "* Proteins & Proteomics\n\t* Olink Target 96\n\n",
         "deck-setup": "![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/2aee74/deck1-5.png)\nNote: all volumes for 96 samples (including controls)\n* blue on sample plate (slot 7): starting samples\n* green on tuberack (slot 8): 400.0\u00b5l incubation mix\n\n---\n\n",
         "description": "\nLinks:\n* [Part 1: Incubation](./2aee74)\n* [Part 2: Extension](./2aee74-2)\n* [Part 3: Detection](./2aee74-3)\n\nThis protocol accomplishes part 1/3: Incubation for the [Olink Target 96 protocol](https://www.olink.com/products-services/target/) for protein biomarker discovery.\n\n---\n\n",
         "internal": "2aee74\n",

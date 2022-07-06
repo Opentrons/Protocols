@@ -115,13 +115,19 @@ def run(ctx):
     pickup_p300('multi')
     for col in dw_plate.rows()[0]:
         if determine_dil(col):
-            p300.transfer(800, diluent, col, new_tip='never')
+            for _ in range(4):  # 4x 200ul = 800ul
+                p300.transfer(200, diluent, col, new_tip='never')
     p300.drop_tip()
 
     # prompt user to transfer neat sample
+    display_wells = [
+        well for well, vol in dict1.items() if vol]
+    display_vols = [
+        round(vol, 2) for vol in dict1.values() if vol]
     sample_str = '\n'.join([
-        f'Transfer {vol}uL to well {well} of deepwell plate on slot 8.'
-        for well, vol in dict1.items()])
+        f'Transfer {display_vol}uL to well {display_well} of deepwell \
+plate on slot 8.'
+        for display_well, display_vol in zip(display_wells, display_vols)])
     ctx.pause(msg=sample_str)
 
     # perform dilutions
@@ -135,7 +141,7 @@ def run(ctx):
                     pip = p1000
                     p1000.pick_up_tip()
                 custom_transfer(vol, list(set.keys())[i-1], well, pip)
-                pip.mix(5, 100, well)
+                pip.mix(5, 200, well)
                 pip.drop_tip()
 
     # final transfer
@@ -143,4 +149,8 @@ def run(ctx):
         well for plate in final_dilution_plates for well in plate.rows()[0]]
 
     for source, dest in zip(final_locations, final_targets):
-        p1000.transfer(final_vol, source, dest)
+        if source:
+            col = int(source.display_name.split(' ')[0][1:])
+            if col % 3 == 1:
+                pip.mix(5, 200, source)
+            p1000.transfer(final_vol, source, dest)

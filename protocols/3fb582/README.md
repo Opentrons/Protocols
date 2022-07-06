@@ -12,7 +12,7 @@ This protocol automates PCR setups using a CSV file. Slots 2, 5, 8, and 11 are r
 </br>
 **Update (Jan 13, 2021)**: A fix was added that was preventing use of slots 5, 8, and 11.
 
-Customize the PCR setup CSV and upload it to get a custom protocol. Template CSV can be found [here](https://docs.google.com/spreadsheets/d/15ddYgLTeaY4jjYTro1_AiAuMxNe6WrNxDndm7DE7Kgc/edit?usp=sharing).
+Customize the PCR setup CSV and upload it to get a custom protocol. Template CSV can be found [here](https://opentrons-protocol-library-website.s3.amazonaws.com/Technical+Notes/3fb582/PCR+Setup+Template+-+Sheet1.csv).
 
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)

@@ -1,5 +1,11 @@
 [
   {
+    "type": "float",
+    "label": "Sideways Move to Blow Out at Side of Well (mm)",
+    "name": "move_side",
+    "default": 2
+  },
+  {
     "type": "dropDown",
     "label": "Cherry Pick Samples? (yes or no)",
     "name": "sample_cherrypicking",
@@ -20,6 +26,7 @@
     "name": "labware_mm",
     "options": [
       { "label": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap", "value": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap" },
+      { "label": "opentrons_15_tuberack_thomas_1188r46_5000ul", "value": "opentrons_15_tuberack_thomas_1188r46_5000ul" },
       { "label": "ambion_snap_cap_24_aluminumblock_1500ul", "value": "ambion_snap_cap_24_aluminumblock_1500ul" },
       { "label": "eppendorf_snap_cap_24_aluminumblock_1500ul", "value": "eppendorf_snap_cap_24_aluminumblock_1500ul" },
       { "label": "takara_snap_cap_24_aluminumblock_1500ul", "value": "takara_snap_cap_24_aluminumblock_1500ul" }
