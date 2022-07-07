@@ -1,9 +1,6 @@
+# flake8: noqa
 import sys
 import os
-dir = 'protocols/0117ed/supplements/QOT_python_module'
-if os.path.isdir(dir):
-    sys.path.append(dir)
-from QOT import QIDevice
 
 metadata = {
     'protocolName': 'Protein Purification and Assay Setup',
@@ -14,22 +11,22 @@ metadata = {
 
 
 def run(ctx):
-    [serial_number, setup_number,
-     num_expression_blocks] = get_values(  # noqa: F821
-     'serial_number', 'setup_number', 'num_expression_blocks')
+    [num_expression_blocks] = get_values(  # noqa: F821
+     'num_expression_blocks')
 
     # load labware
-    device = QIDevice(serial_number=serial_number, deck_position=1,
-                      adapter_set_up=setup_number, protocol=ctx)
+    if not ctx.is_simulating():
+        my_bioshake = bioshake.BioshakeDriver()
+    bioshake_plate = ctx.load_labware('corning_96_wellplate_360ul_flat', '1')
+    tipracks200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '2')]
     cell_plate = device.load_labware('corning_96_wellplate_360ul_flat',
                                      'cell plate')
     tipracks20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '7')]
-    tipracks200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '2')]
-    ethanol = ctx.load_labware('agilent_1_reservoir_290ml', '3',
-                               'ethanol').wells()[0]
-    assay_plate_1 = ctx.load_labware('protino_96_wellplate_1200ul', '4',
+    elution_buffer = ctx.load_labware('agilent_1_reservoir_290ml', '3',
+                                      'elution buffer').wells()[0]
+    assay_plate_1 = ctx.load_labware('corning_96_wellplate_360ul_flat', '4',
                                      'assay plate 1')
-    assay_plate_2 = ctx.load_labware('protino_96_wellplate_1200ul', '5',
+    assay_plate_2 = ctx.load_labware('corning_96_wellplate_360ul_flat', '5',
                                      'assay plate 2')
     wash_buffer = ctx.load_labware('agilent_1_reservoir_290ml', '6',
                                    'wash buffer 1').wells()[0]
@@ -47,10 +44,48 @@ def run(ctx):
                                tip_racks=tipracks200)
     m20 = ctx.load_instrument('p20_multi_gen2', 'right', tip_racks=tipracks20)
 
-    def pick_up(pip):
-        try:
+    # reagents and samples
+    samples_protino = protino_plate.rows()[0]
+    samples_expression_1 = expression_block_1.rows()[0]
+    samples_expression_2 = expression_block_2.rows()[0]
+    samples_bioshake = bioshake_plate.rows()[0]
+
+    def replace_tipracks(pip):
+        vol = pip.tip_racks[0].wells()[0].max_volume
+        pip.reset_tipracks
+        ctx.pause('')
+
+    def wash(vol, source, drop=True):
+        m300.pick_up_tip()
+        for s in protino_plate.rows()[0]:
+            m300.transfer(vol, source, s.top())
+        if drop:
+            m300.drop_tip()
+        ctx.pause('Vacuum Protino plate to remove buffer from resin and \
+replace Protino plate onto the MN shaker frame.')
 
     # transfer dPBS wash to protino plate
-    m300.pick_up_tip()
-    for s in protino_plate.rows()[0]:
-        m300.transfer(400, )
+    wash(400, wash_buffer, drop=False)
+    m300.move_to(samples_protino[0].top(5))
+
+    # pipette from expression blocks to protino plate
+    m300.flow_rate.aspirate /= 5
+    for source_set in [samples_expression_1, samples_expression_2]
+        for s, d in zip(source_set, samples_protino):
+            if not m300.has_tip:
+                m300.pick_up_tip()
+            m300.transfer(1000, s, d, new_tip='never')
+            m300.drop_tip()
+        m300.reset_tipracks()
+        ctx.pause('Vacuum Protino plate to remove buffer from resin and replace \
+    Protino plate onto the MN shaker frame. Replace 200ul filter tiprack.')
+    m300.flow_rate.aspirate *= 5
+
+    # transfer wash buffer to protino plate
+    wash(400, wash_buffer)
+
+    # transfer wash buffer to protino plate
+    wash(300, elution_buffer)
+
+    ctx.pause('Shake plate at 900rpm for 1 minute on benchtop plate shaker, \
+and elute sample into a 0.5ml 96 well block by centrifugation at 500xg for 5 minutes')
