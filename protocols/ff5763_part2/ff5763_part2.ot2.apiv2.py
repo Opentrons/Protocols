@@ -13,7 +13,7 @@ TEST_MODE = False
 
 
 def run(ctx):
-    """PROTO COL."""
+    """PROTOCOL."""
     [num_samples
      ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
         "num_samples")
