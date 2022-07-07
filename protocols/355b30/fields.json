@@ -1,5 +1,11 @@
 [
   {
+    "type": "int",
+    "label": "Starting Volume of Buffer in Slot 10 Reservoir (uL)",
+    "name": "buffer_vol",
+    "default": 90000
+  },
+  {
     "type": "dropDown",
     "label": "Coordinate Tip Pickup, Aspirate, Dispense and Tip Drop of Two Selected Pipettes?",
     "name": "multitasking",
@@ -231,13 +237,9 @@
     "label": "Labware in Slot 10",
     "name": "labware_res",
     "options": [
-      { "label": "opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical", "value": "opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical" },
-      { "label": "opentrons_15_tuberack_falcon_15ml_conical", "value": "opentrons_15_tuberack_falcon_15ml_conical" },
-      { "label": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap", "value": "opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap" },
-      { "label": "opentrons_24_tuberack_nest_1.5ml_snapcap", "value": "opentrons_24_tuberack_nest_1.5ml_snapcap" },
-      { "label": "opentrons_24_tuberack_generic_2ml_screwcap", "value": "opentrons_24_tuberack_generic_2ml_screwcap" },
-      { "label": "opentrons_24_aluminumblock_nest_1.5ml_screwcap", "value": "opentrons_24_aluminumblock_nest_1.5ml_screwcap" },
-      { "label": "opentrons_6_tuberack_falcon_50ml_conical", "value": "opentrons_6_tuberack_falcon_50ml_conical" },
+      { "label": "agilent_1_reservoir_290ml", "value": "agilent_1_reservoir_290ml" },
+      { "label": "axygen_1_reservoir_90ml", "value": "axygen_1_reservoir_90ml" },
+      { "label": "nest_1_reservoir_195ml", "value": "nest_1_reservoir_195ml" },
       { "label": "EMPTY - NO RESERVOIR IN SLOT 10", "value": null }
     ]
   },
