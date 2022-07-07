@@ -12,16 +12,17 @@ metadata = {
 
 def run(ctx):
 
-    [multitasking, rate_asp_r, rate_disp_r, rate_asp_l, rate_disp_l,
-     filter_tips, pip_l, pip_r, labware_1, clearance_1, labware_2, clearance_2,
-     labware_3, clearance_3, labware_4, clearance_4, labware_5, clearance_5,
-     labware_6, clearance_6, labware_res, labware_11, clearance_11,
-     uploaded_csv] = get_values(  # noqa: F821
-     "multitasking", "rate_asp_r", "rate_disp_r", "rate_asp_l", "rate_disp_l",
-     "filter_tips", "pip_l", "pip_r", "labware_1", "clearance_1", "labware_2",
-     "clearance_2", "labware_3", "clearance_3", "labware_4", "clearance_4",
-     "labware_5", "clearance_5", "labware_6", "clearance_6", "labware_res",
-     "labware_11", "clearance_11", "uploaded_csv")
+    [buffer_vol, multitasking, rate_asp_r, rate_disp_r, rate_asp_l,
+     rate_disp_l, filter_tips, pip_l, pip_r, labware_1, clearance_1,
+     labware_2, clearance_2, labware_3, clearance_3, labware_4, clearance_4,
+     labware_5, clearance_5, labware_6, clearance_6, labware_res, labware_11,
+     clearance_11, uploaded_csv] = get_values(  # noqa: F821
+     "buffer_vol", "multitasking", "rate_asp_r", "rate_disp_r", "rate_asp_l",
+     "rate_disp_l", "filter_tips", "pip_l", "pip_r", "labware_1",
+     "clearance_1", "labware_2", "clearance_2", "labware_3", "clearance_3",
+     "labware_4", "clearance_4", "labware_5", "clearance_5", "labware_6",
+     "clearance_6", "labware_res", "labware_11", "clearance_11",
+     "uploaded_csv")
 
     ctx.set_rail_lights(True)
     ctx.delay(seconds=10)
@@ -47,17 +48,6 @@ def run(ctx):
      'opentrons_96_{}tiprack_1000ul'.format(
       'filter' if filter_tips else ''): [9]
       }
-
-    clearances = {}
-    for clearance, name in zip(
-     [clearance_1, clearance_2, clearance_3, clearance_4, clearance_5,
-      clearance_6, clearance_11],
-     ['clearance_1', 'clearance_2', 'clearance_3', 'clearance_4',
-      'clearance_5', 'clearance_6', 'clearance_11']):
-        if not clearance > 0:
-            raise Exception(
-             '''Specified well bottom clearances must be greater than 0''')
-        clearances[int(name[10:])] = clearance
 
     loaded = []
 
@@ -170,6 +160,11 @@ def run(ctx):
         if labwr:
             ctx.load_labware(labwr, str(slot), 'labware '+str(slot))
 
+    # selected reservoir in slot 10
+    if labware_res:
+        reservoir = ctx.load_labware(labware_res, '10', 'Reservoir').wells()[0]
+        reservoir.liq_vol = buffer_vol
+
     for tfer in tfers:
 
         if int(tfer["Sample_Slot"]) not in ctx.loaded_labwares.keys():
@@ -199,10 +194,6 @@ def run(ctx):
                  is not valid for labware loaded in slot {1}'''.format(
                   tfer["Final_Position"], tfer["Final_Slot"]))
 
-    # selected reservoir in slot 10
-    if labware_res:
-        ctx.load_labware(labware_res, '10', 'Reservoir')
-
     # notify user to replenish tips
     def pick_up_or_refill(self):
         try:
@@ -213,6 +204,29 @@ def run(ctx):
                 and Empty the Tip Waste.""".format(self))
             self.reset_tipracks()
             self.pick_up_tip()
+
+    # return liquid height in a well
+    def liq_height(well, effective_diameter=None):
+        if well.diameter:
+            if effective_diameter:
+                radius = effective_diameter / 2
+            else:
+                radius = well.diameter / 2
+            csa = math.pi*(radius**2)
+        else:
+            csa = well.length*well.width
+        return well.liq_vol / csa
+
+    clearances = {}
+    for clearance, name in zip(
+     [clearance_1, clearance_2, clearance_3, clearance_4, clearance_5,
+      clearance_6, clearance_11],
+     ['clearance_1', 'clearance_2', 'clearance_3', 'clearance_4',
+      'clearance_5', 'clearance_6', 'clearance_11']):
+        if not clearance > 0:
+            raise Exception(
+             '''Specified well bottom clearances must be greater than 0''')
+        clearances[int(name[10:])] = clearance
 
     # transfer sample groups
 
@@ -236,9 +250,23 @@ def run(ctx):
             if reps:
                 v = vol / reps
 
-            tipheight_asp = clearances[int(tfer['Sample_Slot'])]
+            if int(tfer['Sample_Slot']) != 10:
 
-            tipheight_disp = clearances[int(tfer['Final_Slot'])]
+                tipheight_asp = clearances[int(tfer['Sample_Slot'])]
+
+            else:
+
+                tipheight_asp = liq_height(
+                 reservoir) - 3 if liq_height(reservoir) - 3 > 1 else 1
+
+            if int(tfer['Final_Slot']) != 10:
+
+                tipheight_disp = clearances[int(tfer['Final_Slot'])]
+
+            else:
+
+                tipheight_disp = liq_height(
+                 reservoir) - 3 if liq_height(reservoir) - 3 > 1 else 1
 
             ctx.comment(
                  "{0} performing {1} transfer".format(p, tfer.items()))
@@ -255,11 +283,16 @@ def run(ctx):
 
                 p.aspirate(v, loc_asp.bottom(tipheight_asp))
 
+                if int(tfer['Sample_Slot']) == 10:
+                    reservoir.liq_vol -= v
+
                 # tip touch
-                speed_arg = 3.14*loc_asp.diameter
-                r = loc_asp.diameter / 2
-                radius_arg = (r - 0.5) / r
-                p.touch_tip(radius=radius_arg, v_offset=-10, speed=speed_arg)
+                if int(tfer['Sample_Slot']) != 10:
+                    speed_arg = 3.14*loc_asp.diameter
+                    r = loc_asp.diameter / 2
+                    radius_arg = (r - 0.5) / r
+                    p.touch_tip(
+                     radius=radius_arg, v_offset=-10, speed=speed_arg)
 
                 p.air_gap(air_gap_vol)
 
@@ -268,10 +301,12 @@ def run(ctx):
                 p.blow_out()
 
                 # tip touch
-                speed_arg = 3.14*loc_disp.diameter
-                r = loc_disp.diameter / 2
-                radius_arg = (r - 0.5) / r
-                p.touch_tip(radius=radius_arg, v_offset=-2, speed=speed_arg)
+                if int(tfer['Final_Slot']) != 10:
+                    speed_arg = 3.14*loc_disp.diameter
+                    r = loc_disp.diameter / 2
+                    radius_arg = (r - 0.5) / r
+                    p.touch_tip(
+                     radius=radius_arg, v_offset=-2, speed=speed_arg)
 
                 p.drop_tip()
 
@@ -295,9 +330,23 @@ def run(ctx):
                     if reps:
                         v = vol / reps
 
-                    tipheight_asp = clearances[int(tfer['Sample_Slot'])]
+                    if int(tferhigh['Sample_Slot']) != 10:
 
-                    tipheight_disp = clearances[int(tfer['Final_Slot'])]
+                        tipheight_asp = clearances[int(tfer['Sample_Slot'])]
+
+                    else:
+
+                        tipheight_asp = liq_height(
+                         reservoir) - 3 if liq_height(reservoir) - 3 > 1 else 1
+
+                    if int(tferhigh['Final_Slot']) != 10:
+
+                        tipheight_disp = clearances[int(tfer['Final_Slot'])]
+
+                    else:
+
+                        tipheight_disp = liq_height(
+                         reservoir) - 3 if liq_height(reservoir) - 3 > 1 else 1
 
                     ctx.comment(
                      "{0} performing {1} transfer".format(p, tferhigh.items()))
@@ -313,14 +362,26 @@ def run(ctx):
                     reps2 = math.ceil(vol2 / (int(tipmap[p2.name].split(
                      '_')[-1].replace('ul', '')) - air_gap_vol2))
 
-                    ctx.comment(" reps2 {}".format(reps2))
-
                     if reps2:
                         v2 = vol2 / reps2
 
-                    tipheight_asp2 = clearances[int(tfer['Sample_Slot'])]
+                    if int(tferlow['Sample_Slot']) != 10:
 
-                    tipheight_disp2 = clearances[int(tfer['Final_Slot'])]
+                        tipheight_asp2 = clearances[int(tfer['Sample_Slot'])]
+
+                    else:
+
+                        tipheight_asp2 = liq_height(
+                         reservoir) - 3 if liq_height(reservoir) - 3 > 1 else 1
+
+                    if int(tferlow['Final_Slot']) != 10:
+
+                        tipheight_disp2 = clearances[int(tfer['Final_Slot'])]
+
+                    else:
+
+                        tipheight_disp2 = liq_height(
+                         reservoir) - 3 if liq_height(reservoir) - 3 > 1 else 1
 
                     ctx.comment(
                      "{0} performing {1} transfer".format(p2, tferlow.items()))
@@ -358,12 +419,16 @@ def run(ctx):
 
                         p.aspirate(v, loc_asp.bottom(tipheight_asp))
 
+                        if int(tferhigh['Sample_Slot']) == 10:
+                            reservoir.liq_vol -= v
+
                         # tip touch
-                        speed_arg = 3.14*loc_asp.diameter
-                        r = loc_asp.diameter / 2
-                        radius_arg = (r - 0.5) / r
-                        p.touch_tip(
-                         radius=radius_arg, v_offset=-10, speed=speed_arg)
+                        if int(tferhigh['Sample_Slot']) != 10:
+                            speed_arg = 3.14*loc_asp.diameter
+                            r = loc_asp.diameter / 2
+                            radius_arg = (r - 0.5) / r
+                            p.touch_tip(
+                             radius=radius_arg, v_offset=-10, speed=speed_arg)
 
                         p.air_gap(air_gap_vol)
 
@@ -371,12 +436,16 @@ def run(ctx):
 
                         p2.aspirate(v2, loc_asp2.bottom(tipheight_asp2))
 
+                        if int(tferlow['Sample_Slot']) == 10:
+                            reservoir.liq_vol -= v2
+
                         # tip touch
-                        speed_arg = 3.14*loc_asp2.diameter
-                        r = loc_asp2.diameter / 2
-                        radius_arg = (r - 0.5) / r
-                        p2.touch_tip(
-                         radius=radius_arg, v_offset=-10, speed=speed_arg)
+                        if int(tferlow['Sample_Slot']) != 10:
+                            speed_arg = 3.14*loc_asp2.diameter
+                            r = loc_asp2.diameter / 2
+                            radius_arg = (r - 0.5) / r
+                            p2.touch_tip(
+                             radius=radius_arg, v_offset=-10, speed=speed_arg)
 
                         p2.air_gap(air_gap_vol2)
 
@@ -389,11 +458,12 @@ def run(ctx):
                         p.blow_out()
 
                         # tip touch
-                        speed_arg = 3.14*loc_disp.diameter
-                        r = loc_disp.diameter / 2
-                        radius_arg = (r - 0.5) / r
-                        p.touch_tip(
-                         radius=radius_arg, v_offset=-2, speed=speed_arg)
+                        if int(tferhigh['Final_Slot']) != 10:
+                            speed_arg = 3.14*loc_disp.diameter
+                            r = loc_disp.diameter / 2
+                            radius_arg = (r - 0.5) / r
+                            p.touch_tip(
+                             radius=radius_arg, v_offset=-2, speed=speed_arg)
 
                     if (tferlow and rep < reps2):
 
@@ -404,11 +474,12 @@ def run(ctx):
                         p2.blow_out()
 
                         # tip touch
-                        speed_arg = 3.14*loc_disp2.diameter
-                        r = loc_disp2.diameter / 2
-                        radius_arg = (r - 0.5) / r
-                        p2.touch_tip(
-                         radius=radius_arg, v_offset=-2, speed=speed_arg)
+                        if int(tferlow['Final_Slot']) != 10:
+                            speed_arg = 3.14*loc_disp2.diameter
+                            r = loc_disp2.diameter / 2
+                            radius_arg = (r - 0.5) / r
+                            p2.touch_tip(
+                             radius=radius_arg, v_offset=-2, speed=speed_arg)
 
                     if p.has_tip:
                         p.drop_tip()
@@ -435,9 +506,23 @@ def run(ctx):
                     if reps:
                         v = vol / reps
 
-                    tipheight_asp = clearances[int(tfer['Sample_Slot'])]
+                    if int(tfer1['Sample_Slot']) != 10:
 
-                    tipheight_disp = clearances[int(tfer['Final_Slot'])]
+                        tipheight_asp = clearances[int(tfer['Sample_Slot'])]
+
+                    else:
+
+                        tipheight_asp = liq_height(
+                         reservoir) - 3 if liq_height(reservoir) - 3 > 1 else 1
+
+                    if int(tfer1['Final_Slot']) != 10:
+
+                        tipheight_disp = clearances[int(tfer['Final_Slot'])]
+
+                    else:
+
+                        tipheight_disp = liq_height(
+                         reservoir) - 3 if liq_height(reservoir) - 3 > 1 else 1
 
                     ctx.comment(
                      "{0} performing {1} transfer".format(p, tfer1.items()))
@@ -459,9 +544,23 @@ def run(ctx):
                     if reps2:
                         v2 = vol2 / reps2
 
-                    tipheight_asp2 = clearances[int(tfer['Sample_Slot'])]
+                    if int(tfer2['Sample_Slot']) != 10:
 
-                    tipheight_disp2 = clearances[int(tfer['Final_Slot'])]
+                        tipheight_asp2 = clearances[int(tfer['Sample_Slot'])]
+
+                    else:
+
+                        tipheight_asp2 = liq_height(
+                         reservoir) - 3 if liq_height(reservoir) - 3 > 1 else 1
+
+                    if int(tfer2['Final_Slot']) != 10:
+
+                        tipheight_disp2 = clearances[int(tfer['Final_Slot'])]
+
+                    else:
+
+                        tipheight_disp2 = liq_height(
+                         reservoir) - 3 if liq_height(reservoir) - 3 > 1 else 1
 
                     ctx.comment(
                      "{0} performing {1} transfer".format(p2, tfer2.items()))
@@ -498,12 +597,16 @@ def run(ctx):
 
                         p.aspirate(v, loc_asp.bottom(tipheight_asp))
 
+                        if int(tfer1['Sample_Slot']) == 10:
+                            reservoir.liq_vol -= v
+
                         # tip touch
-                        speed_arg = 3.14*loc_asp.diameter
-                        r = loc_asp.diameter / 2
-                        radius_arg = (r - 0.5) / r
-                        p.touch_tip(
-                         radius=radius_arg, v_offset=-10, speed=speed_arg)
+                        if int(tfer1['Sample_Slot']) != 10:
+                            speed_arg = 3.14*loc_asp.diameter
+                            r = loc_asp.diameter / 2
+                            radius_arg = (r - 0.5) / r
+                            p.touch_tip(
+                             radius=radius_arg, v_offset=-10, speed=speed_arg)
 
                         p.air_gap(air_gap_vol)
 
@@ -511,12 +614,16 @@ def run(ctx):
 
                         p2.aspirate(v2, loc_asp2.bottom(tipheight_asp2))
 
+                        if int(tfer2['Sample_Slot']) == 10:
+                            reservoir.liq_vol -= v2
+
                         # tip touch
-                        speed_arg = 3.14*loc_asp2.diameter
-                        r = loc_asp2.diameter / 2
-                        radius_arg = (r - 0.5) / r
-                        p2.touch_tip(
-                         radius=radius_arg, v_offset=-10, speed=speed_arg)
+                        if int(tfer2['Sample_Slot']) != 10:
+                            speed_arg = 3.14*loc_asp2.diameter
+                            r = loc_asp2.diameter / 2
+                            radius_arg = (r - 0.5) / r
+                            p2.touch_tip(
+                             radius=radius_arg, v_offset=-10, speed=speed_arg)
 
                         p2.air_gap(air_gap_vol2)
 
@@ -529,11 +636,12 @@ def run(ctx):
                         p.blow_out()
 
                         # tip touch
-                        speed_arg = 3.14*loc_disp.diameter
-                        r = loc_disp.diameter / 2
-                        radius_arg = (r - 0.5) / r
-                        p.touch_tip(
-                         radius=radius_arg, v_offset=-2, speed=speed_arg)
+                        if int(tfer1['Final_Slot']) != 10:
+                            speed_arg = 3.14*loc_disp.diameter
+                            r = loc_disp.diameter / 2
+                            radius_arg = (r - 0.5) / r
+                            p.touch_tip(
+                             radius=radius_arg, v_offset=-2, speed=speed_arg)
 
                     if (tfer2 and (rep < reps2)):
 
@@ -544,11 +652,12 @@ def run(ctx):
                         p2.blow_out()
 
                         # tip touch
-                        speed_arg = 3.14*loc_disp2.diameter
-                        r = loc_disp2.diameter / 2
-                        radius_arg = (r - 0.5) / r
-                        p2.touch_tip(
-                         radius=radius_arg, v_offset=-2, speed=speed_arg)
+                        if int(tfer2['Final_Slot']) != 10:
+                            speed_arg = 3.14*loc_disp2.diameter
+                            r = loc_disp2.diameter / 2
+                            radius_arg = (r - 0.5) / r
+                            p2.touch_tip(
+                             radius=radius_arg, v_offset=-2, speed=speed_arg)
 
                     if p.has_tip:
                         p.drop_tip()
