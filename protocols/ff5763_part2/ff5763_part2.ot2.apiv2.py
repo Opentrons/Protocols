@@ -70,8 +70,8 @@ def run(ctx):
     ctx.comment("""adding TSB""")
     for dest in starting_dest:
         m20.pick_up_tip()
-        m20.flow_rate.aspirate = 3
-        m20.flow_rate.dispense = 3
+        m20.flow_rate.aspirate /= 3
+        m20.flow_rate.dispense /= 3
         m20.aspirate(10, tsb)
         m20.move_to(tsb.top(-2))
         ctx.delay(seconds=2)
@@ -81,6 +81,8 @@ def run(ctx):
         m20.dispense(airgap_20, dest.top())
         m20.dispense(10, dest)
         m20.drop_tip()
+        m20.flow_rate.aspirate *= 3
+        m20.flow_rate.dispense *= 3
     ctx.comment('''mixing''')
     for dest in starting_dest:
         m300.pick_up_tip()
@@ -98,8 +100,8 @@ def run(ctx):
     ctx.comment('moving samples from slot 2 to slot 4')
     for source, dest in zip(starting_dest, sample_dest):
         m300.pick_up_tip()
-        m300.flow_rate.aspirate = 3
-        m300.flow_rate.dispense = 3
+        m300.flow_rate.aspirate /= 3
+        m300.flow_rate.dispense /= 3
         m300.aspirate(50, source)
         m300.move_to(source.top(-2))
         ctx.delay(seconds=2)
@@ -109,6 +111,8 @@ def run(ctx):
         m300.dispense(airgap_300, dest.top(-2))
         m300.dispense(50, dest)
         m300.blow_out(dest.top())
+        m300.flow_rate.aspirate *= 3
+        m300.flow_rate.dispense *= 3
         m300.drop_tip()
 
     # Step 4
