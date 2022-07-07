@@ -162,7 +162,7 @@ def run(ctx):
          labware_4, "Temperature Module 2")
         temp.set_temperature(4)
 
-    # selected labware in slots 2-6, 11
+    # selected labware in slots 2,3,5,6,11
     for labwr, slot in zip(
      [labware_2, labware_3, labware_5, labware_6, labware_11],
      [2, 3, 5, 6, 11]):
