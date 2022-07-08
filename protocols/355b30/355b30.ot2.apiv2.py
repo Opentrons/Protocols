@@ -62,7 +62,7 @@ def run(ctx):
             pip_l, 'left', tip_racks=tipsleft)
 
         # to include unused tips in labware position check
-        pipette_l.move_to(tipsleft[0].wells()[0])
+        pipette_l.move_to(tipsleft[0].wells()[0].top())
 
         loaded.append(pipette_l)
 
@@ -94,7 +94,7 @@ def run(ctx):
             pip_r, 'right', tip_racks=tipsright)
 
         # to include unused tips in labware position check
-        pipette_r.move_to(tipsright[0].wells()[0])
+        pipette_r.move_to(tipsright[0].wells()[0].top())
 
         loaded.append(pipette_r)
 
