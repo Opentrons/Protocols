@@ -23,7 +23,7 @@ Supernatant is discarded from the sample plate on the magnetic module into the l
 
 40ul of PCR Master Mix is added to the samples from slot 5 well 2
 
-Samples are moved from magnetic module deep well plate to thermocycler plate in slot 2 before being centrifuged. Index adapters are added to the samples and mixed. The sample plate in slot 2 is moved to an off-deck thermocycler for a pre-programed PCR cycle as outlined in the Illumina DNA Prep reference material.
+Samples are moved from the magnetic module deep well plate to the thermocycler plate in slot 2 before being centrifuged. Index adapters are added to the samples and mixed. The sample plate in slot 2 is moved to an off-deck thermocycler for a pre-programed PCR cycle as outlined in the Illumina DNA Prep reference material.
 
 Explanation of complex parameters below:
 * `Number of Samples`: Total number of samples from 1 to 48
@@ -47,7 +47,7 @@ Explanation of complex parameters below:
 
 ### Reagents
 * PCR Master Mix in slot 5 well 2, 40ul per sample
-* Index Adapters in slot 5 well 3, 10ul per sample
+* Index Adapters in a 96 well plate in slot 3 or, if not indexing, slot 5 well 3, 10ul per sample
 
 ---
 
