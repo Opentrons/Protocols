@@ -1,18 +1,9 @@
 [
   {
     "type": "int",
-    "label": "Starting Volume of Buffer in Slot 10 Reservoir (uL)",
+    "label": "Starting Volume of Buffer in Slot 10 Reservoir (mL)",
     "name": "buffer_vol",
-    "default": 90000
-  },
-  {
-    "type": "dropDown",
-    "label": "Coordinate Tip Pickup, Aspirate, Dispense and Tip Drop of Two Selected Pipettes?",
-    "name": "multitasking",
-    "options": [
-      { "label": "NO - perform one transfer at a time", "value": false },
-      { "label": "YES - coordinate actions of the two selected pipettes", "value": true }
-    ]
+    "default": 90
   },
   {
     "type": "dropDown",
@@ -109,6 +100,12 @@
     ]
   },
   {
+    "type": "int",
+    "label": "Setting for Temperature Module in Slot 1 (degrees Celsius)",
+    "name": "temperature1",
+    "default": 4
+  },
+  {
     "type": "float",
     "label": "Well Bottom Clearance for Slot 1 Labware (mm above bottom of well)",
     "name": "clearance_1",
@@ -177,6 +174,12 @@
       { "label": "celltreat_24_aluminumblock_1500ul", "value": "celltreat_24_aluminumblock_1500ul" },
       { "label": "EMPTY - NO LABWARE ON SLOT 4 TEMPERATURE MODULE", "value": null }
     ]
+  },
+  {
+    "type": "int",
+    "label": "Setting for Temperature Module in Slot 4 (degrees Celsius)",
+    "name": "temperature2",
+    "default": 4
   },
   {
     "type": "float",
