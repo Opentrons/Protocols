@@ -42,8 +42,8 @@ Explanation of complex parameters below:
 * [P20 Multi Channel](https://shop.opentrons.com/8-channel-electronic-pipette/)
 
 ### Reagents
-* NFW, PCR Tubes in slot 1 column 3
-* IPB, PCR Tubes in slot 1 column 7
+* NFW, PCR Tubes in slot 1 column 1
+* IPB, PCR Tubes in slot 1 column 3
 
 ### Protocol Steps
 1. Centrifuge the sample plate at 280 x g for 1 minute to collect contents at the bottom of the wells
