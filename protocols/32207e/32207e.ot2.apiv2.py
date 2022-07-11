@@ -82,7 +82,7 @@ def run(ctx):
         nonlocal tipcount300
 
         if tipcount300 == 191:
-            ctx.pause("Replace 300ul tip racks")
+            ctx.pause("Replace all 300ul tip racks")
             tipcount300 = 0
             p300.pick_up_tip(tips300[tipcount300])
             tipcount300 += 1
