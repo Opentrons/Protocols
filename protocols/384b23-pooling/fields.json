@@ -45,7 +45,7 @@
     "type": "int",
     "label": "Number of pooling rows for Tuberack B",
     "name": "num_rows_B",
-    "default": 5
+    "default": 4
   },
   {
     "type": "int",
