@@ -15,8 +15,6 @@ Explanation of complex parameters below:
 ![csv file](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/32207e/Screen+Shot+2022-04-07+at+9.46.56+AM.png)
 * `DNA Aspiration Rate`: Specify the rate at which to aspirate DNA. A value of 1 is default, 0.5 being 50% of the default value, 1.2 being 20% faster than the default value, etc.
 * `Track tips?`: Specify whether to start at A1 of both tip racks, or to start picking up from where the last protocol left off.
-* `Starstedt Access Height (from bottom of the well in mm)`: Specify the access height in the Starstedt plate from the bottom of the well in the plate in mm.
-* `Kingfisher Access Height (from bottom of the well in mm)`: Specify the access height in the Kingfisher plate from the bottom of the well in the plate in mm. 
 * `P20/P300 Mount`: Specify which mount (left or right) to host the P20 and P300 single channel pipette.
 
 ---
