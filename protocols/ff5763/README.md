@@ -42,9 +42,19 @@ Variables:
 * [P300 Multi Channel]https://shop.opentrons.com/8-channel-electronic-pipette/)
 
 ### Reagents
+* Color code
+![color code](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/ff5763/part_1/color_code.png)
 * Master mix prepared as described in Illumina kit for Tagmentation w/10% overage
-* DNA Samples
+    * 22 uL master mix prepared per sample, 22 ul per well per column to be run. I.e. 24 samples will have 66 uL in slot 1 A1, 66 uL in slot 1 B1, etc.
 
+
+* DNA Samples
+    * Total volume for DNA samples in plate should be 30 uL and contain between 100-500 ng. If below 30 uL, add nuclease free water to samples
+
+---
+### Deck Setup
+* Deck Layout for 96 samples
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/ff5763/part_1/deck_layout.png)
 ---
 
 ### Reagent Setup
@@ -54,7 +64,7 @@ Variables:
 ---
 
 ### Protocol Steps
-1. 20ul of Master Mix is transfered from PCR tubes in slot 1's temperature module to slot 2's samples. Tips will be changed each time
+1. 20ul of Master Mix is transferred from PCR tubes in slot 1's temperature module to slot 2's samples. Tips will be changed each time
 
 ### Process
 1. Input your protocol parameters above.

@@ -41,7 +41,7 @@ def run(ctx):
     # tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
     #              for slot in ['7', '8']]
     tiprack200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-                  for slot in ['8', '9']]
+                  for slot in ['7', '8']]
 
     # load instrument
     # m20 = ctx.load_instrument('p20_multi_gen2', 'right', tip_racks=tiprack20)

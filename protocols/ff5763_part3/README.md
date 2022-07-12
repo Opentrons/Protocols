@@ -21,9 +21,9 @@ This is part three of a five part protocol for the [Illumina DNA Prep kit](https
 Part 3: Amplify Tagmented DNA
 Supernatant is discarded from the sample plate on the magnetic module into the liquid trash in slot 6
 
-40ul of PCR Master Mix is added to the samples from slot 5 well 2
+40 uL of PCR Master Mix is added to the samples
 
-Samples are moved from the magnetic module deep well plate to the thermocycler plate in slot 2 before being centrifuged. Index adapters are added to the samples and mixed. The sample plate in slot 2 is moved to an off-deck thermocycler for a pre-programed PCR cycle as outlined in the Illumina DNA Prep reference material.
+Samples are transferred from the magnetic module deep well plate to the thermocycler plate in slot 2 before being centrifuged. Index adapters are added to the samples and mixed. The sample plate in slot 2 is moved to an off-deck thermocycler for a pre-programed PCR cycle as outlined in the Illumina DNA Prep reference material.
 
 Explanation of complex parameters below:
 * `Number of Samples`: Total number of samples from 1 to 48
@@ -46,17 +46,28 @@ Explanation of complex parameters below:
 * [P20 Multi Channel](https://shop.opentrons.com/8-channel-electronic-pipette/)
 
 ### Reagents
-* PCR Master Mix in slot 5 well 2, 40ul per sample
-* Index Adapters in a 96 well plate in slot 3 or, if not indexing, slot 5 well 3, 10ul per sample
+* PCR Master Mix
+    * If not barcoding, in slot 5 well 2, 40 uL per sample
+    * If barcoding, in slot 3, 40 uL per sample, individual per well
+* Index Adapters in a 96 well plate in slot 3 or, if not indexing, slot 5 well 3, 10 uL per sample
+* Color code
+![color code](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/ff5763/part_3/color_code.png)
+---
+### Deck Setup
+* Deck Layout for 96 samples, barcoding primers
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/ff5763/part_3/deck_setup_barcode.png)
 
+
+* Deck Layout for 96 samples, non-barcoding primers
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/ff5763/part_3/deck_setup_nobar.png)
 ---
 
 ### Protocol Steps
 1. Supernatant is removed from samples on magnetic module and disposed off in liquid trash in slot 6
-2. 40ul PCR Master Mix from slot 5 well 2 is added to samples on magnetic module
+2. 40 uL PCR Master Mix from slot 5 well 2 is added to samples on magnetic module
 3. Samples are moved to thermocycler compatible plate in slot 2
 4. Samples are centrifuged for 3 seconds at 280 x g
-5. 10ul index adapters from slot 5 well 3 is added to sample plate in slot 2 and mixed (10x with 40ul)
+5. 10 uL index adapters from either slot 5 well 3 or the barcoding plate in slot 3 are added to sample plate in slot 2 and mixed (10x with 40 uL)
 
 
 ### Process

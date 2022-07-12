@@ -42,8 +42,8 @@ Explanation of complex parameters below:
 * [P20 Multi Channel](https://shop.opentrons.com/8-channel-electronic-pipette/)
 
 ### Reagents
-* IPB, PCR Tubes in slot 1 column 1 (15ul per sample)
-* RSB, PCR Tubes in slot 1 column 3 (32ul per sample)
+* IPB, PCR Tubes in slot 1 column 1 (15ul per sample per column)
+* RSB, PCR Tubes in slot 1 column 3 (32ul per sample per column)
 * EtOH 80% freshly made, Reservoir in slot 5 well 12 (200ul per sample)
 
 ### Protocol Steps

@@ -19,6 +19,7 @@ This is part four of a five part protocol for the [Illumina DNA Prep kit](https:
 [Part 5](https://develop.protocols.opentrons.com/protocol/ff5763_part5)
 
 Part 4: Cleanup Libraries First Half
+
 Samples are centrifuged down before adding the sample tray to slot 2 on the OT-2's deck. Tray contents are transferred to the available wells in the deep well plate on the magnetic module and left until clear (~5 minutes). 45ul of the resulting supernatant is moved to the second deep well plate in slot 3. 40ul of NFW is added to this supernatant for each sample. 45ul of IPB mix is then added to the now diluted samples and mixed 10x at 100ul each time. The deep well plate is left to incubate for 5 minutes. This ends part 4.
 Explanation of complex parameters below:
 * `Number of Samples`: Total number of samples from 1 to 48
@@ -42,8 +43,16 @@ Explanation of complex parameters below:
 * [P20 Multi Channel](https://shop.opentrons.com/8-channel-electronic-pipette/)
 
 ### Reagents
-* NFW, PCR Tubes in slot 1 column 1
-* IPB, PCR Tubes in slot 1 column 3
+* Nuclease Free Water, PCR Tubes in slot 1 column 1,
+* Illumina Purification Bead, PCR Tubes in slot 1 column 3
+* Color code
+![color code](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/ff5763/part_4/color+code.png)
+
+---
+### Deck Setup
+* Deck Layout for 96 samples
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/ff5763/part_4/deck_setup.png)
+---
 
 ### Protocol Steps
 1. Centrifuge the sample plate at 280 x g for 1 minute to collect contents at the bottom of the wells
