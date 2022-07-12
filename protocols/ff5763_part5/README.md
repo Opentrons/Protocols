@@ -42,10 +42,16 @@ Explanation of complex parameters below:
 * [P20 Multi Channel](https://shop.opentrons.com/8-channel-electronic-pipette/)
 
 ### Reagents
-* IPB, PCR Tubes in slot 1 column 7 (15ul per sample)
-* RSB, PCR Tubes in slot 1 column 9 (32ul per sample)
+* IPB, PCR Tubes in slot 1 column 1 (15ul per sample per column)
+* RSB, PCR Tubes in slot 1 column 3 (32ul per sample per column)
 * EtOH 80% freshly made, Reservoir in slot 5 well 12 (200ul per sample)
-
+* Color code
+![color code](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/ff5763/part_5/color+code.png)
+---
+### Deck Setup
+* Deck Layout for 96 samples
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/ff5763/part_5/deck_setup.png)
+---
 ### Protocol Steps
 1. Magnetic module is engaged for 5 minutes
 2. 15ul IPB is transferred to columns 7-12 on magnetic module

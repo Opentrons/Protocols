@@ -47,10 +47,11 @@ def run(ctx):
     m300 = ctx.load_instrument('p300_multi_gen2', 'left', tip_racks=tiprack200)
 
     # reagents
+    '''always have a tube in thermo_tubes.row[0] for calibration process'''
     '''includes reagents used in other steps for housekeeping purposes'''
     # master_mix_tag = thermo_tubes.rows()[0][0]
     # nf_water = thermo_tubes.rows()[0][2]
-    tsb = thermo_tubes.rows()[0][4]
+    tsb = thermo_tubes.rows()[0][0]
     twb = reagent_resv.rows()[0][0]
     # pcr_mix = reagent_resv.rows()[0][1]
 
@@ -195,7 +196,8 @@ def run(ctx):
             ctx.max_speeds['A'] *= supernatant_headspeed_modulator
             m300.dispense(step6_vol_supernatant+airgap_300,
                           liquid_trash.wells()[0])
-            m300.return_tip()
+            # m300.return_tip()
+            m300.drop_tip()
             num_times += 1
             print(side)
         mag_module.disengage()
