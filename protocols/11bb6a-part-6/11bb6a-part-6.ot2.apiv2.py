@@ -15,7 +15,7 @@ def run(ctx):
     # get parameter values from json above
     [sample_count, labware_plates, engage_height, engage_time, dry_time,
      offset_x] = get_values(  # noqa: F821
-      'size', 'sample_count', 'labware_plates', 'engage_height',
+      'sample_count', 'labware_plates', 'engage_height',
       'engage_time', 'dry_time', 'offset_x')
 
     ctx.set_rail_lights(True)
