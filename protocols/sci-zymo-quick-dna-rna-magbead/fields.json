@@ -152,6 +152,24 @@
   },
   {
     "type": "dropDown",
+    "label": "Include Wash 5 Step? (yes or no)",
+    "name": "include_wash5",
+    "options": [
+      { "label": "YES", "value": true },
+      { "label": "NO", "value": false }
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Include Wash 6 Step? (yes or no)",
+    "name": "include_wash6",
+    "options": [
+      { "label": "YES", "value": true },
+      { "label": "NO", "value": false }
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "Include Air Dry Beads Step? (yes or no)",
     "name": "include_dry",
     "options": [
