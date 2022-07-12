@@ -317,9 +317,8 @@ resuming.')
             _pick_up(m300)
             num_trans = math.ceil(vol/200)
             vol_per_trans = vol/num_trans
-            asp_per_chan = (0.95*res1.wells()[0].max_volume)//(vol_per_trans*8)
             for t in range(num_trans):
-                chan_ind = int((i*num_trans + t)//asp_per_chan)
+                chan_ind = i//(12//len(binding_buffer))
                 source = binding_buffer[chan_ind]
                 if m300.current_volume > 0:
                     # void air gap if necessary
