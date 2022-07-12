@@ -50,9 +50,16 @@ Explanation of complex parameters below:
 * [P20 Multi Channel](https://shop.opentrons.com/8-channel-electronic-pipette/)
 
 ### Reagents
-* Tagmentation Stop Buffer (TSB) in PCR tubes, slot 1 row 1, 10ul per sample
+* Tagmentation Stop Buffer (TSB) in PCR tubes, slot 1 row 1
+    * 10ul per sample per column, I.e. 24 samples will have 30 uL in slot 1 A1, 30 uL in slot 1 B1, etc.
 * Tagmentation Wash Buffer (TWB) in slot 5 well 1, 300ul per sample
+* Color Code
+![color code](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/ff5763/part_2/color_code.png)
 
+---
+### Deck Setup
+* Deck Layout for 96 samples
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/ff5763/part_2/deck_layout.png)
 ---
 
 ### Protocol Steps
