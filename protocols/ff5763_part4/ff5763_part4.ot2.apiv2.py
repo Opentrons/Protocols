@@ -41,7 +41,7 @@ def run(ctx):
     # tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
     #              for slot in ['7', '8']]
     tiprack200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-                  for slot in ['8', '9']]
+                  for slot in ['7', '8']]
 
     # load instrument
     # m20 = ctx.load_instrument('p20_multi_gen2', 'right', tip_racks=tiprack20)
@@ -50,9 +50,9 @@ def run(ctx):
     # reagents
     '''includes reagents used in other steps for housekeeping purposes'''
     # master_mix = thermo_tubes.rows()[0][0]
-    nf_water = thermo_tubes.rows()[0][2]
+    nf_water = thermo_tubes.rows()[0][0]
     # tsb = thermo_tubes.rows()[0][4]
-    ipb = thermo_tubes.rows()[0][6]
+    ipb = thermo_tubes.rows()[0][2]
     sample_dest_ab = sample_plate.rows()[0][6:6+num_cols]
     sample_dest_MIDI_1 = midi_plate_1.rows()[0][6:6+num_cols]
     sample_dest_MIDI_2 = midi_plate_2.rows()[0][:num_cols]

@@ -14,9 +14,9 @@ metadata = {
 def run(ctx):
     """PROTOCOL."""
     [
-     num_samples
+     num_samples, perform_barcode
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
-        "num_samples")
+        "num_samples", "perform_barcode")
 
     # define all custom variables above here with descriptions:
 
@@ -29,6 +29,9 @@ def run(ctx):
     cycler_plate = ctx.load_labware('customabnest_96_wellplate_200ul', '2')
     thermo_tubes = temp_1.load_labware('opentrons_96_aluminumblock_generic_'
                                        'pcr_strip_200ul')
+    if perform_barcode:
+        index_plate = ctx.load_labware('nest_96_wellplate_100ul'
+                                       '_pcr_full_skirt', '3')
     mag_module = ctx.load_module('magnetic module gen2', '4')
     sample_plate = mag_module.load_labware('nest_96_wellplate_2ml_deep')
     reagent_resv = ctx.load_labware('nest_12_reservoir_15ml', '5')
@@ -36,9 +39,9 @@ def run(ctx):
 
     # load tipracks
     tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
-                 for slot in ['3', '7']]
+                 for slot in ['8', '9']]
     tiprack200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
-                  for slot in ['8', '9']]
+                  for slot in ['7', '10']]
 
     # load instrument
     m20 = ctx.load_instrument('p20_multi_gen2', 'right', tip_racks=tiprack20)
@@ -48,10 +51,13 @@ def run(ctx):
     '''includes reagents used in other steps for housekeeping purposes'''
     # master_mix = thermo_tubes.rows()[0][0]
     # nf_water = thermo_tubes.rows()[0][1]
-    tsb = thermo_tubes.rows()[0][2]
+    tsb = thermo_tubes.rows()[0][0]
     sample_dest = sample_plate.rows()[0][:num_cols]
     pcr_mix = reagent_resv.wells()[1]
-    index_adapters = reagent_resv.wells()[2]
+    if perform_barcode:
+        index_source = index_plate.rows()[0][:num_cols]
+    else:
+        index_source = reagent_resv.wells()[2]
     # can reuse other half of plate from previous step!
     cycler_dest = cycler_plate.rows()[0][6:6+num_cols]
     # Constants
@@ -128,19 +134,33 @@ def run(ctx):
               ' return to slot 2 when done')
 
     # Add 10ul index adapters (made offdeck or supplied in 96 well plate)
-    for dest in cycler_dest:
-        m20.pick_up_tip()
-        m20.flow_rate.aspirate /= 4
-        m20.flow_rate.dispense /= 4
-        m20.aspirate(10, index_adapters)
-        m20.move_to(index_adapters.top(-2))
-        m20.aspirate(airgap_index, index_adapters.top(-2))
-        m20.move_to(index_adapters.top(-2))
-        m20.dispense(airgap_index, dest.top())
-        m20.dispense(10, dest)
-        m20.flow_rate.aspirate *= 4
-        m20.flow_rate.dispense *= 4
-        m20.drop_tip()
+    if perform_barcode:
+        for s, d in zip(index_source, cycler_dest):
+            m20.pick_up_tip()
+            m20.flow_rate.aspirate /= 4
+            m20.flow_rate.dispense /= 4
+            m20.aspirate(10, s)
+            m20.move_to(s.top(-2))
+            m20.aspirate(airgap_index, s.top(-2))
+            m20.move_to(s.top(-2))
+            m20.dispense(airgap_index, d.top())
+            m20.dispense(10, d)
+            m20.flow_rate.aspirate *= 4
+            m20.flow_rate.dispense *= 4
+            m20.drop_tip()
+    else:
+        for dest in cycler_dest:
+            m20.pick_up_tip()
+            m20.flow_rate.aspirate /= 4
+            m20.flow_rate.dispense /= 4
+            m20.aspirate(10, index_source)
+            m20.move_to(s.top(-2))
+            m20.aspirate(airgap_index, index_source.top(-2))
+            m20.move_to(index_source.top(-2))
+            m20.dispense(airgap_index, dest.top())
+            m20.dispense(10, dest)
+            m20.flow_rate.aspirate *= 4
+            m20.flow_rate.dispense *= 4
     # mix 10x at 40ul
     for dest in cycler_dest:
         m300.pick_up_tip()
