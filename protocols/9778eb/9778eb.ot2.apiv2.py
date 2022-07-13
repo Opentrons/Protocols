@@ -11,7 +11,7 @@ from opentrons import types
 metadata = {
     'protocolName': 'Mag-Bind® Blood & Tissue DNA HDQ 96 Kit',
     'author': 'Opentrons <protocols@opentrons.com>',
-    'apiLevel': '2.4'
+    'apiLevel': '2.11'
 }
 
 
@@ -19,6 +19,7 @@ metadata = {
 Here is where you can modify the magnetic module engage height:
 """
 MAG_HEIGHT = 13.6
+TEST_MODE = True
 
 
 # Definitions for deck light flashing
@@ -73,7 +74,7 @@ def run(ctx):
     Here is where you can change the locations of your labware and modules
     (note that this is the recommended configuration)
     """
-    magdeck = ctx.load_module('magdeck', '6')
+    magdeck = ctx.load_module('magnetic module gen2', '6')
     magdeck.disengage()
     magplate = magdeck.load_labware(deepwell_type, 'deepwell plate')
 #    tempdeck = ctx.load_module('Temperature Module Gen2', '1')
@@ -85,15 +86,16 @@ def run(ctx):
     res2 = ctx.load_labware(res_type, '3', 'reagent reservoir 2')
     res1 = ctx.load_labware(res_type, '2', 'reagent reservoir 1')
     num_cols = math.ceil(num_samples/8)
-    tips300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot,
+    tips300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot,
                                 '200µl filtertiprack')
                for slot in ['5', '7', '8', '10', '11']]
     if park_tips:
         parkingrack = ctx.load_labware(
-            'opentrons_96_tiprack_300ul', '4', 'tiprack for parking')
+            'opentrons_96_filtertiprack_200ul', '4', 'tiprack for parking')
         parking_spots = parkingrack.rows()[0][:num_cols]
     else:
-        tips300.insert(0, ctx.load_labware('opentrons_96_tiprack_300ul', '4',
+        tips300.insert(0, ctx.load_labware('opentrons_96_filtertiprack_200ul',
+                                           '4',
                                            '200µl filtertiprack'))
         parking_spots = [None for none in range(12)]
 
@@ -234,6 +236,7 @@ resuming.')
                 if m300.current_volume > 0:
                     # void air gap if necessary
                     m300.dispense(m300.current_volume, m.top())
+                # WIP add slower descend into well, break out transfer function
                 m300.move_to(m.center())
                 m300.transfer(vol_per_trans, loc, waste, new_tip='never',
                               air_gap=20)
@@ -336,10 +339,15 @@ resuming.')
                 m300.drop_tip(spot)
             else:
                 _drop(m300)
-        ctx.delay(minutes=10, msg='Bind off-deck on a heater/shaker')
-        magdeck.engage(height=MAG_HEIGHT)
-        ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
-' + str(settling_time) + ' minutes.')
+        if TEST_MODE:
+            ctx.delay(seconds=3, msg='Bind off-deck on a heater/shaker')
+            ctx.delay(seconds=settling_time, msg='Incubating on MagDeck for \
+            ' + str(settling_time) + ' minutes.')
+        else:
+            ctx.delay(minutes=10, msg='Bind off-deck on a heater/shaker')
+            magdeck.engage(height=MAG_HEIGHT)
+            ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
+            ' + str(settling_time) + ' minutes.')
 
         # remove initial supernatant
         remove_supernatant(vol+starting_vol, park=park)
@@ -395,8 +403,12 @@ resuming.')
         if magdeck.status == 'disengaged':
             magdeck.engage(height=MAG_HEIGHT)
 
-        ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
-' + str(settling_time) + ' minutes.')
+        if TEST_MODE:
+            ctx.delay(seconds=settling_time, msg='Incubating on MagDeck for \
+            ' + str(settling_time) + ' minutes.')
+        else:
+            ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
+            ' + str(settling_time) + ' minutes.')
 
         remove_supernatant(vol, park=park)
 
@@ -431,11 +443,16 @@ resuming.')
                 m300.drop_tip(spot)
             else:
                 _drop(m300)
-
-        ctx.delay(minutes=5, msg='Delay for 5 minutes for elution')
-        magdeck.engage(height=MAG_HEIGHT)
-        ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
-' + str(settling_time) + ' minutes.')
+        if TEST_MODE:
+            ctx.delay(seconds=5, msg='Delay for 5 minutes for elution')
+            magdeck.engage(height=MAG_HEIGHT)
+            ctx.delay(seconds=settling_time, msg='Incubating on MagDeck for \
+            ' + str(settling_time) + ' minutes.')
+        else:
+            ctx.delay(minutes=5, msg='Delay for 5 minutes for elution')
+            magdeck.engage(height=MAG_HEIGHT)
+            ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
+            ' + str(settling_time) + ' minutes.')
 
         for i, (m, e, spot) in enumerate(
                 zip(mag_samples_m, elution_samples_m, parking_spots)):
@@ -458,8 +475,12 @@ resuming.')
     wash(wash1_vol, wash1, park=park_tips)
     wash(wash2_vol, wash2, park=park_tips)
     wash(wash3_vol, wash3, park=park_tips)
-    ctx.delay(minutes=5, msg='Incubate for 5 minutes to dry beads')
-    elute(elution_vol, park=park_tips)
+    if TEST_MODE:
+        ctx.delay(seconds=5, msg='Incubate for 5 minutes to dry beads')
+        elute(elution_vol, park=park_tips)
+    else:
+        ctx.delay(minutes=5, msg='Incubate for 5 minutes to dry beads')
+        elute(elution_vol, park=park_tips)
 
     # track final used tip
     if tip_track and not ctx.is_simulating():
@@ -468,3 +489,5 @@ resuming.')
         data = {'tips300': tip_log['count'][m300]}
         with open(tip_file_path, 'w') as outfile:
             json.dump(data, outfile)
+    for c in ctx.commands():
+        print(c)

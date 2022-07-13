@@ -1,77 +1,82 @@
-# Protocol Title (should match metadata of .py file)
+# Mag-Bind® Blood & Tissue DNA HDQ 96 Kit
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
-### Partner
-[Partner Name](partner website link)
-
 ## Categories
-* Broader Category
-	* Subcategory (can be the name of a kit when applicable)
+* Nucleic Acid Extraction & Purification
+	* DNA Extraction
 
 ## Description
-This section of the README (especially the first paragraph) should grip a prospective user with the overarching purpose/flow of the protocol, but should not include fine details of the protocol steps themselves.
+Your OT-2 can fully automate the entire Mag-Bind® Blood & Tissue DNA HDQ 96 Kit.
+Results of the Opentrons Science team's internal testing of this protocol on the OT-2 are shown below:
 
-Example: This is a flexible protocol accommodating a wide range of commercial RNA extraction workflows for COVID-19 sample processing. The protocol is broken down into 5 main parts:
-* binding buffer addition to samples
-* bead wash 3x using magnetic module
-* final elution to chilled PCR plate
-
-Subsequent paragraphs can give some more insight into the details of the protocol, but a step-by-step description should be included in the 'Protocol Steps' section below.
-
-Example: For sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 4) to the elution PCR plate (temperature module, slot 1). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.
-
-Results of the Opentrons Science team's internal testing of this protocol on the OT-2 are shown below:  
-![results](link_to_results.png)
+![results](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-mag-bind-blood-tissue-kit/sci-mag-bind-blood-tissue-kit-results.png)
 
 Explanation of complex parameters below:
-* `park tips`: If set to `yes` (recommended), the protocol will conserve tips between reagent addition and removal. Tips will be stored in the wells of an empty rack corresponding to the well of the sample that they access (tip parked in A1 of the empty rack will only be used for sample A1, tip parked in B1 only used for sample B1, etc.). If set to `no`, tips will always be used only once, and the user will be prompted to manually refill tipracks mid-protocol for high throughput runs.
-* `input .csv file`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:
-```
-source,dest,vol
-A1,B1,4
-```
+* `Number of samples`: Specify the number of samples this run (1-96 and divisible by 8, i.e. whole columns at a time).
+* `Deepwell type`: Specify which well plate will be mounted on the magnetic module.
+* `Reservoir Type`: Specify which reservoir will be employed.
+* `Starting Volume`: Specify starting volume of sample (ul).
+* ``: Specify the volume of binding buffer to use (ul).
+* `Elution Volume`: Specify elution volume (ul).
+* `Park Tips`: Specify whether to park tips or drop tips.
+* `P300 Multi Channel Pipette Mount`: Specify whether the P300 multi channel pipette will be on the left or right mount.
 
 ---
 
 ### Modules
-* [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
 * [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
-* [Thermocycler Module](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module)
-* [HEPA Module](https://shop.opentrons.com/collections/hardware-modules/products/hepa-module)
 
 ### Labware
-* [Labware name](link to labware on shop.opentrons.com when applicable)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [NEST 96 Wellplate 2mL](https://shop.opentrons.com/collections/lab-plates/products/nest-0-2-ml-96-well-deep-well-plate-v-bottom)
+* [USA Scientific 96 Wellplate 2.4mL](https://labware.opentrons.com/?category=wellPlate)
+* [NEST 12 Reservoir 15mL](https://shop.opentrons.com/collections/reservoirs/products/nest-12-well-reservoir-15-ml)
+* [USA Scientific 12 Reservoir 22mL](https://labware.opentrons.com/?category=reservoir)
+* [Opentrons 200uL Filter Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)
+* [Opentrons 96 Aluminum block Nest Wellplate 100ul](https://labware.opentrons.com/opentrons_96_aluminumblock_nest_wellplate_100ul?category=aluminumBlock)
 
 ### Pipettes
-* [Pipette name](link to pipette on shop.opentrons.com)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [P300 Multi Channel Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/8-channel-electronic-pipette)
 
 ### Reagents
-* [kit name when applicable](link to kit)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [Mag-Bind® Blood & Tissue DNA HDQ 96 Kit](https://www.omegabiotek.com/product/tissue-and-blood-kit-genomic-dna-isolation-mag-bind-hdq-96/)
 
 ---
 
 ### Deck Setup
-* If the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)
+
+* Tip rack on Slot 4 is used for tip parking if selected.
+
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-mag-bind-blood-tissue-kit/sci-mag-bind-blood-tissue-kit.png)
 
 ### Reagent Setup
-* This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:
-* Reservoir 1: slot 5
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res1_v2.png)
-* Reservoir 2: slot 2  
-![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res2.png)
+
+* Reservoir 1: Slot 2
+
+![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-mag-bind-blood-tissue-kit/res1.png)
+
+* Reservoir 2: Slot 3
+
+![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-mag-bind-blood-tissue-kit/res2.png)
 
 ---
 
 ### Protocol Steps
-1. This section should consist of a numerical outline of the protocol steps, somewhat analogous to the steps outlined by the user in their custom protocol submission.
-2. example step: Samples are transferred from the source tuberacks on slots 1-2 to the PCR plate on slot 3, down columns and then across rows.
-3. example step: Waste is removed from each sample on the magnetic module, ensuring the bead pellets are not contacted by the pipette tips.
+1. Binding buffer is mixed 5 times.
+2. Binding buffer is added to samples on deep well plate on the magnetic module.
+3. Magnetic module is engaged and incubated for 7 minutes.
+4. Supernatant is removed and dropped into the liquid waste container.
+5. Add Wash Buffer and resuspend by mixing.
+6. Remove supernatant to liquid waste container.
+7. Perform second wash (repeats step 5-6 with second wash buffer set).
+8. Perform third wash (repeats step 5-6 with third wash buffer without resuspension).
+8. Incubate for 1 minute to dry beads.
+9. Elution solution is added to the samples.
+10. Beads are resuspended in elution solution.
+11. Incubates elution solution for 5 minutes.
+12. Magnetic module is engaged and incubates for 7 minutes (variable settling time).
+13. Elution samples are transferred to elution plate in Slot 1.
 
 ### Process
 1. Input your protocol parameters above.
@@ -86,4 +91,4 @@ A1,B1,4
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-protocol-hex-code
+sci-mag-bind-blood-tissue-kit
