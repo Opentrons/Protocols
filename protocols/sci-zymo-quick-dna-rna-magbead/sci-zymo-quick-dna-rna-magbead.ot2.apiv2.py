@@ -54,13 +54,15 @@ def run(ctx):
     [num_samples, include_dnase, deepwell_type, res_type, starting_vol,
      binding_buffer_vol, wash1_vol, wash2_vol, wash3_vol, elution_vol,
      mix_reps, settling_time, park_tips, tip_track, flash, include_bind,
-     include_wash1, include_wash2, include_wash3, include_wash4, include_dry,
+     include_wash1, include_wash2, include_wash3, include_wash4, include_wash5,
+     include_wash6, include_dry,
      include_elute] = get_values(  # noqa: F821
         'num_samples', 'include_dnase', 'deepwell_type', 'res_type',
         'starting_vol', 'binding_buffer_vol', 'wash1_vol', 'wash2_vol',
         'wash3_vol', 'elution_vol', 'mix_reps', 'settling_time', 'park_tips',
         'tip_track', 'flash', 'include_bind', 'include_wash1', 'include_wash2',
-        'include_wash3', 'include_wash4', 'include_dry', 'include_elute')
+        'include_wash3', 'include_wash4', 'include_wash5', 'include_wash6',
+        'include_dry', 'include_elute')
 
     """
     Here is where you can change the locations of your labware and modules
@@ -98,14 +100,16 @@ def run(ctx):
     """
     Here is where you can define the locations of your reagents.
     """
-    binding_buffer = res1.wells()[:4]
-    wash1 = res1.wells()[4:8]
-    wash2 = res1.wells()[8:]
+    binding_buffer = res1.wells()[:2]
+    wash1 = res1.wells()[2:4]
+    wash2 = res1.wells()[4:6]
+    wash3 = res1.wells()[6:8]
+    wash4 = res1.wells()[8:10]
+    wash5 = res1.wells()[10:]
     dnase1 = [res2.wells()[0]]
-    stopreaction = res2.wells()[1:5]
-    wash3 = res2.wells()[5:9]
+    stopreaction = res2.wells()[1:3]
+    wash6 = res2.wells()[3:5]
     elution_solution = res2.wells()[-1]
-    wash4 = res2.wells()[9:11]
 
     mag_samples_m = magplate.rows()[0][:num_cols]
     elution_samples_m = elutionplate.rows()[0][:num_cols]
@@ -313,9 +317,8 @@ resuming.')
             _pick_up(m300)
             num_trans = math.ceil(vol/200)
             vol_per_trans = vol/num_trans
-            asp_per_chan = (0.95*res1.wells()[0].max_volume)//(vol_per_trans*8)
             for t in range(num_trans):
-                chan_ind = int((i*num_trans + t)//asp_per_chan)
+                chan_ind = i//(12//len(binding_buffer))
                 source = binding_buffer[chan_ind]
                 if m300.current_volume > 0:
                     # void air gap if necessary
@@ -536,11 +539,17 @@ resuming.')
     if include_wash3:
         wash(wash3_vol, wash3, park=park_tips)
     if include_wash4:
-        wash(300, wash4, park=park_tips)
+        wash(500, wash4, park=park_tips)
     # dnase1 treatment (for DNA-free RNA prep)
     if include_dnase:
         dnase(50, dnase1, park=park_tips)
         stop_reaction(500, stopreaction, park=park_tips)
+
+    if include_wash5:
+        wash(500, wash5, park=park_tips)
+    if include_wash6:
+        wash(500, wash6, park=park_tips)
+
     if include_dry:
         ctx.delay(minutes=10, msg="dry beads for 10 minute")
     if include_elute:
