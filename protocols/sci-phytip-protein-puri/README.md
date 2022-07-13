@@ -1,4 +1,4 @@
-# Phytip Protein A, ProPlus, ProPlus LX Columns - Plate Prep
+# Phytip Protein A, ProPlus, ProPlus LX Columns - Protein Purification
 
 ### Author
 [Opentrons](https://opentrons.com/)
