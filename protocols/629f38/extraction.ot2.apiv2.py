@@ -1,4 +1,4 @@
-from opentrons.types import Point, Location
+from opentrons.types import Point
 import math
 
 metadata = {
