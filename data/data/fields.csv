@@ -391,7 +391,7 @@ final_temp,3
 final_tubes,1
 final_vol,3
 first_media_x,1
-flash,15
+flash,19
 flow_rate_asp,1
 flow_rate_beads,6
 flow_rate_disp,1
@@ -581,7 +581,7 @@ lysis,1
 lysis_vol,1
 m10_mount,2
 m1k,1
-m20_mount,62
+m20_mount,66
 m300_mount,71
 m300_type,2
 m_mount,1
@@ -748,7 +748,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,114
+num_samples,118
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
