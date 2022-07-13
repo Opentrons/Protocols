@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "\nFor 96 Samples\n\n",
-    "description": "This is part 2 of a 4 part protocol for the rhAmpSeq kit.\n* Part 1\n\nPart 3\nPart 4\n\nThis portion performs a cleanup on the PCR amplification product. A reagent list is below:\n 80% Freshly Prepared Ethanol\n IDTE Buffer\n* Agencourt AMPure XP Beads\nExplanation of complex parameters below:\n Number of Samples: How many samples are to be run, from 1 to 96\n P20 Multi GEN2 mount: Which side the P20 Multi pipette is attached to\n* Flash on Protocol Completion?: Will the OT-2 lights flash on and off when the protocol is complete?\n",
+    "description": "This is part 2 of a 4 part protocol for the rhAmpSeq kit.\n* Part 1\n\nPart 3\nPart 4\n\nThis portion performs a cleanup on the PCR amplification product. A reagent list is below:\n* 80% Freshly Prepared Ethanol\n* IDTE Buffer\n* Agencourt AMPure XP Beads\nExplanation of complex parameters below:\n* Number of Samples: How many samples are to be run, from 1 to 96\n* P20 Multi GEN2 mount: Which side the P20 Multi pipette is attached to\n* Flash on Protocol Completion?: Will the OT-2 lights flash on and off when the protocol is complete?\n",
     "internal": "onsite-ganda-lab",
     "labware": "\nNEST 96 Well Plate\n",
     "markdown": {
@@ -32,7 +32,7 @@
     "pipettes": "\nP20 Multi Gen2\nP300 Multi Gen2\n",
     "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
     "protocol-steps": "\n30 uL of Agencourt AMPure XP Beads is added to all samples on the magnetic module in slot 1 and mixed to homogenization\nSamples with beads are incubated for 10 minutes\nThe magnetic module is engaged for 5 minutes\nAn ethanol wash is performed twice as outlined below:\nSupernatant is discarded\n200 uL of 80% ethyl alcohol is added to samples\nSamples are incubated for 1 minute\nSupernatant is discarded\n\n\nRemainder of ethyl alcohol is removed\nSamples are air dried for 3 minutes\nMagnetic module is disengaged\n15 uL of IDTE, ph 8.0 is added to each sample\nSamples are incubated for 3 minutes\nMagnetic module is engaged for 3 minutes\n11 uL of the resulting supernatant is removed to the elution plate in slot 5\nRobot lights flash on and off to signal protocol has completed\n",
-    "reagent-setup": "\nColor Code:\n\n\n Reagent Reservoir, Slot 2:\n\n Reagent Reservoir, Slot 4:\n\n",
+    "reagent-setup": "\nColor Code:\n\n\n* Reagent Reservoir, Slot 2:\n\n* Reagent Reservoir, Slot 4:\n\n",
     "reagents": [
         "rhAmpSeq Library Preparation"
     ],
