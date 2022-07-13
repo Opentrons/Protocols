@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "\nSlot 2 \u2013 96-well V-bottom plate \u2013 Samples\nSlot 3 - PhyTip\u00ae Columns in an Opentrons 300\u00b5L Tipbox\nSlot 5 \u2013 96-well V-bottom plate \u2013 1st wash\nSlot 7 - 96-well V-bottom plate - 2nd wash\nSlot 9 - 96-well V-bottom plate - equilibration\nSlot 11 - 96-well V-bottom plate - elution\n\n",
-    "description": "This protocol (Protein Purification) performs protein purification by conducting dual flow chromatography using PhyTip\u00ae Protein A, ProPlus or\nProPlus LX Columns on the OT-2. It is developed to process up to 96 samples (a full 96-well plate).\nExplanation of complex parameters below:\n Number of Samples: Specify number of samples (1-96) for this run.\n P300 Multi-Channel Mount: Specify which mount (left or right) to host the P300 Multi-Channel pipette.\n",
+    "description": "This protocol (Protein Purification) performs protein purification by conducting dual flow chromatography using PhyTip\u00ae Protein A, ProPlus or\nProPlus LX Columns on the OT-2. It is developed to process up to 96 samples (a full 96-well plate).\nExplanation of complex parameters below:\n* Number of Samples: Specify number of samples (1-96) for this run.\n* P300 Multi-Channel Mount: Specify which mount (left or right) to host the P300 Multi-Channel pipette.\n",
     "internal": "sci-phytip-protein-puri",
     "labware": "\nThermo Fisher Nunc\u2122 96-Well Polypropylene Storage Microplates\nEmpty Opentrons 300\u00b5L Tip Rack for PhyTip\u00ae Columns\n",
     "markdown": {
