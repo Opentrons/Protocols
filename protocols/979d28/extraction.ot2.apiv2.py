@@ -87,8 +87,6 @@ def run(ctx):
     radius = mag_samples_m[0].width/2
 
     magdeck.disengage()  # just in case
-    if not TEST_MODE:
-        tempdeck.set_temperature(4)
 
     waste_vol = 0
     waste_threshold = 185000
@@ -348,5 +346,5 @@ shaking is complete.')
     remove_supernatant(parking_spots=parking_sets[6], vol=600)
     wash(rna_wash1_vol, rna_wash[2], parking_spots=parking_sets[7])
     if not TEST_MODE:
-        ctx.delay(minutes=10, msg='Air drying')
+        tempdeck.set_temperature(4)
     elute(elution2_vol, parking_spots=parking_sets[3])
