@@ -12,14 +12,11 @@ metadata = {
 def run(ctx: protocol_api.ProtocolContext):
 
     [
-     _custom_variable1,
-     _custom_variable2
+     num_samples,
+     m20_mount
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
-        "_custom_variable1",
-        "_custom_variable2")
-
-    if not 1 <= _custom_variable1 <= 12:
-        raise Exception("Enter a value between 1-12")
+        "num_samples",
+        "m20_mount")
 
     # define all custom variables above here with descriptions:
 
