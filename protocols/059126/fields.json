@@ -1,9 +1,9 @@
 [
   {
     "type": "int",
-    "label": "Number of Samples (max 288)",
+    "label": "Number of Samples (max 96)",
     "name": "num_samp",
-    "default": 288
+    "default": 96
   },
   {
     "type": "dropDown",
@@ -13,11 +13,5 @@
        { "label": "right", "value": "right" },
        { "label": "left", "value": "left" }
      ]
-  },
-  {
-    "type": "float",
-    "label": "Overage Percent",
-    "name": "overage_percent",
-    "default": 15
   }
 ]
