@@ -538,7 +538,7 @@ labware_patient_samples,1
 labware_pcr,1
 labware_pcr_plate,10
 labware_plate,3
-labware_plates,8
+labware_plates,9
 labware_pool,1
 labware_pre_pcr_plate,2
 labware_rack,1
@@ -1054,7 +1054,7 @@ sample_cherrypicking,1
 sample_cols,1
 sample_columns,1
 sample_container,1
-sample_count,38
+sample_count,39
 sample_count_1,1
 sample_count_2,1
 sample_csv,1
