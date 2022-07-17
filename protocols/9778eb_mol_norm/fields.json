@@ -1,0 +1,35 @@
+[
+  {
+    "type": "int",
+    "label": "Number of Samples (max 288)",
+    "name": "num_samples",
+    "default": 96
+  },
+  {
+      "type": "int",
+      "label": "Starting Water Volume, mL",
+      "name": "vol_water",
+      "default": 50
+  },
+  {
+      "type": "int",
+      "label": "Final Concentration, nanomoles/uL",
+      "name": "conc_target",
+      "default": 1
+  },
+  {
+    "type": "dropDown",
+    "label": "P20 Single GEN2 mount",
+    "name": "p20_mount",
+    "options": [
+       { "label": "right", "value": "right" },
+       { "label": "left", "value": "left" }
+     ]
+  },
+  {
+    "type": "textFile",
+    "label": ".CSV File",
+    "name": "file_input",
+    "default": "Source Well,Sample Transfer Vol,Source Tube,Diluent Transfer Volume\n1000, A1, A1, 20"
+  }
+]
