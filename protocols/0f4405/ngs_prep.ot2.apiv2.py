@@ -37,7 +37,7 @@ def run(ctx):
     tc = ctx.load_module('thermocycler')
     tc.open_lid()
     tc.set_block_temperature(20)
-    tc.set_lid_temperature(80)
+    tc.set_lid_temperature(70)
     tc_plate = tc.load_labware('eppendorftwin.tec_96_wellplate_150ul',
                                'DNA plate')
     tips300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
