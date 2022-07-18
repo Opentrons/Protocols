@@ -263,7 +263,7 @@ for {time_mag_incubation} minutes.')
 
     # air dry
     if not _dry_run:
-        ctx.delay(minutes=5, msg='Air drying for 5 minutes.')
+        ctx.delay(minutes=2, msg='Air drying for 2 minutes.')
     magdeck.disengage()
 
     # elute
