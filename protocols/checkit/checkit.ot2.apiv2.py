@@ -25,7 +25,7 @@ def run(ctx):
             'FLOW_RATE_DISPENSE': 15,  # ul/s
             'FLOW_RATE_BLOWOUT': 15,  # ul/s
             'BLOWOUT_HEIGHT': 3.0,  # mm above bottom of well
-            'VOLUME': 5.0,  # ul
+            'VOLUME': 2.0,  # ul
             'BLOWOUT': True,
             'DROP': True
         },
@@ -42,8 +42,8 @@ def run(ctx):
             'FLOW_RATE_ASPIRATE': 7.6,  # ul/s
             'FLOW_RATE_DISPENSE': 15,  # ul/s
             'FLOW_RATE_BLOWOUT': 15,  # ul/s
-            'BLOWOUT_HEIGHT': 3,  # mm above bottom of well
-            'VOLUME': 5.0,  # ul
+            'BLOWOUT_HEIGHT': 4.0,  # mm above bottom of well
+            'VOLUME': 10.0,  # ul
             'BLOWOUT': True,
             'DROP': True
         },
@@ -51,8 +51,8 @@ def run(ctx):
             'FLOW_RATE_ASPIRATE': 7.6,  # ul/s
             'FLOW_RATE_DISPENSE': 15,  # ul/s
             'FLOW_RATE_BLOWOUT': 15,  # ul/s
-            'BLOWOUT_HEIGHT': 3,  # mm above bottom of well
-            'VOLUME': 5.0,  # ul
+            'BLOWOUT_HEIGHT': 3.0,  # mm above bottom of well
+            'VOLUME': 20.0,  # ul
             'BLOWOUT': True,
             'DROP': True
         },
