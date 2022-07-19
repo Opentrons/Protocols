@@ -584,6 +584,7 @@ load_csv,1
 loc_csv,1
 loc_rnase,1
 loc_tween,1
+lw_checkit,1
 lw_deepwell_plate,1
 lw_dmso,1
 lw_hplc,1
@@ -896,9 +897,9 @@ pipette,1
 pipette_2_mount,1
 pipette_2_type,1
 pipette_homing,1
-pipette_mount,16
+pipette_mount,17
 pipette_offset,1
-pipette_type,15
+pipette_type,16
 pipette_types,1
 pipettes,1
 pipinfo,1
