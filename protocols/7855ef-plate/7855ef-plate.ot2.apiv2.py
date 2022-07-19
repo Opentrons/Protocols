@@ -62,12 +62,14 @@ def run(protocol):
             h = 1
 
     def touchtip(pip, well):
+        protocol.max_speeds['X'] = 10
         knock_loc = well.top(z=-2).move(
-                    Point(x=-(well.diameter/2.25)))
+                    Point(x=-(well.diameter/2.5)))
         knock_loc2 = well.top(z=-2).move(
-                Point(x=(well.diameter/2.25)))
+                Point(x=(well.diameter/2.5)))
         pip.move_to(knock_loc)
         pip.move_to(knock_loc2)
+        del protocol.max_speeds['X']
 
     def pick_up():
         nonlocal tip_counter
