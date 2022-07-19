@@ -17,8 +17,8 @@ This protocol performs [Next Advance Checkit Go](https://www.nextadvance.com/che
 ---
 
 ### Labware
-* [Labware name](link to labware on shop.opentrons.com when applicable)
 * [Next Advance Checkit Go Cartridge](https://www.nextadvance.com/checkit-go/)
+* [Opentrons 20/300ul Tiprack](https://shop.opentrons.com/universal-filter-tips/)
 
 ### Pipettes
 * [Opentrons P20/P300 Single-/8-Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/pipettes/)
