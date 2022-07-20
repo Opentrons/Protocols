@@ -18,8 +18,8 @@ metadata = {
 """
 Here is where you can modify the magnetic module engage height:
 """
-TEST_MODE = True
-
+TEST_MODE = False
+mag_height = 3.5  # this is from bottom of deep well plate! Default is too high
 
 # Definitions for deck light flashing
 class CancellationToken:
@@ -124,8 +124,7 @@ def run(ctx):
     """
     binding_buffer = res1.wells()[:4]
     elution_solution = res2.wells()[-1]
-    # VHB, first time
-    wash1 = res1.wells()[4:8]
+    wash1 = res1.wells()[4:8]  # VHB, first time
     wash2 = res1.wells()[8:]  # VHB second time
     wash3 = res2.wells()[:4]  # SPM wash
     wash4 = res2.wells()[4:8]  # NFW wash
@@ -163,6 +162,8 @@ def run(ctx):
         for _ in range(reps):
             pip.aspirate(vol, well.bottom(1))
             pip.dispense(vol, well.bottom(5))
+            pip.aspirate(vol, well.bottom(5))
+            pip.dispense(vol, well.bottom(1))
         pip.flow_rate.aspirate = 150
         pip.flow_rate.aspirate = 300
 
@@ -194,7 +195,7 @@ def run(ctx):
         m300.drop_tip(home_after=False)
 
     # Mag module engage
-    magdeck.engage()
+    magdeck.engage(height_from_base=mag_height)
     if TEST_MODE:
         ctx.delay(seconds=bead_delay_time)
     else:
@@ -239,7 +240,7 @@ def run(ctx):
         m300.drop_tip()
 
     # engage mag module
-    magdeck.engage()
+    magdeck.engage(height_from_base=mag_height)
     if TEST_MODE:
         ctx.delay(seconds=bead_delay_time)
     else:
@@ -284,7 +285,7 @@ def run(ctx):
         m300.drop_tip()
 
     # engage mag module
-    magdeck.engage()
+    magdeck.engage(height_from_base=mag_height)
     if TEST_MODE:
         ctx.delay(seconds=bead_delay_time)
     else:
@@ -327,7 +328,7 @@ def run(ctx):
         m300.drop_tip()
 
     # engage mag module
-    magdeck.engage()
+    magdeck.engage(height_from_base=mag_height)
     if TEST_MODE:
         ctx.delay(seconds=bead_delay_time)
     else:
@@ -360,7 +361,7 @@ def run(ctx):
     for i, dest in enumerate(mag_samples_m):
         side = -1 if i % 2 == 0 else 1
         m300.pick_up_tip()
-        magdeck.engage()
+        magdeck.engage(height_from_base=mag_height)
         for _ in range(2):
             m300.aspirate(200, wash4[i//3])
             m300.dispense(200, dest.top(-2))
@@ -416,8 +417,8 @@ def run(ctx):
         m300.aspirate(50, elution_solution)
         m300.dispense(50, dest)
         bead_mixing(dest, m300, 50, reps=10)
-        m300.drop_tip()
-    magdeck.engage()"""
+        m300.drop_tip()"""
+    magdeck.engage(height_from_base=mag_height)
 
     if TEST_MODE:
         ctx.delay(seconds=bead_delay_time)
@@ -810,5 +811,5 @@ def run(ctx):
 #         data = {'tips300': tip_log['count'][m300]}
 #         with open(tip_file_path, 'w') as outfile:
 #             json.dump(data, outfile)
-#     for c in ctx.commands():
-#         print(c)
+    for c in ctx.commands():
+        print(c)
