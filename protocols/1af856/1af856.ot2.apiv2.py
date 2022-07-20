@@ -11,7 +11,7 @@ metadata = {
 
 def run(ctx):
 
-    # get parameter values from json above
+    # get values from json above
     [count_samples, time_dry, time_engage,
      offset_x] = get_values(  # noqa: F821
       'count_samples', 'time_dry', 'time_engage', 'offset_x')
