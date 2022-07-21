@@ -11,9 +11,9 @@ metadata = {
 
 def run(ctx):
 
-    [csv_samp, dna_asp_rate, tip_track, star_height, king_height,
+    [csv_samp, dna_asp_rate, tip_track,
         p20_mount, p300_mount] = get_values(  # noqa: F821
-        "csv_samp", "dna_asp_rate", "tip_track", "star_height", "king_height",
+        "csv_samp", "dna_asp_rate", "tip_track",
             "p20_mount", "p300_mount")
 
     # load Labware
@@ -24,6 +24,9 @@ def run(ctx):
                   for slot in [4, 5]]
     tipracks300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
                    for slot in [7, 8]]
+
+    star_height = 2
+    king_height = 2
 
     # load instrument
     p20 = ctx.load_instrument("p20_single_gen2", p20_mount,
@@ -79,7 +82,7 @@ def run(ctx):
         nonlocal tipcount300
 
         if tipcount300 == 191:
-            ctx.pause("Replace 300ul tip racks")
+            ctx.pause("Replace all 300ul tip racks")
             tipcount300 = 0
             p300.pick_up_tip(tips300[tipcount300])
             tipcount300 += 1

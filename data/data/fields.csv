@@ -113,6 +113,7 @@ blowout_height,1
 blowout_rate,1
 blowout_vertical_offset,1
 box_count,1
+buffer_vol,1
 cap_count,1
 cd4_dil,1
 cd8_dil,1
@@ -127,6 +128,13 @@ cherrypicking_csv,1
 choose_tip_rack,3
 cleanup_stage,1
 clearance,2
+clearance_1,1
+clearance_11,1
+clearance_2,1
+clearance_3,1
+clearance_4,1
+clearance_5,1
+clearance_6,1
 clearance_aliquots,1
 clearance_aspirate,9
 clearance_bead_pellet,6
@@ -318,7 +326,7 @@ dp_type,2
 dplate,1
 drop_threshold,1
 dry_on_temperature_module,1
-dry_time,13
+dry_time,15
 drying_time,2
 drying_time_in_minutes,2
 dryrun,5
@@ -352,9 +360,9 @@ empty_vial_well,3
 end_col,1
 end_column,1
 end_repair,1
-engage_height,16
+engage_height,19
 engage_offset,4
-engage_time,15
+engage_time,17
 enz_asp_rate,1
 enz_disp_rate,1
 enz_mx_volume,1
@@ -391,7 +399,7 @@ final_temp,3
 final_tubes,1
 final_vol,3
 first_media_x,1
-flash,15
+flash,19
 flow_rate_asp,1
 flow_rate_beads,6
 flow_rate_disp,1
@@ -428,8 +436,10 @@ height_source,1
 htp_csv,1
 i5_volume,1
 i5_well,1
+i5col,1
 i7_volume,1
 i7_well,1
+i7row,1
 inc_time,1
 include_bind,1
 include_dnase,1
@@ -445,6 +455,8 @@ include_wash1,1
 include_wash2,1
 include_wash3,1
 include_wash4,1
+include_wash5,1
+include_wash6,1
 incubate_bind_time,1
 incubate_samples_with_beads,3
 incubation_temperature,1
@@ -485,7 +497,6 @@ is_stop_after_1st_incbn,1
 is_use_custom_block,1
 is_verbose,1
 ki_dil,1
-king_height,1
 label,1
 labware1,1
 labware2,1
@@ -527,7 +538,7 @@ labware_patient_samples,1
 labware_pcr,1
 labware_pcr_plate,10
 labware_plate,3
-labware_plates,5
+labware_plates,9
 labware_pool,1
 labware_pre_pcr_plate,2
 labware_rack,1
@@ -537,7 +548,7 @@ labware_rna,1
 labware_samp,1
 labware_sample_plate,1
 labware_sampleplates,1
-labware_tempmod,4
+labware_tempmod,7
 labware_tips20,3
 labware_tips300,2
 labware_tube_rack,1
@@ -573,6 +584,7 @@ load_csv,1
 loc_csv,1
 loc_rnase,1
 loc_tween,1
+lw_checkit,1
 lw_deepwell_plate,1
 lw_dmso,1
 lw_hplc,1
@@ -581,7 +593,7 @@ lysis,1
 lysis_vol,1
 m10_mount,2
 m1k,1
-m20_mount,62
+m20_mount,66
 m300_mount,71
 m300_type,2
 m_mount,1
@@ -642,7 +654,7 @@ mix_vol,5
 mix_volume,1
 mixln,1
 mixp300,1
-mixreps,1
+mixreps,2
 mixreps_dilution,1
 mm,3
 mm1_col,1
@@ -682,7 +694,6 @@ move_side,2
 move_vol,1
 mp_type,1
 multi_pip_info,1
-multitasking,1
 n1_col,1
 n1_primer_well,1
 n2_col,1
@@ -748,7 +759,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,114
+num_samples,118
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -776,7 +787,7 @@ occupied_well_csv1,5
 occupied_well_csv2,4
 occupied_well_csv3,4
 offset,5
-offset_x,17
+offset_x,20
 offset_x_resuspension,12
 omni_tray_24,1
 omni_tray_96,1
@@ -872,6 +883,7 @@ pcr_volume,1
 pcrcycles,2
 pdl1_dil,1
 peptide_supernat_vol,1
+perform_barcode,1
 perform_steps,1
 pip,1
 pip_l,2
@@ -885,9 +897,9 @@ pipette,1
 pipette_2_mount,1
 pipette_2_type,1
 pipette_homing,1
-pipette_mount,16
+pipette_mount,17
 pipette_offset,1
-pipette_type,15
+pipette_type,16
 pipette_types,1
 pipettes,1
 pipinfo,1
@@ -1043,7 +1055,7 @@ sample_cherrypicking,1
 sample_cols,1
 sample_columns,1
 sample_container,1
-sample_count,35
+sample_count,39
 sample_count_1,1
 sample_count_2,1
 sample_csv,1
@@ -1128,7 +1140,6 @@ stage2_disp_speed,1
 stage2_dispense_height,1
 stage2_height_after_disp,1
 standard_type,1
-star_height,1
 start,1
 start_buff_vol,1
 start_col,1
@@ -1201,14 +1212,18 @@ tempdeck_gen,1
 tempdeck_name,1
 tempdeck_slot,1
 temperature,12
+temperature1,1
+temperature2,1
 tempgen,1
 template_vol,1
 test_method,1
 test_plates,1
+time_airdry_minutes,1
 time_dry,15
 time_engage,15
 time_mag_incubation,1
 time_settling,1
+time_settling_minutes,1
 tip_immersion,1
 tip_max,1
 tip_no,1
@@ -1349,6 +1364,7 @@ vol_elution,1
 vol_elution_buffer,1
 vol_elution_final,1
 vol_etoh,1
+vol_final_elution,1
 vol_h2o,2
 vol_ic,1
 vol_lys_buffer,1

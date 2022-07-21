@@ -39,9 +39,7 @@ Samples should be loaded on the magnetic module in a NEST deepwell plate. For re
 
 ### Reagent Setup
 
-All volumes for 96-sample throughput
-
-![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/629f38/reagents.png)
+You can find a reagent calculator [here](https://docs.google.com/spreadsheets/d/15DXUN9iHFnmqe4cVzvg0mSX2tO7xA43hYlF0h8wDyZM/edit#gid=0). Simply enter the number of samples you would like to run in the green box, and the volume calculations will be displayed.
 
 ---
 

@@ -50,15 +50,22 @@ Explanation of complex parameters below:
 * [P20 Multi Channel](https://shop.opentrons.com/8-channel-electronic-pipette/)
 
 ### Reagents
-* Tagmentation Stop Buffer (TSB) in PCR tubes, slot 1 row 5, 10ul per sample
+* Tagmentation Stop Buffer (TSB) in PCR tubes, slot 1 row 1
+    * 10ul per sample per column, I.e. 24 samples will have 30 uL in slot 1 A1, 30 uL in slot 1 B1, etc.
 * Tagmentation Wash Buffer (TWB) in slot 5 well 1, 300ul per sample
+* Color Code
+![color code](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/ff5763/part_2/color_code.png)
 
+---
+### Deck Setup
+* Deck Layout for 96 samples
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/ff5763/part_2/deck_layout.png)
 ---
 
 ### Protocol Steps
-1. 10ul TSB from slot 1 row 5 is added to samples in slot 2
+1. 10ul TSB from slot 1 row 1 is added to samples in slot 2
 2. Sample plate is moved to pre-prepared thermocycler
-3. Post-thermocycler, sample in slot 2 are transferred to NEST 2ml deep well plate in slot 4 ontop of the magnetic module
+3. Post-thermocycler, samples in slot 2 are transferred to NEST 2ml deep well plate in slot 4 ontop of the magnetic module
 4. Magnetic module is engaged for 3 minutes
 5. Supernatant is discarded from slot 4 samples to liquid trash in slot 6
 6. 100ul TWB is added from slot 5 well 1 to sample plate on magnetic module

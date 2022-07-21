@@ -13,7 +13,7 @@ TEST_MODE = False
 
 
 def run(ctx):
-    """PROTO COL."""
+    """PROTOCOL."""
     [num_samples
      ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
         "num_samples")
@@ -47,10 +47,11 @@ def run(ctx):
     m300 = ctx.load_instrument('p300_multi_gen2', 'left', tip_racks=tiprack200)
 
     # reagents
+    '''always have a tube in thermo_tubes.row[0] for calibration process'''
     '''includes reagents used in other steps for housekeeping purposes'''
     # master_mix_tag = thermo_tubes.rows()[0][0]
     # nf_water = thermo_tubes.rows()[0][2]
-    tsb = thermo_tubes.rows()[0][4]
+    tsb = thermo_tubes.rows()[0][0]
     twb = reagent_resv.rows()[0][0]
     # pcr_mix = reagent_resv.rows()[0][1]
 
@@ -70,8 +71,8 @@ def run(ctx):
     ctx.comment("""adding TSB""")
     for dest in starting_dest:
         m20.pick_up_tip()
-        m20.flow_rate.aspirate = 3
-        m20.flow_rate.dispense = 3
+        m20.flow_rate.aspirate /= 3
+        m20.flow_rate.dispense /= 3
         m20.aspirate(10, tsb)
         m20.move_to(tsb.top(-2))
         ctx.delay(seconds=2)
@@ -81,6 +82,8 @@ def run(ctx):
         m20.dispense(airgap_20, dest.top())
         m20.dispense(10, dest)
         m20.drop_tip()
+        m20.flow_rate.aspirate *= 3
+        m20.flow_rate.dispense *= 3
     ctx.comment('''mixing''')
     for dest in starting_dest:
         m300.pick_up_tip()
@@ -98,8 +101,8 @@ def run(ctx):
     ctx.comment('moving samples from slot 2 to slot 4')
     for source, dest in zip(starting_dest, sample_dest):
         m300.pick_up_tip()
-        m300.flow_rate.aspirate = 3
-        m300.flow_rate.dispense = 3
+        m300.flow_rate.aspirate /= 3
+        m300.flow_rate.dispense /= 3
         m300.aspirate(50, source)
         m300.move_to(source.top(-2))
         ctx.delay(seconds=2)
@@ -109,6 +112,8 @@ def run(ctx):
         m300.dispense(airgap_300, dest.top(-2))
         m300.dispense(50, dest)
         m300.blow_out(dest.top())
+        m300.flow_rate.aspirate *= 3
+        m300.flow_rate.dispense *= 3
         m300.drop_tip()
 
     # Step 4
@@ -191,7 +196,8 @@ def run(ctx):
             ctx.max_speeds['A'] *= supernatant_headspeed_modulator
             m300.dispense(step6_vol_supernatant+airgap_300,
                           liquid_trash.wells()[0])
-            m300.return_tip()
+            # m300.return_tip()
+            m300.drop_tip()
             num_times += 1
             print(side)
         mag_module.disengage()
