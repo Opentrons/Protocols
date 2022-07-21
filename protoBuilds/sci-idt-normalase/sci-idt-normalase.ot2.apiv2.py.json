@@ -1,0 +1,176 @@
+{
+    "content": "# flake8: noqa\n\nfrom opentrons import protocol_api\n\nfrom opentrons import types\n\nimport inspect\n\nmetadata = {\n    'protocolName': 'IDT Normalase',\n    'author': 'Opentrons <protocols@opentrons.com>',\n    'source': 'Protocol Library',\n    'apiLevel': '2.9'\n    }\n\ndef right(s, amount):\n    if s == None:\n        return None\n    elif amount == None:\n        return None\n    s = str(s)\n    if amount > len(s):\n        return s\n    elif amount == 0:\n        return \"\"\n    else:\n        return s[-amount:]\n\n\n# PROTOCOL BLOCKS\nSTEP_NORM1          = 1\nSTEP_NORM1DECK      = 1\nSTEP_POOL           = 1\nSTEP_NORM2          = 1\nSTEP_NORM2DECK      = 1\nSTEP_NORMINACT      = 1\nSTEP_NORMINACTDECK  = 1\n\nSTEPS = {STEP_NORM1,STEP_NORM1DECK,STEP_POOL,STEP_NORM2,STEP_NORMINACT}\n\ndef run(protocol: protocol_api.ProtocolContext):\n\n    [sample_quant_csv, SAMPLES, DRYRUN, NOMODULES, OFFSET, NGSMAG,\n      p20S_mount,\n     p20M_mount] = get_values(  # noqa: F821\n        \"sample_quant_csv\", \"SAMPLES\",\"DRYRUN\", \"NOMODULES\",\n        \"OFFSET\", \"NGSMAG\",\n         \"p20S_mount\", \"p20M_mount\")\n\n    if DRYRUN == 'YES':\n        protocol.comment(\"THIS IS A DRY RUN\")\n    else:\n        protocol.comment(\"THIS IS A REACTION RUN\")\n\n    # DECK SETUP AND LABWARE\n    protocol.comment(\"THIS IS A MODULE RUN\")\n    if NGSMAG == 'YES':\n        mag_block           = protocol.load_module('magnetic module gen2','1')\n        norm_plate_deck        = mag_block.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')\n    else:\n        norm_plate_deck     = protocol.load_labware('nest_96_wellplate_100ul_pcr_full_skirt','1')\n    temp_block          = protocol.load_module('temperature module gen2', '3')\n    reagent_tubes       = temp_block.load_labware('opentrons_96_aluminumblock_biorad_wellplate_200ul')\n    tiprack_20M         = protocol.load_labware('opentrons_96_filtertiprack_20ul',  '4')\n    tiprack_20S         = protocol.load_labware('opentrons_96_filtertiprack_20ul',  '5')\n    thermocycler        = protocol.load_module('thermocycler module')\n    norm_plate_thermo   = thermocycler.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')\n\n    # reagent - plate\n    NORM1               = reagent_tubes.wells_by_name()['A1']\n    NORM2               = reagent_tubes.wells_by_name()['A2']\n    NORMINACT           = reagent_tubes.wells_by_name()['B2']\n\n    # pipette\n    p20M     = protocol.load_instrument('p20_multi_gen2', p20M_mount, tip_racks=[tiprack_20M])\n    p20S     = protocol.load_instrument('p20_single_gen2', p20S_mount, tip_racks=[tiprack_20S])\n\n    #samples\n    src_file_path = inspect.getfile(lambda: None)\n    protocol.comment(src_file_path)\n\n    #tip and sample tracking\n    if SAMPLES == '8x':\n        protocol.comment(\"There are 8 Samples\")\n        samplecolumns    = 1\n    elif SAMPLES == '16x':\n        protocol.comment(\"There are 16 Samples\")\n        samplecolumns    = 2\n    elif SAMPLES == '24x':\n        protocol.comment(\"There are 24 Samples\")\n        samplecolumns    = 3\n    else:\n        protocol.pause(\"ERROR?\")\n\n    data = [r.split(',') for r in sample_quant_csv.strip().splitlines() if r][1:]\n\n    # offset\n    if OFFSET == 'YES':\n        p300_offset_Res     = 2\n        p300_offset_Thermo  = 1\n        p300_offset_Deck    = 0.3\n        if NGSMAG == 'YES':\n            p300_offset_Mag = 0.70\n        else:\n            p300_offset_Mag = p300_offset_Deck\n\n        p300_offset_Temp    = 0.65\n        p300_offset_Tube    = 0\n        p20_offset_Res      = 2\n        p20_offset_Thermo   = 1\n        p20_offset_Mag      = 0.75\n        p20_offset_Deck     = 0.3\n        p20_offset_Temp     = 0.85\n        p20_offset_Tube     = 0\n    else:\n        p300_offset_Res     = 0\n        p300_offset_Thermo  = 0\n        p300_offset_Mag     = 0\n        p300_offset_Deck    = 0\n        p300_offset_Temp    = 0\n        p300_offset_Tube    = 0\n        p20_offset_Res      = 0\n        p20_offset_Thermo   = 0\n        p20_offset_Mag      = 0\n        p20_offset_Deck     = 0\n        p20_offset_Temp     = 0\n        p20_offset_Tube     = 0\n\n    # positions\n    ############################################################################################################################################\n    #  norm_plate_thermo on the Thermocycler\n    A1_p20_bead_side  = norm_plate_thermo['A1'].center().move(types.Point(x=-1.8*0.50,y=0,         z=p20_offset_Thermo-5))                #Beads to the Right\n    A1_p20_bead_top   = norm_plate_thermo['A1'].center().move(types.Point(x=1.5,y=0,               z=p20_offset_Thermo+2))                #Beads to the Right\n    A1_p20_bead_mid   = norm_plate_thermo['A1'].center().move(types.Point(x=1,y=0,                 z=p20_offset_Thermo-2))                #Beads to the Right\n    A1_p300_bead_side = norm_plate_thermo['A1'].center().move(types.Point(x=-0.50,y=0,             z=p300_offset_Thermo-7.2))             #Beads to the Right\n    A1_p300_bead_top  = norm_plate_thermo['A1'].center().move(types.Point(x=1.30,y=0,              z=p300_offset_Thermo-1))               #Beads to the Right\n    A1_p300_bead_mid  = norm_plate_thermo['A1'].center().move(types.Point(x=0.80,y=0,              z=p300_offset_Thermo-4))               #Beads to the Right\n    A1_p300_loc1      = norm_plate_thermo['A1'].center().move(types.Point(x=1.3*0.8,y=1.3*0.8,     z=p300_offset_Thermo-4))               #Beads to the Right\n    A1_p300_loc2      = norm_plate_thermo['A1'].center().move(types.Point(x=1.3,y=0,               z=p300_offset_Thermo-4))               #Beads to the Right\n    A1_p300_loc3      = norm_plate_thermo['A1'].center().move(types.Point(x=1.3*0.8,y=-1.3*0.8,    z=p300_offset_Thermo-4))               #Beads to the Right\n    A3_p20_bead_side  = norm_plate_thermo['A3'].center().move(types.Point(x=-1.8*0.50,y=0,         z=p20_offset_Thermo-5))                #Beads to the Right\n    A3_p20_bead_top   = norm_plate_thermo['A3'].center().move(types.Point(x=1.5,y=0,               z=p20_offset_Thermo+2))                #Beads to the Right\n    A3_p20_bead_mid   = norm_plate_thermo['A3'].center().move(types.Point(x=1,y=0,                 z=p20_offset_Thermo-2))                #Beads to the Right\n    A3_p300_bead_side = norm_plate_thermo['A3'].center().move(types.Point(x=-0.50,y=0,             z=p300_offset_Thermo-7.2))             #Beads to the Right\n    A3_p300_bead_top  = norm_plate_thermo['A3'].center().move(types.Point(x=1.30,y=0,              z=p300_offset_Thermo-1))               #Beads to the Right\n    A3_p300_bead_mid  = norm_plate_thermo['A3'].center().move(types.Point(x=0.80,y=0,              z=p300_offset_Thermo-4))               #Beads to the Right\n    A3_p300_loc1      = norm_plate_thermo['A3'].center().move(types.Point(x=1.3*0.8,y=1.3*0.8,     z=p300_offset_Thermo-4))               #Beads to the Right\n    A3_p300_loc2      = norm_plate_thermo['A3'].center().move(types.Point(x=1.3,y=0,               z=p300_offset_Thermo-4))               #Beads to the Right\n    A3_p300_loc3      = norm_plate_thermo['A3'].center().move(types.Point(x=1.3*0.8,y=-1.3*0.8,    z=p300_offset_Thermo-4))               #Beads to the Right\n    A5_p20_bead_side  = norm_plate_thermo['A5'].center().move(types.Point(x=-1.8*0.50,y=0,         z=p20_offset_Thermo-5))                #Beads to the Right\n    A5_p20_bead_top   = norm_plate_thermo['A5'].center().move(types.Point(x=1.5,y=0,               z=p20_offset_Thermo+2))                #Beads to the Right\n    A5_p20_bead_mid   = norm_plate_thermo['A5'].center().move(types.Point(x=1,y=0,                 z=p20_offset_Thermo-2))                #Beads to the Right\n    A5_p300_bead_side = norm_plate_thermo['A5'].center().move(types.Point(x=-0.50,y=0,             z=p300_offset_Thermo-7.2))             #Beads to the Right\n    A5_p300_bead_top  = norm_plate_thermo['A5'].center().move(types.Point(x=1.30,y=0,              z=p300_offset_Thermo-1))               #Beads to the Right\n    A5_p300_bead_mid  = norm_plate_thermo['A5'].center().move(types.Point(x=0.80,y=0,              z=p300_offset_Thermo-4))               #Beads to the Right\n    A5_p300_loc1      = norm_plate_thermo['A5'].center().move(types.Point(x=1.3*0.8,y=1.3*0.8,     z=p300_offset_Thermo-4))               #Beads to the Right\n    A5_p300_loc2      = norm_plate_thermo['A5'].center().move(types.Point(x=1.3,y=0,               z=p300_offset_Thermo-4))               #Beads to the Right\n    A5_p300_loc3      = norm_plate_thermo['A5'].center().move(types.Point(x=1.3*0.8,y=-1.3*0.8,    z=p300_offset_Thermo-4))               #Beads to the Right\n    ############################################################################################################################################\n\n    bypass = protocol.deck.position_for('11').move(types.Point(x=70,y=80,z=130))\n\n    # commands\n    if DRYRUN == 'NO':\n        protocol.comment(\"SETTING THERMO and TEMP BLOCK Temperature\")\n        thermocycler.set_block_temperature(4)\n        thermocycler.set_lid_temperature(100)\n        temp_block.set_temperature(4)\n        thermocycler.open_lid()\n        protocol.pause(\"Ready\")\n\n    # positions\n    ############################################################################################################################################\n    #  norm_plate_deck on the Mag Block\n    A1_p20_bead_side  = norm_plate_deck['A1'].center().move(types.Point(x=-1.8*0.50,y=0,         z=p20_offset_Mag-5))                #Beads to the Right\n    A1_p20_bead_top   = norm_plate_deck['A1'].center().move(types.Point(x=1.5,y=0,               z=p20_offset_Mag+2))                #Beads to the Right\n    A1_p20_bead_mid   = norm_plate_deck['A1'].center().move(types.Point(x=1,y=0,                 z=p20_offset_Mag-2))                #Beads to the Right\n    A1_p300_bead_side = norm_plate_deck['A1'].center().move(types.Point(x=-0.50,y=0,             z=p300_offset_Mag-7.2))             #Beads to the Right\n    A1_p300_bead_top  = norm_plate_deck['A1'].center().move(types.Point(x=1.30,y=0,              z=p300_offset_Mag-1))               #Beads to the Right\n    A1_p300_bead_mid  = norm_plate_deck['A1'].center().move(types.Point(x=0.80,y=0,              z=p300_offset_Mag-4))               #Beads to the Right\n    A1_p300_loc1      = norm_plate_deck['A1'].center().move(types.Point(x=1.3*0.8,y=1.3*0.8,     z=p300_offset_Mag-4))               #Beads to the Right\n    A1_p300_loc2      = norm_plate_deck['A1'].center().move(types.Point(x=1.3,y=0,               z=p300_offset_Mag-4))               #Beads to the Right\n    A1_p300_loc3      = norm_plate_deck['A1'].center().move(types.Point(x=1.3*0.8,y=-1.3*0.8,    z=p300_offset_Mag-4))               #Beads to the Right\n    A1_p20_loc1       = norm_plate_deck['A1'].center().move(types.Point(x=1.3*0.8,y=1.3*0.8,     z=p20_offset_Mag-7))             #Beads to the Right\n    A1_p20_loc2       = norm_plate_deck['A1'].center().move(types.Point(x=1.3,y=0,               z=p20_offset_Mag-7))             #Beads to the Right\n    A1_p20_loc3       = norm_plate_deck['A1'].center().move(types.Point(x=1.3*0.8,y=-1.3*0.8,    z=p20_offset_Mag-7))             #Beads to the Right\n    A3_p20_bead_side  = norm_plate_deck['A3'].center().move(types.Point(x=-1.8*0.50,y=0,         z=p20_offset_Mag-5))                #Beads to the Right\n    A3_p20_bead_top   = norm_plate_deck['A3'].center().move(types.Point(x=1.5,y=0,               z=p20_offset_Mag+2))                #Beads to the Right\n    A3_p20_bead_mid   = norm_plate_deck['A3'].center().move(types.Point(x=1,y=0,                 z=p20_offset_Mag-2))                #Beads to the Right\n    A3_p300_bead_side = norm_plate_deck['A3'].center().move(types.Point(x=-0.50,y=0,             z=p300_offset_Mag-7.2))             #Beads to the Right\n    A3_p300_bead_top  = norm_plate_deck['A3'].center().move(types.Point(x=1.30,y=0,              z=p300_offset_Mag-1))               #Beads to the Right\n    A3_p300_bead_mid  = norm_plate_deck['A3'].center().move(types.Point(x=0.80,y=0,              z=p300_offset_Mag-4))               #Beads to the Right\n    A3_p300_loc1      = norm_plate_deck['A3'].center().move(types.Point(x=1.3*0.8,y=1.3*0.8,     z=p300_offset_Mag-4))               #Beads to the Right\n    A3_p300_loc2      = norm_plate_deck['A3'].center().move(types.Point(x=1.3,y=0,               z=p300_offset_Mag-4))               #Beads to the Right\n    A3_p300_loc3      = norm_plate_deck['A3'].center().move(types.Point(x=1.3*0.8,y=-1.3*0.8,    z=p300_offset_Mag-4))               #Beads to the Right\n    A3_p20_loc1       = norm_plate_deck['A3'].center().move(types.Point(x=1.3*0.8,y=1.3*0.8,     z=p20_offset_Mag-7))             #Beads to the Right\n    A3_p20_loc2       = norm_plate_deck['A3'].center().move(types.Point(x=1.3,y=0,               z=p20_offset_Mag-7))             #Beads to the Right\n    A3_p20_loc3       = norm_plate_deck['A3'].center().move(types.Point(x=1.3*0.8,y=-1.3*0.8,    z=p20_offset_Mag-7))             #Beads to the Right\n    A5_p20_bead_side  = norm_plate_deck['A5'].center().move(types.Point(x=-1.8*0.50,y=0,         z=p20_offset_Mag-5))                #Beads to the Right\n    A5_p20_bead_top   = norm_plate_deck['A5'].center().move(types.Point(x=1.5,y=0,               z=p20_offset_Mag+2))                #Beads to the Right\n    A5_p20_bead_mid   = norm_plate_deck['A5'].center().move(types.Point(x=1,y=0,                 z=p20_offset_Mag-2))                #Beads to the Right\n    A5_p300_bead_side = norm_plate_deck['A5'].center().move(types.Point(x=-0.50,y=0,             z=p300_offset_Mag-7.2))             #Beads to the Right\n    A5_p300_bead_top  = norm_plate_deck['A5'].center().move(types.Point(x=1.30,y=0,              z=p300_offset_Mag-1))               #Beads to the Right\n    A5_p300_bead_mid  = norm_plate_deck['A5'].center().move(types.Point(x=0.80,y=0,              z=p300_offset_Mag-4))               #Beads to the Right\n    A5_p300_loc1      = norm_plate_deck['A5'].center().move(types.Point(x=1.3*0.8,y=1.3*0.8,     z=p300_offset_Mag-4))               #Beads to the Right\n    A5_p300_loc2      = norm_plate_deck['A5'].center().move(types.Point(x=1.3,y=0,               z=p300_offset_Mag-4))               #Beads to the Right\n    A5_p300_loc3      = norm_plate_deck['A5'].center().move(types.Point(x=1.3*0.8,y=-1.3*0.8,    z=p300_offset_Mag-4))               #Beads to the Right\n    A5_p20_loc1       = norm_plate_deck['A5'].center().move(types.Point(x=1.3*0.8,y=1.3*0.8,     z=p20_offset_Mag-7))             #Beads to the Right\n    A5_p20_loc2       = norm_plate_deck['A5'].center().move(types.Point(x=1.3,y=0,               z=p20_offset_Mag-7))             #Beads to the Right\n    A5_p20_loc3       = norm_plate_deck['A5'].center().move(types.Point(x=1.3*0.8,y=-1.3*0.8,    z=p20_offset_Mag-7))             #Beads to the Right\n    A7_p20_bead_side  = norm_plate_deck['A7'].center().move(types.Point(x=-1.8*0.50,y=0,         z=p20_offset_Mag-5))                #Beads to the Right\n    A7_p20_bead_top   = norm_plate_deck['A7'].center().move(types.Point(x=1.5,y=0,               z=p20_offset_Mag+2))                #Beads to the Right\n    A7_p20_bead_mid   = norm_plate_deck['A7'].center().move(types.Point(x=1,y=0,                 z=p20_offset_Mag-2))                #Beads to the Right\n    A7_p300_bead_side = norm_plate_deck['A7'].center().move(types.Point(x=-0.50,y=0,             z=p300_offset_Mag-7.2))             #Beads to the Right\n    A7_p300_bead_top  = norm_plate_deck['A7'].center().move(types.Point(x=1.30,y=0,              z=p300_offset_Mag-1))               #Beads to the Right\n    A7_p300_bead_mid  = norm_plate_deck['A7'].center().move(types.Point(x=0.80,y=0,              z=p300_offset_Mag-4))               #Beads to the Right\n    A7_p300_loc1      = norm_plate_deck['A7'].center().move(types.Point(x=1.3*0.8,y=1.3*0.8,     z=p300_offset_Mag-5.5))               #Beads to the Right\n    A7_p300_loc2      = norm_plate_deck['A7'].center().move(types.Point(x=1.3,y=0,               z=p300_offset_Mag-5.5))               #Beads to the Right\n    A7_p300_loc3      = norm_plate_deck['A7'].center().move(types.Point(x=1.3*0.8,y=-1.3*0.8,    z=p300_offset_Mag-5.5))               #Beads to the Right\n    A9_p20_bead_side  = norm_plate_deck['A9'].center().move(types.Point(x=-1.8*0.50,y=0,         z=p20_offset_Mag-5))                #Beads to the Right\n    A9_p20_bead_top   = norm_plate_deck['A9'].center().move(types.Point(x=1.5,y=0,               z=p20_offset_Mag+2))                #Beads to the Right\n    A9_p20_bead_mid   = norm_plate_deck['A9'].center().move(types.Point(x=1,y=0,                 z=p20_offset_Mag-2))                #Beads to the Right\n    A9_p300_bead_side = norm_plate_deck['A9'].center().move(types.Point(x=-0.50,y=0,             z=p300_offset_Mag-7.2))             #Beads to the Right\n    A9_p300_bead_top  = norm_plate_deck['A9'].center().move(types.Point(x=1.30,y=0,              z=p300_offset_Mag-1))               #Beads to the Right\n    A9_p300_bead_mid  = norm_plate_deck['A9'].center().move(types.Point(x=0.80,y=0,              z=p300_offset_Mag-4))               #Beads to the Right\n    A9_p300_loc1      = norm_plate_deck['A9'].center().move(types.Point(x=1.3*0.8,y=1.3*0.8,     z=p300_offset_Mag-5.5))               #Beads to the Right\n    A9_p300_loc2      = norm_plate_deck['A9'].center().move(types.Point(x=1.3,y=0,               z=p300_offset_Mag-5.5))               #Beads to the Right\n    A9_p300_loc3      = norm_plate_deck['A9'].center().move(types.Point(x=1.3*0.8,y=-1.3*0.8,    z=p300_offset_Mag-5.5))               #Beads to the Right\n    A11_p20_bead_side  = norm_plate_deck['A11'].center().move(types.Point(x=-1.8*0.50,y=0,         z=p20_offset_Mag-5))                #Beads to the Right\n    A11_p20_bead_top   = norm_plate_deck['A11'].center().move(types.Point(x=1.5,y=0,               z=p20_offset_Mag+2))                #Beads to the Right\n    A11_p20_bead_mid   = norm_plate_deck['A11'].center().move(types.Point(x=1,y=0,                 z=p20_offset_Mag-2))                #Beads to the Right\n    A11_p300_bead_side = norm_plate_deck['A11'].center().move(types.Point(x=-0.50,y=0,             z=p300_offset_Mag-7.2))             #Beads to the Right\n    A11_p300_bead_top  = norm_plate_deck['A11'].center().move(types.Point(x=1.30,y=0,              z=p300_offset_Mag-1))               #Beads to the Right\n    A11_p300_bead_mid  = norm_plate_deck['A11'].center().move(types.Point(x=0.80,y=0,              z=p300_offset_Mag-4))               #Beads to the Right\n    A11_p300_loc1      = norm_plate_deck['A11'].center().move(types.Point(x=1.3*0.8,y=1.3*0.8,     z=p300_offset_Mag-5.5))               #Beads to the Right\n    A11_p300_loc2      = norm_plate_deck['A11'].center().move(types.Point(x=1.3,y=0,               z=p300_offset_Mag-5.5))               #Beads to the Right\n    A11_p300_loc3      = norm_plate_deck['A11'].center().move(types.Point(x=1.3*0.8,y=-1.3*0.8,    z=p300_offset_Mag-5.5))               #Beads to the Right\n    ############################################################################################################################################\n\n    if STEP_NORM1 == 1:\n        protocol.comment('==============================================')\n        protocol.comment('--> NORMALASE I')\n        protocol.comment('==============================================')\n\n        protocol.comment('--> Adding NORM1')\n        if DRYRUN == 'NO':\n            NORM1Vol    = 5\n            NORM1MixRep = 10\n            NORM1MixVol = 20\n        if DRYRUN == 'YES':\n            NORM1Vol    = 5\n            NORM1MixRep = 1\n            NORM1MixVol = 10\n        if samplecolumns >= 1:#-----------------------------------------------------------------------------------------\n            X = 'A1'\n            p20M.pick_up_tip()\n            p20M.aspirate(NORM1Vol, NORM1.bottom(z=p20_offset_Temp))\n            p20M.dispense(NORM1Vol, norm_plate_thermo.wells_by_name()[X].bottom(z=p20_offset_Thermo))\n            p20M.move_to(norm_plate_thermo[X].bottom(z=p20_offset_Thermo))\n            p20M.mix(NORM1MixRep,NORM1MixVol)\n            p20M.drop_tip() if DRYRUN == 'NO' else p20M.return_tip()\n        if samplecolumns >= 2:#-----------------------------------------------------------------------------------------\n            X = 'A2'\n            p20M.pick_up_tip()\n            p20M.aspirate(NORM1Vol, NORM1.bottom(z=p20_offset_Temp))\n            p20M.dispense(NORM1Vol, norm_plate_thermo.wells_by_name()[X].bottom(z=p20_offset_Thermo))\n            p20M.move_to(norm_plate_thermo[X].bottom(z=p20_offset_Thermo))\n            p20M.mix(NORM1MixRep,NORM1MixVol)\n            p20M.drop_tip() if DRYRUN == 'NO' else p20M.return_tip()\n        if samplecolumns >= 3:#-----------------------------------------------------------------------------------------\n            X = 'A3'\n            p20M.pick_up_tip()\n            p20M.aspirate(NORM1Vol, NORM1.bottom(z=p20_offset_Temp))\n            p20M.dispense(NORM1Vol, norm_plate_thermo.wells_by_name()[X].bottom(z=p20_offset_Thermo))\n            p20M.move_to(norm_plate_thermo[X].bottom(z=p20_offset_Thermo))\n            p20M.mix(NORM1MixRep,NORM1MixVol)\n            p20M.drop_tip() if DRYRUN == 'NO' else p20M.return_tip()\n\n    if STEP_NORM1DECK == 1:\n        if DRYRUN == 'NO':\n            ############################################################################################################################################\n            protocol.pause('Seal, Run NORM1 (15min)')\n\n            profile_NORM1 = [\n                {'temperature': 30, 'hold_time_minutes': 15}\n                ]\n            thermocycler.execute_profile(steps=profile_NORM1, repetitions=1, block_max_volume=50)\n            thermocycler.set_block_temperature(4)\n            ############################################################################################################################################\n            protocol.pause(\"Remove Seal\")\n    else:\n        protocol.pause('Seal, Run NORM1 (15min)')\n\n    protocol.pause(\"MOVE NORM PLATE TO POSITION 1, PLACE NEW PLATE IN THERMO\")\n\n    if STEP_POOL == 1:\n        protocol.comment('==============================================')\n        protocol.comment('--> POOLING SAMPLES')\n        protocol.comment('==============================================')\n\n        Poolvol = 5\n        current = 0\n        Pools = 3\n        while current < len(data):\n            CurrentWell     = str(data[current][1])\n            PoolWell        = str(data[current][2])\n            p20S.pick_up_tip()\n            p20S.aspirate(Poolvol, norm_plate_deck.wells_by_name()[CurrentWell].bottom(z=p20_offset_Mag))\n            p20S.dispense(Poolvol, norm_plate_thermo.wells_by_name()[PoolWell].bottom(z=p20_offset_Thermo))\n            p20S.drop_tip() if DRYRUN == 'NO' else p20S.return_tip()\n            current += 1\n\n    if STEP_NORM1 == 1:\n        protocol.comment('==============================================')\n        protocol.comment('--> NORMALASE II')\n        protocol.comment('==============================================')\n\n        protocol.comment('--> Adding NORM2')\n        if DRYRUN == 'NO':\n            NORM2Vol    = 1\n            NORM2MixRep = 10\n            NORM2MixVol = 20\n        if DRYRUN == 'YES':\n            NORM2Vol    = 1\n            NORM2MixRep = 1\n            NORM2MixVol = 10\n        if samplecolumns >= 1:#-----------------------------------------------------------------------------------------\n            X = 'A12'\n            p20S.pick_up_tip()\n            p20S.aspirate(NORM2Vol, NORM2.bottom(z=p20_offset_Temp), rate=0.25)\n            p20S.dispense(NORM2Vol, norm_plate_thermo.wells_by_name()[X].bottom(z=p20_offset_Thermo))\n            p20S.move_to(norm_plate_thermo[X].bottom(z=p20_offset_Thermo))\n            p20S.mix(NORM2MixRep,NORM2MixVol)\n            p20S.drop_tip() if DRYRUN == 'NO' else p20S.return_tip()\n        if samplecolumns >= 2:#-----------------------------------------------------------------------------------------\n            X = 'B12'\n            p20S.pick_up_tip()\n            p20S.aspirate(NORM2Vol, NORM2.bottom(z=p20_offset_Temp), rate=0.25)\n            p20S.dispense(NORM2Vol, norm_plate_thermo.wells_by_name()[X].bottom(z=p20_offset_Thermo))\n            p20S.move_to(norm_plate_thermo[X].bottom(z=p20_offset_Thermo))\n            p20S.mix(NORM2MixRep,NORM2MixVol)\n            p20S.drop_tip() if DRYRUN == 'NO' else p20S.return_tip()\n        if samplecolumns >= 3:#-----------------------------------------------------------------------------------------\n            X = 'C12'\n            p20S.pick_up_tip()\n            p20S.aspirate(NORM1Vol, NORM2.bottom(z=p20_offset_Temp), rate=0.25)\n            p20S.dispense(NORM1Vol, norm_plate_thermo.wells_by_name()[X].bottom(z=p20_offset_Thermo))\n            p20S.move_to(norm_plate_thermo[X].bottom(z=p20_offset_Thermo))\n            p20S.mix(NORM2MixRep,NORM2MixVol)\n            p20S.drop_tip() if DRYRUN == 'NO' else p20S.return_tip()\n\n    if STEP_NORM2DECK == 1:\n        if DRYRUN == 'NO':\n            ############################################################################################################################################\n            protocol.pause('Seal, Run NORM2 (15min)')\n\n            profile_NORM2 = [\n                {'temperature': 37, 'hold_time_minutes': 15}\n                ]\n            thermocycler.execute_profile(steps=profile_NORM2, repetitions=1, block_max_volume=50)\n            thermocycler.set_block_temperature(4)\n            ############################################################################################################################################\n            protocol.pause(\"Remove Seal\")\n    else:\n        protocol.pause('Seal, Run NORM2 (15min)')\n\n        protocol.comment('--> Adding NORMINACT')\n        if DRYRUN == 'NO':\n            NORMINACTVol    = 1.6\n            NORMINACTMixRep = 10\n            NORMINACTMixVol = 20\n        if DRYRUN == 'YES':\n            NORMINACTVol    = 1.6\n            NORMINACTMixRep = 1\n            NORMINACTMixVol = 10\n        if samplecolumns >= 1:#-----------------------------------------------------------------------------------------\n            X = 'A12'\n            p20S.pick_up_tip()\n            p20S.aspirate(NORMINACTVol, NORMINACT.bottom(z=p20_offset_Temp), rate=0.25)\n            p20S.dispense(NORMINACTVol, norm_plate_thermo.wells_by_name()[X].bottom(z=p20_offset_Thermo))\n            p20S.move_to(norm_plate_thermo[X].bottom(z=p20_offset_Thermo))\n            p20S.mix(NORMINACTMixRep,NORM1MixVol)\n            p20S.drop_tip() if DRYRUN == 'NO' else p20S.return_tip()\n        if samplecolumns >= 2:#-----------------------------------------------------------------------------------------\n            X = 'B12'\n            p20S.pick_up_tip()\n            p20S.aspirate(NORMINACTVol, NORMINACT.bottom(z=p20_offset_Temp), rate=0.25)\n            p20S.dispense(NORMINACTVol, norm_plate_thermo.wells_by_name()[X].bottom(z=p20_offset_Thermo))\n            p20S.move_to(norm_plate_thermo[X].bottom(z=p20_offset_Thermo))\n            p20S.mix(NORMINACTMixRep,NORM1MixVol)\n            p20S.drop_tip() if DRYRUN == 'NO' else p20S.return_tip()\n        if samplecolumns >= 3:#-----------------------------------------------------------------------------------------\n            X = 'C12'\n            p20S.pick_up_tip()\n            p20S.aspirate(NORMINACTVol, NORMINACT.bottom(z=p20_offset_Temp), rate=0.25)\n            p20S.dispense(NORMINACTVol, norm_plate_thermo.wells_by_name()[X].bottom(z=p20_offset_Thermo))\n            p20S.move_to(norm_plate_thermo[X].bottom(z=p20_offset_Thermo))\n            p20S.mix(NORMINACTMixRep,NORM1MixVol)\n            p20S.drop_tip() if DRYRUN == 'NO' else p20S.return_tip()\n\n    if STEP_NORMINACTDECK == 1:\n        if DRYRUN == 'NO':\n            ############################################################################################################################################\n            protocol.pause('Seal, Run NORMINACT (2min)')\n\n            profile_NORMINACT = [\n                {'temperature': 95, 'hold_time_minutes': 2}\n                ]\n            thermocycler.execute_profile(steps=profile_NORMINACT, repetitions=1, block_max_volume=50)\n            thermocycler.set_block_temperature(4)\n            ############################################################################################################################################\n            protocol.pause(\"Remove Seal\")\n    else:\n        protocol.pause('Seal, Run NORMINACT (2min)')\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": "Sample_Plate, Sample_well,Target_well\nsample_plate,A1,A12",
+            "label": ".CSV File",
+            "name": "sample_quant_csv",
+            "type": "textFile"
+        },
+        {
+            "label": "Number of Samples",
+            "name": "SAMPLES",
+            "options": [
+                {
+                    "label": "8",
+                    "value": "8x"
+                },
+                {
+                    "label": "16",
+                    "value": "16x"
+                },
+                {
+                    "label": "24",
+                    "value": "24x"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Dry Run",
+            "name": "DRYRUN",
+            "options": [
+                {
+                    "label": "Yes",
+                    "value": "YES"
+                },
+                {
+                    "label": "No",
+                    "value": "NO"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Use Modules?",
+            "name": "NOMODULES",
+            "options": [
+                {
+                    "label": "Yes, use modules",
+                    "value": "NO"
+                },
+                {
+                    "label": "No, do not use modules",
+                    "value": "YES"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Use protocol specific z-offsets?",
+            "name": "OFFSET",
+            "options": [
+                {
+                    "label": "Yes",
+                    "value": "YES"
+                },
+                {
+                    "label": "No",
+                    "value": "NO"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Use NGS Magnetic Block?",
+            "name": "NGSMAG",
+            "options": [
+                {
+                    "label": "Yes, use mag block",
+                    "value": "YES"
+                },
+                {
+                    "label": "No, do not use",
+                    "value": "NO"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P20 Single-Channel Mount",
+            "name": "p20S_mount",
+            "options": [
+                {
+                    "label": "Right",
+                    "value": "right"
+                },
+                {
+                    "label": "Left",
+                    "value": "left"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "P20 Multi-Channel Mount",
+            "name": "p20M_mount",
+            "options": [
+                {
+                    "label": "Left",
+                    "value": "left"
+                },
+                {
+                    "label": "Right",
+                    "value": "right"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "left",
+            "name": "p20_multi_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p20_single_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Magnetic Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons 96 Well Aluminum Block with Bio-Rad Well Plate 200 \u00b5L on Temperature Module GEN2 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "opentrons_96_aluminumblock_biorad_wellplate_200ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 4",
+            "share": false,
+            "slot": "4",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "Opentrons 96 Filter Tip Rack 20 \u00b5L on 5",
+            "share": false,
+            "slot": "5",
+            "type": "opentrons_96_filtertiprack_20ul"
+        },
+        {
+            "name": "NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Thermocycler Module on 7",
+            "share": false,
+            "slot": "7",
+            "type": "nest_96_wellplate_100ul_pcr_full_skirt"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.9",
+        "author": "Opentrons <protocols@opentrons.com>",
+        "protocolName": "IDT Normalase",
+        "source": "Protocol Library"
+    },
+    "modules": []
+}
