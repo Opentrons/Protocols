@@ -8,6 +8,7 @@
 	* Serial Dilution
 
 ## Description
+
 This protocol performs viral titration (serial dilution) of viral samples. It adds media to the dilution plates and then begins the serial dilution process of up to 12 columns worth of samples. It will dilute the samples in one of four dilution plates and then add it to the analysis dish in a specific order (skipping 3 columns for every dilution).
 
 ---

@@ -1,3 +1,4 @@
+import sys
 import os
 import json
 from pathlib import Path
@@ -35,4 +36,7 @@ def write_README_to_json(protocol_path):
 
 
 if __name__ == '__main__':
-    write_README_to_json(PROTOCOL_DIR)
+    sourceFilePath = sys.argv[1]
+    destFilePath = sys.argv[2]
+
+    write_README_to_json(f'{PROTOCOL_DIR}/')

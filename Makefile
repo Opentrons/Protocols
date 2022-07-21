@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 
 MONOREPO_URI := https://github.com/Opentrons/opentrons.git
-OT2_VERSION_TAG := v4.3.0
+OT2_VERSION_TAG := v6.0.0
 OT2_MONOREPO_DIR := ot2monorepoClone
 
 # Parsers output to here
@@ -12,8 +12,11 @@ BUILD_DIR := protoBuilds
 IGNORED_INPUT_PATHS := $(addsuffix %, $(dir $(wildcard protocols/*/.ignore)))
 
 OT2_INPUT_FILES_UNFILTERED := $(shell find protocols -type f -name '*.ot2.apiv2.py')
+OT2_README_INPUT_FILES_UNFILTERED := $(shell find protocols -type f -name '*README.json')
 OT2_INPUT_FILES := $(filter-out $(IGNORED_INPUT_PATHS), $(OT2_INPUT_FILES_UNFILTERED))
+OT2_README_INPUT_FILES := $(filter-out $(IGNORED_INPUT_PATHS), $(OT2_README_INPUT_FILES_UNFILTERED))
 OT2_OUTPUT_FILES := $(patsubst protocols/%.ot2.apiv2.py, $(BUILD_DIR)/%.ot2.apiv2.py.json, $(OT2_INPUT_FILES))
+OT2_README_OUTPUT_FILES := $(patsubst protocols/%README.md, $(BUILD_DIR)/%README.json, $(OT2_README_INPUT_FILES))
 
 .PHONY: all
 all: parse-ot2 parse-errors parse-README
@@ -60,9 +63,13 @@ $(BUILD_DIR)/%.ot2.apiv2.py.json: protocols/%.ot2.apiv2.py
 	deactivate
 
 .PHONY: parse-README
-parse-README:
+parse-README: $(OT2_README_OUTPUT_FILES)
+
+$(BUILD_DIR)/%README.json: protocols/%README.md
+
 	source venvs/ot2/bin/activate && \
 	python protolib/traverse_README.py && \
+	python protolib/generate-README.py && \
 	deactivate
 
 .PHONY: clean
