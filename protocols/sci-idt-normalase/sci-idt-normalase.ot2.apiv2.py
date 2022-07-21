@@ -45,7 +45,7 @@ def run(protocol: protocol_api.ProtocolContext):
      p20M_mount] = get_values(  # noqa: F821
         "sample_quant_csv", "SAMPLES","DRYRUN", "NOMODULES",
         "OFFSET", "NGSMAG",
-         "p20S_mount", "p300M_mount")
+         "p20S_mount", "p20M_mount")
 
     if DRYRUN == 'YES':
         protocol.comment("THIS IS A DRY RUN")
