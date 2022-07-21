@@ -9,11 +9,11 @@
 
 ## Description
 
-This protocol preps a 96 well PCR plate with up to 64 samples. The order of operations is: transfer negative control to A1 of the well plate, transfer samples down plate columns starting from C1, transfer positive control to H12 of well plate, then B1. Resuspension steps are included after most transfers. For wells with powdered reagent, roughly half of the necessary volume is dispensed into the well from half of the well depth, then the pipette tip proceeds to travel to the bottom of the well to dispense the rest of the required volume and mix. Sample in buffer is transferred from the 32-tube rack to the 24 tube rack which contains sterile normalization buffer, and the resulting mixture is then added to the plate.
+This protocol preps a 96 well PCR plate with up to 46 samples. The order of operations is: transfer negative control to A1 of the well plate, transfer samples down plate columns starting from C1, transfer positive control to A12 of well plate, then B1. Resuspension steps are included after most transfers. For wells with powdered reagent, roughly half of the necessary volume is dispensed into the well from half of the well depth, then the pipette tip proceeds to travel to the bottom of the well to dispense the rest of the required volume and mix. Sample in buffer is transferred from the 32-tube rack to the 24 tube rack which contains sterile normalization buffer, and the resulting mixture is then added to the plate.
 
 Explanation of complex parameters below:
-* `Number of tubes (1-32)`: Specify the number of tubes placed in the custom 32-tube tube racks. Tubes should be placed by row, and up down (from slot 7 to slot 4).
-* `Use Temperature Module`: Specify whether or not to use the temperature module at 4C this run. If not, you can place the plate directly on slot 1. 
+* `Number of tubes (1-46)`: Specify the number of tubes placed in the custom 32-tube tube racks. Tubes should be placed by row, and up down (from slot 7 to slot 4).
+* `Use Temperature Module`: Specify whether or not to use the temperature module at 12C this run. If not, you can place the plate directly on slot 1.
 * `P300 Mount`: Specify which mount (left or right) to host the P300 single-channel pipette.
 
 ---
@@ -34,14 +34,14 @@ Explanation of complex parameters below:
 ---
 
 ### Deck Setup
-* 24 tube racks should be placed in order of slots 9, 6, 3. Tubes by row.
+* 24 tube racks should be placed in order of slots 9, 6. Tubes by row.
 * 32 tube racks should be placed in order of slots 7 and 4. Tubes by row.
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/581011/Screen+Shot+2022-02-28+at+10.30.38+AM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1584d2/Screen+Shot+2022-06-09+at+10.34.00+AM.png)
 
 ---
 
 ### Protocol Steps
-1. Preparation of negative control: Transfer 50 μl of sterile Control Buffer (1.5 ml tube) to the first PCR tube in an 8-well strip containing lyophilized PCR mix. Resuspend.
+1. Preparation of negative control: Transfer 50 μl of sterile Control Buffer (1.5 ml tube) to the first PCR tube in an 8-well strip containing lyophilized PCR mix, resuspend.
 2. Preparation of unknown samples: Transfer 50 μl of the unknown sample in SAVD buffer (5 ml tube) to 250 μl sterile Normalization buffer (1.5 ml tube). Resuspend.
 3. Transfer 50 μl of the normalized unknown sample to the next PCR tube in the 8-well strip containing lyophilized PCR mix. Resuspend. Repeat for each unknown sample.
 4. Preparation of positive control: Transfer 50 μl of sterile Normalization Buffer (1.5 ml tube) to the Positive Control Tube (lyophilized in PCR tube). Resuspend.

@@ -1,0 +1,28 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "PCR": [
+            "PCR Prep"
+        ]
+    },
+    "deck-setup": "\n* reservoir channel 1: lipofectamine 2000\n* reservoir channel 2: V141 plasmid\n* 96-wellplate: siRNA\n",
+    "description": "Links:\n* Random Aliquoting\n\n\n* Plasmind Luciferase Assay\n\n\n* QIAcuity Plate Transfer\n\n\n* PCR Prep\n\n\nThis protocol performs a custom Plasmid Luciferase Assay to a 384-wellplate.\n",
+    "internal": "9250d7",
+    "labware": "\nCorning 96 Well Plate 360 ul Flat\nCustom 384 Well Plate 100 ul\nNEST 12-Well Reservoirs, 15 mL #999-00076\nOpentrons 20ul tips\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* PCR\n\t* PCR Prep\n\n",
+        "deck-setup": "![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/925d07/deck_pla.png)\n* reservoir channel 1: lipofectamine 2000\n* reservoir channel 2: V141 plasmid\n* 96-wellplate: siRNA\n\n---\n\n",
+        "description": "\nLinks:\n* [Random Aliquoting](./925d07-cp)\n<br></br>\n<br></br>\n* [Plasmind Luciferase Assay](./925d07-pla)\n<br></br>\n<br></br>\n* [QIAcuity Plate Transfer](./925d07-q)\n<br></br>\n<br></br>\n* [PCR Prep](./925d07-v3)\n<br></br>\n<br></br>\n\n\nThis protocol performs a custom Plasmid Luciferase Assay to a 384-wellplate.\n\n---\n\n",
+        "internal": "9250d7\n",
+        "labware": "* Corning 96 Well Plate 360 ul Flat\n* Custom 384 Well Plate 100 ul\n* [NEST 12-Well Reservoirs, 15 mL #999-00076](https://shop.opentrons.com/nest-12-well-reservoirs-15-ml/)\n* [Opentrons 20ul tips](https://shop.opentrons.com/collections/opentrons-tips)\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [P20 Multi Channel Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/8-channel-electronic-pipette)\n\n---\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "title": "Plasmid Luciferase Assay"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nP20 Multi Channel Pipette\n\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "title": "Plasmid Luciferase Assay"
+}

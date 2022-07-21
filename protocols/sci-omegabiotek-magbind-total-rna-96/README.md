@@ -25,9 +25,14 @@ Explanation of complex parameters below:
 * `Deepwell type`: Specify which well plate will be mounted on the magnetic module.
 * `Reservoir Type`: Specify which reservoir will be employed.
 * `Starting Volume`: Specify starting volume of sample (ul).
+* `Binding Buffer Volume`: Specify binding buffer volume (ul).
+* `Wash Volumes`: Specify each of the three wash volumes (ul).
 * `Elution Volume`: Specify elution volume (ul).
-* `Park Tips`: Specify whether to park tips or drop tips.
+* `Settling Time`: Specify settling time for beads (minutes).
 * `Mag Deck Generation`: Specify whether GEN1 or GEN2 magnetic module will be used.
+* `Park Tips`: Specify whether to park tips or drop tips.
+* `Track Tips`: Specify whether to track tips between runs (starting with fresh tips or pick up from last runs tips).
+* `Flash`: Specify whether to flash OT-2 lights when the protocol runs out of tips, prompting the user to replenish tips.
 * `P300 Multi Channel Pipette Mount`: Specify whether the P300 multi channel pipette will be on the left or right mount.
 
 
@@ -55,17 +60,18 @@ Explanation of complex parameters below:
 
 ### Deck Setup
 
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-omegabiotek-magbind-total-rna-96/Screen+Shot+2021-08-09+at+4.47.46+PM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/528c16/Screen+Shot+2022-03-11+at+3.25.12+PM.png)
 
-### Reagent Setup
+Saliva: add 200uL of saliva
 
-* Reservoir 1: Slot 2
+Bacteria culture: spin down 200uL of culture, wash once in PBS, resuspend in 200uL of chilled PBS
 
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-omegabiotek-magbind-total-rna-96/Screen+Shot+2021-08-09+at+4.48.12+PM.png)
+200uL of sample + 200uL of lysis buffer. Mix thoroughly, add to deep well plate
 
-* Reservoir 2: Slot 3
+Dnase 1 treatment: 49uL of buffer + 1uL of DNAse 1 per sample.
+![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/528c16/Screen+Shot+2022-03-11+at+3.25.34+PM.png)
 
-![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-omegabiotek-magbind-total-rna-96/Screen+Shot+2021-08-09+at+4.49.26+PM.png)
+![reagent volumes](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/528c16/Screen+Shot+2022-03-11+at+3.26.29+PM.png)
 
 ---
 

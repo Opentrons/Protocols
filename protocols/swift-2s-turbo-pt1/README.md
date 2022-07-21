@@ -84,7 +84,7 @@ Slot 1: [NEST 96-Well PCR Plate](https://shop.opentrons.com/collections/lab-plat
 * 16 Samples: Columns 1 & 2
 * 24 Samples: Columns 1, 2, & 3
 
-Slot 3: [Opentrons Temperature Module with 24-Well Aluminum Block](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck) and [NEST 2mL Tubes](https://shop.opentrons.com/collections/tubes/products/nest-2-0-ml-sample-vial) with master mixes (for more information on master mixes, [click here](https://docs.google.com/spreadsheets/d/1_XIL31tTYOFV9ehGmeAc1eorLgv8yxpEu_27qpg3Ei4/edit?usp=sharing))
+Slot 3: [Opentrons Temperature Module with 24-Well Aluminum Block](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck) and [NEST 2mL Tubes](https://shop.opentrons.com/collections/tubes/products/nest-2-0-ml-sample-vial) with master mixes (for more information on master mixes, [click here](https://opentrons-protocol-library-website.s3.amazonaws.com/Technical+Notes/swift-2s-turbo-pt1/Swift+2S+Turbo+Master+Mix+Volumes.xlsx))
 * A1: Enzymatic Prep Master Mix
 * A2: Ligation Master Mix
 * A3: (**used in Part 2**) PCR Master Mix

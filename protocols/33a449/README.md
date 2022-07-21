@@ -5,11 +5,11 @@
 
 
 ## Categories
-* NUCLEIC ACID EXTRACTION & PURIFICATION
+* Nucleic Acid Extraction & Purification
 	* DNA Extraction
 
 ## Description
-This protocol extracts DNA using the [Nucleomag blood DNA kit](https://www.mn-net.com/us/nucleomag-blood-200-l-for-dna-purification-from-blood-744501.4). Pro-k is added to sample, as well as bead buffer. Supernatant is removed with magnets engaged before a dispense of 200ul of mbl3. After supernatant is again removed, ethanol is dispensed and removed in wash before mbl5 is added to sample. The final product is moved to the elute plate on slot 2. 
+This protocol extracts DNA using the [Nucleomag blood DNA kit](https://www.mn-net.com/us/nucleomag-blood-200-l-for-dna-purification-from-blood-744501.4). Pro-k is added to sample, as well as bead buffer. Supernatant is removed with magnets engaged before a dispense of 200ul of mbl3. After supernatant is again removed, ethanol is dispensed and removed in wash before mbl5 is added to sample. The final product is moved to the elute plate on slot 2.
 
 Explanation of complex parameters below:
 * `Number of Columns`: Specify the number of sample columns to run.

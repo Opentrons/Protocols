@@ -37,15 +37,15 @@
     "label": "Tuberack B tubes",
     "name": "tuberackB_tube",
     "options": [
-      { "label": "T4, T5", "value": "t4_t5_6x5" },
-      { "label": "T6", "value": "t6_6x5" }
+      { "label": "T4, T5", "value": "opentrons_24_tuberack_t4_t5" },
+      { "label": "T6", "value": "opentrons_24_tuberack_t6" }
     ]
   },
   {
     "type": "int",
     "label": "Number of pooling rows for Tuberack B",
     "name": "num_rows_B",
-    "default": 5
+    "default": 4
   },
   {
     "type": "int",

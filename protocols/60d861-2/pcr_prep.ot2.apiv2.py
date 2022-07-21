@@ -17,7 +17,7 @@ def run(ctx):
         ctx.load_labware('opentrons_96_tiprack_20ul', slot)
         for slot in ['1', '4', '7', '10']]
     source_plates = [
-        ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', slot,
+        ctx.load_labware('thermofishermicroamp_96_wellplate_200ul', slot,
                          f'source plate {i+1}')
         for i, slot in enumerate(['2', '3'])]
     dest_plates = [

@@ -8,13 +8,14 @@
 	* Plate Filling
 
 ## Description
-This protocol preps 1.5mL and 2mL tubes from stock solutions including but not limited to acetonitrile, water, and methanol. Sources and destinations are determined via a csv uploaded by the user, as well as transfer volumes. 
+This protocol preps 1.5mL and 2mL tubes from stock solutions including but not limited to acetonitrile, water, and methanol. Sources and destinations are determined via a csv uploaded by the user, as well as transfer volumes.
 
 
 Explanation of complex parameters below:
-* `csv file`: The csv file should be formatted like so:
+* `csv file`: The csv file should be formatted like so. Note - for no mix steps, input "0" for the mix repetition. Also specify whether to mix at the source, or destination tube for that row:
 
-![csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/528c16/Screen+Shot+2022-01-18+at+11.48.24+AM.png)
+![csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/528c16/Screen+Shot+2022-03-11+at+1.52.52+PM.png)
+* Note: for aspiration height percent (column J), a value of 10 means that we will be aspirating from 10% of the tube depth, 50 will be 50% of the tube depth, etc.
 * `P20/P1000 Mount`: Specify which mount (left or right) for each single channel pipette.
 
 ---
@@ -32,7 +33,7 @@ Explanation of complex parameters below:
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/528c16/Screen+Shot+2022-01-18+at+10.59.17+AM.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/528c16/Screen+Shot+2022-03-14+at+9.46.44+AM.png)
 
 ---
 

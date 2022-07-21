@@ -77,7 +77,7 @@ def run(ctx):
 
     # workflow step 2: RNaseA to fluidx tube
     for tfer in tfers:
-        if tfer['Quantity of Serum']:
+        if tfer['Quantity of EACH Sterilization Reagent']:
 
             v = float(tfer['Quantity of EACH Sterilization Reagent'])
 
@@ -92,7 +92,7 @@ def run(ctx):
 
     # workflow step 3: Tween 20 to fluidx tube
     for tfer in tfers:
-        if tfer['Quantity of Serum']:
+        if tfer['Quantity of EACH Sterilization Reagent']:
 
             v = float(tfer['Quantity of EACH Sterilization Reagent'])
 

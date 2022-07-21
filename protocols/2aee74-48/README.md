@@ -4,7 +4,7 @@
 [Opentrons](https://opentrons.com/)
 
 ## Categories
-* Proteins & Proteiomics
+* Proteins & Proteomics
 	* Olink Target 48
 
 ## Description

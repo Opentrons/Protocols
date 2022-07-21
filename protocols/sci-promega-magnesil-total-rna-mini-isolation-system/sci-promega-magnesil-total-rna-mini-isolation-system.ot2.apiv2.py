@@ -5,6 +5,7 @@ import math
 import threading
 from time import sleep
 from opentrons import types
+import numpy as np
 
 metadata = {
     'protocolName': 'MagneSil Total RNA Promega',
@@ -16,8 +17,9 @@ metadata = {
 """
 Here is where you can modify the magnetic module engage height:
 """
-MAG_HEIGHT = 13.6
-# MAG_Height = 6.8
+MAG_HEIGHT = 13.6  # Gen1 height
+# MAG_Height = 6.8 # Gen2
+whichwash = 1
 
 
 # Definitions for deck light flashing
@@ -65,14 +67,12 @@ def run(ctx):
     (note that this is the recommended configuration)
     """
     magdeck = ctx.load_module('magdeck', '6')
-    magdeck.disengage()
     magplate = magdeck.load_labware(deepwell_type, 'deepwell plate')
     tempdeck = ctx.load_module('Temperature Module Gen2', '1')
     elutionplate = tempdeck.load_labware(
                 'opentrons_96_aluminumblock_nest_wellplate_100ul')
     waste = ctx.load_labware('nest_1_reservoir_195ml', '9',
                              'Liquid Waste').wells()[0].top()
-#    res2 = ctx.load_labware(res_type, '2', 'reagent reservoir 2')
     res1 = ctx.load_labware(res_type, '3', 'reagent reservoir 1')
     num_cols = math.ceil(num_samples/8)
     tips300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot,
@@ -97,19 +97,16 @@ def run(ctx):
     """
     Here is where you can define the locations of your reagents.
     """
-    binding_buffer = [res1.wells()[0]]
-    wash1 = res1.wells()[1:2]
-    wash2 = res1.wells()[5:6]
-    wash3 = res1.wells()[7:8]
-    wash4 = res1.wells()[9:10]
-    dnase1 = [res1.wells()[3]]
-    stopreaction = [res1.wells()[4]]
+    wash1 = res1.wells()[2]
+    wash2 = res1.wells()[3]
+    wash3 = res1.wells()[4]
+    dnase1 = [res1.wells()[0]]
+    stopreaction = [res1.wells()[1]]
     elution_solution = res1.wells()[-1]
 
     mag_samples_m = magplate.rows()[0][:num_cols]
     elution_samples_m = elutionplate.rows()[0][:num_cols]
 
-#    magdeck.disengage()  # just in case
     tempdeck.set_temperature(4)
 
     m300.flow_rate.aspirate = 50
@@ -236,9 +233,9 @@ resuming.')
         m300.flow_rate.aspirate = 150
 
     def resuspend_pellet(well, pip, mvol, reps=5):
-        """'resuspend_pellet' will forcefully dispense liquid over pellet after.
+        """'resuspend_pellet' will forcefully dispense liquid over pellet.
 
-        the magdeck engage in order to more thoroughly resuspend the pellet.
+        after mag engage in order to more thoroughly resuspend the pellet.
         param well: The current well that the resuspension will occur in.
         param pip: The pipet that is currently attached/ being used.
         param mvol: The volume that is transferred before the mixing steps.
@@ -252,7 +249,7 @@ resuming.')
         'rightLeft' will determine which value to use in the list of 'top' and
         'bottom' (below), based on the column of the 'well' used.
         In the case that an Even column is used, the first value of 'top' and
-        'bottom' will be used, otherwise, second value of each will be used.
+        'bottom' will be used, otherwise, the second value of each is used.
         """
         center = well.bottom().move(types.Point(x=0, y=0, z=0.1))
         top = [
@@ -278,44 +275,46 @@ resuming.')
                 pip.aspirate(mix_vol, center)
                 pip.dispense(mix_vol, bottom[rightLeft])
 
-    def bind(vol, park=True):
-        latest_chan = -1
-        for i, (well, spot) in enumerate(zip(mag_samples_m, parking_spots)):
-            _pick_up(m300)
-            num_trans = math.ceil(vol/200)
-            vol_per_trans = vol/num_trans
-            asp_per_chan = (0.95*res1.wells()[0].max_volume)//(vol_per_trans*8)
-            for t in range(num_trans):
-                chan_ind = int((i*num_trans + t)//asp_per_chan)
-                source = binding_buffer[chan_ind]
-                if m300.current_volume > 0:
-                    # void air gap if necessary
-                    m300.dispense(m300.current_volume, source.top())
-                if chan_ind > latest_chan:  # mix if accessing new channel
-                    for _ in range(5):
-                        m300.aspirate(180, source.bottom(0.5))
-                        m300.dispense(180, source.bottom(5))
-                    latest_chan = chan_ind
-                m300.transfer(vol_per_trans, source, well.top(), air_gap=20,
-                              new_tip='never')
-                if t < num_trans - 1:
-                    m300.air_gap(20)
-            m300.mix(5, 200, well)
-            m300.blow_out(well.top(-2))
-            m300.air_gap(20)
-            if park:
-                m300.drop_tip(spot)
-            else:
-                _drop(m300)
+    def bead_mixing(well, pip, mvol, reps=8):
+        """
+        'bead_mixing' will mix liquid that contains beads.This will be done by.
 
-        magdeck.engage(height=MAG_HEIGHT)
-        ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
-' + str(settling_time) + ' minutes.')
+        aspirating from the bottom of the well and dispensing from the top to
+        mix the beads with the other liquids as much as possible. Aspiration
+        and dispensing will also be reversed to ensure maximal mixing.
+        param well: The current well that the mixing will occur in.
+        param pip: The pipet that is currently attached/ being used.
+        param mvol: The volume that is transferred before the mixing steps.
+        param reps: The number of mix repetitions that should occur. Note~
+        During each mix rep, there are 2 cycles of aspirating from bottom,
+        dispensing at the top and 2 cycles of aspirating from middle,
+        dispensing at the bottom
+        """
+        center = well.top().move(types.Point(x=0, y=0, z=5))
+        aspbot = well.bottom(1)
+        asptop = well.bottom(10)
+        disbot = well.bottom(3)
+        distop = well.top()
 
-        # remove initial supernatant
-        remove_supernatant(vol+starting_vol, park=park)
+        vol = mvol * .9
+
+        pip.move_to(center)
+        for _ in range(reps):
+            pip.aspirate(vol, aspbot)
+            pip.dispense(vol, distop)
+            pip.aspirate(vol, asptop)
+            pip.dispense(vol, disbot)
 
     def wash(vol, source, mix_reps=15, park=True, resuspend=True):
+        # Defines which wash the protocol is on to log on the app
+        global whichwash
+
+        if source == wash1:
+            whichwash = 1
+        if source == wash2:
+            whichwash = 2
+        if source == wash3:
+            whichwash = 3
 
         if resuspend and magdeck.status == 'engaged':
             magdeck.disengage()
@@ -326,7 +325,7 @@ resuming.')
             _pick_up(m300)
             # side = 1 if i % 2 == 0 else -1
             # loc = m.bottom(0.5).move(Point(x=side*2))
-            src = source[i//(12//len(source))]
+            src = source
             for n in range(num_trans):
                 if m300.current_volume > 0:
                     m300.dispense(m300.current_volume, src.top())
@@ -335,7 +334,6 @@ resuming.')
                 if n < num_trans - 1:  # only air_gap if going back to source
                     m300.air_gap(20)
             if resuspend:
-                # m300.mix(mix_reps, 150, loc)
                 resuspend_pellet(m, m300, 180)
             m300.blow_out(m.top())
             m300.air_gap(20)
@@ -346,9 +344,11 @@ resuming.')
 
         if magdeck.status == 'disengaged':
             magdeck.engage(height=MAG_HEIGHT)
-
-        ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
-' + str(settling_time) + ' minutes.')
+        # settling time timer for washes
+        for washi in np.arange(settling_time, 0, -0.5):
+            ctx.delay(minutes=0.5, msg='''
+            There are ' + str(washi) + ' minutes left in wash '
+             + str(whichwash) + ' incubation.''')
 
         remove_supernatant(vol, park=park)
 
@@ -363,7 +363,7 @@ resuming.')
             _pick_up(m300)
             # side = 1 if i % 2 == 0 else -1
             # loc = m.bottom(0.5).move(Point(x=side*2))
-            src = source[i//(12//len(source))]
+            src = source
             for n in range(num_trans):
                 if m300.current_volume > 0:
                     m300.dispense(m300.current_volume, src.top())
@@ -372,17 +372,17 @@ resuming.')
                 if n < num_trans - 1:  # only air_gap if going back to source
                     m300.air_gap(20)
             if resuspend:
-                # m300.mix(mix_reps, 30, loc)
-                resuspend_pellet(m, m300, 180)
+                resuspend_pellet(m, m300, 50)
             m300.blow_out(m.top())
             m300.air_gap(20)
             if park:
                 m300.drop_tip(spot)
             else:
                 _drop(m300)
-
-        ctx.delay(
-         minutes=10, msg='''Incubating 10 minutes for DNase 1 treatment.''')
+        # first number is the total minutes of DNAse treatment
+        for dnai in np.arange(12, 0, -0.5):
+            ctx.delay(minutes=0.5, msg=str(dnai) + '''
+                minutes left in DNase 1 treatment.''')
 
     def stop_reaction(vol, source, mix_reps=6, park=True, resuspend=True):
 
@@ -395,7 +395,7 @@ resuming.')
             _pick_up(m300)
             # side = 1 if i % 2 == 0 else -1
             # loc = m.bottom(0.5).move(Point(x=side*2))
-            src = source[i//(12//len(source))]
+            src = source
             for n in range(num_trans):
                 if m300.current_volume > 0:
                     m300.dispense(m300.current_volume, src.top())
@@ -404,8 +404,7 @@ resuming.')
                 if n < num_trans - 1:  # only air_gap if going back to source
                     m300.air_gap(20)
             if resuspend:
-                # m300.mix(mix_reps, 50, loc)
-                resuspend_pellet(m, m300, 180)
+                resuspend_pellet(m, m300, 50)
             m300.blow_out(m.top())
             m300.air_gap(20)
             if park:
@@ -413,9 +412,14 @@ resuming.')
             else:
                 _drop(m300)
 
-        ctx.delay(minutes=5, msg='Incubating for 5 minutes for stop reaction.')
+        ctx.delay(minutes=2, msg='Incubating for 5 minutes for stop reaction.')
+
         magdeck.engage(height=MAG_HEIGHT)
-        ctx.delay(minutes=5)
+
+        for stop in np.arange(settling_time, 0, -0.5):
+            ctx.delay(minutes=0.5, msg='''
+            There are ' + str(stop) + ' minutes left in the incubation.''')
+
         remove_supernatant(vol, park=park)
 
     def elute(vol, park=True):
@@ -430,8 +434,7 @@ resuming.')
             m300.aspirate(vol, elution_solution)
             m300.move_to(m.center())
             m300.dispense(vol, loc)
-            # m300.mix(mix_reps, 0.8*vol, loc)
-            resuspend_pellet(m, m300, 0.8*vol)
+            resuspend_pellet(m, m300, 180)
             m300.blow_out(m.bottom(5))
             m300.air_gap(20)
             if park:
@@ -439,9 +442,12 @@ resuming.')
             else:
                 _drop(m300)
 
+        ctx.delay(minutes=3, msg='''
+         Occasionally vortex off-deck for 3 minutes to enhance elution.''')
         magdeck.engage(height=MAG_HEIGHT)
-        ctx.delay(minutes=settling_time, msg='Incubating on MagDeck for \
-' + str(settling_time) + ' minutes.')
+        for elutei in np.arange(settling_time, 0, -0.5):
+            ctx.delay(minutes=0.5, msg='Incubating on MagDeck for \
+' + str(elutei) + ' more minutes.')
 
         for i, (m, e, spot) in enumerate(
                 zip(mag_samples_m, elution_samples_m, parking_spots)):
@@ -460,7 +466,9 @@ resuming.')
     Here is where you can call the methods defined above to fit your specific
     protocol. The normal sequence is:
     """
-    bind(binding_buffer_vol, park=park_tips)
+    magdeck.engage(MAG_HEIGHT)
+    remove_supernatant(starting_vol)
+    magdeck.disengage()
     wash(wash1_vol, wash1, park=park_tips)
     # dnase 1 treatment
     dnase(50, dnase1, park=park_tips)
@@ -468,7 +476,6 @@ resuming.')
     # resume washes
     wash(wash2_vol, wash2, park=park_tips)
     wash(wash3_vol, wash3, park=park_tips)
-    wash(100, wash4, park=park_tips)
     ctx.delay(minutes=1, msg='Drying beads for 1 minute')
     elute(elution_vol, park=park_tips)
 

@@ -9,6 +9,20 @@
 
 ## Description
 
+Links:
+* [Random Aliquoting](./925d07-cp)
+<br></br>
+<br></br>
+* [Plasmind Luciferase Assay](./925d07-pla)
+<br></br>
+<br></br>
+* [QIAcuity Plate Transfer](./925d07-q)
+<br></br>
+<br></br>
+* [PCR Prep](./925d07-v3)
+<br></br>
+<br></br>
+
 This protocol performs a custom QIAcuity PCR prep.
 
 ---

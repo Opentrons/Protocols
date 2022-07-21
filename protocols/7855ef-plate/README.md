@@ -19,6 +19,8 @@ Links:
 **Note about tips**
 The OT-2 will track tips from Part 1 to Part 4 of the protocol (e.g. tip leaves off in H11 at the end of protocol 1; first tip pick up will be from H12 in Part 2). When tips run out for any particular Part, the user will be prompted to replace all tip racks.
 
+**Update (July 18, 2022):** The custom touch tip has been adjusted
+
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
@@ -66,7 +68,7 @@ Slot 4, 5, 6: Custom 96 Well Endura Plate (empty)
 
 Slot 7: MMX Plate with Amplification Mix in Column 1
 
-Slot 9, 10, 11: Opentrons 20ul Tip Rack
+Slot 8, 9, 10, 11: Opentrons 20ul Tip Rack
 
 
 

@@ -1,4 +1,4 @@
-# import from the python types module
+# import from python types module
 from types import MethodType
 # import from opentrons.types
 from opentrons import types
@@ -15,17 +15,21 @@ metadata = {
 
 def run(ctx):
 
-    [vol_dead, mix_rate, clearance_water_tube, clearance_rna, clearance_dest,
-     clearance_mix_aspirate, raise_mix_dispense, labware_water_tube,
-     labware_rna, labware_dest, vol_h2o,
+    [move_side, vol_dead, mix_rate, clearance_water_tube, clearance_rna,
+     clearance_dest, clearance_mix_aspirate, raise_mix_dispense,
+     labware_water_tube, labware_rna, labware_dest, vol_h2o,
      uploaded_csv] = get_values(  # noqa: F821
-        "vol_dead", "mix_rate", "clearance_water_tube", "clearance_rna",
-        "clearance_dest", "clearance_mix_aspirate", "raise_mix_dispense",
-        "labware_water_tube", "labware_rna", "labware_dest", "vol_h2o",
-        "uploaded_csv")
+        "move_side", "vol_dead", "mix_rate", "clearance_water_tube",
+        "clearance_rna", "clearance_dest", "clearance_mix_aspirate",
+        "raise_mix_dispense", "labware_water_tube", "labware_rna",
+        "labware_dest", "vol_h2o", "uploaded_csv")
 
     ctx.set_rail_lights(True)
     ctx.delay(seconds=10)
+
+    if not -4 <= move_side <= 4:
+        raise Exception(
+         'p20 flow rate for mix must be 1 and 3 times the default rate.')
 
     if not 1 <= mix_rate <= 3:
         raise Exception(
@@ -74,6 +78,21 @@ def run(ctx):
         raise Exception(
          '''Starting volume of water must be between {0} uL and
          {1} uL per tube.'''.format(100+vol_dead, rack.wells()[0].max_volume))
+
+    # return liquid height in a well
+    def liq_height(well):
+        if well.diameter is not None:
+            radius = well.diameter / 2
+            cse = math.pi*(radius**2)
+        elif well.length is not None:
+            cse = well.length*well.width
+        else:
+            cse = None
+        if cse:
+            return well.liq_vol / cse
+        else:
+            raise Exception("""Labware definition must
+                supply well radius or well length and width.""")
 
     # extended well class to track liquid volume and height
     class WellH(Well):
@@ -133,12 +152,12 @@ def run(ctx):
 
     water_tubes = []
     num_tubes = math.ceil(sum([float(
-     tfer['water vol']) for tfer in tfers]) / vol_h2o)
+     tfer['water vol']) for tfer in tfers]) / vol_h2o) + 1
     pip = p20s
+
     for index, tube in enumerate(rack.wells()[:num_tubes]):
-        new = WellH(
-         rack.wells()[index],
-         min_height=clearance_water_tube, current_volume=vol_h2o)
+        new = rack.wells()[index]
+        new.liq_vol = vol_h2o
         water_tubes.append(new)
 
     ctx.pause(
@@ -168,12 +187,14 @@ def run(ctx):
             disp = []
             in_tip = 0
             pip.pick_up_tip()
-            pip.aspirate(disposal, water.height_dec(disposal))
+            water.liq_vol -= disposal
+            ht = liq_height(water) - 3 if liq_height(water) - 3 > 1 else 1
+            pip.aspirate(disposal, water.bottom(ht))
             in_tip += disposal
             for index, tfer in enumerate(lst):
                 vol = float(tfer['water vol'])
                 dst = dest_wells[tfer['dest well']]
-                if water.current_volume <= vol + vol_dead:
+                if water.liq_vol <= vol + vol_dead:
                     try:
                         water = next(water_tube)
                     except StopIteration:
@@ -183,11 +204,19 @@ def run(ctx):
                         v = float(d[0])
                         pip.dispense(v, d[1].height_inc(v))
                     disp = []
-                    pip.dispense(disposal, water.height_inc(disposal))
+                    water.liq_vol += disposal
+                    ht = liq_height(
+                     water) - 3 if liq_height(water) - 3 > 1 else 1
+                    pip.dispense(disposal, water.bottom(ht))
                     in_tip = 0
-                    pip.aspirate(disposal, water.height_dec(disposal))
+                    water.liq_vol -= disposal
+                    ht = liq_height(
+                     water) - 3 if liq_height(water) - 3 > 1 else 1
+                    pip.aspirate(disposal, water.bottom(ht))
                     in_tip += disposal
-                pip.aspirate(vol, water.height_dec(vol))
+                water.liq_vol -= vol
+                ht = liq_height(water) - 3 if liq_height(water) - 3 > 1 else 1
+                pip.aspirate(vol, water.bottom(ht))
                 in_tip += vol
                 disp.append((vol, dst))
                 if index == len(lst)-1:
@@ -247,21 +276,24 @@ def run(ctx):
         pip.dispense(vol, dest.height_inc(vol))
         rt = mix_rate if pip == p20s else 1
         if pip == p20s:
-            for rep in range(6):
+            for rep in range(3):
                 pip.aspirate(20, dest.height_dec(20).move(
                  types.Point(x=0, y=0, z=-(
                   dest.height-dest.min_height)+clearance_mix_aspirate
                  )), rate=rt)
                 pip.dispense(20, dest.height_inc(20).move(types.Point(
                  x=0, y=0, z=raise_mix_dispense)), rate=rt)
+            ctx.delay(seconds=1)
+            pip.blow_out(
+             dest.bottom(10).move(types.Point(x=move_side, y=0, z=0)))
         else:
             maxv = pip._tip_racks[0].wells()[0].max_volume
             calcv = 0.8*dest.current_volume
             v = calcv if calcv < maxv else maxv
-            for rep in range(4):
+            for rep in range(3):
                 pip.aspirate(v, dest.height_dec(v))
                 pip.dispense(v, dest.height_inc(v))
-        pip.blow_out()
+            pip.blow_out(dest.top(-2))
         pip.touch_tip(radius=0.75, v_offset=-2, speed=20)
         pip.drop_tip()
 
@@ -274,7 +306,7 @@ def run(ctx):
             maxv = pip._tip_racks[0].wells()[0].max_volume
             calcv = 0.8*dest.current_volume
             v = calcv if calcv < maxv else maxv
-            for rep in range(4):
+            for rep in range(3):
                 pip.aspirate(v, dest.height_dec(v))
                 pip.dispense(v, dest.height_inc(v))
             pip.blow_out()
