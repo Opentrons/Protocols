@@ -28,6 +28,7 @@ def run(ctx):
     p300 = ctx.load_instrument('p300_single_gen2',
                                p300_mount, tip_racks=[tiprack])
     p300.well_bottom_clearance.aspirate = asp_height
+    print(tuberack_B.wells())
 
     # protocol
     if use_tuberack_A:

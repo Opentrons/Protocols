@@ -1,4 +1,4 @@
-# 66e60f: Normalization protocol from CSV
+# Normalization protocol from CSV
 
 ### Author
 [Opentrons](https://opentrons.com/)

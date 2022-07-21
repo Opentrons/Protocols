@@ -74,7 +74,7 @@ def run(ctx):
     pick_up()
     dests_per_col = mm_source_vol//mm_transfer_vol
     for i, d in enumerate(all_dests):
-        m20.air_gap(2)
+        m20.aspirate(2, mm[i//dests_per_col].top())
         m20.aspirate(mm_transfer_vol, mm[i//dests_per_col])
         m20.dispense(2+mm_transfer_vol, d)
     m20.drop_tip()
@@ -84,7 +84,7 @@ def run(ctx):
         pick_up()
         if transfer_scheme == 'single':
             for d in dests:
-                m20.air_gap(2)
+                m20.aspirate(2, source.top())
                 m20.aspirate(dna_vol, source)
                 m20.dispense(2+dna_vol, d.bottom(1))
         else:

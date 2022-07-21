@@ -6,14 +6,14 @@
         ]
     },
     "deck-setup": "\n",
-    "description": "This protocol performs a custom QIAcuity PCR prep.\n",
+    "description": "Links:\n* Random Aliquoting\n\n\n* Plasmind Luciferase Assay\n\n\n* QIAcuity Plate Transfer\n\n\n* PCR Prep\n\n\nThis protocol performs a custom QIAcuity PCR prep.\n",
     "internal": "9250d7",
     "labware": "\nOpentrons 20ul tips\nNEST 0.1 mL 96-Well PCR Plate, Full Skirt\nQIAcuity 96-well Nanoplate\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
         "categories": "* PCR\n\t* PCR Prep\n\n",
         "deck-setup": "![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/9250d7/deck2.png)\n\n---\n\n",
-        "description": "\nThis protocol performs a custom QIAcuity PCR prep.\n\n---\n\n",
+        "description": "\nLinks:\n* [Random Aliquoting](./925d07-cp)\n<br></br>\n<br></br>\n* [Plasmind Luciferase Assay](./925d07-pla)\n<br></br>\n<br></br>\n* [QIAcuity Plate Transfer](./925d07-q)\n<br></br>\n<br></br>\n* [PCR Prep](./925d07-v3)\n<br></br>\n<br></br>\n\nThis protocol performs a custom QIAcuity PCR prep.\n\n---\n\n",
         "internal": "9250d7\n",
         "labware": "* [Opentrons 20ul tips](https://shop.opentrons.com/collections/opentrons-tips)\n* [NEST 0.1 mL 96-Well PCR Plate, Full Skirt](https://shop.opentrons.com/nest-0-1-ml-96-well-pcr-plate-full-skirt/)\n* [QIAcuity 96-well Nanoplate](https://www.qiagen.com/us/products/instruments-and-automation/accessories/qiacuity-nanoplates-and-accessories/)\n\n",
         "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",

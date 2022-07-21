@@ -236,17 +236,25 @@ def run(ctx):
 
     # helper function for repeat large vol transfers
     def repeat_max_transfer(current_pipette, remaining, source, dest,
-                            flowrate):
+                            flowrate, touch=False):
         while remaining > tip_max:
             current_pipette.aspirate(
              tip_max, source.height_dec(tip_max), rate=flowrate)
             current_pipette.dispense(
              tip_max, dest.height_inc(tip_max), rate=flowrate)
             remaining -= tip_max
+            if touch:
+                ctx.delay(seconds=0.5)
+                current_pipette.blow_out()
+                current_pipette.touch_tip(radius=0.75, v_offset=-2, speed=10)
         current_pipette.aspirate(
          remaining, source.height_dec(remaining), rate=flowrate)
         current_pipette.dispense(
          remaining, dest.height_inc(remaining), rate=flowrate)
+        if touch:
+            ctx.delay(seconds=0.5)
+            current_pipette.blow_out()
+            current_pipette.touch_tip(radius=0.75, v_offset=-2, speed=10)
 
     # combine DNA dilution with pcr mix
     p300s.starting_tip = tips300[0].wells_by_name()[
@@ -272,7 +280,7 @@ def run(ctx):
         for rep in range(2):
             repeat_max_transfer(
              p300s, reservoir_fill_volume / 16, pcr_mix,
-             well, 0.5)
+             well, 0.5, touch=True)
     p300s.drop_tip()
     if tips300[0].next_tip(1, p300s.starting_tip) is not None:
         future_tip_300 = tips300[0].next_tip(1, p300s.starting_tip)

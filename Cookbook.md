@@ -6,7 +6,8 @@ We are sharing the code that the Opentrons team has developed to run these proce
 
 Table of Contents:
 * [Basic Skeleton Protocol](#basic-skeleton-protocol)
-* [Liquid Level Tracking](#liquid-level-tracking)
+* [Liquid Level Tracking - Simple](#liquid-level-tracking---simple)
+* [Liquid Level Tracking - Complex](#liquid-level-tracking---complex)
 * [Refill Tips Mid-Protocol](#refill-tips-mid-protocol)
 * [Wash Steps](#wash-steps)
 * [Remove Supernatant](#remove-supernatant)
@@ -15,6 +16,7 @@ Table of Contents:
 * [Track Data Across Protocol Runs](#track-data-across-protocol-runs)
 * [Tip Tracking with Refills](#tip-tracking-with-refills)
 * [Picking Up Fewer Than 8 Tips with a Multi-Channel Pipette](#picking-up-fewer-than-8-tips-with-a-multi-channel-pipette)
+* [Flash Robot Lights](#flash-robot-lights)
 
 ## Basic Skeleton Protocol
 
@@ -26,36 +28,31 @@ from opentrons import protocol_api
 # metadata
 metadata = {
     'protocolName': 'My Protocol',
-    'author': 'Name <email@address.com>',
-    'description': 'Simple protocol to get started using OT2',
-    'apiLevel': '2.4'
+    'author': 'Name <opentrons@example.com>',
+    'description': 'Simple protocol to get started using the OT-2',
+    'apiLevel': '2.12'
 }
 
-# protocol run function. the part after the colon lets your editor know
-# where to look for autocomplete suggestions
+# protocol run function
 def run(protocol: protocol_api.ProtocolContext):
 
-    """ load labware """
-    # my_plate = protocol.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '1')
-    # my_tiprack = protocol.load_tiprack('opentrons_96_wellplate_300ul', '2')
+    # labware
+    plate = protocol.load_labware('corning_96_wellplate_360ul_flat', location='1')
+    tiprack = protocol.load_labware('opentrons_96_tiprack_300ul', location='2')
 
-    """ Variables"""
-    # numSamps is the number of samples and should be 1-96 (int)
-    numSamps = _numSamps
+    # pipettes
+    left_pipette = protocol.load_instrument(
+         'p300_single', mount='left', tip_racks=[tiprack])
 
-    """ load pipettes """
-    # p300 = protocol.load_instrument('p300_single_gen2', 'right', tip_racks=[my_tiprack])
-
-    """ helper functions """
-    # def my_helper_fxn():
-    #     protocol.comment('I am helping!')
-
-    """ liquid transfer commands """
-    # p300.transfer(100, my_plate.wells()[0], my_plate.wells()[1])
+    # commands
+    left_pipette.pick_up_tip()
+    left_pipette.aspirate(100, plate['A1'])
+    left_pipette.dispense(100, plate['B2'])
+    left_pipette.drop_tip()
 ```
 
 
-## Liquid Level Tracking
+## Liquid Level Tracking - Simple
 
 ```
 import math
@@ -87,6 +84,78 @@ def run(protocol):
 
     h = h_track(200, tuberack.wells()[0])
     p300.transfer(200, tuberack.wells()[0].bottom(h), plate.wells()[0])
+```
+
+## Liquid Level Tracking - Complex
+
+This liquid level tracking employs extension of the Opentrons `Well` class to add custom attributes for current liquid height, current liquid volume, minimum allowable height for aspiration, and a compensation coefficient. The compensation coefficient denotes a multiple that tells the how much "extra" to calculate incrementing or decrementing the liquid level height calculation based on a volume dispensed or aspirated, to account for real-world liquid behavior. This coefficient will likely be higher for viscous liquids, and lower (close to 1.0) for non-viscous liquids.
+
+```
+from opentrons.protocol_api.labware import Well
+import math
+
+metadata = {
+    'title': 'inheritance',
+    'author': 'Nick Diehl',
+    'apiLevel': '2.10'
+}
+
+
+def run(ctx):
+
+    class WellH(Well):
+        def __init__(self, well, height=0, min_height=5, comp_coeff=1.15,
+                     current_volume=0):
+            super().__init__(well._impl)
+            self.well = well
+            self.height = height
+            self.min_height = min_height
+            self.comp_coeff = comp_coeff
+            self.radius = self.diameter/2
+            self.current_volume = current_volume
+
+        def height_dec(self, vol):
+            dh = (vol/(math.pi*(self.radius**2)))*self.comp_coeff
+            if self.height - dh > self.min_height:
+                self.height = self.height - dh
+            else:
+                self.height = self.min_height
+            if self.current_volume - vol > 0:
+                self.current_volume = self.current_volume - vol
+            else:
+                self.current_volume = 0
+            return(self.well.bottom(self.height))
+
+        def height_inc(self, vol):
+            dh = (vol/(math.pi*(self.radius**2)))*self.comp_coeff
+            if self.height + dh < self.depth:
+                self.height = self.height + dh
+            else:
+                self.height = self.depth
+            self.current_volume += vol
+            return(self.well.bottom(self.height + 20))
+
+    wellrack = ctx.load_labware(
+        'opentrons_10_tuberack_falcon_4x50ml_6x15ml_conical', '1')
+    tiprack = ctx.load_labware('opentrons_96_tiprack_300ul', '2')
+    p300 = ctx.load_instrument('p300_single_gen2', 'right',
+                               tip_racks=[tiprack])
+
+    source = WellH(wellrack.wells()[0], height=50, current_volume=7000)
+    dest = WellH(wellrack.wells()[-1], comp_coeff=1.2)
+
+    def transfer(vol, s: WellH, d: WellH, new_tip='never', pip=p300):
+        if new_tip == 'never' and not pip.has_tip:
+            pip.pick_up_tip()
+        pip.transfer(vol, s.height_dec(vol), d.height_inc(vol),
+                     new_tip=new_tip)
+        ctx.comment(f'Source height: {round(s.height, 2)}mm')
+        ctx.comment(f'Destination height: {round(d.height, 2)}mm')
+
+    p300.pick_up_tip()
+    for _ in range(20):
+        transfer(250, source, dest)
+    p300.drop_tip()
 ```
 
 ## Refill Tips Mid-Protocol
@@ -397,4 +466,84 @@ def run(ctx):
         pick_up(m300)
         # perform some step
         m300.drop_tip()
+```
+
+## Flash Robot Lights
+
+```
+import contextlib
+import threading
+from opentrons import protocol_api
+
+metadata = {
+    'apiLevel': '2.11'
+}
+
+
+# Definitions for deck light flashing
+@contextlib.contextmanager
+def flashing_rail_lights(
+    protocol: protocol_api.ProtocolContext, seconds_per_flash_cycle=1.0
+):
+    """Flash the rail lights on and off in the background.
+    Source: https://github.com/Opentrons/opentrons/issues/7742
+    Example usage:
+        # While the robot is doing nothing for 2 minutes, flash lights quickly.
+        with flashing_rail_lights(protocol, seconds_per_flash_cycle=0.25):
+            protocol.delay(minutes=2)
+    When the ``with`` block exits, the rail lights are restored to their
+    original state.
+    Exclusive control of the rail lights is assumed. For example, within the
+    ``with`` block, you must not call `ProtocolContext.set_rail_lights`
+    yourself, inspect `ProtocolContext.rail_lights_on`, or nest additional
+    calls to `flashing_rail_lights`.
+    """
+    original_light_status = protocol.rail_lights_on
+
+    stop_flashing_event = threading.Event()
+
+    def background_loop():
+        while True:
+            protocol.set_rail_lights(not protocol.rail_lights_on)
+            # Wait until it's time to toggle the lights for the next flash or
+            # we're told to stop flashing entirely, whichever comes first.
+            got_stop_flashing_event = stop_flashing_event.wait(
+                timeout=seconds_per_flash_cycle/2
+            )
+            if got_stop_flashing_event:
+                break
+
+    background_thread = threading.Thread(
+        target=background_loop, name="Background thread for flashing rail \
+lights"
+    )
+
+    try:
+        if not protocol.is_simulating():
+            background_thread.start()
+        yield
+
+    finally:
+        # The ``with`` block might be exiting normally, or it might be exiting
+        # because something inside it raised an exception.
+        #
+        # This accounts for user-issued cancelations because currently
+        # (2021-05-04), the Python Protocol API happens to implement user-
+        # issued cancellations by raising an exception from internal API code.
+        if not protocol.is_simulating():
+            stop_flashing_event.set()
+            background_thread.join()
+
+        # This is questionable: it may issue a command to the API while the API
+        # is in an inconsistent state after raising an exception.
+        protocol.set_rail_lights(original_light_status)
+
+def run(ctx):
+
+    # example code
+    for i in range(10):
+        if i == 5:
+            if not ctx._hw_manager.hardware.is_simulator:
+                with flashing_rail_lights(ctx, seconds_per_flash_cycle=1):
+                    ctx.pause('Condition met (i=5)')
 ```

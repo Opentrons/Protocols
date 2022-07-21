@@ -112,6 +112,6 @@ def run(ctx: protocol_api.ProtocolContext):
         p20.pick_up_tip()
         p20.aspirate(3, source)
         p20.dispense(3, dest)
-        p20.blow_out(col.top(z=-3))
+        p20.blow_out(dest.top(z=-3))
         p20.touch_tip()
         p20.drop_tip()

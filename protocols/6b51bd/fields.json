@@ -1,6 +1,18 @@
 [
   {
     "type": "float",
+    "label": "Aspiration Flow Rate for Mixing (use 0.3-3) (for 0.3-3 times the default rate)",
+    "name": "mix_asp_rate",
+    "default": 1
+  },
+  {
+    "type": "float",
+    "label": "Dispense Flow Rate for Mixing (use 0.3-3) (for 0.3-3 times the default rate)",
+    "name": "mix_disp_rate",
+    "default": 1
+  },
+  {
+    "type": "float",
     "label": "Dead Volume in Reservoir Wells (volume in ul at which to move on to next source well)",
     "name": "dead_vol",
     "default": 3000
@@ -10,6 +22,7 @@
     "label": "Labware for Parent and Child Plates",
     "name": "labware_plate",
     "options": [
+      { "label": "thermo_96_wellplate_ab_0800_200ul", "value": "thermo_96_wellplate_ab_0800_200ul" },
       { "label": "brand_96_wellplate_360ul", "value": "brand_96_wellplate_360ul" },
       { "label": "brooksframestar_96_wellplate_200ul", "value": "brooksframestar_96_wellplate_200ul" },
       { "label": "biorad_96_wellplate_200ul_pcr", "value": "biorad_96_wellplate_200ul_pcr" }

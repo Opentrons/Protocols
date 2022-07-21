@@ -95,7 +95,7 @@ resuming.')
     _pick_up(p10)
     for d in all_dests:
         if vol_mm <= 7:
-            p10.air_gap(2)
+            p10.aspirate(2, mm.top())
         p10.aspirate(vol_mm, mm)
         if vol_mm <= 7:
             p10.air_gap(1)
@@ -106,7 +106,7 @@ resuming.')
     for s, d in zip(source_multi, all_dests_multi):
         _pick_up(m10)
         if vol_mm <= 7:
-            m10.air_gap(2)
+            m10.aspirate(2, mm.top())
         m10.aspirate(vol_sample, mm)
         if vol_mm <= 7:
             m10.air_gap(1)
@@ -117,7 +117,7 @@ resuming.')
     for s, d in zip([pos_control, neg_control], dest_plate.wells()[:2]):
         _pick_up(p10)
         if vol_mm <= 7:
-            p10.air_gap(2)
+            p10.aspirate(2, mm.top())
         p10.aspirate(vol_sample, mm)
         if vol_mm <= 7:
             p10.air_gap(1)

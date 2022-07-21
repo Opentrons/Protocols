@@ -14,16 +14,26 @@ def run(ctx: protocol_api.ProtocolContext):
     [input_csv,
      p20_mount,
      p300_mount,
-     aspiration_height,
+     aspiration_height_plate,
+     dispensing_height_plate,
+     aspiration_height_resv,
      flow_rate_multiplier] = get_values(  # noqa: F821
      "input_csv",
      "p20_mount",
      "p300_mount",
-     "aspiration_height",
+     "aspiration_height_plate",
+     "dispensing_height_plate",
+     "aspiration_height_resv",
      "flow_rate_multiplier")
 
-    if 0.1 >= aspiration_height:
-        raise Exception("Enter a higher aspiration height")
+    if 0.1 > aspiration_height_plate:
+        raise Exception("Enter a higher source plate aspiration height")
+
+    if 0.1 > dispensing_height_plate:
+        raise Exception("Enter a higher destination plate dispensing height")
+
+    if 0.1 > aspiration_height_resv:
+        raise Exception("Enter a higher reservoir aspiration height")
 
     if p20_mount == p300_mount:
         raise Exception("Both pipettes cannot be mounted in the same mount")
@@ -316,23 +326,23 @@ def run(ctx: protocol_api.ProtocolContext):
                             format(i, line))
         # check well formatting
         if well_name_validation_regex.fullmatch(line[0]) is None:
-            raise Exception(("Line #{}: The source plate well name \"{}\" " +
+            raise Exception(("Line #{}: The source plate well name \"{}\" "
                              "has the wrong format").
                             format(i, line[0]))
 
         if well_name_validation_regex.fullmatch(line[1]) is None:
-            raise Exception(("Line #{}: The dest. plate well name \"{}\" " +
+            raise Exception(("Line #{}: The dest. plate well name \"{}\" "
                              "has the wrong format").
                             format(i, line[1]))
 
         if volume_validation_regex.fullmatch(line[2]) is None:
-            raise Exception(("Line #{}: The sample volume \"{}\" " +
-                             "has the wrong format").
+            raise Exception(("Line #{}: The sample volume \"{}\" "
+                             + "has the wrong format").
                             format(i, line[2]))
 
         if volume_validation_regex.fullmatch(line[3]) is None:
-            raise Exception(("Line #{}: The diluent volume \"{}\" " +
-                             "has the wrong format").
+            raise Exception(("Line #{}: The diluent volume \"{}\" "
+                             + "has the wrong format").
                             format(i, line[3]))
 
     # perform normalization - Transfer all the diluent first before
@@ -347,8 +357,13 @@ def run(ctx: protocol_api.ProtocolContext):
         pip = p300 if vol_d > 20 else p20
         if not pip.has_tip:
             pip.pick_up_tip()
-        pip.transfer(vol_d, diluent.track(vol_d), d_well, new_tip='never')
+        pip.transfer(vol_d,
+                     diluent.track(vol_d).bottom(aspiration_height_resv),
+                     d_well.bottom(dispensing_height_plate), new_tip='never')
         pip.blow_out(d_well.top(-2))
+        # Debugging info
+        # print("diluent reservoir position {}".
+        #       format(diluent.track(0).bottom(aspiration_height_resv)))
 
     # Step 5: drop tips
     ctx.comment("\n\nDiluent transfer complete: Droppping tips")
@@ -356,17 +371,21 @@ def run(ctx: protocol_api.ProtocolContext):
         if pip.has_tip:
             pip.drop_tip()
 
-    # Step 7-10: Transfer samples
+    # Step 7-10: Transfer samples from the sample plate to the dest. plate
     ctx.comment("\n\nTransferring samples to the target plate\n")
     for s, d, vol_s, _ in data:
         vol_s = float(vol_s)
-        s_well = sample_wells[s]
-        d_well = dest_wells[d]
-        # transfer sample
+        s_well = sample_wells[s].bottom(aspiration_height_plate)
+        d_well = dest_wells[d].bottom(dispensing_height_plate)
+        blow_out_loc = dest_wells[d].top(-2)
+        # Debugging info
+        # print("Aspiration height s_well: {}".format(s_well))
+        # print("Dispensing height d_well: {}".format(d_well))
+
+        # Transfer sample
         pip = p300 if vol_s > 20 else p20
         pip.pick_up_tip()
-        pip.aspirate(vol_s, s_well.bottom(aspiration_height),
-                     flow_rate_multiplier)
-        pip.dispense(vol_s, d_well)
-        pip.blow_out(d_well.top(-2))
+        pip.aspirate(vol_s, s_well, flow_rate_multiplier)
+        pip.dispense(vol_s, d_well, flow_rate_multiplier)
+        pip.blow_out(blow_out_loc)
         pip.drop_tip()
