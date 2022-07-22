@@ -1,7 +1,7 @@
 """OPENTRONS."""
-from opentrons.types import Point
-import json
-import os
+# from opentrons.types import Point
+# import json
+# import os
 import math
 import threading
 from time import sleep
@@ -448,7 +448,7 @@ def run(ctx):
             m300.dispense(200, dest.top(-2))
         m300.drop_tip()
 
-        for i, (source, park_loc) in enumerate(zip(mag_samples_m, parking_spots)):
+        for i, (source, park_loc) in enumerate(zip(mag_samples_m, parking_spots
             side = -1 if i % 2 == 0 else 1
             if not m300.has_tip:
                 m300.pick_up_tip(park_loc) if _ == 1 else m300.pick_up_tip()
