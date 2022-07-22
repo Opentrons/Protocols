@@ -1,5 +1,4 @@
 from opentrons import protocol_api
-from opentrons.protocol_api.contexts import InstrumentContext
 
 metadata = {
     'protocolName':
