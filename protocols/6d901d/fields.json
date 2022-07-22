@@ -7,20 +7,20 @@
   },
   {
     "type": "dropDown",
-    "label": "Pipette Model",
-    "name": "pip_model",
+    "label": "P300 Multi Mount",
+    "name": "p300_mount",
     "options": [
-      { "label": "P300 Multi GEN2", "value": "p300_multi_gen2"},
-      { "label": "P20 Multi GEN2", "value": "p20_multi_gen2"}
+      { "label": "Right", "value": "right"},
+      { "label": "Left", "value": "left"}
     ]
   },
   {
     "type": "dropDown",
-    "label": "Pipette Mount",
-    "name": "pip_mount",
+    "label": "P20 Multi Mount",
+    "name": "p20_mount",
     "options": [
-      {"label": "Right side", "value": "right"},
-      {"label": "Left side", "value": "left"}
+      { "label": "Left", "value": "left"},
+      { "label": "Right", "value": "right"}
     ]
   },
   {
@@ -56,8 +56,8 @@
     "label": "Use Filter Tips?",
     "name": "filter_tip",
     "options": [
-      {"label": "No", "value": "no"},
-      {"label": "Yes", "value": "yes"}
+      {"label": "No", "value": 0},
+      {"label": "Yes", "value": 1}
     ]
   },
   {
