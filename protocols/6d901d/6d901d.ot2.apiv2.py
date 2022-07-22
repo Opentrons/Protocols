@@ -1,5 +1,4 @@
 from opentrons import protocol_api
-from opentrons.protocol_api.contexts import InstrumentContext
 
 metadata = {
     'protocolName':
@@ -9,8 +8,6 @@ metadata = {
     'source': 'Protocol Library',
     'apiLevel': '2.11'
     }
-
-tiprack_slots = ['4', '5', '10', '11']
 
 
 def transpose_matrix(m):
@@ -41,17 +38,16 @@ def well_csv_to_list(csv_string):
 
 
 def run(ctx: protocol_api.ProtocolContext):
-
     [volumes_csv,
-     pip_model,
-     pip_mount,
+     p300_mount,
+     p20_mount,
      plate_type,
      res_type,
      filter_tip,
      tip_reuse] = get_values(  # noqa: F821
      "volumes_csv",
-     "pip_model",
-     "pip_mount",
+     "p300_mount",
+     "p20_mount",
      "plate_type",
      "res_type",
      "filter_tip",
@@ -64,38 +60,25 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.load_labware('usascientific_96_wellplate_2.4ml_deep', '8')
     reservoir = ctx.load_labware(res_type, '9')
     source = reservoir.wells()[0]
+    if filter_tip:
+        tips300 = ctx.load_labware('opentrons_96_filtertiprack_200ul', '10')
+        tips20 = ctx.load_labware('opentrons_96_filtertiprack_20ul', '11')
+    else:
+        tips300 = ctx.load_labware('opentrons_96_tiprack_300ul', '10')
+        tips20 = ctx.load_labware('opentrons_96_tiprack_20ul', '11')
 
-    pip_size = pip_model.split('_')[0][1:]
+    m300 = ctx.load_instrument('p300_multi_gen2', p300_mount)
+    m20 = ctx.load_instrument('p20_multi_gen2', p20_mount)
 
-    tip_name = 'opentrons_96_tiprack_'+pip_size+'ul'
-    if filter_tip == 'yes':
-        pip_size = '200' if pip_size == '300' else pip_size
-        tip_name = 'opentrons_96_filtertiprack_'+pip_size+'ul'
+    pick_up_current = 0.15  # 150 mA for single tip
+    ctx._implementation._hw_manager.hardware._attached_instruments[
+      m20._implementation.get_mount()].update_config_item(
+      'pick_up_current', pick_up_current)
 
-    tipracks = [ctx.load_labware(tip_name, slot)
-                for slot in tiprack_slots]
+    tip300ctr = 95
+    tip20ctr = 95
 
-    pipette = ctx.load_instrument(
-        pip_model, pip_mount, tip_racks=tipracks)
-
-    if 'p20' in pip_model:
-        pick_up_current = 0.15  # 150 mA for single tip
-        ctx._implementation._hw_manager.hardware._attached_instruments[
-          pipette._implementation.get_mount()].update_config_item(
-          'pick_up_current', pick_up_current)
-
-    # Tip_map has the columns reversed, pipette always picks up the
-    # bottom-most tip in a given column until the column is depleted, and then
-    # moves to the next column (from left to right).
-    tip_map = []
-    for rack in tipracks:
-        tip_map.append(
-            [[col for col in reversed(column)] for column in rack.columns()])
-    # Flag at the end of each rack that is true if there are tips left
-    for rack in tip_map:
-        rack.append(True)
-
-    def pick_up(pipette: InstrumentContext):
+    def pick_up(pip):
         """`pick_up()` will pause the ctx when all tip boxes are out of
         tips, prompting the user to replace all tip racks. Once tipracks are
         reset, the ctx will start picking up tips from the first tip
@@ -106,18 +89,23 @@ def run(ctx: protocol_api.ProtocolContext):
         :param pipette: The pipette desired to pick up tip
         as definited earlier in the ctx (e.g. p300, m20).
         """
-        for rack in tip_map:
-            # Check the flag to see if the rack is empty, then we don't loop
-            # through that rack so that the algorithm executes faster.
-            if rack[-1] is False:
-                continue
-            for column in rack[:-1]:
-                for well in column:
-                    if well.has_tip:
-                        pipette.pick_up_tip(well)
-                        if well.well_name == 'A12':  # last tip in the rack
-                            rack[-1] = False
-                        return
+        nonlocal tip300ctr
+        nonlocal tip20ctr
+
+        if pip == m300:
+            if tip300ctr < 0:
+                ctx.home()
+                ctx.pause('Please replace tips for P300 in slot 10.')
+                tip300ctr = 95
+            m300.pick_up_tip(tips300.wells()[tip300ctr])
+            tip300ctr -= 1
+        else:
+            if tip20ctr < 0:
+                ctx.home()
+                ctx.pause('Please replace tips for P20 in slot 11.')
+                tip20ctr = 95
+            m20.pick_up_tip(tips20.wells()[tip20ctr])
+            tip20ctr -= 1
 
     # create volumes list
     volumes = [float(cell) for cell in well_csv_to_list(volumes_csv)]
@@ -125,7 +113,7 @@ def run(ctx: protocol_api.ProtocolContext):
     is_warning = False
 
     for vol in volumes:
-        if vol < pipette.min_volume and vol > 1E-6:
+        if vol < 1:
             ctx.comment(
                 'WARNING: volume {} is below pipette\'s minimum volume.'
                 .format(vol))
@@ -136,11 +124,10 @@ def run(ctx: protocol_api.ProtocolContext):
         ctx.pause(
             "One or more minimum volume warnings were detected "
             "Do you wish to continue?\n")
-    if tip_reuse == 'always':
-        pick_up(pipette)
 
     for i, vol in enumerate(volumes):
-        if tip_reuse == 'never':
+        pipette = m20 if vol <= 20 else m300
+        if not pipette.has_tip:
             pick_up(pipette)
         pipette.aspirate(vol, source)
         pipette.dispense(vol, source_plate.wells()[i])
