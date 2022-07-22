@@ -1,9 +1,8 @@
 from opentrons import protocol_api
 
 metadata = {
-    'protocolName':
-        ('Normalization with a multi-channel pipette used as a single-channel '
-         'pipette'),
+    'protocolName': 'Normalization with a multi-channel pipette \
+     used as a single-channel pipette',
     'author': 'Opentrons <protocols@opentrons.com>',
     'source': 'Protocol Library',
     'apiLevel': '2.11'
