@@ -20,8 +20,8 @@ There is an optional [Part 2: Cherrypicking Protocol](https://protocols.opentron
 
 Using the customization fields below, set up your protocol.
 * `Volumes CSV`: Your input CSV specifying the normalization volumes. See the Setup section below for details.
-* `Pipette Model`: Choice of 20- or 300 µL Multi Channel GEN2 pipettes
-* `Pipette Mount`: Left or right pipette mount
+* `P300 Multi Mount`: Select mount for P300 Multi-Channel Pipette
+* `P20 Multi Mount`: Select mount for P20 Multi-Channel Pipette
 * `Plate Type`: Select the model of microwell plate to normalize samples on.
 * `Reservoir Type`: The type of the diluent reservoir. If you are selecting a multi-well reservoir you should place your diluent in well A1.
 * `Use Filter Tips?`: Select whether your pipette will use regular or filter tips.
