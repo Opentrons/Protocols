@@ -119,7 +119,7 @@ def run(ctx):
 
     # index plate
     index_plate = ctx.load_labware(
-     'nest_96_wellplate_100ul_pcr_full_skirt', '8', 'Index Plate')
+     'index_96_aluminumblock_200ul', '8', 'Index Plate')
 
     ctx.comment("\nSTEP - please confirm and resume\n")
 
