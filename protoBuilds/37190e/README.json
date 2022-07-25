@@ -1,0 +1,30 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Sterile Workflows": [
+            "Cell Culture"
+        ]
+    },
+    "deck-setup": " \nTuberack on slot 9:\n* tube A1: drug A\n* tube A2: drug B\n* tube A3: media\n",
+    "description": "This protocol performs a custom cell culture assay on up to 8 flat well plates. Please see these instructions for the exact transfer scheme.\n",
+    "internal": "37190e",
+    "labware": "\nCorning 96 Well Plate 360 \u00b5L Flat, 3650\nOpentrons 10 Tube Rack with NEST 4x50 mL, 6x15 mL Conical\nOpentrons 200\u00b5L Filter Tips\nOpentrons 20\u00b5L Filter Tips\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* Sterile Workflows\n\t* Cell Culture\n\n",
+        "deck-setup": "\n![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/37190e/deck.png)  \n\nTuberack on slot 9:\n* tube A1: drug A\n* tube A2: drug B\n* tube A3: media\n\n---\n\n",
+        "description": "\nThis protocol performs a custom cell culture assay on up to 8 flat well plates. Please see [these instructions](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/37190e/opentrons_media_table.xlsx) for the exact transfer scheme.\n\n---\n\n",
+        "internal": "37190e\n",
+        "labware": "* [Corning 96 Well Plate 360 \u00b5L Flat, 3650](https://ecatalog.corning.com/life-sciences/b2c/US/en/Microplates/Assay-Microplates/96-Well-Microplates/Corning%C2%AE-96-well-Solid-Black-and-White-Polystyrene-Microplates/p/corning96WellSolidBlackAndWhitePolystyreneMicroplates)\n* [Opentrons 10 Tube Rack](https://shop.opentrons.com/4-in-1-tube-rack-set/) with [NEST 4x50 mL](https://shop.opentrons.com/nest-50-ml-centrifuge-tube/), [6x15 mL Conical](https://shop.opentrons.com/nest-15-ml-centrifuge-tube/)\n* [Opentrons 200\u00b5L Filter Tips](https://shop.opentrons.com/opentrons-200ul-filter-tips/)\n* [Opentrons 20\u00b5L Filter Tips](https://shop.opentrons.com/opentrons-20ul-filter-tips/)\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [Opentrons P300 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n* [Opentrons P20 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)\n\n---\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "protocol-steps": "1. Drug A is transferred to the bottom of all wells.\n2. Drug B is transferred to the left of all wells.\n2. Media is transferred to the right of all wells to bring to total volume of 100ul.\n\n",
+        "title": "Cell Culture"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons P300 Single Channel Electronic Pipette (GEN2)\nOpentrons P20 Single Channel Electronic Pipette (GEN2)\n\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "protocol-steps": "\nDrug A is transferred to the bottom of all wells.\nDrug B is transferred to the left of all wells.\nMedia is transferred to the right of all wells to bring to total volume of 100ul.\n",
+    "title": "Cell Culture"
+}
