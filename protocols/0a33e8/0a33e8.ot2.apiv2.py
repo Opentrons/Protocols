@@ -10,8 +10,8 @@ metadata = {
 
 def run(ctx):
 
-    [num_samp, p20_mount] = get_values(  # noqa: F821
-        "num_samp", "p20_mount")
+    [num_samp, m20_mount] = get_values(  # noqa: F821
+        "num_samp", "m20_mount")
 
     if not 1 <= num_samp <= 382:
         raise Exception("Enter a sample number 1-382")
@@ -26,7 +26,7 @@ def run(ctx):
                 for slot in [10, 7, 11, 8]]
 
     # load instrument
-    m20 = ctx.load_instrument('p20_multi_gen2', p20_mount, tip_racks=tipracks)
+    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tipracks)
 
     # mapping
     num_col = math.ceil(num_samp/8)
