@@ -256,12 +256,16 @@ def run(ctx: protocol_api.ProtocolContext):
                 m300.dispense(200, col.top(-2))
                 ctx.delay(seconds=2)
                 m300.blow_out()
+                m300.touch_tip(speed=40)
             m300.aspirate(20, src.top())
             m300.aspirate(140, src)
             m300.slow_tip_withdrawal(10, src, to_surface=True)
             m300.dispense(160, col.top(-2))
             m300.mix(10, 100, col)
+            ctx.delay(seconds=5)
             m300.slow_tip_withdrawal(10, col, to_surface=True)
+            m300.blow_out()
+            m300.touch_tip(speed=40)
             m300.aspirate(10, col.top())
             m300.drop_tip()
 
@@ -411,6 +415,8 @@ def run(ctx: protocol_api.ProtocolContext):
     air_dry_msg = '\nAir drying the beads for 10 minutes. \
     Please add elution buffer at 65C to 12-well reservoir.\n'
     ctx.delay(minutes=10, msg=air_dry_msg)
+    flash_lights()
+    ctx.pause('Please check the Well Plate')
 
     mag_deck.disengage()
     # Add Elution Buffer
@@ -434,6 +440,14 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.set_rail_lights(True)
 
     # Transfer elution to PCR plate
+    for col in mag_samps_h:
+        m300.custom_pick_up()
+        m300.mix(10, 100, col)
+        m300.slow_tip_withdrawal(10, col, to_surface=True)
+        m300.blow_out(col.top(-3))
+        m300.touch_tip(speed=40)
+        m300.drop_tip()
+
     mag_deck.engage()
     mag_msg = '\nIncubating on Mag Deck for 3 minutes\n'
     ctx.delay(minutes=3, msg=mag_msg)
@@ -445,8 +459,13 @@ def run(ctx: protocol_api.ProtocolContext):
 
     flow_rate(asp=20)
     for src, dest, tip in zip(mag_samps, pcr_samps, all_tips[t_start:]):
+        w = int(str(src).split(' ')[0][1:])
+        radi = float(src.width)/4 if src.width is not None else \
+            float(src.diameter)/4
+        x0 = radi if w % 2 == 0 else -radi
         m300.custom_pick_up()
-        m300.aspirate(elution_vol, src)
+        m300.aspirate(
+            elution_vol, src.bottom().move(types.Point(x=x0, y=0, z=1)))
         m300.dispense(elution_vol, dest)
         m300.drop_tip(tip)
 
