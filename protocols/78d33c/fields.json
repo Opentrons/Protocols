@@ -51,7 +51,7 @@
     "type": "float",
     "label": "Engage Height for Magnetic Module (mm from base of labware)",
     "name": "height_engage",
-    "default": 11.5
+    "default": 11.25
   },
   {
     "type": "int",
