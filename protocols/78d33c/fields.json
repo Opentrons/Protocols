@@ -37,6 +37,12 @@
   },
   {
     "type": "float",
+    "label": "Well Bottom Clearance for 12-Well Reservoir (mm)",
+    "name": "clearance_12wellreservoir",
+    "default": 1
+  },
+  {
+    "type": "float",
     "label": "Well Bottom Clearance for Reservoir (mm)",
     "name": "clearance_reservoir",
     "default": 1

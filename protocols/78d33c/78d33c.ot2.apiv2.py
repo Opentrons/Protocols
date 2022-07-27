@@ -15,11 +15,11 @@ def run(ctx):
     # get parameter values from json above
     [incubate_samples_with_beads, temp_mod_setting,
      clearance_bead_resuspension, offset_x_resuspension, count_samples,
-     clearance_12wellreservoir, height_engage, time_engage, offset_x,
-     time_dry] = get_values(  # noqa: F821
+     clearance_12wellreservoir, clearance_12wellreservoir, height_engage,
+     time_engage, offset_x, time_dry] = get_values(  # noqa: F821
       'incubate_samples_with_beads', 'temp_mod_setting',
-      'clearance_bead_resuspension',
-      'offset_x_resuspension', 'count_samples', 'clearance_12wellreservoir',
+      'clearance_bead_resuspension', 'offset_x_resuspension', 'count_samples',
+      'clearance_12wellreservoir', 'clearance_12wellreservoir',
       'height_engage', 'time_engage', 'offset_x', 'time_dry')
 
     ctx.set_rail_lights(True)
