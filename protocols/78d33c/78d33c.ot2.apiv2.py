@@ -13,13 +13,13 @@ metadata = {
 def run(ctx):
 
     # get parameter values from json above
-    [incubate_samples_with_beads, temp_mod_setting, manual_bead_resuspension,
+    [incubate_samples_with_beads, temp_mod_setting,
      clearance_bead_resuspension, offset_x_resuspension, count_samples,
-     clearance_reservoir, height_engage, time_engage, offset_x,
-     time_dry] = get_values(  # noqa: F821
+     clearance_12wellreservoir, clearance_12wellreservoir, height_engage,
+     time_engage, offset_x, time_dry] = get_values(  # noqa: F821
       'incubate_samples_with_beads', 'temp_mod_setting',
-      'manual_bead_resuspension', 'clearance_bead_resuspension',
-      'offset_x_resuspension', 'count_samples', 'clearance_reservoir',
+      'clearance_bead_resuspension', 'offset_x_resuspension', 'count_samples',
+      'clearance_12wellreservoir', 'clearance_12wellreservoir',
       'height_engage', 'time_engage', 'offset_x', 'time_dry')
 
     ctx.set_rail_lights(True)
@@ -141,6 +141,7 @@ def run(ctx):
 
     beads = reservoir.columns()[:3]
     fill_cols(beads, 10000, 1512, num_cols, 126, "beads")
+    deadvol_res = 1512
 
     tris = reservoir.wells()[-1]
 
@@ -149,13 +150,13 @@ def run(ctx):
      'nest_1_reservoir_195ml', '6', '80 percent etoh').wells()[0]
     liq_volume([etoh], 48000)
     waste = ctx.load_labware(
-     'nest_1_reservoir_195ml', '4', '80 percent etoh').wells()[0]
+     'nest_1_reservoir_195ml', '4', 'Waste').wells()[0]
 
     # input samples
     temp = ctx.load_module('temperature module gen2', '3')
-    plate2 = temp.load_labware(
+    output_plate = temp.load_labware(
      'eppendorf_twintec_on_opentrons_metal_block_033822',
-     "Plate 2 at 4 Degrees C")
+     "Output plate at 4 Degrees C")
     if temp_mod_setting:
         temp.set_temperature(temp_mod_setting)
 
@@ -177,28 +178,36 @@ def run(ctx):
 
         pick_up_or_refill(p300m)
 
-        if source.liq_vol <= 1512:
+        if source.liq_vol <= deadvol_res:
             source = next(beadwell)
+
             ht_premix = liq_height(source) + 3
+
+            # premix beads - aspirate low, dispense high
             for rep in range(5):
                 p300m.aspirate(
-                 200, source.bottom(clearance_reservoir), rate=0.5)
+                 200, source.bottom(clearance_12wellreservoir), rate=0.5)
                 p300m.dispense(200, source.bottom(ht_premix), rate=0.5)
 
-        source.liq_vol -= 1008
-        ht = liq_height(source) - 3 if liq_height(source) - 3 > 1 else 1
-
+        # extra bead premix prior to the first usage
         if index == 0:
             ht_premix = liq_height(source) + 3
             for rep in range(5):
                 p300m.aspirate(
-                 200, source.bottom(clearance_reservoir), rate=0.5)
+                 200, source.bottom(clearance_12wellreservoir), rate=0.5)
                 p300m.dispense(200, source.bottom(ht_premix), rate=0.5)
+
+        # aspirate beads - use tip height avoiding overimmersion
+        source.liq_vol -= 126*p300m.channels
+        ht = liq_height(source) - 3 if liq_height(source) - 3 > 1 else 1
 
         p300m.aspirate(
          126, source.bottom(ht), rate=0.5)
         ctx.delay(seconds=1)
+        # tip departs slowly to minimize beads on tip exterior
         slow_tip_withdrawal(p300m, source)
+
+        # side tip touch in reservoir - minimize beads on tip exterior
         p300m.move_to(
          source.top(-2).move(types.Point(x=source.length / 2, y=0, z=0)))
         p300m.move_to(source.top())
@@ -209,6 +218,7 @@ def run(ctx):
             p300m.aspirate(149, column[0].bottom(4))
             p300m.dispense(149, column[0].bottom(4))
 
+        # side tip touch after dispense - minimize beads on tip exterior
         p300m.move_to(
          column[0].top(-2).move(types.Point(
           x=column[0].diameter / 2, y=0, z=0)))
@@ -226,13 +236,22 @@ def run(ctx):
     # remove supernatant
     for index, column in enumerate(mag_plate.columns()[:num_cols]):
         pick_up_or_refill(p300m)
+
         p300m.aspirate(200, column[0].bottom(4), rate=0.33)
+
         p300m.dispense(200, waste.top())
         p300m.move_to(column[0].top())
         p300m.air_gap(20)
-        p300m.aspirate(
-         50, column[0].bottom(1).move(types.Point(
-          x={True: -1}.get(not index % 2, 1)*offset_x, y=0, z=0)), rate=0.33)
+
+        # to avoid beads - left if index is even, right if odd
+        direction = -1 if not index % 2 else 1
+
+        # apply move of magntidue x_offset to the location for aspiration
+        loc_asp = column[0].bottom(1).move(types.Point(
+         x=direction*offset_x, y=0, z=0))
+
+        p300m.aspirate(50, loc_asp, rate=0.33)
+
         p300m.dispense(70, waste.top(), rate=2)
         ctx.delay(seconds=1)
         p300m.blow_out()
@@ -242,39 +261,57 @@ def run(ctx):
         # add ethanol
         pick_up_or_refill(p300m, 300)
         for column in mag_plate.columns()[:num_cols]:
-            etoh.liq_vol -= 1600
+
+            etoh.liq_vol -= 200*p300m.channels
             ht = liq_height(etoh) - 3 if liq_height(etoh) - 3 > 1 else 1
+
             p300m.aspirate(200, etoh.bottom(ht))
             p300m.air_gap(20)
+
             p300m.dispense(220, column[0].top())
             ctx.delay(seconds=0.5)
             p300m.blow_out()
             p300m.air_gap(20)
-        p300m.drop_tip()
 
         ctx.delay(seconds=30)
 
         # remove sup
         for index, column in enumerate(mag_plate.columns()[:num_cols]):
-            pick_up_or_refill(p300m, 300)
-            loc = column[0].bottom(1).move(types.Point(x={True: -1}.get(
-              not index % 2, 1)*offset_x, y=0, z=0))
+            if not p300m.has_tip:
+                pick_up_or_refill(p300m, 300)
+
+            # to avoid beads - left if index is even, right if odd
+            direction = -1 if not index % 2 else 1
+
+            # apply move of magnitude x_offset to the location for aspiration
+            loc_asp = column[0].bottom(1).move(types.Point(
+             x=direction*offset_x, y=0, z=0))
+
             p300m.aspirate(180, column[0].bottom(4), rate=0.2)
-            p300m.aspirate(50, loc, rate=0.2)
+            p300m.aspirate(50, loc_asp, rate=0.2)
             p300m.air_gap(20)
+
             p300m.dispense(250, waste.top())
             ctx.delay(seconds=0.5)
             p300m.blow_out()
             p300m.air_gap(20)
+
             p300m.drop_tip()
 
         # to improve completeness of removal
         for index, column in enumerate(mag_plate.columns()[:num_cols]):
             pick_up_or_refill(p300m)
             for clearance in [0.7, 0.4, 0.2, 0]:
-                loc = column[0].bottom(clearance).move(types.Point(
-                 x={True: -1}.get(not index % 2, 1)*offset_x, y=0, z=0))
-                p300m.aspirate(25, loc)
+
+                # to avoid beads - left if index is even, right if odd
+                direction = -1 if not index % 2 else 1
+
+                # apply move of magntidue x_offset to the location for asp
+                loc_asp = column[0].bottom(clearance).move(types.Point(
+                 x=direction*offset_x, y=0, z=0))
+
+                p300m.aspirate(25, loc_asp)
+
             p300m.drop_tip()
 
     # air dry bead pellets
@@ -285,69 +322,89 @@ def run(ctx):
     # resuspend bead pellet in Tris
     for index, column in enumerate(mag_plate.columns()[:num_cols]):
         p20m.pick_up_tip()
-        p20m.aspirate(16, tris.bottom(clearance_reservoir))
-        loc = column[0].bottom(clearance_bead_resuspension).move(types.Point(
-          x={True: 1}.get(not index % 2, -1)*offset_x_resuspension, y=0, z=0))
-        p20m.dispense(16, loc, rate=3)
-        if not manual_bead_resuspension:
-            for rep in range(10):
-                p20m.aspirate(16, column[0].bottom(1))
-                rt = 3 if rep < 9 else 0.5
-                p20m.dispense(16, loc, rate=rt)
-                if rep == 9:
-                    ctx.delay(seconds=1)
-                    slow_tip_withdrawal(p20m, column[0])
-                    p20m.move_to(
-                     column[0].top(-2).move(types.Point(
-                      x=column[0].diameter / 2, y=0, z=0)))
-                    p20m.blow_out()
-                    p20m.move_to(column[0].top())
+
+        p20m.aspirate(16, tris.bottom(clearance_12wellreservoir))
+
+        # to target beads - right if index is even, left if odd
+        direction = 1 if not index % 2 else -1
+
+        # apply move of magntidue x_offset to the location for dispense
+        loc_disp = column[0].bottom(clearance_bead_resuspension).move(
+         types.Point(x=direction*offset_x_resuspension, y=0, z=0))
+
+        # resuspend beads
+        p20m.dispense(16, loc_disp, rate=3)
+        for rep in range(10):
+
+            p20m.aspirate(16, column[0].bottom(1))
+
+            # dispense rate 3x default except 0.5X default for last mix
+            rt = 3 if rep < 9 else 0.5
+            p20m.dispense(16, loc_disp, rate=rt)
+
+            # delay and slow depart after last mix
+            if rep == 9:
+                ctx.delay(seconds=1)
+                slow_tip_withdrawal(p20m, column[0])
+
+                # side touch to minimize beads on tip exterior
+                p20m.move_to(
+                 column[0].top(-2).move(types.Point(
+                  x=column[0].diameter / 2, y=0, z=0)))
+                p20m.blow_out()
+                p20m.move_to(column[0].top())
+
         p20m.drop_tip()
 
-    if manual_bead_resuspension:
-        ctx.pause("""Cover, vortex, spin, incubate,
-        uncover and return the plate. Resume""")
-    else:
-        ctx.delay(minutes=2)
+    ctx.delay(minutes=2)
 
     mag.engage(height=height_engage)
     ctx.delay(minutes=time_engage)
 
     # combine Fragmentation Master Mix and eluted sample
     pick_up_or_refill(p20m)
-    for chunk in create_chunks(plate2.columns()[:num_cols], 4):
+
+    # adding fragmentation mastermix to output plate
+    for chunk in create_chunks(output_plate.columns()[:num_cols], 4):
+
         p20m.aspirate(4*len(chunk)+4, fragmentation_mm[0])
+
         for column in chunk:
             p20m.dispense(4, column[0])
+
         p20m.dispense(4, fragmentation_mm[0])
+
     p20m.drop_tip()
 
     p20m.flow_rate.aspirate = 3.5
 
+    # transfer eluate to output plate and mix
     for index, column in enumerate(mag_plate.columns()[:num_cols]):
         pick_up_or_refill(p20m)
 
+        # to avoid beads - left if index is even, right if odd
+        direction = -1 if not index % 2 else 1
+
+        # apply move of magntidue x_offset to the location for aspiration
         loc_asp = column[0].bottom(1).move(types.Point(
-          x={True: -1}.get(not index % 2, 1)*offset_x, y=0, z=0))
+         x=direction*offset_x, y=0, z=0))
 
         p20m.aspirate(14, loc_asp)
 
         p20m.move_to(loc_asp.move(types.Point(x=0, y=0, z=1)))
         ctx.delay(seconds=1)
 
-        p20m.dispense(14, plate2.columns()[index][0].bottom(1))
+        p20m.dispense(14, output_plate.columns()[index][0].bottom(1))
 
         for rep in range(5):
-            p20m.aspirate(11, plate2.columns()[index][0].bottom(1))
-            p20m.dispense(11, plate2.columns()[index][0].bottom(1))
+            p20m.aspirate(11, output_plate.columns()[index][0].bottom(1))
+            p20m.dispense(11, output_plate.columns()[index][0].bottom(1))
 
         p20m.blow_out()
         p20m.drop_tip()
 
-    p20m.flow_rate.aspirate = 7.6
-
     mag.disengage()
 
     ctx.comment(
-     '''Remove Plate2 on the Temperature Module for off-deck cycler steps.
+     '''Remove output plate on the Temperature Module for off-deck cycler steps.
      Then continue to DNA-PRE-PCR-2 Adapter Ligation protocol.''')

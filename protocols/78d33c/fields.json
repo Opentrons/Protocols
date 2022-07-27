@@ -18,15 +18,6 @@
     ]
   },
   {
-    "type": "dropDown",
-    "label": "Manual Bead Pellet Resuspension? (yes or no)",
-    "name": "manual_bead_resuspension",
-    "options": [
-      { "label": "YES - pause for manual bead pellet resuspension", "value": true },
-      { "label": "NO - use automated bead pellet resuspension steps", "value": false }
-    ]
-  },
-  {
     "type": "float",
     "label": "Well Bottom Clearance for Bead Pellet Resuspension (mm)",
     "name": "clearance_bead_resuspension",
@@ -43,6 +34,12 @@
     "label": "Number of Samples (1-96)",
     "name": "count_samples",
     "default": 96
+  },
+  {
+    "type": "float",
+    "label": "Well Bottom Clearance for 12-Well Reservoir (mm)",
+    "name": "clearance_12wellreservoir",
+    "default": 1
   },
   {
     "type": "float",
