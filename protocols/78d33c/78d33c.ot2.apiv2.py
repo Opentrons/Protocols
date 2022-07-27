@@ -120,13 +120,13 @@ def run(ctx):
 
     # tips, p20 multi, p300 multi
     tips20 = [ctx.load_labware(
-     "opentrons_96_filtertiprack_20ul", str(slot)) for slot in [10, 11]]
+     "opentrons_96_filtertiprack_20ul", str(slot)) for slot in [6, 9]]
     p20m = ctx.load_instrument(
         "p20_multi_gen2", 'left', tip_racks=tips20)
-    tips200 = [
-     ctx.load_labware(
-      "opentrons_96_filtertiprack_200ul", str(slot)) for slot in [7, 8]]
-    tips300 = ctx.load_labware("opentrons_96_tiprack_300ul", 9)
+    tips200 = [ctx.load_labware(
+      "opentrons_96_filtertiprack_200ul", str(slot)) for slot in [5]]
+    tips300 = [ctx.load_labware(
+     "opentrons_96_tiprack_300ul", str(slot)) for slot in [10, 11]]
     tipCtr = 0
     p300m = ctx.load_instrument(
         "p300_multi_gen2", 'right', tip_racks=tips200)
