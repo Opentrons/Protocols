@@ -10,23 +10,28 @@ metadata = {
 def run(ctx):
 
     [input_csv, p20_type, p20_mount, p300_type, p300_mount, source_type,
-     dest_type, reservoir_type] = get_values(  # noqa: F821
+     using_tempdeck, dest_type, reservoir_type] = get_values(  # noqa: F821
         'input_csv', 'p20_type', 'p20_mount', 'p300_type', 'p300_mount',
-        'source_type', 'dest_type', 'reservoir_type')
+        'source_type', 'using_tempdeck', 'dest_type', 'reservoir_type')
 
     # labware
-    source_plate = ctx.load_labware(source_type, '1', 'source plate')
+    if using_tempdeck:
+        tempdeck = ctx.load_module('temperature module gen2', '1')
+        tempdeck.set_temperature(4)
+        source_plate = tempdeck.load_labware(source_type, 'source plate')
+    else:
+        source_plate = ctx.load_labware(source_type, '1', 'source plate')
     destination_plate = ctx.load_labware(dest_type, '2', 'destination plate')
-    tiprack20 = [
-        ctx.load_labware('opentrons_96_tiprack_20ul', slot, '20ul tiprack')
-        for slot in ['3', '6']
-    ]
     water = ctx.load_labware(
         reservoir_type, '5',
         'reservoir for water (position A1)').wells()[0].bottom(1)
+    tiprack20 = [
+        ctx.load_labware('opentrons_96_tiprack_20ul', slot, '20ul tiprack')
+        for slot in ['3']
+    ]
     tiprack300 = [
         ctx.load_labware('opentrons_96_tiprack_300ul', slot, '300ul tiprack')
-        for slot in ['8', '9']
+        for slot in ['6']
     ]
 
     # pipettes
@@ -63,7 +68,8 @@ def run(ctx):
             pip.drop_tip()
 
     # perform normalization
-    for s, d, vol_s, vol_w in data:
+    for line in data:
+        s, d, vol_s, vol_w = line[:4]
         if not vol_s:
             vol_s = 0
         else:
