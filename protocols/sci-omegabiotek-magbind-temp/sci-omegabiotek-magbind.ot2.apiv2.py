@@ -200,7 +200,8 @@ resuming.')
             _drop(m300)
         m300.flow_rate.aspirate = 150
 
-    def resuspend(location, reps, vol, method='mix', samples=mag_samples_m):
+    def resuspend_beads(location, reps, vol, method='mix',
+                        samples=mag_samples_m):
 
         if method == 'shake':
             pass
@@ -298,8 +299,6 @@ resuming.')
         vol_per_trans = vol/num_trans
         for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
             _pick_up(m300)
-            side = 1 if i % 2 == 0 else -1
-            loc = m.bottom(0.5).move(Point(x=side*2))
             src = source[i//(12//len(source))]
             for n in range(num_trans):
                 if m300.current_volume > 0:
@@ -309,7 +308,7 @@ resuming.')
                 if n < num_trans - 1:  # only air_gap if going back to source
                     m300.air_gap(20)
             if resuspend:
-                resuspend(m, mix_reps, 150)
+                resuspend_beads(m, mix_reps, 150)
             m300.blow_out(m.top())
             m300.air_gap(20)
             if park:
@@ -347,7 +346,7 @@ resuming.')
             m300.aspirate(vol, elution_solution)
             m300.move_to(m.center())
             m300.dispense(vol, loc)
-            resuspend(m, mix_reps, elution_vol*0.7)
+            resuspend_beads(m, mix_reps, elution_vol*0.7)
             m300.blow_out(m.bottom(5))
             m300.air_gap(20)
             if park:
