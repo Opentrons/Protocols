@@ -37,6 +37,7 @@ def run(ctx: protocol_api.ProtocolContext):
      _mag_time,
      _air_dry,
      _samp_labware,
+     _asp_ht,
      _fin_wash,
      _elution_vol
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
@@ -46,6 +47,7 @@ def run(ctx: protocol_api.ProtocolContext):
          '_mag_time',
          '_air_dry',
          '_samp_labware',
+         '_asp_ht',
          '_fin_wash',
          '_elution_vol')
 
@@ -62,6 +64,7 @@ def run(ctx: protocol_api.ProtocolContext):
     mag_time = _mag_time
     air_dry = _air_dry
     fin_wash = _fin_wash
+    asp_ht = _asp_ht
 
     # m300_mount = 'left'
     # num_cols = 1
@@ -350,17 +353,18 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.comment('\nTransferring 500uL of sample to plate on MagDeck\n')
 
     flow_rate(asp=20)
+    ht = asp_ht if samp_labware == 'qiagen_96_tuberack_1200ul' else 1
     for src, dest in zip(init_samps, mag_samps_h):
         m300.custom_pick_up()
         for i in range(2):
             m300.aspirate(20, src.top())
-            m300.aspirate(180, src)
+            m300.aspirate(180, src.bottom(ht))
             m300.slow_tip_withdrawal(10, src)
             m300.dispense_h(180, dest)
             m300.slow_tip_withdrawal(10, dest, to_surface=True)
             m300.dispense(20, dest.bottom(5))
         m300.aspirate(20, src.top())
-        m300.aspirate(140, src)
+        m300.aspirate(140, src.bottom(ht))
         m300.dispense_h(140, dest)
         m300.slow_tip_withdrawal(10, dest, to_surface=True)
         m300.dispense(20, dest.bottom(5))
