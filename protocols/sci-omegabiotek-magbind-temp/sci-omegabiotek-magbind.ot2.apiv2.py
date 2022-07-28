@@ -39,6 +39,9 @@ def run(ctx):
     settling_time = 5
     tip_track = False
 
+    radial_offset_fraction = 0.5
+    z_offset = 1.0
+
     """
     Here is where you can change the locations of your labware and modules
     (note that this is the recommended configuration)
@@ -77,13 +80,13 @@ def run(ctx):
     """
     Here is where you can define the locations of your reagents.
     """
-    binding_buffer = res1.wells()[:2]
     elution_solution = res1.wells()[-1]
     wash1 = res1.wells()[2:4]
     wash2 = res1.wells()[4:6]
     wash3 = res1.wells()[6:8]
 
     mag_samples_m = magplate.rows()[0][:num_cols]
+    radius = mag_samples_m[0].width/2
     elution_samples_m = elutionplate.rows()[0][:num_cols]
 
     # magdeck.disengage()  # just in case
@@ -197,6 +200,23 @@ resuming.')
             _drop(m300)
         m300.flow_rate.aspirate = 150
 
+    def resuspend(location, reps, vol, method='mix', samples=mag_samples_m):
+
+        if method == 'shake':
+            pass
+        elif 'mix' in method:
+            m300.flow_rate.aspirate *= 4
+            m300.flow_rate.dispense *= 4
+            side = 1 if samples.index(location) % 2 == 0 else -1
+            bead_loc = location.bottom().move(
+                Point(x=side*radius*radial_offset_fraction, z=z_offset))
+            m300.move_to(location.center())
+            for _ in range(reps):
+                m300.aspirate(vol, bead_loc)
+                m300.dispense(vol, bead_loc)
+            m300.flow_rate.aspirate /= 4
+            m300.flow_rate.dispense /= 4
+
     def bind(vol, park=True):
         """`bind` will bind magnetic beads on each sample in deepwell plate.
 
@@ -289,7 +309,7 @@ resuming.')
                 if n < num_trans - 1:  # only air_gap if going back to source
                     m300.air_gap(20)
             if resuspend:
-                m300.mix(mix_reps, 150, loc)
+                resuspend(m, mix_reps, 150)
             m300.blow_out(m.top())
             m300.air_gap(20)
             if park:
@@ -327,7 +347,7 @@ resuming.')
             m300.aspirate(vol, elution_solution)
             m300.move_to(m.center())
             m300.dispense(vol, loc)
-            m300.mix(mix_reps, 0.8*vol, loc)
+            resuspend(m, mix_reps, elution_vol*0.7)
             m300.blow_out(m.bottom(5))
             m300.air_gap(20)
             if park:
