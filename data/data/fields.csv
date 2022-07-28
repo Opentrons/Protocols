@@ -359,7 +359,7 @@ elution_scan,2
 elution_slot_scan,2
 elution_transfer_vol,2
 elution_type,1
-elution_vol,29
+elution_vol,30
 em,1
 empty_vial_well,3
 end_col,1
@@ -599,14 +599,14 @@ lysis_vol,1
 m10_mount,2
 m1k,1
 m20_mount,67
-m300_mount,71
+m300_mount,72
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
 mag_bead_mix_resuspend_vol,1
 mag_engage_height,3
 mag_engage_time,2
-mag_gen,12
+mag_gen,13
 mag_height,13
 mag_height_1,1
 mag_mod,2
@@ -765,7 +765,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,118
+num_samples,119
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -873,7 +873,7 @@ p5_mix_vol,1
 p_csv,1
 pan_dil,1
 park,2
-park_tips,26
+park_tips,27
 patient_sample_count,1
 patient_sample_vol,1
 pbs_dispense_rate,1
@@ -1160,7 +1160,7 @@ starting_tip_col,1
 starting_tip_position,1
 starting_tip_well,1
 starting_tiprack_slot,1
-starting_vol,23
+starting_vol,24
 starting_volume,1
 starting_well,1
 starttip,1
