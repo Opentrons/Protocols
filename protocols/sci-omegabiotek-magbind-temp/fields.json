@@ -3,13 +3,7 @@
       "type": "int",
       "label": "Number of Samples",
       "name": "num_samples",
-      "default": 24
-  },
-  {
-    "type": "int",
-    "label": "Starting Volume",
-    "name": "starting_vol",
-    "default": 50
+      "default": 16
   },
   {
     "type": "int",
