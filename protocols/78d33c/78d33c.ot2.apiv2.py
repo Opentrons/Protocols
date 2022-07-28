@@ -38,15 +38,15 @@ def run(ctx):
             if vol == 200:
                 pip.pick_up_tip()
             else:
-                if tipCtr < len(tips300.rows()[0]):
-                    pip.pick_up_tip(tips300.rows()[0][tipCtr])
+                if tipCtr < len(tiplist):
+                    pip.pick_up_tip(tiplist[tipCtr])
                     tipCtr += 1
                 else:
                     tipCtr = 0
                     ctx.pause(
-                     """Please Refill the 300 uL Tip Box
+                     """Please Refill the 300 uL Tip Boxes
                      and Empty the Tip Waste""")
-                    pip.pick_up_tip(tips300.rows()[0][tipCtr])
+                    pip.pick_up_tip(tiplist[tipCtr])
                     tipCtr += 1
         except OutOfTipsError:
             ctx.pause(
@@ -120,14 +120,17 @@ def run(ctx):
 
     # tips, p20 multi, p300 multi
     tips20 = [ctx.load_labware(
-     "opentrons_96_filtertiprack_20ul", str(slot)) for slot in [10, 11]]
+     "opentrons_96_filtertiprack_20ul", str(slot)) for slot in [6, 9]]
     p20m = ctx.load_instrument(
         "p20_multi_gen2", 'left', tip_racks=tips20)
-    tips200 = [
-     ctx.load_labware(
-      "opentrons_96_filtertiprack_200ul", str(slot)) for slot in [7, 8]]
-    tips300 = ctx.load_labware("opentrons_96_tiprack_300ul", 9)
+    tips200 = [ctx.load_labware(
+      "opentrons_96_filtertiprack_200ul", str(slot)) for slot in [5]]
+    tips300 = [ctx.load_labware(
+     "opentrons_96_tiprack_300ul", str(slot)) for slot in [10, 11]]
     tipCtr = 0
+    tiplist = []
+    for box in tips300:
+        tiplist.extend(box.rows()[0])
     p300m = ctx.load_instrument(
         "p300_multi_gen2", 'right', tip_racks=tips200)
 
@@ -137,7 +140,7 @@ def run(ctx):
     [fragmentation_mm] = [reagents.columns()[index] for index in [0]]
 
     # reservoir for beads and tris
-    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '5', 'Reservoir')
+    reservoir = ctx.load_labware('nest_12_reservoir_15ml', '8', 'Reservoir')
 
     beads = reservoir.columns()[:3]
     fill_cols(beads, 10000, 1512, num_cols, 126, "beads")
@@ -147,7 +150,7 @@ def run(ctx):
 
     # reservoir for 80 percent ethanol
     etoh = ctx.load_labware(
-     'nest_1_reservoir_195ml', '6', '80 percent etoh').wells()[0]
+     'nest_1_reservoir_195ml', '7', '80 percent etoh').wells()[0]
     liq_volume([etoh], 48000)
     waste = ctx.load_labware(
      'nest_1_reservoir_195ml', '4', 'Waste').wells()[0]

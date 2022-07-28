@@ -1,0 +1,35 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "Sample Prep": [
+            "Pooling"
+        ]
+    },
+    "deck-setup": "\n",
+    "description": "This protocol performs a custom sample pooling from a source PCR plate to a 1.5, 2, or 5ml Eppendorf tube. Sample locations and volumes are specified via .csv file in the following format, including the header line (empty lines ignored):\nsource plate well,volume sample (\u00b5l)\nA1, 28\nC4, 12\nThe proper pipette for a given volume is automatically calculated. Tips are changed for each transfer.\nYou can download an example .csv to edit directly here.\n",
+    "internal": "pooling",
+    "labware": "\nEppendorf\u2122 96-Well twin.tec\u2122 PCR Plate 250\u00b5l\nOpentrons 20\u00b5l and 300\u00b5l tipracks\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n",
+        "categories": "* Sample Prep\n\t* Pooling\n\n",
+        "deck-setup": "\n![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/pooling/pooling.png)\n\n---\n\n",
+        "description": "This protocol performs a custom sample pooling from a source PCR plate to a 1.5, 2, or 5ml Eppendorf tube. Sample locations and volumes are specified via .csv file in the following format, including the header line (empty lines ignored):\n\n```\nsource plate well,volume sample (\u00b5l)\nA1, 28\nC4, 12\n```\n\nThe proper pipette for a given volume is automatically calculated. Tips are changed for each transfer.\n\nYou can download an example .csv to edit directly [here](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/pooling/ex.csv).\n\n---\n\n",
+        "internal": "pooling\n",
+        "labware": "* [Eppendorf\u2122 96-Well twin.tec\u2122 PCR Plate 250\u00b5l](https://www.fishersci.com/shop/products/eppendorf-96-well-twin-tec-pcr-plates-21/e951020389)\n* [Opentrons 20\u00b5l and 300\u00b5l tipracks](https://shop.opentrons.com/collections/opentrons-tips)\n\n",
+        "modules": "* [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)\n* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)\n* [Thermocycler Module](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module)\n* [HEPA Module](https://shop.opentrons.com/collections/hardware-modules/products/hepa-module)\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [Opentrons P20 and P300 GEN2 single-channel pipettes](https://shop.opentrons.com/collections/ot-2-pipettes/products/single-channel-electronic-pipette)\n\n---\n\n",
+        "process": "1. Input the normalization .csv file, and the respective mount sides for your P10 and P50 GEN1 single-channel pipettes.\n2. Download your protocol.\n3. Upload your protocol into the [OT App](https://opentrons.com/ot-app).\n4. Set up your deck according to the deck map.\n5. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n6. Hit \"Run\".\n\n",
+        "title": "Pooling from .csv"
+    },
+    "modules": [
+        "Temperature Module (GEN2)",
+        "Magnetic Module (GEN2)",
+        "Thermocycler Module",
+        "HEPA Module"
+    ],
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nOpentrons P20 and P300 GEN2 single-channel pipettes\n\n",
+    "process": "\nInput the normalization .csv file, and the respective mount sides for your P10 and P50 GEN1 single-channel pipettes.\nDownload your protocol.\nUpload your protocol into the OT App.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit \"Run\".\n",
+    "title": "Pooling from .csv"
+}

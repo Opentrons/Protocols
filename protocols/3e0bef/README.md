@@ -15,10 +15,15 @@ Using the [P300 8-Channel Pipette, GEN2](https://shop.opentrons.com/8-channel-el
 Explanation of complex parameters below:
 * **Pipette Mount**: Select which mount (left or right) the [P300 8-Channel Pipette, GEN2](https://shop.opentrons.com/8-channel-electronic-pipette/) is attached to.
 * **Number of Samples**: Specify the number of samples (1-96). Please note ~ because the 8-channel pipette is used in this protocol, any number will be rounded up to 8.
-* **Labware for Input Samples**: Type the [API load name](https://support.opentrons.com/en/articles/3136506-using-labware-in-your-protocols) of the labware containing samples.
+* **Binding Time (minutes)**: Specify the number of minutes for binding, prior to the first supernatant removal. Please note that this is an estimate, as there will be continuous mixing throughout this step.
+* **MagDeck Incubation (minutes)**: Specify the number of minutes to delay the robot, while the MagDeck is engaged.
+* **Air Dry Time (minutes)**: Specify the number of minutes for air drying after the final wash step.
+* **Labware for Samples Input**: Select the labware that will contain the samples from the drop down.
+* **[QIAGEN ONLY] Aspiration Height**: Specify the height (in mm) from the bead to aspirate from (3mm is the default)
+* **Final Wash Removal (in µL)**: Specify the volume for the supernatant removal step during the final wash.
 * **Elution Volume (in µL)**: The volume of Elution Buffer added to each well. Please note ~ [the written protocol](https://s3.amazonaws.com/pf-upload-01/u-4256/0/2021-12-14/kf03tt7/Omega%20BioTek%20Mag-Bind%20Plant%20DNA%20extraction%20automation%20protocol.pdf) states 100-200µL and this protocol has been designed accordingly.
 
-*Note*: This protocol was updated on May 7th, 2022
+*Note*: This protocol was last updated on July 28th, 2022
 
 ---
 
