@@ -87,7 +87,7 @@ def run(ctx):
     elution_samples_m = elutionplate.rows()[0][:num_cols]
 
     # magdeck.disengage()  # just in case
-    tempdeck.set_temperature(4)
+    tempdeck.deactivate()
 
     m300.flow_rate.aspirate = 50
     m300.flow_rate.dispense = 150
@@ -340,6 +340,8 @@ resuming.')
         magdeck.engage(height=MAG_HEIGHT)
         ctx.delay(minutes=2, msg='Incubating on MagDeck for \
 ' + str(settling_time) + ' minutes.')
+
+        tempdeck.set_temperature(4)
 
         for i, (m, e, spot) in enumerate(
                 zip(mag_samples_m, elution_samples_m, parking_spots)):
