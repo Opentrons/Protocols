@@ -130,6 +130,7 @@ cleanup_stage,1
 clearance,2
 clearance_1,1
 clearance_11,1
+clearance_12wellreservoir,1
 clearance_2,1
 clearance_3,1
 clearance_4,1
@@ -204,7 +205,11 @@ conc_target,1
 control_plate,1
 count_mix,1
 count_plates,1
-count_samples,18
+count_samples,19
+count_samples_rowa,1
+count_samples_rowb,1
+count_samples_rowc,1
+count_samples_rowd,1
 csv,6
 csv1_buff,1
 csv1_samp,1
@@ -261,7 +266,7 @@ dest_plate_type,1
 dest_slot,1
 dest_start_col,1
 dest_temp_mod_lname,1
-dest_type,3
+dest_type,4
 dest_well_plate_tmod,1
 destdilvol,1
 destination_plate_lname,1
@@ -329,7 +334,7 @@ dry_on_temperature_module,1
 dry_time,15
 drying_time,2
 drying_time_in_minutes,2
-dryrun,5
+dryrun,6
 ds_520,1
 ds_540,1
 ds_570,1
@@ -474,7 +479,7 @@ init_vol_buff3,1
 init_vol_dil,1
 initial_denaturation_cycles,1
 initial_vol,1
-input_csv,14
+input_csv,15
 input_file,10
 input_file2,6
 input_labware,1
@@ -593,7 +598,7 @@ lysis,1
 lysis_vol,1
 m10_mount,2
 m1k,1
-m20_mount,66
+m20_mount,67
 m300_mount,71
 m300_type,2
 m_mount,1
@@ -612,7 +617,7 @@ mag_time,1
 magdeck_gen,2
 magmod,2
 magplate_offset,1
-manual_bead_resuspension,3
+manual_bead_resuspension,2
 master_mix_csv,3
 master_mix_range,1
 master_mix_volume,1
@@ -720,13 +725,14 @@ na_oh_volume,1
 na_oh_wash_yn,1
 nc,1
 new_tip,1
+ngsmag,1
 no_cycles,2
 no_of_samps,2
 no_plates,2
 no_samps,2
 noblank,1
 noce,1
-nomodules,5
+nomodules,6
 norep,1
 norm_data,1
 np,1
@@ -754,7 +760,7 @@ num_reps,1
 num_row,1
 num_rows_a,1
 num_rows_b,1
-num_samp,50
+num_samp,51
 num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
@@ -786,8 +792,8 @@ numvisbys,1
 occupied_well_csv1,5
 occupied_well_csv2,4
 occupied_well_csv3,4
-offset,5
-offset_x,20
+offset,6
+offset_x,21
 offset_x_resuspension,12
 omni_tray_24,1
 omni_tray_96,1
@@ -818,7 +824,7 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,99
+p20_mount,101
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
@@ -826,14 +832,16 @@ p20_side,1
 p20_single_mount,4
 p20_tube_height,1
 p20_type,4
+p20m_mount,1
 p20mnt,6
+p20s_mount,1
 p20type,3
 p2n,1
 p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,116
+p300_mount,118
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -888,8 +896,8 @@ perform_steps,1
 pip,1
 pip_l,2
 pip_mnt,5
-pip_model,6
-pip_mount,10
+pip_model,5
+pip_mount,9
 pip_r,2
 pip_tip,4
 pip_type,8
@@ -1066,7 +1074,7 @@ sample_num,1
 sample_number,5
 sample_plate_height,2
 sample_plate_lname,1
-sample_quant_csv,1
+sample_quant_csv,2
 sample_rows,1
 sample_size,1
 sample_slots,1
@@ -1074,7 +1082,7 @@ sample_trans_vol,1
 sample_type,1
 sample_vol,22
 sample_volume,3
-samples,41
+samples,42
 samples_csv,1
 samples_labware,2
 samples_loadname,1
@@ -1121,7 +1129,7 @@ source_lw,1
 source_plate,2
 source_plate_type,1
 source_start_col,1
-source_type,4
+source_type,5
 sp,2
 sp_type,2
 spike_in,1
@@ -1219,8 +1227,8 @@ template_vol,1
 test_method,1
 test_plates,1
 time_airdry_minutes,1
-time_dry,15
-time_engage,15
+time_dry,16
+time_engage,16
 time_mag_incubation,1
 time_settling,1
 time_settling_minutes,1
@@ -1338,6 +1346,7 @@ use_tuberack_b,1
 user_enzyme_volume,1
 user_enzyme_well,1
 using_magdeck,1
+using_tempdeck,2
 v_0_tube,1
 v_0_tube1,2
 v_0_tube2,1

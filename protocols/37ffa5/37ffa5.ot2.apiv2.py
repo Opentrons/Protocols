@@ -130,7 +130,7 @@ def run(ctx):
         for chunk in [*create_chunks(tworows[repeat], 3)][:num_samps]:
 
             p1000s.move_to(pbs.top())
-            for vol in [210, 220, 230]:
+            for vol in [230, 220, 210]:
 
                 ht = liq_height(pbs) - 3 if liq_height(pbs) - 3 > 1 else 1
 
@@ -139,7 +139,7 @@ def run(ctx):
 
                 pbs.liq_vol -= vol
 
-            for well, vol in zip(chunk, [230, 220, 210]):
+            for well, vol in zip(chunk, [210, 220, 230]):
 
                 p1000s.dispense(vol + 50, well.top(2), rate=2)
                 ctx.delay(seconds=0.5)
@@ -155,7 +155,7 @@ def run(ctx):
             p300s.pick_up_tip()
 
             p300s.move_to(samps[repeat][index].top())
-            for i, vol in zip([0, 1, 2], [40, 30, 20]):
+            for i, vol in zip([0, 1, 2], [20, 30, 40]):
 
                 if not i:
                     p300s.air_gap(50)
@@ -163,7 +163,7 @@ def run(ctx):
                 p300s.aspirate(vol, samps[repeat][index].bottom(1))
                 p300s.air_gap(50)
 
-            for i, well, vol in zip([0, 1, 2], chunk, [20, 30, 40]):
+            for i, well, vol in zip([0, 1, 2], chunk, [40, 30, 20]):
 
                 v = vol + 50 if i != 2 else vol + 100
 
@@ -202,7 +202,7 @@ def run(ctx):
 
                     te.liq_vol -= 50
 
-                for pair in chunk:
+                for i, pair in zip([0, 1, 2], chunk):
 
                     v = 90 if i != 2 else 110
 
@@ -231,7 +231,7 @@ def run(ctx):
 
                     te.liq_vol -= 50
 
-                for pair in chunk:
+                for i, pair in zip([0, 1], chunk):
 
                     v = 100 if i != 1 else 150
 
@@ -353,49 +353,35 @@ def run(ctx):
 
         ctx.comment('\nAdding Sample to Test Plate\n')
 
-        for index, chunk in enumerate(
-         [*create_chunks(tworows[repeat], 3)][:num_samps]):
+        source = [*create_chunks(tworows[repeat], 3)][:num_samps]
+
+        dest = [
+         *create_chunks(test_plates[repeat].columns() + test_plates[
+          repeat].columns()[8:11], 3)][:num_samps]
+
+        for j, chunk, chunk2 in zip([0, 1, 2, 3, 4], source, dest):
 
             p300s.pick_up_tip()
 
-            if index < 4:
+            for well, column in zip(chunk, chunk2):
 
-                for well, column in zip(chunk, test_plates[repeat].columns()):
-
-                    for indx in [0, 2]:
-                        p300s.move_to(well.top())
-                        for i, dest in zip([0, 1], column[0+indx:2+indx]):
-                            if not i:
-                                p300s.air_gap(50)
-                            p300s.aspirate(50, well.bottom(1))
+                for indx in [0, 2]:
+                    p300s.move_to(well.top())
+                    for i, dest in zip([0, 1], column[0+indx:2+indx]):
+                        if not i:
                             p300s.air_gap(50)
+                        p300s.aspirate(50, well.bottom(1))
+                        p300s.air_gap(50)
 
-                        for i, dest in zip([0, 1], column[0+indx:2+indx]):
+                    ds = column[
+                     0+indx:2+indx] if j < 4 else column[4+indx:6+indx]
 
-                            v = 100 if i != 1 else 150
+                    for i, d in zip([0, 1], ds):
 
-                            p300s.dispense(v, dest.top(5), rate=2)
-                            ctx.delay(seconds=0.5)
+                        v = 100 if i != 1 else 150
 
-            else:
-
-                for well, column in zip(
-                 chunk, test_plates[repeat].columns()[8:11]):
-
-                    for indx in [0, 2]:
-                        p300s.move_to(well.top())
-                        for i, dest in zip([0, 1], column[4+indx:6+indx]):
-                            if not i:
-                                p300s.air_gap(50)
-                            p300s.aspirate(50, well.bottom(1))
-                            p300s.air_gap(50)
-
-                        for i, dest in zip([0, 1], column[4+indx:6+indx]):
-
-                            v = 100 if i != 1 else 150
-
-                            p300s.dispense(v, dest.top(5), rate=2)
-                            ctx.delay(seconds=0.5)
+                        p300s.dispense(v, d.top(5), rate=2)
+                        ctx.delay(seconds=0.5)
 
             p300s.drop_tip()
 
