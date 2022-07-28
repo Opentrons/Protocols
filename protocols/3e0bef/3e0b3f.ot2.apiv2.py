@@ -33,12 +33,20 @@ def run(ctx: protocol_api.ProtocolContext):
     [
      _m300_mount,
      _num_samps,
+     _inc_time,
+     _mag_time,
+     _air_dry,
      _samp_labware,
+     _fin_wash,
      _elution_vol
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
          '_m300_mount',
          '_num_samps',
+         '_inc_time',
+         '_mag_time',
+         '_air_dry',
          '_samp_labware',
+         '_fin_wash',
          '_elution_vol')
 
     if not 1 <= _num_samps <= 96:
@@ -50,6 +58,10 @@ def run(ctx: protocol_api.ProtocolContext):
     num_cols = math.ceil(_num_samps/8)  # number of sample columns
     samp_labware = _samp_labware  # labware containing sample
     elution_vol = _elution_vol  # volume of elution buffer
+    inc_time = 2 * _inc_time
+    mag_time = _mag_time
+    air_dry = _air_dry
+    fin_wash = _fin_wash
 
     # m300_mount = 'left'
     # num_cols = 1
@@ -243,7 +255,7 @@ def run(ctx: protocol_api.ProtocolContext):
         m300.blow_out()
         m300.aspirate(10, liquid_waste)
 
-    def wash(srcs, msg):
+    def wash(srcs, msg, sup=540):
         nonlocal t_start
         nonlocal t_end
 
@@ -281,8 +293,8 @@ def run(ctx: protocol_api.ProtocolContext):
             m300.drop_tip()
 
         mag_deck.engage()
-        mag_msg = '\nIncubating on Mag Deck for 3 minutes\n'
-        ctx.delay(minutes=3, msg=mag_msg)
+        mag_msg = f'\nIncubating on Mag Deck for {mag_time} minutes\n'
+        ctx.delay(minutes=mag_time, msg=mag_msg)
 
         # Discard Supernatant
         ctx.comment(f'\nRemoving supernatant for wash: {msg}\n')
@@ -290,7 +302,7 @@ def run(ctx: protocol_api.ProtocolContext):
         t_end += num_cols
         for src, t_d in zip(mag_samps_h, all_tips[t_start:t_end]):
             m300.custom_pick_up()
-            remove_supernatant(540, src)
+            remove_supernatant(sup, src)
             m300.drop_tip(t_d)
 
     # plate, tube rack maps
@@ -365,6 +377,7 @@ def run(ctx: protocol_api.ProtocolContext):
         for i in range(2):
             if i == 0:
                 m300.aspirate(20, src.top())
+            m300.mix(3, 150, src)
             m300.aspirate(180, src)
             m300.slow_tip_withdrawal(10, src, to_surface=True)
             m300.dispense(200, col.top(-2))
@@ -372,39 +385,36 @@ def run(ctx: protocol_api.ProtocolContext):
             m300.aspirate(20, col.top(-2))
         m300.aspirate(165, src)
         m300.slow_tip_withdrawal(10, src, to_surface=True)
-        m300.dispense(185, col.top(-2))
+        m300.dispense(185, col)
+        m300.mix(2, 180, col)
+        m300.slow_tip_withdrawal(10, col, to_surface=True)
+        m300.aspirate(20, col.top())
     m300.drop_tip()
 
-    incubate_msg = '\nIncubating at room temperature for 10 minutes\
+    incubate_msg = f'\nIncubating at room temperature for {inc_time} minutes\
      plus mixing\n'
     ctx.comment(incubate_msg)
 
-    for col, t_d in zip(mag_samps, all_tips[t_start:t_end]):
-        m300.custom_pick_up()
-        m300.aspirate(20, col.top())
-        m300.mix(8, 150, col)
-        m300.dispense(20, col.top(-2))
-        m300.blow_out(col.top(-2))
-        m300.touch_tip()
-        m300.drop_tip(t_d)
-
-    for _ in range(2):
-        if num_cols < 3:
-            ctx.delay(minutes=3, seconds=30)
+    num_mixes = math.ceil(inc_time/num_cols)
+    for _ in range(num_mixes):
         for col, t_d in zip(mag_samps, all_tips[t_start:t_end]):
-            m300.custom_pick_up(t_d)
+            if not m300.has_tip:
+                m300.custom_pick_up(t_d)
             m300.aspirate(20, col.top())
             m300.mix(8, 150, col)
             m300.dispense(20, col.top(-2))
             m300.blow_out(col.top(-2))
             m300.touch_tip()
-            m300.drop_tip(t_d)
+            if len(mag_samps) > 1:
+                m300.drop_tip(t_d)
+    if m300.has_tip:
+        m300.drop_tip()
 
     t_start += num_cols
     t_end += num_cols
     mag_deck.engage()
-    mag_msg = '\nIncubating on Mag Deck for 3 minutes\n'
-    ctx.delay(minutes=3, msg=mag_msg)
+    mag_msg = f'\nIncubating on Mag Deck for {mag_time} minutes\n'
+    ctx.delay(minutes=mag_time, msg=mag_msg)
 
     # Discard Supernatant
     ctx.comment('\nRemoving supernatant\n')
@@ -423,15 +433,17 @@ def run(ctx: protocol_api.ProtocolContext):
     wash(spm1, 'SPM (first wash)')
 
     # Wash with SPM Buffer (2)
-    wash(spm2, 'SPM (second wash)')
+    wash(spm2, 'SPM (second wash)', fin_wash)
 
     # Air dry for 10 minutes
     mag_deck.engage()
-
-    air_dry_msg = '\nAir drying the beads for 10 minutes. \
+    ctx.home()
+    air_dry_msg = f'\nAir drying the beads for {air_dry} minutes. \
     Please add elution buffer at 65C to 12-well reservoir.\n'
-    ctx.delay(minutes=10, msg=air_dry_msg)
+    ctx.delay(minutes=air_dry, msg=air_dry_msg)
     flash_lights()
+    if not ctx.is_simulating():
+        test_speaker()
     ctx.pause('Please check the Well Plate')
 
     mag_deck.disengage()
@@ -449,8 +461,7 @@ def run(ctx: protocol_api.ProtocolContext):
         m300.drop_tip()
 
     flash_lights()
-    if not ctx.is_simulating():
-        test_speaker()
+    ctx.home()
     ctx.pause('Please remove samples and incubate at 65C for 5 minutes.\
     When complete, replace samples and click RESUME\n')
     ctx.set_rail_lights(True)
@@ -462,7 +473,7 @@ def run(ctx: protocol_api.ProtocolContext):
         m300.slow_tip_withdrawal(10, col, to_surface=True)
         m300.blow_out(col.top(-3))
         m300.touch_tip(speed=40)
-        m300.drop_tip()
+        m300.drop_tip(home_after=False)
 
     mag_deck.engage()
     mag_msg = '\nIncubating on Mag Deck for 3 minutes\n'
