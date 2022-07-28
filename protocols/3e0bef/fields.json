@@ -16,7 +16,7 @@
   },
   {
     "type": "int",
-    "label": "Incubation Time (minutes)",
+    "label": "Binding Time (minutes)",
     "name": "_inc_time",
     "default": 10
   },
@@ -33,10 +33,19 @@
     "default": 10
   },
   {
-    "type": "str",
-    "label": "Labware for Input Samples",
+    "type": "dropDown",
+    "label": "Labware for Samples Input",
     "name": "_samp_labware",
-    "default": "nest_96_wellplate_2ml_deep"
+    "options": [
+      { "label": "NEST 96 Well Plate, 2mL", "value": "nest_96_wellplate_2ml_deep" },
+      { "label": "QIAGEN 96 Tube Rack, 1.2mL", "value": "qiagen_96_tuberack_1200ul" }
+    ]
+  },
+  {
+    "type": "int",
+    "label": "[QIAGEN ONLY] Aspiration Height",
+    "name": "_asp_ht",
+    "default": 3
   },
   {
     "type": "int",
