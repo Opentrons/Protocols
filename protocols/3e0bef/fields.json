@@ -15,10 +15,34 @@
     "default": 8
   },
   {
+    "type": "int",
+    "label": "Incubation Time (minutes)",
+    "name": "_inc_time",
+    "default": 10
+  },
+  {
+    "type": "int",
+    "label": "MagDeck Incubation (minutes)",
+    "name": "_mag_time",
+    "default": 3
+  },
+  {
+    "type": "int",
+    "label": "Air Dry Time (minutes)",
+    "name": "_air_dry",
+    "default": 10
+  },
+  {
     "type": "str",
     "label": "Labware for Input Samples",
     "name": "_samp_labware",
     "default": "nest_96_wellplate_2ml_deep"
+  },
+  {
+    "type": "int",
+    "label": "Final Wash Removal (in µL)",
+    "name": "_fin_wash",
+    "default": 540
   },
   {
     "type": "int",
