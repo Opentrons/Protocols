@@ -60,7 +60,7 @@ def run(ctx: protocol_api.ProtocolContext):
     num_cols = math.ceil(_num_samps/8)  # number of sample columns
     samp_labware = _samp_labware  # labware containing sample
     elution_vol = _elution_vol  # volume of elution buffer
-    inc_time = 2 * _inc_time
+    inc_time = _inc_time
     mag_time = _mag_time
     air_dry = _air_dry
     fin_wash = _fin_wash
@@ -399,7 +399,7 @@ def run(ctx: protocol_api.ProtocolContext):
      plus mixing\n'
     ctx.comment(incubate_msg)
 
-    num_mixes = math.ceil(inc_time/num_cols)
+    num_mixes = math.ceil(2*inc_time/num_cols)
     for _ in range(num_mixes):
         for col, t_d in zip(mag_samps, all_tips[t_start:t_end]):
             if not m300.has_tip:
