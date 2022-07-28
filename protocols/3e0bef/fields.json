@@ -37,8 +37,8 @@
     "label": "Labware for Samples Input",
     "name": "_samp_labware",
     "options": [
-      { "label": "NEST 96 Well Plate, 2mL", "value": "nest_96_wellplate_2ml_deep" },
-      { "label": "QIAGEN 96 Tube Rack, 1.2mL", "value": "qiagen_96_tuberack_1200ul" }
+      { "label": "QIAGEN 96 Tube Rack, 1.2mL", "value": "qiagen_96_tuberack_1200ul" },
+      { "label": "NEST 96 Well Plate, 2mL", "value": "nest_96_wellplate_2ml_deep" }
     ]
   },
   {
