@@ -125,12 +125,14 @@ def run(ctx):
          '\nDistributing PBS to Sample Plate for {} samples\n'.format(
           num_samps))
 
+        dests = [
+         well.bottom(1) for chunk in [
+          *create_chunks(tworows[repeat], 3)][:num_samps] for well in chunk]
+
         p1000s.distribute(
          num_samps*[210, 220, 230], pbs.bottom(1),
-         [well.top() for chunk in [*create_chunks(
-          tworows[repeat], 3)][:num_samps] for well in chunk],
-         tip_touch=True, disposal_volume=100, blow_out=True,
-         blowout_location='source well', new_tip='once')
+         dests, disposal_volume=100, blow_out=True,
+         blowout_location='trash', new_tip='once')
 
         ctx.comment(
          '\nDistributing {} Samples to Sample Plate\n'.format(num_samps))
@@ -140,9 +142,9 @@ def run(ctx):
 
             p300s.distribute(
              [40, 30, 20], samps[repeat][index].bottom(1),
-             [well.top() for well in chunk], tip_touch=True,
-             disposal_volume=20, blow_out=True,
-             blowout_location='source well', new_tip='once')
+             [well.top(2) for well in chunk],
+             disposal_volume=10, blow_out=True,
+             blowout_location='trash', touch_tip=True, new_tip='once')
 
         ctx.comment('\nDistributing TE to Test Plate\n')
 
@@ -153,63 +155,83 @@ def run(ctx):
           test_plates[repeat].rows()[4][8:11],
           test_plates[repeat].rows()[5][8:11])]
 
-        p1000s.distribute(
-         num_samps*3*[50, 50], te.bottom(1),
-         [well.top(7) for pair in [pair for chunk in [*create_chunks(
+        dests = [well.bottom(1) for pair in [pair for chunk in [*create_chunks(
           [(well, well2) for well, well2 in zip(test_plates[repeat].rows()[0],
            test_plates[repeat].rows()[1])] + for5thsample, 3)
-           ][:num_samps] for pair in chunk] for well in pair],
-         disposal_volume=100, tip_touch=True, blow_out=True,
-         blowout_location='source well', new_tip='never')
+           ][:num_samps] for pair in chunk] for well in pair]
 
         p1000s.distribute(
-         8*[50, 50], te.bottom(1), [well.top(7) for pair in [
+         num_samps*3*[50, 50], te.bottom(1),
+         dests, disposal_volume=100, blow_out=True,
+         blowout_location='trash', new_tip='never')
+
+        dests = [well.bottom(1) for pair in [
           pair for chunk in [*create_chunks(
            [(well, well2) for i, well, well2 in zip([*range(12)],
             test_plates[repeat].rows()[6],
             test_plates[repeat].rows()[7]) if (i and (not 8 <= i <= 10))], 2)
-            ] for pair in chunk] for well in pair], disposal_volume=100,
-         tip_touch=True, blow_out=True, blowout_location='source well',
-         new_tip='never')
+           ] for pair in chunk] for well in pair]
 
         p1000s.distribute(
-         9*[100, 100], te.bottom(1),
-         [well.top(7) for pair in [pair for chunk in [
+         8*[50, 50], te.bottom(1), dests, disposal_volume=100,
+         blow_out=True, blowout_location='trash',
+         new_tip='never')
+
+        dests = [well.bottom(1) for pair in [pair for chunk in [
           *create_chunks([(well, well2) for well, well2 in zip(
            test_plates[repeat].rows()[4],
            test_plates[repeat].rows()[5]) if (
            well, well2) not in for5thsample], 6)
-          ] for pair in chunk] for well in pair], disposal_volume=100,
-         tip_touch=True, blow_out=True, blowout_location='source well',
+          ] for pair in chunk] for well in pair]
+
+        p1000s.distribute(
+         9*[100, 100], te.bottom(1),
+         dests, disposal_volume=100,
+         blow_out=True, blowout_location='trash',
          new_tip='never')
 
         ctx.comment('\nDistributing TE-Triton to Test Plate\n')
 
+        dests = [
+         test_plates[repeat].rows()[rowindex][0].bottom(1) for rowindex in [
+          6, 7]] + [te_triton.bottom(1)]
+
         p1000s.distribute(
-         [100, 100], te_triton.bottom(1),
-         [test_plates[repeat].rows()[rowindex][0] for rowindex in [6, 7]],
-         disposal_volume=100, blow_out=True, blowout_location='source well',
-         tip_touch=True, new_tip='never')
+         [100, 100, 100], te_triton.bottom(1),
+         dests,
+         disposal_volume=0, blow_out=False, new_tip='never')
 
         for5thsample = [(well, well2) for well, well2 in zip(
          test_plates[repeat].rows()[6][8:11],
          test_plates[repeat].rows()[7][8:11])]
 
-        p1000s.distribute(
-         num_samps*3*[50, 50], te_triton.bottom(1),
-         [well.top(7) for pair in [pair for chunk in [*create_chunks(
+        dests = [well.bottom(1) for pair in [pair for chunk in [*create_chunks(
           [(well, well2) for well, well2 in zip(test_plates[repeat].rows()[2],
            test_plates[repeat].rows()[3])] + for5thsample, 3)
-           ][:num_samps] for pair in chunk] for well in pair],
-         disposal_volume=100, tip_touch=True, blow_out=True,
-         blowout_location='source well', new_tip='never')
+           ][:num_samps] for pair in chunk] for well in pair
+           ] + [te_triton.bottom(1)]
+
+        vols = num_samps*3*[50, 50]
+
+        vols = vols + [100]
 
         p1000s.distribute(
-         16*[50], te_triton.bottom(1),
-         [well for row in test_plates[repeat].rows()[6:8] for i, well in zip(
-          [*range(12)], row) if (i and (not 8 <= i <= 10))],
-         disposal_volume=100, tip_touch=True, blow_out=True,
-         blowout_location='source well', new_tip='never')
+         vols, te_triton.bottom(1),
+         dests, disposal_volume=0, blow_out=False,
+         new_tip='never')
+
+        dests = [
+         well.bottom(1) for row in test_plates[repeat].rows(
+         )[6:8] for i, well in zip([*range(12)], row) if (
+          i and (not 8 <= i <= 10))] + [te_triton.bottom(1)]
+
+        vols = 16*[50]
+
+        vols = vols + [100]
+
+        p1000s.distribute(
+         vols, te_triton.bottom(1),
+         dests, disposal_volume=0, blow_out=False, new_tip='never')
 
         p1000s.drop_tip()
 
@@ -223,25 +245,25 @@ def run(ctx):
 
         for i, chunk, chunk2 in zip([0, 0, 0, 0, 4][:num_samps], source, dest):
 
-            p1000s.pick_up_tip()
+            p300s.pick_up_tip()
 
             for well, column in zip(reversed(chunk), reversed(chunk2)):
 
-                p1000s.distribute(
-                 4*[50], well.bottom(1),
-                 [well.top(5) for well in column[i:i+4]],
-                 disposal_volume=25, touch_tip=True, blow_out=True,
-                 blowout_location='source well', new_tip='never')
+                p300s.distribute(
+                 4*[50], well.bottom(0.5),
+                 [well.top(2) for well in column[i:i+4]],
+                 disposal_volume=10, blow_out=True,
+                 blowout_location='trash', touch_tip=True, new_tip='never')
 
-            p1000s.drop_tip()
+            p300s.drop_tip()
 
         ctx.comment('\nSerial Dilution of mRNA in Test Plate\n')
 
         p1000s.distribute(
          4*[100], mrna[repeat].bottom(1),
-         [row[0].top(5) for row in test_plates[repeat].rows()[4:]],
-         disposal_volume=25, touch_tip=True, blow_out=True,
-         blowout_location='trash', new_tip='once')
+         [row[0].top(2) for row in test_plates[repeat].rows()[4:]],
+         disposal_volume=25, blow_out=True,
+         blowout_location='trash', touch_tip=True, new_tip='once')
 
         # mix and transfer to next well
         for row in test_plates[repeat].rows()[4:]:
