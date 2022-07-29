@@ -34,6 +34,15 @@
   },
   {
     "type": "dropDown",
+    "label": "Add Water Before Air Dry",
+    "name": "_add_water",
+    "options": [
+      { "label": "Yes", "value": 1 },
+      { "label": "No", "value": 0 }
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "Labware for Samples Input",
     "name": "_samp_labware",
     "options": [
@@ -43,9 +52,9 @@
   },
   {
     "type": "int",
-    "label": "[QIAGEN ONLY] Aspiration Height",
+    "label": "[QIAGEN ONLY] Aspiration Height (From Top, in mm)",
     "name": "_asp_ht",
-    "default": 3
+    "default": 30
   },
   {
     "type": "int",
