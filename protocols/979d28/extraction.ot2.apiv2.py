@@ -16,8 +16,10 @@ TEST_MODE = False
 # Start protocol
 def run(ctx):
 
-    [num_samples, mixreps, elution2_vol] = get_values(
-        'num_samples', 'mixreps', 'vol_elution_final')
+    [num_samples, time_initial_bead_incubation, mixreps,
+     elution2_vol] = get_values(
+        'num_samples', 'time_initial_bead_incubation', 'mixreps',
+        'vol_elution_final')
 
     if not ctx.is_simulating():
         sys.path.append("/var/lib/jupyter/notebooks/")
@@ -185,8 +187,8 @@ def run(ctx):
 shaking is complete.')
 
         magdeck.engage()
-        ctx.delay(minutes=settling_time, msg=f'Incubating on MagDeck for \
-{settling_time} minutes.')
+        ctx.delay(minutes=time_initial_bead_incubation,
+                  msg=f'Incubating on MagDeck for {settling_time} minutes.')
 
         # remove initial supernatant
         remove_supernatant(vol+starting_vol, parking_spots)
