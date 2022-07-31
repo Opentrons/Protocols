@@ -50,16 +50,32 @@ def run(ctx):
     p300s = ctx.load_instrument(
         "p300_single_gen2", 'right', tip_racks=tips300)
 
-    # tube rack for PS, EB, PB, empty tubes for RT mastermix, PCR mastermix
+    # tube rack for PS, EB, PB
+    # empty tubes for RT mastermix, qPCR mix, endpoint PCR mastermix
+    # fs, dtt, rs, rpm, pm, p5, p7, pe
     tuberack = ctx.load_labware(
      'opentrons_24_tuberack_nest_1.5ml_snapcap', '2',
-     'Tube Rack for PS, EB, PB')
-    ps, eb, pb, mastermix, pcr_mastermix = [
-     tuberack.wells_by_name()[name] for name in ['A1', 'A2', 'A3', 'A4', 'A5']]
+     'Tube Rack for Reagents')
+    ps, eb, pb, mastermix, qpcr_mix, pcr_mastermix = [
+     tuberack.wells_by_name()[name] for name in [
+      'A1', 'A2', 'A3', 'A4', 'A5', 'A6']]
     num_purifications = 2 if count_samples > 56 else 1
     pb.liq_vol = 1.1*(num_purifications*24 + 7 + 31.5)
     ps.liq_vol = 1.1*(13.5*count_samples - 24 + 52 + 30)
-    eb.liq_vol = 1.1*(12 + 40 + 20 + 30 + 20)
+    eb.liq_vol = 1.1*(12 + 40 + 20 + 30 + 20 + 16)
+
+    fs, dtt, rs, rpm, pm, p5, p7, pe, qpcrmixtube = [
+     tuberack.wells_by_name()[name] for name in [
+      'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'C1', 'C2', 'C3']]
+    deadvol_tube = 3
+    fs.liq_vol = 1.1*(2.5*count_samples) + deadvol_tube
+    dtt.liq_vol = 0.25*count_samples + deadvol_tube
+    rs.liq_vol = 2 + deadvol_tube
+    rpm.liq_vol = 6.5 + deadvol_tube
+    pm.liq_vol = 14 + deadvol_tube
+    p5.liq_vol = 10 + deadvol_tube
+    p7.liq_vol = 10 + deadvol_tube
+    pe.liq_vol = 2 + deadvol_tube
 
     # reservoir for 80 percent ethanol
     etoh = ctx.load_labware(
@@ -83,24 +99,15 @@ def run(ctx):
      'nest_96_wellplate_100ul_pcr_full_skirt', '1',
      'Final Output plate in slot 1')
 
-    # temperature module for FS, E1, DTT, RS, RPM, E2, PM, P5, P7, PE
+    # temperature module for E1, E2
     temp = ctx.load_module('Temperature Module', '7')
     block = temp.load_labware('opentrons_24_aluminumblock_nest_1.5ml_snapcap')
-    [fs, e1, dtt, rs, rpm, e2, pm, p5, p7, pe] = [
+    e1, e2 = [
      block.wells_by_name()[name] for name in [
-      'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'B1', 'B2', 'B3', 'B4']]
-    deadvol_tube = 3
+      'A1', 'A2']]
     temp.set_temperature(4)
-    fs.liq_vol = 1.1*(2.5*count_samples) + deadvol_tube
     e1.liq_vol = 0.25*count_samples + deadvol_tube
-    dtt.liq_vol = 0.25*count_samples + deadvol_tube
-    rs.liq_vol = 2 + deadvol_tube
-    rpm.liq_vol = 6.5 + deadvol_tube
     e2.liq_vol = 1 + deadvol_tube
-    pm.liq_vol = 7 + deadvol_tube
-    p5.liq_vol = 5 + deadvol_tube
-    p7.liq_vol = 5 + deadvol_tube
-    pe.liq_vol = 1 + deadvol_tube
 
     # alert user to reagent volumes needed
     ctx.comment("Ensure reagents in sufficient volume are present on deck.")
@@ -390,6 +397,19 @@ Unseal and return plate to slot 5. Resume\n\n
 
     p20s.transfer(6.5, rpm, pcr_plate.wells_by_name()['A1'], mix_after=(5, 15))
 
+    # alert user to reagent volumes needed
+    ctx.comment("Ensure reagents in sufficient volume are present on deck.")
+    for volume, units, reagent, location in zip(
+     [math.ceil(rgnt.liq_vol) if rgnt.liq_vol < 1500 else math.ceil(
+      rgnt.liq_vol / 1000) for rgnt in [
+      e2]],
+     ['uL'],
+     ['E2'],
+     [e2]):
+        ctx.comment(
+         "{0} {1} {2} in {3}".format(
+          str(volume), units, reagent.upper(), location))
+
     ctx.pause("""\n
 Seal the plate\n\n
 Spin\n\n
@@ -397,7 +417,9 @@ Incubate 98 degrees C 2 min\n\n
 Cool to 25 degrees C at reduced 0.5 deg/sec\n\n
 Incubate 25 degrees C 3 min\n\n
 Spin\n\n
-Unseal and return plate to slot 5. Resume\n\n
+Unseal and return plate to slot 5\n\n
+Ensure E2 in sufficient volume is present on deck\n\n
+Resume\n\n
 \n""")
 
     ctx.comment("\nSTEP - add E2\n")
@@ -405,6 +427,7 @@ Unseal and return plate to slot 5. Resume\n\n
     p20s.transfer(1, e2, pcr_plate.wells_by_name()['A1'], mix_after=(5, 15))
 
     ctx.pause("""\n
+Return the E2 to its -20 C storage location\n\n
 Seal the plate\n\n
 Spin\n\n
 Incubate 30 degrees C 30 min\n\n
@@ -541,7 +564,23 @@ Unseal and return plate to slot 5. Resume\n\n
 
     p20s.transfer(17, asp_loc, pcr_plate.wells_by_name()['A2'])
 
-    ctx.comment("\nSTEP - assemble PCR mastermix\n")
+    p20s.transfer(2, eb, pcr_plate.wells_by_name()['A2'])
+
+    ctx.comment("\nSTEP - qPCR mix to determine endpoint PCR cycles\n")
+    for vol, reagent in zip(
+     [1.7, 14.1, 7, 5, 5, 1],
+     [pcr_plate.wells_by_name()['A2'], eb, pm, p5, p7, pe]):
+        p20s.transfer(vol, reagent, qpcr_mix, new_tip='always')
+
+    ctx.pause("""\n
+Remove the qPCR mix tube in {}\n\n
+Manually add syber green DMSO\n\n
+Run qPCR\n\n
+Determine number of cycles for endpoint PCR\n\n
+Resume\n\n
+\n""".format(qpcr_mix))
+
+    ctx.comment("\nSTEP - assemble endpoint PCR mastermix\n")
 
     for vol, reagent in zip([7, 5, 5, 1], [pm, p5, p7, pe]):
         p20s.transfer(vol, reagent, pcr_mastermix, new_tip='always')
