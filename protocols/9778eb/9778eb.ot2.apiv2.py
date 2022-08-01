@@ -1,7 +1,5 @@
 """OPENTRONS."""
-# from opentrons.types import Point
-# import json
-# import os
+from opentrons import protocol_api
 import math
 import threading
 from time import sleep
@@ -9,18 +7,10 @@ from opentrons import types
 
 
 metadata = {
-    'protocolName': '96 DRY TEST Mag-Bind® Blood & Tissue DNA HDQ 96 Kit',
+    'protocolName': '96 Mag-Bind® Blood & Tissue DNA HDQ 96 Kit',
     'author': 'Opentrons <protocols@opentrons.com>',
     'apiLevel': '2.11'
 }
-
-
-"""
-Here is where you can modify the magnetic module engage height:
-"""
-TEST_MODE = False
-flash = True
-mag_height = 3.5  # this is from bottom of deep well plate! Default is too high
 
 # Definitions for deck light flashing
 
@@ -64,25 +54,29 @@ def run(ctx):
     # Setup for flashing lights notification to empty trash
     cancellationToken = CancellationToken()
 
-    # [num_samples, deepwell_type, res_type, starting_vol, binding_buffer_vol,
-    #  wash1_vol, wash2_vol, wash3_vol, elution_vol, mix_reps, settling_time,
-    #  park_tips, tip_track, flash, p300_mount] = get_values(  # noqa: F821
-    #     'num_samples', 'deepwell_type', 'res_type', 'starting_vol',
-    #     'binding_buffer_vol', 'wash1_vol', 'wash2_vol', 'wash3_vol',
-    #     'elution_vol', 'mix_reps', 'settling_time', 'park_tips', 'tip_track',
-    #     'flash', 'p300_mount')
+    [num_samples, sample_vol, elution_vol,
+     flash, p300_mount] = get_values(  # noqa: F821
+        'num_samples', 'sample_vol', 'elution_vol',
+        'flash', 'p300_mount')
 
+    """
     num_samples = 96
-    res_type = 'nest_12_reservoir_15ml'
-    wash1_vol = 600
+    sample_vol = 560
+    elution_vol = 50
     flash = True
     p300_mount = 'left'
-
-    sample_vol = 560
+    """
+    res_type = 'nest_12_reservoir_15ml'
+    wash_vol = 600
     bead_delay_time = 3.5  # minutes real run, seconds for test run
-    supernatant_headspeed_modulator = 10
     num_trans_super_1 = math.ceil((sample_vol+420)/180)
-    num_trans_super_2 = math.ceil(wash1_vol/150)
+    num_trans_super_2 = math.ceil(wash_vol/150)
+    """
+    Here is where you can modify the magnetic module engage height:
+    """
+    TEST_MODE = False
+    mag_height = 3.5  # From bottom of deep well plate! Default is too high
+    supernatant_headspeed_modulator = 10
 
     """
     Here is where you can change the locations of your labware and modules
@@ -136,6 +130,46 @@ def run(ctx):
 
 #    magdeck.disengage()  # just in case
 #    tempdeck.set_temperature(4)
+    def pick_up(pip):
+        try:
+            pip.pick_up_tip()
+        except protocol_api.labware.OutOfTipsError:
+            if flash:
+                if not ctx._hw_manager.hardware.is_simulator:
+                    cancellationToken.set_true()
+                thread = create_thread(ctx, cancellationToken)
+            pip.home()
+            ctx.pause('\n\n~~~~~~~~~~~~~~PLEASE REPLACE TIPRACKS~~~~~~~~~~~~~~~\n')  # noqa: E501
+            ctx.home()  # home before continuing with protocol
+            if flash:
+                cancellationToken.set_false()  # stop light flashing after home
+                thread.join()
+            ctx.set_rail_lights(True)
+            pip.reset_tipracks()
+            pick_up(pip)
+
+    tips_dropped = 0
+
+    def drop_tip(pip, home=True):
+        nonlocal tips_dropped
+        pip.drop_tip(home_after=home)
+        if pip == m300:
+            tips_dropped += 8
+        else:
+            tips_dropped += 1
+        if tips_dropped == 288:
+            if flash:
+                if not ctx._hw_manager.hardware.is_simulator:
+                    cancellationToken.set_true()
+                thread = create_thread(ctx, cancellationToken)
+            pip.home()
+            ctx.pause('\n\n~~~~~~~~~~~~~~PLEASE EMPTY TRASH~~~~~~~~~~~~~~~\n')
+            ctx.home()  # home before continuing with protocol
+            if flash:
+                cancellationToken.set_false()  # stop light flashing after home
+                thread.join()
+            ctx.set_rail_lights(True)
+            tips_dropped = 0
 
     m300.flow_rate.aspirate = 150
     m300.flow_rate.dispense = 300
@@ -173,8 +207,9 @@ def run(ctx):
     # pre-mix bead/binding buffer mix
 
     # add binding buffer/bead mix
+    ctx.comment('\n\n~~~~~~~~~~~~ADDING BINDING/BUFFER BEAD MIX~~~~~~~~~~~~~\n')  # noqa: E501
     m300.flow_rate.dispense = 60
-    m300.pick_up_tip()
+    pick_up(m300)
     for i, dest in enumerate(mag_samples_m):
         if i % 3 == 0:
             bead_mixing(binding_buffer[i//3], m300, 150, reps=10)
@@ -185,18 +220,20 @@ def run(ctx):
             m300.dispense(m300.current_volume, dest.top(-2))
             m300.aspirate(20, dest.top(-2))
             m300.move_to(dest.top(2))
-    m300.drop_tip()
+    drop_tip(m300)
     m300.flow_rate.dispense = 96
     # Mix 30 seconds, move to next sample 30 seconds mix
+    ctx.pause('\n\n~~~~~~~~~~~~MIXING 30 SECONDS~~~~~~~~~~~~~\n')
     for dest in mag_samples_m:
-        m300.pick_up_tip()
+        pick_up(m300)
         bead_mixing(dest, m300, 200, reps=5)
         # for _ in range(8):
         #     m300.aspirate(200, dest)
         #     m300.dispense(200, dest.top(-5))
-        m300.drop_tip(home_after=False)
+        drop_tip(m300, home=False)
 
     # Mag module engage
+    ctx.comment('\n\n~~~~~~~~~~~~ENGAGE MAGNETS~~~~~~~~~~~~~\n')
     magdeck.engage(height_from_base=mag_height)
     if TEST_MODE:
         ctx.delay(seconds=bead_delay_time)
@@ -204,12 +241,13 @@ def run(ctx):
         ctx.delay(minutes=bead_delay_time)
 
     # discard supernatant, Bind buffer wash
+    ctx.comment('\n\n~~~~~~~~~~~~DISCARDING SUPERNATANT~~~~~~~~~~~~~\n')
     ctx.max_speeds['Z'] = 400
     ctx.max_speeds['A'] = 400
     m300.flow_rate.aspirate /= 5
     for i, (source, park_loc) in enumerate(zip(mag_samples_m, parking_spots)):
         side = -1 if i % 2 == 0 else 1
-        m300.pick_up_tip()
+        pick_up(m300)
         m300.move_to(source.top())
         for _ in range(num_trans_super_1):
             ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
@@ -243,8 +281,9 @@ def run(ctx):
     # ctx.set_rail_lights(True)
 
     # Add 600uL VHB Buffer, mix well to resuspend beads
+    ctx.comment('\n\n~~~~~~~~~~~~ADDING VHB BUFFER~~~~~~~~~~~~~\n')
     for i, dest in enumerate(mag_samples_m):
-        m300.pick_up_tip()
+        pick_up(m300)
         for num, s in enumerate(wash1):
             if num == 0:
                 m300.aspirate(20, s.top())
@@ -252,7 +291,7 @@ def run(ctx):
             m300.dispense(m300.current_volume, dest.top(-2))
             m300.aspirate(20, dest.top())
         bead_mixing(dest, m300, 200, reps=5)
-        m300.drop_tip()
+        drop_tip(m300)
 
     # for i, dest in enumerate(mag_samples_m):
     #     m300.pick_up_tip()
@@ -266,6 +305,7 @@ def run(ctx):
     #     m300.drop_tip()
 
     # engage mag module
+    ctx.comment('\n\n~~~~~~~~~~~~ENGAGE MAGNETS~~~~~~~~~~~~~\n')
     magdeck.engage(height_from_base=mag_height)
     if TEST_MODE:
         ctx.delay(seconds=bead_delay_time)
@@ -273,6 +313,7 @@ def run(ctx):
         ctx.delay(minutes=bead_delay_time)
 
     # discard supernatant, VFB Wash 1
+    ctx.comment('\n\n~~~~~~~~~~~~DISCARDING SUPERNATANT~~~~~~~~~~~~~\n')
     m300.flow_rate.aspirate /= 5
     for i, (source, park_loc) in enumerate(zip(mag_samples_m, parking_spots)):
         side = -1 if i % 2 == 0 else 1
@@ -312,8 +353,9 @@ def run(ctx):
     # Wash 2, same as above
 
     # Add 600uL VHB Buffer, mix well to resuspend beads
+    ctx.comment('\n\n~~~~~~~~~~~~SECOND VHB BUFFER ADDITION~~~~~~~~~~~~~\n')
     for i, dest in enumerate(mag_samples_m):
-        m300.pick_up_tip()
+        pick_up(m300)
         for _, s in enumerate(wash2):
             if _ == 0:
                 m300.aspirate(20, s.top())
@@ -321,9 +363,10 @@ def run(ctx):
             m300.dispense(m300.current_volume, dest.top(-2))
             m300.aspirate(20, dest.top())
         bead_mixing(dest, m300, 200, reps=5)
-        m300.drop_tip()
+        drop_tip(m300)
 
     # engage mag module
+    ctx.comment('\n\n~~~~~~~~~~~~ENGAGE MAGNETS~~~~~~~~~~~~~\n')
     magdeck.engage(height_from_base=mag_height)
     if TEST_MODE:
         ctx.delay(seconds=bead_delay_time)
@@ -331,6 +374,7 @@ def run(ctx):
         ctx.delay(minutes=bead_delay_time)
 
     # discard supernatant, VHB 2
+    ctx.comment('\n\n~~~~~~~~~~~~DISCARDING SUPERNATANT~~~~~~~~~~~~~\n')
     m300.flow_rate.aspirate /= 5
     for i, (source, park_loc) in enumerate(zip(mag_samples_m, parking_spots)):
         side = -1 if i % 2 == 0 else 1
@@ -355,8 +399,9 @@ def run(ctx):
     magdeck.disengage()
 
     # SPM Buffer Wash
+    ctx.comment('\n\n~~~~~~~~~~~~ADDING SPM BUFFER~~~~~~~~~~~~~\n')
     for i, dest in enumerate(mag_samples_m):
-        m300.pick_up_tip()
+        pick_up(m300)
         for _, s in enumerate(wash3):
             if _ == 0:
                 m300.aspirate(20, s.top())
@@ -364,9 +409,10 @@ def run(ctx):
             m300.dispense(m300.current_volume, dest.top(-2))
             m300.aspirate(20, dest.top())
         bead_mixing(dest, m300, 200, reps=5)
-        m300.drop_tip()
+        drop_tip(m300)
 
     # engage mag module
+    ctx.comment('\n\n~~~~~~~~~~~~ENGAGE MAGNETS~~~~~~~~~~~~~\n')
     magdeck.engage(height_from_base=mag_height)
     if TEST_MODE:
         ctx.delay(seconds=bead_delay_time)
@@ -374,6 +420,7 @@ def run(ctx):
         ctx.delay(minutes=bead_delay_time)
 
     # discard supernatant, SPM Wash, N.B. Trash tips here
+    ctx.comment('\n\n~~~~~~~~~~~~DISCARDING SUPERNATANT~~~~~~~~~~~~~\n')
     m300.flow_rate.aspirate /= 5
     for i, (source, park_loc) in enumerate(zip(mag_samples_m, parking_spots)):
         side = -1 if i % 2 == 0 else 1
@@ -393,29 +440,31 @@ def run(ctx):
             ctx.max_speeds['A'] *= supernatant_headspeed_modulator
             m300.dispense(m300.current_volume, spm_trash[i//2].top())
             m300.aspirate(20, spm_trash[i//2].top())
-        m300.drop_tip()
+        drop_tip(m300)
     m300.flow_rate.aspirate *= 5
 
     # N.B. Tips run out here!
-    if flash:
-        if not ctx._hw_manager.hardware.is_simulator:
-            cancellationToken.set_true()
-        thread = create_thread(ctx, cancellationToken)
-    m300.home()
-    ctx.pause('Please Refill Tip Boxes in Slots 1, 6, and 9 then Empty Trash'
-              'Press Resume When Finished')
-    ctx.home()  # home before continuing with protocol
-    if flash:
-        cancellationToken.set_false()  # stop light flashing after home
-        thread.join()
-    ctx.set_rail_lights(True)
-    # ctx.pause()
-    m300.reset_tipracks()
+    # if flash:
+    #     if not ctx._hw_manager.hardware.is_simulator:
+    #         cancellationToken.set_true()
+    #     thread = create_thread(ctx, cancellationToken)
+    # m300.home()
+    # ctx.pause('Please Refill Tip Boxes in Slots 1, 6, and 9 then Empty Trash'
+    #           'Press Resume When Finished')
+    # ctx.home()  # home before continuing with protocol
+    # if flash:
+    #     cancellationToken.set_false()  # stop light flashing after home
+    #     thread.join()
+    # ctx.set_rail_lights(True)
+    # # ctx.pause()
+    # m300.reset_tipracks()
 
     # NFW wash to remove EtOH twice
+    ctx.comment('\n\n~~~~~~~~~~~~NFW WASH~~~~~~~~~~~~~\n')
     for i, dest in enumerate(mag_samples_m):
         side = -1 if i % 2 == 0 else 1
-        m300.pick_up_tip()
+        pick_up(m300)
+        ctx.comment('\n\n~~~~~~~~~~~~ENGAGE MAGNETS~~~~~~~~~~~~~\n')
         magdeck.engage(height_from_base=mag_height)
         for _ in range(2):
             m300.aspirate(200, wash4[i//3])
@@ -432,11 +481,11 @@ def run(ctx):
         magdeck.disengage()
         m300.aspirate(20, dest.top())
         m300.drop_tip()
-        m300.pick_up_tip()
+        pick_up(m300)
         m300.aspirate(50, elution_solution)
         m300.dispense(50, dest)
         m300.mix(4, 50, dest)
-        m300.drop_tip()
+        drop_tip(m300)
 
     # N.B. previous approach to NFW wash
     """for _ in range(2):
@@ -448,7 +497,7 @@ def run(ctx):
             m300.dispense(200, dest.top(-2))
         m300.drop_tip()
 
-        for i, (source, park_loc) in enumerate(zip(mag_samples_m, parking_spots
+        for i, (source, park_loc) in enumerate(zip(mag_samples_m, parking_spots)):  # noqa: E501
             side = -1 if i % 2 == 0 else 1
             if not m300.has_tip:
                 m300.pick_up_tip(park_loc) if _ == 1 else m300.pick_up_tip()
@@ -473,6 +522,7 @@ def run(ctx):
         m300.dispense(50, dest)
         bead_mixing(dest, m300, 50, reps=10)
         m300.drop_tip()"""
+    ctx.comment('\n\n~~~~~~~~~~~~ENGAGE MAGNETS~~~~~~~~~~~~~\n')
     magdeck.engage(height_from_base=mag_height)
 
     if TEST_MODE:
@@ -481,22 +531,23 @@ def run(ctx):
         ctx.delay(minutes=bead_delay_time)
 
     # Transfer super to 96 well plate
+    ctx.comment('\n\n~~~~~~~~~~~~TRANSFERING SUPERNATANT~~~~~~~~~~~~~\n')
     for i, (source, dest) in enumerate(zip(mag_samples_m, elution_samples_m)):
         side = -1 if i % 2 == 0 else 1
-        m300.pick_up_tip()
+        pick_up(m300)
         m300.move_to(source.top())
         ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
         ctx.max_speeds['A'] /= supernatant_headspeed_modulator
         m300.aspirate(
-            50, source.bottom().move(types.Point(x=side,
-                                                 y=0, z=0.2)))
+            elution_vol, source.bottom().move(types.Point(x=side,
+                                                          y=0, z=0.2)))
         m300.move_to(source.top())
         m300.aspirate(20, source.top())
         ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
         ctx.max_speeds['A'] *= supernatant_headspeed_modulator
         m300.dispense(20, dest.top())
         m300.dispense(m300.current_volume, dest)
-        m300.drop_tip()
+        drop_tip(m300)
 
     for c in ctx.commands():
         print(c)
