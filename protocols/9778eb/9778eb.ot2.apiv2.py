@@ -554,6 +554,3 @@ def run(ctx):
         m300.dispense(20, dest.top())
         m300.dispense(m300.current_volume, dest)
         drop_tip(m300)
-
-    for c in ctx.commands():
-        print(c)
