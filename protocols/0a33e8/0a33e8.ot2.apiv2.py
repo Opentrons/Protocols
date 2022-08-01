@@ -1,5 +1,6 @@
 import math
 
+
 metadata = {
     'protocolName': 'PCR Prep Deep Well to 384',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
@@ -18,7 +19,7 @@ def run(ctx):
 
     # load labware
     deepwell_plates = [ctx.load_labware(
-                       'thermofisherscientificdeepwell_96_wellplate_2000ul',
+                       'kingfisher_96_wellplate_2000ul',
                        slot) for slot in [4, 1, 5, 2]]
 
     final_plate = ctx.load_labware('thermofisher_384_wellplate_50ul', 3)
