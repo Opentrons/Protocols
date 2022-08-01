@@ -36,6 +36,7 @@ def run(ctx: protocol_api.ProtocolContext):
      _inc_time,
      _mag_time,
      _air_dry,
+     _add_water,
      _samp_labware,
      _asp_ht,
      _fin_wash,
@@ -46,6 +47,7 @@ def run(ctx: protocol_api.ProtocolContext):
          '_inc_time',
          '_mag_time',
          '_air_dry',
+         '_add_water',
          '_samp_labware',
          '_asp_ht',
          '_fin_wash',
@@ -65,12 +67,8 @@ def run(ctx: protocol_api.ProtocolContext):
     air_dry = _air_dry
     fin_wash = _fin_wash
     asp_ht = _asp_ht
+    add_water = _add_water
 
-    # m300_mount = 'left'
-    # num_cols = 1
-    # samp_labware = 'nest_96_wellplate_2ml_deep'
-    # elution_vol = 100
-    # load modules
     mag_deck = ctx.load_module('magnetic module gen2', 7)
 
     # load labware
@@ -335,7 +333,7 @@ def run(ctx: protocol_api.ProtocolContext):
     # necessary reagents in deck slots 2 and 3. When ready, click RESUME.')
     # ctx.set_rail_lights(True)
     # Creating reagent variables for second part of protocol
-    rbb = [WellH(well, current_volume=0) for well in rsvr_12[0].wells()[:6]]
+    rbb = [WellH(well, current_volume=0) for well in rsvr_12[0].wells()[:4]]
     cspw1 = [WellH(well) for well in rsvr_12[0].wells()[6:10]]
     cspw2 = [WellH(well) for well in rsvr_12[1].wells()[:4]]
     spm1 = [WellH(well) for well in rsvr_12[1].wells()[4:8]]
@@ -343,28 +341,31 @@ def run(ctx: protocol_api.ProtocolContext):
     elution_buffer = [WellH(well) for well in rsvr_12[0].wells()[10:]]
 
     for idx in range(num_cols):
-        rbb[idx//2].height_inc(525*8*1.1)
-        cspw1[idx//3].height_inc(500*8*1.1)
-        cspw2[idx//3].height_inc(500*8*1.1)
-        spm1[idx//3].height_inc(500*8*1.1)
-        spm2[idx//3].height_inc(500*8*1.1)
-        cspw1[idx//6].height_inc(elution_vol*8*1.1)
+        rbb[idx//3].height_inc(525*8)
+        cspw1[idx//3].height_inc(500*8)
+        cspw2[idx//3].height_inc(500*8)
+        spm1[idx//3].height_inc(500*8)
+        spm2[idx//3].height_inc(500*8)
+        cspw1[idx//6].height_inc(elution_vol*8)
 
     ctx.comment('\nTransferring 500uL of sample to plate on MagDeck\n')
 
     flow_rate(asp=20)
-    ht = asp_ht if samp_labware == 'qiagen_96_tuberack_1200ul' else 1
     for src, dest in zip(init_samps, mag_samps_h):
+        if samp_labware == 'qiagen_96_tuberack_1200ul':
+            src_asp = src.top(-asp_ht)
+        else:
+            src_asp = src
         m300.custom_pick_up()
         for i in range(2):
             m300.aspirate(20, src.top())
-            m300.aspirate(180, src.bottom(ht))
+            m300.aspirate(180, src_asp)
             m300.slow_tip_withdrawal(10, src)
             m300.dispense_h(180, dest)
             m300.slow_tip_withdrawal(10, dest, to_surface=True)
             m300.dispense(20, dest.bottom(5))
         m300.aspirate(20, src.top())
-        m300.aspirate(140, src.bottom(ht))
+        m300.aspirate(140, src_asp)
         m300.dispense_h(140, dest)
         m300.slow_tip_withdrawal(10, dest, to_surface=True)
         m300.dispense(20, dest.bottom(5))
@@ -376,24 +377,29 @@ def run(ctx: protocol_api.ProtocolContext):
     20uL Mag-Bind Beads\n')
 
     m300.custom_pick_up()
+    flow_rate(blow=10)
     for idx, col in enumerate(mag_samps):
         src = rbb[idx//2]
-        for i in range(2):
-            if i == 0:
-                m300.aspirate(20, src.top())
-            m300.mix(3, 150, src)
-            m300.aspirate(180, src)
+        for _ in range(3):
+            flow_rate(asp=20, disp=20)
+            m300.mix(1, 100, src)
+            m300.aspirate(175, src)
             m300.slow_tip_withdrawal(10, src, to_surface=True)
-            m300.dispense(200, col.top(-2))
+            flow_rate(disp=10)
+            m300.dispense(75, dest.top(-1))
+            flow_rate(disp=5)
+            m300.dispense(50, dest.top(-1))
+            ctx.delay(seconds=3)
+            m300.dispense(30, dest.top(-1))
+            ctx.delay(seconds=3)
+            flow_rate(disp=2)
+            m300.dispense(20, dest.top(-1))
             m300.blow_out()
-            m300.aspirate(20, col.top(-2))
-        m300.aspirate(165, src)
-        m300.slow_tip_withdrawal(10, src, to_surface=True)
-        m300.dispense(185, col)
-        m300.mix(2, 180, col)
-        m300.slow_tip_withdrawal(10, col, to_surface=True)
-        m300.aspirate(20, col.top())
+            for x in range(2):
+                m300.move_to(dest.top(-2))
+                m300.move_to(dest.top(-1))
     m300.drop_tip()
+    flow_rate()
 
     incubate_msg = f'\nIncubating at room temperature for {inc_time} minutes\
      plus mixing\n'
@@ -402,17 +408,20 @@ def run(ctx: protocol_api.ProtocolContext):
     num_mixes = math.ceil(2*inc_time/num_cols)
     for _ in range(num_mixes):
         for col, t_d in zip(mag_samps, all_tips[t_start:t_end]):
+            if _ == 0:
+                m300.custom_pick_up()
             if not m300.has_tip:
                 m300.custom_pick_up(t_d)
             m300.aspirate(20, col.top())
             m300.mix(8, 150, col)
+            ctx.delay(seconds=1)
             m300.dispense(20, col.top(-2))
             m300.blow_out(col.top(-2))
             m300.touch_tip()
             if len(mag_samps) > 1:
                 m300.drop_tip(t_d)
     if m300.has_tip:
-        m300.drop_tip()
+        m300.drop_tip(t_d)
 
     t_start += num_cols
     t_end += num_cols
@@ -424,8 +433,11 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.comment('\nRemoving supernatant\n')
     for src, t_d in zip(mag_samps_h, all_tips[t_start:t_end]):
         m300.custom_pick_up()
+        flow_rate(asp=40, disp=40)
         remove_supernatant(1080, src)
         m300.drop_tip(t_d)
+
+    flow_rate()
 
     # Wash with 500uL CSPW1 Buffer
     wash(cspw1, 'CSPW1')
@@ -441,6 +453,19 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # Air dry for 10 minutes
     mag_deck.engage()
+    if add_water:
+        h2o = rsvr_12[0]['A4']
+        for src in mag_samps_h:
+            m300.custom_pick_up()
+            m300.aspirate(100, h2o)
+            flow_rate(asp=30, disp=30)
+            m300.dispense(80, src)
+            m300.aspirate(100, src)
+            flow_rate()
+            m300.dispense(180, liquid_waste)
+            m300.blow_out()
+            m300.drop_tip()
+
     ctx.home()
     air_dry_msg = f'\nAir drying the beads for {air_dry} minutes. \
     Please add elution buffer at 65C to 12-well reservoir.\n'
@@ -460,8 +485,12 @@ def run(ctx: protocol_api.ProtocolContext):
         m300.aspirate(elution_vol, src)
         m300.slow_tip_withdrawal(10, src, to_surface=True)
         m300.dispense_h(elution_vol, col)
-        m300.mix(10, 100, col)
+        m300.mix(10, 50, col)
         m300.slow_tip_withdrawal(10, col, to_surface=True)
+        m300.blow_out(col.bottom(6))
+        for _ in range(2):
+            m300.move_to(col.bottom(5))
+            m300.move_to(col.bottom(6))
         m300.drop_tip()
 
     flash_lights()
@@ -473,10 +502,12 @@ def run(ctx: protocol_api.ProtocolContext):
     # Transfer elution to PCR plate
     for col in mag_samps_h:
         m300.custom_pick_up()
-        m300.mix(10, 100, col)
+        m300.mix(10, 50, col)
         m300.slow_tip_withdrawal(10, col, to_surface=True)
-        m300.blow_out(col.top(-3))
-        m300.touch_tip(speed=40)
+        m300.blow_out(col.bottom(6))
+        for _ in range(2):
+            m300.move_to(col.bottom(5))
+            m300.move_to(col.bottom(6))
         m300.drop_tip(home_after=False)
 
     mag_deck.engage()

@@ -1,3 +1,5 @@
+_air_dry,1
+_asp_ht,1
 _csv,3
 _dest_module,3
 _dp_type,1
@@ -5,9 +7,12 @@ _dry_run,1
 _dye_type,1
 _elution_vol,1
 _filter_tips,1
+_fin_wash,1
+_inc_time,1
 _m20_mount,6
 _m300_mount,3
 _mag_height,1
+_mag_time,1
 _mbl5_vol,1
 _mm_transfer_vol,1
 _num_col,3
@@ -1160,7 +1165,7 @@ starting_tip_col,1
 starting_tip_position,1
 starting_tip_well,1
 starting_tiprack_slot,1
-starting_vol,24
+starting_vol,23
 starting_volume,1
 starting_well,1
 starttip,1
@@ -1229,6 +1234,7 @@ test_plates,1
 time_airdry_minutes,1
 time_dry,16
 time_engage,16
+time_initial_bead_incubation,1
 time_mag_incubation,1
 time_settling,1
 time_settling_minutes,1
