@@ -8,19 +8,13 @@
 	* DNA Extraction
 
 ## Description
-Your OT-2 can fully automate the entire Mag-Bind® Blood & Tissue DNA HDQ 96 Kit.
-Results of the Opentrons Science team's internal testing of this protocol on the OT-2 are shown below:
-
-![results](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-mag-bind-blood-tissue-kit/sci-mag-bind-blood-tissue-kit-results.png)
+This is a custom implementation of the Mag-Bind Blood and Tissue kit. Specify the starting sample volume, final elution volume, and number of samples, allowing the OT-2 to automate the procedure with minimal intervention to empty trash and/or refill tip racks as alerted.
 
 Explanation of complex parameters below:
 * `Number of samples`: Specify the number of samples this run (1-96 and divisible by 8, i.e. whole columns at a time).
-* `Deepwell type`: Specify which well plate will be mounted on the magnetic module.
-* `Reservoir Type`: Specify which reservoir will be employed.
-* `Starting Volume`: Specify starting volume of sample (ul).
-* ``: Specify the volume of binding buffer to use (ul).
-* `Elution Volume`: Specify elution volume (ul).
-* `Park Tips`: Specify whether to park tips or drop tips.
+* `Initial Volume`: Specify starting volume of sample (ul).
+* `Elution Volume`: Specify elution volume (ul) into final plate.
+* `Flash on Robot Pause`: Specify whether the robot will flash on pause. This includes trash or tip rack notifications
 * `P300 Multi Channel Pipette Mount`: Specify whether the P300 multi channel pipette will be on the left or right mount.
 
 ---
@@ -30,11 +24,9 @@ Explanation of complex parameters below:
 
 ### Labware
 * [NEST 96 Wellplate 2mL](https://shop.opentrons.com/collections/lab-plates/products/nest-0-2-ml-96-well-deep-well-plate-v-bottom)
-* [USA Scientific 96 Wellplate 2.4mL](https://labware.opentrons.com/?category=wellPlate)
 * [NEST 12 Reservoir 15mL](https://shop.opentrons.com/collections/reservoirs/products/nest-12-well-reservoir-15-ml)
-* [USA Scientific 12 Reservoir 22mL](https://labware.opentrons.com/?category=reservoir)
 * [Opentrons 200uL Filter Tips](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-200ul-filter-tips)
-* [Opentrons 96 Aluminum block Nest Wellplate 100ul](https://labware.opentrons.com/opentrons_96_aluminumblock_nest_wellplate_100ul?category=aluminumBlock)
+* [Thermofisher 96 Well, semi-skirted, black lettering](https://www.thermofisher.com/order/catalog/product/AB1400L) mounted to deck with [Opentrons 96 Aluminum block](https://labware.opentrons.com/opentrons_96_aluminumblock_nest_wellplate_100ul?category=aluminumBlock)
 
 ### Pipettes
 * [P300 Multi Channel Pipette](https://shop.opentrons.com/collections/ot-2-robot/products/8-channel-electronic-pipette)
@@ -46,37 +38,41 @@ Explanation of complex parameters below:
 
 ### Deck Setup
 
-* Tip rack on Slot 4 is used for tip parking if selected.
+![reagent color code](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/9778eb/color_code.png)
 
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-mag-bind-blood-tissue-kit/sci-mag-bind-blood-tissue-kit.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/9778eb/deck_state.png)
 
 ### Reagent Setup
 
 * Reservoir 1: Slot 2
 
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-mag-bind-blood-tissue-kit/res1.png)
+![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/9778eb/slot_2.png)
 
-* Reservoir 2: Slot 3
+* Reservoir 2: Slot 5
 
-![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/sci-mag-bind-blood-tissue-kit/res2.png)
+![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/9778eb/slot_5.png)
 
+Binding buffer is mixed with purification beads and added to specified deck slot.
+
+NOTE ON REAGENT SETUP:
+The VHB and SPM/Ethanol reagents should be split evenly between the specified wells. Wells 1-5 and 5-10 in slot 5 are for the first and second VHB washes respectively. The OT-2 will access these reagent wells in sequence, aspirating equally across all wells. The NEST 12 well reservoirs should be filled to a minimum volume of 1.5 mL to ensure proper aspiration.
 ---
 
 ### Protocol Steps
-1. Binding buffer is mixed 5 times.
+1. Binding buffer/bead mixture is vigorously mixed to disperse beads. This is repeated when a well is accessed for the first time, i.e. every 4th column
 2. Binding buffer is added to samples on deep well plate on the magnetic module.
-3. Magnetic module is engaged and incubated for 7 minutes.
-4. Supernatant is removed and dropped into the liquid waste container.
-5. Add Wash Buffer and resuspend by mixing.
-6. Remove supernatant to liquid waste container.
-7. Perform second wash (repeats step 5-6 with second wash buffer set).
-8. Perform third wash (repeats step 5-6 with third wash buffer without resuspension).
-8. Incubate for 1 minute to dry beads.
-9. Elution solution is added to the samples.
-10. Beads are resuspended in elution solution.
-11. Incubates elution solution for 5 minutes.
-12. Magnetic module is engaged and incubates for 7 minutes (variable settling time).
-13. Elution samples are transferred to elution plate in Slot 1.
+3. Samples are mixed for 30 seconds
+4. Magnetic module is engaged and incubated for 5 minutes
+5. Supernatant is removed and disposed of in waste container, slot 4. Tips are re-used for future supernatant removals in first tip rack, slot 1
+6. 600 uL of VHB buffer is added to each sample and mixed
+7. Magnetic module is engaged and incubated for 5 minutes
+8. Supernatant is removed and disposed of in waste container, slot 4
+9. Steps 6 through 8 are repeated for a second VHB wash and supernatant removal
+10. 600 uL of SPM buffer diluted with ethanol is added to each sample and mixed
+11. Magnetic module is engaged and incubated for 5 minutes
+12. Supernatant is removed and disposed of in waste container, slot 4. Supernatant tips are disposed of here after third use
+13. 400 uL nuclease free water is added to a single column, delay for 20 seconds, then NFW is removed. This is to ensure ethanol removal without premature elution. Elution buffer is immediately added to column. Repeated for all samples
+14. A specified volume of elution buffer is transferred to an awaiting plate in slot 3
 
 ### Process
 1. Input your protocol parameters above.
@@ -91,4 +87,4 @@ Explanation of complex parameters below:
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-sci-mag-bind-blood-tissue-kit
+9778eb
