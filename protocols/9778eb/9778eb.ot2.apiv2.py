@@ -68,7 +68,7 @@ def run(ctx):
     """
     res_type = 'nest_12_reservoir_15ml'
     wash_vol = 600
-    bead_delay_time = 3.5  # minutes real run, seconds for test run
+    bead_delay_time = 5  # minutes real run, seconds for test run
     num_trans_super_1 = math.ceil((sample_vol+420)/180)
     num_trans_super_2 = math.ceil(wash_vol/150)
     """
@@ -338,17 +338,17 @@ def run(ctx):
     magdeck.disengage()
 
     # Empty trash warning? Could possibly be after one more wash? We'll see
-    if flash:
-        if not ctx._hw_manager.hardware.is_simulator:
-            cancellationToken.set_true()
-        thread = create_thread(ctx, cancellationToken)
-    m300.home()
-    ctx.pause('Please Empty Trash')
-    ctx.home()  # home before continuing with protocol
-    if flash:
-        cancellationToken.set_false()  # stop light flashing after home
-        thread.join()
-    ctx.set_rail_lights(True)
+    # if flash:
+    #     if not ctx._hw_manager.hardware.is_simulator:
+    #         cancellationToken.set_true()
+    #     thread = create_thread(ctx, cancellationToken)
+    # m300.home()
+    # ctx.pause('Please Empty Trash')
+    # ctx.home()  # home before continuing with protocol
+    # if flash:
+    #     cancellationToken.set_false()  # stop light flashing after home
+    #     thread.join()
+    # ctx.set_rail_lights(True)
 
     # Wash 2, same as above
 
@@ -486,6 +486,12 @@ def run(ctx):
         m300.dispense(50, dest)
         m300.mix(4, 50, dest)
         drop_tip(m300)
+
+    ctx.comment('\n\n~~~~~~~~~~~~ELUTION INCUBATION~~~~~~~~~~~~~\n')
+    if TEST_MODE:
+        ctx.delay(seconds=5)
+    else:
+        ctx.delay(minutes=5)
 
     # N.B. previous approach to NFW wash
     """for _ in range(2):

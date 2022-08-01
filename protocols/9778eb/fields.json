@@ -7,7 +7,7 @@
     },
     {
       "type": "int",
-      "label": "Intitial Volume (sample + lysis buffer, in ul)",
+      "label": "Initial Volume (sample + lysis buffer, in ul)",
       "name": "sample_vol",
       "default": 560
     },
