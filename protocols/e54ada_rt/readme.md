@@ -31,44 +31,21 @@ Explanation of complex parameters below:
 
 ### Deck Setup
 
-* Tube racks in slots 1, 2, 4, and 5 map directly to the 96 well plate. I.e. if 95 samples are specified all four tube racks will load in, RT mix will be in the bottom right well, C4, for slot 2. Well G12 will have primers added from slot 2, tube C3. If 13 samples are specified, the tube racks in slot 4 and 1 will load in, RT mix will be in well B2 in slot 1 (the 14th tube). Slot 1 A1's primer will add to well E1 in slot 3's well plate
+* Tube racks in slots 1, 2, 4, and 5 map directly to the 96 well plate. I.e. if 95 samples are specified all four tube racks will load in, RT mix will be in the bottom right well, C4, for slot 2. Well G12 will have primers added from slot 2, tube C3. If 13 samples are specified, the tube racks in slot 4 and 1 will load in, RT mix will be in well B2 in slot 1 (the 14th tube). Slot 1 A1's primer will add to well E1 in slot 3's well plate. Click [here](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/e54ada_rt/Tube+to+Plate+Mapping+for+RT.xlsx) for an explanatory spreadsheet
 
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/e54ada/deck_layout.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/e54ada_rt/deck_layout.png)
 
 ### Reagent Setup
 
 * Liquid Color Code:
 
-![Color Code](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/e54ada/liquids.png)
-
-* Reservoir 1: Slot 3
-
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/e54ada/resv.png)
-
-* NOTE ON REAGENT LOADING:
-  Ethanol should be loaded into slots 1-4 in deck slot 3. Ethanol will be aspirated equally from all 4 wells. The minimum volume for the NEST reservoir is 1.5 mL. E.g. if 4 mL of ethanol is needed in total it should be split between the four wells with an extra 500 uL added to reach 1.5 mL per well.
-
-  Additionally, the ethanol wash volume varies depending on the well plate being used. 200 uL per wash per sample will be used for the Greiner plate while 120 uL per wash per sample will be used for the BioRad plate.
-
-* NOTE ON SAMPLE NUMBERS:
-  This protocol is very flexible in sample numbers but with one caveat. Multiples of 8 to run full columns is recommended for efficiency. Running 15 samples will take much longer than 16 samples as 7 samples in the second column will utilize the single-channel pipette. This is a trade off of total run time for reagent efficiency. If you want to run 15 samples and are willing to use extra reagent, enter 16 samples and leave the 16th well empty in column 2.
-
-* NOTE ON SLOT 2's EMPTY TIP BOX
-  This protocol uses an empty 300uL tip box in slot 2 for tip parking and reuse across steps. This allows easy tip re-use for supernatant removal and wash steps. Proper tip rack calibration is still necessary for good results
+![Color Code](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/e54ada_rt/color_code.png)
 
 ---
 
 ### Protocol Steps
-1. Beads are added to the sample plate according to the supplied bead ratio parameter. The sample/bead mixture is mixed. The beads are re-mixed every 3 samples to ensure homogeneity in the reagent well.
-2. The beads are incubated for 10 minutes in the samples before the magnetic module is engaged for 7 minutes
-3. The supernatant is removed and deposited in the waste container in slot 11
-4. Ethanol is added to the wells to wash beads. 200 uL is added for the Greiner plates and 120 uL for BioRad plates
-5. A 2 minute delay occurs to allow beads to re-pellet after ethanol wash
-6. Ethanol is removed from samples and deposited in the waste container in slot 11
-7. Steps 4-6 are repeated for a second ethanol wash
-8. Water is added to the samples to elute according to the set parameters below and mixed
-9. A 5 minute delay occurs to allow elution to occur followed by the magnetic module being engaged for 7 minutes
-10. The elution solution, now separated from the beads, is aspirated and dispensed in the awaiting plate in slot 10
+1. RT mix is added from the final tube location to the sample plate, a single mix is done post-dispense to ensure full transfer of RT mix to the sample plate
+2. 1 uL of primer is added from the tube rack to the plate, a single mix is done post-dispense to ensure full transfer of primer to the sample plate
 
 ### Process
 1. Input your protocol parameters above.
