@@ -4,8 +4,8 @@
     "label": "Pipette Mount",
     "name": "_m300_mount",
     "options": [
-      { "label": "Left", "value": "left" },
-      { "label": "Right", "value": "right" }
+      { "label": "Right", "value": "right" },
+      { "label": "Left", "value": "left" }
     ]
   },
   {
@@ -54,18 +54,27 @@
     "type": "int",
     "label": "[QIAGEN ONLY] Aspiration Height (From Top, in mm)",
     "name": "_asp_ht",
-    "default": 30
+    "default": 33
   },
   {
     "type": "int",
     "label": "Final Wash Removal (in µL)",
     "name": "_fin_wash",
-    "default": 540
+    "default": 600
   },
   {
     "type": "int",
     "label": "Elution Volume (in µL)",
     "name": "_elution_vol",
     "default": 100
+  },
+  {
+    "type": "dropDown",
+    "label": "Play Custom Music at Pause",
+    "name": "_music",
+    "options": [
+      { "label": "No", "value": 0 },
+      { "label": "Yes", "value": 1 }
+    ]
   }
 ]
