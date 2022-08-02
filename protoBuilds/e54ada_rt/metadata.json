@@ -1,0 +1,20 @@
+{
+    "files": {
+        "OT 1 protocol": [],
+        "OT 2 protocol": [
+            "fill_proto.ot2.apiv2.py"
+        ],
+        "description": [
+            "readme.md"
+        ]
+    },
+    "flags": {
+        "embedded-app": false,
+        "feature": false,
+        "hide-from-search": false,
+        "skip-tests": false
+    },
+    "path": "protocols/e54ada_rt",
+    "slug": "e54ada_rt",
+    "status": "ok"
+}
