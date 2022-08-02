@@ -1,7 +1,4 @@
 """OPENTRONS."""
-# from opentrons.types import Point
-# import json
-# import os
 import math
 import threading
 from time import sleep
@@ -10,7 +7,7 @@ from opentrons import protocol_api
 
 
 metadata = {
-    'protocolName': 'SPRI Bead Purification, Optional Size Selection',
+    'protocolName': 'SPRI Bead Purification, Size Selection',
     'author': 'Opentrons <protocols@opentrons.com>',
     'apiLevel': '2.11'
 }
@@ -60,7 +57,7 @@ def create_thread(ctx, cancel_token):
 
 # Start protocol
 def run(ctx):
-    """PRO TOCOL."""
+    """PROTOCOL."""
     # Setup for flashing lights notification to empty trash
     cancellationToken = CancellationToken()
 
@@ -151,7 +148,7 @@ def run(ctx):
     etoh_1_wells = res1.wells()[1:3]  # 10mL in each, 6 columns each
     etoh_2_wells = res1.wells()[3:5]  # 10mL in each, 6 columns each
     elution_solution = res1.wells()[-1]
-    # load P300M pipette
+    # load pipettes
     m300 = ctx.load_instrument(
         'p300_multi_gen2', p300_mount, tip_racks=tips300)
     m20 = ctx.load_instrument('p20_multi_gen2', p20_mount, tip_racks=tips20)
