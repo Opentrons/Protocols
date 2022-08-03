@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "Batch_Test_Plating.ot2.apiv2.py"
+            "batch_test_plating.ot2.apiv2.py"
         ],
         "description": [
             "README.md"

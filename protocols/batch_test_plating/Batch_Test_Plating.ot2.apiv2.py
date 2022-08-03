@@ -4,15 +4,13 @@ from opentrons import protocol_api
 metadata = {
     'protocolName': 'Batch Test Plating',
     'author': 'Facu <frodriguezgoren@gmail.com>',
-    'description': 'Protocol0 de plaqueo de Mix y \
-                    muestras para el Test de Lote',
-    'apiLevel': '2.12'
+    'description': 'Protocol de plaqueo de Mix y muestras para el Test',
+    'apiLevel': '2.11'
 }
 
 
 def run(ctx: protocol_api.ProtocolContext):
-
-    _well = get_values(  # noqa: F821
+    [_well] = get_values(  # noqa: F821
         '_well')
 
     if not 1 <= _well <= 82:
@@ -20,14 +18,11 @@ def run(ctx: protocol_api.ProtocolContext):
 
     """ labware """
     placa = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '2')
-    placa.set_offset(x=-0.30, y=1.00, z=0.30)
 
     tiprack20 = ctx.load_labware('opentrons_96_filtertiprack_20ul', '5')
-    tiprack20.set_offset(x=0.00, y=1.20, z=-0.40)
 
     tuberack_Muestras = ctx.load_labware(
         'opentrons_24_tuberack_generic_2ml_screwcap', '1')
-    tuberack_Muestras.set_offset(x=-0.70, y=1.60, z=0.70)
 
     """ load pipettes """
     p20 = ctx.load_instrument(
@@ -39,7 +34,6 @@ def run(ctx: protocol_api.ProtocolContext):
     tuberack = temperature_module.load_labware(
         'opentrons_24_aluminumblock_generic_2ml_screwcap',
         label='Temperature-Controlled Tubes')
-    tuberack.set_offset(x=-0.40, y=2.10, z=-0.60)
 
     # Important Wells
 
