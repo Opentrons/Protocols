@@ -16,6 +16,7 @@ _mag_height,1
 _mag_time,1
 _mbl5_vol,1
 _mm_transfer_vol,1
+_music,1
 _num_col,3
 _num_samp,1
 _num_samps,2
@@ -99,7 +100,7 @@ bead_mix_source_well_indices,1
 bead_mix_speed,1
 bead_mix_vol,1
 bead_pellet_clearance,2
-bead_ratio,3
+bead_ratio,4
 bead_separation_time_in_minutes,2
 bead_settling_time_on_magnet_in_minutes,1
 bead_vol,3
@@ -354,6 +355,7 @@ e_time,2
 eluate_volume,1
 elute_buff_vol,1
 elute_on_robot,1
+elute_vol,1
 eluteplate,1
 elution,1
 elution_buf_vol,1
@@ -365,7 +367,7 @@ elution_scan,2
 elution_slot_scan,2
 elution_transfer_vol,2
 elution_type,1
-elution_vol,30
+elution_vol,31
 em,1
 empty_vial_well,3
 end_col,1
@@ -410,7 +412,7 @@ final_temp,3
 final_tubes,1
 final_vol,3
 first_media_x,1
-flash,19
+flash,21
 flow_rate_asp,1
 flow_rate_beads,6
 flow_rate_disp,1
@@ -605,7 +607,7 @@ lysis_vol,1
 m10_mount,2
 m1k,1
 m20_mount,67
-m300_mount,72
+m300_mount,73
 m300_type,2
 m_mount,1
 mag_bead_mix_resuspend_reps,1
@@ -766,12 +768,12 @@ num_reps,1
 num_row,1
 num_rows_a,1
 num_rows_b,1
-num_samp,51
+num_samp,52
 num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,120
+num_samples,122
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -847,7 +849,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,118
+p300_mount,119
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -1049,7 +1051,7 @@ run_number,1
 rxn_bf_volume,1
 rxn_bf_well,1
 rxn_mix_vol_p3,1
-rxn_vol,1
+rxn_vol,2
 s_csv,1
 s_mount,1
 s_pip,1
@@ -1088,7 +1090,7 @@ sample_size,1
 sample_slots,1
 sample_trans_vol,1
 sample_type,1
-sample_vol,22
+sample_vol,23
 sample_volume,3
 samples,42
 samples_csv,1
@@ -1388,6 +1390,7 @@ vol_ic,1
 vol_lys_buffer,1
 vol_mm,2
 vol_mobile_phase,1
+vol_neutralization_buffer,1
 vol_peptide1,1
 vol_peptide2,1
 vol_peptide3,1
@@ -1428,7 +1431,7 @@ water_well,1
 wb_col,1
 well_disp_height,1
 well_edge_offset,1
-well_plate,1
+well_plate,2
 well_vol,2
 wells_skipped,1
 wells_to_be_pooled,1
