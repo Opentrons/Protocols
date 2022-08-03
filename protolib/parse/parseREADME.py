@@ -2,7 +2,8 @@ import json
 import sys
 from pathlib import Path
 
-STANDARD_LABWARE_DIRECTORY = 'ot2monorepoClone/shared-data/labware/definitions/2'
+STANDARD_LABWARE_DIRECTORY = 'ot2monorepoClone/\
+shared-data/labware/definitions/2'
 
 
 def parse_title(data):
@@ -51,7 +52,8 @@ def parse_labware(data):
             if lw['type'] not in custom_labware_loadnames]
         standard_labware_list = []
         for loadname in standard_loadnames:
-            lw_definition_path = f'{STANDARD_LABWARE_DIRECTORY}/{loadname}/1.json'
+            lw_definition_path = f'\
+{STANDARD_LABWARE_DIRECTORY}/{loadname}/1.json'
             with open(lw_definition_path) as lw_definition_file:
                 lw_data = json.load(lw_definition_file)
             display_name = lw_data['metadata']['displayName']
@@ -144,29 +146,40 @@ def parse(data, readme_map, folder_id):
     title_lines = parse_title(data)
     author_lines = ['### Author', '[Opentrons](https://opentrons.com/)']
     description_lines = ['## Description', 'This protocol does stuff!']
-    category_lines = ['## Categories', '* Broad Category', '	* Specific Category']
+    category_lines = [
+        '## Categories', '* Broad Category', '	* Specific Category']
     module_lines = parse_modules(data, readme_map)
     labware_lines = parse_labware(data,)
     pipette_lines = parse_pipettes(data, readme_map)
     deck_setup_lines = [
         '### Deck Setup',
-        f'![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/{folder_id}/deck.png)']
+        f'![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/\
+custom-README-images/{folder_id}/deck.png)']
     reagent_setup_lines = [
         '### Reagent Setup',
-        f'![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/{folder_id}/reagents.png)']
+        f'![reagents](https://opentrons-protocol-library-website.s3.amazonaws.\
+com/custom-README-images/{folder_id}/reagents.png)']
     protocol_step_lines = ['### Protocol Steps', '1. Step 1...']
     process_lines = [
         '### Process',
         '1. Input your protocol parameters above.',
         '2. Download your protocol and unzip if needed.',
-        '3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.',
-        '4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.',
+        '3. Upload your custom labware to the [OT App](https://opentrons.com/\
+ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and \
+selecting your labware files (.json extensions) if needed.',
+        '4. Upload your protocol file (.py extension) to the [OT App](https://\
+opentrons.com/ot-app) in the `Protocol` tab.',
         '5. Set up your deck according to the deck map.',
-        '6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).',
+        '6. Calibrate your labware, tiprack and pipette using the OT App. \
+For calibration tips, check out our \
+[support articles](https://support.opentrons.com/en/collections/\
+1559720-guide-for-getting-started-with-the-ot-2).',
         '7. Hit "Run".']
     additional_notes_lines = [
         '### Additional Notes',
-        'If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).']
+        'If you have any questions about this protocol, please contact the \
+Protocol Development Team by filling out the [Troubleshooting Survey]\
+(https://protocol-troubleshooting.paperform.co/).']
     internal_lines = ['###### Internal', f'{folder_id}']
 
     readme_data = {
