@@ -61,6 +61,3 @@ def run(ctx):
         p20.mix(1, 1, well)
         p20.blow_out()
         p20.drop_tip()
-
-    for c in ctx.commands():
-        print(c)
