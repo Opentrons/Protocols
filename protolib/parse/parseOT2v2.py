@@ -22,8 +22,6 @@ def parse_module(slot, module):
     except AttributeError:
         return None
 
-    # TODO: Ian 2019-09-12 Labware should remember its label,
-    # use that for `name` instead of Labware.__str__
     return {
         'slot': str(slot),
         'type': module_type,  # load name or something
@@ -131,10 +129,10 @@ def parse(protocol_path):
     metadata = protocol.metadata
 
     # NOTE: module population broke library deck layout 3/5/2020
-    # modules = filter_none([parse_module(slot, module)
-    #                        for slot, module
-    #                        in context.loaded_modules.items()])
-    modules = []
+    modules = filter_none([parse_module(slot, module)
+                           for slot, module
+                           in context.loaded_modules.items()])
+    # modules = []
 
     return {
         "instruments": instruments,
