@@ -10,7 +10,6 @@
 * PCR
 	* PCR Prep
 
-
 ## Description
 This is a flexible protocol that helps you to prepare the PCR plate for a batch test of 12 samples and 2 No Template Controls, with the previous adition of the Master Mix
 The protocol is broken down into 3 main parts:
