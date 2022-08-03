@@ -1,6 +1,6 @@
 """OPENTRONS."""
 metadata = {
-    'protocolName': '95 Sample, PCR Prep',
+    'protocolName': 'Reverse Transcriptase Preparation',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
     'source': 'Custom Protocol Request',
     'apiLevel': '2.11'

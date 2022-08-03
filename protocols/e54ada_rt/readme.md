@@ -11,7 +11,7 @@
 This is a plate filling protocol for a reverse transcriptase procedure. Up to 95 samples can be prepped using 4-in-1 tube racks filled with barcode primer mixes and a prepared enzyme mix in the final tube.
 
 Explanation of complex parameters below:
-* `Number of samples`: Specify the number of samples this run (1-95)
+* `Number of Samples`: Specify the number of samples this run (1-95)
 * `Reagent Volume to Add`: Specify the volume of RT mix to add. Default is 4.7 uL
 * `Well Plate Type`: Change between the BioRad plate in the OT-2 default labware library and the custom definition for Greiner 96 well plates with a circular well
 * `P20 Mount`: Specify which side the single-channel P20 is mounted to
