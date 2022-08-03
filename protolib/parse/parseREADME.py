@@ -49,7 +49,8 @@ def parse_labware(data):
             custom_labware_loadnames = []
         standard_loadnames = [
             lw['type'] for lw in data['labware']
-            if lw['type'] not in custom_labware_loadnames]
+            if lw['type'] not in custom_labware_loadnames
+            and int(lw['slot']) != 12]  # don't include trash
         standard_labware_list = []
         for loadname in standard_loadnames:
             lw_definition_path = f'\
