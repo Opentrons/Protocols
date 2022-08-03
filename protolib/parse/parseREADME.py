@@ -143,8 +143,8 @@ def parse(data, readme_map, folder_id):
 
     title_lines = parse_title(data)
     author_lines = ['### Author', '[Opentrons](https://opentrons.com/)']
-    description_lines = ['## Description']
-    category_lines = ['## Categories', '* ', '	* ']
+    description_lines = ['## Description', 'This protocol does stuff!']
+    category_lines = ['## Categories', '* Broad Category', '	* Specific Category']
     module_lines = parse_modules(data, readme_map)
     labware_lines = parse_labware(data,)
     pipette_lines = parse_pipettes(data, readme_map)
@@ -154,7 +154,7 @@ def parse(data, readme_map, folder_id):
     reagent_setup_lines = [
         '### Reagent Setup',
         f'![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/{folder_id}/reagents.png)']
-    protocol_step_lines = ['### Protocol Steps', '1. ']
+    protocol_step_lines = ['### Protocol Steps', '1. Step 1...']
     process_lines = [
         '### Process',
         '1. Input your protocol parameters above.',
@@ -211,12 +211,11 @@ if __name__ == '__main__':
         readme_map = json.load(map_file)
     # print('OT2 APIv2: parsing {} to {}'.format(sourceFilePath, destFilePath))
 
-    readme_path = f'{Path(protocol_path).parent}/README2.md'
+    readme_path = f'{Path(protocol_path).parent}/README.md'
     readme_content = parse(protobuilds_data, readme_map, folder_id)
     readme_text = write_readme_text(readme_content)
 
-    # if not Path(readme_build_path).exists():  # do not overwrite README
-    if 1:
+    if not Path(readme_path).exists():  # do not overwrite README
         with open(readme_path, 'w') as f:
             for line in readme_text:
                 f.writelines(f'{line}\n')
