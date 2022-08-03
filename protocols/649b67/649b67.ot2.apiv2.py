@@ -900,11 +900,17 @@ def run(ctx: protocol_api.ProtocolContext):
                     "Cannot aspirate and park a tip for an aspiration "
                     f"volume of {volume}")
 
-        if volume < 50.01:
+        if volume < 100.01:
             if pip_left and "20" in left_mount_pipette_type:
                 return pip_left, 20
             elif pip_right and "20" in right_mount_pipette_type:
                 return pip_right, 20
+            elif pip_left and "300" in left_mount_pipette_type:
+                max_vol = 200 if left_tip_type == "filter" else 300
+                return pip_left, max_vol
+            elif pip_right and "300" in right_mount_pipette_type:
+                max_vol = 200 if right_tip_type == "filter" else 300
+                return pip_right, max_vol
             else:
                 raise Exception(
                     ("There is no 20 uL pipette loaded for handling a "
@@ -916,6 +922,10 @@ def run(ctx: protocol_api.ProtocolContext):
             elif pip_right and "300" in right_mount_pipette_type:
                 max_vol = 200 if right_tip_type == "filter" else 300
                 return pip_right, max_vol
+            elif pip_right and "1000" in right_mount_pipette_type:
+                return pip_right, 1000
+            elif pip_left and "1000" in left_mount_pipette_type:
+                return pip_left, 1000
             else:
                 raise Exception(
                     ("There is no 300 uL pipette loaded for handling a "
