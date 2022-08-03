@@ -29,7 +29,7 @@ Explanation of complex parameters below:
 
 ---
 
-### Deck Setup
+### Deck-Setup
 
 * Tube racks in slots 1, 2, 4, and 5 map directly to the 96 well plate. I.e. if 95 samples are specified all four tube racks will load in, RT mix will be in the bottom right well, C4, for slot 2. Well G12 will have primers added from slot 2, tube C3. If 13 samples are specified, the tube racks in slot 4 and 1 will load in, RT mix will be in well B2 in slot 1 (the 14th tube). Slot 1 A1's primer will add to well E1 in slot 3's well plate. Click [here](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/e54ada_rt/Tube+to+Plate+Mapping+for+RT.xlsx) for an explanatory spreadsheet
 
