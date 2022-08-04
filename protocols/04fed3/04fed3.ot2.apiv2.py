@@ -48,7 +48,7 @@ def run(ctx):
     destplate = ctx.load_labware(
      'genesee25221_96_wellplate_300ul', '6', 'Destination Plate')
 
-    # p300m "one tip" buffer transfer
+    # p300m one tip buffer transfer
     p300m.pick_up_tip(tips300[0]['H1'])
     p300m.transfer(
      [float(tfer['Diluent Volume(ul)']) for tfer in tfers],
