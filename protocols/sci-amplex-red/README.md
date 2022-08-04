@@ -5,7 +5,7 @@
 
 ## Categories
 * Standard curve for Hydrogen Peroxide
-  * Measurement of peroxides/hydrogen peroxide from THP-1 cells
+	* Measurement of peroxides/hydrogen peroxide from THP-1 cells
 
 ## Description
 This protocol can be used to measure the levels of hydrogen peroxide from THP-1 cells using Amplex Red reagent kit on the OT-2. 96-well plate format is used for this protocol.
