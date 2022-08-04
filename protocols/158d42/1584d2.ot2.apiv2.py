@@ -34,7 +34,7 @@ def run(ctx: protocol_api.ProtocolContext):
     # MODULES
     if use_temp_mod:
         temp_mod = ctx.load_module('temperature module gen2', '1')
-        temp_mod.set_temperature(12)
+        temp_mod.set_temperature(20)
         plate = temp_mod.load_labware('nest_96_wellplate_100ul_pcr_full_skirt')
     else:
         plate = ctx.load_labware('nest_96_wellplate_100ul_pcr_full_skirt', '1')
