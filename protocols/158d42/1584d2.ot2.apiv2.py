@@ -97,15 +97,19 @@ def run(ctx: protocol_api.ProtocolContext):
         ctx.comment('\n')
 
     ctx.comment('\n\nMOVING POSITIVE CONTROL TO PLATE\n')
+    pos_ctrl_aspiration_height = 0.4
     p300.pick_up_tip()
     p300.aspirate(50, pos_ctrl_tube.bottom(2))
     p300.dispense(30, positive_ctrl_1.bottom(positive_ctrl_1.depth/2))
     p300.dispense(20, positive_ctrl_1)
     p300.mix(5, 40, positive_ctrl_1)
+    p300.aspirate(50, positive_ctrl_1.bottom(pos_ctrl_aspiration_height),
+                  rate=0.5)
 
-    p300.aspirate(50, positive_ctrl_1.bottom(2), rate=0.5)
-    p300.home()
+    p300.move_to(positive_ctrl_1.top(20))
+    ctx.delay(seconds=2)
+
     p300.dispense(30, positive_ctrl_final.bottom(positive_ctrl_1.depth/2))
     p300.dispense(20, positive_ctrl_final)
     p300.mix(5, 40, positive_ctrl_final)
-    p300.drop_tip(ctx.loaded_labwares[12].wells()[0].top(z=5))
+    p300.drop_tip(ctx.loaded_labwares[12].wells()[0].top(z=-25))
