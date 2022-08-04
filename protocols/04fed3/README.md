@@ -21,6 +21,7 @@ Set up: Place up to three 24-tube Opentrons racks in deck slots 1, 4, and 7 and 
 The OT-2 will perform the following steps:
 1. Use the p300 multi to distribute buffer from the reservoir to wells of the destination plate according to the uploaded csv file.
 2. Use the p20 single to mix the sample source 6x, transfer sample to wells of the destination plate, and mix the destination well 3x according to the uploaded csv file.
+
 ---
 ![Materials Needed](https://s3.amazonaws.com/opentrons-protocol-library-website/custom-README-images/001-General+Headings/materials.png)
 
