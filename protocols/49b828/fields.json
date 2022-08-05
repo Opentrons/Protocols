@@ -7,6 +7,15 @@
   },
   {
     "type": "dropDown",
+    "label": "96 Plate Type",
+    "name": "plate_96",
+    "options": [
+      {"label": "Thermofisher Plate", "value": "thermofisherscientific_96_wellplate_50ul"},
+      {"label": "Kingfisher Plate": "kingfisher_96_wellplate_200ul"}
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "384 Plate Type",
     "name": "plate_384",
     "options": [
