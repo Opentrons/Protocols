@@ -13,11 +13,13 @@ def run(ctx: protocol_api.ProtocolContext):
 
     [
      num_samp,
+     plate_96,
      plate_384,
      use_temp,
      m20_mount
      ] = get_values(  # noqa: F821
          "num_samp",
+         "plate_96",
          "plate_384",
          "use_temp",
          "m20_mount"
@@ -38,7 +40,7 @@ def run(ctx: protocol_api.ProtocolContext):
                       "lifetechnologies_384_wellplate_50ul", '3',
                       label='the 384 PCR PLATE')
     sample_plates = [ctx.load_labware(
-                      "thermofisherscientific_96_wellplate_50ul",
+                      plate_96,
                       slot, label="the SAMPLE PLATE")
                      for slot in ['7', '8', '1', '2']]
     reservoir = ctx.load_labware('nest_12_reservoir_15ml', '9')

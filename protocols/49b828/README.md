@@ -13,8 +13,9 @@ This protocol preps a 384 well plate with mastermix and sample. Plates should lo
 
 Explanation of complex parameters below:
 * `Number of Samples`: Specify the number of samples in this run. Samples 1-96 will go in plate 1 slot 7, samples 97-192 will go in plate 2 slot 8, samples 193-288 will go in plate 3 slot 1, samples 289-384 will go in plate 4 slot 2. Samples will be put into the 384 well plate in the following manner:
+* `96 Well Plate Type`: Specify whether using the four 96 plates as the Kingfisher plate (depth 12.8mm) or the thermofisher plate (depth 42.3mm).
 * `384 Well Plate Type`: Specify whether using the 384 plate with the clear numbers, or the 384 plate with the black numbers. Plate should be mounted on aluminum block.
-* `Use Temperature Module?`: Specify whether using the temperature module or not on the 384 plate in slot 3 for this run. The temperature module will be set at 4C. If not using the temperature module, just place the 384 plate in slot 3 with no aluminum block. 
+* `Use Temperature Module?`: Specify whether using the temperature module or not on the 384 plate in slot 3 for this run. The temperature module will be set at 4C. If not using the temperature module, just place the 384 plate in slot 3 with no aluminum block.
 * `P20 Multi-Channel Mount`: Specify which mount (left or right) to host the P20 Single-Channel pipette.
 
 ---
