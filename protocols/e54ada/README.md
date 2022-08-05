@@ -11,7 +11,7 @@
 This is a bead-based purification of nucleic acids using either BioRad 96 well plates or Grenier 96 well plates. Using P300 single and multi channel pipettes we have flexibility using 4-in-1 tube racks or 12 well reservoirs to hold beads. The beads can be diluted with 40% PEG 8000 mixtures or left neat from the reagent bottle.
 
 Explanation of complex parameters below:
-* `Number of samples`: Specify the number of samples this run (1-96 and divisible by 8, i.e. whole columns at a time).
+* `Number of samples`: Specify the number of samples this run (1-96)
 * `Reaction Volume`: Specify the starting sample volume in uL for the first plate
 * `Bead Ratio`: Specify the ratio of beads to sample volume with a float. Default is 1.8
 * `Elution Volume`: Specify the volume of elution liquid to use and subsequently transfer to the final plate in uL
