@@ -63,16 +63,16 @@ def run(ctx):
     park_cols = math.ceil(num_samp/8)
     if well_plate == "biorad_96_wellplate_200ul_pcr":
         x_abs_move_super = 0.5  # how far left or right during super removal
+        z_asp_height = 0.5  # how far above well bottom during super removal
         etoh_wash_vol = 120
     else:
         x_abs_move_super = 0
+        z_asp_height = 1
         etoh_wash_vol = 200
     if m300_mount == 'left':
         p300_mount = 'right'
     else:
         p300_mount = 'left'
-    # if not 1 <= num_samp <= 12:
-    #     raise Exception("")
 
     # load module
     mag_mod = ctx.load_module('magnetic module gen2', 1)
@@ -87,7 +87,7 @@ def run(ctx):
     elution_plate = ctx.load_labware(well_plate, 10)
     waste_labware = ctx.load_labware('nest_1_reservoir_195ml', 11)
 
-    if num_samp < 7:  # will have to adjust this number
+    if num_samp < 7:
         single_mode = True
     else:
         single_mode = False
@@ -95,7 +95,7 @@ def run(ctx):
     if single_mode:
         reagent_rack = ctx.load_labware('opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', 6)  # noqa: E501
         # num_tubes = math.ceil(bead_vol*num_samp/1200)
-        beads = reagent_rack.wells()[0]  # first row of tubes
+        beads = reagent_rack.wells()[0]
         bead_tube = beads
 
     reagent_res = ctx.load_labware('nest_12_reservoir_15ml', 3)
@@ -315,7 +315,7 @@ def run(ctx):
         pick_up(m300)
         ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
         ctx.max_speeds['A'] /= supernatant_headspeed_modulator
-        m300.aspirate(bead_vol+rxn_vol, col.bottom().move(types.Point(x=side, y=0, z=1)), rate=magnet_rate)  # noqa: E501
+        m300.aspirate(bead_vol+rxn_vol, col.bottom().move(types.Point(x=side, y=0, z=z_asp_height)), rate=magnet_rate)  # noqa: E501
         ctx.delay(3)
         m300.move_to(col.top())
         ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
@@ -331,7 +331,7 @@ def run(ctx):
             pick_up(p300)
             ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
             ctx.max_speeds['A'] /= supernatant_headspeed_modulator
-            p300.aspirate(bead_vol+rxn_vol, well.bottom().move(types.Point(x=side, y=0, z=1)), rate=magnet_rate)  # noqa: E501
+            p300.aspirate(bead_vol+rxn_vol, well.bottom().move(types.Point(x=side, y=0, z=z_asp_height)), rate=magnet_rate)  # noqa: E501
             ctx.delay(3)
             p300.move_to(well.top())
             ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
@@ -353,8 +353,10 @@ def run(ctx):
             if i == 0:
                 m300.aspirate(20, ethanol[i].top())
             m300.aspirate(etoh_wash_vol, ethanol[i])
+            m300.move_to(ethanol[i].top())
+            m300.aspirate(20, ethanol[i].top())
             m300.dispense(m300.current_volume, col.top())
-            m300.aspirate(20, col.top(3))
+            m300.aspirate(20, col.top())
         drop_tip(m300)
         ctx.comment('\n')
 
@@ -366,6 +368,8 @@ def run(ctx):
                     if i == 0:
                         p300.aspirate(20, ethanol[i].top())
                     p300.aspirate(etoh_wash_vol, ethanol[i+1])
+                    p300.move_to(ethanol[i])
+                    p300.aspirate(20, ethanol[i].top())
                     p300.dispense(p300.current_volume, well.top())
                     p300.aspirate(20, well.top(3))
                 drop_tip(p300)
@@ -381,22 +385,28 @@ def run(ctx):
             m300.move_to(col.top(3))
             ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
             ctx.max_speeds['A'] /= supernatant_headspeed_modulator
-            m300.aspirate(etoh_wash_vol, col.bottom().move(types.Point(x=side, y=0, z=1)), rate=magnet_rate)  # noqa: E501
+            m300.aspirate(etoh_wash_vol, col.bottom().move(types.Point(x=side, y=0, z=z_asp_height)), rate=magnet_rate)  # noqa: E501
             ctx.delay(seconds=3)
+            m300.move_to(col.top())
+            m300.aspirate(20, col.top())
             ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
             ctx.max_speeds['A'] *= supernatant_headspeed_modulator
-            m300.dispense(etoh_wash_vol, waste)
+            m300.move_to(waste)
+            m300.dispense(m300.current_volume, waste)
             m300.aspirate(20, waste)
             m300.move_to(col.top(3))
             ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
             ctx.max_speeds['A'] /= supernatant_headspeed_modulator
-            m300.aspirate(50, col.bottom().move(types.Point(x=side, y=0, z=1)), rate=magnet_rate)  # noqa: E501
+            m300.aspirate(50, col.bottom().move(types.Point(x=side, y=0, z=z_asp_height)), rate=magnet_rate)  # noqa: E501
             m300.move_to(col.top(3))
             ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
             ctx.max_speeds['A'] *= supernatant_headspeed_modulator
             m300.dispense(m300.current_volume, waste)
             m300.blow_out()
-            m300.drop_tip(park_loc_m)
+            if _ == 0:
+                m300.drop_tip(park_loc_m)
+            else:
+                drop_tip(m300)
             ctx.comment('\n')
 
         if leftover:
@@ -408,7 +418,7 @@ def run(ctx):
                 p300.move_to(well.top(3))
                 ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
                 ctx.max_speeds['A'] /= supernatant_headspeed_modulator
-                p300.aspirate(etoh_wash_vol, well.bottom().move(types.Point(x=side, y=0, z=1)), rate=magnet_rate)  # noqa: E501
+                p300.aspirate(etoh_wash_vol, well.bottom().move(types.Point(x=side, y=0, z=z_asp_height)), rate=magnet_rate)  # noqa: E501
                 ctx.delay(seconds=3)
                 p300.move_to(well.top(3))
                 ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
@@ -417,7 +427,7 @@ def run(ctx):
                 p300.move_to(well.top(3))
                 ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
                 ctx.max_speeds['A'] /= supernatant_headspeed_modulator
-                p300.aspirate(50, well.bottom().move(types.Point(x=side, y=0, z=1)), rate=magnet_rate)  # noqa: E501
+                p300.aspirate(50, well.bottom().move(types.Point(x=side, y=0, z=z_asp_height)), rate=magnet_rate)  # noqa: E501
                 ctx.delay(seconds=3)
                 p300.move_to(well.top(3))
                 ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
@@ -479,7 +489,7 @@ def run(ctx):
         m300.move_to(s.top())
         ctx.max_speeds['Z'] /= supernatant_headspeed_modulator
         ctx.max_speeds['A'] /= supernatant_headspeed_modulator
-        m300.aspirate(elute_vol, s.bottom().move(types.Point(x=side, y=0, z=1)), rate=magnet_rate)  # noqa: E501
+        m300.aspirate(elute_vol, s.bottom().move(types.Point(x=side, y=0, z=z_asp_height)), rate=magnet_rate)  # noqa: E501
         m300.move_to(s.top())
         ctx.max_speeds['Z'] *= supernatant_headspeed_modulator
         ctx.max_speeds['A'] *= supernatant_headspeed_modulator
@@ -506,6 +516,7 @@ def run(ctx):
             drop_tip(p300)
             ctx.comment('\n')
 
+    mag_mod.disengage()
     for c in ctx.commands():
         print(c)
     # NOTES:
