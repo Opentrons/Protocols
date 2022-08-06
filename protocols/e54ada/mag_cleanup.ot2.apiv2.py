@@ -59,7 +59,7 @@ def run(ctx):
     bead_mag_time = 7
     bead_incubate_time = 10
     etoh_dry_time = 10
-    elute_time = 5
+    elute_time = 7
     park_cols = math.ceil(num_samp/8)
     if well_plate == "biorad_96_wellplate_200ul_pcr":
         x_abs_move_super = 0.5  # how far left or right during super removal
@@ -454,7 +454,7 @@ def run(ctx):
         pick_up(m300)
         m300.aspirate(elute_vol, water)
         m300.dispense(elute_vol, col)
-        m300.mix(5, elute_vol*0.9, col, rate=mix_rate)
+        m300.mix(10, elute_vol*0.9, col, rate=2)
         m300.blow_out()
         drop_tip(m300)
     ctx.comment('\n')
@@ -466,7 +466,7 @@ def run(ctx):
         for well in mag_plate.columns()[num_full_col][:left_over_in_unfilled_col]:  # noqa: E501
             p300.aspirate(elute_vol, water)
             p300.dispense(elute_vol, well.top())
-            p300.mix(5, elute_vol*0.9, well, rate=mix_rate)
+            p300.mix(10, elute_vol*0.9, well, rate=2)
             p300.blow_out()
             ctx.comment('\n')
         drop_tip(p300)
