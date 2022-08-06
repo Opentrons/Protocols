@@ -7,7 +7,7 @@
     },
     {
       "type": "int",
-      "label": "Reaction Volume (uL, integer)",
+      "label": "Reaction Volume (uL)",
       "name": "rxn_vol",
       "default": 40
     },
