@@ -1,5 +1,6 @@
 from opentrons import protocol_api
 
+
 metadata = {
     'protocolName': 'RNA Normalization I & II',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
@@ -13,8 +14,7 @@ def run(ctx: protocol_api.ProtocolContext):
     [
      _num_samp,
      _use_temp_mod,
-     _p300_mount,
-
+     _p300_mount
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
         "_num_samp",
         "_use_temp_mod",
@@ -79,7 +79,7 @@ def run(ctx: protocol_api.ProtocolContext):
     p300.dispense(30, negative_ctrl.bottom(negative_ctrl.depth/2))
     p300.dispense(20, negative_ctrl)
     p300.mix(5, 40, negative_ctrl)
-    p300.drop_tip(ctx.loaded_labwares[12].wells()[0].top(z=5))
+    p300.drop_tip(ctx.loaded_labwares[12].wells()[0].top(z=-25))
 
     ctx.comment('\n\nMOVING SAMPLES TO PLATE\n')
     for prl_source, dest1, final_dest in zip(prl_rows,
@@ -88,12 +88,12 @@ def run(ctx: protocol_api.ProtocolContext):
         p300.pick_up_tip()
         p300.aspirate(50, prl_source.bottom(prl_source.depth/2))
         p300.dispense(50, dest1.bottom(2))
-        p300.mix(5, 200, dest1.bottom(2))
+        p300.mix(5, 50, dest1.bottom(2))
         p300.aspirate(50, dest1.bottom(2))
         p300.dispense(30, final_dest.bottom(final_dest.depth/2))
         p300.dispense(20, final_dest)
         p300.mix(5, 40, final_dest)
-        p300.drop_tip(ctx.loaded_labwares[12].wells()[0].top(z=5))
+        p300.drop_tip(ctx.loaded_labwares[12].wells()[0].top(z=-25))
         ctx.comment('\n')
 
     ctx.comment('\n\nMOVING POSITIVE CONTROL TO PLATE\n')
