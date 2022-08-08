@@ -26,10 +26,10 @@ def run(ctx):
     z_offset = 3.0
     radial_offset_fraction = 0.4  # fraction of radius
     starting_vol = 400
-    vol_binding_buffer = 433
-    vol_quick_dna_magbinding_buffer = 500
-    vol_dna_pre_wash_buffer = 500
-    vol_g_dna_wash_buffer = 900
+    vol_binding_buffer = 216
+    vol_quick_dna_magbinding_buffer = 250
+    vol_dna_pre_wash_buffer = 250
+    vol_g_dna_wash_buffer = 450
     vol_elution = 50
     engage_height = 7.6
 
