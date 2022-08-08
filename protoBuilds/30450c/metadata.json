@@ -2,7 +2,7 @@
     "files": {
         "OT 1 protocol": [],
         "OT 2 protocol": [
-            "test.ot2.apiv2.py"
+            "30450c.ot2.apiv2.py"
         ],
         "description": [
             "README.md"
@@ -11,10 +11,10 @@
     "flags": {
         "embedded-app": false,
         "feature": false,
-        "hide-from-search": true,
+        "hide-from-search": false,
         "skip-tests": false
     },
-    "path": "protocols/test-readme",
-    "slug": "test-readme",
+    "path": "protocols/30450c",
+    "slug": "30450c",
     "status": "ok"
 }
