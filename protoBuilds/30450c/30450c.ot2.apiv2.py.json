@@ -1,0 +1,150 @@
+{
+    "content": "import math\n\nmetadata = {\n    'protocolName': 'Add Bulk Reagent to ELISA Plates',\n    'author': 'Steve Plonk <protocols@opentrons.com>',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx):\n\n    # get parameter values from json above\n    [plate_count, step, pause_for_washing, tip_touch,\n     labware_elisa_plate] = get_values(  # noqa: F821\n      'plate_count', 'step', 'pause_for_washing', 'tip_touch',\n      'labware_elisa_plate')\n\n    ctx.set_rail_lights(True)\n    ctx.delay(seconds=10)\n    if plate_count < 1 or plate_count > 5:\n        raise Exception('Invalid number of ELISA plates (must be 1-5).')\n\n    # tips, p20 single, p300 multi\n    tips300 = [ctx.load_labware(\n     \"opentrons_96_tiprack_300ul\", str(slot)) for slot in [11]]\n    p300m = ctx.load_instrument(\n        \"p300_multi_gen2\", 'right', tip_racks=tips300)\n\n    reagent_dict = {'blocking': '1x Assay Diluent',\n                    'coating': 'capture ab in 1x Coating Buffer A',\n                    'detection ab': 'diluted detection ab',\n                    'avidin hrp': 'diluted Avidin-HRP',\n                    'TMB substrate': 'TMB substrate',\n                    'stop': 'stop solution'}\n\n    vol_dispense_dict = {'blocking': 200,\n                         'coating': 100,\n                         'detection ab': 100,\n                         'avidin hrp': 100,\n                         'TMB substrate': 100,\n                         'stop': 100}\n\n    # yield list chunks of size n\n    def create_chunks(list_name, n):\n        for i in range(0, len(list_name), n):\n            yield list_name[i:i+n]\n\n    elisaplates = [\n     ctx.load_labware(labware_elisa_plate, str(slot+1),\n                      'Elisa Plate in Slot {}'.format(\n                      str(slot+1))) for slot in [*range(5)]]\n\n    reagentreservoir = ctx.load_labware(\n     'nest_1_reservoir_195ml', '10', 'Bulk Reagent {}'.format(\n      reagent_dict[step]))\n\n    vol = vol_dispense_dict[step]\n\n    source = reagentreservoir.wells()[0]\n\n    p300m.pick_up_tip()\n\n    for index, plate in enumerate(elisaplates[:plate_count]):\n\n        # pause for off deck washing, then fill\n        if pause_for_washing:\n            p300m.move_to(reagentreservoir.wells()[0].top())\n            ctx.pause(\n             \"\"\"Pausing for washing/liquid removal for ELISA plate {}.\n             Resume to fill with {} uL {}\"\"\".format(\n              index+1, vol, reagent_dict[step]))\n        else:\n            ctx.comment(\n             \"Filling ELISA plate {} with {} uL {}\".format(\n              index+1, vol, reagent_dict[step]))\n\n        # if tip touch, repeat dispense (faster plate filling), disposal vol\n        if tip_touch:\n\n            disposal_volume = 100\n\n            dispense_locations = [column[0] for column in plate.columns()]\n\n            chunk_size = math.floor(\n             (tips300[0].wells()[0].max_volume - disposal_volume) / vol)\n\n            chunks = [*create_chunks(dispense_locations, chunk_size)]\n\n            for chunk in chunks:\n\n                p300m.aspirate(\n                 len(chunk)*vol + disposal_volume, source.bottom(1))\n\n                for well in chunk:\n                    p300m.dispense(vol, well.top(2))\n                    p300m.touch_tip()\n\n                # return disposal to source for less reagent usage\n                p300m.dispense(disposal_volume, source.bottom(1))\n\n        # for clean top dispense when tip touch is not an option\n        else:\n\n            for column in plate.columns():\n\n                # pre air gap\n                p300m.move_to(source.top())\n                p300m.air_gap(20)\n                p300m.aspirate(vol, source.bottom(1))\n\n                # dispense liquid followed by air at rate=2\n                p300m.dispense(vol+20, column[0].top(2), rate=2)\n                # followed by delayed blowout\n                ctx.delay(seconds=0.5)\n                p300m.blow_out()\n\n    p300m.drop_tip()\n\n    ctx.comment(\"Finished with {} step\".format(step))\n",
+    "custom_labware_defs": [],
+    "fields": [
+        {
+            "default": 5,
+            "label": "Number of ELISA plates (1-5)",
+            "name": "plate_count",
+            "type": "int"
+        },
+        {
+            "label": "Step of the ELISA process",
+            "name": "step",
+            "options": [
+                {
+                    "label": "Blocking Step - Add 1x Assay Diluent",
+                    "value": "blocking"
+                },
+                {
+                    "label": "Coating Step - Add capture ab in 1x Coating Buffer A",
+                    "value": "coating"
+                },
+                {
+                    "label": "Detection Ab Step - Add diluted detection ab",
+                    "value": "detection ab"
+                },
+                {
+                    "label": "Avidin HRP Step - Add diluted avidin HRP",
+                    "value": "avidin hrp"
+                },
+                {
+                    "label": "TMB substrate Step - Add TMB substrate",
+                    "value": "TMB substrate"
+                },
+                {
+                    "label": "Stop Step - Add stop solution",
+                    "value": "stop"
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Pause (for off-deck washing) before adding reagent to each plate? (yes or no)",
+            "name": "pause_for_washing",
+            "options": [
+                {
+                    "label": "YES - include pause before adding reagent to each plate",
+                    "value": true
+                },
+                {
+                    "label": "NO - add reagent to each plate without pausing",
+                    "value": false
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Include tip touch after dispense? (yes or no)",
+            "name": "tip_touch",
+            "options": [
+                {
+                    "label": "YES - touch tip after each dispense",
+                    "value": true
+                },
+                {
+                    "label": "NO - avoid tip touch after each dispense",
+                    "value": false
+                }
+            ],
+            "type": "dropDown"
+        },
+        {
+            "label": "Labware for the ELISA plate",
+            "name": "labware_elisa_plate",
+            "options": [
+                {
+                    "label": "corning_96_wellplate_360ul_flat",
+                    "value": "corning_96_wellplate_360ul_flat"
+                },
+                {
+                    "label": "nest_96_wellplate_200ul_flat",
+                    "value": "nest_96_wellplate_200ul_flat"
+                }
+            ],
+            "type": "dropDown"
+        }
+    ],
+    "instruments": [
+        {
+            "mount": "right",
+            "name": "p300_multi_gen2"
+        }
+    ],
+    "labware": [
+        {
+            "name": "Elisa Plate in Slot 1 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Elisa Plate in Slot 2 on 2",
+            "share": false,
+            "slot": "2",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Elisa Plate in Slot 3 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Elisa Plate in Slot 4 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Elisa Plate in Slot 5 on 5",
+            "share": false,
+            "slot": "5",
+            "type": "corning_96_wellplate_360ul_flat"
+        },
+        {
+            "name": "Bulk Reagent 1x Assay Diluent on 10",
+            "share": false,
+            "slot": "10",
+            "type": "nest_1_reservoir_195ml"
+        },
+        {
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 11",
+            "share": false,
+            "slot": "11",
+            "type": "opentrons_96_tiprack_300ul"
+        },
+        {
+            "name": "Opentrons Fixed Trash on 12",
+            "share": false,
+            "slot": "12",
+            "type": "opentrons_1_trash_1100ml_fixed"
+        }
+    ],
+    "metadata": {
+        "apiLevel": "2.11",
+        "author": "Steve Plonk <protocols@opentrons.com>",
+        "protocolName": "Add Bulk Reagent to ELISA Plates"
+    },
+    "modules": []
+}
