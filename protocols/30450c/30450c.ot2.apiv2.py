@@ -62,7 +62,7 @@ def run(ctx):
 
     for index, plate in enumerate(elisaplates[:plate_count]):
 
-        # pause for off deck washing/emptying, then fill
+        # pause for off deck washing, then fill
         if pause_for_washing:
             p300m.move_to(reagentreservoir.wells()[0].top())
             ctx.pause(
