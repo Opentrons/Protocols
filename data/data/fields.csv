@@ -19,10 +19,12 @@ _mm_transfer_vol,1
 _music,1
 _num_col,3
 _num_samp,1
+_num_samples,1
 _num_samps,2
 _p1000_mount,1
 _p20_mount,3
 _p300_mount,1
+_p300mnt,1
 _pip_model,1
 _pip_mount,1
 _profile_type,1
@@ -34,6 +36,10 @@ _src_module,3
 _tc_cycles,1
 _tip_start_column,1
 _use_temp_mod,1
+_vol_eln,1
+_vol_eql,1
+_vol_wash1,1
+_vol_wash2,1
 a1_init_vol,1
 a3_init_vol,1
 a4_init_vol,1
@@ -768,7 +774,7 @@ num_reps,1
 num_row,1
 num_rows_a,1
 num_rows_b,1
-num_samp,52
+num_samp,53
 num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
@@ -832,7 +838,7 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,101
+p20_mount,102
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
@@ -996,6 +1002,7 @@ ratio_beads,1
 reaction_plate,3
 reag1_vol,1
 reag2_vol,1
+reag_vol,1
 reagent,1
 reagent1_loadname,1
 reagent2_loadname,1
@@ -1431,7 +1438,7 @@ water_well,1
 wb_col,1
 well_disp_height,1
 well_edge_offset,1
-well_plate,2
+well_plate,3
 well_vol,2
 wells_skipped,1
 wells_to_be_pooled,1
