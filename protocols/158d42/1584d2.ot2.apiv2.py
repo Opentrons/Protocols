@@ -14,7 +14,8 @@ def run(ctx: protocol_api.ProtocolContext):
     [
      _num_samp,
      _use_temp_mod,
-     _p300_mount
+     _p300_mount,
+
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
         "_num_samp",
         "_use_temp_mod",
