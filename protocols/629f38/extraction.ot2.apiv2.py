@@ -25,11 +25,11 @@ def run(ctx):
     vol_mix = 200
     z_offset = 3.0
     radial_offset_fraction = 0.4  # fraction of radius
-    starting_vol = 400
-    vol_binding_buffer = 433
-    vol_quick_dna_magbinding_buffer = 500
-    vol_dna_pre_wash_buffer = 500
-    vol_g_dna_wash_buffer = 900
+    starting_vol = 200
+    vol_binding_buffer = 216
+    vol_quick_dna_magbinding_buffer = 250
+    vol_dna_pre_wash_buffer = 250
+    vol_g_dna_wash_buffer = 450
     vol_elution = 50
     engage_height = 7.6
 
@@ -47,7 +47,7 @@ def run(ctx):
                              'Liquid Waste').wells()[0].top()
     res1 = ctx.load_labware('nest_12_reservoir_15ml', '5',
                             'reagent reservoir 1')
-    res2 = ctx.load_labware('nest_1_reservoir_195ml', '2',
+    res2 = ctx.load_labware('nest_12_reservoir_15ml', '2',
                             'reagent reservoir 2')
     tips300 = [
         ctx.load_labware('opentrons_96_filtertiprack_200ul', slot,
@@ -66,7 +66,7 @@ def run(ctx):
     quick_dna_magbinding_buffer = res1.wells()[3:7]
     dna_pre_wash_buffer = res1.wells()[7:11]
     elution_buffer = res1.wells()[11:]
-    g_dna_wash_buffer = res2.wells()[:1]
+    g_dna_wash_buffer = [res2.wells()[i*4:(i+1)*4] for i in range(2)]
 
     num_cols = math.ceil(num_samples/8)
     mag_samples_m = magplate.rows()[0][:num_cols]
@@ -354,8 +354,8 @@ MagDeck for {time_settling_minutes} minutes.')
          parking_spots=parking_sets[1])
     wash(vol_dna_pre_wash_buffer, dna_pre_wash_buffer,
          parking_spots=parking_sets[2])
-    for set_ind in [3, 4]:
-        wash(vol_g_dna_wash_buffer, g_dna_wash_buffer,
+    for i, set_ind in enumerate([3, 4]):
+        wash(vol_g_dna_wash_buffer, g_dna_wash_buffer[i],
              parking_spots=parking_sets[set_ind],
              aspiration_location=Point(x=-4.5, z=0.5))
     if not TEST_MODE_AIRDRY:

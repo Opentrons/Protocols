@@ -9,7 +9,7 @@ metadata = {
 
 def run(ctx):
 
-    # get parameter values from json above
+    # get parameter values from json
     [plate_count, step, pause_for_washing, tip_touch,
      labware_elisa_plate] = get_values(  # noqa: F821
       'plate_count', 'step', 'pause_for_washing', 'tip_touch',
