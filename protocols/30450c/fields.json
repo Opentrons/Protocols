@@ -41,6 +41,7 @@
     "label": "Labware for the ELISA plate",
     "name": "labware_elisa_plate",
     "options": [
+      { "label": "nunc_442404_96_flat_wellplate_400ul", "value": "nunc_442404_96_flat_wellplate_400ul" },
       { "label": "corning_96_wellplate_360ul_flat", "value": "corning_96_wellplate_360ul_flat" },
       { "label": "nest_96_wellplate_200ul_flat", "value": "nest_96_wellplate_200ul_flat" }
     ]
