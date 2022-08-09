@@ -48,7 +48,7 @@ def run(ctx):
     elisaplates = [
      ctx.load_labware(labware_elisa_plate, str(slot+1),
                       'Elisa Plate in Slot {}'.format(
-                      str(slot+1))) for slot in [*range(5)]]
+                      str(slot+1))) for slot in [*range(5)][:plate_count]]
 
     reagentreservoir = ctx.load_labware(
      'nest_1_reservoir_195ml', '10', 'Bulk Reagent {}'.format(
@@ -92,7 +92,7 @@ def run(ctx):
                  len(chunk)*vol + disposal_volume, source.bottom(1))
 
                 for well in chunk:
-                    p300m.dispense(vol, well.top(2))
+                    p300m.dispense(vol, well.top())
                     p300m.touch_tip()
 
                 # return disposal to source for less reagent usage
@@ -109,7 +109,7 @@ def run(ctx):
                 p300m.aspirate(vol, source.bottom(1))
 
                 # dispense liquid followed by air at rate=2
-                p300m.dispense(vol+20, column[0].top(2), rate=2)
+                p300m.dispense(vol+20, column[0].top(), rate=2)
                 # followed by delayed blowout
                 ctx.delay(seconds=0.5)
                 p300m.blow_out()
