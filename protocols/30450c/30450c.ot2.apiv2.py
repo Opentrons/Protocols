@@ -23,7 +23,7 @@ def run(ctx):
     if step == 'blocking' and labware_reservoir == 'nest_12_reservoir_15ml':
         raise Exception('Use 195 mL reservoir for 200 uL blocking transfers')
 
-    # tips, p20 single, p300 multi
+    # tips, p300 multi
     tips300 = [ctx.load_labware(
      "opentrons_96_tiprack_300ul", str(slot)) for slot in [11]]
     p300m = ctx.load_instrument(
