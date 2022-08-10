@@ -11,14 +11,17 @@ def run(ctx):
 
     # get parameter values from json
     [plate_count, step, pause_for_washing, tip_touch,
-     labware_elisa_plate] = get_values(  # noqa: F821
+     labware_reservoir, labware_elisa_plate] = get_values(  # noqa: F821
       'plate_count', 'step', 'pause_for_washing', 'tip_touch',
-      'labware_elisa_plate')
+      'labware_reservoir', 'labware_elisa_plate')
 
     ctx.set_rail_lights(True)
     ctx.delay(seconds=10)
     if plate_count < 1 or plate_count > 5:
         raise Exception('Invalid number of ELISA plates (must be 1-5).')
+
+    if step == 'blocking' and labware_reservoir == 'nest_12_reservoir_15ml':
+        raise Exception('Use 195 mL reservoir for 200 uL blocking transfers')
 
     # tips, p20 single, p300 multi
     tips300 = [ctx.load_labware(
@@ -51,22 +54,27 @@ def run(ctx):
                       str(slot+1))) for slot in [*range(5)][:plate_count]]
 
     reagentreservoir = ctx.load_labware(
-     'nest_1_reservoir_195ml', '10', 'Bulk Reagent {}'.format(
+     labware_reservoir, '10', 'Bulk Reagent {}'.format(
       reagent_dict[step]))
 
     vol = vol_dispense_dict[step]
 
-    source = reagentreservoir.wells()[0]
+    bufferwells = 5*[
+     reagentreservoir.wells()[0]
+     ] if labware_reservoir != 'nest_12_reservoir_15ml' \
+        else reagentreservoir.wells()[:5]
 
     p300m.pick_up_tip()
 
     for index, plate in enumerate(elisaplates[:plate_count]):
 
+        source = bufferwells[index]
+
         # pause for off deck washing, then fill
         if pause_for_washing:
             p300m.move_to(reagentreservoir.wells()[0].top())
             ctx.pause(
-             """Pausing for washing/liquid removal for ELISA plate {}.
+             """Pausing to wash ELISA plate {}.
              Resume to fill with {} uL {}""".format(
               index+1, vol, reagent_dict[step]))
         else:
