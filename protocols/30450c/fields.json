@@ -10,8 +10,8 @@
     "label": "Step of the ELISA process",
     "name": "step",
     "options": [
-      { "label": "Blocking Step - Add 1x Assay Diluent", "value": "blocking" },
       { "label": "Coating Step - Add capture ab in 1x Coating Buffer A", "value": "coating" },
+      { "label": "Blocking Step - Add 1x Assay Diluent", "value": "blocking" },
       { "label": "Detection Ab Step - Add diluted detection ab", "value": "detection ab" },
       { "label": "Avidin HRP Step - Add diluted avidin HRP", "value": "avidin hrp" },
       { "label": "TMB substrate Step - Add TMB substrate", "value": "TMB substrate" },
