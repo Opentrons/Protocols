@@ -11,6 +11,7 @@ def mine_fields():
         prtcl_path = f'{protocols_path}/{folder}'
         if os.path.isdir(prtcl_path):
             if 'fields.json' in os.listdir(prtcl_path):
+                print(folder)
                 with open(f'{prtcl_path}/fields.json') as fields_file:
                     fields = json.load(fields_file)
                     for field in fields:

@@ -4,7 +4,7 @@ metadata = {
     'protocolName': 'PCR2 Setup',
     'author': 'Nick <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.10'
+    'apiLevel': '2.12'
 }
 
 
@@ -14,11 +14,6 @@ def run(ctx):
      pcr2_buffer_vol] = get_values(  # noqa: F821
         'num_samples', 'm20_mount', 'm300_mount', 'index_vol',
         'pcr2_buffer_vol')
-    # num_samples = 96
-    # m20_mount = 'left'
-    # m300_mount = 'right'
-    # index_vol = 8.0
-    # pcr2_buffer_vol = 27.0
 
     # load labware
     pcr2_buffer = ctx.load_labware('sarstedt_24_tuberack_2000ul', '1',
@@ -34,19 +29,28 @@ def run(ctx):
         raise Exception('Pipette mounts cannot match.')
     m20 = ctx.load_instrument('p20_multi_gen2', m20_mount, tip_racks=tips20m)
 
+    num_cols = math.ceil(num_samples/6)
+    num_channels = 3 if num_samples == 3 else 6
     m20.default_speed = 200
 
-    def _pick_up_single(pip):
-        tips_ordered = [
-            well for rack in pip.tip_racks[::-1]
-            for col in rack.columns()[::-1]
-            for well in col[::-1]]
-        for tip_well in tips_ordered:
-            if tip_well.has_tip:
-                pip.pick_up_tip(tip_well)
-                return
+    def pick_up(pip=m20, channels=num_channels):
+        # iterate and look for required number of consecutive tips
+        for rack in pip.tip_racks:
+            for col in rack.columns():
+                counter = 0
+                for well in col[::-1]:
+                    if well.has_tip:
+                        counter += 1
+                    else:
+                        counter = 0
+                    if counter == channels:
+                        pip.pick_up_tip(well)
+                        return
 
-    num_cols = math.ceil(num_samples/6)
+        # refill rack if no tips available
+        ctx.pause(f'Refill {pip} tipracks before resuming.')
+        pip.reset_tipracks()
+
     indices = index_rack.rows()[0]
     sample_columns = [col[:6] for col in pcr_plate.columns()[:num_cols]]
     all_samples = [well for col in sample_columns for well in col]
@@ -56,14 +60,14 @@ def run(ctx):
     ctx.max_speeds['A'] = 40
     for col in sample_columns:
         for source, dest in zip(indices, col):
-            _pick_up_single(m20)
+            pick_up(m20)
             m20.aspirate(index_vol, source)
             m20.dispense(index_vol, dest)
             m20.drop_tip()
 
     # transfer buffer
     for dest in all_samples:
-        _pick_up_single(m20)
+        pick_up(m20)
         m20.aspirate(pcr2_buffer_vol, pcr2_buffer)
         m20.dispense(pcr2_buffer_vol, dest)
         m20.mix(10, pcr2_buffer_vol, dest)
