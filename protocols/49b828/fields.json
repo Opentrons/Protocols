@@ -11,7 +11,7 @@
     "name": "plate_96",
     "options": [
       {"label": "Thermofisher Plate", "value": "thermofisherscientific_96_wellplate_50ul"},
-      {"label": "Kingfisher Plate": "kingfisher_96_wellplate_200ul"}
+      {"label": "Kingfisher Plate", "value": "kingfisher_96_wellplate_200ul"}
     ]
   },
   {
