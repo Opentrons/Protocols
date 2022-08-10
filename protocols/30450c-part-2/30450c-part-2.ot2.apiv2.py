@@ -163,9 +163,9 @@ def run(ctx):
             p20m.aspirate(10, col1[0].bottom(1))
             ctx.delay(seconds=1)
 
-            p20m.dispense(10, col2[0].bottom(4))
+            p20m.dispense(10, col2[0].bottom(2))
             ctx.delay(seconds=1)
-            p20m.blow_out()
+            p20m.blow_out(col2[0].top())
             p20m.touch_tip()
 
             p20m.drop_tip()
