@@ -5,7 +5,7 @@ metadata = {
      used as a single-channel pipette',
     'author': 'Opentrons <protocols@opentrons.com>',
     'source': 'Protocol Library',
-    'apiLevel': '2.11'
+    'apiLevel': '2.12'
     }
 
 

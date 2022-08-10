@@ -31,6 +31,7 @@ class CancellationToken:
 
 def turn_on_blinking_notification(hardware, pause):
     """FLASH SETUP."""
+
     while pause.is_continued:
         hardware.set_lights(rails=True)
         sleep(1)
@@ -517,8 +518,6 @@ def run(ctx):
             ctx.comment('\n')
 
     mag_mod.disengage()
-    for c in ctx.commands():
-        print(c)
     # NOTES:
     """1. aspirating from opposite side of magnetically engaged wells?
             (single vs. multi)
