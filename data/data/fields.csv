@@ -136,6 +136,7 @@ cdna_down_column,1
 cdna_vol,1
 cellht,1
 cellsmedia,1
+change_standard_tip,1
 change_tips,2
 cherrypicking_csv,1
 choose_tip_rack,3
@@ -218,6 +219,7 @@ conc_target,1
 control_plate,1
 count_mix,1
 count_plates,1
+count_racks,1
 count_samples,19
 count_samples_rowa,1
 count_samples_rowb,1
@@ -549,7 +551,7 @@ labware_cultureplate,1
 labware_deep_well,1
 labware_dest,1
 labware_dna_sample_plate,1
-labware_elisa_plate,1
+labware_elisa_plate,3
 labware_mm,1
 labware_mmplate,1
 labware_p300_tips,1
@@ -779,7 +781,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,122
+num_samples,123
 num_samples_1,1
 num_samples_2,1
 num_samples_3,1
@@ -838,7 +840,7 @@ p1kmnt,1
 p1n,1
 p1num,1
 p20_blowout_height,1
-p20_mount,102
+p20_mount,103
 p20_multi_mount,3
 p20_rate,2
 p20_reservoir_height,1
@@ -855,7 +857,7 @@ p2num,1
 p300_gen,1
 p300_mixing_height,1
 p300_mnt,3
-p300_mount,119
+p300_mount,120
 p300_mount_1,1
 p300_multi_mount,7
 p300_rate,1
@@ -890,6 +892,7 @@ park,2
 park_tips,27
 patient_sample_count,1
 patient_sample_vol,1
+pause_for_washing,1
 pbs_dispense_rate,1
 pbsvol,1
 pcr,1
@@ -938,11 +941,12 @@ plate4_samples,1
 plate_1_cols,6
 plate_2_cols,4
 plate_384,1
+plate_96,1
 plate_a_start_col,1
 plate_b_start_col,1
 plate_c_start_col,1
 plate_cols,1
-plate_count,6
+plate_count,8
 plate_def,1
 plate_height,2
 plate_map_1_csv,1
@@ -1014,6 +1018,7 @@ reagents_csv,1
 reduced_speed_limit,1
 relative_height,1
 remove_empty_racks,1
+replenish_tips_manually,1
 res,2
 res12_type,1
 res1_type,1
@@ -1182,7 +1187,7 @@ starting_volume,1
 starting_well,1
 starttip,1
 std_height,1
-step,2
+step,3
 step1,1
 step1_mix_vol,1
 step2,1
@@ -1265,7 +1270,7 @@ tip_start_20,2
 tip_start_column,4
 tip_strategy,3
 tip_threshold,1
-tip_touch,1
+tip_touch,3
 tip_track,37
 tip_type,25
 tip_use_strategy,2
@@ -1351,7 +1356,7 @@ tvol,1
 twb_rate,1
 twelve_well_resv_lname,1
 udi_start_col,1
-uploaded_csv,15
+uploaded_csv,16
 uploaded_csv_mastermix,1
 use_384,1
 use_csv,1
