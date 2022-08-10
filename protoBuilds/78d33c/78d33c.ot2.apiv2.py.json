@@ -2432,5 +2432,18 @@
         "author": "Steve Plonk <protocols@opentrons.com>",
         "protocolName": "ArcBio DNA Workflow Continuous:\n    Pre-PCR Instrument: DNA-PRE-PCR-1 Concentration Fragmentation"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 3 lw Output plate at 4 Degrees C on Temperature Module GEN2 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "tempdeck"
+        },
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 1 lw Mag Plate on Magnetic Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "magdeck"
+        }
+    ]
 }

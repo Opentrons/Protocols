@@ -3,15 +3,9 @@
     "custom_labware_defs": [],
     "fields": [
         {
-            "default": 24,
+            "default": 16,
             "label": "Number of Samples",
             "name": "num_samples",
-            "type": "int"
-        },
-        {
-            "default": 50,
-            "label": "Starting Volume",
-            "name": "starting_vol",
             "type": "int"
         },
         {
@@ -151,5 +145,18 @@
         "author": "Opentrons <protocols@opentrons.com>",
         "protocolName": "Mag-Bind\u00ae Viral DNA/RNA 96 Kit"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN1 on 3 lw deepwell plate on Magnetic Module GEN1 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "magdeck"
+        },
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 1 lw elution plate on Temperature Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "tempdeck"
+        }
+    ]
 }

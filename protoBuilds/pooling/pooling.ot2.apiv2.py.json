@@ -4886,5 +4886,12 @@
         "protocolName": "Pooling from .csv",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 1 lw source plate on Temperature Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "tempdeck"
+        }
+    ]
 }

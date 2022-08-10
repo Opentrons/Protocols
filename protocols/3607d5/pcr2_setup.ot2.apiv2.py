@@ -32,9 +32,15 @@ def run(ctx):
     num_cols = math.ceil(num_samples/6)
     num_channels = 3 if num_samples == 3 else 6
     m20.default_speed = 200
+    pick_up_current_per_tip = 0.1
 
     def pick_up(pip=m20, channels=num_channels):
         # iterate and look for required number of consecutive tips
+        pick_up_current = pick_up_current_per_tip*channels
+        ctx._hw_manager.hardware._attached_instruments[
+          m20._implementation.get_mount()].update_config_item(
+          'pick_up_current', pick_up_current)
+
         for rack in pip.tip_racks:
             for col in rack.columns():
                 counter = 0
@@ -67,7 +73,7 @@ def run(ctx):
 
     # transfer buffer
     for dest in all_samples:
-        pick_up(m20)
+        pick_up(m20, channels=1)
         m20.aspirate(pcr2_buffer_vol, pcr2_buffer)
         m20.dispense(pcr2_buffer_vol, dest)
         m20.mix(10, pcr2_buffer_vol, dest)
