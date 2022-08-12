@@ -48,7 +48,7 @@ def run(ctx):
     elutionplate = ctx.load_labware('eppendorfmetaladapter_96_wellplate_200ul',
                                     '2', 'elution plate')
     waste = ctx.loaded_labwares[12].wells()[0].top()
-    res1 = ctx.load_labware('nest_12_reservoir_15ml', '6', 'reagent reservoir')
+    res1 = ctx.load_labware('striptubes_96_wellplate_1000ul', '6', 'reagent reservoir')
     num_cols = math.ceil(num_samples/6)  # offset
     tips300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot,
                                 '200ul tiprack')
