@@ -58,15 +58,19 @@ def run(ctx):
         pip.reset_tipracks()
 
     indices = index_rack.rows()[0]
-    sample_columns = [col[:6] for col in pcr_plate.columns()[:num_cols]]
+    sample_columns = [
+        col[1:num_channels]
+        for col in [
+            pcr_plate.columns()[col_ind] for col_ind in [2, 4][:num_cols]]]
     all_samples = [well for col in sample_columns for well in col]
+    print(sample_columns)
 
     # transfer indices
     ctx.max_speeds['Z'] = 40
     ctx.max_speeds['A'] = 40
     for col in sample_columns:
         for source, dest in zip(indices, col):
-            pick_up(m20)
+            pick_up(m20, channels=1)
             m20.aspirate(index_vol, source)
             m20.dispense(index_vol, dest)
             m20.drop_tip()
