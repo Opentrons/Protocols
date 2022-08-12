@@ -32,7 +32,7 @@ def run(protocol):
                                       label='MMX Plate')
     tiprack20 = [protocol.load_labware('opentrons_96_filtertiprack_20ul',
                                        str(slot))
-                 for slot in [7, 8, 9, 10, 11]][:math.ceil(num_col/12)+1]
+                 for slot in [7, 8, 9, 10, 11]]
 
     # load instruments
     m20 = protocol.load_instrument('p20_multi_gen2', m20_mount,
@@ -59,16 +59,16 @@ def run(protocol):
             h = 1
 
     def touchtip(pip, well):
-        knock_loc = well.top(z=-1).move(
-                    Point(x=-(well.diameter/2.25)))
-        knock_loc2 = well.top(z=-1).move(
-                Point(x=(well.diameter/2.25)))
+        knock_loc = well.top(z=-2).move(
+                    Point(x=-(well.diameter/2.5)))
+        knock_loc2 = well.top(z=-2).move(
+                Point(x=(well.diameter/2.5)))
         pip.move_to(knock_loc)
         pip.move_to(knock_loc2)
 
     def pick_up():
         nonlocal tip_counter
-        if tip_counter == 36:
+        if tip_counter == 60:
             protocol.home()
             protocol.pause('Replace 20 ul tip racks')
             m20.reset_tipracks()
