@@ -187,7 +187,7 @@ resuming.')
             # pip.blow_out(waste)
             _drop(pip)
 
-    def bind(vol, park=True):
+    def bind(vol, park=True, transfer_sample=True):
         """
         `bind` will perform magnetic bead binding on each sample in the
         deepwell plate. Each channel of binding beads will be mixed before
@@ -231,23 +231,24 @@ resuming.')
         m300.flow_rate.aspirate = 80
 
         # transfer samples
-        for source, dest, spot in zip(starting_samples, mag_samples_m,
-                                      parking_spots):
-            if not m300.has_tip:
+        if transfer_sample:
+            for source, dest, spot in zip(starting_samples, mag_samples_m,
+                                          parking_spots):
+                if not m300.has_tip:
+                    if park:
+                        _pick_up(m300, spot)
+                    else:
+                        _pick_up(m300)
+                # _drop(m300)
+                # _pick_up(m300)
+                m300.transfer(sample_vol, source.bottom(0.1), dest,
+                              mix_after=(10, sample_vol),
+                              air_gap=air_gap_vol, new_tip='never')
+                m300.air_gap(air_gap_vol)
                 if park:
-                    _pick_up(m300, spot)
+                    m300.drop_tip(spot)
                 else:
-                    _pick_up(m300)
-            # _drop(m300)
-            # _pick_up(m300)
-            m300.transfer(sample_vol, source.bottom(0.1), dest,
-                          mix_after=(10, sample_vol),
-                          air_gap=air_gap_vol, new_tip='never')
-            m300.air_gap(air_gap_vol)
-            if park:
-                m300.drop_tip(spot)
-            else:
-                _drop(m300)
+                    _drop(m300)
 
         ctx.delay(minutes=5, msg='Incubating off magnet for 5 minutes.')
         magdeck.engage(height=mag_height)
@@ -381,7 +382,7 @@ resuming.')
     elution_samples_m = elutionplate.rows()[0][:num_cols]
     binding_buffer_vol = 45
     elution_vol = 25
-    bind(binding_buffer_vol, park=park_tips)
+    bind(binding_buffer_vol, park=park_tips, transfer_sample=False)
     wash(wash1_vol, wash1, park=park_tips, blow_out=True)
     wash(wash2_vol, wash2, park=park_tips)
     remove_supernatant(18, pip=m20)
