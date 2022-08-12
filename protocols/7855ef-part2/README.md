@@ -10,6 +10,8 @@
 ## Description
 This protocol is the second of a four part series for performing NGS library prep with the [ThermoFisher Scientific AgriSeq kit](https://www.thermofisher.com/order/catalog/product/A34144#/A34144). 2ul of Pre-ligation mix is distributed to each column of sample that was processed in Part 1 of the protocol.
 
+**Note**: This protocol was updated August 12th, 2022
+
 Links:
 * [Part 1: DNA Transfer](http://protocols.opentrons.com/protocol/7855ef)
 * [Part 2: Pre-Ligation](http://protocols.opentrons.com/protocol/7855ef-part2)

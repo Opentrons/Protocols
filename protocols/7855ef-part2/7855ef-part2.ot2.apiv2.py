@@ -11,8 +11,8 @@ metadata = {
 
 def run(protocol):
 
-    [num_samp, m20_mount] = get_values(  # noqa: F821
-        "num_samp", "m20_mount")
+    [num_samp, m20_mount, overage_percent] = get_values(  # noqa: F821
+        "num_samp", "m20_mount", "overage_percent")
 
     if not 1 <= num_samp <= 384:
         raise Exception("Enter a sample number between 1-384")
@@ -28,7 +28,7 @@ def run(protocol):
                                       label='MMX Plate')
     tiprack20 = [protocol.load_labware('opentrons_96_filtertiprack_20ul',
                  str(slot))
-                 for slot in [8, 9, 10, 11]][:math.ceil(num_col/12)+1]
+                 for slot in [8, 9, 10, 11]]
 
     # load instruments
     m20 = protocol.load_instrument('p20_multi_gen2', m20_mount,
@@ -38,7 +38,7 @@ def run(protocol):
 
     def pick_up():
         nonlocal tip_counter
-        if tip_counter == 36:
+        if tip_counter == 48:
             protocol.home()
             protocol.pause('Replace 20 ul tip racks')
             m20.reset_tipracks()
@@ -57,6 +57,26 @@ def run(protocol):
         pip.move_to(knock_loc)
         pip.move_to(knock_loc2)
 
+    # Height Tracking
+
+    overage_coef = (overage_percent/100)+1
+    v_naught = 2*num_col*overage_coef
+    # starting height minus 2.5mm, using % isn't enough
+    h_naught = (1.92*(v_naught)**(1/3))-2.5
+    h = h_naught
+
+    def adjust_height(vol):
+        nonlocal v_naught
+        nonlocal h
+        # below if/else needed to avoid complex number error
+        if v_naught - vol > 0:
+            v_naught = v_naught - vol
+        else:
+            v_naught = 0
+        h = (1.92*(v_naught)**(1/3))-2.5
+        if h < 3:
+            h = 1
+
     # load reagents
     pre_ligation_mix = mmx_plate.rows()[0][2]
     reaction_plate_cols = [col for j in range(2) for i in range(2)
@@ -66,15 +86,25 @@ def run(protocol):
     airgap = 2
     for col in reaction_plate_cols:
         pick_up()
-        m20.aspirate(2, pre_ligation_mix)
-        touchtip(m20, pre_ligation_mix)
-        m20.air_gap(airgap)
+        m20.flow_rate.aspirate = 1.5
+        m20.flow_rate.dispense = 1.5
+        m20.flow_rate.blow_out = 1.5
+        m20.aspirate(2, pre_ligation_mix.bottom(h))
+        m20.move_to(pre_ligation_mix.top(-2))
+        protocol.delay(seconds=2)
+        m20.touch_tip(v_offset=-2)
+        m20.move_to(pre_ligation_mix.top(-2))
+        m20.aspirate(airgap, pre_ligation_mix.top(-2))
         m20.dispense(airgap, col.top())
         m20.dispense(2, col)
+        m20.flow_rate.aspirate = 3
+        m20.flow_rate.dispense = 3
         m20.mix(2, 8, col)
-        m20.blow_out()
-        touchtip(m20, col)
+        m20.blow_out(col.top(z=-2))
+        m20.touch_tip(v_offset=-2)
+        m20.move_to(col.top(-2))
         m20.return_tip()
+        adjust_height(2)
         protocol.comment('\n')
 
     protocol.comment('''Protocol complete - remove reaction plates from
