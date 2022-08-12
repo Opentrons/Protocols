@@ -30,7 +30,6 @@ def run(ctx):
     # elution_vol = 50.0
     # settling_time = 5.0
     park_tips = False
-    tip_track = False
     radial_offset = 0.3
     z_offset = 0.5
     air_gap_vol = 0
@@ -65,8 +64,6 @@ def run(ctx):
 
     m300.default_speed = 180
     m20.default_speed = 180
-
-    tip_log = {val: {} for val in ctx.loaded_instruments.values()}
 
     """
     Here is where you can define the locations of your reagents.
@@ -370,11 +367,3 @@ def run(ctx):
     wash(wash2_vol, wash2, park=park_tips)
     remove_supernatant(18, pip=m20)
     elute(elution_vol, park=park_tips)
-
-    # track final used tip
-    if tip_track and not ctx.is_simulating():
-        if not os.path.isdir(folder_path):
-            os.mkdir(folder_path)
-        data = {pip.name: tip_log[pip]['count'] for pip in tip_log}
-        with open(tip_file_path, 'w') as outfile:
-            json.dump(data, outfile)
