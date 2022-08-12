@@ -13,5 +13,11 @@
        { "label": "left", "value": "left" },
        { "label": "right", "value": "right" }
      ]
+  },
+  {
+    "type": "float",
+    "label": "Overage Percent",
+    "name": "overage_percent",
+    "default": 15
   }
 ]
