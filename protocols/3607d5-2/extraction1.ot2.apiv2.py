@@ -48,7 +48,8 @@ def run(ctx):
     elutionplate = ctx.load_labware('eppendorfmetaladapter_96_wellplate_200ul',
                                     '2', 'elution plate')
     waste = ctx.loaded_labwares[12].wells()[0].top()
-    res1 = ctx.load_labware('striptubes_96_wellplate_1000ul', '6', 'reagent reservoir')
+    res1 = ctx.load_labware('striptubes_96_wellplate_1000ul', '6',
+                            'reagent reservoir')
     num_cols = math.ceil(num_samples/6)  # offset
     tips300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot,
                                 '200ul tiprack')
@@ -86,44 +87,27 @@ def run(ctx):
     m300.flow_rate.dispense = 50
     m300.flow_rate.blow_out = 150
 
-    folder_path = '/data/B'
-    tip_file_path = folder_path + '/tip_log.json'
-    if tip_track and not ctx.is_simulating():
-        if os.path.isfile(tip_file_path):
-            with open(tip_file_path) as json_file:
-                data = json.load(json_file)
-                for pip in tip_log:
-                    if pip.name in data:
-                        tip_log[pip]['count'] = data[pip.name]
+    num_channels = 3 if num_samples == 3 else 6
+    pick_up_current_per_tip = 0.1
+
+    def pick_up(pip=m20, channels=num_channels, loc=None):
+        # iterate and look for required number of consecutive tips
+        pick_up_current = pick_up_current_per_tip*channels
+        ctx._hw_manager.hardware._attached_instruments[
+          m20._implementation.get_mount()].update_config_item(
+          'pick_up_current', pick_up_current)
+
+        for rack in pip.tip_racks:
+            for col in rack.columns():
+                counter = 0
+                for well in col[::-1]:
+                    if well.has_tip:
+                        counter += 1
                     else:
-                        tip_log[pip]['count'] = 0
-        else:
-            for pip in tip_log:
-                tip_log[pip]['count'] = 0
-    else:
-        for pip in tip_log:
-            tip_log[pip]['count'] = 0
-
-    for pip in tip_log:
-        if pip.type == 'multi':
-            tip_log[pip]['tips'] = [tip for rack in pip.tip_racks
-                                    for tip in rack.rows()[2]]  # offset
-        else:
-            tip_log[pip]['tips'] = [tip for rack in pip.tip_racks
-                                    for tip in rack.wells()]
-        tip_log[pip]['max'] = len(tip_log[pip]['tips'])
-
-    def _pick_up(pip, loc=None):
-        if tip_log[pip]['count'] == tip_log[pip]['max'] and not loc:
-            ctx.pause('Replace ' + str(pip.max_volume) + 'ul tipracks before \
-resuming.')
-            pip.reset_tipracks()
-            tip_log[pip]['count'] = 0
-        if loc:
-            pip.pick_up_tip(loc)
-        else:
-            pip.pick_up_tip(tip_log[pip]['tips'][tip_log[pip]['count']])
-            tip_log[pip]['count'] += 1
+                        counter = 0
+                    if counter == channels:
+                        pip.pick_up_tip(well)
+                        return
 
     switch = True
     drop_count = 0
@@ -170,9 +154,9 @@ resuming.')
         for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
             if not m300.has_tip:
                 if park:
-                    _pick_up(pip, spot)
+                    pick_up(pip, spot)
                 else:
-                    _pick_up(pip)
+                    pick_up(pip)
             side = -1 if i % 2 == 0 else 1
             loc = m.bottom(0).move(Point(x=side*radius*radial_offset,
                                          z=z_offset))
@@ -204,13 +188,12 @@ resuming.')
         """
         m300.flow_rate.aspirate = 30
         latest_chan = -1
-        _pick_up(m300)
+        pick_up(m300)
         for i, (well, spot) in enumerate(zip(mag_samples_m, parking_spots)):
             num_trans = math.ceil(vol/200)
             vol_per_trans = vol/num_trans
-            asp_per_chan = (0.95*res1.wells()[0].max_volume)//(vol_per_trans*8)
             for t in range(num_trans):
-                chan_ind = int((i*num_trans + t)//asp_per_chan)
+                chan_ind = 0
                 source = binding_buffer[chan_ind]
                 if m300.current_volume > 0:
                     # void air gap if necessary
@@ -236,11 +219,11 @@ resuming.')
                                           parking_spots):
                 if not m300.has_tip:
                     if park:
-                        _pick_up(m300, spot)
+                        pick_up(m300, loc=spot)
                     else:
-                        _pick_up(m300)
+                        pick_up(m300)
                 # _drop(m300)
-                # _pick_up(m300)
+                # pick_up(m300)
                 m300.transfer(sample_vol, source.bottom(0.1), dest,
                               mix_after=(10, sample_vol),
                               air_gap=air_gap_vol, new_tip='never')
@@ -283,7 +266,7 @@ resuming.')
 
         num_trans = math.ceil(vol/200)
         vol_per_trans = vol/num_trans
-        _pick_up(m300)
+        pick_up(m300)
         for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
             src = source[int(i//(12/len(source)))]
             for n in range(num_trans):
@@ -299,7 +282,7 @@ resuming.')
         if resuspend:
             for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
                 if not m300.has_tip:
-                    _pick_up(m300)
+                    pick_up(m300)
                     side = 1 if i % 2 == 0 else -1
                     loc = m.bottom().move(Point(x=side*radius*radial_offset,
                                                 z=z_offset))
@@ -333,7 +316,7 @@ resuming.')
         # resuspend beads in elution
         magdeck.disengage()
         for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
-            _pick_up(m300)
+            pick_up(m300)
             side = 1 if i % 2 == 0 else -1
             loc = m.bottom().move(Point(x=side*radius*radial_offset,
                                         z=z_offset))
@@ -355,9 +338,9 @@ resuming.')
         for i, (m, e, spot) in enumerate(
                 zip(mag_samples_m, elution_samples_m, parking_spots)):
             if park:
-                _pick_up(m300, spot)
+                pick_up(m300, loc=spot)
             else:
-                _pick_up(m300)
+                pick_up(m300)
             side = -1 if i % 2 == 0 else 1
             loc = m.bottom().move(Point(x=side*radius*radial_offset,
                                         z=z_offset))
