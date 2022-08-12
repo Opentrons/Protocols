@@ -43,7 +43,7 @@ def run(protocol):
 
     def pick_up():
         nonlocal tip_counter
-        if tip_counter == 36:
+        if tip_counter == 48:
             protocol.home()
             protocol.pause('Replace 20 ul tip racks')
             m20.reset_tipracks()
