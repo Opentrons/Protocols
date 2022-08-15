@@ -7,6 +7,16 @@
   },
   {
     "type": "dropDown",
+    "label": "Tubes on Slot 2",
+    "name": "tubes_on_slot2",
+    "options": [
+      {"label": "48 tube rack (yellow cap)", "value": "altemislab_48_wellplate_2000ul"},
+      {"label": "24 tube rack large (black cap)", "value": "bricklabwaretype1racklong_24_wellplate_4000ul"},
+      {"label": "24 tube rack small (white cap)", "value": "bricklabwaretype2rackshort_24_wellplate_2000ul"}
+    ]
+  },
+  {
+    "type": "dropDown",
     "label": "P1000 Single-Channel Mount",
     "name": "p1000_mount",
     "options": [
