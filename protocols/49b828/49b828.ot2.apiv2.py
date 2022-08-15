@@ -11,19 +11,16 @@ metadata = {
 
 def run(ctx: protocol_api.ProtocolContext):
 
-    [
-     num_samp,
+    [num_samp,
      plate_96,
      plate_384,
      use_temp,
-     m20_mount,
-     ] = get_values(  # noqa: F821
+     m20_mount] = get_values(  # noqa: F821
          "num_samp",
          "plate_96",
          "plate_384",
          "use_temp",
-         "m20_mount",
-         )
+         "m20_mount")
 
     if not 0 <= num_samp <= 382:
         raise Exception("Enter a sample number 0-384")
