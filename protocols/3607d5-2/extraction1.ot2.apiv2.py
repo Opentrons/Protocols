@@ -1,6 +1,4 @@
 from opentrons.types import Point
-import json
-import os
 import math
 
 metadata = {
@@ -75,7 +73,7 @@ def run(ctx):
 
     starting_samples = pcr_plate.rows()[0][:num_cols]
     mag_samples_m = magplate.rows()[0][:num_cols]
-    elution_samples_m = magplate.rows()[0][10:10+num_cols]
+    elution_samples_m = magplate.rows()[0][3:3+num_cols]
     radius = mag_samples_m[0].diameter/2
 
     magdeck.disengage()  # just in case
@@ -341,10 +339,9 @@ def run(ctx):
             side = -1 if i % 2 == 0 else 1
             loc = m.bottom().move(Point(x=side*radius*radial_offset,
                                         z=z_offset))
-            m300.transfer(vol, loc, e.bottom(5), air_gap=air_gap_vol,
-                          new_tip='never')
+            m300.aspirate(vol, loc)
+            m300.dispense(vol, e.bottom(5))
             m300.blow_out(e.top(-2))
-            m300.air_gap(air_gap_vol)
             m300.drop_tip()
 
     """
@@ -359,7 +356,9 @@ def run(ctx):
 
     # update for second round
     mag_samples_m = elution_samples_m
-    elution_samples_m = elutionplate.rows()[0][:num_cols]
+    elution_samples_m = [
+        elutionplate.columns()[col_ind][1]
+        for col_ind in [2, 4][:num_cols]]
     binding_buffer_vol = 45
     elution_vol = 25
     bind(binding_buffer_vol, park=park_tips, transfer_sample=False)

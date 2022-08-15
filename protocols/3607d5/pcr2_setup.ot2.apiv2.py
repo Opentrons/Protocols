@@ -63,7 +63,6 @@ def run(ctx):
         for col in [
             pcr_plate.columns()[col_ind] for col_ind in [2, 4][:num_cols]]]
     all_samples = [well for col in sample_columns for well in col]
-    print(sample_columns)
 
     # transfer indices
     ctx.max_speeds['Z'] = 40

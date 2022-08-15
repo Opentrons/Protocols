@@ -1,6 +1,4 @@
 from opentrons.types import Point
-import json
-import os
 import math
 
 metadata = {
