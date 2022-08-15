@@ -16,7 +16,7 @@ def run(ctx: protocol_api.ProtocolContext):
      plate_96,
      plate_384,
      use_temp,
-     m20_mount,
+     m20_mount
      ] = get_values(  # noqa: F821
          "num_samp",
          "plate_96",
