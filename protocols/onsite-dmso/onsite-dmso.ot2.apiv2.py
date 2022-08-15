@@ -13,8 +13,6 @@ def run(ctx):
     [csv, p1000_mount] = get_values(  # noqa: F821
         "csv", "p1000_mount")
 
-    p1000_mount = "left"
-
     all_rows = [[val.strip() for val in line.split(',')]
                 for line in csv.splitlines()
                 if line.split(',')[0].strip()][1:]
