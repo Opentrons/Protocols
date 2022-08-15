@@ -123,5 +123,12 @@
         "protocolName": "rhAmpSeq Library Prep Part 2 - Cleanup 1",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 1 lw NEST 96 Well Plate 100 \u00b5L PCR Full Skirt on Magnetic Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "magdeck"
+        }
+    ]
 }

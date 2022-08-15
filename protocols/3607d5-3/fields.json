@@ -4,6 +4,7 @@
     "label": "number of samples",
     "name": "num_samples",
     "options": [
+      {"label": "3", "value": 3},
       {"label": "6", "value": 6},
       {"label": "12", "value": 12}
     ]
