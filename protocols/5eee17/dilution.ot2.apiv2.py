@@ -11,9 +11,10 @@ metadata = {
 def run(ctx):
 
     [num_extracts, lw_hplc, mixreps_dilution, height_source,
-     height_intermediate, height_final] = get_values(  # noqa: F821
+     height_intermediate_asp, height_intermediate_disp,
+     height_final] = get_values(  # noqa: F821
         'num_extracts', 'lw_hplc', 'mixreps_dilution', 'height_source',
-        'height_intermediate', 'height_final')
+        'height_intermediate_asp', 'height_intermediate_disp', 'height_final')
 
     tuberacks_50 = [
         ctx.load_labware('bd_24_tuberack_50ml_green', slot, '50ml tubes')
@@ -41,8 +42,8 @@ def run(ctx):
 
     def mix(pip, reps, vol, loc):
         for _ in range(reps):
-            pip.aspirate(vol, loc.bottom(height_intermediate))
-            pip.dispense(vol, loc.center())
+            pip.aspirate(vol, loc.bottom(height_intermediate_asp))
+            pip.dispense(vol, loc.bottom(height_intermediate_disp))
 
     refill_map = {
         'source': len(
@@ -105,9 +106,9 @@ resuming.')
         for pip, i_tube, f_tube in zip(pips, intermediate_set, final_set):
             pip.dispense(100, i_tube.top())
             pip.dispense(pip.current_volume,
-                         i_tube.bottom(height_intermediate))
+                         i_tube.bottom(height_intermediate_disp))
             mix(pip, mixreps_dilution, 1000, i_tube)
-            pip.transfer(800, i_tube.bottom(height_intermediate),
+            pip.transfer(800, i_tube.bottom(height_intermediate_asp),
                          f_tube.bottom(height_final),
                          new_tip='never')
         [pip.drop_tip() for pip in [p1000l, p1000r] if pip.has_tip]
