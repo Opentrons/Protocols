@@ -452,7 +452,8 @@ height_after_disp,1
 height_dispense,2
 height_engage,14
 height_final,1
-height_intermediate,1
+height_intermediate_asp,1
+height_intermediate_disp,1
 height_source,1
 htp_csv,1
 i5_volume,1
@@ -562,9 +563,12 @@ labware_plate,3
 labware_plates,9
 labware_pool,1
 labware_pre_pcr_plate,2
+labware_processing_plate,1
 labware_rack,1
 labware_res,1
 labware_reservoir,11
+labware_reservoir_12well,1
+labware_reservoir_1well,1
 labware_rna,1
 labware_samp,1
 labware_sample_plate,1
@@ -758,7 +762,7 @@ nuc_free_water_vol_well,1
 num,3
 num_antibodies,1
 num_col,8
-num_cols,2
+num_cols,3
 num_columns,1
 num_daughter_plates,1
 num_extracts,1
@@ -818,7 +822,7 @@ one_rack_yn,1
 onlysamps,1
 open_lid,1
 output_labware,1
-overage_percent,9
+overage_percent,12
 p1000_flow_rate_asp,2
 p1000_flow_rate_disp,2
 p1000_mount,31
