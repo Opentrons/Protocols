@@ -1191,5 +1191,18 @@
         "protocolName": "Illumina DNA Prep Part 4, Clean Up Libraries First Half",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN1 on 1 lw Opentrons 96 Well Aluminum Block with Generic PCR Strip 200 \u00b5L on Temperature Module GEN1 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "tempdeck"
+        },
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 4 lw NEST 96 Deepwell Plate 2mL on Magnetic Module GEN2 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "magdeck"
+        }
+    ]
 }

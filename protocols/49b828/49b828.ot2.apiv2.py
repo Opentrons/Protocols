@@ -11,19 +11,16 @@ metadata = {
 
 def run(ctx: protocol_api.ProtocolContext):
 
-    [
-     num_samp,
+    [num_samp,
      plate_96,
      plate_384,
      use_temp,
-     m20_mount
-     ] = get_values(  # noqa: F821
+     m20_mount] = get_values(  # noqa: F821
          "num_samp",
          "plate_96",
          "plate_384",
          "use_temp",
-         "m20_mount"
-         )
+         "m20_mount")
 
     if not 0 <= num_samp <= 382:
         raise Exception("Enter a sample number 0-384")
@@ -109,24 +106,24 @@ def run(ctx: protocol_api.ProtocolContext):
                                         source_cols,
                                         plate_to_384[:num_full_cols-1 if num_samp == 382 else num_full_cols])):  # noqa: E501
         pick_up_less(8)
-        m20.aspirate(15, source)
-        m20.dispense(15, col)
+        m20.aspirate(5, source)
+        m20.dispense(5, col)
         m20.drop_tip()
 
     if num_samp == 382:
         ctx.comment('\n')
         pick_up_less(7)
-        m20.aspirate(15, sample_plates[3].rows()[0][10])
-        m20.dispense(15, pcr_plate.wells_by_name()['A24'])
+        m20.aspirate(5, sample_plates[3].rows()[0][10])
+        m20.dispense(5, pcr_plate.wells_by_name()['A24'])
         m20.drop_tip()
         pick_up_less(7)
-        m20.aspirate(15, sample_plates[3].rows()[0][11])
-        m20.dispense(15, pcr_plate.wells_by_name()['B24'])
+        m20.aspirate(5, sample_plates[3].rows()[0][11])
+        m20.dispense(5, pcr_plate.wells_by_name()['B24'])
         m20.drop_tip()
 
     if leftover_samp_col > 0 and num_samp != 382:
         ctx.comment('\n\n~~~~~~~~MOVING SAMPLE TO UNFILLED COLUMN~~~~~~~~~\n')
         pick_up_less(leftover_samp_col)
-        m20.aspirate(15, sample_plates[num_full_plates].rows()[0][leftover_cols])  # noqa: E501
-        m20.dispense(15, plate_to_384[num_full_cols])
+        m20.aspirate(5, sample_plates[num_full_plates].rows()[0][leftover_cols])  # noqa: E501
+        m20.dispense(5, plate_to_384[num_full_cols])
         m20.drop_tip()
