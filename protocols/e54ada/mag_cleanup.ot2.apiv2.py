@@ -61,15 +61,8 @@ def run(ctx):
     bead_incubate_time = 10
     etoh_dry_time = 10
     elute_time = 7
+    elute_rate = 2
     park_cols = math.ceil(num_samp/8)
-    if well_plate == "biorad_96_wellplate_200ul_pcr":
-        x_abs_move_super = 0.5  # how far left or right during super removal
-        z_asp_height = 0.5  # how far above well bottom during super removal
-        etoh_wash_vol = 120
-    else:
-        x_abs_move_super = 0
-        z_asp_height = 1
-        etoh_wash_vol = 200
     if m300_mount == 'left':
         p300_mount = 'right'
     else:
@@ -80,8 +73,16 @@ def run(ctx):
     mag_plate = mag_mod.load_labware(well_plate)
     if well_plate == 'biorad_96_wellplate_200ul_pcr':
         engage_height = 8
+        x_abs_move_super = 0.5  # how far left or right during super removal
+        z_asp_height = 0.5  # how far above well bottom during super removal
+        z_disp_height = -1  # how far below well top during water addition
+        etoh_wash_vol = 120
     else:
         engage_height = 5
+        x_abs_move_super = 0
+        z_asp_height = 1
+        z_disp_height = -2  # how far below well top during water addition
+        etoh_wash_vol = 200
     mag_mod.disengage()
 
     # load labware
@@ -155,7 +156,7 @@ def run(ctx):
 
 # Custom Functions
 
-    def bead_mixing(well, pip, mvol,
+    def bead_mixing(well, pip, mvol, top=5, bottom=1,
                     asp_speed_mod=5, disp_speed_mod=5, reps=10):
         """bead_mixing."""
         """
@@ -179,13 +180,27 @@ def run(ctx):
         pip.flow_rate.aspirate *= asp_speed_mod
         pip.flow_rate.dispense *= disp_speed_mod
         for _ in range(reps):
-            pip.aspirate(vol, well.bottom(1))
-            pip.dispense(vol, well.bottom(5))
-            pip.aspirate(vol, well.bottom(5))
-            pip.dispense(vol, well.bottom(1))
+            pip.aspirate(vol, well.bottom(bottom))
+            pip.dispense(vol, well.bottom(top))
+            pip.aspirate(vol, well.bottom(top))
+            pip.dispense(vol, well.bottom(bottom))
         pip.flow_rate.aspirate /= asp_speed_mod
         pip.flow_rate.dispense /= disp_speed_mod
         ctx.comment('\n\n\n')
+
+    def bead_spray_down(pipette, vol, src, well, reps, pip_rate=2):
+        pipette.aspirate(vol, src)
+        pipette.move_to(well.top(-1))
+        pipette.dispense(vol,
+                         well.top().move(types.Point(x=-side, y=0,
+                                                     z=z_disp_height)),
+                         rate=pip_rate)
+        for _ in range(reps):
+            pipette.aspirate(vol*0.9, well)
+            pipette.dispense(vol,
+                             well.top().move(types.Point(x=-side, y=0,
+                                                         z=z_disp_height)),
+                             rate=pip_rate)
 
     # ~~~~~~~~~~~~~~~~~~~~~ MAPPING ~~~~~~~~~~~~~~~~~~~~~
     num_ethanol_wells = math.ceil(num_samp*400/12000)  # /1200 to leave 300ul headroom in tube  # noqa: E501
@@ -452,30 +467,37 @@ def run(ctx):
 
     ctx.comment('\n\n~~~~~~~~~~~~~~ADDING WATER~~~~~~~~~~~~~~~\n')
     for i, col in enumerate(working_cols):
+        side = x_abs_move_super if i % 2 == 0 else -x_abs_move_super
         pick_up(m300)
-        m300.aspirate(elute_vol, water)
-        m300.dispense(elute_vol, col)
-        m300.mix(10, elute_vol*0.9, col, rate=2)
+        bead_spray_down(m300, elute_vol, water, col, 5)
+        """m300.aspirate(elute_vol, water)
+        m300.dispense(elute_vol, col.top().move(types.Point(x=side, y=0,
+                                                z=z_disp_height)),
+                      rate=elute_rate)"""
+        bead_mixing(well, m300, elute_vol, top=2, bottom=1,
+                    asp_speed_mod=5, disp_speed_mod=5, reps=5)
+        # m300.mix(10, elute_vol*0.9, col, rate=2)
         m300.blow_out()
         drop_tip(m300)
     ctx.comment('\n')
 
     if leftover:
         ctx.comment('USING SINGLE CHANNEL FOR UNFILLED COLUMN\n')
-
-        pick_up(p300)
         for well in mag_plate.columns()[num_full_col][:left_over_in_unfilled_col]:  # noqa: E501
-            p300.aspirate(elute_vol, water)
-            p300.dispense(elute_vol, well.top())
-            p300.mix(10, elute_vol*0.9, well, rate=2)
+            pick_up(p300)
+            bead_spray_down(p300, elute_vol, water, well, 5)
+            bead_mixing(well, p300, elute_vol, top=2, bottom=1,
+                        asp_speed_mod=5, disp_speed_mod=5, reps=5)
+            """p300.mix(10, elute_vol*0.9, well, rate=2)"""
             p300.blow_out()
             ctx.comment('\n')
-        drop_tip(p300)
+            drop_tip(p300)
 
     if TEST_MODE:
         ctx.delay(seconds=elute_time)
     else:
         ctx.delay(minutes=elute_time)
+
     mag_mod.engage(height_from_base=engage_height)
 
     if TEST_MODE:
