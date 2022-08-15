@@ -278,7 +278,7 @@ def run(ctx):
             for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
                 if not m300.has_tip:
                     pick_up(m300)
-                    side = 1 if i % 2 == 0 else -1
+                    side = 1 if magplate.rows()[0].index(m) % 2 == 0 else -1
                     loc = m.bottom().move(Point(x=side*radius*radial_offset,
                                                 z=z_offset))
                     m300.mix(mix_reps, 150, loc)
@@ -312,7 +312,7 @@ def run(ctx):
         magdeck.disengage()
         for i, (m, spot) in enumerate(zip(mag_samples_m, parking_spots)):
             pick_up(m300)
-            side = 1 if i % 2 == 0 else -1
+            side = 1 if magplate.rows()[0].index(m) % 2 == 0 else -1
             loc = m.bottom().move(Point(x=side*radius*radial_offset,
                                         z=z_offset))
             m300.aspirate(vol+2.5, elution_solution)
@@ -336,7 +336,7 @@ def run(ctx):
                 pick_up(m300, loc=spot)
             else:
                 pick_up(m300)
-            side = -1 if i % 2 == 0 else 1
+            side = -1 if magplate.rows()[0].index(m) % 2 == 0 else 1
             loc = m.bottom().move(Point(x=side*radius*radial_offset,
                                         z=z_offset))
             m300.aspirate(vol, loc)
