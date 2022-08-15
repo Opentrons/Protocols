@@ -79,7 +79,10 @@ def run(ctx):
     elution_solution = res1.rows()[0][-1]
 
     starting_samples = pcr_plate.rows()[0][:num_cols]
-    mag_samples_m = magplate.rows()[0][:num_cols]
+    starting_samples = [
+        pcr_plate.columns()[col_ind][1]
+        for col_ind in [2, 4][:num_cols]]
+    mag_samples_m = magplate.rows()[0][10:10+num_cols]
     elution_samples_m = elutionplate.rows()[0][:num_cols]
     radius = mag_samples_m[0].diameter/2
 
@@ -225,10 +228,9 @@ def run(ctx):
                     pick_up(m300)
             # _drop(m300)
             # pick_up(m300)
-            m300.transfer(sample_vol, source.bottom(0.1), dest,
-                          mix_after=(10, sample_vol),
-                          air_gap=air_gap_vol, new_tip='never')
-            m300.air_gap(air_gap_vol)
+            m300.aspirate(sample_vol, source.bottom(0.1))
+            m300.dispense(sample_vol, dest)
+            m300.mix(10, sample_vol, dest)
             if park:
                 m300.drop_tip(spot)
             else:
