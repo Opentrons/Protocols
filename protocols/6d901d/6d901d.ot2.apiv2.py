@@ -70,7 +70,7 @@ def run(ctx: protocol_api.ProtocolContext):
     m20 = ctx.load_instrument('p20_multi_gen2', p20_mount)
 
     pick_up_current = 0.15  # 150 mA for single tip
-    ctx._implementation._hw_manager.hardware._attached_instruments[
+    ctx._hw_manager.hardware._attached_instruments[
       m20._implementation.get_mount()].update_config_item(
       'pick_up_current', pick_up_current)
 
