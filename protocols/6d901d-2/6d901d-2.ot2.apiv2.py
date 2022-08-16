@@ -9,7 +9,7 @@ metadata = {
          'channel pipette'),
     'author': 'Nick & Eskil <protocols@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.11'
+    'apiLevel': '2.12'
 }
 
 
@@ -73,7 +73,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     if 'p20' in pipette_type:
         pick_up_current = 0.15
-        ctx._implementation._hw_manager.hardware._attached_instruments[
+        ctx._hw_manager.hardware._attached_instruments[
           pip._implementation.get_mount()].update_config_item(
           'pick_up_current', pick_up_current)
 
