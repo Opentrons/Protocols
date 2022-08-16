@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "",
-    "description": "This protocol automates the Alpco Insulin ELISA protocol. The protocol begins by transferring aliquots of samples, standards, and controls. The rest of the protocol can be automated or include manual interventions (for wash steps and off-deck incubations). Please note this protocol is currently being optimized.\nExplanation of complex parameters below:\n Number of Samples: Specify the number of samples\n P300 Multi-Channel Mount: Select which mount the P300 Multi-Channel Mount is attached to\n Manually Add Controls: Specify whether or not to manually add controls and standards\n Perform Manual Washes: Specify whether to perform wash steps manually or on the OT-2",
+    "description": "This protocol automates the Alpco Insulin ELISA protocol. The protocol begins by transferring aliquots of samples, standards, and controls. The rest of the protocol can be automated or include manual interventions (for wash steps and off-deck incubations). Please note this protocol is currently being optimized.\nExplanation of complex parameters below:\n* Number of Samples: Specify the number of samples\n* P300 Multi-Channel Mount: Select which mount the P300 Multi-Channel Mount is attached to\n* Manually Add Controls: Specify whether or not to manually add controls and standards\n* Perform Manual Washes: Specify whether to perform wash steps manually or on the OT-2",
     "internal": "29f643",
     "labware": "\nNEST 12 Well Reservoir 15 mL #360102\nNEST 96 Well Plate 100 \u00b5L PCR Full Skirt #402501\nNEST 1 Well Reservoir 195 mL #360103\nOpentrons 96 Tip Rack 300 \u00b5L\n",
     "markdown": {
