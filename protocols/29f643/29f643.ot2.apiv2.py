@@ -29,9 +29,9 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # load labware
     dest_plate = ctx.load_labware(
-        'nest_96_wellplate_100ul_pcr_full_skirt', '2')
+        'nunc_maxisorp_96_wellplate_250ul', '2')
     samp_plate = ctx.load_labware(
-        'nest_96_wellplate_100ul_pcr_full_skirt', '3')
+        'nunc_maxisorp_96_wellplate_250ul', '3')
     res12 = ctx.load_labware('nest_12_reservoir_15ml', '1')
     wb_res = ctx.load_labware('nest_1_reservoir_195ml', '4')
     waste_res = ctx.load_labware('nest_1_reservoir_195ml', '11')
