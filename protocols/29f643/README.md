@@ -21,10 +21,10 @@ Explanation of complex parameters below:
 
 
 ### Labware
-* [NEST 12 Well Reservoir 15 mL #360102](http://www.cell-nest.com/page94?_l=en&product_id=102)
-* [NEST 96 Well Plate 100 µL PCR Full Skirt #402501](http://www.cell-nest.com/page94?_l=en&product_id=97&product_category=96)
-* [NEST 1 Well Reservoir 195 mL #360103](http://www.cell-nest.com/page94?_l=en&product_id=102)
-* [Opentrons 96 Tip Rack 300 µL](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
+* [NEST 12 Well Reservoir, 15 mL](http://www.cell-nest.com/page94?_l=en&product_id=102)
+* [NEST 1 Well Reservoir, 195 mL](http://www.cell-nest.com/page94?_l=en&product_id=102)
+* [Opentrons 96 Tip Rack, 300 µL](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
+* Nunc MaxiSorp 96 Well Plate, 250µL
 
 
 ### Pipettes
