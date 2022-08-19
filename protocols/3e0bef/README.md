@@ -26,7 +26,7 @@ Explanation of complex parameters below:
 * **Play Custom Music at Pause**: Specify whether or not to play custom music during pause steps. Please note, selecting **'No'** will result in the pre-installed music playing. Please only select **'Yes'** if you've worked with the Opentrons team on this protocol prior to download
 </br>
 
-*Note*: This protocol was last updated on August 2nd, 2022
+*Note*: This protocol was last updated on August 19th, 2022
 
 ---
 
