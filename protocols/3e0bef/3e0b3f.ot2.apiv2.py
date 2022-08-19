@@ -338,10 +338,10 @@ def run(ctx: protocol_api.ProtocolContext):
     # Creating reagent variables for second part of protocol
     rbb = [WellH(well, current_volume=0) for well in rsvr_12[0].wells()[:4]]
     cspw1 = [WellH(well) for well in rsvr_12[0].wells()[4:8]]
-    cspw2 = [WellH(well) for well in rsvr_12[1].wells()[8:]]
+    cspw2 = [WellH(well) for well in rsvr_12[0].wells()[8:]]
     spm = [WellH(well) for well in rsvr_12[1].wells()[:8]]
     h2o = rsvr_12[1]['A9']
-    elution_buffer = [WellH(well) for well in rsvr_12[0].wells()[10:]]
+    elution_buffer = [WellH(well) for well in rsvr_12[1].wells()[10:]]
 
     cspw1_wells = []
     cspw2_wells = []
