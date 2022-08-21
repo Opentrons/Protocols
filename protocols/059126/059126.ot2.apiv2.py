@@ -1,204 +1,85 @@
+"""OPENTRONS."""
 from opentrons import protocol_api
+import math
 
 metadata = {
-    'protocolName': 'Protocol Title',
-    'author': 'AUTHOR NAME <authoremail@company.com>',
+    'protocolName': 'Reagent Addition',
+    'author': 'John C. Lynch <john.lynch@opentrons.com>',
     'source': 'Custom Protocol Request',
-    'apiLevel': '2.11'   # CHECK IF YOUR API LEVEL HERE IS UP TO DATE
-                         # IN SECTION 5.2 OF THE APIV2 "VERSIONING"
+    'apiLevel': '2.11'
 }
 
 
 def run(ctx: protocol_api.ProtocolContext):
-
+    """PROTOCOL."""
     [
      num_samples,
+     vol_transfer,
+     num_vials,
      m20_mount
     ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)
         "num_samples",
+        "vol_transfer",
+        "num_vials",
         "m20_mount")
 
     # define all custom variables above here with descriptions:
+    if m20_mount == 'right':
+        m300_mount = 'left'
+    else:
+        m300_mount = 'right'
 
-    # number of samples
-    custom_variable1 = _custom_variable1
-
-    # "True" for park tips, "False" for discard tips
-    custom_variable2 = _custom_variable2
-
-    # load modules
-
-    '''
-
-    Add your modules here with:
-
-    module_name = ctx.load_module('{module_loadname}', '{slot number}')
-
-    Note: if you are loading a thermocycler, you do not need to specify
-    a slot number - thermocyclers will always occupy slots 7, 8, 10, and 11.
-
-    For all other modules, you can load them on slots 1, 3, 4, 6, 7, 9, 10.
-
-    '''
-
+    num_384_cols = math.ceil(num_samples/16)
     # load labware
 
-    '''
-
-    Add your labware here with:
-
-    labware_name = ctx.load_labware('{loadname}', '{slot number}')
-
-    If loading labware on a module, you can load with:
-
-    labware_name = module_name.load_labware('{loadname}')
-    where module_name is defined above.
-
-    '''
+    plate_96 = ctx.load_labware('greiner_96_wellplate_340ul', '1')
+    plate_384 = ctx.load_labware('greiner_384_wellplate_50ul', '2')
+    vials = ctx.load_labware('corning_24_wellplate_3.4ml_flat', '4')
 
     # load tipracks
-
-    '''
-
-    Add your tipracks here as a list:
-
-    For a single tip rack:
-
-    tiprack_name = [ctx.load_labware('{loadname}', '{slot number}')]
-
-    For multiple tip racks of the same type:
-
-    tiprack_name = [ctx.load_labware('{loadname}', 'slot')
-                     for slot in ['1', '2', '3']]
-
-    If two different tipracks are on the deck, use convention:
-    tiprack[number of microliters]
-    e.g. tiprack10, tiprack20, tiprack200, tiprack300, tiprack1000
-
-    '''
+    tiprack_300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
+                   for slot in '8']
+    tiprack_20 = [ctx.load_labware('opentrons_96_tiprack_20ul', slot)
+                  for slot in '9']
+    single_tip_loc = tiprack_300[0].wells()[:num_vials:-1]
 
     # load instrument
-
-    '''
-    Nomenclature for pipette:
-
-    use 'p'  for single-channel, 'm' for multi-channel,
-    followed by number of microliters.
-
-    p20, p300, p1000 (single channel pipettes)
-    m20, m300 (multi-channel pipettes)
-
-    If loading pipette, load with:
-
-    ctx.load_instrument(
-                        '{pipette api load name}',
-                        pipette_mount ("left", or "right"),
-                        tip_racks=tiprack
-                        )
-    '''
-
-    # pipette functions   # INCLUDE ANY BINDING TO CLASS
-
-    '''
-
-    Define all pipette functions, and class extensions here.
-    These may include but are not limited to:
-
-    - Custom pickup functions
-    - Custom drop tip functions
-    - Custom Tip tracking functions
-    - Custom Trash tracking functions
-    - Slow tip withdrawal
-
-    For any functions in your protocol, describe the function as well as
-    describe the parameters which are to be passed in as a docstring below
-    the function (see below).
-
-    def pick_up(pipette):
-        """`pick_up()` will pause the protocol when all tip boxes are out of
-        tips, prompting the user to replace all tip racks. Once tipracks are
-        reset, the protocol will start picking up tips from the first tip
-        box as defined in the slot order when assigning the labware definition
-        for that tip box. `pick_up()` will track tips for both pipettes if
-        applicable.
-
-        :param pipette: The pipette desired to pick up tip
-        as definited earlier in the protocol (e.g. p300, m20).
-        """
-        try:
-            pipette.pick_up_tip()
-        except protocol_api.labware.OutOfTipsError:
-            ctx.pause("Replace empty tip racks")
-            pipette.reset_tipracks()
-            pipette.pick_up_tip()
-
-    '''
-
-    # helper functions
-    '''
-    Define any custom helper functions outside of the pipette scope here, using
-    the convention seen above.
-
-    e.g.
-
-    def remove_supernatant(vol, index):
-        """
-        function description
-
-        :param vol:
-
-        :param index:
-        """
-
-
-    '''
+    m20 = ctx.load_instrument('p20_multi_gen2', m20_mount,
+                              tip_racks=tiprack_20)
+    m300 = ctx.load_instrument('p300_multi_gen2', m300_mount,
+                               tip_racks=tiprack_300)
 
     # reagents
+    row_a_384 = plate_384.rows()[0][:num_384_cols]
+    row_b_384 = plate_384.rows()[1][:num_384_cols]
+    vial_list = vials.wells()[:num_vials]
+    plate_96_cols = plate_96.rows()[0][:num_vials]
+    rows_384 = [row_a_384, row_b_384]
 
-    '''
-    Define where all reagents are on the deck using the labware defined above.
+    pre_air_gap = 5
+    # BEGIN PROTOCOL
 
-    e.g.
+    # Transfer to 96 Plate
+    ctx.comment('\n\n~~~~~~~~~~~~~~ADDING TO 96 WELL PLATE~~~~~~~~~~~~~~\n\n')
+    for i, (tip, src) in enumerate(zip(single_tip_loc, vial_list)):
+        m300.pick_up_tip(tip)
+        for dest in plate_96.columns()[i][:8]:
+            m300.aspirate(150, src, rate=0.5)
+            m300.dispense(150, dest, rate=0.5)
+        m300.drop_tip()
 
-    water = reservoir12.wells()[-1]
-    waste = reservoir.wells()[0]
-    samples = plate.rows()[0][0]
-    dnase = tuberack.wells_by_name()['A4']
+    # Transfer to 384 Well Plate
+    ctx.comment('\n\n~~~~~~~~~~~~~~ADDING TO 384 WELL PLATE~~~~~~~~~~~~~~\n\n')
+    for src in plate_96_cols:
+        m20.pick_up_tip()
+        for plate_384 in rows_384:
+            for dest in plate_384:
+                m20.aspirate(pre_air_gap, src.top())
+                m20.aspirate(vol_transfer, src, rate=0.5)
+                m20.dispense(vol_transfer+pre_air_gap, dest.top(), rate=2)
+                m20.blow_out()
+                m20.touch_tip()
+        m20.drop_tip()
 
-    '''
-
-    # plate, tube rack maps
-
-    '''
-    Define any plate or tube maps here.
-
-    e.g.
-
-    plate_wells_by_row = [well for row in plate.rows() for well in row]
-
-    '''
-
-    # protocol
-
-    '''
-
-    Include header sections as follows for each "section" of your protocol.
-
-    Section can be defined as a step in a bench protocol.
-
-    e.g.
-
-    ctx.comment('\n\nMOVING MASTERMIX TO SAMPLES IN COLUMNS 1-6\n')
-
-    for .... in ...:
-        ...
-        ...
-
-    ctx.comment('\n\nRUNNING THERMOCYCLER PROFILE\n')
-
-    ...
-    ...
-    ...
-
-
-    '''
+    for c in ctx.commands():
+        print(c)
