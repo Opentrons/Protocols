@@ -34,7 +34,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     plate_96 = ctx.load_labware('greiner_96_wellplate_340ul', '1')
     plate_384 = ctx.load_labware('greiner_384_wellplate_50ul', '2')
-    vials = ctx.load_labware('corning_24_wellplate_3.4ml_flat', '4')
+    vials = ctx.load_labware('cytiva_24_wellplate_2000ul', '4')
 
     # load tipracks
     tiprack_300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
