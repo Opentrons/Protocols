@@ -10,6 +10,7 @@
 Explanation of complex parameters below:
 * `csv`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line, with volume in the 6th column:
 ![csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite-dmso/Screen+Shot+2022-06-27+at+4.46.37+PM.png)
+* `Tubes on Slot 4`: Specify which tube rack to use on slot 4. 
 * `P1000 Mount`: Specify which mount (left or right) to host the P1000 single channel pipette
 
 ---
