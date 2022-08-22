@@ -7,12 +7,12 @@
   },
   {
     "type": "dropDown",
-    "label": "Tubes on Slot 2",
-    "name": "tubes_on_slot2",
+    "label": "Tubes on Slot 4",
+    "name": "tubes_on_slot4",
     "options": [
-      {"label": "48 tube rack (yellow cap)", "value": "altemislab_48_wellplate_2000ul"},
       {"label": "24 tube rack large (black cap)", "value": "bricklabwaretype1racklong_24_wellplate_4000ul"},
-      {"label": "24 tube rack small (white cap)", "value": "bricklabwaretype2rackshort_24_wellplate_2000ul"}
+      {"label": "24 tube rack small (white cap)", "value": "bricklabwaretype2rackshort_24_wellplate_2000ul"},
+      {"label": "48 tube rack (yellow cap)", "value": "opentrons_15_tuberack_2000ul"}
     ]
   },
   {
