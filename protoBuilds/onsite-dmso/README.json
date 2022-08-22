@@ -10,7 +10,7 @@
     "labware": "\nCustom Opentrons 4-in-1 tube rack\nAltemis lab 48 plate\nMicronic 96 well plate\nNest 1-well Reservoir\n",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
-        "categories": "* Sample Prep\n\t* Plate Filling\n\nExplanation of complex parameters below:\n* `csv`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line, with volume in the 6th column:\n![csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite-dmso/Screen+Shot+2022-06-27+at+4.46.37+PM.png)\n* `P1000 Mount`: Specify which mount (left or right) to host the P1000 single channel pipette\n\n---\n\n\n",
+        "categories": "* Sample Prep\n\t* Plate Filling\n\nExplanation of complex parameters below:\n* `csv`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line, with volume in the 6th column:\n![csv](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite-dmso/Screen+Shot+2022-06-27+at+4.46.37+PM.png)\n* `Tubes on Slot 4`: Specify which tube rack to use on slot 4. \n* `P1000 Mount`: Specify which mount (left or right) to host the P1000 single channel pipette\n\n---\n\n\n",
         "deck-setup": "![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/onsite-dmso/Screen+Shot+2022-06-27+at+4.51.24+PM.png)\n\n---\n\n",
         "internal": "onsite-dmso\n",
         "labware": "* Custom Opentrons 4-in-1 tube rack\n* Altemis lab 48 plate\n* Micronic 96 well plate\n* Nest 1-well Reservoir\n\n",
