@@ -10,8 +10,8 @@ metadata = {
 
 def run(ctx):
 
-    [csv, p1000_mount] = get_values(  # noqa: F821
-        "csv", "p1000_mount")
+    [csv, tubes_on_slot4, p1000_mount] = get_values(  # noqa: F821
+        "csv", "tubes_on_slot4", "p1000_mount")
 
     all_rows = [[val.strip() for val in line.split(',')]
                 for line in csv.splitlines()
@@ -21,8 +21,8 @@ def run(ctx):
     res = ctx.load_labware('nest_1_reservoir_195ml', 1)
     tiprack = ctx.load_labware('opentrons_96_filtertiprack_1000ul', 6)
     final_96_plate = ctx.load_labware('micronic_96_wellplate_1000ul', 5)
-    middle_48_plate = ctx.load_labware('altemislab_48_wellplate_2000ul', 2)
-    sample_racks = ctx.load_labware('opentrons_15_tuberack_2000ul', 4)
+    middle_48_plate = ctx.load_labware("altemislab_48_wellplate_2000ul", 2)
+    sample_racks = ctx.load_labware(tubes_on_slot4, 4)
 
     # pipettes
     p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,
