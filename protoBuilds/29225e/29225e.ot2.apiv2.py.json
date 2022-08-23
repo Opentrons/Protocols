@@ -6057,5 +6057,12 @@
         "author": "Steve Plonk",
         "title": "RNA Normalization"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 1 lw Destination Plate at 4 Degrees on Temperature Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "tempdeck"
+        }
+    ]
 }
