@@ -74,5 +74,12 @@
         "protocolName": "Oncomine Focus Assay - Pt 4: Purify Library + Elution",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 1 lw Sample Plate on MagDeck on Magnetic Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "magdeck"
+        }
+    ]
 }

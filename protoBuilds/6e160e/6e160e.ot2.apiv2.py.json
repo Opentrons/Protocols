@@ -4449,5 +4449,18 @@
         "protocolName": "Covid Sample Prep to 384 Plate",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 3 lw Applied Biosystems Optical 384 Well 40uL on Temperature Module GEN2 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "tempdeck"
+        },
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 6 lw NEST 12 Well Reservoir 15 mL on Temperature Module GEN2 on 6",
+            "share": false,
+            "slot": "6",
+            "type": "tempdeck"
+        }
+    ]
 }

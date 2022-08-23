@@ -2399,5 +2399,18 @@
         "author": "Steve Plonk <protocols@opentrons.com>",
         "protocolName": "ArcBio RNA Workflow Continuous:\n    Pre-PCR Instrument: Part-4: cDNA Library Purification, Ligation"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 3 lw Sample Plate at 4 Degrees on Temperature Module GEN2 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "tempdeck"
+        },
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 1 lw Mag Plate on Magnetic Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "magdeck"
+        }
+    ]
 }

@@ -2488,5 +2488,12 @@
         "protocolName": "NucleoMag Blood for DNA purification from blood",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 1 lw 96 Square-Well Block by Macherey-Nagel on Magnetic Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "magdeck"
+        }
+    ]
 }

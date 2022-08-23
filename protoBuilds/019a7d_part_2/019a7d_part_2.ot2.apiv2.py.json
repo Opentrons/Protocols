@@ -5306,5 +5306,18 @@
         "protocolName": "Nucleic Acid Purification/Cloning",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN1 on 1 lw Azenta Life Sciences 96 Aluminum Block 200 \u00b5L on Temperature Module GEN1 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "tempdeck"
+        },
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN1 on 3 lw Azenta Life Sciences 96 Aluminum Block 200 \u00b5L on Temperature Module GEN1 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "tempdeck"
+        }
+    ]
 }

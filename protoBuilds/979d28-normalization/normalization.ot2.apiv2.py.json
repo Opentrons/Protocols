@@ -2420,5 +2420,18 @@
         "author": "Opentrons <protocols@opentrons.com>",
         "protocolName": "Normalization"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 9 lw source RNA plate on Temperature Module GEN2 on 9",
+            "share": false,
+            "slot": "9",
+            "type": "tempdeck"
+        },
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 3 lw qPCR plate on Temperature Module GEN2 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "tempdeck"
+        }
+    ]
 }
