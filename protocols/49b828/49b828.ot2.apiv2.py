@@ -34,7 +34,7 @@ def run(ctx: protocol_api.ProtocolContext):
         temp_mod.set_temperature(4)
     else:
         pcr_plate = ctx.load_labware(
-                      "lifetechnologies_384_wellplate_50ul", '3',
+                      plate_384, '3',
                       label='the 384 PCR PLATE')
     sample_plates = [ctx.load_labware(
                       plate_96,
