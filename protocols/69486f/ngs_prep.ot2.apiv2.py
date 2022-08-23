@@ -83,21 +83,7 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
             pip.reset_tipracks()
             look()
 
-    # perform dilution
-    # pre-add water
-    dests_water = [
-        well for col in dilution_plate.columns()[:num_subsamples]
-        for well in col[:num_samples]]
-    vol_water = 9
-    pick_up(p20, 1)
-    for d in dests_water:
-        p20.aspirate(vol_water, water)
-        p20.dispense(vol_water, d.bottom(2))
-        # touch at half radius
-        p20.move_to(d.bottom().move(Point(x=d.diameter/4, z=2)))
-    p20.drop_tip()
-
-    # add samples to dilute
+    """ DILUTION """
     rows_per_sample = 2 if num_subsamples > 6 else 1
     if p20.type == 'multi' and rows_per_sample == 1:  # only if samples in col
         sources, num_pickups = samples_multi, num_samples
@@ -113,7 +99,27 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
             sets.append(rows_flat)
         dest_sets = [set[:num_subsamples] for set in sets]
 
-    # create sample destination sets
+    # pre-add water
+    sets = []
+    for i in range(num_samples):
+        rows_flat = [
+            well for row in dilution_plate.rows()[
+                i*rows_per_sample:(i+1)*rows_per_sample]
+            for well in row]
+        sets.append(rows_flat)
+    dests_water_all = [
+        well for set in sets
+        for well in set[:num_subsamples]]
+    vol_water = 9
+    pick_up(p20, 1)
+    for d in dests_water_all:
+        p20.aspirate(vol_water, water)
+        p20.dispense(vol_water, d.bottom(2))
+        # touch at half radius
+        p20.move_to(d.bottom().move(Point(x=d.diameter/4, z=2)))
+    p20.drop_tip()
+
+    # add samples to dilute
     vol_sample = 1
     for s, dest_set in zip(sources, dest_sets):
         for d in dest_set:
@@ -125,6 +131,7 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
             p20.move_to(d.bottom().move(Point(x=d.diameter/4, z=2)))
             p20.drop_tip()
 
+    """ PCR1 PREP """
     # prepare PCR1 mastermixes
     num_samples_mm_creation = num_samples*2+2+1  # accounts for overage
     pcr1_map = [
@@ -139,8 +146,7 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
             [tuberack.wells()[8+(ind % 5)] for ind in range(num_subsamples)])
     ]
 
-    """ add all constant reagents to each mix tube """
-
+    # add all constant reagents to each mix tube
     vol_pcr_mm = 10*num_samples_mm_creation
     vol_reverse_primer_mm = 0.1*num_samples_mm_creation
     vol_water_mm = 8.8*num_samples_mm_creation
