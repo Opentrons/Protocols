@@ -3,7 +3,7 @@
     "type": "int",
     "label": "number of samples (1-8)",
     "name": "num_samples",
-    "default": 4
+    "default": 3
   },
   {
     "type": "int",
