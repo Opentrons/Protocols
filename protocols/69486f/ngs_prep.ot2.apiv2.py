@@ -10,9 +10,9 @@ metadata = {
 
 def run(ctx):
 
-    [num_samples, num_primers, pipette_p20, pipette_p300, mount_p20,
+    [num_samples, num_subsamples, pipette_p20, pipette_p300, mount_p20,
      mount_p300] = get_values(  # noqa: F821
-        'num_samples', 'num_primers', 'pipette_p20', 'pipette_p300',
+        'num_samples', 'num_subsamples', 'pipette_p20', 'pipette_p300',
         'mount_p20', 'mount_p300')
 
     # labware
@@ -43,15 +43,15 @@ def run(ctx):
     samples_multi = sample_plate.rows()[0][:num_cols]
     dilution_samples_single = [
         well for row in dilution_plate.rows()[:num_samples]
-        for well in row[:num_primers]]
-    dilution_samples_multi = dilution_plate.rows()[:num_primers]
+        for well in row[:num_subsamples]]
+    dilution_samples_multi = dilution_plate.rows()[:num_subsamples]
     pcr1_sample_sets_single = [
         row[i*2:(i+1*2)]
         for row in pcr1_plate.rows()[:num_samples]
-        for i in range(num_primers)]
+        for i in range(num_subsamples)]
     pcr1_sample_sets_multi = [
         pcr1_plate.rows()[0][i*2:(i+1)*2]
-        for i in range(num_primers)]
+        for i in range(num_subsamples)]
     water, mm1, reverse_primer1, mm2 = tuberack2.columns()[0][:4]
 
     def pick_up(pip=p20, channels=p20.channels):
@@ -75,7 +75,7 @@ def run(ctx):
     # perform dilution
     # pre-add water
     dests_water = [
-        well for col in dilution_plate.columns()[:num_primers]
+        well for col in dilution_plate.columns()[:num_subsamples]
         for well in col[:num_samples]]
     vol_water = 9
     pick_up(p20, 1)
@@ -92,7 +92,7 @@ def run(ctx):
     else:
         sources, num_pickups = samples_single, 1
     dest_sets = [
-        row[:num_primers]
+        row[:num_subsamples]
         for row in dilution_plate.rows()[:len(sources)]]
     vol_sample = 1
     for s, dest_set in zip(sources, dest_sets):
@@ -114,8 +114,12 @@ def run(ctx):
             'volume': 0.1*num_samples_mm_creation
         }
         for creation_well, primer_well in zip(
-            tuberack.wells()[:num_primers], tuberack.wells()[8:num_primers])
+            tuberack.wells()[:num_subsamples],
+            # use max 5 primers. loop back around for subsamples 6-8
+            [tuberack.wells()[8+(ind % 5)] for ind in range(num_subsamples)])
     ]
+    for i in pcr1_map:
+        print(i)
 
     """ add all constant reagents to each mix tube """
 
@@ -159,7 +163,7 @@ def run(ctx):
     pcr1_mix_dest_sets = [
         [well for col in pcr1_plate.columns()[i*2:(i+1)*2]
          for well in col[:num_samples]]
-        for i in range(num_primers)
+        for i in range(num_subsamples)
     ]
     for source, dest_set in zip(pcr1_mix_sources, pcr1_mix_dest_sets):
         pick_up(p20, 1)
@@ -263,13 +267,13 @@ TO REAGENT MAP 2.')
 
     """ POOLING """
     if p20.type == 'multi':
-        pool_source_sets = [pcr1_plate.rows()[:num_primers*2]]
+        pool_source_sets = [pcr1_plate.rows()[:num_subsamples*2]]
         pool_dests = pcr1_plate.rows()[0][11:]
         pool_replicate_sets = [pcr2_plate.rows()[:num_replicates]]
         num_pickups = num_samples
     else:
         pool_source_sets = [
-            row[:num_primers*2]
+            row[:num_subsamples*2]
             for row in pcr1_plate.rows()[:num_samples]]
         pool_dests = pcr1_plate.columns()[-1][:num_samples]
         pool_replicate_sets = [

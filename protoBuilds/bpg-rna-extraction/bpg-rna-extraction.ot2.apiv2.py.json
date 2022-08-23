@@ -1246,5 +1246,12 @@
         "protocolName": "BP Genomics RNA Extraction",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN1 on 4 lw NEST 1mL Deep Well Plate on Magnetic Module GEN1 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "magdeck"
+        }
+    ]
 }

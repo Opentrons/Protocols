@@ -4770,5 +4770,12 @@
         "author": "Steve Plonk",
         "title": "qRT-PCR Reaction Setup"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 1 lw PCR Plate at 4 Degrees on Temperature Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "tempdeck"
+        }
+    ]
 }
