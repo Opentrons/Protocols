@@ -9,7 +9,7 @@
     "type": "int",
     "label": "number of subsamples (1-8)",
     "name": "num_subsamples",
-    "default": 8
+    "default": 6
   },
   {
     "type": "dropDown",

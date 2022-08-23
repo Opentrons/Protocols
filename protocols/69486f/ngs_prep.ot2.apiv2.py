@@ -42,20 +42,8 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
     p300 = ctx.load_instrument(pipette_p300, mount_p300, tip_racks=tipracks200)
 
     # reagents
-    num_cols = math.ceil(num_samples/8)
     samples_single = sample_plate.wells()[:num_samples]
     samples_multi = sample_plate.rows()[0][0]  # max 8 samples
-    dilution_samples_single = [
-        well for row in dilution_plate.rows()[:num_samples]
-        for well in row[:num_subsamples]]
-    dilution_samples_multi = dilution_plate.rows()[:num_subsamples]
-    pcr1_sample_sets_single = [
-        row[i*2:(i+1*2)]
-        for row in pcr1_plate.rows()[:num_samples]
-        for i in range(num_subsamples)]
-    pcr1_sample_sets_multi = [
-        pcr1_plate.rows()[0][i*2:(i+1)*2]
-        for i in range(num_subsamples)]
     water, mm1, reverse_primer1, mm2 = tuberack2.columns()[0][:4]
 
     def pick_up(pip=p20, channels=p20.channels):
@@ -255,25 +243,25 @@ TO REAGENT MAP 2.')
             'volume': 0.1*num_samples_mm_creation
         }
         for creation_well, forward_primer_well, reverse_primer_well in zip(
-            tuberack.wells()[:num_samples], tuberack.wells()[8:num_samples],
-            tuberack.wells()[16:num_samples])
+            tuberack.wells()[:num_samples], tuberack.wells()[8:8+num_samples],
+            tuberack.wells()[16:16+num_samples])
     ]
 
-    """ add all constant reagents to each mix tube """
+    # add all constant reagents to each mix tube
     vol_pcr_mm = 10*num_samples_mm_creation
     vol_water_mm = 4.8*num_samples_mm_creation
     for reagent, vol in zip(
             [mm2, water], [vol_pcr_mm, vol_water_mm]):
         pip = p300 if vol > 20 else p20
         tip_capacity = pip.tip_racks[0].wells()[0].max_volume
-        num_transfers = vol/tip_capacity
+        num_transfers = math.ceil(vol/tip_capacity)
         vol_per_transfer = vol/num_transfers
         pick_up(pip, 1)
         for item in pcr2_map:
             mix_dest = item['creation-tube']
             for _ in range(num_transfers):
                 pip.aspirate(vol_per_transfer, reagent)
-                pip.dispense(mix_dest.bottom(5))
+                pip.dispense(vol_per_transfer, mix_dest.bottom(5))
         pip.drop_tip()
 
     # add unique forward/reverse primers to mix and homogenize
@@ -284,21 +272,21 @@ TO REAGENT MAP 2.')
             primer = item[primer_type]
             pip = p300 if vol_primer_mm > 20 else p20
             tip_capacity = pip.tip_racks[0].wells()[0].max_volume
-            num_transfers = vol_primer_mm/tip_capacity
+            num_transfers = math.ceil(vol_primer_mm/tip_capacity)
             vol_per_transfer = vol_forward_primer_mm/num_transfers
             pick_up(pip, 1)
             mix_dest = item['creation-tube']
             for _ in range(num_transfers):
                 pip.aspirate(vol_per_transfer, primer)
-                pip.dispense(mix_dest.bottom(5))
+                pip.dispense(vol_per_transfer, mix_dest.bottom(5))
             if i == 1:
-                pip.mix(10, 20, mix_dest.bottom(5))
+                pip.mix(1, 20, mix_dest.bottom(5))
             pip.drop_tip()
 
     # plate PCR mixes
     pcr2_mix_sources = [item['creation-tube'] for item in pcr2_map]
     pcr2_mix_dest_sets = [
-        row[:num_replicates]
+        row[:num_replicates] + [row[9]]  # include NTC
         for row in pcr2_plate.rows()[:num_samples]]
     vol_pcr2_mix = 15
     for source, dest_set in zip(pcr2_mix_sources, pcr2_mix_dest_sets):
@@ -310,20 +298,16 @@ TO REAGENT MAP 2.')
         p20.drop_tip()
 
     """ POOLING """
-    if p20.type == 'multi':
-        pool_source_sets = [pcr1_plate.rows()[:num_subsamples*2]]
-        pool_dests = pcr1_plate.rows()[0][11:]
-        pool_replicate_sets = [pcr2_plate.rows()[:num_replicates]]
-        num_pickups = num_samples
-    else:
-        pool_source_sets = [
-            row[:num_subsamples*2]
-            for row in pcr1_plate.rows()[:num_samples]]
-        pool_dests = pcr1_plate.columns()[-1][:num_samples]
-        pool_replicate_sets = [
-            row[num_replicates]
-            for row in pcr2_plate.rows()[:num_samples]]
-        num_pickups = 1
+    pool_source_sets = [
+        [well
+         for row in pcr1_plate.rows()[i*rows_per_sample:(i+1)*rows_per_sample]
+         for well in row][:num_subsamples*2]
+        for i in range(num_samples)]
+    pool_dests = pcr2_plate.columns()[-1][:num_samples]
+    pool_replicate_sets = [
+        row[:num_replicates]
+        for row in pcr2_plate.rows()[:num_samples]]
+    num_pickups = 1
 
     # pool and distribute replicates
     vol_sample_for_pooling = 10
@@ -340,8 +324,10 @@ TO REAGENT MAP 2.')
                 p20.mix(10, 10, pool.bottom(2))
                 p20.move_to(pool.bottom().move(Point(x=pool.diameter/4, z=2)))
 
-        for r in pool_replicate_sets:
+        # transfer replicates
+        for r in replicate_set:
             p20.aspirate(5, pool)
             p20.dispense(5, r.bottom(2))
-            p20.move_to(pool.bottom().move(Point(x=pool.diameter/4, z=2)))
+            p20.mix(1, 5, r.bottom(2))
+            p20.move_to(r.bottom().move(Point(x=r.diameter/4, z=2)))
         p20.drop_tip()
