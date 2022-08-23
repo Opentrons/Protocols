@@ -87,7 +87,7 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
     rows_per_sample = 2 if num_subsamples > 6 else 1
     if p20.type == 'multi' and rows_per_sample == 1:  # only if samples in col
         sources, num_pickups = samples_multi, num_samples
-        dest_sets = [dilution_plate.rows()[:num_subsamples]]
+        dilution_sets = [dilution_plate.rows()[:num_subsamples]]
     else:
         sources, num_pickups = samples_single, 1
         sets = []
@@ -97,7 +97,7 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
                     i*rows_per_sample:(i+1)*rows_per_sample]
                 for well in row]
             sets.append(rows_flat)
-        dest_sets = [set[:num_subsamples] for set in sets]
+        dilution_sets = [set[:num_subsamples] for set in sets]
 
     # pre-add water
     sets = []
@@ -121,7 +121,7 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
 
     # add samples to dilute
     vol_sample = 1
-    for s, dest_set in zip(sources, dest_sets):
+    for s, dest_set in zip(sources, dilution_sets):
         for d in dest_set:
             pick_up(p20, num_pickups)
             p20.aspirate(vol_sample, s)
@@ -143,7 +143,7 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
         for creation_well, primer_well in zip(
             tuberack.wells()[:num_subsamples],
             # use max 5 primers. loop back around for subsamples 6-8
-            [tuberack.wells()[8+(ind % 5)] for ind in range(num_subsamples)])
+            [tuberack.wells()[8+(i % 5)] for i in range(num_subsamples)])
     ]
 
     # add all constant reagents to each mix tube
@@ -184,11 +184,30 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
     # pre-transfer mix to wellplate
     vol_mm_total = 19
     pcr1_mix_sources = [item['creation-tube'] for item in pcr1_map]
-    pcr1_mix_dest_sets = [
-        [well for col in pcr1_plate.columns()[i*2:(i+1)*2]
-         for well in col[:num_samples]]
-        for i in range(num_subsamples)
-    ]
+
+    sets = []
+    for i in range(num_samples):
+        rows_flat = [
+            well for row in pcr1_plate.rows()[
+                i*rows_per_sample:(i+1)*rows_per_sample]
+            for well in row]
+        sets.append(rows_flat)
+
+    if num_subsamples <= 6:
+        locs_ntc = pcr1_plate.rows()[-1][:2*num_subsamples:2]
+    else:
+        locs_ntc = pcr1_plate.rows()[-1][:2*num_subsamples]
+
+    pcr1_mix_dest_sets = []
+    for i in range(num_subsamples):
+        temp = []
+        for set in sets:
+            wells = set[i*2:(i+1)*2]
+            for well in wells:
+                temp.append(well)
+        temp.append(locs_ntc[i])
+        pcr1_mix_dest_sets.append(temp)
+
     for source, dest_set in zip(pcr1_mix_sources, pcr1_mix_dest_sets):
         pick_up(p20, 1)
         for d in dest_set:
@@ -198,14 +217,15 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
         p20.drop_tip()
 
     # add DNA template to mix
-    if p20.type == 'multi':
-        [sources, destination_sets, num_pickups] = [
-            dilution_samples_multi, pcr1_sample_sets_multi, num_samples]
-    else:
-        [sources, destination_sets, num_pickups] = [
-            dilution_samples_single, pcr1_sample_sets_single, 1]
+    pcr1_sample_sets = []
+    for set in sets:
+        for i in range(num_subsamples):
+            wells = set[i*2:(i+1)*2]
+            pcr1_sample_sets.append(wells)
+    sources = dests_water_all
+
     vol_template = 1
-    for source, dest_set in zip(sources, destination_sets):
+    for source, dest_set in zip(sources, pcr1_sample_sets):
         for d in dest_set:
             pick_up(p20, num_pickups)
             p20.aspirate(vol_template, source)
