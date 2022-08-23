@@ -7,9 +7,9 @@
   },
   {
     "type": "int",
-    "label": "number of primers (3-6)",
-    "name": "num_primers",
-    "default": 5
+    "label": "number of subsamples (1-8)",
+    "name": "num_subsamples",
+    "default": 8
   },
   {
     "type": "dropDown",
