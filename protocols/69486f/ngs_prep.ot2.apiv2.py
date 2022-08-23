@@ -15,6 +15,10 @@ def run(ctx):
         'num_samples', 'num_subsamples', 'pipette_p20', 'pipette_p300',
         'mount_p20', 'mount_p300')
 
+    if num_samples * num_subsamples * 2 > 96:
+        raise Exception(f'Invalid number of samples ({num_samples}) and \
+subsamples ({num_subsamples}). Exceeds plate capacity.')
+
     # labware
     sample_plate = ctx.load_labware('agilent_96_wellplate_200ul', '1',
                                     'sample plate')
@@ -40,7 +44,7 @@ def run(ctx):
     # reagents
     num_cols = math.ceil(num_samples/8)
     samples_single = sample_plate.wells()[:num_samples]
-    samples_multi = sample_plate.rows()[0][:num_cols]
+    samples_multi = sample_plate.rows()[0][0]  # max 8 samples
     dilution_samples_single = [
         well for row in dilution_plate.rows()[:num_samples]
         for well in row[:num_subsamples]]
@@ -97,18 +101,19 @@ def run(ctx):
     rows_per_sample = 2 if num_subsamples > 6 else 1
     if p20.type == 'multi' and rows_per_sample == 1:  # only if samples in col
         sources, num_pickups = samples_multi, num_samples
+        dest_sets = [dilution_plate.rows()[:num_subsamples]]
     else:
         sources, num_pickups = samples_single, 1
-    # create sample destination sets
-    sets = []
-    for i in range(num_samples):
-        rows_flat = [
-            well for row in dilution_plate.rows()[
-                i*rows_per_sample:(i+1)*rows_per_sample]
-            for well in row]
-        sets.append(rows_flat)
-    dest_sets = [set[:num_subsamples] for set in sets]
+        sets = []
+        for i in range(num_samples):
+            rows_flat = [
+                well for row in dilution_plate.rows()[
+                    i*rows_per_sample:(i+1)*rows_per_sample]
+                for well in row]
+            sets.append(rows_flat)
+        dest_sets = [set[:num_subsamples] for set in sets]
 
+    # create sample destination sets
     vol_sample = 1
     for s, dest_set in zip(sources, dest_sets):
         for d in dest_set:
