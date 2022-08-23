@@ -210,7 +210,7 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
             pick_up(p20, num_pickups)
             p20.aspirate(vol_template, source)
             p20.dispense(vol_template, d.bottom(2))
-            p20.mix(10, 10, d.bottom(2))
+            p20.mix(1, 10, d.bottom(2))
             p20.move_to(d.bottom().move(Point(x=d.diameter/4, z=2)))
             p20.drop_tip()
 
