@@ -64,9 +64,9 @@ def run(ctx):
     ps.liq_vol = 1.1*(13.5*count_samples - 24 + 52 + 30)
     eb.liq_vol = 1.1*(12 + 40 + 20 + 30 + 20 + 16)
 
-    fs, dtt, rs, rpm, pm, p5, p7, pe, qpcrmixtube = [
+    fs, dtt, rs, rpm, pm, p5, p7, pe = [
      tuberack.wells_by_name()[name] for name in [
-      'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'C1', 'C2', 'C3']]
+      'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'C1', 'C2']]
     deadvol_tube = 3
     fs.liq_vol = 1.1*(2.5*count_samples) + deadvol_tube
     dtt.liq_vol = 0.25*count_samples + deadvol_tube
@@ -139,7 +139,6 @@ Spin to collect liquid at well bottom.\n\n
 Return plate to slot 8. Resume\n\n
 \n""".format(index_plate.wells()[:count_samples]))
 
-    # is this reagent assembly using the automation well?
     ctx.comment(
      "\nSTEP - assemble mastermix\n")
 
@@ -159,7 +158,10 @@ Return plate to slot 8. Resume\n\n
     ctx.comment("\nSTEP - add 3 uL mastermix to each RT reaction\n")
 
     for well in index_plate.wells()[:count_samples]:
-        p20s.transfer(3, mastermix, well, new_tip='always')
+        p20s.transfer(
+         3, mastermix, well, blow_out=True,
+         blowout_location='destination well',
+         touch_tip=True, new_tip='always')
 
     ctx.pause("""\n
 Seal the plate\n\n
