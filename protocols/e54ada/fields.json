@@ -21,7 +21,7 @@
       "type": "int",
       "label": "Elution Volume",
       "name": "elute_vol",
-      "default": 25
+      "default": 40
     },
     {
         "type": "dropDown",
