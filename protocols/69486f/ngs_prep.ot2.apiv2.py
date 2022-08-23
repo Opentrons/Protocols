@@ -94,19 +94,27 @@ def run(ctx):
     p20.drop_tip()
 
     # add samples to dilute
-    if p20.type == 'multi':
+    rows_per_sample = 2 if num_subsamples > 6 else 1
+    if p20.type == 'multi' and rows_per_sample == 1:  # only if samples in col
         sources, num_pickups = samples_multi, num_samples
     else:
         sources, num_pickups = samples_single, 1
-    dest_sets = [
-        row[:num_subsamples]
-        for row in dilution_plate.rows()[:len(sources)]]
+    # create sample destination sets
+    sets = []
+    for i in range(num_samples):
+        rows_flat = [
+            well for row in dilution_plate.rows()[
+                i*rows_per_sample:(i+1)*rows_per_sample]
+            for well in row]
+        sets.append(rows_flat)
+    dest_sets = [set[:num_subsamples] for set in sets]
+
     vol_sample = 1
     for s, dest_set in zip(sources, dest_sets):
         for d in dest_set:
             pick_up(p20, num_pickups)
             p20.aspirate(vol_sample, s)
-            p20.dispense(vol_water, d.bottom(2))
+            p20.dispense(vol_sample, d.bottom(2))
             p20.mix(5, 8, d.bottom(2))
             # touch at half radius
             p20.move_to(d.bottom().move(Point(x=d.diameter/4, z=2)))
