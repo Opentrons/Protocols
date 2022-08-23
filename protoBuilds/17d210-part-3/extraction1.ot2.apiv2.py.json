@@ -7919,5 +7919,12 @@
         "author": "Opentrons <protocols@opentrons.com>",
         "protocolName": "Verogen ForenSeq DNA Signature Prep Kit Part 3/5: Library Purification"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 10 lw deepwell wash plate on Magnetic Module GEN2 on 10",
+            "share": false,
+            "slot": "10",
+            "type": "magdeck"
+        }
+    ]
 }

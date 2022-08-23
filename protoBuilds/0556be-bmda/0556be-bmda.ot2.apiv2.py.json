@@ -188,5 +188,12 @@
         "description": "Custom Protocol Request",
         "protocolName": "BMDA - Dengue Protocol"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 10 lw Opentrons 24 Well Aluminum Block with NEST 1.5 mL Snapcap on Temperature Module GEN2 on 10",
+            "share": false,
+            "slot": "10",
+            "type": "tempdeck"
+        }
+    ]
 }

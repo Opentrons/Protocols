@@ -5840,5 +5840,12 @@
         "author": "Opentrons <protocols@opentrons.com>",
         "protocolName": "Verogen ForenSeq DNA Signature Prep Kit Part 4/5: Extraction 2"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 9 lw deepwell wash plate on Magnetic Module GEN2 on 9",
+            "share": false,
+            "slot": "9",
+            "type": "magdeck"
+        }
+    ]
 }

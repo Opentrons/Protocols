@@ -14,13 +14,16 @@ _m20_mount,6
 _m300_mount,3
 _mag_height,1
 _mag_time,1
+_manual_ctrls,1
+_manual_wash,1
 _mbl5_vol,1
 _mm_transfer_vol,1
+_multi_mnt,1
 _music,1
 _num_col,3
 _num_samp,1
 _num_samples,1
-_num_samps,2
+_num_samps,3
 _p1000_mount,1
 _p20_mount,3
 _p300_mount,1
@@ -775,7 +778,7 @@ num_pl,2
 num_plates,25
 num_pool_sources,1
 num_pools,1
-num_primers,3
+num_primers,2
 num_reps,1
 num_row,1
 num_rows_a,1
@@ -793,6 +796,7 @@ num_samples_4,1
 num_samples_per_plate,1
 num_samps,6
 num_slides,2
+num_subsamples,1
 num_tests,1
 num_tipracks,1
 num_tubes,2
@@ -1355,6 +1359,7 @@ tuberacka_tube,1
 tuberackb_tube,1
 tuberacks,1
 tuberacks_15_lname,1
+tubes_on_slot4,1
 tubetype,1
 tvol,1
 twb_rate,1

@@ -2420,5 +2420,12 @@
         "protocolName": "Covid-19 qPCR Prep (Station C)",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 4 lw PCR plate on Temperature Module GEN2 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "tempdeck"
+        }
+    ]
 }

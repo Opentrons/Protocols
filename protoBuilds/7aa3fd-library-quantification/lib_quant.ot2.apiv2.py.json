@@ -1225,5 +1225,18 @@
         "protocolName": "NGS Prep Part 2/3: Library Quantification",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN1 on 1 lw None",
+            "share": false,
+            "slot": "1",
+            "type": "magdeck"
+        },
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN1 on 4 lw Eppendorf Twin.tec 96 Well Plate 150 \u00b5L on Temperature Module GEN1 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "tempdeck"
+        }
+    ]
 }

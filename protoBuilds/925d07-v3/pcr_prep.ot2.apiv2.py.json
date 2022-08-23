@@ -5600,5 +5600,12 @@
         "protocolName": "PCR Prep",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 4 lw mastermix strips (1-3) on Temperature Module GEN2 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "tempdeck"
+        }
+    ]
 }
