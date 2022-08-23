@@ -98,6 +98,7 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
     dests_water_all = [
         well for set in sets
         for well in set[:num_subsamples]]
+
     vol_water = 9
     pick_up(p20, 1)
     for d in dests_water_all:
