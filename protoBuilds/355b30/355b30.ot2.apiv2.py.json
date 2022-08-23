@@ -3774,5 +3774,18 @@
         "author": "Steve Plonk",
         "title": "Sample Mixing"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 1 lw Temperature Module on Temperature Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "tempdeck"
+        },
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 4 lw Temperature Module 2 on Temperature Module GEN2 on 4",
+            "share": false,
+            "slot": "4",
+            "type": "tempdeck"
+        }
+    ]
 }

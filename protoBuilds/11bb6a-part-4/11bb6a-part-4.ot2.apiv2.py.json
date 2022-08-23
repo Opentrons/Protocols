@@ -4984,5 +4984,18 @@
         "author": "Steve Plonk <protocols@opentrons.com>",
         "protocolName": "NEBNext Quarter Volume Library Prep Step 4:\n     Adapter Ligation"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN1 on 1 lw Sarstedt 24 well aluminum block with screwcap tube 2 mL on Temperature Module GEN1 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "tempdeck"
+        },
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 9 lw None",
+            "share": false,
+            "slot": "9",
+            "type": "magdeck"
+        }
+    ]
 }
