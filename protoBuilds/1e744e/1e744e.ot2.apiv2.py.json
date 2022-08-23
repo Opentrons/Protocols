@@ -6871,5 +6871,18 @@
         "author": "Steve Plonk",
         "title": "BioGX XFree RT-PCR Reaction Setup"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 1 lw Reaction Plate at 4 Degrees on Temperature Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "tempdeck"
+        },
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 3 lw Mastermix Plate at 4 Degrees on Temperature Module GEN2 on 3",
+            "share": false,
+            "slot": "3",
+            "type": "tempdeck"
+        }
+    ]
 }
