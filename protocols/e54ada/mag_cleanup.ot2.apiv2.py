@@ -31,7 +31,6 @@ class CancellationToken:
 
 def turn_on_blinking_notification(hardware, pause):
     """FLASH SETUP."""
-
     while pause.is_continued:
         hardware.set_lights(rails=True)
         sleep(1)
@@ -160,7 +159,7 @@ def run(ctx):
                     asp_speed_mod=5, disp_speed_mod=5, reps=10):
         """bead_mixing."""
         """
-        'bead_mixing' will mix liquid that contains beads. This will be done by
+        'bead_mixing ' will mix liquid that contains beads. This is done by
         aspirating from the middle of the well & dispensing from the bottom to
         mix the beads with the other liquids as much as possible. Aspiration &
         dispensing will also be reversed to ensure proper mixing.
@@ -189,6 +188,20 @@ def run(ctx):
         ctx.comment('\n\n\n')
 
     def bead_spray_down(pipette, vol, src, well, reps, pip_rate=2):
+        """Bead spray down."""
+        """This function helps in resuspending beads that have pelleted to the
+        sides of the wells. Elution liquid is added to the wells. The liquid is
+        then re-aspirated and dispensed down the pelleted bead sides for a
+        specified number of repetitions set by 'reps'.
+        Pipette, specifies which pipette will be used
+        Vol, volume to be aspirated and dispensed
+        Src, where the initial liquid will be aspirated from
+        Well, destination well for liquid
+        Reps, how many times the robot will spray down the sides, reusing the
+        initial volume aspirated from the source
+        Pip_rate, multiplier of pipette dispense rate. 2 will double default
+        dispense rate
+        """
         pipette.aspirate(vol, src)
         pipette.move_to(well.top(-1))
         pipette.dispense(vol,
@@ -469,12 +482,12 @@ def run(ctx):
     for i, col in enumerate(working_cols):
         side = x_abs_move_super if i % 2 == 0 else -x_abs_move_super
         pick_up(m300)
-        bead_spray_down(m300, elute_vol, water, col, 5)
+        bead_spray_down(m300, elute_vol, water, col, 5, pip_rate=elute_rate)
         """m300.aspirate(elute_vol, water)
         m300.dispense(elute_vol, col.top().move(types.Point(x=side, y=0,
                                                 z=z_disp_height)),
                       rate=elute_rate)"""
-        bead_mixing(well, m300, elute_vol, top=2, bottom=1,
+        bead_mixing(col, m300, elute_vol, top=2, bottom=1,
                     asp_speed_mod=5, disp_speed_mod=5, reps=5)
         # m300.mix(10, elute_vol*0.9, col, rate=2)
         m300.blow_out()
@@ -485,7 +498,8 @@ def run(ctx):
         ctx.comment('USING SINGLE CHANNEL FOR UNFILLED COLUMN\n')
         for well in mag_plate.columns()[num_full_col][:left_over_in_unfilled_col]:  # noqa: E501
             pick_up(p300)
-            bead_spray_down(p300, elute_vol, water, well, 5)
+            bead_spray_down(p300, elute_vol, water, well, 5,
+                            pip_rate=elute_rate)
             bead_mixing(well, p300, elute_vol, top=2, bottom=1,
                         asp_speed_mod=5, disp_speed_mod=5, reps=5)
             """p300.mix(10, elute_vol*0.9, well, rate=2)"""
@@ -540,6 +554,9 @@ def run(ctx):
             ctx.comment('\n')
 
     mag_mod.disengage()
+
+    for c in ctx.commands():
+        print(c)
     # NOTES:
     """1. aspirating from opposite side of magnetically engaged wells?
             (single vs. multi)
