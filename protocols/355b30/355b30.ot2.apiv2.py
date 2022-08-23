@@ -288,7 +288,7 @@ def run(ctx):
             if int(tfer['Sample_Slot']) == 10:
                 reservoir.liq_vol -= v
 
-            # tip touch
+            # touch tip
             if int(tfer['Sample_Slot']) != 10:
                 if loc_asp.diameter:
                     speed_arg = 3.14*loc_asp.diameter
