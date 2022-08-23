@@ -27,10 +27,10 @@ def run(ctx):
     pcr2_plate = ctx.load_labware('agilent_96_wellplate_200ul', '6',
                                   'PCR 2 plate')
     tuberack = ctx.load_labware(
-        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '8',
+        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '7',
         'tuberack 1')
     tuberack2 = ctx.load_labware(
-        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '9',
+        'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '8',
         'tuberack 2')
 
     # pipettes
@@ -55,22 +55,29 @@ def run(ctx):
     water, mm1, reverse_primer1, mm2 = tuberack2.columns()[0][:4]
 
     def pick_up(pip=p20, channels=p20.channels):
-        # iterate and look for required number of consecutive tips
-        for rack in pip.tip_racks:
-            for col in rack.columns():
-                counter = 0
-                for well in col[::-1]:
-                    if well.has_tip:
-                        counter += 1
-                    else:
-                        counter = 0
-                    if counter == channels:
-                        pip.pick_up_tip(well)
-                        return
+        def look():
+            # iterate and look for required number of consecutive tips
+            for rack in pip.tip_racks:
+                for col in rack.columns():
+                    counter = 0
+                    for well in col[::-1]:
+                        if well.has_tip:
+                            counter += 1
+                        else:
+                            counter = 0
+                        if counter == channels:
+                            pip.pick_up_tip(well)
+                            return True
+            return False
 
-        # refill rack if no tips available
-        ctx.pause(f'Refill {pip} tipracks before resuming.')
-        pip.reset_tipracks()
+        eval_pickup = look()
+        if eval_pickup:
+            return
+        else:
+            # refill rack if no tips available
+            ctx.pause(f'Refill {pip} tipracks before resuming.')
+            pip.reset_tipracks()
+            look()
 
     # perform dilution
     # pre-add water
@@ -118,8 +125,6 @@ def run(ctx):
             # use max 5 primers. loop back around for subsamples 6-8
             [tuberack.wells()[8+(ind % 5)] for ind in range(num_subsamples)])
     ]
-    for i in pcr1_map:
-        print(i)
 
     """ add all constant reagents to each mix tube """
 
@@ -131,21 +136,21 @@ def run(ctx):
             [vol_pcr_mm, vol_reverse_primer_mm, vol_water_mm]):
         pip = p300 if vol > 20 else p20
         tip_capacity = pip.tip_racks[0].wells()[0].max_volume
-        num_transfers = vol/tip_capacity
+        num_transfers = math.ceil(vol/tip_capacity)
         vol_per_transfer = vol/num_transfers
         pick_up(pip, 1)
         for item in pcr1_map:
             mix_dest = item['creation-tube']
             for _ in range(num_transfers):
                 pip.aspirate(vol_per_transfer, reagent)
-                pip.dispense(mix_dest.bottom(5))
+                pip.dispense(vol_per_transfer, mix_dest.bottom(5))
         pip.drop_tip()
 
     # add unique forward primers to mix and homogenize
     vol_forward_primer_mm = 0.1*num_samples_mm_creation
     pip = p300 if vol_forward_primer_mm > 20 else p20
     tip_capacity = pip.tip_racks[0].wells()[0].max_volume
-    num_transfers = vol_forward_primer_mm/tip_capacity
+    num_transfers = math.ceil(vol_forward_primer_mm/tip_capacity)
     vol_per_transfer = vol_forward_primer_mm/num_transfers
     for item in pcr1_map:
         pick_up(pip, 1)
@@ -153,7 +158,7 @@ def run(ctx):
         mix_dest = item['creation-tube']
         for _ in range(num_transfers):
             pip.aspirate(vol_per_transfer, primer)
-            pip.dispense(mix_dest.bottom(5))
+            pip.dispense(vol_per_transfer, mix_dest.bottom(5))
         pip.mix(10, 20, mix_dest.bottom(5))
         pip.drop_tip()
 
@@ -292,7 +297,7 @@ TO REAGENT MAP 2.')
             p20.move_to(pool.bottom().move(Point(x=pool.diameter/4, z=2)))
             if i < len(source_set) - 1:
                 p20.drop_tip()
-            if i == len(source_set) - 1 and len(source_set) > 2:
+            if (i == len(source_set) - 1) and (len(source_set) > 2):
                 p20.mix(10, 10, pool.bottom(2))
                 p20.move_to(pool.bottom().move(Point(x=pool.diameter/4, z=2)))
 
