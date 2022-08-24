@@ -715,8 +715,8 @@ mother_plate_type,1
 mount,2
 mount_m20,1
 mount_m300,2
-mount_p20,6
-mount_p300,5
+mount_p20,7
+mount_p300,6
 mount_side,1
 move_side,2
 move_vol,1
@@ -789,8 +789,8 @@ num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
 num_samples,123
-num_samples_1,1
-num_samples_2,1
+num_samples_1,2
+num_samples_2,2
 num_samples_3,1
 num_samples_4,1
 num_samples_per_plate,1
@@ -917,6 +917,7 @@ pcrcycles,2
 pdl1_dil,1
 peptide_supernat_vol,1
 perform_barcode,1
+perform_normalization,1
 perform_steps,1
 pip,1
 pip_l,2
@@ -932,8 +933,8 @@ pipette_2_type,1
 pipette_homing,1
 pipette_mount,17
 pipette_offset,1
-pipette_p20,1
-pipette_p300,1
+pipette_p20,2
+pipette_p300,2
 pipette_type,16
 pipette_types,1
 pipettes,1
