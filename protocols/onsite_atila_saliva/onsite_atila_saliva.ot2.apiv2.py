@@ -55,7 +55,7 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # protocol
     ctx.comment('\n\n~~~~~~~~MOVING MMX TO PLATE~~~~~~~~~\n')
-    mmx_vol = 22
+    mmx_vol = 20
     mmx_ctr = 0
     if num_full_col > 0:
         p300.pick_up_tip()
@@ -75,7 +75,7 @@ def run(ctx: protocol_api.ProtocolContext):
             p20.pick_up_tip()
         for source, well in zip(mmx_plate.columns()[mmx_ctr],
                                 pcr_plate.columns()[num_full_col][:spill]):
-            p20.transfer(22, source,
+            p20.transfer(20, source,
                          well,
                          new_tip='never',
                          touch_tip=True,
@@ -90,7 +90,7 @@ def run(ctx: protocol_api.ProtocolContext):
         for i, source in enumerate(
                         mmx_plate.columns()[mmx_ctr][spill:spill+2]):
 
-            p20.transfer(22, source,
+            p20.transfer(20, source,
                          controls_dest[i],
                          new_tip='never',
                          touch_tip=True,
@@ -101,8 +101,8 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.comment('\n\n~~~~~~~~MOVING SAMPLES TO PLATE~~~~~~~~~\n')
     for sample, well in zip(all_sample_tubes, pcr_plate.wells()):
         p20.pick_up_tip()
-        p20.aspirate(3, sample)
-        p20.dispense(3, well)
+        p20.aspirate(5, sample)
+        p20.dispense(5, well)
         p20.blow_out()
         p20.touch_tip()
         p20.drop_tip()
@@ -110,8 +110,8 @@ def run(ctx: protocol_api.ProtocolContext):
     ctx.comment('\n\n~~~~~~~~MOVING CONTROLS TO PLATE~~~~~~~~~\n')
     for source, dest in zip(controls_source, controls_dest):
         p20.pick_up_tip()
-        p20.aspirate(3, source)
-        p20.dispense(3, dest)
+        p20.aspirate(5, source)
+        p20.dispense(5, dest)
         p20.blow_out(dest.top(z=-3))
         p20.touch_tip()
         p20.drop_tip()
