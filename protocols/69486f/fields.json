@@ -13,11 +13,11 @@
   },
   {
     "type": "dropDown",
-    "label": "normalize",
+    "label": "normalization scheme",
     "name": "perform_normalization",
     "options": [
-      { "label": "yes", "value": true },
-      { "label": "no", "value": false }
+      { "label": "on OT-2", "value": true },
+      { "label": "manual", "value": false }
     ]
   },
   {
