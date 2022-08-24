@@ -129,6 +129,7 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
             p20.drop_tip()
 
     """ PCR1 PREP """
+
     # prepare PCR1 mastermixes
     num_samples_mm_creation = num_samples*2+2+1  # accounts for overage
     pcr1_map = [
@@ -233,6 +234,16 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
 
     """ NORMALIZATION """
     pool_dests = tuberack2.wells()[4:4+num_samples]
+    all_pcr1_wells = [well for set in pcr1_sample_sets for well in set]
+    all_normalization_wells = [
+        normalization_plate.wells()[pcr1_plate.wells().index(well)]
+        for well in all_pcr1_wells]
+    wells_per_pool = num_subsamples*2
+    pool_source_sets = [
+        all_normalization_wells[i*wells_per_pool:(i+1)*wells_per_pool]
+        for i in range(num_samples)]
+    vol_sample_per_pool = 15
+
     if perform_normalization:
         ctx.pause(F'RUN PCR PROFILE 1 ON PLATE IN SLOT {pcr1_plate.parent}. \
 CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2.')
@@ -241,15 +252,9 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2.')
         vol_binding_buffer = vol_pcr1_product
         vol_wash_buffer = 50
         vol_elution = 20
-        vol_sample_per_pool = 15
         binding_buffer, wash_buffer, elution_buffer = reservoir.wells()[:3]
 
         # transfer PCR1 to normalization plate
-        all_pcr1_wells = [
-            well for set in pcr1_sample_sets for well in set]
-        all_normalization_wells = [
-            normalization_plate.wells()[pcr1_plate.wells().index(well)]
-            for well in all_pcr1_wells]
         for s, d in zip(all_pcr1_wells, all_normalization_wells):
             pick_up(p20, 1)
             p20.aspirate(vol_pcr1_product, s)
@@ -284,11 +289,6 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2.')
             p300.drop_tip()
 
         # elute
-        wells_per_pool = num_subsamples*2
-        pool_source_sets = [
-            all_normalization_wells[i*wells_per_pool:(i+1)*wells_per_pool]
-            for i in range(num_samples)]
-
         for d in all_normalization_wells:
             pick_up(p20, 1)
             p20.aspirate(vol_elution, elution_buffer)
@@ -298,22 +298,17 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2.')
 
         ctx.delay(minutes=5, msg='Incubating 5 minutes.')
 
-        for source_set, pool in zip(pool_source_sets, pool_dests):
-            pick_up(p20, 1)
-            for s in source_set:
-                p20.aspirate(vol_elution, elution_buffer)
-                p20.dispense(vol_elution, d.bottom(2))
-                p20.mix(5, 10, d.bottom(2))
-                p20.aspirate(vol_sample_per_pool, d.bottom(0.5))
-                p20.dispense(vol_sample_per_pool, pool.bottom(3))
-            p20.drop_tip()
-
     else:
-        final_pool_tube = pool_dests[-1].display_name.split(' ')[0]
         ctx.pause(f'RUN PCR PROFILE 1 ON PLATE IN SLOT {pcr1_plate.parent}. \
-NORMALIZE ALL SAMPLES AND POOL INTO TUBERACK 2 (slot 8) TUBES \
-A2-{final_pool_tube}. CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO \
-REAGENT MAP 2')
+NORMALIZE ALL SAMPLES PLACE NORMALIZED PLATE IN SLOT 6 FOR POOLING TO BEGIN. \
+CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2')
+
+    for source_set, pool in zip(pool_source_sets, pool_dests):
+        pick_up(p20, 1)
+        for s in source_set:
+            p20.aspirate(vol_sample_per_pool, d.bottom(0.5))
+            p20.dispense(vol_sample_per_pool, pool.bottom(3))
+        p20.drop_tip()
 
     if num_samples < 6:
         num_replicates = 4
