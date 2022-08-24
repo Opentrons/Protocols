@@ -390,7 +390,6 @@ TUBES A2-{final_pool_tube}.')
         for row in pcr2_plate.rows()[:num_samples]]
     num_pickups = 1
 
-    ctx.clear_commands()
     # distribute replicates
     for source_set, pool, replicate_set in zip(
             pool_source_sets, pool_dests, pool_replicate_sets):
@@ -405,5 +404,3 @@ TUBES A2-{final_pool_tube}.')
                 p20.mix(1, 5, r.bottom(2))
                 p20.move_to(r.bottom().move(Point(x=r.diameter/4, z=2)))
             p20.drop_tip()
-    for c in ctx.commands():
-        print(c)
