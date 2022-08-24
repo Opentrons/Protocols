@@ -43,7 +43,6 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
 
     # reagents
     samples_single = sample_plate.wells()[:num_samples]
-    samples_multi = sample_plate.rows()[0][0]  # max 8 samples
     water, mm1, reverse_primer1, mm2 = tuberack2.columns()[0][:4]
 
     def pick_up(pip=p20, channels=p20.channels):
@@ -72,10 +71,14 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
             look()
 
     """ DILUTION """
+
     rows_per_sample = 2 if num_subsamples > 6 else 1
     if p20.type == 'multi' and rows_per_sample == 1:  # only if samples in col
-        sources, num_pickups = samples_multi, num_samples
-        dilution_sets = [dilution_plate.rows()[:num_subsamples]]
+        sources, num_pickups = [
+            sample_plate.rows()[0][0] for _ in range(num_subsamples)], \
+            num_samples
+        dilution_sets = [
+            [dilution_plate.rows()[0][i]] for i in range(num_subsamples)]
     else:
         sources, num_pickups = samples_single, 1
         sets = []
@@ -215,13 +218,13 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
 
     vol_template = 1
     for source, dest_set in zip(sources, pcr1_sample_sets):
+        pick_up(p20, num_pickups)
         for d in dest_set:
-            pick_up(p20, num_pickups)
             p20.aspirate(vol_template, source)
             p20.dispense(vol_template, d.bottom(2))
             p20.mix(1, 10, d.bottom(2))
             p20.move_to(d.bottom().move(Point(x=d.diameter/4, z=2)))
-            p20.drop_tip()
+        p20.drop_tip()
 
     ctx.pause(F'RUN PCR PROFILE 1 ON PLATE IN SLOT {pcr1_plate.parent} \
 NORMALIZE AND REPLACE PLATE WHEN FINISHED AND CHANGE THE TUBERACK ACCORDING \
