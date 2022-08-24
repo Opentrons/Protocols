@@ -31,19 +31,19 @@ This protocol uses single-channel P20 and P300 pipettes to perform library prep 
 ---
 
 ### Deck Setup
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1af856/screenshot-deck_updated.png)
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1af856/screenshot0823-deck.png)
 </br>
 </br>
 **Slot 1**: Final Output Plate (nest_96_wellplate_100ul_pcr_full_skirt) </br>
-**Slot 2**: Tube Rack for PS, EB, PB (opentrons_24_tuberack_nest_1.5ml_snapcap) </br>
-![tuberack](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1af856/screenshot-tuberack.png)
+**Slot 2**: Tube Rack for Reagents (opentrons_24_tuberack_nest_1.5ml_snapcap) </br>
+![tuberack](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1af856/screenshot0823-tuberack.png)
 </br>
 </br>
 **Slot 3**: 80 Percent Ethanol Reservoir (nest_12_reservoir_15ml) </br>
 **Slot 4**: Opentrons Magnetic Module with 96-Deep Well Plate (nest_96_wellplate_2ml_deep) </br>
 **Slot 5**: PCR Plate (nest_96_wellplate_100ul_pcr_full_skirt) </br>
 **Slot 7**: Opentrons Temperature Module with 24-Well Aluminum Block holding 1.5 mL Nest SnapCap Tubes </br>
-![tempmod](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1af856/screenshot-tempmod.png)
+![tempmod](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1af856/screenshot0823-block.png)
 </br>
 </br>
 **Slot 8**: Index Plate </br>

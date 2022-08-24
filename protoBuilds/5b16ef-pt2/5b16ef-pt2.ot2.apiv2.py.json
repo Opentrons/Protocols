@@ -1267,5 +1267,12 @@
         "protocolName": "",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 10 lw Bio-Rad 96 Well Plate 200 \u00b5L PCR on Magnetic Module GEN2 on 10",
+            "share": false,
+            "slot": "10",
+            "type": "magdeck"
+        }
+    ]
 }

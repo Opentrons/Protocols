@@ -2480,5 +2480,12 @@
         "protocolName": "SuperScript III: qRT-PCR Prep with CSV File",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 9 lw Starting on Temperature Module GEN2 on 9",
+            "share": false,
+            "slot": "9",
+            "type": "tempdeck"
+        }
+    ]
 }

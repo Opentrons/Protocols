@@ -2389,5 +2389,12 @@
         "protocolName": "Zymo Quick-DNA Fecal/Soil Microbe 96 Magbead Kit",
         "source": "Custom Protocol Request"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 10 lw VWR 96 Well Plate 1000 \u00b5L on Magnetic Module GEN2 on 10",
+            "share": false,
+            "slot": "10",
+            "type": "magdeck"
+        }
+    ]
 }

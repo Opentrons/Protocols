@@ -17,12 +17,10 @@ def run(ctx):
         'source_type', 'using_tempdeck', 'dest_type')
 
     # labware
+    tempdeck = ctx.load_module('temperature module gen2', '1')
     if using_tempdeck:
-        tempdeck = ctx.load_module('temperature module gen2', '1')
         tempdeck.set_temperature(4)
-        source_plate = tempdeck.load_labware(source_type, 'source plate')
-    else:
-        source_plate = ctx.load_labware(source_type, '1', 'source plate')
+    source_plate = tempdeck.load_labware(source_type, 'source plate')
     pooling_tube = ctx.load_labware(dest_type, '2', 'pooling tube').wells()[0]
     tiprack20 = [
         ctx.load_labware('opentrons_96_tiprack_20ul', slot, '20ul tiprack')

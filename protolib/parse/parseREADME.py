@@ -27,7 +27,8 @@ def parse_labware(data):
             custom_labware_list = []
             for custom_labware in data['custom_labware_defs']:
                 display_text = custom_labware['metadata']['displayName']
-                if custom_labware['brand']['brandId']:
+                if 'brandId' in custom_labware['brand'] and \
+                        custom_labware['brand']['brandId']:
                     brand_id = custom_labware['brand']['brandId']
                 else:
                     brand_id = None

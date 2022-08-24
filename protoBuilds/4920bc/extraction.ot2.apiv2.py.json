@@ -87,5 +87,18 @@
         "author": "Opentrons <protocols@opentrons.com>",
         "protocolName": "Omega Mag-Bind\u00ae Total RNA 96 Kit"
     },
-    "modules": []
+    "modules": [
+        {
+            "name": "MagneticModuleContext at Magnetic Module GEN2 on 6 lw deepwell plate on Magnetic Module GEN2 on 6",
+            "share": false,
+            "slot": "6",
+            "type": "magdeck"
+        },
+        {
+            "name": "TemperatureModuleContext at Temperature Module GEN2 on 1 lw elution plate on Temperature Module GEN2 on 1",
+            "share": false,
+            "slot": "1",
+            "type": "tempdeck"
+        }
+    ]
 }
