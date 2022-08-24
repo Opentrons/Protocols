@@ -1,24 +1,15 @@
 [
   {
     "type": "int",
-    "label": "number of samples (1-8)",
-    "name": "num_samples",
-    "default": 4
+    "label": "number of samples, type 1",
+    "name": "num_samples_1",
+    "default": 3
   },
   {
     "type": "int",
-    "label": "number of subsamples (1-8)",
-    "name": "num_subsamples",
-    "default": 6
-  },
-  {
-    "type": "dropDown",
-    "label": "normalize",
-    "name": "perform_normalization",
-    "options": [
-      { "label": "yes", "value": true },
-      { "label": "no", "value": false }
-    ]
+    "label": "number of samples, type 2",
+    "name": "num_samples_2",
+    "default": 2
   },
   {
     "type": "dropDown",

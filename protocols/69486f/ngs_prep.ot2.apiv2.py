@@ -10,10 +10,10 @@ metadata = {
 
 def run(ctx):
 
-    [num_samples, num_subsamples, pipette_p20, pipette_p300, mount_p20,
-     mount_p300] = get_values(  # noqa: F821
-        'num_samples', 'num_subsamples', 'pipette_p20', 'pipette_p300',
-        'mount_p20', 'mount_p300')
+    [num_samples, num_subsamples, perform_normalization, pipette_p20,
+     pipette_p300, mount_p20, mount_p300] = get_values(  # noqa: F821
+        'num_samples', 'num_subsamples', 'perform_normalization',
+        'pipette_p20', 'pipette_p300', 'mount_p20', 'mount_p300')
 
     if num_samples * num_subsamples * 2 > 96:
         raise Exception(f'Invalid number of samples ({num_samples}) and \
