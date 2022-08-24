@@ -25,8 +25,8 @@
     "label": "P20 pipette type",
     "name": "pipette_p20",
     "options": [
-      { "label": "single-channel (GEN2)", "value": "p20_single_gen2" },
-      { "label": "8-channel (GEN2)", "value": "p20_multi_gen2" }
+      { "label": "8-channel (GEN2)", "value": "p20_multi_gen2" },
+      { "label": "single-channel (GEN2)", "value": "p20_single_gen2" }
     ]
   },
   {
@@ -34,8 +34,8 @@
     "label": "P20 pipette mount",
     "name": "mount_p20",
     "options": [
-      { "label": "left", "value": "left" },
-      { "label": "right", "value": "right" }
+      { "label": "right", "value": "right" },
+      { "label": "left", "value": "left" }
     ]
   },
   {
@@ -43,8 +43,8 @@
     "label": "P300 pipette type",
     "name": "pipette_p300",
     "options": [
-      { "label": "single-channel (GEN2)", "value": "p300_single_gen2" },
-      { "label": "8-channel (GEN2)", "value": "p300_multi_gen2" }
+      { "label": "8-channel (GEN2)", "value": "p300_multi_gen2" },
+      { "label": "single-channel (GEN2)", "value": "p300_single_gen2" }
     ]
   },
   {
@@ -52,8 +52,8 @@
     "label": "P300 pipette mount",
     "name": "mount_p300",
     "options": [
-      { "label": "right", "value": "right" },
-      { "label": "left", "value": "left" }
+      { "label": "left", "value": "left" },
+      { "label": "right", "value": "right" }
     ]
   }
 ]
