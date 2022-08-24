@@ -310,8 +310,10 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2.')
 
     else:
         final_pool_tube = pool_dests[-1].display_name.split(' ')[0]
-        ctx.pause(f'NORMALIZE ALL SAMPLES AND POOL INTO TUBERACK 2 (slot 8) \
-TUBES A2-{final_pool_tube}.')
+        ctx.pause(f'RUN PCR PROFILE 1 ON PLATE IN SLOT {pcr1_plate.parent}. \
+NORMALIZE ALL SAMPLES AND POOL INTO TUBERACK 2 (slot 8) TUBES \
+A2-{final_pool_tube}. CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO \
+REAGENT MAP 2')
 
     if num_samples < 6:
         num_replicates = 4
