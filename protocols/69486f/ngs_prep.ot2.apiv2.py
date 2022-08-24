@@ -28,7 +28,9 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
                                   'PCR 1 plate')
     tipracks20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '4')]
     tipracks200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '5')]
-    pcr2_plate = ctx.load_labware('agilent_96_wellplate_200ul', '6',
+    normalization_plate = ctx.load_labware('agilent_96_wellplate_200ul', '6',
+                                           'normalization plate')
+    pcr2_plate = ctx.load_labware('agilent_96_wellplate_200ul', '9',
                                   'PCR 2 plate')
     tuberack = ctx.load_labware(
         'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '7',
@@ -36,6 +38,9 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
     tuberack2 = ctx.load_labware(
         'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '8',
         'tuberack 2')
+    if perform_normalization:
+        reservoir = ctx.load_labware('agilent_3_reservoir_95ml', '11',
+                                     'normalization buffers')
 
     # pipettes
     p20 = ctx.load_instrument(pipette_p20, mount_p20, tip_racks=tipracks20)
@@ -226,9 +231,87 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
             p20.move_to(d.bottom().move(Point(x=d.diameter/4, z=2)))
         p20.drop_tip()
 
-    ctx.pause(F'RUN PCR PROFILE 1 ON PLATE IN SLOT {pcr1_plate.parent} \
-NORMALIZE AND REPLACE PLATE WHEN FINISHED AND CHANGE THE TUBERACK ACCORDING \
-TO REAGENT MAP 2.')
+    """ NORMALIZATION """
+    pool_dests = tuberack2.wells()[4:4+num_samples]
+    if perform_normalization:
+        ctx.pause(F'RUN PCR PROFILE 1 ON PLATE IN SLOT {pcr1_plate.parent}. \
+CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2.')
+
+        vol_pcr1_product = 15
+        vol_binding_buffer = vol_pcr1_product
+        vol_wash_buffer = 50
+        vol_elution = 20
+        vol_sample_per_pool = 15
+        binding_buffer, wash_buffer, elution_buffer = reservoir.wells()[:3]
+
+        # transfer PCR1 to normalization plate
+        all_pcr1_wells = [
+            well for set in pcr1_sample_sets for well in set]
+        all_normalization_wells = [
+            normalization_plate.wells()[pcr1_plate.wells().index(well)]
+            for well in all_pcr1_wells]
+        for s, d in zip(all_pcr1_wells, all_normalization_wells):
+            pick_up(p20, 1)
+            p20.aspirate(vol_pcr1_product, s)
+            p20.dispense(vol_pcr1_product, d.bottom(2))
+            p20.move_to(d.bottom().move(Point(x=d.diameter/4, z=2)))
+            p20.drop_tip()
+
+        # transfer binding buffer, mix, incubate
+        for d in all_normalization_wells:
+            pick_up(p20, 1)
+            p20.aspirate(vol_binding_buffer, binding_buffer)
+            p20.dispense(vol_binding_buffer, d.bottom(2))
+            p20.mix(10, 10, d.bottom(2))
+            p20.move_to(d.bottom().move(Point(x=d.diameter/4, z=2)))
+            p20.drop_tip()
+
+        ctx.delay(minutes=60, msg='Incubating 1 hour.')
+
+        # remove liquid
+        for d in all_normalization_wells:
+            pick_up(p300, 1)
+            p300.aspirate(vol_pcr1_product+vol_binding_buffer, d.bottom(0.5))
+            p300.drop_tip()
+
+        # wash
+        for d in all_normalization_wells:
+            pick_up(p300, 1)
+            p300.aspirate(vol_wash_buffer, wash_buffer)
+            p300.dispense(vol_wash_buffer, d.bottom(2))
+            p300.mix(2, 10, d.bottom(2))
+            p300.aspirate(vol_wash_buffer, d.bottom(0.5))
+            p300.drop_tip()
+
+        # elute
+        wells_per_pool = num_subsamples*2
+        pool_source_sets = [
+            all_normalization_wells[i*wells_per_pool:(i+1)*wells_per_pool]
+            for i in range(num_samples)]
+
+        for d in all_normalization_wells:
+            pick_up(p20, 1)
+            p20.aspirate(vol_elution, elution_buffer)
+            p20.dispense(vol_elution, d.bottom(2))
+            p20.mix(5, 10, d.bottom(2))
+            p20.drop_tip()
+
+        ctx.delay(minutes=5, msg='Incubating 5 minutes.')
+
+        for source_set, pool in zip(pool_source_sets, pool_dests):
+            pick_up(p20, 1)
+            for s in source_set:
+                p20.aspirate(vol_elution, elution_buffer)
+                p20.dispense(vol_elution, d.bottom(2))
+                p20.mix(5, 10, d.bottom(2))
+                p20.aspirate(vol_sample_per_pool, d.bottom(0.5))
+                p20.dispense(vol_sample_per_pool, pool.bottom(3))
+            p20.drop_tip()
+
+    else:
+        final_pool_tube = pool_dests[-1].display_name.split(' ')[0]
+        ctx.pause(f'NORMALIZE ALL SAMPLES AND POOL INTO TUBERACK 2 (slot 8) \
+TUBES A2-{final_pool_tube}.')
 
     if num_samples < 6:
         num_replicates = 4
@@ -302,36 +385,25 @@ TO REAGENT MAP 2.')
         p20.drop_tip()
 
     """ POOLING """
-    pool_source_sets = [
-        [well
-         for row in pcr1_plate.rows()[i*rows_per_sample:(i+1)*rows_per_sample]
-         for well in row][:num_subsamples*2]
-        for i in range(num_samples)]
-    pool_dests = pcr2_plate.columns()[-1][:num_samples]
     pool_replicate_sets = [
         row[:num_replicates]
         for row in pcr2_plate.rows()[:num_samples]]
     num_pickups = 1
 
-    # pool and distribute replicates
-    vol_sample_for_pooling = 10
+    ctx.clear_commands()
+    # distribute replicates
     for source_set, pool, replicate_set in zip(
             pool_source_sets, pool_dests, pool_replicate_sets):
-        for i, s in enumerate(source_set):
-            pick_up(p20, num_pickups)
-            p20.aspirate(vol_sample_for_pooling, s)
-            p20.dispense(vol_sample_for_pooling, pool.bottom(2))
-            p20.move_to(pool.bottom().move(Point(x=pool.diameter/4, z=2)))
-            if i < len(source_set) - 1:
-                p20.drop_tip()
-            if (i == len(source_set) - 1) and (len(source_set) > 2):
-                p20.mix(10, 10, pool.bottom(2))
-                p20.move_to(pool.bottom().move(Point(x=pool.diameter/4, z=2)))
-
-        # transfer replicates
-        for r in replicate_set:
-            p20.aspirate(5, pool)
-            p20.dispense(5, r.bottom(2))
-            p20.mix(1, 5, r.bottom(2))
-            p20.move_to(r.bottom().move(Point(x=r.diameter/4, z=2)))
-        p20.drop_tip()
+        for pool, replicate_set in zip(pool_dests, pool_replicate_sets):
+            # transfer replicates
+            pick_up(p20, 1)
+            for i, r in enumerate(replicate_set):
+                if i == 0:
+                    p20.mix(10, 10, pool.bottom(3))
+                p20.aspirate(5, pool)
+                p20.dispense(5, r.bottom(2))
+                p20.mix(1, 5, r.bottom(2))
+                p20.move_to(r.bottom().move(Point(x=r.diameter/4, z=2)))
+            p20.drop_tip()
+    for c in ctx.commands():
+        print(c)
