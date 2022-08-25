@@ -38,9 +38,6 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
     tuberack2 = ctx.load_labware(
         'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '8',
         'tuberack 2')
-    if perform_normalization:
-        reservoir = ctx.load_labware('agilent_3_reservoir_95ml', '11',
-                                     'normalization buffers')
 
     # pipettes
     p20 = ctx.load_instrument(pipette_p20, mount_p20, tip_racks=tipracks20)
@@ -252,7 +249,8 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2.')
         vol_binding_buffer = vol_pcr1_product
         vol_wash_buffer = 50
         vol_elution = 20
-        binding_buffer, wash_buffer, elution_buffer = reservoir.wells()[:3]
+        [binding_buffer, wash_buffer,
+         elution_buffer] = tuberack2.columns()[-1][:3]
 
         # transfer PCR1 to normalization plate
         for s, d in zip(all_pcr1_wells, all_normalization_wells):
