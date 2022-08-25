@@ -62,7 +62,18 @@
   },
   {
     "type": "dropDown",
-    "label": "Labware Containing Input RNA Samples",
+    "label": "Labware Containing First Input RNA Samples in Slot 3 at 4 Degrees",
+    "name": "labware_firstrna",
+    "options": [
+      { "label": "thermo_ab_0600_96_aluminumblock_300ul", "value": "thermo_ab_0600_96_aluminumblock_300ul" },
+      { "label": "thermo_ab_0900_96_aluminumblock_300ul", "value": "thermo_ab_0900_96_aluminumblock_300ul" },
+      { "label": "eppendorf_snapcap_tube_24_well_aluminumblock_1500ul", "value": "eppendorf_snapcap_tube_24_well_aluminumblock_1500ul" },
+      { "label": "nest_96_wellplate_500ul_on_flataluminumblock", "value": "nest_96_wellplate_500ul_on_flataluminumblock" }
+    ]
+  },
+  {
+    "type": "dropDown",
+    "label": "Labware Containing Additional Input RNA Samples in Slots 2,5,6",
     "name": "labware_rna",
     "options": [
       { "label": "thermo_ab_0600_96_aluminumblock_300ul", "value": "thermo_ab_0600_96_aluminumblock_300ul" },
