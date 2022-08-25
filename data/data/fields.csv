@@ -112,7 +112,7 @@ bead_pellet_clearance,2
 bead_ratio,4
 bead_separation_time_in_minutes,2
 bead_settling_time_on_magnet_in_minutes,1
-bead_vol,3
+bead_vol,4
 bead_vol1,1
 bead_vol2,1
 bead_volume,1
@@ -121,7 +121,7 @@ beads_vol_1,1
 beads_vol_2,1
 big_pip,1
 bindbuf_source_well_indices,1
-binding_buffer_vol,19
+binding_buffer_vol,20
 blank_on,2
 blot_dwell_time,1
 blow_out,1
@@ -349,7 +349,7 @@ dp_type,2
 dplate,1
 drop_threshold,1
 dry_on_temperature_module,1
-dry_time,15
+dry_time,16
 drying_time,2
 drying_time_in_minutes,2
 dryrun,6
@@ -378,7 +378,7 @@ elution_scan,2
 elution_slot_scan,2
 elution_transfer_vol,2
 elution_type,1
-elution_vol,31
+elution_vol,32
 em,1
 empty_vial_well,3
 end_col,1
@@ -556,6 +556,7 @@ labware_deep_well,1
 labware_dest,1
 labware_dna_sample_plate,1
 labware_elisa_plate,3
+labware_firstrna,1
 labware_mm,1
 labware_mmplate,1
 labware_p300_tips,1
@@ -673,8 +674,11 @@ mix_repetitions,2
 mix_reps,26
 mix_reps1,1
 mix_reps2,1
+mix_reps_bind,1
+mix_reps_elu,1
 mix_reps_elution1,1
 mix_reps_elution2,1
+mix_reps_wash,1
 mix_reps_wash1,1
 mix_reps_wash2,1
 mix_sources,1
@@ -788,7 +792,7 @@ num_samp_plate1,1
 num_samp_plate2,1
 num_samp_plate3,1
 num_samp_plate4,1
-num_samples,123
+num_samples,124
 num_samples_1,2
 num_samples_2,2
 num_samples_3,1
@@ -1012,6 +1016,7 @@ rate_asp_r,1
 rate_disp_l,1
 rate_disp_r,1
 ratio_beads,1
+rdnase_vol,1
 reaction_plate,3
 reag1_vol,1
 reag2_vol,1
@@ -1125,6 +1130,9 @@ sds_buffer_vol,1
 sec_ex,1
 sec_plate,1
 second_media_y,1
+sep_time_bind,1
+sep_time_elu,1
+sep_time_wash,1
 serial_csv,1
 set_tip_max,2
 settling_1,1
@@ -1191,7 +1199,7 @@ starting_tip_col,1
 starting_tip_position,1
 starting_tip_well,1
 starting_tiprack_slot,1
-starting_vol,23
+starting_vol,24
 starting_volume,1
 starting_well,1
 starttip,1
@@ -1280,7 +1288,7 @@ tip_start_column,4
 tip_strategy,3
 tip_threshold,1
 tip_touch,3
-tip_track,37
+tip_track,38
 tip_type,25
 tip_use_strategy,2
 tip_withdrawal_speed,1
@@ -1439,9 +1447,9 @@ volume_of_beads_in_ul,2
 volume_to_cherrypick_in_ul,1
 volume_transfers,1
 volumes_csv,6
-wash1_vol,21
-wash2_vol,20
-wash3_vol,10
+wash1_vol,22
+wash2_vol,21
+wash3_vol,11
 wash_buf_vol,1
 wash_scheme,1
 waste,2

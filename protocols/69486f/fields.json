@@ -25,8 +25,8 @@
     "label": "P20 pipette type",
     "name": "pipette_p20",
     "options": [
-      { "label": "8-channel (GEN2)", "value": "p20_multi_gen2" },
-      { "label": "single-channel (GEN2)", "value": "p20_single_gen2" }
+      { "label": "single-channel (GEN2)", "value": "p20_single_gen2" },
+      { "label": "8-channel (GEN2)", "value": "p20_multi_gen2" }
     ]
   },
   {
