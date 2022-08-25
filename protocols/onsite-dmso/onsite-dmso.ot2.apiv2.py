@@ -1,5 +1,6 @@
 # flake8: noqa
 
+
 metadata = {
     'protocolName': 'Diluting Samples with DMSO',
     'author': 'Rami Farawi <rami.farawi@opentrons.com>',
@@ -10,8 +11,10 @@ metadata = {
 
 def run(ctx):
 
-    [csv, tubes_on_slot4, p1000_mount] = get_values(  # noqa: F821
-        "csv", "tubes_on_slot4", "p1000_mount")
+    [csv, tubes_on_slot4, slot_2_height, slot_2_touch,
+        slot_5_touch, p1000_mount] = get_values(  # noqa: F821
+        "csv", "tubes_on_slot4", "slot_2_height", "slot_2_touch",
+            "slot_5_touch", "p1000_mount")
 
     all_rows = [[val.strip() for val in line.split(',')]
                 for line in csv.splitlines()
@@ -28,6 +31,8 @@ def run(ctx):
     p1000 = ctx.load_instrument('p1000_single_gen2', p1000_mount,
                                 tip_racks=[tiprack])
 
+
+
     # protocol
     sample_tubes = [tube for tube in sample_racks.wells()]
     for i, row in enumerate(all_rows):
@@ -40,21 +45,22 @@ def run(ctx):
 
     ctx.pause("Check to see if powder has dissolved in DMSO")
     ctx.comment('\n\n\n')
+    airgap = 30
 
     for i, row in enumerate(all_rows):
         vol = float(row[5])
         p1000.pick_up_tip()
         p1000.transfer(vol+100,
                        sample_tubes[i].bottom(z=2),
-                       middle_48_plate.wells()[i],
+                       middle_48_plate.wells()[i].bottom(slot_2_height),
                        new_tip='never',
                        air_gap=30)
-        p1000.transfer(200,
-                       middle_48_plate.wells()[i],
-                       final_96_plate.wells()[i].top(z=-5),
-                       new_tip='never',
-                       air_gap=30,
-                       touch_tip=True)
+
+        p1000.aspirate(200, middle_48_plate.wells()[i].bottom(slot_2_height))
+        p1000.air_gap(airgap)
+        p1000.touch_tip(v_offset=-slot_2_touch)
+        p1000.dispense(200+airgap, final_96_plate.wells()[i].top(z=-5))
         p1000.blow_out()
+        p1000.touch_tip(v_offset=-slot_5_touch)
         p1000.drop_tip()
         ctx.comment('\n')
