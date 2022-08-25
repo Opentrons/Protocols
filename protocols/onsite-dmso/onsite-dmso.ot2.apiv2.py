@@ -1,11 +1,5 @@
 # flake8: noqa
 
-def get_values(*names):
-    import json
-    _all_values = json.loads("""{"csv":"3,4.3,0.0043,508.59,0.01,1845.47\\n4,4.1,0.0041,462.57,0.01,886.35","tubes_on_slot4":"bricklabwaretype1racklong_24_wellplate_4000ul","p1000_mount":"left", "slot_2_height":2, "slot_2_touch":3,
-        "slot_5_touch":5}""")
-    return [_all_values[n] for n in names]
-
 
 metadata = {
     'protocolName': 'Diluting Samples with DMSO',
