@@ -16,6 +16,24 @@
     ]
   },
   {
+  "type": "int",
+  "label": "Slot 2 aspiration height from bottom (mm)",
+  "name": "slot_2_height",
+  "default": 3
+  },
+  {
+  "type": "int",
+  "label": "Slot 2 touch tip z offset (how many mm further down)",
+  "name": "slot_2_touch",
+  "default": 6
+  },
+  {
+  "type": "int",
+  "label": "Slot 5 touch tip z offset (how many mm further down)",
+  "name": "slot_5_touch",
+  "default": 3
+  },
+  {
     "type": "dropDown",
     "label": "P1000 Single-Channel Mount",
     "name": "p1000_mount",
