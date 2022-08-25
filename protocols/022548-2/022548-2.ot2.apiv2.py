@@ -1,6 +1,6 @@
 from opentrons import protocol_api
 from opentrons.protocol_api.labware import Well, Labware
-from math import ceil
+import math
 from typing import Sequence, Tuple
 import re
 
@@ -85,13 +85,12 @@ def run(ctx: protocol_api.ProtocolContext):
 
     # Define labware and slots
     sample_tuberack_loader = \
-        ("nest_32_tuberack_8x15ml_8x15ml_8x15ml_8x15ml", ['2', '4', '7'])
+        ("nest_32_tuberack_8x15ml_8x15ml_8x15ml_8x15ml", ['4', '7', '10'])
     target_plate_loader = \
-        ("thermofisherkingfisherdeepwell_96_wellplate_2000ul", '1')
-    mastermix_labware_loader = ('nest_12_reservoir_15ml', '10')
+        ("thermofisherkingfisherdeepwell_96_wellplate_2000ul", '2')
+    mastermix_labware_loader = ('nest_12_reservoir_15ml', '1')
     sample_200ul_filtertiprack_loader = \
-        ('opentrons_96_filtertiprack_200ul', '6')
-    mastermix_300uL_tiprack_loader = ('opentrons_96_tiprack_300ul', '11')
+        ('opentrons_96_filtertiprack_200ul', '9')
 
     mm_well_vol_ul = mastermix_max_vol * 1_000
     # TODO: Remove dead volumes from the protocols - the dead-volume is
@@ -108,7 +107,7 @@ def run(ctx: protocol_api.ProtocolContext):
     # excess volume factor: 1.5
     # 93*275*1.5=38,362.5 uL, max volume per mm well is 9540 uL
     # n_wells = 38262.5/9540 = 4.02 wells
-    n_required_mm_wells = ceil(total_mm_vol/(mm_well_vol_ul-dead_vol))
+    n_required_mm_wells = math.ceil(total_mm_vol/(mm_well_vol_ul-dead_vol))
     if is_debug_mode:
         msg = "\n\nNumber of required wells: {}\n"
         msg = msg.format(n_required_mm_wells)
@@ -181,8 +180,8 @@ def run(ctx: protocol_api.ProtocolContext):
     '''
     tiprack_200 = ctx.load_labware(sample_200ul_filtertiprack_loader[0],
                                    sample_200ul_filtertiprack_loader[1])
-    tiprack_300 = ctx.load_labware(mastermix_300uL_tiprack_loader[0],
-                                   mastermix_300uL_tiprack_loader[1])
+    tiprack_300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
+                   for slot in [6, 3]]
 
     # load instrument
 
@@ -211,8 +210,24 @@ def run(ctx: protocol_api.ProtocolContext):
     m300 = ctx.load_instrument(
                               'p300_multi_gen2',
                               m300_mount,
-                              tip_racks=[tiprack_300]
+                              tip_racks=tiprack_300
                               )
+    num_samp = int(n_samples_rack_1) + int(n_samples_rack_2) + int(n_samples_rack_3)  # noqa: E501
+    spill = num_samp % 8
+    num_full_columns = math.floor(num_samp/8)
+    num_channels_per_pickup = spill
+    tip_count = 0
+    if spill > 0:
+        tips_ordered = [
+            tip for rack in tiprack_300
+            for row in rack.rows()[
+                len(rack.rows())-num_channels_per_pickup::-1*num_channels_per_pickup]  # noqa: E501
+            for tip in row]
+
+    def pick_up_multi():
+        nonlocal tip_count
+        m300.pick_up_tip(tips_ordered[tip_count])
+        tip_count += 1
 
     # pipette functions   # INCLUDE ANY BINDING TO CLASS
 
@@ -493,24 +508,24 @@ def run(ctx: protocol_api.ProtocolContext):
                 vol = vol * 8 if self.pip_type == 'multi' else vol
 
             # Track the total change in volume of this volume tracker
-            self.total_vol_changed += vol
-
-            if (self.labware_wells[well][0] + vol
-                    > self.well_vol - self.dead_volume):
-                if self.is_strict_mode:
-                    msg = ("Tracking a volume of {} uL would {} the "
-                           "current well: {} on the {} {} tracker. "
-                           "The max well volume is {}, and "
-                           "the current vol is {}. The dead volume is {}")
-                    mode_msg = ("over-deplete`" if self.mode == "reagent"
-                                else "over-fill")
-                    msg = msg.format(
-                        vol, mode_msg, well, self.reagent_name, self.mode,
-                        self.well_vol, self.get_active_well_vol(),
-                        self.dead_volume)
-                    raise Exception(msg)
-                self.labware_wells[well][1] = True
-                is_all_used = True
+            # self.total_vol_changed += vol
+            #
+            # if (self.labware_wells[well][0] + vol
+            #         > self.well_vol - self.dead_volume):
+            #     if self.is_strict_mode:
+            #         msg = ("Tracking a volume of {} uL would {} the "
+            #                "current well: {} on the {} {} tracker. "
+            #                "The max well volume is {}, and "
+            #                "the current vol is {}. The dead volume is {}")
+            #         mode_msg = ("over-deplete`" if self.mode == "reagent"
+            #                     else "over-fill")
+            #         msg = msg.format(
+            #             vol, mode_msg, well, self.reagent_name, self.mode,
+            #             self.well_vol, self.get_active_well_vol(),
+            #             self.dead_volume)
+            #         raise Exception(msg)
+            #     self.labware_wells[well][1] = True
+            #     is_all_used = True
 
                 # Check if wells are completely full (or depleted)
                 for w in self.labware_wells:
@@ -598,12 +613,12 @@ def run(ctx: protocol_api.ProtocolContext):
         for well in rack.wells()[0:num_s]:
             sample_wells.append(well)
 
-    dest_rows = target_plate.rows()
+    dest_cols = target_plate.columns()
 
     i = 0
     dest_wells = []
-    for row in dest_rows:
-        for well in row:
+    for col in dest_cols:
+        for well in col:
             dest_wells.append(well)
             i += 1
             if i == total_samples:
@@ -671,7 +686,7 @@ def run(ctx: protocol_api.ProtocolContext):
     Step 14: Discard Tips
     """
     n_tips = 8
-    m300.pick_up_tip(tiprack_300.wells()[0])
+    m300.pick_up_tip()
 
     ctx.comment("\n\nMixing the mastermix\n")
     mm_wells = mm_tracker.get_wells()
@@ -684,104 +699,35 @@ def run(ctx: protocol_api.ProtocolContext):
         m300.blow_out(well)
         m300.touch_tip()
     m300.drop_tip()
-
-    """
-    Step 15: 8-channel pipette acquires [variable 1-8]x300uL non-filtered
-    pipette tips and slowly aspirates 275 uL of master bead mixture from
-    12-well reservoir [different tips; variable aspiration speed; tip touch
-    on side of well]. For 4-8 samples in a column have the P300 remove
-    8-n tips (0-4) and use the M300. For 1-3 samples transfer the mastermix
-    with the P300. Make sure to adjust the pickup current for volume
-    correction.
-    Step 16: 8-Channel pippettor then dispenses 275 uL of master bead mix
-    into the first column (column 1 starting with A1, B1, etc...) of the 96
-    deep-well plate [different tips; variable dispensing speed; with blowout;
-    tip touch on side of wells]
-    Step 17: The tips are discarded [different tips]
-    Step 18: Steps 15 - 17 are repeated for all designated wells on 96
-    deep-well plate
-    """
+    tip_count += 1
 
     ctx.comment("\n\nDistributing mastermix to samples on the target plate\n")
-    # Calculate the number of sample wells in each column
-    used_sample_wells_per_column = []
-    n_wells_per_row = 12  # in a 96 well plate 8x12
-    n_full_rows = total_samples // n_wells_per_row
-    last_row_wells = total_samples % n_wells_per_row
-    for i in range(n_wells_per_row):
-        wells = n_full_rows + 1 if i < last_row_wells else n_full_rows
-        used_sample_wells_per_column.append(wells)
-
-    # Multi-channel pipette mastermix distribution
-    # 1st step: Remove tips from wells that do not correspond to sample
-    # wells using the p300
-    if p300.has_tip:
-        p300.drop_tip()
-
-    # Check if there's enough tips to refill the first col with as many
-    # tips as neccesary, otherwise ask user to replace tiprack so that
-    # there will be enough tips for all of the samples
-    do_refill_first_column = True
-    if total_samples > 96-used_sample_wells_per_column[0]:
-        ctx.pause(
-            "\nPlease replace the 300 uL tiprack on deck slot 11\n")
-        do_refill_first_column = False
-
-    # Use the single channel pip to remove tips from the 300 uL
-    # tiprack from rows not matching any sample wells
-    # then when m300 is used to aspirate it doesn't waste mastermix
-    # on unused sample wells
-
-    ctx.comment("\nRemoving unused tips from tiprack 300\n")
-    tiprack_300_columns = tiprack_300.columns()
-    offset = 1 if do_refill_first_column else 0
-    first_tiprack_col = tiprack_300_columns[0]
-    n_tips_first_col_left = used_sample_wells_per_column[0]
-    for n_used_wells, col in zip(
-            used_sample_wells_per_column, tiprack_300_columns[offset:]):
-        wells = col[n_used_wells:]
-        for well in wells:
-            p300.pick_up_tip(well)
-            if do_refill_first_column and n_tips_first_col_left >= 0:
-                p300.drop_tip(first_tiprack_col[n_tips_first_col_left])
-                n_tips_first_col_left -= 1
-            else:
-                p300.drop_tip()
 
     if do_mm_resusp_pause:
         ctx.pause("\n\nPausing protocol for mastermix resuspension\n")
 
     # Transfer mastermix to samples
     air_gap_vol = 10
-    m300.reset_tipracks()
-    mm_tracker = mm_tracker
+    dead_vol = 3000
+    aspiration_vol = 8 * mm_vol_per_sample
+    res_well = 0
+    remaining_well_vol = mastermix_max_vol*1000
     ctx.comment("\n\nDistributing mastermix to samples on target plate\n")
-    for well, n_used_wells in zip(
-            target_plate.rows()[0], used_sample_wells_per_column):
+
+    for well in target_plate.rows()[0][:num_full_columns]:
+
         m300.pick_up_tip()
-        aspiration_vol = n_used_wells * mm_vol_per_sample
-        remaining_well_vol = mm_tracker.get_active_well_remaining_vol()
-        if remaining_well_vol < aspiration_vol:
-            per_tip_vol = remaining_well_vol/n_used_wells
-            m300.aspirate(per_tip_vol,
-                          mm_tracker.track(per_tip_vol,
-                                           custom_num_tips=n_used_wells),
+
+        if remaining_well_vol > dead_vol:
+            m300.aspirate(275, mm_source.wells()[res_well],
                           mm_aspiration_flowrate_multiplier)
-            try:
-                mm_tracker.advance_well()
-            except Exception:
-                ctx.comment("\n\nMastermix wells depleted\n")
-            remaining_tip_vol = mm_vol_per_sample - per_tip_vol
-            m300.aspirate(remaining_tip_vol,
-                          mm_tracker.track(remaining_tip_vol,
-                                           custom_num_tips=n_used_wells),
+            remaining_well_vol -= aspiration_vol
+        else:
+            res_well += 1
+            remaining_well_vol = mastermix_max_vol*1000
+            m300.aspirate(275, mm_source.wells()[res_well],
                           mm_aspiration_flowrate_multiplier)
 
-        else:
-            m300.aspirate(
-                mm_vol_per_sample, mm_tracker.track(
-                    mm_vol_per_sample, custom_num_tips=n_used_wells),
-                mm_aspiration_flowrate_multiplier)
         m300.air_gap(air_gap_vol)
         m300.dispense(
             mm_vol_per_sample+air_gap_vol, well,
@@ -789,6 +735,34 @@ def run(ctx: protocol_api.ProtocolContext):
         m300.blow_out()
         m300.touch_tip()
         m300.drop_tip()
+        tip_count += 1
+        ctx.comment('\n')
+
+    if spill > 0:
+        ctx.comment("\n\nDistributing mastermix to unfilled column\n")
+
+        pick_up_multi()
+
+        if remaining_well_vol > dead_vol:
+            m300.aspirate(275, mm_source.wells()[res_well],
+                          mm_aspiration_flowrate_multiplier)
+            remaining_well_vol -= aspiration_vol
+        else:
+            res_well += 1
+            remaining_well_vol = mastermix_max_vol*1000
+            m300.aspirate(275, mm_source.wells()[res_well],
+                          mm_aspiration_flowrate_multiplier)
+
+        m300.air_gap(air_gap_vol)
+        m300.dispense(
+            mm_vol_per_sample+air_gap_vol,
+            target_plate.rows()[0][num_full_columns],
+            mm_dispense_flowrate_multiplier)
+        m300.blow_out()
+        m300.touch_tip()
+        m300.drop_tip()
+        tip_count += 1
+        ctx.comment('\n')
 
     ctx.comment("\n\n - Protocol finished! - \n")
 
