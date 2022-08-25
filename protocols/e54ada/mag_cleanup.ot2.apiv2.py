@@ -75,12 +75,14 @@ def run(ctx):
         x_abs_move_super = 0.5  # how far left or right during super removal
         z_asp_height = 0.5  # how far above well bottom during super removal
         z_disp_height = -1  # how far below well top during water addition
+        width_multiplier = 2  # how far over during water spray down
         etoh_wash_vol = 120
     else:
         engage_height = 5
         x_abs_move_super = 0
         z_asp_height = 1
         z_disp_height = -2  # how far below well top during water addition
+        width_multiplier = 3  # how far over during water spray down
         etoh_wash_vol = 200
     mag_mod.disengage()
 
@@ -205,8 +207,8 @@ def run(ctx):
         pipette.aspirate(vol, src)
         pipette.move_to(well.top(-1))
         pipette.dispense(vol,
-                         well.top().move(types.Point(x=-side, y=0,
-                                                     z=z_disp_height)),
+                         well.top().move(types.Point(x=-side*width_multiplier,
+                                                     y=0, z=z_disp_height)),
                          rate=pip_rate)
         for _ in range(reps):
             pipette.aspirate(vol*0.9, well)
