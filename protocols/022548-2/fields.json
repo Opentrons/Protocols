@@ -19,7 +19,7 @@
   },
   {
     "type": "str",
-    "label": "Master mix wells location",
+    "label": "Master mix wells location (starting from A1)",
     "name": "master_mix_range",
     "default": "1-5"
   },
