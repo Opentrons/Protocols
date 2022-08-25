@@ -27,7 +27,7 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
     pcr1_plate = ctx.load_labware('agilent_96_wellplate_200ul', '3',
                                   'PCR 1 plate')
     tipracks20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', '4')]
-    tipracks200 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', '5')]
+    tipracks300 = [ctx.load_labware('opentrons_96_tiprack_300ul', '5')]
     normalization_plate = ctx.load_labware('agilent_96_wellplate_200ul', '6',
                                            'normalization plate')
     pcr2_plate = ctx.load_labware('agilent_96_wellplate_200ul', '9',
@@ -44,7 +44,7 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
 
     # pipettes
     p20 = ctx.load_instrument(pipette_p20, mount_p20, tip_racks=tipracks20)
-    p300 = ctx.load_instrument(pipette_p300, mount_p300, tip_racks=tipracks200)
+    p300 = ctx.load_instrument(pipette_p300, mount_p300, tip_racks=tipracks300)
 
     # reagents
     samples_single = sample_plate.wells()[:num_samples]
