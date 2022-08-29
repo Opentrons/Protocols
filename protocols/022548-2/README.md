@@ -19,7 +19,7 @@ Explanation of parameters below:
 * `Number of samples in tuberack 1 slot(2-3)`: How many samples to transfer from rack 1: 1 to 32
 * `Number of samples in tuberack 2 (slot 4-5)`: 0 to 32
 * `Number of samples in tuberack 3 (7-8)`: 0 to 32
-* `Master mix wells location`: Informs the protocol which wells of the reservoir contain mastermix, for example 5-10 to specify wells A5 to A10. This parameter may also be a single number instead of a range
+* `Master mix wells location`: Informs the protocol which wells of the reservoir contain mastermix, starting from A1 on the very left. For example 1-4 to specify wells A1 to A4. This parameter may also be a single number instead of a range
 * `Mastermix max volume per well (mL)`: Informs the protocol what the maximal volume of mastermix is in each reservoir well, default is 9.54 mL
 * `Mastermix mixing rate multiplier`: Controls the flow rate of mixing, 1.0 means standard flow rate, less is slower and more is faster.
 * `mastermix aspiration flow rate multiplier`: Controls the rate of aspiration of mastermix from the reservoir wells
@@ -45,24 +45,17 @@ Explanation of parameters below:
 ---
 
 ### Deck Setup
-Slot 1: Target - Kingfisher 96 well plate
-Slot 2-3: PRL 32 15 mL tuberack
-Slot 4-5: PRL 32 15 mL tuberack
-Slot 6: 200 uL Opentrons filter tiprack
-Slot 7-8: PRL 32 15 mL tuberack
-Slot 9: 300 uL Opentrons tiprack
-Slot 10: Mastermix reservoir
-![Deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/022548/2/deck.jpg)
+Load 300 ul tip racks in order 6-3. Load tube racks in order from top down. Load samples in order down the column in each tube rack. Tube racks should be filled fully before proceeding to next tube rack. For example, 33 samples total would mean 32 in the top most tube rack and 1 sample in the middle tube rack.
+![Deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/022548/Screen+Shot+2022-08-25+at+3.01.33+PM.png)
 
 ### Reagent Setup
-* Mastermix Reservoir: Specify what wells contain mastermix in the parameter section - See parameter section above.
+* Mastermix Reservoir: Specify what wells contain mastermix starting from A1 in the parameter section - See parameter section above.
 
 ---
 
 ### Protocol Steps
 1. Transfer samples from the tubracks to the target plate in row order using the single channel 300 uL pipette using 200 uL filter tips.
 2. Mix the bead/binding buffer mastermix 7 times.
-3. Remove tips from the 300 uL tiprack that do not correspond to sample wells on the target plate.
 3. Transfer mastermix to samples using the multi-channel 300 uL pipette with regular 300 uL tips.
 
 ### Process

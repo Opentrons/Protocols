@@ -46,6 +46,7 @@ def run(ctx):
     # Sample Wells
     mag_plate_wells = mag_plate.rows()[0][:cols]
     sample_plate_wells = sample_plate.rows()[0][:cols]
+    sample_plate_single_wells = sample_plate.wells()[:samples]
 
     # Helper Functions
     def pick_up(pip):
@@ -130,7 +131,7 @@ def run(ctx):
     # PROTOCOL STEPS
 
     # Transfer Adapter Ligation Mix to Samples on PCR Plate (1)
-    p300.transfer(40, mm, sample_plate_wells, new_tip='always',
+    p300.transfer(40, mm, sample_plate_single_wells, new_tip='always',
                   mix_after=(3, 30))
 
     # Transfer Samples from Sample Plate to Mag Mod (2)

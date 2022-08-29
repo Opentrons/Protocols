@@ -17,12 +17,12 @@ def run(ctx):
 
     [move_side, vol_dead, mix_rate, clearance_water_tube, clearance_rna,
      clearance_dest, clearance_mix_aspirate, raise_mix_dispense,
-     labware_water_tube, labware_rna, labware_dest, vol_h2o,
+     labware_water_tube, labware_firstrna, labware_rna, labware_dest, vol_h2o,
      uploaded_csv] = get_values(  # noqa: F821
         "move_side", "vol_dead", "mix_rate", "clearance_water_tube",
         "clearance_rna", "clearance_dest", "clearance_mix_aspirate",
-        "raise_mix_dispense", "labware_water_tube", "labware_rna",
-        "labware_dest", "vol_h2o", "uploaded_csv")
+        "raise_mix_dispense", "labware_water_tube", "labware_firstrna",
+        "labware_rna", "labware_dest", "vol_h2o", "uploaded_csv")
 
     ctx.set_rail_lights(True)
     ctx.delay(seconds=10)
@@ -63,11 +63,6 @@ def run(ctx):
      'opentrons_96_filtertiprack_200ul', str(slot)) for slot in [11]]
     p20s = ctx.load_instrument("p20_single_gen2", 'left', tip_racks=tips20)
     p300s = ctx.load_instrument("p300_single_gen2", 'right', tip_racks=tips300)
-
-    # count unique values in csv, load input RNA labware instances
-    rna = [
-     ctx.load_labware(labware_rna, slot, "Input RNA Samples") for slot in [
-      2, 3, 5, 6][:len(set([tfer['source rack or plate'] for tfer in tfers]))]]
 
     # water tubes with volume and liquid height tracking
     rack = ctx.load_labware(
@@ -180,6 +175,20 @@ def run(ctx):
      well.well_name: WellH(
       well, min_height=clearance_dest, current_volume=0
       ) for well in dest_plate.wells()}
+
+    # load 2nd temperature module in slot 3
+    temp2 = ctx.load_module('temperature module gen2', '3')
+    temp2.set_temperature(4)
+
+    # count unique in csv minus 1, load additional input RNA labware instances
+    rna = [
+     ctx.load_labware(
+      labware_rna, slot, "Additional Input RNA Samples") for slot in [
+      2, 5, 6][:len(set([tfer['source rack or plate'] for tfer in tfers]))-1]]
+
+    # load first input RNA labware on temperature module in slot 3
+    rna.insert(0, temp2.load_labware(
+     labware_firstrna, "First Input RNA Samples at 4 Degrees"))
 
     def distribute_water(pip, lst, disposal):
         nonlocal water

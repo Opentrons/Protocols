@@ -33,22 +33,30 @@ This custom protocol performs part 2 of the [KAPA HiFi NGS Library Prep kit](htt
 Note that these deck states depict a combination of the maximum number of samples and PCR 1 forward primers (8 and 6, respectively).
 
 Starting state:  
-![deck1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/69486f/deck1.png)  
+![deck1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/69486f/deck1-2.png)  
 * green on slot 1: starting samples
-* clear on slot 8 (tubes A1-D2): empty tubes for mix creation
-* orange on slot 8: unique PCR 1 forward primers (in column order)
-* blue on slot 9: water
-* pink on slot 9: PCR 1 mastermix
-* blue on slot 9: PCR 1 reverse primer
+* clear on slot 7 (tubes A1-D2): empty tubes for mix creation
+* orange on slot 7: unique PCR 1 forward primers (in column order)
+* blue blue on slot 8 (A1): water
+* pink on slot 8: PCR 1 mastermix
+* purple on slot 8: PCR 1 reverse primer
+* dark blue on slot 8 (A2-D3): tubes for normalized pools
+* light blue on slot 8 (A6): normalization binding buffer
+* light purple on slot 8 (B6): normalization wash buffer
+* green on slot 8 (C6): normalization elution buffer
 
-State after PCR 1 and normalization:
-![deck2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/69486f/deck2.png)
-* green on slot 3: PCR 1 product
-* clear on slot 8 (tubes A1-D2): empty tubes for mix creation
-* orange on slot 8: unique PCR 2 forward primers (in column order)
-* purple on slot 8: unique PCR 2 reverse primers (in column order)
-* blue on slot 9: water
-* pink on slot 9: PCR 2 mastermix
+State after PCR 1:
+![deck2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/69486f/deck2-2.png)
+* green on slot 1: starting samples
+* clear on slot 7 (tubes A1-D2): empty tubes for mix creation
+* orange on slot 7: unique PCR 1 forward primers (in column order)
+* purple on slot 7: unique PCR 2 reverse primers (in column order)
+* light blue on slot 8 (A1): water
+* pink on slot 8: PCR 1 mastermix
+* dark blue on slot 8 (A2-D3): tubes for normalized pools
+* light blue on slot 8 (A6): normalization binding buffer
+* light purple on slot 8 (B6): normalization wash buffer
+* green on slot 8 (C6): normalization elution buffer
 
 ---
 

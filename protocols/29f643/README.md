@@ -15,39 +15,43 @@ This protocol automates the Alpco Insulin ELISA protocol. The protocol begins by
 
 Explanation of complex parameters below:
 * **Number of Samples**: Specify the number of samples
-* **P300 Multi-Channel Mount**: Select which mount the P300 Multi-Channel Mount is attached to
-* **Manually Add Controls**: Specify whether or not to manually add controls and standards
-* **Perform Manual Washes**: Specify whether to perform wash steps manually or on the OT-2
+* **P300 Multi-Channel Mount**: Select which mount the P300 Multi-Channel Pipette is attached to (the Single-Channel Pipette should be attached to the opposite mount)
 
 
 ### Labware
-* [NEST 12 Well Reservoir, 15 mL](http://www.cell-nest.com/page94?_l=en&product_id=102)
-* [NEST 1 Well Reservoir, 195 mL](http://www.cell-nest.com/page94?_l=en&product_id=102)
-* [Opentrons 96 Tip Rack, 300 µL](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
+* [NEST 12-Well Reservoir, 15 mL](http://www.cell-nest.com/page94?_l=en&product_id=102)
+* [Opentrons Tip Rack, 300 µL](https://shop.opentrons.com/collections/opentrons-tips/products/opentrons-300ul-tips)
+* [Opentrons 24-Well Aluminum Block](https://shop.opentrons.com/aluminum-block-set/)
 * Nunc MaxiSorp 96 Well Plate, 250µL
 
 
 ### Pipettes
-* [Opentrons P300 8 Channel Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)
+* [Opentrons P300 8-Channel Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)
+* [Opentrons P300 Single Channel Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)
+
 
 
 ### Deck Setup
 ![deck](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/29f643/deck.png)
-
+</br>
+</br>
+Standards and Controls will be transferred to the first column of each 96-well plate and their duplicate in the second column. After the Standards and Controls have been added, each sample will be added in duplicate (to the well immediately to the right of the initial target destination). Please see below for an example of the resulting plate layout with one sample.
+![sample layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/29f643/samples.png)
 
 ### Reagent Setup
+Please note, that if using more than 40 samples, all reagents for the 2nd 96-well plate should be filled in the column to the right of the column illustrated below (columns 2, 5, and 8)
 ![reagents](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/29f643/reagents.png)
 
 
+
 ### Protocol Steps
-1. Transfer of 25µL of Standards and Controls into column 1 of the Destination Plate. Followed by 25µL aliquots of samples into two columns for each column of samples.
+1. Transfer of 25µL of Standards and Controls into column 1 of the Destination Plate(s). Followed by 25µL aliquots of samples into two columns for each column of samples.
 2. 100µL of Detection Antibody is added to Destination Plate.
 3. User is prompted to remove plate from OT-2 and place on shaker for 1 hour incubation.
-4. If automating washes, the OT-2 will add 350µL to all wells, then transfer 375µL to the liquid waste reservoir.
-5. 100µL of TMB Substrate is added to the Destination Plate.
-6. User is prompted to remove plate from OT-2 and place on shaker for 15 minute incubation.
-7. 100µL of Stop Solution is added to the Destination Plate.
-8. Protocol complete.
+4. 100µL of TMB Substrate is added to the Destination Plate.
+5. User is prompted to remove plate from OT-2 and place on shaker for 15 minute incubation.
+6. 100µL of Stop Solution is added to the Destination Plate.
+7. Protocol complete.
 
 
 ### Process
