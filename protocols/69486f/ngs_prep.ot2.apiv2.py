@@ -79,6 +79,8 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
         sources, num_pickups = [
             sample_plate.rows()[0][0] for _ in range(num_subsamples)], \
             num_samples
+        source_sets = [
+            [sample_plate.rows()[0][i]] for i in range(num_subsamples)]
         dilution_sets = [
             [dilution_plate.rows()[0][i]] for i in range(num_subsamples)]
     else:
@@ -91,6 +93,10 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
                 for well in row]
             sets.append(rows_flat)
         dilution_sets = [set[:num_subsamples] for set in sets]
+        source_sets = [
+            [sample_plate.wells()[dilution_plate.wells().index(well)]
+             for well in set]
+            for set in dilution_sets]
 
     # pre-add water
     sets = []
@@ -114,16 +120,19 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
     p20.drop_tip()
 
     # add samples to dilute
+    ctx.clear_commands()
     vol_sample = 1
-    for s, dest_set in zip(sources, dilution_sets):
-        for d in dest_set:
-            pick_up(p20, num_pickups)
+    for source_set, dest_set in zip(source_sets, dilution_sets):
+        pick_up(p20, num_pickups)
+        for s, d in zip(source_set, dest_set):
             p20.aspirate(vol_sample, s)
             p20.dispense(vol_sample, d.bottom(2))
             p20.mix(5, 8, d.bottom(2))
             # touch at half radius
             p20.move_to(d.bottom().move(Point(x=d.diameter/4, z=2)))
-            p20.drop_tip()
+        p20.drop_tip()
+    for c in ctx.commands():
+        print(c)
 
     """ PCR1 PREP """
 
@@ -252,19 +261,19 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2.')
         [binding_buffer, wash_buffer,
          elution_buffer] = tuberack2.columns()[-1][:3]
 
+        # transfer binding buffer, mix, incubate
+        pick_up(p20, 1)
+        for d in all_normalization_wells:
+            p20.aspirate(vol_binding_buffer, binding_buffer)
+            p20.dispense(vol_binding_buffer, d.bottom(2))
+            p20.move_to(d.bottom().move(Point(x=d.diameter/4, z=2)))
+        p20.drop_tip()
+
         # transfer PCR1 to normalization plate
         for s, d in zip(all_pcr1_wells, all_normalization_wells):
             pick_up(p20, 1)
             p20.aspirate(vol_pcr1_product, s)
             p20.dispense(vol_pcr1_product, d.bottom(2))
-            p20.move_to(d.bottom().move(Point(x=d.diameter/4, z=2)))
-            p20.drop_tip()
-
-        # transfer binding buffer, mix, incubate
-        for d in all_normalization_wells:
-            pick_up(p20, 1)
-            p20.aspirate(vol_binding_buffer, binding_buffer)
-            p20.dispense(vol_binding_buffer, d.bottom(2))
             p20.mix(10, 10, d.bottom(2))
             p20.move_to(d.bottom().move(Point(x=d.diameter/4, z=2)))
             p20.drop_tip()
