@@ -94,7 +94,8 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
             sets.append(rows_flat)
         dilution_sets = [set[:num_subsamples] for set in sets]
         source_sets = [
-            [sample_plate.wells()[set.index(well)] for well in set]
+            [sample_plate.wells()[dilution_plate.wells().index(well)]
+             for well in set]
             for set in dilution_sets]
 
     # pre-add water
@@ -119,6 +120,7 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
     p20.drop_tip()
 
     # add samples to dilute
+    ctx.clear_commands()
     vol_sample = 1
     for source_set, dest_set in zip(source_sets, dilution_sets):
         pick_up(p20, num_pickups)
@@ -129,6 +131,8 @@ subsamples ({num_subsamples}). Exceeds plate capacity.')
             # touch at half radius
             p20.move_to(d.bottom().move(Point(x=d.diameter/4, z=2)))
         p20.drop_tip()
+    for c in ctx.commands():
+        print(c)
 
     """ PCR1 PREP """
 
