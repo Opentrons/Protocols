@@ -252,19 +252,19 @@ CHANGE THE TUBERACK 1 (SLOT 7) ACCORDING TO REAGENT MAP 2.')
         [binding_buffer, wash_buffer,
          elution_buffer] = tuberack2.columns()[-1][:3]
 
+        # transfer binding buffer, mix, incubate
+        pick_up(p20, 1)
+        for d in all_normalization_wells:
+            p20.aspirate(vol_binding_buffer, binding_buffer)
+            p20.dispense(vol_binding_buffer, d.bottom(2))
+            p20.move_to(d.bottom().move(Point(x=d.diameter/4, z=2)))
+        p20.drop_tip()
+
         # transfer PCR1 to normalization plate
         for s, d in zip(all_pcr1_wells, all_normalization_wells):
             pick_up(p20, 1)
             p20.aspirate(vol_pcr1_product, s)
             p20.dispense(vol_pcr1_product, d.bottom(2))
-            p20.move_to(d.bottom().move(Point(x=d.diameter/4, z=2)))
-            p20.drop_tip()
-
-        # transfer binding buffer, mix, incubate
-        for d in all_normalization_wells:
-            pick_up(p20, 1)
-            p20.aspirate(vol_binding_buffer, binding_buffer)
-            p20.dispense(vol_binding_buffer, d.bottom(2))
             p20.mix(10, 10, d.bottom(2))
             p20.move_to(d.bottom().move(Point(x=d.diameter/4, z=2)))
             p20.drop_tip()
