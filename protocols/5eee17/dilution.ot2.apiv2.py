@@ -100,7 +100,7 @@ resuming.')
         pick_up([p1000l, p1000r][:len(source_set)])
 
         for pip, tube in zip(pips, source_set):
-            pip.aspirate(700, tube.bottom(height_source))
+            pip.aspirate(500, tube.bottom(height_source))
             pip.air_gap(100)
 
         for pip, i_tube, f_tube in zip(pips, intermediate_set, final_set):
