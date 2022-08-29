@@ -36,7 +36,7 @@ Explanation of complex parameters below:
 </br>
 </br>
 Standards and Controls will be transferred to the first column of each 96-well plate and their duplicate in the second column. After the Standards and Controls have been added, each sample will be added in duplicate (to the well immediately to the right of the initial target destination). Please see below for an example of the resulting plate layout with one sample.
-![sample layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/29f643/deck.png)
+![sample layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/29f643/samples.png)
 
 ### Reagent Setup
 Please note, that if using more than 40 samples, all reagents for the 2nd 96-well plate should be filled in the column to the right of the column illustrated below (columns 2, 5, and 8)
