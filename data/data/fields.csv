@@ -1151,6 +1151,9 @@ single_pip_info,1
 size,1
 skip_mix_step,1
 slide_dwell_time,1
+slot_2_height,1
+slot_2_touch,1
+slot_5_touch,1
 slot_cultureplate,1
 slot_scan,3
 slot_screwcaps,1
