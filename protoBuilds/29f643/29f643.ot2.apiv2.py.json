@@ -1,5 +1,5 @@
 {
-    "content": "from opentrons import protocol_api\nimport math\n\nmetadata = {\n    'protocolName': 'Alpco Human Insulin ELISA',\n    'author': 'Chaz Childers <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx: protocol_api.ProtocolContext):\n    [\n     _num_samps,\n     _multi_mnt,\n     _manual_ctrls,\n     _manual_wash\n    ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)\n        \"_num_samps\",\n        \"_multi_mnt\",\n        \"_manual_ctrls\",\n        \"_manual_wash\")\n\n    # VARIABLES\n    num_samps = _num_samps\n    manual_ctrls = _manual_ctrls\n    multi_mnt = _multi_mnt\n    manual_wash = _manual_wash\n\n    # load labware\n    dest_plate = ctx.load_labware(\n        'nunc_maxisorp_96_wellplate_250ul', '2')\n    samp_plate = ctx.load_labware(\n        'nunc_maxisorp_96_wellplate_250ul', '3')\n    res12 = ctx.load_labware('nest_12_reservoir_15ml', '1')\n    wb_res = ctx.load_labware('nest_1_reservoir_195ml', '4')\n    waste_res = ctx.load_labware('nest_1_reservoir_195ml', '11')\n    tips = [\n        ctx.load_labware(\n            'opentrons_96_tiprack_300ul', s) for s in [5, 7, 8, 9, 10]\n            ]\n\n    # load pipette\n    m300 = ctx.load_instrument('p300_multi_gen2', multi_mnt, tip_racks=tips)\n\n    # reagent locations\n    antibody = res12['A1']\n    tmb = res12['A4']\n    stop_sol = res12['A7']\n\n    wash_buffer = wb_res['A1']\n\n    liq_waste = waste_res['A1'].top()\n    all_tips = [well for rack in tips for well in rack.rows()[0]]\n    tip_ctr = 0\n\n    def pick_up(pipette):\n        \"\"\"`pick_up()` will pause the protocol when all tip boxes are out of\n        tips, prompting the user to replace all tip racks. Once tipracks are\n        reset, the protocol will start picking up tips from the first tip\n        box as defined in the slot order when assigning the labware definition\n        for that tip box. `pick_up()` will track tips for both pipettes if\n        applicable.\n        :param pipette: The pipette desired to pick up tip\n        as definited earlier in the protocol (e.g. p300, m20).\n        \"\"\"\n        nonlocal tip_ctr\n        try:\n            pipette.pick_up_tip()\n        except protocol_api.labware.OutOfTipsError:\n            ctx.home()\n            ctx.pause(\"Replace empty tip racks\")\n            pipette.reset_tipracks()\n            tip_ctr = 0\n            pipette.pick_up_tip()\n\n    def drop_used():\n        \"\"\"\n        `drop_used` will drop used tips in empty tip rack for ease of\n        waste removal and to help mitigate a full trash bin\n        \"\"\"\n        nonlocal tip_ctr\n        m300.drop_tip(all_tips[tip_ctr])\n        tip_ctr += 1\n\n    # Transfer 25ul of standards, controls, samples\n    # standards/controls\n    if not manual_ctrls:\n        ctrl_rack = ctx.load_labware(\n            'opentrons_24_tuberack_eppendorf_1.5ml_safelock_snapcap', '3')\n        s_mnt = 'left' if multi_mnt == 'right' else 'right'\n        p300 = ctx.load_instrument('p300_single_gen2', s_mnt, tip_racks=tips)\n\n        for src, dest in zip(ctrl_rack.wells(), dest_plate.wells()[:8]):\n            p300.transfer(25, src, dest)\n    else:\n        ctx.pause('Please ensure standards + controls are in the first column')\n\n    num_cols = math.ceil(num_samps/8)\n    dest_cols = range(1, 12, 2)\n    for d, col in zip(dest_cols, samp_plate.rows()[0][:num_cols]):\n        pick_up(m300)\n        m300.mix(3, 50, col)\n        m300.aspirate(50, col)\n        m300.dispense(25, dest_plate.rows()[0][d])\n        m300.dispense(25, dest_plate.rows()[0][d+1])\n        m300.drop_tip()\n\n    # Add 100ul detection antibody\n    ctx.comment(\n        '\\nAdding 100uL Dettection Antibody from A1 of 12-Well Reservoir')\n    all_cols = num_cols + 1\n    all_samps = dest_plate.rows()[0][:all_cols]\n    pick_up(m300)\n    for col in all_samps:\n        m300.aspirate(100, antibody)\n        m300.dispense(100, col.top(-1))\n    m300.drop_tip()\n\n    ctx.pause(\n        '\\nAddition of Detection Antibody complete. Please cover plate \\\n        and place on shaker for 1 hour at room temperature. When ready \\\n        for next steps, replace plate and click RESUME.')\n\n    # 6 washes with 350uL wash buffer\n    if not manual_wash:\n        for idx in range(1, 7):\n            ctx.comment(f'\\nPerforming Wash {idx}')\n            pick_up(m300)\n            for col in all_samps:\n                for _ in range(2):\n                    m300.aspirate(175, wash_buffer)\n                    m300.dispense(175, col.top())\n            drop_used()\n            for col in all_samps:\n                pick_up(m300)\n                for _ in range(2):\n                    m300.aspirate(200, col)\n                    m300.dispense(175, liq_waste)\n                drop_used()\n        ctx.pause(\n            '\\nWashes complete. \\\n            Please ensure all wash buffer has been removed from wells. \\\n            When ready, click RESUME.')\n    else:\n        ctx.pause('\\nPlease perform 6 washes manually. \\\n        When ready for automated addition of TMB, click RESUME')\n\n    # Add 100uL of TMB Sustrate\n    ctx.comment('\\nAdding 100uL of TMB Substrate')\n    pick_up(m300)\n    for col in all_samps:\n        m300.aspirate(100, tmb)\n        m300.dispense(100, col.top(-1))\n    drop_used()\n\n    ctx.pause('\\nPlease place plate on shaker for 15 minutes. \\\n    When ready, replace plate and click RESUME')\n\n    # Add 100uL of Stop Solution\n    ctx.comment('\\nAdding 100uL of Stop Solution')\n    pick_up(m300)\n    for col in all_samps:\n        m300.aspirate(100, stop_sol)\n        m300.dispense(100, col.top(-1))\n    drop_used()\n\n    ctx.comment('Protocol complete!')\n",
+    "content": "from opentrons import protocol_api\nimport math\nimport string\n\nmetadata = {\n    'protocolName': 'Alpco Human Insulin ELISA',\n    'author': 'Chaz Childers <protocols@opentrons.com>',\n    'source': 'Custom Protocol Request',\n    'apiLevel': '2.11'\n}\n\n\ndef run(ctx: protocol_api.ProtocolContext):\n    [\n     _num_samps,\n     _multi_mnt\n    ] = get_values(  # noqa: F821 (<--- DO NOT REMOVE!)\n        \"_num_samps\",\n        \"_multi_mnt\")\n\n    # VARIABLES\n    num_samps = _num_samps\n    multi_mnt = _multi_mnt\n\n    # load labware\n    dest_plate = ctx.load_labware(\n        'nunc_maxisorp_96_wellplate_250ul', '1')\n    if num_samps > 40:\n        dest_plate2 = ctx.load_labware(\n            'nunc_maxisorp_96_wellplate_250ul', '4')\n    res12 = ctx.load_labware('nest_12_reservoir_15ml', '7')\n    tips = [\n        ctx.load_labware(\n            'opentrons_96_tiprack_300ul', s) for s in [10, 11]\n            ]\n\n    num_racks = math.ceil((num_samps+8)/24)\n    samp_racks = [\n        ctx.load_labware(\n            'opentrons_24_aluminumblock_nest_1.5ml_snapcap',\n            s) for s in [2, 3, 5, 6][:num_racks]\n            ]\n\n    # load pipette\n    m300 = ctx.load_instrument('p300_multi_gen2', multi_mnt, tip_racks=tips)\n    s_mnt = 'left' if multi_mnt == 'right' else 'right'\n    p300 = ctx.load_instrument('p300_single_gen2', s_mnt, tip_racks=tips)\n\n    # reagent locations\n    antibody = res12.wells()[:2]\n    tmb = res12.wells()[3:5]\n    stop_sol = res12.wells()[6:8]\n\n    # Transfer 25ul of standards, controls, samples\n    # standards/controls\n    ctx.comment('Adding 25ul of standards and controls')\n    for src, dest in zip(samp_racks[0].wells()[:8], string.ascii_uppercase):\n        p300.pick_up_tip()\n        p300.mix(3, 50, src)\n        p300.aspirate(60, src)\n        p300.dispense(25, dest_plate[dest+'1'])\n        p300.dispense(25, dest_plate[dest+'2'])\n        p300.dispense(10, src)\n        if num_samps > 40:\n            p300.mix(3, 50, src)\n            p300.aspirate(60, src)\n            p300.dispense(25, dest_plate2[dest+'1'])\n            p300.dispense(25, dest_plate2[dest+'2'])\n            p300.dispense(10, src)\n        p300.drop_tip()\n\n    ctx.comment('Adding 25ul of sample in duplicate')\n    samp_tubes = [\n        well for rack in samp_racks for well in rack.wells()][8:num_samps+8]\n    samp_dests = []\n    for lc, rc in zip(dest_plate.columns()[2::2], dest_plate.columns()[3::2]):\n        for lwell, rwell in zip(lc, rc):\n            samp_dests.append([lwell, rwell])\n    if num_samps > 40:\n        for lc, rc in zip(\n                dest_plate2.columns()[2::2], dest_plate2.columns()[3::2]):\n            for lwell, rwell in zip(lc, rc):\n                samp_dests.append([lwell, rwell])\n\n    for src, dests in zip(samp_tubes, samp_dests):\n        p300.pick_up_tip()\n        p300.mix(3, 50, src)\n        p300.aspirate(60, src)\n        p300.dispense(25, dests[0])\n        p300.dispense(25, dests[1])\n        p300.dispense(10, src)\n        p300.drop_tip()\n\n    # Add 100ul detection antibody\n    ctx.comment(\n        '\\nAdding 100uL Dettection Antibody from A1 of 12-Well Reservoir')\n    num_cols = math.ceil((8+num_samps)/8) * 2\n    if num_samps > 40:\n        total_cols = dest_plate.rows()[0] + dest_plate2.rows()[0]\n        all_cols = total_cols[:num_cols]\n    else:\n        all_cols = dest_plate.rows()[0][:num_cols]\n\n    m300.pick_up_tip()\n    for idx, col in enumerate(all_cols):\n        src = antibody[0] if idx < 12 else antibody[1]\n        if m300.current_volume == 0:\n            m300.aspirate(200, src)\n        m300.dispense(100, col.top(-1))\n    if m300.current_volume > 0:\n        m300.dispense(m300.current_volume, src)\n    m300.drop_tip()\n\n    ctx.pause(\n        '\\nAddition of Detection Antibody complete. Please cover plate \\\n        and place on shaker for 1 hour at room temperature. When ready \\\n        for next steps, replace plate and click RESUME.')\n\n    # Add 100uL of TMB Sustrate\n    ctx.comment('\\nAdding 100uL of TMB Substrate')\n    m300.pick_up_tip()\n    for idx, col in enumerate(all_cols):\n        src = tmb[0] if idx < 12 else tmb[1]\n        if m300.current_volume == 0:\n            m300.aspirate(200, src)\n        m300.dispense(100, col.top(-1))\n    if m300.current_volume > 0:\n        m300.dispense(m300.current_volume, src)\n    m300.drop_tip()\n\n    ctx.pause('\\nPlease place plate on shaker for 15 minutes. \\\n    When ready, replace plate and click RESUME')\n\n    # Add 100uL of Stop Solution\n    ctx.comment('\\nAdding 100uL of Stop Solution')\n\n    m300.pick_up_tip()\n    for idx, col in enumerate(all_cols):\n        src = stop_sol[0] if idx < 12 else stop_sol[1]\n        if m300.current_volume == 0:\n            m300.aspirate(200, src)\n        m300.dispense(100, col.top(-1))\n    if m300.current_volume > 0:\n        m300.dispense(m300.current_volume, src)\n    m300.drop_tip()\n\n    ctx.comment('Protocol complete!')\n",
     "custom_labware_defs": [
         {
             "brand": {
@@ -1148,92 +1148,42 @@
                 }
             ],
             "type": "dropDown"
-        },
-        {
-            "label": "Manually Add Controls",
-            "name": "_manual_ctrls",
-            "options": [
-                {
-                    "label": "Yes, user will add controls",
-                    "value": true
-                },
-                {
-                    "label": "No, OT-2 will add controls",
-                    "value": false
-                }
-            ],
-            "type": "dropDown"
-        },
-        {
-            "label": "Perform Manual Washes",
-            "name": "_manual_wash",
-            "options": [
-                {
-                    "label": "Yes, manually wash",
-                    "value": true
-                },
-                {
-                    "label": "No, OT-2 will wash",
-                    "value": false
-                }
-            ],
-            "type": "dropDown"
         }
     ],
     "instruments": [
         {
             "mount": "left",
             "name": "p300_multi_gen2"
+        },
+        {
+            "mount": "right",
+            "name": "p300_single_gen2"
         }
     ],
     "labware": [
         {
-            "name": "NEST 12 Well Reservoir 15 mL on 1",
+            "name": "Nunc MaxiSorp 96 Well Plate 250ul on 1",
             "share": false,
             "slot": "1",
-            "type": "nest_12_reservoir_15ml"
+            "type": "nunc_maxisorp_96_wellplate_250ul"
         },
         {
-            "name": "Nunc MaxiSorp 96 Well Plate 250ul on 2",
+            "name": "Opentrons 24 Well Aluminum Block with NEST 1.5 mL Snapcap on 2",
             "share": false,
             "slot": "2",
-            "type": "nunc_maxisorp_96_wellplate_250ul"
+            "type": "opentrons_24_aluminumblock_nest_1.5ml_snapcap"
         },
         {
-            "name": "Nunc MaxiSorp 96 Well Plate 250ul on 3",
+            "name": "Opentrons 24 Well Aluminum Block with NEST 1.5 mL Snapcap on 3",
             "share": false,
             "slot": "3",
-            "type": "nunc_maxisorp_96_wellplate_250ul"
+            "type": "opentrons_24_aluminumblock_nest_1.5ml_snapcap"
         },
         {
-            "name": "NEST 1 Well Reservoir 195 mL on 4",
-            "share": false,
-            "slot": "4",
-            "type": "nest_1_reservoir_195ml"
-        },
-        {
-            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 5",
-            "share": false,
-            "slot": "5",
-            "type": "opentrons_96_tiprack_300ul"
-        },
-        {
-            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 7",
+            "name": "NEST 12 Well Reservoir 15 mL on 7",
             "share": false,
             "slot": "7",
-            "type": "opentrons_96_tiprack_300ul"
-        },
-        {
-            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 8",
-            "share": false,
-            "slot": "8",
-            "type": "opentrons_96_tiprack_300ul"
-        },
-        {
-            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 9",
-            "share": false,
-            "slot": "9",
-            "type": "opentrons_96_tiprack_300ul"
+            "type": "nest_12_reservoir_15ml"
         },
         {
             "name": "Opentrons 96 Tip Rack 300 \u00b5L on 10",
@@ -1242,10 +1192,10 @@
             "type": "opentrons_96_tiprack_300ul"
         },
         {
-            "name": "NEST 1 Well Reservoir 195 mL on 11",
+            "name": "Opentrons 96 Tip Rack 300 \u00b5L on 11",
             "share": false,
             "slot": "11",
-            "type": "nest_1_reservoir_195ml"
+            "type": "opentrons_96_tiprack_300ul"
         },
         {
             "name": "Opentrons Fixed Trash on 12",
