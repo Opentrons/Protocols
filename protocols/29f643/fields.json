@@ -13,23 +13,5 @@
       {"label": "Left", "value": "left"},
       {"label": "Right", "value": "right"}
     ]
-  },
-  {
-    "type": "dropDown",
-    "label": "Manually Add Controls",
-    "name": "_manual_ctrls",
-    "options": [
-      {"label": "Yes, user will add controls", "value": true},
-      {"label": "No, OT-2 will add controls", "value": false}
-    ]
-  },
-  {
-    "type": "dropDown",
-    "label": "Perform Manual Washes",
-    "name": "_manual_wash",
-    "options": [
-      {"label": "Yes, manually wash", "value": true},
-      {"label": "No, OT-2 will wash", "value": false}
-    ]
   }
 ]
