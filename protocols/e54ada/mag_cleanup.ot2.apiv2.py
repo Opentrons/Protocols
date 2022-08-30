@@ -57,6 +57,7 @@ def run(ctx):
 
     bead_vol = rxn_vol*bead_ratio
     bead_mag_time = 7
+    bead_mag_time_elute = 10
     bead_incubate_time = 10
     etoh_dry_time = 10
     elute_time = 7
@@ -517,9 +518,9 @@ def run(ctx):
     mag_mod.engage(height_from_base=engage_height)
 
     if TEST_MODE:
-        ctx.delay(seconds=bead_mag_time)
+        ctx.delay(seconds=bead_mag_time_elute)
     else:
-        ctx.delay(minutes=bead_mag_time)
+        ctx.delay(minutes=bead_mag_time_elute)
 
     ctx.comment('\n\n~~~~~~~~~~~~~~REMOVING ELUTE~~~~~~~~~~~~~~~\n')
     for i, (s, d) in enumerate(zip(working_cols, elution_plate.rows()[0])):
