@@ -68,7 +68,7 @@ def run(ctx):
 
     # Steps 1-2
     # Slowly add 10ul TSB (stop buffer) then slowly mix to suspend
-    ctx.comment("""adding TSB""")
+    ctx.comment('\n\n~~~~~~~~~~~~~~~ADDING TSB~~~~~~~~~~~~~~~~\n')
     for dest in starting_dest:
         m20.pick_up_tip()
         m20.flow_rate.aspirate /= 3
@@ -84,7 +84,7 @@ def run(ctx):
         m20.drop_tip()
         m20.flow_rate.aspirate *= 3
         m20.flow_rate.dispense *= 3
-    ctx.comment('''mixing''')
+    ctx.comment('\n\n~~~~~~~~~~~~~~~MIXING~~~~~~~~~~~~~~~~\n')
     for dest in starting_dest:
         m300.pick_up_tip()
         m300.flow_rate.aspirate /= 4
@@ -93,12 +93,14 @@ def run(ctx):
         m300.flow_rate.aspirate *= 4
         m300.flow_rate.dispense *= 4
         m300.drop_tip()
+    ctx.comment("\n\n")
     ctx.pause("""Please move sample plate from slot 2"""
               """ to off-deck thermocycler then return to slot 2."""
               """Click 'Resume' when set""")
+    ctx.comment('\n\n')
 
     # Mid-protocol transfer to mag module
-    ctx.comment('moving samples from slot 2 to slot 4')
+    ctx.comment('\n\n~~~~~~~~~~~~~MOVING SAMPLES FROM 2 TO 4~~~~~~~~~~~~~~~\n')
     for source, dest in zip(starting_dest, sample_dest):
         m300.pick_up_tip()
         m300.flow_rate.aspirate /= 3
@@ -118,13 +120,15 @@ def run(ctx):
 
     # Step 4
     # Incubate on mag stand, 3 minutes
+    ctx.comment('\n\n')
     ctx.comment('''incubate 3 minutes''')
+    ctx.comment('\n\n')
     mag_module.engage()
     ctx.delay(minutes=3)
 
     # Step 5
     # Discard supernatant
-    ctx.comment('''discarding supernatant''')
+    ctx.comment('\n\n~~~~~~~~~~~~~~~DISCARDING SUPERNATANT~~~~~~~~~~~~~~~~\n')
     ctx.max_speeds['Z'] = 50
     ctx.max_speeds['A'] = 50
     num_times = 1
@@ -153,7 +157,7 @@ def run(ctx):
     mag_module.disengage()
 
     # Step 6, TWB wash twice removing super each time
-    ctx.comment('''twb wash twice, removing supernatant each time''')
+    ctx.comment('\n\n~~~~~~~~~~~~~TWB WASH AND SUPER REMOVAL~~~~~~~~~~~~~~\n')
     for _ in range(2):
         m300.flow_rate.aspirate /= 5
         m300.flow_rate.dispense /= 5
@@ -177,7 +181,6 @@ def run(ctx):
         ctx.max_speeds['Z'] = 50
         ctx.max_speeds['A'] = 50
         num_times = 1
-        m300.flow_rate.aspirate /= 5
         for source in sample_dest:
             side = 1 if num_times % 2 == 0 else -1
             m300.pick_up_tip()
@@ -199,9 +202,9 @@ def run(ctx):
             # m300.return_tip()
             m300.drop_tip()
             num_times += 1
-            print(side)
         mag_module.disengage()
     # Step 7, add twb and mix, leave TWB and incubate on mag stand until step 3
+    ctx.comment('\n\n~~~~~~~~~~~~~~~ADDING TWB AND MIXING~~~~~~~~~~~~~~~~\n')
     m300.flow_rate.aspirate /= 5
     m300.flow_rate.dispense /= 5
     for dest in sample_dest:
@@ -218,10 +221,9 @@ def run(ctx):
     m300.flow_rate.dispense *= 5
 
     mag_module.engage()
+    ctx.comment('\n\n')
     ctx.comment('''Clean up complete, please move on to part 3 of the'''
                 ''' protocol, leaving the plate engaged on the'''
                 ''' magnetic module''')
 
     # End part 2
-    for c in ctx.commands():
-        print(c)
