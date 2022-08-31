@@ -98,7 +98,7 @@ def run(ctx):
     # Add 40ul Master mix (EFW and NFW made off-deck w/10% overage), mix 10x
     ctx.comment('\n\n~~~~~~~~~~~~~~~ADDING MASTER MIX~~~~~~~~~~~~~~~~\n')
     for i, dest in enumerate(sample_dest):
-        i_x = 0 if i <= 5 else 1
+        i_x = 0 if i <= 2 else 1
         m300.pick_up_tip()
         m300.flow_rate.aspirate /= 5
         m300.flow_rate.dispense /= 5
@@ -185,3 +185,4 @@ def run(ctx):
               )
     # for c in ctx.commands():
     #     print(c)
+    # print(pcr_mix)
