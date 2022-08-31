@@ -65,6 +65,7 @@ def run(ctx):
     mag_module.engage()
     ctx.delay(minutes=5)
 # transfer 15ul IPB to each empty well in mag module plate
+    ctx.comment('\n\n~~~~~~~~~~~~~~~ADDING IPB~~~~~~~~~~~~~~~~\n')
     m20.pick_up_tip()
     for dest in final_plate_dest:
         m20.flow_rate.aspirate /= 4
@@ -84,7 +85,7 @@ def run(ctx):
     m20.drop_tip()
 
 # Transfer 125ul supernatant from mag plate left to mag plate right w/10x mix
-
+    ctx.comment('\n\n~~~~~~~~~~~~~~~MOVING SUPERNATANT~~~~~~~~~~~~~~~~\n')
     mag_module.engage()
     ctx.max_speeds['Z'] = 50
     ctx.max_speeds['A'] = 50
@@ -116,9 +117,9 @@ def run(ctx):
         m300.flow_rate.aspirate *= 2
         m300.drop_tip()
         num_times += 1
-        print(side)
     mag_module.disengage()
     # Incubate 5 minutes
+    ctx.comment('\n\n~~~~~~~~~~~~~~~INCUBATING W/IPB~~~~~~~~~~~~~~~~\n')
     ctx.delay(minutes=5)
     # Mag stand engage for 5 minutes
     # discard supernatant
@@ -127,6 +128,7 @@ def run(ctx):
     ctx.max_speeds['Z'] = 50
     ctx.max_speeds['A'] = 50
     num_times = 1
+    ctx.comment('\n\n~~~~~~~~~~~~~~~DISCARDING SUPERNATANT~~~~~~~~~~~~~~~~\n')
     for source in final_plate_dest:
         side = 1 if num_times % 2 == 0 else -1
         m300.flow_rate.aspirate /= 5
@@ -142,9 +144,9 @@ def run(ctx):
         m300.drop_tip()
         m300.flow_rate.aspirate *= 5
         num_times += 1
-        print(side)
     mag_module.disengage()
 # wash twice: Add 200ul EtOH (let's try 100), wait 30 secs, discard supernatant
+    ctx.comment('\n\n~~~~~~~~~~~~~~~WASHING WITH ETOH~~~~~~~~~~~~~~~~\n')
     for _ in range(2):
         for dest in final_plate_dest:
             m300.pick_up_tip()
@@ -175,12 +177,12 @@ def run(ctx):
             m300.drop_tip()
             m300.flow_rate.aspirate *= 5
             num_times += 1
-            print(side)
 
 # remove remaining EtOH w/20ul pipette
     ctx.max_speeds['Z'] = 50
     ctx.max_speeds['A'] = 50
     num_times = 1
+    ctx.comment('\n\n~~~~~~~~~~~~~~~REMOVING REMAINING ETOH~~~~~~~~~~~~~~~~\n')
     for source in final_plate_dest:
         side = 1 if num_times % 2 == 0 else -1
         m20.flow_rate.aspirate /= 5
@@ -199,12 +201,13 @@ def run(ctx):
         m20.drop_tip()
         m20.flow_rate.aspirate *= 5
         num_times += 1
-        print(side)
 # Air dry 5 minutes
+    ctx.comment('\n\n~~~~~~~~~~~~~~~AIR DRYING~~~~~~~~~~~~~~~~\n')
     ctx.delay(minutes=5)
 # disengage mag stand
     mag_module.disengage()
 # add 32ul RSB, mix to resuspend
+    ctx.comment('\n\n~~~~~~~~~~~~~~~ADDING RSB~~~~~~~~~~~~~~~~\n')
     for dest in final_plate_dest:
         m300.pick_up_tip()
         m300.aspirate(32, rsb)
@@ -220,6 +223,7 @@ def run(ctx):
     ctx.max_speeds['Z'] = 50
     ctx.max_speeds['A'] = 50
     num_times = 1
+    ctx.comment('\n\n~~~~~~~~~~~~~~TRANSFERRING SUPERNATANT~~~~~~~~~~~~~~~~\n')
     for source, dest in zip(final_plate_dest, supernate_final_dest):
         side = 1 if num_times % 2 == 0 else -1
         m300.flow_rate.aspirate /= 5
@@ -235,7 +239,6 @@ def run(ctx):
         m300.drop_tip()
         m300.flow_rate.aspirate *= 5
         num_times += 1
-        print(side)
 
-    for c in ctx.commands():
-        print(c)
+    # for c in ctx.commands():
+    #     print(c)
