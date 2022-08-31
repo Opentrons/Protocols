@@ -57,7 +57,7 @@ def run(ctx):
     if perform_barcode:
         index_source = index_plate.rows()[0][:num_cols]
     else:
-        index_source = thermo_tubes.rows()[0][6]  # single column
+        index_source = thermo_tubes.rows()[0][4]  # single column
     # can reuse other half of plate from previous step!
     cycler_dest = cycler_plate.rows()[0][6:6+num_cols]
     # Constants
@@ -151,18 +151,20 @@ def run(ctx):
             m20.flow_rate.dispense *= 4
             m20.drop_tip()
     else:
+        print('it worked')
         for dest in cycler_dest:
             m20.pick_up_tip()
             m20.flow_rate.aspirate /= 4
             m20.flow_rate.dispense /= 4
             m20.aspirate(10, index_source)
-            m20.move_to(s.top(-2))
+            m20.move_to(index_source.top(-2))
             m20.aspirate(airgap_index, index_source.top(-2))
             m20.move_to(index_source.top(-2))
             m20.dispense(airgap_index, dest.top())
             m20.dispense(10, dest)
             m20.flow_rate.aspirate *= 4
             m20.flow_rate.dispense *= 4
+            m20.drop_tip()
     ctx.comment('\n')
     # mix 10x at 40ul
     ctx.comment('\n\n~~~~~~~~~~~~~~~MIXING~~~~~~~~~~~~~~~~\n')
@@ -183,6 +185,6 @@ def run(ctx):
     ctx.home()
     ctx.pause('Run complete, please move sample plate to off-deck thermocycler'
               )
-    # for c in ctx.commands():
-    #     print(c)
+    for c in ctx.commands():
+        print(c)
     # print(pcr_mix)

@@ -10,8 +10,8 @@
     "label": "Use Illumina Barcoding Adapter Plate?",
     "name": "perform_barcode",
     "options": [
-       { "label": "Yes", "value": "true" },
-       { "label": "No", "value": "false" }
+       { "label": "Yes", "value": true },
+       { "label": "No", "value": false }
      ]
   }
 ]
