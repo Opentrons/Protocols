@@ -51,13 +51,13 @@ def run(ctx):
     '''includes reagents used in other steps for housekeeping purposes'''
     # master_mix = thermo_tubes.rows()[0][0]
     # nf_water = thermo_tubes.rows()[0][1]
-    tsb = thermo_tubes.rows()[0][0]
+    # tsb = thermo_tubes.rows()[0][0]
     sample_dest = sample_plate.rows()[0][:num_cols]
-    pcr_mix = reagent_resv.wells()[1]
+    pcr_mix = thermo_tubes.rows()[0][:3:2]  # should be two columns of tubes
     if perform_barcode:
         index_source = index_plate.rows()[0][:num_cols]
     else:
-        index_source = reagent_resv.wells()[2]
+        index_source = thermo_tubes.rows()[0][6]  # single column
     # can reuse other half of plate from previous step!
     cycler_dest = cycler_plate.rows()[0][6:6+num_cols]
     # Constants
@@ -69,11 +69,8 @@ def run(ctx):
     airgap_mastermix = 10
     airgap_plate = 10
 
-    # keeps temp module loaded
-    m300.move_to(tsb.top(3))
-
     # Discard supernatant
-    ctx.comment('''discarding supernatant''')
+    ctx.comment('\n\n~~~~~~~~~~~~~~~DISCARDING SUPERNATANT~~~~~~~~~~~~~~~~\n')
     ctx.max_speeds['Z'] = 50
     ctx.max_speeds['A'] = 50
     num_times = 1
@@ -96,17 +93,18 @@ def run(ctx):
         m300.dispense(vol_supernatant, liquid_trash.wells()[0])
         m300.drop_tip()
         num_times += 1
-        print(side)
     mag_module.disengage()
 
     # Add 40ul Master mix (EFW and NFW made off-deck w/10% overage), mix 10x
-    for dest in sample_dest:
+    ctx.comment('\n\n~~~~~~~~~~~~~~~ADDING MASTER MIX~~~~~~~~~~~~~~~~\n')
+    for i, dest in enumerate(sample_dest):
+        i_x = 0 if i <= 5 else 1
         m300.pick_up_tip()
         m300.flow_rate.aspirate /= 5
         m300.flow_rate.dispense /= 5
-        m300.aspirate(40, pcr_mix)
-        m300.move_to(pcr_mix.top())
-        m300.aspirate(airgap_mastermix, pcr_mix.top())
+        m300.aspirate(40, pcr_mix[i_x])
+        m300.move_to(pcr_mix[i_x].top())
+        m300.aspirate(airgap_mastermix, pcr_mix[i_x].top())
         m300.dispense(airgap_mastermix, dest.top())
         m300.dispense(40, dest)
         m300.flow_rate.aspirate *= 5
@@ -115,6 +113,7 @@ def run(ctx):
         m300.drop_tip()
 
     # Move samples to thermocycler plate for centrifuge
+    ctx.comment('\n\n~~~~~~~~~~~~~~~MOVING TO 96 WELL PLATE~~~~~~~~~~~~~~~~\n')
     for source, dest in zip(sample_dest, cycler_dest):
         m300.pick_up_tip()
         m300.flow_rate.aspirate /= 5
@@ -130,10 +129,13 @@ def run(ctx):
         m300.drop_tip()
 
     # centrifuge off deck, 280 x g for 3 seconds
+    ctx.comment('\n')
     ctx.pause('Please centrifuge plate in slot 2 at 280 x g for 3 seconds,'
               ' return to slot 2 when done')
+    ctx.comment('\n')
 
     # Add 10ul index adapters (made offdeck or supplied in 96 well plate)
+    ctx.comment('\n\n~~~~~~~~~~~~~~~ADDING ADAPTERS~~~~~~~~~~~~~~~~\n')
     if perform_barcode:
         for s, d in zip(index_source, cycler_dest):
             m20.pick_up_tip()
@@ -161,7 +163,9 @@ def run(ctx):
             m20.dispense(10, dest)
             m20.flow_rate.aspirate *= 4
             m20.flow_rate.dispense *= 4
+    ctx.comment('\n')
     # mix 10x at 40ul
+    ctx.comment('\n\n~~~~~~~~~~~~~~~MIXING~~~~~~~~~~~~~~~~\n')
     for dest in cycler_dest:
         m300.pick_up_tip()
         m300.flow_rate.aspirate /= 3
@@ -170,9 +174,14 @@ def run(ctx):
         m300.flow_rate.aspirate *= 3
         m300.flow_rate.dispense *= 3
         m300.drop_tip()
+    ctx.comment('\n')
 
     # Move to off-deck thermo cycler
+
+    # keeps temp module loaded
+    m300.move_to(reagent_resv.wells()[0].top(3))
+    ctx.home()
     ctx.pause('Run complete, please move sample plate to off-deck thermocycler'
               )
-    for c in ctx.commands():
-        print(c)
+    # for c in ctx.commands():
+    #     print(c)

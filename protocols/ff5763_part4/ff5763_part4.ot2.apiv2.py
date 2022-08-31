@@ -34,8 +34,8 @@ def run(ctx):
     sample_plate = ctx.load_labware('customabnest_96_wellplate_200ul', '2')
     midi_plate_2 = ctx.load_labware('nest_96_wellplate_2ml_deep', '3')
     midi_plate_1 = mag_module.load_labware('nest_96_wellplate_2ml_deep')
-    # reagent_resv = ctx.load_labware('nest_12_reservoir_15ml', '5')
-    # liquid_trash = ctx.load_labware('nest_1_reservoir_195ml', '6')
+    reagent_resv = ctx.load_labware('nest_12_reservoir_15ml', '5')
+    liquid_trash = ctx.load_labware('nest_1_reservoir_195ml', '6')
 
     # load tipracks
     # tiprack20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
@@ -64,6 +64,7 @@ def run(ctx):
     # protocol
 
     # move samples to Deep Well Plate on Mag Module
+    ctx.comment('\n\n~~~~~~~~~~~~~~MOVING SAMPLES TO MAGNETS~~~~~~~~~~~~~~~\n')
     for source, dest in zip(sample_dest_ab, sample_dest_MIDI_1):
         m300.pick_up_tip()
         m300.aspirate(70, source)
@@ -77,6 +78,7 @@ def run(ctx):
     ctx.max_speeds['Z'] = 50
     ctx.max_speeds['A'] = 50
     num_times = 1
+    ctx.comment('\n\n~~~~~~~~~~~~~~~MOVING SUPERNATANT~~~~~~~~~~~~~~~~\n')
     for source, dest in zip(sample_dest_MIDI_1, sample_dest_MIDI_2):
         side = 1 if num_times % 2 == 0 else -1
         m300.pick_up_tip()
@@ -93,10 +95,10 @@ def run(ctx):
         m300.dispense(vol_supernatant, dest)
         m300.drop_tip()
         num_times += 1
-        print(side)
     mag_module.disengage()
 
     # add 40ul NFW to MIDI plate 1
+    ctx.comment('\n\n~~~~~~~~~~~~~~~ADDING NFW~~~~~~~~~~~~~~~~\n')
     for dest in sample_dest_MIDI_2:
         m300.pick_up_tip()
         m300.flow_rate.aspirate /= 4
@@ -110,6 +112,7 @@ def run(ctx):
         m300.flow_rate.dispense *= 4
         m300.drop_tip()
     # add 45ul IPB to MIDI plate 2 and mix 10x
+    ctx.comment('\n\n~~~~~~~~~~~~~~~ADDING IPB~~~~~~~~~~~~~~~~\n')
     for dest in sample_dest_MIDI_2:
         m300.flow_rate.aspirate /= 4
         m300.flow_rate.dispense /= 4
@@ -123,7 +126,10 @@ def run(ctx):
         m300.flow_rate.dispense *= 2
         m300.drop_tip()
     # Incubate 5 minutes
-        ctx.delay(minutes=5)
+    m300.move_to(reagent_resv.wells()[0].top(3))
+    m300.move_to(liquid_trash.wells()[0].top(3))
+    ctx.delay(minutes=5)
+    ctx.comment('\n\n')
     ctx.comment('''First half of library cleanup completed. Please dispose'''
                 ''' of AB Gene plate in slot 2 and now empty Deep Well Plate'''
                 ''' on magnetic module. Deep Well Plate in slot 3 should be '''
