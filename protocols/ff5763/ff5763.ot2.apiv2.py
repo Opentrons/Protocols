@@ -74,7 +74,9 @@ def run(ctx):
         m300.flow_rate.aspirate *= 2
         m300.flow_rate.dispense *= 2
         m300.drop_tip()
-    for c in ctx.commands():
-        print(c)
+
     ctx.comment('''Tagmentation Prep Complete. Please transfer samples to
     thermocycler to complete tagmentation''')
+
+    # for c in ctx.commands():
+    #     print(c)

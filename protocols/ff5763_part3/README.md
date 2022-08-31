@@ -46,10 +46,8 @@ Explanation of complex parameters below:
 * [P20 Multi Channel](https://shop.opentrons.com/8-channel-electronic-pipette/)
 
 ### Reagents
-* PCR Master Mix
-    * If not barcoding, in slot 5 well 2, 40 uL per sample
-    * If barcoding, in slot 3, 40 uL per sample, individual per well
-* Index Adapters in a 96 well plate in slot 3 or, if not indexing, slot 5 well 3, 10 uL per sample
+* PCR Master Mix, slot 1 columns 1 and 3. Each tube contains up to 132 uL (enough for 3 samples with a 10% overage). The first 3 columns will use column 1 and the last 3 will use column 2
+* Index Adapters in a 96 well plate in slot 3 or, if not indexing, slot 1 column 5, 10 uL per column in each tube.
 * Color code
 ![color code](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/ff5763/part_3/color_code.png)
 ---
@@ -64,7 +62,7 @@ Explanation of complex parameters below:
 
 ### Protocol Steps
 1. Supernatant is removed from samples on magnetic module and disposed off in liquid trash in slot 6
-2. 40 uL PCR Master Mix from slot 5 well 2 is added to samples on magnetic module
+2. 40 uL PCR Master Mix from slot 1 columns 1 and 3 (as needed) is added to samples on magnetic module
 3. Samples are moved to thermocycler compatible plate in slot 2
 4. Samples are centrifuged for 3 seconds at 280 x g
 5. 10 uL index adapters from either slot 5 well 3 or the barcoding plate in slot 3 are added to sample plate in slot 2 and mixed (10x with 40 uL)
