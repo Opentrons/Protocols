@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "\n",
-    "description": "Links:\n* Part 1\n\n* Part 2\n\n* Part 3\n\n* Part 4\n\n* Part 5\nThis custom PCR1 Setup protocol is part 1/5 of the Verogen ForenSeq DNA Signature Prep kit. In this protocol, mastermix is pre-added to a clean PCR plate. Then, samples from up to 4 source plates specified in the .csv file are transferred to the plate containing mastermix and mixed (optionally).\nThe .csv file should be formatted as shown below (including header line):\nvolume,source plate # (1-4),source column (1-12),destination column(1-12)\n8,1,2,1\n8,2,3,2\n8,2,12,3\n",
+    "description": "Links:\n Part 1\n\n Part 2\n\n Part 3\n\n Part 4\n\n* Part 5\nThis custom PCR1 Setup protocol is part 1/5 of the Verogen ForenSeq DNA Signature Prep kit. In this protocol, mastermix is pre-added to a clean PCR plate. Then, samples from up to 4 source plates specified in the .csv file are transferred to the plate containing mastermix and mixed (optionally).\nThe .csv file should be formatted as shown below (including header line):\nvolume,source plate # (1-4),source column (1-12),destination column(1-12)\n8,1,2,1\n8,2,3,2\n8,2,12,3\n",
     "internal": "17d210",
     "labware": "\nAmplifyt 96 Well Plate 200 \u00b5L\nOpentrons 20\u00b5l Tipracks\nOpentrons 96 Well Aluminum Block with Generic PCR Strip 200 \u00b5L\n",
     "markdown": {

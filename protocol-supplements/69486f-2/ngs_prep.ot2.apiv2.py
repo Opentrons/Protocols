@@ -243,8 +243,10 @@ def run(ctx):
     pick_up(p300, 1)
     p300.transfer(910, buffer2, wash_well_1, new_tip='never',
                   mix_after=(10, buffer3_vol*0.8))
+    wells_per_col = 8 if num_samples >= 8 else num_samples
     bead_dests = [
-        well for row in prep_plate1.rows()[2:5] for well in row[:num_samples]]
+        well for col in prep_plate1.columns()[:num_cols]
+        for well in col[:wells_per_col]]
     for d in bead_dests:
         p300.aspirate(50, wash_well_1)
         p300.dispense(50, d)
@@ -287,7 +289,7 @@ def run(ctx):
 
     # resuspend in wash buffer 3 and transfer to incubation plate 2
     incubation_dest_sets = [
-        prep_plate2.rows()[2][i*num_samples_1:(i+1)*num_samples_1]
+        prep_plate2.columns()[0][i*num_samples_1:(i+1)*num_samples_1]
         for i in range(num_samples_2)]
     num_trans = math.ceil(610/vol_p300_max)
     vol_per_trans = 610/num_trans

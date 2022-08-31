@@ -5,7 +5,7 @@
             "Thermo Fisher Dynabeads\u2122 Protein A/G"
         ]
     },
-    "deck-setup": "\n* Beads: 50 uL per sample\n* Antibody: diluted in phosphate-buffered saline with 0.1% Tween 20 (PBS-T), 50 uL per sample  ",
+    "deck-setup": "\n Beads: 50 uL per sample\n Antibody: diluted in phosphate-buffered saline with 0.1% Tween 20 (PBS-T), 50 uL per sample  ",
     "description": "This protocol (Part 1) performs pipetting and mixing of reagents and samples on the OT2 as the first part of automated immunoprecipitation using Thermo Fisher Dynabeads Protein A or Protein G.\nThe user can determine the number of samples to be processed.\nThe samples (e.g. cell lysates), Dynabeads and the antibody specific for the protein of interest will be transferred to and mixed in a 96-well deepwell working plate on the OT2. The first part of the protocol completes at this point allowing the user to move the working plate to an agitation device, an antibody/target protein incubation period determined by the user. After incubation, the process proceeds with the second part of the protocol on the OT2. Dynabeads/antibody/target protein complex will be washed, eluted, and heated to denature. The final product is ready for SDS-PAGE.  ",
     "internal": "sci-dynabeads-tube-1",
     "labware": "\nNEST 2 mL 96-Well Deep Well Plate, V Bottom\nNEST 1-Well Reservoirs, 195 mL\n4-in-1 Tube Rack Set\nNEST 15 mL Centrifuge Tube\nOpentrons 300\u00b5L Tips\n",
