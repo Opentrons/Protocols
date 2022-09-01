@@ -13,7 +13,7 @@ INCUBATION_TEMP = 4
 INCUBATION_TIME_MINUTES = 10
 NUM_SAMPLES_1 = 6
 NUM_SAMPLES_2 = 2
-WASH_VOLUMES_INCUBATION_2 = [200]  # should list of length equivalent to length of sample columns
+WASH_VOLUMES_INCUBATION_2 = [200, 200]  # should list of length equivalent to length of sample columns
 
 
 def run(ctx):
