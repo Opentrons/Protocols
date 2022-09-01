@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "",
-    "description": "This is a specific protocol for aliquoting liquid from three reagent plates to three 96 deep well plates using a multi-channel p300 pipette. Tips are changed between reagents. Either pipette mount can be specified in setup.\n* 350ul SPR Wash Buffer is added to a 96 deep well plate\n* 350ul VHB Buffer is added to a second 96 deep well plate\n* 50ul nuclease free water is added to a third 96 deep well plate\n\n'P300-Multi Mount Side': Left or right refers to the pipette mount side\n",
+    "description": "This is a specific protocol for aliquoting liquid from three reagent plates to three 96 deep well plates using a multi-channel p300 pipette. Tips are changed between reagents. Either pipette mount can be specified in setup.\n 350ul SPR Wash Buffer is added to a 96 deep well plate\n 350ul VHB Buffer is added to a second 96 deep well plate\n* 50ul nuclease free water is added to a third 96 deep well plate\n\n'P300-Multi Mount Side': Left or right refers to the pipette mount side\n",
     "internal": "3308b4",
     "labware": "\n3x NEST 1 Well Reservoir 195ml\n3x NEST 96 Deepwell Plate 2ml\n",
     "markdown": {
