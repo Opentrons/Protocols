@@ -46,15 +46,18 @@ Explanation of complex parameters below:
 * [Opentrons P20 8 Channel Electronic Pipette (GEN20)](https://shop.opentrons.com/8-channel-electronic-pipette/)
 
 ### Reagents
-* [SPRI Beads](https://www.beckman.com/reagents/genomic/cleanup-and-size-selection/size-selection?utm_medium=cpc&utm_source=google&utm_campaign=ecommerce-spriselect&utm_content=geno_ecommerce_bottom&creative=443930351713&keyword=spri%20beads&matchtype=e&network=g&device=c&gclid=Cj0KCQjwjbyYBhCdARIsAArC6LI6dgI3lnL2E7_tB8sJuHRyIDWJx124iGVRfQQ-k2MabecsakRC6U4aAsf_EALw_wcB)
+* [SPRI Beads](https://www.beckman.com/reagents/genomic/cleanup-and-size-selection/size-selection?utm_medium=cpc&utm_source=google&utm_campaign=ecommerce-spriselect&utm_content=geno_ecommerce_bottom&creative=443930351713&keyword=spri%20beads&matchtype=e&network=g&device=c&gclid=Cj0KCQjwjbyYBhCdARIsAArC6LI6dgI3lnL2E7_tB8sJuHRyIDWJx124iGVRfQQ-k2MabecsakRC6U4aAsf_EALw_wcB), slot 5 well 1. Volume should be a minimum of 2 mL in reservoir and a maximum of 12 mL.
+* 80% Ethanol, 10 mL in each well for 96 samples. Ethanol wash 1 will use wells 2 and 3, ethanol wash 2 will use wells 4 and 5.
+* Elution liquid, volume should be a minimum of 2 mL in reservoir and a maximum of 12 mL. Volume per well is specified below.
 
 ---
 
 ### Deck Setup
 * Reagent Color Code
-![color code](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)
-* Starting deck layout with reagents
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)
+![color code](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/9778eb/spri/color+code.png)
+
+* Starting deck layout with reagents for single bead purification
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/9778eb/spri/starting_deck_not_size.png)
 
 ---
 
