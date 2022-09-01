@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "\n\nOpentrons 200ul filter tips (Deck Slot 10)\nOpentrons 20ul filter tips (Deck Slots 5,11)\n96-tube Fluidx rack with 1 mL Fluidx tubes (Deck Slot 9)\n24-tube Opentrons rack with MTC-3220-SG 2 mL tubes  (Deck Slots 7,4,1,8)\n\n\n",
-    "description": "This protocol uses a p300 single-channel pipette to transfer custom volumes of serum reagent from specified locations in four Opentrons 24-tube racks into specified tubes held in a 96-well rack. A p20 single-channel pipette is then used to tranfer a custom volume of RNase A and 20 percent Tween 20 to the same 96-tube rack locations. Finally, destination tube contents are mixed and the tubes are held at room temperature for 30 minutes. Volumes, rack locations and well locations are specified in a csv file uploaded at the time of protocol download.\nLinks:\n* example input csv\n* Fluidx rack and 1 mL tubes\n* MTC Bio MTC-3220-SG tubes",
+    "description": "This protocol uses a p300 single-channel pipette to transfer custom volumes of serum reagent from specified locations in four Opentrons 24-tube racks into specified tubes held in a 96-well rack. A p20 single-channel pipette is then used to tranfer a custom volume of RNase A and 20 percent Tween 20 to the same 96-tube rack locations. Finally, destination tube contents are mixed and the tubes are held at room temperature for 30 minutes. Volumes, rack locations and well locations are specified in a csv file uploaded at the time of protocol download.\nLinks:\n example input csv\n Fluidx rack and 1 mL tubes\n* MTC Bio MTC-3220-SG tubes",
     "internal": "2942dd",
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n",
