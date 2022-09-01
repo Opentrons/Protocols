@@ -19,7 +19,7 @@
     },
     {
       "type": "float",
-      "label": "Bead Ratio 2",
+      "label": "Bead Ratio 2 for Size Selection",
       "name": "bead_ratio_2",
       "default": 0.8
     },
@@ -82,5 +82,14 @@
           {"label": "Left", "value": "left"},
           {"label": "Right", "value": "right"}
         ]
+      },
+      {
+        "type": "dropDown",
+        "label": "Size Selection or Single Purification?",
+        "name": "size_select",
+        "options": [
+          {"label": "Size Selection", "value": true},
+          {"label": "Single Purification", "value": false}
+          ]
       }
   ]
