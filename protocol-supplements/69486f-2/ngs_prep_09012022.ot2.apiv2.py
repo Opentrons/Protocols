@@ -10,6 +10,10 @@ metadata = {
 SHAKE = False
 VOLUME_SAMPLE_1 = 50
 INCUBATION_TEMP = 4
+INCUBATION_TIME_MINUTES = 10
+NUM_SAMPLES_1 = 6
+NUM_SAMPLES_2 = 2
+WASH_VOLUMES_INCUBATION_2 = [200, 200]  # should list of length equivalent to length of sample columns
 
 
 def run(ctx):
@@ -22,10 +26,10 @@ def run(ctx):
         sys.path.append("/var/lib/jupyter/notebooks/")
         import bioshake
 
-    [num_samples_1, num_samples_2, pipette_p20, pipette_p300, mount_p20,
+    [NUM_SAMPLES_1, NUM_SAMPLES_2, pipette_p20, pipette_p300, mount_p20,
      mount_p300] = 3, 2, 'p20_single_gen2', 'p300_multi_gen2', 'right', 'left'
 
-    num_samples = num_samples_1*num_samples_2
+    num_samples = NUM_SAMPLES_1*NUM_SAMPLES_2
     time_mag_incubation = 2.0
     z_offset = 3.0
     x_offset_ratio = 0.7
@@ -119,7 +123,7 @@ def run(ctx):
             p300.aspirate(vol, well.bottom(1))
             p300.dispense(vol, bead_loc)
 
-    def wash(wells, reagent, vol_initial, vol_wash, wash_reps, dests=None,
+    def wash(wells, reagent, vol_initial, vols_wash, wash_reps, dests=None,
              remove_initial=True):
 
         # remove initial volume
@@ -138,11 +142,14 @@ def run(ctx):
                     p300.dispense(vol_per_trans, waste)
                 p300.drop_tip()
 
-        num_trans = math.ceil(vol_wash/vol_p300_max)
-        vol_per_trans = vol_wash/num_trans
+        if not isinstance(vols_wash, list):
+            vols_wash = [vols_wash for _ in range(num_cols)]
+
         for _ in range(wash_reps):
             magdeck.disengage()
-            for well in wells:
+            for well, vol_wash in zip(wells, vols_wash):
+                num_trans = math.ceil(vol_wash/vol_p300_max)
+                vol_per_trans = vol_wash/num_trans
                 side = -1 if index_ref_list.index(well) % 2 == 0 else 1
                 pick_up(p300, 1)
                 for _ in range(num_trans):
@@ -205,8 +212,8 @@ def run(ctx):
     p300.aspirate(beads_vol, buffer1)
     p300.dispense(beads_vol, wash_well_2)
     p300.mix(10, beads_vol*0.8, wash_well_2)
-    shake_dests = shake_plate.rows()[0][:num_samples_2]  # shake plate
-    shake_dests_2 = shake_plate.rows()[1][:num_samples_2]
+    shake_dests = shake_plate.rows()[0][:NUM_SAMPLES_2]  # shake plate
+    shake_dests_2 = shake_plate.rows()[1][:NUM_SAMPLES_2]
     for d in shake_dests:
         p300.aspirate(50, wash_well_2)
         p300.dispense(50, d)
@@ -230,7 +237,7 @@ def run(ctx):
     p300.drop_tip()
 
     # transfer beads back for washing
-    wash_dests_2 = mag_plate.rows()[2][:num_samples_2]
+    wash_dests_2 = mag_plate.rows()[2][:NUM_SAMPLES_2]
     for s, d in zip(shake_dests, wash_dests_2):
         pick_up(p300, 1)
         p300.aspirate(50, s)
@@ -278,7 +285,7 @@ def run(ctx):
         ctx.delay(seconds=actual_shake_time+10)
 
     # transfer beads back for washing
-    wash_dests_3 = mag_plate.rows()[3][:num_samples_2]
+    wash_dests_3 = mag_plate.rows()[3][:NUM_SAMPLES_2]
     for s, d in zip(shake_dests_2, wash_dests_3):
         pick_up(p300, 1)
         p300.aspirate(110, s)
@@ -289,8 +296,8 @@ def run(ctx):
 
     # resuspend in wash buffer 3 and transfer to incubation plate 2
     incubation_dest_sets = [
-        prep_plate2.columns()[0][i*num_samples_1:(i+1)*num_samples_1]
-        for i in range(num_samples_2)]
+        prep_plate2.columns()[0][i*NUM_SAMPLES_1:(i+1)*NUM_SAMPLES_1]
+        for i in range(NUM_SAMPLES_2)]
     num_trans = math.ceil(610/vol_p300_max)
     vol_per_trans = 610/num_trans
     for s, dest_set in zip(wash_dests_3, incubation_dest_sets):
@@ -442,7 +449,7 @@ fresh plate on Bioshake.')
         p300.transfer(t_vol+100, d, inc, new_tip='never')
         p300.drop_tip()
     if SHAKE:
-        actual_shake_time = 30*60  # in secondss
+        actual_shake_time = INCUBATION_TIME_MINUTES*60  # in seconds
         bioshake.set_shake(500, actual_shake_time)
         bioshake.home_shaker()
         ctx.delay(seconds=actual_shake_time+10)  # 10s safety
@@ -464,7 +471,7 @@ fresh plate on Bioshake.')
         p300.drop_tip()
 
     # wash beads
-    wash(mag_set, buffer1, 0, 200, 3, dests=None, remove_initial=False)
+    wash(mag_set, buffer1, 0, WASH_VOLUMES_INCUBATION_2, 3, dests=None, remove_initial=False)
 
     # resuspend and transfer beads
     for s, d in zip(mag_set, bead_locs_2):
