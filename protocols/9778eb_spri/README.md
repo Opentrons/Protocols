@@ -59,9 +59,19 @@ Explanation of complex parameters below:
 ---
 
 ### Protocol Steps
-1. This section should consist of a numerical outline of the protocol steps, somewhat analogous to the steps outlined by the user in their custom protocol submission.
-2. example step: Samples are transferred from the source tuberacks on slots 1-2 to the PCR plate on slot 3, down columns and then across rows.
-3. example step: Waste is removed from each sample on the magnetic module, ensuring the bead pellets are not contacted by the pipette tips.
+1. Beads in reservoir are mixed to ensure good dispersion
+2. The calculated bead volume is added to each sample and mixed to ensure good dispersion
+3. Beads are incubated for specified amount of time
+4. Magnetic module is engaged for a specified amount of time
+5. Resulting supernatant is removed from the beads. This supernatant is either dispensed in the waste during a single purification or moved to the second magnetic module during a size selection
+6. If size selection is being performed, a second bead addition step is performed with the resulting supernatant removed to the waste before moving on to subsequent steps
+7. 200 uL of ethanol is added to the wells, reusing tips with a top dispense
+8. The beads are separated and the resulting supernatant is removed to the waste
+9. Steps 7 and 8 are repeated for a second ethanol wash
+10. Beads are left to air dry for a specified amount of time
+11. A specified amount of elution liquid is added to the now washed and air dried beads
+12. The elution liquid is mixed with the beads and left to incubate for a set amount of time
+13. Beads are separated from the elution liquid and the resulting supernatant (the eluted sample) is moved to slot 3's awaiting plate
 
 ### Process
 1. Input your protocol parameters above.
@@ -76,4 +86,4 @@ Explanation of complex parameters below:
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-protocol-hex-code
+9778eb_spri
