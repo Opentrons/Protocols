@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-MONOREPO_URI := https://github.com/opentrons/opentrons
+MONOREPO_URI := https://github.com/Opentrons/opentrons.git
 OT2_VERSION_TAG := v4.3.0
 OT2_MONOREPO_DIR := ot2monorepoClone
 
