@@ -2,7 +2,7 @@
 import math
 
 metadata = {
-    'protocolName': 'Normalization',
+    'protocolName': 'Normalization with CSV',
     'author': 'Opentrons <protocols@opentrons.com>',
     'apiLevel': '2.12'
 }
@@ -14,6 +14,10 @@ def run(ctx):
      p20_mount, file_input] = get_values(  # noqa: F821
         'vol_water', 'src_plate', 'dst_plate', 'p20_mount', 'file_input')
 
+    if p20_mount == 'right':
+        p300_mount = 'left'
+    else:
+        p300_mount = 'right'
     source_plate = ctx.load_labware(src_plate, '1')
     dest_plate = ctx.load_labware(dst_plate, '2')
     reagent_tubes = ctx.load_labware('opentrons_6_tuberack_'
@@ -58,7 +62,11 @@ def run(ctx):
 
     tips20 = [ctx.load_labware('opentrons_96_filtertiprack_20ul', slot)
               for slot in ['3', '6'][:math.ceil(len(well_list)/48)]]
+    tips300 = [ctx.load_labware('opentrons_96_filtertiprack_200ul', slot)
+               for slot in ['5', '7'][:math.ceil(len(well_list)/48)]]
     p20 = ctx.load_instrument('p20_single_gen2', p20_mount, tip_racks=tips20)
+    p300 = ctx.load_instrument('p300_single_gen2', p300_mount,
+                               tip_racks=tips300)
 
     # liquid height tracking
     v_naught_dil = vol_water*1000
@@ -74,19 +82,31 @@ def run(ctx):
             h = 1
 
     # do NFW addition first to save tips, mix after sample addition
+    ctx.comment('\n\n~~~~~~~~~~~~~~ADDING NFW TO WELLS~~~~~~~~~~~~~~~\n')
     p20.pick_up_tip()
+    p300.pick_up_tip()
     for nfw, d in zip(nfw_vol, well_list):
-        p20.transfer(nfw, nfw_source.bottom(h), dest_plate[d],
+        if nfw >= 20:
+            pip = p300
+        else:
+            pip = p20
+        pip.transfer(nfw, nfw_source.bottom(h), dest_plate[d],
                      new_tip='never')
         adjust_height(nfw)
     p20.drop_tip()
+    p300.drop_tip()
 
+    ctx.comment('\n\n~~~~~~~~~~~~~TRANSFERRING SAMPLE VOLUMES~~~~~~~~~~~~~~\n')
     for t_vol, well in zip(transfer_vol, well_list):
-        p20.pick_up_tip()
-        p20.transfer(t_vol, source_plate.wells_by_name()[well],
+        if t_vol >= 20:
+            pip = p300
+        else:
+            pip = p20
+        pip.pick_up_tip()
+        pip.transfer(t_vol, source_plate.wells_by_name()[well],
                      dest_plate.wells_by_name()[well], new_tip='never')
-        p20.mix(4, f_vol/2, dest_plate.wells_by_name()[well])
-        p20.drop_tip()
+        pip.mix(4, f_vol/2, dest_plate.wells_by_name()[well])
+        pip.drop_tip()
 
     # bad_list = [well.display_name.split(' ')[0] for well in bad_wells]
     # print(lists)
@@ -94,3 +114,6 @@ def run(ctx):
     if len(bad_wells) > 0:
         bad_msg = '\n\n'.join(bad_wells)
         ctx.comment(f'The following sample wells failed: \n\n{bad_msg}')
+
+    for c in ctx.commands():
+        print(c)
