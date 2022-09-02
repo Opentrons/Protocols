@@ -6,7 +6,7 @@
         ]
     },
     "deck-setup": "\n",
-    "description": "This protocol preps 1.5mL and 2mL tubes from stock solutions including but not limited to acetonitrile, water, and methanol. Sources and destinations are determined via a csv uploaded by the user, as well as transfer volumes.\nExplanation of complex parameters below:\n* csv file: The csv file should be formatted like so. Note - for no mix steps, input \"0\" for the mix repetition. Also specify whether to mix at the source, or destination tube for that row:\n\n* Note: for aspiration height percent (column J), a value of 10 means that we will be aspirating from 10% of the tube depth, 50 will be 50% of the tube depth, etc.\n* P20/P1000 Mount: Specify which mount (left or right) for each single channel pipette.\n",
+    "description": "This protocol preps 1.5mL and 2mL tubes from stock solutions including but not limited to acetonitrile, water, and methanol. Sources and destinations are determined via a csv uploaded by the user, as well as transfer volumes.\nExplanation of complex parameters below:\n* csv file: The csv file should be formatted like so. Note - for no mix steps, input \"0\" for the mix repetition. Also specify whether to mix at the source, or destination tube for that row:\n\n Note: for aspiration height percent (column J), a value of 10 means that we will be aspirating from 10% of the tube depth, 50 will be 50% of the tube depth, etc.\n P20/P1000 Mount: Specify which mount (left or right) for each single channel pipette.\n",
     "internal": "528c16",
     "labware": "\nOpentrons 4-in-1 tube rack with 50mL & 15mL Falcon tubes\nOpentrons 4-in-1 tube rack with 1.5mL Eppendorf snap cap tubes\nOpentrons 1000ul tips\nOpentrons 20ul tips\n",
     "markdown": {
