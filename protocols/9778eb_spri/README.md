@@ -59,6 +59,34 @@ Explanation of complex parameters below:
 * Starting deck layout with reagents for single bead purification
 ![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/9778eb/spri/starting_deck_not_size.png)
 
+* Slot 1: 96 Filter Tip Rack 20 uL
+* Slot 2: 96 Filter Tip Rack 200 uL
+* Slot 3: Custom 3D printed custom adapter for half-skirted plates with Thermofisher half-skirted plate
+* Slot 4: NEST 1 Well Reservoir 195 mL
+* Slot 5: NEST 12 Well Reservoir 15 mL
+* Slot 6: Empty
+* Slot 7: Magnetic module with custom 3D printed custom adapter for half-skirted plates with Thermofisher half-skirted plate
+* Slot 8: 96 Filter Tip Rack 20 uL
+* Slot 9: 96 Filter Tip Rack 200 uL
+* Slot 10: 96 Filter Tip Rack 20 uL
+* Slot 11: 96 Filter Tip Rack 200 uL
+
+* Starting deck layout with reagents for size selection
+![deck layout 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/9778eb/spri/size_selection.png)
+
+* Slot 1: 96 Filter Tip Rack 20 uL
+* Slot 2: 96 Filter Tip Rack 200 uL
+* Slot 3: Custom 3D printed custom adapter for half-skirted plates with Thermofisher half-skirted plate
+* Slot 4: NEST 1 Well Reservoir 195 mL
+* Slot 5: NEST 12 Well Reservoir 15 mL
+* Slot 6: Magnetic module with custom 3D printed custom adapter for half-skirted plates with Thermofisher half-skirted plate
+* Slot 7: Magnetic module with custom 3D printed custom adapter for half-skirted plates with Thermofisher half-skirted plate
+* Slot 8: 96 Filter Tip Rack 20 uL
+* Slot 9: 96 Filter Tip Rack 200 uL
+* Slot 10: 96 Filter Tip Rack 20 uL
+* Slot 11: 96 Filter Tip Rack 200 uL
+
+
 ---
 
 ### Protocol Steps
