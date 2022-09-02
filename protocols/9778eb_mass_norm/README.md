@@ -1,77 +1,63 @@
-# Protocol Title (should match metadata of .py file)
+# Normalization with CSV
 
 ### Author
 [Opentrons](https://opentrons.com/)
 
-### Partner
-[Partner Name](partner website link)
-
 ## Categories
-* Broader Category
-	* Subcategory (can be the name of a kit when applicable)
+* Sample Prep
+	* Normalization
 
 ## Description
-This section of the README (especially the first paragraph) should grip a prospective user with the overarching purpose/flow of the protocol, but should not include fine details of the protocol steps themselves.
+This protocol uses values in a CSV to normalize samples in a 96 well plate. The CSV requires starting and finishing concentrations broken up into mass/moles and volumes. This allows for minimal user calculations before loading samples. Additionally, units can be different from run to run and even sample to sample provided the starting and finishing units are the same. E.g. sample A1 is nanograms/uL and will be diluted to a set concentration in well A1 in the normalized plate while sample B1 is moles/uL and will be diluted to a set molarity in well B1.
 
-Example: This is a flexible protocol accommodating a wide range of commercial RNA extraction workflows for COVID-19 sample processing. The protocol is broken down into 5 main parts:
-* binding buffer addition to samples
-* bead wash 3x using magnetic module
-* final elution to chilled PCR plate
-
-Subsequent paragraphs can give some more insight into the details of the protocol, but a step-by-step description should be included in the 'Protocol Steps' section below.
-
-Example: For sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 4) to the elution PCR plate (temperature module, slot 1). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.
-
-Results of the Opentrons Science team's internal testing of this protocol on the OT-2 are shown below:  
-![results](link_to_results.png)
+This protocol also checks if normalization is possible with the given concentrations and will list the failed wells at the end of the protocol run. E.g. C1 starting concentration is 15 ng/uL and the stated final concentration target is 20 ng/uL so C1 will be added to the 'failed well' list at the protocol end.
 
 Explanation of complex parameters below:
-* `park tips`: If set to `yes` (recommended), the protocol will conserve tips between reagent addition and removal. Tips will be stored in the wells of an empty rack corresponding to the well of the sample that they access (tip parked in A1 of the empty rack will only be used for sample A1, tip parked in B1 only used for sample B1, etc.). If set to `no`, tips will always be used only once, and the user will be prompted to manually refill tipracks mid-protocol for high throughput runs.
-* `input .csv file`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:
-```
-source,dest,vol
-A1,B1,4
-```
-
+* `Volume of Water in Falcon Tube`: Starting volume of nuclease free water in the on-deck tube rack. This is in mL and will be used to track liquid height
+* `Source Plate Type`: 96 well plate samples will start the protocol in
+* `Destination Plate Type`: 96 well plate samples will end the protocol in
+* `P20 Single GEN2 Mount`: Defines which side the P20 single pipette will be mounted on. The P300 single pipette will be mounted on the opposite side
+* `Transfer .csv File`: Here, you should upload a .csv file formatted [like the example CSV located here](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/9778eb/csv/example_norm.csv)
 ---
 
-### Modules
-* [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
-* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
-* [Thermocycler Module](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module)
-* [HEPA Module](https://shop.opentrons.com/collections/hardware-modules/products/hepa-module)
-
 ### Labware
-* [Labware name](link to labware on shop.opentrons.com when applicable)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [Opentrons 6 Tube Rack with Falcon 50 mL Conical](https://shop.opentrons.com/4-in-1-tube-rack-set/)
+* [NEST 96 Deepwell Plate 2mL](https://shop.opentrons.com/nest-2-ml-96-well-deep-well-plate-v-bottom/)
+* [NEST 100uL 96 Well Plate](https://shop.opentrons.com/nest-0-1-ml-96-well-pcr-plate-full-skirt/)
+* [Thermofisher Semi-Skirted on Adapter 96 Well Plate](https://www.thermofisher.com/order/catalog/product/AB1400L)
 
 ### Pipettes
-* [Pipette name](link to pipette on shop.opentrons.com)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [Opentrons P300 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
+* [Opentrons P300 Single Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/single-channel-electronic-pipette-p20/)
 
 ### Reagents
-* [kit name when applicable](link to kit)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* Nuclease Free Water (for diluent)
 
 ---
 
 ### Deck Setup
-* If the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)
+* Reagent Color Code
+![color code](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/9778eb/csv/color_code.png)
+
+* Starting deck layout with reagents
+![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/9778eb/csv/deck_layout.png)
 
 ### Reagent Setup
-* This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:
-* Reservoir 1: slot 5
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res1_v2.png)
-* Reservoir 2: slot 2  
-![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res2.png)
+* Slot 1, sample plate
+* Slot 2, normalized plate
+* Slot 3, 96 Filter Tip Rack 20 uL
+* Slot 4, tube A1, Nuclease free water
+* Slot 5, 96 Filter Tip Rack 200 uL
+* Slot 6, 96 Filter Tip Rack 20 uL
+* Slot 7, 96 Filter Tip Rack 200 uL
 
 ---
 
 ### Protocol Steps
-1. This section should consist of a numerical outline of the protocol steps, somewhat analogous to the steps outlined by the user in their custom protocol submission.
-2. example step: Samples are transferred from the source tuberacks on slots 1-2 to the PCR plate on slot 3, down columns and then across rows.
-3. example step: Waste is removed from each sample on the magnetic module, ensuring the bead pellets are not contacted by the pipette tips.
+1. Both pipettes pick up tips in preparation for diluent addition
+2. A calculated amount of nuclease free water is added to each specified well in slot 2 from tube A1 in slot 4, using the same tip for each addition and swapping pipettes based on transfer volume
+3. A calculated amount of each sample in slot 1 is added to the same well in slot 2 and mixed. A new tip is used for each sample and the pipette used is based on the transfer volume for efficient transfers
+4. A list of non-normalizable wells is listed at the end of the protocol run
 
 ### Process
 1. Input your protocol parameters above.
@@ -86,4 +72,4 @@ A1,B1,4
 If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).
 
 ###### Internal
-protocol-hex-code
+9778eb_mass_norm
