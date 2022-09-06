@@ -1,0 +1,30 @@
+{
+    "author": "Opentrons",
+    "categories": {
+        "PCR": [
+            "PCR Prep"
+        ]
+    },
+    "deck-setup": "\n",
+    "description": "This protocol pools 4 plates one at a time into a fresh 384 well plate with water. Each PCR plate is pooled in order A1, A2, B1, B2 to A1 pool, then A3, A4, B3, B4 to A3 pool, etc. The next plate will pool all of the same source wells, but the destination wells of the pool will start at B1, skipping every other well. PCR plate 3 will start pooling at B1, and PCR plate wills start pooling at B2.\n",
+    "internal": "08fd01",
+    "labware": "\nNest 12 Well Reservoir\nOpentrons 20ul Filter tips\nCustom 384 well plate(link to labware on shop.opentrons.com when applicable)\n",
+    "markdown": {
+        "author": "[Opentrons](https://opentrons.com/)\n\n\n",
+        "categories": "* PCR\n\t* PCR Prep\n\n",
+        "deck-setup": "![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/08fd01/Screen+Shot+2022-09-06+at+11.53.06+AM.png)\n\n\n---\n\n",
+        "description": "This protocol pools 4 plates one at a time into a fresh 384 well plate with water. Each PCR plate is pooled in order A1, A2, B1, B2 to A1 pool, then A3, A4, B3, B4 to A3 pool, etc. The next plate will pool all of the same source wells, but the destination wells of the pool will start at B1, skipping every other well. PCR plate 3 will start pooling at B1, and PCR plate wills start pooling at B2.\n\n---\n\n",
+        "internal": "08fd01\n",
+        "labware": "* [Nest 12 Well Reservoir](https://shop.opentrons.com/consumables/)\n* [Opentrons 20ul Filter tips](https://shop.opentrons.com/universal-filter-tips/)\n* Custom 384 well plate(link to labware on shop.opentrons.com when applicable)\n\n",
+        "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the [Troubleshooting Survey](https://protocol-troubleshooting.paperform.co/).\n\n",
+        "pipettes": "* [P20 Multi-Channel Pipette](https://shop.opentrons.com/8-channel-electronic-pipette/)\n\n\n---\n\n",
+        "process": "1. Input your protocol parameters above.\n2. Download your protocol and unzip if needed.\n3. Upload your custom labware to the [OT App](https://opentrons.com/ot-app) by navigating to `More` > `Custom Labware` > `Add Labware`, and selecting your labware files (.json extensions) if needed.\n4. Upload your protocol file (.py extension) to the [OT App](https://opentrons.com/ot-app) in the `Protocol` tab.\n5. Set up your deck according to the deck map.\n6. Calibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our [support articles](https://support.opentrons.com/en/collections/1559720-guide-for-getting-started-with-the-ot-2).\n7. Hit 'Run'.\n\n",
+        "protocol-steps": "1. 12ul of water is added to all wells in pool plate (same tip)\n2. 3ul of sample is pooled onto pool plate one plate at a time beginning in slot 1 (fresh tip)\n\n",
+        "title": "PCR Prep and Pooling with 384 Plates"
+    },
+    "notes": "If you have any questions about this protocol, please contact the Protocol Development Team by filling out the Troubleshooting Survey.",
+    "pipettes": "\nP20 Multi-Channel Pipette\n\n",
+    "process": "\nInput your protocol parameters above.\nDownload your protocol and unzip if needed.\nUpload your custom labware to the OT App by navigating to More > Custom Labware > Add Labware, and selecting your labware files (.json extensions) if needed.\nUpload your protocol file (.py extension) to the OT App in the Protocol tab.\nSet up your deck according to the deck map.\nCalibrate your labware, tiprack and pipette using the OT App. For calibration tips, check out our support articles.\nHit 'Run'.\n",
+    "protocol-steps": "\n12ul of water is added to all wells in pool plate (same tip)\n3ul of sample is pooled onto pool plate one plate at a time beginning in slot 1 (fresh tip)\n",
+    "title": "PCR Prep and Pooling with 384 Plates"
+}
