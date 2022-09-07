@@ -5,70 +5,43 @@
 
 ## Categories
 * Sample Prep
-	* Sample Clean-Up
+	* Reagent Addition
 
 ## Description
-This section of the README (especially the first paragraph) should grip a prospective user with the overarching purpose/flow of the protocol, but should not include fine details of the protocol steps themselves.
+This is a specialized reagent addition to add reagent from vials in a Cytiva well plate to a 96 well plate which are then transferred to a 384 well plate. The tips are picked up in a non-standard manner with a single tip picked up from the bottom-right corner to add from the vials to the 96 well plate. The columns of the 96 well plate will then have a specified amount of each column added to the 384 well plate, reusing tips as much as possible.
 
-Example: This is a flexible protocol accommodating a wide range of commercial RNA extraction workflows for COVID-19 sample processing. The protocol is broken down into 5 main parts:
-* binding buffer addition to samples
-* bead wash 3x using magnetic module
-* final elution to chilled PCR plate
-
-Subsequent paragraphs can give some more insight into the details of the protocol, but a step-by-step description should be included in the 'Protocol Steps' section below.
-
-Example: For sample traceability and consistency, samples are mapped directly from the magnetic extraction plate (magnetic module, slot 4) to the elution PCR plate (temperature module, slot 1). Magnetic extraction plate well A1 is transferred to elution PCR plate A1, extraction plate well B1 to elution plate B1, ..., D2 to D2, etc.
-
-Results of the Opentrons Science team's internal testing of this protocol on the OT-2 are shown below:  
-![results](link_to_results.png)
+Sample numbers should be specified in multiple of 16 for most efficient reagent use. I.e. 2 samples can be specified but reagent will be added to all of column 1 in the 384 well plate. 32 samples will add reagent to column 1 and 2 in the 384 well plate.
 
 Explanation of complex parameters below:
-* `park tips`: If set to `yes` (recommended), the protocol will conserve tips between reagent addition and removal. Tips will be stored in the wells of an empty rack corresponding to the well of the sample that they access (tip parked in A1 of the empty rack will only be used for sample A1, tip parked in B1 only used for sample B1, etc.). If set to `no`, tips will always be used only once, and the user will be prompted to manually refill tipracks mid-protocol for high throughput runs.
-* `input .csv file`: Here, you should upload a .csv file formatted in the following way, being sure to include the header line:
-```
-source,dest,vol
-A1,B1,4
-```
+* `Number of Samples in 384 Well Plate`: How many samples will be in the 384 well plate
+* `Transfer Volume (1-20uL)`: How much liquid will be transferred from the 96 well plate to the 384 well plate in uL. Please keep in mind the max volume of 50uL for the 384 well plate when specifying number of vials and transfer volume along with the liquid handling in the script. I.e. During the 384 well addition, a blow-out followed by a tip touch will occur 1 mm below the well top to ensure no liquid remains in the tip or beads on the tip.
+* `Number of Vials (1-12)`: How many starting vials are there in the Cytiva well plate. Each vial will fill a single column in the 96 well plate. A1 goes to column 1, B1 to column 2, C1 to column 3, etc.
+*`P20 Multi GEN2 Mount`: Which mount the P20 multi-channel is connected to. The P300 will be connected to the opposite mount.  
 
 ---
 
-### Modules
-* [Temperature Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/tempdeck)
-* [Magnetic Module (GEN2)](https://shop.opentrons.com/collections/hardware-modules/products/magdeck)
-* [Thermocycler Module](https://shop.opentrons.com/collections/hardware-modules/products/thermocycler-module)
-* [HEPA Module](https://shop.opentrons.com/collections/hardware-modules/products/hepa-module)
-
 ### Labware
-* [Labware name](link to labware on shop.opentrons.com when applicable)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* Greiner 96 Well Plate 340uL
+* Greiner 384 Well Plate 50uL
+* Cytive 24 Well Plate 2000uL used as Vial Holder
 
 ### Pipettes
-* [Pipette name](link to pipette on shop.opentrons.com)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
-
-### Reagents
-* [kit name when applicable](link to kit)
-* Nick is working on auto-filling these sections from the protocol (3/28/2021)
+* [Opentrons P300 8 Channel Electronic Pipette (GEN2)](https://shop.opentrons.com/8-channel-electronic-pipette/)
+* [Opentrons P20 8 Channel Electronic Pipette (GEN20)](https://shop.opentrons.com/8-channel-electronic-pipette/)
 
 ---
 
 ### Deck Setup
-* If the deck layout of a particular protocol is more or less static, it is often helpful to attach a preview of the deck layout, most descriptively generated with Labware Creator. Example:
-![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/bc-rnadvance-viral/Screen+Shot+2021-02-23+at+2.47.23+PM.png)
-
-### Reagent Setup
-* This section can contain finer detail and images describing reagent volumes and positioning in their respective labware. Examples:
-* Reservoir 1: slot 5
-![reservoir 1](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res1_v2.png)
-* Reservoir 2: slot 2  
-![reservoir 2](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/1ccd23/res2.png)
+* Starting Deck Setup for 2 Reagent Vials:
+![deck_setup](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/059126/deck_setup.png)
 
 ---
 
 ### Protocol Steps
-1. This section should consist of a numerical outline of the protocol steps, somewhat analogous to the steps outlined by the user in their custom protocol submission.
-2. example step: Samples are transferred from the source tuberacks on slots 1-2 to the PCR plate on slot 3, down columns and then across rows.
-3. example step: Waste is removed from each sample on the magnetic module, ensuring the bead pellets are not contacted by the pipette tips.
+1. Tips are picked up by the P300 starting from the front-right corner of the tip rack. They will be picked up column-wise then row-wise
+2. 150 uL is aspirated from the first vial in the 24 well holder A1 and added to each well in the first column
+3. Repeat step 2 for each vial specified (up to 12, one for each column)
+4. A set amount of each column in the 96 well plate is added with the P20 multichannel to each sample. The net effect is each vial supplied will put a specified amount of its contents in each well.
 
 ### Process
 1. Input your protocol parameters above.
