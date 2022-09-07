@@ -12,7 +12,7 @@
     "markdown": {
         "author": "[Opentrons](https://opentrons.com/)\n\n\n",
         "categories": "* PCR\n\t* PCR Prep\n\n",
-        "deck-setup": "![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/08fd01/Screen+Shot+2022-09-06+at+11.53.06+AM.png)\n\n\n---\n\n",
+        "deck-setup": "![deck layout](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/08fd01/deck+setup+new+version+optimization.png)\n\n\n---\n\n",
         "description": "This protocol pools 4 plates one at a time into a fresh 384 well plate with water. Each PCR plate is pooled in order A1, A2, B1, B2 to A1 pool, then A3, A4, B3, B4 to A3 pool, etc. The next plate will pool all of the same source wells, but the destination wells of the pool will start at B1, skipping every other well. PCR plate 3 will start pooling at B1, and PCR plate wills start pooling at B2.\n\n---\n\n",
         "internal": "08fd01\n",
         "labware": "* [Nest 12 Well Reservoir](https://shop.opentrons.com/consumables/)\n* [Opentrons 20ul Filter tips](https://shop.opentrons.com/universal-filter-tips/)\n* Custom 384 well plate(link to labware on shop.opentrons.com when applicable)\n\n",
