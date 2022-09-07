@@ -32,9 +32,9 @@ def run(ctx: protocol_api.ProtocolContext):
     num_384_cols = math.ceil(num_samples/16)
     # load labware
 
-    plate_96 = ctx.load_labware('greiner_96_wellplate_340ul', '1')
+    plate_96 = ctx.load_labware('greiner_96_wellplate_340ul', '4')
     plate_384 = ctx.load_labware('greiner_384_wellplate_50ul', '2')
-    vials = ctx.load_labware('cytiva_24_wellplate_2000ul', '4')
+    vials = ctx.load_labware('cytiva_24_wellplate_2000ul', '7')
 
     # load tipracks
     tiprack_300 = [ctx.load_labware('opentrons_96_tiprack_300ul', slot)
