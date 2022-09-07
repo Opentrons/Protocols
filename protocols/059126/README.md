@@ -14,7 +14,7 @@ Sample numbers should be specified in multiple of 16 for most efficient reagent 
 
 Explanation of complex parameters below:
 * `Number of Samples in 384 Well Plate`: How many samples will be in the 384 well plate
-* `Transfer Volume (1-20uL)`: How much liquid will be transferred from the 96 well plate to the 384 well plate in uL. Please keep in mind the max volume of 50uL for the 384 well plate when specifying number of vials and transfer volume along with the liquid handling in the script. I.e. During the 384 well addition, a blow-out followed by a tip touch will occur 1 mm below the well top to ensure no liquid remains in the tip or beads on the tip.
+* `Transfer Volume (1-15uL)`: How much liquid will be transferred from the 96 well plate to the 384 well plate in uL. A 5 uL air gap is used to prevent dripping, limiting the transfer to 15 uL. Please keep in mind the max volume of 50uL for the 384 well plate when specifying number of vials and transfer volume along with the liquid handling in the script. I.e. During the 384 well addition, a blow-out followed by a tip touch will occur 1 mm below the well top to ensure no liquid remains in the tip or beads on the tip.
 * `Number of Vials (1-12)`: How many starting vials are there in the Cytiva well plate. Each vial will fill a single column in the 96 well plate. A1 goes to column 1, B1 to column 2, C1 to column 3, etc.
 *`P20 Multi GEN2 Mount`: Which mount the P20 multi-channel is connected to. The P300 will be connected to the opposite mount.  
 
