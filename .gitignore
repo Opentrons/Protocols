@@ -114,3 +114,5 @@ protocols/**/supplements
 
 # credentials
 data/salesforce/credentials.json
+# security keys
+user-submissions/keys.json
