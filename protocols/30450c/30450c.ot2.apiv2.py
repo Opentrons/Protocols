@@ -10,9 +10,9 @@ metadata = {
 def run(ctx):
 
     # get parameter values from json
-    [plate_count, step, pause_for_washing, tip_touch,
+    [plate_count, step, src_height, pause_for_washing, tip_touch,
      labware_reservoir, labware_elisa_plate] = get_values(  # noqa: F821
-      'plate_count', 'step', 'pause_for_washing', 'tip_touch',
+      'plate_count', 'step', 'src_height', 'pause_for_washing', 'tip_touch',
       'labware_reservoir', 'labware_elisa_plate')
 
     ctx.set_rail_lights(True)
@@ -97,14 +97,14 @@ def run(ctx):
             for chunk in chunks:
 
                 p300m.aspirate(
-                 len(chunk)*vol + disposal_volume, source.bottom(1))
+                 len(chunk)*vol + disposal_volume, source.bottom(src_height))
 
                 for well in chunk:
                     p300m.dispense(vol, well.top())
                     p300m.touch_tip()
 
                 # return disposal to source for less reagent usage
-                p300m.dispense(disposal_volume, source.bottom(1))
+                p300m.dispense(disposal_volume, source.bottom(src_height))
 
         # for clean top dispense when tip touch is not an option
         else:
@@ -114,7 +114,7 @@ def run(ctx):
                 # pre air gap
                 p300m.move_to(source.top())
                 p300m.air_gap(20)
-                p300m.aspirate(vol, source.bottom(1))
+                p300m.aspirate(vol, source.bottom(src_height))
 
                 # dispense liquid followed by air at rate=2
                 p300m.dispense(vol+20, column[0].top(), rate=2)
