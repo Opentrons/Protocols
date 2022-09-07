@@ -180,18 +180,18 @@ def parse(data, readme_map, folder_id):
     module_lines = parse_modules(data, readme_map)
     labware_lines = parse_labware(data,)
     pipette_lines = parse_pipettes(data, readme_map)
+    deck_image_link = readme_slug.get(
+        'deck-setup',
+        f'![deck](https://opentrons-protocol-library-website.s3.\
+amazonaws.com/custom-README-images/{folder_id}/deck.png)')
+    reagent_image_link = readme_slug.get(
+        'reagent-setup',
+        f'![reagents](https://opentrons-protocol-library-website.s3.\
+amazonaws.com/custom-README-images/{folder_id}/reagents.png)')
     deck_setup_lines = [
-        '### Deck Setup',
-        readme_slug.get(
-            'deck-setup',
-            f'![deck](https://opentrons-protocol-library-website.s3.\
-amazonaws.com/custom-README-images/{folder_id}/deck.png)')]
+        '### Deck Setup', f'[deck]({deck_image_link})']
     reagent_setup_lines = [
-        '### Reagent Setup',
-        readme_slug.get(
-            'reagent-setup',
-            f'![reagents](https://opentrons-protocol-library-website.s3.\
-amazonaws.com/custom-README-images/{folder_id}/reagents.png)')]
+        '### Reagent Setup', f'[reagents]({reagent_image_link})']
     protocol_step_lines = [
         '### Protocol Steps',
         readme_slug.get('steps', '1. Step 1...')]

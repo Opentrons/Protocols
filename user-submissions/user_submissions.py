@@ -44,7 +44,8 @@ def create_protocol():
         "Deck Setup image": "deck-setup",
         "Reagent Setup image": "reagent-setup",
         "Protocol Step-by-Step": "steps",
-        "Parent protocol (if adapted from an existing Protocol Library protocol)": "parent",
+        "Parent protocol \
+(if adapted from an existing Protocol Library protocol)": "parent",
         "Code": "id"
     })
 
