@@ -19,6 +19,12 @@
     ]
   },
   {
+  "type": "int",
+  "label": "Aspiration Height for Reagent Reservoir",
+  "name": "src_height",
+  "default": 2
+  },
+  {
     "type": "dropDown",
     "label": "Pause (for off-deck washing) before adding reagent to each plate? (yes or no)",
     "name": "pause_for_washing",

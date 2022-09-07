@@ -9,7 +9,7 @@
 	* Plate Filling
 
 ## Description
-This protocol uses 8-channel P300 and p20 pipettes to transfer samples and standard dilutions to a batch of 1-5 ELISA plates for the attached BioLegend Human IL-2 ELISA. User-determined parameters are available to specify the number of ELISA plates (1-5), to include or not include a tip touch following dispenses, and to automate or not automate the placement and replenishment of tips in row H of the empty tip box in slot 9 (these tips will be used to transfer standard from row H of the sample plate to row H of the ELISA plate).
+This protocol uses 8-channel P300 and p20 pipettes to transfer samples and standard dilutions to a batch of 1-5 ELISA plates for the attached BioLegend Human IL-2 ELISA. User-determined parameters are available to specify the number of ELISA plates (1-5), to include or not include a tip touch following dispenses, the aspiration position in the large reservoir (in millimeters above the labware bottom), and to automate or not automate the placement and replenishment of tips in row H of the empty tip box in slot 9 (these tips will be used to transfer standard from row H of the sample plate to row H of the ELISA plate).
 
 Links:
 * [BioLegend Human IL-2 ELISA MAX Deluxe Set - user manual](https://opentrons-protocol-library-website.s3.amazonaws.com/custom-README-images/30450c/431804_R7_Human_IL-2_Deluxe+1.pdf)
