@@ -15,6 +15,12 @@
     ]
   },
   {
+    "type": "int",
+    "label": "Aspiration Height for Reagent Reservoir",
+    "name": "src_height",
+    "default": 2
+  },
+  {
     "type": "dropDown",
     "label": "Manually place tips for transfer of standards in slot 9 empty box row H (yes or no)",
     "name": "replenish_tips_manually",
